@@ -1,3 +1,5 @@
+Import-VstsLocStrings "$PSScriptRoot\Task.json"
+
 Write-Verbose "Starting SonarQube PostBuild Step"
 
 . $PSScriptRoot/Common/SonarQubeHelpers/SonarQubeHelper.ps1

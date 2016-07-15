@@ -96,7 +96,7 @@ function CreateCommandLineArgs
 
     if ([String]::IsNullOrWhiteSpace($serverUrl))
     {   
-		throw "Please setup a generic endpoint and specify the SonarQube Url as the Server Url" 
+		throw (Get-VstsLocString -Key "Error_Endpoint") 
 	}
 
 	[void]$sb.Append(" /d:sonar.host.url=" + (EscapeArg($serverUrl))) 
@@ -135,7 +135,7 @@ function CreateCommandLineArgs
     {
         if (![System.IO.File]::Exists($configFile))
         {
-            throw "Could not find the specified configuration file: $configFile" 
+            throw (Get-VstsLocString -Key "Error_Config" -ArgumentList $configFile) 
         }
 
         [void]$sb.Append(" /s:" + (EscapeArg($configFile))) 
@@ -146,11 +146,11 @@ function CreateCommandLineArgs
 
 function UpdateArgsForPullRequestAnalysis($cmdLineArgs)
 {       
-    if (IsPrBuild)
+    if (IsPRBuild)
     {
         if ($cmdLineArgs -and $cmdLineArgs.ToString().Contains("sonar.analysis.mode"))
         {
-            throw "Error: sonar.analysis.mode seems to be set already. Please check the properties of SonarQube build tasks and try again."
+             throw (Get-VstsLocString -Key "Error_Pr_Config")
         }
 
         Write-VstsTaskVerbose "Detected a PR build - running the SonarQube analysis in issues / incremental mode"
@@ -179,13 +179,13 @@ function GetEndpointData
 
 	if (!$serviceEndpoint)
 	{
-		throw "A Connected Service with name '$ConnectedServiceName' could not be found.  Ensure that this Connected Service was successfully provisioned using the services tab in the Admin UI."
+        throw (Get-VstsLocString -Key "Error_Endpoint_Name" -ArgumentList $connectedServiceName)
 	}
 
 	$authScheme = $serviceEndpoint.Auth.Scheme
 	if ($authScheme -ne 'UsernamePassword')
 	{
-		throw "The authorization scheme $authScheme is not supported for a SonarQube server."
+        throw (Get-VstsLocString -Key "Error_Endpoint_Auth" -ArgumentList $authScheme)
 	}
 
     return $serviceEndpoint
@@ -194,10 +194,6 @@ function GetEndpointData
 function GetDashboardUrl
 {
     param ([Uri]$serviceEndpointUrl, [string]$projectKey)
-    
-    Write-VstsTaskVerbose $projectKey
-    Write-VstsTaskVerbose $serviceEndpointUrl
-    Write-VstsTaskVerbose $serviceEndpointUrl.ToString()
     
     $serviceUrlString = $serviceEndpointUrl.ToString().TrimEnd('/')
     return "$serviceUrlString/dashboard/index?id=$($projectKey)"

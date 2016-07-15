@@ -189,7 +189,7 @@ function PostDiscussionThreads
     $vssJsonThreadCollection = New-Object -TypeName "Microsoft.VisualStudio.Services.WebApi.VssJsonCollectionWrapper[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadCollection]" -ArgumentList @(,$threads)
     [void]$script:discussionClient.CreateThreadsAsync($vssJsonThreadCollection, $null, [System.Threading.CancellationToken]::None).Result
     
-    Write-Host "Posted $($threads.Count) discussion threads"
+    Write-Host (Get-VstsLocString -Key "Info_PRCA_Posted" -ArgumentList $threads.Count) 
 }
 
 #

@@ -12,7 +12,7 @@ function GetBootstrapperPath
 
 	if (!$bootstrapperPath -or ![System.IO.File]::Exists($bootstrapperPath))
 	{
-		throw "The MSBuild.SonarQube.Runner executable could not be found. Check that the build definition includes a SonarQube Pre-Build step"
+		throw (Get-VstsLocString -Key 'Error_SQ_Not_Found')
 	}
 
 	Write-VstsTaskVerbose "bootstrapperPath: $bootstrapperPath"

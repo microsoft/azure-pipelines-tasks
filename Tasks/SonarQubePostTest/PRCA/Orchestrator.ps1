@@ -4,9 +4,9 @@
 function HandleCodeAnalysisReporting
 {	
     
-    if (IsPrBuild)
+    if (IsPRBuild)
     {   
-        Write-Host "Fetching code analysis issues and posting them to the PR..."
+        Write-Host (Get-VstsLocString -Key "Info_PRCA_Start")
            
         Import-Module -Name "$PSScriptRoot/ReportProcessor-Module.psm1"
         Import-Module -Name "$PSScriptRoot/PostComments-Module.psm1"
@@ -77,6 +77,7 @@ function GetMessagesFromIssues
         [void]$comments.Add($comment)
     }
     
+    $sw.Stop();
     Write-VstsTaskVerbose "Creating $($issues.Count) messages from issues took $($sw.ElapsedMilliseconds) ms"
          
     return $comments

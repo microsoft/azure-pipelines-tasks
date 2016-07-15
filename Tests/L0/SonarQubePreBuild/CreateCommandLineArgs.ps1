@@ -54,7 +54,7 @@ Assert-AreEqual ('begin /k:"pkey" /n:"Test Project" /v:"1.0" /d:sonar.host.url="
 
 
 # Test Case 3 - missing host url results in a user friendly exception
-Assert-Throws { CreateCommandLineArgs -projectKey "pkey" -projectName "Test Project" -projectVersion "1.0" } "Please setup a generic endpoint and specify the SonarQube Url as the Server Url" 
+Assert-Throws { CreateCommandLineArgs -projectKey "pkey" -projectName "Test Project" -projectVersion "1.0" } 
 
 
 

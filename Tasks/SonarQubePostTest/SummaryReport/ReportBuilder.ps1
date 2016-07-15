@@ -5,9 +5,10 @@
 
 function CreateAndUploadReport
 {    
-    if ((IsPrBuild) -or ((IsReportEnabled) -eq $false) -or ((CompareSonarQubeVersionWith52) -le 0))
+    if ((IsPRBuild) -or ((IsReportEnabled) -eq $false) -or ((CompareSonarQubeVersionWith52) -le 0))
     {
-        Write-host "Uploading the legacy summary report. The new report is not uploaded if not enabled, if the SonarQube server version is 5.2 or lower or if the build was triggered by a pull request"
+        
+        Write-host (Get-VstsLocString -Key "Info_Legacy_Report")
         UploadLegacySummaryMdReport
     }
     else
@@ -38,18 +39,18 @@ function UploadLegacySummaryMdReport
 	}
 	else
 	{
-		 Write-Warning "Could not find the summary report file $legacySummaryReportPath"
+		 Write-VstsTaskWarning (Get-VstsLocString -Key "Warn_Report_Missing" -ArgumentList $legacySummaryReportPath)
 	}
 }
 
 function CreateAndUploadReportInternal
 {
     Assert ((IsReportEnabled) -eq $true) "The summary report is disabled"
-    Assert ((IsPrBuild) -eq $false) "Cannot produce a report because the analysis was done in issues mode"
-
-    Write-Host "Creating a summary report"        
+    Assert ((IsPRBuild) -eq $false) "Cannot produce a report because the analysis was done in issues mode"
+ 
+    Write-Host (Get-VstsLocString -Key "Info_Report_Create")  
     $reportPath = CreateReport
-    Write-Host "Uploading the report"
+    Write-Host (Get-VstsLocString -Key "Info_Report_Upload")  
     FireUploadReportCommand $reportPath
 }
 
@@ -95,7 +96,6 @@ function FireUploadReportCommand
     param($reportPath)
     
     Write-VstsAddAttachment -Type "Distributedtask.Core.Summary" -Name "SonarQube Analysis Report" -Path $reportPath
-    #Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report;]$reportPath"
 }
 
 

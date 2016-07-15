@@ -69,8 +69,8 @@ function PostAndResolveComments
     
     $script:messageSource = $messageSource
     
-    ValidateMessages $messages    
-    Write-Host "Processing $($messages.Count) new messages"        
+    ValidateMessages $messages     
+    Write-Host (Get-VstsLocString -Key "Info_PRCA_Messages" -ArgumentList $($messages.Count))  
     InternalPostAndResolveComments $messages
 }
 
@@ -106,7 +106,7 @@ function InternalPostAndResolveComments
     
     if (!(HasElements $messages))
     {
-        Write-Host "No new messages were posted"
+        Write-Host (Get-VstsLocString -Key "Info_PRCA_No_Messages")
         return
     } 
     
@@ -237,7 +237,7 @@ function FilterMessagesByPath
     $messages = $messages | Where-Object {$modifiedFilesInPr.Contains($_.RelativePath)}
     $commentsFiltered = $countBefore - $messages.Count 
     
-    Write-Host "$commentsFiltered message(s) were filtered because they do not belong to files that were changed in this PR"
+    Write-Host (Get-VstsLocString -Key "Info_PRCA_Filtered" -ArgumentList $commentsFiltered)
     
     return $messages
 }
@@ -266,7 +266,7 @@ function FilterPreExistingComments
      $messages = $messages | Where-Object { !(MessageHasMatchingComments $_)}
      $commentsFiltered = $countBefore - $messages.Count 
      
-     Write-Host "$commentsFiltered message(s) were filtered because they were already present"
+     Write-Host (Get-VstsLocString -Key "Info_PRCA_Filtered_Existing" -ArgumentList $commentsFiltered)
      Write-VstsTaskVerbose "Filtering out $($existingComments.Count) existing comments took $($sw.ElapsedMilliseconds) ms"
      
      return $messages
@@ -286,7 +286,7 @@ function FilterMessagesByNumber
     $messages = $messages | Sort-Object Priority | Select-Object -first $PostCommentsModule_MaxMessagesToPost
     $commentsFiltered = $countBefore - $messages.Count
     
-    Write-Host "$commentsFiltered message(s) were filtered to match the maximum $PostCommentsModule_MaxMessagesToPost comments limit"
+    Write-Host (Get-VstsLocString -Key "Info_PRCA_Filtered_Max" -ArgumentList $commentsFiltered, PostCommentsModule_MaxMessagesToPost)
     
     return $messages
 }
@@ -401,7 +401,7 @@ function CreateDiscussionThreads
     
     foreach ($message in $messages)
     {
-        Write-Host "Creating a discussion comment for the message at line $($message.Line) from $($message.RelativePath)"
+        Write-Verbose "Creating a discussion comment for the message at line $($message.Line) from $($message.RelativePath)"
         
         $newThread = New-Object "$script:discussionWebApiNS.ArtifactDiscussionThread"
         $newThread.DiscussionId = $discussionId

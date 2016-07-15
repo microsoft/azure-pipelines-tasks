@@ -1,7 +1,9 @@
 [CmdletBinding()]
 param()
 
-[string]$connectedServiceName =  Get-VstsInput -Name "connectedServiceName"
+Import-VstsLocStrings "$PSScriptRoot\Task.json"
+
+[string]$connectedServiceName = Get-VstsInput -Name "connectedServiceName"
 [string]$projectKey =  Get-VstsInput -Name "projectKey"
 [string]$projectName =  Get-VstsInput -Name "projectName"
 [string]$projectVersion =  Get-VstsInput -Name "projectVersion"

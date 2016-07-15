@@ -29,13 +29,13 @@ function FetchAnnotatedNewIssues
 
     # '@' makes sure the result set is returned as an array
     $newIssues = @($json.issues | Where { $_.isNew -eq $true })
-    Write-Host "SonarQube found $($json.issues.Count) issues out of which $($newIssues.Count) are new"
+    Write-Host (Get-VstsLocString -Key "Info_PRCA_Summary" -ArgumentList $json.issues.Count, $newIssues.Count)
     
     $newFileLevelIssues = @($newIssues | Where {(IsFileLevelIssue $_)})
     $difference = $newIssues.Count - $newFileLevelIssues.Count
     if ($difference -gt 0)
     {
-        Write-Host "$difference issue(s) do not relate to a specific file and will not be posted to the code review"
+        Write-Host (Get-VstsLocString -Key "Info_PRCA_NotInPr" -ArgumentList difference)
     }
 
     $newFileLevelIssues = AnnotateIssuesWithRelativePath $newFileLevelIssues

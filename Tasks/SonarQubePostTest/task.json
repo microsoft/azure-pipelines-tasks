@@ -24,5 +24,29 @@
     "PowerShell3": {
       "target": "SonarQubePostTest.ps1"
     }
+  },
+  "messages": {
+    "Error_SQ_Not_Found": "The MSBuild.SonarQube.Runner executable could not be found. Check that the build definition includes a SonarQube Pre-Build step",
+    "Error_Analysis_Timeout": "The analysis did not complete in the allotted time of {0} seconds. Consider setting the build variable SonarQubeAnalysisTimeoutInSeconds to a higher value.",
+    "Warn_Report_Missing": "Could not find the summary report file {0}",
+    "Info_Waiting_Processing":"Waiting on the SonarQube server to finish processing in order to determine the quality gate status",
+    "Info_Analysis_Finished": "The SonarQube analysis has finished processing.",
+    "Info_Analysis_Custom_Timeout": "SonarQubeAnalysisTimeoutInSeconds is set to {0} and will be used to poll for the SonarQube task completion.",
+    "Info_Breaker_Pr": "Ignoring the setting of breaking the build on quality gate failure because the build was triggered by a pull request.",
+    "Info_Breaker_Disabled": "The build was not set to fail if the associated quality gate fails.",
+    "Info_Breaker_Passed" : "The SonarQube quality gate associated with this build has passed (status {0})",
+    "Info_Legacy_Report": "Uploading the legacy summary report. The new report is not uploaded if not enabled, if the SonarQube server version is 5.2 or lower or if the build was triggered by a pull request",
+    "Info_Report_Create": "Creating a summary report",    
+    "Info_Report_Upload": "Uploading the report",
+    "Info_PRCA_Start": "Fetching code analysis issues and posting them to the PR...",
+    "Info_PRCA_Messages": "Processing {0} new messages", 
+    "Info_PRCA_No_Messages": "No new messages were posted",
+    "Info_PRCA_Filtered": "{0} message(s) were filtered because they do not belong to files that were changed in this PR",
+    "Info_PRCA_Filtered_Existing": "{0} message(s) were filtered because they were already present",
+    "Info_PRCA_Filtered_Max": "{0} message(s) were filtered to match the maximum {1} comments limit",
+    "Info_PRCA_Posted": "Posted {0} discussion threads",
+    "Info_PRCA_Summary": "SonarQube found {0} issues out of which {1} are new",
+    "Info_PRCA_NotInPr": "$difference issue(s) do not relate to a specific file and will not be posted to the code review"
+
   }
 }

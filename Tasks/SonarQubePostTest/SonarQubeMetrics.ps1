@@ -74,7 +74,7 @@ function FetchQualityGateStatus
 #
 function WaitForAnalysisToFinishInternal
 {    
-    Write-Host "Waiting on the SonarQube server to finish processing in order to determine the quality gate status."
+    Write-Host (Get-VstsLocString -Key "Info_Waiting_Processing")
        
     $reportPath = GetTaskStatusFile    
     $taskId = FetchTaskIdFromReportFile $reportPath
@@ -85,13 +85,12 @@ function WaitForAnalysisToFinishInternal
 
     if (!$taskFinished)
     {
-        throw "The analysis did not complete in the allotted time of $timeout seconds. Consider setting the build variable SonarQubeAnalysisTimeoutInSeconds to a higher value."
-
+        throw (Get-VstsLocString -Key 'Error_Analysis_Timeout' -ArgumentList $timeout)
     }
 
     $analysisId = QueryAnalysisId $taskId
 
-    Write-Host "The SonarQube analysis has finished processing."
+    Write-Host (Get-VstsLocString -Key 'Info_Analysis_Finished')
     Write-VstsTaskVerbose "The analysis id is $analysisId"
 
     return $analysisId
@@ -143,7 +142,7 @@ function IsAnalysisFinished
 
     if (!$status)
     {
-        throw "Could not determine the task status - please raise a bug."
+        throw "Could not determine the task status."
     }
     
     return $status -eq "success"   
@@ -184,8 +183,7 @@ function GetAnalysisCompleteTimeout
     if ($env:SonarQubeAnalysisTimeoutInSeconds)
     {
         $timeout = $env:SonarQubeAnalysisTimeoutInSeconds
-        Write-Host "SonarQubeAnalysisTimeoutInSeconds is set to $timeout and will be used to poll for the SonarQube task completion."
-        
+        Write-Host (Get-VstsLocString -Key 'Info_Analysis_Custom_Timeout' -ArgumentList $timeout)
     }
     else
     {
