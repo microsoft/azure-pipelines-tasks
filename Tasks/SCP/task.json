@@ -1,0 +1,101 @@
+{
+  "id": "67cec91b-0351-4c2f-8465-d74b3d2a2d96",
+  "name": "SCP",
+  "friendlyName": "SCP",
+  "description": "Copy files or build artifacts to remote machine using SSH",
+  "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=821894)",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 0
+  },
+  "demands": [
+  ],
+  "instanceNameFormat": "Securely copy files to remote machine",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "sshEndpoint",
+      "type": "connectedService:ssh",
+      "label": "SSH endpoint",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "SSH endpoint with connection details for the remote machine."
+    },
+    {
+      "name": "sourceFolder",
+      "type": "filePath",
+      "label": "Source Folder",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "The source folder that the copy pattern(s) will be run from.  Empty is the root of the repo.  Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988) if files are not in the repo. Example: $(agent.builddirectory)"
+    },
+    {
+      "name": "contents",
+      "type": "multiLine",
+      "label": "Contents",
+      "defaultValue": "**",
+      "required": true,
+      "helpMarkDown": "File paths to include as part of the copy. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkID=708389)"
+    },
+    {
+      "name": "targetFolder",
+      "type": "string",
+      "label": "Target folder",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Target folder on remote machine where files will be copied to. Example: /home/user/MySite"
+    },
+    {
+      "name": "cleanTargetFolder",
+      "type": "boolean",
+      "label": "Clean target folder",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Delete all existing files in target folder before copy",
+      "groupName": "advanced"
+    },
+    {
+      "name": "overwrite",
+      "type": "boolean",
+      "label": "Overwrite",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Replace existing files in target folder",
+      "groupName": "advanced"
+    },
+    {
+      "name": "flattenFolders",
+      "type": "boolean",
+      "label": "Flatten folders",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Flatten the folder structure and copy all files into specified target folder on the remote machine.",
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "scp.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified.",
+    "SettingUpSshConnection": "Trying to setup SSH connection to %s@%s:%s",
+    "ConnectionFailed": "Failed to connect to remote machine. Verify the SSH endpoint details. Error: %s.",
+    "CleanTargetFolderFailed": "Failed to clean the target folder on the remote machine. %s"
+  }
+}
