@@ -11,7 +11,7 @@
     "Minor": 2,
     "Patch": 0
   },
-  "minimumAgentVersion": "1.101.0",
+  "minimumAgentVersion": "1.83.0",
   "groups": [
     {
       "name": "advanced",
@@ -116,8 +116,16 @@
     "NoCredProviderOnAgent": "ms-resource:loc.messages.NoCredProviderOnAgent",
     "NotARegularFile": "ms-resource:loc.messages.NotARegularFile",
     "UnknownRestoreMode": "ms-resource:loc.messages.UnknownRestoreMode",
+    "CouldNotFindNuGetService": "ms-resource:loc.messages.CouldNotFindNuGetService",
     "NGCommon_IgnoringNuGetExtensionsPath": "ms-resource:loc.messages.NGCommon_IgnoringNuGetExtensionsPath",
     "NGCommon_DetectedNuGetExtensionsPath": "ms-resource:loc.messages.NGCommon_DetectedNuGetExtensionsPath",
-    "NGCommon_UnableToFindTool": "ms-resource:loc.messages.NGCommon_UnableToFindTool"
+    "NGCommon_UnableToFindTool": "ms-resource:loc.messages.NGCommon_UnableToFindTool",
+    "NGCommon_SpsNotFound": "ms-resource:loc.messages.NGCommon_SpsNotFound",
+    "NGCommon_AreaNotFoundInSps": "ms-resource:loc.messages.NGCommon_AreaNotFoundInSps",
+    "NGCommon_NuGetConfigIsPackagesConfig": "ms-resource:loc.messages.NGCommon_NuGetConfigIsPackagesConfig",
+    "NGCommon_NuGetConfigIsInvalid": "ms-resource:loc.messages.NGCommon_NuGetConfigIsInvalid",
+    "NGCommon_RemovingSources": "ms-resource:loc.messages.NGCommon_RemovingSources",
+    "NGCommon_AddingSources": "ms-resource:loc.messages.NGCommon_AddingSources",
+    "NGCommon_NoSourcesFoundInConfig": "ms-resource:loc.messages.NGCommon_NoSourcesFoundInConfig"
   }
 }

@@ -1,3 +1,4 @@
+import Q = require('q');
 import * as locationApi from './LocationApi';
 import * as vstsWebApi from 'vso-node-api/WebApi';
 import * as util from 'util';
@@ -83,6 +84,12 @@ export function getAllAccessMappingUris(connectionData: locationApi.ConnectionDa
     return accessMappings.map(getUriForAccessMapping);
 }
 
+export class GetConnectionDataForAreaError extends Error {
+    constructor(message: string, public code: string) {
+        super(message);
+    } 
+}
+
 export function getConnectionDataForArea(serviceUri: string, areaName: string, areaId: string, accessToken: string): Q.Promise<locationApi.ConnectionData> {
     return getConnectionData(serviceUri, accessToken)
         .then(connectionData => {
@@ -96,7 +103,9 @@ export function getConnectionDataForArea(serviceUri: string, areaName: string, a
                 const rootLocationServiceId = "951917AC-A960-4999-8464-E3F0AA25B381";
                 var sps = findServiceByIdentifier(connectionData, rootLocationServiceId);
                 if (!sps) {
-                    throw new Error("The current service does not support NuGet and does not have SPS");
+                    throw new GetConnectionDataForAreaError(
+                        tl.loc("NGCommon_SpsNotFound", areaName, areaId),
+                        "SpsNotFound");
                 }
 
                 var spsUri = getUriForServiceDefinition(sps);
@@ -107,10 +116,9 @@ export function getConnectionDataForArea(serviceUri: string, areaName: string, a
                         tl.debug("successfully loaded SPS location data");
                         var areaService = findServiceByIdentifier(spsConnectionData, areaId);
                         if (!areaService) {
-                            var error = new Error("Could not locate nuget service in the root location service");
-                            (<any>error).code = "AreaNotFoundInSps";
-                            (<any>error).spsConnectionData = spsConnectionData;
-                            throw error;
+                            throw new GetConnectionDataForAreaError(
+                                tl.loc("NGCommon_AreaNotFoundInSps", areaName, areaId),
+                                "AreaNotFoundInSps");
                         }
 
                         var areaServiceUri = getUriForServiceDefinition(areaService)

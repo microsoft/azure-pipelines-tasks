@@ -60,7 +60,7 @@ export class NuGetToolRunner extends ToolRunner {
     private _settings: NuGetEnvironmentSettings;
 
     constructor(nuGetExePath: string, settings: NuGetEnvironmentSettings) {
-        if (os.platform() === 'win32') {
+        if (os.platform() === 'win32' || !nuGetExePath.trim().toLowerCase().endsWith('.exe')) {
             super(nuGetExePath);
         }
         else {
@@ -99,18 +99,18 @@ export function locateTool(tool: string, userPath?: string, optional?: boolean) 
         return userPath;
     }
 
-    var agentRoot = tl.getVariable("Agent.HomeDirectory");
-    var newAgentLocation = path.join(agentRoot, "externals/nuget", tool);
-    tl.debug("checking " + newAgentLocation);
-    if (tl.exist(newAgentLocation)) {
-        return newAgentLocation;
+    let searchPath = ["externals/nuget", "agent/Worker/Tools/NuGetCredentialProvider", "agent/Worker/Tools"];
+
+    let agentRoot = tl.getVariable("Agent.HomeDirectory");
+    for (let possibleLocation of searchPath) {
+        let fullPath = path.join(agentRoot, possibleLocation, tool);
+        tl.debug("checking " + fullPath);
+        if (tl.exist(fullPath)) {
+            return fullPath;
+        }
     }
 
-    var oldAgentLocation = path.join(agentRoot, "agent/Worker/Tools", tool);
-    tl.debug("checking " + oldAgentLocation);
-    if (tl.exist(oldAgentLocation)) {
-        return oldAgentLocation;
-    }
+    tl.debug("not found");
 
     if (!optional) {
         throw new Error(tl.loc("NGCommon_UnableToFindTool", tool));

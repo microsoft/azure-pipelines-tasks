@@ -8,6 +8,7 @@ import url = require('url');
 import * as auth from "./Authentication"
 import * as ngToolRunner from "./NuGetToolRunner"
 import * as util from 'util';
+import * as os from 'os';
 
 var xmlreader = require('xmlreader');
 
@@ -34,21 +35,6 @@ export class NuGetConfigHelper {
         this._environmentSettings = environmentSettings;
     }
 
-    public setCredentialsNuGetConfigAndSaveTemp(): Q.Promise<string> {
-        return this.getSourcesFromConfig()
-            .then(packageSources => {
-                if (packageSources.length === 0) {
-                    // nothing to do; calling code should use the user's config unmodified.
-                    return this._nugetConfigPath;
-                }
-                else {
-                    this.setSources(packageSources);
-
-                    return this.tempNugetConfigPath;
-                }
-            });
-    }
-
     public ensureTempConfigCreated() {
         // save nuget config file to agent build directory
         tl._writeLine('save nuget.config to temp config file');
@@ -57,7 +43,7 @@ export class NuGetConfigHelper {
         };
 
         if (this._nugetConfigPath) {
-            tl.cp('', this._nugetConfigPath, this.tempNugetConfigPath);
+            tl.cp("-f", this._nugetConfigPath, this.tempNugetConfigPath);
         }
         else {
             // small file, use writeFileSync
@@ -69,11 +55,11 @@ export class NuGetConfigHelper {
         this.ensureTempConfigCreated();
 
         // remove sources
-        tl._writeLine('remove sources in the config file');
+        tl._writeLine(tl.loc("NGCommon_RemovingSources"));
         this.removeSourcesInNugetConfig(packageSources);
 
         // add sources
-        tl._writeLine('add sources in the config file');
+        tl._writeLine(tl.loc("NGCommon_AddingSources"));
         this.addSourcesInNugetConfig(packageSources);
     }
 
@@ -94,17 +80,36 @@ export class NuGetConfigHelper {
                 var sourceKey;
                 var sourceValue;
 
+                // give clearer errors if the user has set an invalid nuget.config
+                if (!configXml.configuration) {
+                    if (configXml.packages) {
+                        throw new Error(tl.loc("NGCommon_NuGetConfigIsPackagesConfig", this._nugetConfigPath, tl.getVariable("Task.DisplayName")));
+                    }
+                    else {
+                        throw new Error(tl.loc("NGCommon_NuGetConfigIsInvalid", this._nugetConfigPath));
+                    }
+                }
+
+                if(!configXml.configuration.packageSources || !configXml.configuration.packageSources.add) {
+                    tl.warning(tl.loc("NGCommon_NoSourcesFoundInConfig", this._nugetConfigPath))
+                    return [];
+                }
+
                 for (var i = 0; i < configXml.configuration.packageSources.add.count(); i++) {
                     sourceKey = configXml.configuration.packageSources.add.at(i).attributes().key;
                     sourceValue = configXml.configuration.packageSources.add.at(i).attributes().value;
+                    if(!sourceKey || !sourceValue) {
+                        continue;
+                    }
+
                     packageSource = {feedName: sourceKey, feedUri: sourceValue};
 
                     // check if need to add credential to feed
-                    tl._writeLine('check credential: ' + sourceValue)
                     if (this.shouldGetCredentialsForFeed(packageSource)) {
                         packageSources.push(packageSource);
                     }
                 }
+
                 return packageSources;
             });
     }
@@ -143,6 +148,11 @@ export class NuGetConfigHelper {
             nugetTool.arg(this._authInfo.accessToken);
             nugetTool.arg('-ConfigFile')
             nugetTool.pathArg(this.tempNugetConfigPath);
+
+            if (os.platform() !== 'win32') {
+                // only Windows supports DPAPI. Older NuGets fail to add credentials at all if DPAPI fails. 
+                nugetTool.arg('-StorePasswordInClearText');
+            }
 
             // short run, use execSync
             nugetTool.execSync();

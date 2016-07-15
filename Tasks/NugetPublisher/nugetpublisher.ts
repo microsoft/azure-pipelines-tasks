@@ -46,7 +46,7 @@ var verbosity = tl.getInput('verbosity');
 var preCredProviderNuGet = tl.getBoolInput('preCredProviderNuGet');
 
 var nuGetFeedType = tl.getInput('nuGetFeedType') || "external";
-// normalize the restore mode for display purposes, and ensure it's a known one
+// make sure the feed type is an expected one
 var normalizedNuGetFeedType = ['internal', 'external'].find(x => nuGetFeedType.toUpperCase() == x.toUpperCase());
 if (!normalizedNuGetFeedType) {
     throw new Error(tl.loc("UnknownFeedType", nuGetFeedType))
@@ -85,41 +85,36 @@ locationHelpers.getNuGetConnectionData(serviceUri, accessToken)
         tl._writeLine(tl.loc('ConnectingAs', buildIdentityDisplayName, buildIdentityAccount));
         return connectionData;
     })
+    .then(locationHelpers.getAllAccessMappingUris)
     .fail(err => {
         if (err.code && err.code == 'AreaNotFoundInSps') {
-            var spsConnectionData: locationApi.ConnectionData = err.spsConnectionData;
-            return <locationApi.ConnectionData>{
-                authorizedUser: spsConnectionData.authorizedUser,
-                locationServiceData: {
-                    defaultAccessMappingMoniker: '',
-                    accessMappings: [],
-                    serviceDefinitions: []
-                }
-            }
+            tl.warning(tl.loc('CouldNotFindNuGetService'))
+            return <string[]>[];
         }
 
         throw err;
     })
-    .then(locationHelpers.getAllAccessMappingUris)
     .then(urlPrefixes => {
         tl.debug("discovered URL prefixes: " + urlPrefixes.join(';'))
         return new auth.NuGetAuthInfo(urlPrefixes, accessToken);
     })
     .then(authInfo => {
-        var environmentSettings = <ngToolRunner.NuGetEnvironmentSettings>{
+        var environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
             authInfo: authInfo,
             credProviderFolder: credProviderDir,
-            extensionsDisabled: !!userNuGetPath
+            extensionsDisabled: !userNuGetPath
         }
 
         var configFilePromise = Q<string>(null);
         var apiKey: string;
         var feedUri: string;
+        var credCleanup = () => { return };
         if (nuGetFeedType == "internal") {
             if (!credProviderDir || (userNuGetPath && preCredProviderNuGet)) {
                 var nuGetConfigHelper = new NuGetConfigHelper(nuGetPathToUse, null, authInfo, environmentSettings);
                 nuGetConfigHelper.setSources([{ feedName: "internalFeed", feedUri: internalFeedUri }]);
                 configFilePromise = Q(nuGetConfigHelper.tempNugetConfigPath);
+                credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath, true);
             }
 
             apiKey = "VSTS";
@@ -132,7 +127,7 @@ locationHelpers.getNuGetConnectionData(serviceUri, accessToken)
         }
 
         return configFilePromise.then(configFile => {
-            var restoreOptions = new PublishOptions(
+            var publishOptions = new PublishOptions(
                 nuGetPathToUse,
                 feedUri,
                 apiKey,
@@ -144,10 +139,10 @@ locationHelpers.getNuGetConnectionData(serviceUri, accessToken)
             var result = Q({});
             filesList.forEach((solutionFile) => {
                 result = result.then(() => {
-                    return restorePackages(solutionFile, restoreOptions);
+                    return publishPackage(solutionFile, publishOptions);
                 })
             })
-            return result;
+            return result.fin(credCleanup);
         })
     })
     .then(() => {
@@ -170,7 +165,7 @@ locationHelpers.getNuGetConnectionData(serviceUri, accessToken)
     })
     .done();
 
-function restorePackages(packageFile: string, options: PublishOptions): Q.Promise<number> {
+function publishPackage(packageFile: string, options: PublishOptions): Q.Promise<number> {
     var nugetTool = ngToolRunner.createNuGetToolRunner(options.nuGetPath, options.environment);
     nugetTool.arg('push')
 
