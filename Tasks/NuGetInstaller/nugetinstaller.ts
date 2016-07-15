@@ -89,22 +89,43 @@ locationHelpers.getNuGetConnectionData(serviceUri, accessToken)
         return connectionData;
     })
     .then(locationHelpers.getAllAccessMappingUris)
+    .fail(err => {
+        if (err.code && err.code == 'AreaNotFoundInSps') {
+            tl.warning(tl.loc('CouldNotFindNuGetService'))
+            return <string[]>[];
+        }
+
+        throw err;
+    })
     .then(urlPrefixes => {
         tl.debug("discovered URL prefixes: " + urlPrefixes.join(';'))
         return new auth.NuGetAuthInfo(urlPrefixes, accessToken);
     })
     .then(authInfo => {
-        var environmentSettings = <ngToolRunner.NuGetEnvironmentSettings>{
+        var environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
             authInfo: authInfo,
             credProviderFolder: credProviderDir,
-            extensionsDisabled: !!userNuGetPath
+            extensionsDisabled: !userNuGetPath
         }
 
         var configFilePromise = Q<string>(nugetConfigPath);
+        var credCleanup = () => { return };
         if (!credProviderDir || (userNuGetPath && preCredProviderNuGet)) {
             if (nugetConfigPath) {
                 var nuGetConfigHelper = new NuGetConfigHelper(nuGetPathToUse, nugetConfigPath, authInfo, environmentSettings);
-                configFilePromise = nuGetConfigHelper.setCredentialsNuGetConfigAndSaveTemp();
+                configFilePromise = nuGetConfigHelper.getSourcesFromConfig()
+                    .then(packageSources => {
+                        if (packageSources.length === 0) {
+                            // nothing to do; calling code should use the user's config unmodified.
+                            return nugetConfigPath;
+                        }
+                        else {
+                            nuGetConfigHelper.setSources(packageSources);
+                            credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath, true);
+                            return nuGetConfigHelper.tempNugetConfigPath;
+                        }
+                    });
+                
             }
             else {
                 if (credProviderDir) {
@@ -132,7 +153,7 @@ locationHelpers.getNuGetConnectionData(serviceUri, accessToken)
                     return restorePackages(solutionFile, restoreOptions);
                 })
             })
-            return result;
+            return result.fin(credCleanup);
         })
     })
     .then(() => {

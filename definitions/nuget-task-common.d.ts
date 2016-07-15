@@ -71,10 +71,15 @@ declare module 'nuget-task-common/LocationApi' {
 
 }
 declare module 'nuget-task-common/LocationHelpers' {
+	import Q = require('q');
 	import * as locationApi from 'nuget-task-common/LocationApi';
 	export function getIdentityDisplayName(identity: locationApi.Identity): string;
 	export function getIdentityAccount(identity: locationApi.Identity): string;
 	export function getAllAccessMappingUris(connectionData: locationApi.ConnectionData): string[];
+	export class GetConnectionDataForAreaError extends Error {
+	    code: string;
+	    constructor(message: string, code: string);
+	}
 	export function getConnectionDataForArea(serviceUri: string, areaName: string, areaId: string, accessToken: string): Q.Promise<locationApi.ConnectionData>;
 	export function getNuGetConnectionData(serviceUri: string, accessToken: string): Q.Promise<locationApi.ConnectionData>;
 
@@ -116,7 +121,6 @@ declare module 'nuget-task-common/NuGetConfigHelper' {
 	    private tempNugetConfigFileName;
 	    tempNugetConfigPath: string;
 	    constructor(nugetPath: string, nugetConfigPath: string, authInfo: auth.NuGetAuthInfo, environmentSettings: ngToolRunner.NuGetEnvironmentSettings);
-	    setCredentialsNuGetConfigAndSaveTemp(): Q.Promise<string>;
 	    ensureTempConfigCreated(): void;
 	    setSources(packageSources: IPackageSource[]): void;
 	    getSourcesFromConfig(): Q.Promise<IPackageSource[]>;
