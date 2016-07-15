@@ -6,6 +6,8 @@ param()
 . $PSScriptRoot\..\..\..\Tasks\SonarQubePostTest\SonarQubeMetrics.ps1
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 
+Register-Mock Write-VstsTaskVerbose
+
 # E2E test - waiting for the SQ analysis to complete and querying for the quality gate status
 
 # Arrange 

@@ -4,20 +4,23 @@ param()
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 . $PSScriptRoot\..\..\..\Tasks\SonarQubePostTest\Common\SonarQubeHelpers\SonarQubeHelper.ps1
 
-
 # Test 1 - other repository provider
-$env:BUILD_REPOSITORY_PROVIDER = "3rdPartyGit"
-$env:Build_SourceBranch = "refs/pull/12/dev"
+Register-Mock GetTaskContextVariable  {"3rdPartyGit"} -- "Build.Repository.Provider"
+Register-Mock GetTaskContextVariable  {"refs/pull/12/dev"} -- "Build.SourceBranch"
 Assert-AreEqual $false (IsPrBuild) "Only builds from TfsGit can be PR builds"
+Unregister-Mock GetTaskContextVariable
 
 # Test 2 - non PR build
-$env:BUILD_REPOSITORY_PROVIDER = "TfsGit"
-$env:Build_SourceBranch = "dev"
+Register-Mock GetTaskContextVariable  {"TfsGit"} -- "Build.Repository.Provider"
+Register-Mock GetTaskContextVariable  {"dev"} -- "Build.SourceBranch"
 Assert-AreEqual $false (IsPrBuild) "Expecting the build to not be a PR build"
+Unregister-Mock GetTaskContextVariable
 
 
 # Test 3 - PR Build
-$env:BUILD_REPOSITORY_PROVIDER = "TfsGit"
-$env:Build_SourceBranch = "refs/pull/12/master"
+Register-Mock GetTaskContextVariable  {"TfsGit"} -- "Build.Repository.Provider"
+Register-Mock GetTaskContextVariable  {"refs/pull/12/master"} -- "Build.SourceBranch"
 Assert-AreEqual $true (IsPrBuild) "Expecting the build to be a PR build"
+Unregister-Mock GetTaskContextVariable
+
 

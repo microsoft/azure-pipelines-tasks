@@ -5,6 +5,8 @@ param()
 . $PSScriptRoot\..\..\..\..\Tasks\SonarQubePostTest\PRCA\Orchestrator.ps1
 . $PSScriptRoot\..\..\..\lib\Initialize-Test.ps1
 
+Register-Mock Write-VstsTaskVerbose
+
 function BuildIssue
 {    
     param ([string]$message, [int]$line, [string]$severity, [string]$relativePath, [string]$rule)

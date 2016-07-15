@@ -12,22 +12,32 @@ function EscapeArg
 
 
 # Set a variable in a property bag that is accessible by all steps
-# To retrieve the variable use $val = Get-Variable $distributedTaskContext "varName"
+# To retrieve the variable use GetTaskContextVariable
+#
+# Remark: the variable is available in the current task via env variables and in
+# subsequent tasks via Set-VstsTaskVariable 
 function SetTaskContextVariable
 {
     param([string][ValidateNotNullOrEmpty()]$varName, 
           [string]$varValue)
         
-    #[Environment]::SetEnvironmentVariable($varName, $varValue)
-    Write-Host "##vso[task.setvariable variable=$varName;]$varValue"
+    [Environment]::SetEnvironmentVariable($varName, $varValue)
+    Set-VstsTaskVariable $varName $varValue
 }
 
 function GetTaskContextVariable()
 {
 	param([string][ValidateNotNullOrEmpty()]$varName)
         
-    #return ([Environment]::GetEnvironmentVariable($varName))
-	return Get-TaskVariable -Context $distributedTaskContext -Name $varName    
+    $value = [Environment]::GetEnvironmentVariable($varName);
+
+    if ([String]::IsNullOrWhiteSpace($value))
+    {
+        $value = Get-VstsTaskVariable -Name $varName 
+    } 
+
+    Write-Verbose "Variable read: $varName = $value"
+	return $value
 }
 
 #
@@ -42,9 +52,10 @@ function IsFilePathSpecified
         return $false
      }
 
+     $sourceDir = GetTaskContextVariable "Build.SourcesDirectory"
      return ![String]::Equals(
                 [System.IO.Path]::GetFullPath($path).TrimEnd([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar),
-                [System.IO.Path]::GetFullPath($env:BUILD_SOURCESDIRECTORY).TrimEnd([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar),
+                [System.IO.Path]::GetFullPath($sourceDir).TrimEnd([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar),
                 [StringComparison]::OrdinalIgnoreCase)
 }
 
@@ -145,17 +156,16 @@ function InvokeGetRestMethod
 {
     param ([Parameter(Mandatory=$true)][string]$query)
                 
-    $sonarQubeHostUrl = GetTaskContextVariable "MSBuild.SonarQube.HostUrl"     
-    $sonarQubeHostUrl  = $sonarQubeHostUrl.TrimEnd("/");
-
+    $sonarQubeHostUrl = GetTaskContextVariable "MSBuild.SonarQube.HostUrl"
     Assert (![System.String]::IsNullOrWhiteSpace($sonarQubeHostUrl)) "Could not retrieve the SonarQube host url"
-
+    $sonarQubeHostUrl  = $sonarQubeHostUrl.TrimEnd("/");
+    
     $request = $sonarQubeHostUrl + $query;
     $authHeader = CreateBasicAuthHeaderFromEndpoint
 
     if (![String]::IsNullOrWhiteSpace($authHeader))
     {
-        $allheaders = @{Authorization = $authHeader}        
+        $allheaders = @{Authorization = $authHeader}
     }
 
     # Fix for HTTPS websites that support only TLS 1.2, as described by https://jira.sonarsource.com/browse/SONARMSBRU-169
@@ -203,10 +213,8 @@ function Assert
 function HasElements
 {
     param ([Array]$arr)
-    
     return ($arr -ne $null) -and ($arr.Count -gt 0)
 }
-
 
 #
 # Returns true if this build was triggered in response to a PR
@@ -214,10 +222,10 @@ function HasElements
 # Remark: this logic is temporary until the platform provides a more robust way of determining PR builds; 
 # Note that PR builds are only supported on TfsGit
 #
-function IsPrBuild
+function IsPRBuild
 {    
-    $sourceBranch = $env:Build_SourceBranch
-    $scProvider = $env:Build_Repository_Provider
+    $sourceBranch = GetTaskContextVariable "Build.SourceBranch"
+    $scProvider = GetTaskContextVariable "Build.Repository.Provider" 
 
     return   $scProvider -and `
              ($scProvider -eq "TfsGit") -and `
@@ -280,7 +288,9 @@ function IsFeatureEnabled
 #
 function ExitOnPRBuild
 {    
-    if ((IsPrBuild) -and !(IsFeatureEnabled "SQPullRequestBot" $true))
+    Write-VstsTaskDebug "Checking if the build was triggered by a PR"
+
+    if ((IsPRBuild) -and !(IsFeatureEnabled "SQPullRequestBot" $true))
     {
         Write-Host "SonarQube analysis is disabled because either this is a pull request build or because the flag SQPullRequestBot is set to false"
         exit

@@ -4,27 +4,29 @@ param()
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 
 # Arrange 
-$distributedTaskContext = 'Some distributed task context'
 
 function VerifyPrRun
 {
-    param([string]$SQPullRequestBotSetting, [bool]$IsPrBuild, [bool]$ExpectedToRun )
+    param([string]$sQPullRequestBotSetting, [bool]$isPrBuild, [bool]$expectedToRun )
 
     # Arrange
-    if ($SQPullRequestBotSetting -ne $null)
+    if ($sQPullRequestBotSetting -ne $null)
     {
-        Register-Mock Get-TaskVariable { $SQPullRequestBotSetting } -- -Context $distributedTaskContext -Name 'SQPullRequestBot'
+        Register-Mock GetTaskContextVariable { $sQPullRequestBotSetting } -- 'SQPullRequestBot'
     }
     
-    Register-Mock IsPrBuild {$IsPrBuild}
+    Register-Mock IsPrBuild {$isPrBuild}
     Register-Mock Write-Host
     Register-Mock InvokePreBuildTask
+    Register-Mock Get-VstsInput {$false} -- -Name "includeFullReport" -AsBool
+    Register-Mock Get-VstsInput {$true} -- -Name "breakBuild" -AsBool
+    Register-Mock Write-VstsTaskDebug
     
-    #Act
-    . $PSScriptRoot\..\..\..\Tasks\SonarQubePreBuild\SonarQubePreBuild.ps1 -connectedServiceName "service" -projectKey "projectKey" -projectName "projectName" -projectVersion "1"
+    #Act -connectedServiceName "service" -projectKey "projectKey" -projectName "projectName" -projectVersion "1"
+    . $PSScriptRoot\..\..\..\Tasks\SonarQubePreBuild\SonarQubePreBuild.ps1
     
     # Assert
-    if ($ExpectedToRun)
+    if ($expectedToRun)
     {
         Assert-WasCalled InvokePreBuildTask
     }
@@ -38,10 +40,12 @@ function VerifyPrRun
     Unregister-Mock IsPrBuild 
     Unregister-Mock Write-Host
     Unregister-Mock InvokePreBuildTask
+    Unregister-Mock Get-VstsInput 
+    Unregister-Mock Write-VstsTaskDebug
     
-    if ($SQPullRequestBotSetting -ne $null)
+    if ($sQPullRequestBotSetting -ne $null)
     {
-        Unregister-Mock Get-TaskVariable
+        Unregister-Mock GetTaskContextVariable
     }
 }
 
@@ -55,11 +59,3 @@ VerifyPrRun -SQPullRequestBotSetting "true" -IsPrBuild $false -ExpectedToRun $tr
 VerifyPrRun -SQPullRequestBotSetting "false" -IsPrBuild $false -ExpectedToRun $true
 VerifyPrRun -SQPullRequestBotSetting "something_else" -IsPrBuild $false -ExpectedToRun $true
 VerifyPrRun -SQPullRequestBotSetting $null -IsPrBuild $false -ExpectedToRun $true
- 
-
-
-
-
-
-
-
