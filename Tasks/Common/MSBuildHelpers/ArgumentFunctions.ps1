@@ -46,6 +46,8 @@ function Get-UserAgentString
           if ($env:AZURE_HTTP_USER_AGENT) {
 		      return $env:AZURE_HTTP_USER_AGENT
 		  }
+		  
+	    return [string]::Empty
 	} finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
