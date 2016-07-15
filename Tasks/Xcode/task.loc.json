@@ -12,7 +12,7 @@
   "version": {
     "Major": 2,
     "Minor": 1,
-    "Patch": 19
+    "Patch": 20
   },
   "demands": [
     "xcode"
