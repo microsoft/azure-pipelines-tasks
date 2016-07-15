@@ -179,7 +179,7 @@ function Set-UserAgent {
     param()
 
     if ($env:AZURE_HTTP_USER_AGENT) {
-        Set-UserAgent_Core -UserAgent $userAgent
+        Set-UserAgent_Core -UserAgent $env:AZURE_HTTP_USER_AGENT
     }
 }
 
