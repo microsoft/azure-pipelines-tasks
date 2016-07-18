@@ -75,6 +75,10 @@
         {
             "module": "sonarqube-common",
             "dest": "node_modules"
+        },
+        {
+            "module": "testlib",
+            "dest": "node_modules"
         }
     ],
     "Gradle": [

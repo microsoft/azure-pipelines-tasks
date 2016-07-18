@@ -278,6 +278,15 @@
       "visibleRule": "sqDbDetailsRequired = true"
     },
     {
+      "name": "sqAnalysisWaitForAnalysis",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.sqAnalysisWaitForAnalysis",
+      "required": true,
+      "defaultValue": "true",
+      "groupName": "CodeAnalysis",
+      "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisWaitForAnalysis"
+    },
+    {
       "name": "pmdAnalysisEnabled",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.pmdAnalysisEnabled",
@@ -303,12 +312,16 @@
   },
   "messages": {
     "sqCommon_CreateTaskReport_MissingField": "ms-resource:loc.messages.sqCommon_CreateTaskReport_MissingField",
+    "sqCommon_WaitingForAnalysis": "ms-resource:loc.messages.sqCommon_WaitingForAnalysis",
+    "sqCommon_NotWaitingForAnalysis": "ms-resource:loc.messages.sqCommon_NotWaitingForAnalysis",
     "codeAnalysis_ToolIsEnabled": "ms-resource:loc.messages.codeAnalysis_ToolIsEnabled",
     "codeAnalysis_ToolFailed": "ms-resource:loc.messages.codeAnalysis_ToolFailed",
     "sqAnalysis_IncrementalMode": "ms-resource:loc.messages.sqAnalysis_IncrementalMode",
     "sqAnalysis_BuildSummaryTitle": "ms-resource:loc.messages.sqAnalysis_BuildSummaryTitle",
     "sqAnalysis_TaskReportInvalid": "ms-resource:loc.messages.sqAnalysis_TaskReportInvalid",
     "sqAnalysis_BuildSummary_LinkText": "ms-resource:loc.messages.sqAnalysis_BuildSummary_LinkText",
+    "sqAnalysis_BuildSummary_CannotAuthenticate": "ms-resource:loc.messages.sqAnalysis_BuildSummary_CannotAuthenticate",
+    "sqAnalysis_AnalysisTimeout": "ms-resource:loc.messages.sqAnalysis_AnalysisTimeout",
     "sqAnalysis_BuildSummaryNotAvailableInPrBuild": "ms-resource:loc.messages.sqAnalysis_BuildSummaryNotAvailableInPrBuild",
     "codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles",
     "codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsOneFile",

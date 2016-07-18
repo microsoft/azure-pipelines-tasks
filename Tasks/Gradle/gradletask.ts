@@ -5,7 +5,7 @@ import fs = require('fs');
 import path = require('path');
 
 // Lowercased file names are to lessen the likelihood of xplat issues
-import sqCommon = require('sonarqube-common/sonarqube-common');
+import sqCommon = require('./sonarqube-common/sonarqube-common');
 import sqGradle = require('./CodeAnalysis/gradlesonar');
 
 import {CodeAnalysisOrchestrator} from './CodeAnalysis/Common/CodeAnalysisOrchestrator';
@@ -94,29 +94,34 @@ if (isSonarQubeEnabled) {
 
 gb = codeAnalysisOrchestrator.configureBuild(gb);
 
+var gradleResult;
 gb.exec()
     .then(function (code) {
+        gradleResult = code;
+
         publishTestResults(publishJUnitResults, testResultsFiles);
         publishCodeCoverage(isCodeCoverageOpted);
         processCodeAnalysisResults();
-
-        tl.exit(code);
+    })
+    .then(() => {
+        return processCodeAnalysisResults();
+    })
+    .then(() => {
+        tl.exit(gradleResult);
     })
     .fail(function (err) {
         publishTestResults(publishJUnitResults, testResultsFiles);
-        console.error(err.message);
+        console.error(err);
         tl.debug('taskRunner fail');
         tl.exit(1);
-    })
+    });
 
-function processCodeAnalysisResults() {
+function processCodeAnalysisResults(): Q.Promise<void> {
 
     tl.debug('Processing code analysis results');
-    codeAnalysisOrchestrator.publishCodeAnalysisResults()
+    codeAnalysisOrchestrator.publishCodeAnalysisResults();
 
-    if (isSonarQubeEnabled) {
-        sqGradle.uploadSonarQubeBuildSummary();
-    }
+    return sqGradle.uploadSonarQubeBuildSummaryIfEnabled();
 }
 
 /* Functions for Publish Test Results, Code Coverage */
