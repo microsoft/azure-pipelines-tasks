@@ -136,9 +136,8 @@ function Get-MsDeployCmdArgs
         $msDeployCmdArgs += ( " " + $AdditionalArguments)
     }
 	
-	$userAgent = Get-UserAgentString
-	if (!([string]::IsNullOrEmpty($userAgent))) {
-	    $msDeployCmdArgs += [String]::Format(' -userAgent:"{0}"', $userAgent)
+	if ($env:AZURE_HTTP_USER_AGENT) {
+	    $msDeployCmdArgs += [String]::Format(' -userAgent:"{0}"', $env:AZURE_HTTP_USER_AGENT)
 	}
 
     Write-Verbose "Constructed msdeploy command arguments to deploy to azureRM WebApp:'$webAppNameForMSDeployCmd' `nfrom source Wep App zip package:'$packageFile'."
@@ -192,15 +191,6 @@ function Run-MsDeployCommand
     Write-Host (Get-LocalizedString -Key "Running msdeploy command: `n`t{0}" -ArgumentList $msDeployCmdForLogs)
     Run-Command -command $msDeployCmd
     Write-Host (Get-LocalizedString -Key "msdeploy command ran successfully.")
-}
-
-function Get-UserAgentString
-{
-    if ($env:AZURE_HTTP_USER_AGENT) {
-        return $env:AZURE_HTTP_USER_AGENT
-	}
-	
-	return [string]::Empty
 }
 
 function Update-DeploymentStatus

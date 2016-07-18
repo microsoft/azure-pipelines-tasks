@@ -178,8 +178,9 @@ function Set-UserAgent {
     [CmdletBinding()]
     param()
 
-    if ($env:AZURE_HTTP_USER_AGENT) {
-        Set-UserAgent_Core -UserAgent $env:AZURE_HTTP_USER_AGENT
+	$userAgent = Get-VstsTaskVariable -Name AZURE_HTTP_USER_AGENT
+    if ($userAgent) {
+        Set-UserAgent_Core -UserAgent $userAgent
     }
 }
 

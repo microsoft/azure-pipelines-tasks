@@ -136,7 +136,7 @@ function Get-MsDeployCmdArgs
         $msDeployCmdArgs += ( " " + $AdditionalArguments)
     }
 	
-	$userAgent = Get-UserAgentString
+	$userAgent = Get-VstsTaskVariable -Name AZURE_HTTP_USER_AGENT
 	if (!([string]::IsNullOrEmpty($userAgent))) {
 	    $msDeployCmdArgs += [String]::Format(' -userAgent:"{0}"', $userAgent)
 	}
@@ -192,15 +192,6 @@ function Run-MsDeployCommand
     Write-Host (Get-VstsLocString -Key Runningmsdeploycommand0 -ArgumentList $msDeployCmdForLogs)
     Run-Command -command $msDeployCmd
     Write-Host (Get-VstsLocString -Key msdeploycommandransuccessfully )
-}
-
-function Get-UserAgentString
-{
-    if ($env:AZURE_HTTP_USER_AGENT) {
-        return $env:AZURE_HTTP_USER_AGENT
-	}
-	
-	return [string]::Empty
 }
 
 function Update-DeploymentStatus
