@@ -8,7 +8,7 @@
 #
 function GetDashboardUriSectionContent
 {
-     Write-VstsTaskVerbose "Formatting the dashboard uri report section"
+     Write-Verbose "Formatting the dashboard uri report section"
     
      $dashboardUri = GetTaskContextVariable "MSBuild.SonarQube.ProjectUri"
      Assert (![String]::IsNullOrEmpty($dashboardUri)) "Could not find the dashboard uri"

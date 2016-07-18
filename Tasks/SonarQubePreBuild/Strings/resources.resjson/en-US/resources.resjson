@@ -28,10 +28,5 @@
   "loc.input.label.includeFullReport": "Include full analysis report in the build summary (SQ 5.3+)",
   "loc.input.help.includeFullReport": "This option will delay the build until the SonarQube analysis is completed.",
   "loc.input.label.breakBuild": "Fail the build on quality gate failure (SQ 5.3+)",
-  "loc.input.help.breakBuild": "This option is only available when using a SonarQube server 5.3 or above. It will introduce delays as the build must wait for SonarQube to complete the analysis. [More information](https://go.microsoft.com/fwlink/?LinkId=722407)",
-  "loc.messages.Error_Endpoint": "Please setup a generic endpoint and specify the SonarQube Url as the Server Url",
-  "loc.messages.Error_Config": "Could not find the specified configuration file: {0}",
-  "loc.messages.Error_Pr_Config": "sonar.analysis.mode is already set",
-  "loc.messages.Error_Endpoint_Name": "A Connected Service with name '{0}' could not be found.  Ensure that this Connected Service was successfully provisioned using the services tab in the Admin UI.",
-  "loc.messages.Error_Endpoint_Auth": "The authorization scheme $authScheme is not supported for a SonarQube server."
+  "loc.input.help.breakBuild": "This option is only available when using a SonarQube server 5.3 or above. It will introduce delays as the build must wait for SonarQube to complete the analysis. [More information](https://go.microsoft.com/fwlink/?LinkId=722407)"
 }

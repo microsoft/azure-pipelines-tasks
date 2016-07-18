@@ -1,6 +1,6 @@
-Import-VstsLocStrings "$PSScriptRoot\Task.json"
-
 Write-Verbose "Starting SonarQube PostBuild Step"
+
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 . $PSScriptRoot/Common/SonarQubeHelpers/SonarQubeHelper.ps1
 
