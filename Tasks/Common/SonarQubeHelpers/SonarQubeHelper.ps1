@@ -14,8 +14,8 @@ function EscapeArg
 # Set a variable in a property bag that is accessible by all steps
 # To retrieve the variable use GetTaskContextVariable
 #
-# Remark: the variable is available in the current task via env variables and in
-# subsequent tasks via Set-VstsTaskVariable 
+# Remark: The variable is available in the current task via env variables and in
+# subsequent tasks via Get-VstsTaskVariable 
 function SetTaskContextVariable
 {
     param([string][ValidateNotNullOrEmpty()]$varName, 
