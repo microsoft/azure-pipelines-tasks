@@ -25,30 +25,13 @@ function Format-MSBuildArguments {
             $MSBuildArguments = "$MSBuildArguments /m"
         }
         
-        $userAgent = Get-UserAgentString
+        $userAgent = Get-VstsTaskVariable -Name AZURE_HTTP_USER_AGENT
         if ($userAgent) {
             $MSBuildArguments = "$MSBuildArguments /p:_MSDeployUserAgent=`"$userAgent`""
         }
 
         $MSBuildArguments
     } finally {
-        Trace-VstsLeavingInvocation $MyInvocation
-    }
-}
-
-function Get-UserAgentString
-{
-    [CmdletBinding()]
-	param()
-
-	Trace-VstsEnteringInvocation $MyInvocation
-    try {
-          if ($env:AZURE_HTTP_USER_AGENT) {
-		      return $env:AZURE_HTTP_USER_AGENT
-		  }
-		  
-	    return [string]::Empty
-	} finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }
