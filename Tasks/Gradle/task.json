@@ -270,6 +270,15 @@
             "visibleRule": "sqDbDetailsRequired = true"
         },
         {
+            "name": "sqAnalysisWaitForAnalysis",
+            "type": "boolean",
+            "label": "Wait for SonarQube analysis and add quality gate details",
+            "required": true,
+            "defaultValue": "true",
+            "groupName": "CodeAnalysis",
+            "helpMarkDown": "Wait for the SonarQube server to finish analysing the build, then add quality gate details to the SonarQube build summary."
+        },
+        {
             "name": "pmdAnalysisEnabled",
             "type": "boolean",
             "label": "Run PMD Analysis",
@@ -296,6 +305,8 @@
     },
     "messages": {
         "sqCommon_CreateTaskReport_MissingField": "Failed to create TaskReport object. Missing field: {0}",
+        "sqCommon_WaitingForAnalysis": "Waiting for the SonarQube server to analyse the build.",
+        "sqCommon_NotWaitingForAnalysis": "Build not configured to wait for the SonarQube analysis. Detailed quality gate status will not be available.",
         "codeAnalysis_ToolIsEnabled": "%s analysis is enabled.",
         "codeAnalysis_ToolFailed": "%s analysis failed.",
         "sqAnalysis_IncrementalMode": "Detected a PR build - running the SonarQube analysis in incremental mode",
@@ -303,6 +314,8 @@
         "sqAnalysis_BuildSummaryNotAvailableInPrBuild": "Detailed SonarQube reports are not available for pull request builds.",
         "sqAnalysis_TaskReportInvalid": "Invalid or missing task report. Check SonarQube finished successfully.",
         "sqAnalysis_BuildSummary_LinkText": "Detailed SonarQube report",
+        "sqAnalysis_BuildSummary_CannotAuthenticate": "Cannot authenticate to the SonarQube server. Check the saved endpoint details and the status of the server.",
+        "sqAnalysis_AnalysisTimeout": "The analysis did not complete in the allotted time of {0} seconds.",
         "codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "%s found %d violations in %d files.",
         "codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "%s found %d violations in 1 file.",
         "codeAnalysisBuildSummaryLine_OneViolationOneFile": "%s found 1 violation in 1 file.",
