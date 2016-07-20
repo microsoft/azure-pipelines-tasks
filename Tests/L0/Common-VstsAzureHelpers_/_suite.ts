@@ -97,7 +97,7 @@ describe('Common-VstsAzureHelpers_ Suite', function () {
         it('(Set-CurrentAzureSubscription) passes values', (done) => {
             psr.run(path.join(__dirname, 'Set-CurrentAzureSubscription.PassesValues.ps1'), done);
         })
-        it('(Set-UserAgent) passes values', (done) => {
+		it('(Set-UserAgent) passes values', (done) => {
             psr.run(path.join(__dirname, 'Set-UserAgent.PassesValues.ps1'), done);
         })
         it('Overriddes global debug preference', (done) => {
