@@ -24,6 +24,11 @@ function Format-MSBuildArguments {
         if ($MaximumCpuCount) {
             $MSBuildArguments = "$MSBuildArguments /m"
         }
+        
+        $userAgent = Get-VstsTaskVariable -Name AZURE_HTTP_USER_AGENT
+        if ($userAgent) {
+            $MSBuildArguments = "$MSBuildArguments /p:_MSDeployUserAgent=`"$userAgent`""
+        }
 
         $MSBuildArguments
     } finally {

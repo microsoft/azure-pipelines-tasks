@@ -46,6 +46,9 @@ describe('Common-MSBuildHelpers Suite', function () {
         it('(Format-MSBuildArguments) adds VS version property', (done) => {
             psr.run(path.join(__dirname, 'Format-MSBuildArguments.AddsVSVersionProperty.ps1'), done);
         })
+        it('(Format-MSBuildArguments) adds MS deploy user agent property', (done) => {
+            psr.run(path.join(__dirname, 'Format-MSBuildArguments.AddsMSDeployUserAgentProperty.ps1'), done);
+        })
         it('(Get-SolutionFiles) resolves wildcards', (done) => {
             psr.run(path.join(__dirname, 'Get-SolutionFiles.ResolvesWildcards.ps1'), done);
         })
