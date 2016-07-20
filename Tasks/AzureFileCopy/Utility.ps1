@@ -187,6 +187,62 @@ function Get-StorageKey
     return $storageKey
 }
 
+function Get-blobStorageEndpoint
+{
+    param([string][Parameter(Mandatory=$true)]$storageAccountName,
+          [string][Parameter(Mandatory=$true)]$connectionType)
+
+    $storageAccountName = $storageAccountName.Trim()
+    if($connectionType -eq 'Certificate' -or $connectionType -eq 'UserNamePassword')
+    {
+        try
+        {
+            # getting storage key from RDFE
+            $blobStorageEndpoint = Get-AzureBlobStorageEndpointFromRDFE -storageAccountName $storageAccountName
+        }
+        catch [Hyak.Common.CloudException]
+        {
+            $exceptionMessage = $_.Exception.Message.ToString()
+            Write-Verbose "[Azure Call](RDFE) ExceptionMessage: $exceptionMessage"
+
+            if($connectionType -eq 'Certificate')
+            {
+                Write-TaskSpecificTelemetry "PREREQ_ClassicStorageAccountNotFound"
+                Throw (Get-LocalizedString -Key "Storage account: {0} not found. Selected Connection 'Certificate' supports storage account of Azure Classic type only." -ArgumentList $storageAccountName)
+            }
+            # Since authentication is UserNamePassword we will check whether storage is non-classic
+            # Bug: We are validating azureps version to be atleast 0.9.0 though it is not required if user working on classic resources
+            else
+            {
+                try
+                {
+                    # checking azure powershell version to make calls to ARM endpoint
+                    Validate-AzurePowershellVersion
+
+                    # getting storage account key from ARM endpoint
+                    $blobStorageEndpoint = Get-AzureBlobStorageEndpointFromARM -storageAccountName $storageAccountName
+                }
+                catch
+                {
+                    #since authentication was UserNamePassword so we cant suggest user whether storage should be classic or non-classic
+                    Write-TaskSpecificTelemetry "PREREQ_StorageAccountNotFound"
+                    Throw (Get-LocalizedString -Key "Storage account: {0} not found. Please specify existing storage account" -ArgumentList $storageAccountName)
+                }
+            }
+        }
+    }
+    else
+    {
+        # checking azure powershell version to make calls to ARM endpoint
+        Validate-AzurePowershellVersion
+
+        # getting storage account key from ARM endpoint
+        $blobStorageEndpoint = Get-AzureBlobStorageEndpointFromARM -storageAccountName $storageAccountName
+    }
+
+    return $blobStorageEndpoint
+}
+
 function ThrowError
 {
     param([string]$errorMessage)
@@ -202,6 +258,7 @@ function Upload-FilesToAzureContainer
           [string][Parameter(Mandatory=$true)]$storageAccountName,
           [string][Parameter(Mandatory=$true)]$containerName,
           [string]$blobPrefix,
+		  [string]$blobStorageEndpoint,
           [string][Parameter(Mandatory=$true)]$storageKey,
           [string][Parameter(Mandatory=$true)]$azCopyLocation,
           [string]$additionalArguments,
@@ -213,10 +270,9 @@ function Upload-FilesToAzureContainer
     {
         Write-Output (Get-LocalizedString -Key "Uploading files from source path: '{0}' to storage account: '{1}' in container: '{2}' with blobprefix: '{3}'" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
         
-        $storageAccount = Get-AzureStorageAccount -StorageAccountName $storageAccountName
-        if( $storageAccount ){
-            $stoargeAccountEnpoints = $storageAccount.Endpoints
-            $blobStorageURI = $stoargeAccountEnpoints[0]+$containerName+"/"+$blobPrefix
+		if([string]::IsNullOrWhiteSpace($blobStorageEndpoint))
+        {
+            $blobStorageURI = $blobStorageEndpoint+$containerName+"/"+$blobPrefix
         }
 		
         if([string]::IsNullOrWhiteSpace($additionalArguments))
@@ -899,6 +955,7 @@ function Copy-FilesSequentiallyToAzureVMs
     param([string][Parameter(Mandatory=$true)]$storageAccountName,
           [string][Parameter(Mandatory=$true)]$containerName,
           [string][Parameter(Mandatory=$true)]$containerSasToken,
+		  [string]$blobStorageEndpoint,
           [string][Parameter(Mandatory=$true)]$targetPath,
           [string][Parameter(Mandatory=$true)]$azCopyLocation,
           [object][Parameter(Mandatory=$true)]$azureVMResourcesProperties,
@@ -920,7 +977,7 @@ function Copy-FilesSequentiallyToAzureVMs
         Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $resourceName)
 
         $copyResponse = Invoke-Command -ScriptBlock $AzureFileCopyJob -ArgumentList `
-                            $resourceFQDN, $storageAccountName, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $azureVMsCredentials, `
+                            $resourceFQDN, $storageAccountName, $containerName, $containerSasToken, $blobStorageEndpoint, $azCopyLocation, $targetPath, $azureVMsCredentials, `
                             $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $communicationProtocol, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments
 
         $status = $copyResponse.Status
@@ -950,6 +1007,7 @@ function Copy-FilesParallellyToAzureVMs
     param([string][Parameter(Mandatory=$true)]$storageAccountName,
           [string][Parameter(Mandatory=$true)]$containerName,
           [string][Parameter(Mandatory=$true)]$containerSasToken,
+		  [string]$blobStorageEndpoint,
           [string][Parameter(Mandatory=$true)]$targetPath,
           [string][Parameter(Mandatory=$true)]$azCopyLocation,
           [object][Parameter(Mandatory=$true)]$azureVMResourcesProperties,
@@ -972,7 +1030,7 @@ function Copy-FilesParallellyToAzureVMs
         Write-Output (Get-LocalizedString -Key "Copy started for machine: '{0}'" -ArgumentList $resourceName)
 
         $job = Start-Job -ScriptBlock $AzureFileCopyJob -ArgumentList `
-                   $resourceFQDN, $storageAccountName, $containerName, $containerSasToken, $azCopyLocation, $targetPath, $azureVmsCredentials, `
+                   $resourceFQDN, $storageAccountName, $containerName, $containerSasToken, $blobStorageEndpoint, $azCopyLocation, $targetPath, $azureVmsCredentials, `
                    $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $communicationProtocol, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments
 
         $Jobs.Add($job.Id, $resourceProperties)
@@ -1029,6 +1087,7 @@ function Copy-FilesToAzureVMsFromStorageContainer
     param([string][Parameter(Mandatory=$true)]$storageAccountName,
           [string][Parameter(Mandatory=$true)]$containerName,
           [string][Parameter(Mandatory=$true)]$containerSasToken,
+		  [string]$blobStorageEndpoint,
           [string][Parameter(Mandatory=$true)]$targetPath,
           [string][Parameter(Mandatory=$true)]$azCopyLocation,
           [string][Parameter(Mandatory=$true)]$resourceGroupName,
@@ -1047,7 +1106,7 @@ function Copy-FilesToAzureVMsFromStorageContainer
     {
 
         Copy-FilesSequentiallyToAzureVMs `
-                -storageAccountName $storageAccountName -containerName $containerName -containerSasToken $containerSasToken -targetPath $targetPath -azCopyLocation $azCopyLocation `
+                -storageAccountName $storageAccountName -containerName $containerName -containerSasToken $containerSasToken -blobStorageEndpoint $blobStorageEndpoint -targetPath $targetPath -azCopyLocation $azCopyLocation `
                 -azureVMResourcesProperties $azureVMResourcesProperties -azureVMsCredentials $azureVMsCredentials `
                 -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $communicationProtocol -skipCACheckOption $skipCACheckOption `
                 -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments -connectionType $connectionType
@@ -1056,7 +1115,7 @@ function Copy-FilesToAzureVMsFromStorageContainer
     else
     {
         Copy-FilesParallellyToAzureVMs `
-                -storageAccountName $storageAccountName -containerName $containerName -containerSasToken $containerSasToken -targetPath $targetPath -azCopyLocation $azCopyLocation `
+                -storageAccountName $storageAccountName -containerName $containerName -containerSasToken $containerSasToken -blobStorageEndpoint $blobStorageEndpoint -targetPath $targetPath -azCopyLocation $azCopyLocation `
                 -azureVMResourcesProperties $azureVMResourcesProperties -azureVMsCredentials $azureVMsCredentials `
                 -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $communicationProtocol -skipCACheckOption $skipCACheckOption `
                 -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments -connectionType $connectionType
