@@ -111,6 +111,7 @@ try
         Create-AzureContainer -containerName $containerName -storageContext $storageContext
     }
 	
+	# Geting Azure Blob Storage Endpoint
 	$blobStorageEndpoint = Get-blobStorageEndpoint -storageAccountName $storageAccount -connectionType $connectionType
 }
 catch
