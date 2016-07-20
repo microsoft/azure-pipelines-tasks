@@ -4,6 +4,7 @@ param (
     [string]$storageAccount,
     [string]$containerName,
     [string]$sasToken,
+	[string]$blobStorageEndpoint,
     [string]$azCopyLocation,
     [string]$targetPath,
     [object]$credential,
@@ -62,11 +63,9 @@ param (
 
     Write-Verbose "Initiating copy on $fqdn "
 
-    $storageAccountInfo = Get-AzureStorageAccount -StorageAccountName $storageAccount
-    if( $storageAccountInfo )
+	if(-not [string]::IsNullOrWhiteSpace($blobStorageEndpoint))
     {
-        $stoargeAccountEnpoints = $storageAccountInfo.Endpoints
-        $blobStorageURI = $stoargeAccountEnpoints[0]+$containerName+"/"+$blobPrefix
+        $blobStorageURI = $blobStorageEndpoint+$containerName+"/"+$blobPrefix
     }
 	
     [String]$copyToAzureMachinesBlockString = [string]::Empty
