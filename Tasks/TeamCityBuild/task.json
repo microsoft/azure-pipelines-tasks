@@ -23,7 +23,7 @@
     "version": {
         "Major": "0",
         "Minor": "2",
-        "Patch": "3"
+        "Patch": "5"
     },
     "minimumAgentVersion": "1.95.0",
     "instanceNameFormat": "Trigger TeamCityBuild $(buildType)",
@@ -55,7 +55,7 @@
             "name": "workingFolder",
             "type": "filePath",
             "label": "Working folder",
-            "defaultValue": "",
+            "defaultValue": "$(build.sourcesDirectory)",
             "required": false,
             "groupName": "advanced"
         },
@@ -63,7 +63,7 @@
             "name": "customRunnerPath",
             "type": "filePath",
             "label": "customRunnerPath",
-            "defaultValue": "",
+            "defaultValue": "C:\\Python27\\python.exe",
             "required": false,
             "groupName": "advanced"
         }
