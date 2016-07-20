@@ -204,38 +204,12 @@ function Get-blobStorageEndpoint
         {
             $exceptionMessage = $_.Exception.Message.ToString()
             Write-Verbose "[Azure Call](RDFE) ExceptionMessage: $exceptionMessage"
-
-            if($connectionType -eq 'Certificate')
-            {
-                Write-TaskSpecificTelemetry "PREREQ_ClassicStorageAccountNotFound"
-                Throw (Get-LocalizedString -Key "Storage account: {0} not found. Selected Connection 'Certificate' supports storage account of Azure Classic type only." -ArgumentList $storageAccountName)
-            }
-            # Since authentication is UserNamePassword we will check whether storage is non-classic
-            # Bug: We are validating azureps version to be atleast 0.9.0 though it is not required if user working on classic resources
-            else
-            {
-                try
-                {
-                    # checking azure powershell version to make calls to ARM endpoint
-                    Validate-AzurePowershellVersion
-
-                    # getting storage account key from ARM endpoint
-                    $blobStorageEndpoint = Get-AzureBlobStorageEndpointFromARM -storageAccountName $storageAccountName
-                }
-                catch
-                {
-                    #since authentication was UserNamePassword so we cant suggest user whether storage should be classic or non-classic
-                    Write-TaskSpecificTelemetry "PREREQ_StorageAccountNotFound"
-                    Throw (Get-LocalizedString -Key "Storage account: {0} not found. Please specify existing storage account" -ArgumentList $storageAccountName)
-                }
-            }
+			Write-TaskSpecificTelemetry "PREREQ_StorageAccountNotFound"
+            Throw (Get-LocalizedString -Key "Storage account: {0} not found. Please specify existing storage account" -ArgumentList $storageAccountName)
         }
     }
     else
     {
-        # checking azure powershell version to make calls to ARM endpoint
-        Validate-AzurePowershellVersion
-
         # getting storage account key from ARM endpoint
         $blobStorageEndpoint = Get-AzureBlobStorageEndpointFromARM -storageAccountName $storageAccountName
     }
@@ -270,7 +244,7 @@ function Upload-FilesToAzureContainer
     {
         Write-Output (Get-LocalizedString -Key "Uploading files from source path: '{0}' to storage account: '{1}' in container: '{2}' with blobprefix: '{3}'" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
         
-		if([string]::IsNullOrWhiteSpace($blobStorageEndpoint))
+		if(-not [string]::IsNullOrWhiteSpace($blobStorageEndpoint))
         {
             $blobStorageURI = $blobStorageEndpoint+$containerName+"/"+$blobPrefix
         }
