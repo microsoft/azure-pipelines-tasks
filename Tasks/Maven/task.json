@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 54
+        "Patch": 56
     },
     "minimumAgentVersion": "1.89.0",
     "instanceNameFormat": "Maven $(mavenPOMFile)",
@@ -278,20 +278,20 @@
             "visibleRule": "sqDbDetailsRequired = true"
         },
         {
-          "name": "pmdAnalysisEnabled",
-          "type": "boolean",
-          "label": "Run PMD Analysis",
-          "required": false,
-          "defaultValue": "false",
-          "groupName": "CodeAnalysis",
-          "helpMarkDown": "Use the PMD Java static analysis tool to look for bugs in the code."
+            "name": "pmdAnalysisEnabled",
+            "type": "boolean",
+            "label": "Run PMD Analysis",
+            "required": false,
+            "defaultValue": "false",
+            "groupName": "CodeAnalysis",
+            "helpMarkDown": "Use the PMD Java static analysis tool to look for bugs in the code."
         }
     ],
     "execution": {
         "Node": {
             "target": "maventask.js",
             "argumentFormat": ""
-         },
+        },
         "PowerShell": {
             "target": "$(currentDirectory)\\maven.ps1",
             "argumentFormat": "",

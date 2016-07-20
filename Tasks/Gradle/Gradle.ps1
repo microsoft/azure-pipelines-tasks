@@ -13,7 +13,8 @@ param(
     [string]$jdkVersion,      # JDK version
     [string]$jdkArchitecture,  # JDK arch
     [string]$jdkUserInputPath,
-    [string]$sqAnalysisEnabled
+    [string]$sqAnalysisEnabled,
+    [string]$pmdAnalysisEnabled
 )
 
 Function CmdletHasMember($memberName) {
@@ -39,6 +40,13 @@ if($isCoverageEnabled)
 if($sqAnalysisEnabled)
 {
     Write-Warning "SonarQube analysis is not yet supported on Windows and hosted agents."
+    Write-Warning "Please use a dedicated Unix agent to enable this feature: https://github.com/Microsoft/vsts-agent"
+}
+
+# PMD analysis is not supported on Powershell, output a warning message
+if($pmdAnalysisEnabled)
+{
+    Write-Warning "PMD code analysis is not yet supported on Windows and hosted agents."
     Write-Warning "Please use a dedicated Unix agent to enable this feature: https://github.com/Microsoft/vsts-agent"
 }
 
@@ -105,14 +113,22 @@ if ($jdkPath)
 
 $buildRootPath = $cwd
 $wrapperDirectory = Split-Path $wrapperScript -Parent
-$reportDirectoryName = "ReportDirectory_84B7D86C-F08D-4B65-8D37-742D8B02D27B"
+$reportDirectoryName = "ReportDirectory84B7D86C"
 $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
 
-if(Test-Path $reportDirectory)
-{
-   # delete any code coverage data 
-   rm -r $reportDirectory -force | Out-Null
+try 
+{    
+    if(Test-Path $reportDirectory)
+    {
+    # delete any code coverage data 
+    rm -r $reportDirectory -force | Out-Null
+    }
 }
+catch
+{
+    Write-Verbose "Failed to delete report directory"
+}
+
 
 # check if project is multi module gradle build or not
 $subprojects = Invoke-BatchScript -Path $wrapperScript -Arguments 'properties' -WorkingFolder $buildRootPath | Select-String '^subprojects: (.*)'|ForEach-Object {$_.Matches[0].Groups[1].Value}

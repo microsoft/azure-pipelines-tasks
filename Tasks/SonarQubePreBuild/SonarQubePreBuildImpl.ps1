@@ -4,24 +4,24 @@
 function InvokePreBuildTask
 {
     $serviceEndpoint = GetEndpointData $connectedServiceName
-    Write-Verbose "Server Url: $($serviceEndpoint.Url)"
+    Write-VstsTaskVerbose "Server Url: $($serviceEndpoint.Url)"
 
     $currentDir = (Get-Item -Path ".\" -Verbose).FullName
     $bootstrapperDir = [System.IO.Path]::Combine($currentDir, "SonarQube.Bootstrapper") 
     $bootstrapperPath = [System.IO.Path]::Combine($bootstrapperDir, "MSBuild.SonarQube.Runner.exe")
     $dashboardUrl = GetDashboardUrl $serviceEndpoint.Url $projectKey
-    Write-Verbose "Dashboard Url: $dashboardUrl"
+    Write-VstsTaskVerbose "Dashboard Url: $dashboardUrl"
     
     ResetTaskContext
     StoreParametersInTaskContext $serviceEndpoint.Url $bootstrapperPath $dashboardUrl $includeFullReport $breakBuild
-    StoreSensitiveParametersInTaskContext $serviceEndpoint.Authorization.Parameters.UserName $serviceEndpoint.Authorization.Parameters.Password $dbUsername $dbPassword
+    StoreSensitiveParametersInTaskContext $serviceEndpoint.Auth.Parameters.UserName $serviceEndpoint.Auth.Parameters.Password $dbUsername $dbPassword
 
     $cmdLineArgs = UpdateArgsForPullRequestAnalysis $cmdLineArgs $serviceEndpoint
-    Write-Verbose -Verbose $cmdLineArgs
+    Write-VstsTaskVerbose -Verbose $cmdLineArgs
 
-    $arguments = CreateCommandLineArgs $projectKey $projectName $projectVersion $serviceEndpoint.Url $serviceEndpoint.Authorization.Parameters.UserName $serviceEndpoint.Authorization.Parameters.Password $dbUrl $dbUsername $dbPassword $cmdLineArgs $configFile
+    $arguments = CreateCommandLineArgs $projectKey $projectName $projectVersion $serviceEndpoint.Url $serviceEndpoint.Auth.Parameters.UserName $serviceEndpoint.Auth.Parameters.Password $dbUrl $dbUsername $dbPassword $cmdLineArgs $configFile
 
-    Invoke-BatchScript $bootstrapperPath -Arguments $arguments
+    Invoke-VstsTool -FileName $bootstrapperPath -Arguments $arguments -RequireExitCodeZero
 }
 
 #
@@ -96,7 +96,7 @@ function CreateCommandLineArgs
 
     if ([String]::IsNullOrWhiteSpace($serverUrl))
     {   
-		throw "Please setup a generic endpoint and specify the SonarQube Url as the Server Url" 
+		throw (Get-VstsLocString -Key "Error_Endpoint") 
 	}
 
 	[void]$sb.Append(" /d:sonar.host.url=" + (EscapeArg($serverUrl))) 
@@ -135,7 +135,7 @@ function CreateCommandLineArgs
     {
         if (![System.IO.File]::Exists($configFile))
         {
-            throw "Could not find the specified configuration file: $configFile" 
+            throw (Get-VstsLocString -Key "Error_Config" -ArgumentList $configFile) 
         }
 
         [void]$sb.Append(" /s:" + (EscapeArg($configFile))) 
@@ -146,14 +146,14 @@ function CreateCommandLineArgs
 
 function UpdateArgsForPullRequestAnalysis($cmdLineArgs)
 {       
-    if (IsPrBuild)
+    if (IsPRBuild)
     {
         if ($cmdLineArgs -and $cmdLineArgs.ToString().Contains("sonar.analysis.mode"))
         {
-            throw "Error: sonar.analysis.mode seems to be set already. Please check the properties of SonarQube build tasks and try again."
+             throw (Get-VstsLocString -Key "Error_Pr_Config")
         }
 
-        Write-Verbose "Detected a PR build - running the SonarQube analysis in issues / incremental mode"
+        Write-VstsTaskVerbose "Detected a PR build - running the SonarQube analysis in issues / incremental mode"
 
         # For SQ version 5.2+ use issues mode, otherwise use incremental mode. Incremental mode is not supported in SQ 5.2+.         
         if ((CompareSonarQubeVersionWith52) -ge 0)
@@ -175,17 +175,17 @@ function GetEndpointData
 {
 	param([string][ValidateNotNullOrEmpty()]$connectedServiceName)
 
-	$serviceEndpoint = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
+	$serviceEndpoint = Get-VstsEndpoint -Name $connectedServiceName
 
 	if (!$serviceEndpoint)
 	{
-		throw "A Connected Service with name '$ConnectedServiceName' could not be found.  Ensure that this Connected Service was successfully provisioned using the services tab in the Admin UI."
+        throw (Get-VstsLocString -Key "Error_Endpoint_Name" -ArgumentList $connectedServiceName)
 	}
 
-	$authScheme = $serviceEndpoint.Authorization.Scheme
-	if ($authScheme -ne 'UserNamePassword')
+	$authScheme = $serviceEndpoint.Auth.Scheme
+	if ($authScheme -ne 'UsernamePassword')
 	{
-		throw "The authorization scheme $authScheme is not supported for a SonarQube server."
+        throw (Get-VstsLocString -Key "Error_Endpoint_Auth" -ArgumentList $authScheme)
 	}
 
     return $serviceEndpoint
@@ -194,10 +194,6 @@ function GetEndpointData
 function GetDashboardUrl
 {
     param ([Uri]$serviceEndpointUrl, [string]$projectKey)
-    
-    Write-Verbose $projectKey
-    Write-Verbose $serviceEndpointUrl
-    Write-Verbose $serviceEndpointUrl.ToString()
     
     $serviceUrlString = $serviceEndpointUrl.ToString().TrimEnd('/')
     return "$serviceUrlString/dashboard/index?id=$($projectKey)"

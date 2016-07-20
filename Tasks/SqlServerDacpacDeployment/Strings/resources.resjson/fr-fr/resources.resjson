@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "[Deprecated] SQL Server Database Deploy",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/sqlserverdacpackreadme)",
+  "loc.helpMarkDown": "[Plus d'informations](https://aka.ms/sqlserverdacpackreadme)",
   "loc.description": "Déployer la base de données SQL Server avec DACPAC",
   "loc.instanceNameFormat": "[Deprecated] Deploy SQL DACPAC: $(DacpacFile)",
   "loc.group.displayName.deployment": "Déploiement",

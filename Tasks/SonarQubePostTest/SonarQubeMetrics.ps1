@@ -74,7 +74,7 @@ function FetchQualityGateStatus
 #
 function WaitForAnalysisToFinishInternal
 {    
-    Write-Host "Waiting on the SonarQube server to finish processing in order to determine the quality gate status."
+    Write-Host (Get-VstsLocString -Key "Info_Waiting_Processing")
        
     $reportPath = GetTaskStatusFile    
     $taskId = FetchTaskIdFromReportFile $reportPath
@@ -85,14 +85,13 @@ function WaitForAnalysisToFinishInternal
 
     if (!$taskFinished)
     {
-        throw "The analysis did not complete in the allotted time of $timeout seconds. Consider setting the build variable SonarQubeAnalysisTimeoutInSeconds to a higher value."
-
+        throw (Get-VstsLocString -Key 'Error_Analysis_Timeout' -ArgumentList $timeout)
     }
 
     $analysisId = QueryAnalysisId $taskId
 
-    Write-Host "The SonarQube analysis has finished processing."
-    Write-Verbose "The analysis id is $analysisId"
+    Write-Host (Get-VstsLocString -Key 'Info_Analysis_Finished')
+    Write-VstsTaskVerbose "The analysis id is $analysisId"
 
     return $analysisId
 }
@@ -123,7 +122,7 @@ function FetchTaskIdFromReportFile
     }
 
     $taskId = $matchResult.Groups[1].Value.Trim()
-    Write-Verbose "The analysis is associated with the task id $taskId"
+    Write-VstsTaskVerbose "The analysis is associated with the task id $taskId"
 
     return $taskId
 }
@@ -139,11 +138,11 @@ function IsAnalysisFinished
     $response = InvokeGetRestMethod "/api/ce/task?id=$taskId" 
     $status = $response.task.status
     
-    Write-Verbose "The task status is $status"
+    Write-VstsTaskVerbose "The task status is $status"
 
     if (!$status)
     {
-        throw "Could not determine the task status - please raise a bug."
+        throw "Could not determine the task status."
     }
     
     return $status -eq "success"   
@@ -170,7 +169,7 @@ function GetTaskStatusFile
     
     if (![System.IO.File]::Exists($reportTaskFile))
     {
-        Write-Verbose "Could not find the task details file at $reportTaskFile"
+        Write-VstsTaskVerbose "Could not find the task details file at $reportTaskFile"
         throw "Cannot determine if the analysis has finished. Possible cause: your SonarQube server version is lower than 5.3 - for more details see https://go.microsoft.com/fwlink/?LinkId=722407"
     }
 
@@ -184,8 +183,7 @@ function GetAnalysisCompleteTimeout
     if ($env:SonarQubeAnalysisTimeoutInSeconds)
     {
         $timeout = $env:SonarQubeAnalysisTimeoutInSeconds
-        Write-Host "SonarQubeAnalysisTimeoutInSeconds is set to $timeout and will be used to poll for the SonarQube task completion."
-        
+        Write-Host (Get-VstsLocString -Key 'Info_Analysis_Custom_Timeout' -ArgumentList $timeout)
     }
     else
     {

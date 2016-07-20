@@ -212,14 +212,20 @@ function Upload-FilesToAzureContainer
     try
     {
         Write-Output (Get-LocalizedString -Key "Uploading files from source path: '{0}' to storage account: '{1}' in container: '{2}' with blobprefix: '{3}'" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
-
+        
+        $storageAccount = Get-AzureStorageAccount -StorageAccountName $storageAccountName
+        if( $storageAccount ){
+            $stoargeAccountEnpoints = $storageAccount.Endpoints
+            $blobStorageURI = $stoargeAccountEnpoints[0]+$containerName+"/"+$blobPrefix
+        }
+		
         if([string]::IsNullOrWhiteSpace($additionalArguments))
         {
-            $uploadResponse = Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccountName -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey $storageKey -AzCopyLocation $azCopyLocation
+            $uploadResponse = Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccountName -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey  $storageKey -AzCopyLocation $azCopyLocation -BlobStorageURI $blobStorageURI
         }
         else
         {
-            $uploadResponse = Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccountName -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey $storageKey -AzCopyLocation $azCopyLocation -AdditionalArguments $additionalArguments
+            $uploadResponse = Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccountName -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey $storageKey -AzCopyLocation $azCopyLocation -AdditionalArguments $additionalArguments -BlobStorageURI $blobStorageURI
         }
     }
     catch
@@ -783,7 +789,7 @@ function Check-AzureCloudServiceExists
             if($connectionType -eq 'Certificate')
             {
                 Write-TaskSpecificTelemetry "PREREQ_ResourceGroupNotFound"
-                throw (Get-LocalizedString -Key "Using selected Connection '{0}' unable to find the resource '{1}'. Selected connection '{0}' supports classic resources only (Service Management model)." -ArgumentList $connectionType, $cloudServiceName)
+                throw (Get-LocalizedString -Key "Unable to find the resource '{1}' using selected connection '{0}'. Selected connection '{0}' supports classic resources only (Service Management model)." -ArgumentList $connectionType, $cloudServiceName)
             }
         }
     }
@@ -1057,7 +1063,7 @@ function Copy-FilesToAzureVMsFromStorageContainer
     }
 
     # if no error thrown, copy successfully succeeded
-    Write-Output (Get-LocalizedString -Key "Copied files from source path: '{0}' to target azure vms in resource group: '{1}' successfully" -ArgumentList $sourcePath, $resourceGroupName)
+    Write-Output (Get-LocalizedString -Key "Copied files from source path: '{0}' to target azure VMs in resource group: '{1}' successfully" -ArgumentList $sourcePath, $resourceGroupName)
 }
 
 function Validate-CustomScriptExecutionStatus

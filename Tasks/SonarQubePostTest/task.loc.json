@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 50
+    "Patch": 52
   },
   "minimumAgentVersion": "1.99.0",
   "demands": [
@@ -21,10 +21,31 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "PowerShell": {
-      "target": "$(currentDirectory)\\SonarQubePostTest.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "PowerShell3": {
+      "target": "SonarQubePostTest.ps1"
     }
+  },
+  "messages": {
+    "Error_SQ_Not_Found": "ms-resource:loc.messages.Error_SQ_Not_Found",
+    "Error_Analysis_Timeout": "ms-resource:loc.messages.Error_Analysis_Timeout",
+    "Warn_Report_Missing": "ms-resource:loc.messages.Warn_Report_Missing",
+    "Info_Waiting_Processing": "ms-resource:loc.messages.Info_Waiting_Processing",
+    "Info_Analysis_Finished": "ms-resource:loc.messages.Info_Analysis_Finished",
+    "Info_Analysis_Custom_Timeout": "ms-resource:loc.messages.Info_Analysis_Custom_Timeout",
+    "Info_Breaker_Pr": "ms-resource:loc.messages.Info_Breaker_Pr",
+    "Info_Breaker_Disabled": "ms-resource:loc.messages.Info_Breaker_Disabled",
+    "Info_Breaker_Passed": "ms-resource:loc.messages.Info_Breaker_Passed",
+    "Info_Legacy_Report": "ms-resource:loc.messages.Info_Legacy_Report",
+    "Info_Report_Create": "ms-resource:loc.messages.Info_Report_Create",
+    "Info_Report_Upload": "ms-resource:loc.messages.Info_Report_Upload",
+    "Info_PRCA_Start": "ms-resource:loc.messages.Info_PRCA_Start",
+    "Info_PRCA_Messages": "ms-resource:loc.messages.Info_PRCA_Messages",
+    "Info_PRCA_No_Messages": "ms-resource:loc.messages.Info_PRCA_No_Messages",
+    "Info_PRCA_Filtered": "ms-resource:loc.messages.Info_PRCA_Filtered",
+    "Info_PRCA_Filtered_Existing": "ms-resource:loc.messages.Info_PRCA_Filtered_Existing",
+    "Info_PRCA_Filtered_Max": "ms-resource:loc.messages.Info_PRCA_Filtered_Max",
+    "Info_PRCA_Posted": "ms-resource:loc.messages.Info_PRCA_Posted",
+    "Info_PRCA_Summary": "ms-resource:loc.messages.Info_PRCA_Summary",
+    "Info_PRCA_NotInPr": "ms-resource:loc.messages.Info_PRCA_NotInPr"
   }
 }

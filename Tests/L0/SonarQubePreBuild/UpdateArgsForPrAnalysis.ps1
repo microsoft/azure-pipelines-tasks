@@ -13,7 +13,10 @@ function RunTest
     # Arrange
     Register-Mock IsPrBuild {$isPrBuild}
     Register-Mock InvokeGetRestMethod {$sqVersion} -- "/api/server/version" 
-    Register-Mock GetTaskContextVariable {$null} -- "MSBuild.SonarQube.ServerVersion" 
+    Register-Mock GetTaskContextVariable
+    Register-Mock SetTaskContextVariable
+    Register-Mock Write-VstsTaskVerbose   
+
 
     # Act
     $newArgs = UpdateArgsForPullRequestAnalysis $existingArgs
@@ -25,6 +28,8 @@ function RunTest
     Unregister-Mock InvokeGetRestMethod
     Unregister-Mock IsPrBuild
     Unregister-Mock GetTaskContextVariable
+    Unregister-Mock SetTaskContextVariable
+    Unregister-Mock Write-VstsTaskVerbose
 }
 
 
@@ -53,10 +58,3 @@ RunTest -existingArgs "/s:foo.txt" `
         -sqVersion "5.3-SNAPSHOT" `
         -expectedArgs "/s:foo.txt /d:sonar.analysis.mode=issues /d:sonar.report.export.path=sonar-report.json" `
         -message "Simple semantic versioning is supported, i.e. version-description"
-
-
-
-
-
-
-

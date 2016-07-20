@@ -1,10 +1,10 @@
 {
   "loc.friendlyName": "Déploiement d'application web Azure",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613750)",
+  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613750)",
   "loc.description": "Publier un projet web Visual Studio dans une application web Microsoft Azure à l'aide de Web Deploy",
   "loc.instanceNameFormat": "Déploiement Azure : $(WebSiteName)",
-  "loc.input.label.ConnectedServiceName": "Abonnement Azure",
-  "loc.input.help.ConnectedServiceName": "Abonnement Azure à cibler pour le déploiement.",
+  "loc.input.label.ConnectedServiceName": "Azure Subscription (Classic)",
+  "loc.input.help.ConnectedServiceName": "Azure Classic subscription to target for deployment.",
   "loc.input.label.WebSiteLocation": "Emplacement de l'application web",
   "loc.input.help.WebSiteLocation": "Select a location for website.",
   "loc.input.label.WebSiteName": "Nom de l'application web",

@@ -82,6 +82,9 @@ describe('Common-VstsAzureHelpers_ Suite', function () {
         it('(Initialize-AzureSubscription) throws when RM and cert auth', (done) => {
             psr.run(path.join(__dirname, 'Initialize-AzureSubscription.ThrowsWhenRMAndCertAuth.ps1'), done);
         })
+        it('(Initialize-AzureSubscription) passes values when cert auth and environment', (done) => {
+            psr.run(path.join(__dirname, 'Initialize-AzureSubscription.PassesValuesWhenCertAuthAndEnvironment.ps1'), done);
+        })
         it('(Initialize-AzureSubscription) throws when SP auth and classic 0.9.9', (done) => {
             psr.run(path.join(__dirname, 'Initialize-AzureSubscription.ThrowsWhenSPAuthAndClassic099.ps1'), done);
         })
@@ -93,6 +96,9 @@ describe('Common-VstsAzureHelpers_ Suite', function () {
         })
         it('(Set-CurrentAzureSubscription) passes values', (done) => {
             psr.run(path.join(__dirname, 'Set-CurrentAzureSubscription.PassesValues.ps1'), done);
+        })
+		it('(Set-UserAgent) passes values', (done) => {
+            psr.run(path.join(__dirname, 'Set-UserAgent.PassesValues.ps1'), done);
         })
         it('Overriddes global debug preference', (done) => {
             psr.run(path.join(__dirname, 'OverriddesGlobalDebugPreference.ps1'), done);

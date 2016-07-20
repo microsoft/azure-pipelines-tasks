@@ -20,7 +20,7 @@
   "loc.input.label.location": "Расположение",
   "loc.input.help.location": "Расположение для развертывания группы ресурсов. Если группа ресурсов уже существует в подписке, этот параметр игнорируется.",
   "loc.input.label.csmFile": "Шаблон",
-  "loc.input.help.csmFile": "Specify the path to the Azure Resource Manager template. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate.",
+  "loc.input.help.csmFile": "Укажите путь к шаблону диспетчера Azure Resource Manager. Дополнительные сведения о шаблонах см. по ссылке https://aka.ms/azuretemplates. Чтобы начать работу немедленно, используйте шаблон https://aka.ms/sampletemplate.",
   "loc.input.label.csmParametersFile": "Параметры шаблона",
   "loc.input.help.csmParametersFile": "Укажите путь к файлу параметров для шаблона Azure Resource Manager.",
   "loc.input.label.overrideParameters": "Переопределить параметры шаблона",
@@ -28,7 +28,7 @@
   "loc.input.label.enableDeploymentPrerequisitesForCreate": "Включить необходимые компоненты развертывания",
   "loc.input.help.enableDeploymentPrerequisitesForCreate": "При включении этого параметра настраивается прослушиватель службы удаленного управления Windows (WinRM) по протоколу HTTPS на порте 5986 с использованием самозаверяющего сертификата. Эта конфигурация требуется для выполнения развертывания на виртуальных машинах Azure. Если целевые виртуальные машины поддерживаются средствами Load Balancer, убедитесь, что правила NAT для входящего трафика настроены для целевого порта (5986).",
   "loc.input.label.enableDeploymentPrerequisitesForSelect": "Включить необходимые компоненты развертывания",
-  "loc.input.help.enableDeploymentPrerequisitesForSelect": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986).",
+  "loc.input.help.enableDeploymentPrerequisitesForSelect": "При включении этого параметра настраивается прослушиватель службы удаленного управления Windows (WinRM) по протоколу HTTPS на порте 5986 с использованием самозаверяющего сертификата. Эта конфигурация требуется для выполнения развертывания на виртуальных машинах Azure. Если целевые виртуальные машины поддерживаются средствами Load Balancer, убедитесь, что правила NAT для входящего трафика настроены для целевого порта (5986).",
   "loc.input.label.outputVariable": "Группа ресурсов",
   "loc.input.help.outputVariable": "Укажите имя переменной для группы ресурсов. Переменную можно использовать как $(variableName) для ссылки на группу ресурсов в последующих задачах, например в задаче PowerShell на целевых компьютерах для развертывания приложения. <br>Действительно, только если выбраны действия Create, Update или Select, и требуется, когда выбрана существующая группа ресурсов."
 }

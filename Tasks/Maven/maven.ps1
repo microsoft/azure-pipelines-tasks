@@ -109,9 +109,9 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 
 $buildRootPath = Split-Path $mavenPOMFile -Parent
-$reportDirectoryName = "ReportDirectory_C91CDE2D-CC66-4541-9C27-E3EF6CB3DB16"
+$reportDirectoryName = "ReportDirectoryC91CDE2D"
 $reportDirectoryNameCobertura = "target\site\cobertura"
-$reportPOMFileName = "ReportPOMFile_4E52C1C4-8C32-4580-A54D-41D5E9ED1F74.xml"
+$reportPOMFileName = "ReportPOMFile4E52C1C4.xml"
 $reportPOMFile = Join-Path $buildRootPath $reportPOMFileName
 $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
 $reportDirectoryCobertura = Join-Path $buildRootPath $reportDirectoryNameCobertura
@@ -126,22 +126,36 @@ $CCReportTask = "jacoco:report"
 
 Write-Verbose "SummaryFileCobertura = $summaryFileCobertura"
 
-if(Test-Path $reportDirectory)
+try 
 {
-    # delete any previous code coverage data 
-    rm -r $reportDirectory -force | Out-Null
+	if(Test-Path $reportDirectory)
+	{
+		# delete any previous code coverage data 
+		rm -r $reportDirectory -force | Out-Null
+	}
+
+	if(Test-Path $reportDirectoryCobertura)
+	{
+		# delete any previous code coverage data from Cobertura
+		rm -r $reportDirectoryCobertura -force | Out-Null
+	}
+}
+catch
+{
+	Write-Verbose "Failed to delete report directory"
 }
 
-if(Test-Path $reportDirectoryCobertura)
+try 
 {
-    # delete any previous code coverage data from Cobertura
-    rm -r $reportDirectoryCobertura -force | Out-Null
+	if(Test-Path $reportPOMFile)
+	{
+		# delete any previous code coverage data 
+		rm $reportPOMFile -force | Out-Null
+	}
 }
-
-if(Test-Path $reportPOMFile)
+catch
 {
-    # delete any previous code coverage data 
-    rm $reportPOMFile -force | Out-Null
+	Write-Verbose "Failed to delete report POM file"
 }
 
 if($isCoverageEnabled)
@@ -203,7 +217,3 @@ ElseIf ($codeCoverageTool -eq "Cobertura")
 RunSonarQubeAnalysis $sqAnalysisEnabled $sqConnectedServiceName $sqDbDetailsRequired $sqDbUrl $sqDbUsername $sqDbPassword $options $mavenPOMFile $execFileJacoco
 
 Write-Verbose "Leaving script Maven.ps1"
-
-
-
-

@@ -1,6 +1,6 @@
 {
-  "name": "extractFiles",
-  "version": "1.0.1",
+  "name": "ExtractFiles",
+  "version": "1.0.2",
   "description": "Extract Files Task",
   "main": "extractfilestask.js",
   "repository": {
@@ -14,6 +14,7 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
+    "vsts-task-lib": "^0.8.5",
     "collections": "3.0.0"
   }
 }

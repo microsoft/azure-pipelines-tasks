@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "SonarQube for MSBuild - 분석 종료",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=620063)",
+  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkId=620063)",
   "loc.description": "분석을 마치고 SonarQube에 결과 업로드",
   "loc.instanceNameFormat": "분석을 마치고 SonarQube에 결과 업로드"
 }

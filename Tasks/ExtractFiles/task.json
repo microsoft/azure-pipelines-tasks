@@ -1,55 +1,56 @@
 {
-  "id": "5e1e3830-fbfb-11e5-aab1-090c92bc4988",
-  "name": "ExtractFiles",
-  "friendlyName": "Extract Files",
-  "description": "Extract a variety of archive and compression files such as .7z, .rar, .tar.gz, and .zip.",
-  "author": "Microsoft Corporation",
-  "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=800269)",
-  "category": "Utility",
-  "visibility": [
-    "Build",
-    "Release"
-  ],
-  "demands": [],
-  "version": {
-    "Major": "1",
-    "Minor": "0",
-    "Patch": "1"
-  },
-  "instanceNameFormat": "Extract files $(message)",
-  "inputs": [
-    {
-      "name": "archiveFilePatterns",
-      "type": "multiLine",
-      "label": "Archive file patterns",
-      "defaultValue": "*.zip",
-      "required": true,
-      "helpMarkDown": "File paths or patterns of the archive files to extract.  Supports multiple lines of minimatch patterns.  [More Information](https://go.microsoft.com/fwlink/?LinkId=800269)",
-      "properties": {
-          "resizable": "true",
-          "rows" : "4"
-      }
+    "id": "5e1e3830-fbfb-11e5-aab1-090c92bc4988",
+    "name": "ExtractFiles",
+    "friendlyName": "Extract Files",
+    "description": "Extract a variety of archive and compression files such as .7z, .rar, .tar.gz, and .zip.",
+    "author": "Microsoft Corporation",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=800269)",
+    "category": "Utility",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "demands": [],
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 3
     },
-    {
-      "name": "destinationFolder",
-      "type": "filePath",
-      "label": "Destination folder",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Destination folder into which archive files should be extracted.  Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988) if files are not in the repo. Example: $(agent.builddirectory)"
-    },
-    {
-      "name": "cleanDestinationFolder",
-      "type": "boolean",
-      "label": "Clean destination folder before extracting",
-      "required": true,
-      "defaultValue": "true",
-      "helpMarkDown": "Select this option to clean the destination directory before archive contents are extracted into it."
+    "instanceNameFormat": "Extract files $(message)",
+    "inputs": [
+        {
+            "name": "archiveFilePatterns",
+            "type": "multiLine",
+            "label": "Archive file patterns",
+            "defaultValue": "*.zip",
+            "required": true,
+            "helpMarkDown": "File paths or patterns of the archive files to extract.  Supports multiple lines of minimatch patterns.  [More Information](https://go.microsoft.com/fwlink/?LinkId=800269)",
+            "properties": {
+                "resizable": "true",
+                "rows": "4"
+            }
+        },
+        {
+            "name": "destinationFolder",
+            "type": "filePath",
+            "label": "Destination folder",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Destination folder into which archive files should be extracted.  Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988) if files are not in the repo. Example: $(agent.builddirectory)"
+        },
+        {
+            "name": "cleanDestinationFolder",
+            "type": "boolean",
+            "label": "Clean destination folder before extracting",
+            "required": true,
+            "defaultValue": "true",
+            "helpMarkDown": "Select this option to clean the destination directory before archive contents are extracted into it."
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "extractfilestask.js",
+            "argumentFormat": ""
+        }
     }
-  ],  "execution": {
-    "Node": {
-      "target": "extractfilestask.js",
-      "argumentFormat": ""
-    }
-  }
 }

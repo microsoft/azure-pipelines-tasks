@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin 测试云",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613744)",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613744)",
   "loc.description": "使用 Xamarin.UITest 测试包含 Xamarin 测试云的移动应用",
   "loc.instanceNameFormat": "在 Xamarin 测试云中使用 Xamarin.UITest 测试 $(app)",
   "loc.group.displayName.advanced": "高级",

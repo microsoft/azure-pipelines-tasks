@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "Copia de archivos de Azure",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/azurefilecopyreadme)",
+  "loc.helpMarkDown": "[Más información](https://aka.ms/azurefilecopyreadme)",
   "loc.description": "Copiar archivos a las VM o al blob de Azure",
   "loc.instanceNameFormat": "$(Destination) File Copy",
-  "loc.group.displayName.output": "Output",
+  "loc.group.displayName.output": "Salida",
   "loc.input.label.SourcePath": "Origen",
   "loc.input.help.SourcePath": "La ruta de acceso absoluta de la carpeta de origen, un archivo de la máquina local o un recurso compartido UNC. La expresión debería devolver una única carpeta o un archivo.",
   "loc.input.label.ConnectedServiceNameSelector": "Tipo de conexión de Azure",

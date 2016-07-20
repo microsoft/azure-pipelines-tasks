@@ -13,12 +13,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 34
+    "Patch": 35
   },
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.103.0",
+  "minimumAgentVersion": "1.90.0",
   "inputs": [
     {
       "name": "ConnectedServiceName",
@@ -32,7 +32,7 @@
       "name": "WebSiteLocation",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.WebSiteLocation",
-      "defaultValue": "South Central US",
+      "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.WebSiteLocation",
       "properties": {

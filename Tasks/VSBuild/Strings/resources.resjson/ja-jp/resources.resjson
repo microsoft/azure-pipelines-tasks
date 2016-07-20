@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio のビルド",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613727)",
+  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613727)",
   "loc.description": "MSBuild を使用してビルドし、Visual Studio のバージョンを適切に設定します",
   "loc.instanceNameFormat": "ソリューション $(solution) のビルド",
   "loc.group.displayName.advanced": "詳細設定",
@@ -11,6 +11,8 @@
   "loc.input.label.platform": "プラットフォーム",
   "loc.input.label.configuration": "構成",
   "loc.input.label.clean": "消去",
+  "loc.input.label.maximumCpuCount": "Maximum CPU Count",
+  "loc.input.help.maximumCpuCount": "If you're MSBuild target configuration is compatible with building in parallel, you can optionally check this input to pass the /m switch to MSBuild (Windows only). If you're target configuration is not compatible with building in parallel, checking this option may cause your build to result in file-in-use errors, or intermittent or inconsistent build failures.",
   "loc.input.label.restoreNugetPackages": "NuGet パッケージの復元",
   "loc.input.help.restoreNugetPackages": "This option is deprecated. To restore NuGet packages, add a NuGet Installer step before the build.",
   "loc.input.label.vsVersion": "Visual Studio のバージョン",

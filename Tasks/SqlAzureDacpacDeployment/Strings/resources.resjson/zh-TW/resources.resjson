@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure SQL Database 部署",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/sqlazuredeployreadme)",
+  "loc.helpMarkDown": "[詳細資訊](https://aka.ms/sqlazuredeployreadme)",
   "loc.description": "使用 DACPAC 部署 Azure SQL DB",
   "loc.instanceNameFormat": "部署 Azure SQL DACPAC: $(DacpacFile)",
   "loc.group.displayName.target": "目標",
@@ -19,7 +19,7 @@
   "loc.input.label.SqlUsername": "伺服器管理員登入",
   "loc.input.help.SqlUsername": "指定 Azure SQL Server 系統管理員的登入。",
   "loc.input.label.SqlPassword": "密碼",
-  "loc.input.help.SqlPassword": "Azure SQL Server 系統管理員的密碼。",
+  "loc.input.help.SqlPassword": "Password for the Azure SQL Server administrator.<br>It can accept variable defined in Build/Release Definitions as '$(passwordVariable').<br>You may mark variable type as 'secret' to secure it.",
   "loc.input.label.PublishProfile": "發行設定檔",
   "loc.input.help.PublishProfile": "發行設定檔可提供對建立或更新 Azure SQL Database 的微調控制。請在自動化代理程式或在通用命名慣例 (UNC) 共用上指定發行設定檔 XML 檔的路徑。也可在此使用預先定義的系統變數，例如 $(agent.buildDirectory) 或 $(agent.releaseDirectory)。",
   "loc.input.label.AdditionalArguments": "其他 SqlPackage.exe 引數",

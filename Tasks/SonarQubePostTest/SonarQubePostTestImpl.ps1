@@ -3,7 +3,7 @@ function InvokeMSBuildRunnerPostTest
 	$bootstrapperPath = GetBootstrapperPath
 	$arguments = GetMSBuildRunnerPostTestArgs
 
-	Invoke-BatchScript $bootstrapperPath -Arguments $arguments
+	Invoke-VstsTool -FileName $bootstrapperPath -Arguments $arguments -RequireExitCodeZero
 }
 
 function GetBootstrapperPath
@@ -12,10 +12,10 @@ function GetBootstrapperPath
 
 	if (!$bootstrapperPath -or ![System.IO.File]::Exists($bootstrapperPath))
 	{
-		throw "The MSBuild.SonarQube.Runner executable could not be found. Check that the build definition includes a SonarQube Pre-Build step"
+		throw (Get-VstsLocString -Key 'Error_SQ_Not_Found')
 	}
 
-	Write-Verbose "bootstrapperPath: $bootstrapperPath"
+	Write-VstsTaskVerbose "bootstrapperPath: $bootstrapperPath"
 	return $bootstrapperPath;
 }
 
@@ -33,7 +33,6 @@ function GetMSBuildRunnerPostTestArgs()
 	  $sb = New-Object -TypeName "System.Text.StringBuilder"; 
       [void]$sb.Append("end");
 
-	
       if (![String]::IsNullOrWhiteSpace($serverUsername))
       {
           [void]$sb.Append(" /d:sonar.login=" + (EscapeArg($serverUsername))) 

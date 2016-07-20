@@ -4,13 +4,11 @@ param()
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 . $PSScriptRoot\..\..\..\Tasks\SonarQubePostTest\Common\SonarQubeHelpers\SonarQubeHelper.ps1
 
-$distributedTaskContext = 'Some distributed task context'
-
 function VerifyVersionComparison
 {
     param ([string]$inputVersion, [int]$expectedComparisonResult)
     
-    Register-Mock Get-TaskVariable { $inputVersion } -- -Context $distributedTaskContext -Name 'MSBuild.SonarQube.Internal.ServerVersion'
+    Register-Mock GetTaskContextVariable  { $inputVersion } -- 'MSBuild.SonarQube.Internal.ServerVersion'
     
     $result = CompareSonarQubeVersionWith52 
     
@@ -27,7 +25,7 @@ function VerifyVersionComparison
          Assert-AreEqual $true ($result -eq 0) "Expecting $inputVersion to be equal to 5.2"
     }
     
-    Unregister-Mock Get-TaskVariable
+    Unregister-Mock GetTaskContextVariable 
 } 
 
 VerifyVersionComparison "4.5.2" -1

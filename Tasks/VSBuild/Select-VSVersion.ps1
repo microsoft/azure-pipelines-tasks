@@ -14,7 +14,7 @@ function Select-VSVersion {
         }
 
         # Look for the latest version of Visual Studio.
-        [string[]]$knownVersions = '14.0', '12.0', '11.0', '10.0' |
+        [string[]]$knownVersions = '15.0', '14.0', '12.0', '11.0', '10.0' |
             Where-Object { $_ -ne $PreferredVersion }
         foreach ($version in $knownVersions) {
             if ($location = Get-VSPath -Version $version) {

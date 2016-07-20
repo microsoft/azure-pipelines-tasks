@@ -1,10 +1,10 @@
 {
   "loc.friendlyName": "Distribuzione app Web di Azure",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613750)",
+  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613750)",
   "loc.description": "Consente di pubblicare un progetto Web di Visual Studio in un'app Web di Microsoft Azure con Distribuzione Web",
   "loc.instanceNameFormat": "Distribuzione Azure: $(WebSiteName)",
-  "loc.input.label.ConnectedServiceName": "Sottoscrizione di Azure",
-  "loc.input.help.ConnectedServiceName": "Sottoscrizione di Azure usata come destinazione della distribuzione.",
+  "loc.input.label.ConnectedServiceName": "Azure Subscription (Classic)",
+  "loc.input.help.ConnectedServiceName": "Azure Classic subscription to target for deployment.",
   "loc.input.label.WebSiteLocation": "Percorso app Web",
   "loc.input.help.WebSiteLocation": "Select a location for website.",
   "loc.input.label.WebSiteName": "Nome app Web",

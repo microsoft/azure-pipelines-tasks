@@ -11,7 +11,7 @@ import tr = require('../../lib/vsts-task-lib/toolRunner');
 
 import pmd = require('../../../Tasks/Maven/CodeAnalysis/mavenpmd');
 import ca = require('../../../Tasks/Maven/CodeAnalysis/mavencodeanalysis');
-import ar = require('../../../Tasks/Maven/CodeAnalysis/analysisResult');
+import ar = require('../../../Tasks/Maven/CodeAnalysis/analysisresult');
 
 function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
@@ -107,7 +107,7 @@ describe('Maven Suite', function () {
     it('run maven with all default inputs and M2_HOME not set', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -135,7 +135,7 @@ describe('Maven Suite', function () {
     it('run maven with all default inputs and M2_HOME set', (done) => {
         setResponseFile('responseM2_HOME.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -164,7 +164,7 @@ describe('Maven Suite', function () {
     it('run maven with missing mavenVersionSelection', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         //tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -191,7 +191,7 @@ describe('Maven Suite', function () {
     it('run maven with INVALID mavenVersionSelection', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'garbage');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -219,7 +219,7 @@ describe('Maven Suite', function () {
     it('run maven with mavenVersionSelection set to Path (mavenPath valid)', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Path');
         tr.setInput('mavenPath', '/home/bin/maven2') // Make that checkPath returns true for this filename in the response file
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
@@ -248,7 +248,7 @@ describe('Maven Suite', function () {
     it('run maven with mavenVersionSelection set to Path (mavenPath missing)', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Path');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -275,7 +275,7 @@ describe('Maven Suite', function () {
     it('run maven with mavenVersionSelection set to Path (mavenPath INVALID)', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Path');
         tr.setInput('mavenPath', '/home/bin/maven333')
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
@@ -303,7 +303,7 @@ describe('Maven Suite', function () {
     it('run maven with mavenSetM2Home set to garbage', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Path');
         tr.setInput('mavenPath', '/home/bin/maven2') // Make that checkPath returns true for this filename in the response file
         tr.setInput('mavenSetM2Home', 'garbage');
@@ -333,7 +333,7 @@ describe('Maven Suite', function () {
     it('run maven with mavenSetM2Home set to true', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Path');
         tr.setInput('mavenPath', '/home/bin/maven2') // Make that checkPath returns true for this filename in the response file
         tr.setInput('mavenSetM2Home', 'true');
@@ -364,7 +364,7 @@ describe('Maven Suite', function () {
     it('run maven with options set', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '/o /p "/t:i o" /n /s');
@@ -392,7 +392,7 @@ describe('Maven Suite', function () {
     it('run maven with goals not set', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '/o /p /t /i /o /n /s');
@@ -419,7 +419,7 @@ describe('Maven Suite', function () {
     it('run maven with tasks set to multiple', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '/o /p /t /i /o /n /s');
@@ -447,7 +447,7 @@ describe('Maven Suite', function () {
     it('run maven with missing publishJUnitResults input', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '/o /p /t /i /o /n /s');
@@ -472,7 +472,7 @@ describe('Maven Suite', function () {
     })
 
     it('run maven with publishJUnitResults set to "garbage"', (done) => {
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '/o /p /t /i /o /n /s');
@@ -498,7 +498,7 @@ describe('Maven Suite', function () {
     })
 
     it('run maven and publish tests', (done) => {
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -527,7 +527,7 @@ describe('Maven Suite', function () {
     it('fails if missing testResultsFiles input', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -553,7 +553,7 @@ describe('Maven Suite', function () {
     it('fails if missing javaHomeSelection input', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -580,7 +580,7 @@ describe('Maven Suite', function () {
     it('run maven with jdkVersion set to 1.8', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -610,7 +610,7 @@ describe('Maven Suite', function () {
     it('run maven with jdkVersion set to 1.5', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -638,7 +638,7 @@ describe('Maven Suite', function () {
     it('run maven with Valid inputs but it fails', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -743,7 +743,7 @@ describe('Maven Suite', function () {
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -945,7 +945,7 @@ describe('Maven Suite', function () {
 
     it('maven calls enable code coverage and publish code coverage when jacoco is selected', (done) => {
         setResponseFile('responseCodeCoverage.json');
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -1033,7 +1033,7 @@ describe('Maven Suite', function () {
 
     it('maven calls enable code coverage and not publish code coverage when jacoco is selected and report generation failed', (done) => {
         setResponseFile('response.json');
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -1067,7 +1067,7 @@ describe('Maven Suite', function () {
 
     it('maven calls enable code coverage and publish code coverage when cobertura is selected', (done) => {
         setResponseFile('responseCodeCoverage.json');
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -1148,7 +1148,7 @@ describe('Maven Suite', function () {
 
     it('maven calls enable code coverage and not publish code coverage when cobertura is selected and report generation failed', (done) => {
         setResponseFile('response.json');
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -1179,7 +1179,7 @@ describe('Maven Suite', function () {
 
     it('Maven build with publish test results', (done) => {
         setResponseFile('response.json');
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');

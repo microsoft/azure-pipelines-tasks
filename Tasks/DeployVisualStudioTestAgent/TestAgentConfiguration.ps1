@@ -253,7 +253,8 @@ function Set-TestAgentConfiguration
         [String] $EnvironmentUrl,
         [String] $MachineName,
         [String] $Capabilities,
-        [System.Management.Automation.PSCredential] $AgentUserCredential
+        [System.Management.Automation.PSCredential] $AgentUserCredential,
+        [Bool] $keepConnectionAlive
     )
 
     switch ($AsServiceOrProcess)
@@ -316,6 +317,16 @@ function Set-TestAgentConfiguration
     {
         $configArgs = $configArgs +  ("/Capabilities:{0}" -f $Capabilities)
     }
+    
+    if($keepConnectionAlive)
+    {
+        #To maintain compat with older test agents which will not have this parameter.
+        $consoleOptions = InvokeTestAgentConfigExe -Arguments "configureAsService /help" -Version $TestAgentVersion -UserCredential $MachineUserCredential    
+        if($consoleOptions.CommandOutput -match 'keepConnectionAlive')
+        {        
+            $configArgs = $configArgs +  ("/keepConnectionAlive")
+        }
+    }    
 
     DeleteDTAAgentExecutionService -ServiceName "DTAAgentExecutionService" | Out-Null
 
@@ -773,7 +784,7 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
     {
         $session = CreateNewSession -MachineCredential $MachineCredential
         # Make sure DTA Agent Execution Service starts first before invoking DTA Execution Host
-        Invoke-Command -Session $session -ErrorAction SilentlyContinue -ErrorVariable err -OutVariable out { Start-Service -Name "DTAAgentExecutionService" }
+        Invoke-Command -Session $session -ErrorAction SilentlyContinue -ErrorVariable err -OutVariable out { Restart-Service -Name "DTAAgentExecutionService" }
         Write-Verbose -Message ("Error : {0} " -f ($err | out-string)) -Verbose
         Write-Verbose -Message ("Output : {0} " -f ($out | out-string)) -Verbose
         
@@ -905,18 +916,19 @@ function ConfigureTestAgent
         [String] $PersonalAccessToken,
         [String] $MachineName,
         [String] $Capabilities,
-        [System.Management.Automation.PSCredential] $AgentUserCredential
+        [System.Management.Automation.PSCredential] $AgentUserCredential,
+        [Bool] $KeepConnectionAlive
     )
 
     EnableTracing -TestAgentVersion $TestAgentVersion | Out-Null
 
     if ($AsServiceOrProcess -eq "Service")
     {
-        $ret = Set-TestAgentConfiguration -TfsCollection $TfsCollection -AsServiceOrProcess $AsServiceOrProcess -MachineUserCredential $MachineUserCredential -TestAgentVersion $TestAgentVersion -EnvironmentUrl $EnvironmentUrl -PersonalAccessToken $PersonalAccessToken -MachineName $MachineName -Capabilities $Capabilities -AgentUserCredential $AgentUserCredential
+        $ret = Set-TestAgentConfiguration -TfsCollection $TfsCollection -AsServiceOrProcess $AsServiceOrProcess -MachineUserCredential $MachineUserCredential -TestAgentVersion $TestAgentVersion -EnvironmentUrl $EnvironmentUrl -PersonalAccessToken $PersonalAccessToken -MachineName $MachineName -Capabilities $Capabilities -AgentUserCredential $AgentUserCredential -KeepConnectionAlive $KeepConnectionAlive
     }
     else
     {
-        $ret = Set-TestAgentConfiguration -TfsCollection $TfsCollection -AsServiceOrProcess $AsServiceOrProcess -MachineUserCredential $MachineUserCredential -DisableScreenSaver $DisableScreenSaver -EnableAutoLogon $EnableAutoLogon -TestAgentVersion $TestAgentVersion -EnvironmentUrl $EnvironmentUrl -PersonalAccessToken $PersonalAccessToken -MachineName $MachineName -Capabilities $Capabilities -AgentUserCredential $AgentUserCredential
+        $ret = Set-TestAgentConfiguration -TfsCollection $TfsCollection -AsServiceOrProcess $AsServiceOrProcess -MachineUserCredential $MachineUserCredential -DisableScreenSaver $DisableScreenSaver -EnableAutoLogon $EnableAutoLogon -TestAgentVersion $TestAgentVersion -EnvironmentUrl $EnvironmentUrl -PersonalAccessToken $PersonalAccessToken -MachineName $MachineName -Capabilities $Capabilities -AgentUserCredential $AgentUserCredential -KeepConnectionAlive $KeepConnectionAlive
     }
 
     $retCode = $ret
@@ -946,6 +958,16 @@ function ConfigureTestAgent
 $disableScreenSaver = [Boolean] $disableScreenSaver
 $enableAutoLogon = [Boolean] $enableAutoLogon
 
+#To maintain compat with old build agents.
+if(-not $keepConnectionAlive)
+{
+    $keepConnectionAlive = [Boolean] $false
+}
+else
+{
+    $keepConnectionAlive = [System.Convert]::ToBoolean($keepConnectionAlive)
+}
+
 $machineCredential = New-Object System.Management.Automation.PSCredential -ArgumentList $userName, (ConvertTo-SecureString -String $password -AsPlainText -Force)
 $agentCredential = New-Object System.Management.Automation.PSCredential -ArgumentList $testAgentConfigUserName, (ConvertTo-SecureString -String $testAgentConfigPassword -AsPlainText -Force)
 
@@ -953,6 +975,6 @@ $ret = CanSkipTestAgentConfiguration -TfsCollection $tfsCollectionUrl -AsService
 
 if ($ret -eq $false)
 {
-    $returnCode = ConfigureTestAgent -TfsCollection $tfsCollectionUrl -AsServiceOrProcess $asServiceOrProcess -EnvironmentUrl $environmentUrl -MachineName $machineName -MachineUserCredential $machineCredential -DisableScreenSaver $disableScreenSaver -EnableAutoLogon $enableAutoLogon -PersonalAccessToken $PersonalAccessToken -Capabilities $capabilities -AgentUserCredential $agentCredential
+    $returnCode = ConfigureTestAgent -TfsCollection $tfsCollectionUrl -AsServiceOrProcess $asServiceOrProcess -EnvironmentUrl $environmentUrl -MachineName $machineName -MachineUserCredential $machineCredential -DisableScreenSaver $disableScreenSaver -EnableAutoLogon $enableAutoLogon -PersonalAccessToken $PersonalAccessToken -Capabilities $capabilities -AgentUserCredential $agentCredential -KeepConnectionAlive $keepConnectionAlive 
     return $returnCode;
 }

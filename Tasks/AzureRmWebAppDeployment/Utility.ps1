@@ -136,7 +136,7 @@ function Get-MsDeployCmdArgs
         $msDeployCmdArgs += ( " " + $AdditionalArguments)
     }
 	
-	$userAgent = Get-UserAgentString
+	$userAgent = Get-VstsTaskVariable -Name AZURE_HTTP_USER_AGENT
 	if (!([string]::IsNullOrEmpty($userAgent))) {
 	    $msDeployCmdArgs += [String]::Format(' -userAgent:"{0}"', $userAgent)
 	}
@@ -153,16 +153,18 @@ function Run-Command
 	{
         if( $psversiontable.PSVersion.Major -le 4)
         {
-           cmd.exe /c "`"$command`""
+           cmd.exe /c "`"$command`"" 2>&1
         }
         else
         {
-           cmd.exe /c "$command"
+           cmd.exe /c "$command" 2>&1
         }
 
     }
 	catch [System.Exception]
     {
+        $exception = $_.Exception
+        Write-Verbose "Error occured is $($exception.Message)"
         throw $_.Exception.Message    
     }
 
@@ -192,28 +194,109 @@ function Run-MsDeployCommand
     Write-Host (Get-VstsLocString -Key msdeploycommandransuccessfully )
 }
 
-function Get-UserAgentString
+function Update-DeploymentStatus
 {
-    $collectionUri = Get-VstsTaskVariable -Name System.TeamFoundationCollectionUri -Require
-    $collectionId = Get-VstsTaskVariable -Name System.CollectionId -Require
-    $hostType = Get-VstsTaskVariable -Name System.HostType -Require
-    $serverString = "TFS"
-    if ($collectionUri.ToLower().Contains("visualstudio.com".ToLower())) {
-        $serverString = "VSTS"
-    }
 
-    $userAgent = [string]::Empty
-    if ($hostType -ieq "build") {
-        $definitionId = Get-VstsTaskVariable -Name System.DefinitionId -Require
-        $buildId = Get-VstsTaskVariable -Name Build.BuildId -Require
-        $userAgent = $serverString + "_" + $collectionId + "_" + "build" + "_" + $definitionId + "_" + $buildId
-    } elseif ($hostType -ieq "release") {
-        $definitionId = Get-VstsTaskVariable -Name Release.DefinitionId -Require
-        $releaseId = Get-VstsTaskVariable -Name Release.ReleaseId -Require
-        $environmentId = Get-VstsTaskVariable -Name Release.EnvironmentId -Require
-        $attemptNumber = Get-VstsTaskVariable -Name Release.AttemptNumber -Require
-        $userAgent = $serverString + "_" + $collectionId + "_" + "release" + "_" + $definitionId + "_" + $releaseId + "_" + $environmentId + "_" + $attemptNumber
-	}
-	
-	return $userAgent
+    param([Parameter(Mandatory=$true)] $azureRMWebAppConnectionDetails,
+          [Parameter(Mandatory=$true)] $deployAzureWebsiteError)
+
+        $webAppPublishKuduUrl = $azureRMWebAppConnectionDetails.KuduHostName
+        if ($webAppPublishKuduUrl) {
+            # Set status of deployment to failed
+            $status = 3 #failed
+            $status_text = "failed"
+
+			
+            # If there is no error in deployment then set status to success
+            if(!$deployAzureWebsiteError) {
+                $status = 4 #succeeded
+                $status_text = "succeeded"
+            }
+
+            $username = $azureRMWebAppConnectionDetails.UserName
+            $securePwd = ConvertTo-SecureString $azureRMWebAppConnectionDetails.UserPassword -AsPlainText -Force
+            $credential = New-Object System.Management.Automation.PSCredential ($username, $securePwd)
+
+            # Get autor of build or release
+            $author = Get-VstsTaskVariable -Name "build.sourceVersionAuthor"
+            if([string]::IsNullOrEmpty($author)) {
+                # fall back to build/release requestedfor
+                $author = Get-VstsTaskVariable -Name "build.requestedfor"
+                if([string]::IsNullOrEmpty($author)) {
+                    $author = Get-VstsTaskVariable -Name "release.requestedfor"
+                }
+                # At this point if this is still null, let's use agent name
+                if([string]::IsNullOrEmpty($author)) {
+                    $author = Get-VstsTaskVariable -Name "agent.name"
+                }
+            }
+
+            # using buildId/releaseId to update deployment status
+            # using buildUrl/releaseUrl to update deployment message
+            $buildUrlTaskVar = Get-VstsTaskVariable -Name "build.buildUri"
+            $releaseUrlTaskVar = Get-VstsTaskVariable -Name "release.releaseUri"
+            $buildIdTaskVar = Get-VstsTaskVariable -Name "build.buildId"
+            $releaseIdTaskVar = Get-VstsTaskVariable -Name "release.releaseId"
+			
+            $collectionUrl = Get-VstsTaskVariable -Name System.TeamFoundationCollectionUri -Require
+            $teamproject = Get-VstsTaskVariable -Name System.TeamProject -Require
+            $buildOrReleaseUrl = "";
+            $uniqueId = Get-Date -Format ddMMyyhhmmss
+
+            if(-not [string]::IsNullOrEmpty($releaseUrlTaskVar)) {
+                $deploymentId = $releaseIdTaskVar + $uniqueId
+                $buildOrReleaseUrl = [string]::Format("{0}{1}/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?releaseId={2}&_a=release-summary", $collectionUrl, $teamproject, $releaseIdTaskVar)
+                $message = Get-VstsLocString -Key "Updatingdeploymenthistoryfordeployment0" -ArgumentList $buildOrReleaseUrl
+            }
+            else
+            {
+               $deploymentId = $buildIdTaskVar + $uniqueId
+               $buildOrReleaseUrl = [string]::Format("{0}{1}/_build#buildId={2}&_a=summary", $collectionUrl, $teamproject, $buildIdTaskVar)
+               $message = Get-VstsLocString -Key "Updatingdeploymenthistoryfordeployment0" -ArgumentList $buildOrReleaseUrl
+            }
+
+            
+
+            if([string]::IsNullOrEmpty($deploymentId)) {
+                #No point in proceeding further
+                Write-Warning (Get-VstsLocString -Key "CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved")  
+                Return
+            }
+
+            Write-Verbose "Using deploymentId as: '$deploymentId' to update deployment Status"
+            Write-Verbose "Using message as: '$message' to update deployment Status"
+
+            $body = ConvertTo-Json (New-Object -TypeName psobject -Property @{
+                status = $status
+                status_text = $status_text
+                message = $message
+                author = $author
+                deployer = 'VSTS'
+                details = $buildOrReleaseUrl
+            })
+
+            $webAppHostUrl = $webAppPublishKuduUrl.split(':')[0]
+            $url = [string]::Format("https://{0}/deployments/{1}",[System.Web.HttpUtility]::UrlEncode($webAppHostUrl),[System.Web.HttpUtility]::UrlEncode($deploymentId))
+
+            Write-Verbose "Invoke-RestMethod $url -Credential $credential  -Method PUT -Body $body -ContentType `"application/json`" -UserAgent `"myuseragent`""
+            Write-Host (Get-VstsLocString -Key "Updatingdeploymentstatus")
+            try {
+                Invoke-RestMethod $url -Credential $credential  -Method PUT -Body $body -ContentType "application/json" -UserAgent "myuseragent"
+            } 
+            catch {
+                Write-Verbose $_.Exception.ToString()
+                $response = $_.Exception.Response
+                $responseStream =  $response.GetResponseStream()
+                $streamReader = New-Object System.IO.StreamReader($responseStream)
+                $streamReader.BaseStream.Position = 0
+                $streamReader.DiscardBufferedData()
+                $responseBody = $streamReader.ReadToEnd()
+                $streamReader.Close()
+                Write-Warning (Get-VstsLocString -Key "Cannotupdatedeploymentstatusfor01" -ArgumentList $WebSiteName, $responseBody)        
+            }
+        }
+        else {
+            Write-Warning (Get-VstsLocString -Key "CannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite")      
+        }
+    
 }

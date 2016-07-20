@@ -8,6 +8,7 @@ function Select-MSBuildLocation {
         $msBuildVersion = $null;
         switch ("$VSVersion") {
             '' { break }
+            '15.0' { $msBuildVersion = '15.0' ; break }
             '14.0' { $msBuildVersion = '14.0' ; break }
             '12.0' { $msBuildVersion = '12.0' ; break }
             '11.0' { $msBuildVersion = '4.0' ; break }

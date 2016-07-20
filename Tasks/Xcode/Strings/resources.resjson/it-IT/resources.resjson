@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Compilazione Xcode",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613730)",
+  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613730)",
   "loc.description": "Consente di compilare un'area di lavoro Xcode su Mac OS",
   "loc.instanceNameFormat": "Xcode $(actions)",
   "loc.group.displayName.sign": "Firma e provisioning",

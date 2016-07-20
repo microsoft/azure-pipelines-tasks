@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Ant",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613718)",
+  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613718)",
   "loc.description": "使用 Apache Ant 建置",
   "loc.instanceNameFormat": "Ant $(options) $(antBuildFile)",
   "loc.group.displayName.junitTestResults": "JUnit 測試結果",

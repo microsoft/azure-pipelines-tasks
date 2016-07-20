@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 45
+    "Patch": 46
   },
   "minimumAgentVersion": "1.99.0",
   "demands": [
@@ -137,10 +137,15 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "PowerShell": {
-      "target": "$(currentDirectory)\\SonarQubePreBuild.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "PowerShell3": {
+      "target": "SonarQubePreBuild.ps1"
     }
+  },
+  "messages": {
+    "Error_Endpoint": "ms-resource:loc.messages.Error_Endpoint",
+    "Error_Config": "ms-resource:loc.messages.Error_Config",
+    "Error_Pr_Config": "ms-resource:loc.messages.Error_Pr_Config",
+    "Error_Endpoint_Name": "ms-resource:loc.messages.Error_Endpoint_Name",
+    "Error_Endpoint_Auth": "ms-resource:loc.messages.Error_Endpoint_Auth"
   }
 }

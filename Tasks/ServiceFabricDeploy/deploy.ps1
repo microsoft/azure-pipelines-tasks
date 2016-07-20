@@ -28,29 +28,50 @@ try {
     Assert-VstsPath -LiteralPath $applicationPackagePath -PathType Container
     Write-Host (Get-VstsLocString -Key FoundApplicationPackage -ArgumentList $applicationPackagePath)
 
-    $aadServiceConnectionName = Get-VstsInput -Name aadServiceConnectionName -Require
-    $aadConnectedServiceEndpoint = Get-VstsEndpoint -Name $aadServiceConnectionName -Require
+    $serviceConnectionName = Get-VstsInput -Name serviceConnectionName -Require
+    $connectedServiceEndpoint = Get-VstsEndpoint -Name $serviceConnectionName -Require
 
     $publishProfile = Read-PublishProfile $publishProfilePath
     $clusterConnectionParameters = $publishProfile.ClusterConnectionParameters
-    
-    if (-not $clusterConnectionParameters.ContainsKey("AzureActiveDirectory") -or $clusterConnectionParameters.Item("AzureActiveDirectory") -eq $false)
-    {
-        throw (Get-VstsLocString -Key AzureActiveDirectoryNotSet)
-    }
-    
-    # Connect to cluster
-    $securityToken = Get-AadSecurityToken -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $aadConnectedServiceEndpoint
-    $clusterConnectionParameters["SecurityToken"] = $securityToken
-    $clusterConnectionParameters["WarningAction"] = "SilentlyContinue"
-    [void](Connect-ServiceFabricCluster @clusterConnectionParameters)
-    Write-Host (Get-VstsLocString -Key ConnectedToCluster)
     
     $regKey = "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK"
     if (!(Test-Path $regKey))
     {
         throw (Get-VstsLocString -Key ServiceFabricSDKNotInstalled)
     }
+
+    # Configure cluster connection pre-reqs and validate that the auth type configured by the service endpoint matches the auth type used by the publish profile.
+    if ($connectedServiceEndpoint.Auth.Scheme -eq "UserNamePassword")
+    {
+        if (-not $clusterConnectionParameters.ContainsKey("AzureActiveDirectory") -or $clusterConnectionParameters.Item("AzureActiveDirectory") -eq $false)
+        {
+            throw (Get-VstsLocString -Key ClusterSecurityMismatch_AAD)
+        }
+
+        $securityToken = Get-AadSecurityToken -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
+        $clusterConnectionParameters["SecurityToken"] = $securityToken
+        $clusterConnectionParameters["WarningAction"] = "SilentlyContinue"
+    }
+    elseif ($connectedServiceEndpoint.Auth.Scheme -eq "Certificate")
+    {
+        if (-not $clusterConnectionParameters.ContainsKey("X509Credential") -or $clusterConnectionParameters.Item("X509Credential") -eq $false)
+        {
+            throw (Get-VstsLocString -Key ClusterSecurityMismatch_Certificate)
+        }
+
+        Add-Certificate -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
+    }
+    else
+    {
+        if ($clusterConnectionParameters.AzureActiveDirectory -or $clusterConnectionParameters.X509Credential) 
+        {
+            throw (Get-VstsLocString -Key ClusterSecurityMismatch_None)
+        }
+    }
+
+    # Connect to cluster
+    [void](Connect-ServiceFabricCluster @clusterConnectionParameters)
+    Write-Host (Get-VstsLocString -Key ConnectedToCluster)
     
     . "$PSScriptRoot\ServiceFabricSDK\ServiceFabricSDK.ps1"
 
