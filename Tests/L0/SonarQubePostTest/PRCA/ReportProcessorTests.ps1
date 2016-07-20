@@ -5,8 +5,6 @@ Import-Module -Name "$PSScriptRoot\..\..\..\..\Tasks\SonarQubePostTest\PRCA\Repo
 
 . $PSScriptRoot\..\..\..\lib\Initialize-Test.ps1
 
-Register-Mock Write-VstsTaskVerbose
-
 #
 # This test validates the ReportProcessor that is responsible for loading the new issues 
 # from the SonarQube json report and computing the relative path to the associated code file. 
@@ -16,7 +14,7 @@ Register-Mock Write-VstsTaskVerbose
 Register-Mock GetSonarQubeOutDirectory { "$PSScriptRoot\data\out\" }
 
 # The repo local path matches the reportFilePath property from the projectInfo.xml files 
-Register-Mock GetTaskContextVariable { "C:\agent\_work\3\s" } -- "Build.Repository.LocalPath"
+Register-Mock Get-TaskVariable { "C:\agent\_work\3\s" } -- -Context $distributedTaskContext -Name "Build.Repository.LocalPath"
 
 # Act
 $actualIssues = FetchAnnotatedNewIssues
@@ -37,4 +35,4 @@ Assert-AreEqual "/ConsoleApplication1/Program.cs" $issue2.relativePath "Expectin
 
 # Cleanup
 Unregister-Mock GetSonarQubeOutDirectory
-Unregister-Mock GetTaskContextVariable
+Unregister-Mock Get-TaskVariable

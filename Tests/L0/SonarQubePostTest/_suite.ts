@@ -25,7 +25,10 @@ describe('SonarQubePostTest Suite', function () {
         psr.kill();
     });
 
-    if (ps) {        
+    if (ps) {
+         it('DisableAnalysisOnPrBuild tests', (done) => {
+             psr.run(path.join(__dirname, 'DisableAnalysisOnPrBuild.ps1'), done);
+         })
          it('TopLevelOrchestration tests', (done) => {
              psr.run(path.join(__dirname, 'TopLevelOrchestration.ps1'), done);
          })
@@ -37,6 +40,9 @@ describe('SonarQubePostTest Suite', function () {
          })
          it('PRCA Orchestrator tests', (done) => {
              psr.run(path.join(__dirname, 'PRCA', 'OrchestratorTests.ps1'), done);
+         })
+         it('PRCA Invoke tests', (done) => {
+            psr.run(path.join(__dirname,'PRCA', 'InvokeTests.ps1'), done);
          })
          it('SonarQubeMetrics tests', (done) => {
              psr.run(path.join(__dirname, 'SonarQubeMetrics.ps1'), done);

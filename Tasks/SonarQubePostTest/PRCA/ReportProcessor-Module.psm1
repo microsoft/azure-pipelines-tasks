@@ -19,7 +19,7 @@ function FetchAnnotatedNewIssues
         throw  [System.IO.FileNotFoundException] "Could not find the SonarQube issue report at $sonarReportFilePath. Unable to post issues to the PR."
     }
 
-    Write-VstsTaskVerbose "Report file found at $sonarReportFilePath"    
+    Write-Verbose "Report file found at $sonarReportFilePath"    
         
     CreateProjectGuidToProjectPathMap    
     
@@ -29,13 +29,13 @@ function FetchAnnotatedNewIssues
 
     # '@' makes sure the result set is returned as an array
     $newIssues = @($json.issues | Where { $_.isNew -eq $true })
-    Write-Host (Get-VstsLocString -Key "Info_PRCA_Summary" -ArgumentList $json.issues.Count, $newIssues.Count)
+    Write-Host "SonarQube found $($json.issues.Count) issues out of which $($newIssues.Count) are new"
     
     $newFileLevelIssues = @($newIssues | Where {(IsFileLevelIssue $_)})
     $difference = $newIssues.Count - $newFileLevelIssues.Count
     if ($difference -gt 0)
     {
-        Write-Host (Get-VstsLocString -Key "Info_PRCA_NotInPr" -ArgumentList difference)
+        Write-Host "$difference issue(s) do not relate to a specific file and will not be posted to the code review"
     }
 
     $newFileLevelIssues = AnnotateIssuesWithRelativePath $newFileLevelIssues
@@ -88,7 +88,7 @@ function CreateComponentKeyToPathMap($json)
         }
         else 
         {
-            Write-VstsTaskVerbose "Found a duplicate component key: $($component.key)"    
+            Write-Verbose "Found a duplicate component key: $($component.key)"    
         }
     }
 }
@@ -108,7 +108,7 @@ function CreateProjectGuidToProjectPathMap
         
         if ([System.IO.File]::Exists($projectInfoFilePath))
         {
-            Write-VstsTaskVerbose "CreateProjectGuidToProjectPathMap: Processing project info file: $projectInfoFilePath"
+            Write-Verbose "CreateProjectGuidToProjectPathMap: Processing project info file: $projectInfoFilePath"
             [xml]$xmlContent = Get-Content $projectInfoFilePath
             
             Assert ($xmlContent -ne $null) "Internal error: could not read $projectInfoFilePath"
@@ -120,7 +120,7 @@ function CreateProjectGuidToProjectPathMap
             }
             else
             {
-                Write-VstsTaskVerbose "Duplicate ProjectGuid found in $projectInfoFilePath"
+                Write-Verbose "Duplicate ProjectGuid found in $projectInfoFilePath"
             }
         }
     }
@@ -164,12 +164,12 @@ function GetPathRelativeToRepoRoot
     
     if (!$script:ProjectGuidAndFilePathMap.ContainsKey($guidToken))
     {
-        Write-VstsTaskVerbose "GetPathRelativeToRepoRoot: An entry for project guid $guidToken could not be found, check ProjectInfo.xml file"
+        Write-Verbose "GetPathRelativeToRepoRoot: An entry for project guid $guidToken could not be found, check ProjectInfo.xml file"
         return $null
     }
     if (!$script:ComponentKeyAndPathMap.ContainsKey($component))
     {
-        Write-VstsTaskVerbose "GetPathRelativeToRepoRoot: An entry for component key $component could not be found, check sonar-report.json file"
+        Write-Verbose "GetPathRelativeToRepoRoot: An entry for component key $component could not be found, check sonar-report.json file"
         return $null
     }
 
