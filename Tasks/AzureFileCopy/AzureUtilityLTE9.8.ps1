@@ -93,10 +93,10 @@ function Get-AzureBlobStorageEndpointFromRDFE
 
         Write-Verbose "[Azure Call](RDFE)Retrieving storage account endpoint for the storage account: $storageAccount"
         $storageAccountInfo = Get-AzureStorageAccount -StorageAccountName $storageAccountName -ErrorAction Stop
-        $stoargeAccountEnpoint = $storageAccountInfo.Endpoints[0]
+        $storageAccountEnpoint = $storageAccountInfo.Endpoints[0]
         Write-Verbose "[Azure Call](RDFE)Retrieved storage account endpoint successfully for the storage account: $storageAccount"
 
-        return $stoargeAccountEnpoint
+        return $storageAccountEnpoint
     }
 }
 
@@ -113,10 +113,10 @@ function Get-AzureBlobStorageEndpointFromARM
 
         Write-Verbose "[Azure Call]Retrieving storage account endpoint for the storage account: $storageAccount in resource group: $azureResourceGroupName"
         $storageAccountInfo = Get-AzureStorageAccount -ResourceGroupName $azureResourceGroupName -Name $storageAccountName -ErrorAction Stop
-        $stoargeAccountEnpoint = $storageAccountInfo.Endpoints[0]
+        $storageAccountEnpoint = $storageAccountInfo.PrimaryEndpoints[0].blob
 	    Write-Verbose "[Azure Call]Retrieved storage account endpoint successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName"
 
-        return $stoargeAccountEnpoint
+        return $storageAccountEnpoint
     }	
 }
 

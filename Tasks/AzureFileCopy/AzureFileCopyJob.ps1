@@ -63,7 +63,7 @@ param (
 
     Write-Verbose "Initiating copy on $fqdn "
 
-	if([string]::IsNullOrWhiteSpace($blobStorageEndpoint))
+	if(-not [string]::IsNullOrWhiteSpace($blobStorageEndpoint))
     {
         $blobStorageURI = $blobStorageEndpoint+$containerName+"/"+$blobPrefix
     }
