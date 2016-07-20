@@ -41,6 +41,9 @@ describe('SonarQubePostTest Suite', function () {
          it('PRCA Orchestrator tests', (done) => {
              psr.run(path.join(__dirname, 'PRCA', 'OrchestratorTests.ps1'), done);
          })
+         it('PRCA Invoke tests', (done) => {
+            psr.run(path.join(__dirname,'PRCA', 'InvokeTests.ps1'), done);
+         })
          it('SonarQubeMetrics tests', (done) => {
              psr.run(path.join(__dirname, 'SonarQubeMetrics.ps1'), done);
          })
