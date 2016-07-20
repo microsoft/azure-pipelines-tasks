@@ -26,6 +26,18 @@ function Create-AzureStorageContext
           [string]$storageAccountKey)
 }
 
+# return blob storage endpoint for given classic storage account
+function Get-AzureBlobStorageEndpointFromRDFE
+{
+    param([string]$storageAccountName)
+}
+
+# return blob storage endpoint for given ARM storage account
+function Get-AzureBlobStorageEndpointFromARM
+{
+    param([string]$storageAccountName)
+}
+
 #creates azure container on given storageaccount whose information is present in $storageContext
 function Create-AzureContainer
 {
