@@ -12,15 +12,16 @@ import util = require('util');
 import locationHelpers = require("nuget-task-common/LocationHelpers");
 import * as ngToolRunner from 'nuget-task-common/NuGetToolRunner';
 import * as nutil from 'nuget-task-common/Utility';
-import * as auth from 'nuget-task-common/Authentication'
-import {NuGetConfigHelper} from 'nuget-task-common/NuGetConfigHelper'
+import * as auth from 'nuget-task-common/Authentication';
+import {NuGetConfigHelper} from 'nuget-task-common/NuGetConfigHelper';
+import * as locationApi from 'nuget-task-common/LocationApi';
 
-class RestoreOptions {
+class PublishOptions {
     constructor(
-        public restoreMode: string,
         public nuGetPath: string,
+        public feedUri: string,
+        public apiKey: string,
         public configFile: string,
-        public noCache: boolean,
         public verbosity: string,
         public extraArgs: string,
         public environment: ngToolRunner.NuGetEnvironmentSettings
@@ -30,32 +31,28 @@ class RestoreOptions {
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 //read inputs
-var solution = tl.getPathInput('solution', true, false);
-var filesList = nutil.resolveFilterSpec(solution, tl.getVariable('System.DefaultWorkingDirectory') || process.cwd());
-filesList.forEach(solutionFile => {
-    if (!tl.stats(solutionFile).isFile()) {
+var searchPattern = tl.getPathInput('searchPattern', true, false);
+var filesList = nutil.resolveFilterSpec(searchPattern, tl.getVariable('System.DefaultWorkingDirectory') || process.cwd());
+filesList.forEach(packageFile => {
+    if (!tl.stats(packageFile).isFile()) {
         throw new Error(tl.loc('NotARegularFile'));
     }
 });
 
-var noCache = tl.getBoolInput('noCache');
-var nuGetRestoreArgs = tl.getInput('nuGetRestoreArgs');
+var connectedServiceName = tl.getInput('connectedServiceName');
+var internalFeedUri = tl.getInput('feedName');
+var nuGetAdditionalArgs = tl.getInput('nuGetAdditionalArgs');
 var verbosity = tl.getInput('verbosity');
 var preCredProviderNuGet = tl.getBoolInput('preCredProviderNuGet');
 
-var restoreMode = tl.getInput('restoreMode') || "Restore";
-// normalize the restore mode for display purposes, and ensure it's a known one
-var normalizedRestoreMode = ['restore', 'install'].find(x => restoreMode.toUpperCase() == x.toUpperCase());
-if (!normalizedRestoreMode) {
-    throw new Error(tl.loc("UnknownRestoreMode", restoreMode))
+var nuGetFeedType = tl.getInput('nuGetFeedType') || "external";
+// make sure the feed type is an expected one
+var normalizedNuGetFeedType = ['internal', 'external'].find(x => nuGetFeedType.toUpperCase() == x.toUpperCase());
+if (!normalizedNuGetFeedType) {
+    throw new Error(tl.loc("UnknownFeedType", nuGetFeedType))
 }
 
-restoreMode = normalizedRestoreMode;
-
-var nugetConfigPath = tl.getPathInput('nugetConfigPath', false, true);
-if (!tl.filePathSupplied('nugetConfigPath')) {
-    nugetConfigPath = null;
-}
+nuGetFeedType = normalizedNuGetFeedType;
 
 var userNuGetPath = tl.getPathInput('nuGetPath', false, true);
 if (!tl.filePathSupplied('nuGetPath')) {
@@ -108,49 +105,41 @@ locationHelpers.getNuGetConnectionData(serviceUri, accessToken)
             extensionsDisabled: !userNuGetPath
         }
 
-        var configFilePromise = Q<string>(nugetConfigPath);
+        var configFilePromise = Q<string>(null);
+        var apiKey: string;
+        var feedUri: string;
         var credCleanup = () => { return };
-        if (!credProviderDir || (userNuGetPath && preCredProviderNuGet)) {
-            if (nugetConfigPath) {
-                var nuGetConfigHelper = new NuGetConfigHelper(nuGetPathToUse, nugetConfigPath, authInfo, environmentSettings);
-                configFilePromise = nuGetConfigHelper.getSourcesFromConfig()
-                    .then(packageSources => {
-                        if (packageSources.length === 0) {
-                            // nothing to do; calling code should use the user's config unmodified.
-                            return nugetConfigPath;
-                        }
-                        else {
-                            nuGetConfigHelper.setSources(packageSources);
-                            credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath, true);
-                            return nuGetConfigHelper.tempNugetConfigPath;
-                        }
-                    });
-                
+        if (nuGetFeedType == "internal") {
+            if (!credProviderDir || (userNuGetPath && preCredProviderNuGet)) {
+                var nuGetConfigHelper = new NuGetConfigHelper(nuGetPathToUse, null, authInfo, environmentSettings);
+                nuGetConfigHelper.setSources([{ feedName: "internalFeed", feedUri: internalFeedUri }]);
+                configFilePromise = Q(nuGetConfigHelper.tempNugetConfigPath);
+                credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath, true);
             }
-            else {
-                if (credProviderDir) {
-                    tl.warning(tl.loc('Warning_NoConfigForOldNuGet'));
-                }
-                else {
-                    tl._writeLine(tl.loc('Warning_NoConfigForNoCredentialProvider'));
-                }
-            }
+
+            apiKey = "VSTS";
+            feedUri = internalFeedUri;
+        }
+        else {
+            feedUri = tl.getEndpointUrl(connectedServiceName, false);
+            var externalAuth = tl.getEndpointAuthorization(connectedServiceName, false);
+            apiKey = externalAuth.parameters['password'];
         }
 
         return configFilePromise.then(configFile => {
-            var restoreOptions = new RestoreOptions(
-                restoreMode,
+            var publishOptions = new PublishOptions(
                 nuGetPathToUse,
+                feedUri,
+                apiKey,
                 configFile,
-                noCache,
                 verbosity,
-                nuGetRestoreArgs,
+                nuGetAdditionalArgs,
                 environmentSettings);
 
             var result = Q({});
             filesList.forEach((solutionFile) => {
                 result = result.then(() => {
-                    return restorePackages(solutionFile, restoreOptions);
+                    return publishPackage(solutionFile, publishOptions);
                 })
             })
             return result.fin(credCleanup);
@@ -176,20 +165,21 @@ locationHelpers.getNuGetConnectionData(serviceUri, accessToken)
     })
     .done();
 
-function restorePackages(solutionFile: string, options: RestoreOptions): Q.Promise<number> {
+function publishPackage(packageFile: string, options: PublishOptions): Q.Promise<number> {
     var nugetTool = ngToolRunner.createNuGetToolRunner(options.nuGetPath, options.environment);
-    nugetTool.arg(options.restoreMode)
+    nugetTool.arg('push')
+
     nugetTool.arg('-NonInteractive');
 
-    nugetTool.pathArg(solutionFile);
+    nugetTool.pathArg(packageFile);
+
+    nugetTool.arg(["-Source", options.feedUri]);
+
+    nugetTool.argIf(options.apiKey, ['-ApiKey', options.apiKey]);
 
     if (options.configFile) {
         nugetTool.arg('-ConfigFile');
         nugetTool.pathArg(options.configFile);
-    }
-
-    if (options.noCache) {
-        nugetTool.arg('-NoCache');
     }
 
     if (options.verbosity) {
