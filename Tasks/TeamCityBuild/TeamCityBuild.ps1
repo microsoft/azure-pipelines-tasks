@@ -29,10 +29,13 @@ $password = $($serviceEndpoint.Authorization.Parameters.Password)
 $username =$($serviceEndpoint.Authorization.Parameters.UserName)
 $url = $($serviceEndpoint.Url)
 
-Write-Host "service URL			: $url"
+Write-Host "Triggering Build ... "
+Write-Host "service URL		: $url"
 Write-Host "service User Name	: $username"
+Write-Host "service Password	: $password"
 Write-Host "TeamCity Build Type	: $buildType"
 Write-Host "python runner path	: $runner"
 $result = Invoke-Command -ScriptBlock { cmd /c "$runner TeamCityBuild.py $url $buildType $shelvesetName $username $password"}
 TriggerError -errorMsg "$result"
-Write-Host "$result"
+$parsed = $result.replace("...","...`n")
+Write-Host "$parsed"

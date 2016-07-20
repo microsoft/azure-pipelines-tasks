@@ -23,7 +23,7 @@
     "version": {
         "Major": "0",
         "Minor": "3",
-        "Patch": "5"
+        "Patch": "8"
     },
     "minimumAgentVersion": "1.95.0",
     "instanceNameFormat": "Trigger TeamCityBuild $(buildType)",
