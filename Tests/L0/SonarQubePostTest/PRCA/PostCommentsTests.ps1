@@ -1,9 +1,6 @@
 [CmdletBinding()]
 param()
 
-
-
-
 #
 # The tests do not have access to the TFS client assemblies because those live only on the build agent. As such instead of mocking 
 # types such as DiscussionThread, these need to be completly replaced. Since the client API is binary compatible with future versions, this 
@@ -298,7 +295,6 @@ Add-Type -TypeDefinition $source -Language CSharp
 # import the module before initializing the test library to avoid "import-module" being mocked
 Import-Module -Name "$PSScriptRoot\..\..\..\..\Tasks\SonarQubePostTest\PRCA\PostComments-Module.psm1" -Verbose
 . $PSScriptRoot\..\..\..\lib\Initialize-Test.ps1
-Register-Mock Write-VstsTaskVerbose
 
 # Builds the input, similar to the ReportProcessor module output 
 function BuildTestMessage 
