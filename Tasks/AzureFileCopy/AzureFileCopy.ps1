@@ -110,6 +110,9 @@ try
         $containerName = [guid]::NewGuid().ToString()
         Create-AzureContainer -containerName $containerName -storageContext $storageContext
     }
+	
+	# Geting Azure Blob Storage Endpoint
+	$blobStorageEndpoint = Get-blobStorageEndpoint -storageAccountName $storageAccount -connectionType $connectionType
 }
 catch
 {
@@ -122,7 +125,7 @@ catch
 }
 
 # Uploading files to container
-Upload-FilesToAzureContainer -sourcePath $sourcePath -storageAccountName $storageAccount -containerName $containerName -blobPrefix $blobPrefix -storageKey $storageKey `
+Upload-FilesToAzureContainer -sourcePath $sourcePath -storageAccountName $storageAccount -containerName $containerName -blobPrefix $blobPrefix -blobStorageEndpoint $blobStorageEndpoint -storageKey $storageKey `
                              -azCopyLocation $azCopyLocation -additionalArguments $additionalArguments -destinationType $destination
 
 # Complete the task if destination is azure blob
@@ -158,7 +161,7 @@ try
 
     #copies files on azureVMs 
     Copy-FilesToAzureVMsFromStorageContainer `
-        -storageAccountName $storageAccount -containerName $containerName -containerSasToken $containerSasToken -targetPath $targetPath -azCopyLocation $azCopyLocation `
+        -storageAccountName $storageAccount -containerName $containerName -containerSasToken $containerSasToken -blobStorageEndpoint $blobStorageEndpoint -targetPath $targetPath -azCopyLocation $azCopyLocation `
         -resourceGroupName $environmentName -azureVMResourcesProperties $azureVMResourcesProperties -azureVMsCredentials $azureVMsCredentials `
         -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $useHttpsProtocolOption -skipCACheckOption $skipCACheckOption `
         -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments -copyFilesInParallel $copyFilesInParallel -connectionType $connectionType

@@ -83,6 +83,43 @@ function Create-AzureStorageContext
     }
 }
 
+function Get-AzureBlobStorageEndpointFromRDFE
+{
+    param([string]$storageAccountName)
+
+    if(-not [string]::IsNullOrEmpty($storageAccountName))
+    {
+        Switch-AzureMode AzureServiceManagement
+
+        Write-Verbose "[Azure Call](RDFE)Retrieving storage account endpoint for the storage account: $storageAccount"
+        $storageAccountInfo = Get-AzureStorageAccount -StorageAccountName $storageAccountName -ErrorAction Stop
+        $storageAccountEnpoint = $storageAccountInfo.Endpoints[0]
+        Write-Verbose "[Azure Call](RDFE)Retrieved storage account endpoint successfully for the storage account: $storageAccount"
+
+        return $storageAccountEnpoint
+    }
+}
+
+function Get-AzureBlobStorageEndpointFromARM
+{
+    param([string]$storageAccountName)
+
+    if(-not [string]::IsNullOrEmpty($storageAccountName))
+    {
+        Switch-AzureMode AzureResourceManager
+
+        # get azure storage account resource group name
+        $azureResourceGroupName = Get-AzureStorageAccountResourceGroupName -storageAccountName $storageAccountName
+
+        Write-Verbose "[Azure Call]Retrieving storage account endpoint for the storage account: $storageAccount in resource group: $azureResourceGroupName"
+        $storageAccountInfo = Get-AzureStorageAccount -ResourceGroupName $azureResourceGroupName -Name $storageAccountName -ErrorAction Stop
+        $storageAccountEnpoint = $storageAccountInfo.PrimaryEndpoints[0].blob
+	    Write-Verbose "[Azure Call]Retrieved storage account endpoint successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName"
+
+        return $storageAccountEnpoint
+    }	
+}
+
 function Create-AzureContainer
 {
     param([string]$containerName,
