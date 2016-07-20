@@ -22,7 +22,7 @@
     ],
     "version": {
         "Major": "0",
-        "Minor": "2",
+        "Minor": "3",
         "Patch": "5"
     },
     "minimumAgentVersion": "1.95.0",
@@ -66,6 +66,15 @@
             "defaultValue": "C:\\Python27\\python.exe",
             "required": false,
             "groupName": "advanced"
+        },
+        {
+            "name": "failOnStandardError",
+            "type": "boolean",
+            "label": "Fail on Standard Error",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "If this is true, this task will fail if any errors are written to the StandardError stream.",
+            "groupName": "advanced"
         }
     ],
     "execution": {
@@ -79,5 +88,9 @@
                 "windows"
             ]
         }
+    },
+    "messages": {
+        "BashReturnCode": "TeamCityBuild.py exited with return code: %d",
+        "BashFailed": "TeamCityBuild.py failed with error: %s"
     }
 }

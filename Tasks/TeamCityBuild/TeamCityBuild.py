@@ -4,6 +4,9 @@ import sys
 import time
 import logging
 
+print 'Number of arguments:', len(sys.argv), 'arguments.'
+print 'Argument List:', str(sys.argv) 
+
 f = """<build>
             <triggeringOptions rebuildAllDependencies="true" />
             <buildType id=\"""" + sys.argv[2] + """\"/>
