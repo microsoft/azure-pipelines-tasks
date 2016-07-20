@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Queue TeamCity Build",
+  "loc.helpMarkDown": "Replace with markdown to show in help",
+  "loc.description": "Queue a TeamCity build and wait for its result",
+  "loc.instanceNameFormat": "Trigger TeamCityBuild $(buildType)",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.connectedServiceName": "Server Endpoint",
+  "loc.input.help.connectedServiceName": "The server generic endpoint, set the key -Password/Token Key- field to your API key.",
+  "loc.input.label.buildType": "Build Type",
+  "loc.input.help.buildType": "TeamCity Build Name for triggering",
+  "loc.input.label.shelvesetName": "Shelveset Name",
+  "loc.input.help.shelvesetName": "TeamCity Build Name for triggering",
+  "loc.input.label.workingFolder": "Working folder"
+}

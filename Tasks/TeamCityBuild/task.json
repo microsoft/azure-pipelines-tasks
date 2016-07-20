@@ -1,0 +1,83 @@
+{
+    "id": "cd7d6010-4e68-11e6-a932-67b56cfb606b",
+    "name": "TeamCityBuild",
+    "friendlyName": "Queue TeamCity Build",
+    "description": "Queue a TeamCity build and wait for its result",
+    "author": "TIM",
+    "helpMarkDown": "Replace with markdown to show in help",
+    "category": "Utility",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
+    "demands": [
+        "python"
+    ],
+    "version": {
+        "Major": "0",
+        "Minor": "2",
+        "Patch": "3"
+    },
+    "minimumAgentVersion": "1.95.0",
+    "instanceNameFormat": "Trigger TeamCityBuild $(buildType)",
+    "inputs": [
+        {
+            "name": "connectedServiceName",
+            "type": "connectedService:Generic",
+            "label": "Server Endpoint",
+            "required": true,
+            "helpMarkDown": "The server generic endpoint, set the key -Password/Token Key- field to your API key."
+        },
+        {
+            "name": "buildType",
+            "type": "string",
+            "label": "Build Type",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "TeamCity Build Name for triggering"
+        },
+        {
+            "name": "shelvesetName",
+            "type": "string",
+            "label": "Shelveset Name",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "TeamCity Build Name for triggering"
+        },
+        {
+            "name": "workingFolder",
+            "type": "filePath",
+            "label": "Working folder",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "advanced"
+        },
+        {
+            "name": "customRunnerPath",
+            "type": "filePath",
+            "label": "customRunnerPath",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "advanced"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "TeamCityBuild.js",
+            "argumentFormat": ""
+        },
+        "PowerShell": {
+            "target": "$(currentDirectory)\\TeamCityBuild.ps1",
+            "platforms": [
+                "windows"
+            ]
+        }
+    }
+}

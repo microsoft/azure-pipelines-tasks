@@ -1,0 +1,72 @@
+{
+  "id": "cd7d6010-4e68-11e6-a932-67b56cfb606b",
+  "name": "TeamCityBuild",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "TIM",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "demands": [
+    "python"
+  ],
+  "version": {
+    "Major": "0",
+    "Minor": "1",
+    "Patch": "0"
+  },
+  "minimumAgentVersion": "1.95.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "connectedServiceName",
+      "type": "connectedService:Generic",
+      "label": "ms-resource:loc.input.label.connectedServiceName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
+    },
+    {
+      "name": "buildType",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.buildType",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.buildType"
+    },
+    {
+      "name": "shelvesetName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.shelvesetName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.shelvesetName"
+    },
+    {
+      "name": "workingFolder",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.workingFolder",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "TeamCityBuild.js",
+      "argumentFormat": ""
+    },
+    "PowerShell": {
+      "target": "TeamCityBuild.ps1"
+    }
+  }
+}
