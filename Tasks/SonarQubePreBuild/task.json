@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 46
+    "Patch": 47
   },
   "minimumAgentVersion": "1.99.0",
   "demands": [
@@ -116,7 +116,7 @@
       "helpMarkDown": "You can also specify settings via a configuration file. A template is available [here](https://go.microsoft.com/fwlink/?LinkID=620062)",
       "groupName": "advanced"
     },
-    {
+      {
       "name": "includeFullReport",
       "type": "boolean",
       "defaultValue": "true",
@@ -134,19 +134,14 @@
       "helpMarkDown": "This option is only available when using a SonarQube server 5.3 or above. It will introduce delays as the build must wait for SonarQube to complete the analysis. [More information](https://go.microsoft.com/fwlink/?LinkId=722407)",
       "groupName": "advanced"
     }
+  
   ],
   "instanceNameFormat": "Fetch the Quality Profile from SonarQube",
   "execution": {
-    "PowerShell3": {
-      "target": "SonarQubePreBuild.ps1"
+    "PowerShell": {
+      "target": "$(currentDirectory)\\SonarQubePreBuild.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
     }
-  },
-  "messages": {
-    "Error_Endpoint": "Please setup a generic endpoint and specify the SonarQube Url as the Server Url",
-    "Error_Config": "Could not find the specified configuration file: {0}",
-    "Error_Pr_Config": "sonar.analysis.mode is already set",
-    "Error_Endpoint_Name": "A Connected Service with name '{0}' could not be found.  Ensure that this Connected Service was successfully provisioned using the services tab in the Admin UI.",
-    "Error_Endpoint_Auth": "The authorization scheme $authScheme is not supported for a SonarQube server."
-
   }
 }

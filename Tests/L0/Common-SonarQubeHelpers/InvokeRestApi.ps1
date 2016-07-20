@@ -5,7 +5,8 @@ param()
 . $PSScriptRoot\..\..\..\Tasks\SonarQubePostTest\Common\SonarQubeHelpers\SonarQubeHelper.ps1
 
 # Common setup
-Register-Mock GetTaskContextVariable  { 'http://testsqserver:9999' } -- 'MSBuild.SonarQube.HostUrl'
+$distributedTaskContext = 'Some distributed task context'
+Register-Mock Get-TaskVariable { 'http://testsqserver:9999' } -- -Context $distributedTaskContext -Name 'MSBuild.SonarQube.HostUrl'
 Register-Mock Invoke-RestMethod # Hijack the PowerShell function used to make REST calls
 
 
@@ -25,8 +26,8 @@ Unregister-Mock Invoke-RestMethod
 
 # Test case 2: authenticated users can make authenticated calls to the SQ server
 
-Register-Mock GetTaskContextVariable  { 'user' } -- "MSBuild.SonarQube.ServerUsername"
-Register-Mock GetTaskContextVariable  { 'pa$$word' } -- "MSBuild.SonarQube.ServerPassword"
+Register-Mock Get-TaskVariable { 'user' } -- -Context $distributedTaskContext -Name "MSBuild.SonarQube.ServerUsername"
+Register-Mock Get-TaskVariable { 'pa$$word' } -- -Context $distributedTaskContext -Name "MSBuild.SonarQube.ServerPassword"
 Register-Mock Invoke-RestMethod
 
 # Act

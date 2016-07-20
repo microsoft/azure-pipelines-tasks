@@ -18,26 +18,32 @@ function VerifyPrRun
     
     Register-Mock IsPrBuild {$IsPrBuild}
     Register-Mock Write-Host
-    Register-Mock InvokePreBuildTask
+    Register-Mock InvokeMSBuildRunnerPostTest
+    Register-Mock CreateAndUploadReport
+    Register-Mock HandleCodeAnalysisReporting
+    Register-Mock BreakBuildOnQualityGateFailure
     
     #Act
-    . $PSScriptRoot\..\..\..\Tasks\SonarQubePreBuild\SonarQubePreBuild.ps1 -connectedServiceName "service" -projectKey "projectKey" -projectName "projectName" -projectVersion "1"
+    . $PSScriptRoot\..\..\..\Tasks\SonarQubePostTest\SonarQubePostTest.ps1
     
     # Assert
     if ($ExpectedToRun)
     {
-        Assert-WasCalled InvokePreBuildTask
+        Assert-WasCalled InvokeMSBuildRunnerPostTest
     }
     else
     {
         Assert-WasCalled Write-Host -ArgumentsEvaluator {$args[0] -like "*SQPullRequestBot*"}
-        Assert-WasCalled InvokePreBuildTask -Times 0
+        Assert-WasCalled InvokeMSBuildRunnerPostTest -Times 0
     }
     
     # Cleanup
     Unregister-Mock IsPrBuild 
     Unregister-Mock Write-Host
-    Unregister-Mock InvokePreBuildTask
+    Unregister-Mock InvokeMSBuildRunnerPostTest
+    Unregister-Mock CreateAndUploadReport
+    Unregister-Mock HandleCodeAnalysisReporting
+    Unregister-Mock BreakBuildOnQualityGateFailure
     
     if ($SQPullRequestBotSetting -ne $null)
     {

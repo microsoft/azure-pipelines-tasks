@@ -4,13 +4,13 @@
 function BreakBuildOnQualityGateFailure
 {    
     $breakBuild = GetTaskContextVariable "MSBuild.SonarQube.Internal.BreakBuild"
-    $breakBuildEnabled = [System.Convert]::ToBoolean($breakBuild)
+    $breakBuildEnabled = Convert-String $breakBuild Boolean
 
     if ($breakBuildEnabled)
     {
-        if (IsPRBuild)
+        if (IsPrBuild)
         {
-            Write-Host (Get-VstsLocString -Key 'Info_Breaker_Pr')
+            Write-Host "Ignoring the setting of breaking the build on quality gate failure because the build was triggered by a pull request."
             return;
         }
         
@@ -20,7 +20,7 @@ function BreakBuildOnQualityGateFailure
     }
     else
     {
-        Write-Host (Get-VstsLocString -Key 'Info_Breaker_Disabled')
+        Write-Host "The build was not set to fail if the associated quality gate fails."
     }
 }
 
@@ -34,11 +34,13 @@ function FailBuildOnQualityGateStatus
     if ($qualityGateStatus -eq "error")
     {        
         $dashboardUrl = GetTaskContextVariable "MSBuild.SonarQube.ProjectUri"
-        Write-VstsTaskError "The SonarQube quality gate associated with this build has failed. For more details see $dashboardUrl"
-        Write-VstsSetResult -Result Failed
+        
+        Write-Host "##vso[task.logissue type=error]The SonarQube quality gate associated with this build has failed. For more details see $dashboardUrl"
+        Write-Host "##vso[task.complete result=Failed;]"
+        
     }
     else
     {
-        Write-Host (Get-VstsLocString -Key 'Info_Breaker_Passed' -ArgumentList $qualityGateStatus)
+        Write-Host "The SonarQube quality gate associated with this build has passed (status $qualityGateStatus)"
     }
 }

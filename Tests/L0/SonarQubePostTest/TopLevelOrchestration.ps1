@@ -11,17 +11,12 @@ param()
 Register-Mock InvokeMSBuildRunnerPostTest 
 Register-Mock CreateAndUploadReport 
 Register-Mock BreakBuildOnQualityGateFailure 
-Register-Mock ExitOnPRBuild
-Register-Mock HandleCodeAnalysisReporting
 
 # Act
 . $PSScriptRoot\..\..\..\Tasks\SonarQubePostTest\SonarQubePostTest.ps1    
 
 # Assert
-Assert-WasCalled ExitOnPRBuild
 Assert-WasCalled InvokeMSBuildRunnerPostTest
 Assert-WasCalled CreateAndUploadReport
 Assert-WasCalled BreakBuildOnQualityGateFailure
-Assert-WasCalled HandleCodeAnalysisReporting
-
 

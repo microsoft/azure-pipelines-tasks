@@ -29,7 +29,7 @@
 #
 function GetQualityGateSectionContent
 {
-    Write-VstsTaskVerbose "Formatting the quality gate report section"
+    Write-Verbose "Formatting the quality gate report section"
     
     WaitForAnalysisToFinish
     
@@ -63,7 +63,7 @@ function FormatQualityGateMessagesSection
         
         foreach ($message in $messages)
         {
-            Write-VstsTaskVerbose "Value $($message.actualValue)"
+            Write-Verbose "Value $($message.actualValue)"
             
             [void]$sb.AppendLine("<tr>")
             [void]$sb.AppendLine("<td><span style=""padding-right:4px;"">$($message.metric_name)</span></td>")
@@ -173,7 +173,7 @@ function GetMetricValueWithUnit
     }
     
     $type = $metric.type
-    Write-VstsTaskVerbose "$($metric.name) -  type is $type with the value $metricValue"
+    Write-Verbose "$($metric.name) -  type is $type with the value $metricValue"
     
     if ($type -eq "WORK_DUR")
     {
