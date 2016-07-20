@@ -70,7 +70,7 @@
       "name": "overwrite",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.overwrite",
-      "defaultValue": "false",
+      "defaultValue": "true",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.overwrite",
       "groupName": "advanced"
@@ -93,8 +93,15 @@
   },
   "messages": {
     "UseDefaultPort": "ms-resource:loc.messages.UseDefaultPort",
-    "SettingUpSshConnection": "ms-resource:loc.messages.SettingUpSshConnection",
+    "CleanTargetFolder": "ms-resource:loc.messages.CleanTargetFolder",
+    "CleanTargetFolderFailed": "ms-resource:loc.messages.CleanTargetFolderFailed",
+    "CopyingFiles": "ms-resource:loc.messages.CopyingFiles",
+    "StartedFileCopy": "ms-resource:loc.messages.StartedFileCopy",
+    "FileExists": "ms-resource:loc.messages.FileExists",
     "ConnectionFailed": "ms-resource:loc.messages.ConnectionFailed",
-    "CleanTargetFolderFailed": "ms-resource:loc.messages.CleanTargetFolderFailed"
+    "RemoteCmdExecutionErr": "ms-resource:loc.messages.RemoteCmdExecutionErr",
+    "CheckLogForStdErr": "ms-resource:loc.messages.CheckLogForStdErr",
+    "RemoteCmdNonZeroExitCode": "ms-resource:loc.messages.RemoteCmdNonZeroExitCode",
+    "UploadFileFailed": "ms-resource:loc.messages.UploadFileFailed"
   }
 }
