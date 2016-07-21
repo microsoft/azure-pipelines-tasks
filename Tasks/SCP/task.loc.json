@@ -1,0 +1,112 @@
+{
+  "id": "67cec91b-0351-4c2f-8465-d74b3d2a2d96",
+  "name": "SCP",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 0
+  },
+  "demands": [],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "sshEndpoint",
+      "type": "connectedService:ssh",
+      "label": "ms-resource:loc.input.label.sshEndpoint",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.sshEndpoint"
+    },
+    {
+      "name": "sourceFolder",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.sourceFolder",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sourceFolder"
+    },
+    {
+      "name": "contents",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.contents",
+      "defaultValue": "**",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.contents"
+    },
+    {
+      "name": "targetFolder",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.targetFolder",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.targetFolder"
+    },
+    {
+      "name": "cleanTargetFolder",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.cleanTargetFolder",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cleanTargetFolder",
+      "groupName": "advanced"
+    },
+    {
+      "name": "overwrite",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.overwrite",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.overwrite",
+      "groupName": "advanced"
+    },
+    {
+      "name": "flattenFolders",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.flattenFolders",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.flattenFolders",
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "scp.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "UseDefaultPort": "ms-resource:loc.messages.UseDefaultPort",
+    "SourceNotFolder": "ms-resource:loc.messages.SourceNotFolder",
+    "CleanTargetFolder": "ms-resource:loc.messages.CleanTargetFolder",
+    "CleanTargetFolderFailed": "ms-resource:loc.messages.CleanTargetFolderFailed",
+    "NothingToCopy": "ms-resource:loc.messages.NothingToCopy",
+    "CopyingFiles": "ms-resource:loc.messages.CopyingFiles",
+    "StartedFileCopy": "ms-resource:loc.messages.StartedFileCopy",
+    "CopyCompleted": "ms-resource:loc.messages.CopyCompleted",
+    "FileExists": "ms-resource:loc.messages.FileExists",
+    "SettingUpSSHConnection": "ms-resource:loc.messages.SettingUpSSHConnection",
+    "ConnectionNotSetup": "ms-resource:loc.messages.ConnectionNotSetup",
+    "ConnectionFailed": "ms-resource:loc.messages.ConnectionFailed",
+    "RemoteCmdExecutionErr": "ms-resource:loc.messages.RemoteCmdExecutionErr",
+    "CheckLogForStdErr": "ms-resource:loc.messages.CheckLogForStdErr",
+    "RemoteCmdNonZeroExitCode": "ms-resource:loc.messages.RemoteCmdNonZeroExitCode",
+    "UploadFileFailed": "ms-resource:loc.messages.UploadFileFailed"
+  }
+}
