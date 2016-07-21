@@ -35,7 +35,7 @@ Write-Host "service User Name	: $username"
 Write-Host "service Password	: $password"
 Write-Host "TeamCity Build Type	: $buildType"
 Write-Host "python runner path	: $runner"
-$result = Invoke-Command -ScriptBlock { cmd /c "$runner TeamCityBuild.py $url $buildType $shelvesetName $username $password"}
+$result = Invoke-Command -ScriptBlock { cmd /c "$runner TeamCityBuild.py $url $buildType $shelvesetName $username $password 2>&1"}
 TriggerError -errorMsg "$result"
-$parsed = $result.replace("...","...`n")
+$parsed = $result.replace("...","...`r`n")
 Write-Host "$parsed"

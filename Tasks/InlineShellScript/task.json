@@ -1,0 +1,77 @@
+﻿{
+    "id": "d9c9d610-4f20-11e6-8efc-53eddb99a14a",
+    "name": "InlineShellScript",
+    "friendlyName": "Inline Shell script",
+    "description": "Write and Run a script from Build Task UI",
+    "author": "TIM",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613738)",
+    "category": "Utility",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "version": {
+        "Major": "0",
+        "Minor": "0",
+        "Patch": "9"
+    },
+    "demands": [
+        "sh",
+        "Agent.OS -equals linux"
+    ],
+    "instanceNameFormat": "Inline Script $(customTool)",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "cwd",
+            "type": "filePath",
+            "label": "Working Directory",
+            "defaultValue": "$(build.sourcesDirectory)",
+            "required": false,
+            "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "customTool",
+            "type": "string",
+            "label": "Custom runner",
+            "defaultValue": "bash",
+            "required": false,
+            "helpMarkDown": "Custom runner (default is bash).",
+            "groupName": "advanced"
+        },
+        {
+            "name": "script",
+            "type": "multiLine",
+            "label": "Script Content",
+            "defaultValue": "#!/bin/bash",
+            "required": true,
+            "helpMarkDown": "Content of the shell script file to run."
+        },
+        {
+            "name": "failOnStandardError",
+            "type": "boolean",
+            "label": "Fail on Standard Error",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "If this is true, this task will fail if any errors are written to the StandardError stream.",
+            "groupName": "advanced"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "inlineshellscript.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "BashReturnCode": "Script exited with return code: %d",
+        "BashFailed": "Script failed with error: %s"
+    }
+}
