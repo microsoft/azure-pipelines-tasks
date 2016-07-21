@@ -1,7 +1,6 @@
 import Q = require('q');
 import tl = require('vsts-task-lib/task');
 var Ssh2Client = require('ssh2').Client;
-var Scp2 = require('scp2');
 var Scp2Client = require('scp2').Client;
 
 export class RemoteCommandOptions {
@@ -13,8 +12,7 @@ export class SshHelper {
     private sshClient: any;
     private scpClient: any;
     private sftpClient: any;
-    private clientForSftp: any;
-
+    
     /**
      * Constructor that takes a configuration object of format
      * {

@@ -37,7 +37,7 @@
     {
       "name": "sourceFolder",
       "type": "filePath",
-      "label": "Source Folder",
+      "label": "Source folder",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "The source folder that the copy pattern(s) will be run from.  Empty is the root of the repo.  Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988) if files are not in the repo. Example: $(agent.builddirectory)"
@@ -109,6 +109,5 @@
     "CheckLogForStdErr": "Check the build log for STDERR from the command.",
     "RemoteCmdNonZeroExitCode": "Command %s exited with code %s.",
     "UploadFileFailed": "Failed to upload %s to %s on remote machine. %s."
-
   }
 }

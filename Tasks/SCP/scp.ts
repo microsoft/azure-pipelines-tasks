@@ -1,10 +1,11 @@
+/// <reference path="../../definitions/ssh-common.d.ts" />
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
 
-import path = require('path');
-import tl = require('vsts-task-lib/task');
 import os = require('os');
-import fs = require('fs');
+import path = require('path');
 import Q = require('q');
+
+import tl = require('vsts-task-lib/task');
 import sshCommon = require('ssh-common/ssh-common');
 import {SshHelper} from 'ssh-common/ssh-common';
 
@@ -227,4 +228,5 @@ async function run() {
         }
     }
 }
+
 run();
