@@ -17,7 +17,12 @@ declare module 'ssh-common/ssh-common' {
         constructor(sshConfig:any);
 
         /**
-         * Close any open client connections for SSH, SCP and SFTP
+         * Sets up the SSH connection using the configuration passed to the constructor
+         */
+        setupConnection();
+
+        /**
+         * Close any open SSH client connections
          */
         closeConnection();
 
@@ -27,14 +32,14 @@ declare module 'ssh-common/ssh-common' {
          * @param dest, folders will be created if they do not exist on remote server
          * @returns {Promise<string>}
          */
-        uploadFile(sourceFile:string, dest:string);
+        uploadFile(sourceFile:string, dest:string) : Q.Promise<string>;
 
         /**
          * Returns true if the path exists on remote machine, false if it does not exist
          * @param path
          * @returns {Promise<boolean>}
          */
-        checkRemotePathExists(path:string);
+        checkRemotePathExists(path:string) : Q.Promise<boolean>;
 
         /**
          * Runs specified command on remote machine, returns error for non-zero exit code
@@ -42,6 +47,6 @@ declare module 'ssh-common/ssh-common' {
          * @param options
          * @returns {Promise<string>}
          */
-        runCommandOnRemoteMachine(command:string, options:RemoteCommandOptions);
+        runCommandOnRemoteMachine(command:string, options:RemoteCommandOptions) : Q.Promise<string>;
     }
 }

@@ -8,6 +8,9 @@ import Q = require('q');
 import sshCommon = require('ssh-common/ssh-common');
 import {SshHelper} from 'ssh-common/ssh-common';
 
+//This method will find the list of matching files for the specified contents
+//This logic is the same as the one used by CopyFiles task except for allowing dot folders to be copied
+//This will be useful to put in the task-lib
 function getFilesToCopy(sourceFolder, contents: string []) : string [] {
     // include filter
     var includeContents: string[] = [];
@@ -59,7 +62,7 @@ function getFilesToCopy(sourceFolder, contents: string []) : string [] {
         var map = {};
 
         // minimatch options
-        var matchOptions = { matchBase: true };
+        var matchOptions = { matchBase: true , dot: true};
         if(os.type().match(/^Win/))
         {
             matchOptions["nocase"] = true;
@@ -156,59 +159,63 @@ async function run() {
         var flattenFolders:boolean = tl.getBoolInput('flattenFolders', false);
 
         if(!tl.stats(sourceFolder).isDirectory()) {
-            tl.setResult(tl.TaskResult.Failed, 'Source folder has to be a directory.');
-            throw 'Source folder has to be a directory.';
+            throw tl.loc('SourceNotFolder');
         }
 
-        //initialize the SSH helpers
+        //initialize the SSH helpers, setup the connection
         sshHelper = new sshCommon.SshHelper(sshConfig);
+        await sshHelper.setupConnection();
 
         if(cleanTargetFolder) {
             tl._writeLine(tl.loc('CleanTargetFolder', targetFolder));
-            var cleanTargetFolderCmd = 'rm -rf "' + targetFolder + path.posix.sep + '*"';
+            var cleanTargetFolderCmd = 'rm -rf "' + targetFolder + '/*"';
             try {
                 await sshHelper.runCommandOnRemoteMachine(cleanTargetFolderCmd, null);
             } catch (err) {
-                tl.setResult(tl.TaskResult.Failed, tl.loc('CleanTargetFolderFailed', err));
                 throw tl.loc('CleanTargetFolderFailed', err);
             }
         }
 
-        //copy Files
+        //identify the files to copy
         var filesToCopy: string [] = [];
         filesToCopy = getFilesToCopy(sourceFolder, contents);
-        tl.debug('Number of files to copy = ' + filesToCopy.length);
-        tl.debug('filesToCopy = ' + filesToCopy);
 
-        tl._writeLine(tl.loc('CopyingFiles', filesToCopy.length));
-        var fileCopyProgress : Q.Promise<string> [] = [];
-        for(var i : number = 0; i < filesToCopy.length; i ++) {
-            var fileToCopy = filesToCopy[i];
-            tl.debug('fileToCopy = ' + fileToCopy);
+        //copy files to remote machine
+        if(filesToCopy && filesToCopy.length > 0) {
+            tl.debug('Number of files to copy = ' + filesToCopy.length);
+            tl.debug('filesToCopy = ' + filesToCopy);
 
-            var relativePath;
-            if(flattenFolders) {
-                relativePath = path.basename(fileToCopy);
-            } else {
-                relativePath = fileToCopy.substring(sourceFolder.length)
-                    .replace(/^\\/g, "")
-                    .replace(/^\//g, "");
-            }
-            tl.debug('relativePath = ' + relativePath);
-            var targetPath = path.posix.join(targetFolder, relativePath);
+            tl._writeLine(tl.loc('CopyingFiles', filesToCopy.length));
+            var fileCopyProgress:Q.Promise<string> [] = [];
+            for (var i:number = 0; i < filesToCopy.length; i++) {
+                var fileToCopy = filesToCopy[i];
+                tl.debug('fileToCopy = ' + fileToCopy);
 
-            tl._writeLine(tl.loc('StartedFileCopy', fileToCopy, targetPath));
-            if(!overwrite) {
-                var fileExists : boolean = await sshHelper.checkRemotePathExists(targetPath);
-                if(fileExists) {
-                    throw tl.loc('FileExists', targetPath);
+                var relativePath;
+                if (flattenFolders) {
+                    relativePath = path.basename(fileToCopy);
+                } else {
+                    relativePath = fileToCopy.substring(sourceFolder.length)
+                        .replace(/^\\/g, "")
+                        .replace(/^\//g, "");
                 }
-            }
-            fileCopyProgress.push(sshHelper.uploadFile(fileToCopy, targetPath));
-        }
+                tl.debug('relativePath = ' + relativePath);
+                var targetPath = path.posix.join(targetFolder, relativePath);
 
-        //wait for all files to be copied
-        await Q.all(fileCopyProgress);
+                tl._writeLine(tl.loc('StartedFileCopy', fileToCopy, targetPath));
+                if (!overwrite) {
+                    var fileExists:boolean = await sshHelper.checkRemotePathExists(targetPath);
+                    if (fileExists) {
+                        throw tl.loc('FileExists', targetPath);
+                    }
+                }
+                //looks like scp can only hanlde one file at a time reliably
+                await sshHelper.uploadFile(fileToCopy, targetPath);
+            }
+            tl._writeLine(tl.loc('CopyCompleted', filesToCopy.length));
+        } else {
+            tl.warning(tl.loc('NothingToCopy'));
+        }
     } catch(err) {
         tl.setResult(tl.TaskResult.Failed, err);
     } finally {

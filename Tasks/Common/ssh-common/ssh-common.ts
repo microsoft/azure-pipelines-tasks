@@ -1,6 +1,7 @@
-import tl = require('vsts-task-lib/task');
 import Q = require('q');
+import tl = require('vsts-task-lib/task');
 var Ssh2Client = require('ssh2').Client;
+var Scp2 = require('scp2');
 var Scp2Client = require('scp2').Client;
 
 export class RemoteCommandOptions {
@@ -12,6 +13,7 @@ export class SshHelper {
     private sshClient: any;
     private scpClient: any;
     private sftpClient: any;
+    private clientForSftp: any;
 
     /**
      * Constructor that takes a configuration object of format
@@ -28,68 +30,73 @@ export class SshHelper {
         this.sshConfig = sshConfig;
     }
 
-    private setupSshClientConnection() : Q.Promise<any> {
-        var defer = Q.defer<any>();
-        var client = new Ssh2Client();
-        client.on('ready', () => {
-            defer.resolve(client);
+    private setupSshClientConnection() : Q.Promise<void> {
+        var defer = Q.defer<void>();
+        this.sshClient = new Ssh2Client();
+        this.sshClient.on('ready', () => {
+            defer.resolve(null);
         }).on('error', (err) => {
             defer.reject(tl.loc('ConnectionFailed', err));
         }).connect(this.sshConfig);
         return defer.promise;
     }
 
-    private setupScpConnection() : Q.Promise<any> {
-        var defer = Q.defer<any>();
-        var scp2Connection = new Scp2Client();
-        scp2Connection.defaults(this.sshConfig);
-        scp2Connection.sftp((err, sftp) => {
+    private setupScpConnection() : Q.Promise<void> {
+        var defer = Q.defer<void>();
+        this.scpClient = new Scp2Client();
+        this.scpClient.defaults(this.sshConfig);
+        this.scpClient.sftp((err, sftp) => {
             if(err) {
                 defer.reject(tl.loc('ConnectionFailed', err));
             } else {
-                defer.resolve(scp2Connection);
+                this.sftpClient = sftp;
+                defer.resolve(null);
             }
         })
         return defer.promise;
     }
 
-    private async setupSftpConnection() {
-    var defer = Q.defer<any>();
-        var clientForSftp;
-        if(this.sshClient) {
-            clientForSftp = this.sshClient;
-        } else if(this.scpClient) {
-            clientForSftp = this.scpClient;
-        } else {
-            //setup client using sshConfig
-            clientForSftp = await this.setupSshClientConnection();
+    /**
+     * Sets up the SSH connection
+     */
+    async setupConnection() {
+        tl._writeLine(tl.loc('SettingUpSSHConnection', this.sshConfig.host));
+        try {
+            await this.setupSshClientConnection();
+            await this.setupScpConnection();
+        } catch(err) {
+            throw tl.loc('ConnectionFailed', err);
         }
-
-        clientForSftp.sftp(function (err, sftp) {
-            if (err) {
-                defer.reject(tl.loc('ConnectionFailed', err));
-            }
-            defer.resolve(sftp);
-        })
-
-        return defer.promise;
     }
 
     /**
      * Close any open client connections for SSH, SCP and SFTP
      */
     closeConnection() {
-        if(this.sshClient) {
-            this.sshClient.end();
-            this.sshClient = null;
+        try {
+            if (this.sftpClient) {
+                this.sftpClient.close();
+                this.sftpClient = null;
+            }
+        } catch(err) {
+            tl.debug('Failed to close SFTP client.');
         }
-        if(this.scpClient) {
-            this.scpClient.close();
-            this.scpClient = null;
+        try {
+            if (this.sshClient) {
+                this.sshClient.end();
+                this.sshClient = null;
+            }
+        } catch(err) {
+            tl.debug('Failed to close SSH client.');
         }
-        if(this.sftpClient) {
-            this.sftpClient.close();
-            this.sftpClient = null;
+
+        try {
+            if (this.scpClient) {
+                this.scpClient.close();
+                this.scpClient = null;
+            }
+        } catch(err) {
+            tl.debug('Failed to close SCP client.');
         }
     }
 
@@ -99,10 +106,11 @@ export class SshHelper {
      * @param dest, folders will be created if they do not exist on remote server
      * @returns {Promise<string>}
      */
-    async uploadFile(sourceFile: string, dest: string) {
+    uploadFile(sourceFile: string, dest: string) : Q.Promise<string> {
+        tl.debug('Upload ' + sourceFile + ' to ' + dest + ' on remote machine.');
         var defer = Q.defer<string>();
         if(!this.scpClient) {
-            this.scpClient = await this.setupScpConnection();
+            defer.reject(tl.loc('ConnectionNotSetup'));
         }
         this.scpClient.upload(sourceFile, dest, (err) => {
             if(err) {
@@ -119,11 +127,11 @@ export class SshHelper {
      * @param path
      * @returns {Promise<boolean>}
      */
-    async checkRemotePathExists(path: string) {
+    checkRemotePathExists(path: string) : Q.Promise<boolean> {
         var defer = Q.defer<boolean>();
 
         if(!this.sftpClient) {
-            this.sftpClient = await this.setupSftpConnection();
+            defer.reject(tl.loc('ConnectionNotSetup'));
         }
         this.sftpClient.stat(path, function(err, attr) {
             if(err) {
@@ -144,12 +152,12 @@ export class SshHelper {
      * @param options
      * @returns {Promise<string>}
      */
-    async runCommandOnRemoteMachine(command: string, options: RemoteCommandOptions) {
+    runCommandOnRemoteMachine(command: string, options: RemoteCommandOptions) : Q.Promise<string> {
         var defer = Q.defer<string>();
         var stdErrWritten:boolean = false;
 
         if(!this.sshClient) {
-            this.sshClient = await this.setupSshClientConnection();
+            defer.reject(tl.loc('ConnectionNotSetup'));
         }
 
         if(!options) {
