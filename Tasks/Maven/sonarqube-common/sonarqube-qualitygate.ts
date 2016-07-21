@@ -9,34 +9,38 @@ export function createBuildSummaryQualityGateSection(analysisStatus:string):stri
         return null;
     }
 
-    var visualStatus:QualityGateVisualStatus = QualityGateVisualStatus.createFromAnalysisStatus(analysisStatus);
+
+    var visualColor:string;
+    var visualLabel:string;
+    switch (analysisStatus.toUpperCase()) {
+        case 'OK':
+            visualColor = '#85BB43';
+            visualLabel = 'Passed';
+            break;
+        case 'WARN':
+            visualColor = '#F90';
+            visualLabel = 'Warning';
+            break;
+        case 'ERROR':
+            visualColor = '#D4333F';
+            visualLabel = 'Failed';
+            break;
+        case 'NONE':
+            visualColor = '#BBB';
+            visualLabel = 'None';
+            break;
+        default:
+            visualColor = '#BBB';
+            visualLabel = 'Unknown';
+            tl.warning(tl.loc('sqCommon_QualityGateStatusUnknown'));
+            break;
+    }
 
     // ES6 template literal usage to streamline creating this section.
     var reportContents:string  = `<div style="padding:5px 0px">
         <span>Quality Gate</span>
-    <span style="padding:4px 10px; margin-left: 5px; background-color:${visualStatus.Color}; color:#fff; display:inline-block">${visualStatus.Label}</span>
+    <span style="padding:4px 10px; margin-left: 5px; background-color:${visualColor}; color:#fff; display:inline-block">${visualLabel}</span>
         </div>`;
 
     return reportContents;
-}
-
-class QualityGateVisualStatus {
-    constructor(public Color: string, public Label: string) {
-    }
-
-    public static createFromAnalysisStatus(analysisStatus:string):QualityGateVisualStatus {
-        switch (analysisStatus.toUpperCase()) {
-            case 'OK':
-                return new QualityGateVisualStatus('#85BB43', 'Passed');
-            case 'WARN':
-                return new QualityGateVisualStatus('#F90', 'Warning');
-            case 'ERROR':
-                return new QualityGateVisualStatus('#D4333F', 'Failed');
-            case 'NONE':
-                return new QualityGateVisualStatus('#BBB', 'None');
-            default:
-                tl.warning('Could not detect the quality gate status or a new status has been introduced.'); // TODO: LOC
-                return new QualityGateVisualStatus('#BBB', 'Unknown');
-        }
-    }
 }

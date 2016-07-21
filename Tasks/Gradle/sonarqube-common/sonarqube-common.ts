@@ -221,7 +221,7 @@ function createQualityGateStatusSection(taskReport: TaskReport): Q.Promise<strin
     }
 
     // Wait for analysis to finish so that we can get analysis information from the SonarQube server
-    var timeout:number = 60;
+    var timeout:number = 300;
     var delay:number = 1;
 
     console.log(tl.loc('sqCommon_WaitingForAnalysis'));

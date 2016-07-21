@@ -189,7 +189,7 @@ export function setResourcePath(path:string):void {
 
 // Replaces tl.loc(). Use setResourcePath(path) or setLoc(key, value) in setup.
 export function loc(key:string):string {
-    return 'Localisation of key ' + key;
+    return process.env[getLocEnvVar(key)] || key;
 }
 
 // Replaces tl.getInput(key). Use setInput(key, value) in setup.

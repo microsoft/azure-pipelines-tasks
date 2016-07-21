@@ -15,6 +15,7 @@ import sqCommon = require('./sonarqube-common');
 
 // Repeated query the server to determine if the task has finished.
 // Returns true if the task is finished, or false if the timeout was exceeded without a positive answer from the server.
+// Rejects if there was an error in the request(s), or if any request returns a response code that is not a success.
 // Timeout and delay are in seconds, defaulting to 60 and 1 respectively if not specified
 export function waitForAnalysisCompletion(taskReport:TaskReport, timeout?:number, delay?:number):Q.Promise<boolean> {
     var defer = Q.defer<boolean>();
@@ -53,6 +54,7 @@ export function waitForAnalysisCompletion(taskReport:TaskReport, timeout?:number
 export function isTaskComplete(taskReport:TaskReport):Q.Promise<boolean> {
     return getTaskDetails(taskReport)
         .then((responseJson:any) => {
+            console.log('TEST');
             var taskStatus:string = responseJson.task.status;
             return (taskStatus.toUpperCase() == 'SUCCESS');
         });
@@ -83,41 +85,38 @@ function getProjectStatus(qualityGateDetails:any):string {
 }
 
 export function getAnalysisDetails(analysisId:string):Q.Promise<Object> {
-    try {
-        return callSonarQubeRestEndpoint('/api/qualitygates/project_status?analysisId=' + analysisId)
-            .then((response:RestResponse) => {
-                var responseJson:any = response.payloadToJson();
-                if (!responseJson.projectStatus) {
-                    throw responseJson;
-                }
+    return callSonarQubeRestEndpoint('/api/qualitygates/project_status?analysisId=' + analysisId)
+        .then((responseJson:any) => {
+            if (!responseJson.projectStatus) {
+                tl.debug('Could not fetch quality gate details on analysis ID' + analysisId);
+                return Q.reject(new Error(tl.loc('sqCommon_InvalidResponseFromServer')));
+            }
 
-                return responseJson;
-            });
-    } catch (error) {
-        tl.debug('Could not fetch quality gate details on analysis ID' + analysisId);
-        throw error;
-    }
+            return responseJson;
+        });
 }
 
 function getTaskDetails(taskReport:TaskReport):Q.Promise<Object> {
     if (!taskReport) {
-        throw new Error(tl.loc('sqAnalysis_TaskReportInvalid'));
+        return Q.reject(tl.loc('sqAnalysis_TaskReportInvalid'));
     }
 
-    try {
-        return callSonarQubeRestEndpoint('/api/ce/task?id=' + taskReport.ceTaskId)
-            .then((response:RestResponse) => {
-                var responseJson:any = response.payloadToJson();
-                if (!responseJson.task) {
-                    throw responseJson;
-                }
+    return callSonarQubeRestEndpoint('/api/ce/task?id=' + taskReport.ceTaskId)
+        .then((responseJsonObject:any) => {
+            if (!responseJsonObject || !responseJsonObject.task) {
+                return Q.reject(new Error('Invalid response when requesting task details for ID ' + taskReport.ceTaskId));
+            }
 
-                return responseJson;
-            });
-    } catch (error) {
-        tl.debug('Could not fetch task details on ID' + taskReport.ceTaskId);
-        throw error;
-    }
+            return responseJsonObject;
+        })
+        .fail((err) => {
+            if (err && err.message) {
+                tl.debug(err.message);
+            }
+
+            tl.debug('Could not fetch task details on ID' + taskReport.ceTaskId);
+            return Q.reject(new Error(tl.loc('sqCommon_InvalidResponseFromServer')));
+        })
 }
 
 // Invokes a REST endpoint at the SonarQube server.

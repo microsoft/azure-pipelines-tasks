@@ -1741,7 +1741,7 @@ describe('Maven Suite', function () {
             });
     })
 
-    it('Maven with SQ - Fails the build if the response from the server is an error', () => {
+    it('Maven with SQ - Throws an error if the response from the server is an error', () => {
         tlMock.setInput('sqAnalysisEnabled', 'true');
 
         var serverUrl:Url = url.parse('http://sonarqubeserver:9000'); // should match getVariable('ENDPOINT_URL_ID1) in response.json
@@ -1774,4 +1774,67 @@ describe('Maven Suite', function () {
                 assert(err.toUpperCase().indexOf('500') > -1, 'Should have thrown an error due to a non-200 response code');
             });
     })
+
+    it('Maven with SQ - Throws an error if the response from the server is invalid (empty body)', () => {
+        tlMock.setInput('sqAnalysisEnabled', 'true');
+
+        var serverUrl:Url = url.parse('http://sonarqubeserver:9000'); // should match getVariable('ENDPOINT_URL_ID1) in response.json
+        tlMock.setInput('sqConnectedServiceName', 'ID1');
+        tlMock.setVariable('ENDPOINT_URL_ID1', serverUrl.href);
+        tlMock.setVariable('ENDPOINT_AUTH_ID1', '{"scheme":"UsernamePassword","parameters":{"username":"username","password":"password"}}');
+        tlMock.setInput('sqAnalysisWaitForAnalysis', 'true');
+
+        var testSrcDir:string = path.join(__dirname, 'data', 'taskreport-valid');
+        var testStgDir:string = path.join(__dirname, '_temp');
+        // Set mocked build variables
+        tlMock.setVariable('build.sourcesDirectory', testSrcDir);
+        tlMock.setVariable('build.artifactStagingDirectory', testStgDir);
+
+        // The task details
+        mockAndReturn(serverUrl, `/api/ce/task?id=${'asdfghjklqwertyuiopz'}`, ''); // Empty response
+        // The analysis details
+        mockAndReturn(serverUrl, `/api/qualitygates/project_status?analysisId=${'12345'}`, ''); // Empty response
+
+        // Act
+        return sqCommon.uploadSonarQubeBuildSummaryIfEnabled(path.join(__dirname, 'data', 'taskreport-valid', 'target', 'sonar'))
+            .then(() => {
+                // Expecting a failure
+                assert.fail('success', 'failure', 'Should not have exited successfully');
+            }, (err) => {
+                //Assert
+                console.log(err);
+                assert(err.message.indexOf('sqCommon_InvalidResponseFromServer') > -1, 'Should have thrown an error due to an invalid response');
+            });
+    });
+
+    it('Maven with SQ - Throws an error if the response from the server is invalid (non-JSON response)', () => {
+        tlMock.setInput('sqAnalysisEnabled', 'true');
+
+        var serverUrl:Url = url.parse('http://sonarqubeserver:9000'); // should match getVariable('ENDPOINT_URL_ID1) in response.json
+        tlMock.setInput('sqConnectedServiceName', 'ID1');
+        tlMock.setVariable('ENDPOINT_URL_ID1', serverUrl.href);
+        tlMock.setVariable('ENDPOINT_AUTH_ID1', '{"scheme":"UsernamePassword","parameters":{"username":"username","password":"password"}}');
+        tlMock.setInput('sqAnalysisWaitForAnalysis', 'true');
+
+        var testSrcDir:string = path.join(__dirname, 'data', 'taskreport-valid');
+        var testStgDir:string = path.join(__dirname, '_temp');
+        // Set mocked build variables
+        tlMock.setVariable('build.sourcesDirectory', testSrcDir);
+        tlMock.setVariable('build.artifactStagingDirectory', testStgDir);
+
+        // The task details
+        mockAndReturn(serverUrl, `/api/ce/task?id=${'asdfghjklqwertyuiopz'}`, '<html></html>'); // non-JSON response
+        // Analysis details - will not be accessed
+
+        // Act
+        return sqCommon.uploadSonarQubeBuildSummaryIfEnabled(path.join(__dirname, 'data', 'taskreport-valid', 'target', 'sonar'))
+            .then(() => {
+                // Expecting a failure
+                assert.fail('success', 'failure', 'Should not have exited successfully');
+            }, (err) => {
+                //Assert
+                console.log(err);
+                assert(err.message.indexOf('sqCommon_InvalidResponseFromServer') > -1, 'Should have thrown an error due to an invalid response');
+            });
+    });
 });

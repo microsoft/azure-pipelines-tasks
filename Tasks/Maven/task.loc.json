@@ -314,18 +314,22 @@
     "sqCommon_CreateTaskReport_MissingField": "ms-resource:loc.messages.sqCommon_CreateTaskReport_MissingField",
     "sqCommon_WaitingForAnalysis": "ms-resource:loc.messages.sqCommon_WaitingForAnalysis",
     "sqCommon_NotWaitingForAnalysis": "ms-resource:loc.messages.sqCommon_NotWaitingForAnalysis",
+    "sqCommon_QualityGateStatusUnknown": "ms-resource:loc.messages.sqCommon_QualityGateStatusUnknown",
+    "sqCommon_InvalidResponseFromServer": "ms-resource:loc.messages.sqCommon_InvalidResponseFromServer",
     "codeAnalysis_ToolIsEnabled": "ms-resource:loc.messages.codeAnalysis_ToolIsEnabled",
     "codeAnalysis_ToolFailed": "ms-resource:loc.messages.codeAnalysis_ToolFailed",
     "sqAnalysis_IncrementalMode": "ms-resource:loc.messages.sqAnalysis_IncrementalMode",
     "sqAnalysis_BuildSummaryTitle": "ms-resource:loc.messages.sqAnalysis_BuildSummaryTitle",
+    "sqAnalysis_BuildSummaryNotAvailableInPrBuild": "ms-resource:loc.messages.sqAnalysis_BuildSummaryNotAvailableInPrBuild",
     "sqAnalysis_TaskReportInvalid": "ms-resource:loc.messages.sqAnalysis_TaskReportInvalid",
     "sqAnalysis_BuildSummary_LinkText": "ms-resource:loc.messages.sqAnalysis_BuildSummary_LinkText",
     "sqAnalysis_BuildSummary_CannotAuthenticate": "ms-resource:loc.messages.sqAnalysis_BuildSummary_CannotAuthenticate",
     "sqAnalysis_AnalysisTimeout": "ms-resource:loc.messages.sqAnalysis_AnalysisTimeout",
-    "sqAnalysis_BuildSummaryNotAvailableInPrBuild": "ms-resource:loc.messages.sqAnalysis_BuildSummaryNotAvailableInPrBuild",
     "codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles",
     "codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsOneFile",
     "codeAnalysisBuildSummaryLine_OneViolationOneFile": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_OneViolationOneFile",
-    "codeAnalysisBuildSummaryLine_NoViolations": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_NoViolations"
+    "codeAnalysisBuildSummaryLine_NoViolations": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_NoViolations",
+    "codeAnalysisBuildSummaryTitle": "ms-resource:loc.messages.codeAnalysisBuildSummaryTitle",
+    "codeAnalysisArtifactSummaryTitle": "ms-resource:loc.messages.codeAnalysisArtifactSummaryTitle"
   }
 }

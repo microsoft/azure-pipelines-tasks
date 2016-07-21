@@ -101,9 +101,6 @@ gb.exec()
 
         publishTestResults(publishJUnitResults, testResultsFiles);
         publishCodeCoverage(isCodeCoverageOpted);
-        processCodeAnalysisResults();
-    })
-    .then(() => {
         return processCodeAnalysisResults();
     })
     .then(() => {

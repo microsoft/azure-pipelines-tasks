@@ -58,17 +58,21 @@
   "loc.messages.sqCommon_CreateTaskReport_MissingField": "Failed to create TaskReport object. Missing field: {0}",
   "loc.messages.sqCommon_WaitingForAnalysis": "Waiting for the SonarQube server to analyse the build.",
   "loc.messages.sqCommon_NotWaitingForAnalysis": "Build not configured to wait for the SonarQube analysis. Detailed quality gate status will not be available.",
+  "loc.messages.sqCommon_QualityGateStatusUnknown": "Could not detect the quality gate status or a new status has been introduced.",
+  "loc.messages.sqCommon_InvalidResponseFromServer": "Server responded with an invalid or unexpected response format.",
   "loc.messages.codeAnalysis_ToolIsEnabled": "%s analysis is enabled.",
   "loc.messages.codeAnalysis_ToolFailed": "%s analysis failed.",
   "loc.messages.sqAnalysis_IncrementalMode": "Detected a PR build - running the SonarQube analysis in incremental mode",
   "loc.messages.sqAnalysis_BuildSummaryTitle": "SonarQube Analysis Report",
+  "loc.messages.sqAnalysis_BuildSummaryNotAvailableInPrBuild": "Detailed SonarQube reports are not available for pull request builds.",
   "loc.messages.sqAnalysis_TaskReportInvalid": "Invalid or missing task report. Check SonarQube finished successfully.",
   "loc.messages.sqAnalysis_BuildSummary_LinkText": "Detailed SonarQube report",
   "loc.messages.sqAnalysis_BuildSummary_CannotAuthenticate": "Cannot authenticate to the SonarQube server. Check the saved endpoint details and the status of the server.",
   "loc.messages.sqAnalysis_AnalysisTimeout": "The analysis did not complete in the allotted time of {0} seconds.",
-  "loc.messages.sqAnalysis_BuildSummaryNotAvailableInPrBuild": "Detailed SonarQube reports are not available for pull request builds.",
   "loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "%s found %d violations in %d files.",
   "loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "%s found %d violations in 1 file.",
   "loc.messages.codeAnalysisBuildSummaryLine_OneViolationOneFile": "%s found 1 violation in 1 file.",
-  "loc.messages.codeAnalysisBuildSummaryLine_NoViolations": "%s found no violations."
+  "loc.messages.codeAnalysisBuildSummaryLine_NoViolations": "%s found no violations.",
+  "loc.messages.codeAnalysisBuildSummaryTitle": "Code Analysis Report",
+  "loc.messages.codeAnalysisArtifactSummaryTitle": "Code Analysis Results"
 }

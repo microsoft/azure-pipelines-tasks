@@ -35,7 +35,7 @@ class QualityGateVisualStatus {
             case 'NONE':
                 return new QualityGateVisualStatus('#BBB', 'None');
             default:
-                tl.warning('Could not detect the quality gate status or a new status has been introduced.'); // TODO: LOC
+                tl.warning(tl.loc('sqCommon_QualityGateStatusUnknown'));
                 return new QualityGateVisualStatus('#BBB', 'Unknown');
         }
     }

@@ -307,6 +307,8 @@
     "sqCommon_CreateTaskReport_MissingField": "ms-resource:loc.messages.sqCommon_CreateTaskReport_MissingField",
     "sqCommon_WaitingForAnalysis": "ms-resource:loc.messages.sqCommon_WaitingForAnalysis",
     "sqCommon_NotWaitingForAnalysis": "ms-resource:loc.messages.sqCommon_NotWaitingForAnalysis",
+    "sqCommon_QualityGateStatusUnknown": "ms-resource:loc.messages.sqCommon_QualityGateStatusUnknown",
+    "sqCommon_InvalidResponseFromServer": "ms-resource:loc.messages.sqCommon_InvalidResponseFromServer",
     "codeAnalysis_ToolIsEnabled": "ms-resource:loc.messages.codeAnalysis_ToolIsEnabled",
     "codeAnalysis_ToolFailed": "ms-resource:loc.messages.codeAnalysis_ToolFailed",
     "sqAnalysis_IncrementalMode": "ms-resource:loc.messages.sqAnalysis_IncrementalMode",

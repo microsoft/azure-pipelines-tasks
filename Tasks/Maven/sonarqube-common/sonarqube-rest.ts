@@ -13,9 +13,21 @@ import {RestResponse} from  './restresponse';
 import {SonarQubeEndpoint} from './sonarqube-common';
 import sqCommon = require('./sonarqube-common');
 
-// Repeated query the server to determine if the task has finished.
-// Returns true if the task is finished, or false if the timeout was exceeded without a positive answer from the server.
-// Timeout and delay are in seconds, defaulting to 60 and 1 respectively if not specified
+/*
+ SonarQube runs are represented in the API in two stages: tasks and analyses. The build system submits a task,
+ which is a compute engine job. The task may take some time to finish, depending on the size and complexity of the build.
+
+ Once the task is complete, its results become the analysis. This has quality gate and issues data available, and is used
+ to create the build summary.
+ */
+
+/**
+ * Repeatedly query the server to determine if the task has finished.
+ * @param taskReport A TaskReport object for the analysis to wait for
+ * @param timeout    (optional) Time, in seconds, to wait for the analysis job to finish before returning the promise as false.
+ * @param delay      (optional) Time, in seconds, to wait between polling attempts. Warning: Does not also wait for previous request to finish.
+ * @returns A promise resolving true if the task finished, false if the timeout was exceeded, or rejecting if there was an error.
+ */
 export function waitForAnalysisCompletion(taskReport:TaskReport, timeout?:number, delay?:number):Q.Promise<boolean> {
     var defer = Q.defer<boolean>();
 
@@ -49,8 +61,12 @@ export function waitForAnalysisCompletion(taskReport:TaskReport, timeout?:number
     return defer.promise;
 }
 
-// Queries the server to determine if the task has finished, i.e. if the quality gate has been evaluated
-export function isTaskComplete(taskReport:TaskReport):Q.Promise<boolean> {
+/**
+ * Queries the server to determine if the task has finished, i.e. if the quality gate has been evaluated
+ * @param  taskReport A TaskReport object for the analysis to fetch the completion status of
+ * @returns A promise, resolving true if the task has finished and false if it has not. Rejects on error.
+ */
+function isTaskComplete(taskReport:TaskReport):Q.Promise<boolean> {
     return getTaskDetails(taskReport)
         .then((responseJson:any) => {
             var taskStatus:string = responseJson.task.status;
@@ -58,7 +74,11 @@ export function isTaskComplete(taskReport:TaskReport):Q.Promise<boolean> {
         });
 }
 
-// Query the server to determine the analysis id associated with the current task
+/**
+ * Query the server to determine the analysis ID associated with the current task
+ * @param taskReport A TaskReport object for the task to fetch the analysis ID of
+ * @returns A promise, resolving with a string representing the analysis ID. Rejects on error.
+ */
 export function getAnalysisId(taskReport:TaskReport):Q.Promise<string> {
     return getTaskDetails(taskReport)
         .then((analysisDetails:any) => {
@@ -66,11 +86,20 @@ export function getAnalysisId(taskReport:TaskReport):Q.Promise<string> {
         });
 }
 
-function getTaskAnalysisId(analysisDetails:any):string {
-    return analysisDetails.task.analysisId;
+/**
+ * Returns the analysis ID from a task JSON object.
+ * @param taskDetails A JSON object representation of the task
+ * @returns The analysis ID associated with the task
+ */
+function getTaskAnalysisId(taskDetails:any):string {
+    return taskDetails.task.analysisId;
 }
 
-// Returns the status of the analysis identified by the argument.
+/**
+ * Returns the status of the analysis identified by the argument.
+ * @param analysisId String representing the ID of the analysis to fetch the status of
+ * @returns String representing the result of the project analysis
+ */
 export function getAnalysisStatus(analysisId:string):Q.Promise<string> {
     return getAnalysisDetails(analysisId)
         .then((analysisDetails:any) => {
@@ -78,50 +107,67 @@ export function getAnalysisStatus(analysisId:string):Q.Promise<string> {
         });
 }
 
-function getProjectStatus(qualityGateDetails:any):string {
-    return qualityGateDetails.projectStatus.status;
+
+/**
+ * Returns the status of the project under analysis.
+ * @param analysisDetails A JSON object representation of the analysis
+ * @returns String representing the result of the project analysis
+ */
+function getProjectStatus(analysisDetails:any):string {
+    return analysisDetails.projectStatus.status;
 }
 
+/**
+ * Makes a RESTful API call to get analysis details (e.g. quality gate status)
+ * @param analysisId String representing the ID of the analysis to fetch details for
+ * @returns JSON object representation of the analysis details
+ */
 export function getAnalysisDetails(analysisId:string):Q.Promise<Object> {
-    try {
-        return callSonarQubeRestEndpoint('/api/qualitygates/project_status?analysisId=' + analysisId)
-            .then((response:RestResponse) => {
-                var responseJson:any = response.payloadToJson();
-                if (!responseJson.projectStatus) {
-                    throw responseJson;
-                }
+    return callSonarQubeRestEndpoint('/api/qualitygates/project_status?analysisId=' + analysisId)
+        .then((responseJson:any) => {
+            if (!responseJson.projectStatus) {
+                tl.debug('Could not fetch quality gate details on analysis ID' + analysisId);
+                return Q.reject(new Error(tl.loc('sqCommon_InvalidResponseFromServer')));
+            }
 
-                return responseJson;
-            });
-    } catch (error) {
-        tl.debug('Could not fetch quality gate details on analysis ID' + analysisId);
-        throw error;
-    }
+            return responseJson;
+        });
 }
 
+/**
+ * Makes a RESTful API call to get task details (e.g. quality gate status)
+ * @param taskReport A TaskReport object for the analysis to fetch the details of
+ * @returns JSON object representation of the task details
+ */
 function getTaskDetails(taskReport:TaskReport):Q.Promise<Object> {
     if (!taskReport) {
-        throw new Error(tl.loc('sqAnalysis_TaskReportInvalid'));
+        return Q.reject(tl.loc('sqAnalysis_TaskReportInvalid'));
     }
 
-    try {
-        return callSonarQubeRestEndpoint('/api/ce/task?id=' + taskReport.ceTaskId)
-            .then((response:RestResponse) => {
-                var responseJson:any = response.payloadToJson();
-                if (!responseJson.task) {
-                    throw responseJson;
-                }
+    return callSonarQubeRestEndpoint('/api/ce/task?id=' + taskReport.ceTaskId)
+        .then((responseJsonObject:any) => {
+            if (!responseJsonObject || !responseJsonObject.task) {
+                return Q.reject(new Error('Invalid response when requesting task details for ID ' + taskReport.ceTaskId));
+            }
 
-                return responseJson;
-            });
-    } catch (error) {
-        tl.debug('Could not fetch task details on ID' + taskReport.ceTaskId);
-        throw error;
-    }
+            return responseJsonObject;
+        })
+        .fail((err) => {
+            if (err && err.message) {
+                tl.debug(err.message);
+            }
+
+            tl.debug('Could not fetch task details on ID' + taskReport.ceTaskId);
+            return Q.reject(new Error(tl.loc('sqCommon_InvalidResponseFromServer')));
+        })
 }
 
-// Invokes a REST endpoint at the SonarQube server.
-function callSonarQubeRestEndpoint(path:string):Q.Promise<RestResponse> {
+/**
+ * Invokes a REST endpoint on the SonarQube server.
+ * @param path The host-relative path to the REST endpoint (e.g. /api/ce/task)
+ * @returns A promise, resolving with a JSON object representation of the response. Rejects on error or non-200 header.
+ */
+function callSonarQubeRestEndpoint(path:string):Q.Promise<Object> {
     var defer = Q.defer<RestResponse>();
 
     var options:any = createSonarQubeHttpRequestOptions(path);
@@ -149,13 +195,18 @@ function callSonarQubeRestEndpoint(path:string):Q.Promise<RestResponse> {
 
         response.on('end', function () {
             var serverResponseString:string = response.statusCode + " " + http.STATUS_CODES[response.statusCode];
-            tl.debug('Got response: ' + serverResponseString + " from " + path);
-            tl.debug(responseBody);
-            var result:RestResponse = new RestResponse(response.statusCode, responseBody);
-            if (!result.wasSuccess()) {
-                defer.reject('Server responded with ' + serverResponseString);
+
+            // HTTP response codes between 200 and 299 inclusive are successes
+            if (!(result.statusCode >= 200 && result.statusCode < 300)) {
+                defer.reject(new Error('Server responded with ' + serverResponseString));
             } else {
-                defer.resolve(result);
+                tl.debug('Got response: ' + serverResponseString + " from " + path);
+
+                if (!responseBody || responseBody.length < 1) {
+                    defer.resolve({});
+                } else {
+                    defer.resolve(JSON.parse(responseBody));
+                }
             }
         });
     });
@@ -170,7 +221,12 @@ function callSonarQubeRestEndpoint(path:string):Q.Promise<RestResponse> {
     return defer.promise;
 }
 
-// Constructs the options object used by the https.request() method. Takes the host-relative path i.e. '/' as an argument.
+/**
+ * Constructs the options object used by the http/https request() method.
+ * Defaults to an HTTP request on port 80 to the relative path '/'.
+ * @param path The host-relative path to the REST endpoint (e.g. /api/ce/task)
+ * @returns An options object to be passed to the request() method
+ */
 function createSonarQubeHttpRequestOptions(path?:string):Object {
     const endpoint:SonarQubeEndpoint = sqCommon.getSonarQubeEndpoint();
 

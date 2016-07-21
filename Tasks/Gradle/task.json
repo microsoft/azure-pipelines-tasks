@@ -307,6 +307,8 @@
         "sqCommon_CreateTaskReport_MissingField": "Failed to create TaskReport object. Missing field: {0}",
         "sqCommon_WaitingForAnalysis": "Waiting for the SonarQube server to analyse the build.",
         "sqCommon_NotWaitingForAnalysis": "Build not configured to wait for the SonarQube analysis. Detailed quality gate status will not be available.",
+        "sqCommon_QualityGateStatusUnknown": "Could not detect the quality gate status or a new status has been introduced.",
+        "sqCommon_InvalidResponseFromServer": "Server responded with an invalid or unexpected response format.",
         "codeAnalysis_ToolIsEnabled": "%s analysis is enabled.",
         "codeAnalysis_ToolFailed": "%s analysis failed.",
         "sqAnalysis_IncrementalMode": "Detected a PR build - running the SonarQube analysis in incremental mode",
