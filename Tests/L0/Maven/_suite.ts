@@ -6,14 +6,25 @@ import trm = require('../../lib/taskRunner');
 import mockHelper = require('../../lib/mockHelper');
 import path = require('path');
 import fs = require('fs');
+import url = require('url');
+import {Url} from 'url';
+import nock = require('nock');
 
+import {ToolRunner} from 'vsts-task-lib/toolrunner';
 import tr = require('../../lib/vsts-task-lib/toolRunner');
 
+import tl = require('../../../Tasks/Maven/testlib/tasklib-wrapper');
+import tlMock = require('../../../Tasks/Maven/testlib/testlib-main');
+import sqCommon = require('../../../Tasks/Maven/sonarqube-common/sonarqube-common');
 import pmd = require('../../../Tasks/Maven/CodeAnalysis/mavenpmd');
 import ca = require('../../../Tasks/Maven/CodeAnalysis/mavencodeanalysis');
 import ar = require('../../../Tasks/Maven/CodeAnalysis/analysisresult');
 
-function setResponseFile(name: string) {
+import Q = require('q');
+import http = require('http');
+import {IncomingMessage} from 'http';
+
+function setResponseFile(name:string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
 }
 
@@ -31,6 +42,9 @@ function setupDefaultMavenTaskRunner(): trm.TaskRunner {
     taskRunner.setInput('sqAnalysisEnabled', 'false');
     taskRunner.setInput('mavenPOMFile', 'pom.xml');
 
+    // TaskRunner system is incompatible with HTTP/HTTPS mocking due to the use of seperate processes
+    taskRunner.setInput('sqAnalysisWaitForAnalysis', 'false');
+
     return taskRunner;
 }
 
@@ -47,6 +61,32 @@ function listFolderContents(folder): string[] {
     });
 
     return result;
+}
+
+// Adds mock exist, checkPath, rmRF and mkdirP responses for given file paths.
+// Takes an object to add to and an array of file paths for which responses should be added.
+// Modifies and returns the argument object.
+function setupMockResponsesForPaths(responseObject:any, paths:string[]) { // Can't use rest arguments here (gulp-mocha complains)
+
+    // Create empty objects for responses only if they did not already exist (avoid overwriting existing responses)
+    responseObject.exist = responseObject.exist || {};
+    responseObject.checkPath = responseObject.checkPath || {};
+    responseObject.rmRF = responseObject.rmRF || {};
+    responseObject.mkdirP = responseObject.mkdirP || {};
+
+    var rmRFSuccessObj = {
+        success: true,
+        message: "foo bar"
+    };
+
+    paths.forEach((path) => {
+        responseObject.exist[path] = true;
+        responseObject.checkPath[path] = true;
+        responseObject.rmRF[path] = rmRFSuccessObj;
+        responseObject.mkdirP[path] = true;
+    });
+
+    return responseObject;
 }
 
 // Create temp dirs for mavencodeanalysis tests to save into
@@ -78,31 +118,115 @@ function createTempDirsForSonarQubeTests(): void {
 }
 
 function assertCodeAnalysisBuildSummaryContains(stagingDir: string, expectedString: string): void {
-    assertBuildSummaryContains(path.join(stagingDir, '.codeAnalysis', 'CodeAnalysisBuildSummary.md'), expectedString);
+    assertBuildSummaryContains(fs.readFileSync(path.join(stagingDir, '.codeAnalysis', 'CodeAnalysisBuildSummary.md'), 'utf-8'), expectedString);
 }
 
 function assertSonarQubeBuildSummaryContains(stagingDir: string, expectedString: string): void {
-    assertBuildSummaryContains(path.join(stagingDir, '.sqAnalysis', 'SonarQubeBuildSummary.md'), expectedString);
+    assertBuildSummaryContains(fs.readFileSync(path.join(stagingDir, '.sqAnalysis', 'SonarQubeBuildSummary.md'), 'utf-8'), expectedString);
 }
 
 // Asserts the existence of a given line in the build summary file that is uploaded to the server.
-function assertBuildSummaryContains(buildSummaryFilePath: string, expectedLine: string): void {
-    var buildSummaryString: string = fs.readFileSync(buildSummaryFilePath, 'utf-8');
+function assertBuildSummaryContains(buildSummaryString:string, expectedLine:string):void {
+    assert(buildSummaryString.indexOf(expectedLine) > -1, `Expected build summary to contain: ${expectedLine}
+     Actual: ${buildSummaryString}`);
+}
 
-    assert(buildSummaryString.indexOf(expectedLine) > -1, "Expected build summary to contain: " + expectedLine);
+function assertToolRunnerContainsArg(toolRunner:ToolRunner, expectedArg:string) {
+    return toolRunner.args.indexOf(expectedArg) > -1;
+}
+
+function assertToolRunnerHasArgLength(toolRunner:ToolRunner, expectedNumArgs:number) {
+    return toolRunner.args.length == expectedNumArgs;
+}
+
+// Creates a new response json file based on an initial one and some env variables 
+function setResponseAndBuildVars(initialResponseFile:string, finalResponseFile:string, envVars:Array<[string,string]>) {
+
+    var responseJsonFilePath:string = path.join(__dirname, initialResponseFile);
+    var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
+    responseJsonContent.getVariable = responseJsonContent.getVariable || {};
+    for (var envVar of envVars) {
+        responseJsonContent.getVariable[envVar[0]] = envVar[1];
+    }
+
+    var newResponseFilePath:string = path.join(__dirname, finalResponseFile);
+    fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
+    setResponseFile(path.basename(newResponseFilePath));
+}
+
+// Invokes a REST endpoint at the SonarQube server.
+function callSonarQubeRestEndpoint(path:string):Q.Promise<any> {
+    var defer = Q.defer<any>();
+
+    var options:any = createSonarQubeHttpRequestOptions(path);
+
+    var responseBody:string = '';
+    var request = http.request(options, (response:IncomingMessage) => {
+
+        response.on('data', function (body) {
+            responseBody += body;
+        });
+
+        response.on('end', function () {
+            var result:string = responseBody;
+            if (!(response.statusCode == 200)) {
+                defer.reject(result);
+            } else {
+                defer.resolve(result);
+            }
+        });
+    });
+
+    request.on('error', (error) => {
+        defer.reject(error);
+    });
+
+    tl.debug('Sending request to: ' + path);
+    request.end();
+    return defer.promise;
+}
+
+// Constructs the options object used by the https.request() method. Takes the host-relative path i.e. '/' as an argument.
+function createSonarQubeHttpRequestOptions(path?:string):Object {
+
+    var options = {
+        method: 'GET',
+        protocol: 'http',
+        host: 'sonarqubeserver',
+        port: 9000,
+        path: path || '/',
+        headers: {}
+    };
+
+    return options;
+}
+
+// Mocks web requests to the given host and path, returning the result with an optional return code (i.e. 200, 404)
+// The result field may be a string or a JSON-encoded object representation of the same.
+function mockAndReturn(host:Url, path:string, result:string|Object, returnCode?:number) {
+    console.log(`Registering mock for host ${host.href} and path ${path}`);
+    return nock(host.href)
+        .persist()
+        .get(path)
+        .reply(returnCode || 200, result);
 }
 
 describe('Maven Suite', function () {
     this.timeout(20000);
 
     before((done) => {
-        // init here
+        tl.enableTesting();
         done();
     });
 
-    after(function () {
+    after(function() {
 
     });
+
+    afterEach((done) => {
+        nock.cleanAll();
+        done();
+    })
 
     it('run maven with all default inputs and M2_HOME not set', (done) => {
         setResponseFile('response.json');
@@ -128,6 +252,8 @@ describe('Maven Suite', function () {
                 done();
             })
             .fail((err) => {
+                console.log(tr.stdout);
+                console.log(tr.stderr);
                 done(err);
             });
     })
@@ -697,7 +823,7 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should have run SQ analysis');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should have run SQ analysis');
                 assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -762,7 +888,7 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jdbc.url=dbURL -Dsonar.jdbc.username=dbUser -Dsonar.jdbc.password=dbPass sonar:sonar'), 'it should have run SQ analysis');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jdbc.url=dbURL -Dsonar.jdbc.username=dbUser -Dsonar.jdbc.password=dbPass sonar:sonar'), 'it should have run SQ analysis');
                 assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -815,7 +941,7 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should have run SQ analysis');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should have run SQ analysis');
                 assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
@@ -867,7 +993,7 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should have run SQ analysis');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should have run SQ analysis');
                 assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
@@ -921,8 +1047,8 @@ describe('Maven Suite', function () {
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
                 assert(tr.ran(
-                    '/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json sonar:sonar'
-                ), 'it should have run SQ analysis');
+                    '/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json sonar:sonar'
+                    ), 'it should have run SQ analysis');
                 assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length < 1, 'should not have written to stderr');
@@ -1012,7 +1138,7 @@ describe('Maven Suite', function () {
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
                 assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml jacoco:report'), 'it should have run mvn -f pom.xml jacoco:report');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml clean package -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jacoco.reportPath=CCReport43F6D5EF\/jacoco.exec sonar:sonar'), 'it should have run SQ analysis');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml clean package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jacoco.reportPath=CCReport43F6D5EF\/jacoco.exec sonar:sonar'), 'it should have run SQ analysis');
                 // calls maven to generate cc report.
                 assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
                 assert(tr.resultWasSet, 'task should have set a result');
@@ -1063,7 +1189,6 @@ describe('Maven Suite', function () {
                 done(err);
             });
     })
-
 
     it('maven calls enable code coverage and publish code coverage when cobertura is selected', (done) => {
         setResponseFile('responseCodeCoverage.json');
@@ -1131,7 +1256,7 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml clean package -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should have run SQ analysis');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml clean package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should have run SQ analysis');
                 assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=pom.xml;summaryfile=target\/site\/cobertura\/coverage.xml;reportdirectory=target\/site\/cobertura;reportbuildfile=CCReportPomA4D283EG.xml;buildtool=Maven;codecoveragetool=Cobertura;\]/) >= 0, 'should have called enable code coverage.');
@@ -1259,6 +1384,7 @@ describe('Maven Suite', function () {
                     'should have uploaded a Code Analysis Report build summary');
                 assert(taskRunner.stdout.indexOf('artifact.upload containerfolder=root;artifactname=') > -1,
                     'should have uploaded PMD build artifacts');
+
                 assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found 3 violations in 2 files.');
 
                 done();
@@ -1477,7 +1603,7 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json sonar:sonar'), 'it should have run SQ analysis in issues mode');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json sonar:sonar'), 'it should have run SQ analysis in issues mode');
                 assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -1489,6 +1615,163 @@ describe('Maven Suite', function () {
                 console.log(tr.stderr);
                 console.log(err);
                 done(err);
+            });
+    })
+
+    /* Unit tests - SonarQube common code */
+
+    it('Applies correct SonarQube connection arguments', (done) => {
+        // Arrange
+        var toolRunner:ToolRunner = new ToolRunner('');
+        var serverUrl:Url = url.parse('http://sonarqubeserver:9000'); // should match getVariable('ENDPOINT_URL_ID1) in response.json
+        tlMock.setInput('sqConnectedServiceName', 'ID1');
+        tlMock.setVariable('ENDPOINT_URL_ID1', serverUrl.href);
+        tlMock.setVariable('ENDPOINT_AUTH_ID1', '{"scheme":"UsernamePassword","parameters":{"username":"username","password":"password"}}');
+
+        // Act
+        toolRunner = sqCommon.applySonarQubeConnectionParams(toolRunner);
+
+        // Assert
+        assertToolRunnerHasArgLength(toolRunner, 3);
+        assertToolRunnerContainsArg(toolRunner, '-Dsonar.host.url=http://sonarqubeserver:9000');
+        assertToolRunnerContainsArg(toolRunner, '-Dsonar.login=username');
+        assertToolRunnerContainsArg(toolRunner, '-Dsonar.password=password');
+        done();
+    })
+
+    it('Applies correct SonarQube connection arguments (with db details)', (done) => {
+        // Arrange
+        var toolRunner:ToolRunner = new ToolRunner('');
+        var serverUrl:Url = url.parse('http://sonarqubeserver:9000'); // should match getVariable('ENDPOINT_URL_ID1) in response.json
+        tlMock.setInput('sqConnectedServiceName', 'ID1');
+        tlMock.setVariable('ENDPOINT_URL_ID1', serverUrl.href);
+        tlMock.setVariable('ENDPOINT_AUTH_ID1', '{"scheme":"UsernamePassword","parameters":{"username":"username","password":"password"}}');
+
+        tlMock.setInput('sqDbDetailsRequired', 'true');
+        tlMock.setInput('sqDbUrl', 'dbURL');
+        tlMock.setInput('sqDbUsername', 'dbUser');
+        tlMock.setInput('sqDbPassword', 'dbPass');
+
+        // Act
+        toolRunner = sqCommon.applySonarQubeConnectionParams(toolRunner);
+
+        // Assert
+        assertToolRunnerHasArgLength(toolRunner, 6);
+        assertToolRunnerContainsArg(toolRunner, '-Dsonar.host.url=http://sonarqubeserver:9000');
+        assertToolRunnerContainsArg(toolRunner, '-Dsonar.login=username');
+        assertToolRunnerContainsArg(toolRunner, '-Dsonar.password=password');
+        assertToolRunnerContainsArg(toolRunner, '-Dsonar.jdbc.url=dbURL');
+        assertToolRunnerContainsArg(toolRunner, '-Dsonar.jdbc.username=dbUser');
+        assertToolRunnerContainsArg(toolRunner, '-Dsonar.jdbc.password=dbPass');
+        done();
+    })
+
+    it('Maven with SQ - Creates and uploads a correct SonarQube build summary on quality gate pass', () => {
+        tlMock.setInput('sqAnalysisEnabled', 'true');
+
+        var serverUrl:Url = url.parse('http://sonarqubeserver:9000'); // should match getVariable('ENDPOINT_URL_ID1) in response.json
+        tlMock.setInput('sqConnectedServiceName', 'ID1');
+        tlMock.setVariable('ENDPOINT_URL_ID1', serverUrl.href);
+        tlMock.setVariable('ENDPOINT_AUTH_ID1', '{"scheme":"UsernamePassword","parameters":{"username":"username","password":"password"}}');
+        tlMock.setInput('sqAnalysisWaitForAnalysis', 'true');
+
+
+        var testSrcDir:string = path.join(__dirname, 'data', 'taskreport-valid');
+        var testStgDir:string = path.join(__dirname, '_temp');
+        // Set mocked build variables
+        tlMock.setVariable('build.sourcesDirectory', testSrcDir);
+        tlMock.setVariable('build.artifactStagingDirectory', testStgDir);
+
+        // The task details
+        var taskResponse:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'task_details.json'), 'utf-8'));
+        taskResponse.task.status = 'SUCCESS'; // task is a success
+        mockAndReturn(serverUrl, `/api/ce/task?id=${'asdfghjklqwertyuiopz'}`, taskResponse); // Task ID should match report-task.txt
+
+        // The analysis details
+        var analysisResponse:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'analysis_details.json'), 'utf-8'));
+        analysisResponse.projectStatus.status = 'OK'; // task is a success
+        mockAndReturn(serverUrl, `/api/qualitygates/project_status?analysisId=${'12345'}`, analysisResponse); // Analysis ID should match task-details.json
+
+        // Act
+        return sqCommon.uploadSonarQubeBuildSummaryIfEnabled(path.join(__dirname, 'data', 'taskreport-valid', 'target', 'sonar'))
+            .then(() => {
+                //Assert
+                var buildSummaryString:string = fs.readFileSync(path.join(testStgDir, '.sqAnalysis', 'SonarQubeBuildSummary.md'), 'utf-8');
+                assertBuildSummaryContains(buildSummaryString, 'Quality Gate');
+                assertBuildSummaryContains(buildSummaryString, 'Passed');
+                assertBuildSummaryContains(buildSummaryString, serverUrl.href);
+            });
+
+    });
+
+    it('Maven with SQ - Creates and uploads a correct SonarQube build summary on quality gate failure', () => {
+        tlMock.setInput('sqAnalysisEnabled', 'true');
+
+        var serverUrl:Url = url.parse('http://sonarqubeserver:9000'); // should match getVariable('ENDPOINT_URL_ID1) in response.json
+        tlMock.setInput('sqConnectedServiceName', 'ID1');
+        tlMock.setVariable('ENDPOINT_URL_ID1', serverUrl.href);
+        tlMock.setVariable('ENDPOINT_AUTH_ID1', '{"scheme":"UsernamePassword","parameters":{"username":"username","password":"password"}}');
+        tlMock.setInput('sqAnalysisWaitForAnalysis', 'true');
+
+
+        var testSrcDir:string = path.join(__dirname, 'data', 'taskreport-valid');
+        var testStgDir:string = path.join(__dirname, '_temp');
+        // Set mocked build variables
+        tlMock.setVariable('build.sourcesDirectory', testSrcDir);
+        tlMock.setVariable('build.artifactStagingDirectory', testStgDir);
+
+        // The task details
+        var taskResponse:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'task_details.json'), 'utf-8'));
+        taskResponse.task.status = 'SUCCESS'; // task is a success
+        mockAndReturn(serverUrl, `/api/ce/task?id=${'asdfghjklqwertyuiopz'}`, taskResponse); // Task ID should match report-task.txt
+
+        // The analysis details
+        var analysisResponse:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'analysis_details.json'), 'utf-8'));
+        analysisResponse.projectStatus.status = 'ERROR'; // task is a success
+        mockAndReturn(serverUrl, `/api/qualitygates/project_status?analysisId=${'12345'}`, analysisResponse); // Analysis ID should match task-details.json
+
+        // Act
+        return sqCommon.uploadSonarQubeBuildSummaryIfEnabled(path.join(__dirname, 'data', 'taskreport-valid', 'target', 'sonar'))
+            .then(() => {
+                //Assert
+                var buildSummaryString:string = fs.readFileSync(path.join(testStgDir, '.sqAnalysis', 'SonarQubeBuildSummary.md'), 'utf-8');
+                assertBuildSummaryContains(buildSummaryString, 'Quality Gate');
+                assertBuildSummaryContains(buildSummaryString, 'Failed');
+                assertBuildSummaryContains(buildSummaryString, serverUrl.href);
+            });
+    })
+
+    it('Maven with SQ - Fails the build if the response from the server is an error', () => {
+        tlMock.setInput('sqAnalysisEnabled', 'true');
+
+        var serverUrl:Url = url.parse('http://sonarqubeserver:9000'); // should match getVariable('ENDPOINT_URL_ID1) in response.json
+        tlMock.setInput('sqConnectedServiceName', 'ID1');
+        tlMock.setVariable('ENDPOINT_URL_ID1', serverUrl.href);
+        tlMock.setVariable('ENDPOINT_AUTH_ID1', '{"scheme":"UsernamePassword","parameters":{"username":"username","password":"password"}}');
+        tlMock.setInput('sqAnalysisWaitForAnalysis', 'true');
+
+
+        var testSrcDir:string = path.join(__dirname, 'data', 'taskreport-valid');
+        var testStgDir:string = path.join(__dirname, '_temp');
+        // Set mocked build variables
+        tlMock.setVariable('build.sourcesDirectory', testSrcDir);
+        tlMock.setVariable('build.artifactStagingDirectory', testStgDir);
+
+        // The task details
+        mockAndReturn(serverUrl, `/api/ce/task?id=${'asdfghjklqwertyuiopz'}`, '', 500); // Error 500 is a general server problem
+
+        // The analysis details
+        mockAndReturn(serverUrl, `/api/qualitygates/project_status?analysisId=${'12345'}`, '', 500); // Error 500 is a general server problem
+
+        // Act
+        return sqCommon.uploadSonarQubeBuildSummaryIfEnabled(path.join(__dirname, 'data', 'taskreport-valid', 'target', 'sonar'))
+            .then(() => {
+                // Expecting a failure
+                assert.fail('success', 'failure', 'Should not have exited successfully');
+            }, (err) => {
+                //Assert
+                console.log(err);
+                assert(err.toUpperCase().indexOf('500') > -1, 'Should have thrown an error due to a non-200 response code');
             });
     })
 });

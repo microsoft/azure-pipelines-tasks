@@ -1,13 +1,16 @@
 /// <reference path="../../../definitions/vsts-task-lib.d.ts" />
 
+import Q = require('q');
 import path = require('path');
 import fs = require('fs');
-import util = require('util');
 
-import tl = require('vsts-task-lib/task');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
 
-import {TaskReport} from  './taskreport';
+import {TaskReport} from './taskreport';
+import sqRest = require('./sonarqube-rest');
+import sqQualityGate = require('./sonarqube-qualitygate');
+
+import tl = require('../testlib/tasklib-wrapper');
 
 export const toolName: string = 'SonarQube';
 
@@ -111,19 +114,17 @@ export function getSonarQubeEndpoint(): SonarQubeEndpoint {
 }
 
 // Upload a build summary with links to available SonarQube dashboards for further analysis details.
-export function uploadSonarQubeBuildSummary(sqBuildFolder: string): void {
-    // Save and upload build summary
-    // Looks like: "[Detailed SonarQube report >](https://mySQserver:9000/dashboard/index/foo "foo Dashboard")"
-    var buildSummaryContents:string = createSonarQubeBuildSummary(sqBuildFolder);
+export function uploadSonarQubeBuildSummaryIfEnabled(sqBuildFolder:string):Q.Promise<void> {
+    return createSonarQubeBuildSummary(sqBuildFolder)
+        .then((buildSummaryContents:string) => {
+            var buildSummaryFilePath = saveSonarQubeBuildSummary(buildSummaryContents);
+            tl.debug('Uploading build summary from ' + buildSummaryFilePath);
 
-    var buildSummaryFilePath = saveSonarQubeBuildSummary(buildSummaryContents);
-
-    tl.debug('Uploading build summary from ' + buildSummaryFilePath);
-
-    tl.command('task.addattachment', {
-        'type': 'Distributedtask.Core.Summary',
-        'name': tl.loc('sqAnalysis_BuildSummaryTitle')
-    }, buildSummaryFilePath);
+            tl.command('task.addattachment', {
+                'type': 'Distributedtask.Core.Summary',
+                'name': tl.loc('sqAnalysis_BuildSummaryTitle')
+            }, buildSummaryFilePath);
+        });
 }
 
 // Gets a SonarQube authentication parameter from the specified connection endpoint.
@@ -180,22 +181,28 @@ function isNullOrEmpty(str) {
 }
 
 // Creates the string that comprises the build summary text, given the location of the /sonar build folder.
-function createSonarQubeBuildSummary(sqBuildFolder: string): string {
-    // Task report is not created for PR builds
+function createSonarQubeBuildSummary(sqBuildFolder:string):Q.Promise<string> {
+    // Task report is not created for PR builds - inform the user in the build summary
     if (isPrBuild()) {
+        tl.debug('Pull request build, will not attempt to fetch detailed SonarQube report');
         // Looks like: Detailed SonarQube reports are not available for pull request builds.
-        return tl.loc('sqAnalysis_BuildSummaryNotAvailableInPrBuild');
+        return Q.when(tl.loc('sqAnalysis_BuildSummaryNotAvailableInPrBuild'));
     }
 
-    var taskReport: TaskReport = getSonarQubeTaskReport(sqBuildFolder);
-    if (!taskReport) {
-        throw new Error(tl.loc('sqAnalysis_TaskReportInvalid'));
-    }
+    var taskReport:TaskReport = getSonarQubeTaskReport(sqBuildFolder);
+    // Build summary has two major sections: quality gate status and a link to the dashboard
+    return createQualityGateStatusSection(taskReport)
+        .then((qualityGateStatus:string) => {
+            // Looks like: "[Detailed SonarQube report >](https://mySQserver:9000/dashboard/index/foo "foo Dashboard")"
+            var linkToDashBoard:string = createLinkToSonarQubeDashboard(taskReport);
 
-    var linkToDashBoard: string = createLinkToSonarQubeDashboard(sqBuildFolder);
-
-    // Put the quality gate status and dashboard link sections together with the Markdown newline
-    return linkToDashBoard;
+            // Put the quality gate status and dashboard link sections together with the Markdown newline
+            var buildSections:string[] = [qualityGateStatus, linkToDashBoard];
+            var buildSummary:string = buildSections.join('  \r\n');
+            tl.debug('Build summary:');
+            tl.debug(buildSummary);
+            return buildSummary;
+        })
 }
 
 // Returns the location of the SonarQube integration staging directory.
@@ -205,16 +212,47 @@ function getOrCreateSonarQubeStagingDirectory(): string {
     return sqStagingDir;
 }
 
+// Creates a string containing Markdown of the SonarQube quality gate status for this project.
+function createQualityGateStatusSection(taskReport: TaskReport): Q.Promise<string> {
+    if (!tl.getBoolInput('sqAnalysisWaitForAnalysis')) {
+        // Do not create a quality gate status section if not waiting for the server to analyse the build
+        console.log(tl.loc('sqCommon_NotWaitingForAnalysis'));
+        return Q.when<string>(null);
+    }
+
+    // Wait for analysis to finish so that we can get analysis information from the SonarQube server
+    var timeout:number = 60;
+    var delay:number = 1;
+
+    console.log(tl.loc('sqCommon_WaitingForAnalysis'));
+    return sqRest.waitForAnalysisCompletion(taskReport, timeout, delay)
+        .then((analysisCompleted:boolean) => {
+            if (!analysisCompleted) {
+                tl.debug('Did not receive a success response before the timeout expired.');
+                return Q.reject(tl.loc('sqAnalysis_AnalysisTimeout', timeout));
+            }
+
+            // If analysis completed, fetch the analysis ID to check quality gate status
+            return sqRest.getAnalysisId(taskReport)
+        })
+        .then((analysisId:string) => {
+            return sqRest.getAnalysisStatus(analysisId);
+        })
+        .then((analysisStatus:string) => {
+            return sqQualityGate.createBuildSummaryQualityGateSection(analysisStatus)
+        });
+}
+
 // Creates a string containing Markdown of a link to the SonarQube dashboard for this project.
-function createLinkToSonarQubeDashboard(sqBuildFolder: string): string {
-    var taskReport: TaskReport = getSonarQubeTaskReport(sqBuildFolder);
+function createLinkToSonarQubeDashboard(taskReport: TaskReport): string {
     if (!taskReport) {
+        // Looks like: Invalid or missing task report. Check SonarQube finished successfully.
         throw new Error(tl.loc('sqAnalysis_TaskReportInvalid'));
     }
 
-    return util.format('[%s >](%s "%s Dashboard")',
-        // Looks like: Detailed SonarQube report
-        tl.loc('sqAnalysis_BuildSummary_LinkText'), taskReport.dashboardUrl, taskReport.projectKey);
+    // Looks like: Detailed SonarQube report
+    var linkText:string = tl.loc('sqAnalysis_BuildSummary_LinkText');
+    return `[${linkText} >](${taskReport.dashboardUrl} \"${taskReport.projectKey} Dashboard\")`;
 }
 
 // Returns, as an object, the contents of the 'report-task.txt' file created by SonarQube plugins
@@ -224,7 +262,8 @@ function getSonarQubeTaskReport(sonarPluginFolder: string): TaskReport {
     var reportFilePath:string = path.join(sonarPluginFolder, 'report-task.txt');
     if (!tl.exist(reportFilePath)) {
         tl.debug('Task report not found at: ' + reportFilePath);
-        return null;
+        // Looks like: Invalid or missing task report. Check SonarQube finished successfully.
+        throw new Error(tl.loc('sqAnalysis_TaskReportInvalid'));
     }
 
     return createTaskReportFromFile(reportFilePath);
