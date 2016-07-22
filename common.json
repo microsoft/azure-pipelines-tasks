@@ -35,6 +35,12 @@
             "dest": "Common"
         }
     ],
+    "SCP": [
+        {
+            "module": "ssh-common",
+            "dest": "node_modules"
+        }
+    ],
     "Maven": [
         {
             "module": "sonarqube-common",
