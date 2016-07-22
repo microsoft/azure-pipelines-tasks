@@ -134,17 +134,11 @@ function uploadTestSummary() {
     }
 
     tl.debug('reportdata = ' + reportData);
-    fs.writeFile(mdReportFile, reportData, function (err) {
-        if (err) {
-            tl.warning('Failed to create Xamarin Test Cloud run summary report. ' + err);
-        } else {
-            tl.command('task.addattachment', {
-                name: "Xamarin Test Cloud Results",
-                type: "Distributedtask.Core.Summary"
-            }, mdReportFile);
-        }
-    })
-
+    fs.writeFileSync(mdReportFile, reportData);
+    tl.command('task.addattachment', {
+            name: "Xamarin Test Cloud Results",
+            type: "Distributedtask.Core.Summary"
+        }, mdReportFile);
 }
 
 function publishTestResults() {
