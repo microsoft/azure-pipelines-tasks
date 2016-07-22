@@ -899,8 +899,13 @@ function saveToFile(fileContents: string, extension: string): Q.Promise<string> 
 function setRunInParallellIfApplicable(vsVersion: number) {
     if (runInParallel) {
         if (!isNaN(vsVersion) && vsVersion >= 14) {
+            if (vsVersion >= 15) { // moved away from taef
+                return;
+            }
+
+            // in 14.0 taef parellization needed taef enabled
             var vs14Common = tl.getVariable("VS140COMNTools");
-            if (vsVersion > 14 || (vs14Common && pathExistsAsFile(path.join(vs14Common, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll")))) {
+            if (vs14Common && pathExistsAsFile(path.join(vs14Common, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll"))) {
                 setRegistryKeyForParallelExecution(vsVersion);
                 return;
             }

@@ -70,11 +70,17 @@ function IsVisualStudio2015Update1OrHigherInstalled {
 	}
 	
 	$version = [int]($vsTestVersion)
-	if($version -ge 14)
+	# with dev15 we are back to vstest and away from taef
+	if($version -ge 15)
+	{
+		return $true
+	}
+
+	if($version -eq 14)
 	{
 		# checking for dll introduced in vs2015 update1
 		# since path of the dll will change in dev15+ using vstestversion>14 as a blanket yes
-		if((Test-Path -Path "$env:VS140COMNTools\..\IDE\CommonExtensions\Microsoft\TestWindow\TE.TestModes.dll") -Or ($version -gt 14))
+		if(Test-Path -Path "$env:VS140COMNTools\..\IDE\CommonExtensions\Microsoft\TestWindow\TE.TestModes.dll")
 		{
 			# ensure the registry is set otherwise you need to launch VSIDE
 			SetRegistryKeyForParallel $vsTestVersion
