@@ -35,7 +35,12 @@ Write-Host "service User Name	: $username"
 Write-Host "service Password	: $password"
 Write-Host "TeamCity Build Type	: $buildType"
 Write-Host "python runner path	: $runner"
-$result = Invoke-Command -ScriptBlock { cmd /c "$runner TeamCityBuild.py $url $buildType $shelvesetName $username $password 2>&1"}
+Write-Host "Build Triggered ... Waiting for TeamCity Server return code ...(from: $url)"
+Write-Host "When this build completes you will find the hyperlink to TeamCity build in the summary page."
+$result = Invoke-Command -ScriptBlock { cmd /c "$runner TeamCityBuild.py $url $buildType $shelvesetName $username $password $workingFolder 2>&1"}
+$linkMarkdownFile = "$workingFolder\TeamCityBuild.md".Replace("\","\\\\"); 
+Write-Host "adding markdown file: $linkMarkdownFile";
+Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=Team City Build;]$linkMarkdownFile";
 TriggerError -errorMsg "$result"
 $parsed = $result.replace("...","...`r`n")
 Write-Host "$parsed"

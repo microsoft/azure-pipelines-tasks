@@ -24,11 +24,11 @@ var buildType = tl.getPathInput('buildType', true, false);
 var shelvesetName = tl.getPathInput('shelvesetName');
 
 tr.pathArg(path.join( __dirname, pyScript));
-var args = [baseURL,buildType,shelvesetName,username,password];
+var args = [baseURL,buildType,shelvesetName,username,password,cwd];
 tr.arg(args);
 
 var failOnStdErr = tl.getBoolInput('failOnStandardError', false);
-
+var linkedMarkdownFile = cwd + "\TeamCityBuild.md";
 tr.exec(<any>{failOnStdErr: failOnStdErr})
 .then(function(code) {
 	tl.setResult(tl.TaskResult.Succeeded, tl.loc('BashReturnCode', code));
@@ -37,3 +37,4 @@ tr.exec(<any>{failOnStdErr: failOnStdErr})
 	tl.debug('taskRunner fail');
 	tl.setResult(tl.TaskResult.Failed, tl.loc('BashFailed', err.message));
 })
+console.log("##vso[task.addattachment type=Distributedtask.Core.Summary;name=Team City Build;]" + linkedMarkdownFile);

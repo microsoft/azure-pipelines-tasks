@@ -3,6 +3,7 @@ import re
 import sys
 import time
 import logging
+import os
 
 print('Number of arguments:', len(sys.argv), 'arguments.')
 print('Argument List:', str(sys.argv))
@@ -35,8 +36,14 @@ buildId = b_info.group(1)
 buildURL = b_info.group(2)
 
 print("Build queued. TeamCity url: " + buildURL)
+markdownfile = sys.argv[6] + '\TeamCityBuild.md' 
+if os.path.isfile(markdownfile):
+    os.remove(markdownfile)
+f = open(markdownfile, 'ab+')
+f.write('[' + buildURL + '](' + buildURL + ')')
+f.close()
 
-secs_timeout_btw_reqs = 1
+secs_timeout_btw_reqs = 5
 
 while 1:
     print("Querying build state...")
