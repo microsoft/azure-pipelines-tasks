@@ -28,13 +28,14 @@ var args = [baseURL,buildType,shelvesetName,username,password,cwd];
 tr.arg(args);
 
 var failOnStdErr = tl.getBoolInput('failOnStandardError', false);
-var linkedMarkdownFile = cwd + "\TeamCityBuild.md";
+var linkedMarkdownFile = cwd + "/TeamCityBuild.md";
 tr.exec(<any>{failOnStdErr: failOnStdErr})
 .then(function(code) {
 	tl.setResult(tl.TaskResult.Succeeded, tl.loc('BashReturnCode', code));
+	console.log("##vso[task.addattachment type=Distributedtask.Core.Summary;name=Team City Build;]" + linkedMarkdownFile);
 })
 .fail(function(err) {
 	tl.debug('taskRunner fail');
 	tl.setResult(tl.TaskResult.Failed, tl.loc('BashFailed', err.message));
+	console.log("##vso[task.addattachment type=Distributedtask.Core.Summary;name=Team City Build;]" + linkedMarkdownFile);
 })
-console.log("##vso[task.addattachment type=Distributedtask.Core.Summary;name=Team City Build;]" + linkedMarkdownFile);

@@ -36,7 +36,10 @@ buildId = b_info.group(1)
 buildURL = b_info.group(2)
 
 print("Build queued. TeamCity url: " + buildURL)
-markdownfile = sys.argv[6] + '\TeamCityBuild.md' 
+if os.name == 'nt':
+    markdownfile = sys.argv[6] + '\TeamCityBuild.md'
+if os.name == 'posix':
+    markdownfile = sys.argv[6] + '/TeamCityBuild.md'
 if os.path.isfile(markdownfile):
     os.remove(markdownfile)
 f = open(markdownfile, 'ab+')
