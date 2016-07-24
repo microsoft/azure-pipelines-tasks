@@ -15,14 +15,20 @@ var request = require('request');
 
 var serverEndpoint = tl.getInput('serverEndpoint', true);
 var serverEndpointUrl = tl.getEndpointUrl(serverEndpoint, false);
-tl.debug('serverEndpointUrl=' + serverEndpointUrl);
-
+tl._writeLine('serverEndpointUrl=' + serverEndpointUrl);
+var port = serverEndpointUrl.substring(serverEndpointUrl.lastIndexOf(":")).replace(":","").replace("/","");
+tl._writeLine('port='+port);
 var serverEndpointAuth = tl.getEndpointAuthorization(serverEndpoint, false);
 var username = serverEndpointAuth['parameters']['username'];
 var password = serverEndpointAuth['parameters']['password'];
 
+var parameters = tl.getInput('parameters');
+var action = '/build';
+if (parameters) {
+    action = '/buildWithParameters?' + parameters;
+}
 var jobName = tl.getInput('jobName', true);
-var jobQueueUrl = serverEndpointUrl + '/job/' + jobName + '/build';
+var jobQueueUrl = serverEndpointUrl + 'job/' + jobName + action;
 tl.debug('jobQueueUrl=' + jobQueueUrl);
 
 var captureConsole = tl.getBoolInput('captureConsole', true);
@@ -41,7 +47,10 @@ function failReturnCode(httpResponse, message: string): void {
 var jenkinsTaskName;
 var jenkinsExecutableNumber
 var jenkinsExecutableUrl;
-
+var protocol = 'http://';
+if (serverEndpointUrl.indexOf("https://") >= 0) {
+    protocol = 'https://';
+}
 function trackJobQueued(queueUri: string) {
     tl.debug('Tracking progress of job queue: ' + queueUri);
     request.get({ url: queueUri }, function callBack(err, httpResponse, body) {
@@ -64,7 +73,7 @@ function trackJobQueued(queueUri: string) {
             } else {
                 jenkinsTaskName = parsedBody.task.name;
                 jenkinsExecutableNumber = parsedBody.executable.number;
-                jenkinsExecutableUrl = parsedBody.executable.url;
+                jenkinsExecutableUrl = protocol + parsedBody.executable.url.replace('/job',":"+port+"/job");
                 console.log('Jenkins job started: ' + jenkinsExecutableUrl);
 
                 if (captureConsole) {
@@ -98,7 +107,8 @@ function createLinkAndFinish(result, jobStatus: string, resultMessage: string) {
 }
 
 function captureJenkinsConsole(consoleOffset: number) {
-    var fullUrl = jenkinsExecutableUrl + '/logText/progressiveText/?start=' + consoleOffset;
+    var fullUrl = jenkinsExecutableUrl + 'logText/progressiveText/?start=' + consoleOffset;
+    tl._writeLine('full URL='+ fullUrl);
     tl.debug('Tracking progress of job URL: ' + fullUrl);
     request.get({ url: fullUrl }, function callBack(err, httpResponse, body) {
         if (err) {

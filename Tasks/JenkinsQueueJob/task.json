@@ -12,9 +12,9 @@
     "author": "Microsoft",
     "demands": [],
     "version": {
-        "Major": 1,
-        "Minor": 0,
-        "Patch": 2
+        "Major": "1",
+        "Minor": "0",
+        "Patch": "6"
     },
     "instanceNameFormat": "Queue Jenkins Job: $(jobName)",
     "inputs": [
@@ -41,6 +41,14 @@
             "defaultValue": true,
             "required": true,
             "helpMarkDown": "If selected, this step will capture the Jenkins build console output, wait for the Jenkins build to complete, and succeed/fail based on the Jenkins build result.  Otherwise, once the Jenkins job is successfully queued, this step will successfully complete without waiting for the Jenkins build to run."
+        },
+                {
+            "name": "parameters",
+            "type": "string",
+            "label": "Job Parameters",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "List of parameters to queue the build with (PARAMETER_1=Value_1&PARAMETER_2=Value_2)."
         }
     ],
     "execution": {
