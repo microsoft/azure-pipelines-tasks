@@ -5,10 +5,10 @@
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
 /// <reference path="../../definitions/shelljs.d.ts"/>
 
-import tl = require('vsts-task-lib/task');
-import fs = require('fs');
-import path = require('path');
-import shell = require('shelljs');
+var tl = require('vsts-task-lib/task');
+var fs = require('fs');
+var path = require('path');
+var shell = require('shelljs');
 
 // node js modules
 var request = require('request');
@@ -17,19 +17,29 @@ var serverEndpoint = tl.getInput('serverEndpoint', true);
 var serverEndpointUrl = tl.getEndpointUrl(serverEndpoint, false);
 tl._writeLine('serverEndpointUrl=' + serverEndpointUrl);
 var port = serverEndpointUrl.substring(serverEndpointUrl.lastIndexOf(":")).replace(":","").replace("/","");
+if (!port) {
+    port ='80'
+}
 tl._writeLine('port='+port);
 var serverEndpointAuth = tl.getEndpointAuthorization(serverEndpoint, false);
 var username = serverEndpointAuth['parameters']['username'];
 var password = serverEndpointAuth['parameters']['password'];
 
 var parameters = tl.getInput('parameters');
+var token = tl.getInput('token');
 var action = '/build';
+if (token) {
+    action = '/build?token=' + token
+}
 if (parameters) {
     action = '/buildWithParameters?' + parameters;
 }
+if (parameters && token) {
+    action = '/buildWithParameters?token=' + token + '&' + parameters;
+}
 var jobName = tl.getInput('jobName', true);
 var jobQueueUrl = serverEndpointUrl + 'job/' + jobName + action;
-tl.debug('jobQueueUrl=' + jobQueueUrl);
+tl._writeLine('jobQueueUrl=' + jobQueueUrl);
 
 var captureConsole = tl.getBoolInput('captureConsole', true);
 var captureConsolePollInterval = 5000; // five seconds is what the Jenkins Web UI uses
@@ -47,12 +57,13 @@ function failReturnCode(httpResponse, message: string): void {
 var jenkinsTaskName;
 var jenkinsExecutableNumber
 var jenkinsExecutableUrl;
+var crumb;
 var protocol = 'http://';
 if (serverEndpointUrl.indexOf("https://") >= 0) {
     protocol = 'https://';
 }
 function trackJobQueued(queueUri: string) {
-    tl.debug('Tracking progress of job queue: ' + queueUri);
+    tl._writeLine('Tracking progress of job queue: ' + queueUri);
     request.get({ url: queueUri }, function callBack(err, httpResponse, body) {
         if (err) {
             tl.setResult(tl.TaskResult.Failed, err);
@@ -73,7 +84,12 @@ function trackJobQueued(queueUri: string) {
             } else {
                 jenkinsTaskName = parsedBody.task.name;
                 jenkinsExecutableNumber = parsedBody.executable.number;
-                jenkinsExecutableUrl = protocol + parsedBody.executable.url.replace('/job',":"+port+"/job");
+                if (parsedBody.executable.url.indexOf(port) >= 0) {
+                	jenkinsExecutableUrl = parsedBody.executable.url
+                }
+                else{
+                	jenkinsExecutableUrl = parsedBody.executable.url.replace('/job', ':' + port + '/job');	
+                }
                 console.log('Jenkins job started: ' + jenkinsExecutableUrl);
 
                 if (captureConsole) {
@@ -107,8 +123,8 @@ function createLinkAndFinish(result, jobStatus: string, resultMessage: string) {
 }
 
 function captureJenkinsConsole(consoleOffset: number) {
-    var fullUrl = jenkinsExecutableUrl + 'logText/progressiveText/?start=' + consoleOffset;
-    tl._writeLine('full URL='+ fullUrl);
+    var fullUrl =  protocol + username + ':' + password + '@' + jenkinsExecutableUrl.replace(protocol,"") + 'logText/progressiveText/?start=' + consoleOffset;
+    tl.debug('full URL='+ fullUrl);
     tl.debug('Tracking progress of job URL: ' + fullUrl);
     request.get({ url: fullUrl }, function callBack(err, httpResponse, body) {
         if (err) {
@@ -150,8 +166,14 @@ function getResultString(resultCode: string): string {
 }
 
 function checkSuccess() {
-    var resultUrl = jenkinsExecutableUrl + 'api/json';
-    tl.debug('Tracking completion status of job: ' + resultUrl);
+    var resultUrl
+    if (jenkinsExecutableUrl.indexOf(port) >= 0) {
+        resultUrl = protocol + username + ':' + password + '@' + jenkinsExecutableUrl.replace(protocol,"") + 'api/json';
+        } else {
+            resultUrl = protocol + username + ':' + password + '@' + jenkinsExecutableUrl.replace(protocol,"").replace('/job', ':' + port + '/job') + 'api/json';	
+        }
+    resultUrl = protocol + username + ':' + password + '@' + jenkinsExecutableUrl.replace(protocol,"") + 'api/json';
+    tl._writeLine('Tracking completion status of job: ' + resultUrl);
     request.get({ url: resultUrl }, function callBack(err, httpResponse, body) {
         if (err) {
             tl.setResult(tl.TaskResult.Failed, err);
@@ -164,7 +186,6 @@ function checkSuccess() {
                 resultCode = resultCode.toUpperCase(); 
                 var resultStr = getResultString(resultCode);
                 tl.debug(resultUrl + ' resultCode: ' + resultCode + ' resultStr: ' + resultStr);
-            
                 var completionMessage = 'Jenkins job: ' + resultCode + ' ' + jobName + ' ' + jenkinsExecutableUrl;
                 if (resultCode == "SUCCESS" || resultCode == 'UNSTABLE') {
                     createLinkAndFinish(tl.TaskResult.Succeeded, resultStr, completionMessage);
@@ -201,14 +222,44 @@ function checkSuccess() {
  *    V
  * createLinkAndFinish()
  */
-request.post({ url: jobQueueUrl }, function optionalCallback(err, httpResponse, body) {
-    if (err) {
-        tl.setResult(tl.TaskResult.Failed, err);
-    } else if (httpResponse.statusCode != 201) {
-        failReturnCode(httpResponse, 'Job creation failed.');
-    } else {
-        console.log('Jenkins job queued');
-        var queueUri = httpResponse.headers.location + 'api/json';
-        trackJobQueued(queueUri);
-    }
-}).auth(username, password, true);
+if (token) {
+    tl._writeLine('requesting crumb for token:'+token);
+    tl._writeLine('crumb request:'+ serverEndpointUrl +'crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)');
+    request.get({url: serverEndpointUrl+"crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)" }, function (err, httpResponse, body) {
+        if (err) {
+            tl._writeLine('crumb='+crumb);
+            tl.setResult(tl.TaskResult.Failed, err);
+        } else if (httpResponse.statusCode != 200) {
+            failReturnCode(httpResponse, 'crumb request failed.');
+        } else {
+            crumb = body;
+            console.log('crumb created:' + crumb);
+            request.post({ url: jobQueueUrl + '&' + crumb }, function (err, httpResponse, body) {
+                if (err) {
+                    tl.setResult(tl.TaskResult.Failed, err);
+                } else if (httpResponse.statusCode != 201) {
+                    failReturnCode(httpResponse, 'Job creation failed.');
+                } else {
+                    console.log('Jenkins job queued');
+                    var queueUri = httpResponse.headers.location + 'api/json';
+                    trackJobQueued(queueUri);
+                }
+            }).auth(username, password, true);       
+        }
+    }).auth(username, password, true);    
+} 
+else
+{
+    request.post({ url: protocol + username + ':' + password + '@' + jobQueueUrl.replace(protocol,"") }, function (err, httpResponse, body) {
+        if (err) {
+            tl.setResult(tl.TaskResult.Failed, err);
+        } else if (httpResponse.statusCode != 201) {
+            failReturnCode(httpResponse, 'Job creation failed.');
+        } else {
+            console.log('Jenkins job queued');
+            var queueUri = httpResponse.headers.location + 'api/json';
+            trackJobQueued(protocol + username + ':' + password + '@' + queueUri.replace(protocol,""));
+        }
+    }).auth(username, password, true);
+}
+
