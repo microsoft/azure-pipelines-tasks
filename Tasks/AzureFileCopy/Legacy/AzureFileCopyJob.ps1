@@ -1,6 +1,5 @@
 $AzureFileCopyJob = {
 param (
-    [string]$deploymentUtilitiesLocation,
     [string]$fqdn,
     [string]$storageAccount,
     [string]$containerName,
@@ -44,13 +43,10 @@ param (
     }
     else
     {
-        #if(Test-Path "$env:AGENT_HOMEDIRECTORY\externals\vstshost")
-        #{
-            #[void][reflection.assembly]::LoadFrom("$env:AGENT_HOMEDIRECTORY\externals\vstshost\Microsoft.TeamFoundation.DistributedTask.Task.LegacySDK.dll")
-        #}
-
-        Import-Module "$deploymentUtilitiesLocation\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
-        Import-Module "$deploymentUtilitiesLocation\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs.dll"
+        if(Test-Path "$env:AGENT_HOMEDIRECTORY\externals\vstshost")
+        {
+            [void][reflection.assembly]::LoadFrom("$env:AGENT_HOMEDIRECTORY\externals\vstshost\Microsoft.TeamFoundation.DistributedTask.Task.LegacySDK.dll")
+        }
     }
 
     $cleanTargetPathOption = ''

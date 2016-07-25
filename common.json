@@ -5,6 +5,12 @@
             "dest": "ps_modules"
         }
     ],
+    "AzureFileCopy": [
+        {
+            "module": "VstsAzureHelpers_",
+            "dest": "ps_modules"
+        }
+    ],
     "AzureRMWebAppDeployment": [
         {
             "module": "VstsAzureHelpers_",
