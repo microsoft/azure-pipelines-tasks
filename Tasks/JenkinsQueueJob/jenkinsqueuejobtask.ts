@@ -232,9 +232,9 @@ if (token) {
         } else if (httpResponse.statusCode != 200) {
             failReturnCode(httpResponse, 'crumb request failed.');
         } else {
-            crumb = body;
+            crumb = body.replace('Jenkins-Crumb:','');
             console.log('crumb created:' + crumb);
-            request.post({ url: jobQueueUrl + '&' + crumb }, function (err, httpResponse, body) {
+            request.post({ url: jobQueueUrl, headers:{'.crumb':crumb } }, function (err, httpResponse, body) {
                 if (err) {
                     tl.setResult(tl.TaskResult.Failed, err);
                 } else if (httpResponse.statusCode != 201) {
