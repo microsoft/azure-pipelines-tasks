@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [
     "Cmd"
@@ -121,6 +121,7 @@
     "NotARegularFile": "ms-resource:loc.messages.NotARegularFile",
     "UnknownFeedType": "ms-resource:loc.messages.UnknownFeedType",
     "CouldNotFindNuGetService": "ms-resource:loc.messages.CouldNotFindNuGetService",
+    "ErrorPreventsAuth": "ms-resource:loc.messages.ErrorPreventsAuth",
     "NGCommon_IgnoringNuGetExtensionsPath": "ms-resource:loc.messages.NGCommon_IgnoringNuGetExtensionsPath",
     "NGCommon_DetectedNuGetExtensionsPath": "ms-resource:loc.messages.NGCommon_DetectedNuGetExtensionsPath",
     "NGCommon_UnableToFindTool": "ms-resource:loc.messages.NGCommon_UnableToFindTool",
