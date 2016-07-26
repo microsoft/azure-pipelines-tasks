@@ -1,0 +1,97 @@
+{
+  "id": "363805f0-3eb6-11e6-880e-61c440f5ba19",
+  "name": "GetBuildArtifacts",
+  "friendlyName": "Get Build Artifacts",
+  "description": "Get path to build artifacts",
+  "author": "Intel TIM",
+  "helpMarkDown": "Get path to build artifacts by definition filters",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": "1",
+    "Minor": "0",
+    "Patch": "9"
+  },
+  "minimumAgentVersion": "1.95.0",
+  "instanceNameFormat": "Get Build Artifacts from $(buildDefName)",
+  "inputs": [
+    {
+      "name": "buildDefName",
+      "type": "string",
+      "label": "Build Definition Name",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Name of the build definition to get Artifacts from."
+    },
+    {
+      "name": "buildDefID",
+      "type": "string",
+      "label": "Build Definition ID",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Id of the build definition to get Artifacts from."
+    },
+    {
+      "name": "artifactPathVarName",
+      "type": "string",
+      "label": "Artifact Path Variable",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "The step returns to this variable path for the found Artifact (input name only without $)."
+    },
+    {
+      "name": "buildArtifactName",
+      "type": "string",
+      "label": "Artifact Name",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Name of Artifact to get from the selected build. Keep it empty to get first Artifact."
+    },
+    {
+      "name": "connectedServiceName",
+      "type": "connectedService:Generic",
+      "label": "Credentials",
+      "required": true,
+      "helpMarkDown": "The server generic endpoint, set the key 'Password/Token Key' field to your API key."
+    },
+    {
+      "name": "latestSucceeded",
+      "type": "boolean",
+      "label": "Last Succeeded Build",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "Set true to get artifacts from last succeeded build"
+    },
+    {
+      "name": "buildQuality",
+      "type": "string",
+      "label": "Build Quality",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Filter the builds according to build quality tag (for example: Ready for Deployment)"
+    },
+    {
+      "name": "customFilter",
+      "type": "string",
+      "label": "Custom Filter",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Custom fillter to get builds (for example: qualityFilter=Ready for Deployment)"
+    }
+  ],
+  "execution": 
+  {
+    "Powershell": {
+      "target": "$(currentDirectory)\\GetBuildArtifacts.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)",
+      "platforms": [
+        "windows"
+      ]
+    }
+  }
+}

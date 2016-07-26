@@ -1,0 +1,107 @@
+{
+    "id": "128262e0-2d4f-11e6-bb0e-9bb1cca78def",
+    "name": "IncrediBuild",
+    "friendlyName": "IncrediBuild",
+    "description": "Build with IncrediBuild",
+    "helpMarkDown": "Help not available",
+    "category": "Build",
+    "visibility": [
+        "Build"
+    ],
+    "author": "ALM",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 19
+    },
+    "demands": [
+        "msbuild",
+        "visualstudio"
+    ],
+    "minimumAgentVersion": "1.95.0",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "solution",
+            "type": "filePath",
+            "label": "Solution",
+            "defaultValue": "**\\*.sln",
+            "required": true,
+            "helpMarkDown": "Relative path from repo root of the solution(s) to run.  Wildcards can be used.  For example, `**\\*.sln` for all sln files in all sub folders."
+        },
+        {
+            "name": "incredibuildArgs",
+            "type": "string",
+            "label": "IncrediBuild Arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Additional arguments passed to IncrediBuild. See available arguments at: https://www.incredibuild.com/webhelp/#ib_for_make_and_build_tools3.html"
+        },
+        {
+            "name": "platform",
+            "type": "string",
+            "label": "Platform",
+            "defaultValue": "",
+            "required": true
+        },
+        {
+            "name": "configuration",
+            "type": "string",
+            "label": "Configuration",
+            "defaultValue": "",
+            "required": true
+        },
+        {
+            "name": "clean",
+            "type": "boolean",
+            "label": "Clean",
+            "defaultValue": "false",
+            "required": false
+        },
+        {
+            "name": "vsVersion",
+            "type": "pickList",
+            "label": "Visual Studio Version",
+            "required": false,
+            "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead.",
+            "defaultValue": "14.0",
+            "options": {
+                "latest": "Latest",
+                "14.0": "Visual Studio 2015",
+                "12.0": "Visual Studio 2013",
+                "11.0": "Visual Studio 2012"
+            }
+        },
+        {
+            "name": "msbuildArchitecture",
+            "type": "pickList",
+            "label": "MSBuild Architecture",
+            "defaultValue": "x86",
+            "required": false,
+            "helpMarkDown": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
+            "groupName": "advanced",
+            "options": {
+                "x86": "MSBuild x86",
+                "x64": "MSBuild x64"
+            }
+        }
+    ],
+    "instanceNameFormat": "Build solution $(solution)",
+    "execution": {
+        "PowerShell3": {
+            "target": "IncrediBuild.ps1"
+        }
+    },
+    "messages": {
+        "IncrediBuildNotFoundVersion0Architecture1": "IncrediBuild not found for version '{0}' and architecture '{1}'.",
+        "UnexpectedVSVersion0": "Unexpected Visual Studio version '{0}'.",
+        "VSNotFoundTry": "Visual Studio not found. Try installing a supported version of Visual Studio. See the task definition for a list of supported versions.",
+        "VSVersion0NotFoundLookingForLatest": "Visual Studio version '{0}' not found. Looking for the latest version."
+    }
+}

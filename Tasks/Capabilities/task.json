@@ -1,0 +1,49 @@
+{
+  "id": "4ff647b0-440e-11e6-a51f-3912cf3b5755",
+  "name": "PerCapabilities",
+  "friendlyName": "PerC Capabilities",
+  "description": "Add capabilities to current aggent",
+  "author": "ALME2E",
+  "helpMarkDown": "Replace with markdown to show in help",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": "0",
+    "Minor": "1",
+    "Patch": "22"
+  },
+  "minimumAgentVersion": "1.95.0",
+  "instanceNameFormat": "PerCapabilities $(message)",
+  "inputs": [
+    {
+            "name": "capabilitiyKey",
+            "type": "string",
+            "label": "Capability Name",
+            "required": true
+        },
+        {
+            "name": "capabilitiyValue",
+            "type": "string",
+            "label": "Capability Value",
+            "required": false
+        },
+        {
+            "name": "connectedServiceName",
+            "type": "connectedService:Generic",
+            "label": "Server Endpoint",
+            "required": true,
+            "helpMarkDown": "The server generic endpoint, set the key -Password/Token Key- field to your API key."
+        }
+  ],
+  "execution": {
+      "PowerShell": {
+      "target": "$(currentDirectory)\\Capabilities.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

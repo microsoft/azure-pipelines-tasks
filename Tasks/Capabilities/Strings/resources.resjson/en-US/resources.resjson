@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "PerC Capabilities",
+  "loc.helpMarkDown": "Replace with markdown to show in help",
+  "loc.description": "Add capabilities to current aggent",
+  "loc.instanceNameFormat": "PerCapabilities $(message)",
+  "loc.input.label.capabilitiyKey": "Capability Name",
+  "loc.input.label.capabilitiyValue": "Capability Value",
+  "loc.input.label.connectedServiceName": "Server Endpoint",
+  "loc.input.help.connectedServiceName": "The server generic endpoint, set the key -Password/Token Key- field to your API key."
+}
