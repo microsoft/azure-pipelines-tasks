@@ -76,5 +76,11 @@ describe('Common-MSBuildHelpers Suite', function () {
         it('(Invoke-MSBuild) combines msbuildexe', (done) => {
             psr.run(path.join(__dirname, 'Invoke-MSBuild.CombinesMsbuildexe.ps1'), done);
         })
+        it('(Invoke-MSBuild) drops timeline detail', (done) => {
+            psr.run(path.join(__dirname, 'Invoke-MSBuild.DropsTimelineDetail.ps1'), done);
+        })
+        it('(Invoke-MSBuild) fixes timeline detail name', (done) => {
+            psr.run(path.join(__dirname, 'Invoke-MSBuild.FixesTimelineDetailName.ps1'), done);
+        })
     }
 });
