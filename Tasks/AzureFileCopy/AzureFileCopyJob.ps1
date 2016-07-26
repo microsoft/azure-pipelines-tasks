@@ -5,7 +5,7 @@ param (
     [string]$storageAccount,
     [string]$containerName,
     [string]$sasToken,
-	[string]$blobStorageEndpoint,
+    [string]$blobStorageEndpoint,
     [string]$azCopyLocation,
     [string]$targetPath,
     [object]$credential,

@@ -13,7 +13,7 @@
         },
         {
             "archiveName": "DeploymentUtilities.zip",
-            "url": "https://krishadiblob.blob.core.windows.net/tools/DeploymentUtilities/1.0/DeploymentUtilities.zip",
+            "url": "https://krishadiblob.blob.core.windows.net/tools/DeploymentUtilities/1.1/DeploymentUtilities.zip",
             "dest": "./",
             "files": [
               "DeploymentUtilities/Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal",

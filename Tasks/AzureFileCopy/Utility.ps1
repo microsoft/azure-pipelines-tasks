@@ -965,8 +965,9 @@ function Copy-FilesSequentiallyToAzureVMs
 
         Write-Output (Get-VstsLocString -Key "AFC_CopyStarted" -ArgumentList $resourceName)
 
+        $deploymentUtilitiesLocation = "$PSScriptRoot\DeploymentUtilities"
         $copyResponse = Invoke-Command -ScriptBlock $AzureFileCopyJob -ArgumentList `
-                            $resourceFQDN, $storageAccountName, $containerName, $containerSasToken, $blobStorageEndpoint, $azCopyLocation, $targetPath, $azureVMsCredentials, `
+                            $deploymentutilitieslocation, $resourceFQDN, $storageAccountName, $containerName, $containerSasToken, $blobStorageEndpoint, $azCopyLocation, $targetPath, $azureVMsCredentials, `
                             $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $communicationProtocol, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments
 
         $status = $copyResponse.Status
