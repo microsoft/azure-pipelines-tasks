@@ -101,7 +101,12 @@ declare module 'nuget-task-common/NuGetToolRunner' {
 	    exec(options?: IExecOptions): Q.Promise<number>;
 	}
 	export function createNuGetToolRunner(nuGetExePath: string, settings: NuGetEnvironmentSettings): NuGetToolRunner;
-	export function locateTool(tool: string, userPath?: string, optional?: boolean): string;
+	export interface LocateOptions {
+	    optional?: boolean;
+	    userPath?: string;
+	    fallbackToSystemPath?: boolean;
+	}
+	export function locateTool(tool: string | string[], opts?: LocateOptions): string;
 
 }
 declare module 'nuget-task-common/NuGetConfigHelper' {
