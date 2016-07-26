@@ -66,9 +66,8 @@ if (!tl.filePathSupplied('nuGetPath')) {
 var serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
 
 //find nuget location to use
-var nuGetExeVariants = ['nuget.exe', 'NuGet.exe', 'nuget', 'NuGet']
-var nuGetPathToUse = ngToolRunner.locateTool(nuGetExeVariants, {userPath: userNuGetPath, fallbackToSystemPath: os.platform() !== 'win32'});
-var credProviderPath = ngToolRunner.locateTool('CredentialProvider.TeamBuild.exe', {optional: true});
+var nuGetPathToUse = ngToolRunner.locateNuGetExe(userNuGetPath);
+var credProviderPath = ngToolRunner.locateCredentialProvider();
 
 var credProviderDir: string = null;
 if (credProviderPath) {

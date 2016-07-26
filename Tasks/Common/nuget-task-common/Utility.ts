@@ -44,17 +44,6 @@ export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEm
 
 export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: boolean): string[] {
     let isWindows = os.platform() === 'win32';
-    let toPosixPath = (path: string) => path;
-    let toNativePath = (path: string) => path;
-    if (isWindows) {
-        // minimatch assumes paths use /, so on Windows, make paths use /
-        // This needs to be done both to the pattern and to the filenames.
-        toPosixPath = (path: string) => path.replace(/\\/g, "/");
-
-        // tl.find always returns forward slashes. This is problematic with UNC paths because NuGet
-        // interprets that as a switch argument instead of a path.
-        toNativePath = (path: string) => path.replace(/\//g, "\\");
-    }
 
     // Resolve files for the specified value or pattern
     var filesList: string[];
@@ -93,9 +82,9 @@ export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: b
         var allFiles = tl.find(findPathRoot);
 
         // Now matching the pattern against all files
-        // Turn off a bunch of minimatch features to replicate the be
+        // Turn off a bunch of minimatch features to replicate the behavior of Find-Files in the old PowerShell tasks
         let patternFilter = tl.filter(
-            toPosixPath(pattern), {
+            pattern, {
                 matchBase: true,
                 nobrace: true,
                 noext: true,
@@ -105,7 +94,7 @@ export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: b
                 dot: isWindows
             });
 
-        filesList = allFiles.filter((file, index, array) => patternFilter(toPosixPath(file), index, array));
+        filesList = allFiles.filter(patternFilter);
 
         // Fail if no matching .sln files were found
         if (!allowEmptyWildcardMatch && (!filesList || filesList.length == 0)) {
@@ -113,5 +102,12 @@ export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: b
         }
     }
 
-    return filesList.map(toNativePath);
+    if (!isWindows)
+    {
+        return filesList;
+    }
+    else
+    {
+        return filesList.map(file => file.split("/").join("\\"));
+    }
 }
