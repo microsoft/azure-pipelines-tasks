@@ -14,6 +14,7 @@ import * as ngToolRunner from 'nuget-task-common/NuGetToolRunner';
 import * as nutil from 'nuget-task-common/Utility';
 import * as auth from 'nuget-task-common/Authentication'
 import {NuGetConfigHelper} from 'nuget-task-common/NuGetConfigHelper'
+import * as os from 'os';
 
 class RestoreOptions {
     constructor(
@@ -65,8 +66,9 @@ if (!tl.filePathSupplied('nuGetPath')) {
 var serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
 
 //find nuget location to use
-var nuGetPathToUse = ngToolRunner.locateTool('nuget.exe', userNuGetPath);
-var credProviderPath = ngToolRunner.locateTool('CredentialProvider.TeamBuild.exe', null, true);
+var nuGetExeVariants = ['nuget.exe', 'NuGet.exe', 'nuget', 'NuGet']
+var nuGetPathToUse = ngToolRunner.locateTool(nuGetExeVariants, {userPath: userNuGetPath, fallbackToSystemPath: os.platform() !== 'win32'});
+var credProviderPath = ngToolRunner.locateTool('CredentialProvider.TeamBuild.exe', {optional: true});
 
 var credProviderDir: string = null;
 if (credProviderPath) {
