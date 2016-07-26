@@ -95,7 +95,10 @@ locationHelpers.getNuGetConnectionData(serviceUri, accessToken)
             return <string[]>[];
         }
 
-        throw err;
+        // for now, make this a warning, since we're getting customers broken trying to call location service
+        tl.warning(tl.loc("ErrorPreventsAuth"));
+        tl.warning(err);
+        return [];
     })
     .then(urlPrefixes => {
         tl.debug("discovered URL prefixes: " + urlPrefixes.join(';'))
