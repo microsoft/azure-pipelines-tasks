@@ -2,13 +2,13 @@
 {
     if ($files -is [system.array])
     {
-        throw (Get-VstsLocString -Key "Found more than one file to deploy with search pattern {0}. There can be only one." -ArgumentList $pattern)
+        throw (Get-VstsLocString -Key "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone" -ArgumentList $pattern)
     }
     else
     {
         if (!$files)
         {
-            throw (Get-VstsLocString -Key "No files were found to deploy with search pattern {0}" -ArgumentList $pattern)
+            throw (Get-VstsLocString -Key "Nofileswerefoundtodeploywithsearchpattern0" -ArgumentList $pattern)
         }
         return $files
     }
@@ -47,7 +47,7 @@ function Get-RoleName($extPath)
     }
     else
     {
-        Write-Warning (Get-VstsLocString -Key "'{0}' could not be parsed into parts for registering diagnostics extensions." -ArgumentList $extPath)
+        Write-Warning (Get-VstsLocString -Key "0couldnotbeparsedintopartsforregisteringdiagnosticsextensions" -ArgumentList $extPath)
     }
 
     return $roleName
@@ -68,7 +68,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath)
     }
     else
     {
-        Write-Host (Get-VstsLocString -Key "Applying any configured diagnostics extensions.")
+        Write-Host (Get-VstsLocString -Key "Applyinganyconfigureddiagnosticsextensions")
 
         Write-Verbose "Getting the primary AzureStorageKey..."
         $primaryStorageKey = (Get-AzureStorageKey -StorageAccountName "$storageAccount").Primary
@@ -107,7 +107,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath)
                         }
                         else
                         {
-                            Write-Warning (Get-VstsLocString -Key "Could not get the primary storage key for the public config storage account '{0}'. Unable to apply any diagnostics extensions." -ArgumentList "$publicConfigStorageAccountName")
+                            Write-Warning (Get-VstsLocString -Key "Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions" -ArgumentList "$publicConfigStorageAccountName")
                             return
                         }
                     }
@@ -128,7 +128,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath)
         }
         else
         {
-            Write-Warning (Get-VstsLocString -Key "Could not get the primary storage key for storage account '{0}'. Unable to apply any diagnostics extensions." -ArgumentList "$storageAccount")
+            Write-Warning (Get-VstsLocString -Key "Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions" -ArgumentList "$storageAccount")
         }
     }
     
