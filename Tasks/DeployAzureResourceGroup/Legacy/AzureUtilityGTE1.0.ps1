@@ -1,17 +1,16 @@
-# This file implements IAzureUtility for Azure PowerShell version <= 0.9.8
+# This file implements IAzureUtility for Azure PowerShell version >= 1.0.0
 
 function Create-AzureResourceGroupIfNotExist
 {
     param([string]$resourceGroupName,
           [string]$location)
 
-    Switch-AzureMode AzureResourceManager
     if(-not [string]::IsNullOrEmpty($resourceGroupName))
     {
         try
         {
             Write-Verbose "[Azure Resource Manager]Getting resource group:$resourceGroupName"
-            $azureResourceGroup = Get-AzureResourceGroup -ResourceGroupName $resourceGroupName -ErrorAction silentlyContinue
+            $azureResourceGroup = Get-AzureRMResourceGroup -ResourceGroupName $resourceGroupName -ErrorAction silentlyContinue
             Write-Verbose "[Azure Resource Manager]Got resource group:$resourceGroupName"
         }
         catch
@@ -22,8 +21,8 @@ function Create-AzureResourceGroupIfNotExist
         if(-not $azureResourceGroup -and -not [string]::IsNullOrEmpty($location))
         {
             Write-Verbose "[Azure Resource Manager]Creating resource group $resourceGroupName in $location"
-            $azureResourceGroup = New-AzureResourceGroup -Name $resourceGroupName -Location $location -Verbose -ErrorAction Stop
-            Write-Host (Get-VstsLocString -Key "ARG_CreatedResourceGroup" -ArgumentList $resourceGroupName)
+            $azureResourceGroup = New-AzureRMResourceGroup -Name $resourceGroupName -Location $location -Verbose -ErrorAction Stop
+            Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Created resource group '{0}'" -ArgumentList $resourceGroupName)
         }
         return $azureResourceGroup
     }
@@ -36,21 +35,18 @@ function Deploy-AzureResourceGroup
           [string]$resourceGroupName,
           [string]$overrideParameters)
 
-    Switch-AzureMode AzureResourceManager
-
     $deploymentName = [System.IO.Path]::GetFileNameWithoutExtension($csmFile) + '-' + ((Get-Date).ToUniversalTime()).ToString('yyyyMMdd-HHmm')
 
     Write-Host "[Azure Resource Manager]Creating resource group deployment with name $deploymentName"
 
     if (!$csmParametersFile)
     {
-        $finalCommand = "`$azureResourceGroupDeployment = New-AzureResourceGroupDeployment -Name `"$deploymentName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
+        $finalCommand = "`$azureResourceGroupDeployment = New-AzureRMResourceGroupDeployment -Name `"$deploymentName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
     }
     else
     {
-        $finalCommand = "`$azureResourceGroupDeployment = New-AzureResourceGroupDeployment -Name `"$deploymentName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" -TemplateParameterFile `$csmParametersFile $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
+        $finalCommand = "`$azureResourceGroupDeployment = New-AzureRMResourceGroupDeployment -Name `"$deploymentName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" -TemplateParameterFile `"$csmParametersFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
     }
-
     Write-Verbose "$finalCommand"
     Invoke-Expression -Command $finalCommand
 
@@ -61,12 +57,11 @@ function Get-AllVMInstanceView
 {
     param([string]$resourceGroupName)
 
-    Switch-AzureMode AzureResourceManager
     $VmInstanceViews = @{}
     if (-not [string]::IsNullOrEmpty($resourceGroupName))
     {
         Write-Verbose "[Azure Call]Getting resource group:$resourceGroupName RM virtual machines type resources"
-        $azureVMResources = Get-AzureVM -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
+        $azureVMResources = Get-AzureRMVM -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
         Write-Verbose "[Azure Call]Count of resource group:$resourceGroupName RM virtual machines type resource is $($azureVMResources.Count)"
 
         if($azureVMResources)
@@ -75,13 +70,12 @@ function Get-AllVMInstanceView
             {
                 $name = $resource.Name
                 Write-Verbose "[Azure Resource Manager]Getting VM $name from resource group $resourceGroupName"
-                $vmInstanceView = Get-AzureVM -Name $resource.Name -ResourceGroupName $resourceGroupName -Status -Verbose -ErrorAction Stop
+                $vmInstanceView = Get-AzureRMVM -Name $resource.Name -ResourceGroupName $resourceGroupName -Status -Verbose -ErrorAction Stop
                 Write-Verbose "[Azure Resource Manager]Got VM $name from resource group $resourceGroupName"
                 $VmInstanceViews.Add($name, $vmInstanceView)
             }
         }
     }
-
     return $VmInstanceViews
 }
 
@@ -90,12 +84,11 @@ function Start-Machine
     param([string]$resourceGroupName,
           [string]$machineName)
 
-    Switch-AzureMode AzureResourceManager
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($machineName))
     {
-        Write-Host (Get-VstsLocString -Key "ARG_StartingMachine" -ArgumentList $machineName)
-        $response = Start-AzureVM -Name $machineName -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
-        Write-Host (Get-VstsLocString -Key "ARG_StartedMachine" -ArgumentList $machineName)
+        Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Starting machine '{0}'" -ArgumentList $machineName)
+        $response = Start-AzureRMVM -Name $machineName -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
+        Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Started machine '{0}' from Azure provider" -ArgumentList $machineName)
     }
     return $response
 }
@@ -105,12 +98,11 @@ function Stop-Machine
     param([string]$resourceGroupName,
           [string]$machineName)
 
-    Switch-AzureMode AzureResourceManager
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($machineName))
     {
-        Write-Host (Get-VstsLocString -Key "ARG_StoppingMachine" -ArgumentList $machineName)
-        $response = Stop-AzureVM -Name $machineName -ResourceGroupName $resourceGroupName -Force -ErrorAction Stop -Verbose
-        Write-Host (Get-VstsLocString -Key "ARG_StoppedMachine" -ArgumentList $machineName)
+        Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Stopping machine '{0}'" -ArgumentList $machineName)
+        $response = Stop-AzureRMVM -Name $machineName -ResourceGroupName $resourceGroupName -Force -ErrorAction Stop -Verbose
+        Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Stopped machine '{0}' from Azure provider" -ArgumentList $machineName)
     }
     return $response
 }
@@ -120,12 +112,11 @@ function Delete-Machine
     param([string]$resourceGroupName,
           [string]$machineName)
 
-    Switch-AzureMode AzureResourceManager
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($machineName))
     {
-        Write-Host (Get-VstsLocString -Key "ARG_DeletingMachine" -ArgumentList $machineName)
-        $response = Remove-AzureVM -Name $machineName -ResourceGroupName $resourceGroupName -Force -ErrorAction Stop -Verbose
-        Write-Host (Get-VstsLocString -Key "ARG_DeletedMachine" -ArgumentList $machineName)
+        Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleting machine '{0}'" -ArgumentList $machineName)
+        $response = Remove-AzureRMVM -Name $machineName -ResourceGroupName $resourceGroupName -Force -ErrorAction Stop -Verbose
+        Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleted machine '{0}' from Azure provider" -ArgumentList $machineName)
     }
     return $response
 }
@@ -134,12 +125,11 @@ function Delete-ResourceGroup
 {
     param([string]$resourceGroupName)
 
-    Switch-AzureMode AzureResourceManager
     if(-not [string]::IsNullOrEmpty($resourceGroupName))
     {
-        Write-Host (Get-VstsLocString -Key "ARG_DeletingResourceGroup" -ArgumentList $resourceGroupName)
-        Remove-AzureResourceGroup -Name $resourceGroupName -Force -ErrorAction Stop -Verbose
-        Write-Host (Get-VstsLocString -Key "ARG_DeletedResourceGroup" -ArgumentList $resourceGroupName)
+        Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleting resource group '{0}'" -ArgumentList $resourceGroupName)
+        Remove-AzureRMResourceGroup -Name $resourceGroupName -Force -ErrorAction Stop -Verbose
+        Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleted resource group '{0}'" -ArgumentList $resourceGroupName)
     }
 }
 
@@ -147,19 +137,18 @@ function Get-AzureRMVMsInResourceGroup
 {
     param([string]$resourceGroupName)
 
-    Switch-AzureMode AzureResourceManager
     If(-not [string]::IsNullOrEmpty($resourceGroupName))
     {
         try
         {
             Write-Verbose "[Azure Call]Getting resource group:$resourceGroupName RM virtual machines type resources"
-            $azureVMResources = Get-AzureVM -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
+            $azureVMResources = Get-AzureRMVM -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
             Write-Verbose "[Azure Call]Count of resource group:$resourceGroupName RM virtual machines type resource is $($azureVMResources.Count)"
         }
         catch [Microsoft.WindowsAzure.Commands.Common.ComputeCloudException],[System.MissingMethodException], [System.Management.Automation.PSInvalidOperationException], [Hyak.Common.CloudException]
         {
             Write-Verbose $_.Exception.Message
-            throw (Get-VstsLocString -Key "ARG_EnsureResourceGroupWithMachine" -ArgumentList $resourceGroupName)
+            throw (Get-LocalizedString -Key "Ensure resource group '{0}' exists and has at least one virtual machine in it" -ArgumentList $resourceGroupName)
         }
         catch
         {
@@ -175,23 +164,22 @@ function Get-AzureRMResourceGroupResourcesDetails
     param([string]$resourceGroupName,
           [object]$azureRMVMResources)
 
-    Switch-AzureMode AzureResourceManager
     [hashtable]$ResourcesDetails = @{}
     [hashtable]$LoadBalancerDetails = @{}
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and $azureRMVMResources)
     {
         Write-Verbose "[Azure Call]Getting network interfaces in resource group $resourceGroupName"
-        $networkInterfaceResources = Get-AzureNetworkInterface -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
-        Write-Verbose "[Azure Call]Got network interfaces in resource group $resourceGroupName"
+        $networkInterfaceResources = Get-AzureRMNetworkInterface -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
+        Write-Verbose  "[Azure Call]Got network interfaces in resource group $resourceGroupName"
         $ResourcesDetails.Add("networkInterfaceResources", $networkInterfaceResources)
 
         Write-Verbose "[Azure Call]Getting public IP Addresses in resource group $resourceGroupName"
-        $publicIPAddressResources = Get-AzurePublicIpAddress -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
-        Write-Verbose "[Azure Call]Got public IP Addresses in resource group $resourceGroupName"
+        $publicIPAddressResources = Get-AzureRMPublicIpAddress -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
+        Write-Verbose  "[Azure Call]Got public IP Addresses in resource group $resourceGroupName"
         $ResourcesDetails.Add("publicIPAddressResources", $publicIPAddressResources)
 
         Write-Verbose "[Azure Call]Getting load balancers in resource group $resourceGroupName"
-        $lbGroup = Get-AzureLoadBalancer -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
+        $lbGroup = Get-AzureRMLoadBalancer -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
         Write-Verbose "[Azure Call]Got load balancers in resource group $resourceGroupName"
 
         if($lbGroup)
@@ -199,23 +187,22 @@ function Get-AzureRMResourceGroupResourcesDetails
             foreach($lb in $lbGroup)
             {
                 $lbDetails = @{}
-                Write-Verbose "[Azure Call]Getting load balancer in resource group $resourceGroupName"
-                $loadBalancer = Get-AzureLoadBalancer -Name $lb.Name -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
-                Write-Verbose "[Azure Call]Got load balancer in resource group $resourceGroupName"
+                Write-Verbose  "[Azure Call]Getting load balancer in resource group $resourceGroupName"
+                $loadBalancer = Get-AzureRMLoadBalancer -Name $lb.Name -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
+                Write-Verbose  "[Azure Call]Got load balancer in resource group $resourceGroupName"
 
                 Write-Verbose "[Azure Call]Getting LoadBalancer Frontend Ip Config"
-                $frontEndIPConfigs = Get-AzureLoadBalancerFrontendIpConfig -LoadBalancer $loadBalancer -ErrorAction Stop -Verbose
+                $frontEndIPConfigs = Get-AzureRMLoadBalancerFrontendIpConfig -LoadBalancer $loadBalancer -ErrorAction Stop -Verbose
                 Write-Verbose "[Azure Call]Got LoadBalancer Frontend Ip Config"
 
                 Write-Verbose "[Azure Call]Getting Azure LoadBalancer Inbound NatRule Config"
-                $inboundRules = Get-AzureLoadBalancerInboundNatRuleConfig -LoadBalancer $loadBalancer -ErrorAction Stop -Verbose
+                $inboundRules = Get-AzureRMLoadBalancerInboundNatRuleConfig -LoadBalancer $loadBalancer -ErrorAction Stop -Verbose
                 Write-Verbose "[Azure Call]Got Azure LoadBalancer Inbound NatRule Config"
 
                 $lbDetails.Add("frontEndIPConfigs", $frontEndIPConfigs)
                 $lbDetails.Add("inboundRules", $inboundRules)
                 $LoadBalancerDetails.Add($lb.Name, $lbDetails)
             }
-
             $ResourcesDetails.Add("loadBalancerResources", $LoadBalancerDetails)
         }
     }
@@ -227,12 +214,11 @@ function Get-AzureClassicVMsInResourceGroup
 {
     param([string]$resourceGroupName)
 
-    Switch-AzureMode AzureServiceManagement
     if(-not [string]::IsNullOrEmpty($resourceGroupName))
     {
-        Write-Verbose "[Azure Call]Getting resource group:$resourceGroupName classic virtual machines type resources"
+        Write-Verbose -Verbose "[Azure Call]Getting resource group:$resourceGroupName classic virtual machines type resources"
         $azureClassicVMResources = Get-AzureVM -ServiceName $resourceGroupName -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
-        Write-Verbose "[Azure Call]Count of resource group:$resourceGroupName classic virtual machines type resource is $($azureClassicVMResources.Count)"
+        Write-Verbose -Verbose "[Azure Call]Count of resource group:$resourceGroupName classic virtual machines type resource is $($azureClassicVMResources.Count)"
     }
 
     return $azureClassicVMResources
@@ -243,7 +229,6 @@ function Get-AzureClassicVMsConnectionDetailsInResourceGroup
     param([string]$resourceGroupName,
           [object]$azureClassicVMResources)
 
-    Switch-AzureMode AzureServiceManagement
     [hashtable]$classicVMsDetails = @{}
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and $azureClassicVMResources)
     {
@@ -252,13 +237,13 @@ function Get-AzureClassicVMsConnectionDetailsInResourceGroup
         {
             $resourceName = $azureClassicVm.Name
 
-            Write-Verbose "[Azure Call]Getting classic virtual machine:$resourceName details in resource group $resourceGroupName"
+            Write-Verbose  "[Azure Call]Getting classic virtual machine:$resourceName details in resource group $resourceGroupName"
             $azureClassicVM = Get-AzureVM -ServiceName $resourceGroupName -Name $resourceName -ErrorAction Stop -Verbose
-            Write-Verbose "[Azure Call]Got classic virtual machine:$resourceName details in resource group $resourceGroupName"
-            
-            Write-Verbose "[Azure Call]Getting classic virtual machine:$resourceName endpoint with localport 5986 in resource group $resourceGroupName"
+            Write-Verbose  "[Azure Call]Got classic virtual machine:$resourceName details in resource group $resourceGroupName"
+
+            Write-Verbose  "[Azure Call]Getting classic virtual machine:$resourceName endpoint with localport 5986 in resource group $resourceGroupName"
             $azureClassicVMEndpoint = $azureClassicVM | Get-AzureEndpoint | Where-Object {$_.LocalPort -eq '5986'}
-            Write-Verbose "[Azure Call]Got classic virtual machine:$resourceName endpoint with localport 5986 in resource group $resourceGroupName"
+            Write-Verbose  "[Azure Call]Got classic virtual machine:$resourceName endpoint with localport 5986 in resource group $resourceGroupName"
 
             $fqdnUri = [System.Uri]$azureClassicVM.DNSName
             $resourceFQDN = $fqdnUri.Host
@@ -266,12 +251,12 @@ function Get-AzureClassicVMsConnectionDetailsInResourceGroup
             $resourceWinRmHttpsPort = $azureClassicVMEndpoint.Port
             if([string]::IsNullOrWhiteSpace($resourceWinRMHttpsPort))
             {
-                Write-Verbose "Defaulting WinRMHttpsPort of $resourceName to 5986"
+                Write-Verbose -Verbose "Defaulting WinRMHttpsPort of $resourceName to 5986"
                 $resourceWinRMHttpsPort = "5986"
             }
 
-            Write-Verbose "FQDN value for resource $resourceName is $resourceFQDN"
-            Write-Verbose "WinRM HTTPS Port for resource $resourceName is $resourceWinRmHttpsPort"
+            Write-Verbose -Verbose "FQDN value for resource $resourceName is $resourceFQDN"
+            Write-Verbose -Verbose "WinRM HTTPS Port for resource $resourceName is $resourceWinRmHttpsPort"
 
             $resourceProperties = @{}
             $resourceProperties.Name = $resourceName
@@ -289,12 +274,11 @@ function Get-AzureMachineStatus
     param([string]$resourceGroupName,
           [string]$name)
 
-    Switch-AzureMode AzureResourceManager
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($name))
     {
-        Write-Host (Get-VstsLocString -Key "ARG_GettingVmStatus" -ArgumentList $name)
-        $status = Get-AzureVM -ResourceGroupName $resourceGroupName -Name $name -Status -ErrorAction Stop -Verbose
-        Write-Host (Get-VstsLocString -Key "ARG_GotVmStatus" -ArgumentList $name)
+        Write-Host (Get-LocalizedString -Key "[Azure Call]Getting the status for vm '{0}'" -ArgumentList $name)
+        $status = Get-AzureRmVM -ResourceGroupName $resourceGroupName -Name $name -Status -ErrorAction Stop -Verbose
+        Write-Host (Get-LocalizedString -Key "[Azure Call]Got the status for vm '{0}'" -ArgumentList $name)
     }
 	
     return $status
@@ -306,12 +290,11 @@ function Get-AzureMachineCustomScriptExtension
           [string]$vmName,
           [string]$name)
 
-    Switch-AzureMode AzureResourceManager
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName))
     {
-        Write-Host (Get-VstsLocString -Key "ARG_GettingExtensionStatus" -ArgumentList $name, $vmName)
-        $customScriptExtension = Get-AzureVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -ErrorAction Stop -Verbose     
-        Write-Host (Get-VstsLocString -Key "ARG_GotExtensionStatus" -ArgumentList $name, $vmName)
+        Write-Host (Get-LocalizedString -Key "[Azure Call]Getting the custom script extension '{0}' for vm '{1}'" -ArgumentList $name, $vmName)
+        $customScriptExtension = Get-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -ErrorAction Stop -Verbose     
+        Write-Host (Get-LocalizedString -Key "[Azure Call]Got the custom script extension '{0}' for vm '{1}'" -ArgumentList $name, $vmName)
     }
 	
     return $customScriptExtension
@@ -327,12 +310,11 @@ function Set-AzureMachineCustomScriptExtension
           [string]$argument,
           [string]$location)
 
-    Switch-AzureMode AzureResourceManager
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName) -and -not [string]::IsNullOrEmpty($name))
     {
-        Write-Host (Get-VstsLocString -Key "ARG_SettingExtension" -ArgumentList $name, $vmName)
-        $result = Set-AzureVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -FileUri $fileUri  -Run $run -Argument $argument -Location $location -ErrorAction Stop -Verbose		
-        Write-Host (Get-VstsLocString -Key "ARG_SetExtension" -ArgumentList $name, $vmName)
+        Write-Host (Get-LocalizedString -Key "[Azure Call]Setting the custom script extension '{0}' for vm '{1}'" -ArgumentList $name, $vmName)
+        $result = Set-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -FileUri $fileUri  -Run $run -Argument $argument -Location $location -ErrorAction Stop -Verbose		
+        Write-Host (Get-LocalizedString -Key "[Azure Call]Set the custom script extension '{0}' for vm '{1}'" -ArgumentList $name, $vmName)
     }
 	
     return $result
@@ -344,12 +326,11 @@ function Remove-AzureMachineCustomScriptExtension
           [string]$vmName,
           [string]$name)
 
-    Switch-AzureMode AzureResourceManager
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName) -and -not [string]::IsNullOrEmpty($name))
     {
-        Write-Host (Get-VstsLocString -Key "ARG_RemovingExtension" -ArgumentList $name, $vmName)
-        $response = Remove-AzureVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -Force -ErrorAction SilentlyContinue -Verbose		
-        Write-Host (Get-VstsLocString -Key "ARG_RemovedExtension" -ArgumentList $name, $vmName)
+        Write-Host (Get-LocalizedString -Key "[Azure Call]Removing the custom script extension '{0}' for vm '{1}'" -ArgumentList $name, $vmName)
+        $response = Remove-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -Force -ErrorAction SilentlyContinue -Verbose		
+        Write-Host (Get-LocalizedString -Key "[Azure Call]Removed the custom script extension '{0}' for vm '{1}'" -ArgumentList $name, $vmName)
     }
 
     return $response
@@ -362,11 +343,10 @@ function Get-NetworkSecurityGroups
 
     $securityGroups = New-Object System.Collections.Generic.List[System.Object]
 
-    Switch-AzureMode AzureResourceManager
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmId))
     {
         Write-Verbose "[Azure Call]Getting network interfaces in resource group $resourceGroupName for vm $vmId"
-        $networkInterfaces = Get-AzureNetworkInterface -ResourceGroupName $resourceGroupName | Where-Object { $_.VirtualMachine.Id -eq $vmId }
+        $networkInterfaces = Get-AzureRmNetworkInterface -ResourceGroupName $resourceGroupName | Where-Object { $_.VirtualMachine.Id -eq $vmId }
         Write-Verbose "[Azure Call]Got network interfaces in resource group $resourceGroupName"
         
         if($networkInterfaces)
@@ -379,7 +359,7 @@ function Get-NetworkSecurityGroups
                 $networkSecurityGroupEntry = $networkInterface.NetworkSecurityGroup
                 if($networkSecurityGroupEntry)
                 {
-					$nsId = $networkSecurityGroupEntry.Id
+                    $nsId = $networkSecurityGroupEntry.Id
 					Write-Verbose "Network Security Group Id: $nsId"
 					
                     $securityGroupName = $nsId.Split('/')[-1]
@@ -388,7 +368,7 @@ function Get-NetworkSecurityGroups
 
                     # Get the network security group object
                     Write-Verbose "[Azure Call]Getting network security group $securityGroupName in resource group $sgResourceGroup"
-                    $securityGroup = Get-AzureNetworkSecurityGroup -ResourceGroupName $sgResourceGroup -Name $securityGroupName                    
+                    $securityGroup = Get-AzureRmNetworkSecurityGroup -ResourceGroupName $sgResourceGroup -Name $securityGroupName                    
                     Write-Verbose "[Azure Call]Got network security group $securityGroupName in resource group $sgResourceGroup"
 
                     $securityGroups.Add($securityGroup)
@@ -397,12 +377,12 @@ function Get-NetworkSecurityGroups
         }
         else
         {
-            throw (Get-VstsLocString -Key "ARG_NetworkInterfaceNotFound" -ArgumentList $vmid , $resourceGroupName)
+            throw (Get-LocalizedString -Key "[Azure Call]No network interface found with virtual machine id {0} under resource group {1}" -ArgumentList $vmid , $resourceGroupName)
         }
     }
     else
     {
-        throw (Get-VstsLocString -Key "ARG_EmptyRGName")
+        throw (Get-LocalizedString -Key "[Azure Call]Resource group name and virtual machine ID should not be null or empty")
     }
     
     return $securityGroups
@@ -416,7 +396,6 @@ function Add-NetworkSecurityRuleConfig
           [string]$rulePriotity,
           [string]$winrmHttpsPort)
 
-    Switch-AzureMode AzureResourceManager
     if($securityGroups.Count -gt 0)
     {
         foreach($securityGroup in $securityGroups)
@@ -427,7 +406,7 @@ function Add-NetworkSecurityRuleConfig
                 $winRMConfigRule = $null
 
                 Write-Verbose "[Azure Call]Getting network security rule config $ruleName under security group $securityGroupName"
-                $winRMConfigRule = Get-AzureNetworkSecurityRuleConfig -NetworkSecurityGroup $securityGroup -Name $ruleName -EA SilentlyContinue
+                $winRMConfigRule = Get-AzureRmNetworkSecurityRuleConfig -NetworkSecurityGroup $securityGroup -Name $ruleName -EA SilentlyContinue
                 Write-Verbose "[Azure Call]Got network security rule config $ruleName under security group $securityGroupName"
             }
             catch
@@ -444,11 +423,11 @@ function Add-NetworkSecurityRuleConfig
                     try
                     {
                         Write-Verbose "[Azure Call]Adding inbound network security rule config $ruleName with priority $rulePriotity for port $winrmHttpsPort under security group $securityGroupName"
-                        $securityGroup = Add-AzureNetworkSecurityRuleConfig -NetworkSecurityGroup $securityGroup -Name $ruleName -Direction Inbound -Access Allow -SourceAddressPrefix '*' -SourcePortRange '*' -DestinationAddressPrefix '*' -DestinationPortRange $winrmHttpsPort -Protocol * -Priority $rulePriotity
+                        $securityGroup = Add-AzureRmNetworkSecurityRuleConfig -NetworkSecurityGroup $securityGroup -Name $ruleName -Direction Inbound -Access Allow -SourceAddressPrefix '*' -SourcePortRange '*' -DestinationAddressPrefix '*' -DestinationPortRange $winrmHttpsPort -Protocol * -Priority $rulePriotity
                         Write-Verbose "[Azure Call]Added inbound network security rule config $ruleName with priority $rulePriotity for port $winrmHttpsPort under security group $securityGroupName"                         
 
                         Write-Verbose "[Azure Call]Setting the azure network security group"
-                        $result = Set-AzureNetworkSecurityGroup -NetworkSecurityGroup $securityGroup
+                        $result = Set-AzureRmNetworkSecurityGroup -NetworkSecurityGroup $securityGroup
                         Write-Verbose "[Azure Call]Set the azure network security group"
                     }
                     catch
@@ -459,7 +438,7 @@ function Add-NetworkSecurityRuleConfig
                         $rulePriotity = $newPort.ToString()
 
                         Write-Verbose "[Azure Call]Getting network security group $securityGroupName in resource group $resourceGroupName"
-                        $securityGroup = Get-AzureNetworkSecurityGroup -ResourceGroupName $resourceGroupName -Name $securityGroupName
+                        $securityGroup = Get-AzureRmNetworkSecurityGroup -ResourceGroupName $resourceGroupName -Name $securityGroupName
                         Write-Verbose "[Azure Call]Got network security group $securityGroupName in resource group $resourceGroupName"
                         
 
@@ -485,11 +464,10 @@ function Remove-NetworkSecurityRuleConfig
     param([object] $securityGroups,
           [string] $ruleName)
 
-    Switch-AzureMode AzureResourceManager
     foreach($securityGroup in $securityGroups)
     {
         Write-Verbose "[Azure Call]Removing the Rule $ruleName"
-        $result = Remove-AzureNetworkSecurityRuleConfig -NetworkSecurityGroup $securityGroup -Name $ruleName | Set-AzureNetworkSecurityGroup
+        $result = Remove-AzureRmNetworkSecurityRuleConfig -NetworkSecurityGroup $securityGroup -Name $ruleName | Set-AzureRmNetworkSecurityGroup
         Write-Verbose "[Azure Call]Removed the Rule $ruleName"
     }
 }

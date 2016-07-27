@@ -1,23 +1,42 @@
-[CmdletBinding()]
-param()
+param(
+    [string][Parameter(Mandatory=$true)]$connectedServiceNameSelector,
+    [string]$connectedServiceName,
+    [string]$connectedServiceNameClassic,
+    [string]$action,
+    [string]$actionClassic,
+    [string]$resourceGroupName,
+    [string]$cloudService,
+    [string]$location,
+    [string]$csmFile,
+    [string]$csmParametersFile,
+    [string]$overrideParameters,
+    # for preventing compat break scenarios passing below parameters also,
+    # though we don't require them in current implementation of task
+    [string]$dscDeployment,
+    [string]$moduleUrlParameterNames,
+    [string]$sasTokenParameterNames,
+    [string]$vmCreds,
+    [string]$vmUserName,
+    [string]$vmPassword,
+    [string]$skipCACheck,
+    [string]$outputVariable,
+    [string]$enableDeploymentPrerequisitesForCreate,
+    [string]$enableDeploymentPrerequisitesForSelect
+)
 
-Trace-VstsEnteringInvocation $MyInvocation
-
-# Get inputs for the task
-$connectedServiceNameSelector = Get-VstsInput -Name "connectedServiceNameSelector" -Require
-$connectedServiceName = Get-VstsInput -Name "connectedServiceName"
-$connectedServiceNameClassic = Get-VstsInput -Name "connectedServiceNameClassic"
-$action = Get-VstsInput -Name "action"
-$actionClassic = Get-VstsInput -Name "actionClassic"
-$resourceGroupName = Get-VstsInput -Name "resourceGroupName"
-$cloudService = Get-VstsInput -Name "cloudService"
-$location = Get-VstsInput -Name "location"
-$csmFile = Get-VstsInput -Name "csmFile"
-$csmParametersFile = Get-VstsInput -Name "csmParametersFile"
-$overrideParameters = Get-VstsInput -Name "overrideParameters"
-$outputVariable = Get-VstsInput -Name "outputVariable"
-$enableDeploymentPrerequisitesForCreate = Get-VstsInput -Name "enableDeploymentPrerequisitesForCreate"
-$enableDeploymentPrerequisitesForSelect = Get-VstsInput -Name "enableDeploymentPrerequisitesForSelect"
+Write-Verbose "Starting Azure Resource Group Deployment Task"
+Write-Verbose "ConnectedServiceNameSelector = $connectedServiceNameSelector"
+Write-Verbose "ConnectedServiceName = $ConnectedServiceName"
+Write-Verbose "ConnectedServiceNameClassic = $connectedServiceNameClassic"
+Write-Verbose "Action = $action"
+Write-Verbose "ActionClassic = $actionClassic"
+Write-Verbose "ResourceGroupName = $resourceGroupName"
+Write-Verbose "CloudService = $cloudService"
+Write-Verbose "Location = $location"
+Write-Verbose "OverrideParameters = $overrideParameters"
+Write-Verbose "OutputVariable = $outputVariable"
+Write-Verbose "enableDeploymentPrerequisitesForCreate = $enableDeploymentPrerequisitesForCreate"
+Write-Verbose "enableDeploymentPrerequisitesForSelect = $enableDeploymentPrerequisitesForSelect"
 
 if($connectedServiceNameSelector -eq "ConnectedServiceNameClassic")
 {
@@ -33,19 +52,13 @@ $csmParametersFile = $csmParametersFile.Trim('"', ' ')
 $overrideParameters = $overrideParameters.Trim()
 $outputVariable = $outputVariable.Trim()
 $telemetrySet = $false
-
 $ErrorActionPreference = "Stop"
 
-# Initialize Azure.
-Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-Initialize-Azure
-
-# Import the loc strings.
-Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
-
 # Import all the dlls and modules which have cmdlets we need
-Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
-Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs.dll"
+Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
+Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
+Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
 
 # Load all dependent files for execution
 Import-Module ./Utility.ps1 -Force
@@ -55,7 +68,7 @@ function Handle-SelectResourceGroupAction
     if([string]::IsNullOrEmpty($outputVariable))
     {
         Write-TaskSpecificTelemetry "PREREQ_NoOutputVariableForSelectActionInAzureRG"
-        throw (Get-VstsLocString -Key "ARG_ProvideOutputVariable")
+        throw (Get-LocalizedString -Key "Please provide the output variable name since you have specified the 'Select Resource Group' option.")
     }
 
     Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable -enableDeploymentPrerequisites $enableDeploymentPrerequisitesForSelect
@@ -63,11 +76,11 @@ function Handle-SelectResourceGroupAction
 
 function Handle-ResourceGroupLifeCycleOperations
 {
-    $serviceEndpoint = Get-VstsEndpoint -Name "$ConnectedServiceName"
-    if ($serviceEndpoint.Auth.Scheme -eq 'Certificate')
+    $serviceEndpoint = Get-ServiceEndpoint -Name "$ConnectedServiceName" -Context $distributedTaskContext
+    if ($serviceEndpoint.Authorization.Scheme -eq 'Certificate')
     {
         Write-TaskSpecificTelemetry "PREREQ_InvalidServiceConnectionType"
-        throw (Get-VstsLocString -Key "ARG_UseSpnAuth")
+        throw (Get-LocalizedString -Key "Certificate based authentication only works with the 'Select Resource Group' action. Please select an Azure subscription with either Credential or SPN based authentication.")
     }
 
     if( $action -eq "Create Or Update Resource Group" )
