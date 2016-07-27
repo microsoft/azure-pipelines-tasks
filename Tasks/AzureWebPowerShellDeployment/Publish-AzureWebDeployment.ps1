@@ -55,7 +55,7 @@ try{
         Write-Host "##[command]Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue -ErrorVariable azureWebSiteError $(if ($Slot) { "-Slot $Slot" })"
         $azureWebSite = Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue -ErrorVariable azureWebSiteError @extraParameters
         if($azureWebSiteError){
-            $azureWebSiteError | ForEach-Object { Write-Warning $_.Exception.ToString() }
+            $azureWebSiteError | ForEach-Object { Write-Verbose $_.Exception.ToString() }
         }
 
         if($azureWebSite)
