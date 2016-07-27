@@ -151,6 +151,7 @@ export function assumeNuGetUriPrefixes(collectionUri: string): Q.Promise<string[
         let hostparts = collectionUrlObject.hostname.split('.');
         let packagingHostName = hostparts[0] + ".pkgs.visualstudio.com"
         collectionUrlObject.hostname = packagingHostName;
+        // remove the host property so it doesn't override the hostname property for url.format
         delete collectionUrlObject.host;
         prefixes.push(url.format(collectionUrlObject));
     }
