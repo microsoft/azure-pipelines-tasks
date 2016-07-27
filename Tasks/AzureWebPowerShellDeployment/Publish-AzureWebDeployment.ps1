@@ -52,7 +52,7 @@ try{
         $extraParameters = @{ }
         if ($Slot) { $extraParameters['Slot'] = $Slot }
 
-        Write-Host "Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue -ErrorVariable azureWebSiteError $(if ($Slot) { "-Slot $Slot" })"
+        Write-Host "##[command]Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue -ErrorVariable azureWebSiteError $(if ($Slot) { "-Slot $Slot" })"
         $azureWebSite = Get-AzureWebSite -Name $WebSiteName -ErrorAction SilentlyContinue -ErrorVariable azureWebSiteError @extraParameters
         if($azureWebSiteError){
             $azureWebSiteError | ForEach-Object { Write-Warning $_.Exception.ToString() }
@@ -68,12 +68,12 @@ try{
 
             if ($Slot)
             {
-                Write-Host "New-AzureWebSite -Name $WebSiteName -Location $WebSiteLocation -Slot $Slot"
+                Write-Host "##[command]New-AzureWebSite -Name $WebSiteName -Location $WebSiteLocation -Slot $Slot"
                 $azureWebSite = New-AzureWebSite -Name $WebSiteName -Location $WebSiteLocation -Slot $Slot
             }
             else
             {
-                Write-Host "New-AzureWebSite -Name $WebSiteName -Location $WebSiteLocation"
+                Write-Host "##[command]New-AzureWebSite -Name $WebSiteName -Location $WebSiteLocation"
                 $azureWebSite = New-AzureWebSite -Name $WebSiteName -Location $WebSiteLocation
             }
         }
@@ -165,7 +165,7 @@ try{
 
             $url = [string]::Format("https://{0}/deployments/{1}",[System.Web.HttpUtility]::UrlEncode($matchedWebSiteName),[System.Web.HttpUtility]::UrlEncode($deploymentId))
 
-            Write-Verbose "Invoke-RestMethod $url -Credential $credential  -Method PUT -Body $body -ContentType `"application/json`" -UserAgent `"myuseragent`""
+            Write-Verbose "##[command]Invoke-RestMethod $url -Credential $credential  -Method PUT -Body $body -ContentType `"application/json`" -UserAgent `"myuseragent`""
             Write-Host (Get-VstsLocString -Key "Updatingdeploymentstatus")
             try {
                 Invoke-RestMethod $url -Credential $credential  -Method PUT -Body $body -ContentType "application/json" -UserAgent "myuseragent"
