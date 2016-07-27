@@ -67,7 +67,7 @@ try{
     $azureDeployment = Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue -ErrorVariable azureDeploymentError
 
     if($azureDeploymentError) {
-       $azureDeploymentError | ForEach-Object { Write-Warning $_.Exception.ToString() }
+       $azureDeploymentError | ForEach-Object { Write-Verbose $_.Exception.ToString() }
     }
 
     if (!$azureDeployment)
