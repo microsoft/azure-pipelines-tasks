@@ -1,6 +1,11 @@
 {
     "npm": {
-        "vsts-task-lib":"0.7.4",
-        "vsts-task-sdk":"0.6.4"
+        "vsts-task-lib": "0.7.4"
+    },
+    "nugetv2": {
+        "VstsTaskSdk": {
+            "version": "0.6.4",
+            "repository": "https://www.powershellgallery.com/api/v2/"
+        }
     }
 }

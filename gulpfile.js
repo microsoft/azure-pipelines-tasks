@@ -117,6 +117,18 @@ gulp.task('compileTasks', ['clean'], function (cb) {
                 });
             }
 
+            // Check for NuGetV2 externals.
+            if (externals.nugetv2) {
+                // Walk the dictionary.
+                var packageNames = Object.keys(externals.nugetv2);
+                packageNames.forEach(function (packageName) {
+                    // Cache the NuGet V2 package.
+                    var packageVersion = externals.nugetv2[packageName].version;
+                    var packageRepository = externals.nugetv2[packageName].repository;
+                    cacheNuGetV2Package(packageRepository, packageName, packageVersion);
+                })
+            }
+
             // Check for archive files.
             if (externals.archivePackages) {
                 // Walk the array.
@@ -387,6 +399,24 @@ var cacheNpmPackage = function (name, version) {
     // Move the intermediate directory to the target location.
     shell.mkdir('-p', path.dirname(targetPath));
     shell.mv(partialPath, targetPath);
+}
+
+var cacheNuGetV2Package = function (repository, name, version) {
+    // Validate the parameters.
+    if (!repository) {
+        throw new Error('Parameter "repository" cannot be null or empty.');
+    }
+
+    if (!name) {
+        throw new Error('Parameter "name" cannot be null or empty.');
+    }
+
+    if (!version) {
+        throw new Error('Parameter "version" cannot be null or empty.');
+    }
+
+    // Cache the archive file.
+    cacheArchiveFile(repository.replace(/\/$/, '') + '/package/' + name + '/' + version);
 }
 
 var QExec = function (commandLine) {
