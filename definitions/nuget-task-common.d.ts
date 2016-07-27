@@ -82,6 +82,11 @@ declare module 'nuget-task-common/LocationHelpers' {
 	}
 	export function getConnectionDataForArea(serviceUri: string, areaName: string, areaId: string, accessToken: string): Q.Promise<locationApi.ConnectionData>;
 	export function getNuGetConnectionData(serviceUri: string, accessToken: string): Q.Promise<locationApi.ConnectionData>;
+	/**
+	 * Make assumptions about VSTS domain names to generate URI prefixes for feeds in the current collection.
+	 * Returns a promise so as to provide a drop-in replacement for location-service-based lookup.
+	 */
+	export function assumeNuGetUriPrefixes(collectionUri: string): Q.Promise<string[]>;
 
 }
 declare module 'nuget-task-common/NuGetToolRunner' {
