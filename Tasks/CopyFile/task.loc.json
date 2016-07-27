@@ -1,0 +1,49 @@
+{
+    "id": "6B4E5958-EE28-4630-AB26-BE4B75EE1CC0",
+    "name": "CopyFile",
+    "friendlyName": "ms-resource:loc.friendlyName",
+    "description": "ms-resource:loc.description",
+    "helpMarkDown": "ms-resource:loc.helpMarkDown",
+    "category": "Utility",
+    "visibility": [
+        "Build"
+    ],
+    "author": "Dustin Oprea",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 0
+    },
+    "demands": [],
+    "minimumAgentVersion": "1.91.0",
+    "groups": [],
+    "inputs": [
+        {
+            "name": "SourceFile",
+            "type": "filePath",
+            "label": "ms-resource:loc.input.label.SourceFile",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "ms-resource:loc.input.help.SourceFile"
+        },
+        {
+            "name": "TargetFile",
+            "type": "string",
+            "label": "ms-resource:loc.input.label.TargetFile",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "ms-resource:loc.input.help.TargetFile"
+        }
+    ],
+    "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\CopyFile.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    },
+    "messages": {
+        "CopyingTo": "ms-resource:loc.messages.CopyingTo"
+    }
+}

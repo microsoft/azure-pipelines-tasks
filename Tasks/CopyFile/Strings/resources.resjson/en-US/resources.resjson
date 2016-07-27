@@ -1,0 +1,11 @@
+{
+  "loc.friendlyName": "Copy File",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=708389)",
+  "loc.description": "Copy file from one path to another",
+  "loc.instanceNameFormat": "Copy File $(sourceFilepath) to $(targetFilepath)",
+  "loc.input.label.SourceFile": "Source File",
+  "loc.input.help.SourceFile": "The source file that will be copied. Example: $(build.sourcedirectory)\\from_file",
+  "loc.input.label.TargetFile": "Target File",
+  "loc.input.help.TargetFile": "The destination file to be written. You can use [variables](http://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)\\to_file",
+  "loc.messages.CopyingTo": "Copying %s to %s"
+}
