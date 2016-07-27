@@ -29,7 +29,7 @@ try{
     # adding System.Web explicitly, since we use http utility
     Add-Type -AssemblyName System.Web
 
-    Write-Host "packageFile= Find-VstsFiles -LegacyPattern $Package"
+    Write-Host "Finding $Package"
     $packageFile = Find-VstsFiles -LegacyPattern $Package
     Write-Host "packageFile= $packageFile"
 
@@ -114,14 +114,14 @@ try{
             $credential = New-Object System.Management.Automation.PSCredential ($username, $securePwd)
 
             $author = Get-VstsTaskVariable -Name "build.sourceVersionAuthor"
-            if([string]::IsNullOrEmpty($author)) {
+            if(!$author) {
                 # fall back to build/release requestedfor
                 $author = Get-VstsTaskVariable -Name "build.requestedfor"
-                if([string]::IsNullOrEmpty($author)) {
+                if(!$author) {
                     $author = Get-VstsTaskVariable -Name "release.requestedfor"
                 }
                 # At this point if this is still null, let's use agent name
-                if([string]::IsNullOrEmpty($author)) {
+                if(!$author) {
                     $author = Get-VstsTaskVariable -Name "agent.name"
                 }
             }
@@ -132,7 +132,7 @@ try{
             $releaseUrlTaskVar = Get-VstsTaskVariable -Name "release.releaseUri"
             $buildIdTaskVar = Get-VstsTaskVariable -Name "build.buildId"
             $releaseIdTaskVar = Get-VstsTaskVariable -Name "release.releaseId"
-            if(-not [string]::IsNullOrEmpty($releaseUrlTaskVar)) {
+            if($releaseUrlTaskVar) {
                 $deploymentId = $releaseIdTaskVar
                 $message = Get-VstsLocString -Key "Updatingdeploymenthistoryfordeployment0" -ArgumentList $releaseUrlTaskVar
             }
@@ -145,14 +145,14 @@ try{
             Write-Verbose "Using deploymentId as: '$deploymentId' to update deployment Status"
             Write-Verbose "Using message as: '$message' to update deployment Status"
 
-            if([string]::IsNullOrEmpty($deploymentId)) {
+            if(!$deploymentId) {
                 #No point in proceeding further
                 Write-Warning (Get-VstsLocString -Key "CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved")  
                 Return
             }
 
-            $collectionUrl = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI".TrimEnd('/')
-            $teamproject = "$env:SYSTEM_TEAMPROJECTID"
+            $collectionUrl = Get-VstsTaskVariable -Name System.TeamFoundationCollectionUri -Require
+            $teamproject = Get-VstsTaskVariable -Name System.TeamProject -Require
             $buildUrl = [string]::Format("{0}/{1}/_build#buildId={2}&_a=summary", $collectionUrl, $teamproject, $buildIdTaskVar)
 
             $body = ConvertTo-Json (New-Object -TypeName psobject -Property @{
@@ -190,7 +190,6 @@ try{
          Write-Warning (Get-VstsLocString -Key "Cannotgetwebsitedeploymentstatusisnotupdated")
     }
 
-    Write-Verbose "Leaving script Publish-AzureWebDeployment.ps1"
 
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation

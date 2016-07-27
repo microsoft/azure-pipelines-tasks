@@ -18,7 +18,7 @@ try{
     # Load all dependent files for execution
     . $PSScriptRoot/Utility.ps1
 
-    Write-Host "Find-VstsFiles -LegacyPattern $CsCfg"
+    Write-Host "Finding $CsCfg"
     $serviceConfigFile = Find-VstsFiles -LegacyPattern "$CsCfg"
     Write-Host "serviceConfigFile= $serviceConfigFile"
     $serviceConfigFile = Get-SingleFile $serviceConfigFile $CsCfg
@@ -28,11 +28,11 @@ try{
     Write-Host "servicePackageFile= $servicePackageFile"
     $servicePackageFile = Get-SingleFile $servicePackageFile $CsPkg
 
-    Write-Host "Get-AzureService -ServiceName $ServiceName -ErrorAction SilentlyContinue  -ErrorVariable azureServiceError"
+    Write-Host "##[command]Get-AzureService -ServiceName $ServiceName -ErrorAction SilentlyContinue  -ErrorVariable azureServiceError"
     $azureService = Get-AzureService -ServiceName $ServiceName -ErrorAction SilentlyContinue  -ErrorVariable azureServiceError
 
     if($azureServiceError){
-       $azureServiceError | ForEach-Object { Write-Warning $_.Exception.ToString() }
+       $azureServiceError | ForEach-Object { Write-Verbose $_.Exception.ToString() }
     }   
 
    
@@ -57,13 +57,13 @@ try{
 
     $label = $DeploymentLabel
 
-    if ($label -and $appendDateTime)
+    if ($label -and $AppendDateTimeToLabel)
     {
 	    $label += " "
-	    $label += Get-Date
+	    $label += [datetime]::now
     }
 
-    Write-Host "Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue -ErrorVariable azureDeploymentError"
+    Write-Host "##[command]Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue -ErrorVariable azureDeploymentError"
     $azureDeployment = Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue -ErrorVariable azureDeploymentError
 
     if($azureDeploymentError) {
@@ -74,12 +74,12 @@ try{
     {
 	    if ($label)
 	    {
-		    Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration <extensions>"
+		    Write-Host "##[command]New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration <extensions>"
 		    $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration $diagnosticExtensions
 	    }
 	    else
 	    {
-		    Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
+		    Write-Host "##[command]New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
 		    $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions
 	    }
     } 
@@ -88,33 +88,32 @@ try{
         #Use -Upgrade
 	    if ($label)
 	    {
-		    Write-Host "Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration <extensions>"
+		    Write-Host "##[command]Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration <extensions>"
 		    $azureDeployment = Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration $diagnosticExtensions
 	    }
 	    else
 	    {
-		    Write-Host "Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
+		    Write-Host "##[command]Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
 		    $azureDeployment = Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions
 	    }
     }
     else
     {
         #Remove and then Re-create
-        Write-Host "Remove-AzureDeployment -ServiceName $ServiceName -Slot $Slot -Force"
+        Write-Host "##[command]Remove-AzureDeployment -ServiceName $ServiceName -Slot $Slot -Force"
         $azureOperationContext = Remove-AzureDeployment -ServiceName $ServiceName -Slot $Slot -Force
 	    if ($label)
 	    {
-		    Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration <extensions>"
+		    Write-Host "##[command]New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration <extensions>"
 		    $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration $diagnosticExtensions
 	    }
 	    else
 	    {
-		    Write-Host "New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
+		    Write-Host "##[command]New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
 		    $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions
 	    }
     }
 
-    Write-Verbose "Leaving script Publish-AzureCloudDeployment.ps1"
 
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation

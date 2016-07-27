@@ -47,7 +47,7 @@ function Get-RoleName($extPath)
     }
     else
     {
-        Write-Warning (Get-VstsLocString -Key "0couldnotbeparsedintopartsforregisteringdiagnosticsextensions" -ArgumentList $extPath)
+        Write-Warning (Get-VstsLocString -Key "_0couldnotbeparsedintopartsforregisteringdiagnosticsextensions" -ArgumentList $extPath)
     }
 
     return $roleName
@@ -75,10 +75,10 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath)
 
         if ($primaryStorageKey)
         {
-            Write-Verbose "New-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey <key>"
+            Write-Verbose "##[command]New-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey <key>"
             $definitionStorageContext = New-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $primaryStorageKey
 
-            Write-Verbose "Get-ChildItem -Path $extensionsSearchPath -Filter PaaSDiagnostics.*.PubConfig.xml"
+            Write-Verbose "##[command]Get-ChildItem -Path $extensionsSearchPath -Filter PaaSDiagnostics.*.PubConfig.xml"
             $diagnosticsExtensions = Get-ChildItem -Path $extensionsSearchPath -Filter "PaaSDiagnostics.*.PubConfig.xml"
 
             #$extPath like PaaSDiagnostics.WebRole1.PubConfig.xml
@@ -102,7 +102,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath)
                         $publicConfigStorageKey = Get-AzureStorageKey -StorageAccountName $publicConfigStorageAccountName
                         if ($publicConfigStorageKey)
                         {
-                            Write-Verbose "New-AzureStorageContext -StorageAccountName $publicConfigStorageAccountName -StorageAccountKey <key>"
+                            Write-Verbose "##[command]New-AzureStorageContext -StorageAccountName $publicConfigStorageAccountName -StorageAccountKey <key>"
                             $storageContext = New-AzureStorageContext -StorageAccountName $publicConfigStorageAccountName -StorageAccountKey $publicConfigStorageKey.Primary
                         }
                         else

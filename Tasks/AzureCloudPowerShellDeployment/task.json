@@ -173,7 +173,7 @@
         "Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions":"Could not get the primary storage key for storage account '{0}'. Unable to apply any diagnostics extensions.",
         "Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions":"Could not get the primary storage key for the public config storage account '{0}'. Unable to apply any diagnostics extensions.",
         "Applyinganyconfigureddiagnosticsextensions":"Applying any configured diagnostics extensions.",
-        "0couldnotbeparsedintopartsforregisteringdiagnosticsextensions":"'{0}' could not be parsed into parts for registering diagnostics extensions.",
+        "_0couldnotbeparsedintopartsforregisteringdiagnosticsextensions":"'{0}' could not be parsed into parts for registering diagnostics extensions.",
         "Nofileswerefoundtodeploywithsearchpattern0":"No files were found to deploy with search pattern {0}",
         "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone":"Found more than one file to deploy with search pattern {0}. There can be only one."
     }
