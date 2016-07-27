@@ -78,6 +78,8 @@ var accessToken = auth.getSystemAccessToken();
 let buildIdentityDisplayName: string = null;
 let buildIdentityAccount: string = null;
 
+/*
+BUG: HTTP calls to access the location service currently do not work for customers behind proxies.
 locationHelpers.getNuGetConnectionData(serviceUri, accessToken)
     .then(connectionData => {
         buildIdentityDisplayName = locationHelpers.getIdentityDisplayName(connectionData.authorizedUser);
@@ -94,9 +96,19 @@ locationHelpers.getNuGetConnectionData(serviceUri, accessToken)
         }
 
         throw err;
-    })
+    })*/
+locationHelpers.assumeNuGetUriPrefixes(serviceUri)
     .then(urlPrefixes => {
-        tl.debug("discovered URL prefixes: " + urlPrefixes.join(';'))
+        tl.debug(`discovered URL prefixes: ${urlPrefixes}`);
+
+        // Note to readers: This variable will be going away once we have a fix for the location service for
+        // customers behind proxies
+        let testPrefixes = tl.getVariable("NuGetTasks.ExtraUrlPrefixesForTesting");
+        if (testPrefixes) {
+            urlPrefixes = urlPrefixes.concat(testPrefixes.split(';'));
+            tl.debug(`all URL prefixes: ${urlPrefixes}`)
+        }
+
         return new auth.NuGetAuthInfo(urlPrefixes, accessToken);
     })
     .then(authInfo => {
