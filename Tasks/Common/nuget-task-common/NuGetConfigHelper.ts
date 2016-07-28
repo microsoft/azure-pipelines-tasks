@@ -24,7 +24,7 @@ export class NuGetConfigHelper {
     private _authInfo: auth.NuGetAuthInfo;
     private _environmentSettings: ngToolRunner.NuGetEnvironmentSettings;
 
-    private tempNugetConfigDir = path.join(tl.getVariable('agent.buildDirectory'), 'Nuget');
+    private tempNugetConfigDir = path.join(tl.getVariable('system.defaultWorkingDirectory') || process.cwd(), 'Nuget');
     private tempNugetConfigFileName = 'tempNuGet_' + tl.getVariable('build.buildId') + '.config';
     public tempNugetConfigPath = path.join(this.tempNugetConfigDir, this.tempNugetConfigFileName);
 
