@@ -254,7 +254,7 @@ function packageTask(pkgPath, commonDeps, commonSrc) {
 						}
 
 						// Copy the lib from the cache.
-						gutil.log('Linking vsts-task-lib ' + libVer + ' into ' + task.name);
+						gutil.log('Linking vsts-task-lib ' + libVer);
 						var copySource = path.join(_tempPath, 'npm', 'vsts-task-lib', libVer, 'node_modules', '*');
 						var copyTarget = path.join(tgtPath, 'node_modules');
 						shell.mkdir('-p', copyTarget);
@@ -263,18 +263,21 @@ function packageTask(pkgPath, commonDeps, commonSrc) {
 
 					// Statically link the PowerShell3 externals.
 					if (task.execution['PowerShell3']) {
-						// Determine the vsts-task-sdk version.
-						var libVer = externals.npm['vsts-task-sdk'];
-						if (!libVer) {
-							throw new Error('External vsts-task-sdk not defined in externals.json.');
-						}
+						// Determine the URL.
+						var libInfo = externals.nugetv2.VstsTaskSdk;
+						var url = libInfo.repository.replace(/\/$/, '') + '/package/VstsTaskSdk/' + libInfo.version;
 
-						// Copy the lib from the cache.
-						gutil.log('Linking vsts-task-sdk ' + libVer + ' into ' + task.name);
-						var libSource = path.join(_tempPath, 'npm', 'vsts-task-sdk', libVer, 'node_modules', 'vsts-task-sdk', 'VstsTaskSdk', '*');
-						var libTarget = path.join(tgtPath, 'ps_modules', 'VstsTaskSdk');
-						shell.mkdir('-p', libTarget);
-						shell.cp('-R', libSource, libTarget);
+						// Copy the nuget v2 package from the cache.
+						gutil.log('Linking VstsTaskSdk ' + libInfo.version);
+						var scrubbedUrl = url.replace(/[/\:?]/g, '_');
+						var copySource = path.join(_tempPath, "archive", scrubbedUrl, '*');
+						var copyTarget = path.join(tgtPath, 'ps_modules', 'VstsTaskSdk');
+						shell.mkdir('-p', copyTarget);
+						shell.cp('-R', copySource, copyTarget);
+						shell.rm('-rf', path.join(copyTarget, 'package'));
+						shell.rm('-rf', path.join(copyTarget, '_rels'));
+						shell.rm(path.join(copyTarget, 'VstsTaskSdk.nuspec'));
+						shell.rm(path.join(copyTarget, '[Content_Types].xml'));
 					}
 
 					// Statically link the internal common modules.
