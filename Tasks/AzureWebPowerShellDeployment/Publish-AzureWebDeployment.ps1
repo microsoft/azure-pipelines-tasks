@@ -26,6 +26,10 @@ try{
     $DoNotDelete = Get-VstsInput -Name DoNotDelete -AsBool
     $AdditionalArguments = Get-VstsInput -Name AdditionalArguments
 
+    # Initialize Azure.
+    Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+    Initialize-Azure
+
     # adding System.Web explicitly, since we use http utility
     Add-Type -AssemblyName System.Web
 

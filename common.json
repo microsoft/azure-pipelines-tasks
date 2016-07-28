@@ -11,6 +11,18 @@
             "dest": "ps_modules"
         }
     ],
+    "AzureCloudPowerShellDeployment": [
+        {
+            "module": "VstsAzureHelpers_",
+            "dest": "ps_modules"
+        }
+    ],
+    "AzureWebPowerShellDeployment": [
+        {
+            "module": "VstsAzureHelpers_",
+            "dest": "ps_modules"
+        }
+    ],
     "MSBuild": [
         {
             "module": "MSBuildHelpers",

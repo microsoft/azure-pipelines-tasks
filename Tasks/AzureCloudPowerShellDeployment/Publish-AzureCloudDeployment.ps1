@@ -15,6 +15,10 @@ try{
     $NewServiceAdditionalArguments = Get-VstsInput -Name NewServiceAdditionalArguments
     $NewServiceAffinityGroup = Get-VstsInput -Name NewServiceAffinityGroup
 
+    # Initialize Azure.
+    Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+    Initialize-Azure
+
     # Load all dependent files for execution
     . $PSScriptRoot/Utility.ps1
 
