@@ -30,25 +30,16 @@ param (
     Write-Verbose "enableDetailedLogging = $enableDetailedLogging"
     Write-Verbose "additionalArguments = $additionalArguments"
 
-    if(Test-Path -Path "$env:AGENT_HOMEDIRECTORY\Agent\Worker")
+    if(Test-Path -Path "$env:AGENT_HOMEDIRECTORY\Agent\Worker\PS")
     {
-        Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\*.dll | % {
-            [void][reflection.assembly]::LoadFrom( $_.FullName )
-            Write-Verbose "Loading .NET assembly:`t$($_.name)"
-        }
-
-        Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs\*.dll | % {
-            [void][reflection.assembly]::LoadFrom( $_.FullName )
-            Write-Verbose "Loading .NET assembly:`t$($_.name)"
-        }
+        # For "Windows (Legacy)" agent, legacy sdk assembly must be loaded for the job
+        $legacyAssembly = "$env:AGENT_HOMEDIRECTORY\Agent\Worker\PS\Microsoft.TeamFoundation.DistributedTask.Task.LegacySDK.dll"
+        [void][reflection.assembly]::LoadFrom($legacyAssembly)
+        Write-Verbose "Loading .NET assembly:`t$($legacyAssembly)"
     }
     else
     {
-        #if(Test-Path "$env:AGENT_HOMEDIRECTORY\externals\vstshost")
-        #{
-            #[void][reflection.assembly]::LoadFrom("$env:AGENT_HOMEDIRECTORY\externals\vstshost\Microsoft.TeamFoundation.DistributedTask.Task.LegacySDK.dll")
-        #}
-
+        # For the coreclr agent, dependencies should be picked up from DeploymentUtilities directory
         Import-Module "$deploymentUtilitiesLocation\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
         Import-Module "$deploymentUtilitiesLocation\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs.dll"
     }

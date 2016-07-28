@@ -1,39 +1,38 @@
 [CmdletBinding()]
 param()
 
-Write-Verbose "Starting Azure File Copy Task"
 Trace-VstsEnteringInvocation $MyInvocation
 
 # Get inputs for the task
-$ConnectedServiceNameSelector = Get-VstsInput -Name ConnectedServiceNameSelector -Require
-$SourcePath = Get-VstsInput -Name SourcePath -Require
-$Destination = Get-VstsInput -Name Destination -Require
-$ConnectedServiceName = Get-VstsInput -Name ConnectedServiceName
-$ConnectedServiceNameARM = Get-VstsInput -Name ConnectedServiceNameARM
-$StorageAccount = Get-VstsInput -Name StorageAccount
-$StorageAccountRM = Get-VstsInput -Name StorageAccountRM
-$ContainerName = Get-VstsInput -Name ContainerName
-$BlobPrefix = Get-VstsInput -Name BlobPrefix
-$EnvironmentName = Get-VstsInput -Name EnvironmentName
-$EnvironmentNameRM = Get-VstsInput -Name EnvironmentNameRM
-$ResourceFilteringMethod = Get-VstsInput -Name ResourceFilteringMethod
-$MachineNames = Get-VstsInput -Name MachineNames
-$VmsAdminUserName = Get-VstsInput -Name VmsAdminUsername
-$VmsAdminPassword = Get-VstsInput -Name VmsAdminPassword
-$TargetPath = Get-VstsInput -Name TargetPath
-$AdditionalArguments = Get-VstsInput -Name AdditionalArguments
-$CleanTargetBeforeCopy = Get-VstsInput -Name CleanTargetBeforeCopy
-$CopyFilesInParallel = Get-VstsInput -Name CopyFilesInParallel
-$SkipCACheck = Get-VstsInput -Name SkipCACheck
-$EnableCopyPrerequisites = Get-VstsInput -Name EnableCopyPrerequisites
-$OutputStorageContainerSasToken = Get-VstsInput -Name OutputStorageContainerSasToken
-$OutputStorageURI = Get-VstsInput -Name OutputStorageUri
+$connectedServiceNameSelector = Get-VstsInput -Name ConnectedServiceNameSelector -Require
+$sourcePath = Get-VstsInput -Name SourcePath -Require
+$destination = Get-VstsInput -Name Destination -Require
+$connectedServiceName = Get-VstsInput -Name ConnectedServiceName
+$connectedServiceNameARM = Get-VstsInput -Name ConnectedServiceNameARM
+$storageAccount = Get-VstsInput -Name StorageAccount
+$storageAccountRM = Get-VstsInput -Name StorageAccountRM
+$containerName = Get-VstsInput -Name ContainerName
+$blobPrefix = Get-VstsInput -Name BlobPrefix
+$environmentName = Get-VstsInput -Name EnvironmentName
+$environmentNameRM = Get-VstsInput -Name EnvironmentNameRM
+$resourceFilteringMethod = Get-VstsInput -Name ResourceFilteringMethod
+$machineNames = Get-VstsInput -Name MachineNames
+$vmsAdminUserName = Get-VstsInput -Name VmsAdminUsername
+$vmsAdminPassword = Get-VstsInput -Name VmsAdminPassword
+$targetPath = Get-VstsInput -Name TargetPath
+$additionalArguments = Get-VstsInput -Name AdditionalArguments
+$cleanTargetBeforeCopy = Get-VstsInput -Name CleanTargetBeforeCopy -AsBool
+$copyFilesInParallel = Get-VstsInput -Name CopyFilesInParallel -AsBool
+$skipCACheck = Get-VstsInput -Name SkipCACheck -AsBool
+$enableCopyPrerequisites = Get-VstsInput -Name EnableCopyPrerequisites -AsBool
+$outputStorageContainerSasToken = Get-VstsInput -Name OutputStorageContainerSasToken
+$outputStorageURI = Get-VstsInput -Name OutputStorageUri
 
-if ($ConnectedServiceNameSelector -eq "ConnectedServiceNameARM")
+if ($connectedServiceNameSelector -eq "ConnectedServiceNameARM")
 {
-    $ConnectedServiceName = $ConnectedServiceNameARM
-    $StorageAccount = $StorageAccountRM
-    $EnvironmentName = $EnvironmentNameRM
+    $connectedServiceName = $ConnectedServiceNameARM
+    $storageAccount = $StorageAccountRM
+    $environmentName = $EnvironmentNameRM
 }
 
 # Constants
@@ -57,14 +56,12 @@ Initialize-Azure
 Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 
 # Import all the dlls and modules which have cmdlets we need
-# Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
-# Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
 Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs.dll"
 
 # Load all dependent files for execution
-Import-Module ./AzureFileCopyJob.ps1 -Force
-Import-Module ./Utility.ps1 -Force
+. "$PSScriptRoot\AzureFileCopyJob.ps1"
+. "$PSScriptRoot\Utility.ps1"
 
 # Enabling detailed logging only when system.debug is true
 $enableDetailedLoggingString = $env:system_debug
