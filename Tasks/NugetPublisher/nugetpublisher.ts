@@ -15,6 +15,7 @@ import * as nutil from 'nuget-task-common/Utility';
 import * as auth from 'nuget-task-common/Authentication';
 import {NuGetConfigHelper} from 'nuget-task-common/NuGetConfigHelper';
 import * as locationApi from 'nuget-task-common/LocationApi';
+import * as os from 'os';
 
 class PublishOptions {
     constructor(
@@ -62,8 +63,8 @@ if (!tl.filePathSupplied('nuGetPath')) {
 var serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
 
 //find nuget location to use
-var nuGetPathToUse = ngToolRunner.locateTool('nuget.exe', userNuGetPath);
-var credProviderPath = ngToolRunner.locateTool('CredentialProvider.TeamBuild.exe', null, true);
+var nuGetPathToUse = ngToolRunner.locateNuGetExe(userNuGetPath);
+var credProviderPath = ngToolRunner.locateCredentialProvider();
 
 var credProviderDir: string = null;
 if (credProviderPath) {

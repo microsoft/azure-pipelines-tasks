@@ -101,7 +101,8 @@ declare module 'nuget-task-common/NuGetToolRunner' {
 	    exec(options?: IExecOptions): Q.Promise<number>;
 	}
 	export function createNuGetToolRunner(nuGetExePath: string, settings: NuGetEnvironmentSettings): NuGetToolRunner;
-	export function locateTool(tool: string, userPath?: string, optional?: boolean): string;
+	export function locateNuGetExe(userNuGetExePath: string): string;
+	export function locateCredentialProvider(): string;
 
 }
 declare module 'nuget-task-common/NuGetConfigHelper' {
