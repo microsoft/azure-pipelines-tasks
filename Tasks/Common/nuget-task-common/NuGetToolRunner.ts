@@ -91,30 +91,70 @@ export function createNuGetToolRunner(nuGetExePath: string, settings: NuGetEnvir
     return runner;
 }
 
-export function locateTool(tool: string, userPath?: string, optional?: boolean) {
-    tl.debug("looking for tool " + tool);
-    if (userPath) {
-        tl.debug("using user-supplied path " + userPath)
-        tl.checkPath(userPath, 'nuget');
-        return userPath;
-    }
+interface LocateOptions {
+    /** if true, search along the system path in addition to the hard-coded NuGet tool paths */
+    fallbackToSystemPath?: boolean;
 
+    /** Array of filenames to use when searching for the tool. Defaults to the tool name. */
+    toolFilenames?: string[];
+}
+
+function locateTool(tool: string, opts?: LocateOptions) {
     let searchPath = ["externals/nuget", "agent/Worker/Tools/NuGetCredentialProvider", "agent/Worker/Tools"];
-
     let agentRoot = tl.getVariable("Agent.HomeDirectory");
-    for (let possibleLocation of searchPath) {
-        let fullPath = path.join(agentRoot, possibleLocation, tool);
-        tl.debug("checking " + fullPath);
-        if (tl.exist(fullPath)) {
-            return fullPath;
+
+    opts = opts || {};
+    opts.toolFilenames = opts.toolFilenames || [tool];
+
+    tl.debug(`looking for tool ${tool}`)
+
+    for (let thisVariant of opts.toolFilenames)
+    {
+        tl.debug(`looking for tool variant ${thisVariant}`);
+
+        for (let possibleLocation of searchPath) {
+            let fullPath = path.join(agentRoot, possibleLocation, thisVariant);
+            tl.debug(`checking ${fullPath}`);
+            if (tl.exist(fullPath)) {
+                return fullPath;
+            }
         }
-    }
 
-    tl.debug("not found");
+        if (opts.fallbackToSystemPath) {
+            tl.debug('Checking system path');
+            let whichResult = tl.which(thisVariant);
+            if (whichResult) {
+                tl.debug(`found ${whichResult}`);
+                return whichResult;
+            }
+        }
 
-    if (!optional) {
-        throw new Error(tl.loc("NGCommon_UnableToFindTool", tool));
+        tl.debug("not found");
     }
 
     return null;
+}
+
+export function locateNuGetExe(userNuGetExePath: string): string {
+    if (userNuGetExePath) {
+        tl.debug(`using user-supplied NuGet path ${userNuGetExePath}`)
+        tl.checkPath(userNuGetExePath, 'NuGet');
+        return userNuGetExePath;
+    }
+
+    var toolPath = locateTool('NuGet', {
+        fallbackToSystemPath: os.platform() !== 'win32',
+        toolFilenames: ['nuget.exe', 'NuGet.exe', 'nuget', 'NuGet']
+    });
+
+    
+    if (!toolPath) {
+        throw new Error(tl.loc("NGCommon_UnableToFindTool", 'NuGet'));
+    }
+
+    return toolPath;
+}
+
+export function locateCredentialProvider(): string {
+    return locateTool('CredentialProvider.TeamBuild.exe');
 }
