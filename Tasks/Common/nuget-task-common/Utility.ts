@@ -43,9 +43,23 @@ export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEm
 }
 
 export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: boolean): string[] {
+    let isWindows = os.platform() === 'win32';
+    let toPosixPath = (path: string) => path;
+    let toNativePath = (path: string) => path;
+    if (isWindows) {
+        // minimatch assumes paths use /, so on Windows, make paths use /
+        // This needs to be done both to the pattern and to the filenames.
+        toPosixPath = (path: string) => path.replace(/\\/g, "/");
+
+        // tl.find always returns forward slashes. This is problematic with UNC paths because NuGet
+        // interprets that as a switch argument instead of a path.
+        toNativePath = (path: string) => path.replace(/\//g, "\\");
+    }
+
     // Resolve files for the specified value or pattern
     var filesList: string[];
     if (pattern.indexOf('*') == -1 && pattern.indexOf('?') == -1) {
+        
         // No pattern found, check literal path to a single file
         tl.checkPath(pattern, 'files');
 
@@ -78,14 +92,6 @@ export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: b
         // Now we get a list of all files under this root
         var allFiles = tl.find(findPathRoot);
 
-        let isWindows = os.platform() === 'win32';
-        let toPosixPath: (string) => string = _ => _;
-        if (isWindows) {
-            // minimatch assumes paths use /, so on Windows, make paths use /
-            // This needs to be done both to the pattern and to the filenames.
-            toPosixPath = (path: string) => path.replace("\\", "/");
-        }
-
         // Now matching the pattern against all files
         // Turn off a bunch of minimatch features to replicate the be
         let patternFilter = tl.filter(
@@ -107,5 +113,5 @@ export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: b
         }
     }
 
-    return filesList;
+    return filesList.map(toNativePath);
 }

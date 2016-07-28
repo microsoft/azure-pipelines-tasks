@@ -91,29 +91,53 @@ export function createNuGetToolRunner(nuGetExePath: string, settings: NuGetEnvir
     return runner;
 }
 
-export function locateTool(tool: string, userPath?: string, optional?: boolean) {
-    tl.debug("looking for tool " + tool);
-    if (userPath) {
-        tl.debug("using user-supplied path " + userPath)
-        tl.checkPath(userPath, 'nuget');
-        return userPath;
-    }
+export interface LocateOptions {
+    optional?: boolean;
+    userPath?: string;
+    fallbackToSystemPath?: boolean;
+}
 
+export function locateTool(tool: string | string[], opts?: LocateOptions) {
+    let toolVariants: string[] = typeof tool === 'string' ? [tool] : tool;
     let searchPath = ["externals/nuget", "agent/Worker/Tools/NuGetCredentialProvider", "agent/Worker/Tools"];
-
     let agentRoot = tl.getVariable("Agent.HomeDirectory");
-    for (let possibleLocation of searchPath) {
-        let fullPath = path.join(agentRoot, possibleLocation, tool);
-        tl.debug("checking " + fullPath);
-        if (tl.exist(fullPath)) {
-            return fullPath;
-        }
+
+    opts = opts || {};
+
+    tl.debug(`looking for tool ${tool}`)
+
+    if (opts.userPath) {
+        tl.debug(`using user-supplied path ${opts.userPath}`)
+        tl.checkPath(opts.userPath, toolVariants[0]);
+        return opts.userPath;
     }
 
-    tl.debug("not found");
+    for (let thisVariant of toolVariants)
+    {
+        tl.debug(`looking for tool variant ${thisVariant}`);
 
-    if (!optional) {
-        throw new Error(tl.loc("NGCommon_UnableToFindTool", tool));
+        for (let possibleLocation of searchPath) {
+            let fullPath = path.join(agentRoot, possibleLocation, thisVariant);
+            tl.debug(`checking ${fullPath}`);
+            if (tl.exist(fullPath)) {
+                return fullPath;
+            }
+        }
+
+        if (opts.fallbackToSystemPath) {
+            tl.debug('Checking system path');
+            let whichResult = tl.which(thisVariant);
+            if (whichResult) {
+                tl.debug(`found ${whichResult}`);
+                return whichResult;
+            }
+        }
+
+        tl.debug("not found");
+    }
+
+    if (!opts.optional) {
+        throw new Error(tl.loc("NGCommon_UnableToFindTool", toolVariants[0]));
     }
 
     return null;
