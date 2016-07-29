@@ -14,7 +14,7 @@
   "version": {
     "Major": "1",
     "Minor": "0",
-    "Patch": "0"
+    "Patch": "1"
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -86,6 +86,15 @@
       "defaultValue": "false",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.preservePaths",
+      "groupName": "advanced"
+    },
+    {
+      "name": "rejectUnauthorized",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.rejectUnauthorized",
+      "defaultValue": "true",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.rejectUnauthorized",
       "groupName": "advanced"
     }
   ],
