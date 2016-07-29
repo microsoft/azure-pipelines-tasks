@@ -268,6 +268,9 @@ function packageTask(pkgPath, commonDeps, commonSrc) {
 						var url = libInfo.repository.replace(/\/$/, '') + '/package/VstsTaskSdk/' + libInfo.version;
 
 						// Copy the nuget v2 package from the cache.
+						//
+						// PowerShell is not used to download the VstsTaskSdk from the gallery to
+						// avoid a PowerShell 5 dev dependency for building the tasks in this repo.
 						gutil.log('Linking VstsTaskSdk ' + libInfo.version);
 						var scrubbedUrl = url.replace(/[/\:?]/g, '_');
 						var copySource = path.join(_tempPath, "archive", scrubbedUrl, '*');
