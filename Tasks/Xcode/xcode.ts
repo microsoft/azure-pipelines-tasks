@@ -71,7 +71,7 @@ async function run() {
         var xcb: ToolRunner = tl.createToolRunner(tool);
         xcb.argIf(sdk, ['-sdk', sdk]);
         xcb.argIf(configuration, ['-configuration', configuration]);
-        if(ws) {
+        if(ws && tl.filePathSupplied('xcWorkspacePath')) {
             xcb.arg('-workspace');
             xcb.pathArg(ws);
         }
