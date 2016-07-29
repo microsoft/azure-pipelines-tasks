@@ -11,6 +11,12 @@
             "dest": "ps_modules"
         }
     ],
+    "SqlAzureDacpacDeployment": [
+        {
+            "module": "VstsAzureHelpers_",
+            "dest": "ps_modules"
+        }
+    ],
     "MSBuild": [
         {
             "module": "MSBuildHelpers",
