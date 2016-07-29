@@ -47,7 +47,7 @@
             "dest": "Common"
         }
     ],
-    "SCP": [
+    "CopyFilesOverSSH": [
         {
             "module": "ssh-common",
             "dest": "node_modules"
