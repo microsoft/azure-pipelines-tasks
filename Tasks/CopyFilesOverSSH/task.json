@@ -3,7 +3,7 @@
   "name": "CopyFilesOverSSH",
   "friendlyName": "Copy Files Over SSH",
   "description": "Copy files or build artifacts to a remote machine over SSH",
-  "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=821894)",
+  "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=821894)",
   "category": "Deploy",
   "visibility": [
     "Build",
@@ -48,7 +48,7 @@
       "label": "Contents",
       "defaultValue": "**",
       "required": true,
-      "helpMarkDown": "File paths to include as part of the copy. Supports multiple lines of minimatch patterns. [More Information](http://go.microsoft.com/fwlink/?LinkId=821894)"
+      "helpMarkDown": "File paths to include as part of the copy. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkId=821894)"
     },
     {
       "name": "targetFolder",
