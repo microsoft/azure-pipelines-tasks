@@ -1,6 +1,11 @@
 [CmdletBinding(DefaultParameterSetName = 'None')]
 param
 (
+    [String]
+    $env:SYSTEM_DEFINITIONID,
+    [String]
+    $env:BUILD_BUILDID,
+    
     [String] [Parameter(Mandatory = $true)]
     $connectedServiceName,
 
@@ -11,7 +16,9 @@ param
     [String] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()]
     $LoadTest,
     [String]
-    $ThresholdLimit
+    $ThresholdLimit,
+    [String] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()]
+    $MachineType
 )
 
 $userAgent = "CloudLoadTestBuildTask"
@@ -225,7 +232,9 @@ $trjson = @"
         "name":"$name",
         "description":"Load Test queued from build",
         "testSettings":{"cleanupCommand":"$cleanupScript", "hostProcessPlatform":"$processPlatform", "setupCommand":"$setupScript"},
+        "superSedeRunSettings":{"loadGeneratorMachinesType":"$MachineType"},
         "testDrop":{"id":"$tdid"},
+        "runSourceIdentifier":"build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
     }
 "@
     return $trjson
@@ -333,6 +342,8 @@ WriteTaskMessages "Starting Load Test Script"
 Write-Output "Test settings = $TestSettings"
 Write-Output "Test drop = $TestDrop"
 Write-Output "Load test = $LoadTest"
+Write-Output "Load Generator Machine Type = $MachineType"
+Write-Output "RunSourceIdentifier = build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
 
 #Validate Input
 Validate
