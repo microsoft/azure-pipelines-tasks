@@ -214,5 +214,5 @@ function restorePackages(solutionFile: string, options: RestoreOptions): Q.Promi
         nugetTool.argString(options.extraArgs);
     }
 
-    return nugetTool.exec();
+    return nugetTool.exec({cwd: path.dirname(solutionFile)});
 }
