@@ -160,11 +160,6 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "AzurePowerShell": {
-      "target": "$(currentDirectory)\\Publish-AzureCloudDeployment-Legacy.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
-    },
     "PowerShell3": {
       "target": "Publish-AzureCloudDeployment.ps1"
     }

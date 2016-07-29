@@ -99,11 +99,6 @@
   ],
   "instanceNameFormat": "Azure Deployment: $(WebSiteName)",
   "execution": {
-    "AzurePowerShell": {
-      "target": "$(currentDirectory)\\Publish-AzureWebDeployment-Legacy.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
-    },
 	"PowerShell3": {
         "target": "Publish-AzureWebDeployment.ps1"
     }
