@@ -4,6 +4,7 @@ import * as vstsWebApi from 'vso-node-api/WebApi';
 import * as util from 'util';
 import * as tl from 'vsts-task-lib/task';
 import * as path from 'path';
+import * as url from 'url';
 
 function getUriForAccessMapping(mapping: locationApi.AccessMapping): string {
     let accessPoint = mapping.accessPoint;
@@ -135,4 +136,25 @@ export function getConnectionDataForArea(serviceUri: string, areaName: string, a
 
 export function getNuGetConnectionData(serviceUri: string, accessToken: string): Q.Promise<locationApi.ConnectionData> {
     return getConnectionDataForArea(serviceUri, 'nuget', 'b3be7473-68ea-4a81-bfc7-9530baaa19ad', accessToken);
+}
+
+/** 
+ * Make assumptions about VSTS domain names to generate URI prefixes for feeds in the current collection.
+ * Returns a promise so as to provide a drop-in replacement for location-service-based lookup.
+ */
+export function assumeNuGetUriPrefixes(collectionUri: string): Q.Promise<string[]> {
+    let prefixes = [collectionUri];
+
+    let collectionUrlObject = url.parse(collectionUri);
+    if(collectionUrlObject.hostname.toUpperCase().endsWith(".VISUALSTUDIO.COM"))
+    {
+        let hostparts = collectionUrlObject.hostname.split('.');
+        let packagingHostName = hostparts[0] + ".pkgs.visualstudio.com"
+        collectionUrlObject.hostname = packagingHostName;
+        // remove the host property so it doesn't override the hostname property for url.format
+        delete collectionUrlObject.host;
+        prefixes.push(url.format(collectionUrlObject));
+    }
+
+    return Q(prefixes);
 }

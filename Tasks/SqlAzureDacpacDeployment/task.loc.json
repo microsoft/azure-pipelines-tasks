@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 23
+    "Patch": 24
   },
   "demands": [
     "azureps",
@@ -174,10 +174,18 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "AzurePowerShell": {
-      "target": "$(currentDirectory)\\DeploySqlAzure.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "PowerShell3": {
+      "target": "DeploySqlAzure.ps1"
     }
+  },
+  "messages": {
+    "SAD_InvalidServerAddress": "ms-resource:loc.messages.SAD_InvalidServerAddress",
+    "SAD_ServerNotFound": "ms-resource:loc.messages.SAD_ServerNotFound",
+    "SAD_InvalidIPv4Address": "ms-resource:loc.messages.SAD_InvalidIPv4Address",
+    "SAD_FoundMoreFiles": "ms-resource:loc.messages.SAD_FoundMoreFiles",
+    "SAD_NoFilesMatch": "ms-resource:loc.messages.SAD_NoFilesMatch",
+    "SAD_InvalidDacpacFile": "ms-resource:loc.messages.SAD_InvalidDacpacFile",
+    "SAD_NoPassword": "ms-resource:loc.messages.SAD_NoPassword",
+    "SAD_InvalidPublishProfile": "ms-resource:loc.messages.SAD_InvalidPublishProfile"
   }
 }

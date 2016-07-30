@@ -9,7 +9,7 @@ function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
 }
 
-describe('SCP Suite', function() {
+describe('CopyFilesOverSSH Suite', function() {
     this.timeout(20000);
 
     before((done) => {
@@ -23,7 +23,7 @@ describe('SCP Suite', function() {
     it('Fails for missing endpoint', (done) => {
         setResponseFile('responseEndpoint.json');
 
-        var tr = new trm.TaskRunner('SCP', true, true);
+        var tr = new trm.TaskRunner('CopyFilesOverSSH', true, true);
 
         tr.run()
             .then(() => {
@@ -40,7 +40,7 @@ describe('SCP Suite', function() {
     })
     it('Fails for invalid private key', (done) => {
         setResponseFile('responseEndpoint.json');
-        var tr = new trm.TaskRunner('SCP', true, true);
+        var tr = new trm.TaskRunner('CopyFilesOverSSH', true, true);
         tr.setInput('sshEndpoint', 'IDInvalidKey');
         tr.setInput('sourceFolder', '/user/build');
         tr.setInput('contents', '**');
@@ -62,7 +62,7 @@ describe('SCP Suite', function() {
     })
     it('Fails when user name is not provided in the endpoint', (done) => {
         setResponseFile('responseEndpoint.json');
-        var tr = new trm.TaskRunner('SCP', true, true);
+        var tr = new trm.TaskRunner('CopyFilesOverSSH', true, true);
         tr.setInput('sshEndpoint', 'IDUserNameNotSet');
         tr.setInput('contents', '**');
         tr.setInput('targetFolder', '/home/mg');
@@ -82,7 +82,7 @@ describe('SCP Suite', function() {
     })
     it('Empty password/passphrase is valid in the endpoint', (done) => {
         setResponseFile('responseEndpoint.json');
-        var tr = new trm.TaskRunner('SCP', true, true);
+        var tr = new trm.TaskRunner('CopyFilesOverSSH', true, true);
         tr.setInput('sshEndpoint', 'IDPasswordNotSet');
 
         tr.run()
@@ -97,7 +97,7 @@ describe('SCP Suite', function() {
     })
     it('Fails when host is not provided in the endpoint', (done) => {
         setResponseFile('responseEndpoint.json');
-        var tr = new trm.TaskRunner('SCP', true, true);
+        var tr = new trm.TaskRunner('CopyFilesOverSSH', true, true);
         tr.setInput('sshEndpoint', 'IDHostNotSet');
 
         tr.run()
@@ -115,7 +115,7 @@ describe('SCP Suite', function() {
     })
     it('When port is not provided in the endpoint, 22 is used as default port number', (done) => {
         setResponseFile('responseEndpoint.json');
-        var tr = new trm.TaskRunner('SCP', true, true);
+        var tr = new trm.TaskRunner('CopyFilesOverSSH', true, true);
         tr.setInput('sshEndpoint', 'IDPortNotSet');
 
         tr.run()
@@ -130,7 +130,7 @@ describe('SCP Suite', function() {
     })
     it('Fails when connection cannot be made with given details', (done) => {
         setResponseFile('responseEndpoint.json');
-        var tr = new trm.TaskRunner('SCP', true, true);
+        var tr = new trm.TaskRunner('CopyFilesOverSSH', true, true);
         tr.setInput('sshEndpoint', 'IDValidKey');
         tr.setInput('sourceFolder', '/user/build');
         tr.setInput('contents', '**');
@@ -152,7 +152,7 @@ describe('SCP Suite', function() {
     it('Fails for missing target folder', (done) => {
         setResponseFile('responseEndpoint.json');
 
-        var tr = new trm.TaskRunner('SCP', true, true);
+        var tr = new trm.TaskRunner('CopyFilesOverSSH', true, true);
         tr.setInput('sshEndpoint', 'IDValidKey');
         tr.setInput('sourceFolder', '/user/build');
         tr.setInput('contents', '**');
@@ -171,7 +171,7 @@ describe('SCP Suite', function() {
     it('Fails for missing contents', (done) => {
         setResponseFile('responseEndpoint.json');
 
-        var tr = new trm.TaskRunner('SCP', true, true);
+        var tr = new trm.TaskRunner('CopyFilesOverSSH', true, true);
         tr.setInput('sshEndpoint', 'IDValidKey');
         tr.setInput('targetFolder', '/home/user');
 

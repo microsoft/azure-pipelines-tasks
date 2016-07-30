@@ -12,7 +12,7 @@
    height="1024"
    width="1024"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="scp-task-icon.svg"
+   sodipodi:docname="ssh-copy--task-icon.svg"
    inkscape:export-filename="C:\Users\JimLamb\Dropbox\Work\Resources\scp-task-icon.png"
    inkscape:export-xdpi="2.8099999"
    inkscape:export-ydpi="2.8099999">
@@ -32,7 +32,7 @@
      inkscape:snap-bbox="true"
      inkscape:bbox-nodes="true"
      inkscape:zoom="0.65186409"
-     inkscape:cx="-660.73717"
+     inkscape:cx="505.15003"
      inkscape:cy="400.83687"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
@@ -46,7 +46,7 @@
        spacingy="32" />
   </sodipodi:namedview>
   <title
-     id="title4145">scp-task</title>
+     id="title4145">ssh-copy</title>
   <defs
      id="defs10">
     <pattern
@@ -67,7 +67,7 @@
         <dc:identifier>
                     sql-database-generic
                 </dc:identifier>
-        <dc:title>scp-task</dc:title>
+        <dc:title>ssh-copy</dc:title>
         <dc:format>
                     image/svg+xml
                 </dc:format>
@@ -125,7 +125,7 @@
          y="1408"
          style="font-size:180px;fill:#000000" /></flowRegion><flowPara
        id="flowPara3342"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:240px;font-family:Consolas;-inkscape-font-specification:'Consolas Bold';fill:#000000">SCP</flowPara></flowRoot>  <path
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:240px;font-family:Consolas;-inkscape-font-specification:'Consolas Bold';fill:#000000">SSH</flowPara></flowRoot>  <path
      style="font-style:normal;font-variant:normal;font-weight:400;font-size:180px;line-height:125%;font-family:'Segoe UI Symbol';text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
      d="M 64 64 L 64 685.51758 L 249.30273 685.51758 L 249.30273 832 L 448 832 L 448 758.57227 L 323.34766 758.57227 L 323.34766 283.53516 L 471.43945 283.53516 L 471.43945 502.69727 L 693.95508 502.69727 L 693.95508 704 L 768 704 L 768 429.64258 L 545.48438 210.10742 L 471.43945 210.10742 L 323.34766 64 L 64 64 z M 137.66602 137.05273 L 286.13672 137.05273 L 360.18164 210.10742 L 249.30273 210.10742 L 249.30273 612.46484 L 137.66602 612.46484 L 137.66602 137.05273 z M 545.48438 319.875 L 656.74219 429.64258 L 545.48438 429.64258 L 545.48438 319.875 z "
      id="path4726" />
