@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 37
+    "Patch": 38
   },
   "demands": [
     "msbuild",
@@ -116,7 +116,8 @@
       "label": "ms-resource:loc.input.label.logProjectEvents",
       "defaultValue": "true",
       "required": false,
-      "groupName": "advanced"
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.logProjectEvents"
     },
     {
       "name": "createLogFile",
