@@ -1,0 +1,39 @@
+{
+    "archivePackages": [
+        {
+            "archiveName": "AzCopy.zip",
+            "url": "https://krishadiblob.blob.core.windows.net/tools/AzCopy/3.1/AzCopy.zip",
+            "dest": "./",
+            "files": [
+              "AzCopy/Microsoft.WindowsAzure.Storage.DataMovement.dll",
+              "AzCopy/Microsoft.WindowsAzure.Storage.TableDataMovement.dll",
+              "AzCopy/Microsoft.WindowsAzure.Storage.dll",
+              "AzCopy/AzCopy.exe"
+            ]
+        },
+        {
+            "archiveName": "DeploymentUtilities.zip",
+            "url": "https://krishadiblob.blob.core.windows.net/tools/DeploymentUtilities/1.3/DeploymentUtilities.zip",
+            "dest": "./",
+            "files": [
+              "DeploymentUtilities/Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal",
+              "DeploymentUtilities/Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs.dll",
+              "DeploymentUtilities/Microsoft.VisualStudio.Services.Common.dll",
+              "DeploymentUtilities/Microsoft.VisualStudio.Services.DevTestLabs.Client.dll",
+              "DeploymentUtilities/Microsoft.VisualStudio.Services.DevTestLabs.Common.dll",
+              "DeploymentUtilities/Microsoft.VisualStudio.Services.DevTestLabs.Definition.dll",
+              "DeploymentUtilities/Microsoft.VisualStudio.Services.DevTestLabs.Deployment.dll",
+              "DeploymentUtilities/Microsoft.VisualStudio.Services.WebApi.dll",
+              "DeploymentUtilities/Newtonsoft.Json.dll",
+              "DeploymentUtilities/VisualStudioRemoteDeployer.exe",
+              "DeploymentUtilities/VisualStudioRemoteDeployer.exe.config",
+              "DeploymentUtilities/Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal/Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal.psm1",
+              "DeploymentUtilities/Modules/Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Chef.psm1",
+              "DeploymentUtilities/Modules/Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal.psm1",
+              "DeploymentUtilities/Modules/Microsoft.TeamFoundation.DistributedTask.Task.Deployment.RemoteDeployment.psm1",
+              "DeploymentUtilities/Modules/Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs.psm1",
+              "DeploymentUtilities/Scripts/Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Sql.ps1"
+            ]
+        }
+    ]
+}
