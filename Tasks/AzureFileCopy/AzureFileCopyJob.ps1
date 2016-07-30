@@ -1,10 +1,11 @@
 $AzureFileCopyJob = {
 param (
+    [string]$deploymentUtilitiesLocation,
     [string]$fqdn,
     [string]$storageAccount,
     [string]$containerName,
     [string]$sasToken,
-	[string]$blobStorageEndpoint,
+    [string]$blobStorageEndpoint,
     [string]$azCopyLocation,
     [string]$targetPath,
     [object]$credential,
@@ -29,25 +30,7 @@ param (
     Write-Verbose "enableDetailedLogging = $enableDetailedLogging"
     Write-Verbose "additionalArguments = $additionalArguments"
 
-    if(Test-Path -Path "$env:AGENT_HOMEDIRECTORY\Agent\Worker")
-    {
-        Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\*.dll | % {
-            [void][reflection.assembly]::LoadFrom( $_.FullName )
-            Write-Verbose "Loading .NET assembly:`t$($_.name)"
-        }
-
-        Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs\*.dll | % {
-            [void][reflection.assembly]::LoadFrom( $_.FullName )
-            Write-Verbose "Loading .NET assembly:`t$($_.name)"
-        }
-    }
-    else
-    {
-        if(Test-Path "$env:AGENT_HOMEDIRECTORY\externals\vstshost")
-        {
-            [void][reflection.assembly]::LoadFrom("$env:AGENT_HOMEDIRECTORY\externals\vstshost\Microsoft.TeamFoundation.DistributedTask.Task.LegacySDK.dll")
-        }
-    }
+    Import-Module "$deploymentUtilitiesLocation\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs.dll"
 
     $cleanTargetPathOption = ''
     if ($cleanTargetBeforeCopy -eq "true")

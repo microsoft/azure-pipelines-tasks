@@ -240,64 +240,64 @@ function Invoke-MSBuild {
 
         $detailResult = 'Succeeded'
         try {
-            if ($NoTimelineLogger) {
-                Invoke-VstsTool -FileName $MSBuildPath -Arguments $arguments -RequireExitCodeZero
-            } else {
-                $knownDetailNodes = @{ }
-                Invoke-VstsTool -FileName $MSBuildPath -Arguments $arguments -RequireExitCodeZero |
-                    ForEach-Object {
-                        if ($_ -and
-                            $_.IndexOf($script:loggingCommandPrefix) -ge 0 -and
-                            ($command = ConvertFrom-SerializedLoggingCommand -Message $_)) {
-                            if ($command.Area -eq 'task' -and
-                                $command.Event -eq 'logissue' -and
-                                $command.Properties['type'] -eq 'error') {
+            $knownDetailNodes = @{ }
+            Invoke-VstsTool -FileName $MSBuildPath -Arguments $arguments -RequireExitCodeZero |
+                ForEach-Object {
+                    if ($_ -and
+                        $_.IndexOf($script:loggingCommandPrefix) -ge 0 -and
+                        ($command = ConvertFrom-SerializedLoggingCommand -Message $_)) {
+                        if ($command.Area -eq 'task' -and
+                            $command.Event -eq 'logissue' -and
+                            $command.Properties['type'] -eq 'error') {
 
-                                # An error issue was detected. Set the result to Failed for the logdetail completed event.
-                                $detailResult = 'Failed'
-                            } elseif ($command.Area -eq 'task' -and
-                                $command.Event -eq 'logdetail' -and
-                                !$NoTimelineLogger) {
+                            # An error issue was detected. Set the result to Failed for the logdetail completed event.
+                            $detailResult = 'Failed'
+                        } elseif ($command.Area -eq 'task' -and
+                            $command.Event -eq 'logdetail') {
 
-                                # Record known detail nodes and manipulate the parent project ID if required.
-                                $id = $command.Properties['id']
-                                if (!$knownDetailNodes.ContainsKey($id)) {
-                                    # The detail node is new.
-
-                                    # Check if the parent project ID is null or empty.
-                                    $parentProjectId = $command.Properties['parentid']
-                                    if (!$parentProjectId -or [guid]$parentProjectId -eq [guid]::Empty) {
-                                        # Default the parent ID to the root ID it is a new node and does not have a parent ID.
-                                        $command.Properties['parentid'] = $detailId.ToString('D')
-                                    }
-
-                                    # Track the detail node as known.
-                                    $knownDetailNodes[$id] = $null
-                                }
-
-                                if ($projFile = $command.Properties['name']) {
-                                    # Make the project file relative.
-                                    if ($projFile.StartsWith("$solutionDirectory\", [System.StringComparison]::OrdinalIgnoreCase)) {
-                                        $projFile = $projFile.Substring($solutionDirectory.Length).TrimStart('\'[0])
-                                    } else {
-                                        $projFile = [System.IO.Path]::GetFileName($projFile)
-                                    }
-
-                                    # If available, add the targets to the name.
-                                    if ($targetNames = $command.Properties['targetnames']) {
-                                        $projFile = "$projFile ($targetNames)"
-                                    }
-
-                                    $command.Properties['name'] = $projFile
-                                }
+                            # Check whether to drop detail timeline records.
+                            if ($NoTimelineLogger) {
+                                return
                             }
 
-                            Write-LoggingCommand -Command $command -AsOutput
-                        } else {
-                            $_
+                            # Record known detail nodes and manipulate the parent project ID if required.
+                            $id = $command.Properties['id']
+                            if (!$knownDetailNodes.ContainsKey($id)) {
+                                # The detail node is new.
+
+                                # Check if the parent project ID is null or empty.
+                                $parentProjectId = $command.Properties['parentid']
+                                if (!$parentProjectId -or [guid]$parentProjectId -eq [guid]::Empty) {
+                                    # Default the parent ID to the root ID it is a new node and does not have a parent ID.
+                                    $command.Properties['parentid'] = $detailId.ToString('D')
+                                }
+
+                                # Track the detail node as known.
+                                $knownDetailNodes[$id] = $null
+                            }
+
+                            if ($projFile = $command.Properties['name']) {
+                                # Make the project file relative.
+                                if ($projFile.StartsWith("$solutionDirectory\", [System.StringComparison]::OrdinalIgnoreCase)) {
+                                    $projFile = $projFile.Substring($solutionDirectory.Length).TrimStart('\'[0])
+                                } else {
+                                    $projFile = [System.IO.Path]::GetFileName($projFile)
+                                }
+
+                                # If available, add the targets to the name.
+                                if ($targetNames = $command.Properties['targetnames']) {
+                                    $projFile = "$projFile ($targetNames)"
+                                }
+
+                                $command.Properties['name'] = $projFile
+                            }
                         }
+
+                        Write-LoggingCommand -Command $command -AsOutput
+                    } else {
+                        $_
                     }
-            }
+                }
 
             if ($LASTEXITCODE -ne 0) {
                 Write-VstsSetResult -Result Failed -DoNotThrow

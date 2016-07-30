@@ -1,8 +1,8 @@
 {
   "id": "67cec91b-0351-4c2f-8465-d74b3d2a2d96",
-  "name": "SCP",
-  "friendlyName": "SCP",
-  "description": "Copy files or build artifacts to a remote machine using SSH",
+  "name": "CopyFilesOverSSH",
+  "friendlyName": "Copy Files Over SSH",
+  "description": "Copy files or build artifacts to a remote machine over SSH",
   "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=821894)",
   "category": "Deploy",
   "visibility": [
@@ -88,7 +88,7 @@
   ],
   "execution": {
     "Node": {
-      "target": "scp.js",
+      "target": "copyfilesoverssh.js",
       "argumentFormat": ""
     }
   },

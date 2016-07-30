@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 35
+    "Patch": 36
   },
   "demands": [
     "azureps"
@@ -99,10 +99,18 @@
   ],
   "instanceNameFormat": "Azure Deployment: $(WebSiteName)",
   "execution": {
-    "AzurePowerShell": {
-      "target": "$(currentDirectory)\\Publish-AzureWebDeployment.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+	"PowerShell3": {
+        "target": "Publish-AzureWebDeployment.ps1"
     }
-  }
+  },
+  "messages": {
+        "Cannotgetwebsitedeploymentstatusisnotupdated":"Cannot get website, deployment status is not updated",
+        "CannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite":"Cannot update deployment status, SCM endpoint is not enabled for this website",
+        "Cannotupdatedeploymentstatusfor01":"Cannot update deployment status for {0} - {1}",
+        "Updatingdeploymentstatus":"Updating deployment status",
+        "CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved":"Cannot update deployment status, unique deploymentId cannot be retrieved",
+        "Updatingdeploymenthistoryfordeployment0":"Updating deployment history for deployment {0}",
+        "Nofileswerefoundtodeploywithsearchpattern0":"No files were found to deploy with search pattern {0}",
+        "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone":"Found more than one file to deploy with search pattern {0}. There can be only one."
+    }
 }

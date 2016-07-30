@@ -14,6 +14,7 @@ import * as ngToolRunner from 'nuget-task-common/NuGetToolRunner';
 import * as nutil from 'nuget-task-common/Utility';
 import * as auth from 'nuget-task-common/Authentication'
 import {NuGetConfigHelper} from 'nuget-task-common/NuGetConfigHelper'
+import * as os from 'os';
 
 class RestoreOptions {
     constructor(
@@ -65,8 +66,8 @@ if (!tl.filePathSupplied('nuGetPath')) {
 var serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
 
 //find nuget location to use
-var nuGetPathToUse = ngToolRunner.locateTool('nuget.exe', userNuGetPath);
-var credProviderPath = ngToolRunner.locateTool('CredentialProvider.TeamBuild.exe', null, true);
+var nuGetPathToUse = ngToolRunner.locateNuGetExe(userNuGetPath);
+var credProviderPath = ngToolRunner.locateCredentialProvider();
 
 var credProviderDir: string = null;
 if (credProviderPath) {
@@ -80,6 +81,8 @@ var accessToken = auth.getSystemAccessToken();
 let buildIdentityDisplayName: string = null;
 let buildIdentityAccount: string = null;
 
+/*
+BUG: HTTP calls to access the location service currently do not work for customers behind proxies.
 locationHelpers.getNuGetConnectionData(serviceUri, accessToken)
     .then(connectionData => {
         buildIdentityDisplayName = locationHelpers.getIdentityDisplayName(connectionData.authorizedUser);
@@ -96,9 +99,19 @@ locationHelpers.getNuGetConnectionData(serviceUri, accessToken)
         }
 
         throw err;
-    })
+    })*/
+locationHelpers.assumeNuGetUriPrefixes(serviceUri)
     .then(urlPrefixes => {
-        tl.debug("discovered URL prefixes: " + urlPrefixes.join(';'))
+        tl.debug(`discovered URL prefixes: ${urlPrefixes}`);
+
+        // Note to readers: This variable will be going away once we have a fix for the location service for
+        // customers behind proxies
+        let testPrefixes = tl.getVariable("NuGetTasks.ExtraUrlPrefixesForTesting");
+        if (testPrefixes) {
+            urlPrefixes = urlPrefixes.concat(testPrefixes.split(';'));
+            tl.debug(`all URL prefixes: ${urlPrefixes}`)
+        }
+
         return new auth.NuGetAuthInfo(urlPrefixes, accessToken);
     })
     .then(authInfo => {
@@ -201,5 +214,5 @@ function restorePackages(solutionFile: string, options: RestoreOptions): Q.Promi
         nugetTool.argString(options.extraArgs);
     }
 
-    return nugetTool.exec();
+    return nugetTool.exec({cwd: path.dirname(solutionFile)});
 }
