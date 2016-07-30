@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 68
+    "Patch": 69
   },
   "demands": [
     "azureps"
@@ -280,11 +280,6 @@
   ],
   "instanceNameFormat": "$(Destination) File Copy",
   "execution": {
-    "AzurePowerShell": {
-      "target": "$(currentDirectory)\\Legacy\\AzureFileCopy.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)\\Legacy"
-    },
     "PowerShell3": {
         "target": "AzureFileCopy.ps1"
     }
