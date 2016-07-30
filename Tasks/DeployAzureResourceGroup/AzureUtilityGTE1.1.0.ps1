@@ -1,6 +1,6 @@
 # This file implements IAzureUtility for Azure PowerShell version >= 1.1.0
 
-Import-Module ./AzureUtilityGTE1.0.ps1 -Force
+. "$PSScriptRoot\AzureUtilityGTE1.0.ps1"
 
 function Get-AzureRMVMsInResourceGroup
 {

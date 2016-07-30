@@ -16,8 +16,8 @@ $csmFile = Get-VstsInput -Name "csmFile"
 $csmParametersFile = Get-VstsInput -Name "csmParametersFile"
 $overrideParameters = Get-VstsInput -Name "overrideParameters"
 $outputVariable = Get-VstsInput -Name "outputVariable"
-$enableDeploymentPrerequisitesForCreate = Get-VstsInput -Name "enableDeploymentPrerequisitesForCreate"
-$enableDeploymentPrerequisitesForSelect = Get-VstsInput -Name "enableDeploymentPrerequisitesForSelect"
+$enableDeploymentPrerequisitesForCreate = Get-VstsInput -Name "enableDeploymentPrerequisitesForCreate" -AsBool
+$enableDeploymentPrerequisitesForSelect = Get-VstsInput -Name "enableDeploymentPrerequisitesForSelect" -AsBool
 
 if($connectedServiceNameSelector -eq "ConnectedServiceNameClassic")
 {
@@ -48,7 +48,7 @@ Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.Distri
 Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs.dll"
 
 # Load all dependent files for execution
-Import-Module ./Utility.ps1 -Force
+. "$PSScriptRoot\Utility.ps1"
 
 function Handle-SelectResourceGroupAction
 {
@@ -95,7 +95,7 @@ try
 
     $azureUtility = Get-AzureUtility
     Write-Verbose "Loading $azureUtility"
-    Import-Module ./$azureUtility -Force
+    . "$PSScriptRoot\$azureUtility"
 
     switch ($action)
     {

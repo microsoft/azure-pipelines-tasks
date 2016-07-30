@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 81
+    "Patch": 82
   },
   "demands": [
     "azureps"
@@ -207,11 +207,6 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "AzurePowerShell": {
-      "target": "$(currentDirectory)\\Legacy\\DeployAzureResourceGroup.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
-    },
     "PowerShell3": {
       "target": "DeployAzureResourceGroup.ps1"
     }
