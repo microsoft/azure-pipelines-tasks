@@ -1,6 +1,6 @@
 # This file implements IAzureUtility for Azure PowerShell version >= 1.1.0
 
-Import-Module ./AzureUtilityGTE1.0.ps1 -Force
+. "$PSScriptRoot\AzureUtilityGTE1.0.ps1"
 
 function Get-AzureRMVMsInResourceGroup
 {
@@ -17,7 +17,7 @@ function Get-AzureRMVMsInResourceGroup
         catch [Microsoft.WindowsAzure.Commands.Common.ComputeCloudException],[System.MissingMethodException], [System.Management.Automation.PSInvalidOperationException], [Hyak.Common.CloudException], [Microsoft.Rest.Azure.CloudException]
         {
             Write-Verbose $_.Exception.Message
-            throw (Get-LocalizedString -Key "Ensure resource group '{0}' exists and has at least one virtual machine in it" -ArgumentList $resourceGroupName)
+            throw (Get-VstsLocString -Key "ARG_EnsureResourceGroupWithMachine" -ArgumentList $resourceGroupName)
         }
         catch
         {
@@ -35,9 +35,9 @@ function Start-Machine
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($machineName))
     {
-        Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Starting machine '{0}'" -ArgumentList $machineName)
+        Write-Host (Get-VstsLocString -Key "ARG_StartingMachine" -ArgumentList $machineName)
         $response = Start-AzureRMVM -Name $machineName -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
-        Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Started machine '{0}' from Azure provider" -ArgumentList $machineName)
+        Write-Host (Get-VstsLocString -Key "ARG_StartedMachine" -ArgumentList $machineName)
         if($response.IsSuccessStatusCode -eq $true)
         {
             $responseJObject = [Newtonsoft.Json.Linq.JObject]::Parse(($response | ConvertTo-Json))
@@ -55,9 +55,9 @@ function Stop-Machine
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($machineName))
     {
-        Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Stopping machine '{0}'" -ArgumentList $machineName)
+        Write-Host (Get-VstsLocString -Key "ARG_StoppingMachine" -ArgumentList $machineName)
         $response = Stop-AzureRMVM -Name $machineName -ResourceGroupName $resourceGroupName -Force -ErrorAction Stop -Verbose
-        Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Stopped machine '{0}' from Azure provider" -ArgumentList $machineName)
+        Write-Host (Get-VstsLocString -Key "ARG_StoppedMachine" -ArgumentList $machineName)
         if($response.IsSuccessStatusCode -eq $true)
         {
             $responseJObject = [Newtonsoft.Json.Linq.JObject]::Parse(($response | ConvertTo-Json))
@@ -75,9 +75,9 @@ function Delete-Machine
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($machineName))
     {
-        Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleting machine '{0}'" -ArgumentList $machineName)
+        Write-Host (Get-VstsLocString -Key "ARG_DeletingMachine" -ArgumentList $machineName)
         $response = Remove-AzureRMVM -Name $machineName -ResourceGroupName $resourceGroupName -Force -ErrorAction Stop -Verbose
-        Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleted machine '{0}' from Azure provider" -ArgumentList $machineName)
+        Write-Host (Get-VstsLocString -Key "ARG_DeletedMachine" -ArgumentList $machineName)
         if($response.IsSuccessStatusCode -eq $true)
         {
             $responseJObject = [Newtonsoft.Json.Linq.JObject]::Parse(($response | ConvertTo-Json))
@@ -101,10 +101,10 @@ function Set-AzureMachineCustomScriptExtension
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName) -and -not [string]::IsNullOrEmpty($name))
     {
-        Write-Host (Get-LocalizedString -Key "[Azure Call]Setting the custom script extension '{0}' for vm '{1}'" -ArgumentList $name, $vmName)
+        Write-Host (Get-VstsLocString -Key "ARG_SettingExtension" -ArgumentList $name, $vmName)
         Write-Verbose "Set-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -FileUri $fileUri  -Run $run -Argument $argument -Location $location -ErrorAction Stop -Verbose"
         $result = Set-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -FileUri $fileUri  -Run $run -Argument $argument -Location $location -ErrorAction Stop -Verbose		
-        Write-Host (Get-LocalizedString -Key "[Azure Call]Set the custom script extension '{0}' for vm '{1}'" -ArgumentList $name, $vmName)
+        Write-Host (Get-VstsLocString -Key "ARG_SetExtension" -ArgumentList $name, $vmName)
         if($result.IsSuccessStatusCode -eq $true)
         {
             $responseJObject = [Newtonsoft.Json.Linq.JObject]::Parse(($result | ConvertTo-Json))

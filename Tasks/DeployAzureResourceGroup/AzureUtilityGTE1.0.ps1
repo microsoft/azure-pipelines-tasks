@@ -22,7 +22,7 @@ function Create-AzureResourceGroupIfNotExist
         {
             Write-Verbose "[Azure Resource Manager]Creating resource group $resourceGroupName in $location"
             $azureResourceGroup = New-AzureRMResourceGroup -Name $resourceGroupName -Location $location -Verbose -ErrorAction Stop
-            Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Created resource group '{0}'" -ArgumentList $resourceGroupName)
+            Write-Host (Get-VstsLocString -Key "ARG_CreatedResourceGroup" -ArgumentList $resourceGroupName)
         }
         return $azureResourceGroup
     }
@@ -86,9 +86,9 @@ function Start-Machine
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($machineName))
     {
-        Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Starting machine '{0}'" -ArgumentList $machineName)
+        Write-Host (Get-VstsLocString -Key "ARG_StartingMachine" -ArgumentList $machineName)
         $response = Start-AzureRMVM -Name $machineName -ResourceGroupName $resourceGroupName -ErrorAction Stop -Verbose
-        Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Started machine '{0}' from Azure provider" -ArgumentList $machineName)
+        Write-Host (Get-VstsLocString -Key "ARG_StartedMachine" -ArgumentList $machineName)
     }
     return $response
 }
@@ -100,9 +100,9 @@ function Stop-Machine
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($machineName))
     {
-        Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Stopping machine '{0}'" -ArgumentList $machineName)
+        Write-Host (Get-VstsLocString -Key "ARG_StoppingMachine" -ArgumentList $machineName)
         $response = Stop-AzureRMVM -Name $machineName -ResourceGroupName $resourceGroupName -Force -ErrorAction Stop -Verbose
-        Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Stopped machine '{0}' from Azure provider" -ArgumentList $machineName)
+        Write-Host (Get-VstsLocString -Key "ARG_StoppedMachine" -ArgumentList $machineName)
     }
     return $response
 }
@@ -114,9 +114,9 @@ function Delete-Machine
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($machineName))
     {
-        Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleting machine '{0}'" -ArgumentList $machineName)
+        Write-Host (Get-VstsLocString -Key "ARG_DeletingMachine" -ArgumentList $machineName)
         $response = Remove-AzureRMVM -Name $machineName -ResourceGroupName $resourceGroupName -Force -ErrorAction Stop -Verbose
-        Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleted machine '{0}' from Azure provider" -ArgumentList $machineName)
+        Write-Host (Get-VstsLocString -Key "ARG_DeletedMachine" -ArgumentList $machineName)
     }
     return $response
 }
@@ -127,9 +127,9 @@ function Delete-ResourceGroup
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName))
     {
-        Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleting resource group '{0}'" -ArgumentList $resourceGroupName)
+        Write-Host (Get-VstsLocString -Key "ARG_DeletingResourceGroup" -ArgumentList $resourceGroupName)
         Remove-AzureRMResourceGroup -Name $resourceGroupName -Force -ErrorAction Stop -Verbose
-        Write-Host (Get-LocalizedString -Key "[Azure Resource Manager]Deleted resource group '{0}'" -ArgumentList $resourceGroupName)
+        Write-Host (Get-VstsLocString -Key "ARG_DeletedResourceGroup" -ArgumentList $resourceGroupName)
     }
 }
 
@@ -148,7 +148,7 @@ function Get-AzureRMVMsInResourceGroup
         catch [Microsoft.WindowsAzure.Commands.Common.ComputeCloudException],[System.MissingMethodException], [System.Management.Automation.PSInvalidOperationException], [Hyak.Common.CloudException]
         {
             Write-Verbose $_.Exception.Message
-            throw (Get-LocalizedString -Key "Ensure resource group '{0}' exists and has at least one virtual machine in it" -ArgumentList $resourceGroupName)
+            throw (Get-VstsLocString -Key "ARG_EnsureResourceGroupWithMachine" -ArgumentList $resourceGroupName)
         }
         catch
         {
@@ -276,9 +276,9 @@ function Get-AzureMachineStatus
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($name))
     {
-        Write-Host (Get-LocalizedString -Key "[Azure Call]Getting the status for vm '{0}'" -ArgumentList $name)
+        Write-Host (Get-VstsLocString -Key "ARG_GettingVmStatus" -ArgumentList $name)
         $status = Get-AzureRmVM -ResourceGroupName $resourceGroupName -Name $name -Status -ErrorAction Stop -Verbose
-        Write-Host (Get-LocalizedString -Key "[Azure Call]Got the status for vm '{0}'" -ArgumentList $name)
+        Write-Host (Get-VstsLocString -Key "ARG_GotVmStatus" -ArgumentList $name)
     }
 	
     return $status
@@ -292,9 +292,9 @@ function Get-AzureMachineCustomScriptExtension
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName))
     {
-        Write-Host (Get-LocalizedString -Key "[Azure Call]Getting the custom script extension '{0}' for vm '{1}'" -ArgumentList $name, $vmName)
+        Write-Host (Get-VstsLocString -Key "ARG_GettingExtensionStatus" -ArgumentList $name, $vmName)
         $customScriptExtension = Get-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -ErrorAction Stop -Verbose     
-        Write-Host (Get-LocalizedString -Key "[Azure Call]Got the custom script extension '{0}' for vm '{1}'" -ArgumentList $name, $vmName)
+        Write-Host (Get-VstsLocString -Key "ARG_GotExtensionStatus" -ArgumentList $name, $vmName)
     }
 	
     return $customScriptExtension
@@ -312,9 +312,9 @@ function Set-AzureMachineCustomScriptExtension
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName) -and -not [string]::IsNullOrEmpty($name))
     {
-        Write-Host (Get-LocalizedString -Key "[Azure Call]Setting the custom script extension '{0}' for vm '{1}'" -ArgumentList $name, $vmName)
+        Write-Host (Get-VstsLocString -Key "ARG_SettingExtension" -ArgumentList $name, $vmName)
         $result = Set-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -FileUri $fileUri  -Run $run -Argument $argument -Location $location -ErrorAction Stop -Verbose		
-        Write-Host (Get-LocalizedString -Key "[Azure Call]Set the custom script extension '{0}' for vm '{1}'" -ArgumentList $name, $vmName)
+        Write-Host (Get-VstsLocString -Key "ARG_SetExtension" -ArgumentList $name, $vmName)
     }
 	
     return $result
@@ -328,9 +328,9 @@ function Remove-AzureMachineCustomScriptExtension
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName) -and -not [string]::IsNullOrEmpty($name))
     {
-        Write-Host (Get-LocalizedString -Key "[Azure Call]Removing the custom script extension '{0}' for vm '{1}'" -ArgumentList $name, $vmName)
+        Write-Host (Get-VstsLocString -Key "ARG_RemovingExtension" -ArgumentList $name, $vmName)
         $response = Remove-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -Force -ErrorAction SilentlyContinue -Verbose		
-        Write-Host (Get-LocalizedString -Key "[Azure Call]Removed the custom script extension '{0}' for vm '{1}'" -ArgumentList $name, $vmName)
+        Write-Host (Get-VstsLocString -Key "ARG_RemovedExtension" -ArgumentList $name, $vmName)
     }
 
     return $response
@@ -377,12 +377,12 @@ function Get-NetworkSecurityGroups
         }
         else
         {
-            throw (Get-LocalizedString -Key "[Azure Call]No network interface found with virtual machine id {0} under resource group {1}" -ArgumentList $vmid , $resourceGroupName)
+            throw (Get-VstsLocString -Key "ARG_NetworkInterfaceNotFound" -ArgumentList $vmid , $resourceGroupName)
         }
     }
     else
     {
-        throw (Get-LocalizedString -Key "[Azure Call]Resource group name and virtual machine ID should not be null or empty")
+        throw (Get-VstsLocString -Key "ARG_EmptyRGName")
     }
     
     return $securityGroups

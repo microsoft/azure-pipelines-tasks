@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 81
+    "Patch": 82
   },
   "demands": [
     "azureps"
@@ -207,10 +207,50 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "AzurePowerShell": {
-      "target": "$(currentDirectory)\\DeployAzureResourceGroup.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "PowerShell3": {
+      "target": "DeployAzureResourceGroup.ps1"
     }
+  },
+  "messages": {
+    "ARG_CreatedResourceGroup": "ms-resource:loc.messages.ARG_CreatedResourceGroup",
+    "ARG_StartingMachine": "ms-resource:loc.messages.ARG_StartingMachine",
+    "ARG_StartedMachine": "ms-resource:loc.messages.ARG_StartedMachine",
+    "ARG_StoppingMachine": "ms-resource:loc.messages.ARG_StoppingMachine",
+    "ARG_StoppedMachine": "ms-resource:loc.messages.ARG_StoppedMachine",
+    "ARG_DeletingMachine": "ms-resource:loc.messages.ARG_DeletingMachine",
+    "ARG_DeletedMachine": "ms-resource:loc.messages.ARG_DeletedMachine",
+    "ARG_DeletingResourceGroup": "ms-resource:loc.messages.ARG_DeletingResourceGroup",
+    "ARG_DeletedResourceGroup": "ms-resource:loc.messages.ARG_DeletedResourceGroup",
+    "ARG_EnsureResourceGroupWithMachine": "ms-resource:loc.messages.ARG_EnsureResourceGroupWithMachine",
+    "ARG_GettingVmStatus": "ms-resource:loc.messages.ARG_GettingVmStatus",
+    "ARG_GotVmStatus": "ms-resource:loc.messages.ARG_GotVmStatus",
+    "ARG_GettingExtensionStatus": "ms-resource:loc.messages.ARG_GettingExtensionStatus",
+    "ARG_GotExtensionStatus": "ms-resource:loc.messages.ARG_GotExtensionStatus",
+    "ARG_SettingExtension": "ms-resource:loc.messages.ARG_SettingExtension",
+    "ARG_SetExtension": "ms-resource:loc.messages.ARG_SetExtension",
+    "ARG_RemovingExtension": "ms-resource:loc.messages.ARG_RemovingExtension",
+    "ARG_RemovedExtension": "ms-resource:loc.messages.ARG_RemovedExtension",
+    "ARG_NetworkInterfaceNotFound": "ms-resource:loc.messages.ARG_NetworkInterfaceNotFound",
+    "ARG_EmptyRGName": "ms-resource:loc.messages.ARG_EmptyRGName",
+    "ARG_UseSpnAuth": "ms-resource:loc.messages.ARG_UseSpnAuth",
+    "ARG_ProvideOutputVariable": "ms-resource:loc.messages.ARG_ProvideOutputVariable",
+    "ARG_UnsupportedAzurePSVersion": "ms-resource:loc.messages.ARG_UnsupportedAzurePSVersion",
+    "ARG_AzureRMModuleNotFound": "ms-resource:loc.messages.ARG_AzureRMModuleNotFound",
+    "ARG_DeploymentFailed": "ms-resource:loc.messages.ARG_DeploymentFailed",
+    "ARG_DeploymentSucceeded": "ms-resource:loc.messages.ARG_DeploymentSucceeded",
+    "ARG_InvalidFilePath": "ms-resource:loc.messages.ARG_InvalidFilePath",
+    "ARG_FileNotFound": "ms-resource:loc.messages.ARG_FileNotFound",
+    "ARG_SpecifyValidTemplatePath": "ms-resource:loc.messages.ARG_SpecifyValidTemplatePath",
+    "ARG_SpecifyValidParametersPath": "ms-resource:loc.messages.ARG_SpecifyValidParametersPath",
+    "ARG_ActionNotSupported": "ms-resource:loc.messages.ARG_ActionNotSupported",
+    "ARG_OperationFailedOnMachine": "ms-resource:loc.messages.ARG_OperationFailedOnMachine",
+    "ARG_InvokeInvalidOperation": "ms-resource:loc.messages.ARG_InvokeInvalidOperation",
+    "ARG_NoVmsFound": "ms-resource:loc.messages.ARG_NoVmsFound",
+    "ARG_AllResourceNotFound": "ms-resource:loc.messages.ARG_AllResourceNotFound",
+    "ARG_ResourceNotFound": "ms-resource:loc.messages.ARG_ResourceNotFound",
+    "ARG_SetExtensionFailed": "ms-resource:loc.messages.ARG_SetExtensionFailed",
+    "ARG_NetworkSecurityConfigFailed": "ms-resource:loc.messages.ARG_NetworkSecurityConfigFailed",
+    "ARG_SetExtensionFailedForVm": "ms-resource:loc.messages.ARG_SetExtensionFailedForVm",
+    "ARG_DeploymentPrereqFailed": "ms-resource:loc.messages.ARG_DeploymentPrereqFailed"
   }
 }
