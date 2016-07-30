@@ -1,61 +1,51 @@
-[CmdletBinding(DefaultParameterSetName = 'None')]
-param
-(
-    [string] [Parameter(Mandatory=$true)] $connectedServiceNameSelector,
-    [String] [Parameter(Mandatory = $true)] $DacpacFile,
-    [String] [Parameter(Mandatory = $true)] $ServerName,
-    [String] [Parameter(Mandatory = $true)] $DatabaseName,
-    [string] $connectedServiceName,
-    [string] $connectedServiceNameARM,
-    [String] $SqlUsername,
-    [String] $SqlPassword,
-    [String] $PublishProfile,
-    [String] $AdditionalArguments,
-    [String] [Parameter(Mandatory = $true)] $IpDetectionMethod,
-    [String] $StartIpAddress,
-    [String] $EndIpAddress,
-    [String] [Parameter(Mandatory = $true)] $DeleteFirewallRule
-)
+[CmdletBinding()]
+param()
 
-Write-Verbose "Entering script DeploySqlAzure.ps1"
+Trace-VstsEnteringInvocation $MyInvocation
 
-# Log arguments
-Write-Verbose "ConnectedServiceNameSelector= $connectedServiceNameSelector"
-Write-Verbose "DacpacFile= $DacpacFile"
-Write-Verbose "ServerName= $ServerName"
-Write-Verbose "DatabaseName= $DatabaseName"
-Write-Verbose "SqlUsername= $SqlUsername"
-Write-Verbose "PublishProfile= $PublishProfile"
-Write-Verbose "AdditionalArguments= $AdditionalArguments"
-Write-Verbose "StartIPAddress= $StartIPAddress"
-Write-Verbose "EndIPAddress= $EndIPAddress"
-Write-Verbose "DeleteFirewallRule= $DeleteFirewallRule"
+$connectedServiceNameSelector = Get-VstsInput -Name "ConnectedServiceNameSelector" -Require
+$DacpacFile = Get-VstsInput -Name "DacpacFile" -Require
+$ServerName = Get-VstsInput -Name  "ServerName" -Require
+$DatabaseName = Get-VstsInput -Name "DatabaseName" -Require
+$connectedServiceName = Get-VstsInput -Name "ConnectedServiceName"
+$connectedServiceNameARM = Get-VstsInput -Name "ConnectedServiceNameARM"
+$SqlUsername = Get-VstsInput -Name "SqlUsername"
+$SqlPassword = Get-VstsInput -Name "SqlPassword"
+$PublishProfile = Get-VstsInput -Name "PublishProfile"
+$AdditionalArguments = Get-VstsInput -Name "AdditionalArguments"
+$IpDetectionMethod = Get-VstsInput -Name "IpDetectionMethod" -Require
+$StartIpAddress = Get-VstsInput -Name "StartIpAddress"
+$EndIpAddress = Get-VstsInput -Name "EndIpAddress"
+$DeleteFirewallRule = Get-VstsInput -Name "DeleteFirewallRule" -Require -AsBool
 
-Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
-Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
-Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
+# Initialize Azure.
+Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+Initialize-Azure
+
+# Import the loc strings.
+Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 
 # Load all dependent files for execution
-Import-Module ./Utility.ps1 -Force
-Import-Module ./FindSqlPackagePath.ps1 -Force
+. "$PSScriptRoot\Utility.ps1"
+. "$PSScriptRoot\FindSqlPackagePath.ps1"
 
 function ThrowIfMultipleFilesOrNoFilePresent($files, $pattern)
 {
     if ($files -is [system.array])
     {
-        throw (Get-LocalizedString -Key "Found more than one file to deploy with search pattern {0}. There can be only one." -ArgumentList $pattern)
+        throw (Get-VstsLocString -Key "SAD_FoundMoreFiles" -ArgumentList $pattern)
     }
     else
     {
         if (!$files)
         {
-            throw (Get-LocalizedString -Key "No files were found to deploy with search pattern {0}" -ArgumentList $pattern)
+            throw (Get-VstsLocString -Key "SAD_NoFilesMatch" -ArgumentList $pattern)
         }
     }
 }
 
-Write-Host "DacpacFilePath= Find-Files -SearchPattern $DacpacFile"
-$DacpacFilePath = Find-Files -SearchPattern $DacpacFile
+Write-Host "DacpacFilePath= Find-VstsFiles LegacyPattern $DacpacFile"
+$DacpacFilePath = Find-VstsFiles LegacyPattern $DacpacFile
 Write-Host "packageFile= $DacpacFilePath"
 
 #Ensure that a single package (.dacpac) file is found
@@ -64,8 +54,8 @@ ThrowIfMultipleFilesOrNoFilePresent -files $DacpacFilePath -pattern $DacpacFile
 $PublishProfilePath = ""
 if( [string]::IsNullOrWhitespace($PublishProfile) -eq $false -and $PublishProfile -ne $env:SYSTEM_DEFAULTWORKINGDIRECTORY -and $PublishProfile -ne [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\"))
 {
-    Write-Host "PublishProfilePath = Find-Files -SearchPattern $PublishProfile"
-    $PublishProfilePath = Find-Files -SearchPattern $PublishProfile
+    Write-Host "PublishProfilePath = Find-VstsFiles LegacyPattern $PublishProfile"
+    $PublishProfilePath = Find-VstsFiles LegacyPattern $PublishProfile
     Write-Host "Publish profile path = $PublishProfilePath"
 
     #Ensure that only one publish profile file is found
@@ -80,7 +70,7 @@ $serverFriendlyName = $ServerName.split(".")[0]
 Write-Verbose "Server friendly name is $serverFriendlyName"
 
 # Getting start and end IP address for agent machine
-$ipAddress = Get-AgentIPAddress -startIPAddress $StartIpAddress -endIPAddress $EndIpAddress -ipDetectionMethod $IpDetectionMethod -taskContext $distributedTaskContext
+$ipAddress = Get-AgentIPAddress -startIPAddress $StartIpAddress -endIPAddress $EndIpAddress -ipDetectionMethod $IpDetectionMethod
 Write-Verbose ($ipAddress | Format-List | Out-String)
 
 $startIp =$ipAddress.StartIPAddress
@@ -92,7 +82,7 @@ Try
     $azureUtility = Get-AzureUtility
 
     Write-Verbose "Loading $azureUtility"
-    Import-Module ./$azureUtility -Force
+    . "$PSScriptRoot\$azureUtility"
 
     if ($connectedServiceNameSelector -eq "ConnectedServiceNameARM")
     {
@@ -100,7 +90,7 @@ Try
     }
 
     # Getting connection type (Certificate/UserNamePassword/SPN) used for the task
-    $connectionType = Get-ConnectionType -connectedServiceName $connectedServiceName -taskContext $distributedTaskContext
+    $connectionType = Get-ConnectionType -connectedServiceName $connectedServiceName
 
     # creating firewall rule for agent on sql server
     $firewallSettings = Create-AzureSqlDatabaseServerFirewallRule -startIP $startIp -endIP $endIp -serverName $serverFriendlyName -connectionType $connectionType
