@@ -30,9 +30,9 @@ $outputStorageURI = Get-VstsInput -Name OutputStorageUri
 
 if ($connectedServiceNameSelector -eq "ConnectedServiceNameARM")
 {
-    $connectedServiceName = $ConnectedServiceNameARM
-    $storageAccount = $StorageAccountRM
-    $environmentName = $EnvironmentNameRM
+    $connectedServiceName = $connectedServiceNameARM
+    $storageAccount = $storageAccountRM
+    $environmentName = $environmentNameRM
 }
 
 # Constants
@@ -77,7 +77,7 @@ try
     $azureUtility = Get-AzureUtility
 
     Write-Verbose -Verbose "Loading $azureUtility"
-    Import-Module ./$azureUtility -Force
+    . "$PSScriptRoot/$azureUtility"
 
     # Getting connection type (Certificate/UserNamePassword/SPN) used for the task
     $connectionType = Get-ConnectionType -connectedServiceName $connectedServiceName
@@ -95,8 +95,8 @@ try
         Create-AzureContainer -containerName $containerName -storageContext $storageContext
     }
 	
-	# Geting Azure Blob Storage Endpoint
-	$blobStorageEndpoint = Get-blobStorageEndpoint -storageAccountName $storageAccount -connectionType $connectionType
+    # Geting Azure Blob Storage Endpoint
+    $blobStorageEndpoint = Get-blobStorageEndpoint -storageAccountName $storageAccount -connectionType $connectionType
 }
 catch
 {

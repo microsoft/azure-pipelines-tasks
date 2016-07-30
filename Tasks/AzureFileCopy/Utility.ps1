@@ -71,6 +71,11 @@ function Write-TaskSpecificTelemetry
     Write-Telemetry "$codeKey" "EB72CB01-A7E5-427B-A8A1-1B31CCAC8A43"
 }
 
+function Get-DeploymentModulePath
+{
+    Write-Output "$PSScriptRoot\DeploymentUtilities"
+}
+
 function Get-AzureCmdletsVersion
 {
     $module = Get-Module AzureRM -ListAvailable
@@ -965,7 +970,7 @@ function Copy-FilesSequentiallyToAzureVMs
 
         Write-Output (Get-VstsLocString -Key "AFC_CopyStarted" -ArgumentList $resourceName)
 
-        $deploymentUtilitiesLocation = "$PSScriptRoot\DeploymentUtilities"
+        $deploymentUtilitiesLocation = Get-DeploymentModulePath
         $copyResponse = Invoke-Command -ScriptBlock $AzureFileCopyJob -ArgumentList `
                             $deploymentutilitieslocation, $resourceFQDN, $storageAccountName, $containerName, $containerSasToken, $blobStorageEndpoint, $azCopyLocation, $targetPath, $azureVMsCredentials, `
                             $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $communicationProtocol, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments
@@ -1010,7 +1015,7 @@ function Copy-FilesParallellyToAzureVMs
           [string][Parameter(Mandatory=$true)]$connectionType)
 
     [hashtable]$Jobs = @{}
-    $deploymentUtilitiesLocation = "$PSScriptRoot\DeploymentUtilities"
+    $deploymentUtilitiesLocation = Get-DeploymentModulePath
     foreach ($resource in $azureVMResourcesProperties.Keys)
     {
         $resourceProperties = $azureVMResourcesProperties[$resource]
@@ -1097,7 +1102,8 @@ function Copy-FilesToAzureVMsFromStorageContainer
     {
 
         Copy-FilesSequentiallyToAzureVMs `
-                -storageAccountName $storageAccountName -containerName $containerName -containerSasToken $containerSasToken -blobStorageEndpoint $blobStorageEndpoint -targetPath $targetPath -azCopyLocation $azCopyLocation `
+                -storageAccountName $storageAccountName -containerName $containerName -containerSasToken $containerSasToken `
+                -blobStorageEndpoint $blobStorageEndpoint -targetPath $targetPath -azCopyLocation $azCopyLocation `
                 -azureVMResourcesProperties $azureVMResourcesProperties -azureVMsCredentials $azureVMsCredentials `
                 -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $communicationProtocol -skipCACheckOption $skipCACheckOption `
                 -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments -connectionType $connectionType
@@ -1106,7 +1112,8 @@ function Copy-FilesToAzureVMsFromStorageContainer
     else
     {
         Copy-FilesParallellyToAzureVMs `
-                -storageAccountName $storageAccountName -containerName $containerName -containerSasToken $containerSasToken -blobStorageEndpoint $blobStorageEndpoint -targetPath $targetPath -azCopyLocation $azCopyLocation `
+                -storageAccountName $storageAccountName -containerName $containerName -containerSasToken $containerSasToken `
+                -blobStorageEndpoint $blobStorageEndpoint -targetPath $targetPath -azCopyLocation $azCopyLocation `
                 -azureVMResourcesProperties $azureVMResourcesProperties -azureVMsCredentials $azureVMsCredentials `
                 -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $communicationProtocol -skipCACheckOption $skipCACheckOption `
                 -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments -connectionType $connectionType

@@ -30,19 +30,7 @@ param (
     Write-Verbose "enableDetailedLogging = $enableDetailedLogging"
     Write-Verbose "additionalArguments = $additionalArguments"
 
-    if(Test-Path -Path "$env:AGENT_HOMEDIRECTORY\Agent\Worker\PS")
-    {
-        # For "Windows (Legacy)" agent, legacy sdk assembly must be loaded for the job
-        $legacyAssembly = "$env:AGENT_HOMEDIRECTORY\Agent\Worker\PS\Microsoft.TeamFoundation.DistributedTask.Task.LegacySDK.dll"
-        [void][reflection.assembly]::LoadFrom($legacyAssembly)
-        Write-Verbose "Loading .NET assembly:`t$($legacyAssembly)"
-    }
-    else
-    {
-        # For the coreclr agent, dependencies should be picked up from DeploymentUtilities directory
-        Import-Module "$deploymentUtilitiesLocation\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
-        Import-Module "$deploymentUtilitiesLocation\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs.dll"
-    }
+    Import-Module "$deploymentUtilitiesLocation\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs.dll"
 
     $cleanTargetPathOption = ''
     if ($cleanTargetBeforeCopy -eq "true")
