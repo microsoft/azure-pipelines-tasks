@@ -213,6 +213,7 @@ function ComposeTestRunJson($name, $tdid)
     $processPlatform = "x86"
     $setupScript=""
     $cleanupScript=""
+    $agentCoreCount = $agentCount * 2
 
 $trjson = @"
     {
@@ -220,7 +221,7 @@ $trjson = @"
         "runType":"jMeterLoadTest",
         "description":"Apache Jmeter test queued from build",
         "testSettings":{"cleanupCommand":"$cleanupScript", "hostProcessPlatform":"$processPlatform", "setupCommand":"$setupScript"},
-        "runSpecificDetails":{"coreCount":"$agentCount", "duration":"$runDuration", "samplingInterval":15},
+        "runSpecificDetails":{"coreCount":"$agentCoreCount", "duration":"$runDuration", "samplingInterval":15},
         "superSedeRunSettings":{"loadGeneratorMachinesType":"$MachineType"},
         "testDrop":{"id":"$tdid"},
         "runSourceIdentifier":"build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
