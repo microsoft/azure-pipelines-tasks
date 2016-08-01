@@ -418,7 +418,13 @@ function CreateDiscussionThreads
         
         if ($script:pullRequest.CodeReviewId -gt 0)
         {
-            $changeTrackingId = GetCodeFlowChangeTrackingId $changes $message.RelativePath
+            $changeTrackingId = 0;
+            if (!(TryGetCodeFlowChangeTrackingId($changes, $message.RelativePath, [Ref]$changeTrackingId)))
+            {
+                Write-Warning "Cannot post a comment for the file $($message.RelativePath) because no changes could be found";
+                continue;
+            } 
+
             AddCodeFlowProperties $message $iterationId $changeTrackingId $properties
         } 
         else
