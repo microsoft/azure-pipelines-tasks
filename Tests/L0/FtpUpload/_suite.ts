@@ -169,7 +169,7 @@ describe(jobName + ' Suite', function () {
                     done(err);
                 });
         });
-        it(os + ' check args: rejectUnauthorized', (done) => {
+        it(os + ' check args: trustSSL', (done) => {
             setResponseFile(responseFile);
 
             var tr = new trm.TaskRunner(jobName, true);
@@ -183,7 +183,7 @@ describe(jobName + ' Suite', function () {
             
             tr.run()
                 .then(() => {
-                    assert(tr.stderr.indexOf('Input required: rejectUnauthorized') != -1, 'should have written to stderr');
+                    assert(tr.stderr.indexOf('Input required: trustSSL') != -1, 'should have written to stderr');
                     assert(tr.failed, 'task should have failed');
                     done();
                 })
@@ -203,7 +203,7 @@ describe(jobName + ' Suite', function () {
             tr.setInput('clean', 'true');
             tr.setInput('overwrite', 'true');
             tr.setInput('preservePaths', 'true');
-            tr.setInput('rejectUnauthorized', 'true');
+            tr.setInput('trustSSL', 'true');
 
             tr.run()
                 .then(() => {

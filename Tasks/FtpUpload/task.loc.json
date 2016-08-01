@@ -14,7 +14,7 @@
   "version": {
     "Major": "1",
     "Minor": "0",
-    "Patch": "1"
+    "Patch": "2"
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -89,12 +89,12 @@
       "groupName": "advanced"
     },
     {
-      "name": "rejectUnauthorized",
+      "name": "trustSSL",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.rejectUnauthorized",
-      "defaultValue": "true",
+      "label": "ms-resource:loc.input.label.trustSSL",
+      "defaultValue": "false",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.rejectUnauthorized",
+      "helpMarkDown": "ms-resource:loc.input.help.trustSSL",
       "groupName": "advanced"
     }
   ],
