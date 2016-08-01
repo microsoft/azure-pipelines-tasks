@@ -6,11 +6,12 @@ import fs = require('fs');
 
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
 
-import {TaskReport} from './taskreport';
-import sqRest = require('./sonarqube-rest');
-import sqQualityGate = require('./sonarqube-qualitygate');
+import {SonarQubeRunSettings} from './sonarqube-runsettings';
+import {ISonarQubeServer, SonarQubeServer} from './sonarqube-server';
+import {SonarQubeMetrics} from './sonarqube-metrics';
+import {SonarQubeReportBuilder} from './sonarqube-reportbuilder';
 
-import tl = require('../testlib/tasklib-wrapper');
+import tl = require('vsts-task-lib/task');
 
 export const toolName: string = 'SonarQube';
 
@@ -95,7 +96,7 @@ export function getSonarQubeEndpoint(): SonarQubeEndpoint {
         throw new Error(errorMessage);
     }
 
-    var genericEndpoint = tl.getInput("sqConnectedServiceName");
+    var genericEndpoint: string = tl.getInput("sqConnectedServiceName");
     if (!genericEndpoint) {
         throw new Error(errorMessage);
     }
@@ -131,7 +132,7 @@ export function uploadSonarQubeBuildSummaryIfEnabled(sqBuildFolder:string):Q.Pro
 // The endpoint stores the auth details as JSON. Unfortunately the structure of the JSON has changed through time, namely the keys were sometimes upper-case.
 // To work around this, we can perform case insensitive checks in the property dictionary of the object. Note that the PowerShell implementation does not suffer from this problem.
 // See https://github.com/Microsoft/vso-agent/blob/bbabbcab3f96ef0cfdbae5ef8237f9832bef5e9a/src/agent/plugins/release/artifact/jenkinsArtifact.ts for a similar implementation
-function getSonarQubeAuthParameter(endpoint, paramName) {
+function getSonarQubeAuthParameter(endpoint: string, paramName: string) {
 
     var paramValue = null;
     var auth = tl.getEndpointAuthorization(endpoint, false);
@@ -189,12 +190,22 @@ function createSonarQubeBuildSummary(sqBuildFolder:string):Q.Promise<string> {
         return Q.when(tl.loc('sqAnalysis_BuildSummaryNotAvailableInPrBuild'));
     }
 
-    var taskReport:TaskReport = getSonarQubeTaskReport(sqBuildFolder);
+    // Wait for analysis to finish so that we can get analysis information from the SonarQube server
+    var timeout:number = 300;
+    var delay:number = 1;
+
+    var sqRunSettings:SonarQubeRunSettings = getSonarQubeTaskReport(sqBuildFolder);
+
+    var sqServer:ISonarQubeServer = new SonarQubeServer();
+    var analysisMetrics:SonarQubeMetrics = new SonarQubeMetrics(sqServer, sqRunSettings.ceTaskId, timeout, delay);
+    var sqReportBuilder:SonarQubeReportBuilder = new SonarQubeReportBuilder(sqRunSettings, analysisMetrics);
+
+    // Looks like: "[Detailed SonarQube report >](https://mySQserver:9000/dashboard/index/foo "foo Dashboard")"
+    var linkToDashBoard:string = sqReportBuilder.createLinkToSonarQubeDashboard();
+
     // Build summary has two major sections: quality gate status and a link to the dashboard
-    return createQualityGateStatusSection(taskReport)
+    return createQualityGateStatusSection(sqReportBuilder)
         .then((qualityGateStatus:string) => {
-            // Looks like: "[Detailed SonarQube report >](https://mySQserver:9000/dashboard/index/foo "foo Dashboard")"
-            var linkToDashBoard:string = createLinkToSonarQubeDashboard(taskReport);
 
             // Put the quality gate status and dashboard link sections together with the Markdown newline
             var buildSections:string[] = [qualityGateStatus, linkToDashBoard];
@@ -212,53 +223,25 @@ function getOrCreateSonarQubeStagingDirectory(): string {
     return sqStagingDir;
 }
 
-// Creates a string containing Markdown of the SonarQube quality gate status for this project.
-function createQualityGateStatusSection(taskReport: TaskReport): Q.Promise<string> {
+/**
+ * Creates a string containing Markdown of the SonarQube quality gate status for this project.
+ * @param sqRunSettings SonarQubeRunSettings object for the applicable run
+ * @returns {string}    A Markdown-formatted report on the SonarQube quality gate status
+ */
+function createQualityGateStatusSection(sqReportBuilder: SonarQubeReportBuilder): Q.Promise<string> {
     if (!tl.getBoolInput('sqAnalysisWaitForAnalysis')) {
         // Do not create a quality gate status section if not waiting for the server to analyse the build
         console.log(tl.loc('sqCommon_NotWaitingForAnalysis'));
         return Q.when<string>(null);
     }
 
-    // Wait for analysis to finish so that we can get analysis information from the SonarQube server
-    var timeout:number = 300;
-    var delay:number = 1;
-
-    console.log(tl.loc('sqCommon_WaitingForAnalysis'));
-    return sqRest.waitForAnalysisCompletion(taskReport, timeout, delay)
-        .then((analysisCompleted:boolean) => {
-            if (!analysisCompleted) {
-                tl.debug('Did not receive a success response before the timeout expired.');
-                return Q.reject(tl.loc('sqAnalysis_AnalysisTimeout', timeout));
-            }
-
-            // If analysis completed, fetch the analysis ID to check quality gate status
-            return sqRest.getAnalysisId(taskReport)
-        })
-        .then((analysisId:string) => {
-            return sqRest.getAnalysisStatus(analysisId);
-        })
-        .then((analysisStatus:string) => {
-            return sqQualityGate.createBuildSummaryQualityGateSection(analysisStatus)
-        });
-}
-
-// Creates a string containing Markdown of a link to the SonarQube dashboard for this project.
-function createLinkToSonarQubeDashboard(taskReport: TaskReport): string {
-    if (!taskReport) {
-        // Looks like: Invalid or missing task report. Check SonarQube finished successfully.
-        throw new Error(tl.loc('sqAnalysis_TaskReportInvalid'));
-    }
-
-    // Looks like: Detailed SonarQube report
-    var linkText:string = tl.loc('sqAnalysis_BuildSummary_LinkText');
-    return `[${linkText} >](${taskReport.dashboardUrl} \"${taskReport.projectKey} Dashboard\")`;
+    return sqReportBuilder.fetchQualityGateStatusAndCreateReport();
 }
 
 // Returns, as an object, the contents of the 'report-task.txt' file created by SonarQube plugins
 // The returned object contains the following properties:
 //   projectKey, serverUrl, dashboardUrl, ceTaskId, ceTaskUrl
-function getSonarQubeTaskReport(sonarPluginFolder: string): TaskReport {
+function getSonarQubeTaskReport(sonarPluginFolder: string): SonarQubeRunSettings {
     var reportFilePath:string = path.join(sonarPluginFolder, 'report-task.txt');
     if (!tl.exist(reportFilePath)) {
         tl.debug('Task report not found at: ' + reportFilePath);
@@ -266,11 +249,11 @@ function getSonarQubeTaskReport(sonarPluginFolder: string): TaskReport {
         throw new Error(tl.loc('sqAnalysis_TaskReportInvalid'));
     }
 
-    return createTaskReportFromFile(reportFilePath);
+    return createRunSettingsFromFile(reportFilePath);
 }
 
-// Constructs a map out of an existing report-task.txt file. File must exist on disk.
-function createTaskReportFromFile(taskReportFile: string): TaskReport {
+// Constructs a SonarQubeRunSettings object out of an existing report-task.txt file. File must exist on disk.
+function createRunSettingsFromFile(taskReportFile: string): SonarQubeRunSettings {
     var reportFileString: string = fs.readFileSync(taskReportFile, 'utf-8');
     if (!reportFileString || reportFileString.length < 1) {
         tl.debug('Error reading file:' + reportFileString);
@@ -289,7 +272,7 @@ function createTaskReportFromFile(taskReportFile: string): TaskReport {
     });
 
     try {
-        return TaskReport.createTaskReportFromMap(reportMap);
+        return SonarQubeRunSettings.createTaskReportFromMap(reportMap);
     } catch (err) {
         tl.debug(err.message);
         // Looks like: Invalid or missing task report. Check SonarQube finished successfully.
