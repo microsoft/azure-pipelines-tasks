@@ -169,6 +169,29 @@ describe(jobName + ' Suite', function () {
                     done(err);
                 });
         });
+        it(os + ' check args: rejectUnauthorized', (done) => {
+            setResponseFile(responseFile);
+
+            var tr = new trm.TaskRunner(jobName, true);
+            tr.setInput('serverEndpoint', 'ID1');
+            tr.setInput('rootFolder', 'rootFolder');
+            tr.setInput('filePatterns', '**');
+            tr.setInput('remotePath', '/upload/');
+            tr.setInput('clean', 'true');
+            tr.setInput('overwrite', 'true');
+            tr.setInput('preservePaths', 'true');
+            
+            tr.run()
+                .then(() => {
+                    assert(tr.stderr.indexOf('Input required: rejectUnauthorized') != -1, 'should have written to stderr');
+                    assert(tr.failed, 'task should have failed');
+                    done();
+                })
+                .fail((err) => {
+                    console.log(err)
+                    done(err);
+                });
+        });
         it(os + ' check args: bogusURL', (done) => {
             setResponseFile(responseFile);
 
@@ -180,6 +203,7 @@ describe(jobName + ' Suite', function () {
             tr.setInput('clean', 'true');
             tr.setInput('overwrite', 'true');
             tr.setInput('preservePaths', 'true');
+            tr.setInput('rejectUnauthorized', 'true');
 
             tr.run()
                 .then(() => {

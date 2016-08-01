@@ -14,7 +14,7 @@
   "version": {
     "Major": "1",
     "Minor": "0",
-    "Patch": "0"
+    "Patch": "1"
   },
   "instanceNameFormat": "FTP Upload: $(rootFolder)",
   "groups": [
@@ -86,6 +86,15 @@
         "defaultValue": "false",
         "required": true,
         "helpMarkDown": "If selected, the relative local directory structure is recreated under the remote directory where files are uploaded.  Otherwise, files are uploaded directly to the remote directory without creating additional subdirectories.<p>For example, suppose your source folder is: <b>`/home/user/source/`</b> and contains the file: <b>`foo/bar/foobar.txt`</b>, and your remote directory is: <b>`/uploads/`</b>.<br>If selected, the file is uploaded to: <b>`/uploads/foo/bar/foobar.txt`</b>.  Otherwise, to: <b>`/uploads/foobar.txt`</b>.",
+        "groupName": "advanced"
+    },
+    {
+        "name": "rejectUnauthorized",
+        "type": "boolean",
+        "label": "Reject unauthorized SSL certificates",
+        "defaultValue": "true",
+        "required": true,
+        "helpMarkDown": "If selected, when connecting in secure mode with ftps://, the FTP server certificate is verified with several well known root certificate authorities (e.g. Verisign).  This option protects against invalid server authentication certificates which may be expired or revoked (e.g. if they were compromised).  Disabling this option should be done with care, but is necessary if using self-signed certificates.",
         "groupName": "advanced"
     }
   ],  "execution": {

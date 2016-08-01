@@ -28,6 +28,7 @@ export class FtpOptions {
     clean: boolean = tl.getBoolInput('clean', true);
     overwrite: boolean = tl.getBoolInput('overwrite', true);
     preservePaths: boolean = tl.getBoolInput('preservePaths', true);
+    rejectUnauthorized: boolean = tl.getBoolInput('rejectUnauthorized', true);
 }
 
 function doWork() {
@@ -98,8 +99,10 @@ function doWork() {
     var secure = ftpOptions.serverEndpointUrl.protocol.toLowerCase() == 'ftps:' ? true : false;
     tl.debug('secure ftp=' + secure);
 
+    var secureOptions = { 'rejectUnauthorized': ftpOptions.rejectUnauthorized };
+
     console.log('connecting to: ' + ftpOptions.serverEndpointUrl.host);
-    ftpClient.connect({ 'host': ftpOptions.serverEndpointUrl.host, 'user': ftpOptions.username, 'password': ftpOptions.password, 'secure': secure });
+    ftpClient.connect({ 'host': ftpOptions.serverEndpointUrl.host, 'user': ftpOptions.username, 'password': ftpOptions.password, 'secure': secure, 'secureOptions': secureOptions });
 }
 
 doWork();
