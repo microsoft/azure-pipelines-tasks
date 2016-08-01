@@ -159,12 +159,12 @@ locationHelpers.assumeNuGetUriPrefixes(serviceUri)
         })
     })
     .then(() => {
-        tl._writeLine(tl.loc('PackagesInstalledSuccessfully'));
+        tl._writeLine(tl.loc('PackagesPublishedSuccessfully'));
         tl.exit(0);
     })
     .fail((err) => {
         tl.error(err);
-        tl.error(tl.loc('PackagesFailedToInstall'));
+        tl.error(tl.loc('PackagesFailedToPublish'));
 
         if (buildIdentityDisplayName || buildIdentityAccount) {
             tl.warning(tl.loc("BuildIdentityPermissionsHint", buildIdentityDisplayName, buildIdentityAccount));
