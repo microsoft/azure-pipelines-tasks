@@ -342,8 +342,8 @@ WriteTaskMessages "Starting Load Test Script"
 Write-Output "Test settings = $TestSettings"
 Write-Output "Test drop = $TestDrop"
 Write-Output "Load test = $LoadTest"
-Write-Output "Load Generator Machine Type = $MachineType"
-Write-Output "RunSourceIdentifier = build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
+Write-Output "Load generator machine type = $machineType"
+Write-Output "Run source identifier = build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
 
 #Validate Input
 Validate

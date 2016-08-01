@@ -1,6 +1,11 @@
 [CmdletBinding(DefaultParameterSetName = 'None')]
 param
 (
+    [String]
+    $env:SYSTEM_DEFINITIONID,
+    [String]
+    $env:BUILD_BUILDID,
+    
     [String] [Parameter(Mandatory = $true)]
     $connectedServiceName,
 
@@ -12,7 +17,9 @@ param
     [String] [Parameter(Mandatory = $true)]
     $agentCount,
     [String] [Parameter(Mandatory = $true)]
-    $runDuration
+    $runDuration,
+    [String] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()]
+    $machineType
 )
 
 $userAgent = "ApacheJmeterTestBuildTask"
@@ -214,7 +221,9 @@ $trjson = @"
         "description":"Apache Jmeter test queued from build",
         "testSettings":{"cleanupCommand":"$cleanupScript", "hostProcessPlatform":"$processPlatform", "setupCommand":"$setupScript"},
         "runSpecificDetails":{"coreCount":"$agentCount", "duration":"$runDuration", "samplingInterval":15},
+        "superSedeRunSettings":{"loadGeneratorMachinesType":"$MachineType"},
         "testDrop":{"id":"$tdid"},
+        "runSourceIdentifier":"build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
     }
 "@
     return $trjson
@@ -331,6 +340,8 @@ WriteTaskMessages "Starting Load Test Script"
 
 Write-Output "Test drop = $TestDrop"
 Write-Output "Load test = $LoadTest"
+Write-Output "Load generator machine type = $machineType"
+Write-Output "Run source identifier = build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
 
 $summaryFile =  ("{0}\Load test results.md" -f $global:ScopedTestDrop)
 Write-Output "Summary file = $summaryFile"

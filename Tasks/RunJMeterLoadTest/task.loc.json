@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [
     "azureps"
@@ -72,6 +72,17 @@
         "180": "180",
         "240": "240",
         "300": "300"
+      }
+    },
+    {
+      "name": "machineType",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.machineType",
+      "required": true,
+      "defaultValue": "0",
+      "options": {
+        "0": "Automatically provisioned agents",
+        "2": "Self-provisioned agents"
       }
     }
   ],
