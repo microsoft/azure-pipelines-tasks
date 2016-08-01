@@ -11,7 +11,6 @@ import Q = require('q');
 // node js modules
 var request = require('request');
 
-
 import job = require('./job');
 import Job = job.Job;
 import JobState = job.JobState;
@@ -53,7 +52,7 @@ export class JobSearch {
         if (!thisSearch.initialized) { //only initialize once
             var apiTaskUrl : string = util.addUrlSegment(thisSearch.taskUrl, "/api/json");
             tl.debug('getting job task URL:' + apiTaskUrl);
-            request.get({ url: apiTaskUrl }, function requestCallBack(err, httpResponse, body) {
+            request.get({ url: apiTaskUrl, strictSSL: thisSearch.queue.taskOptions.strictSSL }, function requestCallBack(err, httpResponse, body) {
                 if (!thisSearch.initialized) { // only initialize once
                     if (err) {
                         if (err.code == 'ECONNRESET') {
@@ -244,7 +243,7 @@ export class JobSearch {
         } else {
             var url : string  = util.addUrlSegment(thisSearch.taskUrl, thisSearch.nextSearchBuildNumber + "/api/json");
             tl.debug('pipeline, locating child execution URL:' + url);
-            request.get({ url: url }, function requestCallback(err, httpResponse, body) {
+            request.get({ url: url, strictSSL: thisSearch.queue.taskOptions.strictSSL }, function requestCallback(err, httpResponse, body) {
                 tl.debug('locateExecution().requestCallback()');
                 if (err) {
                     util.handleConnectionResetError(err); // something went bad

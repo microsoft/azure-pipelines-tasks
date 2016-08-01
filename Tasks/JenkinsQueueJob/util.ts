@@ -81,7 +81,7 @@ function createRootJob(queueUri: string, jobQueue: JobQueue, taskOptions: TaskOp
     var defer: Q.Deferred<Job> = Q.defer<Job>();
     tl.debug('createRootJob(): ' + queueUri);
 
-    request.get({ url: queueUri }, function requestCallback(err, httpResponse, body) {
+    request.get({ url: queueUri, strictSSL: taskOptions.strictSSL }, function requestCallback(err, httpResponse, body) {
         tl.debug('createRootJob().requestCallback()');
         if (err) {
             if (err.code == 'ECONNRESET') {

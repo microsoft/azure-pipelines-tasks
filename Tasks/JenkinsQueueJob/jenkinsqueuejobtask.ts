@@ -41,6 +41,8 @@ export class TaskOptions {
 
     jobQueueUrl: string = util.addUrlSegment(this.serverEndpointUrl, '/job/' + this.jobName) + ((this.parameterizedJob) ? '/buildWithParameters?delay=0sec' : '/build?delay=0sec');
 
+    strictSSL: boolean = !tl.getBoolInput('trustSSL', true);
+
     constructor() {
         tl.debug('serverEndpointUrl=' + this.serverEndpointUrl);
         tl.debug('jobQueueUrl=' + this.jobQueueUrl);
@@ -76,8 +78,8 @@ async function doWork() {
 
         var jobQueue: JobQueue = new JobQueue(taskOptions);
         var initialPostData = taskOptions.parameterizedJob ?
-            { url: taskOptions.jobQueueUrl, formData: parseJobParameters(taskOptions.jobParameters) } :
-            { url: taskOptions.jobQueueUrl };
+            { url: taskOptions.jobQueueUrl, formData: parseJobParameters(taskOptions.jobParameters), strictSSL: taskOptions.strictSSL } :
+            { url: taskOptions.jobQueueUrl, strictSSL: taskOptions.strictSSL };
 
         tl.debug('initialPostData = ' + JSON.stringify(initialPostData));
         var queueUri = await util.pollSubmitJob(initialPostData, taskOptions);
