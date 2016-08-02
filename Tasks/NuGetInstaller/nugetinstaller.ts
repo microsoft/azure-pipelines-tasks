@@ -35,7 +35,7 @@ var solution = tl.getPathInput('solution', true, false);
 var filesList = nutil.resolveFilterSpec(solution, tl.getVariable('System.DefaultWorkingDirectory') || process.cwd());
 filesList.forEach(solutionFile => {
     if (!tl.stats(solutionFile).isFile()) {
-        throw new Error(tl.loc('NotARegularFile'));
+        throw new Error(tl.loc('NotARegularFile', solutionFile));
     }
 });
 
