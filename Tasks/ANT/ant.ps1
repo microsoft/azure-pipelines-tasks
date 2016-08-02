@@ -113,14 +113,14 @@ $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
 
 if($isCoverageEnabled)
 {
-	if ($codeCoverageTool -eq "Cobertura")
-	{
-		$summaryFileName = "coverage.xml"
-	}
-	ElseIf ($codeCoverageTool -eq "JaCoCo")
-	{
-		$summaryFileName = "summary.xml"
-	}
+    if ($codeCoverageTool -eq "Cobertura")
+    {
+        $summaryFileName = "coverage.xml"
+    }
+    ElseIf ($codeCoverageTool -eq "JaCoCo")
+    {
+        $summaryFileName = "summary.xml"
+    }
 }
 
 $summaryFile = Join-Path $buildRootPath $reportDirectoryName 
@@ -182,11 +182,11 @@ if($publishJUnitResultsFromAntBuild)
     else
     {
         Write-Verbose "Calling Publish-TestResults"
-	    $runTitleMemberExists = CmdletHasMember "RunTitle"
-	    if($runTitleMemberExists)
-	    {
-		    Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext -RunTitle $testRunTitle -MergeResults $true
-	    }
+        $runTitleMemberExists = CmdletHasMember "RunTitle"
+        if($runTitleMemberExists)
+        {
+            Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext -RunTitle $testRunTitle -MergeResults $true
+        }
         else
         {
             if(!([string]::IsNullOrWhiteSpace($testRunTitle)))
@@ -205,7 +205,7 @@ else
 # check if code coverage has been enabled
 if($isCoverageEnabled)
 {
-	
+    
     # run report code coverage task which generates code coverage reports.
     $reportsGenerationFailed = $false
     Write-Verbose "Collecting code coverage reports" -Verbose
@@ -226,18 +226,18 @@ if($isCoverageEnabled)
         $reportsGenerationFailed = $true
     }
    
-	if(-not $reportsGenerationFailed -and (Test-Path $summaryFile))
-   	{
-		Write-Verbose "Summary file = $summaryFile" -Verbose
-		Write-Verbose "Report directory = $reportDirectory" -Verbose
-		Write-Verbose "Calling Publish-CodeCoverage" -Verbose
-		Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext    
-   	}
-   	else
-   	{
+    if(-not $reportsGenerationFailed -and (Test-Path $summaryFile))
+       {
+        Write-Verbose "Summary file = $summaryFile" -Verbose
+        Write-Verbose "Report directory = $reportDirectory" -Verbose
+        Write-Verbose "Calling Publish-CodeCoverage" -Verbose
+        Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext    
+       }
+       else
+       {
         Write-Host "##vso[task.logissue type=warning;code=006003;]"
-		Write-Warning "No code coverage results found to be published. This could occur if there were no tests executed or there was a build failure. Check the ant output for details." -Verbose
-   	}
+        Write-Warning "No code coverage results found to be published. This could occur if there were no tests executed or there was a build failure. Check the ant output for details." -Verbose
+       }
 
     # Reset temp copy and file permissions are reset by default
     Copy-Item "$antBuildFile.tmp" $antBuildFile -Force -ErrorAction Continue
