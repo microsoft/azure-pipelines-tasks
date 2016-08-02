@@ -191,7 +191,37 @@ if($isCoverageEnabled)
 			rm -r $instrumentedClassesDirectory -force | Out-Null
 		}
 	}
-	
+
+    # Temporary workaround when running in a 2.x agent and using TFVC. The Ant code
+    # coverage enabler re-writes every XML file under $(Build.SourcesDirectory). The
+    # 2.x agent uses server workspaces for TFVC, so the files need to be pend edited first.
+    if ($env:BUILD_REPOSITORY_PROVIDER -eq 'TfsVersionControl') {
+        Write-Verbose "TFS Version control detected."
+        $tf = "$env:AGENT_HOMEDIRECTORY\externals\vstsom\TF.exe"
+        if ((Test-Path -LiteralPath $tf -PathType Leaf)) {
+            Write-Verbose "Getting service endpoint: '$env:BUILD_REPOSITORY_ID'"
+            $endpoint = Get-ServiceEndpoint -Context $distributedTaskContext -Name SystemVssConnection
+            $arguments = @(
+                'vc'
+                'checkout'
+                "$env:BUILD_SOURCESDIRECTORY\*.xml"
+                '/recursive'
+                "/login:.,$($endpoint.Authorization.Parameters.AccessToken)"
+                "/loginType:OAuth"
+            )
+            $OFS = " "
+            Write-Host "##[command]$tf $arguments"
+            & $tf $arguments 2>&1 |
+                ForEach-Object {
+                    if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                        $_.Exception.Message
+                    } else {
+                        $_
+                    }
+                }
+        }
+    }
+
 	Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectory -CCReportTask $CCReportTask -ReportBuildFile $reportBuildFile
 	Write-Verbose "Code coverage is successfully enabled." -Verbose
    }

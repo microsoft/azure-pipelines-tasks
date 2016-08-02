@@ -161,6 +161,35 @@ $buildFile = Join-Path $buildRootPath "build.gradle"
 # check if code coverage has been enabled
 if($isCoverageEnabled)
 {
+    # Temporary workaround when running in a 2.x agent and using TFVC. The Gradle code
+    # coverage enabler re-writes the build file. The 2.x agent uses server workspaces for
+    # TFVC, so the file needs to be pend edited first.
+    if ($env:BUILD_REPOSITORY_PROVIDER -eq 'TfsVersionControl') {
+        Write-Verbose "TFS Version control detected."
+        $tf = "$env:AGENT_HOMEDIRECTORY\externals\vstsom\TF.exe"
+        if ((Test-Path -LiteralPath $tf -PathType Leaf)) {
+            Write-Verbose "Getting service endpoint: '$env:BUILD_REPOSITORY_ID'"
+            $endpoint = Get-ServiceEndpoint -Context $distributedTaskContext -Name SystemVssConnection
+            $arguments = @(
+                'vc'
+                'checkout'
+                $buildFile
+                "/login:.,$($endpoint.Authorization.Parameters.AccessToken)"
+                "/loginType:OAuth"
+            )
+            $OFS = " "
+            Write-Host "##[command]$tf $arguments"
+            & $tf $arguments 2>&1 |
+                ForEach-Object {
+                    if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                        $_.Exception.Message
+                    } else {
+                        $_
+                    }
+                }
+        }
+    }
+
    # Enable code coverage in build file
    Enable-CodeCoverage -BuildTool 'Gradle' -BuildFile $buildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -IsMultiModule (!$singlemodule) -ErrorAction Stop
    Write-Verbose "Code coverage is successfully enabled." -Verbose

@@ -290,7 +290,36 @@ function EnableCodeCoverage
 			# delete any previous reportPOMFile
 			rm $reportPOMFile -force | Out-Null
 		}
-		
+
+		# Temporary workaround when running in a 2.x agent and using TFVC. The Maven code
+		# coverage enabler re-writes the POM file. The 2.x agent uses server workspaces for
+		# TFVC, so the file needs to be pend edited first.
+		if ($env:BUILD_REPOSITORY_PROVIDER -eq 'TfsVersionControl') {
+			Write-Verbose "TFS Version control detected."
+			$tf = "$env:AGENT_HOMEDIRECTORY\externals\vstsom\TF.exe"
+			if ((Test-Path -LiteralPath $tf -PathType Leaf)) {
+				Write-Verbose "Getting service endpoint: '$env:BUILD_REPOSITORY_ID'"
+				$endpoint = Get-ServiceEndpoint -Context $distributedTaskContext -Name SystemVssConnection
+				$arguments = @(
+					'vc'
+					'checkout'
+					$mavenPOMFile
+					"/login:.,$($endpoint.Authorization.Parameters.AccessToken)"
+					"/loginType:OAuth"
+				)
+				$OFS = " "
+				Write-Host "##[command]$tf $arguments"
+				& $tf $arguments 2>&1 |
+					ForEach-Object {
+						if ($_ -is [System.Management.Automation.ErrorRecord]) {
+							$_.Exception.Message
+						} else {
+							$_
+						}
+					}
+			}
+		}
+
         # Enable code coverage in build file
         Enable-CodeCoverage -BuildTool 'Maven' -BuildFile $mavenPOMFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectory -ReportBuildFile $reportPOMFile -ErrorAction Stop
         Write-Verbose "Code coverage is successfully enabled." -Verbose
