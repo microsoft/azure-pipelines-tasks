@@ -64,7 +64,7 @@ var serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
 
 //find nuget location to use
 var nuGetPathToUse = ngToolRunner.locateNuGetExe(userNuGetPath);
-var credProviderPath = ngToolRunner.locateCredentialProvider();
+var credProviderPath = null;//ngToolRunner.locateCredentialProvider();
 
 var credProviderDir: string = null;
 if (credProviderPath) {
