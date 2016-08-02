@@ -139,8 +139,8 @@ if ($isCoverageEnabled)
     Remove-Item -Recurse -Force $instrumentedClassesDirectory -ErrorAction SilentlyContinue
 
     # Create temp copy - requried in case of TFVC
-    Copy-Item $antBuildFile "$antBuildFile.tmp" -Force -ErrorAction Continue
-    Set-ItemProperty $antBuildFile -Name Attributes -Value Normal
+    Copy-Item $antBuildFile "$antBuildFile.tmp" -Force -ErrorAction SilentlyContinue
+    Set-ItemProperty $antBuildFile -Name Attributes -Value Normal -Force -ErrorAction SilentlyContinue
 
     try
     {
@@ -240,8 +240,8 @@ if($isCoverageEnabled)
        }
 
     # Reset temp copy and file permissions are reset by default
-    Copy-Item "$antBuildFile.tmp" $antBuildFile -Force -ErrorAction Continue
-    Remove-Item "$antBuildFile.tmp" -Force -ErrorAction Continue
+    Copy-Item "$antBuildFile.tmp" $antBuildFile -Force -ErrorAction SilentlyContinue
+    Remove-Item "$antBuildFile.tmp" -Force -ErrorAction SilentlyContinue
 }
 
 Write-Verbose "Leaving script Ant.ps1"
