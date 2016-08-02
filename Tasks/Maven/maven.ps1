@@ -132,8 +132,8 @@ Remove-Item -Recurse -Force $targetDirectory -ErrorAction SilentlyContinue
 
 if ($isCoverageEnabled)
 {
-    Copy-Item $mavenPOMFile "$mavenPOMFile.tmp" -Force -ErrorAction Continue
-    Set-ItemProperty $mavenPOMFile -Name Attributes -Value Normal
+    Copy-Item $mavenPOMFile "$mavenPOMFile.tmp" -Force -ErrorAction SilentlyContinue
+    Set-ItemProperty $mavenPOMFile -Name Attributes -Value Normal -Force -ErrorAction SilentlyContinue
 }
 
 # Enable Code Coverage
@@ -188,8 +188,8 @@ RunSonarQubeAnalysis $sqAnalysisEnabled $sqConnectedServiceName $sqDbDetailsRequ
 # Reset temp copy and file permissions are reset by default
 if ($isCoverageEnabled)
 {
-    Copy-Item "$mavenPOMFile.tmp" $mavenPOMFile -Force -ErrorAction Continue
-    Remove-Item "$mavenPOMFile.tmp" -Force -ErrorAction Continue
+    Copy-Item "$mavenPOMFile.tmp" $mavenPOMFile -Force -ErrorAction SilentlyContinue
+    Remove-Item "$mavenPOMFile.tmp" -Force -ErrorAction SilentlyContinue
 }
 
 Write-Verbose "Leaving script Maven.ps1"
