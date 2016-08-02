@@ -213,7 +213,12 @@ function ComposeTestRunJson($name, $tdid)
     $processPlatform = "x86"
     $setupScript=""
     $cleanupScript=""
-    $agentCoreCount = $agentCount * 2
+
+    $agentCountInt = 0
+    if([int]::TryParse($agentCount, [ref]$agentCountInt))
+    {
+        $agentCoreCount = 2 * $agentCountInt
+    }
 
 $trjson = @"
     {
