@@ -107,6 +107,8 @@ declare module 'nuget-task-common/NuGetToolRunner' {
 	}
 	export function createNuGetToolRunner(nuGetExePath: string, settings: NuGetEnvironmentSettings): NuGetToolRunner;
 	export function locateNuGetExe(userNuGetExePath: string): string;
+	export function isCredentialProviderEnabled(): boolean;
+	export function isCredentialConfigEnabled(): boolean;
 	export function locateCredentialProvider(): string;
 
 }
@@ -123,6 +125,7 @@ declare module 'nuget-task-common/NuGetConfigHelper' {
 	    private _nugetConfigPath;
 	    private _authInfo;
 	    private _environmentSettings;
+	    private tempNugetConfigBaseDir;
 	    private tempNugetConfigDir;
 	    private tempNugetConfigFileName;
 	    tempNugetConfigPath: string;

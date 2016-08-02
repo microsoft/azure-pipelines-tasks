@@ -67,7 +67,7 @@ var serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
 
 //find nuget location to use
 var nuGetPathToUse = ngToolRunner.locateNuGetExe(userNuGetPath);
-var credProviderPath = null;//ngToolRunner.locateCredentialProvider();
+var credProviderPath = ngToolRunner.locateCredentialProvider();
 
 var credProviderDir: string = null;
 if (credProviderPath) {
@@ -123,7 +123,10 @@ locationHelpers.assumeNuGetUriPrefixes(serviceUri)
 
         var configFilePromise = Q<string>(nugetConfigPath);
         var credCleanup = () => { return };
-        if (!credProviderDir || (userNuGetPath && preCredProviderNuGet)) {
+        if (!ngToolRunner.isCredentialConfigEnabled()) {
+            tl.debug("Not configuring credentials in nuget.config");
+        }
+        else if (!credProviderDir || (userNuGetPath && preCredProviderNuGet)) {
             if (nugetConfigPath) {
                 var nuGetConfigHelper = new NuGetConfigHelper(nuGetPathToUse, nugetConfigPath, authInfo, environmentSettings);
                 configFilePromise = nuGetConfigHelper.getSourcesFromConfig()
