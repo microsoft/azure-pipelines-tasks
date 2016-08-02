@@ -39,6 +39,11 @@ export async function installCertInTemporaryKeychain(keychainPath : string, keyc
     importP12Command.arg(['-P', p12Pwd, '-A', '-t', 'cert', '-f', 'pkcs12', '-k']);
     importP12Command.pathArg(keychainPath);
     await importP12Command.exec();
+
+    //list the keychain
+    var listCommand : ToolRunner = tl.createToolRunner(tl.which('security', true));
+    listCommand.arg(['list-keychain', '-d', 'user', '-s',  keychainPath]);
+    await listCommand.exec();
 }
 
 /**
