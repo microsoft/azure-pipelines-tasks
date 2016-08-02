@@ -140,7 +140,10 @@ if ($isCoverageEnabled)
 
     # Create temp copy - requried in case of TFVC
     Copy-Item $antBuildFile "$antBuildFile.tmp" -Force -ErrorAction SilentlyContinue
-    Set-ItemProperty $antBuildFile -Name Attributes -Value Normal -Force -ErrorAction SilentlyContinue
+    Get-ChildItem -LiteralPath $env:BUILD_SOURCESDIRECTORY -Filter '*.xml' -Recurse |
+        ForEach-Object {
+            Set-ItemProperty -LiteralPath $_.FullName -Name Attributes -Value Normal -Force -ErrorAction SilentlyContinue
+        }
 
     try
     {
