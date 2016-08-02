@@ -5,6 +5,7 @@
 import tl = require('vsts-task-lib/task');
 import fs = require('fs');
 import path = require('path');
+import url = require('url');
 import shell = require('shelljs');
 
 // node js modules
@@ -41,6 +42,7 @@ export class Job {
     executableUrl: string; // URL for the executing job instance
     executableNumber: number;
     name: string;
+    identifier: string; // a job identifier that takes into account folder structure
     jobConsole: string = "";
     jobConsoleOffset: number = 0;
     jobConsoleEnabled: boolean = false;
@@ -59,6 +61,7 @@ export class Job {
         if (this.parent != null) {
             this.parent.children.push(this);
         }
+        this.identifier = url.parse(this.taskUrl).path.substr(1);
         this.queue = jobQueue;
         this.queue.addJob(this);
 
