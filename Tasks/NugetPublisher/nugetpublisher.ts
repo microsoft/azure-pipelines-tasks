@@ -123,7 +123,10 @@ locationHelpers.assumeNuGetUriPrefixes(serviceUri)
         var feedUri: string;
         var credCleanup = () => { return };
         if (nuGetFeedType == "internal") {
-            if (!credProviderDir || (userNuGetPath && preCredProviderNuGet)) {
+            if (!ngToolRunner.isCredentialConfigEnabled()) {
+                tl.debug("Not configuring credentials in nuget.config");
+            }
+            else if (!credProviderDir || (userNuGetPath && preCredProviderNuGet)) {
                 var nuGetConfigHelper = new NuGetConfigHelper(nuGetPathToUse, null, authInfo, environmentSettings);
                 nuGetConfigHelper.setSources([{ feedName: "internalFeed", feedUri: internalFeedUri }]);
                 configFilePromise = Q(nuGetConfigHelper.tempNugetConfigPath);

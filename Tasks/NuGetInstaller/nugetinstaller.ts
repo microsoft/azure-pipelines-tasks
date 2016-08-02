@@ -123,7 +123,10 @@ locationHelpers.assumeNuGetUriPrefixes(serviceUri)
 
         var configFilePromise = Q<string>(nugetConfigPath);
         var credCleanup = () => { return };
-        if (!credProviderDir || (userNuGetPath && preCredProviderNuGet)) {
+        if (!ngToolRunner.isCredentialConfigEnabled()) {
+            tl.debug("Not configuring credentials in nuget.config");
+        }
+        else if (!credProviderDir || (userNuGetPath && preCredProviderNuGet)) {
             if (nugetConfigPath) {
                 var nuGetConfigHelper = new NuGetConfigHelper(nuGetPathToUse, nugetConfigPath, authInfo, environmentSettings);
                 configFilePromise = nuGetConfigHelper.getSourcesFromConfig()
