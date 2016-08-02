@@ -115,64 +115,48 @@ $buildRootPath = $cwd
 $wrapperDirectory = Split-Path $wrapperScript -Parent
 $reportDirectoryName = "ReportDirectory84B7D86C"
 $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
-
-try 
-{    
-    if(Test-Path $reportDirectory)
-    {
-    # delete any code coverage data 
-    rm -r $reportDirectory -force | Out-Null
-    }
-}
-catch
-{
-    Write-Verbose "Failed to delete report directory"
-}
-
-
-# check if project is multi module gradle build or not
-$subprojects = Invoke-BatchScript -Path $wrapperScript -Arguments 'properties' -WorkingFolder $buildRootPath | Select-String '^subprojects: (.*)'|ForEach-Object {$_.Matches[0].Groups[1].Value}
-Write-Verbose "subprojects: $subprojects"
-$singlemodule = [string]::IsNullOrEmpty($subprojects) -or $subprojects -eq '[]'
-
-if($codeCoverageTool -eq "JaCoCo")
-{
-    $summaryFileName = "summary.xml"
-
-    if($singlemodule)
-    {
-        $reportingTaskName = "jacocoTestReport"
-    }
-    else
-    {
-        $reportingTaskName = "jacocoRootReport"
-    }
-}
-elseif($codeCoverageTool -eq "Cobertura")
-{
-    $summaryFileName = "coverage.xml"
-    $reportingTaskName = "cobertura"
-}
-
-$summaryFile = Join-Path $buildRootPath $reportDirectoryName 
-$summaryFile = Join-Path $summaryFile $summaryFileName 
 $buildFile = Join-Path $buildRootPath "build.gradle"
 
-# check if code coverage has been enabled
-if($isCoverageEnabled)
+if ($isCoverageEnabled)
 {
-   # Enable code coverage in build file
-   Enable-CodeCoverage -BuildTool 'Gradle' -BuildFile $buildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -IsMultiModule (!$singlemodule) -ErrorAction Stop
-   Write-Verbose "Code coverage is successfully enabled." -Verbose
-}
-else
-{
-    Write-Verbose "Option to enable code coverage was not selected and is being skipped." -Verbose
-}
+    Write-Verbose "Option to enable code coverage was selected and is being running." -Verbose
+    
+    # check if project is multi module gradle build or not
+    $subprojects = Invoke-BatchScript -Path $wrapperScript -Arguments 'properties' -WorkingFolder $buildRootPath | Select-String '^subprojects: (.*)'|ForEach-Object {$_.Matches[0].Groups[1].Value}
+    Write-Verbose "subprojects: $subprojects"
+    $singlemodule = [string]::IsNullOrEmpty($subprojects) -or $subprojects -eq '[]'
 
+    if($codeCoverageTool -eq "JaCoCo")
+    {
+        $summaryFileName = "summary.xml"
 
-if($isCoverageEnabled)
-{
+        if($singlemodule)
+        {
+            $reportingTaskName = "jacocoTestReport"
+        }
+        else
+        {
+            $reportingTaskName = "jacocoRootReport"
+        }
+    }
+    elseif($codeCoverageTool -eq "Cobertura")
+    {
+        $summaryFileName = "coverage.xml"
+        $reportingTaskName = "cobertura"
+    }
+
+    $summaryFile = Join-Path $buildRootPath $reportDirectoryName 
+    $summaryFile = Join-Path $summaryFile $summaryFileName 
+
+    Remove-Item -Recurse -Force $reportDirectory -ErrorAction SilentlyContinue
+    # Create temp copy - requried in case of TFVC
+    Copy-Item $buildFile "$buildFile.tmp" -Force -ErrorAction Continue
+    Set-ItemProperty $buildFile -Name Attributes -Value Normal
+
+    # Enable code coverage in build file
+    Enable-CodeCoverage -BuildTool 'Gradle' -BuildFile $buildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -IsMultiModule (!$singlemodule) -ErrorAction Stop
+    Write-Verbose "Code coverage is successfully enabled." -Verbose
+
     $arguments = "$options $tasks $reportingTaskName"
 }
 else
@@ -219,7 +203,7 @@ else
 
 
 # check if code coverage has been enabled
-if($isCoverageEnabled)
+if ($isCoverageEnabled)
 {
 	if(Test-Path $summaryFile)
 	{
@@ -232,7 +216,11 @@ if($isCoverageEnabled)
 	{
         Write-Host "##vso[task.logissue type=warning;code=005003;]"
 		Write-Warning "No code coverage results found to be published. This could occur if there were no tests executed or there was a build failure. Check the gradle output for details." -Verbose
-	}   
+	}
+
+    # Reset temp copy and file permissions are reset by default
+    Copy-Item "$buildFile.tmp" $buildFile -Force -ErrorAction Continue
+    Remove-Item "$buildFile.tmp" -Force -ErrorAction Continue
 }
 
 Write-Verbose "Leaving script Gradle.ps1"
