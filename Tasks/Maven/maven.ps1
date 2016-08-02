@@ -107,6 +107,7 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 . ./mavenHelper.ps1
 
+
 $buildRootPath = Split-Path $mavenPOMFile -Parent
 $reportDirectoryName = "ReportDirectoryC91CDE2D"
 $reportDirectoryNameCobertura = "target\site\cobertura"
@@ -125,15 +126,45 @@ $CCReportTask = "jacoco:report"
 
 Write-Verbose "SummaryFileCobertura = $summaryFileCobertura"
 
-Remove-Item -Recurse -Force $reportDirectory -ErrorAction SilentlyContinue
-Remove-Item -Recurse -Force $reportDirectoryCobertura -ErrorAction SilentlyContinue
-Remove-Item -Recurse -Force $reportPOMFile -ErrorAction SilentlyContinue
-Remove-Item -Recurse -Force $targetDirectory -ErrorAction SilentlyContinue
-
-if ($isCoverageEnabled)
+try 
 {
-	Copy-Item $mavenPOMFile "$mavenPOMFile.tmp" -Force -ErrorAction Continue
-	Set-ItemProperty $mavenPOMFile -Name Attributes -Value Normal
+	if(Test-Path $reportDirectory)
+	{
+		# delete any previous code coverage data 
+		rm -r $reportDirectory -force | Out-Null
+	}
+
+	if(Test-Path $reportDirectoryCobertura)
+	{
+		# delete any previous code coverage data from Cobertura
+		rm -r $reportDirectoryCobertura -force | Out-Null
+	}
+}
+catch
+{
+	Write-Verbose "Failed to delete report directory"
+}
+
+try 
+{
+	if(Test-Path $reportPOMFile)
+	{
+		# delete any previous code coverage data 
+		rm $reportPOMFile -force | Out-Null
+	}
+}
+catch
+{
+	Write-Verbose "Failed to delete report POM file"
+}
+
+if($isCoverageEnabled)
+{
+	if(Test-Path $targetDirectory)
+	{
+		# delete the target directory created by cobertura
+		rm -r $targetDirectory -force | Out-Null
+	}
 }
 
 # Enable Code Coverage
@@ -184,12 +215,5 @@ ElseIf ($codeCoverageTool -eq "Cobertura")
 
 # Run SonarQube analysis by invoking Maven with the "sonar:sonar" goal
 RunSonarQubeAnalysis $sqAnalysisEnabled $sqConnectedServiceName $sqDbDetailsRequired $sqDbUrl $sqDbUsername $sqDbPassword $options $mavenPOMFile $execFileJacoco
-
-# Reset temp copy and file permissions are reset by default
-if ($isCoverageEnabled)
-{
-	Copy-Item "$mavenPOMFile.tmp" $mavenPOMFile -Force -ErrorAction Continue
-	Remove-Item "$mavenPOMFile.tmp" -Force -ErrorAction Continue
-}
 
 Write-Verbose "Leaving script Maven.ps1"
