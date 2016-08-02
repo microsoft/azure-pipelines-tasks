@@ -39,7 +39,12 @@ export class TaskOptions {
     // jobParameters are only possible if parameterizedJob is enabled
     jobParameters: string[] = this.parameterizedJob ? tl.getDelimitedInput('jobParameters', '\n', false) : [];
 
-    jobQueueUrl: string = util.addUrlSegment(this.serverEndpointUrl, '/job/' + this.jobName) + ((this.parameterizedJob) ? '/buildWithParameters?delay=0sec' : '/build?delay=0sec');
+    jobQueueUrl: string = util.addUrlSegment(this.serverEndpointUrl, util.convertJobName(this.jobName)) + ((this.parameterizedJob) ? '/buildWithParameters?delay=0sec' : '/build?delay=0sec');
+    teamJobQueueUrl: string = util.addUrlSegment(this.serverEndpointUrl, '/team-build/build/' + this.jobName + '?delay=0sec');
+    teamPluginUrl: string = util.addUrlSegment(this.serverEndpointUrl, '/pluginManager/available');
+
+    NO_CRUMB: string = 'NO_CRUMB';
+    crumb: string = this.NO_CRUMB;
 
     constructor() {
         tl.debug('serverEndpointUrl=' + this.serverEndpointUrl);
@@ -47,40 +52,12 @@ export class TaskOptions {
     }
 }
 
-/**
- * Supported parameter types: boolean, string, choice, password
- * 
- * - If a parameter is not defined by Jenkins it is fine to pass it anyway
- * - Anything passed to a boolean parameter other than 'true' (case insenstive) becomes false.
- * - Invalid choice parameters result in a 500 response.
- * 
- */
-function parseJobParameters(jobParameters: string[]) {
-    var formData = {};
-    for (var i = 0; i < jobParameters.length; i++) {
-        var paramLine = jobParameters[i].trim();
-        var splitIndex = paramLine.indexOf('=');
-        if (splitIndex <= 0) { // either no paramValue (-1), or no paramName (0)
-            throw 'Job parameters should be specified as "parameterName=parameterValue" with one name, value pair per line. Invalid parameter line: ' + jobParameters[i];
-        }
-        var paramName = paramLine.substr(0, splitIndex).trim();
-        var paramValue = paramLine.slice(splitIndex + 1).trim();
-        formData[paramName] = paramValue;
-    }
-    return formData;
-}
-
 async function doWork() {
     try {
         var taskOptions: TaskOptions = new TaskOptions();
 
         var jobQueue: JobQueue = new JobQueue(taskOptions);
-        var initialPostData = taskOptions.parameterizedJob ?
-            { url: taskOptions.jobQueueUrl, formData: parseJobParameters(taskOptions.jobParameters) } :
-            { url: taskOptions.jobQueueUrl };
-
-        tl.debug('initialPostData = ' + JSON.stringify(initialPostData));
-        var queueUri = await util.pollSubmitJob(initialPostData, taskOptions);
+        var queueUri = await util.pollSubmitJob(taskOptions);
         console.log('Jenkins job queued');
         var rootJob = await util.pollCreateRootJob(queueUri, jobQueue, taskOptions);
         //start the job queue

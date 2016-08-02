@@ -6,6 +6,7 @@ import tl = require('vsts-task-lib/task');
 import fs = require('fs');
 import path = require('path');
 import shell = require('shelljs');
+import url = require('url');
 import Q = require('q');
 
 // node js modules
@@ -22,15 +23,15 @@ import util = require('./util');
 
 export class JobSearch {
     taskUrl: string; // URL for the job definition
-    name: string; // name of the job this search is for
+    identifier: string; // identifier of the job this search is for
     queue: JobQueue;
     searchingFor: Job[] = [];
 
-    constructor(queue: JobQueue, taskUrl: string, name: string) {
+    constructor(queue: JobQueue, taskUrl: string, identifier: string) {
         this.queue = queue;
         this.taskUrl = taskUrl;
-        this.name = name;
-
+        this.identifier = identifier;
+        
         this.initialize().fail((err) => {
             throw err;
         });
@@ -64,7 +65,7 @@ export class JobSearch {
                             defer.reject(err);
                         }
                     } else if (httpResponse.statusCode != 200) {
-                        defer.reject(util.getFullErrorMessage(httpResponse, 'Unable to retrieve job: ' + thisSearch.name));
+                        defer.reject(util.getFullErrorMessage(httpResponse, 'Unable to retrieve job: ' + thisSearch.identifier));
                     } else {
                         var parsedBody: any = JSON.parse(body);
                         tl.debug("parsedBody for: " + apiTaskUrl + ": " + JSON.stringify(parsedBody));
@@ -113,14 +114,14 @@ export class JobSearch {
     determineMainJob(executableNumber: number, callback) {
         var thisSearch: JobSearch = this;
         if (!thisSearch.foundCauses[executableNumber]) {
-            util.fail('No known exeuction number: ' + executableNumber + ' for job: ' + thisSearch.name);
+            util.fail('No known exeuction number: ' + executableNumber + ' for job: ' + thisSearch.identifier);
         } else {
             var causes : any = thisSearch.foundCauses[executableNumber];
             var causesThatRan: Job[] = []; // these are all the causes for this executableNumber that are running/ran
             var causesThatMayRun: Job[] = []; // these are the causes for this executableNumber that could run in the future
             var causesThatWontRun: Job[] = []; // these are the causes for this executableNumber that will never run
             for (var i in causes) {
-                var job = thisSearch.queue.findJob(causes[i].upstreamProject, causes[i].upstreamBuild);
+                var job = thisSearch.queue.findJob(causes[i].upstreamUrl, causes[i].upstreamBuild);
                 if (job) { // we know about it
                     if (job.state == JobState.Streaming || job.state == JobState.Finishing || job.state == JobState.Done) {
                         causesThatRan.push(job);
@@ -174,7 +175,7 @@ export class JobSearch {
             function findChild(parent: Job): Job {
                 for (var i in parent.children) {
                     var child: Job = parent.children[i];
-                    if (thisSearch.name == child.name) {
+                    if (thisSearch.identifier == child.identifier) {
                         return child
                     }
                 }
