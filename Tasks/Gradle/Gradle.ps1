@@ -150,8 +150,8 @@ if ($isCoverageEnabled)
 
     Remove-Item -Recurse -Force $reportDirectory -ErrorAction SilentlyContinue
     # Create temp copy - requried in case of TFVC
-    Copy-Item $buildFile "$buildFile.tmp" -Force -ErrorAction Continue
-    Set-ItemProperty $buildFile -Name Attributes -Value Normal
+    Copy-Item $buildFile "$buildFile.tmp" -Force -ErrorAction SilentlyContinue
+    Set-ItemProperty $buildFile -Name Attributes -Value Normal -Force -ErrorAction SilentlyContinue
 
     # Enable code coverage in build file
     Enable-CodeCoverage -BuildTool 'Gradle' -BuildFile $buildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectoryName -IsMultiModule (!$singlemodule) -ErrorAction Stop
@@ -219,8 +219,8 @@ if ($isCoverageEnabled)
     }
 
     # Reset temp copy and file permissions are reset by default
-    Copy-Item "$buildFile.tmp" $buildFile -Force -ErrorAction Continue
-    Remove-Item "$buildFile.tmp" -Force -ErrorAction Continue
+    Copy-Item "$buildFile.tmp" $buildFile -Force -ErrorAction SilentlyContinue
+    Remove-Item "$buildFile.tmp" -Force -ErrorAction SilentlyContinue
 }
 
 Write-Verbose "Leaving script Gradle.ps1"
