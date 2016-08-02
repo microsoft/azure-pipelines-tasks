@@ -31,27 +31,27 @@ Function CmdletHasMember($memberName) {
 }
 
 Function GetMavenToolPath() {
-	if(!$mavenPath -or -not (Test-Path $mavenPath))
-	{
-		throw "Maven path not specified or does not exist"
-	}
-	# The Maven bin path should contain either mvn.cmd (Maven 3) or mvn.bat (Maven 2)
-	$toolPath = gci -Path "$mavenPath" -Filter "mvn.cmd" -Recurse | select -First 1
-	if(!$toolPath)
-	{
-		$toolPath = gci -Path "$mavenPath" -Filter "mvn.bat" -Recurse | select -First 1
-	}
-	if(!$toolPath)
-	{
-		throw "Path $mavenPath does not contain a Maven installation"
-	}
-	Write-Host "Using Maven executable at $($toolPath.FullName)"
-	if($mavenSetM2Home -eq $true)
-	{
-		$env:M2_HOME = $mavenPath
-		Write-Host "M2_HOME set to $mavenPath"
-	}
-	return $toolPath.FullName
+    if(!$mavenPath -or -not (Test-Path $mavenPath))
+    {
+        throw "Maven path not specified or does not exist"
+    }
+    # The Maven bin path should contain either mvn.cmd (Maven 3) or mvn.bat (Maven 2)
+    $toolPath = gci -Path "$mavenPath" -Filter "mvn.cmd" -Recurse | select -First 1
+    if(!$toolPath)
+    {
+        $toolPath = gci -Path "$mavenPath" -Filter "mvn.bat" -Recurse | select -First 1
+    }
+    if(!$toolPath)
+    {
+        throw "Path $mavenPath does not contain a Maven installation"
+    }
+    Write-Host "Using Maven executable at $($toolPath.FullName)"
+    if($mavenSetM2Home -eq $true)
+    {
+        $env:M2_HOME = $mavenPath
+        Write-Host "M2_HOME set to $mavenPath"
+    }
+    return $toolPath.FullName
 }
 
 Write-Verbose 'Entering Maven.ps1'
@@ -66,8 +66,8 @@ if($isCoverageEnabled -eq $true)
 {
     Write-Verbose "codeCoverageTool = $codeCoverageTool" -Verbose
     Write-Verbose "classFilter = $classFilter" -Verbose
-	Write-Verbose "classFilesDirectories = $classFilesDirectories" 
-	Write-Verbose "srcDirectories = $srcDirectories" 
+    Write-Verbose "classFilesDirectories = $classFilesDirectories" 
+    Write-Verbose "srcDirectories = $srcDirectories" 
 }
 
 Write-Verbose "javaHomeSelection = $javaHomeSelection"
@@ -107,7 +107,6 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 . ./mavenHelper.ps1
 
-
 $buildRootPath = Split-Path $mavenPOMFile -Parent
 $reportDirectoryName = "ReportDirectoryC91CDE2D"
 $reportDirectoryNameCobertura = "target\site\cobertura"
@@ -126,45 +125,15 @@ $CCReportTask = "jacoco:report"
 
 Write-Verbose "SummaryFileCobertura = $summaryFileCobertura"
 
-try 
-{
-	if(Test-Path $reportDirectory)
-	{
-		# delete any previous code coverage data 
-		rm -r $reportDirectory -force | Out-Null
-	}
+Remove-Item -Recurse -Force $reportDirectory -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force $reportDirectoryCobertura -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force $reportPOMFile -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force $targetDirectory -ErrorAction SilentlyContinue
 
-	if(Test-Path $reportDirectoryCobertura)
-	{
-		# delete any previous code coverage data from Cobertura
-		rm -r $reportDirectoryCobertura -force | Out-Null
-	}
-}
-catch
+if ($isCoverageEnabled)
 {
-	Write-Verbose "Failed to delete report directory"
-}
-
-try 
-{
-	if(Test-Path $reportPOMFile)
-	{
-		# delete any previous code coverage data 
-		rm $reportPOMFile -force | Out-Null
-	}
-}
-catch
-{
-	Write-Verbose "Failed to delete report POM file"
-}
-
-if($isCoverageEnabled)
-{
-	if(Test-Path $targetDirectory)
-	{
-		# delete the target directory created by cobertura
-		rm -r $targetDirectory -force | Out-Null
-	}
+    Copy-Item $mavenPOMFile "$mavenPOMFile.tmp" -Force -ErrorAction SilentlyContinue
+    Set-ItemProperty $mavenPOMFile -Name Attributes -Value Normal -Force -ErrorAction SilentlyContinue
 }
 
 # Enable Code Coverage
@@ -177,43 +146,50 @@ ConfigureJDK $javaHomeSelection $jdkVersion $jdkArchitecture $jdkUserInputPath
 Write-Host "Running Maven..."
 if($mavenVersionSelection -eq "Default")
 {
-	Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals 
+    Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals 
 }
 else
 {
-	$mavenToolPath = GetMavenToolPath
-	Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals -ToolPath $mavenToolPath
+    $mavenToolPath = GetMavenToolPath
+    Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals -ToolPath $mavenToolPath
 }
 
 # Publish test results
 $runTitleMemberExists = CmdletHasMember "RunTitle"
 if($runTitleMemberExists)
 {
-	PublishTestResults $publishJUnitResults $testResultsFiles $testRunTitle
+    PublishTestResults $publishJUnitResults $testResultsFiles $testRunTitle
 }
 else
 {
-	if(!([string]::IsNullOrWhiteSpace($testRunTitle)))
-	{
-		Write-Warning "Update the build agent to be able to use the custom run title feature."
-	}
-	PublishTestResults $publishJUnitResults $testResultsFiles
+    if(!([string]::IsNullOrWhiteSpace($testRunTitle)))
+    {
+        Write-Warning "Update the build agent to be able to use the custom run title feature."
+    }
+    PublishTestResults $publishJUnitResults $testResultsFiles
 }
 
 if ($codeCoverageTool -eq "JaCoCo")
 {
-	#set sonar parameter
-	$execFileJacoco = Join-Path $reportDirectory "jacoco.exec"
-	# Publish code coverage for Jacoco
-	PublishCodeCoverageJacoco  $isCoverageEnabled $mavenPOMFile $CCReportTask $summaryFileJacoco $reportDirectory $codeCoverageTool $reportPOMFile
+    #set sonar parameter
+    $execFileJacoco = Join-Path $reportDirectory "jacoco.exec"
+    # Publish code coverage for Jacoco
+    PublishCodeCoverageJacoco  $isCoverageEnabled $mavenPOMFile $CCReportTask $summaryFileJacoco $reportDirectory $codeCoverageTool $reportPOMFile
 }
 ElseIf ($codeCoverageTool -eq "Cobertura")
 {
-	# Publish code coverage for Jacoco
-	PublishCodeCoverageCobertura  $isCoverageEnabled $mavenPOMFile $summaryFileCobertura $reportDirectoryCobertura $codeCoverageTool
+    # Publish code coverage for Jacoco
+    PublishCodeCoverageCobertura  $isCoverageEnabled $mavenPOMFile $summaryFileCobertura $reportDirectoryCobertura $codeCoverageTool
 }
 
 # Run SonarQube analysis by invoking Maven with the "sonar:sonar" goal
 RunSonarQubeAnalysis $sqAnalysisEnabled $sqConnectedServiceName $sqDbDetailsRequired $sqDbUrl $sqDbUsername $sqDbPassword $options $mavenPOMFile $execFileJacoco
+
+# Reset temp copy and file permissions are reset by default
+if ($isCoverageEnabled)
+{
+    Copy-Item "$mavenPOMFile.tmp" $mavenPOMFile -Force -ErrorAction SilentlyContinue
+    Remove-Item "$mavenPOMFile.tmp" -Force -ErrorAction SilentlyContinue
+}
 
 Write-Verbose "Leaving script Maven.ps1"

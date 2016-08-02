@@ -111,29 +111,16 @@ $buildRootPath = Split-Path $antBuildFile -Parent
 $reportDirectoryName = "ReportDirectory75C12DBC"
 $reportDirectory = Join-Path $buildRootPath $reportDirectoryName
 
-try 
-{
-    if(Test-Path $reportDirectory)
-    {
-        # delete any previous code coverage data 
-        rm -r $reportDirectory -force | Out-Null
-    }
-}
-catch
-{
-    Write-Verbose "Failed to delete report directory"
-}
-
 if($isCoverageEnabled)
 {
-	if ($codeCoverageTool -eq "Cobertura")
-	{
-		$summaryFileName = "coverage.xml"
-	}
-	ElseIf ($codeCoverageTool -eq "JaCoCo")
-	{
-		$summaryFileName = "summary.xml"
-	}
+    if ($codeCoverageTool -eq "Cobertura")
+    {
+        $summaryFileName = "coverage.xml"
+    }
+    ElseIf ($codeCoverageTool -eq "JaCoCo")
+    {
+        $summaryFileName = "summary.xml"
+    }
 }
 
 $summaryFile = Join-Path $buildRootPath $reportDirectoryName 
@@ -145,60 +132,33 @@ $reportBuildFileName = "ReportBuildFile9B5907FC.xml"
 $reportBuildFile = Join-Path $buildRootPath $reportBuildFileName
 $instrumentedClassesDirectory = Join-Path $buildRootPath "InstrumentedClasses"
 
-try
+if ($isCoverageEnabled)
 {
-    if(Test-Path $reportBuildFile)
+    Remove-Item -Recurse -Force $reportDirectory -ErrorAction SilentlyContinue
+    Remove-Item -Recurse -Force $reportBuildFile -ErrorAction SilentlyContinue
+    Remove-Item -Recurse -Force $instrumentedClassesDirectory -ErrorAction SilentlyContinue
+
+    # Create temp copy - requried in case of TFVC
+    Copy-Item $antBuildFile "$antBuildFile.tmp" -Force -ErrorAction SilentlyContinue
+    Set-ItemProperty $antBuildFile -Name Attributes -Value Normal -Force -ErrorAction SilentlyContinue
+
+    try
     {
-        # delete any previous code coverage report build file
-        rm -r $reportBuildFile -force | Out-Null
+        # Enable code coverage in build file
+        if ($codeCoverageTool -eq "Cobertura")
+        {
+            $coberturaCCFile = Join-Path $buildRootPath "cobertura.ser"
+            Remove-Item -Recurse -Force $coberturaCCFile -ErrorAction SilentlyContinue
+            Remove-Item -Recurse -Force $instrumentedClassesDirectory -ErrorAction SilentlyContinue
+        }
+
+        Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectory -CCReportTask $CCReportTask -ReportBuildFile $reportBuildFile
+        Write-Verbose "Code coverage is successfully enabled." -Verbose
     }
-}
-catch
-{
-    Write-Verbose "Failed to delete report build file"
-}
- 
-try
-{
-    if(Test-Path $instrumentedClassesDirectory)
+    catch
     {
-        # delete any previous instrumented classes directory
-        rm -r $instrumentedClassesDirectory -force | Out-Null
+        Write-Warning "Enabling code coverage failed. Check the build logs for errors" -Verbose
     }
-}
-catch
-{
-    Write-Verbose "Failed to delete instrumented classes directory"
-}
- 
-if($isCoverageEnabled)
-{
-   try
-   {
-	# Enable code coverage in build file
-	if ($codeCoverageTool -eq "Cobertura")
-	{
-		$coberturaCCFile = Join-Path $buildRootPath "cobertura.ser"
-		if(Test-Path $coberturaCCFile)
-		{
-			# delete any previous cobertura code coverage file
-			rm -r $coberturaCCFile -force | Out-Null
-		}		
-		
-		if(Test-Path $instrumentedClassesDirectory)
-		{
-			# delete any previous cobertura instrumented classes
-			rm -r $instrumentedClassesDirectory -force | Out-Null
-		}
-	}
-	
-	Enable-CodeCoverage -BuildTool 'Ant' -BuildFile $antBuildFile -CodeCoverageTool $codeCoverageTool -ClassFilter $classFilter -ClassFilesDirectories $classFilesDirectories -SourceDirectories $srcDirectories -SummaryFile $summaryFileName -ReportDirectory $reportDirectory -CCReportTask $CCReportTask -ReportBuildFile $reportBuildFile
-	Write-Verbose "Code coverage is successfully enabled." -Verbose
-   }
-   catch
-   {
-	Write-Warning "Enabling code coverage failed. Check the build logs for errors" -Verbose
-   }
 }
 else
 {
@@ -222,19 +182,19 @@ if($publishJUnitResultsFromAntBuild)
     else
     {
         Write-Verbose "Calling Publish-TestResults"
-	$runTitleMemberExists = CmdletHasMember "RunTitle"
-	if($runTitleMemberExists)
-	{
-		Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext -RunTitle $testRunTitle -MergeResults $true
-	}
-	else
-	{
-		if(!([string]::IsNullOrWhiteSpace($testRunTitle)))
-		{
-			Write-Warning "Update the build agent to be able to use the custom run title feature."
-		}
-		Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext -MergeResults $true
-	}
+        $runTitleMemberExists = CmdletHasMember "RunTitle"
+        if($runTitleMemberExists)
+        {
+            Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext -RunTitle $testRunTitle -MergeResults $true
+        }
+        else
+        {
+            if(!([string]::IsNullOrWhiteSpace($testRunTitle)))
+            {
+                Write-Warning "Update the build agent to be able to use the custom run title feature."
+            }
+            Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext -MergeResults $true
+        }
     }    
 }
 else
@@ -245,40 +205,43 @@ else
 # check if code coverage has been enabled
 if($isCoverageEnabled)
 {
-	
-   # run report code coverage task which generates code coverage reports.
-   $reportsGenerationFailed = $false
-   Write-Verbose "Collecting code coverage reports" -Verbose
-   try
-   {
-	if(Test-Path $reportBuildFile)
-	{
-		# This will handle compat between S91 and S92
-		Invoke-Ant -AntBuildFile $reportBuildFile -Targets $CCReportTask
-	}
-	else
-	{
-		Invoke-Ant -AntBuildFile $antBuildFile -Targets $CCReportTask
-	}
-   }
-   catch
-   {
-	$reportsGenerationFailed = $true
-   }
+    
+    # run report code coverage task which generates code coverage reports.
+    $reportsGenerationFailed = $false
+    Write-Verbose "Collecting code coverage reports" -Verbose
+    try
+    {
+        if(Test-Path $reportBuildFile)
+        {
+            # This will handle compat between S91 and S92
+            Invoke-Ant -AntBuildFile $reportBuildFile -Targets $CCReportTask
+        }
+        else
+        {
+            Invoke-Ant -AntBuildFile $antBuildFile -Targets $CCReportTask
+        }
+    }
+    catch
+    {
+        $reportsGenerationFailed = $true
+    }
    
-	
-	if(-not $reportsGenerationFailed -and (Test-Path $summaryFile))
-   	{
-		Write-Verbose "Summary file = $summaryFile" -Verbose
-		Write-Verbose "Report directory = $reportDirectory" -Verbose
-		Write-Verbose "Calling Publish-CodeCoverage" -Verbose
-		Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext    
-   	}
-   	else
-   	{
-        	Write-Host "##vso[task.logissue type=warning;code=006003;]"
-		Write-Warning "No code coverage results found to be published. This could occur if there were no tests executed or there was a build failure. Check the ant output for details." -Verbose
-   	}
+    if(-not $reportsGenerationFailed -and (Test-Path $summaryFile))
+       {
+        Write-Verbose "Summary file = $summaryFile" -Verbose
+        Write-Verbose "Report directory = $reportDirectory" -Verbose
+        Write-Verbose "Calling Publish-CodeCoverage" -Verbose
+        Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext    
+       }
+       else
+       {
+        Write-Host "##vso[task.logissue type=warning;code=006003;]"
+        Write-Warning "No code coverage results found to be published. This could occur if there were no tests executed or there was a build failure. Check the ant output for details." -Verbose
+       }
+
+    # Reset temp copy and file permissions are reset by default
+    Copy-Item "$antBuildFile.tmp" $antBuildFile -Force -ErrorAction SilentlyContinue
+    Remove-Item "$antBuildFile.tmp" -Force -ErrorAction SilentlyContinue
 }
 
 Write-Verbose "Leaving script Ant.ps1"
