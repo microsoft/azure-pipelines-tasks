@@ -67,6 +67,10 @@
       "code": 0,
       "stdout": "delete output here"
     },
+    "/usr/bin/security list-keychain -d user -s /user/build/_xcodetasktmp.keychain" : {
+      "code": 0,
+      "stdout": "list-keychain output here"
+    },
     "/bin/cp -f /user/build/testuuid.mobileprovision /users/test/Library/MobileDevice/Provisioning Profiles/testuuid.mobileprovision": {
       "code": 0,
       "stdout": "provisioning profile copied"
