@@ -161,7 +161,7 @@ if ($isCoverageEnabled)
 }
 else
 {
-	$arguments = "$options $tasks"
+    $arguments = "$options $tasks"
 }
 
 Write-Verbose "Invoking Gradle wrapper $wrapperScript $arguments"
@@ -181,19 +181,19 @@ if($publishJUnitResultsFromAntBuild)
     else
     {
         Write-Verbose "Calling Publish-TestResults"
-	$runTitleMemberExists = CmdletHasMember "RunTitle"
-	if($runTitleMemberExists)
-	{
-		Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext -RunTitle $testRunTitle -MergeResults $true
-	}
-	else
-	{
-		if(!([string]::IsNullOrWhiteSpace($testRunTitle)))
-		{
-			Write-Warning "Update the build agent to be able to use the custom run title feature."
-		}
-		Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext -MergeResults $true
-	}         
+    $runTitleMemberExists = CmdletHasMember "RunTitle"
+    if($runTitleMemberExists)
+    {
+        Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext -RunTitle $testRunTitle -MergeResults $true
+    }
+    else
+    {
+        if(!([string]::IsNullOrWhiteSpace($testRunTitle)))
+        {
+            Write-Warning "Update the build agent to be able to use the custom run title feature."
+        }
+        Publish-TestResults -TestRunner "JUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext -MergeResults $true
+    }         
     }    
 }
 else
@@ -205,18 +205,18 @@ else
 # check if code coverage has been enabled
 if ($isCoverageEnabled)
 {
-	if(Test-Path $summaryFile)
-	{
-		Write-Verbose "Summary file = $summaryFile" -Verbose
-		Write-Verbose "Report directory = $reportDirectory" -Verbose
-		Write-Verbose "Calling Publish-CodeCoverage" -Verbose
-		Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext   
-	}
-	else
-	{
+    if(Test-Path $summaryFile)
+    {
+        Write-Verbose "Summary file = $summaryFile" -Verbose
+        Write-Verbose "Report directory = $reportDirectory" -Verbose
+        Write-Verbose "Calling Publish-CodeCoverage" -Verbose
+        Publish-CodeCoverage -CodeCoverageTool $codeCoverageTool -SummaryFileLocation $summaryFile -ReportDirectory $reportDirectory -Context $distributedTaskContext   
+    }
+    else
+    {
         Write-Host "##vso[task.logissue type=warning;code=005003;]"
-		Write-Warning "No code coverage results found to be published. This could occur if there were no tests executed or there was a build failure. Check the gradle output for details." -Verbose
-	}
+        Write-Warning "No code coverage results found to be published. This could occur if there were no tests executed or there was a build failure. Check the gradle output for details." -Verbose
+    }
 
     # Reset temp copy and file permissions are reset by default
     Copy-Item "$buildFile.tmp" $buildFile -Force -ErrorAction Continue

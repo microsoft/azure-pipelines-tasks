@@ -31,27 +31,27 @@ Function CmdletHasMember($memberName) {
 }
 
 Function GetMavenToolPath() {
-	if(!$mavenPath -or -not (Test-Path $mavenPath))
-	{
-		throw "Maven path not specified or does not exist"
-	}
-	# The Maven bin path should contain either mvn.cmd (Maven 3) or mvn.bat (Maven 2)
-	$toolPath = gci -Path "$mavenPath" -Filter "mvn.cmd" -Recurse | select -First 1
-	if(!$toolPath)
-	{
-		$toolPath = gci -Path "$mavenPath" -Filter "mvn.bat" -Recurse | select -First 1
-	}
-	if(!$toolPath)
-	{
-		throw "Path $mavenPath does not contain a Maven installation"
-	}
-	Write-Host "Using Maven executable at $($toolPath.FullName)"
-	if($mavenSetM2Home -eq $true)
-	{
-		$env:M2_HOME = $mavenPath
-		Write-Host "M2_HOME set to $mavenPath"
-	}
-	return $toolPath.FullName
+    if(!$mavenPath -or -not (Test-Path $mavenPath))
+    {
+        throw "Maven path not specified or does not exist"
+    }
+    # The Maven bin path should contain either mvn.cmd (Maven 3) or mvn.bat (Maven 2)
+    $toolPath = gci -Path "$mavenPath" -Filter "mvn.cmd" -Recurse | select -First 1
+    if(!$toolPath)
+    {
+        $toolPath = gci -Path "$mavenPath" -Filter "mvn.bat" -Recurse | select -First 1
+    }
+    if(!$toolPath)
+    {
+        throw "Path $mavenPath does not contain a Maven installation"
+    }
+    Write-Host "Using Maven executable at $($toolPath.FullName)"
+    if($mavenSetM2Home -eq $true)
+    {
+        $env:M2_HOME = $mavenPath
+        Write-Host "M2_HOME set to $mavenPath"
+    }
+    return $toolPath.FullName
 }
 
 Write-Verbose 'Entering Maven.ps1'
@@ -66,8 +66,8 @@ if($isCoverageEnabled -eq $true)
 {
     Write-Verbose "codeCoverageTool = $codeCoverageTool" -Verbose
     Write-Verbose "classFilter = $classFilter" -Verbose
-	Write-Verbose "classFilesDirectories = $classFilesDirectories" 
-	Write-Verbose "srcDirectories = $srcDirectories" 
+    Write-Verbose "classFilesDirectories = $classFilesDirectories" 
+    Write-Verbose "srcDirectories = $srcDirectories" 
 }
 
 Write-Verbose "javaHomeSelection = $javaHomeSelection"
@@ -132,8 +132,8 @@ Remove-Item -Recurse -Force $targetDirectory -ErrorAction SilentlyContinue
 
 if ($isCoverageEnabled)
 {
-	Copy-Item $mavenPOMFile "$mavenPOMFile.tmp" -Force -ErrorAction Continue
-	Set-ItemProperty $mavenPOMFile -Name Attributes -Value Normal
+    Copy-Item $mavenPOMFile "$mavenPOMFile.tmp" -Force -ErrorAction Continue
+    Set-ItemProperty $mavenPOMFile -Name Attributes -Value Normal
 }
 
 # Enable Code Coverage
@@ -146,40 +146,40 @@ ConfigureJDK $javaHomeSelection $jdkVersion $jdkArchitecture $jdkUserInputPath
 Write-Host "Running Maven..."
 if($mavenVersionSelection -eq "Default")
 {
-	Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals 
+    Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals 
 }
 else
 {
-	$mavenToolPath = GetMavenToolPath
-	Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals -ToolPath $mavenToolPath
+    $mavenToolPath = GetMavenToolPath
+    Invoke-Maven -MavenPomFile $mavenPOMFile -Options $options -Goals $goals -ToolPath $mavenToolPath
 }
 
 # Publish test results
 $runTitleMemberExists = CmdletHasMember "RunTitle"
 if($runTitleMemberExists)
 {
-	PublishTestResults $publishJUnitResults $testResultsFiles $testRunTitle
+    PublishTestResults $publishJUnitResults $testResultsFiles $testRunTitle
 }
 else
 {
-	if(!([string]::IsNullOrWhiteSpace($testRunTitle)))
-	{
-		Write-Warning "Update the build agent to be able to use the custom run title feature."
-	}
-	PublishTestResults $publishJUnitResults $testResultsFiles
+    if(!([string]::IsNullOrWhiteSpace($testRunTitle)))
+    {
+        Write-Warning "Update the build agent to be able to use the custom run title feature."
+    }
+    PublishTestResults $publishJUnitResults $testResultsFiles
 }
 
 if ($codeCoverageTool -eq "JaCoCo")
 {
-	#set sonar parameter
-	$execFileJacoco = Join-Path $reportDirectory "jacoco.exec"
-	# Publish code coverage for Jacoco
-	PublishCodeCoverageJacoco  $isCoverageEnabled $mavenPOMFile $CCReportTask $summaryFileJacoco $reportDirectory $codeCoverageTool $reportPOMFile
+    #set sonar parameter
+    $execFileJacoco = Join-Path $reportDirectory "jacoco.exec"
+    # Publish code coverage for Jacoco
+    PublishCodeCoverageJacoco  $isCoverageEnabled $mavenPOMFile $CCReportTask $summaryFileJacoco $reportDirectory $codeCoverageTool $reportPOMFile
 }
 ElseIf ($codeCoverageTool -eq "Cobertura")
 {
-	# Publish code coverage for Jacoco
-	PublishCodeCoverageCobertura  $isCoverageEnabled $mavenPOMFile $summaryFileCobertura $reportDirectoryCobertura $codeCoverageTool
+    # Publish code coverage for Jacoco
+    PublishCodeCoverageCobertura  $isCoverageEnabled $mavenPOMFile $summaryFileCobertura $reportDirectoryCobertura $codeCoverageTool
 }
 
 # Run SonarQube analysis by invoking Maven with the "sonar:sonar" goal
@@ -188,8 +188,8 @@ RunSonarQubeAnalysis $sqAnalysisEnabled $sqConnectedServiceName $sqDbDetailsRequ
 # Reset temp copy and file permissions are reset by default
 if ($isCoverageEnabled)
 {
-	Copy-Item "$mavenPOMFile.tmp" $mavenPOMFile -Force -ErrorAction Continue
-	Remove-Item "$mavenPOMFile.tmp" -Force -ErrorAction Continue
+    Copy-Item "$mavenPOMFile.tmp" $mavenPOMFile -Force -ErrorAction Continue
+    Remove-Item "$mavenPOMFile.tmp" -Force -ErrorAction Continue
 }
 
 Write-Verbose "Leaving script Maven.ps1"
