@@ -1,87 +1,24 @@
 ﻿function Get-TestAgentType([string] $Version)
 {
-	$Version = Locate-TestVersion
-	$testAgentPath = "HKLM:\SOFTWARE\Microsoft\VisualStudio\{0}\EnterpriseTools\QualityTools\Agent" -f $Version
+	$testAgentPath = Locate-TestAgentPath($Version)
 	
-	if (-not (Test-Path $testAgentPath))
-	{
-		$testAgentPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\{0}\EnterpriseTools\QualityTools\Agent" -f $Version
-	}
-	
-	if (-not (Test-Path $testAgentPath))
-	{
-		return $null
-	}
-	
-	$testAgentServiceConfig = (Get-ItemProperty $testAgentPath -ErrorAction SilentlyContinue).AgentRunMode
-	if (($testAgentServiceConfig -eq $null) -or ($testAgentServiceConfig.Length -eq 0))
+    if(-not $testAgentPath)
     {
-		return $null
-	}
-	return $testAgentServiceConfig
-}
-
-
-function Locate-TestVersion()
-{
-	#Find the latest version
-	$regPath = "HKLM:\SOFTWARE\Microsoft\DevDiv\vstf\Servicing"
-	if (-not (Test-Path $regPath))
-	{
-		$regPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\DevDiv\vstf\Servicing"
-	}
-	$keys = Get-ChildItem $regPath | Where-Object {$_.GetSubKeyNames() -contains "testagentcore"}
-	$Version = Get-SubKeysInFloatFormat $keys | Sort-Object -Descending | Select-Object -First 1
-
-	if ([string]::IsNullOrWhiteSpace($Version))
-	{
-		return $null
-	}
-	return $Version
+        return $null
+    }
+	
+	return (Get-ChildItem $testAgentPath).GetValue('AgentRunMode')
 }
 
 function Locate-TestVersionAndVsRoot([string] $Version)
 {
-    if ([string]::IsNullOrWhiteSpace($Version))
-    {
-        $Version = Locate-TestVersion
+    $testAgentPath = Locate-TestAgentPath($Version)
+
+    if($testAgentPath){
+        return (Get-ChildItem $testAgentPath).GetValue('InstallDir')
     }
-
-    # Lookup the install location
-    $installRegPath = ("SOFTWARE\Microsoft\VisualStudio\{0}\EnterpriseTools\QualityTools" -f $Version)
-
-    $installRoot = Get-RegistryValueIgnoreError CurrentUser "$installRegPath" "InstallDir" Registry32
-    if (-not $installRoot)
-    {
-        $installRoot = Get-RegistryValueIgnoreError CurrentUser "$installRegPath" "InstallDir" Registry64
-    }
-
-    if (-not $installRoot)
-    {
-        $installRoot = Get-RegistryValueIgnoreError LocalMachine "$installRegPath" "InstallDir" Registry32
-        if (-not $installRoot)
-        {
-            $installRoot = Get-RegistryValueIgnoreError LocalMachine "$installRegPath" "InstallDir" Registry64
-        }
-    }
-
-    if (-not $installRoot)
-    {
-        # We still got nothing
-        throw "Unable to find TestAgent installation path"
-    }
-    return $installRoot
-}
-
-function Get-SubKeysInFloatFormat($keys)
-{
-    $targetKeys = @()      # New array
-    foreach ($key in $keys)
-    {
-      $targetKeys += [decimal] $key.PSChildName
-    }
-
-    return $targetKeys
+    
+    throw "Unable to find TestAgent installation path"
 }
 
 function DeleteDTAAgentExecutionService([String] $ServiceName)
@@ -106,43 +43,6 @@ function DeleteDTAAgentExecutionService([String] $ServiceName)
     }
 }
 
-function Get-RegistryValueIgnoreError
-{
-    param
-    (
-        [parameter(Mandatory = $true)]
-        [Microsoft.Win32.RegistryHive]
-        $RegistryHive,
-
-        [parameter(Mandatory = $true)]
-        [System.String]
-        $Key,
-
-        [parameter(Mandatory = $true)]
-        [System.String]
-        $Value,
-
-        [parameter(Mandatory = $true)]
-        [Microsoft.Win32.RegistryView]
-        $RegistryView
-    )
-
-    try
-    {
-        $baseKey = [Microsoft.Win32.RegistryKey]::OpenBaseKey($RegistryHive, $RegistryView)
-        $subKey =  $baseKey.OpenSubKey($Key)
-        if($subKey -ne $null)
-        {
-            return $subKey.GetValue($Value)
-        }
-    }
-    catch
-    {
-        #ignore
-    }
-    return $null
-}
-
 function Get-TestAgentConfiguration
 {
     param
@@ -159,7 +59,6 @@ function Get-TestAgentConfiguration
         Write-Verbose -Message ("No output received from TestAgentConfig.exe, returning empty test agent configuration") -Verbose
         $enableAutoLogon = $false
         $disableScreenSaver = $false
-        $isUserProcess = $false
     }
     else
     {
