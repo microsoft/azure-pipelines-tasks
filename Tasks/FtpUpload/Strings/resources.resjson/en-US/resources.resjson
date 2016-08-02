@@ -18,6 +18,6 @@
   "loc.input.help.overwrite": "Overwrite existing files in the remote directory.",
   "loc.input.label.preservePaths": "Preserve file paths",
   "loc.input.help.preservePaths": "If selected, the relative local directory structure is recreated under the remote directory where files are uploaded.  Otherwise, files are uploaded directly to the remote directory without creating additional subdirectories.<p>For example, suppose your source folder is: <b>`/home/user/source/`</b> and contains the file: <b>`foo/bar/foobar.txt`</b>, and your remote directory is: <b>`/uploads/`</b>.<br>If selected, the file is uploaded to: <b>`/uploads/foo/bar/foobar.txt`</b>.  Otherwise, to: <b>`/uploads/foobar.txt`</b>.",
-  "loc.input.label.rejectUnauthorized": "Reject unauthorized SSL certificates",
-  "loc.input.help.rejectUnauthorized": "If selected, when connecting in secure mode with ftps://, the FTP server certificate is verified with several well known root certificate authorities (e.g. Verisign).  This option protects against invalid server authentication certificates which may be expired or revoked (e.g. if they were compromised).  Disabling this option should be done with care, but is necessary if using self-signed certificates."
+  "loc.input.label.trustSSL": "Trust server certificate",
+  "loc.input.help.trustSSL": "Selecting this option results in the FTP server's SSL certificate being trusted with ftps://, even if it is self-signed or cannot be validated by a Certificate Authority (CA)."
 }
