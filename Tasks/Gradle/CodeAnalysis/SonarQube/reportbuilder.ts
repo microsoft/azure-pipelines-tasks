@@ -1,7 +1,7 @@
 import Q = require('q');
 
-import {SonarQubeRunSettings} from './sonarqube-runsettings';
-import {SonarQubeMetrics} from './sonarqube-metrics';
+import {SonarQubeRunSettings} from './runsettings';
+import {SonarQubeMetrics} from './metrics';
 
 import tl = require('vsts-task-lib/task');
 
@@ -25,15 +25,37 @@ export class SonarQubeReportBuilder {
         this.taskMetrics = taskMetrics;
     }
 
+    /**
+     * Creates a Markdown-formatted build summary, fetching appropriate data (as configured by the user) to do so.
+     */
+    public fetchMetricsAndCreateReport(waitForAnalysis:boolean):Q.Promise<string> {
+        // Start asynchronous processing of all report sections at once, assembling them at the end.
+        var reportSectionPromises:Q.Promise<string>[] = [
+            // Quality gate status
+            this.fetchQualityGateStatusAndCreateReport(waitForAnalysis),
+            // Link to the SonarQube dashboard
+            Q.when<string>(this.createLinkToSonarQubeDashboard())
+        ];
 
-    // Creates a string containing Markdown of a link to the SonarQube dashboard for this project.
+        // Resolve them all and return the finished build summary. Rejectionss fail fast.
+        return Q.all<string>(reportSectionPromises)
+            .then((reportSections:string[]) => {
+                // Put the build summary sections together with the Markdown newline - any null values are ignored
+                var buildSummary:string = reportSections.join('  \r\n');
+                tl.debug('Build summary:');
+                tl.debug(buildSummary);
+                return buildSummary;
+            });
+    }
+
     /**
      * Creates a Markdown-formatted link to the SonarQube dashboard for this project.
      * @returns {string} A single-line, Markdown-formatted link to the SonarQube dashboard for this project
      */
-    public createLinkToSonarQubeDashboard(): string {
+    private createLinkToSonarQubeDashboard(): string {
         // Looks like: Detailed SonarQube report
         var linkText:string = tl.loc('sqAnalysis_BuildSummary_LinkText');
+        // Looks like: "[Detailed SonarQube report >](https://mySQserver:9000/dashboard/index/foo "foo Dashboard")"
         return `[${linkText} >](${this.sqRunSettings.dashboardUrl} \"${this.sqRunSettings.projectKey} Dashboard\")`;
     }
 
@@ -42,8 +64,14 @@ export class SonarQubeReportBuilder {
      * Returns null if this.taskMetrics is null.
      * @returns {Promise<string>} A promise, resolving to a string of a Markdown-formatted report of the quality gate status
      */
-    public fetchQualityGateStatusAndCreateReport():Q.Promise<string> {
+    private fetchQualityGateStatusAndCreateReport(waitForAnalysis:boolean):Q.Promise<string> {
+        if (!waitForAnalysis) {
+            // Do not create a quality gate status section if not waiting for the server to analyse the build
+            console.log(tl.loc('sqCommon_NotWaitingForAnalysis'));
+            return Q.when<string>(null);
+        }
         if (!this.taskMetrics) {
+            tl.debug("SQTaskMetrics was null in SQReportBuilder, returning null for quality gate status");
             return Q.when<string>(null);
         }
 

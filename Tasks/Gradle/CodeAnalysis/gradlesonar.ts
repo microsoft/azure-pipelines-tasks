@@ -8,8 +8,8 @@ import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
 
 // Lowercased file names are to lessen the likelihood of xplat issues
-import sqCommon = require('../sonarqube-common/sonarqube-common');
-import {SonarQubeEndpoint} from '../sonarqube-common/sonarqube-common';
+import sqCommon = require('../CodeAnalysis/SonarQube/common');
+import {SonarQubeEndpoint} from '../CodeAnalysis/SonarQube/endpoint';
 
 // Apply arguments to enable SonarQube analysis.
 // Returns the changed toolRunner. Has no effect if SonarQube is not enabled.

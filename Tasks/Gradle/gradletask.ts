@@ -5,7 +5,7 @@ import fs = require('fs');
 import path = require('path');
 
 // Lowercased file names are to lessen the likelihood of xplat issues
-import sqCommon = require('./sonarqube-common/sonarqube-common');
+import sqCommon = require('./CodeAnalysis/SonarQube/common');
 import sqGradle = require('./CodeAnalysis/gradlesonar');
 
 import {CodeAnalysisOrchestrator} from './CodeAnalysis/Common/CodeAnalysisOrchestrator';

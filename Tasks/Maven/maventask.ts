@@ -7,7 +7,7 @@ import fs = require('fs');
 
 import tl = require('vsts-task-lib/task');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
-import sqCommon = require('./sonarqube-common/sonarqube-common');
+import sqCommon = require('./CodeAnalysis/SonarQube/common');
 
 // Lowercased file names are to lessen the likelihood of xplat issues
 import codeAnalysis = require('./CodeAnalysis/mavencodeanalysis');

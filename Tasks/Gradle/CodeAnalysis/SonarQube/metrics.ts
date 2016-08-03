@@ -1,8 +1,8 @@
 import Q = require('q');
 
-import {SonarQubeEndpoint} from './sonarqube-common';
-import sqCommon = require('./sonarqube-common');
-import {ISonarQubeServer} from  './sonarqube-server';
+import {SonarQubeEndpoint} from './endpoint';
+import sqCommon = require('./common');
+import {ISonarQubeServer} from  './server';
 
 import tl = require('vsts-task-lib/task');
 
@@ -37,8 +37,14 @@ export class SonarQubeMetrics {
         this.server = server;
         this.taskId = taskId;
 
-        this.timeout = timeout|| 60;
-        this.delay = delay || 1;
+        if (timeout == undefined) {
+            timeout = 300;
+        }
+        if (delay == undefined) {
+            delay = 1;
+        }
+        this.timeout = timeout;
+        this.delay = delay;
     }
 
     /**
@@ -70,32 +76,35 @@ export class SonarQubeMetrics {
         var timeout = timeout || this.timeout;
         var delay = delay || this.delay;
 
-        var isDone:boolean = false;
         // Every [delay] seconds, call isAnalysisComplete()
-        var intervalObject = setInterval(() => {
+        var intervalTask = setInterval(() => {
             this.isTaskComplete()
                 .then((isDone:boolean) => {
                     if (isDone) {
-                        clearInterval(intervalObject);
                         this.analysisComplete = true;
                         defer.resolve(true);
                     }
                 })
                 .fail((error) => {
-                    // If anything goes wrong, delete the repeating call and reject.
-                    clearInterval(intervalObject);
+                    // If anything goes wrong, reject
                     defer.reject(error);
                 })
         }, delay * 1000);
 
-        // After [timeout] seconds, delete the repeating call and reject.
-        setTimeout((intervalObject) => {
-            clearInterval(intervalObject);
-            tl.debug(`Did not receive a success response before the timeout (${timeout}s) expired.`);
-            defer.reject(tl.loc('sqAnalysis_AnalysisTimeout', timeout));
-        }, timeout * 1000, intervalObject);
+        // After [timeout] seconds, reject.
+        var timeoutTask = setTimeout(() => {
+            if (!this.analysisComplete) {
+                tl.debug(`Did not receive a success response before the timeout (${timeout}s) expired.`);
+                defer.reject(tl.loc('sqAnalysis_AnalysisTimeout', timeout));
+            }
+        }, timeout * 1000);
 
-        return defer.promise;
+        return defer.promise
+            .fin(() => {
+                // Upon exit, clear the repeating and delayed tasks.
+                clearInterval(intervalTask);
+                clearTimeout(timeoutTask);
+            });
     }
 
     /**
@@ -162,7 +171,7 @@ export class SonarQubeMetrics {
      * @returns JSON object representation of the analysis details
      */
     private getAnalysisDetails(analysisId:string):Q.Promise<Object> {
-        return this.server.callSonarQubeRestEndpoint('/api/qualitygates/project_status?analysisId=' + analysisId)
+        return this.server.invokeApiCall('/api/qualitygates/project_status?analysisId=' + analysisId)
             .then((responseJson:any) => {
                 if (!responseJson.projectStatus) {
                     tl.debug('Could not fetch quality gate details on analysis ID' + analysisId);
@@ -178,7 +187,7 @@ export class SonarQubeMetrics {
      * @returns JSON object representation of the task details
      */
     private getTaskDetails():Q.Promise<Object> {
-        return this.server.callSonarQubeRestEndpoint('/api/ce/task?id=' + this.taskId)
+        return this.server.invokeApiCall('/api/ce/task?id=' + this.taskId)
             .then((responseJsonObject:any) => {
                 if (!responseJsonObject || !responseJsonObject.task) {
                     return Q.reject(new Error(`Invalid response when requesting task details for ID ${this.taskId}`));
@@ -191,7 +200,7 @@ export class SonarQubeMetrics {
                     tl.debug(err.message);
                 }
 
-                tl.debug(`Could not fetch task details on ID ${this.taskId}}`);
+                tl.debug(`Could not fetch task details on ID ${this.taskId}`);
                 return Q.reject(new Error(tl.loc('sqCommon_InvalidResponseFromServer')));
             })
     }

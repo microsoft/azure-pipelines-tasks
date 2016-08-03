@@ -1,4 +1,4 @@
-/// <reference path="../../../definitions/vsts-task-lib.d.ts" />
+/// <reference path="../../../../definitions/vsts-task-lib.d.ts" />
 
 import Q = require('q');
 import path = require('path');
@@ -6,20 +6,15 @@ import fs = require('fs');
 
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
 
-import {SonarQubeRunSettings} from './sonarqube-runsettings';
-import {ISonarQubeServer, SonarQubeServer} from './sonarqube-server';
-import {SonarQubeMetrics} from './sonarqube-metrics';
-import {SonarQubeReportBuilder} from './sonarqube-reportbuilder';
+import {SonarQubeEndpoint} from './endpoint';
+import {SonarQubeRunSettings} from './runsettings';
+import {ISonarQubeServer, SonarQubeServer} from './server';
+import {SonarQubeMetrics} from './metrics';
+import {SonarQubeReportBuilder} from './reportbuilder';
 
 import tl = require('vsts-task-lib/task');
 
 export const toolName: string = 'SonarQube';
-
-// Simple data class for a SonarQube generic endpoint
-export class SonarQubeEndpoint {
-    constructor(public Url: string, public Username: string, public Password: string) {
-    }
-}
 
 // Returns true if SonarQube integration is enabled.
 export function isSonarQubeAnalysisEnabled(): boolean {
@@ -190,30 +185,13 @@ function createSonarQubeBuildSummary(sqBuildFolder:string):Q.Promise<string> {
         return Q.when(tl.loc('sqAnalysis_BuildSummaryNotAvailableInPrBuild'));
     }
 
-    // Wait for analysis to finish so that we can get analysis information from the SonarQube server
-    var timeout:number = 300;
-    var delay:number = 1;
+    var sqRunSettings:SonarQubeRunSettings = getSonarQubeRunSettings(sqBuildFolder);
 
-    var sqRunSettings:SonarQubeRunSettings = getSonarQubeTaskReport(sqBuildFolder);
-
-    var sqServer:ISonarQubeServer = new SonarQubeServer();
-    var analysisMetrics:SonarQubeMetrics = new SonarQubeMetrics(sqServer, sqRunSettings.ceTaskId, timeout, delay);
+    var sqServer:ISonarQubeServer = new SonarQubeServer(getSonarQubeEndpoint());
+    var analysisMetrics:SonarQubeMetrics = new SonarQubeMetrics(sqServer, sqRunSettings.ceTaskId);
     var sqReportBuilder:SonarQubeReportBuilder = new SonarQubeReportBuilder(sqRunSettings, analysisMetrics);
 
-    // Looks like: "[Detailed SonarQube report >](https://mySQserver:9000/dashboard/index/foo "foo Dashboard")"
-    var linkToDashBoard:string = sqReportBuilder.createLinkToSonarQubeDashboard();
-
-    // Build summary has two major sections: quality gate status and a link to the dashboard
-    return createQualityGateStatusSection(sqReportBuilder)
-        .then((qualityGateStatus:string) => {
-
-            // Put the quality gate status and dashboard link sections together with the Markdown newline
-            var buildSections:string[] = [qualityGateStatus, linkToDashBoard];
-            var buildSummary:string = buildSections.join('  \r\n');
-            tl.debug('Build summary:');
-            tl.debug(buildSummary);
-            return buildSummary;
-        })
+    return sqReportBuilder.fetchMetricsAndCreateReport(tl.getBoolInput('sqAnalysisWaitForAnalysis'));
 }
 
 // Returns the location of the SonarQube integration staging directory.
@@ -223,25 +201,10 @@ function getOrCreateSonarQubeStagingDirectory(): string {
     return sqStagingDir;
 }
 
-/**
- * Creates a string containing Markdown of the SonarQube quality gate status for this project.
- * @param sqRunSettings SonarQubeRunSettings object for the applicable run
- * @returns {string}    A Markdown-formatted report on the SonarQube quality gate status
- */
-function createQualityGateStatusSection(sqReportBuilder: SonarQubeReportBuilder): Q.Promise<string> {
-    if (!tl.getBoolInput('sqAnalysisWaitForAnalysis')) {
-        // Do not create a quality gate status section if not waiting for the server to analyse the build
-        console.log(tl.loc('sqCommon_NotWaitingForAnalysis'));
-        return Q.when<string>(null);
-    }
-
-    return sqReportBuilder.fetchQualityGateStatusAndCreateReport();
-}
-
 // Returns, as an object, the contents of the 'report-task.txt' file created by SonarQube plugins
 // The returned object contains the following properties:
 //   projectKey, serverUrl, dashboardUrl, ceTaskId, ceTaskUrl
-function getSonarQubeTaskReport(sonarPluginFolder: string): SonarQubeRunSettings {
+function getSonarQubeRunSettings(sonarPluginFolder: string): SonarQubeRunSettings {
     var reportFilePath:string = path.join(sonarPluginFolder, 'report-task.txt');
     if (!tl.exist(reportFilePath)) {
         tl.debug('Task report not found at: ' + reportFilePath);

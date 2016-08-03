@@ -4,39 +4,28 @@ import https = require('https');
 import http = require('http');
 import {IncomingMessage} from 'http';
 
-import {SonarQubeEndpoint} from './sonarqube-common';
-import sqCommon = require('./sonarqube-common');
+import {SonarQubeEndpoint} from './endpoint';
 
 import tl = require('vsts-task-lib/task');
 
 export interface ISonarQubeServer {
-
-    /**
-     * Retrieves the SonarQubeEndpoint instance associated with this ISonarQubeServer.
-     */
-    getEndpoint():SonarQubeEndpoint;
-
     /**
      * Invoke a REST endpoint on the SonarQube server.
      * @param path The host-relative path to the REST endpoint (e.g. /api/ce/task)
      * @returns A promise, resolving with a JSON object representation of the response. Rejects on error or non-200 header.
      */
-    callSonarQubeRestEndpoint(path:string):Q.Promise<Object>;
+    invokeApiCall(path:string):Q.Promise<Object>;
 }
 
 export class SonarQubeServer implements ISonarQubeServer {
 
     private endpoint:SonarQubeEndpoint;
 
-    constructor() {
-        this.endpoint = sqCommon.getSonarQubeEndpoint();
+    constructor(endpoint:SonarQubeEndpoint) {
+        this.endpoint = endpoint;
     }
 
-    public getEndpoint():SonarQubeEndpoint {
-        return this.endpoint;
-    }
-
-    public callSonarQubeRestEndpoint(path:string):Q.Promise<Object> {
+    public invokeApiCall(path:string):Q.Promise<Object> {
         var defer = Q.defer<Object>();
 
         var options:any = this.createSonarQubeHttpRequestOptions(path);
