@@ -2,20 +2,21 @@
 {
 	$testAgentPath = Locate-TestAgentPath($Version)
 	
-    if(-not $testAgentPath)
+    if((-not $testAgentPath) -or (-not (Test-Path ($testAgentPath + "\Agent"))))
     {
         return $null
     }
 	
-	return (Get-ChildItem $testAgentPath).GetValue('AgentRunMode')
+	return (Get-Item ($testAgentPath + "\Agent")).GetValue('AgentRunMode')
 }
 
 function Locate-TestVersionAndVsRoot([string] $Version)
 {
     $testAgentPath = Locate-TestAgentPath($Version)
 
-    if($testAgentPath){
-        return (Get-ChildItem $testAgentPath).GetValue('InstallDir')
+    if ($testAgentPath)
+    {
+        return (Get-Item $testAgentPath).GetValue('InstallDir')
     }
     
     throw "Unable to find TestAgent installation path"

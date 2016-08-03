@@ -23,6 +23,11 @@ Function CmdletHasMember($memberName) {
     return $cmdletParameter
 }
 
+Function DtaCmdletHasMember($memberName) {
+    $cmdletParameter = (gcm Invoke-DeployTestAgent).Parameters.Keys.Contains($memberName)
+    return $cmdletParameter
+}
+
 Function Get-PersonalAccessToken($vssEndPoint) {
     return $vssEndpoint.Authorization.Parameters.AccessToken
 }
@@ -66,6 +71,9 @@ Write-Verbose "downloadTestAgentScriptLocation = $downloadTestAgentScriptLocatio
 $verifyTestMachinesAreInUse = Join-Path -Path $currentDirectory -ChildPath "VerifyTestMachinesAreInUse.ps1"
 Write-Verbose "VerifyTestMachinesAreInUseScriptLocation = $verifyTestMachinesAreInUse"
 
+$locateTestAgentHelper = Join-Path -Path $currentDirectory -ChildPath "LocateTestAgentHelper.ps1"
+Write-Verbose "LocateTestAgentHelperScriptLocation = $locateTestAgentHelper"
+
 # Import the Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
@@ -88,6 +96,7 @@ if (!$personalAccessToken)
 try
 {
     $persistExists = CmdletHasMember "Persist"
+    $locateTestAgentHelperExists = DtaCmdletHasMember "LocateTestAgentHelperScriptLocation"
 
     if($persistExists)
     {
@@ -102,8 +111,17 @@ try
         Write-Verbose "Environment details $environment"
     }
 
-    Write-Verbose "Calling Deploy test agent cmdlet"
-    Invoke-DeployTestAgent -TaskContext $distributedTaskContext -MachineEnvironment $environment -UserName $machineUserName -Password $machinePassword -MachineNames $testMachineGroup -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -downloadTestAgentScriptLocation $downloadTestAgentScriptLocation -Connection $connection -PersonalAccessToken $personalAccessToken -DataCollectionOnly $isDataCollectionOnly -VerifyTestMachinesAreInUseScriptLocation $verifyTestMachinesAreInUse
+    if($locateTestAgentHelperExists)
+    {
+        Write-Verbose "Calling Deploy test agent cmdlet with locate test agent helper"
+        Invoke-DeployTestAgent -TaskContext $distributedTaskContext -MachineEnvironment $environment -UserName $machineUserName -Password $machinePassword -MachineNames $testMachineGroup -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -downloadTestAgentScriptLocation $downloadTestAgentScriptLocation -Connection $connection -PersonalAccessToken $personalAccessToken -DataCollectionOnly $isDataCollectionOnly -VerifyTestMachinesAreInUseScriptLocation $verifyTestMachinesAreInUse -LocateTestAgentHelperScriptLocation $locateTestAgentHelper
+    } 
+    else 
+    {
+        Write-Verbose "Calling Deploy test agent cmdlet"
+        Invoke-DeployTestAgent -TaskContext $distributedTaskContext -MachineEnvironment $environment -UserName $machineUserName -Password $machinePassword -MachineNames $testMachineGroup -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -downloadTestAgentScriptLocation $downloadTestAgentScriptLocation -Connection $connection -PersonalAccessToken $personalAccessToken -DataCollectionOnly $isDataCollectionOnly -VerifyTestMachinesAreInUseScriptLocation $verifyTestMachinesAreInUse
+    }
+
     Write-Verbose "Leaving script DeployTestAgent.ps1"
 }
 catch

@@ -1,7 +1,18 @@
 function Check-TestAgentIsRunning($Version)
 {
     $testAgentPath = Locate-TestAgentPath($Version)
-    $testAgentTfsUrl = (Get-ItemProperty $testAgentPath -ErrorAction SilentlyContinue).TfsUrl
+    if (!$testAgentPath)
+    {
+        Write-Verbose "Test Agent path doesn't exist" -verbose
+        return $false
+    }
+    
+    if (-not (Test-Path ($testAgentPath + "\Agent"))){
+        Write-Verbose "Test Agent is not configured" -verbose
+        return $false
+    }
+
+    $testAgentTfsUrl = (Get-ItemProperty ($testAgentPath + "\Agent") -ErrorAction SilentlyContinue).TfsUrl
     if ([string]::IsNullOrWhiteSpace($testAgentTfsUrl))
     {
         Write-Verbose "Test Agent is not running as it's not configured against Team Foundation Service" -verbose

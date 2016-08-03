@@ -49,10 +49,10 @@ function Get-SubKeysInFloatFormat($keys)
     $targetKeys = @()      # New array
     foreach ($key in $keys)
     {
-      $targetKeys += [decimal] $key.PSChildName
-  }
+        $targetKeys += [decimal] $key.PSChildName
+    }
 
-  return $targetKeys
+    return $targetKeys
 }
 
 function Locate-TestAgentPath($ProductVersion = "14.0")
@@ -64,18 +64,19 @@ function Locate-TestAgentPath($ProductVersion = "14.0")
     }
     Write-Verbose "VS Agent version $ProductVersion" -verbose
 
-    $testAgentPath = "HKLM:\SOFTWARE\Microsoft\VisualStudio\{0}\EnterpriseTools\QualityTools\Agent" -f $ProductVersion
+    $testAgentPath = "HKLM:\SOFTWARE\Microsoft\VisualStudio\{0}\EnterpriseTools\QualityTools" -f $ProductVersion
 
-    if (-not (Test-Path $testAgentPath))
+    if ((Test-Path $testAgentPath) -and (Get-Item $testAgentPath).GetValue('InstallDir'))
     {
-      $testAgentPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\{0}\EnterpriseTools\QualityTools\Agent" -f $ProductVersion
+      return $testAgentPath;
     }
 
-    if (-not (Test-Path $testAgentPath))
+    $testAgentPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\{0}\EnterpriseTools\QualityTools" -f $ProductVersion
+    if ((Test-Path $testAgentPath) -and (Get-Item $testAgentPath).GetValue('InstallDir'))
     {
-      Write-Verbose "Test Agent is not running as Path doesn't exist" -verbose
-      return $null
+      return $testAgentPath;
     }
 
-  return $testAgentPath;
+    Write-Verbose "Test Agent doesn't exist as Path doesn't exist" -verbose
+    return $testAgentPath;
 }
