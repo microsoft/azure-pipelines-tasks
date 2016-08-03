@@ -15,7 +15,6 @@ Register-Mock Get-SourceProvider
 Register-Mock Get-SourceFilePaths
 Register-Mock New-SrcSrvIniContent
 Register-Mock Add-SourceServerStream
-Register-Mock Invoke-DisposeSourceProvider
 Register-Mock Remove-DbghelpLibrary
 
 # Act.
@@ -24,5 +23,4 @@ Invoke-IndexSources -SymbolsFilePaths 'SomeDrive:\SomeDir\SomeLibrary1.pdb' -Tre
 # Assert.
 Assert-WasCalled Push-Location $env:TEMP
 Assert-WasCalled Get-SourceFilePaths -Times 0
-Assert-WasCalled Invoke-DisposeSourceProvider -- -Provider $null
 Assert-WasCalled Remove-DbghelpLibrary -- -HModule $libraryHandle
