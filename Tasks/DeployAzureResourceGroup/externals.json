@@ -15,7 +15,7 @@
           "DeploymentUtilities/Newtonsoft.Json.dll",
           "DeploymentUtilities/VisualStudioRemoteDeployer.exe",
           "DeploymentUtilities/VisualStudioRemoteDeployer.exe.config",
-          "DeploymentUtilities/Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal/Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal.psm1"
+          "DeploymentUtilities/Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal.psm1"
       ]
     }
   ]
