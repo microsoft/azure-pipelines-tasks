@@ -44,7 +44,9 @@ export class NuGetConfigHelper {
         };
 
         if (this._nugetConfigPath) {
-            tl.cp("-f", this._nugetConfigPath, this.tempNugetConfigPath);
+            // don't use cp as that copies the read-only flag, and tfvc sets that on files
+            let content = fs.readFileSync(this._nugetConfigPath);
+            fs.writeFileSync(this.tempNugetConfigPath, content);
         }
         else {
             // small file, use writeFileSync
