@@ -23,11 +23,13 @@ class Credential {
     }
 }
 
-function getRequest(url: string, cred: Credential, strictSSL: boolean, callback: (res) => void): void {
+function getRequest(url: string, cred: Credential, strictSSL: boolean): Q.Promise<any> {
+    let defer = Q.defer<any>();
+
     request
         .get({url: url, strictSSL: strictSSL}, (err, res, body) => {
             if (res && body && res.statusCode === 200)  {
-                callback.call(this, JSON.parse(body));
+                defer.resolve(JSON.parse(body));
             } else {
                 if (res && res.statusCode) {
                    tl.debug(tl.loc('ServerCallErrorCode', res.statusCode)); 
@@ -35,32 +37,36 @@ function getRequest(url: string, cred: Credential, strictSSL: boolean, callback:
                 if (body) {
                     tl.debug(body);
                 }
-                tl.setResult(tl.TaskResult.Failed, tl.loc('ServerCallFailed'));
+                defer.reject(new Error(tl.loc('ServerCallFailed')));
             }
         })
         .auth(cred.mUsername, cred.mPassword, true)
         .on('error', err => {
-            tl.setResult(tl.TaskResult.Failed, err);
+            defer.reject(new Error(err));
         });
+
+        return defer.promise;
 }
 
 function getLastSuccessful(serverEndpointUrl: string, jobName: string, cred: Credential, strictSSL: boolean): Q.Promise<number> {
     let defer = Q.defer<number>();
     let lastSuccessfulUrl = `${serverEndpointUrl}/job/${jobName}/api/json?tree=lastSuccessfulBuild[id,displayname]`;
 
-    getRequest(lastSuccessfulUrl, cred, strictSSL, result => {
+    getRequest(lastSuccessfulUrl, cred, strictSSL)
+    .then( result => {
         if (result && result['lastSuccessfulBuild']) {
             let lastSuccessfulBuildId = result['lastSuccessfulBuild']['id'];
             if (lastSuccessfulBuildId) {
                 defer.resolve(lastSuccessfulBuildId);
             } else {
-                tl.setResult(tl.TaskResult.Failed, tl.loc('CouldNotGetLastSuccessfuilBuildNumber'));
+                defer.reject(new Error(tl.loc('CouldNotGetLastSuccessfuilBuildNumber')));
             }
         } else {
-            tl.setResult(tl.TaskResult.Failed, tl.loc('CouldNotGetLastSuccessfuilBuildNumber'));
+            defer.reject(new Error(tl.loc('CouldNotGetLastSuccessfuilBuildNumber')));
         }
-    });
-              
+    })
+    .fail(err => {defer.reject(err)});
+
     return defer.promise;
 }
 
@@ -69,11 +75,12 @@ function getArtifactsRelativePaths(serverEndpointUrl: string, jobName: string, j
     let defer = Q.defer<string[]>();
     let artifactQueryUrl = `${serverEndpointUrl}/job/${jobName}/${jobBuildId}/api/json?tree=artifacts[*]`;
 
-    getRequest(artifactQueryUrl, cred, strictSSL, result => {
+    getRequest(artifactQueryUrl, cred, strictSSL)
+    .then(result => { 
         if (result && result['artifacts']) {
             let artifacts = result['artifacts'];
             if (artifacts.length === 0) {
-                tl.setResult(tl.TaskResult.Failed, tl.loc('CouldNotFindArtifacts', jobName, jobBuildId));
+                defer.reject(new Error(tl.loc('CouldNotFindArtifacts', jobName, jobBuildId)));
             } else {
                 let artifactsRelativePaths = result['artifacts'].map(artifact => {
                     return artifact['relativePath'];
@@ -82,11 +89,12 @@ function getArtifactsRelativePaths(serverEndpointUrl: string, jobName: string, j
             }
         } else {
             // no artifacts for this job
-            tl.setResult(tl.TaskResult.Failed, tl.loc('CouldNotFindArtifacts', jobName, jobBuildId));
+            defer.reject(new Error(tl.loc('CouldNotFindArtifacts', jobName, jobBuildId)));
         }
-    });
+    })
+    .fail(err => {defer.reject(err)});
 
-    return defer.promise 
+    return defer.promise
 }
 
 async function download(url: string, localFile: string, cred: Credential, strictSSL: boolean) {
@@ -94,7 +102,7 @@ async function download(url: string, localFile: string, cred: Credential, strict
     await request.get( {url: url, strictSSL: strictSSL} )
         .auth(cred.mUsername, cred.mPassword, true)
         .on('error', err => {
-            tl.setResult(tl.TaskResult.Failed, err)
+            throw new Error(err);
         })
         .pipe(fs.createWriteStream(localFile));
 
@@ -116,7 +124,7 @@ async function doWork() {
         let username: string = serverEndpointAuth['parameters']['username'];
         let password: string = serverEndpointAuth['parameters']['password'];
         let cred: Credential = (username && password) ? new Credential(username, password) : new Credential("", "");
-        
+
         let jobName: string = tl.getInput('jobName', true);
         let localPathRoot: string = tl.getPathInput('saveTo', true);
 
@@ -132,8 +140,8 @@ async function doWork() {
             buildId = parseInt(buildIdStr);
         }
         tl.debug(tl.loc('GetArtifactsFromBuildNumber', buildId, jobName));
-        
-        let artifactsRelativePaths = await getArtifactsRelativePaths(serverEndpointUrl, jobName, 
+
+        let artifactsRelativePaths = await getArtifactsRelativePaths(serverEndpointUrl, jobName,
                 buildId, cred, strictSSL);
         artifactsRelativePaths.forEach(relativePath => {
             let localPath = path.resolve(localPathRoot, relativePath);
@@ -143,7 +151,7 @@ async function doWork() {
             }
 
             let artifactUrl = getArtifactUrl(serverEndpointUrl, jobName, buildId, relativePath);
-            download(artifactUrl, localPath, cred, strictSSL);  
+            download(artifactUrl, localPath, cred, strictSSL);
         });
 
     } catch (e) {
