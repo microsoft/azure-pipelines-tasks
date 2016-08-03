@@ -30,7 +30,7 @@ param (
     Write-Verbose "enableDetailedLogging = $enableDetailedLogging"
     Write-Verbose "additionalArguments = $additionalArguments"
 
-    Import-Module "$deploymentUtilitiesLocation\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs.dll"
+    Import-Module "$deploymentUtilitiesLocation\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll"
 
     $cleanTargetPathOption = ''
     if ($cleanTargetBeforeCopy -eq "true")

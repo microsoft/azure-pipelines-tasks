@@ -44,8 +44,8 @@ Initialize-Azure
 Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 
 # Import all the dlls and modules which have cmdlets we need
-Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
-Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs.dll"
+Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal.psm1"
+Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll"
 
 # Load all dependent files for execution
 . "$PSScriptRoot\Utility.ps1"
