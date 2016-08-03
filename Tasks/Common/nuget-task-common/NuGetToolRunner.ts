@@ -6,6 +6,7 @@ import {ToolRunner, IExecOptions, IExecResult} from 'vsts-task-lib/toolrunner';
 import * as auth from "./Authentication"
 import * as os from 'os';
 import * as path from 'path';
+import * as url from 'url';
 
 interface EnvironmentDictionary { [key: string]: string }
 
@@ -50,6 +51,7 @@ function prepareNuGetExeEnvironment(input: EnvironmentDictionary, settings: NuGe
     env['NUGET_CREDENTIAL_PROVIDER_OVERRIDE_DEFAULT'] = 'true';
 
     if (credProviderPath) {
+        tl.debug(`credProviderPath = ${credProviderPath}`);
         env['NUGET_CREDENTIALPROVIDERS_PATH'] = credProviderPath;
     }
 
@@ -155,6 +157,79 @@ export function locateNuGetExe(userNuGetExePath: string): string {
     return toolPath;
 }
 
-export function locateCredentialProvider(): string {
-    return locateTool('CredentialProvider.TeamBuild.exe');
+function isHosted(): boolean {
+    // not an ideal way to detect hosted, but there isn't a variable for it, and we can't make network calls from here
+    // due to proxy issues.
+    const collectionUri = tl.getVariable("System.TeamFoundationCollectionUri");
+    const parsedCollectionUri = url.parse(collectionUri);
+    return /\.visualstudio\.com$/i.test(parsedCollectionUri.hostname);
 }
+
+// Currently, there is a race condition of some sort that causes nuget to not send credentials sometimes
+// when using the credential provider.
+// Unfortunately, on on-premises TFS, we must use credential provider to override NTLM auth with the build
+// identity's token.
+// Therefore, we are enabling credential provider on on-premises and disabling it on hosted. We allow for test
+// instances by an override variable.
+
+export function isCredentialProviderEnabled(): boolean {
+    // set NuGet.ForceEnableCredentialProvider to "true" to force allowing the credential provider flow, "false"
+    // to force *not* allowing the credential provider flow, or unset/anything else to fall through to the 
+    // hosted environment detection logic
+    const credentialProviderOverrideFlag = tl.getVariable("NuGet.ForceEnableCredentialProvider");
+    if (credentialProviderOverrideFlag === "true") {
+        tl.debug("Credential provider is force-enabled for testing purposes.");
+        return true;
+    }
+
+    if (credentialProviderOverrideFlag === "false") {
+        tl.debug("Credential provider is force-disabled for testing purposes.");
+        return false;
+    }
+    
+    if (isHosted()) {
+        tl.debug("Credential provider is disabled on hosted.");
+        return false;
+    }
+    else {
+        tl.debug("Credential provider is enabled.")
+        return true;
+    }
+}
+
+export function isCredentialConfigEnabled(): boolean {
+    // set NuGet.ForceEnableCredentialConfig to "true" to force allowing config-based credential flow, "false"
+    // to force *not* allowing config-based credential flow, or unset/anything else to fall through to the 
+    // hosted environment detection logic
+    const credentialConfigOverrideFlag = tl.getVariable("NuGet.ForceEnableCredentialConfig");
+    if (credentialConfigOverrideFlag === "true") {
+        tl.debug("Credential config is force-enabled for testing purposes.");
+        return true;
+    }
+
+    if (credentialConfigOverrideFlag === "false") {
+        tl.debug("Credential config is force-disabled for testing purposes.");
+        return false;
+    }
+    
+    // credentials in config will always fail for on-prem
+    if (!isHosted()) {
+        tl.debug("Credential config is disabled on on-premises TFS.");
+        return false;
+    }
+    else {
+        tl.debug("Credential config is enabled.")
+        return true;
+    }
+}
+
+export function locateCredentialProvider(): string {
+    const credentialProviderLocation = locateTool('CredentialProvider.TeamBuild.exe');
+    if(!credentialProviderLocation) {
+        tl.debug("Credential provider is not present.");
+        return null;
+    }
+
+    return isCredentialProviderEnabled() ? credentialProviderLocation : null;
+}
+

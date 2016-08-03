@@ -35,7 +35,7 @@ var solution = tl.getPathInput('solution', true, false);
 var filesList = nutil.resolveFilterSpec(solution, tl.getVariable('System.DefaultWorkingDirectory') || process.cwd());
 filesList.forEach(solutionFile => {
     if (!tl.stats(solutionFile).isFile()) {
-        throw new Error(tl.loc('NotARegularFile'));
+        throw new Error(tl.loc('NotARegularFile', solutionFile));
     }
 });
 
@@ -123,7 +123,10 @@ locationHelpers.assumeNuGetUriPrefixes(serviceUri)
 
         var configFilePromise = Q<string>(nugetConfigPath);
         var credCleanup = () => { return };
-        if (!credProviderDir || (userNuGetPath && preCredProviderNuGet)) {
+        if (!ngToolRunner.isCredentialConfigEnabled()) {
+            tl.debug("Not configuring credentials in nuget.config");
+        }
+        else if (!credProviderDir || (userNuGetPath && preCredProviderNuGet)) {
             if (nugetConfigPath) {
                 var nuGetConfigHelper = new NuGetConfigHelper(nuGetPathToUse, nugetConfigPath, authInfo, environmentSettings);
                 configFilePromise = nuGetConfigHelper.getSourcesFromConfig()
