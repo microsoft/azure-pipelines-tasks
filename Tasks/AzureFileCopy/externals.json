@@ -13,7 +13,7 @@
         },
         {
             "archiveName": "DeploymentUtilities.zip",
-            "url": "https://krishadiblob.blob.core.windows.net/tools/DeploymentUtilities/1.4/DeploymentUtilities.zip",
+            "url": "https://krishadiblob.blob.core.windows.net/tools/DeploymentUtilities/1.5/DeploymentUtilities.zip",
             "dest": "./",
             "files": [
               "DeploymentUtilities/Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll",
@@ -26,7 +26,7 @@
               "DeploymentUtilities/Newtonsoft.Json.dll",
               "DeploymentUtilities/VisualStudioRemoteDeployer.exe",
               "DeploymentUtilities/VisualStudioRemoteDeployer.exe.config",
-              "DeploymentUtilities/Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal/Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal.psm1"
+              "DeploymentUtilities/Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal.psm1"
             ]
         }
     ]
