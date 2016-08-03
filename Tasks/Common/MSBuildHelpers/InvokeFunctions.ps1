@@ -260,16 +260,23 @@ function Invoke-MSBuild {
                                 return
                             }
 
-                            # Record known detail nodes and manipulate the parent project ID if required.
+                            # Check if the detail node is new.
                             $id = $command.Properties['id']
                             if (!$knownDetailNodes.ContainsKey($id)) {
-                                # The detail node is new.
-
-                                # Check if the parent project ID is null or empty.
+                                # Default the parent ID to the root ID.
                                 $parentProjectId = $command.Properties['parentid']
                                 if (!$parentProjectId -or [guid]$parentProjectId -eq [guid]::Empty) {
-                                    # Default the parent ID to the root ID it is a new node and does not have a parent ID.
                                     $command.Properties['parentid'] = $detailId.ToString('D')
+                                }
+
+                                # Default the name. Some types of projects may not have a name (e.g. metaproj).
+                                if (!$command.Properties['name']) {
+                                    $command.Properties['name'] = 'project'
+                                }
+
+                                # Default the type to build.
+                                if (!$command.Properties['type']) {
+                                    $command.Properties['type'] = 'Build'
                                 }
 
                                 # Track the detail node as known.
