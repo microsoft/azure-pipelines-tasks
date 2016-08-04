@@ -86,7 +86,7 @@
       "type": "boolean",
       "label": "ms-resource:loc.input.label.trustSSL",
       "defaultValue": "false",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.trustSSL",
       "groupName": "advanced"
     }
