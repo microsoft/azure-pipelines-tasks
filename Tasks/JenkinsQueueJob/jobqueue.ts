@@ -103,11 +103,11 @@ export class JobQueue {
             var job = this.allJobs[i];
             // the parent must be finished (or null for root) in order for a job to possibly be started
             if (job.state == JobState.Locating && (job.parent == null || job.parent.state == JobState.Done)) {
-                // group these together so only search is done per job name
-                if (!nextSearches[job.name]) {
-                    nextSearches[job.name] = this.searches[job.name];
+                // group these together so only search is done per job.identifier
+                if (!nextSearches[job.identifier]) {
+                    nextSearches[job.identifier] = this.searches[job.identifier];
                 }
-                nextSearches[job.name].searchFor(job);
+                nextSearches[job.identifier].searchFor(job);
             }
         }
         return nextSearches;
@@ -131,10 +131,10 @@ export class JobQueue {
             this.rootJob = job;
         }
         this.allJobs.push(job);
-        if (this.searches[job.name] == null) {
-            this.searches[job.name] = new JobSearch(this, job.taskUrl, job.name);
+        if (this.searches[job.identifier] == null) {
+            this.searches[job.identifier] = new JobSearch(this, job.taskUrl, job.identifier);
         }
-        job.search = this.searches[job.name];
+        job.search = this.searches[job.identifier];
     }
 
     flushJobConsolesSafely(): void {
@@ -178,10 +178,10 @@ export class JobQueue {
         return null;
     }
 
-    findJob(name: string, executableNumber: number): Job {
+    findJob(identifier: string, executableNumber: number): Job {
         for (var i in this.allJobs) {
             var job = this.allJobs[i];
-            if (job.name == name && job.executableNumber == executableNumber) {
+            if (job.identifier == identifier && job.executableNumber == executableNumber) {
                 return job;
             }
         }
