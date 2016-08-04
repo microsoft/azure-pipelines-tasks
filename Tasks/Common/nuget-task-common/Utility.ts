@@ -119,3 +119,22 @@ export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: b
         return filesList.map(file => file.split("/").join("\\"));
     }
 }
+
+export function stripLeadingAndTrailingQuotes(path: string): string {
+    if (path.length == 0) {
+        return path;
+    }
+
+    let left = 0;
+    if (path.charAt(left) == '"') {
+        ++left;
+    }
+
+    let right = path.length - 1;
+    if (path.charAt(right) == '"') {
+        --right;
+    }
+
+    // substring returns a value *not* including the character at right
+    return path.substring(left, right + 1);
+}
