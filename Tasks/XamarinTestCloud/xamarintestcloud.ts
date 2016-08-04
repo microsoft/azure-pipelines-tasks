@@ -138,11 +138,10 @@ var onRunComplete = function () {
         uploadTestSummary();
 
         if (runFailures == 'true') {
-            // Error executing
-            tl.exit(1);
+            tl.setResult(tl.TaskResult.Failed, "Xamarin Test Cloud runs had failures, check the log for details.")
         }
         else {
-            tl.exit(0); // Done submitting all app files
+            tl.setResult(tl.TaskResult.Succeeded, "Xamarin Test Cloud runs completed successfully.");
         }
     } else {
         // Submit next app file
