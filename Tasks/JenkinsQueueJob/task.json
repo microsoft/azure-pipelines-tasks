@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 4
     },
     "groups": [
         {
@@ -80,7 +80,16 @@
             "resizable": "true",
             "rows" : "4"
         }
-      }
+      },
+      {
+        "name": "trustSSL",
+        "type": "boolean",
+        "label": "Trust server certificate",
+        "defaultValue": "false",
+        "required": false,
+        "helpMarkDown": "Selecting this option results in the Jenkins server's SSL certificate being trusted even if it is self-signed or cannot be validated by a Certificate Authority (CA).",
+        "groupName": "advanced"
+	    }
     ],
     "execution": {
         "Node": {
