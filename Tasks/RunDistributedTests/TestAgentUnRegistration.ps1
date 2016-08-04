@@ -139,7 +139,7 @@ function TestAgent-UnRegister
     if(Test-path -Path $dtaLogFile) 
     {
         Write-Verbose "=== Starting to print the dtaexecutionhost log file for [$env:COMPUTERNAME] ==="
-        Get-Content $dtaLogFile | foreach { Write-Verbose [$env:COMPUTERNAME] $_ }
+        Get-Content $dtaLogFile | Select -Last 1000 | foreach { Write-Verbose "[$env:COMPUTERNAME] $_" }
         Write-Verbose "=== Done printing the dtaexecutionhost log file for [$env:COMPUTERNAME] ==="
     }
 

@@ -338,7 +338,7 @@ function Set-TestAgentConfiguration
     if(Test-path -Path $configLogFile) 
     {
         Write-Verbose "=== Starting to print the testagent configuration log file for [$env:COMPUTERNAME] ==="
-        Get-Content $configLogFile | foreach { Write-Verbose [$env:COMPUTERNAME] $_ }
+        Get-Content $configLogFile | foreach { Write-Verbose "[$env:COMPUTERNAME] $_" }
         Write-Verbose "=== Done printing the testagent configuration log file for [$env:COMPUTERNAME] ==="        
     }
 
