@@ -135,6 +135,13 @@ function TestAgent-UnRegister
         [String] $TestAgentVersion 
     )
 
+    $dtaLogFile = Join-Path $env:SystemDrive "DtaLogs" | Join-Path -ChildPath "DTAExecutionHost.exe.log"
+    if(Test-path -Path $dtaLogFile) 
+    {
+        Write-Verbose "=== Starting to print the dtaexecutionhost log file ==="
+        Get-Content $dtaLogFile | foreach { Write-Verbose $_ }
+        Write-Verbose "=== Done printing the dtaexecutionhost log file ==="
+    }
 
     Write-Verbose -Message "Trying to delete TestAgent configurations." -verbose
 
