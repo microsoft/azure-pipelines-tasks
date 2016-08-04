@@ -639,6 +639,10 @@ export function createToolRunner(tool: string) {
     return tr;
 }
 
+export function tool(tool: string) {
+    return createToolRunner(tool);
+}
+
 //-----------------------------------------------------
 // Matching helpers
 //-----------------------------------------------------
