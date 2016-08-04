@@ -164,7 +164,7 @@ function updateResponseFile(argsArray: string[], responseFile: string): Q.Promis
 }
 
 function getTestSelectorLocation() : string {
-    return path.join(__dirname, "TestSelector", "TestSelector.exe");
+    return path.join(__dirname, "TestSelector/TestSelector.exe");
 }
 
 function generateResponseFile(): Q.Promise<string> {
@@ -233,7 +233,7 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
         defer.resolve(1);
         return defer.promise;
     }
-    var vstestLocation = path.join(vsCommon, "..", "IDE", "CommonExtensions", "Microsoft", "TestWindow", "vstest.console.exe");
+    var vstestLocation = path.join(vsCommon, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe");
     var vstest = tl.createToolRunner(vstestLocation);
     addVstestArgs(argsArray, vstest);
 
