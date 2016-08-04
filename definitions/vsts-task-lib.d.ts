@@ -342,6 +342,14 @@ declare module 'vsts-task-lib/task' {
 	 * @returns   boolean
 	 */
 	export function exist(path: string): boolean;
+
+	/**
+	 * Synchronously writes data to a file, replacing the file if it already exists.
+	 * @param file
+	 * @param data
+	 * @param options
+	 */
+	export function writeFileSync(file: string, data:string, options?:any);
 	/**
 	 * Useful for determining the host operating system.
 	 * see [os.type](https://nodejs.org/api/os.html#os_os_type)

@@ -448,6 +448,10 @@ export function exist(path: string): boolean {
     return mock.getResponse('exist', path) || false;
 }
 
+export function writeFileSync(file: string, data: string, options?: any) {
+    //do nothing
+}
+
 export function osType(): string {
     return mock.getResponse('osType', 'osType');
 }
