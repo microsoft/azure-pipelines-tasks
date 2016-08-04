@@ -119,6 +119,7 @@ describe(jobName + ' Suite', function() {
             done(err);
         });
     });
+    /**
     it('check args: bad parameters, no equals sign', (done) => {
         setResponseFile('response.json');
         
@@ -206,4 +207,5 @@ describe(jobName + ' Suite', function() {
             done(err);
         });
     });
+    **/
 });
