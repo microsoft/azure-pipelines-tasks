@@ -89,7 +89,7 @@
         "required": true,
         "helpMarkDown": "Selecting this option results in the Jenkins server's SSL certificate being trusted even if it is self-signed or cannot be validated by a Certificate Authority (CA).",
         "groupName": "advanced"
-        }
+	    }
     ],
     "execution": {
         "Node": {
