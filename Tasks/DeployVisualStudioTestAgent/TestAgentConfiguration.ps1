@@ -330,6 +330,8 @@ function Set-TestAgentConfiguration
 
     $configLogFile = Join-Path $env:temp "testagentconfig.log"
     Remove-Item $configLogFile -ErrorAction SilentlyContinue
+    $dtaLogFile = Join-Path $env:SystemDrive "DtaLogs" | Join-Path -ChildPath "DTAExecutionHost.exe.log" #filename also present in testagentunconfiguration.ps1
+    Remove-Item $dtaLogFile -ErrorAction SilentlyContinue
     
     DeleteDTAAgentExecutionService -ServiceName "DTAAgentExecutionService" | Out-Null
 
@@ -337,9 +339,9 @@ function Set-TestAgentConfiguration
 
     if(Test-path -Path $configLogFile) 
     {
-        Write-Verbose "=== Starting to print the testagent configuration log file for [$env:COMPUTERNAME] ==="
-        Get-Content $configLogFile | foreach { Write-Verbose "[$env:COMPUTERNAME] $_" }
-        Write-Verbose "=== Done printing the testagent configuration log file for [$env:COMPUTERNAME] ==="        
+        Write-Verbose -Message "=== Starting to print the testagent configuration log file for [$env:COMPUTERNAME] ===" -Verbose
+        Get-Content $configLogFile | foreach { Write-Verbose -Message "[$env:COMPUTERNAME] $_" -Verbose }
+        Write-Verbose -Message "=== Done printing the testagent configuration log file for [$env:COMPUTERNAME] ===" -Verbose        
     }
 
     if ($configOut.ExitCode -ne 0 -and $configOut.ExitCode -ne 3010)
