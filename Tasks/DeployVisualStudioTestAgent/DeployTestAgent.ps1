@@ -96,7 +96,7 @@ if (!$personalAccessToken)
 try
 {
     $persistExists = CmdletHasMember "Persist"
-    $locateTestAgentHelperExists = DtaCmdletHasMember "LocateTestAgentHelperScriptLocation"
+    $locateTestAgentHelperParamExists = DtaCmdletHasMember "LocateTestAgentHelperScriptLocation"
 
     if($persistExists)
     {
@@ -111,7 +111,7 @@ try
         Write-Verbose "Environment details $environment"
     }
 
-    if($locateTestAgentHelperExists)
+    if($locateTestAgentHelperParamExists)
     {
         Write-Verbose "Calling Deploy test agent cmdlet with locate test agent helper"
         Invoke-DeployTestAgent -TaskContext $distributedTaskContext -MachineEnvironment $environment -UserName $machineUserName -Password $machinePassword -MachineNames $testMachineGroup -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -downloadTestAgentScriptLocation $downloadTestAgentScriptLocation -Connection $connection -PersonalAccessToken $personalAccessToken -DataCollectionOnly $isDataCollectionOnly -VerifyTestMachinesAreInUseScriptLocation $verifyTestMachinesAreInUse -LocateTestAgentHelperScriptLocation $locateTestAgentHelper
