@@ -8,8 +8,6 @@ import path = require('path');
 import shell = require('shelljs');
 
 // node js modules
-var request = require('request');
-
 import task = require('./jenkinsqueuejobtask');
 import TaskOptions = task.TaskOptions;
 
