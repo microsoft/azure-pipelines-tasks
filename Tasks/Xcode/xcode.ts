@@ -71,7 +71,7 @@ async function run() {
         var xcb: ToolRunner = tl.createToolRunner(tool);
         xcb.argIf(sdk, ['-sdk', sdk]);
         xcb.argIf(configuration, ['-configuration', configuration]);
-        if(ws) {
+        if(ws && tl.filePathSupplied('xcWorkspacePath')) {
             xcb.arg('-workspace');
             xcb.pathArg(ws);
         }
@@ -112,14 +112,14 @@ async function run() {
                 //find signing identity
                 var signIdentity = await sign.findSigningIdentity(keychain);
                 xcb.argIf(signIdentity, 'CODE_SIGN_IDENTITY=' + signIdentity);
+            }
 
-                //determine the provisioning profile UUID
-                if(tl.filePathSupplied('provProfile') && tl.exist(provProfilePath)) {
-                    var provProfileUUID = await sign.getProvisioningProfileUUID(provProfilePath);
-                    xcb.argIf(provProfileUUID, 'PROVISIONING_PROFILE=' + provProfileUUID);
-                    if (removeProfile && provProfileUUID) {
-                        profileToDelete = provProfileUUID;
-                    }
+            //determine the provisioning profile UUID
+            if(tl.filePathSupplied('provProfile') && tl.exist(provProfilePath)) {
+                var provProfileUUID = await sign.getProvisioningProfileUUID(provProfilePath);
+                xcb.argIf(provProfileUUID, 'PROVISIONING_PROFILE=' + provProfileUUID);
+                if (removeProfile && provProfileUUID) {
+                    profileToDelete = provProfileUUID;
                 }
             }
 

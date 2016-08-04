@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 37
+        "Patch": 40
     },
     "demands": [
         "msbuild",
@@ -116,7 +116,8 @@
             "label": "Record Project Details",
             "defaultValue": "true",
             "required": false,
-            "groupName": "advanced"
+            "groupName": "advanced",
+            "helpMarkDown": "Optionally record timeline details for each project."
         },
         {
             "name": "createLogFile",

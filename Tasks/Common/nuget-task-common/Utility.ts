@@ -6,7 +6,8 @@ import * as os from 'os';
 
 // Attempts to resolve paths the same way the legacy PowerShell's Find-Files worked
 export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEmptyMatch?: boolean): string[] {
-    let patterns = filterSpec.split(";");
+    // make sure to remove any empty entries, or else we'll accidentally match the current directory.
+    let patterns = filterSpec.split(";").map(x => x.trim()).filter(x => !!x);
     let result = new Set<string>();
 
     patterns.forEach(pattern => {
@@ -22,6 +23,8 @@ export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEm
         if (basePath) {
             pattern = path.resolve(basePath, pattern);
         }
+
+        tl.debug(`pattern: ${pattern}, isNegative: ${isNegative}`);
 
         let thisPatternFiles = resolveWildcardPath(pattern, true);
         thisPatternFiles.forEach(file => {
@@ -43,9 +46,17 @@ export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEm
 }
 
 export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: boolean): string[] {
+    let isWindows = os.platform() === 'win32';
+    
     // Resolve files for the specified value or pattern
     var filesList: string[];
-    if (pattern.indexOf('*') == -1 && pattern.indexOf('?') == -1) {
+
+    // empty patterns match nothing (otherwise they will effectively match the current directory)
+    if (!pattern) {
+        filesList = [];
+    }
+    else if (pattern.indexOf('*') == -1 && pattern.indexOf('?') == -1) {
+        
         // No pattern found, check literal path to a single file
         tl.checkPath(pattern, 'files');
 
@@ -78,18 +89,10 @@ export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: b
         // Now we get a list of all files under this root
         var allFiles = tl.find(findPathRoot);
 
-        let isWindows = os.platform() === 'win32';
-        let toPosixPath: (string) => string = _ => _;
-        if (isWindows) {
-            // minimatch assumes paths use /, so on Windows, make paths use /
-            // This needs to be done both to the pattern and to the filenames.
-            toPosixPath = (path: string) => path.replace("\\", "/");
-        }
-
         // Now matching the pattern against all files
-        // Turn off a bunch of minimatch features to replicate the be
+        // Turn off a bunch of minimatch features to replicate the behavior of Find-Files in the old PowerShell tasks
         let patternFilter = tl.filter(
-            toPosixPath(pattern), {
+            pattern, {
                 matchBase: true,
                 nobrace: true,
                 noext: true,
@@ -99,7 +102,7 @@ export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: b
                 dot: isWindows
             });
 
-        filesList = allFiles.filter((file, index, array) => patternFilter(toPosixPath(file), index, array));
+        filesList = allFiles.filter(patternFilter);
 
         // Fail if no matching .sln files were found
         if (!allowEmptyWildcardMatch && (!filesList || filesList.length == 0)) {
@@ -107,5 +110,12 @@ export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: b
         }
     }
 
-    return filesList;
+    if (!isWindows)
+    {
+        return filesList;
+    }
+    else
+    {
+        return filesList.map(file => file.split("/").join("\\"));
+    }
 }

@@ -127,6 +127,58 @@ describe('Xcode Suite', function() {
             })
     })
 
+    it('run Xcode with project and no workspace', (done) => {
+        setResponseFile('responseProject.json');
+
+        var tr = new trm.TaskRunner('Xcode', true, true);
+        tr.setInput('actions', 'build');
+        tr.setInput('configuration', '$(Configuration)');
+        tr.setInput('sdk', '$(SDK)');
+        tr.setInput('xcWorkspacePath', '/user/build');
+        tr.setInput('scheme', '');
+        tr.setInput('packageApp', 'true');
+        tr.setInput('signMethod', 'file');
+        tr.setInput('p12', '/user/build');
+        tr.setInput('p12pwd', '');
+        tr.setInput('provProfile', '/user/build');
+        tr.setInput('removeProfile', 'false');
+        tr.setInput('unlockDefaultKeychain', 'false');
+        tr.setInput('defaultKeychainPassword', '');
+        tr.setInput('iosSigningIdentity', '');
+        tr.setInput('provProfileUuid', '');
+        tr.setInput('args', '-project test.xcodeproj');
+        tr.setInput('cwd', '/user/build');
+        tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
+        tr.setInput('xcodeDeveloperDir', '');
+        tr.setInput('useXctool', 'false');
+        tr.setInput('xctoolReporter', '');
+        tr.setInput('publishJUnitResults', 'false');
+
+        tr.run()
+            .then(() => {
+                assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
+                assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
+                        'build DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst ' +
+                        'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
+                        'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
+                        'SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch ' +
+                        '-project test.xcodeproj'),
+                    'xcodebuild for building the ios project should have been run.');
+                assert(tr.ran('/home/bin/xcrun -sdk $(SDK) PackageApplication ' +
+                        '-v /user/build/output/$(SDK)/$(Configuration)/build.sym/Release.iphoneos/fun.app ' +
+                        '-o /user/build/output/$(SDK)/$(Configuration)/build.sym/Release.iphoneos/fun.ipa'),
+                    "xcrun to package the app and generate an .ipa should have been run.");
+                assert(tr.invokedToolCount == 3, 'should have xcodebuild for version, xcodebuild for build and xcrun for packaging');
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.succeeded, 'task should have succeeded');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            })
+    })
+
     it('run Xcode build with test action, publish test results', (done) => {
         setResponseFile('responseXctool.json');
 
@@ -274,6 +326,91 @@ describe('Xcode Suite', function() {
                 done(err);
             })
     })
+
+    it('run Xcode build, signing with P12 only, no provisioning profile', (done) => {
+        setResponseFile('responseSigningFile.json');
+
+        var tr = new trm.TaskRunner('Xcode', true, true);
+        tr.setInput('actions', 'build');
+        tr.setInput('configuration', '$(Configuration)');
+        tr.setInput('sdk', '$(SDK)');
+        tr.setInput('xcWorkspacePath', '**/*.xcodeproj/*.xcworkspace');
+        tr.setInput('scheme', 'fun');
+        tr.setInput('packageApp', 'false');
+        tr.setInput('signMethod', 'file');
+        tr.setInput('p12', '/user/build/cert.p12');
+        tr.setInput('p12pwd', 'p12password');
+        tr.setInput('provProfile', '/user/build');
+        tr.setInput('removeProfile', 'false');
+        tr.setInput('unlockDefaultKeychain', 'false');
+        tr.setInput('defaultKeychainPassword', '');
+        tr.setInput('iosSigningIdentity', '');
+        tr.setInput('provProfileUuid', '');
+        tr.setInput('args', '');
+        tr.setInput('cwd', '/user/build');
+        tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
+        tr.setInput('xcodeDeveloperDir', '');
+        tr.setInput('useXctool', 'false');
+        tr.setInput('xctoolReporter', '');
+        tr.setInput('publishJUnitResults', 'false');
+
+        tr.run()
+            .then(() => {
+                assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
+                assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme fun build DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q)'),
+                    'xcodebuild for building the ios project/workspace should have been run with signing options with P12 only, no provisioning profile.');
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.succeeded, 'task should have succeeded');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            })
+    })
+
+    it('run Xcode build, signing with provisioning profile only, no P12', (done) => {
+        setResponseFile('responseSigningFile.json');
+
+        var tr = new trm.TaskRunner('Xcode', true, true);
+        tr.setInput('actions', 'build');
+        tr.setInput('configuration', '$(Configuration)');
+        tr.setInput('sdk', '$(SDK)');
+        tr.setInput('xcWorkspacePath', '**/*.xcodeproj/*.xcworkspace');
+        tr.setInput('scheme', 'fun');
+        tr.setInput('packageApp', 'false');
+        tr.setInput('signMethod', 'file');
+        tr.setInput('p12', '/user/build');
+        tr.setInput('p12pwd', '');
+        tr.setInput('provProfile', '/user/build/testuuid.mobileprovision');
+        tr.setInput('removeProfile', 'false');
+        tr.setInput('unlockDefaultKeychain', 'false');
+        tr.setInput('defaultKeychainPassword', '');
+        tr.setInput('iosSigningIdentity', '');
+        tr.setInput('provProfileUuid', '');
+        tr.setInput('args', '');
+        tr.setInput('cwd', '/user/build');
+        tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
+        tr.setInput('xcodeDeveloperDir', '');
+        tr.setInput('useXctool', 'false');
+        tr.setInput('xctoolReporter', '');
+        tr.setInput('publishJUnitResults', 'false');
+
+        tr.run()
+            .then(() => {
+                assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
+                assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme fun build DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch PROVISIONING_PROFILE=testuuid'),
+                    'xcodebuild for building the ios project/workspace should have been run with signing options with provisioning profile only.');
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.succeeded, 'task should have succeeded');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            })
+    })
+
 
     it('run Xcode build, signing with identifiers', (done) => {
         setResponseFile('responseSigningId.json');

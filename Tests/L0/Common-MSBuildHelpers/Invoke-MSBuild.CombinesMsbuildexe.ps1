@@ -13,6 +13,7 @@ Register-Mock Get-VstsTaskVariable { "C:\Some agent home directory" } -- -Name A
 Register-Mock Invoke-VstsTool { 'Some output 1', 'Some output 2' }
 $global:LASTEXITCODE = 0
 Register-Mock Write-VstsSetResult
+Register-Mock Write-LoggingCommand
 
 # Act.
 $actual = & $module Invoke-MSBuild -ProjectFile 'Some project file' -NoTimelineLogger -MSBuildPath $msBuildPath

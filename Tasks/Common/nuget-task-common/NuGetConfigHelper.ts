@@ -24,7 +24,8 @@ export class NuGetConfigHelper {
     private _authInfo: auth.NuGetAuthInfo;
     private _environmentSettings: ngToolRunner.NuGetEnvironmentSettings;
 
-    private tempNugetConfigDir = path.join(tl.getVariable('agent.buildDirectory'), 'Nuget');
+    private tempNugetConfigBaseDir = tl.getVariable('Agent.BuildDirectory') || tl.getVariable('Agent.ReleaseDirectory') || process.cwd();
+    private tempNugetConfigDir = path.join(this.tempNugetConfigBaseDir, 'Nuget');
     private tempNugetConfigFileName = 'tempNuGet_' + tl.getVariable('build.buildId') + '.config';
     public tempNugetConfigPath = path.join(this.tempNugetConfigDir, this.tempNugetConfigFileName);
 
@@ -43,7 +44,9 @@ export class NuGetConfigHelper {
         };
 
         if (this._nugetConfigPath) {
-            tl.cp("-f", this._nugetConfigPath, this.tempNugetConfigPath);
+            // don't use cp as that copies the read-only flag, and tfvc sets that on files
+            let content = fs.readFileSync(this._nugetConfigPath);
+            fs.writeFileSync(this.tempNugetConfigPath, content);
         }
         else {
             // small file, use writeFileSync

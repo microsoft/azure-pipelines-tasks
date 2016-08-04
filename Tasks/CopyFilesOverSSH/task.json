@@ -1,9 +1,9 @@
 {
   "id": "67cec91b-0351-4c2f-8465-d74b3d2a2d96",
-  "name": "SCP",
-  "friendlyName": "SCP",
-  "description": "Copy files or build artifacts to a remote machine using SSH",
-  "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=821894)",
+  "name": "CopyFilesOverSSH",
+  "friendlyName": "Copy Files Over SSH",
+  "description": "Copy files or build artifacts to a remote machine over SSH",
+  "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=821894)",
   "category": "Deploy",
   "visibility": [
     "Build",
@@ -40,7 +40,7 @@
       "label": "Source folder",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "The source folder that the copy pattern(s) will be run from.  Empty is the root of the repo.  Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988) if files are not in the repo. Example: $(agent.builddirectory)"
+      "helpMarkDown": "The source folder for the files to copy to the remote machine.  Empty is the root of the repo.  Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988) if files are not in the repo. Example: $(agent.builddirectory)"
     },
     {
       "name": "contents",
@@ -48,7 +48,7 @@
       "label": "Contents",
       "defaultValue": "**",
       "required": true,
-      "helpMarkDown": "File paths to include as part of the copy. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkID=708389)"
+      "helpMarkDown": "File paths to include as part of the copy. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkId=821894)"
     },
     {
       "name": "targetFolder",
@@ -88,7 +88,7 @@
   ],
   "execution": {
     "Node": {
-      "target": "scp.js",
+      "target": "copyfilesoverssh.js",
       "argumentFormat": ""
     }
   },

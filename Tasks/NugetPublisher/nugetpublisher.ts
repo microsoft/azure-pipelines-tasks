@@ -15,6 +15,7 @@ import * as nutil from 'nuget-task-common/Utility';
 import * as auth from 'nuget-task-common/Authentication';
 import {NuGetConfigHelper} from 'nuget-task-common/NuGetConfigHelper';
 import * as locationApi from 'nuget-task-common/LocationApi';
+import * as os from 'os';
 
 class PublishOptions {
     constructor(
@@ -35,7 +36,7 @@ var searchPattern = tl.getPathInput('searchPattern', true, false);
 var filesList = nutil.resolveFilterSpec(searchPattern, tl.getVariable('System.DefaultWorkingDirectory') || process.cwd());
 filesList.forEach(packageFile => {
     if (!tl.stats(packageFile).isFile()) {
-        throw new Error(tl.loc('NotARegularFile'));
+        throw new Error(tl.loc('NotARegularFile', packageFile));
     }
 });
 
@@ -62,8 +63,8 @@ if (!tl.filePathSupplied('nuGetPath')) {
 var serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
 
 //find nuget location to use
-var nuGetPathToUse = ngToolRunner.locateTool('nuget.exe', userNuGetPath);
-var credProviderPath = ngToolRunner.locateTool('CredentialProvider.TeamBuild.exe', null, true);
+var nuGetPathToUse = ngToolRunner.locateNuGetExe(userNuGetPath);
+var credProviderPath = ngToolRunner.locateCredentialProvider();
 
 var credProviderDir: string = null;
 if (credProviderPath) {
@@ -77,6 +78,8 @@ var accessToken = auth.getSystemAccessToken();
 let buildIdentityDisplayName: string = null;
 let buildIdentityAccount: string = null;
 
+/*
+BUG: HTTP calls to access the location service currently do not work for customers behind proxies.
 locationHelpers.getNuGetConnectionData(serviceUri, accessToken)
     .then(connectionData => {
         buildIdentityDisplayName = locationHelpers.getIdentityDisplayName(connectionData.authorizedUser);
@@ -93,9 +96,19 @@ locationHelpers.getNuGetConnectionData(serviceUri, accessToken)
         }
 
         throw err;
-    })
+    })*/
+locationHelpers.assumeNuGetUriPrefixes(serviceUri)
     .then(urlPrefixes => {
-        tl.debug("discovered URL prefixes: " + urlPrefixes.join(';'))
+        tl.debug(`discovered URL prefixes: ${urlPrefixes}`);
+
+        // Note to readers: This variable will be going away once we have a fix for the location service for
+        // customers behind proxies
+        let testPrefixes = tl.getVariable("NuGetTasks.ExtraUrlPrefixesForTesting");
+        if (testPrefixes) {
+            urlPrefixes = urlPrefixes.concat(testPrefixes.split(';'));
+            tl.debug(`all URL prefixes: ${urlPrefixes}`)
+        }
+
         return new auth.NuGetAuthInfo(urlPrefixes, accessToken);
     })
     .then(authInfo => {
@@ -110,7 +123,10 @@ locationHelpers.getNuGetConnectionData(serviceUri, accessToken)
         var feedUri: string;
         var credCleanup = () => { return };
         if (nuGetFeedType == "internal") {
-            if (!credProviderDir || (userNuGetPath && preCredProviderNuGet)) {
+            if (!ngToolRunner.isCredentialConfigEnabled()) {
+                tl.debug("Not configuring credentials in nuget.config");
+            }
+            else if (!credProviderDir || (userNuGetPath && preCredProviderNuGet)) {
                 var nuGetConfigHelper = new NuGetConfigHelper(nuGetPathToUse, null, authInfo, environmentSettings);
                 nuGetConfigHelper.setSources([{ feedName: "internalFeed", feedUri: internalFeedUri }]);
                 configFilePromise = Q(nuGetConfigHelper.tempNugetConfigPath);

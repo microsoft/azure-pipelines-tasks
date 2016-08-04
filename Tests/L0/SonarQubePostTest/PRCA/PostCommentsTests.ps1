@@ -528,7 +528,6 @@ ValidateDiscussionThreadCollection $postedThreads $expectedComments "TestSource"
 # - Current state:                      path1:A (resolved), path2:B (resolved),  path1:C:50,  path1:C:60
 # - Messages to be posted:              
 # - Expected comments after posting:    path1:A (resolved), path2:B (resolved),  path1:C:50 (resolved),  path1:C:60 (resolved) 
- 
 
 # Act
 PostAndResolveComments $null "TestSource"
@@ -593,7 +592,7 @@ $mockDiscussionClient = InitPostCommentsModule $false
 Register-Mock GetModifiedFilesInPR { @("some/path1/file.cs") }
 Register-Mock GetCodeFlowLatestIterationId 
 Register-Mock GetCodeFlowChanges
-Register-Mock GetCodeFlowChangeTrackingId {100}
+Register-Mock TryGetCodeFlowChangeTrackingId {$true}
 
 # Iteration 1: 
 # - Current state: {no existing comments}

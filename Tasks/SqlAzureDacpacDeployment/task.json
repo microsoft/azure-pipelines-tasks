@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 23
+        "Patch": 25
     },
     "demands": [
         "azureps",
@@ -174,10 +174,18 @@
     ],
     "instanceNameFormat": "Deploy Azure SQL DACPAC: $(DacpacFile)",
     "execution": {
-        "AzurePowerShell": {
-            "target": "$(currentDirectory)\\DeploySqlAzure.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
+        "PowerShell3": {
+            "target": "DeploySqlAzure.ps1"
         }
+    },
+    "messages": {
+        "SAD_InvalidServerAddress": "Either IPAddress mentioned is not a valid IPv4 address or Sql database server: '{0}' does not exist.",
+        "SAD_ServerNotFound": "Sql Database Server: '{0}' not found.",
+        "SAD_InvalidIPv4Address": "IPAddress mentioned is not a valid IPv4 address.",
+        "SAD_FoundMoreFiles": "Found more than one file to deploy with search pattern {0}. There can be only one.",
+        "SAD_NoFilesMatch": "No files were found to deploy with search pattern {0}",
+        "SAD_InvalidDacpacFile": "Invalid Dacpac file '{0}' provided",
+        "SAD_NoPassword": "No password specified for the SQL User: '{0}'",
+        "SAD_InvalidPublishProfile": "Invalid Publish Profile '{0}' provided"
     }
 }

@@ -56,6 +56,7 @@ Per the [Contribution Guidelines](https://github.com/Microsoft/vsts-tasks/blob/m
 | Grunt                          | | | | | |
 | Gulp                           | | | | | |
 | IISWebAppDeployment            | | | | | |
+| JenkinsQueueJob                |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
 | MSBuild                        | | | | | |
 | Maven                          |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. Code Coverage only in PS1|
 | Npm                            | | | | | |

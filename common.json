@@ -5,7 +5,37 @@
             "dest": "ps_modules"
         }
     ],
+    "AzureFileCopy": [
+        {
+            "module": "VstsAzureHelpers_",
+            "dest": "ps_modules"
+        }
+    ],
+    "AzureResourceGroupDeployment": [
+        {
+            "module": "VstsAzureHelpers_",
+            "dest": "ps_modules"
+        }
+    ],
     "AzureRMWebAppDeployment": [
+        {
+            "module": "VstsAzureHelpers_",
+            "dest": "ps_modules"
+        }
+    ],
+    "AzureCloudPowerShellDeployment": [
+        {
+            "module": "VstsAzureHelpers_",
+            "dest": "ps_modules"
+        }
+    ],
+    "AzureWebPowerShellDeployment": [
+        {
+            "module": "VstsAzureHelpers_",
+            "dest": "ps_modules"
+        }
+    ],
+    "SqlAzureDacpacDeployment": [
         {
             "module": "VstsAzureHelpers_",
             "dest": "ps_modules"
@@ -35,7 +65,7 @@
             "dest": "Common"
         }
     ],
-    "SCP": [
+    "CopyFilesOverSSH": [
         {
             "module": "ssh-common",
             "dest": "node_modules"

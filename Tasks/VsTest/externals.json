@@ -3,11 +3,7 @@
         {
             "archiveName": "TestSelector.zip",
             "url": "https://testselector.blob.core.windows.net/testselector/3110153/TestSelector.zip",
-            "dest": "./",
-            "files": [
-              "TestSelector/TestSelector.exe",
-              "TestSelector/Microsoft.TestFoundation.TestImpact.MetaDataAnalysis.dll"
-            ]
+            "dest": "./"
         }
     ]
 }
