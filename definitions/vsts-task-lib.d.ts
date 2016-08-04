@@ -502,6 +502,15 @@ declare module 'vsts-task-lib/task' {
 	 * @returns   ToolRunner
 	 */
 	export function createToolRunner(tool: string): trm.ToolRunner;
+
+	/**
+	 * Convenience factory to create a ToolRunner.
+	 *
+	 * @param     tool     path to tool to exec
+	 * @returns   ToolRunner
+	 */
+	export function tool(tool: string) : trm.ToolRunner;
+
 	export function match(list: any, pattern: any, options: any): string[];
 	export function filter(pattern: any, options: any): (element: string, indexed: number, array: string[]) => boolean;
 	export class TestPublisher {
