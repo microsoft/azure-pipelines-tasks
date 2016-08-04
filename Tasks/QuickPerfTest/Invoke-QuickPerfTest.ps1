@@ -1,6 +1,11 @@
 [CmdletBinding(DefaultParameterSetName = 'None')]
 param
 (
+    [String]
+    $env:SYSTEM_DEFINITIONID,
+    [String]
+    $env:BUILD_BUILDID,
+ 
     [String] [Parameter(Mandatory = $true)]
     $connectedServiceName,
 
@@ -13,7 +18,9 @@ param
     [String] [Parameter(Mandatory = $true)]
     $runDuration,
     [String] [Parameter(Mandatory = $true)]
-    $geoLocation
+    $geoLocation,
+    [String] [Parameter(Mandatory = $true)]
+    $machineType
 )
 
 $userAgent = "QuickPerfTestBuildTask"
@@ -143,7 +150,9 @@ $trjson = @"
     "name":"$name",
     "description":"Quick perf test from automation task",
     "testSettings":{"cleanupCommand":"", "hostProcessPlatform":"x86", "setupCommand":""},
+    "superSedeRunSettings":{"loadGeneratorMachinesType":"$MachineType"},
     "testDrop":{"id":"$tdid"},
+    "runSourceIdentifier":"build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
 }
 "@
 
@@ -201,6 +210,8 @@ Write-Output "Run duration = $runDuration"
 Write-Output "Website Url = $websiteUrl"
 Write-Output "Virtual user load = $vuLoad"
 Write-Output "Load location = $geoLocation"
+Write-Output "Load generator machine type = $machineType"
+Write-Output "Run source identifier = build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
