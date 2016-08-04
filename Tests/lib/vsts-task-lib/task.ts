@@ -448,7 +448,13 @@ export function exist(path: string): boolean {
     return mock.getResponse('exist', path) || false;
 }
 
-export function writeFileSync(file: string, data: string, options?: any) {
+export interface FsOptions {
+    encoding?:string;
+    mode?:number;
+    flag?:string;
+}
+
+export function writeFile(file: string, data: string|Buffer, options?: string|FsOptions) {
     //do nothing
 }
 

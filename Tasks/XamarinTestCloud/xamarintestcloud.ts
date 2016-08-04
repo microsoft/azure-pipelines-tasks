@@ -169,7 +169,7 @@ function uploadTestSummary() {
     }
 
     tl.debug('reportdata = ' + reportData);
-    tl.writeFileSync(mdReportFile, reportData);
+    tl.writeFile(mdReportFile, reportData);
     tl.command('task.addattachment', {
             name: "Xamarin Test Cloud Results",
             type: "Distributedtask.Core.Summary"

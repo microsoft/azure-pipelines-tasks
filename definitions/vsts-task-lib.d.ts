@@ -344,12 +344,17 @@ declare module 'vsts-task-lib/task' {
 	export function exist(path: string): boolean;
 
 	/**
+	 * Interface to wrap file options
+	 */
+	export interface FsOptions {}
+
+	/**
 	 * Synchronously writes data to a file, replacing the file if it already exists.
 	 * @param file
 	 * @param data
 	 * @param options
 	 */
-	export function writeFileSync(file: string, data:string, options?:any);
+	export function writeFile(file: string, data:string|Buffer, options?:string|FsOptions);
 	/**
 	 * Useful for determining the host operating system.
 	 * see [os.type](https://nodejs.org/api/os.html#os_os_type)
