@@ -95,7 +95,7 @@ export class SonarQubeMetrics {
         var timeoutTask = setTimeout(() => {
             if (!this.analysisComplete) {
                 tl.debug(`Did not receive a success response before the timeout (${timeout}s) expired.`);
-                defer.reject(tl.loc('sqAnalysis_AnalysisTimeout', timeout));
+                defer.reject(new Error(tl.loc('sqAnalysis_AnalysisTimeout', timeout)));
             }
         }, timeout * 1000);
 

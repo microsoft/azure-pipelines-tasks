@@ -176,7 +176,11 @@ function isNullOrEmpty(str) {
     return str === undefined || str === null || str.length === 0;
 }
 
-// Creates the string that comprises the build summary text, given the location of the /sonar build folder.
+/**
+ * Creates the string that comprises the build summary text, given the location of the /sonar build folder.
+ * @param sqBuildFolder
+ * @returns {any}
+ */
 function createSonarQubeBuildSummary(sqBuildFolder:string):Q.Promise<string> {
     // Task report is not created for PR builds - inform the user in the build summary
     if (isPrBuild()) {
@@ -191,59 +195,36 @@ function createSonarQubeBuildSummary(sqBuildFolder:string):Q.Promise<string> {
     var analysisMetrics:SonarQubeMetrics = new SonarQubeMetrics(sqServer, sqRunSettings.ceTaskId);
     var sqReportBuilder:SonarQubeReportBuilder = new SonarQubeReportBuilder(sqRunSettings, analysisMetrics);
 
-    return sqReportBuilder.fetchMetricsAndCreateReport(tl.getBoolInput('sqAnalysisWaitForAnalysis'));
+    return sqReportBuilder.fetchMetricsAndCreateReport(tl.getBoolInput('sqAnalysisIncludeFullReport'));
 }
 
-// Returns the location of the SonarQube integration staging directory.
+/**
+ * Returns the location of the SonarQube integration staging directory.
+ * @returns {string} Full path to the SonarQube staging directory
+ */
 function getOrCreateSonarQubeStagingDirectory(): string {
     var sqStagingDir = path.join(tl.getVariable('build.artifactStagingDirectory'), ".sqAnalysis");
     tl.mkdirP(sqStagingDir);
     return sqStagingDir;
 }
 
-// Returns, as an object, the contents of the 'report-task.txt' file created by SonarQube plugins
-// The returned object contains the following properties:
-//   projectKey, serverUrl, dashboardUrl, ceTaskId, ceTaskUrl
+/**
+ * Returns, as an object, the contents of the report-task.txt file created by SonarQube plugins
+ * The returned object contains the following properties:
+ *     projectKey, serverUrl, dashboardUrl, ceTaskId, ceTaskUrl
+ * @param sonarPluginFolder The folder created by SonarQube integration during build
+ * @returns {SonarQubeRunSettings} An object with fields corresponding to the properties exposed in report-task.txt
+ */
 function getSonarQubeRunSettings(sonarPluginFolder: string): SonarQubeRunSettings {
     var reportFilePath:string = path.join(sonarPluginFolder, 'report-task.txt');
-    if (!tl.exist(reportFilePath)) {
-        tl.debug('Task report not found at: ' + reportFilePath);
-        // Looks like: Invalid or missing task report. Check SonarQube finished successfully.
-        throw new Error(tl.loc('sqAnalysis_TaskReportInvalid'));
-    }
-
-    return createRunSettingsFromFile(reportFilePath);
+    return SonarQubeRunSettings.createRunSettingsFromFile(reportFilePath);
 }
 
-// Constructs a SonarQubeRunSettings object out of an existing report-task.txt file. File must exist on disk.
-function createRunSettingsFromFile(taskReportFile: string): SonarQubeRunSettings {
-    var reportFileString: string = fs.readFileSync(taskReportFile, 'utf-8');
-    if (!reportFileString || reportFileString.length < 1) {
-        tl.debug('Error reading file:' + reportFileString);
-        // Looks like: Invalid or missing task report. Check SonarQube finished successfully.
-        throw new Error(tl.loc('sqAnalysis_TaskReportInvalid'));
-    }
-
-    var reportLines: string[] = reportFileString.replace(/\r\n/g, '\n').split('\n'); // proofs against xplat line-ending issues
-
-    var reportMap = new Map<string, string>();
-    reportLines.forEach((reportLine:string) => {
-        var splitLine: string[] = reportLine.split('=');
-        if (splitLine.length > 1) {
-            reportMap.set(splitLine[0], splitLine.slice(1, splitLine.length).join());
-        }
-    });
-
-    try {
-        return SonarQubeRunSettings.createTaskReportFromMap(reportMap);
-    } catch (err) {
-        tl.debug(err.message);
-        // Looks like: Invalid or missing task report. Check SonarQube finished successfully.
-        throw new Error(tl.loc('sqAnalysis_TaskReportInvalid'));
-    }
-}
-
-// Saves the build summary string and returns the file path it was saved to.
+/**
+ * Saves the build summary string to disk and returns the file path it was saved to.
+ * @param contents   The build summary
+ * @returns {string} Full path to the build summary file
+ */
 function saveSonarQubeBuildSummary(contents: string): string {
     var filePath:string = path.join(getOrCreateSonarQubeStagingDirectory(), 'SonarQubeBuildSummary.md');
     fs.writeFileSync(filePath, contents);

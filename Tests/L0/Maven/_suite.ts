@@ -47,7 +47,7 @@ function setupDefaultMavenTaskRunner(): trm.TaskRunner {
     taskRunner.setInput('mavenPOMFile', 'pom.xml');
 
     // TaskRunner system is incompatible with HTTP/HTTPS mocking due to the use of seperate processes
-    taskRunner.setInput('sqAnalysisWaitForAnalysis', 'false');
+    taskRunner.setInput('sqAnalysisIncludeFullReport', 'false');
 
     return taskRunner;
 }
@@ -133,6 +133,12 @@ function assertSonarQubeBuildSummaryContains(stagingDir: string, expectedString:
 function assertBuildSummaryContains(buildSummaryString:string, expectedLine:string):void {
     assert(buildSummaryString.indexOf(expectedLine) > -1, `Expected build summary to contain: ${expectedLine}
      Actual: ${buildSummaryString}`);
+}
+
+function assertErrorContains(error:any, expectedString:string):void {
+    assert(error instanceof Error, `Expected an instance of Error to be thrown. Actual: ${typeof error}`);
+    assert(error.message.indexOf(expectedString) > -1, `Expected error to contain: ${expectedString}
+     Actual: ${error.message}`);
 }
 
 function assertToolRunnerContainsArg(toolRunner:ToolRunner, expectedArg:string) {
@@ -1623,8 +1629,7 @@ describe('Maven Suite', function () {
             .then((report) => {
                 return Q.reject('Should not have finished successfully');
             }, (error) => {
-                assert(error instanceof Error, 'Expected to fail with an error');
-                assert(error.message.indexOf('sqCommon_InvalidResponseFromServer') > -1, 'Expected error to contain a loc string for an invalid response from the server.');
+                assertErrorContains(error, 'sqCommon_InvalidResponseFromServer');
                 return Q.when(true);
             });
     });
@@ -1637,15 +1642,36 @@ describe('Maven Suite', function () {
         var analysisMetrics:SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
         var sqReportBuilder:SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
 
-        // Mock responses from the server for the task and analysis details
+        // Mock responses from the server
         mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', {}); // Empty object returned by the server
 
         return sqReportBuilder.fetchMetricsAndCreateReport(true)
             .then((report) => {
                 return Q.reject('Should not have finished successfully');
             }, (error) => {
-                assert(error instanceof Error, 'Expected to fail with an error');
-                assert(error.message.indexOf('sqCommon_InvalidResponseFromServer') > -1, 'Expected error to contain a loc string for an invalid response from the server.');
+                assertErrorContains(error, 'sqCommon_InvalidResponseFromServer');
+                return Q.when(true);
+            });
+    });
+
+    it('SonarQube common - Build summary fails correctly when timeout is triggered', () => {
+        // Arrange
+        var mockRunSettings:SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockServer:MockSonarQubeServer = new MockSonarQubeServer();
+
+        var analysisMetrics:SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 2, 1); // override to a 2-second timeout
+        var sqReportBuilder:SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
+
+        // Mock responses from the server
+        var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
+        taskDetailsJsonObject.task.status = "notsuccess";
+        mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject, 200); // HTTP Error 500 Internal Server Error
+
+        return sqReportBuilder.fetchMetricsAndCreateReport(true)
+            .then((report) => {
+                return Q.reject('Should not have finished successfully');
+            }, (error) => {
+                assertErrorContains(error, 'sqAnalysis_AnalysisTimeout');
                 return Q.when(true);
             });
     });

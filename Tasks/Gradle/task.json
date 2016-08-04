@@ -270,7 +270,7 @@
             "visibleRule": "sqDbDetailsRequired = true"
         },
         {
-            "name": "sqAnalysisWaitForAnalysis",
+            "name": "sqAnalysisIncludeFullReport",
             "type": "boolean",
             "label": "Wait for SonarQube analysis and add quality gate details",
             "required": true,
