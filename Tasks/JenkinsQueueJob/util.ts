@@ -85,7 +85,7 @@ function createRootJob(queueUri: string, jobQueue: JobQueue, taskOptions: TaskOp
     var defer: Q.Deferred<Job> = Q.defer<Job>();
     tl.debug('createRootJob(): ' + queueUri);
 
-    request.get({ url: queueUri }, function requestCallback(err, httpResponse, body) {
+    request.get({ url: queueUri, strictSSL: taskOptions.strictSSL }, function requestCallback(err, httpResponse, body) {
         tl.debug('createRootJob().requestCallback()');
         if (err) {
             if (err.code == 'ECONNRESET') {
@@ -139,6 +139,8 @@ export function pollSubmitJob(taskOptions: TaskOptions): Q.Promise<string> {
                 // no crumb yet, but no failure either, so keep trying
                 setTimeout(poll, taskOptions.pollIntervalMillis);
             }
+        }).fail((err: any) => {
+            defer.reject(err);
         });
     };
 
@@ -170,7 +172,8 @@ function submitJob(taskOptions: TaskOptions): Q.Promise<string> {
                     "team-build": getTeamParameters(),
                     "parameter": parseJobParametersTeamBuild(taskOptions.jobParameters)
                 })
-            }
+            },
+            strictSSL: taskOptions.strictSSL
         }
     );
 
@@ -192,10 +195,12 @@ function submitJob(taskOptions: TaskOptions): Q.Promise<string> {
             let jobQueuePostData = addCrumb(taskOptions.parameterizedJob ?
                 {
                     url: taskOptions.jobQueueUrl,
-                    formData: parseJobParameters(taskOptions.jobParameters)
+                    formData: parseJobParameters(taskOptions.jobParameters),
+                    strictSSL: taskOptions.strictSSL
                 } :
                 {
-                    url: taskOptions.jobQueueUrl
+                    url: taskOptions.jobQueueUrl,
+                    strictSSL: taskOptions.strictSSL
                 }
             );
             tl.debug('jobQueuePostData = ' + JSON.stringify(jobQueuePostData));
@@ -232,7 +237,7 @@ function getCrumb(taskOptions: TaskOptions): Q.Promise<string> {
     let defer: Q.Deferred<string> = Q.defer<string>();
     let crumbRequestUrl: string = addUrlSegment(taskOptions.serverEndpointUrl, '/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)');
     tl.debug('crumbRequestUrl: ' + crumbRequestUrl);
-    request.get({ url: crumbRequestUrl }, function (err, httpResponse, body) {
+    request.get({ url: crumbRequestUrl, strictSSL: taskOptions.strictSSL }, function (err, httpResponse, body) {
         if (err) {
             if (err.code == 'ECONNRESET') {
                 tl.debug(err);
@@ -241,7 +246,7 @@ function getCrumb(taskOptions: TaskOptions): Q.Promise<string> {
                 defer.reject(err);
             }
         } else if (httpResponse.statusCode == 404) {
-            tl.debug('crumb not found');
+            tl.debug('crumb endpoint not found');
             taskOptions.crumb = taskOptions.NO_CRUMB;
             defer.resolve(taskOptions.NO_CRUMB);
         } else if (httpResponse.statusCode != 200) {

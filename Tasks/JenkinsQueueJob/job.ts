@@ -274,7 +274,7 @@ export class Job {
         } else { // stay in Finishing, or eventually go to Done
             var resultUrl: string = Util.addUrlSegment(thisJob.executableUrl, 'api/json');
             thisJob.debug('Tracking completion status of job: ' + resultUrl);
-            request.get({ url: resultUrl }, function requestCallback(err, httpResponse, body) {
+            request.get({ url: resultUrl, strictSSL: thisJob.queue.taskOptions.strictSSL }, function requestCallback(err, httpResponse, body) {
                 tl.debug('finish().requestCallback()');
                 if (err) {
                     Util.handleConnectionResetError(err); // something went bad
@@ -305,7 +305,7 @@ export class Job {
         var thisJob: Job = this;
         var fullUrl: string = Util.addUrlSegment(thisJob.executableUrl, '/logText/progressiveText/?start=' + thisJob.jobConsoleOffset);
         thisJob.debug('Tracking progress of job URL: ' + fullUrl);
-        request.get({ url: fullUrl }, function requestCallback(err, httpResponse, body) {
+        request.get({ url: fullUrl, strictSSL: thisJob.queue.taskOptions.strictSSL }, function requestCallback(err, httpResponse, body) {
             tl.debug('streamConsole().requestCallback()');
             if (err) {
                 Util.handleConnectionResetError(err); // something went bad
