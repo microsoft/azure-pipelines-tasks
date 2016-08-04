@@ -2,17 +2,16 @@
 
 import path = require('path');
 import fs = require('fs');
-import util = require('util');
 
-import tl = require('vsts-task-lib/task');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
-import sqCommon = require('sonarqube-common/sonarqube-common');
 
 // Lowercased names are to lessen the likelihood of xplat issues
 import {AnalysisResult} from './analysisresult';
 import {ModuleAnalysis} from './moduleanalysis';
 import pmd = require('./mavenpmd');
 import sqMaven = require('./mavensonar');
+
+import tl = require('vsts-task-lib/task');
 
 // Cache build variables are cached globally as they cannot change during the same build.
 var sourcesDir:string;
@@ -267,7 +266,7 @@ function uploadBuildArtifactsFromModule(toolName:string, moduleAnalysis:ModuleAn
     }
 
     if (!analysisResult) {
-        tl.debug(util.format("No analysis result found for %s analysis of %s", toolName, moduleAnalysis.moduleName));
+        tl.debug(`No analysis result found for ${toolName} analysis of ${moduleAnalysis.moduleName}`);
         return;
     }
 
