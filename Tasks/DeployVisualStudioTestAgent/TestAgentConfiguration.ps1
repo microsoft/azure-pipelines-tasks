@@ -329,20 +329,17 @@ function Set-TestAgentConfiguration
     }    
 
     $configLogFile = Join-Path $env:temp "testagentconfig.log"
-    if(Test-path -Path $configLogFile) 
-    {
-        Remove-Item $configLogFile -ErrorAction SilentlyContinue
-    }
-
+    Remove-Item $configLogFile -ErrorAction SilentlyContinue
+    
     DeleteDTAAgentExecutionService -ServiceName "DTAAgentExecutionService" | Out-Null
 
     $configOut = InvokeTestAgentConfigExe -Arguments $configArgs -Version $TestAgentVersion -UserCredential $MachineUserCredential
 
     if(Test-path -Path $configLogFile) 
     {
-        Write-Verbose "=== Starting to print the testagent configuration log file ==="
-        Get-Content $configLogFile | foreach { Write-Verbose $_ }
-        Write-Verbose "=== Done printing the testagent configuration log file ==="        
+        Write-Verbose "=== Starting to print the testagent configuration log file for [$env:COMPUTERNAME] ==="
+        Get-Content $configLogFile | foreach { Write-Verbose [$env:COMPUTERNAME] $_ }
+        Write-Verbose "=== Done printing the testagent configuration log file for [$env:COMPUTERNAME] ==="        
     }
 
     if ($configOut.ExitCode -ne 0 -and $configOut.ExitCode -ne 3010)
