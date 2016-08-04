@@ -13,4 +13,4 @@ function Check-Installation($ProductVersion)
     Write-Verbose -Message ("Test Agent does not exists.") -verbose
 }
 
-Check-Installation  -ProductVersion "14.0"
+Check-Installation -ProductVersion "14.0"

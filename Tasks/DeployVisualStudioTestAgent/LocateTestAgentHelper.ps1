@@ -78,5 +78,5 @@ function Locate-TestAgentPath($ProductVersion = "14.0")
     }
 
     Write-Verbose "Test Agent doesn't exist as Path doesn't exist" -verbose
-    return $testAgentPath;
+    return $null;
 }
