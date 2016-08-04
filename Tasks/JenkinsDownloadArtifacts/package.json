@@ -1,0 +1,8 @@
+{
+  "name": "vsts-tasks-jenkinsdownloadartifacts",
+  "version": "1.0.0",
+  "dependencies": {
+    "request": "2.74.0",
+    "vsts-task-lib": "0.8.3"
+  }
+}
