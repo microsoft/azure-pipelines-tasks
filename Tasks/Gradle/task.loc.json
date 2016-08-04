@@ -270,13 +270,13 @@
       "visibleRule": "sqDbDetailsRequired = true"
     },
     {
-      "name": "sqAnalysisWaitForAnalysis",
+      "name": "sqAnalysisIncludeFullReport",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.sqAnalysisWaitForAnalysis",
+      "label": "ms-resource:loc.input.label.sqAnalysisIncludeFullReport",
       "required": true,
       "defaultValue": "true",
       "groupName": "CodeAnalysis",
-      "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisWaitForAnalysis"
+      "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisIncludeFullReport"
     },
     {
       "name": "pmdAnalysisEnabled",

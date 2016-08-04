@@ -278,13 +278,13 @@
       "visibleRule": "sqDbDetailsRequired = true"
     },
     {
-      "name": "sqAnalysisWaitForAnalysis",
+      "name": "sqAnalysisIncludeFullReport",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.sqAnalysisWaitForAnalysis",
-      "required": true,
       "defaultValue": "true",
-      "groupName": "CodeAnalysis",
-      "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisWaitForAnalysis"
+      "label": "ms-resource:loc.input.label.sqAnalysisIncludeFullReport",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisIncludeFullReport",
+      "groupName": "CodeAnalysis"
     },
     {
       "name": "pmdAnalysisEnabled",

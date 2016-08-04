@@ -272,11 +272,11 @@
         {
             "name": "sqAnalysisIncludeFullReport",
             "type": "boolean",
-            "label": "Wait for SonarQube analysis and add quality gate details",
-            "required": true,
             "defaultValue": "true",
-            "groupName": "CodeAnalysis",
-            "helpMarkDown": "Wait for the SonarQube server to finish analysing the build, then add quality gate details to the SonarQube build summary."
+            "label": "Include full analysis report in the build summary (SQ 5.3+)",
+            "required": false,
+            "helpMarkDown": "This option will delay the build until the SonarQube analysis is completed.",
+            "groupName": "CodeAnalysis"
         },
         {
             "name": "pmdAnalysisEnabled",
