@@ -80,10 +80,16 @@ function IsVisualStudio2015Update1OrHigherInstalled {
 	{
 		# checking for dll introduced in vs2015 update1
 		# since path of the dll will change in dev15+ using vstestversion>14 as a blanket yes
-		if(Test-Path -Path "$env:VS140COMNTools\..\IDE\CommonExtensions\Microsoft\TestWindow\TE.TestModes.dll")
+		$teModesDll = [io.path]::Combine("$env:VS140COMNTools", "..", "IDE", "CommonExtensions", "Microsoft", "TestWindow", "TE.TestModes.dll");
+		if(Test-Path -Path $teModesDll)
 		{
-			# ensure the registry is set otherwise you need to launch VSIDE
-			SetRegistryKeyForParallel $vsTestVersion
+			$devenvExe = [io.path]::Combine("$env:VS140COMNTools", "..", "IDE", "devenv.exe");
+			$devenvVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($devenvExe);
+			if($devenvVersion.ProductBuildPart -lt 25420) #update3 build#
+			{
+				# ensure the registry is set otherwise you need to launch VSIDE
+				SetRegistryKeyForParallel $vsTestVersion
+			}
 			
 			return $true
 		}
