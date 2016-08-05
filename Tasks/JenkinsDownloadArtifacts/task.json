@@ -45,7 +45,7 @@
         "name": "saveTo",
         "type": "filePath",
         "label": "Save to",
-        "defaultValue": "jenkinArtifacts",
+        "defaultValue": "jenkinsArtifacts",
         "required": true,
         "helpMarkDown": "Jenkins artifacts will be downloaded and saved to this directory.  This directory will be created if it does not exist."
       },
