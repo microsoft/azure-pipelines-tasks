@@ -277,7 +277,7 @@
             "required": false,
             "helpMarkDown": "This option will delay the build until the SonarQube analysis is completed.",
             "groupName": "CodeAnalysis",
-            "visibleRule": "sqDbDetailsRequired = true"
+            "visibleRule": "sqAnalysisEnabled = true"
         },
         {
             "name": "pmdAnalysisEnabled",
