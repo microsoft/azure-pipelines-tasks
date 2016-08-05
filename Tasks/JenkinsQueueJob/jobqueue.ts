@@ -45,7 +45,9 @@ export class JobQueue {
                 for (var i in running) {
                     running[i].doWork();
                 }
-                if (this.getActiveJobs().length == 0) {
+                if (this.hasFailedJobs()) {
+                    this.stop(false);
+                } else if (this.getActiveJobs().length == 0) {
                     this.stop(true);
                 } else {
                     this.flushJobConsolesSafely();
@@ -62,26 +64,19 @@ export class JobQueue {
         tl.debug('jobQueue.stop()');
         clearInterval(this.intervalId);
         this.flushJobConsolesSafely();
-        var message: string = null;
-        if (complete) {
-            if (this.taskOptions.capturePipeline) {
-                message = 'Jenkins pipeline complete';
-            } else if (this.taskOptions.captureConsole) {
-                message = 'Jenkins job complete';
-            } else {
-                message = 'Jenkins job queued';
-            }
-            tl.setResult(tl.TaskResult.Succeeded, message);
-        } else {
-            if (this.taskOptions.capturePipeline) {
-                message = 'Jenkins pipeline failed';
-            } else if (this.taskOptions.captureConsole) {
-                message = 'Jenkins job failed';
-            } else {
-                message = 'Jenkins job failed to queue';
+        this.writeFinalMarkdown(complete);
+    }
+
+    hasFailedJobs(): boolean {
+        for (var i in this.allJobs) {
+            var job = this.allJobs[i];
+            if (job.state == JobState.Done) {
+                if (job.getTaskResult() == tl.TaskResult.Failed) {
+                    return true;
+                }
             }
         }
-        this.writeFinalMarkdown();
+        return false;
     }
 
     findRunningJobs(): Job[] {
@@ -186,8 +181,9 @@ export class JobQueue {
         return null;
     }
 
-    writeFinalMarkdown() {
+    writeFinalMarkdown(complete: boolean) {
         tl.debug('writing summary markdown');
+        var thisQueue = this;
         var tempDir = shell.tempdir();
         var linkMarkdownFile = path.join(tempDir, 'JenkinsJob_' + this.rootJob.name + '_' + this.rootJob.executableNumber + '.md');
         tl.debug('markdown location: ' + linkMarkdownFile);
@@ -200,9 +196,12 @@ export class JobQueue {
 
             // if this job was joined to another follow that one instead
             job = findWorkingJob(job);
-            var jobState: JobState = job.state;
-
-            jobContents += indent + '[' + job.name + ' #' + job.executableNumber + '](' + job.executableUrl + ') ' + job.getResultString() + '<br>\n';
+            
+            if (job.executableNumber == -1) {
+                jobContents += indent + job.name + ' ' + job.getResultString() + '<br>\n';
+            } else {
+                jobContents += indent + '[' + job.name + ' #' + job.executableNumber + '](' + job.executableUrl + ') ' + job.getResultString() + '<br>\n';
+            }
 
             var childContents = "";
             for (var i in job.children) {
@@ -228,6 +227,27 @@ export class JobQueue {
                 console.log('Error creating link to Jenkins job: ' + err);
             } else {
                 console.log('##vso[task.addattachment type=Distributedtask.Core.Summary;name=Jenkins Results;]' + linkMarkdownFile);
+            }
+
+            var message: string = null;
+            if (complete) {
+                if (thisQueue.taskOptions.capturePipeline) {
+                    message = 'Jenkins pipeline complete';
+                } else if (thisQueue.taskOptions.captureConsole) {
+                    message = 'Jenkins job complete';
+                } else {
+                    message = 'Jenkins job queued';
+                }
+                tl.setResult(tl.TaskResult.Succeeded, message);
+            } else {
+                if (thisQueue.taskOptions.capturePipeline) {
+                    message = 'Jenkins pipeline failed';
+                } else if (thisQueue.taskOptions.captureConsole) {
+                    message = 'Jenkins job failed';
+                } else {
+                    message = 'Jenkins job failed to queue';
+                }
+                tl.setResult(tl.TaskResult.Failed, message);
             }
         });
     }
