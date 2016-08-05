@@ -28,6 +28,10 @@ When a new major version of the task is available, the definition editor will ad
 
 The user selects a major version (2.x) and we display the channel quality.  Even though there may be a 3.0.0-preview, the user does not lock to that.  They lock to 3.x and we advertise it's preview.  Users just get fixes to stable versions and latest on preview.  There is the possibility of subsequent preview versions breaking you (added required field - will fail at runtime).  That's OK.  They are trying out the preview task because they need a new emerging capability.  They will understand.
 
+When a task is added, the default version is latest released or preview if that's all there is.  So a newly added task with a stable and preview available means the immediate experience is advisement that there's also a preview version to try out.  
+
+Newly created tasks always start at 0.x preview.  They should have a few sprints of usage before going to 1.x.
+
 We can't force one stable version because there is another desire to make breaking changes in tasks that require user interaction.  For example, new required fields or deprecating an option.  For that reason, each major version should have an adoption message in the json which is localized and displayed when advertising the new version.  Task authors must create a new major version in significant rewrites and breaking changes.
 
 A version of a task will use the tools api to either lock to a specific version or range (which is downloaded to a tools cache) or in some cases where appropriate, offer the user the ability to select the version.  That should be a combo box so the user can enter versions of external tools that ship after our product does.  Very useful for on-prem.
