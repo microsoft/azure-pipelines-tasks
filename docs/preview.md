@@ -4,7 +4,7 @@
 
 Provide the ability to have preview tasks while still offering stable versions which are patched.  There is also the related desire to make breaking changes in tasks that customers might need to react to during that event.
 
-Tasks typically are just tool runners.  There are two types of tools.  For some tools, the user needs to be able select the version and even multiplex the build on.  Examples are msbuild/csc for compilation to lock a maintenance branch to.  Another example would be I want to test mode node lib against node 4,5 and 6.
+Tasks typically are just tool runners.  There are two types of tools.  For some tools, the user needs to be able select the version and even multiplex the build on.  Examples are msbuild/csc for compilation to lock a maintenance branch to.  Another example would be I want to test my node lib against node 4,5 and 6.
 
 [Related document on tools here](tools.md)
 
@@ -14,19 +14,19 @@ Because there is often a desire to lock to a working state, the typical request 
 
 Tasks bundle libs and http clients.  Especially in an emerging preview task, it could use APIs which are in preview and could take breaking changes before they release.  Locking to those could break.
 
-The other challenges are complexity and the testing challenges.  End to end testing and automating every possible locked version is challenging.
+The other challenges are complexity and the testing challenges.  End to end testing and automating every possible locked version against a service which is constantly moving forward is challenging.  Tasks drive large integration scenarios.
 
 ## Proposal
 
 Allow user to select major versions of the task in the editor.  Each of these is a channel.  Each channel is either marked as stable or preview.  
 
-When a new major version of the task is available, the definition editor will advise the user that there is a new version.  If that major version is preview, the message will to 'try it out'.  You can always go back.  If it's stable the message should be a little stronger.  
+When a new major version of the task is available, the definition editor will advise the user that there is a new version.  If that major version is preview, the message will to 'try it out'.  You can always go back.  If it's stable the message should be a little stronger.  If they are more than one major version back, another stronger message.  As noted above, staying back too far also adds risk.
 
 The user selects a major version (2.x) and we display the channel quality.  Even though there may be a 3.0.0-preview, the user does not lock to that.  They lock to 3.x and we advertise it's preview.  Users just get fixes to stable versions and latest on preview.  There is the possibility of subsequent preview versions breaking you (added required field - will fail at runtime).  That's OK.  They are trying out the preview task because they need a new emerging capability.  They will understand.
 
-We can't force one stable version because there is another desire to make breaking changes in tasks that require user interaction.  For example, a new required fields, deprecating an option.  For that reason, each major version should have an adoption message in the json which is localized and displayed when advertising the new version.  Task authors must create a new major version in significant rewrites and breaking changes.
+We can't force one stable version because there is another desire to make breaking changes in tasks that require user interaction.  For example, new required fields or deprecating an option.  For that reason, each major version should have an adoption message in the json which is localized and displayed when advertising the new version.  Task authors must create a new major version in significant rewrites and breaking changes.
 
-A version of a task will use the tools api to either lock to a specific version (which is downloaded to a tools cache) or in some cases where appropriate, offer the user the ability
+A version of a task will use the tools api to either lock to a specific version (which is downloaded to a tools cache) or in some cases where appropriate, offer the user the ability to select the version.  That should be a combo box so the user can enter versions of external tools that ship after our product does.  Very useful for on-prem.
 
 This also benefits hosted build for tools that can be pulled (packages, zips) where customers have been frustrated by a single locked version that always moves forward.
 
