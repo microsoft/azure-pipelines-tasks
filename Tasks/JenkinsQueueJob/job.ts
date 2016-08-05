@@ -5,6 +5,7 @@
 import tl = require('vsts-task-lib/task');
 import fs = require('fs');
 import path = require('path');
+import url = require('url');
 import shell = require('shelljs');
 
 // node js modules
@@ -41,6 +42,7 @@ export class Job {
     executableUrl: string; // URL for the executing job instance
     executableNumber: number;
     name: string;
+    identifier: string; // a job identifier that takes into account folder structure
     jobConsole: string = "";
     jobConsoleOffset: number = 0;
     jobConsoleEnabled: boolean = false;
@@ -59,6 +61,7 @@ export class Job {
         if (this.parent != null) {
             this.parent.children.push(this);
         }
+        this.identifier = url.parse(this.taskUrl).path.substr(1);
         this.queue = jobQueue;
         this.queue.addJob(this);
 
@@ -271,7 +274,7 @@ export class Job {
         } else { // stay in Finishing, or eventually go to Done
             var resultUrl: string = Util.addUrlSegment(thisJob.executableUrl, 'api/json');
             thisJob.debug('Tracking completion status of job: ' + resultUrl);
-            request.get({ url: resultUrl }, function requestCallback(err, httpResponse, body) {
+            request.get({ url: resultUrl, strictSSL: thisJob.queue.taskOptions.strictSSL }, function requestCallback(err, httpResponse, body) {
                 tl.debug('finish().requestCallback()');
                 if (err) {
                     Util.handleConnectionResetError(err); // something went bad
@@ -302,7 +305,7 @@ export class Job {
         var thisJob: Job = this;
         var fullUrl: string = Util.addUrlSegment(thisJob.executableUrl, '/logText/progressiveText/?start=' + thisJob.jobConsoleOffset);
         thisJob.debug('Tracking progress of job URL: ' + fullUrl);
-        request.get({ url: fullUrl }, function requestCallback(err, httpResponse, body) {
+        request.get({ url: fullUrl, strictSSL: thisJob.queue.taskOptions.strictSSL }, function requestCallback(err, httpResponse, body) {
             tl.debug('streamConsole().requestCallback()');
             if (err) {
                 Util.handleConnectionResetError(err); // something went bad

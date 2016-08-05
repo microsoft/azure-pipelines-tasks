@@ -1,6 +1,5 @@
 /// <reference path="../../../definitions/mocha.d.ts"/>
 /// <reference path="../../../definitions/node.d.ts"/>
-/// <reference path="../../../definitions/sonarqube-common.d.ts" />
 
 import assert = require('assert');
 import fs = require('fs');

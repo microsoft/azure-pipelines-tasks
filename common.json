@@ -71,18 +71,6 @@
             "dest": "node_modules"
         }
     ],
-    "Maven": [
-        {
-            "module": "sonarqube-common",
-            "dest": "node_modules"
-        }
-    ],
-    "Gradle": [
-        {
-            "module": "sonarqube-common",
-            "dest": "node_modules"
-        }
-    ],
     "Xcode": [
         {
             "module": "ios-signing-common",

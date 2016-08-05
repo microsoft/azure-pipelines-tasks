@@ -7,7 +7,7 @@ import fs = require('fs');
 
 import tl = require('vsts-task-lib/task');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
-import sqCommon = require('sonarqube-common/sonarqube-common');
+import sqCommon = require('./CodeAnalysis/SonarQube/common');
 
 // Lowercased file names are to lessen the likelihood of xplat issues
 import codeAnalysis = require('./CodeAnalysis/mavencodeanalysis');
@@ -169,17 +169,18 @@ mvnGetVersion.exec()
     })
     .then(function (code) {
         // 4. Attempt to collate and upload static code analysis build summaries and artifacts.
-        // The files won't be created if the build failed, and the user should probably fix their build first
+
+        // The files won't be created if the build failed, and the user should probably fix their build first.
         if (userRunFailed) {
             console.error('Could not retrieve code analysis results - Maven run failed.');
             return;
         }
 
-        if (sqCommon.isSonarQubeAnalysisEnabled()) {
-            sqMaven.uploadSonarQubeBuildSummaryIfEnabled();
-        }
-
-        codeAnalysis.uploadCodeAnalysisBuildSummaryIfEnabled();
+        // Otherwise, start uploading relevant build summaries.
+        return sqMaven.uploadSonarQubeBuildSummaryIfEnabled()
+            .then(() => {
+                return codeAnalysis.uploadCodeAnalysisBuildSummaryIfEnabled();
+            });
     })
     .fail(function (err) {
         console.error(err.message);

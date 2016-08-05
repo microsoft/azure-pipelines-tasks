@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 47
+        "Patch": 48
     },
     "demands": [
         "msbuild"
@@ -67,11 +67,11 @@
         {
             "name": "maximumCpuCount",
             "type": "boolean",
-            "label": "Maximum CPU Count",
+            "label": "Build in Parallel",
             "defaultValue": "false",
             "required": false,
             "groupName": "advanced",
-            "helpMarkDown": "If you're MSBuild target configuration is compatible with building in parallel, you can optionally check this input to pass the /m switch to MSBuild (Windows only). If you're target configuration is not compatible with building in parallel, checking this option may cause your build to result in file-in-use errors, or intermittent or inconsistent build failures."
+            "helpMarkDown": "If your MSBuild target configuration is compatible with building in parallel, you can optionally check this input to pass the /m switch to MSBuild (Windows only). If your target configuration is not compatible with building in parallel, checking this option may cause your build to result in file-in-use errors, or intermittent or inconsistent build failures."
         },
         {
             "name": "restoreNugetPackages",
