@@ -45,7 +45,7 @@
       "name": "saveTo",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.saveTo",
-      "defaultValue": "jenkinArtifacts",
+      "defaultValue": "jenkinsArtifacts",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.saveTo"
     },
