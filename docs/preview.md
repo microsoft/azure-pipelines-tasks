@@ -16,7 +16,7 @@ For other tools, you typically always just want latest or a single stable versio
 
 Because there is often a desire to lock to a working state, the typical request is I want to lock my task to a specific version.  In some cases this can add more risk and complexity.  The service is constantly moving forward.  On-prem is by it's nature locked since tasks ship with the product.  
 
-Tasks bundle libs and http clients.  Especially in an emerging preview task, it could use APIs which are in preview and could take breaking changes before they release.  Locking to those could break.
+Tasks bundle libs and http clients.  Especially in an emerging preview task, it could use APIs which are in preview and could take breaking changes before they release.  Locking to those could break.  Tasks also drive external tools and service which may deprecate features over long periods of time.
 
 The other challenges are complexity and the testing challenges.  End to end testing and automating every possible locked version against a service which is constantly moving forward is challenging.  Tasks drive large integration scenarios.
 
