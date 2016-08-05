@@ -30,7 +30,7 @@ The user selects a major version (2.x) and we display the channel quality.  Even
 
 We can't force one stable version because there is another desire to make breaking changes in tasks that require user interaction.  For example, new required fields or deprecating an option.  For that reason, each major version should have an adoption message in the json which is localized and displayed when advertising the new version.  Task authors must create a new major version in significant rewrites and breaking changes.
 
-A version of a task will use the tools api to either lock to a specific version (which is downloaded to a tools cache) or in some cases where appropriate, offer the user the ability to select the version.  That should be a combo box so the user can enter versions of external tools that ship after our product does.  Very useful for on-prem.
+A version of a task will use the tools api to either lock to a specific version or range (which is downloaded to a tools cache) or in some cases where appropriate, offer the user the ability to select the version.  That should be a combo box so the user can enter versions of external tools that ship after our product does.  Very useful for on-prem.
 
 This also benefits hosted build for tools that can be pulled (packages, zips) where customers have been frustrated by a single locked version that always moves forward.
 
