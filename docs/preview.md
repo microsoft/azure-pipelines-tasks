@@ -14,11 +14,13 @@ For other tools, you typically always just want latest or a single stable versio
 
 ## Caution
 
-Because there is often a desire to lock to a working state, the typical request is I want to lock my task to a specific version.  In some cases this can add more risk and complexity.  The service is constantly moving forward.  On-prem is by it's nature locked since tasks ship with the product.  
+Because there is often a desire to lock to a working state, the typical request is I want to lock my task to a specific version.  In some cases this can add more risk and complexity.  The service is constantly moving forward.  Externals are constantly moving forward.  On-prem is by it's nature locked since tasks ship with the product.  
 
 Tasks bundle libs and http clients.  Especially in an emerging preview task, it could use APIs which are in preview and could take breaking changes before they release.  Locking to those could break.  Tasks also drive external tools and service which may deprecate features over long periods of time.
 
 The other challenges are complexity and the testing challenges.  End to end testing and automating every possible locked version against a service which is constantly moving forward is challenging.  Tasks drive large integration scenarios.
+
+Finally, although locked, users should have a way to just pick critical small targetted fixes.  We need the ability to ensure customers get small updates to stable versions (security bug).
 
 ## Proposal
 
@@ -38,6 +40,8 @@ A version of a task will use the tools api to either lock to a specific version 
 
 This also benefits hosted build for tools that can be pulled (packages, zips) where customers have been frustrated by a single locked version that always moves forward.
 
+We have also had sprints where a task-lib change broke multiple tasks which didn't react.  At that time, all our tasks just picked up a single defined lib to use.  We recently added the ability for a task to declare which version of the lib to consume (linked in at build time via npm install or ps-get).  But if you don't you got the single defined.  We need to change it to the task must declare.  There is an illusion that if I didn't change the task, it will continue to work.  We need to ensure that is true via libs and tools.
+
 ## Engineering
 
 The good news is tasks are semver versioned.  The backend also supports storing and advertising multiple versions.  The distributed task automation also supports taking a version.  Before 1.0 shipped, we had the ability in the UI to select a version but our thinking had not formed so we hid the ability to lock.
@@ -46,9 +50,12 @@ We will need to add version selection back but only by major version.  We need t
 
 Our in the box tasks are in one repo which builds on CI and produces a nuget package for VSTS build consumption.  Tasks are then imported into the system during servicing and immutable versions of the tasks are appended to the tasks table and file container storage.
 
-Tasks will have to be able to ship patches to previous major versions (likely just the last) and preview versions.  For that reason, the monolithic repo will have to be split up into a github repo per task.  Each task can take it's own branching but will need to conform to convention in order to be consumed.  The main tasks repo will still exist as an entry point, for issue tracking and will contain the manifest on the other tasks and versions to publish.
+Tasks will have to be able to ship patches to previous major versions (likely just the last) and preview versions.  For that reason, the monolithic repo will have to be split up into a github repo per task.  Each task needs it's own branching but will need to conform to convention in order to be consumed.  The main tasks repo will still exist as an entry point, for issue tracking and will contain the manifest on the other tasks and versions to publish.  The build will need to be able to build multiple branches/versions of the same task for that sprints package.
+
+The main task repo currently gets branched for each release (e.g. releases/m104).  That will continue to occur but what will branch is the manifest.  The task author needs to update the manifest which branches (convention is version) to build and include in this sprints release.  This needs some detailed design work.
 
 Custom tasks in the gallery can take advantage of the same versioning strategies by setting the task semver and promotion messaging.  Extensions can carry multiple tasks.  We need to ensure they can carry multiple versions of the same task.  Since users just get updates to extensions, when they go to the definition again, they will see new versions advertised.
+
 
 
 
