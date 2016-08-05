@@ -13,11 +13,11 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 40
+        "Patch": 41
     },
     "demands": [
     ],
-    "minimumAgentVersion": "1.101.0",
+    "minimumAgentVersion": "1.104.0",
     "groups": [
         {
             "name": "setupOptions",
