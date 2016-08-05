@@ -4,7 +4,11 @@
 
 Provide the ability to have preview tasks while still offering stable versions which are patched.  There is also the related desire to make breaking changes in tasks that customers might need to react to during that event.
 
-Tasks typically are just tool runners.  There are two types of tools.  For some tools, the user needs to be able select the version and even multiplex the build on.  Examples are msbuild/csc for compilation to lock a maintenance branch to.  Another example would be I want to test my node lib against node 4,5 and 6.
+Tasks typically are just tool runners.  There are two types of tools.  
+
+For some tools, the user needs to be able select/lock the version.  Examples are msbuild/csc for compilation to lock a maintenance branch to.  Another example would be I want to test my node lib against node 4,5 and 6 (select plus matrix option).
+
+For other tools, you typically always just want latest or a single stable version.  Examples of this is git, tfsvc, nuget.
 
 [Related document on tools here](tools.md)
 
