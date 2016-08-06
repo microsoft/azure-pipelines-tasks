@@ -100,4 +100,24 @@ Basic sample above.  Intent is to allow service side matrix job explosion
 Basic examples above.  Condition of current state, trigger type (PR doesn't run but CI does) and more.
 
 TODO flush out.
-   
+
+## Build Definition
+
+The build definition in the web still has to exist.  All reporting, queues and other items hang off it.
+
+TODO define.  Basic gist...
+
+- Checkin yaml.  Convention creates build definition in build system.
+- Process tab is replaced with monaco editor in place.  Can edit and save.  We should validate on save.
+- Variables still exist.  Merged with yaml defined.
+
+## Variables
+
+TODO - define variables in yaml.  Merged with variables on definition.
+
+## Demands
+
+Define what it means for demands since the web designer no longer adds the relevant demands. 
+
+I think language offers a good opportunity here.
+
