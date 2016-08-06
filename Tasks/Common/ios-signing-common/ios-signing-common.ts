@@ -40,10 +40,65 @@ export async function installCertInTemporaryKeychain(keychainPath : string, keyc
     importP12Command.pathArg(keychainPath);
     await importP12Command.exec();
 
-    //list the keychain
-    var listCommand : ToolRunner = tl.createToolRunner(tl.which('security', true));
-    listCommand.arg(['list-keychain', '-d', 'user', '-s',  keychainPath]);
-    await listCommand.exec();
+    //list the keychains to get current keychains in search path
+    var listAllOutput : string;
+    var listAllCommand : ToolRunner = tl.createToolRunner(tl.which('security', true));
+    listAllCommand.arg(['list-keychain', '-d', 'user']);
+    listAllCommand.on('stdout', function(data) {
+        if(data) {
+            if(listAllOutput) {
+                listAllOutput = listAllOutput.concat(data.toString().trim());
+            } else {
+                listAllOutput = data.toString().trim();
+            }
+        }
+    })
+
+    await listAllCommand.exec();
+
+    var allKeychainsArr:string [] = [];
+    tl.debug('listAllOutput = ' + listAllOutput);
+
+    //parse out all the existing keychains in search path
+    if(listAllOutput) {
+        allKeychainsArr = listAllOutput.split(/[\n\r\f\v]/gm);
+    }
+
+    if(!listAllOutput || listAllOutput.indexOf('login.keychain') < 0) {
+        //login keychain is not in the search path,
+        //this might have happened with the 2.1.21 version of Xcode task
+        //add it back explicitly, this can be removed after a couple of sprints
+        allKeychainsArr.push(path.join(tl.getVariable('HOME'), 'Library', 'Keychains', 'login.keychain'));
+    }
+
+    //add the temporary keychain to list path along with existing keychains
+    var listAddCommand : ToolRunner = tl.createToolRunner(tl.which('security', true));
+    listAddCommand.arg(['list-keychain', '-d', 'user', '-s',  keychainPath]);
+    for(var i : number = 0; i < allKeychainsArr.length; i ++) {
+        listAddCommand.arg(allKeychainsArr[i].trim().replace(/"/gm, ''));
+    }
+
+    await listAddCommand.exec();
+
+    var listVerifyOutput : string;
+    var listVerifyCommand : ToolRunner = tl.createToolRunner(tl.which('security', true));
+    listVerifyCommand.arg(['list-keychain', '-d', 'user']);
+    listVerifyCommand.on('stdout', function(data) {
+        if(data) {
+            if(listVerifyOutput) {
+                listVerifyOutput = listVerifyOutput.concat(data.toString().trim());
+            } else {
+                listVerifyOutput = data.toString().trim();
+            }
+        }
+    })
+
+    await listVerifyCommand.exec();
+
+    if(listVerifyOutput.indexOf(keychainPath) < 0) {
+        throw tl.loc('TempKeychainSetupFailed');
+    }
+
 }
 
 /**
