@@ -3,11 +3,11 @@
 ## Goals
 
 - **Process follows code through branches**: History, diff, merge your build process.
-- **Easy intuitive format per language type**: Having a language type allows infered execution without having to tediously define everything.
-- **Easy migration to and from web based definition**: This includes a tool which maps 
+- **Easy intuitive format per language type**: Having a language type allows infered execution without having to tediously define everything. 
 - **Consistent execution with web defined process**: Switching because you have a preference in yaml and code based process should lead to a consistent build.
 - **Leverage heavy investment in tasks**: Multiple teams have been developing tasks for a few years.  We should leverage that effort.
 - **Execute Locally**: Should be able to execute and diagnose locally.  
+- **Easy migration to and from web based definition**: This includes a tool which maps.
 
 ## Language Type and Execution
 
@@ -81,7 +81,7 @@ test:
 
 ## CI Triggers
 
-TODO
+TODO.  CI only - defined in yaml.
 
 ## Installers
 
@@ -120,4 +120,3 @@ TODO - define variables in yaml.  Merged with variables on definition.
 Define what it means for demands since the web designer no longer adds the relevant demands. 
 
 I think language offers a good opportunity here.
-
