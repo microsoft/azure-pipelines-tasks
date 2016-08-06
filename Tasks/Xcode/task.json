@@ -12,7 +12,7 @@
     "version": {
         "Major": 2,
         "Minor": 1,
-        "Patch": 24
+        "Patch": 25
     },
     "demands": [
         "xcode"
@@ -231,6 +231,10 @@
         }
     },
     "messages": {
+        "SignIdNotFound": "Failed to find iOS signing identity. Verify the signing and provisioning information provided.",
+        "TempKeychainSetupFailed": "Failed to add the temporary keychain to the keychains search path.",
+        "ProvProfileDetailsNotFound": "Failed to find the details for provisioning profile: %s",
+        "ProvProfileUUIDNotFound": "Failed to find provisioning profile UUID for provisioning profile: %s",
         "MultipleWorkspacesFound": "Multiple xcode workspace matches were found. Using the first match: %s",
         "WorkspaceDoesNotExist": "Xcode workspace was specified but it does not exist or is not a directory",
         "UseXcToolForTestPublishing": "Check the 'Use xctool' checkbox and specify the xctool reporter format to publish test results. No results published.",
