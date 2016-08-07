@@ -3,7 +3,7 @@
 ## Goals
 
 - **Process follows code through branches**: History, diff, merge your build process.
-- **Keep the spirit of yaml**:  The sprit is to define your language with key simple data points which derives an execution plan.  We do not want it to define an execution plan (our job) but just serialized in a different format.  If we do that, we're missing the point.
+- **Keep the spirit of yaml**:  The spirit is to define your language with key simple data points which derives an execution plan.  We do not want it to define an execution plan (our job) but just serialized in a different format.  If we do that, we're missing the point.
 - **Easy intuitive format per language type**: Having a language type allows infered execution without having to tediously define everything. 
 - **Consistent execution with web defined process**: Switching because you have a preference in yaml and code based process should lead to a consistent build.
 - **Leverage heavy investment in tasks**: Multiple teams have been developing tasks for a few years.  We should leverage that effort.
@@ -101,7 +101,7 @@ build:
 
 The goal is to create a simple and expressive yaml where language offers the opportunity to infer context.
 
-However, in the invent you just want literal task invocation that the language plugin does not have first class knowledge of, then that is possible (but not in the spirit of yaml and languages)
+However, in the event you just want literal task invocation that the language plugin does not have first class knowledge of, then that is possible (but not in the spirit of yaml and languages)
 
 ```yaml
 build:
@@ -122,24 +122,6 @@ TODO - flush out
 ## CI Triggers
 
 TODO.  CI only - defined in yaml.
-
-## Installers
-
-Tools can be lazily installed.  [More here](tools.md).  
-
-Language plugins know what tools they run and install.  In the example above, the matrix with a simple definition of 4, 5, 6 is understood to be node.
-
-## Test Matrix
-
-TODO: flush out
-
-Basic sample above.  Intent is to allow service side matrix job explosion
-
-## Step Conditions
-
-Basic examples above.  Condition of current state, trigger type (PR doesn't run but CI does) and more.
-
-TODO flush out.
 
 ## Build Definition
 
