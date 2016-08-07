@@ -52,8 +52,16 @@ build:
   # this has no conditions so will not run if something failed previously
   - echo Hello World
 
+  # common concepts like failInStdErr, cwd can be set.
+  # it will be set for all subsequent steps until changed.
+  # the same concept can be used for any input.
+  # the language plugin will compensate for some input name inconsistencies
+  - failOnStdErr: true
+  - cwd: src/ci 
+  - src/ci/postBuild.ps1
+
   # control options like always and continueOnError are easy to use
-  - [always] src/ci/cleanup.sh
+  - [always] src/ci/cleanup.ps1
 ```
 
 ## Installers
@@ -94,7 +102,28 @@ build:
   # condition on failed or always run.  eval condition
   # shell script task will run this 
 
-  - [always] src/ci/cleanup.sh
+  - [always] src/ci/cleanup.ps1
+```
+
+## Task Hints and Locking
+
+We need to be able to lock to certain versions of tasks.  
+
+**The default is latest non preview task** 
+
+The language plugin will sometimes have to decide which task to use.  A good example of this is ps1 paths.  It could be a generic ps1 task or an azure powershell task.  We will figure it out by cracking the file. 
+
+```yaml
+build:
+  # This will use the latest non-preview version of the task
+  # It will also use the powershell version of the task 
+  - src/ci/start.ps1
+
+  # This will use the 2.0.1-preview version of the powershell task 
+  - src/ci/setupenv.ps1@2
+
+  # This will use the azure powershell task.  It's a hint to the base language handler
+  - [azure] src/ci/prepazure.ps1
 ```
 
 ## Generic Task Invocation
