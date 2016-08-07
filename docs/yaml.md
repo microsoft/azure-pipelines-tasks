@@ -3,6 +3,7 @@
 ## Goals
 
 - **Process follows code through branches**: History, diff, merge your build process.
+- **Keep the spirit of yaml**:  The sprit is to define your language with key simple data points which derives an execution plan.  We do not want it to define an execution plan (our job) but just serialized in a different format.  If we do that, we're missing the point.
 - **Easy intuitive format per language type**: Having a language type allows infered execution without having to tediously define everything. 
 - **Consistent execution with web defined process**: Switching because you have a preference in yaml and code based process should lead to a consistent build.
 - **Leverage heavy investment in tasks**: Multiple teams have been developing tasks for a few years.  We should leverage that effort.
@@ -14,8 +15,9 @@
 
 ## Related Topics
 
-[Tools](tools.md): Build and test yaml can define which toolset version to build with.  Matrix option available in tests.
-[Task Channgles](preview.md): Yaml allows reference to task including major locked version.
+[Tools](tools.md): Build and test yaml can define which toolset version to build with.  Matrix option available in tests.  
+
+[Task Versions](preview.md): Yaml allows reference to task including major locked version.
 
 ## Language Type and Execution
 
