@@ -44,6 +44,9 @@ describe('VsTest Suite', function () {
         it('(2015U1Check.ReturnsTrueIfTaefFileIsFound) returns true if taef file is found', (done) => {
             psr.run(path.join(__dirname, '2015U1Check.ReturnsTrueIfTaefFileIsFound.ps1'), done);
         })
+        it('(2015U1Check.ReturnsFalseIfTaefFileIsFoundButVersionIsLTU3) returns false if taef file is found but version is <u3', (done) => {
+            psr.run(path.join(__dirname, '2015U1Check.ReturnsFalseIfTaefFileIsFoundButVersionIsLTU3.ps1'), done);
+        })
         it('(2015U1Check.ReturnsFalseForOlderVSTestVersion.ps1) returns false if vstest version less than 14', (done) => {
             psr.run(path.join(__dirname, '2015U1Check.ReturnsFalseForOlderVSTestVersion.ps1'), done);
         })
