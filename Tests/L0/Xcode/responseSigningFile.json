@@ -71,7 +71,11 @@
       "code": 0,
       "stdout": "delete output here"
     },
-    "/usr/bin/security list-keychain -d user -s /user/build/_xcodetasktmp.keychain" : {
+    "/usr/bin/security list-keychain -d user" : {
+      "code": 0,
+      "stdout":  "/User/test/Library/Keychains/login.keychain \n /user/build/_xcodetasktmp.keychain"
+    },
+    "/usr/bin/security list-keychain -d user -s /user/build/_xcodetasktmp.keychain /User/test/Library/Keychains/login.keychain /user/build/_xcodetasktmp.keychain" : {
       "code": 0,
       "stdout": "list-keychain output here"
     },
