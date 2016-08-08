@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Licenza Xamarin",
-  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613739)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613739)",
   "loc.description": "Consente di attivare o disattivare le licenze per Xamarin",
   "loc.instanceNameFormat": "$(action) licenza Xamarin",
   "loc.group.displayName.advanced": "Avanzate",
@@ -8,8 +8,8 @@
   "loc.input.label.email": "Posta elettronica",
   "loc.input.help.email": "Indirizzo di posta elettronica dell'account Xamarin.",
   "loc.input.label.password": "Password",
-  "loc.input.help.password": "Xamarin account password. Use a new build variable with its lock enabled on the Variables tab to encrypt this value.",
-  "loc.input.label.product": "Xamarin Product",
-  "loc.input.help.product": "Xamarin product name.",
+  "loc.input.help.password": "Password dell'account di Xamarin. Per crittografare questo valore, usare una nuova variabile di compilazione con il relativo blocco abilitato nella scheda Variabili.",
+  "loc.input.label.product": "Prodotto Xamarin",
+  "loc.input.help.product": "Nome del prodotto Xamarin.",
   "loc.input.label.timeout": "Timeout in secondi"
 }

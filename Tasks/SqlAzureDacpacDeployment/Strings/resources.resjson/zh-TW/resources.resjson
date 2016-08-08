@@ -31,5 +31,13 @@
   "loc.input.label.EndIpAddress": "結束 IP 位址",
   "loc.input.help.EndIpAddress": "自動化代理程式電腦集區的結尾 IP 位址，例如 196.21.30.65。",
   "loc.input.label.DeleteFirewallRule": "工作結束後刪除規則",
-  "loc.input.help.DeleteFirewallRule": "如有選取，則會在工作結束後，從 Azure SQL Server 防火牆 [允許的 IP 位址] 清單刪除在此指定的 IP 位址。"
+  "loc.input.help.DeleteFirewallRule": "如有選取，則會在工作結束後，從 Azure SQL Server 防火牆 [允許的 IP 位址] 清單刪除在此指定的 IP 位址。",
+  "loc.messages.SAD_InvalidServerAddress": "Either IPAddress mentioned is not a valid IPv4 address or Sql database server: '{0}' does not exist.",
+  "loc.messages.SAD_ServerNotFound": "Sql Database Server: '{0}' not found.",
+  "loc.messages.SAD_InvalidIPv4Address": "IPAddress mentioned is not a valid IPv4 address.",
+  "loc.messages.SAD_FoundMoreFiles": "Found more than one file to deploy with search pattern {0}. There can be only one.",
+  "loc.messages.SAD_NoFilesMatch": "No files were found to deploy with search pattern {0}",
+  "loc.messages.SAD_InvalidDacpacFile": "Invalid Dacpac file '{0}' provided",
+  "loc.messages.SAD_NoPassword": "No password specified for the SQL User: '{0}'",
+  "loc.messages.SAD_InvalidPublishProfile": "Invalid Publish Profile '{0}' provided"
 }

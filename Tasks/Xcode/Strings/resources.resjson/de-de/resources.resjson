@@ -47,5 +47,12 @@
   "loc.input.label.xctoolReporter": "xctool-Testreporterformat",
   "loc.input.help.xctoolReporter": "Das Testreporterformat, das verwendet werden soll, wenn die Aktion \"Test\" angegeben wird und \"xctool verwenden\" aktiviert ist. Geben Sie \"junit:Pfad-der-Ausgabedatei-hier.xml\" an, um ein Dateiformat zu generieren, das mit dem Task \"Testergebnisse veröffentlichen\" kompatibel ist. Wenn eine Angabe erfolgt, wird \"plain\" ebenfalls automatisch hinzugefügt. xctool muss auf den Agent-Hosts installiert sein. Details finden Sie unter [xctool](https://github.com/facebook/xctool).",
   "loc.input.label.publishJUnitResults": "In VSTS/TFS veröffentlichen",
-  "loc.input.help.publishJUnitResults": "Wählen Sie diese Option aus, um mithilfe von \"xctool\" die oben generierten JUnit-Testergebnisse in VSTS/TFS zu veröffentlichen."
+  "loc.input.help.publishJUnitResults": "Wählen Sie diese Option aus, um mithilfe von \"xctool\" die oben generierten JUnit-Testergebnisse in VSTS/TFS zu veröffentlichen.",
+  "loc.messages.MultipleWorkspacesFound": "Multiple xcode workspace matches were found. Using the first match: %s",
+  "loc.messages.WorkspaceDoesNotExist": "Xcode workspace was specified but it does not exist or is not a directory",
+  "loc.messages.UseXcToolForTestPublishing": "Check the 'Use xctool' checkbox and specify the xctool reporter format to publish test results. No results published.",
+  "loc.messages.NoTestResultsFound": "No test result files matching %s were found, so publishing JUnit test results is being skipped.",
+  "loc.messages.XcodeSuccess": "Xcode task execution completed with no errors.",
+  "loc.messages.TempKeychainDeleteFailed": "Failed to delete temporary keychain %s created during the build.",
+  "loc.messages.ProvProfileDeleteFailed": "Failed to delete the provisioning profile %s."
 }

@@ -1,8 +1,8 @@
 {
   "loc.friendlyName": "Dateikopiervorgang auf Windows-Computer",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "Dateien auf Remotecomputer kopieren",
-  "loc.instanceNameFormat": "Copy files from $(SourcePath)",
+  "loc.instanceNameFormat": "Dateien kopieren aus $(SourcePath)",
   "loc.group.displayName.advanced": "Erweiterte Optionen",
   "loc.input.label.SourcePath": "Quelle",
   "loc.input.help.SourcePath": "Der absolute Pfad des Quellordners oder der Quelldatei auf dem lokalen Computer oder eine UNC-Freigabe, z. B. \"c:\\fabrikamfiber\" oder \"\\\\\\\\fabrikamshare\\fabrikamfiber\".",

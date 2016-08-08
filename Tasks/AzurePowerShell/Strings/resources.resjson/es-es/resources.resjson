@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "PowerShell de Azure",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613749)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613749)",
   "loc.description": "Ejecutar un script de PowerShell en un entorno de Azure",
   "loc.instanceNameFormat": "Script de PowerShell de Azure: $(ScriptPath)",
   "loc.input.label.ConnectedServiceNameSelector": "Tipo de conexión de Azure",
@@ -12,6 +12,6 @@
   "loc.input.help.ScriptPath": "Ruta de acceso del script. Debe ser una ruta de acceso completa o relativa al directorio de trabajo predeterminado.",
   "loc.input.label.ScriptArguments": "Argumentos del script",
   "loc.input.help.ScriptArguments": "Parámetros adicionales que pasar a PowerShell. Pueden ser parámetros ordinales o con nombre.",
-  "loc.messages.InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
-  "loc.messages.InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified."
+  "loc.messages.InvalidScriptArguments0": "Argumentos de script '{0}' no válidos. No se permiten los saltos de línea.",
+  "loc.messages.InvalidScriptPath0": "Ruta del script '{0}' no válida. Los caracteres de ruta de acceso especificados no son válidos."
 }

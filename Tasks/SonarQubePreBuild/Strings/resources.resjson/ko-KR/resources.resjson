@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "SonarQube for MSBuild - 분석 시작",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkId=620063)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=620063)",
   "loc.description": "분석을 구성하기 위해 SonarQube에서 품질 프로필 가져오기",
   "loc.instanceNameFormat": "SonarQube에서 품질 프로필 가져오기",
   "loc.group.displayName.serverSettings": "SonarQube Server",
@@ -10,7 +10,7 @@
   "loc.input.label.projectKey": "프로젝트 키",
   "loc.input.help.projectKey": "SonarQube 프로젝트 고유 키(예: sonar.projectKey)",
   "loc.input.label.projectName": "프로젝트 이름",
-  "loc.input.help.projectName": "The SonarQube project name, i.e. sonar.projectName",
+  "loc.input.help.projectName": "SonarQube 프로젝트 이름(즉, sonar.ProjectName)",
   "loc.input.label.projectVersion": "프로젝트 버전",
   "loc.input.help.projectVersion": "SonarQube 프로젝트 버전(예: sonar.projectVersion)",
   "loc.input.label.connectedServiceName": "SonarQube 끝점",
@@ -22,11 +22,11 @@
   "loc.input.label.dbPassword": "Db 사용자 암호",
   "loc.input.help.dbPassword": "SonarQube Server 5.1 이하에만 해당됩니다. 데이터베이스 사용자의 암호(예: sonar.jdbc.password)입니다.",
   "loc.input.label.cmdLineArgs": "추가 설정",
-  "loc.input.help.cmdLineArgs": "/d:propertyName=propertyValue 형식을 사용하는 공백으로 구분된 설정입니다. 일반 명령줄 이스케이프 규칙이 적용됩니다. 설정에 대한 자세한 내용은 [SonarQube 문서](https://go.microsoft.com/fwlink/?LinkID=624390)를 참조하세요.",
+  "loc.input.help.cmdLineArgs": "Space separated settings using the format: /d:propertyName=propertyValue. Normal command line escaping rules apply. For more details on the settings please view the [SonarQube docs](https://go.microsoft.com/fwlink/?LinkID=624390).",
   "loc.input.label.configFile": "설정 파일",
-  "loc.input.help.configFile": "구성 파일을 통해 설정을 지정할 수도 있습니다. 템플릿은 [여기](https://go.microsoft.com/fwlink/?LinkID=620062)에서 사용할 수 있습니다.",
-  "loc.input.label.includeFullReport": "Include full analysis report in the build summary (SQ 5.3+)",
-  "loc.input.help.includeFullReport": "This option will delay the build until the SonarQube analysis is completed.",
+  "loc.input.help.configFile": "You can also specify settings via a configuration file. A template is available [here](https://go.microsoft.com/fwlink/?LinkID=620062)",
+  "loc.input.label.includeFullReport": "빌드 요약에 전체 분석 보고서 포함(SQ 5.3 이상)",
+  "loc.input.help.includeFullReport": "이 옵션은 SonarQube 분석이 완료될 때까지 빌드를 지연합니다.",
   "loc.input.label.breakBuild": "품질 게이트 실패에서 빌드 실패(SQ 5.3+)",
-  "loc.input.help.breakBuild": "SonarQube Server 5.3 이상을 사용할 경우에만 이 옵션을 사용할 수 있습니다. SonarQube에서 분석을 완료할 때까지 빌드가 대기해야 하므로 지연이 발생합니다. [추가 정보](https://go.microsoft.com/fwlink/?LinkId=722407)"
+  "loc.input.help.breakBuild": "This option is only available when using a SonarQube server 5.3 or above. It will introduce delays as the build must wait for SonarQube to complete the analysis. [More information](https://go.microsoft.com/fwlink/?LinkId=722407)"
 }

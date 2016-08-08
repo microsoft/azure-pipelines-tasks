@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Chef Knife",
-  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/ChefKnife/README.md)",
+  "loc.helpMarkDown": "[Weitere Informationen](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/ChefKnife/README.md)",
   "loc.description": "Skripte mit Knife-Befehlen auf Ihrer Chef-Arbeitsstation ausführen",
   "loc.instanceNameFormat": "Chef Knife-Skript: $(ScriptPath)",
   "loc.input.label.ConnectedServiceName": "Chef-Abonnements",

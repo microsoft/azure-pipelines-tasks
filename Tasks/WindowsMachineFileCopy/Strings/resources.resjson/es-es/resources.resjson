@@ -1,8 +1,8 @@
 {
   "loc.friendlyName": "Copia de archivo en equipo Windows",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "Copiar archivos en máquinas remotas",
-  "loc.instanceNameFormat": "Copy files from $(SourcePath)",
+  "loc.instanceNameFormat": "Copiar archivos desde $(SourcePath)",
   "loc.group.displayName.advanced": "Opciones avanzadas",
   "loc.input.label.SourcePath": "Origen",
   "loc.input.help.SourcePath": "Ruta de acceso absoluta del archivo o carpeta de origen en el equipo local, o un recurso compartido UNC, como c:\\fabrikamfiber o \\\\\\\\fabrikamshare\\fabrikamfiber.",

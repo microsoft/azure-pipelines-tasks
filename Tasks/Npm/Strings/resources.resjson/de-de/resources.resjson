@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "npm",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613746)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613746)",
   "loc.description": "Führt einen npm-Befehl aus.",
   "loc.instanceNameFormat": "npm $(command)",
   "loc.group.displayName.advanced": "Erweitert",
@@ -10,7 +10,7 @@
   "loc.input.help.arguments": "Weitere Argumente, die an npm übergeben werden.",
   "loc.input.label.cwd": "Arbeitsverzeichnis",
   "loc.input.help.cwd": "Das aktuelle Arbeitsverzeichnis, in dem der npm-Befehl ausgeführt wird. Der Standardwert ist der Stamm des Repositorys.",
-  "loc.messages.InvalidCommand": "Only one command should be used for npm. Use arguments input for additional arguments.",
+  "loc.messages.InvalidCommand": "Nur ein Befehl sollte für npm verwendet werden. Verwenden Sie Argumenteingabe für weitere Argumente.",
   "loc.messages.NpmReturnCode": "Npm wurde mit dem folgenden Rückgabecode beendet: %d",
   "loc.messages.NpmFailed": "Npm-Fehler: %s"
 }

@@ -1,13 +1,13 @@
 {
   "loc.friendlyName": "Xamarin Test Cloud",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613744)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613744)",
   "loc.description": "Mobile Apps mit Xamarin-Testcloud mithilfe von \"Xamarin.UITest\" testen",
   "loc.instanceNameFormat": "$(app) mit \"Xamarin.UITest\" in Xamarin-Testcloud testen",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.app": "App-Datei",
-  "loc.input.help.app": "Relative path from repo root of the app(s) to test.  Wildcards can be used.  For example, `**/*.apk` for all APK files in all subfolders.",
+  "loc.input.help.app": "Der relative Pfad vom Repositorystamm der zu testenden Apps. Platzhalter können verwendet werden. Beispiel: \"**\\*.apk\" für alle APK-Dateien in allen Unterordnern.",
   "loc.input.label.dsym": "dSYM-Datei (nur iOS)",
-  "loc.input.help.dsym": "To make crash logs easier to read, you can upload a dSYM file that is associated with your app. This field only applies to iOS apps. Provide path relative to the .ipa file. Example: *.dSYM",
+  "loc.input.help.dsym": "Um Absturzprotokolle besser verständlich zu machen, können Sie eine Ihrer App zugeordnete dSYM-Datei hochladen. Dieses Feld gilt nur für iOS-Apps. Geben Sie einen Pfad an, der relativ zur IPA-Datei ist. Beispiel: *.dSYM",
   "loc.input.label.teamApiKey": "Team-API-Schlüssel",
   "loc.input.help.teamApiKey": "Sie finden den Team-API-Schlüssel für die Xamarin-Testcloud unter \"Teams & Apps\" unter \"https://testcloud.xamarin.com/account\".",
   "loc.input.label.user": "Benutzer-E-Mail",
@@ -26,6 +26,6 @@
   "loc.input.label.testCloudLocation": "Speicherort von test-cloud.exe",
   "loc.input.label.optionalArgs": "Optionale Argumente",
   "loc.input.help.optionalArgs": "Zusätzliche Argumente, die an test-cloud.exe übergeben werden.",
-  "loc.input.label.publishNUnitResults": "Publish results to TFS/Team Services",
-  "loc.input.help.publishNUnitResults": "When selected, --nunit-xml option will be passed to test-cloud.exe. Results from the NUnit xml file will be published to TFS/Team Services."
+  "loc.input.label.publishNUnitResults": "Ergebnisse in TFS/Team Services veröffentlichen",
+  "loc.input.help.publishNUnitResults": "Wenn ausgewählt, wird die Option \"-nunit-xml\" an \"test-cloud.exe\" übergeben. Ergebnisse aus der NUnit-XML-Datei werden in TFS/Team Services veröffentlicht."
 }

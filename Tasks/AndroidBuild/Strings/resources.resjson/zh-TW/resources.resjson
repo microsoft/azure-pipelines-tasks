@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "Android Build (deprecated; use Gradle)",
-  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613716)",
+  "loc.friendlyName": "Android 組建 (已取代; 使用 Gradle)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613716)",
   "loc.description": "使用 Gradle 建置 Android 應用程式，並選擇性地啟動模擬器進行單元測試",
   "loc.instanceNameFormat": "Android 組建 $(gradleProj)",
   "loc.group.displayName.avdOptions": "Android 虛擬裝置 (AVD) 選項",

@@ -31,5 +31,13 @@
   "loc.input.label.EndIpAddress": "Конечный IP-адрес",
   "loc.input.help.EndIpAddress": "Последний IP-адрес пула машин агента автоматизации, например 196.21.30.65.",
   "loc.input.label.DeleteFirewallRule": "Удалить правило после завершения задачи",
-  "loc.input.help.DeleteFirewallRule": "Если выбрано, после завершения задачи указанные здесь IP-адреса удаляются из списка \"Разрешенные IP-адреса\" брандмауэра Azure SQL Server."
+  "loc.input.help.DeleteFirewallRule": "Если выбрано, после завершения задачи указанные здесь IP-адреса удаляются из списка \"Разрешенные IP-адреса\" брандмауэра Azure SQL Server.",
+  "loc.messages.SAD_InvalidServerAddress": "Either IPAddress mentioned is not a valid IPv4 address or Sql database server: '{0}' does not exist.",
+  "loc.messages.SAD_ServerNotFound": "Sql Database Server: '{0}' not found.",
+  "loc.messages.SAD_InvalidIPv4Address": "IPAddress mentioned is not a valid IPv4 address.",
+  "loc.messages.SAD_FoundMoreFiles": "Found more than one file to deploy with search pattern {0}. There can be only one.",
+  "loc.messages.SAD_NoFilesMatch": "No files were found to deploy with search pattern {0}",
+  "loc.messages.SAD_InvalidDacpacFile": "Invalid Dacpac file '{0}' provided",
+  "loc.messages.SAD_NoPassword": "No password specified for the SQL User: '{0}'",
+  "loc.messages.SAD_InvalidPublishProfile": "Invalid Publish Profile '{0}' provided"
 }

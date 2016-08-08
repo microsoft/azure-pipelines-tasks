@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Knife Chef",
-  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/ChefKnife/README.md)",
+  "loc.helpMarkDown": "[Altre informazioni](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/ChefKnife/README.md)",
   "loc.description": "Consente di eseguire script con comandi knife sulla workstation Chef",
   "loc.instanceNameFormat": "Script knife Chef: $(ScriptPath)",
   "loc.input.label.ConnectedServiceName": "Sottoscrizione di Chef",
