@@ -283,13 +283,14 @@ var cacheArchiveFile = function (url) {
     }
 
     // Short-circuit if already downloaded.
-    console.log('Downloading archive file ' + url);
     var scrubbedUrl = url.replace(/[/\:?]/g, '_');
     var targetPath = path.join(_tempPath, 'archive', scrubbedUrl);
     if (shell.test('-d', targetPath)) {
-        console.log('Archive already cached. Skipping.');
+        console.log('Archive file already cached: ' + url);
         return;
     }
+
+    console.log('Downloading archive file: ' + url);
 
     // Delete any previous partial attempt.
     var partialPath = path.join(_tempPath, 'partial', 'archive', scrubbedUrl);
