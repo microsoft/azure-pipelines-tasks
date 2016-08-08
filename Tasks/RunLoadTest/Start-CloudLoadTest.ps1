@@ -336,6 +336,20 @@ function Validate()
     ValidateFiles "load test file" $LoadTest
 }
 
+function UploadSummaryMdReport($summaryMdPath)
+{
+	Write-Verbose "Summary Markdown Path = $summaryMdPath"
+
+	if ([System.IO.File]::Exists($summaryMdPath))
+	{	
+		Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=Cloud Load Test Report;]$summaryMdPath"
+	}
+	else
+	{
+		 Write-Warning "Could not find the summary report file $summaryMdPath"
+	}
+}
+
 ############################################## PS Script execution starts here ##########################################
 WriteTaskMessages "Starting Load Test Script"
 
@@ -344,6 +358,13 @@ Write-Output "Test drop = $TestDrop"
 Write-Output "Load test = $LoadTest"
 Write-Output "Load generator machine type = $machineType"
 Write-Output "Run source identifier = build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
+
+$tfsUrl = $env:System_TeamFoundationCollectionUri.TrimEnd('/')
+
+$resultsMDFolder = "$env:Temp\LoadTestResultSummary\$env:BUILD_BUILDID"
+New-Item -ItemType Directory -Force -Path $resultsMDFolder
+$summaryFile =  ("{0}\CloudLoadTestResults.md" -f $resultsMDFolder)
+Write-Output "Summary file = $summaryFile"
 
 #Validate Input
 Validate
@@ -408,12 +429,18 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
     }
 
     Write-Output ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name)
+    Write-Output ("To view run details navigate to {0}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={1}" -f $tfsUrl, $run.id)
     Write-Output "To view detailed results navigate to Load Test | Load Test Manager in Visual Studio IDE, and open this run."
+
+    ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name) >>  $summaryFile
+    ("To view run details navigate [here]({0}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={1})." -f $tfsUrl, $run.id) >>  $summaryFile
 }
 else
 {
     Write-Error ("Connection '{0}' failed for service '{1}'" -f $connectedServiceName, $connectedServiceDetails.Url.AbsoluteUri)
 }
+
+UploadSummaryMdReport $summaryFile
 
 WriteTaskMessages "Finished Load Test Script"
 

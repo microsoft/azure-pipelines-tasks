@@ -325,8 +325,8 @@ function UploadSummaryMdReport($summaryMdPath)
 	Write-Verbose "Summary Markdown Path = $summaryMdPath"
 
 	if ([System.IO.File]::Exists($summaryMdPath))
-	{
-		Write-Host "##vso[build.uploadsummary]$summaryMdPath"
+	{	
+		Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=Apache JMeter Test Report;]$summaryMdPath"
 	}
 	else
 	{
@@ -343,7 +343,11 @@ Write-Output "Load test = $LoadTest"
 Write-Output "Load generator machine type = $machineType"
 Write-Output "Run source identifier = build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
 
-$summaryFile =  ("{0}\Load test results.md" -f $global:ScopedTestDrop)
+$tfsUrl = $env:System_TeamFoundationCollectionUri.TrimEnd('/')
+
+$resultsMDFolder = "$env:Temp\LoadTestResultSummary\$env:BUILD_BUILDID"
+New-Item -ItemType Directory -Force -Path $resultsMDFolder
+$summaryFile =  ("{0}\ApacheJMeterTestResults.md" -f $resultsMDFolder)
 Write-Output "Summary file = $summaryFile"
 
 #Validate Input
@@ -409,10 +413,10 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
     }
 
     Write-Output ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name)
-    Write-Output ("To view run details navigate to http://{0}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account#runId={1}" -f $connectedServiceDetails.Url.AbsoluteUri, $run.id)
+    Write-Output ("To view run details navigate to {0}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={1}" -f $tfsUrl, $run.id)
 
     ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name) >>  $summaryFile
-    ("To view run details navigate [here]({0}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account#runId={1})." -f $connectedServiceDetails.Url.AbsoluteUri, $run.id) >>  $summaryFile
+    ("To view run details navigate [here]({0}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={1})." -f $tfsUrl, $run.id) >>  $summaryFile
 }
 else
 {

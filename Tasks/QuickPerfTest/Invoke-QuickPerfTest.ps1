@@ -201,6 +201,20 @@ function ValidateInputs()
     }
 }
 
+function UploadSummaryMdReport($summaryMdPath)
+{
+	Write-Verbose "Summary Markdown Path = $summaryMdPath"
+
+	if ([System.IO.File]::Exists($summaryMdPath))
+	{	
+		Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=Quick Perf Test Report;]$summaryMdPath"
+	}
+	else
+	{
+		 Write-Warning "Could not find the summary report file $summaryMdPath"
+	}
+}
+
 ############################################## PS Script execution starts here ##########################################
 Write-Output "Starting Quick Perf Test Script"
 
@@ -226,6 +240,13 @@ $CltAccountUrl = ComposeAccountUrl($VSOAccountUrl)
 
 Write-Verbose "VSO account Url = $VSOAccountUrl" -Verbose
 
+$tfsUrl = $env:System_TeamFoundationCollectionUri.TrimEnd('/')
+
+$resultsMDFolder = "$env:Temp\LoadTestResultSummary\$env:BUILD_BUILDID"
+New-Item -ItemType Directory -Force -Path $resultsMDFolder
+$summaryFile =  ("{0}\QuickPerfTestResults.md" -f $resultsMDFolder)
+Write-Output "Summary file = $summaryFile"
+
 ValidateInputs
 
 $h = InitializeRestHeaders
@@ -240,12 +261,18 @@ if ($drop.dropType -eq "InPlaceDrop")
     MonitorTestRun $h $run
 
     Write-Output ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name)
+    Write-Output ("To view run details navigate to {0}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={1}" -f $tfsUrl, $run.id)
     Write-Output "To view detailed results navigate to Load Test | Load Test Manager in Visual Studio IDE, and open this run."
+
+    ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name) >>  $summaryFile
+    ("To view run details navigate [here]({0}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={1})." -f $tfsUrl, $run.id) >>  $summaryFile
 }
 else
 {
     Write-Error ("Failed to connect to the endpoint '{0}' for VSO account '{1}'" -f $EndpointName, $VSOAccountUrl)
 }
 
+UploadSummaryMdReport $summaryFile
+	
 Write-Output "Finished Quick Perf Test Script"
 
