@@ -2,7 +2,7 @@
     "archivePackages": [
         {
             "archiveName": "AzCopy.zip",
-            "url": "https://krishadiblob.blob.core.windows.net/tools/AzCopy/3.1/AzCopy.zip",
+            "url": "https://vstsagenttools.blob.core.windows.net/tools/azcopy/3.1/AzCopy.zip",
             "dest": "./",
             "files": [
               "AzCopy/Microsoft.WindowsAzure.Storage.DataMovement.dll",
@@ -13,7 +13,7 @@
         },
         {
             "archiveName": "DeploymentUtilities.zip",
-            "url": "https://krishadiblob.blob.core.windows.net/tools/DeploymentUtilities/1.5/DeploymentUtilities.zip",
+            "url": "https://vstsagenttools.blob.core.windows.net/tools/DeploymentUtilities/15.104.25603/DeploymentUtilities.zip",
             "dest": "./",
             "files": [
               "DeploymentUtilities/Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll",
