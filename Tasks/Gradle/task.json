@@ -276,7 +276,8 @@
             "label": "Include full analysis report in the build summary (SQ 5.3+)",
             "required": false,
             "helpMarkDown": "This option will delay the build until the SonarQube analysis is completed.",
-            "groupName": "CodeAnalysis"
+            "groupName": "CodeAnalysis",
+            "visibleRule": "sqAnalysisEnabled = true"
         },
         {
             "name": "pmdAnalysisEnabled",

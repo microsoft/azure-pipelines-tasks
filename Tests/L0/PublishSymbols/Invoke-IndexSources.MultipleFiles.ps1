@@ -13,7 +13,6 @@ foreach ($treatNotIndexedAsWarning in @($false, $true)) {
     Unregister-Mock Get-VstsTaskVariable
     Unregister-Mock New-SrcSrvIniContent
     Unregister-Mock Add-SourceServerStream
-    Unregister-Mock Invoke-DisposeSourceProvider
     Unregister-Mock Remove-DbghelpLibrary
     $script:pdbstrExePath = 'SomeDrive:\SomeDir\pdbstr.exe'
     Register-Mock Get-VstsTaskVariable { 'SomeDrive:\AgentHome' } -- -Name Agent.HomeDirectory -Require
@@ -25,7 +24,6 @@ foreach ($treatNotIndexedAsWarning in @($false, $true)) {
     $script:provider = New-Object psobject -Property @{ SourcesRootPath = $sourcesRoot }
     Register-Mock Get-SourceProvider { $script:provider }
     Register-Mock Add-SourceServerStream
-    Register-Mock Invoke-DisposeSourceProvider
     Register-Mock Remove-DbghelpLibrary
 
     # Arrange mocks for the first symbols file.
@@ -57,6 +55,5 @@ foreach ($treatNotIndexedAsWarning in @($false, $true)) {
     Assert-WasCalled Push-Location $env:TEMP
     Assert-WasCalled Add-SourceServerStream -- -PdbStrPath $pdbstrExePath -SymbolsFilePath $symbolsFile1 -StreamContent $iniContent1
     Assert-WasCalled Add-SourceServerStream -- -PdbStrPath $pdbstrExePath -SymbolsFilePath $symbolsFile2 -StreamContent $iniContent2
-    Assert-WasCalled Invoke-DisposeSourceProvider -- -Provider $provider
     Assert-WasCalled Remove-DbghelpLibrary -- -HModule $libraryHandle
 }

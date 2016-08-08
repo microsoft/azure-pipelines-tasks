@@ -10,7 +10,6 @@ Register-Mock Get-VstsTaskVariable { 'Some team project ID' } -- -Name System.Te
 Register-Mock Get-VstsTaskVariable { 'SomeProtocol://SomeCollection/' } -- -Name System.TeamFoundationCollectionUri -Require
 Register-Mock Get-VstsTaskVariable { 'Some repo ID' } -- -Name Build.Repository.Id -Require
 Register-Mock Get-VstsTaskVariable { 'Some commit ID' } -- -Name Build.SourceVersion -Require
-Register-Mock Invoke-DisposeSourceProvider
 
 # Act.
 $actual = Get-SourceProvider
@@ -23,4 +22,3 @@ Assert-AreEqual 'Some team project ID' $actual.TeamProjectId
 Assert-AreEqual 'SomeProtocol://SomeCollection' $actual.CollectionUrl
 Assert-AreEqual 'Some repo ID' $actual.RepoId
 Assert-AreEqual 'Some commit ID' $actual.CommitId
-Assert-WasCalled Invoke-DisposeSourceProvider -Times 0
