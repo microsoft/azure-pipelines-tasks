@@ -242,9 +242,9 @@ Write-Verbose "VSO account Url = $VSOAccountUrl" -Verbose
 
 $tfsUrl = $env:System_TeamFoundationCollectionUri.TrimEnd('/')
 
-$resultsMDFolder = "$env:Temp\LoadTestResultSummary\$env:BUILD_BUILDID"
-New-Item -ItemType Directory -Force -Path $resultsMDFolder
-$summaryFile =  ("{0}\QuickPerfTestResults.md" -f $resultsMDFolder)
+$resultsMDFolder = New-Item -ItemType Directory -Force -Path "$env:Temp\LoadTestResultSummary"
+Remove-Item $resultsMDFolder\QuickPerfTestResults_*.md -Force
+$summaryFile =  ("{0}\QuickPerfTestResults_{1}_{2}.md" -f $resultsMDFolder, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID)
 Write-Output "Summary file = $summaryFile"
 
 ValidateInputs
