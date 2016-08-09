@@ -205,9 +205,9 @@ function UploadSummaryMdReport($summaryMdPath)
 {
 	Write-Verbose "Summary Markdown Path = $summaryMdPath"
 
-	if ([System.IO.File]::Exists($summaryMdPath))
+	if (Test-Path($summaryMdPath))
 	{	
-		Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=Quick Perf Test Report;]$summaryMdPath"
+		Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=Quick Web Perf Test Report;]$summaryMdPath"
 	}
 	else
 	{
@@ -218,6 +218,9 @@ function UploadSummaryMdReport($summaryMdPath)
 ############################################## PS Script execution starts here ##########################################
 Write-Output "Starting Quick Perf Test Script"
 
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+
 $testName = $testName + ".loadtest"
 Write-Output "Test name = $testName"
 Write-Output "Run duration = $runDuration"
@@ -227,26 +230,21 @@ Write-Output "Load location = $geoLocation"
 Write-Output "Load generator machine type = $machineType"
 Write-Output "Run source identifier = build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
 
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+#Validate Input
+ValidateInputs
 
-$serviceEndpoint = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
+$connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
 
-$Username = $serviceEndpoint.Authorization.Parameters.Username
-$Password = $serviceEndpoint.Authorization.Parameters.Password
-$VSOAccountUrl = $serviceEndpoint.Url.AbsoluteUri
-##$EndpointName = $serviceEndpoint.Name
+$Username = $connectedServiceDetails.Authorization.Parameters.Username
+Write-Verbose "Username = $Username" -Verbose
+$Password = $connectedServiceDetails.Authorization.Parameters.Password
+$VSOAccountUrl = $connectedServiceDetails.Url.AbsoluteUri
 $CltAccountUrl = ComposeAccountUrl($VSOAccountUrl)
-
-Write-Verbose "VSO account Url = $VSOAccountUrl" -Verbose
 
 $tfsUrl = $env:System_TeamFoundationCollectionUri.TrimEnd('/')
 
-$resultsMDFolder = New-Item -ItemType Directory -Force -Path "$env:Temp\LoadTestResultSummary"
-Remove-Item $resultsMDFolder\QuickPerfTestResults_*.md -Force
-$summaryFile =  ("{0}\QuickPerfTestResults_{1}_{2}.md" -f $resultsMDFolder, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID)
-
-ValidateInputs
+Write-Verbose "VSO account Url = $tfsUrl" -Verbose
+Write-Verbose "CLT account Url = $CltAccountUrl" -Verbose
 
 $h = InitializeRestHeaders
 
@@ -263,15 +261,21 @@ if ($drop.dropType -eq "InPlaceDrop")
     Write-Output ("To view run details navigate to {0}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={1}" -f $tfsUrl, $run.id)
     Write-Output "To view detailed results navigate to Load Test | Load Test Manager in Visual Studio IDE, and open this run."
 
-    ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name) >>  $summaryFile
-    ("To view run details navigate [here]({0}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={1})." -f $tfsUrl, $run.id) >>  $summaryFile
+    $resultsMDFolder = New-Item -ItemType Directory -Force -Path "$env:Temp\LoadTestResultSummary"
+    $resultFilePattern = ("QuickPerfTestResults_{0}_{1}_*.md" -f $env:AGENT_ID, $env:SYSTEM_DEFINITIONID)
+    $excludeFilePattern = ("QuickPerfTestResults_{0}_{1}_{2}_*.md" -f $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID)
+    Remove-Item $resultsMDFolder\$resultFilePattern -Exclude $excludeFilePattern -Force
+    $summaryFile =  ("{0}\QuickPerfTestResults_{1}_{2}_{3}_{4}.md" -f $resultsMDFolder, $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID, $run.id)
+
+    ("<p>Run-id for this load test is **{0}** and its name is **{1}**.<br/>To view run details navigate [here]({2}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={3}).</p>" -f  $run.runNumber, $run.name, $tfsUrl, $run.id) >>  $summaryFile
+	
+    UploadSummaryMdReport $summaryFile
 }
 else
 {
     Write-Error ("Failed to connect to the endpoint '{0}' for VSO account '{1}'" -f $EndpointName, $VSOAccountUrl)
 }
 
-UploadSummaryMdReport $summaryFile
 	
 Write-Output "Finished Quick Perf Test Script"
 
