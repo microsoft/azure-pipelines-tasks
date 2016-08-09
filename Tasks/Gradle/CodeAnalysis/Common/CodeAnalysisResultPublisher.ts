@@ -41,7 +41,9 @@ export class CodeAnalysisResultPublisher {
 
             for (var resultFile of analysisResult.resultFiles) {
                 let extension = path.extname(resultFile);
-                let artifactName = `${prefix}_${analysisResult.moduleName}_${analysisResult.toolName}${extension}`;
+                let reportName = path.basename(resultFile, extension);
+
+                let artifactName = `${prefix}_${reportName}_${analysisResult.toolName}${extension}`;
                 tl.cp('-f', resultFile, path.join(destinationDir, artifactName));
             }
         }

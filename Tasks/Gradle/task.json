@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 49
+        "Patch": 50
     },
     "demands": [
         "java"
@@ -280,13 +280,22 @@
             "visibleRule": "sqAnalysisEnabled = true"
         },
         {
-            "name": "pmdAnalysisEnabled",
+            "name": "checkstyleAnalysisEnabled",
             "type": "boolean",
-            "label": "Run PMD Analysis",
+            "label": "Run Checkstyle",
             "required": false,
             "defaultValue": "false",
             "groupName": "CodeAnalysis",
-            "helpMarkDown": "Use the PMD Java static analysis tool to look for bugs in the code."
+            "helpMarkDown": "Run the Checkstyle tool with the default Sun checks. Results are uploaded as build artifacts."
+        },
+        {
+            "name": "pmdAnalysisEnabled",
+            "type": "boolean",
+            "label": "Run PMD",
+            "required": false,
+            "defaultValue": "false",
+            "groupName": "CodeAnalysis",
+            "helpMarkDown": "Use the PMD Java static analysis tool to look for bugs in the code. Results are uploaded as build artifacts."
         }
     ],
     "instanceNameFormat": "gradlew $(tasks)",
