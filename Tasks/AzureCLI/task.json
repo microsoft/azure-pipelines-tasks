@@ -1,0 +1,101 @@
+{
+  "id": "459F4E94-8CC0-40A3-9BAC-77A2D65E3425",
+  "name": "AzureCLI",
+  "friendlyName": "Azure CLI",
+  "description": "Run a Shell script within an Azure environment",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "Replace with markdown to show in help",
+  "category": "Utility",
+  "visibility":["Build","Release"],
+  "demands": [],
+  "version": {
+    "Major": "1",
+    "Minor": "0",
+    "Patch": "1"
+  },
+  "minimumAgentVersion": "1.95.0",
+  "instanceNameFormat": "AzureCLI $(message)",
+  "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
+  "inputs": [
+    {
+            "name": "connectedServiceNameSelector",
+            "type": "pickList",
+            "label": "Azure Connection Type",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select the Azure connection type for the Deployment",
+            "options": {
+                "connectedServiceName": "Azure Classic",
+                "connectedServiceNameARM": "Azure Resource Manager"
+            }
+     },
+     {
+            "name": "connectedServiceNameARM",
+            "type": "connectedService:AzureRM",
+            "label": "AzureRM Subscription",
+            "defaultValue": "",
+            "visibleRule": "connectedServiceNameSelector = connectedServiceNameARM",
+            "required": true,
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment"
+     },
+     {
+            "name": "connectedServiceName",
+            "type": "connectedService:Azure",
+            "label": "Azure Classic Subscription",
+            "defaultValue": "",
+            "visibleRule": "connectedServiceNameSelector = connectedServiceName",
+            "required": true,
+            "helpMarkDown": "Select the Azure Classic subscription for the deployment"
+     },
+     {
+            "name": "scriptPath",
+            "type": "filePath",
+            "label": "Script Path",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Fully qualified path of the script or a path relative to the the default working directory"
+        },
+        {
+            "name": "args",
+            "type": "string",
+            "label": "Arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Arguments passed to the shell script"
+        },
+        {
+            "name": "cwd",
+            "type": "filePath",
+            "label": "Working Directory",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Current working directory where the script is run.  Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory)",
+            "groupName": "advanced"
+        },
+        {
+            "name": "failOnStandardError",
+            "type": "boolean",
+            "label": "Fail on Standard Error",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "If this is true, this task will fail when any errors are written to the StandardError stream",
+            "groupName": "advanced"
+        }
+  ],
+  "execution": {
+    "Node": {
+      "target": "azureclitask.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+        "BashReturnCode": "Bash exited with return code: %d",
+        "BashFailed": "Bash failed with error: %s"
+    }
+}

@@ -1,0 +1,9 @@
+{
+  "which": {
+    "bash": "/usr/local/bin/bash"
+  },
+
+  "checkPath" : {
+    "/usr/local/bin/bash": false
+  }
+}
