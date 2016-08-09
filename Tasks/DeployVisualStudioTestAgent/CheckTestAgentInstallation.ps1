@@ -1,7 +1,7 @@
 function Check-Installation($ProductVersion)
 {
     $agentPath = Locate-TestAgent
-    if($agentPath)
+    if($agentPath -and $agentPath.Path)
     {
         $isProductExists = (Get-ChildItem $agentPath.Path).GetValue('Install') -eq '1'
         if($isProductExists)

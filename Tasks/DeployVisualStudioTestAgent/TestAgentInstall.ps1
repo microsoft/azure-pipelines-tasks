@@ -5,7 +5,7 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 	$testAgentDetails = Locate-TestAgent($ProductVersion)
 	
 	# If test agent is already installed - probe for update criteria
-	if($testAgentDetails)
+	if($testAgentDetails -and $testAgentDetails.Path)
 	{	
 		$agentPath = $testAgentDetails.Path
 		$versionToInstall = ((Get-Item $SetupPath).VersionInfo.FileVersion)
