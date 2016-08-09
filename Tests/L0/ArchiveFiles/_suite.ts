@@ -27,6 +27,7 @@ describe('ArchiveFiles Suite', function () {
     });
 
     var tests = [
+        /*
         {
             'file': 'test.zip',
             'type': 'zip',
@@ -62,6 +63,7 @@ describe('ArchiveFiles Suite', function () {
             'type': 'tar',
             'tarCompression': 'xz'
         }
+        */
     ]
 
     tests.forEach((test) => {
