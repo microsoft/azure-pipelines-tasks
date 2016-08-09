@@ -1,0 +1,27 @@
+rootProject {
+    boolean hasCheckstyle = false;
+    allprojects { proj ->
+        afterEvaluate {
+            if (proj.plugins.hasPlugin('checkstyle')) {
+                hasCheckstyle = true;
+                println(proj.getName() + ' is already configured to run checkstyle. Skipping auto configuration ');
+            }
+        }
+    }
+
+    allprojects { proj ->
+        afterEvaluate {
+            if (!hasCheckstyle) {
+                println('Applying the checkstyle plugin to project ' + proj.getName());
+
+                proj.apply plugin: 'checkstyle'
+                checkstyle {
+                    println(rootDir);
+                    configFile rootProject.file('checkstyle.xml')
+                    ignoreFailures = true
+                    showViolations = false
+                }
+            }
+        }
+    }
+}

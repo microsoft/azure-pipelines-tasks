@@ -6,9 +6,8 @@ import glob = require('glob');
 
 import tl = require('vsts-task-lib/task');
 
-
 export enum BuildEngine {
-    Maven, 
+    Maven,
     Gradle
 }
 
@@ -21,18 +20,18 @@ export enum BuildEngine {
  */
 export class BuildOutput {
 
-    private moduleOutputs: ModuleOutput[] = [];
-
     constructor(private rootDirectory: string, public buildEngine: BuildEngine) {
-        this.findCandidateModuleOutputs();
+
     }
 
-    public getModuleOutputs(): ModuleOutput[] {
-        return this.moduleOutputs;
-    }
+    /**
+     * Finds the module outputs by looking at the file structure. In Gradle the modules are in the "build" 
+     * 
+     * @returns {ModuleOutput[]}
+     */
+    public findModuleOutputs(): ModuleOutput[] {
 
-    private findCandidateModuleOutputs() {
-        
+        let moduleOutputs: ModuleOutput[] = [];
         let modulePaths = glob.sync(path.join(this.rootDirectory, '**', this.getBuildDirectoryName()))
             .filter((dir) => fs.lstatSync(dir).isDirectory());
 
@@ -41,8 +40,10 @@ export class BuildOutput {
             let moduleName = this.getModuleName(modulePath);
             let mo = new ModuleOutput(moduleName, modulePath);
             tl.debug(`[CA] Candidate module: ${mo.moduleName} - root ${mo.moduleRoot}`)
-            this.moduleOutputs.push(mo);
+            moduleOutputs.push(mo);
         }
+
+        return moduleOutputs;
     }
 
     private getModuleName(modulePath: string): string {
@@ -55,17 +56,16 @@ export class BuildOutput {
         return path.basename(path.join(modulePath, '..'));
     }
 
-    private getBuildDirectoryName() : string {
-        switch (this.buildEngine)
-        {
+    private getBuildDirectoryName(): string {
+        switch (this.buildEngine) {
             case BuildEngine.Gradle:
-            {
-                return 'build';
-            }
+                {
+                    return 'build';
+                }
             case BuildEngine.Maven:
-            {
-                return 'target'
-            }
+                {
+                    return 'target'
+                }
         }
     }
 

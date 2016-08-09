@@ -20,10 +20,10 @@ import tl = require('vsts-task-lib/task');
  * @class PmdReportParser
  * @implements {IAnalysisToolReportParser}
  */
-export class PmdTool extends BaseTool {
+export class CheckstyleTool extends BaseTool {
 
     constructor(buildOutput: BuildOutput, boolInputName: string) {
-        super('PMD', buildOutput, boolInputName);
+        super('Checkstyle', buildOutput, boolInputName);
     }
 
     /**
@@ -35,11 +35,11 @@ export class PmdTool extends BaseTool {
             case BuildEngine.Maven:
                 return path.join(output.moduleRoot);
             case BuildEngine.Gradle:
-                return path.join(output.moduleRoot, 'reports', 'pmd');
+                return path.join(output.moduleRoot, 'reports', 'checkstyle');
             default:
-                throw new Error('No such build engine ' + this.buildOutput.buildEngine);
+                tl.debug('No such build engine ' + this.buildOutput.buildEngine);
+                throw new Error();
         }
-
     }
 
     /**
@@ -53,28 +53,28 @@ export class PmdTool extends BaseTool {
 
         var reportContent = fs.readFileSync(xmlReport, 'utf-8');
         xml2js.parseString(reportContent, (err, data) => {
-            // If the file is not XML, or is not from PMD, return immediately
-            if (!data || !data.pmd) {
-                tl.debug(`[CA] Empty or unrecognized PMD xml report ${xmlReport}`);
+            // If the file is not XML, or is not from checkstyle, return immediately
+            if (!data || !data.checkstyle) {
+                tl.debug(`[CA] Empty or unrecognized checkstyle xml report ${xmlReport}`);
                 return null;
             }
 
-            if (!data.pmd.file || data.pmd.file.length === 0) { // No files with violations, return now that it has been marked for upload
-                tl.debug(`[CA] A PMD report was found for module '${moduleName}' but it contains no violations`);
+            // No files with violations, return now that it has been marked for upload
+            if (!data.checkstyle.file || data.checkstyle.file.length === 0) {
+                tl.debug(`[CA] A checkstyle report was found for module '${moduleName}' but it contains no violations`);
                 return null;
             }
 
-            data.pmd.file.forEach((file: any) => {
-                if (file.violation) {
+            data.checkstyle.file.forEach((file: any) => {
+                if (file.error) {
                     fileCount++;
-                    violationCount += file.violation.length;
+                    violationCount += file.error.length;
                 }
             });
 
-            tl.debug(`[CA] A PMD report was found for for module '${moduleName}' containing ${violationCount} issues - ${xmlReport}`);
+            tl.debug(`[CA] A checkstyle report was found for for module '${moduleName}' containing ${violationCount} issues - ${xmlReport}`);
         });
 
         return [violationCount, fileCount];
     }
-
 }
