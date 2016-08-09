@@ -3,7 +3,7 @@
 ## Goals
 
 - **Process follows code through branches**: History, diff, merge your build process.
-- **Keep the spirit of yaml**:  The spirit is to define your language with key simple data points which derives an execution plan.  We do not want it to define an execution plan (our job) but just serialized in a different format.  If we do that, we're missing the point.
+- **Keep the spirit of simple builds that use yaml**:  The spirit is to define your language with key simple data points which derives an execution plan.  We do not want it to define an execution plan (our job) but just serialized in a different format.  If we do that, we're missing the point.
 - **Easy intuitive format per language type**: Having a language type allows infered execution without having to tediously define everything. 
 - **Consistent execution with web defined process**: Switching because you have a preference in yaml and code based process should lead to a consistent build.
 - **Leverage heavy investment in tasks**: Multiple teams have been developing tasks for a few years.  We should leverage that effort.
@@ -11,11 +11,11 @@
 
 ## Non Goals
 
-- **Round Trip**: We will not round trip and keep yaml and web edits in sync.  Pick how you want to work.
+- **Round Trip**: We will not round trip the process and keep yaml and web edits in sync.  Pick how you want to work.
 
 ## Related Topics
 
-[Tools](tools.md): Build and test yaml can define which toolset version to build with.  Matrix option available in tests.  
+[Tools](tools.md): Build and test yaml can define which toolset version to build with.  The language knows which tools has to work with. 
 
 [Task Versions](preview.md): Yaml allows reference to task including major locked version.
 
@@ -32,61 +32,83 @@ Finally, all yaml entries that fall through essentially map to the cmd line task
 Example:
 
 ```yaml
-language: csharp
 
-## drives which msbuild is called.  hint to msbuild below
-toolset: VisualStudio2015
+# a definition will be able to have multiple jobs
+my build job:
 
-build:
-  # each line is handed to the language plugin.
-  # in this case, because toolset is VS2015 (above) it knows to add msbuild task
-  # with input sln path and vs version. 
-  - src/myApp.sln
+  ## specify language.
+  language: dotnet
 
-  # if it's not something handled by project plugin, goes to the base
-  # base plugin has handlers for sh, cmd, ps1 etc... and auto maps to the appropriate task
-  - src/ci/after.ps1
+  ## drives which msbuild is called.  hint to msbuild below
+  toolset: VisualStudio2015
+ 
+  ## variables are merged and overlayed over variables defined in the web definition editor.
+  variables:
+    foo: bar
+    baz: foo
 
-  # if it falls through all the special base project handlers, 
-  # ends up with exec command line task
-  # this has no conditions so will not run if something failed previously
-  - echo Hello World
+  steps:
+    
+    # each line is handed to the language plugin.
+    # in this case, because toolset is VS2015 (above) it knows to add msbuild task
+    - src\mywebapp.sln
 
-  # common concepts like failInStdErr, cwd can be set.
-  # it will be set for all subsequent steps until changed.
-  # the same concept can be used for any input.
-  # the language plugin will compensate for some input name inconsistencies
-  - failOnStdErr: true
-  - cwd: src/ci 
-  - src/ci/postBuild.ps1
+    # the dotnet language plugin also understands that "proj" maps to msbuild task
+    # you can pass other inputs to the msbuild task
+    - proj: src\mywebApp.csproj
+      msbuildArguments: /m
 
-  # control options like always and continueOnError are easy to use
-  - [always] src/ci/cleanup.ps1
+    # if it's not something handled by project plugin, goes to the base
+    # base plugin has handlers for sh, cmd, ps1 etc... and auto maps to the powershell task
+    # language pluging understands that everything after the script is additional arguments to script 
+    - src\ci\after.ps1 arg1 $(foo)
+
+    # if I need to specify other inputs for script tasks ...
+    # variables map into inputs  
+    - script: src\ci\try.ps1 $(baz) "arg two"
+      failOnStandardError: true
+
+    # if it falls through all the special base project handlers, 
+    # ends up with exec command line task
+    - echo Hello World
+
+  finally:
+    # always run
+    - src\ci\cleanup.ps1
 ```
 
-## Installers
+## Installers and Tools
 
 Language plug-ins have associate [toolinstallers](tools.md).  The language plugin in this case (jsnode) has first class knowledge of node and npm and will ensure the proper version is installed and pre-pended to the path.
 
 Variables can also be used to leverage the build service side matrix option.  This is very powerful since it offers a matrix option that runs build jobs in parallel.
 
 ```yaml
-language: jsnode
-node: $(node.version)
-npm: $(npm.version)
-install:
-  # node project type would just run npm install if install yaml element exists
-  # it will inject and npm task with install as it's argument.
-  # in this case, also knows to set cwd input on the task to src.
-  - src/project.json
+my build job:
+  language: jsnode
 
-build:
-  # if it's not something handled by project plugin, goes to the base
-  # base plugin has handlers for sh, cmd, ps1 etc... and auto maps to the appropriate task
-  - src/ci/before.sh
+  # jsnode language plugin knows it's node that it installs and had the node installer
+  # TODO: define how server uses job matrix and sets variable.  
+  # Is it a hint to the tasks below so all tasks that use that node version?  
+  # Need conventions for that.  tools feature needs flushing out 
+  nodejs:
+    - 0.12.7
+    - 4.3.2
 
-  # the jsnode language plugin knows if a gulpfile to inject a gulp task
-  - src/gulpfile.js
+  # if steps do not exist the nodejs lang plugin will npm install, npm test
+  # you can specify
+  steps:
+    - npm install
+    - gulp
+    - gulp test
+
+
+    # the jsnode language plugin knows if a gulpfile to inject a gulp task
+    - src/gulpfile.js
+
+    - gulp src/gulptest.js test
+    - gulp test
+    
 ```
 
 ## Common Utility Tasks
@@ -94,15 +116,14 @@ build:
 The base language plugin has first class knowledge of other common tasks such as copy and publish
 
 ```yaml
-build:
+steps:
+
   # base language plugin knows it's
-  - copy $(Build.SourcesDirectory) **/*.zip $(Build.ArtifactsDirectory) overwrite
-  - publish server $(Build.ArtifactsDirectory)/*.zip as AppZip 
+  - copy $(Build.SourcesDirectory) **/*.zip $(Build.ArtifactsDirectory) overwrite 
 
-  # condition on failed or always run.  eval condition
-  # shell script task will run this 
-
-  - [always] src/ci/cleanup.ps1
+publish:
+  # publish to a server drop
+  - server $(Build.ArtifactsDirectory)/*.zip as AppZip
 ```
 
 ## Task Hints and Locking
@@ -114,16 +135,16 @@ We need to be able to lock to certain versions of tasks.
 The language plugin will sometimes have to decide which task to use.  A good example of this is ps1 paths.  It could be a generic ps1 task or an azure powershell task.  We will figure it out by cracking the file. 
 
 ```yaml
-build:
+steps:
   # This will use the latest non-preview version of the task
   # It will also use the powershell version of the task 
   - src/ci/start.ps1
 
   # This will use the 2.0.1-preview version of the powershell task 
-  - src/ci/setupenv.ps1@2
+  - (PowerShell@2) src/ci/setupenv.ps1
 
   # This will use the azure powershell task.  It's a hint to the base language handler
-  - [azure] src/ci/prepazure.ps1
+  - (AzurePowerShell) src/ci/prepazure.ps1
 ```
 
 ## Generic Task Invocation
@@ -133,7 +154,7 @@ The goal is to create a simple and expressive yaml where language offers the opp
 However, in the event you just want literal task invocation that the language plugin does not have first class knowledge of, then that is possible (but not in the spirit of yaml and languages)
 
 ```yaml
-build:
+steps:
 
   # only task names are used.
   # input name or label name (what they see in the web UI) can be used 
@@ -143,10 +164,6 @@ build:
     format: PREFast
     scanfolder: $(Build.SourcesDirectory)
 ```
-
-## Test
-
-TODO - flush out
 
 ## CI Triggers
 
@@ -171,3 +188,7 @@ TODO - define variables in yaml.  Merged with variables on definition.
 Define what it means for demands since the web designer no longer adds the relevant demands. 
 
 I think language offers a good opportunity here.
+
+## New Definition Wizard Integration
+
+
