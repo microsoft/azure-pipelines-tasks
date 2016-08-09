@@ -67,7 +67,7 @@ describe('AzureCLI Suite', function () {
             });
     })
     it('should fail when endpoint is not correct',(done) => {
-        setResponseFile('azureclitaskFails.json');
+        setResponseFile('azureLoginFails.json');
 
         var tr = new trm.TaskRunner('AzureCLI');
         tr.setInput('connectedServiceNameSelector', 'ConnectedServiceNameARM');
@@ -84,7 +84,7 @@ describe('AzureCLI Suite', function () {
             });
     })
     it('should not logout and not run bash when login failed AzureRM',(done) => {
-        setResponseFile('azureclitaskFails.json');
+        setResponseFile('azureLoginFails.json');
 
         var tr = new trm.TaskRunner('AzureCLI');
         tr.setInput('connectedServiceNameSelector', 'ConnectedServiceNameARM');
@@ -101,11 +101,11 @@ describe('AzureCLI Suite', function () {
             });
     })
     it('should not logout and not run bash when login failed Classic',(done) => {
-        setResponseFile('azureclitaskFails.json');
+        setResponseFile('azureLoginFails.json');
 
         var tr = new trm.TaskRunner('AzureCLI');
         tr.setInput('connectedServiceNameSelector', 'ConnectedServiceName');
-        tr.setInput('connectedServiceName', 'AzureClassic');
+        tr.setInput('connectedServiceName', 'AzureClassicFail');
         tr.run()
             .then(() => {
                 assert(tr.invokedToolCount == 2, 'should have only run 2 azure invocations');
@@ -118,7 +118,7 @@ describe('AzureCLI Suite', function () {
             });
     })
     it('should logout and fail without running bash when subscription not set',(done) => {
-        setResponseFile('azureclitaskFails.json');
+        setResponseFile('azureLoginFails.json');
 
         var tr = new trm.TaskRunner('AzureCLI');
         tr.setInput('connectedServiceNameSelector', 'ConnectedServiceNameARM');
@@ -136,12 +136,33 @@ describe('AzureCLI Suite', function () {
                 done(err);
             });
     })
-    it('should logout if bash failed',(done) => {
+    it('should logout of AzureRM if bash failed',(done) => {
         setResponseFile('bashfailed.json');
 
         var tr = new trm.TaskRunner('AzureCLI');
         tr.setInput('connectedServiceNameSelector', 'ConnectedServiceNameARM');
         tr.setInput('connectedServiceNameARM', 'AzureRM');
+        tr.setInput('scriptPath', 'scriptfail.sh');
+        tr.setInput('args', 'arg1');
+        tr.setInput('cwd', 'fake/wd');
+        tr.setInput('failOnStandardError', 'false');
+        tr.run()
+            .then(() => {
+                assert(tr.invokedToolCount == 5, 'logout happened when bash fails');
+                assert(tr.stderr.length > 0, 'should have written to stderr');
+                assert(tr.failed, 'task should have failed');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+    it('should logout of AzureClassic if bash failed',(done) => {
+        setResponseFile('bashfailed.json');
+
+        var tr = new trm.TaskRunner('AzureCLI');
+        tr.setInput('connectedServiceNameSelector', 'ConnectedServiceName');
+        tr.setInput('connectedServiceName', 'AzureClassic');
         tr.setInput('scriptPath', 'scriptfail.sh');
         tr.setInput('args', 'arg1');
         tr.setInput('cwd', 'fake/wd');

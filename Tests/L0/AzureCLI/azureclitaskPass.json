@@ -40,20 +40,12 @@
   },
   "getVariable": {
     "ENDPOINT_AUTH_AzureClassic": "{\"parameters\":{\"certificate\":\"cert\"},\"scheme\":\"Certificate\"}",
-    "ENDPOINT_DATA_AzureClassic": "{\"subscriptionName\":\"sName\",\"subscriptionId\":\"sId\"}",
-    "ENDPOINT_AUTH_SCHEME_AzureClassic": "Certificate",
-    "ENDPOINT_AUTH_PARAMETER_AzureClassic_CERTIFICATE": "cert",
     "ENDPOINT_DATA_AzureClassic_SUBSCRIPTIONNAME": "sName",
     "ENDPOINT_DATA_AzureClassic_SUBSCRIPTIONID": "sId",
     "ENDPOINT_AUTH_AzureRM": "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}",
     "ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALID": "id",
     "ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALKEY": "key",
     "ENDPOINT_AUTH_PARAMETER_AzureRM_TENANTID": "tenant",
-    "ENDPOINT_DATA_AzureRM_SUBSCRIPTIONNAME": "sName",
-    "INPUT_CONNECTEDSERVICENAME":"AzureClassic",
-    "INPUT_CONNECTEDSERVICENAMEARM":"AzureRM",
-    "INPUT_SCRIPTPATH":"script.sh",
-    "INPUT_ARGS":"arg1",
-    "INPUT_CWD":"fake/wd"
+    "ENDPOINT_DATA_AzureRM_SUBSCRIPTIONNAME": "sName"
   }
 }
