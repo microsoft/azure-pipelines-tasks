@@ -342,7 +342,7 @@ function UploadSummaryMdReport($summaryMdPath)
 
 	if (Test-Path($summaryMdPath))
 	{	
-		Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=Cloud Load Test Report;]$summaryMdPath"
+		Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=Load test results;]$summaryMdPath"
 	}
 	else
 	{
@@ -435,7 +435,7 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
     Remove-Item $resultsMDFolder\$resultFilePattern -Exclude $excludeFilePattern -Force
     $summaryFile =  ("{0}\CloudLoadTestResults_{1}_{2}_{3}_{4}.md" -f $resultsMDFolder, $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID, $run.id)
 
-    ("<p>Run-id for this load test is **{0}** and its name is **{1}**.<br/>To view run details navigate [here]({2}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={3}).</p>" -f  $run.runNumber, $run.name, $tfsUrl, $run.id) >>  $summaryFile
+    ("<p>[Test Run: {0}]({2}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={3}) using {1}.</p>" -f  $run.runNumber, $run.name, $tfsUrl, $run.id) >>  $summaryFile
 	
     UploadSummaryMdReport $summaryFile
 }
