@@ -5,6 +5,7 @@
 import path = require('path');
 import tl = require('vsts-task-lib/task');
 import fs = require('fs');
+import util = require('util');
 
 export class azureclitask {
     public static async runMain() {
@@ -16,14 +17,13 @@ export class azureclitask {
             var bash = tl.createToolRunner(tl.which('bash', true));
 
             var scriptPath = tl.getPathInput('scriptPath', true, true);
+            var args = tl.getInput('args', false);
             var cwd = tl.getPathInput('cwd', true, false);
             // if user didn't supply a cwd (advanced), then set cwd to folder script is in.
             // All "script" tasks should do this
             if (!tl.filePathSupplied('cwd')) {
                 cwd = path.dirname(scriptPath);
             }
-
-            var args = tl.getInput('args', false);
 
             // determines whether output to stderr will fail a task.
             // some tools write progress and other warnings to stderr.  scripts can also redirect.
@@ -33,12 +33,7 @@ export class azureclitask {
             tl.cd(cwd);
 
             var connectedServiceNameSelector = tl.getInput('connectedServiceNameSelector', true);
-            try{
-                this.loginAzure(connectedServiceNameSelector);
-            }
-            catch(err){
-                throw err.stderr;
-            }
+            this.loginAzure(connectedServiceNameSelector);
 
             bash.pathArg(scriptPath);
             bash.argString(args); // additional args should always call argString.  argString() parses quoted arg strings
@@ -46,7 +41,12 @@ export class azureclitask {
             await bash.exec({failOnStdErr: failOnStdErr});
         }
         catch (err) {
-            toolExecutionError = err;
+            if(err.stderr){
+                toolExecutionError = err.stderr;
+            }
+            else {
+                toolExecutionError = err;
+            }
             //go to finally and logout of azure and set task result
         }
         finally {
@@ -75,8 +75,7 @@ export class azureclitask {
             connectedService = tl.getInput('connectedServiceNameARM', true);
             this.loginAzureRM(connectedService);
         }
-        else
-        {
+        else {
             connectedService = tl.getInput('connectedServiceName', true);
             this.loginAzureClassic(connectedService);
         }
@@ -137,8 +136,7 @@ export class azureclitask {
             connectedService = tl.getInput('connectedServiceNameARM', true);
             this.logoutAzureRM(connectedService);
         }
-        else
-        {
+        else {
             connectedService = tl.getInput('connectedServiceName', true);
             this.logoutAzureClassic(connectedService);
         }
@@ -158,8 +156,7 @@ export class azureclitask {
             var username:string = endpointAuth.parameters["username"];
             tl.execSync("azure", "logout -u " + username);
         }
-        else
-        {
+        else {
             var subscriptionName:string = tl.getEndpointDataParameter(connectedService, "SubscriptionName", true);
             tl.execSync("azure", " account clear -s " + subscriptionName);
         }
@@ -174,8 +171,7 @@ export class azureclitask {
     private static createPublishSettingFile(subscriptionName:string, subscriptionId:string, certificate:string, publishSettingFileName:string): void  {
         //writing the data to the publishsetting file
         try {
-            fs.writeFileSync(publishSettingFileName, '<?xml version="1.0" encoding="utf-8"?><PublishData><PublishProfile SchemaVersion="2.0" PublishMethod="AzureServiceManagementAPI"><Subscription ServiceManagementUrl="https://management.core.windows.net" Id="'
-                + subscriptionId + '" Name="' + subscriptionName + '" ManagementCertificate="' + certificate + '" /> </PublishProfile></PublishData>');
+            fs.writeFileSync(publishSettingFileName, util.format('<?xml version="1.0" encoding="utf-8"?><PublishData><PublishProfile SchemaVersion="2.0" PublishMethod="AzureServiceManagementAPI"><Subscription ServiceManagementUrl="https://management.core.windows.net" Id="%s" Name="%s" ManagementCertificate="%s" /> </PublishProfile></PublishData>',subscriptionId, subscriptionName, certificate));
         }
         catch (err) {
             this.deletePublishSettingFile(publishSettingFileName);
