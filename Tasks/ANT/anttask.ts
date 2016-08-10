@@ -4,102 +4,107 @@ import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
 
-var anttool = tl.which('ant', true);
-var antv = tl.createToolRunner(anttool);
-antv.arg('-version');
 
-var antb = tl.createToolRunner(anttool);
-var antBuildFile = tl.getPathInput('antBuildFile', true, true);
-antb.arg('-buildfile');
-antb.pathArg(antBuildFile);
+try {
+    var anttool = tl.which('ant', true);
+    var antv = tl.tool(anttool);
+    antv.arg('-version');
 
-// options and targets are optional
-antb.argString(tl.getInput('options', false));
-antb.arg(tl.getDelimitedInput('targets', ' ', false));
+    var antb = tl.tool(anttool);
+    var antBuildFile = tl.getPathInput('antBuildFile', true, true);
+    antb.arg('-buildfile');
+    antb.arg(antBuildFile);
 
-// update ANT_HOME if user specified path manually (not required, but if so, check it)
-var antHomeUserInputPath = tl.getPathInput('antHomeUserInputPath', false, true);
-if (antHomeUserInputPath) {
-    tl.debug('Using path from user input to set ANT_HOME');
-    tl.debug('Set ANT_HOME to ' + antHomeUserInputPath);
-    process.env['ANT_HOME'] = antHomeUserInputPath;
-}
+    // options and targets are optional
+    antb.arg(tl.getInput('options', false));
+    antb.arg(tl.getDelimitedInput('targets', ' ', false));
 
-// Warn if ANT_HOME is not set either locally or on the task via antHomeUserInputPath
-var antHome = tl.getVariable('ANT_HOME');
-if (!antHome) {
-    tl.warning('The ANT_HOME environment variable is not set.  Please make sure that it exists and is set to the location of the bin folder.  See https://ant.apache.org/manual/install.html.');
-}
+    // update ANT_HOME if user specified path manually (not required, but if so, check it)
+    var antHomeUserInputPath = tl.getPathInput('antHomeUserInputPath', false, true);
+    if (antHomeUserInputPath) {
+        tl.debug('Using path from user input to set ANT_HOME');
+        tl.debug('Set ANT_HOME to ' + antHomeUserInputPath);
+        process.env['ANT_HOME'] = antHomeUserInputPath;
+    }
 
-// update JAVA_HOME if user selected specific JDK version or set path manually
-var javaHomeSelection = tl.getInput('javaHomeSelection', true);
-var specifiedJavaHome = null;
+    // Warn if ANT_HOME is not set either locally or on the task via antHomeUserInputPath
+    var antHome = tl.getVariable('ANT_HOME');
+    if (!antHome) {
+        tl.warning('The ANT_HOME environment variable is not set.  Please make sure that it exists and is set to the location of the bin folder.  See https://ant.apache.org/manual/install.html.');
+    }
 
-if (javaHomeSelection == 'JDKVersion') {
-    tl.debug('Using JDK version to find and set JAVA_HOME');
-    var jdkVersion = tl.getInput('jdkVersion');
-    var jdkArchitecture = tl.getInput('jdkArchitecture');
+    // update JAVA_HOME if user selected specific JDK version or set path manually
+    var javaHomeSelection = tl.getInput('javaHomeSelection', true);
+    var specifiedJavaHome = null;
 
-    if (jdkVersion != 'default') {
-        // jdkVersion should be in the form of 1.7, 1.8, or 1.10
-        // jdkArchitecture is either x64 or x86
-        // envName for version 1.7 and x64 would be "JAVA_HOME_7_X64"
-        var envName = "JAVA_HOME_" + jdkVersion.slice(2) + "_" + jdkArchitecture.toUpperCase();
-        specifiedJavaHome = tl.getVariable(envName);
-        if (!specifiedJavaHome) {
-            tl.error('Failed to find specified JDK version. Please make sure environment variable ' + envName + ' exists and is set to the location of a corresponding JDK.');
-            tl.exit(1);
+    if (javaHomeSelection == 'JDKVersion') {
+        tl.debug('Using JDK version to find and set JAVA_HOME');
+        var jdkVersion = tl.getInput('jdkVersion');
+        var jdkArchitecture = tl.getInput('jdkArchitecture');
+
+        if (jdkVersion != 'default') {
+            // jdkVersion should be in the form of 1.7, 1.8, or 1.10
+            // jdkArchitecture is either x64 or x86
+            // envName for version 1.7 and x64 would be "JAVA_HOME_7_X64"
+            var envName = "JAVA_HOME_" + jdkVersion.slice(2) + "_" + jdkArchitecture.toUpperCase();
+            specifiedJavaHome = tl.getVariable(envName);
+            if (!specifiedJavaHome) {
+                throw new Error('Failed to find specified JDK version. Please make sure environment variable ' + envName + ' exists and is set to the location of a corresponding JDK.');
+            }
         }
     }
+    else {
+        tl.debug('Using path from user input to set JAVA_HOME');
+        var jdkUserInputPath = tl.getPathInput('jdkUserInputPath', true, true);
+        specifiedJavaHome = jdkUserInputPath;
+    }
+
+    if (specifiedJavaHome) {
+        tl.debug('Set JAVA_HOME to ' + specifiedJavaHome);
+        process.env['JAVA_HOME'] = specifiedJavaHome;
+    }
+
+    var ccTool = tl.getInput('codeCoverageTool');
+    var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
+
+    var buildRootPath = path.dirname(antBuildFile);
+    var instrumentedClassesDirectory = path.join(buildRootPath, "InstrumentedClasses");
+    //delete any previous cobertura instrumented classes as they might interfere with ant execution.
+    tl.rmRF(instrumentedClassesDirectory, true);
+
+    if (isCodeCoverageOpted) {
+        var summaryFile: string = null;
+        var reportDirectory: string = null;
+        var ccReportTask: string = null;
+        var reportBuildFile: string = null;
+        enableCodeCoverage();
+    }
+    else {
+        tl.debug("Option to enable code coverage was not selected and is being skipped.");
+    }
+
+    var publishJUnitResults = tl.getInput('publishJUnitResults');
+    var testResultsFiles = tl.getInput('testResultsFiles', true);
+
+    antv.exec()
+        .then(function (code) {
+            return antb.exec();
+        })
+        .then(function (code) {
+            publishTestResults(publishJUnitResults, testResultsFiles);
+            publishCodeCoverage(isCodeCoverageOpted);
+        })
+        .fail(function (err) {
+            publishTestResults(publishJUnitResults, testResultsFiles);
+            console.error(err.message);
+            tl.debug('taskRunner fail');
+            tl.setResult(tl.TaskResult.Failed, err);
+        })
+} catch (e) {
+    tl.debug(e.message);
+    tl._writeError(e);
+    tl.setResult(tl.TaskResult.Failed, e.message);
 }
-else {
-    tl.debug('Using path from user input to set JAVA_HOME');
-    var jdkUserInputPath = tl.getPathInput('jdkUserInputPath', true, true);
-    specifiedJavaHome = jdkUserInputPath;
-}
-
-if (specifiedJavaHome) {
-    tl.debug('Set JAVA_HOME to ' + specifiedJavaHome);
-    process.env['JAVA_HOME'] = specifiedJavaHome;
-}
-
-var ccTool = tl.getInput('codeCoverageTool');
-var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
-
-var buildRootPath = path.dirname(antBuildFile);
-var instrumentedClassesDirectory = path.join(buildRootPath, "InstrumentedClasses");
-//delete any previous cobertura instrumented classes as they might interfere with ant execution.
-tl.rmRF(instrumentedClassesDirectory, true);
-
-if (isCodeCoverageOpted) {
-    var summaryFile: string = null;
-    var reportDirectory: string = null;
-    var ccReportTask: string = null;
-    var reportBuildFile: string = null;
-    enableCodeCoverage();
-}
-else {
-    tl.debug("Option to enable code coverage was not selected and is being skipped.");
-}
-
-var publishJUnitResults = tl.getInput('publishJUnitResults');
-var testResultsFiles = tl.getInput('testResultsFiles', true);
-
-antv.exec()
-    .then(function(code) {
-        return antb.exec();
-    })
-    .then(function(code) {
-        publishTestResults(publishJUnitResults, testResultsFiles);
-        publishCodeCoverage(isCodeCoverageOpted);
-        tl.exit(code);
-    })
-    .fail(function(err) {
-        publishTestResults(publishJUnitResults, testResultsFiles);
-        console.error(err.message);
-        tl.debug('taskRunner fail');
-        tl.exit(1);
-    })
 
 function publishTestResults(publishJUnitResults, testResultsFiles: string) {
     if (publishJUnitResults == 'true') {
@@ -167,14 +172,14 @@ function enableCodeCoverage() {
 function publishCodeCoverage(codeCoverageOpted: boolean) {
     if (codeCoverageOpted) {
         tl.debug("Collecting code coverage reports");
-        var antRunner = tl.createToolRunner(anttool);
+        var antRunner = tl.tool(anttool);
         antRunner.arg('-buildfile');
         if (pathExistsAsFile(reportBuildFile)) {
-            antRunner.pathArg(reportBuildFile);
+            antRunner.arg(reportBuildFile);
             antRunner.arg(ccReportTask);
         }
         else {
-            antRunner.pathArg(antBuildFile);
+            antRunner.arg(antBuildFile);
             antRunner.arg(ccReportTask);
         }
         antRunner.exec().then(function(code) {
