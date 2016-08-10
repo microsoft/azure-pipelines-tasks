@@ -121,7 +121,7 @@ function processCodeAnalysisResults(): Q.Promise<void> {
     tl.debug('Processing code analysis results');
     codeAnalysisOrchestrator.publishCodeAnalysisResults();
 
-    return sqGradle.uploadSonarQubeBuildSummaryIfEnabled();
+    return sqGradle.processSonarQubeIntegration();
 }
 
 /* Functions for Publish Test Results, Code Coverage */

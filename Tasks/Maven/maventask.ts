@@ -177,7 +177,7 @@ mvnGetVersion.exec()
         }
 
         // Otherwise, start uploading relevant build summaries.
-        return sqMaven.uploadSonarQubeBuildSummaryIfEnabled()
+        return sqMaven.processSonarQubeIntegration()
             .then(() => {
                 return codeAnalysis.uploadCodeAnalysisBuildSummaryIfEnabled();
             });
