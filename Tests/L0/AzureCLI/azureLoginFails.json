@@ -13,7 +13,7 @@
       "stdout": "azure output here"
     },
     "/usr/local/bin/azure account import subscriptions.publishsettings": {
-      "code": 0,
+      "code": 1,
       "stdout": "azure output here",
       "stderr": "azure error"
     },
@@ -22,12 +22,12 @@
       "stdout": "azure output here"
     },
     "/usr/local/bin/azure login -u idf -p keyf --tenant tenantf --service-principal": {
-      "code": 0,
+      "code": 1,
       "stdout": "azure output here",
       "stderr": "azure error"
     },
     "/usr/local/bin/azure account set sName": {
-      "code": 0,
+      "code": 1,
       "stdout": "azure output here",
       "stderr": "azure error"
     },

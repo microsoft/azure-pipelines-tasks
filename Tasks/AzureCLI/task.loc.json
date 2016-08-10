@@ -98,7 +98,8 @@
     }
   },
   "messages": {
-    "BashReturnCode": "ms-resource:loc.messages.BashReturnCode",
-    "BashFailed": "ms-resource:loc.messages.BashFailed"
+    "ScriptReturnCode": "ms-resource:loc.messages.ScriptReturnCode",
+    "ScriptFailed": "ms-resource:loc.messages.ScriptFailed",
+    "UnsupportedEndpointScheme": "ms-resource:loc.messages.UnsupportedEndpointScheme"
   }
 }

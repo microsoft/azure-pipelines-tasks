@@ -34,7 +34,7 @@ describe('AzureCLI Suite', function () {
                 assert(tr.ran('/usr/local/bin/azure account clear -s sName'), 'it should have logged out of azure');
                 assert(tr.ran('/usr/local/bin/azure config mode asm'), 'it should have set the mode to asm');
                 assert(tr.invokedToolCount == 5, 'should have only run ShellScript');
-                assert(tr.stderr.length === 0, 'should have written to stderr');
+                assert(tr.stderr.length == 0, 'should have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
                 done();
             })
@@ -57,7 +57,6 @@ describe('AzureCLI Suite', function () {
                 assert(tr.ran('/usr/local/bin/azure account clear -s sName'), 'it should have logged out of azure');
                 assert(tr.ran('/usr/local/bin/azure config mode arm'), 'it should have set the mode to asm');
                 assert(tr.invokedToolCount == 5, 'should have only run ShellScript');
-                assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
                 done();
@@ -71,7 +70,7 @@ describe('AzureCLI Suite', function () {
 
         var tr = new trm.TaskRunner('AzureCLI');
         tr.setInput('connectedServiceNameSelector', 'ConnectedServiceNameARM');
-        tr.setInput('connectedServiceNameARM', 'AzureRMa');
+        tr.setInput('connectedServiceNameARM', 'InvalidEndpoint');
         tr.run()
             .then(() => {
                 assert(tr.invokedToolCount == 0, 'should have only run ShellScript');
@@ -89,6 +88,10 @@ describe('AzureCLI Suite', function () {
         var tr = new trm.TaskRunner('AzureCLI');
         tr.setInput('connectedServiceNameSelector', 'ConnectedServiceNameARM');
         tr.setInput('connectedServiceNameARM', 'AzureRMFail');
+        tr.setInput('scriptPath', 'script.sh');
+        tr.setInput('args', 'arg1');
+        tr.setInput('cwd', 'fake/wd');
+        tr.setInput('failOnStandardError', 'false');
         tr.run()
             .then(() => {
                 assert(tr.invokedToolCount == 2, 'should have only run 2 azure invocations');
@@ -106,6 +109,10 @@ describe('AzureCLI Suite', function () {
         var tr = new trm.TaskRunner('AzureCLI');
         tr.setInput('connectedServiceNameSelector', 'ConnectedServiceName');
         tr.setInput('connectedServiceName', 'AzureClassicFail');
+        tr.setInput('scriptPath', 'script.sh');
+        tr.setInput('args', 'arg1');
+        tr.setInput('cwd', 'fake/wd');
+        tr.setInput('failOnStandardError', 'false');
         tr.run()
             .then(() => {
                 assert(tr.invokedToolCount == 2, 'should have only run 2 azure invocations');
@@ -123,6 +130,10 @@ describe('AzureCLI Suite', function () {
         var tr = new trm.TaskRunner('AzureCLI');
         tr.setInput('connectedServiceNameSelector', 'ConnectedServiceNameARM');
         tr.setInput('connectedServiceNameARM', 'AzureRM');
+        tr.setInput('scriptPath', 'script.sh');
+        tr.setInput('args', 'arg1');
+        tr.setInput('cwd', 'fake/wd');
+        tr.setInput('failOnStandardError', 'false');
         tr.run()
             .then(() => {
                 assert(tr.ran('/usr/local/bin/azure account clear -s sName'), 'it should have logged out of azure');
@@ -137,7 +148,7 @@ describe('AzureCLI Suite', function () {
             });
     })
     it('should logout of AzureRM if bash failed',(done) => {
-        setResponseFile('bashfailed.json');
+        setResponseFile('bashFailed.json');
 
         var tr = new trm.TaskRunner('AzureCLI');
         tr.setInput('connectedServiceNameSelector', 'ConnectedServiceNameARM');
@@ -158,7 +169,7 @@ describe('AzureCLI Suite', function () {
             });
     })
     it('should logout of AzureClassic if bash failed',(done) => {
-        setResponseFile('bashfailed.json');
+        setResponseFile('bashFailed.json');
 
         var tr = new trm.TaskRunner('AzureCLI');
         tr.setInput('connectedServiceNameSelector', 'ConnectedServiceName');
@@ -192,5 +203,22 @@ describe('AzureCLI Suite', function () {
             .fail((err) => {
                 done(err);
             });
+    })
+    it('task should fail in case script path is invalid',(done) => {
+        setResponseFile('checkpathFails.json');
+
+        var tr = new trm.TaskRunner('AzureCLI');
+        tr.setInput('scriptPath', 'scriptfail.sh');
+        tr.run()
+            .then(() => {
+                assert(tr.invokedToolCount == 0, 'logout happened when script checkpath fails');
+                assert(tr.stderr.length > 0, 'should have written to stderr');
+                assert(tr.failed, 'task should have failed');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+
     })
 });

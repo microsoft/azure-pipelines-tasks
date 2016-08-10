@@ -2,14 +2,14 @@
   "id": "459F4E94-8CC0-40A3-9BAC-77A2D65E3425",
   "name": "AzureCLI",
   "friendlyName": "Azure CLI",
-  "description": "Run a Shell script within an Azure environment",
+  "description": "Run a Shell script with Azure CLI commands against an azure subscription",
   "author": "Microsoft Corporation",
   "helpMarkDown": "Replace with markdown to show in help",
   "category": "Utility",
   "visibility":["Build","Release"],
   "demands": [],
   "version": {
-    "Major": "1",
+    "Major": "0",
     "Minor": "0",
     "Patch": "1"
   },
@@ -95,7 +95,8 @@
     }
   },
   "messages": {
-        "BashReturnCode": "Bash exited with return code: %d",
-        "BashFailed": "Bash failed with error: %s"
+        "ScriptReturnCode": "Script exited with return code: %d",
+        "ScriptFailed": "Script failed with error: %s",
+    "UnsupportedEndpointScheme": "Unsupported Endpoint Authorization Scheme: (certificate and usernamePassword for Azure Classic and ServicePrincipal for AzureRM "
     }
 }

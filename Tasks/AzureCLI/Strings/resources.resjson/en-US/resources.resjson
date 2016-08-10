@@ -18,6 +18,7 @@
   "loc.input.help.cwd": "Current working directory where the script is run.  Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory)",
   "loc.input.label.failOnStandardError": "Fail on Standard Error",
   "loc.input.help.failOnStandardError": "If this is true, this task will fail when any errors are written to the StandardError stream",
-  "loc.messages.BashReturnCode": "Bash exited with return code: %d",
-  "loc.messages.BashFailed": "Bash failed with error: %s"
+  "loc.messages.ScriptReturnCode": "Script exited with return code: %d",
+  "loc.messages.ScriptFailed": "Script failed with error: %s"
+  "loc.messages.UnsupportedEndpointScheme": "Unsupported Endpoint Authorization Scheme: (certificate and usernamePassword for Azure Classic and ServicePrincipal for AzureRM "
 }
