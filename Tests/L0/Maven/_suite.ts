@@ -1765,4 +1765,39 @@ describe('Maven Suite', function () {
                 return true;
             });
     });
+
+    it('SonarQube common - Build breaker does not fail the build when the quality gate has passed', () => {
+        // Arrange
+        var mockRunSettings:SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockServer:MockSonarQubeServer = new MockSonarQubeServer();
+
+        var analysisMetrics:SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+        var sqReportBuilder:SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
+
+        // Mock responses from the server for the task and analysis details
+        var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
+        mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject);
+
+        var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
+        taskDetailsJsonObject.projectStatus.status = 'OK'; // Quality gate passed
+        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', taskDetailsJsonObject);
+
+        // capture process.stdout and process.exit, along with useful data to assert on
+        var capturedStream = captureStream(process.stdout);
+        var capturedExit = process.exit;
+        var processExitInvoked:number = 0;
+        process.exit = function() { processExitInvoked++; return; };
+
+        // Act
+        return sqCommon.breakBuildIfQualityGateFails(mockRunSettings, analysisMetrics)
+            .then(() => {
+                // unhook captured functions since they are important system functions
+                capturedStream.unhook();
+                process.exit = capturedExit;
+
+                // Assert
+                assert(processExitInvoked == 0, `Expected process to have not exited. Actual: ${processExitInvoked}`);
+                return true;
+            });
+    });
 });
