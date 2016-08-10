@@ -1,16 +1,18 @@
 {
-  "id": "459F4E94-8CC0-40A3-9BAC-77A2D65E3425",
-  "name": "AzureCLI",
-  "friendlyName": "Azure CLI",
+  "id": "46E4BE58-730B-4389-8A2F-EA10B3E5E815",
+  "name": "AzureCLI [Preview]",
+  "friendlyName": "Azure CLI preview",
   "description": "Run a Shell script with Azure CLI commands against an azure subscription",
   "author": "Microsoft Corporation",
   "helpMarkDown": "Replace with markdown to show in help",
   "category": "Utility",
-  "visibility":["Build","Release"],
-  "demands": [],
+  "visibility":["Preview","Build","Release"],
+  "demands": [
+    "sh"
+  ],
   "version": {
     "Major": "0",
-    "Minor": "0",
+    "Minor": "1",
     "Patch": "1"
   },
   "minimumAgentVersion": "1.95.0",

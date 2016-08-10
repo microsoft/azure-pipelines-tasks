@@ -1,19 +1,22 @@
 {
-  "id": "459F4E94-8CC0-40A3-9BAC-77A2D65E3425",
-  "name": "AzureCLI",
+  "id": "46E4BE58-730B-4389-8A2F-EA10B3E5E815",
+  "name": "AzureCLI [Preview]",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
+    "Preview",
     "Build",
     "Release"
   ],
-  "demands": [],
+  "demands": [
+    "sh"
+  ],
   "version": {
-    "Major": "1",
-    "Minor": "0",
+    "Major": "0",
+    "Minor": "1",
     "Patch": "1"
   },
   "minimumAgentVersion": "1.95.0",
