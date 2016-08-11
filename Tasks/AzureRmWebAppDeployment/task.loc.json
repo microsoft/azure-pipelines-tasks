@@ -1,5 +1,5 @@
 {
-  "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCC2",
+  "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
   "name": "AzureRMWebAppDeployment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
@@ -13,7 +13,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 18
+    "Patch": 16
   },
   "minimumAgentVersion": "1.102.0",
   "groups": [
