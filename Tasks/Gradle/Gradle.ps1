@@ -12,6 +12,7 @@ param(
     [string]$javaHomeSelection,
     [string]$jdkVersion,      # JDK version
     [string]$jdkArchitecture,  # JDK arch
+    [string]$gradleOpts,
     [string]$jdkUserInputPath,
     [string]$sqAnalysisEnabled,
     [string]$checkstyleAnalysisEnabled,
@@ -56,6 +57,12 @@ if ($checkstyleAnalysisEnabled)
     Write-Warning "Checkstyle code analysis is not yet supported on Windows and hosted agents."
     Write-Warning "Please use a dedicated Unix agent to enable this feature: https://github.com/Microsoft/vsts-agent"
 }
+
+if ($gradleOpts)
+{
+    $env:GRADLE_OPTS = $gradleOpts
+    Write-Verbose "GRADLE_OPTS set to $env:GRADLE_OPTS"
+} 
 
 Write-Verbose "javaHomeSelection = $javaHomeSelection"
 Write-Verbose "jdkVersion = $jdkVersion"

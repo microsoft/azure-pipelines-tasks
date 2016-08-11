@@ -166,6 +166,7 @@ describe('gradle Suite', function () {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
+        tr.setInput('gradleOpts', '-Xmx2048m');
 
         tr.run()
             .then(() => {
@@ -174,6 +175,8 @@ describe('gradle Suite', function () {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.stdout.indexOf('GRADLE_OPTS is now set to -Xmx2048m') > 0);
+               
                 done();
             })
             .fail((err) => {

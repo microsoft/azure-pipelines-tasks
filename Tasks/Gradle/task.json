@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 50
+        "Patch": 51
     },
     "demands": [
         "java"
@@ -186,6 +186,15 @@
                 "x86": "x86",
                 "x64": "x64"
             }
+        },
+        {
+            "name": "gradleOpts",
+            "type": "string",
+            "label": "Set GRADLE_OPTS",
+            "required": false,
+            "groupName": "advanced",
+            "defaultValue": "-Xmx2048m",
+            "helpMarkDown": "Sets the GRADLE_OPTS enviroment variable, which is used to send command-line arguments to start the JVM. The xmx flag specifies the maximum memory available to the JVM."
         },
         {
             "name": "sqAnalysisEnabled",

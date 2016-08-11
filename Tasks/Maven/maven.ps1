@@ -16,6 +16,7 @@
     [string]$mavenVersionSelection,
     [string]$mavenPath,
     [string]$mavenSetM2Home,
+    [string]$mavenOpts,
     [string]$sqAnalysisEnabled, 
     [string]$sqConnectedServiceName, 
     [string]$sqDbDetailsRequired,
@@ -141,6 +142,9 @@ EnableCodeCoverage $isCoverageEnabled $mavenPOMFile $codeCoverageTool $classFilt
 
 # Use a specific JDK
 ConfigureJDK $javaHomeSelection $jdkVersion $jdkArchitecture $jdkUserInputPath
+
+# Configure the JVM
+ConfigureMavenOpts $mavenOpts
 
 # Invoke MVN
 Write-Host "Running Maven..."

@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 50
+    "Patch": 51
   },
   "demands": [
     "java"
@@ -186,6 +186,15 @@
         "x86": "x86",
         "x64": "x64"
       }
+    },
+    {
+      "name": "gradleOpts",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.gradleOpts",
+      "required": false,
+      "groupName": "advanced",
+      "defaultValue": "-Xmx2048m",
+      "helpMarkDown": "ms-resource:loc.input.help.gradleOpts"
     },
     {
       "name": "sqAnalysisEnabled",
