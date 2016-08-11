@@ -1,6 +1,6 @@
 import Q = require('q');
 
-import {SonarQubeRunSettings} from './runsettings';
+import {SonarQubeRunSettings} from './run-settings';
 import {SonarQubeMetrics} from './metrics';
 
 import tl = require('vsts-task-lib/task');

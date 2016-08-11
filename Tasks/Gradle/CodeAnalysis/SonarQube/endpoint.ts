@@ -6,29 +6,21 @@ export class SonarQubeEndpoint {
     constructor(public Url: string, public Username: string, public Password: string) {
     }
 
-    public static createSonarQubeEndpoint():SonarQubeEndpoint {
-        var errorMessage = "Could not decode the generic endpoint. Please ensure you are running the latest agent (min version 0.3.2)";
-        if (!tl.getEndpointUrl) {
-            throw new Error(errorMessage);
+    public static getTaskSonarQubeEndpoint():SonarQubeEndpoint {
+        if (tl.getEndpointUrl == null) {
+            tl.debug('Could not decode the generic endpoint. Please ensure you are running the latest agent (min version 0.3.2)');
+            throw new Error();
         }
 
-        var genericEndpoint: string = tl.getInput("sqConnectedServiceName");
-        if (!genericEndpoint) {
-            throw new Error(errorMessage);
-        }
-
-        var hostUrl = tl.getEndpointUrl(genericEndpoint, false);
-        if (!hostUrl) {
-            throw new Error(errorMessage);
-        }
+        var genericEndpointName: string = tl.getInput('sqConnectedServiceName');
+        var hostUrl = tl.getEndpointUrl(genericEndpointName, false);
 
         // Currently the username and the password are required, but in the future they will not be mandatory
         // - so not validating the values here
-        var hostUsername = SonarQubeEndpoint.getSonarQubeAuthParameter(genericEndpoint, 'username');
-        var hostPassword = SonarQubeEndpoint.getSonarQubeAuthParameter(genericEndpoint, 'password');
+        var hostUsername = SonarQubeEndpoint.getSonarQubeAuthParameter(genericEndpointName, 'username');
+        var hostPassword = SonarQubeEndpoint.getSonarQubeAuthParameter(genericEndpointName, 'password');
 
         return new SonarQubeEndpoint(hostUrl, hostUsername, hostPassword);
-
     }
 
     // Gets a SonarQube authentication parameter from the specified connection endpoint.

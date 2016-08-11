@@ -18,10 +18,11 @@ import ca = require('../../../Tasks/Maven/CodeAnalysis/mavencodeanalysis');
 import ar = require('../../../Tasks/Maven/CodeAnalysis/analysisresult');
 
 import sqCommon = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/common');
-import {SonarQubeRunSettings} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/runsettings';
+import {VstsServerUtils} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/vsts-server-utils';
+import {SonarQubeRunSettings} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/run-settings';
 import {ISonarQubeServer} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/server';
 import {SonarQubeEndpoint} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/endpoint';
-import {SonarQubeReportBuilder} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/reportbuilder';
+import {SonarQubeReportBuilder} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/report-builder';
 import {SonarQubeMetrics} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/metrics';
 import {MockSonarQubeServer} from './server-mock';
 
@@ -1590,16 +1591,16 @@ describe('Maven Suite', function () {
         return analysisMetrics.getQualityGateStatus()
             .then((qualityGateStatus:string) => {
                 var expectedQualityGateStatus:string = qualityGateStatus;
-                var expectedInvokeCount = mockServer.responses.get('/api/qualitygates/project_status?analysisId=12345').invokedCount;
+                var oldInvokeCount = mockServer.responses.get('/api/qualitygates/project_status?analysisId=12345').invokedCount;
 
-                assert(expectedInvokeCount == 1, 'Expected the analysis details endpoint to only have been invoked once');
+                assert(oldInvokeCount == 1, 'Expected the analysis details endpoint to only have been invoked once');
                 return analysisMetrics.getQualityGateStatus()
                     .then((qualityGateStatus:string) => {
                         var actualQualityGateStatus:string = qualityGateStatus;
-                        var actualInvokeCount = mockServer.responses.get('/api/qualitygates/project_status?analysisId=12345').invokedCount;
+                        var newInvokeCount = mockServer.responses.get('/api/qualitygates/project_status?analysisId=12345').invokedCount;
 
                         assert(expectedQualityGateStatus === actualQualityGateStatus, 'Expected the new analysis details to strictly equal the old analysis details');
-                        assert(expectedInvokeCount == actualInvokeCount, 'Expected that no further invocations of the analysis details endpoint');
+                        assert(oldInvokeCount == newInvokeCount, 'Expected no further invocations of the analysis details endpoint');
                     });
             })
     });
@@ -1735,7 +1736,6 @@ describe('Maven Suite', function () {
         var mockServer:MockSonarQubeServer = new MockSonarQubeServer();
 
         var analysisMetrics:SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
-        var sqReportBuilder:SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
 
         // Mock responses from the server for the task and analysis details
         var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
@@ -1752,7 +1752,7 @@ describe('Maven Suite', function () {
         process.exit = function() { processExitInvoked++; return; };
 
         // Act
-        return sqCommon.breakBuildIfQualityGateFails(mockRunSettings, analysisMetrics)
+        return VstsServerUtils.breakBuildIfQualityGateFails(mockRunSettings, analysisMetrics)
             .then(() => {
                 // unhook captured functions since they are important system functions
                 capturedStream.unhook();
@@ -1772,7 +1772,6 @@ describe('Maven Suite', function () {
         var mockServer:MockSonarQubeServer = new MockSonarQubeServer();
 
         var analysisMetrics:SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
-        var sqReportBuilder:SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
 
         // Mock responses from the server for the task and analysis details
         var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
@@ -1789,7 +1788,7 @@ describe('Maven Suite', function () {
         process.exit = function() { processExitInvoked++; return; };
 
         // Act
-        return sqCommon.breakBuildIfQualityGateFails(mockRunSettings, analysisMetrics)
+        return VstsServerUtils.breakBuildIfQualityGateFails(mockRunSettings, analysisMetrics)
             .then(() => {
                 // unhook captured functions since they are important system functions
                 capturedStream.unhook();
