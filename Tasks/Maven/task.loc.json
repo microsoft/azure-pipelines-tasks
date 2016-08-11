@@ -284,8 +284,7 @@
       "label": "ms-resource:loc.input.label.sqAnalysisIncludeFullReport",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisIncludeFullReport",
-      "groupName": "CodeAnalysis",
-      "visibleRule": "sqAnalysisEnabled = true"
+      "groupName": "CodeAnalysis"
     },
     {
       "name": "pmdAnalysisEnabled",
