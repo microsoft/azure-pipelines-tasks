@@ -19,26 +19,27 @@ export function applySonarQubeArgs(mvnsq: ToolRunner, execFileJacoco?: string): 
         return mvnsq;
     }
 
-    mvnsq = sqCommon.applySonarQubeConnectionParams(mvnsq);
+    mvnsq = sqCommon.applySonarQubeParameters(mvnsq);
 
     // Apply argument for the JaCoCo tool, if enabled
     if (typeof execFileJacoco != "undefined" && execFileJacoco) {
         mvnsq.arg('-Dsonar.jacoco.reportPath=' + execFileJacoco);
     }
 
-    mvnsq = sqCommon.applySonarQubeIssuesModeInPrBuild(mvnsq); // in PR builds run SQ in issues mode
     mvnsq.arg("sonar:sonar");
 
     return mvnsq;
 }
 
-// Upload a build summary with links to available SonarQube dashboards for further analysis details.
-// Has no effect if SonarQube analysis is not enabled.
-export function uploadSonarQubeBuildSummaryIfEnabled(): Q.Promise<void> {
+// Effect any user-enabled SonarQube integration options. Has no effect if SonarQube analysis is not enabled.
+// 1. Create a build summary
+// 2. Wait for analysis to complete, then add quality gate details
+// 3. Fail the build if quality gate was failed.
+export function processSonarQubeIntegration(): Q.Promise<void> {
     if (!sqCommon.isSonarQubeAnalysisEnabled()) {
         return Q.when();
     }
 
     var sqBuildFolder: string = path.join(tl.getVariable('build.sourcesDirectory'), 'target', 'sonar');
-    return sqCommon.uploadSonarQubeBuildSummaryIfEnabled(sqBuildFolder);
+    return sqCommon.processSonarQubeIntegration(sqBuildFolder);
 }
