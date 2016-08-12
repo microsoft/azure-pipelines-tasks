@@ -3,10 +3,8 @@
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
 
 var adal = require ('adal-node');
-
-import taskLib = require ('vsts-task-lib/task');
 var request = require ('request');
-import Q = require ('q');
+var taskLib = require ('vsts-task-lib/task');
 var parseString = require('xml2js').parseString;
 
 var AuthenticationContext = adal.AuthenticationContext;
@@ -142,7 +140,7 @@ function getAzureRMWebAppDetails_version2 ( SPN, webAppName : string, resourceTy
 	.then(function (accessToken : string) {
 		
  		var requestOptions = {
- 		 	url : 'https://management.azure.com/subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'' + resourceType + '\' AND substringof(\'' + webAppName + '\', name)&api-version=2016-07-01',
+ 		 	url: 'https://management.azure.com/subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'' + resourceType + '\' AND name EQ \'' + webAppName + '\'&api-version=2016-07-01',
  		 	auth : {
  		 		bearer : accessToken
  		 	}
