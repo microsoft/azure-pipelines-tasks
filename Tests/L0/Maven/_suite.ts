@@ -18,10 +18,11 @@ import ca = require('../../../Tasks/Maven/CodeAnalysis/mavencodeanalysis');
 import ar = require('../../../Tasks/Maven/CodeAnalysis/analysisresult');
 
 import sqCommon = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/common');
-import {SonarQubeRunSettings} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/runsettings';
+import {VstsServerUtils} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/vsts-server-utils';
+import {SonarQubeRunSettings} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/run-settings';
 import {ISonarQubeServer} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/server';
 import {SonarQubeEndpoint} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/endpoint';
-import {SonarQubeReportBuilder} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/reportbuilder';
+import {SonarQubeReportBuilder} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/report-builder';
 import {SonarQubeMetrics} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/metrics';
 import {MockSonarQubeServer} from './server-mock';
 
@@ -121,6 +122,24 @@ function createTempDirsForSonarQubeTests(): void {
     }
 }
 
+function captureStream(stream):{unhook():void, captured():string} {
+    var oldWrite = stream.write;
+    var buf:string = '';
+    stream.write = function(chunk, encoding, callback) {
+        buf += chunk.toString(); // chunk is a String or Buffer
+        oldWrite.apply(stream, arguments);
+    };
+
+    return {
+        unhook: function unhook():void {
+            stream.write = oldWrite;
+        },
+        captured: function():string {
+            return buf;
+        }
+    };
+}
+
 function assertCodeAnalysisBuildSummaryContains(stagingDir: string, expectedString: string): void {
     assertBuildSummaryContains(fs.readFileSync(path.join(stagingDir, '.codeAnalysis', 'CodeAnalysisBuildSummary.md'), 'utf-8'), expectedString);
 }
@@ -141,6 +160,11 @@ function assertErrorContains(error:any, expectedString:string):void {
      Actual: ${error.message}`);
 }
 
+function assertStringContains(actualString:string, expectedString:string):void {
+    assert(actualString.indexOf(expectedString) > -1, `Expected string to contain: ${expectedString}`);
+}
+
+
 function assertToolRunnerContainsArg(toolRunner:ToolRunner, expectedArg:string) {
     return toolRunner.args.indexOf(expectedArg) > -1;
 }
@@ -153,6 +177,7 @@ describe('Maven Suite', function () {
     this.timeout(20000);
 
     before((done) => {
+        Q.longStackSupport = true;
         done();
     });
 
@@ -839,7 +864,6 @@ describe('Maven Suite', function () {
             });
     })
 
-
     it('Maven with SonarQube - Fails when report-task.txt is invalid', function (done) {
         // Arrange
         createTempDirsForSonarQubeTests();
@@ -985,10 +1009,8 @@ describe('Maven Suite', function () {
                 assert(tr.stderr.length < 1, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
 
-                assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report') > 0,
-                    'should have uploaded a SonarQube Analysis Report build summary');
-                assertSonarQubeBuildSummaryContains(testStgDir,
-                    'Detailed SonarQube reports are not available for pull request builds.');
+                assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report') < 1,
+                    'should not have uploaded a SonarQube Analysis Report build summary');
                 done();
             })
             .fail((err) => {
@@ -998,7 +1020,6 @@ describe('Maven Suite', function () {
                 done(err);
             });
     });
-
 
     it('maven calls enable code coverage and publish code coverage when jacoco is selected', (done) => {
         setResponseFile('responseCodeCoverage.json');
@@ -1551,6 +1572,39 @@ describe('Maven Suite', function () {
 
     /* SonarQube unit tests */
 
+    it('SonarQube common - SQMetrics caching holds true over multiple requests, and does not invoke additional REST calls', () => {
+        // Arrange
+        var mockRunSettings:SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockServer:MockSonarQubeServer = new MockSonarQubeServer();
+
+        var analysisMetrics:SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+        var sqReportBuilder:SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
+
+        // Mock responses from the server for the task and analysis details
+        var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
+        mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject);
+
+        var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
+        taskDetailsJsonObject.projectStatus.status = 'OK'; // Quality gate passed
+        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', taskDetailsJsonObject);
+
+        return analysisMetrics.getQualityGateStatus()
+            .then((qualityGateStatus:string) => {
+                var expectedQualityGateStatus:string = qualityGateStatus;
+                var oldInvokeCount = mockServer.responses.get('/api/qualitygates/project_status?analysisId=12345').invokedCount;
+
+                assert(oldInvokeCount == 1, 'Expected the analysis details endpoint to only have been invoked once');
+                return analysisMetrics.getQualityGateStatus()
+                    .then((qualityGateStatus:string) => {
+                        var actualQualityGateStatus:string = qualityGateStatus;
+                        var newInvokeCount = mockServer.responses.get('/api/qualitygates/project_status?analysisId=12345').invokedCount;
+
+                        assert(expectedQualityGateStatus === actualQualityGateStatus, 'Expected the new analysis details to strictly equal the old analysis details');
+                        assert(oldInvokeCount == newInvokeCount, 'Expected no further invocations of the analysis details endpoint');
+                    });
+            })
+    });
+
     it('SonarQube common - Build summary is created (dashboard link only when not waiting for server)', () => {
         // Arrange
         var mockRunSettings:SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "taskId", "taskUrl");
@@ -1560,8 +1614,8 @@ describe('Maven Suite', function () {
         var sqReportBuilder:SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
 
         return sqReportBuilder.fetchMetricsAndCreateReport(false)
-            .then((report) => {
-                    assert(report.indexOf('[sqAnalysis_BuildSummary_LinkText >](http://dashboardUrl "projectKey Dashboard")') > -1);
+            .then((report:string) => {
+                assertBuildSummaryContains(report, '[sqAnalysis_BuildSummary_LinkText >](http://dashboardUrl "projectKey Dashboard")');
             });
     });
 
@@ -1582,7 +1636,7 @@ describe('Maven Suite', function () {
         mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', taskDetailsJsonObject);
 
         return sqReportBuilder.fetchMetricsAndCreateReport(true)
-            .then((report) => {
+            .then((report:string) => {
                 assertBuildSummaryContains(report, '[sqAnalysis_BuildSummary_LinkText >](http://dashboardUrl "projectKey Dashboard")');
                 assertBuildSummaryContains(report, 'Quality Gate');
                 assertBuildSummaryContains(report, 'Failed');
@@ -1606,7 +1660,7 @@ describe('Maven Suite', function () {
         mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', taskDetailsJsonObject);
 
         return sqReportBuilder.fetchMetricsAndCreateReport(true)
-            .then((report) => {
+            .then((report:string) => {
                 assertBuildSummaryContains(report, '[sqAnalysis_BuildSummary_LinkText >](http://dashboardUrl "projectKey Dashboard")');
                 assertBuildSummaryContains(report, 'Quality Gate');
                 assertBuildSummaryContains(report, 'Passed');
@@ -1626,7 +1680,7 @@ describe('Maven Suite', function () {
         mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject, 500); // HTTP Error 500 Internal Server Error
 
         return sqReportBuilder.fetchMetricsAndCreateReport(true)
-            .then((report) => {
+            .then(() => {
                 return Q.reject('Should not have finished successfully');
             }, (error) => {
                 assertErrorContains(error, 'sqCommon_InvalidResponseFromServer');
@@ -1646,7 +1700,7 @@ describe('Maven Suite', function () {
         mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', {}); // Empty object returned by the server
 
         return sqReportBuilder.fetchMetricsAndCreateReport(true)
-            .then((report) => {
+            .then(() => {
                 return Q.reject('Should not have finished successfully');
             }, (error) => {
                 assertErrorContains(error, 'sqCommon_InvalidResponseFromServer');
@@ -1664,15 +1718,85 @@ describe('Maven Suite', function () {
 
         // Mock responses from the server
         var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
-        taskDetailsJsonObject.task.status = "notsuccess";
-        mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject, 200); // HTTP Error 500 Internal Server Error
+        taskDetailsJsonObject.task.status = "notsuccess"; // will never return task status as 'SUCCESS'
+        mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject, 200);
 
         return sqReportBuilder.fetchMetricsAndCreateReport(true)
-            .then((report) => {
+            .then(() => {
                 return Q.reject('Should not have finished successfully');
             }, (error) => {
                 assertErrorContains(error, 'sqAnalysis_AnalysisTimeout');
                 return Q.when(true);
+            });
+    });
+
+    it('SonarQube common - Build breaker fails the build when the quality gate has failed', () => {
+        // Arrange
+        var mockRunSettings:SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockServer:MockSonarQubeServer = new MockSonarQubeServer();
+
+        var analysisMetrics:SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+
+        // Mock responses from the server for the task and analysis details
+        var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
+        mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject);
+
+        var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
+        taskDetailsJsonObject.projectStatus.status = 'ERROR'; // Quality gate failed
+        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', taskDetailsJsonObject);
+
+        // capture process.stdout and process.exit, along with useful data to assert on
+        var capturedStream = captureStream(process.stdout);
+        var capturedExit = process.exit;
+        var processExitInvoked:number = 0;
+        process.exit = function() { processExitInvoked++; return; };
+
+        // Act
+        return VstsServerUtils.breakBuildIfQualityGateFails(mockRunSettings, analysisMetrics)
+            .then(() => {
+                // unhook captured functions since they are important system functions
+                capturedStream.unhook();
+                process.exit = capturedExit;
+
+                // Assert
+                assertStringContains(capturedStream.captured(),
+                    '##vso[task.complete result=Failed;]sqAnalysis_BuildBrokenDueToQualityGateFailure http://dashboardUrl');
+                assert(processExitInvoked == 1, `Expected process to have exited exactly once. Actual: ${processExitInvoked}`);
+                return true;
+            });
+    });
+
+    it('SonarQube common - Build breaker does not fail the build when the quality gate has passed', () => {
+        // Arrange
+        var mockRunSettings:SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockServer:MockSonarQubeServer = new MockSonarQubeServer();
+
+        var analysisMetrics:SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+
+        // Mock responses from the server for the task and analysis details
+        var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
+        mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject);
+
+        var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
+        taskDetailsJsonObject.projectStatus.status = 'OK'; // Quality gate passed
+        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', taskDetailsJsonObject);
+
+        // capture process.stdout and process.exit, along with useful data to assert on
+        var capturedStream = captureStream(process.stdout);
+        var capturedExit = process.exit;
+        var processExitInvoked:number = 0;
+        process.exit = function() { processExitInvoked++; return; };
+
+        // Act
+        return VstsServerUtils.breakBuildIfQualityGateFails(mockRunSettings, analysisMetrics)
+            .then(() => {
+                // unhook captured functions since they are important system functions
+                capturedStream.unhook();
+                process.exit = capturedExit;
+
+                // Assert
+                assert(processExitInvoked == 0, `Expected process to have not exited. Actual: ${processExitInvoked}`);
+                return true;
             });
     });
 });

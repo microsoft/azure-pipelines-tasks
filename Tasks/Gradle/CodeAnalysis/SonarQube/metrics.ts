@@ -1,10 +1,13 @@
+/// <reference path="../../../../definitions/vsts-task-lib.d.ts" />
+
 import Q = require('q');
+
+import tl = require('vsts-task-lib/task');
+import {TaskResult} from 'vsts-task-lib/task';
 
 import {SonarQubeEndpoint} from './endpoint';
 import sqCommon = require('./common');
 import {ISonarQubeServer} from  './server';
-
-import tl = require('vsts-task-lib/task');
 
 /*
  SonarQube runs are represented in the API in two stages: tasks and analyses. The build system submits a task,
@@ -21,10 +24,15 @@ export class SonarQubeMetrics {
 
     private server:ISonarQubeServer;
     private taskId:string;
-    private analysisComplete:boolean = false;
 
     private timeout:number;
     private delay:number;
+
+    // cached data to speed up operations
+    private analysisComplete:boolean = false;
+    private analysisId:string = null;
+    private taskDetails:any = null;
+    private analysisDetails:any = null;
 
     /**
      * Construct a new SonarQubeMetrics instance with a specified SonarQubeServer and task ID.
@@ -48,14 +56,38 @@ export class SonarQubeMetrics {
     }
 
     /**
+     * Returns true if the quality gate has failed.
+     * @returns {Promise<boolean>} True if the quality gate has failed, false if the quality gate passed or is warning.
+     */
+    public static hasQualityGateFailed(qualityGateStatus:string): boolean {
+        return qualityGateStatus.toUpperCase() == 'ERROR';
+    }
+
+    /**
      * Retrieves the quality gate status of the SonarQube analysis task of this SonarQubeMetrics instance.
      * Waits for the analysis task to complete, if necessary.
+     * @returns {Promise<string>} The quality gate status, as reported by the SonarQube server.
      */
     public getQualityGateStatus(): Q.Promise<string> {
         return this.getAnalysisId()
             .then((analysisId:string) => {
                 return this.getAnalysisStatus(analysisId);
             })
+    }
+
+    /**
+     * Returns the appropriate TaskResult enum based on whether the quality gate failed or passed.
+     * @returns {any}
+     */
+    public getTaskResultFromQualityGateStatus(): Q.Promise<TaskResult> {
+        return this.getQualityGateStatus()
+            .then((qualityGateStatus:string) => {
+                if (SonarQubeMetrics.hasQualityGateFailed(qualityGateStatus)) {
+                    return TaskResult.Failed;
+                }
+
+                return TaskResult.Succeeded;
+            });
     }
 
     /**
@@ -81,8 +113,20 @@ export class SonarQubeMetrics {
             this.isTaskComplete()
                 .then((isDone:boolean) => {
                     if (isDone) {
+                        // analysis is complete, set the cache (there should be no further state changes)
                         this.analysisComplete = true;
-                        defer.resolve(true);
+                        this.getTaskDetails()
+                            .then((taskDetails:Object) => {
+                                this.taskDetails = taskDetails;
+                                this.analysisId = SonarQubeMetrics.getTaskAnalysisId(taskDetails);
+
+                                return this.getAnalysisDetails(this.analysisId);
+                            })
+                            .then((analysisDetails:Object) => {
+                                this.analysisDetails = analysisDetails;
+                            });
+
+                        defer.resolve(this.analysisComplete);
                     }
                 })
                 .fail((error) => {
@@ -130,17 +174,8 @@ export class SonarQubeMetrics {
                 return this.getTaskDetails();
             })
             .then((taskDetails:any) => {
-                return this.getTaskAnalysisId(taskDetails);
+                return SonarQubeMetrics.getTaskAnalysisId(taskDetails);
             });
-    }
-
-    /**
-     * Returns the analysis ID from a task JSON object.
-     * @param taskDetails A JSON object representation of the task
-     * @returns The analysis ID associated with the task
-     */
-    private getTaskAnalysisId(taskDetails:any):string {
-        return taskDetails.task.analysisId;
     }
 
     /**
@@ -151,26 +186,25 @@ export class SonarQubeMetrics {
     private getAnalysisStatus(analysisId:string):Q.Promise<string> {
         return this.getAnalysisDetails(analysisId)
             .then((analysisDetails:any) => {
-                return this.getProjectStatus(analysisDetails);
+                return SonarQubeMetrics.getProjectStatus(analysisDetails);
             });
-    }
-
-
-    /**
-     * Returns the status of the project under analysis.
-     * @param analysisDetails A JSON object representation of the analysis
-     * @returns String representing the result of the project analysis
-     */
-    private getProjectStatus(analysisDetails:any):string {
-        return analysisDetails.projectStatus.status;
     }
 
     /**
      * Makes a RESTful API call to get analysis details (e.g. quality gate status)
-     * @param analysisId String representing the ID of the analysis to fetch details for
+     * Returns from the cache if analysis has completed.
+     * @param analysisId (optional) String representing the ID of the analysis to fetch details for. If not specified, cached ID will be used
      * @returns JSON object representation of the analysis details
      */
-    private getAnalysisDetails(analysisId:string):Q.Promise<Object> {
+    private getAnalysisDetails(analysisId?:string):Q.Promise<Object> {
+        if (this.analysisDetails != null) {
+            return Q.when(this.analysisDetails);
+        }
+
+        if (analysisId == undefined || analysisId == null) {
+            analysisId = this.analysisId;
+        }
+
         return this.server.invokeApiCall('/api/qualitygates/project_status?analysisId=' + analysisId)
             .then((responseJson:any) => {
                 if (!responseJson.projectStatus) {
@@ -183,10 +217,15 @@ export class SonarQubeMetrics {
     }
 
     /**
-     * Makes a RESTful API call to get task details (e.g. quality gate status)
+     * Makes a RESTful API call to get task details (e.g. quality gate status).
+     * Returns from the cache if analysis has completed.
      * @returns JSON object representation of the task details
      */
     private getTaskDetails():Q.Promise<Object> {
+        if (this.taskDetails != null) {
+            return Q.when(this.taskDetails);
+        }
+
         return this.server.invokeApiCall('/api/ce/task?id=' + this.taskId)
             .then((responseJsonObject:any) => {
                 if (!responseJsonObject || !responseJsonObject.task) {
@@ -203,5 +242,25 @@ export class SonarQubeMetrics {
                 tl.debug(`Could not fetch task details on ID ${this.taskId}`);
                 return Q.reject(new Error(tl.loc('sqCommon_InvalidResponseFromServer')));
             })
+    }
+
+    /* Static helper methods */
+
+    /**
+     * Returns the analysis ID from a task JSON object.
+     * @param taskDetails A JSON object representation of the task
+     * @returns The analysis ID associated with the task
+     */
+    private static getTaskAnalysisId(taskDetails:any):string {
+        return taskDetails.task.analysisId;
+    }
+
+    /**
+     * Returns the status of the project under analysis.
+     * @param analysisDetails A JSON object representation of the analysis
+     * @returns String representing the result of the project analysis
+     */
+    private static getProjectStatus(analysisDetails:any):string {
+        return analysisDetails.projectStatus.status;
     }
 }

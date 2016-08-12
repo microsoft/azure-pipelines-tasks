@@ -1,6 +1,6 @@
 import Q = require('q');
 
-import {SonarQubeRunSettings} from './runsettings';
+import {SonarQubeRunSettings} from './run-settings';
 import {SonarQubeMetrics} from './metrics';
 
 import tl = require('vsts-task-lib/task');
@@ -13,7 +13,7 @@ export class SonarQubeReportBuilder {
     /**
      * Creates a new SonarQubeReportBuilder, which creates Markdown-formatted reports for SonarQube analyses.
      * @param sqRunSettings SonarQubeRunSettings object for the applicable run
-     * @param taskMetrics
+     * @param taskMetrics   SonarQube metrics for the applicable run
      */
     constructor(sqRunSettings:SonarQubeRunSettings, taskMetrics:SonarQubeMetrics) {
         if (!sqRunSettings) {
