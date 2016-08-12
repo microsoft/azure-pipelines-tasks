@@ -1,12 +1,11 @@
 /// <reference path="../../definitions/node.d.ts" />
 /// <reference path="../../definitions/q.d.ts" />
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
-import tl = require('vsts-task-lib/task');
-var Q = require('q');
+var tl = require('vsts-task-lib/task');
+var fs = require('fs');
 var regedit = require('regedit');
-import fs = require('fs');
 var azureRmUtil = require('./AzureRMUtil.js');
-
+import Q = require('q');
 //Error Handler
 var onError = function(error) {
 	tl.error(error);
@@ -122,7 +121,7 @@ function runMSDeployCommand(msDeployExePath: string, msDeployCmdArgs: string, az
 
 // Get the latest version of MSDeploy installed
 function getMSDeployVersion(registryKey: string) : Q.Promise<String> {
-    var defer = Q.defer();
+    var defer = Q.defer<String>();
     regedit.list(registryKey)
     .on('data', function(entry) {
         var keys = entry.data.keys;
@@ -138,7 +137,7 @@ function getMSDeployVersion(registryKey: string) : Q.Promise<String> {
 
 //Get the absolut path of MSDeploy.exe
 function getMSDeployInstallPath(registryKey: string) : Q.Promise<string> {
-    var defer = Q.defer();
+    var defer = Q.defer<string>();
     regedit.list(registryKey)
     .on('data', function(entry) {
         defer.resolve(entry.data.values.InstallPath.value);
@@ -155,11 +154,6 @@ function runMSDeployCommandWrapper(msDeployCmdArgs: string, azureRMWebAppConnect
     var msDeployInstallPathRegKey = "HKLM\\SOFTWARE\\Microsoft\\IIS Extensions\\MSDeploy";
     getMSDeployVersion(msDeployInstallPathRegKey)
     .then(function(version){
-        if(version == null) {
-            onError('Unable to find the location of MS Deploy location');
-            return;
-        }
-        
         var msDeployLatestPathRegKey = msDeployInstallPathRegKey+"\\"+version;
         getMSDeployInstallPath(msDeployLatestPathRegKey)
         .then(function(msDeployPath) {
