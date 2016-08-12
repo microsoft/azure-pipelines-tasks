@@ -4,8 +4,10 @@
 
 var adal = require ('adal-node');
 var request = require ('request');
-var taskLib = require ('vsts-task-lib/task');
 var parseString = require('xml2js').parseString;
+
+import taskLib = require ('vsts-task-lib/task');
+import Q = require('q');
 
 var AuthenticationContext = adal.AuthenticationContext;
 
