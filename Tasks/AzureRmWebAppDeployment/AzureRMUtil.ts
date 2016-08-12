@@ -172,7 +172,7 @@ exports.getAzureRMWebAppDetails_version2 = getAzureRMWebAppDetails_version2;
 
 function updateDeploymentStatus (azureRMWebAppConnectionDetails, deployAzureWebsiteError : boolean) {
 
-	var webAppPublishKuduUrl = azureRMWebAppConnectionDetails.publishUrl;
+	var webAppPublishKuduUrl = azureRMWebAppConnectionDetails.KuduHostName;
 	
 	if ( webAppPublishKuduUrl ) {
 
@@ -263,8 +263,8 @@ function updateDeploymentStatus (azureRMWebAppConnectionDetails, deployAzureWebs
 				method : 'PUT', 
 				json : body, 
 				auth: {
-					username : azureRMWebAppConnectionDetails.userName, 
-					password : azureRMWebAppConnectionDetails.userPWD
+					username : azureRMWebAppConnectionDetails.UserName, 
+					password : azureRMWebAppConnectionDetails.UserPassword
 				}
 			};
 
@@ -289,6 +289,5 @@ function updateDeploymentStatus (azureRMWebAppConnectionDetails, deployAzureWebs
 	else {
 		taskLib.error('WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website');
 	}
-
-
 }
+exports.updateDeploymentStatus = updateDeploymentStatus;

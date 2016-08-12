@@ -53,8 +53,8 @@ azureRmUtil.getAzureRMWebAppPublishingProfileDetails(SPN, WebAppName, ResourceGr
 	azureRMWebAppConnectionDetails["UserName"] = publishingProfile.userName;
 	azureRMWebAppConnectionDetails["UserPassword"] = publishingProfile.userPWD;
 	WebAppName = Utility.getWebAppNameForMSDeployCmd(WebAppName, DeployToSlotFlag, SlotName);
-	Utility.runMSDeployCommandWrapper(Utility.getMSDeployCmdArgs(Package, WebAppName, azureRMWebAppConnectionDetails, RemoveAdditionalFilesFlag, ExcludeFilesFromAppDataFlag, TakeAppOfflineFlag, VirtualApplication, SetParametersFile, AdditionalArguments));
-	azureRmUtil.updateDeploymentStatus ( azureRMWebAppConnectionDetails, true );
+	Utility.runMSDeployCommandWrapper(Utility.getMSDeployCmdArgs(Package, WebAppName, azureRMWebAppConnectionDetails, RemoveAdditionalFilesFlag, ExcludeFilesFromAppDataFlag, TakeAppOfflineFlag, VirtualApplication, SetParametersFile, AdditionalArguments), azureRMWebAppConnectionDetails);
+
 },function (error) {
 	onError(error);
 });

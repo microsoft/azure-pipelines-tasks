@@ -5,6 +5,7 @@ import tl = require('vsts-task-lib/task');
 var Q = require('q');
 var regedit = require('regedit');
 import fs = require('fs');
+var azureRmUtil = require('./AzureRMUtil.js');
 
 //Error Handler
 var onError = function(error) {
@@ -102,19 +103,21 @@ function getMSDeployCmdForLogs(msDeployCmdArgs: string) : string {
     return msDeployCmdArray.join(",");
 }
 
-function runMSDeployCommand(msDeployExePath: string, msDeployCmdArgs: string) {
+function runMSDeployCommand(msDeployExePath: string, msDeployCmdArgs: string, azureRMWebAppConnectionDetails) {
     var msDeployCmdForLogs = getMSDeployCmdForLogs(msDeployCmdArgs);
     tl.debug("[command] "+msDeployExePath+" "+msDeployCmdForLogs);
 
     tl.exec(msDeployExePath, msDeployCmdArgs)
-	.then((code) => {
-		tl.debug("MSDeploy executed Successfully !");
-        tl.debug("Return Code : "+code);
-	})
-	.fail((error) => {
-		tl.error("MSDeploy failed !");
+    .then(function(code){
+      azureRmUtil.updateDeploymentStatus(azureRMWebAppConnectionDetails, true);
+        console.log("MSDeploy executed Successfully !");
+        tl.debug("Return Code : " + code);
+    },
+    function(error) {
+       azureRmUtil.updateDeploymentStatus(azureRMWebAppConnectionDetails, false);
+        tl.error("MSDeploy failed !");
         onError(error);
-	});
+    });
 }
 
 // Get the latest version of MSDeploy installed
@@ -148,7 +151,7 @@ function getMSDeployInstallPath(registryKey: string) : Q.Promise<string> {
 }
 
 //
-function runMSDeployCommandWrapper(msDeployCmdArgs: string): void {
+function runMSDeployCommandWrapper(msDeployCmdArgs: string, azureRMWebAppConnectionDetails): void {
     var msDeployInstallPathRegKey = "HKLM\\SOFTWARE\\Microsoft\\IIS Extensions\\MSDeploy";
     getMSDeployVersion(msDeployInstallPathRegKey)
     .then(function(version){
@@ -162,7 +165,7 @@ function runMSDeployCommandWrapper(msDeployCmdArgs: string): void {
         .then(function(msDeployPath) {
             //Append msdeploy.exe to get the absolute path
             msDeployPath = msDeployPath+"\\msdeploy.exe";
-            runMSDeployCommand(msDeployPath, msDeployCmdArgs);
+            runMSDeployCommand(msDeployPath, msDeployCmdArgs, azureRMWebAppConnectionDetails);
         },
         function(error) {
             onError(error);
