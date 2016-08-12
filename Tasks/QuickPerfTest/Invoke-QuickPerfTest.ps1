@@ -297,7 +297,7 @@ if ($drop.dropType -eq "InPlaceDrop")
                 if ($previousRun.name -eq $run.name)
                 {
                     $runComparisonAvailable = $true
-                    ('<br/>[Compare with run {4} from build {0}]({1}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=compare&runId1={2}&runId2={3}).' -f  $lastSuccessfulBuild.id, $TFSAccountUrl, $previousRun.id, $run.id, $previousRun.runNumber) >>  $summaryFile
+                    ('<p>[Compare with run {4} from build {0}]({1}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=compare&runId1={2}&runId2={3}).</p>' -f  $lastSuccessfulBuild.id, $TFSAccountUrl, $previousRun.id, $run.id, $previousRun.runNumber) >>  $summaryFile
                     break
                 }
             }
@@ -306,7 +306,7 @@ if ($drop.dropType -eq "InPlaceDrop")
 
 	if(!$runComparisonAvailable)
 	{
-        ('<br/>No previous run found for comparison.') >>  $summaryFile
+        ('<p>No previous run found for comparison.</p>') >>  $summaryFile
 	}
 	
     UploadSummaryMdReport $summaryFile
