@@ -25,9 +25,7 @@ param
 $userAgent = "ApacheJmeterTestBuildTask"
 $apiVersion = "api-version=1.0"
 
-$global:ThresholdExceeded = $false
 $global:RestTimeout = 5
-$global:MonitorThresholds = $false
 $global:ElsAccountUrl = "http://www.visualstudio.com"
 $global:ScopedTestDrop = $TestDrop
 
@@ -101,20 +99,6 @@ $start = @"
     return $run
 }
 
-function StopTestRun($headers, $run)
-{
-$stop = @"
-    {
-      "state": "aborted"
-    }
-"@
-    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?{2}", $global:ElsAccountUrl, $run.id, $apiVersion)
-    Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Method Patch -Headers $headers -Body $stop
-    $run = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
-    return $run
-
-}
-
 function RunInProgress($run)
 {
     return $run.state -ne "completed" -and $run.state -ne "error" -and $run.state -ne "aborted"
@@ -131,45 +115,12 @@ function PrintErrorSummary($headers, $run)
             {
                 foreach ($errorDetail in $subType.errorDetailList)
                 {
-                    if ($type.typeName -eq "ThresholdMessage")
-                    {
-                        Write-Warning ( "[{0}] {1} occurrences of {2} " -f $type.typeName, $errorDetail.occurrences, $errorDetail.messageText)
-                    }
-                    else
-                    {
-                        Write-Warning ( "[{0}] {1} occurrences of ['{2}','{3}','{4}'] : {5} " -f $type.typeName, $errorDetail.occurrences, $errorDetail.scenarioName, $errorDetail.testCaseName,
-                        $subType.subTypeName, $errorDetail.messageText)
-                    }
-                }
-                if ($type.typeName -eq "ThresholdMessage" -and $subType.subTypeName -eq "Critical" -and $global:MonitorThresholds -and $subType.occurrences -gt $ThresholdLimit)
-                {
-                    Write-Error ( "Your loadtest has crossed the permissible {0} threshold violations with {1} violations" -f $ThresholdLimit, $subType.occurrences )
+                    Write-Warning ( "[{0}] {1} occurrences of ['{2}','{3}','{4}'] : {5} " -f $type.typeName, $errorDetail.occurrences, $errorDetail.scenarioName, $errorDetail.testCaseName,
+                    $subType.subTypeName, $errorDetail.messageText)
                 }
             }
         }
     }
-}
-
-function CheckTestErrors($headers, $run)
-{
-    if ($global:MonitorThresholds)
-    {
-        $uri = [String]::Format("{0}/_apis/clt/testruns/{1}/errors?type=ThresholdMessage&detailed=True&{2}", $global:ElsAccountUrl, $run.id, $apiVersion)
-        $errors = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
-
-        if ($errors -and $errors.count -gt 0 -and  $errors.types.count -gt 0)
-        {
-            foreach ($subType in $errors.types.subTypes)
-            {
-                if ($subType.subTypeName -eq 'Critical' -and $subType.occurrences -gt $ThresholdLimit)
-                {
-                    $global:ThresholdExceeded = $true
-                    return $true;
-                }
-            }
-        }
-    }
-    return $false;
 }
 
 function ShowMessages($headers, $run)
@@ -239,16 +190,10 @@ function MonitorTestRun($headers, $run)
     $runId = $run.id
     if ($runId)
     {
-        $abortRun = $false
         do
         {
             Start-Sleep -s 15
             $run = GetTestRun $headers $runId
-            $abortRun = CheckTestErrors $headers $run
-            if ($abortRun)
-            {
-                StopTestRun $headers $run
-            }
         }
         while (RunInProgress $run)
     }
@@ -349,13 +294,6 @@ Write-Output "Run source identifier = build/$env:SYSTEM_DEFINITIONID/$env:BUILD_
 #Validate Input
 Validate
 
-#Setting monitoring of Threshold rule appropriately
-if ($ThresholdLimit -and $ThresholdLimit -ge 0)
-{
-    $global:MonitorThresholds = $true
-    Write-Output "Threshold limit = $ThresholdLimit"
-}
-
 $connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
 
 $Username = $connectedServiceDetails.Authorization.Parameters.Username
@@ -399,10 +337,6 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
     if ($run.state -ne "completed")
     {
         Write-Error "Load test has failed. Please check error messages to fix the problem."
-    }
-    elseif ($global:ThresholdExceeded -eq $true)
-    {
-        Write-Error "Load test task is marked as failed, as the number of threshold errors has exceeded permissible limit."
     }
     else
     {
