@@ -39,6 +39,18 @@ function ConfigureJDK
 	}
 }
 
+# Configure the JVM associated with this run.
+function ConfigureMavenOpts
+{
+    param($mavenOptsValue)
+
+    if ($mavenOptsValue)
+    {
+        $env:MAVEN_OPTS = $mavenOptsValue
+        Write-Verbose "MAVEN_OPTS set to $env:MAVEN_OPTS"
+    } 
+}
+
 function PublishTestResults
 {
 	param([string]$publishJUnitResults,
@@ -188,8 +200,6 @@ function CreateSonarQubeArgs
 
     return $sb.ToString();
 }
-
-
 
 function PublishCodeCoverageJacoco
 {

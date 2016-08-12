@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 57
+    "Patch": 58
   },
   "minimumAgentVersion": "1.89.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -221,6 +221,15 @@
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.mavenSetM2Home",
       "visibleRule": "mavenVersionSelection = Path"
+    },
+    {
+      "name": "mavenOpts",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.mavenOpts",
+      "required": false,
+      "groupName": "advanced",
+      "defaultValue": "-Xmx2048m",
+      "helpMarkDown": "ms-resource:loc.input.help.mavenOpts"
     },
     {
       "name": "sqAnalysisEnabled",
