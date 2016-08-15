@@ -12,7 +12,7 @@ import * as util from './utilities';
 
 /* Code Coverage enabler for different type of build tools and code coverage tools*/
 export abstract class CodeCoverageEnabler implements ICodeCoverageEnabler {
-    
+
     abstract enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<boolean>;
 
     //-----------------------------------------------------
@@ -31,8 +31,7 @@ export abstract class CodeCoverageEnabler implements ICodeCoverageEnabler {
             };
         }
 
-        var inputFilters = classFilter.split(",");
-        inputFilters.forEach(inputFilter => {
+        classFilter.split(",").forEach(inputFilter => {
             if (util.isNullOrWhitespace(inputFilter) || inputFilter.length < 2) {
                 throw new Error("Invalid class filter " + inputFilter);
             }

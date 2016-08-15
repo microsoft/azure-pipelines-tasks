@@ -72,7 +72,17 @@ export class JacocoMavenCodeCoverageEnabler extends CodeCoverageEnabler {
     //-----------------------------------------------------    
     public enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<boolean> {
         var defer = Q.defer<boolean>();
+        var _this = this;
 
+        var buildFile = ccProps['buildFile'];
+        var classFilter = ccProps['classFilter'];
+        var isMultiModule = ccProps['isMultiModule'];
+        var classFileDirs = ccProps['classFileDirs'];
+        var reportDir = ccProps['reportDir'];
+        var codeCoveragePluginData = null;
+
+        var pomJson = util.readXmlFileAsJson(buildFile);
+        
 
         defer.resolve(true);
         return defer.promise;

@@ -3,6 +3,7 @@
 /// <reference path="../../../definitions/node.d.ts" />
 /// <reference path="../../../definitions/vsts-task-lib.d.ts" />
 /// <reference path="../../../definitions/shelljs.d.ts" />
+/// <reference path="../../../definitions/xml2js.d.ts" />
 
 import * as Q from 'q';
 import * as fs from 'fs';
@@ -10,18 +11,11 @@ import * as tl from 'vsts-task-lib/task'
 import * as shell from 'shelljs';
 import * as path from 'path';
 import * as str from 'string';
+import * as xml2js from 'xml2js';
 
 export interface GetOrCreateResult<T> {
     created: boolean;
     result: T;
-}
-
-//converts inputString to titleCase string. For example, "abc def" is converted to "Abc Def"
-export function toTitleCase(inputString: string): string {
-    if (inputString) {
-        return inputString.replace(/\w\S*/g, function(str) { return str.charAt(0).toUpperCase() + str.substr(1).toLowerCase(); });
-    }
-    return inputString;
 }
 
 // returns a substring that is common from first. For example, for "abcd" and "abdf", "ab" is returned.
@@ -44,9 +38,7 @@ export function sortStringArray(list): string[] {
         else if (a < b) {
             return -1;
         }
-        else {
-            return 0;
-        }
+        return 0;
     });
     return sortedFiles;
 }
@@ -69,123 +61,6 @@ export function isFileExists(path: string): boolean {
     catch (error) {
         return false;
     }
-}
-
-export function readFileContents(filePath: string, encoding: string): Q.Promise<string> {
-    var defer = Q.defer<string>();
-
-    fs.readFile(filePath, encoding, (err, data) => {
-        if (err) {
-            defer.reject(new Error('Could not read file (' + filePath + '): ' + err.message));
-        }
-        else {
-            defer.resolve(data);
-        }
-    });
-
-    return defer.promise;
-}
-
-export function fileExists(filePath: string): Q.Promise<boolean> {
-    var defer = Q.defer<boolean>();
-
-    fs.exists(filePath, (exists) => {
-        defer.resolve(exists);
-    });
-
-    return <Q.Promise<boolean>>defer.promise;
-}
-export function objectToFile(filePath: string, obj: any): Q.Promise<void> {
-    var defer = Q.defer<void>();
-
-    fs.writeFile(filePath, JSON.stringify(obj, null, 2), (err) => {
-        if (err) {
-            defer.reject(new Error('Could not save to file (' + filePath + '): ' + err.message));
-        }
-        else {
-            defer.resolve(null);
-        }
-    });
-
-    return defer.promise;
-}
-
-export function objectFromFile(filePath: string, defObj?: any): Q.Promise<any> {
-    var defer = Q.defer<any>();
-
-    fs.exists(filePath, (exists) => {
-        if (!exists && defObj) {
-            defer.resolve(defObj);
-        }
-        else if (!exists) {
-            defer.reject(new Error('File does not exist: ' + filePath));
-        }
-        else {
-            fs.readFile(filePath, (err, contents) => {
-                if (err) {
-                    defer.reject(new Error('Could not read file (' + filePath + '): ' + err.message));
-                }
-                else {
-                    var obj: any = JSON.parse(contents.toString());
-                    defer.resolve(obj);
-                }
-            });
-        }
-    })
-
-    return defer.promise;
-}
-
-export function getOrCreateObjectFromFile<T>(filePath: string, defObj: T): Q.Promise<GetOrCreateResult<T>> {
-    var defer = Q.defer<GetOrCreateResult<T>>();
-
-    fs.exists(filePath, (exists) => {
-        if (!exists) {
-            fs.writeFile(filePath, JSON.stringify(defObj, null, 2), (err) => {
-                if (err) {
-                    defer.reject(new Error('Could not save to file (' + filePath + '): ' + err.message));
-                }
-                else {
-                    defer.resolve({
-                        created: true,
-                        result: defObj
-                    });
-                }
-            });
-        }
-        else {
-            fs.readFile(filePath, (err, contents) => {
-                if (err) {
-                    defer.reject(new Error('Could not read file (' + filePath + '): ' + err.message));
-                }
-                else {
-                    var obj: any = JSON.parse(contents.toString());
-                    defer.resolve({
-                        created: false,
-                        result: obj
-                    });
-                }
-            });
-        }
-    })
-
-    return defer.promise;
-}
-
-// ret is { output: string, code: number }
-export function exec(cmdLine: string): Q.Promise<any> {
-    var defer = Q.defer<any>();
-
-    shell.exec(cmdLine, (code, output) => {
-        defer.resolve({ code: code, output: output });
-    });
-
-    return defer.promise;
-}
-
-export enum SearchOption {
-    TopDirectoryOnly = 0,
-    AllDirectories = 1,
 }
 
 // returns true if given string is null or whitespace.
@@ -255,3 +130,27 @@ export function trimEnd(data: string, trimChar: string) {
         return data;
     }
 }
+
+export function readXmlFileAsJson(filePath: string): Q.Promise<string> {
+    return readFile(filePath, 'utf-8')
+        .then(convertXmlStringToJson);
+}
+
+export function readFile(filePath: string, encoding: string): Q.Promise<string> {
+    return Q.nfcall<string>(fs.readFile, filePath, encoding);
+}
+
+export function convertXmlStringToJson(xmlContent: string): Q.Promise<string> {
+    return Q.nfcall<string>(xml2js.parseString, xmlContent);
+}
+
+export function writeJsonAsXmlFile(jsonContent: string): Q.Promise<void> {
+    let builder = new xml2js.Builder();
+    let xml = builder.buildObject(jsonContent);
+    return writeFile(xml);
+}
+
+export function writeFile(fileContent: string): Q.Promise<void> {
+    return Q.nfcall<void>(fs.writeFile, fileContent);
+}
+
