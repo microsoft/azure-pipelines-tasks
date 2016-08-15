@@ -53,33 +53,6 @@ export class VstsServerUtils {
     }
 
     /**
-     * If enabled, fails the build in response to a quality gate failure.
-     * @param sqRunSettings SonarQubeRunSettings object for the applicable run or null if this is a PR build and the object could not be created
-     * @param sqMetrics     SonarQube metrics for the applicable run
-     * @returns {Promise<void>} Promise resolved when action completes (NB: Setting build result to failed results in procees exit)
-     */
-    public /* for test */ static breakBuildIfQualityGateFails(sqRunSettings:SonarQubeRunSettings, sqMetrics:SonarQubeMetrics):Q.Promise<void> {
-    // During a pull request build, data necessary to create SQRunSettings is not available
-    if (sqRunSettings == null || VstsServerUtils.isPrBuild()) {
-        console.log(tl.loc('sqAnalysis_IsPullRequest_SkippingBuildBreaker'));
-        return Q.when<void>(null);
-    }
-
-    // Necessary data is not available during a pull request build
-    return sqMetrics.getTaskResultFromQualityGateStatus()
-            .then((taskResult:TaskResult) => {
-                if (taskResult == TaskResult.Failed) {
-// Looks like: "The SonarQube quality gate associated with this build has failed. For more details see http://mysonarqubeserver"
-                    tl.setResult(1, tl.loc('sqAnalysis_BuildBrokenDueToQualityGateFailure', sqRunSettings.dashboardUrl));
-                    return;
-                }
-
-                // Looks like: "The SonarQube quality gate associated with this build has passed (status OK)"
-                console.log(tl.loc('sqAnalysis_QualityGatePassed', sqMetrics.getQualityGateStatus()));
-            });
-    }
-
-    /**
      * Handle the creation, saving and upload of the SonarQube build summary.
      * @param sqRunSettings SonarQubeRunSettings object for the applicable run or null if this is a PR build and the object could not be created
      * @param sqMetrics     SonarQube metrics for the applicable run
@@ -99,6 +72,33 @@ export class VstsServerUtils {
             })
             .then((buildSummaryFilePath:string) => {
                 return VstsServerUtils.uploadBuildSummary(buildSummaryFilePath, tl.loc('sqAnalysis_BuildSummaryTitle'));
+            });
+    }
+
+    /**
+     * If enabled, fails the build in response to a quality gate failure.
+     * @param sqRunSettings SonarQubeRunSettings object for the applicable run or null if this is a PR build and the object could not be created
+     * @param sqMetrics     SonarQube metrics for the applicable run
+     * @returns {Promise<void>} Promise resolved when action completes (NB: Setting build result to failed results in procees exit)
+     */
+    private static breakBuildIfQualityGateFails(sqRunSettings:SonarQubeRunSettings, sqMetrics:SonarQubeMetrics):Q.Promise<void> {
+        // During a pull request build, data necessary to create SQRunSettings is not available
+        if (sqRunSettings == null || VstsServerUtils.isPrBuild()) {
+            console.log(tl.loc('sqAnalysis_IsPullRequest_SkippingBuildBreaker'));
+            return Q.when<void>(null);
+        }
+
+        // Necessary data is not available during a pull request build
+        return sqMetrics.getTaskResultFromQualityGateStatus()
+            .then((taskResult:TaskResult) => {
+                if (taskResult == TaskResult.Failed) {
+// Looks like: "The SonarQube quality gate associated with this build has failed. For more details see http://mysonarqubeserver"
+                    tl.setResult(1, tl.loc('sqAnalysis_BuildBrokenDueToQualityGateFailure', sqRunSettings.dashboardUrl));
+                    return;
+                }
+
+                // Looks like: "The SonarQube quality gate associated with this build has passed (status OK)"
+                console.log(tl.loc('sqAnalysis_QualityGatePassed', sqMetrics.getQualityGateStatus()));
             });
     }
 
@@ -149,6 +149,11 @@ export class VstsServerUtils {
         return sqStagingDir;
     }
 
+    /**
+     * Utility method, returns true if the given string is undefined, null or has length 0
+     * @param str String to examine
+     * @returns {boolean}
+     */
     private static isNullOrEmpty(str):boolean {
         return str === undefined || str === null || str.length === 0;
     }
