@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 7
+        "Patch": 9
     },
     "demands": [
         "Cmd"
@@ -119,7 +119,7 @@
         "LegacyNuGetHint": "If %s is older than NuGet 3.2, you may need to edit the build definition and check the 'Path to NuGet.exe is below version 3.2' checkbox",
         "BuildIdentityPermissionsHint": "For internal feeds, make sure the build service identity '%s' [%s] has access to the feed.",
         "NoCredProviderOnAgent": "CredentialProvider.TeamBuild.exe not found on the agent. Falling back to config-based credential flow.",
-        "NotARegularFile": "%s is not a solution file. Check the 'path to solution or packages.config' property of the NuGetInstaller task.",
+        "NotARegularFile": "%s is not a regular file. Check the 'Path/Pattern to nupkg' property of the NuGetPublisher task.",
         "UnknownFeedType": "Unknown feed type '%s'",
         "CouldNotFindNuGetService": "Could not find the NuGet service. This task will be unable to authenticate to feeds hosted in your Team Services account/TFS project collection.",
 
