@@ -16,8 +16,12 @@ rootProject {
 
                 proj.apply plugin: 'checkstyle'
                 checkstyle {
-                    println(rootDir);
-                    configFile rootProject.file('checkstyle.xml')
+                    // Groovy way of resolving the current directory  
+                    File currentDir = file(new File("."));
+                    // Usually the rules xml sits with the project, but we don't want to touch the source files 
+                    File checkstyleXmlPath = new File(currentDir, "checkstyle.xml")
+                    configFile = checkstyleXmlPath
+
                     ignoreFailures = true
                     showViolations = false
                 }
