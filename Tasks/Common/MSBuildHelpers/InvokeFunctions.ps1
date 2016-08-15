@@ -1,14 +1,4 @@
 ########################################
-# Private module variables.
-########################################
-$script:loggingCommandPrefix = '##vso['
-$script:loggingCommandEscapeMappings = @( # TODO: WHAT ABOUT "="? WHAT ABOUT "%"?
-    New-Object psobject -Property @{ Token = ';' ; Replacement = '%3B' }
-    New-Object psobject -Property @{ Token = "`r" ; Replacement = '%0D' }
-    New-Object psobject -Property @{ Token = "`n" ; Replacement = '%0A' }
-)
-
-########################################
 # Public functions.
 ########################################
 function Invoke-BuildTools {
@@ -53,129 +43,6 @@ function Invoke-BuildTools {
 ########################################
 # Private functions.
 ########################################
-function ConvertFrom-SerializedLoggingCommand {
-    [CmdletBinding()]
-    param([string]$Message)
-
-    if (!$Message) {
-        return
-    }
-
-    try {
-        # Get the index of the prefix.
-        $prefixIndex = $Message.IndexOf($script:loggingCommandPrefix)
-        if ($prefixIndex -lt 0) {
-            return
-        }
-
-        # Get the index of the separator between the command info and the data.
-        $rbIndex = $Message.IndexOf(']'[0], $prefixIndex)
-        if ($rbIndex -lt 0) {
-            return
-        }
-
-        # Get the command info.
-        $cmdIndex = $prefixIndex + $script:loggingCommandPrefix.Length
-        $cmdInfo = $Message.Substring($cmdIndex, $rbIndex - $cmdIndex)
-        $spaceIndex = $cmdInfo.IndexOf(' '[0])
-        if ($spaceIndex -lt 0) {
-            $command = $cmdInfo
-        } else {
-            $command = $cmdInfo.Substring(0, $spaceIndex)
-        }
-
-        # Get the area and event.
-        [string[]]$areaEvent = $command.Split([char[]]@( '.'[0] ), [System.StringSplitOptions]::RemoveEmptyEntries)
-        if ($areaEvent.Length -ne 2) {
-            return
-        }
-
-        $areaName = $areaEvent[0]
-        $eventName = $areaEvent[1]
-
-        # Get the properties.
-        $eventProperties = @{ }
-        if ($spaceIndex -ge 0) {
-            $propertiesStr = $cmdInfo.Substring($spaceIndex + 1)
-            [string[]]$splitProperties = $propertiesStr.Split([char[]]@( ';'[0] ), [System.StringSplitOptions]::RemoveEmptyEntries)
-            foreach ($propertyStr in $splitProperties) {
-                [string[]]$pair = $propertyStr.Split([char[]]@( '='[0] ), 2, [System.StringSplitOptions]::RemoveEmptyEntries)
-                if ($pair.Length -eq 2) {
-                    $pair[1] = Format-LoggingCommandData -Value $pair[1] -Reverse
-                    $eventProperties[$pair[0]] = $pair[1]
-                }
-            }
-        }
-
-        $eventData = Format-LoggingCommandData -Value $Message.Substring($rbIndex + 1) -Reverse
-        New-Object -TypeName psobject -Property @{
-            'Area' = $areaName
-            'Event' = $eventName
-            'Properties' = $eventProperties
-            'Data' = $eventData
-        }
-    } catch { }
-}
-
-function Format-LoggingCommand {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)]
-        [string]$Area,
-        [Parameter(Mandatory = $true)]
-        [string]$Event,
-        [string]$Data,
-        [hashtable]$Properties)
-
-    # Append the preamble.
-    [System.Text.StringBuilder]$sb = New-Object -TypeName System.Text.StringBuilder
-    $null = $sb.Append($script:loggingCommandPrefix).Append($Area).Append('.').Append($Event)
-
-    # Append the properties.
-    if ($Properties) {
-        $first = $true
-        foreach ($key in $Properties.Keys) {
-            [string]$value = Format-LoggingCommandData $Properties[$key]
-            if ($value) {
-                if ($first) {
-                    $null = $sb.Append(' ')
-                    $first = $false
-                } else {
-                    $null = $sb.Append(';')
-                }
-
-                $null = $sb.Append("$key=$value")
-            }
-        }
-    }
-
-    # Append the tail and output the value.
-    $Data = Format-LoggingCommandData $Data
-    $sb.Append(']').Append($Data).ToString()
-}
-
-function Format-LoggingCommandData {
-    [CmdletBinding()]
-    param([string]$Value, [switch]$Reverse)
-
-    if (!$Value) {
-        return ''
-    }
-
-    if (!$Reverse) {
-        foreach ($mapping in $script:loggingCommandEscapeMappings) {
-            $Value = $Value.Replace($mapping.Token, $mapping.Replacement)
-        }
-    } else {
-        for ($i = $script:loggingCommandEscapeMappings.Length - 1 ; $i -ge 0 ; $i--) {
-            $mapping = $script:loggingCommandEscapeMappings[$i]
-            $Value = $Value.Replace($mapping.Replacement, $mapping.Token)
-        }
-    }
-
-    return $Value
-}
-
 function Invoke-MSBuild {
     [CmdletBinding()]
     param(
@@ -216,21 +83,8 @@ function Invoke-MSBuild {
             $arguments = "$arguments /fl /flp:`"logfile=$LogFile`""
         }
 
-        # Always hook up the timeline logger. If project events are not requested then we will simply drop those
-        # messages on the floor.
-        $loggerAssembly = "$PSScriptRoot\Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll"
-        Assert-VstsPath -LiteralPath $loggerAssembly -PathType Leaf
-        $arguments = "$arguments /dl:CentralLogger,`"$loggerAssembly`"*ForwardingLogger,`"$loggerAssembly`""
-
-        # Append additional arguments.
-        if ($AdditionalArguments) {
-            $arguments = "$arguments $AdditionalArguments"
-        }
-
-        # Store the solution folder so we can provide solution-relative paths (for now).
-        $solutionDirectory = [System.IO.Path]::GetDirectoryName($ProjectFile)
-
         # Start the detail timeline.
+        $detailId = ''
         if (!$NoTimelineLogger) {
             $detailId = [guid]::NewGuid()
             $detailName = Get-VstsLocString -Key MSB_Build0 -ArgumentList ([System.IO.Path]::GetFileName($ProjectFile))
@@ -238,80 +92,35 @@ function Invoke-MSBuild {
             Write-VstsLogDetail -Id $detailId -Type Process -Name $detailName -Progress 0 -StartTime $detailStartTime -State Initialized -AsOutput
         }
 
-        $detailResult = 'Succeeded'
+        # Store the solution folder so we can provide solution-relative paths (for now) for the project events.
+        $solutionDirectory = [System.IO.Path]::GetDirectoryName($ProjectFile)
+
+        # Hook up the custom logger.
+        $loggerAssembly = "$PSScriptRoot\Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll"
+        Assert-VstsPath -LiteralPath $loggerAssembly -PathType Leaf
+        $arguments = "$arguments /dl:CentralLogger,`"$loggerAssembly`";`"RootDetailId=$($detailId)|SolutionDir=$($solutionDirectory)`"*ForwardingLogger,`"$loggerAssembly`""
+
+        # Append additional arguments.
+        if ($AdditionalArguments) {
+            $arguments = "$arguments $AdditionalArguments"
+        }
+
+        $global:LASTEXITCODE = ''
         try {
-            $knownDetailNodes = @{ }
-            Invoke-VstsTool -FileName $MSBuildPath -Arguments $arguments -RequireExitCodeZero |
-                ForEach-Object {
-                    if ($_ -and
-                        $_.IndexOf($script:loggingCommandPrefix) -ge 0 -and
-                        ($command = ConvertFrom-SerializedLoggingCommand -Message $_)) {
-                        if ($command.Area -eq 'task' -and
-                            $command.Event -eq 'logissue' -and
-                            $command.Properties['type'] -eq 'error') {
-
-                            # An error issue was detected. Set the result to Failed for the logdetail completed event.
-                            $detailResult = 'Failed'
-                        } elseif ($command.Area -eq 'task' -and
-                            $command.Event -eq 'logdetail') {
-
-                            # Check whether to drop detail timeline records.
-                            if ($NoTimelineLogger) {
-                                return
-                            }
-
-                            # Check if the detail node is new.
-                            $id = $command.Properties['id']
-                            if (!$knownDetailNodes.ContainsKey($id)) {
-                                # Default the parent ID to the root ID.
-                                $parentProjectId = $command.Properties['parentid']
-                                if (!$parentProjectId -or [guid]$parentProjectId -eq [guid]::Empty) {
-                                    $command.Properties['parentid'] = $detailId.ToString('D')
-                                }
-
-                                # Default the name. Some types of projects may not have a name (e.g. metaproj).
-                                if (!$command.Properties['name']) {
-                                    $command.Properties['name'] = 'project'
-                                }
-
-                                # Default the type to build.
-                                if (!$command.Properties['type']) {
-                                    $command.Properties['type'] = 'Build'
-                                }
-
-                                # Track the detail node as known.
-                                $knownDetailNodes[$id] = $null
-                            }
-
-                            if ($projFile = $command.Properties['name']) {
-                                # Make the project file relative.
-                                if ($projFile.StartsWith("$solutionDirectory\", [System.StringComparison]::OrdinalIgnoreCase)) {
-                                    $projFile = $projFile.Substring($solutionDirectory.Length).TrimStart('\'[0])
-                                } else {
-                                    $projFile = [System.IO.Path]::GetFileName($projFile)
-                                }
-
-                                # If available, add the targets to the name.
-                                if ($targetNames = $command.Properties['targetnames']) {
-                                    $projFile = "$projFile ($targetNames)"
-                                }
-
-                                $command.Properties['name'] = $projFile
-                            }
-                        }
-
-                        Write-LoggingCommand -Command $command -AsOutput
-                    } else {
-                        $_
-                    }
-                }
-
+            # Invoke MSBuild.
+            Invoke-VstsTool -FileName $MSBuildPath -Arguments $arguments -RequireExitCodeZero
             if ($LASTEXITCODE -ne 0) {
                 Write-VstsSetResult -Result Failed -DoNotThrow
             }
         } finally {
             # Complete the detail timeline.
             if (!$NoTimelineLogger) {
+                if ($LASTEXITCODE -ne 0) {
+                    $detailResult = 'Failed'
+                } else {
+                    $detailResult = 'Succeeded'
+                }
+
                 $detailFinishTime = [datetime]::UtcNow.ToString('O')
                 Write-VstsLogDetail -Id $detailId -FinishTime $detailFinishTime -Progress 100 -State Completed -Result $detailResult -AsOutput
             }
@@ -348,33 +157,5 @@ function Invoke-NuGetRestore {
         }
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
-    }
-}
-
-function Write-LoggingCommand {
-    [CmdletBinding(DefaultParameterSetName = 'Parameters')]
-    param(
-        [Parameter(Mandatory = $true, ParameterSetName = 'Parameters')]
-        [string]$Area,
-        [Parameter(Mandatory = $true, ParameterSetName = 'Parameters')]
-        [string]$Event,
-        [Parameter(ParameterSetName = 'Parameters')]
-        [string]$Data,
-        [Parameter(ParameterSetName = 'Parameters')]
-        [hashtable]$Properties,
-        [Parameter(Mandatory = $true, ParameterSetName = 'Object')]
-        $Command,
-        [switch]$AsOutput)
-
-    if ($PSCmdlet.ParameterSetName -eq 'Object') {
-        Write-LoggingCommand -Area $Command.Area -Event $Command.Event -Data $Command.Data -Properties $Command.Properties -AsOutput:$AsOutput
-        return
-    }
-
-    $command = Format-LoggingCommand -Area $Area -Event $Event -Data $Data -Properties $Properties
-    if ($AsOutput) {
-        $command
-    } else {
-        Write-Host $command
     }
 }
