@@ -1,3 +1,9 @@
+/* 
+* We are using a hard-coded checkstyle.xml file that is checked in with as part of this task.
+* We expect to find it in the same folder as this file. 
+* The user cannot specify their own checkstyle.xml file / other checkstyle configuration; 
+*/
+
 rootProject {
     boolean hasCheckstyle = false;
     allprojects { proj ->
@@ -16,8 +22,12 @@ rootProject {
 
                 proj.apply plugin: 'checkstyle'
                 checkstyle {
-                    println(rootDir);
-                    configFile rootProject.file('checkstyle.xml')
+                    // "Groovy" way of resolving the directory containing the current file
+                    File currentDir = file(new File("."));
+                    // The rules xml is in the same directory as this script 
+                    File checkstyleXmlPath = new File(currentDir, "checkstyle.xml")
+                    configFile = checkstyleXmlPath
+
                     ignoreFailures = true
                     showViolations = false
                 }
