@@ -3,6 +3,7 @@
 
 import assert = require('assert');
 import trm = require('../../lib/taskRunner');
+import os = require('os');
 import psm = require('../../lib/psRunner');
 import path = require('path');
 
@@ -10,22 +11,21 @@ function setResponseFile(name: string) {
 	process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
 }
 
-describe('Publish Build Artifacts Suite', function() {
+describe('Publish Build Artifacts Suite', function () {
     this.timeout(10000);
 	
-	before((done) => {
+	before((done: MochaDone) => {
 		// init here
 		done();
 	});
 
-	after(function() {
-		
-	});	
+	after(() => {
+	});
 	
-	it('Publish to container', (done) => {
+	it('Publish to container', (done: MochaDone) => {
 		setResponseFile('publishBuildArtifactsGood.json');
 		
-		var tr = new trm.TaskRunner('PublishBuildArtifacts');
+		let tr = new trm.TaskRunner('PublishBuildArtifacts');
 		tr.setInput('PathtoPublish', '/bin/release');
 		tr.setInput('ArtifactName', 'drop');
 		tr.setInput('ArtifactType', 'Container');
@@ -41,11 +41,56 @@ describe('Publish Build Artifacts Suite', function() {
 			done(err);
 		});
 	})	
-	
-	it('Publish to UNC', (done) => {
+
+	if (os.platform() == 'win32') {
+		it('Publish to UNC', (done: MochaDone) => {
+			setResponseFile('publishBuildArtifactsGood.json');
+			
+			let tr = new trm.TaskRunner('PublishBuildArtifacts', false, true);
+			tr.setInput('PathtoPublish', '/bin/release');
+			tr.setInput('ArtifactName', 'drop');
+			tr.setInput('ArtifactType', 'FilePath');
+			tr.setInput('TargetPath', '\\\\UNCShare');
+			
+			tr.run()
+			.then(() => {
+				assert(!tr.stderr, 'should not have written to stderr. error: ' + tr.stderr);
+				assert(tr.succeeded, 'task should have succeeded');
+				assert(tr.stdout.match(/test stdout from robocopy/gi).length === 1, 'should copy files.');
+				assert(tr.stdout.search(/artifact.associate/gi) >= 0, 'should associate artifact.');
+				done();
+			})
+			.fail((err) => {
+				done(err);
+			});
+		})
+
+		it('fails if robocopy fails', (done: MochaDone) => {
+			setResponseFile('publishBuildArtifactsBad.json');
+			
+			let tr = new trm.TaskRunner('PublishBuildArtifacts', false, true);
+			tr.setInput('PathtoPublish', '/bin/release');
+			tr.setInput('ArtifactName', 'drop');
+			tr.setInput('ArtifactType', 'FilePath');
+			tr.setInput('TargetPath', '\\\\UNCShare');
+			
+			tr.run()
+			.then(() => {
+				assert(tr.failed, 'task should have failed');
+				assert(tr.stdout.match(/test stdout from robocopy/gi).length === 1, 'should call robocopy.');
+				assert(tr.stdout.search(/artifact.associate/gi) >= 0, 'should associate artifact.');
+				done();
+			})
+			.fail((err) => {
+				done(err);
+			});
+		})
+	}
+
+	it('creates filepath artifact', (done: MochaDone) => {
 		setResponseFile('publishBuildArtifactsGood.json');
-		
-		var tr = new trm.TaskRunner('PublishBuildArtifacts');
+
+		let tr = new trm.TaskRunner('PublishBuildArtifacts', false, true);
 		tr.setInput('PathtoPublish', '/bin/release');
 		tr.setInput('ArtifactName', 'drop');
 		tr.setInput('ArtifactType', 'FilePath');
@@ -53,21 +98,20 @@ describe('Publish Build Artifacts Suite', function() {
 		
 		tr.run()
 		.then(() => {
-			assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
-            assert(tr.succeeded, 'task should have succeeded');
-			assert(tr.stdout.match(/###copying###/gi).length === 1, 'should copy files.');
-			assert(tr.stdout.search(/##vso\[artifact.associate artifactType=filepath;artifactName=drop;artifactlocation=\\\\UNCShare;\]\\\\UNCShare/gi) >= 0, 'should associate artifact.');
+			assert(!tr.stderr, 'should not have written to stderr. error: ' + tr.stderr);
+			assert(tr.succeeded, 'task should have succeeded');
+			assert(tr.stdout.indexOf('##vso[artifact.associate artifacttype=filepath;artifactname=drop;artifactlocation=\\\\UNCShare;]\\\\UNCShare') >= 0, 'should associate artifact.');
 			done();
 		})
 		.fail((err) => {
 			done(err);
 		});
 	})
-	
-	it('fails if PathtoPublish not set', (done) => {
+
+	it('fails if PathtoPublish not set', (done: MochaDone) => {
 		setResponseFile('publishBuildArtifactsGood.json');
 		
-		var tr = new trm.TaskRunner('PublishBuildArtifacts');		
+		let tr = new trm.TaskRunner('PublishBuildArtifacts');		
 		tr.setInput('ArtifactName', 'drop');
 		tr.setInput('ArtifactType', 'Container');
 		tr.run()
@@ -84,10 +128,10 @@ describe('Publish Build Artifacts Suite', function() {
 		});
 	})
 	
-	it('fails if ArtifactName not set', (done) => {
+	it('fails if ArtifactName not set', (done: MochaDone) => {
 		setResponseFile('publishBuildArtifactsGood.json');
 		
-		var tr = new trm.TaskRunner('PublishBuildArtifacts');
+		let tr = new trm.TaskRunner('PublishBuildArtifacts');
 		tr.setInput('PathtoPublish', '/bin/release');
 		tr.setInput('ArtifactType', 'Container');
 		tr.run()
@@ -104,10 +148,10 @@ describe('Publish Build Artifacts Suite', function() {
 		});
 	})
 	
-	it('fails if ArtifactType not set', (done) => {
+	it('fails if ArtifactType not set', (done: MochaDone) => {
 		setResponseFile('publishBuildArtifactsGood.json');
 		
-		var tr = new trm.TaskRunner('PublishBuildArtifacts');
+		let tr = new trm.TaskRunner('PublishBuildArtifacts');
 		tr.setInput('PathtoPublish', '/bin/release');
 		tr.setInput('ArtifactName', 'drop');
 		tr.run()
@@ -125,17 +169,17 @@ describe('Publish Build Artifacts Suite', function() {
 	})
 	
 	
-	it('fails if PathtoPublish not found', (done) => {
+	it('fails if PathtoPublish not found', (done: MochaDone) => {
 		setResponseFile('publishBuildArtifactsGood.json');
 		
-		var tr = new trm.TaskRunner('PublishBuildArtifacts');
+		let tr = new trm.TaskRunner('PublishBuildArtifacts');
 		tr.setInput('PathtoPublish', '/bin/notexist');
 		tr.setInput('ArtifactName', 'drop');
 		tr.setInput('ArtifactType', 'Container');
 		tr.run()
 		.then(() => {
 			assert(tr.failed, 'should have failed');
-            var expectedErr = 'not found PathtoPublish';
+            let expectedErr = 'not found PathtoPublish';
             assert(tr.stdErrContained(expectedErr), 'should have said: ' + expectedErr);
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.invokedToolCount == 0, 'should exit before running PublishBuildArtifacts');

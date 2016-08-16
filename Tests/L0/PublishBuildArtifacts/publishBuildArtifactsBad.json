@@ -4,9 +4,9 @@
     },
     "exec": {
         "powershell.exe -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command & '\\PublishBuildArtifacts\\Invoke-Robocopy.ps1' -Source '/bin/release' -Target '\\\\UNCShare\\drop\\'": {
-            "stdout": "test stdout from robocopy",
+            "stdout": "test stdout from robocopy middle-man",
             "stderr": "",
-            "code": 0
+            "code": 1
         }
     }
 }
