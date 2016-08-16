@@ -28,15 +28,7 @@ export function applyEnabledSonarQubeArguments(gradleRun: trm.ToolRunner):trm.To
 
     // #2: Configure additional command-line parameters
     // Add parameters to connect to the SonarQube server for reporting
-    var sqEndpoint: SonarQubeEndpoint = sqCommon.getSonarQubeEndpoint();
-
-
-    gradleRun = sqCommon.applySonarQubeConnectionParams(gradleRun);
-
-    // Add parameters to specify the SonarQube project properties (if given by the user)
-    gradleRun = sqCommon.applySonarQubeAnalysisParams(gradleRun);
-
-    gradleRun = sqCommon.applySonarQubeIssuesModeInPrBuild(gradleRun);
+    gradleRun = sqCommon.applySonarQubeParameters(gradleRun);
 
     return gradleRun;
 }
@@ -53,11 +45,11 @@ export function applySonarQubeCodeCoverageArguments(gradleRun: trm.ToolRunner, i
 }
 
 // Upload a build summary with links to available SonarQube dashboards for further analysis details.
-export function uploadSonarQubeBuildSummaryIfEnabled(): Q.Promise<void> {
+export function processSonarQubeIntegration(): Q.Promise<void> {
     if (!sqCommon.isSonarQubeAnalysisEnabled()) {
         return Q.when();
     }
 
     var sqBuildFolder: string = path.join(tl.getVariable('build.sourcesDirectory'), 'build', 'sonar');
-    return sqCommon.uploadSonarQubeBuildSummaryIfEnabled(sqBuildFolder);
+    return sqCommon.processSonarQubeIntegration(sqBuildFolder);
 }

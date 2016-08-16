@@ -3,6 +3,7 @@ import {IAnalysisTool} from './IAnalysisTool'
 import {BuildOutput, BuildEngine} from './BuildOutput'
 import {ModuleOutput} from './ModuleOutput'
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
+import {BaseTool} from './BaseTool'
 
 import path = require('path');
 import fs = require('fs');
@@ -19,147 +20,53 @@ import tl = require('vsts-task-lib/task');
  * @class PmdReportParser
  * @implements {IAnalysisToolReportParser}
  */
-export class PmdTool implements IAnalysisTool {
+export class PmdTool extends BaseTool {
 
-    private static Name: string = 'PMD';
-
-    constructor(private buildOutput: BuildOutput) {
-
+    constructor(buildOutput: BuildOutput, boolInputName: string) {
+        super('PMD', buildOutput, boolInputName);
     }
 
-    private isEnabled(): boolean {
-        return tl.getBoolInput('pmdAnalysisEnabled', false);
-    }
+    /**
+    * Implementers must specify where the XML reports are located
+    */
+    protected getBuildReportDir(output: ModuleOutput) {
 
-    public configureBuild(toolRunner: ToolRunner): ToolRunner {
-        switch (this.buildOutput.buildEngine) {
-            case BuildEngine.Maven: {
-                throw new Error('Not implemented');
-            }
-            case BuildEngine.Gradle: {
-
-                if (this.isEnabled()) {
-                    console.log(tl.loc('codeAnalysis_ToolIsEnabled'), PmdTool.Name);
-
-                    var pmdInitScriptPath: string = path.join(__dirname, '../', 'pmd.gradle');
-                    toolRunner.arg(['-I', pmdInitScriptPath]);
-                    break;
-                }
-            }
-        }
-        return toolRunner;
-    }
-
-
-    public processResults(): AnalysisResult[] {
-
-        if (!this.isEnabled()) {
-            tl.debug('[CA]PMD analysis is not enabled');
-            return [];
-        }
-
-        var results: AnalysisResult[] = [];
-        var outputs: ModuleOutput[] = this.buildOutput.getModuleOutputs();
-        tl.debug(`[CA] PMD parser found ${outputs.length} possible modules` );
-
-        for (var output of outputs) {
-            var result = this.parseModuleOutput(output);
-
-            if (result) {
-                results.push(result);
-            }
-        }
-
-        return results;
-    }
-
-    private parseModuleOutput(output: ModuleOutput): AnalysisResult {
-
-        let reportDir = this.getBuildReportDir(output);
-        let xmlReports = glob.sync(path.join(reportDir, '*.xml'));
-
-        if (xmlReports.length === 0) {
-            tl.debug(`[CA] No PMD reports found for the ${output.moduleName} module. Searched in ${reportDir}`);
-            return null;
-        }
-
-        tl.debug(`[CA] Found ${xmlReports.length} xml reports for module ${output.moduleName}`)
-        return this.buildAnalysisResultFromModule(xmlReports, output.moduleName);
-    }
-
-    private getBuildReportDir(output: ModuleOutput) {
         switch (this.buildOutput.buildEngine) {
             case BuildEngine.Maven:
                 return path.join(output.moduleRoot);
             case BuildEngine.Gradle:
                 return path.join(output.moduleRoot, 'reports', 'pmd');
             default:
-                throw new Error('not supported');
-        }
-    }
-
-    private buildAnalysisResultFromModule(xmlReports: string[], moduleName: string): AnalysisResult {
-
-        let analysisResult: AnalysisResult = null;
-        let fileCount: number = 0;
-        let violationCount: number = 0;
-        let artifacts: string[] = [];
-
-        for (var xmlReport of xmlReports) {
-
-            var pmdXmlFileContents = fs.readFileSync(xmlReport, 'utf-8');
-            var result = this.parseXmlReport(pmdXmlFileContents, xmlReport, moduleName);
-
-            if (result) {
-                violationCount += result[0];
-                fileCount += result[1];
-                artifacts.push(xmlReport);
-                var htmlReport = this.findHtmlReport(xmlReport);
-
-                if (htmlReport) {
-                    artifacts.push(htmlReport);
-                }
-            }
+                throw new Error('No such build engine ' + this.buildOutput.buildEngine);
         }
 
-        return new AnalysisResult(PmdTool.Name, moduleName, artifacts, violationCount, fileCount);
     }
 
-    private findHtmlReport(xmlReport: string): string {
-
-        // expecting to find an html report with the same name
-        var reportName = path.basename(xmlReport, '.xml');
-        var dirName = path.dirname(xmlReport);
-
-        var htmlReports = glob.sync(path.join(dirName, '**', reportName + '.html'));
-
-        if (htmlReports.length > 0) {
-            return htmlReports[0];
-        }
-
-        return null;
-    }
-
-    private parseXmlReport(pmdXmlFileContents: string, xmlReport: string, moduleName: string) {
-
+    /**
+    * Report parser that extracts the number of affected files and the number of violations from a report
+    *
+    * @returns a tuple of [affected_file_count, violation_count]
+    */
+    protected parseXmlReport(xmlReport: string, moduleName: string): [number, number] {
         let fileCount = 0;
         let violationCount = 0;
 
-        xml2js.parseString(pmdXmlFileContents, (err, data) => {
+        var reportContent = fs.readFileSync(xmlReport, 'utf-8');
+        xml2js.parseString(reportContent, (err, data) => {
             // If the file is not XML, or is not from PMD, return immediately
-            if (!data || !data.pmd) { 
+            if (!data || !data.pmd) {
                 tl.debug(`[CA] Empty or unrecognized PMD xml report ${xmlReport}`);
                 return null;
             }
 
             if (!data.pmd.file || data.pmd.file.length === 0) { // No files with violations, return now that it has been marked for upload
-                tl.debug(`[CA] A pmd report was found for module '${moduleName}' but it contains no violations`);
+                tl.debug(`[CA] A PMD report was found for module '${moduleName}' but it contains no violations`);
                 return null;
             }
 
-            fileCount = data.pmd.file.length;
             data.pmd.file.forEach((file: any) => {
                 if (file.violation) {
+                    fileCount++;
                     violationCount += file.violation.length;
                 }
             });

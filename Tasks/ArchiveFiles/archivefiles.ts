@@ -21,7 +21,7 @@ var xpTarLocation: string;
 var xpZipLocation: string;
 // 7zip
 var xpSevenZipLocation: string;
-var winSevenZipLocation: string = path.join(tl.cwd(), '7zip/7z.exe');
+var winSevenZipLocation: string = path.join(__dirname, '7zip/7z.exe');
 
 function getSevenZipLocation(): string {
     if (win) {

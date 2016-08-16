@@ -8,10 +8,6 @@
       "code": 0,
       "stdout":"bash executed successfully"
     },
-    "/usr/local/bin/bash fake\\wd\\azureclitaskscript.sh arg1": {
-      "code": 0,
-      "stdout":"bash executed successfully"
-    },
     "/usr/local/bin/azure config mode asm": {
       "code": 0,
       "stdout": "azure output here"

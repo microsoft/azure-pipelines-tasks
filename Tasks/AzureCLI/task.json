@@ -127,5 +127,10 @@
     "ScriptReturnCode": "Script exited with return code: %d",
     "ScriptFailed": "Script failed with error: %s",
     "UnsupportedEndpointScheme": "Unsupported Endpoint Authorization Scheme: (certificate and usernamePassword for Azure Classic and ServicePrincipal for AzureRM "
+<<<<<<< HEAD
   }
 }
+=======
+    }
+}
+>>>>>>> 359084060c4f9609f8ae030338e5a35b6c1938ec

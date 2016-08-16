@@ -9,9 +9,13 @@
             "stdout": "subprojects: []",
             "stderr": ""
         },
-        "gradlew build -I /gradle/CodeAnalysis/pmd.gradle": {
+        "gradlew build -I /Gradle/CodeAnalysis/pmd.gradle": {
             "code": 0,
             "stdout": "Sample gradle + PMD"
+        },
+        "gradlew build -I /Gradle/CodeAnalysis/checkstyle.gradle -I /Gradle/CodeAnalysis/pmd.gradle": {
+            "code": 0,
+            "stdout": "Sample gradle + Checkstyle + PMD"
         }
     },
     "checkPath": {
