@@ -1732,8 +1732,7 @@ describe('Maven Suite', function () {
             });
     });
 
-    /* Ignored until test can be fixed */
-    /*it('SonarQube common - Build breaker fails the build when the quality gate has failed', () => {
+    it('SonarQube common - Build breaker fails the build when the quality gate has failed', () => {
         // Arrange
         var mockRunSettings:SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
         var mockServer:MockSonarQubeServer = new MockSonarQubeServer();
@@ -1748,26 +1747,12 @@ describe('Maven Suite', function () {
         taskDetailsJsonObject.projectStatus.status = 'ERROR'; // Quality gate failed
         mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', taskDetailsJsonObject);
 
-        // capture process.stdout and process.exit, along with useful data to assert on
-        var capturedStream = captureStream(process.stdout);
-        var capturedExit = process.exit;
-        var processExitInvoked:number = 0;
-        process.exit = function() { processExitInvoked++; return; };
-
         // Act
-        return VstsServerUtils.breakBuildIfQualityGateFails(mockRunSettings, analysisMetrics)
-            .then(() => {
-                // unhook captured functions since they are important system functions
-                capturedStream.unhook();
-                process.exit = capturedExit;
-
-                // Assert
-                assertStringContains(capturedStream.captured(),
-                    '##vso[task.complete result=Failed;]sqAnalysis_BuildBrokenDueToQualityGateFailure http://dashboardUrl');
-                assert(processExitInvoked == 1, `Expected process to have exited exactly once. Actual: ${processExitInvoked}`);
-                return true;
+        return analysisMetrics.getTaskResultFromQualityGateStatus()
+            .then((taskResult) => {
+                assert(taskResult == 1 /* TaskResult.Failed == 1 */, 'Task should have failed.');
             });
-    });*/
+    });
 
     it('SonarQube common - Build breaker does not fail the build when the quality gate has passed', () => {
         // Arrange
@@ -1791,15 +1776,9 @@ describe('Maven Suite', function () {
         process.exit = function() { processExitInvoked++; return; };
 
         // Act
-        return VstsServerUtils.breakBuildIfQualityGateFails(mockRunSettings, analysisMetrics)
-            .then(() => {
-                // unhook captured functions since they are important system functions
-                capturedStream.unhook();
-                process.exit = capturedExit;
-
-                // Assert
-                assert(processExitInvoked == 0, `Expected process to have not exited. Actual: ${processExitInvoked}`);
-                return true;
+        return analysisMetrics.getTaskResultFromQualityGateStatus()
+            .then((taskResult) => {
+                assert(taskResult == 0 /* TaskResult.Failed == 0 */, 'Task should not have failed.');
             });
     });
 });
