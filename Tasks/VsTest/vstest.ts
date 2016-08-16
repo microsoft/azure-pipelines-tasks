@@ -35,6 +35,8 @@ try {
     var publishRunAttachments: string = tl.getInput('publishRunAttachments');
     var runInParallel: boolean = tl.getBoolInput('runInParallel');
     var tiaEnabled = tl.getVariable('tia.enabled');
+    var fileLevel = tl.getVariable('tia.filelevel');
+    var sourcesDir = tl.getVariable('build.sourcesdirectory');
 
     tl._writeLine("##vso[task.logissue type=warning;TaskName=VSTest]");
 
@@ -106,7 +108,7 @@ function getTestAssemblies(): Set<string> {
     return new Set(testAssemblyFiles);
 }
 
-function getVstestArguments(settingsFile: string): string[] {
+function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[] {
     var argsArray: string[] = [];
     testAssemblyFiles.forEach(function (testAssembly) {
         var testAssemblyPath = testAssembly;
@@ -120,7 +122,15 @@ function getVstestArguments(settingsFile: string): string[] {
         argsArray.push(testAssemblyPath);
     });
     if (testFiltercriteria) {
-        argsArray.push("/TestCaseFilter:" + testFiltercriteria);
+        if (!tiaEnabled)
+        {
+            argsArray.push("/TestCaseFilter:" + testFiltercriteria);
+        }
+        else
+        {
+            tl.debug("Ignoring TestCaseFilter because Test Impact is enabled");
+            
+        }
     }
     if (settingsFile && pathExistsAsFile(settingsFile)) {
         argsArray.push("/Settings:" + settingsFile);
@@ -201,14 +211,21 @@ function publishCodeChanges(): Q.Promise<string> {
     var endTime : number;
     var elapsedTime: number;
     var defer = Q.defer<string>();
+
+    if (!fileLevel)
+    {
+        fileLevel = "true";
+    }
+
     var selectortool = tl.createToolRunner(getTestSelectorLocation());
     selectortool.arg("PublishCodeChanges");
     selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
     selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
-    selectortool.arg("/newdropPath:" + tl.getVariable("Build.SourcesDirectory"));
     selectortool.arg("/Definitionid:" + tl.getVariable("System.DefinitionId"));
     selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
     selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
+    selectortool.arg("/SourcesDir:" + sourcesDir);
+    selectortool.arg("/newprovider:" + fileLevel.toUpperCase());
 
     selectortool.exec()
         .then(function(code) {
@@ -262,7 +279,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                 generateResponseFile()
                     .then(function (responseFile) {
                         if (isNonEmptyResponseFile(responseFile)) {
-                            updateResponseFile(getVstestArguments(settingsFile), responseFile)
+                            updateResponseFile(getVstestArguments(settingsFile, true), responseFile)
                                 .then(function (updatedFile) {
                                     executeVstest(testResultsDirectory, settingsFile, vsVersion, ["@" + updatedFile])
                                         .then(function (code) {
@@ -279,7 +296,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                 .fail(function (err) {
                                     tl.error(err);
                                     tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', responseFile));
-                                    executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile))
+                                    executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
                                         .then(function (code) {
                                             defer.resolve(code);
                                         })
@@ -293,7 +310,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                         }
                         else {
                             tl.debug("Empty response file detected. All tests will be executed.");
-                            executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile))
+                            executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
                                 .then(function (code) {
                                     defer.resolve(code);
                                 })
@@ -309,7 +326,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                     .fail(function (err) {
                         tl.error(err);
                         tl.warning(tl.loc('ErrorWhileCreatingResponseFile'));
-                        executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile))
+                        executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
                             .then(function (code) {
                                 defer.resolve(code);
                             })
@@ -321,7 +338,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
             .fail(function (err){
                 tl.error(err);
                 tl.warning(tl.loc('ErrorWhilePublishingCodeChanges'));
-                executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile))
+                executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
                     .then(function (code) {
                         defer.resolve(code);
                     })
@@ -332,7 +349,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
     }
     else {
         tl.debug("Non TIA mode of test execution");
-        executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile))
+        executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
             .then(function (code) {
                 defer.resolve(code);
             })
@@ -574,35 +591,64 @@ function isTestImapctCollectorPresent(dataCollectorArray): Boolean {
     return found;
 }
 
+function pushImpactLevelAndRootPathIfNotFound(dataCollectorArray): void {
+    tl.debug("Checking for ImpactLevel and RootPath nodes in TestImpact collector");
+    var tiaFriendlyName = TIFriendlyName.toUpperCase();
+    var arrayLength = dataCollectorArray.length;
+    for (var i = 0; i < arrayLength; i++) {
+        if (dataCollectorArray[i].$.friendlyName && dataCollectorArray[i].$.friendlyName.toUpperCase() === tiaFriendlyName) {
+            if (!dataCollectorArray[i].Configuration)
+            {
+                dataCollectorArray[i] = {Configuration:{}};
+            }
+            if (dataCollectorArray[i].Configuration.TestImpact && !dataCollectorArray[i].Configuration.RootPath)
+            {
+                dataCollectorArray[i].Configuration = {RootPath : sourcesDir};
+            }
+            else if (!dataCollectorArray[i].Configuration.TestImpact && dataCollectorArray[i].Configuration.RootPath)
+            {
+                dataCollectorArray[i].Configuration = {ImpactLevel : getTIALevel()};
+            }
+            else if (dataCollectorArray[i].Configuration && !dataCollectorArray[i].Configuration.TestImpact && !dataCollectorArray[i].Configuration.RootPath)
+            {
+                dataCollectorArray[i].Configuration = {ImpactLevel : getTIALevel(), RootPath : sourcesDir};
+            }
+        }      
+    }
+}
+
 function updateRunSettings(result: any, vsVersion: number) {
     var dataCollectorNode = null;
     if (!result.RunSettings) {
         tl.debug("Updating runsettings file from RunSettings node");
-        result.RunSettings = { DataCollectionRunSettings: { DataCollectors: { DataCollector: {} } } };
+        result.RunSettings = { DataCollectionRunSettings: { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } } };
         dataCollectorNode = result.RunSettings.DataCollectionRunSettings.DataCollectors.DataCollector;
     }
     else if (!result.RunSettings.DataCollectionRunSettings) {
         tl.debug("Updating runsettings file from DataCollectionSettings node");
-        result.RunSettings.DataCollectionRunSettings = { DataCollectors: { DataCollector: {} } };
+        result.RunSettings.DataCollectionRunSettings = { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } };
         dataCollectorNode = result.RunSettings.DataCollectionRunSettings.DataCollectors.DataCollector;
     }
     else if (!result.RunSettings.DataCollectionRunSettings[0].DataCollectors) {
         tl.debug("Updating runsettings file from DataCollectors node");
-        result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: {} } };
+        result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } };
         dataCollectorNode = result.RunSettings.DataCollectionRunSettings[0].DataCollectors.DataCollector;
     }
     else {
         var dataCollectorArray = result.RunSettings.DataCollectionRunSettings[0].DataCollectors[0].DataCollector;
         if (!dataCollectorArray) {
             tl.debug("Updating runsettings file from DataCollector node");
-            result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: {} } };
+            result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } };
             dataCollectorNode = result.RunSettings.DataCollectionRunSettings[0].DataCollectors.DataCollector;
         }
         else {
             if (!isTestImapctCollectorPresent(dataCollectorArray)) {
                 tl.debug("Updating runsettings file, adding a DataCollector node");
-                dataCollectorArray.push({});
+                dataCollectorArray.push({Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}});
                 dataCollectorNode = dataCollectorArray[dataCollectorArray.length - 1];
+            }
+            else {
+                pushImpactLevelAndRootPathIfNotFound(dataCollectorArray);
             }
         }
     }
@@ -650,40 +696,43 @@ function updatTestSettings(result: any, vsVersion: number) {
     var dataCollectorNode = null;
     if (!result.TestSettings) {
         tl.debug("Updating testsettings file from TestSettings node");
-        result.TestSettings = { Execution: { AgentRule: { DataCollectors: { DataCollector: {} } } } };
+        result.TestSettings = { Execution: { AgentRule: { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } } } };
         result.TestSettings.Execution.AgentRule.$ = { name: TITestSettingsAgentNameTag };
         result.TestSettings.$ = { name: TITestSettingsNameTag, id: TITestSettingsIDTag, xmlns: TITestSettingsXmlnsTag };
         dataCollectorNode = result.TestSettings.Execution.AgentRule.DataCollectors.DataCollector;
     }
     else if (!result.TestSettings.Execution) {
         tl.debug("Updating testsettings file from Execution node");
-        result.TestSettings.Execution = { AgentRule: { DataCollectors: { DataCollector: {} } } };
+        result.TestSettings.Execution = { AgentRule: { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } } };
         result.TestSettings.Execution.AgentRule.$ = { name: TITestSettingsAgentNameTag };
         dataCollectorNode = result.TestSettings.Execution.AgentRule.DataCollectors.DataCollector;
     }
     else if (!result.TestSettings.Execution[0].AgentRule) {
         tl.debug("Updating testsettings file from AgentRule node");
-        result.TestSettings.Execution[0] = { AgentRule: { DataCollectors: { DataCollector: {} } } };
+        result.TestSettings.Execution[0] = { AgentRule: { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } } };
         result.TestSettings.Execution[0].AgentRule.$ = { name: TITestSettingsAgentNameTag };
         dataCollectorNode = result.TestSettings.Execution[0].AgentRule.DataCollectors.DataCollector;
     }
     else if (!result.TestSettings.Execution[0].AgentRule[0].DataCollectors) {
         tl.debug("Updating testsettings file from DataCollectors node");
-        result.TestSettings.Execution[0].AgentRule[0] = { DataCollectors: { DataCollector: {} } };
+        result.TestSettings.Execution[0].AgentRule[0] = { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } };
         dataCollectorNode = result.TestSettings.Execution[0].AgentRule[0].DataCollectors.DataCollector;
     }
     else {
         var dataCollectorArray = result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector;
         if (!dataCollectorArray) {
             tl.debug("Updating testsettings file from DataCollector node");
-            result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0] = { DataCollector: {} };
+            result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0] = { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} };
             dataCollectorNode = result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector;
         }
         else {
             if (!isTestImapctCollectorPresent(dataCollectorArray)) {
                 tl.debug("Updating testsettings file, adding a DataCollector node");
-                dataCollectorArray.push({});
+                dataCollectorArray.push({Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}});
                 dataCollectorNode = dataCollectorArray[dataCollectorArray.length - 1];
+            }
+            else {
+                pushImpactLevelAndRootPathIfNotFound(dataCollectorArray);
             }
         }
     }
@@ -752,7 +801,10 @@ function createRunSettingsForTestImpact(vsVersion: number, settingsFile: string,
     var runSettingsForTIA = '<?xml version="1.0" encoding="utf-8"?><RunSettings><DataCollectionRunSettings><DataCollectors>' +
         '<DataCollector uri="' + TICollectorURI + '" ' +
         'assemblyQualifiedName="' + getTIAssemblyQualifiedName(vsVersion) + '" ' +
-        'friendlyName="' + TIFriendlyName + '"/>' +
+        'friendlyName="' + TIFriendlyName + '">' +
+        '<ImpactLevel>' + getTIALevel() + '</ImpactLevel>' +
+        '<RootPath>' + sourcesDir + '</RootPath>' +
+        '</DataCollector>' +
         '</DataCollectors></DataCollectionRunSettings></RunSettings>';
     saveToFile(runSettingsForTIA, runSettingsExt)
         .then(function (fileName) {
@@ -1014,4 +1066,12 @@ function isTiaAllowed(): boolean {
         return true;
     }
     return false;
+}
+
+function getTIALevel()
+{
+    if (fileLevel && fileLevel.toUpperCase() == "TRUE") {
+        return "file";
+    }
+    return "method";
 }
