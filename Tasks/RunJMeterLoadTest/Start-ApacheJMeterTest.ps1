@@ -366,7 +366,7 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
     Remove-Item $resultsMDFolder\$resultFilePattern -Exclude $excludeFilePattern -Force
     $summaryFile =  ("{0}\ApacheJMeterTestResults_{1}_{2}_{3}_{4}.md" -f $resultsMDFolder, $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID, $run.id)
 
-    ('[Test Run: {0}]({2}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={3}) using {1}.' -f  $run.runNumber, $run.name, $global:TFSAccountUrl, $run.id) >>  $summaryFile
+    $summary = ('[Test Run: {0}]({2}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={3}) using {1}.<br/>' -f  $run.runNumber, $run.name, $global:TFSAccountUrl, $run.id)
     
     $runComparisonAvailable = $false
     $lastSuccessfulBuild = GetLastSuccessfultBuild $headers
@@ -383,7 +383,7 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
                 if ($previousRun.name -eq $run.name)
                 {
                     $runComparisonAvailable = $true
-                    ('<p>[Compare with run {4} from build {0}]({1}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=compare&runId1={2}&runId2={3}).</p>' -f  $lastSuccessfulBuild.id, $global:TFSAccountUrl, $previousRun.id, $run.id, $previousRun.runNumber) >>  $summaryFile
+                    $summary += ('[Compare with run {0}]({1}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=compare&runId1={2}&runId2={3}) from [build {4}]({1}/{5}/_build#buildId={4}&_a=summary).' -f $previousRun.runNumber, $global:TFSAccountUrl, $previousRun.id, $run.id, $lastSuccessfulBuild.id, $env:System_TeamProjectId, $env:BUILD_BUILDID)
                     break
                 }
             }
@@ -392,9 +392,10 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
 
 	if(!$runComparisonAvailable)
 	{
-        ('<p>No previous run found for comparison.</p>') >>  $summaryFile
+        $summary += ('No previous run found for comparison.')
 	}   
 	
+	('<p>{0}</p>' -f $summary) >>  $summaryFile
     UploadSummaryMdReport $summaryFile
 }
 else
