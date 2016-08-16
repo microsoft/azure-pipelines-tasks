@@ -16,14 +16,27 @@ export class azureclitask {
 
             var bash = tl.createToolRunner(tl.which('bash', true));
 
-            var scriptPath = tl.getPathInput('scriptPath', true, true);
-            var args = tl.getInput('args', false);
-            var cwd = tl.getPathInput('cwd', true, false);
-            // if user didn't supply a cwd (advanced), then set cwd to folder script is in.
-            // All "script" tasks should do this
-            if (!tl.filePathSupplied('cwd')) {
-                cwd = path.dirname(scriptPath);
+            var scriptType:string = tl.getInput('scriptType');
+            var scriptPath:string = null;
+            var cwd:string = tl.getPathInput('cwd', true, false);
+
+            if(scriptType === "scriptPath") {
+                scriptPath = tl.getPathInput('scriptPath', true, true);
+                // if user didn't supply a cwd (advanced), then set cwd to folder script is in.
+                // All "script" tasks should do this
+                if (!tl.filePathSupplied('cwd')) {
+                    cwd = path.dirname(scriptPath);
+                }
             }
+            else {
+                var script:string = tl.getInput('inlineScript', true);
+                const inlineScriptName:string = "azureclitaskscript.sh";
+                const tempDir:string = tl.getVariable("agent.workFolder");
+                scriptPath = path.join(tempDir, inlineScriptName);
+                this.createScriptFile(scriptPath, script);
+            }
+
+            var args = tl.getInput('args', false);
 
             // determines whether output to stderr will fail a task.
             // some tools write progress and other warnings to stderr.  scripts can also redirect.
@@ -50,6 +63,10 @@ export class azureclitask {
             //go to finally and logout of azure and set task result
         }
         finally {
+            if(scriptType === "inlineScript")
+            {
+                this.deleteScriptFile(scriptPath);
+            }
             //Logout of Azure if logged in
             if (this.isLoggedIn) {
                 this.logoutAzure(connectedServiceNameSelector);
@@ -65,12 +82,35 @@ export class azureclitask {
         }
     }
 
+    private static createScriptFile (inlineScriptPath:string, script:string)
+    {
+        try {
+            fs.writeFileSync(inlineScriptPath, script);
+        }
+        catch(err) {
+            this.deleteScriptFile(inlineScriptPath);
+            throw err;
+        }
+    }
+
+    private static deleteScriptFile(inlineScriptPath:string) {
+        if (fs.existsSync(inlineScriptPath)) {
+            try {
+                //delete the script file created earlier
+                fs.unlinkSync(inlineScriptPath);
+            }
+            catch (err) {
+                console.error(err.toString());
+            }
+        }
+    }
+
     private static isLoggedIn:boolean = false;
 
     private static loginAzure(connectedServiceNameSelector:string)
     {
         var connectedService:string;
-        if(connectedServiceNameSelector === 'ConnectedServiceNameARM')
+        if(connectedServiceNameSelector === 'connectedServiceNameARM')
         {
             connectedService = tl.getInput('connectedServiceNameARM', true);
             this.loginAzureRM(connectedService);
@@ -131,7 +171,7 @@ export class azureclitask {
     private static logoutAzure(connectedServiceNameSelector:string)
     {
         var connectedService:string;
-        if(connectedServiceNameSelector ==='ConnectedServiceNameARM')
+        if(connectedServiceNameSelector ==='connectedServiceNameARM')
         {
             connectedService = tl.getInput('connectedServiceNameARM', true);
             this.logoutAzureRM(connectedService);
