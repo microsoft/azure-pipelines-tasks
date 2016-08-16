@@ -41,14 +41,17 @@ describe('VsTest Suite', function () {
         it('(VsTest-NoSourceDirectory) throws if no source directory is found', (done) => {
             psr.run(path.join(__dirname, 'ThrowsIfNoSourceDirectoryFound.ps1'), done);
         })
-        it('(2015U1Check.ReturnsTrueIfTaefFileIsFound) returns true if taef file is found', (done) => {
-            psr.run(path.join(__dirname, '2015U1Check.ReturnsTrueIfTaefFileIsFound.ps1'), done);
+        it('(VS2015U1PlusCheck.TaefDllFound) returns true if vsversion == 14 && taef file is found', (done) => {
+            psr.run(path.join(__dirname, 'VS2015U1PlusCheck.TaefDllFound.ps1'), done);
         })
-        it('(2015U1Check.ReturnsFalseForOlderVSTestVersion.ps1) returns false if vstest version less than 14', (done) => {
-            psr.run(path.join(__dirname, '2015U1Check.ReturnsFalseForOlderVSTestVersion.ps1'), done);
+        it('(VS2015U1PlusCheck.VSVersion14NoTaefDll.ps1) returns false if verson is 14 but no taef dll found', (done) => {
+            psr.run(path.join(__dirname, 'VS2015U1PlusCheck.VSVersion14NoTaefDll.ps1'), done);
         })
-        it('(2015U1Check.ReturnsTrueForLaterVSTestVersion) returns true if vstest version greater than 14', (done) => {
-            psr.run(path.join(__dirname, '2015U1Check.ReturnsTrueForLaterVSTestVersion.ps1'), done);
+        it('(VS2015U1PlusCheck.VSVersionGT14) returns true if vstest version greater than 14', (done) => {
+            psr.run(path.join(__dirname, 'VS2015U1PlusCheck.VSVersionGT14.ps1'), done);
+        })
+        it('(VS2015U1PlusCheck.VSVersionLT14) returns false if vstest version less than 14', (done) => {
+            psr.run(path.join(__dirname, 'VS2015U1PlusCheck.VSVersionLT14.ps1'), done);
         })
         it('(RunSettingsForParallel.ReturnsSameFileIfParallelIsFalse) returns same file if parallel flag is false', (done) => {
             psr.run(path.join(__dirname, 'RunSettingsForParallel.ReturnsSameFileIfParallelIsFalse.ps1'), done);

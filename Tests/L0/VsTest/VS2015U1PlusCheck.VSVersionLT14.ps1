@@ -7,7 +7,7 @@ Register-Mock Get-LocalizedString { $OFS = " " ; "$args" }
 Register-Mock Get-TaskVariable
 $vstestVersion = "13"
 Register-Mock SetRegistryKeyForParallel { } -- -vsTestVersion $vstestVersion 
-$path="$env:VS140COMNTools\..\IDE\CommonExtensions\Microsoft\TestWindow\TE.TestModes.dll"
+$path=[io.path]::Combine("$env:VS140COMNTools", "..", "IDE", "CommonExtensions", "Microsoft", "TestWindow", "TE.TestModes.dll")
 Register-Mock Test-Path { $true } -- -Path $path
 
 . $PSScriptRoot\..\..\..\Tasks\VsTest\Helpers.ps1
