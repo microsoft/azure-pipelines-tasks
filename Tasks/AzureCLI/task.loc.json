@@ -1,0 +1,108 @@
+{
+  "id": "46E4BE58-730B-4389-8A2F-EA10B3E5E815",
+  "name": "AzureCLI [Preview]",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Preview",
+    "Build",
+    "Release"
+  ],
+  "demands": [
+    "sh"
+  ],
+  "version": {
+    "Major": "0",
+    "Minor": "1",
+    "Patch": "1"
+  },
+  "minimumAgentVersion": "1.95.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "connectedServiceNameSelector",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.connectedServiceNameSelector",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameSelector",
+      "options": {
+        "connectedServiceName": "Azure Classic",
+        "connectedServiceNameARM": "Azure Resource Manager"
+      }
+    },
+    {
+      "name": "connectedServiceNameARM",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.connectedServiceNameARM",
+      "defaultValue": "",
+      "visibleRule": "connectedServiceNameSelector = connectedServiceNameARM",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameARM"
+    },
+    {
+      "name": "connectedServiceName",
+      "type": "connectedService:Azure",
+      "label": "ms-resource:loc.input.label.connectedServiceName",
+      "defaultValue": "",
+      "visibleRule": "connectedServiceNameSelector = connectedServiceName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
+    },
+    {
+      "name": "scriptPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.scriptPath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.scriptPath"
+    },
+    {
+      "name": "args",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.args",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.args"
+    },
+    {
+      "name": "cwd",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.cwd",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cwd",
+      "groupName": "advanced"
+    },
+    {
+      "name": "failOnStandardError",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnStandardError",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failOnStandardError",
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "azureclitask.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "ScriptReturnCode": "ms-resource:loc.messages.ScriptReturnCode",
+    "ScriptFailed": "ms-resource:loc.messages.ScriptFailed",
+    "UnsupportedEndpointScheme": "ms-resource:loc.messages.UnsupportedEndpointScheme"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "which": {
+    "bash": "/usr/local/bin/bash",
+    "azure": "/usr/local/bin/azure"
+  },
+  "exec": {
+    "/usr/local/bin/bash script.sh arg1": {
+      "code": 0,
+      "stdout":"bash executed successfully"
+    },
+    "/usr/local/bin/azure config mode asm": {
+      "code": 0,
+      "stdout": "azure output here"
+    },
+    "/usr/local/bin/azure config mode arm": {
+      "code": 0,
+      "stdout": "azure output here"
+    },
+    "/usr/local/bin/azure account import subscriptions.publishsettings": {
+      "code": 0,
+      "stdout": "azure output here"
+    },
+    "/usr/local/bin/azure login -u id -p key --tenant tenant --service-principal": {
+      "code": 0,
+      "stdout": "azure output here"
+    },
+    "/usr/local/bin/azure account set sName": {
+      "code": 0,
+      "stdout": "azure output here"
+    },
+    "/usr/local/bin/azure account clear -s sName": {
+      "code": 0,
+      "stdout": "azure output here"
+    }
+  },
+  "checkPath" : {
+    "/usr/local/bin/bash": true,
+    "/usr/local/bin/azure": true,
+    "script.sh" : true
+  },
+  "getVariable": {
+    "ENDPOINT_AUTH_AzureClassic": "{\"parameters\":{\"certificate\":\"cert\"},\"scheme\":\"Certificate\"}",
+    "ENDPOINT_DATA_AzureClassic_SUBSCRIPTIONNAME": "sName",
+    "ENDPOINT_DATA_AzureClassic_SUBSCRIPTIONID": "sId",
+    "ENDPOINT_AUTH_AzureRM": "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}",
+    "ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALID": "id",
+    "ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALKEY": "key",
+    "ENDPOINT_AUTH_PARAMETER_AzureRM_TENANTID": "tenant",
+    "ENDPOINT_DATA_AzureRM_SUBSCRIPTIONNAME": "sName"
+  }
+}

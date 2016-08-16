@@ -1,0 +1,24 @@
+{
+  "loc.friendlyName": "Azure CLI preview",
+  "loc.helpMarkDown": "Replace with markdown to show in help",
+  "loc.description": "Run a Shell script within an Azure environment",
+  "loc.instanceNameFormat": "AzureCLI $(scriptPath)",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.connectedServiceNameSelector": "Azure Connection Type",
+  "loc.input.help.connectedServiceNameSelector": "Select the Azure connection type for the Deployment",
+  "loc.input.label.connectedServiceNameARM": "AzureRM Subscription",
+  "loc.input.help.connectedServiceNameARM": "Select the Azure Resource Manager subscription for the deployment",
+  "loc.input.label.connectedServiceName": "Azure Classic Subscription",
+  "loc.input.help.connectedServiceName": "Select the Azure Classic subscription for the deployment",
+  "loc.input.label.scriptPath": "Script Path",
+  "loc.input.help.scriptPath": "Fully qualified path of the script or a path relative to the the default working directory",
+  "loc.input.label.args": "Arguments",
+  "loc.input.help.args": "Arguments passed to the shell script",
+  "loc.input.label.cwd": "Working Directory",
+  "loc.input.help.cwd": "Current working directory where the script is run.  Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory)",
+  "loc.input.label.failOnStandardError": "Fail on Standard Error",
+  "loc.input.help.failOnStandardError": "If this is true, this task will fail when any errors are written to the StandardError stream",
+  "loc.messages.ScriptReturnCode": "Script exited with return code: %d",
+  "loc.messages.ScriptFailed": "Script failed with error: %s"
+  "loc.messages.UnsupportedEndpointScheme": "Unsupported Endpoint Authorization Scheme: (certificate and usernamePassword for Azure Classic and ServicePrincipal for AzureRM "
+}
