@@ -603,17 +603,14 @@ function pushImpactLevelAndRootPathIfNotFound(dataCollectorArray): void {
             }
             if (dataCollectorArray[i].Configuration.TestImpact && !dataCollectorArray[i].Configuration.RootPath)
             {
-                tl.debug("Pushing root path node");
                 dataCollectorArray[i].Configuration = {RootPath : sourcesDir};
             }
             else if (!dataCollectorArray[i].Configuration.TestImpact && dataCollectorArray[i].Configuration.RootPath)
             {
-                tl.debug("Pushing test impact node");
                 dataCollectorArray[i].Configuration = {ImpactLevel : getTIALevel()};
             }
             else if (dataCollectorArray[i].Configuration && !dataCollectorArray[i].Configuration.TestImpact && !dataCollectorArray[i].Configuration.RootPath)
             {
-                tl.debug("Pushing both nodes");
                 dataCollectorArray[i].Configuration = {ImpactLevel : getTIALevel(), RootPath : sourcesDir};
             }
         }      
