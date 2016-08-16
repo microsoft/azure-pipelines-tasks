@@ -591,35 +591,67 @@ function isTestImapctCollectorPresent(dataCollectorArray): Boolean {
     return found;
 }
 
+function pushImpactLevelAndRootPathIfNotFound(dataCollectorArray): void {
+    tl.debug("Checking for ImpactLevel and RootPath nodes in TestImpact collector");
+    var tiaFriendlyName = TIFriendlyName.toUpperCase();
+    var arrayLength = dataCollectorArray.length;
+    for (var i = 0; i < arrayLength; i++) {
+        if (dataCollectorArray[i].$.friendlyName && dataCollectorArray[i].$.friendlyName.toUpperCase() === tiaFriendlyName) {
+            if (!dataCollectorArray[i].Configuration)
+            {
+                dataCollectorArray[i] = {Configuration:{}};
+            }
+            if (dataCollectorArray[i].Configuration.TestImpact && !dataCollectorArray[i].Configuration.RootPath)
+            {
+                tl.debug("Pushing root path node");
+                dataCollectorArray[i].Configuration = {RootPath : sourcesDir};
+            }
+            else if (!dataCollectorArray[i].Configuration.TestImpact && dataCollectorArray[i].Configuration.RootPath)
+            {
+                tl.debug("Pushing test impact node");
+                dataCollectorArray[i].Configuration = {ImpactLevel : getTIALevel()};
+            }
+            else if (dataCollectorArray[i].Configuration && !dataCollectorArray[i].Configuration.TestImpact && !dataCollectorArray[i].Configuration.RootPath)
+            {
+                tl.debug("Pushing both nodes");
+                dataCollectorArray[i].Configuration = {ImpactLevel : getTIALevel(), RootPath : sourcesDir};
+            }
+        }      
+    }
+}
+
 function updateRunSettings(result: any, vsVersion: number) {
     var dataCollectorNode = null;
     if (!result.RunSettings) {
         tl.debug("Updating runsettings file from RunSettings node");
-        result.RunSettings = { DataCollectionRunSettings: { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : isFileLevelAllowed(), RootPath : sourcesDir}} } } };
+        result.RunSettings = { DataCollectionRunSettings: { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } } };
         dataCollectorNode = result.RunSettings.DataCollectionRunSettings.DataCollectors.DataCollector;
     }
     else if (!result.RunSettings.DataCollectionRunSettings) {
         tl.debug("Updating runsettings file from DataCollectionSettings node");
-        result.RunSettings.DataCollectionRunSettings = { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : isFileLevelAllowed(), RootPath : sourcesDir}} } };
+        result.RunSettings.DataCollectionRunSettings = { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } };
         dataCollectorNode = result.RunSettings.DataCollectionRunSettings.DataCollectors.DataCollector;
     }
     else if (!result.RunSettings.DataCollectionRunSettings[0].DataCollectors) {
         tl.debug("Updating runsettings file from DataCollectors node");
-        result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : isFileLevelAllowed(), RootPath : sourcesDir}} } };
+        result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } };
         dataCollectorNode = result.RunSettings.DataCollectionRunSettings[0].DataCollectors.DataCollector;
     }
     else {
         var dataCollectorArray = result.RunSettings.DataCollectionRunSettings[0].DataCollectors[0].DataCollector;
         if (!dataCollectorArray) {
             tl.debug("Updating runsettings file from DataCollector node");
-            result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : isFileLevelAllowed(), RootPath : sourcesDir}} } };
+            result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } };
             dataCollectorNode = result.RunSettings.DataCollectionRunSettings[0].DataCollectors.DataCollector;
         }
         else {
             if (!isTestImapctCollectorPresent(dataCollectorArray)) {
                 tl.debug("Updating runsettings file, adding a DataCollector node");
-                dataCollectorArray.push({Configuration : {ImpactLevel : isFileLevelAllowed(), RootPath : sourcesDir}});
+                dataCollectorArray.push({Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}});
                 dataCollectorNode = dataCollectorArray[dataCollectorArray.length - 1];
+            }
+            else {
+                pushImpactLevelAndRootPathIfNotFound(dataCollectorArray);
             }
         }
     }
@@ -667,40 +699,43 @@ function updatTestSettings(result: any, vsVersion: number) {
     var dataCollectorNode = null;
     if (!result.TestSettings) {
         tl.debug("Updating testsettings file from TestSettings node");
-        result.TestSettings = { Execution: { AgentRule: { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : isFileLevelAllowed(), RootPath : sourcesDir}} } } } };
+        result.TestSettings = { Execution: { AgentRule: { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } } } };
         result.TestSettings.Execution.AgentRule.$ = { name: TITestSettingsAgentNameTag };
         result.TestSettings.$ = { name: TITestSettingsNameTag, id: TITestSettingsIDTag, xmlns: TITestSettingsXmlnsTag };
         dataCollectorNode = result.TestSettings.Execution.AgentRule.DataCollectors.DataCollector;
     }
     else if (!result.TestSettings.Execution) {
         tl.debug("Updating testsettings file from Execution node");
-        result.TestSettings.Execution = { AgentRule: { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : isFileLevelAllowed(), RootPath : sourcesDir}} } } };
+        result.TestSettings.Execution = { AgentRule: { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } } };
         result.TestSettings.Execution.AgentRule.$ = { name: TITestSettingsAgentNameTag };
         dataCollectorNode = result.TestSettings.Execution.AgentRule.DataCollectors.DataCollector;
     }
     else if (!result.TestSettings.Execution[0].AgentRule) {
         tl.debug("Updating testsettings file from AgentRule node");
-        result.TestSettings.Execution[0] = { AgentRule: { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : isFileLevelAllowed(), RootPath : sourcesDir}} } } };
+        result.TestSettings.Execution[0] = { AgentRule: { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } } };
         result.TestSettings.Execution[0].AgentRule.$ = { name: TITestSettingsAgentNameTag };
         dataCollectorNode = result.TestSettings.Execution[0].AgentRule.DataCollectors.DataCollector;
     }
     else if (!result.TestSettings.Execution[0].AgentRule[0].DataCollectors) {
         tl.debug("Updating testsettings file from DataCollectors node");
-        result.TestSettings.Execution[0].AgentRule[0] = { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : isFileLevelAllowed(), RootPath : sourcesDir}} } };
+        result.TestSettings.Execution[0].AgentRule[0] = { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } };
         dataCollectorNode = result.TestSettings.Execution[0].AgentRule[0].DataCollectors.DataCollector;
     }
     else {
         var dataCollectorArray = result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector;
         if (!dataCollectorArray) {
             tl.debug("Updating testsettings file from DataCollector node");
-            result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0] = { DataCollector: {Configuration : {ImpactLevel : isFileLevelAllowed(), RootPath : sourcesDir}} };
+            result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0] = { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} };
             dataCollectorNode = result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector;
         }
         else {
             if (!isTestImapctCollectorPresent(dataCollectorArray)) {
                 tl.debug("Updating testsettings file, adding a DataCollector node");
-                dataCollectorArray.push({Configuration : {ImpactLevel : isFileLevelAllowed(), RootPath : sourcesDir}});
+                dataCollectorArray.push({Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}});
                 dataCollectorNode = dataCollectorArray[dataCollectorArray.length - 1];
+            }
+            else {
+                pushImpactLevelAndRootPathIfNotFound(dataCollectorArray);
             }
         }
     }
@@ -770,7 +805,7 @@ function createRunSettingsForTestImpact(vsVersion: number, settingsFile: string,
         '<DataCollector uri="' + TICollectorURI + '" ' +
         'assemblyQualifiedName="' + getTIAssemblyQualifiedName(vsVersion) + '" ' +
         'friendlyName="' + TIFriendlyName + '">' +
-        '<ImpactLevel>' + isFileLevelAllowed() + '</ImpactLevel>' +
+        '<ImpactLevel>' + getTIALevel() + '</ImpactLevel>' +
         '<RootPath>' + sourcesDir + '</RootPath>' +
         '</DataCollector>' +
         '</DataCollectors></DataCollectionRunSettings></RunSettings>';
@@ -1036,7 +1071,7 @@ function isTiaAllowed(): boolean {
     return false;
 }
 
-function isFileLevelAllowed()
+function getTIALevel()
 {
     if (fileLevel && fileLevel.toUpperCase() == "TRUE") {
         return "file";
