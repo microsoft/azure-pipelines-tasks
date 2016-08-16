@@ -2,7 +2,7 @@
   "loc.friendlyName": "Azure CLI preview",
   "loc.helpMarkDown": "Replace with markdown to show in help",
   "loc.description": "Run a Shell script within an Azure environment",
-  "loc.instanceNameFormat": "AzureCLI $(message)",
+  "loc.instanceNameFormat": "AzureCLI $(scriptPath)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.connectedServiceNameSelector": "Azure Connection Type",
   "loc.input.help.connectedServiceNameSelector": "Select the Azure connection type for the Deployment",
