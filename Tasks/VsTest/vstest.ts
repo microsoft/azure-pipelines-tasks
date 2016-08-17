@@ -73,13 +73,55 @@ catch (error) {
     throw error;
 }
 
-function getTestAssemblies(): Set<string> {
+function getBasePathFromFilter(testAssemblyFilter) {
+    //find first index of asterisk or question mark in the pattern
+    var starPatternIndex = testAssemblyFilter.indexOf('*');
+    var questPatternIndex = testAssemblyFilter.indexOf('?');
+    var firstPatternIndex = starPatternIndex < questPatternIndex ? starPatternIndex : questPatternIndex;
+    if (starPatternIndex < 0) {
+        firstPatternIndex = questPatternIndex;
+    }
+    else if (questPatternIndex < 0) {
+        firstPatternIndex = starPatternIndex;
+    }
+    if (firstPatternIndex > 0) {
+        //get prefix such that it includes * or ? char as path.dirname, will return corredt folder path
+        var patternPrefix = testAssemblyFilter.substring(0, firstPatternIndex+1);
+        //check if path is absolute, that is full path and not raltive to folder
+        if (path.isAbsolute(patternPrefix)) {
+            //get the path till parent folder
+            var basePath = path.dirname(patternPrefix);
+            tl.debug('Absolute base path for ' + testAssemblyFilter + ' pattern determined : ' + basePath);
+            return basePath;
+        }
+    }
+    return "";
+}
+function getTestAssemblies() {
     var testAssemblyFiles = [];
     if (testAssembly.indexOf('*') >= 0 || testAssembly.indexOf('?') >= 0) {
         tl.debug('Pattern found in solution parameter.');
         var excludeTestAssemblies = [];
-        var allFiles = tl.find(sourcesDirectory);
+        var allFilesSet = new Set(tl.find(sourcesDirectory));
         var testAssemblyFilters = testAssembly.split(';');
+        //Find source files as per provided pattern/path
+        testAssemblyFilters.forEach(function (testAssemblyFilter) {
+            if (testAssemblyFilter.indexOf('*') >= 0 || testAssemblyFilter.indexOf('?') >= 0) {
+                var filterBasePath = getBasePathFromFilter(testAssemblyFilter);
+                //check if base path is there and whether the path exists
+                if (filterBasePath != "" && fs.existsSync(filterBasePath)) {
+                    tl.debug('Including assembly source path : ' + filterBasePath);
+                    var allBasePathFiles = tl.find(filterBasePath);
+                    allBasePathFiles.forEach(function (filePath) {
+                        allFilesSet.add(filePath);
+                    });
+                }
+            }
+            else if (!testAssemblyFilter.startsWith("-:")) {
+                allFilesSet.add(testAssemblyFilter);
+            }
+        });
+        var allFiles = Array.from(allFilesSet);
         testAssemblyFilters.forEach(function (testAssemblyFilter) {
             if (testAssemblyFilter.startsWith("-:")) {
                 if (testAssemblyFilter.indexOf('*') >= 0 || testAssemblyFilter.indexOf('?') >= 0) {
@@ -96,10 +138,18 @@ function getTestAssemblies(): Set<string> {
                 testAssemblyFiles.push(testAssemblyFilter);
             }
         });
-        testAssemblyFiles = testAssemblyFiles.filter(x => excludeTestAssemblies.indexOf(x) < 0);
+        testAssemblyFiles = testAssemblyFiles.filter(function (x) {
+            var include = true;
+            excludeTestAssemblies.forEach(function (excludeAssembly) {
+                if (path.relative(x, excludeAssembly) == "") {
+                    include = false;
+                }
+            });
+            return include;
+        });
     }
     else {
-        tl.debug('No Pattern found in solution parameter.');
+        tl.debug('No pattern found in solution parameter.');
         var assemblies = testAssembly.split(';');
         assemblies.forEach(function (assembly) {
             testAssemblyFiles.push(assembly);
