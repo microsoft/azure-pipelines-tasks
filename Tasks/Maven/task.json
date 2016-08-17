@@ -346,7 +346,7 @@
         "sqAnalysis_AnalysisTimeout": "The analysis did not complete in the allotted time of %d seconds.",
         "sqAnalysis_IsPullRequest_SkippingBuildSummary": "Pull request build: detailed SonarQube build summary will not be available.",
         "sqAnalysis_IsPullRequest_SkippingBuildBreaker": "Pull request build: build will not be broken if quality gate fails.",
-        "sqAnalysis_BuildBrokenDueToQualityGateFailure": "The SonarQube quality gate associated with this build has failed. For more details see %s",
+        "sqAnalysis_BuildBrokenDueToQualityGateFailure": "The SonarQube quality gate associated with this build has failed.",
         "sqAnalysis_QualityGatePassed": "The SonarQube quality gate associated with this build has passed (status %s)",
         "codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "%s found %d violations in %d files.",
         "codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "%s found %d violations in 1 file.",
