@@ -1,11 +1,13 @@
 /// <reference path="../../definitions/node.d.ts" />
 /// <reference path="../../definitions/q.d.ts" />
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
-var tl = require('vsts-task-lib/task');
-var fs = require('fs');
+import Q = require('q');
+import tl = require('vsts-task-lib/task');
+import fs = require('fs');
+
 var regedit = require('regedit');
 var azureRmUtil = require('./AzureRMUtil.js');
-import Q = require('q');
+
 //Error Handler
 var onError = function(error) {
 	tl.error(error);

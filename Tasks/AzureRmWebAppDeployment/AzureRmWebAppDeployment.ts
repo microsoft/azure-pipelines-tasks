@@ -1,6 +1,7 @@
 
 /// <reference path="../../definitions/node.d.ts" />
 /// <reference path="../../definitions/q.d.ts" />
+
 var tl = require('vsts-task-lib/task');
 var azureRmUtil = require ('./AzureRMUtil.js');
 var Utility = require('./MSDeployUtility.js');
@@ -27,7 +28,7 @@ var onError = function(errorMsg) {
 	tl.exit(1);
 }
 
-if(PublishMethod == "WebDeploy") {
+if(PublishMethod == "WebDeploy" || PublishMethod != "FTP") {
 	PublishMethod = "MSDeploy";
 }
 
@@ -54,27 +55,6 @@ azureRmUtil.getAzureRMWebAppPublishingProfileDetails(SPN, WebAppName, ResourceGr
 	azureRMWebAppConnectionDetails["UserPassword"] = publishingProfile.userPWD;
 	WebAppName = Utility.getWebAppNameForMSDeployCmd(WebAppName, DeployToSlotFlag, SlotName);
 	Utility.runMSDeployCommandWrapper(Utility.getMSDeployCmdArgs(Package, WebAppName, azureRMWebAppConnectionDetails, RemoveAdditionalFilesFlag, ExcludeFilesFromAppDataFlag, TakeAppOfflineFlag, VirtualApplication, SetParametersFile, AdditionalArguments), azureRMWebAppConnectionDetails);
-
 },function (error) {
 	onError(error);
 });
-
-
-/*
-if(Utility.isFileExists(Package)) {
-	tl.debug("Package "+Package+" is found in the machine");
-}
-
-
-if(!Utility.isFileExists(SetParametersFile)) {
-	SetParametersFile = null;
-}
-
-azureRMWebAppConnectionDetails = {}
-azureRMWebAppConnectionDetails.KuduHostName = 'randomwebapp.scm.azurewebsites.net:443';
-azureRMWebAppConnectionDetails.UserName = '$randomwebapp';
-azureRMWebAppConnectionDetails.UserPassword = 'cxgAXjqFnQ5rkeYBoBhQFP4jCJxEBthrf5MgosRsWWtDQkrBme3GaJGZSlas';
-
-WebAppName =  Utility.getWebAppNameForMSDeployCmd(WebAppName,DeployToSlotFlag,SlotName);
-Utility.runMSDeployCommandWrapper(Utility.getMSDeployCmdArgs(Package, WebAppName,azureRMWebAppConnectionDetails,RemoveAdditionalFilesFlag,ExcludeFilesFromAppDataFlag,TakeAppOfflineFlag,VirtualApplication,SetParametersFile,AdditionalArguments));
-*/

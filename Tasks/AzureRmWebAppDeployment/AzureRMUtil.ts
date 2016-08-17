@@ -110,8 +110,12 @@ exports.getAzureRMWebAppPublishingProfileDetails = function (SPN, webAppName: st
     var deferred = Q.defer();
       
     if ( !deployToSlotFlag ) {
-        getAzureRMWebAppDetails_version2 ( SPN, webAppName, 'Microsoft.Web/sites' ).then ( function (webApp) {
-            resourceGroupName = webApp.id.split ('/')[4];
+        getAzureRMWebAppDetails_version2( SPN, webAppName,'Microsoft.Web/Sites').then ( function (webAppID) {
+			/*
+				webAppID --> /subscriptions/<subscriptionId>/resourceGroups/<resource_grp_name>/providers/Microsoft.Web/sites/<webAppName>
+				The fourth string represents the Resource group name for the corresponding web app name.
+			*/
+            resourceGroupName = webAppID.id.split ('/')[4];
             getPublishProfileUtil ( SPN, webAppName, resourceGroupName, publishMethod, deployToSlotFlag, slotName).then ( function (publishProfile) {
                 deferred.resolve (publishProfile);
             }, function (error) {
