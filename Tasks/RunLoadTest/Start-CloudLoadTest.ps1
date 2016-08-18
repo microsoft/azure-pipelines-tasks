@@ -353,7 +353,7 @@ function UploadSummaryMdReport($summaryMdPath)
 	}
 }
 
-function GetLastSuccessfultBuild($headers)
+function GetLastSuccessfulBuild($headers)
 {
     $uri = ("{0}/{1}/_apis/build/builds?api-version={2}&definitions={3}&statusFilter=completed&resultFilter=succeeded&`$top=1" -f $global:TFSAccountUrl, $env:System_TeamProjectId, '2.0', $env:SYSTEM_DEFINITIONID)
     $previousBuild = Get $headers $uri
@@ -454,28 +454,28 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
 	if ($global:ThresholdExceeded -eq $true)
 	{
         $thresholdMessage=("{0} thresholds violated." -f $global:ThresholdsViolationCount)
-        $thresholdImage="glyph-error"
+        $thresholdImage="bowtie-status-error"
 	}
 	elseif ($global:ThresholdsViolationCount -gt 1)
 	{
         $thresholdMessage=("{0} thresholds violated." -f $global:ThresholdsViolationCount)
-        $thresholdImage="glyph-warning"
+        $thresholdImage="bowtie-status-warning"
 	}
 	elseif ($global:ThresholdsViolationCount -eq 1)
 	{
         $thresholdMessage=("{0} threshold violated." -f $global:ThresholdsViolationCount)
-        $thresholdImage="glyph-warning"
+        $thresholdImage="bowtie-status-warning"
 	}
 	else
     {
         $thresholdMessage="No thresholds violated."
-        $thresholdImage="glyph-success"
+        $thresholdImage="bowtie-status-success"
 	}
 	
-    $summary = ('[Test Run: {0}]({2}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={3}) using {1}.<br/><img src="/_static/content/notifications/{4}.png" width=15px height=15px/>   {5}<br/>' -f  $run.runNumber, $run.name, $global:TFSAccountUrl, $run.id, $thresholdImage, $thresholdMessage)
+    $summary = ('<span class="bowtie-icon {4}" />   {5}<br/>[Test Run: {0}]({2}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={3}) using {1}.<br/>' -f  $run.runNumber, $run.name, $global:TFSAccountUrl, $run.id, $thresholdImage, $thresholdMessage)
     
     $runComparisonAvailable = $false
-    $lastSuccessfulBuild = GetLastSuccessfultBuild $headers
+    $lastSuccessfulBuild = GetLastSuccessfulBuild $headers
 	
 	if ($lastSuccessfulBuild)
 	{

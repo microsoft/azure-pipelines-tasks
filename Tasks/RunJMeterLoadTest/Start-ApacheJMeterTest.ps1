@@ -280,7 +280,7 @@ function UploadSummaryMdReport($summaryMdPath)
 	}
 }
 
-function GetLastSuccessfultBuild($headers)
+function GetLastSuccessfulBuild($headers)
 {
     $uri = ("{0}/{1}/_apis/build/builds?api-version={2}&definitions={3}&statusFilter=completed&resultFilter=succeeded&`$top=1" -f $global:TFSAccountUrl, $env:System_TeamProjectId, '2.0', $env:SYSTEM_DEFINITIONID)
     $previousBuild = Get $headers $uri
@@ -369,7 +369,7 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
     $summary = ('[Test Run: {0}]({2}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={3}) using {1}.<br/>' -f  $run.runNumber, $run.name, $global:TFSAccountUrl, $run.id)
     
     $runComparisonAvailable = $false
-    $lastSuccessfulBuild = GetLastSuccessfultBuild $headers
+    $lastSuccessfulBuild = GetLastSuccessfulBuild $headers
 	
 	if ($lastSuccessfulBuild)
 	{

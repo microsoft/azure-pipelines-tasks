@@ -215,7 +215,7 @@ function UploadSummaryMdReport($summaryMdPath)
 	}
 }
 
-function GetLastSuccessfultBuild($headers)
+function GetLastSuccessfulBuild($headers)
 {
     $uri = ("{0}/{1}/_apis/build/builds?api-version={2}&definitions={3}&statusFilter=completed&resultFilter=succeeded&`$top=1" -f $TFSAccountUrl, $env:System_TeamProjectId, '2.0', $env:SYSTEM_DEFINITIONID)
     $previousBuild = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
@@ -259,16 +259,16 @@ $TFSAccountUrl = $env:System_TeamFoundationCollectionUri.TrimEnd('/')
 Write-Verbose "VSO account Url = $TFSAccountUrl" -Verbose
 Write-Verbose "CLT account Url = $CltAccountUrl" -Verbose
 
-$h = InitializeRestHeaders
+$headers = InitializeRestHeaders
 
 $dropjson = ComposeTestDropJson $testName $runDuration $websiteUrl $vuLoad
-$drop = CreateTestDrop $h $dropjson
+$drop = CreateTestDrop $headers $dropjson
 if ($drop.dropType -eq "InPlaceDrop")
 {
     $runJson = ComposeTestRunJson $testName $drop.id
 
-    $run = QueueTestRun $h $runJson
-    MonitorTestRun $h $run
+    $run = QueueTestRun $headers $runJson
+    MonitorTestRun $headers $run
 
     Write-Output ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name)
     Write-Output ("To view run details navigate to {0}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={1}" -f $TFSAccountUrl, $run.id)
@@ -283,12 +283,12 @@ if ($drop.dropType -eq "InPlaceDrop")
     $summary = ('[Test Run: {0}]({2}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={3}) using {1}.<br/>' -f  $run.runNumber, $run.name, $TFSAccountUrl, $run.id)
     
     $runComparisonAvailable = $false
-    $lastSuccessfulBuild = GetLastSuccessfultBuild $h
+    $lastSuccessfulBuild = GetLastSuccessfulBuild $headers
 	
 	if ($lastSuccessfulBuild)
 	{
         $runSourceIdentifierFilter=('runsourceidentifier=build/{0}/{1}' -f $env:SYSTEM_DEFINITIONID, $lastSuccessfulBuild.id)
-        $runsInLastBuild = GetFilteredTestRuns $h $runSourceIdentifierFilter
+        $runsInLastBuild = GetFilteredTestRuns $headers $runSourceIdentifierFilter
         
         if ($runsInLastBuild)
         {
