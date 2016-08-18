@@ -27,7 +27,6 @@ describe('ArchiveFiles Suite', function () {
     });
 
     var tests = [
-        /*
         {
             'file': 'test.zip',
             'type': 'zip',
@@ -63,14 +62,13 @@ describe('ArchiveFiles Suite', function () {
             'type': 'tar',
             'tarCompression': 'xz'
         }
-        */
     ]
 
     tests.forEach((test) => {
         it('test root windows: archive ' + test.file, (done) => {
             setResponseFile('archiveFilesWin.json');
 
-            var tr = new trm.TaskRunner('ArchiveFiles', true);
+            var tr = new trm.TaskRunner('ArchiveFiles', true, true);
             tr.setInput('rootFolder', 'testRootFolder');
             tr.setInput('includeRootFolder', 'true');
             tr.setInput('archiveType', test.type);
@@ -99,7 +97,7 @@ describe('ArchiveFiles Suite', function () {
         it('test no root windows: archive ' + test.file, (done) => {
             setResponseFile('archiveFilesWin.json');
 
-            var tr = new trm.TaskRunner('ArchiveFiles', true);
+            var tr = new trm.TaskRunner('ArchiveFiles', true, true);
             tr.setInput('rootFolder', 'testRootFolder');
             tr.setInput('includeRootFolder', 'false');
             tr.setInput('archiveType', test.type);
@@ -130,7 +128,7 @@ describe('ArchiveFiles Suite', function () {
         it('test root linux: archive ' + test.file, (done) => {
             setResponseFile('archiveFilesLinux.json');
 
-            var tr = new trm.TaskRunner('ArchiveFiles', true);
+            var tr = new trm.TaskRunner('ArchiveFiles', true, true);
             tr.setInput('rootFolder', 'testRootFolder');
             tr.setInput('includeRootFolder', 'true');
             tr.setInput('archiveType', test.type);
@@ -151,7 +149,7 @@ describe('ArchiveFiles Suite', function () {
         it('test no root linux: archive ' + test.file, (done) => {
             setResponseFile('archiveFilesLinux.json');
 
-            var tr = new trm.TaskRunner('ArchiveFiles', true);
+            var tr = new trm.TaskRunner('ArchiveFiles', true, true);
             tr.setInput('rootFolder', 'testRootFolder');
             tr.setInput('includeRootFolder', 'false');
             tr.setInput('archiveType', test.type);
