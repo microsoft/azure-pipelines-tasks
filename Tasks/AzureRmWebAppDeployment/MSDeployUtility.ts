@@ -11,7 +11,7 @@ var azureRmUtil = require('./AzureRMUtil.js');
 //Error Handler
 var onError = function(error) {
 	tl.error(error);
-	tl.exit(1);
+	process.exit(1);
 }
 
 
