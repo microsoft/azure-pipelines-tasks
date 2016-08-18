@@ -1,5 +1,21 @@
 # This file implements IAzureUtility for Azure PowerShell version >= 1.0.0
 
+function Get-AzureVersionComparison($azureVersion, $compareVersion)
+{
+    Write-Verbose "Compare azure versions: $azureVersion, $compareVersion"
+    return ($azureVersion -and $azureVersion -gt $compareVersion)
+}
+
+function Get-AzureCmdletsVersion
+{
+    $module = Get-Module AzureRM -ListAvailable
+    if($module)
+    {
+        return ($module).Version
+    }
+    return (Get-Module Azure -ListAvailable).Version
+}
+
 function Get-AzureStorageKeyFromRDFE
 {
     param([string]$storageAccountName)
@@ -55,7 +71,16 @@ function Get-AzureStorageKeyFromARM
 
         Write-Verbose "[Azure Call]Retrieving storage key for the storage account: $storageAccount in resource group: $azureResourceGroupName"
         $storageKeyDetails = Get-AzureRMStorageAccountKey -ResourceGroupName $azureResourceGroupName -Name $storageAccountName -ErrorAction Stop
-        $storageKey = $storageKeyDetails.Key1
+        $AzureCmdletsVersion = Get-AzureCmdletsVersion
+        $AzureVersion139 = New-Object System.Version(1, 3, 9)
+        if(Get-AzureVersionComparison -azureVersion $AzureCmdletsVersion -compareVersion $AzureVersion139)
+        {
+            $storageKey = $storageKeyDetails.Value[0]
+        }
+        else
+        {
+            $storageKey = $storageKeyDetails.Key1
+        }
         Write-Verbose "[Azure Call]Retrieved storage key successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName"
 
         return $storageKey
