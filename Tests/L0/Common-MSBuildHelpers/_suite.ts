@@ -28,12 +28,6 @@ describe('Common-MSBuildHelpers Suite', function () {
     });
 
     if (ps) {
-        it('(ConvertFrom-SerializedLoggingCommand) ignores malformed commands', (done) => {
-            psr.run(path.join(__dirname, 'ConvertFrom-SerializedLoggingCommand.IgnoresMalformedCommands.ps1'), done);
-        })
-        it('(ConvertFrom-SerializedLoggingCommand) parses into objects', (done) => {
-            psr.run(path.join(__dirname, 'ConvertFrom-SerializedLoggingCommand.ParsesIntoObjects.ps1'), done);
-        })
         it('(Format-MSBuildArguments) adds configuration property', (done) => {
             psr.run(path.join(__dirname, 'Format-MSBuildArguments.AddsConfigurationProperty.ps1'), done);
         })
@@ -76,11 +70,14 @@ describe('Common-MSBuildHelpers Suite', function () {
         it('(Invoke-MSBuild) combines msbuildexe', (done) => {
             psr.run(path.join(__dirname, 'Invoke-MSBuild.CombinesMsbuildexe.ps1'), done);
         })
-        it('(Invoke-MSBuild) drops timeline detail', (done) => {
-            psr.run(path.join(__dirname, 'Invoke-MSBuild.DropsTimelineDetail.ps1'), done);
+        it('(Invoke-MSBuild) fails root timeline detail on exit code', (done) => {
+            psr.run(path.join(__dirname, 'Invoke-MSBuild.FailsRootTimelineDetailOnExitCode.ps1'), done);
         })
-        it('(Invoke-MSBuild) fixes timeline detail name', (done) => {
-            psr.run(path.join(__dirname, 'Invoke-MSBuild.FixesTimelineDetailName.ps1'), done);
+        it('(Invoke-MSBuild) omits timeline detail', (done) => {
+            psr.run(path.join(__dirname, 'Invoke-MSBuild.OmitsTimelineDetail.ps1'), done);
+        })
+        it('(Invoke-MSBuild) writes root timeline detail', (done) => {
+            psr.run(path.join(__dirname, 'Invoke-MSBuild.WritesRootTimelineDetail.ps1'), done);
         })
     }
 });
