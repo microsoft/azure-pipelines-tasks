@@ -115,12 +115,12 @@ describe('VsTest Suite', function () {
             psr.run(path.join(__dirname, 'GetResultsLocationReturnsNullForEmptyPath.ps1'), done);
         })
 
-        it('(DefaultTestResultsDirectoryIsUsedIfnorunsettings) vstest invoked with  default test results directory if no settings is specified', (done) => {
-            psr.run(path.join(__dirname, 'DefaultTestResultsDirectoryIsUsedIfnorunsettings.ps1'), done);
+        it('(TestResultsDirectoryVariableIsUsedIfnorunsettings) vstest invoked with  default test results directory if no settings is specified', (done) => {
+            psr.run(path.join(__dirname, 'TestResultsDirectoryVariableIsUsedIfnorunsettings.ps1'), done);
         })
 
-        it('(DefaultTestResultsDirectoryIsUsedIfOverrideParamsAreUsed) vstest invoked with  default test results directory if override run parameters is used', (done) => {
-            psr.run(path.join(__dirname, 'DefaultTestResultsDirectoryIsUsedIfOverrideParamsAreUsed.ps1'), done);
+        it('(TestResultsDirectoryVariableIsUsedIfOverrideParamsAreUsed) vstest invoked with  default test results directory if override run parameters is used', (done) => {
+            psr.run(path.join(__dirname, 'TestResultsDirectoryVariableIsUsedIfOverrideParamsAreUsed.ps1'), done);
         })
 
         it('(EnableDiagCheckReturnsFalseInNonDebugMode) diag flag should not be used in non-debug mode', (done) => {
