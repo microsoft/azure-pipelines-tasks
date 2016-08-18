@@ -1,5 +1,5 @@
 {
-  "id": "46E4BE58-730B-4389-8A2F-EA10B3E5E815",
+  "id": "C4D43943-39C4-42EA-9CBE-E14FAA32B828",
   "name": "AzureCLI",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
@@ -33,7 +33,7 @@
       "name": "connectedServiceNameSelector",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.connectedServiceNameSelector",
-      "defaultValue": "",
+      "defaultValue": "connectedServiceNameARM",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameSelector",
       "options": {
@@ -60,12 +60,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
     },
     {
-      "name": "scriptType",
+      "name": "scriptLocation",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.scriptType",
+      "label": "ms-resource:loc.input.label.scriptLocation",
       "defaultValue": "filePath",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.scriptType",
+      "helpMarkDown": "ms-resource:loc.input.help.scriptLocation",
       "options": {
         "inlineScript": "Inline Script",
         "scriptPath": "Script Path"
@@ -75,10 +75,24 @@
       "name": "scriptPath",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.scriptPath",
-      "visibleRule": "scriptType = scriptPath",
+      "visibleRule": "scriptLocation = scriptPath",
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.scriptPath"
+    },
+    {
+      "name": "inlineScript",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.inlineScript",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.inlineScript",
+      "visibleRule": "scriptLocation = inlineScript",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "500"
+      }
     },
     {
       "name": "args",
@@ -87,20 +101,6 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.args"
-    },
-    {
-      "name": "inlineScript",
-      "type": "multiLine",
-      "label": "ms-resource:loc.input.label.inlineScript",
-      "defaultValue": "# You can write your shell scripts inline here. \n# You can also pass predefined and custom variables to this scripts using arguments\n\n",
-      "required": true,
-      "helpMarkDown": "",
-      "visibleRule": "scriptType = inlineScript",
-      "properties": {
-        "resizable": "true",
-        "rows": "10",
-        "maxLength": "500"
-      }
     },
     {
       "name": "cwd",

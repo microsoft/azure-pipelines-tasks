@@ -2,50 +2,49 @@
 /// <reference path="../../definitions/Q.d.ts" />
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
 
-import path = require('path');
-import tl = require('vsts-task-lib/task');
-import fs = require('fs');
-import util = require('util');
+import path = require("path");
+import tl = require("vsts-task-lib/task");
+import fs = require("fs");
+import util = require("util");
+import os = require("os");
 
 export class azureclitask {
     public static async runMain() {
 
         var toolExecutionError = null;
         try {
-            tl.setResourcePath(path.join( __dirname, 'task.json'));
+            tl.setResourcePath(path.join( __dirname, "task.json"));
 
-            var bash = tl.createToolRunner(tl.which('bash', true));
+            var bash = tl.createToolRunner(tl.which("bash", true));
 
-            var scriptType:string = tl.getInput('scriptType');
+            var scriptLocation:string = tl.getInput("scriptLocation");
             var scriptPath:string = null;
-            var cwd:string = tl.getPathInput('cwd', true, false);
+            var cwd:string = tl.getPathInput("cwd", true, false);
 
-            if(scriptType === "scriptPath") {
-                scriptPath = tl.getPathInput('scriptPath', true, true);
-                // if user didn't supply a cwd (advanced), then set cwd to folder script is in.
+            if(scriptLocation === "scriptPath") {
+                scriptPath = tl.getPathInput("scriptPath", true, true);
+                // if user didn"t supply a cwd (advanced), then set cwd to folder script is in.
                 // All "script" tasks should do this
-                if (!tl.filePathSupplied('cwd')) {
+                if (!tl.filePathSupplied("cwd")) {
                     cwd = path.dirname(scriptPath);
                 }
             }
             else {
-                var script:string = tl.getInput('inlineScript', true);
-                const inlineScriptName:string = "azureclitaskscript.sh";
-                const tempDir:string = tl.getVariable("agent.workFolder");
-                scriptPath = path.join(tempDir, inlineScriptName);
-                this.createScriptFile(scriptPath, script);
+                var script:string = tl.getInput("inlineScript", true);
+                scriptPath = path.join(os.tmpDir() ,"azureclitaskscript.sh");
+                this.createFile(scriptPath, script);
             }
 
-            var args = tl.getInput('args', false);
+            var args = tl.getInput("args", false);
 
             // determines whether output to stderr will fail a task.
             // some tools write progress and other warnings to stderr.  scripts can also redirect.
-            var failOnStdErr = tl.getBoolInput('failOnStandardError', false);
+            var failOnStdErr = tl.getBoolInput("failOnStandardError", false);
 
             tl.mkdirP(cwd);
             tl.cd(cwd);
 
-            var connectedServiceNameSelector = tl.getInput('connectedServiceNameSelector', true);
+            var connectedServiceNameSelector = tl.getInput("connectedServiceNameSelector", true);
             this.loginAzure(connectedServiceNameSelector);
 
             bash.pathArg(scriptPath);
@@ -63,9 +62,9 @@ export class azureclitask {
             //go to finally and logout of azure and set task result
         }
         finally {
-            if(scriptType === "inlineScript")
+            if(scriptLocation === "inlineScript")
             {
-                this.deleteScriptFile(scriptPath);
+                this.deleteFile(scriptPath);
             }
             //Logout of Azure if logged in
             if (this.isLoggedIn) {
@@ -74,34 +73,22 @@ export class azureclitask {
 
             //set the task result to either succeeded or failed based on error was thrown or not
             if (toolExecutionError) {
-                tl.setResult(tl.TaskResult.Failed, tl.loc('ScriptFailed', toolExecutionError));
+                tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailed", toolExecutionError));
             }
             else {
-                tl.setResult(tl.TaskResult.Succeeded, tl.loc('ScriptReturnCode', 0));
+                tl.setResult(tl.TaskResult.Succeeded, tl.loc("ScriptReturnCode", 0));
             }
         }
     }
 
-    private static createScriptFile (inlineScriptPath:string, script:string)
+    private static createFile (filePath:string, data:string)
     {
         try {
-            fs.writeFileSync(inlineScriptPath, script);
+            fs.writeFileSync(filePath, data);
         }
         catch(err) {
-            this.deleteScriptFile(inlineScriptPath);
+            this.deleteFile(filePath);
             throw err;
-        }
-    }
-
-    private static deleteScriptFile(inlineScriptPath:string) {
-        if (fs.existsSync(inlineScriptPath)) {
-            try {
-                //delete the script file created earlier
-                fs.unlinkSync(inlineScriptPath);
-            }
-            catch (err) {
-                console.error(err.toString());
-            }
         }
     }
 
@@ -110,13 +97,13 @@ export class azureclitask {
     private static loginAzure(connectedServiceNameSelector:string)
     {
         var connectedService:string;
-        if(connectedServiceNameSelector === 'connectedServiceNameARM')
+        if(connectedServiceNameSelector === "connectedServiceNameARM")
         {
-            connectedService = tl.getInput('connectedServiceNameARM', true);
+            connectedService = tl.getInput("connectedServiceNameARM", true);
             this.loginAzureRM(connectedService);
         }
         else {
-            connectedService = tl.getInput('connectedServiceName', true);
+            connectedService = tl.getInput("connectedServiceName", true);
             this.loginAzureClassic(connectedService);
         }
     }
@@ -144,10 +131,10 @@ export class azureclitask {
         if (endpointAuth.scheme === "Certificate") {
             var bytes = endpointAuth.parameters["certificate"];
             var subscriptionId:string = tl.getEndpointDataParameter(connectedService, "SubscriptionId", true);
-            const publishSettingFileName:string = 'subscriptions.publishsettings';
+            const publishSettingFileName:string = path.join(os.tmpDir() ,"subscriptions.publishsettings");
             this.createPublishSettingFile(subscriptionName, subscriptionId, bytes, publishSettingFileName);
             var resultOfToolExecution = tl.execSync("azure", "account import " + publishSettingFileName);
-            this.deletePublishSettingFile(publishSettingFileName);
+            this.deleteFile(publishSettingFileName);
             this.throwIfError(resultOfToolExecution);
             this.isLoggedIn = true;
             //set the subscription imported to the current subscription
@@ -163,22 +150,26 @@ export class azureclitask {
         }
         else {
             var err;
-            err.stderr = tl.loc('UnsupportedEndpointScheme');
+            err.stderr = tl.loc("UnsupportedEndpointScheme");
             throw(err);
         }
     }
 
     private static logoutAzure(connectedServiceNameSelector:string)
     {
-        var connectedService:string;
-        if(connectedServiceNameSelector ==='connectedServiceNameARM')
-        {
-            connectedService = tl.getInput('connectedServiceNameARM', true);
-            this.logoutAzureRM(connectedService);
+        try {
+            var connectedService:string;
+            if (connectedServiceNameSelector === "connectedServiceNameARM") {
+                connectedService = tl.getInput("connectedServiceNameARM", true);
+                this.logoutAzureRM(connectedService);
+            }
+            else {
+                connectedService = tl.getInput("connectedServiceName", true);
+                this.logoutAzureClassic(connectedService);
+            }
         }
-        else {
-            connectedService = tl.getInput('connectedServiceName', true);
-            this.logoutAzureClassic(connectedService);
+        catch(err){
+            // task should not fail if logout doesn`t occur
         }
     }
 
@@ -210,25 +201,18 @@ export class azureclitask {
 
     private static createPublishSettingFile(subscriptionName:string, subscriptionId:string, certificate:string, publishSettingFileName:string): void  {
         //writing the data to the publishsetting file
-        try {
-            fs.writeFileSync(publishSettingFileName, util.format('<?xml version="1.0" encoding="utf-8"?><PublishData><PublishProfile SchemaVersion="2.0" PublishMethod="AzureServiceManagementAPI"><Subscription ServiceManagementUrl="https://management.core.windows.net" Id="%s" Name="%s" ManagementCertificate="%s" /> </PublishProfile></PublishData>',subscriptionId, subscriptionName, certificate));
-        }
-        catch (err) {
-            this.deletePublishSettingFile(publishSettingFileName);
-            console.error("Error in writing PublishSetting File");
-            throw err;
-        }
+        this.createFile(publishSettingFileName, util.format('<?xml version="1.0" encoding="utf-8"?><PublishData><PublishProfile SchemaVersion="2.0" PublishMethod="AzureServiceManagementAPI"><Subscription ServiceManagementUrl="https://management.core.windows.net" Id="%s" Name="%s" ManagementCertificate="%s" /> </PublishProfile></PublishData>',subscriptionId, subscriptionName, certificate));
     }
 
-    private static deletePublishSettingFile(publishSettingFileName:string): void {
-        if (fs.existsSync(publishSettingFileName)) {
+    private static deleteFile(filePath:string): void {
+        if (fs.existsSync(filePath)) {
             try {
                 //delete the publishsetting file created earlier
-                fs.unlinkSync(publishSettingFileName);
+                fs.unlinkSync(filePath);
             }
             catch (err) {
-                console.error("Error in deleting PublishSetting File");
-                throw err;
+                //error while deleting should not result in task failure
+                console.error(err.toString());
             }
         }
     }

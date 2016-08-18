@@ -1,5 +1,5 @@
 {
-  "id": "46E4BE58-730B-4389-8A2F-EA10B3E5E815",
+  "id": "C4D43943-39C4-42EA-9CBE-E14FAA32B828",
   "name": "AzureCLI",
   "friendlyName": "Azure CLI preview",
   "description": "Run a Shell script with Azure CLI commands against an azure subscription",
@@ -29,7 +29,7 @@
       "name": "connectedServiceNameSelector",
       "type": "pickList",
       "label": "Azure Connection Type",
-      "defaultValue": "",
+      "defaultValue": "connectedServiceNameARM",
       "required": true,
       "helpMarkDown": "Select the Azure connection type for the Deployment",
       "options": {
@@ -56,9 +56,9 @@
       "helpMarkDown": "Select the Azure Classic subscription for the deployment"
     },
     {
-      "name": "scriptType",
+      "name": "scriptLocation",
       "type": "pickList",
-      "label": "Script Type",
+      "label": "Script Location",
       "defaultValue": "filePath",
       "required": true,
       "helpMarkDown": "Type of script: File Path or Inline Script",
@@ -73,8 +73,22 @@
       "label": "Script Path",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "scriptType = scriptPath",
+      "visibleRule": "scriptLocation = scriptPath",
       "helpMarkDown": "Fully qualified path of the script or a path relative to the the default working directory"
+    },
+    {
+      "name": "inlineScript",
+      "type": "multiLine",
+      "label": "Inline Script",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "You can write your shell scripts inline here. You can also pass predefined and custom variables to this scripts using arguments",
+      "visibleRule": "scriptLocation = inlineScript",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "500"
+      }
     },
     {
       "name": "args",
@@ -83,20 +97,6 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Arguments passed to the shell script"
-    },
-    {
-      "name": "inlineScript",
-      "type": "multiLine",
-      "label": "Inline Script",
-      "defaultValue": "# You can write your shell scripts inline here. \n# You can also pass predefined and custom variables to this scripts using arguments\n\n",
-      "required": true,
-      "helpMarkDown": "",
-      "visibleRule": "scriptType = inlineScript",
-      "properties": {
-        "resizable": "true",
-        "rows": "10",
-        "maxLength": "500"
-      }
     },
     {
       "name": "cwd",
