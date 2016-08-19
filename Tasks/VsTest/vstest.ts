@@ -177,6 +177,10 @@ function getTestSelectorLocation() : string {
     return path.join(__dirname, "TestSelector/TestSelector.exe");
 }
 
+function getTraceCollectorUri() : string {
+    return "file://" + path.join(__dirname, "TestSelector/Microsoft.VisualStudio.TraceCollector.dll");
+}
+
 function generateResponseFile(): Q.Promise<string> {
     var startTime = perf();
     var endTime : number;
@@ -574,7 +578,8 @@ function getTestImpactAttributes(vsVersion: number) {
     return {
         uri: TICollectorURI,
         assemblyQualifiedName: getTIAssemblyQualifiedName(vsVersion),
-        friendlyName: TIFriendlyName
+        friendlyName: TIFriendlyName,
+        codebase: getTraceCollectorUri()
     };
 }
 
@@ -612,6 +617,12 @@ function pushImpactLevelAndRootPathIfNotFound(dataCollectorArray): void {
             else if (dataCollectorArray[i].Configuration && !dataCollectorArray[i].Configuration.TestImpact && !dataCollectorArray[i].Configuration.RootPath)
             {
                 dataCollectorArray[i].Configuration = {ImpactLevel : getTIALevel(), RootPath : sourcesDir};
+            }
+
+            //Adding the codebase attribute to TestImpact collector 
+            tl.debug("Adding codebase attribute to the existing test impact collector");           
+            if (!dataCollectorArray[i].$.codebase) {
+                dataCollectorArray[i].$.codebase = getTraceCollectorUri();
             }
         }      
     }
@@ -801,9 +812,12 @@ function createRunSettingsForTestImpact(vsVersion: number, settingsFile: string,
     var runSettingsForTIA = '<?xml version="1.0" encoding="utf-8"?><RunSettings><DataCollectionRunSettings><DataCollectors>' +
         '<DataCollector uri="' + TICollectorURI + '" ' +
         'assemblyQualifiedName="' + getTIAssemblyQualifiedName(vsVersion) + '" ' +
-        'friendlyName="' + TIFriendlyName + '">' +
+        'friendlyName="' + TIFriendlyName + '" ' +
+        'codebase="' + getTraceCollectorUri() + '" >' +
+        '<Configuration>' +
         '<ImpactLevel>' + getTIALevel() + '</ImpactLevel>' +
         '<RootPath>' + sourcesDir + '</RootPath>' +
+        '</Configuration>' +
         '</DataCollector>' +
         '</DataCollectors></DataCollectionRunSettings></RunSettings>';
     saveToFile(runSettingsForTIA, runSettingsExt)
