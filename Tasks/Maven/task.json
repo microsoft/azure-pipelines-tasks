@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 58
+        "Patch": 59
     },
     "minimumAgentVersion": "1.89.0",
     "instanceNameFormat": "Maven $(mavenPOMFile)",
@@ -320,14 +320,6 @@
         "Node": {
             "target": "maventask.js",
             "argumentFormat": ""
-        },
-        "PowerShell": {
-            "target": "$(currentDirectory)\\maven.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)",
-            "platforms": [
-                "windows"
-            ]
         }
     },
     "messages": {

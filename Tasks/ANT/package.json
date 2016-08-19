@@ -1,0 +1,12 @@
+{
+  "name": "Ant",
+  "author": "Microsoft Corporation",
+  "description": "Build with Apache Ant",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
+  },
+  "dependencies": {
+    "vsts-task-lib": "0.9.7"
+  }
+}

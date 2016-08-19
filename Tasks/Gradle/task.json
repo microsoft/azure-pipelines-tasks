@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 52
+        "Patch": 53
     },
     "demands": [
         "java"
@@ -319,14 +319,6 @@
     ],
     "instanceNameFormat": "gradlew $(tasks)",
     "execution": {
-        "PowerShell": {
-            "target": "$(currentDirectory)\\gradle.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)",
-            "platforms": [
-                "windows"
-            ]
-        },
         "Node": {
             "target": "gradletask.js",
             "argumentFormat": ""
