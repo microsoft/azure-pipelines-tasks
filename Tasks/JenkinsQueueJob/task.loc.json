@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 6
   },
   "groups": [
     {
@@ -80,15 +80,6 @@
         "resizable": "true",
         "rows": "4"
       }
-    },
-    {
-      "name": "trustSSL",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.trustSSL",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.trustSSL",
-      "groupName": "advanced"
     }
   ],
   "execution": {
