@@ -1,5 +1,5 @@
 {
-  "id": "C4D43943-39C4-42EA-9CBE-E14FAA32B828",
+  "id": "46E4BE58-730B-4389-8A2F-EA10B3E5E815",
   "name": "AzureCLI",
   "friendlyName": "Azure CLI preview",
   "description": "Run a Shell script with Azure CLI commands against an azure subscription",
@@ -59,7 +59,7 @@
       "name": "scriptLocation",
       "type": "pickList",
       "label": "Script Location",
-      "defaultValue": "filePath",
+      "defaultValue": "scriptPath",
       "required": true,
       "helpMarkDown": "Type of script: File Path or Inline Script",
       "options": {

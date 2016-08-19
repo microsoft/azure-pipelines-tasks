@@ -1,5 +1,5 @@
 {
-  "id": "C4D43943-39C4-42EA-9CBE-E14FAA32B828",
+  "id": "46E4BE58-730B-4389-8A2F-EA10B3E5E815",
   "name": "AzureCLI",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
@@ -63,7 +63,7 @@
       "name": "scriptLocation",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.scriptLocation",
-      "defaultValue": "filePath",
+      "defaultValue": "scriptPath",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.scriptLocation",
       "options": {

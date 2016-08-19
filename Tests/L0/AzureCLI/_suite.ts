@@ -24,34 +24,34 @@ describe('AzureCLI Suite', function () {
 
     function addSubscriptionObjectJson(responseFileName:string, nameOfFileToBeCreated:string)
     {
-        var m:any = JSON.parse(fs.readFileSync(path.join(__dirname,responseFileName)).toString());
-        if( !m.exec['/usr/local/bin/azure account import ' + path.join(os.tmpdir(), nameOfFileToBeCreated)]){
-            m.exec['/usr/local/bin/azure account import ' + path.join(os.tmpdir(), nameOfFileToBeCreated)]=  m.exec['/usr/local/bin/azure account import subscriptions.publishsettings'];
+        var jsonFileObject:any = JSON.parse(fs.readFileSync(path.join(__dirname,responseFileName)).toString());
+        if( !jsonFileObject.exec['/usr/local/bin/azure account import ' + path.join(os.tmpdir(), nameOfFileToBeCreated)]){
+            jsonFileObject.exec['/usr/local/bin/azure account import ' + path.join(os.tmpdir(), nameOfFileToBeCreated)] = jsonFileObject.exec['/usr/local/bin/azure account import subscriptions.publishsettings'];
         }
-        fs.writeFileSync(path.join(__dirname,responseFileName), JSON.stringify(m));
+        fs.writeFileSync(path.join(__dirname,responseFileName), JSON.stringify(jsonFileObject));
     }
 
     function addInlineObjectJson(responseFileName:string, nameOfFileToBeCreated:string)
     {
-        var m:any = JSON.parse(fs.readFileSync(path.join(__dirname,responseFileName)).toString());
-        if( !m.exec['/usr/local/bin/bash ' + path.join(os.tmpdir(), nameOfFileToBeCreated) + ' arg1']){
-            m.exec['/usr/local/bin/bash ' + path.join(os.tmpdir(), nameOfFileToBeCreated) + ' arg1']= m.exec['/usr/local/bin/bash azureclitaskscript.sh arg1'];
+        var jsonFileObject:any = JSON.parse(fs.readFileSync(path.join(__dirname,responseFileName)).toString());
+        if( !jsonFileObject.exec['/usr/local/bin/bash ' + path.join(os.tmpdir(), nameOfFileToBeCreated) + ' arg1']){
+            jsonFileObject.exec['/usr/local/bin/bash ' + path.join(os.tmpdir(), nameOfFileToBeCreated) + ' arg1'] = jsonFileObject.exec['/usr/local/bin/bash azureclitaskscript.sh arg1'];
         }
-        fs.writeFileSync(path.join(__dirname,responseFileName), JSON.stringify(m));
+        fs.writeFileSync(path.join(__dirname,responseFileName), JSON.stringify(jsonFileObject));
     }
 
     function deleteInlineObjectJson(responseFileName:string, nameOfFileToBeCreated:string)
     {
-        var m:any = JSON.parse(fs.readFileSync(path.join(__dirname,responseFileName)).toString());
-        delete m.exec['/usr/local/bin/bash ' + path.join(os.tmpdir(), nameOfFileToBeCreated) + ' arg1'];
-        fs.writeFileSync(path.join(__dirname,responseFileName), JSON.stringify(m));
+        var jsonFileObject:any = JSON.parse(fs.readFileSync(path.join(__dirname,responseFileName)).toString());
+        delete jsonFileObject.exec['/usr/local/bin/bash ' + path.join(os.tmpdir(), nameOfFileToBeCreated) + ' arg1'];
+        fs.writeFileSync(path.join(__dirname,responseFileName), JSON.stringify(jsonFileObject));
     }
 
     function deleteSubscriptionObjectJson(responseFileName:string, nameOfFileToBeCreated:string)
     {
-        var m:any = JSON.parse(fs.readFileSync(path.join(__dirname,responseFileName)).toString());
-        delete m.exec['/usr/local/bin/azure account import' + path.join(os.tmpdir(), nameOfFileToBeCreated)];
-        fs.writeFileSync(path.join(__dirname,responseFileName), JSON.stringify(m));
+        var jsonFileObject:any = JSON.parse(fs.readFileSync(path.join(__dirname,responseFileName)).toString());
+        delete jsonFileObject.exec['/usr/local/bin/azure account import' + path.join(os.tmpdir(), nameOfFileToBeCreated)];
+        fs.writeFileSync(path.join(__dirname,responseFileName), JSON.stringify(jsonFileObject));
     }
 
     var publishsettingFileName:string = 'subscriptions.publishsettings';

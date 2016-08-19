@@ -31,7 +31,7 @@ export class azureclitask {
             }
             else {
                 var script:string = tl.getInput("inlineScript", true);
-                scriptPath = path.join(os.tmpDir() ,"azureclitaskscript.sh");
+                scriptPath = path.join(os.tmpdir() ,"azureclitaskscript.sh");
                 this.createFile(scriptPath, script);
             }
 
@@ -81,17 +81,6 @@ export class azureclitask {
         }
     }
 
-    private static createFile (filePath:string, data:string)
-    {
-        try {
-            fs.writeFileSync(filePath, data);
-        }
-        catch(err) {
-            this.deleteFile(filePath);
-            throw err;
-        }
-    }
-
     private static isLoggedIn:boolean = false;
 
     private static loginAzure(connectedServiceNameSelector:string)
@@ -131,7 +120,7 @@ export class azureclitask {
         if (endpointAuth.scheme === "Certificate") {
             var bytes = endpointAuth.parameters["certificate"];
             var subscriptionId:string = tl.getEndpointDataParameter(connectedService, "SubscriptionId", true);
-            const publishSettingFileName:string = path.join(os.tmpDir() ,"subscriptions.publishsettings");
+            const publishSettingFileName:string = path.join(os.tmpdir() ,"subscriptions.publishsettings");
             this.createPublishSettingFile(subscriptionName, subscriptionId, bytes, publishSettingFileName);
             var resultOfToolExecution = tl.execSync("azure", "account import " + publishSettingFileName);
             this.deleteFile(publishSettingFileName);
@@ -202,6 +191,17 @@ export class azureclitask {
     private static createPublishSettingFile(subscriptionName:string, subscriptionId:string, certificate:string, publishSettingFileName:string): void  {
         //writing the data to the publishsetting file
         this.createFile(publishSettingFileName, util.format('<?xml version="1.0" encoding="utf-8"?><PublishData><PublishProfile SchemaVersion="2.0" PublishMethod="AzureServiceManagementAPI"><Subscription ServiceManagementUrl="https://management.core.windows.net" Id="%s" Name="%s" ManagementCertificate="%s" /> </PublishProfile></PublishData>',subscriptionId, subscriptionName, certificate));
+    }
+
+    private static createFile (filePath:string, data:string)
+    {
+        try {
+            fs.writeFileSync(filePath, data);
+        }
+        catch(err) {
+            this.deleteFile(filePath);
+            throw err;
+        }
     }
 
     private static deleteFile(filePath:string): void {

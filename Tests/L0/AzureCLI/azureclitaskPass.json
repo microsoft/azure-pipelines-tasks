@@ -40,8 +40,7 @@
   "checkPath": {
     "/usr/local/bin/bash": true,
     "/usr/local/bin/azure": true,
-    "script.sh": true,
-    "/tmp": true
+    "script.sh": true
   },
   "getVariable": {
     "ENDPOINT_AUTH_AzureClassic": "{\"parameters\":{\"certificate\":\"cert\"},\"scheme\":\"Certificate\"}",
