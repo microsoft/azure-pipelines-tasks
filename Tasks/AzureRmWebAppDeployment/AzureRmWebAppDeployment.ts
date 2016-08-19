@@ -25,7 +25,7 @@ var PublishMethod: string = tl.getInput('PublishMethod');
 //Error Handler
 var onError = function(errorMsg) {
 	tl.error(errorMsg);
-	tl.exit(1);
+	process.exit(1);
 }
 
 if(PublishMethod == "WebDeploy" || PublishMethod != "FTP") {
