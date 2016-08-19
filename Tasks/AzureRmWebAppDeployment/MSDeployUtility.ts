@@ -137,7 +137,7 @@ function getMSDeployVersion(registryKey: string) : Q.Promise<String> {
     return defer.promise;
 }
 
-//Get the absolut path of MSDeploy.exe
+//Get the absolute path of MSDeploy.exe Folder
 function getMSDeployInstallPath(registryKey: string) : Q.Promise<string> {
     var defer = Q.defer<string>();
     regedit.list(registryKey)
@@ -150,6 +150,32 @@ function getMSDeployInstallPath(registryKey: string) : Q.Promise<string> {
 
     return defer.promise;
 }
+
+//Get absolute path of MSDeploy.exe File
+function getMSDeployExePath() : Q.Promise<string> {
+    var defer = Q.defer<string>();
+    var msDeployInstallPathRegKey = "HKLM\\SOFTWARE\\Microsoft\\IIS Extensions\\MSDeploy";
+    getMSDeployVersion(msDeployInstallPathRegKey)
+    .then(function(version){
+        var msDeployLatestPathRegKey = msDeployInstallPathRegKey+"\\"+version;
+        getMSDeployInstallPath(msDeployLatestPathRegKey)
+        .then(function(msDeployPath) {
+            //Append msdeploy.exe to get the absolute path
+            msDeployPath = msDeployPath+"\\msdeploy.exe";
+            defer.resolve(msDeployPath);
+        },
+        function(error) {
+            defer.reject(error);
+            onError(error);
+        });
+    },
+    function(error) {
+        defer.reject(error);
+        onError(error);
+    });
+      return defer.promise;
+}
+module.exports.getMSDeployExePath = getMSDeployExePath;
 
 //
 function runMSDeployCommandWrapper(msDeployCmdArgs: string, azureRMWebAppConnectionDetails): void {
@@ -171,4 +197,5 @@ function runMSDeployCommandWrapper(msDeployCmdArgs: string, azureRMWebAppConnect
         onError(error);
     });
 }
-module.exports.runMSDeployCommandWrapper = runMSDeployCommandWrapper;
+module.exports.runMSDeployCommandWrapper = runMSDeployCommandWrapper
+
