@@ -128,7 +128,7 @@ async function doWork() {
         let jobName: string = tl.getInput('jobName', true);
         let localPathRoot: string = tl.getPathInput('saveTo', true);
 
-        let strictSSL: boolean = !(tl.getBoolInput("trustSSL", false));
+        let strictSSL: boolean = ("true" !== tl.getEndpointDataParameter(serverEndpoint, "acceptUntrustedCerts", true));
 
         let jenkinsBuild: string = tl.getInput("jenkinsBuild", true);
         let buildId: number;

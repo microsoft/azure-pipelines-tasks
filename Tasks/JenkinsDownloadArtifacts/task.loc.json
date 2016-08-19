@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
   "groups": [
     {
@@ -48,15 +48,6 @@
       "defaultValue": "jenkinsArtifacts",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.saveTo"
-    },
-    {
-      "name": "trustSSL",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.trustSSL",
-      "defaultValue": false,
-      "required": false,
-      "groupName": "advanced",
-      "helpMarkDown": "ms-resource:loc.input.help.trustSSL"
     },
     {
       "name": "jenkinsBuild",
