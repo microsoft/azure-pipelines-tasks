@@ -7,7 +7,7 @@
 - **Easy intuitive format per language type**: Having a language type allows infered execution without having to tediously define everything. 
 - **Consistent execution with web defined process**: Switching because you have a preference in yaml and code based process should lead to a consistent build.
 - **Leverage heavy investment in tasks**: Multiple teams have been developing tasks for a few years.  We should leverage that effort.
-- **Execute Locally**: Should be able to execute and diagnose locally.
+- **Execute Locally**: Should be able to execute and diagnose locally. (nice to have tool after main server impl)
 
 ## Non Goals
 
@@ -51,21 +51,21 @@ my build job:
     
     # each line is handed to the language plugin.
     # in this case, because toolset is VS2015 (above) it knows to add msbuild task
-    - src\mywebapp.sln
+    - src/mywebapp.sln
 
     # the dotnet language plugin also understands that "proj" maps to msbuild task
     # you can pass other inputs to the msbuild task
-    - proj: src\mywebApp.csproj
+    - proj: src/mywebApp.csproj
       msbuildArguments: /m
 
     # if it's not something handled by project plugin, goes to the base
     # base plugin has handlers for sh, cmd, ps1 etc... and auto maps to the powershell task
     # language pluging understands that everything after the script is additional arguments to script 
-    - src\ci\after.ps1 arg1 $(foo)
+    - src/ci/after.ps1 arg1 $(foo)
 
     # if I need to specify other inputs for script tasks ...
     # variables map into inputs  
-    - script: src\ci\try.ps1 $(baz) "arg two"
+    - script: src/ci/try.ps1 $(baz) "arg two"
       failOnStandardError: true
 
     # if it falls through all the special base project handlers, 
@@ -74,12 +74,12 @@ my build job:
 
   finally:
     # always run
-    - src\ci\cleanup.ps1
+    - src/ci/cleanup.ps1
 ```
 
 ## Installers and Tools
 
-Language plug-ins have associate [toolinstallers](tools.md).  The language plugin in this case (jsnode) has first class knowledge of node and npm and will ensure the proper version is installed and pre-pended to the path.
+Language plug-ins have associate [tool installers](tools.md).  The language plugin in this case (jsnode) has first class knowledge of node and npm and will ensure the proper version is installed and pre-pended to the path.
 
 Variables can also be used to leverage the build service side matrix option.  This is very powerful since it offers a matrix option that runs build jobs in parallel.
 
@@ -87,10 +87,12 @@ Variables can also be used to leverage the build service side matrix option.  Th
 my build job:
   language: jsnode
 
-  # jsnode language plugin knows it's node that it installs and had the node installer
-  # TODO: define how server uses job matrix and sets variable.  
-  # Is it a hint to the tasks below so all tasks that use that node version?  
-  # Need conventions for that.  tools feature needs flushing out 
+  # jsnode language plugin knows it's node that it installs and had the node installer.  So it knows nodejs element is a matrix.
+  # We will have a set of 'Set xxx Runtime Version' tasks.  In this case 'Set Node Runtime Version' (think nvm)
+  # Same for other runtimes like jvm, python, etc...
+  # The server will create a job for each of this and add the 'Set Node Runtime Version' task first in the job with a value
+  # The 'Set xxx Runtime Tasks' will use the tool installers feature above. 
+  #   
   nodejs:
     - 0.12.7
     - 4.3.2
@@ -108,7 +110,6 @@ my build job:
 
     - gulp src/gulptest.js test
     - gulp test
-    
 ```
 
 ## Common Utility Tasks
@@ -175,9 +176,11 @@ The build definition in the web still has to exist.  All reporting, queues and o
 
 TODO define.  Basic gist...
 
-- Checkin yaml.  Convention creates build definition in build system.
-- Process tab is replaced with monaco editor in place.  Can edit and save.  We should validate on save.
-- Variables still exist.  Merged with yaml defined.
+- Checkin yaml under .vsts folder.  Only supported in git.
+- Name should be ci-{name here}.yml for build rel-{name here}.yml for a release definition.    
+- A build / release definition is created in vsts by {name here} used. 
+- Process tab is replaced with monaco editor in place.  Can edit and save.  We should validate on save.  Not only valid yaml but valid per lang.
+- Variables still exist.  Merged with yaml defined at queue time.
 
 ## Variables
 
@@ -190,5 +193,12 @@ Define what it means for demands since the web designer no longer adds the relev
 I think language offers a good opportunity here.
 
 ## New Definition Wizard Integration
+
+New definition templates can be provided in the box or user created from a definition.  
+
+For the in the box templates we deliver, we will deliver yaml as the template.  When you create a user template from a definition it will be either a yaml or web edited definition.
+
+If the definition template is backed by yaml, then when creating a definition from a template, we will offer the choice of whether you want a yaml or web edited process.  We can derive both from a yaml (higher level construct) but not go the other way and create yaml from the lower level step construct.
+
 
 

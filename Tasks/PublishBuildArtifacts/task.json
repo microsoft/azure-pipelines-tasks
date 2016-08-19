@@ -39,7 +39,7 @@
             "label": "Artifact Type",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The type of the artifact to create.",
+            "helpMarkDown": "The type of artifact to create.",
             "options": {
                 "Container": "Server",
                 "FilePath": "File share"
