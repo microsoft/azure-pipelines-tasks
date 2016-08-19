@@ -197,5 +197,5 @@ function runMSDeployCommandWrapper(msDeployCmdArgs: string, azureRMWebAppConnect
         onError(error);
     });
 }
-module.exports.runMSDeployCommandWrapper = runMSDeployCommandWrapper
+module.exports.runMSDeployCommandWrapper = runMSDeployCommandWrapper;
 
