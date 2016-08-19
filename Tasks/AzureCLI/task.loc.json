@@ -33,7 +33,7 @@
       "name": "connectedServiceNameSelector",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.connectedServiceNameSelector",
-      "defaultValue": "",
+      "defaultValue": "connectedServiceNameARM",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameSelector",
       "options": {
@@ -60,12 +60,39 @@
       "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
     },
     {
+      "name": "scriptLocation",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.scriptLocation",
+      "defaultValue": "scriptPath",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.scriptLocation",
+      "options": {
+        "inlineScript": "Inline Script",
+        "scriptPath": "Script Path"
+      }
+    },
+    {
       "name": "scriptPath",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.scriptPath",
+      "visibleRule": "scriptLocation = scriptPath",
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.scriptPath"
+    },
+    {
+      "name": "inlineScript",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.inlineScript",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.inlineScript",
+      "visibleRule": "scriptLocation = inlineScript",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "500"
+      }
     },
     {
       "name": "args",
