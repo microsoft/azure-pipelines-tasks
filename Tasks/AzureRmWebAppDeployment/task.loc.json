@@ -11,12 +11,17 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
+    "Major": 2,
     "Minor": 0,
-    "Patch": 16
+    "Patch": 0
   },
   "minimumAgentVersion": "1.102.0",
   "groups": [
+    {
+      "name": "AdditionalDeploymentOptions",
+      "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
+      "isExpanded": true
+    },
     {
       "name": "output",
       "displayName": "ms-resource:loc.group.displayName.output",
@@ -76,46 +81,6 @@
       "visibleRule": "DeployToSlotFlag = true"
     },
     {
-      "name": "Package",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.Package",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.Package"
-    },
-    {
-      "name": "SetParametersFile",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.SetParametersFile",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.SetParametersFile"
-    },
-    {
-      "name": "RemoveAdditionalFilesFlag",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.RemoveAdditionalFilesFlag",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.RemoveAdditionalFilesFlag"
-    },
-    {
-      "name": "ExcludeFilesFromAppDataFlag",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.ExcludeFilesFromAppDataFlag",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.ExcludeFilesFromAppDataFlag"
-    },
-    {
-      "name": "TakeAppOfflineFlag",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.TakeAppOfflineFlag",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
-    },
-    {
       "name": "VirtualApplication",
       "type": "string",
       "label": "ms-resource:loc.input.label.VirtualApplication",
@@ -124,12 +89,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.VirtualApplication"
     },
     {
-      "name": "AdditionalArguments",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.AdditionalArguments",
-      "required": false,
+      "name": "Package",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.Package",
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.Package"
     },
     {
       "name": "WebAppUri",
@@ -139,6 +104,78 @@
       "defaultValue": "",
       "groupName": "output",
       "helpMarkDown": "ms-resource:loc.input.help.WebAppUri"
+    },
+    {
+      "name": "PublishMethod",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.PublishMethod",
+      "required": false,
+      "defaultValue": "Select FTP or Web Deploy",
+      "groupName": "AdditionalDeploymentOptions",
+      "options": {
+        "WebDeploy": "Web Deploy"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.PublishMethod"
+    },
+    {
+      "name": "SetParametersFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.SetParametersFile",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "AdditionalDeploymentOptions",
+      "visibleRule": "PublishMethod = WebDeploy",
+      "helpMarkDown": "ms-resource:loc.input.help.SetParametersFile"
+    },
+    {
+      "name": "RemoveAdditionalFilesFlag",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.RemoveAdditionalFilesFlag",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "AdditionalDeploymentOptions",
+      "visibleRule": "PublishMethod = WebDeploy",
+      "helpMarkDown": "ms-resource:loc.input.help.RemoveAdditionalFilesFlag"
+    },
+    {
+      "name": "ExcludeFilesFromAppDataFlag",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ExcludeFilesFromAppDataFlag",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "AdditionalDeploymentOptions",
+      "visibleRule": "PublishMethod = WebDeploy",
+      "helpMarkDown": "ms-resource:loc.input.help.ExcludeFilesFromAppDataFlag"
+    },
+    {
+      "name": "TakeAppOfflineFlag",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.TakeAppOfflineFlag",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "AdditionalDeploymentOptions",
+      "visibleRule": "PublishMethod = WebDeploy",
+      "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
+    },
+    {
+      "name": "AdditionalArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AdditionalArguments",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "AdditionalDeploymentOptions",
+      "visibleRule": "PublishMethod = WebDeploy",
+      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
+    },
+    {
+      "name": "PassiveMode",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.PassiveMode",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "AdditionalDeploymentOptions",
+      "visibleRule": "PublishMethod = FTP",
+      "helpMarkDown": "ms-resource:loc.input.help.PassiveMode"
     }
   ],
   "dataSourceBindings": [
@@ -168,13 +205,8 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "AzurePowerShell": {
-      "target": "$(currentDirectory)\\AzureRmWebAppDeployment-Legacy.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
-    },
-    "PowerShell3": {
-      "target": "AzureRMWebAppDeployment.ps1"
+    "Node": {
+      "target": "AzureRMWebAppDeployment.js"
     }
   },
   "messages": {
