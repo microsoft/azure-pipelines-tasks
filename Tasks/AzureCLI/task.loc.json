@@ -75,9 +75,9 @@
       "name": "scriptPath",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.scriptPath",
-      "visibleRule": "scriptLocation = scriptPath",
       "defaultValue": "",
       "required": true,
+      "visibleRule": "scriptLocation = scriptPath",
       "helpMarkDown": "ms-resource:loc.input.help.scriptPath"
     },
     {
