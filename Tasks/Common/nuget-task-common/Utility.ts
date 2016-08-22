@@ -104,6 +104,9 @@ export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: b
 
         filesList = allFiles.filter(patternFilter);
 
+        // Avoid matching anything other than files
+        filesList = filesList.filter(x => tl.stats(x).isFile());
+
         // Fail if no matching .sln files were found
         if (!allowEmptyWildcardMatch && (!filesList || filesList.length == 0)) {
             throw new Error('No matching files were found with search pattern: ' + pattern);
