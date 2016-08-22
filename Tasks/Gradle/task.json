@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 50
+        "Patch": 53
     },
     "demands": [
         "java"
@@ -188,6 +188,15 @@
             }
         },
         {
+            "name": "gradleOpts",
+            "type": "string",
+            "label": "Set GRADLE_OPTS",
+            "required": false,
+            "groupName": "advanced",
+            "defaultValue": "-Xmx2048m",
+            "helpMarkDown": "Sets the GRADLE_OPTS enviroment variable, which is used to send command-line arguments to start the JVM. The xmx flag specifies the maximum memory available to the JVM."
+        },
+        {
             "name": "sqAnalysisEnabled",
             "type": "boolean",
             "label": "Run SonarQube Analysis",
@@ -280,6 +289,16 @@
             "visibleRule": "sqAnalysisEnabled = true"
         },
         {
+            "name": "sqAnalysisBreakBuildIfQualityGateFailed",
+            "type": "boolean",
+            "defaultValue": "",
+            "label": "Fail the build on quality gate failure (SQ 5.3+)",
+            "required": false,
+            "helpMarkDown": "This option is only available when using a SonarQube server 5.3 or above. It will introduce delays as the build must wait for SonarQube to complete the analysis. [More information](https://go.microsoft.com/fwlink/?LinkId=722407)",
+            "groupName": "CodeAnalysis",
+            "visibleRule": "sqAnalysisEnabled = true"
+        },
+        {
             "name": "checkstyleAnalysisEnabled",
             "type": "boolean",
             "label": "Run Checkstyle",
@@ -300,21 +319,13 @@
     ],
     "instanceNameFormat": "gradlew $(tasks)",
     "execution": {
-        "PowerShell": {
-            "target": "$(currentDirectory)\\gradle.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)",
-            "platforms": [
-                "windows"
-            ]
-        },
         "Node": {
             "target": "gradletask.js",
             "argumentFormat": ""
         }
     },
     "messages": {
-        "sqCommon_CreateTaskReport_MissingField": "Failed to create TaskReport object. Missing field: {0}",
+        "sqCommon_CreateTaskReport_MissingField": "Failed to create TaskReport object. Missing field: %s",
         "sqCommon_WaitingForAnalysis": "Waiting for the SonarQube server to analyse the build.",
         "sqCommon_NotWaitingForAnalysis": "Build not configured to wait for the SonarQube analysis. Detailed quality gate status will not be available.",
         "sqCommon_QualityGateStatusUnknown": "Could not detect the quality gate status or a new status has been introduced.",
@@ -323,11 +334,14 @@
         "codeAnalysis_ToolFailed": "%s analysis failed.",
         "sqAnalysis_IncrementalMode": "Detected a PR build - running the SonarQube analysis in incremental mode",
         "sqAnalysis_BuildSummaryTitle": "SonarQube Analysis Report",
-        "sqAnalysis_BuildSummaryNotAvailableInPrBuild": "Detailed SonarQube reports are not available for pull request builds.",
         "sqAnalysis_TaskReportInvalid": "Invalid or missing task report. Check SonarQube finished successfully.",
         "sqAnalysis_BuildSummary_LinkText": "Detailed SonarQube report",
         "sqAnalysis_BuildSummary_CannotAuthenticate": "Cannot authenticate to the SonarQube server. Check the saved endpoint details and the status of the server.",
-        "sqAnalysis_AnalysisTimeout": "The analysis did not complete in the allotted time of {0} seconds.",
+        "sqAnalysis_AnalysisTimeout": "The analysis did not complete in the allotted time of %d seconds.",
+        "sqAnalysis_IsPullRequest_SkippingBuildSummary": "Pull request build: detailed SonarQube build summary will not be available.",
+        "sqAnalysis_IsPullRequest_SkippingBuildBreaker": "Pull request build: build will not be broken if quality gate fails.",
+        "sqAnalysis_BuildBrokenDueToQualityGateFailure": "The SonarQube quality gate associated with this build has failed.",
+        "sqAnalysis_QualityGatePassed": "The SonarQube quality gate associated with this build has passed (status %s)",
         "codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "%s found %d violations in %d files.",
         "codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "%s found %d violations in 1 file.",
         "codeAnalysisBuildSummaryLine_OneViolationOneFile": "%s found 1 violation in 1 file.",

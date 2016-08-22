@@ -13,10 +13,23 @@ import {BuildOutput, BuildEngine} from './CodeAnalysis/Common/BuildOutput';
 import {PmdTool} from './CodeAnalysis/Common/PmdTool';
 import {CheckstyleTool} from './CodeAnalysis/Common/CheckstyleTool';
 
+import os = require('os');
+
+var isWindows = os.type().match(/^Win/);
+
 // Set up localization resource file
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 var wrapperScript = tl.getPathInput('wrapperScript', true, true);
+
+if (isWindows) {
+    // append .bat extension name on Windows platform
+    if (!wrapperScript.endsWith('bat')) {
+        tl.debug("Append .bat extension name to gradlew script.");
+        wrapperScript += '.bat';
+    }
+} 
+
 if (fs.existsSync(wrapperScript)) {
     // (The exists check above is not necessary, but we need to avoid this call when we are running L0 tests.)
     // Make sure the wrapper script is executable
@@ -45,7 +58,7 @@ var isSonarQubeEnabled: boolean = sqCommon.isSonarQubeAnalysisEnabled();
 let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('build.sourcesDirectory'), BuildEngine.Gradle);
 var codeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
     [new CheckstyleTool(buildOutput, 'checkstyleAnalysisEnabled'),
-     new PmdTool(buildOutput, 'pmdAnalysisEnabled')])
+        new PmdTool(buildOutput, 'pmdAnalysisEnabled')])
 
 if (isCodeCoverageOpted && inputTasks.indexOf('clean') == -1) {
     gb.arg('clean'); //if user opts for code coverage, we append clean functionality to make sure any uninstrumented class files are removed
@@ -97,6 +110,8 @@ if (isSonarQubeEnabled) {
 
 gb = codeAnalysisOrchestrator.configureBuild(gb);
 
+setGradleOpts();
+
 var gradleResult;
 gb.exec()
     .then(function (code) {
@@ -121,7 +136,17 @@ function processCodeAnalysisResults(): Q.Promise<void> {
     tl.debug('Processing code analysis results');
     codeAnalysisOrchestrator.publishCodeAnalysisResults();
 
-    return sqGradle.uploadSonarQubeBuildSummaryIfEnabled();
+    return sqGradle.processSonarQubeIntegration();
+}
+
+// Configure the JVM associated with this run.
+function setGradleOpts() {
+    let gradleOptsValue: string = tl.getInput('gradleOpts');
+
+    if (gradleOptsValue) {
+        process.env['GRADLE_OPTS'] = gradleOptsValue;
+        tl.debug(`GRADLE_OPTS is now set to ${gradleOptsValue}`);
+    }
 }
 
 /* Functions for Publish Test Results, Code Coverage */

@@ -324,9 +324,9 @@ function UploadSummaryMdReport($summaryMdPath)
 {
 	Write-Verbose "Summary Markdown Path = $summaryMdPath"
 
-	if ([System.IO.File]::Exists($summaryMdPath))
-	{
-		Write-Host "##vso[build.uploadsummary]$summaryMdPath"
+	if (Test-Path($summaryMdPath))
+	{	
+		Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=Load test results;]$summaryMdPath"
 	}
 	else
 	{
@@ -338,13 +338,13 @@ function UploadSummaryMdReport($summaryMdPath)
 ############################################## PS Script execution starts here ##########################################
 WriteTaskMessages "Starting Load Test Script"
 
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+
 Write-Output "Test drop = $TestDrop"
 Write-Output "Load test = $LoadTest"
 Write-Output "Load generator machine type = $machineType"
 Write-Output "Run source identifier = build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
-
-$summaryFile =  ("{0}\Load test results.md" -f $global:ScopedTestDrop)
-Write-Output "Summary file = $summaryFile"
 
 #Validate Input
 Validate
@@ -356,16 +356,17 @@ if ($ThresholdLimit -and $ThresholdLimit -ge 0)
     Write-Output "Threshold limit = $ThresholdLimit"
 }
 
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
-
 $connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
 
 $Username = $connectedServiceDetails.Authorization.Parameters.Username
 Write-Verbose "Username = $userName" -Verbose
 $Password = $connectedServiceDetails.Authorization.Parameters.Password
 $global:ElsAccountUrl = ComposeAccountUrl($connectedServiceDetails.Url.AbsoluteUri)
-Write-Verbose "Account Url = $global:ElsAccountUrl" -Verbose
+
+$tfsUrl = $env:System_TeamFoundationCollectionUri.TrimEnd('/')
+
+Write-Verbose "VSO account Url = $tfsUrl" -Verbose
+Write-Verbose "CLT account Url = $global:ElsAccountUrl" -Verbose
 
 #Setting Headers and account Url accordingly
 $headers = InitializeRestHeaders
@@ -409,10 +410,17 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
     }
 
     Write-Output ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name)
-    Write-Output ("To view run details navigate to http://{0}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account#runId={1}" -f $connectedServiceDetails.Url.AbsoluteUri, $run.id)
+    Write-Output ("To view run details navigate to {0}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={1}" -f $tfsUrl, $run.id)
 
-    ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name) >>  $summaryFile
-    ("To view run details navigate [here]({0}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account#runId={1})." -f $connectedServiceDetails.Url.AbsoluteUri, $run.id) >>  $summaryFile
+    $resultsMDFolder = New-Item -ItemType Directory -Force -Path "$env:Temp\LoadTestResultSummary"
+    $resultFilePattern = ("ApacheJMeterTestResults_{0}_{1}_*.md" -f $env:AGENT_ID, $env:SYSTEM_DEFINITIONID)
+    $excludeFilePattern = ("ApacheJMeterTestResults_{0}_{1}_{2}_*.md" -f $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID)
+    Remove-Item $resultsMDFolder\$resultFilePattern -Exclude $excludeFilePattern -Force
+    $summaryFile =  ("{0}\ApacheJMeterTestResults_{1}_{2}_{3}_{4}.md" -f $resultsMDFolder, $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID, $run.id)
+
+    ("<p>[Test Run: {0}]({2}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={3}) using {1}.</p>" -f  $run.runNumber, $run.name, $tfsUrl, $run.id) >>  $summaryFile
+	
+    UploadSummaryMdReport $summaryFile
 }
 else
 {
@@ -420,7 +428,5 @@ else
     ("Connection '{0}' failed for service '{1}'" -f $connectedServiceName, $connectedServiceDetails.Url.AbsoluteUri) >> $summaryFile
 }
 
-UploadSummaryMdReport $summaryFile
-
-WriteTaskMessages "Finished Load Test Script"
+WriteTaskMessages "Finished JMeter Test Script"
 

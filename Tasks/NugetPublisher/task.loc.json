@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 7
+    "Patch": 9
   },
   "demands": [
     "Cmd"
@@ -112,8 +112,8 @@
   "messages": {
     "Warning_NoConfigForOldNuGet": "ms-resource:loc.messages.Warning_NoConfigForOldNuGet",
     "Warning_NoConfigForNoCredentialProvider": "ms-resource:loc.messages.Warning_NoConfigForNoCredentialProvider",
-    "PackagesInstalledSuccessfully": "ms-resource:loc.messages.PackagesInstalledSuccessfully",
-    "PackagesFailedToInstall": "ms-resource:loc.messages.PackagesFailedToInstall",
+    "PackagesPublishedSuccessfully": "ms-resource:loc.messages.PackagesPublishedSuccessfully",
+    "PackagesFailedToPublish": "ms-resource:loc.messages.PackagesFailedToPublish",
     "ConnectingAs": "ms-resource:loc.messages.ConnectingAs",
     "LegacyNuGetHint": "ms-resource:loc.messages.LegacyNuGetHint",
     "BuildIdentityPermissionsHint": "ms-resource:loc.messages.BuildIdentityPermissionsHint",

@@ -8,8 +8,6 @@ import path = require('path');
 import shell = require('shelljs');
 import os = require('os');
 
-var ps = shell.which('powershell');
-
 function setResponseFile(name: string) {
 	process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
 }

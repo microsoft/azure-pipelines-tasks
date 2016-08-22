@@ -151,6 +151,17 @@ export class ToolRunner extends events.EventEmitter {
         }
     }
 
+    private ignoreTempPath(cmdString: string): string {
+        this._debug('ignoreTempPath=' + process.env['MOCK_IGNORE_TEMP_PATH']);
+        this._debug('tempPath=' + process.env['MOCK_TEMP_PATH']);
+        if (process.env['MOCK_IGNORE_TEMP_PATH'] === 'true') {
+            // Using split/join to replace the temp path
+            cmdString = cmdString.split(process.env['MOCK_TEMP_PATH']).join('');
+        }
+
+        return cmdString;
+    } 
+
     //
     // Exec - use for long running tools where you need to stream live output as it runs
     //        returns a promise with return code.
@@ -183,12 +194,8 @@ export class ToolRunner extends events.EventEmitter {
             cmdString += (' ' + argString);
         }
 
-        this._debug('ignoreTempPath=' + process.env['MOCK_IGNORE_TEMP_PATH']);
-        this._debug('tempPath=' + process.env['MOCK_TEMP_PATH']);
-        if (process.env['MOCK_IGNORE_TEMP_PATH'] === 'true') {
-            // Using split/join to replace the temp path
-            cmdString = cmdString.split(process.env['MOCK_TEMP_PATH']).join('');
-        }
+        // Using split/join to replace the temp path
+        cmdString = this.ignoreTempPath(cmdString);
 
         if (!ops.silent) {
             ops.outStream.write('[command]' + cmdString + os.EOL);
@@ -264,6 +271,10 @@ export class ToolRunner extends events.EventEmitter {
 
         var argString = this.args.join(' ') || '';
         var cmdString = this.toolPath;
+
+        // Using split/join to replace the temp path
+        cmdString = this.ignoreTempPath(cmdString);
+
         if (argString) {
             cmdString += (' ' + argString);
         }

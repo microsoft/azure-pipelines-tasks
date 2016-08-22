@@ -1,0 +1,135 @@
+{
+  "id": "46E4BE58-730B-4389-8A2F-EA10B3E5E815",
+  "name": "AzureCLI",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Preview",
+    "Build",
+    "Release"
+  ],
+  "demands": [
+    "sh"
+  ],
+  "version": {
+    "Major": "0",
+    "Minor": "1",
+    "Patch": "1"
+  },
+  "minimumAgentVersion": "1.95.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "connectedServiceNameSelector",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.connectedServiceNameSelector",
+      "defaultValue": "connectedServiceNameARM",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameSelector",
+      "options": {
+        "connectedServiceName": "Azure Classic",
+        "connectedServiceNameARM": "Azure Resource Manager"
+      }
+    },
+    {
+      "name": "connectedServiceNameARM",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.connectedServiceNameARM",
+      "defaultValue": "",
+      "visibleRule": "connectedServiceNameSelector = connectedServiceNameARM",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameARM"
+    },
+    {
+      "name": "connectedServiceName",
+      "type": "connectedService:Azure",
+      "label": "ms-resource:loc.input.label.connectedServiceName",
+      "defaultValue": "",
+      "visibleRule": "connectedServiceNameSelector = connectedServiceName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
+    },
+    {
+      "name": "scriptLocation",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.scriptLocation",
+      "defaultValue": "scriptPath",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.scriptLocation",
+      "options": {
+        "inlineScript": "Inline Script",
+        "scriptPath": "Script Path"
+      }
+    },
+    {
+      "name": "scriptPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.scriptPath",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "scriptLocation = scriptPath",
+      "helpMarkDown": "ms-resource:loc.input.help.scriptPath"
+    },
+    {
+      "name": "inlineScript",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.inlineScript",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.inlineScript",
+      "visibleRule": "scriptLocation = inlineScript",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "500"
+      }
+    },
+    {
+      "name": "args",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.args",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.args"
+    },
+    {
+      "name": "cwd",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.cwd",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cwd",
+      "groupName": "advanced"
+    },
+    {
+      "name": "failOnStandardError",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnStandardError",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failOnStandardError",
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "azureclitask.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "ScriptReturnCode": "ms-resource:loc.messages.ScriptReturnCode",
+    "ScriptFailed": "ms-resource:loc.messages.ScriptFailed",
+    "UnsupportedEndpointScheme": "ms-resource:loc.messages.UnsupportedEndpointScheme"
+  }
+}

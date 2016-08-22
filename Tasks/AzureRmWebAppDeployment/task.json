@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 16
+        "Patch": 17
     },
     "minimumAgentVersion": "1.102.0",
     "groups": [
@@ -199,10 +199,10 @@
         "filePathFindFilesSearchPattern0": "filePath = Find-Files -SearchPattern {0}",
         "filePath0": "filePath = {0}",
         "UnabletofindpublishUrlforWebApp0": "Unable to find publish Url for WebApp '{0}'.",
-        "Updatingdeploymenthistoryfordeployment0":"Updating deployment history for deployment {0}",
-        "Updatingdeploymentstatus":"Updating deployment status",
-        "CannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite":"Cannot update deployment status, SCM endpoint is not enabled for this website",
-        "Cannotupdatedeploymentstatusfor01":"Cannot update deployment status for {0} - {1}",
-        "CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved":"Cannot update deployment status, unique deploymentId cannot be retrieved"
+        "Updatingdeploymenthistoryfordeployment0": "Updating deployment history for deployment {0}",
+        "Updatingdeploymentstatus": "Updating deployment status",
+        "CannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "Cannot update deployment status, SCM endpoint is not enabled for this website",
+        "Cannotupdatedeploymentstatusfor01": "Cannot update deployment status for {0} - {1}",
+        "CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved": "Cannot update deployment status, unique deploymentId cannot be retrieved"
     }
 }

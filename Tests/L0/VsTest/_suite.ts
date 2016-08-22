@@ -11,7 +11,7 @@ import os = require('os');
 import mockHelper = require('../../lib/mockHelper');
 import fs = require('fs');
 var shell = require('shelljs');
-var ps = shell.which('powershell');
+var ps = shell.which('powershell.exe');
 var psr = null;
 
 function setResponseFile(name: string) {
