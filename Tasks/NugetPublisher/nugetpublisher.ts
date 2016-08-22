@@ -55,7 +55,9 @@ if (!normalizedNuGetFeedType) {
 
 nuGetFeedType = normalizedNuGetFeedType;
 
-var userNuGetPath = tl.getPathInput('nuGetPath', false, true);
+// due to a bug where we accidentally allowed nuGetPath to be surrounded by quotes before,
+// locateNuGetExe() will strip them and check for existence there.
+var userNuGetPath = tl.getPathInput('nuGetPath', false, false);
 if (!tl.filePathSupplied('nuGetPath')) {
     userNuGetPath = null;
 }

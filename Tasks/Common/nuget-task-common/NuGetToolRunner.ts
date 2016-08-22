@@ -8,6 +8,8 @@ import * as os from 'os';
 import * as path from 'path';
 import * as url from 'url';
 
+import * as ngutil from "./Utility";
+
 interface EnvironmentDictionary { [key: string]: string }
 
 export interface NuGetEnvironmentSettings {
@@ -139,7 +141,11 @@ function locateTool(tool: string, opts?: LocateOptions) {
 
 export function locateNuGetExe(userNuGetExePath: string): string {
     if (userNuGetExePath) {
-        tl.debug(`using user-supplied NuGet path ${userNuGetExePath}`)
+        if (os.platform() === "win32") {
+            userNuGetExePath = ngutil.stripLeadingAndTrailingQuotes(userNuGetExePath);
+        }
+
+        tl.debug(`using user-supplied NuGet path ${userNuGetExePath}`);
         tl.checkPath(userNuGetExePath, 'NuGet');
         return userNuGetExePath;
     }

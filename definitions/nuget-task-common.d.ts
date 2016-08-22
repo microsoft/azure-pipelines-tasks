@@ -143,5 +143,6 @@ declare module 'nuget-task-common/Utility' {
 	/// <reference path="../../../definitions/Q.d.ts" />
 	export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEmptyMatch?: boolean): string[];
 	export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: boolean): string[];
+	export function stripLeadingAndTrailingQuotes(path: string): string;
 
 }
