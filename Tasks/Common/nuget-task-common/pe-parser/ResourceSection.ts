@@ -180,9 +180,12 @@ export class ResourceSection {
     }
 
     public static async load(file: IReadableFile, resourceSectionTableEntry: SectionTableEntry) {
+        const buffer = new Buffer(1024);
+        buffer.fill(0);
+
         const root = await readResourceDirectoryTable(
             file,
-            new Buffer(1024).fill(0),
+            buffer,
             resourceSectionTableEntry.pointerToRawData);
 
         return new ResourceSection(root, file, resourceSectionTableEntry);
@@ -211,7 +214,8 @@ export class ResourceSection {
         const resourceOffset = resource.dataRva - this.sectionTableEntry.virtualAddress;
         const resourceFilePosition = this.sectionTableEntry.pointerToRawData + resourceOffset;
 
-        const buffer = new Buffer(resource.size).fill(0);
+        const buffer = new Buffer(resource.size);
+        buffer.fill(0);
         await this.file.readAsync(buffer, 0, resource.size, resourceFilePosition);
         return buffer;
     }

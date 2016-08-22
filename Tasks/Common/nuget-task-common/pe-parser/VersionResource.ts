@@ -64,7 +64,7 @@ export interface VersionInfo {
 
 function readNullTerminatedUcs2String(buffer: Buffer, offset: number): { value: string, bytesRead: number } {
     let end = offset;
-    while (end < buffer.byteLength - 1) {
+    while (end < buffer.length - 1) {
         if (buffer.readInt16LE(end) === 0) {
             return { value: buffer.toString("utf16le", offset, end), bytesRead: end - offset + 2 };
         }

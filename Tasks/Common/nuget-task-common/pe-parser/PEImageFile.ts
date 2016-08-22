@@ -20,7 +20,8 @@ export class PEImageFile {
     constructor(public coffHeader: CoffHeader, public sectionTable: SectionTable) { }
 
     public static async readAsync(file: IReadableFile): Promise<PEImageFile> {
-        let buffer = new Buffer(1024).fill(0);
+        let buffer = new Buffer(1024);
+        buffer.fill(0);
 
         // read the DOS signature
         await file.readAsync(buffer, 0, 2, 0);
