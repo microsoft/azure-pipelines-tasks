@@ -90,6 +90,7 @@ function Get-MsDeployCmdArgs
           [String][Parameter(Mandatory=$true)] $takeAppOfflineFlag,
           [String][Parameter(Mandatory=$false)] $virtualApplication,
           [String][Parameter(Mandatory=$false)] $setParametersFile,
+          [Boolean][Parameter(Mandatory=$false)] $isPackageContainsParamFile,
           [String][Parameter(Mandatory=$false)] $AdditionalArguments)
 
     $msDeployCmdArgs = [String]::Empty
@@ -100,13 +101,16 @@ function Get-MsDeployCmdArgs
                                         , $packageFile, $azureRMWebAppConnectionDetails.KuduHostName, $webAppNameForMSDeployCmd, $azureRMWebAppConnectionDetails.UserName, $azureRMWebAppConnectionDetails.UserPassword)
 
     # msdeploy argument to set destination IIS App Name for deploy
-    if($virtualApplication)
+    if( $isPackageContainsParamFile -or $setParametersFile )
     {
-        $msDeployCmdArgs += [String]::Format(' -setParam:name="IIS Web Application Name",value="{0}/{1}"', $webAppNameForMSDeployCmd, $virtualApplication)
-    }
-    else
-    {
-        $msDeployCmdArgs += [String]::Format(' -setParam:name="IIS Web Application Name",value="{0}"', $webAppNameForMSDeployCmd)
+        if($virtualApplication)
+        {
+            $msDeployCmdArgs += [String]::Format(' -setParam:name="IIS Web Application Name",value="{0}/{1}"', $webAppNameForMSDeployCmd, $virtualApplication)
+        }
+        else
+        {
+            $msDeployCmdArgs += [String]::Format(' -setParam:name="IIS Web Application Name",value="{0}"', $webAppNameForMSDeployCmd)
+        }
     }
 
     # msdeploy argument to block deletion from happening
@@ -145,6 +149,27 @@ function Get-MsDeployCmdArgs
     return $msDeployCmdArgs
 }
 
+function Contains-ParamFile( [String][Parameter(Mandatory=$true)] $packageFile )
+{
+    $msDeployExePath = Get-MsDeployExePath
+
+    $msDeployCheckParamFileCmdArgs = " -verb:getParameters -source:package='" + $packageFile + "'";
+
+    $msDeployCheckParamFileCmd = "`"$msDeployExePath`" $msDeployCheckParamFileCmdArgs"
+
+    $ParamFileContent = Get-CommandOutput -command $msDeployCheckParamFileCmd
+
+    $paramFileXML = [XML] $ParamFileContent
+
+    if( $paramFileXML.output.parameters )
+    {
+        return $true
+    }
+       
+    return $false
+
+}
+
 function Run-Command
 {
     param([String][Parameter(Mandatory=$true)] $command)
@@ -168,6 +193,34 @@ function Run-Command
         throw $_.Exception.Message    
     }
 
+}
+
+function Get-CommandOutput
+{
+    param(
+        [string]$command,
+        [bool] $failOnErr = $true
+    )
+
+    $ErrorActionPreference = 'Continue'
+
+    if( $psversiontable.PSVersion.Major -le 4)
+    {        
+        $result = cmd.exe /c "`"$command`""
+    }
+    else
+    {
+        $result = cmd.exe /c "$command"
+    }
+    
+    $ErrorActionPreference = 'Stop'
+
+    if($failOnErr -and $LASTEXITCODE -ne 0)
+    {
+        throw $result
+    }
+    
+    return $result
 }
 
 function Get-MsDeployCmdForLogs
