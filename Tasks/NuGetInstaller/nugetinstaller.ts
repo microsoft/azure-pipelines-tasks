@@ -210,7 +210,7 @@ function restorePackages(solutionFile: string, options: RestoreOptions): Q.Promi
         nugetTool.arg('-NoCache');
     }
 
-    if (options.verbosity) {
+    if (options.verbosity && options.verbosity != "-") {
         nugetTool.arg("-Verbosity");
         nugetTool.arg(options.verbosity);
     }
