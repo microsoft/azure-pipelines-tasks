@@ -1,6 +1,7 @@
 /// <reference path="../../definitions/node.d.ts" />
 /// <reference path="../../definitions/q.d.ts" />
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
+
 import Q = require('q');
 import tl = require('vsts-task-lib/task');
 import fs = require('fs');
@@ -13,7 +14,6 @@ var onError = function(error) {
 	tl.error(error);
 	process.exit(1);
 }
-
 
 function isFileExists(filePath: string) : boolean {
     try{
@@ -111,7 +111,7 @@ function runMSDeployCommand(msDeployExePath: string, msDeployCmdArgs: string, az
     tl.exec(msDeployExePath, msDeployCmdArgs)
     .then(function(code){
       azureRmUtil.updateDeploymentStatus(azureRMWebAppConnectionDetails, true);
-        console.log("MSDeploy executed Successfully !");
+        tl.debug("MSDeploy executed Successfully !");
         tl.debug("Return Code : " + code);
     },
     function(error) {
@@ -166,36 +166,29 @@ function getMSDeployExePath() : Q.Promise<string> {
         },
         function(error) {
             defer.reject(error);
-            onError(error);
         });
     },
     function(error) {
         defer.reject(error);
-        onError(error);
     });
       return defer.promise;
 }
 module.exports.getMSDeployExePath = getMSDeployExePath;
 
-//
-function runMSDeployCommandWrapper(msDeployCmdArgs: string, azureRMWebAppConnectionDetails): void {
-    var msDeployInstallPathRegKey = "HKLM\\SOFTWARE\\Microsoft\\IIS Extensions\\MSDeploy";
-    getMSDeployVersion(msDeployInstallPathRegKey)
-    .then(function(version){
-        var msDeployLatestPathRegKey = msDeployInstallPathRegKey+"\\"+version;
-        getMSDeployInstallPath(msDeployLatestPathRegKey)
-        .then(function(msDeployPath) {
-            //Append msdeploy.exe to get the absolute path
-            msDeployPath = msDeployPath+"\\msdeploy.exe";
-            runMSDeployCommand(msDeployPath, msDeployCmdArgs, azureRMWebAppConnectionDetails);
-        },
-        function(error) {
-            onError(error);
-        });
-    },
-    function(error) {
+
+
+async function runMSDeployCommandWrapper(msDeployCmdArgs: string, azureRMWebAppConnectionDetails) {
+    try {
+        var msDeployInstallPathRegKey = "HKLM\\SOFTWARE\\Microsoft\\IIS Extensions\\MSDeploy";
+        var msDeployVersion = await getMSDeployVersion(msDeployInstallPathRegKey);
+        var msDeployLatestPathRegKey = msDeployInstallPathRegKey+"\\"+msDeployVersion;
+        var msDeployExePath = await getMSDeployInstallPath(msDeployLatestPathRegKey);
+        msDeployExePath = msDeployExePath+"\\msdeploy.exe";
+        runMSDeployCommand(msDeployExePath, msDeployCmdArgs, azureRMWebAppConnectionDetails);
+    }  
+    catch(error) {
         onError(error);
-    });
+    }
 }
 module.exports.runMSDeployCommandWrapper = runMSDeployCommandWrapper;
 
