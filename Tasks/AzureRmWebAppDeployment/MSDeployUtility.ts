@@ -104,21 +104,22 @@ function getMSDeployCmdForLogs(msDeployCmdArgs: string) : string {
     return msDeployCmdArray.join(",");
 }
 
-function runMSDeployCommand(msDeployExePath: string, msDeployCmdArgs: string, azureRMWebAppConnectionDetails) {
+async function runMSDeployCommand(msDeployExePath: string, msDeployCmdArgs: string, azureRMWebAppConnectionDetails) {
     var msDeployCmdForLogs = getMSDeployCmdForLogs(msDeployCmdArgs);
     tl.debug("[command] "+msDeployExePath+" "+msDeployCmdForLogs);
-
+    var defer = Q.defer<String>();
     tl.exec(msDeployExePath, msDeployCmdArgs)
     .then(function(code){
       azureRmUtil.updateDeploymentStatus(azureRMWebAppConnectionDetails, true);
-        tl.debug("MSDeploy executed Successfully !");
-        tl.debug("Return Code : " + code);
+      tl.debug("MSDeploy executed successfully");
+      defer.resolve(code.toString());
     },
     function(error) {
        azureRmUtil.updateDeploymentStatus(azureRMWebAppConnectionDetails, false);
-        tl.error("MSDeploy failed !");
-        onError(error);
+       tl.error("MSDeploy.exe failed with error");
+        defer.reject(error);
     });
+    return defer.promise;
 }
 
 // Get the latest version of MSDeploy installed
@@ -184,7 +185,7 @@ async function runMSDeployCommandWrapper(msDeployCmdArgs: string, azureRMWebAppC
         var msDeployLatestPathRegKey = msDeployInstallPathRegKey+"\\"+msDeployVersion;
         var msDeployExePath = await getMSDeployInstallPath(msDeployLatestPathRegKey);
         msDeployExePath = msDeployExePath+"\\msdeploy.exe";
-        runMSDeployCommand(msDeployExePath, msDeployCmdArgs, azureRMWebAppConnectionDetails);
+        await runMSDeployCommand(msDeployExePath, msDeployCmdArgs, azureRMWebAppConnectionDetails);
     }  
     catch(error) {
         onError(error);
