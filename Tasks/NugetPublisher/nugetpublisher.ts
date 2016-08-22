@@ -200,7 +200,7 @@ function publishPackage(packageFile: string, options: PublishOptions): Q.Promise
         nugetTool.pathArg(options.configFile);
     }
 
-    if (options.verbosity) {
+    if (options.verbosity && options.verbosity != "-") {
         nugetTool.arg("-Verbosity");
         nugetTool.arg(options.verbosity);
     }
