@@ -34,8 +34,21 @@ describe('AzureCLI Suite', function () {
     function addInlineObjectJson(responseFileName:string, nameOfFileToBeCreated:string)
     {
         var jsonFileObject:any = JSON.parse(fs.readFileSync(path.join(__dirname,responseFileName)).toString());
-        if( !jsonFileObject.exec['/usr/local/bin/bash ' + path.join(os.tmpdir(), nameOfFileToBeCreated) + ' arg1']){
-            jsonFileObject.exec['/usr/local/bin/bash ' + path.join(os.tmpdir(), nameOfFileToBeCreated) + ' arg1'] = jsonFileObject.exec['/usr/local/bin/bash azureclitaskscript.sh arg1'];
+        if(nameOfFileToBeCreated === inlineScriptName + '.sh'){
+            if( !jsonFileObject.exec['/usr/local/bin/bash ' + path.join(os.tmpdir(), nameOfFileToBeCreated) + ' arg1']){
+                jsonFileObject.exec['/usr/local/bin/bash ' + path.join(os.tmpdir(), nameOfFileToBeCreated) + ' arg1'] = jsonFileObject.exec['/usr/local/bin/bash azureclitaskscript.sh arg1'];
+            }
+        }
+        else {
+            if( !jsonFileObject.exec[path.join(os.tmpdir(), nameOfFileToBeCreated) + ' arg1']){
+                jsonFileObject.exec[path.join(os.tmpdir(), nameOfFileToBeCreated) + ' arg1'] = jsonFileObject.exec['script.bat arg1'];
+            }
+            if(!jsonFileObject.which[path.join(os.tmpdir(), nameOfFileToBeCreated)]) {
+                jsonFileObject.which[path.join(os.tmpdir(), nameOfFileToBeCreated)] = path.join(os.tmpdir(), nameOfFileToBeCreated).toString();
+            }
+            if(!jsonFileObject.checkPath[path.join(os.tmpdir(), nameOfFileToBeCreated)]) {
+                jsonFileObject.checkPath[path.join(os.tmpdir(), nameOfFileToBeCreated)] = true;
+            }
         }
         fs.writeFileSync(path.join(__dirname,responseFileName), JSON.stringify(jsonFileObject));
     }
@@ -43,27 +56,66 @@ describe('AzureCLI Suite', function () {
     function deleteInlineObjectJson(responseFileName:string, nameOfFileToBeCreated:string)
     {
         var jsonFileObject:any = JSON.parse(fs.readFileSync(path.join(__dirname,responseFileName)).toString());
-        delete jsonFileObject.exec['/usr/local/bin/bash ' + path.join(os.tmpdir(), nameOfFileToBeCreated) + ' arg1'];
+        if(nameOfFileToBeCreated === inlineScriptName + '.sh') {
+            delete jsonFileObject.exec['/usr/local/bin/bash ' + path.join(os.tmpdir(), nameOfFileToBeCreated) + ' arg1'];
+        }
+        else {
+            delete jsonFileObject.exec[path.join(os.tmpdir(), nameOfFileToBeCreated) + ' arg1'];
+            delete jsonFileObject.which[path.join(os.tmpdir(), nameOfFileToBeCreated)];
+            delete jsonFileObject.checkPath[path.join(os.tmpdir(), nameOfFileToBeCreated)];
+        }
         fs.writeFileSync(path.join(__dirname,responseFileName), JSON.stringify(jsonFileObject));
     }
 
     function deleteSubscriptionObjectJson(responseFileName:string, nameOfFileToBeCreated:string)
     {
         var jsonFileObject:any = JSON.parse(fs.readFileSync(path.join(__dirname,responseFileName)).toString());
-        delete jsonFileObject.exec['/usr/local/bin/azure account import' + path.join(os.tmpdir(), nameOfFileToBeCreated)];
+        delete jsonFileObject.exec['/usr/local/bin/azure account import ' + path.join(os.tmpdir(), nameOfFileToBeCreated)];
         fs.writeFileSync(path.join(__dirname,responseFileName), JSON.stringify(jsonFileObject));
     }
 
     var publishsettingFileName:string = 'subscriptions.publishsettings';
+    var inlineScriptName:string = 'azureclitaskscript';
 
-    it('successfully login azure classic and run bash script (scriptPath)', (done) => {
+    it('successfully login azure classic and run shell script (scriptPath)', (done) => {
         var responseFileName:string = 'azureclitaskPass.json';
         addSubscriptionObjectJson(responseFileName, publishsettingFileName);
         setResponseFile(responseFileName);
 
         var tr = new trm.TaskRunner('AzureCLI');
+        tr.setInput('scriptType', 'bash');
         tr.setInput('scriptLocation', 'scriptPath');
         tr.setInput('scriptPath', 'script.sh');
+        tr.setInput('cwd', 'fake/wd');
+        tr.setInput('args', 'arg1');
+        tr.setInput('failOnStandardError', 'false');
+        tr.setInput('connectedServiceNameSelector', 'connectedServiceName');
+        tr.setInput('connectedServiceName', 'AzureClassic');
+        tr.run()
+            .then(() => {
+                console.log(tr.stderr)
+                console.log(tr.stdout)
+                deleteSubscriptionObjectJson(responseFileName, 'subscriptions.publishsettings')
+                assert(tr.ran('/usr/local/bin/azure account clear -s sName'), 'it should have logged out of azure');
+                assert(tr.ran('/usr/local/bin/azure config mode asm'), 'it should have set the mode to asm');
+                assert(tr.invokedToolCount == 5, 'should have only run ShellScript');
+                assert(tr.stderr.length == 0, 'should have written to stderr');
+                assert(tr.succeeded, 'task should have succeeded');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+    it('successfully login azure classic and run batch script (scriptPath)', (done) => {
+        var responseFileName:string = 'azureclitaskPass.json';
+        addSubscriptionObjectJson(responseFileName, publishsettingFileName);
+        setResponseFile(responseFileName);
+
+        var tr = new trm.TaskRunner('AzureCLI');
+        tr.setInput('scriptType', 'cmd');
+        tr.setInput('scriptLocation', 'scriptPath');
+        tr.setInput('scriptPath', 'script.bat');
         tr.setInput('cwd', 'fake/wd');
         tr.setInput('args', 'arg1');
         tr.setInput('failOnStandardError', 'false');
@@ -83,13 +135,14 @@ describe('AzureCLI Suite', function () {
                 done(err);
             });
     })
-    it('successfully login azure classic and run bash script (inline)', (done) => {
+    it('successfully login azure classic and run shell script (inline)', (done) => {
         var responseFileName:string = 'azureclitaskPass.json';
-        addInlineObjectJson(responseFileName, 'azureclitaskscript.sh');
+        addInlineObjectJson(responseFileName, inlineScriptName + '.sh');
         addSubscriptionObjectJson(responseFileName, publishsettingFileName);
         setResponseFile(responseFileName);
 
         var tr = new trm.TaskRunner('AzureCLI');
+        tr.setInput('scriptType', 'bash');
         tr.setInput('scriptLocation', 'inlineScript');
         tr.setInput('inlineScript', 'console.log("test");');
         tr.setInput('cwd', 'fake/wd');
@@ -100,7 +153,7 @@ describe('AzureCLI Suite', function () {
         tr.run()
             .then(() => {
                 deleteSubscriptionObjectJson(responseFileName, 'subscriptions.publishsettings');
-                deleteInlineObjectJson(responseFileName, 'azureclitaskscript.sh');
+                deleteInlineObjectJson(responseFileName, inlineScriptName + '.sh');
                 assert(tr.ran('/usr/local/bin/azure account clear -s sName'), 'it should have logged out of azure');
                 assert(tr.ran('/usr/local/bin/azure config mode asm'), 'it should have set the mode to asm');
                 assert(tr.invokedToolCount == 5, 'should have only run ShellScript');
@@ -112,10 +165,41 @@ describe('AzureCLI Suite', function () {
                 done(err);
             });
     })
-    it('successfully login azure RM and run bash script (scriptPath)', (done) => {
+    it('successfully login azure classic and run batch script (inline)', (done) => {
+        var responseFileName:string = 'azureclitaskPass.json';
+        addInlineObjectJson(responseFileName, inlineScriptName + '.bat');
+        addSubscriptionObjectJson(responseFileName, publishsettingFileName);
+        setResponseFile(responseFileName);
+
+        var tr = new trm.TaskRunner('AzureCLI');
+        tr.setInput('scriptType', 'cmd');
+        tr.setInput('scriptLocation', 'inlineScript');
+        tr.setInput('inlineScript', 'console.log("test");');
+        tr.setInput('cwd', 'fake/wd');
+        tr.setInput('args', 'arg1');
+        tr.setInput('failOnStandardError', 'false');
+        tr.setInput('connectedServiceNameSelector', 'connectedServiceName');
+        tr.setInput('connectedServiceName', 'AzureClassic');
+        tr.run()
+            .then(() => {
+                deleteSubscriptionObjectJson(responseFileName, 'subscriptions.publishsettings');
+                deleteInlineObjectJson(responseFileName, inlineScriptName + '.bat');
+                assert(tr.ran('/usr/local/bin/azure account clear -s sName'), 'it should have logged out of azure');
+                assert(tr.ran('/usr/local/bin/azure config mode asm'), 'it should have set the mode to asm');
+                assert(tr.invokedToolCount == 5, 'should have only run ShellScript');
+                assert(tr.stderr.length == 0, 'should have written to stderr');
+                assert(tr.succeeded, 'task should have succeeded');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+    it('successfully login azure RM and run shell script (scriptPath)', (done) => {
         setResponseFile('azureclitaskPass.json');
 
         var tr = new trm.TaskRunner('AzureCLI');
+        tr.setInput('scriptType', 'bash');
         tr.setInput('scriptLocation', 'scriptPath');
         tr.setInput('scriptPath', 'script.sh');
         tr.setInput('cwd', 'fake/wd');
@@ -136,12 +220,13 @@ describe('AzureCLI Suite', function () {
                 done(err);
             });
     })
-    it('successfully login azure RM and run bash script (inline)', (done) => {
+    it('successfully login azure RM and run shell script (inline)', (done) => {
         var responseFileName:string = 'azureclitaskPass.json';
-        addInlineObjectJson(responseFileName, 'azureclitaskscript.sh');
+        addInlineObjectJson(responseFileName, inlineScriptName + '.sh');
         setResponseFile(responseFileName);
 
         var tr = new trm.TaskRunner('AzureCLI');
+        tr.setInput('scriptType', 'bash');
         tr.setInput('scriptLocation', 'inlineScript');
         tr.setInput('inlineScript', 'console.log("test");');
         tr.setInput('cwd', 'fake/wd');
@@ -151,7 +236,7 @@ describe('AzureCLI Suite', function () {
         tr.setInput('connectedServiceNameARM', 'AzureRM');
         tr.run()
             .then(() => {
-                deleteInlineObjectJson(responseFileName, 'azureclitaskscript.sh');
+                deleteInlineObjectJson(responseFileName, inlineScriptName + '.sh');
                 assert(tr.ran('/usr/local/bin/azure account clear -s sName'), 'it should have logged out of azure');
                 assert(tr.ran('/usr/local/bin/azure config mode arm'), 'it should have set the mode to asm');
                 assert(tr.invokedToolCount == 5, 'should have only run ShellScript');
@@ -167,6 +252,7 @@ describe('AzureCLI Suite', function () {
         setResponseFile('azureLoginFails.json');
 
         var tr = new trm.TaskRunner('AzureCLI');
+        tr.setInput('scriptType', 'bash');
         tr.setInput('scriptLocation', 'scriptPath');
         tr.setInput('scriptPath', 'script.sh');
         tr.setInput('cwd', 'fake/wd');
@@ -189,6 +275,7 @@ describe('AzureCLI Suite', function () {
         setResponseFile('azureLoginFails.json');
 
         var tr = new trm.TaskRunner('AzureCLI');
+        tr.setInput('scriptType', 'bash');
         tr.setInput('scriptLocation', 'scriptPath');
         tr.setInput('scriptPath', 'script.sh');
         tr.setInput('cwd', 'fake/wd');
@@ -213,6 +300,7 @@ describe('AzureCLI Suite', function () {
         setResponseFile(responseFileName);
 
         var tr = new trm.TaskRunner('AzureCLI');
+        tr.setInput('scriptType', 'bash');
         tr.setInput('scriptLocation', 'scriptPath');
         tr.setInput('scriptPath', 'script.sh');
         tr.setInput('cwd', 'fake/wd');
@@ -236,6 +324,7 @@ describe('AzureCLI Suite', function () {
         setResponseFile('azureLoginFails.json');
 
         var tr = new trm.TaskRunner('AzureCLI');
+        tr.setInput('scriptType', 'bash');
         tr.setInput('scriptLocation', 'scriptPath');
         tr.setInput('scriptPath', 'script.sh');
         tr.setInput('cwd', 'fake/wd');
@@ -256,10 +345,11 @@ describe('AzureCLI Suite', function () {
                 done(err);
             });
     })
-    it('should logout of AzureRM if bash failed (scripPath)',(done) => {
-        setResponseFile('bashFailed.json');
+    it('should logout of AzureRM if script execution failed (scripPath)',(done) => {
+        setResponseFile('scriptExecutionFailed.json');
 
         var tr = new trm.TaskRunner('AzureCLI');
+        tr.setInput('scriptType', 'bash');
         tr.setInput('scriptLocation', 'scriptPath');
         tr.setInput('scriptPath', 'scriptfail.sh');
         tr.setInput('cwd', 'fake/wd');
@@ -279,11 +369,12 @@ describe('AzureCLI Suite', function () {
             });
     })
     it('should logout of AzureClassic if bash failed (scriptPath)',(done) => {
-        var responseFileName:string = 'bashFailed.json';
+        var responseFileName:string = 'scriptExecutionFailed.json';
         addSubscriptionObjectJson(responseFileName, publishsettingFileName);
         setResponseFile(responseFileName);
 
         var tr = new trm.TaskRunner('AzureCLI');
+        tr.setInput('scriptType', 'bash');
         tr.setInput('scriptLocation', 'scriptPath');
         tr.setInput('scriptPath', 'scriptfail.sh');
         tr.setInput('cwd', 'fake/wd');
@@ -303,10 +394,63 @@ describe('AzureCLI Suite', function () {
                 done(err);
             });
     })
-    it('task should fail if bash not found',(done) => {
-        setResponseFile('bashnotfoundFails.json');
+    it('should logout of AzureClassic if CMD failed (scriptPath)',(done) => {
+        var responseFileName:string = 'scriptExecutionFailed.json';
+        addSubscriptionObjectJson(responseFileName, publishsettingFileName);
+        setResponseFile(responseFileName);
 
         var tr = new trm.TaskRunner('AzureCLI');
+        tr.setInput('scriptType', 'cmd');
+        tr.setInput('scriptLocation', 'scriptPath');
+        tr.setInput('scriptPath', 'scriptfail.bat');
+        tr.setInput('cwd', 'fake/wd');
+        tr.setInput('args', 'arg1');
+        tr.setInput('failOnStandardError', 'false');
+        tr.setInput('connectedServiceNameSelector', 'connectedServiceName');
+        tr.setInput('connectedServiceName', 'AzureClassic');
+        tr.run()
+            .then(() => {
+                deleteSubscriptionObjectJson(responseFileName, publishsettingFileName);
+                assert(tr.invokedToolCount == 5, 'logout happened when bash fails');
+                assert(tr.stderr.length > 0, 'should have written to stderr');
+                assert(tr.failed, 'task should have failed');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+    it('task should fail if bash not found',(done) => {
+        setResponseFile('toolnotfoundFails.json');
+
+        var tr = new trm.TaskRunner('AzureCLI');
+        tr.setInput('scriptType', 'bash');
+        tr.setInput('scriptLocation', 'scriptPath');
+        tr.setInput('cwd', 'fake/wd');
+        tr.setInput('scriptPath', 'script.sh');
+        tr.setInput('args', 'args1');
+        tr.setInput('failOnStandardError', 'false');
+        tr.run()
+            .then(() => {
+                assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
+                assert(tr.stderr.length > 0, 'should have written to stderr');
+                assert(tr.failed, 'task should have failed');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+    it('task should fail if cmd not found',(done) => {
+        setResponseFile('toolnotfoundFails.json');
+
+        var tr = new trm.TaskRunner('AzureCLI');
+        tr.setInput('scriptType', 'cmd');
+        tr.setInput('scriptLocation', 'scriptPath');
+        tr.setInput('cwd', 'fake/wd');
+        tr.setInput('scriptPath', 'script.bat');
+        tr.setInput('args', 'args1');
+        tr.setInput('failOnStandardError', 'false');
         tr.run()
             .then(() => {
                 assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
@@ -322,7 +466,9 @@ describe('AzureCLI Suite', function () {
         setResponseFile('checkpathFails.json');
 
         var tr = new trm.TaskRunner('AzureCLI');
+        tr.setInput('scriptType', 'bash');
         tr.setInput('scriptLocation', 'scriptPath');
+        tr.setInput('cwd', 'fake/wd');
         tr.setInput('scriptPath', 'scriptfail.sh');
         tr.run()
             .then(() => {

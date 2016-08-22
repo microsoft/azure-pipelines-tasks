@@ -1,6 +1,6 @@
-/// <reference path="../../definitions/node.d.ts" />
-/// <reference path="../../definitions/Q.d.ts" />
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
+/// <reference path="definitions/node.d.ts" />
+/// <reference path="definitions/Q.d.ts" />
+/// <reference path="definitions/vsts-task-lib.d.ts" />
 
 import path = require("path");
 import tl = require("vsts-task-lib/task");
@@ -15,7 +15,7 @@ export class azureclitask {
         try {
             tl.setResourcePath(path.join( __dirname, "task.json"));
 
-            var bash = tl.createToolRunner(tl.which("bash", true));
+            var scriptType: string = tl.getInput("scriptType", true);
 
             var scriptLocation:string = tl.getInput("scriptLocation");
             var scriptPath:string = null;
@@ -30,8 +30,13 @@ export class azureclitask {
                 }
             }
             else {
-                var script:string = tl.getInput("inlineScript", true);
-                scriptPath = path.join(os.tmpdir() ,"azureclitaskscript.sh");
+                var script: string = tl.getInput("inlineScript", true);
+                if (scriptType === "bash") {
+                    scriptPath = path.join(os.tmpdir(), "azureclitaskscript.sh");
+                }
+                else {
+                    scriptPath = path.join(os.tmpdir(), "azureclitaskscript.bat");
+                }
                 this.createFile(scriptPath, script);
             }
 
@@ -44,13 +49,20 @@ export class azureclitask {
             tl.mkdirP(cwd);
             tl.cd(cwd);
 
+            var tool;
+            if (scriptType === "bash") {
+                tool = tl.createToolRunner(tl.which("bash", true));
+                tool.pathArg(scriptPath);
+            }
+            else {
+                tool = tl.createToolRunner(tl.which(scriptPath, true));
+            }
+
             var connectedServiceNameSelector = tl.getInput("connectedServiceNameSelector", true);
             this.loginAzure(connectedServiceNameSelector);
 
-            bash.pathArg(scriptPath);
-            bash.argString(args); // additional args should always call argString.  argString() parses quoted arg strings
-
-            await bash.exec({failOnStdErr: failOnStdErr});
+            tool.argString(args); // additional args should always call argString.  argString() parses quoted arg strings
+            await tool.exec({ failOnStdErr: failOnStdErr });
         }
         catch (err) {
             if(err.stderr){

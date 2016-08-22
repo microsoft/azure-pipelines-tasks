@@ -7,9 +7,7 @@
   "helpMarkDown": "Replace with markdown to show in help",
   "category": "Utility",
   "visibility":["Preview","Build","Release"],
-  "demands": [
-    "sh"
-  ],
+  "demands": [],
   "version": {
     "Major": "0",
     "Minor": "1",
@@ -56,6 +54,18 @@
       "helpMarkDown": "Select the Azure Classic subscription for the deployment"
     },
     {
+      "name": "scriptType",
+      "type": "pickList",
+      "label": "Script Type",
+      "defaultValue": "bash",
+      "required": true,
+      "helpMarkDown": "Type of the script: Shell OR Batch",
+      "options": {
+        "bash": "Shell",
+        "cmd": "Batch"
+      }
+    },
+    {
       "name": "scriptLocation",
       "type": "pickList",
       "label": "Script Location",
@@ -80,9 +90,9 @@
       "name": "inlineScript",
       "type": "multiLine",
       "label": "Inline Script",
-      "defaultValue": "",
+      "defaultValue": "//You can write your shell scripts inline here. You can also pass predefined and custom variables to this scripts using arguments \n\n azure --version",
       "required": true,
-      "helpMarkDown": "You can write your shell scripts inline here. You can also pass predefined and custom variables to this scripts using arguments",
+      "helpMarkDown": "",
       "visibleRule": "scriptLocation = inlineScript",
       "properties": {
         "resizable": "true",

@@ -1,0 +1,12 @@
+{
+  "which": {
+    "bash": "/usr/local/bin/bash",
+    "script.bat" : "script.bat"
+  },
+
+  "checkPath" : {
+    "script.sh" : true,
+    "script.bat" : false,
+    "/usr/local/bin/bash": false
+  }
+}
