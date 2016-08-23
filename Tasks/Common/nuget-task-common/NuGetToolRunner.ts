@@ -3,12 +3,14 @@
 
 import * as tl from 'vsts-task-lib/task';
 import {ToolRunner, IExecOptions, IExecResult} from 'vsts-task-lib/toolrunner';
-import * as auth from "./Authentication"
 import * as os from 'os';
 import * as path from 'path';
 import * as url from 'url';
 
+import * as auth from "./Authentication"
 import * as ngutil from "./Utility";
+import {defaultQuirks, NuGetQuirks, NuGetQuirkName} from "./NuGetQuirks"
+import * as peParser from "./pe-parser"
 
 interface EnvironmentDictionary { [key: string]: string }
 
@@ -112,8 +114,7 @@ function locateTool(tool: string, opts?: LocateOptions) {
 
     tl.debug(`looking for tool ${tool}`)
 
-    for (let thisVariant of opts.toolFilenames)
-    {
+    for (let thisVariant of opts.toolFilenames) {
         tl.debug(`looking for tool variant ${thisVariant}`);
 
         for (let possibleLocation of searchPath) {
@@ -155,7 +156,7 @@ export function locateNuGetExe(userNuGetExePath: string): string {
         toolFilenames: ['nuget.exe', 'NuGet.exe', 'nuget', 'NuGet']
     });
 
-    
+
     if (!toolPath) {
         throw new Error(tl.loc("NGCommon_UnableToFindTool", 'NuGet'));
     }
@@ -163,7 +164,40 @@ export function locateNuGetExe(userNuGetExePath: string): string {
     return toolPath;
 }
 
+export async function getNuGetQuirksAsync(nuGetExePath: string): Promise<NuGetQuirks> {
+    try {
+        const version = await peParser.getFileVersionInfoAsync(nuGetExePath);
+        const quirks = NuGetQuirks.fromVersion(version.fileVersion);
+
+        tl._writeLine(tl.loc("NGCommon_DetectedNuGetVersion", version.fileVersion, version.strings.ProductVersion))
+        tl.debug(`Quirks for ${version.fileVersion}:`);
+        quirks.getQuirkNames().forEach(quirk => {
+            tl.debug(`    ${quirk}`)
+        });
+
+        return quirks;
+    } catch (err) {
+        if (err.code && (
+            err.code === "invalidSignature"
+            || err.code === "noResourceSection"
+            || err.code === "noVersionResource")) {
+
+            tl.debug("Cannot read version from NuGet. Using default quirks:")
+            defaultQuirks.forEach(quirk => {
+                tl.debug(`    ${NuGetQuirkName[quirk]}`)
+            });
+            return new NuGetQuirks(null, defaultQuirks);
+        }
+
+        throw err;
+    }
+}
+
 function isHosted(): boolean {
+    if(tl.getVariable("NuGetTasks.IsHostedTestEnvironment") === "true") {
+        return true;
+    }
+
     // not an ideal way to detect hosted, but there isn't a variable for it, and we can't make network calls from here
     // due to proxy issues.
     const collectionUri = tl.getVariable("System.TeamFoundationCollectionUri");
@@ -178,7 +212,7 @@ function isHosted(): boolean {
 // Therefore, we are enabling credential provider on on-premises and disabling it on hosted. We allow for test
 // instances by an override variable.
 
-export function isCredentialProviderEnabled(): boolean {
+export function isCredentialProviderEnabled(quirks: NuGetQuirks): boolean {
     // set NuGet.ForceEnableCredentialProvider to "true" to force allowing the credential provider flow, "false"
     // to force *not* allowing the credential provider flow, or unset/anything else to fall through to the 
     // hosted environment detection logic
@@ -192,18 +226,24 @@ export function isCredentialProviderEnabled(): boolean {
         tl.debug("Credential provider is force-disabled for testing purposes.");
         return false;
     }
-    
-    if (isHosted()) {
-        tl.debug("Credential provider is disabled on hosted.");
+
+    if (quirks.hasQuirk(NuGetQuirkName.NoCredentialProvider)
+        || quirks.hasQuirk(NuGetQuirkName.CredentialProviderRace)) {
+        tl.debug("Credential provider is disabled due to quirks.");
         return false;
     }
-    else {
-        tl.debug("Credential provider is enabled.")
-        return true;
+
+    if (!isHosted() && (
+        quirks.hasQuirk(NuGetQuirkName.NoTfsOnPremAuthCredentialProvider))) {
+        tl.debug("Credential provider is disabled due to on-prem quirks.")
+        return false;
     }
+
+    tl.debug("Credential provider is enabled.");
+    return true;
 }
 
-export function isCredentialConfigEnabled(): boolean {
+export function isCredentialConfigEnabled(quirks: NuGetQuirks): boolean {
     // set NuGet.ForceEnableCredentialConfig to "true" to force allowing config-based credential flow, "false"
     // to force *not* allowing config-based credential flow, or unset/anything else to fall through to the 
     // hosted environment detection logic
@@ -217,25 +257,25 @@ export function isCredentialConfigEnabled(): boolean {
         tl.debug("Credential config is force-disabled for testing purposes.");
         return false;
     }
-    
-    // credentials in config will always fail for on-prem
-    if (!isHosted()) {
-        tl.debug("Credential config is disabled on on-premises TFS.");
+
+
+    if (!isHosted() && (
+        quirks.hasQuirk(NuGetQuirkName.NoTfsOnPremAuthConfig))) {
+        tl.debug("Credential config is disabled due to on-prem quirks.")
         return false;
     }
-    else {
-        tl.debug("Credential config is enabled.")
-        return true;
-    }
+
+    tl.debug("Credential config is enabled.")
+    return true;
 }
 
 export function locateCredentialProvider(): string {
     const credentialProviderLocation = locateTool('CredentialProvider.TeamBuild.exe');
-    if(!credentialProviderLocation) {
+    if (!credentialProviderLocation) {
         tl.debug("Credential provider is not present.");
         return null;
     }
 
-    return isCredentialProviderEnabled() ? credentialProviderLocation : null;
+    return credentialProviderLocation;
 }
 

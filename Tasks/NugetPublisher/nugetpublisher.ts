@@ -16,8 +16,9 @@ import * as auth from 'nuget-task-common/Authentication';
 import {NuGetConfigHelper} from 'nuget-task-common/NuGetConfigHelper';
 import * as locationApi from 'nuget-task-common/LocationApi';
 import * as os from 'os';
+import INuGetCommandOptions from 'nuget-task-common/INuGetCommandOptions';
 
-class PublishOptions {
+class PublishOptions implements INuGetCommandOptions {
     constructor(
         public nuGetPath: string,
         public feedUri: string,
@@ -49,7 +50,6 @@ async function main(): Promise<void> {
         var internalFeedUri = tl.getInput('feedName');
         var nuGetAdditionalArgs = tl.getInput('nuGetAdditionalArgs');
         var verbosity = tl.getInput('verbosity');
-        var preCredProviderNuGet = tl.getBoolInput('preCredProviderNuGet');
 
         var nuGetFeedType = tl.getInput('nuGetFeedType') || "external";
         // make sure the feed type is an expected one
@@ -73,37 +73,15 @@ async function main(): Promise<void> {
         var nuGetPathToUse = ngToolRunner.locateNuGetExe(userNuGetPath);
         var credProviderPath = ngToolRunner.locateCredentialProvider();
 
-        var credProviderDir: string = null;
-        if (credProviderPath) {
-            credProviderDir = path.dirname(credProviderPath)
-        }
-        else {
-            tl._writeLine(tl.loc("NoCredProviderOnAgent"));
-        }
+        const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPathToUse);
+
+        // clauses ordered in this way to avoid short-circuit evaluation, so the debug info printed by the functions
+        // is unconditionally displayed
+        const useCredProvider = ngToolRunner.isCredentialProviderEnabled(quirks) && credProviderPath;
+        const useCredConfig = ngToolRunner.isCredentialConfigEnabled(quirks) && !useCredProvider;
 
         var accessToken = auth.getSystemAccessToken();
-
-        /*
-        BUG: HTTP calls to access the location service currently do not work for customers behind proxies.
-        locationHelpers.getNuGetConnectionData(serviceUri, accessToken)
-            .then(connectionData => {
-                buildIdentityDisplayName = locationHelpers.getIdentityDisplayName(connectionData.authorizedUser);
-                buildIdentityAccount = locationHelpers.getIdentityAccount(connectionData.authorizedUser);
-        
-                tl._writeLine(tl.loc('ConnectingAs', buildIdentityDisplayName, buildIdentityAccount));
-                return connectionData;
-            })
-            .then(locationHelpers.getAllAccessMappingUris)
-            .fail(err => {
-                if (err.code && err.code == 'AreaNotFoundInSps') {
-                    tl.warning(tl.loc('CouldNotFindNuGetService'))
-                    return <string[]>[];
-                }
-        
-                throw err;
-            })*/
         let urlPrefixes = await locationHelpers.assumeNuGetUriPrefixes(serviceUri);
-
         tl.debug(`discovered URL prefixes: ${urlPrefixes}`);
 
         // Note to readers: This variable will be going away once we have a fix for the location service for
@@ -115,10 +93,9 @@ async function main(): Promise<void> {
         }
 
         const authInfo = new auth.NuGetAuthInfo(urlPrefixes, accessToken);
-
         var environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
             authInfo: authInfo,
-            credProviderFolder: credProviderDir,
+            credProviderFolder: useCredProvider ? path.dirname(credProviderPath) : null,
             extensionsDisabled: !userNuGetPath
         }
 
@@ -127,10 +104,7 @@ async function main(): Promise<void> {
         var feedUri: string;
         var credCleanup = () => { return };
         if (nuGetFeedType == "internal") {
-            if (!ngToolRunner.isCredentialConfigEnabled()) {
-                tl.debug("Not configuring credentials in nuget.config");
-            }
-            else if (!credProviderDir || (userNuGetPath && preCredProviderNuGet)) {
+            if (useCredConfig) {
                 var nuGetConfigHelper = new NuGetConfigHelper(nuGetPathToUse, null, authInfo, environmentSettings);
                 nuGetConfigHelper.setSources([{ feedName: "internalFeed", feedUri: internalFeedUri }]);
                 configFile = nuGetConfigHelper.tempNugetConfigPath;
@@ -156,7 +130,6 @@ async function main(): Promise<void> {
                 nuGetAdditionalArgs,
                 environmentSettings);
 
-            var result = Q({});
             for (const packageFile of filesList) {
                 await publishPackageAsync(packageFile, publishOptions);
             }

@@ -121,7 +121,12 @@ function readRawVsFixedFileInfo(buffer: Buffer, offset: number): RawVsFixedFileI
     };
 }
 
-function readRawVsVersionInfoTree(buffer: Buffer, offset: number, depth: number = 0): RawVsVersionInfoElement {
+function readRawVsVersionInfoTree(buffer: Buffer, offset: number, depth?: number): RawVsVersionInfoElement {
+    if(depth === undefined)
+    {
+        depth = 0;
+    }
+
     let thisElement: RawVsVersionInfoElement = {
         header: readRawVsVersionInfoElementHeader(buffer, offset),
         rawChildren: [],

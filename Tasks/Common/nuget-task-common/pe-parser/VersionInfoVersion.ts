@@ -27,6 +27,9 @@ export class VersionInfoVersion {
     public equals(other: VersionInfoVersion): boolean {
         return VersionInfoVersion.compare(this, other) === 0;
     }
+
+    public static MAX_VERSION = new VersionInfoVersion(0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF);
+    public static MIN_VERSION = new VersionInfoVersion(0x0, 0x0, 0x0, 0x0);
 }
 
 export default VersionInfoVersion;

@@ -1,4 +1,5 @@
 import IReadableFile from "./IReadableFile";
+import PEParserError from "./PEParserError";
 import {SectionTable, SectionTableEntry} from "./SectionTable";
 
 const peSignature = 0x00004550;
@@ -27,7 +28,9 @@ export class PEImageFile {
         await file.readAsync(buffer, 0, 2, 0);
         const dosSignatureValue = buffer.readUInt16LE(0);
         if (dosSignatureValue !== dosSignature) {
-            throw "unexpected dos signature";
+            throw new PEParserError(
+                "invalidSignature",
+                "The DOS signature of the PE file does not match the expected value");
         }
 
         // read the pointer to the PE signature
@@ -38,7 +41,9 @@ export class PEImageFile {
         await file.readAsync(buffer, 0, 4, filePositionOfPEHeader);
         const peSignatureValue = buffer.readUInt32LE(0);
         if (peSignatureValue !== peSignature) {
-            throw "unexpected pe signature";
+            throw new PEParserError(
+                "invalidSignature",
+                "The PE signature of the PE file does not match the expected value");
         }
 
         // the COFF header begins immediately after the PE signature
