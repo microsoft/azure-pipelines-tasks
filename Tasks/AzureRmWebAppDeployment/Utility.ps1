@@ -118,8 +118,8 @@ function Get-MsDeployCmdArgs
 
     }
 
-    $msDeployCmdArgs += [String]::Format('ComputerName="https://{1}/msdeploy.axd?site={2}",UserName="{3}",Password="{4}",AuthType="Basic"' `
-                                        , $packageFile, $azureRMWebAppConnectionDetails.KuduHostName, $webAppNameForMSDeployCmd, $azureRMWebAppConnectionDetails.UserName, $azureRMWebAppConnectionDetails.UserPassword)
+    $msDeployCmdArgs += [String]::Format('ComputerName="https://{0}/msdeploy.axd?site={1}",UserName="{2}",Password="{3}",AuthType="Basic"' `
+                                        ,  $azureRMWebAppConnectionDetails.KuduHostName, $webAppNameForMSDeployCmd, $azureRMWebAppConnectionDetails.UserName, $azureRMWebAppConnectionDetails.UserPassword)
 
 
     # msdeploy argument to set destination IIS App Name for deploy
