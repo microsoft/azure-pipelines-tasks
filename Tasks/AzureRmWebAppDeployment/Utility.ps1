@@ -157,15 +157,21 @@ function Contains-ParamFile( [String][Parameter(Mandatory=$true)] $packageFile )
 
     $msDeployCheckParamFileCmd = "`"$msDeployExePath`" $msDeployCheckParamFileCmdArgs"
 
+    Write-Host (Get-VstsLocString -Key "Runningmsdeploycommandtocheckifpackagecontainsparamfile0" -ArgumentList $msDeployCheckParamFileCmd)
+
     $ParamFileContent = Get-CommandOutput -command $msDeployCheckParamFileCmd
+
+    Write-Verbose (Get-VstsLocString -Key "Paramscontentofwebpackage0" -ArgumentList $ParamFileContent)
 
     $paramFileXML = [XML] $ParamFileContent
 
     if( $paramFileXML.output.parameters )
     {
+        Write-Verbose (Get-VstsLocString -Key "Parameterfileispresentinwebpackage")
         return $true
     }
-       
+     
+    Write-Verbose (Get-VstsLocString -Key "Parameterfileisnotpresentinwebpackage")   
     return $false
 
 }
@@ -221,6 +227,7 @@ function Get-CommandOutput
     }
     
     return $result
+
 }
 
 function Get-MsDeployCmdForLogs
