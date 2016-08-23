@@ -90,7 +90,7 @@
       "name": "inlineScript",
       "type": "multiLine",
       "label": "Inline Script",
-      "defaultValue": "//You can write your shell scripts inline here. You can also pass predefined and custom variables to this scripts using arguments \n\n azure --version",
+      "defaultValue": "//You can write your shell scripts inline here. \n//You can also pass predefined and custom variables to this scripts using arguments \n\n azure --version",
       "required": true,
       "visibleRule": "scriptLocation = inlineScript",
       "helpMarkDown": "",
