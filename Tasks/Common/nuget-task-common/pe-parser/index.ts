@@ -1,5 +1,6 @@
 import IReadableFile from "./IReadableFile";
 import PEImageFile from "./PEImageFile";
+import PEParserError from "./PEParserError";
 import ReadableFile from "./ReadableFile";
 import ResourceSection from "./ResourceSection";
 import {VersionInfo, VersionResource} from "./VersionResource";
@@ -17,7 +18,7 @@ export async function getFileVersionInfoAsync(file: string | IReadableFile): Pro
 
     const resourceSectionTableEntry = peFile.getSection(".rsrc\0\0\0");
     if (!resourceSectionTableEntry) {
-        throw new Error("No resource section found in the file");
+        throw new PEParserError("noResourceSection", "No resource section found in the file");
     }
 
     const resourceSection = await ResourceSection.load(readableFile, resourceSectionTableEntry);
@@ -28,7 +29,7 @@ export async function getFileVersionInfoAsync(file: string | IReadableFile): Pro
         neutralLanguageId);
 
     if (!versionResourceBuffer) {
-        throw new Error("No neutral-language version resource found in the file");
+        throw new PEParserError("noVersionResource", "No neutral-language version resource found in the file");
     }
 
     let versionResource = new VersionResource(versionResourceBuffer);

@@ -191,7 +191,9 @@ export class ResourceSection {
         return new ResourceSection(root, file, resourceSectionTableEntry);
     }
 
-    public getResource(...path: (number | string)[]): ResourceData {
+    public getResource(...path: (number | string)[]): ResourceData;
+    public getResource(): ResourceData {
+        const path = arguments;
         let current = this.root;
         // stop one before the end, need to treat it specially.
         let i;
@@ -205,8 +207,9 @@ export class ResourceSection {
         return current.getDataEntry(path[i]);
     }
 
-    public async getResourceBufferAsync(...path: (number | string)[]): Promise<Buffer> {
-        const resource = this.getResource(...path);
+    public async getResourceBufferAsync(...path: (number | string)[]): Promise<Buffer>
+    public async getResourceBufferAsync(): Promise<Buffer> {
+        const resource = this.getResource.apply(this, arguments);
         if (resource === undefined) {
             return undefined;
         }
