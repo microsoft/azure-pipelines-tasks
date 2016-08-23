@@ -26,23 +26,28 @@ export class SonarQubeServer implements ISonarQubeServer {
     }
 
     public invokeApiCall(path:string):Q.Promise<Object> {
-        var defer = Q.defer<Object>();
 
+        tl.debug(`[SQ] Calling a REST API: ${path}`);
+
+        var defer = Q.defer<Object>();
         var options:any = this.createSonarQubeHttpRequestOptions(path);
 
         // Dynamic switching - we cannot use https.request() for http:// calls or vice versa
         var protocolToUse;
         switch (options.protocol) {
-            case 'http':
+            case 'http:':
                 protocolToUse = http;
                 break;
-            case 'https':
+            case 'https:':
                 protocolToUse = https;
                 break;
             default:
+                tl.debug(`[SQ] Cannot recognize http protocol ${options.protocol} - falling back to http`)
                 protocolToUse = http;
                 break;
         }
+
+         tl.debug(`[SQ] Protocol to use: ${protocolToUse}`);
 
         var responseBody:string = '';
         var request = protocolToUse.request(options, (response:IncomingMessage) => {
@@ -58,7 +63,7 @@ export class SonarQubeServer implements ISonarQubeServer {
                 if (!(response.statusCode >= 200 && response.statusCode < 300)) {
                     defer.reject(new Error('Server responded with ' + serverResponseString));
                 } else {
-                    tl.debug('Got response: ' + serverResponseString + " from " + path);
+                    tl.debug('[SQ] Got response: ' + serverResponseString + " from " + path);
 
                     if (!responseBody || responseBody.length < 1) {
                         defer.resolve({});
@@ -89,6 +94,8 @@ export class SonarQubeServer implements ISonarQubeServer {
         var hostUrl:url.Url = url.parse(this.endpoint.Url);
         var authUser = this.endpoint.Username || '';
         var authPass = this.endpoint.Password || '';
+
+        tl.debug(`[SQ] Host url protocol: ${hostUrl.protocol}`)
 
         var options = {
             method: 'GET',
