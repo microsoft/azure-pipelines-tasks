@@ -47,9 +47,10 @@ export function processSonarQubeIntegration(sqBuildFolder:string):Q.Promise<void
     // Wait for all promises to complete before proceeding (even if one or more promises reject).
     return Q.allSettled([
         VstsServerUtils.processSonarQubeBuildSummary(sqRunSettings, sqMetrics),
-        VstsServerUtils.processSonarQubeBuildBreaker(sqRunSettings, sqMetrics),
     ])
         .then(() => {
+            // Apply the build breaker at the end, since breaking the build exits the build process.
+            VstsServerUtils.processSonarQubeBuildBreaker(sqRunSettings, sqMetrics);
         })
 }
 

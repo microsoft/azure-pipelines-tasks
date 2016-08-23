@@ -16,10 +16,28 @@
         "gradlew build -I /Gradle/CodeAnalysis/checkstyle.gradle -I /Gradle/CodeAnalysis/pmd.gradle": {
             "code": 0,
             "stdout": "Sample gradle + Checkstyle + PMD"
+        },
+        "gradlew.bat build": {
+            "code": 0,
+            "stdout": "Sample gradle output"
+        },
+        "gradlew.bat properties": {
+            "code": 0,
+            "stdout": "subprojects: []",
+            "stderr": ""
+        },
+        "gradlew.bat build -I /Gradle/CodeAnalysis/pmd.gradle": {
+            "code": 0,
+            "stdout": "Sample gradle + PMD"
+        },
+        "gradlew.bat build -I /Gradle/CodeAnalysis/checkstyle.gradle -I /Gradle/CodeAnalysis/pmd.gradle": {
+            "code": 0,
+            "stdout": "Sample gradle + Checkstyle + PMD"
         }
     },
     "checkPath": {
         "gradlew": true,
+        "gradlew.bat": true,
         "/home/repo/src": true
     },
     "getVariable": {

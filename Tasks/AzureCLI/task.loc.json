@@ -87,8 +87,8 @@
       "type": "filePath",
       "label": "ms-resource:loc.input.label.scriptPath",
       "defaultValue": "",
-      "visibleRule": "scriptLocation = scriptPath",
       "required": true,
+      "visibleRule": "scriptLocation = scriptPath",
       "helpMarkDown": "ms-resource:loc.input.help.scriptPath"
     },
     {
@@ -97,8 +97,8 @@
       "label": "ms-resource:loc.input.label.inlineScript",
       "defaultValue": "//You can write your shell scripts inline here. You can also pass predefined and custom variables to this scripts using arguments \n\n azure --version",
       "required": true,
-      "helpMarkDown": "",
       "visibleRule": "scriptLocation = inlineScript",
+      "helpMarkDown": "",
       "properties": {
         "resizable": "true",
         "rows": "10",

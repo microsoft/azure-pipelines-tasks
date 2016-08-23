@@ -4,7 +4,7 @@
   "loc.description": "Publier les artefacts de build sur le serveur ou un partage de fichiers",
   "loc.instanceNameFormat": "Publier l'artefact : $(ArtifactName)",
   "loc.input.label.PathtoPublish": "Chemin d'accès à publier",
-  "loc.input.help.PathtoPublish": "Chemin de dossier ou de fichier à publier. Il peut s'agir d'un chemin complet ou d'un chemin relatif à la racine du dépôt. Les caractères génériques ne sont pas pris en charge. Utilisez des [variables](https://go.microsoft.com/fwlink/?LinkID=550988). Exemple : $(build.artifactstagingdirectory)",
+  "loc.input.help.PathtoPublish": "Folder or file path to publish.  Can be a fully qualified path or relative to repo root, wildcards are not supported. Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)",
   "loc.input.label.ArtifactName": "Nom de l'artefact",
   "loc.input.help.ArtifactName": "Nom de l'artefact à créer.",
   "loc.input.label.ArtifactType": "Type d'artefact",

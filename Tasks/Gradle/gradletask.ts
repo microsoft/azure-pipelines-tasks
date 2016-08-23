@@ -13,10 +13,23 @@ import {BuildOutput, BuildEngine} from './CodeAnalysis/Common/BuildOutput';
 import {PmdTool} from './CodeAnalysis/Common/PmdTool';
 import {CheckstyleTool} from './CodeAnalysis/Common/CheckstyleTool';
 
+import os = require('os');
+
+var isWindows = os.type().match(/^Win/);
+
 // Set up localization resource file
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 var wrapperScript = tl.getPathInput('wrapperScript', true, true);
+
+if (isWindows) {
+    // append .bat extension name on Windows platform
+    if (!wrapperScript.endsWith('bat')) {
+        tl.debug("Append .bat extension name to gradlew script.");
+        wrapperScript += '.bat';
+    }
+} 
+
 if (fs.existsSync(wrapperScript)) {
     // (The exists check above is not necessary, but we need to avoid this call when we are running L0 tests.)
     // Make sure the wrapper script is executable
