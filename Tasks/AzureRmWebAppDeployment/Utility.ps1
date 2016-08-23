@@ -90,23 +90,49 @@ function Get-MsDeployCmdArgs
           [String][Parameter(Mandatory=$true)] $takeAppOfflineFlag,
           [String][Parameter(Mandatory=$false)] $virtualApplication,
           [String][Parameter(Mandatory=$false)] $setParametersFile,
+          [Boolean][Parameter(Mandatory=$false)] $isPackageContainsParamFile,
           [String][Parameter(Mandatory=$false)] $AdditionalArguments)
 
     $msDeployCmdArgs = [String]::Empty
     Write-Verbose "Constructing msdeploy command arguments to deploy to azureRM WebApp:'$webAppNameForMSDeployCmd' `nfrom source Wep App zip package:'$packageFile'."
+    
+    # msdeploy argument containing source details to sync
+    $msDeployCmdArgs = [String]::Format('-verb:sync -source:package="{0}"', $packageFile);
+    
 
-    # msdeploy argument containing source and destination details to sync
-    $msDeployCmdArgs = [String]::Format('-verb:sync -source:package="{0}" -dest:auto,ComputerName="https://{1}/msdeploy.axd?site={2}",UserName="{3}",Password="{4}",AuthType="Basic"' `
-                                        , $packageFile, $azureRMWebAppConnectionDetails.KuduHostName, $webAppNameForMSDeployCmd, $azureRMWebAppConnectionDetails.UserName, $azureRMWebAppConnectionDetails.UserPassword)
+    # msdeploy argument containing destination details to sync
+    if ( $isPackageContainsParamFile ) {
+
+        $msDeployCmdArgs += [String]::Format(' -dest:auto,');
+    
+    } else {
+        
+        if($virtualApplication)
+        {
+            $msDeployCmdArgs += [String]::Format(' -dest:contentPath="{0}/{1}",', $webAppNameForMSDeployCmd, $virtualApplication);
+        }
+        else
+        {
+            $msDeployCmdArgs += [String]::Format(' -dest:contentPath="{0}",', $webAppNameForMSDeployCmd);
+        }
+
+    }
+
+    $msDeployCmdArgs += [String]::Format('ComputerName="https://{0}/msdeploy.axd?site={1}",UserName="{2}",Password="{3}",AuthType="Basic"' `
+                                        ,  $azureRMWebAppConnectionDetails.KuduHostName, $webAppNameForMSDeployCmd, $azureRMWebAppConnectionDetails.UserName, $azureRMWebAppConnectionDetails.UserPassword)
+
 
     # msdeploy argument to set destination IIS App Name for deploy
-    if($virtualApplication)
+    if( $isPackageContainsParamFile -or $setParametersFile )
     {
-        $msDeployCmdArgs += [String]::Format(' -setParam:name="IIS Web Application Name",value="{0}/{1}"', $webAppNameForMSDeployCmd, $virtualApplication)
-    }
-    else
-    {
-        $msDeployCmdArgs += [String]::Format(' -setParam:name="IIS Web Application Name",value="{0}"', $webAppNameForMSDeployCmd)
+        if($virtualApplication)
+        {
+            $msDeployCmdArgs += [String]::Format(' -setParam:name="IIS Web Application Name",value="{0}/{1}"', $webAppNameForMSDeployCmd, $virtualApplication)
+        }
+        else
+        {
+            $msDeployCmdArgs += [String]::Format(' -setParam:name="IIS Web Application Name",value="{0}"', $webAppNameForMSDeployCmd)
+        }
     }
 
     # msdeploy argument to block deletion from happening
@@ -145,6 +171,33 @@ function Get-MsDeployCmdArgs
     return $msDeployCmdArgs
 }
 
+function Contains-ParamFile( [String][Parameter(Mandatory=$true)] $packageFile )
+{
+    $msDeployExePath = Get-MsDeployExePath
+
+    $msDeployCheckParamFileCmdArgs = " -verb:getParameters -source:package='" + $packageFile + "'";
+
+    $msDeployCheckParamFileCmd = "`"$msDeployExePath`" $msDeployCheckParamFileCmdArgs"
+
+    Write-Verbose (Get-VstsLocString -Key "Runningmsdeploycommandtocheckifpackagecontainsparamfile0" -ArgumentList $msDeployCheckParamFileCmd)
+
+    $ParamFileContent = Get-CommandOutput -command $msDeployCheckParamFileCmd
+
+    Write-Verbose (Get-VstsLocString -Key "Paramscontentofwebpackage0" -ArgumentList $ParamFileContent)
+
+    $paramFileXML = [XML] $ParamFileContent
+
+    if( $paramFileXML.output.parameters )
+    {
+        Write-Verbose (Get-VstsLocString -Key "Parameterfileispresentinwebpackage")
+        return $true
+    }
+     
+    Write-Verbose (Get-VstsLocString -Key "Parameterfileisnotpresentinwebpackage")   
+    return $false
+
+}
+
 function Run-Command
 {
     param([String][Parameter(Mandatory=$true)] $command)
@@ -167,6 +220,35 @@ function Run-Command
         Write-Verbose "Error occured is $($exception.Message)"
         throw $_.Exception.Message    
     }
+
+}
+
+function Get-CommandOutput
+{
+    param(
+        [string]$command,
+        [bool] $failOnErr = $true
+    )
+
+    $ErrorActionPreference = 'Continue'
+
+    if( $psversiontable.PSVersion.Major -le 4)
+    {        
+        $result = cmd.exe /c "`"$command`""
+    }
+    else
+    {
+        $result = cmd.exe /c "$command"
+    }
+    
+    $ErrorActionPreference = 'Stop'
+
+    if($failOnErr -and $LASTEXITCODE -ne 0)
+    {
+        throw $result
+    }
+    
+    return $result
 
 }
 

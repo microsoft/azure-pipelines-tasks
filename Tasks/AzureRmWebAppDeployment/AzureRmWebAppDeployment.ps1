@@ -56,6 +56,9 @@ try{
 	# Ensure that at most a package (.zip) file is found
 	$packageFilePath = Get-SingleFilePath -file $Package
 
+    # Check if package contains parameter.xml file
+    $containsParamFile = Contains-ParamFile -packageFile $packageFilePath
+
     # Since the SetParametersFile is optional, but it's a FilePath type, it will have the value System.DefaultWorkingDirectory when not specified
     if( $SetParametersFile -eq $env:SYSTEM_DEFAULTWORKINGDIRECTORY -or $SetParametersFile -eq [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\" ) -or [string]::IsNullOrEmpty($SetParametersFile) ){
 	   $setParametersFilePath = ""
@@ -73,7 +76,7 @@ try{
 	# Construct arguments for msdeploy command
 	$msDeployCmdArgs = Get-MsDeployCmdArgs -packageFile $packageFilePath -webAppNameForMSDeployCmd $webAppNameForMSDeployCmd -azureRMWebAppConnectionDetails $azureRMWebAppConnectionDetails -removeAdditionalFilesFlag $RemoveAdditionalFilesFlag `
 										   -excludeFilesFromAppDataFlag $ExcludeFilesFromAppDataFlag -takeAppOfflineFlag $TakeAppOfflineFlag -virtualApplication $VirtualApplication -AdditionalArguments $AdditionalArguments `
-										   -setParametersFile $setParametersFilePath
+										   -setParametersFile $setParametersFilePath -isPackageContainsParamFile $containsParamFile
 
 	# Deploy azureRM webApp using msdeploy Command
 	Run-MsDeployCommand -msDeployExePath $msDeployExePath -msDeployCmdArgs $msDeployCmdArgs -ErrorAction silentlycontinue -ErrorVariable errorVariable

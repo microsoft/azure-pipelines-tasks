@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 17
+        "Patch": 18
     },
     "minimumAgentVersion": "1.102.0",
     "groups": [
@@ -203,6 +203,10 @@
         "Updatingdeploymentstatus": "Updating deployment status",
         "CannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "Cannot update deployment status, SCM endpoint is not enabled for this website",
         "Cannotupdatedeploymentstatusfor01": "Cannot update deployment status for {0} - {1}",
-        "CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved": "Cannot update deployment status, unique deploymentId cannot be retrieved"
+        "CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved": "Cannot update deployment status, unique deploymentId cannot be retrieved",
+        "Runningmsdeploycommandtocheckifpackagecontainsparamfile0": "Running msdeploy command to check if package contains param file : {0}",
+        "Paramscontentofwebpackage0": "Params content of web package : {0}",
+        "Parameterfileispresentinwebpackage": "Parameter file is present in web package.",
+        "Parameterfileisnotpresentinwebpackage": "Parameter file is not present in web package."
     }
 }
