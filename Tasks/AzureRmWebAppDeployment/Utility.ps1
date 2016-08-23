@@ -95,10 +95,32 @@ function Get-MsDeployCmdArgs
 
     $msDeployCmdArgs = [String]::Empty
     Write-Verbose "Constructing msdeploy command arguments to deploy to azureRM WebApp:'$webAppNameForMSDeployCmd' `nfrom source Wep App zip package:'$packageFile'."
+    
+    # msdeploy argument containing source details to sync
+    $msDeployCmdArgs = [String]::Format('-verb:sync -source:package="{0}"', $packageFile);
+    
 
-    # msdeploy argument containing source and destination details to sync
-    $msDeployCmdArgs = [String]::Format('-verb:sync -source:package="{0}" -dest:auto,ComputerName="https://{1}/msdeploy.axd?site={2}",UserName="{3}",Password="{4}",AuthType="Basic"' `
+    # msdeploy argument containing destination details to sync
+    if ( $isPackageContainsParamFile ) {
+
+        $msDeployCmdArgs += [String]::Format(' -dest:auto,');
+    
+    } else {
+        
+        if($virtualApplication)
+        {
+            $msDeployCmdArgs += [String]::Format(' -dest:contentPath="{0}/{1}",', $webAppNameForMSDeployCmd, $virtualApplication);
+        }
+        else
+        {
+            $msDeployCmdArgs += [String]::Format(' -dest:contentPath="{0}",', $webAppNameForMSDeployCmd);
+        }
+
+    }
+
+    $msDeployCmdArgs += [String]::Format('ComputerName="https://{1}/msdeploy.axd?site={2}",UserName="{3}",Password="{4}",AuthType="Basic"' `
                                         , $packageFile, $azureRMWebAppConnectionDetails.KuduHostName, $webAppNameForMSDeployCmd, $azureRMWebAppConnectionDetails.UserName, $azureRMWebAppConnectionDetails.UserPassword)
+
 
     # msdeploy argument to set destination IIS App Name for deploy
     if( $isPackageContainsParamFile -or $setParametersFile )
@@ -157,7 +179,7 @@ function Contains-ParamFile( [String][Parameter(Mandatory=$true)] $packageFile )
 
     $msDeployCheckParamFileCmd = "`"$msDeployExePath`" $msDeployCheckParamFileCmdArgs"
 
-    Write-Host (Get-VstsLocString -Key "Runningmsdeploycommandtocheckifpackagecontainsparamfile0" -ArgumentList $msDeployCheckParamFileCmd)
+    Write-Verbose (Get-VstsLocString -Key "Runningmsdeploycommandtocheckifpackagecontainsparamfile0" -ArgumentList $msDeployCheckParamFileCmd)
 
     $ParamFileContent = Get-CommandOutput -command $msDeployCheckParamFileCmd
 
