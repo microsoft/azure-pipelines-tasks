@@ -5,7 +5,7 @@
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
-  "category": "Utility",
+  "category": "Deploy",
   "visibility": [
     "Preview",
     "Build",
