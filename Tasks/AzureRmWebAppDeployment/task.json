@@ -198,7 +198,8 @@
         }
     },
   "messages": {
-    "Packagefound0": "Package found: %s",
+    "Packagenotfound0": "Package not found: %s",
+    "SetParamFilenotfound0": "Set parameters file not found: %s",
     "Updatedeploymenthistoryissuccess": "Update deployment history is success.",
     "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
     "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website",
