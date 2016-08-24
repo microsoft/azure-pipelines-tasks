@@ -4,192 +4,111 @@
 
 import Q = require('q');
 import tl = require('vsts-task-lib/task');
-import fs = require('fs');
-
 var regedit = require('regedit');
 var azureRmUtil = require('./AzureRMUtil.js');
 
-//Error Handler
-var onError = function(error) {
-	tl.error(error);
-	process.exit(1);
-}
+export function getMSDeployCmdArgs(packageFile: string, webAppNameForMSDeployCmd: string, azureRMWebAppConnectionDetails: Array<String>,
+                             removeAdditionalFilesFlag: boolean, excludeFilesFromAppDataFlag: boolean, takeAppOfflineFlag: boolean,
+                             virtualApplication: string, setParametersFile: string, additionalArguments: string) : string {
 
-function isFileExists(filePath: string) : boolean {
-    try{
-        return fs.statSync(filePath).isFile();
-    }
-    catch(e) {
-        onError("Cannot access "+filePath+" in machine");
-        return false;
-    }
-}
-module.exports.isFileExists = isFileExists;
-
-function getWebAppNameForMSDeployCmd(webAppName: string, deployToSlotFlag: boolean, slotName: string) : string {
-    if(deployToSlotFlag) {
-        webAppName = webAppName + "(" + slotName + ")";
-    }
-    tl.debug("WebApp Name to be used in msdeploy command is: "+webAppName);
-    return webAppName;
-}
-module.exports.getWebAppNameForMSDeployCmd = getWebAppNameForMSDeployCmd;
-
-//Get Parameters for MSDeploy Command
-function getMSDeployCmdArgs(packageFile: string, webAppNameForMSDeployCmd: string, azureRMWebAppConnectionDetails: Array<String>, removeAdditionalFilesFlag: boolean, excludeFilesFromAppDataFlag: boolean,
-                            takeAppOfflineFlag: boolean, virtualApplication: string, setParametersFile: string, additionalArguments: string) : string {
-
-    // msdeploy argument containing source and destination details to sync
     var msDeployCmdArgs: string = " -verb:sync";
-    msDeployCmdArgs += " -source:package='"+packageFile+"'";
-    msDeployCmdArgs += " -dest:auto,ComputerName='https://"+azureRMWebAppConnectionDetails["KuduHostName"]+"/msdeploy.axd?site="+webAppNameForMSDeployCmd+"',";
-    msDeployCmdArgs += "UserName='"+azureRMWebAppConnectionDetails["UserName"]+"',Password='"+azureRMWebAppConnectionDetails["UserPassword"]+"',AuthType='Basic'";
+    msDeployCmdArgs += " -source:package='"+ packageFile + "'";
+    msDeployCmdArgs += " -dest:auto,ComputerName='https://" + azureRMWebAppConnectionDetails["KuduHostName"] + "/msdeploy.axd?site=" + webAppNameForMSDeployCmd + "',";
+    msDeployCmdArgs += "UserName='" + azureRMWebAppConnectionDetails["UserName"] + "',Password='" + azureRMWebAppConnectionDetails["UserPassword"] + "',AuthType='Basic'";
 
-    // msdeploy argument to set destination IIS App Name for deploy
     if(virtualApplication) {
-        msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='"+webAppNameForMSDeployCmd+"/"+virtualApplication+"'";
+        msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='" + webAppNameForMSDeployCmd + "/" + virtualApplication + "'";
     }
     else {
-        msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='"+webAppNameForMSDeployCmd+"'";
+        msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='" + webAppNameForMSDeployCmd + "'";
     }
 
-    // msdeploy argument to block deletion from happening
     if(!removeAdditionalFilesFlag) {
         msDeployCmdArgs += " -enableRule:DoNotDeleteRule";
     }
 
-    // msdeploy argument to take app offline
     if(takeAppOfflineFlag) {
         msDeployCmdArgs +=  " -enableRule:AppOffline";
     }
 
-    // msdeploy argument to exclude files in App_Data folder
     if(excludeFilesFromAppDataFlag) {
         msDeployCmdArgs += " -skip:Directory='\\App_Data'";
     }
 
-    // msdeploy argument to set paramater files
     if(setParametersFile) {
-        msDeployCmdArgs += " -setParamFile:'"+setParametersFile+"'";
+        msDeployCmdArgs += " -setParamFile:'" + setParametersFile + "'";
     }
 
-    // msdeploy additional arguments
     if(additionalArguments) {
-        msDeployCmdArgs += " "+additionalArguments;
+        msDeployCmdArgs += " " + additionalArguments;
     }
 
     var userAgent = tl.getVariable("AZURE_HTTP_USER_AGENT");
     if(userAgent) {
-        msDeployCmdArgs += " -userAgent:'"+userAgent+"'";
+        msDeployCmdArgs += " -userAgent:'" + userAgent + "'";
     }
 
-    tl.debug("Constructed msdeploy command arguments to deploy to deploy to azureRM WebApp: "+webAppNameForMSDeployCmd+
-            " from source Web App zip package: "+packageFile);
-    
+    tl.debug("Constructed msDeploy comamnd line arguments");    
     return msDeployCmdArgs;
 }
-module.exports.getMSDeployCmdArgs = getMSDeployCmdArgs;
 
-function getMSDeployCmdForLogs(msDeployCmdArgs: string) : string {
-    var msDeployCmdSplitByComma = msDeployCmdArgs.split(",");
-    var msDeployCmdArray = [];
-    for(var msDeployCommandAttr in msDeployCmdSplitByComma) {
-        if(msDeployCmdSplitByComma[msDeployCommandAttr].indexOf('Password=') === 0) {
-            msDeployCmdArray.push("Password=*****");
-        }
-        else {
-            msDeployCmdArray.push(msDeployCmdSplitByComma[msDeployCommandAttr]);
-        }
+export async function executeMSDeployCmd(msDeployCmdArgs: string, azureRMWebAppConnectionDetails) {
+    var msDeployPath = await getMSDeployFullPath();
+    var maskedCommand = maskPasswordDetails(msDeployCmdArgs);
+    tl.debug("Running command: "+ msDeployPath + " " + maskedCommand);
+    var statusCode = await tl.exec(msDeployPath, msDeployCmdArgs);
+    if ( statusCode === 0 ) {
+        tl.debug("Successfully deployed website.");
+        var deploymentResult = await azureRmUtil.updateDeploymentStatus(azureRMWebAppConnectionDetails, true);
+        tl.debug(deploymentResult);
     }
-    return msDeployCmdArray.join(",");
+    else {
+        tl.debug("Failed to deploy website.");
+        var deploymentResult = await azureRmUtil.updateDeploymentStatus(azureRMWebAppConnectionDetails, false);
+        tl.debug(deploymentResult);
+    }
 }
 
-async function runMSDeployCommand(msDeployExePath: string, msDeployCmdArgs: string, azureRMWebAppConnectionDetails) {
-    var msDeployCmdForLogs = getMSDeployCmdForLogs(msDeployCmdArgs);
-    tl.debug("[command] "+msDeployExePath+" "+msDeployCmdForLogs);
-    var defer = Q.defer<String>();
-    tl.exec(msDeployExePath, msDeployCmdArgs)
-    .then(function(code){
-      azureRmUtil.updateDeploymentStatus(azureRMWebAppConnectionDetails, true);
-      tl.debug("MSDeploy executed successfully");
-      defer.resolve(code.toString());
-    },
-    function(error) {
-       azureRmUtil.updateDeploymentStatus(azureRMWebAppConnectionDetails, false);
-       tl.error("MSDeploy.exe failed with error");
-        defer.reject(error);
-    });
-    return defer.promise;
+async function getMSDeployFullPath() {
+    var msDeployInstallPathRegKey = "HKLM\\SOFTWARE\\Microsoft\\IIS Extensions\\MSDeploy";
+    var msDeployVersion = await getMSDeployVersion(msDeployInstallPathRegKey);
+    var msDeployLatestPathRegKey = msDeployInstallPathRegKey + "\\" + msDeployVersion;
+    var msDeployFullPath = await getMSDeployInstallPath(msDeployLatestPathRegKey);
+    msDeployFullPath = msDeployFullPath + "\\msdeploy.exe";
+    return msDeployFullPath;
 }
 
-// Get the latest version of MSDeploy installed
-function getMSDeployVersion(registryKey: string) : Q.Promise<String> {
+function maskPasswordDetails(msDeployCmdArgs: string): string {
+    var startIndex = msDeployCmdArgs.indexOf('Password=');
+    var endIndex = msDeployCmdArgs.indexOf(',AuthType=');
+    msDeployCmdArgs.replace(msDeployCmdArgs.substring(startIndex, endIndex), "Password=******");
+    return msDeployCmdArgs;
+}
+
+function getMSDeployVersion(registryKey: string): Q.Promise<String> {
     var defer = Q.defer<String>();
     regedit.list(registryKey)
-    .on('data', function(entry) {
+    .on('data', (entry) => {
         var keys = entry.data.keys;
         keys.sort();
         defer.resolve(keys[keys.length-1]);
     })
-    .on('error', function(error) {
+    .on('error', (error) => {
         defer.reject(error);
     });
     
     return defer.promise;
 }
 
-//Get the absolute path of MSDeploy.exe Folder
-function getMSDeployInstallPath(registryKey: string) : Q.Promise<string> {
+function getMSDeployInstallPath(registryKey: string): Q.Promise<string> {
     var defer = Q.defer<string>();
     regedit.list(registryKey)
-    .on('data', function(entry) {
+    .on('data', (entry) => {
         defer.resolve(entry.data.values.InstallPath.value);
     })
-    .on('error', function(error) {
+    .on('error', (error) => {
         defer.reject(error);
     });
 
     return defer.promise;
 }
-
-//Get absolute path of MSDeploy.exe File
-function getMSDeployExePath() : Q.Promise<string> {
-    var defer = Q.defer<string>();
-    var msDeployInstallPathRegKey = "HKLM\\SOFTWARE\\Microsoft\\IIS Extensions\\MSDeploy";
-    getMSDeployVersion(msDeployInstallPathRegKey)
-    .then(function(version){
-        var msDeployLatestPathRegKey = msDeployInstallPathRegKey+"\\"+version;
-        getMSDeployInstallPath(msDeployLatestPathRegKey)
-        .then(function(msDeployPath) {
-            //Append msdeploy.exe to get the absolute path
-            msDeployPath = msDeployPath+"\\msdeploy.exe";
-            defer.resolve(msDeployPath);
-        },
-        function(error) {
-            defer.reject(error);
-        });
-    },
-    function(error) {
-        defer.reject(error);
-    });
-      return defer.promise;
-}
-module.exports.getMSDeployExePath = getMSDeployExePath;
-
-
-
-async function runMSDeployCommandWrapper(msDeployCmdArgs: string, azureRMWebAppConnectionDetails) {
-    try {
-        var msDeployInstallPathRegKey = "HKLM\\SOFTWARE\\Microsoft\\IIS Extensions\\MSDeploy";
-        var msDeployVersion = await getMSDeployVersion(msDeployInstallPathRegKey);
-        var msDeployLatestPathRegKey = msDeployInstallPathRegKey+"\\"+msDeployVersion;
-        var msDeployExePath = await getMSDeployInstallPath(msDeployLatestPathRegKey);
-        msDeployExePath = msDeployExePath+"\\msdeploy.exe";
-        await runMSDeployCommand(msDeployExePath, msDeployCmdArgs, azureRMWebAppConnectionDetails);
-    }  
-    catch(error) {
-        onError(error);
-    }
-}
-module.exports.runMSDeployCommandWrapper = runMSDeployCommandWrapper;
-

@@ -96,7 +96,6 @@
             "required": true,
             "helpMarkDown": "Location of the Web App zip package on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\Fabrikam.zip. Predefined system variables and wild cards like, $(System.DefaultWorkingDirectory)\\\\***.zip` can be also used here."
         },
-       
         {
             "name": "WebAppUri",
             "type": "string",
@@ -107,18 +106,13 @@
             "helpMarkDown": "Provide a name for the variable for the webapp hosted url. The variable can be used as $(variableName) to refer to the hosted url of webapp in subsequent tasks like in the PowerShell on Target Machines task."
         }, 
         {
-            "name": "PublishMethod",
-            "type": "pickList",
-            "label": "Publish Method",
+            "name": "UseWebDeploy",
+            "type": "boolean",
+            "label": "Publish using Web Deploy",
             "required": false,
-            "defaultValue": "Select FTP or Web Deploy",
+            "defaultValue": "false",
             "groupName": "AdditionalDeploymentOptions",
-            "options" : {
-                "WebDeploy" : "Web Deploy" 
-                
-            },
-            "helpMarkDown": "Select FTP or Web Deploy for deployment options. The Web Deploy options will only work when the automation agent is on Windows and will be ignored on Linux. The options are also ignored for file formats that are not zipped or in a  folders, like Java WAR files. FTP works with automation agent on both Windows and Linux and for zip files, folders, and Java WAR files." 
-
+            "helpMarkDown": "The Web Deploy options will only work when the automation agent is on Windows and will be ignored on Linux. The options are also ignored for file formats that are not zipped or in a  folders, like Java WAR files. FTP works with automation agent on both Windows and Linux and for zip files, folders, and Java WAR files."
         }, 
          {
             "name": "SetParametersFile",
@@ -127,10 +121,8 @@
             "defaultValue": "",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "PublishMethod = WebDeploy",
+            "visibleRule": "UseWebDeploy = true",
             "helpMarkDown": "Optional: location of the SetParameters.xml file to use."
-           
-            
         },
          {
             "name": "RemoveAdditionalFilesFlag",
@@ -139,10 +131,9 @@
             "defaultValue": "false",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "PublishMethod = WebDeploy",
+            "visibleRule": "UseWebDeploy = true",
             "helpMarkDown": "Select the option to delete files on the AzureRM Web App that have no matching files in the Web App zip package."
         },
-        
         {
             "name": "ExcludeFilesFromAppDataFlag",
             "type": "boolean",
@@ -150,11 +141,9 @@
             "defaultValue": "false",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "PublishMethod = WebDeploy",
+            "visibleRule": "UseWebDeploy = true",
             "helpMarkDown": "Select the option to prevent files in the App_Data folder from being deployed to the AzureRM Web App."
         },
-       
-       
         {
             "name": "TakeAppOfflineFlag",
             "type": "boolean",
@@ -162,7 +151,7 @@
             "defaultValue": "false",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "PublishMethod = WebDeploy",
+            "visibleRule": "UseWebDeploy = true",
             "helpMarkDown": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully."
         },
         {
@@ -172,21 +161,9 @@
             "required": false,
             "defaultValue": "",
             "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "PublishMethod = WebDeploy",
+            "visibleRule": "UseWebDeploy = true",
             "helpMarkDown": "Additional Web Deploy arguments that will be applied when deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension."
-        },
-          {
-            "name": "PassiveMode",
-            "type": "boolean",
-            "label": "Passive Mode",
-            "required": false,
-            "defaultValue": "",
-            "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "PublishMethod = FTP",
-            "helpMarkDown": "Initiate FTP transfer in passive mode."
-        }
-
-        
+        }        
     ],
     "dataSourceBindings": [
         {
