@@ -7,9 +7,12 @@ var tl = require('vsts-task-lib/task');
 var fs = require('fs');
 var azureRmUtil = require ('./AzureRMUtil.js');
 var msDeployUtility = require('./MSDeployUtility.js');
+var path = require('path');
 
 async function run() {
 	try {
+
+		tl.setResourcePath(path.join( __dirname, 'task.json'));
 		var connectedServiceName = tl.getInput('ConnectedServiceName');
 		var webAppName: string = tl.getInput('WebAppName');
 		var deployToSlotFlag: boolean = tl.getBoolInput('DeployToSlotFlag');
@@ -33,7 +36,7 @@ async function run() {
 		SPN["subscriptionId"] = tl.getEndpointDataParameter (connectedServiceName, 'subscriptionid', true); 
 		
 		if (fs.statSync(package).isFile()) {
-			tl.debug("Package " + package + " is found in the machine");
+			tl.debug(tl.loc('Packagefound0', package));
 		}
 
 		if ( !fs.statSync(setParametersFile).isFile()) {
