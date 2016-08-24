@@ -12,7 +12,8 @@ param(
     [string]$platform,
     [string]$configuration,
     [string]$publishRunAttachments,
-    [string]$runInParallel
+    [string]$runInParallel,
+    [string]$vstestLocation
     )
 
 Write-Verbose "Entering script VSTest.ps1"
@@ -28,6 +29,7 @@ Write-Verbose "testRunTitle = $testRunTitle"
 Write-Verbose "platform = $platform"
 Write-Verbose "configuration = $configuration"
 Write-Verbose "publishRunAttachments = $publishRunAttachments"
+Write-Verbose "vstestLocation = $vstestLocation"
 
 # Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
@@ -92,13 +94,22 @@ try
             $vsTestVersion = $null
         }
 
+        if ([System.String]::IsNullOrWhiteSpace($vstestLocation)) 
+        {
+            $vstestLocation = $null
+        }
+        else
+        {
+            $vstestLocation.Trim();
+        }
+
         $artifactsDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.ArtifactsDirectory" -Global $FALSE
 
         $workingDirectory = $artifactsDirectory
 
         if($runInParallel -eq "True")
         {
-            $rightVSVersionAvailable = IsVisualStudio2015Update1OrHigherInstalled $vsTestVersion
+            $rightVSVersionAvailable = IsVisualStudio2015Update1OrHigherInstalled $vsTestVersion $vstestLocation
             if(-Not $rightVSVersionAvailable)
             {
                 Write-Warning (Get-LocalizedString -Key "Install Visual Studio 2015 Update 1 or higher on your build agent machine to run the tests in parallel.")

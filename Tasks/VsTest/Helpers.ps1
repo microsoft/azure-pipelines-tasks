@@ -62,9 +62,10 @@ function IsVisualStudio2015Update1OrHigherInstalled {
 	[cmdletbinding()]
 	[OutputType([System.Boolean])]
 	param(
-		[string]$vsTestVersion
+		[string]$vsTestVersion,
+		[string]$vstestLocation
 	)
-	
+
 	if ([string]::IsNullOrWhiteSpace($vsTestVersion)){
 		$vsTestVersion = Get-VSVersion
 	}
@@ -166,8 +167,14 @@ function Get-SubKeysInFloatFormat($keys)
 	return $targetKeys
 }
 
-function Get-VSVersion()
+function Get-VSVersion($vstestLocation)
 {
+	if(![String]::IsNullOrWhiteSpace($vstestLocation))
+	{
+		$vstestConsoleExeVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($vstestLocation);
+		return $vstestConsoleExeVersion.ProductMajorPart;
+	}
+
 	#Find the latest version
 	$regPath = "HKLM:\SOFTWARE\Microsoft\VisualStudio"
 	if (-not (Test-Path $regPath))
