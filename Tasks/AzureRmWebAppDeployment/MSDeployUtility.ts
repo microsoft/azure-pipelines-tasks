@@ -6,21 +6,38 @@ import Q = require('q');
 import tl = require('vsts-task-lib/task');
 var regedit = require('regedit');
 var azureRmUtil = require('./AzureRMUtil.js');
+var parseString = require('xml2js').parseString;
 
 export function getMSDeployCmdArgs(packageFile: string, webAppNameForMSDeployCmd: string, azureRMWebAppConnectionDetails: Array<String>,
                              removeAdditionalFilesFlag: boolean, excludeFilesFromAppDataFlag: boolean, takeAppOfflineFlag: boolean,
-                             virtualApplication: string, setParametersFile: string, additionalArguments: string) : string {
+                             virtualApplication: string, setParametersFile: string, additionalArguments: string, isParamFilePresentInPacakge: boolean, isFolderBasedDeployment:boolean) : string {
 
     var msDeployCmdArgs: string = " -verb:sync";
-    msDeployCmdArgs += " -source:package='"+ packageFile + "'";
-    msDeployCmdArgs += " -dest:auto,ComputerName='https://" + azureRMWebAppConnectionDetails["KuduHostName"] + "/msdeploy.axd?site=" + webAppNameForMSDeployCmd + "',";
+
+    var webApplicationDeploymentPath = ( virtualApplication ) ? webAppNameForMSDeployCmd+"/"+virtualApplication : webAppNameForMSDeployCmd ;
+    
+    if( isFolderBasedDeployment ){
+
+        msDeployCmdArgs += " -source:IisApp='"+ packageFile + "'";
+        msDeployCmdArgs += " -dest:iisApp='" + webApplicationDeploymentPath + "',";
+
+    } else {
+        
+        msDeployCmdArgs += " -source:package='"+ packageFile + "'";
+
+        if( isParamFilePresentInPacakge ){
+            msDeployCmdArgs += " -dest:auto,";           
+        } else {
+            msDeployCmdArgs += " -dest:contentPath='"+ webApplicationDeploymentPath +"',";
+        }
+
+    }
+
+    msDeployCmdArgs += "ComputerName='https://" + azureRMWebAppConnectionDetails["KuduHostName"] + "/msdeploy.axd?site=" + webAppNameForMSDeployCmd + "',";
     msDeployCmdArgs += "UserName='" + azureRMWebAppConnectionDetails["UserName"] + "',Password='" + azureRMWebAppConnectionDetails["UserPassword"] + "',AuthType='Basic'";
 
-    if(virtualApplication) {
-        msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='" + webAppNameForMSDeployCmd + "/" + virtualApplication + "'";
-    }
-    else {
-        msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='" + webAppNameForMSDeployCmd + "'";
+    if( isParamFilePresentInPacakge || setParametersFile != null ){
+        msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='" + webApplicationDeploymentPath + "'";
     }
 
     if(!removeAdditionalFilesFlag) {
@@ -111,4 +128,32 @@ function getMSDeployInstallPath(registryKey: string): Q.Promise<string> {
     });
 
     return defer.promise;
+}
+
+export async  function containsParamFile( webAppPackage : string ) {
+
+
+    var msDeployPath = await getMSDeployFullPath();
+    var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package='"+webAppPackage+"'";
+
+    tl.debug(tl.loc("Runningmsdeploycommandtocheckifpackagecontainsparamfile0",msDeployPath + " " + msDeployCheckParamFileCmdArgs));
+    
+    var taskResult = tl.execSync(msDeployPath, msDeployCheckParamFileCmdArgs);
+    var paramContentXML = taskResult.stdout;
+
+    tl.debug(tl.loc("Paramscontentofwebpackage0",paramContentXML));
+
+    var isParamFilePresent = false;
+
+    await parseString(paramContentXML, function(error, result ){
+
+        if( result['output']['parameters'][0] ){
+            isParamFilePresent = true;
+        } 
+
+    });
+
+    tl.debug(tl.loc("Isparameterfilepresentinwebpackage0",isParamFilePresent));
+
+    return isParamFilePresent;
 }

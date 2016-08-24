@@ -223,6 +223,9 @@
         "Updatingdeploymentstatus":"Updating deployment status",
         "CannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite":"Cannot update deployment status, SCM endpoint is not enabled for this website",
         "Cannotupdatedeploymentstatusfor01":"Cannot update deployment status for {0} - {1}",
-        "CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved":"Cannot update deployment status, unique deploymentId cannot be retrieved"
+        "CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved":"Cannot update deployment status, unique deploymentId cannot be retrieved",
+        "Runningmsdeploycommandtocheckifpackagecontainsparamfile0":"Running msdeploy command to check if package contains param file : ",
+        "Paramscontentofwebpackage0":"Params content of web package : ",
+        "Isparameterfilepresentinwebpackage0":"Is parameter file is present in web package : "
     }
 }
