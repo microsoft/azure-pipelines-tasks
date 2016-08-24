@@ -1,7 +1,5 @@
 import Q = require('q');
-//import url = require('url');
 import request = require('request');
-import {IncomingMessage} from 'http';
 import {SonarQubeEndpoint} from './endpoint';
 
 import tl = require('vsts-task-lib/task');
