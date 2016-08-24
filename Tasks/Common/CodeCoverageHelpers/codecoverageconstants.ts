@@ -1,3 +1,5 @@
+import * as path from 'path';
+
 // Enable Jacoco Code Coverage for Gradle builds using this props
 export function jacocoGradleMultiModuleEnable(excludeFilter: string, includeFilter: string, classFileDirectory: string, reportDir: string) {
     return `
@@ -179,12 +181,177 @@ cobertura {
 };
 
 // Enable Jacoco Code Coverage for Maven builds using this props
-export const jacocoMavenSingleModuleEnable = "";
-export const jacocoMavenMultiModuleEnable = "";
+export function jacocoMavenPluginEnable(includeFilter: string, excludeFilter: string, destFile: string, outputDirectory: string): any {
+    return {
+        "groupId": "org.jacoco",
+        "artifactId": "jacoco-maven-plugin",
+        "version": "0.7.5.201505241946",
+        "configuration": {
+            "destFile": destFile,
+            "outputDirectory": outputDirectory,
+            "dataFile": destFile,
+            "append": "true"
+        },
+        "executions": {
+            "execution": [
+                {
+                    "configuration": {
+                        "includes": { "include": includeFilter },
+                        "excludes": { "exclude": excludeFilter }
+                    },
+                    "id": "default-prepare-agent-vsts",
+                    "goals": { "goal": "prepare-agent" }
+                },
+                {
+                    "id": "default-report-vsts",
+                    "goals": { "goal": "report" },
+                    "phase": "test"
+                }
+            ]
+        }
+    }
+};
+export function jacocoMavenMultiModuleReport(jacocoExec: string, reportDir: string): string {
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>VstsReport</groupId>
+  <artifactId>VstsReport</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.8</version>
+        <executions>
+          <execution>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <echo message="Generating JaCoCo Reports" />
+                <taskdef name="report" classname="org.jacoco.ant.ReportTask">
+                  <classpath path="{basedir}/target/jacoco-jars/org.jacoco.ant.jar" />
+                </taskdef>
+                <report>
+                  <executiondata>
+                    <file file="${jacocoExec}" />
+                  </executiondata>
+                  <structure name="Jacoco report">
+                    <classfiles>
+                      <fileset dir="." />
+                    </classfiles>
+                    <sourcefiles encoding="UTF-8">
+                      <fileset dir="." />
+                    </sourcefiles>
+                  </structure>
+                  <html destdir="${reportDir}" />
+                  <xml destfile="${reportDir + path.delimiter}jacoco.xml" />
+                  <csv destfile="${reportDir + path.delimiter}report.csv" />
+                </report>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.ant</artifactId>
+            <version>0.7.5.201505241946</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+    `
+};
 
 // Enable Cobertura Code Coverage for Maven builds using this props
-export const coberturaMavenSingleModuleEnable = "";
-export const coberturaMavenMultiModuleEnable = "";
+export function coberturaMavenEnable(includeFilter: string, excludeFilter: string, aggregate: string) {
+    return `
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>cobertura-maven-plugin</artifactId>
+        <version>2.7</version>
+        <configuration>
+          <formats>
+            <format>xml</format>
+            <format>html</format>
+          </formats>
+          <instrumentation>
+            <includes>${includeFilter}</includes>
+            <excludes>${excludeFilter}</excludes>
+          </instrumentation>
+          <aggregate>${aggregate}</aggregate>
+        </configuration>
+        <executions>
+          <execution>
+            <id>package-9af52907-6506-4b87-b16a-9883edee41bc</id>
+            <goals>
+              <goal>cobertura</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>cobertura-maven-plugin</artifactId>
+        <version>2.7</version>
+        <configuration>
+          <formats>
+            <format>xml</format>
+            <format>html</format>
+          </formats>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
+  `
+};
+
+export function jacocoAntReport(reportFile: string, reportDir: string, classData: string, sourceData: string): string {
+    return `
+      <?xml version='1.0'?>
+        <project name='JacocoReport'>
+               <target name='CodeCoverage_9064e1d0'>
+                  <jacoco:report xmlns:jacoco='antlib:org.jacoco.ant'>
+                      <executiondata>
+                         <file file='${reportFile}'/>
+                      </executiondata>
+                      <structure name = 'Jacoco report'>
+                            <classfiles>${classData}</classfiles>
+                            <sourcefiles>${sourceData}</sourcefiles>
+                      </structure>
+                      <html destdir='${reportDir}' />
+                      <csv destfile='${reportDir + path.delimiter}summary.csv' />
+                      <xml destfile='${reportDir + path.delimiter}summary.xml' />
+                  </jacoco:report>
+              </target>
+        </project>
+    `;
+}
+
+export function jacocoAntCoverageEnable() : any{
+    return {
+        $ :
+        {
+            "destfile": "jacoco.exec",
+            "append": true,
+            "xlmns:jacoco": "antlib:org.jacoco.ant"
+        }
+    }
+}
 
 // Gradle Coberutra plugin
 export const coberturaGradleBuildScript = `buildscript {

@@ -131,7 +131,7 @@ export function trimEnd(data: string, trimChar: string) {
     }
 }
 
-export function readXmlFileAsJson(filePath: string): Q.Promise<string> {
+export function readXmlFileAsJson(filePath: string): Q.Promise<any> {
     return readFile(filePath, 'utf-8')
         .then(convertXmlStringToJson);
 }
@@ -140,17 +140,35 @@ export function readFile(filePath: string, encoding: string): Q.Promise<string> 
     return Q.nfcall<string>(fs.readFile, filePath, encoding);
 }
 
-export function convertXmlStringToJson(xmlContent: string): Q.Promise<string> {
+export function convertXmlStringToJson(xmlContent: string): Q.Promise<any> {
     return Q.nfcall<string>(xml2js.parseString, xmlContent);
 }
 
-export function writeJsonAsXmlFile(jsonContent: string): Q.Promise<void> {
+export function writeJsonAsXmlFile(filePath: string, jsonContent: any): Q.Promise<void> {
     let builder = new xml2js.Builder();
     let xml = builder.buildObject(jsonContent);
-    return writeFile(xml);
+    return writeFile(filePath,xml);
 }
 
-export function writeFile(fileContent: string): Q.Promise<void> {
-    return Q.nfcall<void>(fs.writeFile, fileContent);
+export function writeFile(filePath:string, fileContent: string): Q.Promise<void> {
+    return Q.nfcall<void>(fs.writeFile, filePath, fileContent);
+}
+
+export function addPropToJson(obj: any, propName: string, value: any) {
+    if(obj === 'undefined'){
+        obj = {} 
+    }
+
+    if (propName in obj) {
+        if (obj[propName] instanceof Array) {
+            obj[propName].push(value);
+        }
+        else if (typeof obj[propName] !== 'object') {
+            obj[propName] = [obj[propName], value];
+        }
+    }
+    else {
+        obj[propName] = value;
+    }
 }
 

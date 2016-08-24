@@ -12,6 +12,7 @@ import * as util from './utilities';
 
 /* Code Coverage enabler for different type of build tools and code coverage tools*/
 export abstract class CodeCoverageEnabler implements ICodeCoverageEnabler {
+    protected buildFile: string;
 
     abstract enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<boolean>;
 
