@@ -93,7 +93,7 @@ export class NuGetConfigHelper {
                     }
                 }
 
-                if(!configXml.configuration.packageSources || !configXml.configuration.packageSources.add) {
+                if (!configXml.configuration.packageSources || !configXml.configuration.packageSources.add) {
                     tl.warning(tl.loc("NGCommon_NoSourcesFoundInConfig", this._nugetConfigPath))
                     return [];
                 }
@@ -101,11 +101,11 @@ export class NuGetConfigHelper {
                 for (var i = 0; i < configXml.configuration.packageSources.add.count(); i++) {
                     sourceKey = configXml.configuration.packageSources.add.at(i).attributes().key;
                     sourceValue = configXml.configuration.packageSources.add.at(i).attributes().value;
-                    if(!sourceKey || !sourceValue) {
+                    if (!sourceKey || !sourceValue) {
                         continue;
                     }
 
-                    packageSource = {feedName: sourceKey, feedUri: sourceValue};
+                    packageSource = { feedName: sourceKey, feedUri: sourceValue };
 
                     // check if need to add credential to feed
                     if (this.shouldGetCredentialsForFeed(packageSource)) {
