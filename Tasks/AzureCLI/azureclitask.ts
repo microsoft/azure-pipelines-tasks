@@ -16,10 +16,9 @@ export class azureclitask {
             tl.setResourcePath(path.join( __dirname, "task.json"));
 
             var tool;
-            var scriptType: string = tl.getInput("scriptType", true);
-            if(scriptType === "bash")
+            if(os.type() != "Windows_NT")
             {
-                tool = tool = tl.createToolRunner(tl.which("bash", true));
+                tool = tl.tool(tl.which("bash", true));
             }
 
             var scriptLocation:string = tl.getInput("scriptLocation");
@@ -36,7 +35,7 @@ export class azureclitask {
             }
             else {
                 var script: string = tl.getInput("inlineScript", true);
-                if (scriptType === "bash") {
+                if(os.type() != "Windows_NT") {
                     scriptPath = path.join(os.tmpdir(), "azureclitaskscript.sh");
                 }
                 else {
@@ -54,17 +53,17 @@ export class azureclitask {
             tl.mkdirP(cwd);
             tl.cd(cwd);
 
-            if (scriptType === "bash") {
-                tool.pathArg(scriptPath);
+            if(os.type() != "Windows_NT") {
+                tool.arg(scriptPath);
             }
             else {
-                tool = tl.createToolRunner(tl.which(scriptPath, true));
+                tool = tl.tool(tl.which(scriptPath, true));
             }
 
             var connectedServiceNameSelector = tl.getInput("connectedServiceNameSelector", true);
             this.loginAzure(connectedServiceNameSelector);
 
-            tool.argString(args); // additional args should always call argString.  argString() parses quoted arg strings
+            tool.line(args); // additional args should always call argString.  argString() parses quoted arg strings
             await tool.exec({ failOnStdErr: failOnStdErr });
         }
         catch (err) {

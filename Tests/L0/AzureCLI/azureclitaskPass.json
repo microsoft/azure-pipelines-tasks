@@ -2,7 +2,8 @@
   "which": {
     "bash": "/usr/local/bin/bash",
     "azure": "/usr/local/bin/azure",
-    "script.bat": "script.bat"
+    "script.bat": "script.bat",
+    "script.sh": "script.sh"
   },
   "exec": {
     "/usr/local/bin/bash script.sh arg1": {
@@ -10,6 +11,10 @@
       "stdout":"bash executed successfully"
     },
     "script.bat arg1": {
+      "code": 0,
+      "stdout":"bash executed successfully"
+    },
+    "script.sh arg1": {
       "code": 0,
       "stdout":"bash executed successfully"
     },

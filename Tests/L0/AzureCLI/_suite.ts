@@ -34,12 +34,9 @@ describe('AzureCLI Suite', function () {
     function addInlineObjectJson(responseFileName:string, nameOfFileToBeCreated:string)
     {
         var jsonFileObject:any = JSON.parse(fs.readFileSync(path.join(__dirname,responseFileName)).toString());
-        if(nameOfFileToBeCreated === inlineScriptName + '.sh'){
-            if( !jsonFileObject.exec['/usr/local/bin/bash ' + path.join(os.tmpdir(), nameOfFileToBeCreated) + ' arg1']){
-                jsonFileObject.exec['/usr/local/bin/bash ' + path.join(os.tmpdir(), nameOfFileToBeCreated) + ' arg1'] = jsonFileObject.exec['/usr/local/bin/bash azureclitaskscript.sh arg1'];
-            }
-        }
-        else {
+        if(os.type() == "Windows_NT")
+        {
+            nameOfFileToBeCreated = inlineScriptName + '.bat';
             if( !jsonFileObject.exec[path.join(os.tmpdir(), nameOfFileToBeCreated) + ' arg1']){
                 jsonFileObject.exec[path.join(os.tmpdir(), nameOfFileToBeCreated) + ' arg1'] = jsonFileObject.exec['script.bat arg1'];
             }
@@ -50,20 +47,34 @@ describe('AzureCLI Suite', function () {
                 jsonFileObject.checkPath[path.join(os.tmpdir(), nameOfFileToBeCreated)] = true;
             }
         }
+        else
+        {
+            if( !jsonFileObject.checkPath[path.join(os.tmpdir(), nameOfFileToBeCreated)]){
+                jsonFileObject.checkPath[path.join(os.tmpdir(), nameOfFileToBeCreated)] = true;
+            }
+            if( !jsonFileObject.exec['/usr/local/bin/bash ' + path.join(os.tmpdir(), nameOfFileToBeCreated) + ' arg1']){
+                jsonFileObject.exec['/usr/local/bin/bash ' + path.join(os.tmpdir(), nameOfFileToBeCreated) + ' arg1'] = jsonFileObject.exec['script.bat arg1'];
+            }
+        }
         fs.writeFileSync(path.join(__dirname,responseFileName), JSON.stringify(jsonFileObject));
     }
 
     function deleteInlineObjectJson(responseFileName:string, nameOfFileToBeCreated:string)
     {
         var jsonFileObject:any = JSON.parse(fs.readFileSync(path.join(__dirname,responseFileName)).toString());
-        if(nameOfFileToBeCreated === inlineScriptName + '.sh') {
-            delete jsonFileObject.exec['/usr/local/bin/bash ' + path.join(os.tmpdir(), nameOfFileToBeCreated) + ' arg1'];
-        }
-        else {
+        if(os.type() === "Windows_NT")
+        {
+            nameOfFileToBeCreated = inlineScriptName + '.bat'
             delete jsonFileObject.exec[path.join(os.tmpdir(), nameOfFileToBeCreated) + ' arg1'];
             delete jsonFileObject.which[path.join(os.tmpdir(), nameOfFileToBeCreated)];
             delete jsonFileObject.checkPath[path.join(os.tmpdir(), nameOfFileToBeCreated)];
         }
+        else
+        {
+            delete jsonFileObject.exec['/usr/local/bin/bash ' + path.join(os.tmpdir(), nameOfFileToBeCreated) + ' arg1'];
+            delete jsonFileObject.checkPath[path.join(os.tmpdir(), nameOfFileToBeCreated)];
+        }
+
         fs.writeFileSync(path.join(__dirname,responseFileName), JSON.stringify(jsonFileObject));
     }
 
@@ -83,7 +94,6 @@ describe('AzureCLI Suite', function () {
         setResponseFile(responseFileName);
 
         var tr = new trm.TaskRunner('AzureCLI');
-        tr.setInput('scriptType', 'bash');
         tr.setInput('scriptLocation', 'scriptPath');
         tr.setInput('scriptPath', 'script.sh');
         tr.setInput('cwd', 'fake/wd');
@@ -111,7 +121,6 @@ describe('AzureCLI Suite', function () {
         setResponseFile(responseFileName);
 
         var tr = new trm.TaskRunner('AzureCLI');
-        tr.setInput('scriptType', 'cmd');
         tr.setInput('scriptLocation', 'scriptPath');
         tr.setInput('scriptPath', 'script.bat');
         tr.setInput('cwd', 'fake/wd');
@@ -140,7 +149,6 @@ describe('AzureCLI Suite', function () {
         setResponseFile(responseFileName);
 
         var tr = new trm.TaskRunner('AzureCLI');
-        tr.setInput('scriptType', 'bash');
         tr.setInput('scriptLocation', 'inlineScript');
         tr.setInput('inlineScript', 'console.log("test");');
         tr.setInput('cwd', 'fake/wd');
@@ -170,7 +178,6 @@ describe('AzureCLI Suite', function () {
         setResponseFile(responseFileName);
 
         var tr = new trm.TaskRunner('AzureCLI');
-        tr.setInput('scriptType', 'cmd');
         tr.setInput('scriptLocation', 'inlineScript');
         tr.setInput('inlineScript', 'console.log("test");');
         tr.setInput('cwd', 'fake/wd');
@@ -197,7 +204,6 @@ describe('AzureCLI Suite', function () {
         setResponseFile('azureclitaskPass.json');
 
         var tr = new trm.TaskRunner('AzureCLI');
-        tr.setInput('scriptType', 'bash');
         tr.setInput('scriptLocation', 'scriptPath');
         tr.setInput('scriptPath', 'script.sh');
         tr.setInput('cwd', 'fake/wd');
@@ -224,7 +230,6 @@ describe('AzureCLI Suite', function () {
         setResponseFile(responseFileName);
 
         var tr = new trm.TaskRunner('AzureCLI');
-        tr.setInput('scriptType', 'bash');
         tr.setInput('scriptLocation', 'inlineScript');
         tr.setInput('inlineScript', 'console.log("test");');
         tr.setInput('cwd', 'fake/wd');
@@ -250,7 +255,6 @@ describe('AzureCLI Suite', function () {
         setResponseFile('azureLoginFails.json');
 
         var tr = new trm.TaskRunner('AzureCLI');
-        tr.setInput('scriptType', 'bash');
         tr.setInput('scriptLocation', 'scriptPath');
         tr.setInput('scriptPath', 'script.sh');
         tr.setInput('cwd', 'fake/wd');
@@ -273,7 +277,6 @@ describe('AzureCLI Suite', function () {
         setResponseFile('azureLoginFails.json');
 
         var tr = new trm.TaskRunner('AzureCLI');
-        tr.setInput('scriptType', 'bash');
         tr.setInput('scriptLocation', 'scriptPath');
         tr.setInput('scriptPath', 'script.sh');
         tr.setInput('cwd', 'fake/wd');
@@ -298,7 +301,6 @@ describe('AzureCLI Suite', function () {
         setResponseFile(responseFileName);
 
         var tr = new trm.TaskRunner('AzureCLI');
-        tr.setInput('scriptType', 'bash');
         tr.setInput('scriptLocation', 'scriptPath');
         tr.setInput('scriptPath', 'script.sh');
         tr.setInput('cwd', 'fake/wd');
@@ -322,7 +324,6 @@ describe('AzureCLI Suite', function () {
         setResponseFile('azureLoginFails.json');
 
         var tr = new trm.TaskRunner('AzureCLI');
-        tr.setInput('scriptType', 'bash');
         tr.setInput('scriptLocation', 'scriptPath');
         tr.setInput('scriptPath', 'script.sh');
         tr.setInput('cwd', 'fake/wd');
@@ -347,7 +348,6 @@ describe('AzureCLI Suite', function () {
         setResponseFile('scriptExecutionFailed.json');
 
         var tr = new trm.TaskRunner('AzureCLI');
-        tr.setInput('scriptType', 'bash');
         tr.setInput('scriptLocation', 'scriptPath');
         tr.setInput('scriptPath', 'scriptfail.sh');
         tr.setInput('cwd', 'fake/wd');
@@ -372,7 +372,6 @@ describe('AzureCLI Suite', function () {
         setResponseFile(responseFileName);
 
         var tr = new trm.TaskRunner('AzureCLI');
-        tr.setInput('scriptType', 'bash');
         tr.setInput('scriptLocation', 'scriptPath');
         tr.setInput('scriptPath', 'scriptfail.sh');
         tr.setInput('cwd', 'fake/wd');
@@ -398,7 +397,6 @@ describe('AzureCLI Suite', function () {
         setResponseFile(responseFileName);
 
         var tr = new trm.TaskRunner('AzureCLI');
-        tr.setInput('scriptType', 'cmd');
         tr.setInput('scriptLocation', 'scriptPath');
         tr.setInput('scriptPath', 'scriptfail.bat');
         tr.setInput('cwd', 'fake/wd');
@@ -422,7 +420,6 @@ describe('AzureCLI Suite', function () {
         setResponseFile('toolnotfoundFails.json');
 
         var tr = new trm.TaskRunner('AzureCLI');
-        tr.setInput('scriptType', 'bash');
         tr.run()
             .then(() => {
                 assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
@@ -438,7 +435,6 @@ describe('AzureCLI Suite', function () {
         setResponseFile('toolnotfoundFails.json');
 
         var tr = new trm.TaskRunner('AzureCLI');
-        tr.setInput('scriptType', 'cmd');
         tr.setInput('scriptLocation', 'scriptPath');
         tr.setInput('cwd', 'fake/wd');
         tr.setInput('scriptPath', 'script.bat');
@@ -459,7 +455,6 @@ describe('AzureCLI Suite', function () {
         setResponseFile('checkpathFails.json');
 
         var tr = new trm.TaskRunner('AzureCLI');
-        tr.setInput('scriptType', 'bash');
         tr.setInput('scriptLocation', 'scriptPath');
         tr.setInput('cwd', 'fake/wd');
         tr.setInput('scriptPath', 'scriptfail.sh');

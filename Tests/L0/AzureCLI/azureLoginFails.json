@@ -1,7 +1,8 @@
 {
   "which": {
     "bash": "/usr/local/bin/bash",
-    "azure": "/usr/local/bin/azure"
+    "azure": "/usr/local/bin/azure",
+    "script.sh" : "script.sh"
   },
   "exec": {
     "/usr/local/bin/azure config mode asm": {

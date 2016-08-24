@@ -7,6 +7,7 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "visibility": [
+    "Preview",
     "Build",
     "Release"
   ],
@@ -15,7 +16,7 @@
   "version": {
     "Major": "0",
     "Minor": "1",
-    "Patch": "2"
+    "Patch": "1"
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -56,18 +57,6 @@
       "visibleRule": "connectedServiceNameSelector = connectedServiceName",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
-    },
-    {
-      "name": "scriptType",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.scriptType",
-      "defaultValue": "bash",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.scriptType",
-      "options": {
-        "bash": "Shell",
-        "cmd": "Batch"
-      }
     },
     {
       "name": "scriptLocation",

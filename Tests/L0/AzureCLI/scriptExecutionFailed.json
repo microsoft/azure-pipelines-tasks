@@ -2,7 +2,8 @@
   "which": {
     "bash": "/usr/local/bin/bash",
     "azure": "/usr/local/bin/azure",
-    "scriptfail.bat" : "scriptfail.bat"
+    "scriptfail.bat" : "scriptfail.bat",
+    "scriptfail.sh" : "scriptfail.sh"
   },
   "exec": {
     "/usr/local/bin/bash scriptfail.sh arg1": {
@@ -11,6 +12,11 @@
       "stderr": "bash stderr"
     },
 	"scriptfail.bat arg1": {
+      "code": 1,
+      "stdout":"cmd execution failed",
+      "stderr": "cmd stderr"
+    },
+    "scriptfail.sh arg1": {
       "code": 1,
       "stdout":"cmd execution failed",
       "stderr": "cmd stderr"
