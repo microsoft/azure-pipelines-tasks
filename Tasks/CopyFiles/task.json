@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 9
+    "Patch": 10
   },
   "demands": [
   ],
@@ -39,7 +39,11 @@
       "label": "Contents",
       "defaultValue": "**",
       "required": true,
-      "helpMarkDown": "File paths to include as part of the copy. Supports multiple lines of minimatch patterns. [More Information](http://go.microsoft.com/fwlink/?LinkID=708389)"
+      "helpMarkDown": "File paths to include as part of the copy. Supports multiple lines of minimatch patterns. [More Information](http://go.microsoft.com/fwlink/?LinkID=708389)",
+      "properties": {
+          "resizable": "true",
+          "rows": "10"
+      }
     },
     {
       "name": "TargetFolder",
