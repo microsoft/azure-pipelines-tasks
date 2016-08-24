@@ -15,14 +15,6 @@
             "/someDir/someFile"
         ]
     },
-    "stats": {
-        "/someDir/someNestedDir": {
-            "isDirectory": true
-        },
-        "/someDir/someFile": {
-            "isDirectory": false
-        }
-    },
     "match": {
         "\\someDir\\**": [
             "/someDir/someNestedDir",

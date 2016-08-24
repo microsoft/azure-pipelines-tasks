@@ -10,24 +10,19 @@
         }
     },
     "find": {
-        "/notExistDir": [],
         "/someDir": [
             "/someDir/someOtherDir",
             "/someDir/someOtherDir2"
         ]
     },
     "match": {
-        "\\someDir\\someOtherDir": [
-              "/someDir/someOtherDir"
+        "\\someDir\\someOtherDir,\\someDir\\someOtherDir2": [
+            "/someDir/someOtherDir",
+            "/someDir/someOtherDir2"
         ],
-        "/someDir/someOtherDir": [
-              "/someDir/someOtherDir"
-        ],
-        "\\someDir\\someOtherDir2": [
-              "/someDir/someOtherDir2"
-        ],
-        "/someDir/someOtherDir2": [
-              "/someDir/someOtherDir2"
+        "/someDir/someOtherDir,/someDir/someOtherDir2": [
+            "/someDir/someOtherDir",
+            "/someDir/someOtherDir2"
         ]
     },
     "checkPath" : {

@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 7
+        "Patch": 12
     },
     "minimumAgentVersion": "1.83.0",
     "groups": [
@@ -69,12 +69,12 @@
             "name": "verbosity",
             "type": "pickList",
             "label": "Verbosity",
-            "defaultValue": "",
+            "defaultValue": "-",
             "helpMarkDown": "NuGet's verbosity level",
             "required": "false",
             "groupName": "advanced",
             "options": {
-                "": "-",
+                "-": "-",
                 "Quiet": "Quiet",
                 "Normal": "Normal",
                 "Detailed": "Detailed"

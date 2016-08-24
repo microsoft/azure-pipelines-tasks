@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 9
+    "Patch": 12
   },
   "demands": [
     "Cmd"
@@ -73,12 +73,12 @@
       "name": "verbosity",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.verbosity",
-      "defaultValue": "",
+      "defaultValue": "-",
       "helpMarkDown": "ms-resource:loc.input.help.verbosity",
       "required": "false",
       "groupName": "advanced",
       "options": {
-        "": "-",
+        "-": "-",
         "Quiet": "Quiet",
         "Normal": "Normal",
         "Detailed": "Detailed"

@@ -104,6 +104,9 @@ export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: b
 
         filesList = allFiles.filter(patternFilter);
 
+        // Avoid matching anything other than files
+        filesList = filesList.filter(x => tl.stats(x).isFile());
+
         // Fail if no matching .sln files were found
         if (!allowEmptyWildcardMatch && (!filesList || filesList.length == 0)) {
             throw new Error('No matching files were found with search pattern: ' + pattern);
@@ -118,4 +121,23 @@ export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: b
     {
         return filesList.map(file => file.split("/").join("\\"));
     }
+}
+
+export function stripLeadingAndTrailingQuotes(path: string): string {
+    if (path.length == 0) {
+        return path;
+    }
+
+    let left = 0;
+    if (path.charAt(left) == '"') {
+        ++left;
+    }
+
+    let right = path.length - 1;
+    if (path.charAt(right) == '"') {
+        --right;
+    }
+
+    // substring returns a value *not* including the character at right
+    return path.substring(left, right + 1);
 }
