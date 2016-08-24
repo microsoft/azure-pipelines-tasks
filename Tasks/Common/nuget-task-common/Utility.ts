@@ -47,7 +47,7 @@ export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEm
 
 export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: boolean): string[] {
     let isWindows = os.platform() === 'win32';
-    
+
     // Resolve files for the specified value or pattern
     var filesList: string[];
 
@@ -56,7 +56,7 @@ export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: b
         filesList = [];
     }
     else if (pattern.indexOf('*') == -1 && pattern.indexOf('?') == -1) {
-        
+
         // No pattern found, check literal path to a single file
         tl.checkPath(pattern, 'files');
 
@@ -113,12 +113,10 @@ export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: b
         }
     }
 
-    if (!isWindows)
-    {
+    if (!isWindows) {
         return filesList;
     }
-    else
-    {
+    else {
         return filesList.map(file => file.split("/").join("\\"));
     }
 }
