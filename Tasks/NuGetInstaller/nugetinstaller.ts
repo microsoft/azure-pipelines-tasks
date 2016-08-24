@@ -47,7 +47,7 @@ async function main(): Promise<void> {
         var noCache = tl.getBoolInput('noCache');
         var nuGetRestoreArgs = tl.getInput('nuGetRestoreArgs');
         var verbosity = tl.getInput('verbosity');
-        var preCredProviderNuGet = tl.getBoolInput('preCredProviderNuGet');
+        
 
         var restoreMode = tl.getInput('restoreMode') || "Restore";
         // normalize the restore mode for display purposes, and ensure it's a known one
@@ -63,17 +63,33 @@ async function main(): Promise<void> {
             nugetConfigPath = null;
         }
 
+        var nugetVersion = tl.getInput('nuGetVersion');
+
         // due to a bug where we accidentally allowed nuGetPath to be surrounded by quotes before,
         // locateNuGetExe() will strip them and check for existence there.
-        var userNuGetPath = tl.getPathInput('nuGetPath', false, false);
-        if (!tl.filePathSupplied('nuGetPath')) {
-            userNuGetPath = null;
+        var nuGetPath = tl.getPathInput('nuGetPath', false, false);
+        var userNuGetProvided = false;
+        if(tl.filePathSupplied('nuGetPath')){
+            // True if the user provided their own version of NuGet
+            userNuGetProvided = true;
+            if (nugetVersion !== "external"){
+                // For back compat, if a path has already been specificed then use it.
+                // However warn the user in the build of this behavior
+                tl.warning(tl.loc("Warning_ConflictingNuGetPreference"));
+            }
+        }
+        else {
+            if (nugetVersion === "external")
+            {
+                throw new Error(tl.loc("NoNuGetSpecified"))
+            }
+            // Pull the pre-installed path for NuGet.
+            nuGetPath = nutil.getBundledNuGetLocation(nugetVersion);
         }
 
         var serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
 
         //find nuget location to use
-        var nuGetPathToUse = ngToolRunner.locateNuGetExe(userNuGetPath);
         var credProviderPath = ngToolRunner.locateCredentialProvider();
 
         var credProviderDir: string = null;
@@ -121,7 +137,7 @@ async function main(): Promise<void> {
         var environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
             authInfo: authInfo,
             credProviderFolder: credProviderDir,
-            extensionsDisabled: !userNuGetPath
+            extensionsDisabled: !userNuGetProvided
         }
 
         let configFile = nugetConfigPath;
@@ -129,9 +145,9 @@ async function main(): Promise<void> {
         if (!ngToolRunner.isCredentialConfigEnabled()) {
             tl.debug("Not configuring credentials in nuget.config");
         }
-        else if (!credProviderDir || (userNuGetPath && preCredProviderNuGet)) {
+        else if (!credProviderDir /* ||  TODO check nuget version eligibility*/ ) {
             if (nugetConfigPath) {
-                var nuGetConfigHelper = new NuGetConfigHelper(nuGetPathToUse, nugetConfigPath, authInfo, environmentSettings);
+                var nuGetConfigHelper = new NuGetConfigHelper(nuGetPath, nugetConfigPath, authInfo, environmentSettings);
                 const packageSources = await nuGetConfigHelper.getSourcesFromConfig()
 
                 if (packageSources.length !== 0) {
@@ -153,7 +169,7 @@ async function main(): Promise<void> {
         try {
             var restoreOptions = new RestoreOptions(
                 restoreMode,
-                nuGetPathToUse,
+                nuGetPath,
                 configFile,
                 noCache,
                 verbosity,

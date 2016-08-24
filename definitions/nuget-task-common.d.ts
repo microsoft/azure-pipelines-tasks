@@ -144,5 +144,5 @@ declare module 'nuget-task-common/Utility' {
 	export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEmptyMatch?: boolean): string[];
 	export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: boolean): string[];
 	export function stripLeadingAndTrailingQuotes(path: string): string;
-
+	export function getBundledNuGetLocation(version: string): string;
 }

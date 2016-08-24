@@ -62,15 +62,26 @@ async function main(): Promise<void> {
 
         // due to a bug where we accidentally allowed nuGetPath to be surrounded by quotes before,
         // locateNuGetExe() will strip them and check for existence there.
-        var userNuGetPath = tl.getPathInput('nuGetPath', false, false);
-        if (!tl.filePathSupplied('nuGetPath')) {
-            userNuGetPath = null;
+        var nuGetPath = tl.getPathInput('nuGetPath', false, false);
+        var nugetVersion = tl.getInput('nuGetversion');
+        var userNuGetProvided = false;
+        if (tl.filePathSupplied('nuGetPath')) {
+            userNuGetProvided = true;
+            if (nugetVersion !== "external")
+            {
+                // For back compat, if a path has already been specified then use it.
+                // However, warn the user in the build of this behavior.
+                tl.warning(tl.loc("Warning_ConflictingNuGetPreference"));
+            }
+        }
+        else {
+            nuGetPath = nutil.getBundledNuGetLocation(nugetVersion);
         }
 
         var serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
 
         //find nuget location to use
-        var nuGetPathToUse = ngToolRunner.locateNuGetExe(userNuGetPath);
+        var nuGetPathToUse = ngToolRunner.locateNuGetExe(nuGetPath);
         var credProviderPath = ngToolRunner.locateCredentialProvider();
 
         var credProviderDir: string = null;
@@ -119,7 +130,7 @@ async function main(): Promise<void> {
         var environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
             authInfo: authInfo,
             credProviderFolder: credProviderDir,
-            extensionsDisabled: !userNuGetPath
+            extensionsDisabled: !userNuGetProvided
         }
 
         var configFile = null;
@@ -130,7 +141,7 @@ async function main(): Promise<void> {
             if (!ngToolRunner.isCredentialConfigEnabled()) {
                 tl.debug("Not configuring credentials in nuget.config");
             }
-            else if (!credProviderDir || (userNuGetPath && preCredProviderNuGet)) {
+            else if (!credProviderDir || (nuGetPath && preCredProviderNuGet)) {
                 var nuGetConfigHelper = new NuGetConfigHelper(nuGetPathToUse, null, authInfo, environmentSettings);
                 nuGetConfigHelper.setSources([{ feedName: "internalFeed", feedUri: internalFeedUri }]);
                 configFile = nuGetConfigHelper.tempNugetConfigPath;

@@ -1,0 +1,14 @@
+{
+    "archivePackages": [
+        {
+            "archiveName": "NuGet.exe",
+            "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGet/3.3.0/nuget.zip",
+            "dest": "./NuGet/3.3.0/"
+        },
+        {
+            "archiveName": "NuGet.exe",
+            "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGet/3.3.0/nuget.zip",
+            "dest": "./NuGet/3.5.1/"
+        }
+    ]
+}
