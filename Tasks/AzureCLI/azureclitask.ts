@@ -63,7 +63,7 @@ export class azureclitask {
             var connectedServiceNameSelector = tl.getInput("connectedServiceNameSelector", true);
             this.loginAzure(connectedServiceNameSelector);
 
-            tool.line(args); // additional args should always call argString.  argString() parses quoted arg strings
+            tool.line(args); // additional args should always call line. line() parses quoted arg strings
             await tool.exec({ failOnStdErr: failOnStdErr });
         }
         catch (err) {
