@@ -1,13 +1,25 @@
 {
   "which": {
     "bash": "/usr/local/bin/bash",
-    "azure": "/usr/local/bin/azure"
+    "azure": "/usr/local/bin/azure",
+    "scriptfail.bat" : "scriptfail.bat",
+    "scriptfail.sh" : "scriptfail.sh"
   },
   "exec": {
     "/usr/local/bin/bash scriptfail.sh arg1": {
       "code": 1,
-      "stdout":"bash executed successfully",
+      "stdout":"bash execution failed",
       "stderr": "bash stderr"
+    },
+	"scriptfail.bat arg1": {
+      "code": 1,
+      "stdout":"cmd execution failed",
+      "stderr": "cmd stderr"
+    },
+    "scriptfail.sh arg1": {
+      "code": 1,
+      "stdout":"cmd execution failed",
+      "stderr": "cmd stderr"
     },
     "/usr/local/bin/azure config mode asm": {
       "code": 0,
@@ -41,7 +53,8 @@
   "checkPath" : {
     "/usr/local/bin/bash": true,
     "/usr/local/bin/azure": true,
-    "scriptfail.sh" : true
+    "scriptfail.sh" : true,
+    "scriptfail.bat" : true
   },
   "getVariable": {
     "ENDPOINT_AUTH_AzureClassic": "{\"parameters\":{\"certificate\":\"cert\"},\"scheme\":\"Certificate\"}",
