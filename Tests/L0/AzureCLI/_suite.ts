@@ -49,6 +49,7 @@ describe('AzureCLI Suite', function () {
         }
         else
         {
+            nameOfFileToBeCreated = inlineScriptName + '.sh';
             if( !jsonFileObject.checkPath[path.join(os.tmpdir(), nameOfFileToBeCreated)]){
                 jsonFileObject.checkPath[path.join(os.tmpdir(), nameOfFileToBeCreated)] = true;
             }
@@ -71,6 +72,7 @@ describe('AzureCLI Suite', function () {
         }
         else
         {
+            nameOfFileToBeCreated = inlineScriptName + '.sh';
             delete jsonFileObject.exec['/usr/local/bin/bash ' + path.join(os.tmpdir(), nameOfFileToBeCreated) + ' arg1'];
             delete jsonFileObject.checkPath[path.join(os.tmpdir(), nameOfFileToBeCreated)];
         }
@@ -144,7 +146,7 @@ describe('AzureCLI Suite', function () {
     })
     it('successfully login azure classic and run shell script (inline)', (done) => {
         var responseFileName:string = 'azureclitaskPass.json';
-        addInlineObjectJson(responseFileName, inlineScriptName + '.sh');
+        addInlineObjectJson(responseFileName, inlineScriptName);
         addSubscriptionObjectJson(responseFileName, publishsettingFileName);
         setResponseFile(responseFileName);
 
@@ -173,7 +175,7 @@ describe('AzureCLI Suite', function () {
     })
     it('successfully login azure classic and run batch script (inline)', (done) => {
         var responseFileName:string = 'azureclitaskPass.json';
-        addInlineObjectJson(responseFileName, inlineScriptName + '.bat');
+        addInlineObjectJson(responseFileName, inlineScriptName);
         addSubscriptionObjectJson(responseFileName, publishsettingFileName);
         setResponseFile(responseFileName);
 
@@ -226,7 +228,7 @@ describe('AzureCLI Suite', function () {
     })
     it('successfully login azure RM and run shell script (inline)', (done) => {
         var responseFileName:string = 'azureclitaskPass.json';
-        addInlineObjectJson(responseFileName, inlineScriptName + '.sh');
+        addInlineObjectJson(responseFileName, inlineScriptName);
         setResponseFile(responseFileName);
 
         var tr = new trm.TaskRunner('AzureCLI');

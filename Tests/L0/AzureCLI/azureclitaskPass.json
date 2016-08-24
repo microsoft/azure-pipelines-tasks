@@ -10,6 +10,10 @@
       "code": 0,
       "stdout":"bash executed successfully"
     },
+    "/usr/local/bin/bash script.bat arg1": {
+      "code": 0,
+      "stdout":"bash executed successfully"
+    },
     "script.bat arg1": {
       "code": 0,
       "stdout":"bash executed successfully"

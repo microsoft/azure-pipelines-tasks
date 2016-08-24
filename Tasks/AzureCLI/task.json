@@ -14,7 +14,7 @@
     "Patch": "1"
   },
   "minimumAgentVersion": "1.95.0",
-  "instanceNameFormat": "AzureCLI $(scriptPath)",
+  "instanceNameFormat": "Azure CLI $(scriptPath)",
   "groups": [
         {
             "name": "advanced",
