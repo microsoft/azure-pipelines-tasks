@@ -1,4 +1,3 @@
-
 declare module 'vsts-task-lib/taskcommand' {
 	export class TaskCommand {
 	    constructor(command: any, properties: any, message: any);

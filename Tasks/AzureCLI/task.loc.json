@@ -5,14 +5,13 @@
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
-  "category": "Utility",
+  "category": "Deploy",
   "visibility": [
     "Preview",
     "Build",
     "Release"
   ],
   "demands": [
-    "sh"
   ],
   "version": {
     "Major": "0",
@@ -84,10 +83,10 @@
       "name": "inlineScript",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.inlineScript",
-      "defaultValue": "",
+      "defaultValue": "//You can write your scripts inline here. \n//You can also pass predefined and custom variables to this scripts using arguments \n\n azure --version",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.inlineScript",
       "visibleRule": "scriptLocation = inlineScript",
+      "helpMarkDown": "",
       "properties": {
         "resizable": "true",
         "rows": "10",
