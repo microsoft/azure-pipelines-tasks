@@ -10,7 +10,7 @@ $serviceFabricSdkModulePath = "$PSScriptRoot\data\ServiceFabricSDK.ps1"
 $appName = "AppName"
 
 # Setup input arguments
-Register-Mock Get-VstsInput { $publishProfilePath } -- -Name publishProfilePath -Require
+Register-Mock Get-VstsInput { $publishProfilePath } -- -Name publishProfilePath
 Register-Mock Get-VstsInput { $applicationPackagePath } -- -Name applicationPackagePath -Require
 Register-Mock Get-VstsInput { $serviceConnectionName } -- -Name serviceConnectionName -Require
 
