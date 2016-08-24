@@ -140,6 +140,15 @@ export class ToolRunner extends events.EventEmitter {
         this.args = this.args.concat(this._argStringToArray(val));    
     }
 
+    public line(val: string) {
+        if (!val) {
+            return;
+        }
+
+        this._debug(this.toolPath + ' arg: ' + val);
+        this.args = this.args.concat(this._argStringToArray(val));
+    }
+
     public pathArg(val: string) {
         this._debug(this.toolPath + ' pathArg: ' + val);
         this.arg(val);
