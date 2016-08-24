@@ -10,6 +10,8 @@ import tl = require('vsts-task-lib/task');
 import Q = require('q');
 
 var AuthenticationContext = adal.AuthenticationContext;
+var authUrl = 'https://login.windows.net/';
+var armUrl = 'https://management.azure.com/';
 
 export function updateDeploymentStatus(azureRMWebAppConnectionDetails, isDeploymentSuccess: boolean):Q.Promise<string>  {
 	var deferred = Q.defer<string>();
@@ -32,15 +34,15 @@ export function updateDeploymentStatus(azureRMWebAppConnectionDetails, isDeploym
 				deferred.reject(error);
 			}									
 			else if ( response.statusCode === 200 ) {
-				deferred.resolve("Update deployment history is success!!.");
+				deferred.resolve(tl.loc("Updatedeploymenthistoryissuccess"));
 			}
 			else {
-				deferred.reject("Failed to update deployment history!!.");
+				deferred.reject(tl.loc("Failedtoupdatedeploymenthistory."));
 			}				
 		});
 	}
 	else {
-		deferred.reject('WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website');
+		deferred.reject(tl.loc('WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite'));
 	}
 	return deferred.promise;
 }
@@ -48,11 +50,10 @@ export function updateDeploymentStatus(azureRMWebAppConnectionDetails, isDeploym
 function getAuthorizationToken(SPN): Q.Promise<string> {
 
 	var deferred = Q.defer<string>();
-	var authorityUrl = 'https://login.windows.net/' + SPN.tenantID; 
-	var armResource = 'https://management.azure.com/';
+	var authorityUrl = authUrl + SPN.tenantID;	
 
 	var context = new AuthenticationContext (authorityUrl);
-	context.acquireTokenWithClientCredentials (armResource, SPN.servicePrincipalClientID, SPN.servicePrincipalKey, (error, tokenResponse) => {
+	context.acquireTokenWithClientCredentials (armUrl, SPN.servicePrincipalClientID, SPN.servicePrincipalKey, (error, tokenResponse) => {
 		if(error) 
 			deferred.reject(error);
 		else {
@@ -104,7 +105,7 @@ function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isDeploymentSucce
 		buildOrReleaseUrl = collectionUrl + teamProject + "/_build?buildId=" + buildId + "&_a=summary";
 	}
 	else {
-		throw new Error('Cannot update deployment status : uniquedeploymentIdCannotBeRetrieved');
+		throw new Error(tl.loc('CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved'));
 	}		
 
 	var message = "Updating Deployment History For Deployment " + buildOrReleaseUrl;
@@ -133,7 +134,7 @@ async function getWebAppPublishProfile(SPN, webAppName: string, resourceGroupNam
     var accessToken = await getAuthorizationToken(SPN);
 	
 	var requestOptions = {
-		url: 'https://management.azure.com/subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
+		url: armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
 				 '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + '/publishxml?api-version=2015-08-01',
 		auth: {
 			bearer: accessToken
@@ -150,11 +151,11 @@ async function getWebAppPublishProfile(SPN, webAppName: string, resourceGroupNam
 					if (result.publishData.publishProfile[index].$.publishMethod === "MSDeploy")
 						deferred.resolve(result.publishData.publishProfile[index].$);
 				}
-				deferred.reject('Error : No Such Deploying Method Exists');
+				deferred.reject(tl.loc('ErrorNoSuchDeployingMethodExists'));
 			});
 		}
 		else {
-			deferred.reject('Error Fetching Deployment Publish Profile [Staus Code : ' + response.statusCode + ']');
+			deferred.reject(tl.loc('ErrorFetchingDeploymentPublishProfileStausCode0', response.statusCode));
 		}		
 	});
 
@@ -166,7 +167,7 @@ async function getAzureRMWebAppDetails(SPN, webAppName: string, resourceType: st
 	var deferred = Q.defer<any>();
 	var accessToken = await getAuthorizationToken(SPN);
 	var requestOptions = {
-		url: 'https://management.azure.com/subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'' + resourceType +
+		url:  armUrl + 'subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'' + resourceType +
 						'\' AND name EQ \'' + webAppName + '\'&api-version=2016-07-01',
 		auth: {
 			bearer: accessToken
@@ -182,7 +183,7 @@ async function getAzureRMWebAppDetails(SPN, webAppName: string, resourceType: st
 			deferred.resolve(obj.value[0]);
 		}
 		else {
-			deferred.reject('Error Occurred : [Staus Code : ' + response.statusCode + ']');
+			deferred.reject(tl.loc('ErrorOccurredStausCode0',response.statusCode));
 		}		
 	});	
 

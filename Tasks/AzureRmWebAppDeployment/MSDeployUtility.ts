@@ -39,48 +39,45 @@ export function getMSDeployCmdArgs(packageFile: string, webAppNameForMSDeployCmd
     if( isParamFilePresentInPacakge || setParametersFile != null ){
         msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='" + webApplicationDeploymentPath + "'";
     }
+    else {
+        msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='" + webAppNameForMSDeployCmd + "'";
+    }
 
     if(!removeAdditionalFilesFlag) {
         msDeployCmdArgs += " -enableRule:DoNotDeleteRule";
     }
-
-    if(takeAppOfflineFlag) {
-        msDeployCmdArgs +=  " -enableRule:AppOffline";
+    if (takeAppOfflineFlag) {
+        msDeployCmdArgs += ' -enableRule:AppOffline';
     }
-
-    if(excludeFilesFromAppDataFlag) {
-        msDeployCmdArgs += " -skip:Directory='\\App_Data'";
+    if (excludeFilesFromAppDataFlag) {
+        msDeployCmdArgs += ' -skip:Directory="\\App_Data"';
     }
-
-    if(setParametersFile) {
-        msDeployCmdArgs += " -setParamFile:'" + setParametersFile + "'";
+    if (setParametersFile) {
+        msDeployCmdArgs += ' -setParamFile:\'' + setParametersFile + '\'';
     }
-
-    if(additionalArguments) {
-        msDeployCmdArgs += " " + additionalArguments;
+    if (additionalArguments) {
+        msDeployCmdArgs += ' ' + additionalArguments;
     }
-
     var userAgent = tl.getVariable("AZURE_HTTP_USER_AGENT");
-    if(userAgent) {
-        msDeployCmdArgs += " -userAgent:'" + userAgent + "'";
+    if (userAgent) {
+        msDeployCmdArgs += ' -userAgent:"' + userAgent + '"';
     }
-
-    tl.debug("Constructed msDeploy comamnd line arguments");    
+    tl.debug(tl.loc('ConstructedmsDeploycomamndlinearguments'));
     return msDeployCmdArgs;
 }
 
 export async function executeMSDeployCmd(msDeployCmdArgs: string, azureRMWebAppConnectionDetails) {
     var msDeployPath = await getMSDeployFullPath();
     var maskedCommand = maskPasswordDetails(msDeployCmdArgs);
-    tl.debug("Running command: "+ msDeployPath + " " + maskedCommand);
+    tl.debug(tl.loc('Runningcommand01', msDeployPath, maskedCommand));
     var statusCode = await tl.exec(msDeployPath, msDeployCmdArgs);
     if ( statusCode === 0 ) {
-        tl.debug("Successfully deployed website.");
+        tl.debug(tl.loc('Successfullydeployedwebsite'));
         var deploymentResult = await azureRmUtil.updateDeploymentStatus(azureRMWebAppConnectionDetails, true);
         tl.debug(deploymentResult);
     }
     else {
-        tl.debug("Failed to deploy website.");
+        tl.debug(tl.loc('Failedtodeploywebsite'));
         var deploymentResult = await azureRmUtil.updateDeploymentStatus(azureRMWebAppConnectionDetails, false);
         tl.debug(deploymentResult);
     }
