@@ -10,11 +10,6 @@
             "/lockedDir/otherLockedDir"
         ]
     },
-    "stats": {
-        "/lockedDir/otherLockedDir": {
-            "isDirectory": true
-        }
-    },
     "match": {
         "\\lockedDir\\otherLockedDir": [
               "/lockedDir/otherLockedDir"
