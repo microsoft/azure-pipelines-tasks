@@ -37,20 +37,18 @@ async function run() {
 		SPN["tenantID"] = endPointAuthCreds.parameters["tenantid"];
 		SPN["subscriptionId"] = tl.getEndpointDataParameter (connectedServiceName, 'subscriptionid', true); 
 		
-		if(fs.existsSync(package)) {
-            tl.debug(tl.loc('Packagefound0', package));
-		if (!msDeployUtility.fileExists(webDeployPkg)) {
+
+		if (!msDeployUtility.isPathPresent(webDeployPkg)) {
 			throw new Error(tl.loc('Packagenotfound0', webDeployPkg));			
 		}
 
-		var isFolderBasedDeployment = fs.statSync(package).isDirectory();
+		var isFolderBasedDeployment = !msDeployUtility.fileExists(webDeployPkg);
 		var isParamFilePresentInPacakge = false;
 
 		if( !isFolderBasedDeployment ){
-			isParamFilePresentInPacakge = await msDeployUtility.containsParamFile(package);
+			isParamFilePresentInPacakge = await msDeployUtility.containsParamFile(webDeployPkg);
 		}
-
-		if ( !fs.statSync(setParametersFile).isFile()) {
+		
 		var systemDefaultWorkingDir = tl.getVariable('SYSTEM_DEFAULTWORKINGDIRECTORY');
 		if(setParametersFile === systemDefaultWorkingDir || setParametersFile === systemDefaultWorkingDir + '\\' || setParametersFile === "") {
 			setParametersFile = null;
@@ -59,7 +57,6 @@ async function run() {
 			throw new Error(tl.loc('SetParamFilenotfound0', setParametersFile));
 		}
 		
-		
 		var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
 		var azureRMWebAppConnectionDetails = new Array();
 		azureRMWebAppConnectionDetails["KuduHostName"] = publishingProfile.publishUrl;
@@ -67,7 +64,7 @@ async function run() {
 		azureRMWebAppConnectionDetails["UserPassword"] = publishingProfile.userPWD;
 		webAppName = deployToSlotFlag ?  webAppName + "(" + slotName + ")" : webAppName;
 
-		var msDeployArgs = msDeployUtility.getMSDeployCmdArgs(package, webAppName, azureRMWebAppConnectionDetails, removeAdditionalFilesFlag,
+		var msDeployArgs = msDeployUtility.getMSDeployCmdArgs(webDeployPkg, webAppName, azureRMWebAppConnectionDetails, removeAdditionalFilesFlag,
 						 excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments, isParamFilePresentInPacakge, isFolderBasedDeployment);
 		msDeployUtility.executeMSDeployCmd(msDeployArgs, azureRMWebAppConnectionDetails);
 	} catch (error) {

@@ -22,6 +22,19 @@ export function fileExists(path) {
   }
 }
 
+export function isPathPresent(path) {
+  try  {
+    return (fs.statSync(path)) ? true : false ; 
+  }
+  catch (e) {
+    if (e.code == 'ENOENT') {
+      return false;
+    }
+    tl.debug("Exception fs.statSync (" + path + "): " + e);
+    throw e;
+  }
+}
+
 export function getMSDeployCmdArgs(packageFile: string, webAppNameForMSDeployCmd: string, azureRMWebAppConnectionDetails: Array<String>,
                              removeAdditionalFilesFlag: boolean, excludeFilesFromAppDataFlag: boolean, takeAppOfflineFlag: boolean,
                              virtualApplication: string, setParametersFile: string, additionalArguments: string, isParamFilePresentInPacakge: boolean, isFolderBasedDeployment:boolean) : string {
@@ -53,10 +66,7 @@ export function getMSDeployCmdArgs(packageFile: string, webAppNameForMSDeployCmd
     if( isParamFilePresentInPacakge || setParametersFile != null ){
         msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='" + webApplicationDeploymentPath + "'";
     }
-    else {
-        msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='" + webAppNameForMSDeployCmd + "'";
-    }
-
+    
     if(!removeAdditionalFilesFlag) {
         msDeployCmdArgs += " -enableRule:DoNotDeleteRule";
     }
