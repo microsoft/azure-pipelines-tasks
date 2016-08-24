@@ -3,6 +3,7 @@
     "bash": "/usr/local/bin/bash"
   },
   "checkPath" : {
-    "scriptfail.sh" : false
+    "scriptfail.sh" : false,
+    "/usr/local/bin/bash": true
   }
 }

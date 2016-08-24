@@ -18,7 +18,7 @@
   "loc.input.help.scriptPath": "Fully qualified path of the script or a path relative to the the default working directory",
   "loc.input.label.inlineScript": "Inline Script",
   "loc.input.label.args": "Arguments",
-  "loc.input.help.args": "Arguments passed to the shell script",
+  "loc.input.help.args": "Arguments passed to the script",
   "loc.input.label.cwd": "Working Directory",
   "loc.input.help.cwd": "Current working directory where the script is run.  Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory)",
   "loc.input.label.failOnStandardError": "Fail on Standard Error",

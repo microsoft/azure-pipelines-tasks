@@ -93,8 +93,6 @@ describe('AzureCLI Suite', function () {
         tr.setInput('connectedServiceName', 'AzureClassic');
         tr.run()
             .then(() => {
-                console.log(tr.stderr)
-                console.log(tr.stdout)
                 deleteSubscriptionObjectJson(responseFileName, 'subscriptions.publishsettings')
                 assert(tr.ran('/usr/local/bin/azure account clear -s sName'), 'it should have logged out of azure');
                 assert(tr.ran('/usr/local/bin/azure config mode asm'), 'it should have set the mode to asm');
@@ -345,7 +343,7 @@ describe('AzureCLI Suite', function () {
                 done(err);
             });
     })
-    it('should logout of AzureRM if script execution failed (scripPath)',(done) => {
+    it('should logout of AzureRM if shell script execution failed (scripPath)',(done) => {
         setResponseFile('scriptExecutionFailed.json');
 
         var tr = new trm.TaskRunner('AzureCLI');
@@ -368,7 +366,7 @@ describe('AzureCLI Suite', function () {
                 done(err);
             });
     })
-    it('should logout of AzureClassic if bash failed (scriptPath)',(done) => {
+    it('should logout of AzureClassic if shell script execution failed (scriptPath)',(done) => {
         var responseFileName:string = 'scriptExecutionFailed.json';
         addSubscriptionObjectJson(responseFileName, publishsettingFileName);
         setResponseFile(responseFileName);
@@ -394,7 +392,7 @@ describe('AzureCLI Suite', function () {
                 done(err);
             });
     })
-    it('should logout of AzureClassic if CMD failed (scriptPath)',(done) => {
+    it('should logout of AzureClassic if batch script execution failed (scriptPath)',(done) => {
         var responseFileName:string = 'scriptExecutionFailed.json';
         addSubscriptionObjectJson(responseFileName, publishsettingFileName);
         setResponseFile(responseFileName);
@@ -425,11 +423,6 @@ describe('AzureCLI Suite', function () {
 
         var tr = new trm.TaskRunner('AzureCLI');
         tr.setInput('scriptType', 'bash');
-        tr.setInput('scriptLocation', 'scriptPath');
-        tr.setInput('cwd', 'fake/wd');
-        tr.setInput('scriptPath', 'script.sh');
-        tr.setInput('args', 'args1');
-        tr.setInput('failOnStandardError', 'false');
         tr.run()
             .then(() => {
                 assert(tr.invokedToolCount == 0, 'should not have invoked any tool');

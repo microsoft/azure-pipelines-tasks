@@ -15,7 +15,12 @@ export class azureclitask {
         try {
             tl.setResourcePath(path.join( __dirname, "task.json"));
 
+            var tool;
             var scriptType: string = tl.getInput("scriptType", true);
+            if(scriptType === "bash")
+            {
+                tool = tool = tl.createToolRunner(tl.which("bash", true));
+            }
 
             var scriptLocation:string = tl.getInput("scriptLocation");
             var scriptPath:string = null;
@@ -49,9 +54,7 @@ export class azureclitask {
             tl.mkdirP(cwd);
             tl.cd(cwd);
 
-            var tool;
             if (scriptType === "bash") {
-                tool = tl.createToolRunner(tl.which("bash", true));
                 tool.pathArg(scriptPath);
             }
             else {
