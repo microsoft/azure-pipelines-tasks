@@ -66,7 +66,12 @@ export function getMSDeployCmdArgs(packageFile: string, webAppNameForMSDeployCmd
     if( isParamFilePresentInPacakge || setParametersFile != null ){
         msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='" + webApplicationDeploymentPath + "'";
     }
-    
+
+    if (setParametersFile) {
+        
+        msDeployCmdArgs += " -setParamFile=" + setParametersFile + "";
+    }
+
     if(!removeAdditionalFilesFlag) {
         msDeployCmdArgs += " -enableRule:DoNotDeleteRule";
     }
