@@ -106,16 +106,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.WebAppUri"
     },
     {
-      "name": "PublishMethod",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.PublishMethod",
+      "name": "UseWebDeploy",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.UseWebDeploy",
       "required": false,
-      "defaultValue": "Select FTP or Web Deploy",
+      "defaultValue": "false",
       "groupName": "AdditionalDeploymentOptions",
-      "options": {
-        "WebDeploy": "Web Deploy"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.PublishMethod"
+      "helpMarkDown": "ms-resource:loc.input.help.UseWebDeploy"
     },
     {
       "name": "SetParametersFile",
@@ -124,7 +121,7 @@
       "defaultValue": "",
       "required": false,
       "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "PublishMethod = WebDeploy",
+      "visibleRule": "UseWebDeploy = true",
       "helpMarkDown": "ms-resource:loc.input.help.SetParametersFile"
     },
     {
@@ -134,7 +131,7 @@
       "defaultValue": "false",
       "required": false,
       "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "PublishMethod = WebDeploy",
+      "visibleRule": "UseWebDeploy = true",
       "helpMarkDown": "ms-resource:loc.input.help.RemoveAdditionalFilesFlag"
     },
     {
@@ -144,7 +141,7 @@
       "defaultValue": "false",
       "required": false,
       "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "PublishMethod = WebDeploy",
+      "visibleRule": "UseWebDeploy = true",
       "helpMarkDown": "ms-resource:loc.input.help.ExcludeFilesFromAppDataFlag"
     },
     {
@@ -154,7 +151,7 @@
       "defaultValue": "false",
       "required": false,
       "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "PublishMethod = WebDeploy",
+      "visibleRule": "UseWebDeploy = true",
       "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
     },
     {
@@ -164,18 +161,8 @@
       "required": false,
       "defaultValue": "",
       "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "PublishMethod = WebDeploy",
+      "visibleRule": "UseWebDeploy = true",
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
-    },
-    {
-      "name": "PassiveMode",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.PassiveMode",
-      "required": false,
-      "defaultValue": "",
-      "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "PublishMethod = FTP",
-      "helpMarkDown": "ms-resource:loc.input.help.PassiveMode"
     }
   ],
   "dataSourceBindings": [
