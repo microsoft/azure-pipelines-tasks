@@ -1,5 +1,5 @@
 {
-  "name": "vsts-tasks-shellscript",
+  "name": "vsts-tasks-azurecli",
   "version": "0.1.1",
   "description": "VSTS Azure CLI Task",
   "main": "azureclitask.js",
