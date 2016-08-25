@@ -26,7 +26,7 @@
             "name": "output",
             "displayName": "Output",
             "isExpanded": true
-        } 
+        }
     ],
     "inputs": [
         {
@@ -207,7 +207,7 @@
         "ErrorFetchingDeploymentPublishProfileStausCode0": "Error Fetching Deployment Publish Profile [Staus Code : '%s']",
         "ErrorOccurredStausCode0": "Error Occurred : [Staus Code : '%s']",
         "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update deployment status : uniquedeploymentIdCannotBeRetrieved",
-        "Successfullydeployedwebsite": "Successfully deployed website.",
+        "WebappsuccessfullypublishedatUrl0": "Web App successfully deployed at url %s",
         "Failedtodeploywebsite": "Failed to deploy website.",
         "Runningcommand01": "Running command: %s %s",
         "ConstructedmsDeploycomamndlinearguments": "Constructed msDeploy comamnd line arguments",

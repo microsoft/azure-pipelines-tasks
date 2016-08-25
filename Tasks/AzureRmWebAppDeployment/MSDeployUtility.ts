@@ -65,12 +65,15 @@ export function getMSDeployCmdArgs(packageFile: string, webAppNameForMSDeployCmd
     return msDeployCmdArgs;
 }
 
-export async function executeMSDeployCmd(msDeployCmdArgs: string, azureRMWebAppConnectionDetails) {
+export async function executeMSDeployCmd(msDeployCmdArgs: string, azureRMWebAppConnectionDetails, webAppUri: string) {
     try {
-        var msDeployPath = await getMSDeployFullPath();     
+        if(webAppUri) {
+            tl.setVariable(webAppUri, azureRMWebAppConnectionDetails["destinationUrl"]);
+        }
+        var msDeployPath = await getMSDeployFullPath();
             var statusCode = await tl.exec(msDeployPath, msDeployCmdArgs, <any> {failOnStdErr: true});
             if ( statusCode === 0 ) {
-                tl.debug(tl.loc('Successfullydeployedwebsite'));
+                tl.debug(tl.loc('WebappsuccessfullypublishedatUrl0',azureRMWebAppConnectionDetails["destinationUrl"]));                
                 var deploymentResult = await azureRmUtil.updateDeploymentStatus(azureRMWebAppConnectionDetails, true);
                 tl.debug(deploymentResult);
             }
@@ -78,7 +81,9 @@ export async function executeMSDeployCmd(msDeployCmdArgs: string, azureRMWebAppC
                 tl.debug(tl.loc('Failedtodeploywebsite'));
                 var deploymentResult = await azureRmUtil.updateDeploymentStatus(azureRMWebAppConnectionDetails, false);
                 tl.debug(deploymentResult);
+                onError(tl.loc('Failedtodeploywebsite'));
             }
+
     }
     catch(error) {
        onError(error);

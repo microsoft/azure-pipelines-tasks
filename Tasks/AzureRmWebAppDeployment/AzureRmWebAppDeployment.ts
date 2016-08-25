@@ -47,17 +47,17 @@ async function run() {
 			throw new Error(tl.loc('SetParamFilenotfound0', setParametersFile));
 		}
 		
-		
 		var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
 		var azureRMWebAppConnectionDetails = new Array();
 		azureRMWebAppConnectionDetails["KuduHostName"] = publishingProfile.publishUrl;
 		azureRMWebAppConnectionDetails["UserName"] = publishingProfile.userName;
 		azureRMWebAppConnectionDetails["UserPassword"] = publishingProfile.userPWD;
+		azureRMWebAppConnectionDetails["destinationUrl"] = publishingProfile.destinationAppUrl;
 		webAppName = deployToSlotFlag ?  webAppName + "(" + slotName + ")" : webAppName;
 
 		var msDeployArgs = msDeployUtility.getMSDeployCmdArgs(webDeployPkg, webAppName, azureRMWebAppConnectionDetails, removeAdditionalFilesFlag,
 						 excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments);
-		msDeployUtility.executeMSDeployCmd(msDeployArgs, azureRMWebAppConnectionDetails);
+		msDeployUtility.executeMSDeployCmd(msDeployArgs, azureRMWebAppConnectionDetails, webAppUri);
 	} catch (error) {
 		tl.setResult(tl.TaskResult.Failed, error);
 	}
