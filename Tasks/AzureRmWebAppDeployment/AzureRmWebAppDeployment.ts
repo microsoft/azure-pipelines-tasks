@@ -18,8 +18,8 @@ async function run() {
 		var deployToSlotFlag: boolean = tl.getBoolInput('DeployToSlotFlag');
 		var resourceGroupName: string = tl.getInput('ResourceGroupName');
 		var slotName: string = tl.getInput('SlotName');
-		var webDeployPkg: string = trimDoubleQuotes(tl.getPathInput('Package'));
-		var setParametersFile: string = trimDoubleQuotes(tl.getPathInput('SetParametersFile'));
+		var webDeployPkg: string = tl.getPathInput('Package');
+		var setParametersFile: string = tl.getPathInput('SetParametersFile');
 		var removeAdditionalFilesFlag: boolean = tl.getBoolInput('RemoveAdditionalFilesFlag');
 		var excludeFilesFromAppDataFlag: boolean = tl.getBoolInput('ExcludeFilesFromAppDataFlag');
 		var takeAppOfflineFlag: boolean = tl.getBoolInput('TakeAppOfflineFlag');
@@ -40,7 +40,7 @@ async function run() {
 		}
 
 		var systemDefaultWorkingDir = tl.getVariable('SYSTEM_DEFAULTWORKINGDIRECTORY');
-		if(setParametersFile === systemDefaultWorkingDir || setParametersFile === systemDefaultWorkingDir + '\\' || setParametersFile === "") {
+		if(setParametersFile === systemDefaultWorkingDir || setParametersFile === systemDefaultWorkingDir + '\\') {
 			setParametersFile = null;
 		}
 		else if (!msDeployUtility.fileExists(setParametersFile)) {
@@ -61,16 +61,6 @@ async function run() {
 	} catch (error) {
 		tl.setResult(tl.TaskResult.Failed, error);
 	}
-}
-
-function trimDoubleQuotes(input: string): string {
-
-	if (input.charAt(0) === '"' && input.charAt(input.length -1) === '"')
-	{
-    	 input = input.substr(1, input.length -2);
-	}
-
-	return input;
 }
 
 run();
