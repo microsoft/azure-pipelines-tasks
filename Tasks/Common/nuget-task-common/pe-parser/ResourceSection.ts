@@ -48,17 +48,22 @@ export class ResourceDirectory {
     public entries: ResourceDirectoryEntry[] = [];
 
     public getDataEntry(id: string | number): ResourceData {
-        return <ResourceData>this.entries.find(x => x.id === id && !(x.data instanceof ResourceDirectory)).data;
+        const entry = this.entries.find(x => x.id === id && !(x.data instanceof ResourceDirectory));
+        if (!entry) {
+            return undefined;
+        }
+
+        return <ResourceData>entry.data;
     }
 
     public getSubdirectory(id: string | number): ResourceDirectory {
-        return <ResourceDirectory>this.entries.find(x => x.id === id && x.data instanceof ResourceDirectory).data;
-    }
-}
+        const entry = this.entries.find(x => x.id === id && x.data instanceof ResourceDirectory);
+        if (!entry) {
+            return undefined;
+        }
 
-interface CookingResourceDirectory {
-    rva: number;
-    directory: ResourceDirectory;
+        return <ResourceDirectory>entry.data;
+    }
 }
 
 async function readRawResourceDirectoryTableHeader(
@@ -140,8 +145,14 @@ async function readResourceDirectoryTable(
     file: IReadableFile,
     buffer: Buffer,
     resourceDirectoryFilePosition: number): Promise<ResourceDirectory> {
+
+    interface ResourceDirectoryQueueEntry {
+        rva: number;
+        directory: ResourceDirectory;
+    }
+
     let root: ResourceDirectory = new ResourceDirectory();
-    let queue: CookingResourceDirectory[] = [{ rva: 0, directory: root }];
+    let queue: ResourceDirectoryQueueEntry[] = [{ rva: 0, directory: root }];
 
     for (let current = queue.pop(); current !== undefined; current = queue.pop()) {
         let raw = await readRawResourceDirectoryTable(file, buffer, resourceDirectoryFilePosition + current.rva);

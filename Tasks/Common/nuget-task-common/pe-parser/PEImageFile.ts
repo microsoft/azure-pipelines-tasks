@@ -2,8 +2,9 @@ import IReadableFile from "./IReadableFile";
 import PEParserError from "./PEParserError";
 import {SectionTable, SectionTableEntry} from "./SectionTable";
 
-const peSignature = 0x00004550;
 const dosSignature = 0x5A4D;
+const fileOffsetOfPointerToPESignature = 0x3C;
+const peSignature = 0x00004550;
 
 const sizeOfCoffHeader = 20;
 
@@ -34,7 +35,7 @@ export class PEImageFile {
         }
 
         // read the pointer to the PE signature
-        await file.readAsync(buffer, 0, 4, 0x3c);
+        await file.readAsync(buffer, 0, 4, fileOffsetOfPointerToPESignature);
         const filePositionOfPEHeader = buffer.readUInt32LE(0);
 
         // read the PE signature

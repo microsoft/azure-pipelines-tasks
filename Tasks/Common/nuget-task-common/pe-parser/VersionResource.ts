@@ -1,3 +1,4 @@
+import PEParserError from "./PEParserError";
 import VersionInfoVersion from "./VersionInfoVersion";
 
 const neutralLanguageUnicodeCodePage = "000004b0";
@@ -72,7 +73,7 @@ function readNullTerminatedUcs2String(buffer: Buffer, offset: number): { value: 
         end += 2;
     }
 
-    throw new Error("Unterminated string");
+    throw new PEParserError("unterminatedString", "Unterminated string");
 }
 
 function roundUp(value: number, multiple: number) {
