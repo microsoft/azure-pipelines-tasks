@@ -8,7 +8,7 @@
   "loc.input.label.ArtifactName": "Имя артефакта",
   "loc.input.help.ArtifactName": "Имя создаваемого артефакта.",
   "loc.input.label.ArtifactType": "Тип артефакта",
-  "loc.input.help.ArtifactType": "Тип создаваемого артефакта.",
+  "loc.input.help.ArtifactType": "The type of artifact to create.",
   "loc.input.label.TargetPath": "Путь",
   "loc.input.help.TargetPath": "Общая папка, в которую копируются файлы",
   "loc.messages.PublishBuildArtifactsFailed": "Сбой публикации артефактов сборки с ошибкой: %s"
