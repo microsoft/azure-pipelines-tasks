@@ -15,6 +15,7 @@
   "loc.input.label.scriptPath": "Script Path",
   "loc.input.help.scriptPath": "Fully qualified path of the script or a path relative to the the default working directory",
   "loc.input.label.inlineScript": "Inline Script",
+  "loc.input.help.inlineScript": "You can write your scripts inline here. For batch files use the prefix \"call\" before every azure command. You can also pass predefined and custom variables to this script using arguments \n\n example for shell: azure --version || azure account show \n\n example for batch: call  azure --version || call azure account show",
   "loc.input.label.args": "Arguments",
   "loc.input.help.args": "Arguments passed to the script",
   "loc.input.label.cwd": "Working Directory",
