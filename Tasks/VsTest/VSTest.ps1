@@ -92,9 +92,7 @@ try
             $vsTestVersion = $null
         }
 
-        $artifactsDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.ArtifactsDirectory" -Global $FALSE
-
-        $workingDirectory = $artifactsDirectory
+        $workingDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "Agent.BuildDirectory"
 
         if($runInParallel -eq "True")
         {
@@ -109,15 +107,8 @@ try
         $defaultCpuCount = "0"    
         $runSettingsFileWithParallel = [string](SetupRunSettingsFileForParallel $runInParallel $runSettingsFile $defaultCpuCount)
 
-        #If there is settings file and no override parameters, try to get the custom resutls location
-        if(![System.String]::IsNullOrWhiteSpace($runSettingsFileWithParallel) -and !$overrideTestrunParameters)
-        {
-            $testResultsDirectory = Get-ResultsLocation $runSettingsFileWithParallel 
-        }
-        if(!$testResultsDirectory)
-        {
-            $testResultsDirectory = $workingDirectory + [System.IO.Path]::DirectorySeparatorChar + "TestResults"
-        } 
+        # There is a global TestResultsDirectory variable that TestResults need to be placed within
+        $testResultsDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "Common.TestResultsDirectory"
         Write-Verbose "Test results directory: $testResultsDirectory"
 
         
