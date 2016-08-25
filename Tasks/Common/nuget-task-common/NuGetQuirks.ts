@@ -40,10 +40,10 @@ function closedRange(begin: VersionInfoVersion, end: VersionInfoVersion): Versio
 
 function versionIsInRange(version: VersionInfoVersion, range: VersionRange): boolean {
     const beginComparison = VersionInfoVersion.compare(version, range.begin);
-    const endComparison = VersionInfoVersion.compare(range.end, version);
+    const endComparison = VersionInfoVersion.compare(version, range.end);
 
     const beginResult = range.beginIsInclusive ? beginComparison >= 0 : beginComparison > 0;
-    const endResult = range.endIsInclusive ? endComparison >= 0 : endComparison > 0;
+    const endResult = range.endIsInclusive ? endComparison <= 0 : endComparison < 0;
 
     return beginResult && endResult;
 }
@@ -58,9 +58,9 @@ const nuget320 = new VersionInfoVersion(3, 2, 0, 0);
 const nuget330 = new VersionInfoVersion(3, 3, 0, 0);
 const nuget340 = new VersionInfoVersion(3, 4, 0, 0);
 const nuget350 = new VersionInfoVersion(3, 5, 0, 0);
-const nuget350_1707 = new VersionInfoVersion(3,5,0,1707)
+const nuget350_1707 = new VersionInfoVersion(3, 5, 0, 1707)
 const nuget351 = new VersionInfoVersion(3, 5, 1, 0);
-const nuget351_1707 = new VersionInfoVersion(3,5,1,1707)
+const nuget351_1707 = new VersionInfoVersion(3, 5, 1, 1707)
 
 const allQuirks: QuirkDescriptor[] = [
     {
@@ -86,7 +86,7 @@ const allQuirks: QuirkDescriptor[] = [
     },
     {
         quirk: NuGetQuirkName.NoV3,
-        versionRanges: [halfOpenRange(VersionInfoVersion.MIN_VERSION, nuget320)]
+        versionRanges: [halfOpenRange(VersionInfoVersion.MIN_VERSION, nuget300)]
     },
     {
         quirk: NuGetQuirkName.NoTfsOnPremAuthConfig,

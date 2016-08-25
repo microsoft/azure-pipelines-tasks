@@ -109,20 +109,20 @@ describe("Common-NuGetTaskCommon Suite", () => {
                 ])
             },
             {
-                version: new VersionInfoVersion(3, 5, 0, 1737),
-                displayVersion: "3.5.0-rtm-1737",
-                quirks: new Set([
-                    NuGetQuirkName.NoTfsOnPremAuthConfig,
-                    NuGetQuirkName.NoTfsOnPremAuthCredentialProvider,
-                ])
-            },
-            {
                 version: new VersionInfoVersion(3, 5, 0, 1520),
                 displayVersion: "3.5.0-beta2-1520",
                 quirks: new Set([
                     NuGetQuirkName.NoTfsOnPremAuthConfig,
                     NuGetQuirkName.NoTfsOnPremAuthCredentialProvider,
                     NuGetQuirkName.CredentialProviderRace,
+                ])
+            },
+            {
+                version: new VersionInfoVersion(3, 5, 0, 1737),
+                displayVersion: "3.5.0-rtm-1737",
+                quirks: new Set([
+                    NuGetQuirkName.NoTfsOnPremAuthConfig,
+                    NuGetQuirkName.NoTfsOnPremAuthCredentialProvider,
                 ])
             },
             {
