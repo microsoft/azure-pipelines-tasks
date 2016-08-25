@@ -37,7 +37,7 @@ export function updateDeploymentStatus(azureRMWebAppConnectionDetails, isDeploym
 				deferred.resolve(tl.loc("Updatedeploymenthistoryissuccess"));
 			}
 			else {
-				deferred.reject(tl.loc("Failedtoupdatedeploymenthistory."));
+				deferred.reject(tl.loc("Failedtoupdatedeploymenthistory"));
 			}				
 		});
 	}
