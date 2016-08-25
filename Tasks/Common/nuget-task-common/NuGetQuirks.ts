@@ -1,4 +1,4 @@
-import VersionInfoVersion from './pe-parser/VersionInfoVersion'
+import VersionInfoVersion from "./pe-parser/VersionInfoVersion";
 
 export enum NuGetQuirkName {
     /** Race condition in credential provider which causes NuGet to not supply credentials */
@@ -50,17 +50,16 @@ function versionIsInRange(version: VersionInfoVersion, range: VersionRange): boo
 
 interface QuirkDescriptor {
     quirk: NuGetQuirkName;
-    versionRanges: VersionRange[]
+    versionRanges: VersionRange[];
 }
 
 const nuget300 = new VersionInfoVersion(3, 0, 0, 0);
 const nuget320 = new VersionInfoVersion(3, 2, 0, 0);
 const nuget330 = new VersionInfoVersion(3, 3, 0, 0);
 const nuget340 = new VersionInfoVersion(3, 4, 0, 0);
-const nuget350 = new VersionInfoVersion(3, 5, 0, 0);
-const nuget350_1707 = new VersionInfoVersion(3, 5, 0, 1707)
+const nuget350_1707 = new VersionInfoVersion(3, 5, 0, 1707);
 const nuget351 = new VersionInfoVersion(3, 5, 1, 0);
-const nuget351_1707 = new VersionInfoVersion(3, 5, 1, 1707)
+const nuget351_1707 = new VersionInfoVersion(3, 5, 1, 1707);
 
 const allQuirks: QuirkDescriptor[] = [
     {
@@ -70,33 +69,33 @@ const allQuirks: QuirkDescriptor[] = [
         // but it would be less than 1707
         versionRanges: [
             halfOpenRange(nuget320, nuget350_1707),
-            halfOpenRange(nuget351, nuget351_1707)]
+            halfOpenRange(nuget351, nuget351_1707)],
     },
     {
         quirk: NuGetQuirkName.NoCredentialProvider,
-        versionRanges: [halfOpenRange(VersionInfoVersion.MIN_VERSION, nuget320)]
+        versionRanges: [halfOpenRange(VersionInfoVersion.MIN_VERSION, nuget320)],
     },
     {
         quirk: NuGetQuirkName.RelativeRepositoryPathBug,
-        versionRanges: [halfOpenRange(nuget330, nuget340)]
+        versionRanges: [halfOpenRange(nuget330, nuget340)],
     },
     {
         quirk: NuGetQuirkName.NtlmReAuthBug,
-        versionRanges: [halfOpenRange(nuget330, nuget340)]
+        versionRanges: [halfOpenRange(nuget330, nuget340)],
     },
     {
         quirk: NuGetQuirkName.NoV3,
-        versionRanges: [halfOpenRange(VersionInfoVersion.MIN_VERSION, nuget300)]
+        versionRanges: [halfOpenRange(VersionInfoVersion.MIN_VERSION, nuget300)],
     },
     {
         quirk: NuGetQuirkName.NoTfsOnPremAuthConfig,
-        versionRanges: [closedRange(VersionInfoVersion.MIN_VERSION, VersionInfoVersion.MAX_VERSION)]
+        versionRanges: [closedRange(VersionInfoVersion.MIN_VERSION, VersionInfoVersion.MAX_VERSION)],
     },
     {
         quirk: NuGetQuirkName.NoTfsOnPremAuthCredentialProvider,
-        versionRanges: [halfOpenRange(VersionInfoVersion.MIN_VERSION, nuget351)]
-    }
-]
+        versionRanges: [halfOpenRange(VersionInfoVersion.MIN_VERSION, nuget351)],
+    },
+];
 
 /** default quirks to use if the nuget version can't be determined */
 export var defaultQuirks = [
