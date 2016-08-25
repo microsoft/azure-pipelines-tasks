@@ -1,4 +1,5 @@
 import * as path from 'path';
+import * as util from './utilities';
 
 // Enable Jacoco Code Coverage for Gradle builds using this props
 export function jacocoGradleMultiModuleEnable(excludeFilter: string, includeFilter: string, classFileDirectory: string, reportDir: string) {
@@ -342,15 +343,67 @@ export function jacocoAntReport(reportFile: string, reportDir: string, classData
     `;
 }
 
-export function jacocoAntCoverageEnable() : any{
+export function jacocoAntCoverageEnable(): any {
     return {
-        $ :
+        $:
         {
             "destfile": "jacoco.exec",
             "append": true,
             "xlmns:jacoco": "antlib:org.jacoco.ant"
         }
     }
+}
+
+export function coberturaAntReport(): string {
+    return `
+    <?xml version="1.0"?>
+<project name="CoberturaReport">
+  <property environment="env" />
+  <path id="cobertura-classpath" description="classpath for instrumenting classes">
+    <fileset dir="\${env.COBERTURA_HOME}">
+      <include name="cobertura*.jar" />
+      <include name="**/lib/**/*.jar" />
+    </fileset>
+  </path>
+  <taskdef classpathref="cobertura-classpath" resource="tasks.properties" />
+  <target name="CodeCoverage">
+    <cobertura-report format="html" destdir="ReportDirectory75C12DBC" datafile="ReportDirectory75C12DBC\cobertura.ser" srcdir="." />
+    <cobertura-report format="xml" destdir="ReportDirectory75C12DBC" datafile="ReportDirectory75C12DBC\cobertura.ser" srcdir="." />
+  </target>
+</project>
+    `;
+}
+
+export function coberturaAntCoverageEnable(): any {
+    let ccProperty = `
+    <property environment="env" />
+    <path id="cobertura-classpath" description="classpath for instrumenting classes">
+        <fileset dir="\${env.COBERTURA_HOME}">
+            <include name="cobertura*.jar" />
+            <include name="**/lib/**/*.jar" />
+        </fileset>
+    </path>
+    <taskdef classpathref="cobertura-classpath" resource="tasks.properties" />
+    `
+    return util.convertXmlStringToJson(ccProperty).valueOf();
+}
+
+export function coberturaAntInstrumentedClasses(): any {
+    let ccProperty = `
+    <cobertura-instrument todir="\${basedir}\InstrumentedClasses" datafile="\${basedir}\ReportDirectory75C12DBC\cobertura.ser">
+      <fileset dir="." />
+    </cobertura-instrument>
+`
+    return util.convertXmlStringToJson(ccProperty).valueOf();
+}
+
+export function coberturaAntProperties(): any {
+    let ccProperty = `
+    <sysproperty key="net.sourceforge.cobertura.datafile" file="\${basedir}\ReportDirectory75C12DBC\cobertura.ser" />
+    <classpath location="\${basedir}\InstrumentedClasses" />
+    <classpath refid="cobertura-classpath" />
+    `
+    return util.convertXmlStringToJson(ccProperty).valueOf();
 }
 
 // Gradle Coberutra plugin
