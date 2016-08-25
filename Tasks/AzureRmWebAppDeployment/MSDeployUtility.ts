@@ -65,35 +65,51 @@ export function getMSDeployCmdArgs(packageFile: string, webAppNameForMSDeployCmd
 }
 
 export async function executeMSDeployCmd(msDeployCmdArgs: string, azureRMWebAppConnectionDetails) {
-    var msDeployPath = await getMSDeployFullPath();
-    var maskedCommand = maskPasswordDetails(msDeployCmdArgs);
-    tl.debug(tl.loc('Runningcommand01', msDeployPath, maskedCommand));
-    var statusCode = await tl.exec(msDeployPath, msDeployCmdArgs,  <any> {failOnStdErr: true});
-    if ( statusCode === 0 ) {
-        tl.debug(tl.loc('Successfullydeployedwebsite'));
-        var deploymentResult = await azureRmUtil.updateDeploymentStatus(azureRMWebAppConnectionDetails, true);
-        tl.debug(deploymentResult);
+    try {
+        var msDeployPath = await getMSDeployFullPath();
+        var maskedCommand = maskPasswordDetails(msDeployCmdArgs);
+            tl.debug(tl.loc('Runningcommand01', msDeployPath, maskedCommand));
+            var statusCode = await tl.exec(msDeployPath, msDeployCmdArgs, <any> {failOnStdErr: true});
+            if ( statusCode === 0 ) {
+                tl.debug(tl.loc('Successfullydeployedwebsite'));
+                var deploymentResult = await azureRmUtil.updateDeploymentStatus(azureRMWebAppConnectionDetails, true);
+                tl.debug(deploymentResult);
+            }
+            else {
+                tl.debug(tl.loc('Failedtodeploywebsite'));
+                var deploymentResult = await azureRmUtil.updateDeploymentStatus(azureRMWebAppConnectionDetails, false);
+                tl.debug(deploymentResult);
+            }
     }
-    else {
-        tl.debug(tl.loc('Failedtodeploywebsite'));
-        var deploymentResult = await azureRmUtil.updateDeploymentStatus(azureRMWebAppConnectionDetails, false);
-        tl.debug(deploymentResult);
+    catch(error) {
+       onError(error);
     }
 }
 
 async function getMSDeployFullPath() {
-    var msDeployInstallPathRegKey = "HKLM\\SOFTWARE\\Microsoft\\IIS Extensions\\MSDeploy";
-    var msDeployVersion = await getMSDeployVersion(msDeployInstallPathRegKey);
-    var msDeployLatestPathRegKey = msDeployInstallPathRegKey + "\\" + msDeployVersion;
-    var msDeployFullPath = await getMSDeployInstallPath(msDeployLatestPathRegKey);
-    msDeployFullPath = msDeployFullPath + "\\msdeploy.exe";
-    return msDeployFullPath;
+    try {
+        var msDeployInstallPathRegKey = "HKLM\\SOFTWARE\\Microsoft\\IIS Extensions\\MSDeploy";
+        var msDeployVersion = await getMSDeployVersion(msDeployInstallPathRegKey);
+        var msDeployLatestPathRegKey = msDeployInstallPathRegKey + "\\" + msDeployVersion;
+        var msDeployFullPath = await getMSDeployInstallPath(msDeployLatestPathRegKey);
+        msDeployFullPath = msDeployFullPath + "\\msdeploy.exe";
+        return msDeployFullPath;
+    }
+    catch(error) {
+        tl.error(tl.loc('CannotfindMSDeployexe'));
+        onError(error);
+    }
+}
+
+function onError(error) {
+    tl.setResult(tl.TaskResult.Failed, error);
+    process.exit(1);
 }
 
 function maskPasswordDetails(msDeployCmdArgs: string): string {
     var startIndex = msDeployCmdArgs.indexOf('Password=');
     var endIndex = msDeployCmdArgs.indexOf(',AuthType=');
-    msDeployCmdArgs.replace(msDeployCmdArgs.substring(startIndex, endIndex), "Password=******");
+    msDeployCmdArgs = msDeployCmdArgs.replace(msDeployCmdArgs.substring(startIndex, endIndex), "Password=******");
     return msDeployCmdArgs;
 }
 

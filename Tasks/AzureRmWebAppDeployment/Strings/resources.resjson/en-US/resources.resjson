@@ -39,11 +39,12 @@
   "loc.messages.Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
   "loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website",
   "loc.messages.ErrorNoSuchDeployingMethodExists": "Error : No Such Deploying Method Exists",
-  "loc.messages.ErrorFetchingDeploymentPublishProfileStausCode0": "Error Fetching Deployment Publish Profile [Staus Code : '{0}']",
+  "loc.messages.ErrorFetchingDeploymentPublishProfileStausCode0": "Error Fetching Deployment Publish Profile [Staus Code : '%s']",
   "loc.messages.ErrorOccurredStausCode0": "Error Occurred : [Staus Code : '%s']",
   "loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update deployment status : uniquedeploymentIdCannotBeRetrieved",
   "loc.messages.Successfullydeployedwebsite": "Successfully deployed website.",
   "loc.messages.Failedtodeploywebsite": "Failed to deploy website.",
   "loc.messages.Runningcommand01": "Running command: %s %s",
-  "loc.messages.ConstructedmsDeploycomamndlinearguments": "Constructed msDeploy comamnd line arguments"
+  "loc.messages.ConstructedmsDeploycomamndlinearguments": "Constructed msDeploy comamnd line arguments",
+  "loc.messages.CannotfindMSDeployexe": "Cannot find MSDeploy.exe"
 }

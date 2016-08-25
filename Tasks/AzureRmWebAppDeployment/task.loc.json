@@ -209,6 +209,7 @@
     "Successfullydeployedwebsite": "ms-resource:loc.messages.Successfullydeployedwebsite",
     "Failedtodeploywebsite": "ms-resource:loc.messages.Failedtodeploywebsite",
     "Runningcommand01": "ms-resource:loc.messages.Runningcommand01",
-    "ConstructedmsDeploycomamndlinearguments": "ms-resource:loc.messages.ConstructedmsDeploycomamndlinearguments"
+    "ConstructedmsDeploycomamndlinearguments": "ms-resource:loc.messages.ConstructedmsDeploycomamndlinearguments",
+    "CannotfindMSDeployexe": "ms-resource:loc.messages.CannotfindMSDeployexe"
   }
 }
