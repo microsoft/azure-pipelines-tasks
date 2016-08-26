@@ -39,25 +39,18 @@ async function run() {
 			throw new Error(tl.loc('Packagenotfound0', webDeployPkg));			
 		}
 
-		var systemDefaultWorkingDir = tl.getVariable('SYSTEM_DEFAULTWORKINGDIRECTORY');
-		if(setParametersFile === systemDefaultWorkingDir || setParametersFile === systemDefaultWorkingDir + '\\') {
+		if(!tl.filePathSupplied(setParametersFile)) {
 			setParametersFile = null;
 		}
-		else if (!msDeployUtility.fileExists(setParametersFile)) {
+		else if (!tl.exist(setParametersFile)) {
 			throw new Error(tl.loc('SetParamFilenotfound0', setParametersFile));
 		}
 		
 		var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-		var azureRMWebAppConnectionDetails = new Array();
-		azureRMWebAppConnectionDetails["KuduHostName"] = publishingProfile.publishUrl;
-		azureRMWebAppConnectionDetails["UserName"] = publishingProfile.userName;
-		azureRMWebAppConnectionDetails["UserPassword"] = publishingProfile.userPWD;
-		azureRMWebAppConnectionDetails["destinationUrl"] = publishingProfile.destinationAppUrl;
-		webAppName = deployToSlotFlag ?  webAppName + "(" + slotName + ")" : webAppName;
 
-		var msDeployArgs = msDeployUtility.getMSDeployCmdArgs(webDeployPkg, webAppName, azureRMWebAppConnectionDetails, removeAdditionalFilesFlag,
+		var msDeployArgs = msDeployUtility.getMSDeployCmdArgs(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
 						 excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments);
-		msDeployUtility.executeMSDeployCmd(msDeployArgs, azureRMWebAppConnectionDetails, webAppUri);
+		await msDeployUtility.executeMSDeployCmd(msDeployArgs, publishingProfile, webAppUri);
 	} catch (error) {
 		tl.setResult(tl.TaskResult.Failed, error);
 	}

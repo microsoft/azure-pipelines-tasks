@@ -18,10 +18,10 @@
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
     "request": "^2.65.0",
-    "regedit": "^2.2.6",
+    "regedit": "^2.2.5",
     "vsts-task-lib": "^0.9.7",
     "q": "^1.4.1",
-    "adal-node": "^0.1.22",
-    "xml2js": "^0.4.17"
+    "adal-node": "^0.1.15",
+    "xml2js": "^0.4.13"
   }
 }
