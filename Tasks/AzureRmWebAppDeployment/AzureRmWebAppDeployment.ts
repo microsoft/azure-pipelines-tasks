@@ -38,7 +38,8 @@ async function run() {
 		SPN["subscriptionId"] = tl.getEndpointDataParameter (connectedServiceName, 'subscriptionid', true); 
 		
 
-		if (!msDeployUtility.isPathPresent(webDeployPkg)) {
+		
+		if (!tl.exist(webDeployPkg)) {
 			throw new Error(tl.loc('Packagenotfound0', webDeployPkg));			
 		}
 
