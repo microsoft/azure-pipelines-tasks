@@ -61,8 +61,20 @@ export class Job {
         if (this.parent != null) {
             this.parent.children.push(this);
         }
-        this.identifier = url.parse(this.taskUrl).path.substr(1);
         this.queue = jobQueue;
+
+        if (this.taskUrl.startsWith(this.queue.taskOptions.serverEndpointUrl)) {
+            // simplest case (jobs run on the same server name as the endpoint)
+            this.identifier = this.taskUrl.substr(this.queue.taskOptions.serverEndpointUrl.length);
+        } else {
+            // backup check in case job is running on a different server name than the endpoint
+            this.identifier = url.parse(this.taskUrl).path.substr(1);
+            var jobStringIndex: number = this.identifier.indexOf('job/');
+            if (jobStringIndex > 0) {
+                // can fall into here if the jenkins endpoint is not at the server root; e.g. serverUrl/jenkins instead of serverUrl 
+                this.identifier = this.identifier.substr(jobStringIndex);
+            }
+        }
         this.queue.addJob(this);
 
         this.debug('created');
