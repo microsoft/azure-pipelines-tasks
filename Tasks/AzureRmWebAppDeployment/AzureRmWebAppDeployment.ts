@@ -39,10 +39,10 @@ async function run() {
 			throw new Error(tl.loc('Packagenotfound0', webDeployPkg));			
 		}
 
-		if(!msDeployUtility.fileExists(setParametersFile)) {
+		if(!tl.filePathSupplied(setParametersFile)) {
 			setParametersFile = null;
 		}
-		else if (!tl.exist(setParametersFile)) {
+		else if (!msDeployUtility.fileExists(setParametersFile)) {
 			throw new Error(tl.loc('SetParamFilenotfound0', setParametersFile));
 		}
 		
