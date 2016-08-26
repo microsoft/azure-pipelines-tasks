@@ -275,6 +275,50 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
     return defer.promise;
 }
 
+function getVstestTestsList(vsVersion: number, testFile: string): Q.Promise<number> {
+    var defer = Q.defer<number>();
+
+    var argsArray: string[] = [];
+
+    testAssemblyFiles.forEach(function (testAssembly) {
+        var testAssemblyPath = testAssembly;
+        if (sourcesDirectory && !pathExistsAsFile(testAssembly)) {
+            var expandedPath = path.join(sourcesDirectory, testAssembly);
+            if (pathExistsAsFile(expandedPath)) {
+                testAssemblyPath = expandedPath;
+            }
+        }
+        argsArray.push(testAssemblyPath);
+    });
+    
+    tl.debug("The list of discovered tests is generated at " + testFile);
+
+    argsArray.push("/ListFullyQualifiedTests");
+    argsArray.push("/ListTestsTargetPath:\"" + testFile + "\"");
+
+    var vsCommon = tl.getVariable("VS" + vsVersion + "0COMNTools");
+    if (!vsCommon) {
+        tl.error(tl.loc('VstestNotFound', vsVersion));
+        defer.resolve(1);
+        return defer.promise;
+    }
+    var vstestLocation = path.join(vsCommon, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe");
+    var vstest = tl.createToolRunner(vstestLocation);
+    addVstestArgs(argsArray, vstest);
+
+    tl.cd(workingDirectory);
+    vstest.exec({ failOnStdErr: true })
+        .then(function (code) {
+            defer.resolve(code);
+        })
+        .fail(function (err) {
+            tl.debug("Listing tests from VsTest failed.");
+            tl.error(err);
+            defer.resolve(1);
+        });
+    return defer.promise;
+}
+
 function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion: number): Q.Promise<number> {
     var defer = Q.defer<number>();
     if (isTiaAllowed()) {
@@ -352,7 +396,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
             });
     }
     else {
-        tl.debug("Non TIA mode of test execution");
+        tl.debug("Non TIA mode of test execution");        
         executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
             .then(function (code) {
                 defer.resolve(code);
@@ -360,6 +404,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
             .fail(function (code) {
                 defer.resolve(code);
             });
+         
     }
     return defer.promise;
 }
