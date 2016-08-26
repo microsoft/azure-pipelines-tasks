@@ -35,8 +35,15 @@ async function run() {
         SPN["tenantID"] = endPointAuthCreds.parameters["tenantid"];
         SPN["subscriptionId"] = tl.getEndpointDataParameter (connectedServiceName, 'subscriptionid', true); 
         
-        if (!msDeployUtility.fileExists(webDeployPkg)) {
-            throw new Error(tl.loc('Packagenotfound0', webDeployPkg));
+        if (!tl.exist(webDeployPkg)) {
+            throw new Error(tl.loc('Packageorfoldernotfound0', webDeployPkg));
+        }
+
+        var isFolderBasedDeployment = !msDeployUtility.fileExists(webDeployPkg);
+        var isParamFilePresentInPacakge = false;
+
+        if (!isFolderBasedDeployment) {
+            isParamFilePresentInPacakge = await msDeployUtility.containsParamFile(webDeployPkg);
         }
 
         if(!tl.filePathSupplied('SetParametersFile')) {
@@ -49,7 +56,7 @@ async function run() {
         var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
 
         var msDeployArgs = msDeployUtility.getMSDeployCmdArgs(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
-                         excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments);
+            excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments, isParamFilePresentInPacakge, isFolderBasedDeployment);
         await msDeployUtility.executeMSDeployCmd(msDeployArgs, publishingProfile, webAppUri);
     } catch (error) {
         tl.setResult(tl.TaskResult.Failed, error);

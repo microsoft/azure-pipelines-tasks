@@ -198,11 +198,11 @@
         }
     },
     "messages": {
-        "Packagenotfound0": "Package not found: %s",
+        "Packageorfoldernotfound0": "Package or Folder not found: %s",
         "SetParamFilenotfound0": "Set parameters file not found: %s",
         "Updatedeploymenthistoryissuccess": "Update deployment history is success.",
         "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
-        "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite" : "WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website",
+        "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website",
         "ErrorNoSuchDeployingMethodExists": "Error : No Such Deploying Method Exists",
         "ErrorFetchingDeploymentPublishProfileStausCode0": "Error Fetching Deployment Publish Profile [Staus Code : '%s']",
         "ErrorOccurredStausCode0": "Error Occurred : [Staus Code : '%s']",
@@ -211,6 +211,9 @@
         "Failedtodeploywebsite": "Failed to deploy website.",
         "Runningcommand01": "Running command: %s %s",
         "ConstructedmsDeploycomamndlinearguments": "Constructed msDeploy comamnd line arguments",
-        "CannotfindMSDeployexe" : "Cannot find MSDeploy.exe"
-    }
+        "CannotfindMSDeployexe": "Cannot find MSDeploy.exe",
+        "Runningmsdeploycommandtocheckifpackagecontainsparamfile0": "Running msdeploy command to check if package contains param file : %s",
+        "Paramscontentofwebpackage0": "Params content of web package : %s",
+        "Isparameterfilepresentinwebpackage0": "Is parameter file is present in web package : %s"
+  }
 }

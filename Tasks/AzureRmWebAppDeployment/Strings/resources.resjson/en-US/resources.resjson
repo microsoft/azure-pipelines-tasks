@@ -33,7 +33,7 @@
   "loc.input.help.TakeAppOfflineFlag": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully.",
   "loc.input.label.AdditionalArguments": "Additional Arguments",
   "loc.input.help.AdditionalArguments": "Additional Web Deploy arguments that will be applied when deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension.",
-  "loc.messages.Packagenotfound0": "Package not found: %s",
+  "loc.messages.Packageorfoldernotfound0": "Package or Folder not found: %s",
   "loc.messages.SetParamFilenotfound0": "Set parameters file not found: %s",
   "loc.messages.Updatedeploymenthistoryissuccess": "Update deployment history is success.",
   "loc.messages.Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
@@ -46,5 +46,8 @@
   "loc.messages.Failedtodeploywebsite": "Failed to deploy website.",
   "loc.messages.Runningcommand01": "Running command: %s %s",
   "loc.messages.ConstructedmsDeploycomamndlinearguments": "Constructed msDeploy comamnd line arguments",
-  "loc.messages.CannotfindMSDeployexe": "Cannot find MSDeploy.exe"
+  "loc.messages.CannotfindMSDeployexe": "Cannot find MSDeploy.exe",
+  "loc.messages.Runningmsdeploycommandtocheckifpackagecontainsparamfile0": "Running msdeploy command to check if package contains param file : %s",
+  "loc.messages.Paramscontentofwebpackage0": "Params content of web package : %s",
+  "loc.messages.Isparameterfilepresentinwebpackage0": "Is parameter file is present in web package : %s"
 }

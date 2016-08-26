@@ -197,7 +197,7 @@
     }
   },
   "messages": {
-    "Packagenotfound0": "ms-resource:loc.messages.Packagenotfound0",
+    "Packageorfoldernotfound0": "ms-resource:loc.messages.Packageorfoldernotfound0",
     "SetParamFilenotfound0": "ms-resource:loc.messages.SetParamFilenotfound0",
     "Updatedeploymenthistoryissuccess": "ms-resource:loc.messages.Updatedeploymenthistoryissuccess",
     "Failedtoupdatedeploymenthistory": "ms-resource:loc.messages.Failedtoupdatedeploymenthistory",
@@ -210,6 +210,9 @@
     "Failedtodeploywebsite": "ms-resource:loc.messages.Failedtodeploywebsite",
     "Runningcommand01": "ms-resource:loc.messages.Runningcommand01",
     "ConstructedmsDeploycomamndlinearguments": "ms-resource:loc.messages.ConstructedmsDeploycomamndlinearguments",
-    "CannotfindMSDeployexe": "ms-resource:loc.messages.CannotfindMSDeployexe"
+    "CannotfindMSDeployexe": "ms-resource:loc.messages.CannotfindMSDeployexe",
+    "Runningmsdeploycommandtocheckifpackagecontainsparamfile0": "ms-resource:loc.messages.Runningmsdeploycommandtocheckifpackagecontainsparamfile0",
+    "Paramscontentofwebpackage0": "ms-resource:loc.messages.Paramscontentofwebpackage0",
+    "Isparameterfilepresentinwebpackage0": "ms-resource:loc.messages.Isparameterfilepresentinwebpackage0"
   }
 }

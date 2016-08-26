@@ -7,6 +7,7 @@ import tl = require('vsts-task-lib/task');
 
 var regedit = require('regedit');
 var azureRmUtil = require('./AzureRMUtil.js');
+var parseString = require('xml2js').parseString;
 
 export function fileExists(path) {
   try  {
@@ -21,28 +22,41 @@ export function fileExists(path) {
   }
 }
 
-export function getMSDeployCmdArgs(packageFile: string, webAppNameForMSDeployCmd: string, publishingProfile,
+export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, publishingProfile,
                              removeAdditionalFilesFlag: boolean, excludeFilesFromAppDataFlag: boolean, takeAppOfflineFlag: boolean,
-                             virtualApplication: string, setParametersFile: string, additionalArguments: string) : string {
+                             virtualApplication: string, setParametersFile: string, additionalArguments: string, isParamFilePresentInPacakge: boolean, isFolderBasedDeployment: boolean) : string {
 
-    var msDeployCmdArgs = ' -verb:sync';
-    msDeployCmdArgs += ' -source:package=\'' + packageFile + '\'';
-    msDeployCmdArgs += ' -dest:auto,ComputerName=https://' + publishingProfile.publishUrl + '/msdeploy.axd?site=' + webAppNameForMSDeployCmd + ',';
-    msDeployCmdArgs += 'userName=' + publishingProfile.userName + ',Password=' + publishingProfile.userPWD + ',AuthType=Basic';
+    var msDeployCmdArgs: string = " -verb:sync";
+
+    var webApplicationDeploymentPath = ( virtualApplication ) ? webAppName + "/" + virtualApplication : webAppName;
+    
+    if(isFolderBasedDeployment) {
+        msDeployCmdArgs += " -source:IisApp='"+ webAppPackage + "'";
+        msDeployCmdArgs += " -dest:iisApp='" + webApplicationDeploymentPath + "',";
+    } else {       
+        msDeployCmdArgs += " -source:package='"+ webAppPackage + "'";
+
+        if(isParamFilePresentInPacakge) {
+            msDeployCmdArgs += " -dest:auto,";           
+        } else {
+            msDeployCmdArgs += " -dest:contentPath='"+ webApplicationDeploymentPath +"',";
+        }
+    }
+
+    msDeployCmdArgs += "ComputerName='https://" + publishingProfile.publishUrl + "/msdeploy.axd?site=" + webAppName + "',";
+    msDeployCmdArgs += "UserName='" + publishingProfile.userName + "',Password='" + publishingProfile.userPWD + "',AuthType='Basic'";
+
+    if( isParamFilePresentInPacakge || setParametersFile != null ){
+        msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='" + webApplicationDeploymentPath + "'";
+    }
 
     if (setParametersFile) {
-        msDeployCmdArgs += ' -setParamFile=' + setParametersFile;
-    }
-    
-    if (virtualApplication) {
-        msDeployCmdArgs += ' -setParam:name=\'IIS Web Application Name\',value=\'' + webAppNameForMSDeployCmd + '/' + virtualApplication + '\'';
-    }
-    else {
-        msDeployCmdArgs += ' -setParam:name=\'IIS Web Application Name\',value=\'' + webAppNameForMSDeployCmd + '\'';
+        
+        msDeployCmdArgs += " -setParamFile=" + setParametersFile;
     }
 
-    if (!removeAdditionalFilesFlag) {
-        msDeployCmdArgs += ' -enableRule:DoNotDeleteRule';
+    if(!removeAdditionalFilesFlag) {
+        msDeployCmdArgs += " -enableRule:DoNotDeleteRule";
     }
 
     if (takeAppOfflineFlag) {
@@ -136,4 +150,23 @@ function getMSDeployInstallPath(registryKey: string): Q.Promise<string> {
     });
 
     return defer.promise;
+}
+
+export async  function containsParamFile(webAppPackage: string ) {
+    var msDeployPath = await getMSDeployFullPath();
+    var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package='"+webAppPackage+"'";
+    var taskResult = tl.execSync(msDeployPath, msDeployCheckParamFileCmdArgs);
+    var paramContentXML = taskResult.stdout;
+    tl.debug(tl.loc("Paramscontentofwebpackage0",paramContentXML));
+    var isParamFilePresent = false;
+    await parseString(paramContentXML, (error, result ) => {
+        if(error){
+            onError(error);
+        }
+        if( result['output']['parameters'][0] ){
+            isParamFilePresent = true;
+        } 
+    });
+    tl.debug(tl.loc("Isparameterfilepresentinwebpackage0",isParamFilePresent));
+    return isParamFilePresent;
 }
