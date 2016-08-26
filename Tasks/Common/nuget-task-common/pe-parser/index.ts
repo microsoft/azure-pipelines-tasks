@@ -35,7 +35,7 @@ export async function getFileVersionInfoAsync(file: string | IReadableFile): Pro
         let versionResource = new VersionResource(versionResourceBuffer);
         return versionResource.versionInfo;
     } finally {
-        if (typeof file === "string") {
+        if (typeof file === "string" && readableFile) {
             // we opened the file, so we're responsible for closing it
             await readableFile.closeAsync();
         }
