@@ -45,12 +45,11 @@ async function run() {
 		if( !isFolderBasedDeployment ){
 			isParamFilePresentInPacakge = await msDeployUtility.containsParamFile(webDeployPkg);
 		}
-		
-		var systemDefaultWorkingDir = tl.getVariable('SYSTEM_DEFAULTWORKINGDIRECTORY');
-		if(setParametersFile === systemDefaultWorkingDir || setParametersFile === systemDefaultWorkingDir + '\\' || setParametersFile === "") {
+
+		if(!tl.filePathSupplied('SetParametersFile')) {
 			setParametersFile = null;
 		}
-		else if (!tl.exist(setParametersFile)) {
+		else if (!msDeployUtility.fileExists(setParametersFile)) {
 			throw new Error(tl.loc('SetParamFilenotfound0', setParametersFile));
 		}
 		
