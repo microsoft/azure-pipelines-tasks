@@ -1,18 +1,15 @@
-/// <reference path="../../../definitions/node.d.ts" />
-/// <reference path="../../../definitions/vsts-task-lib.d.ts" />
+import * as os from "os";
+import * as path from "path";
+import * as url from "url";
+import * as tl from "vsts-task-lib/task";
+import {IExecOptions, IExecResult, ToolRunner} from "vsts-task-lib/toolrunner";
 
-import * as tl from 'vsts-task-lib/task';
-import {ToolRunner, IExecOptions, IExecResult} from 'vsts-task-lib/toolrunner';
-import * as os from 'os';
-import * as path from 'path';
-import * as url from 'url';
-
-import * as auth from "./Authentication"
+import * as auth from "./Authentication";
+import {NuGetQuirkName, NuGetQuirks, defaultQuirks} from "./NuGetQuirks";
 import * as ngutil from "./Utility";
-import {defaultQuirks, NuGetQuirks, NuGetQuirkName} from "./NuGetQuirks"
-import * as peParser from "./pe-parser"
+import * as peParser from "./pe-parser";
 
-interface EnvironmentDictionary { [key: string]: string }
+interface EnvironmentDictionary { [key: string]: string; }
 
 export interface NuGetEnvironmentSettings {
     authInfo: auth.NuGetAuthInfo;
@@ -20,22 +17,28 @@ export interface NuGetEnvironmentSettings {
     extensionsDisabled: boolean;
 }
 
-function prepareNuGetExeEnvironment(input: EnvironmentDictionary, settings: NuGetEnvironmentSettings): EnvironmentDictionary {
-    var env: EnvironmentDictionary = {}
-    var originalCredProviderPath: string;
-    for (var e in input) {
+function prepareNuGetExeEnvironment(
+    input: EnvironmentDictionary,
+    settings: NuGetEnvironmentSettings): EnvironmentDictionary {
+
+    let env: EnvironmentDictionary = {};
+    let originalCredProviderPath: string;
+    for (let e in input) {
+        if(input.hasOwnProperty(e)) {
+            continue;
+        }
         // NuGet.exe extensions only work with a single specific version of nuget.exe. This causes problems
         // whenever we update nuget.exe on the agent.
-        if (e.toUpperCase() == "NUGET_EXTENSIONS_PATH") {
+        if (e.toUpperCase() === "NUGET_EXTENSIONS_PATH") {
             if (settings.extensionsDisabled) {
-                tl.warning(tl.loc("NGCommon_IgnoringNuGetExtensionsPath"))
+                tl.warning(tl.loc("NGCommon_IgnoringNuGetExtensionsPath"));
                 continue;
             } else {
-                tl._writeLine(tl.loc("NGCommon_DetectedNuGetExtensionsPath", input[e]))
+                tl._writeLine(tl.loc("NGCommon_DetectedNuGetExtensionsPath", input[e]));
             }
         }
 
-        if (e.toUpperCase() == 'NUGET_CREDENTIALPROVIDERS_PATH') {
+        if (e.toUpperCase() === "NUGET_CREDENTIALPROVIDERS_PATH") {
             originalCredProviderPath = input[e];
 
             // will re-set this variable below
@@ -45,55 +48,55 @@ function prepareNuGetExeEnvironment(input: EnvironmentDictionary, settings: NuGe
         env[e] = input[e];
     }
 
-    var credProviderPath = settings.credProviderFolder || originalCredProviderPath;
+    let credProviderPath = settings.credProviderFolder || originalCredProviderPath;
     if (settings.credProviderFolder && originalCredProviderPath) {
         credProviderPath = settings.credProviderFolder + ";" + originalCredProviderPath;
     }
 
-    env['VSS_NUGET_ACCESSTOKEN'] = settings.authInfo.accessToken;
-    env['VSS_NUGET_URI_PREFIXES'] = settings.authInfo.uriPrefixes.join(";");
-    env['NUGET_CREDENTIAL_PROVIDER_OVERRIDE_DEFAULT'] = 'true';
+    env["VSS_NUGET_ACCESSTOKEN"] = settings.authInfo.accessToken;
+    env["VSS_NUGET_URI_PREFIXES"] = settings.authInfo.uriPrefixes.join(";");
+    env["NUGET_CREDENTIAL_PROVIDER_OVERRIDE_DEFAULT"] = "true";
 
     if (credProviderPath) {
         tl.debug(`credProviderPath = ${credProviderPath}`);
-        env['NUGET_CREDENTIALPROVIDERS_PATH'] = credProviderPath;
+        env["NUGET_CREDENTIALPROVIDERS_PATH"] = credProviderPath;
     }
 
     return env;
 }
 
 export class NuGetToolRunner extends ToolRunner {
-    private _settings: NuGetEnvironmentSettings;
+    private settings: NuGetEnvironmentSettings;
 
     constructor(nuGetExePath: string, settings: NuGetEnvironmentSettings) {
-        if (os.platform() === 'win32' || !nuGetExePath.trim().toLowerCase().endsWith('.exe')) {
+        if (os.platform() === "win32" || !nuGetExePath.trim().toLowerCase().endsWith(".exe")) {
             super(nuGetExePath);
         }
         else {
-            let monoPath = tl.which('mono', true);
+            let monoPath = tl.which("mono", true);
             super(monoPath);
             this.pathArg(nuGetExePath);
         }
 
-        this._settings = settings;
+        this.settings = settings;
     }
 
     public execSync(options?: IExecOptions): IExecResult {
         options = options || <IExecOptions>{};
-        options.env = prepareNuGetExeEnvironment(options.env || process.env, this._settings);
+        options.env = prepareNuGetExeEnvironment(options.env || process.env, this.settings);
         return super.execSync(options);
     }
 
     public exec(options?: IExecOptions): Q.Promise<number> {
         options = options || <IExecOptions>{};
-        options.env = prepareNuGetExeEnvironment(options.env || process.env, this._settings);
+        options.env = prepareNuGetExeEnvironment(options.env || process.env, this.settings);
         return super.exec(options);
     }
 }
 
 export function createNuGetToolRunner(nuGetExePath: string, settings: NuGetEnvironmentSettings): NuGetToolRunner {
     let runner = new NuGetToolRunner(nuGetExePath, settings);
-    runner.on('debug', message => tl.debug(message));
+    runner.on("debug", message => tl.debug(message));
     return runner;
 }
 
@@ -112,7 +115,7 @@ function locateTool(tool: string, opts?: LocateOptions) {
     opts = opts || {};
     opts.toolFilenames = opts.toolFilenames || [tool];
 
-    tl.debug(`looking for tool ${tool}`)
+    tl.debug(`looking for tool ${tool}`);
 
     for (let thisVariant of opts.toolFilenames) {
         tl.debug(`looking for tool variant ${thisVariant}`);
@@ -126,7 +129,7 @@ function locateTool(tool: string, opts?: LocateOptions) {
         }
 
         if (opts.fallbackToSystemPath) {
-            tl.debug('Checking system path');
+            tl.debug("Checking system path");
             let whichResult = tl.which(thisVariant);
             if (whichResult) {
                 tl.debug(`found ${whichResult}`);
@@ -147,18 +150,17 @@ export function locateNuGetExe(userNuGetExePath: string): string {
         }
 
         tl.debug(`using user-supplied NuGet path ${userNuGetExePath}`);
-        tl.checkPath(userNuGetExePath, 'NuGet');
+        tl.checkPath(userNuGetExePath, "NuGet");
         return userNuGetExePath;
     }
 
-    var toolPath = locateTool('NuGet', {
-        fallbackToSystemPath: os.platform() !== 'win32',
-        toolFilenames: ['nuget.exe', 'NuGet.exe', 'nuget', 'NuGet']
+    let toolPath = locateTool("NuGet", {
+        fallbackToSystemPath: os.platform() !== "win32",
+        toolFilenames: ["nuget.exe", "NuGet.exe", "nuget", "NuGet"],
     });
 
-
     if (!toolPath) {
-        throw new Error(tl.loc("NGCommon_UnableToFindTool", 'NuGet'));
+        throw new Error(tl.loc("NGCommon_UnableToFindTool", "NuGet"));
     }
 
     return toolPath;
@@ -169,10 +171,10 @@ export async function getNuGetQuirksAsync(nuGetExePath: string): Promise<NuGetQu
         const version = await peParser.getFileVersionInfoAsync(nuGetExePath);
         const quirks = NuGetQuirks.fromVersion(version.fileVersion);
 
-        tl._writeLine(tl.loc("NGCommon_DetectedNuGetVersion", version.fileVersion, version.strings.ProductVersion))
+        tl._writeLine(tl.loc("NGCommon_DetectedNuGetVersion", version.fileVersion, version.strings.ProductVersion));
         tl.debug(`Quirks for ${version.fileVersion}:`);
         quirks.getQuirkNames().forEach(quirk => {
-            tl.debug(`    ${quirk}`)
+            tl.debug(`    ${quirk}`);
         });
 
         return quirks;
@@ -182,9 +184,9 @@ export async function getNuGetQuirksAsync(nuGetExePath: string): Promise<NuGetQu
             || err.code === "noResourceSection"
             || err.code === "noVersionResource")) {
 
-            tl.debug("Cannot read version from NuGet. Using default quirks:")
+            tl.debug("Cannot read version from NuGet. Using default quirks:");
             defaultQuirks.forEach(quirk => {
-                tl.debug(`    ${NuGetQuirkName[quirk]}`)
+                tl.debug(`    ${NuGetQuirkName[quirk]}`);
             });
             return new NuGetQuirks(null, defaultQuirks);
         }
@@ -235,7 +237,7 @@ export function isCredentialProviderEnabled(quirks: NuGetQuirks): boolean {
 
     if (isOnPremisesTfs() && (
         quirks.hasQuirk(NuGetQuirkName.NoTfsOnPremAuthCredentialProvider))) {
-        tl.debug("Credential provider is disabled due to on-prem quirks.")
+        tl.debug("Credential provider is disabled due to on-prem quirks.");
         return false;
     }
 
@@ -258,19 +260,18 @@ export function isCredentialConfigEnabled(quirks: NuGetQuirks): boolean {
         return false;
     }
 
-
     if (isOnPremisesTfs() && (
         quirks.hasQuirk(NuGetQuirkName.NoTfsOnPremAuthConfig))) {
-        tl.debug("Credential config is disabled due to on-prem quirks.")
+        tl.debug("Credential config is disabled due to on-prem quirks.");
         return false;
     }
 
-    tl.debug("Credential config is enabled.")
+    tl.debug("Credential config is enabled.");
     return true;
 }
 
 export function locateCredentialProvider(): string {
-    const credentialProviderLocation = locateTool('CredentialProvider.TeamBuild.exe');
+    const credentialProviderLocation = locateTool("CredentialProvider.TeamBuild.exe");
     if (!credentialProviderLocation) {
         tl.debug("Credential provider is not present.");
         return null;
@@ -278,4 +279,3 @@ export function locateCredentialProvider(): string {
 
     return credentialProviderLocation;
 }
-
