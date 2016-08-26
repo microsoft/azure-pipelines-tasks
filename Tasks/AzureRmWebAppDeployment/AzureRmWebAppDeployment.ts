@@ -18,8 +18,8 @@ async function run() {
 		var deployToSlotFlag: boolean = tl.getBoolInput('DeployToSlotFlag');
 		var resourceGroupName: string = tl.getInput('ResourceGroupName');
 		var slotName: string = tl.getInput('SlotName');
-		var webDeployPkg: string = trimDoubleQuotes(tl.getPathInput('Package'));
-		var setParametersFile: string = trimDoubleQuotes(tl.getPathInput('SetParametersFile'));
+		var webDeployPkg: string = tl.getPathInput('Package');
+		var setParametersFile: string = tl.getPathInput('SetParametersFile');
 		var removeAdditionalFilesFlag: boolean = tl.getBoolInput('RemoveAdditionalFilesFlag');
 		var excludeFilesFromAppDataFlag: boolean = tl.getBoolInput('ExcludeFilesFromAppDataFlag');
 		var takeAppOfflineFlag: boolean = tl.getBoolInput('TakeAppOfflineFlag');
@@ -39,38 +39,21 @@ async function run() {
 			throw new Error(tl.loc('Packagenotfound0', webDeployPkg));			
 		}
 
-		var systemDefaultWorkingDir = tl.getVariable('SYSTEM_DEFAULTWORKINGDIRECTORY');
-		if(setParametersFile === systemDefaultWorkingDir || setParametersFile === systemDefaultWorkingDir + '\\' || setParametersFile === "") {
+		if(!msDeployUtility.fileExists(setParametersFile)) {
 			setParametersFile = null;
 		}
-		else if (!msDeployUtility.fileExists(setParametersFile)) {
+		else if (!tl.exist(setParametersFile)) {
 			throw new Error(tl.loc('SetParamFilenotfound0', setParametersFile));
 		}
 		
-		
 		var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-		var azureRMWebAppConnectionDetails = new Array();
-		azureRMWebAppConnectionDetails["KuduHostName"] = publishingProfile.publishUrl;
-		azureRMWebAppConnectionDetails["UserName"] = publishingProfile.userName;
-		azureRMWebAppConnectionDetails["UserPassword"] = publishingProfile.userPWD;
-		webAppName = deployToSlotFlag ?  webAppName + "(" + slotName + ")" : webAppName;
 
-		var msDeployArgs = msDeployUtility.getMSDeployCmdArgs(webDeployPkg, webAppName, azureRMWebAppConnectionDetails, removeAdditionalFilesFlag,
+		var msDeployArgs = msDeployUtility.getMSDeployCmdArgs(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
 						 excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments);
-		msDeployUtility.executeMSDeployCmd(msDeployArgs, azureRMWebAppConnectionDetails);
+		await msDeployUtility.executeMSDeployCmd(msDeployArgs, publishingProfile, webAppUri);
 	} catch (error) {
 		tl.setResult(tl.TaskResult.Failed, error);
 	}
-}
-
-function trimDoubleQuotes(input: string): string {
-
-	if (input.charAt(0) === '"' && input.charAt(input.length -1) === '"')
-	{
-    	 input = input.substr(1, input.length -2);
-	}
-
-	return input;
 }
 
 run();

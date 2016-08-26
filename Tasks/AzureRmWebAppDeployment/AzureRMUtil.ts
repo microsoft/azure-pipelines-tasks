@@ -13,10 +13,10 @@ var AuthenticationContext = adal.AuthenticationContext;
 var authUrl = 'https://login.windows.net/';
 var armUrl = 'https://management.azure.com/';
 
-export function updateDeploymentStatus(azureRMWebAppConnectionDetails, isDeploymentSuccess: boolean):Q.Promise<string>  {
+export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: boolean):Q.Promise<string>  {
 	var deferred = Q.defer<string>();
 
-	var webAppPublishKuduUrl = azureRMWebAppConnectionDetails.KuduHostName;	
+	var webAppPublishKuduUrl = publishingProfile.publishUrl;	
 	if(webAppPublishKuduUrl) {
 		var requestDetails = getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
 		var requestOptions = {
@@ -24,8 +24,8 @@ export function updateDeploymentStatus(azureRMWebAppConnectionDetails, isDeploym
 			method : 'PUT', 
 			json : requestDetails["requestBody"], 
 			auth: {
-				username : azureRMWebAppConnectionDetails.UserName, 
-				password : azureRMWebAppConnectionDetails.UserPassword
+				username : publishingProfile.userName, 
+				password : publishingProfile.userPWD
 			}
 		};
 
