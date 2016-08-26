@@ -8,7 +8,7 @@
   "loc.input.label.ArtifactName": "Artefaktname",
   "loc.input.help.ArtifactName": "Der Name des zu erstellenden Artefakts.",
   "loc.input.label.ArtifactType": "Artefakttyp",
-  "loc.input.help.ArtifactType": "Der Typ des zu erstellenden Artefakts.",
+  "loc.input.help.ArtifactType": "The type of artifact to create.",
   "loc.input.label.TargetPath": "Pfad",
   "loc.input.help.TargetPath": "Die Dateifreigabe, in die die Dateien kopiert werden sollen",
   "loc.messages.PublishBuildArtifactsFailed": "Fehler beim Veröffentlichen von Buildartefakten: %s"
