@@ -217,9 +217,9 @@ function publishCodeChanges(): Q.Promise<string> {
     var elapsedTime: number;
     var defer = Q.defer<string>();
 
-    var newprovider = "false";
-    if (getTIALevel() == 'file') {
-        newprovider = "true";
+    var newprovider = "true";
+    if (getTIALevel() == 'method') {
+        newprovider = "false";
     }
 
     var selectortool = tl.createToolRunner(getTestSelectorLocation());
@@ -1108,8 +1108,8 @@ function isTiaAllowed(): boolean {
 
 function getTIALevel()
 {
-    if (fileLevel && fileLevel.toUpperCase() == "TRUE") {
-        return "file";
+    if (fileLevel && fileLevel.toUpperCase() == "FALSE") {
+        return "method";
     }
-    return "method";
+    return "file";
 }
