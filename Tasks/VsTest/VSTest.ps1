@@ -99,23 +99,31 @@ try
         if ($vstestLocationMethod -eq "location") 
         {
             Write-Verbose "User has specified vstest location"
-            $vsTestVersion = $null
-            if([String]::IsNullOrWhiteSpace($vstestLocation))
+            if (InvokeVsTestCmdletHasMember "VSTestLocation")
             {
-                throw (Get-LocalizedString -Key "Invalid location specified '{0}'. Provide a valid path to vstest.console.exe and try again" -ArgumentList $vstestLocation)
-            }
-            else
-            {
-                $vstestLocationInput.Trim()
-                $vstestConsoleExeName = "vstest.console.exe"
-                if(!$vstestLocationInput.EndsWith($vstestConsoleExeName, [System.StringComparison]::OrdinalIgnoreCase))
+                $vsTestVersion = $null
+                if([String]::IsNullOrWhiteSpace($vstestLocation))
                 {
-                    $vstestLocationInput = [io.path]::Combine($vstestLocationInput, $vstestConsoleExeName)
-                    if(![io.file]::Exists($vstestLocationInput))
+                    throw (Get-LocalizedString -Key "Invalid location specified '{0}'. Provide a valid path to vstest.console.exe and try again" -ArgumentList $vstestLocation)
+                }
+                else
+                {
+                    $vstestLocationInput.Trim()
+                    $vstestConsoleExeName = "vstest.console.exe"
+                    if(!$vstestLocationInput.EndsWith($vstestConsoleExeName, [System.StringComparison]::OrdinalIgnoreCase))
                     {
-                        throw (Get-LocalizedString -Key "Invalid location specified '{0}'. Provide a valid path to vstest.console.exe and try again" -ArgumentList $vstestLocation)
+                        $vstestLocationInput = [io.path]::Combine($vstestLocationInput, $vstestConsoleExeName)
+                        if(![io.file]::Exists($vstestLocationInput))
+                        {
+                            throw (Get-LocalizedString -Key "Invalid location specified '{0}'. Provide a valid path to vstest.console.exe and try again" -ArgumentList $vstestLocation)
+                        }
                     }
                 }
+            }
+            else 
+            {
+                Write-Warning (Get-LocalizedString -Key "Update the agent to try out the '{0}' feature." -ArgumentList "specify vstest location")
+                $vstestLocationInput = $null
             }
         }
         else 
