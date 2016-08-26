@@ -119,6 +119,16 @@
       }
     },
     {
+      "name": "vstestLocation",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.vstestLocation",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.vstestLocation",
+      "visibleRule": "vstestLocationMethod = location",
+      "groupName": "advancedExecutionOptions"
+    },
+    {
       "name": "pathtoCustomTestAdapters",
       "type": "string",
       "label": "ms-resource:loc.input.label.pathtoCustomTestAdapters",
@@ -134,16 +144,6 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.otherConsoleOptions",
-      "groupName": "advancedExecutionOptions"
-    },
-    {
-      "name": "vstestLocation",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.vstestLocation",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.vstestLocation",
-      "visibleRule": "vstestLocationMethod = location",
       "groupName": "advancedExecutionOptions"
     },
     {

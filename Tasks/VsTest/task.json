@@ -119,6 +119,16 @@
             }
         },
         {
+            "name": "vstestLocation",
+            "type": "string",
+            "label": "Path to vstest.console.exe",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optionally supply the path to VSTest.",
+            "visibleRule": "vstestLocationMethod = location",
+            "groupName": "advancedExecutionOptions"
+        },
+        {
             "name": "pathtoCustomTestAdapters",
             "type": "string",
             "label": "Path to Custom Test Adapters",
@@ -134,16 +144,6 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Other Console options that can be passed to vstest.console.exe. Click on the help link below for more details.",
-            "groupName": "advancedExecutionOptions"
-        },
-        {
-            "name": "vstestLocation",
-            "type": "string",
-            "label": "Path to vstest.console.exe",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Optionally supply the path to VSTest.",
-            "visibleRule": "vstestLocationMethod = location",
             "groupName": "advancedExecutionOptions"
         },
         {
