@@ -42,12 +42,12 @@
   "loc.messages.ErrorFetchingDeploymentPublishProfileStausCode0": "Error Fetching Deployment Publish Profile [Staus Code : '%s']",
   "loc.messages.ErrorOccurredStausCode0": "Error Occurred : [Staus Code : '%s']",
   "loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update deployment status : uniquedeploymentIdCannotBeRetrieved",
-  "loc.messages.Successfullydeployedwebsite": "Successfully deployed website.",
+  "loc.messages.WebappsuccessfullypublishedatUrl0": "Web App successfully deployed at url %s",
   "loc.messages.Failedtodeploywebsite": "Failed to deploy website.",
   "loc.messages.Runningcommand01": "Running command: %s %s",
   "loc.messages.ConstructedmsDeploycomamndlinearguments": "Constructed msDeploy comamnd line arguments",
   "loc.messages.CannotfindMSDeployexe": "Cannot find MSDeploy.exe",
-  "loc.messages.Runningmsdeploycommandtocheckifpackagecontainsparamfile0": "Running msdeploy command to check if package contains param file : ",
-  "loc.messages.Paramscontentofwebpackage0": "Params content of web package : ",
-  "loc.messages.Isparameterfilepresentinwebpackage0": "Is parameter file is present in web package : "
+  "loc.messages.Runningmsdeploycommandtocheckifpackagecontainsparamfile0": "Running msdeploy command to check if package contains param file : %s",
+  "loc.messages.Paramscontentofwebpackage0": "Params content of web package : %s",
+  "loc.messages.Isparameterfilepresentinwebpackage0": "Is parameter file is present in web package : %s"
 }

@@ -4,25 +4,25 @@
 
 import Q = require('q');
 import tl = require('vsts-task-lib/task');
-var fs = require('fs');
+
 var regedit = require('regedit');
 var azureRmUtil = require('./AzureRMUtil.js');
 var parseString = require('xml2js').parseString;
 
 export function fileExists(path) {
   try  {
-    return fs.statSync(path).isFile();
+    return tl.stats(path).isFile();
   }
   catch (e) {
     if (e.code == 'ENOENT') {
       return false;
     }
-    tl.debug("Exception fs.statSync (" + path + "): " + e);
+    tl.debug("Exception tl.stats (" + path + "): " + e);
     throw e;
   }
 }
 
-export function getMSDeployCmdArgs(packageFile: string, webAppNameForMSDeployCmd: string, azureRMWebAppConnectionDetails: Array<String>,
+export function getMSDeployCmdArgs(packageFile: string, webAppNameForMSDeployCmd: string, publishingProfile,
                              removeAdditionalFilesFlag: boolean, excludeFilesFromAppDataFlag: boolean, takeAppOfflineFlag: boolean,
                              virtualApplication: string, setParametersFile: string, additionalArguments: string, isParamFilePresentInPacakge: boolean, isFolderBasedDeployment:boolean) : string {
 
@@ -47,8 +47,8 @@ export function getMSDeployCmdArgs(packageFile: string, webAppNameForMSDeployCmd
 
     }
 
-    msDeployCmdArgs += "ComputerName='https://" + azureRMWebAppConnectionDetails["KuduHostName"] + "/msdeploy.axd?site=" + webAppNameForMSDeployCmd + "',";
-    msDeployCmdArgs += "UserName='" + azureRMWebAppConnectionDetails["UserName"] + "',Password='" + azureRMWebAppConnectionDetails["UserPassword"] + "',AuthType='Basic'";
+    msDeployCmdArgs += "ComputerName='https://" + publishingProfile.publishUrl + "/msdeploy.axd?site=" + webAppNameForMSDeployCmd + "',";
+    msDeployCmdArgs += "UserName='" + publishingProfile.userName + "',Password='" + publishingProfile.userPWD + "',AuthType='Basic'";
 
     if( isParamFilePresentInPacakge || setParametersFile != null ){
         msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='" + webApplicationDeploymentPath + "'";
@@ -56,7 +56,7 @@ export function getMSDeployCmdArgs(packageFile: string, webAppNameForMSDeployCmd
 
     if (setParametersFile) {
         
-        msDeployCmdArgs += " -setParamFile=" + setParametersFile + "";
+        msDeployCmdArgs += " -setParamFile=" + setParametersFile;
     }
 
     if(!removeAdditionalFilesFlag) {
@@ -68,7 +68,7 @@ export function getMSDeployCmdArgs(packageFile: string, webAppNameForMSDeployCmd
     }
 
     if (excludeFilesFromAppDataFlag) {
-        msDeployCmdArgs += ' -skip:Directory="\\App_Data"';
+        msDeployCmdArgs += ' -skip:Directory=App_Data';
     }
     
     if (additionalArguments) {
@@ -77,28 +77,31 @@ export function getMSDeployCmdArgs(packageFile: string, webAppNameForMSDeployCmd
 
     var userAgent = tl.getVariable("AZURE_HTTP_USER_AGENT");
     if (userAgent) {
-        msDeployCmdArgs += ' -userAgent:"' + userAgent + '"';
+        msDeployCmdArgs += ' -userAgent:' + userAgent;
     }
     tl.debug(tl.loc('ConstructedmsDeploycomamndlinearguments'));
     return msDeployCmdArgs;
 }
 
-export async function executeMSDeployCmd(msDeployCmdArgs: string, azureRMWebAppConnectionDetails) {
+export async function executeMSDeployCmd(msDeployCmdArgs: string, publishingProfile, webAppUri: string) {
     try {
+        if(webAppUri) {
+            tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
+        }
         var msDeployPath = await getMSDeployFullPath();
-        var maskedCommand = maskPasswordDetails(msDeployCmdArgs);
-            tl.debug(tl.loc('Runningcommand01', msDeployPath, maskedCommand));
             var statusCode = await tl.exec(msDeployPath, msDeployCmdArgs, <any> {failOnStdErr: true});
             if ( statusCode === 0 ) {
-                tl.debug(tl.loc('Successfullydeployedwebsite'));
-                var deploymentResult = await azureRmUtil.updateDeploymentStatus(azureRMWebAppConnectionDetails, true);
+                tl.debug(tl.loc('WebappsuccessfullypublishedatUrl0',publishingProfile.destinationAppUrl));                
+                var deploymentResult = await azureRmUtil.updateDeploymentStatus(publishingProfile, true);
                 tl.debug(deploymentResult);
             }
             else {
                 tl.debug(tl.loc('Failedtodeploywebsite'));
-                var deploymentResult = await azureRmUtil.updateDeploymentStatus(azureRMWebAppConnectionDetails, false);
+                var deploymentResult = await azureRmUtil.updateDeploymentStatus(publishingProfile, false);
                 tl.debug(deploymentResult);
+                onError(tl.loc('Failedtodeploywebsite'));
             }
+
     }
     catch(error) {
        onError(error);
@@ -123,13 +126,6 @@ async function getMSDeployFullPath() {
 function onError(error) {
     tl.setResult(tl.TaskResult.Failed, error);
     process.exit(1);
-}
-
-function maskPasswordDetails(msDeployCmdArgs: string): string {
-    var startIndex = msDeployCmdArgs.indexOf('Password=');
-    var endIndex = msDeployCmdArgs.indexOf(',AuthType=');
-    msDeployCmdArgs = msDeployCmdArgs.replace(msDeployCmdArgs.substring(startIndex, endIndex), "Password=******");
-    return msDeployCmdArgs;
 }
 
 function getMSDeployVersion(registryKey: string): Q.Promise<String> {
@@ -175,7 +171,11 @@ export async  function containsParamFile( webAppPackage : string ) {
 
     var isParamFilePresent = false;
 
-    await parseString(paramContentXML, function(error, result ){
+    await parseString(paramContentXML, (error, result ) => {
+
+        if(error){
+            onError(error);
+        }
 
         if( result['output']['parameters'][0] ){
             isParamFilePresent = true;
