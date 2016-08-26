@@ -193,16 +193,16 @@ export async function getNuGetQuirksAsync(nuGetExePath: string): Promise<NuGetQu
     }
 }
 
-function isHosted(): boolean {
+function isOnPremisesTfs(): boolean {
     if(tl.getVariable("NuGetTasks.IsHostedTestEnvironment") === "true") {
-        return true;
+        return false;
     }
 
     // not an ideal way to detect hosted, but there isn't a variable for it, and we can't make network calls from here
     // due to proxy issues.
     const collectionUri = tl.getVariable("System.TeamFoundationCollectionUri");
     const parsedCollectionUri = url.parse(collectionUri);
-    return /\.visualstudio\.com$/i.test(parsedCollectionUri.hostname);
+    return !(/\.visualstudio\.com$/i.test(parsedCollectionUri.hostname));
 }
 
 // Currently, there is a race condition of some sort that causes nuget to not send credentials sometimes
@@ -233,7 +233,7 @@ export function isCredentialProviderEnabled(quirks: NuGetQuirks): boolean {
         return false;
     }
 
-    if (!isHosted() && (
+    if (isOnPremisesTfs() && (
         quirks.hasQuirk(NuGetQuirkName.NoTfsOnPremAuthCredentialProvider))) {
         tl.debug("Credential provider is disabled due to on-prem quirks.")
         return false;
@@ -259,7 +259,7 @@ export function isCredentialConfigEnabled(quirks: NuGetQuirks): boolean {
     }
 
 
-    if (!isHosted() && (
+    if (isOnPremisesTfs() && (
         quirks.hasQuirk(NuGetQuirkName.NoTfsOnPremAuthConfig))) {
         tl.debug("Credential config is disabled due to on-prem quirks.")
         return false;
