@@ -197,7 +197,7 @@
     }
   },
   "messages": {
-    "Packagenotfound0": "ms-resource:loc.messages.Packagenotfound0",
+    "Packageorfoldernotfound0": "ms-resource:loc.messages.Packageorfoldernotfound0",
     "SetParamFilenotfound0": "ms-resource:loc.messages.SetParamFilenotfound0",
     "Updatedeploymenthistoryissuccess": "ms-resource:loc.messages.Updatedeploymenthistoryissuccess",
     "Failedtoupdatedeploymenthistory": "ms-resource:loc.messages.Failedtoupdatedeploymenthistory",

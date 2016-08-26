@@ -9,8 +9,6 @@ import path = require('path');
 var azureRmUtil = require ('./AzureRMUtil.js');
 var msDeployUtility = require('./MSDeployUtility.js');
 
-tl.setResourcePath(path.join( __dirname, 'task.json'));
-
 async function run() {
 	try {
 
@@ -36,11 +34,9 @@ async function run() {
 		SPN["servicePrincipalKey"] = endPointAuthCreds.parameters["serviceprincipalkey"];
 		SPN["tenantID"] = endPointAuthCreds.parameters["tenantid"];
 		SPN["subscriptionId"] = tl.getEndpointDataParameter (connectedServiceName, 'subscriptionid', true); 
-		
 
-		
 		if (!tl.exist(webDeployPkg)) {
-			throw new Error(tl.loc('Packagenotfound0', webDeployPkg));			
+			throw new Error(tl.loc('Packageorfoldernotfound0', webDeployPkg));			
 		}
 
 		var isFolderBasedDeployment = !msDeployUtility.fileExists(webDeployPkg);

@@ -198,7 +198,7 @@
         }
     },
     "messages": {
-        "Packagenotfound0": "Package not found: %s",
+        "Packageorfoldernotfound0": "Package or Folder not found: %s",
         "SetParamFilenotfound0": "Set parameters file not found: %s",
         "Updatedeploymenthistoryissuccess": "Update deployment history is success.",
         "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
