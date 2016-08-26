@@ -20,34 +20,6 @@ function InvokeVsTestCmdletHasMember {
 	return $invokeVstestParams
 }
 
-function ShouldAddDiagFlag { 
-	[cmdletbinding()]
-	[OutputType([System.Boolean])]
-	param(
-		[string]$vsTestVersion
-	)
-
-	$inDebugMode = [system.boolean] (Get-ChildItem -path env:system_debug -erroraction silent)
-	
-	if($inDebugMode -eq $true) {
-		
-		$hasDiagFileNameParam = InvokeVsTestCmdletHasMember -memberName "DiagFileName"
-
-		if($hasDiagFileNameParam) {
-			if ([string]::IsNullOrWhiteSpace($vsTestVersion)) {
-				$vsTestVersion = Get-VSVersion
-			}
-			
-			$version = [int]($vsTestVersion)
-			if($version -ge 15) {
-				return $true
-			}
-		}
-	} 
-
-	return $false
-}
-
 function SetRegistryKeyForParallel {    
 	[cmdletbinding()]
 	param(
@@ -62,11 +34,13 @@ function IsVisualStudio2015Update1OrHigherInstalled {
 	[cmdletbinding()]
 	[OutputType([System.Boolean])]
 	param(
-		[string]$vsTestVersion
+		[string]$vsTestVersion,
+		[string]$vsTestLocation
 	)
-	
-	if ([string]::IsNullOrWhiteSpace($vsTestVersion)){
-		$vsTestVersion = Get-VSVersion
+
+	if ([string]::IsNullOrWhiteSpace($vsTestVersion))
+	{
+		$vsTestVersion = Get-VSVersion $vsTestLocation
 	}
 	
 	$version = [int]($vsTestVersion)
@@ -166,8 +140,15 @@ function Get-SubKeysInFloatFormat($keys)
 	return $targetKeys
 }
 
-function Get-VSVersion()
+function Get-VSVersion($vsTestLocation)
 {
+	if(![String]::IsNullOrWhiteSpace($vsTestLocation))
+	{
+		Write-Verbose "Using vstest location provided to get the version"
+		$vstestConsoleExeVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($vsTestLocation);
+		return $vstestConsoleExeVersion.ProductMajorPart;
+	}
+
 	#Find the latest version
 	$regPath = "HKLM:\SOFTWARE\Microsoft\VisualStudio"
 	if (-not (Test-Path $regPath))
