@@ -14,9 +14,10 @@ import * as ngToolRunner from 'nuget-task-common/NuGetToolRunner';
 import * as nutil from 'nuget-task-common/Utility';
 import * as auth from 'nuget-task-common/Authentication'
 import {NuGetConfigHelper} from 'nuget-task-common/NuGetConfigHelper'
+import INuGetCommandOptions from 'nuget-task-common/INuGetCommandOptions';
 import * as os from 'os';
 
-class RestoreOptions {
+class RestoreOptions implements INuGetCommandOptions {
     constructor(
         public restoreMode: string,
         public nuGetPath: string,
@@ -47,7 +48,6 @@ async function main(): Promise<void> {
         var noCache = tl.getBoolInput('noCache');
         var nuGetRestoreArgs = tl.getInput('nuGetRestoreArgs');
         var verbosity = tl.getInput('verbosity');
-        var preCredProviderNuGet = tl.getBoolInput('preCredProviderNuGet');
 
         var restoreMode = tl.getInput('restoreMode') || "Restore";
         // normalize the restore mode for display purposes, and ensure it's a known one
@@ -76,37 +76,15 @@ async function main(): Promise<void> {
         var nuGetPathToUse = ngToolRunner.locateNuGetExe(userNuGetPath);
         var credProviderPath = ngToolRunner.locateCredentialProvider();
 
-        var credProviderDir: string = null;
-        if (credProviderPath) {
-            credProviderDir = path.dirname(credProviderPath)
-        }
-        else {
-            tl._writeLine(tl.loc("NoCredProviderOnAgent"));
-        }
+        const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPathToUse);
+
+        // clauses ordered in this way to avoid short-circuit evaluation, so the debug info printed by the functions
+        // is unconditionally displayed
+        const useCredProvider = ngToolRunner.isCredentialProviderEnabled(quirks) && credProviderPath;
+        const useCredConfig = ngToolRunner.isCredentialConfigEnabled(quirks) && !useCredProvider;
 
         var accessToken = auth.getSystemAccessToken();
-
-        /*
-        BUG: HTTP calls to access the location service currently do not work for customers behind proxies.
-        locationHelpers.getNuGetConnectionData(serviceUri, accessToken)
-            .then(connectionData => {
-                buildIdentityDisplayName = locationHelpers.getIdentityDisplayName(connectionData.authorizedUser);
-                buildIdentityAccount = locationHelpers.getIdentityAccount(connectionData.authorizedUser);
-        
-                tl._writeLine(tl.loc('ConnectingAs', buildIdentityDisplayName, buildIdentityAccount));
-                return connectionData;
-            })
-            .then(locationHelpers.getAllAccessMappingUris)
-            .fail(err => {
-                if (err.code && err.code == 'AreaNotFoundInSps') {
-                    tl.warning(tl.loc('CouldNotFindNuGetService'))
-                    return <string[]>[];
-                }
-        
-                throw err;
-            })*/
         let urlPrefixes = await locationHelpers.assumeNuGetUriPrefixes(serviceUri);
-
         tl.debug(`discovered URL prefixes: ${urlPrefixes}`);
 
         // Note to readers: This variable will be going away once we have a fix for the location service for
@@ -120,16 +98,13 @@ async function main(): Promise<void> {
         const authInfo = new auth.NuGetAuthInfo(urlPrefixes, accessToken);
         var environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
             authInfo: authInfo,
-            credProviderFolder: credProviderDir,
+            credProviderFolder: useCredProvider ? path.dirname(credProviderPath) : null,
             extensionsDisabled: !userNuGetPath
         }
 
         let configFile = nugetConfigPath;
         var credCleanup = () => { return };
-        if (!ngToolRunner.isCredentialConfigEnabled()) {
-            tl.debug("Not configuring credentials in nuget.config");
-        }
-        else if (!credProviderDir || (userNuGetPath && preCredProviderNuGet)) {
+        if (useCredConfig) {
             if (nugetConfigPath) {
                 var nuGetConfigHelper = new NuGetConfigHelper(nuGetPathToUse, nugetConfigPath, authInfo, environmentSettings);
                 const packageSources = await nuGetConfigHelper.getSourcesFromConfig()
@@ -141,7 +116,7 @@ async function main(): Promise<void> {
                 }
             }
             else {
-                if (credProviderDir) {
+                if (credProviderPath) {
                     tl.warning(tl.loc('Warning_NoConfigForOldNuGet'));
                 }
                 else {
