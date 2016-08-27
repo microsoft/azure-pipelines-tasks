@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Cargar archivos con cURL",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627418)",
+  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=627418)",
   "loc.description": "Use cURL para cargar archivos con FTP, FTPS, SFTP, HTTP, etc.",
   "loc.instanceNameFormat": "Upload $(files) with cURL",
   "loc.group.displayName.advanced": "Avanzado",

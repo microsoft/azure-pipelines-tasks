@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "发布代码覆盖率结果",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=626485)",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=626485)",
   "loc.description": "向 VSTS/TFS 发布代码覆盖率结果",
   "loc.instanceNameFormat": "发布代码覆盖率结果 $(summaryFileLocation)",
   "loc.input.label.codeCoverageTool": "代码覆盖率工具",

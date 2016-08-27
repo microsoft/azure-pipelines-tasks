@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "MSBuild",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613724)",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613724)",
   "loc.description": "Führt Buildvorgänge mit MSBuild aus.",
   "loc.instanceNameFormat": "Projektmappe $(solution) erstellen",
   "loc.group.displayName.advanced": "Erweitert",

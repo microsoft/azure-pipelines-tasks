@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "[사용되지 않음] IIS 웹앱 배포",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/iiswebappdeployreadme)",
+  "loc.helpMarkDown": "[자세한 정보](https://aka.ms/iiswebappdeployreadme)",
   "loc.description": "MSDeploy에 의한 배포, 웹 사이트 및 앱 풀 만들기/업데이트",
   "loc.instanceNameFormat": "[사용되지 않음] IIS 앱 배포: $(WebDeployPackage)",
   "loc.group.displayName.deployment": "배포",

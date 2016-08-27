@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Implementación de Visual Studio Test Agent",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=625976)",
+  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkId=625976)",
   "loc.description": "Implementar y configurar el agente de pruebas para que ejecute pruebas en un grupo de máquinas",
   "loc.instanceNameFormat": "Implementar TestAgent en $(testMachineGroup)",
   "loc.group.displayName.testMachineGroups": "Grupo de máquinas de prueba",
@@ -26,7 +26,7 @@
   "loc.input.label.runAsProcess": "Proceso interactivo",
   "loc.input.help.runAsProcess": "Denota si es necesario que el agente de pruebas se ejecute como un proceso interactivo, lo cual es preciso en las pruebas automatizadas de IU.",
   "loc.input.label.agentLocation": "Ubicación del agente de pruebas",
-  "loc.input.help.agentLocation": "Optionally supply the path to vstf_testagent.exe from network or local location. If no path is provided, it will be downloaded from `https://go.microsoft.com/fwlink/?LinkId=536423`",
+  "loc.input.help.agentLocation": "Indique opcionalmente la ruta de acceso a vstf_testagent.exe desde una ubicación local o de red. Si no se proporciona una ruta de acceso, se descargará de `https://go.microsoft.com/fwlink/?LinkId=536423`",
   "loc.input.label.updateTestAgent": "Actualizar agente de pruebas",
   "loc.input.help.updateTestAgent": "Indique opcionalmente si es necesario actualizar el agente de pruebas.",
   "loc.input.label.isDataCollectionOnly": "Habilitar solo recolección de datos",

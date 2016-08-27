@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "NuGet パッケージャー",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627416)",
+  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=627416)",
   "loc.description": "csproj ファイルまたは nuspec ファイルから nupkg 出力を作成します",
   "loc.instanceNameFormat": "NuGet パッケージャー $(solution)",
   "loc.group.displayName.versioning": "バージョン管理",

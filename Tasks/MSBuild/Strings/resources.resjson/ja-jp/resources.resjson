@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "MSBuild",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613724)",
+  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613724)",
   "loc.description": "MSBuild で作成する",
   "loc.instanceNameFormat": "ソリューション $(solution) のビルド",
   "loc.group.displayName.advanced": "詳細設定",

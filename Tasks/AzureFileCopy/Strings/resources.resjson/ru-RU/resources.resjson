@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "Копирование файлов Azure",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/azurefilecopyreadme)",
+  "loc.helpMarkDown": "[Подробнее...](https://aka.ms/azurefilecopyreadme)",
   "loc.description": "Копирование файлов в BLOB-объект или виртуальные машины Azure",
   "loc.instanceNameFormat": "Копирование файлов $(Destination)",
-  "loc.group.displayName.output": "Output",
+  "loc.group.displayName.output": "Выход",
   "loc.input.label.SourcePath": "Источник",
   "loc.input.help.SourcePath": "Абсолютный путь к исходной папке, файлу на локальном компьютере либо сетевому ресурсу UNC. Выражение должно вернуть одну папку или один файл.",
   "loc.input.label.ConnectedServiceNameSelector": "Тип подключения Azure",

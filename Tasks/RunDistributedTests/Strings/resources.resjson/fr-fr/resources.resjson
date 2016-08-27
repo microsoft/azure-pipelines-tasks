@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Exécuter les tests fonctionnels",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=624389)",
+  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkId=624389)",
   "loc.description": "Exécuter des tests codés de l'interface utilisateur/Selenium/fonctionnels sur un ensemble de machines (à l'aide de l'agent de test)",
   "loc.instanceNameFormat": "Exécuter les tests $(sourcefilters) sur $(testMachineGroup)",
   "loc.group.displayName.setupOptions": "Options de configuration",
@@ -9,7 +9,7 @@
   "loc.input.label.testMachineGroup": "Machines",
   "loc.input.help.testMachineGroup": "Indiquez une liste de valeurs séparées par des virgules pour répertorier les adresses IP ou les noms de domaine complets des machines, par exemple : 'dbserver.fabrikam.com ou 192.168.12.34'. Vous pouvez également indiquer la variable de sortie d'autres tâches, par exemple '$(variableName)', ou indiquer un nom de groupe de machines",
   "loc.input.label.dropLocation": "Emplacement cible des tests",
-  "loc.input.help.dropLocation": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Windows Machine File Copy' or 'Azure File Copy' task. System Environment Variables can also be used in location string. e.g., `%systemdrive%\\Tests`, `%temp%\\DropLocation` etc.",
+  "loc.input.help.dropLocation": "Emplacement où les binaires de test ont été déposés sur la ou les machines agent dans le cadre de la tâche 'Copie des fichiers de l'ordinateur Windows' ou 'Copie des fichiers Azure'. Vous pouvez également utiliser des variables d'environnement système dans une chaîne d'emplacement. Exemple : '%systemdrive%\\Tests', '%temp%\\DropLocation' etc.",
   "loc.input.label.testSelection": "Sélection de test",
   "loc.input.help.testSelection": "Sélectionnez la façon dont vous souhaitez exécuter les tests : à l'aide d'assemblys de tests ou à l'aide du plan de test.",
   "loc.input.label.testPlan": "Plan de test",

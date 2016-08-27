@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xamarin.Android",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613728)",
+  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613728)",
   "loc.description": "Compilar una aplicación de Android con Xamarin",
   "loc.instanceNameFormat": "Compilar proyecto Xamarin.Android $(project)",
   "loc.group.displayName.msbuildOptions": "Opciones de MSBuild",
@@ -12,7 +12,7 @@
   "loc.input.label.outputDir": "Directorio de salida",
   "loc.input.help.outputDir": "Si quiere, proporcione el directorio de salida de la compilación. Ejemplo: $(build.binariesDirectory)/bin/Release.",
   "loc.input.label.configuration": "Configuración",
-  "loc.input.label.clean": "Clean",
+  "loc.input.label.clean": "Limpiar",
   "loc.input.help.clean": "Pasa el destino clean (/t:clean) durante la compilación.",
   "loc.input.label.msbuildLocation": "Ubicación de MSBuild",
   "loc.input.help.msbuildLocation": "Si quiere, proporcione la ruta de acceso a MSBuild (en Windows) o xbuild (en Mac). Se establece de forma predeterminada para buscar la versión más reciente.",
@@ -22,7 +22,7 @@
   "loc.input.help.jdkSelection": "Elija el JDK que se usará durante la compilación seleccionando una versión de JDK que se detectará durante las compilaciones o escribiendo manualmente una ruta de acceso de JDK.",
   "loc.input.label.jdkVersion": "Versión de JDK",
   "loc.input.help.jdkVersion": "Use la versión de JDK seleccionada durante la compilación.",
-  "loc.input.label.jdkUserInputPath": "JDK Path",
+  "loc.input.label.jdkUserInputPath": "Ruta de acceso del JDK",
   "loc.input.help.jdkUserInputPath": "Use la versión del JDK en la ruta de acceso especificada durante la compilación.",
   "loc.input.label.jdkArchitecture": "Arquitectura JDK",
   "loc.input.help.jdkArchitecture": "Indique opcionalmente la arquitectura (x86, x64) de JDK."

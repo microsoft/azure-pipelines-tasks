@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "[Deprecata] Distribuzione app Web IIS",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/iiswebappdeployreadme)",
+  "loc.helpMarkDown": "[Altre informazioni](https://aka.ms/iiswebappdeployreadme)",
   "loc.description": "Consente di distribuire con MSDeploy e di creare/aggiornare il sito Web e i pool di applicazioni",
   "loc.instanceNameFormat": "[Deprecata] Distribuisci app IIS: $(WebDeployPackage)",
   "loc.group.displayName.deployment": "Distribuzione",
