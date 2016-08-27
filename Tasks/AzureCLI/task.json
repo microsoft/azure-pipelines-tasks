@@ -78,10 +78,10 @@
       "name": "inlineScript",
       "type": "multiLine",
       "label": "Inline Script",
-      "defaultValue": "//You can write your scripts inline here. \n//You can also pass predefined and custom variables to this scripts using arguments \n\n azure --version",
+      "defaultValue": "",
       "required": true,
       "visibleRule": "scriptLocation = inlineScript",
-      "helpMarkDown": "",
+      "helpMarkDown": "You can write your scripts inline here. For batch files use the prefix \"call\" before every azure command. You can also pass predefined and custom variables to this script using arguments \n\n example for shell: azure --version || azure account show \n\n example for batch: call  azure --version || call azure account show",
       "properties": {
         "resizable": "true",
         "rows": "10",
@@ -109,7 +109,7 @@
       "name": "failOnStandardError",
       "type": "boolean",
       "label": "Fail on Standard Error",
-      "defaultValue": "false",
+      "defaultValue": "true",
       "required": false,
       "helpMarkDown": "If this is true, this task will fail when any errors are written to the StandardError stream",
       "groupName": "advanced"
