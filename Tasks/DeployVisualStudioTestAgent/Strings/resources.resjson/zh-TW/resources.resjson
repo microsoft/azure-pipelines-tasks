@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio Test Agent 部署",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=625976)",
+  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkId=625976)",
   "loc.description": "部署及設定 Test Agent 以在一組電腦上執行測試",
   "loc.instanceNameFormat": "在 $(testMachineGroup) 部署測試代理程式",
   "loc.group.displayName.testMachineGroups": "測試電腦群組",
@@ -26,7 +26,7 @@
   "loc.input.label.runAsProcess": "互動式處理序",
   "loc.input.help.runAsProcess": "代表測試代理程式是否需以互動式處理序執行，為自動程式碼 UI 測試所需。",
   "loc.input.label.agentLocation": "測試代理程式位置",
-  "loc.input.help.agentLocation": "Optionally supply the path to vstf_testagent.exe from network or local location. If no path is provided, it will be downloaded from `https://go.microsoft.com/fwlink/?LinkId=536423`",
+  "loc.input.help.agentLocation": "選擇性地提供從網路或本機位置到 vstf_testagent.exe 的路徑。若未提供路徑，則會從 `https://go.microsoft.com/fwlink/?LinkId=536423` 下載。",
   "loc.input.label.updateTestAgent": "更新測試代理程式",
   "loc.input.help.updateTestAgent": "選擇性地指定測試代理程式是否需更新。",
   "loc.input.label.isDataCollectionOnly": "僅啟用資料收集",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Strumento di creazione pacchetti NuGet",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627416)",
+  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=627416)",
   "loc.description": "Crea output nupkg da file csproj o nuspec",
   "loc.instanceNameFormat": "Strumento di creazione pacchetti NuGet $(solution)",
   "loc.group.displayName.versioning": "Controllo delle versioni",

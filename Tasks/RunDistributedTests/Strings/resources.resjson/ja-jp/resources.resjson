@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "機能テストの実行",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=624389)",
+  "loc.helpMarkDown": "[詳細] (https://go.microsoft.com/fwlink/?LinkId=624389)",
   "loc.description": "一連のコンピューターでコード化された UI/ Selenium/機能の各テストを実行する (テスト エージェントを使用)",
   "loc.instanceNameFormat": "$(testMachineGroup) でのテスト $(sourcefilters) の実行",
   "loc.group.displayName.setupOptions": "セットアップ オプション",
@@ -9,7 +9,7 @@
   "loc.input.label.testMachineGroup": "コンピューター",
   "loc.input.help.testMachineGroup": "マシンの IP アドレスまたは FQDN のコンマ区切りの一覧を指定します。例: `dbserver.fabrikam.com や 192.168.12.34`。または他のタスクの出力変数を指定します。例: `$(variableName)`。またはマシン グループ名を指定します",
   "loc.input.label.dropLocation": "テスト格納場所",
-  "loc.input.help.dropLocation": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Windows Machine File Copy' or 'Azure File Copy' task. System Environment Variables can also be used in location string. e.g., `%systemdrive%\\Tests`, `%temp%\\DropLocation` etc.",
+  "loc.input.help.dropLocation": "'Windows コンピュータ ファイル コピー' または 'Azure ファイル コピー' タスクの一部として、エージェント コンピューター内でテスト バイナリが格納された場所。`%systemdrive%\\Tests`、`%temp%\\DropLocation` などのように、システム環境変数を使用して場所の文字列を指定することもできます。",
   "loc.input.label.testSelection": "テストの選択",
   "loc.input.help.testSelection": "テストの実行方法について、テスト アセンブリを使うかテスト計画を使うかのいずれかを選びます。",
   "loc.input.label.testPlan": "テスト計画",

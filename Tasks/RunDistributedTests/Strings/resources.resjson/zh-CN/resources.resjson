@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "运行功能测试",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=624389)",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkId=624389)",
   "loc.description": "在一组计算机上运行编码的 UI/Selenium/功能测试(使用测试代理)",
   "loc.instanceNameFormat": "在 $(testMachineGroup) 上运行测试 $(sourcefilters)",
   "loc.group.displayName.setupOptions": "设置选项",
@@ -9,7 +9,7 @@
   "loc.input.label.testMachineGroup": "计算机",
   "loc.input.help.testMachineGroup": "提供以逗号分隔的计算机 IP 地址或 FQDN 列表。例如: \"dbserver.fabrikam.com\" 或 \"192.168.12.34\" 或者提供其他任务的输出变量。例如: \"$(variableName)\" 或提供计算机组名",
   "loc.input.label.dropLocation": "测试失败位置",
-  "loc.input.help.dropLocation": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Windows Machine File Copy' or 'Azure File Copy' task. System Environment Variables can also be used in location string. e.g., `%systemdrive%\\Tests`, `%temp%\\DropLocation` etc.",
+  "loc.input.help.dropLocation": "“Windows 计算机文件复制”任务或“Azure 文件复制”任务过程中在代理计算机上放置测试二进制文件的位置。系统环境变量也可以用于位置字符串，例如 \"%systemdrive%\\Tests\"、\"%temp%\\DropLocation\" 等。",
   "loc.input.label.testSelection": "测试选择",
   "loc.input.help.testSelection": "选择运行测试的方式: 使用测试程序集或使用测试计划。",
   "loc.input.label.testPlan": "测试计划",

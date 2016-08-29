@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Ejecutar pruebas funcionales",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=624389)",
+  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkId=624389)",
   "loc.description": "Ejecutar pruebas automatizadas de IU, pruebas de Selenium o pruebas funcionales en un conjunto de máquinas (mediante el agente de pruebas)",
   "loc.instanceNameFormat": "Ejecutar pruebas $(sourcefilters) en $(testMachineGroup)",
   "loc.group.displayName.setupOptions": "Opciones de instalación",
@@ -9,7 +9,7 @@
   "loc.input.label.testMachineGroup": "Máquinas",
   "loc.input.help.testMachineGroup": "Proporcione una lista separada por comas de las direcciones IP de máquinas o FQDN. Por ejemplo: \"dbserver.fabrikam.com o 192.168.12.34\". O bien, proporcione la variable de salida de las otras tareas. Por ejemplo: \"$(variableName)\" o el nombre de un grupo de máquinas.",
   "loc.input.label.dropLocation": "Ubicación de almacenamiento de la prueba",
-  "loc.input.help.dropLocation": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Windows Machine File Copy' or 'Azure File Copy' task. System Environment Variables can also be used in location string. e.g., `%systemdrive%\\Tests`, `%temp%\\DropLocation` etc.",
+  "loc.input.help.dropLocation": "Ubicación de las máquinas de agente donde se colocaron los archivos binarios de prueba como parte de la tarea \"Copia de archivos de la máquina con Windows\" o \"Copia de archivos de Azure\". También se pueden usar variables de entorno del sistema en la cadena de ubicación, p. ej., `%systemdrive%\\Tests`, `%temp%\\DropLocation`, etc.",
   "loc.input.label.testSelection": "Selección de pruebas",
   "loc.input.help.testSelection": "Seleccione la forma en que desea ejecutar pruebas: utilizando los ensamblados de prueba o el Plan de pruebas.",
   "loc.input.label.testPlan": "Plan de pruebas",

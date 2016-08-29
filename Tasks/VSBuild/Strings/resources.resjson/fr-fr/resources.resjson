@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Build Visual Studio",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613727)",
+  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613727)",
   "loc.description": "Générer avec MSBuild et définir la propriété de version Visual Studio",
   "loc.instanceNameFormat": "Générer la solution $(solution)",
   "loc.group.displayName.advanced": "Avancé",

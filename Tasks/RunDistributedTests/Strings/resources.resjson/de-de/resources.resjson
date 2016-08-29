@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Funktionstests ausführen",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=624389)",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkId=624389)",
   "loc.description": "Führen Sie Tests der programmierten UI, Selenium-Tests oder Funktionstests für eine Computergruppe (mithilfe des Test-Agents) aus.",
   "loc.instanceNameFormat": "Tests $(sourcefilters) für $(testMachineGroup) ausführen",
   "loc.group.displayName.setupOptions": "Setupoptionen",
@@ -9,7 +9,7 @@
   "loc.input.label.testMachineGroup": "Computer",
   "loc.input.help.testMachineGroup": "Stellen Sie eine durch Kommas getrennte Liste der IP-Computeradressen oder FQDNs bereit. Beispiel: \"dbserver.fabrikam.com\" oder \"192.168.12.34\". Sie können auch die Ausgabevariable anderer Tasks angeben. Beispiel: \"$(variableName)\". Alternativ können Sie einen Computergruppennamen angeben.",
   "loc.input.label.dropLocation": "Testablagespeicherort",
-  "loc.input.help.dropLocation": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Windows Machine File Copy' or 'Azure File Copy' task. System Environment Variables can also be used in location string. e.g., `%systemdrive%\\Tests`, `%temp%\\DropLocation` etc.",
+  "loc.input.help.dropLocation": "Der Speicherort, an dem die Testbinärdateien im Rahmen des Tasks \"Dateikopiervorgang auf Windows Computer\" oder \"Azure-Dateikopiervorgang\" auf den Agent-Computern abgelegt wurden. In der Speicherort-Zeichenfolge können auch Systemumgebungsvariablen wie \"%systemdrive%\\Tests\", \"%temp%\\DropLocation\" usw. verwendet werden.",
   "loc.input.label.testSelection": "Testauswahl",
   "loc.input.help.testSelection": "Wählen Sie aus, wie Tests auszuführen sind: mithilfe von Testassemblys oder eines Testplans.",
   "loc.input.label.testPlan": "Testplan",
