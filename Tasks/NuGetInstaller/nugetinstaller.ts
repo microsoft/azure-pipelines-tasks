@@ -33,6 +33,11 @@ async function main(): Promise<void> {
     try {
         tl.setResourcePath(path.join(__dirname, "task.json"));
 
+        // set the console code page to "UTF-8"
+        if (process.platform === "win32") {
+            tl.execSync(path.resolve(process.env.windir, "system32", "chcp.com"), ["65001"]);
+        }
+
         // read inputs
         let solution = tl.getPathInput("solution", true, false);
         let filesList = nutil.resolveFilterSpec(
