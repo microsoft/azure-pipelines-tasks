@@ -11,8 +11,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 1,
-    "Patch": 25
+    "Minor": 2,
+    "Patch": 0
   },
   "demands": [
     "xcode"
@@ -212,6 +212,15 @@
       "label": "ms-resource:loc.input.label.xctoolReporter",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.xctoolReporter",
+      "groupName": "advanced"
+    },
+    {
+      "name": "useXcpretty",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useXcpretty",
+      "required": false,
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.useXcpretty",
       "groupName": "advanced"
     },
     {

@@ -53,6 +53,7 @@ async function run() {
         var sdk : string = tl.getInput('sdk', false);
         var configuration : string  = tl.getInput('configuration', false);
         var scheme : string = tl.getInput('scheme', false);
+        var useXcpretty : boolean = tl.getBoolInput('useXcpretty', false);
         var xctoolReporter : string = tl.getInput('xctoolReporter', false);
         var actions : string [] = tl.getDelimitedInput('actions', ' ', true);
         var packageApp : boolean = tl.getBoolInput('packageApp', true);
@@ -63,17 +64,17 @@ async function run() {
         //--------------------------------------------------------
 
         // --- Xcode Version ---
-        var xcv : ToolRunner = tl.createToolRunner(tool);
+        var xcv : ToolRunner = tl.tool(tool);
         xcv.arg('-version');
         await xcv.exec();
 
         // --- Xcode build arguments ---
-        var xcb: ToolRunner = tl.createToolRunner(tool);
+        var xcb: ToolRunner = tl.tool(tool);
         xcb.argIf(sdk, ['-sdk', sdk]);
         xcb.argIf(configuration, ['-configuration', configuration]);
         if(ws && tl.filePathSupplied('xcWorkspacePath')) {
             xcb.arg('-workspace');
-            xcb.pathArg(ws);
+            xcb.arg(ws);
         }
         xcb.argIf(scheme, ['-scheme', scheme]);
         xcb.argIf(useXctool && xctoolReporter, ['-reporter', 'plain', '-reporter', xctoolReporter]);
@@ -83,7 +84,7 @@ async function run() {
         xcb.arg('SYMROOT=' + path.join(outPath, 'build.sym'));
         xcb.arg('SHARED_PRECOMPS_DIR=' + path.join(outPath, 'build.pch'));
         if (args) {
-            xcb.argString(args);
+            xcb.line(args);
         }
 
         //--------------------------------------------------------
@@ -138,6 +139,15 @@ async function run() {
             xcb.argIf(provProfileUUID, 'PROVISIONING_PROFILE=' + provProfileUUID);
         }
 
+        //--- Enable Xcpretty formatting if using xcodebuild ---
+        if(!useXctool && useXcpretty) {
+            var xcPrettyPath: string = tl.which('xcpretty', true);
+            var xcPrettyTool: ToolRunner = tl.tool(xcPrettyPath);
+            xcPrettyTool.arg(['-r', 'junit', '--no-color']);
+
+            xcb.pipeExecOutputToTool(xcPrettyTool);
+        }
+
         //--- Xcode Build ---
         await xcb.exec();
 
@@ -146,16 +156,17 @@ async function run() {
         //--------------------------------------------------------
         var testResultsFiles : string;
         var publishResults : boolean = tl.getBoolInput('publishJUnitResults', false);
-        if (publishResults && !useXctool) {
-            tl.warning(tl.loc('UseXcToolForTestPublishing'));
-        }
 
-        if (publishResults && useXctool && xctoolReporter && 0 !== xctoolReporter.length)
-        {
-            var xctoolReporterString = xctoolReporter.split(":");
-            if (xctoolReporterString && xctoolReporterString.length === 2)
-            {
-                testResultsFiles = path.posix.resolve(workingDir, xctoolReporterString[1].trim());
+        if (publishResults)
+        { 
+            if(useXctool && xctoolReporter && 0 !== xctoolReporter.length) {
+                var xctoolReporterString = xctoolReporter.split(":");
+                if (xctoolReporterString && xctoolReporterString.length === 2)
+                {
+                    testResultsFiles = path.posix.resolve(workingDir, xctoolReporterString[1].trim());
+                }
+            } else if(!useXctool && useXcpretty) {
+                testResultsFiles = path.posix.resolve(workingDir, '**/build/reports/junit.xml');
             }
 
             if(testResultsFiles && 0 !== testResultsFiles.length) {
@@ -177,6 +188,7 @@ async function run() {
                 var tp = new tl.TestPublisher("JUnit");
                 tp.publish(matchingTestResultsFiles, false, "", "", "", true);
             }
+            
         }
 
         //--------------------------------------------------------
@@ -194,7 +206,7 @@ async function run() {
                     var app : string = appFolders.pop();
                     tl.debug('Packaging ' + app);
                     var ipa : string = app.substring(0, app.length-3) + 'ipa';
-                    var xcr : ToolRunner = tl.createToolRunner(xcrunPath);
+                    var xcr : ToolRunner = tl.tool(xcrunPath);
                     xcr.arg(['-sdk', sdk, 'PackageApplication', '-v', app, '-o', ipa]);
                     await xcr.exec();
                 }

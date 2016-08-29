@@ -73,6 +73,15 @@ declare module 'vsts-task-lib/toolrunner' {
 	     * @returns   void
 	     */
 	    argString(val: string): void;
+		/**
+		 * Append argument command line string
+		 * e.g. '"arg one" two -z' would append args[]=['arg one', 'two', '-z']
+		 * returns ToolRunner for chaining
+		 *
+		 * @param     val        string cmdline
+		 * @returns   ToolRunner
+		 */
+		line(val: string): void;
 	    /**
 	     * Add path argument
 	     * Add path string to argument, path string should not contain double quoted
@@ -91,7 +100,13 @@ declare module 'vsts-task-lib/toolrunner' {
 	     * @returns   void
 	     */
 	    argIf(condition: any, val: any): void;
-	    /**
+		/**
+		 * Pipe output of exec() to another tool
+		 * @param tool
+		 * @returns {ToolRunner}
+		 */
+		public pipeExecOutputToTool(tool: ToolRunner) : ToolRunner;
+		/**
 	     * Exec a tool.
 	     * Output will be streamed to the live console.
 	     * Returns promise with return code
