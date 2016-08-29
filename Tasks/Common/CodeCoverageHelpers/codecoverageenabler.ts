@@ -1,20 +1,21 @@
 /// <reference path="../../../definitions/Q.d.ts" />
 /// <reference path="../../../definitions/string.d.ts" />
-/// <reference path="../../../definitions/node.d.ts" />
+/// <reference path="../../../definitions/xml2js.d.ts" />
 /// <reference path="../../../definitions/vsts-task-lib.d.ts" />
+/// <reference path="../../../definitions/node.d.ts" />
 
-import * as Q from 'q';
-import * as str from 'string';
-import * as path from 'path';
-import * as ccc from './codecoverageconstants';
-import * as tl from 'vsts-task-lib/task';
-import * as util from './utilities';
+import * as Q from "q";
+import * as str from "string";
+import * as path from "path";
+import * as ccc from "./codecoverageconstants";
+import * as tl from "vsts-task-lib/task";
+import * as util from "./utilities";
 
-//-----------------------------------------------------
+// -----------------------------------------------------
 // Interface to be implemented by all code coverage enablers 
-//-----------------------------------------------------
+// -----------------------------------------------------
 export interface ICodeCoverageEnabler {
-    //enable code coverage for the given build tool and code coverage tool
+    // enable code coverage for the given build tool and code coverage tool
     enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<boolean>;
 }
 
@@ -24,14 +25,14 @@ export abstract class CodeCoverageEnabler implements ICodeCoverageEnabler {
 
     abstract enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<boolean>;
 
-    //-----------------------------------------------------
+    // -----------------------------------------------------
     // Convert the VSTS specific filter to Code Coverage Tool specific filter pattern
     // - extractFilters: string  - classFilter
-    //-----------------------------------------------------    
+    // -----------------------------------------------------    
     protected extractFilters(classFilter: string) {
-        var includeFilter = "";
-        var excludeFilter = "";
-        var _this = this;
+        let includeFilter = "";
+        let excludeFilter = "";
+        let _this = this;
 
         if (util.isNullOrWhitespace(classFilter)) {
             return {
@@ -46,10 +47,10 @@ export abstract class CodeCoverageEnabler implements ICodeCoverageEnabler {
             }
 
             switch (inputFilter.charAt(0)) {
-                case '+':
+                case "+":
                     includeFilter += inputFilter.substr(1);
                     break;
-                case '-':
+                case "-":
                     excludeFilter += inputFilter.substr(1);
                     break;
                 default:
@@ -64,7 +65,7 @@ export abstract class CodeCoverageEnabler implements ICodeCoverageEnabler {
     }
 }
 
-abstract class CoberturaCodeCoverageEnabler extends CodeCoverageEnabler {
+export abstract class CoberturaCodeCoverageEnabler extends CodeCoverageEnabler {
     protected applyCoberturaFilterPattern(filter: string): string[] {
         let coberturaFilter = [];
         let _this = this;
@@ -81,7 +82,7 @@ abstract class CoberturaCodeCoverageEnabler extends CodeCoverageEnabler {
     }
 }
 
-abstract class JacocoCodeCoverageEnabler extends CodeCoverageEnabler {
+export abstract class JacocoCodeCoverageEnabler extends CodeCoverageEnabler {
     protected applyJacocoFilterPattern(filter: string): string[] {
         let jacocoFilter = [];
         let _this = this;

@@ -1,15 +1,17 @@
-import * as path from 'path';
-import * as util from './utilities';
+/// <reference path="../../../definitions/node.d.ts" />
+
+import * as path from "path";
+import * as util from "./utilities";
 
 // Enable Jacoco Code Coverage for Gradle builds using this props
 export function jacocoGradleMultiModuleEnable(excludeFilter: string, includeFilter: string, classFileDirectory: string, reportDir: string) {
     return `
-allprojects { apply plugin: 'jacoco' }
-
 allprojects {
-	repositories {
+    repositories {
         mavenCentral()
     }
+
+    apply plugin: 'jacoco'
 }
 
 def jacocoExcludes = [${excludeFilter}]
@@ -17,84 +19,84 @@ def jacocoIncludes = [${includeFilter}]
 
 subprojects {	
     jacocoTestReport {
-		doFirst {
-			classDirectories = fileTree(dir: "${classFileDirectory}").exclude(jacocoExcludes).include(jacocoIncludes)
-		}
+        doFirst {
+            classDirectories = fileTree(dir: "${classFileDirectory}").exclude(jacocoExcludes).include(jacocoIncludes)
+        }
 		
-		reports {
-			html.enabled = true
-			html.destination "\${buildDir}/jacocoHtml/"
+        reports {
+            html.enabled = true
+            html.destination "\${buildDir}${path.sep}jacocoHtml"
             xml.enabled = true    
-	        xml.destination "\${buildDir}/summary.xml"
+            xml.destination "\${buildDir}${path.sep}summary.xml"
         }
     }
-	test {
-		jacoco {
-			append = true
-			destinationFile = file("${reportDir}/jacoco.exec")
-		}
-	}
+    test {
+        jacoco {
+            append = true
+            destinationFile = file("${reportDir + path.sep}jacoco.exec")
+        }
+    }
 }
 
 task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
-	dependsOn = subprojects.test
-	executionData = files(subprojects.jacocoTestReport.executionData)
-	sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
-	classDirectories = files()
+    dependsOn = subprojects.test
+    executionData = files(subprojects.jacocoTestReport.executionData)
+    sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
+    classDirectories = files()
 	
-	doFirst {
-		subprojects.each {
-			if (new File("\${it.sourceSets.main.output.classesDir}").exists()) {
-				logger.info("Class directory exists in sub project: \${it.name}")
-				logger.info("Adding class files \${it.sourceSets.main.output.classesDir}")
-				classDirectories += fileTree(dir: "\${it.sourceSets.main.output.classesDir}", includes: jacocoIncludes, excludes: jacocoExcludes)
-			} else {
-				logger.error("Class directory does not exist in sub project: \${it.name}")
-			}
-		}
-	}
+    doFirst {
+        subprojects.each {
+            if (new File("\${it.sourceSets.main.output.classesDir}").exists()) {
+                logger.info("Class directory exists in sub project: \${it.name}")
+                logger.info("Adding class files \${it.sourceSets.main.output.classesDir}")
+                classDirectories += fileTree(dir: "\${it.sourceSets.main.output.classesDir}", includes: jacocoIncludes, excludes: jacocoExcludes)
+            } else {
+                logger.error("Class directory does not exist in sub project: \${it.name}")
+            }
+        }
+    }
 	
-	reports {
-		html.enabled = true
+    reports {
+        html.enabled = true
         xml.enabled = true    
-		xml.destination "${reportDir}/summary.xml"
-		html.destination "${reportDir}/"
-	}
+        xml.destination "${reportDir + path.sep}summary.xml"
+        html.destination "${reportDir + path.sep}"
+    }
 }`;
 }
 
 export function jacocoGradleSingleModuleEnable(excludeFilter: string, includeFilter: string, classFileDirectory: string, reportDir: string) {
     return `
-        allprojects { apply plugin: 'jacoco' }
-
 allprojects {
-	repositories {
+    repositories {
         mavenCentral()
     }
+
+    apply plugin: 'jacoco'
 }
 
 def jacocoExcludes = [${excludeFilter}]
 def jacocoIncludes = [${includeFilter}]
 	
 jacocoTestReport {
-	doFirst {
-		classDirectories = fileTree(dir: "${classFileDirectory}").exclude(jacocoExcludes).include(jacocoIncludes)
-	}
+    doFirst {
+        classDirectories = fileTree(dir: "${classFileDirectory}").exclude(jacocoExcludes).include(jacocoIncludes)
+    }
 		
-	reports {
-	    html.enabled = true
+    reports {
+        html.enabled = true
         xml.enabled = true    
-	    xml.destination "${reportDir}/summary.xml"
-	    html.destination "${reportDir}/"
+        xml.destination "${reportDir + path.sep}summary.xml"
+        html.destination "${reportDir + path.sep}"
     }
 }
 	
 test {
     finalizedBy jacocoTestReport
-	jacoco {
-		append = true
-		destinationFile = file("${reportDir}/jacoco.exec")
-	}
+    jacoco {
+        append = true
+        destinationFile = file("${reportDir + path.sep}jacoco.exec")
+    }
 }`;
 }
 
@@ -116,7 +118,7 @@ allprojects {
     apply plugin: 'net.saliman.cobertura'
 	
     dependencies {
-	    testCompile 'org.slf4j:slf4j-api:1.7.12'
+        testCompile 'org.slf4j:slf4j-api:1.7.12'
     }
 
     cobertura.coverageIncludes = [${includeFilter}]
@@ -131,7 +133,7 @@ cobertura {
 }`;
 }
 export function coberturaGradleMultiModuleEnable(excludeFilter: string, includeFilter: string, classDir: string, sourceDir: string, reportDir: string) {
-    var data = `
+    let data = `
 allprojects {
     repositories {
         mavenCentral()
@@ -139,7 +141,7 @@ allprojects {
     apply plugin: 'net.saliman.cobertura'
 	
     dependencies {
-	    testCompile 'org.slf4j:slf4j-api:1.7.12'
+        testCompile 'org.slf4j:slf4j-api:1.7.12'
     }
 
     cobertura.coverageIncludes = [${includeFilter}]
@@ -159,7 +161,7 @@ cobertura {
     } else {
         data += `
     rootProject.subprojects.each {
-		coverageDirs << file("\${it.sourceSets.main.output.classesDir}")
+        coverageDirs << file("\${it.sourceSets.main.output.classesDir}")
     }`;
     }
 
@@ -169,7 +171,7 @@ cobertura {
     } else {
         data += `
     rootProject.subprojects.each {
-		coverageSourceDirs += it.sourceSets.main.java.srcDirs
+        coverageSourceDirs += it.sourceSets.main.java.srcDirs
     }`;
     }
     data += `
@@ -182,15 +184,15 @@ cobertura {
 };
 
 // Enable Jacoco Code Coverage for Maven builds using this props
-export function jacocoMavenPluginEnable(includeFilter: string, excludeFilter: string, destFile: string, outputDirectory: string): any {
+export function jacocoMavenPluginEnable(includeFilter: string, excludeFilter: string, outputDirectory: string): any {
     return {
         "groupId": "org.jacoco",
         "artifactId": "jacoco-maven-plugin",
         "version": "0.7.5.201505241946",
         "configuration": {
-            "destFile": destFile,
+            "destFile": path.join(outputDirectory, "jacoco.exec"),
             "outputDirectory": outputDirectory,
-            "dataFile": destFile,
+            "dataFile": path.join(outputDirectory, "jacoco.exec"),
             "append": "true"
         },
         "executions": {
@@ -210,7 +212,7 @@ export function jacocoMavenPluginEnable(includeFilter: string, excludeFilter: st
                 }
             ]
         }
-    }
+    };
 };
 export function jacocoMavenMultiModuleReport(jacocoExec: string, reportDir: string): string {
     return `<?xml version="1.0" encoding="UTF-8"?>
@@ -251,8 +253,8 @@ export function jacocoMavenMultiModuleReport(jacocoExec: string, reportDir: stri
                     </sourcefiles>
                   </structure>
                   <html destdir="${reportDir}" />
-                  <xml destfile="${reportDir + path.delimiter}jacoco.xml" />
-                  <csv destfile="${reportDir + path.delimiter}report.csv" />
+                  <xml destfile="${reportDir + path.sep}jacoco.xml" />
+                  <csv destfile="${reportDir + path.sep}report.csv" />
                 </report>
               </target>
             </configuration>
@@ -269,14 +271,13 @@ export function jacocoMavenMultiModuleReport(jacocoExec: string, reportDir: stri
     </plugins>
   </build>
 </project>
-    `
+    `;
 };
 
 // Enable Cobertura Code Coverage for Maven builds using this props
-export function coberturaMavenEnable(includeFilter: string, excludeFilter: string, aggregate: string) {
-    return `
-    <plugins>
-      <plugin>
+export function coberturaMavenEnable(includeFilter: string, excludeFilter: string, aggregate: string): Q.Promise<any> {
+    let ccProperty = `
+    <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cobertura-maven-plugin</artifactId>
         <version>2.7</version>
@@ -300,10 +301,14 @@ export function coberturaMavenEnable(includeFilter: string, excludeFilter: strin
             <phase>package</phase>
           </execution>
         </executions>
-      </plugin>
-    </plugins>
-  </build>
-  <reporting>
+    </plugin>
+  `;
+    return util.convertXmlStringToJson(ccProperty);
+};
+
+export function coberturaMavenReport(): Q.Promise<any> {
+    let ccProperty = `
+    <reporting>
     <plugins>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -318,25 +323,26 @@ export function coberturaMavenEnable(includeFilter: string, excludeFilter: strin
       </plugin>
     </plugins>
   </reporting>
-  `
-};
+  `;
+    return util.convertXmlStringToJson(ccProperty);
+}
 
-export function jacocoAntReport(reportFile: string, reportDir: string, classData: string, sourceData: string): string {
+export function jacocoAntReport(reportDir: string, classData: string, sourceData: string): string {
     return `
       <?xml version='1.0'?>
         <project name='JacocoReport'>
                <target name='CodeCoverage_9064e1d0'>
                   <jacoco:report xmlns:jacoco='antlib:org.jacoco.ant'>
                       <executiondata>
-                         <file file='${reportFile}'/>
+                         <file file='${path.join(reportDir, "jacoco.exec")}'/>
                       </executiondata>
                       <structure name = 'Jacoco report'>
                             <classfiles>${classData}</classfiles>
                             <sourcefiles>${sourceData}</sourcefiles>
                       </structure>
                       <html destdir='${reportDir}' />
-                      <csv destfile='${reportDir + path.delimiter}summary.csv' />
-                      <xml destfile='${reportDir + path.delimiter}summary.xml' />
+                      <csv destfile='${reportDir + path.sep}summary.csv' />
+                      <xml destfile='${reportDir + path.sep}summary.xml' />
                   </jacoco:report>
               </target>
         </project>
@@ -351,7 +357,7 @@ export function jacocoAntCoverageEnable(): any {
             "append": true,
             "xlmns:jacoco": "antlib:org.jacoco.ant"
         }
-    }
+    };
 }
 
 export function coberturaAntReport(): string {
@@ -384,8 +390,8 @@ export function coberturaAntCoverageEnable(): any {
         </fileset>
     </path>
     <taskdef classpathref="cobertura-classpath" resource="tasks.properties" />
-    `
-    return util.convertXmlStringToJson(ccProperty).valueOf();
+    `;
+    return util.convertXmlStringToJsonSync(ccProperty);
 }
 
 export function coberturaAntInstrumentedClasses(): any {
@@ -393,8 +399,8 @@ export function coberturaAntInstrumentedClasses(): any {
     <cobertura-instrument todir="\${basedir}\InstrumentedClasses" datafile="\${basedir}\ReportDirectory75C12DBC\cobertura.ser">
       <fileset dir="." />
     </cobertura-instrument>
-`
-    return util.convertXmlStringToJson(ccProperty).valueOf();
+`;
+    return util.convertXmlStringToJsonSync(ccProperty);
 }
 
 export function coberturaAntProperties(): any {
@@ -402,12 +408,13 @@ export function coberturaAntProperties(): any {
     <sysproperty key="net.sourceforge.cobertura.datafile" file="\${basedir}\ReportDirectory75C12DBC\cobertura.ser" />
     <classpath location="\${basedir}\InstrumentedClasses" />
     <classpath refid="cobertura-classpath" />
-    `
-    return util.convertXmlStringToJson(ccProperty).valueOf();
+    `;
+    return util.convertXmlStringToJsonSync(ccProperty);
 }
 
 // Gradle Coberutra plugin
-export const coberturaGradleBuildScript = `buildscript {
+export const coberturaGradleBuildScript = `
+buildscript {
     repositories {
         mavenCentral()
     }

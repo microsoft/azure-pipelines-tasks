@@ -1,17 +1,15 @@
 /// <reference path="../../../definitions/Q.d.ts" />
 /// <reference path="../../../definitions/string.d.ts" />
-/// <reference path="../../../definitions/node.d.ts" />
-/// <reference path="../../../definitions/vsts-task-lib.d.ts" />
-/// <reference path="../../../definitions/shelljs.d.ts" />
 /// <reference path="../../../definitions/xml2js.d.ts" />
+/// <reference path="../../../definitions/vsts-task-lib.d.ts" />
+/// <reference path="../../../definitions/node.d.ts" />
 
-import * as Q from 'q';
-import * as fs from 'fs';
-import * as tl from 'vsts-task-lib/task'
-import * as shell from 'shelljs';
-import * as path from 'path';
-import * as str from 'string';
-import * as xml2js from 'xml2js';
+import * as Q from "q";
+import * as fs from "fs";
+import * as tl from "vsts-task-lib/task";
+import * as path from "path";
+import * as str from "string";
+import * as xml2js from "xml2js";
 
 export interface GetOrCreateResult<T> {
     created: boolean;
@@ -20,9 +18,9 @@ export interface GetOrCreateResult<T> {
 
 // returns a substring that is common from first. For example, for "abcd" and "abdf", "ab" is returned.
 export function sharedSubString(string1: string, string2: string): string {
-    var ret = "";
-    var index = 1;
-    while (string1.substring(0, index) == string2.substring(0, index)) {
+    let ret = "";
+    let index = 1;
+    while (string1.substring(0, index) === string2.substring(0, index)) {
         ret = string1.substring(0, index);
         index++;
     }
@@ -31,7 +29,7 @@ export function sharedSubString(string1: string, string2: string): string {
 
 // sorts string array in ascending order
 export function sortStringArray(list): string[] {
-    var sortedFiles: string[] = list.sort((a, b) => {
+    let sortedFiles: string[] = list.sort((a, b) => {
         if (a > b) {
             return 1;
         }
@@ -65,15 +63,15 @@ export function isFileExists(path: string): boolean {
 
 // returns true if given string is null or whitespace.
 export function isNullOrWhitespace(input) {
-    if (typeof input == 'undefined' || input == null) {
+    if (typeof input === "undefined" || input == null) {
         return true;
     }
-    return input.replace(/\s/g, '').length < 1;
+    return input.replace(/\s/g, "").length < 1;
 }
 
 // returns empty string if the given value is undefined or null.
 export function trimToEmptyString(input) {
-    if (typeof input == 'undefined' || input == null) {
+    if (typeof input === "undefined" || input == null) {
         return "";
     }
     return input.trim();
@@ -83,17 +81,19 @@ export function trimToEmptyString(input) {
 export function appendTextToFileSync(filePath: string, fileContent: string) {
     if (isFileExists(filePath)) {
         fs.appendFileSync(filePath, fileContent);
+    } else {
+        throw new Error("File not found: " + filePath);
     }
 }
 
 // prepends given text to start of file.
 export function prependTextToFileSync(filePath: string, fileContent: string) {
     if (isFileExists(filePath)) {
-        var data = fs.readFileSync(filePath); //read existing contents into data
-        var fd = fs.openSync(filePath, 'w+');
-        var buffer = new Buffer(fileContent);
-        fs.writeSync(fd, buffer, 0, buffer.length, 0); //write new data
-        fs.writeSync(fd, data, 0, data.length, 0); //append old data
+        let data = fs.readFileSync(filePath); // read existing contents into data
+        let fd = fs.openSync(filePath, "w+");
+        let buffer = new Buffer(fileContent);
+        fs.writeSync(fd, buffer, 0, buffer.length, 0); // write new data
+        fs.writeSync(fd, data, 0, data.length, 0); // append old data
         fs.close(fd);
     }
 }
@@ -101,17 +101,17 @@ export function prependTextToFileSync(filePath: string, fileContent: string) {
 // single utility for appending text and prepending text to file.
 export function insertTextToFileSync(filePath: string, prependFileContent?: string, appendFileContent?: string) {
     if (isFileExists(filePath) && (prependFileContent || appendFileContent)) {
-        var existingData = fs.readFileSync(filePath); //read existing contents into data
-        var fd = fs.openSync(filePath, 'w+');
-        var preTextLength = prependFileContent ? prependFileContent.length : 0;
+        let existingData = fs.readFileSync(filePath); // read existing contents into data
+        let fd = fs.openSync(filePath, "w+");
+        let preTextLength = prependFileContent ? prependFileContent.length : 0;
 
         if (prependFileContent) {
-            var prependBuffer = new Buffer(prependFileContent);
-            fs.writeSync(fd, prependBuffer, 0, prependBuffer.length, 0); //write new data
+            let prependBuffer = new Buffer(prependFileContent);
+            fs.writeSync(fd, prependBuffer, 0, prependBuffer.length, 0); // write new data
         }
-        fs.writeSync(fd, existingData, 0, existingData.length, preTextLength); //append old data
+        fs.writeSync(fd, existingData, 0, existingData.length, preTextLength); // append old data
         if (appendFileContent) {
-            var appendBuffer = new Buffer(appendFileContent);
+            let appendBuffer = new Buffer(appendFileContent);
             fs.writeSync(fd, appendBuffer, 0, appendBuffer.length, existingData.length + preTextLength);
         }
         fs.close(fd);
@@ -132,7 +132,8 @@ export function trimEnd(data: string, trimChar: string) {
 }
 
 export function readXmlFileAsJson(filePath: string): Q.Promise<any> {
-    return readFile(filePath, 'utf-8')
+    console.log("Converting file");
+    return readFile(filePath, "utf-8")
         .then(convertXmlStringToJson);
 }
 
@@ -141,29 +142,41 @@ export function readFile(filePath: string, encoding: string): Q.Promise<string> 
 }
 
 export function convertXmlStringToJson(xmlContent: string): Q.Promise<any> {
-    return Q.nfcall<string>(xml2js.parseString, xmlContent);
+    console.log("Converting data");
+    return Q.nfcall<any>(xml2js.parseString, xmlContent);
+}
+
+export function convertXmlStringToJsonSync(xmlContent: string): any {
+    console.log("Converting data");
+    xml2js.parseString(xmlContent, function (err, res) {
+        if (err) {
+            // TODO error
+            return null;
+        }
+        return res;
+    });
 }
 
 export function writeJsonAsXmlFile(filePath: string, jsonContent: any): Q.Promise<void> {
     let builder = new xml2js.Builder();
     let xml = builder.buildObject(jsonContent);
-    return writeFile(filePath,xml);
+    return writeFile(filePath, xml);
 }
 
-export function writeFile(filePath:string, fileContent: string): Q.Promise<void> {
+export function writeFile(filePath: string, fileContent: string): Q.Promise<void> {
     return Q.nfcall<void>(fs.writeFile, filePath, fileContent);
 }
 
-export function addPropToJson(obj: any, propName: string, value: any) {
-    if(obj === 'undefined'){
-        obj = {} 
+export function addPropToJson(obj: any, propName: string, value: any): void {
+    if (obj === "undefined") {
+        obj = {};
     }
 
     if (propName in obj) {
         if (obj[propName] instanceof Array) {
             obj[propName].push(value);
         }
-        else if (typeof obj[propName] !== 'object') {
+        else if (typeof obj[propName] !== "object") {
             obj[propName] = [obj[propName], value];
         }
     }
