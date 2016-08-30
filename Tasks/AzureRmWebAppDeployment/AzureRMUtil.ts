@@ -42,7 +42,7 @@ export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: b
                 deferred.reject(error);
             }
             else if ( response.statusCode === 200 ) {
-                deferred.resolve(tl.loc("Updatedeploymenthistoryissuccess"));
+                deferred.resolve(tl.loc("Successfullyupdateddeploymenthistory"));
             }
             else {
                 deferred.reject(tl.loc("Failedtoupdatedeploymenthistory"));
@@ -68,7 +68,7 @@ export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: b
  */
 export async function getAzureRMWebAppPublishProfile(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
     if(!deployToSlotFlag) {
-        var webAppID = await getAzureRMWebAppDetails(SPN, webAppName, 'Microsoft.Web/Sites');
+        var webAppID = await getAzureRMWebAppID(SPN, webAppName, 'Microsoft.Web/Sites');
         //    webAppID Format ==> /subscriptions/<subscriptionId>/resourceGroups/<resource_grp_name>/providers/Microsoft.Web/sites/<webAppName>
         resourceGroupName = webAppID.id.split ('/')[4];
     }
@@ -83,8 +83,9 @@ function getAuthorizationToken(SPN): Q.Promise<string> {
 
     var context = new AuthenticationContext (authorityUrl);
     context.acquireTokenWithClientCredentials (armUrl, SPN.servicePrincipalClientID, SPN.servicePrincipalKey, (error, tokenResponse) => {
-        if(error) 
+        if(error) {
             deferred.reject(error);
+        }
         else {
             deferred.resolve(tokenResponse.accessToken);
         }
@@ -156,16 +157,6 @@ function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isDeploymentSucce
     return requestDetails;
 }
 
-/**
- * Gets the Publishing profile details and the credentials for the web app 
- * 
- * @param   SPN                 Service Principal Name
- * @param   resourceGroupName   Resource Group Name
- * @param   deployToSlotFlag    Flag to check Slot Deployment
- * @param   slotName            Name of the slot
- * 
- * @returns Promise with JSON
- */
 async function getWebAppPublishProfile(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string ) {
 
     var deferred = Q.defer();
@@ -194,23 +185,14 @@ async function getWebAppPublishProfile(SPN, webAppName: string, resourceGroupNam
             });
         }
         else {
-            deferred.reject(tl.loc('ErrorFetchingDeploymentPublishProfileStausCode0', response.statusCode));
+            deferred.reject(tl.loc('UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1', webAppName, response.statusCode));
         }
     });
 
     return deferred.promise;
 }
 
-/**
- * Gets the Azure RM Web App Connection details
- * 
- * @param   SPN           Service Principal Name
- * @param   webAppName    Name of the web App
- * @param   resourceType  Resource Type  
- * 
- * @returns string
- */
-async function getAzureRMWebAppDetails(SPN, webAppName: string, resourceType: string) {
+async function getAzureRMWebAppID(SPN, webAppName: string, resourceType: string) {
 
     var deferred = Q.defer<any>();
     var accessToken = await getAuthorizationToken(SPN);
@@ -231,7 +213,7 @@ async function getAzureRMWebAppDetails(SPN, webAppName: string, resourceType: st
             deferred.resolve(obj.value[0]);
         }
         else {
-            deferred.reject(tl.loc('ErrorOccurredStausCode0',response.statusCode));
+            deferred.reject(tl.loc('UnabletoretrieveWebAppIDforazureRMWebApp0StatusCode1', webAppName, response.statusCode));
         }
     });
 

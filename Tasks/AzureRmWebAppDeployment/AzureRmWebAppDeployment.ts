@@ -13,12 +13,12 @@ async function run() {
     try {
 
         tl.setResourcePath(path.join( __dirname, 'task.json'));
-        var connectedServiceName = tl.getInput('ConnectedServiceName');
-        var webAppName: string = tl.getInput('WebAppName');
+        var connectedServiceName = tl.getInput('ConnectedServiceName', true);
+        var webAppName: string = tl.getInput('WebAppName', true);
         var deployToSlotFlag: boolean = tl.getBoolInput('DeployToSlotFlag');
         var resourceGroupName: string = tl.getInput('ResourceGroupName');
         var slotName: string = tl.getInput('SlotName');
-        var webDeployPkg: string = tl.getPathInput('Package');
+        var webDeployPkg: string = tl.getPathInput('Package', true);
         var setParametersFile: string = tl.getPathInput('SetParametersFile');
         var removeAdditionalFilesFlag: boolean = tl.getBoolInput('RemoveAdditionalFilesFlag');
         var excludeFilesFromAppDataFlag: boolean = tl.getBoolInput('ExcludeFilesFromAppDataFlag');
@@ -36,10 +36,11 @@ async function run() {
         SPN["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true); 
         
         if (!tl.exist(webDeployPkg)) {
-            throw new Error(tl.loc('Packageorfoldernotfound0', webDeployPkg));
+            throw new Error(tl.loc('Invalidwebapppackageorfolderpathprovided', webDeployPkg));
         }
       
         var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+        tl.debug(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
         tl._writeLine("##vso[task.setvariable variable=$websitePassword;issecret=true;]"+publishingProfile.userPWD);
 
         if(webAppUri) {
@@ -47,7 +48,7 @@ async function run() {
         }
 
         if(useWebDeploy) {
-            await executeWebDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
+            await DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
                             excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments);
         }
     } catch (error) {
@@ -70,7 +71,7 @@ async function run() {
  * @param   additionalArguments             Arguments provided by user
  * 
  */
-async function executeWebDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
+async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
         excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments) {
 
     var isParamFilePresentInPacakge = false;
@@ -84,13 +85,36 @@ async function executeWebDeploy(webDeployPkg, webAppName, publishingProfile, rem
         setParametersFile = null;
     }
     else if (!msDeployUtility.fileExists(setParametersFile)) {
-        throw new Error(tl.loc('SetParamFilenotfound0', setParametersFile));
+        throw Error(tl.loc('SetParamFilenotfound0', setParametersFile));
     }
 
-    var msDeployArgs = msDeployUtility.getMSDeployCmdArgs(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
+    var msDeployPath = await msDeployUtility.getMSDeployFullPath();
+    var msDeployCmdArgs = msDeployUtility.getMSDeployCmdArgs(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
         excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments, isParamFilePresentInPacakge, isFolderBasedDeployment);
 
-    await msDeployUtility.executeMSDeployCmd(msDeployArgs, publishingProfile);
+    var isDeploymentSuccess = true;
+    var deploymentError = null;
+    try {
+        await tl.exec(msDeployPath, msDeployCmdArgs, <any> {failOnStdErr: true});
+        tl.debug(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
+    }
+    catch(error) {
+        tl.error(tl.loc('Failedtodeploywebsite'));
+        isDeploymentSuccess = false;
+        deploymentError = error;
+    }
+
+    try {
+        tl.debug(await azureRmUtil.updateDeploymentStatus(publishingProfile, isDeploymentSuccess));
+    }
+    catch(error) {
+        tl.warning(error);
+    }
+    finally {
+        if(!isDeploymentSuccess) {
+            throw Error(deploymentError);
+        }
+    }
 }
 
 run();
