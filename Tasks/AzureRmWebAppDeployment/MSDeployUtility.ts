@@ -22,6 +22,23 @@ export function fileExists(path) {
   }
 }
 
+/**
+ * Constructs argument for MSDeploy command
+ * 
+ * @param   webAppPackage                   Web deploy package
+ * @param   webAppName                      web App Name
+ * @param   publishingProfile               Azure RM Connection Details
+ * @param   removeAdditionalFilesFlag       Flag to set DoNotDeleteRule rule
+ * @param   excludeFilesFromAppDataFlag     Flag to prevent App Data from publishing
+ * @param   takeAppOfflineFlag              Flag to enable AppOffline rule
+ * @param   virtualApplication              Virtual Application Name
+ * @param   setParametersFile               Set Parameter File path
+ * @param   additionalArguments             Arguments provided by user
+ * @param   isParamFilePresentInPacakge     Flag to check Paramter.xml file
+ * @param   isFolderBasedDeployment         Flag to check if given web package path is a folder
+ * 
+ * @returns string 
+ */
 export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, publishingProfile,
                              removeAdditionalFilesFlag: boolean, excludeFilesFromAppDataFlag: boolean, takeAppOfflineFlag: boolean,
                              virtualApplication: string, setParametersFile: string, additionalArguments: string, isParamFilePresentInPacakge: boolean, isFolderBasedDeployment: boolean) : string {
@@ -80,6 +97,12 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
     return msDeployCmdArgs;
 }
 
+/**
+ * Executes the MSDeploy command with arguments and updates the kudu stats
+ * 
+ * @param   msDeployCmdArgs     Arguments for MSdeploy command
+ * @param   publishingProfile   AzureRM Connection Details  
+ */
 export async function executeMSDeployCmd(msDeployCmdArgs: string, publishingProfile) {
 
     var msDeployPath = await getMSDeployFullPath();
@@ -97,19 +120,28 @@ export async function executeMSDeployCmd(msDeployCmdArgs: string, publishingProf
     }
 }
 
-async function getMSDeployFullPath() {
-    try {
-        var msDeployInstallPathRegKey = "HKLM\\SOFTWARE\\Microsoft\\IIS Extensions\\MSDeploy";
-        var msDeployVersion = await getMSDeployVersion(msDeployInstallPathRegKey);
-        var msDeployLatestPathRegKey = msDeployInstallPathRegKey + "\\" + msDeployVersion;
-        var msDeployFullPath = await getMSDeployInstallPath(msDeployLatestPathRegKey);
-        msDeployFullPath = msDeployFullPath + "\\msdeploy.exe";
-        return msDeployFullPath;
-    }
-    catch(error) {
-        tl.error(tl.loc('CannotfindMSDeployexe'));
-        onError(error);
-    }
+/**
+ * Check whether the package contains parameter.xml file
+ * @param   webAppPackage   web deploy package
+ * @returns boolean
+ */
+export async  function containsParamFile(webAppPackage: string ) {
+    var msDeployPath = await getMSDeployFullPath();
+    var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package='"+webAppPackage+"'";
+    var taskResult = tl.execSync(msDeployPath, msDeployCheckParamFileCmdArgs);
+    var paramContentXML = taskResult.stdout;
+    tl.debug(tl.loc("Paramscontentofwebpackage0",paramContentXML));
+    var isParamFilePresent = false;
+    await parseString(paramContentXML, (error, result ) => {
+        if(error){
+            onError(error);
+        }
+        if( result['output']['parameters'][0] ){
+            isParamFilePresent = true;
+        } 
+    });
+    tl.debug(tl.loc("Isparameterfilepresentinwebpackage0",isParamFilePresent));
+    return isParamFilePresent;
 }
 
 function onError(error) {
@@ -145,21 +177,22 @@ function getMSDeployInstallPath(registryKey: string): Q.Promise<string> {
     return defer.promise;
 }
 
-export async  function containsParamFile(webAppPackage: string ) {
-    var msDeployPath = await getMSDeployFullPath();
-    var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package='"+webAppPackage+"'";
-    var taskResult = tl.execSync(msDeployPath, msDeployCheckParamFileCmdArgs);
-    var paramContentXML = taskResult.stdout;
-    tl.debug(tl.loc("Paramscontentofwebpackage0",paramContentXML));
-    var isParamFilePresent = false;
-    await parseString(paramContentXML, (error, result ) => {
-        if(error){
-            onError(error);
-        }
-        if( result['output']['parameters'][0] ){
-            isParamFilePresent = true;
-        } 
-    });
-    tl.debug(tl.loc("Isparameterfilepresentinwebpackage0",isParamFilePresent));
-    return isParamFilePresent;
+/**
+ * Gets the full path of MSDeploy.exe
+ * 
+ * @returns    string
+ */
+async function getMSDeployFullPath() {
+    try {
+        var msDeployInstallPathRegKey = "HKLM\\SOFTWARE\\Microsoft\\IIS Extensions\\MSDeploy";
+        var msDeployVersion = await getMSDeployVersion(msDeployInstallPathRegKey);
+        var msDeployLatestPathRegKey = msDeployInstallPathRegKey + "\\" + msDeployVersion;
+        var msDeployFullPath = await getMSDeployInstallPath(msDeployLatestPathRegKey);
+        msDeployFullPath = msDeployFullPath + "msdeploy.exe";
+        return msDeployFullPath;
+    }
+    catch(error) {
+        tl.error(tl.loc('CannotfindMSDeployexe'));
+        onError(error);
+    }
 }

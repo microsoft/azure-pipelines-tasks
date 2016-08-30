@@ -13,17 +13,14 @@ var AuthenticationContext = adal.AuthenticationContext;
 var authUrl = 'https://login.windows.net/';
 var armUrl = 'https://management.azure.com/';
 
-
-export async function getAzureRMWebAppPublishProfile(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
-    if(!deployToSlotFlag) {
-        var webAppID = await getAzureRMWebAppDetails(SPN, webAppName, 'Microsoft.Web/Sites');
-        //    webAppID Format ==> /subscriptions/<subscriptionId>/resourceGroups/<resource_grp_name>/providers/Microsoft.Web/sites/<webAppName>
-        resourceGroupName = webAppID.id.split ('/')[4];
-    }
-    var publishProfile = await getWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-    return publishProfile;
-}
-
+/**
+ * updates the deployment status in kudu service
+ * 
+ * @param   publishingProfile     Publish Profile details
+ * @param   isDeploymentSuccess   Status of Deployment
+ * 
+ * @returns promise with string
+ */
 export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: boolean):Q.Promise<string>  {
     var deferred = Q.defer<string>();
 
@@ -56,6 +53,27 @@ export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: b
         deferred.reject(tl.loc('WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite'));
     }
     return deferred.promise;
+}
+
+/**
+ * Gets the Azure RM Web App Connections details from SPN
+ * 
+ * @param   SPN                 Service Principal Name
+ * @param   webAppName          Name of the web App
+ * @param   resourceGroupName   Resource Group Name
+ * @param   deployToSlotFlag    Flag to check slot deployment
+ * @param   slotName            Name of the slot
+ * 
+ * @returns (JSON)            
+ */
+export async function getAzureRMWebAppPublishProfile(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
+    if(!deployToSlotFlag) {
+        var webAppID = await getAzureRMWebAppDetails(SPN, webAppName, 'Microsoft.Web/Sites');
+        //    webAppID Format ==> /subscriptions/<subscriptionId>/resourceGroups/<resource_grp_name>/providers/Microsoft.Web/sites/<webAppName>
+        resourceGroupName = webAppID.id.split ('/')[4];
+    }
+    var publishProfile = await getWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+    return publishProfile;
 }
 
 function getAuthorizationToken(SPN): Q.Promise<string> {
@@ -138,6 +156,16 @@ function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isDeploymentSucce
     return requestDetails;
 }
 
+/**
+ * Gets the Publishing profile details and the credentials for the web app 
+ * 
+ * @param   SPN                 Service Principal Name
+ * @param   resourceGroupName   Resource Group Name
+ * @param   deployToSlotFlag    Flag to check Slot Deployment
+ * @param   slotName            Name of the slot
+ * 
+ * @returns Promise with JSON
+ */
 async function getWebAppPublishProfile(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string ) {
 
     var deferred = Q.defer();
@@ -173,6 +201,15 @@ async function getWebAppPublishProfile(SPN, webAppName: string, resourceGroupNam
     return deferred.promise;
 }
 
+/**
+ * Gets the Azure RM Web App Connection details
+ * 
+ * @param   SPN           Service Principal Name
+ * @param   webAppName    Name of the web App
+ * @param   resourceType  Resource Type  
+ * 
+ * @returns string
+ */
 async function getAzureRMWebAppDetails(SPN, webAppName: string, resourceType: string) {
 
     var deferred = Q.defer<any>();
