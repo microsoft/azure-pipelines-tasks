@@ -49,7 +49,10 @@ try {
             invokeVSTest(resultsDirectory)
                 .then(function (code) {
                     try {
-                        publishTestResults(resultsDirectory);
+                        if (!isTiaAllowed())
+                        {
+                            publishTestResults(resultsDirectory);
+                        }
                         tl.setResult(code, tl.loc('VstestReturnCode', code));
                     }
                     catch (error) {
@@ -181,7 +184,37 @@ function getTraceCollectorUri() : string {
     return "file://" + path.join(__dirname, "TestSelector/Microsoft.VisualStudio.TraceCollector.dll");
 }
 
-function generateResponseFile(): Q.Promise<string> {
+function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
+    var startTime = perf();
+    var endTime;
+    var elapsedTime;
+    var defer = Q.defer<string>();
+
+    var allFilesInResultsDirectory = tl.find(testResultsDirectory);
+    var resultFiles = tl.match(allFilesInResultsDirectory, "*.trx", { matchBase: true });
+    
+    var selectortool = tl.createToolRunner(getTestSelectorLocation());
+    selectortool.arg("UpdateTestResults");
+    selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
+    selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
+    selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
+    selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
+    selectortool.arg("/ResultFile:" + resultFiles[0]);
+    selectortool.exec()
+        .then(function (code) {        
+        endTime = perf();
+        elapsedTime = endTime - startTime;
+        tl._writeLine("##vso[task.logissue type=warning;SubTaskName=UploadTestResults;SubTaskDuration=" + elapsedTime + "]");
+        tl.debug(tl.loc("UploadTestResultsPerfTime", elapsedTime));
+        defer.resolve(String(code));
+    })
+        .fail(function (err) {
+        defer.reject(err);
+    });
+    return defer.promise;
+}
+
+function generateResponseFile(discoveredTests: string): Q.Promise<string> {
     var startTime = perf();
     var endTime : number;
     var elapsedTime : number;
@@ -195,6 +228,8 @@ function generateResponseFile(): Q.Promise<string> {
     selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
     selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
     selectortool.arg("/responsefile:" + tempFile);
+    selectortool.arg("/DiscoveredTests:" + discoveredTests);
+
     selectortool.exec()
         .then(function (code) {
             endTime = perf();
@@ -275,17 +310,110 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
     return defer.promise;
 }
 
+function getVstestTestsList(vsVersion: number): Q.Promise<string> {
+    var defer = Q.defer<string>();
+    var tempFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
+    tl.debug("Discovered tests listed at: " + tempFile);
+    var argsArray: string[] = [];
+
+    testAssemblyFiles.forEach(function (testAssembly) {
+        var testAssemblyPath = testAssembly;
+        if (sourcesDirectory && !pathExistsAsFile(testAssembly)) {
+            var expandedPath = path.join(sourcesDirectory, testAssembly);
+            if (pathExistsAsFile(expandedPath)) {
+                testAssemblyPath = expandedPath;
+            }
+        }
+        argsArray.push(testAssemblyPath);
+    });
+    
+    tl.debug("The list of discovered tests is generated at " + tempFile);
+
+    argsArray.push("/ListFullyQualifiedTests");
+    argsArray.push("/ListTestsTargetPath:" + tempFile);
+
+    var vsCommon = tl.getVariable("VS" + vsVersion + "0COMNTools");
+    if (!vsCommon) {
+        tl.error(tl.loc('VstestNotFound', vsVersion));
+        defer.resolve(tl.loc('VstestNotFound', vsVersion));
+        return defer.promise;
+    }
+    var vstestLocation = path.join(vsCommon, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe");
+    var vstest = tl.createToolRunner(vstestLocation);
+    addVstestArgs(argsArray, vstest);
+
+    tl.cd(workingDirectory);
+    vstest.exec({ failOnStdErr: true })
+        .then(function (code) {
+            defer.resolve(tempFile);
+        })
+        .fail(function (err) {
+            tl.debug("Listing tests from VsTest failed.");
+            tl.error(err);
+            defer.resolve(err);
+        });
+    return defer.promise;
+}
+
 function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion: number): Q.Promise<number> {
     var defer = Q.defer<number>();
     if (isTiaAllowed()) {
         publishCodeChanges()
-            .then(function(status) {
-                generateResponseFile()
-                    .then(function (responseFile) {
-                        if (isNonEmptyResponseFile(responseFile)) {
-                            updateResponseFile(getVstestArguments(settingsFile, true), responseFile)
-                                .then(function (updatedFile) {
-                                    executeVstest(testResultsDirectory, settingsFile, vsVersion, ["@" + updatedFile])
+            .then(function(status) {                
+                getVstestTestsList(vsVersion)
+                    .then(function (listFile) {
+                        generateResponseFile(listFile)
+                            .then(function (responseFile) {
+                                if (isNonEmptyResponseFile(responseFile)) {
+                                    updateResponseFile(getVstestArguments(settingsFile, true), responseFile)
+                                        .then(function (updatedFile) {
+                                            executeVstest(testResultsDirectory, settingsFile, vsVersion, ["@" + updatedFile])
+                                                .then(function (code) {
+                                                    uploadTestResults(testResultsDirectory)
+                                                    .then(function (code) {
+                                                        defer.resolve(+code);
+                                                    })
+                                                    .fail(function (code) {
+                                                        tl.debug("Test Run Updation failed!");
+                                                        defer.resolve(code);
+                                                    })
+                                                    .finally(function () {
+                                                        tl.debug("Deleting the response file" + responseFile);
+                                                        tl.rmRF(responseFile, true);
+                                                        tl.debug("Deleting the discovered tests file" + listFile);
+                                                        tl.rmRF(listFile, true);
+                                                    });
+                                                })
+                                                .fail(function (code) {
+                                                    defer.resolve(code);
+                                                })
+                                                .finally(function () {
+                                                    tl.debug("Deleting the response file" + responseFile)
+                                                    tl.rmRF(responseFile, true);
+                                                    tl.debug("Deleting the discovered tests file" + listFile);
+                                                    tl.rmRF(listFile, true);
+                                                });
+                                        })
+                                        .fail(function (err) {
+                                            tl.error(err);
+                                            tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', responseFile));
+                                            executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
+                                                .then(function (code) {
+                                                    defer.resolve(code);
+                                                })
+                                                .fail(function (code) {
+                                                    defer.resolve(code);
+                                                }).finally(function () {
+                                                    tl.debug("Deleting the response file" + responseFile)
+                                                    tl.rmRF(responseFile, true);
+                                                    tl.debug("Deleting the discovered tests file" + listFile);
+                                                    tl.rmRF(listFile, true);
+                                                });
+                                        });
+                                }
+                                else {
+                                    tl.debug("Empty response file detected. All tests will be executed.");
+                                    executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
                                         .then(function (code) {
                                             defer.resolve(code);
                                         })
@@ -293,50 +421,29 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                             defer.resolve(code);
                                         })
                                         .finally(function () {
-                                            tl.debug("Deleting the response file " + responseFile)
+                                            tl.debug("Deleting the response file" + responseFile);
                                             tl.rmRF(responseFile, true);
+                                            tl.debug("Deleting the discovered tests file" + listFile);
+                                            tl.rmRF(listFile, true);
                                         });
-                                })
-                                .fail(function (err) {
-                                    tl.error(err);
-                                    tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', responseFile));
-                                    executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
-                                        .then(function (code) {
-                                            defer.resolve(code);
-                                        })
-                                        .fail(function (code) {
-                                            defer.resolve(code);
-                                        }).finally(function () {
-                                            tl.debug("Deleting the response file " + responseFile)
-                                            tl.rmRF(responseFile, true);
-                                        });
-                                });
-                        }
-                        else {
-                            tl.debug("Empty response file detected. All tests will be executed.");
-                            executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
-                                .then(function (code) {
-                                    defer.resolve(code);
-                                })
-                                .fail(function (code) {
-                                    defer.resolve(code);
-                                })
-                                .finally(function () {
-                                    tl.debug("Deleting the response file " + responseFile)
-                                    tl.rmRF(responseFile, true);
-                                });
-                        }
+                                }
+                            })                    
+                            .fail(function (err) {
+                                tl.error(err);
+                                tl.warning(tl.loc('ErrorWhileCreatingResponseFile'));
+                                executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
+                                    .then(function (code) {
+                                        defer.resolve(code);
+                                    })
+                                    .fail(function (code) {
+                                        defer.resolve(code);
+                                    });
+                            });
                     })
                     .fail(function (err) {
                         tl.error(err);
-                        tl.warning(tl.loc('ErrorWhileCreatingResponseFile'));
-                        executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
-                            .then(function (code) {
-                                defer.resolve(code);
-                            })
-                            .fail(function (code) {
-                                defer.resolve(code);
-                            });
+                        tl.warning(tl.loc('ErrorWhileListingDiscoveredTests'));
+                        defer.resolve(1);
                     });
             })
             .fail(function (err){
