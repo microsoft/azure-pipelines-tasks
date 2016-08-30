@@ -33,12 +33,14 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
     if(isFolderBasedDeployment) {
         msDeployCmdArgs += " -source:IisApp='"+ webAppPackage + "'";
         msDeployCmdArgs += " -dest:iisApp='" + webApplicationDeploymentPath + "',";
-    } else {       
+    }
+    else {       
         msDeployCmdArgs += " -source:package='"+ webAppPackage + "'";
 
         if(isParamFilePresentInPacakge) {
             msDeployCmdArgs += " -dest:auto,";           
-        } else {
+        }
+        else {
             msDeployCmdArgs += " -dest:contentPath='"+ webApplicationDeploymentPath +"',";
         }
     }
