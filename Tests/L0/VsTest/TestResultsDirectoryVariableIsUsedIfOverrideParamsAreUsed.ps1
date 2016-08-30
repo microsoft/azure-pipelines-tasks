@@ -38,5 +38,5 @@ $input = @{
 & $PSScriptRoot\..\..\..\Tasks\VsTest\VSTest.ps1 @input
 
 Assert-WasCalled Invoke-VSTest -ParametersEvaluator {
-	return $TestResultsFolder -eq $testResultsDirectory
+	$TestResultsFolder -eq $testResultsDirectory
 }

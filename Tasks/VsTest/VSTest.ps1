@@ -156,11 +156,11 @@ try
         $workingDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.DefaultWorkingDirectory"
         if([string]::IsNullOrEmpty($testResultsDirectory))
         {
-            $testResultsDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "Common.TestResultsDirectory" -Global $FALSE
+            $testResultsDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "Common.TestResultsDirectory"
             if ([string]::IsNullOrWhiteSpace($testResultsDirectory))
             {
                 # for RM
-                $testResultsDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.ArtifactsDirectory" -Global $FALSE
+                $testResultsDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.ArtifactsDirectory"
             }
         }
 
