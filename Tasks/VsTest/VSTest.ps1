@@ -132,9 +132,13 @@ try
             $vstestLocationInput = $null
         }
 
-        $artifactsDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.ArtifactsDirectory" -Global $FALSE
-
-        $workingDirectory = $artifactsDirectory
+        $workingDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.DefaultWorkingDirectory"
+        $testResultsDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "Common.TestResultsDirectory" -Global $FALSE
+        if ([string]::IsNullOrWhiteSpace($testResultsDirectory))
+        {
+            # for RM
+            $testResultsDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.ArtifactsDirectory" -Global $FALSE
+        }
 
         if($runInParallel -eq "True")
         {
@@ -154,10 +158,12 @@ try
         {
             $testResultsDirectory = Get-ResultsLocation $runSettingsFileWithParallel 
         }
+
         if(!$testResultsDirectory)
         {
             $testResultsDirectory = $workingDirectory + [System.IO.Path]::DirectorySeparatorChar + "TestResults"
-        } 
+        }
+
         Write-Verbose "Test results directory: $testResultsDirectory"
 
         
