@@ -1,4 +1,3 @@
-
 /// <reference path="../../definitions/node.d.ts" />
 /// <reference path="../../definitions/q.d.ts" />
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
@@ -41,7 +40,7 @@ async function run() {
       
         var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
         tl.debug(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
-        tl._writeLine("##vso[task.setvariable variable=$websitePassword;issecret=true;]"+publishingProfile.userPWD);
+        tl._writeLine("##vso[task.setvariable variable=$websitePassword;issecret=true;]" + publishingProfile.userPWD);
 
         if(webAppUri) {
             tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);

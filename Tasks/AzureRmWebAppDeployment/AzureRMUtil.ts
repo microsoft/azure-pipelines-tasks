@@ -21,7 +21,7 @@ var armUrl = 'https://management.azure.com/';
  * 
  * @returns promise with string
  */
-export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: boolean):Q.Promise<string>  {
+export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: boolean): Q.Promise<string>  {
     var deferred = Q.defer<string>();
 
     var webAppPublishKuduUrl = publishingProfile.publishUrl;
@@ -29,7 +29,7 @@ export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: b
         var requestDetails = getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
         var requestOptions = {
             url : requestDetails["requestUrl"],
-            method : 'PUT', 
+            method : 'PUT',
             json : requestDetails["requestBody"],
             auth: {
                 username : publishingProfile.userName,
@@ -37,11 +37,11 @@ export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: b
             }
         };
 
-        request( requestOptions , (error, response, body ) => {
-            if (error) {
+        request( requestOptions , (error, response, body) => {
+            if(error) {
                 deferred.reject(error);
             }
-            else if ( response.statusCode === 200 ) {
+            else if(response.statusCode === 200) {
                 deferred.resolve(tl.loc("Successfullyupdateddeploymenthistory"));
             }
             else {
@@ -81,8 +81,8 @@ function getAuthorizationToken(SPN): Q.Promise<string> {
     var deferred = Q.defer<string>();
     var authorityUrl = authUrl + SPN.tenantID;
 
-    var context = new AuthenticationContext (authorityUrl);
-    context.acquireTokenWithClientCredentials (armUrl, SPN.servicePrincipalClientID, SPN.servicePrincipalKey, (error, tokenResponse) => {
+    var context = new AuthenticationContext(authorityUrl);
+    context.acquireTokenWithClientCredentials(armUrl, SPN.servicePrincipalClientID, SPN.servicePrincipalKey, (error, tokenResponse) => {
         if(error) {
             deferred.reject(error);
         }
@@ -96,16 +96,17 @@ function getAuthorizationToken(SPN): Q.Promise<string> {
 
 function getDeploymentAuthor(): string {
     var author = tl.getVariable('build.sourceVersionAuthor');
-    if ( author === undefined )  {
+    
+    if(author === undefined) {
         author = tl.getVariable('build.requestedfor');
-        if (author === undefined) {
-            author = tl.getVariable('release.requestedfor');
-        }
-
-        if (author === undefined) {
-            author = tl.getVariable ('agent.name');
-        }
     }
+    if(author === undefined) {
+        author = tl.getVariable('release.requestedfor');
+    }
+    if(author === undefined) {
+        author = tl.getVariable('agent.name');
+    }
+
     return author;
 }
 
@@ -115,13 +116,13 @@ function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isDeploymentSucce
     var author = getDeploymentAuthor();
 
     var buildUrl = tl.getVariable('build.buildUri');
-    var    releaseUrl = tl.getVariable ('release.releaseUri');
+    var releaseUrl = tl.getVariable('release.releaseUri');
 
     var buildId = tl.getVariable('build.buildId');
-    var    releaseId = tl.getVariable('release.releaseId');
+    var releaseId = tl.getVariable('release.releaseId');
 
-    var collectionUrl = tl.getVariable ('system.TeamFoundationCollectionUri'); 
-    var    teamProject = tl.getVariable ('system.teamProject');
+    var collectionUrl = tl.getVariable('system.TeamFoundationCollectionUri'); 
+    var teamProject = tl.getVariable('system.teamProject');
 
     var buildOrReleaseUrl = "" ;
     var deploymentId = "";
@@ -130,7 +131,7 @@ function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isDeploymentSucce
         deploymentId = releaseId + Date.now();
         buildOrReleaseUrl = collectionUrl + teamProject + "/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?releaseId=" + releaseId + "&_a=release-summary";
     }
-    else if(buildUrl !== undefined){
+    else if(buildUrl !== undefined) {
         deploymentId = buildId + Date.now();
         buildOrReleaseUrl = collectionUrl + teamProject + "/_build?buildId=" + buildId + "&_a=summary";
     }
@@ -171,6 +172,7 @@ async function getWebAppPublishProfile(SPN, webAppName: string, resourceGroupNam
         },
         method: 'POST'
     };
+
     request(requestOptions, (error, response, body) => {
         if(error) {
             deferred.reject(error);
@@ -204,8 +206,8 @@ async function getAzureRMWebAppID(SPN, webAppName: string, resourceType: string)
         }
     };
 
-    request (requestOptions, (error, response, body) => {
-        if( error ) {
+    request(requestOptions, (error, response, body) => {
+        if(error) {
             deferred.reject(error);
         }
         else if(response.statusCode === 200) {

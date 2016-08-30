@@ -13,12 +13,12 @@ export function fileExists(path) {
   try  {
     return tl.stats(path).isFile();
   }
-  catch (e) {
-    if (e.code == 'ENOENT') {
+  catch(error) {
+    if(error.code == 'ENOENT') {
       return false;
     }
-    tl.debug("Exception tl.stats (" + path + "): " + e);
-    throw e;
+    tl.debug("Exception tl.stats (" + path + "): " + error);
+    throw Error(error);
   }
 }
 
@@ -45,31 +45,31 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
 
     var msDeployCmdArgs: string = " -verb:sync";
 
-    var webApplicationDeploymentPath = ( virtualApplication ) ? webAppName + "/" + virtualApplication : webAppName;
+    var webApplicationDeploymentPath = (virtualApplication) ? webAppName + "/" + virtualApplication : webAppName;
     
     if(isFolderBasedDeployment) {
-        msDeployCmdArgs += " -source:IisApp='"+ webAppPackage + "'";
+        msDeployCmdArgs += " -source:IisApp='" + webAppPackage + "'";
         msDeployCmdArgs += " -dest:iisApp='" + webApplicationDeploymentPath + "',";
     }
     else {       
-        msDeployCmdArgs += " -source:package='"+ webAppPackage + "'";
+        msDeployCmdArgs += " -source:package='" + webAppPackage + "'";
 
         if(isParamFilePresentInPacakge) {
             msDeployCmdArgs += " -dest:auto,";           
         }
         else {
-            msDeployCmdArgs += " -dest:contentPath='"+ webApplicationDeploymentPath +"',";
+            msDeployCmdArgs += " -dest:contentPath='" + webApplicationDeploymentPath + "',";
         }
     }
 
     msDeployCmdArgs += "ComputerName='https://" + publishingProfile.publishUrl + "/msdeploy.axd?site=" + webAppName + "',";
     msDeployCmdArgs += "UserName='" + publishingProfile.userName + "',Password='" + publishingProfile.userPWD + "',AuthType='Basic'";
 
-    if( isParamFilePresentInPacakge || setParametersFile != null ) {
+    if(isParamFilePresentInPacakge || setParametersFile != null) {
         msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='" + webApplicationDeploymentPath + "'";
     }
 
-    if (setParametersFile) {
+    if(setParametersFile) {
         msDeployCmdArgs += " -setParamFile=" + setParametersFile;
     }
 
@@ -77,20 +77,20 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
         msDeployCmdArgs += " -enableRule:DoNotDeleteRule";
     }
 
-    if (takeAppOfflineFlag) {
+    if(takeAppOfflineFlag) {
         msDeployCmdArgs += ' -enableRule:AppOffline';
     }
 
-    if (excludeFilesFromAppDataFlag) {
+    if(excludeFilesFromAppDataFlag) {
         msDeployCmdArgs += ' -skip:Directory=App_Data';
     }
     
-    if (additionalArguments) {
+    if(additionalArguments) {
         msDeployCmdArgs += ' ' + additionalArguments;
     }
 
     var userAgent = tl.getVariable("AZURE_HTTP_USER_AGENT");
-    if (userAgent) {
+    if(userAgent) {
         msDeployCmdArgs += ' -userAgent:' + userAgent;
     }
     tl.debug(tl.loc('ConstructedmsDeploycomamndlinearguments'));
@@ -104,20 +104,20 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
  */
 export async  function containsParamFile(webAppPackage: string ) {
     var msDeployPath = await getMSDeployFullPath();
-    var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package='"+webAppPackage+"'";
+    var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package='" + webAppPackage + "'";
     var taskResult = tl.execSync(msDeployPath, msDeployCheckParamFileCmdArgs);
     var paramContentXML = taskResult.stdout;
-    tl.debug(tl.loc("Paramscontentofwebpackage0",paramContentXML));
+    tl.debug(tl.loc("Paramscontentofwebpackage0", paramContentXML));
     var isParamFilePresent = false;
-    await parseString(paramContentXML, (error, result ) => {
-        if(error){
+    await parseString(paramContentXML, (error, result) => {
+        if(error) {
             onError(error);
         }
-        if( result['output']['parameters'][0] ){
+        if(result['output']['parameters'][0] ) {
             isParamFilePresent = true;
-        } 
+        }
     });
-    tl.debug(tl.loc("Isparameterfilepresentinwebpackage0",isParamFilePresent));
+    tl.debug(tl.loc("Isparameterfilepresentinwebpackage0", isParamFilePresent));
     return isParamFilePresent;
 }
 
