@@ -7,10 +7,14 @@
   "helpMarkDown": "Replace with markdown to show in help",
   "category": "Deploy",
   "visibility":["Preview","Build","Release"],
+  "runsOn": [
+    "Agent",
+    "MachineGroup"
+  ],
   "demands": [],
   "version": {
     "Major": "0",
-    "Minor": "1",
+    "Minor": "2",
     "Patch": "1"
   },
   "minimumAgentVersion": "1.95.0",

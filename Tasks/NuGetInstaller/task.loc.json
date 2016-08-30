@@ -8,9 +8,12 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 2,
+    "Minor": 3,
     "Patch": 13
   },
+  "runsOn": [
+    "Agent"
+  ],
   "minimumAgentVersion": "1.83.0",
   "groups": [
     {
