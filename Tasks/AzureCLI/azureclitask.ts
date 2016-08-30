@@ -15,7 +15,11 @@ export class azureclitask {
         try {
             tl.setResourcePath(path.join( __dirname, "task.json"));
 
-            var bash = tl.createToolRunner(tl.which("bash", true));
+            var tool;
+            if(os.type() != "Windows_NT")
+            {
+                tool = tl.tool(tl.which("bash", true));
+            }
 
             var scriptLocation:string = tl.getInput("scriptLocation");
             var scriptPath:string = null;
@@ -30,8 +34,13 @@ export class azureclitask {
                 }
             }
             else {
-                var script:string = tl.getInput("inlineScript", true);
-                scriptPath = path.join(os.tmpdir() ,"azureclitaskscript.sh");
+                var script: string = tl.getInput("inlineScript", true);
+                if(os.type() != "Windows_NT") {
+                    scriptPath = path.join(os.tmpdir(), "azureclitaskscript.sh");
+                }
+                else {
+                    scriptPath = path.join(os.tmpdir(), "azureclitaskscript.bat");
+                }
                 this.createFile(scriptPath, script);
             }
 
@@ -44,13 +53,18 @@ export class azureclitask {
             tl.mkdirP(cwd);
             tl.cd(cwd);
 
+            if(os.type() != "Windows_NT") {
+                tool.arg(scriptPath);
+            }
+            else {
+                tool = tl.tool(tl.which(scriptPath, true));
+            }
+
             var connectedServiceNameSelector = tl.getInput("connectedServiceNameSelector", true);
             this.loginAzure(connectedServiceNameSelector);
 
-            bash.pathArg(scriptPath);
-            bash.argString(args); // additional args should always call argString.  argString() parses quoted arg strings
-
-            await bash.exec({failOnStdErr: failOnStdErr});
+            tool.line(args); // additional args should always call line. line() parses quoted arg strings
+            await tool.exec({ failOnStdErr: failOnStdErr });
         }
         catch (err) {
             if(err.stderr){

@@ -1,20 +1,56 @@
-function Assert-SingleItem
+function Get-SinglePathOfType
 {
     Param (
-        $Items,
-        
         [String]
-        $Pattern
+        $Pattern,
+
+        [ValidateSet("Leaf", "Container")]
+        $PathType,
+
+        [Switch]
+        $Require
     )
-    
-    if (@($Items).Length -gt 1) 
+
+    Write-Host (Get-VstsLocString -Key SearchingForPath -ArgumentList $Pattern)
+    if ($Pattern)
+    {
+        if ($PathType -eq "Container")
+        {
+            $path = Find-VstsFiles -LegacyPattern $Pattern -IncludeDirectories
+        }
+        else
+        {
+            $path = Find-VstsFiles -LegacyPattern $Pattern
+        }
+    }
+    else
+    {
+        $path = $null
+    }
+
+    if (@($path).Length -gt 1) 
     {
         throw (Get-VstsLocString -Key ItemSearchMoreThanOneFound -ArgumentList $Pattern) 
     }
-    elseif ($Items -eq $null -or @($Items).Length -eq 0)
+    elseif ($path -eq $null -or @($path).Length -eq 0)
     {
-        throw (Get-VstsLocString -Key ItemSearchNoFilesFound -ArgumentList $Pattern) 
+        $noFileFoundMessage = Get-VstsLocString -Key ItemSearchNoFilesFound -ArgumentList $Pattern
+        if ($Require)
+        {
+            throw $noFileFoundMessage
+        }
+        else
+        {
+            Write-Host $noFileFoundMessage
+        }
     }
+    else
+    {
+        Assert-VstsPath -LiteralPath $path -PathType $PathType
+        Write-Host (Get-VstsLocString -Key FoundPath -ArgumentList $path)
+    }
+
+    return $path
 }
 
 # Function that can be mocked by tests
@@ -183,4 +219,61 @@ function Add-Certificate
     $clusterConnectionParameters["StoreLocation"] = $storeLocation.ToString()
 
     return $certificate
+}
+
+function Get-VstsUpgradeParameters
+{
+    Param ()
+
+    $parameters = @{}
+
+    $parameterNames = @(
+        "UpgradeReplicaSetCheckTimeoutSec",
+        "ReplicaQuorumTimeoutSec",
+        "TimeoutSec",
+        "ForceRestart",
+        "Force"
+    )
+
+    $upgradeMode = Get-VstsInput -Name upgradeMode -Require
+
+    $parameters[$upgradeMode] = $null
+
+    if ($upgradeMode -eq "Monitored")
+    {
+        $parameterNames += @(
+            "FailureAction",
+            "HealthCheckRetryTimeoutSec",
+            "HealthCheckWaitDurationSec",
+            "HealthCheckStableDurationSec",
+            "UpgradeDomainTimeoutSec",
+            "ConsiderWarningAsError",
+            "DefaultServiceTypeHealthPolicy",
+            "MaxPercentUnhealthyDeployedApplications",
+            "UpgradeTimeoutSec",
+            "ServiceTypeHealthPolicyMap"
+        )
+    }
+
+    foreach ($name in $parameterNames)
+    {
+        $value = Get-VstsInput -Name $name
+        if ($value)
+        {
+            if ($value -eq "false")
+            {
+                $parameters[$name] = $false
+            }
+            elseif ($value -eq "true")
+            {
+                $parameters[$name] = $true
+            }
+            else
+            {
+                $parameters[$name] = $value
+            }
+        }
+    }
+
+    return $parameters
 }
