@@ -40,5 +40,6 @@
   "loc.messages.NGCommon_NuGetConfigIsInvalid": "The NuGet.config at %s is invalid.",
   "loc.messages.NGCommon_RemovingSources": "Preparing to set credentials in NuGet.config",
   "loc.messages.NGCommon_AddingSources": "Setting credentials in NuGet.config",
-  "loc.messages.NGCommon_NoSourcesFoundInConfig": "No package sources were found in the NuGet.config file at %s"
+  "loc.messages.NGCommon_NoSourcesFoundInConfig": "No package sources were found in the NuGet.config file at %s",
+  "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "Unknown NuGet version selected."
 }

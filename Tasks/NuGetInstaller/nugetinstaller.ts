@@ -62,12 +62,12 @@ async function main(): Promise<void> {
             nugetConfigPath = null;
         }
 
-        var nugetVersion = tl.getInput('nuGetVersion');
+        let nugetVersion = tl.getInput('nuGetVersion');
 
         // due to a bug where we accidentally allowed nuGetPath to be surrounded by quotes before,
         // locateNuGetExe() will strip them and check for existence there.
-        var nuGetPath = tl.getPathInput("nuGetPath", false, false);
-        var userNuGetProvided = false;
+        let nuGetPath = tl.getPathInput("nuGetPath", false, false);
+        let userNuGetProvided = false;
         if(tl.filePathSupplied("nuGetPath")){
             // True if the user provided their own version of NuGet
             userNuGetProvided = true;
@@ -89,7 +89,7 @@ async function main(): Promise<void> {
         let serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
 
         //find nuget location to use
-        var credProviderPath = ngToolRunner.locateCredentialProvider();
+        let credProviderPath = ngToolRunner.locateCredentialProvider();
 
         const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
 
@@ -115,14 +115,18 @@ async function main(): Promise<void> {
             authInfo: authInfo,
             credProviderFolder: useCredProvider ? path.dirname(credProviderPath) : null,
             extensionsDisabled: !userNuGetProvided
-        }
+        };
 
         let configFile = nugetConfigPath;
-        var credCleanup = () => { return };
-        if (!useCredConfig) {
+        let credCleanup = () => { return; };
+        if (useCredConfig) {
             if (nugetConfigPath) {
-                var nuGetConfigHelper = new NuGetConfigHelper(nuGetPath, nugetConfigPath, authInfo, environmentSettings);
-                const packageSources = await nuGetConfigHelper.getSourcesFromConfig()
+                let nuGetConfigHelper = new NuGetConfigHelper(
+                    nuGetPath,
+                    nugetConfigPath,
+                    authInfo,
+                    environmentSettings);
+                const packageSources = await nuGetConfigHelper.getSourcesFromConfig();
 
                 if (packageSources.length !== 0) {
                     nuGetConfigHelper.setSources(packageSources);

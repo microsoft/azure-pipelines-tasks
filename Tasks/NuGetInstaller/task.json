@@ -134,7 +134,8 @@
         "NGCommon_NuGetConfigIsInvalid": "The NuGet.config at %s is invalid.",
         "NGCommon_RemovingSources": "Preparing to set credentials in NuGet.config",
         "NGCommon_AddingSources": "Setting credentials in NuGet.config",
-        "NGCommon_NoSourcesFoundInConfig": "No package sources were found in the NuGet.config file at %s"
+        "NGCommon_NoSourcesFoundInConfig": "No package sources were found in the NuGet.config file at %s",
+        "NGCommon_UnabletoDetectNuGetVersion" : "Unknown NuGet version selected."
 
     }
 }
