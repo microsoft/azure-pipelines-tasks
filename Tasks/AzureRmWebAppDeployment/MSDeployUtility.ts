@@ -46,12 +46,11 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
     msDeployCmdArgs += "ComputerName='https://" + publishingProfile.publishUrl + "/msdeploy.axd?site=" + webAppName + "',";
     msDeployCmdArgs += "UserName='" + publishingProfile.userName + "',Password='" + publishingProfile.userPWD + "',AuthType='Basic'";
 
-    if( isParamFilePresentInPacakge || setParametersFile != null ){
+    if( isParamFilePresentInPacakge || setParametersFile != null ) {
         msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='" + webApplicationDeploymentPath + "'";
     }
 
     if (setParametersFile) {
-        
         msDeployCmdArgs += " -setParamFile=" + setParametersFile;
     }
 
@@ -79,28 +78,20 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
     return msDeployCmdArgs;
 }
 
-export async function executeMSDeployCmd(msDeployCmdArgs: string, publishingProfile, webAppUri: string) {
-    try {
-        if(webAppUri) {
-            tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
-        }
-        var msDeployPath = await getMSDeployFullPath();
-            var statusCode = await tl.exec(msDeployPath, msDeployCmdArgs, <any> {failOnStdErr: true});
-            if ( statusCode === 0 ) {
-                tl.debug(tl.loc('WebappsuccessfullypublishedatUrl0',publishingProfile.destinationAppUrl));                
-                var deploymentResult = await azureRmUtil.updateDeploymentStatus(publishingProfile, true);
-                tl.debug(deploymentResult);
-            }
-            else {
-                tl.debug(tl.loc('Failedtodeploywebsite'));
-                var deploymentResult = await azureRmUtil.updateDeploymentStatus(publishingProfile, false);
-                tl.debug(deploymentResult);
-                onError(tl.loc('Failedtodeploywebsite'));
-            }
+export async function executeMSDeployCmd(msDeployCmdArgs: string, publishingProfile) {
 
+    var msDeployPath = await getMSDeployFullPath();
+    try {
+        var statusCode = await tl.exec(msDeployPath, msDeployCmdArgs, <any> {failOnStdErr: true});
+        tl.debug(tl.loc('WebappsuccessfullypublishedatUrl0',publishingProfile.destinationAppUrl));                
+        var deploymentResult = await azureRmUtil.updateDeploymentStatus(publishingProfile, true);
+        tl.debug(deploymentResult);
     }
     catch(error) {
-       onError(error);
+        tl.error(tl.loc('Failedtodeploywebsite'));
+        var deploymentResult = await azureRmUtil.updateDeploymentStatus(publishingProfile, false);
+        tl.debug(deploymentResult);
+        onError(error);
     }
 }
 

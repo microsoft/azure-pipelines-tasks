@@ -33,31 +33,39 @@ async function run() {
         SPN["servicePrincipalClientID"] = endPointAuthCreds.parameters["serviceprincipalid"];
         SPN["servicePrincipalKey"] = endPointAuthCreds.parameters["serviceprincipalkey"];
         SPN["tenantID"] = endPointAuthCreds.parameters["tenantid"];
-        SPN["subscriptionId"] = tl.getEndpointDataParameter (connectedServiceName, 'subscriptionid', true); 
+        SPN["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true); 
         
         if (!tl.exist(webDeployPkg)) {
             throw new Error(tl.loc('Packageorfoldernotfound0', webDeployPkg));
         }
 
         var isFolderBasedDeployment = !msDeployUtility.fileExists(webDeployPkg);
-        var isParamFilePresentInPacakge = false;
-
-        if (!isFolderBasedDeployment) {
-            isParamFilePresentInPacakge = await msDeployUtility.containsParamFile(webDeployPkg);
-        }
-
-        if(!tl.filePathSupplied('SetParametersFile')) {
-            setParametersFile = null;
-        }
-        else if (!msDeployUtility.fileExists(setParametersFile)) {
-            throw new Error(tl.loc('SetParamFilenotfound0', setParametersFile));
-        }
         
         var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+        tl._writeLine("##vso[task.setvariable variable=$websitePassword;issecret=true;]"+publishingProfile.userPWD);
 
-        var msDeployArgs = msDeployUtility.getMSDeployCmdArgs(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
-            excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments, isParamFilePresentInPacakge, isFolderBasedDeployment);
-        await msDeployUtility.executeMSDeployCmd(msDeployArgs, publishingProfile, webAppUri);
+        if(webAppUri) {
+            tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
+        }
+
+        if(useWebDeploy) {
+            var isParamFilePresentInPacakge = false;
+
+            if (!isFolderBasedDeployment) {
+                isParamFilePresentInPacakge = await msDeployUtility.containsParamFile(webDeployPkg);
+            }
+
+            if(!tl.filePathSupplied('SetParametersFile')) {
+                setParametersFile = null;
+            }
+            else if (!msDeployUtility.fileExists(setParametersFile)) {
+                throw new Error(tl.loc('SetParamFilenotfound0', setParametersFile));
+            }
+            var msDeployArgs = msDeployUtility.getMSDeployCmdArgs(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
+                excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments, isParamFilePresentInPacakge, isFolderBasedDeployment);
+
+            await msDeployUtility.executeMSDeployCmd(msDeployArgs, publishingProfile);
+        }
     } catch (error) {
         tl.setResult(tl.TaskResult.Failed, error);
     }
