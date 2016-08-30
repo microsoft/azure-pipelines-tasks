@@ -157,11 +157,11 @@ try
         if(![System.String]::IsNullOrWhiteSpace($runSettingsFileWithParallel) -and !$overrideTestrunParameters)
         {
             $testResultsDirectory = Get-ResultsLocation $runSettingsFileWithParallel 
-        }
 
-        if(!$testResultsDirectory)
-        {
-            $testResultsDirectory = $workingDirectory + [System.IO.Path]::DirectorySeparatorChar + "TestResults"
+            if([string]::IsNullOrEmpty($testResultsDirectory)
+            {
+                $testResultsDirectory = $workingDirectory + [System.IO.Path]::DirectorySeparatorChar + "TestResults"
+            }
         }
 
         Write-Verbose "Test results directory: $testResultsDirectory"
