@@ -132,9 +132,12 @@ try
             $vstestLocationInput = $null
         }
 
-        $artifactsDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.ArtifactsDirectory" -Global $FALSE
-
-        $workingDirectory = $artifactsDirectory
+        $workingDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "Common.TestResultsDirectory" -Global $FALSE
+        if ([string]::IsNullOrWhiteSpace($workingDirectory))
+        {
+            # for RM
+            $workingDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.ArtifactsDirectory" -Global $FALSE
+        }
 
         if($runInParallel -eq "True")
         {
