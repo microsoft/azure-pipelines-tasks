@@ -4,7 +4,12 @@ param()
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 . $PSScriptRoot\..\..\..\Tasks\VsTest\Helpers.ps1
 
-Register-Mock Get-TaskVariable { "c:\testSource" }
+$sourcesDirectory = 'c:\temp'
+$workingDirectory = 'c:\temp'
+$testResultsDirectory = $workingDirectory + [System.IO.Path]::DirectorySeparatorChar + "TestResults"
+Register-Mock Get-TaskVariable { $sourcesDirectory } -- -Context $distributedTaskContext -Name "Build.SourcesDirectory"
+Register-Mock Get-TaskVariable { $workingDirectory } -- -Context $distributedTaskContext -Name "System.DefaultWorkingDirectory"
+Register-Mock Get-TaskVariable { $testResultsDirectory } -- -Context $distributedTaskContext -Name "Common.TestResultsDirectory"
 Register-Mock Convert-String { $true }
 Register-Mock Find-Files { $true }
 Register-Mock CmdletHasMember { $true }
@@ -16,7 +21,7 @@ $input = @{
 'vsTestVersion'='14.0'
 'testAssembly'='asd.dll'
 'testFiltercriteria'=''
-'runSettingsFile'='asd'
+'runSettingsFile'=''
 'codeCoverageEnabled'='false'
 'pathtoCustomTestAdapters'=''
 'overrideTestrunParameters'='asd'
@@ -30,5 +35,5 @@ $input = @{
 & $PSScriptRoot\..\..\..\Tasks\VsTest\VSTest.ps1 @input
 
 Assert-WasCalled Invoke-VSTest -ParametersEvaluator {
-	$TestResultsFolder -eq 'c:\testSource\TestResults'
+	$TestResultsFolder -eq $testResultsDirectory
 }

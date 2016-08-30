@@ -14,13 +14,15 @@ Register-Mock Get-LocalizedString
 Register-Mock Write-Warning
 
 $sourcesDirectory = 'c:\temp'
+$workingDirectory = 'c:\temp'
+$testResultsDirectory = $workingDirectory + [System.IO.Path]::DirectorySeparatorChar + "TestResults"
 $distributedTaskContext = 'Some distributed task context'
 Register-Mock Get-TaskVariable { $sourcesDirectory } -- -Context $distributedTaskContext -Name "Build.SourcesDirectory"
-Register-Mock Get-TaskVariable { $sourcesDirectory } -- -Context $distributedTaskContext -Name "System.ArtifactsDirectory" -Global $FALSE
+Register-Mock Get-TaskVariable { $workingDirectory } -- -Context $distributedTaskContext -Name "System.DefaultWorkingDirectory"
+Register-Mock Get-TaskVariable { $testResultsDirectory } -- -Context $distributedTaskContext -Name "Common.TestResultsDirectory"
 
 Register-Mock Find-Files { $true } -- -SearchPattern $testAssembly -RootFolder $sourcesDirectory
-$testResultsDirectory=$sourcesDirectory + [System.IO.Path]::DirectorySeparatorChar + "TestResults"
-$resultFiles='c:\results.trx'
+$resultFiles='c:\temp\TestResults\results.trx'
 Register-Mock Find-Files { $resultFiles } -- -SearchPattern "*.trx" -RootFolder $testResultsDirectory
 
 Register-Mock Convert-String { $true }
