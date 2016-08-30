@@ -9,13 +9,16 @@
         "Build",
         "Release"
     ],
+    "runsOn": [
+        "Agent"
+    ],
     "author": "Microsoft Corporation",
     "demands": [
         "maven"
     ],
     "version": {
         "Major": 1,
-        "Minor": 0,
+        "Minor": 1,
         "Patch": 60
     },
     "minimumAgentVersion": "1.89.0",
