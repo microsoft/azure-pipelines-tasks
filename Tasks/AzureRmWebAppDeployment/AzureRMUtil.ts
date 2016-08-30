@@ -113,6 +113,7 @@ function getDeploymentAuthor(): string {
 function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isDeploymentSuccess: boolean): any {
     
     var status = isDeploymentSuccess ? 4 : 3;
+    var status_text = (status == 4) ? "success" : "failed";
     var author = getDeploymentAuthor();
 
     var buildUrl = tl.getVariable('build.buildUri');
@@ -142,7 +143,7 @@ function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isDeploymentSucce
     var message = "Updating Deployment History For Deployment " + buildOrReleaseUrl;
     var requestBody = {
         status : status,
-        status_text : status == 4 ? "success" : "failed", 
+        status_text : status_text, 
         message : message,
         author : author,
         deployer : 'VSTS',

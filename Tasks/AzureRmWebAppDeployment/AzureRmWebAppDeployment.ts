@@ -42,6 +42,9 @@ async function run() {
         tl.debug(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
         tl._writeLine("##vso[task.setvariable variable=$websitePassword;issecret=true;]" + publishingProfile.userPWD);
 
+        if(virtualApplication) {
+            publishingProfile.destinationAppUrl += "/" + virtualApplication;
+        }
         if(webAppUri) {
             tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
         }
