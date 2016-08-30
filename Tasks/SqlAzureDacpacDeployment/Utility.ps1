@@ -246,13 +246,16 @@ function Run-Command
            cmd.exe /c "$command"
         }
 
+        if ($LastExitCode -ne 0)
+        {
+            throw [System.Management.Automation.RuntimeException] "$command failed with exit code $LastExitCode"
+        }
     }
 	catch [System.Exception]
     {
         Write-Verbose $_.Exception
         throw $_.Exception
     }
-
 }
 
 function ConvertParamToSqlSupported
