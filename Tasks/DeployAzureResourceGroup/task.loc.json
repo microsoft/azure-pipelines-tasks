@@ -139,6 +139,19 @@
       "visibleRule": "action = Create Or Update Resource Group"
     },
     {
+      "name": "deploymentMode",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.deploymentmode",
+      "defaultValue": "incremental",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.deploymentmode",
+      "options": {
+        "Incremental": "Incremental Mode",
+        "Complete": "Complete Mode"
+      },
+      "visibleRule": "action = Create Or Update Resource Group"
+    },
+    {
       "name": "csmFile",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.csmFile",
