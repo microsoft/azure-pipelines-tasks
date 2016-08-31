@@ -43,7 +43,7 @@ export class TaskOptions {
     teamJobQueueUrl: string = util.addUrlSegment(this.serverEndpointUrl, '/team-build/build/' + this.jobName + '?delay=0sec');
     teamPluginUrl: string = util.addUrlSegment(this.serverEndpointUrl, '/pluginManager/available');
 
-    strictSSL: boolean = !tl.getBoolInput('trustSSL', true);
+    strictSSL: boolean = ("true" !== tl.getEndpointDataParameter(this.serverEndpoint, "acceptUntrustedCerts", true));
 
     NO_CRUMB: string = 'NO_CRUMB';
     crumb: string = this.NO_CRUMB;

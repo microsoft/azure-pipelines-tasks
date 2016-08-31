@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "SonarQube для MSBuild — начать анализ",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=620063)",
+  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkId=620063)",
   "loc.description": "Извлечение профиля качества из SonarQube для настройки анализа",
   "loc.instanceNameFormat": "Извлечение профиля качества из SonarQube",
   "loc.group.displayName.serverSettings": "Сервер SonarQube",
@@ -22,11 +22,11 @@
   "loc.input.label.dbPassword": "Пароль пользователя базы данных",
   "loc.input.help.dbPassword": "Только сервер SonarQube 5.1 и более ранней версии. Пароль для пользователя базы данных, например, i.e. sonar.jdbc.password",
   "loc.input.label.cmdLineArgs": "Дополнительные параметры",
-  "loc.input.help.cmdLineArgs": "Space separated settings using the format: /d:propertyName=propertyValue. Normal command line escaping rules apply. For more details on the settings please view the [SonarQube docs](https://go.microsoft.com/fwlink/?LinkID=624390).",
+  "loc.input.help.cmdLineArgs": "Параметры, разделенные пробелами, в следующем формате: /d:Имя_свойства=значение_свойства. Действуют обычные правила экранирования символов в командной строке. Дополнительные сведения о параметрах см. в [документах SonarQube](https://go.microsoft.com/fwlink/?LinkID=624390)",
   "loc.input.label.configFile": "Файл параметров",
-  "loc.input.help.configFile": "You can also specify settings via a configuration file. A template is available [here](https://go.microsoft.com/fwlink/?LinkID=620062)",
+  "loc.input.help.configFile": "Вы также можете указать параметры с помощью файла конфигурации. Шаблон доступен [здесь](https://go.microsoft.com/fwlink/?LinkID=620062)",
   "loc.input.label.includeFullReport": "Включить полный отчет об анализе в сводку сборки (SQ 5.3+)",
   "loc.input.help.includeFullReport": "При выборе этого параметра сборка откладывается до тех пор, пока не будет завершен анализ SonarQube.",
   "loc.input.label.breakBuild": "Завершать сборку неудачей при сбое шлюза качества (SQ 5.3+)",
-  "loc.input.help.breakBuild": "This option is only available when using a SonarQube server 5.3 or above. It will introduce delays as the build must wait for SonarQube to complete the analysis. [More information](https://go.microsoft.com/fwlink/?LinkId=722407)"
+  "loc.input.help.breakBuild": "Этот параметр доступен только при использовании сервера SonarQube 5.3 или более поздней версии. Он вызывает задержки, так как сборка должна дождаться завершения анализа SonarQube. [Дополнительные сведения](https://go.microsoft.com/fwlink/?LinkId=722407)"
 }

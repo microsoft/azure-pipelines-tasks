@@ -25,10 +25,9 @@ param
 $userAgent = "ApacheJmeterTestBuildTask"
 $apiVersion = "api-version=1.0"
 
-$global:ThresholdExceeded = $false
 $global:RestTimeout = 5
-$global:MonitorThresholds = $false
 $global:ElsAccountUrl = "http://www.visualstudio.com"
+$global:TFSAccountUrl = "http://www.visualstudio.com"
 $global:ScopedTestDrop = $TestDrop
 
 function InitializeRestHeaders()
@@ -101,20 +100,6 @@ $start = @"
     return $run
 }
 
-function StopTestRun($headers, $run)
-{
-$stop = @"
-    {
-      "state": "aborted"
-    }
-"@
-    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?{2}", $global:ElsAccountUrl, $run.id, $apiVersion)
-    Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Method Patch -Headers $headers -Body $stop
-    $run = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
-    return $run
-
-}
-
 function RunInProgress($run)
 {
     return $run.state -ne "completed" -and $run.state -ne "error" -and $run.state -ne "aborted"
@@ -131,45 +116,12 @@ function PrintErrorSummary($headers, $run)
             {
                 foreach ($errorDetail in $subType.errorDetailList)
                 {
-                    if ($type.typeName -eq "ThresholdMessage")
-                    {
-                        Write-Warning ( "[{0}] {1} occurrences of {2} " -f $type.typeName, $errorDetail.occurrences, $errorDetail.messageText)
-                    }
-                    else
-                    {
-                        Write-Warning ( "[{0}] {1} occurrences of ['{2}','{3}','{4}'] : {5} " -f $type.typeName, $errorDetail.occurrences, $errorDetail.scenarioName, $errorDetail.testCaseName,
-                        $subType.subTypeName, $errorDetail.messageText)
-                    }
-                }
-                if ($type.typeName -eq "ThresholdMessage" -and $subType.subTypeName -eq "Critical" -and $global:MonitorThresholds -and $subType.occurrences -gt $ThresholdLimit)
-                {
-                    Write-Error ( "Your loadtest has crossed the permissible {0} threshold violations with {1} violations" -f $ThresholdLimit, $subType.occurrences )
+                    Write-Warning ( "[{0}] {1} occurrences of ['{2}','{3}','{4}'] : {5} " -f $type.typeName, $errorDetail.occurrences, $errorDetail.scenarioName, $errorDetail.testCaseName,
+                    $subType.subTypeName, $errorDetail.messageText)
                 }
             }
         }
     }
-}
-
-function CheckTestErrors($headers, $run)
-{
-    if ($global:MonitorThresholds)
-    {
-        $uri = [String]::Format("{0}/_apis/clt/testruns/{1}/errors?type=ThresholdMessage&detailed=True&{2}", $global:ElsAccountUrl, $run.id, $apiVersion)
-        $errors = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
-
-        if ($errors -and $errors.count -gt 0 -and  $errors.types.count -gt 0)
-        {
-            foreach ($subType in $errors.types.subTypes)
-            {
-                if ($subType.subTypeName -eq 'Critical' -and $subType.occurrences -gt $ThresholdLimit)
-                {
-                    $global:ThresholdExceeded = $true
-                    return $true;
-                }
-            }
-        }
-    }
-    return $false;
 }
 
 function ShowMessages($headers, $run)
@@ -239,16 +191,10 @@ function MonitorTestRun($headers, $run)
     $runId = $run.id
     if ($runId)
     {
-        $abortRun = $false
         do
         {
             Start-Sleep -s 15
             $run = GetTestRun $headers $runId
-            $abortRun = CheckTestErrors $headers $run
-            if ($abortRun)
-            {
-                StopTestRun $headers $run
-            }
         }
         while (RunInProgress $run)
     }
@@ -334,6 +280,20 @@ function UploadSummaryMdReport($summaryMdPath)
 	}
 }
 
+function GetLastSuccessfulBuild($headers)
+{
+    $uri = ("{0}/{1}/_apis/build/builds?api-version={2}&definitions={3}&statusFilter=completed&resultFilter=succeeded&`$top=1" -f $global:TFSAccountUrl, $env:System_TeamProjectId, '2.0', $env:SYSTEM_DEFINITIONID)
+    $previousBuild = Get $headers $uri
+    return $previousBuild.Value
+}
+
+function GetFilteredTestRuns($headers, $filter)
+{
+    $uri = ("{0}/_apis/clt/testruns?{1}&detailed=false&runType=JMeterLoadTest&{2}" -f $global:ElsAccountUrl, $apiVersion, $filter)
+    $filteredTestRuns = Get $headers $uri
+    return $filteredTestRuns
+}
+
 
 ############################################## PS Script execution starts here ##########################################
 WriteTaskMessages "Starting Load Test Script"
@@ -349,23 +309,15 @@ Write-Output "Run source identifier = build/$env:SYSTEM_DEFINITIONID/$env:BUILD_
 #Validate Input
 Validate
 
-#Setting monitoring of Threshold rule appropriately
-if ($ThresholdLimit -and $ThresholdLimit -ge 0)
-{
-    $global:MonitorThresholds = $true
-    Write-Output "Threshold limit = $ThresholdLimit"
-}
-
 $connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
 
 $Username = $connectedServiceDetails.Authorization.Parameters.Username
 Write-Verbose "Username = $userName" -Verbose
 $Password = $connectedServiceDetails.Authorization.Parameters.Password
-$global:ElsAccountUrl = ComposeAccountUrl($connectedServiceDetails.Url.AbsoluteUri)
+$global:ElsAccountUrl = ComposeAccountUrl($connectedServiceDetails.Url.AbsoluteUri).TrimEnd('/')
+$global:TFSAccountUrl = $env:System_TeamFoundationCollectionUri.TrimEnd('/')
 
-$tfsUrl = $env:System_TeamFoundationCollectionUri.TrimEnd('/')
-
-Write-Verbose "VSO account Url = $tfsUrl" -Verbose
+Write-Verbose "VSO account Url = $global:TFSAccountUrl" -Verbose
 Write-Verbose "CLT account Url = $global:ElsAccountUrl" -Verbose
 
 #Setting Headers and account Url accordingly
@@ -400,17 +352,13 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
     {
         Write-Error "Load test has failed. Please check error messages to fix the problem."
     }
-    elseif ($global:ThresholdExceeded -eq $true)
-    {
-        Write-Error "Load test task is marked as failed, as the number of threshold errors has exceeded permissible limit."
-    }
     else
     {
         WriteTaskMessages "The load test completed successfully."
     }
 
     Write-Output ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name)
-    Write-Output ("To view run details navigate to {0}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={1}" -f $tfsUrl, $run.id)
+    Write-Output ("To view run details navigate to {0}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={1}" -f $global:TFSAccountUrl, $run.id)
 
     $resultsMDFolder = New-Item -ItemType Directory -Force -Path "$env:Temp\LoadTestResultSummary"
     $resultFilePattern = ("ApacheJMeterTestResults_{0}_{1}_*.md" -f $env:AGENT_ID, $env:SYSTEM_DEFINITIONID)
@@ -418,8 +366,36 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
     Remove-Item $resultsMDFolder\$resultFilePattern -Exclude $excludeFilePattern -Force
     $summaryFile =  ("{0}\ApacheJMeterTestResults_{1}_{2}_{3}_{4}.md" -f $resultsMDFolder, $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID, $run.id)
 
-    ("<p>[Test Run: {0}]({2}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={3}) using {1}.</p>" -f  $run.runNumber, $run.name, $tfsUrl, $run.id) >>  $summaryFile
+    $summary = ('[Test Run: {0}]({2}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={3}) using {1}.<br/>' -f  $run.runNumber, $run.name, $global:TFSAccountUrl, $run.id)
+    
+    $runComparisonAvailable = $false
+    $lastSuccessfulBuild = GetLastSuccessfulBuild $headers
 	
+	if ($lastSuccessfulBuild)
+	{
+        $runSourceIdentifierFilter=('runsourceidentifier=build/{0}/{1}' -f $env:SYSTEM_DEFINITIONID, $lastSuccessfulBuild.id)
+        $runsInLastBuild = GetFilteredTestRuns $headers $runSourceIdentifierFilter
+        
+        if ($runsInLastBuild)
+        {
+            foreach ($previousRun in $runsInLastBuild)
+            {
+                if ($previousRun.name -eq $run.name)
+                {
+                    $runComparisonAvailable = $true
+                    $summary += ('[Compare with run {0}]({1}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=compare&runId1={2}&runId2={3}) from [build {4}]({1}/{5}/_build#buildId={4}&_a=summary).' -f $previousRun.runNumber, $global:TFSAccountUrl, $previousRun.id, $run.id, $lastSuccessfulBuild.id, $env:System_TeamProjectId, $env:BUILD_BUILDID)
+                    break
+                }
+            }
+        }           
+	}
+
+	if(!$runComparisonAvailable)
+	{
+        $summary += ('No previous run found for comparison.')
+	}   
+	
+	('<p>{0}</p>' -f $summary) >>  $summaryFile
     UploadSummaryMdReport $summaryFile
 }
 else

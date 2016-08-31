@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "Azure ファイル コピー",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/azurefilecopyreadme)",
+  "loc.helpMarkDown": "[詳細] (https://aka.ms/azurefilecopyreadme)",
   "loc.description": "Azure BLOB または VM へのファイルのコピー",
   "loc.instanceNameFormat": "$(Destination) ファイル コピー",
-  "loc.group.displayName.output": "Output",
+  "loc.group.displayName.output": "出力",
   "loc.input.label.SourcePath": "ソース ",
   "loc.input.help.SourcePath": "ローカル コンピューターまたは UNC 共有にあるソース フォルダーまたはファイルの絶対パス。式は1つのフォルダーまたは1つのファイルを返さなければなりません。",
   "loc.input.label.ConnectedServiceNameSelector": "Azure 接続の種類",

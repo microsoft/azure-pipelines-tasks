@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio 組建",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613727)",
+  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613727)",
   "loc.description": "使用 MSBuild 建置並設定 Visual Studio 版本屬性",
   "loc.instanceNameFormat": "建置方案 $(solution)",
   "loc.group.displayName.advanced": "進階",

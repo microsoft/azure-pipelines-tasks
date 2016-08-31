@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 52
+        "Patch": 56
     },
     "demands": [
         "vstest"
@@ -92,6 +92,18 @@
             "groupName": "executionOptions"
         },
         {
+            "name": "vstestLocationMethod",
+            "type": "radio",
+            "label": "VSTest",
+            "required": false,
+            "groupName": "advancedExecutionOptions",
+            "defaultValue": "version",
+            "options": {
+                "version": "Version",
+                "location": "Specify Location"
+            }
+        },
+        {
             "name": "vsTestVersion",
             "type": "pickList",
             "label": "VSTest version",
@@ -99,11 +111,22 @@
             "required": false,
             "helpMarkDown": "The version of VSTest to use.",
             "groupName": "advancedExecutionOptions",
+            "visibleRule": "vstestLocationMethod = version",
             "options": {
                 "latest": "Latest",
                 "14.0": "Visual Studio 2015",
                 "12.0": "Visual Studio 2013"
             }
+        },
+        {
+            "name": "vstestLocation",
+            "type": "string",
+            "label": "Path to vstest.console.exe",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optionally supply the path to VSTest.",
+            "visibleRule": "vstestLocationMethod = location",
+            "groupName": "advancedExecutionOptions"
         },
         {
             "name": "pathtoCustomTestAdapters",

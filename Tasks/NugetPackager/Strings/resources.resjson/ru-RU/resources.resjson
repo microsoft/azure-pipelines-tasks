@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Упаковщик NuGet",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627416)",
+  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=627416)",
   "loc.description": "Создание выходных NUPKG-файлов из CSPROJ- или NUSPEC-файлов",
   "loc.instanceNameFormat": "Упаковщик NuGet $(solution)",
   "loc.group.displayName.versioning": "Управление версиями",

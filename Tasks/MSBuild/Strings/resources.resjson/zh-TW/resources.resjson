@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "MSBuild",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613724)",
+  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613724)",
   "loc.description": "使用 MSBuild 建置",
   "loc.instanceNameFormat": "建置方案 $(solution)",
   "loc.group.displayName.advanced": "進階",

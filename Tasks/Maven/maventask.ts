@@ -136,6 +136,8 @@ var codeAnalysisFailed: boolean = false;
 var mvnGetVersion = tl.createToolRunner(mvnExec);
 mvnGetVersion.arg('-version');
 
+configureMavenOpts();
+
 // 1. Check that Maven exists by executing it to retrieve its version.
 mvnGetVersion.exec()
     .fail(function (err) {
@@ -180,7 +182,7 @@ mvnGetVersion.exec()
         }
 
         // Otherwise, start uploading relevant build summaries.
-        return sqMaven.uploadSonarQubeBuildSummaryIfEnabled()
+        return sqMaven.processSonarQubeIntegration()
             .then(() => {
                 return codeAnalysis.uploadCodeAnalysisBuildSummaryIfEnabled();
             });
@@ -208,6 +210,16 @@ mvnGetVersion.exec()
 
         // Do not force an exit as publishing results is async and it won't have finished 
     });
+}
+
+// Configure the JVM associated with this run.
+function configureMavenOpts() {
+    let mavenOptsValue: string = tl.getInput('mavenOpts');
+
+    if (mavenOptsValue) {
+        process.env['MAVEN_OPTS'] = mavenOptsValue;
+        tl.debug(`MAVEN_OPTS is now set to ${mavenOptsValue}`);
+    }
 }
 
 // Publishes JUnit test results from files matching the specified pattern.

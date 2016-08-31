@@ -8,7 +8,7 @@ import trm = require('../../lib/taskRunner');
 import psm = require('../../lib/psRunner');
 import path = require('path');
 var shell = require('shelljs');
-var ps = shell.which('powershell');
+var ps = shell.which('powershell.exe');
 var psr = null;
 
 describe('AzurePowerShell Suite', function () {

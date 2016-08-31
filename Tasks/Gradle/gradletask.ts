@@ -5,6 +5,7 @@ import tl = require('vsts-task-lib/task');
 import fs = require('fs');
 import path = require('path');
 import * as Q from "q";
+import os = require('os');
 
 import sqCommon = require('./CodeAnalysis/SonarQube/common');
 import sqGradle = require('./CodeAnalysis/gradlesonar');
@@ -13,13 +14,23 @@ import {BuildOutput, BuildEngine} from './CodeAnalysis/Common/BuildOutput';
 import {PmdTool} from './CodeAnalysis/Common/PmdTool';
 import {CheckstyleTool} from './CodeAnalysis/Common/CheckstyleTool';
 import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
-//import * from "code-coverage-tools/CodeCoverageEnabler"
 import sshCommon = require('ssh-common/ssh-common');
+
+var isWindows = os.type().match(/^Win/);
 
 // Set up localization resource file
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 var wrapperScript = tl.getPathInput('wrapperScript', true, true);
+
+if (isWindows) {
+    // append .bat extension name on Windows platform
+    if (!wrapperScript.endsWith('bat')) {
+        tl.debug("Append .bat extension name to gradlew script.");
+        wrapperScript += '.bat';
+    }
+} 
+
 if (fs.existsSync(wrapperScript)) {
     // (The exists check above is not necessary, but we need to avoid this call when we are running L0 tests.)
     // Make sure the wrapper script is executable
@@ -93,6 +104,7 @@ enableCodeCoverage()
     }).catch(function (err) {
         tl.warning("Failed to enable code coverage: " + err);
     }).fin(function () {
+        setGradleOpts();
         enableSonarQubeAnalysis();
         execBuild();
     });
@@ -100,22 +112,22 @@ enableCodeCoverage()
 /* Actual execution of Build and further flows*/
 function execBuild() {
     var gradleResult;
-    gb.exec()
-        .then(function (code) {
-            gradleResult = code;
-            publishTestResults(publishJUnitResults, testResultsFiles);
-            publishCodeCoverage(isCodeCoverageOpted);
-            return processCodeAnalysisResults();
-        })
-        .then(() => {
-            tl.exit(gradleResult);
-        })
-        .fail(function (err) {
-            publishTestResults(publishJUnitResults, testResultsFiles);
-            console.error(err);
-            tl.debug('taskRunner fail');
-            tl.exit(1);
-        });
+gb.exec()
+    .then(function (code) {
+        gradleResult = code;
+        publishTestResults(publishJUnitResults, testResultsFiles);
+        publishCodeCoverage(isCodeCoverageOpted);
+        return processCodeAnalysisResults();
+    })
+    .then(() => {
+        tl.exit(gradleResult);
+    })
+    .fail(function (err) {
+        publishTestResults(publishJUnitResults, testResultsFiles);
+        console.error(err);
+        tl.debug('taskRunner fail');
+        tl.exit(1);
+    });
 }
 
 function enableSonarQubeAnalysis() {
@@ -134,7 +146,17 @@ function processCodeAnalysisResults(): Q.Promise<void> {
     tl.debug('Processing code analysis results');
     codeAnalysisOrchestrator.publishCodeAnalysisResults();
 
-    return sqGradle.uploadSonarQubeBuildSummaryIfEnabled();
+    return sqGradle.processSonarQubeIntegration();
+}
+
+// Configure the JVM associated with this run.
+function setGradleOpts() {
+    let gradleOptsValue: string = tl.getInput('gradleOpts');
+
+    if (gradleOptsValue) {
+        process.env['GRADLE_OPTS'] = gradleOptsValue;
+        tl.debug(`GRADLE_OPTS is now set to ${gradleOptsValue}`);
+    }
 }
 
 /* Functions for Publish Test Results, Code Coverage */

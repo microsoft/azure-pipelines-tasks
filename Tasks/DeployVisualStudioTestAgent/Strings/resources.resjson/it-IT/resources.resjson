@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Distribuzione agente di test di Visual Studio",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=625976)",
+  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkId=625976)",
   "loc.description": "Consente di distribuire e configurare l'agente di test per eseguire test su un set di computer",
   "loc.instanceNameFormat": "Distribuisci agente di test in $(testMachineGroup)",
   "loc.group.displayName.testMachineGroups": "Gruppo di computer di test",
@@ -26,7 +26,7 @@
   "loc.input.label.runAsProcess": "Processo interattivo",
   "loc.input.help.runAsProcess": "Indica se l'agente di test deve essere eseguito come processo interattivo. Necessario per i test codificati dell'interfaccia utente.",
   "loc.input.label.agentLocation": "Percorso dell'agente di test",
-  "loc.input.help.agentLocation": "Optionally supply the path to vstf_testagent.exe from network or local location. If no path is provided, it will be downloaded from `https://go.microsoft.com/fwlink/?LinkId=536423`",
+  "loc.input.help.agentLocation": "Consente, facoltativamente, di specificare il percorso del file vstf_testagent.exe dalla rete o da un percorso locale. Se non si specifica alcun percorso, il file verrà scaricato da `https://go.microsoft.com/fwlink/?LinkId=536423`",
   "loc.input.label.updateTestAgent": "Aggiorna agente di test",
   "loc.input.help.updateTestAgent": "Consente, facoltativamente, di specificare se l'agente di test deve essere aggiornato.",
   "loc.input.label.isDataCollectionOnly": "Abilita solo raccolta dei dati",

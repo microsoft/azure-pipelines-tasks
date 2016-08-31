@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "Copie de fichiers Azure",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/azurefilecopyreadme)",
+  "loc.helpMarkDown": "[Plus d'informations](https://aka.ms/azurefilecopyreadme)",
   "loc.description": "Copier les fichiers vers un objet blob ou des machines virtuelles Azure",
   "loc.instanceNameFormat": "$(Destination) Copie de fichiers",
-  "loc.group.displayName.output": "Output",
+  "loc.group.displayName.output": "Sortie",
   "loc.input.label.SourcePath": "Source",
   "loc.input.help.SourcePath": "Chemin d'accès absolu du dossier source, d'un fichier sur la machine locale ou d'un partage UNC. L'expression doit retourner un seul dossier ou fichier.",
   "loc.input.label.ConnectedServiceNameSelector": "Type de connexion Azure",

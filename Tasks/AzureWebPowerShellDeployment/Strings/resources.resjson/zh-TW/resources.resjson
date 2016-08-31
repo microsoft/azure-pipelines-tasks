@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Web 應用程式部署",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613750)",
+  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613750)",
   "loc.description": "使用 Web Deploy 將 Visual Studio Web 專案發行到 Microsoft Azure Web 應用程式",
   "loc.instanceNameFormat": "Azure 部署: $(WebSiteName)",
   "loc.input.label.ConnectedServiceName": "Azure Subscription (Classic)",

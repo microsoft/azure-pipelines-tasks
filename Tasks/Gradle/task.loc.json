@@ -188,6 +188,15 @@
       }
     },
     {
+      "name": "gradleOpts",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.gradleOpts",
+      "required": false,
+      "groupName": "advanced",
+      "defaultValue": "-Xmx2048m",
+      "helpMarkDown": "ms-resource:loc.input.help.gradleOpts"
+    },
+    {
       "name": "sqAnalysisEnabled",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.sqAnalysisEnabled",
@@ -280,6 +289,16 @@
       "visibleRule": "sqAnalysisEnabled = true"
     },
     {
+      "name": "sqAnalysisBreakBuildIfQualityGateFailed",
+      "type": "boolean",
+      "defaultValue": "",
+      "label": "ms-resource:loc.input.label.sqAnalysisBreakBuildIfQualityGateFailed",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisBreakBuildIfQualityGateFailed",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "sqAnalysisEnabled = true"
+    },
+    {
       "name": "checkstyleAnalysisEnabled",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.checkstyleAnalysisEnabled",
@@ -315,11 +334,14 @@
     "codeAnalysis_ToolFailed": "ms-resource:loc.messages.codeAnalysis_ToolFailed",
     "sqAnalysis_IncrementalMode": "ms-resource:loc.messages.sqAnalysis_IncrementalMode",
     "sqAnalysis_BuildSummaryTitle": "ms-resource:loc.messages.sqAnalysis_BuildSummaryTitle",
-    "sqAnalysis_BuildSummaryNotAvailableInPrBuild": "ms-resource:loc.messages.sqAnalysis_BuildSummaryNotAvailableInPrBuild",
     "sqAnalysis_TaskReportInvalid": "ms-resource:loc.messages.sqAnalysis_TaskReportInvalid",
     "sqAnalysis_BuildSummary_LinkText": "ms-resource:loc.messages.sqAnalysis_BuildSummary_LinkText",
     "sqAnalysis_BuildSummary_CannotAuthenticate": "ms-resource:loc.messages.sqAnalysis_BuildSummary_CannotAuthenticate",
     "sqAnalysis_AnalysisTimeout": "ms-resource:loc.messages.sqAnalysis_AnalysisTimeout",
+    "sqAnalysis_IsPullRequest_SkippingBuildSummary": "ms-resource:loc.messages.sqAnalysis_IsPullRequest_SkippingBuildSummary",
+    "sqAnalysis_IsPullRequest_SkippingBuildBreaker": "ms-resource:loc.messages.sqAnalysis_IsPullRequest_SkippingBuildBreaker",
+    "sqAnalysis_BuildBrokenDueToQualityGateFailure": "ms-resource:loc.messages.sqAnalysis_BuildBrokenDueToQualityGateFailure",
+    "sqAnalysis_QualityGatePassed": "ms-resource:loc.messages.sqAnalysis_QualityGatePassed",
     "codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles",
     "codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsOneFile",
     "codeAnalysisBuildSummaryLine_OneViolationOneFile": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_OneViolationOneFile",

@@ -10,18 +10,11 @@
         }
     },
     "find": {
+        "/notExistDir": [],
         "/someDir": [
             "/someDir/someOtherDir",
             "/someDir/someOtherDir2"
         ]
-    },
-    "stats": {
-        "/someDir/someOtherDir": {
-            "isDirectory": true
-        },
-        "/someDir/someOtherDir2": {
-            "isDirectory": false
-        }
     },
     "match": {
         "\\someDir\\someOtherDir": [

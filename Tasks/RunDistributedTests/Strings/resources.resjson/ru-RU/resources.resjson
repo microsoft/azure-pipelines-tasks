@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Запуск функциональных тестов",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=624389)",
+  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkId=624389)",
   "loc.description": "Запуск закодированных тестов пользовательских интерфейсов, Selenium или функциональных тестов в наборе компьютеров (с использованием агента тестирования)",
   "loc.instanceNameFormat": "Выполнить тесты $(sourcefilters) для $(testMachineGroup)",
   "loc.group.displayName.setupOptions": "Параметры настройки",
@@ -9,7 +9,7 @@
   "loc.input.label.testMachineGroup": "Компьютеры",
   "loc.input.help.testMachineGroup": "Укажите разделенный запятыми список IP-адресов или полных доменных имен компьютеров. Пример: \"dbserver.fabrikam.com или 192.168.12.34\". Можно также указать выходную переменную из других задач. Пример: \"$(variableName)\". Или же укажите имя группы компьютеров.",
   "loc.input.label.dropLocation": "Заданное место теста",
-  "loc.input.help.dropLocation": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Windows Machine File Copy' or 'Azure File Copy' task. System Environment Variables can also be used in location string. e.g., `%systemdrive%\\Tests`, `%temp%\\DropLocation` etc.",
+  "loc.input.help.dropLocation": "Расположение, в которое были помещены тестовые двоичные файлы на компьютерах агентов в рамках задачи \"Копировать файлы на компьютеры Windows\" или \"Копировать файлы Azure\". В строке расположения также можно использовать системные переменные среды, например %systemdrive%\\Tests, %temp%\\DropLocation и т. д.",
   "loc.input.label.testSelection": "Выбор теста",
   "loc.input.help.testSelection": "Выберите способ проведения тестов: с помощью тестовых сборок или плана тестирования.",
   "loc.input.label.testPlan": "План тестирования",

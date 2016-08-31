@@ -563,6 +563,7 @@ export function find(findPath: string): string[] {
 }
 
 export function rmRF(path: string): void {
+    debug(`rmRF(${path})`);
     var response = mock.getResponse('rmRF', path);
     if (!response['success']) {
         setResult(1, response['message']);
@@ -646,8 +647,19 @@ export function tool(tool: string) {
 //-----------------------------------------------------
 // Matching helpers
 //-----------------------------------------------------
-export function match(list, pattern, options): string[] {
-    return mock.getResponse('match', pattern) || [];
+export function match(list: string[], patterns: string[], options): string[];
+export function match(list: string[], pattern: string, options): string[];
+export function match(list: string[], pattern: any, options): string[] {
+    let patterns: string[];
+    if (typeof pattern == 'object') {
+        patterns = pattern;
+    }
+    else {
+        patterns = [ pattern ];
+    }
+
+    let key: string = patterns.join(',');
+    return mock.getResponse('match', key) || [];
 }
 
 export function matchFile(list, pattern, options): string[] {

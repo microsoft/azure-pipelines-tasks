@@ -40,42 +40,42 @@
         "output": true
     },
     "exec": {
-        "7zip/7z.exe x -ooutput mockedBuildSources/foo.zip": {
+        "/ExtractFiles/7zip/7z.exe x -ooutput mockedBuildSources/foo.zip": {
             "code": 0,
             "stdout": "extracted mockedBuildSources/foo.zip",
             "stderr": ""
         },
-        "7zip/7z.exe x -ooutput mockedBuildSources/foo.tar": {
+        "/ExtractFiles/7zip/7z.exe x -ooutput mockedBuildSources/foo.tar": {
             "code": 0,
             "stdout": "extracted mockedBuildSources/foo.tar",
             "stderr": ""
         },
-        "7zip/7z.exe x -ooutput/_foo.tar.gz_ mockedBuildSources/foo.tar.gz": {
+        "/ExtractFiles/7zip/7z.exe x -ooutput/_foo.tar.gz_ mockedBuildSources/foo.tar.gz": {
             "code": 0,
             "stdout": "extracted mockedBuildSources/foo.tar.gz",
             "stderr": ""
         },
-        "7zip/7z.exe x -ooutput output/_foo.tar.gz_/foo.tar": {
+        "/ExtractFiles/7zip/7z.exe x -ooutput output/_foo.tar.gz_/foo.tar": {
             "code": 0,
             "stdout": "extracted output/_foo.tar.gz_/foo.tar",
             "stderr": ""
         },
-        "7zip/7z.exe x -ooutput/ output/_foo.tar.gz_/foo.tar": {
+        "/ExtractFiles/7zip/7z.exe x -ooutput/ output/_foo.tar.gz_/foo.tar": {
             "code": 0,
             "stdout": "extractedoutput/_foo.tar.gz_/foo.tar",
             "stderr": ""
         },
-        "7zip/7z.exe x -ooutput mockedBuildSources/subdir/foo.jar": {
+        "/ExtractFiles/7zip/7z.exe x -ooutput mockedBuildSources/subdir/foo.jar": {
             "code": 0,
             "stdout": "extracted mockedBuildSources/subdir/foo.jar",
             "stderr": ""
         },
-        "7zip/7z.exe x -ooutput mockedBuildSources/subdir/subdir/foo.7z": {
+        "/ExtractFiles/7zip/7z.exe x -ooutput mockedBuildSources/subdir/subdir/foo.7z": {
             "code": 0,
             "stdout": "extracted mockedBuildSources/subdir/subdir/foo.7z",
             "stderr": ""
         },
-        "7zip/7z.exe x -ooutput mockedBuildSources/subdir/foo.zip": {
+        "/ExtractFiles/7zip/7z.exe x -ooutput mockedBuildSources/subdir/foo.zip": {
             "code": 0,
             "stdout": "extracted mockedBuildSources/subdir/foo.zip",
             "stderr": ""

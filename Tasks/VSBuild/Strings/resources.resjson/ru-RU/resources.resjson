@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Сборка Visual Studio",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613727)",
+  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613727)",
   "loc.description": "Сборка с помощью MSBuild и задание свойства версии Visual Studio",
   "loc.instanceNameFormat": "Сборка решения $(solution)",
   "loc.group.displayName.advanced": "Дополнительно",
