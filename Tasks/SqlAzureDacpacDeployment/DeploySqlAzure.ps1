@@ -176,9 +176,8 @@ Catch [System.Management.Automation.CommandNotFoundException]
         Write-Host "1. Install PowershellTools & SharedManagementObjects(dependency), from https://www.microsoft.com/en-us/download/details.aspx?id=52676 (2016)"
         Write-Host "2. Restart agent machine after installing tools to register Module path updates"
         Write-Host "3. Run Import-Module SQLPS on your agent Powershell prompt. (This step is not required on Powershell 3.0 enabled machines)"
-
-        throw
     }
+    throw $_.Exception
 }
 Finally
 {
