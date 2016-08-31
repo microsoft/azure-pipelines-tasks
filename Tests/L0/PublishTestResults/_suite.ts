@@ -11,7 +11,7 @@ function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
 }
 
-describe('Publish Test Results Suite', function() {
+describe('Publish Test Results Suite', function () {
     this.timeout(10000);
 
     before((done) => {
@@ -19,7 +19,7 @@ describe('Publish Test Results Suite', function() {
         done();
     });
 
-    after(function() {
+    after(function () {
 
     });
 
@@ -36,7 +36,7 @@ describe('Publish Test Results Suite', function() {
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.invokedToolCount == 0, 'should exit before running PublishTestResults');
-                
+
                 done();
             })
             .fail((err) => {
@@ -57,8 +57,7 @@ describe('Publish Test Results Suite', function() {
             .then(() => {
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
-                assert(tr.stdout.search(/##vso\[results.publish type=JUnit;mergeResults=true;resultFiles=some\/path\/one,some\/path\/two;\]/) >=0 , 'should publish test results.');
-                
+                assert(tr.stdout.search(/##vso\[results.publish type=JUnit;mergeResults=true;resultFiles=some\/path\/one,some\/path\/two;\]/) >= 0, 'should publish test results.');
                 done();
             })
             .fail((err) => {
@@ -107,7 +106,7 @@ describe('Publish Test Results Suite', function() {
                 done(err);
             });
     })
-    
+
     it('Publish test results when test runner type input is not provided', (done) => {
         setResponseFile('publishTestResultResponses.json');
 
@@ -121,6 +120,27 @@ describe('Publish Test Results Suite', function() {
                 assert(tr.stdErrContained('Input required: testRunner'));
                 assert(tr.failed, 'task should have failed');
                 assert(tr.invokedToolCount == 0, 'should exit before running PublishTestResults');
+
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+
+    it('Publish test results with resultFiles filter outside system default directory', (done) => {
+        setResponseFile('publishTestResultResponses.json');
+
+        var tr = new trm.TaskRunner('PublishTestResults');
+
+        tr.setInput('testRunner', 'JUnit');
+        tr.setInput('testResultsFiles', '/dirOutsideDefault/path/*');
+
+        tr.run()
+            .then(() => {
+                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.stdout.search(/##vso\[results.publish type=JUnit;mergeResults=true;resultFiles=\/dirOutsideDefault\/path\/file1,\/dirOutsideDefault\/path\/file2;\]/) >= 0, 'should publish test results.');
 
                 done();
             })

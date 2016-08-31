@@ -19,44 +19,43 @@ tl.debug('config: ' + config);
 tl.debug('testRunTitle: ' + testRunTitle);
 tl.debug('publishRunAttachments: ' + publishRunAttachments);
 
-var matchingTestResultsFiles = [];
-//check for pattern in testResultsFiles
-if(testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
-  tl.debug('Pattern found in testResultsFiles parameter');
-      if (path.isAbsolute(testResultsFiles)) {
-        var pathParts = testResultsFiles.split(path.sep);
-        var basePath = "";
-        var part= "";
-        for (part in pathParts) {
-            if (isRegexPath(pathParts[part]) == false) {
-                basePath += pathParts[part] + path.sep;
-            }
-        }
-        matchingTestResultsFiles = matchFiles(basePath, testResultsFiles);
-    } else {
-        matchingTestResultsFiles = matchFiles(tl.getVariable('System.DefaultWorkingDirectory'), testResultsFiles);
-    }
-}
-else {
-  tl.debug('No pattern found in testResultsFiles parameter');
-  matchingTestResultsFiles = [testResultsFiles];
-}
+var matchingTestResultsFiles: string[] = getMatchingFiles(tl.getVariable('System.DefaultWorkingDirectory'), testResultsFiles, 'testResultsFiles');
 
-if(!matchingTestResultsFiles || matchingTestResultsFiles.length == 0) {
-  tl.warning('No test result files matching ' + testResultsFiles + ' were found.');  
+if (!matchingTestResultsFiles || matchingTestResultsFiles.length == 0) {
+  tl.warning('No test result files matching ' + testResultsFiles + ' were found.');
   tl.exit(0);
 }
-else{
+else {
   var tp = new tl.TestPublisher(testRunner);
   tp.publish(matchingTestResultsFiles, mergeResults, platform, config, testRunTitle, publishRunAttachments);
 }
 
-function isRegexPath(filePath: string): boolean {
-    return (filePath.indexOf('*') >= 0 || filePath.indexOf('?') >= 0);
-}
+function getMatchingFiles(baseDirectory: string, inputPattern: string, inputPatternName: string): string[] {
+  var matchingFiles: string[] = [];
+  var indexOfAst: number = inputPattern.indexOf('*');
+  var indexOfQues: number = inputPattern.indexOf('?');
+  var basePath: string = baseDirectory;
 
-function matchFiles(basePath: string, filePattern: string): string[] {
-    tl.debug("Base path for matching files: " + basePath);
-    var allFiles = tl.find(basePath);
-    return tl.match(allFiles, filePattern, { matchBase: true });
+  if (indexOfAst >= 0 || indexOfQues >= 0) {
+    tl.debug('Pattern found in ' + inputPatternName + ' parameter');
+    if (path.isAbsolute(inputPattern)) {
+      indexOfAst = indexOfAst >= 0 ? indexOfAst : inputPattern.length;
+      indexOfQues = indexOfQues >= 0 ? indexOfQues : inputPattern.length;
+
+      var minIndexRegex: number = Math.min(indexOfAst, indexOfQues);
+
+      var lastIndexPathSep: number = inputPattern.lastIndexOf(path.sep, minIndexRegex); //can this break, not likely because of isabsolute check
+      basePath = inputPattern.substring(0, lastIndexPathSep);
+
+      tl.debug("Updating search base path to: " + basePath);
+    }
+
+    tl.debug("Using base path for matching files: " + basePath);
+    matchingFiles = tl.match(tl.find(basePath), inputPattern, { matchBase: true });
+  }
+  else {
+    tl.debug('No pattern found in ' + inputPatternName + ' parameter');
+    matchingFiles = [inputPattern];
+  }
+  return matchingFiles;
 }

@@ -6,12 +6,20 @@
         "/someDir": [
             "someDir/someFile2",
             "/someDir/someFile1"
+        ],
+        "/dirOutsideDefault/path": [
+            "/dirOutsideDefault/path/file1",
+            "/dirOutsideDefault/path/file2"
         ]
     },
     "match": {
         "/some/*pattern": [
             "some/path/one",
             "some/path/two"
+        ],
+        "/dirOutsideDefault/path/*": [
+            "/dirOutsideDefault/path/file1",
+            "/dirOutsideDefault/path/file2"
         ],
         "/invalid/*pattern": []
     }
