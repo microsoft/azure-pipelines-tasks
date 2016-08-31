@@ -8,8 +8,6 @@ $telemetryCodes =
   "DEPLOYMENT_Failed" = "DEP001";
   "DEPLOYMENT_FetchPropertyFromMap" = "DEPLOYMENT_FetchPropertyFromMap";
   "DEPLOYMENT_PerformActionFailed" = "DEPLOYMENT_PerformActionFailed";
-
-  #"VALIDATE_Deployment_CSMDeploymentFailed" = "VALIDATE_Deployment_CSMDeploymentFailed";
   
   "ENABLEWINRM_ProvisionVmCustomScriptFailed" = "ENABLEWINRM_ProvisionVmCustomScriptFailed"
   "ENABLEWINRM_ExecutionOfVmCustomScriptFailed" = "ENABLEWINRM_ExecutionOfVmCustomScriptFailed"
