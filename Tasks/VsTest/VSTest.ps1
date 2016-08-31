@@ -43,6 +43,8 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.CodeCoverage"
 
 Write-Host "##vso[task.logissue type=warning;TaskName=VSTest]"
 
+$testResultsDirectory=""
+
 try
 {
     if (!$testAssembly)
@@ -85,7 +87,7 @@ try
     $codeCoverage = Convert-String $codeCoverageEnabled Boolean
 
     $diagFileName = [system.IO.path]::GetTempFileName()
-    if($testAssemblyFiles)
+    if($testAssemblyFiles.count -gt 0)
     {
         Write-Verbose -Verbose "Calling Invoke-VSTest for all test assemblies"
 
@@ -132,14 +134,6 @@ try
             $vstestLocationInput = $null
         }
 
-        $workingDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.DefaultWorkingDirectory"
-        $testResultsDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "Common.TestResultsDirectory" -Global $FALSE
-        if ([string]::IsNullOrWhiteSpace($testResultsDirectory))
-        {
-            # for RM
-            $testResultsDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.ArtifactsDirectory" -Global $FALSE
-        }
-
         if($runInParallel -eq "True")
         {
             $rightVSVersionAvailable = IsVisualStudio2015Update1OrHigherInstalled $vsTestVersion $vstestLocationInput
@@ -159,9 +153,15 @@ try
             $testResultsDirectory = Get-ResultsLocation $runSettingsFileWithParallel 
         }
 
-        if(!$testResultsDirectory)
+        $workingDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.DefaultWorkingDirectory"
+        if([string]::IsNullOrEmpty($testResultsDirectory))
         {
-            $testResultsDirectory = $workingDirectory + [System.IO.Path]::DirectorySeparatorChar + "TestResults"
+            $testResultsDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "Common.TestResultsDirectory"
+            if ([string]::IsNullOrWhiteSpace($testResultsDirectory))
+            {
+                # for RM
+                $testResultsDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.ArtifactsDirectory"
+            }
         }
 
         Write-Verbose "Test results directory: $testResultsDirectory"

@@ -3,10 +3,11 @@ param()
 
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 
-$testAssembly='testAssembly.dll'
+$testAssembly='**\testAssembly.dll'
 Register-Mock Get-LocalizedString { } -- -Key "No results found to publish."
 Register-Mock Get-LocalizedString 
 Register-Mock Write-Warning
+Register-Mock Write-Host
 
 $sourcesDirectory = 'c:\temp'
 $workingDirectory = 'c:\temp'
@@ -16,7 +17,7 @@ Register-Mock Get-TaskVariable { $sourcesDirectory } -- -Context $distributedTas
 Register-Mock Get-TaskVariable { $workingDirectory } -- -Context $distributedTaskContext -Name "System.DefaultWorkingDirectory"
 Register-Mock Get-TaskVariable { $testResultsDirectory } -- -Context $distributedTaskContext -Name "Common.TestResultsDirectory"
 
-Register-Mock Find-Files { $true } -- -SearchPattern $testAssembly -RootFolder $sourcesDirectory
+Register-Mock Find-Files { @() } -- -SearchPattern $testAssembly -RootFolder $sourcesDirectory
 Register-Mock Find-Files { $false } -- -SearchPattern "*.trx" -RootFolder $testResultsDirectory
 
 Register-Mock Convert-String { $true }
@@ -40,11 +41,13 @@ $splat = @{
 	'configuration' = 'configuration'
 	'publishRunAttachments' = 'publishRunAttachments'
 	'runInParallel' = 'runInParallel'
+	'vstestLocationMethod' = "version"
+	'vstestLocation' = 'vstestLocation'
 }
 & $PSScriptRoot\..\..\..\Tasks\VsTest\VsTest.ps1 @splat
 
 Assert-WasCalled Find-Files -Times 1
 Assert-WasCalled IsVisualStudio2015Update1OrHigherInstalled -Times 0
 Assert-WasCalled Publish-TestResults -Times 0
-Assert-WasCalled Invoke-VsTest -Times 1
+Assert-WasCalled Invoke-VsTest -Times 0
 Assert-WasCalled Get-LocalizedString -Times 1

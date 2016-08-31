@@ -4,7 +4,8 @@ param()
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 
 $testAssembly='**\testAssembly.dll'
-Register-Mock Get-LocalizedString {  } -- -Key "No test assemblies found matching the pattern: '{0}'." -ArgumentList $testAssembly
+$called=$false
+Register-Mock Get-LocalizedString { } -- -Key "No test assemblies found matching the pattern: '{0}'." -ArgumentList $testAssembly
 Register-Mock Get-LocalizedString 
 Register-Mock Write-Warning
 
@@ -12,7 +13,8 @@ $sourcesDirectory = 'c:\temp'
 $distributedTaskContext = 'Some distributed task context'
 Register-Mock Get-TaskVariable { $sourcesDirectory } -- -Context $distributedTaskContext -Name "Build.SourcesDirectory"
 
-Register-Mock Find-Files { $false } -- -SearchPattern $testAssembly -RootFolder $sourcesDirectory
+Register-Mock Find-Files { @() } -- -SearchPattern $testAssembly -RootFolder $sourcesDirectory
+Register-Mock Find-Files { $false } -- -SearchPattern "*.trx" -RootFolder $testResultsDirectory
 
 Register-Mock Convert-String { $true }
 
@@ -33,6 +35,8 @@ $splat = @{
 	'configuration' = 'configuration'
 	'publishRunAttachments' = 'publishRunAttachments'
 	'runInParallel' = 'runInParallel'
+	'vstestLocationMethod' = "version"
+	'vstestLocation' = 'vstestLocation'
 }
 & $PSScriptRoot\..\..\..\Tasks\VsTest\VsTest.ps1 @splat
 
