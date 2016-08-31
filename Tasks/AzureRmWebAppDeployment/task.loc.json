@@ -217,6 +217,12 @@
     "CannotfindMSDeployexe": "ms-resource:loc.messages.CannotfindMSDeployexe",
     "Runningmsdeploycommandtocheckifpackagecontainsparamfile0": "ms-resource:loc.messages.Runningmsdeploycommandtocheckifpackagecontainsparamfile0",
     "Paramscontentofwebpackage0": "ms-resource:loc.messages.Paramscontentofwebpackage0",
-    "Isparameterfilepresentinwebpackage0": "ms-resource:loc.messages.Isparameterfilepresentinwebpackage0"
+    "Isparameterfilepresentinwebpackage0": "ms-resource:loc.messages.Isparameterfilepresentinwebpackage0",
+    "Requestingconfigdetails": "ms-resource:loc.messages.Requestingconfigdetails",
+    "Deployingwebapplicationatvirtualpathandphysicalpath": "ms-resource:loc.messages.Deployingwebapplicationatvirtualpathandphysicalpath",
+    "Successfullydeployedusingkuduservice": "ms-resource:loc.messages.Successfullydeployedusingkuduservice",
+    "Failedtodeploywebapppackageusingkuduservice": "ms-resource:loc.messages.Failedtodeploywebapppackageusingkuduservice",
+    "Unabletodeploywebappresponsecode": "ms-resource:loc.messages.Unabletodeploywebappresponsecode",
+    "Unabletopackagecontentoffolder": "ms-resource:loc.messages.Unabletopackagecontentoffolder"
   }
 }

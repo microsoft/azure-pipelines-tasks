@@ -222,3 +222,52 @@ async function getAzureRMWebAppID(SPN, webAppName: string, resourceType: string)
 
     return deferred.promise;
 }
+
+/**
+ *  REST request for azure webapp config details. Config details contains virtual application mappings.
+ *  
+ *  @param SPN                 Subscription details
+ *  @param webAppName          Web application name
+ *  @param deployToSlotFlag    Should deploy to slot
+ *  @param slotName            Slot for deployment
+ */
+async function getWebAppConfigDetails(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
+
+    var deferred = Q.defer<any>();
+    var accessToken = await getAuthorizationToken(SPN);
+    var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
+    var configUrl = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName + '/providers/Microsoft.Web/sites/' + webAppName + slotUrl +  '/config/web?api-version=2015-08-01';
+    tl.debug(tl.loc("Requestingconfigdetails", configUrl));
+    var requestOptions = {
+        url:  configUrl,
+        auth: {
+            bearer: accessToken
+        }
+    };
+
+    request (requestOptions, (error, response, body) => {
+        if( error ) {
+            deferred.reject(error);
+        }
+        else if(response.statusCode === 200) {
+            var obj = JSON.parse(body);
+            deferred.resolve(obj);
+        }
+        else {
+            deferred.reject(tl.loc('ErrorOccurredStausCode0',response.statusCode));
+        }
+    });
+
+    return deferred.promise;
+}
+
+export async function getAzureRMWebAppConfigDetails(SPN, webAppName: string, resourceGroupName:string, deployToSlotFlag:boolean, slotName:string) {
+    
+    if(!deployToSlotFlag){
+        var webAppID = await getAzureRMWebAppID(SPN, webAppName, 'Microsoft.Web/Sites');
+        resourceGroupName = webAppID.id.split ('/')[4];
+    }
+    var azureRmWebAppConfigDetails = await getWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+    return azureRmWebAppConfigDetails;
+
+}

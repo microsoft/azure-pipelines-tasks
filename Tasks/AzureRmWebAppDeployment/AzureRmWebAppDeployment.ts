@@ -7,6 +7,8 @@ import path = require('path');
 
 var azureRmUtil = require ('./AzureRMUtil.js');
 var msDeployUtility = require('./MSDeployUtility.js');
+var kuduUtility = require('./KuduUtility.js');
+var randomstring = require("randomstring");
 
 async function run() {
     try {
@@ -66,6 +68,9 @@ async function run() {
         if(useWebDeploy) {
             await DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
                             excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments, isParamFilePresentInPackage, isFolderBasedDeployment);
+        } else {
+            var azureWebAppDetails = await azureRmUtil.getAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+            await DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment)
         }
     } catch (error) {
         tl.setResult(tl.TaskResult.Failed, error);
@@ -99,6 +104,54 @@ async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, 
     try {
         await tl.exec(msDeployPath, msDeployCmdArgs, <any> {failOnStdErr: true});
         tl.debug(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
+    }
+    catch(error) {
+        tl.error(tl.loc('Failedtodeploywebsite'));
+        isDeploymentSuccess = false;
+        deploymentError = error;
+    }
+
+    try {
+        tl.debug(await azureRmUtil.updateDeploymentStatus(publishingProfile, isDeploymentSuccess));
+    }
+    catch(error) {
+        tl.warning(error);
+    }
+    finally {
+        if(!isDeploymentSuccess) {
+            throw Error(deploymentError);
+        }
+    }
+}
+
+/**
+ * Executes Web Deploy command
+ * 
+ * @param   webDeployPkg                   Web deploy package
+ * @param   webAppName                      web App Name
+ * @param   publishingProfile               Azure RM Connection Details
+ * @param   removeAdditionalFilesFlag       Flag to set DoNotDeleteRule rule
+ * @param   excludeFilesFromAppDataFlag     Flag to prevent App Data from publishing
+ * @param   takeAppOfflineFlag              Flag to enable AppOffline rule
+ * @param   virtualApplication              Virtual Application Name
+ * @param   setParametersFile               Set Parameter File path
+ * @param   additionalArguments             Arguments provided by user
+ * 
+ */
+async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment) {
+
+    var isDeploymentSuccess = true;
+    var deploymentError = null;
+    try {
+        
+        var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
+        var webAppZipFile = webDeployPkg;
+        if(isFolderBasedDeployment){
+            webAppZipFile = tl.getVariable('System.DefaultWorkingDirectory') + randomstring.generate(7) + '.zip';
+            await kuduUtility.archiveFolder(webDeployPkg,webAppZipFile);
+        }
+        await kuduUtility.deployWebAppPackage(webAppZipFile, virtualApplicationMappings, publishingProfile, virtualApplication);
+
     }
     catch(error) {
         tl.error(tl.loc('Failedtodeploywebsite'));
