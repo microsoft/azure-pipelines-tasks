@@ -140,6 +140,15 @@ export class ToolRunner extends events.EventEmitter {
         this.args = this.args.concat(this._argStringToArray(val));    
     }
 
+    public line(val: string) {
+        if (!val) {
+            return;
+        }
+
+        this._debug(this.toolPath + ' arg: ' + val);
+        this.args = this.args.concat(this._argStringToArray(val));
+    }
+
     public pathArg(val: string) {
         this._debug(this.toolPath + ' pathArg: ' + val);
         this.arg(val);
@@ -150,6 +159,17 @@ export class ToolRunner extends events.EventEmitter {
             this.arg(val);
         }
     }
+
+    private ignoreTempPath(cmdString: string): string {
+        this._debug('ignoreTempPath=' + process.env['MOCK_IGNORE_TEMP_PATH']);
+        this._debug('tempPath=' + process.env['MOCK_TEMP_PATH']);
+        if (process.env['MOCK_IGNORE_TEMP_PATH'] === 'true') {
+            // Using split/join to replace the temp path
+            cmdString = cmdString.split(process.env['MOCK_TEMP_PATH']).join('');
+        }
+
+        return cmdString;
+    } 
 
     //
     // Exec - use for long running tools where you need to stream live output as it runs
@@ -183,12 +203,8 @@ export class ToolRunner extends events.EventEmitter {
             cmdString += (' ' + argString);
         }
 
-        this._debug('ignoreTempPath=' + process.env['MOCK_IGNORE_TEMP_PATH']);
-        this._debug('tempPath=' + process.env['MOCK_TEMP_PATH']);
-        if (process.env['MOCK_IGNORE_TEMP_PATH'] === 'true') {
-            // Using split/join to replace the temp path
-            cmdString = cmdString.split(process.env['MOCK_TEMP_PATH']).join('');
-        }
+        // Using split/join to replace the temp path
+        cmdString = this.ignoreTempPath(cmdString);
 
         if (!ops.silent) {
             ops.outStream.write('[command]' + cmdString + os.EOL);
@@ -264,6 +280,10 @@ export class ToolRunner extends events.EventEmitter {
 
         var argString = this.args.join(' ') || '';
         var cmdString = this.toolPath;
+
+        // Using split/join to replace the temp path
+        cmdString = this.ignoreTempPath(cmdString);
+
         if (argString) {
             cmdString += (' ' + argString);
         }
@@ -273,14 +293,14 @@ export class ToolRunner extends events.EventEmitter {
         }
 
         var r = mock.getResponse('exec', cmdString);
-        if (r.stdout.length > 0) {
+        if (r.stdout && r.stdout.length > 0) {
             ops.outStream.write(r.stdout);
         }
 
-        if (r.stderr.length > 0) {
+        if (r.stderr && r.stderr.length > 0) {
             ops.errStream.write(r.stderr);
         }
 
-        return <IExecResult>{ code: r.code, stdout: r.stdout, stderr: r.stderr };
+        return <IExecResult>{ code: r.code, stdout: (r.stdout) ? r.stdout.toString() : null, stderr: (r.stderr) ? r.stderr.toString() : null };
     }
 }

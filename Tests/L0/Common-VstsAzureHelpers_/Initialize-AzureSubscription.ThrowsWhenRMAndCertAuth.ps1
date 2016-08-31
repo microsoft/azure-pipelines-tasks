@@ -7,5 +7,6 @@ $module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot/../../../Tasks/A
 & $module { $script:azureRMProfileModule = @{ } }
 $endpoint = @{ Auth = @{ Scheme = 'Certificate' } }
 
+Register-Mock Set-UserAgent
 # Act/Assert.
 Assert-Throws { & $module Initialize-AzureSubscription -Endpoint $endpoint } -MessagePattern AZ_CertificateAuthNotSupported

@@ -7,7 +7,7 @@
 #
 function InitPostCommentsModule
 {
-    param ([Microsoft.VisualStudio.Services.Client.VssConnection][ValidateNotNull()]$vssConnection)
+    param ([ValidateNotNull()]$vssConnection)
     
     Write-Verbose "Initializing the PostComments-Module"
     
@@ -46,18 +46,25 @@ function InternalInit
     Assert ( $script:codeReviewClient -ne $null ) "Internal error: could not retrieve the CodeReviewHttpClient object"
                  
     Write-Verbose "Fetching data from build variables"
-    $repositoryId = GetTaskContextVariable "build.repository.id"    
+    [Guid] $repositoryId = [Guid]::Empty
+    [Guid]::TryParse((GetTaskContextVariable "build.repository.id"), [ref]$repositoryId)
+
+    # There is a bug in core agent 2.103.0 and lower   
+    if ($repositoryId -eq [Guid]::Empty)
+    {
+        throw "Cannot determine the repository id. Please ensure you're build agent is up to date"
+    }   
+
     $script:project = GetTaskContextVariable "system.teamProject"
 
-    Assert (![String]::IsNullOrWhiteSpace($repositoryId)) "Internal error: could not determine the build.repository.id"
     Assert (![String]::IsNullOrWhiteSpace($script:project)) "Internal error: could not determine the system.teamProject"   
 
     $pullRequestId = GetPullRequestId
-    $repositoryIdGuid = [Guid]::Parse($repositoryId);
     Write-Verbose "Fetching the pull request object with id $pullRequestId"
 
-    $script:pullRequest = [PsWorkarounds.Helper]::GetPullRequestObject($script:gitClient, $script:project, $repositoryIdGuid, $pullRequestId);
-     
+    $request = InvokeByReflection $script:gitClient "GetPullRequestAsync" @([String], [Guid], [int]) @($script:project.ToString(),  [Guid]::Parse($repositoryId), $pullRequestId)
+    $script:pullRequest = $request.Result
+
     Assert ($script:pullRequest -ne $null) "Internal error: could not retrieve the pull request object" 
     Assert ($script:pullRequest.CodeReviewId -ne $null) "Internal error: could not retrieve the code review id" 
     Assert ($script:pullRequest.Repository -ne $null) "Internal error: could not retrieve the repository object" 
@@ -87,45 +94,7 @@ function LoadTfsClientAssemblies
     $externalAssemblyPaths | foreach {Add-Type -Path $_} 
     
     Write-Verbose "Loaded $externalAssemblyPaths"
-    
-    # Workaround: PowerShell 4 seems to have a problem finding the right method from a list of overloaded .net methods. This is because
-    # PS converts variables to its own PSObject type and it then gets confused when trying to coerce the values to determine the right method candidate.
-    # To work around this I create a .net helper method that calls the actual helper. The code bellow is built into an temp assembly
-    # and it can be accessed directly from this script.
-    $source = @"
-
-using Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi;
-using Microsoft.TeamFoundation.SourceControl.WebApi;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace PsWorkarounds
-{
-    public class Helper
-    {
-        public static GitPullRequest GetPullRequestObject(GitHttpClient gitClient, string project, Guid repositoryId, int pullRequestId)
-        {
-            return gitClient.GetPullRequestAsync(project, repositoryId, pullRequestId).Result;
-        }
-        
-        public static Dictionary<string, List<DiscussionThread>> GetThreadsDictionary(DiscussionHttpClient discussionClient, string artifactUri)
-        {
-            return discussionClient.GetThreadsAsync(new string[] { artifactUri }).Result;
-        }
-        
-        public static DiscussionCommentCollection GetComments(DiscussionHttpClient discussionClient, int discussionId)
-        {
-            return discussionClient.GetCommentsAsync(discussionId).Result;
-        }
-    }
 }
-"@
-    
-    (Add-Type -TypeDefinition $source -ReferencedAssemblies $externalAssemblyPaths) | out-null
-}
-
 
 #
 # Returns a list of files that have been changed in this PR
@@ -173,7 +142,13 @@ function GetModifiedFilesInPR
 #
 function PostDiscussionThreads
 {
-    param ([ValidateNotNull()][Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadCollection]$threads)
+    param ([Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadCollection]$threads)
+
+    if (($threads -eq $null) -or ($threads.Count -eq 0))
+    {
+        Write-Debug "No threads to post"
+        return;
+    }
     
     $vssJsonThreadCollection = New-Object -TypeName "Microsoft.VisualStudio.Services.WebApi.VssJsonCollectionWrapper[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadCollection]" -ArgumentList @(,$threads)
     [void]$script:discussionClient.CreateThreadsAsync($vssJsonThreadCollection, $null, [System.Threading.CancellationToken]::None).Result
@@ -186,7 +161,8 @@ function PostDiscussionThreads
 #
 function FetchActiveDiscussionThreads
 {
-    $threadsDictionary = [PsWorkarounds.Helper]::GetThreadsDictionary($script:discussionClient, $script:artifactUri)
+    $request = $script:discussionClient.GetThreadsAsync($artifactUri, $null, [System.Threading.CancellationToken]::None)
+    $threadsDictionary = $request.Result
     $threadList = New-Object "System.Collections.Generic.List[$script:discussionWebApiNS.DiscussionThread]"
     
     foreach ($threads in $threadsDictionary.Values)
@@ -215,8 +191,9 @@ function FetchDiscussionComments
     
     foreach ($discussionThread in $discussionThreads)
     {
-        $commentsFromThread = [PsWorkarounds.Helper]::GetComments($script:discussionClient, $discussionThread.DiscussionId)
-        
+        $request = InvokeByReflection  $script:discussionClient "GetCommentsAsync" @([Int]) @($discussionThread.DiscussionId)
+        $commentsFromThread = $request.Result
+
         if ($commentsFromThread -ne $null)
         {
             $comments.AddRange($commentsFromThread)
@@ -276,15 +253,9 @@ function ThreadMatchesCommentSource
 
 function GetCodeFlowLatestIterationId
 {
-    $review = $script:codeReviewClient.GetReviewAsync(
-        $script:pullRequest.Repository.ProjectReference.Id,  # Guid project
-        $script:pullRequest.CodeReviewId, # int reviewId
-        $null, # bool? includeAllProperties
-        $null, # int? maxChangesCount
-        $null, # DateTimeOffset? ifModifiedSince
-        $null, # object userState
-        [System.Threading.CancellationToken]::None).Result
-    
+    $request = InvokeByReflection $script:codeReviewClient "GetReviewAsync" @([Guid], [Int]) @($script:pullRequest.Repository.ProjectReference.Id, $script:pullRequest.CodeReviewId)
+    $review = $request.Result;
+
     Assert ($review -ne $null) "Could not retrieve the review"
     Assert (HasElements $review.Iterations) "No iterations found on the review"
     
@@ -297,31 +268,81 @@ function GetCodeFlowChanges
 {
      param ([int]$iterationId)
      
-     $changes = $script:codeReviewClient.GetChangesAsync(
-        $script:pullRequest.Repository.ProjectReference.Id, 
-        $script:pullRequest.CodeReviewId, 
-        $iterationId,
-        $null, $null, $null, [System.Threading.CancellationToken]::None).Result
+     $request = InvokeByReflection $script:codeReviewClient "GetChangesAsync" @([Guid], [Int], [Int]) @($script:pullRequest.Repository.ProjectReference.Id, $script:pullRequest.CodeReviewId,$iterationId)
+     $changes = $request.Result;
      
-     Write-Verbose "Change count: $($changes.Count)"
+     if ($changes)
+     {
+        Write-Verbose "Change count: $($changes.Count)"
+     }
      
      return $changes
 }
 
-function GetCodeFlowChangeTrackingId
+
+function TryGetCodeFlowChangeTrackingId
 {
-    param ([Microsoft.VisualStudio.Services.CodeReview.WebApi.IterationChanges]$changes, [string]$path)
-    
+    param ($changes, [string]$path, [Ref][int]$changeId)
     $change = $changes.ChangeEntries | Where-Object {$_.Modified.Path -eq $path}
+
+    if (($change -eq $null) -or ($change.Count -ne 1))
+    {
+        return $false;
+    }
     
-    Assert ($change -ne $null) "No changes found for $path"
-    Assert ($change.Count -eq 1) "Expecting exactly 1 change for $path but found $($change.Count)"
-    
-    return $change.ChangeTrackingId
+    $changeId.Value = $change.ChangeTrackingId;
+    return $true;
 } 
 
 #endregion 
 
+#
+# Invoke a method with optional params by reflection. 
+# This can be used to overcome PS bugs in determining the correct overload candidate method from a .net assembly
+#
+# Remark: this does not work with polymorphic parameters
+function InvokeByReflection
+{
+    param ($obj, $methodName, [Type[]] $parameterTypes, [Object[]] $parameterValues)
 
-     
+    # GetMethod(name, Type[]) could also be used, but the methods tend to have many parameters and to list them all make the code harder to read
+    $publicMethods = $obj.GetType().GetMethods() | Where-Object {($_.Name -eq $methodName) -and  ($_.IsPublic -eq $true)}
+    Assert ($publicMethods.Count -gt 0) "$methodName not found"
+
+    foreach ($method in $publicMethods)
+    {
+        $methodParams = $method.GetParameters();
+        if ((ParamTypesMatch $methodParams $parameterTypes) -eq $true) 
+        {
+            $paramValuesAndDefaults = New-Object "System.Collections.Generic.List[Object]"
+            $paramValuesAndDefaults.AddRange($parameterValues);
+
+            for ($i=0; $i -lt ($methodParams.Length - $parameterValues.Length); $i++)
+            {
+                $paramValuesAndDefaults.Add([Type]::Missing);
+            } 
+
+            return $method.Invoke($obj, [Reflection.BindingFlags]::OptionalParamBinding, $null, $paramValuesAndDefaults.ToArray(), [Globalization.CultureInfo]::CurrentCulture)
+        }
+    }
+
+    throw "No suitable overload found for $methodName"
+}
+
+#
+# Returns true if the candidate types match are a subset of method parameter types, on a position by position basis
+# 
+function ParamTypesMatch
+{
+   param ([Reflection.ParameterInfo[]] $methodParams, [Type[]] $candidateTypes)
+
+   for ($i=0; $i -lt $candidateTypes.Length; $i++) {
+       if ($methodParams[$i].ParameterType -ne $candidateTypes[$i])
+       {
+           return $false;
+       }
+   }
+  
+   return (($methodParams | select -Skip $candidateTypes.Length | Where-Object {$_.IsOptional -eq $false}).Count -eq 0)
+}
 

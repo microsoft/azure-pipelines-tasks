@@ -1,0 +1,92 @@
+{
+  "id": "86c37a92-59a7-444b-93c7-220fcf91e29c",
+  "name": "JenkinsDownloadArtifacts",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft",
+  "demands": [],
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 1
+  },
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "serverEndpoint",
+      "type": "connectedService:Jenkins",
+      "label": "ms-resource:loc.input.label.serverEndpoint",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.serverEndpoint"
+    },
+    {
+      "name": "jobName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.jobName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.jobName"
+    },
+    {
+      "name": "saveTo",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.saveTo",
+      "defaultValue": "jenkinsArtifacts",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.saveTo"
+    },
+    {
+      "name": "jenkinsBuild",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.jenkinsBuild",
+      "defaultValue": "LastSuccessfulBuild",
+      "required": true,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.jenkinsBuild",
+      "options": {
+        "LastSuccessfulBuild": "Last Successful Build",
+        "BuildNumber": "Build Number"
+      }
+    },
+    {
+      "name": "jenkinsBuildNumber",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.jenkinsBuildNumber",
+      "defaultValue": "1",
+      "required": true,
+      "groupName": "advanced",
+      "visibleRule": "jenkinsBuild == BuildNumber",
+      "helpMarkDown": "ms-resource:loc.input.help.jenkinsBuildNumber"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "jenkinsdownloadartifacts.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "GetArtifactsFromLastSuccessfulBuild": "ms-resource:loc.messages.GetArtifactsFromLastSuccessfulBuild",
+    "GetArtifactsFromBuildNumber": "ms-resource:loc.messages.GetArtifactsFromBuildNumber",
+    "CouldNotFindArtifacts": "ms-resource:loc.messages.CouldNotFindArtifacts",
+    "CouldNotGetLastSuccessfuilBuildNumber": "ms-resource:loc.messages.CouldNotGetLastSuccessfuilBuildNumber",
+    "ServerCallFailed": "ms-resource:loc.messages.ServerCallFailed",
+    "ServerCallErrorCode": "ms-resource:loc.messages.ServerCallErrorCode",
+    "DownloadFileTo": "ms-resource:loc.messages.DownloadFileTo",
+    "FileSuccessfullyDownloaded": "ms-resource:loc.messages.FileSuccessfullyDownloaded"
+  }
+}

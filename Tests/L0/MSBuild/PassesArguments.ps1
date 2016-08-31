@@ -7,11 +7,12 @@ Register-Mock Trace-VstsEnteringInvocation
 Register-Mock Trace-VstsLeavingInvocation
 Register-Mock Import-VstsLocStrings
 $variableSets = @(
-    @{ Clean = $false ; RestoreNugetPackages = $false ; LogProjectEvents = $false ; CreateLogFile = $false }
-    @{ Clean = $false ; RestoreNugetPackages = $false ; LogProjectEvents = $false ; CreateLogFile = $true }
-    @{ Clean = $false ; RestoreNugetPackages = $false ; LogProjectEvents = $true ; CreateLogFile = $false }
-    @{ Clean = $false ; RestoreNugetPackages = $true ; LogProjectEvents = $false ; CreateLogFile = $false }
-    @{ Clean = $true ; RestoreNugetPackages = $false ; LogProjectEvents = $false ; CreateLogFile = $false }
+    @{ Clean = $false ; MaximumCpuCount = $false ; RestoreNugetPackages = $false ; LogProjectEvents = $false ; CreateLogFile = $false }
+    @{ Clean = $false ; MaximumCpuCount = $false ; RestoreNugetPackages = $false ; LogProjectEvents = $false ; CreateLogFile = $true }
+    @{ Clean = $false ; MaximumCpuCount = $false ; RestoreNugetPackages = $false ; LogProjectEvents = $true ; CreateLogFile = $false }
+    @{ Clean = $false ; MaximumCpuCount = $false ; RestoreNugetPackages = $true ; LogProjectEvents = $false ; CreateLogFile = $false }
+    @{ Clean = $false ; MaximumCpuCount = $true ; RestoreNugetPackages = $false ; LogProjectEvents = $false ; CreateLogFile = $false }
+    @{ Clean = $true ; MaximumCpuCount = $false ; RestoreNugetPackages = $false ; LogProjectEvents = $false ; CreateLogFile = $false }
 )
 foreach ($variableSet in $variableSets) {
     Unregister-Mock Get-VstsInput
@@ -26,13 +27,14 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Get-VstsInput { 'Some input platform' } -- -Name Platform
     Register-Mock Get-VstsInput { 'Some input configuration' } -- -Name Configuration
     Register-Mock Get-VstsInput { $variableSet.Clean } -- -Name Clean -AsBool
+    Register-Mock Get-VstsInput { $variableSet.MaximumCpuCount } -- -Name MaximumCpuCount -AsBool
     Register-Mock Get-VstsInput { $variableSet.RestoreNuGetPackages } -- -Name RestoreNuGetPackages -AsBool
     Register-Mock Get-VstsInput { $variableSet.LogProjectEvents } -- -Name LogProjectEvents -AsBool
     Register-Mock Get-VstsInput { $variableSet.CreateLogFile } -- -Name CreateLogFile -AsBool
     Register-Mock Get-VstsInput { 'Some input version' } -- -Name MSBuildVersion
     Register-Mock Get-VstsInput { 'Some input architecture' } -- -Name MSBuildArchitecture
     Register-Mock Get-SolutionFiles { 'Some solution 1', 'Some solution 2' } -- -Solution 'Some input solution'
-    Register-Mock Format-MSBuildArguments { 'Some formatted arguments' } -- -MSBuildArguments 'Some input arguments' -Platform 'Some input platform' -Configuration 'Some input configuration'
+    Register-Mock Format-MSBuildArguments { 'Some formatted arguments' } -- -MSBuildArguments 'Some input arguments' -Platform 'Some input platform' -Configuration 'Some input configuration' -MaximumCpuCount: $variableSet.MaximumCpuCount
     Register-Mock Select-MSBuildLocation { 'Some location' } -- -Method 'Some input method' -Location 'Some input location' -Version 'Some input version' -Architecture 'Some input architecture'
     Register-Mock Invoke-BuildTools { 'Some build output line 1', 'Some build output line 2' }
 

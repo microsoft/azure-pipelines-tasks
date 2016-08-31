@@ -29,7 +29,50 @@ var onError = function (errorMsg) {
     tl.exit(1);
 }
 
+function findFiles(pattern: string) : string [] {
+    //set default matching options
+    var matchOptions = {matchBase: true};
+
+    // Resolve files for the specified value or pattern
+    var filesList : string [];
+    if (pattern.indexOf('*') == -1 && pattern.indexOf('?') == -1) {
+        // No pattern found, check literal path to a single file
+        tl.checkPath(pattern, 'files');
+
+        // Use the specified single file
+        filesList = [pattern];
+    } else {
+        var firstWildcardIndex = function(str) {
+            var idx = str.indexOf('*');
+
+            var idxOfWildcard = str.indexOf('?');
+            if (idxOfWildcard > -1) {
+                return (idx > -1) ?
+                    Math.min(idx, idxOfWildcard) : idxOfWildcard;
+            }
+
+            return idx;
+        }
+
+        // First find the most complete path without any matching patterns
+        var idx = firstWildcardIndex(pattern);
+        tl.debug('Index of first wildcard: ' + idx);
+
+        var findPathRoot = path.dirname(pattern.slice(0, idx));
+        tl.debug('find root dir: ' + findPathRoot);
+
+        // Now we get a list of all files under this root
+        var allFiles = tl.find(findPathRoot);
+
+        // Find files matching the specified pattern
+        tl.debug('Matching glob pattern: ' + pattern);
+        filesList = tl.match(allFiles, pattern, matchOptions);
+    }
+    return filesList;
+}
+
 // Resolve apps for the specified value or pattern
+var appFiles;
 if (app.indexOf('*') == -1 && app.indexOf('?') == -1) {
     // Check literal path to a single app file
     if (!tl.exist(app)) {
@@ -37,14 +80,9 @@ if (app.indexOf('*') == -1 && app.indexOf('?') == -1) {
     }
 
     // Use the single specified app file
-    var appFiles = [app];
-}
-else {
-    // Find app files matching the specified pattern    
-    tl.debug('Pattern found in app parameter');
-    var buildFolder = tl.getVariable('agent.buildDirectory');
-    var allappFiles = tl.find(buildFolder);
-    var appFiles = tl.match(allappFiles, app, {matchBase: true});
+    appFiles = [app];
+} else {
+    appFiles = findFiles(app);
 
     // Fail if no matching app files were found
     if (!appFiles || appFiles.length == 0) {
@@ -64,6 +102,7 @@ if (path.basename(testCloudLocation) != 'test-cloud.exe') {
 }
 
 // Locate test-cloud.exe (part of the Xamarin.UITest NuGet package)
+var testCloud;
 if (testCloudLocation.indexOf('*') == -1 && testCloudLocation.indexOf('?') == -1) {
     // Check literal path to test-cloud.exe
     if (!tl.exist(testCloudLocation)) {
@@ -71,24 +110,19 @@ if (testCloudLocation.indexOf('*') == -1 && testCloudLocation.indexOf('?') == -1
     }
 
     // Use literal path to test-cloud.exe
-    var testCloud = testCloudLocation;
-}
-else {
-    // Find test-cloud.exe under the specified directory pattern
-    tl.debug('Pattern found in testCloudLocation parameter');
-    var buildFolder = tl.getVariable('agent.buildDirectory');
-    var allexeFiles = tl.find(buildFolder);
-    var testCloudExecutables = tl.match(allexeFiles, testCloudLocation, {matchBase: true});
+    testCloud = testCloudLocation;
+} else {
+    var testCloudExecutables = findFiles(testCloudLocation);
 
-    // Fail if not found
+    // Fail if no matching test-cloud.exe was found
     if (!testCloudExecutables || testCloudExecutables.length == 0) {
         onError('test-cloud.exe could not be found with search pattern ' + testCloudLocation);
     }
 
-    // Use first found path to test-cloud.exe
-    var testCloud = testCloudExecutables[0];
+    //Use first found path to test-cloud.exe
+    testCloud = testCloudExecutables[0];
 }
-
+tl.debug('test-cloud.exe location = ' + testCloud);
 
 // Invoke test-cloud.exe for each app file
 var buildId = tl.getVariable('build.buildId');
@@ -104,11 +138,10 @@ var onRunComplete = function () {
         uploadTestSummary();
 
         if (runFailures == 'true') {
-            // Error executing
-            tl.exit(1);
+            tl.setResult(tl.TaskResult.Failed, "Xamarin Test Cloud runs had failures, check the log for details.")
         }
         else {
-            tl.exit(0); // Done submitting all app files
+            tl.setResult(tl.TaskResult.Succeeded, "Xamarin Test Cloud runs completed successfully.");
         }
     } else {
         // Submit next app file
@@ -117,6 +150,7 @@ var onRunComplete = function () {
 }
 var onFailedExecution = function (err) {
     runFailures = 'true';
+    tl.setResult(tl.TaskResult.Failed, err);
     tl.debug('Error executing test run: ' + err);
     onRunComplete();
 }
@@ -134,17 +168,11 @@ function uploadTestSummary() {
     }
 
     tl.debug('reportdata = ' + reportData);
-    fs.writeFile(mdReportFile, reportData, function (err) {
-        if (err) {
-            tl.warning('Failed to create Xamarin Test Cloud run summary report. ' + err);
-        } else {
-            tl.command('task.addattachment', {
-                name: "Xamarin Test Cloud Results",
-                type: "Distributedtask.Core.Summary"
-            }, mdReportFile);
-        }
-    })
-
+    tl.writeFile(mdReportFile, reportData);
+    tl.command('task.addattachment', {
+            name: "Xamarin Test Cloud Results",
+            type: "Distributedtask.Core.Summary"
+        }, mdReportFile);
 }
 
 function publishTestResults() {
@@ -161,15 +189,15 @@ function publishTestResults() {
 var submitToTestCloud = function (index) {
     // Find location of mono
     if (isWin) {
-        var testCloudRunner = tl.createToolRunner(testCloud);
+        var testCloudRunner = tl.tool(testCloud);
     } else {
         var monoPath = tl.which('mono', true);
-        var testCloudRunner = tl.createToolRunner(monoPath);
+        var testCloudRunner = tl.tool(monoPath);
         testCloudRunner.arg(testCloud);
     }
     // Form basic arguments
     testCloudRunner.arg('submit');
-    testCloudRunner.pathArg(appFiles[index]);
+    testCloudRunner.arg(appFiles[index]);
     testCloudRunner.arg(teamApiKey);
     testCloudRunner.arg('--user');
     testCloudRunner.arg(user);
@@ -185,7 +213,7 @@ var submitToTestCloud = function (index) {
         testCloudRunner.arg(locale);
     }
     testCloudRunner.arg('--assembly-dir');
-    testCloudRunner.pathArg(testDir);
+    testCloudRunner.arg(testDir);
     if (parallelization != 'none') {
         testCloudRunner.arg(parallelization);
     }
@@ -195,7 +223,7 @@ var submitToTestCloud = function (index) {
     if (publishNUnitResults == 'true') {
         var nunitFile = path.join(testDir, '/xamarintest_' + buildId + '.' + index + '.xml');
         testCloudRunner.arg('--nunit-xml');
-        testCloudRunner.pathArg(nunitFile);
+        testCloudRunner.arg(nunitFile);
     }
 
     // For an iOS .ipa app, look for an accompanying dSYM file
@@ -213,7 +241,7 @@ var submitToTestCloud = function (index) {
         else {
             // Include dSYM file in Test Cloud arguments
             testCloudRunner.arg('--dsym');
-            testCloudRunner.pathArg(dsymFiles[0]);
+            testCloudRunner.arg(dsymFiles[0]);
         }
     }
 

@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 46
+        "Patch": 56
     },
     "demands": [
         "vstest"
@@ -92,6 +92,18 @@
             "groupName": "executionOptions"
         },
         {
+            "name": "vstestLocationMethod",
+            "type": "radio",
+            "label": "VSTest",
+            "required": false,
+            "groupName": "advancedExecutionOptions",
+            "defaultValue": "version",
+            "options": {
+                "version": "Version",
+                "location": "Specify Location"
+            }
+        },
+        {
             "name": "vsTestVersion",
             "type": "pickList",
             "label": "VSTest version",
@@ -99,11 +111,22 @@
             "required": false,
             "helpMarkDown": "The version of VSTest to use.",
             "groupName": "advancedExecutionOptions",
+            "visibleRule": "vstestLocationMethod = version",
             "options": {
                 "latest": "Latest",
                 "14.0": "Visual Studio 2015",
                 "12.0": "Visual Studio 2013"
             }
+        },
+        {
+            "name": "vstestLocation",
+            "type": "string",
+            "label": "Path to vstest.console.exe",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optionally supply the path to VSTest.",
+            "visibleRule": "vstestLocationMethod = location",
+            "groupName": "advancedExecutionOptions"
         },
         {
             "name": "pathtoCustomTestAdapters",
@@ -189,6 +212,9 @@
         "ErrorWhileSettingTestImpactCollectorTestSettings": "Error occurred while setting Test Impact Collector in test settings file.",
         "ErrorWhileSettingTestImpactCollectorRunSettings": "Error occurred while setting Test Impact Collector in run settings file.",
         "ErrorWhileCreatingResponseFile": "Error occurred while creating the response file. All the tests will be executed for this run.",
-        "ErrorWhileUpdatingResponseFile": "Error occurred while updating the response file '%s'. All the tests will be executed for this run."
+        "ErrorWhileUpdatingResponseFile": "Error occurred while updating the response file '%s'. All the tests will be executed for this run.",
+        "ErrorWhilePublishingCodeChanges": "Error occurred while publishing the code changes. All the tests will be executed for this run.",
+        "PublishCodeChangesPerfTime": "Total time taken to publish code changes: %d milliseconds",
+        "GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds"
     }
 }

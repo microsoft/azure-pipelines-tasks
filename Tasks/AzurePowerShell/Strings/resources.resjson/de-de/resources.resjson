@@ -12,6 +12,6 @@
   "loc.input.help.ScriptPath": "Der Pfad des Skripts. Es muss sich um den vollqualifizierten Pfad oder einen Pfad relativ zum Standardarbeitsverzeichnis handeln.",
   "loc.input.label.ScriptArguments": "Skriptargumente",
   "loc.input.help.ScriptArguments": "Zusätzliche Argumente, die an PowerShell übergeben werden sollen. Entweder Ordnungszahl- oder benannte Parameter.",
-  "loc.messages.InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
-  "loc.messages.InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified."
+  "loc.messages.InvalidScriptArguments0": "Ungültige Skriptargumente \"{0}\". Zeilenumbrüche sind unzulässig.",
+  "loc.messages.InvalidScriptPath0": "Ungültiger Skriptpfad \"{0}\". Es wurden ungültige Pfadzeichen angegeben."
 }

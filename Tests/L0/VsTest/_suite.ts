@@ -11,7 +11,7 @@ import os = require('os');
 import mockHelper = require('../../lib/mockHelper');
 import fs = require('fs');
 var shell = require('shelljs');
-var ps = shell.which('powershell');
+var ps = shell.which('powershell.exe');
 var psr = null;
 
 function setResponseFile(name: string) {
@@ -109,6 +109,10 @@ describe('VsTest Suite', function () {
 
         it('(GetResultsLocationReturnsNullForDirectory) returns the null for directory specified as runsettings', (done) => {
             psr.run(path.join(__dirname, 'GetResultsLocationReturnsNullForDirectory.ps1'), done);
+        })
+
+        it('(GetResultsLocationReturnsNullForEmptyPath) returns null for empty directory specified as runsettings', (done) => {
+            psr.run(path.join(__dirname, 'GetResultsLocationReturnsNullForEmptyPath.ps1'), done);
         })
 
         it('(DefaultTestResultsDirectoryIsUsedIfnorunsettings) vstest invoked with  default test results directory if no settings is specified', (done) => {

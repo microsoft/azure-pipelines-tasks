@@ -8,8 +8,8 @@
   "loc.input.label.email": "電子メール",
   "loc.input.help.email": "Xamarin アカウントの電子メール アドレス。",
   "loc.input.label.password": "パスワード",
-  "loc.input.help.password": "Xamarin account password. Use a new build variable with its lock enabled on the Variables tab to encrypt this value.",
-  "loc.input.label.product": "Xamarin Product",
-  "loc.input.help.product": "Xamarin product name.",
+  "loc.input.help.password": "Xamarin アカウントのパスワード。[変数] タブでロックが有効になっている新しいビルド変数を使用して、この値を暗号化します。",
+  "loc.input.label.product": "Xamarin 製品",
+  "loc.input.help.product": "Xamarin の製品名。",
   "loc.input.label.timeout": "タイムアウト (秒)"
 }

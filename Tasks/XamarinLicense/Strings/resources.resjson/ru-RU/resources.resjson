@@ -8,8 +8,8 @@
   "loc.input.label.email": "Электронная почта",
   "loc.input.help.email": "Адрес электронной почты учетной записи Xamarin.",
   "loc.input.label.password": "Пароль",
-  "loc.input.help.password": "Xamarin account password. Use a new build variable with its lock enabled on the Variables tab to encrypt this value.",
-  "loc.input.label.product": "Xamarin Product",
-  "loc.input.help.product": "Xamarin product name.",
+  "loc.input.help.password": "Пароль учетной записи Xamarin. Чтобы зашифровать это значение, используйте новую переменную сборки с включенной блокировкой на вкладке \"Переменные\".",
+  "loc.input.label.product": "Продукт Xamarin",
+  "loc.input.help.product": "Название продукта Xamarin.",
   "loc.input.label.timeout": "Время ожидания в секундах"
 }

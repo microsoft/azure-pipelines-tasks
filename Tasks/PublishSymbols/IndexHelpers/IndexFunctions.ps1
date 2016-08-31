@@ -64,7 +64,6 @@ function Invoke-IndexSources {
                 Add-SourceServerStream -PdbStrPath $pdbstrPath -SymbolsFilePath $symbolsFilePath -StreamContent $srcSrvIniContent
             }
         } finally {
-            Invoke-DisposeSourceProvider -Provider $provider
             Remove-DbghelpLibrary -HModule $dbghelpModuleHandle
         }
     } finally {

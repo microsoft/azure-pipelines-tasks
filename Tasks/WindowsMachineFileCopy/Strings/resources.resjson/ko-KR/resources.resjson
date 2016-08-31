@@ -2,7 +2,7 @@
   "loc.friendlyName": "Windows 컴퓨터 파일 복사",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "파일을 원격 컴퓨터에 복사",
-  "loc.instanceNameFormat": "Copy files from $(SourcePath)",
+  "loc.instanceNameFormat": "$(SourcePath)에서 파일 복사",
   "loc.group.displayName.advanced": "고급 옵션",
   "loc.input.label.SourcePath": "소스",
   "loc.input.help.SourcePath": "로컬 컴퓨터나 UNC 공유에 있는 소스 폴더 또는 파일의 절대 경로입니다(예: c:\\fabrikamfiber 또는 \\\\\\\\fabrikamshare\\fabrikamfiber).",

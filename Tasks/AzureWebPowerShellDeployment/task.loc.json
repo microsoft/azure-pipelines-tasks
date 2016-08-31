@@ -13,12 +13,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 33
+    "Patch": 38
   },
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.90.0",
+  "minimumAgentVersion": "1.103.0",
   "inputs": [
     {
       "name": "ConnectedServiceName",
@@ -32,7 +32,7 @@
       "name": "WebSiteLocation",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.WebSiteLocation",
-      "defaultValue": "South Central US",
+      "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.WebSiteLocation",
       "properties": {
@@ -99,10 +99,18 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "AzurePowerShell": {
-      "target": "$(currentDirectory)\\Publish-AzureWebDeployment.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "PowerShell3": {
+      "target": "Publish-AzureWebDeployment.ps1"
     }
+  },
+  "messages": {
+    "Cannotgetwebsitedeploymentstatusisnotupdated": "ms-resource:loc.messages.Cannotgetwebsitedeploymentstatusisnotupdated",
+    "CannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "ms-resource:loc.messages.CannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite",
+    "Cannotupdatedeploymentstatusfor01": "ms-resource:loc.messages.Cannotupdatedeploymentstatusfor01",
+    "Updatingdeploymentstatus": "ms-resource:loc.messages.Updatingdeploymentstatus",
+    "CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved": "ms-resource:loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved",
+    "Updatingdeploymenthistoryfordeployment0": "ms-resource:loc.messages.Updatingdeploymenthistoryfordeployment0",
+    "Nofileswerefoundtodeploywithsearchpattern0": "ms-resource:loc.messages.Nofileswerefoundtodeploywithsearchpattern0",
+    "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "ms-resource:loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone"
   }
 }

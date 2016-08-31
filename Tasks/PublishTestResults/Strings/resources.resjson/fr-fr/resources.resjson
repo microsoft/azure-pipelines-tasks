@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Publier les résultats des tests",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613742)",
-  "loc.description": "Publish Test Results to VSTS/TFS",
+  "loc.description": "Publier les résultats des tests sur VSTS/TFS",
   "loc.instanceNameFormat": "Publier les résultats de test $(testResultsFiles)",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.testRunner": "Format des résultats des tests",
@@ -9,7 +9,7 @@
   "loc.input.label.testResultsFiles": "Fichiers des résultats des tests",
   "loc.input.help.testResultsFiles": "Chemin d'accès aux fichiers de résultats de test. Les caractères génériques sont autorisés. Par exemple, '**/TEST-*.xml' pour tous les fichiers xml dont le nom commence par TEST-.",
   "loc.input.label.mergeTestResults": "Fusionner les résultats des tests",
-  "loc.input.help.mergeTestResults": "To merge results from all test results files to one test run in VSTS/TFS, check this option. To create a test run for each test results file, uncheck this option.",
+  "loc.input.help.mergeTestResults": "Pour fusionner les résultats de tous les fichiers de résultats des tests en une série de tests dans VSTS/TFS, activez cette option. Pour créer une série de tests pour chaque fichier de résultats des tests, désactivez cette option.",
   "loc.input.label.testRunTitle": "Titre de l'exécution du test",
   "loc.input.help.testRunTitle": "Déploiement",
   "loc.input.label.platform": "Plateforme",

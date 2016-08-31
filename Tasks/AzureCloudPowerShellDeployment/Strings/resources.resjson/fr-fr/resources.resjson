@@ -1,11 +1,11 @@
 {
   "loc.friendlyName": "Déploiement d'un service cloud Azure",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613748)",
+  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613748)",
   "loc.description": "Déployer un service cloud Azure",
   "loc.instanceNameFormat": "Déploiement Azure : $(CsPkg)",
   "loc.group.displayName.newServiceAdvancedOptions": "Options avancées pour la création d'un service",
-  "loc.input.label.ConnectedServiceName": "Abonnement Azure",
-  "loc.input.help.ConnectedServiceName": "Abonnement Azure à cibler pour le déploiement.",
+  "loc.input.label.ConnectedServiceName": "Azure Subscription (Classic)",
+  "loc.input.help.ConnectedServiceName": "Azure Classic subscription to target for deployment.",
   "loc.input.label.StorageAccount": "Compte de stockage",
   "loc.input.help.StorageAccount": "Un compte de stockage est nécessaire pour le déploiement.",
   "loc.input.label.ServiceName": "Nom du service",
@@ -25,5 +25,11 @@
   "loc.input.label.NewServiceAdditionalArguments": "Arguments supplémentaires",
   "loc.input.help.NewServiceAdditionalArguments": "Passez des arguments supplémentaires durant la création d'un service. Ils sont passés à l'applet de commande 'New-AzureService'. Exemple : -Label 'MyTestService'",
   "loc.input.label.NewServiceAffinityGroup": "AffinityGroup",
-  "loc.input.help.NewServiceAffinityGroup": "Durant la création d'un service, ce groupe d'affinités est pris en compte à la place de l'emplacement du service."
+  "loc.input.help.NewServiceAffinityGroup": "Durant la création d'un service, ce groupe d'affinités est pris en compte à la place de l'emplacement du service.",
+  "loc.messages.Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions": "Could not get the primary storage key for storage account '{0}'. Unable to apply any diagnostics extensions.",
+  "loc.messages.Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions": "Could not get the primary storage key for the public config storage account '{0}'. Unable to apply any diagnostics extensions.",
+  "loc.messages.Applyinganyconfigureddiagnosticsextensions": "Applying any configured diagnostics extensions.",
+  "loc.messages._0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "'{0}' could not be parsed into parts for registering diagnostics extensions.",
+  "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}",
+  "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one."
 }

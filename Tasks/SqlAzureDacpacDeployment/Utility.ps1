@@ -1,22 +1,55 @@
+function Get-AzureCmdletsVersion
+{
+    $module = Get-Module AzureRM -ListAvailable
+    if($module)
+    {
+        return ($module).Version
+    }
+    return (Get-Module Azure -ListAvailable).Version
+}
+
+function Get-AzureVersionComparison($azureVersion, $compareVersion)
+{
+    Write-Verbose "Compare azure versions: $azureVersion, $compareVersion"
+    return ($azureVersion -and $azureVersion -gt $compareVersion)
+}
+
 function Get-AgentStartIPAddress
 {
-    param([Object] [Parameter(Mandatory = $true)] $taskContext)
+    $endpoint = (Get-VstsEndpoint -Name SystemVssConnection -Require)
+    $vssCredential = [string]$endpoint.auth.parameters.AccessToken
 
-    $connection = Get-VssConnection -TaskContext $taskContext
+    $vssUri = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI
+    if ($vssUri.IndexOf("visualstudio.com", [System.StringComparison]::OrdinalIgnoreCase) -ne -1) {
+        # This hack finds the DTL uri for a hosted account. Note we can't support devfabric since the
+        # there subdomain is not used for DTL endpoint
+        $vssUri = $vssUri.Replace("visualstudio.com", "vsdtl.visualstudio.com")
+    }
 
-    # getting start ip address from dtl service
+    Write-Verbose "Querying VSTS uri '$vssUri' to get external ip address"
+
+    # Getting start ip address from dtl service
     Write-Verbose "Getting external ip address by making call to dtl service"
-    $startIP = Get-ExternalIpAddress -Connection $connection
+    $vssUri = $vssUri + "/_apis/vslabs/ipaddress"
+    $username = ""
+    $password = $vssCredential
 
-    return $startIP
+    $basicAuth = ("{0}:{1}" -f $username, $password)
+    $basicAuth = [System.Text.Encoding]::UTF8.GetBytes($basicAuth)
+    $basicAuth = [System.Convert]::ToBase64String($basicAuth)
+    $headers = @{Authorization=("Basic {0}" -f $basicAuth)}
+
+    $response = Invoke-RestMethod -Uri $($vssUri) -headers $headers -Method Get -ContentType "application/json"
+    Write-Verbose "Response: $response"
+
+    return $response.Value
 }
 
 function Get-AgentIPAddress
 {
     param([String] $startIPAddress,
           [String] $endIPAddress,
-          [String] [Parameter(Mandatory = $true)] $ipDetectionMethod,
-          [Object] [Parameter(Mandatory = $true)] $taskContext)
+          [String] [Parameter(Mandatory = $true)] $ipDetectionMethod)
 
     [HashTable]$IPAddress = @{}
     if($ipDetectionMethod -eq "IPAddressRange")
@@ -26,7 +59,7 @@ function Get-AgentIPAddress
     }
     elseif($ipDetectionMethod -eq "AutoDetect")
     {
-        $IPAddress.StartIPAddress = Get-AgentStartIPAddress -TaskContext $taskContext
+        $IPAddress.StartIPAddress = Get-AgentStartIPAddress
         $IPAddress.EndIPAddress = $IPAddress.StartIPAddress
     }
 
@@ -59,11 +92,10 @@ function Get-AzureUtility
 
 function Get-ConnectionType
 {
-    param([String] [Parameter(Mandatory=$true)] $connectedServiceName,
-          [Object] [Parameter(Mandatory=$true)] $taskContext)
+    param([String] [Parameter(Mandatory=$true)] $connectedServiceName)
 
-    $serviceEndpoint = Get-ServiceEndpoint -Name "$ConnectedServiceName" -Context $taskContext
-    $connectionType = $serviceEndpoint.Authorization.Scheme
+    $serviceEndpoint = Get-VstsEndpoint -Name "$connectedServiceName"
+    $connectionType = $serviceEndpoint.Auth.Scheme
 
     Write-Verbose "Connection type used is $connectionType"
     return $connectionType
@@ -145,7 +177,7 @@ function Get-SqlPackageCommandArguments
     # validate dacpac file
     if([System.IO.Path]::GetExtension($dacpacFile) -ne $dacpacFileExtension)
     {
-        Write-Error (Get-LocalizedString -Key "Invalid Dacpac file '{0}' provided" -ArgumentList $dacpacFile)
+        Write-Error (Get-VstsLocString -Key "SAD_InvalidDacpacFile" -ArgumentList $dacpacFile)
     }
 
     $sqlPackageArguments = @($SqlPackageOptions.SourceFile + "`"$dacpacFile`"")
@@ -164,7 +196,7 @@ function Get-SqlPackageCommandArguments
             $sqlPackageArguments += @($SqlPackageOptions.TargetUser + "`"$sqlUsername`"")
             if(-not($sqlPassword))
             {
-                Write-Error (Get-LocalizedString -Key "No password specified for the SQL User: '{0}'" -ArgumentList $sqlUserName)
+                Write-Error (Get-VstsLocString -Key "SAD_NoPassword" -ArgumentList $sqlUserName)
             }
 
             if( $isOutputSecure ){
@@ -188,7 +220,7 @@ function Get-SqlPackageCommandArguments
         # validate publish profile
         if([System.IO.Path]::GetExtension($publishProfile) -ne ".xml")
         {
-            Write-Error (Get-LocalizedString -Key "Invalid Publish Profile '{0}' provided" -ArgumentList $publishProfile)
+            Write-Error (Get-VstsLocString -Key "SAD_InvalidPublishProfile" -ArgumentList $publishProfile)
         }
         $sqlPackageArguments += @($SqlPackageOptions.Profile + "`"$publishProfile`"")
     }
@@ -207,11 +239,11 @@ function Run-Command
 	{
         if( $psversiontable.PSVersion.Major -le 4)
         {
-           cmd.exe /c "`"$command`""
+           cmd.exe /c "`"$command`"" 2>&1
         }
         else
         {
-           cmd.exe /c "$command"
+           cmd.exe /c "$command" 2>&1
         }
 
     }
@@ -220,7 +252,6 @@ function Run-Command
         Write-Verbose $_.Exception
         throw $_.Exception
     }
-
 }
 
 function ConvertParamToSqlSupported

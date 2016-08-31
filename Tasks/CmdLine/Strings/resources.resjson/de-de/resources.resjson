@@ -7,7 +7,7 @@
   "loc.input.label.filename": "Tool",
   "loc.input.help.filename": "Der Name des auszuführenden Tools. Das Tool muss sich in Ihrem Pfad befinden. Optional kann ein vollqualifizierter Pfad angegeben werden, der jedoch auf dem Agent vorhanden sein muss.<br/> Hinweis: Sie können **$(Build.SourcesDirectory)**\\\\ verwenden, wenn Sie einen Pfad relativ zum Repository angeben möchten.",
   "loc.input.label.arguments": "Argumente",
-  "loc.input.help.arguments": "Arguments passed to the tool. Use double quotes to escape spaces.",
+  "loc.input.help.arguments": "An das Tool übergebene Argumente. Verwenden Sie doppelte Anführungszeichen als Escapezeichen für Leerzeichen.",
   "loc.input.label.workingFolder": "Arbeitsordner",
   "loc.input.label.failOnStandardError": "Fehler bei Standardfehler.",
   "loc.input.help.failOnStandardError": "Wenn dies wahr ist, tritt ein Aufgabenfehler auf, wenn Fehler in den StandardError-Stream geschrieben werden.",

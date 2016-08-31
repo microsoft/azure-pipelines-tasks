@@ -4,11 +4,12 @@ param()
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 $variableSets = @(
-    @{ Clean = $false ; RestoreNugetPackages = $false ; LogProjectEvents = $false ; CreateLogFile = $false }
-    @{ Clean = $false ; RestoreNugetPackages = $false ; LogProjectEvents = $false ; CreateLogFile = $true }
-    @{ Clean = $false ; RestoreNugetPackages = $false ; LogProjectEvents = $true ; CreateLogFile = $false }
-    @{ Clean = $false ; RestoreNugetPackages = $true ; LogProjectEvents = $false ; CreateLogFile = $false }
-    @{ Clean = $true ; RestoreNugetPackages = $false ; LogProjectEvents = $false ; CreateLogFile = $false }
+    @{ Clean = $false ; MaximumCpuCount = $false ; RestoreNugetPackages = $false ; LogProjectEvents = $false ; CreateLogFile = $false }
+    @{ Clean = $false ; MaximumCpuCount = $false ; RestoreNugetPackages = $false ; LogProjectEvents = $false ; CreateLogFile = $true }
+    @{ Clean = $false ; MaximumCpuCount = $false ; RestoreNugetPackages = $false ; LogProjectEvents = $true ; CreateLogFile = $false }
+    @{ Clean = $false ; MaximumCpuCount = $false ; RestoreNugetPackages = $true ; LogProjectEvents = $false ; CreateLogFile = $false }
+    @{ Clean = $false ; MaximumCpuCount = $true ; RestoreNugetPackages = $false ; LogProjectEvents = $false ; CreateLogFile = $false }
+    @{ Clean = $true ; MaximumCpuCount = $false ; RestoreNugetPackages = $false ; LogProjectEvents = $false ; CreateLogFile = $false }
 )
 foreach ($variableSet in $variableSets) {
     Unregister-Mock Get-VstsInput
@@ -24,13 +25,14 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Get-VstsInput { 'Some input platform' } -- -Name Platform
     Register-Mock Get-VstsInput { 'Some input configuration' } -- -Name Configuration
     Register-Mock Get-VstsInput { $variableSet.Clean } -- -Name Clean -AsBool
+    Register-Mock Get-VstsInput { $variableSet.MaximumCpuCount } -- -Name MaximumCpuCount -AsBool
     Register-Mock Get-VstsInput { $variableSet.RestoreNuGetPackages } -- -Name RestoreNuGetPackages -AsBool
     Register-Mock Get-VstsInput { $variableSet.LogProjectEvents } -- -Name LogProjectEvents -AsBool
     Register-Mock Get-VstsInput { $variableSet.CreateLogFile } -- -Name CreateLogFile -AsBool
     Register-Mock Get-SolutionFiles { 'Some solution 1', 'Some solution 2' } -- -Solution 'Some input solution'
     Register-Mock Select-VSVersion { 'Some VS version' } -- -PreferredVersion 'Some input VS version'
     Register-Mock Select-MSBuildLocation { 'Some MSBuild location' } -- -VSVersion 'Some VS version' -Architecture 'Some input architecture'
-    Register-Mock Format-MSBuildArguments { 'Some formatted arguments' } -- -MSBuildArguments 'Some input arguments' -Platform 'Some input platform' -Configuration 'Some input configuration' -VSVersion 'Some VS version'
+    Register-Mock Format-MSBuildArguments { 'Some formatted arguments' } -- -MSBuildArguments 'Some input arguments' -Platform 'Some input platform' -Configuration 'Some input configuration' -VSVersion 'Some VS version' -MaximumCpuCount: $variableSet.MaximumCpuCount
     Register-Mock Invoke-BuildTools { 'Some build output' }
 
     # Act.

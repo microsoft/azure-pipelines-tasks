@@ -1,11 +1,11 @@
 {
   "loc.friendlyName": "Azure 雲端服務部署",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613748)",
+  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613748)",
   "loc.description": "部署 Azure 雲端服務",
   "loc.instanceNameFormat": "Azure 部署: $(CsPkg)",
   "loc.group.displayName.newServiceAdvancedOptions": "用於建立新服務的進階選項",
-  "loc.input.label.ConnectedServiceName": "Azure 訂用帳戶",
-  "loc.input.help.ConnectedServiceName": "要加以部署的 Azure 訂用帳戶。",
+  "loc.input.label.ConnectedServiceName": "Azure Subscription (Classic)",
+  "loc.input.help.ConnectedServiceName": "Azure Classic subscription to target for deployment.",
   "loc.input.label.StorageAccount": "儲存體帳戶",
   "loc.input.help.StorageAccount": "儲存體帳戶必須存在才能部署應用程式。",
   "loc.input.label.ServiceName": "服務名稱",
@@ -25,5 +25,11 @@
   "loc.input.label.NewServiceAdditionalArguments": "其他引數",
   "loc.input.help.NewServiceAdditionalArguments": "在建立全新的服務時傳入其他引數。這些引數將傳遞到 `New-AzureService` 指令程式。例如: `-Label 'MyTestService'`",
   "loc.input.label.NewServiceAffinityGroup": "AffinityGroup",
-  "loc.input.help.NewServiceAffinityGroup": "在建立新服務時，將考慮此同質群組而非使用服務位置。"
+  "loc.input.help.NewServiceAffinityGroup": "在建立新服務時，將考慮此同質群組而非使用服務位置。",
+  "loc.messages.Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions": "Could not get the primary storage key for storage account '{0}'. Unable to apply any diagnostics extensions.",
+  "loc.messages.Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions": "Could not get the primary storage key for the public config storage account '{0}'. Unable to apply any diagnostics extensions.",
+  "loc.messages.Applyinganyconfigureddiagnosticsextensions": "Applying any configured diagnostics extensions.",
+  "loc.messages._0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "'{0}' could not be parsed into parts for registering diagnostics extensions.",
+  "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}",
+  "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one."
 }

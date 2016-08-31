@@ -12,6 +12,6 @@
   "loc.input.help.ScriptPath": "Percorso dello script. Deve essere un percorso completo o relativo rispetto alla directory di lavoro predefinita.",
   "loc.input.label.ScriptArguments": "Argomenti script",
   "loc.input.help.ScriptArguments": "Parametri aggiuntivi da passare a PowerShell. Possono essere ordinali o denominati.",
-  "loc.messages.InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
-  "loc.messages.InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified."
+  "loc.messages.InvalidScriptArguments0": "Gli argomenti '{0}' dello script non sono validi. Le interruzioni di riga non sono consentite.",
+  "loc.messages.InvalidScriptPath0": "Il percorso '{0}' dello script non è valido. Sono stati specificati caratteri non validi."
 }

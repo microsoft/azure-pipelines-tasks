@@ -7,7 +7,7 @@
   "loc.group.displayName.executionOptions": "Opciones de ejecución",
   "loc.group.displayName.reportingOptions": "Opciones de informe",
   "loc.input.label.testMachineGroup": "Máquinas",
-  "loc.input.help.testMachineGroup": "Provide a comma separated list of machine IP addresses or FQDNs. Eg: `dbserver.fabrikam.com or 192.168.12.34` Or provide output variable of other tasks. Eg: `$(variableName)` Or provide a Machine Group Name",
+  "loc.input.help.testMachineGroup": "Proporcione una lista separada por comas de las direcciones IP de máquinas o FQDN. Por ejemplo: \"dbserver.fabrikam.com o 192.168.12.34\". O bien, proporcione la variable de salida de las otras tareas. Por ejemplo: \"$(variableName)\" o el nombre de un grupo de máquinas.",
   "loc.input.label.dropLocation": "Ubicación de almacenamiento de la prueba",
   "loc.input.help.dropLocation": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Windows Machine File Copy' or 'Azure File Copy' task. System Environment Variables can also be used in location string. e.g., `%systemdrive%\\Tests`, `%temp%\\DropLocation` etc.",
   "loc.input.label.testSelection": "Selección de pruebas",
@@ -28,8 +28,8 @@
   "loc.input.help.overrideRunParams": "Reemplace los parámetros definidos en la sección TestRunParameters del archivo runsettings. Por ejemplo: `AppURL=$(DeployURL);Port=8080`",
   "loc.input.label.codeCoverageEnabled": "Cobertura de código habilitada",
   "loc.input.help.codeCoverageEnabled": "Si es necesario habilitar la cobertura de código.",
-  "loc.input.label.customSlicingEnabled": "Distribute tests by number of machines",
-  "loc.input.help.customSlicingEnabled": "Tests will be distributed based on the number of machines provided instead of number of test containers. Note that tests within a dll might also be distributed to multiple machines.",
+  "loc.input.label.customSlicingEnabled": "Distribuir pruebas por número de máquinas",
+  "loc.input.help.customSlicingEnabled": "Las pruebas se distribuirán en función del número de máquinas proporcionadas en lugar del número de contenedores de pruebas. Tenga en cuenta que las pruebas con un archivo dll también se pueden distribuir a varias máquinas.",
   "loc.input.label.testRunTitle": "Título de la serie de pruebas",
   "loc.input.help.testRunTitle": "Proporcione un nombre para la ejecución de prueba.",
   "loc.input.label.platform": "Plataforma",
@@ -37,7 +37,7 @@
   "loc.input.label.configuration": "Configuración",
   "loc.input.help.configuration": "Configuración con la que se debe informar de las pruebas. Si tiene una variable de configuración definida en la tarea de compilación, úsela aquí.",
   "loc.input.label.testConfigurations": "Configuraciones de prueba",
-  "loc.input.help.testConfigurations": "Asocie opcionalmente un filtro de caso de prueba a un id. de configuración de prueba. Sintaxis: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. Por ejemplo: `FullyQualifiedName~Chrome:12`",
+  "loc.input.help.testConfigurations": "Optionally associate a testcase filter against a testconfiguration ID. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: `FullyQualifiedName~Chrome:12`",
   "loc.input.label.autMachineGroup": "Aplicación en las máquinas de prueba",
   "loc.input.help.autMachineGroup": "Lista de máquinas o variable de salida o nombre de grupo de equipo en los procesos del servidor de separados por comas, como W3WP.exe, en ejecución"
 }

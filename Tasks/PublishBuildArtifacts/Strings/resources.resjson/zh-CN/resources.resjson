@@ -1,14 +1,14 @@
 {
   "loc.friendlyName": "发布生成项目",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=708390)",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=708390)",
   "loc.description": "将生成项目发布到服务器或文件共享",
   "loc.instanceNameFormat": "发布项目: $(ArtifactName)",
   "loc.input.label.PathtoPublish": "要发布的路径",
-  "loc.input.help.PathtoPublish": "Folder or file path to publish.  Can be a fully qualified path or a relative path that relative to repo root, wildcards is not supported. Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)",
+  "loc.input.help.PathtoPublish": "Folder or file path to publish.  Can be a fully qualified path or relative to repo root, wildcards are not supported. Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)",
   "loc.input.label.ArtifactName": "项目名称",
   "loc.input.help.ArtifactName": "要创建的项目的名称。",
   "loc.input.label.ArtifactType": "项目类型",
-  "loc.input.help.ArtifactType": "要创建的项目的类型。",
+  "loc.input.help.ArtifactType": "The type of artifact to create.",
   "loc.input.label.TargetPath": "路径",
   "loc.input.help.TargetPath": "要将文件复制到的文件共享",
   "loc.messages.PublishBuildArtifactsFailed": "发布生成项目失败，出现错误: %s"

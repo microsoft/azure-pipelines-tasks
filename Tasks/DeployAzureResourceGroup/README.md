@@ -76,8 +76,10 @@ The following parameters are shown when the selected action is to create or upda
 Tasks like Azure File Copy, PowerShell on Target Machines, Visual Studio Test Agent Deployment run on the automation agent machine and copy files or deploy apps to Azure VMs using the WinRM HTTPS protocol. For these tasks to work properly, the WinRM HTTPS port (default port is 5986) needs to be opened and configured properly on the virtual machines. Opening the ports and configuring them with the certificates is done using the Azure templates. The [sample template](https://aka.ms/sampletemplate) uploaded on GitHub shows how to enable the WinRM HTTPS protocol on Azure virtual machines and map them to a Public IP using the Azure resource providers' wiz. Network Interfaces, Load Balancers and Virtual Machines. In addition, it also shows how to specify the Azure Key Vault and its secret, and to download and install the certificate on the virtual machine.
 
 ### Supported Azure and AzureRM module versions:
-Recommended: 
-[Azure PowerShell Installer v1.3.0] (https://github.com/Azure/azure-powershell/releases/tag/v1.3.0-March2016)
-
-Other supported versions:
-[Azure PowerShell Installer v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015) 
+|  VSTS/TFS Release  |  Recommended Azure Version  |  Other Supported Versions |
+|:------------------:|:---------------------------:|:-------------------------:|
+|  VSTS              |  [v1.3.2] (https://github.com/Azure/azure-powershell/releases/tag/v1.3.2-April2016)  |  [v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |
+|  TFS 2015 Update 3  | [v1.3.2] (https://github.com/Azure/azure-powershell/releases/tag/v1.3.2-April2016)  |  [v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |
+|  TFS 2015 Update 2  | [v1.0.2] (https://github.com/Azure/azure-powershell/releases/tag/v1.0.2-December2015)  |  [v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |
+|  TFS 2015 Update 1  | [v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |  |
+|  TFS 2015 RTM       | [v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |  |

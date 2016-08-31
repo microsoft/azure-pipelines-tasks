@@ -12,5 +12,6 @@
   "loc.input.label.agentCount": "Agent Count",
   "loc.input.help.agentCount": "Number of test agents (dual-core) used in the run.",
   "loc.input.label.runDuration": "Run Duration (sec)",
-  "loc.input.help.runDuration": "Load test run duration in seconds."
+  "loc.input.help.runDuration": "Load test run duration in seconds.",
+  "loc.input.label.machineType": "Run load test using"
 }

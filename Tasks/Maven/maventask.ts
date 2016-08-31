@@ -7,7 +7,7 @@ import fs = require('fs');
 
 import tl = require('vsts-task-lib/task');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
-import sqCommon = require('sonarqube-common/sonarqube-common');
+import sqCommon = require('./CodeAnalysis/SonarQube/common');
 
 // Lowercased file names are to lessen the likelihood of xplat issues
 import codeAnalysis = require('./CodeAnalysis/mavencodeanalysis');
@@ -133,6 +133,8 @@ var codeAnalysisFailed: boolean = false;
 var mvnGetVersion = tl.createToolRunner(mvnExec);
 mvnGetVersion.arg('-version');
 
+configureMavenOpts();
+
 // 1. Check that Maven exists by executing it to retrieve its version.
 mvnGetVersion.exec()
     .fail(function (err) {
@@ -169,17 +171,18 @@ mvnGetVersion.exec()
     })
     .then(function (code) {
         // 4. Attempt to collate and upload static code analysis build summaries and artifacts.
-        // The files won't be created if the build failed, and the user should probably fix their build first
+
+        // The files won't be created if the build failed, and the user should probably fix their build first.
         if (userRunFailed) {
             console.error('Could not retrieve code analysis results - Maven run failed.');
             return;
         }
 
-        if (sqCommon.isSonarQubeAnalysisEnabled()) {
-            sqMaven.uploadSonarQubeBuildSummaryIfEnabled();
-        }
-
-        codeAnalysis.uploadCodeAnalysisBuildSummaryIfEnabled();
+        // Otherwise, start uploading relevant build summaries.
+        return sqMaven.processSonarQubeIntegration()
+            .then(() => {
+                return codeAnalysis.uploadCodeAnalysisBuildSummaryIfEnabled();
+            });
     })
     .fail(function (err) {
         console.error(err.message);
@@ -204,6 +207,16 @@ mvnGetVersion.exec()
 
         // Do not force an exit as publishing results is async and it won't have finished 
     });
+
+// Configure the JVM associated with this run.
+function configureMavenOpts() {
+    let mavenOptsValue: string = tl.getInput('mavenOpts');
+
+    if (mavenOptsValue) {
+        process.env['MAVEN_OPTS'] = mavenOptsValue;
+        tl.debug(`MAVEN_OPTS is now set to ${mavenOptsValue}`);
+    }
+}
 
 // Publishes JUnit test results from files matching the specified pattern.
 function publishJUnitTestResults(testResultsFiles: string) {

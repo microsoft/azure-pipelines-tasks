@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Android Build (deprecated; use Gradle)",
+  "loc.friendlyName": "Android-Build (veraltet, verwenden Sie Gradle)",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613716)",
   "loc.description": "Erstellen Sie eine Android-App mithilfe von Gradle, und starten Sie optional den Emulator für Komponententests.",
   "loc.instanceNameFormat": "Android-Build $(gradleProj)",
@@ -15,7 +15,7 @@
   "loc.input.label.emulatorTarget": "AVD-Ziel-SDK",
   "loc.input.help.emulatorTarget": "Die Ziel-ID des neuen virtuellen Android-Geräts (AVD).",
   "loc.input.label.emulatorDevice": "AVD-Gerät",
-  "loc.input.help.emulatorDevice": "Die optionale Gerätedefinition. Kann ein Geräteindex oder eine ID sein.",
+  "loc.input.help.emulatorDevice": "The optional device definition to use. Can be a device index or ID.",
   "loc.input.label.avdAbi": "AVD-ABI",
   "loc.input.help.avdAbi": "Die für das virtuelle Android-Gerät (AVD) zu verwendende ABI.",
   "loc.input.label.avdForce": "Vorhandenes AVD überschreiben",

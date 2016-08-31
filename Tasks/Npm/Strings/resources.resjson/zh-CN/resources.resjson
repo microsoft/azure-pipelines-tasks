@@ -10,7 +10,7 @@
   "loc.input.help.arguments": "传递给 npm 的其他参数。",
   "loc.input.label.cwd": "工作目录",
   "loc.input.help.cwd": "运行 npm 命令的当前工作目录。默认为存储库的根。",
-  "loc.messages.InvalidCommand": "Only one command should be used for npm. Use arguments input for additional arguments.",
+  "loc.messages.InvalidCommand": "对 npm 仅使用一个命令。对其他参数使用参数输入。",
   "loc.messages.NpmReturnCode": "Npm 已退出，返回代码为: %d",
   "loc.messages.NpmFailed": "Npm 失败，出现错误: %s"
 }

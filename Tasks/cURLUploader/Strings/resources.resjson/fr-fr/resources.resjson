@@ -1,19 +1,19 @@
 {
   "loc.friendlyName": "Fichiers de téléchargement cURL",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627418)",
-  "loc.description": "Use cURL to upload files with FTP, FTPS, SFTP, HTTP, and more.",
+  "loc.description": "Utilisez cURL pour charger des fichiers avec FTP, FTPS, SFTP, HTTP, etc.",
   "loc.instanceNameFormat": "Télécharger $(files) avec cURL",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.files": "Fichiers",
-  "loc.input.help.files": "File(s) to be uploaded. Wildcards can be used. For example, `**\\*.zip` for all ZIP files in all subfolders.",
+  "loc.input.help.files": "Fichier(s) à charger. Les caractères génériques sont autorisés. Par exemple, '**\\*.zip' correspond à tous les fichiers ZIP dans tous les sous-dossiers.",
   "loc.input.label.username": "Nom d'utilisateur",
-  "loc.input.help.username": "Specify the username for server authentication.",
+  "loc.input.help.username": "Spécifiez le nom d'utilisateur pour l'authentification du serveur.",
   "loc.input.label.password": "Mot de passe",
-  "loc.input.help.password": "Specify the password for server authentication. Use a new build variable with its lock enabled on the Variables tab to encrypt this value.",
+  "loc.input.help.password": "Spécifiez le mot de passe pour l'authentification du serveur. Pour chiffrer cette valeur, utilisez une nouvelle variable de build avec le verrou activé sous l'onglet Variables.",
   "loc.input.label.url": "URL",
-  "loc.input.help.url": "Specify the URL to where the file(s) will be uploaded. The directory should end with a trailing slash. Possible URL protocols include `DICT://`, `FILE://`, `FTP://`, `FTPS://`, `GOPHER://`, `HTTP://`, `HTTPS://`, `IMAP://`, `IMAPS://`, `LDAP://`, `LDAPS://`, `POP3://`, `POP3S://`, `RTMP://`, `RTSP://`, `SCP://`, `SFTP://`, `SMTP://`, `SMTPS://`, `TELNET://` and `TFTP://`.",
+  "loc.input.help.url": "Spécifiez l'URL à utiliser pour charger le ou les fichiers. Le répertoire doit se terminer par une barre oblique finale. Les protocoles d'URL sont notamment 'DICT://', 'FILE://', 'FTP://', 'FTPS://', 'GOPHER://', 'HTTP://', 'HTTPS://', 'IMAP://', 'IMAPS://', 'LDAP://', 'LDAPS://', 'POP3://', 'POP3S://', 'RTMP://', 'RTSP://', 'SCP://', 'SFTP://', 'SMTP://', 'SMTPS://', 'TELNET://' et 'TFTP://'.",
   "loc.input.label.options": "Arguments facultatifs",
   "loc.input.help.options": "Arguments supplémentaires qui seront passés à cURL.",
   "loc.input.label.redirectStderr": "Rediriger une erreur standard vers une sortie standard",
-  "loc.input.help.redirectStderr": "Adds '--stderr -' as an argument to cURL. By default, cURL writes its progress bar to stderr, which is interpreted by the build as error output. Enabling this checkbox suppresses that behavior."
+  "loc.input.help.redirectStderr": "Ajoute '--stderr -' comme argument à cURL. Par défaut, cURL écrit sa barre de progression dans stderr, que la build interprète comme une sortie d'erreur. Si vous cochez cette case, ce comportement est supprimé."
 }

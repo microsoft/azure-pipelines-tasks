@@ -21,7 +21,7 @@ function Create-AzureSqlDatabaseServerFirewallRuleRDFE
         $exceptionMessage = $_.Exception.Message.ToString()
         Write-Verbose "ExceptionMessage: $exceptionMessage" -Verbose
 
-        Throw (Get-LocalizedString -Key "Either IPAddress mentioned is not a valid IPv4 address or Sql database server: '{0}' does not exist." -ArgumentList $serverName)
+        Throw (Get-VstsLocString -Key "SAD_InvalidServerAddress" -ArgumentList $serverName)
     }
 
     return $azureSqlDatabaseServerFirewallRule
@@ -47,9 +47,9 @@ function Get-AzureSqlDatabaseServerRGName
     {
         if ([string]::IsNullOrEmpty($azureResourceGroupName))
         {
-            Write-Verbose "[Azure RM Call] Sql Database Server: $serverName not found" -Verbose
+            Write-Verbose "[Azure RM Call] Sql Database Server: $serverName not found"
 
-            Throw (Get-LocalizedString -Key "Sql Database Server: '{0}' not found." -ArgumentList $serverName)
+            Throw (Get-VstsLocString -Key "SAD_ServerNotFound" -ArgumentList $serverName)
         }
     }
 }
@@ -78,7 +78,7 @@ function Create-AzureSqlDatabaseServerFirewallRuleARM
         $exceptionMessage = $_.Exception.Message.ToString()
         Write-Verbose "ExceptionMessage: $exceptionMessage" -Verbose
 
-        Throw (Get-LocalizedString -Key "IPAddress mentioned is not a valid IPv4 address.")
+        Throw (Get-VstsLocString -Key "SAD_InvalidIPv4Address")
     }
 
     return $azureSqlDatabaseServerFirewallRule

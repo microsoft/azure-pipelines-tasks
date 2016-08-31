@@ -33,7 +33,7 @@
     "gulp": "^3.9.0",
     "gulp-mocha": "2.0.0",
     "gulp-tsc": "^0.10.1",
-    "minimatch": "^2.0.8",
+    "minimatch": "^3.0.2",
     "mocha": "^2.2.5"
   },
   "readme": "# Team Services DevOps Task SDK\n\nLibraries for writing Team Services and TFS build and deployment tasks\n\n## Node Task Lib\nLibrary for writing tasks with the node handler\n\n## Contributing\n\n### Node\n\nOnce:\n```bash\n$ cd node\n$ npm install\n$ sudo npm install gulp -g\n```\n\nBuild and test:\n```bash\n$ cd node\n$ gulp\n```\n\n### Powershell\n\nComing soon\n",

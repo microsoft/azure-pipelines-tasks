@@ -18,8 +18,11 @@
   "loc.input.help.codeCoverageEnabled": "Collect code coverage information from the Test run.",
   "loc.input.label.runInParallel": "Run In Parallel",
   "loc.input.help.runInParallel": "Enable parallel execution of your tests.",
+  "loc.input.label.vstestLocationMethod": "VSTest",
   "loc.input.label.vsTestVersion": "VSTest version",
   "loc.input.help.vsTestVersion": "The version of VSTest to use.",
+  "loc.input.label.vstestLocation": "Path to vstest.console.exe",
+  "loc.input.help.vstestLocation": "Optionally supply the path to VSTest.",
   "loc.input.label.pathtoCustomTestAdapters": "Path to Custom Test Adapters",
   "loc.input.help.pathtoCustomTestAdapters": "Directory path to custom test adapters. Nuget restored adapters are automatically searched for.",
   "loc.input.label.otherConsoleOptions": "Other console options",
@@ -46,5 +49,8 @@
   "loc.messages.ErrorWhileSettingTestImpactCollectorTestSettings": "Error occurred while setting Test Impact Collector in test settings file.",
   "loc.messages.ErrorWhileSettingTestImpactCollectorRunSettings": "Error occurred while setting Test Impact Collector in run settings file.",
   "loc.messages.ErrorWhileCreatingResponseFile": "Error occurred while creating the response file. All the tests will be executed for this run.",
-  "loc.messages.ErrorWhileUpdatingResponseFile": "Error occurred while updating the response file '%s'. All the tests will be executed for this run."
+  "loc.messages.ErrorWhileUpdatingResponseFile": "Error occurred while updating the response file '%s'. All the tests will be executed for this run.",
+  "loc.messages.ErrorWhilePublishingCodeChanges": "Error occurred while publishing the code changes. All the tests will be executed for this run.",
+  "loc.messages.PublishCodeChangesPerfTime": "Total time taken to publish code changes: %d milliseconds",
+  "loc.messages.GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds"
 }

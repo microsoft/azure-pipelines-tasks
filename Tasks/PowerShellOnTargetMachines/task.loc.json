@@ -13,9 +13,9 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 37
+    "Patch": 40
   },
-  "minimumAgentVersion": "1.102.0",
+  "minimumAgentVersion": "1.104.0",
   "groups": [
     {
       "name": "deployment",

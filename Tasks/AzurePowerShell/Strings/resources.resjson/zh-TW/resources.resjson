@@ -12,6 +12,6 @@
   "loc.input.help.ScriptPath": "指令碼的路徑。必須是完整路徑名稱或預設工作目錄的相對路徑。",
   "loc.input.label.ScriptArguments": "指令碼引數",
   "loc.input.help.ScriptArguments": "傳遞至 PowerShell 的額外引數。可以是序數或具名參數。",
-  "loc.messages.InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
-  "loc.messages.InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified."
+  "loc.messages.InvalidScriptArguments0": "指令碼引數 '{0}' 無效。不允許分行符號。",
+  "loc.messages.InvalidScriptPath0": "指令碼路徑 '{0}' 無效。指定的路徑字元無效。"
 }

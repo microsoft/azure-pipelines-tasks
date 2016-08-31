@@ -13,12 +13,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 25
+    "Patch": 30
   },
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.90.0",
+  "minimumAgentVersion": "1.103.0",
   "groups": [
     {
       "name": "newServiceAdvancedOptions",
@@ -60,7 +60,7 @@
       "name": "ServiceLocation",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.ServiceLocation",
-      "defaultValue": "South Central US",
+      "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.ServiceLocation",
       "properties": {
@@ -160,10 +160,16 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "AzurePowerShell": {
-      "target": "$(currentDirectory)\\Publish-AzureCloudDeployment.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "PowerShell3": {
+      "target": "Publish-AzureCloudDeployment.ps1"
     }
+  },
+  "messages": {
+    "Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions": "ms-resource:loc.messages.Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions",
+    "Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions": "ms-resource:loc.messages.Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions",
+    "Applyinganyconfigureddiagnosticsextensions": "ms-resource:loc.messages.Applyinganyconfigureddiagnosticsextensions",
+    "_0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "ms-resource:loc.messages._0couldnotbeparsedintopartsforregisteringdiagnosticsextensions",
+    "Nofileswerefoundtodeploywithsearchpattern0": "ms-resource:loc.messages.Nofileswerefoundtodeploywithsearchpattern0",
+    "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "ms-resource:loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone"
   }
 }

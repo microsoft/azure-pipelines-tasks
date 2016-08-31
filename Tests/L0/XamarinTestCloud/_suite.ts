@@ -23,10 +23,10 @@ describe('XamarinTestCloud Suite', function() {
     after(function() {
         
     });
-    
+
     it('run XamarinTestCloud with all default inputs', (done) => {
         setResponseFile('response.json');
-        
+
         var tr = new trm.TaskRunner('XamarinTestCloud', true, true);
         // required inputs
         tr.setInput('app', 'bin/project.apk');
@@ -43,7 +43,7 @@ describe('XamarinTestCloud Suite', function() {
         //tr.setInput('userDefinedLocale', ''); // shown when locale = user
         //tr.setInput('optionalArgs', '');
         //tr.setInput('publishNUnitResults', ''); // boolean
-        
+
         tr.run()
         .then(() => {
             if (isWin) {
@@ -61,7 +61,7 @@ describe('XamarinTestCloud Suite', function() {
             done(err);
         });
     })
-    
+
     // check all required inputs
     it('fails when app is missing', (done) => {
         setResponseFile('response.json');
@@ -355,7 +355,7 @@ describe('XamarinTestCloud Suite', function() {
         
     it('runs when app pattern matches 1', (done) => {
         setResponseFile('response.json');
-        
+
         var tr = new trm.TaskRunner('XamarinTestCloud', true, true);
         // required inputs
         tr.setInput('app', '**/*Single.apk');
@@ -367,7 +367,7 @@ describe('XamarinTestCloud Suite', function() {
         tr.setInput('parallelization', 'none');
         tr.setInput('locale', 'en_US');
         tr.setInput('testCloudLocation', '**/packages/**/tools/test-cloud.exe');
-        
+
         tr.run()
         .then(() => {
             if (isWin) {
@@ -378,17 +378,17 @@ describe('XamarinTestCloud Suite', function() {
             assert(tr.invokedToolCount == 1, 'should have only run XamarinTestCloud 1 time');
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.stderr.length == 0, 'should not have written to stderr');
-            assert(tr.succeeded, 'task should have succeeded');            
+            assert(tr.succeeded, 'task should have succeeded');
             done();
         })
         .fail((err) => {
             done(err);
         });
-    })       
+    })
     
-    it('runs when app pattern matches 1', (done) => {
+    it('runs when app pattern matches muliple', (done) => {
         setResponseFile('response.json');
-        
+
         var tr = new trm.TaskRunner('XamarinTestCloud', true, true);
         // required inputs
         tr.setInput('app', '**/*Multiple.apk');
@@ -400,7 +400,7 @@ describe('XamarinTestCloud Suite', function() {
         tr.setInput('parallelization', 'none');
         tr.setInput('locale', 'en_US');
         tr.setInput('testCloudLocation', '**/packages/**/tools/test-cloud.exe');
-        
+
         tr.run()
         .then(() => {
             if (isWin) {
@@ -415,13 +415,13 @@ describe('XamarinTestCloud Suite', function() {
             assert(tr.invokedToolCount == 3, 'should have only run XamarinTestCloud 1 time');
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.stderr.length == 0, 'should not have written to stderr');
-            assert(tr.succeeded, 'task should have succeeded');            
+            assert(tr.succeeded, 'task should have succeeded');
             done();
         })
         .fail((err) => {
             done(err);
         });
-    })       
+    })
     
     it('fails when app pattern matches 0', (done) => {
         setResponseFile('response.json');
@@ -512,7 +512,7 @@ describe('XamarinTestCloud Suite', function() {
     
     it('runs when testcloudlocation does not have a pattern', (done) => {
         setResponseFile('response.json');
-        
+
         var tr = new trm.TaskRunner('XamarinTestCloud', true, true);
         // required inputs
         tr.setInput('app', 'bin/project.apk');
@@ -524,7 +524,7 @@ describe('XamarinTestCloud Suite', function() {
         tr.setInput('parallelization', 'none');
         tr.setInput('locale', 'en_US');
         tr.setInput('testCloudLocation', '/home/build/packages/project1/tools/test-cloud.exe');
-        
+
         tr.run()
         .then(() => {
             if (isWin) {
@@ -541,7 +541,7 @@ describe('XamarinTestCloud Suite', function() {
         .fail((err) => {
             done(err);
         });
-    })    
+    })
     
     it('fails when testCloudLocation does not exist', (done) => {
         setResponseFile('response.json');
@@ -573,7 +573,7 @@ describe('XamarinTestCloud Suite', function() {
         
     it('runs when testCloudLocation matches 2', (done) => {
         setResponseFile('response.json');
-        
+
         var tr = new trm.TaskRunner('XamarinTestCloud', true, true);
         // required inputs
         tr.setInput('app', 'bin/project.apk');
@@ -585,14 +585,14 @@ describe('XamarinTestCloud Suite', function() {
         tr.setInput('parallelization', 'none');
         tr.setInput('locale', 'en_US');
         tr.setInput('testCloudLocation', '**/matches/2/test-cloud.exe');
-        
+
         tr.run()
         .then(() => {
             if (isWin) {
                 assert(tr.ran('/home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
             } else {
                 assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin'), 'it should have run xamarinTestCloud');
-            }   
+            }
             assert(tr.invokedToolCount == 1, 'should have only run XamarinTestCloud 1 time');
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -602,7 +602,7 @@ describe('XamarinTestCloud Suite', function() {
         .fail((err) => {
             done(err);
         });
-    })        
+    })
     
     it('fails when testCloudLocation matches 0', (done) => {
         setResponseFile('response.json');
@@ -638,7 +638,7 @@ describe('XamarinTestCloud Suite', function() {
     
     it('runs when dsym is set (but no .ipa files)', (done) => {
         setResponseFile('response.json');
-        
+
         var tr = new trm.TaskRunner('XamarinTestCloud', true, true);
         // required inputs
         tr.setInput('app', 'bin/project.apk');
@@ -652,7 +652,7 @@ describe('XamarinTestCloud Suite', function() {
         tr.setInput('testCloudLocation', '**/packages/**/tools/test-cloud.exe');
         // optional inputs
         tr.setInput('dsym', '**/bin/*.dsym'); // iOS only
-        
+
         tr.run()
         .then(() => {
             if (isWin) {
@@ -669,11 +669,11 @@ describe('XamarinTestCloud Suite', function() {
         .fail((err) => {
             done(err);
         });
-    })     
+    })
     
     it('runs when dsym matches 1', (done) => {
         setResponseFile('response.json');
-        
+
         var tr = new trm.TaskRunner('XamarinTestCloud', true, true);
         // required inputs
         tr.setInput('app', 'bin/project.ipa');
@@ -687,7 +687,7 @@ describe('XamarinTestCloud Suite', function() {
         tr.setInput('testCloudLocation', '**/packages/**/tools/test-cloud.exe');
         // optional inputs
         tr.setInput('dsym', '**/bin/*Single.dsym'); // iOS only
-        
+
         tr.run()
         .then(() => {
             if (isWin) {
@@ -704,11 +704,11 @@ describe('XamarinTestCloud Suite', function() {
         .fail((err) => {
             done(err);
         });
-    })      
+    })
     
     it('runs when dsym matches 2 (with warning)', (done) => {
         setResponseFile('response.json');
-        
+
         var tr = new trm.TaskRunner('XamarinTestCloud', true, true);
         // required inputs
         tr.setInput('app', 'bin/project.ipa');
@@ -722,7 +722,7 @@ describe('XamarinTestCloud Suite', function() {
         tr.setInput('testCloudLocation', '**/packages/**/tools/test-cloud.exe');
         // optional inputs
         tr.setInput('dsym', '**/bin/*Multiple.dsym'); // iOS only
-        
+
         tr.run()
         .then(() => {
             if (isWin) {
@@ -734,8 +734,8 @@ describe('XamarinTestCloud Suite', function() {
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.stderr.length == 0, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.stdout.indexOf('##vso[task.issue type=warning;]More than one matching dSYM file was found with pattern: **/bin/*Multiple.dsym') >= 0, 'wrong error message');            
-            
+            assert(tr.stdout.indexOf('##vso[task.issue type=warning;]More than one matching dSYM file was found with pattern: **/bin/*Multiple.dsym') >= 0, 'wrong error message');
+
             done();
         })
         .fail((err) => {
@@ -745,7 +745,7 @@ describe('XamarinTestCloud Suite', function() {
 
     it('runs when dsym matches 0 (with warning)', (done) => {
         setResponseFile('response.json');
-        
+
         var tr = new trm.TaskRunner('XamarinTestCloud', true, true);
         // required inputs
         tr.setInput('app', 'bin/project.ipa');
@@ -759,7 +759,7 @@ describe('XamarinTestCloud Suite', function() {
         tr.setInput('testCloudLocation', '**/packages/**/tools/test-cloud.exe');
         // optional inputs
         tr.setInput('dsym', '**/bin/*None.dsym'); // iOS only
-        
+
         tr.run()
         .then(() => {
             if (isWin) {
@@ -771,17 +771,17 @@ describe('XamarinTestCloud Suite', function() {
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.stderr.length == 0, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.stdout.indexOf('##vso[task.issue type=warning;]No matching dSYM files were found with pattern: **/bin/*None.dsym') >= 0, 'wrong error message');                        
+            assert(tr.stdout.indexOf('##vso[task.issue type=warning;]No matching dSYM files were found with pattern: **/bin/*None.dsym') >= 0, 'wrong error message');
             done();
         })
         .fail((err) => {
             done(err);
         });
-    })      
+    })
           
     it('runs when dsym is not a pattern', (done) => {
         setResponseFile('response.json');
-        
+
         var tr = new trm.TaskRunner('XamarinTestCloud', true, true);
         // required inputs
         tr.setInput('app', 'bin/project.ipa');
@@ -795,7 +795,7 @@ describe('XamarinTestCloud Suite', function() {
         tr.setInput('testCloudLocation', '**/packages/**/tools/test-cloud.exe');
         // optional inputs
         tr.setInput('dsym', '/bin/NoPattern.dsym'); // iOS only
-        
+
         tr.run()
         .then(() => {
             if (isWin) {
@@ -807,17 +807,17 @@ describe('XamarinTestCloud Suite', function() {
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.stderr.length == 0, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.stdout.indexOf('##vso[task.issue type=warning;]No matching dSYM files were found with pattern: /bin/NoPattern.dsym') >= 0, 'wrong error message');                        
+            assert(tr.stdout.indexOf('##vso[task.issue type=warning;]No matching dSYM files were found with pattern: /bin/NoPattern.dsym') >= 0, 'wrong error message');
             done();
         })
         .fail((err) => {
             done(err);
         });
-    })      
+    })
 
     it('runs XamarinTestCloud when publishNUnitResults is true', (done) => {
         setResponseFile('response.json');
-        
+
         var tr = new trm.TaskRunner('XamarinTestCloud', true, true);
         // required inputs
         tr.setInput('app', 'bin/project.apk');
@@ -831,14 +831,14 @@ describe('XamarinTestCloud Suite', function() {
         tr.setInput('testCloudLocation', '**/packages/**/tools/test-cloud.exe');
         // optional inputs
         tr.setInput('publishNUnitResults', 'true'); // boolean
-        
+
         tr.run()
         .then(() => {
             if (isWin) {
-                assert(tr.ran('/home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin --nunit-xml tests/bin/xamarintest_undefined.0.xml'), 
+                assert(tr.ran('/home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin --nunit-xml tests/bin/xamarintest_undefined.0.xml'),
                           'it should have run xamarinTestCloud');
             } else {
-                assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin --nunit-xml tests/bin/xamarintest_undefined.0.xml'), 
+                assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin --nunit-xml tests/bin/xamarintest_undefined.0.xml'),
                           'it should have run xamarinTestCloud');
             }
             assert(tr.invokedToolCount == 1, 'should have only run XamarinTestCloud 1 time');
@@ -851,7 +851,7 @@ describe('XamarinTestCloud Suite', function() {
             done(err);
         });
     })
-    
+
     it('fails when return code is non-zero', (done) => {
         setResponseFile('response.json');
         

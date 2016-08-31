@@ -6,7 +6,7 @@ import Q = require('q');
 import psm = require('../../lib/psRunner');
 import path = require('path');
 var shell = require('shelljs');
-var ps = shell.which('powershell');
+var ps = shell.which('powershell.exe');
 var psr = null;
 
 describe('SonarQubePostTest Suite', function () {
@@ -40,6 +40,9 @@ describe('SonarQubePostTest Suite', function () {
          })
          it('PRCA Orchestrator tests', (done) => {
              psr.run(path.join(__dirname, 'PRCA', 'OrchestratorTests.ps1'), done);
+         })
+         it('PRCA Invoke tests', (done) => {
+            psr.run(path.join(__dirname,'PRCA', 'InvokeTests.ps1'), done);
          })
          it('SonarQubeMetrics tests', (done) => {
              psr.run(path.join(__dirname, 'SonarQubeMetrics.ps1'), done);

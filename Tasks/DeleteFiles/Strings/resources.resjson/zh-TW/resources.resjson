@@ -9,5 +9,5 @@
   "loc.input.help.Contents": "File/folder paths to delete. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkID=722333)",
   "loc.messages.CantDeleteFiles": "無法刪除一或多個檔案",
   "loc.messages.SkippingSymbolStore": "正在略過刪除符號存放區檔案共用: %s",
-  "loc.messages.NoFiles": "No files to delete."
+  "loc.messages.NoFiles": "沒有要刪除的檔案。"
 }

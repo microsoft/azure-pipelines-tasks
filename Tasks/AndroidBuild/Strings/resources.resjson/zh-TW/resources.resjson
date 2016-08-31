@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Android Build (deprecated; use Gradle)",
+  "loc.friendlyName": "Android 組建 (已取代; 使用 Gradle)",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613716)",
   "loc.description": "使用 Gradle 建置 Android 應用程式，並選擇性地啟動模擬器進行單元測試",
   "loc.instanceNameFormat": "Android 組建 $(gradleProj)",
@@ -15,7 +15,7 @@
   "loc.input.label.emulatorTarget": "AVD 目標 SDK",
   "loc.input.help.emulatorTarget": "新 Android 虛擬裝置 (AVD) 的目標 ID。",
   "loc.input.label.emulatorDevice": "AVD 裝置",
-  "loc.input.help.emulatorDevice": "要使用的選擇性裝置定義。可以是裝置索引或 ID。",
+  "loc.input.help.emulatorDevice": "The optional device definition to use. Can be a device index or ID.",
   "loc.input.label.avdAbi": "AVD ABI",
   "loc.input.help.avdAbi": "Android 虛擬裝置 (AVD) 要使用的 ABI。 ",
   "loc.input.label.avdForce": "覆寫現有 AVD",

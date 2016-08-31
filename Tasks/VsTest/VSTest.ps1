@@ -12,7 +12,9 @@ param(
     [string]$platform,
     [string]$configuration,
     [string]$publishRunAttachments,
-    [string]$runInParallel
+    [string]$runInParallel,
+    [string]$vstestLocationMethod,
+    [string]$vstestLocation
     )
 
 Write-Verbose "Entering script VSTest.ps1"
@@ -28,6 +30,7 @@ Write-Verbose "testRunTitle = $testRunTitle"
 Write-Verbose "platform = $platform"
 Write-Verbose "configuration = $configuration"
 Write-Verbose "publishRunAttachments = $publishRunAttachments"
+Write-Verbose "vstestLocation = $vstestLocation"
 
 # Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
@@ -81,6 +84,7 @@ try
 
     $codeCoverage = Convert-String $codeCoverageEnabled Boolean
 
+    $diagFileName = [system.IO.path]::GetTempFileName()
     if($testAssemblyFiles)
     {
         Write-Verbose -Verbose "Calling Invoke-VSTest for all test assemblies"
@@ -91,13 +95,50 @@ try
             $vsTestVersion = $null
         }
 
+        $vstestLocationInput = $vstestLocation
+        if ($vstestLocationMethod -eq "location") 
+        {
+            Write-Verbose "User has specified vstest location"
+            if (InvokeVsTestCmdletHasMember "VSTestLocation")
+            {
+                $vsTestVersion = $null
+                if([String]::IsNullOrWhiteSpace($vstestLocation))
+                {
+                    throw (Get-LocalizedString -Key "Invalid location specified '{0}'. Provide a valid path to vstest.console.exe and try again" -ArgumentList $vstestLocation)
+                }
+                else
+                {
+                    $vstestLocationInput.Trim()
+                    $vstestConsoleExeName = "vstest.console.exe"
+                    if(!$vstestLocationInput.EndsWith($vstestConsoleExeName, [System.StringComparison]::OrdinalIgnoreCase))
+                    {
+                        $vstestLocationInput = [io.path]::Combine($vstestLocationInput, $vstestConsoleExeName)
+                        if(![io.file]::Exists($vstestLocationInput))
+                        {
+                            throw (Get-LocalizedString -Key "Invalid location specified '{0}'. Provide a valid path to vstest.console.exe and try again" -ArgumentList $vstestLocation)
+                        }
+                    }
+                }
+            }
+            else 
+            {
+                Write-Warning (Get-LocalizedString -Key "Update the agent to try out the '{0}' feature." -ArgumentList "specify vstest location")
+                $vstestLocationInput = $null
+            }
+        }
+        else 
+        {
+            Write-Verbose "User has chosen vs version"
+            $vstestLocationInput = $null
+        }
+
         $artifactsDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.ArtifactsDirectory" -Global $FALSE
 
         $workingDirectory = $artifactsDirectory
 
         if($runInParallel -eq "True")
         {
-            $rightVSVersionAvailable = IsVisualStudio2015Update1OrHigherInstalled $vsTestVersion
+            $rightVSVersionAvailable = IsVisualStudio2015Update1OrHigherInstalled $vsTestVersion $vstestLocationInput
             if(-Not $rightVSVersionAvailable)
             {
                 Write-Warning (Get-LocalizedString -Key "Install Visual Studio 2015 Update 1 or higher on your build agent machine to run the tests in parallel.")
@@ -118,8 +159,16 @@ try
             $testResultsDirectory = $workingDirectory + [System.IO.Path]::DirectorySeparatorChar + "TestResults"
         } 
         Write-Verbose "Test results directory: $testResultsDirectory"
-    
-        Invoke-VSTest -TestAssemblies $testAssemblyFiles -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFileWithParallel -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $workingDirectory -TestResultsFolder $testResultsDirectory -SourcesDirectory $sourcesDirectory
+
+        
+        if (![String]::IsNullOrWhiteSpace($vstestLocationInput) -And (InvokeVsTestCmdletHasMember "VSTestLocation"))
+        {
+            Invoke-VSTest -TestAssemblies $testAssemblyFiles -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFileWithParallel -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $workingDirectory -TestResultsFolder $testResultsDirectory -SourcesDirectory $sourcesDirectory -VSTestLocation $vstestLocationInput
+        }
+        else 
+        {    
+            Invoke-VSTest -TestAssemblies $testAssemblyFiles -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFileWithParallel -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $workingDirectory -TestResultsFolder $testResultsDirectory -SourcesDirectory $sourcesDirectory 
+        }
     
     }
     else
@@ -127,6 +176,7 @@ try
         Write-Host "##vso[task.logissue type=warning;code=002004;]"
         Write-Warning (Get-LocalizedString -Key "No test assemblies found matching the pattern: '{0}'." -ArgumentList $testAssembly)
     }
+    ##vso[task.uploadlog]$diagFileName
 }
 catch
 {

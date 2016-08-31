@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 33
+        "Patch": 34
     },
     "demands": [],
     "minimumAgentVersion": "1.91.0",
@@ -23,7 +23,7 @@
             "label": "Path to Publish",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Folder or file path to publish.  Can be a fully qualified path or a relative path that relative to repo root, wildcards is not supported. Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)"
+            "helpMarkDown": "Folder or file path to publish.  Can be a fully qualified path or relative to repo root, wildcards are not supported. Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)"
         },
         {
             "name": "ArtifactName",
@@ -39,7 +39,7 @@
             "label": "Artifact Type",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The type of the artifact to create.",
+            "helpMarkDown": "The type of artifact to create.",
             "options": {
                 "Container": "Server",
                 "FilePath": "File share"

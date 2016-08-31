@@ -9,5 +9,5 @@
   "loc.input.help.Contents": "File/folder paths to delete. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkID=722333)",
   "loc.messages.CantDeleteFiles": "Non è stato possibile eliminare uno o più file",
   "loc.messages.SkippingSymbolStore": "L'eliminazione per la condivisione file dell'archivio simboli verrà ignorata: %s",
-  "loc.messages.NoFiles": "No files to delete."
+  "loc.messages.NoFiles": "Non ci sono file da eliminare."
 }

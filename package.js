@@ -15,7 +15,22 @@ var stream = require('stream');
 var _strRelPath = path.join('Strings', 'resources.resjson', 'en-US');
 
 var _tempPath = path.join(__dirname, '_temp');
-shell.mkdir('-p', _tempPath);
+
+var _cultureNames = [
+	'cs',
+	'de',
+	'es',
+	'fr',
+	'it',
+	'ja',
+	'ko',
+	'pl',
+	'pt-BR',
+	'ru',
+	'tr',
+	'zh-Hans',
+	'zh-Hant'
+];
 
 var createError = function (msg) {
 	return new gutil.PluginError('PackageTask', msg);
@@ -27,6 +42,7 @@ var validateModule = function (folderName, module) {
     return defer.promise;
 }
 
+// Validates the structure of a task.json file.
 var validateTask = function (folderName, task) {
 	var defer = Q.defer();
 
@@ -244,46 +260,38 @@ function packageTask(pkgPath, commonDeps, commonSrc) {
 					shell.rm(path.join(tgtPath, '*.csproj'));
 					shell.rm(path.join(tgtPath, '*.md'));
 
-					// Build a list of external task lib dependencies.
+					// Statically link the Node externals.
 					var externals = require('./externals.json');
-					var libDeps = [];
 					if (task.execution['Node']) {
-						libDeps.push({
-							"name": "vsts-task-lib",
-							"src": "node_modules",
-							"dest": "node_modules"
-						});
-					}
-
-					if (task.execution['PowerShell3']) {
-						libDeps.push({
-							"name": "vsts-task-sdk",
-							"src": path.join("node_modules", "vsts-task-sdk", "VstsTaskSdk"),
-							"dest": path.join("ps_modules", "VstsTaskSdk")
-						});
-					}
-
-					// Statically link the required external task libs.
-					libDeps.forEach(function (libDep) {
-						var libVer = externals[libDep.name];
+						// Determine the vsts-task-lib version.
+						var libVer = externals.npm['vsts-task-lib'];
 						if (!libVer) {
-							throw new Error('External ' + libDep.name + ' not defined in externals.json.');
+							throw new Error('External vsts-task-lib not defined in externals.json.');
 						}
 
-						gutil.log('Linking ' + libDep.name + ' ' + libVer + ' into ' + task.name);
-						var tskLibSrc = path.join(__dirname, '_temp', libDep.name, libVer, libDep.src);
-						if (shell.test('-d', tskLibSrc)) {
-							new gutil.PluginError('PackageTask', libDep.name + ' not found: ' + tskLibSrc);
-						}
+						// Copy the lib from the cache.
+						gutil.log('Linking vsts-task-lib ' + libVer);
+						var copySource = path.join(_tempPath, 'npm', 'vsts-task-lib', libVer, 'node_modules', '*');
+						var copyTarget = path.join(tgtPath, 'node_modules');
+						shell.mkdir('-p', copyTarget);
+						shell.cp('-R', copySource, copyTarget);
+					}
 
-						var dest = path.join(tgtPath, libDep.dest)
-						shell.mkdir('-p', dest);
-						shell.cp('-R', path.join(tskLibSrc, '*'), dest);
-					})
+					// Statically link the PowerShell3 externals.
+					if (task.execution['PowerShell3']) {
+						// Copy the nuget v2 package from the cache.
+						//
+						// PowerShell is not used to download VstsTaskSdk from the gallery to avoid
+						// a PowerShell 5 dev dependency for building the tasks in this repo.
+						copyNuGetV2External('VstsTaskSdk', externals.nugetv2.VstsTaskSdk, tgtPath);
+					}
 
-					// Statically link the required internal common modules.
-					var taskDeps;
-					if ((taskDeps = commonDeps[task.name])) {
+					// Statically link the internal common modules.
+					//
+					// Note, this must come before the task-specific externals are statically linked.
+					// Internal common modules can contain external references.
+					var taskDeps = commonDeps[task.name];
+					if (taskDeps) {
 						taskDeps.forEach(function (dep) {
 							gutil.log('Linking ' + dep.module + ' into ' + task.name);
 							var src = path.join(commonSrc, dep.module);
@@ -293,12 +301,52 @@ function packageTask(pkgPath, commonDeps, commonSrc) {
 						})
 					}
 
-					// run npm install if packages.json exists
+					// Statically link the task-specific externals.
+					shell.find(tgtPath)
+						.filter(function (file) {
+							return file.match(/(\/|\\)externals\.json$/);
+						})
+						.forEach(function (nestedExternalsJson) {
+							// Load the externals.json.
+							var nestedExternals = require(nestedExternalsJson);
+
+							// Copy archive file references (e.g. zip files).
+							if (nestedExternals.archivePackages) {
+								nestedExternals.archivePackages.forEach(function (archive) {
+									gutil.log('Linking files from ' + archive.archiveName);
+									var scrubbedUrl = archive.url.replace(/[/\:?]/g, '_');
+									var archiveSource = path.join(_tempPath, "archive", scrubbedUrl, '*');
+									var archiveTarget = path.join(path.dirname(nestedExternalsJson), archive.dest);
+									shell.mkdir('-p', archiveTarget);
+									shell.cp('-R', archiveSource, archiveTarget);
+								});
+							}
+
+							// Copy each NuGet V2 reference.
+							if (nestedExternals.nugetv2) {
+								var packageNames = Object.keys(nestedExternals.nugetv2);
+								packageNames.forEach(function (packageName) {
+									if (nestedExternals.nugetv2.hasOwnProperty(packageName)) {
+										copyNuGetV2External(packageName, nestedExternals.nugetv2[packageName], path.dirname(nestedExternalsJson));
+									}
+								});
+							}
+						});
+
+					// TODO: Remove support for task-specific package.json files and switch to
+					// externals.json for task-specific npm packages (handles caching).
+
+					// Run npm install if packages.json exists.
 					var pkgJsonPath = path.join(tgtPath, 'package.json');
-					var nodeModulesPath = path.join(tgtPath, 'node_modules');
-					if (fs.existsSync(pkgJsonPath) && fs.existsSync(nodeModulesPath)) {
-						shell.pushd(tgtPath);
+					if (fs.existsSync(pkgJsonPath)) {
+
+						// Ensure a node_modules directory. Otherwise the modules can be installed
+						// in a node_modules directory further up the directory hierarchy.
+						shell.mkdir('-p', path.join(tgtPath, 'node_modules'));
+
+						// Run npm install
 						gutil.log('package.json exists.  Running npm install');
+						shell.pushd(tgtPath);
 						try {
 							cp.execSync('npm install');
 						}
@@ -307,76 +355,12 @@ function packageTask(pkgPath, commonDeps, commonSrc) {
 							gutil.log(err.Message);
 							throw new Error('npm install failed');
 						}
-						shell.popd();
-					}
-
-					// download any dependencies
-					var alldependenciesjson = shell.find(tgtPath).
-						filter(function (file) {
-							return file.match(/(\/|\\)dependencies\.json$/);
-						});
-
-					var finisheddependenciesjson = 0;
-					if (alldependenciesjson) {
-						if (alldependenciesjson.length == 0) {
-							deferred.resolve();
+						finally {
+							shell.popd();
 						}
-
-						alldependenciesjson.forEach(function (dependenciesjson) {
-							var dependencies = require(dependenciesjson);
-							if (dependencies.archivePackages) {
-								var archives = dependencies.archivePackages;
-								var finishedarchiveCount = 0;
-								archives.forEach(function (archive) {
-									gutil.log('Download archive dependency: ' + archive.archiveName + ' from: ' + archive.url);
-
-									var file = fs.createWriteStream(path.join(_tempPath, archive.archiveName));
-									request.get(archive.url)
-										.on('response', function (response) {
-											if (response.statusCode != 200) {
-												throw new Error('file download error. Http status code: ' + response.statusCode);
-											}
-										})
-										.on('error', function (err) {
-											throw new Error('file download error: ' + err);
-										})
-										.pipe(file);
-
-									file.on('finish', function () {
-										file.close();
-										gutil.log('Unzip to: ' + path.join(path.dirname(dependenciesjson), archive.dest));
-										gulp.src(path.join(_tempPath, archive.archiveName))
-											.pipe(unzip())
-											.pipe(gulp.dest(path.join(path.dirname(dependenciesjson), archive.dest)))
-											.on('end', function () {
-												gutil.log('Validate download files.');
-												archive.files.forEach(function (file) {
-													gutil.log('Checking download file:' + file);
-													if (!fs.existsSync(path.join(path.dirname(dependenciesjson), archive.dest, file))) {
-														throw new Error('File expected does not exist: ' + path.join(path.dirname(dependenciesjson), archive.dest, file));
-													}
-												})
-
-												gutil.log('Remove download .zip file.');
-												shell.rm(path.join(_tempPath, archive.archiveName));
-												finishedarchiveCount++;
-												if (finishedarchiveCount == archives.length) {
-													finisheddependenciesjson++;
-													if (finisheddependenciesjson == alldependenciesjson.length) {
-														gutil.log('Finished all dependencies download.');
-														deferred.resolve();
-													}
-												}
-											});
-									});
-								});
-							} else {
-								deferred.resolve();
-							}
-						});
-					} else {
-						deferred.resolve();
 					}
+
+					deferred.resolve();
 				}));
 
 			Q.all(promises).then(function () {
@@ -387,6 +371,83 @@ function packageTask(pkgPath, commonDeps, commonSrc) {
 				done(err);
 			});
 		});
+}
+
+function copyNuGetV2External(name, info, destRoot) {
+	// Validate the parameters.
+	assertParameter(name, 'name');
+	assertParameter(info, 'info');
+	assertParameter(info.repository, 'info.repository');
+	assertParameter(info.version, 'info.version');
+	assertParameter(info.cp, 'info.cp');
+	assertParameter(info.cp.length, 'info.cp.length');
+	for (var i = 0 ; i < info.cp.length ; i++) {
+		if (typeof(info.cp[i].source) != 'string') {
+			assertParameter(info.cp[i].source.length, 'info.cp[' + i + '].source.length');
+			for (var j = 0 ; j < info.cp[i].source.length ; j++) {
+				assertParameter(info.cp[i].source[j], 'info.cp[' + i + '].source[' + j + ']');
+			}
+		}
+	}
+
+	assertParameter(destRoot, 'destRoot');
+
+	// Determine the source root.
+	var url = info.repository.replace(/\/$/, '') + '/package/' + name + '/' + info.version;
+	var scrubbedUrl = url.replace(/[/\:?]/g, '_');
+	var sourceRoot = path.join(_tempPath, 'archive', scrubbedUrl);
+	gutil.log('Linking ' + name + ' ' + info.version);
+
+	info.cp.forEach(function (cpInfo) {
+		// If the dest contains the culture name placeholder, then multiply the copy for each culture name.
+		var cultureNames;
+		if (cpInfo.dest && cpInfo.dest.indexOf('<CULTURE_NAME>') >= 0) {
+			cultureNames = _cultureNames;
+		} else {
+			cultureNames = [ 'n/a' ];
+		}
+
+		cultureNames.forEach(function (cultureName) {
+			// Build the source array. The source culture name should always match the dest culture name.
+			var source = [];
+			if (typeof(cpInfo.source) == 'string') {
+				source.push(path.join(sourceRoot, cpInfo.source.replace('<CULTURE_NAME>', cultureName)));
+			} else {
+				cpInfo.source.forEach(function (s) {
+					source.push(path.join(sourceRoot, s.replace('<CULTURE_NAME>', cultureName)));
+				});
+			}
+
+			// Determine the destination.
+			var dest;
+			if (cpInfo.dest) {
+				dest = path.join(destRoot, cpInfo.dest.replace('<CULTURE_NAME>', cultureName));
+			} else {
+				dest = destRoot + '/';
+			}
+
+			// Create the destination directory.
+			if (dest.match(/[/\\]$/)) {
+				shell.mkdir('-p', dest);
+			} else {
+				shell.mkdir('-p', path.dirname(dest));
+			}
+
+			// Copy the files.
+			if (cpInfo.options) {
+				shell.cp(cpInfo.options, source, dest);
+			} else {
+				shell.cp(source, dest);
+			}
+
+		});
+	});
+}
+
+function assertParameter(value, name) {
+	if (!value) {
+		throw new Error('"' + name + '" cannot be null or empty.');
+	}
 }
 
 exports.LocCommon = locCommon;

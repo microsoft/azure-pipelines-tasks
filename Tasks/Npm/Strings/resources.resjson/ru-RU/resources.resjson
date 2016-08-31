@@ -10,7 +10,7 @@
   "loc.input.help.arguments": "В npm переданы дополнительные аргументы.",
   "loc.input.label.cwd": "Рабочая папка",
   "loc.input.help.cwd": "Текущий рабочий каталог, где выполняется команда npm. По умолчанию — корень репозитория.",
-  "loc.messages.InvalidCommand": "Only one command should be used for npm. Use arguments input for additional arguments.",
+  "loc.messages.InvalidCommand": "Для npm следует использовать только одну команду. Чтобы добавить аргументы, используйте ввод аргументов.",
   "loc.messages.NpmReturnCode": "Завершение работы NPM с кодом возврата: %d",
   "loc.messages.NpmFailed": "Сбой NPM с ошибкой: %s"
 }

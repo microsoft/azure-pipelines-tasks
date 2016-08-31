@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "PowerShell на целевых компьютерах",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=627414)",
+  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?linkid=627414)",
   "loc.description": "Выполнять сценарии PowerShell на удаленных компьютерах",
   "loc.instanceNameFormat": "Выполнить PowerShell в $(EnvironmentName)",
   "loc.group.displayName.deployment": "Развертывание",

@@ -18,7 +18,8 @@
     "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
     "dependencies": {
         "xml2js": "0.4.16",
-        "vsts-task-lib": "^0.8.2"
+        "vsts-task-lib": "^0.8.3",
+        "performance-now": "0.2.0"
     },
     "optionalDependencies": {
         "regedit": "2.2.6"

@@ -26,129 +26,122 @@ describe('ExtractFiles Suite', function() {
         
     });
 
-    var win = os.type().match(/^Win/);
-    if(!win){
-        //TODO tests only run on windows at the moment.
-        return;
-    }
+    var responseFiles = ['extractFilesWin.json', 'extractFilesLinux.json'];
     
-
-    //simplest case; one file, with default for cleanDestinationFolder
-    it('extracts foo.zip', (done) => {
-        setResponseFile('extractFilesGood.json');
-        
-        var tr = new trm.TaskRunner('ExtractFiles', true);
-        tr.setInput('archiveFilePatterns', 'foo.zip');
-		tr.setInput('destinationFolder', 'output');
-        tr.setInput('cleanDestinationFolder', 'true');
-        
-        tr.run()
-        .then(() => {
-            var shouldExtract = [
-                "mockedBuildSources/foo.zip",
-            ];
+    responseFiles.forEach((responseFile) => {
+        var isWin = responseFile == 'extractFilesWin.json'; 
+        var os = isWin ? 'Windows' : 'Linux';
+        //simplest case; one file, with default for cleanDestinationFolder
+        it(os + ' extracts foo.zip', (done) => {
+            setResponseFile(responseFile);
             
-            assert(tr.invokedToolCount == shouldExtract.length, 'should have extracted '+shouldExtract.length+' files(s)');
-            for(var i in shouldExtract){
-                assert((tr.stdout.indexOf('7zip extracted '+shouldExtract[i]) != -1), 'should have extracted '+shouldExtract[i]);
-            }
+            var tr = new trm.TaskRunner('ExtractFiles', true, true);
+            tr.setInput('archiveFilePatterns', 'foo.zip');
+            tr.setInput('destinationFolder', 'output');
+            tr.setInput('cleanDestinationFolder', 'true');
+            
+            tr.run()
+            .then(() => {
+                var shouldExtract = [
+                    "mockedBuildSources/foo.zip",
+                ];
+                
+                assert(tr.invokedToolCount == shouldExtract.length, 'should have extracted '+shouldExtract.length+' files(s)');
+                for(var i in shouldExtract){
+                    assert((tr.stdout.indexOf('extracted '+shouldExtract[i]) != -1), 'should have extracted '+shouldExtract[i]);
+                }
 
-            assert(tr.stderr.length == 0, 'should not have written to stderr');
-            assert(tr.succeeded, 'task should have succeeded');
-            done();
-        })
-        .fail((err) => {
-            done(err);
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.succeeded, 'task should have succeeded');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+        });  
+
+        //another simple case, but goes through a different flow, multiple args are passed, and a sub directory is used
+        it(os + ' extracts foo.tar & subdir/foo.zip', (done) => {
+            setResponseFile(responseFile);
+            
+            var tr = new trm.TaskRunner('ExtractFiles', true, true);
+            tr.setInput('archiveFilePatterns', 'foo.tar\nsubdir/foo.zip');
+            tr.setInput('destinationFolder', 'output');
+            tr.setInput('cleanDestinationFolder', 'true');
+            
+            tr.run()
+            .then(() => {
+
+                var shouldExtract = [
+                    "mockedBuildSources/foo.tar",
+                    "mockedBuildSources/subdir/foo.zip"
+                ];
+                
+                assert(tr.invokedToolCount == shouldExtract.length, 'should have extracted '+shouldExtract.length+' files(s)');
+                for(var i in shouldExtract){
+                    assert((tr.stdout.indexOf('extracted '+shouldExtract[i]) != -1), 'should have extracted '+shouldExtract[i]);
+                }
+                
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.succeeded, 'task should have succeeded');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
         });
-    });  
-
-    //another simple case, but goes through a different flow, multiple args are passed, and a sub directory is used
-    it('extracts foo.tar & subdir/foo.zip', (done) => {
-        setResponseFile('extractFilesGood.json');
         
-        var tr = new trm.TaskRunner('ExtractFiles', true);
-        tr.setInput('archiveFilePatterns', 'foo.tar\nsubdir/foo.zip');
-		tr.setInput('destinationFolder', 'output');
-        tr.setInput('cleanDestinationFolder', 'true');
-        
-        tr.run()
-        .then(() => {
+        //tests the double extraction needed for compressed tars on windows
+        it(os + ' extracts foo.tar.gz', (done) => {
+            setResponseFile(responseFile);
+            
+            var tr = new trm.TaskRunner('ExtractFiles', true, true);
+            tr.setInput('archiveFilePatterns', 'foo.tar.gz');
+            tr.setInput('destinationFolder', 'output');
+            tr.setInput('cleanDestinationFolder', 'true');
+            
+            tr.run()
+            .then(() => {
+                assert(tr.invokedToolCount == (isWin ? 2 : 1), 'should have extracted '+(isWin ? 2 : 1)+' files(s)');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.succeeded, 'task should have succeeded');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+        })  
 
-            var shouldExtract = [
-                "mockedBuildSources/foo.tar",
-                "mockedBuildSources/subdir/foo.zip"
-            ];
+        // tests muliple minimatch patterns
+        it(os + ' extracts *.zip, *.tar, *.jar, *.7z', (done) => {
+            setResponseFile(responseFile);
             
-            assert(tr.invokedToolCount == shouldExtract.length, 'should have extracted '+shouldExtract.length+' files(s)');
-            for(var i in shouldExtract){
-                assert((tr.stdout.indexOf('7zip extracted '+shouldExtract[i]) != -1), 'should have extracted '+shouldExtract[i]);
-            }
+            var tr = new trm.TaskRunner('ExtractFiles', true, true);
+            tr.setInput('archiveFilePatterns', '*.zip\n*.tar\n*.jar\n*.7z');
+            tr.setInput('destinationFolder', 'output');
+            tr.setInput('cleanDestinationFolder', 'true');
             
-            assert(tr.stderr.length == 0, 'should not have written to stderr');
-            assert(tr.succeeded, 'task should have succeeded');
-            done();
-        })
-        .fail((err) => {
-            done(err);
-        });
+            tr.run()
+            .then(() => {
+                var shouldExtract = [
+                    "mockedBuildSources/foo.zip",
+                    "mockedBuildSources/subdir/foo.zip",
+                    "mockedBuildSources/foo.tar",
+                    "mockedBuildSources/subdir/foo.jar",
+                    "mockedBuildSources/subdir/subdir/foo.7z"
+                ];
+                
+                assert(tr.invokedToolCount == shouldExtract.length, 'should have extracted '+shouldExtract.length+' files(s)');
+                for(var i in shouldExtract){
+                    assert((tr.stdout.indexOf('extracted '+shouldExtract[i]) != -1), 'should have extracted '+shouldExtract[i]);
+                }
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.succeeded, 'task should have succeeded');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+        })  
     });
-    
-    //tests the double extraction needed for compressed tars on windows
-    it('extracts foo.tar.gz', (done) => {
-        setResponseFile('extractFilesGood.json');
-        
-        var tr = new trm.TaskRunner('ExtractFiles', true);
-        tr.setInput('archiveFilePatterns', 'foo.tar.gz');
-		tr.setInput('destinationFolder', 'output');
-        tr.setInput('cleanDestinationFolder', 'true');
-        
-        tr.run()
-        .then(() => {
-            //TODO this is failing because we need to mock out fs.readdirSync() which does not exist on task library yet
-            //and therefore fails the task, so check explicitly for that failure (as it is expected until this is mockable)
-            //assert(tr.invokedToolCount == 2, 'should have extracted 2 files(s)');
-            //assert(tr.stderr.length == 0, 'should not have written to stderr');
-            //assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount == 1, 'should have extracted 1 files(s)');
-            assert(tr.stderr.startsWith('Unhandled:ENOENT: no such file or directory, scandir'));
-            assert(tr.failed, 'task should have failed');
-            done();
-        })
-        .fail((err) => {
-            done(err);
-        });
-    })  
-
-    // tests muliple minimatch patterns
-    it('extracts *.zip, *.tar, *.jar, *.7z', (done) => {
-        setResponseFile('extractFilesGood.json');
-        
-        var tr = new trm.TaskRunner('ExtractFiles', true);
-        tr.setInput('archiveFilePatterns', '*.zip\n*.tar\n*.jar\n*.7z');
-		tr.setInput('destinationFolder', 'output');
-        tr.setInput('cleanDestinationFolder', 'true');
-        
-        tr.run()
-        .then(() => {
-            var shouldExtract = [
-                "mockedBuildSources/foo.zip",
-                "mockedBuildSources/subdir/foo.zip",
-                "mockedBuildSources/foo.tar",
-                "mockedBuildSources/subdir/foo.jar",
-                "mockedBuildSources/subdir/subdir/foo.7z"
-            ];
-            
-            assert(tr.invokedToolCount == shouldExtract.length, 'should have extracted '+shouldExtract.length+' files(s)');
-            for(var i in shouldExtract){
-                assert((tr.stdout.indexOf('7zip extracted '+shouldExtract[i]) != -1), 'should have extracted '+shouldExtract[i]);
-            }
-            assert(tr.stderr.length == 0, 'should not have written to stderr');
-            assert(tr.succeeded, 'task should have succeeded');
-            done();
-        })
-        .fail((err) => {
-            done(err);
-        });
-    })  
-    
 });

@@ -8,8 +8,8 @@
   "loc.input.label.email": "메일",
   "loc.input.help.email": "Xamarin 계정 메일 주소.",
   "loc.input.label.password": "암호",
-  "loc.input.help.password": "Xamarin account password. Use a new build variable with its lock enabled on the Variables tab to encrypt this value.",
-  "loc.input.label.product": "Xamarin Product",
-  "loc.input.help.product": "Xamarin product name.",
+  "loc.input.help.password": "Xamarin 계정 암호입니다. 이 값을 암호화하려면 [변수] 탭에서 해당 잠금을 사용하도록 설정한 상태로 새 빌드 변수를 사용하세요.",
+  "loc.input.label.product": "Xamarin 제품",
+  "loc.input.help.product": "Xamarin 제품 이름입니다.",
   "loc.input.label.timeout": "시간 제한(초)"
 }

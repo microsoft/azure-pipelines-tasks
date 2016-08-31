@@ -1,17 +1,33 @@
 /// <reference path="../../../definitions/mocha.d.ts"/>
 /// <reference path="../../../definitions/node.d.ts"/>
-
+import Q = require('q');
 import assert = require('assert');
 import trm = require('../../lib/taskRunner');
 import mockHelper = require('../../lib/mockHelper');
 import path = require('path');
 import fs = require('fs');
+import url = require('url');
+import {Url} from 'url';
 
+import {ToolRunner} from 'vsts-task-lib/toolrunner';
 import tr = require('../../lib/vsts-task-lib/toolRunner');
+import tl = require('../../lib/vsts-task-lib/toolRunner');
 
 import pmd = require('../../../Tasks/Maven/CodeAnalysis/mavenpmd');
 import ca = require('../../../Tasks/Maven/CodeAnalysis/mavencodeanalysis');
-import ar = require('../../../Tasks/Maven/CodeAnalysis/analysisResult');
+import ar = require('../../../Tasks/Maven/CodeAnalysis/analysisresult');
+
+import sqCommon = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/common');
+import {VstsServerUtils} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/vsts-server-utils';
+import {SonarQubeRunSettings} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/run-settings';
+import {ISonarQubeServer} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/server';
+import {SonarQubeEndpoint} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/endpoint';
+import {SonarQubeReportBuilder} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/report-builder';
+import {SonarQubeMetrics} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/metrics';
+import {MockSonarQubeServer} from './server-mock';
+
+import http = require('http');
+import {IncomingMessage} from 'http';
 
 function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
@@ -22,7 +38,7 @@ function setupDefaultMavenTaskRunner(): trm.TaskRunner {
     var taskRunner = new trm.TaskRunner('Maven', true, true);
     // default required settings
     taskRunner.setInput('mavenVersionSelection', 'Path');
-    taskRunner.setInput('mavenPath', '/home/bin/maven') // Make that checkPath returns true for this filename in the response file
+    taskRunner.setInput('mavenPath', '/home/bin/maven'); // Make that checkPath returns true for this filename in the response file
     taskRunner.setInput('goals', 'package');
     taskRunner.setInput('javaHomeSelection', 'JDKVersion');
     taskRunner.setInput('jdkVersion', 'default');
@@ -30,6 +46,9 @@ function setupDefaultMavenTaskRunner(): trm.TaskRunner {
     taskRunner.setInput('testResultsFiles', '**/TEST-*.xml');
     taskRunner.setInput('sqAnalysisEnabled', 'false');
     taskRunner.setInput('mavenPOMFile', 'pom.xml');
+
+    // TaskRunner system is incompatible with HTTP/HTTPS mocking due to the use of seperate processes
+    taskRunner.setInput('sqAnalysisIncludeFullReport', 'false');
 
     return taskRunner;
 }
@@ -47,6 +66,32 @@ function listFolderContents(folder): string[] {
     });
 
     return result;
+}
+
+// Adds mock exist, checkPath, rmRF and mkdirP responses for given file paths.
+// Takes an object to add to and an array of file paths for which responses should be added.
+// Modifies and returns the argument object.
+function setupMockResponsesForPaths(responseObject: any, paths: string[]) { // Can't use rest arguments here (gulp-mocha complains)
+
+    // Create empty objects for responses only if they did not already exist (avoid overwriting existing responses)
+    responseObject.exist = responseObject.exist || {};
+    responseObject.checkPath = responseObject.checkPath || {};
+    responseObject.rmRF = responseObject.rmRF || {};
+    responseObject.mkdirP = responseObject.mkdirP || {};
+
+    var rmRFSuccessObj = {
+        success: true,
+        message: "foo bar"
+    };
+
+    paths.forEach((path) => {
+        responseObject.exist[path] = true;
+        responseObject.checkPath[path] = true;
+        responseObject.rmRF[path] = rmRFSuccessObj;
+        responseObject.mkdirP[path] = true;
+    });
+
+    return responseObject;
 }
 
 // Create temp dirs for mavencodeanalysis tests to save into
@@ -77,37 +122,72 @@ function createTempDirsForSonarQubeTests(): void {
     }
 }
 
+function captureStream(stream):{unhook():void, captured():string} {
+    var oldWrite = stream.write;
+    var buf:string = '';
+    stream.write = function(chunk, encoding, callback) {
+        buf += chunk.toString(); // chunk is a String or Buffer
+        oldWrite.apply(stream, arguments);
+    };
+
+    return {
+        unhook: function unhook():void {
+            stream.write = oldWrite;
+        },
+        captured: function():string {
+            return buf;
+        }
+    };
+}
+
 function assertCodeAnalysisBuildSummaryContains(stagingDir: string, expectedString: string): void {
-    assertBuildSummaryContains(path.join(stagingDir, '.codeAnalysis', 'CodeAnalysisBuildSummary.md'), expectedString);
+    assertBuildSummaryContains(fs.readFileSync(path.join(stagingDir, '.codeAnalysis', 'CodeAnalysisBuildSummary.md'), 'utf-8'), expectedString);
 }
 
 function assertSonarQubeBuildSummaryContains(stagingDir: string, expectedString: string): void {
-    assertBuildSummaryContains(path.join(stagingDir, '.sqAnalysis', 'SonarQubeBuildSummary.md'), expectedString);
+    assertBuildSummaryContains(fs.readFileSync(path.join(stagingDir, '.sqAnalysis', 'SonarQubeBuildSummary.md'), 'utf-8'), expectedString);
 }
 
 // Asserts the existence of a given line in the build summary file that is uploaded to the server.
-function assertBuildSummaryContains(buildSummaryFilePath: string, expectedLine: string): void {
-    var buildSummaryString: string = fs.readFileSync(buildSummaryFilePath, 'utf-8');
+function assertBuildSummaryContains(buildSummaryString: string, expectedLine: string): void {
+    assert(buildSummaryString.indexOf(expectedLine) > -1, `Expected build summary to contain: ${expectedLine}
+     Actual: ${buildSummaryString}`);
+}
 
-    assert(buildSummaryString.indexOf(expectedLine) > -1, "Expected build summary to contain: " + expectedLine);
+function assertErrorContains(error: any, expectedString: string): void {
+    assert(error instanceof Error, `Expected an instance of Error to be thrown. Actual: ${typeof error}`);
+    assert(error.message.indexOf(expectedString) > -1, `Expected error to contain: ${expectedString}
+     Actual: ${error.message}`);
+}
+
+function assertStringContains(actualString:string, expectedString:string):void {
+    assert(actualString.indexOf(expectedString) > -1, `Expected string to contain: ${expectedString}`);
+}
+
+
+function assertToolRunnerContainsArg(toolRunner:ToolRunner, expectedArg:string) {
+    return toolRunner.args.indexOf(expectedArg) > -1;
+}
+
+function assertToolRunnerHasArgLength(toolRunner: ToolRunner, expectedNumArgs: number) {
+    return toolRunner.args.length == expectedNumArgs;
 }
 
 describe('Maven Suite', function () {
     this.timeout(20000);
 
     before((done) => {
-        // init here
+        Q.longStackSupport = true;
         done();
     });
 
     after(function () {
-
     });
 
     it('run maven with all default inputs and M2_HOME not set', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -116,6 +196,7 @@ describe('Maven Suite', function () {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('mavenOpts', '-Xmx2048m')
 
         tr.run()
             .then(() => {
@@ -125,9 +206,12 @@ describe('Maven Suite', function () {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.stdout.indexOf('MAVEN_OPTS is now set to -Xmx2048m') > 0);
                 done();
             })
             .fail((err) => {
+                console.log(tr.stdout);
+                console.log(tr.stderr);
                 done(err);
             });
     })
@@ -135,7 +219,7 @@ describe('Maven Suite', function () {
     it('run maven with all default inputs and M2_HOME set', (done) => {
         setResponseFile('responseM2_HOME.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -164,7 +248,7 @@ describe('Maven Suite', function () {
     it('run maven with missing mavenVersionSelection', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         //tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -191,7 +275,7 @@ describe('Maven Suite', function () {
     it('run maven with INVALID mavenVersionSelection', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'garbage');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -219,7 +303,7 @@ describe('Maven Suite', function () {
     it('run maven with mavenVersionSelection set to Path (mavenPath valid)', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Path');
         tr.setInput('mavenPath', '/home/bin/maven2') // Make that checkPath returns true for this filename in the response file
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
@@ -248,7 +332,7 @@ describe('Maven Suite', function () {
     it('run maven with mavenVersionSelection set to Path (mavenPath missing)', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Path');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -275,7 +359,7 @@ describe('Maven Suite', function () {
     it('run maven with mavenVersionSelection set to Path (mavenPath INVALID)', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Path');
         tr.setInput('mavenPath', '/home/bin/maven333')
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
@@ -303,7 +387,7 @@ describe('Maven Suite', function () {
     it('run maven with mavenSetM2Home set to garbage', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Path');
         tr.setInput('mavenPath', '/home/bin/maven2') // Make that checkPath returns true for this filename in the response file
         tr.setInput('mavenSetM2Home', 'garbage');
@@ -333,7 +417,7 @@ describe('Maven Suite', function () {
     it('run maven with mavenSetM2Home set to true', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Path');
         tr.setInput('mavenPath', '/home/bin/maven2') // Make that checkPath returns true for this filename in the response file
         tr.setInput('mavenSetM2Home', 'true');
@@ -364,7 +448,7 @@ describe('Maven Suite', function () {
     it('run maven with options set', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '/o /p "/t:i o" /n /s');
@@ -392,7 +476,7 @@ describe('Maven Suite', function () {
     it('run maven with goals not set', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '/o /p /t /i /o /n /s');
@@ -419,7 +503,7 @@ describe('Maven Suite', function () {
     it('run maven with tasks set to multiple', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '/o /p /t /i /o /n /s');
@@ -447,7 +531,7 @@ describe('Maven Suite', function () {
     it('run maven with missing publishJUnitResults input', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '/o /p /t /i /o /n /s');
@@ -472,7 +556,7 @@ describe('Maven Suite', function () {
     })
 
     it('run maven with publishJUnitResults set to "garbage"', (done) => {
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '/o /p /t /i /o /n /s');
@@ -498,7 +582,7 @@ describe('Maven Suite', function () {
     })
 
     it('run maven and publish tests', (done) => {
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -527,7 +611,7 @@ describe('Maven Suite', function () {
     it('fails if missing testResultsFiles input', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -553,7 +637,7 @@ describe('Maven Suite', function () {
     it('fails if missing javaHomeSelection input', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -580,7 +664,7 @@ describe('Maven Suite', function () {
     it('run maven with jdkVersion set to 1.8', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -610,7 +694,7 @@ describe('Maven Suite', function () {
     it('run maven with jdkVersion set to 1.5', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -638,7 +722,7 @@ describe('Maven Suite', function () {
     it('run maven with Valid inputs but it fails', (done) => {
         setResponseFile('response.json');
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -697,7 +781,7 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should have run SQ analysis');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should have run SQ analysis');
                 assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -743,7 +827,7 @@ describe('Maven Suite', function () {
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
         setResponseFile(path.basename(newResponseFilePath));
 
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -762,7 +846,7 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jdbc.url=dbURL -Dsonar.jdbc.username=dbUser -Dsonar.jdbc.password=dbPass sonar:sonar'), 'it should have run SQ analysis');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jdbc.url=dbURL -Dsonar.jdbc.username=dbUser -Dsonar.jdbc.password=dbPass sonar:sonar'), 'it should have run SQ analysis');
                 assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -781,7 +865,6 @@ describe('Maven Suite', function () {
                 done(err);
             });
     })
-
 
     it('Maven with SonarQube - Fails when report-task.txt is invalid', function (done) {
         // Arrange
@@ -815,7 +898,7 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should have run SQ analysis');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should have run SQ analysis');
                 assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
@@ -867,7 +950,7 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should have run SQ analysis');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should have run SQ analysis');
                 assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
@@ -921,17 +1004,15 @@ describe('Maven Suite', function () {
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
                 assert(tr.ran(
-                    '/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json sonar:sonar'
+                    '/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json sonar:sonar'
                 ), 'it should have run SQ analysis');
                 assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length < 1, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
 
-                assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report') > 0,
-                    'should have uploaded a SonarQube Analysis Report build summary');
-                assertSonarQubeBuildSummaryContains(testStgDir,
-                    'Detailed SonarQube reports are not available for pull request builds.');
+                assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report') < 1,
+                    'should not have uploaded a SonarQube Analysis Report build summary');
                 done();
             })
             .fail((err) => {
@@ -942,10 +1023,9 @@ describe('Maven Suite', function () {
             });
     });
 
-
     it('maven calls enable code coverage and publish code coverage when jacoco is selected', (done) => {
         setResponseFile('responseCodeCoverage.json');
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -1012,7 +1092,7 @@ describe('Maven Suite', function () {
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
                 assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml jacoco:report'), 'it should have run mvn -f pom.xml jacoco:report');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml clean package -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jacoco.reportPath=CCReport43F6D5EF\/jacoco.exec sonar:sonar'), 'it should have run SQ analysis');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml clean package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jacoco.reportPath=CCReport43F6D5EF\/jacoco.exec sonar:sonar'), 'it should have run SQ analysis');
                 // calls maven to generate cc report.
                 assert(tr.invokedToolCount == 3, 'should have only run maven 3 times');
                 assert(tr.resultWasSet, 'task should have set a result');
@@ -1033,7 +1113,7 @@ describe('Maven Suite', function () {
 
     it('maven calls enable code coverage and not publish code coverage when jacoco is selected and report generation failed', (done) => {
         setResponseFile('response.json');
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -1064,10 +1144,9 @@ describe('Maven Suite', function () {
             });
     })
 
-
     it('maven calls enable code coverage and publish code coverage when cobertura is selected', (done) => {
         setResponseFile('responseCodeCoverage.json');
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -1131,7 +1210,7 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml clean package -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should have run SQ analysis');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml clean package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should have run SQ analysis');
                 assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=pom.xml;summaryfile=target\/site\/cobertura\/coverage.xml;reportdirectory=target\/site\/cobertura;reportbuildfile=CCReportPomA4D283EG.xml;buildtool=Maven;codecoveragetool=Cobertura;\]/) >= 0, 'should have called enable code coverage.');
@@ -1148,7 +1227,7 @@ describe('Maven Suite', function () {
 
     it('maven calls enable code coverage and not publish code coverage when cobertura is selected and report generation failed', (done) => {
         setResponseFile('response.json');
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -1179,7 +1258,7 @@ describe('Maven Suite', function () {
 
     it('Maven build with publish test results', (done) => {
         setResponseFile('response.json');
-        var tr = new trm.TaskRunner('maven', true);
+        var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('options', '');
@@ -1259,6 +1338,7 @@ describe('Maven Suite', function () {
                     'should have uploaded a Code Analysis Report build summary');
                 assert(taskRunner.stdout.indexOf('artifact.upload containerfolder=root;artifactname=') > -1,
                     'should have uploaded PMD build artifacts');
+
                 assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found 3 violations in 2 files.');
 
                 done();
@@ -1477,7 +1557,7 @@ describe('Maven Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
-                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json sonar:sonar'), 'it should have run SQ analysis in issues mode');
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json sonar:sonar'), 'it should have run SQ analysis in issues mode');
                 assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -1491,4 +1571,214 @@ describe('Maven Suite', function () {
                 done(err);
             });
     })
+
+    /* SonarQube unit tests */
+
+    it('SonarQube common - SQMetrics caching holds true over multiple requests, and does not invoke additional REST calls', () => {
+        // Arrange
+        var mockRunSettings:SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockServer:MockSonarQubeServer = new MockSonarQubeServer();
+
+        var analysisMetrics:SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+        var sqReportBuilder:SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
+
+        // Mock responses from the server for the task and analysis details
+        var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
+        mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject);
+
+        var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
+        taskDetailsJsonObject.projectStatus.status = 'OK'; // Quality gate passed
+        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', taskDetailsJsonObject);
+
+        return analysisMetrics.getQualityGateStatus()
+            .then((qualityGateStatus:string) => {
+                var expectedQualityGateStatus:string = qualityGateStatus;
+                var oldInvokeCount = mockServer.responses.get('/api/qualitygates/project_status?analysisId=12345').invokedCount;
+
+                assert(oldInvokeCount == 1, 'Expected the analysis details endpoint to only have been invoked once');
+                return analysisMetrics.getQualityGateStatus()
+                    .then((qualityGateStatus:string) => {
+                        var actualQualityGateStatus:string = qualityGateStatus;
+                        var newInvokeCount = mockServer.responses.get('/api/qualitygates/project_status?analysisId=12345').invokedCount;
+
+                        assert(expectedQualityGateStatus === actualQualityGateStatus, 'Expected the new analysis details to strictly equal the old analysis details');
+                        assert(oldInvokeCount == newInvokeCount, 'Expected no further invocations of the analysis details endpoint');
+                    });
+            })
+    });
+
+    it('SonarQube common - Build summary is created (dashboard link only when not waiting for server)', () => {
+        // Arrange
+        var mockRunSettings: SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "taskId", "taskUrl");
+        var mockServer: ISonarQubeServer = new MockSonarQubeServer();
+
+        var analysisMetrics: SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId);
+        var sqReportBuilder: SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
+
+        return sqReportBuilder.fetchMetricsAndCreateReport(false)
+            .then((report:string) => {
+                assertBuildSummaryContains(report, '[sqAnalysis_BuildSummary_LinkText >](http://dashboardUrl "projectKey Dashboard")');
+            });
+    });
+
+    it('SonarQube common - Build summary is created with quality gate failure', () => {
+        // Arrange
+        var mockRunSettings: SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockServer: MockSonarQubeServer = new MockSonarQubeServer();
+
+        var analysisMetrics: SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+        var sqReportBuilder: SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
+
+        // Mock responses from the server for the task and analysis details
+        var taskDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
+        mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject);
+
+        var taskDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
+        taskDetailsJsonObject.projectStatus.status = 'ERROR'; // Quality gate failed
+        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', taskDetailsJsonObject);
+
+        return sqReportBuilder.fetchMetricsAndCreateReport(true)
+            .then((report:string) => {
+                assertBuildSummaryContains(report, '[sqAnalysis_BuildSummary_LinkText >](http://dashboardUrl "projectKey Dashboard")');
+                assertBuildSummaryContains(report, 'Quality Gate');
+                assertBuildSummaryContains(report, 'Failed');
+            });
+    });
+
+    it('SonarQube common - Build summary is created with quality gate pass', () => {
+        // Arrange
+        var mockRunSettings: SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockServer: MockSonarQubeServer = new MockSonarQubeServer();
+
+        var analysisMetrics: SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+        var sqReportBuilder: SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
+
+        // Mock responses from the server for the task and analysis details
+        var taskDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
+        mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject);
+
+        var taskDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
+        taskDetailsJsonObject.projectStatus.status = 'OK'; // Quality gate passed
+        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', taskDetailsJsonObject);
+
+        return sqReportBuilder.fetchMetricsAndCreateReport(true)
+            .then((report:string) => {
+                assertBuildSummaryContains(report, '[sqAnalysis_BuildSummary_LinkText >](http://dashboardUrl "projectKey Dashboard")');
+                assertBuildSummaryContains(report, 'Quality Gate');
+                assertBuildSummaryContains(report, 'Passed');
+            });
+    });
+
+    it('SonarQube common - Build summary fails correctly when server returns an error', () => {
+        // Arrange
+        var mockRunSettings: SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockServer: MockSonarQubeServer = new MockSonarQubeServer();
+
+        var analysisMetrics: SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+        var sqReportBuilder: SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
+
+        // Mock responses from the server for the task and analysis details
+        var taskDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
+        mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject, 500); // HTTP Error 500 Internal Server Error
+
+        return sqReportBuilder.fetchMetricsAndCreateReport(true)
+            .then(() => {
+                return Q.reject('Should not have finished successfully');
+            }, (error) => {
+                assertErrorContains(error, 'sqCommon_InvalidResponseFromServer');
+                return Q.when(true);
+            });
+    });
+
+    it('SonarQube common - Build summary fails correctly when server does not return expected data', () => {
+        // Arrange
+        var mockRunSettings: SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockServer: MockSonarQubeServer = new MockSonarQubeServer();
+
+        var analysisMetrics: SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+        var sqReportBuilder: SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
+
+        // Mock responses from the server
+        mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', {}); // Empty object returned by the server
+
+        return sqReportBuilder.fetchMetricsAndCreateReport(true)
+            .then(() => {
+                return Q.reject('Should not have finished successfully');
+            }, (error) => {
+                assertErrorContains(error, 'sqCommon_InvalidResponseFromServer');
+                return Q.when(true);
+            });
+    });
+
+    it('SonarQube common - Build summary fails correctly when timeout is triggered', () => {
+        // Arrange
+        var mockRunSettings: SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockServer: MockSonarQubeServer = new MockSonarQubeServer();
+
+        var analysisMetrics: SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 2, 1); // override to a 2-second timeout
+        var sqReportBuilder: SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
+
+        // Mock responses from the server
+        var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
+        taskDetailsJsonObject.task.status = "notsuccess"; // will never return task status as 'SUCCESS'
+        mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject, 200);
+
+        return sqReportBuilder.fetchMetricsAndCreateReport(true)
+            .then(() => {
+                return Q.reject('Should not have finished successfully');
+            }, (error) => {
+                assertErrorContains(error, 'sqAnalysis_AnalysisTimeout');
+                return Q.when(true);
+            });
+    });
+
+    it('SonarQube common - Build breaker fails the build when the quality gate has failed', () => {
+        // Arrange
+        var mockRunSettings:SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockServer:MockSonarQubeServer = new MockSonarQubeServer();
+
+        var analysisMetrics:SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+
+        // Mock responses from the server for the task and analysis details
+        var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
+        mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject);
+
+        var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
+        taskDetailsJsonObject.projectStatus.status = 'ERROR'; // Quality gate failed
+        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', taskDetailsJsonObject);
+
+        // Act
+        return analysisMetrics.getTaskResultFromQualityGateStatus()
+            .then((taskResult) => {
+                assert(taskResult == 1 /* TaskResult.Failed == 1 */, 'Task should have failed.');
+            });
+    });
+
+    it('SonarQube common - Build breaker does not fail the build when the quality gate has passed', () => {
+        // Arrange
+        var mockRunSettings:SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockServer:MockSonarQubeServer = new MockSonarQubeServer();
+
+        var analysisMetrics:SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+
+        // Mock responses from the server for the task and analysis details
+        var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
+        mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject);
+
+        var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
+        taskDetailsJsonObject.projectStatus.status = 'OK'; // Quality gate passed
+        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', taskDetailsJsonObject);
+
+        // capture process.stdout and process.exit, along with useful data to assert on
+        var capturedStream = captureStream(process.stdout);
+        var capturedExit = process.exit;
+        var processExitInvoked:number = 0;
+        process.exit = function() { processExitInvoked++; return; };
+
+        // Act
+        return analysisMetrics.getTaskResultFromQualityGateStatus()
+            .then((taskResult) => {
+                assert(taskResult == 0 /* TaskResult.Failed == 0 */, 'Task should not have failed.');
+            });
+    });
 });

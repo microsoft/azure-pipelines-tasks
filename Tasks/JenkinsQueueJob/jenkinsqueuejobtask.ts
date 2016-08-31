@@ -9,196 +9,67 @@ import tl = require('vsts-task-lib/task');
 import fs = require('fs');
 import path = require('path');
 import shell = require('shelljs');
+import Q = require('q');
 
 // node js modules
-var request = require('request');
 
-var serverEndpoint = tl.getInput('serverEndpoint', true);
-var serverEndpointUrl = tl.getEndpointUrl(serverEndpoint, false);
-tl.debug('serverEndpointUrl=' + serverEndpointUrl);
+import job = require('./job');
+import Job = job.Job;
+import jobqueue = require('./jobqueue');
+import JobQueue = jobqueue.JobQueue;
+import util = require('./util');
 
-var serverEndpointAuth = tl.getEndpointAuthorization(serverEndpoint, false);
-var username = serverEndpointAuth['parameters']['username'];
-var password = serverEndpointAuth['parameters']['password'];
+export class TaskOptions {
+    serverEndpoint: string = tl.getInput('serverEndpoint', true);
+    serverEndpointUrl: string = tl.getEndpointUrl(this.serverEndpoint, false);
 
-var jobName = tl.getInput('jobName', true);
-var jobQueueUrl = serverEndpointUrl + '/job/' + jobName + '/build';
-tl.debug('jobQueueUrl=' + jobQueueUrl);
+    serverEndpointAuth: tl.EndpointAuthorization = tl.getEndpointAuthorization(this.serverEndpoint, false);
+    username: string = this.serverEndpointAuth['parameters']['username'];
+    password: string = this.serverEndpointAuth['parameters']['password'];
 
-var captureConsole = tl.getBoolInput('captureConsole', true);
-var captureConsolePollInterval = 5000; // five seconds is what the Jenkins Web UI uses
+    jobName: string = tl.getInput('jobName', true);
 
-function failReturnCode(httpResponse, message: string): void {
-    var fullMessage = message +
-        '\nHttpResponse.statusCode=' + httpResponse.statusCode +
-        '\nHttpResponse.statusMessage=' + httpResponse.statusMessage +
-        '\nHttpResponse=\n' + JSON.stringify(httpResponse);
-    tl.debug(fullMessage);
-    tl.setResult(tl.TaskResult.Failed, fullMessage);
-}
+    captureConsole: boolean = tl.getBoolInput('captureConsole', true);
+    // capturePipeline is only possible if captureConsole mode is enabled
+    capturePipeline: boolean = this.captureConsole ? tl.getBoolInput('capturePipeline', true) : false;
 
-// These are set once the job is successfully queued and don't change afterwards
-var jenkinsTaskName;
-var jenkinsExecutableNumber
-var jenkinsExecutableUrl;
+    pollIntervalMillis: number = 5000; // five seconds is what the Jenkins Web UI uses
 
-function trackJobQueued(queueUri: string) {
-    tl.debug('Tracking progress of job queue: ' + queueUri);
-    request.get({ url: queueUri }, function callBack(err, httpResponse, body) {
-        if (err) {
-            tl.setResult(tl.TaskResult.Failed, err);
-        } else if (httpResponse.statusCode != 200) {
-            failReturnCode(httpResponse, 'Job progress tracking failed to read job queue');
-        } else {
-            var parsedBody = JSON.parse(body);
-            // canceled is spelled wrong in the body with 2 Ls (checking correct spelling also in case they fix it)
-            if (parsedBody.cancelled || parsedBody.canceled) {
-                tl.setResult(tl.TaskResult.Failed, 'Jenkins job canceled.');
-            }
-            var executable = parsedBody.executable;
-            if (!executable) {
-                // job has not actually been queued yet, keep checking
-                setTimeout(function () {
-                    trackJobQueued(queueUri);
-                }, captureConsolePollInterval);
-            } else {
-                jenkinsTaskName = parsedBody.task.name;
-                jenkinsExecutableNumber = parsedBody.executable.number;
-                jenkinsExecutableUrl = parsedBody.executable.url;
-                console.log('Jenkins job started: ' + jenkinsExecutableUrl);
+    parameterizedJob: boolean = tl.getBoolInput('parameterizedJob', true);
+    // jobParameters are only possible if parameterizedJob is enabled
+    jobParameters: string[] = this.parameterizedJob ? tl.getDelimitedInput('jobParameters', '\n', false) : [];
 
-                if (captureConsole) {
-                    // start capturing console
-                    captureJenkinsConsole(0);
-                } else {
-                    // no console option, just create link and finish
-                    createLinkAndFinish(tl.TaskResult.Succeeded, 'Queued', 'Jenkins job successfully queued: ' + jenkinsExecutableUrl);
-                }
-            }
-        }
-    });
-}
+    jobQueueUrl: string = util.addUrlSegment(this.serverEndpointUrl, util.convertJobName(this.jobName)) + ((this.parameterizedJob) ? '/buildWithParameters?delay=0sec' : '/build?delay=0sec');
+    teamJobQueueUrl: string = util.addUrlSegment(this.serverEndpointUrl, '/team-build/build/' + this.jobName + '?delay=0sec');
+    teamPluginUrl: string = util.addUrlSegment(this.serverEndpointUrl, '/pluginManager/available');
 
-function createLinkAndFinish(result, jobStatus: string, resultMessage: string) {
-    var tempDir = shell.tempdir();
-    var linkMarkdownFile = path.join(tempDir, 'JenkinsJob_' + jenkinsTaskName + '_' + jenkinsExecutableNumber + '.md');
-    tl.debug('jenkinsLink: ' + linkMarkdownFile);
-    var summaryTitle = 'Jenkins ' + jenkinsTaskName + ' - ' + jenkinsExecutableNumber + ' - ' + jobStatus;
-    tl.debug('summaryTitle: ' + summaryTitle);
-    var markdownContents = '[' + jenkinsExecutableUrl + '](' + jenkinsExecutableUrl + ')';
-    fs.writeFile(linkMarkdownFile, markdownContents, function callBack(err) {
-        if (err) {
-            //don't fail the build -- there just won't be a link
-            console.log('Error creating link to Jenkins job: ' + err);
-        } else {
-            console.log('##vso[task.addattachment type=Distributedtask.Core.Summary;name=' + summaryTitle + ';]' + linkMarkdownFile);
-        }
-        tl.setResult(result, resultMessage);
-    });
-}
+    strictSSL: boolean = ("true" !== tl.getEndpointDataParameter(this.serverEndpoint, "acceptUntrustedCerts", true));
 
-function captureJenkinsConsole(consoleOffset: number) {
-    var fullUrl = jenkinsExecutableUrl + '/logText/progressiveText/?start=' + consoleOffset;
-    tl.debug('Tracking progress of job URL: ' + fullUrl);
-    request.get({ url: fullUrl }, function callBack(err, httpResponse, body) {
-        if (err) {
-            tl.setResult(tl.TaskResult.Failed, err);
-        } else if (httpResponse.statusCode != 200) {
-            failReturnCode(httpResponse, 'Job progress tracking failed to read job progress');
-        } else {
-            console.log(body); // redirect Jenkins console to task console
-            var xMoreData = httpResponse.headers['x-more-data'];
-            if (xMoreData && xMoreData == 'true') {
-                var offset = httpResponse.headers['x-text-size'];
-                // job still running so keep logging console
-                setTimeout(function () {
-                    captureJenkinsConsole(offset);
-                }, captureConsolePollInterval);
-            } else { // job is done -- did it succeed or not?
-                checkSuccess();
-            }
-        }
-    });
-}
+    NO_CRUMB: string = 'NO_CRUMB';
+    crumb: string = this.NO_CRUMB;
 
-function getResultString(resultCode: string): string {
-    // codes map to fields in http://hudson-ci.org/javadoc/hudson/model/Result.html
-    resultCode = resultCode.toUpperCase();
-    if (resultCode == 'SUCCESS') {
-        return 'Success';
-    } else if (resultCode == 'UNSTABLE') {
-        return 'Unstable';
-    } else if (resultCode == 'FAILURE') {
-        return 'Failure';
-    } else if (resultCode == 'NOT_BUILT') {
-        return 'Not built';
-    } else if (resultCode == 'ABORTED') {
-        return 'Aborted';
-    } else {
-        return resultCode;
+    constructor() {
+        tl.debug('strictSSL=' + this.strictSSL);
+        tl.debug('serverEndpointUrl=' + this.serverEndpointUrl);
+        tl.debug('jobQueueUrl=' + this.jobQueueUrl);
     }
 }
 
-function checkSuccess() {
-    var resultUrl = jenkinsExecutableUrl + 'api/json';
-    tl.debug('Tracking completion status of job: ' + resultUrl);
-    request.get({ url: resultUrl }, function callBack(err, httpResponse, body) {
-        if (err) {
-            tl.setResult(tl.TaskResult.Failed, err);
-        } else if (httpResponse.statusCode != 200) {
-            failReturnCode(httpResponse, 'Job progress tracking failed to read job result');
-        } else {
-            var parsedBody = JSON.parse(body);
-            var resultCode = parsedBody.result;
-            if (resultCode) {
-                resultCode = resultCode.toUpperCase(); 
-                var resultStr = getResultString(resultCode);
-                tl.debug(resultUrl + ' resultCode: ' + resultCode + ' resultStr: ' + resultStr);
-            
-                var completionMessage = 'Jenkins job: ' + resultCode + ' ' + jobName + ' ' + jenkinsExecutableUrl;
-                if (resultCode == "SUCCESS" || resultCode == 'UNSTABLE') {
-                    createLinkAndFinish(tl.TaskResult.Succeeded, resultStr, completionMessage);
-                } else {
-                    createLinkAndFinish(tl.TaskResult.Failed, resultStr, completionMessage);
-                }
-            } else {
-                // result not updated yet -- keep trying
-                setTimeout(function () {
-                    checkSuccess();
-                }, captureConsolePollInterval);
-            }
-        }
-    });
-}
+async function doWork() {
+    try {
+        var taskOptions: TaskOptions = new TaskOptions();
 
-/**
- * This post starts the process by kicking off the job and then: 
- *    |
- *    |---------------            
- *    V              | not queued yet            
- * trackJobQueued() --  
- *    |
- * captureConsole --no--> createLinkAndFinish()   
- *    |
- *    |----------------------
- *    V                     | more stuff in console  
- * captureJenkinsConsole() --    
- *    |
- *    |-------------
- *    V            | keep checking until something
- * checkSuccess() -- 
- *    |
- *    V
- * createLinkAndFinish()
- */
-request.post({ url: jobQueueUrl }, function optionalCallback(err, httpResponse, body) {
-    if (err) {
-        tl.setResult(tl.TaskResult.Failed, err);
-    } else if (httpResponse.statusCode != 201) {
-        failReturnCode(httpResponse, 'Job creation failed.');
-    } else {
+        var jobQueue: JobQueue = new JobQueue(taskOptions);
+        var queueUri = await util.pollSubmitJob(taskOptions);
         console.log('Jenkins job queued');
-        var queueUri = httpResponse.headers.location + 'api/json';
-        trackJobQueued(queueUri);
+        var rootJob = await util.pollCreateRootJob(queueUri, jobQueue, taskOptions);
+        //start the job queue
+        jobQueue.start();
+    } catch (e) {
+        tl.debug(e.message);
+        tl._writeError(e);
+        tl.setResult(tl.TaskResult.Failed, e.message);
     }
-}).auth(username, password, true);
+}
+
+doWork();

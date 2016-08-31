@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xcode 版本",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613730)",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613730)",
   "loc.description": "在 Mac OS 上创建 Xcode 工作区",
   "loc.instanceNameFormat": "Xcode $(actions)",
   "loc.group.displayName.sign": "签名和预配",
@@ -47,5 +47,16 @@
   "loc.input.label.xctoolReporter": "xctool 测试报告器格式",
   "loc.input.help.xctoolReporter": "指定了“测试”操作并选中了“使用 xctool”时将使用的测试报告器格式。指定 \"junit:output-file-path-here.xml\" 以生成与“发布测试结果”任务兼容的文件格式。指定后，还将自动添加 \"plain\"。要求在代理主机上安装 xctool。有关详细信息，请参阅 [xctool](https://github.com/facebook/xctool)。",
   "loc.input.label.publishJUnitResults": "发布到 VSTS/TFS",
-  "loc.input.help.publishJUnitResults": "选择此选项，以使用 xctool 将上述生成的 JUnit 测试结果发布到 VSTS/TFS。"
+  "loc.input.help.publishJUnitResults": "选择此选项，以使用 xctool 将上述生成的 JUnit 测试结果发布到 VSTS/TFS。",
+  "loc.messages.SignIdNotFound": "Failed to find iOS signing identity. Verify the signing and provisioning information provided.",
+  "loc.messages.TempKeychainSetupFailed": "Failed to add the temporary keychain to the keychains search path.",
+  "loc.messages.ProvProfileDetailsNotFound": "Failed to find the details for provisioning profile: %s",
+  "loc.messages.ProvProfileUUIDNotFound": "Failed to find provisioning profile UUID for provisioning profile: %s",
+  "loc.messages.MultipleWorkspacesFound": "Multiple xcode workspace matches were found. Using the first match: %s",
+  "loc.messages.WorkspaceDoesNotExist": "Xcode workspace was specified but it does not exist or is not a directory",
+  "loc.messages.UseXcToolForTestPublishing": "Check the 'Use xctool' checkbox and specify the xctool reporter format to publish test results. No results published.",
+  "loc.messages.NoTestResultsFound": "No test result files matching %s were found, so publishing JUnit test results is being skipped.",
+  "loc.messages.XcodeSuccess": "Xcode task execution completed with no errors.",
+  "loc.messages.TempKeychainDeleteFailed": "Failed to delete temporary keychain %s created during the build.",
+  "loc.messages.ProvProfileDeleteFailed": "Failed to delete the provisioning profile %s."
 }

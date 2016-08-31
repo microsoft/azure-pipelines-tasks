@@ -7,7 +7,7 @@
   "loc.group.displayName.agentConfiguration": "エージェントの構成",
   "loc.group.displayName.advanced": "詳細設定",
   "loc.input.label.testMachineGroup": "コンピューター",
-  "loc.input.help.testMachineGroup": "Provide a comma separated list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the selected protocol. Eg: `dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986` Or provide output variable of other tasks. Eg: `$(variableName)` Or provide a Machine Group Name.",
+  "loc.input.help.testMachineGroup": "マシンの IP アドレスまたは FQDN とポートをコンマ区切りの一覧で指定します。ポートの既定値は、選んだプロトコルに基づいて決まります。例: `dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986`。または他のタスクの出力変数を指定します。例: `$(variableName)`。またはマシン グループ名を指定します。",
   "loc.input.label.adminUserName": "管理者ログイン",
   "loc.input.help.adminUserName": "ターゲット コンピューターにログインする管理者。",
   "loc.input.label.adminPassword": "管理者パスワード",

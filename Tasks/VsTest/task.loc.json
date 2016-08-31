@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 46
+    "Patch": 56
   },
   "demands": [
     "vstest"
@@ -92,6 +92,18 @@
       "groupName": "executionOptions"
     },
     {
+      "name": "vstestLocationMethod",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.vstestLocationMethod",
+      "required": false,
+      "groupName": "advancedExecutionOptions",
+      "defaultValue": "version",
+      "options": {
+        "version": "Version",
+        "location": "Specify Location"
+      }
+    },
+    {
       "name": "vsTestVersion",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.vsTestVersion",
@@ -99,11 +111,22 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.vsTestVersion",
       "groupName": "advancedExecutionOptions",
+      "visibleRule": "vstestLocationMethod = version",
       "options": {
         "latest": "Latest",
         "14.0": "Visual Studio 2015",
         "12.0": "Visual Studio 2013"
       }
+    },
+    {
+      "name": "vstestLocation",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.vstestLocation",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.vstestLocation",
+      "visibleRule": "vstestLocationMethod = location",
+      "groupName": "advancedExecutionOptions"
     },
     {
       "name": "pathtoCustomTestAdapters",
@@ -189,6 +212,9 @@
     "ErrorWhileSettingTestImpactCollectorTestSettings": "ms-resource:loc.messages.ErrorWhileSettingTestImpactCollectorTestSettings",
     "ErrorWhileSettingTestImpactCollectorRunSettings": "ms-resource:loc.messages.ErrorWhileSettingTestImpactCollectorRunSettings",
     "ErrorWhileCreatingResponseFile": "ms-resource:loc.messages.ErrorWhileCreatingResponseFile",
-    "ErrorWhileUpdatingResponseFile": "ms-resource:loc.messages.ErrorWhileUpdatingResponseFile"
+    "ErrorWhileUpdatingResponseFile": "ms-resource:loc.messages.ErrorWhileUpdatingResponseFile",
+    "ErrorWhilePublishingCodeChanges": "ms-resource:loc.messages.ErrorWhilePublishingCodeChanges",
+    "PublishCodeChangesPerfTime": "ms-resource:loc.messages.PublishCodeChangesPerfTime",
+    "GenerateResponseFilePerfTime": "ms-resource:loc.messages.GenerateResponseFilePerfTime"
   }
 }

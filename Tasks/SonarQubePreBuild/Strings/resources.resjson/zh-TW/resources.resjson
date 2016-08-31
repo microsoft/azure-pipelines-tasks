@@ -10,7 +10,7 @@
   "loc.input.label.projectKey": "專案機碼",
   "loc.input.help.projectKey": "SonarQube 專案的專用索引鍵，亦即 sonar.projectKey",
   "loc.input.label.projectName": "專案名稱",
-  "loc.input.help.projectName": "The SonarQube project name, i.e. sonar.projectName",
+  "loc.input.help.projectName": "SonarQube 專案名稱，即 sonar.ProjectName",
   "loc.input.label.projectVersion": "專案版本",
   "loc.input.help.projectVersion": "SonarQube 專案版本，亦即 sonar.projectVersion",
   "loc.input.label.connectedServiceName": "SonarQube 端點",
@@ -25,8 +25,8 @@
   "loc.input.help.cmdLineArgs": "Space separated settings using the format: /d:propertyName=propertyValue. Normal command line escaping rules apply. For more details on the settings please view the [SonarQube docs](https://go.microsoft.com/fwlink/?LinkID=624390).",
   "loc.input.label.configFile": "設定檔案",
   "loc.input.help.configFile": "You can also specify settings via a configuration file. A template is available [here](https://go.microsoft.com/fwlink/?LinkID=620062)",
-  "loc.input.label.includeFullReport": "Include full analysis report in the build summary (SQ 5.3+)",
-  "loc.input.help.includeFullReport": "This option will delay the build until the SonarQube analysis is completed.",
+  "loc.input.label.includeFullReport": "在組建摘要中包含完整分析報告 (SQ 5.3+)",
+  "loc.input.help.includeFullReport": "此選項會將組建延遲到 SonarQube 分析完成。",
   "loc.input.label.breakBuild": "組建未通過品質閘門的錯誤 (SQ 5.3+)",
   "loc.input.help.breakBuild": "This option is only available when using a SonarQube server 5.3 or above. It will introduce delays as the build must wait for SonarQube to complete the analysis. [More information](https://go.microsoft.com/fwlink/?LinkId=722407)"
 }

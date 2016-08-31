@@ -1,4 +1,3 @@
-
 declare module 'vsts-task-lib/taskcommand' {
 	export class TaskCommand {
 	    constructor(command: any, properties: any, message: any);
@@ -248,6 +247,26 @@ declare module 'vsts-task-lib/task' {
 	 * @returns   string
 	 */
 	export function getEndpointUrl(id: string, optional: boolean): string;
+	export function getEndpointDataParameter(id: string, key: string, optional: boolean): string;
+	/**
+	 * Gets the endpoint authorization scheme for a service endpoint
+	 * If the endpoint authorization scheme is not set and is not optional, the task will fail with an error message. Execution will halt.
+	 *
+	 * @param id name of the service endpoint
+	 * @param optional whether the endpoint authorization scheme is optional
+	 * @returns {string} value of the endpoint authorization scheme
+	 */
+	export function getEndpointAuthorizationScheme(id: string, optional: boolean): string;
+	/**
+	 * Gets the endpoint authorization parameter value for a service endpoint with specified key
+	 * If the endpoint authorization parameter is not set and is not optional, the task will fail with an error message. Execution will halt.
+	 *
+	 * @param id name of the service endpoint
+	 * @param key key to find the endpoint authorization parameter
+	 * @param optional optional whether the endpoint authorization scheme is optional
+	 * @returns {string} value of the endpoint authorization parameter value
+	 */
+	export function getEndpointAuthorizationParameter(id: string, key: string, optional: boolean): string;
 	/**
 	 * Interface for EndpointAuthorization
 	 * Contains a schema and a string/string dictionary of auth data
@@ -270,12 +289,42 @@ declare module 'vsts-task-lib/task' {
 	 * @returns   string
 	 */
 	export function getEndpointAuthorization(id: string, optional: boolean): EndpointAuthorization;
+	/*
+	 * Gets the endpoint data parameter value with specified key for a service endpoint
+	 * If the endpoint data parameter was not set and is not optional, the task will fail with an error message. Execution will halt.
+	 *
+	 * @param id name of the service endpoint
+	 * @param key of the parameter
+	 * @param optional whether the endpoint data is optional
+	 * @returns {string} value of the endpoint data parameter
+	 */
+	export function getEndpointDataParameter(id: string, key: string, optional: boolean): string;
+	/**
+	 * Gets the endpoint authorization scheme for a service endpoint
+	 * If the endpoint authorization scheme is not set and is not optional, the task will fail with an error message. Execution will halt.
+	 *
+	 * @param id name of the service endpoint
+	 * @param optional whether the endpoint authorization scheme is optional
+	 * @returns {string} value of the endpoint authorization scheme
+	 */
+	export function getEndpointAuthorizationScheme(id: string, optional: boolean): string;
+	/**
+	 * Gets the endpoint authorization parameter value for a service endpoint with specified key
+	 * If the endpoint authorization parameter is not set and is not optional, the task will fail with an error message. Execution will halt.
+	 *
+	 * @param id name of the service endpoint
+	 * @param key key to find the endpoint authorization parameter
+	 * @param optional optional whether the endpoint authorization scheme is optional
+	 * @returns {string} value of the endpoint authorization parameter value
+	 */
+	export function getEndpointAuthorizationParameter(id: string, key: string, optional: boolean): string;
 	export function command(command: string, properties: any, message: string): void;
 	export function warning(message: string): void;
 	export function error(message: string): void;
 	export function debug(message: string): void;
 	export interface FsStats extends fs.Stats {
 	}
+
 	/**
 	 * Get's stat on a path.
 	 * Useful for checking whether a file or directory.  Also getting created, modified and accessed time.
@@ -292,6 +341,33 @@ declare module 'vsts-task-lib/task' {
 	 * @returns   boolean
 	 */
 	export function exist(path: string): boolean;
+
+	/**
+	 * Interface to wrap file options
+	 */
+	export interface FsOptions {}
+
+	/**
+	 * Synchronously writes data to a file, replacing the file if it already exists.
+	 * @param file
+	 * @param data
+	 * @param options
+	 */
+	export function writeFile(file: string, data:string|Buffer, options?:string|FsOptions);
+	/**
+	 * Useful for determining the host operating system.
+	 * see [os.type](https://nodejs.org/api/os.html#os_os_type)
+	 *
+	 * @return      the name of the operating system
+	 */
+	export function osType(): string;
+	/**
+	 * Returns the process's current working directory.
+	 * see [process.cwd](https://nodejs.org/api/process.html#process_process_cwd)
+	 *
+	 * @return      the path to the current working directory of the process
+	 */
+	export function cwd(): string;
 	/**
 	 * Checks whether a path exists.
 	 * If the path does not exist, the task will fail with an error message. Execution will halt.
@@ -322,6 +398,14 @@ declare module 'vsts-task-lib/task' {
 	 */
 	export function popd(): void;
 	/**
+	 * Resolves a sequence of paths or path segments into an absolute path.
+	 * Calls node.js path.resolve()
+	 * Allows L0 testing with consistent path formats on Mac/Linux and Windows in the mock implementation
+	 * @param pathSegments
+	 * @returns {string}
+	 */
+	export function resolve(...pathSegments: any[]): string;
+	/**
 	 * Make a directory.  Creates the full path with folders in between
 	 * Returns whether it was successful or not
 	 *
@@ -338,6 +422,13 @@ declare module 'vsts-task-lib/task' {
 	 * @returns   string
 	 */
 	export function which(tool: string, check?: boolean): string;
+	/**
+	 * Returns array of files in the given path, or in current directory if no path provided.  See shelljs.ls
+	 * @param  {string}   options  Available options: -R (recursive), -A (all files, include files beginning with ., except for . and ..)
+	 * @param  {string[]} paths    Paths to search.
+	 * @return {string[]}          An array of files in the given path(s).
+	 */
+	export function ls(options: string, paths: string[]): string[];
 	/**
 	 * Returns path of a tool had the tool actually been invoked.  Resolves via paths.
 	 * If you check and the tool does not exist, the task will fail with an error message and halt execution.
@@ -410,6 +501,15 @@ declare module 'vsts-task-lib/task' {
 	 * @returns   ToolRunner
 	 */
 	export function createToolRunner(tool: string): trm.ToolRunner;
+
+	/**
+	 * Convenience factory to create a ToolRunner.
+	 *
+	 * @param     tool     path to tool to exec
+	 * @returns   ToolRunner
+	 */
+	export function tool(tool: string) : trm.ToolRunner;
+
 	export function match(list: any, pattern: any, options: any): string[];
 	export function filter(pattern: any, options: any): (element: string, indexed: number, array: string[]) => boolean;
 	export class TestPublisher {

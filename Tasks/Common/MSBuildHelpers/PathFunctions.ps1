@@ -10,6 +10,7 @@ function Get-MSBuildPath {
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         $msbuildUtilitiesAssemblies = @(
+            "Microsoft.Build.Utilities.Core, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
             "Microsoft.Build.Utilities.Core, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
             "Microsoft.Build.Utilities.v12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
             "Microsoft.Build.Utilities.v4.0, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
@@ -37,13 +38,13 @@ function Get-MSBuildPath {
             [type]$t = $msUtilities.GetType('Microsoft.Build.Utilities.ToolLocationHelper')
             if ($t -ne $null) {
                 # Attempt to load the method info for GetPathToBuildToolsFile. This method
-                # is available in the 14.0 and 12.0 utilities DLL. It is not available in
-                # the 4.0 utilities DLL.
+                # is available in the 15.0, 14.0, and 12.0 utilities DLL. It is not available
+                # in the 4.0 utilities DLL.
                 [System.Reflection.MethodInfo]$mi = $t.GetMethod(
                     "GetPathToBuildToolsFile",
                     [type[]]@( [string], [string], $msUtilities.GetType("Microsoft.Build.Utilities.DotNetFrameworkArchitecture") ))
                 if ($mi -ne $null -and $mi.GetParameters().Length -eq 3) {
-                    $versions = "14.0", "12.0", "4.0"
+                    $versions = "15.0", "14.0", "12.0", "4.0"
                     if ($Version) {
                         $versions = @( $Version )
                     }

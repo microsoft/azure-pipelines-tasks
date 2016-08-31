@@ -12,13 +12,16 @@ function EscapeArg
 
 
 # Set a variable in a property bag that is accessible by all steps
-# To retrieve the variable use $val = Get-Variable $distributedTaskContext "varName"
+# To retrieve the variable use GetTaskContextVariable
+#
+# Remark: The variable is available in the current task via env variables and in
+# subsequent tasks via Get-VstsTaskVariable 
 function SetTaskContextVariable
 {
     param([string][ValidateNotNullOrEmpty()]$varName, 
           [string]$varValue)
         
-    #[Environment]::SetEnvironmentVariable($varName, $varValue)
+    [Environment]::SetEnvironmentVariable($varName, $varValue)
     Write-Host "##vso[task.setvariable variable=$varName;]$varValue"
 }
 
@@ -26,8 +29,15 @@ function GetTaskContextVariable()
 {
 	param([string][ValidateNotNullOrEmpty()]$varName)
         
-    #return ([Environment]::GetEnvironmentVariable($varName))
-	return Get-TaskVariable -Context $distributedTaskContext -Name $varName    
+    $value = [Environment]::GetEnvironmentVariable($varName);
+
+    if ([String]::IsNullOrWhiteSpace($value))
+    {
+	    $value = Get-TaskVariable -Context $distributedTaskContext -Name $varName
+    }    
+
+    Write-Verbose "Variable read: $varName = $value"
+	return $value
 }
 
 #

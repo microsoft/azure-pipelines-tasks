@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 7
+    "Patch": 9
   },
   "demands": [
     "msbuild",
@@ -49,7 +49,7 @@
       "name": "LoadTest",
       "type": "string",
       "label": "Load test file",
-      "defaultValue": "loadtest1.loadtest",
+      "defaultValue": "",
       "required": true,
       "helpMarkDown": "The load test filename to be used under the load test folder specified above."
     },
@@ -59,6 +59,17 @@
       "label": "Number of permissible threshold violations",
       "required": false,
       "helpMarkDown": "Number of threshold violations above which the load test outcome is considered unsuccessful."
+    },
+    {
+      "name": "MachineType",
+      "type": "radio",
+      "label": "Run load test using",
+      "required": true,
+      "defaultValue": "0",
+      "options": {
+        "2": "Self-provisioned agents",
+        "0": "Automatically provisioned agents"
+      }
     }
   ],
   "instanceNameFormat": "Cloud Load Test $(LoadTest)",

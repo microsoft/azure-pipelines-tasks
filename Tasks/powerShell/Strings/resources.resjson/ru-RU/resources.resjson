@@ -2,17 +2,17 @@
   "loc.friendlyName": "PowerShell",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613736)",
   "loc.description": "Запуск скрипта PowerShell",
-  "loc.instanceNameFormat": "PowerShell Script",
+  "loc.instanceNameFormat": "Скрипт PowerShell",
   "loc.group.displayName.advanced": "Дополнительно",
-  "loc.input.label.scriptType": "Type",
-  "loc.input.help.scriptType": "Type of the script: File Path or Inline Script",
-  "loc.input.label.scriptName": "Script Path",
+  "loc.input.label.scriptType": "Тип",
+  "loc.input.help.scriptType": "Тип скрипта: путь к файлу или встроенный скрипт",
+  "loc.input.label.scriptName": "Путь к скрипту",
   "loc.input.help.scriptName": "Путь к выполняемому сценарию. Это должен быть полный путь или путь относительно рабочего каталога по умолчанию.",
   "loc.input.label.arguments": "Аргументы",
   "loc.input.help.arguments": "Аргументы, передаваемые в сценарий PowerShell. Параметры могут быть порядковыми или именованными.",
   "loc.input.label.workingFolder": "Рабочая папка",
   "loc.input.help.workingFolder": "Текущий рабочий каталог при выполнении сценария. По умолчанию используется папка, в которой находится сценарий.",
-  "loc.input.label.inlineScript": "Inline Script",
+  "loc.input.label.inlineScript": "Встроенный скрипт",
   "loc.input.label.failOnStandardError": "Fail on Standard Error",
-  "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely solely on $LASTEXITCODE and the exit code to determine failure. This feature requires an agent version 1.102 or higher, to enable not failing on STDERR."
+  "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely solely on $LASTEXITCODE and the exit code to determine failure."
 }

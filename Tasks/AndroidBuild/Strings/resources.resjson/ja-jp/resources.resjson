@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Android Build (deprecated; use Gradle)",
+  "loc.friendlyName": "Android のビルド (非推奨。Gradle をご使用ください)",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613716)",
   "loc.description": "Gradle を使用して Android アプリを作成し、必要に応じて単体テストのエミュレーターを起動します",
   "loc.instanceNameFormat": "Android のビルド $(gradleProj)",
@@ -15,7 +15,7 @@
   "loc.input.label.emulatorTarget": "AVD のターゲット SDK",
   "loc.input.help.emulatorTarget": "新しい Android 仮想デバイス (AVD) のターゲット ID。",
   "loc.input.label.emulatorDevice": "AVD デバイス",
-  "loc.input.help.emulatorDevice": "使用するオプションのデバイス定義。デバイス インデックスまたは ID を指定できます。",
+  "loc.input.help.emulatorDevice": "The optional device definition to use. Can be a device index or ID.",
   "loc.input.label.avdAbi": "AVD ABI",
   "loc.input.help.avdAbi": "Android 仮想デバイス (AVD) で使用する ABI。",
   "loc.input.label.avdForce": "既存の AVD の上書き",

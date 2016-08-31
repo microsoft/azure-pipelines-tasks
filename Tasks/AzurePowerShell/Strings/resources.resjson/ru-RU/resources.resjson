@@ -12,6 +12,6 @@
   "loc.input.help.ScriptPath": "Путь к сценарию. Это должен быть полный путь или путь относительно рабочего каталога по умолчанию.",
   "loc.input.label.ScriptArguments": "Аргументы скрипта",
   "loc.input.help.ScriptArguments": "Дополнительные параметры для передачи в PowerShell. Могут быть как порядковыми, так и именованными.",
-  "loc.messages.InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
-  "loc.messages.InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified."
+  "loc.messages.InvalidScriptArguments0": "Недопустимые аргументы скрипта \"{0}\". Разрывы строк запрещены.",
+  "loc.messages.InvalidScriptPath0": "Недопустимый путь к скрипту \"{0}\". Указаны символы, недопустимые в пути."
 }

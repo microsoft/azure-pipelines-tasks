@@ -15,6 +15,22 @@
     return $certificate
 }
 
+function Format-Splat {
+    [CmdletBinding()]
+    param([Parameter(Mandatory = $true)][hashtable]$Hashtable)
+
+    # Collect the parameters (names and values) in an array.
+    $parameters = foreach ($key in $Hashtable.Keys) {
+        $value = $Hashtable[$key]
+        # If the value is a bool, format the parameter as a switch (ending with ':').
+        if ($value -is [bool]) { "-$($key):" } else { "-$key" }
+        $value
+    }
+
+    $OFS = " "
+    "$parameters" # String join the array.
+}
+
 function Initialize-AzureSubscription {
     [CmdletBinding()]
     param(
@@ -23,6 +39,9 @@ function Initialize-AzureSubscription {
         [Parameter(Mandatory=$false)]
         [string]$StorageAccount)
 
+    #Set UserAgent for Azure Calls
+    Set-UserAgent
+    
     if ($Endpoint.Auth.Scheme -eq 'Certificate') {
         # Certificate is only supported for the Azure module.
         if (!$script:azureModule) {
@@ -38,9 +57,14 @@ function Initialize-AzureSubscription {
             $additional['CurrentStorageAccountName'] = $StorageAccount
         }
 
+        $environmentName = "AzureCloud"
+        if( $Endpoint.Data.Environment ) {
+            $environmentName = $Endpoint.Data.Environment
+        }
+
         # Set the subscription.
-        Write-Host "##[command]Set-AzureSubscription -SubscriptionName $($Endpoint.Data.SubscriptionName) -SubscriptionId $($Endpoint.Data.SubscriptionId) -Certificate ******** -Environment AzureCloud $(Format-Splat $additional)"
-        Set-AzureSubscription -SubscriptionName $Endpoint.Data.SubscriptionName -SubscriptionId $Endpoint.Data.SubscriptionId -Certificate $certificate -Environment AzureCloud @additional
+        Write-Host "##[command]Set-AzureSubscription -SubscriptionName $($Endpoint.Data.SubscriptionName) -SubscriptionId $($Endpoint.Data.SubscriptionId) -Certificate ******** -Environment $environmentName $(Format-Splat $additional)"
+        Set-AzureSubscription -SubscriptionName $Endpoint.Data.SubscriptionName -SubscriptionId $Endpoint.Data.SubscriptionId -Certificate $certificate -Environment $environmentName @additional
         Set-CurrentAzureSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -StorageAccount $StorageAccount
     } elseif ($Endpoint.Auth.Scheme -eq 'UserNamePassword') {
         $psCredential = New-Object System.Management.Automation.PSCredential(
@@ -150,18 +174,28 @@ function Set-CurrentAzureRMSubscription {
     $null = Select-AzureRMSubscription -SubscriptionId $SubscriptionId @additional
 }
 
-function Format-Splat {
+function Set-UserAgent {
     [CmdletBinding()]
-    param([Parameter(Mandatory = $true)][hashtable]$Hashtable)
+    param()
 
-    # Collect the parameters (names and values) in an array.
-    $parameters = foreach ($key in $Hashtable.Keys) {
-        $value = $Hashtable[$key]
-        # If the value is a bool, format the parameter as a switch (ending with ':').
-        if ($value -is [bool]) { "-$($key):" } else { "-$key" }
-        $value
+	$userAgent = Get-VstsTaskVariable -Name AZURE_HTTP_USER_AGENT
+    if ($userAgent) {
+        Set-UserAgent_Core -UserAgent $userAgent
     }
+}
 
-    $OFS = " "
-    "$parameters" # String join the array.
+function Set-UserAgent_Core {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$UserAgent)
+
+    Trace-VstsEnteringInvocation $MyInvocation
+    try {
+        [Microsoft.Azure.Common.Authentication.AzureSession]::ClientFactory.AddUserAgent($UserAgent)
+    } catch {
+        Write-Verbose "Set-UserAgent failed with exception message: $_.Exception.Message"
+    } finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
 }

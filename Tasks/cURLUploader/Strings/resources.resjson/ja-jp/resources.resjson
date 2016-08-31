@@ -1,19 +1,19 @@
 {
   "loc.friendlyName": "ファイルを cURL でアップロード",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=627418)",
-  "loc.description": "Use cURL to upload files with FTP, FTPS, SFTP, HTTP, and more.",
+  "loc.description": "cURL を使用して、FTP、FTPS、SFTP、HTTP などでファイルをアップロードします。",
   "loc.instanceNameFormat": "cURL で $(files) をアップロード",
   "loc.group.displayName.advanced": "詳細設定",
   "loc.input.label.files": "ファイル",
-  "loc.input.help.files": "File(s) to be uploaded. Wildcards can be used. For example, `**\\*.zip` for all ZIP files in all subfolders.",
+  "loc.input.help.files": "アップロードするファイル。ワイルドカードを使用できます。たとえば、全サブフォルダー内のすべての ZIP ファイルの場合は `**\\*.zip` です。",
   "loc.input.label.username": "ユーザー名",
-  "loc.input.help.username": "Specify the username for server authentication.",
+  "loc.input.help.username": "サーバー認証のユーザー名を指定します。",
   "loc.input.label.password": "パスワード",
-  "loc.input.help.password": "Specify the password for server authentication. Use a new build variable with its lock enabled on the Variables tab to encrypt this value.",
+  "loc.input.help.password": "サーバー認証のパスワードを指定します。[変数] タブでロックが有効になっている新しいビルド変数を使用して、この値を暗号化します。",
   "loc.input.label.url": "URL",
-  "loc.input.help.url": "Specify the URL to where the file(s) will be uploaded. The directory should end with a trailing slash. Possible URL protocols include `DICT://`, `FILE://`, `FTP://`, `FTPS://`, `GOPHER://`, `HTTP://`, `HTTPS://`, `IMAP://`, `IMAPS://`, `LDAP://`, `LDAPS://`, `POP3://`, `POP3S://`, `RTMP://`, `RTSP://`, `SCP://`, `SFTP://`, `SMTP://`, `SMTPS://`, `TELNET://` and `TFTP://`.",
+  "loc.input.help.url": "ファイルのアップロード先の URL を指定します。ディレクトリの末尾はスラッシュで終わる必要があります。使用可能な URL プロトコルは、`DICT://`、`FILE://`、`FTP://`、`FTPS://`、`GOPHER://`、`HTTP://`、`HTTPS://`、`IMAP://`、`IMAPS://`、`LDAP://`、`LDAPS://`、`POP3://`、`POP3S://`、`RTMP://`、`RTSP://`、`SCP://`、`SFTP://`、`SMTP://`、`SMTPS://`、`TELNET://`、`TFTP://` などです。",
   "loc.input.label.options": "オプションの引数",
   "loc.input.help.options": "cURL に渡す追加の引数。",
   "loc.input.label.redirectStderr": "標準エラーを標準出力にリダイレクトします",
-  "loc.input.help.redirectStderr": "Adds '--stderr -' as an argument to cURL. By default, cURL writes its progress bar to stderr, which is interpreted by the build as error output. Enabling this checkbox suppresses that behavior."
+  "loc.input.help.redirectStderr": "引数として '--stderr -' を cURL に追加します。既定では、cURL は stderr に進行状況バーを書き込み、ビルドはそれをエラー出力と見なします。このチェックボックスをオンにするとその動作が抑制されます。"
 }

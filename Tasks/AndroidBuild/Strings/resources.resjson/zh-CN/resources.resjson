@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Android Build (deprecated; use Gradle)",
+  "loc.friendlyName": "Android 生成(已弃用; 使用 Gradle)",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613716)",
   "loc.description": "使用 Gradle 生成 Android 应用，可选择启动用于单元测试的仿真器",
   "loc.instanceNameFormat": "Android 版本 $(gradleProj)",
@@ -15,7 +15,7 @@
   "loc.input.label.emulatorTarget": "AVD 目标 SDK",
   "loc.input.help.emulatorTarget": "新 Android 虚拟设备(AVD)的目标 ID。",
   "loc.input.label.emulatorDevice": "AVD 设备",
-  "loc.input.help.emulatorDevice": "要使用的可选设备定义。可以是设备索引或 id。",
+  "loc.input.help.emulatorDevice": "The optional device definition to use. Can be a device index or ID.",
   "loc.input.label.avdAbi": "AVD ABI",
   "loc.input.help.avdAbi": "要用于 Android 虚拟设备(AVD)的 ABI。",
   "loc.input.label.avdForce": "覆盖现有 AVD",

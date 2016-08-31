@@ -5,15 +5,31 @@ import fs = require('fs');
 import path = require('path');
 
 // Lowercased file names are to lessen the likelihood of xplat issues
-import sqCommon = require('sonarqube-common/sonarqube-common');
-import {SonarQubeEndpoint} from 'sonarqube-common/sonarqube-common';
-
+import sqCommon = require('./CodeAnalysis/SonarQube/common');
 import sqGradle = require('./CodeAnalysis/gradlesonar');
+
+import {CodeAnalysisOrchestrator} from './CodeAnalysis/Common/CodeAnalysisOrchestrator';
+import {BuildOutput, BuildEngine} from './CodeAnalysis/Common/BuildOutput';
+import {PmdTool} from './CodeAnalysis/Common/PmdTool';
+import {CheckstyleTool} from './CodeAnalysis/Common/CheckstyleTool';
+
+import os = require('os');
+
+var isWindows = os.type().match(/^Win/);
 
 // Set up localization resource file
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 var wrapperScript = tl.getPathInput('wrapperScript', true, true);
+
+if (isWindows) {
+    // append .bat extension name on Windows platform
+    if (!wrapperScript.endsWith('bat')) {
+        tl.debug("Append .bat extension name to gradlew script.");
+        wrapperScript += '.bat';
+    }
+} 
+
 if (fs.existsSync(wrapperScript)) {
     // (The exists check above is not necessary, but we need to avoid this call when we are running L0 tests.)
     // Make sure the wrapper script is executable
@@ -38,6 +54,11 @@ var summaryFile: string = null;
 var reportDirectory: string = null;
 var inputTasks: string[] = tl.getDelimitedInput('tasks', ' ', true);
 var isSonarQubeEnabled: boolean = sqCommon.isSonarQubeAnalysisEnabled();
+
+let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('build.sourcesDirectory'), BuildEngine.Gradle);
+var codeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
+    [new CheckstyleTool(buildOutput, 'checkstyleAnalysisEnabled'),
+        new PmdTool(buildOutput, 'pmdAnalysisEnabled')])
 
 if (isCodeCoverageOpted && inputTasks.indexOf('clean') == -1) {
     gb.arg('clean'); //if user opts for code coverage, we append clean functionality to make sure any uninstrumented class files are removed
@@ -79,7 +100,6 @@ if (isCodeCoverageOpted) {
     enableCodeCoverage();
 }
 
-
 if (isSonarQubeEnabled) {
     // Looks like: 'SonarQube analysis is enabled.'
     console.log(tl.loc('codeAnalysis_ToolIsEnabled'), sqCommon.toolName);
@@ -88,22 +108,46 @@ if (isSonarQubeEnabled) {
     gb = sqGradle.applySonarQubeCodeCoverageArguments(gb, isCodeCoverageOpted, ccTool, summaryFile);
 }
 
+gb = codeAnalysisOrchestrator.configureBuild(gb);
+
+setGradleOpts();
+
+var gradleResult;
 gb.exec()
-    .then(function(code) {
+    .then(function (code) {
+        gradleResult = code;
+
         publishTestResults(publishJUnitResults, testResultsFiles);
         publishCodeCoverage(isCodeCoverageOpted);
-
-        if (isSonarQubeEnabled) {
-            sqGradle.uploadSonarQubeBuildSummary();
-        }
-        tl.exit(code);
+        return processCodeAnalysisResults();
     })
-    .fail(function(err) {
+    .then(() => {
+        tl.exit(gradleResult);
+    })
+    .fail(function (err) {
         publishTestResults(publishJUnitResults, testResultsFiles);
-        console.error(err.message);
+        console.error(err);
         tl.debug('taskRunner fail');
         tl.exit(1);
-    })
+    });
+
+function processCodeAnalysisResults(): Q.Promise<void> {
+
+    tl.debug('Processing code analysis results');
+    codeAnalysisOrchestrator.publishCodeAnalysisResults();
+
+    return sqGradle.processSonarQubeIntegration();
+}
+
+// Configure the JVM associated with this run.
+function setGradleOpts() {
+    let gradleOptsValue: string = tl.getInput('gradleOpts');
+
+    if (gradleOptsValue) {
+        process.env['GRADLE_OPTS'] = gradleOptsValue;
+        tl.debug(`GRADLE_OPTS is now set to ${gradleOptsValue}`);
+    }
+}
 
 /* Functions for Publish Test Results, Code Coverage */
 function publishTestResults(publishJUnitResults, testResultsFiles: string) {

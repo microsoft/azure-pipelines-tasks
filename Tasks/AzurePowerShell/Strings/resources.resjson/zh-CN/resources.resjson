@@ -12,6 +12,6 @@
   "loc.input.help.ScriptPath": "脚本的路径。应是完全限定的路径或相对于默认工作目录。",
   "loc.input.label.ScriptArguments": "脚本参数",
   "loc.input.help.ScriptArguments": "要传递给 PowerShell 的其他参数。可以是序号或命名参数。",
-  "loc.messages.InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
-  "loc.messages.InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified."
+  "loc.messages.InvalidScriptArguments0": "脚本参数“{0}”无效。不允许换行。",
+  "loc.messages.InvalidScriptPath0": "脚本路径“{0}”无效。指定的路径字符无效。"
 }

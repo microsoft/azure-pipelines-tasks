@@ -7,7 +7,7 @@
   "loc.group.displayName.agentConfiguration": "Configurazione agente",
   "loc.group.displayName.advanced": "Avanzate",
   "loc.input.label.testMachineGroup": "Computer",
-  "loc.input.help.testMachineGroup": "Provide a comma separated list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the selected protocol. Eg: `dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986` Or provide output variable of other tasks. Eg: `$(variableName)` Or provide a Machine Group Name.",
+  "loc.input.help.testMachineGroup": "Consente di specificare un elenco di indirizzi IP o FQDN separati da virgola unitamente alle porte. Per impostazione predefinita, la porta è basata sul protocollo selezionato. Esempio: `dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986` In alternativa, consente di specificare la variabile di output di altre attività. Esempio: `$(variableName)` In alternativa, consente di specificare un nome di gruppo di computer.",
   "loc.input.label.adminUserName": "Account di accesso amministratore",
   "loc.input.help.adminUserName": "Account di accesso dell'amministratore per i computer di destinazione.",
   "loc.input.label.adminPassword": "Password amministratore",
