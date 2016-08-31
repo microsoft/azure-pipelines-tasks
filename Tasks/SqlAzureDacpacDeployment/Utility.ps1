@@ -239,17 +239,13 @@ function Run-Command
 	{
         if( $psversiontable.PSVersion.Major -le 4)
         {
-           cmd.exe /c "`"$command`""
+           cmd.exe /c "`"$command`"" 2>&1
         }
         else
         {
-           cmd.exe /c "$command"
+           cmd.exe /c "$command" 2>&1
         }
 
-        if ($LastExitCode -ne 0)
-        {
-            throw [System.Management.Automation.RuntimeException] "$command failed with exit code $LastExitCode"
-        }
     }
 	catch [System.Exception]
     {
