@@ -64,7 +64,6 @@
   },
   "messages": {
     "PublishBuildArtifactsFailed": "ms-resource:loc.messages.PublishBuildArtifactsFailed",
-    "RobocopyFailed": "ms-resource:loc.messages.RobocopyFailed",
     "SkippingCopy": "ms-resource:loc.messages.SkippingCopy",
     "UncPathRequired": "ms-resource:loc.messages.UncPathRequired"
   }

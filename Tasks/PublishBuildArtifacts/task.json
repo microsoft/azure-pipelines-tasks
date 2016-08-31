@@ -64,7 +64,6 @@
     },
     "messages": {
         "PublishBuildArtifactsFailed": "Publish build artifacts failed with error: %s",
-        "RobocopyFailed": "One or more files failed to copy. Robocopy exit code: '%s'",
         "SkippingCopy": "Skipping copy and creating an artifact association only.",
         "UncPathRequired": "Artifact is not in UNC format."
     }
