@@ -28,34 +28,6 @@ function Create-AzureResourceGroupIfNotExist
     }
 }
 
-<#function Validation_Deploy-AzureResourceGroup
-{
-    param([string]$csmFile,
-          [string]$csmParametersFile,
-          [string]$resourceGroupName,
-          [string]$overrideParameters,
-          [string]$deploymentMode)
-
-    #$deploymentName = [System.IO.Path]::GetFileNameWithoutExtension($csmFile) + '-' + ((Get-Date).ToUniversalTime()).ToString('yyyyMMdd-HHmm')
-
-    Write-Host "[Azure Resource Manager]Creating resource group deployment with name $deploymentName in validation mode"
-
-    if (!$csmParametersFile)
-    {
-        $finalCommand = "`$azureResourceGroupDeployment = Test-AzureRMResourceGroupDeployment -ResourceGroupName `"$resourceGroupName`" -Mode `"$deploymentMode`" -TemplateFile `"$csmFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
-    }
-    else
-    {
-        $finalCommand = "`$azureResourceGroupDeployment = Test-AzureRMResourceGroupDeployment -ResourceGroupName `"$resourceGroupName`" -Mode `"$deploymentMode`" -TemplateFile `"$csmFile`" -TemplateParameterFile `$csmParametersFile $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
-    }
-    Write-Verbose "$finalCommand"
-    Write-Verbose "Validating Deployment Template File"
-    Invoke-Expression -Command $finalCommand
-
-    @{"azureResourceGroupDeployment" = $($azureResourceGroupDeployment); "deploymentError" = $($deploymentError)}
-}
-#>
-
 function Deploy-AzureResourceGroup
 {
     param([string]$csmFile,

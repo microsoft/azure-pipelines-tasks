@@ -151,37 +151,6 @@ function Create-AzureResourceGroup
         # Create azure resource group
         Create-AzureResourceGroupIfNotExist -resourceGroupName $resourceGroupName -location $location
 
-        <#Testing Deploying CSM Template
-        $validationDeploymentDetails = Validation_Deploy-AzureResourceGroup -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -overrideParameters $overrideParameters -deploymentMode $deploymentMode
-
-        $azureResourceGroupDeployment = $validationDeploymentDetails["azureResourceGroupDeployment"]
-        $deploymentError = $validationDeploymentDetails["deploymentError"]
-
-        if ($azureResourceGroupDeployment)
-        {
-            if($deploymentError)
-            {
-                Write-TaskSpecificTelemetry "VALIDATE_Deployment_CSMDeploymentFailed"
-
-                foreach($error in $deploymentError)
-                {
-                    Write-Error $error -ErrorAction Continue
-                }
-
-                throw (Get-VstsLocString -Key "VALIDATE_ARG_DeploymentFailed" -ArgumentList $resourceGroupName)
-            }
-            else
-            {
-                Write-Host (Get-VstsLocString -Key "VALIDATE_ARG_DeploymentSucceeded" -ArgumentList $resourceGroupName)
-            }
-        }
-        if($deploymentError)
-        {
-            Write-TaskSpecificTelemetry "VALIDATE_Deployment_CSMDeploymentFailed"
-            Throw $deploymentError
-        }
-        #>
-
         # Deploying CSM Template
         $deploymentDetails = Deploy-AzureResourceGroup -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -overrideParameters $overrideParameters -deploymentMode $deploymentMode
 
