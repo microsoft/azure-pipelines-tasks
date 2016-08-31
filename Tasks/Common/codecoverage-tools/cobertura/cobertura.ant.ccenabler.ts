@@ -14,8 +14,8 @@ import * as path from "path";
 
 export class CoberturaAntCodeCoverageEnabler extends cc.CoberturaCodeCoverageEnabler {
 
-    reportDir: string = "CCReport43F6D5EF";
-    reportbuildfile: string = "CCReportBuildA4D283EG.xml";
+    reportDir: string;
+    reportbuildfile: string;
     classDirs: string;
     includeFilter: string;
     excludeFilter: string;
@@ -28,6 +28,8 @@ export class CoberturaAntCodeCoverageEnabler extends cc.CoberturaCodeCoverageEna
     public enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<boolean> {
         let _this = this;
 
+        _this.reportDir = "CCReport43F6D5EF";
+        _this.reportbuildfile = "CCReportBuildA4D283EG.xml";
         _this.buildFile = ccProps["buildfile"];
         let classFilter = ccProps["classfilter"];
         let srcDirs = ccProps["sourcedirectories"];
