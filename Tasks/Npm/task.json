@@ -8,12 +8,9 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 3,
+        "Minor": 2,
         "Patch": 15
     },
-    "runsOn": [
-        "Agent"
-    ],
     "demands": [
         "npm"
     ],

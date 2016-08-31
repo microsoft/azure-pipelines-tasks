@@ -8,16 +8,13 @@
     "visibility": [
         "Build"
     ],
-    "runsOn": [
-        "Agent"
-    ],
     "author": "Microsoft Corporation",
     "demands": [
         "cmake"
     ],
     "version": {
         "Major": 1,
-        "Minor": 1,
+        "Minor": 0,
         "Patch": 23
     },
     "minimumAgentVersion": "1.91.0",

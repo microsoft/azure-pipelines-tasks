@@ -8,13 +8,10 @@
   "visibility": [
     "Build"
   ],
-  "runsOn": [
-    "Agent"
-  ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 6,
+    "Minor": 5,
     "Patch": 27
   },
   "demands": [

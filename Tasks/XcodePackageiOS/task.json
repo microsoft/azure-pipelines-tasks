@@ -8,13 +8,10 @@
     "visibility": [
         "Build"
     ],
-    "runsOn": [
-        "Agent"
-    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 2,
+        "Minor": 1,
         "Patch": 19
     },
     "instanceNameFormat": "Xcode Package $(appName)",
