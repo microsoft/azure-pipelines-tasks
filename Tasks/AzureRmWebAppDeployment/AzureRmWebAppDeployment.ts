@@ -37,6 +37,20 @@ async function run() {
         if (!tl.exist(webDeployPkg)) {
             throw new Error(tl.loc('Invalidwebapppackageorfolderpathprovided', webDeployPkg));
         }
+
+        var isParamFilePresentInPackage = false;
+        var isFolderBasedDeployment = !msDeployUtility.fileExists(webDeployPkg);
+        
+        if (!isFolderBasedDeployment) {
+            isParamFilePresentInPackage = await msDeployUtility.containsParamFile(webDeployPkg);
+        }
+
+        if(!tl.filePathSupplied('SetParametersFile')) {
+            setParametersFile = null;
+        }
+        else if (!msDeployUtility.fileExists(setParametersFile)) {
+            throw Error(tl.loc('SetParamFilenotfound0', setParametersFile));
+        }
       
         var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
         tl.debug(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
@@ -51,7 +65,7 @@ async function run() {
 
         if(useWebDeploy) {
             await DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
-                            excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments);
+                            excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments, isParamFilePresentInPackage, isFolderBasedDeployment);
         }
     } catch (error) {
         tl.setResult(tl.TaskResult.Failed, error);
@@ -73,26 +87,12 @@ async function run() {
  * @param   additionalArguments             Arguments provided by user
  * 
  */
-async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
-        excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments) {
-
-    var isParamFilePresentInPacakge = false;
-    var isFolderBasedDeployment = !msDeployUtility.fileExists(webDeployPkg);
-    
-    if (!isFolderBasedDeployment) {
-        isParamFilePresentInPacakge = await msDeployUtility.containsParamFile(webDeployPkg);
-    }
-
-    if(!tl.filePathSupplied('SetParametersFile')) {
-        setParametersFile = null;
-    }
-    else if (!msDeployUtility.fileExists(setParametersFile)) {
-        throw Error(tl.loc('SetParamFilenotfound0', setParametersFile));
-    }
+async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag, 
+        excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments, isParamFilePresentInPackage, isFolderBasedDeployment) {
 
     var msDeployPath = await msDeployUtility.getMSDeployFullPath();
     var msDeployCmdArgs = msDeployUtility.getMSDeployCmdArgs(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
-        excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments, isParamFilePresentInPacakge, isFolderBasedDeployment);
+        excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments, isParamFilePresentInPackage, isFolderBasedDeployment);
 
     var isDeploymentSuccess = true;
     var deploymentError = null;
