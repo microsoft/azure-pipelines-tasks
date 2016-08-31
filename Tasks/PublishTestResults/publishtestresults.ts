@@ -43,8 +43,7 @@ function getMatchingFiles(baseDirectory: string, inputPattern: string, inputPatt
       indexOfQues = indexOfQues >= 0 ? indexOfQues : inputPattern.length;
 
       var minIndexRegex: number = Math.min(indexOfAst, indexOfQues);
-
-      var lastIndexPathSep: number = inputPattern.lastIndexOf(path.sep, minIndexRegex); //can this break, not likely because of isabsolute check
+      var lastIndexPathSep: number = inputPattern.lastIndexOf(path.sep, minIndexRegex);
       basePath = inputPattern.substring(0, lastIndexPathSep);
 
       tl.debug("Updating search base path to: " + basePath);
