@@ -88,5 +88,23 @@
             "module": "nuget-task-common",
             "dest": "node_modules"  
         }
+    ],
+    "Gradle" : [
+        {
+            "module": "codecoverage-tools",
+            "dest": "node_modules"  
+        }
+    ],
+    "Maven" : [
+        {
+            "module": "codecoverage-tools",
+            "dest": "node_modules"  
+        }
+    ],
+    "Ant" : [
+        {
+            "module": "codecoverage-tools",
+            "dest": "node_modules"  
+        }
     ]
 }

@@ -1,7 +1,11 @@
 /// <reference path="../../../definitions/node.d.ts" />
+/// <reference path="../../../definitions/string.d.ts" />
 
 import * as path from "path";
 import * as util from "./utilities";
+import * as os from "os";
+import * as str from "string";
+
 
 // Enable Jacoco Code Coverage for Gradle builds using this props
 export function jacocoGradleMultiModuleEnable(excludeFilter: string, includeFilter: string, classFileDirectory: string, reportDir: string) {
@@ -184,8 +188,8 @@ cobertura {
 };
 
 // Enable Jacoco Code Coverage for Maven builds using this props
-export function jacocoMavenPluginEnable(includeFilter: string, excludeFilter: string, outputDirectory: string): any {
-    return {
+export function jacocoMavenPluginEnable(includeFilter: string[], excludeFilter: string[], outputDirectory: string): any {
+    let plugin = {
         "groupId": "org.jacoco",
         "artifactId": "jacoco-maven-plugin",
         "version": "0.7.5.201505241946",
@@ -198,9 +202,14 @@ export function jacocoMavenPluginEnable(includeFilter: string, excludeFilter: st
         "executions": {
             "execution": [
                 {
-                    "configuration": {
-                        "includes": { "include": includeFilter },
-                        "excludes": { "exclude": excludeFilter }
+                    "configuration":
+                    {
+                        "includes": [{
+                            "include": includeFilter,
+                        }],
+                        "excludes": [{
+                            "exclude": excludeFilter
+                        }]
                     },
                     "id": "default-prepare-agent-vsts",
                     "goals": { "goal": "prepare-agent" }
@@ -213,9 +222,16 @@ export function jacocoMavenPluginEnable(includeFilter: string, excludeFilter: st
             ]
         }
     };
+
+    return plugin;
 };
-export function jacocoMavenMultiModuleReport(jacocoExec: string, reportDir: string): string {
-    return `<?xml version="1.0" encoding="UTF-8"?>
+export function jacocoMavenMultiModuleReport(reportDir: string, srcData: string, classData: string, includeFilter: string, excludeFilter: string): string {
+    let classNode = "";
+    classData.split(",").forEach(c => {
+        classNode += `<fileset dir="${c}" includes="${includeFilter}" excludes="${excludeFilter}" />` + os.EOL;
+    });
+
+    let report = `<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>VstsReport</groupId>
@@ -242,14 +258,14 @@ export function jacocoMavenMultiModuleReport(jacocoExec: string, reportDir: stri
                 </taskdef>
                 <report>
                   <executiondata>
-                    <file file="${jacocoExec}" />
+                    <file file="${path.join(reportDir, "jacoco.exec")}" />
                   </executiondata>
                   <structure name="Jacoco report">
                     <classfiles>
-                      <fileset dir="." />
+                      ${classNode}
                     </classfiles>
                     <sourcefiles encoding="UTF-8">
-                      <fileset dir="." />
+                      <fileset dir="${srcData}" />
                     </sourcefiles>
                   </structure>
                   <html destdir="${reportDir}" />
@@ -272,6 +288,8 @@ export function jacocoMavenMultiModuleReport(jacocoExec: string, reportDir: stri
   </build>
 </project>
     `;
+
+    return report;
 };
 
 // Enable Cobertura Code Coverage for Maven builds using this props
@@ -360,9 +378,8 @@ export function jacocoAntCoverageEnable(): any {
     };
 }
 
-export function coberturaAntReport(): string {
-    return `
-    <?xml version="1.0"?>
+export function coberturaAntReport(srcDir: string): string {
+    return `<?xml version="1.0"?>
 <project name="CoberturaReport">
   <property environment="env" />
   <path id="cobertura-classpath" description="classpath for instrumenting classes">
@@ -372,44 +389,87 @@ export function coberturaAntReport(): string {
     </fileset>
   </path>
   <taskdef classpathref="cobertura-classpath" resource="tasks.properties" />
-  <target name="CodeCoverage">
-    <cobertura-report format="html" destdir="ReportDirectory75C12DBC" datafile="ReportDirectory75C12DBC\cobertura.ser" srcdir="." />
-    <cobertura-report format="xml" destdir="ReportDirectory75C12DBC" datafile="ReportDirectory75C12DBC\cobertura.ser" srcdir="." />
+  <target name="CodeCoverage_9064e1d0">
+    <cobertura-report format="html" destdir="ReportDirectory75C12DBC" datafile="ReportDirectory75C12DBC${path.sep}cobertura.ser" srcdir="${srcDir}" />
+    <cobertura-report format="xml" destdir="ReportDirectory75C12DBC" datafile="ReportDirectory75C12DBC${path.sep}cobertura.ser" srcdir="${srcDir}" />
   </target>
 </project>
     `;
 }
 
-export function coberturaAntCoverageEnable(): any {
-    let ccProperty = `
-    <property environment="env" />
-    <path id="cobertura-classpath" description="classpath for instrumenting classes">
-        <fileset dir="\${env.COBERTURA_HOME}">
-            <include name="cobertura*.jar" />
-            <include name="**/lib/**/*.jar" />
-        </fileset>
-    </path>
-    <taskdef classpathref="cobertura-classpath" resource="tasks.properties" />
-    `;
-    return util.convertXmlStringToJsonSync(ccProperty);
+export function coberturaAntCoverageEnable(buildJsonContent: any): void {
+    let propertyNode = {
+        $: {
+            environment: "env"
+        }
+    };
+    util.addPropToJson(buildJsonContent, "property", propertyNode);
+
+    let pathNode = {
+        $: {
+            id: "cobertura-classpath",
+            description: "classpath for instrumenting classes"
+        },
+        fileset: {
+            $: {
+                dir: "${env.COBERTURA_HOME}"
+            },
+            include: [
+                {
+                    $: {
+                        name: "cobertura*.jar"
+                    }
+                },
+                {
+                    $: {
+                        name: "**/lib/**/*.jar"
+                    }
+                }
+            ]
+        }
+    };
+    util.addPropToJson(buildJsonContent, "path", pathNode);
+
+    let taskdefNode = {
+        $: {
+            classpathref: "cobertura-classpath",
+            resource: "tasks.properties"
+        }
+    };
+    util.addPropToJson(buildJsonContent, "taskdef", taskdefNode);
 }
 
 export function coberturaAntInstrumentedClasses(): any {
-    let ccProperty = `
-    <cobertura-instrument todir="\${basedir}\InstrumentedClasses" datafile="\${basedir}\ReportDirectory75C12DBC\cobertura.ser">
-      <fileset dir="." />
-    </cobertura-instrument>
-`;
-    return util.convertXmlStringToJsonSync(ccProperty);
+    let ccProperty = {
+        $: {
+            todir: "${basedir}" + path.sep + "InstrumentedClasses",
+            datafile: "${basedir}" + path.sep + "ReportDirectory75C12DBC" + path.sep + "cobertura.ser"
+        },
+        fileset: []
+    };
+    return ccProperty;
 }
 
-export function coberturaAntProperties(): any {
-    let ccProperty = `
-    <sysproperty key="net.sourceforge.cobertura.datafile" file="\${basedir}\ReportDirectory75C12DBC\cobertura.ser" />
-    <classpath location="\${basedir}\InstrumentedClasses" />
-    <classpath refid="cobertura-classpath" />
-    `;
-    return util.convertXmlStringToJsonSync(ccProperty);
+export function coberturaAntProperties(node: any): any {
+    node.sysproperty = {
+        $: {
+            key: "net.sourceforge.cobertura.datafile",
+            file: "${basedir}" + path.sep + "ReportDirectory75C12DBC" + path.sep + "cobertura.ser"
+        }
+    };
+
+    node.classpath = [
+        {
+            $: {
+                location: "${basedir}" + path.sep + "InstrumentedClasses",
+            }
+        },
+        {
+            $: {
+                refid: "cobertura-classpath"
+            }
+        }
+    ];
 }
 
 // Gradle Coberutra plugin

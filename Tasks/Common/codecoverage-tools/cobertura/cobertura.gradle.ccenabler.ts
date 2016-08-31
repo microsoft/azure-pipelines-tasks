@@ -19,16 +19,16 @@ export class CoberturaGradleCodeCoverageEnabler extends cc.CoberturaCodeCoverage
     public enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<boolean> {
         let _this = this;
 
-        _this.buildFile = ccProps["buildFile"];
-        let classFilter = ccProps["classFilter"];
-        let isMultiModule = ccProps["isMultiModule"];
-        let classFileDirs = ccProps["classFileDirs"];
-        let reportDir = ccProps["reportDir"];
+        _this.buildFile = ccProps["buildfile"];
+        let classFilter = ccProps["classfilter"];
+        let isMultiModule = ccProps["ismultimodule"];
+        let classFileDirs = ccProps["classfilesdirectories"];
+        let reportDir = ccProps["reportdirectory"];
         let codeCoveragePluginData = null;
 
         let filter = _this.extractFilters(classFilter);
-        let cobExclude = _this.applyCoberturaFilterPattern(filter.excludeFilter);
-        let cobInclude = _this.applyCoberturaFilterPattern(filter.includeFilter);
+        let cobExclude = _this.applyFilterPattern(filter.excludeFilter);
+        let cobInclude = _this.applyFilterPattern(filter.includeFilter);
 
         if (isMultiModule) {
             codeCoveragePluginData = ccc.coberturaGradleMultiModuleEnable(cobExclude.join(","), cobInclude.join(","), classFileDirs, null, reportDir);
@@ -44,5 +44,20 @@ export class CoberturaGradleCodeCoverageEnabler extends cc.CoberturaCodeCoverage
             return Q.reject<boolean>(error);
         }
         return Q.resolve(true);
+    }
+
+    protected applyFilterPattern(filter: string): string[] {
+        let ccfilter = [];
+        let _this = this;
+
+        if (!util.isNullOrWhitespace(filter)) {
+            util.trimToEmptyString(filter).split(":").forEach(exFilter => {
+                if (exFilter) {
+                    ccfilter.push(str(exFilter).endsWith("*") ? ("'.*" + util.trimEnd(exFilter, "*") + ".*'") : ("'.*" + exFilter + "'"));
+                }
+            });
+        }
+
+        return ccfilter;
     }
 }

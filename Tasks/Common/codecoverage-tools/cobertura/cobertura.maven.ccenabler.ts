@@ -8,63 +8,63 @@ import * as tl from "vsts-task-lib/task";
 import * as ccc from "../codecoverageconstants";
 import * as cc from "../codecoverageenabler";
 import * as str from "string";
-import * as path from "path";
 import * as os from "os";
 import * as Q from "q";
 
-export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler {
+export class CoberturaMavenCodeCoverageEnabler extends cc.CoberturaCodeCoverageEnabler {
 
-    excludeFilter: string;
-    includeFilter: string;
-    reportDir: string;
-
+    protected includeFilter: string;
+    protected excludeFilter: string;
     // -----------------------------------------------------
-    // Enable code coverage for Jacoco Maven Builds
+    // Enable code coverage for Cobertura Maven Builds
     // - enableCodeCoverage: CodeCoverageProperties  - ccProps
     // -----------------------------------------------------    
     public enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<boolean> {
         let _this = this;
 
-        _this.buildFile = ccProps["buildFile"];
-        _this.reportDir = ccProps["reportDir"];
+        _this.buildFile = ccProps["buildfile"];
+        let classFilter = ccProps["classfilter"];
+        let reportDir = ccProps["reportdirectory"];
 
-        let classFilter = ccProps["classFilter"];
         let filter = _this.extractFilters(classFilter);
-        _this.excludeFilter = _this.applyJacocoFilterPattern(filter.excludeFilter).join(",");
-        _this.includeFilter = _this.applyJacocoFilterPattern(filter.includeFilter).join(",");
+        _this.excludeFilter = _this.applyFilterPattern(filter.excludeFilter).join(",");
+        _this.includeFilter = _this.applyFilterPattern(filter.includeFilter).join(",");
 
         return util.readXmlFileAsJson(_this.buildFile)
             .then(function (resp) {
-                _this.addCodeCoverageData(resp);
+                return _this.addCodeCoveragePluginData(resp);
             })
             .thenResolve(true);
     }
 
-    protected addCodeCoverageData(pomJson: any): Q.Promise<any[]> {
+    protected applyFilterPattern(filter: string): string[] {
+        let ccfilter = [];
         let _this = this;
 
-        if (!pomJson.project) {
-            Q.reject("Invalid/Unsupported POM xml");
+        if (!util.isNullOrWhitespace(filter)) {
+            str(util.trimToEmptyString(filter)).replaceAll(".", "/").s.split(":").forEach(exFilter => {
+                if (exFilter) {
+                    ccfilter.push(str(exFilter).endsWith("*") ? (exFilter + "/**") : (exFilter + ".class"));
+                }
+            });
         }
 
-        let isMultiModule = false;
-        if (pomJson.project.modules) {
-            console.log("Multimodule project detected");
-            isMultiModule = true;
-        }
-
-        let promises = [_this.addCodeCoveragePluginData(pomJson)];
-        if (isMultiModule) {
-            promises.push(_this.createMultiModuleReport("jacoco.exec", _this.reportDir, "report.xml"));
-        }
-
-        return Q.all(promises);
+        return ccfilter;
     }
 
     protected addCodeCoverageNodes(buildJsonContent: any): Q.Promise<any> {
         let _this = this;
         let pluginsNode = null;
         let isMultiModule = false;
+
+        if (!buildJsonContent.project) {
+            return Q.reject("Invalid build file");
+        }
+
+        if (buildJsonContent.project.modules) {
+            console.log("Multimodule project detected");
+            isMultiModule = true;
+        }
 
         if (!buildJsonContent.project.build) {
             console.log("Build tag is not present");
@@ -88,20 +88,25 @@ export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler
             pluginsNode = buildJsonContent.project.build.plugins;
         }
 
-        let ccContent = ccc.jacocoMavenPluginEnable(_this.includeFilter, _this.excludeFilter, _this.reportDir);
-        util.addPropToJson(pluginsNode, "plugin", ccContent);
-        return Q.resolve(buildJsonContent);
+        if (!buildJsonContent.project.reporting || typeof buildJsonContent.project.reporting === "string") {
+            buildJsonContent.project.reporting = {};
+        }
+
+        let ccPluginData = ccc.coberturaMavenEnable(_this.includeFilter, _this.excludeFilter, String(isMultiModule));
+        let reportContent = ccc.coberturaMavenReport();
+
+        return Q.allSettled([ccPluginData, reportContent])
+            .then(function (resp) {
+                util.addPropToJson(pluginsNode, "plugin", resp[1]);
+                util.addPropToJson(buildJsonContent.project, "reporting", resp[0]);
+            });
     }
 
-    protected createMultiModuleReport(jacocoExec: string, reportDir: string, reportFile: string): Q.Promise<any> {
-        return util.writeFile(reportFile, ccc.jacocoMavenMultiModuleReport(jacocoExec, reportDir));
-    }
-
-    protected addCodeCoveragePluginData(pomJson: any): Q.Promise<any> {
+    protected addCodeCoveragePluginData(pomJson: any): Q.Promise<void> {
         let _this = this;
-        return _this.addCodeCoverageNodes(pomJson).
-            then(function (content) {
-                return util.writeJsonAsXmlFile(_this.buildFile, content);
+        return _this.addCodeCoverageNodes(pomJson)
+            .then(function (buildContent) {
+                return util.writeJsonAsXmlFile(_this.buildFile, buildContent);
             });
     }
 }

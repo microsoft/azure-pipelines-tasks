@@ -1,4 +1,5 @@
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
+/// <reference path="../../definitions/codecoveragefactory.d.ts" />
 
 import Q = require('q');
 import os = require('os');
@@ -8,10 +9,9 @@ import fs = require('fs');
 import tl = require('vsts-task-lib/task');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
 import sqCommon = require('./CodeAnalysis/SonarQube/common');
-
-// Lowercased file names are to lessen the likelihood of xplat issues
 import codeAnalysis = require('./CodeAnalysis/mavencodeanalysis');
 import sqMaven = require('./CodeAnalysis/mavensonar');
+import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
 
 // Set up localization resource file
 tl.setResourcePath(path.join( __dirname, 'task.json'));
@@ -26,6 +26,11 @@ var testResultsFiles: string = tl.getInput('testResultsFiles', true);
 var ccTool = tl.getInput('codeCoverageTool');
 var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
 var isSonarQubeEnabled:boolean = false;
+var summaryFile: string = null;
+var reportDirectory: string = null;
+var reportPOMFile: string = null;
+var execFileJacoco: string = null;
+var ccReportTask: string = null;
 
 // Determine the version and path of Maven to use
 var mvnExec: string = '';
@@ -105,18 +110,16 @@ if (specifiedJavaHome) {
     tl.setVariable('JAVA_HOME', specifiedJavaHome);
 }
 
-if (isCodeCoverageOpted) {
-    var summaryFile: string = null;
-    var reportDirectory: string = null;
-    var reportPOMFile: string = null;
-    var execFileJacoco: string = null;
-    var ccReportTask: string = null;
-    enableCodeCoverage();
-}
-else {
-    tl.debug("Option to enable code coverage was not selected and is being skipped.");
-}
+enableCodeCoverage()
+    .then(function (resp) {
+        ccReportTask = "jacoco:report";
+    }).catch(function (err) {
+        tl.warning("Enabling code coverage failed. Check the build logs for errors.");
+    }).fin(function () {
+        execBuild();
+    });
 
+function execBuild(){
 // Maven task orchestration occurs as follows:
 // 1. Check that Maven exists by executing it to retrieve its version.
 // 2. Apply any goals for static code analysis tools selected by the user.
@@ -205,6 +208,7 @@ mvnGetVersion.exec()
 
         // Do not force an exit as publishing results is async and it won't have finished 
     });
+}
 
 // Publishes JUnit test results from files matching the specified pattern.
 function publishJUnitTestResults(testResultsFiles: string) {
@@ -234,7 +238,11 @@ function publishJUnitTestResults(testResultsFiles: string) {
     tp.publish(matchingJUnitResultFiles, true, "", "", "", true);
 }
 
-function enableCodeCoverage() {
+function enableCodeCoverage() : Q.Promise<any> {
+    if(!isCodeCoverageOpted){
+        return Q.resolve(true);
+    }
+
     var classFilter: string = tl.getInput('classFilter');
     var classFilesDirectories: string = tl.getInput('classFilesDirectories');
     var sourceDirectories: string = tl.getInput('srcDirectories');
@@ -243,7 +251,6 @@ function enableCodeCoverage() {
     var reportPOMFileName = "CCReportPomA4D283EG.xml";
     reportPOMFile = path.join(buildRootPath, reportPOMFileName);
     var targetDirectory = path.join(buildRootPath, "target");
-    ccReportTask = "jacoco:report";
 
     if (ccTool.toLowerCase() == "jacoco") {
         var reportDirectoryName = "CCReport43F6D5EF";
@@ -276,18 +283,12 @@ function enableCodeCoverage() {
     buildProps['reportdirectory'] = reportDirectory;
     buildProps['reportbuildfile'] = reportPOMFile;
 
-    try {
-        var codeCoverageEnabler = new tl.CodeCoverageEnabler('Maven', ccTool);
-        codeCoverageEnabler.enableCodeCoverage(buildProps);
-        tl.debug("Code coverage is successfully enabled.");
-    }
-    catch (Error) {
-        tl.warning("Enabling code coverage failed. Check the build logs for errors.");
-    }
+    let ccEnabler = new CodeCoverageEnablerFactory().getTool("maven", ccTool.toLowerCase());
+    return ccEnabler.enableCodeCoverage(buildProps);
 }
 
 function publishCodeCoverage(isCodeCoverageOpted: boolean) {
-    if (isCodeCoverageOpted) {
+    if (isCodeCoverageOpted && ccReportTask) {
         tl.debug("Collecting code coverage reports");
 
         if (ccTool.toLowerCase() == "jacoco") {

@@ -27,21 +27,36 @@ export class JacocoAntCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler {
     public enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<boolean> {
         let _this = this;
         let defer = Q.defer<boolean>();
-        _this.buildFile = ccProps["buildFile"];
-        _this.sourceDirs = ccProps["sourceDirs"];
-        _this.classDirs = ccProps["classDirs"];
-        _this.reportDir = ccProps["reportDir"];
+        _this.buildFile = ccProps["buildfile"];
+        _this.sourceDirs = ccProps["sourcedirectories"];
+        _this.classDirs = ccProps["classfilesdirectories"];
+        _this.reportDir = ccProps["reportdirectory"];
 
-        let classFilter = ccProps["classFilter"];
+        let classFilter = ccProps["classfilter"];
         let filter = _this.extractFilters(classFilter);
-        _this.excludeFilter = _this.applyJacocoFilterPattern(filter.excludeFilter).join(",");
-        _this.includeFilter = _this.applyJacocoFilterPattern(filter.includeFilter).join(",");
+        _this.excludeFilter = _this.applyFilterPattern(filter.excludeFilter).join(",");
+        _this.includeFilter = _this.applyFilterPattern(filter.includeFilter).join(",");
 
         return util.readXmlFileAsJson(_this.buildFile).
             then(function (resp) {
                 _this.addCodeCoverageData(resp);
             })
             .thenResolve(true);
+    }
+
+    protected applyFilterPattern(filter: string): string[] {
+        let ccfilter = [];
+        let _this = this;
+
+        if (!util.isNullOrWhitespace(filter)) {
+            str(util.trimToEmptyString(filter)).replaceAll(".", "/").s.split(":").forEach(exFilter => {
+                if (exFilter) {
+                    ccfilter.push(str(exFilter).endsWith("*") ? ("**/" + exFilter + "/**") : ("**/" + exFilter + ".class"));
+                }
+            });
+        }
+
+        return ccfilter;
     }
 
     protected getSourceFilter(): string {
@@ -72,7 +87,9 @@ export class JacocoAntCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler {
         return classData;
     }
 
-    protected createReportFile(reportFile: string, reportContent: string): Q.Promise<void> {
+    protected createReportFile(reportContent: string): Q.Promise<void> {
+        let _this = this;
+        let reportFile = path.join(path.dirname(_this.buildFile), "report.xml");
         return util.writeFile(reportFile, reportContent);
     }
 
@@ -86,12 +103,13 @@ export class JacocoAntCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler {
         let classData = _this.getClassData();
         let reportPluginData = ccc.jacocoAntReport(_this.reportDir, classData, sourceData);
 
-        return Q.all([_this.addCodeCoveragePluginData(pomJson), _this.createReportFile("report.xml", reportPluginData)]);
+        return Q.all([_this.addCodeCoveragePluginData(pomJson), _this.createReportFile(reportPluginData)]);
     }
 
     protected addCodeCoverageNodes(buildJsonContent: any): Q.Promise<any> {
         let _this = this;
         let pluginsNode = null;
+        let coverageNode = ccc.jacocoAntCoverageEnable();
 
         if (!buildJsonContent.project.target) {
             console.log("Build tag is not present");
@@ -102,51 +120,48 @@ export class JacocoAntCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler {
             buildJsonContent.project.target = {};
         }
 
-        _this.enableForking(buildJsonContent.project.target);
+        buildJsonContent.project.target["jacoco.coverage"] = coverageNode;
+
+        if (buildJsonContent.project.target instanceof Array) {
+            buildJsonContent.project.target.forEach(element => {
+                _this.enableForking(element);
+            });
+        }
+        else {
+            _this.enableForking(buildJsonContent.project.target);
+        }
+
         return Q.resolve(buildJsonContent);
     }
 
     protected enableForking(targetNode: any) {
         let _this = this;
-        let coverageNode = ccc.jacocoAntCoverageEnable();
+        let testNodes = ["junit", "java", "testng", "batchtest"];
 
-        if (targetNode.junit) {
-            let node = targetNode.junit;
-            coverageNode.junit = node;
-            _this.enableForkOnTestNodes(coverageNode, true);
-            targetNode.junit = undefined;
-        }
-        if (targetNode.java) {
-            let node = targetNode.java;
-            coverageNode.java = node;
-            _this.enableForkOnTestNodes(coverageNode, false);
-            targetNode.java = undefined;
-        }
-        if (targetNode.testng) {
-            let node = targetNode.testng;
-            coverageNode.testng = node;
-            _this.enableForkOnTestNodes(coverageNode, false);
-            targetNode.testng = undefined;
-        }
-        if (targetNode.batchtest) {
-            let node = targetNode.batchtest;
-            coverageNode.batchtest = node;
-            _this.enableForkOnTestNodes(coverageNode, true);
-            targetNode.batchtest = undefined;
-        }
-        // TODO check if none of them available
-        targetNode["jacoco.coverage"] = coverageNode;
+        testNodes.forEach(tn => {
+            if (!targetNode[tn]) {
+                return;
+            }
+            _this.enableForkOnTestNodes(targetNode[tn], true);
+        });
     }
 
     protected enableForkOnTestNodes(testNode: any, enableForkMode: boolean) {
-        if (typeof testNode === "Array") {
+        if (testNode instanceof Array) {
             testNode.forEach(element => {
+                if (!element.$) {
+                    element.$ = {};
+                }
                 if (enableForkMode) {
                     element.$.forkmode = "once";
                 }
                 element.$.fork = "true";
+
             });
         } else {
+            if (!testNode.$) {
+                testNode.$ = {};
+            }
             if (enableForkMode) {
                 testNode.$.forkmode = "once";
             }

@@ -10,6 +10,7 @@ import * as tl from "vsts-task-lib/task";
 import * as path from "path";
 import * as str from "string";
 import * as xml2js from "xml2js";
+//import * as fse from "fs-extra";
 
 export interface GetOrCreateResult<T> {
     created: boolean;
@@ -44,7 +45,8 @@ export function sortStringArray(list): string[] {
 // returns true if path exists and it is a directory else false.
 export function isDirectoryExists(path: string): boolean {
     try {
-        return tl.stats(path).isDirectory();
+        //     return tl.stats(path).isDirectory();
+        return true;
     }
     catch (error) {
         return false;
@@ -54,7 +56,8 @@ export function isDirectoryExists(path: string): boolean {
 // returns true if path exists and it is a file else false.
 export function isFileExists(path: string): boolean {
     try {
-        return tl.stats(path).isFile();
+        //  return tl.stats(path).isFile();
+        return true;
     }
     catch (error) {
         return false;
@@ -132,7 +135,7 @@ export function trimEnd(data: string, trimChar: string) {
 }
 
 export function readXmlFileAsJson(filePath: string): Q.Promise<any> {
-    console.log("Converting file");
+    console.log("Reading XML file: " + filePath);
     return readFile(filePath, "utf-8")
         .then(convertXmlStringToJson);
 }
@@ -142,34 +145,36 @@ export function readFile(filePath: string, encoding: string): Q.Promise<string> 
 }
 
 export function convertXmlStringToJson(xmlContent: string): Q.Promise<any> {
-    console.log("Converting data");
+    console.log("Converting XML file to JSON");
     return Q.nfcall<any>(xml2js.parseString, xmlContent);
-}
-
-export function convertXmlStringToJsonSync(xmlContent: string): any {
-    console.log("Converting data");
-    xml2js.parseString(xmlContent, function (err, res) {
-        if (err) {
-            // TODO error
-            return null;
-        }
-        return res;
-    });
 }
 
 export function writeJsonAsXmlFile(filePath: string, jsonContent: any): Q.Promise<void> {
     let builder = new xml2js.Builder();
+    console.log("Writing JSON as XML file: " + filePath);
     let xml = builder.buildObject(jsonContent);
+    xml = str(xml).replaceAll("&#xD;", "").s;
     return writeFile(filePath, xml);
 }
 
 export function writeFile(filePath: string, fileContent: string): Q.Promise<void> {
+    console.log("Creating dir if not exists: " + path.dirname(filePath));
+    //fse.mkdirpSync(path.dirname(filePath));
+    console.log("Check dir: " + fs.existsSync(path.dirname(filePath)));
     return Q.nfcall<void>(fs.writeFile, filePath, fileContent);
 }
 
 export function addPropToJson(obj: any, propName: string, value: any): void {
+    console.log("Adding property to JSON: " + propName);
     if (obj === "undefined") {
         obj = {};
+    }
+
+    if (obj instanceof Array) {
+        let propNode = obj.find(o => o[propName]);
+        if (propNode) {
+            obj = propNode;
+        }
     }
 
     if (propName in obj) {
@@ -180,7 +185,11 @@ export function addPropToJson(obj: any, propName: string, value: any): void {
             obj[propName] = [obj[propName], value];
         }
     }
-    else {
+    else if (obj instanceof Array) {
+        let prop = {};
+        prop[propName] = value;
+        obj.push(prop);
+    } else {
         obj[propName] = value;
     }
 }

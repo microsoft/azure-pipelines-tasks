@@ -1,6 +1,5 @@
 /// <reference path="../../../definitions/Q.d.ts" />
 /// <reference path="../../../definitions/string.d.ts" />
-/// <reference path="../../../definitions/xml2js.d.ts" />
 /// <reference path="../../../definitions/vsts-task-lib.d.ts" />
 /// <reference path="../../../definitions/node.d.ts" />
 
@@ -66,36 +65,9 @@ export abstract class CodeCoverageEnabler implements ICodeCoverageEnabler {
 }
 
 export abstract class CoberturaCodeCoverageEnabler extends CodeCoverageEnabler {
-    protected applyCoberturaFilterPattern(filter: string): string[] {
-        let coberturaFilter = [];
-        let _this = this;
-
-        if (!util.isNullOrWhitespace(filter)) {
-            util.trimToEmptyString(filter).split(":").forEach(exFilter => {
-                if (exFilter) {
-                    coberturaFilter.push(str(exFilter).endsWith("*") ? ("'.*" + util.trimEnd(exFilter, "*") + ".*'") : ("'.*" + exFilter + "'"));
-                }
-            });
-        }
-
-        return coberturaFilter;
-    }
+    protected abstract applyFilterPattern(filter: string): string[];
 }
 
 export abstract class JacocoCodeCoverageEnabler extends CodeCoverageEnabler {
-    protected applyJacocoFilterPattern(filter: string): string[] {
-        let jacocoFilter = [];
-        let _this = this;
-
-        if (!util.isNullOrWhitespace(filter)) {
-            str(util.trimToEmptyString(filter)).replaceAll(".", "/").s.split(":").forEach(exFilter => {
-                if (exFilter) {
-                    jacocoFilter.push(str(exFilter).endsWith("*") ? ("'" + exFilter + "/**'") : ("'" + exFilter + ".class'"));
-                }
-            });
-        }
-
-        return jacocoFilter;
-    }
+    protected abstract applyFilterPattern(filter: string): string[];
 }
-

@@ -20,16 +20,16 @@ export class JacocoGradleCodeCoverageEnabler extends cc.JacocoCodeCoverageEnable
     public enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<boolean> {
         let _this = this;
 
-        _this.buildFile = ccProps["buildFile"];
-        let classFilter = ccProps["classFilter"];
-        let isMultiModule = ccProps["isMultiModule"] && ccProps["isMultiModule"] === "true";
-        let classFileDirs = ccProps["classFileDirs"];
-        let reportDir = ccProps["reportDir"];
+        _this.buildFile = ccProps["buildfile"];
+        let classFilter = ccProps["classfilter"];
+        let isMultiModule = ccProps["ismultimodule"] && ccProps["ismultimodule"] === "true";
+        let classFileDirs = ccProps["classfilesdirectories"];
+        let reportDir = ccProps["reportdirectory"];
         let codeCoveragePluginData = null;
 
         let filter = _this.extractFilters(classFilter);
-        let jacocoExclude = _this.applyJacocoFilterPattern(filter.excludeFilter);
-        let jacocoInclude = _this.applyJacocoFilterPattern(filter.includeFilter);
+        let jacocoExclude = _this.applyFilterPattern(filter.excludeFilter);
+        let jacocoInclude = _this.applyFilterPattern(filter.includeFilter);
 
         if (isMultiModule) {
             codeCoveragePluginData = ccc.jacocoGradleMultiModuleEnable(jacocoExclude.join(","), jacocoInclude.join(","), classFileDirs, reportDir);
@@ -46,5 +46,20 @@ export class JacocoGradleCodeCoverageEnabler extends cc.JacocoCodeCoverageEnable
             return Q.reject<boolean>(error);
         }
         return Q.resolve<boolean>(true);
+    }
+
+    protected applyFilterPattern(filter: string): string[] {
+        let ccfilter = [];
+        let _this = this;
+
+        if (!util.isNullOrWhitespace(filter)) {
+            str(util.trimToEmptyString(filter)).replaceAll(".", "/").s.split(":").forEach(exFilter => {
+                if (exFilter) {
+                    ccfilter.push(str(exFilter).endsWith("*") ? ("'" + exFilter + "/**'") : ("'" + exFilter + ".class'"));
+                }
+            });
+        }
+
+        return ccfilter;
     }
 }

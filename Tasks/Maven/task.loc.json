@@ -14,9 +14,9 @@
     "maven"
   ],
   "version": {
-    "Major": 1,
+    "Major": 2,
     "Minor": 0,
-    "Patch": 57
+    "Patch": 0
   },
   "minimumAgentVersion": "1.89.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -284,7 +284,8 @@
       "label": "ms-resource:loc.input.label.sqAnalysisIncludeFullReport",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisIncludeFullReport",
-      "groupName": "CodeAnalysis"
+      "groupName": "CodeAnalysis",
+      "visibleRule": "sqAnalysisEnabled = true"
     },
     {
       "name": "pmdAnalysisEnabled",
@@ -300,14 +301,6 @@
     "Node": {
       "target": "maventask.js",
       "argumentFormat": ""
-    },
-    "PowerShell": {
-      "target": "$(currentDirectory)\\maven.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)",
-      "platforms": [
-        "windows"
-      ]
     }
   },
   "messages": {
