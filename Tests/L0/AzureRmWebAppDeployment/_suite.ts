@@ -41,7 +41,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
 
     });
 
-    it('Runs with default inputs', (done) => {
+    it('Runs successfully with default inputs', (done) => {
         
         setResponseFile('armGood.json');
 
@@ -65,7 +65,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             });
     });
 
-    it('Runs with all other inputs', (done) => {
+    it('Runs successfully with all other inputs', (done) => {
         
         setResponseFile('armGoodOtherInputs.json');
 
@@ -95,7 +95,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             });
     });
 
-    it('Runs with default inputs for deployment to specific slot', (done) => {
+    it('Runs successfully with default inputs for deployment to specific slot', (done) => {
         
         setResponseFile('armGood.json');
 
@@ -122,7 +122,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             });
     });
    
-    it('Runs with parameter file present in package', (done) => {
+    it('Runs successfully with parameter file present in package', (done) => {
         
         setResponseFile('armGoodWithParamFile.json');
 
@@ -299,7 +299,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             });
     });
 
-    it('Runs with Folder Support', (done) => {
+    it('Runs successfully with Folder Deployment', (done) => {
         
         setResponseFile('armFolderGood.json');
 
