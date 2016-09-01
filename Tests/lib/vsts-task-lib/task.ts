@@ -666,9 +666,12 @@ export function matchFile(list, pattern, options): string[] {
     return mock.getResponse('match', pattern) || [];
 }
 
-export function filter(pattern, options): string[] {
-    return mock.getResponse('filter', pattern) || [];
-}    
+export function filter(pattern, options): any {
+	var filterList = mock.getResponse('filter', pattern) || [];
+	return function(pattern, i, filterList) {
+		return filterList;
+	}
+}
 
 //-----------------------------------------------------
 // Test Publisher
