@@ -16,14 +16,12 @@ function getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, depl
 	};
 
 	if(deployToSlotFlag) {
-		
 		mockPublishProfile.profileName =  'mytestapp-' + slotName + ' - Web Deploy';
 		mockPublishProfile.publishUrl = 'mytestappKuduUrl-' + slotName;
 		mockPublishProfile.msdeploySite = 'mytestapp__' + slotName;
 		mockPublishProfile.userName = '$mytestapp__' + slotName;
 		mockPublishProfile.userPWD = 'mytestappPwd';
 		mockPublishProfile.destinationAppUrl = 'mytestappUrl-' + slotName;
-		
 	}
 
 	return mockPublishProfile;

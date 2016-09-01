@@ -1,20 +1,8 @@
 /// <reference path="../../definitions/node.d.ts" />
-/// <reference path="../../definitions/q.d.ts" />
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments)).next());
-    });
-};
-const Q = require('q');
+
 const tl = require('vsts-task-lib/task');
-var regedit = require('regedit');
-var azureRmUtil = require('./AzureRMUtil.js');
-var parseString = require('xml2js').parseString;
 function fileExists(path) {
     try {
         return tl.stats(path).isFile();
@@ -28,23 +16,7 @@ function fileExists(path) {
     }
 }
 exports.fileExists = fileExists;
-/**
- * Constructs argument for MSDeploy command
- *
- * @param   webAppPackage                   Web deploy package
- * @param   webAppName                      web App Name
- * @param   publishingProfile               Azure RM Connection Details
- * @param   removeAdditionalFilesFlag       Flag to set DoNotDeleteRule rule
- * @param   excludeFilesFromAppDataFlag     Flag to prevent App Data from publishing
- * @param   takeAppOfflineFlag              Flag to enable AppOffline rule
- * @param   virtualApplication              Virtual Application Name
- * @param   setParametersFile               Set Parameter File path
- * @param   additionalArguments             Arguments provided by user
- * @param   isParamFilePresentInPacakge     Flag to check Paramter.xml file
- * @param   isFolderBasedDeployment         Flag to check if given web package path is a folder
- *
- * @returns string
- */
+
 function getMSDeployCmdArgs(webAppPackage, webAppName, publishingProfile, removeAdditionalFilesFlag, excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments, isParamFilePresentInPacakge, isFolderBasedDeployment) {
     var msDeployCmdArgs = " -verb:sync";
     var webApplicationDeploymentPath = (virtualApplication) ? webAppName + "/" + virtualApplication : webAppName;
@@ -89,38 +61,17 @@ function getMSDeployCmdArgs(webAppPackage, webAppName, publishingProfile, remove
     return msDeployCmdArgs;
 }
 exports.getMSDeployCmdArgs = getMSDeployCmdArgs;
-/**
- * Check whether the package contains parameter.xml file
- * @param   webAppPackage   web deploy package
- * @returns boolean
- */
+
 function containsParamFile(webAppPackage) {
-    return __awaiter(this, void 0, void 0, function* () {
-        var msDeployPath = yield getMSDeployFullPath();
+        var msDeployPath = getMSDeployFullPath();
         var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package='" + webAppPackage + "'";
         var taskResult = tl.execSync(msDeployPath, msDeployCheckParamFileCmdArgs);
-        console.log ('**************** taskResult : ' + JSON.stringify(taskResult) );
-
         var paramContentXML = taskResult.stdout;
         tl.debug(tl.loc("Paramscontentofwebpackage0", paramContentXML));
         var isParamFilePresent = false;
 
         // Return mocked output
         return taskResult.code == 0 ? isParamFilePresent : true;
-
-        yield parseString(paramContentXML, (error, result) => {
-            if (error) {
-                onError(error);
-            }
-            if (result['output']['parameters'][0]) {
-                isParamFilePresent = true;
-            }
-        });
-        tl.debug(tl.loc("Isparameterfilepresentinwebpackage0", isParamFilePresent));
-        
-        return isParamFilePresent;
-
-    });
 }
 exports.containsParamFile = containsParamFile;
 /**
@@ -129,16 +80,8 @@ exports.containsParamFile = containsParamFile;
  * @returns    string
  */
 function getMSDeployFullPath() {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            var msDeployFullPath =  "msdeploypath\\msdeploy.exe";
-            return msDeployFullPath;
-        }
-        catch (error) {
-            tl.error(tl.loc('CannotfindMSDeployexe'));
-            onError(error);
-        }
-    });
+    var msDeployFullPath =  "msdeploypath\\msdeploy.exe";
+    return msDeployFullPath;
 }
 exports.getMSDeployFullPath = getMSDeployFullPath;
 function onError(error) {

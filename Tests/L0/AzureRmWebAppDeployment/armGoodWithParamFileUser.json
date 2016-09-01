@@ -5,12 +5,12 @@
     "stats": {
     	"webAppPkg.zip": {
     		"isFile": true
-    	}, 
+    	},
         "parameterFile.xml": {
-            "isFile": true
+            "isFile" : true
         }
     },
-     "checkPath": {
+    "checkPath": {
         "msdeploy_path": true
     },
     "exec": {

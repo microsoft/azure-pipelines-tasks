@@ -41,9 +41,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
 
     });
 
-    
-
-    it('run AzureRmWebAppDeployment Task with default inputs', (done) => {
+    it('Runs with default inputs', (done) => {
         
         setResponseFile('armGood.json');
 
@@ -67,7 +65,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             });
     });
 
-    it('run AzureRmWebAppDeployment Task with all other inputs', (done) => {
+    it('Runs with all other inputs', (done) => {
         
         setResponseFile('armGoodOtherInputs.json');
 
@@ -97,7 +95,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             });
     });
 
-    it('run AzureRmWebAppDeployment Task with default inputs for deployment to specific slot', (done) => {
+    it('Runs with default inputs for deployment to specific slot', (done) => {
         
         setResponseFile('armGood.json');
 
@@ -124,7 +122,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             });
     });
    
-    it('run AzureRmWebAppDeployment Task with default inputs and Parameter file present in package', (done) => {
+    it('Runs with parameter file present in package', (done) => {
         
         setResponseFile('armGoodWithParamFile.json');
 
@@ -148,7 +146,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             });
     });
 
-    it('run AzureRmWebAppDeployment Task with default inputs and Parameter file provided by user', (done) => {
+    it('Runs with parameter file provided by user', (done) => {
         
         setResponseFile('armGoodWithParamFileUser.json');
 
@@ -172,7 +170,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
                 done(err);
             });
     });
-     it('run AzureRmWebAppDeployment Task with default inputs and Parameter file input is present but invalid', (done) => {
+    
+    it('Fails if parameters file provided by user is invalid', (done) => {
         
         setResponseFile('armGoodWithParamFileUser.json');
 
@@ -199,7 +198,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             });
     });
 
-    it('run AzureRmWebAppDeployment Task with missing SPN input', (done) => {
+    it('Fails if SPN details are missing', (done) => {
         
         setResponseFile('armGood.json');
 
@@ -224,7 +223,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             });
     });
 
-    it('run AzureRmWebAppDeployment Task with missing WebAppName', (done) => {
+    it('Fails if webapp name is not provided', (done) => {
         
         setResponseFile('armGood.json');
 
@@ -249,7 +248,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             });
     });
 
-    it('run AzureRmWebAppDeployment Task with missing Package Name Input', (done) => {
+    it('Fails if package or folder name is not provided', (done) => {
         
         setResponseFile('armGood.json');
 
@@ -274,7 +273,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             });
     });
 
-    it('run AzureRmWebAppDeployment Task with missing Package or Folder', (done) => {
+    it('Fails if package or folder name is invalid', (done) => {
         
         setResponseFile('armGood.json');
 
@@ -300,7 +299,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             });
     });
 
-    it('run AzureRmWebAppDeployment Task with Folder Support', (done) => {
+    it('Runs with Folder Support', (done) => {
         
         setResponseFile('armFolderGood.json');
 
