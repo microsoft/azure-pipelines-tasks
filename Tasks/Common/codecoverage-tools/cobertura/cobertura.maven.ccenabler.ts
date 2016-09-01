@@ -57,7 +57,8 @@ export class CoberturaMavenCodeCoverageEnabler extends cc.CoberturaCodeCoverageE
         let _this = this;
         let pluginsNode = null;
         let isMultiModule = false;
-
+        let buildNode = null;
+        
         if (!buildJsonContent.project) {
             return Q.reject("Invalid build file");
         }
@@ -73,24 +74,45 @@ export class CoberturaMavenCodeCoverageEnabler extends cc.CoberturaCodeCoverageE
         }
 
         if (!buildJsonContent.project.build || typeof buildJsonContent.project.build === "string") {
-            buildJsonContent.project.build = {};
+            buildNode = {};
+            buildJsonContent.project.build = buildNode;
         }
 
-        if (buildJsonContent.project.build.pluginManagement) {
-            if (typeof buildJsonContent.project.build.pluginManagement === "string") {
-                buildJsonContent.project.build.pluginManagement = {};
+        if (buildJsonContent.project.build instanceof Array) {
+            if(typeof buildJsonContent.project.build[0] === 'string'){
+                buildNode = {};
+                buildJsonContent.project.build[0] = buildNode;
+            }else{
+                buildNode = buildJsonContent.project.build[0];
             }
-            pluginsNode = buildJsonContent.project.build.pluginManagement.plugins;
+        }
+
+        if (buildNode.pluginManagement) {
+            if (typeof buildNode.pluginManagement === "string") {
+                buildNode.pluginManagement = {};
+            }
+            if (buildNode.pluginManagement instanceof Array) {
+                pluginsNode = buildNode.pluginManagement[0].plugins;
+            }
+            else {
+                pluginsNode = buildNode.pluginManagement.plugins;
+            }
         }
         else {
-            if (!buildJsonContent.project.build.plugins || typeof buildJsonContent.project.build.plugins === "string") {
-                buildJsonContent.project.build.plugins = {};
+            if (!buildNode.plugins || typeof buildNode.plugins === "string") {
+                buildNode.plugins = {};
             }
-            pluginsNode = buildJsonContent.project.build.plugins;
-        }
-
-        if (!buildJsonContent.project.reporting || typeof buildJsonContent.project.reporting === "string") {
-            buildJsonContent.project.reporting = {};
+            if (buildNode.plugins instanceof Array) {
+                if(typeof buildNode.plugins[0] === 'string'){
+                    pluginsNode = {};
+                    buildNode.plugins[0] = pluginsNode;
+                }
+                else{
+                    pluginsNode = buildNode.plugins[0];
+                }
+            }else{
+                pluginsNode = buildNode.plugins;
+            }
         }
 
         let ccPluginData = ccc.coberturaMavenEnable(_this.includeFilter, _this.excludeFilter, String(isMultiModule));
@@ -98,9 +120,10 @@ export class CoberturaMavenCodeCoverageEnabler extends cc.CoberturaCodeCoverageE
 
         return Q.allSettled([ccPluginData, reportContent])
             .then(function (resp) {
-                util.addPropToJson(pluginsNode, "plugin", resp[1].value);
-                util.addPropToJson(buildJsonContent.project, "reporting", resp[0].value);
+                util.addPropToJson(pluginsNode, "plugin", resp[0].value.plugin);
+                util.addPropToJson(buildJsonContent.project, "reporting", resp[1].value);
                 console.log("Final buildContent: "+buildJsonContent);
+                return Q.resolve(buildJsonContent);
             });
     }
 

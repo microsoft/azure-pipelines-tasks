@@ -122,7 +122,17 @@ export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler
             if (!buildNode.plugins || typeof buildNode.plugins === "string") {
                 buildNode.plugins = {};
             }
-            pluginsNode = buildNode.plugins;
+            if (buildNode.plugins instanceof Array) {
+                if(typeof buildNode.plugins[0] === 'string'){
+                    pluginsNode = {};
+                    buildNode.plugins[0] = pluginsNode;
+                }
+                else{
+                    pluginsNode = buildNode.plugins[0];
+                }
+            }else{
+                pluginsNode = buildNode.plugins;
+            }
         }
 
         let ccContent = ccc.jacocoMavenPluginEnable(_this.includeFilter, _this.excludeFilter, _this.reportDir);

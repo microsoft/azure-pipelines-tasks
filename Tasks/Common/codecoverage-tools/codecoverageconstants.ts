@@ -197,7 +197,13 @@ export function jacocoMavenPluginEnable(includeFilter: string[], excludeFilter: 
             "destFile": path.join(outputDirectory, "jacoco.exec"),
             "outputDirectory": outputDirectory,
             "dataFile": path.join(outputDirectory, "jacoco.exec"),
-            "append": "true"
+            "append": "true",
+            "includes": [{
+                "include": includeFilter,
+            }],
+            "excludes": [{
+                "exclude": excludeFilter
+            }]
         },
         "executions": {
             "execution": [
@@ -205,10 +211,7 @@ export function jacocoMavenPluginEnable(includeFilter: string[], excludeFilter: 
                     "configuration":
                     {
                         "includes": [{
-                            "include": includeFilter,
-                        }],
-                        "excludes": [{
-                            "exclude": excludeFilter
+                            "include": "**/*",
                         }]
                     },
                     "id": "default-prepare-agent-vsts",
@@ -302,6 +305,19 @@ export function jacocoMavenMultiModuleReport(reportDir: string, srcData: string,
 
 // Enable Cobertura Code Coverage for Maven builds using this props
 export function coberturaMavenEnable(includeFilter: string, excludeFilter: string, aggregate: string): Q.Promise<any> {
+    let includeTag = "";
+    let excludeTag = "";
+    if (!str(excludeFilter).isEmpty()) {
+        excludeFilter.split(",").forEach(ex => {
+            excludeTag += `<exclude>${ex}</exclude>` + os.EOL;
+        });
+    }
+    if (!str(includeFilter).isEmpty()) {
+        includeFilter.split(",").forEach(ex => {
+            includeTag += `<include>${ex}</include>` + os.EOL;
+        });
+    }
+
     let ccProperty = `
     <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -313,8 +329,8 @@ export function coberturaMavenEnable(includeFilter: string, excludeFilter: strin
             <format>html</format>
           </formats>
           <instrumentation>
-            <includes>${includeFilter}</includes>
-            <excludes>${excludeFilter}</excludes>
+            <includes>${includeTag}</includes>
+            <excludes>${excludeTag}</excludes>
           </instrumentation>
           <aggregate>${aggregate}</aggregate>
         </configuration>
@@ -334,7 +350,6 @@ export function coberturaMavenEnable(includeFilter: string, excludeFilter: strin
 
 export function coberturaMavenReport(): Q.Promise<any> {
     let ccProperty = `
-    <reporting>
     <plugins>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -348,7 +363,6 @@ export function coberturaMavenReport(): Q.Promise<any> {
         </configuration>
       </plugin>
     </plugins>
-  </reporting>
   `;
     return util.convertXmlStringToJson(ccProperty);
 }
