@@ -132,6 +132,14 @@ function Get-ConnectionType
     return $connectionType
 }
 
+function Get-Endpoint
+{
+    param([String] [Parameter(Mandatory=$true)] $connectedServiceName)
+
+    $serviceEndpoint = Get-VstsEndpoint -Name "$connectedServiceName"
+    return $serviceEndpoint
+}
+
 function Validate-AzurePowershellVersion
 {
     Write-Verbose "Validating minimum required azure powershell version is greater than or equal to 0.9.0"
@@ -154,15 +162,17 @@ function Validate-AzurePowershellVersion
 function Get-StorageKey
 {
     param([string][Parameter(Mandatory=$true)]$storageAccountName,
-          [string][Parameter(Mandatory=$true)]$connectionType)
+          [string][Parameter(Mandatory=$true)]$connectionType,
+          [string][Parameter(Mandatory=$true)]$connectedServiceName)
 
+    $serviceEndpoint = Get-Endpoint -serviceEndpoint $connectedServiceName
     $storageAccountName = $storageAccountName.Trim()
     if($connectionType -eq 'Certificate' -or $connectionType -eq 'UserNamePassword')
     {
         try
         {
             # getting storage key from RDFE
-            $storageKey = Get-AzureStorageKeyFromRDFE -storageAccountName $storageAccountName
+            $storageKey = Get-AzureStorageKeyFromRDFE -storageAccountName $storageAccountName -endpoint $serviceEndpoint
         }
         catch [Hyak.Common.CloudException]
         {
@@ -184,7 +194,7 @@ function Get-StorageKey
                     Validate-AzurePowershellVersion
 
                     # getting storage account key from ARM endpoint
-                    $storageKey = Get-AzureStorageKeyFromARM -storageAccountName $storageAccountName
+                    $storageKey = Get-AzureStorageKeyFromARM -storageAccountName $storageAccountName -serviceEndpoint $serviceEndpoint
                 }
                 catch
                 {
@@ -210,8 +220,10 @@ function Get-StorageKey
 function Get-blobStorageEndpoint
 {
     param([string][Parameter(Mandatory=$true)]$storageAccountName,
-          [string][Parameter(Mandatory=$true)]$connectionType)
-
+          [string][Parameter(Mandatory=$true)]$connectionType,
+          [string][Parameter(Mandatory=$true)]$connectedServiceName)
+    
+    $endpoint = Get-Endpoint $connectedServiceName
     $storageAccountName = $storageAccountName.Trim()
     if($connectionType -eq 'Certificate' -or $connectionType -eq 'UserNamePassword')
     {
@@ -231,7 +243,7 @@ function Get-blobStorageEndpoint
     else
     {
         # getting storage account key from ARM endpoint
-        $blobStorageEndpoint = Get-AzureBlobStorageEndpointFromARM -storageAccountName $storageAccountName
+        $blobStorageEndpoint = Get-AzureBlobStorageEndpointFromARM -storageAccountName $storageAccountName -endpoint $endpoint
     }
 
     return $blobStorageEndpoint
@@ -751,7 +763,8 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
 {
     param([string]$resourceGroupName,
           [object]$azureRMVMResources,
-          [string]$enableCopyPrerequisites)
+          [string]$enableCopyPrerequisites,
+          [string]$connectedServiceName)
 
     [hashtable]$fqdnMap = @{}
     $winRMHttpsPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
@@ -811,7 +824,7 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
             if ($enableCopyPrerequisites -eq "true")
             {
                 Write-Verbose "Enabling winrm for virtual machine $resourceName" -Verbose
-                Add-AzureVMCustomScriptExtension -resourceGroupName $resourceGroupName -vmId $resourceId -vmName $resourceName -dnsName $resourceFQDN -location $resource.Location
+                Add-AzureVMCustomScriptExtension -resourceGroupName $resourceGroupName -vmId $resourceId -vmName $resourceName -dnsName $resourceFQDN -location $resource.Location -connectedServiceName $connectedServiceName
             }
         }
 
@@ -851,7 +864,8 @@ function Get-AzureVMResourcesProperties
           [string]$connectionType,
           [string]$resourceFilteringMethod,
           [string]$machineNames,
-          [string]$enableCopyPrerequisites)
+          [string]$enableCopyPrerequisites,
+          [string]$connectedServiceName)
 
     $machineNames = $machineNames.Trim()
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($connectionType))
@@ -871,14 +885,14 @@ function Get-AzureVMResourcesProperties
 
                 $azureRMVMResources = Get-AzureRMVMsInResourceGroup -resourceGroupName  $resourceGroupName
                 $filteredAzureRMVMResources = Get-FilteredAzureRMVMsInResourceGroup -azureRMVMResources $azureRMVMResources -resourceFilteringMethod $resourceFilteringMethod -filter $machineNames
-                $azureVMsDetails = Get-AzureRMVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName -azureRMVMResources $filteredAzureRMVMResources -enableCopyPrerequisites $enableCopyPrerequisites
+                $azureVMsDetails = Get-AzureRMVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName -azureRMVMResources $filteredAzureRMVMResources -enableCopyPrerequisites $enableCopyPrerequisites -connectedServiceName $connectedServiceName
             }
         }
         else
         {
             $azureRMVMResources = Get-AzureRMVMsInResourceGroup -resourceGroupName  $resourceGroupName
             $filteredAzureRMVMResources = Get-FilteredAzureRMVMsInResourceGroup -azureRMVMResources $azureRMVMResources -resourceFilteringMethod $resourceFilteringMethod -filter $machineNames
-            $azureVMsDetails = Get-AzureRMVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName -azureRMVMResources $filteredAzureRMVMResources -enableCopyPrerequisites $enableCopyPrerequisites
+            $azureVMsDetails = Get-AzureRMVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName -azureRMVMResources $filteredAzureRMVMResources -enableCopyPrerequisites $enableCopyPrerequisites -connectedServiceName $connectedServiceName
         }
 
         # throw if no azure VMs found in resource group or due to filtering
@@ -1127,7 +1141,8 @@ function Validate-CustomScriptExecutionStatus
 {
     param([string]$resourceGroupName,
           [string]$vmName,
-          [string]$extensionName)
+          [string]$extensionName,
+          [object]$endpoint)
 
     Write-Verbose "Validating the winrm configuration custom script extension status"
 
@@ -1178,7 +1193,7 @@ function Validate-CustomScriptExecutionStatus
 
     if(-not $isScriptExecutionPassed)
     {
-        $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName
+        $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -endpoint $endpoint
         throw (Get-VstsLocString -Key "AFC_SetCustomScriptExtensionFailed" -ArgumentList $extensionName, $vmName, $errMessage)
     }
 
@@ -1189,14 +1204,16 @@ function Is-WinRMCustomScriptExtensionExists
 {
     param([string]$resourceGroupName,
           [string]$vmName,
-          [string]$extensionName)
+          [string]$extensionName,
+          [string]$connectedServiceName)
 
     $isExtensionExists = $true
     $removeExtension = $false
 
     try
     {
-        $customScriptExtension = Get-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName
+        $serviceEndpoint=Get-Endpoint $connectedServiceName
+        $customScriptExtension = Get-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -serviceEndpoint $serviceEndpoint
 
         if($customScriptExtension)
         {
@@ -1208,7 +1225,7 @@ function Is-WinRMCustomScriptExtensionExists
             {
                 try
                 {
-                    Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
+                    Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName -endpoint $serviceEndpoint
                 }
                 catch
                 {
@@ -1228,7 +1245,7 @@ function Is-WinRMCustomScriptExtensionExists
 
     if($removeExtension)
     {
-        $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName
+        $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -endpoint $serviceEndpoint
         $isExtensionExists = $false
     }
 
@@ -1267,7 +1284,8 @@ function Add-AzureVMCustomScriptExtension
           [string]$vmId,
           [string]$vmName,
           [string]$dnsName,
-          [string]$location)
+          [string]$location,
+          [string]$connectedServiceName)
 
     $configWinRMScriptFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/ConfigureWinRM.ps1"
     $makeCertFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/makecert.exe"
@@ -1284,7 +1302,8 @@ function Add-AzureVMCustomScriptExtension
 
     try
     {
-        $isExtensionExists = Is-WinRMCustomScriptExtensionExists -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
+        $endpoint = Get-Endpoint $connectedServiceName
+        $isExtensionExists = Is-WinRMCustomScriptExtensionExists -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName -connectedServiceName $connectedServiceName
         Write-Verbose -Verbose "IsExtensionExists: $isExtensionExists"
 
         if($isExtensionExists)
@@ -1303,11 +1322,11 @@ function Add-AzureVMCustomScriptExtension
         {
             Write-TaskSpecificTelemetry "ENABLEWINRM_ProvisionVmCustomScriptFailed"			
 
-            $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName
+            $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -endpoint $endpoint
             throw (Get-VstsLocString -Key "AFC_UnableToSetCustomScriptExtension" -ArgumentList $extensionName, $vmName, $result.Error.Message)
         }
 
-        Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
+        Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName -endpoint $endpoint
         Add-WinRMHttpsNetworkSecurityRuleConfig -resourceGroupName $resourceGroupName -vmId $vmId -ruleName $ruleName -rulePriotity $rulePriotity -winrmHttpsPort $winrmHttpsPort
     }
     catch

@@ -49,6 +49,7 @@ $azCopyExeLocation = 'AzCopy\AzCopy.exe'
 $azCopyLocation = [System.IO.Path]::GetDirectoryName($azCopyExeLocation)
 
 # Initialize Azure.
+Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 Initialize-Azure
 
@@ -74,7 +75,7 @@ if ($enableDetailedLoggingString -ne "true")
 try
 {
     # Importing required version of azure cmdlets according to azureps installed on machine
-    $azureUtility = Get-AzureUtility
+    $azureUtility = Get-AzureUtility $connectedServiceName
 
     Write-Verbose -Verbose "Loading $azureUtility"
     . "$PSScriptRoot/$azureUtility"
@@ -82,8 +83,12 @@ try
     # Getting connection type (Certificate/UserNamePassword/SPN) used for the task
     $connectionType = Get-ConnectionType -connectedServiceName $connectedServiceName
 
+    if($connectionType -ne "UserNamePassword")
+    {
+        . "$PSScriptRoot\AzureUtilityRest.ps1"
+    }
     # Getting storage key for the storage account based on the connection type
-    $storageKey = Get-StorageKey -storageAccountName $storageAccount -connectionType $connectionType
+    $storageKey = Get-StorageKey -storageAccountName $storageAccount -connectionType $connectionType -connectedServiceName $connectedServiceName
 
     # creating storage context to be used while creating container, sas token, deleting container
     $storageContext = Create-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $storageKey
@@ -96,7 +101,7 @@ try
     }
 	
     # Geting Azure Blob Storage Endpoint
-    $blobStorageEndpoint = Get-blobStorageEndpoint -storageAccountName $storageAccount -connectionType $connectionType
+    $blobStorageEndpoint = Get-blobStorageEndpoint -storageAccountName $storageAccount -connectionType $connectionType -connectedServiceName $connectedServiceName
 }
 catch
 {
@@ -135,7 +140,7 @@ try
 {
     # getting azure vms properties(name, fqdn, winrmhttps port)
     $azureVMResourcesProperties = Get-AzureVMResourcesProperties -resourceGroupName $environmentName -connectionType $connectionType `
-    -resourceFilteringMethod $resourceFilteringMethod -machineNames $machineNames -enableCopyPrerequisites $enableCopyPrerequisites
+    -resourceFilteringMethod $resourceFilteringMethod -machineNames $machineNames -enableCopyPrerequisites $enableCopyPrerequisites -connectedServiceName $connectedServiceName
 
     $skipCACheckOption = Get-SkipCACheckOption -skipCACheck $skipCACheck
     $azureVMsCredentials = Get-AzureVMsCredentials -vmsAdminUserName $vmsAdminUserName -vmsAdminPassword $vmsAdminPassword
