@@ -44,7 +44,7 @@ if (!cwd) {
 }
 tl.cd(cwd);
 
-var gb = tl.createToolRunner(wrapperScript);
+var gb = tl.tool(wrapperScript);
 var javaHomeSelection = tl.getInput('javaHomeSelection', true);
 var specifiedJavaHome = null;
 var ccTool = tl.getInput('codeCoverageTool');
@@ -66,7 +66,7 @@ if (isCodeCoverageOpted && inputTasks.indexOf('clean') == -1) {
     gb.arg('clean'); //if user opts for code coverage, we append clean functionality to make sure any uninstrumented class files are removed
 }
 
-gb.argString(tl.getInput('options', false));
+gb.arg(tl.getInput('options', false));
 gb.arg(inputTasks);
 
 // update JAVA_HOME if user selected specific JDK version or set path manually
@@ -112,22 +112,22 @@ enableCodeCoverage()
 /* Actual execution of Build and further flows*/
 function execBuild() {
     var gradleResult;
-gb.exec()
-    .then(function (code) {
-        gradleResult = code;
-        publishTestResults(publishJUnitResults, testResultsFiles);
-        publishCodeCoverage(isCodeCoverageOpted);
-        return processCodeAnalysisResults();
-    })
-    .then(() => {
-        tl.exit(gradleResult);
-    })
-    .fail(function (err) {
-        publishTestResults(publishJUnitResults, testResultsFiles);
-        console.error(err);
-        tl.debug('taskRunner fail');
-        tl.exit(1);
-    });
+    gb.exec()
+        .then(function (code) {
+            gradleResult = code;
+            publishTestResults(publishJUnitResults, testResultsFiles);
+            publishCodeCoverage(isCodeCoverageOpted);
+            return processCodeAnalysisResults();
+        })
+        .then(() => {
+            tl.exit(gradleResult);
+        })
+        .fail(function (err) {
+            publishTestResults(publishJUnitResults, testResultsFiles);
+            console.error(err);
+            tl.debug('taskRunner fail');
+            tl.exit(1);
+        });
 }
 
 function enableSonarQubeAnalysis() {
@@ -229,9 +229,9 @@ function enableCodeCoverage(): Q.Promise<any> {
 }
 
 function isMultiModuleProject(wrapperScript: string): boolean {
-    var gradleBuild = tl.createToolRunner(wrapperScript);
+    var gradleBuild = tl.tool(wrapperScript);
     gradleBuild.arg("properties");
-    gradleBuild.argString(tl.getInput('options', false));
+    gradleBuild.arg(tl.getInput('options', false));
 
     var data = gradleBuild.execSync().stdout;
     if (typeof data != "undefined" && data) {

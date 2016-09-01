@@ -19,6 +19,7 @@ export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler
     reportDir: string;
     sourceDirs: string;
     classDirs: string;
+    reportBuildFile: string;
 
     // -----------------------------------------------------
     // Enable code coverage for Jacoco Maven Builds
@@ -31,6 +32,7 @@ export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler
         _this.reportDir = ccProps["reportdirectory"];
         _this.sourceDirs = ccProps["sourcedirectories"];
         _this.classDirs = ccProps["classfilesdirectories"];
+        _this.reportBuildFile = ccProps["reportbuildfile"];
 
         let classFilter = ccProps["classfilter"];
         let filter = _this.extractFilters(classFilter);
@@ -83,7 +85,7 @@ export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler
     protected addCodeCoverageNodes(buildJsonContent: any): Q.Promise<any> {
         let _this = this;
         let isMultiModule = false;
-        let pluginsNode = null;
+        let pluginsNode = {};
         let buildNode = null;
 
         if (!buildJsonContent.project.build) {
@@ -92,22 +94,27 @@ export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler
         }
 
         if (!buildJsonContent.project.build || typeof buildJsonContent.project.build === "string") {
-            buildJsonContent.project.build = {};
+            buildNode = {};
+            buildJsonContent.project.build = buildNode;
         }
 
         if (buildJsonContent.project.build instanceof Array) {
-            buildNode = buildJsonContent.project.build[0];
-        } else {
-            buildNode = buildJsonContent.project.build;
+            if(typeof buildJsonContent.project.build[0] === 'string'){
+                buildNode = {};
+                buildJsonContent.project.build[0] = buildNode;
+            }else{
+                buildNode = buildJsonContent.project.build[0];
+            }
         }
 
         if (buildNode.pluginManagement) {
-            if (typeof buildJsonContent.project.build.pluginManagement === "string") {
+            if (typeof buildNode.pluginManagement === "string") {
                 buildNode.pluginManagement = {};
             }
             if (buildNode.pluginManagement instanceof Array) {
                 pluginsNode = buildNode.pluginManagement[0].plugins;
-            } else {
+            }
+            else {
                 pluginsNode = buildNode.pluginManagement.plugins;
             }
         }
@@ -123,13 +130,31 @@ export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler
         return Q.resolve(buildJsonContent);
     }
 
+    private configurePluginNodes(buildNode: any): any{
+        if (buildNode.pluginManagement) {
+            if (typeof buildNode.pluginManagement === "string") {
+                buildNode.pluginManagement = {};
+            }
+            if (buildNode.pluginManagement instanceof Array) {
+                return buildNode.pluginManagement[0].plugins;
+            } else {
+                return buildNode.pluginManagement.plugins;
+            }
+        }
+        else {
+            if (!buildNode.plugins || typeof buildNode.plugins === "string") {
+                buildNode.plugins = {};
+            }
+            return buildNode.plugins;
+        }
+    }
+
     protected createMultiModuleReport(reportDir: string): Q.Promise<any> {
         let _this = this;
         let srcDirs = _this.sourceDirs;
         let classDirs = _this.classDirs;
         let includeFilter = _this.includeFilter.join(",");
         let excludeFilter = _this.excludeFilter.join(",");
-        let reportFile = path.join(path.dirname(_this.buildFile), "report.xml");
 
         if (str(srcDirs).isEmpty()) {
             srcDirs = ".";
@@ -138,7 +163,7 @@ export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler
             classDirs = ".";
         }
 
-        return util.writeFile(reportFile, ccc.jacocoMavenMultiModuleReport(reportDir, srcDirs, classDirs, includeFilter, excludeFilter));
+        return util.writeFile(_this.reportBuildFile, ccc.jacocoMavenMultiModuleReport(reportDir, srcDirs, classDirs, includeFilter, excludeFilter));
     }
 
     protected addCodeCoveragePluginData(pomJson: any): Q.Promise<any> {

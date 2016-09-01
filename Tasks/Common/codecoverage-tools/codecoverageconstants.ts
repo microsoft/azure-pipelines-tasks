@@ -29,15 +29,15 @@ subprojects {
 		
         reports {
             html.enabled = true
-            html.destination "\${buildDir}${path.sep}jacocoHtml"
+            html.destination "\${buildDir}/jacocoHtml"
             xml.enabled = true    
-            xml.destination "\${buildDir}${path.sep}summary.xml"
+            xml.destination "\${buildDir}/summary.xml"
         }
     }
     test {
         jacoco {
             append = true
-            destinationFile = file("${reportDir + path.sep}jacoco.exec")
+            destinationFile = file("${reportDir}/jacoco.exec")
         }
     }
 }
@@ -63,8 +63,8 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
     reports {
         html.enabled = true
         xml.enabled = true    
-        xml.destination "${reportDir + path.sep}summary.xml"
-        html.destination "${reportDir + path.sep}"
+        xml.destination "${reportDir}/summary.xml"
+        html.destination "${reportDir}/"
     }
 }`;
 }
@@ -90,8 +90,8 @@ jacocoTestReport {
     reports {
         html.enabled = true
         xml.enabled = true    
-        xml.destination "${reportDir + path.sep}summary.xml"
-        html.destination "${reportDir + path.sep}"
+        xml.destination "${reportDir}/summary.xml"
+        html.destination "${reportDir}"
     }
 }
 	
@@ -99,7 +99,7 @@ test {
     finalizedBy jacocoTestReport
     jacoco {
         append = true
-        destinationFile = file("${reportDir + path.sep}jacoco.exec")
+        destinationFile = file("${reportDir}/jacoco.exec")
     }
 }`;
 }
@@ -230,6 +230,14 @@ export function jacocoMavenMultiModuleReport(reportDir: string, srcData: string,
     classData.split(",").forEach(c => {
         classNode += `<fileset dir="${c}" includes="${includeFilter}" excludes="${excludeFilter}" />` + os.EOL;
     });
+    let srcNode = "";
+    if(str(srcData).isEmpty()){
+        srcNode = `<fileset dir="." />`
+    } else {
+        srcData.split(",").forEach(c => {
+            srcNode += `<fileset dir="${c}" />` + os.EOL;
+        });
+    }
 
     let report = `<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -265,7 +273,7 @@ export function jacocoMavenMultiModuleReport(reportDir: string, srcData: string,
                       ${classNode}
                     </classfiles>
                     <sourcefiles encoding="UTF-8">
-                      <fileset dir="${srcData}" />
+                      ${srcNode}
                     </sourcefiles>
                   </structure>
                   <html destdir="${reportDir}" />

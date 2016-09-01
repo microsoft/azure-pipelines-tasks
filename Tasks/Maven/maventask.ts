@@ -133,7 +133,7 @@ var userRunFailed: boolean = false;
 var codeAnalysisFailed: boolean = false;
 
 // Setup tool runner that executes Maven only to retrieve its version
-var mvnGetVersion = tl.createToolRunner(mvnExec);
+var mvnGetVersion = tl.tool(mvnExec);
 mvnGetVersion.arg('-version');
 
 configureMavenOpts();
@@ -147,10 +147,10 @@ mvnGetVersion.exec()
     })
     .then(function (code) {
         // Setup tool runner to execute Maven goals
-        var mvnRun = tl.createToolRunner(mvnExec);
+        var mvnRun = tl.tool(mvnExec);
         mvnRun.arg('-f');
-        mvnRun.pathArg(mavenPOMFile);
-        mvnRun.argString(mavenOptions);
+        mvnRun.arg(mavenPOMFile);
+        mvnRun.arg(mavenOptions);
         if (isCodeCoverageOpted && mavenGoals.indexOf('clean') == -1) {
             mvnRun.arg('clean');
         }
@@ -304,15 +304,15 @@ function publishCodeCoverage(isCodeCoverageOpted: boolean) {
         tl.debug("Collecting code coverage reports");
 
         if (ccTool.toLowerCase() == "jacoco") {
-            var mvnReport = tl.createToolRunner(mvnExec);
+            var mvnReport = tl.tool(mvnExec);
             mvnReport.arg('-f');
             if (tl.exist(reportPOMFile)) {
                 // multi module project
-                mvnReport.pathArg(reportPOMFile);
+                mvnReport.arg(reportPOMFile);
                 mvnReport.arg("verify");
             }
             else {
-                mvnReport.pathArg(mavenPOMFile);
+                mvnReport.arg(mavenPOMFile);
                 mvnReport.arg(ccReportTask);
             }
             mvnReport.exec().then(function (code) {

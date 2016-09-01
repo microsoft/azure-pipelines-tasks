@@ -21,7 +21,7 @@ export class CoberturaGradleCodeCoverageEnabler extends cc.CoberturaCodeCoverage
 
         _this.buildFile = ccProps["buildfile"];
         let classFilter = ccProps["classfilter"];
-        let isMultiModule = ccProps["ismultimodule"];
+        let isMultiModule = ccProps["ismultimodule"] && ccProps["ismultimodule"] === "true";
         let classFileDirs = ccProps["classfilesdirectories"];
         let reportDir = ccProps["reportdirectory"];
         let codeCoveragePluginData = null;

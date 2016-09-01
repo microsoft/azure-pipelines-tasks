@@ -11,8 +11,7 @@
     "Build",
     "Release"
   ],
-  "demands": [
-  ],
+  "demands": [],
   "version": {
     "Major": "0",
     "Minor": "1",

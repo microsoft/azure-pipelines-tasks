@@ -295,8 +295,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisIncludeFullReport",
       "groupName": "CodeAnalysis",
       "visibleRule": "sqAnalysisEnabled = true"
-<<<<<<< HEAD
-=======
     },
     {
       "name": "sqAnalysisBreakBuildIfQualityGateFailed",
@@ -307,7 +305,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisBreakBuildIfQualityGateFailed",
       "groupName": "CodeAnalysis",
       "visibleRule": "sqAnalysisEnabled = true"
->>>>>>> releases/m105
     },
     {
       "name": "pmdAnalysisEnabled",

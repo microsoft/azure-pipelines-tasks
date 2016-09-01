@@ -32,6 +32,7 @@ export class CoberturaMavenCodeCoverageEnabler extends cc.CoberturaCodeCoverageE
 
         return util.readXmlFileAsJson(_this.buildFile)
             .then(function (resp) {
+                console.log("Read XML: "+resp);
                 return _this.addCodeCoveragePluginData(resp);
             })
             .thenResolve(true);
@@ -97,13 +98,15 @@ export class CoberturaMavenCodeCoverageEnabler extends cc.CoberturaCodeCoverageE
 
         return Q.allSettled([ccPluginData, reportContent])
             .then(function (resp) {
-                util.addPropToJson(pluginsNode, "plugin", resp[1]);
-                util.addPropToJson(buildJsonContent.project, "reporting", resp[0]);
+                util.addPropToJson(pluginsNode, "plugin", resp[1].value);
+                util.addPropToJson(buildJsonContent.project, "reporting", resp[0].value);
+                console.log("Final buildContent: "+buildJsonContent);
             });
     }
 
     protected addCodeCoveragePluginData(pomJson: any): Q.Promise<void> {
         let _this = this;
+        console.log("Adding coverage plugin data");
         return _this.addCodeCoverageNodes(pomJson)
             .then(function (buildContent) {
                 return util.writeJsonAsXmlFile(_this.buildFile, buildContent);
