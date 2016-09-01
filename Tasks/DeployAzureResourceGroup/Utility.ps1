@@ -915,7 +915,7 @@ function Is-WinRMCustomScriptExtensionExists
     $removeExtension = $false
     try
     {
-        $customScriptExtension = Get-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName
+        $customScriptExtension = Get-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -endpoint $endpoint
 
         if($customScriptExtension)
         {

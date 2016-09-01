@@ -7,10 +7,10 @@ function Get-AzureStorageKeyFromRDFE
 
     if(-not [string]::IsNullOrEmpty($storageAccountName))
     {
-        Write-Verbose "[Azure Call](RDFE)Retrieving storage key for the storage account: $storageAccountName"
-        $storageKeyDetails = Get-AzStorageKey $storageAccountName $endpoint -ErrorAction Stop
+        Write-Verbose "[Azure Call](RDFE)Retrieving storage key for the storage account: $storageAccount"
+        $storageKeyDetails = Get-AzureStorageKey -StorageAccountName $storageAccountName -ErrorAction Stop
         $storageKey = $storageKeyDetails.Primary
-        Write-Verbose "[Azure Call](RDFE)Retrieved storage key successfully for the storage account: $storageAccountName"
+        Write-Verbose "[Azure Call](RDFE)Retrieved storage key successfully for the storage account: $storageAccount"
 
         return $storageKey
     }
@@ -45,46 +45,18 @@ function Get-AzureStorageAccountResourceGroupName
     }
 }
 
-function Get-AzureStorageAccountResourceDetails
-{
-    param([string]$storageAccountName)
-
-    $ARMStorageAccountResourceType =  "Microsoft.Storage/storageAccounts"
-    if (-not [string]::IsNullOrEmpty($storageAccountName))
-    {
-        try
-        {
-            Write-Verbose "[Azure Call]Getting resource details for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType"
-            $azureStorageAccountResourceDetails = (Get-AzureRMResource -ErrorAction Stop) | Where-Object { ($_.ResourceType -eq $ARMStorageAccountResourceType) -and ($_.ResourceName -eq $storageAccountName)}
-            Write-Verbose "[Azure Call]Retrieved resource details successfully for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType"
-            return $azureStorageAccountResourceDetails
-        }
-        finally
-        {
-            if ($azureStorageAccountResourceDetails -eq $null)
-            {
-                Write-Verbose "(ARM)Storage account: $storageAccountName not found"
-
-                Write-TaskSpecificTelemetry "PREREQ_RMStorageAccountNotFound"
-                Throw (Get-VstsLocString -Key "AFC_StorageAccountNotFound" -ArgumentList $storageAccountName)
-            }
-        }
-    }
-}
-
 function Get-AzureStorageKeyFromARM
 {
     param([string]$storageAccountName,
-          [object]$serviceEndpoint)
+          [object]$endpoint)
 
     if (-not [string]::IsNullOrEmpty($storageAccountName))
     {
         # get azure storage account resource group name
         $azureResourceGroupName = Get-AzureStorageAccountResourceGroupName -storageAccountName $storageAccountName
 
-        Write-Verbose "[Azure Call]Retrieving storage key for the storage account: $storageAccount in resource group: $azureResourceid"
-        #$storageKeyDetails = Get-AzureRMStorageAccountKey -ResourceGroupName $azureResourceGroupName -Name $storageAccountName -ErrorAction Stop
-        $storageKeyDetails = Get-AzRMStorageKeys $azureResourceGroupName $storageAccountName $serviceEndpoint
+        Write-Verbose "[Azure Call]Retrieving storage key for the storage account: $storageAccount in resource group: $azureResourceGroupName"
+        $storageKeyDetails = Get-AzureRMStorageAccountKey -ResourceGroupName $azureResourceGroupName -Name $storageAccountName -ErrorAction Stop
         $storageKey = $storageKeyDetails.Key1
         Write-Verbose "[Azure Call]Retrieved storage key successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName"
 
@@ -109,12 +81,13 @@ function Create-AzureStorageContext
 
 function Get-AzureBlobStorageEndpointFromRDFE
 {
-    param([string]$storageAccountName)
+    param([string]$storageAccountName,
+          [object]$endpoint)
 
     if(-not [string]::IsNullOrEmpty($storageAccountName))
     {
         Write-Verbose "[Azure Call](RDFE)Retrieving storage account endpoint for the storage account: $storageAccount"
-        $storageAccountInfo = Get-AzStorageAccount $storageAccountName $endpoint -ErrorAction Stop
+        $storageAccountInfo = Get-AzureStorageAccount -StorageAccountName $storageAccountName -ErrorAction Stop
         $storageAccountEnpoint = $storageAccountInfo.Endpoints[0]
         Write-Verbose "[Azure Call](RDFE)Retrieved storage account endpoint successfully for the storage account: $storageAccount"
 
@@ -130,12 +103,10 @@ function Get-AzureBlobStorageEndpointFromARM
     if(-not [string]::IsNullOrEmpty($storageAccountName))
     {
         # get azure storage account resource group name
-        #$azureResourceGroupDetails = Get-AzRmResourceGroups -endpoint $endpoint
         $azureResourceGroupName = Get-AzureStorageAccountResourceGroupName -storageAccountName $storageAccountName
 
         Write-Verbose "[Azure Call]Retrieving storage account endpoint for the storage account: $storageAccount in resource group: $azureResourceGroupName"
-        #$storageAccountInfo = Get-AzRmStorageAccount $azureResourceGroupDetails $storageAccountName $endpoint
-        $storageAccountInfo = Get-AzRMStorageAccount $azureResourceGroupName $storageAccountName $endpoint -ErrorAction Stop
+        $storageAccountInfo = Get-AzureRMStorageAccount -ResourceGroupName $azureResourceGroupName -Name $storageAccountName -ErrorAction Stop
         $storageAccountEnpoint = $storageAccountInfo.PrimaryEndpoints[0].blob
 	    Write-Verbose "[Azure Call]Retrieved storage account endpoint successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName"
 
@@ -366,8 +337,7 @@ function Get-AzureMachineCustomScriptExtension
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName))
     {
         Write-Host (Get-VstsLocString -Key "AFC_GetCustomScriptExtension" -ArgumentList $name, $vmName)
-        $customScriptExtension = Get-AzRmVmCustomScriptExtension $resourceGroupName $vmName $name $endpoint
-        #$customScriptExtension = Get-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -ErrorAction Stop -Verbose     
+        $customScriptExtension = Get-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -ErrorAction Stop -Verbose     
         Write-Host (Get-VstsLocString -Key "AFC_GetCustomScriptExtensionComplete" -ArgumentList $name, $vmName)
     }
 	
@@ -404,8 +374,7 @@ function Remove-AzureMachineCustomScriptExtension
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName) -and -not [string]::IsNullOrEmpty($name))
     {
         Write-Host (Get-VstsLocString -Key "AFC_RemoveCustomScriptExtension" -ArgumentList $name, $vmName)
-        $response = Remove-AzRmVMCustomScriptExtension $resourceGroupName $vmName $name $endpoint
-        #$response = Remove-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupDetails -VMName $vmName -Name $name -Force -ErrorAction SilentlyContinue -Verbose		
+        $response = Remove-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -Force -ErrorAction SilentlyContinue -Verbose		
         Write-Host (Get-VstsLocString -Key "AFC_RemoveCustomScriptExtensionComplete" -ArgumentList $name, $vmName)
     }
 
