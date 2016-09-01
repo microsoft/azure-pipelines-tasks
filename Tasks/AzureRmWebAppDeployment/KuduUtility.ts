@@ -32,8 +32,8 @@ export async function deployWebAppPackage(webAppPackage: string, virtualApplicat
             break;
         }
     }
-
-    tl.debug(tl.loc("Deployingwebapplicationatvirtualpathandphysicalpath", virtualPath, physicalDeploymentPath));
+	
+    tl.debug(tl.loc("Deployingwebapplicationatvirtualpathandphysicalpath", webAppPackage, virtualPath, physicalDeploymentPath));
 
     var kuduDeploymentURL = "https://" + publishingProfile.publishUrl + "/api/zip/" + physicalDeploymentPath;
     var basicAuthToken = 'Basic ' + new Buffer(publishingProfile.userName + ':' + publishingProfile.userPWD).toString('base64');
@@ -44,10 +44,11 @@ export async function deployWebAppPackage(webAppPackage: string, virtualApplicat
             if (error){
                 deferred.reject(tl.loc("Failedtodeploywebapppackageusingkuduservice",error));
             } else if(response.statusCode === 200) {
-                tl._writeLine(tl.loc("Successfullydeployedusingkuduservice"));
-                deferred.resolve(tl.loc("Successfullydeployedusingkuduservice"))
+                tl._writeLine(tl.loc("Successfullydeployedpackageusingkuduserviceat", webAppPackage, publishingProfile.publishUrl));
+                deferred.resolve(tl.loc("Successfullydeployedpackageusingkuduserviceat", webAppPackage, publishingProfile.publishUrl))
             }
             else {
+                tl.debug("Response :"+ JSON.stringify(response));
                 deferred.reject(tl.loc('Unabletodeploywebappresponsecode', response.statusCode));
             }
     }));
@@ -68,8 +69,8 @@ export async function archiveFolder(webAppPackage:string , webAppZipFile:string 
     var output = fs.createWriteStream(webAppZipFile);
     var archive = archiver('zip');
     output.on('close', function () {
-        console.log(archive.pointer() + ' bytes compressed');
-        deferred.resolve(archive.pointer() + ' bytes compressed');
+        tl.debug(tl.loc("Webappfolderisbeingarchivedtobytescompressed", webAppPackage, webAppZipFile, archive.pointer()))
+        deferred.resolve(tl.loc("Webappfolderisbeingarchivedtobytescompressed", webAppPackage, webAppZipFile, archive.pointer()));
     });
     archive.on('error', function (err) {
         deferred.reject(tl.loc("Unabletopackagecontentoffolder",err));

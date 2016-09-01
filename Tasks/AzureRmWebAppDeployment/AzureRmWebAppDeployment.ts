@@ -69,6 +69,7 @@ async function run() {
             await DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
                             excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments, isParamFilePresentInPackage, isFolderBasedDeployment);
         } else {
+            tl.debug(tl.loc("Initiateddeploymentviakuduserviceforwebapppackage", webDeployPkg));
             var azureWebAppDetails = await azureRmUtil.getAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
             await DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment)
         }
@@ -148,6 +149,7 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
         var webAppZipFile = webDeployPkg;
         if(isFolderBasedDeployment){
             webAppZipFile = tl.getVariable('System.DefaultWorkingDirectory') + randomstring.generate(7) + '.zip';
+            tl.debug(tl.loc("Compressingfolderintozip", webDeployPkg, webAppZipFile));
             await kuduUtility.archiveFolder(webDeployPkg,webAppZipFile);
         }
         await kuduUtility.deployWebAppPackage(webAppZipFile, virtualApplicationMappings, publishingProfile, virtualApplication);

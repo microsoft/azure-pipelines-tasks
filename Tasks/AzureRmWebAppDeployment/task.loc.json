@@ -220,9 +220,12 @@
     "Isparameterfilepresentinwebpackage0": "ms-resource:loc.messages.Isparameterfilepresentinwebpackage0",
     "Requestingconfigdetails": "ms-resource:loc.messages.Requestingconfigdetails",
     "Deployingwebapplicationatvirtualpathandphysicalpath": "ms-resource:loc.messages.Deployingwebapplicationatvirtualpathandphysicalpath",
-    "Successfullydeployedusingkuduservice": "ms-resource:loc.messages.Successfullydeployedusingkuduservice",
+    "Successfullydeployedpackageusingkuduserviceat": "ms-resource:loc.messages.Successfullydeployedpackageusingkuduserviceat",
     "Failedtodeploywebapppackageusingkuduservice": "ms-resource:loc.messages.Failedtodeploywebapppackageusingkuduservice",
     "Unabletodeploywebappresponsecode": "ms-resource:loc.messages.Unabletodeploywebappresponsecode",
-    "Unabletopackagecontentoffolder": "ms-resource:loc.messages.Unabletopackagecontentoffolder"
+    "Unabletopackagecontentoffolder": "ms-resource:loc.messages.Unabletopackagecontentoffolder",
+    "Compressingfolderintozip": "ms-resource:loc.messages.Compressingfolderintozip",
+    "Webappfolderisbeingarchivedtobytescompressed": "ms-resource:loc.messages.Webappfolderisbeingarchivedtobytescompressed",
+    "Initiateddeploymentviakuduserviceforwebapppackage": "ms-resource:loc.messages.Initiateddeploymentviakuduserviceforwebapppackage"
   }
 }
