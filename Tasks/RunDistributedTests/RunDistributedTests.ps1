@@ -24,6 +24,40 @@ Function CmdletHasMember($memberName) {
     return $cmdletParameter
 }
 
+Function ModifyTestSettingsForDeploymentItems() {
+
+    if([System.String]::IsNullOrWhiteSpace($runSettingsFile) -Or ([string]::Compare([io.path]::GetExtension($runSettingsFile), ".runsettings", $True) -eq 0) -Or (Test-Path $runSettingsFile -pathtype container))
+    {
+        Write-Verbose "No modifications to test settings required"
+    }
+    else{
+        if (([string]::Compare([io.path]::GetExtension($runSettingsFile), ".testsettings", $True) -eq 0)) {
+            
+            $runSettingsContent = [System.Xml.XmlDocument](Get-Content $runSettingsFile)
+			$runConfigurationElement = $runSettingsContent.SelectNodes("/*/*/*[local-name()='DeploymentItem']")
+            
+            For ($index=0; $index -lt $runConfigurationElement.Count; $index++)
+            {
+                if (!([string]::IsNullOrEmpty($runConfigurationElement[$index].Attributes["filename"].Value)))
+                {
+                    if (!([io.path]::IsPathRooted($runConfigurationElement[$index].Attributes["filename"].Value)))
+                    {
+                        $runConfigurationElement[$index].Attributes["filename"].Value = [io.path]::Combine($dropLocation, $runConfigurationElement[$index].Attributes["filename"].Value);                        
+                    }
+                }
+                
+            }
+            
+            $tempFile = [io.path]::GetTempFileName()
+            $runSettingsContent.Save($tempFile)
+            Write-Verbose "Temporary runsettings file created at $tempFile"
+            return $tempFile
+        }        
+    }
+
+    return 	$runSettingsFile
+}
+
 Write-Verbose "Entering script RunDistributedTests.ps1"
 Write-Verbose "TestMachineGroup = $testMachineGroup"
 Write-Verbose "Test Drop Location = $dropLocation"
@@ -53,6 +87,9 @@ $unregisterTestAgentScriptLocation = Join-Path -Path $currentDirectory -ChildPat
 $checkTaCompatScriptLocation = Join-Path -Path $currentDirectory -ChildPath "CheckTestAgentCompat.ps1"
 Write-Verbose "UnregisterTestAgent script Path  = $unRegisterTestAgentLocation"
 
+Write-Verbose "Checking test settings for deployment items"
+$runSettingsFile = ModifyTestSettingsForDeploymentItems
+
 Write-Verbose "Calling Invoke-RunDistributedTests"
 
 $checkTestAgentCompatScriptLocationMemberExists  = CmdletHasMember "CheckTestAgentCompatScriptLocation"
@@ -78,7 +115,6 @@ if([int]::TryParse($testConfiguration, [ref]$testConfigurationId)){}
 
 $customSlicingEnabledFlag = $false
 if([bool]::TryParse($customSlicingEnabled, [ref]$customSlicingEnabledFlag)){}
- 
  
 if([string]::Equals($testSelection, "testPlan")) 
 {
