@@ -17,7 +17,7 @@ var archiver = require('archiver');
 export async function deployWebAppPackage(webAppPackage: string, virtualApplicationMappings, publishingProfile,
                              virtualApplication: string) {
 
-	var deferred = Q.defer<any>();	
+    var deferred = Q.defer<any>();	
     // construct URL depending on virtualApplication or root of webapplication 
     var physicalDeploymentPath = "/site/wwwroot";
     var virtualPath = "/";
@@ -42,13 +42,13 @@ export async function deployWebAppPackage(webAppPackage: string, virtualApplicat
             'content-type': 'multipart/form-data'
         } }, function (error, response) {
             if (error){
-				deferred.reject(tl.loc("Failedtodeploywebapppackageusingkuduservice",error));
+                deferred.reject(tl.loc("Failedtodeploywebapppackageusingkuduservice",error));
             } else if(response.statusCode === 200) {
                 tl._writeLine(tl.loc("Successfullydeployedusingkuduservice"));
-				deferred.resolve(tl.loc("Successfullydeployedusingkuduservice"))
+                deferred.resolve(tl.loc("Successfullydeployedusingkuduservice"))
             }
             else {
-				deferred.reject(tl.loc('Unabletodeploywebappresponsecode', response.statusCode));
+                deferred.reject(tl.loc('Unabletodeploywebappresponsecode', response.statusCode));
             }
     }));
     return deferred.promise;
