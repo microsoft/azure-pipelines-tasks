@@ -135,7 +135,8 @@ function Create-AzureResourceGroup
           [string]$csmParametersFile,
           [string]$resourceGroupName,
           [string]$location,
-          [string]$overrideParameters)
+          [string]$overrideParameters,
+          [object]$endpoint)
 
     $csmFileName = [System.IO.Path]::GetFileNameWithoutExtension($csmFile)
 
@@ -146,7 +147,7 @@ function Create-AzureResourceGroup
     if(-not [string]::IsNullOrEmpty($csmFile) -and -not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($location))
     {
         # Create azure resource group
-        Create-AzureResourceGroupIfNotExist -resourceGroupName $resourceGroupName -location $location
+        Create-AzureResourceGroupIfNotExist -resourceGroupName $resourceGroupName -location $location -endpoint $endpoint
 
         # Deploying CSM Template
         $deploymentDetails = Deploy-AzureResourceGroup -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -overrideParameters $overrideParameters
@@ -428,14 +429,15 @@ function Instantiate-Environment
 {
     param([string]$resourceGroupName,
           [string]$outputVariable,
-          [string]$enableDeploymentPrerequisites)
+          [string]$enableDeploymentPrerequisites,
+          [object]$endpoint)
 
     $azureVMResources = Get-AzureClassicVMsInResourceGroup -resourceGroupName $resourceGroupName
     $azureVMsDetails = Get-AzureClassicVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName -azureClassicVMResources $azureVMResources
     if($azureVMsDetails.Count -eq 0)
     {
         $azureVMResources = Get-AzureRMVMsInResourceGroup -resourceGroupName $resourceGroupName
-        $azureVMsDetails = Get-AzureRMVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName -azureRMVMResources $azureVMResources -enableDeploymentPrerequisites $enableDeploymentPrerequisites
+        $azureVMsDetails = Get-AzureRMVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName -azureRMVMResources $azureVMResources -enableDeploymentPrerequisites $enableDeploymentPrerequisites -endpoint $endpoint
         $tagsList = Get-AzureResourcesTags -azureVMResources $azureVMResources -azureVMsDetails $azureVMsDetails
     }
 
@@ -770,7 +772,8 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
 {
     param([string]$resourceGroupName,
           [object]$azureRMVMResources,
-          [string]$enableDeploymentPrerequisites)
+          [string]$enableDeploymentPrerequisites,
+          [object]$endpoint)
 
     [hashtable]$fqdnMap = @{}
     $winRmHttpsPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
@@ -830,7 +833,7 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
             if ($enableDeploymentPrerequisites -eq "true")
             {
                 Write-Verbose "Enabling winrm for virtual machine $resourceName"
-                Add-AzureVMCustomScriptExtension -resourceGroupName $resourceGroupName -vmId $resourceId -vmName $resourceName -dnsName $resourceFQDN -location $resource.Location
+                Add-AzureVMCustomScriptExtension -resourceGroupName $resourceGroupName -vmId $resourceId -vmName $resourceName -dnsName $resourceFQDN -location $resource.Location -endpoint $endpoint
             }
         }
 
@@ -842,7 +845,8 @@ function Validate-CustomScriptExecutionStatus
 {
     param([string]$resourceGroupName,
           [string]$vmName,
-          [string]$extensionName)
+          [string]$extensionName,
+          [object]$endpoint)
 
     Write-Verbose "Validating the winrm configuration custom script extension status"
 
@@ -893,7 +897,7 @@ function Validate-CustomScriptExecutionStatus
 
     if(-not $isScriptExecutionPassed)
     {
-        $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName
+        $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -endpoint $endpoint
         throw (Get-VstsLocString -Key "ARG_SetExtensionFailed" -ArgumentList $extensionName, $vmName, $errMessage)
     }
 
@@ -904,7 +908,8 @@ function Is-WinRMCustomScriptExtensionExists
 {
     param([string]$resourceGroupName,
     [string]$vmName,
-    [string]$extensionName)
+    [string]$extensionName,
+    [object]$endpoint)
 
     $isExtensionExists = $true
     $removeExtension = $false
@@ -914,7 +919,7 @@ function Is-WinRMCustomScriptExtensionExists
 
         if($customScriptExtension)
         {
-            if($customScriptExtension.ProvisioningState -ne "Succeeded")
+            if($customScriptExtension.properties.ProvisioningState -ne "Succeeded")
             {	
                 $removeExtension = $true		    
             }
@@ -922,7 +927,7 @@ function Is-WinRMCustomScriptExtensionExists
             {
                 try
                 {
-                        Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
+                        Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName -endpoint $endpoint
                 }
                 catch
                 {
@@ -942,7 +947,7 @@ function Is-WinRMCustomScriptExtensionExists
 
     if($removeExtension)
     {
-        $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName
+        $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -endpoint $endpoint
         $isExtensionExists = $false
     }
 
@@ -981,7 +986,8 @@ function Add-AzureVMCustomScriptExtension
           [string]$vmId,
           [string]$vmName,
           [string]$dnsName,
-          [string]$location)
+          [string]$location,
+          [object]$endpoint)
 
     $configWinRMScriptFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/ConfigureWinRM.ps1"
     $makeCertFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/makecert.exe"
@@ -998,7 +1004,7 @@ function Add-AzureVMCustomScriptExtension
 
     try
     {
-        $isExtensionExists = Is-WinRMCustomScriptExtensionExists -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
+        $isExtensionExists = Is-WinRMCustomScriptExtensionExists -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName -endpoint $endpoint
         Write-Verbose "IsExtensionExists: $isExtensionExists"
 
         if($isExtensionExists)
@@ -1017,11 +1023,11 @@ function Add-AzureVMCustomScriptExtension
         {
             Write-TaskSpecificTelemetry "ENABLEWINRM_ProvisionVmCustomScriptFailed"
 
-            $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName
+            $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -endpoint $endpoint
             throw (Get-VstsLocString -Key "ARG_SetExtensionFailedForVm" -ArgumentList $extensionName, $vmName, $result.Error.Message)
         }
 
-        Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
+        Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName -endpoint $endpoint
         Add-WinRMHttpsNetworkSecurityRuleConfig -resourceGroupName $resourceGroupName -vmId $vmId -ruleName $ruleName -rulePriotity $rulePriotity -winrmHttpsPort $winrmHttpsPort
     }
     catch
@@ -1035,7 +1041,8 @@ function Add-AzureVMCustomScriptExtension
 
 function Enable-WinRMHttpsListener
 {
-    param([string]$resourceGroupName)
+    param([string]$resourceGroupName,
+          [object]$endpoint)
    
     # Get azurerm vms
     $azureVMResources = Get-AzureRMVMsInResourceGroup -resourceGroupName $resourceGroupName
@@ -1046,5 +1053,5 @@ function Enable-WinRMHttpsListener
     }
 
     # Below call enables the winrm custom script extension
-    $azureVMsDetails = Get-AzureRMVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName -azureRMVMResources $azureVMResources -enableDeploymentPrerequisites $true
+    $azureVMsDetails = Get-AzureRMVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName -azureRMVMResources $azureVMResources -enableDeploymentPrerequisites $true -endpoint $endpoint
 }
