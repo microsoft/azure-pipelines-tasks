@@ -2,7 +2,8 @@
 
 function Get-AzureStorageKeyFromRDFE
 {
-    param([string]$storageAccountName)
+    param([string]$storageAccountName,
+          [object]$endpoint)
 
     if(-not [string]::IsNullOrEmpty($storageAccountName))
     {
@@ -50,7 +51,8 @@ function Get-AzureStorageAccountResourceGroupName
 
 function Get-AzureStorageKeyFromARM
 {
-    param([string]$storageAccountName)
+    param([string]$storageAccountName,
+          [object]$endpoint)
 
     if(-not [string]::IsNullOrEmpty($storageAccountName))
     {
@@ -85,7 +87,8 @@ function Create-AzureStorageContext
 
 function Get-AzureBlobStorageEndpointFromRDFE
 {
-    param([string]$storageAccountName)
+    param([string]$storageAccountName,
+          [object]$endpoint)
 
     if(-not [string]::IsNullOrEmpty($storageAccountName))
     {
@@ -102,7 +105,8 @@ function Get-AzureBlobStorageEndpointFromRDFE
 
 function Get-AzureBlobStorageEndpointFromARM
 {
-    param([string]$storageAccountName)
+    param([string]$storageAccountName,
+          [object]$endpoint)
 
     if(-not [string]::IsNullOrEmpty($storageAccountName))
     {
@@ -348,7 +352,8 @@ function Get-AzureMachineCustomScriptExtension
 {
     param([string]$resourceGroupName,
           [string]$vmName,
-          [string]$name)
+          [string]$name,
+          [object]$endpoint)
 
     Switch-AzureMode AzureResourceManager
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName))
@@ -386,7 +391,8 @@ function Remove-AzureMachineCustomScriptExtension
 {
     param([string]$resourceGroupName,
           [string]$vmName,
-          [string]$name)
+          [string]$name,
+          [object]$endpoint)
 
     Switch-AzureMode AzureResourceManager
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName) -and -not [string]::IsNullOrEmpty($name))

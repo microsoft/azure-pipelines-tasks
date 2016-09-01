@@ -36,7 +36,8 @@ function Get-AzureStorageKeyFromARM
 
 function Get-AzureBlobStorageEndpointFromRDFE
 {
-    param([string]$storageAccountName)
+    param([string]$storageAccountName,
+          [object]$endpoint)
 
     if(-not [string]::IsNullOrEmpty($storageAccountName))
     {

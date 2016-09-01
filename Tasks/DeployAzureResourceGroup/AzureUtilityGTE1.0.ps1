@@ -11,7 +11,7 @@ function Create-AzureResourceGroupIfNotExist
         try
         {
             Write-Verbose "[Azure Resource Manager]Getting resource group:$resourceGroupName"
-            $azureResourceGroup = Get-AzRmResourceGroup $resourceGroupName $endpoint -ErrorAction silentlyContinue
+            $azureResourceGroup = Get-AzureRMResourceGroup -ResourceGroupName $resourceGroupName -ErrorAction silentlyContinue
             Write-Verbose "[Azure Resource Manager]Got resource group:$resourceGroupName"
         }
         catch
@@ -289,12 +289,13 @@ function Get-AzureMachineCustomScriptExtension
 {
     param([string]$resourceGroupName,
           [string]$vmName,
-          [string]$name)
+          [string]$name,
+          [object]$endpoint)
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName))
     {
         Write-Host (Get-VstsLocString -Key "ARG_GettingExtensionStatus" -ArgumentList $name, $vmName)
-        $customScriptExtension = Get-AzRmVmCustomScriptExtension $resourceGroupName $vmName $name $endpoint -ErrorAction Stop -Verbose     
+        $customScriptExtension = Get-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -ErrorAction Stop -Verbose     
         Write-Host (Get-VstsLocString -Key "ARG_GotExtensionStatus" -ArgumentList $name, $vmName)
     }
 	
@@ -325,12 +326,13 @@ function Remove-AzureMachineCustomScriptExtension
 {
     param([string]$resourceGroupName,
           [string]$vmName,
-          [string]$name)
+          [string]$name,
+          [object]$endpoint)
 
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName) -and -not [string]::IsNullOrEmpty($name))
     {
         Write-Host (Get-VstsLocString -Key "ARG_RemovingExtension" -ArgumentList $name, $vmName)
-        $response = Remove-AzRmVMCustomScriptExtension $resourceGroupName $vmName $name $endpoint -Force -ErrorAction SilentlyContinue -Verbose		
+        $response = Remove-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -Force -ErrorAction SilentlyContinue -Verbose		
         Write-Host (Get-VstsLocString -Key "ARG_RemovedExtension" -ArgumentList $name, $vmName)
     }
 

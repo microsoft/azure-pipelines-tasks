@@ -55,7 +55,6 @@ function Get-RoleName($extPath)
 
 function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $connectedServiceName)
 {
-    $endpoint =  Get-VstsEndpoint -Name "$connectedServiceName"
     $diagnosticsConfigurations = @()
     
     $extensionsSearchPath = Split-Path -Parent $extensionsPath
@@ -72,8 +71,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $connectedS
         Write-Host (Get-VstsLocString -Key "Applyinganyconfigureddiagnosticsextensions")
 
         Write-Verbose "Getting the primary AzureStorageKey..."
-        #$primaryStorageKey = (Get-AzureStorageKey -StorageAccountName "$storageAccount").Primary
-        $primaryStorageKey = (Get-AzStorageKey -StorageAccountName "$storageAccount" -endpoint $endpoint).Primary
+        $primaryStorageKey = (Get-AzureStorageKey -StorageAccountName "$storageAccount").Primary
 
         if ($primaryStorageKey)
         {
@@ -101,7 +99,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $connectedS
                         $publicConfigStorageAccountName = $publicConfig.PublicConfig.StorageAccount
                         Write-Verbose "Found PublicConfig.StorageAccount= '$publicConfigStorageAccountName'"
 
-                        $publicConfigStorageKey = Get-AzStorageKey -StorageAccountName $publicConfigStorageAccountName -endpoint $endpoint
+                        $publicConfigStorageKey = Get-AzureStorageKey -StorageAccountName $publicConfigStorageAccountName
                         if ($publicConfigStorageKey)
                         {
                             Write-Verbose "##[command]New-AzureStorageContext -StorageAccountName $publicConfigStorageAccountName -StorageAccountKey <key>"

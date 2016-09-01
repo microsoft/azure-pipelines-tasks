@@ -211,7 +211,7 @@ function Get-StorageKey
         Validate-AzurePowershellVersion
 
         # getting storage account key from ARM endpoint
-        $storageKey = Get-AzureStorageKeyFromARM -storageAccountName $storageAccountName
+        $storageKey = Get-AzureStorageKeyFromARM -storageAccountName $storageAccountName -endpoint $serviceEndpoint
     }
 
     return $storageKey
@@ -230,7 +230,7 @@ function Get-blobStorageEndpoint
         try
         {
             # getting storage key from RDFE
-            $blobStorageEndpoint = Get-AzureBlobStorageEndpointFromRDFE -storageAccountName $storageAccountName
+            $blobStorageEndpoint = Get-AzureBlobStorageEndpointFromRDFE -storageAccountName $storageAccountName -endpoint $endpoint
         }
         catch [Hyak.Common.CloudException]
         {
