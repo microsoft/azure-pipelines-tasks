@@ -99,10 +99,12 @@ function Get-AzureUtility
 
     $AzureVersion099 = New-Object System.Version(0, 9, 9)
     $AzureVersion103 = New-Object System.Version(1, 0, 3)
+    $AzureVersion132 = New-Object System.Version(1, 3, 2)
 
     $azureUtilityVersion098 = "AzureUtilityLTE9.8.ps1"
     $azureUtilityVersion100 = "AzureUtilityGTE1.0.ps1"
     $azureUtilityVersion110 = "AzureUtilityGTE1.1.0.ps1"
+	$azureUtilityRest100 = "AzureUtilityRest.ps1"
 
     if(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion099))
     {
@@ -112,10 +114,14 @@ function Get-AzureUtility
     {
         $azureUtilityRequiredVersion = $azureUtilityVersion100
     }
-    else
+    elseif(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion132))
     {
         $azureUtilityRequiredVersion = $azureUtilityVersion110
     }
+	else
+	{
+	    $azureUtilityRequiredVersion = $azureUtilityRest100
+	}
 
     Write-Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
     return $azureUtilityRequiredVersion
@@ -131,6 +137,7 @@ function Get-ConnectionType
     Write-Verbose "Connection type used is $connectionType"
     return $connectionType
 }
+
 
 function Get-Endpoint
 {
@@ -247,6 +254,41 @@ function Get-blobStorageEndpoint
     }
 
     return $blobStorageEndpoint
+}
+
+function Get-StorageAccountType
+{
+    param([string][Parameter(Mandatory=$true)]$storageAccountName,
+          [string][Parameter(Mandatory=$true)]$connectionType,
+          [string][Parameter(Mandatory=$true)]$connectedServiceName)
+
+    $endpoint = Get-Endpoint $connectedServiceName
+    $storageAccountName = $storageAccountName.Trim()
+    if($connectionType -eq 'Certificate' -or $connectionType -eq 'UserNamePassword')
+    {
+        try
+        {
+            # getting storage account type from RDFE
+            $storageAccountType = Get-AzureStorageAccountTypeFromRDFE -storageAccountName $storageAccountName -endpoint $endpoint
+        }
+        catch [Hyak.Common.CloudException]
+        {
+            $exceptionMessage = $_.Exception.Message.ToString()
+            Write-Verbose "[Azure Call](RDFE) ExceptionMessage: $exceptionMessage"
+            Write-TaskSpecificTelemetry "PREREQ_StorageAccountNotFound"
+            Throw (Get-VstsLocString -Key "AFC_BlobStorageNotFound" -ArgumentList $storageAccountName)
+        }
+    }
+    else
+    {
+        # getting storage account type from ARM endpoint
+        $storageAccountType = Get-AzureStorageAccountTypeFromARM -storageAccountName $storageAccountName -endpoint $endpoint
+    }
+
+	if($storageAccountType -ne $null)
+    {
+        return $storageAccountType.ToString()
+    }
 }
 
 function ThrowError

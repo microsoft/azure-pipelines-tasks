@@ -114,6 +114,41 @@ function Get-AzureBlobStorageEndpointFromARM
     }	
 }
 
+function Get-AzureStorageAccountTypeFromRDFE
+{
+    param([string]$storageAccountName,
+          [object]$endpoint)
+
+    if(-not [string]::IsNullOrEmpty($storageAccountName))
+    {
+        Write-Verbose "[Azure Call](RDFE)Retrieving storage account type for the storage account: $storageAccount"
+        $storageAccountInfo = Get-AzureStorageAccount -StorageAccountName $storageAccountName -ErrorAction Stop
+        $storageAccountType = $storageAccountInfo.AccountType
+        Write-Verbose "[Azure Call](RDFE)Retrieved storage account type successfully for the storage account: $storageAccount"
+
+        return $storageAccountType
+    }
+}
+
+function Get-AzureStorageAccountTypeFromARM
+{
+    param([string]$storageAccountName,
+          [object]$endpoint)
+
+    if(-not [string]::IsNullOrEmpty($storageAccountName))
+    {
+        # get azure storage account resource group name
+        $azureResourceGroupName = Get-AzureStorageAccountResourceGroupName -storageAccountName $storageAccountName
+
+        Write-Verbose "[Azure Call]Retrieving storage account type for the storage account: $storageAccount in resource group: $azureResourceGroupName"
+        $storageAccountInfo = Get-AzureRMStorageAccount -ResourceGroupName $azureResourceGroupName -Name $storageAccountName -ErrorAction Stop
+        $storageAccountType = $storageAccountInfo.AccountType
+	    Write-Verbose "[Azure Call]Retrieved storage account type successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName"
+
+        return $storageAccountType
+    }	
+}
+
 function Create-AzureContainer
 {
     param([string]$containerName,

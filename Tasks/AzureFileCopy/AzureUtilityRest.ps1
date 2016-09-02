@@ -1,3 +1,4 @@
+. "$PSScriptRoot/AzureUtilityGTE1.1.0.ps1"
 Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_
 
 function Get-AzureStorageKeyFromRDFE
