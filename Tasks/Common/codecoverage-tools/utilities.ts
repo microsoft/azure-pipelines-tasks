@@ -10,7 +10,7 @@ import * as tl from "vsts-task-lib/task";
 import * as path from "path";
 import * as str from "string";
 import * as xml2js from "xml2js";
-//import * as fse from "fs-extra";
+import * as fse from "fs-extra";
 
 export interface GetOrCreateResult<T> {
     created: boolean;
@@ -159,7 +159,7 @@ export function writeJsonAsXmlFile(filePath: string, jsonContent: any): Q.Promis
 
 export function writeFile(filePath: string, fileContent: string): Q.Promise<void> {
     console.log("Creating dir if not exists: " + path.dirname(filePath));
-    //fse.mkdirpSync(path.dirname(filePath));
+    fse.mkdirpSync(path.dirname(filePath));
     console.log("Check dir: " + fs.existsSync(path.dirname(filePath)));
     return Q.nfcall<void>(fs.writeFile, filePath, fileContent);
 }

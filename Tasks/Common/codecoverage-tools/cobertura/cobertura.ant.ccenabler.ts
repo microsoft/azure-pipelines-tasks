@@ -90,7 +90,7 @@ export class CoberturaAntCodeCoverageEnabler extends cc.CoberturaCodeCoverageEna
 
     protected createReportFile(reportContent: string): Q.Promise<void> {
         let _this = this;
-        let reportFile = path.join(path.dirname(_this.buildFile), _this.reportDir, _this.reportbuildfile);
+        let reportFile = path.join(path.dirname(_this.buildFile), _this.reportbuildfile);
         return util.writeFile(reportFile, reportContent);
     }
 
@@ -102,7 +102,7 @@ export class CoberturaAntCodeCoverageEnabler extends cc.CoberturaCodeCoverageEna
         }
 
         console.log("Parallel promies");
-        let reportPluginData = ccc.coberturaAntReport(_this.sourceDirs);
+        let reportPluginData = ccc.coberturaAntReport(_this.sourceDirs, path.join(path.dirname(_this.buildFile), _this.reportDir));
         return Q.all([_this.addCodeCoverageNodes(pomJson), _this.createReportFile(reportPluginData)]);
     }
 
@@ -134,27 +134,36 @@ export class CoberturaAntCodeCoverageEnabler extends cc.CoberturaCodeCoverageEna
 
     protected enableForking(targetNode: any) {
         let _this = this;
-        let coberturaNode = ccc.coberturaAntInstrumentedClasses();
+        let coberturaNode = ccc.coberturaAntInstrumentedClasses(path.dirname(_this.buildFile), _this.reportDir);
         coberturaNode.fileset = _this.getClassData();
         let testNodes = ["junit", "java", "testng", "batchtest"];
+
+        if (targetNode.javac) {
+            if(targetNode.javac instanceof Array){
+                targetNode.javac.forEach(jn => {
+                    jn.$.debug = "true";
+                });
+            }
+        }
 
         testNodes.forEach(tn => {
             if (!targetNode[tn]) {
                 return;
             }
 
+            let tempNodeString = null;
             let node = targetNode[tn];
             _this.enableForkOnTestNodes(node, true);
             if (node instanceof Array) {
                 node.forEach(n => {
-                    ccc.coberturaAntProperties(n);
+                    ccc.coberturaAntProperties(n, _this.reportDir, path.dirname(_this.buildFile));
                 });
             } else {
-                ccc.coberturaAntProperties(node);
+                ccc.coberturaAntProperties(node, _this.reportDir, path.dirname(_this.buildFile));
             }
+            
+            targetNode["cobertura-instrument"] = coberturaNode;
         });
-
-        targetNode["cobertura-instrument"] = coberturaNode;
     }
 
     protected enableForkOnTestNodes(testNode: any, enableForkMode: boolean) {

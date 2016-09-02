@@ -400,7 +400,7 @@ export function jacocoAntCoverageEnable(): any {
     };
 }
 
-export function coberturaAntReport(srcDir: string): string {
+export function coberturaAntReport(srcDir: string, reportDir: string): string {
     return `<?xml version="1.0"?>
 <project name="CoberturaReport">
   <property environment="env" />
@@ -412,8 +412,8 @@ export function coberturaAntReport(srcDir: string): string {
   </path>
   <taskdef classpathref="cobertura-classpath" resource="tasks.properties" />
   <target name="CodeCoverage_9064e1d0">
-    <cobertura-report format="html" destdir="ReportDirectory75C12DBC" datafile="ReportDirectory75C12DBC${path.sep}cobertura.ser" srcdir="${srcDir}" />
-    <cobertura-report format="xml" destdir="ReportDirectory75C12DBC" datafile="ReportDirectory75C12DBC${path.sep}cobertura.ser" srcdir="${srcDir}" />
+    <cobertura-report format="html" destdir="${reportDir}" datafile="${reportDir + path.sep}cobertura.ser" srcdir="${srcDir}" />
+    <cobertura-report format="xml" destdir="${reportDir}" datafile="${reportDir + path.sep}cobertura.ser" srcdir="${srcDir}" />
   </target>
 </project>
     `;
@@ -461,37 +461,38 @@ export function coberturaAntCoverageEnable(buildJsonContent: any): void {
     util.addPropToJson(buildJsonContent, "taskdef", taskdefNode);
 }
 
-export function coberturaAntInstrumentedClasses(): any {
+export function coberturaAntInstrumentedClasses(baseDir: string, reportDir: string): any {
     let ccProperty = {
         $: {
-            todir: "${basedir}" + path.sep + "InstrumentedClasses",
-            datafile: "${basedir}" + path.sep + "ReportDirectory75C12DBC" + path.sep + "cobertura.ser"
+            todir: path.join(baseDir, "InstrumentedClasses"),
+            datafile: path.join(baseDir, reportDir, "cobertura.ser")
         },
         fileset: []
     };
     return ccProperty;
 }
 
-export function coberturaAntProperties(node: any): any {
+export function coberturaAntProperties(node: any, reportDir: string, baseDir: string): any {
     node.sysproperty = {
         $: {
             key: "net.sourceforge.cobertura.datafile",
-            file: "${basedir}" + path.sep + "ReportDirectory75C12DBC" + path.sep + "cobertura.ser"
+            file: path.join(baseDir, reportDir, "cobertura.ser")
         }
     };
 
-    node.classpath = [
+    let classpath = [
         {
             $: {
-                location: "${basedir}" + path.sep + "InstrumentedClasses",
-            }
-        },
-        {
-            $: {
-                refid: "cobertura-classpath"
+                location: path.join(baseDir, "InstrumentedClasses"),
             }
         }
     ];
+
+    if (node.classpath && node.classpath instanceof Array) {
+        node.classpath = classpath.concat(node.classpath);
+    } else {
+        node.classpath = classpath;
+    }
 }
 
 // Gradle Coberutra plugin
