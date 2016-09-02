@@ -264,7 +264,10 @@ function Get-StorageAccountType
         $storageAccountType = Get-AzureStorageAccountTypeFromARM -storageAccountName $storageAccountName
     }
 
-    return $storageAccountType
+	if($storageAccountType -ne $null)
+    {
+        return $storageAccountType.ToString()
+    }
 }
 
 function ThrowError

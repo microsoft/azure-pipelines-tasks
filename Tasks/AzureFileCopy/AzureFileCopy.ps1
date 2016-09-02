@@ -111,8 +111,9 @@ catch
     throw
 }
 
-if(-not [string]::IsNullOrEmpty($storageAccountType) -and $storageAccountType.StartsWith('Premium'))
+if(-not [string]::IsNullOrEmpty($storageAccountType) -and $storageAccountType.Contains('Premium'))
 {
+    Write-Verbose "Setting BlobType to page for Premium Storage account."
     $uploadAdditionalArguments = $additionalArguments + " /BlobType: page"
 }
 else
