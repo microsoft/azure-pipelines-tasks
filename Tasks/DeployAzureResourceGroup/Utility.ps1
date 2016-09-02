@@ -98,8 +98,18 @@ function Check-AzureRMInstalled
     }
 }
 
-function Get-AzureUtility (Parameter(Mandatory=$true)]$connectedServiceName)
+function Get-Endpoint
 {
+    param([String] [Parameter(Mandatory=$true)] $connectedServiceName)
+
+    $serviceEndpoint = Get-VstsEndpoint -Name "$connectedServiceName"
+    return $serviceEndpoint
+}
+
+function Get-AzureUtility 
+{
+    param([string] $connectedServiceName)
+
     $currentVersion =  Get-AzureCmdletsVersion
     Write-Verbose "Installed Azure PowerShell version: $currentVersion"
 
@@ -122,7 +132,7 @@ function Get-AzureUtility (Parameter(Mandatory=$true)]$connectedServiceName)
 		return $azureUtilityVersion100
     }
 	
-	$endpoint = Get-ConnectionType $connectedServiceName
+	$endpoint = Get-Endpoint $connectedServiceName
 	if(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion132) -or ($endpoint.Auth.Scheme -eq "UserNamePassword"))
     {
         return $azureUtilityVersion110
