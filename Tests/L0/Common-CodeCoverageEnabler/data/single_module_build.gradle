@@ -1,0 +1,10 @@
+repositories {
+	mavenCentral()
+}
+
+apply plugin: 'java'
+
+dependencies {
+	compile 'log4j:log4j:1.2.17'
+	compile 'junit:junit:4.11'
+}
