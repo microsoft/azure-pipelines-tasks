@@ -36,6 +36,7 @@ try {
     var runInParallel: boolean = tl.getBoolInput('runInParallel');
     var tiaEnabled = tl.getVariable('tia.enabled');
     var fileLevel = tl.getVariable('tia.filelevel');
+    var tiaRebaseLimit = tl.getVariable('tia.rebaselimit');
     var sourcesDir = tl.getVariable('build.sourcesdirectory');
 
     tl._writeLine("##vso[task.logissue type=warning;TaskName=VSTest]");
@@ -216,9 +217,9 @@ function publishCodeChanges(): Q.Promise<string> {
     var elapsedTime: number;
     var defer = Q.defer<string>();
 
-    if (!fileLevel)
-    {
-        fileLevel = "true";
+    var newprovider = "true";
+    if (getTIALevel() == 'method') {
+        newprovider = "false";
     }
 
     var selectortool = tl.createToolRunner(getTestSelectorLocation());
@@ -229,7 +230,10 @@ function publishCodeChanges(): Q.Promise<string> {
     selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
     selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
     selectortool.arg("/SourcesDir:" + sourcesDir);
-    selectortool.arg("/newprovider:" + fileLevel.toUpperCase());
+    selectortool.arg("/newprovider:" + newprovider);
+    if (tiaRebaseLimit) {
+        selectortool.arg("/RebaseLimit:" + tiaRebaseLimit);
+    }
 
     selectortool.exec()
         .then(function(code) {
@@ -282,7 +286,12 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
             .then(function(status) {
                 generateResponseFile()
                     .then(function (responseFile) {
-                        if (isNonEmptyResponseFile(responseFile)) {
+                        if (responseContainsNoTests(responseFile)) {
+                            tl.debug("No tests impacted. Not running any tests.");
+                            tl.debug("Deleting the response file " + responseFile)
+                            tl.rmRF(responseFile, true);
+                        }
+                        else if (isNonEmptyResponseFile(responseFile)) {
                             updateResponseFile(getVstestArguments(settingsFile, true), responseFile)
                                 .then(function (updatedFile) {
                                     executeVstest(testResultsDirectory, settingsFile, vsVersion, ["@" + updatedFile])
@@ -313,17 +322,25 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                 });
                         }
                         else {
-                            tl.debug("Empty response file detected. All tests will be executed.");
-                            executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
-                                .then(function (code) {
-                                    defer.resolve(code);
+                            tl.debug("Rebasing. All tests will be executed.");
+
+                            setupSettingsFileForTestImpact(vsVersion, settingsFile)
+                                .then(function (runSettingswithTestImpact) {
+                                    executeVstest(testResultsDirectory, runSettingswithTestImpact, vsVersion, getVstestArguments(runSettingswithTestImpact, false))
+                                        .then(function (code) {
+                                            defer.resolve(code);
+                                        })
+                                        .fail(function (code) {
+                                            defer.resolve(code);
+                                        })
+                                        .finally(function () {
+                                            tl.debug("Deleting the response file " + responseFile)
+                                            tl.rmRF(responseFile, true);
+                                        });
                                 })
-                                .fail(function (code) {
-                                    defer.resolve(code);
-                                })
-                                .finally(function () {
-                                    tl.debug("Deleting the response file " + responseFile)
-                                    tl.rmRF(responseFile, true);
+                                .fail(function (err) {
+                                    tl.error(err);
+                                    defer.resolve(1);
                                 });
                         }
                     })
@@ -373,28 +390,21 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
         .then(function (overriddenSettingsFile) {
             locateVSVersion()
                 .then(function (vsVersion) {
-                    setupSettingsFileForTestImpact(vsVersion, overriddenSettingsFile)
-                        .then(function (runSettingswithTestImpact) {
-                            setRunInParallellIfApplicable(vsVersion);
-                            setupRunSettingsFileForParallel(runInParallel, runSettingswithTestImpact)
-                                .then(function (parallelRunSettingsFile) {
-                                    runVStest(testResultsDirectory, parallelRunSettingsFile, vsVersion)
-                                        .then(function (code) {
-                                            defer.resolve(code);
-                                        })
-                                        .fail(function (code) {
-                                            defer.resolve(code);
-                                        });
-                                })
-                                .fail(function (err) {
-                                    tl.error(err);
-                                    defer.resolve(1);
-                                });
-                        })
-                        .fail(function (err) {
-                            tl.error(err);
-                            defer.resolve(1);
-                        });
+                        setRunInParallellIfApplicable(vsVersion);
+                        setupRunSettingsFileForParallel(runInParallel, overriddenSettingsFile)
+                            .then(function (parallelRunSettingsFile) {
+                                runVStest(testResultsDirectory, parallelRunSettingsFile, vsVersion)
+                                    .then(function (code) {
+                                        defer.resolve(code);
+                                    })
+                                    .fail(function (code) {
+                                        defer.resolve(code);
+                                    });
+                            })
+                            .fail(function (err) {
+                                tl.error(err);
+                                defer.resolve(1);
+                            });
                 })
                 .fail(function (err) {
                     tl.error(err);
@@ -1075,6 +1085,20 @@ function isNonEmptyResponseFile(responseFile: string): boolean {
     return false;
 }
 
+function responseContainsNoTests(responseFile: string): Q.Promise<boolean> {
+    var defer = Q.defer<boolean>();    
+    if (pathExistsAsFile(responseFile)) {                        
+        readFileContents(responseFile, "utf-8")
+            .then(function (responseFileContents) {                
+                if (responseFileContents == "/Tests:") {                    
+                    defer.resolve(true);
+                }                
+            });
+    }    
+    defer.resolve(false);
+    return defer.promise;
+}
+
 function isTiaAllowed(): boolean {
     if (tiaEnabled && tiaEnabled.toUpperCase() == "TRUE" && getTestSelectorLocation()) {
         return true;
@@ -1084,8 +1108,8 @@ function isTiaAllowed(): boolean {
 
 function getTIALevel()
 {
-    if (fileLevel && fileLevel.toUpperCase() == "TRUE") {
-        return "file";
+    if (fileLevel && fileLevel.toUpperCase() == "FALSE") {
+        return "method";
     }
-    return "method";
+    return "file";
 }
