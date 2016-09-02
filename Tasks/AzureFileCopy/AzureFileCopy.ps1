@@ -111,7 +111,7 @@ catch
     throw
 }
 
-if(-not [string]::IsNullOrEmpty($storageAccountType) -and $storageAccountType.ToLower().StartsWith('premium'))
+if(-not [string]::IsNullOrEmpty($storageAccountType) -and $storageAccountType.StartsWith('Premium'))
 {
     $uploadAdditionalArguments = $additionalArguments + " /BlobType: page"
 }
