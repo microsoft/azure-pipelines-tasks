@@ -92,7 +92,7 @@ try
 {
     Validate-AzurePowerShellVersion
 
-    $azureUtility = Get-AzureUtility
+    $azureUtility = Get-AzureUtility "$connectedServiceName"
     Write-Verbose "Loading $azureUtility"
     . "$PSScriptRoot\$azureUtility"
 

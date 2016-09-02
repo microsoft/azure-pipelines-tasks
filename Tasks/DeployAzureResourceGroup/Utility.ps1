@@ -98,35 +98,37 @@ function Check-AzureRMInstalled
     }
 }
 
-function Get-AzureUtility
+function Get-AzureUtility (Parameter(Mandatory=$true)]$connectedServiceName)
 {
     $currentVersion =  Get-AzureCmdletsVersion
-    Write-Verbose "Azure PowerShell version: $currentVersion"
+    Write-Verbose "Installed Azure PowerShell version: $currentVersion"
 
     $AzureVersion099 = New-Object System.Version(0, 9, 9)
     $AzureVersion103 = New-Object System.Version(1, 0, 3)
+    $AzureVersion132 = New-Object System.Version(1, 3, 2)
 
     $azureUtilityVersion098 = "AzureUtilityLTE9.8.ps1"
     $azureUtilityVersion100 = "AzureUtilityGTE1.0.ps1"
     $azureUtilityVersion110 = "AzureUtilityGTE1.1.0.ps1"
+	$azureUtilityRest100 = "AzureUtilityRest.ps1"
 
     if(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion099))
     {
-        $azureUtilityRequiredVersion = $azureUtilityVersion098
+		return $azureUtilityVersion098
     }
-    elseif(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion103))
+	
+    if(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion103))
     {
-        Check-AzureRMInstalled
-        $azureUtilityRequiredVersion = $azureUtilityVersion100
+		return $azureUtilityVersion100
     }
-    else
+	
+	$endpoint = Get-ConnectionType $connectedServiceName
+	if(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion132) -or ($endpoint.Auth.Scheme -eq "UserNamePassword"))
     {
-        Check-AzureRMInstalled
-        $azureUtilityRequiredVersion = $azureUtilityVersion110
+        return $azureUtilityVersion110
     }
-
-    Write-Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
-    return $azureUtilityRequiredVersion
+	
+    return $azureUtilityRest100
 }
 
 function Create-AzureResourceGroup
