@@ -26,14 +26,9 @@ Function CmdletHasMember($memberName) {
 
 Function ModifyTestSettingsForDeploymentItems() {
 
-    if([System.String]::IsNullOrWhiteSpace($runSettingsFile) -Or ([string]::Compare([io.path]::GetExtension($runSettingsFile), ".runsettings", $True) -eq 0) -Or (Test-Path $runSettingsFile -pathtype container))
+    if(!([System.String]::IsNullOrWhiteSpace($runSettingsFile)) -And !(Test-Path $runSettingsFile -pathtype container) -And ([string]::Compare([io.path]::GetExtension($runSettingsFile), ".testsettings", $True) -eq 0))
     {
-        Write-Verbose "No modifications to test settings required"
-    }
-    else{
-        if (([string]::Compare([io.path]::GetExtension($runSettingsFile), ".testsettings", $True) -eq 0)) {
-            
-            $runSettingsContent = [System.Xml.XmlDocument](Get-Content $runSettingsFile)
+        $runSettingsContent = [System.Xml.XmlDocument](Get-Content $runSettingsFile)
 			$runConfigurationElement = $runSettingsContent.SelectNodes("/*/*/*[local-name()='DeploymentItem']")
             
             For ($index=0; $index -lt $runConfigurationElement.Count; $index++)
@@ -52,8 +47,8 @@ Function ModifyTestSettingsForDeploymentItems() {
             $runSettingsContent.Save($tempFile)
             Write-Verbose "Temporary runsettings file created at $tempFile"
             return $tempFile
-        }        
-    }
+        
+    }    
 
     return 	$runSettingsFile
 }
@@ -207,4 +202,10 @@ else
             throw
         }
     }
+}
+
+if (([string]::Compare([io.path]::GetExtension($runSettingsFile), ".tmp", $True) -eq 0))
+{
+    Write-Host "Removing temp settings file"
+    Remove-Item $runSettingsFile
 }
