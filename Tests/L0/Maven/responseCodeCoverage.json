@@ -71,7 +71,8 @@
         "JAVA_HOME_8_X86": "/user/local/bin/Java8",
         "agent.buildDirectory": "/user/build",
         "ENDPOINT_URL_ID1": "http://sonarqubeserver:9000",
-        "ENDPOINT_AUTH_ID1": "{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}"
+        "ENDPOINT_AUTH_ID1": "{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}",
+        "Agent.Version": "2.105.3"
     },
     "find": {
         "/user/build": [

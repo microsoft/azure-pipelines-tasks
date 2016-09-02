@@ -192,7 +192,8 @@ mvnGetVersion.exec()
     })
     .then(function () {
         // 5. Always publish test results even if tests fail, causing this task to fail.
-        if (publishJUnitResults == 'true') {
+        if (publishJUnitResults == 'true' &&
+            agentIs2_105OrLater("Publishing test results from the Maven task requires agent version 2.105.0 or later.")) {
             publishJUnitTestResults(testResultsFiles);
         }
         publishCodeCoverage(isCodeCoverageOpted);
@@ -216,6 +217,18 @@ function configureMavenOpts() {
         process.env['MAVEN_OPTS'] = mavenOptsValue;
         tl.debug(`MAVEN_OPTS is now set to ${mavenOptsValue}`);
     }
+}
+
+// Determines whether the agent is version 2.105.0 or later
+function agentIs2_105OrLater(warningIfFalse: string) : boolean {
+    var agentVersion: string = tl.getVariable('Agent.Version');
+    if (!agentVersion || !agentVersion.startsWith("2.105.")) {
+        if (warningIfFalse) {
+            tl.warning(warningIfFalse);
+        }
+        return false;
+    }
+    return true;
 }
 
 // Publishes JUnit test results from files matching the specified pattern.
@@ -299,7 +312,8 @@ function enableCodeCoverage() {
 }
 
 function publishCodeCoverage(isCodeCoverageOpted: boolean) {
-    if (isCodeCoverageOpted) {
+    if (isCodeCoverageOpted &&
+        agentIs2_105OrLater("Publishing code coverage results from the Maven task requires agent version 2.105.0 or later.")) {
         tl.debug("Collecting code coverage reports");
 
         if (ccTool.toLowerCase() == "jacoco") {

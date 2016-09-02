@@ -16,8 +16,21 @@ function pathExistsAsFile(path: string) {
     }
 }
 
+// Determines whether the agent is version 2.105.0 or later
+function agentIs2_105OrLater(warningIfFalse: string) : boolean {
+    var agentVersion: string = tl.getVariable('Agent.Version');
+    if (!agentVersion || !agentVersion.startsWith("2.105.")) {
+        if (warningIfFalse) {
+            tl.warning(warningIfFalse);
+        }
+        return false;
+    }
+    return true;
+}
+
 function publishTestResults(publishJUnitResults, testResultsFiles: string) {
-    if (publishJUnitResults == 'true') {
+    if (publishJUnitResults == 'true' &&
+        agentIs2_105OrLater("Publishing test results from the Ant task requires agent version 2.105.0 or later.")) {
         //check for pattern in testResultsFiles
         if (testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
             tl.debug('Pattern found in testResultsFiles parameter');
@@ -118,7 +131,8 @@ async function doWork() {
     }
 
     function publishCodeCoverage(codeCoverageOpted: boolean) {
-        if (codeCoverageOpted) {
+        if (codeCoverageOpted &&
+            agentIs2_105OrLater("Publishing code coverage results from the Ant task requires agent version 2.105.0 or later.")) {
             tl.debug("Collecting code coverage reports");
             var antRunner = tl.tool(anttool);
             antRunner.arg('-buildfile');
@@ -264,7 +278,6 @@ async function doWork() {
         tl._writeError(e);
         tl.setResult(tl.TaskResult.Failed, e.message);
     }
-
 }
 
 doWork();

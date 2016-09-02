@@ -120,7 +120,7 @@ describe('ANT Suite', function() {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
         tr.setInput('antHomeUserInputPath', '/usr/local/bin/ANT2'); // Make that checkPath returns true for this filename in the response file
-		
+
         tr.run()
             .then(() => {
                 assert(tr.ran('/usr/local/bin/ANT -version'), 'it should have run ANT -version');
@@ -357,8 +357,8 @@ describe('ANT Suite', function() {
     })
 
     it('Ant calls enable code coverage but not publish code coverage when summary file is not generated.', (done) => {
-        setResponseFile('antGood.json');
-        // antGood.json doesnt mock the stat for summary file.
+        setResponseFile('antGood.json'); // antGood.json doesn't mock the stat for summary file
+
         var tr = new trm.TaskRunner('Ant');
         tr.setInput('antBuildFile', '/build/build.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('javaHomeSelection', 'JDKVersion');
@@ -366,7 +366,7 @@ describe('ANT Suite', function() {
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
         tr.setInput('codeCoverageTool', 'JaCoCo');
         tr.setInput('classFilesDirectories', 'class1');
-
+        
         tr.run()
             .then(() => {
                 assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=\/build\/build.xml;classfilesdirectories=class1;summaryfile=coverage.xml;reportdirectory=\\build\\CCReport43F6D5EF;ccreporttask=CodeCoverage_9064e1d0;reportbuildfile=\\build\\CCReportBuildA4D283EG.xml;buildtool=Ant;codecoveragetool=JaCoCo;\]/) >= 0 || tr.stdout.search(/##vso\[codecoverage.enable buildfile=\/build\/build.xml;classfilesdirectories=class1;summaryfile=coverage.xml;reportdirectory=\/build\/CCReport43F6D5EF;ccreporttask=CodeCoverage_9064e1d0;reportbuildfile=\/build\/CCReportBuildA4D283EG.xml;buildtool=Ant;codecoveragetool=JaCoCo;\]/) >= 0, 'should have called enable code coverage.');
