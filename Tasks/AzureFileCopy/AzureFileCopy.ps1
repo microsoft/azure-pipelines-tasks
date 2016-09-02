@@ -101,6 +101,7 @@ try
 	
     # Geting Azure Storage Account type
     $storageAccountType = Get-StorageAccountType -storageAccountName $storageAccount -connectionType $connectionType -connectedServiceName $connectedServiceName
+    Write-Verbose "Obtained Storage Account type: $storageAccountType"
 
 }
 catch
@@ -116,7 +117,7 @@ catch
 if(-not [string]::IsNullOrEmpty($storageAccountType) -and $storageAccountType.Contains('Premium'))
 {
     Write-Verbose "Setting BlobType to page for Premium Storage account."
-    $uploadAdditionalArguments = $additionalArguments + " /BlobType: page"
+    $uploadAdditionalArguments = $additionalArguments + " /BlobType:page"
 }
 else
 {
