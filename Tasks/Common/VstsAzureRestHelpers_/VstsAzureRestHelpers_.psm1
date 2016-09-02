@@ -48,7 +48,7 @@ function Get-SpnAccessToken {
     $principalId = $endpoint.Auth.Parameters.ServicePrincipalId
     $tenantId = $endpoint.Auth.Parameters.TenantId
     $principalKey = $endpoint.Auth.Parameters.ServicePrincipalKey
-
+    
     # Prepare contents for POST
     $method = "POST"
     $authUri = "https://login.windows.net/$tenantId/oauth2/token"
@@ -61,11 +61,11 @@ function Get-SpnAccessToken {
     
     # Call Rest API to fetch AccessToken
     Write-Verbose "Fetching Access Token"
-
+    
     try
     {
         $proxyUri = Get-ProxyUri $authUri
-        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $authUri))
         {
             Write-Verbose "No proxy settings"
             $accessToken = Invoke-RestMethod -Uri $authUri -Method $method -Body $body -ContentType $script:formContentType
@@ -324,11 +324,12 @@ function Get-AzRMStorageKeys
     try
     {
         $accessToken = Get-SpnAccessToken $endpoint
+
         $resourceGroupDetails = Get-AzRmResourceGroup $resourceGroupName $endpoint
         $resourceGroupId = $resourceGroupDetails.id
 
         $method = "POST"
-        $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Storage/storageAccounts/$storageAccountName/listKeys\?api-version=2015-06-15"
+        $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Storage/storageAccounts/$storageAccountName/listKeys" + '?api-version=2015-06-15'
 
         $headers = @{"x-ms-client-request-id"="d5b6a13d-7fa4-43fd-b912-a83a37221815"}
         $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
@@ -370,7 +371,7 @@ function Get-AzRmVmCustomScriptExtension
         $resourceGroupId = $resourceGroupDetails.id
 
         $method="GET"
-        $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Compute/virtualMachines/$vmName/extensions/$Name\?api-version=2016-03-30"
+        $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Compute/virtualMachines/$vmName/extensions/$Name" + '?api-version=2016-03-30'
 
         $headers = @{"x-ms-client-request-id"="5cbea21e-5ef3-41a1-ad99-38f877af3f93"}
         $headers.Add("accept-language", "en-US")
@@ -413,7 +414,7 @@ function Remove-AzRmVmCustomScriptExtension
         $resourceGroupId = $resourceGroupDetails.id
 
         $method="DELETE"
-        $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Compute/virtualMachines/$vmName/extensions/$Name\?api-version=2016-03-30"
+        $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Compute/virtualMachines/$vmName/extensions/$Name" + '?api-version=2016-03-30'
 
         $headers = @{"x-ms-client-request-id"="f6c57f61-2003-4b56-a34c-d8d41a345f2d"}
         $headers.Add("accept-language", "en-US")
@@ -548,7 +549,7 @@ function Get-AzRmResourceGroup
         $subscriptionId = $endpoint.Data.SubscriptionId
 
         $method="GET"
-        $uri = "$script:azureRmUri/subscriptions/$subscriptionId/resourceGroups\?api-version=2016-02-01"
+        $uri = "$script:azureRmUri/subscriptions/$subscriptionId/resourceGroups" + '?api-version=2016-02-01'
 
         $headers = @{"x-ms-client-request-id"="f18eb0d7-20c2-44b9-af30-21dab6afbcde"}
         $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
