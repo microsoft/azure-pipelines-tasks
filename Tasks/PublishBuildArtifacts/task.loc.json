@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 36
+    "Patch": 37
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",
@@ -63,8 +63,7 @@
     }
   },
   "messages": {
-    "PublishBuildArtifactsFailed": "ms-resource:loc.messages.PublishBuildArtifactsFailed",
-    "SkippingCopy": "ms-resource:loc.messages.SkippingCopy",
-    "UncPathRequired": "ms-resource:loc.messages.UncPathRequired"
+    "ErrorFileShareLinux": "ms-resource:loc.messages.ErrorFileShareLinux",
+    "PublishBuildArtifactsFailed": "ms-resource:loc.messages.PublishBuildArtifactsFailed"
   }
 }
