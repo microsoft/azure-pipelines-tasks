@@ -1,9 +1,6 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "loc.friendlyName": "CocoaPods",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613745)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613745)",
   "loc.description": "CocoaPods is the dependency manager for Swift and Objective-C Cocoa projects. Runs pod install",
   "loc.instanceNameFormat": "pod install",
   "loc.input.label.cwd": "Working Directory",

@@ -1,9 +1,9 @@
 {
     "id": "DF857559-8715-46EB-A74E-AC98B9178AA0",
     "name": "AndroidBuild",
-    "friendlyName": "Android Build",
+    "friendlyName": "Android Build (deprecated; use Gradle)",
     "description": "Build an Android app using Gradle and optionally start the emulator for unit tests",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613716)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613716)",
     "category": "Build",
     "visibility": [
                 "Build"
@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 8
+        "Patch": 14
     },
     "demands" : [
 	    "AndroidSDK"
@@ -87,7 +87,7 @@
             "defaultValue":"Nexus 5",
             "required":false,
             "visibleRule": "createAvd = true",
-            "helpMarkDown": "The optional device definition to use. Can be a device index or id.",
+            "helpMarkDown": "The optional device definition to use. Can be a device index or ID.",
             "groupName":"avdOptions"
         },
         {

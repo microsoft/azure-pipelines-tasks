@@ -1,21 +1,22 @@
-[cmdletbinding()]
+[CmdletBinding()]
 param()
 
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-. $PSScriptRoot\..\..\..\Tasks\PublishSymbols\Helpers.ps1
+. $PSScriptRoot\..\..\..\Tasks\PublishSymbols\IndexHelpers\IndexFunctions.ps1
 foreach ($treatNotIndexedAsWarning in @($false, $true)) {
-    Unregister-Mock Get-ToolPath
+    Unregister-Mock Assert-VstsPath
     Unregister-Mock Push-Location
     Unregister-Mock Add-DbghelpLibrary
     Unregister-Mock Get-SourceProvider
     Unregister-Mock Get-SourceFilePaths
+    Unregister-Mock Get-VstsTaskVariable
     Unregister-Mock New-SrcSrvIniContent
     Unregister-Mock Add-SourceServerStream
-    Unregister-Mock Invoke-DisposeSourceProvider
     Unregister-Mock Remove-DbghelpLibrary
     $script:pdbstrExePath = 'SomeDrive:\SomeDir\pdbstr.exe'
-    Register-Mock Get-ToolPath { $script:pdbstrExePath } -- -Name 'Pdbstr\pdbstr.exe'
+    Register-Mock Get-VstsTaskVariable { 'SomeDrive:\AgentHome' } -- -Name Agent.HomeDirectory -Require
+    Register-Mock Assert-VstsPath { $script:pdbstrExePath } -- -LiteralPath "SomeDrive:\AgentHome\Externals\Pdbstr\pdbstr.exe" -PathType Leaf -PassThru
     Register-Mock Push-Location
     $script:libraryHandle = -1234
     Register-Mock Add-DbghelpLibrary { $script:libraryHandle }
@@ -23,7 +24,6 @@ foreach ($treatNotIndexedAsWarning in @($false, $true)) {
     $script:provider = New-Object psobject -Property @{ SourcesRootPath = $sourcesRoot }
     Register-Mock Get-SourceProvider { $script:provider }
     Register-Mock Add-SourceServerStream
-    Register-Mock Invoke-DisposeSourceProvider
     Register-Mock Remove-DbghelpLibrary
 
     # Arrange mocks for the first symbols file.
@@ -55,6 +55,5 @@ foreach ($treatNotIndexedAsWarning in @($false, $true)) {
     Assert-WasCalled Push-Location $env:TEMP
     Assert-WasCalled Add-SourceServerStream -- -PdbStrPath $pdbstrExePath -SymbolsFilePath $symbolsFile1 -StreamContent $iniContent1
     Assert-WasCalled Add-SourceServerStream -- -PdbStrPath $pdbstrExePath -SymbolsFilePath $symbolsFile2 -StreamContent $iniContent2
-    Assert-WasCalled Invoke-DisposeSourceProvider -- -Provider $provider
     Assert-WasCalled Remove-DbghelpLibrary -- -HModule $libraryHandle
 }

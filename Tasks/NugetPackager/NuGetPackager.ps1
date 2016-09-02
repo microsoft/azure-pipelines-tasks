@@ -1,7 +1,12 @@
 param(
     [string]$searchPattern,
     [string]$outputdir,
+    [string]$includeReferencedProjects,
     [string]$versionByBuild,
+    [string]$versionEnvVar,
+    [string]$requestedMajorVersion,
+    [string]$requestedMinorVersion,
+    [string]$requestedPatchVersion,    
     [string]$configurationToPack,
     [string]$buildProperties,
     [string]$nuGetAdditionalArgs,
@@ -18,36 +23,48 @@ foreach($key in $PSBoundParameters.Keys)
 Write-Verbose "Importing modules"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
-$b_versionByBuild = Convert-String $versionByBuild Boolean    
+
+$b_includeReferencedProjects = Convert-String $includeReferencedProjects Boolean
+
+# the string for versionByBuild is "true" for back-compat
+$b_versionByBuild = $versionByBuild -eq "true"    
+$b_versionByEnvVar = $versionByBuild -eq "byEnvVar"
+$b_versionByPrereleaseNumber = $versionByBuild -eq "byPrereleaseNumber"
+
+$b_automaticallyVersion = $b_versionByBuild -or $b_versionByEnvVar -or $b_versionByPrereleaseNumber
+
+if ($b_automaticallyVersion -and $b_includeReferencedProjects)
+{
+    Write-Warning (Get-LocalizedString -Key "The automatic package versioning and include referenced projects options do not work together. 
+    Referenced projects will not inherit the custom version provided by the automatic versioning settings.")
+}
+
 if ($b_versionByBuild)
 {
-    Write-Host "Getting version number from build"
+    Write-Verbose "Autoversion: Getting version number from build"
     ##Get Version from Build
     
     # Regular expression pattern to find the version in the build number 
     # and then apply it to the assemblies
-    $VersionRegex = "\d+\.\d+\.\d+\.\d+"
+    $VersionRegex = "\d+\.\d+\.\d+(?:\.\d+)?"
     
     # If this script is not running on a build server, remind user to 
     # set environment variables so that this script can be debugged
     if(-not ($Env:BUILD_SOURCESDIRECTORY -and $Env:BUILD_BUILDNUMBER))
     {
-        Write-Error "You must set the following environment variables"
-        Write-Error "to test this script interactively."
-        Write-Host '$Env:BUILD_SOURCESDIRECTORY - For example, enter something like:'
-        Write-Host '$Env:BUILD_SOURCESDIRECTORY = "C:\code\FabrikamTFVC\HelloWorld"'
-        Write-Host '$Env:BUILD_BUILDNUMBER - For example, enter something like:'
-        Write-Host '$Env:BUILD_BUILDNUMBER = "Build HelloWorld_0000.00.00.0"'
+        Write-Error (Get-LocalizedString -Key "To test this script interactively, set these environment variables.")
+        Write-Host (Get-LocalizedString -Key '{0} (example: "C:\code\FabrikamTFVC\HelloWorld")' -ArgumentList '$Env:BUILD_SOURCESDIRECTORY')
+        Write-Host (Get-LocalizedString -Key '{0} (example: "Build HelloWorld_0000.00.00.0")' -ArgumentList '$Env:BUILD_BUILDNUMBER')
         exit 1
     }
     
     #Make sure there is a build number
     if (-not $Env:BUILD_BUILDNUMBER)
     {
-        Write-Error ("BUILD_BUILDNUMBER environment variable is missing.")
+        Write-Error (Get-LocalizedString -Key "BUILD_BUILDNUMBER environment variable is missing.")
         exit 1
     }
-    Write-Host "BUILD_BUILDNUMBER: $Env:BUILD_BUILDNUMBER"
+    Write-Verbose "BUILD_BUILDNUMBER: $Env:BUILD_BUILDNUMBER"
     
     # Get and validate the version data
     $VersionData = [regex]::matches($Env:BUILD_BUILDNUMBER,$VersionRegex)
@@ -55,90 +72,150 @@ if ($b_versionByBuild)
     {
        0        
           { 
-             Write-Error "Could not find version number data in BUILD_BUILDNUMBER."
+             Write-Error (Get-LocalizedString -Key "Could not find version number data in BUILD_BUILDNUMBER.")
              exit 1
           }
        1 {}
        default 
           { 
-             Write-Warning "Found more than instance of version data in BUILD_BUILDNUMBER." 
-             Write-Warning "Will assume first instance is version."
+             Write-Warning (Get-LocalizedString -Key "Found more than one instance of version data in BUILD_BUILDNUMBER.")
+             Write-Warning (Get-LocalizedString -Key "Assuming first instance is version.")
           }
     }
     $NewVersion = $VersionData[0]
-    Write-Host "Version: $NewVersion"
+    Write-Verbose "Version: $NewVersion"
+}
+elseif ($b_versionByEnvVar)
+{
+    Write-Verbose "Autoversion: Getting version number from environment variable"
+    Write-Verbose "Requested '$versionEnvVar'"
+    
+    $NewVersion = [environment]::GetEnvironmentVariable($versionEnvVar)
+    
+    Write-Verbose "Version: $NewVersion"
+}
+elseif ($b_versionByPrereleaseNumber)
+{
+    Write-Verbose "Autoversion: Generating prerelease number"
+
+    $UtcDateTime = (Get-Date).ToUniversalTime()
+    $PreReleaseMoniker = (Get-Date -Date $UtcDateTime -Format "yyyyMMdd-HHmmss")
+
+    $NewVersion = "$requestedMajorVersion.$requestedMinorVersion.$requestedPatchVersion-ci-$PreReleaseMoniker"
+    Write-Verbose "Version: $NewVersion"
 }
 
-Write-Host "Checking pattern is specified"
+Write-Verbose "Checking pattern is specified"
 if(!$searchPattern)
 {
-    throw (Get-LocalizedString -Key "Search Pattern parameter must be set")
+    throw (Get-LocalizedString -Key "Search pattern parameter must be set")
 }
 
 if ($outputdir -and !(Test-Path $outputdir))
 {
-    Write-Host "Output folder used but doesn't exists, creating it"
+    Write-Verbose "Output folder selected but doesn't exist. Creating it."
     New-Item $outputdir -type directory
 }
 
 # check for solution pattern
-if ($searchPattern.Contains("*") -or $searchPattern.Contains("?"))
+if ($searchPattern.Contains("*") -or $searchPattern.Contains("?") -or $searchPattern.Contains(";"))
 {
-    Write-Host "Pattern found in solution parameter."
-    Write-Host "Find-Files -SearchPattern $searchPattern"
-    $foundFiles = Find-Files -SearchPattern $searchPattern 
+    Write-Verbose "Pattern found in solution parameter."    
+    if ($env:BUILD_SOURCESDIRECTORY)
+    {
+        Write-Verbose "Using build.sourcesdirectory as root folder"
+        Write-Host "Find-Files -SearchPattern $searchPattern -RootFolder $env:BUILD_SOURCESDIRECTORY"
+        $foundFiles = Find-Files -SearchPattern $searchPattern -RootFolder $env:BUILD_SOURCESDIRECTORY
+    }
+    elseif ($env:SYSTEM_ARTIFACTSDIRECTORY)
+    {
+        Write-Verbose "Using system.artifactsdirectory as root folder"
+        Write-Host "Find-Files -SearchPattern $searchPattern -RootFolder $env:SYSTEM_ARTIFACTSDIRECTORY"
+        $foundFiles = Find-Files -SearchPattern $searchPattern -RootFolder $env:SYSTEM_ARTIFACTSDIRECTORY
+    }
+    else
+    {
+        Write-Host "Find-Files -SearchPattern $searchPattern"
+        $foundFiles = Find-Files -SearchPattern $searchPattern
+    }
 }
 else
 {
-    Write-Host "No Pattern found in solution parameter."
+    Write-Verbose "No pattern found in solution parameter."
     $foundFiles = ,$searchPattern
 }
 
-$foundCount = $foundFiles.Count 
-Write-Host "Found files: $foundCount"
+$foundCount = $foundFiles.Count
+Write-Verbose "Found files: $foundCount"
 foreach ($fileToPackage in $foundFiles)
 {
-    Write-Host "--File: `"$fileToPackage`""
+    Write-Verbose "--File: `"$fileToPackage`""
 }
 
-foreach ($fileToPackage in $foundFiles)
+$useBuiltinNuGetExe = !$nuGetPath
+
+if($useBuiltinNuGetExe)
 {
-    $slnFolder = $(Get-ItemProperty -Path $fileToPackage -Name 'DirectoryName').DirectoryName
-    #Setup Nuget
-    Write-Host "Creating Nuget Arguments:"
-    $buildProps = "Configuration=$configurationToPack";
-    if ([string]::IsNullOrEmpty($buildProperties) -eq $false)
-    {
-        $buildProps = ($buildProps + ";" + $buildProperties)
-    }
-    $argsPack = "pack `"$fileToPackage`" -OutputDirectory `"$outputdir`" -Properties $buildProps";
-    
-    if ($b_versionByBuild)
-    {
-        $argsPack = ($argsPack + " -version $NewVersion")
-    }
-    if($nuGetAdditionalArgs)
-    {
-        $argsPack = ($argsPack + " " + $nuGetAdditionalArgs);
-    }    
-     
-    Write-Host "--ARGS: $argsPack"
-    
-    if(!$nuGetPath)
-    {
-        $nuGetPath = Get-ToolPath -Name 'NuGet.exe';
-    }
-    
-    if (-not $nuGetPath)
-    {
-        throw (Get-LocalizedString -Key "Unable to locate {0}" -ArgumentList 'nuget.exe')
-    }
-    
+    $nuGetPath = Get-ToolPath -Name 'NuGet.exe';
+}
+
+if (-not $nuGetPath)
+{
+    throw (Get-LocalizedString -Key "Unable to locate {0}" -ArgumentList 'nuget.exe')
+}
+
+$initialNuGetExtensionsPath = $env:NUGET_EXTENSIONS_PATH
+try
+{
     if ($env:NUGET_EXTENSIONS_PATH)
     {
-        Write-Host (Get-LocalizedString -Key "Detected NuGet extensions loader path. Environment variable NUGET_EXTENSIONS_PATH is set to: {0}" -ArgumentList $env:NUGET_EXTENSIONS_PATH)
+        if($useBuiltinNuGetExe)
+        {
+            # NuGet.exe extensions only work with a single specific version of nuget.exe. This causes problems
+            # whenever we update nuget.exe on the agent.
+            $env:NUGET_EXTENSIONS_PATH = $null
+            Write-Warning (Get-LocalizedString -Key "The NUGET_EXTENSIONS_PATH environment variable is set, but nuget.exe extensions are not supported when using the built-in NuGet implementation.")   
+        }
+        else
+        {
+            Write-Host (Get-LocalizedString -Key "Detected NuGet extensions loader path. Environment variable NUGET_EXTENSIONS_PATH is set to: {0}" -ArgumentList $env:NUGET_EXTENSIONS_PATH)
+        }
     }
 
-    Write-Host "Invoking nuget with $argsPack on $slnFolder"
-    Invoke-Tool -Path $nugetPath -Arguments "$argsPack" -WorkingFolder $slnFolder
+    foreach ($fileToPackage in $foundFiles)
+    {
+        $slnFolder = $(Get-ItemProperty -Path $fileToPackage -Name 'DirectoryName').DirectoryName
+        #Setup Nuget
+
+        $buildProps = "Configuration=$configurationToPack";
+        if ([string]::IsNullOrEmpty($buildProperties) -eq $false)
+        {
+            $buildProps = ($buildProps + ";" + $buildProperties)
+        }
+        $argsPack = "pack `"$fileToPackage`" -OutputDirectory `"$outputdir`" -Properties $buildProps";
+        
+        if($b_includeReferencedProjects)
+        {
+            $argsPack = ($argsPack + " -IncludeReferencedProjects ");
+        }
+        
+        if ($b_automaticallyVersion)
+        {
+            $argsPack = ($argsPack + " -version $NewVersion")
+        }
+        if($nuGetAdditionalArgs)
+        {
+            $argsPack = ($argsPack + " " + $nuGetAdditionalArgs);
+        }    
+         
+        Write-Verbose "NuGet arguments: $argsPack"
+
+        Write-Verbose "Invoking nuget with $argsPack on $slnFolder"
+        Invoke-Tool -Path $nugetPath -Arguments "$argsPack" -WorkingFolder $slnFolder
+    }
 }
+finally
+{
+    $env:NUGET_EXTENSIONS_PATH = $initialNuGetExtensionsPath
+}
+

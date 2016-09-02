@@ -1,7 +1,7 @@
 {
   "name": "Agent.Tasks",
   "version": "0.5.0",
-  "description": "Tasks for VSO Build.vNext build system",
+  "description": "Tasks for the Team Services build system",
   "main": "gulpfile.js",
   "directories": {
     "doc": "docs"
@@ -11,40 +11,38 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Microsoft/vso-agent-tasks"
+    "url": "https://github.com/Microsoft/vsts-tasks"
   },
   "keywords": [
-    "VSO",
+    "VSTS",
     "build",
     "tasks"
   ],
   "author": "Microsoft Corporation",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
+    "url": "https://github.com/Microsoft/vsts-tasks/issues"
   },
-  "homepage": "https://github.com/Microsoft/vso-agent-tasks",
+  "homepage": "https://github.com/Microsoft/vsts-tasks",
   "devDependencies": {
-    "del": "^1.1.1",
-    "gulp": "^3.8.11",
-    "gulp-mocha": "^2.1.3",
-    "gulp-tsc": "^1.1.0",
-    "gulp-util": "^3.0.4",
-    "gulp-zip": "^3.0.2",
-    "minimatch": "^2.0.7",
-    "minimist": "^1.1.1",
-    "mocha": "^2.3.3",
-    "run-sequence": "^1.0.2",
-    "semver": "^4.3.3",
-    "shelljs": "^0.3.0",
-    "through2": "^0.6.3",
-    "validator": "^3.33.0",
-    "vsts-task-lib": "^0.5.6"
-  },
-  "dependencies": {
-    "archiver": "^0.14.3",
-    "process": "^0.10.1",
-    "q": "^1.2.0",
-    "read": "^1.0.5"
+    "adm-zip": "0.4.7",
+    "del": "1.1.1",
+    "gulp": "3.9.0",
+    "gulp-mocha": "2.1.3",
+    "gulp-typescript": "2.13.0",
+    "gulp-util": "3.0.4",
+    "gulp-zip": "3.2.0",
+    "gulp-unzip": "0.1.4",
+    "minimatch": "3.0.2",
+    "minimist": "1.1.1",
+    "mocha": "2.3.3",
+    "q": "1.4.1",
+    "request": "2.72.0",
+    "semver": "4.3.3",
+    "shelljs": "0.3.0",
+    "sync-request": "3.0.1",
+    "through2": "2.0.1",
+    "typescript": "1.8.7",
+    "validator": "3.33.0"
   }
 }

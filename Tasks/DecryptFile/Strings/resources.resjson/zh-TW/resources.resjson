@@ -4,7 +4,7 @@
   "loc.instanceNameFormat": "解密 $(inFile)",
   "loc.group.displayName.advanced": "進階",
   "loc.input.label.cipher": "Cypher",
-  "loc.input.help.cipher": "要使用的加密 Cypher。如需完整的可能值清單，請參閱 [Cypher 套件名稱](http://go.microsoft.com/fwlink/?LinkID=627129)。",
+  "loc.input.help.cipher": "要使用的加密 Cypher。如需完整的可能值清單，請參閱 [Cypher 套件名稱](https://go.microsoft.com/fwlink/?LinkID=627129)。",
   "loc.input.label.inFile": "加密的檔案",
   "loc.input.help.inFile": "要解密的檔案相對路徑。",
   "loc.input.label.passphrase": "複雜密碼",

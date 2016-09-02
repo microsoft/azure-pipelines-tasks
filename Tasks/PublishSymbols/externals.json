@@ -1,0 +1,58 @@
+{
+    "nugetv2": {
+        "Microsoft.TeamFoundationServer.Client": {
+            "version": "15.101.0-preview",
+            "repository": "https://www.nuget.org/api/v2/",
+            "cp": [
+                {
+                    "source": "lib/net45/Microsoft.TeamFoundation.Core.WebApi.dll"
+                },
+                {
+                    "source": "lib/net45/<CULTURE_NAME>/Microsoft.TeamFoundation.Core.WebApi.resources.dll",
+                    "dest": "<CULTURE_NAME>/"
+                }
+            ]
+        },
+        "Microsoft.TeamFoundationServer.ExtendedClient": {
+            "version": "15.101.1-preview",
+            "repository": "https://www.nuget.org/api/v2/",
+            "cp": [
+                {
+                    "source": [
+                        "lib/net45/Microsoft.TeamFoundation.Client.dll",
+                        "lib/net45/Microsoft.TeamFoundation.VersionControl.Client.dll",
+                        "lib/net45/Microsoft.TeamFoundation.VersionControl.Common.dll"
+                    ]
+                },
+                {
+                    "source": [
+                        "lib/net45/<CULTURE_NAME>/Microsoft.TeamFoundation.Client.resources.dll",
+                        "lib/net45/<CULTURE_NAME>/Microsoft.TeamFoundation.VersionControl.Common.resources.dll"
+                    ],
+                    "dest": "<CULTURE_NAME>/"
+                }
+            ]
+        },
+        "Microsoft.VisualStudio.Services.Client": {
+            "version": "15.101.0-preview",
+            "repository": "https://www.nuget.org/api/v2/",
+            "cp": [
+                {
+                    "source": [
+                        "lib/net45/Microsoft.TeamFoundation.Common.dll",
+                        "lib/net45/Microsoft.VisualStudio.Services.Common.dll",
+                        "lib/net45/Microsoft.VisualStudio.Services.WebApi.dll"
+                    ]
+                },
+                {
+                    "source": [
+                        "lib/net45/<CULTURE_NAME>/Microsoft.TeamFoundation.Common.resources.dll",
+                        "lib/net45/<CULTURE_NAME>/Microsoft.VisualStudio.Services.Common.resources.dll",
+                        "lib/net45/<CULTURE_NAME>/Microsoft.VisualStudio.Services.WebApi.resources.dll"
+                    ],
+                    "dest": "<CULTURE_NAME>/"
+                }
+            ]
+        }
+    }
+}

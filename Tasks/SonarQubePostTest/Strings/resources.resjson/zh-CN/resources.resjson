@@ -1,9 +1,6 @@
 {
   "loc.friendlyName": "用于 MSBuild 的 SonarQube - 结束分析",
-  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkId=620063)",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkId=620063)",
   "loc.description": "完成分析并将结果上载到 SonarQube",
-  "loc.instanceNameFormat": "完成分析并将结果上载到 SonarQube",
-  "loc.group.displayName.extraSettings": "Post Analysis Settings",
-  "loc.input.label.breakBuild": "Break the build on quality gate failure (SQ 5.3+)",
-  "loc.input.help.breakBuild": "This option is only available when using a SonarQube server 5.3 or above. It will introduce delays as the build must wait for SonarQube to complete the analysis. [More information](http://go.microsoft.com/fwlink/?LinkId=722407)"
+  "loc.instanceNameFormat": "完成分析并将结果上载到 SonarQube"
 }

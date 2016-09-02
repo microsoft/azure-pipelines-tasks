@@ -21,7 +21,7 @@ tl.debug('publishRunAttachments: ' + publishRunAttachments);
 //check for pattern in testResultsFiles
 if(testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
   tl.debug('Pattern found in testResultsFiles parameter');
-  var buildFolder = tl.getVariable('agent.buildDirectory');
+  var buildFolder = tl.getVariable('System.DefaultWorkingDirectory');
   var allFiles = tl.find(buildFolder);
   var matchingTestResultsFiles = tl.match(allFiles, testResultsFiles, { matchBase: true });
 }
@@ -30,10 +30,11 @@ else {
   var matchingTestResultsFiles = [testResultsFiles];
 }
 
-if(!matchingTestResultsFiles) {
+if(!matchingTestResultsFiles || matchingTestResultsFiles.length == 0) {
   tl.warning('No test result files matching ' + testResultsFiles + ' were found.');  
   tl.exit(0);
 }
-
-var tp = new tl.TestPublisher(testRunner);
-tp.publish(matchingTestResultsFiles, mergeResults, platform, config, testRunTitle, publishRunAttachments);
+else{
+  var tp = new tl.TestPublisher(testRunner);
+  tp.publish(matchingTestResultsFiles, mergeResults, platform, config, testRunTitle, publishRunAttachments);
+}

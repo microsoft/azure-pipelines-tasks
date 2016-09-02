@@ -1,9 +1,6 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "loc.friendlyName": "CMake",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613719)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613719)",
   "loc.description": "Build with the CMake cross-platform build system",
   "loc.instanceNameFormat": "CMake $(cmakeArgs)",
   "loc.input.label.cwd": "Working Directory",

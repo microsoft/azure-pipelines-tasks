@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Indicizza origini e pubblica simboli",
-  "loc.helpMarkDown": "Consente di indicizzare il codice sorgente e di pubblicare i simboli in una condivisione file.<br/>[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=613722)",
+  "loc.helpMarkDown": "Consente di indicizzare il codice sorgente e di pubblicare i simboli in una condivisione file.<br/>[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613722)",
   "loc.description": "Consente di indicizza il codice sorgente e di pubblicare i simboli in una condivisione file",
   "loc.instanceNameFormat": "Percorso di pubblicazione simboli: $(SymbolsPath)",
   "loc.group.displayName.advanced": "Avanzate",
@@ -25,6 +25,7 @@
   "loc.messages.CleanedUpSemaphoreFile0": "Il file di semaforo '{0}' è stato pulito.",
   "loc.messages.CleanUpSemaphoreFile0Error1": "Non è stato possibile pulire il file di semaforo esistente '{0}'. {1}",
   "loc.messages.Error0AccessingSemaphoreFile1Retrying2Seconds": "Durante l'accesso al file di semaforo '{1}' si è verificato l'errore '{0}'. Verrà effettuato un nuovo tentativo tra {2:N0} secondi.",
+  "loc.messages.FailedToLoadDbghelpDllFrom0ErrorCode1": "Failed to load dbghelp.dll from '{0}' with error code '{1}'.",
   "loc.messages.Found0Files": "Sono stati trovati {0:N0} file.",
   "loc.messages.FreeLibraryDbghelpDllError0": "Non è stato possibile liberare la libreria dbghelp.dll. Codice errore: '{0}'.",
   "loc.messages.NoFilesForIndexing": "Non è stato selezionato alcun file per l'indicizzazione.",

@@ -1,0 +1,104 @@
+{
+    "exec": {
+        "gradlew build": {
+            "code": 0,
+            "stdout": "Sample gradle output"
+        },
+        "gradlew properties": {
+            "code": 0,
+            "stdout": "subprojects: []",
+            "stderr": ""
+        },
+        "gradlew clean build jacocoTestReport": {
+            "code": 0,
+            "stdout": "Sample output",
+            "stderr": ""
+        },
+        "gradlew clean build cobertura": {
+            "code": 0,
+            "stdout": "Sample output",
+            "stderr": ""
+        },
+        "gradlew build FAIL": {
+            "code": 2,
+            "stderr": "FAILED"
+        },
+        "gradlew /o /p t i /o /n /s build": {
+            "code": 0,
+            "stdout": "More sample gradle output"
+        },
+        "gradlew /o /p t i /o /n /s build test deploy": {
+            "code": 0,
+            "stdout": "More sample gradle output"
+        },
+        "gradlew.bat build": {
+            "code": 0,
+            "stdout": "Sample gradle output"
+        },
+        "gradlew.bat properties": {
+            "code": 0,
+            "stdout": "subprojects: []",
+            "stderr": ""
+        },
+        "gradlew.bat clean build jacocoTestReport": {
+            "code": 0,
+            "stdout": "Sample output",
+            "stderr": ""
+        },
+        "gradlew.bat clean build cobertura": {
+            "code": 0,
+            "stdout": "Sample output",
+            "stderr": ""
+        },
+        "gradlew.bat build FAIL": {
+            "code": 2,
+            "stderr": "FAILED"
+        },
+        "gradlew.bat /o /p t i /o /n /s build": {
+            "code": 0,
+            "stdout": "More sample gradle output"
+        },
+        "gradlew.bat /o /p t i /o /n /s build test deploy": {
+            "code": 0,
+            "stdout": "More sample gradle output"
+        }
+    },
+    "checkPath": {
+        "gradlew": true,
+        "gradlew.bat": true,
+        "/home/repo/src": true
+    },
+    "getVariable": {
+        "JAVA_HOME_8_X86": "/user/local/bin/Java8",
+        "System.DefaultWorkingDirectory": "/user/build",
+        "ENDPOINT_URL_ID1": "http://sonarqube/end/point",
+        "ENDPOINT_AUTH_ID1": "{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}",
+        "build.buildNumber": "14",
+        "build.sourcesDirectory": "/user/build/s",
+        "build.artifactStagingDirectory": "/user/build/a"
+    },
+    "stats": {
+        "CCReport43F6D5EF\\coverage.xml": {
+            "isFile": true
+        }
+    },
+    "rmRF": {
+        "CCReport43F6D5EF": {
+            "success": true,
+            "message": "success"
+        }
+    },
+    "find": {
+        "/user/build": [
+            "/user/build/fun/test-123.xml"
+        ]
+    },
+    "match": {
+        "**/TEST-*.xml": [
+            "/user/build/fun/test-123.xml"
+        ],
+        "**/build/test-results/TEST-*.xml": [
+            "/user/build/fun/test-results/test-123.xml"
+        ]
+    }
+}

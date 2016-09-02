@@ -54,7 +54,37 @@ describe('General Suite', function() {
 		
 		done();
 	})
-	
+
+	it('Find nested task.json', (done) => {
+		this.timeout(1000);
+		
+		// Path to the _build/Tasks folder.
+		var tasksFolder =  path.resolve(__dirname, '../../../Tasks');
+
+		// Recursively find all task.json files.
+		var folders: string[] = [ tasksFolder ];
+		while (folders.length > 0) {
+			// Pop the next folder.
+			var folder: string = folders.pop();
+
+			// Read the directory.
+			fs.readdirSync(folder).forEach(item => {
+				var itemPath: string = path.join(folder, item);
+				if (fs.statSync(itemPath).isDirectory()) {
+					// Push the child directory.
+					folders.push(itemPath);
+				} else if (item.toUpperCase() == "TASK.JSON" &&
+					path.resolve(folder, '..').toUpperCase() != tasksFolder.toUpperCase()) {
+
+					// A task.json file was found nested recursively within the task folder.
+					assert(false, 'A task.json file was found nested recursively within the task folder. This will break the servicing step. Offending file: ' + itemPath);
+				}
+			});
+		}
+
+		done();
+	})
+
     it('Find .js with uppercase', (done) => {
 		this.timeout(1000);
 		
@@ -88,7 +118,7 @@ describe('General Suite', function() {
 				
                 var targetJs = task.execution['Node'].target;
                 if(targetJs.search(/[A-Z]/g) >= 0) {
-                    console.error('Has uppercase in task.json\'s excution.node.target for tasks: ' + path.relative(tasksRootFolder, taskjson));
+                    console.error('Has uppercase in task.json\'s execution.node.target for tasks: ' + path.relative(tasksRootFolder, taskjson));
                     assert(false, 'Has uppercase is dangerous for xplat tasks.' + taskjson);
                 }
 			}
@@ -99,14 +129,36 @@ describe('General Suite', function() {
     
     it('Find unsupported demands', (done) => {
 		this.timeout(1000);
-		
-        var supportedDemands :string[] = ['AndroidSDK', 'ant', 'AzurePS', 'Chef', 
-                                          'DotNetFramework', 'java', 'JDK', 'maven',
-                                          'MSBuild', 'MSBuild_x64', 'npm', 'node.js',
-                                          'PowerShell', 'SqlPackage', 'VisualStudio', 'VisualStudio_IDE',
-                                          'VSTest', 'WindowsKit', 'WindowsSdk', 'cmake',
-                                          'cocoapods', 'curl', 'Cmd', 'sh',
-                                          'KnifeReporting', 'Xamarin.Android', 'Xamarin.iOS', 'xcode'];
+
+        var supportedDemands :string[] = ['AndroidSDK',
+                                          'ant', 
+                                          'AzurePS', 
+                                          'Chef', 
+                                          'DotNetFramework', 
+                                          'java', 
+                                          'JDK', 
+                                          'maven',
+                                          'MSBuild', 
+                                          'MSBuild_x64', 
+                                          'npm', 
+                                          'node.js',
+                                          'PowerShell', 
+                                          'SqlPackage', 
+                                          'VisualStudio', 
+                                          'VisualStudio_IDE',
+                                          'VSTest', 
+                                          'WindowsKit', 
+                                          'WindowsSdk', 
+                                          'cmake',
+                                          'cocoapods', 
+                                          'curl', 
+                                          'Cmd', 
+                                          'SCVMMAdminConsole',
+                                          'sh',
+                                          'KnifeReporting', 
+                                          'Xamarin.Android', 
+                                          'Xamarin.iOS', 
+                                          'xcode'];
         
         supportedDemands.forEach(demand => {
             if(supportedDemands.indexOf(demand.toLocaleLowerCase()) < 0) {

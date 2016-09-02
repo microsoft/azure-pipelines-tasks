@@ -3,20 +3,19 @@
     "name": "XamarinTestCloud",
     "friendlyName": "Xamarin Test Cloud",
     "description": "Test mobile apps with Xamarin Test Cloud using Xamarin.UITest",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613744)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613744)",
     "category": "Test",
     "visibility": [
-                "Build",
-                "Release"
-                  ],
+        "Build",
+        "Release"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 9 
+        "Patch": 27
     },
-    "demands": [
-    ],
+    "demands": [],
     "minimumAgentVersion": "1.83.0",
     "groups": [
         {
@@ -32,7 +31,7 @@
             "label": "App File",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Relative path from repo root of the app(s) to test.  Wildcards can be used.  For example, `**\\*.apk` for all APK files in all subfolders."
+            "helpMarkDown": "Relative path from repo root of the app(s) to test.  Wildcards can be used.  For example, `**/*.apk` for all APK files in all subfolders."
         },
         {
             "name": "dsym",
@@ -40,7 +39,7 @@
             "label": "dSYM File (iOS only)",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "To make crash logs easier to read, you can upload a dSYM file that is associated with your app. This field only applies to iOS apps. Example: *.dSYM"
+            "helpMarkDown": "To make crash logs easier to read, you can upload a dSYM file that is associated with your app. This field only applies to iOS apps. Provide path relative to the .ipa file. Example: *.dSYM"
         },
         {
             "name": "teamApiKey",
@@ -147,16 +146,15 @@
         {
             "name": "publishNUnitResults",
             "type": "boolean",
-            "label": "Publish results to VSO/TFS",
+            "label": "Publish results to TFS/Team Services",
             "groupName": "advanced",
             "defaultValue": "true",
-            "helpMarkDown": "When selected, --nunit-xml option will be passed to test-cloud.exe. Results from the NUnit xml file will be published to VSO/TFS."
+            "helpMarkDown": "When selected, --nunit-xml option will be passed to test-cloud.exe. Results from the NUnit xml file will be published to TFS/Team Services."
         }
-
     ],
     "instanceNameFormat": "Test $(app) with Xamarin.UITest in Xamarin Test Cloud",
     "execution": {
-       "Node": {
+        "Node": {
             "target": "xamarintestcloud.js",
             "argumentFormat": ""
         },
@@ -164,7 +162,9 @@
             "target": "$(currentDirectory)\\XamarinTestCloud.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)",
-            "platforms": ["windows"]
+            "platforms": [
+                "windows"
+            ]
         }
     }
 }

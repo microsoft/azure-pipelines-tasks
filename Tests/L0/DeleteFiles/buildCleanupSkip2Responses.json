@@ -1,0 +1,11 @@
+{
+    "find": {
+        "/someDir": [
+            "/someDir/someNestedDir/000ADmin",
+            "/someDir/someFile"
+        ]
+    },
+    "checkPath" : {
+        "/someDir": true
+    }
+}

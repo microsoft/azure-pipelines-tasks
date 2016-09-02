@@ -15,8 +15,10 @@
     [string]$connectionString,
     [string]$publishProfile,
     [string]$additionalArguments,
-    [string]$deployInParallel    
+    [string]$deployInParallel
     )
+
+Write-Warning "The preview SQL Server Database Deployment task has been deprecated and will be removed soon. An SQL Server Database Deployment task has been released as an extension in the Visual Studio Team Services marketplace at https://aka.ms/iisextn. Install the extension, and use its tasks in the Build/Release definitions, and delete the preview task from the definition."
 
 Write-Verbose "Entering script DeployToSqlServer.ps1" -Verbose
 Write-Verbose "environmentName = $environmentName" -Verbose
@@ -42,7 +44,16 @@ Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.RemoteDe
 
 $ErrorActionPreference = 'Stop'
 
+if( $publishProfile -eq $env:SYSTEM_DEFAULTWORKINGDIRECTORY -or $publishProfile -eq [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\")){
+    $publishProfile = ""
+}
+
 $sqlDeploymentScriptPath = Join-Path "$env:AGENT_HOMEDIRECTORY" "Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs\Scripts\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Sql.ps1"
+
+if( -Not (Test-Path -Path $sqlDeploymentScriptPath))
+{
+    $sqlDeploymentScriptPath = Join-Path "$env:AGENT_HOMEDIRECTORY" "externals\vstshost\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs\Scripts\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Sql.ps1"
+}
 
 $sqlPackageOnTargetMachineBlock = Get-Content $sqlDeploymentScriptPath | Out-String
 
@@ -65,7 +76,7 @@ else
 
 if(-not [string]::IsNullOrEmpty($errorMessage))
 {
-    $readmelink = "http://aka.ms/sqlserverdacpackreadme"
+    $readmelink = "https://aka.ms/sqlserverdacpackreadme"
     $helpMessage = (Get-LocalizedString -Key "For more info please refer to {0}" -ArgumentList $readmelink)
     throw "$errorMessage $helpMessage"
 }

@@ -3,7 +3,7 @@
     "name": "WindowsMachineFileCopy",
     "friendlyName": "Windows Machine File Copy",
     "description": "Copy files to remote machine(s)",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?linkid=627415)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=627415)",
     "category": "Deploy",
     "visibility": [
                 "Build",
@@ -13,9 +13,9 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 17
+        "Patch": 35
     },
-    "minimumAgentVersion": "1.91.0",
+    "minimumAgentVersion": "1.104.0",
     "groups": [
         {
             "name":"advanced",
@@ -110,10 +110,10 @@
             "defaultValue": "",
             "groupName": "advanced",
             "required": false,
-            "helpMarkDown": "This input is valid only for machine groups and is not supported for flat list of machines or output variables yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. For Azure Resource Groups, provide the virtual machine's name like, ffweb, ffdb. The default is to run the task in all machines."
+            "helpMarkDown": "This input is valid only for machine groups and is not supported for flat list of machines or output variables yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. The default is to run the task in all machines."
         }
     ],
-    "instanceNameFormat": "Copy files $(SourcePath)",
+    "instanceNameFormat": "Copy files from $(SourcePath)",
     "execution": {
         "PowerShell": {
             "target": "$(currentDirectory)\\WindowsMachineFileCopy.ps1",

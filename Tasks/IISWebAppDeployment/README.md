@@ -1,8 +1,14 @@
 # IIS Web Application Deployment
 
+## **Important Notice**
+The preview IIS Web Application Deployment task has been **deprecated and will be removed soon**. The task has been **shipped as an extension for Visual Studio Team Services**, and is available in the marketplace - https://marketplace.visualstudio.com/items?itemName=ms-vscs-rm.iiswebapp. 
+
+**Install the extension, and add the tasks from the extension in Build or Release Definitions, and remove this IIS Web Application Deployment task from the definition.**
+
+
 ## Overview
 
-The task is used to deploy a web application or a website to IIS web server and to create or update websites and application pools, and the underlying technologies used by the task is [Web Deploy](http://www.iis.net/downloads/microsoft/web-deploy) and [AppCmd.exe](http://www.iis.net/learn/get-started/getting-started-with-iis/getting-started-with-appcmdexe). Web Deploy packages the web application content, configuration and any other artifacts like registry, GAC assemblies etc. that can be used deployment. If the package needs to be redeployed to a different environment, configuration values within the package can be parameterized during deployment without requiring modifications to the packages themselves. Web deploy works with IIS 7, IIS 7.5, IIS 8, and IIS 8.5. AppCmd.exe is the single command line tool for managing IIS 7 and above. It exposes all key server management functionality through a set of intuitive management objects that can be manipulated from the command line or from scripts.
+The task is used to deploy a web application or a website to IIS web server and to create or update websites and application pools, and the underlying technologies used by the task is [Web Deploy](https://www.iis.net/downloads/microsoft/web-deploy) and [AppCmd.exe](https://www.iis.net/learn/get-started/getting-started-with-iis/getting-started-with-appcmdexe). Web Deploy packages the web application content, configuration and any other artifacts like registry, GAC assemblies etc. that can be used deployment. If the package needs to be redeployed to a different environment, configuration values within the package can be parameterized during deployment without requiring modifications to the packages themselves. Web deploy works with IIS 7, IIS 7.5, IIS 8, and IIS 8.5. AppCmd.exe is the single command line tool for managing IIS 7 and above. It exposes all key server management functionality through a set of intuitive management objects that can be manipulated from the command line or from scripts.
 
 The task runs on the target machine(s) and it is important to have the pre-requisites, as described below, installed on the machine(s). The flow is that the automation agent when executing the task, connects to the target machine using the Windows Remote Management (WinRM), and then launches a bootstrap service, which in turn invokes the PowerShell scripts to locate the msdeploy.exe on the machine, and deploys the web application using the msdeploy.exe.
 
@@ -16,7 +22,7 @@ The following pre-requisites need to be setup for the task to work properly.
 
 ### Web Deploy
 
-Web Deploy (msdeploy.exe) is used to deploy the web application on the IIS server, and needs to be installed on the target machines, and can be easily done so using [Microsoft Web Platform Installer](http://www.microsoft.com/web/gallery/install.aspx?appid=wdeploynosmo). Note that the link will open Web PI with the Web Deploy showing-up ready to install. The WebDeploy 3.5 needs to be installed without the bundled SQL support and using the default settings. There is no need to choose any custom settings while installing web deploy. After installation the Web Deploy is available at C:\Program Files (x86)\IIS\Microsoft Web Deploy V3. The task [PowerShell on Target Machines](https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/PowerShellOnTargetMachines) can be used to deploy Web Deploy to Azure virtual machines or domain-joined/workgroup machines.
+Web Deploy (msdeploy.exe) is used to deploy the web application on the IIS server, and needs to be installed on the target machines, and can be easily done so using [Microsoft Web Platform Installer](https://www.microsoft.com/web/gallery/install.aspx?appid=wdeploynosmo). Note that the link will open Web PI with the Web Deploy showing-up ready to install. The WebDeploy 3.5 needs to be installed without the bundled SQL support and using the default settings. There is no need to choose any custom settings while installing web deploy. After installation the Web Deploy is available at C:\Program Files (x86)\IIS\Microsoft Web Deploy V3. The task [PowerShell on Target Machines](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/PowerShellOnTargetMachines) can be used to deploy Web Deploy to Azure virtual machines or domain-joined/workgroup machines.
 
 AppCmd.exe is an in-built command line tool of IIS and does not need to be separately installed. It is used to create or update websites and application pools.
 
@@ -26,95 +32,20 @@ There should be a IIS web server already installed and configured on the pre-exi
 
 ### Pre-existing Machine Groups
 
-If the web application is being deployed on pre-existing machines (physical or virtual machines) then a machine group has to be created in the Machines Hub. There is a manage link next to the Machine Group parameter of the task. Click on the link to navigate to the Machines Hub and create a machine group. Note that the IP Address or the FDQN of Azure virtual machines can be also added in the machine group. The difference between using the domain-joined/workgroup machines and the Azure virtual machines is that copying files to them uses separate tasks wiz. [Windows Machine File Copy](https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/WindowsMachineFileCopy) for the domain-joined/workgroup machines and [Azure File Copy](https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/AzureFileCopy) for the Azure virtual machines. Note that the IIS Web Application Deployment task expects the web application's package zip files to be available on the machines or on a UNC path that is accessible by the machine administrator's login. Prior to using the IIS Web Application Deployment task ensure that the zip files are available for the deployment by copying them to the machines using the Windows Machine File Copy or the Azure File Copy tasks.
+If the web application is being deployed on pre-existing machines (physical or virtual machines) then a machine group has to be created in the Machines Hub. There is a manage link next to the Machine Group parameter of the task. Click on the link to navigate to the Machines Hub and create a machine group. Note that the IP Address or the FDQN of Azure virtual machines can be also added in the machine group. The difference between using the domain-joined/workgroup machines and the Azure virtual machines is that copying files to them uses separate tasks wiz. [Windows Machine File Copy](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/WindowsMachineFileCopy) for the domain-joined/workgroup machines and [Azure File Copy](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzureFileCopy) for the Azure virtual machines. Note that the IIS Web Application Deployment task expects the web application's package zip files to be available on the machines or on a UNC path that is accessible by the machine administrator's login. Prior to using the IIS Web Application Deployment task ensure that the zip files are available for the deployment by copying them to the machines using the Windows Machine File Copy or the Azure File Copy tasks.
 
-### Azure Resource Groups
+### WinRM setup
+This task uses the [Windows Remote Management](https://msdn.microsoft.com/en-us/library/aa384426.aspx) (WinRM) to access domain-joined or workgroup, on-premises physical or virtual machines.
 
-To use dynamically deployed Azure virtual machines, use the [Azure Resource Group Deployment](https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/DeployAzureResourceGroup) task to deploy the virtual machines in a Resource Group and then the name of the Resource Group can be typed in the Machine Group parameter of the IIS Web Application Deployment task. As described above, copy the web application's package zip files to the virtual machines in the Azure Resource Group using the [Azure File Copy](https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/AzureFileCopy) task.
+#### Windows Remote Management (WinRM) Setup for On-premises Physical or Virtual Machines
+To easily **setup WinRM** on the **host machines** follow the directions for [domain-joined machines](https://www.visualstudio.com/en-us/docs/release/examples/other-servers/net-to-vm) or the [workgroup machines](https://www.visualstudio.com/en-us/docs/release/examples/other-servers/net-to-workgroup-vm).
 
-_NOTE: Currently existing Azure Resource Groups, classic (v1) or Azure Resource Manager (v2), cannot be used in the Build or Release Management definitions. Ability to select existing Resource Groups and to use the virtual machine resources in them to deploy applications to is coming soon._
+#### Windows Remote Management (WinRM) Setup for Azure Virtual Machines
+Azure virtual machines only work with the WinRM HTTPS protocol. With the WinRM protocol selected as HTTPS, you have an option to use the Test Certificate. Selecting the Test Certificate option means that the certificate is a self-signed certificate, and the automation agent will skip validating the authenticity of the machine's certificate from a trusted certification authority.
 
-### Windows Remote Management (WinRM) Setup
+-	**Classic Virtual machines:** When creating [classic virtual machine](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) from the [new Azure portal](https://portal.azure.com/) or the [classic Azure portal](https://manage.windowsazure.com/), the virtual machine is already setup for WinRM HTTPS, with the default port 5986 already open in Firewall, and a self-signed certificate installed on the machine. These virtual machines can be directly added to the WinRM. The existing [classic virtual machine](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) can be also selected by using the [Azure Resource Group Deployment task](https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/DeployAzureResourceGroup).
 
-The IIS Web Application Deployment task uses the [Windows Remote Management](https://msdn.microsoft.com/en-us/library/aa384426(v=vs.85).aspx) (WinRM) to access domain-joined/workgroup machines or Azure virtual machines. WinRM is Microsoft's implementation of  [WS-Management Protocol](https://msdn.microsoft.com/en-us/library/aa384470(v=vs.85).aspx) that is firewall-friendly and provides a common way for systems to access and exchange management information across on-premises or Cloud IT infrastructure. The automation agent that runs the IIS Web Application Deployment task uses WinRM to communicate with the target machines. It is important to setup WinRM properly on the target machines else the deployment tasks will fail. The configuration of WinRM is described in detail on the MSDN [site](https://msdn.microsoft.com/en-us/library/aa384372(v=vs.85).aspx). For the target machines the following will ensure that the WinRM has been setup properly on them:
-
-1. Azure virtual machines only work with the WinRM HTTPS protocol. When creating [classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) or [resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) virtual machine from the Azure preview portal or Azure portal, the virtual machine is already setup for WinRM HTTPS, with the default port 5986 already open in Firewall, and a test certificate installed on the machine. These virtual machines can be directly added to a machine group, with the WinRM protocol selected as HTTPS, and the Skip CA Check option selected. The Skip CA Check means that the certificate is a test certificate and the client should skip the validation of the certificate by a trusted certification authority. 
-2. To dynamically deploy Azure resource groups with virtual machines in them use the [Azure Resource Group Deployment](https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/DeployAzureResourceGroup) task. The task has a sample template that can setup the WinRM HTTPS protocol on the virtual machines, open the 5986 port in the Firewall, and install the test certificate. After this the virtual machines are ready for use in the deployment task.
-3. For pre-existing on-premises machines, domain-joined or workgroup, and whether they are physical machines or virtual machines, set them up as per the table below to ensure that the deployment tasks work fine with them:
-
-<table border="1" style="width:100%">
-<tr>
-	<th> Target Machine State </th>
-	<th> Target Machine Trust with Automation Agent </th>
-	<th> Machine Identity </th>
-	<th> Authentication Account </th>
-	<th> Authentication Mode </th>
-	<th> Authentication Account Permission on Target Machine </th>
-	<th> Connection Type </th>
-	<th> Pre-requisites in Target machine for Deployment Tasks to Succeed </th>
-</tr>
-<tr>
-	<td> Domain joined machine in Corp network </td>
-	<td> Trusted </td>
-	<td> DNS name </td>
-	<td> Domain account </td>
-	<td> Kerberos </td>
-	<td> Machine Administrator </td>
-	<td> WinRM HTTP </td>
-	<td>	<ul>
-		<li> WinRM HTTP port (default 5985) opened in Firewall. </li>
-		<li> File & Printer sharing enabled </li>
-		</ul> </td>
-</tr>
-<tr>
-	<td> Domain joined machine in Corp network </td>
-	<td> Trusted </td>
-	<td> DNS name </td>
-	<td> Domain account </td>
-	<td> Kerberos </td>
-	<td> Machine Administrator </td>
-	<td> WinRM HTTPS </td>
-	<td>	<ul>
-		<li> WinRM HTTPS port (default 5986) opened in Firewall. </li>
-		<li> Trusted certificate in Automation agent. </li>
-		<li> If Trusted certificate not in Automation agent, then Test Certificate option enabled in Task for deployment. </li>
-		<li> File & Printer sharing enabled. </li>
-		</ul> </td>
-</tr>
-<tr>
-	<td> Domain joined machine or Workgroup machine, in Corp network </td>
-	<td> Any </td>
-	<td> DNS name </td>
-	<td> Local machine account </td>
-	<td> NTLM </td>
-	<td> Machine Administrator </td>
-	<td> WinRM HTTP </td>
-	<td>	<ul>
-		<li> WinRM HTTP port (default 5985) opened in Firewall. </li>
-		<li> Disable UAC remote restrictions (<a href="https://support.microsoft.com/en-us/kb/951016">link</a>). </li>
-		<li> Credential in domain\\account name  or machine\\account name format. </li>
-		<li> Set "AllowUnencrypted" option and add remote machines in "Trusted Host" list in Automation Agent (<a href="https://msdn.microsoft.com/en-us/library/aa384372(v=vs.85).aspx">link</a>). </li>
-		<li> File & Printer sharing enabled. </li>
-		</ul> </td>
-</tr>
-<tr>
-	<td> Domain joined machine or Workgroup machine, in Corp network </td>
-	<td> Any </td>
-	<td> DNS name </td>
-	<td> Local machine account </td>
-	<td> NTLM </td>
-	<td> Machine Administrator </td>
-	<td> WinRM HTTPS </td>
-	<td>	<ul>
-		<li> WinRM HTTPS port (default 5986) opened in Firewall. </li>
-		<li> Disable UAC remote restrictions(<a href="https://support.microsoft.com/en-us/kb/951016">link</a>). </li>
-		<li> Credential in <Account> format. </li>
-		<li> Trusted certificate in Automation agent. </li>
-		<li> If Trusted certificate not in Automation agent, then Test Certificate option enabled in Task for deployment. </li>
-		<li> File & Printer sharing enabled. </li>
-		</ul> </td>
-</tr>
-</table>
+- **•	Azure Resource Group:** If an [Azure resource group](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-hero-tutorial/) has been created in the [new Azure portal](https://portal.azure.com/), then it needs to be setup for the WinRM HTTPS protocol (WinRM HTTPS, with the default port 5986 already open in Firewall, and a self-signed certificate installed on the machine). To dynamically deploy Azure resource groups with virtual machines in them use the [Azure Resource Group Deployment task](https://github.com/Microsoft/vso-agent-tasks/tree/master/Tasks/DeployAzureResourceGroup). The task has a checkbox titled - **Enable Deployment Pre-requisites**. Select this option to setup the WinRM HTTPS protocol on the virtual machines, and to open the 5986 port in the Firewall, and to install the test certificate. After this the virtual machines are ready for use in the deployment task.
 
 ## Parameters of the task
 
@@ -132,7 +63,7 @@ This section of the task is used to deploy the web application to an existing II
  - **Test Certificate**: Select the option to skip validating the authenticity of the machine's certificate by a trusted certification authority. The parameter is required for the WinRM HTTPS protocol.
  - **Web Deploy Package\*:** Location of the web deploy zip package file on the target machine or on a UNC path that is accessible to the administrator credentials of the machine like, \\\\BudgetIT\Web\Deploy\FabrikamWeb.zip. Environment variables are also supported like $env:windir, $env:systemroot etc. For example, $env:windir\FabrikamFibre\Web.
   - **Web Deploy Parameters File:** The parameter file is used to override the default settings in the web deploy zip package file like, the IIS Web application name or the database connection string. This helps in having a single package that can be deployed across dev, test, staging, and production, with a specific parameter file for each environment. The parameter takes in the location of the parameter file on the target machines or on a UNC path.
-  - **Override Parameters:** Parameters specified here will override the parameters in the MSDeploy zip file and the Parameter file. The format followed here is same as that for [setParam](https://technet.microsoft.com/en-us/library/dd569084(v=ws.10).aspx) option of MsDepoy.exe. For example, name="IIS Web Application Name",value="Fabrikam/MyApplication"
+  - **Override Parameters:** Parameters specified here will override the parameters in the MSDeploy zip file and the Parameter file. The format followed here is same as that for [setParam](https://technet.microsoft.com/en-us/library/dd569084(v=ws.10).aspx) option of MsDeploy.exe. For example, name="IIS Web Application Name",value="Fabrikam/MyApplication"
  
 ### Website
 The section of the task is used to create a new IIS website or to update an existing one by using the IIS Server's AppCmd.exe command line tool. For more information about the parameters see the [websites](https://technet.microsoft.com/library/hh831681.aspx#Add_Site) page on MSDN.
@@ -176,4 +107,4 @@ The section provides for advanced options.
 ## Known Issues
 
   - The IIS Web Application Deployment task does not provide support for Web Deploy manifest files and has not been tested and verified for ASP.NET 5 and MVC 6 web application. Please send us feedback for the task and for the support for manifest files, ASP.NET 5/MVC 6 we applications at RM\_Customer\_Queries at microsoft dot com.
-  - The Override Parameters can take only one parameter based on the [setParam](https://technet.microsoft.com/en-us/library/dd569084(v=ws.10).aspx) option of MsDepoy.exe
+  - The Override Parameters can take only one parameter based on the [setParam](https://technet.microsoft.com/en-us/library/dd569084(v=ws.10).aspx) option of MsDeploy.exe

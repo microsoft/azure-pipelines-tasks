@@ -1,5 +1,8 @@
 {
     "which": {
         "cmd": "/usr/local/bin/cmd"
+    },
+    "checkPath": {
+        "/usr/local/bin/cmd": true
     }
 }

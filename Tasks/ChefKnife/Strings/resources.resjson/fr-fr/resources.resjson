@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Knife pour Chef",
-  "loc.helpMarkDown": "[Plus d'informations](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/ChefKnife/README.md)",
+  "loc.helpMarkDown": "[Plus d'informations](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/ChefKnife/README.md)",
   "loc.description": "Exécuter des scripts avec des commandes knife sur votre station de travail chef",
   "loc.instanceNameFormat": "Script Chef Knife : $(ScriptPath)",
   "loc.input.label.ConnectedServiceName": "Abonnement Chef",

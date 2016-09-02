@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Compilazione Xcode",
-  "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=613730)",
+  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613730)",
   "loc.description": "Consente di compilare un'area di lavoro Xcode su Mac OS",
   "loc.instanceNameFormat": "Xcode $(actions)",
   "loc.group.displayName.sign": "Firma e provisioning",
@@ -43,9 +43,20 @@
   "loc.input.label.xcodeDeveloperDir": "Percorso sviluppatori Xcode",
   "loc.input.help.xcodeDeveloperDir": "Percorso facoltativo della cartella per sviluppatori Xcode se non è quella predefinita di sistema. Da usare quando in un sistema sono installate più versioni di Xcode. Esempio: /Applications/Xcode 7.app/Contents/Developer",
   "loc.input.label.useXctool": "Usa xctool",
-  "loc.input.help.useXctool": "Usa xctool invece di xcodebuild. Richiede che xctool sia installato negli host di agenti. Per dettagli, vedere [xctool](https://github.com/facebook/xctool).",
+  "loc.input.help.useXctool": "Consente di usare xctool invece di xcodebuild. Richiede che xctool sia installato negli host di agenti. Per dettagli, vedere [xctool](https://github.com/facebook/xctool).",
   "loc.input.label.xctoolReporter": "Formato reporter di test xctool",
   "loc.input.help.xctoolReporter": "Formato del reporter di test da usare quando si specifica l'azione \"test\" ed è selezionata l'opzione \"Usa xctool\". Specificare \"junit:percorso-file-di-output.xml\" per generare un formato di file compatibile con l'attività Pubblica risultati del test. Se è specificato, viene aggiunto anche \"plain\". Richiede che xctool sia installato negli host di agenti. Per dettagli, vedere [xctool](https://github.com/facebook/xctool).",
   "loc.input.label.publishJUnitResults": "Pubblica in VSTS/TFS",
-  "loc.input.help.publishJUnitResults": "Selezionare questa opzione per pubblicare in VSTS/TFS i risultati di test JUnit ottenuti in precedenza usando xctool."
+  "loc.input.help.publishJUnitResults": "Selezionare questa opzione per pubblicare in VSTS/TFS i risultati di test JUnit ottenuti in precedenza usando xctool.",
+  "loc.messages.SignIdNotFound": "Failed to find iOS signing identity. Verify the signing and provisioning information provided.",
+  "loc.messages.TempKeychainSetupFailed": "Failed to add the temporary keychain to the keychains search path.",
+  "loc.messages.ProvProfileDetailsNotFound": "Failed to find the details for provisioning profile: %s",
+  "loc.messages.ProvProfileUUIDNotFound": "Failed to find provisioning profile UUID for provisioning profile: %s",
+  "loc.messages.MultipleWorkspacesFound": "Multiple xcode workspace matches were found. Using the first match: %s",
+  "loc.messages.WorkspaceDoesNotExist": "Xcode workspace was specified but it does not exist or is not a directory",
+  "loc.messages.UseXcToolForTestPublishing": "Check the 'Use xctool' checkbox and specify the xctool reporter format to publish test results. No results published.",
+  "loc.messages.NoTestResultsFound": "No test result files matching %s were found, so publishing JUnit test results is being skipped.",
+  "loc.messages.XcodeSuccess": "Xcode task execution completed with no errors.",
+  "loc.messages.TempKeychainDeleteFailed": "Failed to delete temporary keychain %s created during the build.",
+  "loc.messages.ProvProfileDeleteFailed": "Failed to delete the provisioning profile %s."
 }

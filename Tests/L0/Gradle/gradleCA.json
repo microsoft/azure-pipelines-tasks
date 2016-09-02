@@ -1,0 +1,65 @@
+{
+    "exec": {
+        "gradlew build": {
+            "code": 0,
+            "stdout": "Sample gradle output"
+        },
+        "gradlew properties": {
+            "code": 0,
+            "stdout": "subprojects: []",
+            "stderr": ""
+        },
+        "gradlew build -I /Gradle/CodeAnalysis/pmd.gradle": {
+            "code": 0,
+            "stdout": "Sample gradle + PMD"
+        },
+        "gradlew build -I /Gradle/CodeAnalysis/checkstyle.gradle -I /Gradle/CodeAnalysis/pmd.gradle": {
+            "code": 0,
+            "stdout": "Sample gradle + Checkstyle + PMD"
+        },
+        "gradlew.bat build": {
+            "code": 0,
+            "stdout": "Sample gradle output"
+        },
+        "gradlew.bat properties": {
+            "code": 0,
+            "stdout": "subprojects: []",
+            "stderr": ""
+        },
+        "gradlew.bat build -I /Gradle/CodeAnalysis/pmd.gradle": {
+            "code": 0,
+            "stdout": "Sample gradle + PMD"
+        },
+        "gradlew.bat build -I /Gradle/CodeAnalysis/checkstyle.gradle -I /Gradle/CodeAnalysis/pmd.gradle": {
+            "code": 0,
+            "stdout": "Sample gradle + Checkstyle + PMD"
+        }
+    },
+    "checkPath": {
+        "gradlew": true,
+        "gradlew.bat": true,
+        "/home/repo/src": true
+    },
+    "getVariable": {
+        "JAVA_HOME_8_X86": "/user/local/bin/Java8",
+        "System.DefaultWorkingDirectory": "/user/build",
+        "ENDPOINT_URL_ID1": "http://sonarqube/end/point",
+        "ENDPOINT_AUTH_ID1": "{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}",
+        "build.buildNumber": "14",
+        "build.sourcesDirectory": "/user/build/s",
+        "build.artifactStagingDirectory": "/user/build/a"
+    },
+    "find": {
+        "/user/build": [
+            "/user/build/fun/test-123.xml"
+        ]
+    },
+    "match": {
+        "**/TEST-*.xml": [
+            "/user/build/fun/test-123.xml"
+        ],
+        "**/build/test-results/TEST-*.xml": [
+            "/user/build/fun/test-results/test-123.xml"
+        ]
+    }
+}

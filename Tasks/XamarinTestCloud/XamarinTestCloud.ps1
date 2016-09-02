@@ -1,10 +1,10 @@
-﻿param(
-    [string]$app, 
-    [string]$testDir, 
+param(
+    [string]$app,
+    [string]$testDir,
     [string]$teamApiKey,
     [string]$user,
     [string]$devices,
-    [string]$series, 
+    [string]$series,
     [string]$locale,
     [string]$userDefinedLocale,
     [string]$testCloudLocation,
@@ -30,10 +30,11 @@ Write-Verbose "publishNUnitResults = $publishNUnitResults"
 # Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
 $parameters = ""
 
-if (!$teamApiKey) 
+if (!$teamApiKey)
 {
     throw "Must specify a Team API key."
 }
@@ -50,13 +51,13 @@ if (!$devices)
 }
 $parameters = "$parameters --devices $devices"
 
-if (!$series) 
+if (!$series)
 {
     throw "Must specify the series."
 }
 $parameters = "$parameters --series `"$series`""
 
-if (!$locale -or ($locale -eq "user" -and [string]::IsNullOrEmpty($userDefinedLocale))) 
+if (!$locale -or ($locale -eq "user" -and [string]::IsNullOrEmpty($userDefinedLocale)))
 {
     throw "Must specify the system language."
 }
@@ -116,24 +117,24 @@ if ($testCloudLocation.Contains("*") -or $testCloudLocation.Contains("?"))
 
     if ($testCloudExectuables)
     {
-        foreach ($executable in $testCloudExectuables) 
+        foreach ($executable in $testCloudExectuables)
         {
             $testCloud = $executable
             break;
         }
     }
 }
-else 
+else
 {
-    if (Test-Path -Path $testCloudLocation -Type Leaf) 
+    if (Test-Path -Path $testCloudLocation -Type Leaf)
     {
-        $testCloud = $testCloudLocation 
+        $testCloud = $testCloudLocation
     }
 }
 
-if (!$testCloud) 
+if (!$testCloud)
 {
-    throw "Could not find test-cloud.exe.  If you don't have Xamarin Test Cloud command line tools installed, install the NuGet package Xamarin.UITest."  
+    throw "Could not find test-cloud.exe.  If you don't have Xamarin Test Cloud command line tools installed, install the NuGet package Xamarin.UITest."
 }
 
 if ($optionalArgs)
@@ -142,34 +143,54 @@ if ($optionalArgs)
 }
 
 $publishResults = Convert-String $publishNUnitResults Boolean
-if($publishResults) 
+if($publishResults)
 {
     $buildId = Get-TaskVariable $distributedTaskContext "build.buildId"
     $indx = 0;
 }
 
 foreach ($ap in $appFiles)
-{   
+{
     $argument = "submit ""$ap"" $teamApiKey $parameters"
-    if($publishResults) 
+    if($publishResults)
     {
         $nunitFileCurrent = Join-Path $testDir "xamarintest_$buildId.$indx.xml"
         $indx++;
         $argument = "$argument --nunit-xml ""$nunitFileCurrent"""
     }
     Write-Host "Submit $ap to Xamarin Test Cloud."
-    Invoke-Tool -Path $testCloud -Arguments $argument 
+    Invoke-Tool -Path $testCloud -Arguments $argument -OutVariable toolOutput
+    foreach($line in $toolOutput)
+    {
+        if($line -imatch "https://testcloud.xamarin.com/test/(.+)/")
+        {
+            $testCloudResults = ,$matches[0]
+        }
+    }
 }
 
-# Publish nunit test results to VSO
-if($publishResults) 
-{    
+# Publish NUnit test results to Team Services
+if($publishResults)
+{
     $searchPattern = Join-Path $testDir "xamarintest_$buildId*.xml"
     $matchingTestResultsFiles = Find-Files -SearchPattern $searchPattern
     if($matchingTestResultsFiles)
     {
         Publish-TestResults -TestRunner "NUnit" -TestResultsFiles $matchingTestResultsFiles -Context $distributedTaskContext
     }
+}
+
+# Upload test summary section
+if($testCloudResults)
+{
+    Write-Verbose "Upload Test Cloud run results summary. testCloudResults = $testCloudResults"
+    $mdReportFile = Join-Path $testDir "xamarintestcloud_$buildId.md"
+    foreach($result in $testCloudResults)
+    {
+       Write-Output $result | Out-File $mdReportFile -Append
+       Write-Output [Environment]::NewLine | Out-File $mdReportFile -Append
+    }
+    Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=Xamarin Test Cloud Results;]$mdReportFile"
 }
 
 Write-Verbose "Leaving script XamarinTestCloud.ps1"

@@ -1,0 +1,212 @@
+{
+  "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
+  "name": "AzureRMWebAppDeployment",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 18
+  },
+  "minimumAgentVersion": "1.102.0",
+  "groups": [
+    {
+      "name": "output",
+      "displayName": "ms-resource:loc.group.displayName.output",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
+      "name": "WebAppName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.WebAppName",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.WebAppName"
+    },
+    {
+      "name": "DeployToSlotFlag",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.DeployToSlotFlag",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.DeployToSlotFlag"
+    },
+    {
+      "name": "ResourceGroupName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ResourceGroupName",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName",
+      "visibleRule": "DeployToSlotFlag = true"
+    },
+    {
+      "name": "SlotName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.SlotName",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.SlotName",
+      "visibleRule": "DeployToSlotFlag = true"
+    },
+    {
+      "name": "Package",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.Package",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.Package"
+    },
+    {
+      "name": "SetParametersFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.SetParametersFile",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.SetParametersFile"
+    },
+    {
+      "name": "RemoveAdditionalFilesFlag",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.RemoveAdditionalFilesFlag",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.RemoveAdditionalFilesFlag"
+    },
+    {
+      "name": "ExcludeFilesFromAppDataFlag",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ExcludeFilesFromAppDataFlag",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.ExcludeFilesFromAppDataFlag"
+    },
+    {
+      "name": "TakeAppOfflineFlag",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.TakeAppOfflineFlag",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
+    },
+    {
+      "name": "VirtualApplication",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.VirtualApplication",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.VirtualApplication"
+    },
+    {
+      "name": "AdditionalArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AdditionalArguments",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
+    },
+    {
+      "name": "WebAppUri",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.WebAppUri",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "output",
+      "helpMarkDown": "ms-resource:loc.input.help.WebAppUri"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "WebAppName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppNames"
+    },
+    {
+      "target": "ResourceGroupName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppResourceGroup",
+      "parameters": {
+        "WebAppName": "$(WebAppName)"
+      }
+    },
+    {
+      "target": "SlotName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppSlotsId",
+      "parameters": {
+        "WebAppName": "$(WebAppName)",
+        "ResourceGroupName": "$(ResourceGroupName)"
+      },
+      "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "AzurePowerShell": {
+      "target": "$(currentDirectory)\\AzureRmWebAppDeployment-Legacy.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    },
+    "PowerShell3": {
+      "target": "AzureRMWebAppDeployment.ps1"
+    }
+  },
+  "messages": {
+    "Invalidwebapppackagepathprovided": "ms-resource:loc.messages.Invalidwebapppackagepathprovided",
+    "WebappsuccessfullypublishedatUrl0": "ms-resource:loc.messages.WebappsuccessfullypublishedatUrl0",
+    "Unabletoretrievewebapppublishurlforwebapp0": "ms-resource:loc.messages.Unabletoretrievewebapppublishurlforwebapp0",
+    "GettingconnectiondetailsforazureRMWebApp0underSlot1": "ms-resource:loc.messages.GettingconnectiondetailsforazureRMWebApp0underSlot1",
+    "GotconnectiondetailsforazureRMWebApp0underSlot1": "ms-resource:loc.messages.GotconnectiondetailsforazureRMWebApp0underSlot1",
+    "GettingconnectiondetailsforazureRMWebApp0underProductionSlot": "ms-resource:loc.messages.GettingconnectiondetailsforazureRMWebApp0underProductionSlot",
+    "WebApp0doesnotexist": "ms-resource:loc.messages.WebApp0doesnotexist",
+    "GotconnectiondetailsforazureRMWebApp0underProductionSlot": "ms-resource:loc.messages.GotconnectiondetailsforazureRMWebApp0underProductionSlot",
+    "WebApp0notfound": "ms-resource:loc.messages.WebApp0notfound",
+    "Unabletofindwebapppublishprofiledetailsforwebapp0": "ms-resource:loc.messages.Unabletofindwebapppublishprofiledetailsforwebapp0",
+    "UsinglocalMSDeployexe": "ms-resource:loc.messages.UsinglocalMSDeployexe",
+    "msdeployexeislocatedat0": "ms-resource:loc.messages.msdeployexeislocatedat0",
+    "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "ms-resource:loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone",
+    "Nofileswerefoundtodeploywithsearchpattern0": "ms-resource:loc.messages.Nofileswerefoundtodeploywithsearchpattern0",
+    "packageFileFindFilesSearchPattern0": "ms-resource:loc.messages.packageFileFindFilesSearchPattern0",
+    "packageFile0": "ms-resource:loc.messages.packageFile0",
+    "Runningmsdeploycommand0": "ms-resource:loc.messages.Runningmsdeploycommand0",
+    "msdeploycommandransuccessfully": "ms-resource:loc.messages.msdeploycommandransuccessfully",
+    "filePathFindFilesSearchPattern0": "ms-resource:loc.messages.filePathFindFilesSearchPattern0",
+    "filePath0": "ms-resource:loc.messages.filePath0",
+    "UnabletofindpublishUrlforWebApp0": "ms-resource:loc.messages.UnabletofindpublishUrlforWebApp0",
+    "Updatingdeploymenthistoryfordeployment0": "ms-resource:loc.messages.Updatingdeploymenthistoryfordeployment0",
+    "Updatingdeploymentstatus": "ms-resource:loc.messages.Updatingdeploymentstatus",
+    "CannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "ms-resource:loc.messages.CannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite",
+    "Cannotupdatedeploymentstatusfor01": "ms-resource:loc.messages.Cannotupdatedeploymentstatusfor01",
+    "CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved": "ms-resource:loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved",
+    "Runningmsdeploycommandtocheckifpackagecontainsparamfile0": "ms-resource:loc.messages.Runningmsdeploycommandtocheckifpackagecontainsparamfile0",
+    "Paramscontentofwebpackage0": "ms-resource:loc.messages.Paramscontentofwebpackage0",
+    "Parameterfileispresentinwebpackage": "ms-resource:loc.messages.Parameterfileispresentinwebpackage",
+    "Parameterfileisnotpresentinwebpackage": "ms-resource:loc.messages.Parameterfileisnotpresentinwebpackage"
+  }
+}

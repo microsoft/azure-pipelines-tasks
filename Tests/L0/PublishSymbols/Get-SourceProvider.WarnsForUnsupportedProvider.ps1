@@ -1,13 +1,12 @@
-[cmdletbinding()]
+[CmdletBinding()]
 param()
 
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-. $PSScriptRoot\..\..\..\Tasks\PublishSymbols\Helpers.ps1
-$env:BUILD_REPOSITORY_PROVIDER = 'Some repository provider'
-$env:BUILD_SOURCESDIRECTORY = 'Some build sources directory'
-$env:SYSTEM_TEAMPROJECTID = 'Some team project ID'
-Register-Mock Invoke-DisposeSourceProvider
+. $PSScriptRoot\..\..\..\Tasks\PublishSymbols\IndexHelpers\SourceProviderFunctions.ps1
+Register-Mock Get-VstsTaskVariable { 'Some repository provider' } -- -Name Build.Repository.Provider -Require
+Register-Mock Get-VstsTaskVariable { 'Some build sources directory' } -- -Name Build.SourcesDirectory -Require
+Register-Mock Get-VstsTaskVariable { 'Some team project ID' } -- -Name System.TeamProjectId -Require
 Register-Mock Write-Warning
 
 # Act.
@@ -15,11 +14,4 @@ $actual = Get-SourceProvider
 
 # Assert.
 Assert-IsNullOrEmpty $actual
-# Asserting that dispose was called isn't partically interesting for the flow
-# exercised by this test case. However, it does validate that dispose would
-# would get called properly for other providers.
-Assert-WasCalled Invoke-DisposeSourceProvider -Time 1 -ParametersEvaluator {
-        $Provider -ne $null -and
-        $Provider.Name -eq $env:BUILD_REPOSITORY_PROVIDER
-    }
 Assert-WasCalled Write-Warning

@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "731004D4-1D66-4F70-8C05-638018B22210",
   "name": "WindowsMachineFileCopy",
@@ -16,9 +13,9 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 17
+    "Patch": 35
   },
-  "minimumAgentVersion": "1.91.0",
+  "minimumAgentVersion": "1.104.0",
   "groups": [
     {
       "name": "advanced",

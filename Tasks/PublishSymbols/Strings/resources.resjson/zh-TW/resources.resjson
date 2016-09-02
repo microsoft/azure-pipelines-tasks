@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "編製來源索引及發行符號",
-  "loc.helpMarkDown": "索引您的原始程式碼，並將符號發行至檔案共用<br/>[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=613722)",
+  "loc.helpMarkDown": "索引您的原始程式碼，並將符號發行至檔案共用<br/>[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613722)",
   "loc.description": "編製原始程式碼的索引，並將符號發行到檔案共用",
   "loc.instanceNameFormat": "發行符號路徑: $(SymbolsPath)",
   "loc.group.displayName.advanced": "進階",
@@ -25,6 +25,7 @@
   "loc.messages.CleanedUpSemaphoreFile0": "已成功清理現有的旗號檔案 '{0}'。",
   "loc.messages.CleanUpSemaphoreFile0Error1": "無法清理現有的旗號檔案 '{0}'。{1}",
   "loc.messages.Error0AccessingSemaphoreFile1Retrying2Seconds": "存取旗號檔案 '{1}' 時發生錯誤 '{0}'。將在 {2:N0} 秒內重試。",
+  "loc.messages.FailedToLoadDbghelpDllFrom0ErrorCode1": "Failed to load dbghelp.dll from '{0}' with error code '{1}'.",
   "loc.messages.Found0Files": "找到 {0:N0} 檔案。",
   "loc.messages.FreeLibraryDbghelpDllError0": "無法釋放程式庫 dbghelp.dll。錯誤碼 '{0}'。",
   "loc.messages.NoFilesForIndexing": "未選取要編製索引的檔案。",

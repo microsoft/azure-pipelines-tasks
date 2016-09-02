@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "EF087383-EE5E-42C7-9A53-AB56C98420F9",
   "name": "VSTest",
@@ -16,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 29
+    "Patch": 57
   },
   "demands": [
     "vstest"
@@ -89,10 +86,22 @@
       "name": "runInParallel",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.runInParallel",
-      "defaultValue": "true",
+      "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.runInParallel",
       "groupName": "executionOptions"
+    },
+    {
+      "name": "vstestLocationMethod",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.vstestLocationMethod",
+      "required": false,
+      "groupName": "advancedExecutionOptions",
+      "defaultValue": "version",
+      "options": {
+        "version": "Version",
+        "location": "Specify Location"
+      }
     },
     {
       "name": "vsTestVersion",
@@ -102,11 +111,22 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.vsTestVersion",
       "groupName": "advancedExecutionOptions",
+      "visibleRule": "vstestLocationMethod = version",
       "options": {
         "latest": "Latest",
         "14.0": "Visual Studio 2015",
         "12.0": "Visual Studio 2013"
       }
+    },
+    {
+      "name": "vstestLocation",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.vstestLocation",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.vstestLocation",
+      "visibleRule": "vstestLocationMethod = location",
+      "groupName": "advancedExecutionOptions"
     },
     {
       "name": "pathtoCustomTestAdapters",
@@ -168,7 +188,33 @@
     "PowerShell": {
       "target": "$(currentDirectory)\\VSTest.ps1",
       "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+      "workingDirectory": "$(currentDirectory)",
+      "platforms": [
+        "windows"
+      ]
+    },
+    "Node": {
+      "target": "vstest.js"
     }
+  },
+  "messages": {
+    "VstestReturnCode": "ms-resource:loc.messages.VstestReturnCode",
+    "NoMatchingTestAssemblies": "ms-resource:loc.messages.NoMatchingTestAssemblies",
+    "VstestNotFound": "ms-resource:loc.messages.VstestNotFound",
+    "VstestFailed": "ms-resource:loc.messages.VstestFailed",
+    "NoResultsToPublish": "ms-resource:loc.messages.NoResultsToPublish",
+    "ErrorWhileReadingRunSettings": "ms-resource:loc.messages.ErrorWhileReadingRunSettings",
+    "ErrorWhileReadingTestSettings": "ms-resource:loc.messages.ErrorWhileReadingTestSettings",
+    "RunInParallelNotSupported": "ms-resource:loc.messages.RunInParallelNotSupported",
+    "FailedToSetRunInParallel": "ms-resource:loc.messages.FailedToSetRunInParallel",
+    "UpdateOneOrHigherRequired": "ms-resource:loc.messages.UpdateOneOrHigherRequired",
+    "ErrorOccuredWhileSettingRegistry": "ms-resource:loc.messages.ErrorOccuredWhileSettingRegistry",
+    "ErrorWhileSettingTestImpactCollectorTestSettings": "ms-resource:loc.messages.ErrorWhileSettingTestImpactCollectorTestSettings",
+    "ErrorWhileSettingTestImpactCollectorRunSettings": "ms-resource:loc.messages.ErrorWhileSettingTestImpactCollectorRunSettings",
+    "ErrorWhileCreatingResponseFile": "ms-resource:loc.messages.ErrorWhileCreatingResponseFile",
+    "ErrorWhileUpdatingResponseFile": "ms-resource:loc.messages.ErrorWhileUpdatingResponseFile",
+    "ErrorWhilePublishingCodeChanges": "ms-resource:loc.messages.ErrorWhilePublishingCodeChanges",
+    "PublishCodeChangesPerfTime": "ms-resource:loc.messages.PublishCodeChangesPerfTime",
+    "GenerateResponseFilePerfTime": "ms-resource:loc.messages.GenerateResponseFilePerfTime"
   }
 }

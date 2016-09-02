@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "SQL Server Database 部署",
-  "loc.helpMarkDown": "[詳細資訊](http://aka.ms/sqlserverdacpackreadme)",
+  "loc.friendlyName": "[已取代] SQL Server Database 部署",
+  "loc.helpMarkDown": "[More Information](https://aka.ms/sqlserverdacpackreadme)",
   "loc.description": "使用 DACPAC 部署 SQL Server 資料庫",
-  "loc.instanceNameFormat": "部署 SQL DACPAC: $(DacpacFile)",
+  "loc.instanceNameFormat": "[已取代] 部署 SQL DACPAC: $(DacpacFile)",
   "loc.group.displayName.deployment": "部署",
   "loc.group.displayName.target": "目標",
   "loc.group.displayName.advanced": "進階",
@@ -39,5 +39,5 @@
   "loc.input.label.ResourceFilteringMethod": "選取電腦依據 ",
   "loc.input.help.ResourceFilteringMethod": "選擇性地提供電腦名稱或標記來選取電腦的子集。",
   "loc.input.label.MachineFilter": "部署至電腦",
-  "loc.input.help.MachineFilter": "此輸入只對電腦群組有效，電腦的簡單列表或輸出變目前尚無法支援。請以 dbserver.fabrikam.com、webserver.fabrikam.com、192.168.12.34 等形式提供電腦清單，或以 Role:DB; OS:Win8.1 等提供標記清單。若提供多個標記，工作會在所有具有指定標記的電腦上執行。若為 Azure 資源群組，請提供虛擬機器的名稱 (例如 ffweb、ffdb)。預設會在所有電腦上執行此工作。"
+  "loc.input.help.MachineFilter": "此輸入只對電腦群組有效，電腦的簡單列表或輸出變數目前尚無法支援。請以 dbserver.fabrikam.com、webserver.fabrikam.com、192.168.12.34 等形式提供電腦清單，或以 Role:DB; OS:Win8.1 等提供標記清單。若提供多個標記，工作會在所有具有指定標記的電腦上執行。若為 Azure 資源群組，請提供虛擬機器的名稱 (例如 ffweb、ffdb)。預設會在所有電腦上執行此工作。"
 }

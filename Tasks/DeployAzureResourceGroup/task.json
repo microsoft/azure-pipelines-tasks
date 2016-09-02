@@ -3,7 +3,7 @@
     "name": "AzureResourceGroupDeployment",
     "friendlyName": "Azure Resource Group Deployment",
     "description": "Deploy, start, stop, delete Azure Resource Groups",
-    "helpMarkDown": "[More Information](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
+    "helpMarkDown": "[More Information](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -13,12 +13,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 52
+        "Patch": 87
     },
     "demands": [
         "azureps"
     ],
-    "minimumAgentVersion": "1.95.0",
+    "minimumAgentVersion": "1.103.0",
     "groups": [
         {
             "name": "output",
@@ -51,40 +51,40 @@
         {
             "name": "ConnectedServiceNameClassic",
             "type": "connectedService:Azure",
-            "label": "Classic Azure Subscription",
+            "label": "Azure Classic Subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the Classic Azure subscription for the deployment.",
+            "helpMarkDown": "Select the Azure Classic subscription for the deployment.",
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
         },
         {
-            "name": "action", 
-            "type": "pickList", 
+            "name": "action",
+            "type": "pickList",
             "label": "Action",
             "defaultValue": "Create Or Update Resource Group",
             "required": true,
-            "helpMarkDown" : "Action to be performed on the Azure resources or resource group.",
+            "helpMarkDown": "Action to be performed on the Azure resources or resource group.",
             "options": {
-                 "Create Or Update Resource Group": "Create Or Update Resource Group",
-                 "Select Resource Group": "Select Resource Group",
-                 "Start": "Start Virtual Machines",
-                 "Stop": "Stop Virtual Machines",
-                 "Restart": "Restart Virtual Machines",
-                 "Delete": "Delete Virtual Machines",
-                 "DeleteRG": "Delete Resource Group"
-                },
+                "Create Or Update Resource Group": "Create Or Update Resource Group",
+                "Select Resource Group": "Select Resource Group",
+                "Start": "Start Virtual Machines",
+                "Stop": "Stop Virtual Machines",
+                "Restart": "Restart Virtual Machines",
+                "Delete": "Delete Virtual Machines",
+                "DeleteRG": "Delete Resource Group"
+            },
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
         },
         {
-            "name": "actionClassic", 
-            "type": "pickList", 
+            "name": "actionClassic",
+            "type": "pickList",
             "label": "Action",
             "defaultValue": "Select Resource Group",
             "required": true,
-            "helpMarkDown" : "Action to be performed on the Azure resources or cloud service.",
+            "helpMarkDown": "Action to be performed on the Azure resources or cloud service.",
             "options": {
-                 "Select Resource Group": "Select Cloud Service"
-                },
+                "Select Resource Group": "Select Cloud Service"
+            },
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
         },
         {
@@ -93,6 +93,9 @@
             "label": "Resource Group",
             "required": true,
             "helpMarkDown": "Provide the name of the resource group.",
+            "properties": {
+                "EditableOptions": "True"
+            },
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
         },
         {
@@ -101,6 +104,9 @@
             "label": "Cloud Service",
             "required": true,
             "helpMarkDown": "Provide the name of the cloud service.",
+            "properties": {
+                "EditableOptions": "True"
+            },
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
         },
         {
@@ -128,17 +134,17 @@
                 "West US": "West US"
             },
             "properties": {
-                "EditableOptions": "True" 
+                "EditableOptions": "True"
             },
             "visibleRule": "action = Create Or Update Resource Group"
         },
         {
-            "name": "csmFile", 
-            "type": "filePath", 
-            "label": "Template", 
-            "defaultValue":"",
+            "name": "csmFile",
+            "type": "filePath",
+            "label": "Template",
+            "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information about the templates see http://aka.ms/azuretemplates. To get started immediately use template http://aka.ms/sampletemplate.",
+            "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate.",
             "visibleRule": "action = Create Or Update Resource Group"
         },
         {
@@ -166,7 +172,7 @@
             "defaultValue": "false",
             "visibleRule": "action = Create Or Update Resource Group",
             "required": false,
-            "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). If the target Virtual Machines are associated with a Network security group (NSG), configure Inbound security rules for Destination port (5986)."
+            "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
         },
         {
             "name": "enableDeploymentPrerequisitesForSelect",
@@ -175,7 +181,7 @@
             "defaultValue": "false",
             "visibleRule": "action = Select Resource Group",
             "required": false,
-            "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). If the target Virtual Machines are associated with a Network security group (NSG), configure Inbound security rules for Destination port (5986). Applicable only for ARM VMs."
+            "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
         },
         {
             "name": "outputVariable",
@@ -192,22 +198,59 @@
             "target": "cloudService",
             "endpointId": "$(ConnectedServiceNameClassic)",
             "dataSourceName": "AzureHostedServiceNames"
-        }
-    ],
-    "sourceDefinitions": [
+        },
         {
             "target": "resourceGroupName",
-            "endpoint": "https://management.azure.com/subscriptions/$(authKey.SubscriptionId)/resourcegroups?api-version=2015-01-01",
-            "selector": "jsonpath:$.value[*].name",
-            "authKey": "$(ConnectedServiceName)"
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureResourceGroups"
         }
     ],
     "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
-  "execution": {
-    "AzurePowerShell": {
-      "target": "$(currentDirectory)\\DeployAzureResourceGroup.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "execution": {
+        "PowerShell3": {
+            "target": "DeployAzureResourceGroup.ps1"
+        }
+    },
+    "messages": {
+        "ARG_CreatedResourceGroup": "[Azure Resource Manager]Created resource group '{0}'",
+        "ARG_StartingMachine": "[Azure Resource Manager]Starting machine '{0}'",
+        "ARG_StartedMachine": "[Azure Resource Manager]Started machine '{0}' from Azure provider",
+        "ARG_StoppingMachine": "[Azure Resource Manager]Stopping machine '{0}'",
+        "ARG_StoppedMachine": "{0}' from Azure provider",
+        "ARG_DeletingMachine": "[Azure Resource Manager]Deleting machine '{0}'",
+        "ARG_DeletedMachine": "[Azure Resource Manager]Deleted machine '{0}' from Azure provider",
+        "ARG_DeletingResourceGroup": "[Azure Resource Manager]Deleting resource group '{0}'",
+        "ARG_DeletedResourceGroup": "[Azure Resource Manager]Deleted resource group '{0}'",
+        "ARG_EnsureResourceGroupWithMachine": "Ensure resource group '{0}' exists and has at least one virtual machine in it",
+        "ARG_GettingVmStatus": "[Azure Call]Getting the status for vm '{0}'",
+        "ARG_GotVmStatus": "[Azure Call]Got the status for vm '{0}'",
+        "ARG_GettingExtensionStatus": "[Azure Call]Getting the custom script extension '{0}' for vm '{1}'",
+        "ARG_GotExtensionStatus": "[Azure Call]Got the custom script extension '{0}' for vm '{1}'",
+        "ARG_SettingExtension": "[Azure Call]Setting the custom script extension '{0}' for vm '{1}'",
+        "ARG_SetExtension": "[Azure Call]Set the custom script extension '{0}' for vm '{1}'",
+        "ARG_RemovingExtension": "[Azure Call]Removing the custom script extension '{0}' for vm '{1}'",
+        "ARG_RemovedExtension": "[Azure Call]Removed the custom script extension '{0}' for vm '{1}'",
+        "ARG_NetworkInterfaceNotFound": "[Azure Call]No network interface found with virtual machine id {0} under resource group {1}",
+        "ARG_EmptyRGName": "[Azure Call]Resource group name and virtual machine ID should not be null or empty",
+        "ARG_UseSpnAuth": "Certificate based authentication only works with the 'Select Resource Group' action. Please select an Azure subscription with either Credential or SPN based authentication.",
+        "ARG_ProvideOutputVariable": "Please provide the output variable name since you have specified the 'Select Resource Group' option.",
+        "ARG_UnsupportedAzurePSVersion": "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at {1} to get the latest Azure powershell",
+        "ARG_AzureRMModuleNotFound": "The required AzureRM Powershell module is not installed. You can follow the instructions at {0} to get the latest Azure powershell",
+        "ARG_DeploymentFailed": "Resource group deployment '{0}' failed",
+        "ARG_DeploymentSucceeded": "Successfully created resource group deployment with name '{0}'",
+        "ARG_InvalidFilePath": "Found more than one file to deploy with search pattern '{0}'. There can be only one",
+        "ARG_FileNotFound": "No files were found to deploy with search pattern '{0}'",
+        "ARG_SpecifyValidTemplatePath": "Please specify a complete and a valid template file path",
+        "ARG_SpecifyValidParametersPath": "Please specify a complete and a valid template parameters file path",
+        "ARG_ActionNotSupported": "Action '{0}' is not supported on the provider '{1}'",
+        "ARG_OperationFailedOnMachine": "Operation '{0}' failed on the machine '{1}'",
+        "ARG_InvokeInvalidOperation": "Tried to invoke an invalid operation: '{0}'",
+        "ARG_NoVmsFound": "No VMs found in resource group: '{0}'. Could not register environment in the output variable: '{1}'",
+        "ARG_AllResourceNotFound": "Unable to get {0} for all resources in ResourceGroup : '{1}'",
+        "ARG_ResourceNotFound": "Unable to get {0} for '{1}' resources in ResourceGroup : '{2}'",
+        "ARG_SetExtensionFailed": "Setting the custom script extension '{0}' for virtual machine '{1}' failed with error : {2}",
+        "ARG_NetworkSecurityConfigFailed": "Failed to add the network security rule: {0}",
+        "ARG_SetExtensionFailedForVm": "Unable to set the custom script extension '{0}' for virtual machine '{1}': {2}",
+        "ARG_DeploymentPrereqFailed": "Failed to enable deployment prerequisites. {0}"
     }
-  }
 }

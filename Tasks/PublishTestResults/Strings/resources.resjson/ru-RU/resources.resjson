@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Публикация результатов теста",
-  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkID=613742)",
-  "loc.description": "Публикация результатов теста в VSO/Team Foundation Server",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613742)",
+  "loc.description": "Опубликовать результаты теста в VSTS или TFS",
   "loc.instanceNameFormat": "Опубликовать результаты тестов $(testResultsFiles)",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.testRunner": "Формат результатов теста",
@@ -9,7 +9,7 @@
   "loc.input.label.testResultsFiles": "Файлы результатов тестов",
   "loc.input.help.testResultsFiles": "Путь к файлам результатов тестов. Можно использовать подстановочные знаки. Пример: **/TEST-*.xml для всех XML-файлов, имена которых начинаются с \"TEST-\".",
   "loc.input.label.mergeTestResults": "Объединение результатов теста",
-  "loc.input.help.mergeTestResults": "Чтобы объединить результаты из всех файлов результатов тестов в один тестовый запуск в Team Foundation Server/VSO, установите этот флажок. Чтобы создать тестовый запуск для каждого файла результатов теста, снимите этот флажок.",
+  "loc.input.help.mergeTestResults": "Чтобы объединить результаты из всех файлов результатов тестов в один тестовый запуск в VSTS или TFS, установите этот флажок. Чтобы создать тестовый запуск для каждого файла результатов теста, снимите этот флажок.",
   "loc.input.label.testRunTitle": "Заголовок тестового запуска",
   "loc.input.help.testRunTitle": "Укажите имя для тестового запуска.",
   "loc.input.label.platform": "Платформа",

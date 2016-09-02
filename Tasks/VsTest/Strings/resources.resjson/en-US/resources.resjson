@@ -1,9 +1,6 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "loc.friendlyName": "Visual Studio Test",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=624539)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=624539)",
   "loc.description": "Run tests with Visual Studio test runner",
   "loc.instanceNameFormat": "Test Assemblies $(testAssembly)",
   "loc.group.displayName.executionOptions": "Execution Options",
@@ -16,13 +13,16 @@
   "loc.input.label.runSettingsFile": "Run Settings File",
   "loc.input.help.runSettingsFile": "Path to runsettings file to use with the tests. Use `$(Build.SourcesDirectory)` to access the Project folder.",
   "loc.input.label.overrideTestrunParameters": "Override TestRun Parameters",
-  "loc.input.help.overrideTestrunParameters": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `Platform=$(platform);Port=8080`",
+  "loc.input.help.overrideTestrunParameters": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `AppURL=$(DeployURL);Port=8080`",
   "loc.input.label.codeCoverageEnabled": "Code Coverage Enabled",
   "loc.input.help.codeCoverageEnabled": "Collect code coverage information from the Test run.",
   "loc.input.label.runInParallel": "Run In Parallel",
   "loc.input.help.runInParallel": "Enable parallel execution of your tests.",
+  "loc.input.label.vstestLocationMethod": "VSTest",
   "loc.input.label.vsTestVersion": "VSTest version",
   "loc.input.help.vsTestVersion": "The version of VSTest to use.",
+  "loc.input.label.vstestLocation": "Path to vstest.console.exe",
+  "loc.input.help.vstestLocation": "Optionally supply the path to VSTest.",
   "loc.input.label.pathtoCustomTestAdapters": "Path to Custom Test Adapters",
   "loc.input.help.pathtoCustomTestAdapters": "Directory path to custom test adapters. Nuget restored adapters are automatically searched for.",
   "loc.input.label.otherConsoleOptions": "Other console options",
@@ -34,5 +34,23 @@
   "loc.input.label.configuration": "Configuration",
   "loc.input.help.configuration": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here.",
   "loc.input.label.publishRunAttachments": "Upload Test Attachments",
-  "loc.input.help.publishRunAttachments": "Opt in/out of publishing test run level attachments."
+  "loc.input.help.publishRunAttachments": "Opt in/out of publishing test run level attachments.",
+  "loc.messages.VstestReturnCode": "Vstest exited with return code: %d.",
+  "loc.messages.NoMatchingTestAssemblies": "No test assemblies found matching the pattern: %s.",
+  "loc.messages.VstestNotFound": "Vstest of version %d is not found. Try again with a visual studio version that exists on your build agent machine.",
+  "loc.messages.VstestFailed": "Vstest failed with error. Check logs for failures. There might be failed tests.",
+  "loc.messages.NoResultsToPublish": "No results found to publish.",
+  "loc.messages.ErrorWhileReadingRunSettings": "Error occured while reading run settings file. Error : %s.",
+  "loc.messages.ErrorWhileReadingTestSettings": "Error occured while reading test settings file. Error : %s.",
+  "loc.messages.RunInParallelNotSupported": "Run in Parallel is not supported with testsettings file.",
+  "loc.messages.FailedToSetRunInParallel": "Failed to set run in parallel. Invalid run settings file.",
+  "loc.messages.UpdateOneOrHigherRequired": "Install Visual Studio 2015 Update 1 or higher on your build agent machine to run the tests in parallel.",
+  "loc.messages.ErrorOccuredWhileSettingRegistry": "Error occured while setting registry key, Error: %s.",
+  "loc.messages.ErrorWhileSettingTestImpactCollectorTestSettings": "Error occurred while setting Test Impact Collector in test settings file.",
+  "loc.messages.ErrorWhileSettingTestImpactCollectorRunSettings": "Error occurred while setting Test Impact Collector in run settings file.",
+  "loc.messages.ErrorWhileCreatingResponseFile": "Error occurred while creating the response file. All the tests will be executed for this run.",
+  "loc.messages.ErrorWhileUpdatingResponseFile": "Error occurred while updating the response file '%s'. All the tests will be executed for this run.",
+  "loc.messages.ErrorWhilePublishingCodeChanges": "Error occurred while publishing the code changes. All the tests will be executed for this run.",
+  "loc.messages.PublishCodeChangesPerfTime": "Total time taken to publish code changes: %d milliseconds",
+  "loc.messages.GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds"
 }

@@ -1,13 +1,18 @@
 {
   "loc.friendlyName": "PowerShell",
-  "loc.helpMarkDown": "[詳細資訊](http://go.microsoft.com/fwlink/?LinkID=613736)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613736)",
   "loc.description": "執行 PowerShell 指令碼",
-  "loc.instanceNameFormat": "Powershell: $(scriptName)",
+  "loc.instanceNameFormat": "PowerShell 指令碼",
   "loc.group.displayName.advanced": "進階",
-  "loc.input.label.scriptName": "指令碼檔名",
+  "loc.input.label.scriptType": "類型",
+  "loc.input.help.scriptType": "指令碼類型: 檔案路徑或內嵌指令碼",
+  "loc.input.label.scriptName": "指令碼路徑",
   "loc.input.help.scriptName": "執行指令碼的路徑。必須是完整路徑或預設工作目錄的相對路徑。",
   "loc.input.label.arguments": "引數",
   "loc.input.help.arguments": "傳遞至 PowerShell 指令碼的引數。可以是序號參數或具名參數",
   "loc.input.label.workingFolder": "工作資料夾",
-  "loc.input.help.workingFolder": "執行指令碼後的目前工作目錄。預設為指令碼所在的資料夾。"
+  "loc.input.help.workingFolder": "執行指令碼後的目前工作目錄。預設為指令碼所在的資料夾。",
+  "loc.input.label.inlineScript": "內嵌指令碼",
+  "loc.input.label.failOnStandardError": "Fail on Standard Error",
+  "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely solely on $LASTEXITCODE and the exit code to determine failure."
 }

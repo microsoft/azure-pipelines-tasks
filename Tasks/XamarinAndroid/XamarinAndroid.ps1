@@ -2,6 +2,7 @@ param(
     [string]$project, 
     [string]$target, 
     [string]$configuration,
+    [string]$clean,
     [string]$outputDir,
     [string]$msbuildLocation, 
     [string]$msbuildArguments,
@@ -13,6 +14,7 @@ Write-Verbose "Entering script XamarinAndroid.ps1"
 Write-Verbose "project = $project"
 Write-Verbose "target = $target"
 Write-Verbose "configuration = $configuration"
+Write-Verbose "clean = $clean"
 Write-Verbose "outputDir = $outputDir"
 Write-Verbose "msbuildLocation = $msbuildLocation"
 Write-Verbose "msbuildArguments = $msbuildArguments"
@@ -55,6 +57,12 @@ if ($configuration)
     $args = "$args /p:configuration=$configuration"
 }
 
+if ($clean.ToLower() -eq 'true')
+{
+    Write-Verbose "adding /t:clean"
+    $args = "$args /t:clean"
+}
+
 if ($target)
 {
     Write-Verbose "adding target: $target"
@@ -86,9 +94,20 @@ if ($jdkVersion -and $jdkVersion -ne "default")
 Write-Verbose "args = $args"
 
 # build each project file
+$exitCode = 0;
 foreach ($pf in $projectFiles)
 {
-    Invoke-MSBuild $pf -LogFile "$pf.log" -ToolLocation $msBuildLocation -CommandLineArgs $args
+    try {
+        Invoke-MSBuild $pf -LogFile "$pf.log" -ToolLocation $msBuildLocation -CommandLineArgs $args
+    }
+    catch [System.Exception] {
+        Write-Error $error[0]
+        $exitCode = 1
+    }
+}
+
+if ($exitCode -ne 0) {
+    Write-Error "See https://go.microsoft.com/fwlink/?LinkId=760847"
 }
 
 Write-Verbose "Leaving script XamarinAndroid.ps1"

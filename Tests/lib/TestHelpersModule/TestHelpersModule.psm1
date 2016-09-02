@@ -1,9 +1,9 @@
 [CmdletBinding()]
 param()
 
-[hashtable]$mocks = @{ }
-. $PSScriptRoot\PrivateFunctions.ps1
-. $PSScriptRoot\PublicFunctions.ps1
+[hashtable]$script:mocks = @{ }
+. $PSScriptRoot/PrivateFunctions.ps1
+. $PSScriptRoot/PublicFunctions.ps1
 
 Export-ModuleMember -Verbose:$false -Function @(
     'Assert-AreEqual'

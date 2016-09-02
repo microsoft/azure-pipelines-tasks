@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "6237827D-6244-4D52-B93E-47D8610FBD8A",
   "name": "XamarinLicense",
@@ -15,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 19
   },
   "demands": [],
   "minimumAgentVersion": "1.83.0",
@@ -55,12 +52,17 @@
       "helpMarkDown": "ms-resource:loc.input.help.password"
     },
     {
-      "name": "activateAndroid",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.activateAndroid",
-      "defaultValue": true,
+      "name": "product",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.product",
+      "defaultValue": "MA",
       "required": true,
-      "visibleRule": "action = Activate"
+      "helpMarkDown": "ms-resource:loc.input.help.product",
+      "options": {
+        "MA": "Xamarin.Android",
+        "MT": "Xamarin.iOS",
+        "MM": "Xamarin.Mac"
+      }
     },
     {
       "name": "timeout",
@@ -73,10 +75,9 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "PowerShell": {
-      "target": "$(currentDirectory)\\XamarinLicense.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "Node": {
+      "target": "xamarinlicense.js",
+      "argumentFormat": ""
     }
   }
 }

@@ -146,7 +146,13 @@ export function setResourcePath(path: string): void {
     }
 }
 
-export function loc(key: string, ...param: any[]): string {
+export function loc(key: string): string {
+    // we can't do ...param if we target ES6 and node 5.  This is what <=ES5 compiles down to.
+    var param = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        param[_i - 1] = arguments[_i];
+    }
+
     if (!libResourceFileLoaded) {
         // merge loc strings from vsts-task-lib.
         var libResourceFile = path.join(__dirname, 'lib.json');
@@ -241,8 +247,8 @@ export function getDelimitedInput(name: string, delim: string, required?: boolea
 
 export function filePathSupplied(name: string): boolean {
     // normalize paths
-    var pathValue = path.resolve(this.getPathInput(name) || '');
-    var repoRoot = path.resolve(this.getVariable('build.sourcesDirectory') || '');
+    var pathValue = this.resolve(this.getPathInput(name) || '');
+    var repoRoot = this.resolve(this.getVariable('build.sourcesDirectory') || '');
 
     var supplied = pathValue !== repoRoot;
     debug(name + 'path supplied :' + supplied);
@@ -278,15 +284,51 @@ export function getPathInput(name: string, required?: boolean, check?: boolean):
 //-----------------------------------------------------
 
 export function getEndpointUrl(id: string, optional: boolean): string {
-    var urlval = process.env['ENDPOINT_URL_' + id];
+    var urlval = getVariable('ENDPOINT_URL_' + id);
+    debug(id + '=' + urlval);
 
     if (!optional && !urlval) {
         _writeError('Endpoint not present: ' + id);
         exit(1);
     }
 
-    debug(id + '=' + urlval);
     return urlval;
+}
+
+export function getEndpointDataParameter(id: string, key: string, optional: boolean) : string {
+    var dataParam = getVariable('ENDPOINT_DATA_' + id + '_' + key.toUpperCase());
+    debug(id + '=' + dataParam);
+
+    if (!optional && !dataParam) {
+        _writeError('Endpoint data not present: ' + id);
+        exit(1);
+    }
+
+    return dataParam;
+}
+
+export function getEndpointAuthorizationScheme(id: string, optional: boolean) : string {
+    var authScheme = getVariable('ENDPOINT_AUTH_SCHEME_' + id);
+    debug(id + '=' + authScheme);
+
+    if (!optional && !authScheme) {
+        _writeError('Endpoint auth not present: ' + id);
+        exit(1);
+    }
+
+    return authScheme;
+}
+
+export function getEndpointAuthorizationParameter(id: string, key: string, optional: boolean) : string {
+    var authParam = getVariable('ENDPOINT_AUTH_PARAMETER_' + id + '_' + key.toUpperCase());
+    debug(id + '=' + authParam);
+
+    if (!optional && !authParam) {
+        _writeError('Endpoint auth not present: ' + id);
+        exit(1);
+    }
+
+    return authParam;
 }
 
 // TODO: should go away when task lib 
@@ -298,13 +340,12 @@ export interface EndpointAuthorization {
 }
 
 export function getEndpointAuthorization(id: string, optional: boolean): EndpointAuthorization {
-    var aval = process.env['ENDPOINT_AUTH_' + id];
+    var aval = getVariable('ENDPOINT_AUTH_' + id);
+    debug(id + '=' + aval);
 
     if (!optional && !aval) {
         setResult(TaskResult.Failed, 'Endpoint not present: ' + id);
     }
-
-    debug(id + '=' + aval);
 
     var auth: EndpointAuthorization;
     try {
@@ -407,6 +448,24 @@ export function exist(path: string): boolean {
     return mock.getResponse('exist', path) || false;
 }
 
+export interface FsOptions {
+    encoding?:string;
+    mode?:number;
+    flag?:string;
+}
+
+export function writeFile(file: string, data: string|Buffer, options?: string|FsOptions) {
+    //do nothing
+}
+
+export function osType(): string {
+    return mock.getResponse('osType', 'osType');
+}
+
+export function cwd(): string {
+    return mock.getResponse('cwd', 'cwd');
+}
+
 //-----------------------------------------------------
 // Cmd Helpers
 //-----------------------------------------------------
@@ -470,8 +529,28 @@ export function mkdirP(p): void {
     debug('creating path: ' + p);
 }
 
+export function resolve(): string {
+    // we can't do ...param if we target ES6 and node 5.  This is what <=ES5 compiles down to.
+    //return the posix implementation in the mock, so paths will be consistent when L0 tests are run on Windows or Mac/Linux
+    var absolutePath = path.posix.resolve.apply(this, arguments);
+    debug('Absolute path for pathSegments: ' + arguments + ' = ' + absolutePath);
+    return absolutePath;
+}
+
 export function which(tool: string, check?: boolean): string {
-    return mock.getResponse('which', tool);
+    var response = mock.getResponse('which', tool);
+    if (check) {
+        checkPath(response, tool);
+    }
+    return response;
+}
+
+export function ls(options: string, paths: string[]): string[] {
+    var response = mock.getResponse('ls', paths[0]);
+    if(!response){
+        return [];
+    }
+    return response;
 }
 
 export function cp(options, source: string, dest: string): void {
@@ -484,6 +563,7 @@ export function find(findPath: string): string[] {
 }
 
 export function rmRF(path: string): void {
+    debug(`rmRF(${path})`);
     var response = mock.getResponse('rmRF', path);
     if (!response['success']) {
         setResult(1, response['message']);
@@ -560,11 +640,26 @@ export function createToolRunner(tool: string) {
     return tr;
 }
 
+export function tool(tool: string) {
+    return createToolRunner(tool);
+}
+
 //-----------------------------------------------------
 // Matching helpers
 //-----------------------------------------------------
-export function match(list, pattern, options): string[] {
-    return mock.getResponse('match', pattern) || [];
+export function match(list: string[], patterns: string[], options): string[];
+export function match(list: string[], pattern: string, options): string[];
+export function match(list: string[], pattern: any, options): string[] {
+    let patterns: string[];
+    if (typeof pattern == 'object') {
+        patterns = pattern;
+    }
+    else {
+        patterns = [ pattern ];
+    }
+
+    let key: string = patterns.join(',');
+    return mock.getResponse('match', key) || [];
 }
 
 export function matchFile(list, pattern, options): string[] {
@@ -585,14 +680,14 @@ export class TestPublisher {
 
     public testRunner: string;
 
-    public publish(resultFiles, mergeResults, platform, config) {
-
-        if (mergeResults == 'true') {
-            _writeLine("Merging test results from multiple files to one test run is not supported on this version of build agent for OSX/Linux, each test result file will be published as a separate test run in VSO/TFS.");
-        }
+    public publish(resultFiles, mergeResults, platform, config, runTitle, publishRunAttachments) {
 
         var properties = <{ [key: string]: string }>{};
         properties['type'] = this.testRunner;
+
+        if (mergeResults) {
+            properties['mergeResults'] = mergeResults;
+        }
 
         if (platform) {
             properties['platform'] = platform;
@@ -602,9 +697,68 @@ export class TestPublisher {
             properties['config'] = config;
         }
 
-        for (var i = 0; i < resultFiles.length; i++) {
-            command('results.publish', properties, resultFiles[i]);
+        if (runTitle) {
+            properties['runTitle'] = runTitle;
         }
+
+        if (publishRunAttachments) {
+            properties['publishRunAttachments'] = publishRunAttachments;
+        }
+
+        if (resultFiles) {
+            properties['resultFiles'] = resultFiles;
+        }
+
+        command('results.publish', properties, '');
+    }
+}
+
+//-----------------------------------------------------
+// Code Coverage Publisher
+//-----------------------------------------------------
+export class CodeCoveragePublisher {
+    constructor() {
+    }
+    public publish(codeCoverageTool, summaryFileLocation, reportDirectory, additionalCodeCoverageFiles) {
+
+        var properties = <{ [key: string]: string }>{};
+
+        if (codeCoverageTool) {
+            properties['codecoveragetool'] = codeCoverageTool;
+        }
+
+        if (summaryFileLocation) {
+            properties['summaryfile'] = summaryFileLocation;
+        }
+
+        if (reportDirectory) {
+            properties['reportdirectory'] = reportDirectory;
+        }
+
+        if (additionalCodeCoverageFiles) {
+            properties['additionalcodecoveragefiles'] = additionalCodeCoverageFiles;
+        }
+
+        command('codecoverage.publish', properties, "");        
+    }
+}
+
+//-----------------------------------------------------
+// Code coverage Publisher
+//-----------------------------------------------------
+export class CodeCoverageEnabler {
+    private buildTool: string;
+    private ccTool: string;
+
+    constructor(buildTool: string, ccTool: string) {
+        this.buildTool = buildTool;
+        this.ccTool = ccTool;
+    }
+
+    public enableCodeCoverage(buildProps: { [key: string]: string }) {
+        buildProps['buildtool'] = this.buildTool;
+        buildProps['codecoveragetool'] = this.ccTool;
+        command('codecoverage.enable', buildProps, "");
     }
 }
 

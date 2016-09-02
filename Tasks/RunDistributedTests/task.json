@@ -3,7 +3,7 @@
     "name": "RunVisualStudioTestsusingTestAgent",
     "friendlyName": "Run Functional Tests",
     "description": "Run Coded UI/Selenium/Functional tests on a set of machines (using Test Agent)",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=624389)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=624389)",
     "category": "Test",
     "visibility": [     
                   "Build",
@@ -13,11 +13,11 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 22
+        "Patch": 42
     },
     "demands": [
     ],
-    "minimumAgentVersion": "1.88.0",
+    "minimumAgentVersion": "1.104.0",
     "groups": [
         {
             "name": "setupOptions",
@@ -30,12 +30,6 @@
             "isExpanded": true
         },
         {
-            "name": "runUsingTestPlan",
-            "displayName": "Execution Options - Run using Test Plan",
-            "tags" : [ "Preview" ],
-            "isExpanded": true
-        },
-        {
             "name": "reportingOptions",
             "displayName": "Reporting Options",
             "isExpanded": false
@@ -44,11 +38,11 @@
     "inputs": [
         {
             "name": "testMachineGroup",
-            "type": "pickList",
-            "label": "Test Machine Group / Azure Resource Group",
+            "type": "multiLine",
+            "label": "Machines",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Name of the Test Machine Group or Azure Resource Group on which tests need to be run.",
+            "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs. Eg: `dbserver.fabrikam.com or 192.168.12.34` Or provide output variable of other tasks. Eg: `$(variableName)` Or provide a Machine Group Name",
             "groupName": "setupOptions"
         },
         {
@@ -61,12 +55,63 @@
             "groupName": "setupOptions"
         },
         {
+            "name": "testSelection",
+            "type": "pickList",
+            "label": "Test Selection",
+            "defaultValue": "testAssembly",
+            "required": true,
+            "helpMarkDown": "Select the way you want to run tests : using Test Assemblies or using Test Plan.",
+            "options": { "testAssembly" : "Test Assembly", "testPlan" : "Test Plan" },
+            "groupName": "executionOptions"
+        },
+        {
+          "name": "testPlan",
+          "type": "pickList",
+          "label": "Test Plan",
+          "defaultValue": "",
+          "required": false,
+          "properties": {
+            "DisableManageLink": "True"
+          },
+          "helpMarkDown": "Select a Test Plan.",
+          "visibleRule": "testSelection = testPlan",
+          "groupName": "executionOptions"
+        },
+        {
+          "name": "testSuite",
+          "type": "pickList",
+          "label": "Test Suite",
+          "defaultValue": "",
+          "required": false,
+          "properties": {
+            "MultiSelect": "True",
+            "DisableManageLink": "True"
+          },
+          "helpMarkDown": "Select Test Suites from the Test Plan.",
+          "visibleRule": "testSelection = testPlan",
+          "groupName": "executionOptions"
+        },
+        {
+          "name": "testConfiguration",
+          "type": "pickList",
+          "label": "Test Configuration",
+          "defaultValue": "",
+          "required": false,
+          "properties": {
+            "DisableManageLink": "True"
+          },
+          "helpMarkDown": "Select Test Configuration.",
+          "visibleRule": "testSelection = testPlan",
+          "groupName": "executionOptions"
+        },
+        {
             "name": "sourcefilters",
             "type": "string",
             "label": "Test Assembly",
             "defaultValue": "**\\*test*.dll",
             "required": true,
             "helpMarkDown": "Test binaries to run tests on. Wildcards can be used. For example, `**\\*test*.dll;` for all dlls containing 'test' in their name.",            
+            "visibleRule": "testSelection = testAssembly",
             "groupName": "executionOptions"
         },
         {
@@ -76,6 +121,7 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Optionally specify the test case filter criteria. For example, `Owner=james&Priority=1`",            
+            "visibleRule": "testSelection = testAssembly",
             "groupName": "executionOptions"
         },
         {
@@ -84,7 +130,7 @@
             "label": "Run Settings File",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Path to runsettings file to use with the tests. Use `$(agent.BuildDirectory)\\$(system.teamProject)` to access the Project folder.",
+            "helpMarkDown": "Path to runsettings or testsettings file to use with the tests. Use `$(agent.BuildDirectory)\\$(system.teamProject)` to access the Project folder.",
             "groupName": "executionOptions"
         },
         {
@@ -93,7 +139,7 @@
             "label": "Override Test Run Parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `Platform=$(platform);Port=8080`",
+            "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `AppURL=$(DeployURL);Port=8080`",
             "groupName": "executionOptions"
         },
         {
@@ -106,12 +152,21 @@
             "groupName": "executionOptions"
         },
         {
+            "name": "customSlicingEnabled",
+            "type": "boolean",
+            "label": "Distribute tests by number of machines",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Tests will be distributed based on the number of machines provided instead of number of test containers. Note that tests within a dll might also be distributed to multiple machines.",
+            "groupName": "executionOptions"
+        },
+        {
  	          "name": "testRunTitle", 
 	          "type": "string", 
 	          "label": "Test Run Title", 
 	          "defaultValue":"", 
 	          "required":false,
-              "helpMarkDown": "Platform against which the tests should be reported. If you have defined a variable for platform in your build task, use that here.",
+              "helpMarkDown": "Provide a name for the Test Run.",
 	          "groupName": "reportingOptions"
 	      },
         {
@@ -139,118 +194,44 @@
             "label": "Test Configurations",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Optionally associate a testcase filter against a testconfiguration id. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: `FullyQualifiedName~Chrome:12`",
+            "helpMarkDown": "Optionally associate a testcase filter against a testconfiguration ID. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: `FullyQualifiedName~Chrome:12`",
             "groupName": "reportingOptions"
         },
         {
             "name": "autMachineGroup",
-            "type": "pickList",
-            "label": "Application Under Test Machine Group",
+            "type": "multiLine",
+            "label": "Application Under Test Machines",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "The name of the application under test(AUT) machine group on which server processes such as W3WP.exe is running.",
+            "helpMarkDown": "Comma separated list of machines or output variable or Machine Group Name on which server processes such as W3WP.exe is running",
             "groupName": "reportingOptions"
-        },
-        {
-            "name": "testPlan",
-            "type": "pickList",
-            "label": "Test Plan",
-            "defaultValue": "",
-            "required": false,
-            "properties": {
-                "DisableManageLink": "True" 
-            },
-            "helpMarkDown": "Select a Test Plan.",
-            "groupName": "runUsingTestPlan"
-        },
-        {
-            "name": "testSuite",
-            "type": "pickList",
-            "label": "Test Suite",
-            "defaultValue": "",
-            "required": false,
-            "properties": {
-                "MultiSelect": "True",
-                "DisableManageLink": "True" 
-            },
-            "helpMarkDown": "Select Test Suites from the Test Plan.",
-            "groupName": "runUsingTestPlan"
-        },
-        {
-            "name": "testConfiguration",
-            "type": "pickList",
-            "label": "Test Configuration",
-            "defaultValue": "",
-            "required": false,
-            "properties": {
-                "DisableManageLink": "True" 
-            },
-            "helpMarkDown": "Select Test Configuration.",
-            "groupName": "runUsingTestPlan"
-        },
-        {
-            "name": "runSettingsFilePreview",
-            "type": "filePath",
-            "label": "Run Settings File",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Path to runsettings file to use with the tests. Use `$(agent.BuildDirectory)\\$(system.teamProject)` to access the Project folder.",
-            "groupName": "runUsingTestPlan"
-        },
-        {
-            "name": "overrideRunParamsPreview",
-            "type": "string",
-            "label": "Override Test Run Parameters",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `Platform=$(platform);Port=8080`",
-            "groupName": "runUsingTestPlan"
-        },
-        {
-            "name": "codeCoverageEnabledPreview",
-            "type": "boolean",
-            "label": "Code Coverage Enabled",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Whether code coverage needs to be enabled.",
-            "groupName": "runUsingTestPlan"
         }
+
     ],
+
     "sourceDefinitions": [ 
-     { 
-         "target": "testMachineGroup", 
-         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
-         "selector": "jsonpath:$.value[*].name",
-         "authKey": "tfs:DevTestLabs"
-     },
-     { 
-         "target": "autMachineGroup", 
-         "endpoint": "/$(system.teamProject)/_apis/vslabs/environments", 
-         "selector": "jsonpath:$.value[*].name", 
-         "authKey": "tfs:DevTestLabs" 
-     },
      {
          "target": "testPlan",
          "endpoint":"/$(system.teamProject)/_apis/test/plans",
          "selector":"jsonpath:$.value[*].name",
          "keySelector":"jsonpath:$.value[*].id",
-         "authKey": "tfs:DevTestLabs"
+         "authKey": "tfs:teamfoundation"
      },
      {
          "target": "testConfiguration",
          "endpoint":"/$(system.teamProject)/_apis/test/configurations",
          "selector":"jsonpath:$.value[*].name",
          "keySelector":"jsonpath:$.value[*].id",
-         "authKey": "tfs:DevTestLabs"
+         "authKey": "tfs:teamfoundation"
      },
      {
          "target": "testSuite",
-         "endpoint":"/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites",
-         "selector":"jsonpath:$.value[*].name",
-         "keySelector":"jsonpath:$.value[*].id",
-         "authKey": "tfs:DevTestLabs"
+         "endpoint":"/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites?$asTreeView=true",
+         "selector":"jsonpath:$.value[*]",
+         "authKey": "tfs:teamfoundation"
      }      
     ], 
+
     "instanceNameFormat": "Run Tests $(sourcefilters) on $(testMachineGroup)", 
     "execution": {
         "PowerShell": {

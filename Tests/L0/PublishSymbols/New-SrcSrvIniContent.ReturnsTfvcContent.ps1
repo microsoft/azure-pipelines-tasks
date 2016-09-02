@@ -1,9 +1,9 @@
-[cmdletbinding()]
+[CmdletBinding()]
 param()
 
 # Arrange.
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-. $PSScriptRoot\..\..\..\Tasks\PublishSymbols\Helpers.ps1
+. $PSScriptRoot\..\..\..\Tasks\PublishSymbols\IndexHelpers\SrcSrvIniContentFunctions.ps1
 $provider = New-Object psobject -Property @{ Name = 'TfsVersionControl' }
 $sourceFiles = 'SomeDrive:\SomeDir\SomeFile1.cs', 'SomeDrive:\SomeDir\SomeFile2.cs'
 Register-Mock New-TfvcSrcSrvIniContent { 'Some content 1', 'Some content 2' } -- -Provider $provider -SourceFilePaths $sourceFiles

@@ -1,0 +1,23 @@
+{
+  "loc.friendlyName": "FTP Upload",
+  "loc.helpMarkDown": "Upload files to a remote machine using the File Transfer Protocol (FTP), or securely with FTPS.  [More Information](http://go.microsoft.com/fwlink/?LinkId=809084).",
+  "loc.description": "FTP Upload",
+  "loc.instanceNameFormat": "FTP Upload: $(rootFolder)",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.serverEndpoint": "FTP Service Endpoint",
+  "loc.input.help.serverEndpoint": "Select the service endpoint for your FTP server.  To create one, click the Manage link and create a new Generic Service Endpoint, enter the FTP server URL for the server URL, e.g. <b>`ftp://server.example.com`</b>, and required credentials.<p>Secure connections will always be made regardless of the specified protocol (<b>`ftp://`</b> or <b>`ftps://`</b>) if the target server supports FTPS.  To allow only secure connections, use the <b>`ftps://`</b> protocol, e.g. <b>`ftps://server.example.com`</b>.  Connections to servers not supporting FTPS will fail if <b>`ftps://`</b> is specified.",
+  "loc.input.label.rootFolder": "Source folder",
+  "loc.input.help.rootFolder": "The source folder to upload files from.",
+  "loc.input.label.filePatterns": "File patterns",
+  "loc.input.help.filePatterns": "File paths or patterns of the files to upload.  Supports multiple lines of minimatch patterns.  [More Information](https://go.microsoft.com/fwlink/?LinkId=800269)",
+  "loc.input.label.remotePath": "Remote directory",
+  "loc.input.help.remotePath": "Upload files to this directory on the remote FTP server.",
+  "loc.input.label.clean": "Clean remote directory",
+  "loc.input.help.clean": "Recursively delete all contents of the remote directory before uploading.",
+  "loc.input.label.overwrite": "Overwrite",
+  "loc.input.help.overwrite": "Overwrite existing files in the remote directory.",
+  "loc.input.label.preservePaths": "Preserve file paths",
+  "loc.input.help.preservePaths": "If selected, the relative local directory structure is recreated under the remote directory where files are uploaded.  Otherwise, files are uploaded directly to the remote directory without creating additional subdirectories.<p>For example, suppose your source folder is: <b>`/home/user/source/`</b> and contains the file: <b>`foo/bar/foobar.txt`</b>, and your remote directory is: <b>`/uploads/`</b>.<br>If selected, the file is uploaded to: <b>`/uploads/foo/bar/foobar.txt`</b>.  Otherwise, to: <b>`/uploads/foobar.txt`</b>.",
+  "loc.input.label.trustSSL": "Trust server certificate",
+  "loc.input.help.trustSSL": "Selecting this option results in the FTP server's SSL certificate being trusted with ftps://, even if it is self-signed or cannot be validated by a Certificate Authority (CA)."
+}

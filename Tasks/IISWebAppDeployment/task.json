@@ -1,9 +1,9 @@
 {
   "id": "89A3A82D-4B3E-4A09-8D40-A793849DC94F",
   "name": "IISWebAppDeployment",
-  "friendlyName": "IIS Web Application Deployment",
+  "friendlyName": "[Deprecated] IIS Web App Deployment",
   "description": "Deploy by MSDeploy, create/update website & app pools",
-  "helpMarkDown": "[More Information](http://aka.ms/iiswebappdeployreadme)",
+  "helpMarkDown": "[More Information](https://aka.ms/iiswebappdeployreadme)",
   "category": "Deploy",
   "visibility": [
     "Preview",
@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 9
+    "Patch": 19
   },
   "demands": [
   ],
@@ -171,11 +171,11 @@
       "name": "WebSiteAuthUserPassword",
       "type": "string",
       "label": "Password",
-      "required": true,
+      "required": false,
       "groupName": "website",
       "defaultValue": "",
       "visibleRule": "WebSitePhysicalPathAuth = WebSiteWindowsAuth",
-      "helpMarkDown": "Password for accessing the website's physical path."
+      "helpMarkDown": "Password for accessing the website's physical path. If you are using a gMSA, this is not required."
     },
     {
       "name": "AddBinding",
@@ -360,7 +360,8 @@
       "type": "string",
       "label": "Password",
       "defaultValue": "",
-      "required": true,
+      "required": false,
+      "helpMarkDown": "If you are using a gMSA, this is not required.", 
       "groupName": "applicationPool",
       "visibleRule": "AppPoolIdentity = SpecificUser"
     },
@@ -405,7 +406,7 @@
       "helpMarkDown": "This input is valid only for machine groups and is not supported for flat list of machines or output variables yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. For Azure Resource Groups, provide the virtual machine's name like, ffweb, ffdb. The default is to run the task in all machines."
     }
   ],
-    "instanceNameFormat": "Deploy IIS App: $(WebDeployPackage)",
+    "instanceNameFormat": "[Deprecated] Deploy IIS App: $(WebDeployPackage)",
     "execution": {
         "PowerShell": {
         "target": "$(currentDirectory)\\DeployIISWebApp.ps1",

@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "EB72CB01-A7E5-427B-A8A1-1B31CCAC8A43",
   "name": "AzureFileCopy",
@@ -16,12 +13,19 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 34
+    "Patch": 74
   },
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.95.0",
+  "minimumAgentVersion": "1.103.0",
+  "groups": [
+    {
+      "name": "output",
+      "displayName": "ms-resource:loc.group.displayName.output",
+      "isExpanded": true
+    }
+  ],
   "inputs": [
     {
       "name": "SourcePath",
@@ -80,6 +84,9 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.StorageAccount",
+      "properties": {
+        "EditableOptions": "True"
+      },
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
     },
     {
@@ -89,6 +96,9 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.StorageAccountRM",
+      "properties": {
+        "EditableOptions": "True"
+      },
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
     },
     {
@@ -116,6 +126,9 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.EnvironmentName",
+      "properties": {
+        "EditableOptions": "True"
+      },
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName && Destination = AzureVMs"
     },
     {
@@ -125,6 +138,9 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.EnvironmentNameRM",
+      "properties": {
+        "EditableOptions": "True"
+      },
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM && Destination = AzureVMs"
     },
     {
@@ -219,6 +235,24 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.skipCACheck",
       "visibleRule": "Destination = AzureVMs"
+    },
+    {
+      "name": "outputStorageUri",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.outputStorageUri",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "output",
+      "helpMarkDown": "ms-resource:loc.input.help.outputStorageUri"
+    },
+    {
+      "name": "outputStorageContainerSasToken",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.outputStorageContainerSasToken",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "output",
+      "helpMarkDown": "ms-resource:loc.input.help.outputStorageContainerSasToken"
     }
   ],
   "dataSourceBindings": [
@@ -231,28 +265,64 @@
       "target": "EnvironmentName",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureHostedServiceNames"
-    }
-  ],
-  "sourceDefinitions": [
+    },
     {
       "target": "StorageAccountRM",
-      "endpoint": "https://management.azure.com/subscriptions/$(authKey.SubscriptionId)/providers/Microsoft.Storage/storageAccounts?api-version=2015-06-15",
-      "selector": "jsonpath:$.value[*].name",
-      "authKey": "$(ConnectedServiceNameARM)"
+      "endpointId": "$(ConnectedServiceNameARM)",
+      "dataSourceName": "AzureStorageAccountRM"
     },
     {
       "target": "EnvironmentNameRM",
-      "endpoint": "https://management.azure.com/subscriptions/$(authKey.SubscriptionId)/resourcegroups?api-version=2015-01-01",
-      "selector": "jsonpath:$.value[*].name",
-      "authKey": "$(ConnectedServiceNameARM)"
+      "endpointId": "$(ConnectedServiceNameARM)",
+      "dataSourceName": "AzureVirtualMachinesV2Id",
+      "resultTemplate": "{\"Value\":\"{{{ #extractResource resourceGroups}}}\",\"DisplayValue\":\"{{{ #extractResource resourceGroups}}}\"}"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "AzurePowerShell": {
-      "target": "$(currentDirectory)\\AzureFileCopy.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "PowerShell3": {
+      "target": "AzureFileCopy.ps1"
     }
+  },
+  "messages": {
+    "AFC_StorageAccountNotFound": "ms-resource:loc.messages.AFC_StorageAccountNotFound",
+    "AFC_ResourceGroupNotFound": "ms-resource:loc.messages.AFC_ResourceGroupNotFound",
+    "AFC_GetVMStatus": "ms-resource:loc.messages.AFC_GetVMStatus",
+    "AFC_GetVMStatusComplete": "ms-resource:loc.messages.AFC_GetVMStatusComplete",
+    "AFC_GetCustomScriptExtension": "ms-resource:loc.messages.AFC_GetCustomScriptExtension",
+    "AFC_GetCustomScriptExtensionComplete": "ms-resource:loc.messages.AFC_GetCustomScriptExtensionComplete",
+    "AFC_SetCustomScriptExtension": "ms-resource:loc.messages.AFC_SetCustomScriptExtension",
+    "AFC_SetCustomScriptExtensionComplete": "ms-resource:loc.messages.AFC_SetCustomScriptExtensionComplete",
+    "AFC_RemoveCustomScriptExtension": "ms-resource:loc.messages.AFC_RemoveCustomScriptExtension",
+    "AFC_RemoveCustomScriptExtensionComplete": "ms-resource:loc.messages.AFC_RemoveCustomScriptExtensionComplete",
+    "AFC_NoNetworkInterface": "ms-resource:loc.messages.AFC_NoNetworkInterface",
+    "AFC_NullOrEmptyResourceGroup": "ms-resource:loc.messages.AFC_NullOrEmptyResourceGroup",
+    "AFC_AzurePSNotInstalled": "ms-resource:loc.messages.AFC_AzurePSNotInstalled",
+    "AFC_ClassicStorageAccountNotFound": "ms-resource:loc.messages.AFC_ClassicStorageAccountNotFound",
+    "AFC_GenericStorageAccountNotFound": "ms-resource:loc.messages.AFC_GenericStorageAccountNotFound",
+    "AFC_AzureFileCopyMoreHelp": "ms-resource:loc.messages.AFC_AzureFileCopyMoreHelp",
+    "AFC_UploadFilesStorageAccount": "ms-resource:loc.messages.AFC_UploadFilesStorageAccount",
+    "AFC_UploadContainerStorageAccount": "ms-resource:loc.messages.AFC_UploadContainerStorageAccount",
+    "AFC_UploadFileSuccessful": "ms-resource:loc.messages.AFC_UploadFileSuccessful",
+    "AFC_IncorrectTags": "ms-resource:loc.messages.AFC_IncorrectTags",
+    "AFC_MachineDoesNotExist": "ms-resource:loc.messages.AFC_MachineDoesNotExist",
+    "AFC_MachineNameFromIdErrorAllResources": "ms-resource:loc.messages.AFC_MachineNameFromIdErrorAllResources",
+    "AFC_MachineNameFromIdError": "ms-resource:loc.messages.AFC_MachineNameFromIdError",
+    "AFC_ResourceGroupNotFoundForSelectedConnection": "ms-resource:loc.messages.AFC_ResourceGroupNotFoundForSelectedConnection",
+    "AFC_NoClassicVMResources": "ms-resource:loc.messages.AFC_NoClassicVMResources",
+    "AFC_NoARMVMResources": "ms-resource:loc.messages.AFC_NoARMVMResources",
+    "AFC_NoGenericVMResources": "ms-resource:loc.messages.AFC_NoGenericVMResources",
+    "AFC_FilteringNoVMResources": "ms-resource:loc.messages.AFC_FilteringNoVMResources",
+    "AFC_CopyStarted": "ms-resource:loc.messages.AFC_CopyStarted",
+    "AFC_CopyCompleted": "ms-resource:loc.messages.AFC_CopyCompleted",
+    "AFC_WinRMHelpMessage": "ms-resource:loc.messages.AFC_WinRMHelpMessage",
+    "AFC_CopyFailed": "ms-resource:loc.messages.AFC_CopyFailed",
+    "AFC_ParallelCopyFailed": "ms-resource:loc.messages.AFC_ParallelCopyFailed",
+    "AFC_CopySuccessful": "ms-resource:loc.messages.AFC_CopySuccessful",
+    "AFC_SetCustomScriptExtensionFailed": "ms-resource:loc.messages.AFC_SetCustomScriptExtensionFailed",
+    "AFC_AddNetworkSecurityRuleFailed": "ms-resource:loc.messages.AFC_AddNetworkSecurityRuleFailed",
+    "AFC_UnableToSetCustomScriptExtension": "ms-resource:loc.messages.AFC_UnableToSetCustomScriptExtension",
+    "AFC_CopyPrereqsFailed": "ms-resource:loc.messages.AFC_CopyPrereqsFailed",
+    "AFC_BlobStorageNotFound": "ms-resource:loc.messages.AFC_BlobStorageNotFound"
   }
 }

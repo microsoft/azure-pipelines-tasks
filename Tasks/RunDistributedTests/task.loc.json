@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "D353D6A2-E361-4A8F-8D8C-123BEBB71028",
   "name": "RunVisualStudioTestsusingTestAgent",
@@ -16,10 +13,10 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 22
+    "Patch": 42
   },
   "demands": [],
-  "minimumAgentVersion": "1.88.0",
+  "minimumAgentVersion": "1.104.0",
   "groups": [
     {
       "name": "setupOptions",
@@ -32,14 +29,6 @@
       "isExpanded": true
     },
     {
-      "name": "runUsingTestPlan",
-      "displayName": "ms-resource:loc.group.displayName.runUsingTestPlan",
-      "tags": [
-        "Preview"
-      ],
-      "isExpanded": true
-    },
-    {
       "name": "reportingOptions",
       "displayName": "ms-resource:loc.group.displayName.reportingOptions",
       "isExpanded": false
@@ -48,7 +37,7 @@
   "inputs": [
     {
       "name": "testMachineGroup",
-      "type": "pickList",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.testMachineGroup",
       "defaultValue": "",
       "required": true,
@@ -65,12 +54,66 @@
       "groupName": "setupOptions"
     },
     {
+      "name": "testSelection",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.testSelection",
+      "defaultValue": "testAssembly",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.testSelection",
+      "options": {
+        "testAssembly": "Test Assembly",
+        "testPlan": "Test Plan"
+      },
+      "groupName": "executionOptions"
+    },
+    {
+      "name": "testPlan",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.testPlan",
+      "defaultValue": "",
+      "required": false,
+      "properties": {
+        "DisableManageLink": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.testPlan",
+      "visibleRule": "testSelection = testPlan",
+      "groupName": "executionOptions"
+    },
+    {
+      "name": "testSuite",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.testSuite",
+      "defaultValue": "",
+      "required": false,
+      "properties": {
+        "MultiSelect": "True",
+        "DisableManageLink": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.testSuite",
+      "visibleRule": "testSelection = testPlan",
+      "groupName": "executionOptions"
+    },
+    {
+      "name": "testConfiguration",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.testConfiguration",
+      "defaultValue": "",
+      "required": false,
+      "properties": {
+        "DisableManageLink": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.testConfiguration",
+      "visibleRule": "testSelection = testPlan",
+      "groupName": "executionOptions"
+    },
+    {
       "name": "sourcefilters",
       "type": "string",
       "label": "ms-resource:loc.input.label.sourcefilters",
       "defaultValue": "**\\*test*.dll",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.sourcefilters",
+      "visibleRule": "testSelection = testAssembly",
       "groupName": "executionOptions"
     },
     {
@@ -80,6 +123,7 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.testFilterCriteria",
+      "visibleRule": "testSelection = testAssembly",
       "groupName": "executionOptions"
     },
     {
@@ -107,6 +151,15 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.codeCoverageEnabled",
+      "groupName": "executionOptions"
+    },
+    {
+      "name": "customSlicingEnabled",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.customSlicingEnabled",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.customSlicingEnabled",
       "groupName": "executionOptions"
     },
     {
@@ -147,111 +200,34 @@
     },
     {
       "name": "autMachineGroup",
-      "type": "pickList",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.autMachineGroup",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.autMachineGroup",
       "groupName": "reportingOptions"
-    },
-    {
-      "name": "testPlan",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.testPlan",
-      "defaultValue": "",
-      "required": false,
-      "properties": {
-        "DisableManageLink": "True"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.testPlan",
-      "groupName": "runUsingTestPlan"
-    },
-    {
-      "name": "testSuite",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.testSuite",
-      "defaultValue": "",
-      "required": false,
-      "properties": {
-        "MultiSelect": "True",
-        "DisableManageLink": "True"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.testSuite",
-      "groupName": "runUsingTestPlan"
-    },
-    {
-      "name": "testConfiguration",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.testConfiguration",
-      "defaultValue": "",
-      "required": false,
-      "properties": {
-        "DisableManageLink": "True"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.testConfiguration",
-      "groupName": "runUsingTestPlan"
-    },
-    {
-      "name": "runSettingsFilePreview",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.runSettingsFilePreview",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.runSettingsFilePreview",
-      "groupName": "runUsingTestPlan"
-    },
-    {
-      "name": "overrideRunParamsPreview",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.overrideRunParamsPreview",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.overrideRunParamsPreview",
-      "groupName": "runUsingTestPlan"
-    },
-    {
-      "name": "codeCoverageEnabledPreview",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.codeCoverageEnabledPreview",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.codeCoverageEnabledPreview",
-      "groupName": "runUsingTestPlan"
     }
   ],
   "sourceDefinitions": [
-    {
-      "target": "testMachineGroup",
-      "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
-      "selector": "jsonpath:$.value[*].name",
-      "authKey": "tfs:DevTestLabs"
-    },
-    {
-      "target": "autMachineGroup",
-      "endpoint": "/$(system.teamProject)/_apis/vslabs/environments",
-      "selector": "jsonpath:$.value[*].name",
-      "authKey": "tfs:DevTestLabs"
-    },
     {
       "target": "testPlan",
       "endpoint": "/$(system.teamProject)/_apis/test/plans",
       "selector": "jsonpath:$.value[*].name",
       "keySelector": "jsonpath:$.value[*].id",
-      "authKey": "tfs:DevTestLabs"
+      "authKey": "tfs:teamfoundation"
     },
     {
       "target": "testConfiguration",
       "endpoint": "/$(system.teamProject)/_apis/test/configurations",
       "selector": "jsonpath:$.value[*].name",
       "keySelector": "jsonpath:$.value[*].id",
-      "authKey": "tfs:DevTestLabs"
+      "authKey": "tfs:teamfoundation"
     },
     {
       "target": "testSuite",
-      "endpoint": "/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites",
-      "selector": "jsonpath:$.value[*].name",
-      "keySelector": "jsonpath:$.value[*].id",
-      "authKey": "tfs:DevTestLabs"
+      "endpoint": "/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites?$asTreeView=true",
+      "selector": "jsonpath:$.value[*]",
+      "authKey": "tfs:teamfoundation"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

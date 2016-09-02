@@ -1,6 +1,11 @@
 [CmdletBinding(DefaultParameterSetName = 'None')]
 param
 (
+    [String]
+    $env:SYSTEM_DEFINITIONID,
+    [String]
+    $env:BUILD_BUILDID,
+
     [String] [Parameter(Mandatory = $true)]
     $connectedServiceName,
 
@@ -13,7 +18,9 @@ param
     [String] [Parameter(Mandatory = $true)]
     $runDuration,
     [String] [Parameter(Mandatory = $true)]
-    $geoLocation
+    $geoLocation,
+    [String] [Parameter(Mandatory = $true)]
+    $machineType
 )
 
 $userAgent = "QuickPerfTestBuildTask"
@@ -143,7 +150,9 @@ $trjson = @"
     "name":"$name",
     "description":"Quick perf test from automation task",
     "testSettings":{"cleanupCommand":"", "hostProcessPlatform":"x86", "setupCommand":""},
+    "superSedeRunSettings":{"loadGeneratorMachinesType":"$MachineType"},
     "testDrop":{"id":"$tdid"},
+    "runSourceIdentifier":"build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
 }
 "@
 
@@ -192,8 +201,39 @@ function ValidateInputs()
     }
 }
 
+function UploadSummaryMdReport($summaryMdPath)
+{
+	Write-Verbose "Summary Markdown Path = $summaryMdPath"
+
+	if (Test-Path($summaryMdPath))
+	{	
+		Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=Load test results;]$summaryMdPath"
+	}
+	else
+	{
+		 Write-Warning "Could not find the summary report file $summaryMdPath"
+	}
+}
+
+function GetLastSuccessfulBuild($headers)
+{
+    $uri = ("{0}/{1}/_apis/build/builds?api-version={2}&definitions={3}&statusFilter=completed&resultFilter=succeeded&`$top=1" -f $TFSAccountUrl, $env:System_TeamProjectId, '2.0', $env:SYSTEM_DEFINITIONID)
+    $previousBuild = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
+    return $previousBuild.Value
+}
+
+function GetFilteredTestRuns($headers, $filter)
+{
+    $uri = ("{0}/_apis/clt/testruns?api-version=1.0&detailed=false&{1}" -f $CltAccountUrl, $filter)
+    $filteredTestRuns = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
+    return $filteredTestRuns
+}
+
 ############################################## PS Script execution starts here ##########################################
 Write-Output "Starting Quick Perf Test Script"
+
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
 $testName = $testName + ".loadtest"
 Write-Output "Test name = $testName"
@@ -201,37 +241,82 @@ Write-Output "Run duration = $runDuration"
 Write-Output "Website Url = $websiteUrl"
 Write-Output "Virtual user load = $vuLoad"
 Write-Output "Load location = $geoLocation"
+Write-Output "Load generator machine type = $machineType"
+Write-Output "Run source identifier = build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
 
-$serviceEndpoint = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
-
-$Username = $serviceEndpoint.Authorization.Parameters.Username
-$Password = $serviceEndpoint.Authorization.Parameters.Password
-$VSOAccountUrl = $serviceEndpoint.Url.AbsoluteUri
-##$EndpointName = $serviceEndpoint.Name
-$CltAccountUrl = ComposeAccountUrl($VSOAccountUrl)
-
-Write-Verbose "VSO account Url = $VSOAccountUrl" -Verbose
-
+#Validate Input
 ValidateInputs
 
-$h = InitializeRestHeaders
+$connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
+
+$Username = $connectedServiceDetails.Authorization.Parameters.Username
+Write-Verbose "Username = $Username" -Verbose
+$Password = $connectedServiceDetails.Authorization.Parameters.Password
+$VSOAccountUrl = $connectedServiceDetails.Url.AbsoluteUri
+$CltAccountUrl = ComposeAccountUrl($VSOAccountUrl).TrimEnd('/')
+$TFSAccountUrl = $env:System_TeamFoundationCollectionUri.TrimEnd('/')
+
+Write-Verbose "VSO account Url = $TFSAccountUrl" -Verbose
+Write-Verbose "CLT account Url = $CltAccountUrl" -Verbose
+
+$headers = InitializeRestHeaders
 
 $dropjson = ComposeTestDropJson $testName $runDuration $websiteUrl $vuLoad
-$drop = CreateTestDrop $h $dropjson
+$drop = CreateTestDrop $headers $dropjson
 if ($drop.dropType -eq "InPlaceDrop")
 {
     $runJson = ComposeTestRunJson $testName $drop.id
 
-    $run = QueueTestRun $h $runJson
-    MonitorTestRun $h $run
+    $run = QueueTestRun $headers $runJson
+    MonitorTestRun $headers $run
 
     Write-Output ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name)
+    Write-Output ("To view run details navigate to {0}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={1}" -f $TFSAccountUrl, $run.id)
     Write-Output "To view detailed results navigate to Load Test | Load Test Manager in Visual Studio IDE, and open this run."
+
+    $resultsMDFolder = New-Item -ItemType Directory -Force -Path "$env:Temp\LoadTestResultSummary"
+    $resultFilePattern = ("QuickPerfTestResults_{0}_{1}_*.md" -f $env:AGENT_ID, $env:SYSTEM_DEFINITIONID)
+    $excludeFilePattern = ("QuickPerfTestResults_{0}_{1}_{2}_*.md" -f $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID)
+    Remove-Item $resultsMDFolder\$resultFilePattern -Exclude $excludeFilePattern -Force
+    $summaryFile =  ("{0}\QuickPerfTestResults_{1}_{2}_{3}_{4}.md" -f $resultsMDFolder, $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID, $run.id)
+	
+    $summary = ('[Test Run: {0}]({2}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={3}) using {1}.<br/>' -f  $run.runNumber, $run.name, $TFSAccountUrl, $run.id)
+    
+    $runComparisonAvailable = $false
+    $lastSuccessfulBuild = GetLastSuccessfulBuild $headers
+	
+	if ($lastSuccessfulBuild)
+	{
+        $runSourceIdentifierFilter=('runsourceidentifier=build/{0}/{1}' -f $env:SYSTEM_DEFINITIONID, $lastSuccessfulBuild.id)
+        $runsInLastBuild = GetFilteredTestRuns $headers $runSourceIdentifierFilter
+        
+        if ($runsInLastBuild)
+        {
+            foreach ($previousRun in $runsInLastBuild)
+            {
+                if ($previousRun.name -eq $run.name)
+                {
+                    $runComparisonAvailable = $true
+                    $summary += ('[Compare with run {0}]({1}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=compare&runId1={2}&runId2={3}) from [build {4}]({1}/{5}/_build#buildId={4}&_a=summary).' -f $previousRun.runNumber, $global:TFSAccountUrl, $previousRun.id, $run.id, $lastSuccessfulBuild.id, $env:System_TeamProjectId, $env:BUILD_BUILDID)
+                    break
+                }
+            }
+        }           
+	}
+
+	if(!$runComparisonAvailable)
+	{
+        $summary += ('No previous run found for comparison.')
+	}
+	
+	('<p>{0}</p>' -f $summary) >>  $summaryFile
+    UploadSummaryMdReport $summaryFile
 }
 else
 {
     Write-Error ("Failed to connect to the endpoint '{0}' for VSO account '{1}'" -f $EndpointName, $VSOAccountUrl)
 }
 
+	
 Write-Output "Finished Quick Perf Test Script"
 

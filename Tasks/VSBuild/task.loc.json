@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "71A9A2D3-A98A-4CAA-96AB-AFFCA411ECDA",
   "name": "VSBuild",
@@ -15,13 +12,13 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 20
+    "Patch": 43
   },
   "demands": [
     "msbuild",
     "visualstudio"
   ],
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "1.95.0",
   "groups": [
     {
       "name": "advanced",
@@ -68,11 +65,22 @@
       "required": false
     },
     {
+      "name": "maximumCpuCount",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.maximumCpuCount",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.maximumCpuCount"
+    },
+    {
       "name": "restoreNugetPackages",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.restoreNugetPackages",
-      "defaultValue": "true",
-      "required": false
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.restoreNugetPackages"
     },
     {
       "name": "vsVersion",
@@ -83,6 +91,7 @@
       "defaultValue": "14.0",
       "options": {
         "latest": "Latest",
+        "15.0": "Visual Studio 15",
         "14.0": "Visual Studio 2015",
         "12.0": "Visual Studio 2013",
         "11.0": "Visual Studio 2012"
@@ -107,18 +116,23 @@
       "label": "ms-resource:loc.input.label.logProjectEvents",
       "defaultValue": "true",
       "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.logProjectEvents"
+    },
+    {
+      "name": "createLogFile",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.createLogFile",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.createLogFile",
       "groupName": "advanced"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell3": {
-      "target": "VSBuild_PS3.ps1"
-    },
-    "PowerShell": {
-      "target": "$(currentDirectory)\\VSBuild.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+      "target": "VSBuild.ps1"
     }
   },
   "messages": {

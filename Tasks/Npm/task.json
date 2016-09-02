@@ -3,66 +3,61 @@
     "name": "Npm",
     "friendlyName": "npm",
     "description": "Run a npm command",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613746)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613746)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 3
+        "Patch": 15
     },
-    "demands" : [
+    "demands": [
         "npm"
     ],
     "minimumAgentVersion": "1.91.0",
     "groups": [
         {
-            "name":"advanced",
-            "displayName":"Advanced",
-            "isExpanded":false
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
         }
-    ],    
+    ],
     "instanceNameFormat": "npm $(command)",
     "inputs": [
         {
             "name": "command",
             "type": "string",
             "label": "Command",
-            "defaultValue":"install",
+            "defaultValue": "install",
             "helpMarkDown": "npm command to run. [More Information](https://docs.npmjs.com/).",
-            "required":true
+            "required": true
         },
         {
             "name": "arguments",
             "type": "string",
             "label": "Arguments",
-            "defaultValue":"",
+            "defaultValue": "",
             "helpMarkDown": "Additional arguments passed to npm.",
-            "required":false,
-            "groupName":"advanced"
+            "required": false
         },
         {
             "name": "cwd",
             "type": "filePath",
             "label": "Working Directory",
-            "defaultValue":"",
-            "required":false,
+            "defaultValue": "",
+            "required": false,
             "helpMarkDown": "Current working directory where npm command is run.  Defaults to the root of the repo.",
-            "groupName":"advanced"
+            "groupName": "advanced"
         }
     ],
     "execution": {
         "Node": {
             "target": "npmtask.js",
             "argumentFormat": ""
-        },
-        "PowerShell": {
-            "target": "$(currentDirectory)\\Npm.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(cwd)"
         }
     },
     "messages": {
+        "InvalidCommand": "Only one command should be used for npm. Use arguments input for additional arguments.",
         "NpmReturnCode": "Npm exited with return code: %d",
         "NpmFailed": "Npm failed with error: %s"
     }

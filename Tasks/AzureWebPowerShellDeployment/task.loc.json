@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "DCBEF2C9-E4F4-4929-82B2-EA7FC9166109",
   "name": "AzureWebPowerShellDeployment",
@@ -16,12 +13,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 23
+    "Patch": 38
   },
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.90.0",
+  "minimumAgentVersion": "1.103.0",
   "inputs": [
     {
       "name": "ConnectedServiceName",
@@ -32,22 +29,23 @@
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
-      "name": "WebSiteName",
+      "name": "WebSiteLocation",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.WebSiteName",
+      "label": "ms-resource:loc.input.label.WebSiteLocation",
       "defaultValue": "",
       "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.WebSiteLocation",
       "properties": {
         "EditableOptions": "True"
       }
     },
     {
-      "name": "WebSiteLocation",
+      "name": "WebSiteName",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.WebSiteLocation",
-      "defaultValue": "South Central US",
+      "label": "ms-resource:loc.input.label.WebSiteName",
+      "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.WebSiteLocation",
+      "helpMarkDown": "ms-resource:loc.input.help.WebSiteName",
       "properties": {
         "EditableOptions": "True"
       }
@@ -86,25 +84,33 @@
   ],
   "dataSourceBindings": [
     {
+      "target": "WebSiteLocation",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureWebsiteLocations"
+    },
+    {
       "target": "WebSiteName",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureWebSiteNames",
       "parameters": {
         "WebSiteLocation": "$(WebSiteLocation)"
       }
-    },
-    {
-      "target": "WebSiteLocation",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureLocations"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "AzurePowerShell": {
-      "target": "$(currentDirectory)\\Publish-AzureWebDeployment.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "PowerShell3": {
+      "target": "Publish-AzureWebDeployment.ps1"
     }
+  },
+  "messages": {
+    "Cannotgetwebsitedeploymentstatusisnotupdated": "ms-resource:loc.messages.Cannotgetwebsitedeploymentstatusisnotupdated",
+    "CannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "ms-resource:loc.messages.CannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite",
+    "Cannotupdatedeploymentstatusfor01": "ms-resource:loc.messages.Cannotupdatedeploymentstatusfor01",
+    "Updatingdeploymentstatus": "ms-resource:loc.messages.Updatingdeploymentstatus",
+    "CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved": "ms-resource:loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved",
+    "Updatingdeploymenthistoryfordeployment0": "ms-resource:loc.messages.Updatingdeploymenthistoryfordeployment0",
+    "Nofileswerefoundtodeploywithsearchpattern0": "ms-resource:loc.messages.Nofileswerefoundtodeploywithsearchpattern0",
+    "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "ms-resource:loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone"
   }
 }

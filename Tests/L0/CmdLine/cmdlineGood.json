@@ -3,6 +3,10 @@
         "cmd": "/usr/local/bin/cmd",
         "node": "/usr/local/bin/node"
     },
+    "checkPath": {
+        "/usr/local/bin/cmd": true,
+        "/usr/local/bin/node": true
+    },
     "exec": {
         "/usr/local/bin/cmd /c cmd": {
             "code": 0,

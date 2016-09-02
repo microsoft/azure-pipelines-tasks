@@ -1,0 +1,18 @@
+{
+    "getVariable": {
+        "System.DefaultWorkingDirectory": "/someDir"
+    },
+    "find": {
+        "/someDir": [
+            "someDir/someFile2",
+            "/someDir/someFile1"
+        ]
+    },
+    "match": {
+        "/some/*pattern": [
+            "some/path/one",
+            "some/path/two"
+        ],
+        "/invalid/*pattern": []
+    }
+}

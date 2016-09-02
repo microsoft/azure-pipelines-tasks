@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "vsts-task-lib": "0.9.8"
+  }
+}

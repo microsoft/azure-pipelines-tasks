@@ -1,24 +1,24 @@
 {
-    "id":"71A9A2D3-A98A-4CAA-96AB-AFFCA411ECDA",
-    "name":"VSBuild",
+    "id": "71A9A2D3-A98A-4CAA-96AB-AFFCA411ECDA",
+    "name": "VSBuild",
     "friendlyName": "Visual Studio Build",
     "description": "Build with MSBuild and set the Visual Studio version property",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613727)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613727)",
     "category": "Build",
     "visibility": [
-                "Build"
-                  ],
+        "Build"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 20
+        "Patch": 43
     },
     "demands": [
         "msbuild",
         "visualstudio"
     ],
-    "minimumAgentVersion": "1.83.0",
+    "minimumAgentVersion": "1.95.0",
     "groups": [
         {
             "name": "advanced",
@@ -65,11 +65,22 @@
             "required": false
         },
         {
+            "name": "maximumCpuCount",
+            "type": "boolean",
+            "label": "Build in Parallel",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "If your MSBuild target configuration is compatible with building in parallel, you can optionally check this input to pass the /m switch to MSBuild (Windows only). If your target configuration is not compatible with building in parallel, checking this option may cause your build to result in file-in-use errors, or intermittent or inconsistent build failures."
+        },
+        {
             "name": "restoreNugetPackages",
             "type": "boolean",
             "label": "Restore NuGet Packages",
-            "defaultValue": "true",
-            "required": false
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "This option is deprecated. To restore NuGet packages, add a NuGet Installer step before the build."
         },
         {
             "name": "vsVersion",
@@ -79,7 +90,8 @@
             "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead.",
             "defaultValue": "14.0",
             "options": {
-                "latest":"Latest",
+                "latest": "Latest",
+                "15.0": "Visual Studio 15",
                 "14.0": "Visual Studio 2015",
                 "12.0": "Visual Studio 2013",
                 "11.0": "Visual Studio 2012"
@@ -104,18 +116,23 @@
             "label": "Record Project Details",
             "defaultValue": "true",
             "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "Optionally record timeline details for each project."
+        },
+        {
+            "name": "createLogFile",
+            "type": "boolean",
+            "label": "Create Log File",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Optionally create a log file (Windows only).",
             "groupName": "advanced"
         }
     ],
     "instanceNameFormat": "Build solution $(solution)",
     "execution": {
         "PowerShell3": {
-            "target": "VSBuild_PS3.ps1"
-        },
-        "PowerShell": {
-            "target": "$(currentDirectory)\\VSBuild.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
+            "target": "VSBuild.ps1"
         }
     },
     "messages": {

@@ -1,4 +1,30 @@
 #
+# Orchestrates the pre build task logic
+#
+function InvokePreBuildTask
+{
+    $serviceEndpoint = GetEndpointData $connectedServiceName
+    Write-Verbose "Server Url: $($serviceEndpoint.Url)"
+
+    $currentDir = (Get-Item -Path ".\" -Verbose).FullName
+    $bootstrapperDir = [System.IO.Path]::Combine($currentDir, "SonarQube.Bootstrapper") 
+    $bootstrapperPath = [System.IO.Path]::Combine($bootstrapperDir, "MSBuild.SonarQube.Runner.exe")
+    $dashboardUrl = GetDashboardUrl $serviceEndpoint.Url $projectKey
+    Write-Verbose "Dashboard Url: $dashboardUrl"
+    
+    ResetTaskContext
+    StoreParametersInTaskContext $serviceEndpoint.Url $bootstrapperPath $dashboardUrl $includeFullReport $breakBuild
+    StoreSensitiveParametersInTaskContext $serviceEndpoint.Authorization.Parameters.UserName $serviceEndpoint.Authorization.Parameters.Password $dbUsername $dbPassword
+
+    $cmdLineArgs = UpdateArgsForPullRequestAnalysis $cmdLineArgs $serviceEndpoint
+    Write-Verbose -Verbose $cmdLineArgs
+
+    $arguments = CreateCommandLineArgs $projectKey $projectName $projectVersion $serviceEndpoint.Url $serviceEndpoint.Authorization.Parameters.UserName $serviceEndpoint.Authorization.Parameters.Password $dbUrl $dbUsername $dbPassword $cmdLineArgs $configFile
+
+    Invoke-BatchScript $bootstrapperPath -Arguments $arguments
+}
+
+#
 # Store some parameters as context variables so that they can be picked by other tasks, mainly by the "end task"
 #
 function StoreParametersInTaskContext
@@ -6,15 +32,25 @@ function StoreParametersInTaskContext
 	param(
 		  [string]$hostUrl,
 		  [string]$bootstrapperPath,
-		  [string]$dahsboardUrl, 
+		  [string]$dashboardUrl,
+          [string]$includeFullReport, 
           [string]$breakBuild)
 	
-    SetTaskContextVariable "MSBuild.SonarQube.BootstrapperPath" $bootstrapperPath    
-    SetTaskContextVariable "MSBuild.SonarQube.HostUrl" $hostUrl   
-    SetTaskContextVariable "MSBuild.SonarQube.BreakBuild" $breakBuild    
-    SetTaskContextVariable "MSBuild.SonarQube.ProjectUri" $dahsboardUrl
+    SetTaskContextVariable "MSBuild.SonarQube.Internal.BootstrapperPath" $bootstrapperPath    
+    SetTaskContextVariable "MSBuild.SonarQube.HostUrl" $hostUrl
+    SetTaskContextVariable "MSBuild.SonarQube.ProjectUri" $dashboardUrl   
+    SetTaskContextVariable "MSBuild.SonarQube.Internal.BreakBuild" $breakBuild
+    SetTaskContextVariable "MSBuild.SonarQube.Internal.IncludeFullReport" $includeFullReport        
 }
 
+#
+# Some data is cached into the task context so it needs to be reset 
+#
+function ResetTaskContext
+{
+    SetTaskContextVariable "MSBuild.SonarQube.AnalysisId" ""
+    SetTaskContextVariable "MSBuild.SonarQube.QualityGateStatus" ""
+}
 
 #
 # Remarks: Some sensitive parameters cannot be stored on the agent between the 2 steps so 
@@ -102,7 +138,7 @@ function CreateCommandLineArgs
             throw "Could not find the specified configuration file: $configFile" 
         }
 
-        [void]$sb.Append(" /s:" + (EscapeArg($configFileParam))) 
+        [void]$sb.Append(" /s:" + (EscapeArg($configFile))) 
     }
 
     return $sb.ToString();
@@ -119,18 +155,8 @@ function UpdateArgsForPullRequestAnalysis($cmdLineArgs)
 
         Write-Verbose "Detected a PR build - running the SonarQube analysis in issues / incremental mode"
 
-        $sqServerVersion = GetSonarQubeServerVersion     
-
-        Write-Verbose "SonarQube server version:$sqServerVersion"
-
-        #strip out '-SNAPSHOT' if it is present in version (developer versions of SonarQube might return version in this format: 5.2-SNAPSHOT)
-        $sqServerVersion = ([string]$sqServerVersion).split("-")[0]
-
-        $sqVersion = New-Object -TypeName System.Version -ArgumentList $sqServerVersion
-        $sqVersion5dot2 = New-Object -TypeName System.Version -ArgumentList "5.2"
-
-        #For SQ version 5.2+ use issues mode, otherwise use incremental mode. Incremental mode is not supported in SQ 5.2+. -ge below calls the overloaded operator in System.Version class
-        if ($sqVersion -ge $sqVersion5dot2)
+        # For SQ version 5.2+ use issues mode, otherwise use incremental mode. Incremental mode is not supported in SQ 5.2+.         
+        if ((CompareSonarQubeVersionWith52) -ge 0)
         {
             $cmdLineArgs = $cmdLineArgs + " " + "/d:sonar.analysis.mode=issues" + " " + "/d:sonar.report.export.path=sonar-report.json"
         }
@@ -138,9 +164,6 @@ function UpdateArgsForPullRequestAnalysis($cmdLineArgs)
         {
             $cmdLineArgs = $cmdLineArgs + " " + "/d:sonar.analysis.mode=incremental"
         }
-
-		#use this variable in post-test task
-		SetTaskContextVariable "MSBuild.SonarQube.AnalysisModeIsIncremental" "true"
 	}
 
 	return $cmdLineArgs
@@ -168,18 +191,14 @@ function GetEndpointData
     return $serviceEndpoint
 }
 
-
-################# Helpers ######################
-
-#
-# Helper that returns the version number of the SonarQube server
-#
-function GetSonarQubeServerVersion()
-{         
-    $command = {InvokeGetRestMethod "/api/server/version" }
-    $version = Retry $command -maxRetries 2 -retryDelay 1 -Verbose
-  
-    Write-Verbose "Returning SonarQube server version:$version"
-
-    return $version
+function GetDashboardUrl
+{
+    param ([Uri]$serviceEndpointUrl, [string]$projectKey)
+    
+    Write-Verbose $projectKey
+    Write-Verbose $serviceEndpointUrl
+    Write-Verbose $serviceEndpointUrl.ToString()
+    
+    $serviceUrlString = $serviceEndpointUrl.ToString().TrimEnd('/')
+    return "$serviceUrlString/dashboard/index?id=$($projectKey)"
 }

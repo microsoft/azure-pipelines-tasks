@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Xcode のビルド",
-  "loc.helpMarkDown": "[詳細](http://go.microsoft.com/fwlink/?LinkID=613730)",
+  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613730)",
   "loc.description": "Mac OS で Xcode ワークスペースをビルドします",
   "loc.instanceNameFormat": "Xcode $(actions)",
   "loc.group.displayName.sign": "署名およびプロビジョニング",
@@ -47,5 +47,16 @@
   "loc.input.label.xctoolReporter": "xctool テスト レポーター形式",
   "loc.input.help.xctoolReporter": "\"テスト\" 処理が指定され、[xctool の使用] がオンになっている場合に使用するテスト リポーター形式。[テスト結果の発行] タスクと互換性のあるファイル形式を生成するには、\"junit:output-file-path-here.xml\" を指定します。指定すると \"plain\" が自動的に追加されます。xctool がエージェント ホストにインストールされていることが必要です。詳細については、[xctool](https://github.com/facebook/xctool) を参照してください。",
   "loc.input.label.publishJUnitResults": "VSTS/TFS に公開する",
-  "loc.input.help.publishJUnitResults": "xctool を使って上で作成した JUnit テスト結果を VSTS/TFS へ公開するにはこのオプションを選びます。"
+  "loc.input.help.publishJUnitResults": "xctool を使って上で作成した JUnit テスト結果を VSTS/TFS へ公開するにはこのオプションを選びます。",
+  "loc.messages.SignIdNotFound": "Failed to find iOS signing identity. Verify the signing and provisioning information provided.",
+  "loc.messages.TempKeychainSetupFailed": "Failed to add the temporary keychain to the keychains search path.",
+  "loc.messages.ProvProfileDetailsNotFound": "Failed to find the details for provisioning profile: %s",
+  "loc.messages.ProvProfileUUIDNotFound": "Failed to find provisioning profile UUID for provisioning profile: %s",
+  "loc.messages.MultipleWorkspacesFound": "Multiple xcode workspace matches were found. Using the first match: %s",
+  "loc.messages.WorkspaceDoesNotExist": "Xcode workspace was specified but it does not exist or is not a directory",
+  "loc.messages.UseXcToolForTestPublishing": "Check the 'Use xctool' checkbox and specify the xctool reporter format to publish test results. No results published.",
+  "loc.messages.NoTestResultsFound": "No test result files matching %s were found, so publishing JUnit test results is being skipped.",
+  "loc.messages.XcodeSuccess": "Xcode task execution completed with no errors.",
+  "loc.messages.TempKeychainDeleteFailed": "Failed to delete temporary keychain %s created during the build.",
+  "loc.messages.ProvProfileDeleteFailed": "Failed to delete the provisioning profile %s."
 }

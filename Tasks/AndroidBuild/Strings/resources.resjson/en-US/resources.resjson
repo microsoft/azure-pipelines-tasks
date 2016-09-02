@@ -1,9 +1,6 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
-  "loc.friendlyName": "Android Build",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613716)",
+  "loc.friendlyName": "Android Build (deprecated; use Gradle)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613716)",
   "loc.description": "Build an Android app using Gradle and optionally start the emulator for unit tests",
   "loc.instanceNameFormat": "Android Build $(gradleProj)",
   "loc.group.displayName.avdOptions": "Android Virtual Device (AVD) Options",
@@ -18,7 +15,7 @@
   "loc.input.label.emulatorTarget": "AVD Target SDK",
   "loc.input.help.emulatorTarget": "Target ID of the new Android Virtual Device (AVD).",
   "loc.input.label.emulatorDevice": "AVD Device",
-  "loc.input.help.emulatorDevice": "The optional device definition to use. Can be a device index or id.",
+  "loc.input.help.emulatorDevice": "The optional device definition to use. Can be a device index or ID.",
   "loc.input.label.avdAbi": "AVD ABI",
   "loc.input.help.avdAbi": "The ABI to use for the Android Virtual Device (AVD).",
   "loc.input.label.avdForce": "Overwrite Existing AVD",

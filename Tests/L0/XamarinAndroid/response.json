@@ -1,0 +1,69 @@
+{
+    "which": {
+        "xbuild": "/home/bin/xbuild"  
+    },
+    "exec": {
+        "/home/bin/xbuild /user/build/fun/project.csproj /t:PackageForAndroid": {
+            "code": 0,
+            "stdout": "Xamarin android"
+        },
+        "/home/bin2/xbuild.exe /user/build/fun/project.csproj /t:PackageForAndroid": {
+            "code": 0,
+            "stdout": "Xamarin android"
+        },
+        "/home/bin/xbuild /user/build/fun/project1.csproj /t:PackageForAndroid": {
+            "code": 0,
+            "stdout": "Xamarin android"
+        },
+        "/home/bin/xbuild /user/build/fun/project2.csproj /t:PackageForAndroid": {
+            "code": 0,
+            "stdout": "Xamarin android"
+        },
+        "/home/bin/xbuild /user/build/fun/project3.csproj /t:PackageForAndroid": {
+            "code": 0,
+            "stdout": "Xamarin android"
+        },
+        "/home/bin/xbuild /user/build/fun/project.csproj /t:PackageForAndroid /p:JavaSdkDirectory=/user/local/bin/Java8": {
+            "code": 0,
+            "stdout": "Xamarin android"
+        },
+        "/home/bin/xbuild /user/build/fun/project.csproj /t:Clean /t:My Target /t:PackageForAndroid /m:1 /p:temp=/home/temp dir/ /f /p:OutputPath=/home/o u t/dir /p:Configuration=For Release /p:JavaSdkDirectory=/user/local/bin/Java8": {
+            "code": 0,
+            "stdout": "Xamarin android"
+        },
+        "/home/bin/xbuild /user/build/fun/project1.csproj /t:Clean /t:My Target /t:PackageForAndroid /m:1 /p:temp=/home/temp dir/ /f /p:OutputPath=/home/o u t/dir /p:Configuration=For Release /p:JavaSdkDirectory=/user/local/bin/Java8": {
+            "code": 0,
+            "stdout": "Xamarin android"
+        },
+        "/home/bin/xbuild /user/build/fun/project2.csproj /t:Clean /t:My Target /t:PackageForAndroid /m:1 /p:temp=/home/temp dir/ /f /p:OutputPath=/home/o u t/dir /p:Configuration=For Release /p:JavaSdkDirectory=/user/local/bin/Java8": {
+            "code": 0,
+            "stdout": "Xamarin android"
+        },
+        "/home/bin/xbuild /user/build/fun/project3.csproj /t:Clean /t:My Target /t:PackageForAndroid /m:1 /p:temp=/home/temp dir/ /f /p:OutputPath=/home/o u t/dir /p:Configuration=For Release /p:JavaSdkDirectory=/user/local/bin/Java8": {
+            "code": 0,
+            "stdout": "Xamarin android"
+        }
+    },
+    "checkPath" : {
+        "/user/build/fun/project.csproj": true,  
+        "/home/bin2/xbuild.exe": true
+    },
+    "getVariable" : {
+        "JAVA_HOME_8_X86": "/user/local/bin/Java8"
+    },
+    "find": {
+        "": [
+            "/user/build"
+        ]
+    },
+    "match": {
+        "**/Single*.csproj": [
+            "/user/build/fun/project.csproj"
+        ],
+        "**/Multiple*.csproj": [
+            "/user/build/fun/project1.csproj",
+            "/user/build/fun/project2.csproj",
+            "/user/build/fun/project3.csproj"
+        ]        
+    }
+}

@@ -1,28 +1,42 @@
+/// <reference path="../../definitions/node.d.ts" />
+/// <reference path="../../definitions/Q.d.ts" />
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
 
 import path = require('path');
 import tl = require('vsts-task-lib/task');
 
-tl.setResourcePath(path.join( __dirname, 'task.json'));
+async function run() {
+    try {    
+        tl.setResourcePath(path.join( __dirname, 'task.json'));
 
-var bash = tl.createToolRunner(tl.which('bash', true));
+        var bash = tl.createToolRunner(tl.which('bash', true));
 
-var cwd = tl.getPathInput('cwd', true, false);
-tl.mkdirP(cwd);
-tl.cd(cwd);
+        var scriptPath: string = tl.getPathInput('scriptPath', true, true);
+        var cwd: string = tl.getPathInput('cwd', true, false);
 
-var scriptPath = tl.getPathInput('scriptPath', true, true);
-bash.arg(scriptPath);
+        // if user didn't supply a cwd (advanced), then set cwd to folder script is in.
+        // All "script" tasks should do this
+        if (!tl.filePathSupplied('cwd') && !tl.getBoolInput('disableAutoCwd', false)) {
+            cwd = path.dirname(scriptPath);
+        }
+        tl.mkdirP(cwd);
+        tl.cd(cwd);
 
-bash.arg(tl.getInput('args', false));
+        bash.pathArg(scriptPath);
 
-var failOnStdErr = tl.getBoolInput('failOnStandardError', false);
+        // additional args should always call argString.  argString() parses quoted arg strings
+        bash.argString(tl.getInput('args', false));
 
-bash.exec(<any>{failOnStdErr: failOnStdErr})
-.then(function(code) {
-	tl.setResult(tl.TaskResult.Succeeded, tl.loc('BashReturnCode', code));
-})
-.fail(function(err) {
-	tl.debug('taskRunner fail');
-	tl.setResult(tl.TaskResult.Failed, tl.loc('BashFailed', err.message));
-})
+        // determines whether output to stderr will fail a task.
+        // some tools write progress and other warnings to stderr.  scripts can also redirect.
+        var failOnStdErr: boolean = tl.getBoolInput('failOnStandardError', false);
+
+        var code: number = await bash.exec(<any>{failOnStdErr: failOnStdErr});
+        tl.setResult(tl.TaskResult.Succeeded, tl.loc('BashReturnCode', code));
+    }
+    catch(err) {
+        tl.setResult(tl.TaskResult.Failed, tl.loc('BashFailed', err.message));
+    }    
+}
+
+run();

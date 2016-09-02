@@ -1,9 +1,9 @@
 {
   "id": "70A3A82D-4A3C-4A09-8D30-A793739DC94F",
   "name": "SqlServerDacpacDeployment",
-  "friendlyName": "SQL Server Database Deployment",
+  "friendlyName": "[Deprecated] SQL Server Database Deploy",
   "description": "Deploy SQL Server Database using DACPAC",
-  "helpMarkDown": "[More Information](http://aka.ms/sqlserverdacpackreadme)",
+  "helpMarkDown": "[More Information](https://aka.ms/sqlserverdacpackreadme)",
   "category": "Deploy",
   "visibility": [
     "Preview",
@@ -14,11 +14,11 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 8
+    "Patch": 15
   },
   "demands": [
   ],
-  "minimumAgentVersion": "1.91.0",
+  "minimumAgentVersion": "1.96.2",
   "groups": [
     {
       "name": "deployment",
@@ -84,7 +84,7 @@
     },
     {
       "name": "DacpacFile",
-      "type": "string",
+      "type": "filePath",
       "label": "DACPAC File",
       "required": true,
       "groupName": "deployment",
@@ -157,7 +157,7 @@
     },
     {
       "name": "PublishProfile",
-      "type": "string",
+      "type": "filePath",
       "label": "Publish Profile",
       "required": false,
       "groupName": "target",
@@ -205,7 +205,7 @@
       "helpMarkDown": "This input is valid only for machine groups and is not supported for flat list of machines or output variables yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. For Azure Resource Groups, provide the virtual machine's name like, ffweb, ffdb. The default is to run the task in all machines."
     }
   ],
-  "instanceNameFormat": "Deploy SQL DACPAC: $(DacpacFile)",
+  "instanceNameFormat": "[Deprecated] Deploy SQL DACPAC: $(DacpacFile)",
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\DeployToSqlServer.ps1",

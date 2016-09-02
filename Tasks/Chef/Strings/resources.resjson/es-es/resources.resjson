@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Chef",
-  "loc.helpMarkDown": "[Más información](https://github.com/Microsoft/vso-agent-tasks/blob/master/Tasks/Chef/README.md)",
+  "loc.helpMarkDown": "[Más información](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/Chef/README.md)",
   "loc.description": "Realice implementaciones en entornos Chef mediante la edición de los atributos del entorno",
   "loc.instanceNameFormat": "Implementar en Chef editando los atributos de entorno de la suscripción de Chef $(ChefServer)",
   "loc.input.label.connectedServiceName": "Conexión Chef",

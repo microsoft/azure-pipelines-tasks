@@ -1,11 +1,11 @@
 {
   "loc.friendlyName": "Implementación de servicios en la nube de Azure",
-  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=613748)",
+  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613748)",
   "loc.description": "Implemente un servicio en la nube de Azure",
   "loc.instanceNameFormat": "Implementación de Azure: $(CsPkg)",
   "loc.group.displayName.newServiceAdvancedOptions": "Opciones avanzadas para la creación de un nuevo servicio",
-  "loc.input.label.ConnectedServiceName": "Suscripción a Azure",
-  "loc.input.help.ConnectedServiceName": "Suscripción de Azure de destino para la implementación.",
+  "loc.input.label.ConnectedServiceName": "Azure Subscription (Classic)",
+  "loc.input.help.ConnectedServiceName": "Azure Classic subscription to target for deployment.",
   "loc.input.label.StorageAccount": "Cuenta de almacenamiento",
   "loc.input.help.StorageAccount": "Tiene que haber una cuenta de almacenamiento antes de la implementación.",
   "loc.input.label.ServiceName": "Nombre del servicio",
@@ -25,5 +25,11 @@
   "loc.input.label.NewServiceAdditionalArguments": "Argumentos adicionales",
   "loc.input.help.NewServiceAdditionalArguments": "Pase argumentos adicionales al crear un servicio completamente nuevo. Estos se pasarán al comandlet `New-AzureService`. Por ejemplo: `-Label 'MyTestService'`",
   "loc.input.label.NewServiceAffinityGroup": "AffinityGroup",
-  "loc.input.help.NewServiceAffinityGroup": "Mientras se crea el nuevo servicio, se tendrá en cuenta este grupo de afinidad en lugar de utilizar la ubicación del servicio."
+  "loc.input.help.NewServiceAffinityGroup": "Mientras se crea el nuevo servicio, se tendrá en cuenta este grupo de afinidad en lugar de utilizar la ubicación del servicio.",
+  "loc.messages.Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions": "Could not get the primary storage key for storage account '{0}'. Unable to apply any diagnostics extensions.",
+  "loc.messages.Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions": "Could not get the primary storage key for the public config storage account '{0}'. Unable to apply any diagnostics extensions.",
+  "loc.messages.Applyinganyconfigureddiagnosticsextensions": "Applying any configured diagnostics extensions.",
+  "loc.messages._0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "'{0}' could not be parsed into parts for registering diagnostics extensions.",
+  "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}",
+  "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one."
 }

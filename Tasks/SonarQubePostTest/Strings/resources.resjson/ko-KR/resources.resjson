@@ -1,9 +1,6 @@
 {
   "loc.friendlyName": "SonarQube for MSBuild - 분석 종료",
-  "loc.helpMarkDown": "[자세한 정보](http://go.microsoft.com/fwlink/?LinkId=620063)",
+  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkId=620063)",
   "loc.description": "분석을 마치고 SonarQube에 결과 업로드",
-  "loc.instanceNameFormat": "분석을 마치고 SonarQube에 결과 업로드",
-  "loc.group.displayName.extraSettings": "Post Analysis Settings",
-  "loc.input.label.breakBuild": "Break the build on quality gate failure (SQ 5.3+)",
-  "loc.input.help.breakBuild": "This option is only available when using a SonarQube server 5.3 or above. It will introduce delays as the build must wait for SonarQube to complete the analysis. [More information](http://go.microsoft.com/fwlink/?LinkId=722407)"
+  "loc.instanceNameFormat": "분석을 마치고 SonarQube에 결과 업로드"
 }

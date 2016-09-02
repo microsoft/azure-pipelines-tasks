@@ -26,6 +26,30 @@ function Create-AzureStorageContext
           [string]$storageAccountKey)
 }
 
+# return blob storage endpoint for given classic storage account
+function Get-AzureBlobStorageEndpointFromRDFE
+{
+    param([string]$storageAccountName)
+}
+
+# return blob storage endpoint for given ARM storage account
+function Get-AzureBlobStorageEndpointFromARM
+{
+    param([string]$storageAccountName)
+}
+
+# return account type for given ARM storage account
+function Get-AzureStorageAccountTypeFromARM
+{
+    param([string]$storageAccountName)
+}
+
+# return account type for given classic storage account
+function Get-AzureStorageAccountTypeFromRDFE
+{
+    param([string]$storageAccountName)
+}
+
 #creates azure container on given storageaccount whose information is present in $storageContext
 function Create-AzureContainer
 {
@@ -78,7 +102,7 @@ function Get-AzureRMResourceGroupResourcesDetails
           [object]$azureRMVMResources)
 }
 
-#Generate and return SAS Token correspoding to Container and storageaccount information present in $storageContext
+#Generate and return SAS Token corresponding to Container and storageaccount information present in $storageContext
 function Generate-AzureStorageContainerSASToken
 {
     param([string]$containerName,
@@ -93,7 +117,7 @@ function Get-AzureMachineStatus
           [string]$name)
 }
 
-# Returns details of the custon script extension $name of VM $vmName present in ResourceGroup $resourceGroupName
+# Returns details of the custom script extension $name of VM $vmName present in ResourceGroup $resourceGroupName
 function Get-AzureMachineCustomScriptExtension
 {
     param([string]$resourceGroupName,
@@ -101,7 +125,7 @@ function Get-AzureMachineCustomScriptExtension
           [string]$name)
 }
 
-# Returns details of the custon script extension $name executed on VM $vmName present in ResourceGroup $resourceGroupName
+# Returns details of the custom script extension $name executed on VM $vmName present in ResourceGroup $resourceGroupName
 function Set-AzureMachineCustomScriptExtension
 {
     param([string]$resourceGroupName,
@@ -113,7 +137,7 @@ function Set-AzureMachineCustomScriptExtension
           [string]$location)
 }
 
-# Returns details of the custon script extension $name deleted from VM $vmName present in ResourceGroup $resourceGroupName
+# Returns details of the custom script extension $name deleted from VM $vmName present in ResourceGroup $resourceGroupName
 function Remove-AzureMachineCustomScriptExtension
 {
     param([string]$resourceGroupName,

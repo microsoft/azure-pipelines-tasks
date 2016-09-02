@@ -3,7 +3,7 @@
   "name": "SonarQubePostTest",
   "friendlyName": "SonarQube for MSBuild - End Analysis",
   "description": "Finish the analysis and upload the results to SonarQube",
-  "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=620063)",
+  "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=620063)",
   "category": "Build",
   "visibility": [
     "Build"
@@ -12,8 +12,9 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 35
+    "Patch": 54
   },
+  "minimumAgentVersion": "1.99.0",
   "demands": [
     "msbuild",
     "java"
@@ -26,5 +27,4 @@
       "workingDirectory": "$(currentDirectory)"
     }
   }
-
 }

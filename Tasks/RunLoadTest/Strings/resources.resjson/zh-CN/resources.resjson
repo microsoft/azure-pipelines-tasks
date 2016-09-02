@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "基于云的负载测试",
-  "loc.helpMarkDown": "此任务可以用于触发使用 Visual Studio Online 的基于云的负载测试。[了解详细信息](http://go.microsoft.com/fwlink/?linkid=546976)。",
-  "loc.description": "使用 Visual Studio Online 在云中运行负载测试",
+  "loc.helpMarkDown": "此任务通过使用 Visual Studio Team Services 触发基于云的负载测试。[了解详细信息](https://go.microsoft.com/fwlink/?linkid=546976)。",
+  "loc.description": "使用 Visual Studio Team Services 在云中运行负载测试",
   "loc.instanceNameFormat": "云负载测试 $(LoadTest)",
   "loc.input.label.connectedServiceName": "已注册的连接",
   "loc.input.help.connectedServiceName": "选择以前注册的服务连接以与基于云的负载测试服务进行通话。选择“管理”可注册新连接。",
@@ -12,5 +12,6 @@
   "loc.input.label.LoadTest": "负载测试文件",
   "loc.input.help.LoadTest": "要在上面指定的负载测试文件夹下使用的负载测试文件名。",
   "loc.input.label.ThresholdLimit": "可允许的阈值违规次数",
-  "loc.input.help.ThresholdLimit": "阈值冲突数，高于它便将负载测试结果视为不成功。"
+  "loc.input.help.ThresholdLimit": "阈值冲突数，高于它便将负载测试结果视为不成功。",
+  "loc.input.label.MachineType": "Run load test using"
 }

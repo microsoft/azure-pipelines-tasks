@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "AD8974D8-DE11-11E4-B2FE-7FB898A745F3",
   "name": "cURLUploader",
@@ -12,7 +9,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 17
   },
   "demands": [
     "curl"
@@ -77,11 +74,6 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "PowerShell": {
-      "target": "$(currentDirectory)\\cURLUploader.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
-    },
     "Node": {
       "target": "curluploader.js",
       "argumentFormat": ""

@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
   "name": "PowerShell",
@@ -15,12 +12,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 5
+    "Minor": 1,
+    "Patch": 4
   },
   "demands": [
     "DotNetFramework"
   ],
+  "minimumAgentVersion": "1.102",
   "groups": [
     {
       "name": "advanced",
@@ -30,11 +28,24 @@
   ],
   "inputs": [
     {
+      "name": "scriptType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.scriptType",
+      "defaultValue": "filePath",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.scriptType",
+      "options": {
+        "inlineScript": "Inline Script",
+        "filePath": "File Path"
+      }
+    },
+    {
       "name": "scriptName",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.scriptName",
       "defaultValue": "",
       "required": true,
+      "visibleRule": "scriptType = filePath",
       "helpMarkDown": "ms-resource:loc.input.help.scriptName"
     },
     {
@@ -53,6 +64,29 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.workingFolder",
       "groupName": "advanced"
+    },
+    {
+      "name": "inlineScript",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.inlineScript",
+      "defaultValue": "# You can write your powershell scripts inline here. \n# You can also pass predefined and custom variables to this scripts using arguments\n\n Write-Host \"Hello World\"",
+      "required": true,
+      "helpMarkDown": "",
+      "visibleRule": "scriptType = inlineScript",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "500"
+      }
+    },
+    {
+      "name": "failOnStandardError",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnStandardError",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failOnStandardError",
+      "groupName": "advanced"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -60,7 +94,10 @@
     "PowerShellExe": {
       "target": "$(scriptName)",
       "argumentFormat": "$(arguments)",
-      "workingDirectory": "$(workingFolder)"
+      "workingDirectory": "$(workingFolder)",
+      "inlineScript": "$(inlineScript)",
+      "scriptType": "$(scriptType)",
+      "failOnStandardError": "$(failOnStandardError)"
     }
   }
 }

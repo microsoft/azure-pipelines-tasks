@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "3B5693D4-5777-4FEE-862A-BD2B7A374C68",
   "name": "PowerShellOnTargetMachines",
@@ -16,9 +13,9 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 24
+    "Patch": 40
   },
-  "minimumAgentVersion": "1.92.0",
+  "minimumAgentVersion": "1.104.0",
   "groups": [
     {
       "name": "deployment",

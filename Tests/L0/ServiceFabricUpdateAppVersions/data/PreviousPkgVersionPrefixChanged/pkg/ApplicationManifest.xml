@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ApplicationManifest ApplicationTypeName="AppType"
+                     ApplicationTypeVersion="0.9.9.OldSuffix"
+                     xmlns="http://schemas.microsoft.com/2011/01/fabric"
+                     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="ServicePkg" ServiceManifestVersion="1.0.0.OldSuffix" />
+    <ServiceManifestRef ServiceManifestName="Service2Pkg" ServiceManifestVersion="1.0.0.OldSuffix" />
+  </ServiceManifestImport>
+</ApplicationManifest>

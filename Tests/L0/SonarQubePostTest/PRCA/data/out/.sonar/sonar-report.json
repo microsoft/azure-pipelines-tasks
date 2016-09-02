@@ -1,0 +1,440 @@
+{
+    "version": "5.3",
+    "issues": [       
+        {
+            "key": "01532D5DA0E13EE55C",
+            "component": "prca_test:prca_test:8C269B30-29BC-4BCD-9AB0-7ACFB763DB2E:Class1.cs",
+            "line": 13,
+            "startLine": 13,
+            "startOffset": 0,
+            "endLine": 13,
+            "endOffset": 29,
+            "message": "'Class1.Foo()' declares a variable, 'b', of type 'string', which is never used or is only assigned to. Use this variable or remove it.",
+            "severity": "MAJOR",
+            "rule": "fxcop:RemoveUnusedLocals",
+            "status": "OPEN",
+            "isNew": true,
+            "creationDate": "2016-02-29T14:10:20+0000"
+        },
+        {
+            "key": "3d04d8a1-1c8d-47be-8e47-09a1b4c037f6",
+            "component": "prca_test:prca_test:8C269B30-29BC-4BCD-9AB0-7ACFB763DB2E",
+            "message": "This issue is reported at the assembly level!",
+            "severity": "MAJOR",
+            "rule": "fxcop:MarkAssembliesWithNeutralResourcesLanguage",
+            "status": "OPEN",
+            "isNew": true,
+            "creationDate": "2016-05-17T23:16:56+0200"
+        },
+        {
+            "key": "AVMtPj5t2ux5vOqxVSsN",
+            "component": "prca_test:prca_test:8C269B30-29BC-4BCD-9AB0-7ACFB763DB2E:Class1.cs",
+            "line": 10,
+            "startLine": 10,
+            "startOffset": 0,
+            "endLine": 10,
+            "endOffset": 34,
+            "message": "Remove this logging statement.",
+            "severity": "CRITICAL",
+            "rule": "csharpsquid:S2228",
+            "status": "OPEN",
+            "isNew": false,
+            "creationDate": "2016-02-29T13:36:02+0000"
+        },
+        {
+            "key": "AVMtPj5u2ux5vOqxVSsQ",
+            "component": "prca_test:prca_test:8C269B30-29BC-4BCD-9AB0-7ACFB763DB2E:Class1.cs",
+            "line": 10,
+            "startLine": 10,
+            "startOffset": 0,
+            "endLine": 10,
+            "endOffset": 34,
+            "message": "Method 'Class1.Foo()' passes a literal string as parameter 'value' of a call to 'Console.WriteLine(string)'. Retrieve the following string(s) from a resource table instead: \"hi\".",
+            "severity": "MAJOR",
+            "rule": "fxcop:DoNotPassLiteralsAsLocalizedParameters",
+            "status": "OPEN",
+            "isNew": false,
+            "creationDate": "2016-02-29T13:36:02+0000"
+        },
+        {
+            "key": "AVMtPj5u2ux5vOqxVSsR",
+            "component": "prca_test:prca_test:8C269B30-29BC-4BCD-9AB0-7ACFB763DB2E:Class1.cs",
+            "line": 8,
+            "startLine": 8,
+            "startOffset": 0,
+            "endLine": 8,
+            "endOffset": 10,
+            "message": "The 'this' parameter (or 'Me' in Visual Basic) of 'Class1.Foo()' is never used. Mark the member as static (or Shared in Visual Basic) or use 'this'/'Me' in the method body or at least one property accessor, if appropriate.",
+            "severity": "MAJOR",
+            "rule": "fxcop:MarkMembersAsStatic",
+            "status": "OPEN",
+            "isNew": false,
+            "creationDate": "2016-02-29T13:36:02+0000"
+        },
+        {
+            "key": "AVMtPj5X2ux5vOqxVSr_",
+            "component": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457:ExceptionHandling.cs",
+            "line": 13,
+            "startLine": 13,
+            "endLine": 13,
+            "message": "Add a \"protected\" constructor or the \"static\" keyword to the class declaration.",
+            "severity": "MAJOR",
+            "rule": "csharpsquid:S1118",
+            "status": "OPEN",
+            "isNew": false,
+            "creationDate": "2016-02-29T13:36:02+0000"
+        },
+        {
+            "key": "AVMtPj5Z2ux5vOqxVSsA",
+            "component": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457:ExceptionHandling.cs",
+            "line": 13,
+            "startLine": 13,
+            "endLine": 13,
+            "message": "This class is recommended to be defined as static",
+            "severity": "INFO",
+            "rule": "roslyn.refactoringessentials.cs:RECS0014",
+            "status": "OPEN",
+            "isNew": false,
+            "creationDate": "2016-02-29T13:36:02+0000"
+        },
+        {
+            "key": "AVMtPj5Z2ux5vOqxVSsB",
+            "component": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457:ExceptionHandling.cs",
+            "line": 21,
+            "startLine": 21,
+            "endLine": 21,
+            "message": "Remove this logging statement.",
+            "severity": "CRITICAL",
+            "rule": "csharpsquid:S2228",
+            "status": "OPEN",
+            "isNew": false,
+            "creationDate": "2016-02-29T13:36:02+0000"
+        },
+
+        {
+            "key": "01532D5DA0C93EE550",
+            "component": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457:Program.cs",
+            "line": 13,
+            "startLine": 13,
+            "startOffset": 0,
+            "endLine": 13,
+            "endOffset": 24,
+            "message": "Remove this unused \"a\" local variable.",
+            "severity": "MAJOR",
+            "rule": "csharpsquid:S1481",
+            "status": "OPEN",
+            "isNew": true,
+            "creationDate": "2016-02-29T14:10:20+0000"
+        },
+       
+        {
+            "key": "AVMtPj5g2ux5vOqxVSsC",
+            "component": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457:Program.cs",
+            "line": 30,
+            "startLine": 30,
+            "startOffset": 0,
+            "endLine": 30,
+            "endOffset": 12,
+            "message": "Add a \"protected\" constructor or the \"static\" keyword to the class declaration.",
+            "severity": "MAJOR",
+            "rule": "csharpsquid:S1118",
+            "status": "OPEN",
+            "isNew": false,
+            "creationDate": "2016-02-29T13:36:02+0000"
+        },
+        {
+            "key": "AVMtPj5h2ux5vOqxVSsD",
+            "component": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457:Program.cs",
+            "line": 67,
+            "startLine": 67,
+            "startOffset": 0,
+            "endLine": 67,
+            "endOffset": 35,
+            "message": "Add a nested comment explaining why this method is empty, throw a NotSupportedException or complete the implementation.",
+            "severity": "MAJOR",
+            "rule": "csharpsquid:S1186",
+            "status": "OPEN",
+            "isNew": false,
+            "creationDate": "2016-02-29T13:36:02+0000"
+        },
+        {
+            "key": "AVMtPj5h2ux5vOqxVSsE",
+            "component": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457:Program.cs",
+            "line": 20,
+            "startLine": 20,
+            "startOffset": 0,
+            "endLine": 20,
+            "endOffset": 35,
+            "message": "Remove this logging statement.",
+            "severity": "CRITICAL",
+            "rule": "csharpsquid:S2228",
+            "status": "OPEN",
+            "isNew": false,
+            "creationDate": "2016-02-29T13:36:02+0000"
+        },
+        {
+            "key": "AVMtPj5i2ux5vOqxVSsF",
+            "component": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457:Program.cs",
+            "line": 59,
+            "startLine": 59,
+            "startOffset": 0,
+            "endLine": 59,
+            "endOffset": 35,
+            "message": "Add a nested comment explaining why this method is empty, throw a NotSupportedException or complete the implementation.",
+            "severity": "MAJOR",
+            "rule": "csharpsquid:S1186",
+            "status": "OPEN",
+            "isNew": false,
+            "creationDate": "2016-02-29T13:36:02+0000"
+        },
+        {
+            "key": "AVMtPj5i2ux5vOqxVSsG",
+            "component": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457:Program.cs",
+            "line": 46,
+            "startLine": 46,
+            "startOffset": 0,
+            "endLine": 46,
+            "endOffset": 46,
+            "message": "Add a nested comment explaining why this method is empty, throw a NotSupportedException or complete the implementation.",
+            "severity": "MAJOR",
+            "rule": "csharpsquid:S1186",
+            "status": "OPEN",
+            "isNew": false,
+            "creationDate": "2016-02-29T13:36:02+0000"
+        },
+        {
+            "key": "AVMtPj5i2ux5vOqxVSsH",
+            "component": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457:Program.cs",
+            "line": 32,
+            "startLine": 32,
+            "startOffset": 0,
+            "endLine": 32,
+            "endOffset": 34,
+            "message": "Add a nested comment explaining why this method is empty, throw a NotSupportedException or complete the implementation.",
+            "severity": "MAJOR",
+            "rule": "csharpsquid:S1186",
+            "status": "OPEN",
+            "isNew": false,
+            "creationDate": "2016-02-29T13:36:02+0000"
+        },
+        {
+            "key": "AVMtPj5i2ux5vOqxVSsI",
+            "component": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457:Program.cs",
+            "line": 47,
+            "startLine": 47,
+            "startOffset": 0,
+            "endLine": 47,
+            "endOffset": 10,
+            "message": "Correct the casing of 'XXX' in member name 'B.XXX(this string)' by changing it to 'Xxx'.",
+            "severity": "MAJOR",
+            "rule": "fxcop:IdentifiersShouldBeCasedCorrectly",
+            "status": "OPEN",
+            "isNew": false,
+            "creationDate": "2016-02-29T13:36:02+0000"
+        },
+        {
+            "key": "AVMtPj5j2ux5vOqxVSsJ",
+            "component": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457:Program.cs",
+            "line": 47,
+            "startLine": 47,
+            "startOffset": 0,
+            "endLine": 47,
+            "endOffset": 10,
+            "message": "In method 'B.XXX(this string)', consider providing a more meaningful name than parameter name 's'.",
+            "severity": "MAJOR",
+            "rule": "fxcop:IdentifiersShouldBeSpelledCorrectly",
+            "status": "OPEN",
+            "isNew": false,
+            "creationDate": "2016-02-29T13:36:02+0000"
+        },
+        {
+            "key": "AVMtPj5j2ux5vOqxVSsK",
+            "component": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457:Program.cs",
+            "line": 47,
+            "startLine": 47,
+            "startOffset": 0,
+            "endLine": 47,
+            "endOffset": 10,
+            "message": "Parameter 's' of 'B.XXX(this string)' is never used. Remove the parameter or use it in the method body.",
+            "severity": "MAJOR",
+            "rule": "fxcop:ReviewUnusedParameters",
+            "status": "OPEN",
+            "isNew": false,
+            "creationDate": "2016-02-29T13:36:02+0000"
+        },
+        {
+            "key": "AVMtPj5j2ux5vOqxVSsL",
+            "component": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457:Program.cs",
+            "line": 20,
+            "startLine": 20,
+            "startOffset": 0,
+            "endLine": 20,
+            "endOffset": 35,
+            "message": "Method 'Program.Main(string[])' passes a literal string as parameter 'value' of a call to 'Console.Write(string)'. Retrieve the following string(s) from a resource table instead: \"boom\".",
+            "severity": "MAJOR",
+            "rule": "fxcop:DoNotPassLiteralsAsLocalizedParameters",
+            "status": "OPEN",
+            "isNew": false,
+            "creationDate": "2016-02-29T13:36:02+0000"
+        },
+        {
+            "key": "AVMtPj5j2ux5vOqxVSsM",
+            "component": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457:Program.cs",
+            "line": 12,
+            "startLine": 12,
+            "startOffset": 0,
+            "endLine": 12,
+            "endOffset": 10,
+            "message": "Parameter 'args' of 'Program.Main(string[])' is never used. Remove the parameter or use it in the method body.",
+            "severity": "MAJOR",
+            "rule": "fxcop:ReviewUnusedParameters",
+            "status": "OPEN",
+            "isNew": false,
+            "creationDate": "2016-02-29T13:36:02+0000"
+        }
+    ],
+    "components": [
+        {
+            "key": "prca_test"
+        },
+        {
+            "key": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457",
+            "path": "ConsoleApplication1"
+        },
+        {
+            "key": "prca_test:prca_test:8C269B30-29BC-4BCD-9AB0-7ACFB763DB2E",
+            "path": "CSProj2"
+        },
+        {
+            "key": "prca_test:prca_test:8C269B30-29BC-4BCD-9AB0-7ACFB763DB2E:Class1.cs",
+            "path": "Class1.cs",
+            "moduleKey": "prca_test:prca_test:8C269B30-29BC-4BCD-9AB0-7ACFB763DB2E",
+            "status": "CHANGED"
+        },
+        {
+            "key": "prca_test:prca_test:8C269B30-29BC-4BCD-9AB0-7ACFB763DB2E:Properties/AssemblyInfo.cs",
+            "path": "Properties/AssemblyInfo.cs",
+            "moduleKey": "prca_test:prca_test:8C269B30-29BC-4BCD-9AB0-7ACFB763DB2E",
+            "status": "SAME"
+        },
+        {
+            "key": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457:ExceptionHandling.cs",
+            "path": "ExceptionHandling.cs",
+            "moduleKey": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457",
+            "status": "SAME"
+        },
+        {
+            "key": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457:IDateGetter.cs",
+            "path": "IDateGetter.cs",
+            "moduleKey": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457",
+            "status": "SAME"
+        },
+        {
+            "key": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457:Program.cs",
+            "path": "Program.cs",
+            "moduleKey": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457",
+            "status": "CHANGED"
+        },
+        {
+            "key": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457:Properties/AssemblyInfo.cs",
+            "path": "Properties/AssemblyInfo.cs",
+            "moduleKey": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457",
+            "status": "SAME"
+        },
+        {
+            "key": "prca_test:prca_test:8C269B30-29BC-4BCD-9AB0-7ACFB763DB2E:/",
+            "path": "",
+            "moduleKey": "prca_test:prca_test:8C269B30-29BC-4BCD-9AB0-7ACFB763DB2E"
+        },
+        {
+            "key": "prca_test:prca_test:8C269B30-29BC-4BCD-9AB0-7ACFB763DB2E:Properties",
+            "path": "Properties",
+            "moduleKey": "prca_test:prca_test:8C269B30-29BC-4BCD-9AB0-7ACFB763DB2E"
+        },
+        {
+            "key": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457:/",
+            "path": "",
+            "moduleKey": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457"
+        },
+        {
+            "key": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457:Properties",
+            "path": "Properties",
+            "moduleKey": "prca_test:prca_test:D692F2E0-9DCE-4D86-9672-0EEAA9ABC457"
+        }
+    ],
+    "rules": [
+        {
+            "key": "fxcop:RemoveUnusedLocals",
+            "rule": "RemoveUnusedLocals",
+            "repository": "fxcop",
+            "name": "CA1804: Remove unused locals"
+        },
+        {
+            "key": "fxcop:IdentifiersShouldBeCasedCorrectly",
+            "rule": "IdentifiersShouldBeCasedCorrectly",
+            "repository": "fxcop",
+            "name": "CA1709: Identifiers should be cased correctly"
+        },
+        {
+            "key": "csharpsquid:S1854",
+            "rule": "S1854",
+            "repository": "csharpsquid",
+            "name": "Dead stores should be removed"
+        },
+        {
+            "key": "csharpsquid:S2228",
+            "rule": "S2228",
+            "repository": "csharpsquid",
+            "name": "Console logging should not be used"
+        },
+        {
+            "key": "fxcop:DoNotPassLiteralsAsLocalizedParameters",
+            "rule": "DoNotPassLiteralsAsLocalizedParameters",
+            "repository": "fxcop",
+            "name": "CA1303: Do not pass literals as localized parameters"
+        },
+        {
+            "key": "fxcop:MarkMembersAsStatic",
+            "rule": "MarkMembersAsStatic",
+            "repository": "fxcop",
+            "name": "CA1822: Mark members as static"
+        },
+        {
+            "key": "csharpsquid:S1118",
+            "rule": "S1118",
+            "repository": "csharpsquid",
+            "name": "Utility classes should not have public constructors"
+        },
+        {
+            "key": "roslyn.refactoringessentials.cs:RECS0014",
+            "rule": "RECS0014",
+            "repository": "roslyn.refactoringessentials.cs",
+            "name": "If all fields, properties and methods members are static, the class can be made static."
+        },
+        {
+            "key": "csharpsquid:S1481",
+            "rule": "S1481",
+            "repository": "csharpsquid",
+            "name": "Unused local variables should be removed"
+        },
+        {
+            "key": "fxcop:IdentifiersShouldBeSpelledCorrectly",
+            "rule": "IdentifiersShouldBeSpelledCorrectly",
+            "repository": "fxcop",
+            "name": "CA1704: Identifiers should be spelled correctly"
+        },
+        {
+            "key": "fxcop:ReviewUnusedParameters",
+            "rule": "ReviewUnusedParameters",
+            "repository": "fxcop",
+            "name": "CA1801: Review unused parameters"
+        },
+        {
+            "key": "csharpsquid:S1186",
+            "rule": "S1186",
+            "repository": "csharpsquid",
+            "name": "Methods should not be empty"
+        }
+    ],
+    "users": []
+}

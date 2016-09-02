@@ -15,15 +15,42 @@ param(
     [string]$testPlan,
     [string]$testSuite,
     [string]$testConfiguration,
-    [string]$runSettingsFilePreview,
-    [string]$codeCoverageEnabledPreview,
-    [string]$overrideRunParamsPreview
+    [string]$customSlicingEnabled
 
 )
 
 Function CmdletHasMember($memberName) {
-    $publishParameters = (gcm Invoke-RunDistributedTests).Parameters.Keys.Contains($memberName) 
-    return $publishParameters
+    $cmdletParameter = (gcm Invoke-RunDistributedTests).Parameters.Keys.Contains($memberName) 
+    return $cmdletParameter
+}
+
+Function ModifyTestSettingsForDeploymentItems() {
+
+    if(!([System.String]::IsNullOrWhiteSpace($runSettingsFile)) -And !(Test-Path $runSettingsFile -pathtype container) -And ([string]::Compare([io.path]::GetExtension($runSettingsFile), ".testsettings", $True) -eq 0))
+    {
+        $runSettingsContent = [System.Xml.XmlDocument](Get-Content $runSettingsFile)
+			$runConfigurationElement = $runSettingsContent.SelectNodes("/*/*/*[local-name()='DeploymentItem']")
+            
+            For ($index=0; $index -lt $runConfigurationElement.Count; $index++)
+            {
+                if (!([string]::IsNullOrEmpty($runConfigurationElement[$index].Attributes["filename"].Value)))
+                {
+                    if (!([io.path]::IsPathRooted($runConfigurationElement[$index].Attributes["filename"].Value)))
+                    {
+                        $runConfigurationElement[$index].Attributes["filename"].Value = [io.path]::Combine($dropLocation, $runConfigurationElement[$index].Attributes["filename"].Value);                        
+                    }
+                }
+                
+            }
+            
+            $tempFile = [io.path]::GetTempFileName()
+            $runSettingsContent.Save($tempFile)
+            Write-Verbose "Temporary runsettings file created at $tempFile"
+            return $tempFile
+        
+    }    
+
+    return 	$runSettingsFile
 }
 
 Write-Verbose "Entering script RunDistributedTests.ps1"
@@ -39,6 +66,7 @@ Write-Verbose "TestRun Parameters to override = $overrideRunParams"
 Write-Verbose "TestConfiguration = $testConfigurations"
 Write-Verbose "Application Under Test Machine Group = $autTestMachineGroup"
 
+
 # Import the Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
@@ -53,10 +81,14 @@ $unregisterTestAgentScriptLocation = Join-Path -Path $currentDirectory -ChildPat
 $checkTaCompatScriptLocation = Join-Path -Path $currentDirectory -ChildPath "CheckTestAgentCompat.ps1"
 Write-Verbose "UnregisterTestAgent script Path  = $unRegisterTestAgentLocation"
 
+Write-Verbose "Checking test settings for deployment items"
+$runSettingsFile = ModifyTestSettingsForDeploymentItems
+
 Write-Verbose "Calling Invoke-RunDistributedTests"
 
-$runTitleMemberExists = CmdletHasMember "TestRunTitle"
 $checkTestAgentCompatScriptLocationMemberExists  = CmdletHasMember "CheckTestAgentCompatScriptLocation"
+$checkCustomSlicingEnabledMemberExists  = CmdletHasMember "CustomSlicingEnabled"
+$taskContextMemberExists  = CmdletHasMember "TaskContext"
 
 $suites = $testSuite.Split(",")
 $testSuites = @()
@@ -75,33 +107,104 @@ if([int]::TryParse($testPlan, [ref]$testPlanId)){}
 $testConfigurationId = 0
 if([int]::TryParse($testConfiguration, [ref]$testConfigurationId)){}
 
-if($runTitleMemberExists)
+$customSlicingEnabledFlag = $false
+if([bool]::TryParse($customSlicingEnabled, [ref]$customSlicingEnabledFlag)){}
+ 
+if([string]::Equals($testSelection, "testPlan")) 
 {
-   if(![string]::IsNullOrWhiteSpace($testSuite))  
-   {
-     $testSelection = "testPlan"
-     if($checkTestAgentCompatScriptLocationMemberExists)
-     {     
-       Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFilePreview -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabledPreview -TestRunParams $overrideRunParamsPreview -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TestSelection $testSelection -TestPlan $testPlanId -TestSuites $testSuites -TestConfig $testConfigurationId -CheckTestAgentCompatScriptLocation $checkTaCompatScriptLocation
-     }
-     else
-     {
-       throw (Get-LocalizedString -Key "Update the build agent to run tests from test plan. If you are using hosted agent there are chances that it is still not updated, so retry using your own agent.")
-     }
-   }
-   else
-   {
-       Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle
-   }
+    if($checkCustomSlicingEnabledMemberExists)
+    {
+        try
+        {	
+            Write-Verbose "Invoking Run Distributed Tests with Register Environment support"
+    
+            Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TestSelection $testSelection -TestPlan $testPlanId -TestSuites $testSuites -TestConfig $testConfigurationId -TaskContext $distributedTaskContext -CheckTestAgentCompatScriptLocation $checkTaCompatScriptLocation -CustomSlicingEnabled $customSlicingEnabledFlag
+	    }
+        catch
+        {
+            Write-Host "##vso[task.logissue type=error;code=" $_.Exception.Message ";TaskName=DTA]"
+            throw
+        }
+    }
+    elseif($checkTestAgentCompatScriptLocationMemberExists)
+    {
+        if($customSlicingEnabledFlag)
+        {
+            Write-Warning "Update the build agent to run tests with uniform distribution. If you are using hosted agent there are chances that it is still not updated, so retry using your own agent."
+        }
+        try
+        {	
+            if($taskContextMemberExists)
+            {
+                Write-Verbose "Invoking Run Distributed Tests with Register Environment support"
+    
+                Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TestSelection $testSelection -TestPlan $testPlanId -TestSuites $testSuites -TestConfig $testConfigurationId -TaskContext $distributedTaskContext -CheckTestAgentCompatScriptLocation $checkTaCompatScriptLocation
+            }
+            else
+            {
+                Write-Verbose "Invoking Run Distributed Tests with Machine Group Confg"
+            
+                Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFilePreview -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabledPreview -TestRunParams $overrideRunParamsPreview -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TestSelection $testSelection -TestPlan $testPlanId -TestSuites $testSuites -TestConfig $testConfigurationId -CheckTestAgentCompatScriptLocation $checkTaCompatScriptLocation
+            }  
+	    }
+        catch
+        {
+            Write-Host "##vso[task.logissue type=error;code=" $_.Exception.Message ";TaskName=DTA]"
+            throw
+        }
+    }
+    else
+    {
+        throw (Get-LocalizedString -Key "Update the build agent to run tests from test plan. If you are using hosted agent there are chances that it is still not updated, so retry using your own agent.")
+    }
 }
 else
 {
-   if(!([string]::IsNullOrWhiteSpace($testRunTitle)))
-   {
-       Write-Warning "Update the build agent to be able to customize your test run title."
-   }
-   
-   Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation   
-} 
+    if($checkCustomSlicingEnabledMemberExists)
+    {
+        try
+        {	
+            Write-Verbose "Invoking Run Distributed Tests with Register Environment support"
+        
+            Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TaskContext $distributedTaskContext -CustomSlicingEnabled $customSlicingEnabledFlag
+	    }
+        catch
+        {
+            Write-Host "##vso[task.logissue type=error;code=" $_.Exception.Message ";TaskName=DTA]"
+            throw
+        }
+    }
+	else 
+	{
+        if($customSlicingEnabledFlag)
+        {
+            Write-Warning "Update the build agent to run tests with uniform distribution. If you are using hosted agent there are chances that it is still not updated, so retry using your own agent."
+        }
+        try
+        {
+            if($taskContextMemberExists)
+            {
+                Write-Verbose "Invoking Run Distributed Tests with Register Environment support"
+        
+                Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TaskContext $distributedTaskContext
+            }
+            else
+            {
+                Write-Verbose "Invoking Run Distributed Tests with Machng Group Confg"
+        
+                Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle
+            }
+        }
+        catch
+        {
+            Write-Host "##vso[task.logissue type=error;code=" $_.Exception.Message ";TaskName=DTA]"
+            throw
+        }
+    }
+}
 
-Write-Verbose "Leaving script RunDistributedTests.ps1"
+if (([string]::Compare([io.path]::GetExtension($runSettingsFile), ".tmp", $True) -eq 0))
+{
+    Write-Host "Removing temp settings file"
+    Remove-Item $runSettingsFile
+}

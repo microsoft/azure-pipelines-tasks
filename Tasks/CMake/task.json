@@ -3,49 +3,44 @@
     "name": "CMake",
     "friendlyName": "CMake",
     "description": "Build with the CMake cross-platform build system",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613719)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613719)",
     "category": "Build",
     "visibility": [
-                "Build"
-                  ],    
+        "Build"
+    ],
     "author": "Microsoft Corporation",
-    "demands" : [
+    "demands": [
         "cmake"
     ],
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 12
+        "Patch": 23
     },
     "minimumAgentVersion": "1.91.0",
     "instanceNameFormat": "CMake $(cmakeArgs)",
     "inputs": [
-        { 
-            "name": "cwd", 
-            "type": "filePath", 
-            "label": "Working Directory", 
-            "defaultValue":"build", 
-            "required":false,
-            "helpMarkDown": "Current working directory when cmake is run."  
+        {
+            "name": "cwd",
+            "type": "filePath",
+            "label": "Working Directory",
+            "defaultValue": "build",
+            "required": false,
+            "helpMarkDown": "Current working directory when cmake is run."
         },
-        { 
-            "name": "cmakeArgs", 
-            "type": "string", 
-            "label": "Arguments", 
-            "defaultValue":"", 
-            "required":false,
-            "helpMarkDown": "Arguments passed to cmake" 
+        {
+            "name": "cmakeArgs",
+            "type": "string",
+            "label": "Arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Arguments passed to cmake"
         }
     ],
     "execution": {
         "Node": {
             "target": "cmaketask.js",
             "argumentFormat": ""
-        },        
-        "PowerShell": {
-            "target": "$(currentDirectory)\\CMake.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
         }
     },
     "messages": {

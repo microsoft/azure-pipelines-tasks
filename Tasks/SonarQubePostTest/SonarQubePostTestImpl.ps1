@@ -1,16 +1,14 @@
-. .\SonarQubeHelper.ps1
-
 function InvokeMSBuildRunnerPostTest
 {
-	$bootstrapperPath = GetBootsrapperPath
+	$bootstrapperPath = GetBootstrapperPath
 	$arguments = GetMSBuildRunnerPostTestArgs
 
 	Invoke-BatchScript $bootstrapperPath -Arguments $arguments
 }
 
-function GetBootsrapperPath
+function GetBootstrapperPath
 {
-	$bootstrapperPath = GetTaskContextVariable "MSBuild.SonarQube.BootstrapperPath" 
+	$bootstrapperPath = GetTaskContextVariable "MSBuild.SonarQube.Internal.BootstrapperPath" 
 
 	if (!$bootstrapperPath -or ![System.IO.File]::Exists($bootstrapperPath))
 	{
@@ -59,30 +57,3 @@ function GetMSBuildRunnerPostTestArgs()
 	return $sb.ToString();
 }
 
-function UploadSummaryMdReport
-{
-	$sonarQubeOutDir = GetSonarQubeOutDirectory
-
-	# Upload the summary markdown file
-	$summaryMdPath = [System.IO.Path]::Combine($sonarQubeOutDir, "summary.md")
-	Write-Verbose "summaryMdPath = $summaryMdPath"
-
-	if ([System.IO.File]::Exists($summaryMdPath))
-	{
-		Write-Verbose "Uploading the summary.md file"
-		Write-Host "##vso[build.uploadsummary]$summaryMdPath"
-	}
-	else
-	{
-		 Write-Warning "Could not find the summary report file $summaryMdPath"
-	}
-}
-
-function HandleCodeAnalysisReporting
-{
-	$sonarQubeAnalysisModeIsIncremental = GetTaskContextVariable "MSBuild.SonarQube.AnalysisModeIsIncremental"
-	if ($sonarQubeAnalysisModeIsIncremental -ieq "true")
-	{
-		GenerateCodeAnalysisReport  
-	}
-}

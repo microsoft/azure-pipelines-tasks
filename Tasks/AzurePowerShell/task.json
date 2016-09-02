@@ -3,19 +3,19 @@
     "name": "AzurePowerShell",
     "friendlyName": "Azure PowerShell",
     "description": "Run a PowerShell script within an Azure environment",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613749)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613749)",
     "category": "Deploy",
     "visibility": [
-                "Build",
-                "Release"
-                  ],
+        "Build",
+        "Release"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 9
+        "Patch": 31
     },
-    "demands" : [
+    "demands": [
         "azureps"
     ],
     "minimumAgentVersion": "1.95.0",
@@ -35,10 +35,10 @@
         {
             "name": "ConnectedServiceName",
             "type": "connectedService:Azure",
-            "label": "Classic Azure Subscription",
+            "label": "Azure Classic Subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Classic Azure subscription to configure before running PowerShell",
+            "helpMarkDown": "Azure Classic subscription to configure before running PowerShell",
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
         },
         {
@@ -69,10 +69,12 @@
     ],
     "instanceNameFormat": "Azure PowerShell script: $(ScriptPath)",
     "execution": {
-        "AzurePowerShell": {
-            "target": "$(currentDirectory)\\RunAzurePowerShell.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
+        "PowerShell3": {
+            "target": "AzurePowerShell.ps1"
         }
+    },
+    "messages": {
+        "InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
+        "InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified."
     }
 }

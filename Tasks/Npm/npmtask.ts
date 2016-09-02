@@ -12,9 +12,12 @@ tl.mkdirP(cwd);
 tl.cd(cwd);
 
 var command = tl.getInput('command', true);
+if (command.indexOf(' ') >= 0) {
+	tl.setResult(tl.TaskResult.Failed, tl.loc("InvalidCommand"));
+}
 npm.arg(command);
 
-npm.arg(tl.getInput('arguments', false));
+npm.argString(tl.getInput('arguments', false));
 
 npm.exec()
 .then(function(code) {

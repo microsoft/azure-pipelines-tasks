@@ -1,6 +1,6 @@
 # Contributing
 
-This repo contains the in-the-box tasks for VSO build.  Tasks in this repo get deployed every three weeks to VSO and appear in TFS quarterly updates.
+This repo contains the in-the-box tasks for Team Services build.  Tasks in this repo get deployed every three weeks to Team Services and appear in TFS quarterly updates.
 
 If you are creating tasks that you believe the community can benefit from consider creating an extension.
 [create an extension](https://www.visualstudio.com/integrate/extensions/develop/add-build-task)
@@ -36,6 +36,22 @@ npm install gulp -g
 From the root of the repo, install the dependencies to build:
 ```bash
 npm install
+```
+
+## TypeScript
+
+Install TypeScript
+```bash
+npm install typescript -g
+```
+
+You'll need at least TypeScript 1.6 but would recommend latest at time of writing this which is 1.8.7
+
+Validate it's resolving from your terminal after installing:
+
+```bash
+$ tsc --version
+Version 1.8.7
 ```
 
 ## Build

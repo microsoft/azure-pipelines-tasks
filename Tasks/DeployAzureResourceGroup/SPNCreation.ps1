@@ -14,20 +14,21 @@ param
 $ErrorActionPreference = "Stop"
 $VerbosePreference = "SilentlyContinue"
 $userName = $env:USERNAME
-$newguid = New-Guid
-$displayName = "VSO." + $userName + '.' + $subscriptionName + '.' + $newguid
+$newguid = [guid]::NewGuid()
+$displayName = [String]::Format("VSO.{0}.{1}", $userName, $newguid)
 $homePage = "http://" + $displayName
 $identifierUri = $homePage
 
 
 #Initialize subscription
-$isAzureModulePresent = Get-Module -Name AzureRM -ListAvailable
+$isAzureModulePresent = Get-Module -Name AzureRM* -ListAvailable
 if ([String]::IsNullOrEmpty($isAzureModulePresent) -eq $true)
 {
-    Write-Output "Script requires AzureRM module to be present. Obtain AzureRM from https://www.powershellgallery.com/packages/AzureRM/" -Verbose
+    Write-Output "Script requires AzureRM modules to be present. Obtain AzureRM from https://github.com/Azure/azure-powershell/releases. Please refer https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md for recommended AzureRM versions." -Verbose
     return
 }
-Import-Module -Name AzureRM
+
+Import-Module -Name AzureRM.Profile
 Write-Output "Provide your credentials to access Azure subscription $subscriptionName" -Verbose
 Login-AzureRmAccount -SubscriptionName $subscriptionName
 $azureSubscription = Get-AzureRmSubscription -SubscriptionName $subscriptionName
@@ -52,7 +53,7 @@ Write-Output "SPN creation completed successfully (SPN Name: $spnName)" -Verbose
 
 #Assign role to SPN
 Write-Output "Waiting for SPN creation to reflect in Directory before Role assignment"
-sleep 20
+Start-Sleep 20
 Write-Output "Assigning role ($spnRole) to SPN App ($appId)" -Verbose
 New-AzureRmRoleAssignment -RoleDefinitionName $spnRole -ServicePrincipalName $appId
 Write-Output "SPN role assignment completed successfully" -Verbose

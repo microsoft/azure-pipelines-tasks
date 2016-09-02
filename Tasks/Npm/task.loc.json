@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "FE47E961-9FA8-4106-8639-368C022D43AD",
   "name": "Npm",
@@ -12,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 3
+    "Patch": 15
   },
   "demands": [
     "npm"
@@ -41,8 +38,7 @@
       "label": "ms-resource:loc.input.label.arguments",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.arguments",
-      "required": false,
-      "groupName": "advanced"
+      "required": false
     },
     {
       "name": "cwd",
@@ -58,14 +54,10 @@
     "Node": {
       "target": "npmtask.js",
       "argumentFormat": ""
-    },
-    "PowerShell": {
-      "target": "$(currentDirectory)\\Npm.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(cwd)"
     }
   },
   "messages": {
+    "InvalidCommand": "ms-resource:loc.messages.InvalidCommand",
     "NpmReturnCode": "ms-resource:loc.messages.NpmReturnCode",
     "NpmFailed": "ms-resource:loc.messages.NpmFailed"
   }

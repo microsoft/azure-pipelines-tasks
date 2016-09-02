@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "C6C4C611-AA2E-4A33-B606-5EABA2196824",
   "name": "MSBuild",
@@ -15,12 +12,12 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 19
+    "Patch": 50
   },
   "demands": [
     "msbuild"
   ],
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "1.95.0",
   "groups": [
     {
       "name": "advanced",
@@ -33,7 +30,7 @@
       "name": "solution",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.solution",
-      "defaultValue": "**\\*.sln",
+      "defaultValue": "**/*.sln",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.solution"
     },
@@ -68,11 +65,21 @@
       "helpMarkDown": "ms-resource:loc.input.help.clean"
     },
     {
+      "name": "maximumCpuCount",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.maximumCpuCount",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.maximumCpuCount"
+    },
+    {
       "name": "restoreNugetPackages",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.restoreNugetPackages",
-      "defaultValue": "true",
+      "defaultValue": "false",
       "required": false,
+      "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.restoreNugetPackages"
     },
     {
@@ -81,6 +88,16 @@
       "label": "ms-resource:loc.input.label.logProjectEvents",
       "defaultValue": "false",
       "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.logProjectEvents"
+    },
+    {
+      "name": "createLogFile",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.createLogFile",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.createLogFile",
       "groupName": "advanced"
     },
     {
@@ -106,6 +123,7 @@
       "visibleRule": "msbuildLocationMethod = version",
       "options": {
         "latest": "Latest",
+        "15.0": "MSBuild 15.0",
         "14.0": "MSBuild 14.0",
         "12.0": "MSBuild 12.0",
         "4.0": "MSBuild 4.0"
@@ -139,12 +157,18 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell3": {
-      "target": "MSBuild_PS3.ps1"
+      "target": "MSBuild.ps1",
+      "platforms": [
+        "windows"
+      ]
     },
-    "PowerShell": {
-      "target": "$(currentDirectory)\\MSBuild.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "Node": {
+      "target": "msbuild.js",
+      "argumentFormat": ""
     }
+  },
+  "messages": {
+    "UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "ms-resource:loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion",
+    "MSBuildNotFoundVersion0Architecture1TryDifferent": "ms-resource:loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent"
   }
 }

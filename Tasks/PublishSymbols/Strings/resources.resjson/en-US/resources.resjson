@@ -1,9 +1,6 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "loc.friendlyName": "Index Sources & Publish Symbols",
-  "loc.helpMarkDown": "Index your source code and publish symbols to a file share<br/>[More Information](http://go.microsoft.com/fwlink/?LinkID=613722)",
+  "loc.helpMarkDown": "Index your source code and publish symbols to a file share<br/>[More Information](https://go.microsoft.com/fwlink/?LinkID=613722)",
   "loc.description": "Index your source code and publish symbols to a file share",
   "loc.instanceNameFormat": "Publish symbols path: $(SymbolsPath)",
   "loc.group.displayName.advanced": "Advanced",
@@ -28,6 +25,7 @@
   "loc.messages.CleanedUpSemaphoreFile0": "Successfully cleaned up semaphore file '{0}'.",
   "loc.messages.CleanUpSemaphoreFile0Error1": "Could not clean up existing semaphore file '{0}'. {1}",
   "loc.messages.Error0AccessingSemaphoreFile1Retrying2Seconds": "Error '{0}' accessing semaphore file '{1}'. Retrying in {2:N0} seconds.",
+  "loc.messages.FailedToLoadDbghelpDllFrom0ErrorCode1": "Failed to load dbghelp.dll from '{0}' with error code '{1}'.",
   "loc.messages.Found0Files": "Found {0:N0} files.",
   "loc.messages.FreeLibraryDbghelpDllError0": "Failed to free library dbghelp.dll. Error code '{0}'.",
   "loc.messages.NoFilesForIndexing": "No files selected for indexing.",

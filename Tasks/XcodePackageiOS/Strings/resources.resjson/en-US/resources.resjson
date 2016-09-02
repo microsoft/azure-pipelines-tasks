@@ -1,9 +1,6 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "loc.friendlyName": "Xcode Package iOS",
-  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613731)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613731)",
   "loc.description": "Generate an .ipa file from Xcode build output",
   "loc.instanceNameFormat": "Xcode Package $(appName)",
   "loc.group.displayName.advanced": "Advanced",

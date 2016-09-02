@@ -2,40 +2,52 @@
     "id": "333b11bd-d341-40d9-afcf-b32d5ce6f23b",
     "name": "NuGetInstaller",
     "friendlyName": "NuGet Installer",
-    "description": "Installs and updates missing NuGet packages",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=613747)",
+    "description": "Installs or restores missing NuGet packages",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613747)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 1,
-        "Patch": 16
+        "Minor": 2,
+        "Patch": 14
     },
     "minimumAgentVersion": "1.83.0",
     "groups": [
         {
-            "name":"advanced",
-            "displayName":"Advanced",
-            "isExpanded":false
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
         }
-    ],    
-    "instanceNameFormat": "NuGet restore $(solution)",
+    ],
+    "instanceNameFormat": "NuGet $(restoreMode) $(solution)",
     "inputs": [
         {
             "name": "solution",
             "type": "filePath",
-            "label": "Path to Solution",
-            "defaultValue":"**\\*.sln",
-            "helpMarkDown": "The path to the Visual Studio Solution file",
-            "required":"true"
+            "label": "Path to solution or packages.config",
+            "defaultValue": "**/*.sln",
+            "helpMarkDown": "The path to the Visual Studio solution file or NuGet packages.config",
+            "required": "true"
         },
         {
             "name": "nugetConfigPath",
             "type": "filePath",
             "label": "Path to NuGet.config",
-            "defaultValue":"",
-            "helpMarkDown": "To use feeds within this account, check in a NuGet.config which lists those feeds as sources and select it here. This will allow the build system to authenticate to those feeds, assuming you’ve added the build identity as a reader or contributor to the feed.\n\nWant to know more about feed permissions? [Learn more]( http://go.microsoft.com/fwlink/?LinkID=691232).",
-            "required":"false"
+            "defaultValue": "",
+            "helpMarkDown": "Equivalent to the -ConfigFile NuGet.exe command line argument",
+            "required": "false"
+        },
+        {
+            "name": "restoreMode",
+            "type": "radio",
+            "label": "Installation type",
+            "defaultValue": "restore",
+            "helpMarkDown": "Restore will restore the packages a solution depends upon, and is generally what you want.\n\nInstall will install packages from a packages.config file. Use this option if you want to install a standalone tool package.",
+            "required": "true",
+            "options": {
+                "restore": "Restore",
+                "install": "Install"
+            }
         },
         {
             "name": "noCache",
@@ -43,15 +55,30 @@
             "label": "Disable local cache",
             "defaultValue": "false",
             "helpMarkDown": "Equivalent to the -NoCache NuGet.exe command line argument",
-            "required":"false"
+            "required": "false"
         },
         {
             "name": "nuGetRestoreArgs",
             "type": "string",
-            "label": "NuGet Arguments",
+            "label": "NuGet arguments",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Additional arguments passed to NuGet.exe restore. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command)."
+            "helpMarkDown": "Additional arguments passed to NuGet.exe restore or install. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command)."
+        },
+        {
+            "name": "verbosity",
+            "type": "pickList",
+            "label": "Verbosity",
+            "defaultValue": "-",
+            "helpMarkDown": "NuGet's verbosity level",
+            "required": "false",
+            "groupName": "advanced",
+            "options": {
+                "-": "-",
+                "Quiet": "Quiet",
+                "Normal": "Normal",
+                "Detailed": "Detailed"
+            }
         },
         {
             "name": "nuGetPath",
@@ -61,14 +88,46 @@
             "required": false,
             "helpMarkDown": "Optionally supply the path to NuGet.exe",
             "groupName": "advanced"
+        },
+        {
+            "name": "preCredProviderNuGet",
+            "type": "boolean",
+            "label": "Path to NuGet.exe is below version 3.2",
+            "groupName": "advanced",
+            "defaultValue": "false",
+            "helpMarkDown": "If you are supplying a path to nuget.exe and it is older than NuGet 3.2, check this box and fill in a 'Path to NuGet.config' above. Has no effect if 'Path to NuGet.exe' is not specified.",
+            "required": "false"
         }
-
     ],
     "execution": {
-        "PowerShell": {
-            "target": "$(currentDirectory)\\NuGetInstaller.ps1",
-            "argumentFormat": "",
-            "workingDirectory": ""
+        "Node": {
+            "target": "nugetinstaller.js",
+            "argumentFormat": ""
         }
+    },
+    "messages": {
+        "Warning_NoConfigForOldNuGet": "To connect to NuGet feeds hosted in your Team Services account/TFS project collection with NuGet 3.1 or below, edit your build definition to specify a path to a NuGet.config containing the package sources you wish to use.",
+        "Warning_NoConfigForNoCredentialProvider": "To connect to NuGet feeds hosted in your Team Services account/TFS project collection on this build agent, edit your build definition to specify a path to a NuGet.config containing the package sources you wish to use.",
+        "PackagesInstalledSuccessfully": "Packages were installed successfully",
+        "PackagesFailedToInstall": "Packages failed to install",
+        "ConnectingAs": "Connecting to feeds in your Team Services account/TFS project collection as '%s' [%s]",
+        "BuildIdentityPermissionsHint": "For internal feeds, make sure the build service identity '%s' [%s] has access to the feed.",
+        "NoCredProviderOnAgent": "CredentialProvider.TeamBuild.exe not found on the agent. Falling back to config-based credential flow.",
+        "NotARegularFile": "%s i not a solution file. Check the 'path to solution or packages.config' property of the NuGetInstaller task.",
+        "UnknownRestoreMode": "Unknown restore mode '%s'",
+        "CouldNotFindNuGetService": "Could not find the NuGet service. This task will be unable to authenticate to feeds hosted in your Team Services account/TFS project collection.",
+     
+        "NGCommon_DetectedNuGetVersion": "Detected NuGet version %s / %s",
+        "NGCommon_IgnoringNuGetExtensionsPath": "Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable). Extensions are ignored when using the built-in NuGet client",
+        "NGCommon_DetectedNuGetExtensionsPath": "Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable): %s",
+        "NGCommon_UnableToFindTool": "Unable to find tool %s",
+        "NGCommon_SpsNotFound": "Unable to find the '%s' [%s] area. There may be a problem with your Team Foundation Server installation.",
+        "NGCommon_AreaNotFoundInSps": "Unable to locate the '%s' [%s] area. The service containing that area may not be available in your region.",
+        "NGCommon_NuGetConfigIsPackagesConfig": "Expected a NuGet.config file at %s, but its contents appear to be a packages.config. Check the settings for the %s task and confirm you selected NuGet.config rather than packages.config.",
+        "NGCommon_NuGetConfigIsInvalid": "The NuGet.config at %s is invalid.",
+        "NGCommon_RemovingSources": "Preparing to set credentials in NuGet.config",
+        "NGCommon_AddingSources": "Setting credentials in NuGet.config",
+        "NGCommon_NoSourcesFoundInConfig": "No package sources were found in the NuGet.config file at %s"
+
     }
 }

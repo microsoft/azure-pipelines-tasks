@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "BFC8BF76-E7AC-4A8C-9A55-A944A9F632FD",
   "name": "BatchScript",
@@ -16,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 10
+    "Patch": 13
   },
   "demands": [
     "Cmd"

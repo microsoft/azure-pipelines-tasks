@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "MSBuild 用の SonarQube - 分析開始",
-  "loc.helpMarkDown": "[詳細] (http://go.microsoft.com/fwlink/?LinkId=620063)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=620063)",
   "loc.description": "SonarQube から品質プロファイルを取得して、分析を構成します",
   "loc.instanceNameFormat": "SonarQube から品質プロファイルを取得します",
   "loc.group.displayName.serverSettings": "SonarQube サーバー",
@@ -22,9 +22,11 @@
   "loc.input.label.dbPassword": "DB ユーザー パスワード",
   "loc.input.help.dbPassword": "SonarQube サーバー 5.1 以前のみ。データベース ユーザーのパスワード (sonar.jdbc.password)",
   "loc.input.label.cmdLineArgs": "追加設定 ",
-  "loc.input.help.cmdLineArgs": "/d:propertyName=propertyValue の形式を使用してスペース区切りで設定します。通常のコマンド ラインのエスケープ ルールが適用されます。設定の詳細については、[SonarQube の資料] (http://go.microsoft.com/fwlink/?LinkID=624390) をご覧ください。",
+  "loc.input.help.cmdLineArgs": "Space separated settings using the format: /d:propertyName=propertyValue. Normal command line escaping rules apply. For more details on the settings please view the [SonarQube docs](https://go.microsoft.com/fwlink/?LinkID=624390).",
   "loc.input.label.configFile": "設定ファイル ",
-  "loc.input.help.configFile": "設定は構成ファイルでも指定できます。テンプレートは [こちら] (http://go.microsoft.com/fwlink/?LinkID=620062) でご利用いただけます。",
-  "loc.input.label.breakBuild": "Fail the build on quality gate failure (SQ 5.3+)",
-  "loc.input.help.breakBuild": "This option is only available when using a SonarQube server 5.3 or above. It will introduce delays as the build must wait for SonarQube to complete the analysis. More information"
+  "loc.input.help.configFile": "You can also specify settings via a configuration file. A template is available [here](https://go.microsoft.com/fwlink/?LinkID=620062)",
+  "loc.input.label.includeFullReport": "ビルド概要 (SQ 5.3+) に完全な解析レポートが含まれる",
+  "loc.input.help.includeFullReport": "SonarQube の解析が完了するまで、このオプションはビルドを遅延させます。",
+  "loc.input.label.breakBuild": "品質ゲートのエラー時にビルドを失敗とする (SQ 5.3+)",
+  "loc.input.help.breakBuild": "This option is only available when using a SonarQube server 5.3 or above. It will introduce delays as the build must wait for SonarQube to complete the analysis. [More information](https://go.microsoft.com/fwlink/?LinkId=722407)"
 }

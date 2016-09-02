@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Cloudbasierter Auslastungstest",
-  "loc.helpMarkDown": "Diese Aufgabe kann verwendet werden, um einen cloudbasierten Auslastungstest unter Verwendung von Visual Studio Online auszulösen. [Weitere Informationen](http://go.microsoft.com/fwlink/?linkid=546976)",
-  "loc.description": "Führt den Auslastungstest in der Cloud mit Visual Studio Online aus",
+  "loc.helpMarkDown": "Dieser Task löst einen cloudbasierten Auslastungstest mithilfe von Visual Studio Team Services aus. [Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=546976).",
+  "loc.description": "Führt den Auslastungstest in der Cloud mit Visual Studio Team Services aus.",
   "loc.instanceNameFormat": "Cloudauslastungstest $(LoadTest)",
   "loc.input.label.connectedServiceName": "Registrierte Verbindung",
   "loc.input.help.connectedServiceName": "Wählen Sie eine zuvor registrierte Dienstverbindung aus, um mit dem Dienst \"Cloudbasierter Auslastungstest\" zu kommunizieren. Wählen Sie \"Verwalten\", um eine neue Verbindung zu registrieren.",
@@ -12,5 +12,6 @@
   "loc.input.label.LoadTest": "Auslastungstestdatei",
   "loc.input.help.LoadTest": "Der Dateiname des Auslastungstests, der unter dem oben angegebenen Auslastungstestordner verwendet werden soll.",
   "loc.input.label.ThresholdLimit": "Anzahl zulässiger Schwellenwertverstöße",
-  "loc.input.help.ThresholdLimit": "Anzahl der Schwellenwertverstöße, ab der das Ergebnis des Auslastungstests als nicht erfolgreich betrachtet wird"
+  "loc.input.help.ThresholdLimit": "Die Anzahl der Schwellenwertverstöße, ab der das Ergebnis des Auslastungstests als nicht erfolgreich betrachtet wird.",
+  "loc.input.label.MachineType": "Run load test using"
 }

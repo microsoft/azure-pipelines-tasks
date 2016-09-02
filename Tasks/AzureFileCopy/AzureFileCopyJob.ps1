@@ -1,9 +1,11 @@
 $AzureFileCopyJob = {
 param (
+    [string]$deploymentUtilitiesLocation,
     [string]$fqdn,
     [string]$storageAccount,
     [string]$containerName,
     [string]$sasToken,
+    [string]$blobStorageEndpoint,
     [string]$azCopyLocation,
     [string]$targetPath,
     [object]$credential,
@@ -15,28 +17,20 @@ param (
     [string]$additionalArguments
     )
 
-    Write-Verbose "fqdn = $fqdn" -Verbose
-    Write-Verbose "storageAccount = $storageAccount" -Verbose
-    Write-Verbose "containerName = $containerName" -Verbose
-    Write-Verbose "sasToken = $sasToken" -Verbose
-    Write-Verbose "azCopyLocation = $azCopyLocation" -Verbose
-    Write-Verbose "targetPath = $targetPath" -Verbose
-    Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy" -Verbose
-    Write-Verbose "winRMPort = $winRMPort" -Verbose
-    Write-Verbose "httpProtocolOption = $httpProtocolOption" -Verbose
-    Write-Verbose "skipCACheckOption = $skipCACheckOption" -Verbose
-    Write-Verbose "enableDetailedLogging = $enableDetailedLogging" -Verbose
-    Write-Verbose "additionalArguments = $additionalArguments" -Verbose
+    Write-Verbose "fqdn = $fqdn"
+    Write-Verbose "storageAccount = $storageAccount"
+    Write-Verbose "containerName = $containerName"
+    Write-Verbose "sasToken = $sasToken"
+    Write-Verbose "azCopyLocation = $azCopyLocation"
+    Write-Verbose "targetPath = $targetPath"
+    Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy"
+    Write-Verbose "winRMPort = $winRMPort"
+    Write-Verbose "httpProtocolOption = $httpProtocolOption"
+    Write-Verbose "skipCACheckOption = $skipCACheckOption"
+    Write-Verbose "enableDetailedLogging = $enableDetailedLogging"
+    Write-Verbose "additionalArguments = $additionalArguments"
 
-    Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\*.dll | % {
-        [void][reflection.assembly]::LoadFrom( $_.FullName )
-        Write-Verbose "Loading .NET assembly:`t$($_.name)" -Verbose
-    }
-
-    Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs\*.dll | % {
-        [void][reflection.assembly]::LoadFrom( $_.FullName )
-        Write-Verbose "Loading .NET assembly:`t$($_.name)" -Verbose
-    }
+    Import-Module "$deploymentUtilitiesLocation\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll"
 
     $cleanTargetPathOption = ''
     if ($cleanTargetBeforeCopy -eq "true")
@@ -50,16 +44,21 @@ param (
         $enableDetailedLoggingOption = '-EnableDetailedLogging'
     }
 
-    Write-Verbose "Initiating copy on $fqdn " -Verbose
+    Write-Verbose "Initiating copy on $fqdn "
 
+	if(-not [string]::IsNullOrWhiteSpace($blobStorageEndpoint))
+    {
+        $blobStorageURI = $blobStorageEndpoint+$containerName+"/"+$blobPrefix
+    }
+	
     [String]$copyToAzureMachinesBlockString = [string]::Empty
     if([string]::IsNullOrWhiteSpace($additionalArguments))
     {
-        $copyToAzureMachinesBlockString = "Copy-ToAzureMachines -MachineDnsName `$fqdn -StorageAccountName `$storageAccount -ContainerName `$containerName -SasToken `$sasToken -DestinationPath `$targetPath -Credential `$credential -AzCopyLocation `$azCopyLocation -WinRMPort $winRMPort $cleanTargetPathOption $skipCACheckOption $httpProtocolOption $enableDetailedLoggingOption"
+        $copyToAzureMachinesBlockString = "Copy-ToAzureMachines -MachineDnsName `$fqdn -StorageAccountName `$storageAccount -ContainerName `$containerName -SasToken `$sasToken -DestinationPath `$targetPath -Credential `$credential -AzCopyLocation `$azCopyLocation -BlobStorageURI `$blobStorageURI -WinRMPort $winRMPort $cleanTargetPathOption $skipCACheckOption $httpProtocolOption $enableDetailedLoggingOption"
     }
     else
     {
-        $copyToAzureMachinesBlockString = "Copy-ToAzureMachines -MachineDnsName `$fqdn -StorageAccountName `$storageAccount -ContainerName `$containerName -SasToken `$sasToken -DestinationPath `$targetPath -Credential `$credential -AzCopyLocation `$azCopyLocation -AdditionalArguments `$additionalArguments -WinRMPort $winRMPort $cleanTargetPathOption $skipCACheckOption $httpProtocolOption $enableDetailedLoggingOption"
+        $copyToAzureMachinesBlockString = "Copy-ToAzureMachines -MachineDnsName `$fqdn -StorageAccountName `$storageAccount -ContainerName `$containerName -SasToken `$sasToken -DestinationPath `$targetPath -Credential `$credential -AzCopyLocation `$azCopyLocation -AdditionalArguments `$additionalArguments -BlobStorageURI `$blobStorageURI -WinRMPort $winRMPort $cleanTargetPathOption $skipCACheckOption $httpProtocolOption $enableDetailedLoggingOption"
     }
     [scriptblock]$copyToAzureMachinesBlock = [scriptblock]::Create($copyToAzureMachinesBlockString)
 

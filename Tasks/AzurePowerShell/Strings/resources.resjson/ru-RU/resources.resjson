@@ -1,12 +1,17 @@
 {
   "loc.friendlyName": "Azure PowerShell",
-  "loc.helpMarkDown": "[Подробнее...](http://go.microsoft.com/fwlink/?LinkID=613749)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613749)",
   "loc.description": "Выполнение скрипта PowerShell в среде Azure",
   "loc.instanceNameFormat": "Сценарий Azure PowerShell: $(ScriptPath)",
-  "loc.input.label.ConnectedServiceName": "Подписка Azure",
-  "loc.input.help.ConnectedServiceName": "Подписка Azure, которую нужно настроить перед запуском PowerShell",
+  "loc.input.label.ConnectedServiceNameSelector": "Тип подключения Azure",
+  "loc.input.label.ConnectedServiceName": "Классическая подписка Azure",
+  "loc.input.help.ConnectedServiceName": "Классическая подписка Azure для настройки перед запуском PowerShell",
+  "loc.input.label.ConnectedServiceNameARM": "Подписка на Диспетчер ресурсов Azure",
+  "loc.input.help.ConnectedServiceNameARM": "Подписка на Azure Resource Manager для настройки перед запуском PowerShell",
   "loc.input.label.ScriptPath": "Путь к скрипту",
   "loc.input.help.ScriptPath": "Путь к сценарию. Это должен быть полный путь или путь относительно рабочего каталога по умолчанию.",
   "loc.input.label.ScriptArguments": "Аргументы скрипта",
-  "loc.input.help.ScriptArguments": "Дополнительные параметры для передачи в PowerShell. Могут быть как порядковыми, так и именованными."
+  "loc.input.help.ScriptArguments": "Дополнительные параметры для передачи в PowerShell. Могут быть как порядковыми, так и именованными.",
+  "loc.messages.InvalidScriptArguments0": "Недопустимые аргументы скрипта \"{0}\". Разрывы строк запрещены.",
+  "loc.messages.InvalidScriptPath0": "Недопустимый путь к скрипту \"{0}\". Указаны символы, недопустимые в пути."
 }

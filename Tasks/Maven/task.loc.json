@@ -1,6 +1,3 @@
-// *******************************************************
-// GENERATED FILE - DO NOT EDIT DIRECTLY
-// *******************************************************
 {
   "id": "AC4EE482-65DA-4485-A532-7B085873E532",
   "name": "Maven",
@@ -19,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 30
+    "Patch": 60
   },
   "minimumAgentVersion": "1.89.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -40,8 +37,8 @@
       "isExpanded": false
     },
     {
-      "name": "SQAnalysis",
-      "displayName": "ms-resource:loc.group.displayName.SQAnalysis",
+      "name": "CodeAnalysis",
+      "displayName": "ms-resource:loc.group.displayName.CodeAnalysis",
       "isExpanded": true
     }
   ],
@@ -50,7 +47,7 @@
       "name": "mavenPOMFile",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.mavenPOMFile",
-      "defaultValue": "",
+      "defaultValue": "pom.xml",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.mavenPOMFile"
     },
@@ -107,8 +104,8 @@
       "helpMarkDown": "ms-resource:loc.input.help.codeCoverageTool",
       "options": {
         "None": "None",
-        "JaCoCo": "JaCoCo",
-        "Cobertura": "Cobertura"
+        "Cobertura": "Cobertura",
+        "JaCoCo": "JaCoCo"
       }
     },
     {
@@ -226,12 +223,21 @@
       "visibleRule": "mavenVersionSelection = Path"
     },
     {
+      "name": "mavenOpts",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.mavenOpts",
+      "required": false,
+      "groupName": "advanced",
+      "defaultValue": "-Xmx2048m",
+      "helpMarkDown": "ms-resource:loc.input.help.mavenOpts"
+    },
+    {
       "name": "sqAnalysisEnabled",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.sqAnalysisEnabled",
       "required": true,
       "defaultValue": "false",
-      "groupName": "SQAnalysis",
+      "groupName": "CodeAnalysis",
       "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisEnabled"
     },
     {
@@ -240,7 +246,7 @@
       "label": "ms-resource:loc.input.label.sqConnectedServiceName",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.sqConnectedServiceName",
-      "groupName": "SQAnalysis",
+      "groupName": "CodeAnalysis",
       "visibleRule": "sqAnalysisEnabled = true"
     },
     {
@@ -249,7 +255,7 @@
       "label": "ms-resource:loc.input.label.sqDbDetailsRequired",
       "required": true,
       "defaultValue": "false",
-      "groupName": "SQAnalysis",
+      "groupName": "CodeAnalysis",
       "helpMarkDown": "ms-resource:loc.input.help.sqDbDetailsRequired",
       "visibleRule": "sqAnalysisEnabled = true"
     },
@@ -259,7 +265,7 @@
       "label": "ms-resource:loc.input.label.sqDbUrl",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.sqDbUrl",
-      "groupName": "SQAnalysis",
+      "groupName": "CodeAnalysis",
       "visibleRule": "sqDbDetailsRequired = true"
     },
     {
@@ -268,7 +274,7 @@
       "label": "ms-resource:loc.input.label.sqDbUsername",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.sqDbUsername",
-      "groupName": "SQAnalysis",
+      "groupName": "CodeAnalysis",
       "visibleRule": "sqDbDetailsRequired = true"
     },
     {
@@ -277,22 +283,68 @@
       "label": "ms-resource:loc.input.label.sqDbPassword",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.sqDbPassword",
-      "groupName": "SQAnalysis",
+      "groupName": "CodeAnalysis",
       "visibleRule": "sqDbDetailsRequired = true"
+    },
+    {
+      "name": "sqAnalysisIncludeFullReport",
+      "type": "boolean",
+      "defaultValue": "true",
+      "label": "ms-resource:loc.input.label.sqAnalysisIncludeFullReport",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisIncludeFullReport",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "sqAnalysisEnabled = true"
+    },
+    {
+      "name": "sqAnalysisBreakBuildIfQualityGateFailed",
+      "type": "boolean",
+      "defaultValue": "",
+      "label": "ms-resource:loc.input.label.sqAnalysisBreakBuildIfQualityGateFailed",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisBreakBuildIfQualityGateFailed",
+      "groupName": "CodeAnalysis",
+      "visibleRule": "sqAnalysisEnabled = true"
+    },
+    {
+      "name": "pmdAnalysisEnabled",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.pmdAnalysisEnabled",
+      "required": false,
+      "defaultValue": "false",
+      "groupName": "CodeAnalysis",
+      "helpMarkDown": "ms-resource:loc.input.help.pmdAnalysisEnabled"
     }
   ],
   "execution": {
     "Node": {
       "target": "maventask.js",
       "argumentFormat": ""
-    },
-    "PowerShell": {
-      "target": "$(currentDirectory)\\maven.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)",
-      "platforms": [
-        "windows"
-      ]
     }
+  },
+  "messages": {
+    "sqCommon_CreateTaskReport_MissingField": "ms-resource:loc.messages.sqCommon_CreateTaskReport_MissingField",
+    "sqCommon_WaitingForAnalysis": "ms-resource:loc.messages.sqCommon_WaitingForAnalysis",
+    "sqCommon_NotWaitingForAnalysis": "ms-resource:loc.messages.sqCommon_NotWaitingForAnalysis",
+    "sqCommon_QualityGateStatusUnknown": "ms-resource:loc.messages.sqCommon_QualityGateStatusUnknown",
+    "sqCommon_InvalidResponseFromServer": "ms-resource:loc.messages.sqCommon_InvalidResponseFromServer",
+    "codeAnalysis_ToolIsEnabled": "ms-resource:loc.messages.codeAnalysis_ToolIsEnabled",
+    "codeAnalysis_ToolFailed": "ms-resource:loc.messages.codeAnalysis_ToolFailed",
+    "sqAnalysis_IncrementalMode": "ms-resource:loc.messages.sqAnalysis_IncrementalMode",
+    "sqAnalysis_BuildSummaryTitle": "ms-resource:loc.messages.sqAnalysis_BuildSummaryTitle",
+    "sqAnalysis_TaskReportInvalid": "ms-resource:loc.messages.sqAnalysis_TaskReportInvalid",
+    "sqAnalysis_BuildSummary_LinkText": "ms-resource:loc.messages.sqAnalysis_BuildSummary_LinkText",
+    "sqAnalysis_BuildSummary_CannotAuthenticate": "ms-resource:loc.messages.sqAnalysis_BuildSummary_CannotAuthenticate",
+    "sqAnalysis_AnalysisTimeout": "ms-resource:loc.messages.sqAnalysis_AnalysisTimeout",
+    "sqAnalysis_IsPullRequest_SkippingBuildSummary": "ms-resource:loc.messages.sqAnalysis_IsPullRequest_SkippingBuildSummary",
+    "sqAnalysis_IsPullRequest_SkippingBuildBreaker": "ms-resource:loc.messages.sqAnalysis_IsPullRequest_SkippingBuildBreaker",
+    "sqAnalysis_BuildBrokenDueToQualityGateFailure": "ms-resource:loc.messages.sqAnalysis_BuildBrokenDueToQualityGateFailure",
+    "sqAnalysis_QualityGatePassed": "ms-resource:loc.messages.sqAnalysis_QualityGatePassed",
+    "codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles",
+    "codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsOneFile",
+    "codeAnalysisBuildSummaryLine_OneViolationOneFile": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_OneViolationOneFile",
+    "codeAnalysisBuildSummaryLine_NoViolations": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_NoViolations",
+    "codeAnalysisBuildSummaryTitle": "ms-resource:loc.messages.codeAnalysisBuildSummaryTitle",
+    "codeAnalysisArtifactSummaryTitle": "ms-resource:loc.messages.codeAnalysisArtifactSummaryTitle"
   }
 }
