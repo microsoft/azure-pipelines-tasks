@@ -126,7 +126,8 @@ function Get-AzureBlobStorageEndpointFromARM
 
 function Get-AzureStorageAccountTypeFromRDFE
 {
-    param([string]$storageAccountName)
+    param([string]$storageAccountName,
+          [object]$endpoint)
 
     if(-not [string]::IsNullOrEmpty($storageAccountName))
     {
@@ -143,7 +144,8 @@ function Get-AzureStorageAccountTypeFromRDFE
 
 function Get-AzureStorageAccountTypeFromARM
 {
-    param([string]$storageAccountName)
+    param([string]$storageAccountName,
+          [object]$endpoint)
 
     if(-not [string]::IsNullOrEmpty($storageAccountName))
     {

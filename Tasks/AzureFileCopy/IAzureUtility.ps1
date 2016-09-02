@@ -45,13 +45,15 @@ function Get-AzureBlobStorageEndpointFromARM
 # return account type for given ARM storage account
 function Get-AzureStorageAccountTypeFromARM
 {
-    param([string]$storageAccountName)
+    param([string]$storageAccountName,
+          [object]$endpoint)
 }
 
 # return account type for given classic storage account
 function Get-AzureStorageAccountTypeFromRDFE
 {
-    param([string]$storageAccountName)
+    param([string]$storageAccountName,
+          [object]$endpoint)
 }
 
 #creates azure container on given storageaccount whose information is present in $storageContext
