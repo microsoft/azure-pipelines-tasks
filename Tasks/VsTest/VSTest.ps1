@@ -41,7 +41,6 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.CodeCoverage"
 
 . $PSScriptRoot\Helpers.ps1
 
-Write-Host "##vso[task.logissue type=warning;TaskName=VSTest]"
 
 try
 {
