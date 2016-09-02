@@ -1,4 +1,4 @@
-Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_
 
 function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $connectedServiceName)
 {
