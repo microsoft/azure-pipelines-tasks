@@ -118,7 +118,7 @@ export class VstsServerUtils {
      * @param contents   The build summary
      * @returns {string} Full path to the build summary file
      */
-    private static  saveSonarQubeBuildSummary(contents: string): string {
+    private static saveSonarQubeBuildSummary(contents: string): string {
         var filePath:string = path.join(
             VstsServerUtils.getOrCreateSonarQubeStagingDirectory(), 'SonarQubeBuildSummary.md');
         fs.writeFileSync(filePath, contents);
@@ -130,7 +130,7 @@ export class VstsServerUtils {
      * @param buildSummaryFilePath Physical location of the build summary file on disk
      * @param title    Title to be given to the build summary, shown to the user
      */
-    private static  uploadBuildSummary(buildSummaryFilePath:string, title:string):void {
+    private static uploadBuildSummary(buildSummaryFilePath:string, title:string):void {
         tl.debug('Uploading build summary from ' + buildSummaryFilePath);
 
         tl.command('task.addattachment', {
@@ -143,7 +143,7 @@ export class VstsServerUtils {
      * Returns the location of the SonarQube integration staging directory.
      * @returns {string} Full path to the SonarQube staging directory
      */
-    private static  getOrCreateSonarQubeStagingDirectory(): string {
+    private static getOrCreateSonarQubeStagingDirectory(): string {
         var sqStagingDir = path.join(tl.getVariable('build.artifactStagingDirectory'), ".sqAnalysis");
         tl.mkdirP(sqStagingDir);
         return sqStagingDir;

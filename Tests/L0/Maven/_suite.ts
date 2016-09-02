@@ -24,6 +24,7 @@ import {ISonarQubeServer} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/serv
 import {SonarQubeEndpoint} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/endpoint';
 import {SonarQubeReportBuilder} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/report-builder';
 import {SonarQubeMetrics} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/metrics';
+import {SonarQubeMeasurementUnit} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/metrics';
 import {MockSonarQubeServer} from './server-mock';
 
 import http = require('http');
@@ -1574,7 +1575,7 @@ describe('Maven Suite', function () {
 
     /* SonarQube unit tests */
 
-    it('SonarQube common - SQMetrics caching holds true over multiple requests, and does not invoke additional REST calls', () => {
+    it('SonarQube common - task and analysis details caching holds true over multiple requests, and does not invoke additional REST calls', () => {
         // Arrange
         var mockRunSettings:SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
         var mockServer:MockSonarQubeServer = new MockSonarQubeServer();
@@ -1586,9 +1587,9 @@ describe('Maven Suite', function () {
         var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
         mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject);
 
-        var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
-        taskDetailsJsonObject.projectStatus.status = 'OK'; // Quality gate passed
-        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', taskDetailsJsonObject);
+        var analysisDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
+        analysisDetailsJsonObject.projectStatus.status = 'OK'; // Quality gate passed
+        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', analysisDetailsJsonObject);
 
         return analysisMetrics.getQualityGateStatus()
             .then((qualityGateStatus:string) => {
@@ -1607,6 +1608,49 @@ describe('Maven Suite', function () {
             })
     });
 
+    it('SonarQube common - measurement details caching holds true over multiple requests, and does not invoke additional REST calls', () => {
+        // Arrange
+        var mockRunSettings:SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockServer:MockSonarQubeServer = new MockSonarQubeServer();
+
+        var analysisMetrics:SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+
+        // Mock responses from the server for the measurement details
+        var measurementDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/measurement_details.json'), 'utf-8'));
+        mockServer.setupMockApiCall('/api/metrics/search?ps=500&f=name', measurementDetailsJsonObject);
+
+        // Act
+        // Make a few requests
+        var measurementDetailsResults:SonarQubeMeasurementUnit[][] = [];
+        return analysisMetrics.getMeasurementDetails()
+            .then((measurementDetailsResult:SonarQubeMeasurementUnit[]) => {
+                measurementDetailsResults.push(measurementDetailsResult);
+                return analysisMetrics.getMeasurementDetails();
+            })
+            .then((measurementDetailsResult:SonarQubeMeasurementUnit[]) => {
+                measurementDetailsResults.push(measurementDetailsResult);
+                return analysisMetrics.getMeasurementDetails();
+            })
+            .then((measurementDetailsResult:SonarQubeMeasurementUnit[]) => {
+                measurementDetailsResults.push(measurementDetailsResult);
+                var expectedMeasurementDetails:SonarQubeMeasurementUnit[] = measurementDetailsJsonObject.metrics as SonarQubeMeasurementUnit[];
+
+                measurementDetailsResults.forEach((actualMeasurementDetails:SonarQubeMeasurementUnit[]) => {
+                    // All results should match the expected
+                    var expectedLength = expectedMeasurementDetails.length;
+                    var actualLength = actualMeasurementDetails.length;
+                    assert(expectedLength == actualLength, `Returned measurement details length (${actualLength}) should match the original (${expectedLength})`);
+                    assert(expectedMeasurementDetails.every( (v,i) => {
+                        return v === actualMeasurementDetails[i];
+                    }), 'Each element of the returned measurement details should match the original');
+
+                    // Endpoint should only have been invoked once
+                    var invokeCount = mockServer.responses.get('/api/metrics/search?ps=500&f=name').invokedCount;
+                    assert(invokeCount == 1, `Measurement details endpoint should only have been invoked once. Actual: ${invokeCount}`);
+                })
+            });
+    });
+
     it('SonarQube common - Build summary is created (dashboard link only when not waiting for server)', () => {
         // Arrange
         var mockRunSettings: SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "taskId", "taskUrl");
@@ -1621,7 +1665,7 @@ describe('Maven Suite', function () {
             });
     });
 
-    it('SonarQube common - Build summary is created with quality gate failure', () => {
+    it('SonarQube common - Build summary with details is created with quality gate fail', () => {
         // Arrange
         var mockRunSettings: SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
         var mockServer: MockSonarQubeServer = new MockSonarQubeServer();
@@ -1633,15 +1677,63 @@ describe('Maven Suite', function () {
         var taskDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
         mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject);
 
-        var taskDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
-        taskDetailsJsonObject.projectStatus.status = 'ERROR'; // Quality gate failed
-        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', taskDetailsJsonObject);
+        var analysisDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
+        analysisDetailsJsonObject.projectStatus.status = 'ERROR'; // Quality gate failed
+        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', analysisDetailsJsonObject);
+
+        var unitsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/units.json'), 'utf-8'));
+        mockServer.setupMockApiCall('/api/metrics/search?ps=500&f=name', unitsJsonObject);
 
         return sqReportBuilder.fetchMetricsAndCreateReport(true)
-            .then((report:string) => {
-                assertBuildSummaryContains(report, '[sqAnalysis_BuildSummary_LinkText >](http://dashboardUrl "projectKey Dashboard")');
-                assertBuildSummaryContains(report, 'Quality Gate');
-                assertBuildSummaryContains(report, 'Failed');
+            .then((buildSummary:string) => {
+                assertBuildSummaryContains(buildSummary, '[sqAnalysis_BuildSummary_LinkText >](http://dashboardUrl "projectKey Dashboard")');
+                assertBuildSummaryContains(buildSummary, 'Quality Gate');
+                assertBuildSummaryContains(buildSummary, 'Failed');
+
+                // Details
+                assertBuildSummaryContains(buildSummary, 'Lines');
+                assertBuildSummaryContains(buildSummary, '71');
+                assertBuildSummaryContains(buildSummary, '&nbsp;&#62; 1'); // "> 1" in escaped HTML
+
+                assertBuildSummaryContains(buildSummary, 'Technical Debt');
+                assertBuildSummaryContains(buildSummary, '1h 27min');
+                assertBuildSummaryContains(buildSummary, '&nbsp;&#62; 0min'); // "> 0min" in escaped HTML
+            });
+    });
+
+    it('SonarQube common - Build summary with details is created with quality gate warn', () => {
+        // Arrange
+        var mockRunSettings: SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockServer: MockSonarQubeServer = new MockSonarQubeServer();
+
+        var analysisMetrics: SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+        var sqReportBuilder: SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
+
+        // Mock responses from the server for the task and analysis details
+        var taskDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
+        mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject);
+
+        var analysisDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
+        analysisDetailsJsonObject.projectStatus.status = 'WARN'; // Quality gate failed
+        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', analysisDetailsJsonObject);
+
+        var unitsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/units.json'), 'utf-8'));
+        mockServer.setupMockApiCall('/api/metrics/search?ps=500&f=name', unitsJsonObject);
+
+        return sqReportBuilder.fetchMetricsAndCreateReport(true)
+            .then((buildSummary:string) => {
+                assertBuildSummaryContains(buildSummary, '[sqAnalysis_BuildSummary_LinkText >](http://dashboardUrl "projectKey Dashboard")');
+                assertBuildSummaryContains(buildSummary, 'Quality Gate');
+                assertBuildSummaryContains(buildSummary, 'Warning');
+
+                // Details
+                assertBuildSummaryContains(buildSummary, 'Lines');
+                assertBuildSummaryContains(buildSummary, '71');
+                assertBuildSummaryContains(buildSummary, '&nbsp;&#62; 1'); // "> 1" in escaped HTML
+
+                assertBuildSummaryContains(buildSummary, 'Technical Debt');
+                assertBuildSummaryContains(buildSummary, '1h 27min');
+                assertBuildSummaryContains(buildSummary, '&nbsp;&#62; 0min'); // "> 0min" in escaped HTML
             });
     });
 
@@ -1657,15 +1749,15 @@ describe('Maven Suite', function () {
         var taskDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
         mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject);
 
-        var taskDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
-        taskDetailsJsonObject.projectStatus.status = 'OK'; // Quality gate passed
-        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', taskDetailsJsonObject);
+        var analysisDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
+        analysisDetailsJsonObject.projectStatus.status = 'OK'; // Quality gate passed
+        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', analysisDetailsJsonObject);
 
         return sqReportBuilder.fetchMetricsAndCreateReport(true)
-            .then((report:string) => {
-                assertBuildSummaryContains(report, '[sqAnalysis_BuildSummary_LinkText >](http://dashboardUrl "projectKey Dashboard")');
-                assertBuildSummaryContains(report, 'Quality Gate');
-                assertBuildSummaryContains(report, 'Passed');
+            .then((buildSummary:string) => {
+                assertBuildSummaryContains(buildSummary, '[sqAnalysis_BuildSummary_LinkText >](http://dashboardUrl "projectKey Dashboard")');
+                assertBuildSummaryContains(buildSummary, 'Quality Gate');
+                assertBuildSummaryContains(buildSummary, 'Passed');
             });
     });
 
@@ -1743,9 +1835,9 @@ describe('Maven Suite', function () {
         var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
         mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject);
 
-        var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
-        taskDetailsJsonObject.projectStatus.status = 'ERROR'; // Quality gate failed
-        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', taskDetailsJsonObject);
+        var analysisDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
+        analysisDetailsJsonObject.projectStatus.status = 'ERROR'; // Quality gate failed
+        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', analysisDetailsJsonObject);
 
         // Act
         return analysisMetrics.getTaskResultFromQualityGateStatus()
@@ -1765,9 +1857,9 @@ describe('Maven Suite', function () {
         var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
         mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject);
 
-        var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
-        taskDetailsJsonObject.projectStatus.status = 'OK'; // Quality gate passed
-        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', taskDetailsJsonObject);
+        var analysisDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
+        analysisDetailsJsonObject.projectStatus.status = 'OK'; // Quality gate passed
+        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', analysisDetailsJsonObject);
 
         // capture process.stdout and process.exit, along with useful data to assert on
         var capturedStream = captureStream(process.stdout);
