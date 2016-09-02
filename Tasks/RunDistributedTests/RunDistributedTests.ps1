@@ -66,7 +66,6 @@ Write-Verbose "TestRun Parameters to override = $overrideRunParams"
 Write-Verbose "TestConfiguration = $testConfigurations"
 Write-Verbose "Application Under Test Machine Group = $autTestMachineGroup"
 
-Write-Host "##vso[task.logissue type=warning;TaskName=DTA]"
 
 # Import the Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
