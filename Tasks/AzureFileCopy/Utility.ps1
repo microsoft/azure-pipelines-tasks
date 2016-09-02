@@ -122,8 +122,7 @@ function Get-AzureUtility (Parameter(Mandatory=$true)]$connectedServiceName)
         return $azureUtilityVersion110
     }
 	
-	Write-Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
-	return $azureUtilityRest100
+    return $azureUtilityRest100
 }
 
 function Get-ConnectionType
