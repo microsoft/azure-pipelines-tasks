@@ -3,7 +3,6 @@ Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
 try{
 
-    $ConnectedServiceName = Get-VstsInput -Name ConnectedSericeName
     $ServiceName = Get-VstsInput -Name ServiceName -Require
     $ServiceLocation = Get-VstsInput -Name ServiceLocation
     $StorageAccount = Get-VstsInput -Name StorageAccount -Require
@@ -22,14 +21,6 @@ try{
 
     # Load all dependent files for execution
     . $PSScriptRoot/Utility.ps1
-
-    $endpoint = Get-VstsEndpoint -Name $ConnectedServiceName
-    $connectionType = $endpoint.Auth.Scheme
-
-    if($connectionType -eq "Certificate")
-    {
-        . $PSScriptRoot/UtilityRest.ps1
-    }
 
     Write-Host "Finding $CsCfg"
     $serviceConfigFile = Find-VstsFiles -LegacyPattern "$CsCfg"
@@ -66,7 +57,7 @@ try{
         $azureService = Invoke-Expression -Command $azureService
     }
 
-    $diagnosticExtensions = Get-DiagnosticsExtensions $StorageAccount $serviceConfigFile $ConnectedServiceName
+    $diagnosticExtensions = Get-DiagnosticsExtensions $StorageAccount $serviceConfigFile
 
     $label = $DeploymentLabel
 

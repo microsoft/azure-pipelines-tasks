@@ -53,7 +53,7 @@ function Get-RoleName($extPath)
     return $roleName
 }
 
-function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $connectedServiceName)
+function Get-DiagnosticsExtensions($storageAccount, $extensionsPath)
 {
     $diagnosticsConfigurations = @()
     
