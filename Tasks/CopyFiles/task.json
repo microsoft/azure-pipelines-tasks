@@ -1,3 +1,5 @@
+// 20160902105811
+// https://raw.githubusercontent.com/dnelly/vso-agent-tasks/96699cc992f09c4aed84c55c7dff581c14881ff6/Tasks/CopyFiles/task.json
 {
     "id": "5BFB729A-A7C8-4A78-A7C3-8D717BB7C13C",
     "name": "CopyFiles",
@@ -12,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 20
+        "Patch": 21
     },
     "demands": [],
     "minimumAgentVersion": "1.91.0",
@@ -23,26 +25,60 @@
             "isExpanded": false
         }
     ],
-  "inputs": [
-    {
-      "name": "SourceFolder",
-      "type": "filePath",
-      "label": "Source Folder",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "The source folder that the copy pattern(s) will be run from.  Empty is the root of the repo.  Use [variables](http://go.microsoft.com/fwlink/?LinkID=550988) if files are not in the repo. Example: $(agent.builddirectory)"
-    },  
-    {
-      "name": "Contents",
-      "type": "multiLine",
-      "label": "Contents",
-      "defaultValue": "**",
-      "required": true,
-      "helpMarkDown": "File paths to include as part of the copy. Supports multiple lines of minimatch patterns. [More Information](http://go.microsoft.com/fwlink/?LinkID=708389)",
-      "properties": {
-          "resizable": "true",
-          "rows": "10"
-      }
+    "inputs": [
+        {
+            "name": "SourceFolder",
+            "type": "filePath",
+            "label": "Source Folder",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The source folder that the copy pattern(s) will be run from.  Empty is the root of the repo.  Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988) if files are not in the repo. Example: $(agent.builddirectory)"
+        },
+        {
+            "name": "Contents",
+            "type": "multiLine",
+            "label": "Contents",
+            "defaultValue": "**",
+            "required": true,
+            "helpMarkDown": "File paths to include as part of the copy. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkID=708389)",
+            "properties": {
+                "resizable": "true",
+                "rows": "10"
+            }
+        },
+        {
+            "name": "TargetFolder",
+            "type": "string",
+            "label": "Target Folder",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Target folder or UNC path files will copy to. You can use [variables](http://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)"
+        },
+        {
+            "name": "CleanTargetFolder",
+            "type": "boolean",
+            "label": "Clean Target Folder",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Delete all existing files in target folder before copy",
+            "groupName": "advanced"
+        },
+        {
+            "name": "OverWrite",
+            "type": "boolean",
+            "label": "Overwrite",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Replace existing file in target folder",
+            "groupName": "advanced"
+        }
+    ],
+    "instanceNameFormat": "Copy Files to: $(TargetFolder)",
+    "execution": {
+        "Node": {
+            "target": "copyfiles.js",
+            "argumentFormat": ""
+        }
     },
     "messages": {
         "FoundNFiles": "found %d files",
