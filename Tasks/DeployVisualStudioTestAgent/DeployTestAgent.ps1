@@ -38,8 +38,6 @@ Write-Verbose "disableScreenSaver = $disableScreenSaver"
 Write-Verbose "updateTestAgent = $updateTestAgent"
 Write-Verbose "isDataCollectionOnly = $isDataCollectionOnly"
 
-Write-Host "##vso[task.logissue type=warning;TaskName=DTA]"
-
 if ([string]::IsNullOrWhiteSpace($agentLocation))
 {
    Write-Verbose "Download of testagent would begin from internet"
