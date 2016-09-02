@@ -87,7 +87,7 @@ function Get-SpnAccessToken {
     $method = "POST"
     $authUri = "https://login.windows.net/$tenantId/oauth2/token"
     $body = @{
-        resource=$script:azureUri
+        resource=$script:azureUri+"/"
         client_id=$principalId
         grant_type='client_credentials'
         client_secret=$principalKey
@@ -99,14 +99,14 @@ function Get-SpnAccessToken {
     try
     {
         $proxyUri = Get-ProxyUri $authUri
-        if (("$proxyUri" -eq $null) or ("$proxyUri" -eq $authUri))
+        if (("$proxyUri" -eq $null) -or ("$proxyUri" -eq $authUri))
         {
             $accessToken = (Invoke-RestMethod -Uri $authUri -Method $method -Body $body -ContentType $script:formContentType)
             return $accessToken
         }
         else
         {
-            $accessToken = (Invoke-RestMethod -Uri $authUri -Method $method -Body $body -ContentType $script:formContentType) -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
+            $accessToken = (Invoke-RestMethod -Uri $authUri -Method $method -Body $body -ContentType $script:formContentType) 
             return $accessToken
         }
     }
@@ -362,14 +362,16 @@ function Get-AzStorageKeys
         $certificate = Get-Certificate $endpoint
 
         $proxyUri = Get-ProxyUri $uri
-        if (("$proxyUri" -eq $null) or ("$proxyUri" -eq $uri))
+        if (("$proxyUri" -eq $null) -or ("$proxyUri" -eq $uri))
         {
             $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate
+            Write-Verbose "Ran Get-AzStorageKeys" -Verbose
             return $storageKeys
         }
         else
         {
-            $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
+            $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate
+            Write-Verbose "Ran Get-AzStorageKeys" -Verbose 
             return $storageKeys
         }
     }
@@ -392,21 +394,25 @@ function Get-AzRMStorageKeys
     {
         $accessToken = Get-SpnAccessToken $endpoint
         $resourceGroupDetails = Get-AzRmResourceGroup $resourceGroupName $endpoint
+        $resourceGroupId = $resourceGroupDetails.id
+
         $method = "POST"
-        $uri = "$script:azureRmUri$resourceGroupDetails.id/providers/Microsoft.Storage/storageAccounts/$storageAccountName/listKeys?api-version=2015-06-15"
+        $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Storage/storageAccounts/$storageAccountName/listKeys\?api-version=2015-06-15"
 
         $headers = @{"x-ms-client-request-id"="d5b6a13d-7fa4-43fd-b912-a83a37221815"}
         $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
 
         $proxyUri = Get-ProxyUri $uri
-        if (("$proxyUri" -eq $null) or ("$proxyUri" -eq $uri))
+        if (("$proxyUri" -eq $null) -or ("$proxyUri" -eq $uri))
         {
             $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
+            Write-Verbose "Ran Get-AzRmStorageKeys" -Verbose
             return $storageKeys
         }
         else
         {
-            $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
+            $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
+            Write-Verbose "Ran Get-AzRmStorageKeys" -Verbose
             return $storageKeys
         }
     }
@@ -430,23 +436,26 @@ function Get-AzRmVmCustomScriptExtension
     {
         $accessToken = Get-SpnAccessToken $endpoint
         $resourceGroupDetails = Get-AzRmResourceGroup $resourceGroupName $endpoint
+        $resourceGroupId = $resourceGroupDetails.id
 
         $method="GET"
-        $uri = "$script:azureRmUri$resourceGroupDetails.id/providers/Microsoft.Compute/virtualMachines/$vmName/extensions/$Name?api-version=2016-03-30"
+        $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Compute/virtualMachines/$vmName/extensions/$Name\?api-version=2016-03-30"
 
         $headers = @{"x-ms-client-request-id"="5cbea21e-5ef3-41a1-ad99-38f877af3f93"}
         $headers.Add("accept-language", "en-US")
         $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
 
         $proxyUri = Get-ProxyUri $uri
-        if (("$proxyUri" -eq $null) or ("$proxyUri" -eq $uri))
+        if (("$proxyUri" -eq $null) -or ("$proxyUri" -eq $uri))
         {
             $customScriptExt=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
+            Write-Verbose "Ran Get-AzRmVmCSE" -Verbose
             return $customScriptExt
         }
         else
         {
-            $customScriptExt=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
+            $customScriptExt=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
+            Write-Verbose "Ran Get-AzRmVmCSE" -Verbose
             return $customScriptExt
         }
     }
@@ -470,23 +479,26 @@ function Remove-AzRmVmCustomScriptExtension
     {
         $accessToken = Get-SpnAccessToken $endpoint
         $resourceGroupDetails = Get-AzRmResourceGroup $resourceGroupName $endpoint
+        $resourceGroupId = $resourceGroupDetails.id
 
         $method="DELETE"
-        $uri = "$script:azureRmUri$resourceGroupDetails.id/providers/Microsoft.Compute/virtualMachines/$vmName/extensions/$Name?api-version=2016-03-30"
+        $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Compute/virtualMachines/$vmName/extensions/$Name\?api-version=2016-03-30"
 
         $headers = @{"x-ms-client-request-id"="f6c57f61-2003-4b56-a34c-d8d41a345f2d"}
         $headers.Add("accept-language", "en-US")
         $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
 
         $proxyUri = Get-ProxyUri $uri
-        if (("$proxyUri" -eq $null) or ("$proxyUri" -eq $uri))
+        if (("$proxyUri" -eq $null) -or ("$proxyUri" -eq $uri))
         {
             $response=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
+            Write-Verbose "Ran Remove-AzRmVmCSE" -Verbose
             return $response
         }
         else
         {
-            $response=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
+            $response=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
+            Write-Verbose "Ran Remove-AzRmVmCSE" -Verbose
             return $response
         }
     }
@@ -516,14 +528,16 @@ function Get-AzStorageAccount
         $certificate = Get-Certificate $endpoint
 
         $proxyUri = Get-ProxyUri $uri
-        if (("$proxyUri" -eq $null) or ("$proxyUri" -eq $uri))
+        if (("$proxyUri" -eq $null) -or ("$proxyUri" -eq $uri))
         {
             $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate
+            Write-Verbose "Ran Get-AzStorageAccount" -Verbose
             return $storageKeys
         }
         else
         {
-            $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
+            $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate
+            Write-Verbose "Ran Get-AzStorageAccount" -Verbose
             return $storageKeys
         }
     }
@@ -546,22 +560,25 @@ function Get-AzRmStorageAccount
     {
         $accessToken = Get-SpnAccessToken $endpoint
         $resourceGroupDetails = Get-AzRmResourceGroup $resourceGroupName $endpoint
+        $resourceGroupId = $resourceGroupDetails.id
 
         $method="GET"
-        $uri = "$script:azureRmUri$resourceGroupDetails.id/providers/Microsoft.Storage/storageAccounts/$storageAccountName?api-version=2016-01-01"
+        $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Storage/storageAccounts/$storageAccountName\?api-version=2016-01-01"
 
         $headers = @{"x-ms-client-request-id"="a21c4b0a-2226-4ab5-a473-e39459e6369a"}
         $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
 
         $storageAccountUnformatted = $null
         $proxyUri = Get-ProxyUri $uri
-        if (("$proxyUri" -eq $null) or ("$proxyUri" -eq $uri))
+        if (("$proxyUri" -eq $null) -or ("$proxyUri" -eq $uri))
         {
             $storageAccountUnformatted=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
+            Write-Verbose "Ran Get-AzRmStorageAccount" -Verbose
         }
         else
         {
-            $storageAccountUnformatted=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
+            $storageAccountUnformatted=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
+            Write-Verbose "Ran Get-AzRmStorageAccount" -Verbose
         }
 
         $storageAccount = New-Object -TypeName PSObject
@@ -595,28 +612,28 @@ function Get-AzRmResourceGroup
 
     try
     {
-        $connectionType = Get-ConnectionType -serviceEndpoint $endpoint
+        $connectionType = Get-ConnectionType $endpoint
         $accessToken = Get-SpnAccessToken $endpoint
         $subscriptionId = $endpoint.Data.SubscriptionId
 
         $method="GET"
-        $uri = "$script:azureRmUri/subscriptions/$subscriptionId/resourceGroups?api-version=2016-02-01"
+        $uri = "$script:azureRmUri/subscriptions/$subscriptionId/resourceGroups\?api-version=2016-02-01"
 
         $headers = @{"x-ms-client-request-id"="f18eb0d7-20c2-44b9-af30-21dab6afbcde"}
         $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
 
         $proxyUri = Get-ProxyUri $uri
-        if (("$proxyUri" -eq $null) or ("$proxyUri" -eq $uri))
+        $resourceGroups=$null
+        
+        if (("$proxyUri" -eq $null) -or ("$proxyUri" -eq $uri))
         {
             $resourceGroups=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
-            return $resourceGroups
         }
         else
         {
-            $resourceGroups=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
-            return $resourceGroups
+            $resourceGroups=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
         }
-
+        Write-Verbose "Ran Get-AzRmRG" -Verbose
         foreach ($resourceGroup in $resourceGroups.value)
         {
             if ($resourceGroup.name -eq $resourceGroupName)
