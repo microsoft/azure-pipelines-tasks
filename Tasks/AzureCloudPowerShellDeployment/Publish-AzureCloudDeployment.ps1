@@ -17,7 +17,6 @@ try{
     $NewServiceAffinityGroup = Get-VstsInput -Name NewServiceAffinityGroup
 
     # Initialize Azure.
-    Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
     Initialize-Azure
 
