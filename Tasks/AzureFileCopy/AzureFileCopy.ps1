@@ -97,6 +97,9 @@ try
 	
     # Geting Azure Blob Storage Endpoint
     $blobStorageEndpoint = Get-blobStorageEndpoint -storageAccountName $storageAccount -connectionType $connectionType
+	
+    # Geting Azure Storage Account type
+    $storageAccountType = Get-StorageAccountType -storageAccountName $storageAccount -connectionType $connectionType
 }
 catch
 {
@@ -108,9 +111,18 @@ catch
     throw
 }
 
+if(-not [string]::IsNullOrEmpty($storageAccountType) -and $storageAccountType.ToLower().StartsWith('premium'))
+{
+    $uploadAdditionalArguments = $additionalArguments + " /BlobType: page"
+}
+else
+{
+    $uploadAdditionalArguments = $additionalArguments
+}
+
 # Uploading files to container
 Upload-FilesToAzureContainer -sourcePath $sourcePath -storageAccountName $storageAccount -containerName $containerName -blobPrefix $blobPrefix -blobStorageEndpoint $blobStorageEndpoint -storageKey $storageKey `
-                             -azCopyLocation $azCopyLocation -additionalArguments $additionalArguments -destinationType $destination
+                             -azCopyLocation $azCopyLocation -additionalArguments $uploadAdditionalArguments -destinationType $destination
 
 # Complete the task if destination is azure blob
 if ($destination -eq "AzureBlob")
