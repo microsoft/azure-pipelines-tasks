@@ -152,15 +152,21 @@ try
             $testResultsDirectory = Get-ResultsLocation $runSettingsFileWithParallel 
         }
 
-        $workingDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.DefaultWorkingDirectory"
+         $buildSourcesDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "Build.SourcesDirectory"
+        if(![string]::IsNullOrEmpty($buildSourcesDirectory))
+        {
+            #For Build
+            $workingDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.DefaultWorkingDirectory"
+        }
+        else
+        {
+            #For RM
+            $workingDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.ArtifactsDirectory"
+        }
+
         if([string]::IsNullOrEmpty($testResultsDirectory))
         {
-            $testResultsDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "Common.TestResultsDirectory"
-            if ([string]::IsNullOrWhiteSpace($testResultsDirectory))
-            {
-                # for RM
-                $testResultsDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.ArtifactsDirectory"
-            }
+            $testResultsDirectory = $workingDirectory + [System.IO.Path]::DirectorySeparatorChar + "TestResults"
         }
 
         Write-Verbose "Test results directory: $testResultsDirectory"
