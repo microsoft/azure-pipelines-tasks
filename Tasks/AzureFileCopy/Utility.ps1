@@ -249,6 +249,39 @@ function Get-blobStorageEndpoint
     return $blobStorageEndpoint
 }
 
+function Get-StorageAccountType
+{
+    param([string][Parameter(Mandatory=$true)]$storageAccountName,
+          [string][Parameter(Mandatory=$true)]$connectionType)
+
+    $storageAccountName = $storageAccountName.Trim()
+    if($connectionType -eq 'Certificate' -or $connectionType -eq 'UserNamePassword')
+    {
+        try
+        {
+            # getting storage account type from RDFE
+            $storageAccountType = Get-AzureStorageAccountTypeFromRDFE -storageAccountName $storageAccountName
+        }
+        catch [Hyak.Common.CloudException]
+        {
+            $exceptionMessage = $_.Exception.Message.ToString()
+            Write-Verbose "[Azure Call](RDFE) ExceptionMessage: $exceptionMessage"
+            Write-TaskSpecificTelemetry "PREREQ_StorageAccountNotFound"
+            Throw (Get-VstsLocString -Key "AFC_BlobStorageNotFound" -ArgumentList $storageAccountName)
+        }
+    }
+    else
+    {
+        # getting storage account type from ARM endpoint
+        $storageAccountType = Get-AzureStorageAccountTypeFromARM -storageAccountName $storageAccountName
+    }
+
+	if($storageAccountType -ne $null)
+    {
+        return $storageAccountType.ToString()
+    }
+}
+
 function ThrowError
 {
     param([string]$errorMessage)
