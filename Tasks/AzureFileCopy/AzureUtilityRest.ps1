@@ -1,4 +1,4 @@
-Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_
 
 function Get-AzureStorageKeyFromRDFE
 {
@@ -67,15 +67,50 @@ function Get-AzureBlobStorageEndpointFromARM
         #$storageAccountInfo = Get-AzRmStorageAccount $azureResourceGroupDetails $storageAccountName $endpoint
         $storageAccountInfo = Get-AzRMStorageAccount $azureResourceGroupName $storageAccountName $endpoint -ErrorAction Stop
         $storageAccountEnpoint = $storageAccountInfo.PrimaryEndpoints[0].blob
-	    Write-Verbose "[Azure Call]Retrieved storage account endpoint successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName"
+                    Write-Verbose "[Azure Call]Retrieved storage account endpoint successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName"
 
         return $storageAccountEnpoint
-    }	
+    }          
+}
+
+function Get-AzureStorageAccountTypeFromRDFE
+{
+    param([string]$storageAccountName,
+          [object]$endpoint)
+
+    if(-not [string]::IsNullOrEmpty($storageAccountName))
+    {
+        Write-Verbose "[Azure Call](RDFE)Retrieving storage account type for the storage account: $storageAccount"
+        $storageAccountInfo = Get-AzStorageAccount $storageAccountName $endpoint -ErrorAction Stop
+        $storageAccountType = $storageAccountInfo.AccountType
+        Write-Verbose "[Azure Call](RDFE)Retrieved storage account type successfully for the storage account: $storageAccount"
+
+        return $storageAccountType
+    }
+}
+
+function Get-AzureStorageAccountTypeFromARM
+{
+    param([string]$storageAccountName,
+          [object]$endpoint)
+
+    if(-not [string]::IsNullOrEmpty($storageAccountName))
+    {
+        # get azure storage account resource group name
+        $azureResourceGroupName = Get-AzureStorageAccountResourceGroupName -storageAccountName $storageAccountName
+
+        Write-Verbose "[Azure Call]Retrieving storage account type for the storage account: $storageAccount in resource group: $azureResourceGroupName"
+        $storageAccountInfo = Get-AzRMStorageAccount $azureResourceGroupName $storageAccountName $endpoint -ErrorAction Stop
+        $storageAccountType = $storageAccountInfo.AccountType
+                    Write-Verbose "[Azure Call]Retrieved storage account type successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName"
+
+        return $storageAccountType
+    }          
 }
 
 function Get-AzureMachineCustomScriptExtension
 {
-    param([string]$resourceGroupName,
+   param([string]$resourceGroupName,
           [string]$vmName,
           [string]$name,
           [object]$endpoint)
@@ -87,7 +122,7 @@ function Get-AzureMachineCustomScriptExtension
         #$customScriptExtension = Get-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -ErrorAction Stop -Verbose     
         Write-Host (Get-VstsLocString -Key "AFC_GetCustomScriptExtensionComplete" -ArgumentList $name, $vmName)
     }
-	
+                
     return $customScriptExtension
 }
 
@@ -102,7 +137,7 @@ function Remove-AzureMachineCustomScriptExtension
     {
         Write-Host (Get-VstsLocString -Key "AFC_RemoveCustomScriptExtension" -ArgumentList $name, $vmName)
         $response = Remove-AzRmVMCustomScriptExtension $resourceGroupName $vmName $name $endpoint
-        #$response = Remove-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupDetails -VMName $vmName -Name $name -Force -ErrorAction SilentlyContinue -Verbose		
+        #$response = Remove-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupDetails -VMName $vmName -Name $name -Force -ErrorAction SilentlyContinue -Verbose                             
         Write-Host (Get-VstsLocString -Key "AFC_RemoveCustomScriptExtensionComplete" -ArgumentList $name, $vmName)
     }
 

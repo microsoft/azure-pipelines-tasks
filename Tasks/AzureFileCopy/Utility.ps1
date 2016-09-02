@@ -165,7 +165,7 @@ function Get-StorageKey
           [string][Parameter(Mandatory=$true)]$connectionType,
           [string][Parameter(Mandatory=$true)]$connectedServiceName)
 
-    $serviceEndpoint = Get-Endpoint -serviceEndpoint $connectedServiceName
+    $serviceEndpoint = Get-Endpoint $connectedServiceName
     $storageAccountName = $storageAccountName.Trim()
     if($connectionType -eq 'Certificate' -or $connectionType -eq 'UserNamePassword')
     {
@@ -211,7 +211,7 @@ function Get-StorageKey
         Validate-AzurePowershellVersion
 
         # getting storage account key from ARM endpoint
-        $storageKey = Get-AzureStorageKeyFromARM -storageAccountName $storageAccountName -endpoint $serviceEndpoint
+        $storageKey = Get-AzureStorageKeyFromARM -storageAccountName $storageAccountName -serviceEndpoint $serviceEndpoint
     }
 
     return $storageKey
