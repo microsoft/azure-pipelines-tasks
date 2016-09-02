@@ -9,7 +9,7 @@ function Get-AzureStorageKeyFromRDFE
     if(-not [string]::IsNullOrEmpty($storageAccountName))
     {
         Write-Verbose "[Azure Call](RDFE)Retrieving storage key for the storage account: $storageAccountName"
-        $storageKeyDetails = Get-AzStorageKey $storageAccountName $endpoint -ErrorAction Stop
+        $storageKeyDetails = Get-AzStorageKeys $storageAccountName $endpoint -ErrorAction Stop
         $storageKey = $storageKeyDetails.Primary
         Write-Verbose "[Azure Call](RDFE)Retrieved storage key successfully for the storage account: $storageAccountName"
 
@@ -68,7 +68,7 @@ function Get-AzureBlobStorageEndpointFromARM
         #$storageAccountInfo = Get-AzRmStorageAccount $azureResourceGroupDetails $storageAccountName $endpoint
         $storageAccountInfo = Get-AzRMStorageAccount $azureResourceGroupName $storageAccountName $endpoint -ErrorAction Stop
         $storageAccountEnpoint = $storageAccountInfo.PrimaryEndpoints[0].blob
-                    Write-Verbose "[Azure Call]Retrieved storage account endpoint successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName"
+        Write-Verbose "[Azure Call]Retrieved storage account endpoint successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName"
 
         return $storageAccountEnpoint
     }          

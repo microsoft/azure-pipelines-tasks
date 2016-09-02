@@ -297,13 +297,13 @@ function Get-AzStorageKeys
         {
             $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate
             Write-Verbose "No Proxy settings"
-            return $storageKeys
+            return $storageKeys.StorageService.StorageServiceKeys
         }
         else
         {
             $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
             Write-Verbose "Using Proxy settings"
-            return $storageKeys
+            return $storageKeys.StorageService.StorageServiceKeys
         }
     }
     catch
@@ -453,7 +453,7 @@ function Get-AzStorageAccount
         $connectionType=Get-ConnectionType $endpoint
         $subscriptionId = $endpoint.Data.SubscriptionId
 
-        $uri="$script:azureUri/$subscriptionId/services/storageservices/$storageAccountName/keys"
+        $uri="$script:azureUri/$subscriptionId/services/storageservices/$storageAccountName"
         $headers = @{"x-ms-version"="2016-03-01"}
         $method="GET"
 
@@ -462,15 +462,15 @@ function Get-AzStorageAccount
         $proxyUri = Get-ProxyUri $uri
         if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
         {
-            $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate
+            $storageAccount=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate
             Write-Verbose "No Proxy settings"
-            return $storageKeys
+            return $storageAccount.StorageService.StorageServiceProperties
         }
         else
         {
-            $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
+            $storageAccount=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
             Write-Verbose "Using Proxy settings"
-            return $storageKeys
+            return $storageAccount.StorageService.StorageServiceProperties
         }
     }
     catch
