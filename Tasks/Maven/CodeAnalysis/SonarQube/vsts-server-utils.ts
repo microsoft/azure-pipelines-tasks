@@ -89,7 +89,7 @@ export class VstsServerUtils {
         }
 
         // Necessary data is not available during a pull request build
-        return sqMetrics.getTaskResultFromQualityGateStatus()
+        return sqMetrics.fetchTaskResultFromQualityGateStatus()
             .then((taskResult:TaskResult) => {
                 if (taskResult == TaskResult.Failed) {
 // Looks like: "The SonarQube quality gate associated with this build has failed. For more details see http://mysonarqubeserver"
@@ -98,7 +98,7 @@ export class VstsServerUtils {
                 }
 
                 // Looks like: "The SonarQube quality gate associated with this build has passed (status OK)"
-                console.log(tl.loc('sqAnalysis_QualityGatePassed', sqMetrics.getQualityGateStatus()));
+                console.log(tl.loc('sqAnalysis_QualityGatePassed', sqMetrics.fetchQualityGateStatus()));
             });
     }
 

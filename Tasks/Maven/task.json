@@ -340,7 +340,7 @@
         "sqAnalysis_IsPullRequest_SkippingBuildBreaker": "Pull request build: build will not be broken if quality gate fails.",
         "sqAnalysis_BuildBrokenDueToQualityGateFailure": "The SonarQube quality gate associated with this build has failed.",
         "sqAnalysis_QualityGatePassed": "The SonarQube quality gate associated with this build has passed (status %s)",
-        "sqAnalysis_UnknownComparatorString": "Unknown operator string: %s",
+        "sqAnalysis_UnknownComparatorString": "The SonarQube build summary encountered a problem: unknown comparator '%s'",
         "sqAnalysis_NoUnitsFound": "The list of SonarQube measurement units could not be retrieved from the server.",
         "codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "%s found %d violations in %d files.",
         "codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "%s found %d violations in 1 file.",

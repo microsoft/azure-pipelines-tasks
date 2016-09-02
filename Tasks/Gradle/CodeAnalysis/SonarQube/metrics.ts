@@ -106,7 +106,7 @@ export class SonarQubeMetrics {
      *     If not specified, cached ID will be used or analysisId will be fetched
      * @returns JSON object representation of the analysis details
      */
-    public getAnalysisDetails(analysisId?:string):Q.Promise<Object> {
+    public fetchAnalysisDetails(analysisId?:string):Q.Promise<Object> {
         // Use the cache if available
         if (!(this.analysisDetails == undefined || this.analysisDetails == null)) {
             return Q.when(this.analysisDetails);
@@ -114,9 +114,9 @@ export class SonarQubeMetrics {
 
         // If analysisId was not given, get it (either from cache or live)
         if (analysisId == undefined || analysisId == null) {
-            return this.getAnalysisId()
+            return this.fetchAnalysisId()
                 .then((analysisId:string) => {
-                    return this.getAnalysisDetails(analysisId);
+                    return this.fetchAnalysisDetails(analysisId);
                 });
         }
 
@@ -137,7 +137,7 @@ export class SonarQubeMetrics {
      * Waits for the analysis task to complete, if necessary.
      * @returns {Promise<string>} The quality gate status, as reported by the SonarQube server.
      */
-    public getQualityGateStatus(): Q.Promise<string> {
+    public fetchQualityGateStatus(): Q.Promise<string> {
 
         tl.debug(`[SQ] Getting the quality gate status `);
 
@@ -145,10 +145,10 @@ export class SonarQubeMetrics {
             return Q.when(SonarQubeMetrics.getQualityGateStatus(this.analysisDetails));
         }
 
-        return this.getAnalysisId()
+        return this.fetchAnalysisId()
             .then((analysisId:string) => {
                 tl.debug(`[SQ] Analysis ID: ${analysisId}`);
-                return this.getAnalysisStatus(analysisId);
+                return this.fetchAnalysisStatus(analysisId);
             })
             .then((analysisStatus:string) => {
                 tl.debug(`[SQ] Analysis status: ${analysisStatus}`);
@@ -160,8 +160,8 @@ export class SonarQubeMetrics {
      * Returns the appropriate TaskResult enum based on whether the quality gate failed or passed.
      * @returns {any}
      */
-    public getTaskResultFromQualityGateStatus(): Q.Promise<TaskResult> {
-        return this.getQualityGateStatus()
+    public fetchTaskResultFromQualityGateStatus(): Q.Promise<TaskResult> {
+        return this.fetchQualityGateStatus()
             .then((qualityGateStatus:string) => {
                 if (SonarQubeMetrics.hasQualityGateFailed(qualityGateStatus)) {
                     return TaskResult.Failed;
@@ -175,7 +175,7 @@ export class SonarQubeMetrics {
      * For all the units used by the server, this method returns the key and the friendly name, as well as the type and the id
      * @returns {Promise<Object>} A list of all units used by the SQ server, represented by objects with fields: id, key, type, name. Rejects if server response was invalid.
      */
-    public getMeasurementDetails():Q.Promise<SonarQubeMeasurementUnit[]> {
+    public fetchMeasurementDetails():Q.Promise<SonarQubeMeasurementUnit[]> {
         if (SonarQubeMetrics.isCached(this.measurementUnits)) {
             tl.debug(`[SQ] Measurement units cache hit (cached array length ${this.measurementUnits.length})`);
             return Q.when(this.measurementUnits);
@@ -274,7 +274,7 @@ export class SonarQubeMetrics {
      * @returns A promise, resolving true if the task has finished and false if it has not. Rejects on error.
      */
     private isTaskComplete():Q.Promise<boolean> {
-        return this.getTaskDetails()
+        return this.fetchTaskDetails()
             .then((responseJson:any) => {
                 var taskStatus:string = responseJson.task.status;
                 tl.debug(`[SQ] Analysis status: ${taskStatus} `);
@@ -297,14 +297,14 @@ export class SonarQubeMetrics {
      * Waits for analysis task to complete, if necessary.
      * @returns A promise, resolving with a string representing the analysis ID. Rejects on error.
      */
-    private getAnalysisId():Q.Promise<string> {
+    private fetchAnalysisId():Q.Promise<string> {
         if (this.analysisId != undefined && this.analysisId != null) {
             return Q.when(this.analysisId);
         }
 
         return this.waitForTaskCompletion()
             .then(() => {
-                return this.getTaskDetails();
+                return this.fetchTaskDetails();
             })
             .then((taskDetails:any) => {
                 this.analysisId = SonarQubeMetrics.getTaskAnalysisId(taskDetails);
@@ -317,8 +317,8 @@ export class SonarQubeMetrics {
      * @param analysisId String representing the ID of the analysis to fetch the status of
      * @returns Promise resolving to a string representing the result of the project analysis
      */
-    private getAnalysisStatus(analysisId:string):Q.Promise<string> {
-        return this.getAnalysisDetails(analysisId)
+    private fetchAnalysisStatus(analysisId:string):Q.Promise<string> {
+        return this.fetchAnalysisDetails(analysisId)
             .then((analysisDetails:any) => {
                 return SonarQubeMetrics.getQualityGateStatus(analysisDetails);
             });
@@ -329,7 +329,7 @@ export class SonarQubeMetrics {
      * Returns from the cache if analysis has completed.
      * @returns JSON object representation of the task details
      */
-    private getTaskDetails():Q.Promise<Object> {
+    private fetchTaskDetails():Q.Promise<Object> {
         if (this.taskDetails != null) {
             return Q.when(this.taskDetails);
         }

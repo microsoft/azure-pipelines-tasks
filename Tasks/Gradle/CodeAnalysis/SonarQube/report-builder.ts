@@ -79,7 +79,7 @@ export class SonarQubeReportBuilder {
             return Q.when<string>(null);
         }
 
-        return this.taskMetrics.getQualityGateStatus()
+        return this.taskMetrics.fetchQualityGateStatus()
             .then((qualityGateStatus:string) => {
                 return SonarQubeReportBuilder.createBuildSummaryQualityGateSection(qualityGateStatus)
             })
@@ -101,7 +101,7 @@ export class SonarQubeReportBuilder {
             return Q.when<string>(null);
         }
 
-        return this.taskMetrics.getAnalysisDetails()
+        return this.taskMetrics.fetchAnalysisDetails()
             .then((analysisDetails:any) => {
                 // If quality gate is neither of FAIL or WARN, return null to hide this section in the build summary
                 if (!SonarQubeMetrics.hasQualityGateFailed(SonarQubeMetrics.getQualityGateStatus(analysisDetails)) &&
@@ -242,7 +242,7 @@ export class SonarQubeReportBuilder {
      * @returns User-visible display name.
      */
     private getMeasurementUnit(measurementKey:string):Q.Promise<SonarQubeMeasurementUnit> {
-        return this.taskMetrics.getMeasurementDetails()
+        return this.taskMetrics.fetchMeasurementDetails()
             .then((measurementUnits:SonarQubeMeasurementUnit[]) => {
                 if ((measurementUnits == undefined || measurementUnits == null) ||
                     (measurementKey == undefined || measurementKey == null)) {

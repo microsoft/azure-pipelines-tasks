@@ -1591,13 +1591,13 @@ describe('Maven Suite', function () {
         analysisDetailsJsonObject.projectStatus.status = 'OK'; // Quality gate passed
         mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', analysisDetailsJsonObject);
 
-        return analysisMetrics.getQualityGateStatus()
+        return analysisMetrics.fetchQualityGateStatus()
             .then((qualityGateStatus:string) => {
                 var expectedQualityGateStatus:string = qualityGateStatus;
                 var oldInvokeCount = mockServer.responses.get('/api/qualitygates/project_status?analysisId=12345').invokedCount;
 
                 assert(oldInvokeCount == 1, 'Expected the analysis details endpoint to only have been invoked once');
-                return analysisMetrics.getQualityGateStatus()
+                return analysisMetrics.fetchQualityGateStatus()
                     .then((qualityGateStatus:string) => {
                         var actualQualityGateStatus:string = qualityGateStatus;
                         var newInvokeCount = mockServer.responses.get('/api/qualitygates/project_status?analysisId=12345').invokedCount;
@@ -1622,14 +1622,14 @@ describe('Maven Suite', function () {
         // Act
         // Make a few requests
         var measurementDetailsResults:SonarQubeMeasurementUnit[][] = [];
-        return analysisMetrics.getMeasurementDetails()
+        return analysisMetrics.fetchMeasurementDetails()
             .then((measurementDetailsResult:SonarQubeMeasurementUnit[]) => {
                 measurementDetailsResults.push(measurementDetailsResult);
-                return analysisMetrics.getMeasurementDetails();
+                return analysisMetrics.fetchMeasurementDetails();
             })
             .then((measurementDetailsResult:SonarQubeMeasurementUnit[]) => {
                 measurementDetailsResults.push(measurementDetailsResult);
-                return analysisMetrics.getMeasurementDetails();
+                return analysisMetrics.fetchMeasurementDetails();
             })
             .then((measurementDetailsResult:SonarQubeMeasurementUnit[]) => {
                 measurementDetailsResults.push(measurementDetailsResult);
@@ -1840,7 +1840,7 @@ describe('Maven Suite', function () {
         mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', analysisDetailsJsonObject);
 
         // Act
-        return analysisMetrics.getTaskResultFromQualityGateStatus()
+        return analysisMetrics.fetchTaskResultFromQualityGateStatus()
             .then((taskResult) => {
                 assert(taskResult == 1 /* TaskResult.Failed == 1 */, 'Task should have failed.');
             });
@@ -1868,7 +1868,7 @@ describe('Maven Suite', function () {
         process.exit = function() { processExitInvoked++; return; };
 
         // Act
-        return analysisMetrics.getTaskResultFromQualityGateStatus()
+        return analysisMetrics.fetchTaskResultFromQualityGateStatus()
             .then((taskResult) => {
                 assert(taskResult == 0 /* TaskResult.Failed == 0 */, 'Task should not have failed.');
             });
