@@ -1,19 +1,3 @@
-function Get-AzureCmdletsVersion
-{
-    $module = Get-Module AzureRM -ListAvailable
-    if($module)
-    {
-        return ($module).Version
-    }
-    return (Get-Module Azure -ListAvailable).Version
-}
-
-function Get-AzureVersionComparison($azureVersion, $compareVersion)
-{
-    Write-Verbose "Compare azure versions: $azureVersion, $compareVersion"
-    return ($azureVersion -and $azureVersion -gt $compareVersion)
-}
-
 function Get-AgentStartIPAddress
 {
     $endpoint = (Get-VstsEndpoint -Name SystemVssConnection -Require)
@@ -66,39 +50,12 @@ function Get-AgentIPAddress
     return $IPAddress
 }
 
-function Get-AzureUtility
-{
-    $currentVersion =  Get-AzureCmdletsVersion
-    Write-Verbose "Installed Azure PowerShell version: $currentVersion"
-
-    $minimumAzureVersion = New-Object System.Version(0, 9, 9)
-    $versionCompatible = Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $minimumAzureVersion
-
-    $azureUtilityOldVersion = "AzureUtilityLTE9.8.ps1"
-    $azureUtilityNewVersion = "AzureUtilityGTE1.0.ps1"
-
-    if(!$versionCompatible)
-    {
-        $azureUtilityRequiredVersion = $azureUtilityOldVersion
-    }
-    else
-    {
-        $azureUtilityRequiredVersion = $azureUtilityNewVersion
-    }
-
-    Write-Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
-    return $azureUtilityRequiredVersion
-}
-
-function Get-ConnectionType
+function Get-Endpoint
 {
     param([String] [Parameter(Mandatory=$true)] $connectedServiceName)
 
     $serviceEndpoint = Get-VstsEndpoint -Name "$connectedServiceName"
-    $connectionType = $serviceEndpoint.Auth.Scheme
-
-    Write-Verbose "Connection type used is $connectionType"
-    return $connectionType
+    return $serviceEndpoint
 }
 
 function Create-AzureSqlDatabaseServerFirewallRule
@@ -106,19 +63,12 @@ function Create-AzureSqlDatabaseServerFirewallRule
     param([String] [Parameter(Mandatory = $true)] $startIp,
           [String] [Parameter(Mandatory = $true)] $endIp,
           [String] [Parameter(Mandatory = $true)] $serverName,
-          [String] [Parameter(Mandatory = $true)] $connectionType)
+          [Object] [Parameter(Mandatory = $true)] $endpoint)
 
     [HashTable]$FirewallSettings = @{}
     $firewallRuleName = [System.Guid]::NewGuid().ToString()
 
-    if($connectionType -eq 'Certificate' -or $connectionType -eq 'UserNamePassword')
-    {
-        Create-AzureSqlDatabaseServerFirewallRuleRDFE -startIPAddress $startIp -endIPAddress $endIp -serverName $serverName -firewallRuleName $firewallRuleName | Out-Null
-    }
-    else
-    {
-        Create-AzureSqlDatabaseServerFirewallRuleARM -startIPAddress $startIp -endIPAddress $endIp -serverName $serverName -firewallRuleName $firewallRuleName | Out-Null
-    }
+    Add-AzureSqlDatabaseServerFirewallRule -endpoint $endpoint -startIPAddress $startIp -endIPAddress $endIp -serverName $serverName -firewallRuleName $firewallRuleName | Out-Null
 
     $FirewallSettings.IsConfigured = $true
     $FirewallSettings.RuleName = $firewallRuleName
@@ -129,21 +79,14 @@ function Create-AzureSqlDatabaseServerFirewallRule
 function Delete-AzureSqlDatabaseServerFirewallRule
 {
     param([String] [Parameter(Mandatory = $true)] $serverName,
-          [String] $firewallRuleName,
-          [String] [Parameter(Mandatory = $true)] $connectionType,
+          [String] [Parameter(Mandatory = $true)] $firewallRuleName,
           [String] $isFirewallConfigured,
-          [String] [Parameter(Mandatory = $true)] $deleteFireWallRule)
+          [String] [Parameter(Mandatory = $true)] $deleteFireWallRule,
+          [Object] [Parameter(Mandatory = $true)] $endpoint)
 
     if($deleteFireWallRule -eq "true" -and $isFirewallConfigured -eq "true")
     {
-        if($connectionType -eq 'Certificate' -or $connectionType -eq 'UserNamePassword')
-        {
-            Delete-AzureSqlDatabaseServerFirewallRuleRDFE -serverName $serverName -firewallRuleName $firewallRuleName | Out-Null
-        }
-        else
-        {
-            Delete-AzureSqlDatabaseServerFirewallRuleARM -serverName $serverName -firewallRuleName $firewallRuleName | Out-Null
-        }
+        Remove-AzureSqlDatabaseServerFirewallRule -serverName $serverName -firewallRuleName $firewallRuleName -endpoint $endpoint
     }
 }
 
@@ -239,17 +182,16 @@ function Run-Command
 	{
         if( $psversiontable.PSVersion.Major -le 4)
         {
-           cmd.exe /c "`"$command`""
+           cmd.exe /c "`"$command`"" 2>&1
         }
         else
         {
-           cmd.exe /c "$command"
+           cmd.exe /c "$command" 2>&1
         }
 
     }
 	catch [System.Exception]
     {
-        Write-Verbose $_.Exception
         throw $_.Exception
     }
 
