@@ -1253,7 +1253,7 @@ function Is-WinRMCustomScriptExtensionExists
     try
     {
         $serviceEndpoint=Get-Endpoint $connectedServiceName
-        $customScriptExtension = Get-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -serviceEndpoint $serviceEndpoint
+        $customScriptExtension = Get-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -endpoint $serviceEndpoint
 
         if($customScriptExtension)
         {
