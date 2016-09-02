@@ -5,15 +5,13 @@
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
-  "category": "Utility",
+  "category": "Deploy",
   "visibility": [
     "Preview",
     "Build",
     "Release"
   ],
-  "demands": [
-    "sh"
-  ],
+  "demands": [],
   "version": {
     "Major": "0",
     "Minor": "1",
@@ -86,8 +84,8 @@
       "label": "ms-resource:loc.input.label.inlineScript",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.inlineScript",
       "visibleRule": "scriptLocation = inlineScript",
+      "helpMarkDown": "ms-resource:loc.input.help.inlineScript",
       "properties": {
         "resizable": "true",
         "rows": "10",
@@ -115,7 +113,7 @@
       "name": "failOnStandardError",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.failOnStandardError",
-      "defaultValue": "false",
+      "defaultValue": "true",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.failOnStandardError",
       "groupName": "advanced"

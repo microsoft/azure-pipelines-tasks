@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 34
+        "Patch": 36
     },
     "demands": [],
     "minimumAgentVersion": "1.91.0",
@@ -63,6 +63,8 @@
         }
     },
     "messages": {
-        "PublishBuildArtifactsFailed": "Publish build artifacts failed with error: %s"
+        "PublishBuildArtifactsFailed": "Publish build artifacts failed with error: %s",
+        "SkippingCopy": "Skipping copy and creating an artifact association only.",
+        "UncPathRequired": "Artifact is not in UNC format."
     }
 }

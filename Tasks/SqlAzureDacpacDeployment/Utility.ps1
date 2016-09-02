@@ -194,7 +194,6 @@ function Run-Command
     {
         throw $_.Exception
     }
-
 }
 
 function ConvertParamToSqlSupported

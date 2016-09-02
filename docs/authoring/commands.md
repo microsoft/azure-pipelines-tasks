@@ -162,7 +162,7 @@ Write-Host "##vso[task.setvariable variable=testvar;]testvalue"
             </td>
             <td>
                 <p align="left">
-                    Upload and attach attachment to current timeline record. <br>
+                    Upload and attach attachment to current timeline record. These files are not available for download with logs. These can only be referred to by extensions using the type or name values. <br>
                     Example: <br>
 					##vso[task.addattachment type=myattachmenttype;name=myattachmentname;]c:\myattachment.txt<br> 
                 </p>
@@ -182,7 +182,7 @@ Write-Host "##vso[task.setvariable variable=testvar;]testvalue"
             </td>
             <td>
                 <p align="left">
-                    Upload and attach summary markdown to current timeline record. <br>
+                    Upload and attach summary markdown to current timeline record. This summary shall be added to the build/release summary and not available for download with logs.<br>
                     Example: <br>
                     ##vso[task.uploadsummary]c:\testsummary.md <br>
                     It is a short hand form for the command <br>

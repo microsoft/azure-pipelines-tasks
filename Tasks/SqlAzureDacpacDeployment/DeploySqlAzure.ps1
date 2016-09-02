@@ -169,6 +169,7 @@ Catch [System.Management.Automation.CommandNotFoundException]
         Write-Host "2. Restart agent machine after installing tools to register Module path updates"
         Write-Host "3. Run Import-Module SQLPS on your agent Powershell prompt. (This step is not required on Powershell 3.0 enabled machines)"
     }
+
     Write-Error ($_.Exception|Format-List -Force|Out-String)
     throw
 }

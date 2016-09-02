@@ -69,9 +69,16 @@ export class SonarQubeMetrics {
      * @returns {Promise<string>} The quality gate status, as reported by the SonarQube server.
      */
     public getQualityGateStatus(): Q.Promise<string> {
+
+        tl.debug(`[SQ] Getting the quality gate status `);
+
         return this.getAnalysisId()
             .then((analysisId:string) => {
-                return this.getAnalysisStatus(analysisId);
+                tl.debug(`[SQ] Analysis ID: ${analysisId}`);
+                var status =  this.getAnalysisStatus(analysisId);
+                tl.debug(`[SQ] Analysis status: ${status}`);
+
+                return status;
             })
     }
 
@@ -97,8 +104,11 @@ export class SonarQubeMetrics {
      * @returns A promise resolving true if the task finished or rejecting if there was an error or the timeout was exceeded.
      */
     private waitForTaskCompletion(timeout?:number, delay?:number):Q.Promise<boolean> {
+        tl.debug(`[SQ] Waiting for SonarQube analysis to complete `);
+
         // If we have previously waited, then we can immediately return true.
         if (this.analysisComplete) {
+            tl.debug(`[SQ] Analysis complete check already performed `);
             return Q.when(true);
         }
 
@@ -113,6 +123,7 @@ export class SonarQubeMetrics {
             this.isTaskComplete()
                 .then((isDone:boolean) => {
                     if (isDone) {
+                        tl.debug(`[SQ] Analysis complete`);
                         // analysis is complete, set the cache (there should be no further state changes)
                         this.analysisComplete = true;
                         this.getTaskDetails()
@@ -159,6 +170,7 @@ export class SonarQubeMetrics {
         return this.getTaskDetails()
             .then((responseJson:any) => {
                 var taskStatus:string = responseJson.task.status;
+                tl.debug(`[SQ] Analysis status: ${taskStatus} `);
                 return (taskStatus.toUpperCase() == 'SUCCESS');
             });
     }

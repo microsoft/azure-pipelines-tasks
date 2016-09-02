@@ -1,0 +1,22 @@
+{
+  "name": "vsts-tasks-azurecli",
+  "version": "0.1.1",
+  "description": "VSTS Azure CLI Task",
+  "main": "azureclitask.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "vsts-task-lib": "^0.9.5"
+  }
+}
