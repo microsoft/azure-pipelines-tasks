@@ -92,7 +92,7 @@ function Get-AzureVersionComparison($azureVersion, $compareVersion)
     return ($azureVersion -and $azureVersion -gt $compareVersion)
 }
 
-function Get-AzureUtility
+function Get-AzureUtility (Parameter(Mandatory=$true)]$connectedServiceName)
 {
     $currentVersion =  Get-AzureCmdletsVersion
     Write-Verbose "Installed Azure PowerShell version: $currentVersion"
@@ -108,23 +108,22 @@ function Get-AzureUtility
 
     if(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion099))
     {
-        $azureUtilityRequiredVersion = $azureUtilityVersion098
+		return $azureUtilityVersion098
     }
-    elseif(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion103))
+	
+    if(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion103))
     {
-        $azureUtilityRequiredVersion = $azureUtilityVersion100
+		return $azureUtilityVersion100
     }
-    elseif(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion132))
+	
+	$endpoint = Get-ConnectionType $connectedServiceName
+	if(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion132) -or ($endpoint.Auth.Scheme -eq "UserNamePassword"))
     {
-        $azureUtilityRequiredVersion = $azureUtilityVersion110
+        return $azureUtilityVersion110
     }
-	else
-	{
-	    $azureUtilityRequiredVersion = $azureUtilityRest100
-	}
-
-    Write-Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
-    return $azureUtilityRequiredVersion
+	
+	Write-Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
+	return $azureUtilityRest100
 }
 
 function Get-ConnectionType
