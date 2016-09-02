@@ -1,3 +1,5 @@
+Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+
 function Get-AzureStorageKeyFromRDFE
 {
     param([string]$storageAccountName,

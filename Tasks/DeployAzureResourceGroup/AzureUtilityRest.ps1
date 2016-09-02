@@ -1,3 +1,5 @@
+Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+
 function Create-AzureResourceGroupIfNotExist
 {
     param([string]$resourceGroupName,
