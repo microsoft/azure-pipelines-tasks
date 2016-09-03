@@ -49,8 +49,7 @@ function Get-AzureBlobStorageEndpointFromRDFE
         $storageAccountEnpoint = $null
         if (($storageAccountInfo -ne $null) -and ($storageAccountInfo.Endpoints -ne $null) -and ($storageAccountInfo.Endpoints.Endpoint -ne $null))
         {
-            $blobEndpoints = $storageAccountInfo.Endpoints.Endpoint -like "*blob*"
-            $storageAccountEnpoint = $blobEndpoints[0]
+            $storageAccountEnpoint = $storageAccountInfo.Endpoints.Endpoint[0]
         }
         Write-Verbose "[Azure Call](RDFE)Retrieved storage account endpoint successfully for the storage account: $storageAccount"
 
