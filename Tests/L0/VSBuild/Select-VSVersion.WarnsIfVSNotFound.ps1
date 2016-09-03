@@ -8,7 +8,7 @@ Register-Mock Write-Warning
 Register-Mock Get-VSPath
 
 # Act.
-$actual = Select-VSVersion -PreferredVersion ''
+$actual = Select-VSVersion -PreferredVersion '' -SearchCom:$false
 
 # Assert.
 Assert-AreEqual '' $actual
