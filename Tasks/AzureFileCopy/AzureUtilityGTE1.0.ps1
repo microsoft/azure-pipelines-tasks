@@ -152,7 +152,7 @@ function Get-AzureStorageAccountTypeFromARM
 function Create-AzureContainer
 {
     param([string]$containerName,
-          [object]$storageContext
+          [object]$storageContext,
           [boolean]$isPremiumStorage)
 
     if(-not [string]::IsNullOrEmpty($containerName) -and $storageContext)
