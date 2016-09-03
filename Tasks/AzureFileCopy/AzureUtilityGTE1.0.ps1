@@ -152,14 +152,20 @@ function Get-AzureStorageAccountTypeFromARM
 function Create-AzureContainer
 {
     param([string]$containerName,
-          [object]$storageContext)
+          [object]$storageContext
+          [boolean]$isPremiumStorage)
 
     if(-not [string]::IsNullOrEmpty($containerName) -and $storageContext)
     {
         $storageAccountName = $storageContext.StorageAccountName
 
         Write-Verbose "[Azure Call]Creating container: $containerName in storage account: $storageAccountName"
-        $container = New-AzureStorageContainer -Name $containerName -Context $storageContext -Permission Container -ErrorAction Stop
+        if ($isPremiumStorage) 
+        {
+            $container = New-AzureStorageContainer -Name $containerName -Context $storageContext -ErrorAction Stop
+        } else {
+            $container = New-AzureStorageContainer -Name $containerName -Context $storageContext -Permission Container -ErrorAction Stop
+        }
         Write-Verbose "[Azure Call]Created container: $containerName successfully in storage account: $storageAccountName"
     }
 }
