@@ -4,7 +4,7 @@
   "loc.description": "Buildartefakte auf dem Server oder in einer Dateifreigabe veröffentlichen",
   "loc.instanceNameFormat": "Artefakt veröffentlichen: $(ArtifactName)",
   "loc.input.label.PathtoPublish": "Zu veröffentlichender Pfad",
-  "loc.input.help.PathtoPublish": "Folder or file path to publish.  Can be a fully qualified path or relative to repo root, wildcards are not supported. Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)",
+  "loc.input.help.PathtoPublish": "Der zu veröffentlichende Ordner- oder Dateipfad. Es kann sich um einen vollqualifizierten Pfad oder um einen Pfad relativ zum Repositorystamm handeln. Platzhalter werden nicht unterstützt. Verwenden Sie [Variablen](https://go.microsoft.com/fwlink/?LinkID=550988), z. B. \"$(build.artifactstagingdirectory)\".",
   "loc.input.label.ArtifactName": "Artefaktname",
   "loc.input.help.ArtifactName": "Der Name des zu erstellenden Artefakts.",
   "loc.input.label.ArtifactType": "Artefakttyp",

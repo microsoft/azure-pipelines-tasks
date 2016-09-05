@@ -15,7 +15,7 @@
   "loc.input.label.emulatorTarget": "AVD 目標 SDK",
   "loc.input.help.emulatorTarget": "新 Android 虛擬裝置 (AVD) 的目標 ID。",
   "loc.input.label.emulatorDevice": "AVD 裝置",
-  "loc.input.help.emulatorDevice": "The optional device definition to use. Can be a device index or ID.",
+  "loc.input.help.emulatorDevice": "要使用的選擇性裝置定義。可以是裝置索引或 ID。",
   "loc.input.label.avdAbi": "AVD ABI",
   "loc.input.help.avdAbi": "Android 虛擬裝置 (AVD) 要使用的 ABI。 ",
   "loc.input.label.avdForce": "覆寫現有 AVD",

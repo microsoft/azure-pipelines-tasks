@@ -50,7 +50,7 @@
   "loc.messages.ErrorWhileSettingTestImpactCollectorRunSettings": "Fehler beim Festlegen des Testauswirkungssammlers in der Datei mit den Ausführungseinstellungen.",
   "loc.messages.ErrorWhileCreatingResponseFile": "Fehler beim Erstellen der Antwortdatei. Für diesen Lauf werden alle Tests ausgeführt.",
   "loc.messages.ErrorWhileUpdatingResponseFile": "Fehler beim Aktualisieren der Antwortdatei \"%s\". Für diesen Lauf werden alle Tests ausgeführt.",
-  "loc.messages.ErrorWhilePublishingCodeChanges": "Error occurred while publishing the code changes. All the tests will be executed for this run.",
-  "loc.messages.PublishCodeChangesPerfTime": "Total time taken to publish code changes: %d milliseconds",
-  "loc.messages.GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds"
+  "loc.messages.ErrorWhilePublishingCodeChanges": "Fehler beim Veröffentlichen der Codeänderungen. Für diesen Lauf werden alle Tests ausgeführt.",
+  "loc.messages.PublishCodeChangesPerfTime": "Gesamtzeit für das Veröffentlichen von Änderungen: %d Millisekunden",
+  "loc.messages.GenerateResponseFilePerfTime": "Gesamtzeit für das Abrufen der Antwortdatei: %d Millisekunden"
 }

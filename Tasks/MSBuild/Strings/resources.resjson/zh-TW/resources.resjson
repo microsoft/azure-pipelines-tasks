@@ -12,7 +12,7 @@
   "loc.input.help.msbuildArguments": "傳遞至 MSBuild (在 Windows 上) 和 xbuild (在 Mac 上) 的額外引數。",
   "loc.input.label.clean": "清除",
   "loc.input.help.clean": "在組建之前執行乾淨的組建 (/t:clean)。",
-  "loc.input.label.maximumCpuCount": "Build in Parallel",
+  "loc.input.label.maximumCpuCount": "以平行方式建置",
   "loc.input.help.maximumCpuCount": "If your MSBuild target configuration is compatible with building in parallel, you can optionally check this input to pass the /m switch to MSBuild (Windows only). If your target configuration is not compatible with building in parallel, checking this option may cause your build to result in file-in-use errors, or intermittent or inconsistent build failures.",
   "loc.input.label.restoreNugetPackages": "還原 NuGet 套件",
   "loc.input.help.restoreNugetPackages": "已取代這個選項。若要還原 NuGet 封裝，請在建置之前新增 NuGet 安裝程式步驟。",

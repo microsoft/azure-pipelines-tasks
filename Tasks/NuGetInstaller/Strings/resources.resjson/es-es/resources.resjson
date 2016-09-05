@@ -14,7 +14,7 @@
   "loc.input.help.noCache": "Equivalente al argumento de línea de comandos -NoCache de NuGet.exe",
   "loc.input.label.nuGetRestoreArgs": "Argumentos de NuGet",
   "loc.input.help.nuGetRestoreArgs": "Argumentos adicionales que se pasan a la restauración o instalación de NuGet.exe. [Más información](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command).",
-  "loc.input.label.verbosity": "Verbosity",
+  "loc.input.label.verbosity": "Nivel de detalle",
   "loc.input.help.verbosity": "NuGet's verbosity level",
   "loc.input.label.nuGetPath": "Ruta de acceso de NuGet.exe",
   "loc.input.help.nuGetPath": "Indique opcionalmente la ruta de acceso a NuGet.exe",

@@ -3,8 +3,8 @@
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613750)",
   "loc.description": "使用 Web Deploy 將 Visual Studio Web 專案發行到 Microsoft Azure Web 應用程式",
   "loc.instanceNameFormat": "Azure 部署: $(WebSiteName)",
-  "loc.input.label.ConnectedServiceName": "Azure Subscription (Classic)",
-  "loc.input.help.ConnectedServiceName": "Azure Classic subscription to target for deployment.",
+  "loc.input.label.ConnectedServiceName": "Azure 訂用帳戶 (傳統)",
+  "loc.input.help.ConnectedServiceName": "要加以部署的 Azure 傳統訂用帳戶。",
   "loc.input.label.WebSiteLocation": "Web 應用程式位置",
   "loc.input.help.WebSiteLocation": "選取網站的位置。",
   "loc.input.label.WebSiteName": "Web 應用程式名稱",
@@ -16,12 +16,12 @@
   "loc.input.label.doNotDelete": "設定 DoNotDelete 旗標 ",
   "loc.input.help.doNotDelete": "啟用此項目後，便會在發行網站時保留 Web 部署套件中的其他檔案。",
   "loc.input.label.AdditionalArguments": "其他引數",
-  "loc.messages.Cannotgetwebsitedeploymentstatusisnotupdated": "Cannot get website, deployment status is not updated",
-  "loc.messages.CannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "Cannot update deployment status, SCM endpoint is not enabled for this website",
-  "loc.messages.Cannotupdatedeploymentstatusfor01": "Cannot update deployment status for {0} - {1}",
+  "loc.messages.Cannotgetwebsitedeploymentstatusisnotupdated": "無法取得網站，部署狀態未更新",
+  "loc.messages.CannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "無法更新部署狀態，此網站未啟用 SCM 端點",
+  "loc.messages.Cannotupdatedeploymentstatusfor01": "無法更新 {0} 的部署狀態 - {1}",
   "loc.messages.Updatingdeploymentstatus": "Updating deployment status",
-  "loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved": "Cannot update deployment status, unique deploymentId cannot be retrieved",
+  "loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved": "無法更新部署狀態，無法擷取獨一的 deploymentId",
   "loc.messages.Updatingdeploymenthistoryfordeployment0": "Updating deployment history for deployment {0}",
   "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}",
-  "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one."
+  "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "使用搜尋模式 {0} 找到一個以上要部署的檔案。但只能一個"
 }

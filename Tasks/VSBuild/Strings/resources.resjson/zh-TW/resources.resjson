@@ -11,7 +11,7 @@
   "loc.input.label.platform": "平台",
   "loc.input.label.configuration": "組態",
   "loc.input.label.clean": "清除",
-  "loc.input.label.maximumCpuCount": "Build in Parallel",
+  "loc.input.label.maximumCpuCount": "以平行方式建置",
   "loc.input.help.maximumCpuCount": "If your MSBuild target configuration is compatible with building in parallel, you can optionally check this input to pass the /m switch to MSBuild (Windows only). If your target configuration is not compatible with building in parallel, checking this option may cause your build to result in file-in-use errors, or intermittent or inconsistent build failures.",
   "loc.input.label.restoreNugetPackages": "還原 NuGet 套件",
   "loc.input.help.restoreNugetPackages": "已取代這個選項。若要還原 NuGet 封裝，請在建置之前新增 NuGet 安裝程式步驟。",

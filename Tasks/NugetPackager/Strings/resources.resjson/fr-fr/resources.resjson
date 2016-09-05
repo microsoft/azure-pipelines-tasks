@@ -27,6 +27,6 @@
   "loc.input.help.buildProperties": "Liste des propriétés, séparées par des points-virgules, utilisées pour générer le package.",
   "loc.input.label.nuGetAdditionalArgs": "Arguments NuGet",
   "loc.input.help.nuGetAdditionalArgs": "Arguments supplémentaires passés à la commande pack de NuGet.exe. [Plus d'informations](https://docs.nuget.org/consume/command-line-reference#user-content-pack-command).",
-  "loc.input.label.nuGetPath": "Chemin d'accès à NuGet.exe",
-  "loc.input.help.nuGetPath": "Indiquez éventuellement le chemin d'accès à NuGet.exe"
+  "loc.input.label.nuGetPath": "Chemin de NuGet.exe",
+  "loc.input.help.nuGetPath": "Indiquez éventuellement le chemin de NuGet.exe"
 }

@@ -37,7 +37,7 @@
   "loc.input.label.configuration": "Configuration",
   "loc.input.help.configuration": "Configuration sur laquelle les tests doivent être signalés. Si vous avez défini une variable pour la configuration dans votre tâche de build, utilisez-la ici.",
   "loc.input.label.testConfigurations": "Configurations de test",
-  "loc.input.help.testConfigurations": "Optionally associate a testcase filter against a testconfiguration ID. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: `FullyQualifiedName~Chrome:12`",
+  "loc.input.help.testConfigurations": "Associez éventuellement un filtre de cas de test à un ID de configuration de test. Syntaxe : &lt;Filtre1&gt;:&lt;Id1&gt;;ConfigurationDeTestParDéfaut:&lt;Id3&gt;. Exemple : 'FullyQualifiedName~Chrome:12'",
   "loc.input.label.autMachineGroup": "Machines de l'application testée",
   "loc.input.help.autMachineGroup": "Liste de machines séparées par des virgules, variable de sortie ou nom du groupe de machines sur lesquelles s'exécutent des processus serveur tels que W3WP.exe"
 }

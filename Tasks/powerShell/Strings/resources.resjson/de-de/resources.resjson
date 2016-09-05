@@ -14,5 +14,5 @@
   "loc.input.help.workingFolder": "Aktuelles Arbeitsverzeichnis bei Skriptausführung. Standardmäßig der Ordner, in dem das Skript gespeichert ist.",
   "loc.input.label.inlineScript": "Inlineskript",
   "loc.input.label.failOnStandardError": "Fehler bei Standardfehler.",
-  "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely solely on $LASTEXITCODE and the exit code to determine failure."
+  "loc.input.help.failOnStandardError": "Wenn dieser Wert TRUE ist, tritt ein Taskfehler auf, wenn Fehler in die Fehlerpipeline oder Daten in den Standard-Fehlerdatenstrom geschrieben werden. Andernfalls verwendet der Task ausschließlich $LASTEXITCODE und den Exitcode zum Ermitteln von Fehlern."
 }

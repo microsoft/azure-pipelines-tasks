@@ -42,13 +42,13 @@
   "loc.input.help.EndIpAddress": "자동화 에이전트 컴퓨터 풀의 마지막 IP 주소입니다(예: 196.21.30.65).",
   "loc.input.label.DeleteFirewallRule": "작업 종료 후 규칙 삭제",
   "loc.input.help.DeleteFirewallRule": "선택하면 작업이 종료된 후 여기에서 지정된 IP 주소가 Azure SQL Server 방화벽의 '허용되는 IP 주소' 목록에서 삭제됩니다.",
-  "loc.messages.SAD_InvalidServerAddress": "Either IPAddress mentioned is not a valid IPv4 address or Sql database server: '{0}' does not exist.",
-  "loc.messages.SAD_ServerNotFound": "Sql Database Server: '{0}' not found.",
-  "loc.messages.SAD_InvalidIPv4Address": "IPAddress mentioned is not a valid IPv4 address.",
-  "loc.messages.SAD_FoundMoreFiles": "Found more than one file to deploy with search pattern {0}. There can be only one.",
-  "loc.messages.SAD_NoFilesMatch": "No files were found to deploy with search pattern {0}",
-  "loc.messages.SAD_InvalidDacpacFile": "Invalid Dacpac file '{0}' provided",
+  "loc.messages.SAD_InvalidServerAddress": "언급된 IPAddress는 유효한 IPv4 주소 또는 SQL 데이터베이스 서버가 아닙니다. '{0}'이(가) 없습니다.",
+  "loc.messages.SAD_ServerNotFound": "SQL 데이터베이스 서버 '{0}'을(를) 찾을 수 없습니다.",
+  "loc.messages.SAD_InvalidIPv4Address": "언급된 IPAddress는 유효한 IPv4 주소가 아닙니다.",
+  "loc.messages.SAD_FoundMoreFiles": "검색 패턴 {0}(으)로 배포할 파일을 두 개 이상 찾았습니다. 하나만 있을 수 있습니다.",
+  "loc.messages.SAD_NoFilesMatch": "검색 패턴 {0}(으)로 배포할 파일을 찾을 수 없습니다.",
+  "loc.messages.SAD_InvalidDacpacFile": "잘못된 Dacpac 파일 '{0}'이(가) 제공되었습니다.",
   "loc.messages.SAD_InvalidSqlFile": "Invalid Sql file '{0}' provided",
-  "loc.messages.SAD_NoPassword": "No password specified for the SQL User: '{0}'",
-  "loc.messages.SAD_InvalidPublishProfile": "Invalid Publish Profile '{0}' provided"
+  "loc.messages.SAD_NoPassword": "SQL 사용자 '{0}'에 대해 지정된 암호가 없습니다.",
+  "loc.messages.SAD_InvalidPublishProfile": "잘못된 게시 프로필 '{0}'이(가) 제공되었습니다."
 }

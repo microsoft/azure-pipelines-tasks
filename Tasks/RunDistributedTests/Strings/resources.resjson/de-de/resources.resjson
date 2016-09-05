@@ -37,7 +37,7 @@
   "loc.input.label.configuration": "Konfiguration",
   "loc.input.help.configuration": "Konfiguration, für die Testberichte erstellt werden sollen. Wenn Sie eine Variable für die Konfiguration in Ihrer Buildaufgabe erstellt haben, verwenden Sie diese hier.",
   "loc.input.label.testConfigurations": "Testkonfigurationen",
-  "loc.input.help.testConfigurations": "Optionally associate a testcase filter against a testconfiguration ID. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: `FullyQualifiedName~Chrome:12`",
+  "loc.input.help.testConfigurations": "Ordnen Sie optional einen Testfallfilter für eine Testkonfigurations-ID zu. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;., z. B. \"FullyQualifiedName~Chrome:12\".",
   "loc.input.label.autMachineGroup": "Computer (zu testende Anwendung)",
   "loc.input.help.autMachineGroup": "Eine durch Kommas getrennte Liste mit Computern, auf denen Serverprozesse wie W3WP.exe ausgeführt werden, oder eine Ausgabevariable bzw. ein Computergruppenname."
 }

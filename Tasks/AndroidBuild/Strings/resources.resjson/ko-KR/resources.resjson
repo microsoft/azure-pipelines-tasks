@@ -15,7 +15,7 @@
   "loc.input.label.emulatorTarget": "AVD 대상 SDK",
   "loc.input.help.emulatorTarget": "새 AVD(Android 가상 장치)의 대상 ID입니다.",
   "loc.input.label.emulatorDevice": "AVD 장치",
-  "loc.input.help.emulatorDevice": "The optional device definition to use. Can be a device index or ID.",
+  "loc.input.help.emulatorDevice": "사용할 선택적 장치 정의입니다. 장치 인덱스 또는 ID일 수 있습니다.",
   "loc.input.label.avdAbi": "AVD ABI",
   "loc.input.help.avdAbi": "AVD(Android 가상 장치)에 사용할 ABI입니다.",
   "loc.input.label.avdForce": "기존 AVD 덮어쓰기",
