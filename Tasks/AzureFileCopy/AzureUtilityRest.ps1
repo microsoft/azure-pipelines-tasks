@@ -28,7 +28,7 @@ function Get-AzureStorageKeyFromARM
         $azureResourceGroupName = Get-AzureStorageAccountResourceGroupName -storageAccountName $storageAccountName
 
         Write-Verbose "[Azure Call]Retrieving storage key for the storage account: $storageAccount in resource group: $azureResourceid"
-        #$storageKeyDetails = Get-AzureRMStorageAccountKey -ResourceGroupName $azureResourceGroupName -Name $storageAccountName -ErrorAction Stop
+        
         $storageKeyDetails = Get-AzRMStorageKeys $azureResourceGroupName $storageAccountName $serviceEndpoint
         $storageKey = $storageKeyDetails.Key1
         Write-Verbose "[Azure Call]Retrieved storage key successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName"
@@ -65,11 +65,10 @@ function Get-AzureBlobStorageEndpointFromARM
     if(-not [string]::IsNullOrEmpty($storageAccountName))
     {
         # get azure storage account resource group name
-        #$azureResourceGroupDetails = Get-AzRmResourceGroups -endpoint $endpoint
         $azureResourceGroupName = Get-AzureStorageAccountResourceGroupName -storageAccountName $storageAccountName
 
         Write-Verbose "[Azure Call]Retrieving storage account endpoint for the storage account: $storageAccount in resource group: $azureResourceGroupName"
-        #$storageAccountInfo = Get-AzRmStorageAccount $azureResourceGroupDetails $storageAccountName $endpoint
+        
         $storageAccountInfo = Get-AzRMStorageAccount $azureResourceGroupName $storageAccountName $endpoint -ErrorAction Stop
         $storageAccountEnpoint = $storageAccountInfo.PrimaryEndpoints[0].blob
         Write-Verbose "[Azure Call]Retrieved storage account endpoint successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName"
@@ -140,7 +139,7 @@ function Remove-AzureMachineCustomScriptExtension
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName) -and -not [string]::IsNullOrEmpty($name))
     {
         Write-Host (Get-VstsLocString -Key "AFC_RemoveCustomScriptExtension" -ArgumentList $name, $vmName)
-        $response = Remove-AzRmVMCustomScriptExtension $resourceGroupName $vmName $name $endpoint                          
+        $response = Remove-AzRmVMCustomScriptExtension $resourceGroupName $vmName $name $endpoint        
         Write-Host (Get-VstsLocString -Key "AFC_RemoveCustomScriptExtensionComplete" -ArgumentList $name, $vmName)
     }
 
