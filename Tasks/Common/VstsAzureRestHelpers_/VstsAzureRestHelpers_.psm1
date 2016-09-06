@@ -168,7 +168,7 @@ function Get-SpnAccessToken {
     }
     catch
     {
-        throw (Get-VstsLocString -Key AZ_BearerTokenFetchFailure -ArgumentList $tenantId)
+        throw (Get-VstsLocString -Key AZ_SpnAccessTokenFetchFailure -ArgumentList $tenantId)
     }
 }
 
