@@ -17,7 +17,7 @@ function Get-AzureUri
     param([object] [Parameter(Mandatory=$true)] $endpoint)
 
     $url = $endpoint.url
-    if ($url[-1] -eq '/')
+    if ($url -ne $null -and $url[-1] -eq '/')
     {
         return $url.Substring(0,$url.Length-1)
     }
@@ -153,8 +153,7 @@ function Get-AzRMStorageKeys
         $method = "POST"
         $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Storage/storageAccounts/$storageAccountName/listKeys" + '?api-version=2015-06-15'
 
-        $headers = @{"x-ms-client-request-id"="d5b6a13d-7fa4-43fd-b912-a83a37221815"}
-        $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
+        $headers = @{"Authorization" = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
         $proxyUri = Get-ProxyUri $uri
         if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
@@ -195,8 +194,7 @@ function Get-AzRmVmCustomScriptExtension
         $method="GET"
         $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Compute/virtualMachines/$vmName/extensions/$Name" + '?api-version=2016-03-30'
 
-        $headers = @{"x-ms-client-request-id"="5cbea21e-5ef3-41a1-ad99-38f877af3f93"}
-        $headers.Add("accept-language", "en-US")
+        $headers = @{"accept-language" = "en-US"}
         $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
 
         $proxyUri = Get-ProxyUri $uri
@@ -238,8 +236,7 @@ function Remove-AzRmVmCustomScriptExtension
         $method="DELETE"
         $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Compute/virtualMachines/$vmName/extensions/$Name" + '?api-version=2016-03-30'
 
-        $headers = @{"x-ms-client-request-id"="f6c57f61-2003-4b56-a34c-d8d41a345f2d"}
-        $headers.Add("accept-language", "en-US")
+        $headers = @{"accept-language" = "en-US"}
         $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
 
         $proxyUri = Get-ProxyUri $uri
@@ -319,8 +316,7 @@ function Get-AzRmStorageAccount
         $method="GET"
         $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Storage/storageAccounts/$storageAccountName" + '?api-version=2016-01-01'
 
-        $headers = @{"x-ms-client-request-id"="a21c4b0a-2226-4ab5-a473-e39459e6369a"}
-        $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
+        $headers = @{"Authorization" = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
         $storageAccountUnformatted = $null
         $proxyUri = Get-ProxyUri $uri
@@ -374,8 +370,7 @@ function Get-AzRmResourceGroup
         $method="GET"
         $uri = "$script:azureRmUri/subscriptions/$subscriptionId/resourceGroups" + '?api-version=2016-02-01'
 
-        $headers = @{"x-ms-client-request-id"="f18eb0d7-20c2-44b9-af30-21dab6afbcde"}
-        $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
+        $headers = @{"Authorization" = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
         $proxyUri = Get-ProxyUri $uri
         $resourceGroups=$null

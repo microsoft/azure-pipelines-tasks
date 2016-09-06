@@ -71,7 +71,6 @@ if ($enableDetailedLoggingString -ne "true")
     $enableDetailedLoggingString = "false"
 }
 
-
 #### MAIN EXECUTION OF AZURE FILE COPY TASK BEGINS HERE ####
 try
 {
