@@ -1,9 +1,8 @@
 ﻿# Private module-scope variables.
-$script:azureUri = "https://management.core.windows.net/"
-$script:azureRmUri = "https://management.azure.com/"
-$script:authUri = "https://login.microsoftonline.com/"
 $script:jsonContentType = "application/json;charset=utf-8"
 $script:formContentType = "application/x-www-form-urlencoded;charset=utf-8"
+$script:azureRmUri = "https://management.azure.com"
+$script:authUri = "https://login.microsoftonline.com/"
 
 # Connection Types
 $certificateConnection = 'Certificate'
@@ -24,6 +23,34 @@ if ($global:DebugPreference -eq 'Continue') {
 
 # Import the loc strings.
 Import-VstsLocStrings -LiteralPath $PSScriptRoot/module.json
+
+function Get-AzureUri
+{
+    param([object] [Parameter(Mandatory=$true)] $endpoint)
+
+    $url = $endpoint.url
+    if ($url -ne $null -and $url[-1] -eq '/')
+    {
+        return $url.Substring(0,$url.Length-1)
+    }
+    return $url
+}
+
+function Get-ProxyUri
+{
+    param([String] [Parameter(Mandatory=$true)] $serverUrl)
+
+    $proxyUri = [Uri]$null
+    $proxy = [System.Net.WebRequest]::GetSystemWebProxy()
+
+    if ($proxy)
+    {
+        $proxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
+        $proxyUri = $proxy.GetProxy("$serverUrl")
+    }
+
+    return $proxyUri
+}
 
 # Check if Azure connection type is classic or not.
 function IsLegacyAzureConnection
@@ -108,11 +135,13 @@ function Get-SpnAccessToken {
     $tenantId = $endpoint.Auth.Parameters.TenantId
     $principalKey = $endpoint.Auth.Parameters.ServicePrincipalKey
 
-    # Prepare contents for POST
+    $azureUri = Get-AzureUri $endpoint
 
-    $authUri = "$script:authUri/$tenantId/oauth2/token"
+    # Prepare contents for POST
+    $method = "POST"
+    $authUri = "https://login.windows.net/$tenantId/oauth2/token"
     $body = @{
-        resource=$script:azureUri
+        resource=$azureUri+"/"
         client_id=$principalId
         grant_type='client_credentials'
         client_secret=$principalKey
@@ -120,11 +149,22 @@ function Get-SpnAccessToken {
     
     # Call Rest API to fetch AccessToken
     Write-Verbose "Fetching Access Token"
-
+    
     try
     {
-        $accessToken = (Invoke-RestMethod -Uri $authUri -Method POST -Body $body -ContentType $script:formContentType)
-        return $accessToken
+        $proxyUri = Get-ProxyUri $authUri
+        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $authUri))
+        {
+            Write-Verbose "No proxy settings"
+            $accessToken = Invoke-RestMethod -Uri $authUri -Method $method -Body $body -ContentType $script:formContentType
+            return $accessToken
+        }
+        else
+        {
+            Write-Verbose "Using Proxy settings"
+            $accessToken = Invoke-RestMethod -Uri $authUri -Method $method -Body $body -ContentType $script:formContentType -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
+            return $accessToken
+        }
     }
     catch
     {
@@ -142,6 +182,310 @@ function Get-Certificate {
     $certificate.Import($bytes)
 
     return $certificate
+}
+
+function Get-AzStorageKeys
+{
+    [CmdletBinding()]
+    param([String] [Parameter(Mandatory = $true)] $storageAccountName,
+          [Object] [Parameter(Mandatory = $true)] $endpoint)
+    
+    try
+    {
+        $subscriptionId = $endpoint.Data.SubscriptionId
+        $azureUri = Get-AzureUri $endpoint
+
+        $uri="$azureUri/$subscriptionId/services/storageservices/$storageAccountName/keys"
+        $headers = @{"x-ms-version"="2016-03-01"}
+        $method="GET"
+
+        $certificate = Get-Certificate $endpoint
+
+        $proxyUri = Get-ProxyUri $uri
+        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+        {
+            $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate
+            Write-Verbose "No Proxy settings"
+            return $storageKeys.StorageService.StorageServiceKeys
+        }
+        else
+        {
+            $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
+            Write-Verbose "Using Proxy settings"
+            return $storageKeys.StorageService.StorageServiceKeys
+        }
+    }
+    catch
+    {
+        $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AzStorageKeys)"
+        throw
+    }
+}
+
+function Get-AzRMStorageKeys
+{
+    [CmdletBinding()]
+    param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
+          [String] [Parameter(Mandatory = $true)] $storageAccountName,
+          [Object] [Parameter(Mandatory = $true)] $endpoint)
+
+    try
+    {
+        $accessToken = Get-SpnAccessToken $endpoint
+
+        $resourceGroupDetails = Get-AzRmResourceGroup $resourceGroupName $endpoint
+        $resourceGroupId = $resourceGroupDetails.id
+
+        $method = "POST"
+        $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Storage/storageAccounts/$storageAccountName/listKeys" + '?api-version=2015-06-15'
+
+        $headers = @{"Authorization" = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
+
+        $proxyUri = Get-ProxyUri $uri
+        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+        {
+            $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
+            Write-Verbose "No Proxy settings"
+            return $storageKeys
+        }
+        else
+        {
+            $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
+            Write-Verbose "Using Proxy settings"
+            return $storageKeys
+        }
+    }
+    catch
+    {
+        $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AzRMStorageKeys)"
+        throw
+    }
+}
+
+function Get-AzRmVmCustomScriptExtension
+{
+    [CmdletBinding()]
+    param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
+          [String] [Parameter(Mandatory = $true)] $vmName,
+          [String] [Parameter(Mandatory = $true)] $Name,
+          [Object] [Parameter(Mandatory = $true)] $endpoint)
+
+    try
+    {
+        $accessToken = Get-SpnAccessToken $endpoint
+        $resourceGroupDetails = Get-AzRmResourceGroup $resourceGroupName $endpoint
+        $resourceGroupId = $resourceGroupDetails.id
+
+        $method="GET"
+        $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Compute/virtualMachines/$vmName/extensions/$Name" + '?api-version=2016-03-30'
+
+        $headers = @{"accept-language" = "en-US"}
+        $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
+
+        $proxyUri = Get-ProxyUri $uri
+        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+        {
+            $customScriptExt=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
+            Write-Verbose "No proxy settings"
+            return $customScriptExt
+        }
+        else
+        {
+            $customScriptExt=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
+            Write-Verbose "Using proxy settings"
+            return $customScriptExt
+        }
+    }
+    catch
+    {
+        $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AzRmVmCustomScriptExtension)"
+        throw
+    }
+}
+
+function Remove-AzRmVmCustomScriptExtension
+{
+    [CmdletBinding()]
+    param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
+          [String] [Parameter(Mandatory = $true)] $vmName,
+          [String] [Parameter(Mandatory = $true)] $Name,
+          [Object] [Parameter(Mandatory = $true)] $endpoint)
+
+    try
+    {
+        $accessToken = Get-SpnAccessToken $endpoint
+        $resourceGroupDetails = Get-AzRmResourceGroup $resourceGroupName $endpoint
+        $resourceGroupId = $resourceGroupDetails.id
+
+        $method="DELETE"
+        $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Compute/virtualMachines/$vmName/extensions/$Name" + '?api-version=2016-03-30'
+
+        $headers = @{"accept-language" = "en-US"}
+        $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
+
+        $proxyUri = Get-ProxyUri $uri
+        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+        {
+            $response=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
+            Write-Verbose "No proxy settings"
+            return $response
+        }
+        else
+        {
+            $response=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
+            Write-Verbose "Using proxy settings"
+            return $response
+        }
+    }
+    catch
+    {
+        $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Error "ExceptionMessage: $exceptionMessage (in function: Remove-AzRmVmCustomScriptExtension)"
+        throw
+    }
+}
+
+function Get-AzStorageAccount
+{
+    [CmdletBinding()]
+    param([String] [Parameter(Mandatory = $true)] $storageAccountName,
+          [Object] [Parameter(Mandatory = $true)] $endpoint)
+
+    try
+    {
+        $subscriptionId = $endpoint.Data.SubscriptionId
+        $azureUri = Get-AzureUri $endpoint
+
+        $uri="$azureUri/$subscriptionId/services/storageservices/$storageAccountName"
+        $headers = @{"x-ms-version"="2016-03-01"}
+        $method="GET"
+
+        $certificate = Get-Certificate $endpoint
+
+        $proxyUri = Get-ProxyUri $uri
+        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+        {
+            $storageAccount=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate
+            Write-Verbose "No Proxy settings"
+            return $storageAccount.StorageService.StorageServiceProperties
+        }
+        else
+        {
+            $storageAccount=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
+            Write-Verbose "Using Proxy settings"
+            return $storageAccount.StorageService.StorageServiceProperties
+        }
+    }
+    catch
+    {
+        $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AzStorageAccount)"
+        throw
+    }
+}
+
+function Get-AzRmStorageAccount
+{
+    [CmdletBinding()]
+    param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
+          [String] [Parameter(Mandatory = $true)] $storageAccountName,
+          [Object] [Parameter(Mandatory = $true)] $endpoint)
+
+    try
+    {
+        $accessToken = Get-SpnAccessToken $endpoint
+        $resourceGroupDetails = Get-AzRmResourceGroup $resourceGroupName $endpoint
+        $resourceGroupId = $resourceGroupDetails.id
+
+        $method="GET"
+        $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Storage/storageAccounts/$storageAccountName" + '?api-version=2016-01-01'
+
+        $headers = @{"Authorization" = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
+
+        $storageAccountUnformatted = $null
+        $proxyUri = Get-ProxyUri $uri
+        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+        {
+            $storageAccountUnformatted=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
+            Write-Verbose "No Proxy settings"
+        }
+        else
+        {
+            $storageAccountUnformatted=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
+            Write-Verbose "Using Proxy settings"
+        }
+
+        Write-Verbose "Constructing the storage account object"
+        
+        $storageAccount = New-Object -TypeName PSObject
+        $storageAccount | Add-Member -type NoteProperty -name id -value $storageAccountUnformatted.id
+        $storageAccount | Add-Member -type NoteProperty -name kind -value $storageAccountUnformatted.kind
+        $storageAccount | Add-Member -type NoteProperty -name location -value $storageAccountUnformatted.location
+        $storageAccount | Add-Member -type NoteProperty -name StorageAccountName -value $storageAccountUnformatted.name
+        $storageAccount | Add-Member -type NoteProperty -name tags -value $storageAccountUnformatted.tags
+        $storageAccount | Add-Member -type NoteProperty -name sku -value $storageAccountUnformatted.sku
+        $storageAccount | Add-Member -type NoteProperty -name creationTime -value $storageAccountUnformatted.properties.creationTime
+        $storageAccount | Add-Member -type NoteProperty -name primaryLocation -value $storageAccountUnformatted.properties.primaryLocation
+        $storageAccount | Add-Member -type NoteProperty -name provisioningState -value $storageAccountUnformatted.properties.provisioningState
+        $storageAccount | Add-Member -type NoteProperty -name statusOfPrimary -value $storageAccountUnformatted.properties.statusOfPrimary
+        $storageAccount | Add-Member -type NoteProperty -name primaryEndpoints -value $storageAccountUnformatted.properties.primaryEndpoints
+
+        return $storageAccount
+    }
+    catch
+    {
+        $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AzRmStorageAccount)"
+        throw
+    }
+}
+
+function Get-AzRmResourceGroup
+{
+    [CmdletBinding()]
+    param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
+          [Object] [Parameter(Mandatory = $true)] $endpoint)
+
+    try
+    {
+        $accessToken = Get-SpnAccessToken $endpoint
+        $subscriptionId = $endpoint.Data.SubscriptionId
+
+        $method="GET"
+        $uri = "$script:azureRmUri/subscriptions/$subscriptionId/resourceGroups" + '?api-version=2016-02-01'
+
+        $headers = @{"Authorization" = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
+
+        $proxyUri = Get-ProxyUri $uri
+        $resourceGroups=$null
+        
+        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+        {
+            $resourceGroups=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
+            Write-Verbose "No Proxy settings"
+        }
+        else
+        {
+            $resourceGroups=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
+            Write-Verbose "Using Proxy settings"
+        }
+        foreach ($resourceGroup in $resourceGroups.value)
+        {
+            if ($resourceGroup.name -eq $resourceGroupName)
+            {
+                return $resourceGroup
+            }
+        }
+    }
+    catch
+    {
+        $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AzRmResourceGroup)"
+        throw
+    }
 }
 
 # Get the Azure Resource Id
@@ -182,7 +526,9 @@ function Add-LegacyAzureSqlServerFirewall
           [String] [Parameter(Mandatory = $true)] $firewallRuleName)
 
     $subscriptionId = $endpoint.Data.SubscriptionId
-    $uri = "$script:azureUri/$subscriptionId/services/sqlservers/servers/$serverName/firewallrules"
+    $azureUri = Get-AzureUri $endpoint
+
+    $uri = "$azureUri/$subscriptionId/services/sqlservers/servers/$serverName/firewallrules"
     $method = "POST"
 
     $body = @{
@@ -219,7 +565,6 @@ function Add-AzureRmSqlServerFirewall
           [String] [Parameter(Mandatory = $true)] $firewallRuleName)
 
     $accessToken = Get-SpnAccessToken $endpoint
-
     # get azure sql server resource Id
     $azureResourceId = Get-AzureSqlDatabaseServerResourceId -endpoint $endpoint -serverName $serverName -accessToken $accessToken
 
@@ -244,7 +589,8 @@ function Remove-LegacyAzureSqlServerFirewall
           [String] [Parameter(Mandatory = $true)] $firewallRuleName)
 
     $subscriptionId = $endpoint.Data.SubscriptionId
-    $uri = "$script:azureUri/$subscriptionId/services/sqlservers/servers/$serverName/firewallrules/$firewallRuleName"
+    $azureUri = Get-AzureUri $endpoint
+    $uri = "$azureUri/$subscriptionId/services/sqlservers/servers/$serverName/firewallrules/$firewallRuleName"
 
     $headers = @{"x-ms-version"=$apiVersion}
 
@@ -344,3 +690,10 @@ function Remove-AzureSqlDatabaseServerFirewallRule
 # Export only the public function.
 Export-ModuleMember -Function Add-AzureSqlDatabaseServerFirewallRule
 Export-ModuleMember -Function Remove-AzureSqlDatabaseServerFirewallRule
+Export-ModuleMember -Function Get-AzStorageKeys
+Export-ModuleMember -Function Get-AzRMStorageKeys
+Export-ModuleMember -Function Get-AzRmVmCustomScriptExtension
+Export-ModuleMember -Function Remove-AzRmVmCustomScriptExtension
+Export-ModuleMember -Function Get-AzStorageAccount
+Export-ModuleMember -Function Get-AzRmStorageAccount
+Export-ModuleMember -Function Get-AzRmResourceGroup
