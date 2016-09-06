@@ -37,7 +37,7 @@
     ],
     "SqlAzureDacpacDeployment": [
         {
-            "module": "VstsAzureHelpers_",
+            "module": "VstsAzureRestHelpers_",
             "dest": "ps_modules"
         }
     ],
