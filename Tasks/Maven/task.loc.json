@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 60
+    "Patch": 61
   },
   "minimumAgentVersion": "1.89.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -340,6 +340,8 @@
     "sqAnalysis_IsPullRequest_SkippingBuildBreaker": "ms-resource:loc.messages.sqAnalysis_IsPullRequest_SkippingBuildBreaker",
     "sqAnalysis_BuildBrokenDueToQualityGateFailure": "ms-resource:loc.messages.sqAnalysis_BuildBrokenDueToQualityGateFailure",
     "sqAnalysis_QualityGatePassed": "ms-resource:loc.messages.sqAnalysis_QualityGatePassed",
+    "sqAnalysis_UnknownComparatorString": "ms-resource:loc.messages.sqAnalysis_UnknownComparatorString",
+    "sqAnalysis_NoUnitsFound": "ms-resource:loc.messages.sqAnalysis_NoUnitsFound",
     "codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles",
     "codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsOneFile",
     "codeAnalysisBuildSummaryLine_OneViolationOneFile": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_OneViolationOneFile",

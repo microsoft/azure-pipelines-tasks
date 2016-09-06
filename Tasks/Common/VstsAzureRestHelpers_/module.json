@@ -1,7 +1,8 @@
 {
     "messages": {
         "AZ_UnsupportedAuthScheme0": "Unsupported authentication scheme '{0}' for Azure endpoint.",
-        "AZ_BearerTokenFetchFailure": "Not able to fetch token for tenant Id {0}.",
-        "AZ_NoValidResourceIdFound": "No Valid Resource of ServerName : {0} , ServerType : {1} Found for Subscription {2}."
+        "AZ_SpnAccessTokenFetchFailure": "Not able to fetch token for tenant Id {0}.",
+        "AZ_UserAccessTokenFetchFailure": "Not able to fetch token for given User.",
+        "AZ_NoValidResourceIdFound": "No resource found with serverName {0}, serverType {1} in subscription {2}. Specify the correct serverName/serverType and try again."
     }
 }
