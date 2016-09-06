@@ -156,16 +156,16 @@ function Create-AzureResourceGroup
             #Testing Deploying CSM Template
             $validationDeploymentDetails = Validation_Deploy-AzureResourceGroup -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -overrideParameters $overrideParameters 
             
-            $azureResourceGroupDeployment = $validationDeploymentDetails["azureResourceGroupDeployment"]
-            $deploymentError = $validationDeploymentDetails["deploymentError"]
+            $azureResourceGroupValidation = $validationDeploymentDetails["azureResourceGroupValidation"]
+            $validationError = $validationDeploymentDetails["validationError"]
             
-            if ($azureResourceGroupDeployment)
+            if ($azureResourceGroupValidation)
             {
-                if($deploymentError)
+                if($validationError)
                 {
                     Write-TaskSpecificTelemetry "VALIDATE_Deployment_CSMDeploymentFailed"
                     
-                    foreach($error in $deploymentError)
+                    foreach($error in $validationError)
                     {
                         Write-Error $error -ErrorAction Continue
                     }
@@ -177,10 +177,10 @@ function Create-AzureResourceGroup
                     Write-Host (Get-VstsLocString -Key "ARG_ValidationSucceeded" -ArgumentList $resourceGroupName)
                 }
             }
-            if($deploymentError)
+            if($validationError)
             {
                 Write-TaskSpecificTelemetry "VALIDATE_Deployment_CSMDeploymentFailed"
-                Throw $deploymentError
+                Throw $validationError
             }
             
             Write-Host "Template is valid."
