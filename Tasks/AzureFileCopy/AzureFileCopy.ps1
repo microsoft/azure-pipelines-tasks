@@ -97,6 +97,10 @@ try
 	
     # Geting Azure Blob Storage Endpoint
     $blobStorageEndpoint = Get-blobStorageEndpoint -storageAccountName $storageAccount -connectionType $connectionType -connectedServiceName $connectedServiceName
+	
+    # Geting Azure Storage Account type
+    $storageAccountType = Get-StorageAccountType -storageAccountName $storageAccount -connectionType $connectionType -connectedServiceName $connectedServiceName
+    Write-Verbose "Obtained Storage Account type: $storageAccountType"
 }
 catch
 {
@@ -106,6 +110,16 @@ catch
     }
 
     throw
+}
+
+if(-not [string]::IsNullOrEmpty($storageAccountType) -and $storageAccountType.Contains('Premium'))
+{
+    Write-Verbose "Setting BlobType to page for Premium Storage account."
+    $uploadAdditionalArguments = $additionalArguments + " /BlobType:page"
+}
+else
+{
+    $uploadAdditionalArguments = $additionalArguments
 }
 
 # Uploading files to container

@@ -83,7 +83,7 @@ function Get-AzureStorageAccountTypeFromRDFE
     {
         Write-Verbose "[Azure Call](RDFE)Retrieving storage account type for the storage account: $storageAccount"
         $storageAccountInfo = Get-AzStorageAccount $storageAccountName $endpoint -ErrorAction Stop
-        $storageAccountType = $storageAccountInfo.AccountType
+        $storageAccountType = $storageAccountInfo.sku.tier
         Write-Verbose "[Azure Call](RDFE)Retrieved storage account type successfully for the storage account: $storageAccount"
 
         return $storageAccountType
@@ -102,7 +102,7 @@ function Get-AzureStorageAccountTypeFromARM
 
         Write-Verbose "[Azure Call]Retrieving storage account type for the storage account: $storageAccount in resource group: $azureResourceGroupName"
         $storageAccountInfo = Get-AzRMStorageAccount $azureResourceGroupName $storageAccountName $endpoint -ErrorAction Stop
-        $storageAccountType = $storageAccountInfo.AccountType
+        $storageAccountType = $storageAccountInfo.sku.tier
                     Write-Verbose "[Azure Call]Retrieved storage account type successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName"
 
         return $storageAccountType

@@ -92,8 +92,10 @@ function Get-AzureVersionComparison($azureVersion, $compareVersion)
     return ($azureVersion -and $azureVersion -gt $compareVersion)
 }
 
-function Get-AzureUtility (Parameter(Mandatory=$true)]$connectedServiceName)
+function Get-AzureUtility
 {
+    param([string][Parameter(Mandatory=$true)]$connectedServiceName)
+
     $currentVersion =  Get-AzureCmdletsVersion
     Write-Verbose "Installed Azure PowerShell version: $currentVersion"
 
