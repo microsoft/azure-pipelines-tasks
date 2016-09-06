@@ -29,17 +29,6 @@ function Get-ProxyUri
     return $proxyUri
 }
 
-# Get connection Type
-function Get-ConnectionType
-{
-    param([Object] [Parameter(Mandatory=$true)] $serviceEndpoint)
-
-    $connectionType = $serviceEndpoint.Auth.Scheme
-
-    Write-Verbose "Connection type used is $connectionType"
-    return $connectionType
-}
-
 # Get the Bearer Access Token from the Endpoint
 function Get-SpnAccessToken {
     [CmdletBinding()]
@@ -96,185 +85,6 @@ function Get-Certificate {
     return $certificate
 }
 
-# Removed now. Keeping it here to Illustrate how the Credential Method was tried.
-# Get the Credential from the end point
-#function Get-PsCredential {
-#    [CmdletBinding()]
-#    param([Parameter(Mandatory=$true)] $endpoint)
-#
-#    $password = ConvertTo-SecureString $endpoint.Auth.Parameters.password -AsPlainText -Force
-#    $psCredentials = New-Object System.Management.Automation.PSCredential($endpoint.Auth.Parameters.username, $password)
-#    
-#    return $psCredentials
-#}
-
-# Get the Azure Resource Id
-
-function Get-AzureSqlDatabaseServerResourceId
-{
-    [CmdletBinding()]
-    param([String] [Parameter(Mandatory = $true)] $serverName,
-          [Object] [Parameter(Mandatory = $true)] $endpoint,
-          [Object] [Parameter(Mandatory = $true)] $accessToken)
-
-    try
-    {
-        $serverType = "Microsoft.Sql/servers"
-        $subscriptionId = $endpoint.Data.SubscriptionId
-        
-        Write-Verbose "[Azure Rest Call] Get Resource Groups"
-        $method = "GET"
-        $uri = "$script:azureRmUri/subscriptions/$subscriptionId/resources?api-version=2016-07-01"
-        $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
-
-        $ResourceDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
-        foreach ($resourceDetail in $ResourceDetails.Value)
-        {
-            if ($resourceDetail.name -eq $serverName -and $resourceDetail.type -eq $serverType)
-            {
-                return $resourceDetail.id
-            }
-        }
-        Write-Error "No Valid Resource of ServerName : $serverName , ServerType : $serverType Found for Subscription $subscriptionId"
-        throw
-
-    }
-    catch 
-    {
-        $exceptionMessage = $_.Exception.Message.ToString()
-        Write-Error "ExceptionMessage: $exceptionMessage"
-        throw
-    }
-}
-
-function Add-AzureSqlDatabaseServerFirewallRule
-{
-    [CmdletBinding()]
-    param([Object] [Parameter(Mandatory = $true)] $endpoint,
-          [String] [Parameter(Mandatory = $true)] $startIPAddress,
-          [String] [Parameter(Mandatory = $true)] $endIPAddress,
-          [String] [Parameter(Mandatory = $true)] $serverName,
-          [String] [Parameter(Mandatory = $true)] $firewallRuleName)
-    
-    Trace-VstsEnteringInvocation $MyInvocation
-    try
-    {
-        $connectionType = Get-ConnectionType -serviceEndpoint $endpoint
-        $subscriptionId = $endpoint.Data.SubscriptionId
-    
-        if($connectionType -eq 'Certificate' -or $connectionType -eq 'UserNamePassword')
-        {
-            $method = "POST"
-            $uri = "$script:azureUri/$subscriptionId/services/sqlservers/servers/$serverName/firewallrules"
-    
-            $body = @{
-                Name=$firewallRuleName
-                StartIPAddress=$startIPAddress
-                EndIPAddress=$endIPAddress
-                }
-            $body = $body | ConvertTo-JSON
-            $headers = @{"x-ms-version"="2014-04-01"}
-
-            # Get Certificate or bearer token and call Rest API
-            if($connectionType -eq 'Certificate')
-            {
-                $certificate = Get-Certificate $endpoint
-                Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Body $body -Certificate $certificate -ContentType $script:jsonContentType
-            }
-            else
-            {
-                $accessToken = Get-UsernamePasswordAccessToken $endpoint
-                $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
-
-                Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Body $body -ContentType $script:jsonContentType
-            }
-            
-        }
-        elseif ($connectionType -eq 'ServicePrincipal')
-        {
-            $accessToken = Get-SpnAccessToken $endpoint
-            
-            # get azure sql server resource Id
-            $azureResourceId = Get-AzureSqlDatabaseServerResourceId -endpoint $endpoint -serverName $serverName -accessToken $accessToken
-            
-            $method = "PUT"
-            $uri = "$script:azureRmUri/$azureResourceId/firewallRules/$firewallRuleName\?api-version=2014-04-01"
-            $body = "{
-                    'properties' : {
-                        'startIpAddress':'$startIPAddress',
-                        'endIpAddress':'$endIPAddress'
-                    }
-            }"
-            
-            $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
-            Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Body $body -ContentType $script:jsonContentType
-            
-        }
-        else {
-            throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $Endpoint.Auth.Scheme)
-        }
-    }
-    catch
-    {
-        Write-Host "Exception Message: $($_.Exception.Message)" -ForegroundColor Red
-        throw
-    }
-}
-
-function Remove-AzureSqlDatabaseServerFirewallRule
-{
-    [CmdletBinding()]
-    param([Object] [Parameter(Mandatory = $true)] $endpoint,
-          [String] [Parameter(Mandatory = $true)] $serverName,
-          [String] [Parameter(Mandatory = $true)] $firewallRuleName)
-
-    Trace-VstsEnteringInvocation $MyInvocation
-    try
-    {
-        $connectionType = Get-ConnectionType -serviceEndpoint $endpoint
-        $subscriptionId = $endpoint.Data.SubscriptionId
-
-        $method = "DELETE"
-        if($connectionType -eq 'Certificate' -or $connectionType -eq 'UserNamePassword')
-        {
-            $uri = "$script:azureUri/$subscriptionId/services/sqlservers/servers/$serverName/firewallrules/$firewallRuleName"
-            $headers = @{"x-ms-version"="2014-04-01"}
-
-            # Get Certificate or PS Credential & Call Invoke
-            if($connectionType -eq 'Certificate')
-            {
-                $certificate = Get-Certificate $endpoint
-                Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate
-            }
-            else
-            {
-                $accessToken = Get-UsernamePasswordAccessToken $endpoint
-                $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
-
-                Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
-            }
-        }
-        else
-        {
-            $accessToken = Get-SpnAccessToken $endpoint
-            
-            # Fetch Azure SQL server resource Id
-            $azureResourceId = Get-AzureSqlDatabaseServerResourceId -endpoint $endpoint -serverName $serverName -accessToken $accessToken
-
-            $uri = "$script:azureRmUri/$azureResourceId/firewallRules/$firewallRuleName\?api-version=2014-04-01"
-            $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
-            
-            Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
-        }
-    }
-    catch
-    {
-        $exceptionMessage = $_.Exception.Message.ToString()
-        Write-Error "ExceptionMessage: $exceptionMessage"
-        throw
-    }
-}
-
 function Get-AzStorageKeys
 {
     [CmdletBinding()]
@@ -283,7 +93,6 @@ function Get-AzStorageKeys
     
     try
     {
-        $connectionType=Get-ConnectionType $endpoint
         $subscriptionId = $endpoint.Data.SubscriptionId
 
         $uri="$script:azureUri/$subscriptionId/services/storageservices/$storageAccountName/keys"
@@ -450,7 +259,6 @@ function Get-AzStorageAccount
 
     try
     {
-        $connectionType=Get-ConnectionType $endpoint
         $subscriptionId = $endpoint.Data.SubscriptionId
 
         $uri="$script:azureUri/$subscriptionId/services/storageservices/$storageAccountName"
@@ -544,7 +352,6 @@ function Get-AzRmResourceGroup
 
     try
     {
-        $connectionType = Get-ConnectionType $endpoint
         $accessToken = Get-SpnAccessToken $endpoint
         $subscriptionId = $endpoint.Data.SubscriptionId
 
