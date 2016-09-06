@@ -82,7 +82,7 @@ try
     . "$PSScriptRoot/$azureUtility"
 
     # Getting connection type (Certificate/UserNamePassword/SPN) used for the task
-    $connectionType = Get-ConnectionType -connectedServiceName $connectedServiceName
+    $connectionType = Get-TypeOfConnection -connectedServiceName $connectedServiceName
 
     # Getting storage key for the storage account based on the connection type
     $storageKey = Get-StorageKey -storageAccountName $storageAccount -connectionType $connectionType -connectedServiceName $connectedServiceName

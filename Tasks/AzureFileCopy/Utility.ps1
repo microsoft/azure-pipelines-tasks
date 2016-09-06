@@ -118,7 +118,7 @@ function Get-AzureUtility
 		return $azureUtilityVersion100
     }
 	
-	$endpoint = Get-ConnectionType $connectedServiceName
+	$endpoint = Get-TypeOfConnection $connectedServiceName
 	if(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion132) -or ($endpoint.Auth.Scheme -eq "UserNamePassword"))
     {
         return $azureUtilityVersion110
@@ -127,7 +127,7 @@ function Get-AzureUtility
     return $azureUtilityRest100
 }
 
-function Get-ConnectionType
+function Get-TypeOfConnection
 {
     param([string][Parameter(Mandatory=$true)]$connectedServiceName)
 
