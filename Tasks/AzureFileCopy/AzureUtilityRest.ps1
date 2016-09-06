@@ -123,8 +123,7 @@ function Get-AzureMachineCustomScriptExtension
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName))
     {
         Write-Host (Get-VstsLocString -Key "AFC_GetCustomScriptExtension" -ArgumentList $name, $vmName)
-        $customScriptExtension = Get-AzRmVmCustomScriptExtension $resourceGroupName $vmName $name $endpoint
-        #$customScriptExtension = Get-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -ErrorAction Stop -Verbose     
+        $customScriptExtension = Get-AzRmVmCustomScriptExtension $resourceGroupName $vmName $name $endpoint  
         Write-Host (Get-VstsLocString -Key "AFC_GetCustomScriptExtensionComplete" -ArgumentList $name, $vmName)
     }
                 
@@ -141,8 +140,7 @@ function Remove-AzureMachineCustomScriptExtension
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName) -and -not [string]::IsNullOrEmpty($name))
     {
         Write-Host (Get-VstsLocString -Key "AFC_RemoveCustomScriptExtension" -ArgumentList $name, $vmName)
-        $response = Remove-AzRmVMCustomScriptExtension $resourceGroupName $vmName $name $endpoint
-        #$response = Remove-AzureRmVMCustomScriptExtension -ResourceGroupName $resourceGroupDetails -VMName $vmName -Name $name -Force -ErrorAction SilentlyContinue -Verbose                             
+        $response = Remove-AzRmVMCustomScriptExtension $resourceGroupName $vmName $name $endpoint                          
         Write-Host (Get-VstsLocString -Key "AFC_RemoveCustomScriptExtensionComplete" -ArgumentList $name, $vmName)
     }
 
