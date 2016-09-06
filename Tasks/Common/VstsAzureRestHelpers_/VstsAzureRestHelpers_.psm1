@@ -335,6 +335,8 @@ function Get-AzRmStorageAccount
             Write-Verbose "Using Proxy settings"
         }
 
+        Write-Verbose "Constructing the storage account object"
+        
         $storageAccount = New-Object -TypeName PSObject
         $storageAccount | Add-Member -type NoteProperty -name id -value $storageAccountUnformatted.id
         $storageAccount | Add-Member -type NoteProperty -name kind -value $storageAccountUnformatted.kind
