@@ -40,6 +40,7 @@ $defaultSasTokenTimeOutInHours = 4
 $useHttpsProtocolOption = ''
 $ErrorActionPreference = 'Stop'
 $telemetrySet = $false
+$isPremiumStorage = $false
 
 $sourcePath = $sourcePath.Trim('"')
 $storageAccount = $storageAccount.Trim()
@@ -70,11 +71,12 @@ if ($enableDetailedLoggingString -ne "true")
     $enableDetailedLoggingString = "false"
 }
 
+
 #### MAIN EXECUTION OF AZURE FILE COPY TASK BEGINS HERE ####
 try
 {
     # Importing required version of azure cmdlets according to azureps installed on machine
-    $azureUtility = Get-AzureUtility
+    $azureUtility = Get-AzureUtility $connectedServiceName
 
     Write-Verbose -Verbose "Loading $azureUtility"
     . "$PSScriptRoot/$azureUtility"
@@ -83,23 +85,32 @@ try
     $connectionType = Get-ConnectionType -connectedServiceName $connectedServiceName
 
     # Getting storage key for the storage account based on the connection type
-    $storageKey = Get-StorageKey -storageAccountName $storageAccount -connectionType $connectionType
+    $storageKey = Get-StorageKey -storageAccountName $storageAccount -connectionType $connectionType -connectedServiceName $connectedServiceName
 
     # creating storage context to be used while creating container, sas token, deleting container
     $storageContext = Create-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $storageKey
+	
+    # Geting Azure Storage Account type
+    $storageAccountType = Get-StorageAccountType -storageAccountName $storageAccount -connectionType $connectionType -connectedServiceName $connectedServiceName
+    Write-Verbose "Obtained Storage Account type: $storageAccountType"
+    if(-not [string]::IsNullOrEmpty($storageAccountType) -and $storageAccountType.Contains('Premium'))
+    {
+        $isPremiumStorage = $true
+    }
 
     # creating temporary container for uploading files if no input is provided for container name
     if([string]::IsNullOrEmpty($containerName))
     {
         $containerName = [guid]::NewGuid().ToString()
-        Create-AzureContainer -containerName $containerName -storageContext $storageContext
+        Create-AzureContainer -containerName $containerName -storageContext $storageContext -isPremiumStorage $isPremiumStorage
     }
 	
     # Geting Azure Blob Storage Endpoint
-    $blobStorageEndpoint = Get-blobStorageEndpoint -storageAccountName $storageAccount -connectionType $connectionType
-	
+    $blobStorageEndpoint = Get-blobStorageEndpoint -storageAccountName $storageAccount -connectionType $connectionType -connectedServiceName $connectedServiceName
+
     # Geting Azure Storage Account type
-    $storageAccountType = Get-StorageAccountType -storageAccountName $storageAccount -connectionType $connectionType
+    $storageAccountType = Get-StorageAccountType -storageAccountName $storageAccount -connectionType $connectionType -connectedServiceName $connectedServiceName
+    Write-Verbose "Obtained Storage Account type: $storageAccountType"
 }
 catch
 {
@@ -111,10 +122,10 @@ catch
     throw
 }
 
-if(-not [string]::IsNullOrEmpty($storageAccountType) -and $storageAccountType.Contains('Premium'))
+if($isPremiumStorage)
 {
     Write-Verbose "Setting BlobType to page for Premium Storage account."
-    $uploadAdditionalArguments = $additionalArguments + " /BlobType: page"
+    $uploadAdditionalArguments = $additionalArguments + " /BlobType:page"
 }
 else
 {
@@ -148,7 +159,7 @@ try
 {
     # getting azure vms properties(name, fqdn, winrmhttps port)
     $azureVMResourcesProperties = Get-AzureVMResourcesProperties -resourceGroupName $environmentName -connectionType $connectionType `
-    -resourceFilteringMethod $resourceFilteringMethod -machineNames $machineNames -enableCopyPrerequisites $enableCopyPrerequisites
+    -resourceFilteringMethod $resourceFilteringMethod -machineNames $machineNames -enableCopyPrerequisites $enableCopyPrerequisites -connectedServiceName $connectedServiceName
 
     $skipCACheckOption = Get-SkipCACheckOption -skipCACheck $skipCACheck
     $azureVMsCredentials = Get-AzureVMsCredentials -vmsAdminUserName $vmsAdminUserName -vmsAdminPassword $vmsAdminPassword
