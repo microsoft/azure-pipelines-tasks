@@ -98,11 +98,6 @@ try
 
     $serviceEndpoint = Get-VstsEndpoint -Name "$connectedServiceName"
 
-    if($serviceEndpoint.Auth.Scheme -ne "UserNamePassword")
-    {
-        . "$PSScriptRoot\AzureUtilityRest.ps1"
-    }
-
     switch ($action)
     {
         "Select Resource Group" {
