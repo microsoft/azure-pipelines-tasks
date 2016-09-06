@@ -142,10 +142,11 @@
       "name": "deploymentMode",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.deploymentmode",
-      "defaultValue": "incremental",
+      "defaultValue": "Incremental",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.deploymentmode",
       "options": {
+        "Validation": "Validation Only",
         "Incremental": "Incremental Mode",
         "Complete": "Complete Mode"
       },

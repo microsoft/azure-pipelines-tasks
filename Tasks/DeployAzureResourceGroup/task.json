@@ -142,10 +142,11 @@
             "name": "deploymentMode",
             "type": "pickList",
             "label": "Deployment Mode",
-            "defaultValue": "incremental",
+            "defaultValue": "Incremental",
             "required": true,
             "helpMarkDown": "Specify the deployment mode for Azure Resource Manager template.",
             "options": {
+                "Validation": "Validation Only",
                 "Incremental" : "Incremental Mode",
                 "Complete" : "Complete Mode"
                 },

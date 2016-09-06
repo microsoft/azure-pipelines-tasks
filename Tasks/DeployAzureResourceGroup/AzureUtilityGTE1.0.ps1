@@ -28,6 +28,29 @@ function Create-AzureResourceGroupIfNotExist
     }
 }
 
+function Validation_Deploy-AzureResourceGroup
+{
+    param([string]$csmFile,
+          [string]$csmParametersFile,
+          [string]$resourceGroupName,
+          [string]$overrideParameters
+          )
+
+    if (!$csmParametersFile)
+    {
+        $finalCommand = "`$azureResourceGroupDeployment = Test-AzureRMResourceGroupDeployment -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
+    }
+    else
+    {
+        $finalCommand = "`$azureResourceGroupDeployment = Test-AzureRMResourceGroupDeployment -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" -TemplateParameterFile `"$csmParametersFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
+    }
+    Write-Verbose "$finalCommand"
+    Write-Host "[Azure Resource Manager]Validating Azure Resource Group Deployment Template"
+    Invoke-Expression -Command $finalCommand
+
+    @{"azureResourceGroupDeployment" = $($azureResourceGroupDeployment); "deployrmentError" = $($deploymentError)}
+}
+
 function Deploy-AzureResourceGroup
 {
     param([string]$csmFile,
@@ -46,7 +69,7 @@ function Deploy-AzureResourceGroup
     }
     else
     {
-        $finalCommand = "`$azureResourceGroupDeployment = New-AzureRMResourceGroupDeployment -Name `"$deploymentName`" -ResourceGroupName `"$resourceGroupName`" -Mode `"$deploymentMode`" -TemplateFile `"$csmFile`" -TemplateParameterFile `$csmParametersFile $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError -force"
+        $finalCommand = "`$azureResourceGroupDeployment = New-AzureRMResourceGroupDeployment -Name `"$deploymentName`" -ResourceGroupName `"$resourceGroupName`" -Mode `"$deploymentMode`" -TemplateFile `"$csmFile`" -TemplateParameterFile `"$csmParametersFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError -force"
     }
     Write-Verbose "$finalCommand"
     Invoke-Expression -Command $finalCommand
