@@ -1259,7 +1259,7 @@ function Is-WinRMCustomScriptExtensionExists
 
         if($customScriptExtension)
         {
-            if($customScriptExtension.ProvisioningState -ne "Succeeded")
+            if($customScriptExtension.properties.ProvisioningState -ne "Succeeded")
             {	
                 $removeExtension = $true  
             }
