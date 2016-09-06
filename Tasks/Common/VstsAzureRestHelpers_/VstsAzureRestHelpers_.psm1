@@ -1,6 +1,7 @@
 ﻿# Private module-scope variables.
 $script:jsonContentType = "application/json;charset=utf-8"
 $script:formContentType = "application/x-www-form-urlencoded;charset=utf-8"
+$script:azureRmUri = "https://management.azure.com"
 $script:authUri = "https://login.microsoftonline.com/"
 
 # Connection Types
@@ -217,7 +218,7 @@ function Get-AzStorageKeys
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
-        Write-Error "ExceptionMessage: $exceptionMessage"
+        Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AzStorageKeys)"
         throw
     }
 }
@@ -235,10 +236,9 @@ function Get-AzRMStorageKeys
 
         $resourceGroupDetails = Get-AzRmResourceGroup $resourceGroupName $endpoint
         $resourceGroupId = $resourceGroupDetails.id
-        $azureRmUri = Get-AzureUri $endpoint
 
         $method = "POST"
-        $uri = "$azureRmUri$resourceGroupId/providers/Microsoft.Storage/storageAccounts/$storageAccountName/listKeys" + '?api-version=2015-06-15'
+        $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Storage/storageAccounts/$storageAccountName/listKeys" + '?api-version=2015-06-15'
 
         $headers = @{"Authorization" = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
@@ -259,7 +259,7 @@ function Get-AzRMStorageKeys
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
-        Write-Error "ExceptionMessage: $exceptionMessage"
+        Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AzRMStorageKeys)"
         throw
     }
 }
@@ -277,10 +277,9 @@ function Get-AzRmVmCustomScriptExtension
         $accessToken = Get-SpnAccessToken $endpoint
         $resourceGroupDetails = Get-AzRmResourceGroup $resourceGroupName $endpoint
         $resourceGroupId = $resourceGroupDetails.id
-        $azureRmUri = Get-AzureUri $endpoint
 
         $method="GET"
-        $uri = "$azureRmUri$resourceGroupId/providers/Microsoft.Compute/virtualMachines/$vmName/extensions/$Name" + '?api-version=2016-03-30'
+        $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Compute/virtualMachines/$vmName/extensions/$Name" + '?api-version=2016-03-30'
 
         $headers = @{"accept-language" = "en-US"}
         $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
@@ -302,7 +301,7 @@ function Get-AzRmVmCustomScriptExtension
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
-        Write-Error "ExceptionMessage: $exceptionMessage"
+        Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AzRmVmCustomScriptExtension)"
         throw
     }
 }
@@ -320,10 +319,9 @@ function Remove-AzRmVmCustomScriptExtension
         $accessToken = Get-SpnAccessToken $endpoint
         $resourceGroupDetails = Get-AzRmResourceGroup $resourceGroupName $endpoint
         $resourceGroupId = $resourceGroupDetails.id
-        $azureRmUri = Get-AzureUri $endpoint
 
         $method="DELETE"
-        $uri = "$azureRmUri$resourceGroupId/providers/Microsoft.Compute/virtualMachines/$vmName/extensions/$Name" + '?api-version=2016-03-30'
+        $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Compute/virtualMachines/$vmName/extensions/$Name" + '?api-version=2016-03-30'
 
         $headers = @{"accept-language" = "en-US"}
         $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
@@ -345,7 +343,7 @@ function Remove-AzRmVmCustomScriptExtension
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
-        Write-Error "ExceptionMessage: $exceptionMessage"
+        Write-Error "ExceptionMessage: $exceptionMessage (in function: Remove-AzRmVmCustomScriptExtension)"
         throw
     }
 }
@@ -384,7 +382,7 @@ function Get-AzStorageAccount
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
-        Write-Error "ExceptionMessage: $exceptionMessage"
+        Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AzStorageAccount)"
         throw
     }
 }
@@ -401,10 +399,9 @@ function Get-AzRmStorageAccount
         $accessToken = Get-SpnAccessToken $endpoint
         $resourceGroupDetails = Get-AzRmResourceGroup $resourceGroupName $endpoint
         $resourceGroupId = $resourceGroupDetails.id
-        $azureRmUri = Get-AzureUri $endpoint
 
         $method="GET"
-        $uri = "$azureRmUri$resourceGroupId/providers/Microsoft.Storage/storageAccounts/$storageAccountName" + '?api-version=2016-01-01'
+        $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Storage/storageAccounts/$storageAccountName" + '?api-version=2016-01-01'
 
         $headers = @{"Authorization" = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
@@ -439,7 +436,7 @@ function Get-AzRmStorageAccount
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
-        Write-Error "ExceptionMessage: $exceptionMessage"
+        Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AzRmStorageAccount)"
         throw
     }
 }
@@ -454,10 +451,9 @@ function Get-AzRmResourceGroup
     {
         $accessToken = Get-SpnAccessToken $endpoint
         $subscriptionId = $endpoint.Data.SubscriptionId
-        $azureRmUri = Get-AzureUri $endpoint
 
         $method="GET"
-        $uri = "$azureRmUri/subscriptions/$subscriptionId/resourceGroups" + '?api-version=2016-02-01'
+        $uri = "$script:azureRmUri/subscriptions/$subscriptionId/resourceGroups" + '?api-version=2016-02-01'
 
         $headers = @{"Authorization" = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
@@ -485,7 +481,7 @@ function Get-AzRmResourceGroup
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
-        Write-Error "ExceptionMessage: $exceptionMessage"
+        Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AzRmResourceGroup)"
         throw
     }
 }
@@ -500,11 +496,10 @@ function Get-AzureSqlDatabaseServerResourceId
 
     $serverType = "Microsoft.Sql/servers"
     $subscriptionId = $endpoint.Data.SubscriptionId
-    $azureRmUri = Get-AzureUri $endpoint
 
     Write-Verbose "[Azure Rest Call] Get Resource Groups"
     $method = "GET"
-    $uri = "$azureRmUri/subscriptions/$subscriptionId/resources?api-version=$apiVersion"
+    $uri = "$script:azureRmUri/subscriptions/$subscriptionId/resources?api-version=$apiVersion"
     $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
     $ResourceDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
@@ -568,11 +563,10 @@ function Add-AzureRmSqlServerFirewall
           [String] [Parameter(Mandatory = $true)] $firewallRuleName)
 
     $accessToken = Get-SpnAccessToken $endpoint
-    $azureRmUri = Get-AzureUri $endpoint
     # get azure sql server resource Id
     $azureResourceId = Get-AzureSqlDatabaseServerResourceId -endpoint $endpoint -serverName $serverName -accessToken $accessToken
 
-    $uri = "$azureRmUri/$azureResourceId/firewallRules/$firewallRuleName\?api-version=$apiVersion"
+    $uri = "$script:azureRmUri/$azureResourceId/firewallRules/$firewallRuleName\?api-version=$apiVersion"
     $body = "{
             'properties' : {
             'startIpAddress':'$startIPAddress',
@@ -621,12 +615,11 @@ function Remove-AzureRmSqlServerFirewall
           [String] [Parameter(Mandatory = $true)] $firewallRuleName)
 
     $accessToken = Get-SpnAccessToken $endpoint
-    $azureRmUri = Get-AzureUri $endpoint
 
     # Fetch Azure SQL server resource Id
     $azureResourceId = Get-AzureSqlDatabaseServerResourceId -endpoint $endpoint -serverName $serverName -accessToken $accessToken
 
-    $uri = "$azureRmUri/$azureResourceId/firewallRules/$firewallRuleName\?api-version=$apiVersion"
+    $uri = "$script:azureRmUri/$azureResourceId/firewallRules/$firewallRuleName\?api-version=$apiVersion"
     $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
     Invoke-RestMethod -Uri $uri -Method Delete -Headers $headers
