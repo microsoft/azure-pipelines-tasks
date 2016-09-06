@@ -9,19 +9,6 @@ var regedit = require('regedit');
 var azureRmUtil = require('./AzureRMUtil.js');
 var parseString = require('xml2js').parseString;
 
-export function fileExists(path) {
-  try  {
-    return tl.stats(path).isFile();
-  }
-  catch(error) {
-    if(error.code == 'ENOENT') {
-      return false;
-    }
-    tl.debug("Exception tl.stats (" + path + "): " + error);
-    throw Error(error);
-  }
-}
-
 /**
  * Constructs argument for MSDeploy command
  * 
@@ -55,7 +42,7 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
         msDeployCmdArgs += " -source:package='" + webAppPackage + "'";
 
         if(isParamFilePresentInPacakge) {
-            msDeployCmdArgs += " -dest:auto,";           
+            msDeployCmdArgs += " -dest:auto,";
         }
         else {
             msDeployCmdArgs += " -dest:contentPath='" + webApplicationDeploymentPath + "',";
@@ -111,7 +98,7 @@ export async  function containsParamFile(webAppPackage: string ) {
     var isParamFilePresent = false;
     await parseString(paramContentXML, (error, result) => {
         if(error) {
-            onError(error);
+            throw new Error(error);
         }
         if(result['output']['parameters'][0] ) {
             isParamFilePresent = true;
@@ -137,13 +124,8 @@ export async function getMSDeployFullPath() {
     }
     catch(error) {
         tl.error(tl.loc('CannotfindMSDeployexe'));
-        onError(error);
+        throw new Error(error);
     }
-}
-
-function onError(error) {
-    tl.setResult(tl.TaskResult.Failed, error);
-    process.exit(1);
 }
 
 function getMSDeployVersion(registryKey: string): Q.Promise<String> {

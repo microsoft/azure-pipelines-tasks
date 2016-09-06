@@ -218,6 +218,15 @@
         "CannotfindMSDeployexe": "Cannot find MSDeploy.exe",
         "Runningmsdeploycommandtocheckifpackagecontainsparamfile0": "Running msdeploy command to check if package contains param file : %s",
         "Paramscontentofwebpackage0": "Params content of web package : %s",
-        "Isparameterfilepresentinwebpackage0": "Is parameter file is present in web package : %s"
+        "Isparameterfilepresentinwebpackage0": "Is parameter file is present in web package : %s",
+        "Requestingconfigdetails": "Requesting for config details : %s",
+        "Deployingwebapplicationatvirtualpathandphysicalpath": "Deploying web package : %s at virtual path (physical path) : %s (%s)",
+        "Successfullydeployedpackageusingkuduserviceat": "Successfully deployed package %s using kudu service at %s",
+        "Failedtodeploywebapppackageusingkuduservice": "Failed to deploy webapp package using kudu service : %s",
+        "Unabletodeploywebappresponsecode": "Unable to deploy webapp due to error code : %s",
+        "Unabletopackagecontentoffolder": "Unable to package content of folder : %s",
+        "Compressingfolderintozip": "Compressing folder %s into zip : %s",
+        "Webappfolderisbeingarchivedtobytescompressed": "Webapp folder : %s is being archived to %s. %s bytes compressed.",
+        "Initiateddeploymentviakuduserviceforwebapppackage": "Initiated deployment via kudu service for webapp package : %s"
   }
 }

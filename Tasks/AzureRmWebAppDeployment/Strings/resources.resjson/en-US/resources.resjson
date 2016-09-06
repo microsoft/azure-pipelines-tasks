@@ -53,5 +53,14 @@
   "loc.messages.CannotfindMSDeployexe": "Cannot find MSDeploy.exe",
   "loc.messages.Runningmsdeploycommandtocheckifpackagecontainsparamfile0": "Running msdeploy command to check if package contains param file : %s",
   "loc.messages.Paramscontentofwebpackage0": "Params content of web package : %s",
-  "loc.messages.Isparameterfilepresentinwebpackage0": "Is parameter file is present in web package : %s"
+  "loc.messages.Isparameterfilepresentinwebpackage0": "Is parameter file is present in web package : %s",
+  "loc.messages.Requestingconfigdetails": "Requesting for config details : %s",
+  "loc.messages.Deployingwebapplicationatvirtualpathandphysicalpath": "Deploying web package : %s at virtual path (physical path) : %s (%s)",
+  "loc.messages.Successfullydeployedpackageusingkuduserviceat": "Successfully deployed package %s using kudu service at %s",
+  "loc.messages.Failedtodeploywebapppackageusingkuduservice": "Failed to deploy webapp package using kudu service : %s",
+  "loc.messages.Unabletodeploywebappresponsecode": "Unable to deploy webapp due to error code : %s",
+  "loc.messages.Unabletopackagecontentoffolder": "Unable to package content of folder : %s",
+  "loc.messages.Compressingfolderintozip": "Compressing folder %s into zip : %s",
+  "loc.messages.Webappfolderisbeingarchivedtobytescompressed": "Webapp folder : %s is being archived to %s. %s bytes compressed.",
+  "loc.messages.Initiateddeploymentviakuduserviceforwebapppackage": "Initiated deployment via kudu service for webapp package : %s"
 }

@@ -12,6 +12,7 @@ import Q = require('q');
 var AuthenticationContext = adal.AuthenticationContext;
 var authUrl = 'https://login.windows.net/';
 var armUrl = 'https://management.azure.com/';
+var azureApiVersion = 'api-version=2015-08-01';
 
 /**
  * updates the deployment status in kudu service
@@ -96,13 +97,15 @@ function getAuthorizationToken(SPN): Q.Promise<string> {
 
 function getDeploymentAuthor(): string {
     var author = tl.getVariable('build.sourceVersionAuthor');
-    
+
     if(author === undefined) {
         author = tl.getVariable('build.requestedfor');
     }
+
     if(author === undefined) {
         author = tl.getVariable('release.requestedfor');
     }
+
     if(author === undefined) {
         author = tl.getVariable('agent.name');
     }
@@ -167,7 +170,7 @@ async function getWebAppPublishProfile(SPN, webAppName: string, resourceGroupNam
     
     var requestOptions = {
         url: armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
-                 '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + '/publishxml?api-version=2015-08-01',
+                 '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + '/publishxml?' + azureApiVersion,
         auth: {
             bearer: accessToken
         },
@@ -217,6 +220,51 @@ async function getAzureRMWebAppID(SPN, webAppName: string, resourceType: string)
         }
         else {
             deferred.reject(tl.loc('UnabletoretrieveWebAppIDforazureRMWebApp0StatusCode1', webAppName, response.statusCode));
+        }
+    });
+
+    return deferred.promise;
+}
+
+/**
+ *  REST request for azure webapp config details. Config details contains virtual application mappings.
+ *  
+ *  @param SPN                 Subscription details
+ *  @param webAppName          Web application name
+ *  @param deployToSlotFlag    Should deploy to slot
+ *  @param slotName            Slot for deployment
+ */
+export async function getAzureRMWebAppConfigDetails(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
+
+    if(!deployToSlotFlag) {
+        var webAppID = await getAzureRMWebAppID(SPN, webAppName, 'Microsoft.Web/Sites');
+        resourceGroupName = webAppID.id.split ('/')[4];
+    }
+
+    var deferred = Q.defer<any>();
+    var accessToken = await getAuthorizationToken(SPN);
+    var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
+    var configUrl = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
+             '/providers/Microsoft.Web/sites/' + webAppName + slotUrl +  '/config/web?' + azureApiVersion;
+
+    tl.debug(tl.loc("Requestingconfigdetails", configUrl));
+    var requestOptions = {
+        url:  configUrl,
+        auth: {
+            bearer: accessToken
+        }
+    };
+
+    request (requestOptions, (error, response, body) => {
+        if( error ) {
+            deferred.reject(error);
+        }
+        else if(response.statusCode === 200) {
+            var obj = JSON.parse(body);
+            deferred.resolve(obj);
+        }
+        else {
+            deferred.reject(tl.loc('ErrorOccurredStausCode0',response.statusCode));
         }
     });
 
