@@ -5,11 +5,10 @@ param()
 . $PSScriptRoot\..\..\lib\Initialize-Test.ps1
 . $PSScriptRoot\..\..\..\Tasks\VSBuild\Select-VSVersion.ps1
 Register-Mock Write-Warning
-Register-Mock Get-VSPath { } -- -Version 'Some unknown VS version'
-Register-Mock Get-VSPath { "Some location" } -ParametersEvaluator { $Version -ne 'Some unknown VS version' }
+Register-Mock Get-VSPath { "Some location" } -- -Version '15.0' -SearchCom:$false
 
 # Act.
-$actual = Select-VSVersion -PreferredVersion 'Some unknown VS version'
+$actual = Select-VSVersion -PreferredVersion '16.0' -SearchCom:$false
 
 # Assert.
 Assert-AreEqual '15.0' $actual

@@ -117,7 +117,7 @@ for (var i: number = 0; i < contents.length; i++){
 
 // enumerate all files    
 var files: string[] = [];
-var allPaths: string[] = tl.find(sourceFolder);
+var allPaths: string[] = tl.find(sourceFolder, { followSymbolicLinks: true } as tl.FindOptions);
 var allFiles: string[] = [];
 
 // remove folder path
@@ -239,7 +239,7 @@ if (files.length > 0) {
             }
             else {
                 console.log(tl.loc('CopyingTo', file, targetPath));
-                tl.cp("-f", file, targetPath);                
+                tl.cp(file, targetPath, "-f");
             }
         });
     }

@@ -20,7 +20,6 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.TestResults"
 
-Write-Host "##vso[task.logissue type=warning;TaskName=VSTest]"
 
 try
 {

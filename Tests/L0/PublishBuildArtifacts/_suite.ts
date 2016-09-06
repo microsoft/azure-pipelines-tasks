@@ -85,28 +85,50 @@ describe('Publish Build Artifacts Suite', function () {
 				done(err);
 			});
 		})
-	}
 
-	it('creates filepath artifact', (done: MochaDone) => {
-		setResponseFile('publishBuildArtifactsGood.json');
+		it('creates filepath artifact', (done: MochaDone) => {
+			setResponseFile('publishBuildArtifactsGood.json');
 
-		let tr = new trm.TaskRunner('PublishBuildArtifacts', false, true);
-		tr.setInput('PathtoPublish', '/bin/release');
-		tr.setInput('ArtifactName', 'drop');
-		tr.setInput('ArtifactType', 'FilePath');
-		tr.setInput('TargetPath', '\\\\UNCShare');
-		
-		tr.run()
-		.then(() => {
-			assert(!tr.stderr, 'should not have written to stderr. error: ' + tr.stderr);
-			assert(tr.succeeded, 'task should have succeeded');
-			assert(tr.stdout.indexOf('##vso[artifact.associate artifacttype=filepath;artifactname=drop;artifactlocation=\\\\UNCShare;]\\\\UNCShare') >= 0, 'should associate artifact.');
-			done();
+			let tr = new trm.TaskRunner('PublishBuildArtifacts', false, true);
+			tr.setInput('PathtoPublish', '/bin/release');
+			tr.setInput('ArtifactName', 'drop');
+			tr.setInput('ArtifactType', 'FilePath');
+			tr.setInput('TargetPath', '\\\\UNCShare');
+
+			tr.run()
+			.then(() => {
+				assert(!tr.stderr, 'should not have written to stderr. error: ' + tr.stderr);
+				assert(tr.succeeded, 'task should have succeeded');
+				assert(tr.stdout.indexOf('##vso[artifact.associate artifacttype=filepath;artifactname=drop;artifactlocation=\\\\UNCShare;]\\\\UNCShare') >= 0, 'should associate artifact.');
+				done();
+			})
+			.fail((err) => {
+				done(err);
+			});
 		})
-		.fail((err) => {
-			done(err);
-		});
-	})
+	}
+	else {
+		it('fails to create filepath artifact', (done: MochaDone) => {
+			setResponseFile('publishBuildArtifactsGood.json');
+
+			let tr = new trm.TaskRunner('PublishBuildArtifacts', false, true);
+			tr.setInput('PathtoPublish', '/bin/release');
+			tr.setInput('ArtifactName', 'drop');
+			tr.setInput('ArtifactType', 'FilePath');
+			tr.setInput('TargetPath', '\\\\UNCShare');
+
+			tr.run()
+			.then(() => {
+				assert(tr.stderr.match(/Cannot publish artifacts from an OSX or Linux agent to a file share/), 'should have written error message');
+				assert(tr.failed, 'task should have succeeded');
+				assert(tr.stdout.indexOf('##vso[artifact.associate') < 0, 'should not associate artifact.');
+				done();
+			})
+			.fail((err) => {
+				done(err);
+			});
+		})
+	}
 
 	it('fails if PathtoPublish not set', (done: MochaDone) => {
 		setResponseFile('publishBuildArtifactsGood.json');
