@@ -1,9 +1,16 @@
+/// <reference path="../../definitions/vso-node-api.d.ts" />
+
 import Q = require('q');
 import tl = require('vsts-task-lib/task');
 import path = require("path");
 import fs = require("fs");
-var request = require ('request');
+import httpClient = require('vso-node-api/httpClient');
+import restClient = require('vso-node-api/restClient');
+
+var httpObj = new httpClient.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
+var restObj = new restClient.RestClient(httpObj);
 var archiver = require('archiver');
+var request = require('request');
 
 /**
  * Finds out virtual path and corresponding physical path mapping.
@@ -45,6 +52,12 @@ export async function deployWebAppPackage(webAppPackage: string, publishingProfi
 
     var kuduDeploymentURL = "https://" + publishingProfile.publishUrl + "/api/zip/" + physicalPath;
     var basicAuthToken = 'Basic ' + new Buffer(publishingProfile.userName + ':' + publishingProfile.userPWD).toString('base64');
+    
+    var headers = {
+        'Authorization': basicAuthToken,
+        'content-type': 'multipart/form-data'
+    };
+
     await fs.createReadStream(webAppPackage).pipe(request.put({ url: kuduDeploymentURL, headers: {
             'Authorization': basicAuthToken,
             'content-type': 'multipart/form-data'
@@ -59,6 +72,17 @@ export async function deployWebAppPackage(webAppPackage: string, publishingProfi
                 tl._writeLine(tl.loc('Unabletodeploywebappresponsecode', response.statusCode));
             }
     }));
+    restObj.replace(kuduDeploymentURL, null, null, headers, null,
+            (error, response, body) => {
+                 if (error){
+                    tl._writeLine(tl.loc("Failedtodeploywebapppackageusingkuduservice", error));
+                 } else if(response === 200) {
+                    tl._writeLine(tl.loc("Successfullydeployedpackageusingkuduserviceat", webAppPackage, publishingProfile.publishUrl));
+                 }
+                 else {
+                    tl._writeLine(tl.loc('Unabletodeploywebappresponsecode', response));
+                 }
+        });
 }
 
 export async function archiveFolder(webAppFolder:string , webAppZipFile:string ) {
