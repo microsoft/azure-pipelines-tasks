@@ -35,10 +35,6 @@
         {
             "module": "VstsAzureHelpers_",
             "dest": "ps_modules"
-        },
-		{
-            "module": "VstsAzureRestHelpers_",
-            "dest": "ps_modules"
         }
     ],
     "AzureWebPowerShellDeployment": [
