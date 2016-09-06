@@ -1,3 +1,5 @@
+// 20160902105811
+// https://raw.githubusercontent.com/dnelly/vso-agent-tasks/96699cc992f09c4aed84c55c7dff581c14881ff6/Tasks/CopyFiles/task.json
 {
     "id": "5BFB729A-A7C8-4A78-A7C3-8D717BB7C13C",
     "name": "CopyFiles",
@@ -38,7 +40,11 @@
             "label": "Contents",
             "defaultValue": "**",
             "required": true,
-            "helpMarkDown": "File paths to include as part of the copy. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkID=708389)"
+            "helpMarkDown": "File paths to include as part of the copy. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkID=708389)",
+            "properties": {
+                "resizable": "true",
+                "rows": "10"
+            }
         },
         {
             "name": "TargetFolder",
