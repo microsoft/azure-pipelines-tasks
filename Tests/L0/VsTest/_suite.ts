@@ -122,18 +122,6 @@ describe('VsTest Suite', function () {
         it('(DefaultTestResultsDirectoryIsUsedIfOverrideParamsAreUsed) vstest invoked with  default test results directory if override run parameters is used', (done) => {
             psr.run(path.join(__dirname, 'DefaultTestResultsDirectoryIsUsedIfOverrideParamsAreUsed.ps1'), done);
         })
-
-        it('(EnableDiagCheckReturnsFalseInNonDebugMode) diag flag should not be used in non-debug mode', (done) => {
-            psr.run(path.join(__dirname, 'EnableDiagCheckReturnsFalseInNonDebugMode.ps1'), done);
-        })
-
-        it('(EnableDiagCheckReturnsFalseIfVSVersionIsLessThan15) diag flag should not be used if vsversion<15', (done) => {
-            psr.run(path.join(__dirname, 'EnableDiagCheckReturnsFalseIfVSVersionIsLessThan15.ps1'), done);
-        })
-
-        it('(EnableDiagCheckReturnsTrueIfConditionsMet) diag flag should be used if vsversion>=15 and in debug mode', (done) => {
-            psr.run(path.join(__dirname, 'EnableDiagCheckReturnsTrueIfConditionsMet.ps1'), done);
-        })
     }
 
     if (!os.type().match(/^Win/)) {

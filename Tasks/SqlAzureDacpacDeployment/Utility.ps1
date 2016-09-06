@@ -239,11 +239,11 @@ function Run-Command
 	{
         if( $psversiontable.PSVersion.Major -le 4)
         {
-           cmd.exe /c "`"$command`""
+           cmd.exe /c "`"$command`"" 2>&1
         }
         else
         {
-           cmd.exe /c "$command"
+           cmd.exe /c "$command" 2>&1
         }
 
     }
@@ -252,7 +252,6 @@ function Run-Command
         Write-Verbose $_.Exception
         throw $_.Exception
     }
-
 }
 
 function ConvertParamToSqlSupported

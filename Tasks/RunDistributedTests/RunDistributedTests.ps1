@@ -24,6 +24,35 @@ Function CmdletHasMember($memberName) {
     return $cmdletParameter
 }
 
+Function ModifyTestSettingsForDeploymentItems() {
+
+    if(!([System.String]::IsNullOrWhiteSpace($runSettingsFile)) -And !(Test-Path $runSettingsFile -pathtype container) -And ([string]::Compare([io.path]::GetExtension($runSettingsFile), ".testsettings", $True) -eq 0))
+    {
+        $runSettingsContent = [System.Xml.XmlDocument](Get-Content $runSettingsFile)
+			$runConfigurationElement = $runSettingsContent.SelectNodes("/*/*/*[local-name()='DeploymentItem']")
+            
+            For ($index=0; $index -lt $runConfigurationElement.Count; $index++)
+            {
+                if (!([string]::IsNullOrEmpty($runConfigurationElement[$index].Attributes["filename"].Value)))
+                {
+                    if (!([io.path]::IsPathRooted($runConfigurationElement[$index].Attributes["filename"].Value)))
+                    {
+                        $runConfigurationElement[$index].Attributes["filename"].Value = [io.path]::Combine($dropLocation, $runConfigurationElement[$index].Attributes["filename"].Value);                        
+                    }
+                }
+                
+            }
+            
+            $tempFile = [io.path]::GetTempFileName()
+            $runSettingsContent.Save($tempFile)
+            Write-Verbose "Temporary runsettings file created at $tempFile"
+            return $tempFile
+        
+    }    
+
+    return 	$runSettingsFile
+}
+
 Write-Verbose "Entering script RunDistributedTests.ps1"
 Write-Verbose "TestMachineGroup = $testMachineGroup"
 Write-Verbose "Test Drop Location = $dropLocation"
@@ -37,7 +66,6 @@ Write-Verbose "TestRun Parameters to override = $overrideRunParams"
 Write-Verbose "TestConfiguration = $testConfigurations"
 Write-Verbose "Application Under Test Machine Group = $autTestMachineGroup"
 
-Write-Host "##vso[task.logissue type=warning;TaskName=DTA]"
 
 # Import the Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
@@ -52,6 +80,9 @@ $currentDirectory = Convert-Path .
 $unregisterTestAgentScriptLocation = Join-Path -Path $currentDirectory -ChildPath "TestAgentUnRegistration.ps1"
 $checkTaCompatScriptLocation = Join-Path -Path $currentDirectory -ChildPath "CheckTestAgentCompat.ps1"
 Write-Verbose "UnregisterTestAgent script Path  = $unRegisterTestAgentLocation"
+
+Write-Verbose "Checking test settings for deployment items"
+$runSettingsFile = ModifyTestSettingsForDeploymentItems
 
 Write-Verbose "Calling Invoke-RunDistributedTests"
 
@@ -78,7 +109,6 @@ if([int]::TryParse($testConfiguration, [ref]$testConfigurationId)){}
 
 $customSlicingEnabledFlag = $false
 if([bool]::TryParse($customSlicingEnabled, [ref]$customSlicingEnabledFlag)){}
- 
  
 if([string]::Equals($testSelection, "testPlan")) 
 {
@@ -171,4 +201,10 @@ else
             throw
         }
     }
+}
+
+if (([string]::Compare([io.path]::GetExtension($runSettingsFile), ".tmp", $True) -eq 0))
+{
+    Write-Host "Removing temp settings file"
+    Remove-Item $runSettingsFile
 }

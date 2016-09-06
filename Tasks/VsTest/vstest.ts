@@ -38,7 +38,6 @@ try {
     var fileLevel = tl.getVariable('tia.filelevel');
     var sourcesDir = tl.getVariable('build.sourcesdirectory');
 
-    tl._writeLine("##vso[task.logissue type=warning;TaskName=VSTest]");
 
     var sourcesDirectory = tl.getVariable('System.DefaultWorkingDirectory');
     var testAssemblyFiles = getTestAssemblies();
@@ -199,7 +198,6 @@ function generateResponseFile(): Q.Promise<string> {
         .then(function (code) {
             endTime = perf();
             elapsedTime = endTime - startTime;
-            tl._writeLine("##vso[task.logissue type=warning;SubTaskName=GenerateResponseFile;SubTaskDuration=" + elapsedTime + "]");    
             tl.debug(tl.loc("GenerateResponseFilePerfTime", elapsedTime));
             defer.resolve(tempFile);
         })
@@ -234,8 +232,7 @@ function publishCodeChanges(): Q.Promise<string> {
     selectortool.exec()
         .then(function(code) {
             endTime = perf();
-            elapsedTime = endTime - startTime;
-            tl._writeLine("##vso[task.logissue type=warning;SubTaskName=PublishCodeChanges;SubTaskDuration=" + elapsedTime + "]");            
+            elapsedTime = endTime - startTime;      
             tl.debug(tl.loc("PublishCodeChangesPerfTime", elapsedTime));
             defer.resolve(String(code));
         })        

@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 12
+    "Patch": 14
   },
   "minimumAgentVersion": "1.83.0",
   "groups": [
@@ -111,12 +111,12 @@
     "PackagesInstalledSuccessfully": "ms-resource:loc.messages.PackagesInstalledSuccessfully",
     "PackagesFailedToInstall": "ms-resource:loc.messages.PackagesFailedToInstall",
     "ConnectingAs": "ms-resource:loc.messages.ConnectingAs",
-    "LegacyNuGetHint": "ms-resource:loc.messages.LegacyNuGetHint",
     "BuildIdentityPermissionsHint": "ms-resource:loc.messages.BuildIdentityPermissionsHint",
     "NoCredProviderOnAgent": "ms-resource:loc.messages.NoCredProviderOnAgent",
     "NotARegularFile": "ms-resource:loc.messages.NotARegularFile",
     "UnknownRestoreMode": "ms-resource:loc.messages.UnknownRestoreMode",
     "CouldNotFindNuGetService": "ms-resource:loc.messages.CouldNotFindNuGetService",
+    "NGCommon_DetectedNuGetVersion": "ms-resource:loc.messages.NGCommon_DetectedNuGetVersion",
     "NGCommon_IgnoringNuGetExtensionsPath": "ms-resource:loc.messages.NGCommon_IgnoringNuGetExtensionsPath",
     "NGCommon_DetectedNuGetExtensionsPath": "ms-resource:loc.messages.NGCommon_DetectedNuGetExtensionsPath",
     "NGCommon_UnableToFindTool": "ms-resource:loc.messages.NGCommon_UnableToFindTool",

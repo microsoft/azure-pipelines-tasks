@@ -35,7 +35,7 @@ describe('ExtractFiles Suite', function() {
         it(os + ' extracts foo.zip', (done) => {
             setResponseFile(responseFile);
             
-            var tr = new trm.TaskRunner('ExtractFiles', true);
+            var tr = new trm.TaskRunner('ExtractFiles', true, true);
             tr.setInput('archiveFilePatterns', 'foo.zip');
             tr.setInput('destinationFolder', 'output');
             tr.setInput('cleanDestinationFolder', 'true');
@@ -64,7 +64,7 @@ describe('ExtractFiles Suite', function() {
         it(os + ' extracts foo.tar & subdir/foo.zip', (done) => {
             setResponseFile(responseFile);
             
-            var tr = new trm.TaskRunner('ExtractFiles', true);
+            var tr = new trm.TaskRunner('ExtractFiles', true, true);
             tr.setInput('archiveFilePatterns', 'foo.tar\nsubdir/foo.zip');
             tr.setInput('destinationFolder', 'output');
             tr.setInput('cleanDestinationFolder', 'true');
@@ -95,7 +95,7 @@ describe('ExtractFiles Suite', function() {
         it(os + ' extracts foo.tar.gz', (done) => {
             setResponseFile(responseFile);
             
-            var tr = new trm.TaskRunner('ExtractFiles', true);
+            var tr = new trm.TaskRunner('ExtractFiles', true, true);
             tr.setInput('archiveFilePatterns', 'foo.tar.gz');
             tr.setInput('destinationFolder', 'output');
             tr.setInput('cleanDestinationFolder', 'true');
@@ -116,7 +116,7 @@ describe('ExtractFiles Suite', function() {
         it(os + ' extracts *.zip, *.tar, *.jar, *.7z', (done) => {
             setResponseFile(responseFile);
             
-            var tr = new trm.TaskRunner('ExtractFiles', true);
+            var tr = new trm.TaskRunner('ExtractFiles', true, true);
             tr.setInput('archiveFilePatterns', '*.zip\n*.tar\n*.jar\n*.7z');
             tr.setInput('destinationFolder', 'output');
             tr.setInput('cleanDestinationFolder', 'true');

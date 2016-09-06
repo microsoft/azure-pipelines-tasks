@@ -8,7 +8,7 @@
   "loc.input.label.ArtifactName": "아티팩트 이름",
   "loc.input.help.ArtifactName": "만들 아티팩트의 이름입니다.",
   "loc.input.label.ArtifactType": "아티팩트 형식",
-  "loc.input.help.ArtifactType": "만들 아티팩트의 형식입니다.",
+  "loc.input.help.ArtifactType": "The type of artifact to create.",
   "loc.input.label.TargetPath": "경로",
   "loc.input.help.TargetPath": "파일을 복사할 파일 공유",
   "loc.messages.PublishBuildArtifactsFailed": "오류 %s(으)로 빌드 아티팩트 게시 실패"
