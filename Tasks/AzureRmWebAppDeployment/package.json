@@ -23,7 +23,6 @@
     "q": "^1.4.1",
     "adal-node": "^0.1.15",
     "xml2js": "^0.4.13",
-    "archiver":"^1.1.0",
-    "randomstring":"^1.1.5"
+    "archiver":"^1.0.1"
   }
 }
