@@ -11,7 +11,6 @@ import {Url} from 'url';
 
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
 import tr = require('../../lib/vsts-task-lib/toolRunner');
-import tl = require('../../lib/vsts-task-lib/toolRunner');
 
 import pmd = require('../../../Tasks/Maven/CodeAnalysis/mavenpmd');
 import ca = require('../../../Tasks/Maven/CodeAnalysis/mavencodeanalysis');
@@ -557,6 +556,7 @@ describe('Maven Suite', function () {
     })
 
     it('run maven with publishJUnitResults set to "garbage"', (done) => {
+
         var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
@@ -583,6 +583,7 @@ describe('Maven Suite', function () {
     })
 
     it('run maven and publish tests', (done) => {
+
         var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
@@ -1026,6 +1027,7 @@ describe('Maven Suite', function () {
 
     it('maven calls enable code coverage and publish code coverage when jacoco is selected', (done) => {
         setResponseFile('responseCodeCoverage.json');
+
         var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
@@ -1114,6 +1116,7 @@ describe('Maven Suite', function () {
 
     it('maven calls enable code coverage and not publish code coverage when jacoco is selected and report generation failed', (done) => {
         setResponseFile('response.json');
+
         var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
@@ -1147,6 +1150,7 @@ describe('Maven Suite', function () {
 
     it('maven calls enable code coverage and publish code coverage when cobertura is selected', (done) => {
         setResponseFile('responseCodeCoverage.json');
+
         var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
@@ -1228,6 +1232,7 @@ describe('Maven Suite', function () {
 
     it('maven calls enable code coverage and not publish code coverage when cobertura is selected and report generation failed', (done) => {
         setResponseFile('response.json');
+
         var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file
@@ -1259,6 +1264,7 @@ describe('Maven Suite', function () {
 
     it('Maven build with publish test results', (done) => {
         setResponseFile('response.json');
+
         var tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'default');
         tr.setInput('mavenPOMFile', 'pom.xml'); // Make that checkPath returns true for this filename in the response file

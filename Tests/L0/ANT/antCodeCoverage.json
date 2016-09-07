@@ -23,7 +23,8 @@
     },
     "getVariable": {
         "ANT_HOME": "/user/local/bin/ANT",
-        "JAVA_HOME_8_X86": "/user/local/bin/ANT8"
+        "JAVA_HOME_8_X86": "/user/local/bin/ANT8",
+        "Agent.Version": "2.105.3"
     },
     "stats": {
         "\\build\\CCReport43F6D5EF\\coverage.xml": {

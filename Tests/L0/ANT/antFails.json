@@ -18,7 +18,8 @@
         "/build/build.xml": true
     },
     "getVariable": {
-        "ANT_HOME": "/user/local/bin/ANT"
+        "ANT_HOME": "/user/local/bin/ANT",
+        "Agent.Version": "2.105.3"
     },
     "rmRF": {
         "\\build\\InstrumentedClasses": {

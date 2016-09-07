@@ -149,9 +149,22 @@ function setGradleOpts() {
     }
 }
 
+// Determines whether the agent is version 2.105.0 or later
+function agentIs2_105OrLater(warningIfFalse: string) : boolean {
+    var agentVersion: string = tl.getVariable('Agent.Version');
+    if (!agentVersion || !agentVersion.startsWith("2.105.")) {
+        if (warningIfFalse) {
+            tl.warning(warningIfFalse);
+        }
+        return false;
+    }
+    return true;
+}
+
 /* Functions for Publish Test Results, Code Coverage */
 function publishTestResults(publishJUnitResults, testResultsFiles: string) {
-    if (publishJUnitResults) {
+    if (publishJUnitResults &&
+        agentIs2_105OrLater("Publishing test results from the Gradle task requires agent version 2.105.0 or later.")) {
         //check for pattern in testResultsFiles
         if (testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
             tl.debug('Pattern found in testResultsFiles parameter');
@@ -241,7 +254,8 @@ function isMultiModuleProject(wrapperScript: string): boolean {
 }
 
 function publishCodeCoverage(isCodeCoverageOpted: boolean) {
-    if (isCodeCoverageOpted) {
+    if (isCodeCoverageOpted &&
+        agentIs2_105OrLater("Publishing code coverage results from the Gradle task requires agent version 2.105.0 or later.")) {
         if (tl.exist(summaryFile)) {
             tl.debug("Summary file = " + summaryFile);
             tl.debug("Report directory = " + reportDirectory);

@@ -75,7 +75,8 @@
         "ENDPOINT_AUTH_ID1": "{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}",
         "build.buildNumber": "14",
         "build.sourcesDirectory": "/user/build/s",
-        "build.artifactStagingDirectory": "/user/build/a"
+        "build.artifactStagingDirectory": "/user/build/a",
+        "Agent.Version": "2.105.3"
     },
     "stats": {
         "CCReport43F6D5EF\\coverage.xml": {

@@ -17,6 +17,9 @@
         "/usr/local/bin/ANT": true,
         "/build/build.xml": true
     },
+    "getVariable": {
+        "Agent.Version": "2.105.3"
+    },
     "rmRF": {
         "\\build\\InstrumentedClasses": {
             "success": true,

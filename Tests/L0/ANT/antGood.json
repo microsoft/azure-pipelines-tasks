@@ -25,7 +25,8 @@
     "getVariable": {
         "ANT_HOME": "/user/local/bin/ANT",
         "JAVA_HOME_8_X86": "/user/local/bin/ANT8",
-        "System.DefaultWorkingDirectory": "/user/build"
+        "System.DefaultWorkingDirectory": "/user/build",
+        "Agent.Version": "2.105.3"
     },
     "rmRF": {
         "\\build\\InstrumentedClasses": {
