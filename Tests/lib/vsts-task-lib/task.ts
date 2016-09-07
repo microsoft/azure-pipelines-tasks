@@ -668,8 +668,8 @@ export function matchFile(list, pattern, options): string[] {
 
 export function filter(pattern, options): any {
 	var filterList = mock.getResponse('filter', pattern) || [];
-	return function(pattern, i, filterList) {
-		return filterList;
+	return function(pattern, i, arr) {
+		return filterList.indexOf(pattern) >= 0;
 	}
 }
 
