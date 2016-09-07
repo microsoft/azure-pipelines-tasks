@@ -45,11 +45,11 @@
         $versionPrefix = $newManifest.ServiceManifest.Version
         $newVersion = $versionPrefix + $VersionSuffix
 
-        $newPackagesXml = @(
-            $newManifest.ServiceManifest.CodePackage,
-            $newManifest.ServiceManifest.ConfigPackage,
-            $newManifest.ServiceManifest.DataPackage
-        ) | Where { $_ }
+        $newPackagesXml = @()
+        $newPackagesXml += $newManifest.ServiceManifest.CodePackage
+        $newPackagesXml += $newManifest.ServiceManifest.ConfigPackage
+        $newPackagesXml += $newManifest.ServiceManifest.DataPackage
+        $newPackagesXml = $newPackagesXml | Where { $_ }
 
         if (!$UpdateAllVersions)
         {
@@ -67,11 +67,11 @@
                 # Set it before we search for changes so that we can compare the xml without the old version suffix causing a false positive. 
                 $newManifest.ServiceManifest.Version = $oldManifest.ServiceManifest.Version
 
-                $oldPackagesXml = @(
-                    $oldManifest.ServiceManifest.CodePackage,
-                    $oldManifest.ServiceManifest.ConfigPackage,
-                    $oldManifest.ServiceManifest.DataPackage
-                ) | Where { $_ }
+                $oldPackagesXml = @()
+                $oldPackagesXml += $oldManifest.ServiceManifest.CodePackage
+                $oldPackagesXml += $oldManifest.ServiceManifest.ConfigPackage
+                $oldPackagesXml += $oldManifest.ServiceManifest.DataPackage
+                $oldPackagesXml = $oldPackagesXml | Where { $_ }
             }
             else
             {
