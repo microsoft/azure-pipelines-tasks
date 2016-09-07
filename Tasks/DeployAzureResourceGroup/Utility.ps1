@@ -154,7 +154,7 @@ function Create-AzureResourceGroup
         if($deploymentMode -eq "Validation") 
         {
             #Testing Deploying CSM Template
-            $validationDeploymentDetails = Validation_Deploy-AzureResourceGroup -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -overrideParameters $overrideParameters 
+            $validationDeploymentDetails = Validation-Deploy-AzureResourceGroup -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -overrideParameters $overrideParameters 
             
             $azureResourceGroupValidation = $validationDeploymentDetails["azureResourceGroupValidation"]
             $validationError = $validationDeploymentDetails["validationError"]

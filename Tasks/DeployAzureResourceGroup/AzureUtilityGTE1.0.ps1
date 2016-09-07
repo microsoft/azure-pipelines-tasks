@@ -28,25 +28,24 @@ function Create-AzureResourceGroupIfNotExist
     }
 }
 
-function Validation_Deploy-AzureResourceGroup
+function Validation-Deploy-AzureResourceGroup
 {
     param([string]$csmFile,
           [string]$csmParametersFile,
           [string]$resourceGroupName,
           [string]$overrideParameters
           )
+    
+    Write-Host "[Azure Resource Manager]Validating Azure Resource Group Deployment Template"
 
     if (!$csmParametersFile)
     {
-        $finalCommand = "`$azureResourceGroupValidation = Test-AzureRMResourceGroupDeployment -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable validationError"
+        Invoke-Expression -Command"`$azureResourceGroupValidation = Test-AzureRMResourceGroupDeployment -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable validationError"
     }
     else
     {
-        $finalCommand = "`$azureResourceGroupValidation = Test-AzureRMResourceGroupDeployment -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" -TemplateParameterFile `"$csmParametersFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable validationError"
+        Invoke-Expression -Command "`$azureResourceGroupValidation = Test-AzureRMResourceGroupDeployment -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" -TemplateParameterFile `"$csmParametersFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable validationError"
     }
-    Write-Verbose "$finalCommand"
-    Write-Host "[Azure Resource Manager]Validating Azure Resource Group Deployment Template"
-    Invoke-Expression -Command $finalCommand
 
     @{"azureResourceGroupValidation" = $($azureResourceGroupValidation); "validationError" = $($validationError)}
 }
