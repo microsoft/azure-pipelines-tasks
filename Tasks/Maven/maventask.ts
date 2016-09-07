@@ -8,10 +8,12 @@ import fs = require('fs');
 import tl = require('vsts-task-lib/task');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
 import sqCommon = require('./CodeAnalysis/SonarQube/common');
-
-// Lowercased file names are to lessen the likelihood of xplat issues
-import codeAnalysis = require('./CodeAnalysis/mavencodeanalysis');
 import sqMaven = require('./CodeAnalysis/mavensonar');
+
+import {CodeAnalysisOrchestrator} from "./CodeAnalysis/Common/CodeAnalysisOrchestrator";
+import {BuildOutput, BuildEngine} from './CodeAnalysis/Common/BuildOutput';
+import {PmdTool} from './CodeAnalysis/Common/PmdTool';
+import {CheckstyleTool} from './CodeAnalysis/Common/CheckstyleTool';
 
 // Set up localization resource file
 tl.setResourcePath(path.join( __dirname, 'task.json'));
@@ -25,7 +27,11 @@ var publishJUnitResults: string = tl.getInput('publishJUnitResults');
 var testResultsFiles: string = tl.getInput('testResultsFiles', true);
 var ccTool = tl.getInput('codeCoverageTool');
 var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
-var isSonarQubeEnabled:boolean = false;
+
+let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('build.sourcesDirectory'), BuildEngine.Maven);
+var codeAnalysisOrchestrator:CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
+    [new CheckstyleTool(buildOutput, 'checkstyleAnalysisEnabled'),
+        new PmdTool(buildOutput, 'pmdAnalysisEnabled')]);
 
 // Determine the version and path of Maven to use
 var mvnExec: string = '';
@@ -155,7 +161,7 @@ mvnGetVersion.exec()
 
         // 2. Apply any goals for static code analysis tools selected by the user.
         mvnRun = sqMaven.applySonarQubeArgs(mvnRun, execFileJacoco);
-        mvnRun = codeAnalysis.applyEnabledCodeAnalysisGoals(mvnRun);
+        mvnRun = codeAnalysisOrchestrator.configureBuild(mvnRun);
 
         // Read Maven standard output
         mvnRun.on('stdout', function (data) {
@@ -179,9 +185,10 @@ mvnGetVersion.exec()
         }
 
         // Otherwise, start uploading relevant build summaries.
+        tl.debug('Processing code analysis results');
         return sqMaven.processSonarQubeIntegration()
             .then(() => {
-                return codeAnalysis.uploadCodeAnalysisBuildSummaryIfEnabled();
+                return codeAnalysisOrchestrator.publishCodeAnalysisResults();
             });
     })
     .fail(function (err) {

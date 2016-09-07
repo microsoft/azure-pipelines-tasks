@@ -26,6 +26,25 @@ export class PmdTool extends BaseTool {
         super('PMD', buildOutput, boolInputName);
     }
 
+    public configureBuild(toolRunner: ToolRunner): ToolRunner {
+        if (this.isEnabled()) {
+            console.log(tl.loc('codeAnalysis_ToolIsEnabled'), this.toolName);
+
+            switch (this.buildOutput.buildEngine) {
+                case BuildEngine.Maven: {
+                    toolRunner.arg(['pmd:pmd']);
+                    break;
+                }
+                case BuildEngine.Gradle: {
+                    var initScriptPath: string = path.join(__dirname, '..', 'pmd.gradle');
+                    toolRunner.arg(['-I', initScriptPath]);
+                    break;
+                }
+            }
+        }
+        return toolRunner;
+    }
+
     /**
     * Implementers must specify where the XML reports are located
     */
