@@ -195,6 +195,9 @@ describe('Maven Suite', function () {
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
         tr.setInput('mavenOpts', '-Xmx2048m')
 
+        tr.setInput('checkstyleAnalysisEnabled', 'false');
+        tr.setInput('pmdAnalysisEnabled', 'false');
+
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
@@ -204,6 +207,11 @@ describe('Maven Suite', function () {
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.stdout.indexOf('MAVEN_OPTS is now set to -Xmx2048m') > 0);
+
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'),
+                    'should have run maven without Checkstyle arguments');
+                assert(tr.stdout.indexOf('##vso[artifact.upload artifactname=Code Analysis Results;]') < 0,
+                    'should not have uploaded a Code Analysis Report build summary');
                 done();
             })
             .fail((err) => {
@@ -1309,7 +1317,6 @@ describe('Maven Suite', function () {
         responseJsonContent.getVariable = responseJsonContent.getVariable || {};
         responseJsonContent.getVariable['build.sourcesDirectory'] = testSrcDir;
         responseJsonContent.getVariable['build.artifactStagingDirectory'] = testStgDir;
-        responseJsonContent.getVariable['build.buildNumber'] = '1';
 
         // Write and set the newly-changed response file
         var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
@@ -1348,54 +1355,6 @@ describe('Maven Suite', function () {
             });
     });
 
-    it('Maven with PMD - Skips PMD goals if PMD is not enabled', function (done) {
-        // Arrange
-        createTempDirsForCodeAnalysisTests();
-        var testStgDir: string = path.join(__dirname, '_temp');
-        var testSrcDir: string = path.join(__dirname, 'data');
-
-        var responseJsonFilePath: string = path.join(__dirname, 'response.json');
-        var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
-
-        // Set mocked build variables
-        responseJsonContent.getVariable = responseJsonContent.getVariable || {};
-        responseJsonContent.getVariable['build.sourcesDirectory'] = testSrcDir;
-        responseJsonContent.getVariable['build.artifactStagingDirectory'] = testStgDir;
-        responseJsonContent.getVariable['build.buildNumber'] = '1';
-
-        // Write and set the newly-changed response file
-        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
-        fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
-        setResponseFile(path.basename(newResponseFilePath));
-
-        // Set up the task runner with the test settings
-        var taskRunner: trm.TaskRunner = setupDefaultMavenTaskRunner();
-        taskRunner.setInput('pmdAnalysisEnabled', 'false');
-
-        // Act
-        taskRunner.run()
-            .then(() => {
-                // Assert
-                assert(taskRunner.resultWasSet, 'should have set a result');
-                assert(taskRunner.stdout.length > 0, 'should have written to stdout');
-                assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
-                assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
-                assert(taskRunner.succeeded, 'task should have succeeded');
-                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package'),
-                    'should have run maven without PMD arguments');
-                assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') < 0,
-                    'should not have uploaded a Code Analysis Report build summary');
-
-                done();
-            })
-            .fail((err) => {
-                console.log(taskRunner.stdout);
-                console.log(taskRunner.stderr);
-                console.log(err);
-                done(err);
-            });
-    });
-
     it('Maven with PMD - Should succeed even if XML output cannot be found', function (done) {
         // Arrange
         createTempDirsForCodeAnalysisTests();
@@ -1413,7 +1372,6 @@ describe('Maven Suite', function () {
         responseJsonContent.getVariable = responseJsonContent.getVariable || {};
         responseJsonContent.getVariable['build.sourcesDirectory'] = testSrcDir;
         responseJsonContent.getVariable['build.artifactStagingDirectory'] = testStgDir;
-        responseJsonContent.getVariable['build.buildNumber'] = '1';
 
         var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
@@ -1471,7 +1429,6 @@ describe('Maven Suite', function () {
         responseJsonContent.getVariable = responseJsonContent.getVariable || {};
         responseJsonContent.getVariable['build.sourcesDirectory'] = testSrcDir;
         responseJsonContent.getVariable['build.artifactStagingDirectory'] = testStgDir;
-        responseJsonContent.getVariable['build.buildNumber'] = '1';
 
         // Write and set the newly-changed response file
         var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
@@ -1510,54 +1467,6 @@ describe('Maven Suite', function () {
             });
     });
 
-    it('Maven with Checkstyle - Skips Checkstyle goals if Checkstyle is not enabled', function (done) {
-        // Arrange
-        createTempDirsForCodeAnalysisTests();
-        var testStgDir: string = path.join(__dirname, '_temp');
-        var testSrcDir: string = path.join(__dirname, 'data');
-
-        var responseJsonFilePath: string = path.join(__dirname, 'response.json');
-        var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
-
-        // Set mocked build variables
-        responseJsonContent.getVariable = responseJsonContent.getVariable || {};
-        responseJsonContent.getVariable['build.sourcesDirectory'] = testSrcDir;
-        responseJsonContent.getVariable['build.artifactStagingDirectory'] = testStgDir;
-        responseJsonContent.getVariable['build.buildNumber'] = '1';
-
-        // Write and set the newly-changed response file
-        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
-        fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
-        setResponseFile(path.basename(newResponseFilePath));
-
-        // Set up the task runner with the test settings
-        var taskRunner: trm.TaskRunner = setupDefaultMavenTaskRunner();
-        taskRunner.setInput('checkstyleAnalysisEnabled', 'false');
-
-        // Act
-        taskRunner.run()
-            .then(() => {
-                // Assert
-                assert(taskRunner.resultWasSet, 'should have set a result');
-                assert(taskRunner.stdout.length > 0, 'should have written to stdout');
-                assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
-                assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
-                assert(taskRunner.succeeded, 'task should have succeeded');
-                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package'),
-                    'should have run maven without Checkstyle arguments');
-                assert(taskRunner.stdout.indexOf('##vso[artifact.upload artifactname=Code Analysis Results;]') < 0,
-                    'should not have uploaded a Code Analysis Report build summary');
-
-                done();
-            })
-            .fail((err) => {
-                console.log(taskRunner.stdout);
-                console.log(taskRunner.stderr);
-                console.log(err);
-                done(err);
-            });
-    });
-
     it('Maven with Checkstyle - Should succeed even if XML output cannot be found', function (done) {
         // Arrange
         createTempDirsForCodeAnalysisTests();
@@ -1575,7 +1484,6 @@ describe('Maven Suite', function () {
         responseJsonContent.getVariable = responseJsonContent.getVariable || {};
         responseJsonContent.getVariable['build.sourcesDirectory'] = testSrcDir;
         responseJsonContent.getVariable['build.artifactStagingDirectory'] = testStgDir;
-        responseJsonContent.getVariable['build.buildNumber'] = '1';
 
         var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
@@ -1599,6 +1507,69 @@ describe('Maven Suite', function () {
                 assert(taskRunner.succeeded, 'task should have succeeded');
                 assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package checkstyle:checkstyle'),
                     'should have run maven with the correct arguments');
+
+                done();
+            })
+            .fail((err) => {
+                console.log(taskRunner.stdout);
+                console.log(taskRunner.stderr);
+                console.log(err);
+                done(err);
+            });
+    });
+
+    it('Maven with Checkstyle & PMD - Executes Checkstyle and PMD and uploads results for both', function (done) {
+        // In the test data:
+        // /: pom.xml, target/.
+        // Expected: one module, root.
+
+        // Arrange
+        createTempDirsForCodeAnalysisTests();
+        var testSrcDir: string = path.join(__dirname, 'data', 'singlemodule');
+        var testStgDir: string = path.join(__dirname, '_temp');
+
+        var responseJsonFilePath: string = path.join(__dirname, 'response.json');
+        var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
+
+        // Add fields corresponding to responses for mock filesystem operations for the following paths
+        // Staging directories
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        // Test data files
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+
+        // Set mocked build variables
+        responseJsonContent.getVariable = responseJsonContent.getVariable || {};
+        responseJsonContent.getVariable['build.sourcesDirectory'] = testSrcDir;
+        responseJsonContent.getVariable['build.artifactStagingDirectory'] = testStgDir;
+
+        // Write and set the newly-changed response file
+        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
+        fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
+        setResponseFile(path.basename(newResponseFilePath));
+
+        // Set up the task runner with the test settings
+        var taskRunner: trm.TaskRunner = setupDefaultMavenTaskRunner();
+        taskRunner.setInput('checkstyleAnalysisEnabled', 'true');
+        taskRunner.setInput('pmdAnalysisEnabled', 'true');
+
+        // Act
+        taskRunner.run()
+            .then(() => {
+                // Assert
+                assert(taskRunner.resultWasSet, 'should have set a result');
+                assert(taskRunner.stdout.length > 0, 'should have written to stdout');
+                assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
+                assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
+                assert(taskRunner.succeeded, 'task should have succeeded');
+                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package checkstyle:checkstyle pmd:pmd'),
+                    'should have run maven with the correct arguments');
+                assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
+                    'should have uploaded a Code Analysis Report build summary');
+                assert(taskRunner.stdout.indexOf('##vso[artifact.upload artifactname=Code Analysis Results;]') > -1,
+                    'should have uploaded a code analysis build artifact');
+
+                assertCodeAnalysisBuildSummaryContains(testStgDir, 'Checkstyle found 9 violations in 2 files.');
+                assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found 3 violations in 2 files.');
 
                 done();
             })
