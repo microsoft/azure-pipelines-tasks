@@ -28,10 +28,23 @@
   ],
   "inputs": [
     {
+      "name": "scriptType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.scriptType",
+      "defaultValue": "filePath",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.scriptType",
+      "options": {
+        "inlineScript": "Inline Script",
+        "filePath": "File Path"
+      }
+    },
+    {
       "name": "scriptPath",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.scriptPath",
       "defaultValue": "",
+      "visibleRule": "scriptType = filePath",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.scriptPath"
     },
@@ -42,6 +55,19 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.args"
+    },
+    {
+      "name": "inlineScript",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.inlineScript",
+      "defaultValue": "echo 'hello world from bash shell'",
+      "required": true,
+      "helpMarkDown": "",
+      "visibleRule": "scriptType = inlineScript",
+      "properties": {
+        "resizable": "true",
+        "rows": "10"
+      }
     },
     {
       "name": "disableAutoCwd",
