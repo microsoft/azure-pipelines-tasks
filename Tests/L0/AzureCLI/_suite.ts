@@ -101,8 +101,6 @@ describe('AzureCLI Suite', function () {
         tr.setInput('connectedServiceName', 'AzureClassic');
         tr.run()
             .then(() => {
-                var testBoolean:boolean ;
-                console.log(testBoolean);
                 deleteSubscriptionObjectJson(responseFileName, publishsettingFileName);
                 assert(tr.ran('/usr/local/bin/azure account clear -s sName'), 'it should have logged out of azure');
                 assert(tr.ran('/usr/local/bin/azure config mode asm'), 'it should have set the mode to asm');
