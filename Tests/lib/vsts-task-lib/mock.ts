@@ -24,6 +24,17 @@ export function getResponse(cmd: string, key: string): any {
             return answers[cmd][key2];
         } 
     }
-
+    if (!answers[cmd][key] && key && process.env['MOCK_WILDCARD_ACCEPTED'] === 'true') {
+        // try Searching for wildcards
+        var values = Object.keys(answers[cmd]);
+        var temp = key;
+        values.forEach(function (value) {
+            var resultOfMatching = key.match(value);
+            if (resultOfMatching) {
+                temp = value;
+            }
+        });
+        key = temp;
+    }
     return answers[cmd][key];
 }

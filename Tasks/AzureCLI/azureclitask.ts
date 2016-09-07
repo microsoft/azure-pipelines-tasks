@@ -8,6 +8,8 @@ import fs = require("fs");
 import util = require("util");
 import os = require("os");
 
+process.env.MOCK_WILDCARD_ACCEPTED = 'true';
+
 export class azureclitask {
     public static async runMain() {
 
