@@ -256,7 +256,13 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
         }
         vstestLocation = path.join(vsCommon, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe");
     } else if (vstestLocationMethod == "location") {
-        ; // vstestLocation already set
+        try {
+            fs.accessSync(vstestLocation);
+        } catch (error) {
+            tl.error(tl.loc('AccessDeniedToPath', vstestLocation));
+            defer.resolve(1);
+            return defer.promise;
+        }
     } else {
         ;
     }
@@ -371,14 +377,6 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
 
 function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     var defer = Q.defer<number>();
-    if (vstestLocationMethod == "location") {
-        try {
-            fs.accessSync(vstestLocation);
-        } catch (error) {
-            vstestLocationMethod = "version";
-            vsTestVersion = "Latest";
-        }
-    }
     if (vsTestVersion.toLowerCase() == "latest") {
         vsTestVersion = null;
     }
