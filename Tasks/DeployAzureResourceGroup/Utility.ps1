@@ -9,6 +9,8 @@ $telemetryCodes =
   "DEPLOYMENT_FetchPropertyFromMap" = "DEPLOYMENT_FetchPropertyFromMap";
   "DEPLOYMENT_PerformActionFailed" = "DEPLOYMENT_PerformActionFailed";
 
+  "VALIDATE_Deployment_CSMDeploymentFailed" = "VALIDATE_Deployment_CSMDeploymentFailed";
+  
   "ENABLEWINRM_ProvisionVmCustomScriptFailed" = "ENABLEWINRM_ProvisionVmCustomScriptFailed"
   "ENABLEWINRM_ExecutionOfVmCustomScriptFailed" = "ENABLEWINRM_ExecutionOfVmCustomScriptFailed"
   "ADDWINRM_NetworkSecurityRuleConfigFailed" = "ADDWINRM_NetworkSecurityRuleConfigFailed"
@@ -148,7 +150,8 @@ function Create-AzureResourceGroup
           [string]$resourceGroupName,
           [string]$location,
           [string]$overrideParameters,
-          [object]$endpoint)
+          [object]$endpoint,
+          [string]$deploymentMode)
 
     $csmFileName = [System.IO.Path]::GetFileNameWithoutExtension($csmFile)
 
@@ -161,42 +164,79 @@ function Create-AzureResourceGroup
         # Create azure resource group
         Create-AzureResourceGroupIfNotExist -resourceGroupName $resourceGroupName -location $location -endpoint $endpoint
 
-        # Deploying CSM Template
-        $deploymentDetails = Deploy-AzureResourceGroup -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -overrideParameters $overrideParameters
-
-        $azureResourceGroupDeployment = $deploymentDetails["azureResourceGroupDeployment"]
-        $deploymentError = $deploymentDetails["deploymentError"]
-
-        if ($azureResourceGroupDeployment)
+        if($deploymentMode -eq "Validation") 
         {
-            Write-Host "[Azure Resource Manager]Created resource group deployment with name $resourceGroupName"
-            Get-MachineLogs -ResourceGroupName $resourceGroupName
-
-            if($deploymentError)
+            #Testing Deploying CSM Template
+            $validationDeploymentDetails = Validation-Deploy-AzureResourceGroup -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -overrideParameters $overrideParameters 
+            
+            $azureResourceGroupValidation = $validationDeploymentDetails["azureResourceGroupValidation"]
+            $validationError = $validationDeploymentDetails["validationError"]
+            
+            if ($azureResourceGroupValidation)
             {
-                Write-TaskSpecificTelemetry "DEPLOYMENT_CSMDeploymentFailed"
-
-                foreach($error in $deploymentError)
+                if($validationError)
                 {
-                    Write-Error $error -ErrorAction Continue
+                    Write-TaskSpecificTelemetry "VALIDATE_Deployment_CSMDeploymentFailed"
+                    
+                    foreach($error in $validationError)
+                    {
+                        Write-Error $error -ErrorAction Continue
+                    }
+                    
+                    throw (Get-VstsLocString -Key "ARG_ValidationFailed" -ArgumentList $resourceGroupName)
                 }
+                else
+                {
+                    Write-Host (Get-VstsLocString -Key "ARG_ValidationSucceeded" -ArgumentList $resourceGroupName)
+                }
+            }
+            if($validationError)
+            {
+                Write-TaskSpecificTelemetry "VALIDATE_Deployment_CSMDeploymentFailed"
+                Throw $validationError
+            }
+            
+            Write-Host "Template is valid."
+        }
+        else 
+        {
+            # Deploying CSM Template
+            $deploymentDetails = Deploy-AzureResourceGroup -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -overrideParameters $overrideParameters -deploymentMode $deploymentMode
+            
+            $azureResourceGroupDeployment = $deploymentDetails["azureResourceGroupDeployment"]
+            $deploymentError = $deploymentDetails["deploymentError"]
 
-                throw (Get-VstsLocString -Key "ARG_DeploymentFailed" -ArgumentList $resourceGroupName)
+            if ($azureResourceGroupDeployment)
+            {
+                Write-Host "[Azure Resource Manager]Created resource group deployment with name $resourceGroupName"
+                Get-MachineLogs -ResourceGroupName $resourceGroupName
+
+                if($deploymentError)
+                {
+                    Write-TaskSpecificTelemetry "DEPLOYMENT_CSMDeploymentFailed"
+                    
+                    foreach($error in $deploymentError)
+                    {
+                        Write-Error $error -ErrorAction Continue
+                    }
+                    
+                    throw (Get-VstsLocString -Key "ARG_DeploymentFailed" -ArgumentList $resourceGroupName)
+                }
+                else
+                {
+                    Write-Host (Get-VstsLocString -Key "ARG_DeploymentSucceeded" -ArgumentList $resourceGroupName)
+                }
+                
+                Write-Verbose "End of resource group deployment logs"
+                return $azureResourceGroupDeployment
             }
             else
             {
-                Write-Host (Get-VstsLocString -Key "ARG_DeploymentSucceeded" -ArgumentList $resourceGroupName)
+                Write-TaskSpecificTelemetry "DEPLOYMENT_CSMDeploymentFailed"
+                Throw $deploymentError
             }
-
-            Write-Verbose "End of resource group deployment logs"
-            return $azureResourceGroupDeployment
         }
-        else
-        {
-            Write-TaskSpecificTelemetry "DEPLOYMENT_CSMDeploymentFailed"
-            Throw $deploymentError
         }
-    }
 }
 
 function Get-MachineLogs
