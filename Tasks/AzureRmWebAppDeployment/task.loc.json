@@ -224,8 +224,9 @@
     "Failedtodeploywebapppackageusingkuduservice": "ms-resource:loc.messages.Failedtodeploywebapppackageusingkuduservice",
     "Unabletodeploywebappresponsecode": "ms-resource:loc.messages.Unabletodeploywebappresponsecode",
     "Unabletopackagecontentoffolder": "ms-resource:loc.messages.Unabletopackagecontentoffolder",
-    "Compressingfolderintozip": "ms-resource:loc.messages.Compressingfolderintozip",
+    "Compressedfolderintozip": "ms-resource:loc.messages.Compressedfolderintozip",
     "Webappfolderisbeingarchivedtobytescompressed": "ms-resource:loc.messages.Webappfolderisbeingarchivedtobytescompressed",
-    "Initiateddeploymentviakuduserviceforwebapppackage": "ms-resource:loc.messages.Initiateddeploymentviakuduserviceforwebapppackage"
+    "Initiateddeploymentviakuduserviceforwebapppackage": "ms-resource:loc.messages.Initiateddeploymentviakuduserviceforwebapppackage",
+    "MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "ms-resource:loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform"
   }
 }

@@ -60,7 +60,8 @@
   "loc.messages.Failedtodeploywebapppackageusingkuduservice": "Failed to deploy webapp package using kudu service : %s",
   "loc.messages.Unabletodeploywebappresponsecode": "Unable to deploy webapp due to error code : %s",
   "loc.messages.Unabletopackagecontentoffolder": "Unable to package content of folder : %s",
-  "loc.messages.Compressingfolderintozip": "Compressing folder %s into zip : %s",
+  "loc.messages.Compressedfolderintozip": "Compressed folder %s into zip : %s",
   "loc.messages.Webappfolderisbeingarchivedtobytescompressed": "Webapp folder : %s is being archived to %s. %s bytes compressed.",
-  "loc.messages.Initiateddeploymentviakuduserviceforwebapppackage": "Initiated deployment via kudu service for webapp package : %s"
+  "loc.messages.Initiateddeploymentviakuduserviceforwebapppackage": "Initiated deployment via kudu service for webapp package : %s",
+  "loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy generated package are only supported for Windows platform."
 }

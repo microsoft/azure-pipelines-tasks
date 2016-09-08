@@ -3,7 +3,9 @@ import tl = require('vsts-task-lib/task');
 import path = require("path");
 import fs = require("fs");
 var request = require ('request');
-var archiver = require('archiver');
+var gulp = require('gulp');
+var zip = require('gulp-zip');
+var AdmZip = require('adm-zip');
 
 /**
  * Finds out virtual path and corresponding physical path mapping.
@@ -51,32 +53,47 @@ export async function deployWebAppPackage(webAppPackage: string, publishingProfi
         } }, function (error, response) {
             if (error){
                 tl._writeLine(tl.loc("Failedtodeploywebapppackageusingkuduservice", error));
+                throw new Error(error);
             } else if(response.statusCode === 200) {
                 tl._writeLine(tl.loc("Successfullydeployedpackageusingkuduserviceat", webAppPackage, publishingProfile.publishUrl));
             }
             else {
                 tl.debug("Response :"+ JSON.stringify(response));
-                tl._writeLine(tl.loc('Unabletodeploywebappresponsecode', response.statusCode));
+                throw new Error((tl.loc('Unabletodeploywebappresponsecode', response.statusCode)));
             }
     }));
 }
 
-export async function archiveFolder(webAppFolder:string , webAppZipFile:string ) {
+export async function archiveFolder(webAppFolder:string) {
     var deferred = Q.defer<string>();
-    var output = fs.createWriteStream(webAppZipFile);
-    var archive = archiver('zip');
-    output.on('close', function () {
-        tl.debug(tl.loc("Webappfolderisbeingarchivedtobytescompressed", webAppFolder, webAppZipFile, archive.pointer()));
-        deferred.resolve(tl.loc("Webappfolderisbeingarchivedtobytescompressed", webAppFolder, webAppZipFile, archive.pointer()));
-    });
-    archive.on('error', function (err) {
-        deferred.reject(tl.loc("Unabletopackagecontentoffolder",err));
-        throw new Error(err);
-    });
-    archive.pipe(output);
-    archive.bulk([
-        { expand: true, cwd: webAppFolder, src: ['**'] }
-    ]);
-    await archive.finalize();
+    var defaultWorkingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
+    var tempPackageName = 'temp_web_app_package.zip';
+    await gulp.src(path.join(webAppFolder, '**', '*'))
+        .pipe(zip(tempPackageName))
+        .pipe(gulp.dest(defaultWorkingDirectory)).on('end',function(error){
+             if(error){
+                 throw new Error(error)
+             }
+             deferred.resolve(path.join(defaultWorkingDirectory, tempPackageName));
+        });
     return deferred.promise;
+}
+
+
+/**
+ * Check whether the package contains parameter.xml file
+ * @param   webAppPackage   web deploy package
+ * @returns boolean
+ */
+export async  function containsParamFile(webAppPackage: string ) {
+    var isParamFilePresent = false;
+    var zip = new AdmZip(webAppPackage);
+    var zipEntries = zip.getEntries();
+    zipEntries.forEach(function(zipEntry) {
+        if (zipEntry.entryName.toLowerCase() == "parameters.xml") {
+            isParamFilePresent = true;
+        }
+    });
+    tl.debug(tl.loc("Isparameterfilepresentinwebpackage0", isParamFilePresent));
+    return isParamFilePresent;
 }
