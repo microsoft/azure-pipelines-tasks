@@ -38,10 +38,10 @@ export class azureclitask {
             else {
                 var script: string = tl.getInput("inlineScript", true);
                 if(os.type() != "Windows_NT") {
-                    scriptPath = path.join(os.tmpdir(), "azureclitaskscript.sh");
+                    scriptPath = path.join(os.tmpdir(), "azureclitaskscript" + new Date().getTime() + ".sh");
                 }
                 else {
-                    scriptPath = path.join(os.tmpdir(), "azureclitaskscript.bat");
+                    scriptPath = path.join(os.tmpdir(), "azureclitaskscript" + new Date().getTime() + ".bat");
                 }
                 this.createFile(scriptPath, script);
             }
@@ -136,7 +136,7 @@ export class azureclitask {
         if (endpointAuth.scheme === "Certificate") {
             var bytes = endpointAuth.parameters["certificate"];
             var subscriptionId:string = tl.getEndpointDataParameter(connectedService, "SubscriptionId", true);
-            const publishSettingFileName:string = path.join(os.tmpdir() ,"subscriptions.publishsettings");
+            const publishSettingFileName:string = path.join(os.tmpdir() ,"subscriptions" + new Date().getTime() + ".publishsettings");
             this.createPublishSettingFile(subscriptionName, subscriptionId, bytes, publishSettingFileName);
             var resultOfToolExecution = tl.execSync("azure", "account import " + publishSettingFileName);
             this.deleteFile(publishSettingFileName);
