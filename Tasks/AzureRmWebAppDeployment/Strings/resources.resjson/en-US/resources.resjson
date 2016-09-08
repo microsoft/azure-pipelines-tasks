@@ -56,8 +56,8 @@
   "loc.messages.CannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "Cannot update deployment status, SCM endpoint is not enabled for this website",
   "loc.messages.Cannotupdatedeploymentstatusfor01": "Cannot update deployment status for {0} - {1}",
   "loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved": "Cannot update deployment status, unique deploymentId cannot be retrieved",
-  "loc.messages.Runningmsdeploycommandtocheckifpackagecontainsparamfile0": "Running msdeploy command to check if package contains param file : {0}.",
-  "loc.messages.Paramscontentofwebpackage0": "Params content of web package : {0}.",
+  "loc.messages.Runningmsdeploycommandtocheckifpackagecontainsparamfile0": "Running msdeploy command to check if package contains param file : {0}",
+  "loc.messages.Paramscontentofwebpackage0": "Params content of web package : {0}",
   "loc.messages.Parameterfileispresentinwebpackage": "Parameter file is present in web package.",
   "loc.messages.Parameterfileisnotpresentinwebpackage": "Parameter file is not present in web package."
 }

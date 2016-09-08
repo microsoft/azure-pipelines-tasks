@@ -2,7 +2,8 @@
 
 function Get-AzureStorageKeyFromRDFE
 {
-    param([string]$storageAccountName)
+    param([string]$storageAccountName,
+          [object]$endpoint)
 
     if(-not [string]::IsNullOrEmpty($storageAccountName))
     {
@@ -50,7 +51,8 @@ function Get-AzureStorageAccountResourceGroupName
 
 function Get-AzureStorageKeyFromARM
 {
-    param([string]$storageAccountName)
+    param([string]$storageAccountName,
+          [object]$endpoint)
 
     if(-not [string]::IsNullOrEmpty($storageAccountName))
     {
@@ -85,7 +87,8 @@ function Create-AzureStorageContext
 
 function Get-AzureBlobStorageEndpointFromRDFE
 {
-    param([string]$storageAccountName)
+    param([string]$storageAccountName,
+          [object]$endpoint)
 
     if(-not [string]::IsNullOrEmpty($storageAccountName))
     {
@@ -102,7 +105,8 @@ function Get-AzureBlobStorageEndpointFromRDFE
 
 function Get-AzureBlobStorageEndpointFromARM
 {
-    param([string]$storageAccountName)
+    param([string]$storageAccountName,
+          [object]$endpoint)
 
     if(-not [string]::IsNullOrEmpty($storageAccountName))
     {
@@ -117,6 +121,45 @@ function Get-AzureBlobStorageEndpointFromARM
 	    Write-Verbose "[Azure Call]Retrieved storage account endpoint successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName"
 
         return $storageAccountEnpoint
+    }	
+}
+
+function Get-AzureStorageAccountTypeFromRDFE
+{
+    param([string]$storageAccountName,
+          [object]$endpoint)
+
+    if(-not [string]::IsNullOrEmpty($storageAccountName))
+    {
+        Switch-AzureMode AzureServiceManagement
+
+        Write-Verbose "[Azure Call](RDFE)Retrieving storage account type for the storage account: $storageAccount"
+        $storageAccountInfo = Get-AzureStorageAccount -StorageAccountName $storageAccountName -ErrorAction Stop
+        $storageAccountType = $storageAccountInfo.AccountType
+        Write-Verbose "[Azure Call](RDFE)Retrieved storage account type successfully for the storage account: $storageAccount"
+
+        return $storageAccountType
+    }
+}
+
+function Get-AzureStorageAccountTypeFromARM
+{
+    param([string]$storageAccountName,
+          [object]$endpoint)
+
+    if(-not [string]::IsNullOrEmpty($storageAccountName))
+    {
+        Switch-AzureMode AzureResourceManager
+
+        # get azure storage account resource group name
+        $azureResourceGroupName = Get-AzureStorageAccountResourceGroupName -storageAccountName $storageAccountName
+
+        Write-Verbose "[Azure Call]Retrieving storage account type for the storage account: $storageAccount in resource group: $azureResourceGroupName"
+        $storageAccountInfo = Get-AzureStorageAccount -ResourceGroupName $azureResourceGroupName -Name $storageAccountName -ErrorAction Stop
+        $storageAccountType = $storageAccountInfo.AccountType
+	    Write-Verbose "[Azure Call]Retrieved storage account type successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName"
+
+        return $storageAccountType
     }	
 }
 
@@ -348,7 +391,8 @@ function Get-AzureMachineCustomScriptExtension
 {
     param([string]$resourceGroupName,
           [string]$vmName,
-          [string]$name)
+          [string]$name,
+          [object]$endpoint)
 
     Switch-AzureMode AzureResourceManager
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName))
@@ -386,7 +430,8 @@ function Remove-AzureMachineCustomScriptExtension
 {
     param([string]$resourceGroupName,
           [string]$vmName,
-          [string]$name)
+          [string]$name,
+          [object]$endpoint)
 
     Switch-AzureMode AzureResourceManager
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName) -and -not [string]::IsNullOrEmpty($name))

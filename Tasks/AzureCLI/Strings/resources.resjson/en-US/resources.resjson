@@ -11,7 +11,7 @@
   "loc.input.label.connectedServiceName": "Azure Classic Subscription",
   "loc.input.help.connectedServiceName": "Select the Azure Classic subscription for the deployment",
   "loc.input.label.scriptLocation": "Script Location",
-  "loc.input.help.scriptLocation": "Location of script: File Path or Inline Script",
+  "loc.input.help.scriptLocation": "Type of script: File Path or Inline Script",
   "loc.input.label.scriptPath": "Script Path",
   "loc.input.help.scriptPath": "Fully qualified path of the script or a path relative to the the default working directory",
   "loc.input.label.inlineScript": "Inline Script",

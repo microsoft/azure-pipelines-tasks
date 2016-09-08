@@ -33,6 +33,12 @@ $b_versionByPrereleaseNumber = $versionByBuild -eq "byPrereleaseNumber"
 
 $b_automaticallyVersion = $b_versionByBuild -or $b_versionByEnvVar -or $b_versionByPrereleaseNumber
 
+if ($b_automaticallyVersion -and $b_includeReferencedProjects)
+{
+    Write-Warning (Get-LocalizedString -Key "The automatic package versioning and include referenced projects options do not work together. 
+    Referenced projects will not inherit the custom version provided by the automatic versioning settings.")
+}
+
 if ($b_versionByBuild)
 {
     Write-Verbose "Autoversion: Getting version number from build"

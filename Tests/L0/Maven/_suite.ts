@@ -13,10 +13,6 @@ import {ToolRunner} from 'vsts-task-lib/toolrunner';
 import tr = require('../../lib/vsts-task-lib/toolRunner');
 import tl = require('../../lib/vsts-task-lib/toolRunner');
 
-import pmd = require('../../../Tasks/Maven/CodeAnalysis/mavenpmd');
-import ca = require('../../../Tasks/Maven/CodeAnalysis/mavencodeanalysis');
-import ar = require('../../../Tasks/Maven/CodeAnalysis/analysisresult');
-
 import sqCommon = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/common');
 import {VstsServerUtils} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/vsts-server-utils';
 import {SonarQubeRunSettings} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/run-settings';
@@ -24,6 +20,7 @@ import {ISonarQubeServer} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/serv
 import {SonarQubeEndpoint} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/endpoint';
 import {SonarQubeReportBuilder} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/report-builder';
 import {SonarQubeMetrics} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/metrics';
+import {SonarQubeMeasurementUnit} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/metrics';
 import {MockSonarQubeServer} from './server-mock';
 
 import http = require('http');
@@ -198,6 +195,9 @@ describe('Maven Suite', function () {
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
         tr.setInput('mavenOpts', '-Xmx2048m')
 
+        tr.setInput('checkstyleAnalysisEnabled', 'false');
+        tr.setInput('pmdAnalysisEnabled', 'false');
+
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/maven/bin/mvn -version'), 'it should have run mvn -version');
@@ -207,6 +207,11 @@ describe('Maven Suite', function () {
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.stdout.indexOf('MAVEN_OPTS is now set to -Xmx2048m') > 0);
+
+                assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package'),
+                    'should have run maven without Checkstyle arguments');
+                assert(tr.stdout.indexOf('##vso[artifact.upload artifactname=Code Analysis Results;]') < 0,
+                    'should not have uploaded a Code Analysis Report build summary');
                 done();
             })
             .fail((err) => {
@@ -1286,7 +1291,7 @@ describe('Maven Suite', function () {
             });
     })
 
-    it('Maven with PMD - Executes PMD and uploads results when there is only a root module', function (done) {
+    it('Maven with PMD - Executes PMD and uploads results', function (done) {
         // In the test data:
         // /: pom.xml, target/.
         // Expected: one module, root.
@@ -1312,7 +1317,6 @@ describe('Maven Suite', function () {
         responseJsonContent.getVariable = responseJsonContent.getVariable || {};
         responseJsonContent.getVariable['build.sourcesDirectory'] = testSrcDir;
         responseJsonContent.getVariable['build.artifactStagingDirectory'] = testStgDir;
-        responseJsonContent.getVariable['build.buildNumber'] = '1';
 
         // Write and set the newly-changed response file
         var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
@@ -1336,132 +1340,10 @@ describe('Maven Suite', function () {
                     'should have run maven with the correct arguments');
                 assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
                     'should have uploaded a Code Analysis Report build summary');
-                assert(taskRunner.stdout.indexOf('artifact.upload containerfolder=root;artifactname=') > -1,
-                    'should have uploaded PMD build artifacts');
+                assert(taskRunner.stdout.indexOf('##vso[artifact.upload artifactname=Code Analysis Results;]') > -1,
+                    'should have uploaded a code analysis build artifact');
 
                 assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found 3 violations in 2 files.');
-
-                done();
-            })
-            .fail((err) => {
-                console.log(taskRunner.stdout);
-                console.log(taskRunner.stderr);
-                console.log(err);
-                done(err);
-            });
-    });
-
-    it('Maven with PMD - Executes PMD and uploads results when multiple modules are present', function (done) {
-        // In the test data:
-        // /: pom.xml, no target/
-        // /util/: pom.xml, target/, has violations
-        // /ignored/: pom.xml, no target/
-        // /backend/: pom.xml, target/, has no violations - not expecting uploads from this module
-        // /leveltwo/app/: pom.xml, target/, has violations
-        // /leveltwo/static/: no pom.xml, target/
-
-        // Arrange
-        createTempDirsForCodeAnalysisTests();
-        var testSrcDir: string = path.join(__dirname, 'data', 'multimodule');
-        var testStgDir: string = path.join(__dirname, '_temp');
-        var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis'); // overall directory for all tools
-        var pmdStgDir: string = path.join(codeAnalysisStgDir, '.pmd'); // PMD subdir is used for artifact staging
-
-        var responseJsonFilePath: string = path.join(__dirname, 'response.json');
-        var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
-
-        // Add fields corresponding to responses for mock filesystem operations for the following paths
-        // Staging directories
-        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
-        // Test data files
-        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
-
-        // Set mocked build variables
-        responseJsonContent.getVariable = responseJsonContent.getVariable || {};
-        responseJsonContent.getVariable['build.sourcesDirectory'] = testSrcDir;
-        responseJsonContent.getVariable['build.artifactStagingDirectory'] = testStgDir;
-        responseJsonContent.getVariable['build.buildNumber'] = '1';
-
-        // Write and set the newly-changed response file
-        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
-        fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
-        setResponseFile(path.basename(newResponseFilePath));
-
-        // Set up the task runner with the test settings
-        var taskRunner: trm.TaskRunner = setupDefaultMavenTaskRunner();
-        taskRunner.setInput('pmdAnalysisEnabled', 'true');
-
-        // Act
-        taskRunner.run()
-            .then(() => {
-
-                // Assert
-                assert(taskRunner.resultWasSet, 'should have set a result');
-                assert(taskRunner.stdout.length > 0, 'should have written to stdout');
-                assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
-                assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
-                assert(taskRunner.succeeded, 'task should have succeeded');
-                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package pmd:pmd'),
-                    'should have run maven with the correct arguments');
-                assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
-                    'should have uploaded a Code Analysis Report build summary');
-                // assert artifacts not uploaded
-                assert(taskRunner.stdout.indexOf('artifact.upload containerfolder=app;artifactname=') > -1,
-                    'should have uploaded PMD build artifacts for the "app" module');
-                assert(taskRunner.stdout.indexOf('artifact.upload containerfolder=util;artifactname=') > -1,
-                    'should have uploaded PMD build artifacts for the "util" module');
-                assert(taskRunner.stdout.indexOf('artifact.upload containerfolder=backend;artifactname=') < 0,
-                    'should not have uploaded PMD build artifacts for the "backend" module');
-
-                assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found 6 violations in 4 files.');
-
-                done();
-            })
-            .fail((err) => {
-                console.log(taskRunner.stdout);
-                console.log(taskRunner.stderr);
-                console.log(err);
-                done(err);
-            });
-    });
-
-    it('Maven with PMD - Skips PMD goals if PMD is not enabled', function (done) {
-        // Arrange
-        createTempDirsForCodeAnalysisTests();
-        var testStgDir: string = path.join(__dirname, '_temp');
-        var testSrcDir: string = path.join(__dirname, 'data');
-
-        var responseJsonFilePath: string = path.join(__dirname, 'response.json');
-        var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
-
-        // Set mocked build variables
-        responseJsonContent.getVariable = responseJsonContent.getVariable || {};
-        responseJsonContent.getVariable['build.sourcesDirectory'] = testSrcDir;
-        responseJsonContent.getVariable['build.artifactStagingDirectory'] = testStgDir;
-        responseJsonContent.getVariable['build.buildNumber'] = '1';
-
-        // Write and set the newly-changed response file
-        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
-        fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
-        setResponseFile(path.basename(newResponseFilePath));
-
-        // Set up the task runner with the test settings
-        var taskRunner: trm.TaskRunner = setupDefaultMavenTaskRunner();
-        taskRunner.setInput('pmdAnalysisEnabled', 'false');
-
-        // Act
-        taskRunner.run()
-            .then(() => {
-                // Assert
-                assert(taskRunner.resultWasSet, 'should have set a result');
-                assert(taskRunner.stdout.length > 0, 'should have written to stdout');
-                assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
-                assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
-                assert(taskRunner.succeeded, 'task should have succeeded');
-                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package'),
-                    'should have run maven without PMD arguments');
-                assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') < 1,
-                    'should not have uploaded a Code Analysis Report build summary');
 
                 done();
             })
@@ -1490,7 +1372,6 @@ describe('Maven Suite', function () {
         responseJsonContent.getVariable = responseJsonContent.getVariable || {};
         responseJsonContent.getVariable['build.sourcesDirectory'] = testSrcDir;
         responseJsonContent.getVariable['build.artifactStagingDirectory'] = testStgDir;
-        responseJsonContent.getVariable['build.buildNumber'] = '1';
 
         var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
@@ -1514,6 +1395,181 @@ describe('Maven Suite', function () {
                 assert(taskRunner.succeeded, 'task should have succeeded');
                 assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package pmd:pmd'),
                     'should have run maven with the correct arguments');
+
+                done();
+            })
+            .fail((err) => {
+                console.log(taskRunner.stdout);
+                console.log(taskRunner.stderr);
+                console.log(err);
+                done(err);
+            });
+    });
+
+    it('Maven with Checkstyle - Executes Checkstyle and uploads results', function (done) {
+        // In the test data:
+        // /: pom.xml, target/.
+        // Expected: one module, root.
+
+        // Arrange
+        createTempDirsForCodeAnalysisTests();
+        var testSrcDir: string = path.join(__dirname, 'data', 'singlemodule');
+        var testStgDir: string = path.join(__dirname, '_temp');
+
+        var responseJsonFilePath: string = path.join(__dirname, 'response.json');
+        var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
+
+        // Add fields corresponding to responses for mock filesystem operations for the following paths
+        // Staging directories
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        // Test data files
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+
+        // Set mocked build variables
+        responseJsonContent.getVariable = responseJsonContent.getVariable || {};
+        responseJsonContent.getVariable['build.sourcesDirectory'] = testSrcDir;
+        responseJsonContent.getVariable['build.artifactStagingDirectory'] = testStgDir;
+
+        // Write and set the newly-changed response file
+        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
+        fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
+        setResponseFile(path.basename(newResponseFilePath));
+
+        // Set up the task runner with the test settings
+        var taskRunner: trm.TaskRunner = setupDefaultMavenTaskRunner();
+        taskRunner.setInput('checkstyleAnalysisEnabled', 'true');
+
+        // Act
+        taskRunner.run()
+            .then(() => {
+                // Assert
+                assert(taskRunner.resultWasSet, 'should have set a result');
+                assert(taskRunner.stdout.length > 0, 'should have written to stdout');
+                assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
+                assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
+                assert(taskRunner.succeeded, 'task should have succeeded');
+                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package checkstyle:checkstyle'),
+                    'should have run maven with the correct arguments');
+                assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
+                    'should have uploaded a Code Analysis Report build summary');
+                assert(taskRunner.stdout.indexOf('##vso[artifact.upload artifactname=Code Analysis Results;]') > -1,
+                    'should have uploaded a code analysis build artifact');
+
+                assertCodeAnalysisBuildSummaryContains(testStgDir, 'Checkstyle found 9 violations in 2 files.');
+
+                done();
+            })
+            .fail((err) => {
+                console.log(taskRunner.stdout);
+                console.log(taskRunner.stderr);
+                console.log(err);
+                done(err);
+            });
+    });
+
+    it('Maven with Checkstyle - Should succeed even if XML output cannot be found', function (done) {
+        // Arrange
+        createTempDirsForCodeAnalysisTests();
+        var testStgDir: string = path.join(__dirname, '_temp');
+        var testSrcDir: string = path.join(__dirname, 'data');
+
+        // Add test file(s) to the response file so that tl.exist() and tl.checkPath() calls return correctly
+        var srcResponseFilePath: string = path.join(__dirname, 'response.json');
+        var responseJsonContent = JSON.parse(fs.readFileSync(srcResponseFilePath, 'utf-8'));
+
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+
+        // Set mocked build variables
+        responseJsonContent.getVariable = responseJsonContent.getVariable || {};
+        responseJsonContent.getVariable['build.sourcesDirectory'] = testSrcDir;
+        responseJsonContent.getVariable['build.artifactStagingDirectory'] = testStgDir;
+
+        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
+        fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
+
+        // Set the newly-changed response file
+        setResponseFile(path.basename(newResponseFilePath));
+
+        // Set up the task runner with the test settings
+        var taskRunner: trm.TaskRunner = setupDefaultMavenTaskRunner();
+        taskRunner.setInput('checkstyleAnalysisEnabled', 'true');
+
+        // Act
+        taskRunner.run()
+            .then(() => {
+                // Assert
+                assert(taskRunner.succeeded, 'task should not have failed');
+                assert(taskRunner.resultWasSet, 'should have set a result');
+                assert(taskRunner.stdout.length > 0, 'should have written to stdout');
+                assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
+                assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
+                assert(taskRunner.succeeded, 'task should have succeeded');
+                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package checkstyle:checkstyle'),
+                    'should have run maven with the correct arguments');
+
+                done();
+            })
+            .fail((err) => {
+                console.log(taskRunner.stdout);
+                console.log(taskRunner.stderr);
+                console.log(err);
+                done(err);
+            });
+    });
+
+    it('Maven with Checkstyle & PMD - Executes Checkstyle and PMD and uploads results for both', function (done) {
+        // In the test data:
+        // /: pom.xml, target/.
+        // Expected: one module, root.
+
+        // Arrange
+        createTempDirsForCodeAnalysisTests();
+        var testSrcDir: string = path.join(__dirname, 'data', 'singlemodule');
+        var testStgDir: string = path.join(__dirname, '_temp');
+
+        var responseJsonFilePath: string = path.join(__dirname, 'response.json');
+        var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
+
+        // Add fields corresponding to responses for mock filesystem operations for the following paths
+        // Staging directories
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        // Test data files
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+
+        // Set mocked build variables
+        responseJsonContent.getVariable = responseJsonContent.getVariable || {};
+        responseJsonContent.getVariable['build.sourcesDirectory'] = testSrcDir;
+        responseJsonContent.getVariable['build.artifactStagingDirectory'] = testStgDir;
+
+        // Write and set the newly-changed response file
+        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
+        fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
+        setResponseFile(path.basename(newResponseFilePath));
+
+        // Set up the task runner with the test settings
+        var taskRunner: trm.TaskRunner = setupDefaultMavenTaskRunner();
+        taskRunner.setInput('checkstyleAnalysisEnabled', 'true');
+        taskRunner.setInput('pmdAnalysisEnabled', 'true');
+
+        // Act
+        taskRunner.run()
+            .then(() => {
+                // Assert
+                assert(taskRunner.resultWasSet, 'should have set a result');
+                assert(taskRunner.stdout.length > 0, 'should have written to stdout');
+                assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
+                assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
+                assert(taskRunner.succeeded, 'task should have succeeded');
+                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package checkstyle:checkstyle pmd:pmd'),
+                    'should have run maven with the correct arguments');
+                assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
+                    'should have uploaded a Code Analysis Report build summary');
+                assert(taskRunner.stdout.indexOf('##vso[artifact.upload artifactname=Code Analysis Results;]') > -1,
+                    'should have uploaded a code analysis build artifact');
+
+                assertCodeAnalysisBuildSummaryContains(testStgDir, 'Checkstyle found 9 violations in 2 files.');
+                assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found 3 violations in 2 files.');
 
                 done();
             })
@@ -1574,7 +1630,7 @@ describe('Maven Suite', function () {
 
     /* SonarQube unit tests */
 
-    it('SonarQube common - SQMetrics caching holds true over multiple requests, and does not invoke additional REST calls', () => {
+    it('SonarQube common - task and analysis details caching holds true over multiple requests, and does not invoke additional REST calls', () => {
         // Arrange
         var mockRunSettings:SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
         var mockServer:MockSonarQubeServer = new MockSonarQubeServer();
@@ -1586,17 +1642,17 @@ describe('Maven Suite', function () {
         var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
         mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject);
 
-        var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
-        taskDetailsJsonObject.projectStatus.status = 'OK'; // Quality gate passed
-        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', taskDetailsJsonObject);
+        var analysisDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
+        analysisDetailsJsonObject.projectStatus.status = 'OK'; // Quality gate passed
+        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', analysisDetailsJsonObject);
 
-        return analysisMetrics.getQualityGateStatus()
+        return analysisMetrics.fetchQualityGateStatus()
             .then((qualityGateStatus:string) => {
                 var expectedQualityGateStatus:string = qualityGateStatus;
                 var oldInvokeCount = mockServer.responses.get('/api/qualitygates/project_status?analysisId=12345').invokedCount;
 
                 assert(oldInvokeCount == 1, 'Expected the analysis details endpoint to only have been invoked once');
-                return analysisMetrics.getQualityGateStatus()
+                return analysisMetrics.fetchQualityGateStatus()
                     .then((qualityGateStatus:string) => {
                         var actualQualityGateStatus:string = qualityGateStatus;
                         var newInvokeCount = mockServer.responses.get('/api/qualitygates/project_status?analysisId=12345').invokedCount;
@@ -1605,6 +1661,49 @@ describe('Maven Suite', function () {
                         assert(oldInvokeCount == newInvokeCount, 'Expected no further invocations of the analysis details endpoint');
                     });
             })
+    });
+
+    it('SonarQube common - measurement details caching holds true over multiple requests, and does not invoke additional REST calls', () => {
+        // Arrange
+        var mockRunSettings:SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockServer:MockSonarQubeServer = new MockSonarQubeServer();
+
+        var analysisMetrics:SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+
+        // Mock responses from the server for the measurement details
+        var measurementDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/measurement_details.json'), 'utf-8'));
+        mockServer.setupMockApiCall('/api/metrics/search?ps=500&f=name', measurementDetailsJsonObject);
+
+        // Act
+        // Make a few requests
+        var measurementDetailsResults:SonarQubeMeasurementUnit[][] = [];
+        return analysisMetrics.fetchMeasurementDetails()
+            .then((measurementDetailsResult:SonarQubeMeasurementUnit[]) => {
+                measurementDetailsResults.push(measurementDetailsResult);
+                return analysisMetrics.fetchMeasurementDetails();
+            })
+            .then((measurementDetailsResult:SonarQubeMeasurementUnit[]) => {
+                measurementDetailsResults.push(measurementDetailsResult);
+                return analysisMetrics.fetchMeasurementDetails();
+            })
+            .then((measurementDetailsResult:SonarQubeMeasurementUnit[]) => {
+                measurementDetailsResults.push(measurementDetailsResult);
+                var expectedMeasurementDetails:SonarQubeMeasurementUnit[] = measurementDetailsJsonObject.metrics as SonarQubeMeasurementUnit[];
+
+                measurementDetailsResults.forEach((actualMeasurementDetails:SonarQubeMeasurementUnit[]) => {
+                    // All results should match the expected
+                    var expectedLength = expectedMeasurementDetails.length;
+                    var actualLength = actualMeasurementDetails.length;
+                    assert(expectedLength == actualLength, `Returned measurement details length (${actualLength}) should match the original (${expectedLength})`);
+                    assert(expectedMeasurementDetails.every( (v,i) => {
+                        return v === actualMeasurementDetails[i];
+                    }), 'Each element of the returned measurement details should match the original');
+
+                    // Endpoint should only have been invoked once
+                    var invokeCount = mockServer.responses.get('/api/metrics/search?ps=500&f=name').invokedCount;
+                    assert(invokeCount == 1, `Measurement details endpoint should only have been invoked once. Actual: ${invokeCount}`);
+                })
+            });
     });
 
     it('SonarQube common - Build summary is created (dashboard link only when not waiting for server)', () => {
@@ -1621,7 +1720,7 @@ describe('Maven Suite', function () {
             });
     });
 
-    it('SonarQube common - Build summary is created with quality gate failure', () => {
+    it('SonarQube common - Build summary with details is created with quality gate fail', () => {
         // Arrange
         var mockRunSettings: SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
         var mockServer: MockSonarQubeServer = new MockSonarQubeServer();
@@ -1633,15 +1732,63 @@ describe('Maven Suite', function () {
         var taskDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
         mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject);
 
-        var taskDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
-        taskDetailsJsonObject.projectStatus.status = 'ERROR'; // Quality gate failed
-        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', taskDetailsJsonObject);
+        var analysisDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
+        analysisDetailsJsonObject.projectStatus.status = 'ERROR'; // Quality gate failed
+        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', analysisDetailsJsonObject);
+
+        var unitsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/measurement_details.json'), 'utf-8'));
+        mockServer.setupMockApiCall('/api/metrics/search?ps=500&f=name', unitsJsonObject);
 
         return sqReportBuilder.fetchMetricsAndCreateReport(true)
-            .then((report:string) => {
-                assertBuildSummaryContains(report, '[sqAnalysis_BuildSummary_LinkText >](http://dashboardUrl "projectKey Dashboard")');
-                assertBuildSummaryContains(report, 'Quality Gate');
-                assertBuildSummaryContains(report, 'Failed');
+            .then((buildSummary:string) => {
+                assertBuildSummaryContains(buildSummary, '[sqAnalysis_BuildSummary_LinkText >](http://dashboardUrl "projectKey Dashboard")');
+                assertBuildSummaryContains(buildSummary, 'Quality Gate');
+                assertBuildSummaryContains(buildSummary, 'Failed');
+
+                // Details
+                assertBuildSummaryContains(buildSummary, 'Lines');
+                assertBuildSummaryContains(buildSummary, '71');
+                assertBuildSummaryContains(buildSummary, '&nbsp;&#62; 1'); // "> 1" in escaped HTML
+
+                assertBuildSummaryContains(buildSummary, 'Technical Debt');
+                assertBuildSummaryContains(buildSummary, '1h 27min');
+                assertBuildSummaryContains(buildSummary, '&nbsp;&#62; 0min'); // "> 0min" in escaped HTML
+            });
+    });
+
+    it('SonarQube common - Build summary with details is created with quality gate warn', () => {
+        // Arrange
+        var mockRunSettings: SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockServer: MockSonarQubeServer = new MockSonarQubeServer();
+
+        var analysisMetrics: SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+        var sqReportBuilder: SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
+
+        // Mock responses from the server for the task and analysis details
+        var taskDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
+        mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject);
+
+        var analysisDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
+        analysisDetailsJsonObject.projectStatus.status = 'WARN'; // Quality gate failed
+        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', analysisDetailsJsonObject);
+
+        var unitsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/measurement_details.json'), 'utf-8'));
+        mockServer.setupMockApiCall('/api/metrics/search?ps=500&f=name', unitsJsonObject);
+
+        return sqReportBuilder.fetchMetricsAndCreateReport(true)
+            .then((buildSummary:string) => {
+                assertBuildSummaryContains(buildSummary, '[sqAnalysis_BuildSummary_LinkText >](http://dashboardUrl "projectKey Dashboard")');
+                assertBuildSummaryContains(buildSummary, 'Quality Gate');
+                assertBuildSummaryContains(buildSummary, 'Warning');
+
+                // Details
+                assertBuildSummaryContains(buildSummary, 'Lines');
+                assertBuildSummaryContains(buildSummary, '71');
+                assertBuildSummaryContains(buildSummary, '&nbsp;&#62; 1'); // "> 1" in escaped HTML
+
+                assertBuildSummaryContains(buildSummary, 'Technical Debt');
+                assertBuildSummaryContains(buildSummary, '1h 27min');
+                assertBuildSummaryContains(buildSummary, '&nbsp;&#62; 0min'); // "> 0min" in escaped HTML
             });
     });
 
@@ -1657,15 +1804,15 @@ describe('Maven Suite', function () {
         var taskDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
         mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject);
 
-        var taskDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
-        taskDetailsJsonObject.projectStatus.status = 'OK'; // Quality gate passed
-        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', taskDetailsJsonObject);
+        var analysisDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
+        analysisDetailsJsonObject.projectStatus.status = 'OK'; // Quality gate passed
+        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', analysisDetailsJsonObject);
 
         return sqReportBuilder.fetchMetricsAndCreateReport(true)
-            .then((report:string) => {
-                assertBuildSummaryContains(report, '[sqAnalysis_BuildSummary_LinkText >](http://dashboardUrl "projectKey Dashboard")');
-                assertBuildSummaryContains(report, 'Quality Gate');
-                assertBuildSummaryContains(report, 'Passed');
+            .then((buildSummary:string) => {
+                assertBuildSummaryContains(buildSummary, '[sqAnalysis_BuildSummary_LinkText >](http://dashboardUrl "projectKey Dashboard")');
+                assertBuildSummaryContains(buildSummary, 'Quality Gate');
+                assertBuildSummaryContains(buildSummary, 'Passed');
             });
     });
 
@@ -1743,12 +1890,12 @@ describe('Maven Suite', function () {
         var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
         mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject);
 
-        var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
-        taskDetailsJsonObject.projectStatus.status = 'ERROR'; // Quality gate failed
-        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', taskDetailsJsonObject);
+        var analysisDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
+        analysisDetailsJsonObject.projectStatus.status = 'ERROR'; // Quality gate failed
+        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', analysisDetailsJsonObject);
 
         // Act
-        return analysisMetrics.getTaskResultFromQualityGateStatus()
+        return analysisMetrics.fetchTaskResultFromQualityGateStatus()
             .then((taskResult) => {
                 assert(taskResult == 1 /* TaskResult.Failed == 1 */, 'Task should have failed.');
             });
@@ -1765,9 +1912,9 @@ describe('Maven Suite', function () {
         var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
         mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject);
 
-        var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
-        taskDetailsJsonObject.projectStatus.status = 'OK'; // Quality gate passed
-        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', taskDetailsJsonObject);
+        var analysisDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
+        analysisDetailsJsonObject.projectStatus.status = 'OK'; // Quality gate passed
+        mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', analysisDetailsJsonObject);
 
         // capture process.stdout and process.exit, along with useful data to assert on
         var capturedStream = captureStream(process.stdout);
@@ -1776,7 +1923,7 @@ describe('Maven Suite', function () {
         process.exit = function() { processExitInvoked++; return; };
 
         // Act
-        return analysisMetrics.getTaskResultFromQualityGateStatus()
+        return analysisMetrics.fetchTaskResultFromQualityGateStatus()
             .then((taskResult) => {
                 assert(taskResult == 0 /* TaskResult.Failed == 0 */, 'Task should not have failed.');
             });
