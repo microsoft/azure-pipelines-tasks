@@ -28,10 +28,16 @@ export function getResponse(cmd: string, key: string): any {
         // try Searching for wildcards
         var values = Object.keys(answers[cmd]);
         var temp = key;
+        var resultOfMatching = null;
+        var compareResult = null;
         values.forEach(function (value) {
-            var resultOfMatching = key.match(value);
+            resultOfMatching = key.match(value);
             if (resultOfMatching) {
-                temp = value;
+                if((compareResult && resultOfMatching[0].length > compareResult.length) || !compareResult)
+                {
+                    temp = value;
+                    compareResult = resultOfMatching[0];
+                }
             }
         });
         key = temp;

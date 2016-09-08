@@ -25,8 +25,8 @@ describe('AzureCLI Suite', function () {
     function addSubscriptionObjectJson(responseFileName:string, nameOfFileToBeCreated:string)
     {
         var jsonFileObject:any = JSON.parse(fs.readFileSync(path.join(__dirname,responseFileName)).toString());
-        if( !jsonFileObject.exec['/usr/local/bin/azure account import ' + '.*' + nameOfFileToBeCreated]){
-            jsonFileObject.exec['/usr/local/bin/azure account import ' + '.*' +   nameOfFileToBeCreated] = jsonFileObject.exec['/usr/local/bin/azure account import subscriptions.publishsettings'];
+        if( !jsonFileObject.exec['/usr/local/bin/azure account import ' + nameOfFileToBeCreated]){
+            jsonFileObject.exec['/usr/local/bin/azure account import ' + nameOfFileToBeCreated] = jsonFileObject.exec['/usr/local/bin/azure account import subscriptions.publishsettings'];
         }
         fs.writeFileSync(path.join(__dirname,responseFileName), JSON.stringify(jsonFileObject));
     }
@@ -79,12 +79,12 @@ describe('AzureCLI Suite', function () {
     function deleteSubscriptionObjectJson(responseFileName:string, nameOfFileToBeCreated:string)
     {
         var jsonFileObject:any = JSON.parse(fs.readFileSync(path.join(__dirname,responseFileName)).toString());
-        delete jsonFileObject.exec['/usr/local/bin/azure account import ' + '.*' + nameOfFileToBeCreated];
+        delete jsonFileObject.exec['/usr/local/bin/azure account import ' + nameOfFileToBeCreated];
         fs.writeFileSync(path.join(__dirname,responseFileName), JSON.stringify(jsonFileObject));
     }
 
-    var publishsettingFileName:string = 'subscriptions';
-    var inlineScriptName:string = 'azureclitaskscript';
+    var publishsettingFileName:string = '.*subscriptions.*';
+    var inlineScriptName:string = '.*azureclitaskscript.*';
 
     it('successfully login azure classic and run shell script (scriptPath)', (done) => {
         var responseFileName:string = 'azureclitaskPass.json';
