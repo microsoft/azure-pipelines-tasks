@@ -63,6 +63,14 @@
         "/home/bin/maven/bin/mvn -f pom.xml package pmd:pmd": {
           "code": 0,
           "stdout": "Maven package and PMD analysis done"
+        },
+        "/home/bin/maven/bin/mvn -f pom.xml package checkstyle:checkstyle": {
+            "code": 0,
+            "stdout": "Maven package and Checkstyle analysis done"
+        },
+        "/home/bin/maven/bin/mvn -f pom.xml package checkstyle:checkstyle pmd:pmd": {
+            "code": 0,
+            "stdout": "Maven package and Checkstyle analysis and PMD analysis done"
         }
     },
     "checkPath": {
@@ -75,7 +83,10 @@
         "JAVA_HOME_8_X86": "/user/local/bin/Java8",
         "System.DefaultWorkingDirectory": "/user/build",
         "ENDPOINT_URL_ID1": "http://sonarqubeserver:9000",
-        "ENDPOINT_AUTH_ID1": "{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}"
+        "ENDPOINT_AUTH_ID1": "{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}",
+        "build.sourcesDirectory": "/user/build/s",
+        "build.artifactStagingDirectory": "/user/build/a",
+        "build.buildNumber": "1"
     },
     "find": {
         "/user/build": [

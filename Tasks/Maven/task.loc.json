@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 62
+    "Patch": 63
   },
   "minimumAgentVersion": "1.89.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -305,6 +305,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisBreakBuildIfQualityGateFailed",
       "groupName": "CodeAnalysis",
       "visibleRule": "sqAnalysisEnabled = true"
+    },
+    {
+      "name": "checkstyleAnalysisEnabled",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.checkstyleAnalysisEnabled",
+      "required": false,
+      "defaultValue": "false",
+      "groupName": "CodeAnalysis",
+      "helpMarkDown": "ms-resource:loc.input.help.checkstyleAnalysisEnabled"
     },
     {
       "name": "pmdAnalysisEnabled",

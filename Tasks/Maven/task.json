@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 62
+        "Patch": 63
     },
     "minimumAgentVersion": "1.89.0",
     "instanceNameFormat": "Maven $(mavenPOMFile)",
@@ -307,13 +307,22 @@
             "visibleRule": "sqAnalysisEnabled = true"
         },
         {
-          "name": "pmdAnalysisEnabled",
-          "type": "boolean",
-          "label": "Run PMD Analysis",
-          "required": false,
-          "defaultValue": "false",
-          "groupName": "CodeAnalysis",
-          "helpMarkDown": "Use the PMD Java static analysis tool to look for bugs in the code."
+            "name": "checkstyleAnalysisEnabled",
+            "type": "boolean",
+            "label": "Run Checkstyle",
+            "required": false,
+            "defaultValue": "false",
+            "groupName": "CodeAnalysis",
+            "helpMarkDown": "Run the Checkstyle tool with the default Sun checks. Results are uploaded as build artifacts."
+        },
+        {
+            "name": "pmdAnalysisEnabled",
+            "type": "boolean",
+            "label": "Run PMD",
+            "required": false,
+            "defaultValue": "false",
+            "groupName": "CodeAnalysis",
+            "helpMarkDown": "Use the PMD Java static analysis tool to look for bugs in the code. Results are uploaded as build artifacts."
         }
     ],
     "execution": {

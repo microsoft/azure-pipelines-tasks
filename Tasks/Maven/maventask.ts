@@ -9,9 +9,12 @@ import fs = require('fs');
 import tl = require('vsts-task-lib/task');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
 import sqCommon = require('./CodeAnalysis/SonarQube/common');
-import codeAnalysis = require('./CodeAnalysis/mavencodeanalysis');
 import sqMaven = require('./CodeAnalysis/mavensonar');
 import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
+import {CodeAnalysisOrchestrator} from "./CodeAnalysis/Common/CodeAnalysisOrchestrator";
+import {BuildOutput, BuildEngine} from './CodeAnalysis/Common/BuildOutput';
+import {PmdTool} from './CodeAnalysis/Common/PmdTool';
+import {CheckstyleTool} from './CodeAnalysis/Common/CheckstyleTool';
 
 // Set up localization resource file
 tl.setResourcePath(path.join( __dirname, 'task.json'));
@@ -31,6 +34,11 @@ var reportDirectory: string = null;
 var reportPOMFile: string = null;
 var execFileJacoco: string = null;
 var ccReportTask: string = null;
+
+let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('build.sourcesDirectory'), BuildEngine.Maven);
+var codeAnalysisOrchestrator:CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
+    [new CheckstyleTool(buildOutput, 'checkstyleAnalysisEnabled'),
+        new PmdTool(buildOutput, 'pmdAnalysisEnabled')]);
 
 // Determine the version and path of Maven to use
 var mvnExec: string = '';
@@ -150,7 +158,7 @@ async function execBuild() {
 
             // 2. Apply any goals for static code analysis tools selected by the user.
             mvnRun = sqMaven.applySonarQubeArgs(mvnRun, execFileJacoco);
-            mvnRun = codeAnalysis.applyEnabledCodeAnalysisGoals(mvnRun);
+             mvnRun = codeAnalysisOrchestrator.configureBuild(mvnRun);
 
             // Read Maven standard output
             mvnRun.on('stdout', function (data) {
@@ -174,9 +182,10 @@ async function execBuild() {
             }
 
             // Otherwise, start uploading relevant build summaries.
+            tl.debug('Processing code analysis results');
             return sqMaven.processSonarQubeIntegration()
                 .then(() => {
-                    return codeAnalysis.uploadCodeAnalysisBuildSummaryIfEnabled();
+                    return codeAnalysisOrchestrator.publishCodeAnalysisResults();
                 });
         })
         .fail(function (err) {

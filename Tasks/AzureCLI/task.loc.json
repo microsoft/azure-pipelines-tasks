@@ -11,11 +11,15 @@
     "Build",
     "Release"
   ],
+  "runsOn": [
+    "Agent",
+    "MachineGroup"
+  ],
   "demands": [],
   "version": {
     "Major": "0",
-    "Minor": "1",
-    "Patch": "1"
+    "Minor": "2",
+    "Patch": "0"
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
