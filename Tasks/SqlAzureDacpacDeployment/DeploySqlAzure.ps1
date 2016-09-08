@@ -23,9 +23,8 @@ $StartIpAddress = Get-VstsInput -Name "StartIpAddress"
 $EndIpAddress = Get-VstsInput -Name "EndIpAddress"
 $DeleteFirewallRule = Get-VstsInput -Name "DeleteFirewallRule" -Require -AsBool
 
-# Initialize Azure.
-Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-Initialize-Azure
+# Initialize Rest API Helpers.
+Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_
 
 # Import the loc strings.
 Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
@@ -94,22 +93,16 @@ $endIp = $ipAddress.EndIPAddress
 
 Try
 {
-    # Importing required version of azure cmdlets according to azureps installed on machine
-    $azureUtility = Get-AzureUtility
-
-    Write-Verbose "Loading $azureUtility"
-    . "$PSScriptRoot\$azureUtility"
-
     if ($connectedServiceNameSelector -eq "ConnectedServiceNameARM")
     {
         $connectedServiceName = $connectedServiceNameARM
     }
 
-    # Getting connection type (Certificate/UserNamePassword/SPN) used for the task
-    $connectionType = Get-ConnectionType -connectedServiceName $connectedServiceName
+    # Getting endpoint used for the task
+    $endpoint = Get-Endpoint -connectedServiceName $connectedServiceName
 
     # creating firewall rule for agent on sql server
-    $firewallSettings = Create-AzureSqlDatabaseServerFirewallRule -startIP $startIp -endIP $endIp -serverName $serverFriendlyName -connectionType $connectionType
+    $firewallSettings = Create-AzureSqlDatabaseServerFirewallRule -startIP $startIp -endIP $endIp -serverName $serverFriendlyName -endpoint $endpoint
     Write-Verbose ($firewallSettings | Format-List | Out-String)
 
     $firewallRuleName = $firewallSettings.RuleName
@@ -169,21 +162,36 @@ Try
 }
 Catch [System.Management.Automation.CommandNotFoundException]
 {
-    Write-Host "Exception Message: $($_.Exception.Message)" -ForegroundColor Red
     if ($_.Exception.CommandName -ieq "Invoke-Sqlcmd")
     {
-        Write-Host "SQL Powershell Module is not installed on your agent machine. Please follow steps given below to execute this task"
+        Write-Host "SQL Powershell Module is not installed on your agent machine. Please follow steps given below to execute this task"  -ForegroundColor Red
         Write-Host "1. Install PowershellTools & SharedManagementObjects(dependency), from https://www.microsoft.com/en-us/download/details.aspx?id=52676 (2016)"
         Write-Host "2. Restart agent machine after installing tools to register Module path updates"
         Write-Host "3. Run Import-Module SQLPS on your agent Powershell prompt. (This step is not required on Powershell 3.0 enabled machines)"
     }
-    throw $_.Exception
+
+    Write-Error ($_.Exception|Format-List -Force|Out-String)
+    throw
+}
+Catch [Exception]
+{
+    Write-Error ($_.Exception|Format-List -Force|Out-String)
+    throw
 }
 Finally
 {
-    # deleting firewall rule for agent on sql server
-    Delete-AzureSqlDatabaseServerFirewallRule -serverName $serverFriendlyName -firewallRuleName $firewallRuleName -connectionType $connectionType `
-                                              -isFirewallConfigured $isFirewallConfigured -deleteFireWallRule $DeleteFirewallRule
+    # Check if Firewall Rule is configured
+    if ($firewallRuleName)
+    {
+        # Deleting firewall rule for agent on sql server
+        Write-Verbose "Deleting $firewallRuleName"
+        Delete-AzureSqlDatabaseServerFirewallRule -serverName $serverFriendlyName -firewallRuleName $firewallRuleName -endpoint $endpoint `
+                                                -isFirewallConfigured $isFirewallConfigured -deleteFireWallRule $DeleteFirewallRule
+    }
+    else
+    {
+        Write-Verbose "No Firewall Rule was added"
+    }
 }
 
 Write-Verbose "Leaving script DeploySqlAzure.ps1"

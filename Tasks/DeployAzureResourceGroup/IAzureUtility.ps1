@@ -2,7 +2,8 @@
 function Create-AzureResourceGroupIfNotExist
 {
     param([string]$resourceGroupName,
-          [string]$location)
+          [string]$location,
+          [object]$endpoint)
 }
 
 # Deploy $csmFile template on ResourceGroup $resourceGroupName.
@@ -94,7 +95,8 @@ function Get-AzureMachineCustomScriptExtension
 {
     param([string]$resourceGroupName,
           [string]$vmName,
-          [string]$name)
+          [string]$name,
+          [object]$endpoint)
 }
 
 # Returns details of the custom script extension $name executed on VM $vmName present in ResourceGroup $resourceGroupName
@@ -114,5 +116,6 @@ function Remove-AzureMachineCustomScriptExtension
 {
     param([string]$resourceGroupName,
           [string]$vmName,
-          [string]$name)
+          [string]$name,
+          [object]$endpoint)
 }

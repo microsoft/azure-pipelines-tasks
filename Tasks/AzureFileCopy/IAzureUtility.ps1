@@ -3,7 +3,8 @@
 # return storageKey from storageAccount if present in classic, else throws
 function Get-AzureStorageKeyFromRDFE
 {
-    param([string]$storageAccountName)
+    param([string]$storageAccountName,
+          [object]$endpoint)
 }
 
 # return azureresourcegroup name for storageaccount present in RM, if not present throws
@@ -15,7 +16,8 @@ function Get-AzureStorageAccountResourceGroupName
 # return storageKey from storageAccount if present in RM, else throws
 function Get-AzureStorageKeyFromARM
 {
-    param([string]$storageAccountName)
+    param([string]$storageAccountName,
+          [object]$endpoint)
 }
 
 # creates azureStorageContext object for given storageaccount and storagekey
@@ -29,25 +31,29 @@ function Create-AzureStorageContext
 # return blob storage endpoint for given classic storage account
 function Get-AzureBlobStorageEndpointFromRDFE
 {
-    param([string]$storageAccountName)
+    param([string]$storageAccountName,
+          [object]$endpoint)
 }
 
 # return blob storage endpoint for given ARM storage account
 function Get-AzureBlobStorageEndpointFromARM
 {
-    param([string]$storageAccountName)
+    param([string]$storageAccountName,
+          [object]$endpoint)
 }
 
 # return account type for given ARM storage account
 function Get-AzureStorageAccountTypeFromARM
 {
-    param([string]$storageAccountName)
+    param([string]$storageAccountName,
+          [object]$endpoint)
 }
 
 # return account type for given classic storage account
 function Get-AzureStorageAccountTypeFromRDFE
 {
-    param([string]$storageAccountName)
+    param([string]$storageAccountName,
+          [object]$endpoint)
 }
 
 #creates azure container on given storageaccount whose information is present in $storageContext
@@ -122,7 +128,8 @@ function Get-AzureMachineCustomScriptExtension
 {
     param([string]$resourceGroupName,
           [string]$vmName,
-          [string]$name)
+          [string]$name,
+          [object]$endpoint)
 }
 
 # Returns details of the custom script extension $name executed on VM $vmName present in ResourceGroup $resourceGroupName
@@ -142,5 +149,6 @@ function Remove-AzureMachineCustomScriptExtension
 {
     param([string]$resourceGroupName,
           [string]$vmName,
-          [string]$name)
+          [string]$name,
+          [object]$endpoint)
 }

@@ -9,11 +9,19 @@
         {
             "module": "VstsAzureHelpers_",
             "dest": "ps_modules"
+        },
+		{
+            "module": "VstsAzureRestHelpers_",
+            "dest": "ps_modules"
         }
     ],
     "AzureResourceGroupDeployment": [
         {
             "module": "VstsAzureHelpers_",
+            "dest": "ps_modules"
+        },
+		{
+            "module": "VstsAzureRestHelpers_",
             "dest": "ps_modules"
         }
     ],
@@ -37,7 +45,7 @@
     ],
     "SqlAzureDacpacDeployment": [
         {
-            "module": "VstsAzureHelpers_",
+            "module": "VstsAzureRestHelpers_",
             "dest": "ps_modules"
         }
     ],

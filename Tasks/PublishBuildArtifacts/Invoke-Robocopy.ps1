@@ -62,6 +62,7 @@ $OutputEncoding = [System.Text.Encoding]::Default
         }
     }
 [System.Console]::WriteLine("##[debug]robocopy exit code '$LASTEXITCODE'")
+[System.Console]::Out.Flush()
 if ($LASTEXITCODE -ge 8) {
     exit $LASTEXITCODE
 }
