@@ -56,23 +56,12 @@ function Get-AzureStorageAccountTypeFromRDFE
           [object]$endpoint)
 }
 
-# return account type for given ARM storage account
-function Get-AzureStorageAccountTypeFromARM
-{
-    param([string]$storageAccountName)
-}
-
-# return account type for given classic storage account
-function Get-AzureStorageAccountTypeFromRDFE
-{
-    param([string]$storageAccountName)
-}
-
 #creates azure container on given storageaccount whose information is present in $storageContext
 function Create-AzureContainer
 {
     param([string]$containerName,
-          [object]$storageContext)
+          [object]$storageContext,
+          [boolean]$isPremiumStorage)
 }
 
 # deletes azure container from storageaccount whose information is present in $storageContext
