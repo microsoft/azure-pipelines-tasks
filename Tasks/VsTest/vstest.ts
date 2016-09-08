@@ -22,6 +22,8 @@ const TITestSettingsXmlnsTag = "http://microsoft.com/schemas/VisualStudio/TeamTe
 try {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     var vsTestVersion: string = tl.getInput('vsTestVersion');
+    var vstestLocationMethod: string = tl.getInput('vstestLocationMethod');
+    var vstestLocation: string = tl.getPathInput('vsTestLocation');
     var testAssembly: string = tl.getInput('testAssembly', true);
     var testFiltercriteria: string = tl.getInput('testFiltercriteria');
     var runSettingsFile: string = tl.getPathInput('runSettingsFile');
@@ -245,13 +247,19 @@ function publishCodeChanges(): Q.Promise<string> {
 
 function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: string, vsVersion: number, argsArray: string[]): Q.Promise<number> {
     var defer = Q.defer<number>();
-    var vsCommon = tl.getVariable("VS" + vsVersion + "0COMNTools");
-    if (!vsCommon) {
-        tl.error(tl.loc('VstestNotFound', vsVersion));
-        defer.resolve(1);
-        return defer.promise;
+    if (vstestLocationMethod == "version") {
+        var vsCommon = tl.getVariable("VS" + vsVersion + "0COMNTools");
+        if (!vsCommon) {
+            tl.error(tl.loc('VstestNotFound', vsVersion));
+            defer.resolve(1);
+            return defer.promise;
+        }
+        vstestLocation = path.join(vsCommon, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe");
+    } else if (vstestLocationMethod == "location") {
+        ; // vstestLocation already set
+    } else {
+        ;
     }
-    var vstestLocation = path.join(vsCommon, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe");
     var vstest = tl.createToolRunner(vstestLocation);
     addVstestArgs(argsArray, vstest);
 
@@ -363,6 +371,14 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
 
 function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     var defer = Q.defer<number>();
+    if (vstestLocationMethod == "location") {
+        try {
+            fs.accessSync(vstestLocation);
+        } catch (error) {
+            vstestLocationMethod = "version";
+            vsTestVersion = "Latest";
+        }
+    }
     if (vsTestVersion.toLowerCase() == "latest") {
         vsTestVersion = null;
     }
