@@ -37,6 +37,7 @@ try {
     var tiaEnabled = tl.getVariable('tia.enabled');
     var fileLevel = tl.getVariable('tia.filelevel');
     var sourcesDir = tl.getVariable('build.sourcesdirectory');
+    var runIdFile = path.join(os.tmpdir(), uuid.v1() + ".txt");    
 
     tl._writeLine("##vso[task.logissue type=warning;TaskName=VSTest]");
 
@@ -199,7 +200,8 @@ function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
     selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
     selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
     selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
-    selectortool.arg("/ResultFile:" + resultFiles[0]);
+    selectortool.arg("/ResultFile:" + resultFiles[0]);    
+    selectortool.arg("/runidfile:" + runIdFile);
     selectortool.exec()
         .then(function (code) {        
         endTime = perf();
@@ -219,16 +221,19 @@ function generateResponseFile(discoveredTests: string): Q.Promise<string> {
     var endTime : number;
     var elapsedTime : number;
     var defer = Q.defer<string>();
-    var tempFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
-    tl.debug("Response file will be generated at " + tempFile);
+    var respFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
+    tl.debug("Response file will be generated at " + respFile);  
+    tl.debug("RunId file will be generated at " + runIdFile);  
     var selectortool = tl.createToolRunner(getTestSelectorLocation());
     selectortool.arg("GetImpactedtests");
     selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
     selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
     selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
     selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
-    selectortool.arg("/responsefile:" + tempFile);
+    selectortool.arg("/responsefile:" + respFile);
     selectortool.arg("/DiscoveredTests:" + discoveredTests);
+    selectortool.arg("/runidfile:" + runIdFile);
+    selectortool.arg("/testruntitle:" + testRunTitle);
 
     selectortool.exec()
         .then(function (code) {
@@ -236,7 +241,7 @@ function generateResponseFile(discoveredTests: string): Q.Promise<string> {
             elapsedTime = endTime - startTime;
             tl._writeLine("##vso[task.logissue type=warning;SubTaskName=GenerateResponseFile;SubTaskDuration=" + elapsedTime + "]");    
             tl.debug(tl.loc("GenerateResponseFilePerfTime", elapsedTime));
-            defer.resolve(tempFile);
+            defer.resolve(respFile);
         })
         .fail(function (err) {
             defer.reject(err);
@@ -399,7 +404,20 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                             tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', responseFile));
                                             executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
                                                 .then(function (code) {
-                                                    defer.resolve(code);
+                                                    uploadTestResults(testResultsDirectory)
+                                                    .then(function (code) {
+                                                        defer.resolve(+code);
+                                                    })
+                                                    .fail(function (code) {
+                                                        tl.debug("Test Run Updation failed!");
+                                                        defer.resolve(code);
+                                                    })
+                                                    .finally(function () {
+                                                        tl.debug("Deleting the response file" + responseFile);
+                                                        tl.rmRF(responseFile, true);
+                                                        tl.debug("Deleting the discovered tests file" + listFile);
+                                                        tl.rmRF(listFile, true);
+                                                    });
                                                 })
                                                 .fail(function (code) {
                                                     defer.resolve(code);
