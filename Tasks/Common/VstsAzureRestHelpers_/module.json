@@ -1,0 +1,7 @@
+{
+    "messages": {
+        "AZ_UnsupportedAuthScheme0": "Unsupported authentication scheme '{0}' for Azure endpoint.",
+        "AZ_BearerTokenFetchFailure": "Not able to fetch token for tenant Id {0}.",
+        "AZ_NoValidResourceIdFound": "No Valid Resource of ServerName : {0} , ServerType : {1} Found for Subscription {2}."
+    }
+}
