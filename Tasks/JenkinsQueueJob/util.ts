@@ -1,4 +1,6 @@
 /// <reference path="../../definitions/node.d.ts"/>
+import stream = require('stream');
+
 import tl = require('vsts-task-lib/task');
 import Q = require('q');
 
@@ -190,6 +192,7 @@ function submitJob(taskOptions: TaskOptions): Q.Promise<string> {
             }
         } else if (httpResponse.statusCode == 404) { // team-build plugin endpoint failed because it is not installed
             console.log('Install the "Team Foundation Server Plug-in" for improved Jenkins integration\n' + taskOptions.teamPluginUrl);
+            taskOptions.teamBuildPluginAvailable = false;
 
             tl.debug('httpResponse: ' + JSON.stringify(httpResponse));
             let jobQueuePostData = addCrumb(taskOptions.parameterizedJob ?
@@ -224,6 +227,7 @@ function submitJob(taskOptions: TaskOptions): Q.Promise<string> {
         } else if (httpResponse.statusCode != 201) {
             defer.reject(getFullErrorMessage(httpResponse, 'Job creation failed.'));
         } else {
+            taskOptions.teamBuildPluginAvailable = true;
             let jsonBody = JSON.parse(body)
             let queueUri = addUrlSegment(jsonBody.created, 'api/json');
             defer.resolve(queueUri);
@@ -237,7 +241,7 @@ function getCrumb(taskOptions: TaskOptions): Q.Promise<string> {
     let defer: Q.Deferred<string> = Q.defer<string>();
     let crumbRequestUrl: string = addUrlSegment(taskOptions.serverEndpointUrl, '/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)');
     tl.debug('crumbRequestUrl: ' + crumbRequestUrl);
-    request.get({ url: crumbRequestUrl, strictSSL: taskOptions.strictSSL }, function (err, httpResponse, body) {
+    request.get({ url: crumbRequestUrl, strictSSL: taskOptions.strictSSL }, function(err, httpResponse, body) {
         if (err) {
             if (err.code == 'ECONNRESET') {
                 tl.debug(err);
@@ -260,6 +264,27 @@ function getCrumb(taskOptions: TaskOptions): Q.Promise<string> {
     }).auth(taskOptions.username, taskOptions.password, true);
     return defer.promise;
 }
+
+export class StringWritable extends stream.Writable {
+
+    value: string = "";
+
+    constructor(options) {
+        super(options);
+    }
+
+    _write(data: any, encoding: string, callback: Function): void {
+        tl.debug(data);
+        this.value += data;
+        if (callback) {
+            callback();
+        }
+    }
+
+    toString(): string {
+        return this.value;
+    }
+};
 
 /**
  * Supported parameter types: boolean, string, choice, password
