@@ -77,6 +77,36 @@ function processAntOutputLine(line) {
     }
 }
 
+function readJavaHomeFromRegistry(jdkVersion: string, arch: string): string {
+    let javaHome = null;
+
+    if (isWindows) {
+        let reg = tl.tool('reg');
+        reg.arg(['query', `HKLM\\SOFTWARE\\JavaSoft\\Java Development Kit\\${jdkVersion}`, "/v", "JavaHome"]);
+        if (arch.toLowerCase() === "x86") {
+            reg.arg("/reg:32");
+        } else {
+            reg.arg("/reg:64");
+        }
+
+        let result = reg.execSync({
+            ignoreReturnCode: true
+        });
+
+        if (result && result.code === 0 && result.stdout) {
+            let regSzIdx = result.stdout.indexOf("REG_SZ");
+            if (regSzIdx > -1) {
+                let output: string[] = result.stdout.split("REG_SZ");
+                if (output.length === 2) {
+                    javaHome = output[1].trim(); // value is what comes after
+                    tl.debug("JAVA_HOME: " + javaHome);
+                }
+            }
+        }
+    }
+
+    return javaHome;
+}
 
 async function doWork() {
 
@@ -208,7 +238,14 @@ async function doWork() {
                 var envName = "JAVA_HOME_" + jdkVersion.slice(2) + "_" + jdkArchitecture.toUpperCase();
                 specifiedJavaHome = tl.getVariable(envName);
                 if (!specifiedJavaHome) {
-                    throw new Error('Failed to find specified JDK version. Please make sure environment variable ' + envName + ' exists and is set to the location of a corresponding JDK.');
+                    if (isWindows) {
+                        // attempt to discover java home property from registry on Windows
+                        specifiedJavaHome = readJavaHomeFromRegistry(jdkVersion, jdkArchitecture);
+                    } 
+                    
+                    if (!specifiedJavaHome) {
+                        throw new Error('Failed to find specified JDK version. Please make sure environment variable ' + envName + ' exists and is set to the location of a corresponding JDK.');
+                    }
                 }
             }
         }
