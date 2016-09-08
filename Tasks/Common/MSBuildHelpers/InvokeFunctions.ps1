@@ -6,7 +6,7 @@ function Invoke-BuildTools {
     param(
         [switch]$NuGetRestore,
         [string[]]$SolutionFiles,
-        [string]$MSBuildLocation,
+        [string]$MSBuildLocation, # TODO: Switch MSBuildLocation to mandatory. Both callers (MSBuild and VSBuild task) throw prior to reaching here if MSBuild cannot be resolved.
         [string]$MSBuildArguments,
         [switch]$Clean,
         [switch]$NoTimelineLogger,
@@ -51,14 +51,14 @@ function Invoke-MSBuild {
         [string]$Targets,
         [string]$LogFile,
         [switch]$NoTimelineLogger,
-        [string]$MSBuildPath,
+        [string]$MSBuildPath, # TODO: Switch MSBuildPath to mandatory. Both callers (MSBuild and VSBuild task) throw prior to reaching here if MSBuild cannot be resolved.
         [string]$AdditionalArguments)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         # Get the MSBuild path.
         if (!$MSBuildPath) {
-            $MSBuildPath = Get-MSBuildPath
+            $MSBuildPath = Get-MSBuildPath # TODO: Delete this condition block. Both callers (MSBuild and VSBuild task) throw prior to reaching here if MSBuild cannot be resolved.
         } else {
             $MSBuildPath = [System.Environment]::ExpandEnvironmentVariables($MSBuildPath)
             if ($MSBuildPath -notlike '*msbuild.exe') {
