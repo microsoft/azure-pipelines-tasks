@@ -11,5 +11,7 @@
   "loc.input.help.ArtifactType": "The type of artifact to create.",
   "loc.input.label.TargetPath": "Path",
   "loc.input.help.TargetPath": "The file share to which to copy the files",
-  "loc.messages.PublishBuildArtifactsFailed": "Publish build artifacts failed with error: %s"
+  "loc.messages.PublishBuildArtifactsFailed": "Publish build artifacts failed with error: %s",
+  "loc.messages.SkippingCopy": "Skipping copy and creating an artifact association only.",
+  "loc.messages.UncPathRequired": "Artifact is not in UNC format."
 }
