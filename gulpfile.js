@@ -219,7 +219,8 @@ gulp.task('test', ['testResources'], function () {
     var suitePath = path.join(_testRoot, options.suite + '/_suite.js');
     var tfBuild = ('' + process.env['TF_BUILD']).toLowerCase() == 'true'
     return gulp.src([suitePath])
-        .pipe(mocha({ reporter: 'spec', ui: 'bdd', useColors: !tfBuild }));
+        .pipe(mocha({ reporter: 'spec', ui: 'bdd', useColors: !tfBuild }))
+        .on('error', errorHandler);
 });
 
 //-----------------------------------------------------------------------------------------------------------------
