@@ -174,7 +174,7 @@ describe('ANT Suite', function() {
             .then(() => {
                 // The response file will cause ANT to fail, but we are looking for the warning about ANT_HOME
                 assert(tr.ran('/usr/local/bin/ANT -version'), 'it should have run ANT -version');
-                assert(tr.invokedToolCount == 2, 'should have only run ANT 2 times');
+                assert(tr.invokedToolCount == 1, 'should have only run ANT once');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
                 assert(tr.failed, 'task should have failed');
