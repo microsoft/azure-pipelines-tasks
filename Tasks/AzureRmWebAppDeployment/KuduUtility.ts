@@ -60,7 +60,7 @@ export async function deployWebAppPackage(webAppPackage: string, publishingProfi
         }
         else if(response.statusCode === 200) {
              tl._writeLine(tl.loc("Successfullydeployedpackageusingkuduserviceat", webAppPackage, publishingProfile.publishUrl));
-             tl.resolve(tl.loc("Successfullydeployedpackageusingkuduserviceat", webAppPackage, publishingProfile.publishUrl));
+             deferred.resolve(tl.loc("Successfullydeployedpackageusingkuduserviceat", webAppPackage, publishingProfile.publishUrl));
         }
         else {
             tl.error(response.statusMessage);
