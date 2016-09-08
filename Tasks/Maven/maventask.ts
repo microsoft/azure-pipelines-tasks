@@ -142,7 +142,7 @@ async function execBuild() {
             var mvnRun = tl.tool(mvnExec);
             mvnRun.arg('-f');
             mvnRun.arg(mavenPOMFile);
-            mvnRun.arg(mavenOptions);
+            mvnRun.line(mavenOptions);
             if (isCodeCoverageOpted && mavenGoals.indexOf('clean') == -1) {
                 mvnRun.arg('clean');
             }

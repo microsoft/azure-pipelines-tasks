@@ -64,7 +64,7 @@ if (isCodeCoverageOpted && inputTasks.indexOf('clean') == -1) {
     gb.arg('clean'); //if user opts for code coverage, we append clean functionality to make sure any uninstrumented class files are removed
 }
 
-gb.arg(tl.getInput('options', false));
+gb.line(tl.getInput('options', false));
 gb.arg(inputTasks);
 
 // update JAVA_HOME if user selected specific JDK version or set path manually
@@ -231,7 +231,7 @@ function enableCodeCoverage(): Q.Promise<any> {
 function isMultiModuleProject(wrapperScript: string): boolean {
     var gradleBuild = tl.tool(wrapperScript);
     gradleBuild.arg("properties");
-    gradleBuild.arg(tl.getInput('options', false));
+    gradleBuild.line(tl.getInput('options', false));
 
     var data = gradleBuild.execSync().stdout;
     if (typeof data != "undefined" && data) {
