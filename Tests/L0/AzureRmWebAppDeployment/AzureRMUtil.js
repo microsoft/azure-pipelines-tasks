@@ -31,10 +31,22 @@ exports.getAzureRMWebAppPublishProfile = getAzureRMWebAppPublishProfile;
 
 function updateDeploymentStatus(publishingProfile, isDeploymentSuccess ) {
 	if(isDeploymentSuccess) {
-		console.log('Updated history');
+		console.log('Updated history to kudu');
 	}
 	else {
-		console.log('Failed Updation');
+		console.log('Failed to update history to kudu');
 	}
 }
 exports.updateDeploymentStatus = updateDeploymentStatus;
+
+function getAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
+	var config = { 
+		id: 'appid',
+  		properties: { 
+     		virtualApplications: [ ['Object'], ['Object'], ['Object'] ],
+    	} 
+  	}
+
+    return config;
+}
+exports.getAzureRMWebAppConfigDetails = getAzureRMWebAppConfigDetails;

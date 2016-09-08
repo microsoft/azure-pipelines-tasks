@@ -12,24 +12,28 @@ function setResponseFile(name: string) {
 }
 
 describe('AzureRmWebAppDeployment Suite', function() {
-    this.timeout(20000);
+    this.timeout(25000);
 
     var taskSrcPath = path.join (__dirname, '..', '..', '..', 'Tasks', 'AzureRmWebAppDeployment');
     var testSrcPath = path.join (__dirname, '..', '..', '..', '..', 'Tests', 'L0', 'AzureRmWebAppDeployment');
 
     before((done) => {
         // init here
-
+        
         if(shell.test ('-d', taskSrcPath)) {
              
-            // Move mocked AzureRMUtil and MSDeployUtility Libraries to task's test location
+            // Move mocked AzureRMUtil, MSDeployUtility and KuduUtility Libraries to task's test location
             shell.mv( '-f', path.join (taskSrcPath,'AzureRMUtil.js'), path.join (taskSrcPath,'AzureRMUtil_backup.js'));
             shell.cp(path.join (testSrcPath, 'AzureRMUtil.js'), path.join (taskSrcPath,'AzureRMUtil.js'));
 
             shell.mv( '-f', path.join (taskSrcPath,'MSDeployUtility.js'), path.join (taskSrcPath,'MSDeployUtility_backup.js'));
             shell.cp(path.join (testSrcPath, 'MSDeployUtility.js'), path.join (taskSrcPath,'MSDeployUtility.js'));
-        }
 
+            shell.mv( '-f', path.join (taskSrcPath,'kuduUtility.js'), path.join (taskSrcPath,'kuduUtility_backup.js'));
+            shell.cp(path.join (testSrcPath, 'kuduUtility.js'), path.join (taskSrcPath,'kuduUtility.js'));
+
+        }
+        
         done();
     });
 
@@ -38,10 +42,11 @@ describe('AzureRmWebAppDeployment Suite', function() {
         // Restore the original libraries
         shell.mv('-f', path.join (taskSrcPath, 'AzureRMUtil_backup.js'), path.join (taskSrcPath,'AzureRMUtil.js'));
         shell.mv('-f', path.join (taskSrcPath, 'MSDeployUtility_backup.js'), path.join (taskSrcPath,'MSDeployUtility.js'));
+        shell.mv('-f', path.join (taskSrcPath, 'kuduUtility_backup.js'), path.join (taskSrcPath,'kuduUtility.js'));
 
     });
-
-    it('Runs successfully with default inputs', (done) => {
+    
+    it('Runs MSDeploy successfully with default inputs', (done) => {
         
         setResponseFile('armGood.json');
 
@@ -50,13 +55,43 @@ describe('AzureRmWebAppDeployment Suite', function() {
         tr.setInput('WebAppName', 'mytestapp');
         tr.setInput('Package', 'webAppPkg.zip');
         tr.setInput('UseWebDeploy', 'true');
-        
+       
         tr.run()
             .then(() => {
 
-                assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
+                assert(tr.invokedToolCount == 2, 'should have invoked tool once');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
+                var expectedOut = 'Updated history to kudu'; 
+                assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
+                done();
+
+            })
+            .fail((err) => {
+                done(err);
+            });
+    });
+
+    it('Fails if msdeploy.exe fails to execute', (done) => {
+        
+        setResponseFile('armBad.json');
+
+        var tr = new trm.TaskRunner('AzureRmWebAppDeployment');
+        tr.setInput('ConnectedServiceName', 'AzureRMSpn');
+        tr.setInput('WebAppName', 'mytestapp');
+        tr.setInput('Package', 'webAppPkg.zip');
+        tr.setInput('UseWebDeploy', 'true');
+       
+        tr.run()
+            .then(() => {
+
+                assert(tr.invokedToolCount == 2, 'should have invoked tool once');
+                assert(tr.stderr.length >= 0, 'should have written to stderr');
+                var expectedErr = 'Error: msdeploy_path failed with return code: 1';
+                assert(tr.stdErrContained(expectedErr), 'should have said: ' + expectedErr);
+                var expectedOut = 'Failed to update history to kudu'; 
+                assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
+                assert(tr.failed, 'task should have failed');
                 done();
 
             })
@@ -86,6 +121,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
                
                 assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
+                var expectedOut = 'Updated history to kudu'; 
+                assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
                 assert(tr.succeeded, 'task should have succeeded');
                 done();
 
@@ -113,6 +150,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
 
                 assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
+                var expectedOut = 'Updated history to kudu'; 
+                assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
                 assert(tr.succeeded, 'task should have succeeded');
                 done();
 
@@ -137,6 +176,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
                
                 assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
+                var expectedOut = 'Updated history to kudu'; 
+                assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
                 assert(tr.succeeded, 'task should have succeeded');
                 done();
 
@@ -146,7 +187,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             });
     });
 
-    it('Runs with parameter file provided by user', (done) => {
+    it('Runs successfully with parameter file provided by user', (done) => {
         
         setResponseFile('armGoodWithParamFileUser.json');
 
@@ -162,6 +203,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
 
                 assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
+                var expectedOut = 'Updated history to kudu'; 
+                assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
                 assert(tr.succeeded, 'task should have succeeded');
                 done();
 
@@ -322,5 +365,116 @@ describe('AzureRmWebAppDeployment Suite', function() {
                 done(err);
             });
     });
-   
+
+    it('Runs KuduDploy successfully with default inputs', (done) => {
+        
+        setResponseFile('armGood.json');
+
+        var tr = new trm.TaskRunner('AzureRmWebAppDeployment');
+        tr.setInput('ConnectedServiceName', 'AzureRMSpn');
+        tr.setInput('WebAppName', 'mytestapp');
+        tr.setInput('Package', 'webAppPkg.zip');
+        tr.setInput('UseWebDeploy', 'false');
+       
+        tr.run()
+            .then(() => {
+
+                assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.succeeded, 'task should have succeeded');
+                var expectedOut = 'Deployed using KuduDeploy'; 
+                assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
+                expectedOut = 'Updated history to kudu'; 
+                assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
+                done();
+
+            })
+            .fail((err) => {
+                done(err);
+            });
+    });
+
+    it('Runs KuduDploy successfully with folder archiving', (done) => {
+        
+        setResponseFile('armFolderGood.json');
+
+        var tr = new trm.TaskRunner('AzureRmWebAppDeployment');
+        tr.setInput('ConnectedServiceName', 'AzureRMSpn');
+        tr.setInput('WebAppName', 'mytestapp');
+        tr.setInput('Package', 'webAppPkg');
+        tr.setInput('UseWebDeploy', 'false');
+       
+        tr.run()
+            .then(() => {
+
+                assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.succeeded, 'task should have succeeded');
+                var expectedOut = 'Folder Archiving Successful'; 
+                assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
+                expectedOut = 'Deployed using KuduDeploy'; 
+                assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
+                expectedOut = 'Updated history to kudu'; 
+                assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
+                done();
+
+            })
+            .fail((err) => {
+                done(err);
+            });
+    });
+    it('Fails KuduDploy if deployment is unsuccessful', (done) => {
+        
+        setResponseFile('armGood.json');
+
+        var tr = new trm.TaskRunner('AzureRmWebAppDeployment');
+        tr.setInput('ConnectedServiceName', 'AzureRMSpn');
+        tr.setInput('WebAppName', 'mytestapp');
+        tr.setInput('Package', 'webAppPkg.zip');
+        tr.setInput('UseWebDeploy', 'false');
+        shell.cp("-f", path.join (testSrcPath,'kuduUtilityBad.js'), path.join (__dirname, '..', '..', 'Temp', 'AzureRmWebAppDeployment', 'kuduUtility.js'));
+        tr.run()
+            .then(() => {
+
+                assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
+                assert(tr.stderr.length >= 0, 'should not have written to stderr');
+                var expectedErr = 'Error: Failed to deploy webapp package using kudu service'
+                assert(tr.stdErrContained(expectedErr), 'should have said: ' + expectedErr);                
+                var expectedOut = 'Failed to update history to kudu'; 
+                assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
+                assert(tr.failed, 'task should have succeeded');
+                done();
+
+            })
+            .fail((err) => {
+                done(err);
+            });
+    });
+    it('Fails KuduDploy if folder archiving fails', (done) => {
+           
+        setResponseFile('armFolderGood.json');
+
+        var tr = new trm.TaskRunner('AzureRmWebAppDeployment');
+        tr.setInput('ConnectedServiceName', 'AzureRMSpn');
+        tr.setInput('WebAppName', 'mytestapp');
+        tr.setInput('Package', 'webAppPkg');
+        tr.setInput('UseWebDeploy', 'false');
+
+        shell.cp("-f", path.join (testSrcPath,'kuduUtilityBad.js'), path.join (__dirname, '..', '..', 'Temp', 'AzureRmWebAppDeployment', 'kuduUtility.js'));
+        tr.run()
+            .then(() => {
+
+                assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
+                assert(tr.stderr.length >= 0, 'should have written to stderr');
+                var expectedErr = 'Error: Folder Archiving Failed'; 
+                assert(tr.stdErrContained(expectedErr), 'should have said: ' + expectedErr); 
+                assert(tr.failed, 'task should have failed');
+                done();
+
+            })
+            .fail((err) => {
+                done(err);
+            });
+    });
+
 });
