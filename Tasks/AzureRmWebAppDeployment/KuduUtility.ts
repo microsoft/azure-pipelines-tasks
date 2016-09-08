@@ -44,7 +44,7 @@ export function getVirtualAndPhysicalPaths(virtualApplication: string, virtualAp
  */
 export async function deployWebAppPackage(webAppPackage: string, publishingProfile, virtualPath: string, physicalPath: string) {
 
-    var defer = Q.defer<any>();
+    var deferred = Q.defer<any>();
     tl.debug(tl.loc("Deployingwebapplicationatvirtualpathandphysicalpath", webAppPackage, virtualPath, physicalPath));
     var kuduDeploymentURL = "https://" + publishingProfile.publishUrl + "/api/zip/" + physicalPath;
     var basicAuthToken = 'Basic ' + new Buffer(publishingProfile.userName + ':' + publishingProfile.userPWD).toString('base64');
@@ -56,7 +56,7 @@ export async function deployWebAppPackage(webAppPackage: string, publishingProfi
     var webAppReadStream = fs.createReadStream(webAppPackage);
     httpObj.sendFile('PUT', kuduDeploymentURL, webAppReadStream, headers, (error, response, body) => {
         if(error) {
-            throw Error(tl.loc("Failedtodeploywebapppackageusingkuduservice", error));
+            deferred.reject(tl.loc("Failedtodeploywebapppackageusingkuduservice", error));
         }
         else if(response.statusCode === 200) {
              tl._writeLine(tl.loc("Successfullydeployedpackageusingkuduserviceat", webAppPackage, publishingProfile.publishUrl));
@@ -64,10 +64,10 @@ export async function deployWebAppPackage(webAppPackage: string, publishingProfi
         }
         else {
             tl.error(response.statusMessage);
-            throw Error(tl.loc('Unabletodeploywebappresponsecode', response.statusCode));
+            deferred.reject(tl.loc('Unabletodeploywebappresponsecode', response.statusCode));
         }
     });
-    return defer.promise;
+    return deferred.promise;
 }
 
 export async function archiveFolder(webAppFolder:string , webAppZipFile:string ) {

@@ -33,9 +33,9 @@ export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: b
     var webAppPublishKuduUrl = publishingProfile.publishUrl;
     if(webAppPublishKuduUrl) {
         var requestDetails = getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
-        var accessToken = (new Buffer(publishingProfile.userName + ':' + publishingProfile.userPWD).toString('base64'));
+        var accessToken = 'Basic ' + (new Buffer(publishingProfile.userName + ':' + publishingProfile.userPWD).toString('base64'));
         var headers = {
-            authorization: 'Basic ' + accessToken
+            authorization: accessToken
         };
 
         restObj.replace(requestDetails['requestUrl'], null, requestDetails['requestBody'], headers, null,
@@ -216,8 +216,8 @@ async function getAzureRMWebAppID(SPN, webAppName: string, resourceType: string)
             deferred.reject(error);
         }
         else if(response.statusCode === 200) {
-            var obj = JSON.parse(body);
-            deferred.resolve(obj.value[0]);
+            var webAppIDDetails = JSON.parse(body);
+            deferred.resolve(webAppIDDetails.value[0]);
         }
         else {
             tl.error(response.statusMessage);
