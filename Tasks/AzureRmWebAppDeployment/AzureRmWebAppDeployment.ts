@@ -4,6 +4,7 @@
 
 import tl = require('vsts-task-lib/task');
 import path = require('path');
+import fs = require('fs');
 
 var azureRmUtil = require ('./AzureRMUtil.js');
 var msDeployUtility = require('./MSDeployUtility.js');
@@ -89,7 +90,11 @@ async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, 
     var isDeploymentSuccess = true;
     var deploymentError = null;
     try {
-        await tl.exec(msDeployPath, msDeployCmdArgs, <any> {failOnStdErr: true});
+
+        var msDeployBatchFile = tl.getVariable('build.sourcesDirectory') + '\\' + 'msDeployCommand.bat';
+        var msDeployCommand = '"' + msDeployPath + '" ' + msDeployCmdArgs;
+        fs.writeFileSync(msDeployBatchFile, msDeployCommand);
+        await tl.exec("cmd", ['/C', msDeployBatchFile], <any> {failOnStdErr: true});
         tl.debug(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
     }
     catch(error) {
