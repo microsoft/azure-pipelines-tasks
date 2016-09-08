@@ -74,6 +74,14 @@ declare module 'vsts-task-lib/toolrunner' {
 	     */
 	    argString(val: string): void;
 	    /**
+	     * Append argument command line string
+	     * e.g. '"arg one" two -z' would append args[]=['arg one', 'two', '-z']
+	     *
+	     * @param     val        string cmdline
+	     * @returns   void
+	     */
+	    line(val: string): void;
+	    /**
 	     * Add path argument
 	     * Add path string to argument, path string should not contain double quoted
 	     * This will call arg(val, literal?) with literal equal 'true'
