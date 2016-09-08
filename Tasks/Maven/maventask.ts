@@ -316,7 +316,7 @@ function publishCodeCoverage(isCodeCoverageOpted: boolean) {
             }
             else {
                 mvnReport.arg(mavenPOMFile);
-                mvnReport.arg(ccReportTask);
+                mvnReport.arg("verify");
             }
             mvnReport.exec().then(function (code) {
                 publishCCToTfs();
