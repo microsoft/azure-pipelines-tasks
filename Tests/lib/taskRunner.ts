@@ -18,7 +18,7 @@ function debug(message) {
 }
 
 export class TaskRunner extends events.EventEmitter {
-	constructor(name: string, normalizeSlashes?: boolean, ignoreTempPathsInResponse?: boolean) {
+	constructor(name: string, normalizeSlashes?: boolean, ignoreTempPathsInResponse?: boolean, wildcardAccepted?: boolean) {
 		super();
 		this._inputs = {};
 		this._name = name;
@@ -34,6 +34,7 @@ export class TaskRunner extends events.EventEmitter {
 		this._commands = [];
 		this._normalizeSlashes = normalizeSlashes;
 		this._ignoreTempPathsInResponse = ignoreTempPathsInResponse;
+		this._wildcardAccepted = wildcardAccepted;
 	}
 	
 	public succeeded: boolean;
@@ -53,6 +54,7 @@ export class TaskRunner extends events.EventEmitter {
 	private _commands: string[];  
 	private _normalizeSlashes: boolean;
     private _ignoreTempPathsInResponse: boolean;
+	private _wildcardAccepted: boolean;
 
 	public ran(cmdLine: string): boolean {
 		var executed: boolean = false;
@@ -187,7 +189,8 @@ export class TaskRunner extends events.EventEmitter {
         // These variables can be used by the mocked task-lib classes
         this._taskEnv['MOCK_TEMP_PATH'] = this._tempPath; 
         this._taskEnv['MOCK_IGNORE_TEMP_PATH'] = this._ignoreTempPathsInResponse; 
-        this._taskEnv['MOCK_NORMALIZE_SLASHES'] = this._normalizeSlashes; 
+        this._taskEnv['MOCK_NORMALIZE_SLASHES'] = this._normalizeSlashes;		 
+		this._taskEnv['MOCK_WILDCARD_ACCEPTED'] = this._wildcardAccepted;
 
 	    //
 	    // Run the task via node
