@@ -28,19 +28,18 @@ export function getResponse(cmd: string, key: string): any {
         // try Searching for wildcards
         var values = Object.keys(answers[cmd]);
         var temp = key;
-        var isAMatch = null;
-        var compareResult = null;
-        values.forEach(function (value) {
-            isAMatch = key.match(value);
-            if (isAMatch) {
-                if((compareResult && isAMatch[0].length > compareResult.length) || !compareResult)
+        var resultOfMatching = null;
+        for(var i = 0 ; i < values.length; i++)
+        {
+            var value = values[i];
+            resultOfMatching = key.match(value);
+            if (resultOfMatching) {
+                if(resultOfMatching[0].length == key.length)
                 {
-                    temp = value;
-                    compareResult = isAMatch[0];
+                    return  answers[cmd][value];
                 }
             }
-        });
-        key = temp;
+        }
     }
     return answers[cmd][key];
 }
