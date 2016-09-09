@@ -4,7 +4,6 @@
   "loc.description": "Deploy, start, stop, delete Azure Resource Groups",
   "loc.instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
   "loc.group.displayName.output": "Output",
-  "loc.group.displayName.advanced": "Advanced Deployment Option",
   "loc.input.label.ConnectedServiceNameSelector": "Azure Connection Type",
   "loc.input.label.ConnectedServiceName": "Azure RM Subscription",
   "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription for the deployment.",
