@@ -336,6 +336,9 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
 
     argsArray.push("/ListFullyQualifiedTests");
     argsArray.push("/ListTestsTargetPath:" + tempFile);
+    if (testFiltercriteria) {        
+        argsArray.push("/TestCaseFilter:" + testFiltercriteria);       
+    }
 
     var vsCommon = tl.getVariable("VS" + vsVersion + "0COMNTools");
     if (!vsCommon) {
