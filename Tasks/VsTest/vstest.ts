@@ -38,7 +38,7 @@ try {
     var fileLevel = tl.getVariable('tia.filelevel');
     var tiaRebaseLimit = tl.getVariable('tia.rebaselimit');
     var sourcesDir = tl.getVariable('build.sourcesdirectory');
-    var runIdFile = path.join(os.tmpdir(), uuid.v1() + ".txt");    
+    var runIdFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
 
 
     var sourcesDirectory = tl.getVariable('System.DefaultWorkingDirectory');
@@ -50,8 +50,7 @@ try {
             invokeVSTest(resultsDirectory)
                 .then(function (code) {
                     try {
-                        if (!isTiaAllowed())
-                        {
+                        if (!isTiaAllowed()) {
                             publishTestResults(resultsDirectory);
                         }
                         tl.setResult(code, tl.loc('VstestReturnCode', code));
@@ -126,14 +125,12 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
         argsArray.push(testAssemblyPath);
     });
     if (testFiltercriteria) {
-        if (!tiaEnabled)
-        {
+        if (!tiaEnabled) {
             argsArray.push("/TestCaseFilter:" + testFiltercriteria);
         }
-        else
-        {
+        else {
             tl.debug("Ignoring TestCaseFilter because Test Impact is enabled");
-            
+
         }
     }
     if (settingsFile && pathExistsAsFile(settingsFile)) {
@@ -177,11 +174,11 @@ function updateResponseFile(argsArray: string[], responseFile: string): Q.Promis
     return defer.promise;
 }
 
-function getTestSelectorLocation() : string {
+function getTestSelectorLocation(): string {
     return path.join(__dirname, "TestSelector/TestSelector.exe");
 }
 
-function getTraceCollectorUri() : string {
+function getTraceCollectorUri(): string {
     return "file://" + path.join(__dirname, "TestSelector/Microsoft.VisualStudio.TraceCollector.dll");
 }
 
@@ -193,37 +190,37 @@ function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
 
     var allFilesInResultsDirectory = tl.find(testResultsDirectory);
     var resultFiles = tl.match(allFilesInResultsDirectory, "*.trx", { matchBase: true });
-    
+
     var selectortool = tl.createToolRunner(getTestSelectorLocation());
     selectortool.arg("UpdateTestResults");
     selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
     selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
     selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
     selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
-    selectortool.arg("/ResultFile:" + resultFiles[0]);    
+    selectortool.arg("/ResultFile:" + resultFiles[0]);
     selectortool.arg("/runidfile:" + runIdFile);
     selectortool.exec()
-        .then(function (code) {        
-        endTime = perf();
-        elapsedTime = endTime - startTime;
-        tl._writeLine("##vso[task.logissue type=warning;SubTaskName=UploadTestResults;SubTaskDuration=" + elapsedTime + "]");
-        tl.debug(tl.loc("UploadTestResultsPerfTime", elapsedTime));
-        defer.resolve(String(code));
-    })
+        .then(function (code) {
+            endTime = perf();
+            elapsedTime = endTime - startTime;
+            tl._writeLine("##vso[task.logissue type=warning;SubTaskName=UploadTestResults;SubTaskDuration=" + elapsedTime + "]");
+            tl.debug(tl.loc("UploadTestResultsPerfTime", elapsedTime));
+            defer.resolve(String(code));
+        })
         .fail(function (err) {
-        defer.reject(err);
-    });
+            defer.reject(err);
+        });
     return defer.promise;
 }
 
 function generateResponseFile(discoveredTests: string): Q.Promise<string> {
     var startTime = perf();
-    var endTime : number;
-    var elapsedTime : number;
+    var endTime: number;
+    var elapsedTime: number;
     var defer = Q.defer<string>();
     var respFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
-    tl.debug("Response file will be generated at " + respFile);  
-    tl.debug("RunId file will be generated at " + runIdFile);  
+    tl.debug("Response file will be generated at " + respFile);
+    tl.debug("RunId file will be generated at " + runIdFile);
     var selectortool = tl.createToolRunner(getTestSelectorLocation());
     selectortool.arg("GetImpactedtests");
     selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
@@ -251,10 +248,10 @@ function generateResponseFile(discoveredTests: string): Q.Promise<string> {
 
 function publishCodeChanges(): Q.Promise<string> {
     var startTime = perf();
-    var endTime : number;
+    var endTime: number;
     var elapsedTime: number;
     var defer = Q.defer<string>();
-    
+
     var newprovider = "true";
     if (getTIALevel() == 'method') {
         newprovider = "false";
@@ -274,16 +271,16 @@ function publishCodeChanges(): Q.Promise<string> {
     }
 
     selectortool.exec()
-        .then(function(code) {
+        .then(function (code) {
             endTime = perf();
             elapsedTime = endTime - startTime;
             tl.debug(tl.loc("PublishCodeChangesPerfTime", elapsedTime));
             defer.resolve(String(code));
-        })        
-        .fail(function (err) {            
+        })
+        .fail(function (err) {
             defer.reject(err);
         });
-    
+
     return defer.promise;
 }
 
@@ -302,7 +299,7 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
     tl.rmRF(testResultsDirectory, true);
     tl.mkdirP(testResultsDirectory);
     tl.cd(workingDirectory);
-    vstest.exec({failOnStdErr: true})
+    vstest.exec({ failOnStdErr: true })
         .then(function (code) {
             cleanUp(parallelRunSettingsFile);
             defer.resolve(code);
@@ -332,13 +329,13 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
         }
         argsArray.push(testAssemblyPath);
     });
-    
+
     tl.debug("The list of discovered tests is generated at " + tempFile);
 
     argsArray.push("/ListFullyQualifiedTests");
     argsArray.push("/ListTestsTargetPath:" + tempFile);
-    if (testFiltercriteria) {        
-        argsArray.push("/TestCaseFilter:" + testFiltercriteria);       
+    if (testFiltercriteria) {
+        argsArray.push("/TestCaseFilter:" + testFiltercriteria);
     }
 
     var vsCommon = tl.getVariable("VS" + vsVersion + "0COMNTools");
@@ -368,30 +365,30 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
     var defer = Q.defer<number>();
     if (isTiaAllowed()) {
         publishCodeChanges()
-            .then(function(status) {                
+            .then(function (status) {
                 getVstestTestsList(vsVersion)
                     .then(function (listFile) {
                         generateResponseFile(listFile)
                             .then(function (responseFile) {
-								if (isEmptyResponseFile(responseFile)) {
+                                if (isEmptyResponseFile(responseFile)) {
                                     tl.debug("Empty response file detected. All tests will be executed.");
                                     executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
                                         .then(function (code) {
-                                                    uploadTestResults(testResultsDirectory)
-                                                    .then(function (code) {
-                                                        defer.resolve(+code);
-                                                    })
-                                                    .fail(function (code) {
-                                                        tl.debug("Test Run Updation failed!");
-                                                        defer.resolve(code);
-                                                    })
-                                                    .finally(function () {
-                                                        tl.debug("Deleting the response file" + responseFile);
-                                                        tl.rmRF(responseFile, true);
-                                                        tl.debug("Deleting the discovered tests file" + listFile);
-                                                        tl.rmRF(listFile, true);
-                                                    });
-										})
+                                            uploadTestResults(testResultsDirectory)
+                                                .then(function (code) {
+                                                    defer.resolve(+code);
+                                                })
+                                                .fail(function (code) {
+                                                    tl.debug("Test Run Updation failed!");
+                                                    defer.resolve(code);
+                                                })
+                                                .finally(function () {
+                                                    tl.debug("Deleting the response file" + responseFile);
+                                                    tl.rmRF(responseFile, true);
+                                                    tl.debug("Deleting the discovered tests file" + listFile);
+                                                    tl.rmRF(listFile, true);
+                                                });
+                                        })
                                         .fail(function (code) {
                                             defer.resolve(code);
                                         })
@@ -403,95 +400,94 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                         });
                                 }
                                 else {
-									responseContainsNoTests(responseFile)
-										.then(function (noTestsAvailable) {
-											if (noTestsAvailable)
-											{
-												tl.debug("No tests impacted. Not running any tests.");
-												tl.debug("Deleting the response file " + responseFile)
-												tl.rmRF(responseFile, true);
-											}
-											else{
-												updateResponseFile(getVstestArguments(settingsFile, true), responseFile)
-												.then(function (updatedFile) {
-													executeVstest(testResultsDirectory, settingsFile, vsVersion, ["@" + updatedFile])
-														.then(function (code) {
-															uploadTestResults(testResultsDirectory)
-															.then(function (code) {
-																defer.resolve(+code);
-															})
-															.fail(function (code) {
-																tl.debug("Test Run Updation failed!");
-																defer.resolve(code);
-															})
-															.finally(function () {
-																tl.debug("Deleting the response file" + responseFile);
-																tl.rmRF(responseFile, true);
-																tl.debug("Deleting the discovered tests file" + listFile);
-																tl.rmRF(listFile, true);
-															});
-														})
-														.fail(function (code) {
-															defer.resolve(code);
-														})
-														.finally(function () {
-															tl.debug("Deleting the response file" + responseFile)
-															tl.rmRF(responseFile, true);
-															tl.debug("Deleting the discovered tests file" + listFile);
-															tl.rmRF(listFile, true);
-														});
-												})
-												.fail(function (err) {
-													tl.error(err);
-													tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', responseFile));
-													executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
-														.then(function (code) {
-															uploadTestResults(testResultsDirectory)
-															.then(function (code) {
-																defer.resolve(+code);
-															})
-															.fail(function (code) {
-																tl.debug("Test Run Updation failed!");
-																defer.resolve(code);
-															})
-															.finally(function () {
-																tl.debug("Deleting the response file" + responseFile);
-																tl.rmRF(responseFile, true);
-																tl.debug("Deleting the discovered tests file" + listFile);
-																tl.rmRF(listFile, true);
-															});
-														})
-														.fail(function (code) {
-															defer.resolve(code);
-														}).finally(function () {
-															tl.debug("Deleting the response file" + responseFile)
-															tl.rmRF(responseFile, true);
-															tl.debug("Deleting the discovered tests file" + listFile);
-															tl.rmRF(listFile, true);
-														});
-												});
-											}
-										});                                    
-									}                                
-                            })                    
+                                    responseContainsNoTests(responseFile)
+                                        .then(function (noTestsAvailable) {
+                                            if (noTestsAvailable) {
+                                                tl.debug("No tests impacted. Not running any tests.");
+                                                tl.debug("Deleting the response file " + responseFile)
+                                                tl.rmRF(responseFile, true);
+                                            }
+                                            else {
+                                                updateResponseFile(getVstestArguments(settingsFile, true), responseFile)
+                                                    .then(function (updatedFile) {
+                                                        executeVstest(testResultsDirectory, settingsFile, vsVersion, ["@" + updatedFile])
+                                                            .then(function (code) {
+                                                                uploadTestResults(testResultsDirectory)
+                                                                    .then(function (code) {
+                                                                        defer.resolve(+code);
+                                                                    })
+                                                                    .fail(function (code) {
+                                                                        tl.debug("Test Run Updation failed!");
+                                                                        defer.resolve(code);
+                                                                    })
+                                                                    .finally(function () {
+                                                                        tl.debug("Deleting the response file" + responseFile);
+                                                                        tl.rmRF(responseFile, true);
+                                                                        tl.debug("Deleting the discovered tests file" + listFile);
+                                                                        tl.rmRF(listFile, true);
+                                                                    });
+                                                            })
+                                                            .fail(function (code) {
+                                                                defer.resolve(code);
+                                                            })
+                                                            .finally(function () {
+                                                                tl.debug("Deleting the response file" + responseFile)
+                                                                tl.rmRF(responseFile, true);
+                                                                tl.debug("Deleting the discovered tests file" + listFile);
+                                                                tl.rmRF(listFile, true);
+                                                            });
+                                                    })
+                                                    .fail(function (err) {
+                                                        tl.error(err);
+                                                        tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', responseFile));
+                                                        executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
+                                                            .then(function (code) {
+                                                                uploadTestResults(testResultsDirectory)
+                                                                    .then(function (code) {
+                                                                        defer.resolve(+code);
+                                                                    })
+                                                                    .fail(function (code) {
+                                                                        tl.debug("Test Run Updation failed!");
+                                                                        defer.resolve(code);
+                                                                    })
+                                                                    .finally(function () {
+                                                                        tl.debug("Deleting the response file" + responseFile);
+                                                                        tl.rmRF(responseFile, true);
+                                                                        tl.debug("Deleting the discovered tests file" + listFile);
+                                                                        tl.rmRF(listFile, true);
+                                                                    });
+                                                            })
+                                                            .fail(function (code) {
+                                                                defer.resolve(code);
+                                                            }).finally(function () {
+                                                                tl.debug("Deleting the response file" + responseFile)
+                                                                tl.rmRF(responseFile, true);
+                                                                tl.debug("Deleting the discovered tests file" + listFile);
+                                                                tl.rmRF(listFile, true);
+                                                            });
+                                                    });
+                                            }
+                                        });
+                                }
+                            })
                             .fail(function (err) {
                                 tl.error(err);
                                 tl.warning(tl.loc('ErrorWhileCreatingResponseFile'));
                                 executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
                                     .then(function (code) {
-											uploadTestResults(testResultsDirectory)
-											.then(function (code) {
-												defer.resolve(+code);
-											})
-											.fail(function (code) {
-												tl.debug("Test Run Updation failed!");
-												defer.resolve(code);
-											})
-											.finally(function () {												
-												tl.debug("Deleting the discovered tests file" + listFile);
-												tl.rmRF(listFile, true);
-											});
-										})
+                                        uploadTestResults(testResultsDirectory)
+                                            .then(function (code) {
+                                                defer.resolve(+code);
+                                            })
+                                            .fail(function (code) {
+                                                tl.debug("Test Run Updation failed!");
+                                                defer.resolve(code);
+                                            })
+                                            .finally(function () {
+                                                tl.debug("Deleting the discovered tests file" + listFile);
+                                                tl.rmRF(listFile, true);
+                                            });
+                                    })
                                     .fail(function (code) {
                                         defer.resolve(code);
                                     });
@@ -503,12 +499,12 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                         defer.resolve(1);
                     });
             })
-            .fail(function (err){
+            .fail(function (err) {
                 tl.error(err);
                 tl.warning(tl.loc('ErrorWhilePublishingCodeChanges'));
                 executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
                     .then(function (code) {
-						publishTestResults(testResultsDirectory);
+                        publishTestResults(testResultsDirectory);
                         defer.resolve(code);
                     })
                     .fail(function (code) {
@@ -767,29 +763,25 @@ function pushImpactLevelAndRootPathIfNotFound(dataCollectorArray): void {
     var arrayLength = dataCollectorArray.length;
     for (var i = 0; i < arrayLength; i++) {
         if (dataCollectorArray[i].$.friendlyName && dataCollectorArray[i].$.friendlyName.toUpperCase() === tiaFriendlyName) {
-            if (!dataCollectorArray[i].Configuration)
-            {
-                dataCollectorArray[i] = {Configuration:{}};
+            if (!dataCollectorArray[i].Configuration) {
+                dataCollectorArray[i] = { Configuration: {} };
             }
-            if (dataCollectorArray[i].Configuration.TestImpact && !dataCollectorArray[i].Configuration.RootPath)
-            {
-                dataCollectorArray[i].Configuration = {RootPath : sourcesDir};
+            if (dataCollectorArray[i].Configuration.TestImpact && !dataCollectorArray[i].Configuration.RootPath) {
+                dataCollectorArray[i].Configuration = { RootPath: sourcesDir };
             }
-            else if (!dataCollectorArray[i].Configuration.TestImpact && dataCollectorArray[i].Configuration.RootPath)
-            {
-                dataCollectorArray[i].Configuration = {ImpactLevel : getTIALevel()};
+            else if (!dataCollectorArray[i].Configuration.TestImpact && dataCollectorArray[i].Configuration.RootPath) {
+                dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel() };
             }
-            else if (dataCollectorArray[i].Configuration && !dataCollectorArray[i].Configuration.TestImpact && !dataCollectorArray[i].Configuration.RootPath)
-            {
-                dataCollectorArray[i].Configuration = {ImpactLevel : getTIALevel(), RootPath : sourcesDir};
+            else if (dataCollectorArray[i].Configuration && !dataCollectorArray[i].Configuration.TestImpact && !dataCollectorArray[i].Configuration.RootPath) {
+                dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), RootPath: sourcesDir };
             }
 
             //Adding the codebase attribute to TestImpact collector 
-            tl.debug("Adding codebase attribute to the existing test impact collector");           
+            tl.debug("Adding codebase attribute to the existing test impact collector");
             if (!dataCollectorArray[i].$.codebase) {
                 dataCollectorArray[i].$.codebase = getTraceCollectorUri();
             }
-        }      
+        }
     }
 }
 
@@ -797,30 +789,30 @@ function updateRunSettings(result: any, vsVersion: number) {
     var dataCollectorNode = null;
     if (!result.RunSettings) {
         tl.debug("Updating runsettings file from RunSettings node");
-        result.RunSettings = { DataCollectionRunSettings: { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } } };
+        result.RunSettings = { DataCollectionRunSettings: { DataCollectors: { DataCollector: { Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } } } } };
         dataCollectorNode = result.RunSettings.DataCollectionRunSettings.DataCollectors.DataCollector;
     }
     else if (!result.RunSettings.DataCollectionRunSettings) {
         tl.debug("Updating runsettings file from DataCollectionSettings node");
-        result.RunSettings.DataCollectionRunSettings = { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } };
+        result.RunSettings.DataCollectionRunSettings = { DataCollectors: { DataCollector: { Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } } } };
         dataCollectorNode = result.RunSettings.DataCollectionRunSettings.DataCollectors.DataCollector;
     }
     else if (!result.RunSettings.DataCollectionRunSettings[0].DataCollectors) {
         tl.debug("Updating runsettings file from DataCollectors node");
-        result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } };
+        result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: { Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } } } };
         dataCollectorNode = result.RunSettings.DataCollectionRunSettings[0].DataCollectors.DataCollector;
     }
     else {
         var dataCollectorArray = result.RunSettings.DataCollectionRunSettings[0].DataCollectors[0].DataCollector;
         if (!dataCollectorArray) {
             tl.debug("Updating runsettings file from DataCollector node");
-            result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } };
+            result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: { Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } } } };
             dataCollectorNode = result.RunSettings.DataCollectionRunSettings[0].DataCollectors.DataCollector;
         }
         else {
             if (!isTestImapctCollectorPresent(dataCollectorArray)) {
                 tl.debug("Updating runsettings file, adding a DataCollector node");
-                dataCollectorArray.push({Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}});
+                dataCollectorArray.push({ Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } });
                 dataCollectorNode = dataCollectorArray[dataCollectorArray.length - 1];
             }
             else {
@@ -872,39 +864,39 @@ function updatTestSettings(result: any, vsVersion: number) {
     var dataCollectorNode = null;
     if (!result.TestSettings) {
         tl.debug("Updating testsettings file from TestSettings node");
-        result.TestSettings = { Execution: { AgentRule: { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } } } };
+        result.TestSettings = { Execution: { AgentRule: { DataCollectors: { DataCollector: { Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } } } } } };
         result.TestSettings.Execution.AgentRule.$ = { name: TITestSettingsAgentNameTag };
         result.TestSettings.$ = { name: TITestSettingsNameTag, id: TITestSettingsIDTag, xmlns: TITestSettingsXmlnsTag };
         dataCollectorNode = result.TestSettings.Execution.AgentRule.DataCollectors.DataCollector;
     }
     else if (!result.TestSettings.Execution) {
         tl.debug("Updating testsettings file from Execution node");
-        result.TestSettings.Execution = { AgentRule: { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } } };
+        result.TestSettings.Execution = { AgentRule: { DataCollectors: { DataCollector: { Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } } } } };
         result.TestSettings.Execution.AgentRule.$ = { name: TITestSettingsAgentNameTag };
         dataCollectorNode = result.TestSettings.Execution.AgentRule.DataCollectors.DataCollector;
     }
     else if (!result.TestSettings.Execution[0].AgentRule) {
         tl.debug("Updating testsettings file from AgentRule node");
-        result.TestSettings.Execution[0] = { AgentRule: { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } } };
+        result.TestSettings.Execution[0] = { AgentRule: { DataCollectors: { DataCollector: { Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } } } } };
         result.TestSettings.Execution[0].AgentRule.$ = { name: TITestSettingsAgentNameTag };
         dataCollectorNode = result.TestSettings.Execution[0].AgentRule.DataCollectors.DataCollector;
     }
     else if (!result.TestSettings.Execution[0].AgentRule[0].DataCollectors) {
         tl.debug("Updating testsettings file from DataCollectors node");
-        result.TestSettings.Execution[0].AgentRule[0] = { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } };
+        result.TestSettings.Execution[0].AgentRule[0] = { DataCollectors: { DataCollector: { Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } } } };
         dataCollectorNode = result.TestSettings.Execution[0].AgentRule[0].DataCollectors.DataCollector;
     }
     else {
         var dataCollectorArray = result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector;
         if (!dataCollectorArray) {
             tl.debug("Updating testsettings file from DataCollector node");
-            result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0] = { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} };
+            result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0] = { DataCollector: { Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } } };
             dataCollectorNode = result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector;
         }
         else {
             if (!isTestImapctCollectorPresent(dataCollectorArray)) {
                 tl.debug("Updating testsettings file, adding a DataCollector node");
-                dataCollectorArray.push({Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}});
+                dataCollectorArray.push({ Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } });
                 dataCollectorNode = dataCollectorArray[dataCollectorArray.length - 1];
             }
             else {
@@ -1247,8 +1239,7 @@ function isTiaAllowed(): boolean {
     return false;
 }
 
-function getTIALevel()
-{
+function getTIALevel() {
     if (fileLevel && fileLevel.toUpperCase() == "FALSE") {
         return "method";
     }
@@ -1256,7 +1247,7 @@ function getTIALevel()
 }
 
 function responseContainsNoTests(filePath: string): Q.Promise<boolean> {
-    return readFileContents(filePath, "utf-8").then(function(resp) {
+    return readFileContents(filePath, "utf-8").then(function (resp) {
         if (resp == "/Tests:") {
             return true;
         }
