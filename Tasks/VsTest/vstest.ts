@@ -236,7 +236,7 @@ function publishCodeChanges(): Q.Promise<string> {
     selectortool.exec()
         .then(function(code) {
             endTime = perf();
-            elapsedTime = endTime - startTime;      
+            elapsedTime = endTime - startTime;
             tl.debug(tl.loc("PublishCodeChangesPerfTime", elapsedTime));
             defer.resolve(String(code));
         })        
