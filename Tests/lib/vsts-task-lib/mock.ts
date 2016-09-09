@@ -27,7 +27,6 @@ export function getResponse(cmd: string, key: string): any {
     if (!answers[cmd][key] && key && process.env['MOCK_WILDCARD_ACCEPTED'] === 'true') {
         // try Searching for wildcards
         var values = Object.keys(answers[cmd]);
-        var temp = key;
         var resultOfMatching = null;
         for(var i = 0 ; i < values.length; i++)
         {

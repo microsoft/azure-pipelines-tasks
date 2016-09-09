@@ -91,7 +91,7 @@ describe('AzureCLI Suite', function () {
         addSubscriptionObjectJson(responseFileName, publishsettingFileName);
         setResponseFile(responseFileName);
 
-        var tr = new trm.TaskRunner('AzureCLI',false,true,true);
+        var tr = new trm.TaskRunner('AzureCLI', false, false, true);
         tr.setInput('scriptLocation', 'scriptPath');
         tr.setInput('scriptPath', 'script.sh');
         tr.setInput('cwd', 'fake/wd');
@@ -118,7 +118,7 @@ describe('AzureCLI Suite', function () {
         addSubscriptionObjectJson(responseFileName, publishsettingFileName);
         setResponseFile(responseFileName);
 
-        var tr = new trm.TaskRunner('AzureCLI',false,true,true);
+        var tr = new trm.TaskRunner('AzureCLI', false, false, true);
         tr.setInput('scriptLocation', 'scriptPath');
         tr.setInput('scriptPath', 'script.bat');
         tr.setInput('cwd', 'fake/wd');
@@ -146,7 +146,7 @@ describe('AzureCLI Suite', function () {
         addSubscriptionObjectJson(responseFileName, publishsettingFileName);
         setResponseFile(responseFileName);
 
-        var tr = new trm.TaskRunner('AzureCLI',false,true,true);
+        var tr = new trm.TaskRunner('AzureCLI', false, false, true);
         tr.setInput('scriptLocation', 'inlineScript');
         tr.setInput('inlineScript', 'console.log("test");');
         tr.setInput('cwd', 'fake/wd');
@@ -175,7 +175,7 @@ describe('AzureCLI Suite', function () {
         addSubscriptionObjectJson(responseFileName, publishsettingFileName);
         setResponseFile(responseFileName);
 
-        var tr = new trm.TaskRunner('AzureCLI',false,true,true);
+        var tr = new trm.TaskRunner('AzureCLI', false, false, true);
         tr.setInput('scriptLocation', 'inlineScript');
         tr.setInput('inlineScript', 'console.log("test");');
         tr.setInput('cwd', 'fake/wd');
@@ -227,7 +227,7 @@ describe('AzureCLI Suite', function () {
         addInlineObjectJson(responseFileName, inlineScriptName);
         setResponseFile(responseFileName);
 
-        var tr = new trm.TaskRunner('AzureCLI',false,true,true);
+        var tr = new trm.TaskRunner('AzureCLI', false, false, true);
         tr.setInput('scriptLocation', 'inlineScript');
         tr.setInput('inlineScript', 'console.log("test");');
         tr.setInput('cwd', 'fake/wd');
@@ -298,7 +298,7 @@ describe('AzureCLI Suite', function () {
         addSubscriptionObjectJson(responseFileName, publishsettingFileName)
         setResponseFile(responseFileName);
 
-        var tr = new trm.TaskRunner('AzureCLI',false,true,true);
+        var tr = new trm.TaskRunner('AzureCLI', false, false, true);
         tr.setInput('scriptLocation', 'scriptPath');
         tr.setInput('scriptPath', 'script.sh');
         tr.setInput('cwd', 'fake/wd');
@@ -369,7 +369,7 @@ describe('AzureCLI Suite', function () {
         addSubscriptionObjectJson(responseFileName, publishsettingFileName);
         setResponseFile(responseFileName);
 
-        var tr = new trm.TaskRunner('AzureCLI',false,true,true);
+        var tr = new trm.TaskRunner('AzureCLI', false, false, true);
         tr.setInput('scriptLocation', 'scriptPath');
         tr.setInput('scriptPath', 'scriptfail.sh');
         tr.setInput('cwd', 'fake/wd');
@@ -394,7 +394,7 @@ describe('AzureCLI Suite', function () {
         addSubscriptionObjectJson(responseFileName, publishsettingFileName);
         setResponseFile(responseFileName);
 
-        var tr = new trm.TaskRunner('AzureCLI',false,true,true);
+        var tr = new trm.TaskRunner('AzureCLI', false, false, true);
         tr.setInput('scriptLocation', 'scriptPath');
         tr.setInput('scriptPath', 'scriptfail.bat');
         tr.setInput('cwd', 'fake/wd');
