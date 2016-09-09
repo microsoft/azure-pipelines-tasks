@@ -36,6 +36,7 @@ try {
     var runInParallel: boolean = tl.getBoolInput('runInParallel');
     var tiaEnabled = tl.getVariable('tia.enabled');
     var fileLevel = tl.getVariable('tia.filelevel');
+    var tiaRebaseLimit = tl.getVariable('tia.rebaselimit');
     var sourcesDir = tl.getVariable('build.sourcesdirectory');
 
 
@@ -213,10 +214,10 @@ function publishCodeChanges(): Q.Promise<string> {
     var endTime : number;
     var elapsedTime: number;
     var defer = Q.defer<string>();
-
-    if (!fileLevel)
-    {
-        fileLevel = "true";
+    
+    var newprovider = "true";
+    if (getTIALevel() == 'method') {
+        newprovider = "false";
     }
 
     var selectortool = tl.createToolRunner(getTestSelectorLocation());
@@ -227,7 +228,10 @@ function publishCodeChanges(): Q.Promise<string> {
     selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
     selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
     selectortool.arg("/SourcesDir:" + sourcesDir);
-    selectortool.arg("/newprovider:" + fileLevel.toUpperCase());
+    selectortool.arg("/newprovider:" + newprovider);
+    if (tiaRebaseLimit) {
+        selectortool.arg("/RebaseLimit:" + tiaRebaseLimit);
+    }
 
     selectortool.exec()
         .then(function(code) {
@@ -279,37 +283,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
             .then(function(status) {
                 generateResponseFile()
                     .then(function (responseFile) {
-                        if (isNonEmptyResponseFile(responseFile)) {
-                            updateResponseFile(getVstestArguments(settingsFile, true), responseFile)
-                                .then(function (updatedFile) {
-                                    executeVstest(testResultsDirectory, settingsFile, vsVersion, ["@" + updatedFile])
-                                        .then(function (code) {
-                                            defer.resolve(code);
-                                        })
-                                        .fail(function (code) {
-                                            defer.resolve(code);
-                                        })
-                                        .finally(function () {
-                                            tl.debug("Deleting the response file " + responseFile)
-                                            tl.rmRF(responseFile, true);
-                                        });
-                                })
-                                .fail(function (err) {
-                                    tl.error(err);
-                                    tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', responseFile));
-                                    executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
-                                        .then(function (code) {
-                                            defer.resolve(code);
-                                        })
-                                        .fail(function (code) {
-                                            defer.resolve(code);
-                                        }).finally(function () {
-                                            tl.debug("Deleting the response file " + responseFile)
-                                            tl.rmRF(responseFile, true);
-                                        });
-                                });
-                        }
-                        else {
+                        if (isEmptyResponseFile(responseFile)) {
                             tl.debug("Empty response file detected. All tests will be executed.");
                             executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
                                 .then(function (code) {
@@ -323,6 +297,47 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                     tl.rmRF(responseFile, true);
                                 });
                         }
+                        else
+                        {
+                            responseContainsNoTests(responseFile)
+                                .then(function (noTestsAvailable) {
+                                    if (noTestsAvailable) {
+                                        tl.debug("No tests impacted. Not running any tests.");
+                                        tl.debug("Deleting the response file " + responseFile)
+                                        tl.rmRF(responseFile, true);
+                                    }
+                                    else {
+                                        updateResponseFile(getVstestArguments(settingsFile, true), responseFile)
+                                            .then(function (updatedFile) {
+                                                executeVstest(testResultsDirectory, settingsFile, vsVersion, ["@" + updatedFile])
+                                                    .then(function (code) {
+                                                        defer.resolve(code);
+                                                    })
+                                                    .fail(function (code) {
+                                                        defer.resolve(code);
+                                                    })
+                                                    .finally(function () {
+                                                        tl.debug("Deleting the response file " + responseFile)
+                                                        tl.rmRF(responseFile, true);
+                                                    });
+                                            })
+                                            .fail(function (err) {
+                                                tl.error(err);
+                                                tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', responseFile));
+                                                executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
+                                                    .then(function (code) {
+                                                        defer.resolve(code);
+                                                    })
+                                                    .fail(function (code) {
+                                                        defer.resolve(code);
+                                                    }).finally(function () {
+                                                        tl.debug("Deleting the response file " + responseFile)
+                                                        tl.rmRF(responseFile, true);
+                                                    });
+                                            });
+                                    }
+                                });                           
+                        }                        
                     })
                     .fail(function (err) {
                         tl.error(err);
@@ -1065,11 +1080,11 @@ function pathExistsAsDirectory(path: string) {
     return tl.exist(path) && tl.stats(path).isDirectory();
 }
 
-function isNonEmptyResponseFile(responseFile: string): boolean {
+function isEmptyResponseFile(responseFile: string): boolean {
     if (pathExistsAsFile(responseFile) && tl.stats(responseFile).size) {
-        return true;
+        return false;
     }
-    return false;
+    return true;
 }
 
 function isTiaAllowed(): boolean {
@@ -1081,8 +1096,19 @@ function isTiaAllowed(): boolean {
 
 function getTIALevel()
 {
-    if (fileLevel && fileLevel.toUpperCase() == "TRUE") {
-        return "file";
+    if (fileLevel && fileLevel.toUpperCase() == "FALSE") {
+        return "method";
     }
-    return "method";
+    return "file";
+}
+
+function responseContainsNoTests(filePath: string): Q.Promise<boolean> {
+    return readFileContents(filePath, "utf-8").then(function(resp) {
+        if (resp == "/Tests:") {
+            return true;
+        }
+        else {
+            return false;
+        }
+    });
 }
