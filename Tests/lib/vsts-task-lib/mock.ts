@@ -28,15 +28,15 @@ export function getResponse(cmd: string, key: string): any {
         // try Searching for wildcards
         var values = Object.keys(answers[cmd]);
         var temp = key;
-        var resultOfMatching = null;
+        var isAMatch = null;
         var compareResult = null;
         values.forEach(function (value) {
-            resultOfMatching = key.match(value);
-            if (resultOfMatching) {
-                if((compareResult && resultOfMatching[0].length > compareResult.length) || !compareResult)
+            isAMatch = key.match(value);
+            if (isAMatch) {
+                if((compareResult && isAMatch[0].length > compareResult.length) || !compareResult)
                 {
                     temp = value;
-                    compareResult = resultOfMatching[0];
+                    compareResult = isAMatch[0];
                 }
             }
         });

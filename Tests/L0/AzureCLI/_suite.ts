@@ -131,7 +131,7 @@ describe('AzureCLI Suite', function () {
                 deleteSubscriptionObjectJson(responseFileName, publishsettingFileName)
                 assert(tr.ran('/usr/local/bin/azure account clear -s sName'), 'it should have logged out of azure');
                 assert(tr.ran('/usr/local/bin/azure config mode asm'), 'it should have set the mode to asm');
-                assert(tr.invokedToolCount == 5, 'should have only run ShellScript');
+                assert(tr.invokedToolCount == 5, 'should have only run Batch Script');
                 assert(tr.stderr.length == 0, 'should have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
                 done();
@@ -189,7 +189,7 @@ describe('AzureCLI Suite', function () {
                 deleteInlineObjectJson(responseFileName, inlineScriptName);
                 assert(tr.ran('/usr/local/bin/azure account clear -s sName'), 'it should have logged out of azure');
                 assert(tr.ran('/usr/local/bin/azure config mode asm'), 'it should have set the mode to asm');
-                assert(tr.invokedToolCount == 5, 'should have only run ShellScript');
+                assert(tr.invokedToolCount == 5, 'should have only run Batch Script');
                 assert(tr.stderr.length == 0, 'should have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
                 done();
