@@ -201,7 +201,7 @@ describe('AzureCLI Suite', function () {
     it('successfully login azure RM and run shell script (scriptPath)', (done) => {
         setResponseFile('azureclitaskPass.json');
 
-       var tr = new trm.TaskRunner('AzureCLI',false,true,false);
+       var tr = new trm.TaskRunner('AzureCLI', false, false ,false);
         tr.setInput('scriptLocation', 'scriptPath');
         tr.setInput('scriptPath', 'script.sh');
         tr.setInput('cwd', 'fake/wd');
