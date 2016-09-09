@@ -79,7 +79,7 @@ export class CoberturaMavenCodeCoverageEnabler extends cc.CoberturaCodeCoverageE
         return Q.allSettled([ccPluginData, reportContent])
             .then(function (resp) {
                 util.addPropToJson(pluginsNode, "plugin", resp[0].value.plugin);
-                util.addPropToJson(buildJsonContent.project, "reporting", resp[1].value);
+                util.addPropToJson(buildJsonContent.project.reporting, "plugins", resp[1].value);
                 tl.debug("Final buildContent: " + buildJsonContent);
                 return Q.resolve(buildJsonContent);
             });
