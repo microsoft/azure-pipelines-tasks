@@ -32,6 +32,39 @@ var reportPOMFile: string = null;
 var execFileJacoco: string = null;
 var ccReportTask: string = null;
 
+var isWindows = os.type().match(/^Win/);
+
+function readJavaHomeFromRegistry(jdkVersion: string, arch: string): string {
+    let javaHome = null;
+
+    if (isWindows) {
+        let reg = tl.tool('reg');
+        reg.arg(['query', `HKLM\\SOFTWARE\\JavaSoft\\Java Development Kit\\${jdkVersion}`, "/v", "JavaHome"]);
+        if (arch.toLowerCase() === "x86") {
+            reg.arg("/reg:32");
+        } else {
+            reg.arg("/reg:64");
+        }
+
+        let result = reg.execSync({
+            ignoreReturnCode: true
+        });
+
+        if (result && result.code === 0 && result.stdout) {
+            let regSzIdx = result.stdout.indexOf("REG_SZ");
+            if (regSzIdx > -1) {
+                let output: string[] = result.stdout.split("REG_SZ");
+                if (output.length === 2) {
+                    javaHome = output[1].trim(); // value is what comes after
+                    tl.debug("JAVA_HOME: " + javaHome);
+                }
+            }
+        }
+    }
+
+    return javaHome;
+}
+
 // Determine the version and path of Maven to use
 var mvnExec: string = '';
 if (mavenVersionSelection == 'Path') {
@@ -63,7 +96,7 @@ else {
 }
 
 // On Windows, append .cmd or .bat to the executable as necessary
-if (os.type().match(/^Win/) &&
+if (isWindows &&
     !mvnExec.toLowerCase().endsWith('.cmd') &&
     !mvnExec.toLowerCase().endsWith('.bat')) {
     if (tl.exist(mvnExec + '.cmd')) {
@@ -93,8 +126,14 @@ if (javaHomeSelection == 'JDKVersion') {
         var envName: string = "JAVA_HOME_" + jdkVersion.slice(2) + "_" + jdkArchitecture.toUpperCase();
         specifiedJavaHome = tl.getVariable(envName);
         if (!specifiedJavaHome) {
-            tl.error('Failed to find specified JDK version. Make sure environment variable ' + envName + ' exists and is set to the location of a corresponding JDK.');
-            tl.exit(1);
+            if (isWindows) {
+                // attempt to discover java home property from registry on Windows
+                specifiedJavaHome = readJavaHomeFromRegistry(jdkVersion, jdkArchitecture);
+            }
+
+            if (!specifiedJavaHome) {
+               throw new Error('Failed to find specified JDK version. Make sure environment variable ' + envName + ' exists and is set to the location of a corresponding JDK.');
+            }
         }
     }
 }
@@ -134,7 +173,7 @@ async function execBuild() {
     mvnGetVersion.exec()
         .fail(function (err) {
             console.error("Maven is not installed on the agent");
-            tl.exit(1);  // tl.exit sets the step result but does not stop execution
+            tl.setResult(tl.TaskResult.Failed, "Build failed.");
             process.exit(1);
         })
         .then(function (code) {
@@ -170,6 +209,7 @@ async function execBuild() {
             // The files won't be created if the build failed, and the user should probably fix their build first.
             if (userRunFailed) {
                 console.error('Could not retrieve code analysis results - Maven run failed.');
+                tl.setResult(tl.TaskResult.Failed, "Build failed.");
                 return;
             }
 
@@ -194,10 +234,10 @@ async function execBuild() {
 
             // 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
             if (userRunFailed || codeAnalysisFailed) {
-                tl.exit(1); // Set task failure
+                tl.setResult(tl.TaskResult.Failed, "Build failed.");
             }
             else {
-                tl.exit(0); // Set task success
+                tl.setResult(tl.TaskResult.Succeeded, "Build Succeeded.");
             }
 
             // Do not force an exit as publishing results is async and it won't have finished 

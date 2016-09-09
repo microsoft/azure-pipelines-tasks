@@ -4,6 +4,9 @@
 import assert = require('assert');
 import trm = require('../../lib/taskRunner');
 import path = require('path');
+import os = require('os');
+
+var isWindows = os.type().match(/^Win/);
 
 function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
@@ -224,7 +227,11 @@ describe('ANT Suite', function() {
 
         tr.run()
             .then(() => {
-                assert(tr.invokedToolCount == 0, 'should not have run ANT');
+                if (isWindows) {
+                    assert(tr.invokedToolCount == 1, 'should not have run ANT'); // should have run the reg query toolrunner
+                } else {
+                    assert(tr.invokedToolCount == 0, 'should not have run ANT'); 
+                }
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
                 assert(tr.failed, 'task should have failed');

@@ -63,6 +63,10 @@
         "/home/bin/maven/bin/mvn -f pom.xml package pmd:pmd": {
           "code": 0,
           "stdout": "Maven package and PMD analysis done"
+        },
+        "reg query HKLM\\SOFTWARE\\JavaSoft\\Java Development Kit\\1.5 /v JavaHome /reg:32": {
+            "code": 222,
+            "stdout": ""
         }
     },
     "checkPath": {
