@@ -1,0 +1,143 @@
+/// <reference path="../../../../definitions/Q.d.ts" />
+/// <reference path="../../../../definitions/string.d.ts" />
+/// <reference path="../../../../definitions/vsts-task-lib.d.ts" />
+/// <reference path="../../../../definitions/node.d.ts" />
+
+import * as util from "../utilities";
+import * as tl from "vsts-task-lib/task";
+import * as ccc from "../codecoverageconstants";
+import * as cc from "../codecoverageenabler";
+import * as str from "string";
+import * as Q from "q";
+
+export class CoberturaMavenCodeCoverageEnabler extends cc.CoberturaCodeCoverageEnabler {
+
+    protected includeFilter: string;
+    protected excludeFilter: string;
+    // -----------------------------------------------------
+    // Enable code coverage for Cobertura Maven Builds
+    // - enableCodeCoverage: CodeCoverageProperties  - ccProps
+    // -----------------------------------------------------    
+    public enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<boolean> {
+        let _this = this;
+
+        tl.debug("Input parameters: " + JSON.stringify(ccProps));
+
+        _this.buildFile = ccProps["buildfile"];
+        let classFilter = ccProps["classfilter"];
+
+        let filter = _this.extractFilters(classFilter);
+        _this.excludeFilter = _this.applyFilterPattern(filter.excludeFilter).join(",");
+        _this.includeFilter = _this.applyFilterPattern(filter.includeFilter).join(",");
+
+        return util.readXmlFileAsJson(_this.buildFile)
+            .then(function (resp) {
+                tl.debug("Read XML: " + resp);
+                return _this.addCodeCoveragePluginData(resp);
+            })
+            .thenResolve(true);
+    }
+
+    protected applyFilterPattern(filter: string): string[] {
+        let ccfilter = [];
+
+        if (!util.isNullOrWhitespace(filter)) {
+            str(util.trimToEmptyString(filter)).replaceAll(".", "/").s.split(":").forEach(exFilter => {
+                if (exFilter) {
+                    ccfilter.push(str(exFilter).endsWith("*") ? (exFilter + "/**") : (exFilter + ".class"));
+                }
+            });
+        }
+
+        tl.debug("Applying the filter pattern: " + filter + " op: " + ccfilter);
+        return ccfilter;
+    }
+
+    protected addCodeCoverageNodes(buildJsonContent: any): Q.Promise<any> {
+        let _this = this;
+        let isMultiModule = false;
+
+        if (!buildJsonContent.project) {
+            return Q.reject(tl.loc("InvalidBuildFile"));
+        }
+
+        if (buildJsonContent.project.modules) {
+            tl.debug("Multimodule project detected");
+            isMultiModule = true;
+        }
+
+        if (!buildJsonContent.project.build) {
+            tl.debug("Build tag is not present");
+            buildJsonContent.project.build = {};
+        }
+
+        let buildNode = _this.getBuildDataNode(buildJsonContent);
+        let pluginsNode = _this.getPluginDataNode(buildNode);
+        let ccPluginData = ccc.coberturaMavenEnable(_this.includeFilter, _this.excludeFilter, String(isMultiModule));
+        let reportContent = ccc.coberturaMavenReport();
+
+        return Q.allSettled([ccPluginData, reportContent])
+            .then(function (resp) {
+                util.addPropToJson(pluginsNode, "plugin", resp[0].value.plugin);
+                util.addPropToJson(buildJsonContent.project.reporting, "plugins", resp[1].value);
+                tl.debug("Final buildContent: " + buildJsonContent);
+                return Q.resolve(buildJsonContent);
+            });
+    }
+
+    private getBuildDataNode(buildJsonContent: any): any {
+        let buildNode = null;
+        if (!buildJsonContent.project.build || typeof buildJsonContent.project.build === "string") {
+            buildNode = {};
+            buildJsonContent.project.build = buildNode;
+        }
+
+        if (buildJsonContent.project.build instanceof Array) {
+            if (typeof buildJsonContent.project.build[0] === "string") {
+                buildNode = {};
+                buildJsonContent.project.build[0] = buildNode;
+            } else {
+                buildNode = buildJsonContent.project.build[0];
+            }
+        }
+        return buildNode;
+    }
+
+    private getPluginDataNode(buildNode: any): any {
+        let pluginsNode = {};
+        if (buildNode.pluginManagement) {
+            if (typeof buildNode.pluginManagement === "string") {
+                buildNode.pluginManagement = {};
+            }
+            if (buildNode.pluginManagement instanceof Array) {
+                pluginsNode = buildNode.pluginManagement[0].plugins;
+            } else {
+                pluginsNode = buildNode.pluginManagement.plugins;
+            }
+        } else {
+            if (!buildNode.plugins || typeof buildNode.plugins === "string") {
+                buildNode.plugins = {};
+            }
+            if (buildNode.plugins instanceof Array) {
+                if (typeof buildNode.plugins[0] === "string") {
+                    pluginsNode = {};
+                    buildNode.plugins[0] = pluginsNode;
+                } else {
+                    pluginsNode = buildNode.plugins[0];
+                }
+            } else {
+                pluginsNode = buildNode.plugins;
+            }
+        }
+        return pluginsNode;
+    }
+
+    protected addCodeCoveragePluginData(pomJson: any): Q.Promise<void> {
+        let _this = this;
+        tl.debug("Adding coverage plugin data");
+        return _this.addCodeCoverageNodes(pomJson)
+            .then(function (buildContent) {
+                return util.writeJsonAsXmlFile(_this.buildFile, buildContent);
+            });
+    }
+}
