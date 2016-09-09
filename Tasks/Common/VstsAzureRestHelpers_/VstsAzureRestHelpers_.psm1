@@ -504,7 +504,19 @@ function Get-AzureSqlDatabaseServerResourceId
     $uri = "$script:azureRmUri/subscriptions/$subscriptionId/resources?api-version=$apiVersion"
     $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
-    $ResourceDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+    $proxyUri = Get-ProxyUri $uri
+    $ResourceDetails = $null
+    if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+    {
+        $ResourceDetails=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType
+        Write-Verbose "No Proxy settings"
+    }
+    else
+    {
+        $ResourceDetails=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
+        Write-Verbose "Using Proxy settings"
+    }
+
     foreach ($resourceDetail in $ResourceDetails.Value)
     {
         if ($resourceDetail.name -eq $serverName -and $resourceDetail.type -eq $serverType)
@@ -540,18 +552,37 @@ function Add-LegacyAzureSqlServerFirewall
     $body = $body | ConvertTo-JSON
     $headers = @{"x-ms-version"=$apiVersion}
 
+    $proxyUri = Get-ProxyUri $uri
     # Get Certificate or bearer token and call Rest API
     if($endpoint.Auth.Scheme -eq $certificateConnection)
     {
         $certificate = Get-Certificate $endpoint
-        Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Body $body -Certificate $certificate -ContentType $script:jsonContentType
+        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+        {
+            Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Body $body -Certificate $certificate -ContentType $script:jsonContentType
+            Write-Verbose "No Proxy settings"
+        }
+        else
+        {
+            Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Body $body -Certificate $certificate -ContentType $script:jsonContentType -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
+            Write-Verbose "Using Proxy settings"
+        }
     }
     else
     {
         $accessToken = Get-UsernamePasswordAccessToken $endpoint
         $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
 
-        Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Body $body -ContentType $script:jsonContentType
+        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+        {
+            Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Body $body -ContentType $script:jsonContentType
+            Write-Verbose "No Proxy settings"
+        }
+        else
+        {
+            Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Body $body -ContentType $script:jsonContentType -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
+            Write-Verbose "Using Proxy settings"
+        }
     }
 }
 
@@ -577,8 +608,19 @@ function Add-AzureRmSqlServerFirewall
         }"
 
     $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
+    $proxyUri = Get-ProxyUri $uri
 
-    Invoke-RestMethod -Uri $uri -Method PUT -Headers $headers -Body $body -ContentType $script:jsonContentType
+    if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+    {
+        Invoke-RestMethod -Uri $uri -Method PUT -Headers $headers -Body $body -ContentType $script:jsonContentType
+        Write-Verbose "No Proxy settings"
+    }
+    else
+    {
+        Invoke-RestMethod -Uri $uri -Method PUT -Headers $headers -Body $body -ContentType $script:jsonContentType -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
+        Write-Verbose "Using Proxy settings"
+    }
+
 }
 
 function Remove-LegacyAzureSqlServerFirewall
@@ -594,18 +636,39 @@ function Remove-LegacyAzureSqlServerFirewall
 
     $headers = @{"x-ms-version"=$apiVersion}
 
+    $proxyUri = Get-ProxyUri $uri
+
     # Get Certificate or PS Credential & Call Invoke
     if($endpoint.Auth.Scheme -eq $certificateConnection)
     {
         $certificate = Get-Certificate $endpoint
-        Invoke-RestMethod -Uri $uri -Method Delete -Headers $headers -Certificate $certificate
+        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+        {
+            Invoke-RestMethod -Uri $uri -Method Delete -Headers $headers -Certificate $certificate
+            Write-Verbose "No Proxy settings"
+        }
+        else
+        {
+            Invoke-RestMethod -Uri $uri -Method Delete -Headers $headers -Certificate $certificate -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
+            Write-Verbose "Using Proxy settings"
+        }
     }
     else
     {
         $accessToken = Get-UsernamePasswordAccessToken $endpoint
         $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
 
-        Invoke-RestMethod -Uri $uri -Method Delete -Headers $headers
+        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+        {
+            Invoke-RestMethod -Uri $uri -Method Delete -Headers $headers
+            Write-Verbose "No Proxy settings"
+        }
+        else
+        {
+            Invoke-RestMethod -Uri $uri -Method Delete -Headers $headers -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
+            Write-Verbose "Using Proxy settings"
+        }
+
     }
 }
 
@@ -624,7 +687,18 @@ function Remove-AzureRmSqlServerFirewall
     $uri = "$script:azureRmUri/$azureResourceId/firewallRules/$firewallRuleName\?api-version=$apiVersion"
     $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
-    Invoke-RestMethod -Uri $uri -Method Delete -Headers $headers
+    $proxyUri = Get-ProxyUri $uri
+
+    if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+    {
+        Invoke-RestMethod -Uri $uri -Method Delete -Headers $headers
+        Write-Verbose "No Proxy settings"
+    }
+    else
+    {
+        Invoke-RestMethod -Uri $uri -Method Delete -Headers $headers -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
+        Write-Verbose "Using Proxy settings"
+    }
 
 }
 
