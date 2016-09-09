@@ -167,33 +167,11 @@ function Create-AzureResourceGroup
         if($deploymentMode -eq "Validation") 
         {
             #Testing Deploying CSM Template
-            $validationDeploymentDetails = Validation-Deploy-AzureResourceGroup -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -overrideParameters $overrideParameters 
+            $azureResourceGroupValidationError = Validation-Deploy-AzureResourceGroup -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -overrideParameters $overrideParameters 
             
-            $azureResourceGroupValidation = $validationDeploymentDetails["azureResourceGroupValidation"]
-            $validationError = $validationDeploymentDetails["validationError"]
-            
-            if ($azureResourceGroupValidation)
+            if ($azureResourceGroupValidationError)
             {
-                if($validationError)
-                {
-                    Write-TaskSpecificTelemetry "VALIDATE_Deployment_CSMDeploymentFailed"
-                    
-                    foreach($error in $validationError)
-                    {
-                        Write-Error $error -ErrorAction Continue
-                    }
-                    
-                    throw (Get-VstsLocString -Key "ARG_ValidationFailed" -ArgumentList $resourceGroupName)
-                }
-                else
-                {
-                    Write-Host (Get-VstsLocString -Key "ARG_ValidationSucceeded" -ArgumentList $resourceGroupName)
-                }
-            }
-            if($validationError)
-            {
-                Write-TaskSpecificTelemetry "VALIDATE_Deployment_CSMDeploymentFailed"
-                Throw $validationError
+                throw (Get-VstsLocString -Key "ARG_ValidationFailed" -ArgumentList $resourceGroupName)
             }
             
             Write-Host "Template is valid."
