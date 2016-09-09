@@ -117,8 +117,7 @@ if (javaHomeSelection == 'JDKVersion') {
             }
 
             if (!specifiedJavaHome) { 
-                tl.error('Failed to find specified JDK version. Please make sure environment variable ' + envName + ' exists and is set to the location of a corresponding JDK.');
-                tl.exit(1);
+                throw new Error('Failed to find specified JDK version. Please make sure environment variable ' + envName + ' exists and is set to the location of a corresponding JDK.');
             }
         }
     }
@@ -145,17 +144,23 @@ async function execBuild() {
     gb.exec()
         .then(function (code) {
             gradleResult = code;
+            tl.debug(`exit code: ${code}`);
             publishTestResults(publishJUnitResults, testResultsFiles);
             publishCodeCoverage(isCodeCoverageOpted);
             return processCodeAnalysisResults();
         })
         .then(() => {
-            tl.exit(gradleResult);
+            tl.debug(`Gradle result: ${gradleResult}`);
+            if (gradleResult === 0) {
+                tl.setResult(tl.TaskResult.Succeeded, "Build succeeded.");
+            } else {
+                tl.setResult(tl.TaskResult.Failed, "Build failed.");
+            }
         })
         .fail(function (err) {
             console.error(err);
             tl.debug('taskRunner fail');
-            tl.exit(1);
+            tl.setResult(tl.TaskResult.Failed, err);
         });
 }
 
