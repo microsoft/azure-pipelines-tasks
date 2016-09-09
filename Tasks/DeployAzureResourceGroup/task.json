@@ -139,20 +139,6 @@
             "visibleRule": "action = Create Or Update Resource Group"
         },
         {
-            "name": "deploymentMode",
-            "type": "pickList",
-            "label": "Deployment Mode",
-            "defaultValue": "Incremental",
-            "required": true,
-            "helpMarkDown": "Specify the deployment mode for Azure Resource Manager template.",
-            "options": {
-                "Validation": "Validation Only",
-                "Incremental" : "Incremental Mode",
-                "Complete" : "Complete Mode"
-                },
-            "visibleRule": "action = Create Or Update Resource Group"
-        },
-        {
             "name": "csmFile",
             "type": "filePath",
             "label": "Template",

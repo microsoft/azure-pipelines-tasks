@@ -29,35 +29,12 @@ function Create-AzureResourceGroupIfNotExist
     }
 }
 
-function Validation-Deploy-AzureResourceGroup
-{
-    param([string]$csmFile,
-          [string]$csmParametersFile,
-          [string]$resourceGroupName,
-          [string]$overrideParameters
-          )
-    
-    Write-Host "[Azure Resource Manager]Validating Azure Resource Group Deployment Template"
-
-    if (!$csmParametersFile)
-    {
-        $azureResourceGroupValidationError = Test-AzureRMResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile $csmFile $overrideParameters -Verbose -ErrorAction silentlycontinue
-    }
-    else
-    {
-        $azureResourceGroupValidationError = Test-AzureRmResourceGroupDeployment -ResourceGroupName $azureResourceName -TemplateFile $csmFile -TemplateParameterFile $csmParametersFile $overrideParameters -Verbose -ErrorAction silentlyContinue
-    }
-
-    $azureResourceGroupValidationError
-}
-
 function Deploy-AzureResourceGroup
 {
     param([string]$csmFile,
           [string]$csmParametersFile,
           [string]$resourceGroupName,
-          [string]$overrideParameters,
-          [string]$deploymentMode)
+          [string]$overrideParameters)
 
     $deploymentName = [System.IO.Path]::GetFileNameWithoutExtension($csmFile) + '-' + ((Get-Date).ToUniversalTime()).ToString('yyyyMMdd-HHmm')
 
@@ -65,11 +42,11 @@ function Deploy-AzureResourceGroup
 
     if (!$csmParametersFile)
     {
-        $finalCommand = "`$azureResourceGroupDeployment = New-AzureRMResourceGroupDeployment -Name `"$deploymentName`" -ResourceGroupName `"$resourceGroupName`" -Mode `"$deploymentMode`" -TemplateFile `"$csmFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError -force"
+        $finalCommand = "`$azureResourceGroupDeployment = New-AzureRMResourceGroupDeployment -Name `"$deploymentName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
     }
     else
     {
-        $finalCommand = "`$azureResourceGroupDeployment = New-AzureRMResourceGroupDeployment -Name `"$deploymentName`" -ResourceGroupName `"$resourceGroupName`" -Mode `"$deploymentMode`" -TemplateFile `"$csmFile`" -TemplateParameterFile `"$csmParametersFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError -force"
+        $finalCommand = "`$azureResourceGroupDeployment = New-AzureRMResourceGroupDeployment -Name `"$deploymentName`" -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" -TemplateParameterFile `"$csmParametersFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue -ErrorVariable deploymentError"
     }
     Write-Verbose "$finalCommand"
     Invoke-Expression -Command $finalCommand
