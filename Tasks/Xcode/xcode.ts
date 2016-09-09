@@ -101,7 +101,7 @@ async function run() {
             var removeProfile : boolean = tl.getBoolInput('removeProfile', false);
 
             if(tl.filePathSupplied('p12') && tl.exist(p12)) {
-                p12 = path.posix.resolve(workingDir, p12);
+                p12 = tl.resolve(workingDir, p12);
                 var keychain : string = path.join(workingDir, '_xcodetasktmp.keychain');
                 var keychainPwd : string = '_xcodetask_TmpKeychain_Pwd#1';
 
@@ -140,6 +140,9 @@ async function run() {
         }
 
         //--- Enable Xcpretty formatting if using xcodebuild ---
+        if(useXctool && useXcpretty) {
+            tl.warning(tl.loc('XcodebuildRequiredForXcpretty'));
+        }
         if(!useXctool && useXcpretty) {
             var xcPrettyPath: string = tl.which('xcpretty', true);
             var xcPrettyTool: ToolRunner = tl.tool(xcPrettyPath);
@@ -159,14 +162,21 @@ async function run() {
 
         if (publishResults)
         { 
-            if(useXctool && xctoolReporter && 0 !== xctoolReporter.length) {
-                var xctoolReporterString = xctoolReporter.split(":");
-                if (xctoolReporterString && xctoolReporterString.length === 2)
-                {
-                    testResultsFiles = path.posix.resolve(workingDir, xctoolReporterString[1].trim());
+            if(useXctool) {
+             if(xctoolReporter && 0 !== xctoolReporter.length) {
+                 var xctoolReporterString = xctoolReporter.split(":");
+                 if (xctoolReporterString && xctoolReporterString.length === 2) {
+                     testResultsFiles = tl.resolve(workingDir, xctoolReporterString[1].trim());
+                 }
+             } else {
+                 tl.warning(tl.loc('UseXcToolForTestPublishing'))
+             }
+            } else if(!useXctool) {
+                if(!useXcpretty) {
+                    tl.warning(tl.loc('UseXcprettyForTestPublishing'));
+                } else {
+                    testResultsFiles = tl.resolve(workingDir, '**/build/reports/junit.xml');
                 }
-            } else if(!useXctool && useXcpretty) {
-                testResultsFiles = path.posix.resolve(workingDir, '**/build/reports/junit.xml');
             }
 
             if(testResultsFiles && 0 !== testResultsFiles.length) {

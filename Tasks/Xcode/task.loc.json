@@ -247,6 +247,8 @@
     "MultipleWorkspacesFound": "ms-resource:loc.messages.MultipleWorkspacesFound",
     "WorkspaceDoesNotExist": "ms-resource:loc.messages.WorkspaceDoesNotExist",
     "UseXcToolForTestPublishing": "ms-resource:loc.messages.UseXcToolForTestPublishing",
+    "UseXcprettyForTestPublishing": "ms-resource:loc.messages.UseXcprettyForTestPublishing",
+    "XcodebuildRequiredForXcpretty": "ms-resource:loc.messages.XcodebuildRequiredForXcpretty",
     "NoTestResultsFound": "ms-resource:loc.messages.NoTestResultsFound",
     "XcodeSuccess": "ms-resource:loc.messages.XcodeSuccess",
     "TempKeychainDeleteFailed": "ms-resource:loc.messages.TempKeychainDeleteFailed",
