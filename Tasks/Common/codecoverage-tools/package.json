@@ -1,0 +1,17 @@
+{
+    "name": "codecoverage-tools",
+    "version": "1.0.0",
+    "author": "Microsoft Corporation",
+    "description": "Build with Gradle",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
+    },
+    "dependencies": {
+        "xml2js": "^0.4.17",
+        "fs-extra": "^0.30.0",
+        "os": "^0.1.1",
+        "string": "^3.3.1",
+        "vsts-task-lib": "0.9.7"
+    }
+}

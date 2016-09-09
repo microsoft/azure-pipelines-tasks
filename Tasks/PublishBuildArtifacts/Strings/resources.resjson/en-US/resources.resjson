@@ -11,5 +11,6 @@
   "loc.input.help.ArtifactType": "The type of artifact to create.",
   "loc.input.label.TargetPath": "Path",
   "loc.input.help.TargetPath": "The file share to which to copy the files",
+  "loc.messages.ErrorFileShareLinux": "Cannot publish artifacts from an OSX or Linux agent to a file share. You can change the artifact type to server or use a Windows agent.",
   "loc.messages.PublishBuildArtifactsFailed": "Publish build artifacts failed with error: %s"
 }

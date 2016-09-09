@@ -8,9 +8,7 @@ import util = require('util');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
 import tl = require('vsts-task-lib/task');
 
-import {ModuleAnalysis} from './moduleanalysis';
 import {SonarQubeEndpoint} from './SonarQube/endpoint';
-import codeAnalysis = require('./mavencodeanalysis');
 import sqCommon = require('./SonarQube/common');
 
 // Applies any applicable SonarQube arguments to the supplied ToolRunner.
