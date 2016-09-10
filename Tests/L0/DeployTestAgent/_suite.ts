@@ -40,5 +40,23 @@ describe('Deploy Test Agent Suite', function () {
         it('(DeployTestAgent-VerifyParameters) verifies if deploy test agent is called with the right parameters', (done) => {
             psr.run(path.join(__dirname, 'VerifyParameters.ps1'), done);
         })
+        it('(LocateTestAgentHelper-32bit) verifies if test agent locate library is finding the 32bit reg key', (done) => {
+            psr.run(path.join(__dirname, 'LocateTestAgentTests', 'VerifyTestAgentFor32BitReg.ps1'), done);
+        })
+        it('(LocateTestAgentHelper-64bit) verifies if test agent locate library is finding the 64bit reg key', (done) => {
+            psr.run(path.join(__dirname, 'LocateTestAgentTests', 'VerifyTestAgentFor64BitReg.ps1'), done);
+        })
+        it('(LocateTestAgentHelper-SpecificVersion) verifies if test agent locate library is finding the specific version key', (done) => {
+            psr.run(path.join(__dirname, 'LocateTestAgentTests', 'VerifyTestAgentForSpecificVersion.ps1'), done);
+        })
+        it('(VerifyCheckTestAgentInstallation) verifies if test agent is already installed', (done) => {
+            psr.run(path.join(__dirname, 'VerifyCheckTestAgentInstallation.ps1'), done);
+        })
+        it('(VerifyTestMachinesAreInUse-TA Already Installed) verifies if test agent is already installed and test machine is in use', (done) => {
+            psr.run(path.join(__dirname, 'VerifyTestMachinesAreInUse.ps1'), done);
+        })
+        it('(VerifyTestMachinesAreInUse-WithoutTA) verifies if test agent is already installed and test machine is in use', (done) => {
+            psr.run(path.join(__dirname, 'VerifyTestMachinesAreInUse.WithoutTA.ps1'), done);
+        })
     }
 });
