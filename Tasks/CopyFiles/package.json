@@ -1,5 +1,5 @@
 {
   "devDependencies": {
-    "vsts-task-lib": "0.9.13"
+    "vsts-task-lib": "0.9.16"
   }
 }
