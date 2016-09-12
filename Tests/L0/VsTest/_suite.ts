@@ -618,7 +618,7 @@ describe('VsTest Suite', function () {
         tr.setInput('vsTestVersion', '14.0');
         tr.run()
             .then(() => {
-                assert(tr.stdout.indexOf('Access to path some\\illegal\\path\\to\\vstest.console.exe is denied') >= 0);
+                assert(tr.stdout.indexOf('some\\illegal\\path\\to\\vstest.console.exe path does not exist.') >= 0);
                 done();
             })
             .fail((err) => {
