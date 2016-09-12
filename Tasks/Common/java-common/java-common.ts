@@ -37,7 +37,7 @@ function readJavaHomeFromRegistry(jdkVersion: string, arch: string): string {
 }
 
 export function findJavaHome(jdkVersion: string, jdkArch: string): string {
-    tl.debug('Using JDK version to find and set JAVA_HOME');
+    tl.debug(tl.loc('LocateJVMBasedOnVersionAndArch', jdkVersion, jdkArch));
 
     // jdkVersion should be in the form of 1.7, 1.8, or 1.10
     // jdkArchitecture is either x64 or x86
@@ -50,7 +50,7 @@ export function findJavaHome(jdkVersion: string, jdkArch: string): string {
         }
 
         if (!discoveredJavaHome) {
-            throw new Error('Failed to find specified JDK version. Please make sure environment variable ' + envName + ' exists and is set to the location of a corresponding JDK.');
+            throw new Error(tl.loc('FailedToLocateSpecifiedJVM', envName));
         }
     } 
     
