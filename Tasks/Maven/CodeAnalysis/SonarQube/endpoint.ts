@@ -15,6 +15,8 @@ export class SonarQubeEndpoint {
         var genericEndpointName: string = tl.getInput('sqConnectedServiceName');
         var hostUrl = tl.getEndpointUrl(genericEndpointName, false);
 
+        tl.debug(`[SQ] SonarQube endpoint: ${hostUrl}`);
+
         // Currently the username and the password are required, but in the future they will not be mandatory
         // - so not validating the values here
         var hostUsername = SonarQubeEndpoint.getSonarQubeAuthParameter(genericEndpointName, 'username');

@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 7
+    "Patch": 15
   },
   "demands": [
     "Cmd"
@@ -73,12 +73,12 @@
       "name": "verbosity",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.verbosity",
-      "defaultValue": "",
+      "defaultValue": "-",
       "helpMarkDown": "ms-resource:loc.input.help.verbosity",
       "required": "false",
       "groupName": "advanced",
       "options": {
-        "": "-",
+        "-": "-",
         "Quiet": "Quiet",
         "Normal": "Normal",
         "Detailed": "Detailed"
@@ -115,12 +115,12 @@
     "PackagesPublishedSuccessfully": "ms-resource:loc.messages.PackagesPublishedSuccessfully",
     "PackagesFailedToPublish": "ms-resource:loc.messages.PackagesFailedToPublish",
     "ConnectingAs": "ms-resource:loc.messages.ConnectingAs",
-    "LegacyNuGetHint": "ms-resource:loc.messages.LegacyNuGetHint",
     "BuildIdentityPermissionsHint": "ms-resource:loc.messages.BuildIdentityPermissionsHint",
     "NoCredProviderOnAgent": "ms-resource:loc.messages.NoCredProviderOnAgent",
     "NotARegularFile": "ms-resource:loc.messages.NotARegularFile",
     "UnknownFeedType": "ms-resource:loc.messages.UnknownFeedType",
     "CouldNotFindNuGetService": "ms-resource:loc.messages.CouldNotFindNuGetService",
+    "NGCommon_DetectedNuGetVersion": "ms-resource:loc.messages.NGCommon_DetectedNuGetVersion",
     "NGCommon_IgnoringNuGetExtensionsPath": "ms-resource:loc.messages.NGCommon_IgnoringNuGetExtensionsPath",
     "NGCommon_DetectedNuGetExtensionsPath": "ms-resource:loc.messages.NGCommon_DetectedNuGetExtensionsPath",
     "NGCommon_UnableToFindTool": "ms-resource:loc.messages.NGCommon_UnableToFindTool",

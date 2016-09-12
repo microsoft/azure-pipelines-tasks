@@ -53,33 +53,6 @@ export class VstsServerUtils {
     }
 
     /**
-     * If enabled, fails the build in response to a quality gate failure.
-     * @param sqRunSettings SonarQubeRunSettings object for the applicable run or null if this is a PR build and the object could not be created
-     * @param sqMetrics     SonarQube metrics for the applicable run
-     * @returns {Promise<void>} Promise resolved when action completes (NB: Setting build result to failed results in procees exit)
-     */
-    public /* for test */ static breakBuildIfQualityGateFails(sqRunSettings:SonarQubeRunSettings, sqMetrics:SonarQubeMetrics):Q.Promise<void> {
-    // During a pull request build, data necessary to create SQRunSettings is not available
-    if (sqRunSettings == null || VstsServerUtils.isPrBuild()) {
-        console.log(tl.loc('sqAnalysis_IsPullRequest_SkippingBuildBreaker'));
-        return Q.when<void>(null);
-    }
-
-    // Necessary data is not available during a pull request build
-    return sqMetrics.getTaskResultFromQualityGateStatus()
-            .then((taskResult:TaskResult) => {
-                if (taskResult == TaskResult.Failed) {
-// Looks like: "The SonarQube quality gate associated with this build has failed. For more details see http://mysonarqubeserver"
-                    tl.setResult(1, tl.loc('sqAnalysis_BuildBrokenDueToQualityGateFailure', sqRunSettings.dashboardUrl));
-                    return;
-                }
-
-                // Looks like: "The SonarQube quality gate associated with this build has passed (status OK)"
-                console.log(tl.loc('sqAnalysis_QualityGatePassed', sqMetrics.getQualityGateStatus()));
-            });
-    }
-
-    /**
      * Handle the creation, saving and upload of the SonarQube build summary.
      * @param sqRunSettings SonarQubeRunSettings object for the applicable run or null if this is a PR build and the object could not be created
      * @param sqMetrics     SonarQube metrics for the applicable run
@@ -103,6 +76,33 @@ export class VstsServerUtils {
     }
 
     /**
+     * If enabled, fails the build in response to a quality gate failure.
+     * @param sqRunSettings SonarQubeRunSettings object for the applicable run or null if this is a PR build and the object could not be created
+     * @param sqMetrics     SonarQube metrics for the applicable run
+     * @returns {Promise<void>} Promise resolved when action completes (NB: Setting build result to failed results in procees exit)
+     */
+    private static breakBuildIfQualityGateFails(sqRunSettings:SonarQubeRunSettings, sqMetrics:SonarQubeMetrics):Q.Promise<void> {
+        // During a pull request build, data necessary to create SQRunSettings is not available
+        if (sqRunSettings == null || VstsServerUtils.isPrBuild()) {
+            console.log(tl.loc('sqAnalysis_IsPullRequest_SkippingBuildBreaker'));
+            return Q.when<void>(null);
+        }
+
+        // Necessary data is not available during a pull request build
+        return sqMetrics.fetchTaskResultFromQualityGateStatus()
+            .then((taskResult:TaskResult) => {
+                if (taskResult == TaskResult.Failed) {
+// Looks like: "The SonarQube quality gate associated with this build has failed. For more details see http://mysonarqubeserver"
+                    tl.setResult(1, tl.loc('sqAnalysis_BuildBrokenDueToQualityGateFailure', sqRunSettings.dashboardUrl));
+                    return;
+                }
+
+                // Looks like: "The SonarQube quality gate associated with this build has passed (status OK)"
+                console.log(tl.loc('sqAnalysis_QualityGatePassed', sqMetrics.fetchQualityGateStatus()));
+            });
+    }
+
+    /**
      * Creates the string that comprises the build summary text.
      * @param sqRunSettings SonarQubeRunSettings object for the applicable run
      * @param sqMetrics     SonarQube metrics for the applicable run
@@ -118,7 +118,7 @@ export class VstsServerUtils {
      * @param contents   The build summary
      * @returns {string} Full path to the build summary file
      */
-    private static  saveSonarQubeBuildSummary(contents: string): string {
+    private static saveSonarQubeBuildSummary(contents: string): string {
         var filePath:string = path.join(
             VstsServerUtils.getOrCreateSonarQubeStagingDirectory(), 'SonarQubeBuildSummary.md');
         fs.writeFileSync(filePath, contents);
@@ -130,7 +130,7 @@ export class VstsServerUtils {
      * @param buildSummaryFilePath Physical location of the build summary file on disk
      * @param title    Title to be given to the build summary, shown to the user
      */
-    private static  uploadBuildSummary(buildSummaryFilePath:string, title:string):void {
+    private static uploadBuildSummary(buildSummaryFilePath:string, title:string):void {
         tl.debug('Uploading build summary from ' + buildSummaryFilePath);
 
         tl.command('task.addattachment', {
@@ -143,12 +143,17 @@ export class VstsServerUtils {
      * Returns the location of the SonarQube integration staging directory.
      * @returns {string} Full path to the SonarQube staging directory
      */
-    private static  getOrCreateSonarQubeStagingDirectory(): string {
+    private static getOrCreateSonarQubeStagingDirectory(): string {
         var sqStagingDir = path.join(tl.getVariable('build.artifactStagingDirectory'), ".sqAnalysis");
         tl.mkdirP(sqStagingDir);
         return sqStagingDir;
     }
 
+    /**
+     * Utility method, returns true if the given string is undefined, null or has length 0
+     * @param str String to examine
+     * @returns {boolean}
+     */
     private static isNullOrEmpty(str):boolean {
         return str === undefined || str === null || str.length === 0;
     }

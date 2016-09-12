@@ -15,6 +15,7 @@ $location = Get-VstsInput -Name "location"
 $csmFile = Get-VstsInput -Name "csmFile"
 $csmParametersFile = Get-VstsInput -Name "csmParametersFile"
 $overrideParameters = Get-VstsInput -Name "overrideParameters"
+$deploymentMode = Get-VstsInput -Name "deploymentMode"
 $outputVariable = Get-VstsInput -Name "outputVariable"
 $enableDeploymentPrerequisitesForCreate = Get-VstsInput -Name "enableDeploymentPrerequisitesForCreate" -AsBool
 $enableDeploymentPrerequisitesForSelect = Get-VstsInput -Name "enableDeploymentPrerequisitesForSelect" -AsBool
@@ -58,12 +59,11 @@ function Handle-SelectResourceGroupAction
         throw (Get-VstsLocString -Key "ARG_ProvideOutputVariable")
     }
 
-    Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable -enableDeploymentPrerequisites $enableDeploymentPrerequisitesForSelect
+    Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable -enableDeploymentPrerequisites $enableDeploymentPrerequisitesForSelect -endpoint $serviceEndpoint
 }
 
 function Handle-ResourceGroupLifeCycleOperations
 {
-    $serviceEndpoint = Get-VstsEndpoint -Name "$ConnectedServiceName"
     if ($serviceEndpoint.Auth.Scheme -eq 'Certificate')
     {
         Write-TaskSpecificTelemetry "PREREQ_InvalidServiceConnectionType"
@@ -72,15 +72,15 @@ function Handle-ResourceGroupLifeCycleOperations
 
     if( $action -eq "Create Or Update Resource Group" )
     {
-        $azureResourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters
+        $azureResourceGroupDeployment = Create-AzureResourceGroup -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -location $location -overrideParameters $overrideParameters -endpoint $serviceEndpoint -deploymentMode $deploymentMode
 
         if(-not [string]::IsNullOrEmpty($outputVariable))
         {
-            Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable -enableDeploymentPrerequisites $enableDeploymentPrerequisitesForCreate
+            Instantiate-Environment -resourceGroupName $resourceGroupName -outputVariable $outputVariable -enableDeploymentPrerequisites $enableDeploymentPrerequisitesForCreate -endpoint $serviceEndpoint
         }
         elseif($enableDeploymentPrerequisitesForCreate -eq "true")
         {
-            Enable-WinRMHttpsListener -ResourceGroupName $resourceGroupName
+            Enable-WinRMHttpsListener -ResourceGroupName $resourceGroupName -endpoint $serviceEndpoint
         }
     }
     else
@@ -93,9 +93,11 @@ try
 {
     Validate-AzurePowerShellVersion
 
-    $azureUtility = Get-AzureUtility
+    $azureUtility = Get-AzureUtility "$connectedServiceName"
     Write-Verbose "Loading $azureUtility"
     . "$PSScriptRoot\$azureUtility"
+
+    $serviceEndpoint = Get-VstsEndpoint -Name "$connectedServiceName"
 
     switch ($action)
     {

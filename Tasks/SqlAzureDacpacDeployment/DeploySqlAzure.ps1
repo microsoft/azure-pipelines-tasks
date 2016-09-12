@@ -4,7 +4,10 @@ param()
 Trace-VstsEnteringInvocation $MyInvocation
 
 $connectedServiceNameSelector = Get-VstsInput -Name "ConnectedServiceNameSelector" -Require
-$DacpacFile = Get-VstsInput -Name "DacpacFile" -Require
+$TaskNameSelector = Get-VstsInput -Name "TaskNameSelector" -Require
+$DacpacFile = Get-VstsInput -Name "DacpacFile"
+$SqlFile = Get-VstsInput -Name "SqlFile"
+$SqlInline = Get-VstsInput -Name "SqlInline"
 $ServerName = Get-VstsInput -Name  "ServerName" -Require
 $DatabaseName = Get-VstsInput -Name "DatabaseName" -Require
 $connectedServiceName = Get-VstsInput -Name "ConnectedServiceName"
@@ -13,14 +16,15 @@ $SqlUsername = Get-VstsInput -Name "SqlUsername"
 $SqlPassword = Get-VstsInput -Name "SqlPassword"
 $PublishProfile = Get-VstsInput -Name "PublishProfile"
 $AdditionalArguments = Get-VstsInput -Name "AdditionalArguments"
+$SqlAdditionalArguments = Get-VstsInput -Name "SqlAdditionalArguments"
+$InlineAdditionalArguments = Get-VstsInput -Name "InlineAdditionalArguments"
 $IpDetectionMethod = Get-VstsInput -Name "IpDetectionMethod" -Require
 $StartIpAddress = Get-VstsInput -Name "StartIpAddress"
 $EndIpAddress = Get-VstsInput -Name "EndIpAddress"
 $DeleteFirewallRule = Get-VstsInput -Name "DeleteFirewallRule" -Require -AsBool
 
-# Initialize Azure.
-Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-Initialize-Azure
+# Initialize Rest API Helpers.
+Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_
 
 # Import the loc strings.
 Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
@@ -44,12 +48,23 @@ function ThrowIfMultipleFilesOrNoFilePresent($files, $pattern)
     }
 }
 
-Write-Host "DacpacFilePath= Find-VstsFiles LegacyPattern $DacpacFile"
-$DacpacFilePath = Find-VstsFiles LegacyPattern $DacpacFile
-Write-Host "packageFile= $DacpacFilePath"
+if ($TaskNameSelector -eq "DacpacTask")
+{
+    Write-Host "FilePath= Find-VstsFiles LegacyPattern $DacpacFile"
+    $FilePath = Find-VstsFiles LegacyPattern $DacpacFile
+    Write-Host "packageFile= $FilePath"
 
-#Ensure that a single package (.dacpac) file is found
-ThrowIfMultipleFilesOrNoFilePresent -files $DacpacFilePath -pattern $DacpacFile
+    #Ensure that a single package (.dacpac) file is found
+    ThrowIfMultipleFilesOrNoFilePresent -files $FilePath -pattern $DacpacFile
+} ElseIf ($TaskNameSelector -eq "SqlTask")
+{
+    Write-Host "FilePath= Find-VstsFiles LegacyPattern $SqlFile"
+    $FilePath = Find-VstsFiles LegacyPattern $SqlFile
+    Write-Host "packageFile= $FilePath"
+
+    #Ensure that a single .sql file is found
+    ThrowIfMultipleFilesOrNoFilePresent -files $FilePath -pattern $SqlFile
+}
 
 $PublishProfilePath = ""
 if( [string]::IsNullOrWhitespace($PublishProfile) -eq $false -and $PublishProfile -ne $env:SYSTEM_DEFAULTWORKINGDIRECTORY -and $PublishProfile -ne [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\"))
@@ -78,53 +93,105 @@ $endIp = $ipAddress.EndIPAddress
 
 Try
 {
-    # Importing required version of azure cmdlets according to azureps installed on machine
-    $azureUtility = Get-AzureUtility
-
-    Write-Verbose "Loading $azureUtility"
-    . "$PSScriptRoot\$azureUtility"
-
     if ($connectedServiceNameSelector -eq "ConnectedServiceNameARM")
     {
         $connectedServiceName = $connectedServiceNameARM
     }
 
-    # Getting connection type (Certificate/UserNamePassword/SPN) used for the task
-    $connectionType = Get-ConnectionType -connectedServiceName $connectedServiceName
+    # Getting endpoint used for the task
+    $endpoint = Get-Endpoint -connectedServiceName $connectedServiceName
 
     # creating firewall rule for agent on sql server
-    $firewallSettings = Create-AzureSqlDatabaseServerFirewallRule -startIP $startIp -endIP $endIp -serverName $serverFriendlyName -connectionType $connectionType
+    $firewallSettings = Create-AzureSqlDatabaseServerFirewallRule -startIP $startIp -endIP $endIp -serverName $serverFriendlyName -endpoint $endpoint
     Write-Verbose ($firewallSettings | Format-List | Out-String)
 
     $firewallRuleName = $firewallSettings.RuleName
     $isFirewallConfigured = $firewallSettings.IsConfigured
 
-    # getting script arguments to execute sqlpackage.exe
-    $scriptArgument = Get-SqlPackageCommandArguments -dacpacFile $DacpacFilePath -targetMethod "server" -serverName $ServerName -databaseName $DatabaseName `
+    if ($TaskNameSelector -eq "DacpacTask")
+    {
+        # getting script arguments to execute sqlpackage.exe
+        $scriptArgument = Get-SqlPackageCommandArguments -dacpacFile $FilePath -targetMethod "server" -serverName $ServerName -databaseName $DatabaseName `
                                                      -sqlUsername $SqlUsername -sqlPassword $SqlPassword -publishProfile $PublishProfilePath -additionalArguments $AdditionalArguments
 
-    $scriptArgumentToBeLogged = Get-SqlPackageCommandArguments -dacpacFile $DacpacFilePath -targetMethod "server" -serverName $ServerName -databaseName $DatabaseName `
+        $scriptArgumentToBeLogged = Get-SqlPackageCommandArguments -dacpacFile $FilePath -targetMethod "server" -serverName $ServerName -databaseName $DatabaseName `
                                                      -sqlUsername $SqlUsername -sqlPassword $SqlPassword -publishProfile $PublishProfilePath -additionalArguments $AdditionalArguments -isOutputSecure
    
-    Write-Verbose "sqlPackageArguments = $scriptArgumentToBeLogged"
+        Write-Verbose "sqlPackageArguments = $scriptArgumentToBeLogged"
 
-    $SqlPackagePath = Get-SqlPackageOnTargetMachine
+        $SqlPackagePath = Get-SqlPackageOnTargetMachine
 
-    Write-Verbose "Executing SQLPackage.exe"     
+        Write-Verbose "Executing SQLPackage.exe"
+
+        $SqlPackageCommand = "`"$SqlPackagePath`" $scriptArgument"
+        $commandToBeLogged = "`"$SqlPackagePath`" $scriptArgumentToBeLogged"
+
+        Write-Verbose "Executing : $commandToBeLogged"
+
+        Run-Command $SqlPackageCommand
+    }
+    else
+    {
+        $scriptArgument = "Invoke-Sqlcmd -ServerInstance `"$ServerName`" -Database `"$DatabaseName`" -Username `"$SqlUsername`" "
+
+        $commandToRun = $scriptArgument + " -Password `"$SqlPassword`" "
+        $commandToLog = $scriptArgument + " -Password ****** "
+
+        if ($TaskNameSelector -eq "SqlTask")
+        {
+            # Check if file selected is an sql file.
+            $sqlFileExtension = ".sql"
+            if([System.IO.Path]::GetExtension($FilePath) -ne $sqlFileExtension)
+            {
+                Write-Error (Get-VstsLocString -Key "SAD_InvalidSqlFile" -ArgumentList $FilePath)
+            }
+
+            $commandToRun += " -Inputfile `"$FilePath`" " + $SqlAdditionalArguments
+            $commandToLog += " -Inputfile `"$FilePath`" " + $SqlAdditionalArguments
+        }
+        else # inline Sql
+        {
+            $commandToRun += " -Query `"$SqlInline`" " + $InlineAdditionalArguments
+            $commandToLog += " -Query `"$SqlInline`" " + $InlineAdditionalArguments
+        }
+
+        Write-Host $commandToLog
+        Invoke-Expression $commandToRun
+    }
     
-    $SqlPackageCommand = "`"$SqlPackagePath`" $scriptArgument"
-    $commandToBeLogged = "`"$SqlPackagePath`" $scriptArgumentToBeLogged"
+}
+Catch [System.Management.Automation.CommandNotFoundException]
+{
+    if ($_.Exception.CommandName -ieq "Invoke-Sqlcmd")
+    {
+        Write-Host "SQL Powershell Module is not installed on your agent machine. Please follow steps given below to execute this task"  -ForegroundColor Red
+        Write-Host "1. Install PowershellTools & SharedManagementObjects(dependency), from https://www.microsoft.com/en-us/download/details.aspx?id=52676 (2016)"
+        Write-Host "2. Restart agent machine after installing tools to register Module path updates"
+        Write-Host "3. Run Import-Module SQLPS on your agent Powershell prompt. (This step is not required on Powershell 3.0 enabled machines)"
+    }
 
-    Write-Verbose "Executing : $commandToBeLogged" 
-
-    Run-Command $SqlPackageCommand
-    
+    Write-Error ($_.Exception|Format-List -Force|Out-String)
+    throw
+}
+Catch [Exception]
+{
+    Write-Error ($_.Exception|Format-List -Force|Out-String)
+    throw
 }
 Finally
 {
-    # deleting firewall rule for agent on sql server
-    Delete-AzureSqlDatabaseServerFirewallRule -serverName $serverFriendlyName -firewallRuleName $firewallRuleName -connectionType $connectionType `
-                                              -isFirewallConfigured $isFirewallConfigured -deleteFireWallRule $DeleteFirewallRule
+    # Check if Firewall Rule is configured
+    if ($firewallRuleName)
+    {
+        # Deleting firewall rule for agent on sql server
+        Write-Verbose "Deleting $firewallRuleName"
+        Delete-AzureSqlDatabaseServerFirewallRule -serverName $serverFriendlyName -firewallRuleName $firewallRuleName -endpoint $endpoint `
+                                                -isFirewallConfigured $isFirewallConfigured -deleteFireWallRule $DeleteFirewallRule
+    }
+    else
+    {
+        Write-Verbose "No Firewall Rule was added"
+    }
 }
 
 Write-Verbose "Leaving script DeploySqlAzure.ps1"

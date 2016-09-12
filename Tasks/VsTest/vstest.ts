@@ -34,9 +34,11 @@ try {
     var configuration: string = tl.getInput('configuration');
     var publishRunAttachments: string = tl.getInput('publishRunAttachments');
     var runInParallel: boolean = tl.getBoolInput('runInParallel');
-    var tiaEnabled = tl.getVariable('tia.enabled');
+    var tiaEnabled: boolean = tl.getBoolInput('runOnlyImpactedTests');
+    var fileLevel = tl.getVariable('tia.filelevel');
+    var tiaRebaseLimit: string = tl.getInput('runAllTestsAfterXBuilds');
+    var sourcesDir = tl.getVariable('build.sourcesdirectory');
 
-    tl._writeLine("##vso[task.logissue type=warning;TaskName=VSTest]");
 
     var sourcesDirectory = tl.getVariable('System.DefaultWorkingDirectory');
     var testAssemblyFiles = getTestAssemblies();
@@ -106,7 +108,7 @@ function getTestAssemblies(): Set<string> {
     return new Set(testAssemblyFiles);
 }
 
-function getVstestArguments(settingsFile: string): string[] {
+function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[] {
     var argsArray: string[] = [];
     testAssemblyFiles.forEach(function (testAssembly) {
         var testAssemblyPath = testAssembly;
@@ -120,7 +122,15 @@ function getVstestArguments(settingsFile: string): string[] {
         argsArray.push(testAssemblyPath);
     });
     if (testFiltercriteria) {
-        argsArray.push("/TestCaseFilter:" + testFiltercriteria);
+        if (!tiaEnabled)
+        {
+            argsArray.push("/TestCaseFilter:" + testFiltercriteria);
+        }
+        else
+        {
+            tl.debug("Ignoring TestCaseFilter because Test Impact is enabled");
+            
+        }
     }
     if (settingsFile && pathExistsAsFile(settingsFile)) {
         argsArray.push("/Settings:" + settingsFile);
@@ -167,6 +177,10 @@ function getTestSelectorLocation() : string {
     return path.join(__dirname, "TestSelector/TestSelector.exe");
 }
 
+function getTraceCollectorUri() : string {
+    return "file://" + path.join(__dirname, "TestSelector/Microsoft.VisualStudio.TraceCollector.dll");
+}
+
 function generateResponseFile(): Q.Promise<string> {
     var startTime = perf();
     var endTime : number;
@@ -185,7 +199,6 @@ function generateResponseFile(): Q.Promise<string> {
         .then(function (code) {
             endTime = perf();
             elapsedTime = endTime - startTime;
-            tl._writeLine("##vso[task.logissue type=warning;SubTaskName=GenerateResponseFile;SubTaskDuration=" + elapsedTime + "]");    
             tl.debug(tl.loc("GenerateResponseFilePerfTime", elapsedTime));
             defer.resolve(tempFile);
         })
@@ -201,20 +214,29 @@ function publishCodeChanges(): Q.Promise<string> {
     var endTime : number;
     var elapsedTime: number;
     var defer = Q.defer<string>();
+    
+    var newprovider = "true";
+    if (getTIALevel() == 'method') {
+        newprovider = "false";
+    }
+
     var selectortool = tl.createToolRunner(getTestSelectorLocation());
     selectortool.arg("PublishCodeChanges");
     selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
     selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
-    selectortool.arg("/newdropPath:" + tl.getVariable("Build.SourcesDirectory"));
     selectortool.arg("/Definitionid:" + tl.getVariable("System.DefinitionId"));
     selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
     selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
+    selectortool.arg("/SourcesDir:" + sourcesDir);
+    selectortool.arg("/newprovider:" + newprovider);
+    if (tiaRebaseLimit) {
+        selectortool.arg("/RebaseLimit:" + tiaRebaseLimit);
+    }
 
     selectortool.exec()
         .then(function(code) {
             endTime = perf();
             elapsedTime = endTime - startTime;
-            tl._writeLine("##vso[task.logissue type=warning;SubTaskName=PublishCodeChanges;SubTaskDuration=" + elapsedTime + "]");            
             tl.debug(tl.loc("PublishCodeChangesPerfTime", elapsedTime));
             defer.resolve(String(code));
         })        
@@ -261,39 +283,9 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
             .then(function(status) {
                 generateResponseFile()
                     .then(function (responseFile) {
-                        if (isNonEmptyResponseFile(responseFile)) {
-                            updateResponseFile(getVstestArguments(settingsFile), responseFile)
-                                .then(function (updatedFile) {
-                                    executeVstest(testResultsDirectory, settingsFile, vsVersion, ["@" + updatedFile])
-                                        .then(function (code) {
-                                            defer.resolve(code);
-                                        })
-                                        .fail(function (code) {
-                                            defer.resolve(code);
-                                        })
-                                        .finally(function () {
-                                            tl.debug("Deleting the response file " + responseFile)
-                                            tl.rmRF(responseFile, true);
-                                        });
-                                })
-                                .fail(function (err) {
-                                    tl.error(err);
-                                    tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', responseFile));
-                                    executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile))
-                                        .then(function (code) {
-                                            defer.resolve(code);
-                                        })
-                                        .fail(function (code) {
-                                            defer.resolve(code);
-                                        }).finally(function () {
-                                            tl.debug("Deleting the response file " + responseFile)
-                                            tl.rmRF(responseFile, true);
-                                        });
-                                });
-                        }
-                        else {
+                        if (isEmptyResponseFile(responseFile)) {
                             tl.debug("Empty response file detected. All tests will be executed.");
-                            executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile))
+                            executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
                                 .then(function (code) {
                                     defer.resolve(code);
                                 })
@@ -305,11 +297,52 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                     tl.rmRF(responseFile, true);
                                 });
                         }
+                        else
+                        {
+                            responseContainsNoTests(responseFile)
+                                .then(function (noTestsAvailable) {
+                                    if (noTestsAvailable) {
+                                        tl.debug("No tests impacted. Not running any tests.");
+                                        tl.debug("Deleting the response file " + responseFile)
+                                        tl.rmRF(responseFile, true);
+                                    }
+                                    else {
+                                        updateResponseFile(getVstestArguments(settingsFile, true), responseFile)
+                                            .then(function (updatedFile) {
+                                                executeVstest(testResultsDirectory, settingsFile, vsVersion, ["@" + updatedFile])
+                                                    .then(function (code) {
+                                                        defer.resolve(code);
+                                                    })
+                                                    .fail(function (code) {
+                                                        defer.resolve(code);
+                                                    })
+                                                    .finally(function () {
+                                                        tl.debug("Deleting the response file " + responseFile)
+                                                        tl.rmRF(responseFile, true);
+                                                    });
+                                            })
+                                            .fail(function (err) {
+                                                tl.error(err);
+                                                tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', responseFile));
+                                                executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
+                                                    .then(function (code) {
+                                                        defer.resolve(code);
+                                                    })
+                                                    .fail(function (code) {
+                                                        defer.resolve(code);
+                                                    }).finally(function () {
+                                                        tl.debug("Deleting the response file " + responseFile)
+                                                        tl.rmRF(responseFile, true);
+                                                    });
+                                            });
+                                    }
+                                });                           
+                        }                        
                     })
                     .fail(function (err) {
                         tl.error(err);
                         tl.warning(tl.loc('ErrorWhileCreatingResponseFile'));
-                        executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile))
+                        executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
                             .then(function (code) {
                                 defer.resolve(code);
                             })
@@ -321,7 +354,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
             .fail(function (err){
                 tl.error(err);
                 tl.warning(tl.loc('ErrorWhilePublishingCodeChanges'));
-                executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile))
+                executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
                     .then(function (code) {
                         defer.resolve(code);
                     })
@@ -332,7 +365,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
     }
     else {
         tl.debug("Non TIA mode of test execution");
-        executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile))
+        executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
             .then(function (code) {
                 defer.resolve(code);
             })
@@ -557,7 +590,8 @@ function getTestImpactAttributes(vsVersion: number) {
     return {
         uri: TICollectorURI,
         assemblyQualifiedName: getTIAssemblyQualifiedName(vsVersion),
-        friendlyName: TIFriendlyName
+        friendlyName: TIFriendlyName,
+        codebase: getTraceCollectorUri()
     };
 }
 
@@ -574,35 +608,70 @@ function isTestImapctCollectorPresent(dataCollectorArray): Boolean {
     return found;
 }
 
+function pushImpactLevelAndRootPathIfNotFound(dataCollectorArray): void {
+    tl.debug("Checking for ImpactLevel and RootPath nodes in TestImpact collector");
+    var tiaFriendlyName = TIFriendlyName.toUpperCase();
+    var arrayLength = dataCollectorArray.length;
+    for (var i = 0; i < arrayLength; i++) {
+        if (dataCollectorArray[i].$.friendlyName && dataCollectorArray[i].$.friendlyName.toUpperCase() === tiaFriendlyName) {
+            if (!dataCollectorArray[i].Configuration)
+            {
+                dataCollectorArray[i] = {Configuration:{}};
+            }
+            if (dataCollectorArray[i].Configuration.TestImpact && !dataCollectorArray[i].Configuration.RootPath)
+            {
+                dataCollectorArray[i].Configuration = {RootPath : sourcesDir};
+            }
+            else if (!dataCollectorArray[i].Configuration.TestImpact && dataCollectorArray[i].Configuration.RootPath)
+            {
+                dataCollectorArray[i].Configuration = {ImpactLevel : getTIALevel()};
+            }
+            else if (dataCollectorArray[i].Configuration && !dataCollectorArray[i].Configuration.TestImpact && !dataCollectorArray[i].Configuration.RootPath)
+            {
+                dataCollectorArray[i].Configuration = {ImpactLevel : getTIALevel(), RootPath : sourcesDir};
+            }
+
+            //Adding the codebase attribute to TestImpact collector 
+            tl.debug("Adding codebase attribute to the existing test impact collector");           
+            if (!dataCollectorArray[i].$.codebase) {
+                dataCollectorArray[i].$.codebase = getTraceCollectorUri();
+            }
+        }      
+    }
+}
+
 function updateRunSettings(result: any, vsVersion: number) {
     var dataCollectorNode = null;
     if (!result.RunSettings) {
         tl.debug("Updating runsettings file from RunSettings node");
-        result.RunSettings = { DataCollectionRunSettings: { DataCollectors: { DataCollector: {} } } };
+        result.RunSettings = { DataCollectionRunSettings: { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } } };
         dataCollectorNode = result.RunSettings.DataCollectionRunSettings.DataCollectors.DataCollector;
     }
     else if (!result.RunSettings.DataCollectionRunSettings) {
         tl.debug("Updating runsettings file from DataCollectionSettings node");
-        result.RunSettings.DataCollectionRunSettings = { DataCollectors: { DataCollector: {} } };
+        result.RunSettings.DataCollectionRunSettings = { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } };
         dataCollectorNode = result.RunSettings.DataCollectionRunSettings.DataCollectors.DataCollector;
     }
     else if (!result.RunSettings.DataCollectionRunSettings[0].DataCollectors) {
         tl.debug("Updating runsettings file from DataCollectors node");
-        result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: {} } };
+        result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } };
         dataCollectorNode = result.RunSettings.DataCollectionRunSettings[0].DataCollectors.DataCollector;
     }
     else {
         var dataCollectorArray = result.RunSettings.DataCollectionRunSettings[0].DataCollectors[0].DataCollector;
         if (!dataCollectorArray) {
             tl.debug("Updating runsettings file from DataCollector node");
-            result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: {} } };
+            result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } };
             dataCollectorNode = result.RunSettings.DataCollectionRunSettings[0].DataCollectors.DataCollector;
         }
         else {
             if (!isTestImapctCollectorPresent(dataCollectorArray)) {
                 tl.debug("Updating runsettings file, adding a DataCollector node");
-                dataCollectorArray.push({});
+                dataCollectorArray.push({Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}});
                 dataCollectorNode = dataCollectorArray[dataCollectorArray.length - 1];
+            }
+            else {
+                pushImpactLevelAndRootPathIfNotFound(dataCollectorArray);
             }
         }
     }
@@ -650,40 +719,43 @@ function updatTestSettings(result: any, vsVersion: number) {
     var dataCollectorNode = null;
     if (!result.TestSettings) {
         tl.debug("Updating testsettings file from TestSettings node");
-        result.TestSettings = { Execution: { AgentRule: { DataCollectors: { DataCollector: {} } } } };
+        result.TestSettings = { Execution: { AgentRule: { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } } } };
         result.TestSettings.Execution.AgentRule.$ = { name: TITestSettingsAgentNameTag };
         result.TestSettings.$ = { name: TITestSettingsNameTag, id: TITestSettingsIDTag, xmlns: TITestSettingsXmlnsTag };
         dataCollectorNode = result.TestSettings.Execution.AgentRule.DataCollectors.DataCollector;
     }
     else if (!result.TestSettings.Execution) {
         tl.debug("Updating testsettings file from Execution node");
-        result.TestSettings.Execution = { AgentRule: { DataCollectors: { DataCollector: {} } } };
+        result.TestSettings.Execution = { AgentRule: { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } } };
         result.TestSettings.Execution.AgentRule.$ = { name: TITestSettingsAgentNameTag };
         dataCollectorNode = result.TestSettings.Execution.AgentRule.DataCollectors.DataCollector;
     }
     else if (!result.TestSettings.Execution[0].AgentRule) {
         tl.debug("Updating testsettings file from AgentRule node");
-        result.TestSettings.Execution[0] = { AgentRule: { DataCollectors: { DataCollector: {} } } };
+        result.TestSettings.Execution[0] = { AgentRule: { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } } };
         result.TestSettings.Execution[0].AgentRule.$ = { name: TITestSettingsAgentNameTag };
         dataCollectorNode = result.TestSettings.Execution[0].AgentRule.DataCollectors.DataCollector;
     }
     else if (!result.TestSettings.Execution[0].AgentRule[0].DataCollectors) {
         tl.debug("Updating testsettings file from DataCollectors node");
-        result.TestSettings.Execution[0].AgentRule[0] = { DataCollectors: { DataCollector: {} } };
+        result.TestSettings.Execution[0].AgentRule[0] = { DataCollectors: { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} } };
         dataCollectorNode = result.TestSettings.Execution[0].AgentRule[0].DataCollectors.DataCollector;
     }
     else {
         var dataCollectorArray = result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector;
         if (!dataCollectorArray) {
             tl.debug("Updating testsettings file from DataCollector node");
-            result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0] = { DataCollector: {} };
+            result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0] = { DataCollector: {Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}} };
             dataCollectorNode = result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector;
         }
         else {
             if (!isTestImapctCollectorPresent(dataCollectorArray)) {
                 tl.debug("Updating testsettings file, adding a DataCollector node");
-                dataCollectorArray.push({});
+                dataCollectorArray.push({Configuration : {ImpactLevel : getTIALevel(), RootPath : sourcesDir}});
                 dataCollectorNode = dataCollectorArray[dataCollectorArray.length - 1];
+            }
+            else {
+                pushImpactLevelAndRootPathIfNotFound(dataCollectorArray);
             }
         }
     }
@@ -752,7 +824,13 @@ function createRunSettingsForTestImpact(vsVersion: number, settingsFile: string,
     var runSettingsForTIA = '<?xml version="1.0" encoding="utf-8"?><RunSettings><DataCollectionRunSettings><DataCollectors>' +
         '<DataCollector uri="' + TICollectorURI + '" ' +
         'assemblyQualifiedName="' + getTIAssemblyQualifiedName(vsVersion) + '" ' +
-        'friendlyName="' + TIFriendlyName + '"/>' +
+        'friendlyName="' + TIFriendlyName + '" ' +
+        'codebase="' + getTraceCollectorUri() + '" >' +
+        '<Configuration>' +
+        '<ImpactLevel>' + getTIALevel() + '</ImpactLevel>' +
+        '<RootPath>' + sourcesDir + '</RootPath>' +
+        '</Configuration>' +
+        '</DataCollector>' +
         '</DataCollectors></DataCollectionRunSettings></RunSettings>';
     saveToFile(runSettingsForTIA, runSettingsExt)
         .then(function (fileName) {
@@ -1002,16 +1080,35 @@ function pathExistsAsDirectory(path: string) {
     return tl.exist(path) && tl.stats(path).isDirectory();
 }
 
-function isNonEmptyResponseFile(responseFile: string): boolean {
+function isEmptyResponseFile(responseFile: string): boolean {
     if (pathExistsAsFile(responseFile) && tl.stats(responseFile).size) {
+        return false;
+    }
+    return true;
+}
+
+function isTiaAllowed(): boolean {
+    if (tiaEnabled && getTestSelectorLocation()) {
         return true;
     }
     return false;
 }
 
-function isTiaAllowed(): boolean {
-    if (tiaEnabled && tiaEnabled.toUpperCase() == "TRUE" && getTestSelectorLocation()) {
-        return true;
+function getTIALevel()
+{
+    if (fileLevel && fileLevel.toUpperCase() == "FALSE") {
+        return "method";
     }
-    return false;
+    return "file";
+}
+
+function responseContainsNoTests(filePath: string): Q.Promise<boolean> {
+    return readFileContents(filePath, "utf-8").then(function(resp) {
+        if (resp == "/Tests:") {
+            return true;
+        }
+        else {
+            return false;
+        }
+    });
 }

@@ -1,7 +1,7 @@
 {
   "name": "vsts-tasks-jenkinsqueuejob",
-  "version": "1.0.1",
   "dependencies": {
-    "request": "^2.65.0"
+    "request": "^2.65.0",
+    "vsts-task-lib": "0.8.5"
   }
 }

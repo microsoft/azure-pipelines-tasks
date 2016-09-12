@@ -30,7 +30,8 @@ describe('Delete Files Suite', function() {
         tr.setInput('BuildCleanup', 'true');
         tr.run()
         .then(() => {
-            assert(tr.stdout.match(/Include matched 2 files/gi), 'task should have deleted 2 files');
+            assert(tr.stdout.indexOf('rmRF(/someDir/someNestedDir)') >= 0, 'task should have deleted nested dir');
+            assert(tr.stdout.indexOf('rmRF(/someDir/someFile)') >= 0, 'task should have deleted nested file');
             assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
             assert(tr.succeeded, 'task should have succeeded');
             done();
@@ -85,6 +86,8 @@ describe('Delete Files Suite', function() {
 		
 		tr.run()
 		.then(() => {
+			assert(tr.stdout.indexOf('rmRF(/someDir/someOtherDir)') >= 0, 'task should have deleted someOtherDir');
+			assert(tr.stdout.indexOf('rmRF(/someDir/someOtherDir2)') < 0, 'task should not have deleted someOtherDir2');
 			assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
             assert(tr.succeeded, 'task should have succeeded');
 			done();
@@ -95,7 +98,7 @@ describe('Delete Files Suite', function() {
 	})	
 	
 	it('runs deleteFiles on multiple folders', (done) => {
-		setResponseFile('deleteFilesResponsesGood.json');
+		setResponseFile('deleteFilesResponsesMultiPatternGood.json');
 		
 		var tr = new trm.TaskRunner('DeleteFiles');
 		tr.setInput('SourceFolder', '/someDir');
@@ -103,6 +106,8 @@ describe('Delete Files Suite', function() {
 		
 		tr.run()
 		.then(() => {
+			assert(tr.stdout.indexOf('rmRF(/someDir/someOtherDir)') >= 0, 'task should have deleted someOtherDir');
+			assert(tr.stdout.indexOf('rmRF(/someDir/someOtherDir2)') >= 0, 'task should have deleted someOtherDir2');
 			assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
             assert(tr.succeeded, 'task should have succeeded');
 			done();

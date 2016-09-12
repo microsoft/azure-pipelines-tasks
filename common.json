@@ -9,11 +9,19 @@
         {
             "module": "VstsAzureHelpers_",
             "dest": "ps_modules"
+        },
+		{
+            "module": "VstsAzureRestHelpers_",
+            "dest": "ps_modules"
         }
     ],
     "AzureResourceGroupDeployment": [
         {
             "module": "VstsAzureHelpers_",
+            "dest": "ps_modules"
+        },
+		{
+            "module": "VstsAzureRestHelpers_",
             "dest": "ps_modules"
         }
     ],
@@ -37,7 +45,7 @@
     ],
     "SqlAzureDacpacDeployment": [
         {
-            "module": "VstsAzureHelpers_",
+            "module": "VstsAzureRestHelpers_",
             "dest": "ps_modules"
         }
     ],
@@ -86,6 +94,24 @@
     "NuGetPublisher" : [
         {
             "module": "nuget-task-common",
+            "dest": "node_modules"  
+        }
+    ],
+    "Gradle" : [
+        {
+            "module": "codecoverage-tools",
+            "dest": "node_modules"  
+        }
+    ],
+    "Maven" : [
+        {
+            "module": "codecoverage-tools",
+            "dest": "node_modules"  
+        }
+    ],
+    "Ant" : [
+        {
+            "module": "codecoverage-tools",
             "dest": "node_modules"  
         }
     ]

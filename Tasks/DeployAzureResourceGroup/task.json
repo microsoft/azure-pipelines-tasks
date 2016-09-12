@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 86
+        "Patch": 88
     },
     "demands": [
         "azureps"
@@ -139,6 +139,20 @@
             "visibleRule": "action = Create Or Update Resource Group"
         },
         {
+            "name": "deploymentMode",
+            "type": "pickList",
+            "label": "Deployment Mode",
+            "defaultValue": "Incremental",
+            "required": true,
+            "helpMarkDown": "Specify the deployment mode for Azure Resource Manager template.",
+            "options": {
+                "Validation": "Validation Only",
+                "Incremental" : "Incremental Mode",
+                "Complete" : "Complete Mode"
+                },
+            "visibleRule": "action = Create Or Update Resource Group"
+        },
+        {
             "name": "csmFile",
             "type": "filePath",
             "label": "Template",
@@ -237,6 +251,8 @@
         "ARG_UnsupportedAzurePSVersion": "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at {1} to get the latest Azure powershell",
         "ARG_AzureRMModuleNotFound": "The required AzureRM Powershell module is not installed. You can follow the instructions at {0} to get the latest Azure powershell",
         "ARG_DeploymentFailed": "Resource group deployment '{0}' failed",
+        "ARG_ValidationFailed": "Resource group deployment template validation failed",
+        "ARG_ValidationSucceeded": "Successfully validated resource group deployment template",
         "ARG_DeploymentSucceeded": "Successfully created resource group deployment with name '{0}'",
         "ARG_InvalidFilePath": "Found more than one file to deploy with search pattern '{0}'. There can be only one",
         "ARG_FileNotFound": "No files were found to deploy with search pattern '{0}'",
