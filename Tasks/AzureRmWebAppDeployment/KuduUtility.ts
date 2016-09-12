@@ -4,9 +4,11 @@ import Q = require('q');
 import tl = require('vsts-task-lib/task');
 import path = require("path");
 import fs = require("fs");
-import httpClient = require('vso-node-api/httpClient');
+import httpClient = require('vso-node-api/HttpClient');
 var httpObj = new httpClient.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
-var archiver = require('archiver');
+var gulp = require('gulp');
+var zip = require('gulp-zip');
+var AdmZip = require('adm-zip');
 
 /**
  * Finds out virtual path and corresponding physical path mapping.
@@ -70,22 +72,33 @@ export async function deployWebAppPackage(webAppPackage: string, publishingProfi
     return deferred.promise;
 }
 
-export async function archiveFolder(webAppFolder:string , webAppZipFile:string ) {
+export async function archiveFolder(webAppFolder:string) {
     var deferred = Q.defer<string>();
-    var output = fs.createWriteStream(webAppZipFile);
-    var archive = archiver('zip');
-    output.on('close', function () {
-        tl.debug(tl.loc("Webappfolderisbeingarchivedtobytescompressed", webAppFolder, webAppZipFile, archive.pointer()));
-        deferred.resolve(tl.loc("Webappfolderisbeingarchivedtobytescompressed", webAppFolder, webAppZipFile, archive.pointer()));
-    });
-    archive.on('error', function (err) {
-        deferred.reject(tl.loc("Unabletopackagecontentoffolder",err));
-        throw new Error(err);
-    });
-    archive.pipe(output);
-    archive.bulk([
-        { expand: true, cwd: webAppFolder, src: ['**'] }
-    ]);
-    await archive.finalize();
+    var defaultWorkingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
+    var tempPackageName = 'temp_web_app_package.zip';
+    await gulp.src(path.join(webAppFolder, '**', '*'))
+        .pipe(zip(tempPackageName))
+        .pipe(gulp.dest(defaultWorkingDirectory)).on('end',function(error){
+             if(error){
+                 throw new Error(error)
+             }
+             deferred.resolve(path.join(defaultWorkingDirectory, tempPackageName));
+        });
     return deferred.promise;
+}
+
+
+/**
+ * Check whether the package contains parameter.xml file
+ * @param   webAppPackage   web deploy package
+ * @returns boolean
+ */
+export async  function containsParamFile(webAppPackage: string ) {
+    var isParamFilePresent = false;
+    var zip = new AdmZip(webAppPackage);
+    if (zip.getEntry("parameters.xml") || zip.getEntry("Parameters.xml")) {
+        isParamFilePresent = true;
+    }
+    tl.debug(tl.loc("Isparameterfilepresentinwebpackage0", isParamFilePresent));
+    return isParamFilePresent;
 }

@@ -244,7 +244,7 @@
     "instanceNameFormat": "Deploy AzureRM App Service: $(WebAppName)",
     "execution": {
         "Node": {
-            "target": "AzureRMWebAppDeployment.js"
+            "target": "AzureRmWebAppDeployment.js"
         }
     },
     "messages": {
@@ -275,8 +275,9 @@
         "Failedtodeploywebapppackageusingkuduservice": "Failed to deploy webapp package using kudu service : %s",
         "Unabletodeploywebappresponsecode": "Unable to deploy webapp due to error code : %s",
         "Unabletopackagecontentoffolder": "Unable to package content of folder : %s",
-        "Compressingfolderintozip": "Compressing folder %s into zip : %s",
+        "Compressedfolderintozip": "Compressed folder %s into zip : %s",
         "Webappfolderisbeingarchivedtobytescompressed": "Webapp folder : %s is being archived to %s. %s bytes compressed.",
-        "Initiateddeploymentviakuduserviceforwebapppackage": "Initiated deployment via kudu service for webapp package : %s"
+        "Initiateddeploymentviakuduserviceforwebapppackage": "Initiated deployment via kudu service for webapp package : %s",
+        "MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy generated package are only supported for Windows platform."
   }
 }

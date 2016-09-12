@@ -52,7 +52,7 @@ async function run() {
             tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
         }
 
-        if(useWebDeploy) {
+        if(canUseWebDeploy(useWebDeploy)) {
             await DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
                             excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile,
                             additionalArguments, isFolderBasedDeployment);
@@ -137,9 +137,12 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
         var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
         var webAppZipFile = webDeployPkg;
         if(isFolderBasedDeployment) {
-            webAppZipFile = tl.getVariable('System.DefaultWorkingDirectory') + 'temp_web_app_package.zip';
-            tl.debug(tl.loc("Compressingfolderintozip", webDeployPkg, webAppZipFile));
-            await kuduUtility.archiveFolder(webDeployPkg, webAppZipFile);
+            webAppZipFile = await kuduUtility.archiveFolder(webDeployPkg);
+            tl.debug(tl.loc("Compressedfolderintozip", webDeployPkg, webAppZipFile));
+        } else {
+            if (await kuduUtility.containsParamFile(webAppZipFile)) {
+                throw new Error(tl.loc("MSDeploygeneratedpackageareonlysupportedforWindowsplatform")); 
+            }
         }
         var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
         await kuduUtility.deployWebAppPackage(webAppZipFile, publishingProfile, pathMappings[0], pathMappings[1]);
@@ -216,6 +219,16 @@ function getSetParamFilePath(setParametersFile: string) : string {
     }
 
     return setParametersFile;
+}
+
+/**
+ * Checks if WebDeploy should be used to deploy webapp package or folder
+ * 
+ * @param useWebDeploy if user explicitly checked useWebDeploy
+ */
+function canUseWebDeploy(useWebDeploy: boolean) {
+    var win = tl.osType().match(/^Win/);
+    return (useWebDeploy || win);
 }
 
 run();
