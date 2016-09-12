@@ -590,7 +590,7 @@ describe('VsTest Suite', function () {
             });
     });
 
-    it('Vstest task with custome vstest.console.exe path', (done) => {
+    it('Vstest task with custom vstest.console.exe path', (done) => {
         setResponseFile('vstestGood.json');
         var tr = new trm.TaskRunner('VSTest');
         tr.setInput('vstestLocationMethod', 'location');
@@ -609,7 +609,7 @@ describe('VsTest Suite', function () {
             });
     });
 
-    it('Vstest task with custome vstest.console.exe path should throw on illegal path', (done) => {
+    it('Vstest task with custom vstest.console.exe path should throw on illegal path', (done) => {
         setResponseFile('vstestGood.json');
         var tr = new trm.TaskRunner('VSTest');
         tr.setInput('vstestLocationMethod', 'location');
