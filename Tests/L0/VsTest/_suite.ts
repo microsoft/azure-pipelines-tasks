@@ -162,7 +162,6 @@ describe('VsTest Suite', function () {
                 done();
             })
             .fail((err) => {
-                assert('failed with ' + err);
                 done(err);
             });
     })
