@@ -9,6 +9,8 @@ import * as Q from "q";
 import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
 import javacommons = require('java-common/java-common');
 
+tl.setResourcePath(path.join(__dirname, 'task.json'));
+
 var isWindows = os.type().match(/^Win/);
 
 function pathExistsAsFile(path: string) {

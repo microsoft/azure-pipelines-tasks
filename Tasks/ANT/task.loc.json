@@ -202,5 +202,9 @@
       "target": "anttask.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "LocateJVMBasedOnVersionAndArch": "ms-resource:loc.messages.LocateJVMBasedOnVersionAndArch",
+    "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM"
   }
 }
