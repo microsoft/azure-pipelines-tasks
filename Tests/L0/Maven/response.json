@@ -72,7 +72,7 @@
             "code": 0,
             "stdout": "Maven package and FindBugs analysis done"
         },
-        "/home/bin/maven/bin/mvn -f pom.xml package checkstyle:checkstyle pmd:pmd findbugs:findbugs": {
+        "/home/bin/maven/bin/mvn -f pom.xml package checkstyle:checkstyle findbugs:findbugs pmd:pmd": {
             "code": 0,
             "stdout": "Maven package and Checkstyle analysis and PMD analysis and FindBugs analysis done"
         }

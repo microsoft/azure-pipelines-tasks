@@ -77,8 +77,10 @@ export class FindbugsTool extends BaseTool {
         var reportContent = fs.readFileSync(xmlReport, 'utf-8');
         xml2js.parseString(reportContent, (err, data) => {
             // If the file is not XML, or is not from FindBugs, return immediately
-            tl.debug(`[CA] Empty or unrecognized FindBugs XML report ${xmlReport}`);
-            if (!data || !data.BugCollection) {
+            if (!data || !data.BugCollection ||
+                !data.BugCollection.FindBugsSummary || !data.BugCollection.FindBugsSummary[0] ||
+                !data.BugCollection.FindBugsSummary[0].FileStats) {
+                tl.debug(`[CA] Empty or unrecognized FindBugs XML report ${xmlReport}`);
                 return null;
             }
 

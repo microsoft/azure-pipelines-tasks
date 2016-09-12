@@ -1675,7 +1675,7 @@ describe('Maven Suite', function () {
                 assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
                 assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
                 assert(taskRunner.succeeded, 'task should have succeeded');
-                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package checkstyle:checkstyle pmd:pmd findbugs:findbugs'),
+                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package checkstyle:checkstyle findbugs:findbugs pmd:pmd'),
                     'should have run maven with the correct arguments');
                 assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
                     'should have uploaded a Code Analysis Report build summary');
