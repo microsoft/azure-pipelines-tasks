@@ -33,6 +33,13 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 . "$PSScriptRoot\Utility.ps1"
 . "$PSScriptRoot\FindSqlPackagePath.ps1"
 
+# Function to import SqlPS module & avoid directory switch
+function Import-Sqlps {
+    push-location
+    Import-Module SqlPS 3>&1 | out-null
+    pop-location
+}
+
 function ThrowIfMultipleFilesOrNoFilePresent($files, $pattern)
 {
     if ($files -is [system.array])
@@ -132,12 +139,22 @@ Try
     }
     else
     {
+        # Import SQLPS Module
+        Import-SqlPs
+
         $scriptArgument = "Invoke-Sqlcmd -ServerInstance `"$ServerName`" -Database `"$DatabaseName`" -Username `"$SqlUsername`" "
 
         $commandToRun = $scriptArgument + " -Password `"$SqlPassword`" "
         $commandToLog = $scriptArgument + " -Password ****** "
 
-        if ($TaskNameSelector -eq "SqlTask")
+        if ($TaskNameSelector -eq "InlineSqlTask")
+        {
+            $FilePath = [System.IO.Path]::GetTempFileName()
+            ($SqlInline | Out-File $FilePath)
+
+            $SqlAdditionalArguments = $InlineAdditionalArguments
+        }
+        else # Sql File Task
         {
             # Check if file selected is an sql file.
             $sqlFileExtension = ".sql"
@@ -145,15 +162,10 @@ Try
             {
                 Write-Error (Get-VstsLocString -Key "SAD_InvalidSqlFile" -ArgumentList $FilePath)
             }
+        }
 
-            $commandToRun += " -Inputfile `"$FilePath`" " + $SqlAdditionalArguments
-            $commandToLog += " -Inputfile `"$FilePath`" " + $SqlAdditionalArguments
-        }
-        else # inline Sql
-        {
-            $commandToRun += " -Query `"$SqlInline`" " + $InlineAdditionalArguments
-            $commandToLog += " -Query `"$SqlInline`" " + $InlineAdditionalArguments
-        }
+        $commandToRun += " -Inputfile `"$FilePath`" " + $SqlAdditionalArguments
+        $commandToLog += " -Inputfile `"$FilePath`" " + $SqlAdditionalArguments
 
         Write-Host $commandToLog
         Invoke-Expression $commandToRun
@@ -180,6 +192,13 @@ Catch [Exception]
 }
 Finally
 {
+    # Delete Temp file Created During inline Task Execution
+    if ($TaskNameSelector -eq "InlineSqlTask" -and (Test-Path $FilePath) -eq $true)
+    {
+        Write-Verbose "Removing File $FilePath"
+        Remove-Item $FilePath -ErrorAction 'SilentlyContinue'
+    }
+
     # Check if Firewall Rule is configured
     if ($firewallRuleName)
     {
