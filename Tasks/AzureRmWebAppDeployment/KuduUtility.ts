@@ -96,8 +96,7 @@ export async function archiveFolder(webAppFolder:string) {
 export async  function containsParamFile(webAppPackage: string ) {
     var isParamFilePresent = false;
     var zip = new AdmZip(webAppPackage);
-    var zipEntry = zip.getEntry("parameters.xml");
-    if (zipEntry) {
+    if (zip.getEntry("parameters.xml") || zip.getEntry("Parameters.xml")) {
         isParamFilePresent = true;
     }
     tl.debug(tl.loc("Isparameterfilepresentinwebpackage0", isParamFilePresent));
