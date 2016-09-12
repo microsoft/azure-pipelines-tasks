@@ -1,4 +1,7 @@
 {
+    "osType": {
+        "osType": "Windows"
+    },
     "getVariable": {
         "ENDPOINT_URL_ID1": "bogusURL",
         "ENDPOINT_AUTH_ID1": "{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}"
