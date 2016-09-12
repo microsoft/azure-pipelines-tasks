@@ -106,22 +106,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.WebAppUri"
     },
     {
-      "name": "UseWebDeploy",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.UseWebDeploy",
-      "required": false,
-      "defaultValue": "false",
-      "groupName": "AdditionalDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.UseWebDeploy"
-    },
-    {
       "name": "SetParametersFile",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.SetParametersFile",
       "defaultValue": "",
       "required": false,
       "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "UseWebDeploy = true",
+      "visibleRule": "false",
       "helpMarkDown": "ms-resource:loc.input.help.SetParametersFile"
     },
     {
@@ -131,7 +122,7 @@
       "defaultValue": "false",
       "required": false,
       "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "UseWebDeploy = true",
+      "visibleRule": "false",
       "helpMarkDown": "ms-resource:loc.input.help.RemoveAdditionalFilesFlag"
     },
     {
@@ -141,7 +132,7 @@
       "defaultValue": "false",
       "required": false,
       "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "UseWebDeploy = true",
+      "visibleRule": "false",
       "helpMarkDown": "ms-resource:loc.input.help.ExcludeFilesFromAppDataFlag"
     },
     {
@@ -151,7 +142,7 @@
       "defaultValue": "false",
       "required": false,
       "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "UseWebDeploy = true",
+      "visibleRule": "false",
       "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
     },
     {
@@ -161,8 +152,67 @@
       "required": false,
       "defaultValue": "",
       "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "UseWebDeploy = true",
+      "visibleRule": "false",
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
+    },
+    {
+      "name": "UseWebDeploy",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.UseWebDeploy",
+      "required": false,
+      "defaultValue": "( SetParametersFile != \"\" || RemoveAdditionalFilesFlag == true || ExcludeFilesFromAppDataFlag == true || TakeAppOfflineFlag == true || AdditionalArguments != \"\") ? true : false",
+      "groupName": "AdditionalDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.UseWebDeploy"
+    },
+    {
+      "name": "SetParametersFile1",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.SetParametersFile1",
+      "defaultValue": "SetParametersFile",
+      "required": false,
+      "groupName": "AdditionalDeploymentOptions",
+      "visibleRule": "UseWebDeploy == true",
+      "helpMarkDown": "ms-resource:loc.input.help.SetParametersFile1"
+    },
+    {
+      "name": "RemoveAdditionalFilesFlag1",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.RemoveAdditionalFilesFlag1",
+      "defaultValue": "RemoveAdditionalFilesFlag",
+      "required": false,
+      "groupName": "AdditionalDeploymentOptions",
+      "visibleRule": "UseWebDeploy == true",
+      "helpMarkDown": "ms-resource:loc.input.help.RemoveAdditionalFilesFlag1"
+    },
+    {
+      "name": "ExcludeFilesFromAppDataFlag1",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ExcludeFilesFromAppDataFlag1",
+      "defaultValue": "ExcludeFilesFromAppDataFlag",
+      "required": false,
+      "groupName": "AdditionalDeploymentOptions",
+      "visibleRule": "UseWebDeploy == true",
+      "helpMarkDown": "ms-resource:loc.input.help.ExcludeFilesFromAppDataFlag1"
+    },
+    {
+      "name": "TakeAppOfflineFlag1",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.TakeAppOfflineFlag1",
+      "defaultValue": "TakeAppOfflineFlag",
+      "required": false,
+      "groupName": "AdditionalDeploymentOptions",
+      "visibleRule": "UseWebDeploy == true",
+      "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag1"
+    },
+    {
+      "name": "AdditionalArguments1",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AdditionalArguments1",
+      "required": false,
+      "defaultValue": "AdditionalArguments",
+      "groupName": "AdditionalDeploymentOptions",
+      "visibleRule": "UseWebDeploy == true",
+      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments1"
     }
   ],
   "dataSourceBindings": [

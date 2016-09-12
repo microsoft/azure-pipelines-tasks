@@ -4,6 +4,7 @@
 
 import tl = require('vsts-task-lib/task');
 import path = require('path');
+import fs = require('fs');
 
 var azureRmUtil = require ('./AzureRMUtil.js');
 var msDeployUtility = require('./MSDeployUtility.js');
@@ -19,14 +20,16 @@ async function run() {
         var resourceGroupName: string = tl.getInput('ResourceGroupName');
         var slotName: string = tl.getInput('SlotName');
         var webDeployPkg: string = tl.getPathInput('Package', true);
-        var setParametersFile: string = tl.getPathInput('SetParametersFile');
-        var removeAdditionalFilesFlag: boolean = tl.getBoolInput('RemoveAdditionalFilesFlag');
-        var excludeFilesFromAppDataFlag: boolean = tl.getBoolInput('ExcludeFilesFromAppDataFlag');
-        var takeAppOfflineFlag: boolean = tl.getBoolInput('TakeAppOfflineFlag');
-        var virtualApplication: string = tl.getInput('VirtualApplication');
-        var additionalArguments: string = tl.getInput('AdditionalArguments');
-        var webAppUri:string = tl.getInput('WebAppUri');
-        var useWebDeploy: boolean = tl.getBoolInput('UseWebDeploy');
+        var virtualApplication: string = tl.getInput('VirtualApplication', false);
+
+        var useWebDeploy: boolean = tl.getBoolInput('UseWebDeploy', false);
+        var setParametersFile: string = (useWebDeploy !== undefined) ? tl.getPathInput('SetParametersFile1', false) : tl.getPathInput('SetParametersFile', false);
+        var removeAdditionalFilesFlag: boolean = (useWebDeploy !== undefined) ? tl.getBoolInput('RemoveAdditionalFilesFlag1', false) : tl.getBoolInput('RemoveAdditionalFilesFlag', false);
+        var excludeFilesFromAppDataFlag: boolean = (useWebDeploy !== undefined) ? tl.getBoolInput('ExcludeFilesFromAppDataFlag1', false) : tl.getBoolInput('ExcludeFilesFromAppDataFlag', false);
+        var takeAppOfflineFlag: boolean = (useWebDeploy !== undefined) ? tl.getBoolInput('TakeAppOfflineFlag1', false) : tl.getBoolInput('TakeAppOfflineFlag', false);
+        var additionalArguments: string = (useWebDeploy !== undefined) ? tl.getInput('AdditionalArguments1', false) : tl.getInput('AdditionalArguments', false);
+
+        var webAppUri:string = tl.getInput('WebAppUri', false);
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
 
         var SPN = new Array();
@@ -91,7 +94,11 @@ async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, 
     var isDeploymentSuccess = true;
     var deploymentError = null;
     try {
-        await tl.exec(msDeployPath, msDeployCmdArgs, <any> {failOnStdErr: true});
+
+        var msDeployBatchFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'msDeployCommand.bat';
+        var msDeployCommand = '"' + msDeployPath + '" ' + msDeployCmdArgs;
+        fs.writeFileSync(msDeployBatchFile, msDeployCommand);
+        await tl.exec("cmd", ['/C', msDeployBatchFile], <any> {failOnStdErr: true});
         tl.debug(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
     }
     catch(error) {

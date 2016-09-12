@@ -1,13 +1,18 @@
 /// <reference path="../../definitions/node.d.ts" />
 /// <reference path="../../definitions/q.d.ts" />
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
+/// <reference path="../../definitions/vso-node-api.d.ts" />
 
 var adal = require ('adal-node');
-var request = require ('request');
 var parseString = require('xml2js').parseString;
 
 import tl = require('vsts-task-lib/task');
 import Q = require('q');
+import httpClient = require('vso-node-api/httpClient');
+import restClient = require('vso-node-api/restClient');
+
+var httpObj = new httpClient.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
+var restObj = new restClient.RestClient(httpObj);
 
 var AuthenticationContext = adal.AuthenticationContext;
 var authUrl = 'https://login.windows.net/';
@@ -28,31 +33,29 @@ export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: b
     var webAppPublishKuduUrl = publishingProfile.publishUrl;
     if(webAppPublishKuduUrl) {
         var requestDetails = getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
-        var requestOptions = {
-            url : requestDetails["requestUrl"],
-            method : 'PUT',
-            json : requestDetails["requestBody"],
-            auth: {
-                username : publishingProfile.userName,
-                password : publishingProfile.userPWD
-            }
+        var accessToken = 'Basic ' + (new Buffer(publishingProfile.userName + ':' + publishingProfile.userPWD).toString('base64'));
+        var headers = {
+            authorization: accessToken
         };
 
-        request( requestOptions , (error, response, body) => {
-            if(error) {
-                deferred.reject(error);
-            }
-            else if(response.statusCode === 200) {
-                deferred.resolve(tl.loc("Successfullyupdateddeploymenthistory"));
-            }
-            else {
-                deferred.reject(tl.loc("Failedtoupdatedeploymenthistory"));
-            }
+        restObj.replace(requestDetails['requestUrl'], null, requestDetails['requestBody'], headers, null,
+            (error, response, body) => {
+                if(error) {
+                    deferred.reject(error);
+                }
+                else if(response === 200) {
+                    deferred.resolve(tl.loc("Successfullyupdateddeploymenthistory"));
+                }
+                else {
+                    tl.warning(body);
+                    deferred.reject(tl.loc("Failedtoupdatedeploymenthistory"));
+                }
         });
     }
     else {
         deferred.reject(tl.loc('WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite'));
     }
+
     return deferred.promise;
 }
 
@@ -168,16 +171,14 @@ async function getWebAppPublishProfile(SPN, webAppName: string, resourceGroupNam
     var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
     var accessToken = await getAuthorizationToken(SPN);
     
-    var requestOptions = {
-        url: armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
-                 '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + '/publishxml?' + azureApiVersion,
-        auth: {
-            bearer: accessToken
-        },
-        method: 'POST'
+    var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
+                 '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + '/publishxml?' + azureApiVersion;
+   var headers = {
+        authorization: 'Bearer '+ accessToken
+
     };
 
-    request(requestOptions, (error, response, body) => {
+    httpObj.get('POST', url, headers, (error, response, body) => {
         if(error) {
             deferred.reject(error);
         }
@@ -191,6 +192,7 @@ async function getWebAppPublishProfile(SPN, webAppName: string, resourceGroupNam
             });
         }
         else {
+            tl.error(response.statusMessage);
             deferred.reject(tl.loc('UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1', webAppName, response.statusCode));
         }
     });
@@ -202,23 +204,23 @@ async function getAzureRMWebAppID(SPN, webAppName: string, resourceType: string)
 
     var deferred = Q.defer<any>();
     var accessToken = await getAuthorizationToken(SPN);
-    var requestOptions = {
-        url:  armUrl + 'subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'' + resourceType +
-                        '\' AND name EQ \'' + webAppName + '\'&api-version=2016-07-01',
-        auth: {
-            bearer: accessToken
-        }
+
+    var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'' + resourceType +
+                        '\' AND name EQ \'' + webAppName + '\'&api-version=2016-07-01';
+    var headers = {
+        authorization: 'Bearer '+ accessToken
     };
 
-    request(requestOptions, (error, response, body) => {
+    httpObj.get('GET', url, headers, (error, response, body) => {
         if(error) {
             deferred.reject(error);
         }
         else if(response.statusCode === 200) {
-            var obj = JSON.parse(body);
-            deferred.resolve(obj.value[0]);
+            var webAppIDDetails = JSON.parse(body);
+            deferred.resolve(webAppIDDetails.value[0]);
         }
         else {
+            tl.error(response.statusMessage);
             deferred.reject(tl.loc('UnabletoretrieveWebAppIDforazureRMWebApp0StatusCode1', webAppName, response.statusCode));
         }
     });
@@ -243,19 +245,16 @@ export async function getAzureRMWebAppConfigDetails(SPN, webAppName: string, res
 
     var deferred = Q.defer<any>();
     var accessToken = await getAuthorizationToken(SPN);
+    var headers = {
+        authorization: 'Bearer '+ accessToken
+    };
+
     var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
     var configUrl = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
              '/providers/Microsoft.Web/sites/' + webAppName + slotUrl +  '/config/web?' + azureApiVersion;
-
     tl.debug(tl.loc("Requestingconfigdetails", configUrl));
-    var requestOptions = {
-        url:  configUrl,
-        auth: {
-            bearer: accessToken
-        }
-    };
 
-    request (requestOptions, (error, response, body) => {
+    httpObj.get('GET', configUrl, headers, (error, response, body) => {
         if( error ) {
             deferred.reject(error);
         }
@@ -264,6 +263,7 @@ export async function getAzureRMWebAppConfigDetails(SPN, webAppName: string, res
             deferred.resolve(obj);
         }
         else {
+            tl.error(response.statusMessage);
             deferred.reject(tl.loc('ErrorOccurredStausCode0',response.statusCode));
         }
     });

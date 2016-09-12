@@ -1,8 +1,11 @@
+/// <reference path="../../definitions/vso-node-api.d.ts" />
+
 import Q = require('q');
 import tl = require('vsts-task-lib/task');
 import path = require("path");
 import fs = require("fs");
-var request = require ('request');
+import httpClient = require('vso-node-api/httpClient');
+var httpObj = new httpClient.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
 var gulp = require('gulp');
 var zip = require('gulp-zip');
 var AdmZip = require('adm-zip');
@@ -43,25 +46,30 @@ export function getVirtualAndPhysicalPaths(virtualApplication: string, virtualAp
  */
 export async function deployWebAppPackage(webAppPackage: string, publishingProfile, virtualPath: string, physicalPath: string) {
 
+    var deferred = Q.defer<any>();
     tl.debug(tl.loc("Deployingwebapplicationatvirtualpathandphysicalpath", webAppPackage, virtualPath, physicalPath));
-
     var kuduDeploymentURL = "https://" + publishingProfile.publishUrl + "/api/zip/" + physicalPath;
     var basicAuthToken = 'Basic ' + new Buffer(publishingProfile.userName + ':' + publishingProfile.userPWD).toString('base64');
-    await fs.createReadStream(webAppPackage).pipe(request.put({ url: kuduDeploymentURL, headers: {
-            'Authorization': basicAuthToken,
-            'content-type': 'multipart/form-data'
-        } }, function (error, response) {
-            if (error){
-                tl._writeLine(tl.loc("Failedtodeploywebapppackageusingkuduservice", error));
-                throw new Error(error);
-            } else if(response.statusCode === 200) {
-                tl._writeLine(tl.loc("Successfullydeployedpackageusingkuduserviceat", webAppPackage, publishingProfile.publishUrl));
-            }
-            else {
-                tl.debug("Response :"+ JSON.stringify(response));
-                throw new Error((tl.loc('Unabletodeploywebappresponsecode', response.statusCode)));
-            }
-    }));
+    var headers = {
+        'Authorization': basicAuthToken,
+        'content-type': 'multipart/form-data'
+    };
+
+    var webAppReadStream = fs.createReadStream(webAppPackage);
+    httpObj.sendFile('PUT', kuduDeploymentURL, webAppReadStream, headers, (error, response, body) => {
+        if(error) {
+            deferred.reject(tl.loc("Failedtodeploywebapppackageusingkuduservice", error));
+        }
+        else if(response.statusCode === 200) {
+             tl._writeLine(tl.loc("Successfullydeployedpackageusingkuduserviceat", webAppPackage, publishingProfile.publishUrl));
+             deferred.resolve(tl.loc("Successfullydeployedpackageusingkuduserviceat", webAppPackage, publishingProfile.publishUrl));
+        }
+        else {
+            tl.error(response.statusMessage);
+            deferred.reject(tl.loc('Unabletodeploywebappresponsecode', response.statusCode));
+        }
+    });
+    return deferred.promise;
 }
 
 export async function archiveFolder(webAppFolder:string) {
