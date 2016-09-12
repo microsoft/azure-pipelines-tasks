@@ -13,8 +13,9 @@ import sqMaven = require('./CodeAnalysis/mavensonar');
 import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
 import {CodeAnalysisOrchestrator} from "./CodeAnalysis/Common/CodeAnalysisOrchestrator";
 import {BuildOutput, BuildEngine} from './CodeAnalysis/Common/BuildOutput';
-import {PmdTool} from './CodeAnalysis/Common/PmdTool';
 import {CheckstyleTool} from './CodeAnalysis/Common/CheckstyleTool';
+import {PmdTool} from './CodeAnalysis/Common/PmdTool';
+import {FindbugsTool} from './CodeAnalysis/Common/FindbugsTool';
 
 // Set up localization resource file
 tl.setResourcePath(path.join( __dirname, 'task.json'));
@@ -38,6 +39,7 @@ var ccReportTask: string = null;
 let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('build.sourcesDirectory'), BuildEngine.Maven);
 var codeAnalysisOrchestrator:CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
     [new CheckstyleTool(buildOutput, 'checkstyleAnalysisEnabled'),
+        new FindbugsTool(buildOutput, 'findbugsAnalysisEnabled'),
         new PmdTool(buildOutput, 'pmdAnalysisEnabled')]);
 
 // Determine the version and path of Maven to use

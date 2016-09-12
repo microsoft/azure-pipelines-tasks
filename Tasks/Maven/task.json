@@ -322,7 +322,16 @@
             "required": false,
             "defaultValue": "false",
             "groupName": "CodeAnalysis",
-            "helpMarkDown": "Use the PMD Java static analysis tool to look for bugs in the code. Results are uploaded as build artifacts."
+            "helpMarkDown": "Use the PMD static analysis tool to look for bugs in the code. Results are uploaded as build artifacts."
+        },
+        {
+            "name": "findbugsAnalysisEnabled",
+            "type": "boolean",
+            "label": "Run FindBugs",
+            "required": false,
+            "defaultValue": "false",
+            "groupName": "CodeAnalysis",
+            "helpMarkDown": "Use the FindBugs static analysis tool to look for bugs in the code. Results are uploaded as build artifacts."
         }
     ],
     "execution": {

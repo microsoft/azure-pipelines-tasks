@@ -20,10 +20,10 @@ import tl = require('vsts-task-lib/task');
  * @class PmdReportParser
  * @implements {IAnalysisToolReportParser}
  */
-export class CheckstyleTool extends BaseTool {
+export class FindbugsTool extends BaseTool {
 
     constructor(buildOutput: BuildOutput, boolInputName: string) {
-        super('Checkstyle', buildOutput, boolInputName);
+        super('FindBugs', buildOutput, boolInputName);
     }
 
     /**
@@ -37,13 +37,12 @@ export class CheckstyleTool extends BaseTool {
 
             switch (this.buildOutput.buildEngine) {
                 case BuildEngine.Maven: {
-                    toolRunner.arg(['checkstyle:checkstyle']);
+                    toolRunner.arg(['findbugs:findbugs']);
                     break;
                 }
                 case BuildEngine.Gradle: {
-                    var initScriptPath: string = path.join(__dirname, '..', 'checkstyle.gradle');
-                    toolRunner.arg(['-I', initScriptPath]);
-                    break;
+                    tl.debug('Findbugs on Gradle is not implemented.');
+                    throw new Error();
                 }
             }
         }
@@ -59,7 +58,7 @@ export class CheckstyleTool extends BaseTool {
             case BuildEngine.Maven:
                 return path.join(output.moduleRoot);
             case BuildEngine.Gradle:
-                return path.join(output.moduleRoot, 'reports', 'checkstyle');
+                return path.join(output.moduleRoot, 'reports', 'findbugs');
             default:
                 tl.debug('No such build engine ' + this.buildOutput.buildEngine);
                 throw new Error();
@@ -77,26 +76,28 @@ export class CheckstyleTool extends BaseTool {
 
         var reportContent = fs.readFileSync(xmlReport, 'utf-8');
         xml2js.parseString(reportContent, (err, data) => {
-            // If the file is not XML, or is not from checkstyle, return immediately
-            if (!data || !data.checkstyle) {
-                tl.debug(`[CA] Empty or unrecognized checkstyle xml report ${xmlReport}`);
+            // If the file is not XML, or is not from FindBugs, return immediately
+            if (!data || !data.BugCollection ||
+                !data.BugCollection.FindBugsSummary || !data.BugCollection.FindBugsSummary[0] ||
+                !data.BugCollection.FindBugsSummary[0].FileStats) {
+                tl.debug(`[CA] Empty or unrecognized FindBugs XML report ${xmlReport}`);
                 return null;
             }
 
-            // No files with violations, return now that it has been marked for upload
-            if (!data.checkstyle.file || data.checkstyle.file.length === 0) {
-                tl.debug(`[CA] A checkstyle report was found for module '${moduleName}' but it contains no violations`);
-                return null;
-            }
-
-            data.checkstyle.file.forEach((file: any) => {
-                if (file.error) {
+            data.BugCollection.FindBugsSummary[0].FileStats.forEach((file: any) => {
+                if (file.$.bugCount > 0) {
                     fileCount++;
-                    violationCount += file.error.length;
+                    violationCount += Number(file.$.bugCount);
                 }
             });
 
-            tl.debug(`[CA] A checkstyle report was found for for module '${moduleName}' containing ${violationCount} issues - ${xmlReport}`);
+            // No files with violations, return now that it has been marked for upload
+            if (violationCount == 0) {
+                tl.debug(`[CA] A FindBugs report was found for module '${moduleName}' but it contains no violations`);
+                return null;
+            }
+
+            tl.debug(`[CA] A FindBugs report was found for for module '${moduleName}' containing ${violationCount} issues - ${xmlReport}`);
         });
 
         return [violationCount, fileCount];
