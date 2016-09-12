@@ -982,6 +982,8 @@ describe('Maven Suite', function () {
         createTempDirsForSonarQubeTests();
         var testSrcDir: string = __dirname;
         var testStgDir: string = path.join(__dirname, '_temp');
+        var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis'); // overall directory for all tools
+        fs.mkdirSync(codeAnalysisStgDir);
 
         mockHelper.setResponseAndBuildVars(
             path.join(__dirname, 'response.json'),

@@ -1132,8 +1132,10 @@ describe('gradle Suite', function () {
     it('Gradle with SonarQube - Does not fail if report-task.txt is missing during a PR build', function (done) {
         // Arrange
         createTempDirsForSonarQubeTests();
-        var testSrcDir: string = __dirname
+        var testSrcDir: string = __dirname;
         var testStgDir: string = path.join(__dirname, '_temp');
+        var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis'); // overall directory for all tools
+        fs.mkdirSync(codeAnalysisStgDir);
 
         mockHelper.setResponseAndBuildVars(
             path.join(__dirname, 'gradleSonarQube.json'),
