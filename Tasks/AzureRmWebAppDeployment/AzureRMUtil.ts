@@ -8,8 +8,8 @@ var parseString = require('xml2js').parseString;
 
 import tl = require('vsts-task-lib/task');
 import Q = require('q');
-import httpClient = require('vso-node-api/httpClient');
-import restClient = require('vso-node-api/restClient');
+import httpClient = require('vso-node-api/HttpClient');
+import restClient = require('vso-node-api/RestClient');
 
 var httpObj = new httpClient.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
 var restObj = new restClient.RestClient(httpObj);

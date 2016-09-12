@@ -52,9 +52,7 @@ async function run() {
             tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
         }
 
-        var win = tl.osType().match(/^Win/);
-
-        if(useWebDeploy || win) {
+        if(canUseWebDeploy(useWebDeploy)) {
             await DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
                             excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile,
                             additionalArguments, isFolderBasedDeployment);
@@ -221,6 +219,16 @@ function getSetParamFilePath(setParametersFile: string) : string {
     }
 
     return setParametersFile;
+}
+
+/**
+ * Checks if WebDeploy should be used to deploy webapp package or folder
+ * 
+ * @param useWebDeploy if user explicitly checked useWebDeploy
+ */
+function canUseWebDeploy(useWebDeploy: boolean) {
+    var win = tl.osType().match(/^Win/);
+    return (useWebDeploy || win);
 }
 
 run();

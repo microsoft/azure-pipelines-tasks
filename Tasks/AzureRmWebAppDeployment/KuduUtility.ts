@@ -4,7 +4,7 @@ import Q = require('q');
 import tl = require('vsts-task-lib/task');
 import path = require("path");
 import fs = require("fs");
-import httpClient = require('vso-node-api/httpClient');
+import httpClient = require('vso-node-api/HttpClient');
 var httpObj = new httpClient.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
 var gulp = require('gulp');
 var zip = require('gulp-zip');
@@ -96,12 +96,10 @@ export async function archiveFolder(webAppFolder:string) {
 export async  function containsParamFile(webAppPackage: string ) {
     var isParamFilePresent = false;
     var zip = new AdmZip(webAppPackage);
-    var zipEntries = zip.getEntries();
-    zipEntries.forEach(function(zipEntry) {
-        if (zipEntry.entryName.toLowerCase() == "parameters.xml") {
-            isParamFilePresent = true;
-        }
-    });
+    var zipEntry = zip.getEntry("parameters.xml");
+    if (zipEntry) {
+        isParamFilePresent = true;
+    }
     tl.debug(tl.loc("Isparameterfilepresentinwebpackage0", isParamFilePresent));
     return isParamFilePresent;
 }
