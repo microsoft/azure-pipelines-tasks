@@ -139,7 +139,7 @@ async function execBuild() {
     mvnGetVersion.exec()
         .fail(function (err) {
             console.error("Maven is not installed on the agent");
-            tl.exit(1);  // tl.exit sets the step result but does not stop execution
+            tl.setResult(tl.TaskResult.Failed, "Build failed."); // tl.exit sets the step result but does not stop execution
             process.exit(1);
         })
         .then(function (code) {
@@ -200,10 +200,10 @@ async function execBuild() {
 
             // 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
             if (userRunFailed || codeAnalysisFailed) {
-                tl.exit(1); // Set task failure
+                tl.setResult(tl.TaskResult.Failed, "Build failed."); // Set task failure
             }
             else {
-                tl.exit(0); // Set task success
+                tl.setResult(tl.TaskResult.Succeeded, "Build Succeeded."); // Set task success
             }
 
             // Do not force an exit as publishing results is async and it won't have finished 

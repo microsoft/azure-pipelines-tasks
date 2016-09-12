@@ -105,12 +105,17 @@ async function execBuild() {
             return processCodeAnalysisResults();
         })
         .then(() => {
-            tl.exit(gradleResult);
+            tl.debug(`Gradle result: ${gradleResult}`); 
+            if (gradleResult === 0) { 
+                tl.setResult(tl.TaskResult.Succeeded, "Build succeeded."); 
+            } else { 
+                tl.setResult(tl.TaskResult.Failed, "Build failed."); 
+            } 
         })
         .fail(function (err) {
             console.error(err);
             tl.debug('taskRunner fail');
-            tl.exit(1);
+            tl.setResult(tl.TaskResult.Failed, err); 
         });
 }
 
