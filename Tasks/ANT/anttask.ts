@@ -1,4 +1,5 @@
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
+/// <reference path="../../definitions/java-common.d.ts" />
 
 import tl = require('vsts-task-lib/task');
 import path = require('path');
@@ -6,6 +7,7 @@ import fs = require('fs');
 import os = require('os');
 import * as Q from "q";
 import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
+import javacommons = require('java-common/java-common');
 
 var isWindows = os.type().match(/^Win/);
 
@@ -175,7 +177,7 @@ async function doWork() {
         antb.arg(antBuildFile);
 
         // options and targets are optional
-        antb.arg(tl.getInput('options', false));
+        antb.line(tl.getInput('options', false));
         antb.arg(tl.getDelimitedInput('targets', ' ', false));
 
         // update ANT_HOME if user specified path manually (not required, but if so, check it)
@@ -202,14 +204,7 @@ async function doWork() {
             var jdkArchitecture = tl.getInput('jdkArchitecture');
 
             if (jdkVersion != 'default') {
-                // jdkVersion should be in the form of 1.7, 1.8, or 1.10
-                // jdkArchitecture is either x64 or x86
-                // envName for version 1.7 and x64 would be "JAVA_HOME_7_X64"
-                var envName = "JAVA_HOME_" + jdkVersion.slice(2) + "_" + jdkArchitecture.toUpperCase();
-                specifiedJavaHome = tl.getVariable(envName);
-                if (!specifiedJavaHome) {
-                    throw new Error('Failed to find specified JDK version. Please make sure environment variable ' + envName + ' exists and is set to the location of a corresponding JDK.');
-                }
+                specifiedJavaHome = javacommons.findJavaHome(jdkVersion, jdkArchitecture);
             }
         }
         else {
