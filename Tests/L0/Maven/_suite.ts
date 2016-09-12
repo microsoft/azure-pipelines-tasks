@@ -26,6 +26,10 @@ import {MockSonarQubeServer} from './server-mock';
 import http = require('http');
 import {IncomingMessage} from 'http';
 
+import os = require('os');
+
+var isWindows = os.type().match(/^Win/); 
+
 function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
 }
@@ -713,7 +717,11 @@ describe('Maven Suite', function () {
 
         tr.run()
             .then(() => {
-                assert(tr.invokedToolCount == 0, 'should not have run maven');
+                if (isWindows) { 
+                    assert(tr.invokedToolCount == 1, 'should not have run maven'); // Should have run reg query toolrunner once 
+                } else { 
+                    assert(tr.invokedToolCount == 0, 'should not have run maven'); 
+                } 
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
                 assert(tr.failed, 'task should have failed');
