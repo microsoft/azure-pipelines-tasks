@@ -67,7 +67,7 @@ function containsParamFile(webAppPackage) {
         var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package='" + webAppPackage + "'";
         var taskResult = tl.execSync(msDeployPath, msDeployCheckParamFileCmdArgs);
         var paramContentXML = taskResult.stdout;
-        tl.debug(tl.loc("Paramscontentofwebpackage0", paramContentXML));
+        //tl.debug(tl.loc("Paramscontentofwebpackage0", paramContentXML));
         var isParamFilePresent = false;
 
         // Return mocked output
