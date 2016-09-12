@@ -35,17 +35,17 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
     var webApplicationDeploymentPath = (virtualApplication) ? webAppName + "/" + virtualApplication : webAppName;
     
     if(isFolderBasedDeployment) {
-        msDeployCmdArgs += " -source:IisApp='" + webAppPackage + "'";
-        msDeployCmdArgs += " -dest:iisApp='" + webApplicationDeploymentPath + "',";
+        msDeployCmdArgs += " -source:IisApp=\"" + webAppPackage + "\"";
+        msDeployCmdArgs += " -dest:iisApp=\"" + webApplicationDeploymentPath + "\",";
     }
     else {       
-        msDeployCmdArgs += " -source:package='" + webAppPackage + "'";
+        msDeployCmdArgs += " -source:package=\"" + webAppPackage + "\"";
 
         if(isParamFilePresentInPacakge) {
             msDeployCmdArgs += " -dest:auto,";
         }
         else {
-            msDeployCmdArgs += " -dest:contentPath='" + webApplicationDeploymentPath + "',";
+            msDeployCmdArgs += " -dest:contentPath=\"" + webApplicationDeploymentPath + "\",";
         }
     }
 
@@ -57,7 +57,7 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
     }
 
     if(setParametersFile) {
-        msDeployCmdArgs += " -setParamFile=" + setParametersFile;
+        msDeployCmdArgs += " -setParamFile=\"" + setParametersFile + "\"";
     }
 
     if(!removeAdditionalFilesFlag) {
