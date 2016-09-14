@@ -95,7 +95,7 @@ async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, 
 
         var msDeployBatchFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'msDeployCommand.bat';
         var msDeployCommand = '"' + msDeployPath + '" ' + msDeployCmdArgs;
-        fs.writeFileSync(msDeployBatchFile, msDeployCommand);
+        tl.writeFile(msDeployBatchFile, msDeployCommand);
         await tl.exec("cmd", ['/C', msDeployBatchFile], <any> {failOnStdErr: true});
         tl.debug(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
     }

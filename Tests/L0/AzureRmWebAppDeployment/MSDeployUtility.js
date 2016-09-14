@@ -67,18 +67,13 @@ function containsParamFile(webAppPackage) {
         var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package='" + webAppPackage + "'";
         var taskResult = tl.execSync(msDeployPath, msDeployCheckParamFileCmdArgs);
         var paramContentXML = taskResult.stdout;
-        //tl.debug(tl.loc("Paramscontentofwebpackage0", paramContentXML));
         var isParamFilePresent = false;
 
         // Return mocked output
         return taskResult.code == 0 ? isParamFilePresent : true;
 }
 exports.containsParamFile = containsParamFile;
-/**
- * Gets the full path of MSDeploy.exe
- *
- * @returns    string
- */
+
 function getMSDeployFullPath() {
     var msDeployFullPath =  "msdeploypath\\msdeploy.exe";
     return msDeployFullPath;

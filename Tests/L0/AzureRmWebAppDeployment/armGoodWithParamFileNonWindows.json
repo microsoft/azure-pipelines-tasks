@@ -19,7 +19,7 @@
         "cmd" : true
     },
     "osType": {
-        "osType" : "Windows"
+        "osType" : "Linux"
     },
     "exec": {
     	"msdeploy_path -verb:getParameters -source:package='webAppPkg.zip'" : {

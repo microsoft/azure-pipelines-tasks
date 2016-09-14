@@ -9,7 +9,7 @@
     	}
     },
     "osType": {
-        "osType" : "Windows"
+        "osType" : "linux"
     },
     "checkPath" : {
         "msdeploy_path" : true,
