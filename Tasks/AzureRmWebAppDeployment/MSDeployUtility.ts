@@ -91,9 +91,20 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
  */
 export async  function containsParamFile(webAppPackage: string ) {
     var msDeployPath = await getMSDeployFullPath();
-    var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package='" + webAppPackage + "'";
-    var taskResult = tl.execSync(msDeployPath, msDeployCheckParamFileCmdArgs);
+    var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package=\"" + webAppPackage + "\"";
+
+    var msDeployParamFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'msDeployParam.bat';
+
+    var silentCommand = '@echo off \n';
+    var msDeployCommand = '"' + msDeployPath + '" ' + msDeployCheckParamFileCmdArgs;
+    var batchCommand = silentCommand + msDeployCommand;
+
+    tl.writeFile(msDeployParamFile, batchCommand);
+    tl._writeLine(tl.loc("Runningcommand", msDeployCommand));
+
+    var taskResult = tl.execSync("cmd", ['/C', msDeployParamFile], { failOnStdErr: true });
     var paramContentXML = taskResult.stdout;
+    paramContentXML = paramContentXML.replace(msDeployCommand, "");
     tl.debug(tl.loc("Paramscontentofwebpackage0", paramContentXML));
     var isParamFilePresent = false;
     await parseString(paramContentXML, (error, result) => {

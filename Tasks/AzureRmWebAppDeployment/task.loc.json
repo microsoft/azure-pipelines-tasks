@@ -262,7 +262,7 @@
     "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "ms-resource:loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved",
     "WebappsuccessfullypublishedatUrl0": "ms-resource:loc.messages.WebappsuccessfullypublishedatUrl0",
     "Failedtodeploywebsite": "ms-resource:loc.messages.Failedtodeploywebsite",
-    "Runningcommand01": "ms-resource:loc.messages.Runningcommand01",
+    "Runningcommand": "ms-resource:loc.messages.Runningcommand",
     "ConstructedmsDeploycomamndlinearguments": "ms-resource:loc.messages.ConstructedmsDeploycomamndlinearguments",
     "CannotfindMSDeployexe": "ms-resource:loc.messages.CannotfindMSDeployexe",
     "Runningmsdeploycommandtocheckifpackagecontainsparamfile0": "ms-resource:loc.messages.Runningmsdeploycommandtocheckifpackagecontainsparamfile0",

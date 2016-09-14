@@ -263,7 +263,7 @@
         "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update deployment status : uniquedeploymentIdCannotBeRetrieved",
         "WebappsuccessfullypublishedatUrl0": "Web App successfully deployed at url %s",
         "Failedtodeploywebsite": "Failed to deploy website.",
-        "Runningcommand01": "Running command: %s %s",
+        "Runningcommand": "Running command: %s",
         "ConstructedmsDeploycomamndlinearguments": "Constructed msDeploy comamnd line arguments",
         "CannotfindMSDeployexe": "Cannot find MSDeploy.exe",
         "Runningmsdeploycommandtocheckifpackagecontainsparamfile0": "Running msdeploy command to check if package contains param file : %s",

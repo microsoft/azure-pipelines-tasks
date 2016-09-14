@@ -58,7 +58,7 @@
   "loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update deployment status : uniquedeploymentIdCannotBeRetrieved",
   "loc.messages.WebappsuccessfullypublishedatUrl0": "Web App successfully deployed at url %s",
   "loc.messages.Failedtodeploywebsite": "Failed to deploy website.",
-  "loc.messages.Runningcommand01": "Running command: %s %s",
+  "loc.messages.Runningcommand": "Running command: %s",
   "loc.messages.ConstructedmsDeploycomamndlinearguments": "Constructed msDeploy comamnd line arguments",
   "loc.messages.CannotfindMSDeployexe": "Cannot find MSDeploy.exe",
   "loc.messages.Runningmsdeploycommandtocheckifpackagecontainsparamfile0": "Running msdeploy command to check if package contains param file : %s",

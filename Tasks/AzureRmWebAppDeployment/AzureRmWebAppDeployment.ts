@@ -16,9 +16,9 @@ async function run() {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
         var connectedServiceName = tl.getInput('ConnectedServiceName', true);
         var webAppName: string = tl.getInput('WebAppName', true);
-        var deployToSlotFlag: boolean = tl.getBoolInput('DeployToSlotFlag');
-        var resourceGroupName: string = tl.getInput('ResourceGroupName');
-        var slotName: string = tl.getInput('SlotName');
+        var deployToSlotFlag: boolean = tl.getBoolInput('DeployToSlotFlag', false);
+        var resourceGroupName: string = tl.getInput('ResourceGroupName', false);
+        var slotName: string = tl.getInput('SlotName', false);
         var webDeployPkg: string = tl.getPathInput('Package', true);
         var virtualApplication: string = tl.getInput('VirtualApplication', false);
 
@@ -40,9 +40,7 @@ async function run() {
 
         var isFolderBasedDeployment = await isInputPkgIsFolder(webDeployPkg);
         var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-        tl.debug(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
-        tl._writeLine("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);
-        tl._writeLine("##vso[task.setvariable variable=websiteUsername;issecret=true;]" + publishingProfile.user);
+        tl._writeLine(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
 
         if(virtualApplication) {
             publishingProfile.destinationAppUrl += "/" + virtualApplication;
@@ -52,7 +50,8 @@ async function run() {
             tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
         }
 
-        if(canUseWebDeploy(useWebDeploy)) {
+        if(canUseWebDeploy(useWebDeploy)) {        
+           tl._writeLine("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);
             await DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
                             excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile,
                             additionalArguments, isFolderBasedDeployment);
@@ -94,10 +93,14 @@ async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, 
     try {
 
         var msDeployBatchFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'msDeployCommand.bat';
+        var silentCommand = '@echo off \n';
         var msDeployCommand = '"' + msDeployPath + '" ' + msDeployCmdArgs;
-        fs.writeFileSync(msDeployBatchFile, msDeployCommand);
+        var batchCommand = silentCommand + msDeployCommand;
+
+        tl.writeFile(msDeployBatchFile, batchCommand);
+        tl._writeLine(tl.loc("Runningcommand", msDeployCommand));
         await tl.exec("cmd", ['/C', msDeployBatchFile], <any> {failOnStdErr: true});
-        tl.debug(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
+        tl._writeLine(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
     }
     catch(error) {
         tl.error(tl.loc('Failedtodeploywebsite'));
@@ -106,7 +109,7 @@ async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, 
     }
 
     try {
-        tl.debug(await azureRmUtil.updateDeploymentStatus(publishingProfile, isDeploymentSuccess));
+        tl._writeLine(await azureRmUtil.updateDeploymentStatus(publishingProfile, isDeploymentSuccess));
     }
     catch(error) {
         tl.warning(error);
@@ -146,6 +149,7 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
         }
         var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
         await kuduUtility.deployWebAppPackage(webAppZipFile, publishingProfile, pathMappings[0], pathMappings[1]);
+        tl._writeLine(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
     }
     catch(error) {
         tl.error(tl.loc('Failedtodeploywebsite'));
@@ -154,7 +158,7 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
     }
 
     try {
-        tl.debug(await azureRmUtil.updateDeploymentStatus(publishingProfile, isDeploymentSuccess));
+        tl._writeLine(await azureRmUtil.updateDeploymentStatus(publishingProfile, isDeploymentSuccess));
     }
     catch(error) {
         tl.warning(error);
