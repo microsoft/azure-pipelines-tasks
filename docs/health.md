@@ -28,59 +28,21 @@ Per the [Contribution Guidelines](https://github.com/Microsoft/vsts-tasks/blob/m
 
 # Task Health
 
+## Build
+
 |      Task        | Implemented | Platform-complete | Uses TaskLib/SDK | Has L0 Tests | Comments |
 |------------------|------|------|------|----|----------|
 | Ant                            |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. Code Coverage only in PS1|
-| ArchiveFiles                   | | | | | |
 | AndroidSigning                 |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
-| AzureCloudPowerShellDeployment | | | | | |
-| AzureFileCopy                  | | | | | |
-| AzurePowerShell                |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
-| AzureRmWebAppDeployment        | | | | | |
-| AzureWebPowerShellDeployment   | | | | | |
-| BatchScript                    |![Green](res/green.png)|![Green](res/green.png)| N/A  |  N/A | Carries no task impl.  Handler in agent |
 | CMake                          |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
-| Chef                           | | | | | |
-| ChefKnife                      | | | | | |
 | CmdLine                        |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
 | CocoaPods                      |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/red.png)| |
-| CopyFiles                      |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
-| CopyPublishBuildArtifacts      |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl.  Pinned to PS on windows |
-| cURLUploader                   |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. PS1 should be removed|
-| DecryptFile                    | | | | | |
-| DeleteFiles                    |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
-| DeployAzureResourceGroup       | | | | | |
-| DeployVisualStudioTestAgent    | | | | | |
-| ExtractFiles                   |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
 | Gradle                         |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. Code Coverage only in PS1|
 | Grunt                          | | | | | |
 | Gulp                           | | | | | |
-| IISWebAppDeployment            | | | | | |
-| JenkinsQueueJob                |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
 | MSBuild                        | | | | | |
 | Maven                          |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. Code Coverage only in PS1|
-| Npm                            | | | | | |
-| NuGetInstaller                 | | | | | |
-| NugetPackager                  | | | | | |
-| NugetPublisher                 | | | | | |
-| powerShell                     | | | | | |
-| PowerShellOnTargetMachines     | | | | | |
-| PublishBuildArtifacts          | | | | | |
-| PublishCodeCoverageResults     | | | | | |
-| PublishSymbols                 | | | | | |
-| PublishTestResults             | | | | | |
-| QuickPerfTest                  | | | | | |
-| RunDistributedTests            | | | | | |
-| RunJMeterLoadTest              | | | | | |
-| RunLoadTest                    | | | | | |
-| ShellScript                    | | | | | |
-| SonarQubePostTest              | | | | | |
-| SonarQubePreBuild              | | | | | |
-| SqlAzureDacpacDeployment       | | | | | |
-| SqlServerDacpacDeployment      | | | | | |
 | VSBuild                        | | | | | |
-| VsTest                         | | | | | |
-| WindowsMachineFileCopy         | | | | | |
 | XamarinAndroid                 | | | |![Green](res/green.png)| |
 | XamarinComponentRestore        | | | |![Green](res/green.png)| |
 | XamarinLicense                 | | | |![Green](res/green.png)| |
@@ -88,3 +50,63 @@ Per the [Contribution Guidelines](https://github.com/Microsoft/vsts-tasks/blob/m
 | XamariniOS                     | | | |![Green](res/green.png)| |
 | Xcode                          | | | | | |
 | XcodePackageiOS                | | | | | |
+
+## Packaging
+
+|      Task        | Implemented | Platform-complete | Uses TaskLib/SDK | Has L0 Tests | Comments |
+|------------------|------|------|------|----|----------|
+| Npm                            | | | | | |
+| NuGetInstaller                 | | | | | |
+| NugetPackager                  | | | | | |
+| NugetPublisher                 | | | | | |
+
+## Utilities
+
+|      Task        | Implemented | Platform-complete | Uses TaskLib/SDK | Has L0 Tests | Comments |
+|------------------|------|------|------|----|----------|
+| ArchiveFiles                   | | | | | |
+| BatchScript                    |![Green](res/green.png)|![Green](res/green.png)| N/A  |  N/A | Carries no task impl.  Handler in agent |
+| CMake                          |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| CmdLine                        |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| CopyFiles                      |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| CopyPublishBuildArtifacts      |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl.  Pinned to PS on windows |
+| cURLUploader                   |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. PS1 should be removed|
+| DecryptFile                    | | | | | |
+| DeleteFiles                    |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| ExtractFiles                   |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| JenkinsQueueJob                |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| powerShell                     | | | | | |
+| PublishBuildArtifacts          | | | | | |
+| PublishSymbols                 | | | | | |
+| ShellScript                    | | | | | |
+
+## Test
+
+|      Task        | Implemented | Platform-complete | Uses TaskLib/SDK | Has L0 Tests | Comments |
+|------------------|------|------|------|----|----------|
+| DeployVisualStudioTestAgent    | | | | | |
+| QuickPerfTest                  | | | | | |
+| RunDistributedTests            | | | | | |
+| RunJMeterLoadTest              | | | | | |
+| RunLoadTest                    | | | | | |
+| SonarQubePostTest              | | | | | |
+| SonarQubePreBuild              | | | | | |
+
+## Deploy 
+
+
+|      Task        | Implemented | Platform-complete | Uses TaskLib/SDK | Has L0 Tests | Comments |
+|------------------|------|------|------|----|----------|
+| AzureCloudPowerShellDeployment | | | | | |
+| AzureFileCopy                  | | | | | |
+| AzurePowerShell                |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| AzureRmWebAppDeployment        | | | | | |
+| AzureWebPowerShellDeployment   | | | | | |
+| Chef                           | | | | | |
+| ChefKnife                      | | | | | |
+| DeployAzureResourceGroup       | | | | | |
+| IISWebAppDeployment            | | | | | |
+| PowerShellOnTargetMachines     | | | | | |
+| SqlAzureDacpacDeployment       | | | | | |
+| SqlServerDacpacDeployment      | | | | | |
+| WindowsMachineFileCopy         | | | | | |
