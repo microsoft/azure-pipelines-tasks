@@ -4,7 +4,7 @@
   "friendlyName": "Azure CLI preview",
   "description": "Run a Shell or Batch script with Azure CLI commands against an azure subscription",
   "author": "Microsoft Corporation",
-  "helpMarkDown": "Replace with markdown to show in help",
+  "helpMarkDown": "http://go.microsoft.com/fwlink/?LinkID=827160",
   "category": "Deploy",
   "visibility":["Preview","Build","Release"],
   "runsOn": [

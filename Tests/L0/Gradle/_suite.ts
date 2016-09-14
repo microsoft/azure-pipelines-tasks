@@ -16,7 +16,8 @@ import {PmdTool} from '../../../Tasks/Gradle/CodeAnalysis/Common/PmdTool'
 
 import os = require('os');
 
-var gradleWrapper = os.type().match(/^Win/) ? 'gradlew.bat' : 'gradlew';
+var isWindows = os.type().match(/^Win/); 
+var gradleWrapper = isWindows ? 'gradlew.bat' : 'gradlew';
 
 function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
@@ -516,7 +517,11 @@ describe('gradle Suite', function () {
 
         tr.run()
             .then(() => {
-                assert(tr.invokedToolCount == 0, 'should not have run gradle');
+                if (isWindows) {
+                    assert(tr.invokedToolCount == 1, 'should not have run gradle'); // should have run reg query toolrunner once 
+                } else {
+                    assert(tr.invokedToolCount == 0, 'should not have run gradle');
+                } 
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
                 assert(tr.failed, 'task should have failed');
@@ -980,8 +985,10 @@ describe('gradle Suite', function () {
     it('Gradle with SonarQube - Does not fail if report-task.txt is missing during a PR build', function (done) {
         // Arrange
         createTempDirsForSonarQubeTests();
-        var testSrcDir: string = __dirname
+        var testSrcDir: string = __dirname;
         var testStgDir: string = path.join(__dirname, '_temp');
+        var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis'); // overall directory for all tools
+        fs.mkdirSync(codeAnalysisStgDir);
 
         mockHelper.setResponseAndBuildVars(
             path.join(__dirname, 'gradleSonarQube.json'),

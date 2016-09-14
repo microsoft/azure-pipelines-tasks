@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 63
+        "Patch": 64
     },
     "minimumAgentVersion": "1.89.0",
     "instanceNameFormat": "Maven $(mavenPOMFile)",
@@ -322,7 +322,16 @@
             "required": false,
             "defaultValue": "false",
             "groupName": "CodeAnalysis",
-            "helpMarkDown": "Use the PMD Java static analysis tool to look for bugs in the code. Results are uploaded as build artifacts."
+            "helpMarkDown": "Use the PMD static analysis tool to look for bugs in the code. Results are uploaded as build artifacts."
+        },
+        {
+            "name": "findbugsAnalysisEnabled",
+            "type": "boolean",
+            "label": "Run FindBugs",
+            "required": false,
+            "defaultValue": "false",
+            "groupName": "CodeAnalysis",
+            "helpMarkDown": "Use the FindBugs static analysis tool to look for bugs in the code. Results are uploaded as build artifacts."
         }
     ],
     "execution": {
@@ -356,6 +365,8 @@
         "codeAnalysisBuildSummaryLine_OneViolationOneFile": "%s found 1 violation in 1 file.",
         "codeAnalysisBuildSummaryLine_NoViolations": "%s found no violations.",
         "codeAnalysisBuildSummaryTitle": "Code Analysis Report",
-        "codeAnalysisArtifactSummaryTitle": "Code Analysis Results"
+        "codeAnalysisArtifactSummaryTitle": "Code Analysis Results",
+        "LocateJVMBasedOnVersionAndArch": "Locate JAVA_HOME for Java %s %s",
+        "FailedToLocateSpecifiedJVM": "Failed to find specified JDK version. Please make sure environment variable '%s' exists and is set to the location of a corresponding JDK."
     }
 }

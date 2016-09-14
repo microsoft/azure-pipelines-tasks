@@ -13,8 +13,12 @@ import sqMaven = require('./CodeAnalysis/mavensonar');
 import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
 import {CodeAnalysisOrchestrator} from "./CodeAnalysis/Common/CodeAnalysisOrchestrator";
 import {BuildOutput, BuildEngine} from './CodeAnalysis/Common/BuildOutput';
-import {PmdTool} from './CodeAnalysis/Common/PmdTool';
 import {CheckstyleTool} from './CodeAnalysis/Common/CheckstyleTool';
+import {PmdTool} from './CodeAnalysis/Common/PmdTool';
+import {FindbugsTool} from './CodeAnalysis/Common/FindbugsTool';
+import javacommons = require('java-common/java-common');
+
+var isWindows = os.type().match(/^Win/);
 
 // Set up localization resource file
 tl.setResourcePath(path.join( __dirname, 'task.json'));
@@ -38,6 +42,7 @@ var ccReportTask: string = null;
 let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('build.sourcesDirectory'), BuildEngine.Maven);
 var codeAnalysisOrchestrator:CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
     [new CheckstyleTool(buildOutput, 'checkstyleAnalysisEnabled'),
+        new FindbugsTool(buildOutput, 'findbugsAnalysisEnabled'),
         new PmdTool(buildOutput, 'pmdAnalysisEnabled')]);
 
 // Determine the version and path of Maven to use
@@ -95,15 +100,7 @@ if (javaHomeSelection == 'JDKVersion') {
     var jdkArchitecture: string = tl.getInput('jdkArchitecture');
 
     if (jdkVersion != 'default') {
-        // jdkVersion must be in the form of "1.7", "1.8", or "1.10"
-        // jdkArchitecture is either "x64" or "x86"
-        // envName for version=1.7 and architecture=x64 would be "JAVA_HOME_7_X64"
-        var envName: string = "JAVA_HOME_" + jdkVersion.slice(2) + "_" + jdkArchitecture.toUpperCase();
-        specifiedJavaHome = tl.getVariable(envName);
-        if (!specifiedJavaHome) {
-            tl.error('Failed to find specified JDK version. Make sure environment variable ' + envName + ' exists and is set to the location of a corresponding JDK.');
-            tl.exit(1);
-        }
+         specifiedJavaHome = javacommons.findJavaHome(jdkVersion, jdkArchitecture);
     }
 }
 else {
@@ -142,7 +139,7 @@ async function execBuild() {
     mvnGetVersion.exec()
         .fail(function (err) {
             console.error("Maven is not installed on the agent");
-            tl.exit(1);  // tl.exit sets the step result but does not stop execution
+            tl.setResult(tl.TaskResult.Failed, "Build failed."); // tl.exit sets the step result but does not stop execution
             process.exit(1);
         })
         .then(function (code) {
@@ -150,7 +147,7 @@ async function execBuild() {
             var mvnRun = tl.tool(mvnExec);
             mvnRun.arg('-f');
             mvnRun.arg(mavenPOMFile);
-            mvnRun.arg(mavenOptions);
+            mvnRun.line(mavenOptions);
             if (isCodeCoverageOpted && mavenGoals.indexOf('clean') == -1) {
                 mvnRun.arg('clean');
             }
@@ -203,10 +200,10 @@ async function execBuild() {
 
             // 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
             if (userRunFailed || codeAnalysisFailed) {
-                tl.exit(1); // Set task failure
+                tl.setResult(tl.TaskResult.Failed, "Build failed."); // Set task failure
             }
             else {
-                tl.exit(0); // Set task success
+                tl.setResult(tl.TaskResult.Succeeded, "Build Succeeded."); // Set task success
             }
 
             // Do not force an exit as publishing results is async and it won't have finished 

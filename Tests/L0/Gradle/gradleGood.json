@@ -61,6 +61,10 @@
         "gradlew.bat /o /p t i /o /n /s build test deploy": {
             "code": 0,
             "stdout": "More sample gradle output"
+        },
+        "reg query HKLM\\SOFTWARE\\JavaSoft\\Java Development Kit\\1.5 /v JavaHome /reg:32": { 
+            "code": 222, 
+            "stdout": "" 
         }
     },
     "checkPath": {

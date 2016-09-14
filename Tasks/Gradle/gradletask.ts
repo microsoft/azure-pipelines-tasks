@@ -14,6 +14,7 @@ import {BuildOutput, BuildEngine} from './CodeAnalysis/Common/BuildOutput';
 import {PmdTool} from './CodeAnalysis/Common/PmdTool';
 import {CheckstyleTool} from './CodeAnalysis/Common/CheckstyleTool';
 import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
+import javacommons = require('java-common/java-common');
 
 var isWindows = os.type().match(/^Win/);
 
@@ -64,7 +65,7 @@ if (isCodeCoverageOpted && inputTasks.indexOf('clean') == -1) {
     gb.arg('clean'); //if user opts for code coverage, we append clean functionality to make sure any uninstrumented class files are removed
 }
 
-gb.arg(tl.getInput('options', false));
+gb.line(tl.getInput('options', false));
 gb.arg(inputTasks);
 
 // update JAVA_HOME if user selected specific JDK version or set path manually
@@ -74,15 +75,7 @@ if (javaHomeSelection == 'JDKVersion') {
     var jdkArchitecture = tl.getInput('jdkArchitecture');
 
     if (jdkVersion != 'default') {
-        // jdkVersion should be in the form of 1.7, 1.8, or 1.10
-        // jdkArchitecture is either x64 or x86
-        // envName for version 1.7 and x64 would be "JAVA_HOME_7_X64"
-        var envName = "JAVA_HOME_" + jdkVersion.slice(2) + "_" + jdkArchitecture.toUpperCase();
-        specifiedJavaHome = tl.getVariable(envName);
-        if (!specifiedJavaHome) {
-            tl.error('Failed to find specified JDK version. Please make sure environment variable ' + envName + ' exists and is set to the location of a corresponding JDK.');
-            tl.exit(1);
-        }
+       specifiedJavaHome = javacommons.findJavaHome(jdkVersion, jdkArchitecture);
     }
 }
 else {
@@ -112,12 +105,17 @@ async function execBuild() {
             return processCodeAnalysisResults();
         })
         .then(() => {
-            tl.exit(gradleResult);
+            tl.debug(`Gradle result: ${gradleResult}`); 
+            if (gradleResult === 0) { 
+                tl.setResult(tl.TaskResult.Succeeded, "Build succeeded."); 
+            } else { 
+                tl.setResult(tl.TaskResult.Failed, "Build failed."); 
+            } 
         })
         .fail(function (err) {
             console.error(err);
             tl.debug('taskRunner fail');
-            tl.exit(1);
+            tl.setResult(tl.TaskResult.Failed, err); 
         });
 }
 
@@ -231,7 +229,7 @@ function enableCodeCoverage(): Q.Promise<any> {
 function isMultiModuleProject(wrapperScript: string): boolean {
     var gradleBuild = tl.tool(wrapperScript);
     gradleBuild.arg("properties");
-    gradleBuild.arg(tl.getInput('options', false));
+    gradleBuild.line(tl.getInput('options', false));
 
     var data = gradleBuild.execSync().stdout;
     if (typeof data != "undefined" && data) {
