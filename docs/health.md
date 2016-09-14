@@ -74,14 +74,14 @@ Per the [Contribution Guidelines](https://github.com/Microsoft/vsts-tasks/blob/m
 | CopyFiles                      |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
 | CopyPublishBuildArtifacts      |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl.  Pinned to PS on windows |
 | cURLUploader                   |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. PS1 should be removed|
-| DecryptFile                    | | | | | |
+| DecryptFiles                   |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Red](res/red.png)| No Tests |
 | DeleteFiles                    |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
 | ExtractFiles                   |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
 | JenkinsQueueJob                |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
-| powerShell                     | | | | | |
-| PublishBuildArtifacts          | | | | | |
-| PublishSymbols                 | | | | | |
-| ShellScript                    | | | | | |
+| PowerShell                     |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Red](res/red.png)| No Tests |
+| PublishBuildArtififacts        |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| PublishSymbols                 |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| ShellScript                    |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
 
 ## Test
 
