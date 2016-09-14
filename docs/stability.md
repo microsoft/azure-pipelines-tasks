@@ -32,6 +32,7 @@
 
 ### Investments
 
+  - Get tasks healthy.  [Current Report here](health.md)
   - Offer major locking of tasks with preview versions.  [Covered here](preview.md)
   - Deploy even patches via Ring model using LR (we currently deploy sprintly task changes via ring model)
   - Test in production builds setup in SU0 breadth of scenario coverage we don't get in mseng (Java, Nuget, iOS, etc...).  Created https://buildcanary.visualstudio.com

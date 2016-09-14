@@ -30,35 +30,38 @@ Per the [Contribution Guidelines](https://github.com/Microsoft/vsts-tasks/blob/m
 
 ## Build
 
+![Green](res/green.png)
+![Yellow](res/yellow.png)
+![Red](res/red.png)
+
 |      Task        | Implemented | Platform-complete | Uses TaskLib/SDK | Has L0 Tests | Comments |
 |------------------|------|------|------|----|----------|
-| Ant                            |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. Code Coverage only in PS1|
+| Ant                            |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. Code Coverage only in PS1|
 | AndroidSigning                 |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
 | CMake                          |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
 | CmdLine                        |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
-| CocoaPods                      |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/red.png)| |
+| CocoaPods                      |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Red](res/red.png)| |
 | Gradle                         |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. Code Coverage only in PS1|
-| Grunt                          | | | | | |
-| Gulp                           | | | | | |
-| MSBuild                        | | | | | |
+| Grunt                          |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| Gulp                           |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| Msbuild                        |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/yellow.png)| Has 2 Impl intentionally for msbuild / xbuild.  Missing xbuild (ts) L0 tests. |
 | Maven                          |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. Code Coverage only in PS1|
-| VSBuild                        | | | | | |
-| XamarinAndroid                 | | | |![Green](res/green.png)| |
-| XamarinComponentRestore        | | | |![Green](res/green.png)| |
-| XamarinLicense                 | | | |![Green](res/green.png)| |
-| XamarinTestCloud               | | | |![Green](res/green.png)| |
-| XamariniOS                     | | | |![Green](res/green.png)| |
-| Xcode                          | | | | | |
-| XcodePackageiOS                | | | | | |
+| VSBuild                        |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| XamarinAndroid                 |![Yellow](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. |
+| XamarinComponentRestore        |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| XamarinLicense                 |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| XamariniOS                     |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| XCode                          |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| XCodePackageiOS                |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
 
 ## Packaging
 
 |      Task        | Implemented | Platform-complete | Uses TaskLib/SDK | Has L0 Tests | Comments |
 |------------------|------|------|------|----|----------|
-| Npm                            | | | | | |
-| NuGetInstaller                 | | | | | |
-| NugetPackager                  | | | | | |
-| NugetPublisher                 | | | | | |
+| Npm                            |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| NuGetInstaller                 |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Red](res/red.png)| No Tests |
+| NugetPackager                  |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Red](res/red.png)| No Tests |
+| NugetPublisher                 |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Red](res/red.png)| No Tests |
 
 ## Utilities
 
@@ -91,6 +94,7 @@ Per the [Contribution Guidelines](https://github.com/Microsoft/vsts-tasks/blob/m
 | RunLoadTest                    | | | | | |
 | SonarQubePostTest              | | | | | |
 | SonarQubePreBuild              | | | | | |
+| XamarinTestCloud               |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
 
 ## Deploy 
 
