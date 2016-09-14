@@ -94,8 +94,8 @@
       "groupName": "advanced",
       "options": {
         "3.3.0": "3.3.0",
-        "3.5.1": "3.5.1",
-        "external": "External"
+        "3.5.0.1829": "3.5.0 – build 1829 (rc2)",
+        "custom": "Custom"
       }
     },
     {
@@ -126,6 +126,7 @@
     "NotARegularFile": "ms-resource:loc.messages.NotARegularFile",
     "UnknownFeedType": "ms-resource:loc.messages.UnknownFeedType",
     "CouldNotFindNuGetService": "ms-resource:loc.messages.CouldNotFindNuGetService",
+    "NoNuGetSpecified": "ms-resource:loc.messages.NoNuGetSpecified",
     "NGCommon_DetectedNuGetVersion": "ms-resource:loc.messages.NGCommon_DetectedNuGetVersion",
     "NGCommon_IgnoringNuGetExtensionsPath": "ms-resource:loc.messages.NGCommon_IgnoringNuGetExtensionsPath",
     "NGCommon_DetectedNuGetExtensionsPath": "ms-resource:loc.messages.NGCommon_DetectedNuGetExtensionsPath",

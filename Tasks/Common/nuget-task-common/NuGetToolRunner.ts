@@ -109,7 +109,7 @@ interface LocateOptions {
 }
 
 function locateTool(tool: string, opts?: LocateOptions) {
-    let searchPath = ["externals/nuget", "agent/Worker/Tools/NuGetCredentialProvider", "agent/Worker/Tools"];
+    let searchPath = ["externals/nuget", "agent/Worker/Tools/NuGetCredentialProvider", "agent/Worker/Tools", path.join(__dirname, 'NuGet/CredentialProvider')];
     let agentRoot = tl.getVariable("Agent.HomeDirectory");
 
     opts = opts || {};

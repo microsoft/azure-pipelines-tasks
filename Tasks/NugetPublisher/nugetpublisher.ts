@@ -66,7 +66,7 @@ async function main(): Promise<void> {
         let userNuGetProvided = false;
         if (tl.filePathSupplied("nuGetPath")) {
             userNuGetProvided = true;
-            if (nugetVersion !== "external")
+            if (nugetVersion !== "custom")
             {
                 // For back compat, if a path has already been specified then use it.
                 // However, warn the user in the build of this behavior.
@@ -74,6 +74,10 @@ async function main(): Promise<void> {
             }
         }
         else {
+            if (nugetVersion === "custom")
+            {
+                throw new Error(tl.loc("NoNuGetSpecified"))
+            }
             nuGetPath = nutil.getBundledNuGetLocation(nugetVersion);
         }
 

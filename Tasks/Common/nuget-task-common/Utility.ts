@@ -140,8 +140,8 @@ export function stripLeadingAndTrailingQuotes(path: string): string {
 }
 
 export function getBundledNuGetLocation(version: string): string {
-    if (version === "3.5.1"){
-        return path.join(__dirname, 'NuGet/3.5.1/NuGet.exe')
+    if (version === "3.5.0.1829"){
+        return path.join(__dirname, 'NuGet/3.5.0.1829/NuGet.exe')
     }
     else if (version === "3.3.0"){
         return path.join(__dirname, 'NuGet/3.3.0/NuGet.exe');
