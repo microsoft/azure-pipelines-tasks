@@ -240,7 +240,9 @@
     "ErrorWhileCreatingResponseFile": "ms-resource:loc.messages.ErrorWhileCreatingResponseFile",
     "ErrorWhileUpdatingResponseFile": "ms-resource:loc.messages.ErrorWhileUpdatingResponseFile",
     "ErrorWhilePublishingCodeChanges": "ms-resource:loc.messages.ErrorWhilePublishingCodeChanges",
+    "ErrorWhileListingDiscoveredTests": "ms-resource:loc.messages.ErrorWhileListingDiscoveredTests",
     "PublishCodeChangesPerfTime": "ms-resource:loc.messages.PublishCodeChangesPerfTime",
-    "GenerateResponseFilePerfTime": "ms-resource:loc.messages.GenerateResponseFilePerfTime"
+    "GenerateResponseFilePerfTime": "ms-resource:loc.messages.GenerateResponseFilePerfTime",
+    "UploadTestResultsPerfTime": "ms-resource:loc.messages.UploadTestResultsPerfTime"
   }
 }
