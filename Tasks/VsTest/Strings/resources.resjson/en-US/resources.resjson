@@ -56,6 +56,8 @@
   "loc.messages.ErrorWhileCreatingResponseFile": "Error occurred while creating the response file. All the tests will be executed for this run.",
   "loc.messages.ErrorWhileUpdatingResponseFile": "Error occurred while updating the response file '%s'. All the tests will be executed for this run.",
   "loc.messages.ErrorWhilePublishingCodeChanges": "Error occurred while publishing the code changes. All the tests will be executed for this run.",
+  "loc.messages.ErrorWhileListingDiscoveredTests": "Error occured while discovering the tests. All the tests will be exexuted for this run.",
   "loc.messages.PublishCodeChangesPerfTime": "Total time taken to publish code changes: %d milliseconds",
-  "loc.messages.GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds"
+  "loc.messages.GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds",
+  "loc.messages.UploadTestResultsPerfTime": "Total time taken to upload test results: %d milliseconds"
 }

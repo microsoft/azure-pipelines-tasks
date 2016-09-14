@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 67
+    "Patch": 68
   },
   "demands": [
     "Cmd"
@@ -38,19 +38,20 @@
       "required": true
     },
     {
-      "name": "includeReferencedProjects",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.includeReferencedProjects",
-      "defaultValue": "false",
-      "helpMarkDown": "ms-resource:loc.input.help.includeReferencedProjects"
-    },
-    {
       "name": "outputdir",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.outputdir",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.outputdir",
       "required": false
+    },
+    {
+      "name": "includeReferencedProjects",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.includeReferencedProjects",
+      "defaultValue": "false",
+      "groupName": "versioning",
+      "helpMarkDown": "ms-resource:loc.input.help.includeReferencedProjects"
     },
     {
       "name": "versionByBuild",
