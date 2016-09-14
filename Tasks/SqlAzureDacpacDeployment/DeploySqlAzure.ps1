@@ -22,6 +22,7 @@ $IpDetectionMethod = Get-VstsInput -Name "IpDetectionMethod" -Require
 $StartIpAddress = Get-VstsInput -Name "StartIpAddress"
 $EndIpAddress = Get-VstsInput -Name "EndIpAddress"
 $DeleteFirewallRule = Get-VstsInput -Name "DeleteFirewallRule" -Require -AsBool
+$defaultTimeout = 120
 
 # Initialize Rest API Helpers.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_
@@ -32,6 +33,13 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 # Load all dependent files for execution
 . "$PSScriptRoot\Utility.ps1"
 . "$PSScriptRoot\FindSqlPackagePath.ps1"
+
+# Function to import SqlPS module & avoid directory switch
+function Import-Sqlps {
+    push-location
+    Import-Module SqlPS -ErrorAction 'SilentlyContinue' 3>&1 | out-null
+    pop-location
+}
 
 function ThrowIfMultipleFilesOrNoFilePresent($files, $pattern)
 {
@@ -110,6 +118,13 @@ Try
 
     if ($TaskNameSelector -eq "DacpacTask")
     {
+        # Increase Timeout to 120 seconds in case its not provided by User
+        if (-not ($AdditionalArguments.ToLower().Contains("/targettimeout:") -or $AdditionalArguments.ToLower().Contains("/tt:")))
+        {
+            # Add Timeout of 120 Seconds
+            $AdditionalArguments = $AdditionalArguments + " /TargetTimeout:$defaultTimeout"
+        }
+
         # getting script arguments to execute sqlpackage.exe
         $scriptArgument = Get-SqlPackageCommandArguments -dacpacFile $FilePath -targetMethod "server" -serverName $ServerName -databaseName $DatabaseName `
                                                      -sqlUsername $SqlUsername -sqlPassword $SqlPassword -publishProfile $PublishProfilePath -additionalArguments $AdditionalArguments
@@ -132,12 +147,22 @@ Try
     }
     else
     {
+        # Import SQLPS Module
+        Import-SqlPs
+
         $scriptArgument = "Invoke-Sqlcmd -ServerInstance `"$ServerName`" -Database `"$DatabaseName`" -Username `"$SqlUsername`" "
 
         $commandToRun = $scriptArgument + " -Password `"$SqlPassword`" "
         $commandToLog = $scriptArgument + " -Password ****** "
 
-        if ($TaskNameSelector -eq "SqlTask")
+        if ($TaskNameSelector -eq "InlineSqlTask")
+        {
+            $FilePath = [System.IO.Path]::GetTempFileName()
+            ($SqlInline | Out-File $FilePath)
+
+            $SqlAdditionalArguments = $InlineAdditionalArguments
+        }
+        else # Sql File Task
         {
             # Check if file selected is an sql file.
             $sqlFileExtension = ".sql"
@@ -145,15 +170,17 @@ Try
             {
                 Write-Error (Get-VstsLocString -Key "SAD_InvalidSqlFile" -ArgumentList $FilePath)
             }
+        }
 
-            $commandToRun += " -Inputfile `"$FilePath`" " + $SqlAdditionalArguments
-            $commandToLog += " -Inputfile `"$FilePath`" " + $SqlAdditionalArguments
-        }
-        else # inline Sql
+        # Increase Timeout to 120 seconds in case its not provided by User
+        if (-not ($SqlAdditionalArguments.ToLower().Contains("-connectiontimeout")))
         {
-            $commandToRun += " -Query `"$SqlInline`" " + $InlineAdditionalArguments
-            $commandToLog += " -Query `"$SqlInline`" " + $InlineAdditionalArguments
+            # Add Timeout of 120 Seconds
+            $SqlAdditionalArguments = $SqlAdditionalArguments + " -ConnectionTimeout $defaultTimeout"
         }
+
+        $commandToRun += " -Inputfile `"$FilePath`" " + $SqlAdditionalArguments
+        $commandToLog += " -Inputfile `"$FilePath`" " + $SqlAdditionalArguments
 
         Write-Host $commandToLog
         Invoke-Expression $commandToRun
@@ -180,6 +207,13 @@ Catch [Exception]
 }
 Finally
 {
+    # Delete Temp file Created During inline Task Execution
+    if ($TaskNameSelector -eq "InlineSqlTask" -and (Test-Path $FilePath) -eq $true)
+    {
+        Write-Verbose "Removing File $FilePath"
+        Remove-Item $FilePath -ErrorAction 'SilentlyContinue'
+    }
+
     # Check if Firewall Rule is configured
     if ($firewallRuleName)
     {
