@@ -22,6 +22,7 @@ $IpDetectionMethod = Get-VstsInput -Name "IpDetectionMethod" -Require
 $StartIpAddress = Get-VstsInput -Name "StartIpAddress"
 $EndIpAddress = Get-VstsInput -Name "EndIpAddress"
 $DeleteFirewallRule = Get-VstsInput -Name "DeleteFirewallRule" -Require -AsBool
+$defaultTimeout = 120
 
 # Initialize Rest API Helpers.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_
@@ -36,7 +37,7 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 # Function to import SqlPS module & avoid directory switch
 function Import-Sqlps {
     push-location
-    Import-Module SqlPS 3>&1 | out-null
+    Import-Module SqlPS -ErrorAction 'SilentlyContinue' 3>&1 | out-null
     pop-location
 }
 
@@ -117,6 +118,13 @@ Try
 
     if ($TaskNameSelector -eq "DacpacTask")
     {
+        # Increase Timeout to 120 seconds in case its not provided by User
+        if (-not ($AdditionalArguments.ToLower().Contains("/targettimeout:") -or $AdditionalArguments.ToLower().Contains("/tt:")))
+        {
+            # Add Timeout of 120 Seconds
+            $AdditionalArguments = $AdditionalArguments + " /TargetTimeout:$defaultTimeout"
+        }
+
         # getting script arguments to execute sqlpackage.exe
         $scriptArgument = Get-SqlPackageCommandArguments -dacpacFile $FilePath -targetMethod "server" -serverName $ServerName -databaseName $DatabaseName `
                                                      -sqlUsername $SqlUsername -sqlPassword $SqlPassword -publishProfile $PublishProfilePath -additionalArguments $AdditionalArguments
@@ -162,6 +170,13 @@ Try
             {
                 Write-Error (Get-VstsLocString -Key "SAD_InvalidSqlFile" -ArgumentList $FilePath)
             }
+        }
+
+        # Increase Timeout to 120 seconds in case its not provided by User
+        if (-not ($SqlAdditionalArguments.ToLower().Contains("-connectiontimeout")))
+        {
+            # Add Timeout of 120 Seconds
+            $SqlAdditionalArguments = $SqlAdditionalArguments + " -ConnectionTimeout $defaultTimeout"
         }
 
         $commandToRun += " -Inputfile `"$FilePath`" " + $SqlAdditionalArguments
