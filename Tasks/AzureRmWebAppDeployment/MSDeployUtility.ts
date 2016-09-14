@@ -134,8 +134,8 @@ export async function getMSDeployFullPath() {
         return msDeployFullPath;
     }
     catch(error) {
-        tl.error(tl.loc('CannotfindMSDeployexe'));
-        throw new Error(error);
+        tl.warning(error);
+        return __dirname + "\\MSDeploy3.6\\msdeploy.exe";
     }
 }
 
@@ -145,10 +145,13 @@ function getMSDeployVersion(registryKey: string): Q.Promise<String> {
     .on('data', (entry) => {
         var keys = entry.data.keys;
         keys.sort();
+        if(parseFloat(keys[keys.length-1]) < 3) {
+            defer.reject(tl.loc("UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove", keys[keys.length-1]));
+        }
         defer.resolve(keys[keys.length-1]);
     })
     .on('error', (error) => {
-        defer.reject(error);
+        defer.reject(tl.loc("UnabletofindthelocationofMSDeployfromregistryonmachineError", error));
     });
     
     return defer.promise;
@@ -161,7 +164,7 @@ function getMSDeployInstallPath(registryKey: string): Q.Promise<string> {
         defer.resolve(entry.data.values.InstallPath.value);
     })
     .on('error', (error) => {
-        defer.reject(error);
+        defer.reject(tl.loc("UnabletofindthelocationofMSDeployfromregistryonmachineError", error));
     });
 
     return defer.promise;
