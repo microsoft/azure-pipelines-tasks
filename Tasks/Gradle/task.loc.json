@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 58
+    "Patch": 59
   },
   "demands": [
     "java"
@@ -193,7 +193,7 @@
       "label": "ms-resource:loc.input.label.gradleOpts",
       "required": false,
       "groupName": "advanced",
-      "defaultValue": "-Xmx2048m",
+      "defaultValue": "-Xmx1024m",
       "helpMarkDown": "ms-resource:loc.input.help.gradleOpts"
     },
     {
