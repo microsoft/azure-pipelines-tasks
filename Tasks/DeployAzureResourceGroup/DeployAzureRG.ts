@@ -41,6 +41,11 @@ export class deployAzureRG {
         try{ 
             this.connectedServiceNameSelector = tl.getInput("ConnectedServiceNameSelector", true);
             this.connectedService = null;
+            if(this.connectedServiceNameSelector=="ConnectedServiceName"){
+                this.connectedService = tl.getInput("ConnectedServiceName");
+            }else{
+                this.connectedService = tl.getInput("ConnectedServiceNameClassic");
+            }
             this.action = tl.getInput("action");
             this.actionClassic = tl.getInput("actionClassic");
             this.resourceGroupName = tl.getInput("resourceGroupName");
@@ -64,8 +69,10 @@ export class deployAzureRG {
            case "Create Or Update Resource Group": 
                 this.createTemplateDeployment();
                 break;
+           case "DeleteRG":
+                this.deleteResourceGroup();
+                break;
            default: 
-                //Error Handling
                 tl.setResult(tl.TaskResult.Failed, tl.loc("This Action is not handled yet."));
                 break;
 
@@ -144,5 +151,20 @@ export class deployAzureRG {
         if (this.outputVariable){
             process.env[this.outputVariable] = this.resourceGroupName;
         }
-    }    
+    }
+
+    private deleteResourceGroup(){
+        var credentials = this.getRMCredentials();
+        var rmClient = new arm.ResourceManagementClient(credentials, this.subscriptionId);
+        rmClient.resourceGroups.deleteMethod(this.resourceGroupName,(error, result, request, response) =>{
+            if (error){
+                tl.setResult(tl.TaskResult.Failed, tl.loc("Deletion of RG failed :"+ this.resourceGroupName));
+                return;
+            }
+            tl.setResult(tl.TaskResult.Succeeded, tl.loc("Successfully deleted "+ this.resourceGroupName));
+        });
+    }
 }
+
+var controller = new deployAzureRG();
+controller.start();
