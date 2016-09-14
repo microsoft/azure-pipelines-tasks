@@ -141,5 +141,8 @@ export class deployAzureRG {
             }
             tl.setResult(tl.TaskResult.Succeeded, tl.loc("Successfully Deployed using createTemplateDeployment"));
         } );
+        if (this.outputVariable){
+            process.env[this.outputVariable] = this.resourceGroupName;
+        }
     }    
 }

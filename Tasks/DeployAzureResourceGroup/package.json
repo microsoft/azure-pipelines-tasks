@@ -3,8 +3,8 @@
   "name": "AzureResourceGroupDeployment",
   "main":"DeployAzureRG.js",
   "devDependencies": {
-    "ms-rest-azure":"1.4.4-preview",
-    "azure-arm-resource": "1.4.4-preview",
+    "ms-rest-azure":"1.15.0",
+    "azure-arm-resource": "1.5.1-preview",
     "vsts-task-lib" : "^0.9.5",
     "minimist": "1.2.0"
   }
