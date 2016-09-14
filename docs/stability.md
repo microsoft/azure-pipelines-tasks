@@ -13,14 +13,14 @@
   - Machine assignment piepline is more robust
   - More monitoring: orchestration failures, machine request failures, granular queue state
   - More perf counters: throughput and faiures
-  - CSS Tool: Expose per SU hosted job queue for visibility.    
+  - More CSS Tool: Expose per SU hosted job queue for visibility.    
   - Parallel jobs for throughput and redundancy to job or agent hanging.
-  - MMS is a separate service: Redirect to healthier machine pools (azure re-image)
+  - MMS is a separate service: Redirect to healthier machine pools (run away from azure re-image issues)
   - Multi-image image support.  Less SxS, Requires MMS sep svc.
   - React Quicker to image issues: Generate the image on a VM in that prod subscription.  Productize intern project already done.  18 hrs --> 1 hr.
   - Run Task L1 tests on the image.  See below in tasks.  Finds real bugs where a tool doesn't actually work (SxS, not in path, etc...) 
-  - Break build and/or distributed task (transient execution) out TFS or do Named Job Queues
-  - JIT tools: Tools and Run as Admin you install
+  - Break build and/or distributed task (transient execution) out of TFS as big S service or do Named Job Queues
+  - JIT tools for user locking of some tools: [Tools feature](tools.md) and Run as Admin you install
 
 ## Tasks
 
