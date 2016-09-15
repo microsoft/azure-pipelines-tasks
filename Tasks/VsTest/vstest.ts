@@ -376,10 +376,19 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                 if (isEmptyResponseFile(responseFile)) {
                                     tl.debug("Empty response file detected. All tests will be executed.");
                                     executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
-                                        .then(function (code) {
+                                        .then(function (vscode) {
                                             uploadTestResults(testResultsDirectory)
                                                 .then(function (code) {
-                                                    defer.resolve(+code);
+                                                    if (!isNaN(+code) && +code != 0)
+                                                    {
+                                                        defer.resolve(+code);
+                                                    }
+                                                    else if (vscode != 0)
+                                                    {
+                                                        defer.resolve(vscode);
+                                                    }
+
+                                                    defer.resolve(0);
                                                 })
                                                 .fail(function (code) {
                                                     tl.debug("Test Run Updation failed!");
@@ -414,10 +423,19 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                 updateResponseFile(getVstestArguments(settingsFile, true), responseFile)
                                                     .then(function (updatedFile) {
                                                         executeVstest(testResultsDirectory, settingsFile, vsVersion, ["@" + updatedFile])
-                                                            .then(function (code) {
+                                                            .then(function (vscode) {
                                                                 uploadTestResults(testResultsDirectory)
                                                                     .then(function (code) {
-                                                                        defer.resolve(+code);
+                                                                        if (!isNaN(+code) && +code != 0)
+                                                                        {
+                                                                            defer.resolve(+code);
+                                                                        }
+                                                                        else if (vscode != 0)
+                                                                        {
+                                                                            defer.resolve(vscode);
+                                                                        }
+
+                                                                        defer.resolve(0);
                                                                     })
                                                                     .fail(function (code) {
                                                                         tl.debug("Test Run Updation failed!");
@@ -444,10 +462,19 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                         tl.error(err);
                                                         tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', responseFile));
                                                         executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
-                                                            .then(function (code) {
+                                                            .then(function (vscode) {
                                                                 uploadTestResults(testResultsDirectory)
                                                                     .then(function (code) {
-                                                                        defer.resolve(+code);
+                                                                        if (!isNaN(+code) && +code != 0)
+                                                                        {
+                                                                            defer.resolve(+code);
+                                                                        }
+                                                                        else if (vscode != 0)
+                                                                        {
+                                                                            defer.resolve(vscode);
+                                                                        }
+
+                                                                        defer.resolve(0);
                                                                     })
                                                                     .fail(function (code) {
                                                                         tl.debug("Test Run Updation failed!");
@@ -477,10 +504,19 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                 tl.error(err);
                                 tl.warning(tl.loc('ErrorWhileCreatingResponseFile'));
                                 executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
-                                    .then(function (code) {
+                                    .then(function (vscode) {
                                         uploadTestResults(testResultsDirectory)
                                             .then(function (code) {
-                                                defer.resolve(+code);
+                                                if (!isNaN(+code) && +code != 0)
+                                                {
+                                                    defer.resolve(+code);
+                                                }
+                                                else if (vscode != 0)
+                                                {
+                                                    defer.resolve(vscode);
+                                                }
+
+                                                defer.resolve(0);
                                             })
                                             .fail(function (code) {
                                                 tl.debug("Test Run Updation failed!");
