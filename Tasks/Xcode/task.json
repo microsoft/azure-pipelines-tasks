@@ -220,7 +220,7 @@
             "label": "Use xcpretty",
             "required": false,
             "defaultValue": false,
-            "helpMarkDown": "Use xcpretty to format xcodebuild output and generate junit test results report. Requires xcpretty be installed on agent hosts. See [xcpretty](https://github.com/supermarin/xcpretty) for details.",
+            "helpMarkDown": "Use xcpretty to format xcodebuild output and generate JUnit test results report. Requires xcpretty be installed on agent hosts. See [xcpretty](https://github.com/supermarin/xcpretty) for details.",
             "groupName": "advanced"
         },
         {
