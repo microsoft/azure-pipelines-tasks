@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 15
+        "Patch": 16
     },
     "demands": [
         "Cmd"
@@ -127,7 +127,7 @@
         "NotARegularFile": "%s is not a regular file. Check the 'Path/Pattern to nupkg' property of the NuGetPublisher task.",
         "UnknownFeedType": "Unknown feed type '%s'",
         "CouldNotFindNuGetService": "Could not find the NuGet service. This task will be unable to authenticate to feeds hosted in your Team Services account/TFS project collection.",
-        "NoNuGetSpecified" : "If 'external' is selected, you must provide a path to NuGet.exe",
+        "NoNuGetSpecified" : "If 'custom' is selected, you must provide a path to NuGet.exe",
 
         "NGCommon_DetectedNuGetVersion": "Detected NuGet version %s / %s",
         "NGCommon_IgnoringNuGetExtensionsPath": "Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable). Extensions are ignored when using the built-in NuGet client",
