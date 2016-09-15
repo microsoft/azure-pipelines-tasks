@@ -39,6 +39,7 @@ try {
     var tiaRebaseLimit: string = tl.getInput('runAllTestsAfterXBuilds');
     var sourcesDir = tl.getVariable('build.sourcesdirectory');
     var runIdFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
+    var baseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
 
 
     var sourcesDirectory = tl.getVariable('System.DefaultWorkingDirectory');
@@ -231,6 +232,7 @@ function generateResponseFile(discoveredTests: string): Q.Promise<string> {
     selectortool.arg("/DiscoveredTests:" + discoveredTests);
     selectortool.arg("/runidfile:" + runIdFile);
     selectortool.arg("/testruntitle:" + testRunTitle);
+    selectortool.arg("/BaseLineFile" + baseLineBuildIdFile);
 
     selectortool.exec()
         .then(function (code) {
@@ -266,6 +268,7 @@ function publishCodeChanges(): Q.Promise<string> {
     selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
     selectortool.arg("/SourcesDir:" + sourcesDir);
     selectortool.arg("/newprovider:" + newprovider);
+    selectortool.arg("/BaseLineFile" + baseLineBuildIdFile);
     if (tiaRebaseLimit) {
         selectortool.arg("/RebaseLimit:" + tiaRebaseLimit);
     }
