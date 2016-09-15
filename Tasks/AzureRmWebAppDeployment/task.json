@@ -251,7 +251,7 @@
         "Invalidwebapppackageorfolderpathprovided": "Invalid webapp package or folder path provided: %s",
         "SetParamFilenotfound0": "Set parameters file not found: %s",
         "GotconnectiondetailsforazureRMWebApp0": "Got connection details for azureRM WebApp:'%s'",
-        "UnabletoretrievewebappIDforazureRMWebApp0StatusCode1": "Unable to retrieve WebApp ID for azureRM WebApp:'%s'. Status Code: %s",
+        "UnabletoretrieveWebAppIDforazureRMWebApp0StatusCode1": "Unable to retrieve WebApp ID for azureRM WebApp:'%s'. Status Code: %s",
         "ErrorNoSuchDeployingMethodExists": "Error : No Such Deploying Method Exists",
         "UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1": "Unable to retrieve connection details for azureRM WebApp:'%s'. Status Code: %s",
         "Unabletoretrievewebapppublishurlforwebapp0StatusCode1" : "Unable to retrieve webapp publish url for webapp : '%s'. Status Code : '%s'",

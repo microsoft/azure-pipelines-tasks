@@ -250,7 +250,7 @@
     "Invalidwebapppackageorfolderpathprovided": "ms-resource:loc.messages.Invalidwebapppackageorfolderpathprovided",
     "SetParamFilenotfound0": "ms-resource:loc.messages.SetParamFilenotfound0",
     "GotconnectiondetailsforazureRMWebApp0": "ms-resource:loc.messages.GotconnectiondetailsforazureRMWebApp0",
-    "UnabletoretrievewebappIDforazureRMWebApp0StatusCode1": "ms-resource:loc.messages.UnabletoretrievewebappIDforazureRMWebApp0StatusCode1",
+    "UnabletoretrieveWebAppIDforazureRMWebApp0StatusCode1": "ms-resource:loc.messages.UnabletoretrieveWebAppIDforazureRMWebApp0StatusCode1",
     "ErrorNoSuchDeployingMethodExists": "ms-resource:loc.messages.ErrorNoSuchDeployingMethodExists",
     "UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1": "ms-resource:loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1",
     "Unabletoretrievewebapppublishurlforwebapp0StatusCode1": "ms-resource:loc.messages.Unabletoretrievewebapppublishurlforwebapp0StatusCode1",
