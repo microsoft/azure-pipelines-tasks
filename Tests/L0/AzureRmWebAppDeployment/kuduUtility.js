@@ -26,3 +26,9 @@ function getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappin
 }
 exports.getVirtualAndPhysicalPaths = getVirtualAndPhysicalPaths;
 
+function containsParamFile(webAppPackage) {
+  
+    var isParamFilePresent = false;
+    return isParamFilePresent;
+}
+exports.containsParamFile = containsParamFile;
