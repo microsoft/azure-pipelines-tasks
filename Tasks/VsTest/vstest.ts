@@ -391,7 +391,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                 })
                                                 .fail(function (code) {
                                                     tl.debug("Test Run Updation failed!");
-                                                    defer.resolve(code);
+                                                    defer.resolve(1);
                                                 })
                                                 .finally(function () {
                                                     tl.debug("Deleting the response file" + responseFile);
@@ -438,7 +438,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                                     })
                                                                     .fail(function (code) {
                                                                         tl.debug("Test Run Updation failed!");
-                                                                        defer.resolve(code);
+                                                                        defer.resolve(1);
                                                                     })
                                                                     .finally(function () {
                                                                         tl.debug("Deleting the response file" + responseFile);
@@ -477,7 +477,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                                     })
                                                                     .fail(function (code) {
                                                                         tl.debug("Test Run Updation failed!");
-                                                                        defer.resolve(code);
+                                                                        defer.resolve(1);
                                                                     })
                                                                     .finally(function () {
                                                                         tl.debug("Deleting the response file" + responseFile);
@@ -519,7 +519,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                             })
                                             .fail(function (code) {
                                                 tl.debug("Test Run Updation failed!");
-                                                defer.resolve(code);
+                                                defer.resolve(1);
                                             })
                                             .finally(function () {
                                                 tl.debug("Deleting the discovered tests file" + listFile);
