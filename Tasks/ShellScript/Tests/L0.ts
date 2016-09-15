@@ -21,8 +21,8 @@ describe('ShellScript L0 Suite', function () {
         let tp = path.join(__dirname, 'L0runsInCwd.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.Run();
-        assert(tr.Ran('/usr/local/bin/bash /script.sh arg1 arg2'), 'it should have run ShellScript');
+        tr.run();
+        assert(tr.ran('/usr/local/bin/bash /script.sh arg1 arg2'), 'it should have run ShellScript');
         assert(tr.invokedToolCount == 1, 'should have only run ShellScript');
         assert(tr.stdout.indexOf('bash output here') >= 0, "bash stdout");
         assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -30,5 +30,40 @@ describe('ShellScript L0 Suite', function () {
 
         done();
     });
-   
+
+	it('fails if script returns 1', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, 'L0failIfReturns1.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+
+		tr.run();
+        assert(tr.ran('/usr/local/bin/bash /script.sh arg1 arg2'), 'it should have run ShellScript');
+        assert(tr.invokedToolCount == 1, 'should have only run ShellScript');
+
+        var expectedErr = '/usr/local/bin/bash failed with return code: 1';
+
+        assert(tr.stdOutContained(expectedErr), 'should have said: ' + expectedErr);
+        // failOnStdErr not set
+        assert(!tr.stderr, 'should not have written to stderr');
+        assert(tr.failed, 'task should have failed');
+        done();
+	})
+
+	it('fails if failOnStdErr and script writes to stderr', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, 'L0failIfStdErr.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+
+		tr.run();
+        assert(tr.ran('/usr/local/bin/bash /script.sh arg1 arg2'), 'it should have run ShellScript');
+        assert(tr.invokedToolCount == 1, 'should have only run ShellScript');
+        // failOnStdErr true
+        assert(tr.stderr.length > 0, 'should have written to stderr');
+        assert(tr.failed, 'task should have failed');
+        done();
+	})
 });
