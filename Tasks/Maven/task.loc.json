@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 64
+    "Patch": 66
   },
   "minimumAgentVersion": "1.89.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -228,7 +228,7 @@
       "label": "ms-resource:loc.input.label.mavenOpts",
       "required": false,
       "groupName": "advanced",
-      "defaultValue": "-Xmx2048m",
+      "defaultValue": "-Xmx1024m",
       "helpMarkDown": "ms-resource:loc.input.help.mavenOpts"
     },
     {
