@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 60
+        "Patch": 66
     },
     "minimumAgentVersion": "1.89.0",
     "instanceNameFormat": "Maven $(mavenPOMFile)",
@@ -228,7 +228,7 @@
             "label": "Set MAVEN_OPTS to",
             "required": false,
             "groupName": "advanced",
-            "defaultValue": "-Xmx2048m",
+            "defaultValue": "-Xmx1024m",
             "helpMarkDown": "Sets the MAVEN_OPTS enviroment variable, which is used to send command-line arguments to start the JVM. The xmx flag specifies the maximum memory available to the JVM."
         },
         {
@@ -307,13 +307,31 @@
             "visibleRule": "sqAnalysisEnabled = true"
         },
         {
-          "name": "pmdAnalysisEnabled",
-          "type": "boolean",
-          "label": "Run PMD Analysis",
-          "required": false,
-          "defaultValue": "false",
-          "groupName": "CodeAnalysis",
-          "helpMarkDown": "Use the PMD Java static analysis tool to look for bugs in the code."
+            "name": "checkstyleAnalysisEnabled",
+            "type": "boolean",
+            "label": "Run Checkstyle",
+            "required": false,
+            "defaultValue": "false",
+            "groupName": "CodeAnalysis",
+            "helpMarkDown": "Run the Checkstyle tool with the default Sun checks. Results are uploaded as build artifacts."
+        },
+        {
+            "name": "pmdAnalysisEnabled",
+            "type": "boolean",
+            "label": "Run PMD",
+            "required": false,
+            "defaultValue": "false",
+            "groupName": "CodeAnalysis",
+            "helpMarkDown": "Use the PMD static analysis tool to look for bugs in the code. Results are uploaded as build artifacts."
+        },
+        {
+            "name": "findbugsAnalysisEnabled",
+            "type": "boolean",
+            "label": "Run FindBugs",
+            "required": false,
+            "defaultValue": "false",
+            "groupName": "CodeAnalysis",
+            "helpMarkDown": "Use the FindBugs static analysis tool to look for bugs in the code. Results are uploaded as build artifacts."
         }
     ],
     "execution": {
@@ -340,11 +358,15 @@
         "sqAnalysis_IsPullRequest_SkippingBuildBreaker": "Pull request build: build will not be broken if quality gate fails.",
         "sqAnalysis_BuildBrokenDueToQualityGateFailure": "The SonarQube quality gate associated with this build has failed.",
         "sqAnalysis_QualityGatePassed": "The SonarQube quality gate associated with this build has passed (status %s)",
+        "sqAnalysis_UnknownComparatorString": "The SonarQube build summary encountered a problem: unknown comparator '%s'",
+        "sqAnalysis_NoUnitsFound": "The list of SonarQube measurement units could not be retrieved from the server.",
         "codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "%s found %d violations in %d files.",
         "codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "%s found %d violations in 1 file.",
         "codeAnalysisBuildSummaryLine_OneViolationOneFile": "%s found 1 violation in 1 file.",
         "codeAnalysisBuildSummaryLine_NoViolations": "%s found no violations.",
         "codeAnalysisBuildSummaryTitle": "Code Analysis Report",
-        "codeAnalysisArtifactSummaryTitle": "Code Analysis Results"
+        "codeAnalysisArtifactSummaryTitle": "Code Analysis Results",
+        "LocateJVMBasedOnVersionAndArch": "Locate JAVA_HOME for Java %s %s",
+        "FailedToLocateSpecifiedJVM": "Failed to find specified JDK version. Please make sure environment variable '%s' exists and is set to the location of a corresponding JDK."
     }
 }

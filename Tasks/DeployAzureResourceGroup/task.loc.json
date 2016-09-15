@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 87
+    "Patch": 88
   },
   "demands": [
     "azureps"
@@ -139,6 +139,20 @@
       "visibleRule": "action = Create Or Update Resource Group"
     },
     {
+      "name": "deploymentMode",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.deploymentmode",
+      "defaultValue": "Incremental",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.deploymentmode",
+      "options": {
+        "Validation": "Validation Only",
+        "Incremental": "Incremental Mode",
+        "Complete": "Complete Mode"
+      },
+      "visibleRule": "action = Create Or Update Resource Group"
+    },
+    {
       "name": "csmFile",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.csmFile",
@@ -238,6 +252,8 @@
     "ARG_AzureRMModuleNotFound": "ms-resource:loc.messages.ARG_AzureRMModuleNotFound",
     "ARG_DeploymentFailed": "ms-resource:loc.messages.ARG_DeploymentFailed",
     "ARG_DeploymentSucceeded": "ms-resource:loc.messages.ARG_DeploymentSucceeded",
+    "ARG_ValidationFailed": "ms-resource:loc.messages.ARG_ValidationFailed",
+    "ARG_ValidationSucceeded": "ms-resource:loc.messages.ARG_ValidationSucceeded",
     "ARG_InvalidFilePath": "ms-resource:loc.messages.ARG_InvalidFilePath",
     "ARG_FileNotFound": "ms-resource:loc.messages.ARG_FileNotFound",
     "ARG_SpecifyValidTemplatePath": "ms-resource:loc.messages.ARG_SpecifyValidTemplatePath",

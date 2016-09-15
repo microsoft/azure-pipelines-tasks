@@ -45,13 +45,13 @@ export function processSonarQubeIntegration(sqBuildFolder:string):Q.Promise<void
     var sqMetrics:SonarQubeMetrics = getSonarQubeMetrics(sqRunSettings);
 
     // Wait for all promises to complete before proceeding (even if one or more promises reject).
-    return Q.allSettled([
+    return Q.all([
         VstsServerUtils.processSonarQubeBuildSummary(sqRunSettings, sqMetrics),
     ])
         .then(() => {
             // Apply the build breaker at the end, since breaking the build exits the build process.
             VstsServerUtils.processSonarQubeBuildBreaker(sqRunSettings, sqMetrics);
-        })
+        });
 }
 
 /**

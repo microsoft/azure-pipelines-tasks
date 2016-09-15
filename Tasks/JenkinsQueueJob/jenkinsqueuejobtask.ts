@@ -20,38 +20,72 @@ import JobQueue = jobqueue.JobQueue;
 import util = require('./util');
 
 export class TaskOptions {
-    serverEndpoint: string = tl.getInput('serverEndpoint', true);
-    serverEndpointUrl: string = tl.getEndpointUrl(this.serverEndpoint, false);
+    serverEndpoint: string;
+    serverEndpointUrl: string;
 
-    serverEndpointAuth: tl.EndpointAuthorization = tl.getEndpointAuthorization(this.serverEndpoint, false);
-    username: string = this.serverEndpointAuth['parameters']['username'];
-    password: string = this.serverEndpointAuth['parameters']['password'];
+    serverEndpointAuth: tl.EndpointAuthorization;
+    username: string;
+    password: string;
 
-    jobName: string = tl.getInput('jobName', true);
+    jobName: string;
 
-    captureConsole: boolean = tl.getBoolInput('captureConsole', true);
+    captureConsole: boolean;
     // capturePipeline is only possible if captureConsole mode is enabled
-    capturePipeline: boolean = this.captureConsole ? tl.getBoolInput('capturePipeline', true) : false;
+    capturePipeline: boolean;
 
-    pollIntervalMillis: number = 5000; // five seconds is what the Jenkins Web UI uses
+    pollIntervalMillis: number;
 
-    parameterizedJob: boolean = tl.getBoolInput('parameterizedJob', true);
+    parameterizedJob: boolean;
     // jobParameters are only possible if parameterizedJob is enabled
-    jobParameters: string[] = this.parameterizedJob ? tl.getDelimitedInput('jobParameters', '\n', false) : [];
+    jobParameters: string[];
 
-    jobQueueUrl: string = util.addUrlSegment(this.serverEndpointUrl, util.convertJobName(this.jobName)) + ((this.parameterizedJob) ? '/buildWithParameters?delay=0sec' : '/build?delay=0sec');
-    teamJobQueueUrl: string = util.addUrlSegment(this.serverEndpointUrl, '/team-build/build/' + this.jobName + '?delay=0sec');
-    teamPluginUrl: string = util.addUrlSegment(this.serverEndpointUrl, '/pluginManager/available');
+    jobQueueUrl: string;
+    teamJobQueueUrl: string;
+    teamPluginUrl: string;
 
-    strictSSL: boolean = ("true" !== tl.getEndpointDataParameter(this.serverEndpoint, "acceptUntrustedCerts", true));
+    teamBuildPluginAvailable: boolean;
+    saveResultsTo: string;
 
-    NO_CRUMB: string = 'NO_CRUMB';
-    crumb: string = this.NO_CRUMB;
+    strictSSL: boolean;
+
+    NO_CRUMB: string;
+    crumb: string;
 
     constructor() {
-        tl.debug('strictSSL=' + this.strictSSL);
+        this.serverEndpoint = tl.getInput('serverEndpoint', true);
+        this.serverEndpointUrl = tl.getEndpointUrl(this.serverEndpoint, false);
         tl.debug('serverEndpointUrl=' + this.serverEndpointUrl);
+        this.serverEndpointAuth = tl.getEndpointAuthorization(this.serverEndpoint, false);
+        this.username = this.serverEndpointAuth['parameters']['username'];
+        this.password = this.serverEndpointAuth['parameters']['password'];
+
+        this.jobName = tl.getInput('jobName', true);
+
+        this.captureConsole = tl.getBoolInput('captureConsole', true);
+        // capturePipeline is only possible if captureConsole mode is enabled
+        this.capturePipeline = this.captureConsole ? tl.getBoolInput('capturePipeline', true) : false;
+
+        this.pollIntervalMillis = 5000; // five seconds is what the Jenkins Web UI uses
+
+        this.parameterizedJob = tl.getBoolInput('parameterizedJob', true);
+        // jobParameters are only possible if parameterizedJob is enabled
+        this.jobParameters = this.parameterizedJob ? tl.getDelimitedInput('jobParameters', '\n', false) : [];
+
+        this.jobQueueUrl = util.addUrlSegment(this.serverEndpointUrl, util.convertJobName(this.jobName)) + ((this.parameterizedJob) ? '/buildWithParameters?delay=0sec' : '/build?delay=0sec');
         tl.debug('jobQueueUrl=' + this.jobQueueUrl);
+        this.teamJobQueueUrl = util.addUrlSegment(this.serverEndpointUrl, '/team-build/build/' + this.jobName + '?delay=0sec');
+        tl.debug('teamJobQueueUrl=' + this.teamJobQueueUrl);
+        this.teamPluginUrl = util.addUrlSegment(this.serverEndpointUrl, '/pluginManager/available');
+        tl.debug('teamPluginUrl=' + this.teamPluginUrl);
+
+        this.teamBuildPluginAvailable = false;
+        this.saveResultsTo = path.join(tl.getVariable('Build.StagingDirectory'), 'jenkinsResults');
+
+        this.strictSSL = ("true" !== tl.getEndpointDataParameter(this.serverEndpoint, "acceptUntrustedCerts", true));
+        tl.debug('strictSSL=' + this.strictSSL);
+
+        this.NO_CRUMB = 'NO_CRUMB';
+        this.crumb = this.NO_CRUMB;
     }
 }
 

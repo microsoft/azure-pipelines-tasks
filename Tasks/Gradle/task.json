@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 54
+        "Patch": 59
     },
     "demands": [
         "java"
@@ -193,7 +193,7 @@
             "label": "Set GRADLE_OPTS",
             "required": false,
             "groupName": "advanced",
-            "defaultValue": "-Xmx2048m",
+            "defaultValue": "-Xmx1024m",
             "helpMarkDown": "Sets the GRADLE_OPTS enviroment variable, which is used to send command-line arguments to start the JVM. The xmx flag specifies the maximum memory available to the JVM."
         },
         {
@@ -342,11 +342,15 @@
         "sqAnalysis_IsPullRequest_SkippingBuildBreaker": "Pull request build: build will not be broken if quality gate fails.",
         "sqAnalysis_BuildBrokenDueToQualityGateFailure": "The SonarQube quality gate associated with this build has failed.",
         "sqAnalysis_QualityGatePassed": "The SonarQube quality gate associated with this build has passed (status %s)",
+        "sqAnalysis_UnknownComparatorString": "The SonarQube build summary encountered a problem: unknown comparator '%s'",
+        "sqAnalysis_NoUnitsFound": "The list of SonarQube measurement units could not be retrieved from the server.",
         "codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "%s found %d violations in %d files.",
         "codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "%s found %d violations in 1 file.",
         "codeAnalysisBuildSummaryLine_OneViolationOneFile": "%s found 1 violation in 1 file.",
         "codeAnalysisBuildSummaryLine_NoViolations": "%s found no violations.",
         "codeAnalysisBuildSummaryTitle": "Code Analysis Report",
-        "codeAnalysisArtifactSummaryTitle": "Code Analysis Results"
+        "codeAnalysisArtifactSummaryTitle": "Code Analysis Results",
+        "LocateJVMBasedOnVersionAndArch": "Locate JAVA_HOME for Java %s %s",
+        "FailedToLocateSpecifiedJVM": "Failed to find specified JDK version. Please make sure environment variable '%s' exists and is set to the location of a corresponding JDK."
     }
 }

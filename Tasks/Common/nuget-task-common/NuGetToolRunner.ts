@@ -24,7 +24,7 @@ function prepareNuGetExeEnvironment(
     let env: EnvironmentDictionary = {};
     let originalCredProviderPath: string;
     for (let e in input) {
-        if(!input.hasOwnProperty(e)) {
+        if (!input.hasOwnProperty(e)) {
             continue;
         }
         // NuGet.exe extensions only work with a single specific version of nuget.exe. This causes problems

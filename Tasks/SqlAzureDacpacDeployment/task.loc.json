@@ -9,14 +9,17 @@
     "Build",
     "Release"
   ],
+  "runsOn": [
+    "Agent",
+    "MachineGroup"
+  ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 26
+    "Minor": 1,
+    "Patch": 0
   },
   "demands": [
-    "azureps",
     "sqlpackage"
   ],
   "minimumAgentVersion": "1.103.0",
@@ -149,8 +152,7 @@
       "visibleRule": "TaskNameSelector = InlineSqlTask",
       "properties": {
         "resizable": "true",
-        "rows": "10",
-        "maxLength": "5000"
+        "rows": "10"
       }
     },
     {

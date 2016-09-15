@@ -30,8 +30,12 @@ async function main(): Promise<void> {
     let buildIdentityDisplayName: string = null;
     let buildIdentityAccount: string = null;
     try {
-
         tl.setResourcePath(path.join(__dirname, "task.json"));
+
+        // set the console code page to "UTF-8"
+        if (process.platform === "win32") {
+            tl.execSync(path.resolve(process.env.windir, "system32", "chcp.com"), ["65001"]);
+        }
 
         // read inputs
         let searchPattern = tl.getPathInput("searchPattern", true, false);

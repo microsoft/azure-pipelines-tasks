@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 56
+        "Patch": 62
     },
     "demands": [
         "vstest"
@@ -24,6 +24,12 @@
             "name": "executionOptions",
             "displayName": "Execution Options",
             "isExpanded": true
+        },
+        {
+            "name": "tiaOptions",
+            "displayName": "Test Impact Analysis",
+            "isExpanded": true,
+			"tags" : [ "Preview" ]
         },
         {
             "name": "advancedExecutionOptions",
@@ -90,6 +96,24 @@
             "required": false,
             "helpMarkDown": "Enable parallel execution of your tests.",
             "groupName": "executionOptions"
+        },
+        {
+            "name": "runOnlyImpactedTests",
+            "type": "boolean",
+            "label": "Run Only Impacted Tests",
+            "defaultValue": "False",
+            "required": false,
+            "helpMarkDown": "Automatically select, and run only the tests needed to validate the code change.",
+            "groupName": "tiaOptions"
+        },
+        {
+            "name": "runAllTestsAfterXBuilds",
+            "type": "string",
+            "label": "Number Of Builds After Which To Run All Tests:",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Number of builds after which to automatically run all tests. Test Impact Analysis stores the mapping between test cases and source code. It is recommended to regenerate the mapping by running all tests, on a regular basis.",
+            "groupName": "tiaOptions"
         },
         {
             "name": "vstestLocationMethod",
@@ -214,7 +238,9 @@
         "ErrorWhileCreatingResponseFile": "Error occurred while creating the response file. All the tests will be executed for this run.",
         "ErrorWhileUpdatingResponseFile": "Error occurred while updating the response file '%s'. All the tests will be executed for this run.",
         "ErrorWhilePublishingCodeChanges": "Error occurred while publishing the code changes. All the tests will be executed for this run.",
+        "ErrorWhileListingDiscoveredTests": "Error occured while discovering the tests. All the tests will be exexuted for this run.",
         "PublishCodeChangesPerfTime": "Total time taken to publish code changes: %d milliseconds",
-        "GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds"
+        "GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds",
+        "UploadTestResultsPerfTime": "Total time taken to upload test results: %d milliseconds"
     }
 }

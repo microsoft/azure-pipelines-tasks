@@ -40,6 +40,7 @@ $defaultSasTokenTimeOutInHours = 4
 $useHttpsProtocolOption = ''
 $ErrorActionPreference = 'Stop'
 $telemetrySet = $false
+$isPremiumStorage = $false
 
 $sourcePath = $sourcePath.Trim('"')
 $storageAccount = $storageAccount.Trim()
@@ -74,29 +75,39 @@ if ($enableDetailedLoggingString -ne "true")
 try
 {
     # Importing required version of azure cmdlets according to azureps installed on machine
-    $azureUtility = Get-AzureUtility
+    $azureUtility = Get-AzureUtility $connectedServiceName
 
     Write-Verbose -Verbose "Loading $azureUtility"
     . "$PSScriptRoot/$azureUtility"
 
     # Getting connection type (Certificate/UserNamePassword/SPN) used for the task
-    $connectionType = Get-ConnectionType -connectedServiceName $connectedServiceName
+    $connectionType = Get-TypeOfConnection -connectedServiceName $connectedServiceName
 
     # Getting storage key for the storage account based on the connection type
-    $storageKey = Get-StorageKey -storageAccountName $storageAccount -connectionType $connectionType
+    $storageKey = Get-StorageKey -storageAccountName $storageAccount -connectionType $connectionType -connectedServiceName $connectedServiceName
 
     # creating storage context to be used while creating container, sas token, deleting container
     $storageContext = Create-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $storageKey
+	
+    # Geting Azure Storage Account type
+    $storageAccountType = Get-StorageAccountType -storageAccountName $storageAccount -connectionType $connectionType -connectedServiceName $connectedServiceName
+    Write-Verbose "Obtained Storage Account type: $storageAccountType"
+    if(-not [string]::IsNullOrEmpty($storageAccountType) -and $storageAccountType.Contains('Premium'))
+    {
+        $isPremiumStorage = $true
+    }
 
     # creating temporary container for uploading files if no input is provided for container name
     if([string]::IsNullOrEmpty($containerName))
     {
         $containerName = [guid]::NewGuid().ToString()
-        Create-AzureContainer -containerName $containerName -storageContext $storageContext
+        Create-AzureContainer -containerName $containerName -storageContext $storageContext -isPremiumStorage $isPremiumStorage
     }
 	
     # Geting Azure Blob Storage Endpoint
-    $blobStorageEndpoint = Get-blobStorageEndpoint -storageAccountName $storageAccount -connectionType $connectionType
+
+    $blobStorageEndpoint = Get-blobStorageEndpoint -storageAccountName $storageAccount -connectionType $connectionType -connectedServiceName $connectedServiceName
+
 }
 catch
 {
@@ -108,9 +119,19 @@ catch
     throw
 }
 
+if($isPremiumStorage)
+{
+    Write-Verbose "Setting BlobType to page for Premium Storage account."
+    $uploadAdditionalArguments = $additionalArguments + " /BlobType:page"
+}
+else
+{
+    $uploadAdditionalArguments = $additionalArguments
+}
+
 # Uploading files to container
 Upload-FilesToAzureContainer -sourcePath $sourcePath -storageAccountName $storageAccount -containerName $containerName -blobPrefix $blobPrefix -blobStorageEndpoint $blobStorageEndpoint -storageKey $storageKey `
-                             -azCopyLocation $azCopyLocation -additionalArguments $additionalArguments -destinationType $destination
+                             -azCopyLocation $azCopyLocation -additionalArguments $uploadAdditionalArguments -destinationType $destination
 
 # Complete the task if destination is azure blob
 if ($destination -eq "AzureBlob")
@@ -135,7 +156,7 @@ try
 {
     # getting azure vms properties(name, fqdn, winrmhttps port)
     $azureVMResourcesProperties = Get-AzureVMResourcesProperties -resourceGroupName $environmentName -connectionType $connectionType `
-    -resourceFilteringMethod $resourceFilteringMethod -machineNames $machineNames -enableCopyPrerequisites $enableCopyPrerequisites
+    -resourceFilteringMethod $resourceFilteringMethod -machineNames $machineNames -enableCopyPrerequisites $enableCopyPrerequisites -connectedServiceName $connectedServiceName
 
     $skipCACheckOption = Get-SkipCACheckOption -skipCACheck $skipCACheck
     $azureVMsCredentials = Get-AzureVMsCredentials -vmsAdminUserName $vmsAdminUserName -vmsAdminPassword $vmsAdminPassword

@@ -1,4 +1,5 @@
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
+/// <reference path="../../definitions/codecoveragefactory.d.ts" />
 
 import Q = require('q');
 import os = require('os');
@@ -8,10 +9,16 @@ import fs = require('fs');
 import tl = require('vsts-task-lib/task');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
 import sqCommon = require('./CodeAnalysis/SonarQube/common');
-
-// Lowercased file names are to lessen the likelihood of xplat issues
-import codeAnalysis = require('./CodeAnalysis/mavencodeanalysis');
 import sqMaven = require('./CodeAnalysis/mavensonar');
+import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
+import {CodeAnalysisOrchestrator} from "./CodeAnalysis/Common/CodeAnalysisOrchestrator";
+import {BuildOutput, BuildEngine} from './CodeAnalysis/Common/BuildOutput';
+import {CheckstyleTool} from './CodeAnalysis/Common/CheckstyleTool';
+import {PmdTool} from './CodeAnalysis/Common/PmdTool';
+import {FindbugsTool} from './CodeAnalysis/Common/FindbugsTool';
+import javacommons = require('java-common/java-common');
+
+var isWindows = os.type().match(/^Win/);
 
 // Set up localization resource file
 tl.setResourcePath(path.join( __dirname, 'task.json'));
@@ -26,6 +33,17 @@ var testResultsFiles: string = tl.getInput('testResultsFiles', true);
 var ccTool = tl.getInput('codeCoverageTool');
 var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
 var isSonarQubeEnabled:boolean = false;
+var summaryFile: string = null;
+var reportDirectory: string = null;
+var reportPOMFile: string = null;
+var execFileJacoco: string = null;
+var ccReportTask: string = null;
+
+let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('build.sourcesDirectory'), BuildEngine.Maven);
+var codeAnalysisOrchestrator:CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
+    [new CheckstyleTool(buildOutput, 'checkstyleAnalysisEnabled'),
+        new FindbugsTool(buildOutput, 'findbugsAnalysisEnabled'),
+        new PmdTool(buildOutput, 'pmdAnalysisEnabled')]);
 
 // Determine the version and path of Maven to use
 var mvnExec: string = '';
@@ -82,15 +100,7 @@ if (javaHomeSelection == 'JDKVersion') {
     var jdkArchitecture: string = tl.getInput('jdkArchitecture');
 
     if (jdkVersion != 'default') {
-        // jdkVersion must be in the form of "1.7", "1.8", or "1.10"
-        // jdkArchitecture is either "x64" or "x86"
-        // envName for version=1.7 and architecture=x64 would be "JAVA_HOME_7_X64"
-        var envName: string = "JAVA_HOME_" + jdkVersion.slice(2) + "_" + jdkArchitecture.toUpperCase();
-        specifiedJavaHome = tl.getVariable(envName);
-        if (!specifiedJavaHome) {
-            tl.error('Failed to find specified JDK version. Make sure environment variable ' + envName + ' exists and is set to the location of a corresponding JDK.');
-            tl.exit(1);
-        }
+         specifiedJavaHome = javacommons.findJavaHome(jdkVersion, jdkArchitecture);
     }
 }
 else {
@@ -105,108 +115,100 @@ if (specifiedJavaHome) {
     tl.setVariable('JAVA_HOME', specifiedJavaHome);
 }
 
-if (isCodeCoverageOpted) {
-    var summaryFile: string = null;
-    var reportDirectory: string = null;
-    var reportPOMFile: string = null;
-    var execFileJacoco: string = null;
-    var ccReportTask: string = null;
-    enableCodeCoverage();
-}
-else {
-    tl.debug("Option to enable code coverage was not selected and is being skipped.");
-}
+async function execBuild() {
+    // Maven task orchestration occurs as follows:
+    // 1. Check that Maven exists by executing it to retrieve its version.
+    // 2. Apply any goals for static code analysis tools selected by the user.
+    // 3. Run Maven. Compilation or test errors will cause this to fail.
+    //    In case the build has failed, the analysis will still succeed but the report will have less data. 
+    // 4. Attempt to collate and upload static code analysis build summaries and artifacts.
+    // 5. Always publish test results even if tests fail, causing this task to fail.
+    // 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
 
-// Maven task orchestration occurs as follows:
-// 1. Check that Maven exists by executing it to retrieve its version.
-// 2. Apply any goals for static code analysis tools selected by the user.
-// 3. Run Maven. Compilation or test errors will cause this to fail.
-//    In case the build has failed, the analysis will still succeed but the report will have less data. 
-// 4. Attempt to collate and upload static code analysis build summaries and artifacts.
-// 5. Always publish test results even if tests fail, causing this task to fail.
-// 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
+    ccReportTask = await execEnableCodeCoverage();
+    var userRunFailed: boolean = false;
+    var codeAnalysisFailed: boolean = false;
 
-var userRunFailed: boolean = false;
-var codeAnalysisFailed: boolean = false;
+    // Setup tool runner that executes Maven only to retrieve its version
+    var mvnGetVersion = tl.tool(mvnExec);
+    mvnGetVersion.arg('-version');
 
-// Setup tool runner that executes Maven only to retrieve its version
-var mvnGetVersion = tl.createToolRunner(mvnExec);
-mvnGetVersion.arg('-version');
+    configureMavenOpts();
 
-configureMavenOpts();
+    // 1. Check that Maven exists by executing it to retrieve its version.
+    mvnGetVersion.exec()
+        .fail(function (err) {
+            console.error("Maven is not installed on the agent");
+            tl.setResult(tl.TaskResult.Failed, "Build failed."); // tl.exit sets the step result but does not stop execution
+            process.exit(1);
+        })
+        .then(function (code) {
+            // Setup tool runner to execute Maven goals
+            var mvnRun = tl.tool(mvnExec);
+            mvnRun.arg('-f');
+            mvnRun.arg(mavenPOMFile);
+            mvnRun.line(mavenOptions);
+            if (isCodeCoverageOpted && mavenGoals.indexOf('clean') == -1) {
+                mvnRun.arg('clean');
+            }
+            mvnRun.arg(mavenGoals);
 
-// 1. Check that Maven exists by executing it to retrieve its version.
-mvnGetVersion.exec()
-    .fail(function (err) {
-        console.error("Maven is not installed on the agent");
-        tl.exit(1);  // tl.exit sets the step result but does not stop execution
-        process.exit(1);
-    })
-    .then(function (code) {
-        // Setup tool runner to execute Maven goals
-        var mvnRun = tl.createToolRunner(mvnExec);
-        mvnRun.arg('-f');
-        mvnRun.pathArg(mavenPOMFile);
-        mvnRun.argString(mavenOptions);
-        if (isCodeCoverageOpted && mavenGoals.indexOf('clean') == -1) {
-            mvnRun.arg('clean');
-        }
-        mvnRun.arg(mavenGoals);
+            // 2. Apply any goals for static code analysis tools selected by the user.
+            mvnRun = sqMaven.applySonarQubeArgs(mvnRun, execFileJacoco);
+             mvnRun = codeAnalysisOrchestrator.configureBuild(mvnRun);
 
-        // 2. Apply any goals for static code analysis tools selected by the user.
-        mvnRun = sqMaven.applySonarQubeArgs(mvnRun, execFileJacoco);
-        mvnRun = codeAnalysis.applyEnabledCodeAnalysisGoals(mvnRun);
-
-        // Read Maven standard output
-        mvnRun.on('stdout', function (data) {
-            processMavenOutput(data);
-        });
-
-        // 3. Run Maven. Compilation or test errors will cause this to fail.
-        return mvnRun.exec(); // Run Maven with the user specified goals
-    })
-    .fail(function (err) {
-        console.error(err.message);
-        userRunFailed = true; // Record the error and continue
-    })
-    .then(function (code) {
-        // 4. Attempt to collate and upload static code analysis build summaries and artifacts.
-
-        // The files won't be created if the build failed, and the user should probably fix their build first.
-        if (userRunFailed) {
-            console.error('Could not retrieve code analysis results - Maven run failed.');
-            return;
-        }
-
-        // Otherwise, start uploading relevant build summaries.
-        return sqMaven.processSonarQubeIntegration()
-            .then(() => {
-                return codeAnalysis.uploadCodeAnalysisBuildSummaryIfEnabled();
+            // Read Maven standard output
+            mvnRun.on('stdout', function (data) {
+                processMavenOutput(data);
             });
-    })
-    .fail(function (err) {
-        console.error(err.message);
-        // Looks like: "Code analysis failed."
-        console.error(tl.loc('codeAnalysis_ToolFailed', 'Code'));
-        codeAnalysisFailed = true;
-    })
-    .then(function () {
-        // 5. Always publish test results even if tests fail, causing this task to fail.
-        if (publishJUnitResults == 'true') {
-            publishJUnitTestResults(testResultsFiles);
-        }
-        publishCodeCoverage(isCodeCoverageOpted);
 
-        // 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
-        if (userRunFailed || codeAnalysisFailed) {
-            tl.exit(1); // Set task failure
-        }
-        else {
-            tl.exit(0); // Set task success
-        }
+            // 3. Run Maven. Compilation or test errors will cause this to fail.
+            return mvnRun.exec(); // Run Maven with the user specified goals
+        })
+        .fail(function (err) {
+            console.error(err.message);
+            userRunFailed = true; // Record the error and continue
+        })
+        .then(function (code) {
+            // 4. Attempt to collate and upload static code analysis build summaries and artifacts.
 
-        // Do not force an exit as publishing results is async and it won't have finished 
-    });
+            // The files won't be created if the build failed, and the user should probably fix their build first.
+            if (userRunFailed) {
+                console.error('Could not retrieve code analysis results - Maven run failed.');
+                return;
+            }
+
+            // Otherwise, start uploading relevant build summaries.
+            tl.debug('Processing code analysis results');
+            return sqMaven.processSonarQubeIntegration()
+                .then(() => {
+                    return codeAnalysisOrchestrator.publishCodeAnalysisResults();
+                });
+        })
+        .fail(function (err) {
+            console.error(err.message);
+            // Looks like: "Code analysis failed."
+            console.error(tl.loc('codeAnalysis_ToolFailed', 'Code'));
+            codeAnalysisFailed = true;
+        })
+        .then(function () {
+            // 5. Always publish test results even if tests fail, causing this task to fail.
+            if (publishJUnitResults == 'true') {
+                publishJUnitTestResults(testResultsFiles);
+            }
+            publishCodeCoverage(isCodeCoverageOpted);
+
+            // 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
+            if (userRunFailed || codeAnalysisFailed) {
+                tl.setResult(tl.TaskResult.Failed, "Build failed."); // Set task failure
+            }
+            else {
+                tl.setResult(tl.TaskResult.Succeeded, "Build Succeeded."); // Set task success
+            }
+
+            // Do not force an exit as publishing results is async and it won't have finished 
+        });
+}
 
 // Configure the JVM associated with this run.
 function configureMavenOpts() {
@@ -246,7 +248,22 @@ function publishJUnitTestResults(testResultsFiles: string) {
     tp.publish(matchingJUnitResultFiles, true, "", "", "", true);
 }
 
-function enableCodeCoverage() {
+function execEnableCodeCoverage(): Q.Promise<string> {
+    return enableCodeCoverage()
+        .then(function (resp) {
+            tl.debug("Enabled code coverage successfully");
+            return "CodeCoverage_9064e1d0";
+        }).catch(function (err) {
+            tl.warning("Failed to enable code coverage: " + err);
+            return "";
+        });
+};
+
+function enableCodeCoverage() : Q.Promise<any> {
+    if(!isCodeCoverageOpted){
+        return Q.resolve(true);
+    }
+
     var classFilter: string = tl.getInput('classFilter');
     var classFilesDirectories: string = tl.getInput('classFilesDirectories');
     var sourceDirectories: string = tl.getInput('srcDirectories');
@@ -255,7 +272,6 @@ function enableCodeCoverage() {
     var reportPOMFileName = "CCReportPomA4D283EG.xml";
     reportPOMFile = path.join(buildRootPath, reportPOMFileName);
     var targetDirectory = path.join(buildRootPath, "target");
-    ccReportTask = "jacoco:report";
 
     if (ccTool.toLowerCase() == "jacoco") {
         var reportDirectoryName = "CCReport43F6D5EF";
@@ -288,31 +304,25 @@ function enableCodeCoverage() {
     buildProps['reportdirectory'] = reportDirectory;
     buildProps['reportbuildfile'] = reportPOMFile;
 
-    try {
-        var codeCoverageEnabler = new tl.CodeCoverageEnabler('Maven', ccTool);
-        codeCoverageEnabler.enableCodeCoverage(buildProps);
-        tl.debug("Code coverage is successfully enabled.");
-    }
-    catch (Error) {
-        tl.warning("Enabling code coverage failed. Check the build logs for errors.");
-    }
+    let ccEnabler = new CodeCoverageEnablerFactory().getTool("maven", ccTool.toLowerCase());
+    return ccEnabler.enableCodeCoverage(buildProps);
 }
 
 function publishCodeCoverage(isCodeCoverageOpted: boolean) {
-    if (isCodeCoverageOpted) {
+    if (isCodeCoverageOpted && ccReportTask) {
         tl.debug("Collecting code coverage reports");
 
         if (ccTool.toLowerCase() == "jacoco") {
-            var mvnReport = tl.createToolRunner(mvnExec);
+            var mvnReport = tl.tool(mvnExec);
             mvnReport.arg('-f');
             if (tl.exist(reportPOMFile)) {
                 // multi module project
-                mvnReport.pathArg(reportPOMFile);
+                mvnReport.arg(reportPOMFile);
                 mvnReport.arg("verify");
             }
             else {
-                mvnReport.pathArg(mavenPOMFile);
-                mvnReport.arg(ccReportTask);
+                mvnReport.arg(mavenPOMFile);
+                mvnReport.arg("verify");
             }
             mvnReport.exec().then(function (code) {
                 publishCCToTfs();
@@ -390,3 +400,5 @@ function processMavenOutput(data) {
         }
     }
 }
+
+execBuild();

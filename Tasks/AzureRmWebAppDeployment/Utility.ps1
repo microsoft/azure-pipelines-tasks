@@ -333,7 +333,7 @@ function Update-DeploymentStatus
             else
             {
                $deploymentId = $buildIdTaskVar + $uniqueId
-               $buildOrReleaseUrl = [string]::Format("{0}{1}/_build#buildId={2}&_a=summary", $collectionUrl, $teamproject, $buildIdTaskVar)
+               $buildOrReleaseUrl = [string]::Format("{0}{1}/_build?buildId={2}&_a=summary", $collectionUrl, $teamproject, $buildIdTaskVar)
                $message = Get-VstsLocString -Key "Updatingdeploymenthistoryfordeployment0" -ArgumentList $buildOrReleaseUrl
             }
 

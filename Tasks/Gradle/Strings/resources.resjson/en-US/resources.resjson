@@ -78,10 +78,14 @@
   "loc.messages.sqAnalysis_IsPullRequest_SkippingBuildBreaker": "Pull request build: build will not be broken if quality gate fails.",
   "loc.messages.sqAnalysis_BuildBrokenDueToQualityGateFailure": "The SonarQube quality gate associated with this build has failed.",
   "loc.messages.sqAnalysis_QualityGatePassed": "The SonarQube quality gate associated with this build has passed (status %s)",
+  "loc.messages.sqAnalysis_UnknownComparatorString": "The SonarQube build summary encountered a problem: unknown comparator '%s'",
+  "loc.messages.sqAnalysis_NoUnitsFound": "The list of SonarQube measurement units could not be retrieved from the server.",
   "loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "%s found %d violations in %d files.",
   "loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "%s found %d violations in 1 file.",
   "loc.messages.codeAnalysisBuildSummaryLine_OneViolationOneFile": "%s found 1 violation in 1 file.",
   "loc.messages.codeAnalysisBuildSummaryLine_NoViolations": "%s found no violations.",
   "loc.messages.codeAnalysisBuildSummaryTitle": "Code Analysis Report",
-  "loc.messages.codeAnalysisArtifactSummaryTitle": "Code Analysis Results"
+  "loc.messages.codeAnalysisArtifactSummaryTitle": "Code Analysis Results",
+  "loc.messages.LocateJVMBasedOnVersionAndArch": "Locate JAVA_HOME for Java %s %s",
+  "loc.messages.FailedToLocateSpecifiedJVM": "Failed to find specified JDK version. Please make sure environment variable '%s' exists and is set to the location of a corresponding JDK."
 }
