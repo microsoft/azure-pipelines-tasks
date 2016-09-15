@@ -450,15 +450,8 @@ function InitPostCommentsModule
     return $mockDiscussionClient
 }
 
-function GetResponseForGetChanges
-{        
-    # It's simpler to deserialize json than to create an actual object that mocks the GetChangesAsync response 
-    $json = Get-Content "$PSScriptRoot\data\GetChangesResponse.json" 
-    return $json | ConvertFrom-Json
-}
-
 #
-# Test - E2E test that goes through several iterations of posting messages.   
+# Test - E2E test that goes through several iterations of posting messages. Note  
 #
 
 # Arrange
@@ -596,25 +589,22 @@ Unregister-Mock GetModifiedFilesInPR
 # Test 3 - Post a code flow style message
 #
 $mockDiscussionClient = InitPostCommentsModule $false
-Register-Mock GetModifiedFilesInPR { @("some/path1/file.cs", "path/not/in/changes/response") }
+Register-Mock GetModifiedFilesInPR { @("some/path1/file.cs") }
 Register-Mock GetCodeFlowLatestIterationId 
-Register-Mock GetCodeFlowChanges {(GetResponseForGetChanges)} 
-Register-Mock Write-Warning
+Register-Mock GetCodeFlowChanges
+Register-Mock TryGetCodeFlowChangeTrackingId {$true}
 
 # Iteration 1: 
 # - Current state: {no existing comments}
 # - Messages to be posted: path1:A, path2:B, otherPath:C
 # - Expected comments after posting: path1:A, path2:B
 
-$pA = BuildTestMessage "A" 14 "some/path1/file.cs" 1
-$pB = BuildTestMessage "B" 33 "path/not/in/changes/response" 1  
+$p1A = BuildTestMessage "A" 14 "some/path1/file.cs" 1 
 
 # Act
-PostAndResolveComments @($pA, $pB) "TestSource"
+PostAndResolveComments @($p1A) "TestSource"
 
 # Assert
 $postedThreads = $mockDiscussionClient.GetPostedThreads()
-
 # GetExpectedMessageState params: the message itself, the number of matching comments, the state of those comments
-ValidateDiscussionThreadCollection $postedThreads @((GetExpectedMessageState $pA 1 "Active")) "TestSource" $false
-Assert-WasCalled Write-Warning 
+ValidateDiscussionThreadCollection $postedThreads @((GetExpectedMessageState $p1a 1 "Active")) "TestSource" $false

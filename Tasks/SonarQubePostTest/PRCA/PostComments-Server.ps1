@@ -275,21 +275,22 @@ function GetCodeFlowChanges
      {
         Write-Verbose "Change count: $($changes.Count)"
      }
-
+     
      return $changes
 }
 
+
 function TryGetCodeFlowChangeTrackingId
 {
-    param ($changes, $path, [Ref][int]$changeId)
+    param ($changes, [string]$path, [Ref][int]$changeId)
+    $change = $changes.ChangeEntries | Where-Object {$_.Modified.Path -eq $path}
 
-    $change = @($changes.ChangeEntries | Where-Object {$_.Modified.Path -eq $path})
     if (($change -eq $null) -or ($change.Count -ne 1))
     {
         return $false;
     }
     
-    $changeId.Value = $change[0].ChangeTrackingId;
+    $changeId.Value = $change.ChangeTrackingId;
     return $true;
 } 
 
@@ -344,3 +345,4 @@ function ParamTypesMatch
   
    return (($methodParams | select -Skip $candidateTypes.Length | Where-Object {$_.IsOptional -eq $false}).Count -eq 0)
 }
+
