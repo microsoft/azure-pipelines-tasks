@@ -65,6 +65,7 @@ async function main(): Promise<void> {
         let nugetVersion = tl.getInput("nuGetversion");
         let userNuGetProvided = false;
         if (tl.filePathSupplied("nuGetPath")) {
+            nuGetPath = nuGetPath.replace(/["]+/g, '');
             userNuGetProvided = true;
             if (nugetVersion !== "custom")
             {
