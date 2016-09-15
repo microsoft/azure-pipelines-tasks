@@ -58,6 +58,7 @@ const nuget320 = new VersionInfoVersion(3, 2, 0, 0);
 const nuget330 = new VersionInfoVersion(3, 3, 0, 0);
 const nuget340 = new VersionInfoVersion(3, 4, 0, 0);
 const nuget350_1707 = new VersionInfoVersion(3, 5, 0, 1707);
+const nuget350_1829 = new VersionInfoVersion(3, 5, 0, 1829);
 const nuget351 = new VersionInfoVersion(3, 5, 1, 0);
 const nuget351_1707 = new VersionInfoVersion(3, 5, 1, 1707);
 
@@ -93,7 +94,7 @@ const allQuirks: QuirkDescriptor[] = [
     },
     {
         quirk: NuGetQuirkName.NoTfsOnPremAuthCredentialProvider,
-        versionRanges: [halfOpenRange(VersionInfoVersion.MIN_VERSION, nuget351)],
+        versionRanges: [halfOpenRange(VersionInfoVersion.MIN_VERSION, nuget350_1829)],
     },
 ];
 
