@@ -414,31 +414,7 @@ function CreateDiscussionThreads
         $discussionComment.IsDeleted = $false;
         $discussionComment.Content = $message.Content
 
-        $properties = New-Object -TypeName "Microsoft.VisualStudio.Services.WebApi.PropertiesCollection"
-        
-        if ($script:pullRequest.CodeReviewId -gt 0)
-        {
-            $changeTrackingId = 0;
-            if (!(TryGetCodeFlowChangeTrackingId($changes, $message.RelativePath, [Ref]$changeTrackingId)))
-            {
-                Write-Warning "Cannot post a comment for the file $($message.RelativePath) because no changes could be found";
-                continue;
-            } 
-
-            AddCodeFlowProperties $message $iterationId $changeTrackingId $properties
-        } 
-        else
-        {
-            AddLegacyProperties $message $properties
-        }
-        
-        # add a custom property to be able to distinguish all comments created this way        
-        $properties.Add($PostCommentsModule_CommentSourcePropertyName, $script:messageSource)
-        
-        # A VSTS UI extension will recognize this and format the comments differently
-        $properties.Add("CodeAnalysisThreadType", "CodeAnalysisIssue");
-        
-        $newThread.Properties = $properties
+        AddThreadProperties $newThread $changes $message $iterationId
         
         $newThread.Comments = @($discussionComment)
         $discussionThreadCollection.Add($newThread)
@@ -448,6 +424,39 @@ function CreateDiscussionThreads
     return $discussionThreadCollection
 }
 
+
+function AddThreadProperties
+{
+    param ($thread, $changes, $message, $iterationId)
+
+    $properties = New-Object -TypeName "Microsoft.VisualStudio.Services.WebApi.PropertiesCollection"
+        
+    if ($script:pullRequest.CodeReviewId -gt 0)
+    {
+        $changeTrackingId = 0;
+        if (!(TryGetCodeFlowChangeTrackingId $changes $message.RelativePath ([Ref]$changeTrackingId)))
+        {
+            Write-Warning "Cannot post a comment for the file $($message.RelativePath) because no changes could be found";
+            continue;
+        } 
+            
+        Write-Debug "ChangeTrackingId=$changeTrackingId for $($message.RelativePath)"
+
+        AddCodeFlowProperties $message $iterationId $changeTrackingId $properties
+    } 
+    else
+    {
+        AddLegacyProperties $message $properties
+    }
+        
+    # add a custom property to be able to distinguish all comments created this way        
+    $properties.Add($PostCommentsModule_CommentSourcePropertyName, $script:messageSource)
+        
+    # A VSTS UI extension will recognize this and format the comments differently
+    $properties.Add("CodeAnalysisThreadType", "CodeAnalysisIssue");
+
+    $thread.Properties = $properties
+}
 
 function AddCodeFlowProperties
 {
