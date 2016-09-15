@@ -11,8 +11,8 @@
             "dest": "./NuGet/3.5.0.1829/"
         },
         {
-            "archiveName": "NuGet.exe",
-            "url": "https://vstsagenttools.blob.core.windows.net/tools/CredentialProvider.TeamBuild/15.105.25713.0/CredentialProvider.TeamBuild.zip",
+            "archiveName": "CredentialProvider.TeamBuild.exe",
+            "url": "https://vstsagenttools.blob.core.windows.net/tools/CredentialProvider.TeamBuild/15.105.25712.0/CredentialProvider.TeamBuild.zip",
             "dest": "./NuGet/CredentialProvider/"
         }
     ]
