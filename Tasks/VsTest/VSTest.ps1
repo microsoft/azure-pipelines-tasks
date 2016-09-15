@@ -87,7 +87,6 @@ try
 
     $codeCoverage = Convert-String $codeCoverageEnabled Boolean
 
-    $diagFileName = [system.IO.path]::GetTempFileName()
     if($testAssemblyFiles.count -gt 0)
     {
         Write-Verbose -Verbose "Calling Invoke-VSTest for all test assemblies"
@@ -194,7 +193,6 @@ try
         Write-Host "##vso[task.logissue type=warning;code=002004;]"
         Write-Warning (Get-LocalizedString -Key "No test assemblies found matching the pattern: '{0}'." -ArgumentList $testAssembly)
     }
-    ##vso[task.uploadlog]$diagFileName
 }
 catch
 {
