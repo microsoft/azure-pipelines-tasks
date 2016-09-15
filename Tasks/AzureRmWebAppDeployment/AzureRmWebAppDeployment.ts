@@ -21,13 +21,16 @@ async function run() {
         var slotName: string = tl.getInput('SlotName');
         var webDeployPkg: string = tl.getPathInput('Package', true);
         var virtualApplication: string = tl.getInput('VirtualApplication', false);
+        var isTaskUpgraded: boolean = isTaskUpgradeDone(tl.getInput('UseWebDeploy', false));
 
-        var useWebDeploy: boolean = tl.getBoolInput('UseWebDeploy', false);
-        var setParametersFile: string = (useWebDeploy !== undefined) ? tl.getPathInput('SetParametersFile1', false) : tl.getPathInput('SetParametersFile', false);
-        var removeAdditionalFilesFlag: boolean = (useWebDeploy !== undefined) ? tl.getBoolInput('RemoveAdditionalFilesFlag1', false) : tl.getBoolInput('RemoveAdditionalFilesFlag', false);
-        var excludeFilesFromAppDataFlag: boolean = (useWebDeploy !== undefined) ? tl.getBoolInput('ExcludeFilesFromAppDataFlag1', false) : tl.getBoolInput('ExcludeFilesFromAppDataFlag', false);
-        var takeAppOfflineFlag: boolean = (useWebDeploy !== undefined) ? tl.getBoolInput('TakeAppOfflineFlag1', false) : tl.getBoolInput('TakeAppOfflineFlag', false);
-        var additionalArguments: string = (useWebDeploy !== undefined) ? tl.getInput('AdditionalArguments1', false) : tl.getInput('AdditionalArguments', false);
+        var setParametersFile: string = isTaskUpgraded ? tl.getPathInput('SetParametersFile1', false) : tl.getPathInput('SetParametersFile', false);
+        var removeAdditionalFilesFlag: boolean = isTaskUpgraded ? tl.getBoolInput('RemoveAdditionalFilesFlag1', false) : tl.getBoolInput('RemoveAdditionalFilesFlag', false);
+        var excludeFilesFromAppDataFlag: boolean = isTaskUpgraded ? tl.getBoolInput('ExcludeFilesFromAppDataFlag1', false) : tl.getBoolInput('ExcludeFilesFromAppDataFlag', false);
+        var takeAppOfflineFlag: boolean = isTaskUpgraded ? tl.getBoolInput('TakeAppOfflineFlag1', false) : tl.getBoolInput('TakeAppOfflineFlag', false);
+        var additionalArguments: string = isTaskUpgraded ? tl.getInput('AdditionalArguments1', false) : tl.getInput('AdditionalArguments', false);
+
+        var useWebDeploy: boolean = isTaskUpgraded ? tl.getBoolInput('UseWebDeploy', false) : true;
+        tl.debug('useWebDeploy = ' + useWebDeploy);
 
         var webAppUri:string = tl.getInput('WebAppUri', false);
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
@@ -167,14 +170,22 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
 }
 
 /**
+ * Takes useWebDeploy as input and returns it is edited or not.
+ * 
+ * @param useWebDeploy value of from task.json
+ */
+function isTaskUpgradeDone(useWebDeploy: string): boolean {
+    return useWebDeploy !== "( SetParametersFile != \"\" || RemoveAdditionalFilesFlag == true || ExcludeFilesFromAppDataFlag == true || TakeAppOfflineFlag == true || AdditionalArguments != \"\") ? true : false";
+}
+
+/**
  * Validates the input package and finds out input type
  * 
  * @param webDeployPkg Web Deploy Package input
  * 
  * @return true/false based on input package type.
  */
-async function isInputPkgIsFolder(webDeployPkg: string)
-{
+async function isInputPkgIsFolder(webDeployPkg: string) {
     if (!tl.exist(webDeployPkg)) {
         throw new Error(tl.loc('Invalidwebapppackageorfolderpathprovided', webDeployPkg));
     }
