@@ -44,7 +44,7 @@ export class CodeAnalysisResultPublisher {
                 let reportName = path.basename(resultFile, extension);
 
                 let artifactName = `${prefix}_${reportName}_${analysisResult.toolName}${extension}`;
-                tl.cp('-f', resultFile, path.join(destinationDir, artifactName));
+                tl.cp(resultFile, path.join(destinationDir, artifactName), '-f');
             }
         }
 
