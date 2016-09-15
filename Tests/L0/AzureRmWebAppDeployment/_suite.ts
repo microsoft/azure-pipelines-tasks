@@ -321,7 +321,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             });
     });
 
-    it('Runs KuduDploy successfully with default inputs on non-windows agent', (done) => {
+    it('Runs KuduDeploy successfully with default inputs on non-windows agent', (done) => {
         
         setResponseFile('armGoodNonWindows.json');
 
@@ -349,7 +349,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             });
     });
 
-    it('Runs KuduDploy successfully with folder archiving on non-windows agent', (done) => {
+    it('Runs KuduDeploy successfully with folder archiving on non-windows agent', (done) => {
         
         setResponseFile('armGoodNonWindows.json');
 
@@ -378,7 +378,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
                 done(err);
             });
     });
-    it('Fails KuduDploy if parameter file is present in package', (done) => {
+    it('Fails KuduDeploy if parameter file is present in package', (done) => {
 
         setResponseFile('armGoodNonWindows.json');
 
@@ -405,7 +405,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
                 done(err);
             });
     });
-    it('Fails KuduDploy if folder archiving fails', (done) => {
+    it('Fails KuduDeploy if folder archiving fails', (done) => {
            
         setResponseFile('armGoodNonWindows.json');
 
