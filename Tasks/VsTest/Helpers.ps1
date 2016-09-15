@@ -57,7 +57,7 @@ function IsVisualStudio2015Update1OrHigherInstalled {
 		$teModesDll = [io.path]::Combine("$env:VS140COMNTools", "..", "IDE", "CommonExtensions", "Microsoft", "TestWindow", "TE.TestModes.dll");
 		if(Test-Path -Path $teModesDll)
 		{
-			$devenvExe = [io.path]::Combine("$env:VS140COMNTools", "..", "IDE", "devenv.exe");
+			$devenvExe = [io.path]::Combine("$env:VS140COMNTools", "..", "IDE", "CommonExtensions", "Microsoft", "TestWindow", "vstest.console.exe");
 			$devenvVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($devenvExe);
 			if($devenvVersion.ProductBuildPart -lt 25420) #update3 build#
 			{
