@@ -91,9 +91,20 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
  */
 export async  function containsParamFile(webAppPackage: string ) {
     var msDeployPath = await getMSDeployFullPath();
-    var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package='" + webAppPackage + "'";
-    var taskResult = tl.execSync(msDeployPath, msDeployCheckParamFileCmdArgs);
+    var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package=\"" + webAppPackage + "\"";
+
+    var msDeployParamFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'msDeployParam.bat';
+
+    var silentCommand = '@echo off \n';
+    var msDeployCommand = '"' + msDeployPath + '" ' + msDeployCheckParamFileCmdArgs;
+    var batchCommand = silentCommand + msDeployCommand;
+
+    tl.writeFile(msDeployParamFile, batchCommand);
+    tl._writeLine(tl.loc("Runningcommand", msDeployCommand));
+
+    var taskResult = tl.execSync("cmd", ['/C', msDeployParamFile], { failOnStdErr: true });
     var paramContentXML = taskResult.stdout;
+    paramContentXML = paramContentXML.replace(msDeployCommand, "");
     tl.debug(tl.loc("Paramscontentofwebpackage0", paramContentXML));
     var isParamFilePresent = false;
     await parseString(paramContentXML, (error, result) => {
@@ -123,8 +134,8 @@ export async function getMSDeployFullPath() {
         return msDeployFullPath;
     }
     catch(error) {
-        tl.error(tl.loc('CannotfindMSDeployexe'));
-        throw new Error(error);
+        tl.warning(error);
+        return __dirname + "\\MSDeploy3.6\\msdeploy.exe";
     }
 }
 
@@ -134,10 +145,13 @@ function getMSDeployVersion(registryKey: string): Q.Promise<String> {
     .on('data', (entry) => {
         var keys = entry.data.keys;
         keys.sort();
+        if(parseFloat(keys[keys.length-1]) < 3) {
+            defer.reject(tl.loc("UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove", keys[keys.length-1]));
+        }
         defer.resolve(keys[keys.length-1]);
     })
     .on('error', (error) => {
-        defer.reject(error);
+        defer.reject(tl.loc("UnabletofindthelocationofMSDeployfromregistryonmachineError", error));
     });
     
     return defer.promise;
@@ -150,7 +164,7 @@ function getMSDeployInstallPath(registryKey: string): Q.Promise<string> {
         defer.resolve(entry.data.values.InstallPath.value);
     })
     .on('error', (error) => {
-        defer.reject(error);
+        defer.reject(tl.loc("UnabletofindthelocationofMSDeployfromregistryonmachineError", error));
     });
 
     return defer.promise;

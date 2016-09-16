@@ -63,22 +63,24 @@ function getMSDeployCmdArgs(webAppPackage, webAppName, publishingProfile, remove
 exports.getMSDeployCmdArgs = getMSDeployCmdArgs;
 
 function containsParamFile(webAppPackage) {
-        var msDeployPath = getMSDeployFullPath();
-        var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package='" + webAppPackage + "'";
-        var taskResult = tl.execSync(msDeployPath, msDeployCheckParamFileCmdArgs);
-        var paramContentXML = taskResult.stdout;
-        //tl.debug(tl.loc("Paramscontentofwebpackage0", paramContentXML));
-        var isParamFilePresent = false;
+    var msDeployPath = getMSDeployFullPath();
+    var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package=\"" + webAppPackage + "\"";
+    var msDeployParamFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'msDeployParam.bat';
+    var silentCommand = '@echo off \n';
+    var msDeployCommand = '"' + msDeployPath + '" ' + msDeployCheckParamFileCmdArgs;
+    var batchCommand = silentCommand + msDeployCommand;
+    tl.writeFile(msDeployParamFile, batchCommand);
+    tl._writeLine(tl.loc("Runningcommand", msDeployCommand));
+    var taskResult = tl.execSync("cmd", ['/C', msDeployParamFile], { failOnStdErr: true });
 
-        // Return mocked output
-        return taskResult.code == 0 ? isParamFilePresent : true;
+    var paramContentXML = taskResult.stdout;
+    var isParamFilePresent = false;
+
+    // Return mocked output
+    return taskResult.code == 0 ? isParamFilePresent : true;
 }
 exports.containsParamFile = containsParamFile;
-/**
- * Gets the full path of MSDeploy.exe
- *
- * @returns    string
- */
+
 function getMSDeployFullPath() {
     var msDeployFullPath =  "msdeploypath\\msdeploy.exe";
     return msDeployFullPath;
