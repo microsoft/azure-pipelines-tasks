@@ -28,7 +28,7 @@ var parseString = require('xml2js').parseString;
  */
 export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, publishingProfile,
                              removeAdditionalFilesFlag: boolean, excludeFilesFromAppDataFlag: boolean, takeAppOfflineFlag: boolean,
-                             virtualApplication: string, setParametersFile: string, additionalArguments: string, isParamFilePresentInPacakge: boolean, isFolderBasedDeployment: boolean) : string {
+                             virtualApplication: string, setParametersFile: string, additionalArguments: string, isParamFilePresentInPacakge: boolean, isFolderBasedDeployment: boolean, useWebDeploy: boolean) : string {
 
     var msDeployCmdArgs: string = " -verb:sync";
 
@@ -56,24 +56,26 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
         msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='" + webApplicationDeploymentPath + "'";
     }
 
-    if(setParametersFile) {
-        msDeployCmdArgs += " -setParamFile=\"" + setParametersFile + "\"";
-    }
+    if(useWebDeploy) {
+        if(setParametersFile) {
+            msDeployCmdArgs += " -setParamFile=\"" + setParametersFile + "\"";
+        }
 
-    if(!removeAdditionalFilesFlag) {
-        msDeployCmdArgs += " -enableRule:DoNotDeleteRule";
-    }
+        if(!removeAdditionalFilesFlag) {
+            msDeployCmdArgs += " -enableRule:DoNotDeleteRule";
+        }
 
-    if(takeAppOfflineFlag) {
-        msDeployCmdArgs += ' -enableRule:AppOffline';
-    }
+        if(takeAppOfflineFlag) {
+            msDeployCmdArgs += ' -enableRule:AppOffline';
+        }
 
-    if(excludeFilesFromAppDataFlag) {
-        msDeployCmdArgs += ' -skip:Directory=App_Data';
-    }
+        if(excludeFilesFromAppDataFlag) {
+            msDeployCmdArgs += ' -skip:Directory=App_Data';
+        }
     
-    if(additionalArguments) {
-        msDeployCmdArgs += ' ' + additionalArguments;
+        if(additionalArguments) {
+            msDeployCmdArgs += ' ' + additionalArguments;
+        }
     }
 
     var userAgent = tl.getVariable("AZURE_HTTP_USER_AGENT");
