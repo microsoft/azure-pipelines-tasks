@@ -5,6 +5,15 @@ import fs = require('fs');
 import tl = require('vsts-task-lib/task');
 
 export class FileSystemInteractions {
+
+    /**
+     * Copies a file from the source path to the destination path.
+     * If the destination path already exists, it is replaced. Otherwise a new file is created.
+     *
+     * Adapted from: https://github.com/Microsoft/vsts-task-lib/blob/master/node/task.ts
+     * @param sourcePath      Path to copy from
+     * @param destinationPath Path to copy to
+     */
     public static copyFile(sourcePath:string, destinationPath:string):void {
         shell.cp('-f', sourcePath, destinationPath);
 
@@ -13,7 +22,9 @@ export class FileSystemInteractions {
 
     /**
      * Create a directory at the specified path, including any folders in between.
-     * @param directoryPath Path to create.
+     *
+     * Copied from: https://github.com/Microsoft/vsts-task-lib/blob/master/node/task.ts
+     * @param directoryPath Path to create
      */
     public static createDirectory(directoryPath:string):void {
         // build a stack of directories to create
@@ -72,7 +83,14 @@ export class FileSystemInteractions {
         }
     }
 
-    public static checkShell(cmd: string, continueOnError?: boolean) {
+    /**
+     * Checks that no errors were produced by the previous command.
+     *
+     * Copied from: https://github.com/Microsoft/vsts-task-lib/blob/master/node/task.ts
+     * @param cmd             Command issued
+     * @param continueOnError Do not throw an exception if an error was produced
+     */
+    private static checkShell(cmd: string, continueOnError?: boolean) {
         var se = shell.error();
 
         if (se) {
