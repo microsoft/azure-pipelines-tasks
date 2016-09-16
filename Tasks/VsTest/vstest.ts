@@ -40,6 +40,12 @@ try {
     var sourcesDir = tl.getVariable('build.sourcesdirectory');
     var runIdFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
     var baseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
+    var useNewCollectorFlag = tl.getVariable('tia.useNewCollector');
+
+    var useNewCollector = true;
+    if (useNewCollectorFlag && useNewCollectorFlag.toUpperCase() == "FALSE") {
+        useNewCollector = false;
+    }
 
     var sourcesDirectory = tl.getVariable('System.DefaultWorkingDirectory');
     var testAssemblyFiles = getTestAssemblies();
@@ -782,6 +788,14 @@ function getTestImpactAttributes(vsVersion: number) {
     };
 }
 
+function getTestImpactAttributesWithoutNewCollector(vsVersion: number) {
+    return {
+        uri: TICollectorURI,
+        assemblyQualifiedName: getTIAssemblyQualifiedName(vsVersion),
+        friendlyName: TIFriendlyName        
+    };
+}
+
 function isTestImapctCollectorPresent(dataCollectorArray): Boolean {
     var found = false;
     var tiaFriendlyName = TIFriendlyName.toUpperCase();
@@ -816,9 +830,11 @@ function pushImpactLevelAndRootPathIfNotFound(dataCollectorArray): void {
 
             //Adding the codebase attribute to TestImpact collector 
             tl.debug("Adding codebase attribute to the existing test impact collector");
-            if (!dataCollectorArray[i].$.codebase) {
-                dataCollectorArray[i].$.codebase = getTraceCollectorUri();
-            }
+            if (useNewCollector) {
+                if (!dataCollectorArray[i].$.codebase) {
+                    dataCollectorArray[i].$.codebase = getTraceCollectorUri();
+                }
+            }            
         }
     }
 }
@@ -860,7 +876,12 @@ function updateRunSettings(result: any, vsVersion: number) {
     }
     if (dataCollectorNode) {
         tl.debug("Setting attributes for test impact data collector");
-        dataCollectorNode.$ = getTestImpactAttributes(vsVersion);
+        if (useNewCollector) {
+            dataCollectorNode.$ = getTestImpactAttributes(vsVersion);
+        }
+        else {
+            dataCollectorNode.$ = getTestImpactAttributesWithoutNewCollector(vsVersion);
+        }        
     }
 }
 
@@ -944,7 +965,12 @@ function updatTestSettings(result: any, vsVersion: number) {
     }
     if (dataCollectorNode) {
         tl.debug("Setting attributes for test impact data collector");
-        dataCollectorNode.$ = getTestImpactAttributes(vsVersion);
+        if (useNewCollector) {
+            dataCollectorNode.$ = getTestImpactAttributes(vsVersion);
+        }
+        else {
+            dataCollectorNode.$ = getTestImpactAttributesWithoutNewCollector(vsVersion);
+        }        
     }
 }
 
@@ -1007,8 +1033,15 @@ function createRunSettingsForTestImpact(vsVersion: number, settingsFile: string,
     var runSettingsForTIA = '<?xml version="1.0" encoding="utf-8"?><RunSettings><DataCollectionRunSettings><DataCollectors>' +
         '<DataCollector uri="' + TICollectorURI + '" ' +
         'assemblyQualifiedName="' + getTIAssemblyQualifiedName(vsVersion) + '" ' +
-        'friendlyName="' + TIFriendlyName + '" ' +
-        'codebase="' + getTraceCollectorUri() + '" >' +
+        'friendlyName="' + TIFriendlyName + '" ';
+
+    if (useNewCollector) {
+        runSettingsForTIA = runSettingsForTIA +
+            'codebase="' + getTraceCollectorUri() + '"';
+    }
+
+    runSettingsForTIA = runSettingsForTIA +
+        ' >' +
         '<Configuration>' +
         '<ImpactLevel>' + getTIALevel() + '</ImpactLevel>' +
         '<RootPath>' + sourcesDir + '</RootPath>' +
