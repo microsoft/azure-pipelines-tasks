@@ -10,6 +10,8 @@
   "loc.input.help.jobName": "The name of the Jenkins job to download artifacts from.  This must exactly match the job name on the Jenkins server.",
   "loc.input.label.saveTo": "Save to",
   "loc.input.help.saveTo": "Jenkins artifacts will be downloaded and saved to this directory.  This directory will be created if it does not exist.",
+  "loc.input.label.trustSSL": "Trust server certificate",
+  "loc.input.help.trustSSL": "Selecting this option results in the Jenkins server's SSL certificate being trusted, even if it is self-signed or cannot be validated by a Certificate Authority (CA).",
   "loc.input.label.jenkinsBuild": "Download artifacts produced by",
   "loc.input.help.jenkinsBuild": "Download artifacts produced by the last successful build, or from a specific build instance.",
   "loc.input.label.jenkinsBuildNumber": "Jenkins build number",

@@ -8,7 +8,7 @@
   "loc.input.label.ArtifactName": "Nom de l'artefact",
   "loc.input.help.ArtifactName": "Nom de l'artefact à créer.",
   "loc.input.label.ArtifactType": "Type d'artefact",
-  "loc.input.help.ArtifactType": "The type of artifact to create.",
+  "loc.input.help.ArtifactType": "Type de l'artefact à créer.",
   "loc.input.label.TargetPath": "Chemin d'accès",
   "loc.input.help.TargetPath": "Partage de fichiers dans lequel copier les fichiers",
   "loc.messages.PublishBuildArtifactsFailed": "Échec de la publication des artefacts de build. Erreur : %s"
