@@ -1,4 +1,5 @@
 import {AnalysisResult} from './AnalysisResult'
+import {FileSystemInteractions} from './FileSystemInteractions';
 
 import path = require('path');
 import fs = require('fs');
@@ -20,7 +21,7 @@ export class CodeAnalysisResultPublisher {
 
     /**
      * Uploads the artifacts. It groups them by module
-     * 
+     *
      * @param {string} prefix - used to discriminate between artifacts comming from different builds of the same projects (e.g. the build number)
      */
     public uploadArtifacts(prefix: string):void {
@@ -31,20 +32,20 @@ export class CodeAnalysisResultPublisher {
         tl.debug('[CA] Preparing to upload artifacts');
 
         let artifactBaseDir = path.join(this.stagingDir, 'CA');
-        tl.mkdirP(artifactBaseDir);
+        FileSystemInteractions.createDirectory(artifactBaseDir);
 
         for (var analysisResult of this.analysisResults) {
 
             // Group artifacts in folders representing the module name
             let destinationDir = path.join(artifactBaseDir, analysisResult.moduleName);
-            tl.mkdirP(destinationDir);
+            FileSystemInteractions.createDirectory(destinationDir);
 
             for (var resultFile of analysisResult.resultFiles) {
                 let extension = path.extname(resultFile);
                 let reportName = path.basename(resultFile, extension);
 
                 let artifactName = `${prefix}_${reportName}_${analysisResult.toolName}${extension}`;
-                tl.cp(resultFile, path.join(destinationDir, artifactName), '-f');
+                FileSystemInteractions.copyFile(resultFile, path.join(destinationDir, artifactName));
             }
         }
 
@@ -56,17 +57,17 @@ export class CodeAnalysisResultPublisher {
 
     /**
      * Creates and uploads a build summary that looks like:
-     * Looks like:  PMD found 13 violations in 4 files.  
-     *              FindBugs found 10 violations in 8 files.  
-     *   
-     * Code analysis results can be found in the 'Artifacts' tab. 
+     * Looks like:  PMD found 13 violations in 4 files.
+     *              FindBugs found 10 violations in 8 files.
+     *
+     * Code analysis results can be found in the 'Artifacts' tab.
      */
     public uploadBuildSummary():void {
 
         if (this.analysisResults.length === 0) {
             return;
         }
-        
+
         tl.debug('[CA] Preparing a build summary');
         let content: string = this.createSummaryContent();
         this.uploadMdSummary(content);
@@ -86,7 +87,7 @@ export class CodeAnalysisResultPublisher {
 
     private uploadMdSummary(content: string):void {
         var buildSummaryFilePath: string = path.join(this.stagingDir, 'CodeAnalysisBuildSummary.md');
-        tl.mkdirP(this.stagingDir);
+        FileSystemInteractions.createDirectory(this.stagingDir);
         fs.writeFileSync(buildSummaryFilePath, content);
 
         tl.debug('[CA] Uploading build summary from ' + buildSummaryFilePath);
