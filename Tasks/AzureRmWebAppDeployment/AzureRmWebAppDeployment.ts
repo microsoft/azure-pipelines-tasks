@@ -21,17 +21,12 @@ async function run() {
         var slotName: string = tl.getInput('SlotName');
         var webDeployPkg: string = tl.getPathInput('Package', true);
         var virtualApplication: string = tl.getInput('VirtualApplication', false);
-        var isTaskUpgraded: boolean = isTaskUpgradeDone(tl.getInput('UseWebDeploy', false));
-
-        var setParametersFile: string = isTaskUpgraded ? tl.getPathInput('SetParametersFile1', false) : tl.getPathInput('SetParametersFile', false);
-        var removeAdditionalFilesFlag: boolean = isTaskUpgraded ? tl.getBoolInput('RemoveAdditionalFilesFlag1', false) : tl.getBoolInput('RemoveAdditionalFilesFlag', false);
-        var excludeFilesFromAppDataFlag: boolean = isTaskUpgraded ? tl.getBoolInput('ExcludeFilesFromAppDataFlag1', false) : tl.getBoolInput('ExcludeFilesFromAppDataFlag', false);
-        var takeAppOfflineFlag: boolean = isTaskUpgraded ? tl.getBoolInput('TakeAppOfflineFlag1', false) : tl.getBoolInput('TakeAppOfflineFlag', false);
-        var additionalArguments: string = isTaskUpgraded ? tl.getInput('AdditionalArguments1', false) : tl.getInput('AdditionalArguments', false);
-
-        var useWebDeploy: boolean = isTaskUpgraded ? tl.getBoolInput('UseWebDeploy', false) : true;
-        tl.debug('useWebDeploy = ' + useWebDeploy);
-
+        var useWebDeploy: boolean = tl.getBoolInput('UseWebDeploy', false);
+        var setParametersFile: string = tl.getPathInput('SetParametersFile', false);
+        var removeAdditionalFilesFlag: boolean = tl.getBoolInput('RemoveAdditionalFilesFlag', false);
+        var excludeFilesFromAppDataFlag: boolean = tl.getBoolInput('ExcludeFilesFromAppDataFlag', false);
+        var takeAppOfflineFlag: boolean = tl.getBoolInput('TakeAppOfflineFlag', false);
+        var additionalArguments: string = tl.getInput('AdditionalArguments', false);
         var webAppUri:string = tl.getInput('WebAppUri', false);
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
 
@@ -167,15 +162,6 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
             throw Error(deploymentError);
         }
     }
-}
-
-/**
- * Takes useWebDeploy as input and returns it is edited or not.
- * 
- * @param useWebDeploy value of from task.json
- */
-function isTaskUpgradeDone(useWebDeploy: string): boolean {
-    return useWebDeploy !== "( SetParametersFile != \"\" || RemoveAdditionalFilesFlag == true || ExcludeFilesFromAppDataFlag == true || TakeAppOfflineFlag == true || AdditionalArguments != \"\") ? true : false";
 }
 
 /**
