@@ -50,7 +50,8 @@ export class SonarQubeRunSettings {
      * @returns {SonarQubeRunSettings} A new SonarQubeRunSettings with appropriate fields filled
      */
     public static createRunSettingsFromFile(filePath:string): SonarQubeRunSettings {
-        if (!tl.exist(filePath)) {
+        
+        if (!fs.existsSync(filePath)) {
             tl.debug('Task report not found at: ' + filePath);
             // Looks like: Invalid or missing task report. Check SonarQube finished successfully.
             throw new Error(tl.loc('sqAnalysis_TaskReportInvalid'));
