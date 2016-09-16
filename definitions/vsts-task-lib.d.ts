@@ -271,7 +271,17 @@ declare module 'vsts-task-lib/task' {
 	 * @returns   string
 	 */
 	export function getEndpointUrl(id: string, optional: boolean): string;
-	export function getEndpointDataParameter(id: string, key: string, optional: boolean): string;
+	/*
+	 * Gets the endpoint data parameter value with specified key for a service endpoint
+	 * If the endpoint data parameter was not set and is not optional, the task will fail with an error message. Execution will halt.
+	 *
+	 * @param id name of the service endpoint
+	 * @param key of the parameter
+	 * @param optional whether the endpoint data is optional
+	 * @param secret, optional, if set to true, will store the value as a secret variable so it will be masked in the build logs
+	 * @returns {string} value of the endpoint data parameter
+	 */
+	export function getEndpointDataParameter(id: string, key: string, optional: boolean, secret?: boolean): string;
 	/**
 	 * Gets the endpoint authorization scheme for a service endpoint
 	 * If the endpoint authorization scheme is not set and is not optional, the task will fail with an error message. Execution will halt.
