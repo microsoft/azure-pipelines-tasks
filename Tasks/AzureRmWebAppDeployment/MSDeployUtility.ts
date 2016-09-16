@@ -61,10 +61,6 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
             msDeployCmdArgs += " -setParamFile=\"" + setParametersFile + "\"";
         }
 
-        if(!removeAdditionalFilesFlag) {
-            msDeployCmdArgs += " -enableRule:DoNotDeleteRule";
-        }
-
         if(takeAppOfflineFlag) {
             msDeployCmdArgs += ' -enableRule:AppOffline';
         }
@@ -76,6 +72,10 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
         if(additionalArguments) {
             msDeployCmdArgs += ' ' + additionalArguments;
         }
+    }
+    
+    if(!(removeAdditionalFilesFlag && useWebDeploy)) {
+        msDeployCmdArgs += " -enableRule:DoNotDeleteRule";
     }
 
     var userAgent = tl.getVariable("AZURE_HTTP_USER_AGENT");
