@@ -139,20 +139,6 @@
             "visibleRule": "action = Create Or Update Resource Group"
         },
         {
-            "name": "deploymentMode",
-            "type": "pickList",
-            "label": "Deployment Mode",
-            "defaultValue": "Incremental",
-            "required": true,
-            "helpMarkDown": "Specify the deployment mode for Azure Resource Manager template.",
-            "options": {
-                "Validation": "Validation Only",
-                "Incremental" : "Incremental Mode",
-                "Complete" : "Complete Mode"
-                },
-            "visibleRule": "action = Create Or Update Resource Group"
-        },
-        {
             "name": "csmFile",
             "type": "filePath",
             "label": "Template",
@@ -196,6 +182,20 @@
             "visibleRule": "action = Select Resource Group",
             "required": false,
             "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
+        },
+        {
+            "name": "deploymentMode",
+            "type": "pickList",
+            "label": "Deployment Mode",
+            "defaultValue": "Incremental",
+            "required": true,
+            "helpMarkDown": "Specify the deployment mode for Azure Resource Manager template.",
+            "options": {
+                "Validation": "Validation Only",
+                "Incremental" : "Incremental Mode",
+                "Complete" : "Complete Mode"
+                },
+            "visibleRule": "action = Create Or Update Resource Group"
         },
         {
             "name": "outputVariable",
