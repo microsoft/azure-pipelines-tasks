@@ -105,24 +105,33 @@
             "groupName": "output",
             "helpMarkDown": "Provide a name for the variable for the webapp hosted url. The variable can be used as $(variableName) to refer to the hosted url of webapp in subsequent tasks like in the PowerShell on Target Machines task."
         },
-         {
+        {
+            "name": "UseWebDeploy",
+            "type": "boolean",
+            "label": "Publish using Web Deploy",
+            "required": false,
+            "defaultValue": "true",
+            "groupName": "AdditionalDeploymentOptions",
+            "helpMarkDown": "The Web Deploy options will only work when the automation agent is on Windows and will be ignored on Linux. The options are also ignored for file formats that are not zipped or in a  folders, like Java WAR files. FTP works with automation agent on both Windows and Linux and for zip files, folders, and Java WAR files."
+        },
+        {
             "name": "SetParametersFile",
             "type": "filePath",
             "label": "SetParameters File",
             "defaultValue": "",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "false",
+            "visibleRule": "UseWebDeploy == true",
             "helpMarkDown": "Optional: location of the SetParameters.xml file to use."
         },
-         {
+        {
             "name": "RemoveAdditionalFilesFlag",
             "type": "boolean",
             "label": "Remove Additional Files at Destination",
             "defaultValue": "false",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "false",
+            "visibleRule": "UseWebDeploy == true",
             "helpMarkDown": "Select the option to delete files on the AzureRM Web App that have no matching files in the Web App zip package."
         },
         {
@@ -132,7 +141,7 @@
             "defaultValue": "false",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "false",
+            "visibleRule": "UseWebDeploy == true",
             "helpMarkDown": "Select the option to prevent files in the App_Data folder from being deployed to the AzureRM Web App."
         },
         {
@@ -142,7 +151,7 @@
             "defaultValue": "false",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "false",
+            "visibleRule": "UseWebDeploy == true",
             "helpMarkDown": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully."
         },
         {
@@ -151,65 +160,6 @@
             "label": "Additional Arguments",
             "required": false,
             "defaultValue": "",
-            "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "false",
-            "helpMarkDown": "Additional Web Deploy arguments that will be applied when deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension."
-        },
-        {
-            "name": "UseWebDeploy",
-            "type": "boolean",
-            "label": "Publish using Web Deploy",
-            "required": false,
-            "defaultValue": "( SetParametersFile != \"\" || RemoveAdditionalFilesFlag == true || ExcludeFilesFromAppDataFlag == true || TakeAppOfflineFlag == true || AdditionalArguments != \"\") ? true : false",
-            "groupName": "AdditionalDeploymentOptions",
-            "helpMarkDown": "The Web Deploy options will only work when the automation agent is on Windows and will be ignored on Linux. The options are also ignored for file formats that are not zipped or in a  folders, like Java WAR files. FTP works with automation agent on both Windows and Linux and for zip files, folders, and Java WAR files."
-        },
-         {
-            "name": "SetParametersFile1",
-            "type": "filePath",
-            "label": "SetParameters File",
-            "defaultValue": "SetParametersFile",
-            "required": false,
-            "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "UseWebDeploy == true",
-            "helpMarkDown": "Optional: location of the SetParameters.xml file to use."
-        },
-         {
-            "name": "RemoveAdditionalFilesFlag1",
-            "type": "boolean",
-            "label": "Remove Additional Files at Destination",
-            "defaultValue": "RemoveAdditionalFilesFlag",
-            "required": false,
-            "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "UseWebDeploy == true",
-            "helpMarkDown": "Select the option to delete files on the AzureRM Web App that have no matching files in the Web App zip package."
-        },
-        {
-            "name": "ExcludeFilesFromAppDataFlag1",
-            "type": "boolean",
-            "label": "Exclude Files from the App_Data Folder",
-            "defaultValue": "ExcludeFilesFromAppDataFlag",
-            "required": false,
-            "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "UseWebDeploy == true",
-            "helpMarkDown": "Select the option to prevent files in the App_Data folder from being deployed to the AzureRM Web App."
-        },
-        {
-            "name": "TakeAppOfflineFlag1",
-            "type": "boolean",
-            "label": "Take App Offline",
-            "defaultValue": "TakeAppOfflineFlag",
-            "required": false,
-            "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "UseWebDeploy == true",
-            "helpMarkDown": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully."
-        },
-        {
-            "name": "AdditionalArguments1",
-            "type": "string",
-            "label": "Additional Arguments",
-            "required": false,
-            "defaultValue": "AdditionalArguments",
             "groupName": "AdditionalDeploymentOptions",
             "visibleRule": "UseWebDeploy == true",
             "helpMarkDown": "Additional Web Deploy arguments that will be applied when deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension."
@@ -239,7 +189,6 @@
             },
             "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
         }
-       
     ],
     "instanceNameFormat": "Deploy AzureRM App Service: $(WebAppName)",
     "execution": {
