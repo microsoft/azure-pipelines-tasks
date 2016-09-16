@@ -11,6 +11,7 @@ import {SonarQubeEndpoint} from './endpoint';
 import {SonarQubeRunSettings} from './run-settings';
 import {SonarQubeReportBuilder} from './report-builder';
 import {SonarQubeMetrics} from './metrics';
+import {FileSystemInteractions} from '../Common/FileSystemInteractions';
 
 /**
  * Class provides functions for effecting change on the VSTS serverside.
@@ -145,7 +146,7 @@ export class VstsServerUtils {
      */
     private static getOrCreateSonarQubeStagingDirectory(): string {
         var sqStagingDir = path.join(tl.getVariable('build.artifactStagingDirectory'), ".sqAnalysis");
-        tl.mkdirP(sqStagingDir);
+        FileSystemInteractions.createDirectory(sqStagingDir);
         return sqStagingDir;
     }
 
