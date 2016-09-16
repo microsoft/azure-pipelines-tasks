@@ -6,7 +6,6 @@
     "helpMarkDown": "[More Information](https://www.visualstudio.com/docs/build/steps/deploy/manual-intervention/)",
     "category": "Deploy",
     "visibility": [  
-                  "Preview",
                   "Release"
     ],    
     "author": "Microsoft Corporation",
