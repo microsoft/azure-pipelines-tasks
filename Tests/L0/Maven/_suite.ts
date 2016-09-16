@@ -141,6 +141,25 @@ function captureStream(stream):{unhook():void, captured():string} {
     };
 }
 
+function cleanTempDirsForCodeAnalysisTests():void {
+    var testTempDir: string = path.join(__dirname, '_temp');
+    deleteFolderRecursive(testTempDir);
+}
+
+function deleteFolderRecursive(path):void {
+    if (fs.existsSync(path)) {
+        fs.readdirSync(path).forEach(function(file,index){
+            var curPath = path + "/" + file;
+            if(fs.lstatSync(curPath).isDirectory()) { // recurse
+                deleteFolderRecursive(curPath);
+            } else { // delete file
+                fs.unlinkSync(curPath);
+            }
+        });
+        fs.rmdirSync(path);
+    }
+};
+
 function assertCodeAnalysisBuildSummaryContains(stagingDir: string, expectedString: string): void {
     assertBuildSummaryContains(fs.readFileSync(path.join(stagingDir, '.codeAnalysis', 'CodeAnalysisBuildSummary.md'), 'utf-8'), expectedString);
 }
@@ -153,6 +172,15 @@ function assertSonarQubeBuildSummaryContains(stagingDir: string, expectedString:
 function assertBuildSummaryContains(buildSummaryString: string, expectedLine: string): void {
     assert(buildSummaryString.indexOf(expectedLine) > -1, `Expected build summary to contain: ${expectedLine}
      Actual: ${buildSummaryString}`);
+}
+
+function assertFileExistsInDir(stagingDir:string, filePath:string) {
+    var directoryName:string = path.dirname(path.join(stagingDir, filePath));
+    var fileName:string = path.basename(filePath);
+    assert(fs.statSync(directoryName).isDirectory(), 'Expected directory did not exist: ' + directoryName);
+    var directoryContents:string[] = fs.readdirSync(directoryName);
+    assert(directoryContents.indexOf(fileName) > -1, `Expected file did not exist: ${filePath}
+    Actual contents of ${directoryName}: ${directoryContents}`);
 }
 
 function assertErrorContains(error: any, expectedString: string): void {
@@ -717,11 +745,11 @@ describe('Maven Suite', function () {
 
         tr.run()
             .then(() => {
-                if (isWindows) { 
-                    assert(tr.invokedToolCount == 1, 'should not have run maven'); // Should have run reg query toolrunner once 
-                } else { 
-                    assert(tr.invokedToolCount == 0, 'should not have run maven'); 
-                } 
+                if (isWindows) {
+                    assert(tr.invokedToolCount == 1, 'should not have run maven'); // Should have run reg query toolrunner once
+                } else {
+                    assert(tr.invokedToolCount == 0, 'should not have run maven');
+                }
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
                 assert(tr.failed, 'task should have failed');
@@ -1123,6 +1151,12 @@ describe('Maven Suite', function () {
 
                 assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found 3 violations in 2 files.');
 
+                var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
+
+                // Test files copied for root module, build 1
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.html');
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.xml');
+
                 done();
             })
             .fail((err) => {
@@ -1131,6 +1165,9 @@ describe('Maven Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
     it('Maven with PMD - Should succeed even if XML output cannot be found', function (done) {
@@ -1235,6 +1272,11 @@ describe('Maven Suite', function () {
 
                 assertCodeAnalysisBuildSummaryContains(testStgDir, 'Checkstyle found 9 violations in 2 files.');
 
+                var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
+
+                // Test files copied for root module, build 1
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_checkstyle_Checkstyle.xml');
+
                 done();
             })
             .fail((err) => {
@@ -1243,6 +1285,9 @@ describe('Maven Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
     it('Maven with Checkstyle - Should succeed even if XML output cannot be found', function (done) {
@@ -1347,6 +1392,11 @@ describe('Maven Suite', function () {
 
                 assertCodeAnalysisBuildSummaryContains(testStgDir, 'FindBugs found 5 violations in 1 file.');
 
+                var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
+
+                // Test files copied for root module, build 1
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_findbugs_FindBugs.xml');
+
                 done();
             })
             .fail((err) => {
@@ -1355,6 +1405,9 @@ describe('Maven Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
     it('Maven with FindBugs - Should succeed even if XML output cannot be found', function (done) {
@@ -1463,6 +1516,22 @@ describe('Maven Suite', function () {
                 assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found 3 violations in 2 files.');
                 assertCodeAnalysisBuildSummaryContains(testStgDir, 'FindBugs found 5 violations in 1 file.');
 
+                var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
+
+                // Test files copied for root module, build 1
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_checkstyle_Checkstyle.xml');
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_findbugs_FindBugs.xml');
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.html');
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.xml');
+
+                var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
+
+                // Test files copied for root module, build 1
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_checkstyle_Checkstyle.xml');
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_findbugs_FindBugs.xml');
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.html');
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.xml');
+
                 done();
             })
             .fail((err) => {
@@ -1471,6 +1540,9 @@ describe('Maven Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
     it('Maven with Checkstyle, PMD & FindBugs - Executes and uploads results for all enabled tools', function (done) {
@@ -1528,6 +1600,14 @@ describe('Maven Suite', function () {
                 assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found 3 violations in 2 files.');
                 assertCodeAnalysisBuildSummaryContains(testStgDir, 'FindBugs found 5 violations in 1 file.');
 
+                var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
+
+                // Test files copied for root module, build 1
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_checkstyle_Checkstyle.xml');
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_findbugs_FindBugs.xml');
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.html');
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.xml');
+
                 done();
             })
             .fail((err) => {
@@ -1536,6 +1616,9 @@ describe('Maven Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
     it('during PR builds SonarQube analysis runs in issues mode', function (done) {

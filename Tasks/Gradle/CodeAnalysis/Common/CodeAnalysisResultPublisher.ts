@@ -1,4 +1,5 @@
 import {AnalysisResult} from './AnalysisResult'
+import {FileSystemInteractions} from './FileSystemInteractions';
 
 import path = require('path');
 import fs = require('fs');
@@ -31,20 +32,20 @@ export class CodeAnalysisResultPublisher {
         tl.debug('[CA] Preparing to upload artifacts');
 
         let artifactBaseDir = path.join(this.stagingDir, 'CA');
-        tl.mkdirP(artifactBaseDir);
+        FileSystemInteractions.createDirectory(artifactBaseDir);
 
         for (var analysisResult of this.analysisResults) {
 
             // Group artifacts in folders representing the module name
             let destinationDir = path.join(artifactBaseDir, analysisResult.moduleName);
-            tl.mkdirP(destinationDir);
+            FileSystemInteractions.createDirectory(destinationDir);
 
             for (var resultFile of analysisResult.resultFiles) {
                 let extension = path.extname(resultFile);
                 let reportName = path.basename(resultFile, extension);
 
                 let artifactName = `${prefix}_${reportName}_${analysisResult.toolName}${extension}`;
-                tl.cp(resultFile, path.join(destinationDir, artifactName), '-f');
+                FileSystemInteractions.copyFile(resultFile, path.join(destinationDir, artifactName));
             }
         }
 
@@ -86,7 +87,7 @@ export class CodeAnalysisResultPublisher {
 
     private uploadMdSummary(content: string):void {
         var buildSummaryFilePath: string = path.join(this.stagingDir, 'CodeAnalysisBuildSummary.md');
-        tl.mkdirP(this.stagingDir);
+        FileSystemInteractions.createDirectory(this.stagingDir);
         fs.writeFileSync(buildSummaryFilePath, content);
 
         tl.debug('[CA] Uploading build summary from ' + buildSummaryFilePath);
