@@ -23,7 +23,7 @@ export enum NuGetQuirkName {
     NoV3,
 }
 
-interface VersionRange {
+export interface VersionRange {
     begin: VersionInfoVersion;
     beginIsInclusive: boolean;
     end: VersionInfoVersion;
@@ -48,7 +48,7 @@ function versionIsInRange(version: VersionInfoVersion, range: VersionRange): boo
     return beginResult && endResult;
 }
 
-interface QuirkDescriptor {
+export interface QuirkDescriptor {
     quirk: NuGetQuirkName;
     versionRanges: VersionRange[];
 }
