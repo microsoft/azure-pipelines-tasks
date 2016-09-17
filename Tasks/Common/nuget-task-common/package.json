@@ -1,0 +1,19 @@
+{
+  "name": "nuget-task-common",
+  "version": "1.0.0",
+  "description": "VSTS Nuget Tasks Common",
+  "main": "Utility.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Microsoft Corporation",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Microsoft/vsts-tasks"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "vso-node-api": "^5.0.5",
+    "vsts-task-lib": "^0.7.4"
+  }
+}

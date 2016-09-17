@@ -40,6 +40,17 @@ var ensureExists = function (checkPath) {
     }    
 }
 
+var buildNodeTask = function (taskPath) {
+    banner('Building node task ' + taskPath, true);
+    pushd(taskPath);
+    if (test('-f', rp('package.json'))) {
+        console.log('installing node modules');
+        run('npm install', true);
+    }
+    run('tsc', true);
+    popd();
+}
+
 var buildPath = path.join(__dirname, '_build');
 var testPath = path.join(__dirname, '_test');
 
@@ -61,30 +72,52 @@ target.build = function() {
         var taskPath = path.join(__dirname, 'Tasks', taskName);
         ensureExists(taskPath);
 
-        pushd(taskPath);
-        var buildNodeTask = true;
+        var shouldBuildNode = true;
 
         // extract what you need out of task.json here.
         // common does not have a task.json
-        if (test('-f', rp('task.json'))) {
-            var taskDef = require(rp('task.json'));
+        var taskJsonPath = path.join(taskPath, 'task.json');
+        if (test('-f', taskJsonPath)) {
+            var taskDef = require(taskJsonPath);
             // TODO: call validate taskJson
-            buildNodeTask = taskDef.execution.hasOwnProperty('Node');
+            shouldBuildNode = taskDef.execution.hasOwnProperty('Node');
+        }
+
+        //--------------------------------
+        // Common: build, copy, install 
+        //--------------------------------
+        // ensure we only compile common modules once
+        var commonBuilt = {};
+        var commonJsonPath = path.join(taskPath, 'common.json');
+        if (test('-f', commonJsonPath)) {
+            var common = require(commonJsonPath);
+            common.forEach(function(mod) {
+                var commonPath = path.join(taskPath, mod['module']);
+
+                if (mod.type === 'node' && mod.compile == true) {
+                    buildNodeTask(commonPath);
+                }
+                
+                if (mod.dest) {
+                    var modName = path.basename(commonPath);
+                    var dest = path.join(taskPath, mod.dest);                    
+                    console.log('copying ' + modName + ' to ' + dest);
+                    cp('-R', commonPath, dest);
+
+                    // remove any typings in module built and copied to avoid conflicts
+                    rm('-Rf', path.join(dest, modName, 'typings'));
+                }
+            });
         }
 
         // ------------------
         // Build Node Task
         // ------------------
-        if (buildNodeTask) {
-            if (test('-f', rp('package.json'))) {
-                console.log('installing node modules');
-                run('npm install', true);
-            }
-            run('tsc', true);
+        if (shouldBuildNode) {
+            buildNodeTask(taskPath);
         }
  
         cp('-R', taskPath, buildPath);
-        popd();
     });
 
     banner('Build successful', true);
