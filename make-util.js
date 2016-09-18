@@ -57,20 +57,15 @@ var buildNodeTask = function (taskPath, outDir) {
     }
     run('tsc --outDir ' + outDir);
 
-    // copy node_modules
-    cp('-R', path.join(taskPath, 'node_modules'), 
-            outDir);
-
     popd();
 }
 exports.buildNodeTask = buildNodeTask;
 
 var copyTaskResources = function(srcPath, destPath) {
     // copy task resources
-    var toCopy = ['icon.png', 'icon.svg', 'package.json', 'Strings', 'task.json', 'task.loc.json', 'README.md'];
+    var toCopy = ['icon.png', 'icon.svg', 'node_modules', 'package.json', 'Strings', 'task.json', 'task.loc.json', 'README.md'];
     toCopy.forEach(function(item) {
         var itemPath = path.join(srcPath, item);
-        //console.log(itemPath, pathExists(itemPath));
 
         if (pathExists(itemPath)) {
             cp('-R', itemPath , destPath);
