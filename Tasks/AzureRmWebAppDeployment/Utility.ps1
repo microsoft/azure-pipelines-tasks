@@ -299,7 +299,7 @@ function Update-DeploymentStatus
             $securePwd = ConvertTo-SecureString $azureRMWebAppConnectionDetails.UserPassword -AsPlainText -Force
             $credential = New-Object System.Management.Automation.PSCredential ($username, $securePwd)
 
-            # Get autor of build or release
+            ### Get author of build or release
             $author = Get-VstsTaskVariable -Name "build.sourceVersionAuthor"
             if([string]::IsNullOrEmpty($author)) {
                 # fall back to build/release requestedfor
