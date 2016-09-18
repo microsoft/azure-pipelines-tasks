@@ -91,6 +91,18 @@ exports.run = function(cl, echo) {
 }
 var run = exports.run;
 
+var ensureTool = function(name, versionArgs) {
+    console.log(name + ' tool:');
+    var toolPath = which(name);
+    if (!toolPath) {
+        fail(name + ' not found.  might need to run npm install');
+    }
+
+    exec(name + ' ' + versionArgs);
+    console.log(toolPath + '');
+}
+exports.ensureTool = ensureTool;
+
 var downloadFile = function (url) {
     // validate parameters
     if (!url) {
