@@ -4,6 +4,7 @@ var fs = require('fs');
 var os = require('os');
 var path = require('path');
 var process = require('process');
+var ncp = require('child_process');
 var syncRequest = require('sync-request');
 
 var downloadPath = path.join(__dirname, '_download');
@@ -52,9 +53,9 @@ var buildNodeTask = function (taskPath, outDir) {
     pushd(taskPath);
     if (test('-f', rp('package.json'))) {
         console.log('installing node modules');
-        run('npm install', true);
+        run('npm install');
     }
-    run('tsc --outDir ' + outDir, true);
+    run('tsc --outDir ' + outDir);
 
     // copy node_modules
     cp('-R', path.join(taskPath, 'node_modules'), 
@@ -79,17 +80,14 @@ var copyTaskResources = function(srcPath, destPath) {
 exports.copyTaskResources = copyTaskResources;
 
 exports.run = function(cl, echo) {
+    console.log();
     console.log('> ' + cl);
     var rc = 0;
     try {
-        var res = exec(cl);
-        rc = res.code;
-        if (echo && res.output) {
-            console.log(res.output);
-        }
+        var output = ncp.execSync(cl);
 
-        if (rc != 0) {
-            throw new Error(cl  + ' returned ' + res.code);
+        if (output && (echo || process.env['TASK_BUILD_VERBOSE'])) {
+            console.log(output.toString());
         }
     }
     catch (err) {

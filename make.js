@@ -90,8 +90,7 @@ target.build = function() {
                         mkdir('-p', path.join(taskPath, 'node_modules'));
                         rm('-Rf', path.join(taskPath, 'node_modules', modName));
                         pushd(taskPath);
-                        console.log('npm install ' + modOutDir);
-                        run('npm install ' + modOutDir, true);
+                        run('npm install ' + modOutDir);
                         popd();
                     }
                 }
