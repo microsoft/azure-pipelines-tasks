@@ -5,54 +5,24 @@ var path = require('path');
 var util = require('./make-util');
 // white list of tasks to make it into the build
 var taskList = require('./make-tasks.json');
+
+// util functions
 var run = util.run;
-
-var banner = function (message, noBracket) {
-    console.log();
-    if (!noBracket) {
-        console.log('------------------------------------------------------------');
-    }
-    console.log(message);
-    if (!noBracket) {
-        console.log('------------------------------------------------------------');
-    }
-    console.log();
-}
-
-var rp = function (relPath) {
-    return path.join(pwd() + '', relPath);
-}
-
-var tp = function(relPath) {
-    return path.join()
-}
-
-var fail = function (message) {
-    console.error('ERROR: ' + message);
-    process.exit(1);
-}
-
-var ensureExists = function (checkPath) {
-    var exists = test('-d', checkPath) || test('-f', checkPath);
-
-    if (!exists) {
-        fail(checkPath + ' does not exist');
-    }    
-}
-
-var buildNodeTask = function (taskPath) {
-    banner('Building node task ' + taskPath, true);
-    pushd(taskPath);
-    if (test('-f', rp('package.json'))) {
-        console.log('installing node modules');
-        run('npm install', true);
-    }
-    run('tsc', true);
-    popd();
-}
-
+var banner = util.banner;
+var rp = util.rp;
+var fail = util.fail;
+var ensureExists = util.ensureExists;
+var buildNodeTask = util.buildNodeTask;
+var addPath = util.addPath;
 var buildPath = path.join(__dirname, '_build');
 var testPath = path.join(__dirname, '_test');
+
+// add node modules .bin to the path so we can dictate version of tsc etc...
+var binPath = path.join(__dirname, 'node_modules', '.bin');
+if (!test('-d', binPath)) {
+    fail('node modules bin not found.  ensure npm install has been run.');
+}
+addPath(binPath);
 
 target.clean = function () {
     rm('-Rf', buildPath);
@@ -63,9 +33,22 @@ target.clean = function () {
 // ex: node make.js build -- ShellScript
 target.build = function() {
     target.clean();
-    
+
+    // ensure tsc
+    var tscPath = which('tsc');
+    if (!tscPath) {
+        fail('tsc not found.  run npm install');
+    }
+
+    var tscVersion = exec('tsc --version');
+    console.log(tscPath + '');
+
+    // filter tasks
     var taskName = process.argv[4];
     var tasksToBuild = taskName ? [ taskName ] : taskList;
+    
+    // ensure we only compile common modules once
+    var commonBuilt = {};
 
     tasksToBuild.forEach(function(taskName) {
         banner('Building: ' + taskName);
@@ -86,26 +69,28 @@ target.build = function() {
         //--------------------------------
         // Common: build, copy, install 
         //--------------------------------
-        // ensure we only compile common modules once
-        var commonBuilt = {};
         var commonJsonPath = path.join(taskPath, 'common.json');
         if (test('-f', commonJsonPath)) {
             var common = require(commonJsonPath);
             common.forEach(function(mod) {
                 var commonPath = path.join(taskPath, mod['module']);
+                var modName = path.basename(commonPath);
 
                 if (mod.type === 'node' && mod.compile == true) {
-                    buildNodeTask(commonPath);
+                    if (!commonBuilt[commonPath]) {
+                        buildNodeTask(commonPath);
+                    }
+                    
+                    commonBuilt[commonPath] = true;
                 }
                 
                 if (mod.dest) {
-                    var modName = path.basename(commonPath);
                     var dest = path.join(taskPath, mod.dest);                    
                     console.log('copying ' + modName + ' to ' + dest);
                     cp('-R', commonPath, dest);
 
                     // remove any typings in module built and copied to avoid conflicts
-                    rm('-Rf', path.join(dest, modName, 'typings'));
+                    //rm('-Rf', path.join(dest, modName, 'typings'));
                 }
             });
         }

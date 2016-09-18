@@ -9,6 +9,51 @@ var syncRequest = require('sync-request');
 var downloadPath = path.join(__dirname, '_download');
 var testPath = path.join(__dirname, '_test');
 
+var banner = function (message, noBracket) {
+    console.log();
+    if (!noBracket) {
+        console.log('------------------------------------------------------------');
+    }
+    console.log(message);
+    if (!noBracket) {
+        console.log('------------------------------------------------------------');
+    }
+    console.log();
+}
+exports.banner = banner;
+
+var rp = function (relPath) {
+    return path.join(pwd() + '', relPath);
+}
+exports.rp = rp;
+
+var fail = function (message) {
+    console.error('ERROR: ' + message);
+    process.exit(1);
+}
+exports.fail = fail;
+
+var ensureExists = function (checkPath) {
+    var exists = test('-d', checkPath) || test('-f', checkPath);
+
+    if (!exists) {
+        fail(checkPath + ' does not exist');
+    }    
+}
+exports.ensureExists = ensureExists;
+
+var buildNodeTask = function (taskPath) {
+    banner('Building node task ' + taskPath, true);
+    pushd(taskPath);
+    if (test('-f', rp('package.json'))) {
+        console.log('installing node modules');
+        run('npm install', true);
+    }
+    run('tsc', true);
+    popd();
+}
+exports.buildNodeTask = buildNodeTask;
+
 exports.run = function(cl, echo) {
     console.log('> ' + cl);
     var rc = 0;
@@ -28,7 +73,6 @@ exports.run = function(cl, echo) {
     }
 }
 var run = exports.run;
-
 
 var downloadFile = function (url) {
     // validate parameters
@@ -125,3 +169,4 @@ var addPath = function (directory) {
         process.env['PATH'] = directory;
     }
 }
+exports.addPath = addPath;
