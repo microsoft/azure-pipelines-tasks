@@ -16,6 +16,7 @@ var pathExists = util.pathExists;
 var buildNodeTask = util.buildNodeTask;
 var addPath = util.addPath;
 var copyTaskResources = util.copyTaskResources;
+var ensureTool = util.ensureTool;
 
 var commonOutputPath = path.join(__dirname, '_common');
 var buildPath = path.join(__dirname, '_build');
@@ -39,14 +40,7 @@ target.clean = function () {
 target.build = function() {
     target.clean();
 
-    // ensure tsc
-    var tscPath = which('tsc');
-    if (!tscPath) {
-        fail('tsc not found.  run npm install');
-    }
-
-    exec('tsc --version');
-    console.log(tscPath + '');
+    ensureTool('tsc', '--version');
 
     // filter tasks
     var taskName = process.argv[4];
@@ -114,11 +108,12 @@ target.build = function() {
 // ex: node make.js test
 // or ex: npm test
 target.test = function() {
-    // TODO: validate mocha installed and min version
+    ensureTool('mocha', '--version');
+
     var suiteArg = process.argv[4];
     var suiteType = suiteArg || 'L0';  
-    var testsSpec = path.join(__dirname, "/**/Tests", suiteType + ".js");
-    run("mocha " + testsSpec);
+    var testsSpec = path.join(buildPath, "/**/Tests", suiteType + ".js");
+    run("mocha " + testsSpec, true);
 
     // TODO: add legacy test approach for migration purposes
 }
