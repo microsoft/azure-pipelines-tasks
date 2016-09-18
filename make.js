@@ -12,8 +12,12 @@ var banner = util.banner;
 var rp = util.rp;
 var fail = util.fail;
 var ensureExists = util.ensureExists;
+var pathExists = util.pathExists;
 var buildNodeTask = util.buildNodeTask;
 var addPath = util.addPath;
+var copyTaskResources = util.copyTaskResources;
+
+var commonOutputPath = path.join(__dirname, '_common');
 var buildPath = path.join(__dirname, '_build');
 var testPath = path.join(__dirname, '_test');
 
@@ -25,6 +29,7 @@ if (!test('-d', binPath)) {
 addPath(binPath);
 
 target.clean = function () {
+    rm('-Rf', commonOutputPath);
     rm('-Rf', buildPath);
     mkdir('-p', buildPath);
     rm('-Rf', testPath);
@@ -40,25 +45,23 @@ target.build = function() {
         fail('tsc not found.  run npm install');
     }
 
-    var tscVersion = exec('tsc --version');
+    exec('tsc --version');
     console.log(tscPath + '');
 
     // filter tasks
     var taskName = process.argv[4];
     var tasksToBuild = taskName ? [ taskName ] : taskList;
     
-    // ensure we only compile common modules once
-    var commonBuilt = {};
-
     tasksToBuild.forEach(function(taskName) {
         banner('Building: ' + taskName);
         var taskPath = path.join(__dirname, 'Tasks', taskName);
         ensureExists(taskPath);
 
+        var outDir = path.join(buildPath, path.basename(taskPath));
+        mkdir('-p', outDir);
+
         var shouldBuildNode = true;
 
-        // extract what you need out of task.json here.
-        // common does not have a task.json
         var taskJsonPath = path.join(taskPath, 'task.json');
         if (test('-f', taskJsonPath)) {
             var taskDef = require(taskJsonPath);
@@ -72,25 +75,25 @@ target.build = function() {
         var commonJsonPath = path.join(taskPath, 'common.json');
         if (test('-f', commonJsonPath)) {
             var common = require(commonJsonPath);
+
             common.forEach(function(mod) {
                 var commonPath = path.join(taskPath, mod['module']);
                 var modName = path.basename(commonPath);
+                var modOutDir = path.join(commonOutputPath, modName);
 
-                if (mod.type === 'node' && mod.compile == true) {
-                    if (!commonBuilt[commonPath]) {
-                        buildNodeTask(commonPath);
+                if (!test('-d', modOutDir)) {
+                    if (mod.type === 'node' && mod.compile == true) {
+                        buildNodeTask(commonPath, modOutDir);
+                        copyTaskResources(commonPath, modOutDir);
+
+                        // install the common module to the task dir
+                        mkdir('-p', path.join(taskPath, 'node_modules'));
+                        rm('-Rf', path.join(taskPath, 'node_modules', modName));
+                        pushd(taskPath);
+                        console.log('npm install ' + modOutDir);
+                        run('npm install ' + modOutDir, true);
+                        popd();
                     }
-                    
-                    commonBuilt[commonPath] = true;
-                }
-                
-                if (mod.dest) {
-                    var dest = path.join(taskPath, mod.dest);                    
-                    console.log('copying ' + modName + ' to ' + dest);
-                    cp('-R', commonPath, dest);
-
-                    // remove any typings in module built and copied to avoid conflicts
-                    //rm('-Rf', path.join(dest, modName, 'typings'));
                 }
             });
         }
@@ -99,10 +102,10 @@ target.build = function() {
         // Build Node Task
         // ------------------
         if (shouldBuildNode) {
-            buildNodeTask(taskPath);
+            buildNodeTask(taskPath, outDir);
         }
- 
-        cp('-R', taskPath, buildPath);
+
+        copyTaskResources(taskPath, outDir);
     });
 
     banner('Build successful', true);

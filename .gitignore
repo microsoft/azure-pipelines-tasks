@@ -27,6 +27,7 @@ bld/
 [Bb]in/
 [Oo]bj/
 temp/
+_common/
 _build/
 _package/
 _working/

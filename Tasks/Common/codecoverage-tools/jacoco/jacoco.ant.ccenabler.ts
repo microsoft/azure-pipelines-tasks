@@ -1,7 +1,3 @@
-/// <reference path="../../../../definitions/Q.d.ts" />
-/// <reference path="../../../../definitions/string.d.ts" />
-/// <reference path="../../../../definitions/vsts-task-lib.d.ts" />
-/// <reference path="../../../../definitions/node.d.ts" />
 
 import * as util from "../utilities";
 import * as tl from "vsts-task-lib/task";

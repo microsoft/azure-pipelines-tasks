@@ -1,7 +1,3 @@
-/// <reference path="../../../definitions/Q.d.ts" />
-/// <reference path="../../../definitions/string.d.ts" />
-/// <reference path="../../../definitions/vsts-task-lib.d.ts" />
-/// <reference path="../../../definitions/node.d.ts" />
 
 import {ICodeCoverageEnabler} from "./codecoverageenabler";
 import {JacocoAntCodeCoverageEnabler} from "./jacoco/jacoco.ant.ccenabler";

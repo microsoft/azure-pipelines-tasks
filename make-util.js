@@ -42,17 +42,41 @@ var ensureExists = function (checkPath) {
 }
 exports.ensureExists = ensureExists;
 
-var buildNodeTask = function (taskPath) {
+var pathExists = function (checkPath) {
+    return test('-d', checkPath) || test('-f', checkPath);  
+}
+exports.pathExists = pathExists;
+
+var buildNodeTask = function (taskPath, outDir) {
     banner('Building node task ' + taskPath, true);
     pushd(taskPath);
     if (test('-f', rp('package.json'))) {
         console.log('installing node modules');
         run('npm install', true);
     }
-    run('tsc', true);
+    run('tsc --outDir ' + outDir, true);
+
+    // copy node_modules
+    cp('-R', path.join(taskPath, 'node_modules'), 
+            outDir);
+
     popd();
 }
 exports.buildNodeTask = buildNodeTask;
+
+var copyTaskResources = function(srcPath, destPath) {
+    // copy task resources
+    var toCopy = ['icon.png', 'icon.svg', 'package.json', 'Strings', 'task.json', 'task.loc.json', 'README.md'];
+    toCopy.forEach(function(item) {
+        var itemPath = path.join(srcPath, item);
+        //console.log(itemPath, pathExists(itemPath));
+
+        if (pathExists(itemPath)) {
+            cp('-R', itemPath , destPath);
+        }
+    });    
+}
+exports.copyTaskResources = copyTaskResources;
 
 exports.run = function(cl, echo) {
     console.log('> ' + cl);
