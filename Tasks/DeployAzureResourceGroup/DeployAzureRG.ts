@@ -169,11 +169,11 @@ export class deployAzureRG {
     private VMActions(){
         var azureCredentials = msRestAzure.ServiceClient(this.getRMCredentials());
         var client = new computeManagementClient(azureCredentials, this.subscriptionId);
-        client.virtualMachines.list(this.resourceGroupName,(error,result,request,response)=>{
+        client.virtualMachines.list(this.resourceGroupName, (error, result, request, response) => {
             var list = [];
-            for(var resource in result){
-                if (resource["type"] == "Microsoft.Compute/virtualMachines") 
-                    list = list.concat(resource["name"]);
+            for (var i=0; i<result.length; i++) {
+                var resource = result[i];
+                list = list.concat(resource["name"]);
             }
             switch (this.action){
                 case "Start":
