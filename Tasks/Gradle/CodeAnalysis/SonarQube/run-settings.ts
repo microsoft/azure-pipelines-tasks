@@ -51,7 +51,6 @@ export class SonarQubeRunSettings {
      */
     public static createRunSettingsFromFile(filePath: string): SonarQubeRunSettings {
 
-        let stats = fs.statSync(filePath);
         if (!SonarQubeRunSettings.fsExistsSync(filePath)) {
             tl.debug('Task report not found at: ' + filePath);
             // Looks like: Invalid or missing task report. Check SonarQube finished successfully.
@@ -78,8 +77,6 @@ export class SonarQubeRunSettings {
             // Looks like: Invalid or missing task report. Check SonarQube finished successfully.
             throw new Error(tl.loc('sqAnalysis_TaskReportInvalid'));
         }
-
-
     }
 
     /**
