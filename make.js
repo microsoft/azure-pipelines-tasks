@@ -4,7 +4,9 @@ var fs = require('fs');
 var path = require('path');
 var util = require('./make-util');
 // white list of tasks to make it into the build
-var taskList = require('./make-tasks.json');
+
+var makeOptions = require('./make-options.json');
+var taskList = makeOptions['tasks'];
 
 // util functions
 var run = util.run;
