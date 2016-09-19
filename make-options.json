@@ -3,6 +3,7 @@
         "ANT",
         "Gulp",
         "NuGetInstaller",
+        "PublishSymbols",
         "ShellScript"
     ],
     "taskResources": [
