@@ -10,6 +10,8 @@ var syncRequest = require('sync-request');
 var downloadPath = path.join(__dirname, '_download');
 var testPath = path.join(__dirname, '_test');
 
+var makeOptions = require('./make-options.json');
+
 var banner = function (message, noBracket) {
     console.log();
     if (!noBracket) {
@@ -63,7 +65,7 @@ exports.buildNodeTask = buildNodeTask;
 
 var copyTaskResources = function(srcPath, destPath) {
     // copy task resources
-    var toCopy = ['icon.png', 'icon.svg', 'node_modules', 'package.json', 'Strings', 'task.json', 'task.loc.json', 'README.md'];
+    var toCopy = makeOptions['taskResources'];
     toCopy.forEach(function(item) {
         var itemPath = path.join(srcPath, item);
 
