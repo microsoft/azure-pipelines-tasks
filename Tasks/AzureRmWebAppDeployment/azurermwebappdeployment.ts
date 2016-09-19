@@ -6,9 +6,9 @@ import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
 
-var azureRmUtil = require ('./AzureRMUtil.js');
-var msDeployUtility = require('./MSDeployUtility.js');
-var kuduUtility = require('./KuduUtility.js');
+var azureRmUtil = require ('./azurermutil.js');
+var msDeployUtility = require('./msdeployutility.js');
+var kuduUtility = require('./kuduutility.js');
 
 async function run() {
     try {

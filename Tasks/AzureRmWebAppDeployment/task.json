@@ -193,7 +193,7 @@
     "instanceNameFormat": "Deploy AzureRM App Service: $(WebAppName)",
     "execution": {
         "Node": {
-            "target": "AzureRmWebAppDeployment.js"
+            "target": "azurermwebappdeployment.js"
         }
     },
     "messages": {
