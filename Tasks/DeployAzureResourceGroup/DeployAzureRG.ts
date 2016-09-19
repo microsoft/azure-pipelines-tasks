@@ -42,7 +42,7 @@ export class deployAzureRG {
         try{ 
             this.connectedServiceNameSelector = tl.getInput("ConnectedServiceNameSelector", true);
             this.connectedService = null;
-            if(this.connectedServiceNameSelector=="ConnectedServiceName"){
+            if(this.connectedServiceNameSelector === "ConnectedServiceName"){
                 this.connectedService = tl.getInput("ConnectedServiceName");
             }else{
                 this.connectedService = tl.getInput("ConnectedServiceNameClassic");
