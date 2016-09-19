@@ -44,7 +44,7 @@ export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: b
                     deferred.reject(error);
                 }
                 else if(response === 200) {
-                    deferred.resolve(tl.loc("Successfullyupdateddeploymenthistory"));
+                    deferred.resolve(tl.loc("Successfullyupdateddeploymenthistory", body.url));
                 }
                 else {
                     tl.warning(body);

@@ -63,17 +63,17 @@ function getMSDeployCmdArgs(webAppPackage, webAppName, publishingProfile, remove
 exports.getMSDeployCmdArgs = getMSDeployCmdArgs;
 
 function containsParamFile(webAppPackage) {
+    
     var msDeployPath = getMSDeployFullPath();
     var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package=\"" + webAppPackage + "\"";
     var msDeployParamFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'msDeployParam.bat';
+    var parameterFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'parameter.xml';
     var silentCommand = '@echo off \n';
-    var msDeployCommand = '"' + msDeployPath + '" ' + msDeployCheckParamFileCmdArgs;
+    var msDeployCommand = '"' + msDeployPath + '" ' + msDeployCheckParamFileCmdArgs + " > \"" + parameterFile + "\"";
     var batchCommand = silentCommand + msDeployCommand;
     tl.writeFile(msDeployParamFile, batchCommand);
     tl._writeLine(tl.loc("Runningcommand", msDeployCommand));
     var taskResult = tl.execSync("cmd", ['/C', msDeployParamFile], { failOnStdErr: true });
-
-    var paramContentXML = taskResult.stdout;
     var isParamFilePresent = false;
 
     // Return mocked output
