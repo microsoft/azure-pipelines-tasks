@@ -12,4 +12,4 @@ Register-Mock Test-Path { $true } -- -Path $path
 
 . $PSScriptRoot\..\..\..\Tasks\VsTest\Helpers.ps1
 $isVS2015Installed = IsVisualStudio2015Update1OrHigherInstalled $vstestVersion
-Assert-AreEqual $isVS2015Installed $true
+Assert-AreEqual $isVS2015Installed $false

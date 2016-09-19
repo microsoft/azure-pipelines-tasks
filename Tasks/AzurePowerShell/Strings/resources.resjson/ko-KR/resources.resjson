@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure PowerShell",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613749)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613749)",
   "loc.description": "Azure 환경에서 PowerShell 스크립트 실행",
   "loc.instanceNameFormat": "Azure PowerShell 스크립트: $(ScriptPath)",
   "loc.input.label.ConnectedServiceNameSelector": "Azure 연결 형식",
@@ -12,6 +12,6 @@
   "loc.input.help.ScriptPath": "스크립트의 경로입니다. 정규화된 경로이거나 기본 작업 디렉터리에 대한 상대 경로여야 합니다.",
   "loc.input.label.ScriptArguments": "스크립트 인수",
   "loc.input.help.ScriptArguments": "PowerShell에 전달할 추가 인수입니다. 서수 매개 변수나 명명된 매개 변수 중 하나일 수 있습니다.",
-  "loc.messages.InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
-  "loc.messages.InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified."
+  "loc.messages.InvalidScriptArguments0": "스크립트 인수 '{0}'이(가) 잘못되었습니다. 줄 바꿈은 허용되지 않습니다.",
+  "loc.messages.InvalidScriptPath0": "스크립트 경로 '{0}'이(가) 잘못되었습니다. 잘못된 경로 문자를 지정했습니다."
 }

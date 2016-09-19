@@ -1,8 +1,8 @@
 {
   "loc.friendlyName": "Windows コンピューターのファイル コピー",
-  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "ファイルをリモート コンピューター (複数可) にコピーします",
-  "loc.instanceNameFormat": "Copy files from $(SourcePath)",
+  "loc.instanceNameFormat": "ファイルを $(SourcePath) からコピーする",
   "loc.group.displayName.advanced": "詳細設定のオプション",
   "loc.input.label.SourcePath": "ソース",
   "loc.input.help.SourcePath": "ローカル コンピューターまたは UNC 共有にあるソース フォルダーまたはファイルの絶対パス。たとえば、c:\\fabrikamfiber または \\\\\\\\fabrikamshare\\fabrikamfiber など。",

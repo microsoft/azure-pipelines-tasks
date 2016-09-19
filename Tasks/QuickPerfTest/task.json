@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 8
   },
   "demands": [
     "msbuild",
@@ -98,6 +98,17 @@
         "Brazil South": "Brazil South (Sao Paulo State)",
         "Australia East": "Australia East (New South Wales)",
         "Australia Southeast": "Australia Southeast (Victoria)"
+      }
+    },
+    {
+      "name": "machineType",
+      "type": "radio",
+      "label": "Run load test using",
+      "required": true,
+      "defaultValue": "0",
+      "options": {
+        "2": "Self-provisioned agents",
+        "0": "Automatically provisioned agents"
       }
     }
   ],

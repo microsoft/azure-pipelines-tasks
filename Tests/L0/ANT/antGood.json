@@ -15,6 +15,10 @@
         "/usr/local/bin/ANT -buildfile /build/build.xml CodeCoverage_9064e1d0": {
             "code": 0,
             "stdout": ""
+        },
+        "reg query HKLM\\SOFTWARE\\JavaSoft\\Java Development Kit\\1.5 /v JavaHome /reg:32": { 
+            "code": 222, 
+            "stdout": "" 
         }
     },
     "checkPath": {

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "npm",
-  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613746)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613746)",
   "loc.description": "npm 명령을 실행합니다.",
   "loc.instanceNameFormat": "npm $(command)",
   "loc.group.displayName.advanced": "고급",
@@ -10,7 +10,7 @@
   "loc.input.help.arguments": "추가 인수를 npm에 전달했습니다.",
   "loc.input.label.cwd": "작업 디렉터리",
   "loc.input.help.cwd": "npm 명령이 실행되는 현재 작업 디렉터리입니다. 기본값은 리포지토리의 루트입니다.",
-  "loc.messages.InvalidCommand": "Only one command should be used for npm. Use arguments input for additional arguments.",
+  "loc.messages.InvalidCommand": "npm에는 명령을 하나만 사용해야 합니다. 추가 인수에는 인수 입력을 사용하세요.",
   "loc.messages.NpmReturnCode": "반환 코드 %d(으)로 Npm 종료",
   "loc.messages.NpmFailed": "오류 %s(으)로 Npm 실패"
 }

@@ -12,20 +12,19 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 1
+    "Minor": 1,
+    "Patch": 0
   },
   "minimumAgentVersion": "1.95.0",
+  "groups": [
+    {
+      "name": "upgrade",
+      "displayName": "ms-resource:loc.group.displayName.upgrade",
+      "isExpanded": false
+    }
+  ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
-    {
-      "name": "publishProfilePath",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.publishProfilePath",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.publishProfilePath"
-    },
     {
       "name": "applicationPackagePath",
       "type": "filePath",
@@ -41,6 +40,193 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.serviceConnectionName"
+    },
+    {
+      "name": "publishProfilePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.publishProfilePath",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.publishProfilePath"
+    },
+    {
+      "name": "applicationParameterPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.applicationParameterPath",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.applicationParameterPath"
+    },
+    {
+      "name": "overridePublishProfileSettings",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.overridePublishProfileSettings",
+      "defaultValue": "false",
+      "required": false,
+      "groupname": "upgrade",
+      "helpMarkDown": "ms-resource:loc.input.help.overridePublishProfileSettings"
+    },
+    {
+      "name": "isUpgrade",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.isUpgrade",
+      "defaultValue": "true",
+      "required": false,
+      "groupname": "upgrade",
+      "visibleRule": "overridePublishProfileSettings = true"
+    },
+    {
+      "name": "upgradeMode",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.upgradeMode",
+      "defaultValue": "Monitored",
+      "required": true,
+      "options": {
+        "Monitored": "Monitored",
+        "UnmonitoredAuto": "UnmonitoredAuto",
+        "UnmonitoredManual": "UnmonitoredManual"
+      },
+      "groupname": "upgrade",
+      "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
+    },
+    {
+      "name": "FailureAction",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.FailureAction",
+      "defaultValue": "Rollback",
+      "required": true,
+      "options": {
+        "Rollback": "Rollback",
+        "Manual": "Manual"
+      },
+      "groupname": "upgrade",
+      "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+    },
+    {
+      "name": "UpgradeReplicaSetCheckTimeoutSec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.UpgradeReplicaSetCheckTimeoutSec",
+      "defaultValue": "",
+      "required": false,
+      "groupname": "upgrade",
+      "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
+    },
+    {
+      "name": "ReplicaQuorumTimeoutSec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ReplicaQuorumTimeoutSec",
+      "defaultValue": "",
+      "required": false,
+      "groupname": "upgrade",
+      "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
+    },
+    {
+      "name": "TimeoutSec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.TimeoutSec",
+      "defaultValue": "",
+      "required": false,
+      "groupname": "upgrade",
+      "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
+    },
+    {
+      "name": "Force",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.Force",
+      "defaultValue": "true",
+      "required": true,
+      "groupname": "upgrade",
+      "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
+    },
+    {
+      "name": "ForceRestart",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ForceRestart",
+      "defaultValue": "false",
+      "required": false,
+      "groupname": "upgrade",
+      "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
+    },
+    {
+      "name": "HealthCheckRetryTimeoutSec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.HealthCheckRetryTimeoutSec",
+      "defaultValue": "",
+      "required": false,
+      "groupname": "upgrade",
+      "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+    },
+    {
+      "name": "HealthCheckWaitDurationSec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.HealthCheckWaitDurationSec",
+      "defaultValue": "",
+      "required": false,
+      "groupname": "upgrade",
+      "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+    },
+    {
+      "name": "HealthCheckStableDurationSec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.HealthCheckStableDurationSec",
+      "defaultValue": "",
+      "required": false,
+      "groupname": "upgrade",
+      "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+    },
+    {
+      "name": "UpgradeDomainTimeoutSec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.UpgradeDomainTimeoutSec",
+      "defaultValue": "",
+      "required": false,
+      "groupname": "upgrade",
+      "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+    },
+    {
+      "name": "ConsiderWarningAsError",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ConsiderWarningAsError",
+      "defaultValue": "false",
+      "required": false,
+      "groupname": "upgrade",
+      "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+    },
+    {
+      "name": "DefaultServiceTypeHealthPolicy",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.DefaultServiceTypeHealthPolicy",
+      "defaultValue": "",
+      "required": false,
+      "groupname": "upgrade",
+      "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+    },
+    {
+      "name": "MaxPercentUnhealthyDeployedApplications",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.MaxPercentUnhealthyDeployedApplications",
+      "defaultValue": "",
+      "required": false,
+      "groupname": "upgrade",
+      "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+    },
+    {
+      "name": "UpgradeTimeoutSec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.UpgradeTimeoutSec",
+      "defaultValue": "",
+      "required": false,
+      "groupname": "upgrade",
+      "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+    },
+    {
+      "name": "ServiceTypeHealthPolicyMap",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ServiceTypeHealthPolicyMap",
+      "defaultValue": "",
+      "required": false,
+      "groupname": "upgrade",
+      "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
     }
   ],
   "execution": {
@@ -49,15 +235,10 @@
     }
   },
   "messages": {
-    "ClusterSecurityMismatch_AAD": "ms-resource:loc.messages.ClusterSecurityMismatch_AAD",
-    "ClusterSecurityMismatch_Certificate": "ms-resource:loc.messages.ClusterSecurityMismatch_Certificate",
-    "ClusterSecurityMismatch_None": "ms-resource:loc.messages.ClusterSecurityMismatch_None",
     "ItemSearchMoreThanOneFound": "ms-resource:loc.messages.ItemSearchMoreThanOneFound",
     "ItemSearchNoFilesFound": "ms-resource:loc.messages.ItemSearchNoFilesFound",
-    "SearchingForPublishProfile": "ms-resource:loc.messages.SearchingForPublishProfile",
-    "FoundPublishProfile": "ms-resource:loc.messages.FoundPublishProfile",
-    "SearchingForApplicationPackage": "ms-resource:loc.messages.SearchingForApplicationPackage",
-    "FoundApplicationPackage": "ms-resource:loc.messages.FoundApplicationPackage",
+    "SearchingForPath": "ms-resource:loc.messages.SearchingForPath",
+    "FoundPath": "ms-resource:loc.messages.FoundPath",
     "ConnectedToCluster": "ms-resource:loc.messages.ConnectedToCluster",
     "AadAuthority": "ms-resource:loc.messages.AadAuthority",
     "ClusterAppId": "ms-resource:loc.messages.ClusterAppId",
@@ -67,6 +248,12 @@
     "ErrorOnCertificateImport": "ms-resource:loc.messages.ErrorOnCertificateImport",
     "ErrorOnAcquireToken": "ms-resource:loc.messages.ErrorOnAcquireToken",
     "ImportedCertificate": "ms-resource:loc.messages.ImportedCertificate",
+    "ServiceEndpointUpgradeWarning": "ms-resource:loc.messages.ServiceEndpointUpgradeWarning",
+    "OverrideApplicationParameterFile": "ms-resource:loc.messages.OverrideApplicationParameterFile",
+    "OverrideUpgradeSettings": "ms-resource:loc.messages.OverrideUpgradeSettings",
+    "PublishProfileRequiredServerThumbprint": "ms-resource:loc.messages.PublishProfileRequiredServerThumbprint",
+    "PublishProfileRequiredAppParams": "ms-resource:loc.messages.PublishProfileRequiredAppParams",
+    "PublishProfileRequiredUpgrade": "ms-resource:loc.messages.PublishProfileRequiredUpgrade",
     "SFSDK_InvalidSFPackage": "ms-resource:loc.messages.SFSDK_InvalidSFPackage",
     "SFSDK_PackageValidationFailed": "ms-resource:loc.messages.SFSDK_PackageValidationFailed",
     "SFSDK_UnableToVerifyClusterConnection": "ms-resource:loc.messages.SFSDK_UnableToVerifyClusterConnection",

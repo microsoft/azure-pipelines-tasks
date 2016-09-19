@@ -20,34 +20,6 @@ function InvokeVsTestCmdletHasMember {
 	return $invokeVstestParams
 }
 
-function ShouldAddDiagFlag { 
-	[cmdletbinding()]
-	[OutputType([System.Boolean])]
-	param(
-		[string]$vsTestVersion
-	)
-
-	$inDebugMode = [system.boolean] (Get-ChildItem -path env:system_debug -erroraction silent)
-	
-	if($inDebugMode -eq $true) {
-		
-		$hasDiagFileNameParam = InvokeVsTestCmdletHasMember -memberName "DiagFileName"
-
-		if($hasDiagFileNameParam) {
-			if ([string]::IsNullOrWhiteSpace($vsTestVersion)) {
-				$vsTestVersion = Get-VSVersion
-			}
-			
-			$version = [int]($vsTestVersion)
-			if($version -ge 15) {
-				return $true
-			}
-		}
-	} 
-
-	return $false
-}
-
 function SetRegistryKeyForParallel {    
 	[cmdletbinding()]
 	param(
@@ -62,22 +34,36 @@ function IsVisualStudio2015Update1OrHigherInstalled {
 	[cmdletbinding()]
 	[OutputType([System.Boolean])]
 	param(
-		[string]$vsTestVersion
+		[string]$vsTestVersion,
+		[string]$vsTestLocation
 	)
-	
-	if ([string]::IsNullOrWhiteSpace($vsTestVersion)){
-		$vsTestVersion = Get-VSVersion
+
+	if ([string]::IsNullOrWhiteSpace($vsTestVersion))
+	{
+		$vsTestVersion = Get-VSVersion $vsTestLocation
 	}
 	
 	$version = [int]($vsTestVersion)
-	if($version -ge 14)
+	# with dev15 we are back to vstest and away from taef
+	if($version -ge 15)
+	{
+		return $true
+	}
+
+	if($version -eq 14)
 	{
 		# checking for dll introduced in vs2015 update1
 		# since path of the dll will change in dev15+ using vstestversion>14 as a blanket yes
-		if((Test-Path -Path "$env:VS140COMNTools\..\IDE\CommonExtensions\Microsoft\TestWindow\TE.TestModes.dll") -Or ($version -gt 14))
+		$teModesDll = [io.path]::Combine("$env:VS140COMNTools", "..", "IDE", "CommonExtensions", "Microsoft", "TestWindow", "TE.TestModes.dll");
+		if(Test-Path -Path $teModesDll)
 		{
-			# ensure the registry is set otherwise you need to launch VSIDE
-			SetRegistryKeyForParallel $vsTestVersion
+			$devenvExe = [io.path]::Combine("$env:VS140COMNTools", "..", "IDE", "devenv.exe");
+			$devenvVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($devenvExe);
+			if($devenvVersion.ProductBuildPart -lt 25420) #update3 build#
+			{
+				# ensure the registry is set otherwise you need to launch VSIDE
+				SetRegistryKeyForParallel $vsTestVersion
+			}
 			
 			return $true
 		}
@@ -154,8 +140,15 @@ function Get-SubKeysInFloatFormat($keys)
 	return $targetKeys
 }
 
-function Get-VSVersion()
+function Get-VSVersion($vsTestLocation)
 {
+	if(![String]::IsNullOrWhiteSpace($vsTestLocation))
+	{
+		Write-Verbose "Using vstest location provided to get the version"
+		$vstestConsoleExeVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($vsTestLocation);
+		return $vstestConsoleExeVersion.ProductMajorPart;
+	}
+
 	#Find the latest version
 	$regPath = "HKLM:\SOFTWARE\Microsoft\VisualStudio"
 	if (-not (Test-Path $regPath))

@@ -9,14 +9,17 @@
     "Build",
     "Release"
   ],
+  "runsOn": [
+    "Agent",
+    "MachineGroup"
+  ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 23
+    "Minor": 1,
+    "Patch": 0
   },
   "demands": [
-    "azureps",
     "sqlpackage"
   ],
   "minimumAgentVersion": "1.103.0",
@@ -24,6 +27,11 @@
     {
       "name": "target",
       "displayName": "ms-resource:loc.group.displayName.target",
+      "isExpanded": true
+    },
+    {
+      "name": "taskDetails",
+      "displayName": "ms-resource:loc.group.displayName.taskDetails",
       "isExpanded": true
     },
     {
@@ -64,14 +72,6 @@
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
     },
     {
-      "name": "DacpacFile",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.DacpacFile",
-      "required": true,
-      "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.DacpacFile"
-    },
-    {
       "name": "ServerName",
       "type": "string",
       "label": "ms-resource:loc.input.label.ServerName",
@@ -108,22 +108,92 @@
       "helpMarkDown": "ms-resource:loc.input.help.SqlPassword"
     },
     {
+      "name": "TaskNameSelector",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.TaskNameSelector",
+      "required": false,
+      "helpMarkDown": "",
+      "groupName": "taskDetails",
+      "defaultValue": "DacpacTask",
+      "options": {
+        "DacpacTask": "SQL DACPAC File",
+        "SqlTask": "SQL Script File",
+        "InlineSqlTask": "Inline SQL Script"
+      }
+    },
+    {
+      "name": "DacpacFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.DacpacFile",
+      "required": true,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.DacpacFile",
+      "visibleRule": "TaskNameSelector = DacpacTask"
+    },
+    {
+      "name": "SqlFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.SqlFile",
+      "required": true,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.SqlFile",
+      "visibleRule": "TaskNameSelector = SqlTask"
+    },
+    {
+      "name": "SqlInline",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.SqlInline",
+      "required": true,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.SqlInline",
+      "visibleRule": "TaskNameSelector = InlineSqlTask",
+      "properties": {
+        "resizable": "true",
+        "rows": "10"
+      }
+    },
+    {
       "name": "PublishProfile",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.PublishProfile",
       "required": false,
-      "groupName": "target",
+      "groupName": "taskDetails",
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.PublishProfile"
+      "helpMarkDown": "ms-resource:loc.input.help.PublishProfile",
+      "visibleRule": "TaskNameSelector = DacpacTask"
     },
     {
       "name": "AdditionalArguments",
       "type": "string",
       "label": "ms-resource:loc.input.label.AdditionalArguments",
       "required": false,
-      "groupName": "target",
+      "groupName": "taskDetails",
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
+      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments",
+      "visibleRule": "TaskNameSelector = DacpacTask"
+    },
+    {
+      "name": "SqlAdditionalArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SqlAdditionalArguments",
+      "required": false,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.SqlAdditionalArguments",
+      "visibleRule": "TaskNameSelector = SqlTask"
+    },
+    {
+      "name": "InlineAdditionalArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.InlineAdditionalArguments",
+      "required": false,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.InlineAdditionalArguments",
+      "visibleRule": "TaskNameSelector = InlineSqlTask"
     },
     {
       "name": "IpDetectionMethod",
@@ -174,10 +244,19 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "AzurePowerShell": {
-      "target": "$(currentDirectory)\\DeploySqlAzure.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "PowerShell3": {
+      "target": "DeploySqlAzure.ps1"
     }
+  },
+  "messages": {
+    "SAD_InvalidServerAddress": "ms-resource:loc.messages.SAD_InvalidServerAddress",
+    "SAD_ServerNotFound": "ms-resource:loc.messages.SAD_ServerNotFound",
+    "SAD_InvalidIPv4Address": "ms-resource:loc.messages.SAD_InvalidIPv4Address",
+    "SAD_FoundMoreFiles": "ms-resource:loc.messages.SAD_FoundMoreFiles",
+    "SAD_NoFilesMatch": "ms-resource:loc.messages.SAD_NoFilesMatch",
+    "SAD_InvalidDacpacFile": "ms-resource:loc.messages.SAD_InvalidDacpacFile",
+    "SAD_InvalidSqlFile": "ms-resource:loc.messages.SAD_InvalidSqlFile",
+    "SAD_NoPassword": "ms-resource:loc.messages.SAD_NoPassword",
+    "SAD_InvalidPublishProfile": "ms-resource:loc.messages.SAD_InvalidPublishProfile"
   }
 }

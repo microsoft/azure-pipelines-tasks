@@ -8,7 +8,7 @@ import trm = require('../../lib/taskRunner');
 import psm = require('../../lib/psRunner');
 import path = require('path');
 var shell = require('shelljs');
-var ps = shell.which('powershell');
+var ps = shell.which('powershell.exe');
 var psr = null;
 
 describe('PublishSymbols Suite', function () {
@@ -78,12 +78,6 @@ describe('PublishSymbols Suite', function () {
         })
         it('(Get-ValidValue) returns within range', (done) => {
             psr.run(path.join(__dirname, 'Get-ValidValue.ReturnsWithinRange.ps1'), done);
-        })
-        it('(Invoke-DisposeSourceProvider) disposes collection', (done) => {
-            psr.run(path.join(__dirname, 'Invoke-DisposeSourceProvider.DisposesCollection.ps1'), done);
-        })
-        it('(Invoke-DisposeSourceProvider) skips null collection', (done) => {
-            psr.run(path.join(__dirname, 'Invoke-DisposeSourceProvider.SkipsNullCollection.ps1'), done);
         })
         it('(Invoke-IndexSources) multiple files', (done) => {
             psr.run(path.join(__dirname, 'Invoke-IndexSources.MultipleFiles.ps1'), done);

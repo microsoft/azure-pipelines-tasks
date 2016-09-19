@@ -9,6 +9,8 @@ $telemetryCodes =
   "DEPLOYMENT_FetchPropertyFromMap" = "DEPLOYMENT_FetchPropertyFromMap";
   "DEPLOYMENT_PerformActionFailed" = "DEPLOYMENT_PerformActionFailed";
 
+  "VALIDATE_Deployment_CSMDeploymentFailed" = "VALIDATE_Deployment_CSMDeploymentFailed";
+  
   "ENABLEWINRM_ProvisionVmCustomScriptFailed" = "ENABLEWINRM_ProvisionVmCustomScriptFailed"
   "ENABLEWINRM_ExecutionOfVmCustomScriptFailed" = "ENABLEWINRM_ExecutionOfVmCustomScriptFailed"
   "ADDWINRM_NetworkSecurityRuleConfigFailed" = "ADDWINRM_NetworkSecurityRuleConfigFailed"
@@ -58,6 +60,22 @@ function Write-TaskSpecificTelemetry
     Write-Telemetry "$codeKey" "94A74903-F93F-4075-884F-DC11F34058B4"
 }
 
+function Get-AzureCmdletsVersion
+{
+    $module = Get-Module AzureRM -ListAvailable
+    if($module)
+    {
+        return ($module).Version
+    }
+    return (Get-Module Azure -ListAvailable).Version
+}
+
+function Get-AzureVersionComparison($azureVersion, $compareVersion)
+{
+    Write-Verbose "Compare azure versions: $azureVersion, $compareVersion"
+    return ($azureVersion -and $azureVersion -gt $compareVersion)
+}
+
 function Validate-AzurePowerShellVersion
 {
     $currentVersion =  Get-AzureCmdletsVersion
@@ -67,7 +85,7 @@ function Validate-AzurePowerShellVersion
     if(!$versionCompatible)
     {
         Write-TaskSpecificTelemetry "PREREQ_UnsupportedAzurePSVersion"
-        Throw (Get-LocalizedString -Key "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at {1} to get the latest Azure powershell" -ArgumentList $minimumAzureVersion, "https://aka.ms/azps")
+        Throw (Get-VstsLocString -Key "ARG_UnsupportedAzurePSVersion" -ArgumentList $minimumAzureVersion, "https://aka.ms/azps")
     }
 
     Write-Verbose "Validated the required azure powershell version"
@@ -78,39 +96,51 @@ function Check-AzureRMInstalled
     if(!(Get-Module -Name "AzureRM*" -ListAvailable))
     {
         Write-TaskSpecificTelemetry "PREREQ_AzureRMModuleNotFound"
-        throw (Get-LocalizedString -Key "The required AzureRM Powershell module is not installed. You can follow the instructions at {0} to get the latest Azure powershell" -ArgumentList "https://aka.ms/azps")
+        throw (Get-VstsLocString -Key "ARG_AzureRMModuleNotFound" -ArgumentList "https://aka.ms/azps")
     }
 }
 
-function Get-AzureUtility
+function Get-Endpoint
 {
+    param([String] [Parameter(Mandatory=$true)] $connectedServiceName)
+
+    $serviceEndpoint = Get-VstsEndpoint -Name "$connectedServiceName"
+    return $serviceEndpoint
+}
+
+function Get-AzureUtility 
+{
+    param([string] $connectedServiceName)
+
     $currentVersion =  Get-AzureCmdletsVersion
-    Write-Verbose "Azure PowerShell version: $currentVersion"
+    Write-Verbose "Installed Azure PowerShell version: $currentVersion"
 
     $AzureVersion099 = New-Object System.Version(0, 9, 9)
     $AzureVersion103 = New-Object System.Version(1, 0, 3)
+    $AzureVersion132 = New-Object System.Version(1, 3, 2)
 
     $azureUtilityVersion098 = "AzureUtilityLTE9.8.ps1"
     $azureUtilityVersion100 = "AzureUtilityGTE1.0.ps1"
     $azureUtilityVersion110 = "AzureUtilityGTE1.1.0.ps1"
+	$azureUtilityRest100 = "AzureUtilityRest.ps1"
 
     if(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion099))
     {
-        $azureUtilityRequiredVersion = $azureUtilityVersion098
+		return $azureUtilityVersion098
     }
-    elseif(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion103))
+	
+    if(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion103))
     {
-        Check-AzureRMInstalled
-        $azureUtilityRequiredVersion = $azureUtilityVersion100
+		return $azureUtilityVersion100
     }
-    else
+	
+	$endpoint = Get-Endpoint $connectedServiceName
+	if(!(Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $AzureVersion132) -or ($endpoint.Auth.Scheme -eq "UserNamePassword"))
     {
-        Check-AzureRMInstalled
-        $azureUtilityRequiredVersion = $azureUtilityVersion110
+        return $azureUtilityVersion110
     }
-
-    Write-Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
-    return $azureUtilityRequiredVersion
+	
+    return $azureUtilityRest100
 }
 
 function Create-AzureResourceGroup
@@ -119,7 +149,9 @@ function Create-AzureResourceGroup
           [string]$csmParametersFile,
           [string]$resourceGroupName,
           [string]$location,
-          [string]$overrideParameters)
+          [string]$overrideParameters,
+          [object]$endpoint,
+          [string]$deploymentMode)
 
     $csmFileName = [System.IO.Path]::GetFileNameWithoutExtension($csmFile)
 
@@ -130,42 +162,57 @@ function Create-AzureResourceGroup
     if(-not [string]::IsNullOrEmpty($csmFile) -and -not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($location))
     {
         # Create azure resource group
-        Create-AzureResourceGroupIfNotExist -resourceGroupName $resourceGroupName -location $location
+        Create-AzureResourceGroupIfNotExist -resourceGroupName $resourceGroupName -location $location -endpoint $endpoint
 
-        # Deploying CSM Template
-        $deploymentDetails = Deploy-AzureResourceGroup -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -overrideParameters $overrideParameters
-
-        $azureResourceGroupDeployment = $deploymentDetails["azureResourceGroupDeployment"]
-        $deploymentError = $deploymentDetails["deploymentError"]
-
-        if ($azureResourceGroupDeployment)
+        if($deploymentMode -eq "Validation") 
         {
-            Write-Host "[Azure Resource Manager]Created resource group deployment with name $resourceGroupName"
-            Get-MachineLogs -ResourceGroupName $resourceGroupName
-
-            if($deploymentError)
+            #Testing Deploying CSM Template
+            $azureResourceGroupValidationError = Validation-Deploy-AzureResourceGroup -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -overrideParameters $overrideParameters 
+            
+            if ($azureResourceGroupValidationError)
             {
-                Write-TaskSpecificTelemetry "DEPLOYMENT_CSMDeploymentFailed"
+                throw (Get-VstsLocString -Key "ARG_ValidationFailed")
+            }
+            
+            Write-Host (Get-VstsLocString -Key "ARG_ValidationSucceeded")
+        }
+        else 
+        {
+            # Deploying CSM Template
+            $deploymentDetails = Deploy-AzureResourceGroup -csmFile $csmFile -csmParametersFile $csmParametersFile -resourceGroupName $resourceGroupName -overrideParameters $overrideParameters -deploymentMode $deploymentMode
+            
+            $azureResourceGroupDeployment = $deploymentDetails["azureResourceGroupDeployment"]
+            $deploymentError = $deploymentDetails["deploymentError"]
 
-                foreach($error in $deploymentError)
+            if ($azureResourceGroupDeployment)
+            {
+                Write-Host "[Azure Resource Manager]Created resource group deployment with name $resourceGroupName"
+                Get-MachineLogs -ResourceGroupName $resourceGroupName
+
+                if($deploymentError)
                 {
-                    Write-Error $error -ErrorAction Continue
+                    Write-TaskSpecificTelemetry "DEPLOYMENT_CSMDeploymentFailed"
+                    
+                    foreach($error in $deploymentError)
+                    {
+                        Write-Error $error -ErrorAction Continue
+                    }
+                    
+                    throw (Get-VstsLocString -Key "ARG_DeploymentFailed" -ArgumentList $resourceGroupName)
                 }
-
-                throw (Get-LocalizedString -Key "Resource group deployment '{0}' failed" -ArgumentList $resourceGroupName)
+                else
+                {
+                    Write-Host (Get-VstsLocString -Key "ARG_DeploymentSucceeded" -ArgumentList $resourceGroupName)
+                }
+                
+                Write-Verbose "End of resource group deployment logs"
+                return $azureResourceGroupDeployment
             }
             else
             {
-                Write-Host (Get-LocalizedString -Key "Successfully created resource group deployment with name '{0}'" -ArgumentList $resourceGroupName)
+                Write-TaskSpecificTelemetry "DEPLOYMENT_CSMDeploymentFailed"
+                Throw $deploymentError
             }
-
-            Write-Verbose "End of resource group deployment logs"
-            return $azureResourceGroupDeployment
-        }
-        else
-        {
-            Write-TaskSpecificTelemetry "DEPLOYMENT_CSMDeploymentFailed"
-            Throw $deploymentError
         }
     }
 }
@@ -222,14 +269,14 @@ function Get-SingleFile($files, $pattern)
     if ($files -is [system.array])
     {
         Write-TaskSpecificTelemetry "PREREQ_InvalidFilePath"
-        throw (Get-LocalizedString -Key "Found more than one file to deploy with search pattern '{0}'. There can be only one" -ArgumentList $pattern)
+        throw (Get-VstsLocString -Key "ARG_InvalidFilePath" -ArgumentList $pattern)
     }
     else
     {
         if (!$files)
         {
             Write-TaskSpecificTelemetry "PREREQ_InvalidFilePath"
-            throw (Get-LocalizedString -Key "No files were found to deploy with search pattern '{0}'" -ArgumentList $pattern)
+            throw (Get-VstsLocString -Key "ARG_FileNotFound" -ArgumentList $pattern)
         }
 
         return $files
@@ -240,7 +287,7 @@ function Get-File($pattern)
 {
     #Find the File based on pattern
     Write-Verbose "Finding files based on $pattern"
-    $filesMatchingPattern = Find-Files -SearchPattern "$pattern"
+    $filesMatchingPattern = Find-VstsFiles -LegacyPattern "$pattern"
 
     Write-Verbose "Files Matching Pattern: $filesMatchingPattern"
 
@@ -258,13 +305,13 @@ function Validate-DeploymentFileAndParameters
     if (!(Test-Path -LiteralPath $csmFile -PathType Leaf))
     {
         Write-TaskSpecificTelemetry "PREREQ_InvalidFilePath"
-        throw (Get-LocalizedString -Key "Please specify a complete and a valid template file path")
+        throw (Get-VstsLocString -Key "ARG_SpecifyValidTemplatePath")
     }
 
     if ($csmParametersFile -ne $env:SYSTEM_DEFAULTWORKINGDIRECTORY -and $csmParametersFile -ne [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\") -and !(Test-Path -LiteralPath $csmParametersFile -PathType Leaf))
     {
          Write-TaskSpecificTelemetry "PREREQ_InvalidFilePath"
-         throw (Get-LocalizedString -Key "Please specify a complete and a valid template parameters file path")
+         throw (Get-VstsLocString -Key "ARG_SpecifyValidParametersPath")
     }
 }
 
@@ -329,7 +376,7 @@ function Perform-Action
 
         default {
             Write-TaskSpecificTelemetry "PREREQ_InvalidActionProvided"
-            throw (Get-LocalizedString -Key "Action '{0}' is not supported on the provider '{1}'" -ArgumentList $action, "Azure")
+            throw (Get-VstsLocString -Key "ARG_ActionNotSupported" -ArgumentList $action, "Azure")
         }
     }
 }
@@ -357,7 +404,7 @@ function Invoke-OperationOnResourceGroup
         if($response.Status -ne "Succeeded")
         {
             Write-TaskSpecificTelemetry "DEPLOYMENT_PerformActionFailed"
-            Write-Error (Get-LocalizedString -Key "Operation '{0}' failed on the machine '{1}'" -ArgumentList $operationName, $machine.Name)
+            Write-Error (Get-VstsLocString -Key "ARG_OperationFailedOnMachine" -ArgumentList $operationName, $machine.Name)
             throw $response.Error
         }
         else
@@ -401,7 +448,7 @@ function Invoke-OperationOnMachine
 
          default {
               Write-TaskSpecificTelemetry "PREREQ_InvalidActionProvided"
-              throw (Get-LocalizedString -Key "Tried to invoke an invalid operation: '{0}'" -ArgumentList $operationName)
+              throw (Get-VstsLocString -Key "ARG_InvokeInvalidOperation" -ArgumentList $operationName)
          }
     }
 
@@ -412,23 +459,22 @@ function Instantiate-Environment
 {
     param([string]$resourceGroupName,
           [string]$outputVariable,
-          [string]$enableDeploymentPrerequisites)
-
-    $connection = Get-VssConnection -TaskContext $distributedTaskContext
+          [string]$enableDeploymentPrerequisites,
+          [object]$endpoint)
 
     $azureVMResources = Get-AzureClassicVMsInResourceGroup -resourceGroupName $resourceGroupName
     $azureVMsDetails = Get-AzureClassicVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName -azureClassicVMResources $azureVMResources
     if($azureVMsDetails.Count -eq 0)
     {
         $azureVMResources = Get-AzureRMVMsInResourceGroup -resourceGroupName $resourceGroupName
-        $azureVMsDetails = Get-AzureRMVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName -azureRMVMResources $azureVMResources -enableDeploymentPrerequisites $enableDeploymentPrerequisites
+        $azureVMsDetails = Get-AzureRMVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName -azureRMVMResources $azureVMResources -enableDeploymentPrerequisites $enableDeploymentPrerequisites -endpoint $endpoint
         $tagsList = Get-AzureResourcesTags -azureVMResources $azureVMResources -azureVMsDetails $azureVMsDetails
     }
 
     if ($azureVMsDetails.Count -eq 0)
     {
         Write-TaskSpecificTelemetry "PREREQ_NoVMResources"
-        throw (Get-LocalizedString -Key "No VMs found in resource group: '{0}'. Could not register environment in the output variable: '{1}'" -ArgumentList $resourceGroupName, $outputVariable)
+        throw (Get-VstsLocString -Key "ARG_NoVmsFound" -ArgumentList $resourceGroupName, $outputVariable)
     }
 
     $resources = @()
@@ -448,19 +494,10 @@ function Instantiate-Environment
     $machineSpecification = $resources -join ","
 
     Write-Verbose "Starting Register-Environment cmdlet call for resource group : $resourceGroupName"
-    if((gcm Register-Environment).Parameters.ContainsKey("Persist"))
-    {
-        $environment = Register-Environment -EnvironmentName $outputVariable -EnvironmentSpecification $machineSpecification -WinRmProtocol "HTTPS" -Connection $connection -TaskContext $distributedTaskContext -TagsList $tagsList -Persist        
-        Write-Verbose "Completed Register-Environment for : $resourceGroupName, adding environment $outputVariable to output variables"
-        Set-TaskVariable -Variable $outputVariable -Value $outputVariable        
-    }
-    else
-    {
-        $environment = Register-Environment -EnvironmentName $outputVariable -EnvironmentSpecification $machineSpecification -WinRmProtocol "HTTPS" -Connection $connection -TaskContext $distributedTaskContext -TagsList $tagsList
-        Write-Verbose "Completed Register-Environment for : $resourceGroupName, converting environment as json and setting as output variable" -verbose       
-        $envStr = $environment.ToString() -replace "`n|`r"
-        write-host "##vso[task.setvariable variable=$outputVariable;issecret=true;]$envStr"  
-    }    
+    $environment = Register-Environment -EnvironmentName $outputVariable -EnvironmentSpecification $machineSpecification -WinRmProtocol "HTTPS" -TagsList $tagsList
+    Write-Verbose "Completed Register-Environment for : $resourceGroupName, converting environment as json and setting as output variable" -verbose       
+    $envStr = $environment.ToString() -replace "`n|`r"
+    Write-Host "##vso[task.setvariable variable=$outputVariable;issecret=true;]$envStr"  
     Write-Verbose "Added the environment $outputVariable to output variable"
 }
 
@@ -682,13 +719,13 @@ function Get-MachineNameFromId
         {
             if($errorCount -eq $azureRMVMResources.Count -and $azureRMVMResources.Count -ne 0)
             {
-                throw (Get-LocalizedString -Key "Unable to get {0} for all resources in ResourceGroup : '{1}'" -ArgumentList $mapParameter, $resourceGroupName)
+                throw (Get-VstsLocString -Key "ARG_AllResourceNotFound" -ArgumentList $mapParameter, $resourceGroupName)
             }
             else
             {
                 if($errorCount -gt 0 -and $errorCount -ne $azureRMVMResources.Count)
                 {
-                    Write-Warning (Get-LocalizedString -Key "Unable to get {0} for '{1}' resources in ResourceGroup : '{2}'" -ArgumentList $mapParameter, $errorCount, $resourceGroupName)
+                    Write-Warning (Get-VstsLocString -Key "ARG_ResourceNotFound" -ArgumentList $mapParameter, $errorCount, $resourceGroupName)
                 }
             }
         }
@@ -765,7 +802,8 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
 {
     param([string]$resourceGroupName,
           [object]$azureRMVMResources,
-          [string]$enableDeploymentPrerequisites)
+          [string]$enableDeploymentPrerequisites,
+          [object]$endpoint)
 
     [hashtable]$fqdnMap = @{}
     $winRmHttpsPortMap = New-Object 'System.Collections.Generic.Dictionary[string, string]'
@@ -825,7 +863,7 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
             if ($enableDeploymentPrerequisites -eq "true")
             {
                 Write-Verbose "Enabling winrm for virtual machine $resourceName"
-                Add-AzureVMCustomScriptExtension -resourceGroupName $resourceGroupName -vmId $resourceId -vmName $resourceName -dnsName $resourceFQDN -location $resource.Location
+                Add-AzureVMCustomScriptExtension -resourceGroupName $resourceGroupName -vmId $resourceId -vmName $resourceName -dnsName $resourceFQDN -location $resource.Location -endpoint $endpoint
             }
         }
 
@@ -837,7 +875,8 @@ function Validate-CustomScriptExecutionStatus
 {
     param([string]$resourceGroupName,
           [string]$vmName,
-          [string]$extensionName)
+          [string]$extensionName,
+          [object]$endpoint)
 
     Write-Verbose "Validating the winrm configuration custom script extension status"
 
@@ -888,8 +927,8 @@ function Validate-CustomScriptExecutionStatus
 
     if(-not $isScriptExecutionPassed)
     {
-        $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName
-        throw (Get-LocalizedString -Key "Setting the custom script extension '{0}' for virtual machine '{1}' failed with error : {2}" -ArgumentList $extensionName, $vmName, $errMessage)
+        $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -endpoint $endpoint
+        throw (Get-VstsLocString -Key "ARG_SetExtensionFailed" -ArgumentList $extensionName, $vmName, $errMessage)
     }
 
     Write-Verbose "Validated the script execution successfully"
@@ -899,17 +938,18 @@ function Is-WinRMCustomScriptExtensionExists
 {
     param([string]$resourceGroupName,
     [string]$vmName,
-    [string]$extensionName)
+    [string]$extensionName,
+    [object]$endpoint)
 
     $isExtensionExists = $true
     $removeExtension = $false
     try
     {
-        $customScriptExtension = Get-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName
+        $customScriptExtension = Get-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -endpoint $endpoint
 
         if($customScriptExtension)
         {
-            if($customScriptExtension.ProvisioningState -ne "Succeeded")
+            if($customScriptExtension.properties.ProvisioningState -ne "Succeeded")
             {	
                 $removeExtension = $true		    
             }
@@ -917,7 +957,7 @@ function Is-WinRMCustomScriptExtensionExists
             {
                 try
                 {
-                        Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
+                        Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName -endpoint $endpoint
                 }
                 catch
                 {
@@ -937,7 +977,7 @@ function Is-WinRMCustomScriptExtensionExists
 
     if($removeExtension)
     {
-        $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName
+        $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -endpoint $endpoint
         $isExtensionExists = $false
     }
 
@@ -966,7 +1006,7 @@ function Add-WinRMHttpsNetworkSecurityRuleConfig
     catch
     {
         Write-TaskSpecificTelemetry "ADDWINRM_NetworkSecurityRuleConfigFailed"
-        Write-Warning (Get-LocalizedString -Key "Failed to add the network security rule: {0}" -ArgumentList $_.exception.message)
+        Write-Warning (Get-VstsLocString -Key "ARG_NetworkSecurityConfigFailed" -ArgumentList $_.exception.message)
     }
 }
 
@@ -976,7 +1016,8 @@ function Add-AzureVMCustomScriptExtension
           [string]$vmId,
           [string]$vmName,
           [string]$dnsName,
-          [string]$location)
+          [string]$location,
+          [object]$endpoint)
 
     $configWinRMScriptFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/ConfigureWinRM.ps1"
     $makeCertFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/makecert.exe"
@@ -993,7 +1034,7 @@ function Add-AzureVMCustomScriptExtension
 
     try
     {
-        $isExtensionExists = Is-WinRMCustomScriptExtensionExists -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
+        $isExtensionExists = Is-WinRMCustomScriptExtensionExists -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName -endpoint $endpoint
         Write-Verbose "IsExtensionExists: $isExtensionExists"
 
         if($isExtensionExists)
@@ -1012,17 +1053,17 @@ function Add-AzureVMCustomScriptExtension
         {
             Write-TaskSpecificTelemetry "ENABLEWINRM_ProvisionVmCustomScriptFailed"
 
-            $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName
-            throw (Get-LocalizedString -Key "Unable to set the custom script extension '{0}' for virtual machine '{1}': {2}" -ArgumentList $extensionName, $vmName, $result.Error.Message)
+            $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -endpoint $endpoint
+            throw (Get-VstsLocString -Key "ARG_SetExtensionFailedForVm" -ArgumentList $extensionName, $vmName, $result.Error.Message)
         }
 
-        Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName
+        Validate-CustomScriptExecutionStatus -resourceGroupName $resourceGroupName -vmName $vmName -extensionName $extensionName -endpoint $endpoint
         Add-WinRMHttpsNetworkSecurityRuleConfig -resourceGroupName $resourceGroupName -vmId $vmId -ruleName $ruleName -rulePriotity $rulePriotity -winrmHttpsPort $winrmHttpsPort
     }
     catch
     {
          Write-TaskSpecificTelemetry "ENABLEWINRM_ExecutionOfVmCustomScriptFailed"    
-        throw (Get-LocalizedString -Key "Failed to enable deployment prerequisites. {0}" -ArgumentList $_.exception.message)
+        throw (Get-VstsLocString -Key "ARG_DeploymentPrereqFailed" -ArgumentList $_.exception.message)
     }
 
     Write-Verbose "Successfully added the custom script extension '$extensionName' for virtual machine '$vmName'"
@@ -1030,7 +1071,8 @@ function Add-AzureVMCustomScriptExtension
 
 function Enable-WinRMHttpsListener
 {
-    param([string]$resourceGroupName)
+    param([string]$resourceGroupName,
+          [object]$endpoint)
    
     # Get azurerm vms
     $azureVMResources = Get-AzureRMVMsInResourceGroup -resourceGroupName $resourceGroupName
@@ -1041,5 +1083,5 @@ function Enable-WinRMHttpsListener
     }
 
     # Below call enables the winrm custom script extension
-    $azureVMsDetails = Get-AzureRMVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName -azureRMVMResources $azureVMResources -enableDeploymentPrerequisites $true
+    $azureVMsDetails = Get-AzureRMVMsConnectionDetailsInResourceGroup -resourceGroupName $resourceGroupName -azureRMVMResources $azureVMResources -enableDeploymentPrerequisites $true -endpoint $endpoint
 }

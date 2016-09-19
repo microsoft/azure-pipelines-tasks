@@ -1,16 +1,17 @@
 {
   "loc.friendlyName": "Copy and Publish Build Artifacts",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613725)",
-  "loc.description": "Copy Build artifacts to staging folder then publish Build artifacts to the server or a file share using minimatch patterns",
+  "loc.description": "Copy build artifacts to a staging folder using minimatch patterns and then publish them to the server or a file share",
   "loc.instanceNameFormat": "Copy Publish Artifact: $(ArtifactName)",
   "loc.input.label.CopyRoot": "Copy Root",
-  "loc.input.help.CopyRoot": "Root folder to apply copy patterns to.  Empty is the root of the repo.  Use variables if build steps building outside the repo. Example: $(agent.builddirectory)",
+  "loc.input.help.CopyRoot": "Root folder to which file matching patterns should apply. If no value is provided, the repo root is used. Use variables to specify a folder outside of the repo, such as: $(Agent.BuildDirectory).",
   "loc.input.label.Contents": "Contents",
-  "loc.input.help.Contents": "File or folder paths to include as part of the artifact.  Supports multiple lines or minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkID=613725)",
+  "loc.input.help.Contents": "File or folder paths to include as part of the artifact. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkID=613725)",
   "loc.input.label.ArtifactName": "Artifact Name",
   "loc.input.help.ArtifactName": "The name of the artifact to create.",
   "loc.input.label.ArtifactType": "Artifact Type",
-  "loc.input.help.ArtifactType": "The type of the artifact to create.",
+  "loc.input.help.ArtifactType": "Choose whether to store the artifact on TFS/Team Services, or to copy it to a file share that must be accessible from the build agent.",
   "loc.input.label.TargetPath": "Path",
-  "loc.input.help.TargetPath": "The file share to which to copy the files"
+  "loc.input.help.TargetPath": "The UNC file path location to copy the artifact. It must be accessible from the build agent.",
+  "loc.messages.ErrorFileShareLinux": "Cannot publish artifacts from OSX or Linux to a file share. You can change 'Artifact Type' to 'Server', use Windows, or use the 'Copy Files', 'Copy Files Over SSH', or 'FTP Upload' task."
 }

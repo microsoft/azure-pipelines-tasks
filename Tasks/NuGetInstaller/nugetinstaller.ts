@@ -3,20 +3,18 @@
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
 /// <reference path="../../definitions/nuget-task-common.d.ts" />
 
-import path = require('path');
-import Q = require('q');
-import tl = require('vsts-task-lib/task');
-import toolrunner = require('vsts-task-lib/toolrunner');
-import util = require('util');
+import * as path from "path";
+import * as Q  from "q";
+import * as tl from "vsts-task-lib/task";
 
+import * as auth from "nuget-task-common/Authentication";
+import INuGetCommandOptions from "nuget-task-common/INuGetCommandOptions";
 import locationHelpers = require("nuget-task-common/LocationHelpers");
-import * as ngToolRunner from 'nuget-task-common/NuGetToolRunner';
-import * as nutil from 'nuget-task-common/Utility';
-import * as auth from 'nuget-task-common/Authentication'
-import {NuGetConfigHelper} from 'nuget-task-common/NuGetConfigHelper'
-import * as os from 'os';
+import {NuGetConfigHelper} from "nuget-task-common/NuGetConfigHelper";
+import * as ngToolRunner from "nuget-task-common/NuGetToolRunner";
+import * as nutil from "nuget-task-common/Utility";
 
-class RestoreOptions {
+class RestoreOptions implements INuGetCommandOptions {
     constructor(
         public restoreMode: string,
         public nuGetPath: string,
@@ -28,184 +26,178 @@ class RestoreOptions {
     ) { }
 }
 
-tl.setResourcePath(path.join(__dirname, 'task.json'));
+async function main(): Promise<void> {
+    let buildIdentityDisplayName: string = null;
+    let buildIdentityAccount: string = null;
 
-//read inputs
-var solution = tl.getPathInput('solution', true, false);
-var filesList = nutil.resolveFilterSpec(solution, tl.getVariable('System.DefaultWorkingDirectory') || process.cwd());
-filesList.forEach(solutionFile => {
-    if (!tl.stats(solutionFile).isFile()) {
-        throw new Error(tl.loc('NotARegularFile'));
-    }
-});
+    try {
+        tl.setResourcePath(path.join(__dirname, "task.json"));
 
-var noCache = tl.getBoolInput('noCache');
-var nuGetRestoreArgs = tl.getInput('nuGetRestoreArgs');
-var verbosity = tl.getInput('verbosity');
-var preCredProviderNuGet = tl.getBoolInput('preCredProviderNuGet');
-
-var restoreMode = tl.getInput('restoreMode') || "Restore";
-// normalize the restore mode for display purposes, and ensure it's a known one
-var normalizedRestoreMode = ['restore', 'install'].find(x => restoreMode.toUpperCase() == x.toUpperCase());
-if (!normalizedRestoreMode) {
-    throw new Error(tl.loc("UnknownRestoreMode", restoreMode))
-}
-
-restoreMode = normalizedRestoreMode;
-
-var nugetConfigPath = tl.getPathInput('nugetConfigPath', false, true);
-if (!tl.filePathSupplied('nugetConfigPath')) {
-    nugetConfigPath = null;
-}
-
-var userNuGetPath = tl.getPathInput('nuGetPath', false, true);
-if (!tl.filePathSupplied('nuGetPath')) {
-    userNuGetPath = null;
-}
-
-var serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
-
-//find nuget location to use
-var nuGetPathToUse = ngToolRunner.locateNuGetExe(userNuGetPath);
-var credProviderPath = ngToolRunner.locateCredentialProvider();
-
-var credProviderDir: string = null;
-if (credProviderPath) {
-    credProviderDir = path.dirname(credProviderPath)
-}
-else {
-    tl._writeLine(tl.loc("NoCredProviderOnAgent"));
-}
-
-var accessToken = auth.getSystemAccessToken();
-let buildIdentityDisplayName: string = null;
-let buildIdentityAccount: string = null;
-
-/*
-BUG: HTTP calls to access the location service currently do not work for customers behind proxies.
-locationHelpers.getNuGetConnectionData(serviceUri, accessToken)
-    .then(connectionData => {
-        buildIdentityDisplayName = locationHelpers.getIdentityDisplayName(connectionData.authorizedUser);
-        buildIdentityAccount = locationHelpers.getIdentityAccount(connectionData.authorizedUser);
-
-        tl._writeLine(tl.loc('ConnectingAs', buildIdentityDisplayName, buildIdentityAccount));
-        return connectionData;
-    })
-    .then(locationHelpers.getAllAccessMappingUris)
-    .fail(err => {
-        if (err.code && err.code == 'AreaNotFoundInSps') {
-            tl.warning(tl.loc('CouldNotFindNuGetService'))
-            return <string[]>[];
+        // set the console code page to "UTF-8"
+        if (process.platform === "win32") {
+            tl.execSync(path.resolve(process.env.windir, "system32", "chcp.com"), ["65001"]);
         }
 
-        throw err;
-    })*/
-locationHelpers.assumeNuGetUriPrefixes(serviceUri)
-    .then(urlPrefixes => {
+        // read inputs
+        let solution = tl.getPathInput("solution", true, false);
+        let filesList = nutil.resolveFilterSpec(
+            solution,
+            tl.getVariable("System.DefaultWorkingDirectory") || process.cwd());
+        filesList.forEach(solutionFile => {
+            if (!tl.stats(solutionFile).isFile()) {
+                throw new Error(tl.loc("NotARegularFile", solutionFile));
+            }
+        });
+
+        let noCache = tl.getBoolInput("noCache");
+        let nuGetRestoreArgs = tl.getInput("nuGetRestoreArgs");
+        let verbosity = tl.getInput("verbosity");
+
+        let restoreMode = tl.getInput("restoreMode") || "Restore";
+        // normalize the restore mode for display purposes, and ensure it's a known one
+        let normalizedRestoreMode = ["restore", "install"].find(x => restoreMode.toUpperCase() === x.toUpperCase());
+        if (!normalizedRestoreMode) {
+            throw new Error(tl.loc("UnknownRestoreMode", restoreMode));
+        }
+
+        restoreMode = normalizedRestoreMode;
+
+        let nugetConfigPath = tl.getPathInput("nugetConfigPath", false, true);
+        if (!tl.filePathSupplied("nugetConfigPath")) {
+            nugetConfigPath = null;
+        }
+
+        let nugetVersion = tl.getInput('nuGetVersion');
+
+        // due to a bug where we accidentally allowed nuGetPath to be surrounded by quotes before,
+        // locateNuGetExe() will strip them and check for existence there.
+        let nuGetPath = tl.getPathInput("nuGetPath", false, false);
+        let userNuGetProvided = false;
+        if(tl.filePathSupplied("nuGetPath")){
+            nuGetPath = nutil.stripLeadingAndTrailingQuotes(nuGetPath);
+            // True if the user provided their own version of NuGet
+            userNuGetProvided = true;
+            if (nugetVersion !== "custom"){
+                // For back compat, if a path has already been specificed then use it.
+                // However warn the user in the build of this behavior
+                tl.warning(tl.loc("Warning_ConflictingNuGetPreference"));
+            }
+        }
+        else {
+            if (nugetVersion === "custom")
+            {
+                throw new Error(tl.loc("NoNuGetSpecified"))
+            }
+            // Pull the pre-installed path for NuGet.
+            nuGetPath = nutil.getBundledNuGetLocation(nugetVersion);
+        }
+
+        let serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
+
+        //find nuget location to use
+        let credProviderPath = ngToolRunner.locateCredentialProvider();
+
+        const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
+
+        // clauses ordered in this way to avoid short-circuit evaluation, so the debug info printed by the functions
+        // is unconditionally displayed
+        const useCredProvider = ngToolRunner.isCredentialProviderEnabled(quirks) && credProviderPath;
+        const useCredConfig = ngToolRunner.isCredentialConfigEnabled(quirks) && !useCredProvider;
+
+        let accessToken = auth.getSystemAccessToken();
+        let urlPrefixes = await locationHelpers.assumeNuGetUriPrefixes(serviceUri);
         tl.debug(`discovered URL prefixes: ${urlPrefixes}`);
 
         // Note to readers: This variable will be going away once we have a fix for the location service for
         // customers behind proxies
         let testPrefixes = tl.getVariable("NuGetTasks.ExtraUrlPrefixesForTesting");
         if (testPrefixes) {
-            urlPrefixes = urlPrefixes.concat(testPrefixes.split(';'));
-            tl.debug(`all URL prefixes: ${urlPrefixes}`)
+            urlPrefixes = urlPrefixes.concat(testPrefixes.split(";"));
+            tl.debug(`all URL prefixes: ${urlPrefixes}`);
         }
 
-        return new auth.NuGetAuthInfo(urlPrefixes, accessToken);
-    })
-    .then(authInfo => {
-        var environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
+        const authInfo = new auth.NuGetAuthInfo(urlPrefixes, accessToken);
+        let environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
             authInfo: authInfo,
-            credProviderFolder: credProviderDir,
-            extensionsDisabled: !userNuGetPath
-        }
+            credProviderFolder: useCredProvider ? path.dirname(credProviderPath) : null,
+            extensionsDisabled: !userNuGetProvided
+        };
 
-        var configFilePromise = Q<string>(nugetConfigPath);
-        var credCleanup = () => { return };
-        if (!credProviderDir || (userNuGetPath && preCredProviderNuGet)) {
+        let configFile = nugetConfigPath;
+        let credCleanup = () => { return; };
+        if (useCredConfig) {
             if (nugetConfigPath) {
-                var nuGetConfigHelper = new NuGetConfigHelper(nuGetPathToUse, nugetConfigPath, authInfo, environmentSettings);
-                configFilePromise = nuGetConfigHelper.getSourcesFromConfig()
-                    .then(packageSources => {
-                        if (packageSources.length === 0) {
-                            // nothing to do; calling code should use the user's config unmodified.
-                            return nugetConfigPath;
-                        }
-                        else {
-                            nuGetConfigHelper.setSources(packageSources);
-                            credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath, true);
-                            return nuGetConfigHelper.tempNugetConfigPath;
-                        }
-                    });
-                
+                let nuGetConfigHelper = new NuGetConfigHelper(
+                    nuGetPath,
+                    nugetConfigPath,
+                    authInfo,
+                    environmentSettings);
+                const packageSources = await nuGetConfigHelper.getSourcesFromConfig();
+
+                if (packageSources.length !== 0) {
+                    nuGetConfigHelper.setSources(packageSources);
+                    credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath, true);
+                    configFile = nuGetConfigHelper.tempNugetConfigPath;
+                }
             }
             else {
-                if (credProviderDir) {
-                    tl.warning(tl.loc('Warning_NoConfigForOldNuGet'));
+                if (credProviderPath) {
+                    tl.warning(tl.loc("Warning_NoConfigForOldNuGet"));
                 }
                 else {
-                    tl._writeLine(tl.loc('Warning_NoConfigForNoCredentialProvider'));
+                    tl._writeLine(tl.loc("Warning_NoConfigForNoCredentialProvider"));
                 }
             }
         }
 
-        return configFilePromise.then(configFile => {
-            var restoreOptions = new RestoreOptions(
+        try {
+            let restoreOptions = new RestoreOptions(
                 restoreMode,
-                nuGetPathToUse,
+                nuGetPath,
                 configFile,
                 noCache,
                 verbosity,
                 nuGetRestoreArgs,
                 environmentSettings);
 
-            var result = Q({});
-            filesList.forEach((solutionFile) => {
-                result = result.then(() => {
-                    return restorePackages(solutionFile, restoreOptions);
-                })
-            })
-            return result.fin(credCleanup);
-        })
-    })
-    .then(() => {
-        tl._writeLine(tl.loc('PackagesInstalledSuccessfully'));
-        tl.exit(0);
-    })
-    .fail((err) => {
+            for (const solutionFile of filesList) {
+                await restorePackagesAsync(solutionFile, restoreOptions);
+            }
+        } finally {
+            credCleanup();
+        }
+
+        tl.setResult(tl.TaskResult.Succeeded, tl.loc("PackagesInstalledSuccessfully"));
+    } catch (err) {
         tl.error(err);
-        tl.error(tl.loc('PackagesFailedToInstall'));
 
         if (buildIdentityDisplayName || buildIdentityAccount) {
             tl.warning(tl.loc("BuildIdentityPermissionsHint", buildIdentityDisplayName, buildIdentityAccount));
         }
 
-        if (userNuGetPath && !preCredProviderNuGet) {
-            tl.warning(tl.loc('LegacyNuGetHint', userNuGetPath));
-        }
+        tl.setResult(tl.TaskResult.Failed, tl.loc("PackagesFailedToInstall"));
+    }
+}
 
-        tl.exit(1);
-    })
-    .done();
+main();
 
-function restorePackages(solutionFile: string, options: RestoreOptions): Q.Promise<number> {
-    var nugetTool = ngToolRunner.createNuGetToolRunner(options.nuGetPath, options.environment);
-    nugetTool.arg(options.restoreMode)
-    nugetTool.arg('-NonInteractive');
+function restorePackagesAsync(solutionFile: string, options: RestoreOptions): Q.Promise<number> {
+    let nugetTool = ngToolRunner.createNuGetToolRunner(options.nuGetPath, options.environment);
+    nugetTool.arg(options.restoreMode);
+    nugetTool.arg("-NonInteractive");
 
     nugetTool.pathArg(solutionFile);
 
     if (options.configFile) {
-        nugetTool.arg('-ConfigFile');
+        nugetTool.arg("-ConfigFile");
         nugetTool.pathArg(options.configFile);
     }
 
     if (options.noCache) {
-        nugetTool.arg('-NoCache');
+        nugetTool.arg("-NoCache");
     }
 
-    if (options.verbosity) {
+    if (options.verbosity && options.verbosity !== "-") {
         nugetTool.arg("-Verbosity");
         nugetTool.arg(options.verbosity);
     }
@@ -214,5 +206,5 @@ function restorePackages(solutionFile: string, options: RestoreOptions): Q.Promi
         nugetTool.argString(options.extraArgs);
     }
 
-    return nugetTool.exec();
+    return nugetTool.exec({ cwd: path.dirname(solutionFile) });
 }

@@ -1,6 +1,5 @@
 /// <reference path="../../../definitions/mocha.d.ts"/>
 /// <reference path="../../../definitions/node.d.ts"/>
-/// <reference path="../../../definitions/sonarqube-common.d.ts" />
 
 import assert = require('assert');
 import fs = require('fs');
@@ -9,6 +8,16 @@ import path = require('path');
 
 import trm = require('../../lib/taskRunner');
 import {TaskRunner} from '../../lib/taskRunner';
+
+import {AnalysisResult} from '../../../Tasks/Gradle/CodeAnalysis/Common/AnalysisResult';
+import {BuildOutput, BuildEngine} from '../../../Tasks/Gradle/CodeAnalysis/Common/BuildOutput'
+import {CheckstyleTool} from '../../../Tasks/Gradle/CodeAnalysis/Common/CheckstyleTool'
+import {PmdTool} from '../../../Tasks/Gradle/CodeAnalysis/Common/PmdTool'
+
+import os = require('os');
+
+var isWindows = os.type().match(/^Win/); 
+var gradleWrapper = isWindows ? 'gradlew.bat' : 'gradlew';
 
 function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
@@ -50,6 +59,25 @@ function createTempDirsForCodeAnalysisTests(): void {
     }
 }
 
+function cleanTempDirsForCodeAnalysisTests():void {
+    var testTempDir: string = path.join(__dirname, '_temp');
+    deleteFolderRecursive(testTempDir);
+}
+
+function deleteFolderRecursive(path):void {
+    if (fs.existsSync(path)) {
+        fs.readdirSync(path).forEach(function(file,index){
+            var curPath = path + "/" + file;
+            if(fs.lstatSync(curPath).isDirectory()) { // recurse
+                deleteFolderRecursive(curPath);
+            } else { // delete file
+                fs.unlinkSync(curPath);
+            }
+        });
+        fs.rmdirSync(path);
+    }
+};
+
 function assertCodeAnalysisBuildSummaryContains(stagingDir: string, expectedString: string): void {
     assertBuildSummaryContains(path.join(stagingDir, '.codeAnalysis', 'CodeAnalysisBuildSummary.md'), expectedString);
 }
@@ -62,7 +90,17 @@ function assertSonarQubeBuildSummaryContains(stagingDir: string, expectedString:
 function assertBuildSummaryContains(buildSummaryFilePath: string, expectedLine: string): void {
     var buildSummaryString: string = fs.readFileSync(buildSummaryFilePath, 'utf-8');
 
-    assert(buildSummaryString.indexOf(expectedLine) > -1, "Expected build summary to contain: " + expectedLine);
+    assert(buildSummaryString.indexOf(expectedLine) > -1, `Expected build summary to contain: ${expectedLine}
+    Actual: ${buildSummaryString}`);
+}
+
+function assertFileExistsInDir(stagingDir:string, filePath:string) {
+    var directoryName:string = path.dirname(path.join(stagingDir, filePath));
+    var fileName:string = path.basename(filePath);
+    assert(fs.statSync(directoryName).isDirectory(), 'Expected directory did not exist: ' + directoryName);
+    var directoryContents:string[] = fs.readdirSync(directoryName);
+    assert(directoryContents.indexOf(fileName) > -1, `Expected file did not exist: ${filePath}
+    Actual contents of ${directoryName}: ${directoryContents}`);
 }
 
 function setResponseAndBuildVars(initialResponseFile: string, finalResponseFile: string, envVars: Array<[string, string]>) {
@@ -161,17 +199,21 @@ describe('gradle Suite', function () {
         tr.setInput('jdkVersion', 'default');
         tr.setInput('publishJUnitResults', 'true');
         tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
+        tr.setInput('gradleOpts', '-Xmx2048m');
 
         tr.run()
             .then(() => {
-                assert(tr.ran('gradlew build'), 'it should have run gradlew build');
+                assert(tr.ran(gradleWrapper + ' build'), 'it should have run gradlew build');
                 assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.stdout.indexOf('GRADLE_OPTS is now set to -Xmx2048m') > 0);
+
                 done();
             })
             .fail((err) => {
+                console.log(tr.stdout);
                 done(err);
             });
     })
@@ -244,7 +286,7 @@ describe('gradle Suite', function () {
 
         tr.run()
             .then(() => {
-                assert(tr.ran('gradlew build'), 'it should have run gradlew build');
+                assert(tr.ran(gradleWrapper + ' build'), 'it should have run gradlew build');
                 assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -297,7 +339,7 @@ describe('gradle Suite', function () {
 
         tr.run()
             .then(() => {
-                assert(tr.ran('gradlew /o /p t i /o /n /s build'), 'it should have run gradlew /o /p t i /o /n /s build');
+                assert(tr.ran(gradleWrapper + ' /o /p t i /o /n /s build'), 'it should have run gradlew /o /p t i /o /n /s build');
                 assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -348,7 +390,7 @@ describe('gradle Suite', function () {
 
         tr.run()
             .then(() => {
-                assert(tr.ran('gradlew /o /p t i /o /n /s build test deploy'), 'it should have run gradlew /o /p t i /o /n /s build test deploy');
+                assert(tr.ran(gradleWrapper + ' /o /p t i /o /n /s build test deploy'), 'it should have run gradlew /o /p t i /o /n /s build test deploy');
                 assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -373,7 +415,7 @@ describe('gradle Suite', function () {
 
         tr.run()
             .then(() => {
-                assert(tr.ran('gradlew build'), 'it should have run gradlew build');
+                assert(tr.ran(gradleWrapper + ' build'), 'it should have run gradlew build');
                 assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -399,7 +441,7 @@ describe('gradle Suite', function () {
 
         tr.run()
             .then(() => {
-                assert(tr.ran('gradlew build'), 'it should have run gradlew build');
+                assert(tr.ran(gradleWrapper + ' build'), 'it should have run gradlew build');
                 assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -476,7 +518,7 @@ describe('gradle Suite', function () {
 
         tr.run()
             .then(() => {
-                assert(tr.ran('gradlew build'), 'it should have run gradlew build');
+                assert(tr.ran(gradleWrapper + ' build'), 'it should have run gradlew build');
                 assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -504,7 +546,11 @@ describe('gradle Suite', function () {
 
         tr.run()
             .then(() => {
-                assert(tr.invokedToolCount == 0, 'should not have run gradle');
+                if (isWindows) {
+                    assert(tr.invokedToolCount == 1, 'should not have run gradle'); // should have run reg query toolrunner once
+                } else {
+                    assert(tr.invokedToolCount == 0, 'should not have run gradle');
+                }
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
                 assert(tr.failed, 'task should have failed');
@@ -530,165 +576,12 @@ describe('gradle Suite', function () {
 
         tr.run()
             .then(() => {
-                assert(tr.ran('gradlew build FAIL'), 'it should have run gradlew build FAIL');
+                assert(tr.ran(gradleWrapper + ' build FAIL'), 'it should have run gradlew build FAIL');
                 assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
                 assert(tr.failed, 'task should have failed');
                 assert(tr.stdout.indexOf('FAILED') >= 0, 'It should have failed');
-                done();
-            })
-            .fail((err) => {
-                done(err);
-            });
-    })
-
-    it('Gradle with jacoco selected should call enable and publish code coverage for a single module project.', (done) => {
-        setResponseFile('gradleCCSingleModule.json');
-
-        var tr = new TaskRunner('Gradle');
-        tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
-        tr.setInput('options', '');
-        tr.setInput('tasks', 'build');
-        tr.setInput('javaHomeSelection', 'JDKVersion');
-        tr.setInput('jdkVersion', 'default');
-        tr.setInput('publishJUnitResults', 'true');
-        tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
-        tr.setInput('codeCoverageTool', 'JaCoCo');
-
-        tr.run()
-            .then(() => {
-                assert(tr.ran('gradlew properties'), 'it should have run gradlew build');
-                assert(tr.ran('gradlew clean build jacocoTestReport'), 'it should have run clean gradlew build');
-                assert(tr.invokedToolCount == 2, 'should have only run gradle 2 times');
-                assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=build.gradle;summaryfile=summary.xml;reportdirectory=CCReport43F6D5EF;ismultimodule=false;buildtool=Gradle;codecoveragetool=JaCoCo;\]/) >= 0, 'should have called enable code coverage.');
-                assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=CCReport43F6D5EF\\summary.xml;reportdirectory=CCReport43F6D5EF;\]/) >= 0 ||
-                    tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=CCReport43F6D5EF\/summary.xml;reportdirectory=CCReport43F6D5EF;\]/) >= 0, 'should have called publish code coverage.');
-                assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr');
-                assert(tr.succeeded, 'task should have succeeded');
-                done();
-            })
-            .fail((err) => {
-                done(err);
-            });
-    })
-
-    it('Gradle with jacoco selected should call enable and publish code coverage for a multi module project.', (done) => {
-        setResponseFile('gradleCCMultiModule.json');
-
-        var tr = new TaskRunner('Gradle');
-        tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
-        tr.setInput('options', '');
-        tr.setInput('tasks', 'build');
-        tr.setInput('javaHomeSelection', 'JDKVersion');
-        tr.setInput('jdkVersion', 'default');
-        tr.setInput('publishJUnitResults', 'true');
-        tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
-        tr.setInput('codeCoverageTool', 'JaCoCo');
-
-        tr.run()
-            .then(() => {
-                assert(tr.ran('gradlew properties'), 'it should have run gradlew build');
-                assert(tr.ran('gradlew clean build jacocoRootReport'), 'it should have run gradlew clean build');
-                assert(tr.invokedToolCount == 2, 'should have only run gradle 2 times');
-                assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=build.gradle;summaryfile=summary.xml;reportdirectory=CCReport43F6D5EF;ismultimodule=true;buildtool=Gradle;codecoveragetool=JaCoCo;\]/) >= 0, 'should have called enable code coverage.');
-                assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=CCReport43F6D5EF\\summary.xml;reportdirectory=CCReport43F6D5EF;\]/) >= 0 ||
-                    tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=JaCoCo;summaryfile=CCReport43F6D5EF\/summary.xml;reportdirectory=CCReport43F6D5EF;\]/) >= 0, 'should have called publish code coverage.');
-                assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr');
-                assert(tr.succeeded, 'task should have succeeded');
-                done();
-            })
-            .fail((err) => {
-                done(err);
-            });
-    })
-
-    it('Gradle with cobertura selected should call enable and publish code coverage.', (done) => {
-        setResponseFile('gradleCCSingleModule.json');
-
-        var tr = new TaskRunner('Gradle');
-        tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
-        tr.setInput('options', '');
-        tr.setInput('tasks', 'build');
-        tr.setInput('javaHomeSelection', 'JDKVersion');
-        tr.setInput('jdkVersion', 'default');
-        tr.setInput('publishJUnitResults', 'true');
-        tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
-        tr.setInput('codeCoverageTool', 'Cobertura');
-
-        tr.run()
-            .then(() => {
-                assert(tr.ran('gradlew properties'), 'it should have run gradlew build');
-                assert(tr.ran('gradlew clean build cobertura'), 'it should have run gradlew clean build');
-                assert(tr.invokedToolCount == 2, 'should have only run gradle 2 times');
-                assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=build.gradle;summaryfile=coverage.xml;reportdirectory=CCReport43F6D5EF;ismultimodule=false;buildtool=Gradle;codecoveragetool=Cobertura;\]/) >= 0, 'should have called enable code coverage.');
-                assert(tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=Cobertura;summaryfile=CCReport43F6D5EF\\coverage.xml;reportdirectory=CCReport43F6D5EF;\]/) >= 0 ||
-                    tr.stdout.search(/##vso\[codecoverage.publish codecoveragetool=Cobertura;summaryfile=CCReport43F6D5EF\/coverage.xml;reportdirectory=CCReport43F6D5EF;\]/) >= 0, 'should have called publish code coverage.');
-                assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr');
-                assert(tr.succeeded, 'task should have succeeded');
-                done();
-            })
-            .fail((err) => {
-                done(err);
-            });
-    })
-
-    it('Gradle with jacoco selected and report generation failed should call enable but not publish code coverage.', (done) => {
-        setResponseFile('gradleGood.json');
-
-        var tr = new TaskRunner('Gradle');
-        tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
-        tr.setInput('options', '');
-        tr.setInput('tasks', 'build');
-        tr.setInput('javaHomeSelection', 'JDKVersion');
-        tr.setInput('jdkVersion', 'default');
-        tr.setInput('publishJUnitResults', 'true');
-        tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
-        tr.setInput('codeCoverageTool', 'JaCoCo');
-
-        tr.run()
-            .then(() => {
-                assert(tr.ran('gradlew properties'), 'it should have run gradlew build');
-                assert(tr.ran('gradlew clean build jacocoTestReport'), 'it should have run gradlew clean build');
-                assert(tr.invokedToolCount == 2, 'should have only run gradle 2 times');
-                assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=build.gradle;summaryfile=summary.xml;reportdirectory=CCReport43F6D5EF;ismultimodule=false;buildtool=Gradle;codecoveragetool=JaCoCo;\]/) >= 0, 'should have called enable code coverage.');
-                assert(tr.stdout.search(/##vso\[codecoverage.publish\]/) < 0, 'should not have called publish code coverage.');
-                assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr');
-                assert(tr.succeeded, 'task should have succeeded');
-                done();
-            })
-            .fail((err) => {
-                done(err);
-            });
-    })
-
-    it('Gradle with cobertura selected and report generation failed should call enable but not publish code coverage.', (done) => {
-        setResponseFile('gradleGood.json');
-
-        var tr = new TaskRunner('Gradle');
-        tr.setInput('wrapperScript', 'gradlew'); // Make that checkPath returns true for this filename in the response file
-        tr.setInput('options', '');
-        tr.setInput('tasks', 'build');
-        tr.setInput('javaHomeSelection', 'JDKVersion');
-        tr.setInput('jdkVersion', 'default');
-        tr.setInput('publishJUnitResults', 'true');
-        tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
-        tr.setInput('codeCoverageTool', 'Cobertura');
-
-        tr.run()
-            .then(() => {
-                assert(tr.ran('gradlew properties'), 'it should have run gradlew build');
-                assert(tr.ran('gradlew clean build cobertura'), 'it should have run gradlew clean build');
-                assert(tr.invokedToolCount == 2, 'should have only run gradle 2 times');
-                assert(tr.stdout.search(/##vso\[codecoverage.enable buildfile=build.gradle;summaryfile=coverage.xml;reportdirectory=CCReport43F6D5EF;ismultimodule=false;buildtool=Gradle;codecoveragetool=Cobertura;\]/) >= 0, 'should have called enable code coverage.');
-                assert(tr.stdout.search(/##vso\[codecoverage.publish\]/) < 0, 'should not have called publish code coverage.');
-                assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr');
-                assert(tr.succeeded, 'task should have succeeded');
                 done();
             })
             .fail((err) => {
@@ -748,7 +641,7 @@ describe('gradle Suite', function () {
                 done(err);
             });
     })
-/*
+
     it('Gradle with SQ in a PR build - SQ issues mode analysis', function (done) {
 
         // Arrange
@@ -786,7 +679,7 @@ describe('gradle Suite', function () {
                 assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
-                assert(tr.ran('gradlew build sonarqube -I /gradle/CodeAnalysis/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json'), 'sq issues mode');
+                assert(tr.ran(gradleWrapper + ' build sonarqube -I /Gradle/CodeAnalysis/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json'), 'sq issues mode');
                 done();
             })
             .fail((err) => {
@@ -795,6 +688,9 @@ describe('gradle Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
     it('Gradle with SQ - source branch not a PR branch', function (done) {
@@ -834,7 +730,7 @@ describe('gradle Suite', function () {
                 assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
-                assert(tr.ran('gradlew build sonarqube -I /gradle/CodeAnalysis/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion'), 'it should not run in issues mode');
+                assert(tr.ran(gradleWrapper + ' build sonarqube -I /Gradle/CodeAnalysis/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion'), 'it should not run in issues mode');
                 done();
             })
             .fail((err) => {
@@ -843,6 +739,9 @@ describe('gradle Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
     it('Gradle with SQ - scc is not TfsGit', function (done) {
@@ -882,7 +781,7 @@ describe('gradle Suite', function () {
                 assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
-                assert(tr.ran('gradlew build sonarqube -I /gradle/CodeAnalysis/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion'), 'it should not run in issues mode');
+                assert(tr.ran(gradleWrapper + ' build sonarqube -I /Gradle/CodeAnalysis/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion'), 'it should not run in issues mode');
                 done();
             })
             .fail((err) => {
@@ -891,6 +790,9 @@ describe('gradle Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
     it('Gradle with SonarQube - Should run Gradle with all default inputs when SonarQube analysis disabled', function (done) {
@@ -911,7 +813,7 @@ describe('gradle Suite', function () {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
-                assert(tr.ran('gradlew build'), 'it should have run only the default settings');
+                assert(tr.ran(gradleWrapper + ' build'), 'it should have run only the default settings');
                 done();
             })
             .fail((err) => {
@@ -951,8 +853,8 @@ describe('gradle Suite', function () {
 
         tr.run()
             .then(() => {
-                assert(tr.ran('gradlew properties'), 'it should have run gradlew build');
-                assert(tr.ran('gradlew clean build cobertura sonarqube -I /gradle/CodeAnalysis/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion -Dsonar.cobertura.reportPath=CCReport43F6D5EF/coverage.xml'), 'it should have run gradlew build');
+                assert(tr.ran(gradleWrapper + ' properties'), 'it should have run gradlew build');
+                assert(tr.ran(gradleWrapper + ' clean build cobertura sonarqube -I /Gradle/CodeAnalysis/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion -Dsonar.cobertura.reportPath=CCReport43F6D5EF/coverage.xml'), 'it should have run gradlew build');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
                 done();
@@ -963,6 +865,9 @@ describe('gradle Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     })
 
     it('Gradle with SonarQube - Should run Gradle with SonarQube', function (done) {
@@ -1001,7 +906,7 @@ describe('gradle Suite', function () {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
-                assert(tr.ran('gradlew build sonarqube -I /gradle/CodeAnalysis/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion'),
+                assert(tr.ran(gradleWrapper + ' build sonarqube -I /Gradle/CodeAnalysis/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion'),
                     'should have run the gradle wrapper with the appropriate SonarQube arguments');
 
                 assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report') > 0,
@@ -1016,6 +921,9 @@ describe('gradle Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
     it('Gradle with SonarQube - Fails if the task report is invalid', function (done) {
@@ -1053,7 +961,7 @@ describe('gradle Suite', function () {
                 assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
-                assert(tr.ran('gradlew build sonarqube -I /gradle/CodeAnalysis/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion'),
+                assert(tr.ran(gradleWrapper + ' build sonarqube -I /Gradle/CodeAnalysis/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion'),
                     'should have run the gradle wrapper with the appropriate SonarQube arguments');
 
                 assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report') < 0,
@@ -1066,6 +974,9 @@ describe('gradle Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
     it('Gradle with SonarQube - Fails if the task report is missing', function (done) {
@@ -1103,7 +1014,7 @@ describe('gradle Suite', function () {
                 assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
-                assert(tr.ran('gradlew build sonarqube -I /gradle/CodeAnalysis/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion'),
+                assert(tr.ran(gradleWrapper + ' build sonarqube -I /Gradle/CodeAnalysis/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion'),
                     'should have run the gradle wrapper with the appropriate SonarQube arguments');
 
                 assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report') < 0,
@@ -1116,12 +1027,15 @@ describe('gradle Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
     it('Gradle with SonarQube - Does not fail if report-task.txt is missing during a PR build', function (done) {
         // Arrange
         createTempDirsForSonarQubeTests();
-        var testSrcDir: string = __dirname
+        var testSrcDir: string = __dirname;
         var testStgDir: string = path.join(__dirname, '_temp');
 
         mockHelper.setResponseAndBuildVars(
@@ -1155,13 +1069,11 @@ describe('gradle Suite', function () {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length < 1, 'should not have written to stderr');
                 assert(tr.ran(
-                    'gradlew build sonarqube -I /gradle/CodeAnalysis/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json'
+                    gradleWrapper + ' build sonarqube -I /Gradle/CodeAnalysis/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json'
                 ), 'should have run the gradle wrapper with the appropriate SonarQube arguments');
 
-                assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report') > -1,
-                    'should have uploaded a SonarQube Analysis Report build summary');
-                assertSonarQubeBuildSummaryContains(testStgDir,
-                    'Detailed SonarQube reports are not available for pull request builds.');
+                assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report') < 0,
+                    'should not have uploaded a SonarQube Analysis Report build summary');
                 done();
             })
             .fail((err) => {
@@ -1170,6 +1082,9 @@ describe('gradle Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
     it('Gradle with SonarQube - Should run Gradle with SonarQube and apply required parameters for older server versions', function (done) {
@@ -1213,7 +1128,7 @@ describe('gradle Suite', function () {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
-                assert(tr.ran('gradlew build sonarqube -I /gradle/CodeAnalysis/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jdbc.url=jdbc:test:tcp://localhost:8080/sonar -Dsonar.jdbc.username=testDbUsername -Dsonar.jdbc.password=testDbPassword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion'),
+                assert(tr.ran(gradleWrapper + ' build sonarqube -I /Gradle/CodeAnalysis/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jdbc.url=jdbc:test:tcp://localhost:8080/sonar -Dsonar.jdbc.username=testDbUsername -Dsonar.jdbc.password=testDbPassword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion'),
                     'should have run the gradle wrapper with the appropriate SonarQube arguments');
 
                 assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report') > 0,
@@ -1225,15 +1140,17 @@ describe('gradle Suite', function () {
             .fail((err) => {
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
-    it('Single Module Gradle with PMD', function (done) {
+    it('Single Module Gradle with PMD and Checkstyle', function (done) {
 
         createTempDirsForCodeAnalysisTests();
 
         var testSrcDir: string = path.join(__dirname, 'data', 'singlemodule');
         var testStgDir: string = path.join(__dirname, '_temp');
-        var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis'); // overall directory for all tools
 
         setResponseAndBuildVars(
             'gradleCA.json',
@@ -1247,6 +1164,7 @@ describe('gradle Suite', function () {
         var tr = new TaskRunner('Gradle', true, true);
         tr = setDefaultInputs(tr, false);
         tr.setInput('pmdAnalysisEnabled', 'true');
+        tr.setInput('checkstyleAnalysisEnabled', 'true');
 
         // Act
         tr.run()
@@ -1256,12 +1174,28 @@ describe('gradle Suite', function () {
                 assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
-                assert(tr.ran('gradlew build -I /gradle/CodeAnalysis/pmd.gradle'), 'ran gradle with pmd');
+                assert(tr.ran(gradleWrapper + ' build -I /Gradle/CodeAnalysis/checkstyle.gradle -I /Gradle/CodeAnalysis/pmd.gradle'), 'Ran Gradle with Checkstyle and Pmd');
                 assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
                     'should have uploaded a Code Analysis Report build summary');
                 assert(tr.stdout.indexOf('artifact.upload artifactname=Code Analysis Results;') > -1,
-                    'should have uploaded PMD build artifacts');
-                assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found 4 violations in 2 files.');
+                    'should have uploaded code analysis build artifacts');
+
+                assertCodeAnalysisBuildSummaryContains(testStgDir, 'Checkstyle found 35 violations in 2 file');
+                assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found 4 violations in 2 files');
+
+                var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
+
+                // Test files were copied for module "root", build 14
+                assertFileExistsInDir(codeAnalysisStgDir, '/root/14_main_Checkstyle.html');
+                assertFileExistsInDir(codeAnalysisStgDir, '/root/14_main_Checkstyle.xml');
+                assertFileExistsInDir(codeAnalysisStgDir, '/root/14_main_PMD.html');
+                assertFileExistsInDir(codeAnalysisStgDir, '/root/14_main_PMD.xml');
+                assertFileExistsInDir(codeAnalysisStgDir, '/root/14_test_Checkstyle.html');
+                assertFileExistsInDir(codeAnalysisStgDir, '/root/14_test_Checkstyle.xml');
+                assertFileExistsInDir(codeAnalysisStgDir, '/root/14_test_PMD.html');
+                assertFileExistsInDir(codeAnalysisStgDir, '/root/14_test_PMD.xml');
+
+
                 done();
             })
             .fail((err) => {
@@ -1270,15 +1204,17 @@ describe('gradle Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
-    it('Multi Module Gradle with PMD', function (done) {
+    it('Multi Module Gradle with Checkstyle and PMD', function (done) {
 
         createTempDirsForCodeAnalysisTests();
 
         var testSrcDir: string = path.join(__dirname, 'data', 'multimodule');
         var testStgDir: string = path.join(__dirname, '_temp');
-        var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis'); // overall directory for all tools
 
         setResponseAndBuildVars(
             'gradleCA.json',
@@ -1292,21 +1228,40 @@ describe('gradle Suite', function () {
         var tr = new TaskRunner('Gradle', true, true);
         tr = setDefaultInputs(tr, false);
         tr.setInput('pmdAnalysisEnabled', 'true');
+        tr.setInput('checkstyleAnalysisEnabled', 'true');
 
         // Act
         tr.run()
             .then(() => {
                 // Assert
-                assert(tr.succeeded, 'task should have succeeded');
+                    assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
                 assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length == 0, 'should not have written to stderr');
-                assert(tr.ran('gradlew build -I /gradle/CodeAnalysis/pmd.gradle'), 'ran gradle with pmd');
+                 assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.ran(gradleWrapper + ' build -I /Gradle/CodeAnalysis/checkstyle.gradle -I /Gradle/CodeAnalysis/pmd.gradle'), 'Ran Gradle with Checkstyle and Pmd');
                 assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
                     'should have uploaded a Code Analysis Report build summary');
                 assert(tr.stdout.indexOf('artifact.upload artifactname=Code Analysis Results;') > -1,
                     'should have uploaded PMD build artifacts');
-                assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found 4 violations in 2 files.');
+                assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found 2 violations in 1 file');
+                assertCodeAnalysisBuildSummaryContains(testStgDir, 'Checkstyle found 34 violations in 2 files');
+
+                var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
+
+                // Test files copied for module "module-one", build 211
+                assertFileExistsInDir(codeAnalysisStgDir, 'module-one/211_main_Checkstyle.html');
+                assertFileExistsInDir(codeAnalysisStgDir, 'module-one/211_main_Checkstyle.xml');
+                assertFileExistsInDir(codeAnalysisStgDir, 'module-one/211_main_PMD.html');
+                assertFileExistsInDir(codeAnalysisStgDir, 'module-one/211_main_PMD.xml');
+                assertFileExistsInDir(codeAnalysisStgDir, 'module-one/211_test_Checkstyle.html');
+                assertFileExistsInDir(codeAnalysisStgDir, 'module-one/211_test_Checkstyle.xml');
+
+                // Test files were copied for module "module-two", build 211
+                // None - the checkstyle reports have no violations and are not uploaded
+
+                // Test files were copied for module "module-three", build 211
+                // None - the pmd reports have no violations and are not uploaded
+
                 done();
             })
             .fail((err) => {
@@ -1315,7 +1270,66 @@ describe('gradle Suite', function () {
                 console.log(err);
                 done(err);
             });
-    });
-    */
 
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
+    });
+
+    class CheckstyleTestTool extends CheckstyleTool {
+        protected isEnabled() {
+            return true;
+        }
+    }
+
+    function verifyModuleResult(results: AnalysisResult[], moduleName: string , expectedViolationCount: number, expectedFileCount: number, expectedReports: string[]) {
+        var analysisResults = results.filter(ar => ar.moduleName === moduleName);
+        assert(analysisResults != null && analysisResults.length != 0 , "Null or empty array");
+        assert(analysisResults.length == 1, "The array does not have a single element");
+        var analysisResult = analysisResults[0];
+
+        assert(analysisResult.affectedFileCount === expectedFileCount, "Invalid file count");
+        assert(analysisResult.violationCount === expectedViolationCount, "Invalid violation count");
+        assert(analysisResult.resultFiles.length === expectedReports.length, "Invalid number of reports");
+
+        for (var actualReport of analysisResult.resultFiles) {
+            var reportFile = path.basename(actualReport);
+            assert(expectedReports.indexOf(reportFile) > -1, "Report not found: " + actualReport);
+        }
+    }
+
+    it('Checkstyle tool retrieves results', function (done) {
+
+        var testSrcDir: string = path.join(__dirname, 'data', 'multimodule');
+
+        let buildOutput: BuildOutput = new BuildOutput(testSrcDir, BuildEngine.Gradle);
+        var tool = new CheckstyleTestTool(buildOutput, 'checkstyleAnalysisEnabled');
+        let results: AnalysisResult[] = tool.processResults();
+
+        assert(results.length == 2, "Unexpected number of results. note that module-three has no tool results ");
+        verifyModuleResult(results, "module-one", 34, 2, ["main.xml", "main.html", "test.xml", "test.html"] );
+        verifyModuleResult(results, "module-two", 0, 0, [] /* empty report files are not copied in */);
+
+        done();
+    });
+
+     class PmdTestTool extends PmdTool {
+        protected isEnabled() {
+            return true;
+        }
+     }
+
+     it('Pmd tool retrieves results', function (done) {
+
+        var testSrcDir: string = path.join(__dirname, 'data', 'multimodule');
+
+        let buildOutput: BuildOutput = new BuildOutput(testSrcDir, BuildEngine.Gradle);
+        var tool = new PmdTestTool(buildOutput, 'checkstyleAnalysisEnabled');
+        let results: AnalysisResult[] = tool.processResults();
+
+        assert(results.length == 2, "Unexpected number of results. note that module-three has no tool results ");
+        verifyModuleResult(results, "module-one", 2, 1, ["main.xml", "main.html"] );
+        verifyModuleResult(results, "module-three", 0, 0, [] /* empty report files are not copied in */);
+
+        done();
+    });
 });

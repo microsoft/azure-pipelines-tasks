@@ -1,4 +1,5 @@
 import {AnalysisResult} from './AnalysisResult'
+import {FileSystemInteractions} from './FileSystemInteractions';
 
 import path = require('path');
 import fs = require('fs');
@@ -23,7 +24,7 @@ export class CodeAnalysisResultPublisher {
      * 
      * @param {string} prefix - used to discriminate between artifacts comming from different builds of the same projects (e.g. the build number)
      */
-    public uploadArtifacts(prefix: string) {
+    public uploadArtifacts(prefix: string):void {
         if (this.analysisResults.length === 0) {
             return;
         }
@@ -31,18 +32,20 @@ export class CodeAnalysisResultPublisher {
         tl.debug('[CA] Preparing to upload artifacts');
 
         let artifactBaseDir = path.join(this.stagingDir, 'CA');
-        tl.mkdirP(artifactBaseDir);
+        FileSystemInteractions.createDirectory(artifactBaseDir);
 
         for (var analysisResult of this.analysisResults) {
 
             // Group artifacts in folders representing the module name
             let destinationDir = path.join(artifactBaseDir, analysisResult.moduleName);
-            tl.mkdirP(destinationDir);
+            FileSystemInteractions.createDirectory(destinationDir);
 
             for (var resultFile of analysisResult.resultFiles) {
                 let extension = path.extname(resultFile);
-                let artifactName = `${prefix}_${analysisResult.moduleName}_${analysisResult.toolName}${extension}`;
-                tl.cp('-f', resultFile, path.join(destinationDir, artifactName));
+                let reportName = path.basename(resultFile, extension);
+
+                let artifactName = `${prefix}_${reportName}_${analysisResult.toolName}${extension}`;
+                FileSystemInteractions.copyFile(resultFile, path.join(destinationDir, artifactName));
             }
         }
 
@@ -59,7 +62,7 @@ export class CodeAnalysisResultPublisher {
      *   
      * Code analysis results can be found in the 'Artifacts' tab. 
      */
-    public uploadBuildSummary() {
+    public uploadBuildSummary():void {
 
         if (this.analysisResults.length === 0) {
             return;
@@ -70,7 +73,7 @@ export class CodeAnalysisResultPublisher {
         this.uploadMdSummary(content);
     }
 
-    private groupBy(array: any, f: Function) {
+    private groupBy(array: any, f: Function):any[] {
         var groups: any = {};
         array.forEach((o: any) => {
             var group = JSON.stringify(f(o));
@@ -82,9 +85,9 @@ export class CodeAnalysisResultPublisher {
         });
     }
 
-    private uploadMdSummary(content: string) {
+    private uploadMdSummary(content: string):void {
         var buildSummaryFilePath: string = path.join(this.stagingDir, 'CodeAnalysisBuildSummary.md');
-        tl.mkdirP(this.stagingDir);
+        FileSystemInteractions.createDirectory(this.stagingDir);
         fs.writeFileSync(buildSummaryFilePath, content);
 
         tl.debug('[CA] Uploading build summary from ' + buildSummaryFilePath);

@@ -2,6 +2,7 @@
 
 import path = require('path');
 import fs = require('fs');
+import os = require('os');
 import tl = require("vsts-task-lib/task");
 
 function getCommonLocalPath(files: string[]): string {
@@ -85,130 +86,131 @@ var artifactType: string = tl.getInput('ArtifactType');
 var targetPath: string = tl.getInput('TargetPath');
 var findRoot: string = tl.getPathInput('CopyRoot');
 
-if (!artifactName) {
-    // nothing to do
-    tl.warning('Artifact name is not specified.');
-}
-else if (!artifactType) {
-    // nothing to do
-    tl.warning('Artifact type is not specified.');
-}
-else {
-    artifactType = artifactType.toLowerCase();
-    // back compat. remove after 82
-    if (artifactType === "localpath") {
-        artifactType = "filepath";
+let run = (): void => {
+    if (!artifactName) {
+        // nothing to do
+        tl.warning('Artifact name is not specified.');
     }
-    
-    var stagingFolder: string = tl.getVariable('build.stagingdirectory');
-    stagingFolder = path.join(stagingFolder, artifactName);
-    
-    console.log('Cleaning staging folder: ' + stagingFolder);
-    tl.rmRF(stagingFolder); 
-
-    tl.debug('Preparing artifact content in staging folder ' + stagingFolder + '...');
-
-    // enumerate all files
-    
-    var files: string[] = [];
-    var allFiles: string[] = tl.find(findRoot);
-    if (contents && allFiles) {
-        tl.debug("allFiles contains " + allFiles.length + " files");
-
-        // a map to eliminate duplicates
-        var map = {};
-        for (var i: number = 0; i < contents.length; i++) {
-            var pattern = contents[i].trim();
-            if (pattern.length == 0) {
-                continue;
-            }
-            tl.debug('Matching ' + pattern);
-
-            var realPattern = path.join(findRoot, pattern);
-            tl.debug('Actual pattern: ' + realPattern);
-
-            // in debug mode, output some match candidates
-            tl.debug('Listing a few potential candidates...')
-            for (var k = 0; k < 10 && k < allFiles.length; k++) {
-                tl.debug('  ' + allFiles[k]);
-            }
-
-            // let minimatch do the actual filtering
-            var matches: string[] = tl.match(allFiles, realPattern, { matchBase: true });
-            
-            tl.debug('Matched ' + matches.length + ' files');
-            for (var j: number = 0; j < matches.length; j++) {
-                var matchPath = matches[j];
-                if (!map.hasOwnProperty(matchPath)) {
-                    map[matchPath] = true;
-                    files.push(matchPath);
-                }
-            }
-        }
+    else if (!artifactType) {
+        // nothing to do
+        tl.warning('Artifact type is not specified.');
     }
     else {
-        tl.debug("Either contents or allFiles is empty");
-        files = allFiles;
-    }
-
-    // copy the files to the staging folder
-
-    console.log("found " + files.length + " files");
-    if (files.length > 0) {
-        // make sure the staging folder exists
-        tl.mkdirP(stagingFolder);
-
-        var commonRoot = getCommonLocalPath(files);
-        var useCommonRoot = !!commonRoot;
-        if (useCommonRoot) {
-            tl.debug("There is a common root (" + commonRoot + ") for the files. Using the remaining path elements in staging folder.");
+        artifactType = artifactType.toLowerCase();
+        // back compat. remove after 82
+        if (artifactType === "localpath") {
+            artifactType = "filepath";
         }
 
-        try {
-            var createdFolders = {};
-            files.forEach((file: string) => {
-                var stagingPath = stagingFolder;
-                if (useCommonRoot) {
-                    var relativePath = file.substring(commonRoot.length)
-                        .replace(/^\\/g, "")
-                        .replace(/^\//g, "");
-                    stagingPath = path.dirname(path.join(stagingFolder, relativePath));
-                }
-                
-                if (!createdFolders[stagingPath]) {
-                    tl.debug("Creating folder " + stagingPath);
-                    tl.mkdirP(stagingPath);
-                    createdFolders[stagingPath] = true;
-                }
-                
-                tl.debug("Copying " + file + " to " + stagingPath);
-                tl.cp("-Rf", file, stagingPath);
-            });
+        if (artifactType === "filepath") {
+            tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorFileShareLinux'));
+            return;
+        }
 
-            var data = {
-                artifacttype: artifactType,
-                artifactname: artifactName
-            };
-    
-            // upload or copy
-            if (artifactType === "container") {
-                data["containerfolder"] = artifactName;
-                
-                // add localpath to ##vso command's properties for back compat of old Xplat agent
-                data["localpath"] = stagingFolder;
-                tl.command("artifact.upload", data, stagingFolder);
-            }
-            else if (artifactType === "filepath") {
-                tl.mkdirP(targetPath);
-                tl.cp("-Rf", stagingFolder, targetPath);
+        var stagingFolder: string = tl.getVariable('build.stagingdirectory');
+        stagingFolder = path.join(stagingFolder, artifactName);
+        
+        console.log('Cleaning staging folder: ' + stagingFolder);
+        tl.rmRF(stagingFolder); 
 
-                // add artifactlocation to ##vso command's properties for back compat of old Xplat agent
-                data["artifactlocation"] = targetPath;
-                tl.command("artifact.associate", data, targetPath);
+        tl.debug('Preparing artifact content in staging folder ' + stagingFolder + '...');
+
+        // enumerate all files
+        
+        var files: string[] = [];
+        var allFiles: string[] = tl.find(findRoot);
+        if (contents && allFiles) {
+            tl.debug("allFiles contains " + allFiles.length + " files");
+
+            // a map to eliminate duplicates
+            var map = {};
+            for (var i: number = 0; i < contents.length; i++) {
+                var pattern = contents[i].trim();
+                if (pattern.length == 0) {
+                    continue;
+                }
+                tl.debug('Matching ' + pattern);
+
+                var realPattern = path.join(findRoot, pattern);
+                tl.debug('Actual pattern: ' + realPattern);
+
+                // in debug mode, output some match candidates
+                tl.debug('Listing a few potential candidates...')
+                for (var k = 0; k < 10 && k < allFiles.length; k++) {
+                    tl.debug('  ' + allFiles[k]);
+                }
+
+                // let minimatch do the actual filtering
+                var matches: string[] = tl.match(allFiles, realPattern, { matchBase: true });
+                
+                tl.debug('Matched ' + matches.length + ' files');
+                for (var j: number = 0; j < matches.length; j++) {
+                    var matchPath = matches[j];
+                    if (!map.hasOwnProperty(matchPath)) {
+                        map[matchPath] = true;
+                        files.push(matchPath);
+                    }
+                }
             }
         }
-        catch (err) {
-            tl.setResult(tl.TaskResult.Failed, err);
+        else {
+            tl.debug("Either contents or allFiles is empty");
+            files = allFiles;
+        }
+
+        // copy the files to the staging folder
+
+        console.log("found " + files.length + " files");
+        if (files.length > 0) {
+            // make sure the staging folder exists
+            tl.mkdirP(stagingFolder);
+
+            var commonRoot = getCommonLocalPath(files);
+            var useCommonRoot = !!commonRoot;
+            if (useCommonRoot) {
+                tl.debug("There is a common root (" + commonRoot + ") for the files. Using the remaining path elements in staging folder.");
+            }
+
+            try {
+                var createdFolders = {};
+                files.forEach((file: string) => {
+                    var stagingPath = stagingFolder;
+                    if (useCommonRoot) {
+                        var relativePath = file.substring(commonRoot.length)
+                            .replace(/^\\/g, "")
+                            .replace(/^\//g, "");
+                        stagingPath = path.dirname(path.join(stagingFolder, relativePath));
+                    }
+                    
+                    if (!createdFolders[stagingPath]) {
+                        tl.debug("Creating folder " + stagingPath);
+                        tl.mkdirP(stagingPath);
+                        createdFolders[stagingPath] = true;
+                    }
+                    
+                    tl.debug("Copying " + file + " to " + stagingPath);
+                    tl.cp("-Rf", file, stagingPath);
+                });
+
+                var data = {
+                    artifacttype: artifactType,
+                    artifactname: artifactName
+                };
+        
+                // upload
+                if (artifactType === "container") {
+                    data["containerfolder"] = artifactName;
+                    
+                    // add localpath to ##vso command's properties for back compat of old Xplat agent
+                    data["localpath"] = stagingFolder;
+                    tl.command("artifact.upload", data, stagingFolder);
+                }
+            }
+            catch (err) {
+                tl.setResult(tl.TaskResult.Failed, err);
+            }
         }
     }
-}
+};
+
+run();

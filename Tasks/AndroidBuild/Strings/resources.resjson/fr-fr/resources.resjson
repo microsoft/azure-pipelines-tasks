@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "Android Build (deprecated; use Gradle)",
-  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613716)",
+  "loc.friendlyName": "Build Android (déconseillé, utiliser Gradle)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613716)",
   "loc.description": "Générer une application Android à l'aide de Gradle et démarrer éventuellement l'émulateur pour les tests unitaires",
   "loc.instanceNameFormat": "Build Android $(gradleProj)",
   "loc.group.displayName.avdOptions": "Options de l'appareil virtuel Android",

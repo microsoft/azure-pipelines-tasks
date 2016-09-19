@@ -13,12 +13,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 35
+        "Patch": 39
     },
     "demands": [
 
     ],
-    "minimumAgentVersion": "1.101.0",
+    "minimumAgentVersion": "1.104.0",
     "groups":  [
         {
             "name": "testMachineGroups",
@@ -142,7 +142,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "advanced",
-            "helpMarkDown": "Optionally supply the path to vstf_testagent.exe from network or local location. If no path is provided, it will be downloaded from `https://go.microsoft.com/fwlink/?LinkId=536423`"
+            "helpMarkDown": "Optionally supply the path to vstf_testagent.exe from network or local location. If no path is provided, it will be downloaded from `https://go.microsoft.com/fwlink/?LinkId=827840`"
         },
         {
             "name": "updateTestAgent",

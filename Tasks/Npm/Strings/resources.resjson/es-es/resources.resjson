@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "npm",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613746)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613746)",
   "loc.description": "Ejecutar un comando npm",
   "loc.instanceNameFormat": "npm $(comando)",
   "loc.group.displayName.advanced": "Avanzado",
@@ -10,7 +10,7 @@
   "loc.input.help.arguments": "Argumentos adicionales pasados a npm.",
   "loc.input.label.cwd": "Directorio de trabajo",
   "loc.input.help.cwd": "Directorio de trabajo actual donde se ejecuta el comando npm. El valor predeterminado es la raíz del repositorio.",
-  "loc.messages.InvalidCommand": "Only one command should be used for npm. Use arguments input for additional arguments.",
+  "loc.messages.InvalidCommand": "Solo debería usarse un comando para npm. Use la entrada de argumentos si necesita argumentos adicionales.",
   "loc.messages.NpmReturnCode": "Npm se cerró con el código de retorno: %d",
   "loc.messages.NpmFailed": "Error de Npm: %s"
 }

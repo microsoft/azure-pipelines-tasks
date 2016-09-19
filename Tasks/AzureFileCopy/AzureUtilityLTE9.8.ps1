@@ -2,7 +2,8 @@
 
 function Get-AzureStorageKeyFromRDFE
 {
-    param([string]$storageAccountName)
+    param([string]$storageAccountName,
+          [object]$endpoint)
 
     if(-not [string]::IsNullOrEmpty($storageAccountName))
     {
@@ -42,7 +43,7 @@ function Get-AzureStorageAccountResourceGroupName
                 Write-Verbose "(ARM)Storage account: $storageAccountName not found"
 
                 Write-TaskSpecificTelemetry "PREREQ_RMStorageAccountNotFound"
-                Throw (Get-LocalizedString -Key "Storage account: {0} not found. Selected Connection 'ServicePrincipal' supports storage account of Azure Resource Manager type only." -ArgumentList $storageAccountName)
+                Throw (Get-VstsLocString -Key "AFC_StorageAccountNotFound" -ArgumentList $storageAccountName)
             }
         }
     }
@@ -50,7 +51,8 @@ function Get-AzureStorageAccountResourceGroupName
 
 function Get-AzureStorageKeyFromARM
 {
-    param([string]$storageAccountName)
+    param([string]$storageAccountName,
+          [object]$endpoint)
 
     if(-not [string]::IsNullOrEmpty($storageAccountName))
     {
@@ -85,7 +87,8 @@ function Create-AzureStorageContext
 
 function Get-AzureBlobStorageEndpointFromRDFE
 {
-    param([string]$storageAccountName)
+    param([string]$storageAccountName,
+          [object]$endpoint)
 
     if(-not [string]::IsNullOrEmpty($storageAccountName))
     {
@@ -102,7 +105,8 @@ function Get-AzureBlobStorageEndpointFromRDFE
 
 function Get-AzureBlobStorageEndpointFromARM
 {
-    param([string]$storageAccountName)
+    param([string]$storageAccountName,
+          [object]$endpoint)
 
     if(-not [string]::IsNullOrEmpty($storageAccountName))
     {
@@ -120,17 +124,64 @@ function Get-AzureBlobStorageEndpointFromARM
     }	
 }
 
+function Get-AzureStorageAccountTypeFromRDFE
+{
+    param([string]$storageAccountName,
+          [object]$endpoint)
+
+    if(-not [string]::IsNullOrEmpty($storageAccountName))
+    {
+        Switch-AzureMode AzureServiceManagement
+
+        Write-Verbose "[Azure Call](RDFE)Retrieving storage account type for the storage account: $storageAccount"
+        $storageAccountInfo = Get-AzureStorageAccount -StorageAccountName $storageAccountName -ErrorAction Stop
+        $storageAccountType = $storageAccountInfo.AccountType
+        Write-Verbose "[Azure Call](RDFE)Retrieved storage account type successfully for the storage account: $storageAccount"
+
+        return $storageAccountType
+    }
+}
+
+function Get-AzureStorageAccountTypeFromARM
+{
+    param([string]$storageAccountName,
+          [object]$endpoint)
+
+    if(-not [string]::IsNullOrEmpty($storageAccountName))
+    {
+        Switch-AzureMode AzureResourceManager
+
+        # get azure storage account resource group name
+        $azureResourceGroupName = Get-AzureStorageAccountResourceGroupName -storageAccountName $storageAccountName
+
+        Write-Verbose "[Azure Call]Retrieving storage account type for the storage account: $storageAccount in resource group: $azureResourceGroupName"
+        $storageAccountInfo = Get-AzureStorageAccount -ResourceGroupName $azureResourceGroupName -Name $storageAccountName -ErrorAction Stop
+        $storageAccountType = $storageAccountInfo.AccountType
+	    Write-Verbose "[Azure Call]Retrieved storage account type successfully for the storage account: $storageAccount in resource group: $azureResourceGroupName"
+
+        return $storageAccountType
+    }	
+}
+
 function Create-AzureContainer
 {
     param([string]$containerName,
-          [object]$storageContext)
+          [object]$storageContext,
+          [boolean]$isPremiumStorage)
 
     if(-not [string]::IsNullOrEmpty($containerName) -and $storageContext)
     {
         $storageAccountName = $storageContext.StorageAccountName
 
         Write-Verbose "[Azure Call]Creating container: $containerName in storage account: $storageAccountName"
-        $container = New-AzureStorageContainer -Name $containerName -Context $storageContext -Permission Container -ErrorAction Stop
+        if ($isPremiumStorage)
+        {
+            $container = New-AzureStorageContainer -Name $containerName -Context $storageContext -ErrorAction Stop
+        }
+        else
+        {
+            $container = New-AzureStorageContainer -Name $containerName -Context $storageContext -Permission Container -ErrorAction Stop
+        }
         Write-Verbose "[Azure Call]Created container: $containerName successfully in storage account: $storageAccountName"
     }
 }
@@ -251,7 +302,7 @@ function Get-AzureRMVMsInResourceGroup
             Write-Verbose "ExceptionMessage: $exceptionMessage"
 
             Write-TaskSpecificTelemetry "PREREQ_ResourceGroupNotFound"
-            throw (Get-LocalizedString -Key "Provided resource group '{0}' does not exist." -ArgumentList $resourceGroupName)
+            throw (Get-VstsLocString -Key "AFC_ResourceGroupNotFound" -ArgumentList $resourceGroupName)
         }
     }
 }
@@ -336,9 +387,9 @@ function Get-AzureMachineStatus
     Switch-AzureMode AzureResourceManager
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($name))
     {
-        Write-Host (Get-LocalizedString -Key "[Azure Call]Getting the status for vm '{0}'" -ArgumentList $name)
+        Write-Host (Get-VstsLocString -Key "AFC_GetVMStatus" -ArgumentList $name)
         $status = Get-AzureVM -ResourceGroupName $resourceGroupName -Name $name -Status -ErrorAction Stop -Verbose
-        Write-Host (Get-LocalizedString -Key "[Azure Call]Got the status for vm '{0}'" -ArgumentList $name)
+        Write-Host (Get-VstsLocString -Key "AFC_GetVMStatusComplete" -ArgumentList $name)
     }
 	
     return $status
@@ -348,14 +399,15 @@ function Get-AzureMachineCustomScriptExtension
 {
     param([string]$resourceGroupName,
           [string]$vmName,
-          [string]$name)
+          [string]$name,
+          [object]$endpoint)
 
     Switch-AzureMode AzureResourceManager
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName))
     {
-        Write-Host (Get-LocalizedString -Key "[Azure Call]Getting the custom script extension '{0}' for vm '{1}'" -ArgumentList $name, $vmName)
+        Write-Host (Get-VstsLocString -Key "AFC_GetCustomScriptExtension" -ArgumentList $name, $vmName)
         $customScriptExtension = Get-AzureVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -ErrorAction Stop -Verbose     
-        Write-Host (Get-LocalizedString -Key "[Azure Call]Got the custom script extension '{0}' for vm '{1}'" -ArgumentList $name, $vmName)
+        Write-Host (Get-VstsLocString -Key "AFC_GetCustomScriptExtensionComplete" -ArgumentList $name, $vmName)
     }
 	
     return $customScriptExtension
@@ -374,9 +426,9 @@ function Set-AzureMachineCustomScriptExtension
     Switch-AzureMode AzureResourceManager
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName) -and -not [string]::IsNullOrEmpty($name))
     {
-        Write-Host (Get-LocalizedString -Key "[Azure Call]Setting the custom script extension '{0}' for vm '{1}'" -ArgumentList $name, $vmName)
+        Write-Host (Get-VstsLocString -Key "AFC_SetCustomScriptExtension" -ArgumentList $name, $vmName)
         $result = Set-AzureVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -FileUri $fileUri  -Run $run -Argument $argument -Location $location -ErrorAction Stop -Verbose		
-        Write-Host (Get-LocalizedString -Key "[Azure Call]Set the custom script extension '{0}' for vm '{1}'" -ArgumentList $name, $vmName)
+        Write-Host (Get-VstsLocString -Key "AFC_SetCustomScriptExtensionComplete" -ArgumentList $name, $vmName)
     }
 	
     return $result
@@ -386,14 +438,15 @@ function Remove-AzureMachineCustomScriptExtension
 {
     param([string]$resourceGroupName,
           [string]$vmName,
-          [string]$name)
+          [string]$name,
+          [object]$endpoint)
 
     Switch-AzureMode AzureResourceManager
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName) -and -not [string]::IsNullOrEmpty($name))
     {
-        Write-Host (Get-LocalizedString -Key "[Azure Call]Removing the custom script extension '{0}' for vm '{1}'" -ArgumentList $name, $vmName)
+        Write-Host (Get-VstsLocString -Key "AFC_RemoveCustomScriptExtension" -ArgumentList $name, $vmName)
         $response = Remove-AzureVMCustomScriptExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name $name -Force -ErrorAction SilentlyContinue -Verbose		
-        Write-Host (Get-LocalizedString -Key "[Azure Call]Removed the custom script extension '{0}' for vm '{1}'" -ArgumentList $name, $vmName)
+        Write-Host (Get-VstsLocString -Key "AFC_SetCustomScriptExtensionComplete" -ArgumentList $name, $vmName)
     }
 
     return $response
@@ -441,12 +494,12 @@ function Get-NetworkSecurityGroups
         }
         else
         {
-            throw (Get-LocalizedString -Key "[Azure Call]No network interface found with virtual machine id {0} under resource group {1}" -ArgumentList $vmid , $resourceGroupName)
+            throw (Get-VstsLocString -Key "AFC_NoNetworkInterface" -ArgumentList $vmid , $resourceGroupName)
         }
     }
     else
     {
-        throw (Get-LocalizedString -Key "[Azure Call]Resource group name and virtual machine ID should not be null or empty")
+        throw (Get-VstsLocString -Key "AFC_NullOrEmptyResourceGroup")
     }
     
     return $securityGroups

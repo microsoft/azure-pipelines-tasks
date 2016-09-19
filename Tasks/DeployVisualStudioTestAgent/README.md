@@ -6,7 +6,7 @@ To learn more about the general usage of the task, please see https://msdn.micro
 
 ###Prerequisites
 The task requires:
-- .NET 4.5 on Windows7 Sp2 or Windows 2K8R2
+- .NET 4.5 on Windows7 SP1 or Windows 2K8R2
 - Test machines should have PSRemoting enabled (run 'Enable-PSRemoting' on Windows Powershell)
 ###WinRM setup
 This task uses the [Windows Remote Management](https://msdn.microsoft.com/en-us/library/aa384426.aspx) (WinRM) to access domain-joined or workgroup, on-premises physical or virtual machines.

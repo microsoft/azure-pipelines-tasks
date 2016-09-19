@@ -1,8 +1,8 @@
 {
   "loc.friendlyName": "Copie des fichiers de l'ordinateur Windows",
-  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "Copier les fichiers sur les ordinateurs distants",
-  "loc.instanceNameFormat": "Copy files from $(SourcePath)",
+  "loc.instanceNameFormat": "Copier les fichiers à partir de $(Source Path)",
   "loc.group.displayName.advanced": "Options avancées",
   "loc.input.label.SourcePath": "Source",
   "loc.input.help.SourcePath": "Chemin d'accès absolu au dossier ou fichier source sur l'ordinateur local, ou partage UNC, par ex. c:\\fabrikamfiber ou \\\\\\\\fabrikamshare\\fabrikamfiber.",

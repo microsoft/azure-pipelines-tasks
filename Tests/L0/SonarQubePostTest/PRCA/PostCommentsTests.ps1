@@ -450,8 +450,15 @@ function InitPostCommentsModule
     return $mockDiscussionClient
 }
 
+function GetResponseForGetChanges
+{        
+    # It's simpler to deserialize json than to create an actual object that mocks the GetChangesAsync response 
+    $json = Get-Content "$PSScriptRoot\data\GetChangesResponse.json" | Out-String
+    return (ConvertFrom-Json $json)
+}
+
 #
-# Test - E2E test that goes through several iterations of posting messages. Note  
+# Test - E2E test that goes through several iterations of posting messages.   
 #
 
 # Arrange
@@ -528,7 +535,6 @@ ValidateDiscussionThreadCollection $postedThreads $expectedComments "TestSource"
 # - Current state:                      path1:A (resolved), path2:B (resolved),  path1:C:50,  path1:C:60
 # - Messages to be posted:              
 # - Expected comments after posting:    path1:A (resolved), path2:B (resolved),  path1:C:50 (resolved),  path1:C:60 (resolved) 
- 
 
 # Act
 PostAndResolveComments $null "TestSource"
@@ -590,22 +596,25 @@ Unregister-Mock GetModifiedFilesInPR
 # Test 3 - Post a code flow style message
 #
 $mockDiscussionClient = InitPostCommentsModule $false
-Register-Mock GetModifiedFilesInPR { @("some/path1/file.cs") }
+Register-Mock GetModifiedFilesInPR { @("some/path1/file.cs", "path/not/in/changes/response") }
 Register-Mock GetCodeFlowLatestIterationId 
-Register-Mock GetCodeFlowChanges
-Register-Mock GetCodeFlowChangeTrackingId {100}
+Register-Mock GetCodeFlowChanges {(GetResponseForGetChanges)} 
+Register-Mock Write-Warning
 
 # Iteration 1: 
 # - Current state: {no existing comments}
 # - Messages to be posted: path1:A, path2:B, otherPath:C
 # - Expected comments after posting: path1:A, path2:B
 
-$p1A = BuildTestMessage "A" 14 "some/path1/file.cs" 1 
+$pA = BuildTestMessage "A" 14 "some/path1/file.cs" 1
+$pB = BuildTestMessage "B" 33 "path/not/in/changes/response" 1  
 
 # Act
-PostAndResolveComments @($p1A) "TestSource"
+PostAndResolveComments @($pA, $pB) "TestSource"
 
 # Assert
 $postedThreads = $mockDiscussionClient.GetPostedThreads()
+
 # GetExpectedMessageState params: the message itself, the number of matching comments, the state of those comments
-ValidateDiscussionThreadCollection $postedThreads @((GetExpectedMessageState $p1a 1 "Active")) "TestSource" $false
+ValidateDiscussionThreadCollection $postedThreads @((GetExpectedMessageState $pA 1 "Active")) "TestSource" $false
+Assert-WasCalled Write-Warning 

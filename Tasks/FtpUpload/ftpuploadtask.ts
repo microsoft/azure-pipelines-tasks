@@ -12,34 +12,35 @@ import ftputils = require('./ftputils');
 
 export class FtpOptions {
     // server endpoint
-    serverEndpoint = tl.getInput('serverEndpoint', true);
+    serverEndpoint: string = tl.getInput('serverEndpoint', true);
     serverEndpointUrl: url.Url = url.parse(tl.getEndpointUrl(this.serverEndpoint, false));
 
-    serverEndpointAuth = tl.getEndpointAuthorization(this.serverEndpoint, false);
-    username = this.serverEndpointAuth['parameters']['username'];
-    password = this.serverEndpointAuth['parameters']['password'];
+    serverEndpointAuth: tl.EndpointAuthorization = tl.getEndpointAuthorization(this.serverEndpoint, false);
+    username: string = this.serverEndpointAuth['parameters']['username'];
+    password: string = this.serverEndpointAuth['parameters']['password'];
 
     // other standard options
     rootFolder: string = tl.getPathInput('rootFolder', true);
     filePatterns: string[] = tl.getDelimitedInput('filePatterns', '\n', true);
-    remotePath = tl.getInput('remotePath', true).trim();
+    remotePath: string = tl.getInput('remotePath', true).trim();
 
     // advanced options
     clean: boolean = tl.getBoolInput('clean', true);
     overwrite: boolean = tl.getBoolInput('overwrite', true);
     preservePaths: boolean = tl.getBoolInput('preservePaths', true);
+    trustSSL: boolean = tl.getBoolInput('trustSSL', true);
 }
 
 function doWork() {
-    var ftpOptions = new FtpOptions();
-    var ftpClient = new Client();
-    var ftpHelper = new ftputils.FtpHelper(ftpOptions, ftpClient);
+    var ftpOptions: FtpOptions = new FtpOptions();
+    var ftpClient: any = new Client();
+    var ftpHelper: ftputils.FtpHelper = new ftputils.FtpHelper(ftpOptions, ftpClient);
 
-    var files = ftputils.findFiles(ftpOptions);
+    var files: string[] = ftputils.findFiles(ftpOptions);
     tl.debug('number of files to upload: ' + files.length);
     tl.debug('files to upload: ' + JSON.stringify(files));
 
-    var uploadSuccessful = false;
+    var uploadSuccessful: boolean = false;
 
     ftpClient.on('greeting', (message: string) => {
         tl.debug('ftp client greeting');
@@ -87,7 +88,7 @@ function doWork() {
     })
 
     function failTask(message: string): void {
-        var fullMessage = 'FTP upload failed: ' + message;
+        var fullMessage: string = 'FTP upload failed: ' + message;
         if (ftpHelper.progressTracking) {
             fullMessage += ftpHelper.progressTracking.getFailureStatusMessage();
         }
@@ -95,11 +96,20 @@ function doWork() {
         tl.setResult(tl.TaskResult.Failed, message);
     }
 
-    var secure = ftpOptions.serverEndpointUrl.protocol.toLowerCase() == 'ftps:' ? true : false;
+    var secure: boolean = ftpOptions.serverEndpointUrl.protocol.toLowerCase() == 'ftps:' ? true : false;
     tl.debug('secure ftp=' + secure);
 
-    console.log('connecting to: ' + ftpOptions.serverEndpointUrl.host);
-    ftpClient.connect({ 'host': ftpOptions.serverEndpointUrl.host, 'user': ftpOptions.username, 'password': ftpOptions.password, 'secure': secure });
+    var secureOptions: any = { 'rejectUnauthorized': !ftpOptions.trustSSL };
+
+    var hostName: string = ftpOptions.serverEndpointUrl.hostname;
+    var port: string = ftpOptions.serverEndpointUrl.port;
+    if (!port) { // port not explicitly specifed, use default
+        port = '21';
+        tl.debug('port not specifided, using default: ' + port);
+    }
+
+    console.log('connecting to: ' + hostName + ':' + port);
+    ftpClient.connect({ 'host': hostName, 'port': port, 'user': ftpOptions.username, 'password': ftpOptions.password, 'secure': secure, 'secureOptions': secureOptions });
 }
 
 doWork();

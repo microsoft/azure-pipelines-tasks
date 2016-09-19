@@ -21,7 +21,7 @@ var xpTarLocation: string;
 var xpZipLocation: string;
 // 7zip
 var xpSevenZipLocation: string;
-var winSevenZipLocation: string = path.join(tl.cwd(), '7zip/7z.exe');
+var winSevenZipLocation: string = path.join(__dirname, '7zip/7z.exe');
 
 function getSevenZipLocation(): string {
     if (win) {
@@ -58,38 +58,21 @@ function makeAbsolute(normalizedPath: string): string {
     return result;
 }
 
-// Find matching archive files
-var files: string[] = findFiles();
-tl.debug('Found: ' + files.length + ' files to archive:');
-for (var i = 0; i < files.length; i++) {
-    tl.debug(files[i]);
-}
-
-// replaceExistingArchive before creation?
-if (tl.exist(archiveFile)) {
-    if (replaceExistingArchive) {
-        try {
-            var stats = tl.stats(archiveFile);
-            if (stats.isFile) {
-                console.log('removing existing archive file before creation: ' + archiveFile);
-            } else {
-                failTask('Specified archive file: ' + archiveFile + ' already exists and is not a file.');
-            }
-        } catch (e) {
-            failTask('Specified archive file: ' + archiveFile + ' can not be created because it can not be accessed: ' + e);
-        }
-    } else {
-        console.log('Archive file: ' + archiveFile + ' already exists.  Attempting to add files to it.');
-    }
-}
-
 function getOptions() {
+    var dirName: string;
     if (includeRootFolder) {
-        tl.debug("cwd (include root folder)= " + path.dirname(rootFolder));
-        return { cwd: path.dirname(rootFolder) };
+        dirName = path.dirname(rootFolder);
+        tl.debug("cwd (include root folder)= " + dirName);
+        return { cwd: dirName };
     } else {
-        tl.debug("cwd (exclude root folder)= " + rootFolder);
-        return { cwd: rootFolder };
+        var stats: tl.FsStats = tl.stats(rootFolder);
+        if (stats.isFile) {
+            dirName = path.dirname(rootFolder);
+        } else {
+            dirName = rootFolder;
+        }
+        tl.debug("cwd (exclude root folder)= " + dirName);
+        return { cwd: dirName };
     }
 }
 
@@ -116,7 +99,7 @@ function zipArchive(archive: string, files: string[]) {
     zip.arg(archive);
     for (var i = 0; i < files.length; i++) {
         zip.arg(files[i]);
-        console.log('files='+files[i]);
+        console.log('files=' + files[i]);
     }
     return handleExecResult(zip.execSync(getOptions()), archive);
 }
@@ -146,13 +129,21 @@ function tarArchive(archive: string, compression: string, files: string[]) {
 
 function handleExecResult(execResult, archive) {
     if (execResult.code != tl.TaskResult.Succeeded) {
-        var message = 'Archive creation failed for archive file: ' + archive + ' See log for details.';
+        tl.debug('execResult: ' + JSON.stringify(execResult));
+        var message = 'Archive creation failed for archive file: ' + archive +
+            '\ncode: ' + execResult.code +
+            '\nstdout: ' + execResult.stdout +
+            '\nstderr: ' + execResult.stderr +
+            '\nerror: ' + execResult.error;
         failTask(message);
     }
 }
 
 function failTask(message: string) {
-    tl.setResult(tl.TaskResult.Failed, message);
+    throw new FailTaskError(message);
+}
+
+export class FailTaskError extends Error {
 }
 
 /**
@@ -204,69 +195,109 @@ function computeTarName(archiveName: string): string {
     return lowerArchiveName + '.tar';
 }
 
-//ensure output folder exists
-var destinationFolder = path.dirname(archiveFile);
-tl.debug("Checking for archive destination folder:" + destinationFolder);
-if (!tl.exist(destinationFolder)) {
-    tl.debug("Destination folder does not exist, creating:" + destinationFolder);
-    tl.mkdirP(destinationFolder);
-}
+function createArchive(files: string[]) {
 
-if (win) { // windows only
-    if (archiveType == "default" || archiveType == "zip") { //default is zip format
-        sevenZipArchive(archiveFile, "zip", files);
-    } else if (archiveType == "tar") {
-        var tarCompression: string = tl.getInput('tarCompression', true);
-        if (tarCompression == "none") {
-            sevenZipArchive(archiveFile, archiveType, files);
-        } else {
-            var tarFile = computeTarName(archiveFile);
-            var tarExists = tl.exist(tarFile);
-            try {
-                if (tarExists) {
-                    console.log('Intermediate tar: ' + tarFile + ' already exists.  Attempting to add files to it.');
-                }
+    if (win) { // windows only
+        if (archiveType == "default" || archiveType == "zip") { //default is zip format
+            sevenZipArchive(archiveFile, "zip", files);
+        } else if (archiveType == "tar") {
+            var tarCompression: string = tl.getInput('tarCompression', true);
+            if (tarCompression == "none") {
+                sevenZipArchive(archiveFile, archiveType, files);
+            } else {
+                var tarFile = computeTarName(archiveFile);
+                var tarExists = tl.exist(tarFile);
+                try {
+                    if (tarExists) {
+                        console.log('Intermediate tar: ' + tarFile + ' already exists.  Attempting to add files to it.');
+                    }
 
-                // this file could already exist, but not checking because by default files will be added to it
-                // create the tar file
-                sevenZipArchive(tarFile, archiveType, files);
-                // compress the tar file
-                var sevenZipCompressionFlag = tarCompression;
-                if (tarCompression == 'gz') {
-                    sevenZipCompressionFlag = 'gzip';
-                } else if (tarCompression == 'bz2') {
-                    sevenZipCompressionFlag = 'bzip2';
-                }
-                sevenZipArchive(archiveFile, sevenZipCompressionFlag, [tarFile]);
-            } finally {
-                // delete the tar file if we created it.
-                if (!tarExists) {
-                    tl.rmRF(tarFile);
+                    // this file could already exist, but not checking because by default files will be added to it
+                    // create the tar file
+                    sevenZipArchive(tarFile, archiveType, files);
+                    // compress the tar file
+                    var sevenZipCompressionFlag = tarCompression;
+                    if (tarCompression == 'gz') {
+                        sevenZipCompressionFlag = 'gzip';
+                    } else if (tarCompression == 'bz2') {
+                        sevenZipCompressionFlag = 'bzip2';
+                    }
+                    sevenZipArchive(archiveFile, sevenZipCompressionFlag, [tarFile]);
+                } finally {
+                    // delete the tar file if we created it.
+                    if (!tarExists) {
+                        tl.rmRF(tarFile);
+                    }
                 }
             }
+        } else {
+            sevenZipArchive(archiveFile, archiveType, files);
         }
-    } else {
-        sevenZipArchive(archiveFile, archiveType, files);
-    }
-} else { // not windows
-    if (archiveType == "default" || archiveType == "zip") { //default is zip format
-        zipArchive(archiveFile, files);
-    } else if (archiveType == "tar") {
-        var tarCompression: string = tl.getInput('tarCompression', true);
-        var tarCompressionFlag;
-        if (tarCompression == "none") {
-            tarCompressionFlag = null;
-        } else if (tarCompression == "gz") {
-            tarCompressionFlag = "gz";
-        } else if (tarCompression == "bz2") {
-            tarCompressionFlag = "bzip2";
-        } else if (tarCompression == "xz") {
-            tarCompressionFlag = "xz";
+    } else { // not windows
+        if (archiveType == "default" || archiveType == "zip") { //default is zip format
+            zipArchive(archiveFile, files);
+        } else if (archiveType == "tar") {
+            var tarCompression: string = tl.getInput('tarCompression', true);
+            var tarCompressionFlag;
+            if (tarCompression == "none") {
+                tarCompressionFlag = null;
+            } else if (tarCompression == "gz") {
+                tarCompressionFlag = "gz";
+            } else if (tarCompression == "bz2") {
+                tarCompressionFlag = "bzip2";
+            } else if (tarCompression == "xz") {
+                tarCompressionFlag = "xz";
+            }
+            tarArchive(archiveFile, tarCompressionFlag, files);
+        } else {
+            sevenZipArchive(archiveFile, archiveType, files);
         }
-        tarArchive(archiveFile, tarCompressionFlag, files);
-    } else {
-        sevenZipArchive(archiveFile, archiveType, files);
     }
 }
 
-tl.setResult(tl.TaskResult.Succeeded, 'Successfully created archive: ' + archiveFile);
+function doWork() {
+    try {
+        // Find matching archive files
+        var files: string[] = findFiles();
+        tl.debug('Found: ' + files.length + ' files to archive:');
+        for (var i = 0; i < files.length; i++) {
+            tl.debug(files[i]);
+        }
+
+        // replaceExistingArchive before creation?
+        if (tl.exist(archiveFile)) {
+            if (replaceExistingArchive) {
+                try {
+                    var stats: tl.FsStats = tl.stats(archiveFile);
+                    if (stats.isFile) {
+                        console.log('removing existing archive file before creation: ' + archiveFile);
+                    } else {
+                        failTask('Specified archive file: ' + archiveFile + ' already exists and is not a file.');
+                    }
+                } catch (e) {
+                    failTask('Specified archive file: ' + archiveFile + ' can not be created because it can not be accessed: ' + e);
+                }
+            } else {
+                console.log('Archive file: ' + archiveFile + ' already exists.  Attempting to add files to it.');
+            }
+        }
+
+        //ensure output folder exists
+        var destinationFolder = path.dirname(archiveFile);
+        tl.debug("Checking for archive destination folder:" + destinationFolder);
+        if (!tl.exist(destinationFolder)) {
+            tl.debug("Destination folder does not exist, creating:" + destinationFolder);
+            tl.mkdirP(destinationFolder);
+        }
+
+        createArchive(files);
+
+        tl.setResult(tl.TaskResult.Succeeded, 'Successfully created archive: ' + archiveFile);
+    } catch (e) {
+        tl.debug(e.message);
+        tl._writeError(e);
+        tl.setResult(tl.TaskResult.Failed, e.message);
+    }
+}
+
+doWork();

@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 68
+    "Patch": 77
   },
   "demands": [
     "azureps"
@@ -280,10 +280,49 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "AzurePowerShell": {
-      "target": "$(currentDirectory)\\AzureFileCopy.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "PowerShell3": {
+      "target": "AzureFileCopy.ps1"
     }
+  },
+  "messages": {
+    "AFC_StorageAccountNotFound": "ms-resource:loc.messages.AFC_StorageAccountNotFound",
+    "AFC_ResourceGroupNotFound": "ms-resource:loc.messages.AFC_ResourceGroupNotFound",
+    "AFC_GetVMStatus": "ms-resource:loc.messages.AFC_GetVMStatus",
+    "AFC_GetVMStatusComplete": "ms-resource:loc.messages.AFC_GetVMStatusComplete",
+    "AFC_GetCustomScriptExtension": "ms-resource:loc.messages.AFC_GetCustomScriptExtension",
+    "AFC_GetCustomScriptExtensionComplete": "ms-resource:loc.messages.AFC_GetCustomScriptExtensionComplete",
+    "AFC_SetCustomScriptExtension": "ms-resource:loc.messages.AFC_SetCustomScriptExtension",
+    "AFC_SetCustomScriptExtensionComplete": "ms-resource:loc.messages.AFC_SetCustomScriptExtensionComplete",
+    "AFC_RemoveCustomScriptExtension": "ms-resource:loc.messages.AFC_RemoveCustomScriptExtension",
+    "AFC_RemoveCustomScriptExtensionComplete": "ms-resource:loc.messages.AFC_RemoveCustomScriptExtensionComplete",
+    "AFC_NoNetworkInterface": "ms-resource:loc.messages.AFC_NoNetworkInterface",
+    "AFC_NullOrEmptyResourceGroup": "ms-resource:loc.messages.AFC_NullOrEmptyResourceGroup",
+    "AFC_AzurePSNotInstalled": "ms-resource:loc.messages.AFC_AzurePSNotInstalled",
+    "AFC_ClassicStorageAccountNotFound": "ms-resource:loc.messages.AFC_ClassicStorageAccountNotFound",
+    "AFC_GenericStorageAccountNotFound": "ms-resource:loc.messages.AFC_GenericStorageAccountNotFound",
+    "AFC_AzureFileCopyMoreHelp": "ms-resource:loc.messages.AFC_AzureFileCopyMoreHelp",
+    "AFC_UploadFilesStorageAccount": "ms-resource:loc.messages.AFC_UploadFilesStorageAccount",
+    "AFC_UploadContainerStorageAccount": "ms-resource:loc.messages.AFC_UploadContainerStorageAccount",
+    "AFC_UploadFileSuccessful": "ms-resource:loc.messages.AFC_UploadFileSuccessful",
+    "AFC_IncorrectTags": "ms-resource:loc.messages.AFC_IncorrectTags",
+    "AFC_MachineDoesNotExist": "ms-resource:loc.messages.AFC_MachineDoesNotExist",
+    "AFC_MachineNameFromIdErrorAllResources": "ms-resource:loc.messages.AFC_MachineNameFromIdErrorAllResources",
+    "AFC_MachineNameFromIdError": "ms-resource:loc.messages.AFC_MachineNameFromIdError",
+    "AFC_ResourceGroupNotFoundForSelectedConnection": "ms-resource:loc.messages.AFC_ResourceGroupNotFoundForSelectedConnection",
+    "AFC_NoClassicVMResources": "ms-resource:loc.messages.AFC_NoClassicVMResources",
+    "AFC_NoARMVMResources": "ms-resource:loc.messages.AFC_NoARMVMResources",
+    "AFC_NoGenericVMResources": "ms-resource:loc.messages.AFC_NoGenericVMResources",
+    "AFC_FilteringNoVMResources": "ms-resource:loc.messages.AFC_FilteringNoVMResources",
+    "AFC_CopyStarted": "ms-resource:loc.messages.AFC_CopyStarted",
+    "AFC_CopyCompleted": "ms-resource:loc.messages.AFC_CopyCompleted",
+    "AFC_WinRMHelpMessage": "ms-resource:loc.messages.AFC_WinRMHelpMessage",
+    "AFC_CopyFailed": "ms-resource:loc.messages.AFC_CopyFailed",
+    "AFC_ParallelCopyFailed": "ms-resource:loc.messages.AFC_ParallelCopyFailed",
+    "AFC_CopySuccessful": "ms-resource:loc.messages.AFC_CopySuccessful",
+    "AFC_SetCustomScriptExtensionFailed": "ms-resource:loc.messages.AFC_SetCustomScriptExtensionFailed",
+    "AFC_AddNetworkSecurityRuleFailed": "ms-resource:loc.messages.AFC_AddNetworkSecurityRuleFailed",
+    "AFC_UnableToSetCustomScriptExtension": "ms-resource:loc.messages.AFC_UnableToSetCustomScriptExtension",
+    "AFC_CopyPrereqsFailed": "ms-resource:loc.messages.AFC_CopyPrereqsFailed",
+    "AFC_BlobStorageNotFound": "ms-resource:loc.messages.AFC_BlobStorageNotFound"
   }
 }

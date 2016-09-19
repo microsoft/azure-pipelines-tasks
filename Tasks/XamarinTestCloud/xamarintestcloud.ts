@@ -138,11 +138,10 @@ var onRunComplete = function () {
         uploadTestSummary();
 
         if (runFailures == 'true') {
-            // Error executing
-            tl.exit(1);
+            tl.setResult(tl.TaskResult.Failed, "Xamarin Test Cloud runs had failures, check the log for details.")
         }
         else {
-            tl.exit(0); // Done submitting all app files
+            tl.setResult(tl.TaskResult.Succeeded, "Xamarin Test Cloud runs completed successfully.");
         }
     } else {
         // Submit next app file
@@ -169,7 +168,7 @@ function uploadTestSummary() {
     }
 
     tl.debug('reportdata = ' + reportData);
-    fs.writeFileSync(mdReportFile, reportData);
+    tl.writeFile(mdReportFile, reportData);
     tl.command('task.addattachment', {
             name: "Xamarin Test Cloud Results",
             type: "Distributedtask.Core.Summary"
@@ -190,15 +189,15 @@ function publishTestResults() {
 var submitToTestCloud = function (index) {
     // Find location of mono
     if (isWin) {
-        var testCloudRunner = tl.createToolRunner(testCloud);
+        var testCloudRunner = tl.tool(testCloud);
     } else {
         var monoPath = tl.which('mono', true);
-        var testCloudRunner = tl.createToolRunner(monoPath);
+        var testCloudRunner = tl.tool(monoPath);
         testCloudRunner.arg(testCloud);
     }
     // Form basic arguments
     testCloudRunner.arg('submit');
-    testCloudRunner.pathArg(appFiles[index]);
+    testCloudRunner.arg(appFiles[index]);
     testCloudRunner.arg(teamApiKey);
     testCloudRunner.arg('--user');
     testCloudRunner.arg(user);
@@ -214,7 +213,7 @@ var submitToTestCloud = function (index) {
         testCloudRunner.arg(locale);
     }
     testCloudRunner.arg('--assembly-dir');
-    testCloudRunner.pathArg(testDir);
+    testCloudRunner.arg(testDir);
     if (parallelization != 'none') {
         testCloudRunner.arg(parallelization);
     }
@@ -224,7 +223,7 @@ var submitToTestCloud = function (index) {
     if (publishNUnitResults == 'true') {
         var nunitFile = path.join(testDir, '/xamarintest_' + buildId + '.' + index + '.xml');
         testCloudRunner.arg('--nunit-xml');
-        testCloudRunner.pathArg(nunitFile);
+        testCloudRunner.arg(nunitFile);
     }
 
     // For an iOS .ipa app, look for an accompanying dSYM file
@@ -242,7 +241,7 @@ var submitToTestCloud = function (index) {
         else {
             // Include dSYM file in Test Cloud arguments
             testCloudRunner.arg('--dsym');
-            testCloudRunner.pathArg(dsymFiles[0]);
+            testCloudRunner.arg(dsymFiles[0]);
         }
     }
 

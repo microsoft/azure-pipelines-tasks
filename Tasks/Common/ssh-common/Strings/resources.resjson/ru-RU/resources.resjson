@@ -1,0 +1,9 @@
+{
+  "loc.messages.SettingUpSSHConnection": "Setting up SSH connection to remote host %s.",
+  "loc.messages.ConnectionNotSetup": "SSH connection is not setup.",
+  "loc.messages.ConnectionFailed": "Failed to connect to remote machine. Verify the SSH endpoint details. %s.",
+  "loc.messages.RemoteCmdExecutionErr": "Command %s failed with errors on remote machine. %s.",
+  "loc.messages.CheckLogForStdErr": "Check the build log for STDERR from the command.",
+  "loc.messages.RemoteCmdNonZeroExitCode": "Command %s exited with code %s.",
+  "loc.messages.UploadFileFailed": "Failed to upload %s to %s on remote machine. %s."
+}

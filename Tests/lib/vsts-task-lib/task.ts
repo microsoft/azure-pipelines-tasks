@@ -448,6 +448,16 @@ export function exist(path: string): boolean {
     return mock.getResponse('exist', path) || false;
 }
 
+export interface FsOptions {
+    encoding?:string;
+    mode?:number;
+    flag?:string;
+}
+
+export function writeFile(file: string, data: string|Buffer, options?: string|FsOptions) {
+    //do nothing
+}
+
 export function osType(): string {
     return mock.getResponse('osType', 'osType');
 }
@@ -553,6 +563,7 @@ export function find(findPath: string): string[] {
 }
 
 export function rmRF(path: string): void {
+    debug(`rmRF(${path})`);
     var response = mock.getResponse('rmRF', path);
     if (!response['success']) {
         setResult(1, response['message']);
@@ -629,20 +640,38 @@ export function createToolRunner(tool: string) {
     return tr;
 }
 
+export function tool(tool: string) {
+    return createToolRunner(tool);
+}
+
 //-----------------------------------------------------
 // Matching helpers
 //-----------------------------------------------------
-export function match(list, pattern, options): string[] {
-    return mock.getResponse('match', pattern) || [];
+export function match(list: string[], patterns: string[], options): string[];
+export function match(list: string[], pattern: string, options): string[];
+export function match(list: string[], pattern: any, options): string[] {
+    let patterns: string[];
+    if (typeof pattern == 'object') {
+        patterns = pattern;
+    }
+    else {
+        patterns = [ pattern ];
+    }
+
+    let key: string = patterns.join(',');
+    return mock.getResponse('match', key) || [];
 }
 
 export function matchFile(list, pattern, options): string[] {
     return mock.getResponse('match', pattern) || [];
 }
 
-export function filter(pattern, options): string[] {
-    return mock.getResponse('filter', pattern) || [];
-}    
+export function filter(pattern, options): any {
+	var filterList = mock.getResponse('filter', pattern) || [];
+	return function(pattern, i, arr) {
+		return filterList.indexOf(pattern) >= 0;
+	}
+}
 
 //-----------------------------------------------------
 // Test Publisher

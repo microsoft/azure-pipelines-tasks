@@ -25,5 +25,11 @@
   "loc.input.label.NewServiceAdditionalArguments": "추가 인수",
   "loc.input.help.NewServiceAdditionalArguments": "새 서비스를 만드는 동안 추가 인수에서 전달합니다. 이러한 인수는 `New-AzureService` commandlet에 전달됩니다. 예: `-Label 'MyTestService'`",
   "loc.input.label.NewServiceAffinityGroup": "선호도 그룹",
-  "loc.input.help.NewServiceAffinityGroup": "새 서비스를 만드는 동안 서비스 위치를 사용하는 대신 이 선호도 그룹이 고려됩니다."
+  "loc.input.help.NewServiceAffinityGroup": "새 서비스를 만드는 동안 서비스 위치를 사용하는 대신 이 선호도 그룹이 고려됩니다.",
+  "loc.messages.Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions": "Could not get the primary storage key for storage account '{0}'. Unable to apply any diagnostics extensions.",
+  "loc.messages.Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions": "Could not get the primary storage key for the public config storage account '{0}'. Unable to apply any diagnostics extensions.",
+  "loc.messages.Applyinganyconfigureddiagnosticsextensions": "Applying any configured diagnostics extensions.",
+  "loc.messages._0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "'{0}' could not be parsed into parts for registering diagnostics extensions.",
+  "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}",
+  "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one."
 }

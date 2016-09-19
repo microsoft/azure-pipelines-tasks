@@ -12,9 +12,9 @@
   "author": "Microsoft",
   "demands": [],
   "version": {
-    "Major": 1,
-    "Minor": 0,
-    "Patch": 2
+    "Major": "1",
+    "Minor": "2",
+    "Patch": "5"
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
@@ -41,6 +41,22 @@
       "defaultValue": true,
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.captureConsole"
+    },
+    {
+      "name": "parameters",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.parameters",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.parameters"
+    },
+    {
+      "name": "token",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.token",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.token"
     }
   ],
   "execution": {

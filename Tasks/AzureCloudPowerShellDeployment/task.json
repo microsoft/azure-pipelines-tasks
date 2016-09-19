@@ -1,169 +1,175 @@
 {
-  "id": "2CA8FE15-42EA-4B26-80F1-E0738EC17E89",
-  "name": "AzureCloudPowerShellDeployment",
-  "friendlyName": "Azure Cloud Service Deployment",
-  "description": "Deploy an Azure Cloud Service",
-  "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613748)",
-  "category": "Deploy",
-  "visibility": [
-    "Build",
-    "Release"
-  ],
-  "author": "Microsoft Corporation",
-  "version": {
-    "Major": 1,
-    "Minor": 0,
-    "Patch": 27
-  },
-  "demands": [
-    "azureps"
-  ],
-  "minimumAgentVersion": "1.103.0",
-  "groups": [
-    {
-      "name": "newServiceAdvancedOptions",
-      "displayName": "Advanced Options For Creating New Service",
-      "isExpanded": false
+    "id": "2CA8FE15-42EA-4B26-80F1-E0738EC17E89",
+    "name": "AzureCloudPowerShellDeployment",
+    "friendlyName": "Azure Cloud Service Deployment",
+    "description": "Deploy an Azure Cloud Service",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613748)",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 30
+    },
+    "demands": [
+        "azureps"
+    ],
+    "minimumAgentVersion": "1.103.0",
+    "groups": [
+        {
+            "name": "newServiceAdvancedOptions",
+            "displayName": "Advanced Options For Creating New Service",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "ConnectedServiceName",
+            "type": "connectedService:Azure:Certificate,UsernamePassword",
+            "label": "Azure Subscription (Classic)",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Azure Classic subscription to target for deployment."
+        },
+        {
+            "name": "StorageAccount",
+            "type": "pickList",
+            "label": "Storage Account",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Storage Account must exist prior to deployment."
+        },
+        {
+            "name": "ServiceName",
+            "type": "pickList",
+            "label": "Service Name",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "ServiceLocation",
+            "type": "pickList",
+            "label": "Service Location",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select a region for new service deployment.Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others.",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "CsPkg",
+            "type": "filePath",
+            "label": "CsPkg",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Path of CsPkg under the default artifact directory."
+        },
+        {
+            "name": "CsCfg",
+            "type": "filePath",
+            "label": "CsCfg",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Path of CsCfg under the default artifact directory."
+        },
+        {
+            "name": "Slot",
+            "type": "string",
+            "label": "Environment (Slot)",
+            "defaultValue": "Production",
+            "required": true,
+            "helpMarkDown": "**Production** or **Staging**"
+        },
+        {
+            "name": "DeploymentLabel",
+            "type": "string",
+            "label": "Deployment Label",
+            "defaultValue": "$(Build.BuildNumber)",
+            "required": false,
+            "helpMarkDown": "Specifies the label name for the new deployment. If not specified, a Globally Unique Identifier (GUID) is used."
+        },
+        {
+            "name": "AppendDateTimeToLabel",
+            "type": "boolean",
+            "label": "Append current date and time",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Appends current date and time to deployment label"
+        },
+        {
+            "name": "AllowUpgrade",
+            "type": "boolean",
+            "label": "Allow Upgrade",
+            "defaultValue": "true",
+            "required": true
+        },
+        {
+            "name": "NewServiceAdditionalArguments",
+            "type": "string",
+            "label": "Additional Arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Pass in additional arguments while creating a brand new service. These will be passed on to `New-AzureService` commandlet. Eg: `-Label 'MyTestService'`",
+            "groupName": "newServiceAdvancedOptions"
+        },
+        {
+            "name": "NewServiceAffinityGroup",
+            "type": "pickList",
+            "label": "AffinityGroup",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "While creating new service, this affinity group will be considered instead of using service location.",
+            "groupName": "newServiceAdvancedOptions",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "ServiceName",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureHostedServiceNames"
+        },
+        {
+            "target": "ServiceLocation",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureLocations"
+        },
+        {
+            "target": "NewServiceAffinityGroup",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureAffinityGroups"
+        },
+        {
+            "target": "StorageAccount",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureStorageServiceNames"
+        }
+    ],
+    "instanceNameFormat": "Azure Deployment: $(CsPkg)",
+    "execution": {
+        "PowerShell3": {
+            "target": "Publish-AzureCloudDeployment.ps1"
+        }
+    },
+    "messages": {
+        "Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions": "Could not get the primary storage key for storage account '{0}'. Unable to apply any diagnostics extensions.",
+        "Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions": "Could not get the primary storage key for the public config storage account '{0}'. Unable to apply any diagnostics extensions.",
+        "Applyinganyconfigureddiagnosticsextensions": "Applying any configured diagnostics extensions.",
+        "_0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "'{0}' could not be parsed into parts for registering diagnostics extensions.",
+        "Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}",
+        "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one."
     }
-  ],
-  "inputs": [
-    {
-      "name": "ConnectedServiceName",
-      "type": "connectedService:Azure:Certificate,UsernamePassword",
-      "label": "Azure Subscription (Classic)",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Azure Classic subscription to target for deployment."
-    },
-    {
-      "name": "StorageAccount",
-      "type": "pickList",
-      "label": "Storage Account",
-      "defaultValue": "",
-      "required": true,
-	  "properties": {
-        "EditableOptions": "True"
-      },
-      "helpMarkDown": "Storage Account must exist prior to deployment."
-    },
-    {
-      "name": "ServiceName",
-      "type": "pickList",
-      "label": "Service Name",
-      "defaultValue": "",
-      "required": true,
-	  "properties": {
-        "EditableOptions": "True"
-      }
-    },
-    {
-      "name": "ServiceLocation",
-      "type": "pickList",
-      "label": "Service Location",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Select a region for new service deployment.Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others.",
-      "properties": {
-        "EditableOptions": "True"
-      }
-    },
-    {
-      "name": "CsPkg",
-      "type": "filePath",
-      "label": "CsPkg",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Path of CsPkg under the default artifact directory."
-    },
-    {
-      "name": "CsCfg",
-      "type": "filePath",
-      "label": "CsCfg",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Path of CsCfg under the default artifact directory."
-    },
-    {
-      "name": "Slot",
-      "type": "string",
-      "label": "Environment (Slot)",
-      "defaultValue": "Production",
-      "required": true,
-      "helpMarkDown": "**Production** or **Staging**"
-    },
-    {
-      "name": "DeploymentLabel",
-      "type": "string",
-      "label": "Deployment Label",
-      "defaultValue": "$(Build.BuildNumber)",
-      "required": false,
-      "helpMarkDown": "Specifies the label name for the new deployment. If not specified, a Globally Unique Identifier (GUID) is used."
-    },
-    {
-      "name": "AppendDateTimeToLabel",
-      "type": "boolean",
-      "label": "Append current date and time",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "Appends current date and time to deployment label"
-    },
-    {
-      "name": "AllowUpgrade",
-      "type": "boolean",
-      "label": "Allow Upgrade",
-      "defaultValue": "true",
-      "required": true
-    },
-    {
-      "name": "NewServiceAdditionalArguments",
-      "type": "string",
-      "label": "Additional Arguments",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Pass in additional arguments while creating a brand new service. These will be passed on to `New-AzureService` commandlet. Eg: `-Label 'MyTestService'`",
-      "groupName": "newServiceAdvancedOptions"
-    },
-    {
-      "name": "NewServiceAffinityGroup",
-      "type": "pickList",
-      "label": "AffinityGroup",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "While creating new service, this affinity group will be considered instead of using service location.",
-      "groupName": "newServiceAdvancedOptions",
-      "properties": {
-        "EditableOptions": "True"
-      }
-    }
-  ],
-  "dataSourceBindings": [
-    {
-      "target": "ServiceName",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureHostedServiceNames"
-    },
-    {
-      "target": "ServiceLocation",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureLocations"
-    },
-    {
-      "target": "NewServiceAffinityGroup",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureAffinityGroups"
-    },
-    {
-      "target": "StorageAccount",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureStorageServiceNames"
-    }
-  ],
-  "instanceNameFormat": "Azure Deployment: $(CsPkg)",
-  "execution": {
-    "AzurePowerShell": {
-      "target": "$(currentDirectory)\\Publish-AzureCloudDeployment.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
-    }
-  }
 }

@@ -1,0 +1,22 @@
+{
+  "archivePackages": [
+    {
+      "archiveName": "DeploymentUtilities.zip",
+      "url": "https://vstsagenttools.blob.core.windows.net/tools/DeploymentUtilities/15.104.25603/DeploymentUtilities.zip",
+      "dest": "./",
+      "files": [
+          "DeploymentUtilities/Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll",
+          "DeploymentUtilities/Microsoft.VisualStudio.Services.Common.dll",
+          "DeploymentUtilities/Microsoft.VisualStudio.Services.DevTestLabs.Client.dll",
+          "DeploymentUtilities/Microsoft.VisualStudio.Services.DevTestLabs.Common.dll",
+          "DeploymentUtilities/Microsoft.VisualStudio.Services.DevTestLabs.Definition.dll",
+          "DeploymentUtilities/Microsoft.VisualStudio.Services.DevTestLabs.Deployment.dll",
+          "DeploymentUtilities/Microsoft.VisualStudio.Services.WebApi.dll",
+          "DeploymentUtilities/Newtonsoft.Json.dll",
+          "DeploymentUtilities/VisualStudioRemoteDeployer.exe",
+          "DeploymentUtilities/VisualStudioRemoteDeployer.exe.config",
+          "DeploymentUtilities/Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal.psm1"
+      ]
+    }
+  ]
+}

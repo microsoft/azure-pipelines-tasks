@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Chef Knife",
-  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/ChefKnife/README.md)",
+  "loc.helpMarkDown": "[詳細](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/ChefKnife/README.md)",
   "loc.description": "Chef ワークステーションで knife コマンドを使ってスクリプトを実行します",
   "loc.instanceNameFormat": "Chef の knife スクリプト: $(ScriptPath)",
   "loc.input.label.ConnectedServiceName": "Chef サブスクリプション",

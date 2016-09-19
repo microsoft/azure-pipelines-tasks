@@ -1,8 +1,8 @@
 {
   "loc.friendlyName": "Windows 计算机文件复制",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "将文件复制到远程计算机",
-  "loc.instanceNameFormat": "Copy files from $(SourcePath)",
+  "loc.instanceNameFormat": "从 $(SourcePath)复制文件",
   "loc.group.displayName.advanced": "高级选项",
   "loc.input.label.SourcePath": "源",
   "loc.input.help.SourcePath": "本地计算机上的源文件夹或文件的绝对路径或 UNC 共享，如 c:\\fabrikamfiber 或 \\\\\\\\fabrikamshare\\fabrikamfiber。",

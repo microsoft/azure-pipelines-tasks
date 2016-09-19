@@ -1,0 +1,40 @@
+{
+    "id": "BCB64569-D51A-4AF0-9C01-EA5D05B3B622",
+    "name": "ManualIntervention",
+    "friendlyName": "Manual Intervention",
+    "description": "Pause deployment and wait for intervention",
+    "helpMarkDown": "[More Information](https://www.visualstudio.com/docs/build/steps/deploy/manual-intervention/)",
+    "category": "Deploy",
+    "visibility": [  
+                  "Release"
+    ],    
+    "author": "Microsoft Corporation",
+    "runsOn": [
+        "Server"
+    ],
+    "version": {
+        "Major": 8,
+        "Minor": 0,
+        "Patch": 0
+    },    
+    "inputs": [       
+        { 
+            "name": "instructions", 
+            "type": "multiLine", 
+            "label": "Instructions", 
+            "defaultValue":"", 
+            "required":false,
+            "helpMarkDown": "These instructions will be shown to the user for resuming or rejecting the manual intervention. Based on these instructions the user will take an informed decision about this manual intervention.",
+            "properties": {
+                "resizable": "true",
+                "rows" : "10",
+                "maxLength" : "500"
+            }
+        }
+    ],
+    "instanceNameFormat": "Manual Intervention",
+    "execution" : {
+        "RM:ManualIntervention": {
+        }
+    }
+}

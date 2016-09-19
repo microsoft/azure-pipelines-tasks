@@ -1,0 +1,31 @@
+{
+    "rmRF": {
+        "/someDir/someOtherDir": {
+            "success": true,
+            "message": "success"
+        },
+        "/someDir/someOtherDir2": {
+            "success": true,
+            "message": "success"
+        }
+    },
+    "find": {
+        "/someDir": [
+            "/someDir/someOtherDir",
+            "/someDir/someOtherDir2"
+        ]
+    },
+    "match": {
+        "\\someDir\\someOtherDir,\\someDir\\someOtherDir2": [
+            "/someDir/someOtherDir",
+            "/someDir/someOtherDir2"
+        ],
+        "/someDir/someOtherDir,/someDir/someOtherDir2": [
+            "/someDir/someOtherDir",
+            "/someDir/someOtherDir2"
+        ]
+    },
+    "checkPath" : {
+        "/someDir": true
+    }
+}

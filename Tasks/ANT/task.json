@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 49
+        "Patch": 55
     },
     "demands": [
         "ant"
@@ -201,14 +201,10 @@
         "Node": {
             "target": "anttask.js",
             "argumentFormat": ""
-        },
-        "PowerShell": {
-            "target": "$(currentDirectory)\\ant.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)",
-            "platforms": [
-                "windows"
-            ]
         }
+    },
+    "messages": {
+        "LocateJVMBasedOnVersionAndArch": "Locate JAVA_HOME for Java %s %s",
+        "FailedToLocateSpecifiedJVM": "Failed to find specified JDK version. Please make sure environment variable '%s' exists and is set to the location of a corresponding JDK."
     }
 }

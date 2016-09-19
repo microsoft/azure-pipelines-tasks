@@ -30,10 +30,46 @@
         "gradlew /o /p t i /o /n /s build test deploy": {
             "code": 0,
             "stdout": "More sample gradle output"
+        },
+        "gradlew.bat build": {
+            "code": 0,
+            "stdout": "Sample gradle output"
+        },
+        "gradlew.bat properties": {
+            "code": 0,
+            "stdout": "subprojects: []",
+            "stderr": ""
+        },
+        "gradlew.bat clean build jacocoTestReport": {
+            "code": 0,
+            "stdout": "Sample output",
+            "stderr": ""
+        },
+        "gradlew.bat clean build cobertura": {
+            "code": 0,
+            "stdout": "Sample output",
+            "stderr": ""
+        },
+        "gradlew.bat build FAIL": {
+            "code": 2,
+            "stderr": "FAILED"
+        },
+        "gradlew.bat /o /p t i /o /n /s build": {
+            "code": 0,
+            "stdout": "More sample gradle output"
+        },
+        "gradlew.bat /o /p t i /o /n /s build test deploy": {
+            "code": 0,
+            "stdout": "More sample gradle output"
+        },
+        "reg query HKLM\\SOFTWARE\\JavaSoft\\Java Development Kit\\1.5 /v JavaHome /reg:32": { 
+            "code": 222, 
+            "stdout": "" 
         }
     },
     "checkPath": {
         "gradlew": true,
+        "gradlew.bat": true,
         "/home/repo/src": true
     },
     "getVariable": {

@@ -47,5 +47,16 @@
   "loc.input.label.xctoolReporter": "xctool 測試報告程式格式",
   "loc.input.help.xctoolReporter": "在已指定「測試」動作並核取「使用 xctool」的情形下，要使用的測試報告格式。指定 \"junit:output-file-path-here.xml\" 以產生與發行測試結果工作相容的檔案格式。指定後，\"plain\" 也會自動加入。代理程式主機上必須安裝 xctool。如需詳細資訊，請參閱 [xctool](https://github.com/facebook/xctool)。",
   "loc.input.label.publishJUnitResults": "發行至 VSTS/TFS",
-  "loc.input.help.publishJUnitResults": "選取此選項可使用 xctool 將前述所產生的 JUnit 測試結果發行到 VSTS/TFS。"
+  "loc.input.help.publishJUnitResults": "選取此選項可使用 xctool 將前述所產生的 JUnit 測試結果發行到 VSTS/TFS。",
+  "loc.messages.SignIdNotFound": "Failed to find iOS signing identity. Verify the signing and provisioning information provided.",
+  "loc.messages.TempKeychainSetupFailed": "Failed to add the temporary keychain to the keychains search path.",
+  "loc.messages.ProvProfileDetailsNotFound": "Failed to find the details for provisioning profile: %s",
+  "loc.messages.ProvProfileUUIDNotFound": "Failed to find provisioning profile UUID for provisioning profile: %s",
+  "loc.messages.MultipleWorkspacesFound": "Multiple xcode workspace matches were found. Using the first match: %s",
+  "loc.messages.WorkspaceDoesNotExist": "Xcode workspace was specified but it does not exist or is not a directory",
+  "loc.messages.UseXcToolForTestPublishing": "Check the 'Use xctool' checkbox and specify the xctool reporter format to publish test results. No results published.",
+  "loc.messages.NoTestResultsFound": "No test result files matching %s were found, so publishing JUnit test results is being skipped.",
+  "loc.messages.XcodeSuccess": "Xcode task execution completed with no errors.",
+  "loc.messages.TempKeychainDeleteFailed": "Failed to delete temporary keychain %s created during the build.",
+  "loc.messages.ProvProfileDeleteFailed": "Failed to delete the provisioning profile %s."
 }

@@ -28,62 +28,89 @@ Per the [Contribution Guidelines](https://github.com/Microsoft/vsts-tasks/blob/m
 
 # Task Health
 
+## Build
+
+![Green](res/green.png)
+![Yellow](res/yellow.png)
+![Red](res/red.png)
+
 |      Task        | Implemented | Platform-complete | Uses TaskLib/SDK | Has L0 Tests | Comments |
 |------------------|------|------|------|----|----------|
-| Ant                            |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. Code Coverage only in PS1|
-| ArchiveFiles                   | | | | | |
+| Ant                            |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. Code Coverage only in PS1|
 | AndroidSigning                 |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| CMake                          |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| CmdLine                        |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| CocoaPods                      |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Red](res/red.png)| |
+| Gradle                         |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. Code Coverage only in PS1|
+| Grunt                          |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| Gulp                           |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| Msbuild                        |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/yellow.png)| Has 2 Impl intentionally for msbuild / xbuild.  Missing xbuild (ts) L0 tests. |
+| Maven                          |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. Code Coverage only in PS1|
+| VSBuild                        |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| XamarinAndroid                 |![Yellow](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. |
+| XamarinComponentRestore        |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| XamarinLicense                 |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| XamariniOS                     |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| XCode                          |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| XCodePackageiOS                |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+
+## Packaging
+
+|      Task        | Implemented | Platform-complete | Uses TaskLib/SDK | Has L0 Tests | Comments |
+|------------------|------|------|------|----|----------|
+| Npm                            |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| NuGetInstaller                 |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Red](res/red.png)| No Tests |
+| NugetPackager                  |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Red](res/red.png)| No Tests |
+| NugetPublisher                 |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Red](res/red.png)| No Tests |
+
+## Utilities
+
+|      Task        | Implemented | Platform-complete | Uses TaskLib/SDK | Has L0 Tests | Comments |
+|------------------|------|------|------|----|----------|
+| ArchiveFiles                   | | | | | |
+| BatchScript                    |![Green](res/green.png)|![Green](res/green.png)| N/A  |  N/A | Carries no task impl.  Handler in agent |
+| CMake                          |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| CmdLine                        |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| CopyFiles                      |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| CopyPublishBuildArtifacts      |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl.  Pinned to PS on windows |
+| cURLUploader                   |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. PS1 should be removed|
+| DecryptFiles                   |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Red](res/red.png)| No Tests |
+| DeleteFiles                    |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| ExtractFiles                   |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| JenkinsQueueJob                |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| PowerShell                     |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Red](res/red.png)| No Tests |
+| PublishBuildArtififacts        |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| PublishSymbols                 |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+| ShellScript                    |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+
+## Test
+
+|      Task        | Implemented | Platform-complete | Uses TaskLib/SDK | Has L0 Tests | Comments |
+|------------------|------|------|------|----|----------|
+| DeployVisualStudioTestAgent    | | | | | |
+| QuickPerfTest                  | | | | | |
+| RunDistributedTests            | | | | | |
+| RunJMeterLoadTest              | | | | | |
+| RunLoadTest                    | | | | | |
+| SonarQubePostTest              | | | | | |
+| SonarQubePreBuild              | | | | | |
+| XamarinTestCloud               |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
+
+## Deploy 
+
+
+|      Task        | Implemented | Platform-complete | Uses TaskLib/SDK | Has L0 Tests | Comments |
+|------------------|------|------|------|----|----------|
 | AzureCloudPowerShellDeployment | | | | | |
 | AzureFileCopy                  | | | | | |
 | AzurePowerShell                |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
 | AzureRmWebAppDeployment        | | | | | |
 | AzureWebPowerShellDeployment   | | | | | |
-| BatchScript                    |![Green](res/green.png)|![Green](res/green.png)| N/A  |  N/A | Carries no task impl.  Handler in agent |
-| CMake                          |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
 | Chef                           | | | | | |
 | ChefKnife                      | | | | | |
-| CmdLine                        |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
-| CocoaPods                      |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/red.png)| |
-| CopyFiles                      |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
-| CopyPublishBuildArtifacts      |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl.  Pinned to PS on windows |
-| cURLUploader                   |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. PS1 should be removed|
-| DecryptFile                    | | | | | |
-| DeleteFiles                    |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
 | DeployAzureResourceGroup       | | | | | |
-| DeployVisualStudioTestAgent    | | | | | |
-| ExtractFiles                   |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
-| Gradle                         |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. Code Coverage only in PS1|
-| Grunt                          | | | | | |
-| Gulp                           | | | | | |
 | IISWebAppDeployment            | | | | | |
-| MSBuild                        | | | | | |
-| Maven                          |![Green](res/yellow.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| 2 Impl. Code Coverage only in PS1|
-| Npm                            | | | | | |
-| NuGetInstaller                 | | | | | |
-| NugetPackager                  | | | | | |
-| NugetPublisher                 | | | | | |
-| powerShell                     | | | | | |
 | PowerShellOnTargetMachines     | | | | | |
-| PublishBuildArtifacts          | | | | | |
-| PublishCodeCoverageResults     | | | | | |
-| PublishSymbols                 | | | | | |
-| PublishTestResults             | | | | | |
-| QuickPerfTest                  | | | | | |
-| RunDistributedTests            | | | | | |
-| RunJMeterLoadTest              | | | | | |
-| RunLoadTest                    | | | | | |
-| ShellScript                    | | | | | |
-| SonarQubePostTest              | | | | | |
-| SonarQubePreBuild              | | | | | |
 | SqlAzureDacpacDeployment       | | | | | |
 | SqlServerDacpacDeployment      | | | | | |
-| VSBuild                        | | | | | |
-| VsTest                         | | | | | |
 | WindowsMachineFileCopy         | | | | | |
-| XamarinAndroid                 | | | |![Green](res/green.png)| |
-| XamarinComponentRestore        | | | |![Green](res/green.png)| |
-| XamarinLicense                 | | | |![Green](res/green.png)| |
-| XamarinTestCloud               | | | |![Green](res/green.png)| |
-| XamariniOS                     | | | |![Green](res/green.png)| |
-| Xcode                          | | | | | |
-| XcodePackageiOS                | | | | | |

@@ -14,7 +14,7 @@
   "version": {
     "Major": "1",
     "Minor": "0",
-    "Patch": "0"
+    "Patch": "3"
   },
   "instanceNameFormat": "FTP Upload: $(rootFolder)",
   "groups": [
@@ -86,6 +86,15 @@
         "defaultValue": "false",
         "required": true,
         "helpMarkDown": "If selected, the relative local directory structure is recreated under the remote directory where files are uploaded.  Otherwise, files are uploaded directly to the remote directory without creating additional subdirectories.<p>For example, suppose your source folder is: <b>`/home/user/source/`</b> and contains the file: <b>`foo/bar/foobar.txt`</b>, and your remote directory is: <b>`/uploads/`</b>.<br>If selected, the file is uploaded to: <b>`/uploads/foo/bar/foobar.txt`</b>.  Otherwise, to: <b>`/uploads/foobar.txt`</b>.",
+        "groupName": "advanced"
+    },
+    {
+        "name": "trustSSL",
+        "type": "boolean",
+        "label": "Trust server certificate",
+        "defaultValue": "false",
+        "required": true,
+        "helpMarkDown": "Selecting this option results in the FTP server's SSL certificate being trusted with ftps://, even if it is self-signed or cannot be validated by a Certificate Authority (CA).",
         "groupName": "advanced"
     }
   ],  "execution": {

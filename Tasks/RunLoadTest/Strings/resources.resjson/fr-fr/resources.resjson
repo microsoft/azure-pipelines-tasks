@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Test de charge basé sur le cloud",
-  "loc.helpMarkDown": "This task triggers a cloud-based load test using Visual Studio Team Services. [Learn more](https://go.microsoft.com/fwlink/?linkid=546976).",
-  "loc.description": "Runs the load test in the cloud with Visual Studio Team Services",
+  "loc.helpMarkDown": "Cette tâche déclenche un test de charge basé sur le cloud à l'aide de Visual Studio Team Services. [En savoir plus](https://go.microsoft.com/fwlink/?linkid=546976).",
+  "loc.description": "Exécute le test de charge dans le cloud avec Visual Studio Team Services",
   "loc.instanceNameFormat": "Test de charge cloud $(LoadTest)",
   "loc.input.label.connectedServiceName": "Connexion enregistrée",
   "loc.input.help.connectedServiceName": "Sélectionnez une connexion de service préalablement enregistrée pour communiquer avec le service de test de charge basé sur le cloud. Choisissez 'Gérer' pour enregistrer une nouvelle connexion.",
@@ -12,5 +12,6 @@
   "loc.input.label.LoadTest": "Fichier de test de charge",
   "loc.input.help.LoadTest": "Nom du fichier de test de charge à utiliser dans le dossier du test de charge spécifié ci-dessus.",
   "loc.input.label.ThresholdLimit": "Nombre de violations de seuils admissibles",
-  "loc.input.help.ThresholdLimit": "Number of threshold violations above which the load test outcome is considered unsuccessful."
+  "loc.input.help.ThresholdLimit": "Nombre de violations du seuil au-dessus duquel le résultat du test de charge est considéré comme ayant échoué.",
+  "loc.input.label.MachineType": "Run load test using"
 }

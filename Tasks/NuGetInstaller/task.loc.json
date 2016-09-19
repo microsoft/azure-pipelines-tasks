@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 2
+    "Patch": 16
   },
   "minimumAgentVersion": "1.83.0",
   "groups": [
@@ -69,15 +69,29 @@
       "name": "verbosity",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.verbosity",
-      "defaultValue": "",
+      "defaultValue": "-",
       "helpMarkDown": "ms-resource:loc.input.help.verbosity",
       "required": "false",
       "groupName": "advanced",
       "options": {
-        "": "-",
+        "-": "-",
         "Quiet": "Quiet",
         "Normal": "Normal",
         "Detailed": "Detailed"
+      }
+    },
+    {
+      "name": "nuGetVersion",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.nuGetVersion",
+      "defaultValue": "3.3.0",
+      "helpMarkDown": "ms-resource:loc.input.help.nuGetVersion",
+      "required": "true",
+      "groupName": "advanced",
+      "options": {
+        "3.3.0": "3.3.0",
+        "3.5.0.1829": "3.5.0 – build 1829 (rc2)",
+        "custom": "Custom"
       }
     },
     {
@@ -88,15 +102,6 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.nuGetPath",
       "groupName": "advanced"
-    },
-    {
-      "name": "preCredProviderNuGet",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.preCredProviderNuGet",
-      "groupName": "advanced",
-      "defaultValue": "false",
-      "helpMarkDown": "ms-resource:loc.input.help.preCredProviderNuGet",
-      "required": "false"
     }
   ],
   "execution": {
@@ -108,15 +113,17 @@
   "messages": {
     "Warning_NoConfigForOldNuGet": "ms-resource:loc.messages.Warning_NoConfigForOldNuGet",
     "Warning_NoConfigForNoCredentialProvider": "ms-resource:loc.messages.Warning_NoConfigForNoCredentialProvider",
+    "Warning_ConflictingNuGetPreference": "ms-resource:loc.messages.Warning_ConflictingNuGetPreference",
     "PackagesInstalledSuccessfully": "ms-resource:loc.messages.PackagesInstalledSuccessfully",
     "PackagesFailedToInstall": "ms-resource:loc.messages.PackagesFailedToInstall",
     "ConnectingAs": "ms-resource:loc.messages.ConnectingAs",
-    "LegacyNuGetHint": "ms-resource:loc.messages.LegacyNuGetHint",
     "BuildIdentityPermissionsHint": "ms-resource:loc.messages.BuildIdentityPermissionsHint",
     "NoCredProviderOnAgent": "ms-resource:loc.messages.NoCredProviderOnAgent",
     "NotARegularFile": "ms-resource:loc.messages.NotARegularFile",
     "UnknownRestoreMode": "ms-resource:loc.messages.UnknownRestoreMode",
     "CouldNotFindNuGetService": "ms-resource:loc.messages.CouldNotFindNuGetService",
+    "NoNuGetSpecified": "ms-resource:loc.messages.NoNuGetSpecified",
+    "NGCommon_DetectedNuGetVersion": "ms-resource:loc.messages.NGCommon_DetectedNuGetVersion",
     "NGCommon_IgnoringNuGetExtensionsPath": "ms-resource:loc.messages.NGCommon_IgnoringNuGetExtensionsPath",
     "NGCommon_DetectedNuGetExtensionsPath": "ms-resource:loc.messages.NGCommon_DetectedNuGetExtensionsPath",
     "NGCommon_UnableToFindTool": "ms-resource:loc.messages.NGCommon_UnableToFindTool",
@@ -126,6 +133,7 @@
     "NGCommon_NuGetConfigIsInvalid": "ms-resource:loc.messages.NGCommon_NuGetConfigIsInvalid",
     "NGCommon_RemovingSources": "ms-resource:loc.messages.NGCommon_RemovingSources",
     "NGCommon_AddingSources": "ms-resource:loc.messages.NGCommon_AddingSources",
-    "NGCommon_NoSourcesFoundInConfig": "ms-resource:loc.messages.NGCommon_NoSourcesFoundInConfig"
+    "NGCommon_NoSourcesFoundInConfig": "ms-resource:loc.messages.NGCommon_NoSourcesFoundInConfig",
+    "NGCommon_UnabletoDetectNuGetVersion": "ms-resource:loc.messages.NGCommon_UnabletoDetectNuGetVersion"
   }
 }

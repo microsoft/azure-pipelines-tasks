@@ -1,22 +1,39 @@
 function Get-AgentStartIPAddress
 {
-    param([Object] [Parameter(Mandatory = $true)] $taskContext)
+    $endpoint = (Get-VstsEndpoint -Name SystemVssConnection -Require)
+    $vssCredential = [string]$endpoint.auth.parameters.AccessToken
 
-    $connection = Get-VssConnection -TaskContext $taskContext
+    $vssUri = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI
+    if ($vssUri.IndexOf("visualstudio.com", [System.StringComparison]::OrdinalIgnoreCase) -ne -1) {
+        # This hack finds the DTL uri for a hosted account. Note we can't support devfabric since the
+        # there subdomain is not used for DTL endpoint
+        $vssUri = $vssUri.Replace("visualstudio.com", "vsdtl.visualstudio.com")
+    }
 
-    # getting start ip address from dtl service
+    Write-Verbose "Querying VSTS uri '$vssUri' to get external ip address"
+
+    # Getting start ip address from dtl service
     Write-Verbose "Getting external ip address by making call to dtl service"
-    $startIP = Get-ExternalIpAddress -Connection $connection
+    $vssUri = $vssUri + "/_apis/vslabs/ipaddress"
+    $username = ""
+    $password = $vssCredential
 
-    return $startIP
+    $basicAuth = ("{0}:{1}" -f $username, $password)
+    $basicAuth = [System.Text.Encoding]::UTF8.GetBytes($basicAuth)
+    $basicAuth = [System.Convert]::ToBase64String($basicAuth)
+    $headers = @{Authorization=("Basic {0}" -f $basicAuth)}
+
+    $response = Invoke-RestMethod -Uri $($vssUri) -headers $headers -Method Get -ContentType "application/json"
+    Write-Verbose "Response: $response"
+
+    return $response.Value
 }
 
 function Get-AgentIPAddress
 {
     param([String] $startIPAddress,
           [String] $endIPAddress,
-          [String] [Parameter(Mandatory = $true)] $ipDetectionMethod,
-          [Object] [Parameter(Mandatory = $true)] $taskContext)
+          [String] [Parameter(Mandatory = $true)] $ipDetectionMethod)
 
     [HashTable]$IPAddress = @{}
     if($ipDetectionMethod -eq "IPAddressRange")
@@ -26,47 +43,19 @@ function Get-AgentIPAddress
     }
     elseif($ipDetectionMethod -eq "AutoDetect")
     {
-        $IPAddress.StartIPAddress = Get-AgentStartIPAddress -TaskContext $taskContext
+        $IPAddress.StartIPAddress = Get-AgentStartIPAddress
         $IPAddress.EndIPAddress = $IPAddress.StartIPAddress
     }
 
     return $IPAddress
 }
 
-function Get-AzureUtility
+function Get-Endpoint
 {
-    $currentVersion =  Get-AzureCmdletsVersion
-    Write-Verbose "Installed Azure PowerShell version: $currentVersion"
+    param([String] [Parameter(Mandatory=$true)] $connectedServiceName)
 
-    $minimumAzureVersion = New-Object System.Version(0, 9, 9)
-    $versionCompatible = Get-AzureVersionComparison -AzureVersion $currentVersion -CompareVersion $minimumAzureVersion
-
-    $azureUtilityOldVersion = "AzureUtilityLTE9.8.ps1"
-    $azureUtilityNewVersion = "AzureUtilityGTE1.0.ps1"
-
-    if(!$versionCompatible)
-    {
-        $azureUtilityRequiredVersion = $azureUtilityOldVersion
-    }
-    else
-    {
-        $azureUtilityRequiredVersion = $azureUtilityNewVersion
-    }
-
-    Write-Verbose "Required AzureUtility: $azureUtilityRequiredVersion"
-    return $azureUtilityRequiredVersion
-}
-
-function Get-ConnectionType
-{
-    param([String] [Parameter(Mandatory=$true)] $connectedServiceName,
-          [Object] [Parameter(Mandatory=$true)] $taskContext)
-
-    $serviceEndpoint = Get-ServiceEndpoint -Name "$ConnectedServiceName" -Context $taskContext
-    $connectionType = $serviceEndpoint.Authorization.Scheme
-
-    Write-Verbose "Connection type used is $connectionType"
-    return $connectionType
+    $serviceEndpoint = Get-VstsEndpoint -Name "$connectedServiceName"
+    return $serviceEndpoint
 }
 
 function Create-AzureSqlDatabaseServerFirewallRule
@@ -74,19 +63,12 @@ function Create-AzureSqlDatabaseServerFirewallRule
     param([String] [Parameter(Mandatory = $true)] $startIp,
           [String] [Parameter(Mandatory = $true)] $endIp,
           [String] [Parameter(Mandatory = $true)] $serverName,
-          [String] [Parameter(Mandatory = $true)] $connectionType)
+          [Object] [Parameter(Mandatory = $true)] $endpoint)
 
     [HashTable]$FirewallSettings = @{}
     $firewallRuleName = [System.Guid]::NewGuid().ToString()
 
-    if($connectionType -eq 'Certificate' -or $connectionType -eq 'UserNamePassword')
-    {
-        Create-AzureSqlDatabaseServerFirewallRuleRDFE -startIPAddress $startIp -endIPAddress $endIp -serverName $serverName -firewallRuleName $firewallRuleName | Out-Null
-    }
-    else
-    {
-        Create-AzureSqlDatabaseServerFirewallRuleARM -startIPAddress $startIp -endIPAddress $endIp -serverName $serverName -firewallRuleName $firewallRuleName | Out-Null
-    }
+    Add-AzureSqlDatabaseServerFirewallRule -endpoint $endpoint -startIPAddress $startIp -endIPAddress $endIp -serverName $serverName -firewallRuleName $firewallRuleName | Out-Null
 
     $FirewallSettings.IsConfigured = $true
     $FirewallSettings.RuleName = $firewallRuleName
@@ -97,21 +79,14 @@ function Create-AzureSqlDatabaseServerFirewallRule
 function Delete-AzureSqlDatabaseServerFirewallRule
 {
     param([String] [Parameter(Mandatory = $true)] $serverName,
-          [String] $firewallRuleName,
-          [String] [Parameter(Mandatory = $true)] $connectionType,
+          [String] [Parameter(Mandatory = $true)] $firewallRuleName,
           [String] $isFirewallConfigured,
-          [String] [Parameter(Mandatory = $true)] $deleteFireWallRule)
+          [String] [Parameter(Mandatory = $true)] $deleteFireWallRule,
+          [Object] [Parameter(Mandatory = $true)] $endpoint)
 
     if($deleteFireWallRule -eq "true" -and $isFirewallConfigured -eq "true")
     {
-        if($connectionType -eq 'Certificate' -or $connectionType -eq 'UserNamePassword')
-        {
-            Delete-AzureSqlDatabaseServerFirewallRuleRDFE -serverName $serverName -firewallRuleName $firewallRuleName | Out-Null
-        }
-        else
-        {
-            Delete-AzureSqlDatabaseServerFirewallRuleARM -serverName $serverName -firewallRuleName $firewallRuleName | Out-Null
-        }
+        Remove-AzureSqlDatabaseServerFirewallRule -serverName $serverName -firewallRuleName $firewallRuleName -endpoint $endpoint
     }
 }
 
@@ -145,7 +120,7 @@ function Get-SqlPackageCommandArguments
     # validate dacpac file
     if([System.IO.Path]::GetExtension($dacpacFile) -ne $dacpacFileExtension)
     {
-        Write-Error (Get-LocalizedString -Key "Invalid Dacpac file '{0}' provided" -ArgumentList $dacpacFile)
+        Write-Error (Get-VstsLocString -Key "SAD_InvalidDacpacFile" -ArgumentList $dacpacFile)
     }
 
     $sqlPackageArguments = @($SqlPackageOptions.SourceFile + "`"$dacpacFile`"")
@@ -164,7 +139,7 @@ function Get-SqlPackageCommandArguments
             $sqlPackageArguments += @($SqlPackageOptions.TargetUser + "`"$sqlUsername`"")
             if(-not($sqlPassword))
             {
-                Write-Error (Get-LocalizedString -Key "No password specified for the SQL User: '{0}'" -ArgumentList $sqlUserName)
+                Write-Error (Get-VstsLocString -Key "SAD_NoPassword" -ArgumentList $sqlUserName)
             }
 
             if( $isOutputSecure ){
@@ -188,7 +163,7 @@ function Get-SqlPackageCommandArguments
         # validate publish profile
         if([System.IO.Path]::GetExtension($publishProfile) -ne ".xml")
         {
-            Write-Error (Get-LocalizedString -Key "Invalid Publish Profile '{0}' provided" -ArgumentList $publishProfile)
+            Write-Error (Get-VstsLocString -Key "SAD_InvalidPublishProfile" -ArgumentList $publishProfile)
         }
         $sqlPackageArguments += @($SqlPackageOptions.Profile + "`"$publishProfile`"")
     }
@@ -207,20 +182,18 @@ function Run-Command
 	{
         if( $psversiontable.PSVersion.Major -le 4)
         {
-           cmd.exe /c "`"$command`""
+           cmd.exe /c "`"$command`"" 2>&1
         }
         else
         {
-           cmd.exe /c "$command"
+           cmd.exe /c "$command" 2>&1
         }
 
     }
 	catch [System.Exception]
     {
-        Write-Verbose $_.Exception
         throw $_.Exception
     }
-
 }
 
 function ConvertParamToSqlSupported

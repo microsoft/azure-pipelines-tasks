@@ -117,6 +117,18 @@ gulp.task('compileTasks', ['clean'], function (cb) {
                 });
             }
 
+            // Check for NuGetV2 externals.
+            if (externals.nugetv2) {
+                // Walk the dictionary.
+                var packageNames = Object.keys(externals.nugetv2);
+                packageNames.forEach(function (packageName) {
+                    // Cache the NuGet V2 package.
+                    var packageVersion = externals.nugetv2[packageName].version;
+                    var packageRepository = externals.nugetv2[packageName].repository;
+                    cacheNuGetV2Package(packageRepository, packageName, packageVersion);
+                })
+            }
+
             // Check for archive files.
             if (externals.archivePackages) {
                 // Walk the array.
@@ -207,7 +219,11 @@ gulp.task('test', ['testResources'], function () {
     var suitePath = path.join(_testRoot, options.suite + '/_suite.js');
     var tfBuild = ('' + process.env['TF_BUILD']).toLowerCase() == 'true'
     return gulp.src([suitePath])
-        .pipe(mocha({ reporter: 'spec', ui: 'bdd', useColors: !tfBuild }));
+        .pipe(mocha({ reporter: 'spec', ui: 'bdd', useColors: !tfBuild }))
+        .on('error', function (err) {
+            console.log('##vso[task.logissue type=error]' + err.message);
+            console.log('##vso[task.complete result=Failed]Failed');
+        });
 });
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -271,13 +287,14 @@ var cacheArchiveFile = function (url) {
     }
 
     // Short-circuit if already downloaded.
-    console.log('Downloading archive file ' + url);
     var scrubbedUrl = url.replace(/[/\:?]/g, '_');
     var targetPath = path.join(_tempPath, 'archive', scrubbedUrl);
     if (shell.test('-d', targetPath)) {
-        console.log('Archive already cached. Skipping.');
+        console.log('Archive file already cached: ' + url);
         return;
     }
+
+    console.log('Downloading archive file: ' + url);
 
     // Delete any previous partial attempt.
     var partialPath = path.join(_tempPath, 'partial', 'archive', scrubbedUrl);
@@ -387,6 +404,24 @@ var cacheNpmPackage = function (name, version) {
     // Move the intermediate directory to the target location.
     shell.mkdir('-p', path.dirname(targetPath));
     shell.mv(partialPath, targetPath);
+}
+
+var cacheNuGetV2Package = function (repository, name, version) {
+    // Validate the parameters.
+    if (!repository) {
+        throw new Error('Parameter "repository" cannot be null or empty.');
+    }
+
+    if (!name) {
+        throw new Error('Parameter "name" cannot be null or empty.');
+    }
+
+    if (!version) {
+        throw new Error('Parameter "version" cannot be null or empty.');
+    }
+
+    // Cache the archive file.
+    cacheArchiveFile(repository.replace(/\/$/, '') + '/package/' + name + '/' + version);
 }
 
 var QExec = function (commandLine) {

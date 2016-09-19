@@ -19,14 +19,7 @@ function Get-SourceProvider {
         }
         
         if ($provider.Name -eq 'TfsVersionControl') {
-            $serverOMDirectory = Get-VstsTaskVariable -Name 'Agent.ServerOMDirectory' -Require
-            Add-Type -LiteralPath ([System.IO.Path]::Combine($serverOMDirectory, 'Microsoft.TeamFoundation.Client.dll'))
-            Add-Type -LiteralPath ([System.IO.Path]::Combine($serverOMDirectory, 'Microsoft.TeamFoundation.Common.dll'))
-            Add-Type -LiteralPath ([System.IO.Path]::Combine($serverOMDirectory, 'Microsoft.TeamFoundation.VersionControl.Client.dll'))
-            $provider.TfsTeamProjectCollection = New-Object Microsoft.TeamFoundation.Client.TfsTeamProjectCollection(
-                (Get-VstsTaskVariable -Name 'System.TeamFoundationCollectionUri' -Require),
-                (Get-VstsTfsClientCredentials))
-            $versionControlServer = $provider.TfsTeamProjectCollection.GetService([Microsoft.TeamFoundation.VersionControl.Client.VersionControlServer])
+            $versionControlServer = Get-VstsTfsService -TypeName 'Microsoft.TeamFoundation.VersionControl.Client.VersionControlServer'
             $provider.Workspace = $versionControlServer.TryGetWorkspace($provider.SourcesRootPath)
             if (!$provider.Workspace) {
                 Write-Verbose "Unable to determine workspace from source folder: $($provider.SourcesRootPath)"
@@ -66,7 +59,7 @@ function Get-SourceProvider {
             # When the build service runs on the same box as the AT, we use localhost
             # to connect to the AT.  This is not appropriate for storing inside of a PDB that will
             # be used on another box, so we have to look up a more durable URL.
-            $locationService = $provider.TfsTeamProjectCollection.GetService([Microsoft.TeamFoundation.Framework.Client.ILocationService])
+            $locationService = Get-VstsTfsService -TypeName 'Microsoft.TeamFoundation.Framework.Client.ILocationService'
             # Retrieve a URI to the location service.
             $provider.PublicCollectionUrl = [string]$locationService.LocationForAccessMapping(
                 [Microsoft.TeamFoundation.ServiceInterfaces]::LocationService,
@@ -90,25 +83,6 @@ function Get-SourceProvider {
         Write-Warning (Get-VstsLocString -Key UnsupportedSourceProvider0 -ArgumentList $provider.Name)
         Write-Warning (Get-VstsLocString -Key UnableToIndexSources)
         return
-    } finally {
-        if (!$success) {
-            Invoke-DisposeSourceProvider -Provider $provider
-        }
-
-        Trace-VstsLeavingInvocation $MyInvocation
-    }
-}
-
-function Invoke-DisposeSourceProvider {
-    [CmdletBinding()]
-    param($Provider)
-
-    Trace-VstsEnteringInvocation $MyInvocation -Parameter @( )
-    try {
-        if ($Provider.TfsTeamProjectCollection) {
-            $Provider.TfsTeamProjectCollection.Dispose()
-            $Provider.TfsTeamProjectCollection = $null
-        }
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }

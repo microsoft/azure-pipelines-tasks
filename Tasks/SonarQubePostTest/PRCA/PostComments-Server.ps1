@@ -142,7 +142,13 @@ function GetModifiedFilesInPR
 #
 function PostDiscussionThreads
 {
-    param ([ValidateNotNull()][Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadCollection]$threads)
+    param ([Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadCollection]$threads)
+
+    if (($threads -eq $null) -or ($threads.Count -eq 0))
+    {
+        Write-Debug "No threads to post"
+        return;
+    }
     
     $vssJsonThreadCollection = New-Object -TypeName "Microsoft.VisualStudio.Services.WebApi.VssJsonCollectionWrapper[Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionThreadCollection]" -ArgumentList @(,$threads)
     [void]$script:discussionClient.CreateThreadsAsync($vssJsonThreadCollection, $null, [System.Threading.CancellationToken]::None).Result
@@ -269,20 +275,22 @@ function GetCodeFlowChanges
      {
         Write-Verbose "Change count: $($changes.Count)"
      }
-     
+
      return $changes
 }
 
-function GetCodeFlowChangeTrackingId
+function TryGetCodeFlowChangeTrackingId
 {
-    param ([Microsoft.VisualStudio.Services.CodeReview.WebApi.IterationChanges]$changes, [string]$path)
+    param ($changes, $path, [Ref][int]$changeId)
+
+    $change = @($changes.ChangeEntries | Where-Object {$_.Modified.Path -eq $path})
+    if (($change -eq $null) -or ($change.Count -ne 1))
+    {
+        return $false;
+    }
     
-    $change = $changes.ChangeEntries | Where-Object {$_.Modified.Path -eq $path}
-    
-    Assert ($change -ne $null) "No changes found for $path"
-    Assert ($change.Count -eq 1) "Expecting exactly 1 change for $path but found $($change.Count)"
-    
-    return $change.ChangeTrackingId
+    $changeId.Value = $change[0].ChangeTrackingId;
+    return $true;
 } 
 
 #endregion 
@@ -336,4 +344,3 @@ function ParamTypesMatch
   
    return (($methodParams | select -Skip $candidateTypes.Length | Where-Object {$_.IsOptional -eq $false}).Count -eq 0)
 }
-

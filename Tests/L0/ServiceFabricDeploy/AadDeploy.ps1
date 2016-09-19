@@ -7,14 +7,17 @@ $publishProfilePath = "$PSScriptRoot\data\AadPublishProfile.xml"
 $applicationPackagePath = "random package path"
 $serviceConnectionName = "random connection name"
 $serviceFabricSdkModulePath = "$PSScriptRoot\data\ServiceFabricSDK.ps1"
+$serverCertThumbprint = "random thumbprint"
 $userName = "random user"
 $password = "random password"
 $aadAuthority = "random authority"
 $accessToken = "random access token"
 $appName = "AppName"
+$connectionEndpointFullUrl = "https://mycluster.com:19000"
+$connectionEndpoint = ([System.Uri]$connectionEndpointFullUrl).Authority
 
 # Setup input arguments
-Register-Mock Get-VstsInput { $publishProfilePath } -- -Name publishProfilePath -Require
+Register-Mock Get-VstsInput { $publishProfilePath } -- -Name publishProfilePath
 Register-Mock Get-VstsInput { $applicationPackagePath } -- -Name applicationPackagePath -Require
 Register-Mock Get-VstsInput { $serviceConnectionName } -- -Name serviceConnectionName -Require
 
@@ -27,9 +30,11 @@ Register-Mock Test-Path { $true } -- "HKLM:\SOFTWARE\Microsoft\Service Fabric SD
 
 # Setup mock VSTS service endpoint
 $vstsEndpoint = @{
+    "url" = $connectionEndpointFullUrl
     "Auth" = @{
         "Scheme" = "UserNamePassword" 
         "Parameters" = @{
+            "ServerCertThumbprint" = $serverCertThumbprint
             "Username" = $userName
             "Password" = $password
         }
@@ -43,7 +48,7 @@ $clusterMetadata = @{
         "Authority" = $aadAuthority
     }
 }
-Register-Mock Connect-ServiceFabricCluster { $clusterMetadata } -- -GetMetadata:$true -AzureActiveDirectory:$true
+Register-Mock Connect-ServiceFabricCluster { $clusterMetadata } -- -ServerCertThumbprint:$serverCertThumbprint -ConnectionEndpoint:$connectionEndpoint -AzureActiveDirectory:$true -GetMetadata:$true
 
 # Setup mocking for ActiveDirectory assembly
 Register-Mock Get-VstsTaskVariable { "" } -- -Name "Agent.ServerOMDirectory" -Require
@@ -66,7 +71,7 @@ Register-Mock Create-Object { $mockAuthContext } -- -TypeName Microsoft.Identity
 Register-Mock Create-Object { $null } -- -TypeName Microsoft.IdentityModel.Clients.ActiveDirectory.UserCredential -ArgumentList @($userName, $password)
 
 # Setup mock for connection to cluster with access token
-Register-Mock Connect-ServiceFabricCluster { $null } -- -AzureActiveDirectory -SecurityToken $accessToken WarningAction SilentlyContinue
+Register-Mock Connect-ServiceFabricCluster { $null } -- -ServerCertThumbprint:$serverCertThumbprint -AzureActiveDirectory:$true -SecurityToken:$accessToken -ConnectionEndpoint:$connectionEndpoint -WarningAction:SilentlyContinue
 
 # Setup mock registry settings
 $regKeyObj = @{

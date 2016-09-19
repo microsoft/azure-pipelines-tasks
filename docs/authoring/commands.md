@@ -1,14 +1,15 @@
 ## Logging Commands:
 
 The general format for a logging command is:
+
     ##vso[area.action property1=value;property2=value;...]message
 
 To invoke a logging command, simply emit the command via standard output. For example, from a PowerShell task:
-```
-Write-Host "##vso[task.setvariable variable=testvar;]testvalue"
-```
+
+    Write-Host "##vso[task.setvariable variable=testvar;]testvalue"
 
 #### Task Logging Commands:
+
 <table>
     <thead>
         <tr>
@@ -22,23 +23,23 @@ Write-Host "##vso[task.setvariable variable=testvar;]testvalue"
         <tr>
             <td>
                 <p align="left">
-                    ##vso[task.logissue]error/warning message
+                    <code>##vso[task.logissue]error/warning message</code>
                 </p>
             </td>
             <td>
                 <p align="left">
-                    type=error or warning (Required) <br>
-                    sourcepath=source file location <br>
-                    linenumber=line number <br>
-                    columnnumber=column number <br>
-                    code=error or warning code <br>
+                    <code>type</code>=error or warning (Required) <br>
+                    <code>sourcepath</code>=source file location <br>
+                    <code>linenumber</code>=line number <br>
+                    <code>columnnumber</code>=column number <br>
+                    <code>code</code>=error or warning code <br>
                 </p>
             </td>
             <td>
                 <p align="left">
                     Log error or warning issue to timeline record of current task.<br>
-                    Example: <br>
-                    ##vso[task.logissue type=error;sourcepath=consoleapp/main.cs;linenumber=1;columnnumber=1;code=100;]this is an error
+                    <b>Example:</b> <br>
+                    <code>##vso[task.logissue type=error;sourcepath=consoleapp/main.cs;linenumber=1;columnnumber=1;code=100;]this is an error</code>
                 </p>
             </td>
             <td>
@@ -47,19 +48,19 @@ Write-Host "##vso[task.setvariable variable=testvar;]testvalue"
         <tr>
             <td>
                 <p align="left">
-                    ##vso[task.setprogress]current operation
+                    <code>##vso[task.setprogress]current operation</code>
                 </p>
             </td>
             <td>
                 <p align="left">
-                    value=percentage of completion
+                    <code>value</code>=percentage of completion
                 </p>
             </td>
             <td>
                 <p align="left">
                     Set progress and current operation for current task.<br>
-                    Example: <br>
-                    ##vso[task.setprogress value=75;]Upload Log
+                    <b>Example:</b> <br>
+                    <code>##vso[task.setprogress value=75;]Upload Log</code>
                 </p>
             </td>
             <td>
@@ -68,56 +69,56 @@ Write-Host "##vso[task.setvariable variable=testvar;]testvalue"
         <tr>
             <td>
                 <p align="left">
-                    ##vso[task.complete]current operation
+                    <code>##vso[task.complete]current operation</code>
                 </p>
             </td>
             <td>
                 <p align="left">
-                    result=Succeeded|SucceededWithIssues|Failed|Cancelled|Skipped
+                    <code>result</code>=<code>Succeeded</code>|<code>SucceededWithIssues</code>|<code>Failed</code>|<code>Cancelled</code>|<code>Skipped</code>
                 </p>
             </td>
             <td>
                 <p align="left">
                     Finish timeline record for current task, set task result and current operation. When result not provide, set result to succeeded.<br>
-                    Example: <br>
-                    ##vso[task.complete result=Succeeded;]DONE
+                    <b>Example:</b> <br>
+                    <code>##vso[task.complete result=Succeeded;]DONE</code>
                 </p>
             </td>
             <td>
-            	1.95
+                1.95
             </td>
         </tr>
         <tr>
             <td>
                 <p align="left">
-                    ##vso[task.logdetail]current operation
+                    <code>##vso[task.logdetail]current operation</code>
                 </p>
             </td>
             <td>
                 <p align="left">
-                    id=Timeline record Guid (Required)<br>
-                    parentid=Parent timeline record Guid <br>
-                    type=Record type (Required for first time, can't overwrite)<br>
-                    name=Record name (Required for first time, can't overwrite)<br>
-                    order=order of timeline record (Required for first time, can't overwrite)<br>
-                    starttime=Datetime <br>
-                    finishtime=Datetime <br>
-                    progress=percentage of completion <br>
-                    state=Unknown|Initialized|InProgress|Completed <br>
-                    result=Succeeded|SucceededWithIssues|Failed|Cancelled|Skipped <br>
+                    <code>id</code>=Timeline record Guid (Required)<br>
+                    <code>parentid</code>=Parent timeline record Guid <br>
+                    <code>type</code>=Record type (Required for first time, can't overwrite)<br>
+                    <code>name</code>=Record name (Required for first time, can't overwrite)<br>
+                    <code>order</code>=order of timeline record (Required for first time, can't overwrite)<br>
+                    <code>starttime</code>=Datetime <br>
+                    <code>finishtime</code>=Datetime <br>
+                    <code>progress</code>=percentage of completion <br>
+                    <code>state</code>=<code>Unknown</code>|<code>Initialized</code>|<code>InProgress</code>|<code>Completed</code> <br>
+                    <code>result</code>=<code>Succeeded</code>|<code>SucceededWithIssues</code>|<code>Failed</code>|<code>Cancelled</code>|<code>Skipped</code> <br>
                 </p>
             </td>
             <td>
                 <p align="left">
                     Create and update detail timeline records. <br>
-                    The first time we saw ##vso[task.detail] for each task, we will create a detail timeline for the task. <br>
+                    The first time we saw <code>##vso[task.detail]</code> for each task, we will create a detail timeline for the task. <br>
                     We will create and update nested timeline record base on id and parentid. <br>
                     Task author need to remember which Guid they used for each timeline record.
                     The logging system will keep tracking the Guid for each timeline records that been created, so any new Guid will result a new timeline record. <br>
-                    Example: <br>
-                    Create new root timeline record: ##vso[task.logdetail id=new guid;name=project1;type=build;order=1]create new timeline record.<br>
-                    Create new nested timeline record: ##vso[task.logdetail id=new guid;parentid=exist timeline record guid;name=project1;type=build;order=1]create new nested timeline record.<br>
-                    Update exist timeline record: ##vso[task.logdetail id=exist timeline record guid;progress=15;state=InProgress;]update timeline record
+                    <b>Examples:</b> <br>
+                    Create new root timeline record: <code>##vso[task.logdetail id=new guid;name=project1;type=build;order=1]create new timeline record</code><br>
+                    Create new nested timeline record: <code>##vso[task.logdetail id=new guid;parentid=exist timeline record guid;name=project1;type=build;order=1]create new nested timeline record</code><br>
+                    Update exist timeline record: <code>##vso[task.logdetail id=exist timeline record guid;progress=15;state=InProgress;]update timeline record</code>
                 </p>
             </td>
             <td>
@@ -126,45 +127,23 @@ Write-Host "##vso[task.setvariable variable=testvar;]testvalue"
         <tr>
             <td>
                 <p align="left">
-                    ##vso[task.setvariable]value
+                    <code>##vso[task.setvariable]value</code>
                 </p>
             </td>
             <td>
                 <p align="left">
-                    variable=variable name (Required) <br>
+                    <code>variable</code>=variable name (Required) <br>
                 </p>
                  <p align="left">
-                    issecret=true (Optional) <br>
+                    <code>issecret</code>=<code>true</code> (Optional) <br>
                 </p>
             </td>
             <td>
                 <p align="left">
-                    Sets a variable in the variable service of taskcontext. The first task can set a variable, and following tasks are able to use the variable. The variable is exposed to the following tasks as an environment variable. When 'issecret' is set to true, the value of the variable will be saved as secret and masked out from log. Secret variables are not passed into tasks as environment variables and must be passed as inputs.<br>
-                    Example: <br>
-                    ##vso[task.setvariable variable=testvar;]testvalue<br> 
-                    ##vso[task.setvariable variable=testvar;issecret=true;]testvalue<br> 
-                </p>
-            </td>
-            <td>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <p align="left">
-                    ##vso[task.addattachment]value
-                </p>
-            </td>
-            <td>
-                <p align="left">
-                    type=attachment type (Required) <br>
-                    name=attachment name (Required) <br>
-                </p>
-            </td>
-            <td>
-                <p align="left">
-                    Upload and attach attachment to current timeline record. <br>
-                    Example: <br>
-					##vso[task.addattachment type=myattachmenttype;name=myattachmentname;]c:\myattachment.txt<br> 
+                    Sets a variable in the variable service of taskcontext. The first task can set a variable, and following tasks are able to use the variable. The variable is exposed to the following tasks as an environment variable. When <code>issecret</code> is set to <code>true</code>, the value of the variable will be saved as secret and masked out from log. Secret variables are not passed into tasks as environment variables and must be passed as inputs.<br>
+                    <b>Examples:</b> <br>
+                    <code>##vso[task.setvariable variable=testvar;]testvalue</code><br>
+                    <code>##vso[task.setvariable variable=testvar;issecret=true;]testvalue</code><br>
                 </p>
             </td>
             <td>
@@ -173,7 +152,29 @@ Write-Host "##vso[task.setvariable variable=testvar;]testvalue"
         <tr>
             <td>
                 <p align="left">
-                    ##vso[task.uploadsummary]local file path
+                    <code>##vso[task.addattachment]value</code>
+                </p>
+            </td>
+            <td>
+                <p align="left">
+                    <code>type</code>=attachment type (Required) <br>
+                    <code>name</code>=attachment name (Required) <br>
+                </p>
+            </td>
+            <td>
+                <p align="left">
+                    Upload and attach attachment to current timeline record. These files are not available for download with logs. These can only be referred to by extensions using the type or name values. <br>
+                    <b>Example:</b> <br>
+                    <code>##vso[task.addattachment type=myattachmenttype;name=myattachmentname;]c:\myattachment.txt</code><br>
+                </p>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p align="left">
+                    <code>##vso[task.uploadsummary]local file path</code>
                 </p>
             </td>
             <td>
@@ -182,11 +183,11 @@ Write-Host "##vso[task.setvariable variable=testvar;]testvalue"
             </td>
             <td>
                 <p align="left">
-                    Upload and attach summary markdown to current timeline record. <br>
-                    Example: <br>
-                    ##vso[task.uploadsummary]c:\testsummary.md <br>
+                    Upload and attach summary markdown to current timeline record. This summary shall be added to the build/release summary and not available for download with logs.<br>
+                    <b>Examples:</b> <br>
+                    <code>##vso[task.uploadsummary]c:\testsummary.md</code> <br>
                     It is a short hand form for the command <br>
-                    ##vso[task.addattachment type=Distributedtask.Core.Summary;name=testsummaryname;]c:\testsummary.md<br> 
+                    <code>##vso[task.addattachment type=Distributedtask.Core.Summary;name=testsummaryname;]c:\testsummary.md</code><br>
                 </p>
             </td>
             <td>
@@ -196,7 +197,7 @@ Write-Host "##vso[task.setvariable variable=testvar;]testvalue"
         <tr>
             <td>
                 <p align="left">
-                    ##vso[task.uploadfile]local file path
+                    <code>##vso[task.uploadfile]local file path</code>
                 </p>
             </td>
             <td>
@@ -206,8 +207,8 @@ Write-Host "##vso[task.setvariable variable=testvar;]testvalue"
             <td>
                 <p align="left">
                     Upload user interested file as additional log information to the current timeline record. The file shall be available for download along with task logs.<br>
-                    Example: <br>
-                    ##vso[task.uploadfile]c:\additionalfile.log
+                    <b>Example:</b> <br>
+                    <code>##vso[task.uploadfile]c:\additionalfile.log</code>
                 </p>
             </td>
             <td>
@@ -234,24 +235,24 @@ Write-Host "##vso[task.setvariable variable=testvar;]testvalue"
         <tr>
             <td>
                 <p align="left">
-                    ##vso[artifact.associate]artifact location
+                    <code>##vso[artifact.associate]artifact location</code>
                 </p>
             </td>
             <td>
                 <p align="left">
-                    artifactname=artifact name (Required) <br>
-                    type = artifact type (Required, supported artifact type: container, filepath, versioncontrol, gitref, tfvclabel)<br> 
+                    <code>artifactname</code>=artifact name (Required) <br>
+                    <code>type</code>=<code>container</code>|<code>filepath</code>|<code>versioncontrol</code>|<code>gitref</code>|<code>tfvclabel</code>, artifact type (Required)<br>
                 </p>
             </td>
             <td>
                 <p align="left">
                     Create an artifact link, artifact location is required to be a file container path, VC path or UNC share path. <br>
-                    Examples: <br>
-                    ##vso[artifact.associate type=container;artifactname=MyServerDrop]#/1/build <br>
-                    ##vso[artifact.associate type=filepath;artifactname=MyFileShareDrop]\\MyShare\MyDropLocation <br>
-                    ##vso[artifact.associate type=versioncontrol;artifactname=MyTfvcPath]$/MyTeamProj/MyFolder <br>
-                    ##vso[artifact.associate type=gitref;artifactname=MyTag]refs/tags/MyGitTag <br>
-                    ##vso[artifact.associate type=tfvclabel;artifactname=MyTag]MyTfvcLabel <br>
+                    <b>Examples:</b> <br>
+                    <code>##vso[artifact.associate type=container;artifactname=MyServerDrop]#/1/build</code> <br>
+                    <code>##vso[artifact.associate type=filepath;artifactname=MyFileShareDrop]\\MyShare\MyDropLocation</code> <br>
+                    <code>##vso[artifact.associate type=versioncontrol;artifactname=MyTfvcPath]$/MyTeamProj/MyFolder</code> <br>
+                    <code>##vso[artifact.associate type=gitref;artifactname=MyTag]refs/tags/MyGitTag</code> <br>
+                    <code>##vso[artifact.associate type=tfvclabel;artifactname=MyTag]MyTfvcLabel</code> <br>
                 </p>
             </td>
             <td>
@@ -260,20 +261,20 @@ Write-Host "##vso[task.setvariable variable=testvar;]testvalue"
         <tr>
             <td>
                 <p align="left">
-                    ##vso[artifact.upload]local file path
+                    <code>##vso[artifact.upload]local file path</code>
                 </p>
             </td>
             <td>
                 <p align="left">
-                    containerfolder=folder that the file will upload to, folder will be created if needed. (Required)<br>
-                    artifactname=artifact name<br>
+                    <code>containerfolder</code>=folder that the file will upload to, folder will be created if needed. (Required)<br>
+                    <code>artifactname</code>=artifact name<br>
                 </p>
             </td>
             <td>
                 <p align="left">
-                    Upload local file into a file container folder, create artifact if artifactname provided.<br>
-                    Example: <br>
-                    ##vso[artifact.upload containerfolder=testresult;artifactname=uploadedresult;]c:\testresult.trx<br>
+                    Upload local file into a file container folder, create artifact if <code>artifactname</code> provided.<br>
+                    <b>Example:</b> <br>
+                    <code>##vso[artifact.upload containerfolder=testresult;artifactname=uploadedresult;]c:\testresult.trx</code><br>
                 </p>
             </td>
             <td>
@@ -296,7 +297,7 @@ Write-Host "##vso[task.setvariable variable=testvar;]testvalue"
         <tr>
             <td>
                 <p align="left">
-                    ##vso[build.uploadlog]local file path
+                    <code>##vso[build.uploadlog]local file path</code>
                 </p>
             </td>
             <td>
@@ -305,9 +306,9 @@ Write-Host "##vso[task.setvariable variable=testvar;]testvalue"
             </td>
             <td>
                 <p align="left">
-                    Upload user interested log to build’s container “logs\tool” folder.<br>
-                    Example: <br>
-                    ##vso[build.uploadlog]c:\msbuild.log
+                    Upload user interested log to build’s container “<code>logs\tool</code>” folder.<br>
+                    <b>Example:</b> <br>
+                    <code>##vso[build.uploadlog]c:\msbuild.log</code>
                 </p>
             </td>
             <td>
@@ -316,7 +317,7 @@ Write-Host "##vso[task.setvariable variable=testvar;]testvalue"
         <tr>
             <td>
                 <p align="left">
-                    ##vso[build.updatebuildnumber]build number
+                    <code>##vso[build.updatebuildnumber]build number</code>
                 </p>
             </td>
             <td>
@@ -326,8 +327,8 @@ Write-Host "##vso[task.setvariable variable=testvar;]testvalue"
             <td>
                 <p align="left">
                     Update build number for current build.<br>
-                    Example: <br>
-                    ##vso[build.updatebuildnumber]my-new-build-number
+                    <b>Example:</b> <br>
+                    <code>##vso[build.updatebuildnumber]my-new-build-number</code>
                 </p>
             </td>
             <td>
@@ -337,7 +338,7 @@ Write-Host "##vso[task.setvariable variable=testvar;]testvalue"
         <tr>
             <td>
                 <p align="left">
-                    ##vso[build.addbuildtag]build tag
+                    <code>##vso[build.addbuildtag]build tag</code>
                 </p>
             </td>
             <td>
@@ -347,8 +348,8 @@ Write-Host "##vso[task.setvariable variable=testvar;]testvalue"
             <td>
                 <p align="left">
                     Add a tag for current build.<br>
-                    Example: <br>
-                    ##vso[build.addbuildtag]Tag_UnitTestPassed
+                    <b>Example:</b> <br>
+                    <code>##vso[build.addbuildtag]Tag_UnitTestPassed</code>
                 </p>
             </td>
             <td>

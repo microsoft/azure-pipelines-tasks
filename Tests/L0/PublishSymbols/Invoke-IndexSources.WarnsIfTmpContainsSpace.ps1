@@ -17,7 +17,6 @@ Register-Mock Get-SourceProvider { $script:provider }
 Register-Mock Get-SourceFilePaths
 Register-Mock New-SrcSrvIniContent
 Register-Mock Add-SourceServerStream
-Register-Mock Invoke-DisposeSourceProvider
 Register-Mock Remove-DbghelpLibrary
 
 # Act.

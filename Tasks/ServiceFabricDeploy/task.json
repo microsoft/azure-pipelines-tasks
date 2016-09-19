@@ -12,20 +12,19 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 1
+        "Minor": 1,
+        "Patch": 0
     },
     "minimumAgentVersion": "1.95.0",
+    "groups": [
+        {
+            "name": "upgrade",
+            "displayName": "Upgrade Settings",
+            "isExpanded": false
+        }
+    ],
     "instanceNameFormat": "Deploy Service Fabric Application",
     "inputs": [
-        {
-            "name": "publishProfilePath",
-            "type": "filePath",
-            "label": "Publish Profile",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Path to the publish profile that defines the settings to use. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path."
-        },
         {
             "name": "applicationPackagePath",
             "type": "filePath",
@@ -40,7 +39,194 @@
             "label": "Cluster Connection",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select an Azure Service Fabric service endpoint to be used to connect to the cluster. Choose 'Manage' to register a new endpoint."
+            "helpMarkDown": "Select an Azure Service Fabric service endpoint to be used to connect to the cluster. The settings defined in this referenced endpoint will override those defined in the publish profile. Choose 'Manage' to register a new endpoint."
+        },
+        {
+            "name": "publishProfilePath",
+            "type": "filePath",
+            "label": "Publish Profile",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Path to the publish profile that defines the settings to use. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path."
+        },
+        {
+            "name": "applicationParameterPath",
+            "type": "filePath",
+            "label": "Application Parameters",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Path to the application parameters file. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path. If specified, this will override the value in the publish profile."
+        },
+        {
+            "name": "overridePublishProfileSettings",
+            "type": "boolean",
+            "label": "Override All Publish Profile Upgrade Settings",
+            "defaultValue": "false",
+            "required": false,
+            "groupname": "upgrade",
+            "helpMarkDown": "This will override all upgrade settings with either the value specified below or the default value if not specified."
+        },
+        {
+            "name": "isUpgrade",
+            "type": "boolean",
+            "label": "Upgrade the Application",
+            "defaultValue": "true",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true"
+        },
+        {
+            "name": "upgradeMode",
+            "type": "pickList",
+            "label": "Upgrade Mode",
+            "defaultValue": "Monitored",
+            "required": true,
+            "options": {
+                "Monitored": "Monitored",
+                "UnmonitoredAuto": "UnmonitoredAuto",
+                "UnmonitoredManual": "UnmonitoredManual"
+            },
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
+        },
+        {
+            "name": "FailureAction",
+            "type": "pickList",
+            "label": "FailureAction",
+            "defaultValue": "Rollback",
+            "required": true,
+            "options": {
+                "Rollback": "Rollback",
+                "Manual": "Manual"
+            },
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+        },
+        {
+            "name": "UpgradeReplicaSetCheckTimeoutSec",
+            "type": "string",
+            "label": "UpgradeReplicaSetCheckTimeoutSec",
+            "defaultValue": "",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
+        },
+        {
+            "name": "ReplicaQuorumTimeoutSec",
+            "type": "string",
+            "label": "ReplicaQuorumTimeoutSec",
+            "defaultValue": "",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
+        },
+        {
+            "name": "TimeoutSec",
+            "type": "string",
+            "label": "TimeoutSec",
+            "defaultValue": "",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
+        },
+        {
+            "name": "Force",
+            "type": "boolean",
+            "label": "Force",
+            "defaultValue": "true",
+            "required": true,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
+        },
+        {
+            "name": "ForceRestart",
+            "type": "boolean",
+            "label": "ForceRestart",
+            "defaultValue": "false",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
+        },
+        {
+            "name": "HealthCheckRetryTimeoutSec",
+            "type": "string",
+            "label": "HealthCheckRetryTimeoutSec",
+            "defaultValue": "",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+        },
+        {
+            "name": "HealthCheckWaitDurationSec",
+            "type": "string",
+            "label": "HealthCheckWaitDurationSec",
+            "defaultValue": "",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+        },
+        {
+            "name": "HealthCheckStableDurationSec",
+            "type": "string",
+            "label": "HealthCheckStableDurationSec",
+            "defaultValue": "",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+        },
+        {
+            "name": "UpgradeDomainTimeoutSec",
+            "type": "string",
+            "label": "UpgradeDomainTimeoutSec",
+            "defaultValue": "",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+        },
+        {
+            "name": "ConsiderWarningAsError",
+            "type": "boolean",
+            "label": "ConsiderWarningAsError",
+            "defaultValue": "false",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+        },
+        {
+            "name": "DefaultServiceTypeHealthPolicy",
+            "type": "string",
+            "label": "DefaultServiceTypeHealthPolicy",
+            "defaultValue": "",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+        },
+        {
+            "name": "MaxPercentUnhealthyDeployedApplications",
+            "type": "string",
+            "label": "MaxPercentUnhealthyDeployedApplications",
+            "defaultValue": "",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+        },
+        {
+            "name": "UpgradeTimeoutSec",
+            "type": "string",
+            "label": "UpgradeTimeoutSec",
+            "defaultValue": "",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+        },
+        {
+            "name": "ServiceTypeHealthPolicyMap",
+            "type": "string",
+            "label": "ServiceTypeHealthPolicyMap",
+            "defaultValue": "",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
         }
     ],
     "execution": {
@@ -49,15 +235,10 @@
         }
     },
     "messages": {
-        "ClusterSecurityMismatch_AAD": "There is a mismatch between the security configuration of the Service Fabric Application Deployment task and the selected publish profile. The task references a service endpoint configured to use Azure Active Directory authentication but the publish profile is not configured to enable Azure Active Directory authentication. Change the configuration of the task or publish profile so that their authentication types match.",
-        "ClusterSecurityMismatch_Certificate": "There is a mismatch between the security configuration of the Service Fabric Application Deployment task and the selected publish profile. The task references a service endpoint configured to use certificate authentication but the publish profile is not configured to enable certificate authentication. Change the configuration of the task or publish profile so that their authentication types match.",
-        "ClusterSecurityMismatch_None": "There is a mismatch between the security configuration of the Service Fabric Application Deployment task and the selected publish profile. The task references a service endpoint configured to use no authentication but the publish profile is configured to use authentication. Change the configuration of the task or publish profile so that their authentication types match.",
         "ItemSearchMoreThanOneFound": "Found more than one item with search pattern {0}. There can be only one.",
         "ItemSearchNoFilesFound": "No items were found with search pattern {0}.",
-        "SearchingForPublishProfile": "Searching for publish profile: {0}",
-        "FoundPublishProfile": "Found publish profile: {0}",
-        "SearchingForApplicationPackage": "Searching for application package: {0}",
-        "FoundApplicationPackage": "Found application package: {0}",
+        "SearchingForPath": "Searching for path: {0}",
+        "FoundPath": "Found path: {0}",
         "ConnectedToCluster": "Successfully connected to cluster.",
         "AadAuthority": "AAD Authority: {0}",
         "ClusterAppId": "Cluster Application ID: {0}",
@@ -67,6 +248,12 @@
         "ErrorOnCertificateImport": "An error occurred attempting to import the certificate. Ensure that your service endpoint is configured properly with a correct certificate value and, if the certificate is password-protected, a valid password. Error message: {0}",
         "ErrorOnAcquireToken": "An error occurred attempting to acquire an Azure Active Directory token. Ensure that your service endpoint is configured properly with valid credentials. Error message: {0}",
         "ImportedCertificate": "Imported cluster client certificate with thumbprint '{0}'.",
+        "ServiceEndpointUpgradeWarning": "Your deploy task has been upgraded to a new version with possible breaking changes. The Cluster Endpoint defined in your service endpoint was previously ignored, but will now override the value in the publish profile. Verify the endpoint is correct and prefixed with 'https://'. In addition, a Server Certificate Thumbprint field has been added to the service endpoint and will also override the publish profile value. Your service endpoint may not have been updated to allow specifying the Server Certificate Thumbprint, in which case we will still use the value from the publish profile and you should try again soon.",
+        "OverrideApplicationParameterFile": "Overriding application parameter file specified in publish profile with '{0}' specified in the VSTS task.",
+        "OverrideUpgradeSettings": "Overriding upgrade settings specified in publish profile with the settings specified in the VSTS Task.",
+        "PublishProfileRequiredServerThumbprint": "A server certificate thumbprint must be defined on the endpoint or a publish profile must be specified in the VSTS task.",
+        "PublishProfileRequiredAppParams": "An application parameters file or a publish profile must be specified in the VSTS task.",
+        "PublishProfileRequiredUpgrade": "Upgrade settings must be overridden or a publish profile must be specified in the VSTS task.",
         "SFSDK_InvalidSFPackage": "{0} is not a valid Service Fabric application package.",
         "SFSDK_PackageValidationFailed": "Validation failed for package: {0}",
         "SFSDK_UnableToVerifyClusterConnection": "Unable to verify connection to Service Fabric cluster.",

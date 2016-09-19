@@ -1,18 +1,18 @@
 {
   "loc.friendlyName": "PowerShell",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613736)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613736)",
   "loc.description": "Ejecute un script de PowerShell",
-  "loc.instanceNameFormat": "PowerShell Script",
+  "loc.instanceNameFormat": "Script de PowerShell",
   "loc.group.displayName.advanced": "Avanzado",
-  "loc.input.label.scriptType": "Type",
-  "loc.input.help.scriptType": "Type of the script: File Path or Inline Script",
-  "loc.input.label.scriptName": "Script Path",
+  "loc.input.label.scriptType": "Tipo",
+  "loc.input.help.scriptType": "Tipo del script: ruta de acceso del archivo o script en línea",
+  "loc.input.label.scriptName": "Ruta de acceso del script",
   "loc.input.help.scriptName": "Ruta de acceso del script que se va a ejecutar. Debe ser una ruta de acceso completa o relativa al directorio de trabajo predeterminado.",
   "loc.input.label.arguments": "Argumentos",
   "loc.input.help.arguments": "Argumentos pasados al script de PowerShell. Pueden ser parámetros ordinales o parámetros con nombre",
   "loc.input.label.workingFolder": "Carpeta de trabajo",
   "loc.input.help.workingFolder": "Directorio de trabajo actual cuando el script se ejecuta. Se establece de forma predeterminada en la carpeta donde está el script.",
-  "loc.input.label.inlineScript": "Inline Script",
-  "loc.input.label.failOnStandardError": "Error en Error estándar",
-  "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely solely on $LASTEXITCODE and the exit code to determine failure. This feature requires an agent version 1.102 or higher, to enable not failing on STDERR."
+  "loc.input.label.inlineScript": "Script en línea",
+  "loc.input.label.failOnStandardError": "Fail on Standard Error",
+  "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely solely on $LASTEXITCODE and the exit code to determine failure."
 }

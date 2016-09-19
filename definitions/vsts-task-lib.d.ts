@@ -1,4 +1,3 @@
-
 declare module 'vsts-task-lib/taskcommand' {
 	export class TaskCommand {
 	    constructor(command: any, properties: any, message: any);
@@ -74,6 +73,24 @@ declare module 'vsts-task-lib/toolrunner' {
 	     * @returns   void
 	     */
 	    argString(val: string): void;
+		/**
+		 * Append argument command line string
+		 * e.g. '"arg one" two -z' would append args[]=['arg one', 'two', '-z']
+		 * returns ToolRunner for chaining
+		 *
+		 * @param     val        string cmdline
+		 * @returns   ToolRunner
+		 */
+		line(val: string): void;
+	    /**
+	     * Append argument command line string
+	     * e.g. '"arg one" two -z' would append args[]=['arg one', 'two', '-z']
+	     * returns ToolRunner for chaining
+	     *
+	     * @param     val        string cmdline
+	     * @returns   ToolRunner 
+	     */
+	    line(val: string): ToolRunner;
 	    /**
 	     * Add path argument
 	     * Add path string to argument, path string should not contain double quoted
@@ -92,7 +109,13 @@ declare module 'vsts-task-lib/toolrunner' {
 	     * @returns   void
 	     */
 	    argIf(condition: any, val: any): void;
-	    /**
+		/**
+		 * Pipe output of exec() to another tool
+		 * @param tool
+		 * @returns {ToolRunner}
+		 */
+		public pipeExecOutputToTool(tool: ToolRunner) : ToolRunner;
+		/**
 	     * Exec a tool.
 	     * Output will be streamed to the live console.
 	     * Returns promise with return code
@@ -342,6 +365,19 @@ declare module 'vsts-task-lib/task' {
 	 * @returns   boolean
 	 */
 	export function exist(path: string): boolean;
+
+	/**
+	 * Interface to wrap file options
+	 */
+	export interface FsOptions {}
+
+	/**
+	 * Synchronously writes data to a file, replacing the file if it already exists.
+	 * @param file
+	 * @param data
+	 * @param options
+	 */
+	export function writeFile(file: string, data:string|Buffer, options?:string|FsOptions);
 	/**
 	 * Useful for determining the host operating system.
 	 * see [os.type](https://nodejs.org/api/os.html#os_os_type)
@@ -441,13 +477,34 @@ declare module 'vsts-task-lib/task' {
 	 */
 	export function mv(source: string, dest: string, force: boolean, continueOnError?: boolean): boolean;
 	/**
+	 * Interface for FindOptions
+	 * Contains properties to control whether to follow symlinks
+	 *
+	 * @param followSpecifiedSymbolicLink   Equivalent to the -H command line option. Indicates whether to traverse descendants if the specified path is a symbolic link directory. Does not cause nested symbolic link directories to be traversed.
+	 * @param  followSymbolicLinks          Equivalent to the -L command line option. Indicates whether to traverse descendants of symbolic link directories.
+	 */
+	export interface FindOptions {
+		/**
+		 * Equivalent to the -H command line option. Indicates whether to traverse descendants if
+		 * the specified path is a symbolic link directory. Does not cause nested symbolic link
+		 * directories to be traversed.
+		 */
+		followSpecifiedSymbolicLink: boolean;
+
+		/**
+		 * Equivalent to the -L command line option. Indicates whether to traverse descendants of
+		 * symbolic link directories.
+		 */
+		followSymbolicLinks: boolean;
+	}
+	/**
 	 * Find all files under a give path
 	 * Returns an array of full paths
 	 *
 	 * @param     findPath     path to find files under
 	 * @returns   string[]
 	 */
-	export function find(findPath: string): string[];
+	export function find(findPath: string, options?: FindOptions): string[];
 	/**
 	 * Remove a path recursively with force
 	 * Returns whether it succeeds
@@ -489,6 +546,15 @@ declare module 'vsts-task-lib/task' {
 	 * @returns   ToolRunner
 	 */
 	export function createToolRunner(tool: string): trm.ToolRunner;
+
+	/**
+	 * Convenience factory to create a ToolRunner.
+	 *
+	 * @param     tool     path to tool to exec
+	 * @returns   ToolRunner
+	 */
+	export function tool(tool: string) : trm.ToolRunner;
+
 	export function match(list: any, pattern: any, options: any): string[];
 	export function filter(pattern: any, options: any): (element: string, indexed: number, array: string[]) => boolean;
 	export class TestPublisher {
