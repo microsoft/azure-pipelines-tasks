@@ -63,12 +63,18 @@ target.build = function() {
             shouldBuildNode = taskDef.execution.hasOwnProperty('Node');
         }
 
+        // common and externals options specific to our scripts
+        var makeOptions = {};
+        var makePath = path.join(taskPath, 'make.json');
+        if (test('-f', makePath)) {
+            makeOptions = require(makePath);
+        }
+
         //--------------------------------
         // Common: build, copy, install 
         //--------------------------------
-        var commonJsonPath = path.join(taskPath, 'common.json');
-        if (test('-f', commonJsonPath)) {
-            var common = require(commonJsonPath);
+        if (makeOptions.hasOwnProperty('common')) {
+            var common = makeOptions['common'];
 
             common.forEach(function(mod) {
                 var commonPath = path.join(taskPath, mod['module']);
