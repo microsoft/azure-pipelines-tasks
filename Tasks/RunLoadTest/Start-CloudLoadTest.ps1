@@ -343,7 +343,7 @@ function UploadSummaryMdReport($summaryMdPath)
 {
 	Write-Verbose "Summary Markdown Path = $summaryMdPath"
 
-	if (Test-Path($summaryMdPath))
+	if (Test-Path($summaryMdPath) -and ($env:SYSTEM_HOSTTYPE -eq "build"))
 	{	
 		Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=Load test results;]$summaryMdPath"
 	}
