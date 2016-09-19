@@ -245,22 +245,31 @@ function publishCodeChanges(): Q.Promise<string> {
     return defer.promise;
 }
 
+function getVSTestLocation(vsVersion: number): string {
+    if (vstestLocationMethod.toLowerCase() === 'version') {
+        let vsCommon: string = tl.getVariable('VS' + vsVersion + '0COMNTools');
+        if (!vsCommon) {
+            throw(new Error(tl.loc('VstestNotFound', vsVersion)));
+        } else {
+            return path.join(vsCommon, '..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe');
+        }
+    } else if(vstestLocationMethod.toLowerCase() === 'location') {
+        if (!pathExistsAsFile(vstestLocation)) {
+            throw(new Error(tl.loc('AccessDeniedToPath', vstestLocation)));
+        } else {
+            return vstestLocation;
+        }
+    }
+}
+
 function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: string, vsVersion: number, argsArray: string[]): Q.Promise<number> {
     var defer = Q.defer<number>();
-    if (vstestLocationMethod.toLowerCase() === 'version') {
-        let vsCommon = tl.getVariable("VS" + vsVersion + "0COMNTools");
-        if (!vsCommon) {
-            tl.error(tl.loc('VstestNotFound', vsVersion));
-            defer.resolve(1);
-            return defer.promise;
-        }
-        vstestLocation = path.join(vsCommon, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe");
-    } else if (vstestLocationMethod.toLowerCase() === 'location') {
-        if(!tl.exist(vstestLocation)) {
-            tl.error(tl.loc('AccessDeniedToPath', vstestLocation));
-            defer.resolve(1);
-            return defer.promise;
-        }
+    try {
+        vstestLocation = getVSTestLocation(vsVersion);
+    } catch (e) {
+        tl.error(e.message);
+        defer.resolve(1);
+        return defer.promise;
     }
     var vstest = tl.createToolRunner(vstestLocation);
     addVstestArgs(argsArray, vstest);
