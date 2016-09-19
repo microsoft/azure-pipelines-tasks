@@ -6,9 +6,9 @@ import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
 
-var azureRmUtil = require ('./AzureRMUtil.js');
-var msDeployUtility = require('./MSDeployUtility.js');
-var kuduUtility = require('./KuduUtility.js');
+var azureRmUtil = require ('./azurermutil.js');
+var msDeployUtility = require('./msdeployutility.js');
+var kuduUtility = require('./kuduutility.js');
 
 async function run() {
     try {
@@ -48,7 +48,8 @@ async function run() {
             tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
         }
 
-        if(canUseWebDeploy(useWebDeploy)) {        
+        if(canUseWebDeploy(useWebDeploy)) {
+           tl._writeLine("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);         
            tl._writeLine("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);
             await DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
                             excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile,
@@ -112,11 +113,11 @@ async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, 
     catch(error) {
         tl.warning(error);
     }
-    finally {
-        if(!isDeploymentSuccess) {
-            throw Error(deploymentError);
-        }
+
+    if(!isDeploymentSuccess) {
+        throw Error(deploymentError);
     }
+    
 }
 
 /**
@@ -161,11 +162,11 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
     catch(error) {
         tl.warning(error);
     }
-    finally {
-        if(!isDeploymentSuccess) {
-            throw Error(deploymentError);
-        }
+    
+    if(!isDeploymentSuccess) {
+        throw Error(deploymentError);
     }
+
 }
 
 /**
