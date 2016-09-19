@@ -193,7 +193,7 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node": {
-      "target": "AzureRmWebAppDeployment.js"
+      "target": "azurermwebappdeployment.js"
     }
   },
   "messages": {

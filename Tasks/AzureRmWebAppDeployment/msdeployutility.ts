@@ -7,7 +7,7 @@ import tl = require('vsts-task-lib/task');
 import fs = require('fs');
 
 var regedit = require('regedit');
-var azureRmUtil = require('./AzureRMUtil.js');
+var azureRmUtil = require('./azurermutil.js');
 var parseString = require('xml2js').parseString;
 
 /**
