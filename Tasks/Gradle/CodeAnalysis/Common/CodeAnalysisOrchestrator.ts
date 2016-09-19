@@ -59,7 +59,7 @@ export class CodeAnalysisOrchestrator {
         let analysisResults: AnalysisResult[] = [];
 
         for (var tool of tools) {
-            var results = tool.processResults();
+            var results:AnalysisResult[] = tool.processResults();
             if (results) {
                 analysisResults = analysisResults.concat(results);
             }

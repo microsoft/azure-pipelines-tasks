@@ -167,6 +167,10 @@ function assertCodeAnalysisBuildSummaryContains(stagingDir: string, expectedStri
     assertBuildSummaryContains(fs.readFileSync(path.join(stagingDir, '.codeAnalysis', 'CodeAnalysisBuildSummary.md'), 'utf-8'), expectedString);
 }
 
+function assertCodeAnalysisBuildSummaryDoesNotContain(stagingDir: string, string: string): void {
+    assertBuildSummaryDoesNotContain(fs.readFileSync(path.join(stagingDir, '.codeAnalysis', 'CodeAnalysisBuildSummary.md'), 'utf-8'), string);
+}
+
 function assertSonarQubeBuildSummaryContains(stagingDir: string, expectedString: string): void {
     assertBuildSummaryContains(fs.readFileSync(path.join(stagingDir, '.sqAnalysis', 'SonarQubeBuildSummary.md'), 'utf-8'), expectedString);
 }
@@ -177,12 +181,27 @@ function assertBuildSummaryContains(buildSummaryString: string, expectedLine: st
      Actual: ${buildSummaryString}`);
 }
 
+// Asserts the existence of a given line in the build summary file that is uploaded to the server.
+function assertBuildSummaryDoesNotContain(buildSummaryString: string, string: string): void {
+    assert(buildSummaryString.indexOf(string) === -1, `Expected build summary to not contain: ${string}
+     Actual: ${buildSummaryString}`);
+}
+
 function assertFileExistsInDir(stagingDir:string, filePath:string) {
     var directoryName:string = path.dirname(path.join(stagingDir, filePath));
     var fileName:string = path.basename(filePath);
     assert(fs.statSync(directoryName).isDirectory(), 'Expected directory did not exist: ' + directoryName);
     var directoryContents:string[] = fs.readdirSync(directoryName);
     assert(directoryContents.indexOf(fileName) > -1, `Expected file did not exist: ${filePath}
+    Actual contents of ${directoryName}: ${directoryContents}`);
+}
+
+function assertFileDoesNotExistInDir(stagingDir:string, filePath:string) {
+    var directoryName:string = path.dirname(path.join(stagingDir, filePath));
+    var fileName:string = path.basename(filePath);
+    assert(fs.statSync(directoryName).isDirectory(), 'Expected directory did not exist: ' + directoryName);
+    var directoryContents:string[] = fs.readdirSync(directoryName);
+    assert(directoryContents.indexOf(fileName) === -1, `Expected file to not exist, but it does: ${filePath}
     Actual contents of ${directoryName}: ${directoryContents}`);
 }
 
@@ -1466,7 +1485,7 @@ describe('Maven Suite', function () {
             });
     });
 
-    it('Maven with Checkstyle, PMD & FindBugs - Uploads results for tools when report files are present, even if those tools are not enabled', function (done) {
+    it('Maven with code analysis - Uploads results for tools when report files are present, even if those tools are not enabled', function (done) {
         // In the test data:
         // /: pom.xml, target/.
         // Expected: one module, root.
@@ -1529,13 +1548,81 @@ describe('Maven Suite', function () {
                 assertFileExistsInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.html');
                 assertFileExistsInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.xml');
 
+                done();
+            })
+            .fail((err) => {
+                console.log(taskRunner.stdout);
+                console.log(taskRunner.stderr);
+                console.log(err);
+                done(err);
+            });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
+    });
+
+    it('Maven with code analysis - Only shows empty results for tools which are enabled', function (done) {
+        // In the test data:
+        // /: pom.xml, target/.
+        // Expected: one module, root.
+
+        // Arrange
+        createTempDirsForCodeAnalysisTests();
+        var testSrcDir: string = path.join(__dirname, 'data', 'singlemodule-noviolations');
+        var testStgDir: string = path.join(__dirname, '_temp');
+
+        var responseJsonFilePath: string = path.join(__dirname, 'response.json');
+        var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
+
+        // Add fields corresponding to responses for mock filesystem operations for the following paths
+        // Staging directories
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        // Test data files
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+
+        // Set mocked build variables
+        responseJsonContent.getVariable = responseJsonContent.getVariable || {};
+        responseJsonContent.getVariable['build.sourcesDirectory'] = testSrcDir;
+        responseJsonContent.getVariable['build.artifactStagingDirectory'] = testStgDir;
+
+        // Write and set the newly-changed response file
+        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
+        fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
+        setResponseFile(path.basename(newResponseFilePath));
+
+        // Set up the task runner with the test settings
+        var taskRunner: trm.TaskRunner = setupDefaultMavenTaskRunner();
+        taskRunner.setInput('checkstyleAnalysisEnabled', 'false');
+        taskRunner.setInput('pmdAnalysisEnabled', 'false');
+        taskRunner.setInput('findbugsAnalysisEnabled', 'true');
+
+        // Act
+        taskRunner.run()
+            .then(() => {
+                // Assert
+                assert(taskRunner.resultWasSet, 'should have set a result');
+                assert(taskRunner.stdout.length > 0, 'should have written to stdout');
+                assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
+                assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
+                assert(taskRunner.succeeded, 'task should have succeeded');
+                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package findbugs:findbugs'),
+                    'should have run maven with the correct arguments');
+                assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
+                    'should have uploaded a Code Analysis Report build summary');
+                assert(taskRunner.stdout.indexOf('##vso[artifact.upload artifactname=Code Analysis Results;]') > -1,
+                    'should have uploaded a code analysis build artifact');
+
+                assertCodeAnalysisBuildSummaryDoesNotContain(testStgDir, 'Checkstyle found no violations.');
+                assertCodeAnalysisBuildSummaryDoesNotContain(testStgDir, 'PMD found no violations.');
+                assertCodeAnalysisBuildSummaryContains(testStgDir, 'FindBugs found no violations.');
+
                 var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
 
-                // Test files copied for root module, build 1
-                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_checkstyle_Checkstyle.xml');
-                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_findbugs_FindBugs.xml');
-                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.html');
-                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.xml');
+                // No files should have been copied since they all report no violations
+                assertFileDoesNotExistInDir(codeAnalysisStgDir, 'root/1_checkstyle_Checkstyle.xml');
+                assertFileDoesNotExistInDir(codeAnalysisStgDir, 'root/1_findbugs_FindBugs.xml');
+                assertFileDoesNotExistInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.html');
+                assertFileDoesNotExistInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.xml');
 
                 done();
             })
@@ -1550,7 +1637,7 @@ describe('Maven Suite', function () {
         cleanTempDirsForCodeAnalysisTests();
     });
 
-    it('Maven with Checkstyle, PMD & FindBugs - Executes and uploads results for all enabled tools', function (done) {
+    it('Maven with code analysis - Executes and uploads results for all enabled tools', function (done) {
         // In the test data:
         // /: pom.xml, target/.
         // Expected: one module, root.
