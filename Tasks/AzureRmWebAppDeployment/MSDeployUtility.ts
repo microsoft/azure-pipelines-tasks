@@ -4,6 +4,7 @@
 
 import Q = require('q');
 import tl = require('vsts-task-lib/task');
+import fs = require('fs');
 
 var regedit = require('regedit');
 var azureRmUtil = require('./AzureRMUtil.js');
@@ -52,7 +53,7 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
     msDeployCmdArgs += "ComputerName='https://" + publishingProfile.publishUrl + "/msdeploy.axd?site=" + webAppName + "',";
     msDeployCmdArgs += "UserName='" + publishingProfile.userName + "',Password='" + publishingProfile.userPWD + "',AuthType='Basic'";
 
-    if(isParamFilePresentInPacakge || setParametersFile != null) {
+    if(isParamFilePresentInPacakge) {
         msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='" + webApplicationDeploymentPath + "'";
     }
 
@@ -92,20 +93,19 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
 export async  function containsParamFile(webAppPackage: string ) {
     var msDeployPath = await getMSDeployFullPath();
     var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package=\"" + webAppPackage + "\"";
-
+    
     var msDeployParamFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'msDeployParam.bat';
-
+    var parameterFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'parameter.xml';
+    
     var silentCommand = '@echo off \n';
-    var msDeployCommand = '"' + msDeployPath + '" ' + msDeployCheckParamFileCmdArgs;
+    var msDeployCommand = '"' + msDeployPath + '" ' + msDeployCheckParamFileCmdArgs + " > \"" + parameterFile + "\"";
     var batchCommand = silentCommand + msDeployCommand;
 
     tl.writeFile(msDeployParamFile, batchCommand);
     tl._writeLine(tl.loc("Runningcommand", msDeployCommand));
 
-    var taskResult = tl.execSync("cmd", ['/C', msDeployParamFile], { failOnStdErr: true });
-    var paramContentXML = taskResult.stdout;
-    paramContentXML = paramContentXML.replace(msDeployCommand, "");
-    tl.debug(tl.loc("Paramscontentofwebpackage0", paramContentXML));
+    var taskResult = tl.execSync("cmd", ['/C', msDeployParamFile], { failOnStdErr: true, silent: true });
+    var paramContentXML = fs.readFileSync(parameterFile);
     var isParamFilePresent = false;
     await parseString(paramContentXML, (error, result) => {
         if(error) {

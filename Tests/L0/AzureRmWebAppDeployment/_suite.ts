@@ -90,7 +90,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
 
         tr.run()
             .then(() => {
-                
+
                 assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 var expectedOut = 'Updated history to kudu'; 
@@ -170,11 +170,11 @@ describe('AzureRmWebAppDeployment Suite', function() {
         tr.setInput('WebAppName', 'mytestapp');
         tr.setInput('Package', 'webAppPkg.zip');
         tr.setInput('UseWebDeploy', 'true');
-        tr.setInput('SetParametersFile1', 'parameterFilePresent.xml');
+        tr.setInput('SetParametersFile', 'parameterFilePresent.xml');
         
         tr.run()
             .then(() => {
-                
+
                 assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 var expectedOut = 'Updated history to kudu'; 
@@ -226,7 +226,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         tr.setInput('WebAppName', 'mytestapp');
         tr.setInput('Package', 'webAppPkg.zip');
         tr.setInput('UseWebDeploy', 'true');
-        tr.setInput('SetParametersFile1', 'parameterFileUser.xml');
+        tr.setInput('SetParametersFile', 'parameterFileUser.xml');
 
         tr.run()
             .then(() => {
@@ -253,7 +253,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         tr.setInput('WebAppName', 'mytestapp');
         tr.setInput('Package', 'webAppPkg.zip');
         tr.setInput('UseWebDeploy', 'true');
-        tr.setInput('SetParametersFile1', 'invalidparameterFile.xml');
+        tr.setInput('SetParametersFile', 'invalidparameterFile.xml');
 
         tr.run()
             .then(() => {
