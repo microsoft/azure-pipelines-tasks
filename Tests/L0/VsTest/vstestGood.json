@@ -80,6 +80,9 @@
         "settings.runsettings": {
             "isFile": true
         },
+        "some\\path\\to\\vstest.console.exe" : {
+            "isFile": true
+        },
         "path/to/customadapters": {
             "isDirectory": true
         }
