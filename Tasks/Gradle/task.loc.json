@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 56
+    "Patch": 60
   },
   "demands": [
     "java"
@@ -193,7 +193,7 @@
       "label": "ms-resource:loc.input.label.gradleOpts",
       "required": false,
       "groupName": "advanced",
-      "defaultValue": "-Xmx2048m",
+      "defaultValue": "-Xmx1024m",
       "helpMarkDown": "ms-resource:loc.input.help.gradleOpts"
     },
     {
@@ -349,6 +349,8 @@
     "codeAnalysisBuildSummaryLine_OneViolationOneFile": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_OneViolationOneFile",
     "codeAnalysisBuildSummaryLine_NoViolations": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_NoViolations",
     "codeAnalysisBuildSummaryTitle": "ms-resource:loc.messages.codeAnalysisBuildSummaryTitle",
-    "codeAnalysisArtifactSummaryTitle": "ms-resource:loc.messages.codeAnalysisArtifactSummaryTitle"
+    "codeAnalysisArtifactSummaryTitle": "ms-resource:loc.messages.codeAnalysisArtifactSummaryTitle",
+    "LocateJVMBasedOnVersionAndArch": "ms-resource:loc.messages.LocateJVMBasedOnVersionAndArch",
+    "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM"
   }
 }

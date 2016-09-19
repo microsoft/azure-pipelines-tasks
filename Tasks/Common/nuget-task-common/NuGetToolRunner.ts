@@ -24,7 +24,7 @@ function prepareNuGetExeEnvironment(
     let env: EnvironmentDictionary = {};
     let originalCredProviderPath: string;
     for (let e in input) {
-        if(input.hasOwnProperty(e)) {
+        if (!input.hasOwnProperty(e)) {
             continue;
         }
         // NuGet.exe extensions only work with a single specific version of nuget.exe. This causes problems
@@ -271,11 +271,5 @@ export function isCredentialConfigEnabled(quirks: NuGetQuirks): boolean {
 }
 
 export function locateCredentialProvider(): string {
-    const credentialProviderLocation = locateTool("CredentialProvider.TeamBuild.exe");
-    if (!credentialProviderLocation) {
-        tl.debug("Credential provider is not present.");
-        return null;
-    }
-
-    return credentialProviderLocation;
+    return path.join(__dirname, 'NuGet/CredentialProvider');
 }

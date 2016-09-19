@@ -11,6 +11,7 @@ import {SonarQubeEndpoint} from './endpoint';
 import {SonarQubeRunSettings} from './run-settings';
 import {SonarQubeReportBuilder} from './report-builder';
 import {SonarQubeMetrics} from './metrics';
+import {FileSystemInteractions} from '../Common/FileSystemInteractions';
 
 /**
  * Class provides functions for effecting change on the VSTS serverside.
@@ -59,14 +60,14 @@ export class VstsServerUtils {
      * @returns {Promise<void>} Promise resolved when action completes.
      */
     public static processSonarQubeBuildSummary(sqRunSettings:SonarQubeRunSettings, sqMetrics:SonarQubeMetrics):Q.Promise<void> {
-    // During a pull request build, data necessary to create SQRunSettings is not available
-    if (sqRunSettings == null || VstsServerUtils.isPrBuild()) {
-        console.log(tl.loc('sqAnalysis_IsPullRequest_SkippingBuildSummary'));
-        return Q.when<void>(null);
-    }
+        // During a pull request build, data necessary to create SQRunSettings is not available
+        if (sqRunSettings == null || VstsServerUtils.isPrBuild()) {
+            console.log(tl.loc('sqAnalysis_IsPullRequest_SkippingBuildSummary'));
+            return Q.when<void>(null);
+        }
 
-    // Necessary data is not available during a pull request build
-    return VstsServerUtils.createSonarQubeBuildSummary(sqRunSettings, sqMetrics)
+        // Necessary data is not available during a pull request build
+        return VstsServerUtils.createSonarQubeBuildSummary(sqRunSettings, sqMetrics)
             .then((buildSummaryContents:string) => {
                 return VstsServerUtils.saveSonarQubeBuildSummary(buildSummaryContents);
             })
@@ -145,7 +146,7 @@ export class VstsServerUtils {
      */
     private static getOrCreateSonarQubeStagingDirectory(): string {
         var sqStagingDir = path.join(tl.getVariable('build.artifactStagingDirectory'), ".sqAnalysis");
-        tl.mkdirP(sqStagingDir);
+        FileSystemInteractions.createDirectory(sqStagingDir);
         return sqStagingDir;
     }
 

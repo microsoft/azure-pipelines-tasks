@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 14
+        "Patch": 16
     },
     "minimumAgentVersion": "1.83.0",
     "groups": [
@@ -79,6 +79,20 @@
                 "Normal": "Normal",
                 "Detailed": "Detailed"
             }
+        },   
+        {
+            "name": "nuGetVersion",
+            "type": "radio",
+            "label": "NuGet Version",
+            "defaultValue": "3.3.0",
+            "helpMarkDown": "The version of NuGet to use, or external verson.",
+            "required": "true",
+            "groupName": "advanced",
+            "options": {
+                "3.3.0": "3.3.0",
+                "3.5.0.1829": "3.5.0 – build 1829 (rc2)",
+                "custom" : "Custom"
+            }
         },
         {
             "name": "nuGetPath",
@@ -86,18 +100,9 @@
             "label": "Path to NuGet.exe",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Optionally supply the path to NuGet.exe",
+            "helpMarkDown": "Optionally supply the path to NuGet.exe. Will override version selection.",
             "groupName": "advanced"
-        },
-        {
-            "name": "preCredProviderNuGet",
-            "type": "boolean",
-            "label": "Path to NuGet.exe is below version 3.2",
-            "groupName": "advanced",
-            "defaultValue": "false",
-            "helpMarkDown": "If you are supplying a path to nuget.exe and it is older than NuGet 3.2, check this box and fill in a 'Path to NuGet.config' above. Has no effect if 'Path to NuGet.exe' is not specified.",
-            "required": "false"
-        }
+        }     
     ],
     "execution": {
         "Node": {
@@ -108,6 +113,7 @@
     "messages": {
         "Warning_NoConfigForOldNuGet": "To connect to NuGet feeds hosted in your Team Services account/TFS project collection with NuGet 3.1 or below, edit your build definition to specify a path to a NuGet.config containing the package sources you wish to use.",
         "Warning_NoConfigForNoCredentialProvider": "To connect to NuGet feeds hosted in your Team Services account/TFS project collection on this build agent, edit your build definition to specify a path to a NuGet.config containing the package sources you wish to use.",
+        "Warning_ConflictingNuGetPreference" : "NuGet 3.3 was selected, but a custom NuGet path was provided. The custom path will be preferred. To resolve this warning, edit your build task and select 'custom' for NuGet version under Advanced.",
         "PackagesInstalledSuccessfully": "Packages were installed successfully",
         "PackagesFailedToInstall": "Packages failed to install",
         "ConnectingAs": "Connecting to feeds in your Team Services account/TFS project collection as '%s' [%s]",
@@ -116,6 +122,7 @@
         "NotARegularFile": "%s i not a solution file. Check the 'path to solution or packages.config' property of the NuGetInstaller task.",
         "UnknownRestoreMode": "Unknown restore mode '%s'",
         "CouldNotFindNuGetService": "Could not find the NuGet service. This task will be unable to authenticate to feeds hosted in your Team Services account/TFS project collection.",
+        "NoNuGetSpecified" : "If 'custom' is selected, you must provide a path to NuGet.exe",
      
         "NGCommon_DetectedNuGetVersion": "Detected NuGet version %s / %s",
         "NGCommon_IgnoringNuGetExtensionsPath": "Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable). Extensions are ignored when using the built-in NuGet client",
@@ -127,7 +134,8 @@
         "NGCommon_NuGetConfigIsInvalid": "The NuGet.config at %s is invalid.",
         "NGCommon_RemovingSources": "Preparing to set credentials in NuGet.config",
         "NGCommon_AddingSources": "Setting credentials in NuGet.config",
-        "NGCommon_NoSourcesFoundInConfig": "No package sources were found in the NuGet.config file at %s"
+        "NGCommon_NoSourcesFoundInConfig": "No package sources were found in the NuGet.config file at %s",
+        "NGCommon_UnabletoDetectNuGetVersion" : "Unknown NuGet version selected."
 
     }
 }

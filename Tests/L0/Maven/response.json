@@ -68,9 +68,17 @@
             "code": 0,
             "stdout": "Maven package and Checkstyle analysis done"
         },
-        "/home/bin/maven/bin/mvn -f pom.xml package checkstyle:checkstyle pmd:pmd": {
+        "/home/bin/maven/bin/mvn -f pom.xml package findbugs:findbugs": {
             "code": 0,
-            "stdout": "Maven package and Checkstyle analysis and PMD analysis done"
+            "stdout": "Maven package and FindBugs analysis done"
+        },
+        "/home/bin/maven/bin/mvn -f pom.xml package checkstyle:checkstyle findbugs:findbugs pmd:pmd": {
+            "code": 0,
+            "stdout": "Maven package and Checkstyle analysis and PMD analysis and FindBugs analysis done"
+        },
+        "reg query HKLM\\SOFTWARE\\JavaSoft\\Java Development Kit\\1.5 /v JavaHome /reg:32": { 
+            "code": 222, 
+            "stdout": "" 
         }
     },
     "checkPath": {

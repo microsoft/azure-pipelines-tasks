@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "xml2js": "^0.4.16",
+    "vsts-task-lib": "0.9.7",
     "request": "^2.74.0"
   }
 }

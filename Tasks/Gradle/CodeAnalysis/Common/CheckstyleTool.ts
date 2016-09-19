@@ -15,7 +15,7 @@ import tl = require('vsts-task-lib/task');
 
 /**
  * An object that is able to configure the build to run PMD and identify and parse PMD reports
- * 
+ *
  * @export
  * @class PmdReportParser
  * @implements {IAnalysisToolReportParser}
@@ -26,6 +26,11 @@ export class CheckstyleTool extends BaseTool {
         super('Checkstyle', buildOutput, boolInputName);
     }
 
+    /**
+     * Configures the provided ToolRunner instance with arguments which will invoke the tool represented by this class.
+     * @param toolRunner
+     * @returns {ToolRunner} ToolRunner instance with arguments applied
+     */
     public configureBuild(toolRunner: ToolRunner): ToolRunner {
         if (this.isEnabled()) {
             console.log(tl.loc('codeAnalysis_ToolIsEnabled'), this.toolName);
@@ -46,8 +51,8 @@ export class CheckstyleTool extends BaseTool {
     }
 
     /**
-    * Implementers must specify where the XML reports are located
-    */
+     * Implementers must specify where the XML reports are located
+     */
     protected getBuildReportDir(output: ModuleOutput) {
 
         switch (this.buildOutput.buildEngine) {
@@ -62,10 +67,10 @@ export class CheckstyleTool extends BaseTool {
     }
 
     /**
-    * Report parser that extracts the number of affected files and the number of violations from a report
-    *
-    * @returns a tuple of [affected_file_count, violation_count]
-    */
+     * Report parser that extracts the number of affected files and the number of violations from a report
+     *
+     * @returns a tuple of [affected_file_count, violation_count]
+     */
     protected parseXmlReport(xmlReport: string, moduleName: string): [number, number] {
         let fileCount = 0;
         let violationCount = 0;

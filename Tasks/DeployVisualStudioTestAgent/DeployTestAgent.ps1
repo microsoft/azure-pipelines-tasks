@@ -38,7 +38,6 @@ Write-Verbose "disableScreenSaver = $disableScreenSaver"
 Write-Verbose "updateTestAgent = $updateTestAgent"
 Write-Verbose "isDataCollectionOnly = $isDataCollectionOnly"
 
-
 if ([string]::IsNullOrWhiteSpace($agentLocation))
 {
    Write-Verbose "Download of testagent would begin from internet"

@@ -14,7 +14,9 @@ param(
     [string]$publishRunAttachments,
     [string]$runInParallel,
     [string]$vstestLocationMethod,
-    [string]$vstestLocation
+    [string]$vstestLocation,
+    [string]$runOnlyImpactedTests,
+    [string]$runAllTestsAfterXBuilds
     )
 
 Write-Verbose "Entering script VSTest.ps1"
@@ -41,6 +43,8 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.CodeCoverage"
 
 . $PSScriptRoot\Helpers.ps1
 
+
+$testResultsDirectory=""
 
 try
 {
@@ -83,8 +87,7 @@ try
 
     $codeCoverage = Convert-String $codeCoverageEnabled Boolean
 
-    $diagFileName = [system.IO.path]::GetTempFileName()
-    if($testAssemblyFiles)
+    if($testAssemblyFiles.count -gt 0)
     {
         Write-Verbose -Verbose "Calling Invoke-VSTest for all test assemblies"
 
@@ -131,10 +134,6 @@ try
             $vstestLocationInput = $null
         }
 
-        $artifactsDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.ArtifactsDirectory" -Global $FALSE
-
-        $workingDirectory = $artifactsDirectory
-
         if($runInParallel -eq "True")
         {
             $rightVSVersionAvailable = IsVisualStudio2015Update1OrHigherInstalled $vsTestVersion $vstestLocationInput
@@ -153,13 +152,32 @@ try
         {
             $testResultsDirectory = Get-ResultsLocation $runSettingsFileWithParallel 
         }
-        if(!$testResultsDirectory)
+
+         $buildSourcesDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "Build.SourcesDirectory"
+        if(![string]::IsNullOrEmpty($buildSourcesDirectory))
+        {
+            #For Build
+            $workingDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.DefaultWorkingDirectory"
+        }
+        else
+        {
+            #For RM
+            $workingDirectory = Get-TaskVariable -Context $distributedTaskContext -Name "System.ArtifactsDirectory"
+        }
+
+        if([string]::IsNullOrEmpty($testResultsDirectory))
         {
             $testResultsDirectory = $workingDirectory + [System.IO.Path]::DirectorySeparatorChar + "TestResults"
-        } 
+        }
+
         Write-Verbose "Test results directory: $testResultsDirectory"
 
-        
+        if($runOnlyImpactedTests -eq "True")
+        {
+            Write-Warning ("Running all tests. To run only impacted tests, move the task to the node implementation.")
+        }
+
+
         if (![String]::IsNullOrWhiteSpace($vstestLocationInput) -And (InvokeVsTestCmdletHasMember "VSTestLocation"))
         {
             Invoke-VSTest -TestAssemblies $testAssemblyFiles -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFileWithParallel -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $workingDirectory -TestResultsFolder $testResultsDirectory -SourcesDirectory $sourcesDirectory -VSTestLocation $vstestLocationInput
@@ -175,7 +193,6 @@ try
         Write-Host "##vso[task.logissue type=warning;code=002004;]"
         Write-Warning (Get-LocalizedString -Key "No test assemblies found matching the pattern: '{0}'." -ArgumentList $testAssembly)
     }
-    ##vso[task.uploadlog]$diagFileName
 }
 catch
 {

@@ -26,6 +26,14 @@
       "isExpanded": true
     },
     {
+      "name": "tiaOptions",
+      "displayName": "ms-resource:loc.group.displayName.tiaOptions",
+      "isExpanded": true,
+      "tags": [
+        "Preview"
+      ]
+    },
+    {
       "name": "advancedExecutionOptions",
       "displayName": "ms-resource:loc.group.displayName.advancedExecutionOptions",
       "isExpanded": false
@@ -90,6 +98,24 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.runInParallel",
       "groupName": "executionOptions"
+    },
+    {
+      "name": "runOnlyImpactedTests",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.runOnlyImpactedTests",
+      "defaultValue": "False",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.runOnlyImpactedTests",
+      "groupName": "tiaOptions"
+    },
+    {
+      "name": "runAllTestsAfterXBuilds",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.runAllTestsAfterXBuilds",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.runAllTestsAfterXBuilds",
+      "groupName": "tiaOptions"
     },
     {
       "name": "vstestLocationMethod",
@@ -215,7 +241,9 @@
     "ErrorWhileCreatingResponseFile": "ms-resource:loc.messages.ErrorWhileCreatingResponseFile",
     "ErrorWhileUpdatingResponseFile": "ms-resource:loc.messages.ErrorWhileUpdatingResponseFile",
     "ErrorWhilePublishingCodeChanges": "ms-resource:loc.messages.ErrorWhilePublishingCodeChanges",
+    "ErrorWhileListingDiscoveredTests": "ms-resource:loc.messages.ErrorWhileListingDiscoveredTests",
     "PublishCodeChangesPerfTime": "ms-resource:loc.messages.PublishCodeChangesPerfTime",
-    "GenerateResponseFilePerfTime": "ms-resource:loc.messages.GenerateResponseFilePerfTime"
+    "GenerateResponseFilePerfTime": "ms-resource:loc.messages.GenerateResponseFilePerfTime",
+    "UploadTestResultsPerfTime": "ms-resource:loc.messages.UploadTestResultsPerfTime"
   }
 }

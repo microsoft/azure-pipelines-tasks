@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 62
+    "Patch": 67
   },
   "minimumAgentVersion": "1.89.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -228,7 +228,7 @@
       "label": "ms-resource:loc.input.label.mavenOpts",
       "required": false,
       "groupName": "advanced",
-      "defaultValue": "-Xmx2048m",
+      "defaultValue": "-Xmx1024m",
       "helpMarkDown": "ms-resource:loc.input.help.mavenOpts"
     },
     {
@@ -323,6 +323,15 @@
       "defaultValue": "false",
       "groupName": "CodeAnalysis",
       "helpMarkDown": "ms-resource:loc.input.help.pmdAnalysisEnabled"
+    },
+    {
+      "name": "findbugsAnalysisEnabled",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.findbugsAnalysisEnabled",
+      "required": false,
+      "defaultValue": "false",
+      "groupName": "CodeAnalysis",
+      "helpMarkDown": "ms-resource:loc.input.help.findbugsAnalysisEnabled"
     }
   ],
   "execution": {
@@ -356,6 +365,8 @@
     "codeAnalysisBuildSummaryLine_OneViolationOneFile": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_OneViolationOneFile",
     "codeAnalysisBuildSummaryLine_NoViolations": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_NoViolations",
     "codeAnalysisBuildSummaryTitle": "ms-resource:loc.messages.codeAnalysisBuildSummaryTitle",
-    "codeAnalysisArtifactSummaryTitle": "ms-resource:loc.messages.codeAnalysisArtifactSummaryTitle"
+    "codeAnalysisArtifactSummaryTitle": "ms-resource:loc.messages.codeAnalysisArtifactSummaryTitle",
+    "LocateJVMBasedOnVersionAndArch": "ms-resource:loc.messages.LocateJVMBasedOnVersionAndArch",
+    "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM"
   }
 }

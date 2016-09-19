@@ -60,7 +60,8 @@ function Get-AzureStorageAccountTypeFromRDFE
 function Create-AzureContainer
 {
     param([string]$containerName,
-          [object]$storageContext)
+          [object]$storageContext,
+          [boolean]$isPremiumStorage)
 }
 
 # deletes azure container from storageaccount whose information is present in $storageContext

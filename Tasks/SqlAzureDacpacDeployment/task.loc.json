@@ -152,8 +152,7 @@
       "visibleRule": "TaskNameSelector = InlineSqlTask",
       "properties": {
         "resizable": "true",
-        "rows": "10",
-        "maxLength": "5000"
+        "rows": "10"
       }
     },
     {
