@@ -8,8 +8,9 @@ import fs = require("fs");
 import util = require("util");
 
 var minimist = require("minimist");
-var azure_rest = require("ms-rest-azure");
-var arm = require("azure-arm-resource");
+var msRestAzure = require("ms-rest-azure");
+var arm_resource = require("azure-arm-resource");
+var computeManagementClient = require('azure-arm-compute');
 
 try{
     tl.setResourcePath(path.join( __dirname, "task.json"));
@@ -94,7 +95,7 @@ export class deployAzureRG {
         var servicePrincipalId:string = endpointAuth.parameters["serviceprincipalid"];
         var servicePrincipalKey:string = endpointAuth.parameters["serviceprincipalkey"];
         var tenantId:string = endpointAuth.parameters["tenantid"];
-        credentials = new azure_rest.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalKey);
+        credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalKey);
         return credentials;
     }
 
@@ -109,7 +110,7 @@ export class deployAzureRG {
     
     private createTemplateDeployment(){
         var credentials = this.getRMCredentials();
-        var rmClient = new arm.ResourceManagementClient(credentials, this.subscriptionId); 
+        var rmClient = new arm_resource.ResourceManagementClient(credentials, this.subscriptionId); 
         var template;
         try{ 
             template= JSON.parse(fs.readFileSync(this.csmFile, 'UTF-8'));
@@ -155,7 +156,7 @@ export class deployAzureRG {
 
     private deleteResourceGroup(){
         var credentials = this.getRMCredentials();
-        var rmClient = new arm.ResourceManagementClient(credentials, this.subscriptionId);
+        var rmClient = new arm_resource.ResourceManagementClient(credentials, this.subscriptionId);
         rmClient.resourceGroups.deleteMethod(this.resourceGroupName,(error, result, request, response) =>{
             if (error){
                 tl.setResult(tl.TaskResult.Failed, tl.loc("Deletion of RG failed :"+ this.resourceGroupName));
@@ -164,6 +165,84 @@ export class deployAzureRG {
             tl.setResult(tl.TaskResult.Succeeded, tl.loc("Successfully deleted "+ this.resourceGroupName));
         });
     }
+
+    private VMActions(){
+        var azureCredentials = msRestAzure.ServiceClient(this.getRMCredentials());
+        var client = new computeManagementClient(azureCredentials, this.subscriptionId);
+        client.virtualMachines.list(this.resourceGroupName,(error,result,request,response)=>{
+            var list = [];
+            for(var resource in result){
+                if (resource["type"] == "Microsoft.Compute/virtualMachines") 
+                    list = list.concat(resource["name"]);
+            }
+            switch (this.action){
+                case "Start":
+                    this.startAllVMs(client, list);
+                    break;
+                case "Stop":
+                    this.shutdownAllVMs(client,list);
+                    break;
+                case "Restart":
+                    this.restartAllVMs(client,list);
+                    break;
+                case "Delete":
+                    this.deleteAllVMs(client,list);
+                    break;
+                default:
+                    tl.setResult(tl.TaskResult.Failed, tl.loc("InvalidAction"));
+            }
+
+        });
+    }
+
+    private startAllVMs(client,listOfVms){
+        for (var i=0; i<listOfVms.length; i++){
+            var vmName = listOfVms[i];
+            client.virtualMachines.start(this.resourceGroupName, vmName, (error,result,request,response)=>{
+                if (error){
+                    tl.setResult(tl.TaskResult.Failed, tl.loc("CouldNotStartVM", vmName));
+                }
+            });
+        }
+        tl.setResult(tl.TaskResult.Succeeded, tl.loc("SuccessfullyStartedVM", vmName));
+    }
+
+    private restartAllVMs(client,listOfVms){
+        for (var i=0; i<listOfVms.length; i++){
+            var vmName = listOfVms[i];
+            client.virtualMachines.restart(this.resourceGroupName, vmName, (error,result,request,response)=>{
+                if (error){
+                    tl.setResult(tl.TaskResult.Failed, tl.loc("CouldNotRestartVM", vmName));
+                }
+            });
+        }
+        tl.setResult(tl.TaskResult.Succeeded, tl.loc("SuccessfullyRestartedVM", vmName));
+    }
+
+    private shutdownAllVMs(client,listOfVms){
+        for (var i=0; i<listOfVms.length; i++){
+            var vmName = listOfVms[i];
+            client.virtualMachines.powerOff(this.resourceGroupName, vmName, (error,result,request,response)=>{
+                if (error){
+                    tl.setResult(tl.TaskResult.Failed, tl.loc("CouldNotShutdownVM", vmName));
+                }
+            });
+        }
+        tl.setResult(tl.TaskResult.Succeeded, tl.loc("SuccessfullyShutdownVM", vmName));
+    }
+
+    private deleteAllVMs(client,listOfVms){
+        for (var i=0; i<listOfVms.length; i++){
+            var vmName = listOfVms[i];
+            client.virtualMachines.deleteMethod(this.resourceGroupName, vmName, (error,result,request,response)=>{
+                if (error){
+                    tl.setResult(tl.TaskResult.Failed, tl.loc("CouldNotDeleteVM", vmName));
+                }
+            });
+        }
+        tl.setResult(tl.TaskResult.Succeeded, tl.loc("SuccessfullyDeleteVM", vmName));
+    }
+
 }
 
 var controller = new deployAzureRG();
