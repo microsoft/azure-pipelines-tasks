@@ -1,8 +1,8 @@
 {
     "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
     "name": "AzureRMWebAppDeployment",
-    "friendlyName": "AzureRM Web App Deployment",
-    "description": "Deploy the web project to the AzureRM Web App using Web Deploy",
+    "friendlyName": "AzureRM App Service Deployment",
+    "description": "Deploy the web project using AzureRM App Service",
     "helpMarkDown": "[More Information](https://aka.ms/azurermwebdeployreadme)",
     "category": "Deploy",
     "visibility": [
@@ -11,12 +11,17 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
+        "Major": 2,
         "Minor": 0,
-        "Patch": 19
+        "Patch": 0
     },
     "minimumAgentVersion": "1.102.0",
     "groups": [
+         {
+            "name": "AdditionalDeploymentOptions",
+            "displayName": "Additional Deployment Options",
+            "isExpanded": true
+        },
         {
             "name": "output",
             "displayName": "Output",
@@ -35,7 +40,7 @@
         {
             "name": "WebAppName",
             "type": "pickList",
-            "label": "Web App Name",
+            "label": "App Service Name",
             "defaultValue": "",
             "required": true,
             "properties": {
@@ -76,46 +81,6 @@
             "visibleRule": "DeployToSlotFlag = true"
         },
         {
-            "name": "Package",
-            "type": "filePath",
-            "label": "Package",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Location of the Web App zip package on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\Fabrikam.zip. Predefined system variables and wild cards like, $(System.DefaultWorkingDirectory)\\\\***.zip` can be also used here."
-        },
-        {
-            "name": "SetParametersFile",
-            "type": "filePath",
-            "label": "SetParameters File",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Optional: location of the SetParameters.xml file to use."
-        },
-        {
-            "name": "RemoveAdditionalFilesFlag",
-            "type": "boolean",
-            "label": "Remove Additional Files at Destination",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Select the option to delete files on the AzureRM Web App that have no matching files in the Web App zip package."
-        },
-        {
-            "name": "ExcludeFilesFromAppDataFlag",
-            "type": "boolean",
-            "label": "Exclude Files from the App_Data Folder",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Select the option to prevent files in the App_Data folder from being deployed to the AzureRM Web App."
-        },
-        {
-            "name": "TakeAppOfflineFlag",
-            "type": "boolean",
-            "label": "Take App Offline",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully."
-        },
-        {
             "name": "VirtualApplication",
             "type": "string",
             "label": "Virtual Application",
@@ -124,21 +89,80 @@
             "helpMarkDown": "Specify the name of the Virtual Application that has been configured in the Azure portal. The option is not required for deployments to the website root."
         },
         {
+            "name": "Package",
+            "type": "filePath",
+            "label": "Package or Folder",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Folder or file path to the Web App package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)\\***.zip."
+        },
+        {
+            "name": "WebAppUri",
+            "type": "string",
+            "label": "Web App URL",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "output",
+            "helpMarkDown": "Specify a name for the output variable that is generated for the URL of the Web App. The variable can be consumed in subsequent tasks."
+        },
+        {
+            "name": "UseWebDeploy",
+            "type": "boolean",
+            "label": "Publish using Web Deploy",
+            "required": false,
+            "defaultValue": "true",
+            "groupName": "AdditionalDeploymentOptions",
+            "helpMarkDown": "Publish using web deploy options are supported only when using Windows agent. On other platforms, the task relies on [Kudu REST APIs](https://github.com/projectkudu/kudu/wiki/REST-API) to deploy the Web App, and following options are not supported"
+        },
+        {
+            "name": "SetParametersFile",
+            "type": "filePath",
+            "label": "SetParameters File",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "AdditionalDeploymentOptions",
+            "visibleRule": "UseWebDeploy == true",
+            "helpMarkDown": "Optional: location of the SetParameters.xml file to use."
+        },
+        {
+            "name": "RemoveAdditionalFilesFlag",
+            "type": "boolean",
+            "label": "Remove Additional Files at Destination",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "AdditionalDeploymentOptions",
+            "visibleRule": "UseWebDeploy == true",
+            "helpMarkDown": "Select the option to delete files on the AzureRM Web App that have no matching files in the Web App zip package."
+        },
+        {
+            "name": "ExcludeFilesFromAppDataFlag",
+            "type": "boolean",
+            "label": "Exclude Files from the App_Data Folder",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "AdditionalDeploymentOptions",
+            "visibleRule": "UseWebDeploy == true",
+            "helpMarkDown": "Select the option to prevent files in the App_Data folder from being deployed to the AzureRM Web App."
+        },
+        {
+            "name": "TakeAppOfflineFlag",
+            "type": "boolean",
+            "label": "Take App Offline",
+            "defaultValue": "true",
+            "required": false,
+            "groupName": "AdditionalDeploymentOptions",
+            "visibleRule": "UseWebDeploy == true",
+            "helpMarkDown": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully."
+        },
+        {
             "name": "AdditionalArguments",
             "type": "string",
             "label": "Additional Arguments",
             "required": false,
             "defaultValue": "",
+            "groupName": "AdditionalDeploymentOptions",
+            "visibleRule": "UseWebDeploy == true",
             "helpMarkDown": "Additional Web Deploy arguments that will be applied when deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension."
-        },
-        {
-            "name": "WebAppUri",
-            "type": "string",
-            "label": "Web App Hosted Url",
-            "required": false,
-            "defaultValue": "",
-            "groupName": "output",
-            "helpMarkDown": "Provide a name for the variable for the webapp hosted url. The variable can be used as $(variableName) to refer to the hosted url of webapp in subsequent tasks like in the PowerShell on Target Machines task."
         }
     ],
     "dataSourceBindings": [
@@ -166,47 +190,45 @@
             "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
         }
     ],
-    "instanceNameFormat": "Deploy AzureRM Web App: $(WebAppName)",
+    "instanceNameFormat": "Deploy AzureRM App Service: $(WebAppName)",
     "execution": {
-        "AzurePowerShell": {
-            "target": "$(currentDirectory)\\AzureRmWebAppDeployment-Legacy.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
-        },
-        "PowerShell3": {
-            "target": "AzureRMWebAppDeployment.ps1"
+        "Node": {
+            "target": "AzureRmWebAppDeployment.js"
         }
     },
     "messages": {
-        "Invalidwebapppackagepathprovided": "Invalid webapp package path provided",
-        "WebappsuccessfullypublishedatUrl0": "Webapp successfully published at Url : {0}",
-        "Unabletoretrievewebapppublishurlforwebapp0": "Unable to retrieve webapp publish url for webapp : '{0}'.",
-        "GettingconnectiondetailsforazureRMWebApp0underSlot1": "Getting connection details for azureRM WebApp:'{0}' under Slot:'{1}'.",
-        "GotconnectiondetailsforazureRMWebApp0underSlot1": "Got connection details for azureRM WebApp:'{0}' under Slot:'{1}'.",
-        "GettingconnectiondetailsforazureRMWebApp0underProductionSlot": "Getting connection details for azureRM WebApp:'{0}' under Production Slot.",
-        "WebApp0doesnotexist": "WebApp '{0}' does not exist.",
-        "GotconnectiondetailsforazureRMWebApp0underProductionSlot": "Got connection details for azureRM WebApp:'{0}' under Production Slot.",
-        "WebApp0notfound": "Web App: '{0}' not found.",
-        "Unabletofindwebapppublishprofiledetailsforwebapp0": "Unable to find webapp publish profile details for webapp {0}.",
-        "UsinglocalMSDeployexe": "Using local MSDeploy.exe",
-        "msdeployexeislocatedat0": "msdeploy.exe is located at '{0}'",
-        "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one.",
-        "Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}.",
-        "packageFileFindFilesSearchPattern0": "packageFile = Find-Files -SearchPattern {0}",
-        "packageFile0": "packageFile = {0}",
-        "Runningmsdeploycommand0": "Running msdeploy command: `n`t{0}",
-        "msdeploycommandransuccessfully": "msdeploy command ran successfully.",
-        "filePathFindFilesSearchPattern0": "filePath = Find-Files -SearchPattern {0}",
-        "filePath0": "filePath = {0}",
-        "UnabletofindpublishUrlforWebApp0": "Unable to find publish Url for WebApp '{0}'.",
-        "Updatingdeploymenthistoryfordeployment0": "Updating deployment history for deployment {0}",
-        "Updatingdeploymentstatus": "Updating deployment status",
-        "CannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "Cannot update deployment status, SCM endpoint is not enabled for this website",
-        "Cannotupdatedeploymentstatusfor01": "Cannot update deployment status for {0} - {1}",
-        "CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved": "Cannot update deployment status, unique deploymentId cannot be retrieved",
-        "Runningmsdeploycommandtocheckifpackagecontainsparamfile0": "Running msdeploy command to check if package contains param file : {0}",
-        "Paramscontentofwebpackage0": "Params content of web package : {0}",
-        "Parameterfileispresentinwebpackage": "Parameter file is present in web package.",
-        "Parameterfileisnotpresentinwebpackage": "Parameter file is not present in web package."
-    }
+        "Invalidwebapppackageorfolderpathprovided": "Invalid webapp package or folder path provided: %s",
+        "SetParamFilenotfound0": "Set parameters file not found: %s",
+        "GotconnectiondetailsforazureRMWebApp0": "Got connection details for azureRM WebApp:'%s'",
+        "UnabletoretrieveWebAppIDforazureRMWebApp0StatusCode1": "Unable to retrieve WebApp ID for azureRM WebApp:'%s'. Status Code: %s",
+        "ErrorNoSuchDeployingMethodExists": "Error : No Such Deploying Method Exists",
+        "UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1": "Unable to retrieve connection details for azureRM WebApp:'%s'. Status Code: %s",
+        "Unabletoretrievewebapppublishurlforwebapp0StatusCode1" : "Unable to retrieve webapp publish url for webapp : '%s'. Status Code : '%s'",
+        "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
+        "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
+        "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website",
+        "ErrorFetchingDeploymentPublishProfileStausCode0": "Error Fetching Deployment Publish Profile [Staus Code : '%s']",
+        "ErrorOccurredStausCode0": "Error Occurred : [Staus Code : '%s']",
+        "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update deployment status : uniquedeploymentIdCannotBeRetrieved",
+        "WebappsuccessfullypublishedatUrl0": "Web App successfully deployed at url %s",
+        "Failedtodeploywebsite": "Failed to deploy website.",
+        "Runningcommand": "Running command: %s",
+        "ConstructedmsDeploycomamndlinearguments": "Constructed msDeploy comamnd line arguments",
+        "CannotfindMSDeployexe": "Cannot find MSDeploy.exe",
+        "Runningmsdeploycommandtocheckifpackagecontainsparamfile0": "Running msdeploy command to check if package contains param file : %s",
+        "Paramscontentofwebpackage0": "Params content of web package : %s",
+        "Isparameterfilepresentinwebpackage0": "Is parameter file is present in web package : %s",
+        "Requestingconfigdetails": "Requesting for config details : %s",
+        "Deployingwebapplicationatvirtualpathandphysicalpath": "Deploying web package : %s at virtual path (physical path) : %s (%s)",
+        "Successfullydeployedpackageusingkuduserviceat": "Successfully deployed package %s using kudu service at %s",
+        "Failedtodeploywebapppackageusingkuduservice": "Failed to deploy webapp package using kudu service : %s",
+        "Unabletodeploywebappresponsecode": "Unable to deploy webapp due to error code : %s",
+        "Unabletopackagecontentoffolder": "Unable to package content of folder : %s",
+        "Compressedfolderintozip": "Compressed folder %s into zip : %s",
+        "Webappfolderisbeingarchivedtobytescompressed": "Webapp folder : %s is being archived to %s. %s bytes compressed.",
+        "Initiateddeploymentviakuduserviceforwebapppackage": "Initiated deployment via kudu service for webapp package : %s",
+        "MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy generated package are only supported for Windows platform.",
+        "UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove": "Unsupported installed version: %s found for MSDeploy. version should be alteast 3 or above",
+        "UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)"
+  }
 }
