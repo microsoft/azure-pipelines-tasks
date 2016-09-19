@@ -73,11 +73,39 @@ export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: b
 export async function getAzureRMWebAppPublishProfile(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
     if(!deployToSlotFlag) {
         var webAppID = await getAzureRMWebAppID(SPN, webAppName, 'Microsoft.Web/Sites');
-        //    webAppID Format ==> /subscriptions/<subscriptionId>/resourceGroups/<resource_grp_name>/providers/Microsoft.Web/sites/<webAppName>
         resourceGroupName = webAppID.id.split ('/')[4];
     }
-    var publishProfile = await getWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-    return publishProfile;
+    var deferred = Q.defer();
+    var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
+    var accessToken = await getAuthorizationToken(SPN);
+    
+    var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
+                 '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + '/publishxml?' + azureApiVersion;
+    var headers = {
+        authorization: 'Bearer '+ accessToken
+
+    };
+
+    httpObj.get('POST', url, headers, (error, response, body) => {
+        if(error) {
+            deferred.reject(error);
+        }
+        else if(response.statusCode === 200) {
+            parseString(body, (error, result) => {
+                for (var index in result.publishData.publishProfile) {
+                    if (result.publishData.publishProfile[index].$.publishMethod === "MSDeploy")
+                        deferred.resolve(result.publishData.publishProfile[index].$);
+                }
+                deferred.reject(tl.loc('ErrorNoSuchDeployingMethodExists'));
+            });
+        }
+        else {
+            tl.error(response.statusMessage);
+            deferred.reject(tl.loc('UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1', webAppName, response.statusCode));
+        }
+    });
+
+    return deferred.promise;
 }
 
 function getAuthorizationToken(SPN): Q.Promise<string> {
@@ -163,41 +191,6 @@ function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isDeploymentSucce
     requestDetails["requestBody"] = requestBody;
     requestDetails["requestUrl"] = requestUrl;
     return requestDetails;
-}
-
-async function getWebAppPublishProfile(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string ) {
-
-    var deferred = Q.defer();
-    var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
-    var accessToken = await getAuthorizationToken(SPN);
-    
-    var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
-                 '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + '/publishxml?' + azureApiVersion;
-   var headers = {
-        authorization: 'Bearer '+ accessToken
-
-    };
-
-    httpObj.get('POST', url, headers, (error, response, body) => {
-        if(error) {
-            deferred.reject(error);
-        }
-        else if(response.statusCode === 200) {
-            parseString(body, (error, result) => {
-                for (var index in result.publishData.publishProfile) {
-                    if (result.publishData.publishProfile[index].$.publishMethod === "MSDeploy")
-                        deferred.resolve(result.publishData.publishProfile[index].$);
-                }
-                deferred.reject(tl.loc('ErrorNoSuchDeployingMethodExists'));
-            });
-        }
-        else {
-            tl.error(response.statusMessage);
-            deferred.reject(tl.loc('UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1', webAppName, response.statusCode));
-        }
-    });
-
-    return deferred.promise;
 }
 
 async function getAzureRMWebAppID(SPN, webAppName: string, resourceType: string) {
