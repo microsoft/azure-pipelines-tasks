@@ -24,5 +24,5 @@
   "loc.input.help.failOnStandardError": "If this is true, this task will fail when any errors are written to the StandardError stream",
   "loc.messages.ScriptReturnCode": "Script exited with return code: %d",
   "loc.messages.ScriptFailed": "Script failed with error: %s",
-  "loc.messages.UnsupportedEndpointScheme": "Unsupported Endpoint Authorization Scheme: certificate and Username Password for Azure Classic and Service Principal for AzureRM"
+  "loc.messages.UnsupportedEndpointScheme": "Unsupported Endpoint Authorization Scheme: Certificate and Username Password for Azure Classic and Service Principal for AzureRM"
 }
