@@ -6,7 +6,6 @@ gulp-tsc-tmp-*
 
 [Tt]asks/**/*.js
 [Tt]ests/**/*.js
-Tasks/Common/**/*.d.ts
 .taskkey
 
 ## Ignore Visual Studio temporary files, build results, and
