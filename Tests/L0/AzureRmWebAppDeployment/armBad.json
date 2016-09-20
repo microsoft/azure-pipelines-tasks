@@ -26,6 +26,9 @@
     "exist": {
     	"webAppPkg.zip": true
     },
+    "glob": {
+        "webAppPkg.zip": ["webAppPkg.zip"]
+    },
     "getVariable": {
     	"ENDPOINT_AUTH_AzureRMSpn": "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}",
    		"ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONNAME": "sName", 

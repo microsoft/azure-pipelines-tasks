@@ -21,6 +21,9 @@
     "exist": {
     	"webAppPkg": true
     },
+    "glob": {
+        "msdeploy_path": ["msdeploy_path"]
+    },
     "getVariable": {
     	"ENDPOINT_AUTH_AzureRMSpn": "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}",
    		"ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONNAME": "sName", 

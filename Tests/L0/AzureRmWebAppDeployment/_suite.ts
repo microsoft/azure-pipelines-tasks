@@ -286,7 +286,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
 
                 assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
-                var expectedErr = 'Error: Invalid webapp package or folder path provided: Invalid_webAppPkg'; 
+                var expectedErr = 'Package Path (Invalid_webAppPkg) was specified but it does not exist'; 
                 assert(tr.stdErrContained(expectedErr), 'should have said: ' + expectedErr); 
                 assert(tr.failed, 'task should have failed');
                 done();

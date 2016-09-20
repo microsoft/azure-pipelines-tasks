@@ -13,7 +13,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "1.102.0",
   "groups": [
@@ -229,6 +229,7 @@
     "Initiateddeploymentviakuduserviceforwebapppackage": "ms-resource:loc.messages.Initiateddeploymentviakuduserviceforwebapppackage",
     "MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "ms-resource:loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform",
     "UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove": "ms-resource:loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove",
-    "UnabletofindthelocationofMSDeployfromregistryonmachineError": "ms-resource:loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError"
+    "UnabletofindthelocationofMSDeployfromregistryonmachineError": "ms-resource:loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError",
+    "PackageDoesNotExist": "ms-resource:loc.messages.PackageDoesNotExist"
   }
 }

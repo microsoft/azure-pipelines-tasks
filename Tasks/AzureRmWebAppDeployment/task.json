@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 1
     },
     "minimumAgentVersion": "1.102.0",
     "groups": [
@@ -229,6 +229,7 @@
         "Initiateddeploymentviakuduserviceforwebapppackage": "Initiated deployment via kudu service for webapp package : %s",
         "MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy generated package are only supported for Windows platform.",
         "UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove": "Unsupported installed version: %s found for MSDeploy. version should be alteast 3 or above",
-        "UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)"
+        "UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)",
+        "PackageDoesNotExist": "Package Path (%s) was specified but it does not exist"
   }
 }

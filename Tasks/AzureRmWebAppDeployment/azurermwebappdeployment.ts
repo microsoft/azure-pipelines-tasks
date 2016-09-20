@@ -36,6 +36,11 @@ async function run() {
         SPN["tenantID"] = endPointAuthCreds.parameters["tenantid"];
         SPN["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
 
+        var availableWebPackages = tl.glob(webDeployPkg);
+        if(availableWebPackages.length == 0) {
+            throw new Error(tl.loc('PackageDoesNotExist', webDeployPkg));
+        }
+        webDeployPkg = availableWebPackages[0];
         var isFolderBasedDeployment = await isInputPkgIsFolder(webDeployPkg);
         var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
         tl._writeLine(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));

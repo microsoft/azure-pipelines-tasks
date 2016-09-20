@@ -65,5 +65,6 @@
   "loc.messages.Initiateddeploymentviakuduserviceforwebapppackage": "Initiated deployment via kudu service for webapp package : %s",
   "loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy generated package are only supported for Windows platform.",
   "loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove": "Unsupported installed version: %s found for MSDeploy. version should be alteast 3 or above",
-  "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)"
+  "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)",
+  "loc.messages.PackageDoesNotExist": "Package Path (%s) was specified but it does not exist"
 }
