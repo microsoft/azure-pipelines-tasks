@@ -20,7 +20,7 @@
   "loc.input.label.location": "Location",
   "loc.input.help.location": "Location for deploying the resource group. If the resource group already exists in the subscription, then this value will be ignored.",
   "loc.input.label.deploymentMode": "Deployment Mode",
-  "loc.input.help.deploymentMode": "Specify the deployment mode for Azure Resource Manager template.",
+  "loc.input.help.deploymentMode": "Incremental mode handles deployments as incremental updates to the resource group . It leaves unchanged resources that exist in the resource group but are not specified in the template. Complete mode deletes resources that are not in your template. \n\n By default, incremental mode is used. \n\n Validate mode enables you to find problems with the template before creating actual resources.",
   "loc.input.label.csmFile": "Template",
   "loc.input.help.csmFile": "Specify the path to the Azure Resource Manager template. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate.",
   "loc.input.label.csmParametersFile": "Template Parameters",
