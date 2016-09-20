@@ -1,7 +1,7 @@
 {
     "common": [
         {
-            "module": "../Common/MSBuildHelpers",
+            "module": "../Common/VstsAzureHelpers_",
             "type": "ps"
         }
     ]

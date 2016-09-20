@@ -61,11 +61,10 @@ target.build = function() {
         var outDir = path.join(buildPath, path.basename(taskPath));
         mkdir('-p', outDir);
 
+        // load the task.json
         var shouldBuildNode = false;
-
         var taskJsonPath = path.join(taskPath, 'task.json');
         if (test('-f', taskJsonPath)) {
-            // load the task.json
             var taskDef = require(taskJsonPath);
             validateTask(taskDef);
 
@@ -77,11 +76,9 @@ target.build = function() {
             shouldBuildNode = taskDef.execution.hasOwnProperty('Node');
         }
 
-        // common and externals options specific to our scripts
+        // get externals
         var taskMakePath = path.join(taskPath, 'make.json');
         var taskMake = test('-f', taskMakePath) ? require(taskMakePath) : {};
-
-        // get externals
         if (taskMake.hasOwnProperty('externals')) {
             console.log('Getting task externals');
             getExternals(taskMake.externals, outDir);
@@ -114,12 +111,12 @@ target.build = function() {
                         buildNodeTask(modPath, modOutDir);
                     }
 
-                    // todo: copy additional resources based on the local make.json
-                    copyTaskResources(modPath, modOutDir);
-
-                    // get externals
+                    // copy default resources and any additional resources defined in the module's make.json
                     var modMakePath = path.join(modPath, 'make.json');
                     var modMake = test('-f', modMakePath) ? require(modMakePath) : {};
+                    copyTaskResources(modMake, modPath, modOutDir);
+
+                    // get externals
                     if (modMake.hasOwnProperty('externals')) {
                         console.log('Getting module externals');
                         getExternals(modMake.externals, modOutDir);
@@ -135,8 +132,19 @@ target.build = function() {
                     run('npm install ' + modOutDir);
                     cd(originalDir);
                 }
-
-                // todo: copy common module resources to the task dir
+                // copy module resources to the task output dir
+                else if (mod.type === 'ps') {
+                    var dest = path.join(outDir, 'ps_modules', modName);
+                    mkdir('-p', dest);
+                    fs.readdirSync(modOutDir)
+                        .filter(function (file) {
+                            return file != 'Tests';
+                        })
+                        .forEach(function (file) {
+                            var source = path.join(modOutDir, file);
+                            cp('-R', source, dest);
+                        });
+                }
             });
         }
 
@@ -147,7 +155,8 @@ target.build = function() {
             buildNodeTask(taskPath, outDir);
         }
 
-        copyTaskResources(taskPath, outDir);
+        // copy default resources and any additional resources defined in the task's make.json
+        copyTaskResources(taskMake, taskPath, outDir);
     });
 
     banner('Build successful', true);
