@@ -5,6 +5,7 @@ import path = require('path');
 import fs = require('fs');
 import util = require('util');
 
+
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
 import tl = require('vsts-task-lib/task');
 
@@ -38,6 +39,8 @@ export function processSonarQubeIntegration(): Q.Promise<void> {
         return Q.when();
     }
 
-    var sqBuildFolder: string = path.join(tl.getVariable('build.sourcesDirectory'), 'target', 'sonar');
-    return sqCommon.processSonarQubeIntegration(sqBuildFolder);
+    // the output folder may not be directly in the build root, for example if the entire project is in a top-lvel dir
+    var reportTaskGlob: string = path.join(tl.getVariable('build.sourcesDirectory'), '**', 'target', 'sonar', 'report-task.txt');
+   
+    return sqCommon.processSonarQubeIntegration(reportTaskGlob);
 }
