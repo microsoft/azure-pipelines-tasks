@@ -1,6 +1,7 @@
 {
     "tasks": [
         "ANT",
+        "ArchiveFiles",
         "Gulp",
         "NuGetInstaller",
         "PublishSymbols",
