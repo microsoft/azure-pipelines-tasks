@@ -148,7 +148,7 @@
             "name": "TakeAppOfflineFlag",
             "type": "boolean",
             "label": "Take App Offline",
-            "defaultValue": "true",
+            "defaultValue": "false",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
             "visibleRule": "UseWebDeploy == true",

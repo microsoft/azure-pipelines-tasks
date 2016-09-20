@@ -148,7 +148,7 @@
       "name": "TakeAppOfflineFlag",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.TakeAppOfflineFlag",
-      "defaultValue": "true",
+      "defaultValue": "false",
       "required": false,
       "groupName": "AdditionalDeploymentOptions",
       "visibleRule": "UseWebDeploy == true",
