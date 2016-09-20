@@ -38,9 +38,14 @@ async function run() {
 
         var availableWebPackages = tl.glob(webDeployPkg);
         if(availableWebPackages.length == 0) {
-            throw new Error(tl.loc('PackageDoesNotExist', webDeployPkg));
+            throw new Error(tl.loc('Nopackagefoundwithspecifiedpattern'));
+        }
+
+        if(availableWebPackages.length > 1) {
+            throw new Error(tl.loc('MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern'));
         }
         webDeployPkg = availableWebPackages[0];
+
         var isFolderBasedDeployment = await isInputPkgIsFolder(webDeployPkg);
         var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
         tl._writeLine(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));

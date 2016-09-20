@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 0
     },
     "minimumAgentVersion": "1.102.0",
     "groups": [
@@ -94,7 +94,7 @@
             "label": "Package or Folder",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Folder or file path to the Web App package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)\\***.zip."
+            "helpMarkDown": "Folder or file path to the Web App package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)\\**\\*.zip."
         },
         {
             "name": "WebAppUri",
@@ -230,6 +230,7 @@
         "MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy generated package are only supported for Windows platform.",
         "UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove": "Unsupported installed version: %s found for MSDeploy. version should be alteast 3 or above",
         "UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)",
-        "PackageDoesNotExist": "Package Path (%s) was specified but it does not exist"
+        "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
+        "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "More than one package matched with specified pattern. Please restrain the search patern."
   }
 }

@@ -28,6 +28,7 @@
         "webAppPkg": true
     }, 
     "glob": {
+        "webAppPkgPattern" : ["webAppPkg1", "webAppPkg2"],
         "Invalid_webAppPkg" : [],
         "webAppPkg.zip": ["webAppPkg.zip"],
         "webAppPkg": ["webAppPkg"]
