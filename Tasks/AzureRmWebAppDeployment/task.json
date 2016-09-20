@@ -92,7 +92,7 @@
             "name": "Package",
             "type": "filePath",
             "label": "Package or Folder",
-            "defaultValue": "",
+            "defaultValue": "$(System.DefaultWorkingDirectory)\\**\\*.zip",
             "required": true,
             "helpMarkDown": "Folder or file path to the Web App package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)\\**\\*.zip."
         },
