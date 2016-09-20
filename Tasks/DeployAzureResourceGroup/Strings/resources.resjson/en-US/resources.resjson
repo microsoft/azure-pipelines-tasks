@@ -58,9 +58,9 @@
   "loc.messages.ARG_UnsupportedAzurePSVersion": "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at {1} to get the latest Azure powershell",
   "loc.messages.ARG_AzureRMModuleNotFound": "The required AzureRM Powershell module is not installed. You can follow the instructions at {0} to get the latest Azure powershell",
   "loc.messages.ARG_DeploymentFailed": "Resource group deployment '{0}' failed",
-  "loc.messages.ARG_DeploymentSucceeded": "Successfully created resource group deployment with name '{0}'",
   "loc.messages.ARG_ValidationFailed": "Resource group deployment template validation failed",
   "loc.messages.ARG_ValidationSucceeded": "Successfully validated resource group deployment template",
+  "loc.messages.ARG_DeploymentSucceeded": "Successfully created resource group deployment with name '{0}'",
   "loc.messages.ARG_InvalidFilePath": "Found more than one file to deploy with search pattern '{0}'. There can be only one",
   "loc.messages.ARG_FileNotFound": "No files were found to deploy with search pattern '{0}'",
   "loc.messages.ARG_SpecifyValidTemplatePath": "Please specify a complete and a valid template file path",
@@ -74,5 +74,7 @@
   "loc.messages.ARG_SetExtensionFailed": "Setting the custom script extension '{0}' for virtual machine '{1}' failed with error : {2}",
   "loc.messages.ARG_NetworkSecurityConfigFailed": "Failed to add the network security rule: {0}",
   "loc.messages.ARG_SetExtensionFailedForVm": "Unable to set the custom script extension '{0}' for virtual machine '{1}': {2}",
-  "loc.messages.ARG_DeploymentPrereqFailed": "Failed to enable deployment prerequisites. {0}"
+  "loc.messages.ARG_DeploymentPrereqFailed": "Failed to enable deployment prerequisites. {0}",
+  "loc.messages.SucceededOnVMOperation": "The %s operation on all VMs succeeded",
+  "loc.messages.FailureOnVMOperation": "The %s operation on all VMs failed with an error: %s"
 }
