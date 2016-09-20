@@ -149,10 +149,20 @@ function getMSDeployLatestRegKey(registryKey: string): Q.Promise<string> {
         if(err) {
             defer.reject(tl.loc("UnabletofindthelocationofMSDeployfromregistryonmachineError", err));
         }
-        subRegKeys.sort();
-        var latestSubKey = subRegKeys[subRegKeys.length-1].key;
-        var latestKeyVersion = latestSubKey.substr(latestSubKey.lastIndexOf('\\')+1, latestSubKey.length-1);
-        if(parseFloat(latestKeyVersion) < 3) {
+        var latestKeyVersion = 0 ;
+        var latestSubKey;
+        for(var index in subRegKeys) {
+            var subRegKey = subRegKeys[index].key;
+            var subKeyVersion = subRegKey.substr(subRegKey.lastIndexOf('\\')+1, subRegKey.length-1);
+            if(!isNaN(subKeyVersion)){
+                var subKeyVersionNumber = parseFloat(subKeyVersion);
+                if(subKeyVersionNumber > latestKeyVersion) {
+                    latestKeyVersion = subKeyVersionNumber;
+                    latestSubKey = subRegKey;
+                }
+            }
+        }
+        if(latestKeyVersion < 3) {
             defer.reject(tl.loc("UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove", latestKeyVersion));
         }
          defer.resolve(latestSubKey);
