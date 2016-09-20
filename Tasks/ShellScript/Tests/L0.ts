@@ -37,7 +37,6 @@ describe('ShellScript L0 Suite', function () {
         let tp = path.join(__dirname, 'L0failIfReturns1.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-
 		tr.run();
         assert(tr.ran('/usr/local/bin/bash /script.sh arg1 arg2'), 'it should have run ShellScript');
         assert(tr.invokedToolCount == 1, 'should have only run ShellScript');
@@ -57,7 +56,6 @@ describe('ShellScript L0 Suite', function () {
         let tp = path.join(__dirname, 'L0failIfStdErr.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-
 		tr.run();
         assert(tr.ran('/usr/local/bin/bash /script.sh arg1 arg2'), 'it should have run ShellScript');
         assert(tr.invokedToolCount == 1, 'should have only run ShellScript');
@@ -66,4 +64,31 @@ describe('ShellScript L0 Suite', function () {
         assert(tr.failed, 'task should have failed');
         done();
 	})
+
+	it('fails if cwd not set', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, 'L0failNoCwd.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+		tr.run();
+
+        assert(tr.invokedToolCount == 0, 'should not have run ShellScript');
+        assert(tr.failed, 'task should have failed');
+        done();
+	})
+
+	it('fails if script not found', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, 'L0failIfScriptNotFound.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+		tr.run();
+
+        assert(tr.invokedToolCount == 0, 'should not have run ShellScript');
+        assert(tr.failed, 'task should have failed');
+        assert(tr.stdOutContained('Not found /notexistscript.sh'));
+        done();
+	})        
 });
