@@ -92,6 +92,8 @@ target.build = function() {
                 if (!test('-d', modOutDir)) {
                     banner('Building module ' + commonPath, true);
 
+                    mkdir('-p', modOutDir);
+                    
                     // build the common node module
                     if (mod.type === 'node' && mod.compile == true) {
                         buildNodeTask(commonPath, modOutDir);
