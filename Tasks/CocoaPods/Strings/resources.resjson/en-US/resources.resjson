@@ -4,5 +4,7 @@
   "loc.description": "CocoaPods is the dependency manager for Swift and Objective-C Cocoa projects. Runs pod install",
   "loc.instanceNameFormat": "pod install",
   "loc.input.label.cwd": "Working Directory",
-  "loc.input.help.cwd": "Current working directory. Defaults to the repo directory."
+  "loc.input.help.cwd": "Current working directory. Defaults to the repo directory.",
+  "loc.messages.PodReturnCode": "Pod exited with return code: %d",
+  "loc.messages.PodFailed": "Pod failed with error: %s"
 }

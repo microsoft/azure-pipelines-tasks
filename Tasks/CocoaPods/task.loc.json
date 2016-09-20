@@ -30,5 +30,9 @@
       "target": "cocoapods.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "PodReturnCode": "ms-resource:loc.messages.PodReturnCode",
+    "PodFailed": "ms-resource:loc.messages.PodFailed"
   }
 }

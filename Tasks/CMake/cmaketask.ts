@@ -20,7 +20,7 @@ async function run() {
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('CMakeReturnCode', code));
     }
     catch(err) {
-        console.log(err.message);
+        tl.error(err.message);
         tl.setResult(tl.TaskResult.Failed, tl.loc('CMakeFailed', err.message));
     }    
 }
