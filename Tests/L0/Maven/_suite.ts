@@ -8,6 +8,7 @@ import path = require('path');
 import fs = require('fs');
 import url = require('url');
 import {Url} from 'url';
+import shell = require('shelljs');
 
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
 import tr = require('../../lib/vsts-task-lib/toolRunner');
@@ -22,6 +23,8 @@ import {SonarQubeReportBuilder} from '../../../Tasks/Maven/CodeAnalysis/SonarQub
 import {SonarQubeMetrics} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/metrics';
 import {SonarQubeMeasurementUnit} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/metrics';
 import {MockSonarQubeServer} from './server-mock';
+
+import {FileSystemInteractions} from '../../../Tasks/Maven/CodeAnalysis/Common/FileSystemInteractions';
 
 import http = require('http');
 import {IncomingMessage} from 'http';
@@ -97,12 +100,7 @@ function setupMockResponsesForPaths(responseObject: any, paths: string[]) { // C
 
 // Create temp dirs for mavencodeanalysis tests to save into
 function createTempDirsForCodeAnalysisTests(): void {
-    var testTempDir: string = path.join(__dirname, '_temp');
-    var caTempDir: string = path.join(testTempDir, '.codeAnalysis');
-
-    if (!fs.existsSync(testTempDir)) {
-        fs.mkdirSync(testTempDir);
-    }
+    var caTempDir: string = path.join(createTempDir(), '.codeAnalysis');
 
     if (!fs.existsSync(caTempDir)) {
         fs.mkdirSync(caTempDir);
@@ -111,16 +109,21 @@ function createTempDirsForCodeAnalysisTests(): void {
 
 // Create temp dirs for mavencodeanalysis tests to save into
 function createTempDirsForSonarQubeTests(): void {
+    var sqTempDir: string = path.join(createTempDir(), '.sqAnalysis');
+
+    if (!fs.existsSync(sqTempDir)) {
+        fs.mkdirSync(sqTempDir);
+    }
+}
+
+function createTempDir():string {
     var testTempDir: string = path.join(__dirname, '_temp');
-    var sqTempDir: string = path.join(testTempDir, '.sqAnalysis');
 
     if (!fs.existsSync(testTempDir)) {
         fs.mkdirSync(testTempDir);
     }
 
-    if (!fs.existsSync(sqTempDir)) {
-        fs.mkdirSync(sqTempDir);
-    }
+    return testTempDir;
 }
 
 function captureStream(stream):{unhook():void, captured():string} {
@@ -141,6 +144,25 @@ function captureStream(stream):{unhook():void, captured():string} {
     };
 }
 
+function cleanTempDirsForCodeAnalysisTests():void {
+    var testTempDir: string = path.join(__dirname, '_temp');
+    deleteFolderRecursive(testTempDir);
+}
+
+function deleteFolderRecursive(path):void {
+    if (fs.existsSync(path)) {
+        fs.readdirSync(path).forEach(function(file,index){
+            var curPath = path + "/" + file;
+            if(fs.lstatSync(curPath).isDirectory()) { // recurse
+                deleteFolderRecursive(curPath);
+            } else { // delete file
+                fs.unlinkSync(curPath);
+            }
+        });
+        fs.rmdirSync(path);
+    }
+};
+
 function assertCodeAnalysisBuildSummaryContains(stagingDir: string, expectedString: string): void {
     assertBuildSummaryContains(fs.readFileSync(path.join(stagingDir, '.codeAnalysis', 'CodeAnalysisBuildSummary.md'), 'utf-8'), expectedString);
 }
@@ -153,6 +175,15 @@ function assertSonarQubeBuildSummaryContains(stagingDir: string, expectedString:
 function assertBuildSummaryContains(buildSummaryString: string, expectedLine: string): void {
     assert(buildSummaryString.indexOf(expectedLine) > -1, `Expected build summary to contain: ${expectedLine}
      Actual: ${buildSummaryString}`);
+}
+
+function assertFileExistsInDir(stagingDir:string, filePath:string) {
+    var directoryName:string = path.dirname(path.join(stagingDir, filePath));
+    var fileName:string = path.basename(filePath);
+    assert(fs.statSync(directoryName).isDirectory(), 'Expected directory did not exist: ' + directoryName);
+    var directoryContents:string[] = fs.readdirSync(directoryName);
+    assert(directoryContents.indexOf(fileName) > -1, `Expected file did not exist: ${filePath}
+    Actual contents of ${directoryName}: ${directoryContents}`);
 }
 
 function assertErrorContains(error: any, expectedString: string): void {
@@ -717,11 +748,11 @@ describe('Maven Suite', function () {
 
         tr.run()
             .then(() => {
-                if (isWindows) { 
-                    assert(tr.invokedToolCount == 1, 'should not have run maven'); // Should have run reg query toolrunner once 
-                } else { 
-                    assert(tr.invokedToolCount == 0, 'should not have run maven'); 
-                } 
+                if (isWindows) {
+                    assert(tr.invokedToolCount == 1, 'should not have run maven'); // Should have run reg query toolrunner once
+                } else {
+                    assert(tr.invokedToolCount == 0, 'should not have run maven');
+                }
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
                 assert(tr.failed, 'task should have failed');
@@ -1123,6 +1154,12 @@ describe('Maven Suite', function () {
 
                 assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found 3 violations in 2 files.');
 
+                var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
+
+                // Test files copied for root module, build 1
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.html');
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.xml');
+
                 done();
             })
             .fail((err) => {
@@ -1131,6 +1168,9 @@ describe('Maven Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
     it('Maven with PMD - Should succeed even if XML output cannot be found', function (done) {
@@ -1235,6 +1275,11 @@ describe('Maven Suite', function () {
 
                 assertCodeAnalysisBuildSummaryContains(testStgDir, 'Checkstyle found 9 violations in 2 files.');
 
+                var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
+
+                // Test files copied for root module, build 1
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_checkstyle_Checkstyle.xml');
+
                 done();
             })
             .fail((err) => {
@@ -1243,6 +1288,9 @@ describe('Maven Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
     it('Maven with Checkstyle - Should succeed even if XML output cannot be found', function (done) {
@@ -1347,6 +1395,11 @@ describe('Maven Suite', function () {
 
                 assertCodeAnalysisBuildSummaryContains(testStgDir, 'FindBugs found 5 violations in 1 file.');
 
+                var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
+
+                // Test files copied for root module, build 1
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_findbugs_FindBugs.xml');
+
                 done();
             })
             .fail((err) => {
@@ -1355,6 +1408,9 @@ describe('Maven Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
     it('Maven with FindBugs - Should succeed even if XML output cannot be found', function (done) {
@@ -1463,6 +1519,22 @@ describe('Maven Suite', function () {
                 assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found 3 violations in 2 files.');
                 assertCodeAnalysisBuildSummaryContains(testStgDir, 'FindBugs found 5 violations in 1 file.');
 
+                var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
+
+                // Test files copied for root module, build 1
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_checkstyle_Checkstyle.xml');
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_findbugs_FindBugs.xml');
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.html');
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.xml');
+
+                var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
+
+                // Test files copied for root module, build 1
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_checkstyle_Checkstyle.xml');
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_findbugs_FindBugs.xml');
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.html');
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.xml');
+
                 done();
             })
             .fail((err) => {
@@ -1471,6 +1543,9 @@ describe('Maven Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
     it('Maven with Checkstyle, PMD & FindBugs - Executes and uploads results for all enabled tools', function (done) {
@@ -1528,6 +1603,14 @@ describe('Maven Suite', function () {
                 assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found 3 violations in 2 files.');
                 assertCodeAnalysisBuildSummaryContains(testStgDir, 'FindBugs found 5 violations in 1 file.');
 
+                var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
+
+                // Test files copied for root module, build 1
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_checkstyle_Checkstyle.xml');
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_findbugs_FindBugs.xml');
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.html');
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.xml');
+
                 done();
             })
             .fail((err) => {
@@ -1536,6 +1619,9 @@ describe('Maven Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
     it('during PR builds SonarQube analysis runs in issues mode', function (done) {
@@ -1885,4 +1971,226 @@ describe('Maven Suite', function () {
                 assert(taskResult == 0 /* TaskResult.Failed == 0 */, 'Task should not have failed.');
             });
     });
+
+    /* Standalone Code Analysis unit tests */
+
+    it('Code Analysis common - createDirectory correctly creates new dir', () => {
+        // Arrange
+        var testStgDir: string = path.join(__dirname, '_temp');
+
+        if (!fs.existsSync(testStgDir)) {
+            fs.mkdirSync(testStgDir);
+        }
+
+        var newFolder1 = path.join(testStgDir, 'fish');
+
+        // Act
+        FileSystemInteractions.createDirectory(newFolder1);
+
+        // Assert
+        assert(fs.existsSync(newFolder1), `Expected folder to have been created: ${newFolder1}`);
+
+        deleteFolderRecursive(testStgDir);
+    });
+
+    it('Code Analysis common - createDirectory correctly creates new dir and 1 directory in between', () => {
+        // Arrange
+        var testStgDir: string = path.join(__dirname, '_temp');
+        var newFolder1 = path.join(testStgDir, 'fish');
+
+        if (!fs.existsSync(testStgDir)) {
+            fs.mkdirSync(testStgDir);
+        }
+        if (!fs.existsSync(newFolder1)) {
+            fs.mkdirSync(newFolder1);
+        }
+
+        var newFolder2 = path.join(testStgDir, 'fish', 'and');
+        var newFolder3 = path.join(testStgDir, 'fish', 'and', 'chips');
+
+        // Act
+        FileSystemInteractions.createDirectory(newFolder3);
+
+        // Assert
+        assert(fs.existsSync(newFolder1), `Expected folder to have been created: ${newFolder2}`);
+        assert(fs.existsSync(newFolder1), `Expected folder to have been created: ${newFolder3}`);
+
+        deleteFolderRecursive(testStgDir);
+    });
+
+    it('Code Analysis common - createDirectory correctly creates new dir and 2 directories in between', () => {
+        // Arrange
+        var testStgDir: string = path.join(__dirname, '_temp');
+        var newFolder1 = path.join(testStgDir, 'fish');
+
+        if (!fs.existsSync(testStgDir)) {
+            fs.mkdirSync(testStgDir);
+        }
+        if (!fs.existsSync(newFolder1)) {
+            fs.mkdirSync(newFolder1);
+        }
+
+        var newFolder2 = path.join(testStgDir, 'fish', 'and');
+        var newFolder3 = path.join(testStgDir, 'fish', 'and', 'chips');
+
+        // Act
+        FileSystemInteractions.createDirectory(newFolder3);
+
+        // Assert
+        assert(fs.existsSync(newFolder1), `Expected folder to have been created: ${newFolder2}`);
+        assert(fs.existsSync(newFolder1), `Expected folder to have been created: ${newFolder3}`);
+
+        deleteFolderRecursive(testStgDir);
+    });
+
+    it('Code Analysis common - createDirectory correctly creates new dir and all directories in between', () => {
+        // Arrange
+        var testStgDir: string = path.join(__dirname, '_temp');
+
+        if (!fs.existsSync(testStgDir)) {
+            fs.mkdirSync(testStgDir);
+        }
+
+        var newFolder1 = path.join(testStgDir, 'fish');
+        var newFolder2 = path.join(testStgDir, 'fish', 'and');
+        var newFolder3 = path.join(testStgDir, 'fish', 'and', 'chips');
+
+        // Act
+        FileSystemInteractions.createDirectory(newFolder3);
+
+        // Assert
+        assert(fs.existsSync(newFolder1), `Expected folder to have been created: ${newFolder1}`);
+        assert(fs.existsSync(newFolder1), `Expected folder to have been created: ${newFolder2}`);
+        assert(fs.existsSync(newFolder1), `Expected folder to have been created: ${newFolder3}`);
+
+        deleteFolderRecursive(testStgDir);
+    });
+
+    it('Code Analysis common - createDirectory correctly creates new dir and all directories in between (repeating dir names)', () => {
+        // Arrange
+        var testStgDir: string = path.join(__dirname, '_temp');
+
+        if (!fs.existsSync(testStgDir)) {
+            fs.mkdirSync(testStgDir);
+        }
+
+        var newFolder1 = path.join(testStgDir, 'fish');
+        var newFolder2 = path.join(testStgDir, 'fish', 'and');
+        var newFolder3 = path.join(testStgDir, 'fish', 'and', 'fish');
+
+        // Act
+        FileSystemInteractions.createDirectory(newFolder3);
+
+        // Assert
+        assert(fs.existsSync(newFolder1), `Expected folder to have been created: ${newFolder1}`);
+        assert(fs.existsSync(newFolder1), `Expected folder to have been created: ${newFolder2}`);
+        assert(fs.existsSync(newFolder1), `Expected folder to have been created: ${newFolder3}`);
+
+        deleteFolderRecursive(testStgDir);
+    });
+
+    // Copied from: https://github.com/Microsoft/vsts-task-lib/blob/master/node/test/dirtests.ts
+    it('Code Analysis common - createDirectory fails with illegal chars', function (done) {
+        this.timeout(1000);
+
+        var testPath = path.join(createTempDir(), 'mkdir\0');
+        var worked: boolean = false;
+        try {
+            FileSystemInteractions.createDirectory(testPath);
+            worked = true;
+        }
+        catch (err) {
+            // asserting failure
+            assert(!shell.test('-d', testPath), 'directory should not be created');
+        }
+
+        assert(!worked, 'mkdirP with illegal chars should have not have worked');
+
+        done();
+    });
+
+    // Copied from: https://github.com/Microsoft/vsts-task-lib/blob/master/node/test/dirtests.ts
+    it('Code Analysis common - createDirectory fails with null path', function (done) {
+        this.timeout(1000);
+
+        var worked: boolean = false;
+        try {
+            FileSystemInteractions.createDirectory(null);
+            worked = true;
+        }
+        catch (err) { }
+
+        assert(!worked, 'mkdirP with null should have not have worked');
+
+        done();
+    });
+
+    // Copied from: https://github.com/Microsoft/vsts-task-lib/blob/master/node/test/dirtests.ts
+    it('Code Analysis common - createDirectory fails with empty path', function (done) {
+        this.timeout(1000);
+
+        var worked: boolean = false;
+        try {
+            FileSystemInteractions.createDirectory('');
+            worked = true;
+        }
+        catch (err) { }
+
+        assert(!worked, 'mkdirP with empty string should have not have worked');
+
+        done();
+    });
+
+    // Copied from: https://github.com/Microsoft/vsts-task-lib/blob/master/node/test/dirtests.ts
+    it('Code Analysis common - createDirectory fails with conflicting file path', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let testPath = path.join(createTempDir(), 'mkdirP_conflicting_file_path');
+        shell.mkdir('-p', createTempDir());
+        fs.writeFileSync(testPath, '');
+        let worked: boolean = false;
+        try {
+            FileSystemInteractions.createDirectory(testPath);
+            worked = true;
+        }
+        catch (err) { }
+
+        assert(!worked, 'mkdirP with conflicting file path should not have worked');
+
+        done();
+    });
+
+    // Copied from: https://github.com/Microsoft/vsts-task-lib/blob/master/node/test/dirtests.ts
+    it('Code Analysis common - createDirectory fails with conflicting parent file path', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let testPath = path.join(createTempDir(), 'mkdirP_conflicting_parent_file_path', 'dir');
+        shell.mkdir('-p', createTempDir());
+        fs.writeFileSync(path.dirname(testPath), '');
+        let worked: boolean = false;
+        try {
+            FileSystemInteractions.createDirectory(testPath);
+            worked = true;
+        }
+        catch (err) { }
+
+        assert(!worked, 'mkdirP with conflicting file path should not have worked');
+
+        done();
+    });
+
+    // Copied from: https://github.com/Microsoft/vsts-task-lib/blob/master/node/test/dirtests.ts
+    it('Code Analysis common - createDirectory no-ops if mkdirP directory exists', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let testPath = path.join(createTempDir(), 'mkdirP_dir_exists');
+        shell.mkdir('-p', createTempDir());
+        fs.mkdirSync(testPath);
+
+        FileSystemInteractions.createDirectory(testPath); // should not throw
+
+        done();
+    });
+
+
 });

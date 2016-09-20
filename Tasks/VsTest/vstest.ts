@@ -22,6 +22,8 @@ const TITestSettingsXmlnsTag = "http://microsoft.com/schemas/VisualStudio/TeamTe
 try {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     var vsTestVersion: string = tl.getInput('vsTestVersion');
+    var vstestLocationMethod: string = tl.getInput('vstestLocationMethod');
+    var vstestLocation: string = tl.getPathInput('vsTestLocation');
     var testAssembly: string = tl.getInput('testAssembly', true);
     var testFiltercriteria: string = tl.getInput('testFiltercriteria');
     var runSettingsFile: string = tl.getPathInput('runSettingsFile');
@@ -39,7 +41,13 @@ try {
     var tiaRebaseLimit: string = tl.getInput('runAllTestsAfterXBuilds');
     var sourcesDir = tl.getVariable('build.sourcesdirectory');
     var runIdFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
+    var baseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
+    var useNewCollectorFlag = tl.getVariable('tia.useNewCollector');
 
+    var useNewCollector = true;
+    if (useNewCollectorFlag && useNewCollectorFlag.toUpperCase() == "FALSE") {
+        useNewCollector = false;
+    }
 
     var sourcesDirectory = tl.getVariable('System.DefaultWorkingDirectory');
     var testAssemblyFiles = getTestAssemblies();
@@ -231,6 +239,7 @@ function generateResponseFile(discoveredTests: string): Q.Promise<string> {
     selectortool.arg("/DiscoveredTests:" + discoveredTests);
     selectortool.arg("/runidfile:" + runIdFile);
     selectortool.arg("/testruntitle:" + testRunTitle);
+    selectortool.arg("/BaseLineFile:" + baseLineBuildIdFile);
 
     selectortool.exec()
         .then(function (code) {
@@ -266,6 +275,7 @@ function publishCodeChanges(): Q.Promise<string> {
     selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
     selectortool.arg("/SourcesDir:" + sourcesDir);
     selectortool.arg("/newprovider:" + newprovider);
+    selectortool.arg("/BaseLineFile:" + baseLineBuildIdFile);
     if (tiaRebaseLimit) {
         selectortool.arg("/RebaseLimit:" + tiaRebaseLimit);
     }
@@ -284,15 +294,32 @@ function publishCodeChanges(): Q.Promise<string> {
     return defer.promise;
 }
 
+function getVSTestLocation(vsVersion: number): string {
+    if (vstestLocationMethod.toLowerCase() === 'version') {
+        let vsCommon: string = tl.getVariable('VS' + vsVersion + '0COMNTools');
+        if (!vsCommon) {
+            throw(new Error(tl.loc('VstestNotFound', vsVersion)));
+        } else {
+            return path.join(vsCommon, '..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe');
+        }
+    } else if(vstestLocationMethod.toLowerCase() === 'location') {
+        if (!pathExistsAsFile(vstestLocation)) {
+            throw(new Error(tl.loc('AccessDeniedToPath', vstestLocation)));
+        } else {
+            return vstestLocation;
+        }
+    }
+}
+
 function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: string, vsVersion: number, argsArray: string[]): Q.Promise<number> {
     var defer = Q.defer<number>();
-    var vsCommon = tl.getVariable("VS" + vsVersion + "0COMNTools");
-    if (!vsCommon) {
-        tl.error(tl.loc('VstestNotFound', vsVersion));
+    try {
+        vstestLocation = getVSTestLocation(vsVersion);
+    } catch (e) {
+        tl.error(e.message);
         defer.resolve(1);
         return defer.promise;
     }
-    var vstestLocation = path.join(vsCommon, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe");
     var vstest = tl.createToolRunner(vstestLocation);
     addVstestArgs(argsArray, vstest);
 
@@ -373,14 +400,23 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                 if (isEmptyResponseFile(responseFile)) {
                                     tl.debug("Empty response file detected. All tests will be executed.");
                                     executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
-                                        .then(function (code) {
+                                        .then(function (vscode) {
                                             uploadTestResults(testResultsDirectory)
                                                 .then(function (code) {
-                                                    defer.resolve(+code);
+                                                    if (!isNaN(+code) && +code != 0)
+                                                    {
+                                                        defer.resolve(+code);
+                                                    }
+                                                    else if (vscode != 0)
+                                                    {
+                                                        defer.resolve(vscode);
+                                                    }
+
+                                                    defer.resolve(0);
                                                 })
                                                 .fail(function (code) {
                                                     tl.debug("Test Run Updation failed!");
-                                                    defer.resolve(code);
+                                                    defer.resolve(1);
                                                 })
                                                 .finally(function () {
                                                     tl.debug("Deleting the response file" + responseFile);
@@ -411,14 +447,23 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                 updateResponseFile(getVstestArguments(settingsFile, true), responseFile)
                                                     .then(function (updatedFile) {
                                                         executeVstest(testResultsDirectory, settingsFile, vsVersion, ["@" + updatedFile])
-                                                            .then(function (code) {
+                                                            .then(function (vscode) {
                                                                 uploadTestResults(testResultsDirectory)
                                                                     .then(function (code) {
-                                                                        defer.resolve(+code);
+                                                                        if (!isNaN(+code) && +code != 0)
+                                                                        {
+                                                                            defer.resolve(+code);
+                                                                        }
+                                                                        else if (vscode != 0)
+                                                                        {
+                                                                            defer.resolve(vscode);
+                                                                        }
+
+                                                                        defer.resolve(0);
                                                                     })
                                                                     .fail(function (code) {
                                                                         tl.debug("Test Run Updation failed!");
-                                                                        defer.resolve(code);
+                                                                        defer.resolve(1);
                                                                     })
                                                                     .finally(function () {
                                                                         tl.debug("Deleting the response file" + responseFile);
@@ -441,14 +486,23 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                         tl.error(err);
                                                         tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', responseFile));
                                                         executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
-                                                            .then(function (code) {
+                                                            .then(function (vscode) {
                                                                 uploadTestResults(testResultsDirectory)
                                                                     .then(function (code) {
-                                                                        defer.resolve(+code);
+                                                                        if (!isNaN(+code) && +code != 0)
+                                                                        {
+                                                                            defer.resolve(+code);
+                                                                        }
+                                                                        else if (vscode != 0)
+                                                                        {
+                                                                            defer.resolve(vscode);
+                                                                        }
+
+                                                                        defer.resolve(0);
                                                                     })
                                                                     .fail(function (code) {
                                                                         tl.debug("Test Run Updation failed!");
-                                                                        defer.resolve(code);
+                                                                        defer.resolve(1);
                                                                     })
                                                                     .finally(function () {
                                                                         tl.debug("Deleting the response file" + responseFile);
@@ -474,14 +528,23 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                 tl.error(err);
                                 tl.warning(tl.loc('ErrorWhileCreatingResponseFile'));
                                 executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
-                                    .then(function (code) {
+                                    .then(function (vscode) {
                                         uploadTestResults(testResultsDirectory)
                                             .then(function (code) {
-                                                defer.resolve(+code);
+                                                if (!isNaN(+code) && +code != 0)
+                                                {
+                                                    defer.resolve(+code);
+                                                }
+                                                else if (vscode != 0)
+                                                {
+                                                    defer.resolve(vscode);
+                                                }
+
+                                                defer.resolve(0);
                                             })
                                             .fail(function (code) {
                                                 tl.debug("Test Run Updation failed!");
-                                                defer.resolve(code);
+                                                defer.resolve(1);
                                             })
                                             .finally(function () {
                                                 tl.debug("Deleting the discovered tests file" + listFile);
@@ -744,6 +807,14 @@ function getTestImpactAttributes(vsVersion: number) {
     };
 }
 
+function getTestImpactAttributesWithoutNewCollector(vsVersion: number) {
+    return {
+        uri: TICollectorURI,
+        assemblyQualifiedName: getTIAssemblyQualifiedName(vsVersion),
+        friendlyName: TIFriendlyName        
+    };
+}
+
 function isTestImapctCollectorPresent(dataCollectorArray): Boolean {
     var found = false;
     var tiaFriendlyName = TIFriendlyName.toUpperCase();
@@ -778,9 +849,11 @@ function pushImpactLevelAndRootPathIfNotFound(dataCollectorArray): void {
 
             //Adding the codebase attribute to TestImpact collector 
             tl.debug("Adding codebase attribute to the existing test impact collector");
-            if (!dataCollectorArray[i].$.codebase) {
-                dataCollectorArray[i].$.codebase = getTraceCollectorUri();
-            }
+            if (useNewCollector) {
+                if (!dataCollectorArray[i].$.codebase) {
+                    dataCollectorArray[i].$.codebase = getTraceCollectorUri();
+                }
+            }            
         }
     }
 }
@@ -822,7 +895,12 @@ function updateRunSettings(result: any, vsVersion: number) {
     }
     if (dataCollectorNode) {
         tl.debug("Setting attributes for test impact data collector");
-        dataCollectorNode.$ = getTestImpactAttributes(vsVersion);
+        if (useNewCollector) {
+            dataCollectorNode.$ = getTestImpactAttributes(vsVersion);
+        }
+        else {
+            dataCollectorNode.$ = getTestImpactAttributesWithoutNewCollector(vsVersion);
+        }        
     }
 }
 
@@ -906,7 +984,12 @@ function updatTestSettings(result: any, vsVersion: number) {
     }
     if (dataCollectorNode) {
         tl.debug("Setting attributes for test impact data collector");
-        dataCollectorNode.$ = getTestImpactAttributes(vsVersion);
+        if (useNewCollector) {
+            dataCollectorNode.$ = getTestImpactAttributes(vsVersion);
+        }
+        else {
+            dataCollectorNode.$ = getTestImpactAttributesWithoutNewCollector(vsVersion);
+        }        
     }
 }
 
@@ -969,8 +1052,15 @@ function createRunSettingsForTestImpact(vsVersion: number, settingsFile: string,
     var runSettingsForTIA = '<?xml version="1.0" encoding="utf-8"?><RunSettings><DataCollectionRunSettings><DataCollectors>' +
         '<DataCollector uri="' + TICollectorURI + '" ' +
         'assemblyQualifiedName="' + getTIAssemblyQualifiedName(vsVersion) + '" ' +
-        'friendlyName="' + TIFriendlyName + '" ' +
-        'codebase="' + getTraceCollectorUri() + '" >' +
+        'friendlyName="' + TIFriendlyName + '" ';
+
+    if (useNewCollector) {
+        runSettingsForTIA = runSettingsForTIA +
+            'codebase="' + getTraceCollectorUri() + '"';
+    }
+
+    runSettingsForTIA = runSettingsForTIA +
+        ' >' +
         '<Configuration>' +
         '<ImpactLevel>' + getTIALevel() + '</ImpactLevel>' +
         '<RootPath>' + sourcesDir + '</RootPath>' +
