@@ -21,7 +21,9 @@ var copyTaskResources = util.copyTaskResources;
 var ensureTool = util.ensureTool;
 var assert = util.assert;
 var getExternals = util.getExternals;
-var copyGroups = util.copyGroups;
+var createResjson = util.createResjson;
+var createTaskLocJson = util.createTaskLocJson;
+var validateTask = util.validateTask;
 
 var commonOutputPath = path.join(__dirname, '_common');
 var buildPath = path.join(__dirname, '_build');
@@ -63,8 +65,15 @@ target.build = function() {
 
         var taskJsonPath = path.join(taskPath, 'task.json');
         if (test('-f', taskJsonPath)) {
+            // load the task.json
             var taskDef = require(taskJsonPath);
-            // TODO: call validate taskJson
+            validateTask(taskDef);
+
+            // create loc files
+            createTaskLocJson(taskPath);
+            createResjson(taskDef, taskPath);
+
+            // determine whether node task
             shouldBuildNode = taskDef.execution.hasOwnProperty('Node');
         }
 
@@ -93,7 +102,13 @@ target.build = function() {
                     banner('Building module ' + commonPath, true);
 
                     mkdir('-p', modOutDir);
-                    
+
+                    // create loc files
+                    var modJsonPath = path.join(commonPath, 'module.json');
+                    if (test('-f', modJsonPath)) {
+                        createResjson(require(modJsonPath), commonPath);
+                    }
+
                     // build the common node module
                     if (mod.type === 'node' && mod.compile == true) {
                         buildNodeTask(commonPath, modOutDir);
