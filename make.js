@@ -20,7 +20,7 @@ var addPath = util.addPath;
 var copyTaskResources = util.copyTaskResources;
 var ensureTool = util.ensureTool;
 var assert = util.assert;
-var downloadArchive = util.downloadArchive;
+var getExternals = util.getExternals;
 var copyGroups = util.copyGroups;
 
 var commonOutputPath = path.join(__dirname, '_common');
@@ -72,41 +72,10 @@ target.build = function() {
         var taskMakePath = path.join(taskPath, 'make.json');
         var taskMake = test('-f', taskMakePath) ? require(taskMakePath) : {};
 
-        // external .zip files
-        if (taskMake.hasOwnProperty('externals') && taskMake.externals.hasOwnProperty('archivePackages')) {
-            var archivePackages = taskMake.externals.archivePackages;
-            archivePackages.forEach(function (archive) {
-                assert(archive.url, 'archive.url');
-                assert(archive.dest, 'archive.dest');
-
-                // download and extract the archive package
-                var archiveSource = downloadArchive(archive.url);
-
-                // copy the files
-                var archiveDest = path.join(outDir, archive.dest);
-                mkdir('-p', archiveDest);
-                cp('-R', archiveSource, archiveDest)
-            });
-        }
-
-        // external NuGet V2 packages
-        if (taskMake.hasOwnProperty('externals') && taskMake.externals.hasOwnProperty('nugetv2')) {
-            var nugetPackages = taskMake.externals.nugetv2;
-            nugetPackages.forEach(function (package) {
-                // validate the structure of the json data
-                assert(package.name, 'package.name');
-                assert(package.version, 'package.version');
-                assert(package.repository, 'package.repository');
-                assert(package.cp, 'package.cp');
-                assert(package.cp, 'package.cp.length');
-
-                // download and extract the NuGet V2 package
-                var url = package.repository.replace(/\/$/, '') + '/package/' + package.name + '/' + package.version;
-                var packageSource = downloadArchive(url, /*omitExtensionCheck*/true);
-
-                // copy specific files
-                copyGroups(package.cp, packageSource, outDir);
-            });
+        // get externals
+        if (taskMake.hasOwnProperty('externals')) {
+            console.log('Getting task externals');
+            getExternals(taskMake.externals, outDir);
         }
 
         //--------------------------------
@@ -121,18 +90,36 @@ target.build = function() {
                 var modOutDir = path.join(commonOutputPath, modName);
 
                 if (!test('-d', modOutDir)) {
+                    banner('Building module ' + commonPath, true);
+
+                    // build the common node module
                     if (mod.type === 'node' && mod.compile == true) {
                         buildNodeTask(commonPath, modOutDir);
-                        copyTaskResources(commonPath, modOutDir);
+                    }
 
-                        // install the common module to the task dir
-                        mkdir('-p', path.join(taskPath, 'node_modules'));
-                        rm('-Rf', path.join(taskPath, 'node_modules', modName));
-                        pushd(taskPath);
-                        run('npm install ' + modOutDir);
-                        popd();
+                    // todo: copy additional resources based on the local make.json
+                    copyTaskResources(commonPath, modOutDir);
+
+                    // get externals
+                    var modMakePath = path.join(commonPath, 'make.json');
+                    var modMake = test('-f', modMakePath) ? require(modMakePath) : {};
+                    if (modMake.hasOwnProperty('externals')) {
+                        console.log('Getting module externals');
+                        getExternals(modMake.externals, modOutDir);
                     }
                 }
+
+                // npm install the common module to the task dir
+                if (mod.type === 'node' && mod.compile == true) {
+                    mkdir('-p', path.join(taskPath, 'node_modules'));
+                    rm('-Rf', path.join(taskPath, 'node_modules', modName));
+                    var originalDir = pwd();
+                    cd(taskPath);
+                    run('npm install ' + modOutDir);
+                    cd(originalDir);
+                }
+
+                // todo: copy common module resources to the task dir
             });
         }
 
