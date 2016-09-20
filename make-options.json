@@ -3,6 +3,7 @@
         "ANT",
         "ArchiveFiles",
         "AzureCLI",
+        "CMake",
         "Gulp",
         "NuGetInstaller",
         "PublishSymbols",
