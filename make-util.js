@@ -1,5 +1,6 @@
 
 require('shelljs');
+var admZip = require('adm-zip');
 var fs = require('fs');
 var os = require('os');
 var path = require('path');
@@ -11,6 +12,16 @@ var downloadPath = path.join(__dirname, '_download');
 var testPath = path.join(__dirname, '_test');
 
 var makeOptions = require('./make-options.json');
+
+// list of .NET culture names
+var cultureNames = [ 'cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant' ];
+
+function assert(value, name) {
+    if (!value) {
+        throw new Error('"' + name + '" cannot be null or empty.');
+    }
+}
+exports.assert = assert;
 
 var banner = function (message, noBracket) {
     console.log();
@@ -41,12 +52,12 @@ var ensureExists = function (checkPath) {
 
     if (!exists) {
         fail(checkPath + ' does not exist');
-    }    
+    }
 }
 exports.ensureExists = ensureExists;
 
 var pathExists = function (checkPath) {
-    return test('-d', checkPath) || test('-f', checkPath);  
+    return test('-d', checkPath) || test('-f', checkPath);
 }
 exports.pathExists = pathExists;
 
@@ -63,20 +74,20 @@ var buildNodeTask = function (taskPath, outDir) {
 }
 exports.buildNodeTask = buildNodeTask;
 
-var copyTaskResources = function(srcPath, destPath) {
+var copyTaskResources = function (srcPath, destPath) {
     // copy task resources
     var toCopy = makeOptions['taskResources'];
-    toCopy.forEach(function(item) {
+    toCopy.forEach(function (item) {
         var itemPath = path.join(srcPath, item);
 
         if (pathExists(itemPath)) {
-            cp('-R', itemPath , destPath);
+            cp('-R', itemPath, destPath);
         }
-    });    
+    });
 }
 exports.copyTaskResources = copyTaskResources;
 
-exports.run = function(cl, echo) {
+exports.run = function (cl, echo) {
     console.log();
     console.log('> ' + cl);
     var rc = 0;
@@ -88,12 +99,13 @@ exports.run = function(cl, echo) {
         }
     }
     catch (err) {
+        console.error(err.output ? err.output.toString() : err.message);
         exit(1);
     }
 }
 var run = exports.run;
 
-var ensureTool = function(name, versionArgs) {
+var ensureTool = function (name, versionArgs) {
     console.log(name + ' tool:');
     var toolPath = which(name);
     if (!toolPath) {
@@ -111,7 +123,7 @@ var downloadFile = function (url) {
         throw new Error('Parameter "url" must be set.');
     }
 
-    // short-circuit if already downloaded
+    // skip if already downloaded
     var scrubbedUrl = url.replace(/[/\:?]/g, '_');
     var targetPath = path.join(downloadPath, 'file', scrubbedUrl);
     var marker = targetPath + '.completed';
@@ -134,24 +146,19 @@ var downloadFile = function (url) {
 
     return targetPath;
 }
+exports.downloadFile = downloadFile;
 
-var downloadArchive = function (url) {
-    // validate platform
-    var platform = os.platform();
-    if (platform != 'darwin' && platform != 'linux') {
-        throw new Error('Unexpected platform: ' + platform);
-    }
-
+var downloadArchive = function (url, omitExtensionCheck) {
     // validate parameters
     if (!url) {
         throw new Error('Parameter "url" must be set.');
     }
 
-    if (!url.match(/\.tar\.gz$/)) {
-        throw new Error('Expected .tar.gz');
+    if (!omitExtensionCheck && !url.match(/\.zip$/)) {
+        throw new Error('Expected .zip');
     }
 
-    // short-circuit if already downloaded and extracted
+    // skip if already downloaded and extracted
     var scrubbedUrl = url.replace(/[/\:?]/g, '_');
     var targetPath = path.join(downloadPath, 'archive', scrubbedUrl);
     var marker = targetPath + '.completed';
@@ -167,14 +174,8 @@ var downloadArchive = function (url) {
 
         // extract
         mkdir('-p', targetPath);
-        var cwd = process.cwd();
-        process.chdir(targetPath);
-        try {
-            run('tar -xzf "' + archivePath + '"');
-        }
-        finally {
-            process.chdir(cwd);
-        }
+        var zip = new admZip(archivePath);
+        zip.extractAllTo(targetPath);
 
         // write the completed marker
         fs.writeFileSync(marker, '');
@@ -182,6 +183,76 @@ var downloadArchive = function (url) {
 
     return targetPath;
 }
+exports.downloadArchive = downloadArchive;
+
+var copyGroup = function (group, sourceRoot, destRoot) {
+    // example structure to copy a single file:
+    // {
+    //   "source": "foo.dll"
+    // }
+    //
+    // example structure to copy an array of files to a relative directory:
+    // {
+    //   "source": [
+    //     "foo.dll",
+    //     "bar.dll",
+    //   ]
+    //   "dest": "baz/",
+    // }
+    //
+    // example to multiply the copy by .NET culture names supported by TFS:
+    // {
+    //   "source": "<CULTURE_NAME>/foo.dll"
+    //   "dest": "<CULTURE_NAME>/"
+    // }
+    //
+
+    // validate parameters
+    assert(group, 'group');
+    assert(group.source, 'group.source');
+    if (typeof group.source == 'object') {
+        assert(group.source.length, 'group.source.length');
+        group.source.forEach(function (s) {
+            assert(s, 'group.source[i]');
+        });
+    }
+
+    assert(sourceRoot, 'sourceRoot');
+    assert(destRoot, 'destRoot');
+
+    // multiply by culture name (recursive call to self)
+    if (group.dest && group.dest.indexOf('<CULTURE_NAME>') >= 0) {
+        cultureNames.forEach(function (cultureName) {
+            // culture names do not contain any JSON-special characters, so this is OK (albeit a hack)
+            var localizedGroupJson = JSON.stringify(group).replace(/<CULTURE_NAME>/g, cultureName);
+            copyGroup(JSON.parse(localizedGroupJson), sourceRoot, destRoot);
+        });
+
+        return;
+    }
+
+    // build the source array
+    var source = typeof group.source == 'string' ? [ group.source ] : group.source;
+    source = source.map(function (val) { // root the paths
+        return path.join(sourceRoot, val);
+    });
+
+    // create the destination directory
+    var dest = group.dest ? path.join(destRoot, group.dest) : destRoot + '/';
+    mkdir('-p', dest);
+
+    // copy the files
+    cp(source, dest);
+}
+
+var copyGroups = function (groups, sourceRoot, destRoot) {
+    assert(groups, 'groups');
+    assert(groups.length, 'groups.length');
+    groups.forEach(function (group) {
+        copyGroup(group, sourceRoot, destRoot);
+    })
+}
+exports.copyGroups = copyGroups;
 
 var addPath = function (directory) {
     var separator;

@@ -28,6 +28,7 @@ bld/
 temp/
 _common/
 _build/
+_download/
 _package/
 _working/
 
