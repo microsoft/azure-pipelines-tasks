@@ -202,13 +202,13 @@ function Get-AzRmVmCustomScriptExtension
         {
             $customScriptExt=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
             Write-Verbose "No proxy settings"
-            return $customScriptExt
+            return $customScriptExt.properties
         }
         else
         {
             $customScriptExt=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
             Write-Verbose "Using proxy settings"
-            return $customScriptExt
+            return $customScriptExt.properties
         }
     }
     catch
