@@ -59,5 +59,14 @@
                 ]
             }
         ]
-    }
+    },
+    "cp": [
+        {
+            "source": [
+                "IndexHelpers",
+                "PublishHelpers"
+            ],
+            "options": "-R"
+        }
+    ]
 }

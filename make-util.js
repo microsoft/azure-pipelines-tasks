@@ -73,8 +73,12 @@ var buildNodeTask = function (taskPath, outDir) {
 }
 exports.buildNodeTask = buildNodeTask;
 
-var copyTaskResources = function (srcPath, destPath) {
-    // copy task resources
+var copyTaskResources = function (taskMake, srcPath, destPath) {
+    assert(taskMake, 'taskMake');
+    assert(srcPath, 'srcPath');
+    assert(destPath, 'destPath');
+
+    // copy the globally defined set of default task resources
     var toCopy = makeOptions['taskResources'];
     toCopy.forEach(function (item) {
         var itemPath = path.join(srcPath, item);
@@ -83,6 +87,11 @@ var copyTaskResources = function (srcPath, destPath) {
             cp('-R', itemPath, destPath);
         }
     });
+
+    // copy the locally defined set of resources
+    if (taskMake.hasOwnProperty('cp')) {
+        copyGroups(taskMake.cp, srcPath, destPath);
+    }
 }
 exports.copyTaskResources = copyTaskResources;
 
@@ -356,7 +365,7 @@ var createResjson = function (task, taskPath) {
             if (input.hasOwnProperty('name')) {
                 resources['loc.input.label.' + input.name] = input.label;
 
-                if (input.hasOwnProperty('helpMarkDown')) {
+                if (input.hasOwnProperty('helpMarkDown') && input.helpMarkDown) {
                     resources['loc.input.help.' + input.name] = input.helpMarkDown;
                 }
             }
@@ -395,7 +404,7 @@ var createTaskLocJson = function (taskPath) {
             if (input.hasOwnProperty('name')) {
                 input.label = 'ms-resource:loc.input.label.' + input.name;
 
-                if (input.hasOwnProperty('helpMarkDown')) {
+                if (input.hasOwnProperty('helpMarkDown') && input.helpMarkDown) {
                     input.helpMarkDown = 'ms-resource:loc.input.help.' + input.name;
                 }
             }

@@ -1,0 +1,12 @@
+{
+    "common": [
+        {
+            "module": "../Common/VstsAzureHelpers_",
+            "type": "ps"
+        },
+        {
+            "module": "../Common/VstsAzureRestHelpers_",
+            "type": "ps"
+        }
+    ]
+}
