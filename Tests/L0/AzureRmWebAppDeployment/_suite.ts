@@ -219,7 +219,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
 
     it('Runs successfully with parameter file provided by user on windows', (done) => {
         
-        setResponseFile('armgoodwithparamFile.json');
+        setResponseFile('armgoodwithparamfile.json');
 
         var tr = new trm.TaskRunner('AzureRmWebAppDeployment');
         tr.setInput('ConnectedServiceName', 'AzureRMSpn');
