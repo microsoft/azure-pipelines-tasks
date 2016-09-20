@@ -22,7 +22,7 @@ import tl = require('vsts-task-lib/task');
  */
 export abstract class BaseTool implements IAnalysisTool {
 
-    constructor(protected toolName: string, protected buildOutput: BuildOutput, private uiInputName: string) {
+    constructor(public toolName: string, protected buildOutput: BuildOutput, private uiInputName: string) {
 
     }
 
@@ -74,7 +74,7 @@ export abstract class BaseTool implements IAnalysisTool {
         return results;
     }
 
-    protected /* for test purposes, otherwise private */ isEnabled(): boolean {
+    public isEnabled(): boolean {
         return tl.getBoolInput(this.uiInputName, false);
     }
 
@@ -121,7 +121,7 @@ export abstract class BaseTool implements IAnalysisTool {
 
         }
 
-        return new AnalysisResult(this.toolName, moduleName, artifacts, violationCount, fileCount);
+        return new AnalysisResult(this, moduleName, artifacts, violationCount, fileCount);
     }
 
     private findHtmlReport(xmlReport: string): string {
