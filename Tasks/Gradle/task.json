@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 60
+        "Patch": 61
     },
     "demands": [
         "java"
@@ -344,6 +344,8 @@
         "sqAnalysis_QualityGatePassed": "The SonarQube quality gate associated with this build has passed (status %s)",
         "sqAnalysis_UnknownComparatorString": "The SonarQube build summary encountered a problem: unknown comparator '%s'",
         "sqAnalysis_NoUnitsFound": "The list of SonarQube measurement units could not be retrieved from the server.",
+        "sqAnalysis_NoReportTask": "Could not find report-task.txt. Possible cause: the SonarQube analysis did not complete successfully.",
+        "sqAnalysis_MultipleReportTasks": "Multiple report-task.txt files found. Choosing the first one. The build summary and the build breaker may not be accurate. Possible cause: multiple SonarQube analysis during the same build, which is not supported.",
         "codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "%s found %d violations in %d files.",
         "codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "%s found %d violations in 1 file.",
         "codeAnalysisBuildSummaryLine_OneViolationOneFile": "%s found 1 violation in 1 file.",

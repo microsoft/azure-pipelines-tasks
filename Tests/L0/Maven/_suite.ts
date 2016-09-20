@@ -948,7 +948,9 @@ describe('Maven Suite', function () {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
                 assert(tr.failed, 'task should not have succeeded');
-
+                
+                // there are 2 report-task.txt files found, so a warning should be generated
+                assert(tr.stdout.indexOf('vso[task.issue type=warning;]Multiple report-task.txt files found.')> -1);
                 assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report') < 1,
                     'should not have uploaded a SonarQube Analysis Report build summary');
                 assert(tr.stderr.indexOf('Invalid or missing task report. Check SonarQube finished successfully.') > -1,
@@ -963,10 +965,10 @@ describe('Maven Suite', function () {
             });
     });
 
-    it('Maven with SonarQube - Fails when report-task.txt is missing', function (done) {
+    it('Maven with SonarQube - Warns when report-task.txt is missing', function (done) {
         // Arrange
         createTempDirsForSonarQubeTests();
-        var testSrcDir: string = __dirname;
+       var testSrcDir: string = path.join(__dirname, 'data', 'singlemodule'); // no report-task.txt here
         var testStgDir: string = path.join(__dirname, '_temp');
 
         // not a valid PR branch
@@ -998,14 +1000,14 @@ describe('Maven Suite', function () {
                 assert(tr.ran('/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword sonar:sonar'), 'it should have run SQ analysis');
                 assert(tr.invokedToolCount == 2, 'should have only run maven 2 times');
                 assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length > 0, 'should have written to stderr');
-                assert(tr.failed, 'task should not have succeeded');
+                assert(tr.succeeded, 'task should have succeeded');
 
-                assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report') < 1,
+                assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report') < 0,
                     'should not have uploaded a SonarQube Analysis Report build summary');
 
-                assert(tr.stderr.indexOf('Invalid or missing task report. Check SonarQube finished successfully.') > -1,
-                    'should have output an error about a failure to find the task report');
+                assert(tr.stdout.indexOf('vso[task.issue type=warning;]Could not find report-task.txt')> -1, 
+                    'Should have fired a warning about the missing report-task.txt');
+
                 done();
             })
             .fail((err) => {
@@ -1022,7 +1024,7 @@ describe('Maven Suite', function () {
         var testSrcDir: string = __dirname;
         var testStgDir: string = path.join(__dirname, '_temp');
         var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis'); // overall directory for all tools
-        fs.mkdirSync(codeAnalysisStgDir);
+        createTempDirsForCodeAnalysisTests();
 
         mockHelper.setResponseAndBuildVars(
             path.join(__dirname, 'response.json'),
@@ -2191,6 +2193,4 @@ describe('Maven Suite', function () {
 
         done();
     });
-
-
 });
