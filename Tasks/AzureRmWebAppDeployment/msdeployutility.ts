@@ -127,7 +127,7 @@ export async  function containsParamFile(webAppPackage: string ) {
 export async function getMSDeployFullPath() {
     try {
         var msDeployInstallPathRegKey = "\\SOFTWARE\\Microsoft\\IIS Extensions\\MSDeploy";
-        var msDeployLatestPathRegKey = await getMSDeployVersion(msDeployInstallPathRegKey);
+        var msDeployLatestPathRegKey = await getMSDeployLatestRegKey(msDeployInstallPathRegKey);
         var msDeployFullPath = await getMSDeployInstallPath(msDeployLatestPathRegKey);
         msDeployFullPath = msDeployFullPath + "msdeploy.exe";
         return msDeployFullPath;
@@ -138,7 +138,7 @@ export async function getMSDeployFullPath() {
     }
 }
 
-function getMSDeployVersion(registryKey: string): Q.Promise<string> {
+function getMSDeployLatestRegKey(registryKey: string): Q.Promise<string> {
     var defer = Q.defer<string>();
     var regKey = new winreg({
       hive: winreg.HKLM,
