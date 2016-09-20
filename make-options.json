@@ -4,7 +4,8 @@
         "Gulp",
         "NuGetInstaller",
         "PublishSymbols",
-        "ShellScript"
+        "ShellScript",
+        "VSBuild"
     ],
     "taskResources": [
         "icon.png", 
@@ -15,5 +16,5 @@
         "Strings", 
         "task.json", 
         "task.loc.json"
-    ]        
+    ]
 }
