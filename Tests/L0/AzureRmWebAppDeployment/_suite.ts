@@ -270,7 +270,34 @@ describe('AzureRmWebAppDeployment Suite', function() {
                 done(err);
             });
     });
+    
+    it('Fails if more than one package matched with specified pattern', (done) => {
+        
+        setResponseFile('armGood.json');
 
+        var tr = new trm.TaskRunner('AzureRmWebAppDeployment');
+        tr.setInput('ConnectedServiceName', 'AzureRMSpn');
+        tr.setInput('WebAppName', 'mytestapp');
+        tr.setInput('Package', 'webAppPkgPattern');
+        tr.setInput('UseWebDeploy', 'true');
+        
+        tr.run()
+            .then(() => {
+
+                assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
+                assert(tr.stderr.length > 0, 'should have written to stderr');
+                var expectedErr = 'More than one package matched with specified pattern. Please restrain the search patern.'; 
+                assert(tr.stdErrContained(expectedErr), 'should have said: ' + expectedErr); 
+                assert(tr.failed, 'task should have failed');
+                done();
+
+            })
+            .fail((err) => {
+                done(err);
+            });
+    });
+
+    
     it('Fails if package or folder name is invalid', (done) => {
         
         setResponseFile('armGood.json');
@@ -286,7 +313,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
 
                 assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
-                var expectedErr = 'Error: Invalid webapp package or folder path provided: Invalid_webAppPkg'; 
+                var expectedErr = 'No package found with specified pattern'; 
                 assert(tr.stdErrContained(expectedErr), 'should have said: ' + expectedErr); 
                 assert(tr.failed, 'task should have failed');
                 done();
