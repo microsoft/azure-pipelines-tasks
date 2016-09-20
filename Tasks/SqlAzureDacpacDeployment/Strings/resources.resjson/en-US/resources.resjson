@@ -18,7 +18,7 @@
   "loc.input.label.SqlUsername": "Server Admin Login",
   "loc.input.help.SqlUsername": "Specify the Azure SQL Server administrator login.",
   "loc.input.label.SqlPassword": "Password",
-  "loc.input.help.SqlPassword": "Password for the Azure SQL Server administrator.<br>It can accept variable defined in Build/Release Definitions as '$(passwordVariable').<br>You may mark the variable type as 'secret' to secure it.",
+  "loc.input.help.SqlPassword": "Password for the Azure SQL Server administrator.<br>It can accept variable defined in Build/Release Definitions as '$(passwordVariable)'.<br>You may mark the variable type as 'secret' to secure it.",
   "loc.input.label.TaskNameSelector": "Type",
   "loc.input.label.DacpacFile": "DACPAC File",
   "loc.input.help.DacpacFile": "Location of the DACPAC file on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. Predefined system variables like, $(agent.releaseDirectory) can also be used here.",
