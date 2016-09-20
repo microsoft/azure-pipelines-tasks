@@ -62,15 +62,13 @@ var pathExists = function (checkPath) {
 exports.pathExists = pathExists;
 
 var buildNodeTask = function (taskPath, outDir) {
-    banner('Building node task ' + taskPath, true);
-    pushd(taskPath);
+    var originalDir = pwd();
+    cd(taskPath);
     if (test('-f', rp('package.json'))) {
-        console.log('installing node modules');
         run('npm install');
     }
     run('tsc --outDir ' + outDir);
-
-    popd();
+    cd(originalDir);
 }
 exports.buildNodeTask = buildNodeTask;
 
@@ -191,13 +189,14 @@ var copyGroup = function (group, sourceRoot, destRoot) {
     //   "source": "foo.dll"
     // }
     //
-    // example structure to copy an array of files to a relative directory:
+    // example structure to copy an array of files/folders to a relative directory:
     // {
     //   "source": [
     //     "foo.dll",
-    //     "bar.dll",
+    //     "bar",
     //   ]
     //   "dest": "baz/",
+    //   "options": "-R"
     // }
     //
     // example to multiply the copy by .NET culture names supported by TFS:
@@ -242,7 +241,12 @@ var copyGroup = function (group, sourceRoot, destRoot) {
     mkdir('-p', dest);
 
     // copy the files
-    cp(source, dest);
+    if (group.hasOwnProperty('options') && group.options) {
+        cp(group.options, source, dest);
+    }
+    else {
+        cp(source, dest);
+    }
 }
 
 var copyGroups = function (groups, sourceRoot, destRoot) {
@@ -272,3 +276,46 @@ var addPath = function (directory) {
     }
 }
 exports.addPath = addPath;
+
+var getExternals = function (externals, destRoot) {
+    assert(externals, 'externals');
+    assert(destRoot, 'destRoot');
+
+    // .zip files
+    if (externals.hasOwnProperty('archivePackages')) {
+        var archivePackages = externals.archivePackages;
+        archivePackages.forEach(function (archive) {
+            assert(archive.url, 'archive.url');
+            assert(archive.dest, 'archive.dest');
+
+            // download and extract the archive package
+            var archiveSource = downloadArchive(archive.url);
+
+            // copy the files
+            var archiveDest = path.join(destRoot, archive.dest);
+            mkdir('-p', archiveDest);
+            cp('-R', path.join(archiveSource, '*'), archiveDest)
+        });
+    }
+
+    // external NuGet V2 packages
+    if (externals.hasOwnProperty('nugetv2')) {
+        var nugetPackages = externals.nugetv2;
+        nugetPackages.forEach(function (package) {
+            // validate the structure of the data
+            assert(package.name, 'package.name');
+            assert(package.version, 'package.version');
+            assert(package.repository, 'package.repository');
+            assert(package.cp, 'package.cp');
+            assert(package.cp, 'package.cp.length');
+
+            // download and extract the NuGet V2 package
+            var url = package.repository.replace(/\/$/, '') + '/package/' + package.name + '/' + package.version;
+            var packageSource = downloadArchive(url, /*omitExtensionCheck*/true);
+
+            // copy specific files
+            copyGroups(package.cp, packageSource, destRoot);
+        });
+    }
+}
+exports.getExternals = getExternals;
