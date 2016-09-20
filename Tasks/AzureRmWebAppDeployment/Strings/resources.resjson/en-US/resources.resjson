@@ -18,7 +18,7 @@
   "loc.input.label.VirtualApplication": "Virtual Application",
   "loc.input.help.VirtualApplication": "Specify the name of the Virtual Application that has been configured in the Azure portal. The option is not required for deployments to the website root.",
   "loc.input.label.Package": "Package or Folder",
-  "loc.input.help.Package": "Folder or file path to the Web App package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)\\***.zip.",
+  "loc.input.help.Package": "Folder or file path to the Web App package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)\\**\\*.zip.",
   "loc.input.label.WebAppUri": "Web App URL",
   "loc.input.help.WebAppUri": "Specify a name for the output variable that is generated for the URL of the Web App. The variable can be consumed in subsequent tasks.",
   "loc.input.label.UseWebDeploy": "Publish using Web Deploy",
@@ -65,5 +65,7 @@
   "loc.messages.Initiateddeploymentviakuduserviceforwebapppackage": "Initiated deployment via kudu service for webapp package : %s",
   "loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy generated package are only supported for Windows platform.",
   "loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove": "Unsupported installed version: %s found for MSDeploy. version should be alteast 3 or above",
-  "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)"
+  "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)",
+  "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
+  "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "More than one package matched with specified pattern. Please restrain the search patern."
 }
