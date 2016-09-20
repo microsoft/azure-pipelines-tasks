@@ -167,8 +167,8 @@ function assertCodeAnalysisBuildSummaryContains(stagingDir: string, expectedStri
     assertBuildSummaryContains(fs.readFileSync(path.join(stagingDir, '.codeAnalysis', 'CodeAnalysisBuildSummary.md'), 'utf-8'), expectedString);
 }
 
-function assertCodeAnalysisBuildSummaryDoesNotContain(stagingDir: string, string: string): void {
-    assertBuildSummaryDoesNotContain(fs.readFileSync(path.join(stagingDir, '.codeAnalysis', 'CodeAnalysisBuildSummary.md'), 'utf-8'), string);
+function assertCodeAnalysisBuildSummaryDoesNotContain(stagingDir: string, unexpectedString: string): void {
+    assertBuildSummaryDoesNotContain(fs.readFileSync(path.join(stagingDir, '.codeAnalysis', 'CodeAnalysisBuildSummary.md'), 'utf-8'), unexpectedString);
 }
 
 function assertSonarQubeBuildSummaryContains(stagingDir: string, expectedString: string): void {
