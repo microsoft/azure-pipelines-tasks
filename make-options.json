@@ -4,6 +4,7 @@
         "ArchiveFiles",
         "AzureCLI",
         "CMake",
+        "CocoaPods",
         "Gulp",
         "NuGetInstaller",
         "PublishSymbols",
