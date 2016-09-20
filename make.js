@@ -19,6 +19,9 @@ var buildNodeTask = util.buildNodeTask;
 var addPath = util.addPath;
 var copyTaskResources = util.copyTaskResources;
 var ensureTool = util.ensureTool;
+var assert = util.assert;
+var downloadArchive = util.downloadArchive;
+var copyGroups = util.copyGroups;
 
 var commonOutputPath = path.join(__dirname, '_common');
 var buildPath = path.join(__dirname, '_build');
@@ -56,7 +59,7 @@ target.build = function() {
         var outDir = path.join(buildPath, path.basename(taskPath));
         mkdir('-p', outDir);
 
-        var shouldBuildNode = true;
+        var shouldBuildNode = false;
 
         var taskJsonPath = path.join(taskPath, 'task.json');
         if (test('-f', taskJsonPath)) {
@@ -66,17 +69,51 @@ target.build = function() {
         }
 
         // common and externals options specific to our scripts
-        var makeOptions = {};
-        var makePath = path.join(taskPath, 'make.json');
-        if (test('-f', makePath)) {
-            makeOptions = require(makePath);
+        var taskMakePath = path.join(taskPath, 'make.json');
+        var taskMake = test('-f', taskMakePath) ? require(taskMakePath) : {};
+
+        // external .zip files
+        if (taskMake.hasOwnProperty('externals') && taskMake.externals.hasOwnProperty('archivePackages')) {
+            var archivePackages = taskMake.externals.archivePackages;
+            archivePackages.forEach(function (archive) {
+                assert(archive.url, 'archive.url');
+                assert(archive.dest, 'archive.dest');
+
+                // download and extract the archive package
+                var archiveSource = downloadArchive(archive.url);
+
+                // copy the files
+                var archiveDest = path.join(outDir, archive.dest);
+                mkdir('-p', archiveDest);
+                cp('-R', archiveSource, archiveDest)
+            });
+        }
+
+        // external NuGet V2 packages
+        if (taskMake.hasOwnProperty('externals') && taskMake.externals.hasOwnProperty('nugetv2')) {
+            var nugetPackages = taskMake.externals.nugetv2;
+            nugetPackages.forEach(function (package) {
+                // validate the structure of the json data
+                assert(package.name, 'package.name');
+                assert(package.version, 'package.version');
+                assert(package.repository, 'package.repository');
+                assert(package.cp, 'package.cp');
+                assert(package.cp, 'package.cp.length');
+
+                // download and extract the NuGet V2 package
+                var url = package.repository.replace(/\/$/, '') + '/package/' + package.name + '/' + package.version;
+                var packageSource = downloadArchive(url, /*omitExtensionCheck*/true);
+
+                // copy specific files
+                copyGroups(package.cp, packageSource, outDir);
+            });
         }
 
         //--------------------------------
         // Common: build, copy, install 
         //--------------------------------
-        if (makeOptions.hasOwnProperty('common')) {
-            var common = makeOptions['common'];
+        if (taskMake.hasOwnProperty('common')) {
+            var common = taskMake['common'];
 
             common.forEach(function(mod) {
                 var commonPath = path.join(taskPath, mod['module']);
