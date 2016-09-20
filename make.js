@@ -25,8 +25,8 @@ var createResjson = util.createResjson;
 var createTaskLocJson = util.createTaskLocJson;
 var validateTask = util.validateTask;
 
-var commonOutputPath = path.join(__dirname, '_common');
 var buildPath = path.join(__dirname, '_build');
+var commonOutputPath = path.join(buildPath, 'Common');
 var testPath = path.join(__dirname, '_test');
 
 // add node modules .bin to the path so we can dictate version of tsc etc...
@@ -94,31 +94,31 @@ target.build = function() {
             var common = taskMake['common'];
 
             common.forEach(function(mod) {
-                var commonPath = path.join(taskPath, mod['module']);
-                var modName = path.basename(commonPath);
+                var modPath = path.join(taskPath, mod['module']);
+                var modName = path.basename(modPath);
                 var modOutDir = path.join(commonOutputPath, modName);
 
                 if (!test('-d', modOutDir)) {
-                    banner('Building module ' + commonPath, true);
+                    banner('Building module ' + modPath, true);
 
                     mkdir('-p', modOutDir);
 
                     // create loc files
-                    var modJsonPath = path.join(commonPath, 'module.json');
+                    var modJsonPath = path.join(modPath, 'module.json');
                     if (test('-f', modJsonPath)) {
-                        createResjson(require(modJsonPath), commonPath);
+                        createResjson(require(modJsonPath), modPath);
                     }
 
                     // build the common node module
                     if (mod.type === 'node' && mod.compile == true) {
-                        buildNodeTask(commonPath, modOutDir);
+                        buildNodeTask(modPath, modOutDir);
                     }
 
                     // todo: copy additional resources based on the local make.json
-                    copyTaskResources(commonPath, modOutDir);
+                    copyTaskResources(modPath, modOutDir);
 
                     // get externals
-                    var modMakePath = path.join(commonPath, 'make.json');
+                    var modMakePath = path.join(modPath, 'make.json');
                     var modMake = test('-f', modMakePath) ? require(modMakePath) : {};
                     if (modMake.hasOwnProperty('externals')) {
                         console.log('Getting module externals');
@@ -161,8 +161,12 @@ target.test = function() {
 
     var suiteArg = process.argv[4];
     var suiteType = suiteArg || 'L0';  
-    var testsSpec = path.join(buildPath, "/**/Tests", suiteType + ".js");
-    run("mocha " + testsSpec, true);
+
+    var taskArg = process.argv[5];
+    var taskType = taskArg || '**';
+
+    var testsSpec = path.join(buildPath, taskType, 'Tests', suiteType + ".js");
+    run('mocha ' + testsSpec, true);
 
     // TODO: add legacy test approach for migration purposes
 }
