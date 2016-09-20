@@ -2,6 +2,7 @@
     "tasks": [
         "ANT",
         "ArchiveFiles",
+        "AzureCLI",
         "Gulp",
         "NuGetInstaller",
         "PublishSymbols",
