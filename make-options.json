@@ -5,6 +5,7 @@
         "AzureCLI",
         "CMake",
         "CocoaPods",
+        "CmdLine",
         "Gulp",
         "NuGetInstaller",
         "PublishSymbols",

@@ -12,7 +12,7 @@ async function run() {
 
         var podPath: string = tl.which('pod');
         if (!podPath) {
-
+            throw new Error(tl.loc('CocoaPodsNotFound'));
         }
 
         var pod: trm.ToolRunner = tl.tool(podPath);

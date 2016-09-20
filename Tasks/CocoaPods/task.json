@@ -33,6 +33,7 @@
     },
     "messages": {
         "PodReturnCode": "Pod exited with return code: %d",
-        "PodFailed": "Pod failed with error: %s"
+        "PodFailed": "Pod failed with error: %s",
+        "CocoaPodsNotFound": "command pod was not found. Please install Cocoapods on the build machine (https://cocoapods.org)"
     }    
 }
