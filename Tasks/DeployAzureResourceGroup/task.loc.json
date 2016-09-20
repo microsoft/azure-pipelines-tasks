@@ -139,20 +139,6 @@
       "visibleRule": "action = Create Or Update Resource Group"
     },
     {
-      "name": "deploymentMode",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.deploymentmode",
-      "defaultValue": "Incremental",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.deploymentmode",
-      "options": {
-        "Validation": "Validation Only",
-        "Incremental": "Incremental Mode",
-        "Complete": "Complete Mode"
-      },
-      "visibleRule": "action = Create Or Update Resource Group"
-    },
-    {
       "name": "csmFile",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.csmFile",
@@ -196,6 +182,20 @@
       "visibleRule": "action = Select Resource Group",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.enableDeploymentPrerequisitesForSelect"
+    },
+    {
+      "name": "deploymentMode",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.deploymentmode",
+      "defaultValue": "Incremental",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.deploymentmode",
+      "options": {
+        "Validation": "Validation Only",
+        "Incremental": "Incremental",
+        "Complete": "Complete"
+      },
+      "visibleRule": "action = Create Or Update Resource Group"
     },
     {
       "name": "outputVariable",
