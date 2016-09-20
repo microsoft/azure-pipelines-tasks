@@ -146,8 +146,13 @@ target.test = function() {
 
     var suiteArg = process.argv[4];
     var suiteType = suiteArg || 'L0';  
-    var testsSpec = path.join(buildPath, "/**/Tests", suiteType + ".js");
-    run("mocha " + testsSpec, true);
+
+    var taskArg = process.argv[5];
+    var taskType = taskArg || '**';
+
+    // the tests may be under _build or _common
+    var testsSpec = path.join(__dirname, '_[bc]*', taskType, 'Tests', suiteType + ".js");
+    run(`mocha ${testsSpec}`, true);
 
     // TODO: add legacy test approach for migration purposes
 }
