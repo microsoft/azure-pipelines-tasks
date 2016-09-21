@@ -21,6 +21,7 @@
         "DeleteFiles",
         "DeployAzureResourceGroup",
         "DeployVisualStudioTestAgent",
+        "ExtractFiles",
         "Gulp",
         "IISWebAppDeployment",
         "NuGetInstaller",
