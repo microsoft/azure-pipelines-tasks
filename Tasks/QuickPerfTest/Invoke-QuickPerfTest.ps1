@@ -96,6 +96,14 @@ function GetTestRuns($headers)
     return $runs
 }
 
+function GetTestRunUri($testRunId)
+{
+ $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?api-version=1.0", $CltAccountUrl,$testRunId)
+ $run = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -TimeoutSec $global:RestTimeout -Uri $uri -Headers $headers
+ 
+ return $run.WebResultUrl
+}
+
 function RunInProgress($run)
 {
     return $run.state -eq "queued" -or $run.state -eq "inProgress"
@@ -209,22 +217,9 @@ function UploadSummaryMdReport($summaryMdPath)
 
 	if (($env:SYSTEM_HOSTTYPE -eq "build") -and (Test-Path($summaryMdPath)))
 	{	
+	    Write-Output "This is a build task and hence summary is being uploaded"
 		Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=Load test results;]$summaryMdPath"
 	}
-}
-
-function GetLastSuccessfulBuild($headers)
-{
-    $uri = ("{0}/{1}/_apis/build/builds?api-version={2}&definitions={3}&statusFilter=completed&resultFilter=succeeded&`$top=1" -f $TFSAccountUrl, $env:System_TeamProjectId, '2.0', $env:SYSTEM_DEFINITIONID)
-    $previousBuild = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
-    return $previousBuild.Value
-}
-
-function GetFilteredTestRuns($headers, $filter)
-{
-    $uri = ("{0}/_apis/clt/testruns?api-version=1.0&detailed=false&{1}" -f $CltAccountUrl, $filter)
-    $filteredTestRuns = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
-    return $filteredTestRuns
 }
 
 ############################################## PS Script execution starts here ##########################################
@@ -267,46 +262,22 @@ if ($drop.dropType -eq "InPlaceDrop")
 
     $run = QueueTestRun $headers $runJson
     MonitorTestRun $headers $run
-
+    $webResultsUrl = GetTestRunUri($run.id)
+	
     Write-Output ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name)
-    Write-Output ("To view run details navigate to {0}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={1}" -f $TFSAccountUrl, $run.id)
+    Write-Output ("To view run details navigate to {0}" -f $webResultsUrl)
     Write-Output "To view detailed results navigate to Load Test | Load Test Manager in Visual Studio IDE, and open this run."
 
     $resultsMDFolder = New-Item -ItemType Directory -Force -Path "$env:Temp\LoadTestResultSummary"
+	
     $resultFilePattern = ("QuickPerfTestResults_{0}_{1}_*.md" -f $env:AGENT_ID, $env:SYSTEM_DEFINITIONID)
-    $excludeFilePattern = ("QuickPerfTestResults_{0}_{1}_{2}_*.md" -f $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID)
-    Remove-Item $resultsMDFolder\$resultFilePattern -Exclude $excludeFilePattern -Force
-    $summaryFile =  ("{0}\QuickPerfTestResults_{1}_{2}_{3}_{4}.md" -f $resultsMDFolder, $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID, $run.id)
 	
-    $summary = ('[Test Run: {0}]({2}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={3}) using {1}.<br/>' -f  $run.runNumber, $run.name, $TFSAccountUrl, $run.id)
-    
-    $runComparisonAvailable = $false
-    $lastSuccessfulBuild = GetLastSuccessfulBuild $headers
+    $excludeFilePattern = ("QuickPerfTestResults_{0}_{1}_{2}_*.md" -f $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID)   
+    Remove-Item $resultsMDFolder\$resultFilePattern -Exclude $excludeFilePattern -Force	
+    $summaryFile =  ("{0}\QuickPerfTestResults_{1}_{2}_{3}_{4}.md" -f $resultsMDFolder, $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID, $run.id)	
 	
-	if ($lastSuccessfulBuild)
-	{
-        $runSourceIdentifierFilter=('runsourceidentifier=build/{0}/{1}' -f $env:SYSTEM_DEFINITIONID, $lastSuccessfulBuild.id)
-        $runsInLastBuild = GetFilteredTestRuns $headers $runSourceIdentifierFilter
-        
-        if ($runsInLastBuild)
-        {
-            foreach ($previousRun in $runsInLastBuild)
-            {
-                if ($previousRun.name -eq $run.name)
-                {
-                    $runComparisonAvailable = $true
-                    $summary += ('[Compare with run {0}]({1}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=compare&runId1={2}&runId2={3}) from [build {4}]({1}/{5}/_build#buildId={4}&_a=summary).' -f $previousRun.runNumber, $global:TFSAccountUrl, $previousRun.id, $run.id, $lastSuccessfulBuild.id, $env:System_TeamProjectId, $env:BUILD_BUILDID)
-                    break
-                }
-            }
-        }           
-	}
+    $summary = ('[Test Run: {0}]({1}) using {2}.<br/>' -f  $run.runNumber, $webResultsUrl ,$run.name)
 
-	if(!$runComparisonAvailable)
-	{
-        $summary += ('No previous run found for comparison.')
-	}
-	
 	('<p>{0}</p>' -f $summary) >>  $summaryFile
     UploadSummaryMdReport $summaryFile
 }
