@@ -161,7 +161,7 @@ export function writeFile(filePath: string, fileContent: string): Q.Promise<void
 
 export function addPropToJson(obj: any, propName: string, value: any): void {
     tl.debug("Adding property to JSON: " + propName);
-    if (obj === "undefined") {
+    if (typeof obj === "undefined") {
         obj = {};
     }
 

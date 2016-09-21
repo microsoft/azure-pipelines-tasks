@@ -357,7 +357,6 @@ export function coberturaMavenEnable(includeFilter: string, excludeFilter: strin
 
 export function coberturaMavenReport(): Q.Promise<any> {
     let ccProperty = `
-    <plugins>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cobertura-maven-plugin</artifactId>
@@ -369,7 +368,6 @@ export function coberturaMavenReport(): Q.Promise<any> {
           </formats>
         </configuration>
       </plugin>
-    </plugins>
   `;
     return util.convertXmlStringToJson(ccProperty);
 }
