@@ -130,7 +130,15 @@ function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isDeploymentSucce
 
     var collectionUrl = tl.getVariable('system.TeamFoundationCollectionUri'); 
     var teamProject = tl.getVariable('system.teamProject');
-
+	
+	var type = "Deployment";
+	var commitId = tl.getVariable('build.sourceVersion');
+	var repoName = tl.getVariable('build.repository.name');
+	var repoProvider = tl.getVariable('build.repository.provider');
+	var slotName = tl.getInput('SlotName');
+	if(slotName==null)
+		slotName="Production"
+	
     var buildOrReleaseUrl = "" ;
     var deploymentId = "";
 
@@ -146,7 +154,18 @@ function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isDeploymentSucce
         throw new Error(tl.loc('CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved'));
     }
 
-    var message = "Updating Deployment History For Deployment " + buildOrReleaseUrl;
+    var message = JSON.stringify({
+		type : type,
+		commitId : commitId,
+		buildId : buildId,
+		releaseId : releaseId,
+		repoProvider : repoProvider,
+		repoName : repoName,
+		collectionUrl : collectionUrl,
+		teamProject : teamProject,
+		slotName : slotName
+	});
+	
     var requestBody = {
         status : status,
         status_text : status_text, 
