@@ -23,6 +23,7 @@
         "DeployVisualStudioTestAgent",
         "ExtractFiles",
         "FtpUpload",
+        "Gradle",
         "Gulp",
         "IISWebAppDeployment",
         "NuGetInstaller",
