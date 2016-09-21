@@ -1,0 +1,17 @@
+{
+    "common": [
+        {
+            "module": "../Common/SonarQubeHelpers",
+            "type": "ps"
+        }
+    ],
+    "cp": [
+        {
+            "source": [
+                "PRCA",
+                "SummaryReport"
+            ],
+            "options": "-R"
+        }
+    ]
+}
