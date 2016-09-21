@@ -34,6 +34,8 @@
   "loc.input.help.provProfile": "Optional relative path to file containing provisioning profile override to be used for this build. Use separate build tasks with different Schemes or Targets to specify separate provisioning profiles by target in a single workspace (iOS, WatchKit, tvOS).",
   "loc.input.label.removeProfile": "Remove Profile After Build",
   "loc.input.help.removeProfile": "Specifies that the contents of the Provisioning Profile File should be removed from the build agent after the build is complete. **Only check if you are running one agent per user.**",
+  "loc.input.label.xcode8AutomaticSigning": "Automatic Signing with Xcode 8",
+  "loc.input.help.xcode8AutomaticSigning": "Select this if you have an Xcode 8 project setup for Automatic Signing",
   "loc.input.label.args": "Arguments",
   "loc.input.help.args": "Additional command line arguments that should be used to build. Useful if you want to use -target or -project instead of specifying a Workspace and Scheme.",
   "loc.input.label.cwd": "Working Directory",

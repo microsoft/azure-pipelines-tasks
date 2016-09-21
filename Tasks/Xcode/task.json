@@ -11,7 +11,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 2,
+        "Minor": 3,
         "Patch": 0
     },
     "demands": [
@@ -163,6 +163,15 @@
             "helpMarkDown": "Specifies that the contents of the Provisioning Profile File should be removed from the build agent after the build is complete. **Only check if you are running one agent per user.**",
             "groupName": "sign",
             "visibleRule": "signMethod = file"
+        },
+        {
+            "name": "xcode8AutomaticSigning",
+            "type": "boolean",
+            "label": "Automatic Signing with Xcode 8",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Select this if you have an Xcode 8 project setup for Automatic Signing",
+            "groupName": "sign"
         },
         {
             "name": "args",

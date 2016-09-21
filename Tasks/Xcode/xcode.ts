@@ -93,6 +93,7 @@ async function run() {
         var signMethod : string = tl.getInput('signMethod', false);
         var keychainToDelete : string;
         var profileToDelete : string;
+        var automaticSigningWithXcode: boolean = tl.getBoolInput('xcode8AutomaticSigning');
 
         if(signMethod === 'file') {
             var p12 : string = tl.getPathInput('p12', false, false);
@@ -112,13 +113,13 @@ async function run() {
 
                 //find signing identity
                 var signIdentity = await sign.findSigningIdentity(keychain);
-                xcb.argIf(signIdentity, 'CODE_SIGN_IDENTITY=' + signIdentity);
+                xcb.argIf(signIdentity && !automaticSigningWithXcode, 'CODE_SIGN_IDENTITY=' + signIdentity);
             }
 
             //determine the provisioning profile UUID
             if(tl.filePathSupplied('provProfile') && tl.exist(provProfilePath)) {
                 var provProfileUUID = await sign.getProvisioningProfileUUID(provProfilePath);
-                xcb.argIf(provProfileUUID, 'PROVISIONING_PROFILE=' + provProfileUUID);
+                xcb.argIf(provProfileUUID && !automaticSigningWithXcode, 'PROVISIONING_PROFILE=' + provProfileUUID);
                 if (removeProfile && provProfileUUID) {
                     profileToDelete = provProfileUUID;
                 }
