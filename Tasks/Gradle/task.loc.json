@@ -308,6 +308,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.checkstyleAnalysisEnabled"
     },
     {
+      "name": "findbugsAnalysisEnabled",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.findbugsAnalysisEnabled",
+      "required": false,
+      "defaultValue": "false",
+      "groupName": "CodeAnalysis",
+      "helpMarkDown": "ms-resource:loc.input.help.findbugsAnalysisEnabled"
+    },
+    {
       "name": "pmdAnalysisEnabled",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.pmdAnalysisEnabled",

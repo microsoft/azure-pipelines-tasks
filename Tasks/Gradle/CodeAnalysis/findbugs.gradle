@@ -1,0 +1,30 @@
+/*
+* We are using a hard-coded findbugs.xml file that is checked in with as part of this task.
+* We expect to find it in the same folder as this file.
+* The user cannot specify their own findbugs.xml file / other findbugs configuration;
+*/
+
+rootProject {
+    boolean hasFindbugs = false;
+    allprojects { proj ->
+        afterEvaluate {
+            if (proj.plugins.hasPlugin('findbugs')) {
+                hasFindbugs = true;
+                println(proj.getName() + ' is already configured to run findbugs. Skipping auto configuration ');
+            }
+        }
+    }
+
+    allprojects { proj ->
+        afterEvaluate {
+            if (!hasFindbugs) {
+                println('Applying the FindBugs plugin to project ' + proj.getName());
+
+                proj.apply plugin: 'findbugs';
+                findbugs {
+                    ignoreFailures = true
+                }
+            }
+        }
+    }
+}
