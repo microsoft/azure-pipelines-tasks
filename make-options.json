@@ -10,6 +10,7 @@
         "CopyFilesOverSSH",
         "CopyPublishBuildArtifacts",
         "cURLUploader",
+        "DecryptFile",
         "Gulp",
         "NuGetInstaller",
         "PublishSymbols",
