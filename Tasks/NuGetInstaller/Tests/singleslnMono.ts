@@ -15,36 +15,36 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "osType" : "Linux"
     },
     "checkPath": {
-        "c:\\agent\\home\\directory\\single.sln": true,
+        "~/myagent/_work/1/s/single.sln": true,
         "/usr/bin/mono": true
     },
     "which": {
         "mono":"/usr/bin/mono"
     },
     "exec": {
-        "/usr/bin/mono c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln": {
+        "/usr/bin/mono ~/myagent/_work/_tasks/NuGet/nuget.exe restore -NonInteractive ~/myagent/_work/1/s/single.sln": {
             "code": 0,
             "stdout": "NuGet output here",
             "stderr": ""
         }
     },
     "exist": {
-        "c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe": true,
-        "c:\\agent\\home\\directory\\externals\\nuget\\CredentialProvider.TeamBuild.exe": true
+        "~/myagent/_work/_tasks/NuGet/nuget.exe": true,
+        "~/myagent/_work/_tasks/NuGet/CredentialProvider.TeamBuild.exe": true
     },
     "stats": {
-        "c:\\agent\\home\\directory\\single.sln": {
+        "~/myagent/_work/1/s/single.sln": {
             "isFile": true
         }
     }
 };
 tmr.setAnswers(a);
 
-process.env['AGENT_HOMEDIRECTORY'] = "c:\\agent\\home\\directory";
-process.env['BUILD_SOURCESDIRECTORY'] = "c:\\agent\\home\\directory\\sources",
+process.env['AGENT_HOMEDIRECTORY'] = "~/myagent/_work/1";
+process.env['BUILD_SOURCESDIRECTORY'] = "~/myagent/_work/1/s",
 process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = "{\"json\" : \"value\"}";
 process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = "https://example.visualstudio.com/defaultcollection";
-process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = "c:\\agent\\home\\directory";
+process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = "~/myagent/_work/1/s";
 process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = "https://example.visualstudio.com/defaultcollection";
 
 
@@ -59,10 +59,10 @@ tmr.registerMock('./pe-parser', {
 
 tmr.registerMock('nuget-task-common/Utility', {
     resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
-        return ["c:\\agent\\home\\directory\\single.sln"];
+        return ["~/myagent/_work/1/s/single.sln"];
     },
     getBundledNuGetLocation: function(version) {
-        return 'c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe';
+        return '~/myagent/_work/_tasks/NuGet/nuget.exe';
     }
 } )
 

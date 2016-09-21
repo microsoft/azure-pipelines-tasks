@@ -62,7 +62,7 @@ describe('NuGetInstaller Suite', function () {
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run()
-        assert(tr.ran('/usr/bin/mono c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln'), 'it should have run NuGet with mono');
+        assert(tr.ran('/usr/bin/mono ~/myagent/_work/_tasks/NuGet/nuget.exe restore -NonInteractive ~/myagent/_work/1/s/single.sln'), 'it should have run NuGet with mono');
         assert(tr.stdout.indexOf('NuGet output here') >= 0, "should have nuget output");
         assert(tr.succeeded, 'should have succeeded');
         assert(tr.invokedToolCount == 1, 'should have run NuGet');
