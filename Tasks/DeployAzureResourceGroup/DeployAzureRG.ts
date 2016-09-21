@@ -19,10 +19,6 @@ try{
     process.exit();
 }
 
-function exit(err) {
-    process.exit(1);
-}
-
 export class AzureResourceGroupDeployment {
 
     private connectedServiceNameSelector:string;
@@ -79,8 +75,15 @@ export class AzureResourceGroupDeployment {
            case "DeleteRG":
                 this.deleteResourceGroup();
                 break;
+           case "Start":
+           case "Stop":
+           case "Restart":
+           case "Delete":
+               new VMOperations(this.resourceGroupName, this.action, this.subscriptionId, this.connectedService, this.getARMCredentials());
+               break;
            default:
-               new VMOperations(this.resourceGroupName, this.action, this.subscriptionId, this.connectedService);
+               tl.setResult(tl.TaskResult.Succeeded, tl.loc("InvalidAction"));
+               process.exit();
         }
     }
 
@@ -91,7 +94,7 @@ export class AzureResourceGroupDeployment {
         return depName;
     } 
 
-    private getRMCredentials(){
+    private getARMCredentials(){
         var endpointAuth = tl.getEndpointAuthorization(this.connectedService, true);
         var servicePrincipalId:string = endpointAuth.parameters["serviceprincipalid"];
         var servicePrincipalKey:string = endpointAuth.parameters["serviceprincipalkey"];
@@ -110,15 +113,14 @@ export class AzureResourceGroupDeployment {
     }
     
     private createTemplateDeployment(){
-        var credentials = this.getRMCredentials();
-        var rmClient = new armResource.ResourceManagementClient(credentials, this.subscriptionId); 
+        var credentials = this.getARMCredentials();
+        var armClient = new armResource.ResourceManagementClient(credentials, this.subscriptionId); 
         var template;
         try{ 
             template= JSON.parse(fs.readFileSync(this.csmFile, 'UTF-8'));
         }
         catch(err){
-            console.log(err);
-            tl.setResult(tl.TaskResult.Failed, tl.loc("TemplateParsingFailed"));
+            tl.setResult(tl.TaskResult.Failed, tl.loc("TemplateParsingFailed", err));
             return;
         }
         var parameters;
@@ -126,8 +128,7 @@ export class AzureResourceGroupDeployment {
             parameters = JSON.parse(fs.readFileSync(this.csmParametersFile, 'UTF-8'));
         }
         catch(err){
-            console.log(err);
-            tl.setResult(tl.TaskResult.Failed, tl.loc("ParametersFileParsingFailed"));
+            tl.setResult(tl.TaskResult.Failed, tl.loc("ParametersFileParsingFailed", err));
             return;
         }
         var properties = {}
@@ -138,17 +139,11 @@ export class AzureResourceGroupDeployment {
         properties["debugSetting"] = {"detailLevel": "requestContent, responseContent"};
         var deployment = {"properties": properties};
         deployment["location"] = this.location;
-        rmClient.deployments.createOrUpdate(this.resourceGroupName, this.createDeploymentName(this.csmFile), deployment, null, (error, result, request, response) =>{
+        armClient.deployments.createOrUpdate(this.resourceGroupName, this.createDeploymentName(this.csmFile), deployment, null, (error, result, request, response) =>{
             if (error){
                 // Logs for error handling TODO
                 tl.setResult(tl.TaskResult.Failed, tl.loc("REST call failed on createTemplateDeployment"));
-                for(var key in error){
-                    console.log(key + ": " + error[key]);
-                }
                 return;
-            }
-            for(var key in result){
-                console.log(key+": "+ result[key]);
             }
             tl.setResult(tl.TaskResult.Succeeded, tl.loc("ARG_CreatedResourceGroup", this.resourceGroupName));
         } );
@@ -158,10 +153,10 @@ export class AzureResourceGroupDeployment {
     }
 
     private deleteResourceGroup(){
-        var credentials = this.getRMCredentials();
-        var rmClient = new armResource.ResourceManagementClient(credentials, this.subscriptionId);
+        var credentials = this.getARMCredentials();
+        var armClient = new armResource.ResourceManagementClient(credentials, this.subscriptionId);
         console.log(tl.loc("ARG_DeletingResourceGroup", this.resourceGroupName));
-        rmClient.resourceGroups.deleteMethod(this.resourceGroupName,(error, result, request, response) =>{
+        armClient.resourceGroups.deleteMethod(this.resourceGroupName,(error, result, request, response) =>{
             if (error){
                 tl.setResult(tl.TaskResult.Failed, tl.loc("Deletion of RG failed :"+ this.resourceGroupName));
                 return;
@@ -184,48 +179,23 @@ class VMOperations{
     private successCount:number;
     private errors:string;
 
-    constructor(resourceGroupName, action, subscriptionID, connectedService){
+    constructor(resourceGroupName, action, subscriptionID, connectedService, credentials){
         try{
             this.resourceGroupName = resourceGroupName;
             this.subscriptionId = subscriptionID;
             this.connectedService = connectedService;
-            this.credentials = this.getRMCredentials();
+            this.credentials = credentials;
             this.client = new computeManagementClient(this.credentials, this.subscriptionId);
             this.action = action;
-            switch (this.action){
-                case "Start":
-                    this.operation = this.client.virtualMachines.start;
-                    break;
-                case "Stop":
-                    this.operation = this.client.virtualMachines.powerOff;
-                    break;
-                case "Restart":
-                    this.operation = this.client.virtualMachines.restart;
-                    break;
-                case "Delete":
-                    this.operation = this.client.virtualMachines.deleteMethod;
-                    break;
-                default:
-                    tl.setResult(tl.TaskResult.Failed, tl.loc("InvalidAction"));
-                    throw new Error("ActionNotDefined");
-            }
+            
         }
         catch(error){
-            tl.setResult(tl.TaskResult.Failed, tl.loc("ConstructorFailed", error));
-            exit(error);
+            tl.setResult(tl.TaskResult.Failed, tl.loc("VMOperationsInitiationFailed", this.action, error));
+            return;
         }
         this.successCount = 0;
         this.failureCount = 0;
         this.start();
-    }
-
-    private getRMCredentials(){
-        var endpointAuth = tl.getEndpointAuthorization(this.connectedService, true);
-        var servicePrincipalId:string = endpointAuth.parameters["serviceprincipalid"];
-        var servicePrincipalKey:string = endpointAuth.parameters["serviceprincipalkey"];
-        var tenantId:string = endpointAuth.parameters["tenantid"];
-        var credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalKey);
-        return credentials;
     }
 
     private postOperationCallBack(error, result, request, response){
@@ -250,10 +220,35 @@ class VMOperations{
 
     private start(){
         this.client.virtualMachines.list(this.resourceGroupName, (error, listOfVms, request, response) => {
-            var list = [];
-            for (var i=0; i<listOfVms.length; i++) {
-                var vmName = listOfVms[i]["name"];
-                this.operation(this.resourceGroupName, vmName, this.postOperationCallBack);
+            if (listOfVms.length == 0){
+                console.log("No VMs found");
+                this.setTaskResult();
+                return;
+            }
+            switch (this.action){
+                case "Start":
+                    for (var i=0; i<listOfVms.length; i++) {
+                        var vmName = listOfVms[i]["name"];
+                        this.client.virtualMachines.start(this.resourceGroupName, vmName, this.postOperationCallBack);
+                    }
+                    break;
+                case "Stop":
+                    for (var i=0; i<listOfVms.length; i++) {
+                        var vmName = listOfVms[i]["name"];
+                        this.client.virtualMachines.powerOff(this.resourceGroupName, vmName, this.postOperationCallBack);
+                    }
+                    break;
+                case "Restart":
+                    for (var i=0; i<listOfVms.length; i++) {
+                        var vmName = listOfVms[i]["name"];
+                        this.client.virtualMachines.restart(this.resourceGroupName, vmName, this.postOperationCallBack);
+                    }
+                    break;
+                case "Delete":
+                    for (var i=0; i<listOfVms.length; i++) {
+                        var vmName = listOfVms[i]["name"];
+                        this.client.virtualMachines.deleteMethod(this.resourceGroupName, vmName, this.postOperationCallBack);
+                    }
             }
         });
     }
