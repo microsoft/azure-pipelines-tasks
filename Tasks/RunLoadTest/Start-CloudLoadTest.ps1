@@ -341,7 +341,7 @@ function Validate()
 
 function UploadSummaryMdReport($summaryMdPath)
 {
-	Write-Output "Summary Markdown Path = $summaryMdPath"
+	Write-Verbose "Summary Markdown Path = $summaryMdPath"
 
 	if (($env:SYSTEM_HOSTTYPE -eq "build") -and (Test-Path($summaryMdPath)))
 	{	
