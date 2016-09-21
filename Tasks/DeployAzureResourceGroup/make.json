@@ -1,0 +1,10 @@
+{
+    "externals": {
+        "archivePackages": [
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/DeploymentUtilities/15.104.25603/DeploymentUtilities.zip",
+                "dest": "./"
+            }
+        ]
+    }
+}
