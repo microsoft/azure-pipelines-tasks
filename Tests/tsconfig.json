@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "module": "commonjs"
+    },
+    "exclude": [
+        "L0/Common-CodeCoverageEnabler",
+        "L0/Common-NuGetTaskCommon",
+        "L0/Gradle",
+        "L0/Maven"
+    ]
+}
