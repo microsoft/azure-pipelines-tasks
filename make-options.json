@@ -7,6 +7,7 @@
         "AzureCloudPowerShellDeployment",
         "AzureFileCopy",
         "AzurePowerShell",
+        "AzureRmWebAppDeployment",
         "AzureWebPowerShellDeployment",
         "CMake",
         "Chef",

@@ -1,8 +1,3 @@
-/// <reference path="../../definitions/node.d.ts" />
-/// <reference path="../../definitions/q.d.ts" />
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-/// <reference path="../../definitions/vso-node-api.d.ts" />
-
 var adal = require ('adal-node');
 var parseString = require('xml2js').parseString;
 
