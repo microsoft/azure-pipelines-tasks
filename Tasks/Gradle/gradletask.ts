@@ -1,7 +1,4 @@
-﻿/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-/// <reference path="../../definitions/codecoveragefactory.d.ts" />
-
-import tl = require('vsts-task-lib/task');
+﻿import tl = require('vsts-task-lib/task');
 import fs = require('fs');
 import path = require('path');
 import * as Q from "q";
