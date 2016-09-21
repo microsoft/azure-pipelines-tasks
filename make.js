@@ -45,7 +45,7 @@ var taskList = makeOptions['tasks'];
 
 // global paths
 var buildPath = path.join(__dirname, '_build', 'Tasks');
-var commonPath = path.join('_build', 'Tasks', 'Common');
+var commonPath = path.join(__dirname, '_build', 'Tasks', 'Common');
 var testPath = path.join(__dirname, '_build', 'Tests');
 var testTempPath = path.join(__dirname, '_build', 'Tests', 'Temp');
 
