@@ -82,8 +82,9 @@ var copyTaskResources = function (taskMake, srcPath, destPath) {
     var toCopy = makeOptions['taskResources'];
     toCopy.forEach(function (item) {
         var itemPath = path.join(srcPath, item);
-
+        
         if (pathExists(itemPath)) {
+            console.log('copying ' + path.basename(itemPath));
             cp('-R', itemPath, destPath);
         }
     });
