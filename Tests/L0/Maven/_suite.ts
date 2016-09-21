@@ -31,7 +31,7 @@ import {IncomingMessage} from 'http';
 
 import os = require('os');
 
-var isWindows = os.type().match(/^Win/); 
+var isWindows = os.type().match(/^Win/);
 
 function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
@@ -116,7 +116,7 @@ function createTempDirsForSonarQubeTests(): void {
     }
 }
 
-function createTempDir():string {
+function createTempDir(): string {
     var testTempDir: string = path.join(__dirname, '_temp');
 
     if (!fs.existsSync(testTempDir)) {
@@ -126,34 +126,34 @@ function createTempDir():string {
     return testTempDir;
 }
 
-function captureStream(stream):{unhook():void, captured():string} {
+function captureStream(stream): { unhook(): void, captured(): string } {
     var oldWrite = stream.write;
-    var buf:string = '';
-    stream.write = function(chunk, encoding, callback) {
+    var buf: string = '';
+    stream.write = function (chunk, encoding, callback) {
         buf += chunk.toString(); // chunk is a String or Buffer
         oldWrite.apply(stream, arguments);
     };
 
     return {
-        unhook: function unhook():void {
+        unhook: function unhook(): void {
             stream.write = oldWrite;
         },
-        captured: function():string {
+        captured: function (): string {
             return buf;
         }
     };
 }
 
-function cleanTempDirsForCodeAnalysisTests():void {
+function cleanTempDirsForCodeAnalysisTests(): void {
     var testTempDir: string = path.join(__dirname, '_temp');
     deleteFolderRecursive(testTempDir);
 }
 
-function deleteFolderRecursive(path):void {
+function deleteFolderRecursive(path): void {
     if (fs.existsSync(path)) {
-        fs.readdirSync(path).forEach(function(file,index){
+        fs.readdirSync(path).forEach(function (file, index) {
             var curPath = path + "/" + file;
-            if(fs.lstatSync(curPath).isDirectory()) { // recurse
+            if (fs.lstatSync(curPath).isDirectory()) { // recurse
                 deleteFolderRecursive(curPath);
             } else { // delete file
                 fs.unlinkSync(curPath);
@@ -187,20 +187,20 @@ function assertBuildSummaryDoesNotContain(buildSummaryString: string, string: st
      Actual: ${buildSummaryString}`);
 }
 
-function assertFileExistsInDir(stagingDir:string, filePath:string) {
-    var directoryName:string = path.dirname(path.join(stagingDir, filePath));
-    var fileName:string = path.basename(filePath);
+function assertFileExistsInDir(stagingDir: string, filePath: string) {
+    var directoryName: string = path.dirname(path.join(stagingDir, filePath));
+    var fileName: string = path.basename(filePath);
     assert(fs.statSync(directoryName).isDirectory(), 'Expected directory did not exist: ' + directoryName);
-    var directoryContents:string[] = fs.readdirSync(directoryName);
+    var directoryContents: string[] = fs.readdirSync(directoryName);
     assert(directoryContents.indexOf(fileName) > -1, `Expected file did not exist: ${filePath}
     Actual contents of ${directoryName}: ${directoryContents}`);
 }
 
-function assertFileDoesNotExistInDir(stagingDir:string, filePath:string) {
-    var directoryName:string = path.dirname(path.join(stagingDir, filePath));
-    var fileName:string = path.basename(filePath);
+function assertFileDoesNotExistInDir(stagingDir: string, filePath: string) {
+    var directoryName: string = path.dirname(path.join(stagingDir, filePath));
+    var fileName: string = path.basename(filePath);
     assert(fs.statSync(directoryName).isDirectory(), 'Expected directory did not exist: ' + directoryName);
-    var directoryContents:string[] = fs.readdirSync(directoryName);
+    var directoryContents: string[] = fs.readdirSync(directoryName);
     assert(directoryContents.indexOf(fileName) === -1, `Expected file to not exist, but it does: ${filePath}
     Actual contents of ${directoryName}: ${directoryContents}`);
 }
@@ -211,17 +211,61 @@ function assertErrorContains(error: any, expectedString: string): void {
      Actual: ${error.message}`);
 }
 
-function assertStringContains(actualString:string, expectedString:string):void {
+function assertStringContains(actualString: string, expectedString: string): void {
     assert(actualString.indexOf(expectedString) > -1, `Expected string to contain: ${expectedString}`);
 }
 
 
-function assertToolRunnerContainsArg(toolRunner:ToolRunner, expectedArg:string) {
+function assertToolRunnerContainsArg(toolRunner: ToolRunner, expectedArg: string) {
     return toolRunner.args.indexOf(expectedArg) > -1;
 }
 
 function assertToolRunnerHasArgLength(toolRunner: ToolRunner, expectedNumArgs: number) {
     return toolRunner.args.length == expectedNumArgs;
+}
+
+function verifyNoopCodeAnalysis(missingBuildVariable: string, analysisEnabled: string): Q.Promise<void> {
+    // In the test data:
+    // /: pom.xml, target/.
+    // Expected: one module, root.
+
+    // Arrange
+
+    var responseJsonFilePath: string = path.join(__dirname, 'response.json');
+    var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
+
+    // Set mocked build variables
+    responseJsonContent.getVariable = responseJsonContent.getVariable || {};
+    responseJsonContent.getVariable[missingBuildVariable] = "";
+
+    // Write and set the newly-changed response file
+    var newResponseFilePath: string = path.join(__dirname, 'noop_response.json');
+    fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
+    setResponseFile(path.basename(newResponseFilePath));
+
+    // Set up the task runner with the test settings
+    var taskRunner: trm.TaskRunner = setupDefaultMavenTaskRunner();
+    taskRunner.setInput('checkstyleAnalysisEnabled', analysisEnabled);
+    taskRunner.setInput('pmdAnalysisEnabled', analysisEnabled);
+    taskRunner.setInput('findbugsAnalysisEnabled', analysisEnabled);
+
+    // Act
+    return taskRunner.run()
+        .then(() => {
+            // Assert
+            assert(taskRunner.resultWasSet, 'should have set a result');
+            assert(taskRunner.stdout.length > 0, 'should have written to stdout');
+            assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
+            assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
+            assert(taskRunner.succeeded, 'task should have succeeded');
+            assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package'),
+                'should have run maven with the correct arguments');
+            assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') < 0,
+                'should have not uploaded a Code Analysis Report build summary');
+            assert(taskRunner.stdout.indexOf('##vso[artifact.upload artifactname=Code Analysis Results;]') < 0,
+                'should have not uploaded a code analysis build artifact');
+
+        })
 }
 
 describe('Maven Suite', function () {
@@ -967,7 +1011,7 @@ describe('Maven Suite', function () {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
                 assert(tr.failed, 'task should not have succeeded');
-                
+
                 // there are 2 report-task.txt files found, so a warning should be generated
                 assert(tr.stdout.indexOf('vso[task.issue type=warning;]Multiple report-task.txt files found.')> -1);
                 assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report') < 1,
@@ -1713,6 +1757,23 @@ describe('Maven Suite', function () {
         cleanTempDirsForCodeAnalysisTests();
     });
 
+    it('Maven code analysis - NOOP if build variables are not set', function (done) {
+
+
+        Q.all([
+            verifyNoopCodeAnalysis('build.sourcesDirectory', 'true'),
+            verifyNoopCodeAnalysis('build.sourcesDirectory', 'false'),
+            verifyNoopCodeAnalysis('build.artifactStagingDirectory', 'false'),
+            verifyNoopCodeAnalysis('build.artifactStagingDirectory', 'true'),
+            verifyNoopCodeAnalysis('build.buildNumber', 'false'),
+            verifyNoopCodeAnalysis('build.buildNumber', 'true'),
+
+        ])
+
+            .then(() => done())
+            .fail((reason) => done("an error occured: " + reason));
+    });
+
     it('during PR builds SonarQube analysis runs in issues mode', function (done) {
         // Arrange
         createTempDirsForSonarQubeTests();
@@ -1764,29 +1825,29 @@ describe('Maven Suite', function () {
 
     it('SonarQube common - task and analysis details caching holds true over multiple requests, and does not invoke additional REST calls', () => {
         // Arrange
-        var mockRunSettings:SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
-        var mockServer:MockSonarQubeServer = new MockSonarQubeServer();
+        var mockRunSettings: SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockServer: MockSonarQubeServer = new MockSonarQubeServer();
 
-        var analysisMetrics:SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
-        var sqReportBuilder:SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
+        var analysisMetrics: SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+        var sqReportBuilder: SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
 
         // Mock responses from the server for the task and analysis details
-        var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
+        var taskDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
         mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject);
 
-        var analysisDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
+        var analysisDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
         analysisDetailsJsonObject.projectStatus.status = 'OK'; // Quality gate passed
         mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', analysisDetailsJsonObject);
 
         return analysisMetrics.fetchQualityGateStatus()
-            .then((qualityGateStatus:string) => {
-                var expectedQualityGateStatus:string = qualityGateStatus;
+            .then((qualityGateStatus: string) => {
+                var expectedQualityGateStatus: string = qualityGateStatus;
                 var oldInvokeCount = mockServer.responses.get('/api/qualitygates/project_status?analysisId=12345').invokedCount;
 
                 assert(oldInvokeCount == 1, 'Expected the analysis details endpoint to only have been invoked once');
                 return analysisMetrics.fetchQualityGateStatus()
-                    .then((qualityGateStatus:string) => {
-                        var actualQualityGateStatus:string = qualityGateStatus;
+                    .then((qualityGateStatus: string) => {
+                        var actualQualityGateStatus: string = qualityGateStatus;
                         var newInvokeCount = mockServer.responses.get('/api/qualitygates/project_status?analysisId=12345').invokedCount;
 
                         assert(expectedQualityGateStatus === actualQualityGateStatus, 'Expected the new analysis details to strictly equal the old analysis details');
@@ -1797,37 +1858,37 @@ describe('Maven Suite', function () {
 
     it('SonarQube common - measurement details caching holds true over multiple requests, and does not invoke additional REST calls', () => {
         // Arrange
-        var mockRunSettings:SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
-        var mockServer:MockSonarQubeServer = new MockSonarQubeServer();
+        var mockRunSettings: SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockServer: MockSonarQubeServer = new MockSonarQubeServer();
 
-        var analysisMetrics:SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+        var analysisMetrics: SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
 
         // Mock responses from the server for the measurement details
-        var measurementDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/measurement_details.json'), 'utf-8'));
+        var measurementDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/measurement_details.json'), 'utf-8'));
         mockServer.setupMockApiCall('/api/metrics/search?ps=500&f=name', measurementDetailsJsonObject);
 
         // Act
         // Make a few requests
-        var measurementDetailsResults:SonarQubeMeasurementUnit[][] = [];
+        var measurementDetailsResults: SonarQubeMeasurementUnit[][] = [];
         return analysisMetrics.fetchMeasurementDetails()
-            .then((measurementDetailsResult:SonarQubeMeasurementUnit[]) => {
+            .then((measurementDetailsResult: SonarQubeMeasurementUnit[]) => {
                 measurementDetailsResults.push(measurementDetailsResult);
                 return analysisMetrics.fetchMeasurementDetails();
             })
-            .then((measurementDetailsResult:SonarQubeMeasurementUnit[]) => {
+            .then((measurementDetailsResult: SonarQubeMeasurementUnit[]) => {
                 measurementDetailsResults.push(measurementDetailsResult);
                 return analysisMetrics.fetchMeasurementDetails();
             })
-            .then((measurementDetailsResult:SonarQubeMeasurementUnit[]) => {
+            .then((measurementDetailsResult: SonarQubeMeasurementUnit[]) => {
                 measurementDetailsResults.push(measurementDetailsResult);
-                var expectedMeasurementDetails:SonarQubeMeasurementUnit[] = measurementDetailsJsonObject.metrics as SonarQubeMeasurementUnit[];
+                var expectedMeasurementDetails: SonarQubeMeasurementUnit[] = measurementDetailsJsonObject.metrics as SonarQubeMeasurementUnit[];
 
-                measurementDetailsResults.forEach((actualMeasurementDetails:SonarQubeMeasurementUnit[]) => {
+                measurementDetailsResults.forEach((actualMeasurementDetails: SonarQubeMeasurementUnit[]) => {
                     // All results should match the expected
                     var expectedLength = expectedMeasurementDetails.length;
                     var actualLength = actualMeasurementDetails.length;
                     assert(expectedLength == actualLength, `Returned measurement details length (${actualLength}) should match the original (${expectedLength})`);
-                    assert(expectedMeasurementDetails.every( (v,i) => {
+                    assert(expectedMeasurementDetails.every((v, i) => {
                         return v === actualMeasurementDetails[i];
                     }), 'Each element of the returned measurement details should match the original');
 
@@ -1847,7 +1908,7 @@ describe('Maven Suite', function () {
         var sqReportBuilder: SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
 
         return sqReportBuilder.fetchMetricsAndCreateReport(false)
-            .then((report:string) => {
+            .then((report: string) => {
                 assertBuildSummaryContains(report, '[sqAnalysis_BuildSummary_LinkText >](http://dashboardUrl "projectKey Dashboard")');
             });
     });
@@ -1872,7 +1933,7 @@ describe('Maven Suite', function () {
         mockServer.setupMockApiCall('/api/metrics/search?ps=500&f=name', unitsJsonObject);
 
         return sqReportBuilder.fetchMetricsAndCreateReport(true)
-            .then((buildSummary:string) => {
+            .then((buildSummary: string) => {
                 assertBuildSummaryContains(buildSummary, '[sqAnalysis_BuildSummary_LinkText >](http://dashboardUrl "projectKey Dashboard")');
                 assertBuildSummaryContains(buildSummary, 'Quality Gate');
                 assertBuildSummaryContains(buildSummary, 'Failed');
@@ -1908,7 +1969,7 @@ describe('Maven Suite', function () {
         mockServer.setupMockApiCall('/api/metrics/search?ps=500&f=name', unitsJsonObject);
 
         return sqReportBuilder.fetchMetricsAndCreateReport(true)
-            .then((buildSummary:string) => {
+            .then((buildSummary: string) => {
                 assertBuildSummaryContains(buildSummary, '[sqAnalysis_BuildSummary_LinkText >](http://dashboardUrl "projectKey Dashboard")');
                 assertBuildSummaryContains(buildSummary, 'Quality Gate');
                 assertBuildSummaryContains(buildSummary, 'Warning');
@@ -1941,7 +2002,7 @@ describe('Maven Suite', function () {
         mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', analysisDetailsJsonObject);
 
         return sqReportBuilder.fetchMetricsAndCreateReport(true)
-            .then((buildSummary:string) => {
+            .then((buildSummary: string) => {
                 assertBuildSummaryContains(buildSummary, '[sqAnalysis_BuildSummary_LinkText >](http://dashboardUrl "projectKey Dashboard")');
                 assertBuildSummaryContains(buildSummary, 'Quality Gate');
                 assertBuildSummaryContains(buildSummary, 'Passed');
@@ -1998,7 +2059,7 @@ describe('Maven Suite', function () {
         var sqReportBuilder: SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
 
         // Mock responses from the server
-        var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
+        var taskDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
         taskDetailsJsonObject.task.status = "notsuccess"; // will never return task status as 'SUCCESS'
         mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject, 200);
 
@@ -2013,16 +2074,16 @@ describe('Maven Suite', function () {
 
     it('SonarQube common - Build breaker fails the build when the quality gate has failed', () => {
         // Arrange
-        var mockRunSettings:SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
-        var mockServer:MockSonarQubeServer = new MockSonarQubeServer();
+        var mockRunSettings: SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockServer: MockSonarQubeServer = new MockSonarQubeServer();
 
-        var analysisMetrics:SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+        var analysisMetrics: SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
 
         // Mock responses from the server for the task and analysis details
-        var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
+        var taskDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
         mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject);
 
-        var analysisDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
+        var analysisDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
         analysisDetailsJsonObject.projectStatus.status = 'ERROR'; // Quality gate failed
         mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', analysisDetailsJsonObject);
 
@@ -2035,24 +2096,24 @@ describe('Maven Suite', function () {
 
     it('SonarQube common - Build breaker does not fail the build when the quality gate has passed', () => {
         // Arrange
-        var mockRunSettings:SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
-        var mockServer:MockSonarQubeServer = new MockSonarQubeServer();
+        var mockRunSettings: SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockServer: MockSonarQubeServer = new MockSonarQubeServer();
 
-        var analysisMetrics:SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+        var analysisMetrics: SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
 
         // Mock responses from the server for the task and analysis details
-        var taskDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
+        var taskDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
         mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', taskDetailsJsonObject);
 
-        var analysisDetailsJsonObject:any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
+        var analysisDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/analysis_details.json'), 'utf-8'));
         analysisDetailsJsonObject.projectStatus.status = 'OK'; // Quality gate passed
         mockServer.setupMockApiCall('/api/qualitygates/project_status?analysisId=12345', analysisDetailsJsonObject);
 
         // capture process.stdout and process.exit, along with useful data to assert on
         var capturedStream = captureStream(process.stdout);
         var capturedExit = process.exit;
-        var processExitInvoked:number = 0;
-        process.exit = function() { processExitInvoked++; return; };
+        var processExitInvoked: number = 0;
+        process.exit = function () { processExitInvoked++; return; };
 
         // Act
         return analysisMetrics.fetchTaskResultFromQualityGateStatus()
