@@ -11,6 +11,9 @@ tmr.setInput('solution', 'single.sln');
 tmr.setInput('nuGetPath', 'c:\\custompath\\nuget.exe');
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
+    "osType": {
+        "osType" :"Windows_NT"
+    },
     "checkPath": {
         "c:\\custompath\\nuget.exe": true,
         "c:\\agent\\home\\directory\\single.sln": true,

@@ -11,6 +11,9 @@ tmr.setInput('solution', '**//*.sln');
 tmr.setInput('nuGetVersion', '3.3.0');
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
+    "osType": {
+        "osType" :"Windows_NT"
+    },
     "checkPath": {
         "c:\\agent\\home\\directory\\single.sln": true,
         "c:\\agent\\home\\directory\\double\\double.sln": true,
@@ -47,12 +50,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "c:\\agent\\home\\directory\\double\\double.sln": {
             "isFile": true
         }
-    },
-	"find": {
-		"c:\\agent\\home": [
-			"c:\\agent\\home\\directory\\single.sln",
-			"c:\\agent\\home\\directory\\double\\double.sln"
-		]
 	}
 };
 tmr.setAnswers(a);
@@ -65,7 +62,6 @@ process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = "c:\\agent\\home\\directory";
 process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = "https://example.visualstudio.com/defaultcollection";
 process.env.windir = "c:\\foo";
 
-
 tmr.registerMock('./pe-parser', {
     getFileVersionInfoAsync: function(nuGetExePath) {
         let result: VersionInfo = { strings: {} };
@@ -76,9 +72,9 @@ tmr.registerMock('./pe-parser', {
 } )
 
 tmr.registerMock('nuget-task-common/Utility', {
-	resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
-		return ["c:\\agent\\home\\directory\\single.sln", "c:\\agent\\home\\directory\\double\\double.sln"];
-	},
+    resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
+        return ["c:\\agent\\home\\directory\\single.sln", "c:\\agent\\home\\directory\\double\\double.sln"];
+    },
     getBundledNuGetLocation: function(version) {
         return 'c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe';
     }

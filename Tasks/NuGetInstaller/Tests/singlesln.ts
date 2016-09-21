@@ -11,6 +11,9 @@ tmr.setInput('solution', 'single.sln');
 tmr.setInput('nuGetVersion', '3.3.0');
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
+    "osType": {
+        "osType" :"Windows_NT"
+    },
     "checkPath": {
         "c:\\agent\\home\\directory\\single.sln": true,
         "c:\\foo\\system32\\chcp.com": true
@@ -61,9 +64,9 @@ tmr.registerMock('./pe-parser', {
 } )
 
 tmr.registerMock('nuget-task-common/Utility', {
-	resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
-		return ["c:\\agent\\home\\directory\\single.sln"];
-	},
+    resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
+        return ["c:\\agent\\home\\directory\\single.sln"];
+    },
     getBundledNuGetLocation: function(version) {
         return 'c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe';
     }

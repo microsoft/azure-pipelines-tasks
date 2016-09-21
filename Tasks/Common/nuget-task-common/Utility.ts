@@ -1,4 +1,3 @@
-import * as os from "os";
 import * as path from "path";
 
 import * as tl from "vsts-task-lib/task";
@@ -45,7 +44,7 @@ export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEm
 }
 
 export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: boolean): string[] {
-    let isWindows = os.platform() === "win32";
+    let isWindows = tl.osType() === 'Windows_NT';
 
     // Resolve files for the specified value or pattern
     let filesList: string[];
