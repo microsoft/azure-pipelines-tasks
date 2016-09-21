@@ -1,0 +1,10 @@
+{
+    "externals": {
+        "archivePackages": [
+            {
+                "url": "https://testselector.blob.core.windows.net/testselector/3272864/TestSelector.zip",
+                "dest": "./"
+            }
+        ]
+    }
+}
