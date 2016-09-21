@@ -33,6 +33,7 @@
   },
   "messages": {
     "PodReturnCode": "ms-resource:loc.messages.PodReturnCode",
-    "PodFailed": "ms-resource:loc.messages.PodFailed"
+    "PodFailed": "ms-resource:loc.messages.PodFailed",
+    "CocoaPodsNotFound": "ms-resource:loc.messages.CocoaPodsNotFound"
   }
 }
