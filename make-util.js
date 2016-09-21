@@ -3,6 +3,7 @@ require('shelljs');
 var admZip = require('adm-zip');
 var check = require('validator');
 var fs = require('fs');
+var minimatch = require('minimatch');
 var os = require('os');
 var path = require('path');
 var process = require('process');
@@ -96,19 +97,55 @@ var copyTaskResources = function (taskMake, srcPath, destPath) {
 }
 exports.copyTaskResources = copyTaskResources;
 
+var matchCopy = function (pattern, sourceRoot, destRoot, options) {
+    assert(pattern, 'pattern');
+    assert(sourceRoot, 'sourceRoot');
+    assert(destRoot, 'destRoot');
+
+    // merge specified options with defaults
+    mergedOptions = { matchBase: true };
+    Object.keys(options || {}).forEach(function (key) {
+        mergedOptions[key] = options[key];
+    });
+
+    // normalize first, so we can substring later
+    sourceRoot = path.resolve(sourceRoot);
+    destRoot = path.resolve(destRoot);
+    console.log(`copying ${pattern} from ${sourceRoot.substring(__dirname.length + 1)} to ${destRoot.substring(__dirname.length + 1)}`);
+
+    minimatch.match(find(sourceRoot), pattern, mergedOptions)
+        .forEach(function (item) {
+            // determine the relative item path
+            var relative = item.substring(sourceRoot.length + 1);
+            assert(relative, 'relative'); // root folder matching is not supported
+
+            // create the dest dir
+            var dest = path.dirname(path.join(destRoot, relative));
+            mkdir('-p', dest);
+
+            // copy
+            console.log(' ' + relative);
+            cp('-R', item, dest + '/');
+        });
+}
+exports.matchCopy = matchCopy;
+
 exports.run = function (cl, echo) {
     console.log();
     console.log('> ' + cl);
+    echo = echo || process.env['TASK_BUILD_VERBOSE'];
+    var options = {
+        stdio: echo ? 'inherit' : 'pipe'
+    };
     var rc = 0;
     try {
-        var output = ncp.execSync(cl);
-
-        if (output && (echo || process.env['TASK_BUILD_VERBOSE'])) {
-            console.log(output.toString());
-        }
+        ncp.execSync(cl, options);
     }
     catch (err) {
-        console.error(err.output ? err.output.toString() : err.message);
+        if (!echo) {
+            console.error(err.output ? err.output.toString() : err.message);
+        }
+
         exit(1);
     }
 }
