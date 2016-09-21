@@ -1,14 +1,13 @@
 // parse command line options
 var minimist = require('minimist');
 var mopts = {
+    boolean: [
+        'legacy'
+    ],
     string: [
         'suite',
         'task'
-    ],
-    default: {
-        suite: '',
-        task: ''
-    }
+    ]
 };
 var options = minimist(process.argv, mopts);
 
@@ -16,14 +15,11 @@ var options = minimist(process.argv, mopts);
 // otherwise each arg will be interpreted as a make target
 process.argv = options._;
 
+// modules
 require('shelljs/make');
 var fs = require('fs');
 var path = require('path');
 var util = require('./make-util');
-
-// default lists of tasks to build
-var makeOptions = require('./make-options.json');
-var taskList = makeOptions['tasks'];
 
 // util functions
 var run = util.run;
@@ -35,6 +31,7 @@ var pathExists = util.pathExists;
 var buildNodeTask = util.buildNodeTask;
 var addPath = util.addPath;
 var copyTaskResources = util.copyTaskResources;
+var matchCopy = util.matchCopy;
 var ensureTool = util.ensureTool;
 var assert = util.assert;
 var getExternals = util.getExternals;
@@ -42,9 +39,15 @@ var createResjson = util.createResjson;
 var createTaskLocJson = util.createTaskLocJson;
 var validateTask = util.validateTask;
 
-var buildPath = path.join(__dirname, '_build');
-var commonOutputPath = path.join(buildPath, 'Common');
-var testPath = path.join(__dirname, '_test');
+// default tasks to build
+var makeOptions = require('./make-options.json');
+var taskList = makeOptions['tasks'];
+
+// global paths
+var buildPath = path.join(__dirname, '_build', 'Tasks');
+var commonPath = path.join('_build', 'Tasks', 'Common');
+var testPath = path.join(__dirname, '_build', 'Tests');
+var testTempPath = path.join(__dirname, '_build', 'Tests', 'Temp');
 
 // add node modules .bin to the path so we can dictate version of tsc etc...
 var binPath = path.join(__dirname, 'node_modules', '.bin');
@@ -54,7 +57,7 @@ if (!test('-d', binPath)) {
 addPath(binPath);
 
 target.clean = function () {
-    rm('-Rf', commonOutputPath);
+    rm('-Rf', commonPath);
     rm('-Rf', buildPath);
     mkdir('-p', buildPath);
     rm('-Rf', testPath);
@@ -109,7 +112,7 @@ target.build = function() {
             common.forEach(function(mod) {
                 var modPath = path.join(taskPath, mod['module']);
                 var modName = path.basename(modPath);
-                var modOutDir = path.join(commonOutputPath, modName);
+                var modOutDir = path.join(commonPath, modName);
 
                 if (!test('-d', modOutDir)) {
                     banner('Building module ' + modPath, true);
@@ -184,10 +187,42 @@ target.build = function() {
 target.test = function() {
     ensureTool('mocha', '--version');
 
+    // legacy tests
+    if (options.legacy) {
+        banner('Legacy tests');
+
+        // clean tests
+        rm('-Rf', testPath);
+        mkdir('-p', testPath);
+
+        // compile tests and test lib
+        cd(path.join(__dirname, 'Tests'));
+        run('tsc --outDir ' + testPath);
+
+        // copy the test lib dir
+        cp('-R', path.join(__dirname, 'Tests', 'lib'), path.join(testPath) + '/');
+
+        // copy the mock node lib to node_modules
+        mkdir('-p', path.join(testPath, 'lib', 'node_modules'));
+        cp('-R', path.join(testPath, 'lib', 'vsts-task-lib'), path.join(testPath, 'lib', 'node_modules') + '/');
+
+        // copy other
+        matchCopy('**/+(data|*.ps1|*.json)', path.join(__dirname, 'Tests', 'L0'), path.join(testPath, 'L0'), { dot: true });
+
+        // setup test temp
+        process.env['TASK_TEST_TEMP'] = testTempPath;
+        mkdir('-p', testTempPath);
+
+        // suite path
+        var suitePath = path.join(testPath, options.suite || 'L0/**', '_suite.js');
+        var tfBuild = ('' + process.env['TF_BUILD']).toLowerCase() == 'true';
+        run('mocha ' + suitePath, true);
+
+        return;
+    }
+
     var suiteType = options.suite || 'L0';
     var taskType = options.task || '**';
     var testsSpec = path.join(buildPath, taskType, 'Tests', suiteType + ".js");
     run('mocha ' + testsSpec, true);
-
-    // TODO: add legacy test approach for migration purposes
 }
