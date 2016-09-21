@@ -32,3 +32,5 @@ async function run() {
         tl.setResult(tl.TaskResult.Failed, tl.loc('OpenSSLFailed', err.message));
     }   
 }
+
+run();
