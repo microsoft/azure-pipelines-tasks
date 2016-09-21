@@ -7,6 +7,7 @@
         "CocoaPods",
         "CmdLine",
         "CopyFiles",
+        "CopyFilesOverSSH",
         "Gulp",
         "NuGetInstaller",
         "PublishSymbols",
