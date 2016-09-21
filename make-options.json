@@ -2,6 +2,7 @@
     "tasks": [
         "ANT",
         "AndroidBuild",
+        "AndroidSigning",
         "ArchiveFiles",
         "AzureCLI",
         "AzureCloudPowerShellDeployment",
@@ -28,6 +29,7 @@
         "Grunt",
         "Gulp",
         "IISWebAppDeployment",
+        "JenkinsDownloadArtifacts",
         "NuGetInstaller",
         "NugetPackager",
         "powerShell",
