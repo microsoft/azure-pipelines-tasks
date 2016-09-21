@@ -25,7 +25,7 @@ param
 $userAgent = "ApacheJmeterTestBuildTask"
 $apiVersion = "api-version=1.0"
 
-$global:RestTimeout = 5
+$global:RestTimeout = 60
 $global:ElsAccountUrl = "http://www.visualstudio.com"
 $global:TFSAccountUrl = "http://www.visualstudio.com"
 $global:ScopedTestDrop = $TestDrop
