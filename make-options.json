@@ -9,6 +9,7 @@
         "CopyFiles",
         "CopyFilesOverSSH",
         "CopyPublishBuildArtifacts",
+        "cURLUploader",
         "Gulp",
         "NuGetInstaller",
         "PublishSymbols",
