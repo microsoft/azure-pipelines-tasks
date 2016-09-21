@@ -16,6 +16,7 @@ describe('NuGetInstaller Suite', function () {
 
         tr.run()
         assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln'), 'it should have run NuGet');
+        assert(tr.ran('c:\\foo\\system32\\chcp.com 65001'), 'it should have run chcp');
         assert(tr.stdout.indexOf('NuGet output here') >= 0, "should have nuget output");
         assert(tr.succeeded, 'should have succeeded');
         assert(tr.invokedToolCount == 2, 'should have run NuGet and chcp');
@@ -50,6 +51,21 @@ describe('NuGetInstaller Suite', function () {
         assert(tr.stdout.indexOf('NuGet output here') >= 0, "should have nuget output");
         assert(tr.succeeded, 'should have succeeded');
         assert(tr.invokedToolCount == 3, 'should have run NuGet twice and chcp');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });
+    
+    it('restore single solution mono', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, 'singleslnMono.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run()
+        assert(tr.ran('/usr/bin/mono c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln'), 'it should have run NuGet with mono');
+        assert(tr.stdout.indexOf('NuGet output here') >= 0, "should have nuget output");
+        assert(tr.succeeded, 'should have succeeded');
+        assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });

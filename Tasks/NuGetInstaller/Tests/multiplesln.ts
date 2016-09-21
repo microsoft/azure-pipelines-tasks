@@ -12,7 +12,7 @@ tmr.setInput('nuGetVersion', '3.3.0');
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "osType": {
-        "osType" :"Windows_NT"
+        "osType" : "Windows_NT"
     },
     "checkPath": {
         "c:\\agent\\home\\directory\\single.sln": true,

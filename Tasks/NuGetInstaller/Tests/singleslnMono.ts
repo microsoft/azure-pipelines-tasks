@@ -12,24 +12,19 @@ tmr.setInput('nuGetVersion', '3.3.0');
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "osType": {
-        "osType" : "Windows_NT"
+        "osType" : "Linux"
     },
     "checkPath": {
         "c:\\agent\\home\\directory\\single.sln": true,
-        "c:\\foo\\system32\\chcp.com": true
+        "/usr/bin/mono": true
     },
     "which": {
-        "c:\\foo\\system32\\chcp.com":"c:\\foo\\system32\\chcp.com"
+        "mono":"/usr/bin/mono"
     },
     "exec": {
-        "c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln": {
+        "/usr/bin/mono c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln": {
             "code": 0,
             "stdout": "NuGet output here",
-            "stderr": ""
-        },
-        "c:\\foo\\system32\\chcp.com 65001": {
-            "code": 0,
-            "stdout": "",
             "stderr": ""
         }
     },
@@ -51,7 +46,6 @@ process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = "{\"json\" : \"value\"}";
 process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = "https://example.visualstudio.com/defaultcollection";
 process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = "c:\\agent\\home\\directory";
 process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = "https://example.visualstudio.com/defaultcollection";
-process.env.windir = "c:\\foo";
 
 
 tmr.registerMock('./pe-parser', {

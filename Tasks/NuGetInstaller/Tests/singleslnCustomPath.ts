@@ -12,7 +12,7 @@ tmr.setInput('nuGetPath', 'c:\\custompath\\nuget.exe');
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "osType": {
-        "osType" :"Windows_NT"
+        "osType" : "Windows_NT"
     },
     "checkPath": {
         "c:\\custompath\\nuget.exe": true,
