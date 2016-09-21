@@ -1,6 +1,6 @@
 {
     "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
-    "name": "AzureRMWebAppDeployment",
+    "name": "AzureRmWebAppDeployment",
     "friendlyName": "AzureRM App Service Deployment",
     "description": "Deploy the web project using AzureRM App Service",
     "helpMarkDown": "[More Information](https://aka.ms/azurermwebdeployreadme)",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 1
     },
     "minimumAgentVersion": "1.102.0",
     "groups": [
@@ -148,7 +148,7 @@
             "name": "TakeAppOfflineFlag",
             "type": "boolean",
             "label": "Take App Offline",
-            "defaultValue": "true",
+            "defaultValue": "false",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
             "visibleRule": "UseWebDeploy == true",
