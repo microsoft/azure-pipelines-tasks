@@ -25,6 +25,8 @@ param
 
 $userAgent = "QuickPerfTestBuildTask"
 
+$global:RestTimeout = 60
+
 function InitializeRestHeaders()
 {
     $restHeaders = New-Object -TypeName "System.Collections.Generic.Dictionary[[String], [String]]"
@@ -72,7 +74,7 @@ function CreateTestDrop($headers, $dropJson)
 function GetTestDrop($headers, $drop)
 {
     $uri = [String]::Format("{0}/_apis/clt/testdrops/{1}?api-version=1.0", $CltAccountUrl, $drop.id)
-    $testdrop = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
+    $testdrop = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -TimeoutSec $global:RestTimeout -Uri $uri -Headers $headers
 
     return $testdrop
 }
@@ -89,7 +91,7 @@ function UploadTestDrop($testdrop)
 function GetTestRuns($headers)
 {
     $uri = [String]::Format("{0}/_apis/clt/testruns?api-version=1.0", $CltAccountUrl)
-    $runs = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
+    $runs = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -TimeoutSec $global:RestTimeout -Uri $uri -Headers $headers
 
     return $runs
 }
