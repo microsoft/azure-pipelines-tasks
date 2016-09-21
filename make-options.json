@@ -19,13 +19,13 @@
         "DeployAzureResourceGroup",
         "Gulp",
         "NuGetInstaller",
+        "powerShell",
         "PublishSymbols",
         "ServiceFabricDeploy",
         "ServiceFabricUpdateAppVersions",
         "ShellScript",
         "SqlAzureDacpacDeployment",
-        "VSBuild",
-        "powerShell"
+        "VSBuild"
     ],
     "taskResources": [
         "*.ps1", 
