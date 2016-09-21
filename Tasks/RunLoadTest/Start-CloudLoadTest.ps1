@@ -25,7 +25,7 @@ $userAgent = "CloudLoadTestBuildTask"
 $apiVersion = "api-version=1.0"
 
 $global:ThresholdExceeded = $false
-$global:RestTimeout = 5
+$global:RestTimeout = 60
 $global:MonitorThresholds = $false
 $global:ElsAccountUrl = "http://www.visualstudio.com"
 $global:TFSAccountUrl = "http://www.visualstudio.com"
@@ -341,15 +341,11 @@ function Validate()
 
 function UploadSummaryMdReport($summaryMdPath)
 {
-	Write-Verbose "Summary Markdown Path = $summaryMdPath"
+	Write-Output "Summary Markdown Path = $summaryMdPath"
 
-	if (Test-Path($summaryMdPath) -and ($env:SYSTEM_HOSTTYPE -eq "build"))
+	if (($env:SYSTEM_HOSTTYPE -eq "build") -and (Test-Path($summaryMdPath)))
 	{	
 		Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=Load test results;]$summaryMdPath"
-	}
-	else
-	{
-		 Write-Warning "Could not find the summary report file $summaryMdPath"
 	}
 }
 
