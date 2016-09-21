@@ -1,0 +1,14 @@
+{
+    "common": [
+        {
+            "module": "../Common/SonarQubeHelpers",
+            "type": "ps"
+        }
+    ],
+    "cp": [
+        {
+            "source": "SonarQube.Bootstrapper",
+            "options": "-R"
+        }
+    ]
+}
