@@ -1,9 +1,6 @@
-/// <reference path="../../definitions/node.d.ts" />
-/// <reference path="../../definitions/q.d.ts" />
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-
 import Q = require('q');
 import tl = require('vsts-task-lib/task');
+import trm = require('vsts-task-lib/toolrunner');
 import fs = require('fs');
 
 var regedit = require('regedit');
@@ -104,7 +101,7 @@ export async  function containsParamFile(webAppPackage: string ) {
     tl.writeFile(msDeployParamFile, batchCommand);
     tl._writeLine(tl.loc("Runningcommand", msDeployCommand));
 
-    var taskResult = tl.execSync("cmd", ['/C', msDeployParamFile], { failOnStdErr: true, silent: true });
+    var taskResult = tl.execSync("cmd", ['/C', msDeployParamFile], <trm.IExecOptions>{ failOnStdErr: true, silent: true });
     var paramContentXML = fs.readFileSync(parameterFile);
     var isParamFilePresent = false;
     await parseString(paramContentXML, (error, result) => {
