@@ -1,0 +1,19 @@
+{
+  "name": "vsts-copypublish-task",
+  "version": "1.0.0",
+  "description": "VSTS Copy Publish Task",
+  "main": "copypublishbuildartifacts.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/microsoft/vsts-tasks#readme"
+}
