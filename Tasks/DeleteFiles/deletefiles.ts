@@ -1,5 +1,3 @@
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-
 import path = require('path');
 import os = require('os');
 import tl = require('vsts-task-lib/task');
