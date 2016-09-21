@@ -45,5 +45,8 @@
     "through2": "2.0.1",
     "typescript": "1.8.7",
     "validator": "3.33.0"
+  },
+  "dependencies": {
+    "vsts-task-lib": "^0.9.20"
   }
 }
