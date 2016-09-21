@@ -11,6 +11,7 @@
         "CopyPublishBuildArtifacts",
         "cURLUploader",
         "DecryptFile",
+        "DeleteFiles",
         "Gulp",
         "NuGetInstaller",
         "PublishSymbols",
