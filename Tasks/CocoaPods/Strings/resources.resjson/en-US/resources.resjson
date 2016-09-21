@@ -6,5 +6,6 @@
   "loc.input.label.cwd": "Working Directory",
   "loc.input.help.cwd": "Current working directory. Defaults to the repo directory.",
   "loc.messages.PodReturnCode": "Pod exited with return code: %d",
-  "loc.messages.PodFailed": "Pod failed with error: %s"
+  "loc.messages.PodFailed": "Pod failed with error: %s",
+  "loc.messages.CocoaPodsNotFound": "command pod was not found. Please install Cocoapods on the build machine (https://cocoapods.org)"
 }
