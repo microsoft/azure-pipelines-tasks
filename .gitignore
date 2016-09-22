@@ -30,6 +30,7 @@ _common/
 _build/
 _download/
 _package/
+_test/
 _working/
 
 # Roslyn cache directories
