@@ -9,10 +9,13 @@
     "Release"
   ],
   "author": "Microsoft Corporation",
+  "runsOn": [
+    "Server"
+  ],
   "version": {
     "Major": 7,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
   "inputs": [
     {
