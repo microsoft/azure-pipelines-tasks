@@ -44,7 +44,7 @@ try {
     var baseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
     var useNewCollectorFlag = tl.getVariable('tia.useNewCollector');
 
-    var useNewCollector = true;
+    var useNewCollector = false;
     if (useNewCollectorFlag && useNewCollectorFlag.toUpperCase() == "FALSE") {
         useNewCollector = false;
     }
