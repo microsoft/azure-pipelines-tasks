@@ -1,4 +1,7 @@
 {
+    "//busted_tasks": [
+        "CopyFilesOverSSH"
+    ],
     "tasks": [
         "ANT",
         "AndroidBuild",
@@ -16,7 +19,6 @@
         "CocoaPods",
         "CmdLine",
         "CopyFiles",
-        "CopyFilesOverSSH",
         "CopyPublishBuildArtifacts",
         "cURLUploader",
         "DecryptFile",
