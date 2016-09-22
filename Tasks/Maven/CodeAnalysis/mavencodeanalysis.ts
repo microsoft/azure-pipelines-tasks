@@ -100,7 +100,7 @@ export function findCandidateModules(directory:string):ModuleAnalysis[] {
 
 export function getOrCreateCodeAnalysisStagingDirectory() {
     var caStagingDir = path.join(tl.getVariable('build.artifactStagingDirectory'), ".codeAnalysis");
-    tl.mkdirP(caStagingDir);
+    FileSystemInteractions.createDirectory(caStagingDir);
     return caStagingDir;
 }
 
@@ -133,7 +133,7 @@ function getToolStagingDirectory(toolName:string):string {
 
 function cleanDirectory(targetDirectory:string):boolean {
     tl.rmRF(targetDirectory);
-    tl.mkdirP(targetDirectory);
+    FileSystemInteractions.createDirectory(targetDirectory);
 
     return tl.exist(targetDirectory);
 }
@@ -283,7 +283,7 @@ function uploadBuildArtifactsFromModule(toolName:string, moduleAnalysis:ModuleAn
 
     // We create a staging directory to copy files to before group uploading them
     var localStagingDir:string = path.join(getToolStagingDirectory(toolName), moduleAnalysis.moduleName);
-    tl.mkdirP(localStagingDir);
+    FileSystemInteractions.createDirectory(localStagingDir);
 
     // Copy files to a staging directory so that they can all be uploaded at once
     // This gives us a single artifact with all relevant files grouped together,
