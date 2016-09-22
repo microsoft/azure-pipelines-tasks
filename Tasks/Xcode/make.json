@@ -1,0 +1,9 @@
+{
+    "common": [
+        {
+            "module": "../Common/ios-signing-common",
+            "type": "node",
+            "compile": true
+        }
+    ]
+}
