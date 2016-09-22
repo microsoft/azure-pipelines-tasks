@@ -69,8 +69,20 @@ target.build = function() {
     ensureTool('tsc', '--version');
 
     // filter tasks
-    var tasksToBuild = options.task ? [ options.task ] : taskList;
-    
+    var tasksToBuild;
+    if (options.task) {
+        tasksToBuild = matchFind(options.task, path.join(__dirname, 'Tasks'), { noRecurse: true })
+            .map(function (item) {
+                return path.basename(item);
+            });
+        if (!tasksToBuild.length) {
+            fail('Unable to find any tasks matching pattern ' + options.task);
+        }
+    }
+    else {
+        tasksToBuild = taskList;
+    }
+
     tasksToBuild.forEach(function(taskName) {
         banner('Building: ' + taskName);
         var taskPath = path.join(__dirname, 'Tasks', taskName);
@@ -156,7 +168,14 @@ target.build = function() {
                 else if (mod.type === 'ps') {
                     console.log();
                     console.log('> copying module resources to task');
-                    var dest = path.join(outDir, 'ps_modules', modName);
+                    var dest;
+                    if (mod.hasOwnProperty('dest')) {
+                        dest = path.join(outDir, mod.dest, modName);
+                    }
+                    else {
+                        dest = path.join(outDir, 'ps_modules', modName);
+                    }
+
                     matchCopy('!Tests', modOutDir, dest, { noRecurse: true });
                 }
             });

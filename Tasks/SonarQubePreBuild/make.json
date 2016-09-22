@@ -2,7 +2,8 @@
     "common": [
         {
             "module": "../Common/SonarQubeHelpers",
-            "type": "ps"
+            "type": "ps",
+            "dest": "Common"
         }
     ],
     "cp": [
