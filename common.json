@@ -108,11 +108,5 @@
             "module": "codecoverage-tools",
             "dest": "node_modules"  
         }
-    ],
-    "Ant" : [
-        {
-            "module": "codecoverage-tools",
-            "dest": "node_modules"  
-        }
     ]
 }
