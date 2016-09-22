@@ -10,6 +10,8 @@ var process = require('process');
 var ncp = require('child_process');
 var syncRequest = require('sync-request');
 
+set('-e');
+
 var downloadPath = path.join(__dirname, '_download');
 var testPath = path.join(__dirname, '_test');
 
@@ -75,6 +77,8 @@ var buildNodeTask = function (taskPath, outDir) {
 exports.buildNodeTask = buildNodeTask;
 
 var copyTaskResources = function (taskMake, srcPath, destPath) {
+    console.log();
+    console.log('> copying task resources');
     assert(taskMake, 'taskMake');
     assert(srcPath, 'srcPath');
     assert(destPath, 'destPath');
@@ -82,12 +86,7 @@ var copyTaskResources = function (taskMake, srcPath, destPath) {
     // copy the globally defined set of default task resources
     var toCopy = makeOptions['taskResources'];
     toCopy.forEach(function (item) {
-        var itemPath = path.join(srcPath, item);
-        
-        if (pathExists(itemPath)) {
-            console.log('copying ' + path.basename(itemPath));
-            cp('-R', itemPath, destPath);
-        }
+        matchCopy(item, srcPath, destPath);
     });
 
     // copy the locally defined set of resources
@@ -111,8 +110,11 @@ var matchCopy = function (pattern, sourceRoot, destRoot, options) {
     // normalize first, so we can substring later
     sourceRoot = path.resolve(sourceRoot);
     destRoot = path.resolve(destRoot);
-    console.log(`copying ${pattern} from ${sourceRoot.substring(__dirname.length + 1)} to ${destRoot.substring(__dirname.length + 1)}`);
 
+    // let's add logging and tracing
+    //console.log(`copying ${pattern} from ${sourceRoot.substring(__dirname.length + 1)} to ${destRoot.substring(__dirname.length + 1)}`);
+    console.log(`copying ${pattern}`);
+    
     minimatch.match(find(sourceRoot), pattern, mergedOptions)
         .forEach(function (item) {
             // determine the relative item path
@@ -124,7 +126,6 @@ var matchCopy = function (pattern, sourceRoot, destRoot, options) {
             mkdir('-p', dest);
 
             // copy
-            console.log(' ' + relative);
             cp('-R', item, dest + '/');
         });
 }
