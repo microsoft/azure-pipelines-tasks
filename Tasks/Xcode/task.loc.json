@@ -12,7 +12,7 @@
   "version": {
     "Major": 2,
     "Minor": 3,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [
     "xcode"
@@ -27,6 +27,11 @@
     {
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    },
+    {
+      "name": "xctool",
+      "displayName": "ms-resource:loc.group.displayName.xctool",
       "isExpanded": false
     }
   ],
@@ -76,6 +81,25 @@
       "defaultValue": true,
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.packageApp"
+    },
+    {
+      "name": "xcode8AutomaticSigning",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.xcode8AutomaticSigning",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.xcode8AutomaticSigning",
+      "groupName": "sign"
+    },
+    {
+      "name": "teamId",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.teamId",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.teamId",
+      "groupName": "sign",
+      "visibleRule": "xcode8AutomaticSigning = true"
     },
     {
       "name": "signMethod",
@@ -165,15 +189,6 @@
       "visibleRule": "signMethod = file"
     },
     {
-      "name": "xcode8AutomaticSigning",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.xcode8AutomaticSigning",
-      "defaultValue": false,
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.xcode8AutomaticSigning",
-      "groupName": "sign"
-    },
-    {
       "name": "args",
       "type": "string",
       "label": "ms-resource:loc.input.label.args",
@@ -208,22 +223,6 @@
       "groupName": "advanced"
     },
     {
-      "name": "useXctool",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.useXctool",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.useXctool",
-      "groupName": "advanced"
-    },
-    {
-      "name": "xctoolReporter",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.xctoolReporter",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.xctoolReporter",
-      "groupName": "advanced"
-    },
-    {
       "name": "useXcpretty",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.useXcpretty",
@@ -240,6 +239,22 @@
       "defaultValue": false,
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.publishJUnitResults"
+    },
+    {
+      "name": "useXctool",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useXctool",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.useXctool",
+      "groupName": "xctool"
+    },
+    {
+      "name": "xctoolReporter",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.xctoolReporter",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.xctoolReporter",
+      "groupName": "xctool"
     }
   ],
   "execution": {

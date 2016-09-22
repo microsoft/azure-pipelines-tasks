@@ -134,11 +134,14 @@ async function run() {
             }
 
             var signIdentity : string = tl.getInput('iosSigningIdentity');
-            xcb.argIf(signIdentity, 'CODE_SIGN_IDENTITY=' + signIdentity);
+            xcb.argIf(signIdentity && !automaticSigningWithXcode, 'CODE_SIGN_IDENTITY=' + signIdentity);
 
             var provProfileUUID : string = tl.getInput('provProfileUuid');
-            xcb.argIf(provProfileUUID, 'PROVISIONING_PROFILE=' + provProfileUUID);
+            xcb.argIf(provProfileUUID && !automaticSigningWithXcode, 'PROVISIONING_PROFILE=' + provProfileUUID);
         }
+
+        var teamId: string = tl.getInput('teamId');
+        xcb.argIf(teamId && automaticSigningWithXcode, 'DEVELOPMENT_TEAM=' + teamId);
 
         //--- Enable Xcpretty formatting if using xcodebuild ---
         if(useXctool && useXcpretty) {

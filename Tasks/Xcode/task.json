@@ -12,7 +12,7 @@
     "version": {
         "Major": 2,
         "Minor": 3,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [
         "xcode"
@@ -27,6 +27,11 @@
         {
             "name": "advanced",
             "displayName": "Advanced",
+            "isExpanded": false
+        },
+        {
+            "name": "xctool",
+            "displayName": "xctool (deprecated)",
             "isExpanded": false
         }
     ],
@@ -76,6 +81,25 @@
             "defaultValue": true,
             "required": true,
             "helpMarkDown": "Indicates whether an IPA should be generated as a part of the build."
+        },
+        {
+            "name": "xcode8AutomaticSigning",
+            "type": "boolean",
+            "label": "Automatic Signing with Xcode 8",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Select this if you have an Xcode 8 project setup for Automatic Signing",
+            "groupName": "sign"
+        },
+        {
+            "name": "teamId",
+            "type": "string",
+            "label": "Team ID",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Specify the 10 digit developer Team ID. This is required if you are a member of multiple development teams.",
+            "groupName": "sign",
+            "visibleRule": "xcode8AutomaticSigning = true"
         },
         {
             "name": "signMethod",
@@ -165,15 +189,6 @@
             "visibleRule": "signMethod = file"
         },
         {
-            "name": "xcode8AutomaticSigning",
-            "type": "boolean",
-            "label": "Automatic Signing with Xcode 8",
-            "defaultValue": false,
-            "required": false,
-            "helpMarkDown": "Select this if you have an Xcode 8 project setup for Automatic Signing",
-            "groupName": "sign"
-        },
-        {
             "name": "args",
             "type": "string",
             "label": "Arguments",
@@ -208,22 +223,6 @@
             "groupName": "advanced"
         },
         {
-            "name": "useXctool",
-            "type": "boolean",
-            "label": "Use xctool",
-            "required": false,
-            "helpMarkDown": "Use xctool instead of xcodebuild. Requires xctool be installed on agent hosts. See [xctool](https://github.com/facebook/xctool) for details.",
-            "groupName": "advanced"
-        },
-        {
-            "name": "xctoolReporter",
-            "type": "string",
-            "label": "xctool Test Reporter Format",
-            "required": false,
-            "helpMarkDown": "Test reporter format to use when \"test\" action is specified and \"Use xctool\" is checked. Specify \"junit:output-file-path-here.xml\" to generate a file format compatible with the Publish Test Results task. When specified, \"plain\" is automatically added as well. Requires xctool be installed on agent hosts. See [xctool](https://github.com/facebook/xctool) for details.",
-            "groupName": "advanced"
-        },
-        {
             "name": "useXcpretty",
             "type": "boolean",
             "label": "Use xcpretty",
@@ -240,6 +239,22 @@
             "defaultValue": false,
             "groupName": "advanced",
             "helpMarkDown": "Select this option to publish JUnit Test results produced above using xctool to VSTS/TFS."
+        },
+        {
+            "name": "useXctool",
+            "type": "boolean",
+            "label": "Use xctool",
+            "required": false,
+            "helpMarkDown": "Use xctool instead of xcodebuild. Requires xctool be installed on agent hosts. See [xctool](https://github.com/facebook/xctool) for details. Note: xctool has been deprecated and does not work with Xcode 8.",
+            "groupName": "xctool"
+        },
+        {
+            "name": "xctoolReporter",
+            "type": "string",
+            "label": "xctool Test Reporter Format",
+            "required": false,
+            "helpMarkDown": "Test reporter format to use when \"test\" action is specified and \"Use xctool\" is checked. Specify \"junit:output-file-path-here.xml\" to generate a file format compatible with the Publish Test Results task. When specified, \"plain\" is automatically added as well. Requires xctool be installed on agent hosts. See [xctool](https://github.com/facebook/xctool) for details. Note: xctool has been deprecated and does not work with Xcode 8.",
+            "groupName": "xctool"
         }
     ],
     "execution": {
