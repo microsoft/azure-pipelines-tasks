@@ -142,7 +142,7 @@ var matchCopy = function (pattern, sourceRoot, destRoot, options) {
     sourceRoot = path.resolve(sourceRoot);
     destRoot = path.resolve(destRoot);
 
-    matchFind(pattern, sourceRoot, destRoot, options)
+    matchFind(pattern, sourceRoot, options)
         .forEach(function (item) {
             // create the dest dir based on the relative item path
             var relative = item.substring(sourceRoot.length + 1);

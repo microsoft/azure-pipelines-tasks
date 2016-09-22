@@ -1,9 +1,6 @@
 // parse command line options
 var minimist = require('minimist');
 var mopts = {
-    boolean: [
-        'legacy'
-    ],
     string: [
         'suite',
         'task'
@@ -160,7 +157,7 @@ target.build = function() {
                     console.log();
                     console.log('> copying module resources to task');
                     var dest = path.join(outDir, 'ps_modules', modName);
-                    matchCopy('!(Tests)', modOutDir, dest, { noRecurse: true });
+                    matchCopy('!Tests', modOutDir, dest, { noRecurse: true });
                 }
             });
         }
