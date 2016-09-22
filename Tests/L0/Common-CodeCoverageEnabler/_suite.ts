@@ -11,7 +11,7 @@ import tl = require('../../lib/vsts-task-lib/toolRunner');
 // Paths aren't the same between compile time and run time. This will need some work
 let realrequire = require;
 function myrequire(module: string): any {
-    return realrequire(path.join(__dirname, "../../../Tasks/Ant/node_modules", module));
+    return realrequire(path.join(__dirname, "../../../Tasks/Maven/node_modules", module));
 }
 require = <typeof require>myrequire;
 import { CodeCoverageEnablerFactory } from 'codecoverage-tools/codecoveragefactory';
@@ -228,38 +228,6 @@ describe('Code Coverage enable tool tests', function () {
             assert.notEqual(content.indexOf(`cobertura.coverageIncludes = ['.*com.abc']`), -1, "Include filter must be present");
             assert.notEqual(content.indexOf(`cobertura.coverageExcludes = ['.*com.xyz']`), -1, "Exclude filter must be present");
             assert.notEqual(content.indexOf(`net.saliman:gradle-cobertura-plugin`), -1, "Cobertura Plugin must be present");
-            done();
-        }).catch(function (err) {
-            done(err);
-        });
-    })
-
-    /* Ant build tool - Code Coverage */
-    it('Ant build file with Jacoco CC', (done) => {
-        let buildFile = path.join(data, "ant_build.xml");
-        buildProps['buildfile'] = buildFile;
-
-        let ccEnabler = new CodeCoverageEnablerFactory().getTool("ant", "jacoco");
-        ccEnabler.enableCodeCoverage(buildProps).then(function (resp) {
-            let content = fs.readFileSync(buildFile, "utf-8");
-            assert.notEqual(content.indexOf(`excludes="**/com/xyz.class"`), -1, "Exclude filter must be present");
-            assert.notEqual(content.indexOf(`includes="**/com/abc.class"`), -1, "Include filter must be present");
-            assert.notEqual(content.indexOf(`jacoco:coverage destfile="jacoco.exec"`), -1, "Jacoco Plugin must be present");
-            done();
-        }).catch(function (err) {
-            done(err);
-        });
-    })
-
-    it('Ant build file with Cobertura CC', (done) => {
-        let buildFile = path.join(data, "ant_build.xml");
-        buildProps['buildfile'] = buildFile;
-
-        let ccEnabler = new CodeCoverageEnablerFactory().getTool("ant", "cobertura");
-        ccEnabler.enableCodeCoverage(buildProps).then(function (resp) {
-            let content = fs.readFileSync(buildFile, "utf-8");
-            assert.notEqual(fs.existsSync(path.join(data, buildProps['reportbuildfile'])), true, "Report file must be present");
-            assert.notEqual(content.indexOf(`cobertura-classpath`), -1, "Jacoco Plugin must be present");
             done();
         }).catch(function (err) {
             done(err);
