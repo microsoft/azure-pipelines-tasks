@@ -29,7 +29,7 @@ function unzipExtract(file: string, destinationFolder: string) {
     if (typeof xpUnzipLocation == "undefined") {
         xpUnzipLocation = tl.which('unzip', true);
     }
-    var unzip = tl.createToolRunner(xpUnzipLocation);
+    var unzip = tl.tool(xpUnzipLocation);
     unzip.arg(file);
     unzip.arg('-d');
     unzip.arg(destinationFolder);
@@ -39,7 +39,7 @@ function unzipExtract(file: string, destinationFolder: string) {
 
 function sevenZipExtract(file: string, destinationFolder: string) {
     tl.debug('Extracting file: ' + file);
-    var sevenZip = tl.createToolRunner(winSevenZipLocation);
+    var sevenZip = tl.tool(winSevenZipLocation);
     sevenZip.arg('x');
     sevenZip.arg('-o' + destinationFolder);
     sevenZip.arg(file);
@@ -59,7 +59,7 @@ function handleExecResult(execResult: tr.IExecResult, file: string) {
 }
 
 function getOptions(): tr.IExecOptions {
-    var execOptions: tr.IExecOptions = {
+    var execOptions: tr.IExecOptions = <any>{
         silent: true,
         outStream: new Util.StringWritable({ decodeStrings: false }),
         errStream: new Util.StringWritable({ decodeStrings: false }),

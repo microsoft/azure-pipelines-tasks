@@ -1,4 +1,4 @@
-/// <reference path="../../definitions/node.d.ts"/>
+
 import stream = require('stream');
 
 import tl = require('vsts-task-lib/task');
