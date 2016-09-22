@@ -27,21 +27,24 @@ export class CodeAnalysisOrchestrator {
     }
 
     public configureBuild(toolRunner: ToolRunner): ToolRunner {
-        for (var tool of this.tools) {
-            toolRunner = tool.configureBuild(toolRunner);
-        }
 
+        if (this.checkBuildContext()) {
+            for (var tool of this.tools) {
+                toolRunner = tool.configureBuild(toolRunner);
+            }
+        }
+        
         return toolRunner;
     }
 
     /**
      * Parses the code analysis tool results (PMD, CheckStyle .. but not SonarQube). Uploads reports and artifacts.
      */
-    public publishCodeAnalysisResults():void {
+    public publishCodeAnalysisResults(): void {
 
-        tl.debug(`[CA] Attempting to find report files from ${this.tools.length} code analysis tool(s)`);
+        if (this.checkBuildContext() && this.tools.length > 0) {
+            tl.debug(`[CA] Attempting to find report files from ${this.tools.length} code analysis tool(s)`);
 
-        if (this.tools.length > 0) {
             let stagingDir = path.join(tl.getVariable('build.artifactStagingDirectory'), ".codeAnalysis");
             let buildNumber: string = tl.getVariable('build.buildNumber');
 
@@ -54,17 +57,30 @@ export class CodeAnalysisOrchestrator {
         }
     }
 
-    private processResults(tools: IAnalysisTool[]):AnalysisResult[] {
+    private processResults(tools: IAnalysisTool[]): AnalysisResult[] {
 
         let analysisResults: AnalysisResult[] = [];
 
         for (var tool of tools) {
-            var results:AnalysisResult[] = tool.processResults();
+            var results: AnalysisResult[] = tool.processResults();
             if (results) {
                 analysisResults = analysisResults.concat(results);
             }
         }
 
         return analysisResults;
+    }
+
+    private checkBuildContext(): boolean {
+        let requiredVariables: string[] = ['build.sourcesDirectory', 'build.artifactStagingDirectory', 'build.buildNumber'];
+
+        for (var requiredVariable of requiredVariables) {
+            if (!tl.getVariable(requiredVariable)) {
+                tl.warning(tl.loc('codeAnalysisDisabled', requiredVariable));
+                return false;
+            }
+        }
+
+        return true;
     }
 }

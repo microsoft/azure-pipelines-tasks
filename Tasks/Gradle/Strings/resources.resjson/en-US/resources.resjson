@@ -88,6 +88,7 @@
   "loc.messages.codeAnalysisBuildSummaryLine_NoViolations": "%s found no violations.",
   "loc.messages.codeAnalysisBuildSummaryTitle": "Code Analysis Report",
   "loc.messages.codeAnalysisArtifactSummaryTitle": "Code Analysis Results",
+  "loc.messages.codeAnalysisDisabled": "Code analysis is disabled outside of the build enviroment. Could not find a value for: %s",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Locate JAVA_HOME for Java %s %s",
   "loc.messages.FailedToLocateSpecifiedJVM": "Failed to find specified JDK version. Please make sure environment variable '%s' exists and is set to the location of a corresponding JDK."
 }
