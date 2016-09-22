@@ -22,6 +22,8 @@ const TITestSettingsXmlnsTag = "http://microsoft.com/schemas/VisualStudio/TeamTe
 try {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     var vsTestVersion: string = tl.getInput('vsTestVersion');
+    var vstestLocationMethod: string = tl.getInput('vstestLocationMethod');
+    var vstestLocation: string = tl.getPathInput('vsTestLocation');
     var testAssembly: string = tl.getInput('testAssembly', true);
     var testFiltercriteria: string = tl.getInput('testFiltercriteria');
     var runSettingsFile: string = tl.getPathInput('runSettingsFile');
@@ -292,15 +294,32 @@ function publishCodeChanges(): Q.Promise<string> {
     return defer.promise;
 }
 
+function getVSTestLocation(vsVersion: number): string {
+    if (vstestLocationMethod.toLowerCase() === 'version') {
+        let vsCommon: string = tl.getVariable('VS' + vsVersion + '0COMNTools');
+        if (!vsCommon) {
+            throw(new Error(tl.loc('VstestNotFound', vsVersion)));
+        } else {
+            return path.join(vsCommon, '..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe');
+        }
+    } else if(vstestLocationMethod.toLowerCase() === 'location') {
+        if (!pathExistsAsFile(vstestLocation)) {
+            throw(new Error(tl.loc('AccessDeniedToPath', vstestLocation)));
+        } else {
+            return vstestLocation;
+        }
+    }
+}
+
 function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: string, vsVersion: number, argsArray: string[]): Q.Promise<number> {
     var defer = Q.defer<number>();
-    var vsCommon = tl.getVariable("VS" + vsVersion + "0COMNTools");
-    if (!vsCommon) {
-        tl.error(tl.loc('VstestNotFound', vsVersion));
+    try {
+        vstestLocation = getVSTestLocation(vsVersion);
+    } catch (e) {
+        tl.error(e.message);
         defer.resolve(1);
         return defer.promise;
     }
-    var vstestLocation = path.join(vsCommon, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe");
     var vstest = tl.createToolRunner(vstestLocation);
     addVstestArgs(argsArray, vstest);
 
