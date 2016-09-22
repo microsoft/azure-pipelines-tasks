@@ -76,7 +76,7 @@ export class CodeAnalysisOrchestrator {
 
         for (var requiredVariable of requiredVariables) {
             if (!tl.getVariable(requiredVariable)) {
-                tl.debug('[CA] Code analysis is disabled outside of the build enviroment. Could not find a value for ' + requiredVariable);
+                tl.warning(tl.loc('codeAnalysisDisabled', requiredVariable));
                 return false;
             }
         }
