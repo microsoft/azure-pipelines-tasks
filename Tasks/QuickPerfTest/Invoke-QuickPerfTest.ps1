@@ -96,7 +96,7 @@ function GetTestRuns($headers)
     return $runs
 }
 
-function GetTestRunUri($testRunId)
+function GetTestRunUri($testRunId, $headers)
 {
  $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?api-version=1.0", $CltAccountUrl,$testRunId)
  $run = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -TimeoutSec $global:RestTimeout -Uri $uri -Headers $headers
@@ -262,7 +262,7 @@ if ($drop.dropType -eq "InPlaceDrop")
 
     $run = QueueTestRun $headers $runJson
     MonitorTestRun $headers $run
-    $webResultsUrl = GetTestRunUri($run.id)
+    $webResultsUrl = GetTestRunUri $run.id $headers
 	
     Write-Output ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name)
     Write-Output ("To view run details navigate to {0}" -f $webResultsUrl)
