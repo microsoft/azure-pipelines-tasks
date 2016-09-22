@@ -155,6 +155,19 @@ var matchCopy = function (pattern, sourceRoot, destRoot, options) {
 }
 exports.matchCopy = matchCopy;
 
+var matchRemove = function (pattern, sourceRoot, options) {
+    assert(pattern, 'pattern');
+    assert(sourceRoot, 'sourceRoot');
+
+    console.log(`removing ${pattern}`);
+
+    matchFind(pattern, sourceRoot, options)
+        .forEach(function (item) {
+            rm('-Rf', item);
+        });
+}
+exports.matchRemove = matchRemove;
+
 exports.run = function (cl, echo) {
     console.log();
     console.log('> ' + cl);
@@ -176,14 +189,17 @@ exports.run = function (cl, echo) {
 }
 var run = exports.run;
 
-var ensureTool = function (name, versionArgs) {
+var ensureTool = function (name, versionArgs, noExec) {
     console.log(name + ' tool:');
     var toolPath = which(name);
     if (!toolPath) {
         fail(name + ' not found.  might need to run npm install');
     }
 
-    exec(name + ' ' + versionArgs);
+    if (!noExec) {
+        exec(name + ' ' + versionArgs);
+    }
+
     console.log(toolPath + '');
 }
 exports.ensureTool = ensureTool;
