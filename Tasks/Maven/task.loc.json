@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 68
+    "Patch": 69
   },
   "minimumAgentVersion": "1.89.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -368,6 +368,7 @@
     "codeAnalysisBuildSummaryLine_NoViolations": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_NoViolations",
     "codeAnalysisBuildSummaryTitle": "ms-resource:loc.messages.codeAnalysisBuildSummaryTitle",
     "codeAnalysisArtifactSummaryTitle": "ms-resource:loc.messages.codeAnalysisArtifactSummaryTitle",
+    "codeAnalysisDisabled": "ms-resource:loc.messages.codeAnalysisDisabled",
     "LocateJVMBasedOnVersionAndArch": "ms-resource:loc.messages.LocateJVMBasedOnVersionAndArch",
     "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM"
   }
