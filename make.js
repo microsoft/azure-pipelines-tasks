@@ -2,8 +2,10 @@
 var minimist = require('minimist');
 var mopts = {
     string: [
+        'server',
         'suite',
-        'task'
+        'task',
+        'version'
     ]
 };
 var options = minimist(process.argv, mopts);
@@ -15,7 +17,9 @@ process.argv = options._;
 // modules
 require('shelljs/make');
 var fs = require('fs');
+var os = require('os');
 var path = require('path');
+var semver = require('semver');
 var util = require('./make-util');
 
 // util functions
@@ -30,6 +34,7 @@ var addPath = util.addPath;
 var copyTaskResources = util.copyTaskResources;
 var matchFind = util.matchFind;
 var matchCopy = util.matchCopy;
+var matchRemove = util.matchRemove;
 var ensureTool = util.ensureTool;
 var assert = util.assert;
 var getExternals = util.getExternals;
@@ -45,9 +50,16 @@ var taskList = makeOptions['tasks'];
 var buildPath = path.join(__dirname, '_build', 'Tasks');
 var buildTestsPath = path.join(__dirname, '_build', 'Tests');
 var commonPath = path.join(__dirname, '_build', 'Tasks', 'Common');
+var packagePath = path.join(__dirname, '_package');
 var testTasksPath = path.join(__dirname, '_test', 'Tasks');
 var testPath = path.join(__dirname, '_test', 'Tests');
 var testTempPath = path.join(__dirname, '_test', 'Tests', 'Temp');
+
+// node min version
+var minNodeVer = '4.0.0';
+if (semver.lt(process.versions.node, minNodeVer)) {
+    fail('requires node >= ' + minNodeVer + '.  installed: ' + process.versions.node);
+}
 
 // add node modules .bin to the path so we can dictate version of tsc etc...
 var binPath = path.join(__dirname, 'node_modules', '.bin');
@@ -275,4 +287,59 @@ target.testLegacy = function() {
     var suitePath = path.join(testPath, options.suite || 'L0/**', '_suite.js');
     var tfBuild = ('' + process.env['TF_BUILD']).toLowerCase() == 'true';
     run('mocha ' + suitePath, true);
+}
+
+target.package = function() {
+    ensureTool('powershell.exe', '-NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command "$PSVersionTable.PSVersion.ToString()"');
+
+    // clean
+    rm('-Rf', packagePath);
+    matchRemove(path.join(buildPath, 'Common'), buildPath, { noRecurse: true });
+    rm('-Rf', commonPath);
+    matchRemove(path.join(buildPath, '*', 'Tests'), buildPath);
+
+    // create the zip
+    var zipPath = path.join(packagePath, 'pack-source', 'contents', 'Microsoft.TeamFoundation.Build.Tasks.zip');
+    mkdir('-p', path.dirname(zipPath));
+    run(`powershell.exe -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command "Add-Type -Assembly 'System.IO.Compression.FileSystem'; [System.IO.Compression.ZipFile]::CreateFromDirectory('${buildPath}', '${zipPath}')"`)
+
+    // nuspec
+    var version = options.version;
+    if (!version) {
+        fail('supply version with --version');
+    }
+
+    if (!semver.valid(version)) {
+        fail('invalid semver version: ' + version);
+    }
+
+    var pkgName = 'Mseng.MS.TF.Build.Tasks';
+    console.log('> Generating .nuspec file');
+    var contents = '<?xml version="1.0" encoding="utf-8"?>' + os.EOL;
+    contents += '<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">' + os.EOL;
+    contents += '   <metadata>' + os.EOL;
+    contents += '      <id>' + pkgName + '</id>' + os.EOL;
+    contents += '      <version>' + version + '</version>' + os.EOL;
+    contents += '      <authors>bigbldt</authors>' + os.EOL;
+    contents += '      <owners>bigbldt,Microsoft</owners>' + os.EOL;
+    contents += '      <requireLicenseAcceptance>false</requireLicenseAcceptance>' + os.EOL;
+    contents += '      <description>For VSS internal use only</description>' + os.EOL;
+    contents += '      <tags>VSSInternal</tags>' + os.EOL;
+    contents += '   </metadata>' + os.EOL;
+    contents += '</package>' + os.EOL;
+    var nuspecPath = path.join(packagePath, 'pack-source', pkgName + '.nuspec');
+    fs.writeFileSync(nuspecPath, contents);
+
+    // package
+    ensureTool('nuget.exe', '', true);
+    var nupkgPath = path.join(packagePath, 'pack-target', `${pkgName}.${version}.nupkg`);
+    mkdir('-p', path.dirname(nupkgPath));
+    run(`nuget.exe pack ${nuspecPath} -OutputDirectory ${path.dirname(nupkgPath)}`);
+
+    // used by CI that does official publish
+    var server = options.server;
+    if (server) {
+        ensureTool('nuget3.exe', '', true);
+        run(`nuget3.exe push ${nupkgPath} -Source ${server} -apikey Skyrise`);
+    }
 }
