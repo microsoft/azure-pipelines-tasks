@@ -23,6 +23,40 @@ describe('NuGetInstaller Suite', function () {
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });
+
+    it('restore single solution with CredentialProvider', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, 'singleslnCredentialProvider.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run()
+        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln'), 'it should have run NuGet');
+        assert(tr.ran('c:\\foo\\system32\\chcp.com 65001'), 'it should have run chcp');
+        assert(tr.stdout.indexOf('NuGet output here') >= 0, "should have nuget output");
+        assert(tr.stdout.indexOf('Got auth token') >= 0, "should have got Auth token");
+        assert(tr.stdout.indexOf('credProviderPath = c:\agent\home\directory\externals\nuget') >= 0, "should have found credential provider path");
+        assert(tr.succeeded, 'should have succeeded');
+        assert(tr.invokedToolCount == 2, 'should have run NuGet and chcp');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });
+    
+    it('restore packages.config', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, 'pkgconfig.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run()
+        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\packages.config'), 'it should have run NuGet');
+        assert(tr.ran('c:\\foo\\system32\\chcp.com 65001'), 'it should have run chcp');
+        assert(tr.stdout.indexOf('NuGet output here') >= 0, "should have nuget output");
+        assert(tr.succeeded, 'should have succeeded');
+        assert(tr.invokedToolCount == 2, 'should have run NuGet and chcp');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });   
     
     it('restore single solution with noCache', (done: MochaDone) => {
         this.timeout(1000);
