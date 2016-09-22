@@ -1,0 +1,54 @@
+import ma = require('vsts-task-lib/mock-answer');
+import tmrm = require('vsts-task-lib/mock-run');
+import path = require('path');
+import util = require('./NugetMockHelper');
+
+let taskPath = path.join(__dirname, '..', 'nugetpublisher.js');
+let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
+let nmh: util.NugetMockHelper = new util.NugetMockHelper(tmr);
+
+nmh.setNugetVersionInputDefault();
+tmr.setInput('searchPattern', 'package.nupkg');
+tmr.setInput('nuGetFeedType', 'internal');
+tmr.setInput('feedName', 'testFeedUri');
+
+let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
+    "osType": {},
+    "checkPath": {
+        "c:\\agent\\home\\directory\\package.nupkg": true
+    },
+    "which": {},
+    "exec": {
+        "c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe push -NonInteractive c:\\agent\\home\\directory\\package.nupkg -Source testFeedUri -ApiKey VSTS -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config": {
+            "code": 0,
+            "stdout": "NuGet output here",
+            "stderr": ""
+        }
+    },
+    "exist": {},
+    "stats": {
+        "c:\\agent\\home\\directory\\package.nupkg": {
+            "isFile": true
+        }
+    },
+    "rmRF": {
+        "c:\\agent\\home\\directory\\tempNuGet_.config": {
+            "success": true
+        }
+    }
+};
+nmh.setAnswers(a);
+
+tmr.registerMock('nuget-task-common/Utility', {
+    resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
+        return ["c:\\agent\\home\\directory\\package.nupkg"];
+    },
+    getBundledNuGetLocation: function(version) {
+        return 'c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe';
+    }
+} )
+nmh.registerDefaultNugetVersionMock();
+nmh.registerNugetConfigMock();
+nmh.registerToolRunnerMock();
+
+tmr.run();

@@ -28,7 +28,7 @@ async function main(): Promise<void> {
         tl.setResourcePath(path.join(__dirname, "task.json"));
 
         // set the console code page to "UTF-8"
-        if (process.platform === "win32") {
+        if (tl.osType() === 'Windows_NT') {
             tl.execSync(path.resolve(process.env.windir, "system32", "chcp.com"), ["65001"]);
         }
 
@@ -171,7 +171,7 @@ function publishPackageAsync(packageFile: string, options: PublishOptions): Q.Pr
 
     nugetTool.arg("-NonInteractive");
 
-    nugetTool.pathArg(packageFile);
+    nugetTool.arg(packageFile);
 
     nugetTool.arg(["-Source", options.feedUri]);
 
@@ -179,7 +179,7 @@ function publishPackageAsync(packageFile: string, options: PublishOptions): Q.Pr
 
     if (options.configFile) {
         nugetTool.arg("-ConfigFile");
-        nugetTool.pathArg(options.configFile);
+        nugetTool.arg(options.configFile);
     }
 
     if (options.verbosity && options.verbosity !== "-") {
