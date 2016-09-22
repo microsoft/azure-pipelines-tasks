@@ -2,7 +2,7 @@
 param()
 
 # Arrange.
-. $PSScriptRoot\..\..\lib\Initialize-Test.ps1
+. $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 $variableSets = @(
     # Variable combinations to assert Booleans are passed correctly.
     @{ Clean = $false ; MaximumCpuCount = $false ; RestoreNugetPackages = $false ; LogProjectEvents = $false ; CreateLogFile = $true ; VSVersion = '14.0' ; ExpectedSearchCom = $false }
@@ -39,7 +39,7 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Invoke-BuildTools { 'Some build output' }
 
     # Act.
-    $output = & $PSScriptRoot\..\..\..\Tasks\VSBuild\VSBuild.ps1
+    $output = & $PSScriptRoot\..\VSBuild.ps1
 
     # Assert.
     Assert-AreEqual 'Some build output' $output

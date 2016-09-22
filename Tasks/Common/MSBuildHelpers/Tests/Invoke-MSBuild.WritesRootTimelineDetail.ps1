@@ -2,14 +2,14 @@
 param()
 
 # Arrange.
-. $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-$module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\..\..\..\Tasks\MSBuild\ps_modules\MSBuildHelpers -PassThru
+. $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
+$module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\.. -PassThru
 $expectedMSBuildPath = "C:\Some msbuild dir\msbuild.exe"
-$expectedLoggerPath = ([System.IO.Path]::GetFullPath("$PSScriptRoot\..\..\..\Tasks\MSBuild\ps_modules\MSBuildHelpers\Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll"))
+$expectedLoggerPath = ([System.IO.Path]::GetFullPath("$PSScriptRoot\..\Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll"))
 Register-Mock Get-MSBuildPath { $expectedMSBuildPath }
 Register-Mock Assert-VstsPath
 Register-Mock Get-VstsTaskVariable { "C:\Some agent home directory" } -- -Name Agent.HomeDirectory -Require
-Register-Mock Invoke-VstsTool { $global:LASTEXITCODE = 1 ; 'Some output 1' ; 'Some output 2' }
+Register-Mock Invoke-VstsTool { $global:LASTEXITCODE = 0 ; 'Some output 1' ; 'Some output 2' }
 Register-Mock Write-VstsSetResult
 Register-Mock Write-VstsLogDetail
 $expectedProjectFile = 'C:\Some solution dir\Some solution file.sln'
@@ -32,7 +32,7 @@ Assert-WasCalled Write-VstsLogDetail -ParametersEvaluator {
             $AsOutput -eq $true
     }
 Assert-WasCalled Invoke-VstsTool -- -FileName $expectedMSBuildPath -Arguments "`"$expectedProjectFile`" /nologo /nr:false /dl:CentralLogger,`"$expectedLoggerPath`";`"RootDetailId=$script:rootDetailId|SolutionDir=C:\Some solution dir`"*ForwardingLogger,`"$expectedLoggerPath`"" -RequireExitCodeZero
-Assert-WasCalled Write-VstsSetResult -- -Result Failed -DoNotThrow
+Assert-WasCalled Write-VstsSetResult -Times 0
 Assert-AreEqual -Expected @(
         'Some output 1'
         'Some output 2'
@@ -42,6 +42,6 @@ Assert-WasCalled Write-VstsLogDetail -ParametersEvaluator {
             $FinishTime -like '????-??-??T??:??:??.*Z' -and
             $Progress -eq 100 -and
             $State -eq 'Completed' -and
-            $Result -eq 'Failed' -and
+            $Result -eq 'Succeeded' -and
             $AsOutput -eq $true
     }

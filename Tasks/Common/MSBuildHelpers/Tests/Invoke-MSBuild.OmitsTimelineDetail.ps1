@@ -2,10 +2,10 @@
 param()
 
 # Arrange.
-. $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-$module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\..\..\..\Tasks\MSBuild\ps_modules\MSBuildHelpers -PassThru
+. $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
+$module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\.. -PassThru
 $expectedMSBuildPath = "C:\Some msbuild dir\msbuild.exe"
-$expectedLoggerPath = ([System.IO.Path]::GetFullPath("$PSScriptRoot\..\..\..\Tasks\MSBuild\ps_modules\MSBuildHelpers\Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll"))
+$expectedLoggerPath = ([System.IO.Path]::GetFullPath("$PSScriptRoot\..\Microsoft.TeamFoundation.DistributedTask.MSBuild.Logger.dll"))
 Register-Mock Get-MSBuildPath { $expectedMSBuildPath }
 Register-Mock Assert-VstsPath
 Register-Mock Get-VstsTaskVariable { "C:\Some agent home directory" } -- -Name Agent.HomeDirectory -Require

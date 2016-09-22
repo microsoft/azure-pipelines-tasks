@@ -31,6 +31,7 @@ var pathExists = util.pathExists;
 var buildNodeTask = util.buildNodeTask;
 var addPath = util.addPath;
 var copyTaskResources = util.copyTaskResources;
+var matchFind = util.matchFind;
 var matchCopy = util.matchCopy;
 var ensureTool = util.ensureTool;
 var assert = util.assert;
@@ -45,6 +46,7 @@ var taskList = makeOptions['tasks'];
 
 // global paths
 var buildPath = path.join(__dirname, '_build', 'Tasks');
+var buildTestsPath = path.join(__dirname, '_build', 'Tests');
 var commonPath = path.join(__dirname, '_build', 'Tasks', 'Common');
 var testTasksPath = path.join(__dirname, '_test', 'Tasks');
 var testPath = path.join(__dirname, '_test', 'Tests');
@@ -81,7 +83,7 @@ target.build = function() {
         mkdir('-p', outDir);
 
         // load the task.json
-        var shouldBuildNode = false;
+        var shouldBuildNode = test('-f', path.join(taskPath, 'tsconfig.json'));
         var taskJsonPath = path.join(taskPath, 'task.json');
         if (test('-f', taskJsonPath)) {
             var taskDef = require(taskJsonPath);
@@ -92,7 +94,7 @@ target.build = function() {
             createResjson(taskDef, taskPath);
 
             // determine whether node task
-            shouldBuildNode = taskDef.execution.hasOwnProperty('Node');
+            shouldBuildNode = shouldBuildNode || taskDef.execution.hasOwnProperty('Node');
         }
 
         // get externals
@@ -125,12 +127,14 @@ target.build = function() {
                         createResjson(require(modJsonPath), modPath);
                     }
 
-                    // build the common node module
-                    if (mod.type === 'node' && mod.compile == true) {
+                    // npm install and compile
+                    if ((mod.type === 'node' && mod.compile == true) || test('-f', path.join(modPath, 'tsconfig.json'))) {
                         buildNodeTask(modPath, modOutDir);
                     }
 
                     // copy default resources and any additional resources defined in the module's make.json
+                    console.log();
+                    console.log('> copying module resources');
                     var modMakePath = path.join(modPath, 'make.json');
                     var modMake = test('-f', modMakePath) ? require(modMakePath) : {};
                     copyTaskResources(modMake, modPath, modOutDir);
@@ -153,16 +157,10 @@ target.build = function() {
                 }
                 // copy module resources to the task output dir
                 else if (mod.type === 'ps') {
+                    console.log();
+                    console.log('> copying module resources to task');
                     var dest = path.join(outDir, 'ps_modules', modName);
-                    mkdir('-p', dest);
-                    fs.readdirSync(modOutDir)
-                        .filter(function (file) {
-                            return file != 'Tests';
-                        })
-                        .forEach(function (file) {
-                            var source = path.join(modOutDir, file);
-                            cp('-R', source, dest);
-                        });
+                    matchCopy('!(Tests)', modOutDir, dest, { noRecurse: true });
                 }
             });
         }
@@ -175,6 +173,8 @@ target.build = function() {
         }
 
         // copy default resources and any additional resources defined in the task's make.json
+        console.log();
+        console.log('> copying task resources');
         copyTaskResources(taskMake, taskPath, outDir);
     });
 
@@ -187,10 +187,27 @@ target.build = function() {
 target.test = function() {
     ensureTool('mocha', '--version');
 
+    // build/copy the ps test infra
+    rm('-Rf', buildTestsPath);
+    mkdir('-p', path.join(buildTestsPath, 'lib'));
+    var runnerSource = path.join(__dirname, 'Tests', 'lib', 'psRunner.ts');
+    run(`tsc ${runnerSource} --outDir ${path.join(buildTestsPath, 'lib')}`);
+    console.log();
+    console.log('> copying ps test lib resources');
+    matchCopy('+(*.ps1|*.psm1)', path.join(__dirname, 'Tests', 'lib'), path.join(buildTestsPath, 'lib'));
+
+    // run the tests
     var suiteType = options.suite || 'L0';
-    var taskType = options.task || '**';
-    var testsSpec = path.join(buildPath, taskType, 'Tests', suiteType + ".js");
-    run('mocha ' + testsSpec, true);
+    var taskType = options.task || '*';
+    var pattern1 = buildPath + '/' + taskType + '/Tests/' + suiteType + '.js';
+    var pattern2 = buildPath + '/Common/' + taskType + '/Tests/' + suiteType + '.js';
+    var testsSpec = matchFind(pattern1, buildPath)
+        .concat(matchFind(pattern2, buildPath));
+    if (!testsSpec.length) {
+        fail(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2])}`, true);
+    }
+
+    run('mocha ' + testsSpec.join(' '), true);
 }
 
 target.testLegacy = function() {
@@ -212,10 +229,10 @@ target.testLegacy = function() {
     run('tsc --outDir ' + testPath);
 
     // copy the test lib dir
-    cp('-R', path.join(__dirname, 'Tests', 'lib'), path.join(testPath) + '/');
+    cp('-R', path.join(__dirname, 'Tests', 'lib'), testPath + '/');
 
     // copy other
-    matchCopy('**/+(data|*.ps1|*.json)', path.join(__dirname, 'Tests', 'L0'), path.join(testPath, 'L0'), { dot: true });
+    matchCopy('+(data|*.ps1|*.json)', path.join(__dirname, 'Tests', 'L0'), path.join(testPath, 'L0'), { dot: true });
 
     // setup test temp
     process.env['TASK_TEST_TEMP'] = testTempPath;

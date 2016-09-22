@@ -10,7 +10,7 @@ var process = require('process');
 var ncp = require('child_process');
 var syncRequest = require('sync-request');
 
-set('-e');
+set('-e'); // exit upon first error (shelljs)
 
 var downloadPath = path.join(__dirname, '_download');
 var testPath = path.join(__dirname, '_test');
@@ -71,14 +71,12 @@ var buildNodeTask = function (taskPath, outDir) {
     if (test('-f', rp('package.json'))) {
         run('npm install');
     }
-    run('tsc --outDir ' + outDir);
+    run('tsc --outDir ' + outDir + ' --rootDir ' + taskPath);
     cd(originalDir);
 }
 exports.buildNodeTask = buildNodeTask;
 
 var copyTaskResources = function (taskMake, srcPath, destPath) {
-    console.log();
-    console.log('> copying task resources');
     assert(taskMake, 'taskMake');
     assert(srcPath, 'srcPath');
     assert(destPath, 'destPath');
@@ -86,7 +84,7 @@ var copyTaskResources = function (taskMake, srcPath, destPath) {
     // copy the globally defined set of default task resources
     var toCopy = makeOptions['taskResources'];
     toCopy.forEach(function (item) {
-        matchCopy(item, srcPath, destPath);
+        matchCopy(item, srcPath, destPath, { noRecurse: true });
     });
 
     // copy the locally defined set of resources
@@ -96,10 +94,14 @@ var copyTaskResources = function (taskMake, srcPath, destPath) {
 }
 exports.copyTaskResources = copyTaskResources;
 
-var matchCopy = function (pattern, sourceRoot, destRoot, options) {
+var matchFind = function (pattern, root, options) {
     assert(pattern, 'pattern');
-    assert(sourceRoot, 'sourceRoot');
-    assert(destRoot, 'destRoot');
+    assert(root, 'root');
+
+    // determine whether to recurse
+    options = options || {};
+    var noRecurse = options.hasOwnProperty('noRecurse') && options.noRecurse;
+    delete options.noRecurse;
 
     // merge specified options with defaults
     mergedOptions = { matchBase: true };
@@ -108,24 +110,46 @@ var matchCopy = function (pattern, sourceRoot, destRoot, options) {
     });
 
     // normalize first, so we can substring later
+    root = path.resolve(root);
+
+    // determine the list of items
+    var items;
+    if (noRecurse) {
+        items = fs.readdirSync(root)
+            .map(function (name) {
+                return path.join(root, name);
+            });
+    }
+    else {
+        items = find(root)
+            .filter(function (item) { // filter out the root folder
+                return path.normalize(item) != root;
+            });
+    }
+
+    return minimatch.match(items, pattern, mergedOptions);
+}
+exports.matchFind = matchFind;
+
+var matchCopy = function (pattern, sourceRoot, destRoot, options) {
+    assert(pattern, 'pattern');
+    assert(sourceRoot, 'sourceRoot');
+    assert(destRoot, 'destRoot');
+
+    console.log(`copying ${pattern}`);
+
+    // normalize first, so we can substring later
     sourceRoot = path.resolve(sourceRoot);
     destRoot = path.resolve(destRoot);
 
-    // let's add logging and tracing
-    //console.log(`copying ${pattern} from ${sourceRoot.substring(__dirname.length + 1)} to ${destRoot.substring(__dirname.length + 1)}`);
-    console.log(`copying ${pattern}`);
-
-    minimatch.match(find(sourceRoot), pattern, mergedOptions)
+    matchFind(pattern, sourceRoot, destRoot, options)
         .forEach(function (item) {
-            // determine the relative item path
+            // create the dest dir based on the relative item path
             var relative = item.substring(sourceRoot.length + 1);
-            assert(relative, 'relative'); // root folder matching is not supported
-
-            // create the dest dir
+            assert(relative, 'relative'); // should always be filterd out by matchFind
             var dest = path.dirname(path.join(destRoot, relative));
             mkdir('-p', dest);
 
-            // copy
             cp('-R', item, dest + '/');
         });
 }
