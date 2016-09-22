@@ -2,8 +2,8 @@
 param()
 
 # Arrange.
-. $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-. $PSScriptRoot\..\..\..\Tasks\VSBuild\Select-MSBuildLocation.ps1
+. $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
+. $PSScriptRoot\..\Select-MSBuildLocation.ps1
 $mappings = @(
     @{ VSVersion = '' ; MSBuildVersion = '' ; SearchCom = $false }
     @{ VSVersion = '15.0' ; MSBuildVersion = '15.0' ; SearchCom = $false }
