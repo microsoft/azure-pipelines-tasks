@@ -62,7 +62,10 @@ target.clean = function () {
     rm('-Rf', path.join(__dirname, '_test'));
 };
 
-// ex: node make.js build -- ShellScript
+//
+// ex: node make.js build
+// ex: node make.js build --task ShellScript
+//
 target.build = function() {
     target.clean();
 
@@ -203,9 +206,12 @@ target.build = function() {
     banner('Build successful', true);
 }
 
+//
 // will run tests for the scope of tasks being built
-// ex: node make.js test
-// or ex: npm test
+// npm test
+// node make.js test
+// node make.js test --task ShellScript --suite L0
+//
 target.test = function() {
     ensureTool('mocha', '--version');
 
@@ -231,6 +237,11 @@ target.test = function() {
 
     run('mocha ' + testsSpec.join(' '), true);
 }
+
+//
+// node make.js testLegacy
+// node make.js testLegacy --suite L0/XCode
+//
 
 target.testLegacy = function() {
     ensureTool('mocha', '--version');

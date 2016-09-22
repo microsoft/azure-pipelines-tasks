@@ -26,43 +26,96 @@ npm -v
 
 Note: on windows if it's still returning npm 2.x run where npm.  Notice hits in program files. Rename those two npm files and the 3.5.0 in AppData will win.
 
-## Gulp
+## Make Dependencies
 
-Install gulp
-```bash
-npm install gulp -g
-```
-
-From the root of the repo, install the dependencies to build:
+Once:
 ```bash
 npm install
 ```
 
-## TypeScript
+## Short Version
 
-Install TypeScript
-```bash
-npm install typescript -g
+ALL:
+
+``` bash
+# once
+npm install
+
+# build and test
+npm run build
+npm test
 ```
 
-You'll need at least TypeScript 1.6 but would recommend latest at time of writing this which is 1.8.7
-
-Validate it's resolving from your terminal after installing:
+Task:
 
 ```bash
-$ tsc --version
-Version 1.8.7
+# once
+npm install
+
+#build and test
+node make.js build --task ShellScript
+node make.js test --task ShellScript --suite LO
 ```
 
-## Build
-Tasks are built using gulp.  
+## Build with Make
 
-From the root of the repo:
+From the root of the repo ...
+
+Build all tasks
+
 ```bash
-gulp
+npm run build
+
+# which is alias for
+node make.js build
+```
+
+Build a single task
+
+```bash
+node make.js build --task ShellScript
 ```
 
 Tasks will be created in the _build directory.  It will also generate a tasks.loc.json and an english strings file under Strings in your source tree.  You can check these back in.  Another localization process will create the other strings files.
+
+## Run Tests
+
+Tests for each task are located in Tests folder for each task
+
+Set the environment variable TASK_TEST_TRACE to 1 for STDOUT to be printed from the test.
+
+[Types of tests discussed here](runningtests.md)
+
+Run tests for tasks built
+
+```bash
+npm test
+
+# which is alias for
+node make.js test
+```
+
+Just run tests for a given task and/or suite type
+
+```bash
+node make.js test --task ShellScript --suite L0
+```
+
+## Legacy Tests
+
+Legacy tests are located in a Tests folder which is a sibling to Tasks.
+
+```bash
+node make.js testLegacy
+node make.js testLegacy --suite L0/XCode
+```
+
+For a specific suite and/or task
+
+```bash
+node make.js testLegacy
+node make.js testLegacy --suite L0/XCode
+```
 
 ## Package
 This must be done on a windows machine with nuget.exe in the path
@@ -72,7 +125,3 @@ gulp package --version 1.0.29
 ```
 
 Tasks will be create a nuget package in the _package directory.  This is only used for TFS internal engineering.
-
-## Tests
-Tests should be run with changes.  Ideally, new tests are added for your change.  
-[Read here](runningtests.md)
