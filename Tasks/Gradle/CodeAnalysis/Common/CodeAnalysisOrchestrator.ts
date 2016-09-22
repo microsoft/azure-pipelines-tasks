@@ -77,7 +77,7 @@ export class CodeAnalysisOrchestrator {
 
         for (var requiredVariable of requiredVariables) {
             if (!tl.getVariable(requiredVariable)) {
-                tl.warning(tl.loc('codeAnalysisDisabled', requiredVariable));
+                console.log(tl.loc('codeAnalysisDisabled', requiredVariable));
                 return false;
             }
         }
