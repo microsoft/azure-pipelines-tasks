@@ -217,7 +217,6 @@ function UploadSummaryMdReport($summaryMdPath)
 
 	if (($env:SYSTEM_HOSTTYPE -eq "build") -and (Test-Path($summaryMdPath)))
 	{	
-	    Write-Output "This is a build task and hence summary is being uploaded"
 		Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=Load test results;]$summaryMdPath"
 	}
 }
