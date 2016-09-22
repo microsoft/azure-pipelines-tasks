@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 57
+        "Patch": 58
     },
     "demands": [
         "java"
@@ -347,6 +347,9 @@
         "codeAnalysisBuildSummaryLine_OneViolationOneFile": "%s found 1 violation in 1 file.",
         "codeAnalysisBuildSummaryLine_NoViolations": "%s found no violations.",
         "codeAnalysisBuildSummaryTitle": "Code Analysis Report",
-        "codeAnalysisArtifactSummaryTitle": "Code Analysis Results"
+        "codeAnalysisArtifactSummaryTitle": "Code Analysis Results",
+        "codeAnalysisDisabled": "Code analysis is disabled outside of the build enviroment. Could not find a value for: %s",
+        "LocateJVMBasedOnVersionAndArch": "Locate JAVA_HOME for Java %s %s",
+        "FailedToLocateSpecifiedJVM": "Failed to find specified JDK version. Please make sure environment variable '%s' exists and is set to the location of a corresponding JDK."
     }
 }
