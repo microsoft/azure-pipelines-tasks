@@ -2,8 +2,8 @@
 param()
 
 # Arrange.
-. $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\..\..\..\Tasks\MSBuild\ps_modules\MSBuildHelpers
+. $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
+Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\..
 
 Register-Mock Get-VstsTaskVariable { '' } -- -Name AZURE_HTTP_USER_AGENT
 

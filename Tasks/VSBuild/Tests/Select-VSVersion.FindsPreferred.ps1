@@ -2,8 +2,8 @@
 param()
 
 # Arrange.
-. $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-. $PSScriptRoot\..\..\..\Tasks\VSBuild\Select-VSVersion.ps1
+. $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
+. $PSScriptRoot\..\Select-VSVersion.ps1
 Register-Mock Get-VSPath { 'Some location' } -- -Version 'Some preferred version' -SearchCom:$false
 
 # Act.

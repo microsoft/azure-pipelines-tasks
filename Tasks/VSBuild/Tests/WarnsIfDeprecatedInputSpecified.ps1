@@ -2,7 +2,7 @@
 param()
 
 # Arrange.
-. $PSScriptRoot\..\..\lib\Initialize-Test.ps1
+. $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 $variableSets = @(
     @{ VSLocation = 'Some VS location' ; ExpectedWarning = '*VS*location*deprecated*' }
     @{ MSBuildLocation = 'Some MSBuild location' ; ExpectedWarning = '*MSBuild*location*deprecated*' }
@@ -23,7 +23,7 @@ Register-Mock Invoke-BuildTools { 'Some build output' }
 Register-Mock Write-Warning
 
 # Act.
-$output = & $PSScriptRoot\..\..\..\Tasks\VSBuild\VSBuild.ps1
+$output = & $PSScriptRoot\..\VSBuild.ps1
 
 # Assert.
 Assert-AreEqual 'Some build output' $output

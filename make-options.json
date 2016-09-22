@@ -61,6 +61,7 @@
         "package.json",
         "Strings",
         "task.json",
-        "task.loc.json"
+        "task.loc.json",
+        "Tests"
     ]
 }
