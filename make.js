@@ -88,15 +88,16 @@ target.build = function() {
         var taskPath = path.join(__dirname, 'Tasks', taskName);
         ensureExists(taskPath);
 
-        var outDir = path.join(buildPath, path.basename(taskPath));
-        mkdir('-p', outDir);
-
         // load the task.json
+        var outDir;
         var shouldBuildNode = test('-f', path.join(taskPath, 'tsconfig.json'));
         var taskJsonPath = path.join(taskPath, 'task.json');
         if (test('-f', taskJsonPath)) {
             var taskDef = require(taskJsonPath);
             validateTask(taskDef);
+
+            // fixup the outDir (required for relative pathing in legacy L0 tests)
+            outDir = path.join(buildPath, taskDef.name);
 
             // create loc files
             createTaskLocJson(taskPath);
@@ -105,6 +106,11 @@ target.build = function() {
             // determine whether node task
             shouldBuildNode = shouldBuildNode || taskDef.execution.hasOwnProperty('Node');
         }
+        else {
+            outDir = path.join(buildPath, path.basename(taskPath));
+        }
+
+        mkdir('-p', outDir);
 
         // get externals
         var taskMakePath = path.join(taskPath, 'make.json');
