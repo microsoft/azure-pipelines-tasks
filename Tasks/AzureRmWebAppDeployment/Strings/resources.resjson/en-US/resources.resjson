@@ -15,7 +15,7 @@
   "loc.input.label.SlotName": "Slot",
   "loc.input.help.SlotName": "Enter or Select an existing Slot other than the Production slot.",
   "loc.input.label.Package": "Package",
-  "loc.input.help.Package": "Location of the Web App zip package on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\Fabrikam.zip. Predefined system variables and wild cards like, $(System.DefaultWorkingDirectory)\\\\***.zip` can be also used here.",
+  "loc.input.help.Package": "Location of the Web App zip package on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\Fabrikam.zip. Predefined system variables and wild cards like, $(System.DefaultWorkingDirectory)\\\\\\*\\*\\\\\\*.zip` can be also used here.",
   "loc.input.label.SetParametersFile": "SetParameters File",
   "loc.input.help.SetParametersFile": "Optional: location of the SetParameters.xml file to use.",
   "loc.input.label.RemoveAdditionalFilesFlag": "Remove Additional Files at Destination",
