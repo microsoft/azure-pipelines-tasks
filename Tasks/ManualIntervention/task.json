@@ -3,16 +3,19 @@
     "name": "ManualIntervention",
     "friendlyName": "Manual Intervention",
     "description": "Pause deployment and wait for intervention",
-    "helpMarkDown": "[More Information](https://www.visualstudio.com/docs/build/steps/deploy/manual-intervention/)",
+    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=825235)",
     "category": "Deploy",
     "visibility": [  
                   "Release"
     ],    
     "author": "Microsoft Corporation",
+    "runsOn": [
+        "Server"
+    ],
     "version": {
         "Major": 7,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 1
     },    
     "inputs": [       
         { 
