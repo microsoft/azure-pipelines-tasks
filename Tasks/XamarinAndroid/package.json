@@ -1,8 +1,8 @@
 {
-  "name": "vsts-copypublish-task",
+  "name": "vsts-xamarinandroid-task",
   "version": "1.0.0",
-  "description": "VSTS Copy Publish Task",
-  "main": "copypublishbuildartifacts.js",
+  "description": "VSTS Xamarin Android Task",
+  "main": "xamarinandroid.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
