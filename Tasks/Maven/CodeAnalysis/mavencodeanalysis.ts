@@ -10,6 +10,7 @@ import {AnalysisResult} from './analysisresult';
 import {ModuleAnalysis} from './moduleanalysis';
 import pmd = require('./mavenpmd');
 import sqMaven = require('./mavensonar');
+import {FileSystemInteractions} from './Common/FileSystemInteractions';
 
 import tl = require('vsts-task-lib/task');
 
@@ -291,7 +292,7 @@ function uploadBuildArtifactsFromModule(toolName:string, moduleAnalysis:ModuleAn
         var stagingFilePath = path.join(localStagingDir, path.basename(fileToUpload));
         tl.debug('Staging ' + fileToUpload + ' to ' + stagingFilePath);
         // Execute the copy operation. -f overwrites if there is already a file at the destination.
-        tl.cp('-f', fileToUpload, stagingFilePath);
+        FileSystemInteractions.copyFile(fileToUpload, stagingFilePath);
     });
 
     console.log('Uploading artifacts for ' + toolName + ' from ' + localStagingDir);
