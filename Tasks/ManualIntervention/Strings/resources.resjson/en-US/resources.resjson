@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Manual Intervention",
-  "loc.helpMarkDown": "[More Information](https://www.visualstudio.com/docs/build/steps/deploy/manual-intervention/)",
+  "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=825235)",
   "loc.description": "Pause deployment and wait for intervention",
   "loc.instanceNameFormat": "Manual Intervention",
   "loc.input.label.instructions": "Instructions",
