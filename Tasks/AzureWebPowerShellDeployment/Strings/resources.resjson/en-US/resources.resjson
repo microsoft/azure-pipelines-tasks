@@ -23,5 +23,6 @@
   "loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved": "Cannot update deployment status, unique deploymentId cannot be retrieved",
   "loc.messages.Updatingdeploymenthistoryfordeployment0": "Updating deployment history for deployment {0}",
   "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}",
-  "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one."
+  "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one.",
+  "loc.messages.FailedtodeployWebsiteError0": "Failed to deploy Website. Error : {0}"
 }
