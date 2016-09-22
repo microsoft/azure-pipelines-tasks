@@ -795,7 +795,7 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
 
 
 function getTIAssemblyQualifiedName(vsVersion: number): String {
-    return "Microsoft.VisualStudio.TraceCollector.TestImpactDataCollector, Microsoft.VisualStudio.TraceCollector, Version=" + vsVersion + ".0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
+    return "Microsoft.VisualStudio.TraceCollector.TestImpactDataCollector, Microsoft.VisualStudio.TraceCollector, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
 }
 
 function getTestImpactAttributes(vsVersion: number) {
