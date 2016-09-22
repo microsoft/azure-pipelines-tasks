@@ -114,7 +114,7 @@ var matchCopy = function (pattern, sourceRoot, destRoot, options) {
     // let's add logging and tracing
     //console.log(`copying ${pattern} from ${sourceRoot.substring(__dirname.length + 1)} to ${destRoot.substring(__dirname.length + 1)}`);
     console.log(`copying ${pattern}`);
-    
+
     minimatch.match(find(sourceRoot), pattern, mergedOptions)
         .forEach(function (item) {
             // determine the relative item path
@@ -297,6 +297,17 @@ var copyGroup = function (group, sourceRoot, destRoot) {
         cp(source, dest);
     }
 }
+
+var removeAllFoldersNamed = function(rootPath, folderName) {
+    var matches = find(rootPath).filter(function(match) { 
+        return path.basename(match) === 'vsts-task-lib'; 
+    });
+
+    matches.forEach(function(item) {
+        rm('-Rf', item);
+    });
+}
+exports.removeAllFoldersNamed = removeAllFoldersNamed;
 
 var copyGroups = function (groups, sourceRoot, destRoot) {
     assert(groups, 'groups');

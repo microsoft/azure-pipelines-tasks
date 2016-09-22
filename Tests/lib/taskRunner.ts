@@ -96,7 +96,7 @@ export class TaskRunner extends events.EventEmitter {
 		var modPath = path.join(this._tempPath, 'node_modules');
 		if (!shell.test('-d', modPath)) {
 			shell.mkdir('-p', modPath);
-			shell.cp('-R', path.join(__dirname, 'node_modules/vsts-task-lib'), path.join(modPath));			
+			shell.cp('-R', path.join(__dirname, 'vsts-task-lib'), path.join(modPath));			
 		}
 
 		// copy the task over so we can execute from Temp 
