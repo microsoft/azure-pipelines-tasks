@@ -52,6 +52,7 @@
         "SqlAzureDacpacDeployment",
         "SqlServerDacpacDeployment",
         "VSBuild",
+        "VsTest",
         "WindowsMachineFileCopy",
         "XamarinAndroid",
         "XamarinComponentRestore",
