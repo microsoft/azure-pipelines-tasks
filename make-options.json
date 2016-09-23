@@ -33,6 +33,7 @@
         "IISWebAppDeployment",
         "JenkinsDownloadArtifacts",
         "JenkinsQueueJob",
+        "Maven",
         "NuGetInstaller",
         "NugetPackager",
         "powerShell",
