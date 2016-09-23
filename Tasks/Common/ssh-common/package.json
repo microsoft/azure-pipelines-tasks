@@ -1,8 +1,8 @@
 {
-  "name": "vsts-copyssh-task",
+  "name": "ssh-common",
   "version": "1.0.0",
-  "description": "VSTS Copy Files over SSH Tasks",
-  "main": "copyfilesoverssh.js",
+  "description": "VSTS SSH Common Module",
+  "main": "ssh-common.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

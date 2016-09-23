@@ -1,11 +1,8 @@
 {
-    "//busted_tasks": [
-        "CopyFilesOverSSH"
-    ],
     "tasks": [
-        "ANT",
         "AndroidBuild",
         "AndroidSigning",
+        "ANT",
         "ArchiveFiles",
         "AzureCLI",
         "AzureCloudPowerShellDeployment",
@@ -13,12 +10,14 @@
         "AzurePowerShell",
         "AzureRmWebAppDeployment",
         "AzureWebPowerShellDeployment",
-        "CMake",
+        "BatchScript",
         "Chef",
         "ChefKnife",
-        "CocoaPods",
+        "CMake",
         "CmdLine",
+        "CocoaPods",
         "CopyFiles",
+        "CopyFilesOverSSH",
         "CopyPublishBuildArtifacts",
         "cURLUploader",
         "DecryptFile",
@@ -33,6 +32,7 @@
         "IISWebAppDeployment",
         "JenkinsDownloadArtifacts",
         "JenkinsQueueJob",
+        "ManualIntervention",
         "Maven",
         "MSBuild",
         "Npm",
