@@ -1,6 +1,3 @@
-/// <reference path="../../definitions/Q.d.ts" />
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-
 import os = require('os');
 import path = require('path');
 var process = require('process');
@@ -69,7 +66,7 @@ async function run() {
                 powershell.on('stderr', (buffer: Buffer) => {
                     process.stderr.write(buffer);
                 });
-                let execOptions: tr.IExecOptions = { silent: true };
+                let execOptions = { silent: true } as tr.IExecOptions;
                 await powershell.exec(execOptions);
             }
             else {
