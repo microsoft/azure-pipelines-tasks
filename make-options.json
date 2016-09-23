@@ -52,7 +52,8 @@
         "SqlServerDacpacDeployment",
         "VSBuild",
         "WindowsMachineFileCopy",
-        "XamarinAndroid"
+        "XamarinAndroid",
+        "XamarinComponentRestore"
     ],
     "taskResources": [
         "*.ps1",
