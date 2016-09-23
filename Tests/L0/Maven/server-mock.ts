@@ -1,10 +1,10 @@
 import http = require('http'); // Used to get the HTTP status code meanings
 import Q = require('q');
 
-import {ISonarQubeServer} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/server';
-import {SonarQubeEndpoint} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/endpoint';
+let ISonarQubeServer = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/server').ISonarQubeServer;
+let SonarQubeEndpoint = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/endpoint').SonarQubeEndpoint;
 
-export class MockSonarQubeServer implements ISonarQubeServer {
+export class MockSonarQubeServer /*implements ISonarQubeServer*/ {
 
     // A map of API endpoints to mock web responses e.g. /api/qualitygates/project_status?analysisId=FOOBAR => {{}, 500, 1}
     public responses:Map<string, MockWebResponse>;
