@@ -54,12 +54,14 @@
         "WindowsMachineFileCopy",
         "XamarinAndroid",
         "XamarinComponentRestore",
+        "XamariniOS",
         "XamarinLicense"
     ],
     "taskResources": [
         "*.ps1",
         "*.psd1",
         "*.psm1",
+        "*.sh",
         "*.txt",
         "icon.png",
         "icon.svg",
