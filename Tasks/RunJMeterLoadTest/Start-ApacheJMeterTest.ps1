@@ -340,7 +340,6 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
 
 	$run = GetTestRun $headers $run.id
 	$webResultsUrl = $run.WebResultUrl
-	Write-Output ("{0}", $webResultsUrl)
     Write-Output ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name)
     Write-Output ("To view run details navigate to {0}" -f $webResultsUrl)
 
