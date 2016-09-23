@@ -1204,7 +1204,7 @@ describe('gradle Suite', function () {
 
                 assertCodeAnalysisBuildSummaryContains(testStgDir, 'Checkstyle found 35 violations in 2 file');
                 assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found 4 violations in 2 files');
-                assertCodeAnalysisBuildSummaryContains(testStgDir, 'FindBugs found 10 violations in 1 file.');
+                assertCodeAnalysisBuildSummaryContains(testStgDir, 'FindBugs found 5 violations in 1 file.');
 
                 var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
 
@@ -1326,7 +1326,7 @@ describe('gradle Suite', function () {
                     'should have uploaded PMD build artifacts');
                 assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found 2 violations in 1 file');
                 assertCodeAnalysisBuildSummaryContains(testStgDir, 'Checkstyle found 34 violations in 2 files');
-                assertCodeAnalysisBuildSummaryContains(testStgDir, 'FindBugs found 10 violations in 1 file.');
+                assertCodeAnalysisBuildSummaryContains(testStgDir, 'FindBugs found 5 violations in 1 file.');
 
                 var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
 
@@ -1369,9 +1369,9 @@ describe('gradle Suite', function () {
         assert(analysisResults.length == 1, "The array does not have a single element");
         var analysisResult = analysisResults[0];
 
-        assert(analysisResult.affectedFileCount === expectedFileCount, "Invalid file count");
-        assert(analysisResult.violationCount === expectedViolationCount, "Invalid violation count");
-        assert(analysisResult.resultFiles.length === expectedReports.length, "Invalid number of reports");
+        assert(analysisResult.affectedFileCount === expectedFileCount, `Expected ${expectedFileCount} files, actual: ${analysisResult.affectedFileCount}`);
+        assert(analysisResult.violationCount === expectedViolationCount, `Expected ${expectedViolationCount} violations, actual: ${analysisResult.violationCount}`);
+        assert(analysisResult.resultFiles.length === expectedReports.length, `Invalid number of reports`);
 
         for (var actualReport of analysisResult.resultFiles) {
             var reportFile = path.basename(actualReport);
@@ -1431,7 +1431,7 @@ describe('gradle Suite', function () {
 
         console.log(JSON.stringify(results));
         assert(results.length == 1, "Unexpected number of results. Expected 1 (only module-three has a findbugs XML), actual " + results.length);
-        verifyModuleResult(results, "module-three", 10, 1, ["main.xml"] /* empty report files are not copied in */);
+        verifyModuleResult(results, "module-three", 5, 1, ["main.xml"] /* empty report files are not copied in */);
 
         done();
     });

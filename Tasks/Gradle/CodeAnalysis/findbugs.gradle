@@ -1,9 +1,3 @@
-/*
-* We are using a hard-coded findbugs.xml file that is checked in with as part of this task.
-* We expect to find it in the same folder as this file.
-* The user cannot specify their own findbugs.xml file / other findbugs configuration;
-*/
-
 rootProject {
     boolean hasFindbugs = false;
     allprojects { proj ->

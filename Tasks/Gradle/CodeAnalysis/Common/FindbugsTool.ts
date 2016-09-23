@@ -12,7 +12,6 @@ import xml2js = require('xml2js');
 
 import tl = require('vsts-task-lib/task');
 
-
 /**
  * An object that is able to configure the build to run FindBugs and identify and parse FindBugs reports
  *
@@ -76,15 +75,12 @@ export class FindbugsTool extends BaseTool {
 
         var reportContent = fs.readFileSync(xmlReport, 'utf-8');
         xml2js.parseString(reportContent, (err, data) => {
-            // If the file is not XML, or is not from FindBugs, return immediately
-            if (!data || !data.BugCollection ||
-                !data.BugCollection.FindBugsSummary || !data.BugCollection.FindBugsSummary[0] ||
-                !(data.BugCollection.FindBugsSummary[0].FileStats || data.BugCollection.FindBugsSummary[0].PackageStats)) {
+            jsonCounts = FindbugsTool.parseJson(data);
+            if (jsonCounts == null) {
                 tl.debug(`[CA] Empty or unrecognized FindBugs XML report ${xmlReport}`);
                 return null;
             }
 
-            jsonCounts = FindbugsTool.parseJson(data);
             let violationCount = jsonCounts[1];
 
             // No files with violations, return now that it has been marked for upload
@@ -105,45 +101,43 @@ export class FindbugsTool extends BaseTool {
      * @returns a tuple of [affected_file_count, violation_count]
      */
     private static parseJson(data:any):[number, number] {
+        // If the file is not XML, or is not from FindBugs, return immediately
+        if (!data || !data.BugCollection ||
+            !data.BugCollection.FindBugsSummary || !data.BugCollection.FindBugsSummary[0] ||
+            !data.BugCollection.FindBugsSummary[0].PackageStats ||
+            !data.BugCollection.FindBugsSummary[0].PackageStats[0].ClassStats) {
+            return null;
+        }
+
         var fileCount:number = 0;
         var violationCount:number = 0;
 
-        // If available, FileStats is much easier to fetch data from than ClassStats.
-        if (!!data.BugCollection.FindBugsSummary[0].FileStats) {
-            data.BugCollection.FindBugsSummary[0].FileStats.forEach((file: any) => {
-                if (file.$.bugCount > 0) {
-                    fileCount++;
-                    violationCount += Number(file.$.bugCount);
+        // Extract violation and file count data from the sourceFile attribute of ClassStats
+        var filesToViolations:Map<string, number> = new Map(); // Maps files -> number of violations
+        data.BugCollection.FindBugsSummary[0].PackageStats[0].ClassStats.forEach((classStats:any) => {
+            // The below line takes the sourceFile attribute of the classStats tag - it looks like this in the XML
+            // <ClassStats class="main.java.TestClassWithErrors" sourceFile="TestClassWithErrors.java" ... />
+            var sourceFile:string = classStats.$.sourceFile;
+            var newBugCount:number = Number(classStats.$.bugs);
+            if (newBugCount > 0) {
+                // If there was not already an entry, start at 0
+                if (!filesToViolations.has(sourceFile)) {
+                    filesToViolations.set(sourceFile, 0);
                 }
-            });
-        } else if (!!data.BugCollection.FindBugsSummary[0].PackageStats &&
-            !!data.BugCollection.FindBugsSummary[0].PackageStats[0].ClassStats) {
 
-            // Otherwise, extract it from the sourceFile attribute of ClassStats
-            var filesToViolations:Map<string, number> = new Map(); // Maps files -> number of violations
-            data.BugCollection.FindBugsSummary[0].PackageStats[0].ClassStats.forEach((classStats:any) => {
-                var sourceFile:string = classStats.$.sourceFile;
-                var newBugCount:number = Number(classStats.$.bugs);
-                if (newBugCount > 0) {
-                    // If there was not already an entry, start at 0
-                    if (!filesToViolations.has(sourceFile)) {
-                        filesToViolations.set(sourceFile, newBugCount);
-                    }
-
-                    // Increment bug count
-                    var oldBugCount:number = filesToViolations.get(sourceFile);
-                    filesToViolations.set(sourceFile, oldBugCount + newBugCount);
-                }
-            });
-
-            // Sum violations across all files for violationCount
-            for (let violations of filesToViolations.values()) {
-                violationCount += violations;
+                // Increment bug count
+                var oldBugCount:number = filesToViolations.get(sourceFile);
+                filesToViolations.set(sourceFile, oldBugCount + newBugCount);
             }
+        });
 
-            // Number of <K,V> pairs in filesToViolations is fileCount
-            fileCount = filesToViolations.size;
+        // Sum violations across all files for violationCount
+        for (let violations of filesToViolations.values()) {
+            violationCount += violations;
         }
+
+        // Number of <K,V> pairs in filesToViolations is fileCount
+        fileCount = filesToViolations.size;
 
         return [violationCount, fileCount];
     }
