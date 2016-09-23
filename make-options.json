@@ -55,7 +55,8 @@
         "XamarinAndroid",
         "XamarinComponentRestore",
         "XamariniOS",
-        "XamarinLicense"
+        "XamarinLicense",
+        "XcodePackageiOS"
     ],
     "taskResources": [
         "*.ps1",
