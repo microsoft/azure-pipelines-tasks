@@ -39,6 +39,7 @@
         "NugetPackager",
         "powerShell",
         "PowerShellOnTargetMachines",
+        "PublishBuildArtifacts",
         "PublishCodeCoverageResults",
         "PublishSymbols",
         "PublishTestResults",
