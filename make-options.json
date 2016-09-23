@@ -53,7 +53,8 @@
         "VSBuild",
         "WindowsMachineFileCopy",
         "XamarinAndroid",
-        "XamarinComponentRestore"
+        "XamarinComponentRestore",
+        "XamarinLicense"
     ],
     "taskResources": [
         "*.ps1",
