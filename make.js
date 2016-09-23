@@ -271,7 +271,7 @@ target.testLegacy = function() {
 
     // compile tests and test lib
     cd(path.join(__dirname, 'Tests'));
-    run('tsc --outDir ' + testPath);
+    run('tsc --outDir ' + testPath + ' --rootDir ' + path.join(__dirname, 'Tests'));
 
     // copy the test lib dir
     cp('-R', path.join(__dirname, 'Tests', 'lib'), testPath + '/');
