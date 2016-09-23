@@ -51,6 +51,7 @@
         "SonarQubePreBuild",
         "SqlAzureDacpacDeployment",
         "SqlServerDacpacDeployment",
+        "SSH",
         "VSBuild",
         "VsTest",
         "WindowsMachineFileCopy",
