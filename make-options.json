@@ -57,6 +57,7 @@
         "XamarinComponentRestore",
         "XamariniOS",
         "XamarinLicense",
+        "Xcode",
         "XcodePackageiOS"
     ],
     "taskResources": [
