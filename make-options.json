@@ -39,6 +39,7 @@
         "NugetPackager",
         "powerShell",
         "PowerShellOnTargetMachines",
+        "PublishCodeCoverageResults",
         "PublishSymbols",
         "PublishTestResults",
         "QuickPerfTest",

@@ -1,5 +1,3 @@
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-
 import tl = require('vsts-task-lib/task');
 
 var codeCoverageTool = tl.getInput('codeCoverageTool', true);
