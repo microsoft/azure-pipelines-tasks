@@ -53,7 +53,6 @@ var commonPath = path.join(__dirname, '_build', 'Tasks', 'Common');
 var packagePath = path.join(__dirname, '_package');
 var testTasksPath = path.join(__dirname, '_test', 'Tasks');
 var testPath = path.join(__dirname, '_test', 'Tests');
-var testTempPath = path.join(__dirname, '_test', 'Tests', 'Temp');
 
 // node min version
 var minNodeVer = '4.0.0';
@@ -258,18 +257,19 @@ target.test = function() {
 target.testLegacy = function() {
     ensureTool('mocha', '--version');
 
-    // clean tests
-    rm('-Rf', testPath);
-    mkdir('-p', testPath);
+    // clean
+    rm('-Rf', path.join(__dirname, '_test'));
 
     // copy the tasks to test folder, delete the included task libs and put mock lib at root
     console.log('copy tasks');
     mkdir('-p', testTasksPath);
     cp('-R', path.join(buildPath, '*'), testTasksPath);
+    console.log('done');
 
     util.removeAllFoldersNamed(testTasksPath, 'vsts-task-lib');
 
     // compile tests and test lib
+    mkdir('-p', testPath);
     cd(path.join(__dirname, 'Tests'));
     run('tsc --outDir ' + testPath + ' --rootDir ' + path.join(__dirname, 'Tests'));
 
@@ -280,8 +280,9 @@ target.testLegacy = function() {
     matchCopy('+(data|*.ps1|*.json)', path.join(__dirname, 'Tests', 'L0'), path.join(testPath, 'L0'), { dot: true });
 
     // setup test temp
-    process.env['TASK_TEST_TEMP'] = testTempPath;
-    mkdir('-p', testTempPath);
+    var tempDir = path.join(testPath, 'Temp');
+    process.env['TASK_TEST_TEMP'] = tempDir;
+    mkdir('-p', tempDir);
 
     // suite path
     var suitePath = path.join(testPath, options.suite || 'L0/**', '_suite.js');

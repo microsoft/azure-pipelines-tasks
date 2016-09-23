@@ -10,8 +10,6 @@ var process = require('process');
 var ncp = require('child_process');
 var syncRequest = require('sync-request');
 
-set('-e'); // exit upon first error (shelljs)
-
 var downloadPath = path.join(__dirname, '_download');
 var testPath = path.join(__dirname, '_test');
 
@@ -150,7 +148,7 @@ var matchCopy = function (pattern, sourceRoot, destRoot, options) {
             var dest = path.dirname(path.join(destRoot, relative));
             mkdir('-p', dest);
 
-            cp('-R', item, dest + '/');
+            cp('-Rf', item, dest + '/');
         });
 }
 exports.matchCopy = matchCopy;
