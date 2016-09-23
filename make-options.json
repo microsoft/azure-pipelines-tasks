@@ -40,6 +40,7 @@
         "powerShell",
         "PowerShellOnTargetMachines",
         "PublishSymbols",
+        "PublishTestResults",
         "QuickPerfTest",
         "RunDistributedTests",
         "RunJMeterLoadTest",
