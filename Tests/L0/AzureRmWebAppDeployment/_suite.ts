@@ -289,7 +289,6 @@ describe('AzureRmWebAppDeployment Suite', function() {
                 assert(tr.stdErrContained(expectedErr), 'should have said: ' + expectedErr); 
                 assert(tr.failed, 'task should have failed');
                 done();
-
             })
             .fail((err) => {
                 done(err);
