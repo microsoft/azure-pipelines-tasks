@@ -37,6 +37,7 @@
         "MSBuild",
         "NuGetInstaller",
         "NugetPackager",
+        "NugetPublisher",
         "powerShell",
         "PowerShellOnTargetMachines",
         "PublishBuildArtifacts",
