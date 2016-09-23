@@ -35,6 +35,7 @@
         "JenkinsQueueJob",
         "Maven",
         "MSBuild",
+        "Npm",
         "NuGetInstaller",
         "NugetPackager",
         "NugetPublisher",
