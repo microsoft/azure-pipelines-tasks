@@ -52,12 +52,17 @@
         "SqlServerDacpacDeployment",
         "VSBuild",
         "WindowsMachineFileCopy",
-        "XamarinAndroid"
+        "XamarinAndroid",
+        "XamarinComponentRestore",
+        "XamariniOS",
+        "XamarinLicense",
+        "XcodePackageiOS"
     ],
     "taskResources": [
         "*.ps1",
         "*.psd1",
         "*.psm1",
+        "*.sh",
         "*.txt",
         "icon.png",
         "icon.svg",
