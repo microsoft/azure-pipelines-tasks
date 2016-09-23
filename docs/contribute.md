@@ -106,7 +106,7 @@ node make.js test --task ShellScript --suite L0
 Legacy tests are located in a Tests folder which is a sibling to Tasks.
 
 ```bash
-node make.js testLegacy
+npm run testLegacy
 node make.js testLegacy --suite L0/XCode
 ```
 

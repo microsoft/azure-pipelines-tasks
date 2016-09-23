@@ -8,7 +8,8 @@
   },
   "scripts": {
     "build": "node make.js build",
-    "test": "node make.js test"
+    "test": "node make.js test",
+    "testLegacy": "node make.js testLegacy"
   },
   "repository": {
     "type": "git",
