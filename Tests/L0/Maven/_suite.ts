@@ -10,7 +10,7 @@ import url = require('url');
 import {Url} from 'url';
 import shell = require('shelljs');
 
-import {ToolRunner} from 'vsts-task-lib/toolrunner';
+// import {ToolRunner} from 'vsts-task-lib/toolrunner';
 import tr = require('../../lib/vsts-task-lib/toolRunner');
 import tl = require('../../lib/vsts-task-lib/toolRunner');
 
@@ -216,13 +216,13 @@ function assertStringContains(actualString: string, expectedString: string): voi
 }
 
 
-function assertToolRunnerContainsArg(toolRunner: ToolRunner, expectedArg: string) {
-    return toolRunner.args.indexOf(expectedArg) > -1;
-}
+// function assertToolRunnerContainsArg(toolRunner: ToolRunner, expectedArg: string) {
+//     return toolRunner.args.indexOf(expectedArg) > -1;
+// }
 
-function assertToolRunnerHasArgLength(toolRunner: ToolRunner, expectedNumArgs: number) {
-    return toolRunner.args.length == expectedNumArgs;
-}
+// function assertToolRunnerHasArgLength(toolRunner: ToolRunner, expectedNumArgs: number) {
+//     return toolRunner.args.length == expectedNumArgs;
+// }
 
 function verifyNoopCodeAnalysis(missingBuildVariable: string, analysisEnabled: string): Q.Promise<void> {
     // In the test data:

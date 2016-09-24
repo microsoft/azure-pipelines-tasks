@@ -15,7 +15,7 @@ var options = minimist(process.argv, mopts);
 process.argv = options._;
 
 // modules
-require('shelljs/make');
+var make = require('shelljs/make');
 var fs = require('fs');
 var os = require('os');
 var path = require('path');
@@ -23,6 +23,11 @@ var semver = require('semver');
 var util = require('./make-util');
 
 // util functions
+var cd = util.cd;
+var cp = util.cp;
+var mkdir = util.mkdir;
+var rm = util.rm;
+var test = util.test;
 var run = util.run;
 var banner = util.banner;
 var rp = util.rp;
@@ -258,28 +263,31 @@ target.testLegacy = function() {
     ensureTool('mocha', '--version');
 
     // clean
+    console.log('removing _test');
     rm('-Rf', path.join(__dirname, '_test'));
 
-    // copy the tasks to test folder, delete the included task libs and put mock lib at root
-    console.log('copy tasks');
+    // copy the tasks to the test dir
+    console.log();
+    console.log('> copying tasks');
     mkdir('-p', testTasksPath);
     cp('-R', path.join(buildPath, '*'), testTasksPath);
-    console.log('done');
 
-    util.removeAllFoldersNamed(testTasksPath, 'vsts-task-lib');
+    // compile L0 and lib
+    var testSource = path.join(__dirname, 'Tests');
+    cd(testSource);
+    run('tsc --outDir ' + testPath + ' --rootDir ' + testSource);
 
-    // compile tests and test lib
-    mkdir('-p', testPath);
-    cd(path.join(__dirname, 'Tests'));
-    run('tsc --outDir ' + testPath + ' --rootDir ' + path.join(__dirname, 'Tests'));
-
-    // copy the test lib dir
-    cp('-R', path.join(__dirname, 'Tests', 'lib'), testPath + '/');
-
-    // copy other
+    // copy L0 test resources
+    console.log();
+    console.log('> copying L0 resources');
     matchCopy('+(data|*.ps1|*.json)', path.join(__dirname, 'Tests', 'L0'), path.join(testPath, 'L0'), { dot: true });
 
-    // setup test temp
+    // copy test lib resources (contains ps scripts, etc)
+    console.log();
+    console.log('> copying lib resources');
+    matchCopy('+(*.ps1|*.psm1|package.json)', path.join(__dirname, 'Tests', 'lib'), path.join(testPath, 'lib'));
+
+    // create a test temp dir - used by the task runner to copy each task to an isolated dir
     var tempDir = path.join(testPath, 'Temp');
     process.env['TASK_TEST_TEMP'] = tempDir;
     mkdir('-p', tempDir);
