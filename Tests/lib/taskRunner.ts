@@ -1,7 +1,6 @@
 /// <reference path="../../definitions/node.d.ts"/>
 /// <reference path="../../definitions/Q.d.ts"/>
 /// <reference path="../../definitions/shelljs.d.ts"/>
-/// <reference path="../../definitions/vsts-task-lib.d.ts"/>
 
 import Q = require('q');
 import events = require('events');
@@ -9,7 +8,7 @@ import fs = require('fs');
 import path = require('path');
 import child_process = require('child_process');
 import shell = require('shelljs');
-import tcm = require('vsts-task-lib/taskcommand');
+import tcm = require('./vsts-task-lib/taskcommand');
 
 function debug(message) {
     if (process.env['TASK_TEST_TRACE']) {
