@@ -6,7 +6,7 @@
         },
         "gradlew properties": {
             "code": 0,
-            "stdout": "subprojects: []",
+            "stdout": "subprojects: []\n",
             "stderr": ""
         },
         "gradlew build sonarqube -I /Gradle/CodeAnalysis/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion": {
@@ -31,7 +31,7 @@
         },
         "gradlew.bat properties": {
             "code": 0,
-            "stdout": "subprojects: []",
+            "stdout": "subprojects: []\n",
             "stderr": ""
         },
         "gradlew.bat build sonarqube -I /Gradle/CodeAnalysis/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion": {
