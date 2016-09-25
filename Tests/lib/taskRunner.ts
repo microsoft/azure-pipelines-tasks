@@ -156,7 +156,6 @@ export class TaskRunner extends events.EventEmitter {
 
 			if (line.indexOf('##vso[') >= 0) {
 				var cmd = tcm.commandFromString(line);
-				//console.log(JSON.stringify(cmd, null, 2));
 
   				if (cmd.command === "task.complete") {
   					if (cmd.properties['result'] === 'Failed') {
