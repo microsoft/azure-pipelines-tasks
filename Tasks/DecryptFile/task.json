@@ -1,4 +1,5 @@
 {
+    "$schema": "../../tasks.schema.json",
     "id": "7C6A6b71-4355-4AFC-A274-480EAB5678E9",
     "name": "DecryptFile",
     "friendlyName": "Decrypt File (OpenSSL)",

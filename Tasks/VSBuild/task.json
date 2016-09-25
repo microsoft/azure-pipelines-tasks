@@ -1,4 +1,5 @@
 {
+    "$schema": "../../tasks.schema.json",
     "id": "71A9A2D3-A98A-4CAA-96AB-AFFCA411ECDA",
     "name": "VSBuild",
     "friendlyName": "Visual Studio Build",

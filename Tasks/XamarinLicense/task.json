@@ -1,4 +1,5 @@
 {
+    "$schema": "../../tasks.schema.json",
     "id": "6237827D-6244-4D52-B93E-47D8610FBD8A",
     "name": "XamarinLicense",
     "friendlyName": "Xamarin License",

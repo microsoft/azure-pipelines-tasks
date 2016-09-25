@@ -1,4 +1,5 @@
 {
+    "$schema": "../../tasks.schema.json",
     "id": "91443475-df55-4874-944b-39253b558790",
     "name": "SSH",
     "friendlyName": "SSH",

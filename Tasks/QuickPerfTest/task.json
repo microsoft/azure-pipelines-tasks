@@ -1,4 +1,5 @@
 {
+  "$schema": "../../tasks.schema.json",
   "id": "9648625C-1523-4EB5-B015-DFE7C685840C",
   "name": "QuickPerfTest",
   "friendlyName": "Cloud-based Web Performance Test",

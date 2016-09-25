@@ -1,4 +1,5 @@
 {
+    "$schema": "../../tasks.schema.json",
     "id": "0675668A-7BBA-4CCB-901D-5AD6554CA653",
     "name": "PublishSymbols",
     "friendlyName": "Index Sources & Publish Symbols",

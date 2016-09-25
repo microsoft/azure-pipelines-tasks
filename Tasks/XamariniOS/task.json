@@ -1,4 +1,5 @@
 {
+    "$schema": "../../tasks.schema.json",
     "id": "0F077E3A-AF59-496D-81BC-AD971B7464E0",
     "name": "XamariniOS",
     "friendlyName": "Xamarin.iOS",

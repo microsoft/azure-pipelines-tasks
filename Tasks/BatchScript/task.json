@@ -1,4 +1,5 @@
 {
+    "$schema": "../../tasks.schema.json",
     "id": "BFC8BF76-E7AC-4A8C-9A55-A944A9F632FD",
     "name": "BatchScript",
     "friendlyName": "Batch Script",

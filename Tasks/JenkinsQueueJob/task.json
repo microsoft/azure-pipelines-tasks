@@ -1,4 +1,5 @@
 {
+    "$schema": "../../tasks.schema.json",
     "id": "c24b86d4-4256-4925-9a29-246f81aa64a7",
     "name": "JenkinsQueueJob",
     "friendlyName": "Jenkins Queue Job",

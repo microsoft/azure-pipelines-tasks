@@ -1,4 +1,5 @@
 {
+  "$schema": "../../tasks.schema.json",
   "id": "67cec91b-0351-4c2f-8465-d74b3d2a2d96",
   "name": "CopyFilesOverSSH",
   "friendlyName": "Copy Files Over SSH",

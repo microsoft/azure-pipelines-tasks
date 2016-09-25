@@ -1,4 +1,5 @@
 {
+    "$schema": "../../tasks.schema.json",
     "id": "DCBEF2C9-E4F4-4929-82B2-EA7FC9166109",
     "name": "AzureWebPowerShellDeployment",
     "friendlyName": "Azure Web App Deployment",

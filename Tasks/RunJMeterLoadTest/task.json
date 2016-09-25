@@ -1,4 +1,5 @@
 {
+  "$schema": "../../tasks.schema.json",
   "id": "F20661EB-E0F7-4AFD-9A86-9FE9D1A93382",
   "name": "ApacheJMeterLoadTest",
   "friendlyName": "Cloud-based Apache JMeter Load Test",

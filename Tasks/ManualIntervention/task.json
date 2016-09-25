@@ -1,4 +1,5 @@
 {
+    "$schema": "../../tasks.schema.json",
     "id": "BCB64569-D51A-4AF0-9C01-EA5D05B3B622",
     "name": "ManualIntervention",
     "friendlyName": "Manual Intervention",

@@ -1,4 +1,5 @@
 {
+    "$schema": "../../tasks.schema.json",
     "id": "5BFB729A-A7C8-4A78-A7C3-8D717BB7C13C",
     "name": "CopyFiles",
     "friendlyName": "Copy Files",

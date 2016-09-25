@@ -1,4 +1,5 @@
 {
+    "$schema": "../../tasks.schema.json",
     "id": "BFC05E0D-839C-42CD-89C7-0F9FBFCAB965",
     "name": "CocoaPods",
     "friendlyName": "CocoaPods",

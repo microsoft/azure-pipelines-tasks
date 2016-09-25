@@ -1,4 +1,5 @@
 {
+    "$schema": "../../tasks.schema.json",
     "id": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
     "name": "PowerShell",
     "friendlyName": "PowerShell",

@@ -1,4 +1,5 @@
 {
+    "$schema": "../../tasks.schema.json",
     "id": "521D1E15-F5FB-4B73-A93B-B2FE88A9A286",
     "name": "Grunt",
     "friendlyName": "Grunt",

@@ -1,4 +1,5 @@
 {
+  "$schema": "../../tasks.schema.json",
   "id": "6f8c69a5-b023-428e-a125-fccf4efcb929",
   "name": "FtpUpload",
   "friendlyName": "FTP Upload",

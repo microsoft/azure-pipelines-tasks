@@ -1,4 +1,5 @@
 {
+    "$schema": "../../tasks.schema.json",
     "id": "1D341BB0-2106-458C-8422-D00BCEA6512A",
     "name": "CopyPublishBuildArtifacts",
     "friendlyName": "Copy and Publish Build Artifacts",

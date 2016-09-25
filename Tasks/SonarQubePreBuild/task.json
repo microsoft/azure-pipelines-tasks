@@ -1,4 +1,5 @@
 {
+  "$schema": "../../tasks.schema.json",
   "id": "EAE5B2CC-AC5E-4CBA-B022-A06621F9C01F",
   "name": "SonarQubePreBuild",
   "friendlyName": "SonarQube for MSBuild - Begin Analysis",

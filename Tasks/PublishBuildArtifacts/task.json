@@ -1,4 +1,5 @@
 {
+    "$schema": "../../tasks.schema.json",
     "id": "2FF763A7-CE83-4E1F-BC89-0AE63477CEBE",
     "name": "PublishBuildArtifacts",
     "friendlyName": "Publish Build Artifacts",
