@@ -8,7 +8,7 @@
   "loc.input.label.ArtifactName": "Nome artefatto",
   "loc.input.help.ArtifactName": "Nome dell'artefatto da creare.",
   "loc.input.label.ArtifactType": "Tipo di artefatto",
-  "loc.input.help.ArtifactType": "The type of artifact to create.",
+  "loc.input.help.ArtifactType": "Tipo dell'artefatto da creare.",
   "loc.input.label.TargetPath": "Percorso",
   "loc.input.help.TargetPath": "Condivisione file in cui copiare i file",
   "loc.messages.PublishBuildArtifactsFailed": "Pubblicazione degli artefatti di compilazione non riuscita. Errore: %s"
