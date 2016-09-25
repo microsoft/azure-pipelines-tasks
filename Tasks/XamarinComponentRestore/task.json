@@ -1,4 +1,5 @@
 {
+    "$schema": "../../tasks.schema.json",
     "id": "ff50fc97-da8c-4683-b014-34c15315ee5f",
     "name": "XamarinComponentRestore",
     "friendlyName": "Xamarin Component Restore",
@@ -20,7 +21,7 @@
             "label": "Path to Solution",
             "defaultValue": "**/*.sln",
             "helpMarkDown": "The path to the Visual Studio Solution file",
-            "required": "true"
+            "required": true
         },
         {
             "name": "email",

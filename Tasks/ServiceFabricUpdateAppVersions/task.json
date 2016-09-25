@@ -1,4 +1,5 @@
 {
+    "$schema": "../../tasks.schema.json",
     "id": "97EF6E59-B8CC-48AA-9937-1A01E35E7584",
     "name": "ServiceFabricUpdateAppVersions",
     "friendlyName": "Update Service Fabric App Versions",

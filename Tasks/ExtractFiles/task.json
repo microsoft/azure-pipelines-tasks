@@ -1,4 +1,5 @@
 {
+    "$schema": "../../tasks.schema.json",
     "id": "5e1e3830-fbfb-11e5-aab1-090c92bc4988",
     "name": "ExtractFiles",
     "friendlyName": "Extract Files",

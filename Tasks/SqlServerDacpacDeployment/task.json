@@ -1,4 +1,5 @@
 {
+  "$schema": "../../tasks.schema.json",
   "id": "70A3A82D-4A3C-4A09-8D30-A793739DC94F",
   "name": "SqlServerDacpacDeployment",
   "friendlyName": "[Deprecated] SQL Server Database Deploy",

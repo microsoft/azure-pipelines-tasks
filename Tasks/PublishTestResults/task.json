@@ -1,4 +1,5 @@
 {
+    "$schema": "../../tasks.schema.json",
     "id": "0B0F01ED-7DDE-43FF-9CBB-E48954DAF9B1",
     "name": "PublishTestResults",
     "friendlyName": "Publish Test Results",

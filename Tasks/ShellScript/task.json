@@ -1,4 +1,5 @@
 {
+    "$schema": "../../tasks.schema.json",
     "id": "6C731C3C-3C68-459A-A5C9-BDE6E6595B5B",
     "name": "ShellScript",
     "friendlyName": "Shell Script",

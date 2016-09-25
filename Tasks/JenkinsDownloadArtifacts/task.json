@@ -1,4 +1,5 @@
 {
+    "$schema": "../../tasks.schema.json",
     "id": "86c37a92-59a7-444b-93c7-220fcf91e29c",
     "name": "JenkinsDownloadArtifacts",
     "friendlyName": "Jenkins Download Artifacts",

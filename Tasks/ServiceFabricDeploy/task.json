@@ -1,4 +1,5 @@
 {
+    "$schema": "../../tasks.schema.json",
     "id": "c6650aa0-185b-11e6-a47d-df93e7a34c64",
     "name": "ServiceFabricDeploy",
     "friendlyName": "Service Fabric Application Deployment",
@@ -63,7 +64,7 @@
             "label": "Override All Publish Profile Upgrade Settings",
             "defaultValue": "false",
             "required": false,
-            "groupname": "upgrade",
+            "groupName": "upgrade",
             "helpMarkDown": "This will override all upgrade settings with either the value specified below or the default value if not specified."
         },
         {
@@ -72,7 +73,7 @@
             "label": "Upgrade the Application",
             "defaultValue": "true",
             "required": false,
-            "groupname": "upgrade",
+            "groupName": "upgrade",
             "visibleRule": "overridePublishProfileSettings = true"
         },
         {
@@ -86,7 +87,7 @@
                 "UnmonitoredAuto": "UnmonitoredAuto",
                 "UnmonitoredManual": "UnmonitoredManual"
             },
-            "groupname": "upgrade",
+            "groupName": "upgrade",
             "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
         },
         {
@@ -99,7 +100,7 @@
                 "Rollback": "Rollback",
                 "Manual": "Manual"
             },
-            "groupname": "upgrade",
+            "groupName": "upgrade",
             "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
         },
         {
@@ -108,7 +109,7 @@
             "label": "UpgradeReplicaSetCheckTimeoutSec",
             "defaultValue": "",
             "required": false,
-            "groupname": "upgrade",
+            "groupName": "upgrade",
             "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
         },
         {
@@ -117,7 +118,7 @@
             "label": "ReplicaQuorumTimeoutSec",
             "defaultValue": "",
             "required": false,
-            "groupname": "upgrade",
+            "groupName": "upgrade",
             "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
         },
         {
@@ -126,7 +127,7 @@
             "label": "TimeoutSec",
             "defaultValue": "",
             "required": false,
-            "groupname": "upgrade",
+            "groupName": "upgrade",
             "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
         },
         {
@@ -135,7 +136,7 @@
             "label": "Force",
             "defaultValue": "true",
             "required": true,
-            "groupname": "upgrade",
+            "groupName": "upgrade",
             "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
         },
         {
@@ -144,7 +145,7 @@
             "label": "ForceRestart",
             "defaultValue": "false",
             "required": false,
-            "groupname": "upgrade",
+            "groupName": "upgrade",
             "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
         },
         {
@@ -153,7 +154,7 @@
             "label": "HealthCheckRetryTimeoutSec",
             "defaultValue": "",
             "required": false,
-            "groupname": "upgrade",
+            "groupName": "upgrade",
             "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
         },
         {
@@ -162,7 +163,7 @@
             "label": "HealthCheckWaitDurationSec",
             "defaultValue": "",
             "required": false,
-            "groupname": "upgrade",
+            "groupName": "upgrade",
             "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
         },
         {
@@ -171,7 +172,7 @@
             "label": "HealthCheckStableDurationSec",
             "defaultValue": "",
             "required": false,
-            "groupname": "upgrade",
+            "groupName": "upgrade",
             "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
         },
         {
@@ -180,7 +181,7 @@
             "label": "UpgradeDomainTimeoutSec",
             "defaultValue": "",
             "required": false,
-            "groupname": "upgrade",
+            "groupName": "upgrade",
             "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
         },
         {
@@ -189,7 +190,7 @@
             "label": "ConsiderWarningAsError",
             "defaultValue": "false",
             "required": false,
-            "groupname": "upgrade",
+            "groupName": "upgrade",
             "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
         },
         {
@@ -198,7 +199,7 @@
             "label": "DefaultServiceTypeHealthPolicy",
             "defaultValue": "",
             "required": false,
-            "groupname": "upgrade",
+            "groupName": "upgrade",
             "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
         },
         {
@@ -207,7 +208,7 @@
             "label": "MaxPercentUnhealthyDeployedApplications",
             "defaultValue": "",
             "required": false,
-            "groupname": "upgrade",
+            "groupName": "upgrade",
             "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
         },
         {
@@ -216,7 +217,7 @@
             "label": "UpgradeTimeoutSec",
             "defaultValue": "",
             "required": false,
-            "groupname": "upgrade",
+            "groupName": "upgrade",
             "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
         },
         {
@@ -225,7 +226,7 @@
             "label": "ServiceTypeHealthPolicyMap",
             "defaultValue": "",
             "required": false,
-            "groupname": "upgrade",
+            "groupName": "upgrade",
             "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
         }
     ],

@@ -1,4 +1,5 @@
 {
+    "$schema": "../../tasks.schema.json",
     "id": "C7B7CCF9-D6E0-472B-97BB-06B6E43504F3",
     "name": "ChefKnife",
     "friendlyName": "Chef Knife",

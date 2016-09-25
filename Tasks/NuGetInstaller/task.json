@@ -1,4 +1,5 @@
 {
+    "$schema": "../../tasks.schema.json",
     "id": "333b11bd-d341-40d9-afcf-b32d5ce6f23b",
     "name": "NuGetInstaller",
     "friendlyName": "NuGet Installer",
@@ -27,7 +28,7 @@
             "label": "Path to solution or packages.config",
             "defaultValue": "**/*.sln",
             "helpMarkDown": "The path to the Visual Studio solution file or NuGet packages.config",
-            "required": "true"
+            "required": true
         },
         {
             "name": "nugetConfigPath",
@@ -35,7 +36,7 @@
             "label": "Path to NuGet.config",
             "defaultValue": "",
             "helpMarkDown": "Equivalent to the -ConfigFile NuGet.exe command line argument",
-            "required": "false"
+            "required": false
         },
         {
             "name": "restoreMode",
@@ -43,7 +44,7 @@
             "label": "Installation type",
             "defaultValue": "restore",
             "helpMarkDown": "Restore will restore the packages a solution depends upon, and is generally what you want.\n\nInstall will install packages from a packages.config file. Use this option if you want to install a standalone tool package.",
-            "required": "true",
+            "required": true,
             "options": {
                 "restore": "Restore",
                 "install": "Install"
@@ -55,7 +56,7 @@
             "label": "Disable local cache",
             "defaultValue": "false",
             "helpMarkDown": "Equivalent to the -NoCache NuGet.exe command line argument",
-            "required": "false"
+            "required": false
         },
         {
             "name": "nuGetRestoreArgs",
@@ -71,7 +72,7 @@
             "label": "Verbosity",
             "defaultValue": "-",
             "helpMarkDown": "NuGet's verbosity level",
-            "required": "false",
+            "required": false,
             "groupName": "advanced",
             "options": {
                 "-": "-",
@@ -86,7 +87,7 @@
             "label": "NuGet Version",
             "defaultValue": "3.3.0",
             "helpMarkDown": "The version of NuGet to use, or external verson.",
-            "required": "true",
+            "required": true,
             "groupName": "advanced",
             "options": {
                 "3.3.0": "3.3.0",

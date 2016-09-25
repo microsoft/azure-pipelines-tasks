@@ -1,4 +1,5 @@
 {
+    "$schema": "../../tasks.schema.json",
     "id": "F54D001C-999F-408A-9867-0400C1838C5E",
     "name": "XcodePackageiOS",
     "friendlyName": "Xcode Package iOS",
