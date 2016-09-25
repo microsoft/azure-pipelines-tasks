@@ -1,0 +1,341 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "VSTS Tasks schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "A unique guid for this task",
+      "pattern": "^[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Name with no spaces",
+      "pattern": "^[A-Za-z0-9\\-]+$"
+    },
+    "friendlyName": {
+      "type": "string",
+      "description": "Descriptive name (spaces allowed)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of what your task does"
+    },
+    "helpMarkDown": {
+      "type": "string"
+    },
+    "author": {
+      "type": "string"
+    },
+    "visibility": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "Build",
+          "Release",
+          "Preview"
+        ]
+      }
+    },
+    "runsOn": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "Agent",
+          "MachineGroup",
+          "Server"
+        ]
+      }
+    },
+    "category": {
+      "type": "string",
+      "description": "Where the task appears in VSTS",
+      "enum": [
+        "Build",
+        "Utility",
+        "Test",
+        "Package",
+        "Deploy"
+      ]
+    },
+    "groups": {
+      "type": "array",
+      "description": "Describes groups that task properties may be logically grouped by in the UI.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "displayName"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "isExpanded": {
+            "type": "boolean"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Preview"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "demands": {
+      "type": "array",
+      "description": "Allows you to define a list of demands that a build agent requires to run this build task.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "minimumAgentVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+(\\.\\d+)?$"
+    },
+    "version": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Always update this when you release your task, so that the agents utilise the latest code.",
+      "required": [
+        "Major",
+        "Minor",
+        "Patch"
+      ],
+      "properties": {
+        "Major": {
+          "type": "number"
+        },
+        "Minor": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "Patch": {
+          "type": [
+            "number",
+            "string"
+          ]
+        }
+      }
+    },
+    "instanceNameFormat": {
+      "type": "string",
+      "description": "This is how the task will be displayed within the build step list - you can use variable values by using $(variablename)"
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "label",
+          "type"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The variable name to use to store the user-supplied value",
+            "pattern": "^[A-Za-z][A-Za-z0-9]*$"
+          },
+          "label": {
+            "type": "string",
+            "description": "The text displayed to the user for the input label"
+          },
+          "type": {
+            "type": "string",
+            "description": "The type that dictates the control rendered to the user.",
+            "enum": [
+              "boolean",
+              "connectedService:ServiceType",
+              "connectedService:AzureRM",
+              "connectedService:Azure",
+              "connectedService:Azure:Certificate,UsernamePassword",
+              "connectedService:Chef",
+              "connectedService:ssh",
+              "connectedService:Generic",
+              "connectedService:Jenkins",
+              "connectedService:servicefabric",
+              "filePath",
+              "multiLine",
+              "pickList",
+              "radio",
+              "string"
+            ]
+          },
+          "defaultValue": {
+            "type": [
+              "string",
+              "boolean"
+            ],
+            "description": "The default value to apply to this input."
+          },
+          "required": {
+            "type": "boolean",
+            "description": "Whether the input is a required field (default is false).",
+            "default": false
+          },
+          "helpMarkDown": {
+            "type": "string",
+            "description": "Help to be displayed when hovering over the help icon for the input. To display URLs use the format [Text To Display](http://Url)"
+          },
+          "groupName": {
+            "type": "string",
+            "description": "Setting this to the name of a group defined in 'groups' will place the input into that group."
+          },
+          "visibleRule": {
+            "type": "string",
+            "description": "Allow's you to define a rule which dictates when the input will be visible to a user, for example \"variableName = value\""
+          },
+          "properties": {
+            "type": "object",
+            "properties": {
+              "EditableOptions": {
+                "type": "string",
+                "enum": [
+                  "True",
+                  "False"
+                ]
+              }
+            }
+          },
+          "options": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "dataSourceBindings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "target": {
+            "type": "string"
+          },
+          "endpointId": {
+            "type": "string"
+          },
+          "dataSourceName": {
+            "type": "string"
+          },
+          "parameters": {
+            "type": "object"
+          },
+          "resultTemplate": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "sourceDefinitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "target": {
+            "type": "string"
+          },
+          "endpoint": {
+            "type": "string"
+          },
+          "selector": {
+            "type": "string"
+          },
+          "keySelector": {
+            "type": "string"
+          },
+          "authKey": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Execution options for this task",
+      "properties": {
+        "Node": {
+          "$ref": "#/definitions/executionObject"
+        },
+        "Bash": {
+          "$ref": "#/definitions/executionObject"
+        },
+        "AzurePowerShell": {
+          "$ref": "#/definitions/executionObject"
+        },
+        "PowerShell": {
+          "$ref": "#/definitions/executionObject"
+        },
+        "PowerShell3": {
+          "$ref": "#/definitions/executionObject"
+        },
+        "PowerShellExe": {
+          "$ref": "#/definitions/executionObject"
+        },
+        "Process": {
+          "$ref": "#/definitions/executionObject"
+        },
+        "RM:ManualIntervention": {
+          "$ref": "#/definitions/executionObject"
+        }
+      }
+    },
+    "messages": {
+      "type": "object"
+    },
+    "$schema": {
+      "type": "string"
+    }
+  },
+  "definitions": {
+    "executionObject": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "target": {
+          "type": "string",
+          "description": "The target file to be executed. You can use variables here in brackets e.g. $(currentDirectory)\filename.ps1"
+        },
+        "argumentFormat": {
+          "type": "string"
+        },
+        "workingDirectory": {
+          "type": "string",
+          "description": "The directory to execute the task from e.g. $(currentDirectory)"
+        },
+        "modifyEnvironment": {
+          "type": [
+            "boolean",
+            "string"
+          ]
+        },
+        "platforms": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "windows"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
