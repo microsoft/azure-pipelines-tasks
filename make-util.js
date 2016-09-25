@@ -1,5 +1,4 @@
 
-require('shelljs');
 var admZip = require('adm-zip');
 var check = require('validator');
 var fs = require('fs');
@@ -8,6 +7,7 @@ var os = require('os');
 var path = require('path');
 var process = require('process');
 var ncp = require('child_process');
+var shell = require('shelljs');
 var syncRequest = require('sync-request');
 
 var downloadPath = path.join(__dirname, '_download');
@@ -18,7 +18,67 @@ var makeOptions = require('./make-options.json');
 // list of .NET culture names
 var cultureNames = [ 'cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant' ];
 
-function assert(value, name) {
+//------------------------------------------------------------------------------
+// shell functions
+//------------------------------------------------------------------------------
+var shellAssert = function () {
+    var errMsg = shell.error();
+    if (errMsg) {
+        throw new Error(errMsg);
+    }
+}
+
+var cd = function (dir) {
+    shell.cd(dir);
+    shellAssert();
+}
+exports.cd = cd;
+
+var cp = function (options, source, dest) {
+    if (dest) {
+        shell.cp(options, source, dest);
+    }
+    else {
+        shell.cp(options, source);
+    }
+
+    shellAssert();
+}
+exports.cp = cp;
+
+var mkdir = function (options, target) {
+    if (target) {
+        shell.mkdir(options, target);
+    }
+    else {
+        shell.mkdir(options);
+    }
+
+    shellAssert();
+}
+exports.mkdir = mkdir;
+
+var rm = function (options, target) {
+    if (target) {
+        shell.rm(options, target);
+    }
+    else {
+        shell.rm(options);
+    }
+
+    shellAssert();
+}
+exports.rm = rm;
+
+var test = function (options, p) {
+    var result = shell.test(options, p);
+    shellAssert();
+    return result;
+}
+exports.test = test;
+//------------------------------------------------------------------------------
+
+var assert = function (value, name) {
     if (!value) {
         throw new Error('"' + name + '" cannot be null or empty.');
     }
@@ -325,6 +385,7 @@ var copyGroup = function (group, sourceRoot, destRoot) {
 
     // create the destination directory
     var dest = group.dest ? path.join(destRoot, group.dest) : destRoot + '/';
+    dest = path.normalize(dest);
     mkdir('-p', dest);
 
     // copy the files
