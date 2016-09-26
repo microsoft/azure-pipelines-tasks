@@ -65,11 +65,11 @@ export class LocationApi extends vstsClientBases.ClientApiBase {
     }
 }
 
-export class QLocationApi extends vstsClientBases.QClientApiBase {
+export class QLocationApi extends vstsClientBases.ClientApiBase {
     public api: LocationApi;
 
     constructor(baseUrl: string, handlers: VsoBaseInterfaces.IRequestHandler[]) {
-        super(baseUrl, handlers, LocationApi);
+        super(baseUrl, handlers);
     }
 
     public getConnectionData(): Q.Promise<ConnectionData> {

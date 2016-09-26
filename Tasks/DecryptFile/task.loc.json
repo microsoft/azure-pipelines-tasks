@@ -68,5 +68,9 @@
       "argumentFormat": ""
     }
   },
+  "messages": {
+    "OpenSSLReturnCode": "ms-resource:loc.messages.OpenSSLReturnCode",
+    "OpenSSLFailed": "ms-resource:loc.messages.OpenSSLFailed"
+  },
   "helpMarkDown": "ms-resource:loc.helpMarkDown"
 }

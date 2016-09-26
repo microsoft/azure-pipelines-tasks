@@ -10,21 +10,21 @@ import url = require('url');
 import {Url} from 'url';
 import shell = require('shelljs');
 
-import {ToolRunner} from 'vsts-task-lib/toolrunner';
+// import {ToolRunner} from 'vsts-task-lib/toolrunner';
 import tr = require('../../lib/vsts-task-lib/toolRunner');
 import tl = require('../../lib/vsts-task-lib/toolRunner');
 
-import sqCommon = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/common');
-import {VstsServerUtils} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/vsts-server-utils';
-import {SonarQubeRunSettings} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/run-settings';
-import {ISonarQubeServer} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/server';
-import {SonarQubeEndpoint} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/endpoint';
-import {SonarQubeReportBuilder} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/report-builder';
-import {SonarQubeMetrics} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/metrics';
-import {SonarQubeMeasurementUnit} from '../../../Tasks/Maven/CodeAnalysis/SonarQube/metrics';
+let sqCommon = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/common');
+let VstsServerUtils = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/vsts-server-utils').VstsServerUtils;
+let SonarQubeRunSettings = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/run-settings').SonarQubeRunSettings;
+let ISonarQubeServer = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/server').ISonarQubeServer;
+let SonarQubeEndpoint = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/endpoint').SonarQubeEndpoint;
+let SonarQubeReportBuilder = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/report-builder').SonarQubeReportBuilder;
+let SonarQubeMetrics = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/metrics').SonarQubeMetrics;
+let SonarQubeMeasurementUnit = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/metrics').SonarQubeMeasurementUnit;
 import {MockSonarQubeServer} from './server-mock';
 
-import {FileSystemInteractions} from '../../../Tasks/Maven/CodeAnalysis/Common/FileSystemInteractions';
+let FileSystemInteractions = require('../../../Tasks/Maven/CodeAnalysis/Common/FileSystemInteractions').FileSystemInteractions;
 
 import http = require('http');
 import {IncomingMessage} from 'http';
@@ -216,13 +216,13 @@ function assertStringContains(actualString: string, expectedString: string): voi
 }
 
 
-function assertToolRunnerContainsArg(toolRunner: ToolRunner, expectedArg: string) {
-    return toolRunner.args.indexOf(expectedArg) > -1;
-}
+// function assertToolRunnerContainsArg(toolRunner: ToolRunner, expectedArg: string) {
+//     return toolRunner.args.indexOf(expectedArg) > -1;
+// }
 
-function assertToolRunnerHasArgLength(toolRunner: ToolRunner, expectedNumArgs: number) {
-    return toolRunner.args.length == expectedNumArgs;
-}
+// function assertToolRunnerHasArgLength(toolRunner: ToolRunner, expectedNumArgs: number) {
+//     return toolRunner.args.length == expectedNumArgs;
+// }
 
 function verifyNoopCodeAnalysis(missingBuildVariable: string, analysisEnabled: string): Q.Promise<void> {
     // In the test data:
@@ -1829,11 +1829,11 @@ describe('Maven Suite', function () {
 
     it('SonarQube common - task and analysis details caching holds true over multiple requests, and does not invoke additional REST calls', () => {
         // Arrange
-        var mockRunSettings: SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockRunSettings/*: SonarQubeRunSettings*/ = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
         var mockServer: MockSonarQubeServer = new MockSonarQubeServer();
 
-        var analysisMetrics: SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
-        var sqReportBuilder: SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
+        var analysisMetrics/*: SonarQubeMetrics*/ = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+        var sqReportBuilder/*: SonarQubeReportBuilder*/ = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
 
         // Mock responses from the server for the task and analysis details
         var taskDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
@@ -1862,10 +1862,10 @@ describe('Maven Suite', function () {
 
     it('SonarQube common - measurement details caching holds true over multiple requests, and does not invoke additional REST calls', () => {
         // Arrange
-        var mockRunSettings: SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockRunSettings/*: SonarQubeRunSettings*/ = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
         var mockServer: MockSonarQubeServer = new MockSonarQubeServer();
 
-        var analysisMetrics: SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+        var analysisMetrics/*: SonarQubeMetrics*/ = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
 
         // Mock responses from the server for the measurement details
         var measurementDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/measurement_details.json'), 'utf-8'));
@@ -1873,21 +1873,21 @@ describe('Maven Suite', function () {
 
         // Act
         // Make a few requests
-        var measurementDetailsResults: SonarQubeMeasurementUnit[][] = [];
+        var measurementDetailsResults/*: SonarQubeMeasurementUnit[][]*/ = [];
         return analysisMetrics.fetchMeasurementDetails()
-            .then((measurementDetailsResult: SonarQubeMeasurementUnit[]) => {
+            .then((measurementDetailsResult/*: SonarQubeMeasurementUnit[]*/) => {
                 measurementDetailsResults.push(measurementDetailsResult);
                 return analysisMetrics.fetchMeasurementDetails();
             })
-            .then((measurementDetailsResult: SonarQubeMeasurementUnit[]) => {
+            .then((measurementDetailsResult/*: SonarQubeMeasurementUnit[]*/) => {
                 measurementDetailsResults.push(measurementDetailsResult);
                 return analysisMetrics.fetchMeasurementDetails();
             })
-            .then((measurementDetailsResult: SonarQubeMeasurementUnit[]) => {
+            .then((measurementDetailsResult/*: SonarQubeMeasurementUnit[]*/) => {
                 measurementDetailsResults.push(measurementDetailsResult);
-                var expectedMeasurementDetails: SonarQubeMeasurementUnit[] = measurementDetailsJsonObject.metrics as SonarQubeMeasurementUnit[];
+                var expectedMeasurementDetails/*: SonarQubeMeasurementUnit[]*/ = measurementDetailsJsonObject.metrics /*as SonarQubeMeasurementUnit[]*/;
 
-                measurementDetailsResults.forEach((actualMeasurementDetails: SonarQubeMeasurementUnit[]) => {
+                measurementDetailsResults.forEach((actualMeasurementDetails/*: SonarQubeMeasurementUnit[]*/) => {
                     // All results should match the expected
                     var expectedLength = expectedMeasurementDetails.length;
                     var actualLength = actualMeasurementDetails.length;
@@ -1905,11 +1905,11 @@ describe('Maven Suite', function () {
 
     it('SonarQube common - Build summary is created (dashboard link only when not waiting for server)', () => {
         // Arrange
-        var mockRunSettings: SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "taskId", "taskUrl");
-        var mockServer: ISonarQubeServer = new MockSonarQubeServer();
+        var mockRunSettings/*: SonarQubeRunSettings*/ = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "taskId", "taskUrl");
+        var mockServer/*: ISonarQubeServer*/ = new MockSonarQubeServer();
 
-        var analysisMetrics: SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId);
-        var sqReportBuilder: SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
+        var analysisMetrics/*: SonarQubeMetrics*/ = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId);
+        var sqReportBuilder/*: SonarQubeReportBuilder*/ = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
 
         return sqReportBuilder.fetchMetricsAndCreateReport(false)
             .then((report: string) => {
@@ -1919,11 +1919,11 @@ describe('Maven Suite', function () {
 
     it('SonarQube common - Build summary with details is created with quality gate fail', () => {
         // Arrange
-        var mockRunSettings: SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockRunSettings/*: SonarQubeRunSettings*/ = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
         var mockServer: MockSonarQubeServer = new MockSonarQubeServer();
 
-        var analysisMetrics: SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
-        var sqReportBuilder: SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
+        var analysisMetrics/*: SonarQubeMetrics*/ = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+        var sqReportBuilder/*: SonarQubeReportBuilder*/ = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
 
         // Mock responses from the server for the task and analysis details
         var taskDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
@@ -1955,11 +1955,11 @@ describe('Maven Suite', function () {
 
     it('SonarQube common - Build summary with details is created with quality gate warn', () => {
         // Arrange
-        var mockRunSettings: SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockRunSettings/*: SonarQubeRunSettings*/ = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
         var mockServer: MockSonarQubeServer = new MockSonarQubeServer();
 
-        var analysisMetrics: SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
-        var sqReportBuilder: SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
+        var analysisMetrics/*: SonarQubeMetrics*/ = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+        var sqReportBuilder/*: SonarQubeReportBuilder*/ = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
 
         // Mock responses from the server for the task and analysis details
         var taskDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
@@ -1991,11 +1991,11 @@ describe('Maven Suite', function () {
 
     it('SonarQube common - Build summary is created with quality gate pass', () => {
         // Arrange
-        var mockRunSettings: SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockRunSettings/*: SonarQubeRunSettings*/ = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
         var mockServer: MockSonarQubeServer = new MockSonarQubeServer();
 
-        var analysisMetrics: SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
-        var sqReportBuilder: SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
+        var analysisMetrics/*: SonarQubeMetrics*/ = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+        var sqReportBuilder/*: SonarQubeReportBuilder*/ = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
 
         // Mock responses from the server for the task and analysis details
         var taskDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
@@ -2015,11 +2015,11 @@ describe('Maven Suite', function () {
 
     it('SonarQube common - Build summary fails correctly when server returns an error', () => {
         // Arrange
-        var mockRunSettings: SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockRunSettings/*: SonarQubeRunSettings*/ = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
         var mockServer: MockSonarQubeServer = new MockSonarQubeServer();
 
-        var analysisMetrics: SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
-        var sqReportBuilder: SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
+        var analysisMetrics/*: SonarQubeMetrics*/ = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+        var sqReportBuilder/*: SonarQubeReportBuilder*/ = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
 
         // Mock responses from the server for the task and analysis details
         var taskDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
@@ -2036,11 +2036,11 @@ describe('Maven Suite', function () {
 
     it('SonarQube common - Build summary fails correctly when server does not return expected data', () => {
         // Arrange
-        var mockRunSettings: SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockRunSettings/*: SonarQubeRunSettings*/ = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
         var mockServer: MockSonarQubeServer = new MockSonarQubeServer();
 
-        var analysisMetrics: SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
-        var sqReportBuilder: SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
+        var analysisMetrics/*: SonarQubeMetrics*/ = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+        var sqReportBuilder/*: SonarQubeReportBuilder*/ = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
 
         // Mock responses from the server
         mockServer.setupMockApiCall('/api/ce/task?id=asdfghjklqwertyuiopz', {}); // Empty object returned by the server
@@ -2056,11 +2056,11 @@ describe('Maven Suite', function () {
 
     it('SonarQube common - Build summary fails correctly when timeout is triggered', () => {
         // Arrange
-        var mockRunSettings: SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockRunSettings/*: SonarQubeRunSettings*/ = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
         var mockServer: MockSonarQubeServer = new MockSonarQubeServer();
 
-        var analysisMetrics: SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 2, 1); // override to a 2-second timeout
-        var sqReportBuilder: SonarQubeReportBuilder = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
+        var analysisMetrics/*: SonarQubeMetrics*/ = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 2, 1); // override to a 2-second timeout
+        var sqReportBuilder/*: SonarQubeReportBuilder*/ = new SonarQubeReportBuilder(mockRunSettings, analysisMetrics);
 
         // Mock responses from the server
         var taskDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
@@ -2078,10 +2078,10 @@ describe('Maven Suite', function () {
 
     it('SonarQube common - Build breaker fails the build when the quality gate has failed', () => {
         // Arrange
-        var mockRunSettings: SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockRunSettings/*: SonarQubeRunSettings*/ = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
         var mockServer: MockSonarQubeServer = new MockSonarQubeServer();
 
-        var analysisMetrics: SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+        var analysisMetrics/*: SonarQubeMetrics*/ = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
 
         // Mock responses from the server for the task and analysis details
         var taskDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));
@@ -2100,10 +2100,10 @@ describe('Maven Suite', function () {
 
     it('SonarQube common - Build breaker does not fail the build when the quality gate has passed', () => {
         // Arrange
-        var mockRunSettings: SonarQubeRunSettings = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
+        var mockRunSettings/*: SonarQubeRunSettings*/ = new SonarQubeRunSettings("projectKey", "serverUrl", "http://dashboardUrl", "asdfghjklqwertyuiopz", "taskUrl");
         var mockServer: MockSonarQubeServer = new MockSonarQubeServer();
 
-        var analysisMetrics: SonarQubeMetrics = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
+        var analysisMetrics/*: SonarQubeMetrics*/ = new SonarQubeMetrics(mockServer, mockRunSettings.ceTaskId, 10, 1); // override to a 10-second timeout
 
         // Mock responses from the server for the task and analysis details
         var taskDetailsJsonObject: any = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/task_details.json'), 'utf-8'));

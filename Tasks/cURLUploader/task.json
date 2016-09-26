@@ -78,5 +78,9 @@
             "target": "curluploader.js",
             "argumentFormat": ""
         }
-    }
+    },
+    "messages": {
+        "CurlReturnCode": "curl exited with return code: %d",
+        "CurlFailed": "curl failed with error: %s"
+    }    
 }

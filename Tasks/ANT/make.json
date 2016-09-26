@@ -1,0 +1,14 @@
+{
+    "common": [
+        {
+            "module": "../Common/java-common",
+            "type": "node",
+            "compile": true  
+        },
+        {
+            "module": "../Common/codecoverage-tools",
+            "type": "node",
+            "compile": true  
+        }    
+    ]
+}

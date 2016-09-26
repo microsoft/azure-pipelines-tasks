@@ -7,15 +7,8 @@ import mockHelper = require('../../lib/mockHelper');
 import path = require('path');
 import fs = require('fs');
 import tl = require('../../lib/vsts-task-lib/toolRunner');
-
-// Paths aren't the same between compile time and run time. This will need some work
-let realrequire = require;
-function myrequire(module: string): any {
-    return realrequire(path.join(__dirname, "../../../Tasks/Ant/node_modules", module));
-}
-require = <typeof require>myrequire;
-import { CodeCoverageEnablerFactory } from 'codecoverage-tools/codecoveragefactory';
-let xml2js = require('xml2js'); 
+let CodeCoverageEnablerFactory = require('../../../Tasks/Common/codecoverage-tools/codecoveragefactory').CodeCoverageEnablerFactory;
+let xml2js = require('../../../Tasks/Common/codecoverage-tools/node_modules/xml2js');
 
 function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);

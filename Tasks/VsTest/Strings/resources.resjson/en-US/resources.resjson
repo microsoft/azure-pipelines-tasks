@@ -40,6 +40,7 @@
   "loc.input.help.configuration": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here.",
   "loc.input.label.publishRunAttachments": "Upload Test Attachments",
   "loc.input.help.publishRunAttachments": "Opt in/out of publishing test run level attachments.",
+  "loc.messages.AccessDeniedToPath": "%s path does not exist.",
   "loc.messages.PathDoesNotExist": "%s path does not exist.",
   "loc.messages.VstestReturnCode": "Vstest exited with return code: %d.",
   "loc.messages.NoMatchingTestAssemblies": "No test assemblies found matching the pattern: %s.",

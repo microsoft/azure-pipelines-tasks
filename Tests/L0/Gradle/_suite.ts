@@ -9,11 +9,12 @@ import path = require('path');
 import trm = require('../../lib/taskRunner');
 import {TaskRunner} from '../../lib/taskRunner';
 
-import {AnalysisResult} from '../../../Tasks/Gradle/CodeAnalysis/Common/AnalysisResult';
-import {BuildOutput, BuildEngine} from '../../../Tasks/Gradle/CodeAnalysis/Common/BuildOutput'
-import {CheckstyleTool} from '../../../Tasks/Gradle/CodeAnalysis/Common/CheckstyleTool'
-import {FindbugsTool} from '../../../Tasks/Gradle/CodeAnalysis/Common/FindbugsTool'
-import {PmdTool} from '../../../Tasks/Gradle/CodeAnalysis/Common/PmdTool'
+let AnalysisResult = require('../../../Tasks/Gradle/CodeAnalysis/Common/AnalysisResult').AnalysisResult;
+let BuildOutput = require('../../../Tasks/Gradle/CodeAnalysis/Common/BuildOutput').BuildOutput;
+let BuildEngine = require('../../../Tasks/Gradle/CodeAnalysis/Common/BuildOutput').BuildEngine;
+let CheckstyleTool = require('../../../Tasks/Gradle/CodeAnalysis/Common/CheckstyleTool').CheckstyleTool;
+let FindbugsTool = require('../../../Tasks/Gradle/CodeAnalysis/Common/FindbugsTool').FindbugsTool;
+let PmdTool = require('../../../Tasks/Gradle/CodeAnalysis/Common/PmdTool').PmdTool;
 
 import os = require('os');
 
@@ -1357,13 +1358,13 @@ describe('gradle Suite', function () {
         cleanTempDirsForCodeAnalysisTests();
     });
 
-    class CheckstyleTestTool extends CheckstyleTool {
-        public isEnabled() {
-            return true;
-        }
-    }
+    // class CheckstyleTestTool extends CheckstyleTool {
+    //     public isEnabled() {
+    //         return true;
+    //     }
+    // }
 
-    function verifyModuleResult(results: AnalysisResult[], moduleName: string , expectedViolationCount: number, expectedFileCount: number, expectedReports: string[]) {
+    function verifyModuleResult(results/*: AnalysisResult[]*/, moduleName: string , expectedViolationCount: number, expectedFileCount: number, expectedReports: string[]) {
         var analysisResults = results.filter(ar => ar.moduleName === moduleName);
         assert(analysisResults != null && analysisResults.length != 0 , "Null or empty array");
         assert(analysisResults.length == 1, "The array does not have a single element");
@@ -1383,9 +1384,11 @@ describe('gradle Suite', function () {
 
         var testSrcDir: string = path.join(__dirname, 'data', 'multimodule');
 
-        let buildOutput: BuildOutput = new BuildOutput(testSrcDir, BuildEngine.Gradle);
-        var tool = new CheckstyleTestTool(buildOutput, 'checkstyleAnalysisEnabled');
-        let results: AnalysisResult[] = tool.processResults();
+        let buildOutput/*: BuildOutput*/ = new BuildOutput(testSrcDir, BuildEngine.Gradle);
+        // var tool = new CheckstyleTestTool(buildOutput, 'checkstyleAnalysisEnabled');
+        var tool = new CheckstyleTool(buildOutput, 'checkstyleAnalysisEnabled');
+        tool.isEnabled = () => true;
+        let results/*: AnalysisResult[]*/ = tool.processResults();
 
         assert(results.length == 2, "Unexpected number of results. note that module-three has no tool results ");
         verifyModuleResult(results, "module-one", 34, 2, ["main.xml", "main.html", "test.xml", "test.html"] );
@@ -1394,19 +1397,21 @@ describe('gradle Suite', function () {
         done();
     });
 
-     class PmdTestTool extends PmdTool {
-        public isEnabled() {
-            return true;
-        }
-     }
+    //  class PmdTestTool extends PmdTool {
+    //     public isEnabled() {
+    //         return true;
+    //     }
+    //  }
 
      it('Pmd tool retrieves results', function (done) {
 
         var testSrcDir: string = path.join(__dirname, 'data', 'multimodule');
 
-        let buildOutput: BuildOutput = new BuildOutput(testSrcDir, BuildEngine.Gradle);
-        var tool = new PmdTestTool(buildOutput, 'checkstyleAnalysisEnabled');
-        let results: AnalysisResult[] = tool.processResults();
+        let buildOutput/*: BuildOutput*/ = new BuildOutput(testSrcDir, BuildEngine.Gradle);
+        // var tool = new PmdTestTool(buildOutput, 'checkstyleAnalysisEnabled');
+        var tool = new PmdTool(buildOutput, 'checkstyleAnalysisEnabled');
+        tool.isEnabled = () => true;
+        let results/*: AnalysisResult[]*/ = tool.processResults();
 
         assert(results.length == 2, "Unexpected number of results. note that module-three has no tool results ");
         verifyModuleResult(results, "module-one", 2, 1, ["main.xml", "main.html"] );
@@ -1415,19 +1420,20 @@ describe('gradle Suite', function () {
         done();
     });
 
-    class FindbugsTestTool extends FindbugsTool {
-        public isEnabled() {
-            return true;
-        }
-    }
+    // class FindbugsTestTool extends FindbugsTool {
+    //     public isEnabled() {
+    //         return true;
+    //     }
+    // }
 
     it('FindBugs tool retrieves results', function (done) {
 
         var testSrcDir: string = path.join(__dirname, 'data', 'multimodule');
 
-        let buildOutput: BuildOutput = new BuildOutput(testSrcDir, BuildEngine.Gradle);
-        var tool = new FindbugsTestTool(buildOutput, 'findbugsAnalysisEnabled');
-        let results: AnalysisResult[] = tool.processResults();
+        let buildOutput/*: BuildOutput*/ = new BuildOutput(testSrcDir, BuildEngine.Gradle);
+        var tool = new FindbugsTool(buildOutput, 'findbugsAnalysisEnabled');
+        tool.isEnabled = () => true;
+        let results/*: AnalysisResult[]*/ = tool.processResults();
 
         console.log(JSON.stringify(results));
         assert(results.length == 1, "Unexpected number of results. Expected 1 (only module-three has a findbugs XML), actual " + results.length);
