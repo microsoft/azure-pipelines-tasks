@@ -309,7 +309,7 @@ function getVSTestLocation(vsVersion: number): string {
             if (pathExistsAsDirectory(vstestLocation)) {
                 return path.join(vstestLocation, 'vstest.console.exe');
             } else {
-                throw (new Error(tl.loc('AccessDeniedToPath', vstestLocation)));
+                throw (new Error(tl.loc('PathDoesNotExist', vstestLocation)));
             }
         } else {
             return vstestLocation;
