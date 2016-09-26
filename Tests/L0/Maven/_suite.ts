@@ -266,6 +266,10 @@ function verifyNoopCodeAnalysis(missingBuildVariable: string, analysisEnabled: s
                 'should have not uploaded a code analysis build artifact');
 
         })
+        .fail((err) => {
+            console.log(taskRunner.stdout);
+            console.log(taskRunner.stderr);
+        });
 }
 
 describe('Maven Suite', function () {

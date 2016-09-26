@@ -41,6 +41,7 @@
   "loc.input.label.publishRunAttachments": "Upload Test Attachments",
   "loc.input.help.publishRunAttachments": "Opt in/out of publishing test run level attachments.",
   "loc.messages.AccessDeniedToPath": "%s path does not exist.",
+  "loc.messages.PathDoesNotExist": "%s path does not exist.",
   "loc.messages.VstestReturnCode": "Vstest exited with return code: %d.",
   "loc.messages.NoMatchingTestAssemblies": "No test assemblies found matching the pattern: %s.",
   "loc.messages.VstestNotFound": "Vstest of version %d is not found. Try again with a visual studio version that exists on your build agent machine.",
