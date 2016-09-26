@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 66
+    "Patch": 67
   },
   "demands": [
     "vstest"
@@ -224,7 +224,7 @@
     }
   },
   "messages": {
-    "AccessDeniedToPath": "ms-resource:loc.messages.AccessDeniedToPath",
+    "PathDoesNotExist": "ms-resource:loc.messages.PathDoesNotExist",
     "VstestReturnCode": "ms-resource:loc.messages.VstestReturnCode",
     "NoMatchingTestAssemblies": "ms-resource:loc.messages.NoMatchingTestAssemblies",
     "VstestNotFound": "ms-resource:loc.messages.VstestNotFound",
