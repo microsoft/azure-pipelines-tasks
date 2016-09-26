@@ -33,6 +33,10 @@
         "gradlew.bat build -I /Gradle/CodeAnalysis/checkstyle.gradle -I /Gradle/CodeAnalysis/pmd.gradle": {
             "code": 0,
             "stdout": "Sample gradle + Checkstyle + PMD"
+        },
+        "gradlew.bat build -I /Gradle/CodeAnalysis/checkstyle.gradle -I /Gradle/CodeAnalysis/findbugs.gradle -I /Gradle/CodeAnalysis/pmd.gradle": {
+            "code": 0,
+            "stdout": "Sample gradle + Checkstyle + PMD + FindBugs"
         }
     },
     "checkPath": {
