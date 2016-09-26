@@ -14,7 +14,7 @@
     "Major": 1,
     "Minor": 0,
     "Patch": 91
-  },
+    },
   "demands": [
     "azureps"
   ],
@@ -251,9 +251,9 @@
     "ARG_UnsupportedAzurePSVersion": "ms-resource:loc.messages.ARG_UnsupportedAzurePSVersion",
     "ARG_AzureRMModuleNotFound": "ms-resource:loc.messages.ARG_AzureRMModuleNotFound",
     "ARG_DeploymentFailed": "ms-resource:loc.messages.ARG_DeploymentFailed",
-    "ARG_DeploymentSucceeded": "ms-resource:loc.messages.ARG_DeploymentSucceeded",
     "ARG_ValidationFailed": "ms-resource:loc.messages.ARG_ValidationFailed",
     "ARG_ValidationSucceeded": "ms-resource:loc.messages.ARG_ValidationSucceeded",
+    "ARG_DeploymentSucceeded": "ms-resource:loc.messages.ARG_DeploymentSucceeded",
     "ARG_InvalidFilePath": "ms-resource:loc.messages.ARG_InvalidFilePath",
     "ARG_FileNotFound": "ms-resource:loc.messages.ARG_FileNotFound",
     "ARG_SpecifyValidTemplatePath": "ms-resource:loc.messages.ARG_SpecifyValidTemplatePath",
