@@ -101,4 +101,20 @@ export class CheckstyleTool extends BaseTool {
 
         return [violationCount, fileCount];
     }
+
+    protected findHtmlReport(xmlReport: string): string {
+        // This method overrides baseTool.findHtmlReport(), which assumes tools produces html and xml files with identical filenames
+        // Checkstyle, however, produces "checkstyle-result.xml" and "checkstyle.html".
+
+        // expecting to find an html report with the same name
+        var dirName = path.dirname(xmlReport);
+
+        var htmlReports = glob.sync(path.join(dirName, '**', 'checkstyle.html'));
+
+        if (htmlReports.length > 0) {
+            return htmlReports[0];
+        }
+
+        return null;
+    }
 }

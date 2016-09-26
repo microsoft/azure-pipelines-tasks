@@ -59,6 +59,8 @@
   "loc.input.help.sqAnalysisBreakBuildIfQualityGateFailed": "This option is only available when using a SonarQube server 5.3 or above. It will introduce delays as the build must wait for SonarQube to complete the analysis. [More information](https://go.microsoft.com/fwlink/?LinkId=722407)",
   "loc.input.label.checkstyleAnalysisEnabled": "Run Checkstyle",
   "loc.input.help.checkstyleAnalysisEnabled": "Run the Checkstyle tool with the default Sun checks. Results are uploaded as build artifacts.",
+  "loc.input.label.findbugsAnalysisEnabled": "Run FindBugs",
+  "loc.input.help.findbugsAnalysisEnabled": "Use the FindBugs static analysis tool to look for bugs in the code. Results are uploaded as build artifacts.",
   "loc.input.label.pmdAnalysisEnabled": "Run PMD",
   "loc.input.help.pmdAnalysisEnabled": "Use the PMD Java static analysis tool to look for bugs in the code. Results are uploaded as build artifacts.",
   "loc.messages.sqCommon_CreateTaskReport_MissingField": "Failed to create TaskReport object. Missing field: %s",
