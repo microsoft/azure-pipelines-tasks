@@ -1,14 +1,14 @@
 import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
-import VersionInfoVersion from 'nuget-task-common/pe-parser/VersionInfoVersion'
-import {VersionInfo, VersionStrings} from 'nuget-task-common/pe-parser/VersionResource'
+import util = require('./NugetMockHelper');
 
 let taskPath = path.join(__dirname, '..', 'nugetinstaller.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
+let nmh: util.NugetMockHelper = new util.NugetMockHelper(tmr);
 
+nmh.setNugetVersionInputDefault();
 tmr.setInput('solution', 'single.sln');
-tmr.setInput('nuGetVersion', '3.3.0');
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "osType": {
@@ -47,16 +47,6 @@ process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = "https://example.visualstudio.
 process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = "~/myagent/_work/1/s";
 process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = "https://example.visualstudio.com/defaultcollection";
 
-
-tmr.registerMock('./pe-parser', {
-    getFileVersionInfoAsync: function(nuGetExePath) {
-        let result: VersionInfo = { strings: {} };
-        result.fileVersion = new VersionInfoVersion(3, 3, 0, 212);
-        result.strings['ProductVersion'] = "3.3.0";
-        return result;
-    }
-} )
-
 tmr.registerMock('nuget-task-common/Utility', {
     resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
         return ["~/myagent/_work/1/s/single.sln"];
@@ -66,8 +56,7 @@ tmr.registerMock('nuget-task-common/Utility', {
     }
 } )
 
-// Required for NuGetToolRunner
-var mtt = require('vsts-task-lib/mock-toolrunner');
-tmr.registerMock('vsts-task-lib/toolrunner', mtt);
+nmh.registerDefaultNugetVersionMock();
+nmh.registerToolRunnerMock();
 
 tmr.run();
