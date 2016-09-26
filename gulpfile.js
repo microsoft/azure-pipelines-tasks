@@ -28,30 +28,16 @@ gulp.task('build', function (cb) {
 gulp.task('default', ['build']);
 
 gulp.task('test', function (cb) {
-    if (!process.argv[3]) {
-        make('test', cb);
-        make('testLegacy', cb);
-    }
-    else {
-        make('testLegacy', cb);
-    }
+    make('test', cb);
+    make('testLegacy', cb);
 });
 
 gulp.task('package', function (cb) {
     var publish = process.argv.filter(function (arg) { return arg == '--server' }).length > 0;
-    if (!process.argv[3]) {
-        make('build', cb) &&
-            make('package', cb) &&
-            make('test', cb) &&
-            make('testLegacy', cb) &&
-            publish &&
-            make('publish', cb);
-    }
-    else {
-        make('build', cb) &&
-            make('package', cb) &&
-            make('testLegacy', cb) &&
-            publish &&
-            make('publish', cb);
-    }
+    make('build', cb) &&
+        make('package', cb) &&
+        make('test', cb) &&
+        make('testLegacy', cb) &&
+        publish &&
+        make('publish', cb);
 });
