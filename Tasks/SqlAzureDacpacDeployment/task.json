@@ -105,7 +105,7 @@
             "required": false,
             "groupName": "target",
             "defaultValue": "",
-            "helpMarkDown": "Password for the Azure SQL Server administrator.<br>It can accept variable defined in Build/Release Definitions as '$(passwordVariable').<br>You may mark the variable type as 'secret' to secure it."
+            "helpMarkDown": "Password for the Azure SQL Server administrator.<br>It can accept variable defined in Build/Release Definitions as '$(passwordVariable)'.<br>You may mark the variable type as 'secret' to secure it."
         },
         {
             "name": "TaskNameSelector",
@@ -152,8 +152,7 @@
             "visibleRule": "TaskNameSelector = InlineSqlTask",
             "properties": {
                 "resizable": "true",
-                "rows": "10",
-                "maxLength": "5000"
+                "rows": "10"
             }
         },
         {

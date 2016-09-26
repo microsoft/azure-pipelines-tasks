@@ -73,13 +73,14 @@ export class CoberturaMavenCodeCoverageEnabler extends cc.CoberturaCodeCoverageE
 
         let buildNode = _this.getBuildDataNode(buildJsonContent);
         let pluginsNode = _this.getPluginDataNode(buildNode);
+        let reportPluginsNode = _this.getReportingPluginNode(buildJsonContent.project.reporting);
         let ccPluginData = ccc.coberturaMavenEnable(_this.includeFilter, _this.excludeFilter, String(isMultiModule));
         let reportContent = ccc.coberturaMavenReport();
 
         return Q.allSettled([ccPluginData, reportContent])
             .then(function (resp) {
                 util.addPropToJson(pluginsNode, "plugin", resp[0].value.plugin);
-                util.addPropToJson(buildJsonContent.project.reporting, "plugins", resp[1].value);
+                util.addPropToJson(reportPluginsNode, "plugin", resp[1].value.plugin);
                 tl.debug("Final buildContent: " + buildJsonContent);
                 return Q.resolve(buildJsonContent);
             });
@@ -105,6 +106,7 @@ export class CoberturaMavenCodeCoverageEnabler extends cc.CoberturaCodeCoverageE
 
     private getPluginDataNode(buildNode: any): any {
         let pluginsNode = {};
+
         if (buildNode.pluginManagement) {
             if (typeof buildNode.pluginManagement === "string") {
                 buildNode.pluginManagement = {};
@@ -129,6 +131,21 @@ export class CoberturaMavenCodeCoverageEnabler extends cc.CoberturaCodeCoverageE
                 pluginsNode = buildNode.plugins;
             }
         }
+        return pluginsNode;
+    }
+
+    private getReportingPluginNode(reportNode: any): any {
+        let pluginsNode = null;
+        if (!reportNode || typeof reportNode === "string") {
+            reportNode = {};
+        }
+
+        if (reportNode instanceof Array) {
+            pluginsNode = reportNode[0].plugins;
+        } else {
+            pluginsNode = reportNode.plugins;
+        }
+
         return pluginsNode;
     }
 

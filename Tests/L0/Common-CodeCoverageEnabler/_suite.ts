@@ -14,7 +14,8 @@ function myrequire(module: string): any {
     return realrequire(path.join(__dirname, "../../../Tasks/Ant/node_modules", module));
 }
 require = <typeof require>myrequire;
-import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
+import { CodeCoverageEnablerFactory } from 'codecoverage-tools/codecoveragefactory';
+let xml2js = require('xml2js'); 
 
 function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
@@ -84,6 +85,25 @@ describe('Code Coverage enable tool tests', function () {
             assert.notEqual(content.indexOf(`<include>com/abc.class</include>`), -1, "Include filter must be present");
             assert.notEqual(content.indexOf(`<exclude>com/xyz.class</exclude>`), -1, "Exclude filter must be present");
             assert.notEqual(content.indexOf(`cobertura-maven-plugin`), -1, "Cobertura maven plugin must be enabled");
+            done();
+        }).catch(function (err) {
+            done(err);
+        });
+    })
+
+    it('Maven single module build with reporting extensions - Cobertura CC', (done) => {
+        let buildFile = path.join(data, "pom_with_reporting_plugins.xml");
+        buildProps['buildfile'] = buildFile;
+
+        let ccEnabler = new CodeCoverageEnablerFactory().getTool("maven", "cobertura");
+        ccEnabler.enableCodeCoverage(buildProps).then(function (resp) {
+            let content = fs.readFileSync(buildFile, "utf-8");
+            assert.notEqual(content.indexOf(`<include>com/abc.class</include>`), -1, "Include filter must be present");
+            assert.notEqual(content.indexOf(`<exclude>com/xyz.class</exclude>`), -1, "Exclude filter must be present");
+            assert.notEqual(content.indexOf(`cobertura-maven-plugin`), -1, "Cobertura maven plugin must be enabled");
+            let xmlContent = xml2js.parseString(content, function (err, res) {
+                assert.equal(res.project.reporting[0].plugins[0].plugin.length, 3, "Cobertura plugin added in the right place");
+            })
             done();
         }).catch(function (err) {
             done(err);
@@ -205,4 +225,5 @@ describe('Code Coverage enable tool tests', function () {
             done(err);
         });
     })
+
 });

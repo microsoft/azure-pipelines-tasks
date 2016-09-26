@@ -11,6 +11,20 @@ import {ToolRunner} from 'vsts-task-lib/toolrunner';
 export interface IAnalysisTool {
 
     /**
+     * A string representing the name of the tool.
+     *
+     * @returns {string}
+     */
+    toolName: string;
+
+    /**
+     * Returns true if the user enabled this tool in the UI.
+     *
+     * @returns {boolean}
+     */
+    isEnabled(): boolean;
+
+    /**
      * Configure the build to run the analysis 
      * 
      * @param {ToolRunner} toolRunner

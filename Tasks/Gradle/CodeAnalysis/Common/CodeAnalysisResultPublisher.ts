@@ -1,4 +1,5 @@
 import {AnalysisResult} from './AnalysisResult'
+import {FileSystemInteractions} from './FileSystemInteractions';
 
 import path = require('path');
 import fs = require('fs');
@@ -20,7 +21,7 @@ export class CodeAnalysisResultPublisher {
 
     /**
      * Uploads the artifacts. It groups them by module
-     * 
+     *
      * @param {string} prefix - used to discriminate between artifacts comming from different builds of the same projects (e.g. the build number)
      */
     public uploadArtifacts(prefix: string):void {
@@ -31,20 +32,20 @@ export class CodeAnalysisResultPublisher {
         tl.debug('[CA] Preparing to upload artifacts');
 
         let artifactBaseDir = path.join(this.stagingDir, 'CA');
-        tl.mkdirP(artifactBaseDir);
+        FileSystemInteractions.createDirectory(artifactBaseDir);
 
         for (var analysisResult of this.analysisResults) {
 
             // Group artifacts in folders representing the module name
             let destinationDir = path.join(artifactBaseDir, analysisResult.moduleName);
-            tl.mkdirP(destinationDir);
+            FileSystemInteractions.createDirectory(destinationDir);
 
             for (var resultFile of analysisResult.resultFiles) {
                 let extension = path.extname(resultFile);
                 let reportName = path.basename(resultFile, extension);
 
-                let artifactName = `${prefix}_${reportName}_${analysisResult.toolName}${extension}`;
-                tl.cp('-f', resultFile, path.join(destinationDir, artifactName));
+                let artifactName = `${prefix}_${reportName}_${analysisResult.originatingTool.toolName}${extension}`;
+                FileSystemInteractions.copyFile(resultFile, path.join(destinationDir, artifactName));
             }
         }
 
@@ -56,17 +57,17 @@ export class CodeAnalysisResultPublisher {
 
     /**
      * Creates and uploads a build summary that looks like:
-     * Looks like:  PMD found 13 violations in 4 files.  
-     *              FindBugs found 10 violations in 8 files.  
-     *   
-     * Code analysis results can be found in the 'Artifacts' tab. 
+     * Looks like:  PMD found 13 violations in 4 files.
+     *              FindBugs found 10 violations in 8 files.
+     *
+     * Code analysis results can be found in the 'Artifacts' tab.
      */
     public uploadBuildSummary():void {
 
         if (this.analysisResults.length === 0) {
             return;
         }
-        
+
         tl.debug('[CA] Preparing a build summary');
         let content: string = this.createSummaryContent();
         this.uploadMdSummary(content);
@@ -86,7 +87,7 @@ export class CodeAnalysisResultPublisher {
 
     private uploadMdSummary(content: string):void {
         var buildSummaryFilePath: string = path.join(this.stagingDir, 'CodeAnalysisBuildSummary.md');
-        tl.mkdirP(this.stagingDir);
+        FileSystemInteractions.createDirectory(this.stagingDir);
         fs.writeFileSync(buildSummaryFilePath, content);
 
         tl.debug('[CA] Uploading build summary from ' + buildSummaryFilePath);
@@ -100,28 +101,31 @@ export class CodeAnalysisResultPublisher {
     private createSummaryContent(): string {
 
         var buildSummaryLines: string[] = [];
-        var resultsGroupedByTool: AnalysisResult[][] = this.groupBy(this.analysisResults, (o: AnalysisResult) => { return o.toolName; });
+        var resultsGroupedByTool: AnalysisResult[][] =
+            this.groupBy(this.analysisResults, (o: AnalysisResult) => { return o.originatingTool.toolName; });
 
         for (var resultGroup of resultsGroupedByTool) {
             var summaryLine = this.createSummaryLine(resultGroup);
-            buildSummaryLines.push(summaryLine);
+            if (summaryLine != null) {
+                buildSummaryLines.push(summaryLine);
+            }
         }
-
-        tl.debug(`[CA] Build Summary: ${buildSummaryLines}`);
 
         if (buildSummaryLines.length > 0) {
             buildSummaryLines.push('');
             buildSummaryLines.push('Code analysis results can be found in the \'Artifacts\' tab.');
         }
 
-        return buildSummaryLines.join('  \r\n');
+        var buildSummaryString = buildSummaryLines.join('  \r\n');
+        tl.debug(`[CA] Build Summary: ${buildSummaryString}`);
+        return buildSummaryString;
     }
 
     // For a given code analysis tool, create a one-line summary from multiple AnalysisResult objects.
     private createSummaryLine(analysisResultsGroup: AnalysisResult[]): string {
         var violationCount: number = 0;
         var affectedFileCount: number = 0;
-        var toolName = analysisResultsGroup[0].toolName;
+        var toolName = analysisResultsGroup[0].originatingTool.toolName;
 
         analysisResultsGroup.forEach((analysisResult: AnalysisResult) => {
             violationCount += analysisResult.violationCount;
@@ -143,6 +147,12 @@ export class CodeAnalysisResultPublisher {
             return tl.loc('codeAnalysisBuildSummaryLine_OneViolationOneFile', toolName);
         }
         if (violationCount === 0) {
+            // Tools produce an AnalysisResult regardless of whether they were enabled through the UI or not
+            // Therefore, only show "X did not find any violations" messages if the tool was enabled
+            if (!analysisResultsGroup[0].originatingTool.isEnabled()) {
+                return null;
+            }
+
             // Looks like: 'PMD found no violations.'
             return tl.loc('codeAnalysisBuildSummaryLine_NoViolations', toolName);
         }

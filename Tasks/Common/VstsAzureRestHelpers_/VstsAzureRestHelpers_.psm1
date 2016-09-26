@@ -289,13 +289,13 @@ function Get-AzRmVmCustomScriptExtension
         {
             $customScriptExt=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
             Write-Verbose "No proxy settings"
-            return $customScriptExt
+            return $customScriptExt.properties
         }
         else
         {
             $customScriptExt=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
             Write-Verbose "Using proxy settings"
-            return $customScriptExt
+            return $customScriptExt.properties
         }
     }
     catch
@@ -455,29 +455,23 @@ function Get-AzRmResourceGroup
         $subscriptionId = $endpoint.Data.SubscriptionId
 
         $method="GET"
-        $uri = "$script:azureRmUri/subscriptions/$subscriptionId/resourceGroups" + '?api-version=2016-02-01'
+        $uri = "$script:azureRmUri/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName" + '?api-version=2016-02-01'
 
         $headers = @{"Authorization" = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
         $proxyUri = Get-ProxyUri $uri
-        $resourceGroups=$null
-        
+
         if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
         {
-            $resourceGroups=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
+            $resourceGroup=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
             Write-Verbose "No Proxy settings"
+            return $resourceGroup
         }
         else
         {
-            $resourceGroups=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
+            $resourceGroup=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
             Write-Verbose "Using Proxy settings"
-        }
-        foreach ($resourceGroup in $resourceGroups.value)
-        {
-            if ($resourceGroup.name -eq $resourceGroupName)
-            {
-                return $resourceGroup
-            }
+            return $resourceGroup
         }
     }
     catch

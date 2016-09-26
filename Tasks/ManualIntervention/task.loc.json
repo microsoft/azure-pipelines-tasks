@@ -6,7 +6,6 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
-    "Preview",
     "Release"
   ],
   "author": "Microsoft Corporation",
@@ -14,9 +13,9 @@
     "Server"
   ],
   "version": {
-    "Major": 7,
-    "Minor": 1,
-    "Patch": 0
+    "Major": 8,
+    "Minor": 0,
+    "Patch": 1
   },
   "inputs": [
     {

@@ -65,18 +65,33 @@ async function main(): Promise<void> {
 
         // due to a bug where we accidentally allowed nuGetPath to be surrounded by quotes before,
         // locateNuGetExe() will strip them and check for existence there.
-        let userNuGetPath = tl.getPathInput("nuGetPath", false, false);
-        if (!tl.filePathSupplied("nuGetPath")) {
-            userNuGetPath = null;
+        let nuGetPath = tl.getPathInput("nuGetPath", false, false);
+        let nugetVersion = tl.getInput("nuGetversion");
+        let userNuGetProvided = false;
+        if (nuGetPath !== null && tl.filePathSupplied("nuGetPath")) {
+            nuGetPath = nutil.stripLeadingAndTrailingQuotes(nuGetPath);
+            userNuGetProvided = true;
+            if (nugetVersion !== "custom")
+            {
+                // For back compat, if a path has already been specified then use it.
+                // However, warn the user in the build of this behavior.
+                tl.warning(tl.loc("Warning_ConflictingNuGetPreference"));
+            }
+        }
+        else {
+            if (nugetVersion === "custom")
+            {
+                throw new Error(tl.loc("NoNuGetSpecified"))
+            }
+            nuGetPath = nutil.getBundledNuGetLocation(nugetVersion);
         }
 
         let serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
 
-        // find nuget location to use
-        let nuGetPathToUse = ngToolRunner.locateNuGetExe(userNuGetPath);
+        //find nuget location to use
         let credProviderPath = ngToolRunner.locateCredentialProvider();
 
-        const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPathToUse);
+        const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
 
         // clauses ordered in this way to avoid short-circuit evaluation, so the debug info printed by the functions
         // is unconditionally displayed
@@ -99,16 +114,16 @@ async function main(): Promise<void> {
         let environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
             authInfo: authInfo,
             credProviderFolder: useCredProvider ? path.dirname(credProviderPath) : null,
-            extensionsDisabled: !userNuGetPath,
-        };
+            extensionsDisabled: !userNuGetProvided
+        }
 
         let configFile = null;
         let apiKey: string;
         let feedUri: string;
-        let credCleanup = () => { return; };
-        if (nuGetFeedType === "internal") {
+        let credCleanup = () => { return };
+        if (nuGetFeedType == "internal") {
             if (useCredConfig) {
-                let nuGetConfigHelper = new NuGetConfigHelper(nuGetPathToUse, null, authInfo, environmentSettings);
+                let nuGetConfigHelper = new NuGetConfigHelper(nuGetPath, null, authInfo, environmentSettings);
                 nuGetConfigHelper.setSources([{ feedName: "internalFeed", feedUri: internalFeedUri }]);
                 configFile = nuGetConfigHelper.tempNugetConfigPath;
                 credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath, true);
@@ -125,7 +140,7 @@ async function main(): Promise<void> {
 
         try {
             let publishOptions = new PublishOptions(
-                nuGetPathToUse,
+                nuGetPath,
                 feedUri,
                 apiKey,
                 configFile,

@@ -59,8 +59,31 @@ function createTempDirsForCodeAnalysisTests(): void {
     }
 }
 
+function cleanTempDirsForCodeAnalysisTests():void {
+    var testTempDir: string = path.join(__dirname, '_temp');
+    deleteFolderRecursive(testTempDir);
+}
+
+function deleteFolderRecursive(path):void {
+    if (fs.existsSync(path)) {
+        fs.readdirSync(path).forEach(function(file,index){
+            var curPath = path + "/" + file;
+            if(fs.lstatSync(curPath).isDirectory()) { // recurse
+                deleteFolderRecursive(curPath);
+            } else { // delete file
+                fs.unlinkSync(curPath);
+            }
+        });
+        fs.rmdirSync(path);
+    }
+};
+
 function assertCodeAnalysisBuildSummaryContains(stagingDir: string, expectedString: string): void {
     assertBuildSummaryContains(path.join(stagingDir, '.codeAnalysis', 'CodeAnalysisBuildSummary.md'), expectedString);
+}
+
+function assertCodeAnalysisBuildSummaryDoesNotContain(stagingDir: string, unexpectedString: string): void {
+    assertBuildSummaryDoesNotContain(fs.readFileSync(path.join(stagingDir, '.codeAnalysis', 'CodeAnalysisBuildSummary.md'), 'utf-8'), unexpectedString);
 }
 
 function assertSonarQubeBuildSummaryContains(stagingDir: string, expectedString: string): void {
@@ -71,7 +94,32 @@ function assertSonarQubeBuildSummaryContains(stagingDir: string, expectedString:
 function assertBuildSummaryContains(buildSummaryFilePath: string, expectedLine: string): void {
     var buildSummaryString: string = fs.readFileSync(buildSummaryFilePath, 'utf-8');
 
-    assert(buildSummaryString.indexOf(expectedLine) > -1, "Expected build summary to contain: " + expectedLine);
+    assert(buildSummaryString.indexOf(expectedLine) > -1, `Expected build summary to contain: ${expectedLine}
+    Actual: ${buildSummaryString}`);
+}
+
+// Asserts the existence of a given line in the build summary file that is uploaded to the server.
+function assertBuildSummaryDoesNotContain(buildSummaryString: string, string: string): void {
+    assert(buildSummaryString.indexOf(string) === -1, `Expected build summary to not contain: ${string}
+     Actual: ${buildSummaryString}`);
+}
+
+function assertFileExistsInDir(stagingDir:string, filePath:string) {
+    var directoryName:string = path.dirname(path.join(stagingDir, filePath));
+    var fileName:string = path.basename(filePath);
+    assert(fs.statSync(directoryName).isDirectory(), 'Expected directory did not exist: ' + directoryName);
+    var directoryContents:string[] = fs.readdirSync(directoryName);
+    assert(directoryContents.indexOf(fileName) > -1, `Expected file did not exist: ${filePath}
+    Actual contents of ${directoryName}: ${directoryContents}`);
+}
+
+function assertFileDoesNotExistInDir(stagingDir:string, filePath:string) {
+    var directoryName:string = path.dirname(path.join(stagingDir, filePath));
+    var fileName:string = path.basename(filePath);
+    assert(fs.statSync(directoryName).isDirectory(), 'Expected directory did not exist: ' + directoryName);
+    var directoryContents:string[] = fs.readdirSync(directoryName);
+    assert(directoryContents.indexOf(fileName) === -1, `Expected file to not exist, but it does: ${filePath}
+    Actual contents of ${directoryName}: ${directoryContents}`);
 }
 
 function setResponseAndBuildVars(initialResponseFile: string, finalResponseFile: string, envVars: Array<[string, string]>) {
@@ -180,7 +228,7 @@ describe('gradle Suite', function () {
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.stdout.indexOf('GRADLE_OPTS is now set to -Xmx2048m') > 0);
-               
+
                 done();
             })
             .fail((err) => {
@@ -518,10 +566,10 @@ describe('gradle Suite', function () {
         tr.run()
             .then(() => {
                 if (isWindows) {
-                    assert(tr.invokedToolCount == 1, 'should not have run gradle'); // should have run reg query toolrunner once 
+                    assert(tr.invokedToolCount == 1, 'should not have run gradle'); // should have run reg query toolrunner once
                 } else {
                     assert(tr.invokedToolCount == 0, 'should not have run gradle');
-                } 
+                }
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
                 assert(tr.failed, 'task should have failed');
@@ -659,6 +707,9 @@ describe('gradle Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
     it('Gradle with SQ - source branch not a PR branch', function (done) {
@@ -707,6 +758,9 @@ describe('gradle Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
     it('Gradle with SQ - scc is not TfsGit', function (done) {
@@ -755,6 +809,9 @@ describe('gradle Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
     it('Gradle with SonarQube - Should run Gradle with all default inputs when SonarQube analysis disabled', function (done) {
@@ -827,6 +884,9 @@ describe('gradle Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     })
 
     it('Gradle with SonarQube - Should run Gradle with SonarQube', function (done) {
@@ -880,6 +940,9 @@ describe('gradle Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
     it('Gradle with SonarQube - Fails if the task report is invalid', function (done) {
@@ -930,6 +993,9 @@ describe('gradle Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
     it('Gradle with SonarQube - Fails if the task report is missing', function (done) {
@@ -980,6 +1046,9 @@ describe('gradle Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
     it('Gradle with SonarQube - Does not fail if report-task.txt is missing during a PR build', function (done) {
@@ -987,8 +1056,6 @@ describe('gradle Suite', function () {
         createTempDirsForSonarQubeTests();
         var testSrcDir: string = __dirname;
         var testStgDir: string = path.join(__dirname, '_temp');
-        var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis'); // overall directory for all tools
-        fs.mkdirSync(codeAnalysisStgDir);
 
         mockHelper.setResponseAndBuildVars(
             path.join(__dirname, 'gradleSonarQube.json'),
@@ -1034,6 +1101,9 @@ describe('gradle Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
     it('Gradle with SonarQube - Should run Gradle with SonarQube and apply required parameters for older server versions', function (done) {
@@ -1089,6 +1159,9 @@ describe('gradle Suite', function () {
             .fail((err) => {
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
     it('Single Module Gradle with PMD and Checkstyle', function (done) {
@@ -1097,7 +1170,6 @@ describe('gradle Suite', function () {
 
         var testSrcDir: string = path.join(__dirname, 'data', 'singlemodule');
         var testStgDir: string = path.join(__dirname, '_temp');
-        var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis'); // overall directory for all tools
 
         setResponseAndBuildVars(
             'gradleCA.json',
@@ -1130,6 +1202,18 @@ describe('gradle Suite', function () {
                 assertCodeAnalysisBuildSummaryContains(testStgDir, 'Checkstyle found 35 violations in 2 file');
                 assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found 4 violations in 2 files');
 
+                var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
+
+                // Test files were copied for module "root", build 14
+                assertFileExistsInDir(codeAnalysisStgDir, '/root/14_main_Checkstyle.html');
+                assertFileExistsInDir(codeAnalysisStgDir, '/root/14_main_Checkstyle.xml');
+                assertFileExistsInDir(codeAnalysisStgDir, '/root/14_main_PMD.html');
+                assertFileExistsInDir(codeAnalysisStgDir, '/root/14_main_PMD.xml');
+                assertFileExistsInDir(codeAnalysisStgDir, '/root/14_test_Checkstyle.html');
+                assertFileExistsInDir(codeAnalysisStgDir, '/root/14_test_Checkstyle.xml');
+                assertFileExistsInDir(codeAnalysisStgDir, '/root/14_test_PMD.html');
+                assertFileExistsInDir(codeAnalysisStgDir, '/root/14_test_PMD.xml');
+
 
                 done();
             })
@@ -1139,6 +1223,66 @@ describe('gradle Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
+    });
+
+    it('Gradle with code analysis - Only shows empty results for tools which are enabled', function (done) {
+
+        createTempDirsForCodeAnalysisTests();
+
+        var testSrcDir: string = path.join(__dirname, 'data', 'singlemodule-noviolations');
+        var testStgDir: string = path.join(__dirname, '_temp');
+
+        setResponseAndBuildVars(
+            'gradleCA.json',
+            this.test.title + '_response.json',
+            [
+                ["build.buildNumber", "14"],
+                ['build.sourcesDirectory', testSrcDir],
+                ['build.artifactStagingDirectory', testStgDir]
+            ]);
+
+        var tr = new TaskRunner('Gradle', true, true);
+        tr = setDefaultInputs(tr, false);
+        tr.setInput('pmdAnalysisEnabled', 'true');
+        tr.setInput('checkstyleAnalysisEnabled', 'false');
+
+        // Act
+        tr.run()
+            .then(() => {
+                // Assert
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.ran(gradleWrapper + ' build -I /Gradle/CodeAnalysis/pmd.gradle'), 'Ran Gradle with PMD');
+                assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
+                    'should have uploaded a Code Analysis Report build summary');
+                assert(tr.stdout.indexOf('artifact.upload artifactname=Code Analysis Results;') > -1,
+                    'should have uploaded code analysis build artifacts');
+
+                assertCodeAnalysisBuildSummaryDoesNotContain(testStgDir, 'Checkstyle found no violations.');
+                assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found no violations.');
+
+                var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
+
+                // Test files were copied for module "root", build 14
+                assertFileDoesNotExistInDir(codeAnalysisStgDir, '/root/14_main_Checkstyle.xml');
+                assertFileDoesNotExistInDir(codeAnalysisStgDir, '/root/14_main_PMD.xml');
+
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                console.log(tr.stderr);
+                console.log(err);
+                done(err);
+            });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
     it('Multi Module Gradle with Checkstyle and PMD', function (done) {
@@ -1147,7 +1291,6 @@ describe('gradle Suite', function () {
 
         var testSrcDir: string = path.join(__dirname, 'data', 'multimodule');
         var testStgDir: string = path.join(__dirname, '_temp');
-        var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis'); // overall directory for all tools
 
         setResponseAndBuildVars(
             'gradleCA.json',
@@ -1179,6 +1322,22 @@ describe('gradle Suite', function () {
                 assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found 2 violations in 1 file');
                 assertCodeAnalysisBuildSummaryContains(testStgDir, 'Checkstyle found 34 violations in 2 files');
 
+                var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
+
+                // Test files copied for module "module-one", build 211
+                assertFileExistsInDir(codeAnalysisStgDir, 'module-one/211_main_Checkstyle.html');
+                assertFileExistsInDir(codeAnalysisStgDir, 'module-one/211_main_Checkstyle.xml');
+                assertFileExistsInDir(codeAnalysisStgDir, 'module-one/211_main_PMD.html');
+                assertFileExistsInDir(codeAnalysisStgDir, 'module-one/211_main_PMD.xml');
+                assertFileExistsInDir(codeAnalysisStgDir, 'module-one/211_test_Checkstyle.html');
+                assertFileExistsInDir(codeAnalysisStgDir, 'module-one/211_test_Checkstyle.xml');
+
+                // Test files were copied for module "module-two", build 211
+                // None - the checkstyle reports have no violations and are not uploaded
+
+                // Test files were copied for module "module-three", build 211
+                // None - the pmd reports have no violations and are not uploaded
+
                 done();
             })
             .fail((err) => {
@@ -1187,10 +1346,13 @@ describe('gradle Suite', function () {
                 console.log(err);
                 done(err);
             });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
     });
 
     class CheckstyleTestTool extends CheckstyleTool {
-        protected isEnabled() {
+        public isEnabled() {
             return true;
         }
     }
@@ -1227,7 +1389,7 @@ describe('gradle Suite', function () {
     });
 
      class PmdTestTool extends PmdTool {
-        protected isEnabled() {
+        public isEnabled() {
             return true;
         }
      }

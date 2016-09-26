@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 60
+        "Patch": 66
     },
     "demands": [
         "vstest"
@@ -222,6 +222,7 @@
         }
     },
     "messages": {
+        "AccessDeniedToPath": "%s path does not exist.",
         "VstestReturnCode": "Vstest exited with return code: %d.",
         "NoMatchingTestAssemblies": "No test assemblies found matching the pattern: %s.",
         "VstestNotFound": "Vstest of version %d is not found. Try again with a visual studio version that exists on your build agent machine.",
@@ -238,7 +239,9 @@
         "ErrorWhileCreatingResponseFile": "Error occurred while creating the response file. All the tests will be executed for this run.",
         "ErrorWhileUpdatingResponseFile": "Error occurred while updating the response file '%s'. All the tests will be executed for this run.",
         "ErrorWhilePublishingCodeChanges": "Error occurred while publishing the code changes. All the tests will be executed for this run.",
+        "ErrorWhileListingDiscoveredTests": "Error occured while discovering the tests. All the tests will be exexuted for this run.",
         "PublishCodeChangesPerfTime": "Total time taken to publish code changes: %d milliseconds",
-        "GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds"
+        "GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds",
+        "UploadTestResultsPerfTime": "Total time taken to upload test results: %d milliseconds"
     }
 }

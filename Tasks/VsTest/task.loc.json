@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 60
+    "Patch": 66
   },
   "demands": [
     "vstest"
@@ -224,6 +224,7 @@
     }
   },
   "messages": {
+    "AccessDeniedToPath": "ms-resource:loc.messages.AccessDeniedToPath",
     "VstestReturnCode": "ms-resource:loc.messages.VstestReturnCode",
     "NoMatchingTestAssemblies": "ms-resource:loc.messages.NoMatchingTestAssemblies",
     "VstestNotFound": "ms-resource:loc.messages.VstestNotFound",
@@ -240,7 +241,9 @@
     "ErrorWhileCreatingResponseFile": "ms-resource:loc.messages.ErrorWhileCreatingResponseFile",
     "ErrorWhileUpdatingResponseFile": "ms-resource:loc.messages.ErrorWhileUpdatingResponseFile",
     "ErrorWhilePublishingCodeChanges": "ms-resource:loc.messages.ErrorWhilePublishingCodeChanges",
+    "ErrorWhileListingDiscoveredTests": "ms-resource:loc.messages.ErrorWhileListingDiscoveredTests",
     "PublishCodeChangesPerfTime": "ms-resource:loc.messages.PublishCodeChangesPerfTime",
-    "GenerateResponseFilePerfTime": "ms-resource:loc.messages.GenerateResponseFilePerfTime"
+    "GenerateResponseFilePerfTime": "ms-resource:loc.messages.GenerateResponseFilePerfTime",
+    "UploadTestResultsPerfTime": "ms-resource:loc.messages.UploadTestResultsPerfTime"
   }
 }
