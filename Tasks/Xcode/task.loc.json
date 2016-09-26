@@ -12,7 +12,7 @@
   "version": {
     "Major": 2,
     "Minor": 3,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [
     "xcode"
@@ -23,6 +23,11 @@
       "name": "sign",
       "displayName": "ms-resource:loc.group.displayName.sign",
       "isExpanded": true
+    },
+    {
+      "name": "package",
+      "displayName": "ms-resource:loc.group.displayName.package",
+      "isExpanded": false
     },
     {
       "name": "advanced",
@@ -81,6 +86,76 @@
       "defaultValue": true,
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.packageApp"
+    },
+    {
+      "name": "archivePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.archivePath",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.archivePath",
+      "groupName": "package"
+    },
+    {
+      "name": "exportPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.exportPath",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.exportPath",
+      "groupName": "package"
+    },
+    {
+      "name": "exportFormat",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.exportFormat",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.exportFormat",
+      "groupName": "package"
+    },
+    {
+      "name": "exportOptions",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.exportOptions",
+      "defaultValue": "none",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.exportOptions",
+      "groupName": "package",
+      "options": {
+        "none": "None",
+        "plist": "Plist",
+        "specify": "Specify"
+      }
+    },
+    {
+      "name": "exportMethod",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.exportMethod",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.exportMethod",
+      "groupName": "package",
+      "visibleRule": "exportOptions == specify"
+    },
+    {
+      "name": "exportTeamId",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.exportTeamId",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.exportTeamId",
+      "groupName": "package",
+      "visibleRule": "exportOptions == specify"
+    },
+    {
+      "name": "exportOptionsPlist",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.exportOptionsPlist",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.exportOptionsPlist",
+      "groupName": "package"
     },
     {
       "name": "xcode8AutomaticSigning",

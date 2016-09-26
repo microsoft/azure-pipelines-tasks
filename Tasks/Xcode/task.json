@@ -12,7 +12,7 @@
     "version": {
         "Major": 2,
         "Minor": 3,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [
         "xcode"
@@ -23,6 +23,11 @@
             "name": "sign",
             "displayName": "Signing & Provisioning",
             "isExpanded": true
+        },
+        {
+            "name": "package",
+            "displayName": "Package Options",
+            "isExpanded": false
         },
         {
             "name": "advanced",
@@ -81,6 +86,76 @@
             "defaultValue": true,
             "required": true,
             "helpMarkDown": "Indicates whether an IPA should be generated as a part of the build."
+        },
+        {
+            "name": "archivePath",
+            "type": "filePath",
+            "label": "Archive Path",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The path to the archive file (.xcarchive), or the archive that should be exported.",
+            "groupName": "package"
+        },
+        {
+            "name": "exportPath",
+            "type": "filePath",
+            "label": "Export Path",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Destination path for the product exported from an archive.",
+            "groupName": "package"
+        },
+        {
+            "name": "exportFormat",
+            "type": "string",
+            "label": "Export Format",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The format to which the archive should be exported. Valid formats are IPA, PKG and APP. If not specified, xcodebuild will attempt to auto-detect the format as either IPA or PKG.",
+            "groupName": "package"
+        },
+        {
+            "name": "exportOptions",
+            "type": "pickList",
+            "label": "Export Options",
+            "defaultValue": "none",
+            "required": false,
+            "helpMarkDown": "Path to a plist file that configures archive exporting.",
+            "groupName": "package",
+            "options": {
+                "none": "None",
+                "plist": "Plist",
+                "specify": "Specify"
+            }
+        },
+        {
+            "name": "exportMethod",
+            "type": "string",
+            "label": "Export Method",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Method for how Xcode should export the archive. E.g. app-store, package, ad-hoc, enterprise, development. Defaults to development if not specified.",
+            "groupName": "package",
+            "visibleRule": "exportOptions == specify"
+        },
+        {
+            "name": "exportTeamId",
+            "type": "string",
+            "label": "TeamId",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The Apple Developer Portal team to use for this export. Defaults to the team used to build the archive.",
+            "groupName": "package",
+            "visibleRule": "exportOptions == specify"
+        },
+        {
+            "name": "exportOptionsPlist",
+            "type": "filePath",
+            "label": "Export Options Plist",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Path to a plist file that configures archive exporting.",
+            "groupName": "package"
         },
         {
             "name": "xcode8AutomaticSigning",
