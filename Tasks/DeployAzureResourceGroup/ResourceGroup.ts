@@ -9,7 +9,7 @@ import util = require("util");
 var minimist = require("minimist");
 var armResource = require("azure-arm-resource");
 
-export class ResourceGroupOperations {
+export class ResourceGroup {
 
     private connectedServiceNameSelector:string;
     private action:string;
@@ -54,7 +54,7 @@ export class ResourceGroupOperations {
     private createDeploymentName(filePath:string):string {
         var fileName = path.basename(filePath).split(".")[0].replace(" ", "");
         var ts = new Date(Date.now());
-        var depName = util.format("%s-%s%s%s-%s%s%s",fileName,ts.getFullYear(), ts.getMonth(), ts.getDate(),ts.getHours(), ts.getMinutes());
+        var depName = util.format("%s-%s%s%s-%s%s",fileName,ts.getFullYear(), ts.getMonth(), ts.getDate(),ts.getHours(), ts.getMinutes());
         return depName;
     } 
 
@@ -88,7 +88,8 @@ export class ResourceGroupOperations {
         var properties = {}
         properties["template"] = template;
         properties["parameters"] = parameters["parameters"];
-        properties["parameters"] = this.updateOverrideParameters(properties["parameters"]);
+        if (this.overrideParameters!=null)
+            properties["parameters"] = this.updateOverrideParameters(properties["parameters"]);
         properties["mode"] = this.deploymentMode;
         properties["debugSetting"] = {"detailLevel": "requestContent, responseContent"};
         var deployment = {"properties": properties};

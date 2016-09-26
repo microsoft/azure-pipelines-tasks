@@ -9,8 +9,8 @@ import util = require("util");
 
 var msRestAzure = require("ms-rest-azure");
 
-import VMUtil = require("./VMUtil");
-import RGUtil = require("./RGUtil");
+import virtualMachine = require("./VirtualMachine");
+import resourceGroup = require("./ResourceGroup");
 
 try {
     tl.setResourcePath(path.join( __dirname, "task.json"));
@@ -73,13 +73,13 @@ export class AzureResourceGroupDeployment {
            case "Create Or Update Resource Group": 
            case "DeleteRG":
            case "Select Resource Group":
-                new RGUtil.ResourceGroupOperations(this.action, this.connectedService, this.getARMCredentials(), this.resourceGroupName, this.location, this.csmFile, this.csmParametersFile, this.overrideParameters, this.subscriptionId, this.deploymentMode);
+                new resourceGroup.ResourceGroup(this.action, this.connectedService, this.getARMCredentials(), this.resourceGroupName, this.location, this.csmFile, this.csmParametersFile, this.overrideParameters, this.subscriptionId, this.deploymentMode);
                 break;
            case "Start":
            case "Stop":
            case "Restart":
            case "Delete":
-               new VMUtil.VirtualMachineOperations(this.resourceGroupName, this.action, this.subscriptionId, this.connectedService, this.getARMCredentials());
+               new virtualMachine.VirtualMachine(this.resourceGroupName, this.action, this.subscriptionId, this.connectedService, this.getARMCredentials());
                break;
            default:
                tl.setResult(tl.TaskResult.Succeeded, tl.loc("InvalidAction"));

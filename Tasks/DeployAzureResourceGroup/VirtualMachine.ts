@@ -6,7 +6,7 @@ import tl = require("vsts-task-lib/task");
 
 var computeManagementClient = require('azure-arm-compute');
 
-export class VirtualMachineOperations {
+export class VirtualMachine {
     private action:string;
     private resourceGroupName:string;
     private subscriptionId:string;
@@ -36,7 +36,7 @@ export class VirtualMachineOperations {
         this.execute();
     }
 
-    private postOperationCallBack(error, result, request, response) {
+    private postOperationCallBack = (error, result, request, response) => {
         if (error) {
             this.failureCount++;
             this.errors+=error.message;
