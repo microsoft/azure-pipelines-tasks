@@ -1,3 +1,14 @@
+$modelServerName = 'yyy.database.windows.net'
+function Check-ServerName
+{
+    param([String] [Parameter(Mandatory = $true)] $serverName)
+
+    if (-not $serverName.Contains('.'))
+    {
+        throw (Get-VstsLocString -Key "SAD_InvalidServerNameFormat" -ArgumentList $serverName, $modelServerName)
+    }
+}
+
 function Get-AgentStartIPAddress
 {
     $endpoint = (Get-VstsEndpoint -Name SystemVssConnection -Require)

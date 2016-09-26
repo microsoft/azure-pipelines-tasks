@@ -18,7 +18,7 @@ rootProject {
     allprojects { proj ->
         afterEvaluate {
             if (!hasCheckstyle) {
-                println('Applying the checkstyle plugin to project ' + proj.getName());
+                println('Applying the Checkstyle plugin to project ' + proj.getName());
 
                 proj.apply plugin: 'checkstyle'
                 checkstyle {

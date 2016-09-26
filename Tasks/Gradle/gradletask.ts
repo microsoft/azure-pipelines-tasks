@@ -10,6 +10,7 @@ import {CodeAnalysisOrchestrator} from './CodeAnalysis/Common/CodeAnalysisOrches
 import {BuildOutput, BuildEngine} from './CodeAnalysis/Common/BuildOutput';
 import {PmdTool} from './CodeAnalysis/Common/PmdTool';
 import {CheckstyleTool} from './CodeAnalysis/Common/CheckstyleTool';
+import {FindbugsTool} from './CodeAnalysis/Common/FindbugsTool';
 import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
 import javacommons = require('java-common/java-common');
 
@@ -54,8 +55,9 @@ var isSonarQubeEnabled: boolean = sqCommon.isSonarQubeAnalysisEnabled();
 let reportingTaskName = "";
 
 let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('build.sourcesDirectory'), BuildEngine.Gradle);
-var codeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
+var codeAnalysisOrchestrator:CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
     [new CheckstyleTool(buildOutput, 'checkstyleAnalysisEnabled'),
+        new FindbugsTool(buildOutput, 'findbugsAnalysisEnabled'),
         new PmdTool(buildOutput, 'pmdAnalysisEnabled')]);
 
 if (isCodeCoverageOpted && inputTasks.indexOf('clean') == -1) {

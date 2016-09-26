@@ -24,6 +24,8 @@ $EndIpAddress = Get-VstsInput -Name "EndIpAddress"
 $DeleteFirewallRule = Get-VstsInput -Name "DeleteFirewallRule" -Require -AsBool
 $defaultTimeout = 120
 
+$ErrorActionPreference = 'Stop'
+
 # Initialize Rest API Helpers.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_
 
@@ -56,58 +58,76 @@ function ThrowIfMultipleFilesOrNoFilePresent($files, $pattern)
     }
 }
 
-if ($TaskNameSelector -eq "DacpacTask")
-{
-    Write-Host "FilePath= Find-VstsFiles LegacyPattern $DacpacFile"
-    $FilePath = Find-VstsFiles LegacyPattern $DacpacFile
-    Write-Host "packageFile= $FilePath"
-
-    #Ensure that a single package (.dacpac) file is found
-    ThrowIfMultipleFilesOrNoFilePresent -files $FilePath -pattern $DacpacFile
-} ElseIf ($TaskNameSelector -eq "SqlTask")
-{
-    Write-Host "FilePath= Find-VstsFiles LegacyPattern $SqlFile"
-    $FilePath = Find-VstsFiles LegacyPattern $SqlFile
-    Write-Host "packageFile= $FilePath"
-
-    #Ensure that a single .sql file is found
-    ThrowIfMultipleFilesOrNoFilePresent -files $FilePath -pattern $SqlFile
-}
-
-$PublishProfilePath = ""
-if( [string]::IsNullOrWhitespace($PublishProfile) -eq $false -and $PublishProfile -ne $env:SYSTEM_DEFAULTWORKINGDIRECTORY -and $PublishProfile -ne [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\"))
-{
-    Write-Host "PublishProfilePath = Find-VstsFiles LegacyPattern $PublishProfile"
-    $PublishProfilePath = Find-VstsFiles LegacyPattern $PublishProfile
-    Write-Host "Publish profile path = $PublishProfilePath"
-
-    #Ensure that only one publish profile file is found
-    ThrowIfMultipleFilesOrNoFilePresent -files $PublishProfilePath -pattern $PublishProfile
-}
-
-
-$ErrorActionPreference = 'Stop'
-
-$ServerName = $ServerName.ToLower()
-$serverFriendlyName = $ServerName.split(".")[0]
-Write-Verbose "Server friendly name is $serverFriendlyName"
-
-# Getting start and end IP address for agent machine
-$ipAddress = Get-AgentIPAddress -startIPAddress $StartIpAddress -endIPAddress $EndIpAddress -ipDetectionMethod $IpDetectionMethod
-Write-Verbose ($ipAddress | Format-List | Out-String)
-
-$startIp =$ipAddress.StartIPAddress
-$endIp = $ipAddress.EndIPAddress
-
 Try
 {
+    $firewallRuleName = ""
+
+    if ($TaskNameSelector -eq "DacpacTask")
+    {
+        Write-Verbose "FilePath= Find-VstsFiles LegacyPattern $DacpacFile"
+        $FilePath = Find-VstsFiles LegacyPattern $DacpacFile
+        Write-Host "packageFile= $FilePath"
+
+        #Ensure that a single package (.dacpac) file is found
+        ThrowIfMultipleFilesOrNoFilePresent -files $FilePath -pattern $DacpacFile
+    }
+    ElseIf ($TaskNameSelector -eq "SqlTask")
+    {
+        Write-Verbose "FilePath= Find-VstsFiles LegacyPattern $SqlFile"
+        $FilePath = Find-VstsFiles LegacyPattern $SqlFile
+        Write-Host "packageFile= $FilePath"
+
+        #Ensure that a single .sql file is found
+        ThrowIfMultipleFilesOrNoFilePresent -files $FilePath -pattern $SqlFile
+
+        $sqlFileExtension = ".sql"
+        if([System.IO.Path]::GetExtension($FilePath) -ne $sqlFileExtension)
+        {
+            Write-Error (Get-VstsLocString -Key "SAD_InvalidSqlFile" -ArgumentList $FilePath)
+        }
+    }
+    ElseIf ($TaskNameSelector -eq "InlineSqlTask")
+    {
+        $FilePath = [System.IO.Path]::GetTempFileName()
+        ($SqlInline | Out-File $FilePath)
+    
+        Write-Host "tempFile= $FilePath"
+    
+        $SqlAdditionalArguments = $InlineAdditionalArguments
+    }
+
+    $PublishProfilePath = ""
+    if( [string]::IsNullOrWhitespace($PublishProfile) -eq $false -and $PublishProfile -ne $env:SYSTEM_DEFAULTWORKINGDIRECTORY -and $PublishProfile -ne [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\"))
+    {
+        Write-Host "PublishProfilePath = Find-VstsFiles LegacyPattern $PublishProfile"
+        $PublishProfilePath = Find-VstsFiles LegacyPattern $PublishProfile
+        Write-Host "Publish profile path = $PublishProfilePath"
+
+        #Ensure that only one publish profile file is found
+        ThrowIfMultipleFilesOrNoFilePresent -files $PublishProfilePath -pattern $PublishProfile
+    }
+
     if ($connectedServiceNameSelector -eq "ConnectedServiceNameARM")
     {
         $connectedServiceName = $connectedServiceNameARM
     }
 
+    $ServerName = $ServerName.ToLower()
+    # Checks for the very basic consistency of the Server Name
+    Check-ServerName $ServerName
+
+    $serverFriendlyName = $ServerName.split(".")[0]
+    Write-Verbose "Server friendly name is $serverFriendlyName"
+
     # Getting endpoint used for the task
     $endpoint = Get-Endpoint -connectedServiceName $connectedServiceName
+
+    # Getting start and end IP address for agent machine
+    $ipAddress = Get-AgentIPAddress -startIPAddress $StartIpAddress -endIPAddress $EndIpAddress -ipDetectionMethod $IpDetectionMethod
+    Write-Verbose ($ipAddress | Format-List | Out-String)
+
+    $startIp =$ipAddress.StartIPAddress
+    $endIp = $ipAddress.EndIPAddress
 
     # creating firewall rule for agent on sql server
     $firewallSettings = Create-AzureSqlDatabaseServerFirewallRule -startIP $startIp -endIP $endIp -serverName $serverFriendlyName -endpoint $endpoint
@@ -154,23 +174,6 @@ Try
 
         $commandToRun = $scriptArgument + " -Password `"$SqlPassword`" "
         $commandToLog = $scriptArgument + " -Password ****** "
-
-        if ($TaskNameSelector -eq "InlineSqlTask")
-        {
-            $FilePath = [System.IO.Path]::GetTempFileName()
-            ($SqlInline | Out-File $FilePath)
-
-            $SqlAdditionalArguments = $InlineAdditionalArguments
-        }
-        else # Sql File Task
-        {
-            # Check if file selected is an sql file.
-            $sqlFileExtension = ".sql"
-            if([System.IO.Path]::GetExtension($FilePath) -ne $sqlFileExtension)
-            {
-                Write-Error (Get-VstsLocString -Key "SAD_InvalidSqlFile" -ArgumentList $FilePath)
-            }
-        }
 
         # Increase Timeout to 120 seconds in case its not provided by User
         if (-not ($SqlAdditionalArguments.ToLower().Contains("-connectiontimeout")))

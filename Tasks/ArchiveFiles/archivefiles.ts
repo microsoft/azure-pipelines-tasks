@@ -64,7 +64,7 @@ function getOptions() {
         return { cwd: dirName };
     } else {
         var stats: tl.FsStats = tl.stats(rootFolder);
-        if (stats.isFile) {
+        if (stats.isFile()) {
             dirName = path.dirname(rootFolder);
         } else {
             dirName = rootFolder;
@@ -267,7 +267,7 @@ function doWork() {
             if (replaceExistingArchive) {
                 try {
                     var stats: tl.FsStats = tl.stats(archiveFile);
-                    if (stats.isFile) {
+                    if (stats.isFile()) {
                         console.log('removing existing archive file before creation: ' + archiveFile);
                     } else {
                         failTask('Specified archive file: ' + archiveFile + ' already exists and is not a file.');

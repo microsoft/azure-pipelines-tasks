@@ -57,7 +57,7 @@ function Remove-AzureMachineCustomScriptExtension
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName) -and -not [string]::IsNullOrEmpty($name))
     {
         Write-Host (Get-VstsLocString -Key "ARG_RemovingExtension" -ArgumentList $name, $vmName)
-        $response = Remove-AzRmVMCustomScriptExtension $resourceGroupName $vmName $name $endpoint -Force -ErrorAction SilentlyContinue -Verbose		
+        $response = Remove-AzRmVMCustomScriptExtension $resourceGroupName $vmName $name $endpoint -ErrorAction SilentlyContinue -Verbose
         Write-Host (Get-VstsLocString -Key "ARG_RemovedExtension" -ArgumentList $name, $vmName)
     }
 
