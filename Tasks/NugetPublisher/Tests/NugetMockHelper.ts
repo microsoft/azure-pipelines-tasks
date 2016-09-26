@@ -46,6 +46,9 @@ export class NugetMockHelper {
             },
             stripLeadingAndTrailingQuotes: function(path) {
                 return path;
+            },
+            locateCredentialProvider: function(path) {
+                return 'c:\\agent\\home\\directory\\externals\\nuget\\CredentialProvider';
             }
         } )
     }

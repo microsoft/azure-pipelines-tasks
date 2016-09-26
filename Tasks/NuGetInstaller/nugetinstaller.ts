@@ -90,7 +90,7 @@ async function main(): Promise<void> {
         let serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
 
         //find nuget location to use
-        let credProviderPath = ngToolRunner.locateCredentialProvider();
+        let credProviderPath = nutil.locateCredentialProvider();
 
         const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
 
@@ -181,11 +181,11 @@ function restorePackagesAsync(solutionFile: string, options: RestoreOptions): Q.
     nugetTool.arg(options.restoreMode);
     nugetTool.arg("-NonInteractive");
 
-    nugetTool.pathArg(solutionFile);
+    nugetTool.arg(solutionFile);
 
     if (options.configFile) {
         nugetTool.arg("-ConfigFile");
-        nugetTool.pathArg(options.configFile);
+        nugetTool.arg(options.configFile);
     }
 
     if (options.noCache) {

@@ -268,13 +268,3 @@ export function isCredentialConfigEnabled(quirks: NuGetQuirks): boolean {
     tl.debug("Credential config is enabled.");
     return true;
 }
-
-export function locateCredentialProvider(): string {
-    const credentialProviderLocation = locateTool("CredentialProvider.TeamBuild.exe");
-    if (!credentialProviderLocation) {
-        tl.debug("Credential provider is not present.");
-        return null;
-    }
-
-    return credentialProviderLocation;
-}

@@ -53,6 +53,9 @@ tmr.registerMock('nuget-task-common/Utility', {
     },
     getBundledNuGetLocation: function(version) {
         return '~/myagent/_work/_tasks/NuGet/nuget.exe';
+    },
+    locateCredentialProvider: function(path) {
+        return '~/myagent/_work/_tasks/NuGet/CredentialProvider';
     }
 } )
 

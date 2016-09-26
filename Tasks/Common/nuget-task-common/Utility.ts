@@ -147,3 +147,7 @@ export function getBundledNuGetLocation(version: string): string {
     }
     throw new Error(tl.loc("NGCommon_UnabletoDetectNuGetVersion"));
 }
+
+export function locateCredentialProvider(): string {
+    return path.join(__dirname, 'NuGet/CredentialProvider'); 
+}

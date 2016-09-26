@@ -46,6 +46,9 @@ export class NugetMockHelper {
             },
             stripLeadingAndTrailingQuotes: function(path) {
                 return path;
+            },
+            locateCredentialProvider: function(path) {
+                return 'c:\\agent\\home\\directory\\externals\\nuget\\CredentialProvider';
             }
         } )
     }
@@ -66,7 +69,7 @@ export class NugetMockHelper {
         a.which["c:\\foo\\system32\\chcp.com"] = "c:\\foo\\system32\\chcp.com";
         a.exec["c:\\foo\\system32\\chcp.com 65001"] = {"code": 0, "stdout": "", "stderr": ""};
         a.exist["c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe"] = true;
-        a.exist["c:\\agent\\home\\directory\\externals\\nuget\\CredentialProvider.TeamBuild.exe"] = true;
+        a.exist["c:\\agent\\home\\directory\\externals\\nuget\\CredentialProvider\\CredentialProvider.TeamBuild.exe"] = true;
         this.tmr.setAnswers(a);
     }
 }
