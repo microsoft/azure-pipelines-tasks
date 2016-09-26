@@ -36,6 +36,20 @@ export class NugetMockHelper {
         })
     }
     
+    public registerNugetUtilityMock(projectFile: string[]) {
+        this.tmr.registerMock('nuget-task-common/Utility', {
+            resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
+                return projectFile;
+            },
+            getBundledNuGetLocation: function(version) {
+                return 'c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe';
+            },
+            stripLeadingAndTrailingQuotes: function(path) {
+                return path;
+            }
+        } )
+    }
+    
     public registerNugetConfigMock() {
         var nchm = require('./NugetConfigHelper-mock');
         this.tmr.registerMock('nuget-task-common/NuGetConfigHelper', nchm);

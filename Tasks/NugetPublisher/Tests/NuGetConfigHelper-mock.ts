@@ -7,7 +7,7 @@ export class NuGetConfigHelper {
     
     getSourcesFromConfig() {
         tl.debug("getting package sources");
-        let result = { feedName: "mockFeedName", feedUri: "mockFeedUri" };
+        let result = [{ feedName: "mockFeedName", feedUri: "mockFeedUri" }];
         return result;
     }
     

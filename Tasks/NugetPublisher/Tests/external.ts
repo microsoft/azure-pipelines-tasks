@@ -37,17 +37,9 @@ nmh.setAnswers(a);
 process.env['ENDPOINT_AUTH_testFeedExternalUri'] = "{\"parameters\":{\"password\":\"secret\"},\"scheme\":\"Basic\"}";
 process.env['ENDPOINT_URL_testFeedExternalUri'] = "https://example.feed.com";
 
+nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\package.nupkg"]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerNugetConfigMock();
 nmh.registerToolRunnerMock();
-
-tmr.registerMock('nuget-task-common/Utility', {
-    resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
-        return ["c:\\agent\\home\\directory\\package.nupkg"];
-    },
-    getBundledNuGetLocation: function(version) {
-        return 'c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe';
-    }
-} )
 
 tmr.run();

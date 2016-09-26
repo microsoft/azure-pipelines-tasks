@@ -39,14 +39,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 nmh.setAnswers(a);
 
-tmr.registerMock('nuget-task-common/Utility', {
-    resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
-        return ["c:\\agent\\home\\directory\\package.nupkg"];
-    },
-    getBundledNuGetLocation: function(version) {
-        return 'c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe';
-    }
-} )
+nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\package.nupkg"]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerNugetConfigMock();
 nmh.registerToolRunnerMock();
