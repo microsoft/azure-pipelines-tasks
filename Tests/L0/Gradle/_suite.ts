@@ -1420,19 +1420,20 @@ describe('gradle Suite', function () {
         done();
     });
 
-    class FindbugsTestTool extends FindbugsTool {
-        public isEnabled() {
-            return true;
-        }
-    }
+    // class FindbugsTestTool extends FindbugsTool {
+    //     public isEnabled() {
+    //         return true;
+    //     }
+    // }
 
     it('FindBugs tool retrieves results', function (done) {
 
         var testSrcDir: string = path.join(__dirname, 'data', 'multimodule');
 
-        let buildOutput: BuildOutput = new BuildOutput(testSrcDir, BuildEngine.Gradle);
-        var tool = new FindbugsTestTool(buildOutput, 'findbugsAnalysisEnabled');
-        let results: AnalysisResult[] = tool.processResults();
+        let buildOutput/*: BuildOutput*/ = new BuildOutput(testSrcDir, BuildEngine.Gradle);
+        var tool = new FindbugsTool(buildOutput, 'findbugsAnalysisEnabled');
+        tool.isEnabled = () => true;
+        let results/*: AnalysisResult[]*/ = tool.processResults();
 
         console.log(JSON.stringify(results));
         assert(results.length == 1, "Unexpected number of results. Expected 1 (only module-three has a findbugs XML), actual " + results.length);
