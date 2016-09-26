@@ -6,7 +6,7 @@ import assert = require('assert');
 import mockHelper = require('../../lib/mockHelper');
 import path = require('path');
 import fs = require('fs');
-import tl = require('../../lib/vsts-task-lib/toolRunner');
+import tl = require('../../lib/vsts-task-lib/toolrunner');
 let CodeCoverageEnablerFactory = require('../../../Tasks/Common/codecoverage-tools/codecoveragefactory').CodeCoverageEnablerFactory;
 let xml2js = require('../../../Tasks/Common/codecoverage-tools/node_modules/xml2js');
 
