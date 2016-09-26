@@ -1,3 +1,5 @@
+/// <reference path="typings/index.d.ts" />
+
 import path = require('path');
 import Q = require('q');
 import tl = require('vsts-task-lib/task');

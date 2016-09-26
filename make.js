@@ -35,6 +35,7 @@ var fail = util.fail;
 var ensureExists = util.ensureExists;
 var pathExists = util.pathExists;
 var buildNodeTask = util.buildNodeTask;
+var buildPs3Task = util.buildPs3Task;
 var addPath = util.addPath;
 var copyTaskResources = util.copyTaskResources;
 var matchFind = util.matchFind;
@@ -110,6 +111,7 @@ target.build = function() {
         // load the task.json
         var outDir;
         var shouldBuildNode = test('-f', path.join(taskPath, 'tsconfig.json'));
+        var shouldBuildPs3 = false;
         var taskJsonPath = path.join(taskPath, 'task.json');
         if (test('-f', taskJsonPath)) {
             var taskDef = require(taskJsonPath);
@@ -122,8 +124,9 @@ target.build = function() {
             createTaskLocJson(taskPath);
             createResjson(taskDef, taskPath);
 
-            // determine whether node task
+            // determine the type of task
             shouldBuildNode = shouldBuildNode || taskDef.execution.hasOwnProperty('Node');
+            shouldBuildPs3 = taskDef.execution.hasOwnProperty('PowerShell3');
         }
         else {
             outDir = path.join(buildPath, path.basename(taskPath));
@@ -206,11 +209,14 @@ target.build = function() {
             });
         }
 
-        // ------------------
-        // Build Node Task
-        // ------------------
+        // build Node task
         if (shouldBuildNode) {
             buildNodeTask(taskPath, outDir);
+        }
+
+        // build PowerShell3 task
+        if (shouldBuildPs3) {
+            buildPs3Task(taskPath, outDir);
         }
 
         // copy default resources and any additional resources defined in the task's make.json
