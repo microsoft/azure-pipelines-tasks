@@ -299,18 +299,50 @@ target.testLegacy = function() {
 }
 
 target.package = function() {
-    ensureTool('powershell.exe', '-NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command "$PSVersionTable.PSVersion.ToString()"');
-
     // clean
     rm('-Rf', packagePath);
-    matchRemove(path.join(buildPath, 'Common'), buildPath, { noRecurse: true });
-    rm('-Rf', commonPath);
-    matchRemove(path.join(buildPath, '*', 'Tests'), buildPath);
+
+    // stage the zip contents
+    console.log('> Staging zip contents');
+    var zipSourcePath = path.join(packagePath, 'zip-source');
+    mkdir('-p', zipSourcePath);
+    // process each item directly under _build/Tasks/
+    fs.readdirSync(buildPath).forEach(function (itemName) {
+        var taskSourcePath = path.join(buildPath, itemName);
+
+        // skip Common and skip files
+        if (itemName == 'Common' || !fs.statSync(taskSourcePath).isDirectory()) {
+            return;
+        }
+
+        // create the target dir
+        var taskTargetPath = path.join(zipSourcePath, itemName);
+        mkdir('-p', taskTargetPath);
+
+        // process each file/folder within the task
+        fs.readdirSync(taskSourcePath).forEach(function (itemName) {
+            // skip the Tests folder
+            if (itemName == 'Tests') {
+                return;
+            }
+
+            // create a junction point for directories, hardlink files
+            var itemSourcePath = path.join(taskSourcePath, itemName);
+            var itemTargetPath = path.join(taskTargetPath, itemName);
+            if (fs.statSync(itemSourcePath).isDirectory()) {
+                fs.symlinkSync(itemSourcePath, itemTargetPath, 'junction');
+            }
+            else {
+                fs.linkSync(itemSourcePath, itemTargetPath);
+            }
+        });
+    });
 
     // create the zip
     var zipPath = path.join(packagePath, 'pack-source', 'contents', 'Microsoft.TeamFoundation.Build.Tasks.zip');
     mkdir('-p', path.dirname(zipPath));
-    run(`powershell.exe -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command "Add-Type -Assembly 'System.IO.Compression.FileSystem'; [System.IO.Compression.ZipFile]::CreateFromDirectory('${buildPath}', '${zipPath}')"`)
+    ensureTool('powershell.exe', '-NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command "$PSVersionTable.PSVersion.ToString()"');
+    run(`powershell.exe -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command "Add-Type -Assembly 'System.IO.Compression.FileSystem'; [System.IO.Compression.ZipFile]::CreateFromDirectory('${zipSourcePath}', '${zipPath}')"`)
 
     // nuspec
     var version = options.version;
@@ -344,11 +376,28 @@ target.package = function() {
     var nupkgPath = path.join(packagePath, 'pack-target', `${pkgName}.${version}.nupkg`);
     mkdir('-p', path.dirname(nupkgPath));
     run(`nuget.exe pack ${nuspecPath} -OutputDirectory ${path.dirname(nupkgPath)}`);
+}
 
-    // used by CI that does official publish
+// used by CI that does official publish
+target.publish = function() {
     var server = options.server;
-    if (server) {
-        ensureTool('nuget3.exe', '', true);
-        run(`nuget3.exe push ${nupkgPath} -Source ${server} -apikey Skyrise`);
+    assert(server, 'server');
+
+    // resolve the nupkg path
+    var nupkgFile;
+    var nupkgDir = path.join(packagePath, 'pack-target');
+    if (!test('-d', nupkgDir)) {
+        fail('nupkg directory does not exist');
     }
+
+    var fileNames = fs.readdirSync(nupkgDir);
+    if (fileNames.length != 1) {
+        fail('Expected exactly one file under ' + nupkgDir);
+    }
+
+    nupkgFile = path.join(nupkgDir, fileNames[0]);
+
+    // publish the package
+    ensureTool('nuget3.exe', '', true);
+    run(`nuget3.exe push ${nupkgFile} -Source ${server} -apikey Skyrise`);
 }
