@@ -1,7 +1,4 @@
 {
-    "files": [
-        "Tests/L0.ts"
-    ],
     "compilerOptions": {
         "target": "ES6",
         "module": "commonjs"
