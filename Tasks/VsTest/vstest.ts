@@ -366,6 +366,21 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
     if (testFiltercriteria) {
         argsArray.push("/TestCaseFilter:" + testFiltercriteria);
     }
+    if (pathtoCustomTestAdapters) {
+        if (pathExistsAsDirectory(pathtoCustomTestAdapters)) {
+            argsArray.push("/TestAdapterPath:\"" + pathtoCustomTestAdapters + "\"");
+        }
+        else {
+            argsArray.push("/TestAdapterPath:\"" + path.dirname(pathtoCustomTestAdapters) + "\"");
+        }
+    }
+    else if (sourcesDirectory && isNugetRestoredAdapterPresent(sourcesDirectory)) {
+        argsArray.push("/TestAdapterPath:\"" + sourcesDirectory + "\"");
+    }
+
+    if ((otherConsoleOptions && otherConsoleOptions.toLowerCase().indexOf("usevsixextensions:true") != -1) || (pathtoCustomTestAdapters && pathtoCustomTestAdapters.toLowerCase().indexOf("usevsixextensions:true") != -1)){
+        argsArray.push("/UseVsixExtensions:true");
+    }
 
     try {
         vstestLocation = getVSTestLocation(vsVersion);
