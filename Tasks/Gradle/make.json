@@ -3,12 +3,23 @@
         {
             "module": "../Common/java-common",
             "type": "node",
-            "compile": true  
+            "compile": true
         },
         {
             "module": "../Common/codecoverage-tools",
             "type": "node",
-            "compile": true  
-        }    
+            "compile": true
+        }
+    ],
+    "cp": [
+        {
+            "source": [
+                "CodeAnalysis/checkstyle.gradle",
+                "CodeAnalysis/checkstyle.xml",
+                "CodeAnalysis/pmd.gradle",
+                "CodeAnalysis/sonar.gradle"
+            ],
+            "dest": "CodeAnalysis/"
+        }
     ]
 }
