@@ -100,30 +100,19 @@
       "name": "exportPath",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.exportPath",
-      "defaultValue": "",
+      "defaultValue": "output/$(SDK)/$(Configuration)",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.exportPath",
-      "groupName": "package"
-    },
-    {
-      "name": "exportFormat",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.exportFormat",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.exportFormat",
       "groupName": "package"
     },
     {
       "name": "exportOptions",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.exportOptions",
-      "defaultValue": "none",
+      "defaultValue": "specify",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.exportOptions",
       "groupName": "package",
       "options": {
-        "none": "None",
         "plist": "Plist",
         "specify": "Specify"
       }
@@ -132,8 +121,8 @@
       "name": "exportMethod",
       "type": "string",
       "label": "ms-resource:loc.input.label.exportMethod",
-      "defaultValue": "",
-      "required": false,
+      "defaultValue": "development",
+      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.exportMethod",
       "groupName": "package",
       "visibleRule": "exportOptions == specify"
@@ -153,9 +142,10 @@
       "type": "filePath",
       "label": "ms-resource:loc.input.label.exportOptionsPlist",
       "defaultValue": "",
-      "required": false,
+      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.exportOptionsPlist",
-      "groupName": "package"
+      "groupName": "package",
+      "visibleRule": "exportOptions == plist"
     },
     {
       "name": "xcode8AutomaticSigning",
@@ -351,6 +341,7 @@
     "NoTestResultsFound": "ms-resource:loc.messages.NoTestResultsFound",
     "XcodeSuccess": "ms-resource:loc.messages.XcodeSuccess",
     "TempKeychainDeleteFailed": "ms-resource:loc.messages.TempKeychainDeleteFailed",
-    "ProvProfileDeleteFailed": "ms-resource:loc.messages.ProvProfileDeleteFailed"
+    "ProvProfileDeleteFailed": "ms-resource:loc.messages.ProvProfileDeleteFailed",
+    "ExportOptionsPlistInvalidFilePath": "ms-resource:loc.messages.ExportOptionsPlistInvalidFilePath"
   }
 }

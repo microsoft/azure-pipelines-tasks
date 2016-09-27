@@ -85,7 +85,7 @@
             "label": "Create App Package",
             "defaultValue": true,
             "required": true,
-            "helpMarkDown": "Indicates whether an IPA should be generated as a part of the build."
+            "helpMarkDown": "Indicates whether an IPA should be generated as a part of the build. For exporting archives with Xcode 7 and Xcode 8, review additional inputs in the `Package Options` section."
         },
         {
             "name": "archivePath",
@@ -93,37 +93,26 @@
             "label": "Archive Path",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "The path to the archive file (.xcarchive), or the archive that should be exported.",
+            "helpMarkDown": "Optionally specify the path to the archive file (.xcarchive) to create and export.",
             "groupName": "package"
         },
         {
             "name": "exportPath",
             "type": "filePath",
             "label": "Export Path",
-            "defaultValue": "",
+            "defaultValue": "output/$(SDK)/$(Configuration)",
             "required": false,
-            "helpMarkDown": "Destination path for the product exported from an archive.",
-            "groupName": "package"
-        },
-        {
-            "name": "exportFormat",
-            "type": "string",
-            "label": "Export Format",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "The format to which the archive should be exported. Valid formats are IPA, PKG and APP. If not specified, xcodebuild will attempt to auto-detect the format as either IPA or PKG.",
+            "helpMarkDown": "Optionally specify the destination path for the IPA exported from the archive.",
             "groupName": "package"
         },
         {
             "name": "exportOptions",
             "type": "pickList",
             "label": "Export Options",
-            "defaultValue": "none",
+            "defaultValue": "specify",
             "required": false,
-            "helpMarkDown": "Path to a plist file that configures archive exporting.",
             "groupName": "package",
             "options": {
-                "none": "None",
                 "plist": "Plist",
                 "specify": "Specify"
             }
@@ -132,19 +121,19 @@
             "name": "exportMethod",
             "type": "string",
             "label": "Export Method",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Method for how Xcode should export the archive. E.g. app-store, package, ad-hoc, enterprise, development. Defaults to development if not specified.",
+            "defaultValue": "development",
+            "required": true,
+            "helpMarkDown": "Method for how Xcode should export the archive. E.g. app-store, package, ad-hoc, enterprise, development.",
             "groupName": "package",
             "visibleRule": "exportOptions == specify"
         },
         {
             "name": "exportTeamId",
             "type": "string",
-            "label": "TeamId",
+            "label": "Team Id",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "The Apple Developer Portal team to use for this export. Defaults to the team used to build the archive.",
+            "helpMarkDown": "The 10 digit Team ID from the Apple Developer Portal to use for this export.",
             "groupName": "package",
             "visibleRule": "exportOptions == specify"
         },
@@ -153,17 +142,18 @@
             "type": "filePath",
             "label": "Export Options Plist",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "helpMarkDown": "Path to a plist file that configures archive exporting.",
-            "groupName": "package"
+            "groupName": "package",
+            "visibleRule": "exportOptions == plist"
         },
         {
             "name": "xcode8AutomaticSigning",
             "type": "boolean",
-            "label": "Automatic Signing with Xcode 8",
+            "label": "Xcode 8 Automatic Signing",
             "defaultValue": false,
             "required": false,
-            "helpMarkDown": "Select this if you have an Xcode 8 project setup for Automatic Signing",
+            "helpMarkDown": "Select this if you have an Xcode 8 project setup for Automatic Signing.",
             "groupName": "sign"
         },
         {
@@ -351,6 +341,7 @@
         "NoTestResultsFound": "No test result files matching %s were found, so publishing JUnit test results is being skipped.",
         "XcodeSuccess": "Xcode task execution completed with no errors.",
         "TempKeychainDeleteFailed": "Failed to delete temporary keychain %s created during the build.",
-        "ProvProfileDeleteFailed": "Failed to delete the provisioning profile %s."
+        "ProvProfileDeleteFailed": "Failed to delete the provisioning profile %s.",
+        "ExportOptionsPlistInvalidFilePath": "Export Options Plist file does not exist at %s. Provide the path to a valid Plist file."
     }
 }

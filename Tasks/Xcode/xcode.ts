@@ -61,7 +61,7 @@ async function run() {
         // --- Xcode Version ---
         var xcv : ToolRunner = tl.tool(tool);
         xcv.arg('-version');
-        var xcodeVersion: number;
+        var xcodeVersion: number = 0;
         xcv.on('stdout', (data) => {
             var match: string = data.toString().trim().match(/Xcode (.+)/g);
             if(match && parseInt(match) !== NaN) {
@@ -127,17 +127,14 @@ async function run() {
                 if(signIdentity && !automaticSigningWithXcode) {
                     xcode_codeSignIdentity = 'CODE_SIGN_IDENTITY=' + signIdentity;
                 }
-                xcb.argIf(xcode_codeSignIdentity, xcode_codeSignIdentity);
             }
 
             //determine the provisioning profile UUID
             if(tl.filePathSupplied('provProfile') && tl.exist(provProfilePath)) {
                 var provProfileUUID = await sign.getProvisioningProfileUUID(provProfilePath);
-                if(provProfileUUID && !automaticSigningWithXcode)
-                {
+                if(provProfileUUID && !automaticSigningWithXcode) {
                     xcode_provProfile = 'PROVISIONING_PROFILE=' + provProfileUUID;
                 }
-                xcb.argIf(xcode_provProfile, xcode_provProfile);
                 if (removeProfile && provProfileUUID) {
                     profileToDelete = provProfileUUID;
                 }
@@ -146,25 +143,25 @@ async function run() {
         } else if (signMethod === 'id') {
             var unlockDefaultKeychain : boolean = tl.getBoolInput('unlockDefaultKeychain');
             var defaultKeychainPassword : string = tl.getInput('defaultKeychainPassword');
-            if(unlockDefaultKeychain) {
+            if (unlockDefaultKeychain) {
                 var defaultKeychain : string = await sign.getDefaultKeychainPath();
                 await sign.unlockKeychain(defaultKeychain, defaultKeychainPassword);
             }
 
             var signIdentity : string = tl.getInput('iosSigningIdentity');
-            if(signIdentity && !automaticSigningWithXcode) {
+            if (signIdentity && !automaticSigningWithXcode) {
                 xcode_codeSignIdentity = 'CODE_SIGN_IDENTITY=' + signIdentity;
             }
-            xcb.argIf(xcode_codeSignIdentity, xcode_codeSignIdentity);
 
-            var provProfileUUID : string = tl.getInput('provProfileUuid');
-            if(provProfileUUID && !automaticSigningWithXcode) {
-                xcode_provProfile = provProfileUUID;
+            var provProfileUUID:string = tl.getInput('provProfileUuid');
+            if (provProfileUUID && !automaticSigningWithXcode) {
+                xcode_provProfile = 'PROVISIONING_PROFILE=' + provProfileUUID;
             }
-            xcb.argIf(xcode_provProfile, xcode_provProfile);
         }
+        xcb.argIf(xcode_codeSignIdentity, xcode_codeSignIdentity);
+        xcb.argIf(xcode_provProfile, xcode_provProfile);
 
-        var teamId: string = tl.getInput('teamId');
+        var teamId : string = tl.getInput('teamId');
         xcb.argIf(teamId && automaticSigningWithXcode, 'DEVELOPMENT_TEAM=' + teamId);
 
         //--- Enable Xcpretty formatting if using xcodebuild ---
@@ -233,59 +230,90 @@ async function run() {
         // Package app to generate .ipa
         //--------------------------------------------------------
         if(tl.getBoolInput('packageApp', true) && sdk !== 'iphonesimulator') {
-            tl.debug('Packaging apps.');
-            var buildOutputPath:string = path.join(outPath, 'build.sym');
-            tl.debug('buildOutputPath: ' + buildOutputPath);
-            var appFolders:string [] = tl.glob(buildOutputPath + '/**/*.app')
-            if (appFolders) {
-                tl.debug(appFolders.length + ' apps found for packaging.');
-                for (var i = 0; i < appFolders.length; i++) {
-                    var app:string = appFolders.pop();
-                    tl.debug('Packaging ' + app);
-
-                    if (useXctool || xcodeVersion === NaN || xcodeVersion < 7) {
-                        //user xcrun tool for older versions of Xcode
-                        var xcrunPath:string = tl.which('xcrun', true);
-                        var ipa:string = app.substring(0, app.length - 3) + 'ipa';
-                        var xcr:ToolRunner = tl.tool(xcrunPath);
+            if (useXctool || !ws || !scheme || xcodeVersion < 7) {
+                // xcrun has been deprecated in Xcode 7 and higher
+                // use xcrun to package apps if xcodeversion is < 7
+                // or if workspace or scheme are not specified since we cannot create the archive
+                tl.debug('Packaging apps.');
+                var buildOutputPath : string = path.join(outPath, 'build.sym');
+                tl.debug('buildOutputPath: ' + buildOutputPath);
+                var appFolders : string [] = tl.glob(buildOutputPath + '/**/*.app')
+                if (appFolders) {
+                    tl.debug(appFolders.length + ' apps found for packaging.');
+                    var xcrunPath : string = tl.which('xcrun', true);
+                    for(var i = 0; i < appFolders.length; i++) {
+                        var app : string = appFolders.pop();
+                        tl.debug('Packaging ' + app);
+                        var ipa : string = app.substring(0, app.length-3) + 'ipa';
+                        var xcr : ToolRunner = tl.tool(xcrunPath);
                         xcr.arg(['-sdk', sdk, 'PackageApplication', '-v', app, '-o', ipa]);
                         await xcr.exec();
-                    } else {
-                        //use xcodebuild to create the app package for Xcode 7 and 8
-                        var xcodeArchive = tl.tool(tl.which('xcodebuild', true));
-                        if (ws && tl.filePathSupplied('xcWorkspacePath')) {
-                            xcodeArchive.arg('-workspace');
-                            xcodeArchive.arg(ws);
-                        }
-                        xcodeArchive.argIf(scheme, ['-scheme', scheme]);
-                        xcodeArchive.arg('archive'); //archive action
-                        xcodeArchive.argIf(sdk, ['-sdk', sdk]);
-                        xcodeArchive.argIf(configuration, ['-configuration', configuration]);
-                        var archivePath = tl.getInput('archivePath');
-                        if (!tl.filePathSupplied((archivePath))) {
-                            archivePath = tl.resolve(archivePath, app.substring(0, app.length - 3) + 'xcarchive');
-                        }
-                        xcodeArchive.arg(archivePath);
-                        xcodeArchive.argIf(xcode_otherCodeSignFlags, xcode_otherCodeSignFlags);
-                        xcodeArchive.argIf(xcode_codeSignIdentity, xcode_codeSignIdentity);
-                        xcodeArchive.argIf(xcode_provProfile, xcode_provProfile);
-
-                        await xcodeArchive.exec();
-
-                        //export the archive
-                        var xcodeExport = tl.tool(tl.which('xcodebuild', true));
-                        xcodeExport.arg(['-exportArchive', '-archivePath', archivePath]);
-                        var exportFormat = tl.getInput('exportFormat');
-                        xcodeExport.argIf(exportFormat, ['-exportFormat', exportFormat]);
-                        var exportPath = tl.getInput('exportPath');
-                        if(!tl.filePathSupplied(exportPath)) {
-                            exportPath = tl.resolve(exportPath, app.substring(0, app.length - 3) + 'ipa');
-                        }
-                        xcodeExport.arg(['-exportPath', exportPath]);
-
-                        await xcodeExport.exec();
                     }
                 }
+            }
+            else {
+                // use xcodebuild to create the app package for Xcode 7 and 8 if workspace is specified
+
+                // create archive
+                var xcodeArchive : ToolRunner = tl.tool(tl.which('xcodebuild', true));
+                if (ws && tl.filePathSupplied('xcWorkspacePath')) {
+                    xcodeArchive.arg('-workspace');
+                    xcodeArchive.arg(ws);
+                }
+                xcodeArchive.argIf(scheme, ['-scheme', scheme]);
+                xcodeArchive.arg('archive'); //archive action
+                xcodeArchive.argIf(sdk, ['-sdk', sdk]);
+                xcodeArchive.argIf(configuration, ['-configuration', configuration]);
+                var archivePath : string = tl.getInput('archivePath');
+                if (!tl.filePathSupplied(('archivePath')) || !tl.stats(archivePath).isFile()) {
+                    archivePath = tl.resolve(archivePath, scheme + '.xcarchive');
+                }
+                xcodeArchive.arg(['-archivePath', archivePath]);
+                xcodeArchive.argIf(xcode_otherCodeSignFlags, xcode_otherCodeSignFlags);
+                xcodeArchive.argIf(xcode_codeSignIdentity, xcode_codeSignIdentity);
+                xcodeArchive.argIf(xcode_provProfile, xcode_provProfile);
+
+                await xcodeArchive.exec();
+
+                //export the archive
+                var xcodeExport : ToolRunner = tl.tool(tl.which('xcodebuild', true));
+                xcodeExport.arg(['-exportArchive', '-archivePath', archivePath]);
+
+                var exportPath : string = tl.getInput('exportPath');
+                exportPath = tl.resolve(exportPath, '_XcodeTaskExport_' + scheme);
+
+                xcodeExport.arg(['-exportPath', exportPath]);
+                // delete file if it already exists, otherwise export will fail
+                if(tl.exist(exportPath)) {
+                    tl.rmRF(exportPath, false);
+                }
+
+                //export options plist
+                var exportOptions : string = tl.getInput('exportOptions');
+                var exportOptionsPlist : string;
+                if(exportOptions === 'specify') {
+                    var exportMethod : string = tl.getInput('exportMethod', true);
+                    var exportTeamId : string = tl.getInput('exportTeamId');
+                    //generate the plist file
+                    var plist : string = tl.which('/usr/libexec/PlistBuddy', true);
+                    exportOptionsPlist = '_XcodeTaskExportOptions.plist';
+                    tl.tool(plist).arg(['-c', 'Clear', exportOptionsPlist]).execSync();
+                    tl.tool(plist).arg(['-c', 'Add method string ' + exportMethod, exportOptionsPlist]).execSync();
+                    if(exportTeamId) {
+                        tl.tool(plist).arg(['-c', 'Add teamID string ' + exportTeamId, exportOptionsPlist]).execSync();
+                    }
+                } else if (exportOptions === 'plist') {
+                    exportOptionsPlist = tl.getInput('exportOptionsPlist');
+                    if(!tl.filePathSupplied('exportOptionsPlist') ||
+                        !tl.exist(exportOptionsPlist) || !tl.stats(exportOptionsPlist).isFile()) {
+                        throw tl.loc('ExportOptionsPlistInvalidFilePath', exportOptionsPlist);
+                    }
+                }
+                if(exportOptionsPlist) {
+                    xcodeExport.arg(['-exportOptionsPlist', exportOptionsPlist]);
+                }
+
+                await xcodeExport.exec();
             }
 
         }
