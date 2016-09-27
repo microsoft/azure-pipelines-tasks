@@ -11,7 +11,6 @@ var shell = require('shelljs');
 var syncRequest = require('sync-request');
 
 var downloadPath = path.join(__dirname, '_download');
-var testPath = path.join(__dirname, '_test');
 
 var makeOptions = require('./make-options.json');
 
@@ -596,4 +595,47 @@ var validateTask = function (task) {
     }
 };
 exports.validateTask = validateTask;
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// package functions
+//------------------------------------------------------------------------------
+var stageTaskZipContent = function (sourceRoot, destRoot, metadataOnly) {
+    var metadataFileNames = [ 'TASK.JSON', 'TASK.LOC.JSON', 'STRINGS', 'ICON.PNG' ];
+    fs.readdirSync(sourceRoot).forEach(function (itemName) {
+        var taskSourcePath = path.join(sourceRoot, itemName);
+        var taskDestPath = path.join(destRoot, itemName);
+
+        // skip Common and skip files
+        if (itemName == 'Common' || !fs.statSync(taskSourcePath).isDirectory()) {
+            return;
+        }
+
+        mkdir('-p', taskDestPath);
+
+        // process each file/folder within the task
+        fs.readdirSync(taskSourcePath).forEach(function (itemName) {
+            // skip the Tests folder
+            if (itemName == 'Tests') {
+                return;
+            }
+
+            // skip if metadataOnly and not a metadata item
+            if (metadataOnly && metadataFileNames.indexOf(itemName.toUpperCase()) < 0) {
+                return;
+            }
+
+            // create a junction point for directories, hardlink files
+            var itemSourcePath = path.join(taskSourcePath, itemName);
+            var itemDestPath = path.join(taskDestPath, itemName);
+            if (fs.statSync(itemSourcePath).isDirectory()) {
+                fs.symlinkSync(itemSourcePath, itemDestPath, 'junction');
+            }
+            else {
+                fs.linkSync(itemSourcePath, itemDestPath);
+            }
+        });
+    });
+}
+exports.stageTaskZipContent = stageTaskZipContent;
 //------------------------------------------------------------------------------
