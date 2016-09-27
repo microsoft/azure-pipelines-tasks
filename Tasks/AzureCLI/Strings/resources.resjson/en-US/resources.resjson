@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Azure CLI preview",
+  "loc.friendlyName": "Azure CLI Preview",
   "loc.helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=827160)",
   "loc.description": "Run a Shell or Batch script with Azure CLI commands against an azure subscription",
   "loc.instanceNameFormat": "Azure CLI $(scriptPath)",
