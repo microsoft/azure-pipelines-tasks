@@ -84,34 +84,45 @@ catch (error) {
     throw error;
 }
 
+function getResolvedPattern(pattern: string): string {
+    var indexOfFirstQuantifier = Math.min(pattern.indexOf('?'), pattern.indexOf('*'));
+    if (indexOfFirstQuantifier == -1) {
+        return path.join(sourcesDirectory, pattern);
+    }
+    else {
+        return path.join(path.join(sourcesDirectory, pattern.slice(0,indexOfFirstQuantifier)), pattern.substr(indexOfFirstQuantifier));
+        //return path.join(path.resolve(pattern.slice(0,indexOfFirstQuantifier), pattern.substr(indexOfFirstQuantifier)));
+    }
+}
+
+function getPatternWithoutIncludeExclude(pattern: string): string {
+    return pattern.startsWith('-:') || pattern.startsWith('+:') ? pattern.substr(2) : pattern;
+}
+
 function getTestAssemblies(): Set<string> {
-    var testAssemblyFiles = [];
+    let testAssemblyFiles: Array<string> = [];
     if (testAssembly.indexOf('*') >= 0 || testAssembly.indexOf('?') >= 0) {
         tl.debug('Pattern found in solution parameter.');
-        var excludeTestAssemblies = [];
-        var allFiles = tl.find(sourcesDirectory);
-        var testAssemblyFilters = testAssembly.split(';');
+        let excludeTestAssemblies: Array<string> = [];
+        let allFiles: Array<string> = tl.find(sourcesDirectory);
+        let testAssemblyFilters: Array<string> = testAssembly.split(';');
         testAssemblyFilters.forEach(function (testAssemblyFilter) {
-            if (testAssemblyFilter.startsWith("-:")) {
-                if (testAssemblyFilter.indexOf('*') >= 0 || testAssemblyFilter.indexOf('?') >= 0) {
-                    excludeTestAssemblies = excludeTestAssemblies.concat(getFilteredFiles(testAssemblyFilter.substr(2), allFiles));
-                }
-                else {
-                    excludeTestAssemblies.push(testAssemblyFilter.substr(2));
-                }
-            }
-            else if (testAssemblyFilter.indexOf('*') >= 0 || testAssemblyFilter.indexOf('?') >= 0) {
-                testAssemblyFiles = testAssemblyFiles.concat(getFilteredFiles(testAssemblyFilter, allFiles));
+            let exclude: boolean = testAssemblyFilter.startsWith('-:');
+            let hasQuantifier: boolean = Math.max(testAssembly.indexOf('*'), testAssembly.indexOf('?')) != -1;
+            let patternWithoutIncludeExclude: string = getPatternWithoutIncludeExclude(testAssemblyFilter);
+            let resolvedPattern: string = getResolvedPattern(patternWithoutIncludeExclude);
+            if (exclude) {
+                excludeTestAssemblies.push.apply(excludeTestAssemblies, hasQuantifier ? getFilteredFiles(resolvedPattern,allFiles): [resolvedPattern]);
             }
             else {
-                testAssemblyFiles.push(testAssemblyFilter);
+                testAssemblyFiles.push.apply(testAssemblyFiles, hasQuantifier ? getFilteredFiles(resolvedPattern,allFiles): [resolvedPattern]);
             }
         });
         testAssemblyFiles = testAssemblyFiles.filter(x => excludeTestAssemblies.indexOf(x) < 0);
     }
     else {
         tl.debug('No Pattern found in solution parameter.');
-        var assemblies = testAssembly.split(';');
+        let assemblies: Array<string> = testAssembly.split(';');
         assemblies.forEach(function (assembly) {
             testAssemblyFiles.push(assembly);
         });
@@ -1211,19 +1222,27 @@ function saveToFile(fileContents: string, extension: string): Q.Promise<string> 
 
 function setRunInParallellIfApplicable(vsVersion: number) {
     if (runInParallel) {
-        if (!isNaN(vsVersion) && vsVersion >= 14) {
-            if (vsVersion >= 15) { // moved away from taef
-                return;
-            }
+        if (vstestLocationMethod.toLowerCase() === 'version') {
+            if (!isNaN(vsVersion) && vsVersion >= 14) {
+                if (vsVersion >= 15) { // moved away from taef
+                    return;
+                }
 
-            // in 14.0 taef parellization needed taef enabled
+                // in 14.0 taef parellization needed taef enabled
+                var vs14Common = tl.getVariable("VS140COMNTools");
+                if (vs14Common && pathExistsAsFile(path.join(vs14Common, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll"))) {
+                    setRegistryKeyForParallelExecution(vsVersion);
+                    return;
+                }
+            }
+            resetRunInParallel();
+        } else if (vstestLocationMethod.toLowerCase() === 'location') {
             var vs14Common = tl.getVariable("VS140COMNTools");
             if (vs14Common && pathExistsAsFile(path.join(vs14Common, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll"))) {
                 setRegistryKeyForParallelExecution(vsVersion);
                 return;
             }
         }
-        resetRunInParallel();
     }
 }
 

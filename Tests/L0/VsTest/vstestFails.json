@@ -11,7 +11,7 @@
         ]
     },
     "match": {
-        "/some/*pattern": [
+        "\\source\\dir\\some\\*pattern": [
             "some/path/one",
             "some/path/two"
         ],
