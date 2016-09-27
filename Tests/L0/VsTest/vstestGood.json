@@ -12,11 +12,11 @@
         ]
     },
     "match": {
-        "/some/*pattern": [
+        "\\source\\dir\\some\\*pattern": [
             "some/path/one",
             "some/path/two"
         ],
-        "/exclude/*pattern": [
+        "\\source\\dir\\exclude\\*pattern": [
             "some/path/two",
             "some/path/three"
         ],
