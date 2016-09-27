@@ -1,5 +1,3 @@
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 import Q = require('q');
@@ -210,7 +208,7 @@ function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
     var defer = Q.defer<string>();
 
     var allFilesInResultsDirectory = tl.find(testResultsDirectory);
-    var resultFiles = tl.match(allFilesInResultsDirectory, "*.trx", { matchBase: true });
+    var resultFiles = tl.match(allFilesInResultsDirectory, path.join(testResultsDirectory, "*.trx"), { matchBase: true });
 
     var selectortool = tl.createToolRunner(getTestSelectorLocation());
     selectortool.arg("UpdateTestResults");
@@ -313,13 +311,17 @@ function getVSTestLocation(vsVersion: number): string {
     if (vstestLocationMethod.toLowerCase() === 'version') {
         let vsCommon: string = tl.getVariable('VS' + vsVersion + '0COMNTools');
         if (!vsCommon) {
-            throw(new Error(tl.loc('VstestNotFound', vsVersion)));
+            throw (new Error(tl.loc('VstestNotFound', vsVersion)));
         } else {
             return path.join(vsCommon, '..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe');
         }
-    } else if(vstestLocationMethod.toLowerCase() === 'location') {
+    } else if (vstestLocationMethod.toLowerCase() === 'location') {
         if (!pathExistsAsFile(vstestLocation)) {
-            throw(new Error(tl.loc('AccessDeniedToPath', vstestLocation)));
+            if (pathExistsAsDirectory(vstestLocation)) {
+                return path.join(vstestLocation, 'vstest.console.exe');
+            } else {
+                throw (new Error(tl.loc('PathDoesNotExist', vstestLocation)));
+            }
         } else {
             return vstestLocation;
         }
@@ -379,6 +381,21 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
     if (testFiltercriteria) {
         argsArray.push("/TestCaseFilter:" + testFiltercriteria);
     }
+    if (pathtoCustomTestAdapters) {
+        if (pathExistsAsDirectory(pathtoCustomTestAdapters)) {
+            argsArray.push("/TestAdapterPath:\"" + pathtoCustomTestAdapters + "\"");
+        }
+        else {
+            argsArray.push("/TestAdapterPath:\"" + path.dirname(pathtoCustomTestAdapters) + "\"");
+        }
+    }
+    else if (sourcesDirectory && isNugetRestoredAdapterPresent(sourcesDirectory)) {
+        argsArray.push("/TestAdapterPath:\"" + sourcesDirectory + "\"");
+    }
+
+    if ((otherConsoleOptions && otherConsoleOptions.toLowerCase().indexOf("usevsixextensions:true") != -1) || (pathtoCustomTestAdapters && pathtoCustomTestAdapters.toLowerCase().indexOf("usevsixextensions:true") != -1)){
+        argsArray.push("/UseVsixExtensions:true");
+    }
 
     try {
         vstestLocation = getVSTestLocation(vsVersion);
@@ -410,7 +427,7 @@ function cleanFiles(responseFile: string, listFile: string): void {
     tl.debug("Deleting the discovered tests file" + listFile);
     tl.rmRF(listFile, true);
     tl.debug("Deleting the baseline build id file" + baseLineBuildIdFile);
-    tl.rmRF(baseLineBuildIdFile, true);    
+    tl.rmRF(baseLineBuildIdFile, true);
 }
 
 function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion: number): Q.Promise<number> {
@@ -428,12 +445,10 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                         .then(function (vscode) {
                                             uploadTestResults(testResultsDirectory)
                                                 .then(function (code) {
-                                                    if (!isNaN(+code) && +code != 0)
-                                                    {
+                                                    if (!isNaN(+code) && +code != 0) {
                                                         defer.resolve(+code);
                                                     }
-                                                    else if (vscode != 0)
-                                                    {
+                                                    else if (vscode != 0) {
                                                         defer.resolve(vscode);
                                                     }
 
@@ -471,12 +486,10 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                             .then(function (vscode) {
                                                                 uploadTestResults(testResultsDirectory)
                                                                     .then(function (code) {
-                                                                        if (!isNaN(+code) && +code != 0)
-                                                                        {
+                                                                        if (!isNaN(+code) && +code != 0) {
                                                                             defer.resolve(+code);
                                                                         }
-                                                                        else if (vscode != 0)
-                                                                        {
+                                                                        else if (vscode != 0) {
                                                                             defer.resolve(vscode);
                                                                         }
 
@@ -506,12 +519,10 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                             .then(function (vscode) {
                                                                 uploadTestResults(testResultsDirectory)
                                                                     .then(function (code) {
-                                                                        if (!isNaN(+code) && +code != 0)
-                                                                        {
+                                                                        if (!isNaN(+code) && +code != 0) {
                                                                             defer.resolve(+code);
                                                                         }
-                                                                        else if (vscode != 0)
-                                                                        {
+                                                                        else if (vscode != 0) {
                                                                             defer.resolve(vscode);
                                                                         }
 
@@ -544,12 +555,10 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                     .then(function (vscode) {
                                         uploadTestResults(testResultsDirectory)
                                             .then(function (code) {
-                                                if (!isNaN(+code) && +code != 0)
-                                                {
+                                                if (!isNaN(+code) && +code != 0) {
                                                     defer.resolve(+code);
                                                 }
-                                                else if (vscode != 0)
-                                                {
+                                                else if (vscode != 0) {
                                                     defer.resolve(vscode);
                                                 }
 
@@ -649,7 +658,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
 function publishTestResults(testResultsDirectory: string) {
     if (testResultsDirectory) {
         var allFilesInResultsDirectory = tl.find(testResultsDirectory);
-        var resultFiles = tl.match(allFilesInResultsDirectory, "*.trx", { matchBase: true });
+        var resultFiles = tl.match(allFilesInResultsDirectory, path.join(testResultsDirectory, "*.trx"), { matchBase: true });
         if (resultFiles && resultFiles.length != 0) {
             var tp = new tl.TestPublisher("VSTest");
             tp.publish(resultFiles, "false", platform, configuration, testRunTitle, publishRunAttachments);
@@ -824,7 +833,7 @@ function getTestImpactAttributesWithoutNewCollector(vsVersion: number) {
     return {
         uri: TICollectorURI,
         assemblyQualifiedName: getTIAssemblyQualifiedName(vsVersion),
-        friendlyName: TIFriendlyName        
+        friendlyName: TIFriendlyName
     };
 }
 
@@ -866,7 +875,7 @@ function pushImpactLevelAndRootPathIfNotFound(dataCollectorArray): void {
                 if (!dataCollectorArray[i].$.codebase) {
                     dataCollectorArray[i].$.codebase = getTraceCollectorUri();
                 }
-            }            
+            }
         }
     }
 }
@@ -913,7 +922,7 @@ function updateRunSettings(result: any, vsVersion: number) {
         }
         else {
             dataCollectorNode.$ = getTestImpactAttributesWithoutNewCollector(vsVersion);
-        }        
+        }
     }
 }
 
@@ -1002,7 +1011,7 @@ function updatTestSettings(result: any, vsVersion: number) {
         }
         else {
             dataCollectorNode.$ = getTestImpactAttributesWithoutNewCollector(vsVersion);
-        }        
+        }
     }
 }
 

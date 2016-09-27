@@ -1,8 +1,3 @@
-/// <reference path="../../definitions/node.d.ts"/>
-/// <reference path="../../definitions/Q.d.ts" />
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-/// <reference path="../../definitions/nuget-task-common.d.ts" />
-
 import * as path from "path";
 import * as Q  from "q";
 import * as tl from "vsts-task-lib/task";

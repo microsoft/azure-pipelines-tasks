@@ -1,6 +1,4 @@
-﻿/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-
-import fs = require('fs');
+﻿import fs = require('fs');
 import path = require('path');
 import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');

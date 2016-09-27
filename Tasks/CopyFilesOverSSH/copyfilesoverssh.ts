@@ -1,6 +1,3 @@
-/// <reference path="../../definitions/ssh-common.d.ts" />
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-
 import os = require('os');
 import path = require('path');
 import Q = require('q');

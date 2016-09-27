@@ -1,13 +1,6 @@
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-
-import tl = require('vsts-task-lib/task');
 import path = require('path');
-
-// Define error handler
-var onError = function (errorMsg) {
-    tl.error(errorMsg);
-    tl.exit(1);
-}
+import tl = require('vsts-task-lib/task');
+import trm = require('vsts-task-lib/toolrunner');
 
 var firstWildcardIndex = function (str) {
     var idx = str.indexOf('*');
@@ -24,112 +17,97 @@ var firstWildcardIndex = function (str) {
     return idx;
 }
 
-// Get files to be uploaded 
-var filesPattern = tl.getInput('files', true);
-tl.debug('filesPattern: ' + filesPattern); 
+async function run() {
+    try {
+        var filesPattern: string = tl.getInput('files', true);
+        var username: string = tl.getInput('username', false);
+        var password: string = tl.getInput('password', false);
+        var url: string = tl.getInput('url', true); 
+        var redirectStderr: boolean = tl.getBoolInput('redirectStderr', false);
+        var options: string = tl.getInput('options', false);
 
-// Get username for server authentication
-var username = tl.getInput('username', false);
-tl.debug('user: ' + username);
+        // Find location of curl 
+        var curlPath: string = tl.which('curl');
+        if (!curlPath) {
+            throw new Error('curl was not found in the path.');
+        }
 
-// Get password for server authentication
-var password = tl.getInput('password', false);
-tl.debug('password nil?: ' + !(password));
+        // Prepare curl upload command line
+        var curlRunner: trm.ToolRunner = tl.tool('curl');
 
-// Get where to upload
-var url = tl.getInput('url', true);
-tl.debug('URL: ' + url);
+        // Resolve files for the specified value or pattern
+        if (filesPattern.indexOf('*') == -1 && filesPattern.indexOf('?') == -1) {
+            // No pattern found, check literal path to a single file
+            tl.checkPath(filesPattern, "filesPattern");
 
-// Should redirect stderr to stdout (curl by defaults write progress bar to stderr, and they show up as error text) 
-var redirectStderr = tl.getInput('redirectStderr', false);
-tl.debug('redirectStderr: ' + redirectStderr);
+            // Use the specified single file
+            var uploadFiles = filesPattern;
+        } 
+        else {
+            // Find app files matching the specified pattern
+            tl.debug('Matching glob pattern: ' + filesPattern);
 
-var options = tl.getInput('options', false);
-tl.debug("options: " + options);
+            // First find the most complete path without any matching patterns
+            var idx = firstWildcardIndex(filesPattern);
+            tl.debug('Index of first wildcard: ' + idx);
 
-// Find location of curl 
-var curlPath = tl.which('curl');
-if (!curlPath) {
-    onError('curl was not found in the path.');
-}
+            var findPathRoot = path.dirname(filesPattern.slice(0, idx));
+            tl.debug('find root dir: ' + findPathRoot);
 
-// Prepare curl upload command line
-var curlRunner = tl.createToolRunner('curl');
+            // Now we get a list of all files under this root
+            var allFiles = tl.find(findPathRoot);
 
-// Resolve files for the specified value or pattern
-if (filesPattern.indexOf('*') == -1 && filesPattern.indexOf('?') == -1) {
-    // No pattern found, check literal path to a single file
-    tl.checkPath(filesPattern, "filesPattern");
+            // Now matching the pattern against all files
+            var uploadFilesList = tl.match(allFiles, filesPattern, {matchBase: true});
 
-    // Use the specified single file
-    var uploadFiles = filesPattern;
+            // Fail if no matching app files were found
+            if (!uploadFilesList || uploadFilesList.length == 0) {
+                throw new Error('No matching files were found with search pattern: ' + filesPattern);
+            }
 
-} else {
-    // Find app files matching the specified pattern
-    tl.debug('Matching glob pattern: ' + filesPattern);
+            var uploadFiles = '{' + uploadFilesList.join(',') + '}'
+        }
+        tl.debug("uploading file(s): " + uploadFiles);
 
-    // First find the most complete path without any matching patterns
-    var idx = firstWildcardIndex(filesPattern);
-    tl.debug('Index of first wildcard: ' + idx);
-    var findPathRoot = path.dirname(filesPattern.slice(0, idx));
+        curlRunner.arg('-T')
+        // arrayify the arg so vsts-task-lib does not try to break args at space
+        // this is required for any file input that could potentially contain spaces
+        curlRunner.arg([uploadFiles]);
 
-    tl.debug('find root dir: ' + findPathRoot);
+        curlRunner.arg(url);
 
-    // Now we get a list of all files under this root
-    var allFiles = tl.find(findPathRoot);
+        if (redirectStderr) {
+            curlRunner.arg('--stderr');
+            curlRunner.arg('-');
+        }
 
-    // Now matching the pattern against all files
-    var uploadFilesList = tl.match(allFiles, filesPattern, {matchBase: true});
+        if (options) {
+            curlRunner.line(options);
+        }
 
-    // Fail if no matching app files were found
-    if (!uploadFilesList || uploadFilesList.length == 0) {
-        onError('No matching files were found with search pattern: ' + filesPattern);
+        if (username || password) {
+            var userPassCombo = "";
+            if (username) {
+                userPassCombo += username;
+            }
+
+            userPassCombo += ":";
+
+            if (password) {
+                userPassCombo += password;
+            }
+
+            curlRunner.arg('-u');
+            curlRunner.arg(userPassCombo);
+        }
+
+        var code: number = await curlRunner.exec();
+        tl.setResult(tl.TaskResult.Succeeded, tl.loc('CurlReturnCode', code));
     }
-
-    var uploadFiles = '{' + uploadFilesList.join(',') + '}'
-}
-tl.debug("uploading file(s): " + uploadFiles);
-
-curlRunner.arg('-T')
-// arrayify the arg so vsts-task-lib does not try to break args at space
-// this is required for any file input that could potentially contain spaces
-curlRunner.arg([uploadFiles]);
-
-curlRunner.arg(url);
-
-if (redirectStderr === 'true') {
-    curlRunner.arg('--stderr');
-    curlRunner.arg('-');
+    catch(err) {
+        tl.error(err.message);
+        tl.setResult(tl.TaskResult.Failed, tl.loc('CurlFailed', err.message));
+    }    
 }
 
-if (options) {
-    curlRunner.argString(options);
-}
-
-if (username || password) {
-    var userPassCombo = "";
-    if (username) {
-        userPassCombo += username;
-    }
-
-    userPassCombo += ":";
-
-    if (password) {
-        userPassCombo += password;
-    }
-
-    curlRunner.arg('-u');
-    curlRunner.arg(userPassCombo);
-}
-
-// Execute build
-curlRunner.exec()
-.then(function (code) {
-    // Executed successfully
-    tl.exit(code);
-})
-.fail(function (err) {
-    // Error executing
-    tl.debug('ToolRunner execution failure: ' + err);
-    tl.exit(1);
-})
+run();

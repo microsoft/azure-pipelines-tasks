@@ -78,5 +78,9 @@
       "target": "curluploader.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "CurlReturnCode": "ms-resource:loc.messages.CurlReturnCode",
+    "CurlFailed": "ms-resource:loc.messages.CurlFailed"
   }
 }

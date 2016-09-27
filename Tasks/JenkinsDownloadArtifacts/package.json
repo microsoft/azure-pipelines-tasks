@@ -1,8 +1,14 @@
 {
   "name": "vsts-tasks-jenkinsdownloadartifacts",
-  "version": "1.0.0",
+  "description": "VSTS Jenkins Download Task",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",  
   "dependencies": {
     "request": "2.74.0",
-    "vsts-task-lib": "0.8.3"
+    "vsts-task-lib": "0.9.20"
   }
 }

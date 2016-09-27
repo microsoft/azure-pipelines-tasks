@@ -8,6 +8,7 @@ import path = require('path');
 import fs = require('fs');
 
 describe('General Suite', function() {
+	this.timeout(20000);
 
 	before((done) => {
 		// init here
@@ -19,7 +20,7 @@ describe('General Suite', function() {
 	});
 
 	it('Find invalid task.json', (done) => {
-		this.timeout(1000);
+		this.timeout(20000);
 		
 		var tasksRootFolder =  path.resolve(__dirname, '../../../../Tasks');
 		
@@ -56,7 +57,7 @@ describe('General Suite', function() {
 	})
 
 	it('Find nested task.json', (done) => {
-		this.timeout(1000);
+		this.timeout(20000);
 		
 		// Path to the _build/Tasks folder.
 		var tasksFolder =  path.resolve(__dirname, '../../../Tasks');
@@ -86,7 +87,7 @@ describe('General Suite', function() {
 	})
 
     it('Find .js with uppercase', (done) => {
-		this.timeout(1000);
+		this.timeout(20000);
 		
 		var tasksRootFolder =  path.resolve(__dirname, '../../../../Tasks');
 		
@@ -101,7 +102,7 @@ describe('General Suite', function() {
 			var taskFolder = taskFolders[i];
 
 			var taskjson = path.join(taskFolder, 'task.json');
-            var task = require(taskjson);
+            var task = JSON.parse(fs.readFileSync(taskjson).toString());
             
             if (task.execution['Node']) {
 				
@@ -128,7 +129,7 @@ describe('General Suite', function() {
 	})
     
     it('Find unsupported demands', (done) => {
-		this.timeout(1000);
+		this.timeout(20000);
 
         var supportedDemands :string[] = ['AndroidSDK',
                                           'ant', 
@@ -180,7 +181,7 @@ describe('General Suite', function() {
 			var taskFolder = taskFolders[i];
 			var taskjson = path.join(taskFolder, 'task.json');            
             
-            var task = require(taskjson);
+            var task = JSON.parse(fs.readFileSync(taskjson).toString());
             if (task.hasOwnProperty('demands')) {
                 task['demands'].forEach(demand => {
                     if(supportedDemands.indexOf(demand.toLocaleLowerCase()) < 0) {

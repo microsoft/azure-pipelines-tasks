@@ -1,5 +1,3 @@
-/// <reference path="../../definitions/vso-node-api.d.ts" />
-
 import Q = require('q');
 import tl = require('vsts-task-lib/task');
 import path = require("path");
