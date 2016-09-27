@@ -195,7 +195,7 @@ function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
     var defer = Q.defer<string>();
 
     var allFilesInResultsDirectory = tl.find(testResultsDirectory);
-    var resultFiles = tl.match(allFilesInResultsDirectory, "*.trx", { matchBase: true });
+    var resultFiles = tl.match(allFilesInResultsDirectory, path.join(testResultsDirectory, "*.trx"), { matchBase: true });
 
     var selectortool = tl.createToolRunner(getTestSelectorLocation());
     selectortool.arg("UpdateTestResults");
@@ -645,7 +645,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
 function publishTestResults(testResultsDirectory: string) {
     if (testResultsDirectory) {
         var allFilesInResultsDirectory = tl.find(testResultsDirectory);
-        var resultFiles = tl.match(allFilesInResultsDirectory, "*.trx", { matchBase: true });
+        var resultFiles = tl.match(allFilesInResultsDirectory, path.join(testResultsDirectory, "*.trx"), { matchBase: true });
         if (resultFiles && resultFiles.length != 0) {
             var tp = new tl.TestPublisher("VSTest");
             tp.publish(resultFiles, "false", platform, configuration, testRunTitle, publishRunAttachments);
