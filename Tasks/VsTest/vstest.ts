@@ -1228,15 +1228,16 @@ function setRunInParallellIfApplicable(vsVersion: number) {
                 }
 
                 // in 14.0 taef parellization needed taef enabled
-                var vs14Common = tl.getVariable("VS140COMNTools");
+                let vs14Common: string = tl.getVariable("VS140COMNTools");
                 if (vs14Common && pathExistsAsFile(path.join(vs14Common, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll"))) {
                     setRegistryKeyForParallelExecution(vsVersion);
                     return;
                 }
             }
             resetRunInParallel();
-        } else if (vstestLocationMethod.toLowerCase() === 'location') {
-            var vs14Common = tl.getVariable("VS140COMNTools");
+        } 
+        else if (vstestLocationMethod.toLowerCase() === 'location') {
+            let vs14Common: string = tl.getVariable("VS140COMNTools");
             if (vs14Common && pathExistsAsFile(path.join(vs14Common, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll"))) {
                 setRegistryKeyForParallelExecution(vsVersion);
                 return;
