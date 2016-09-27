@@ -111,10 +111,16 @@ function getTestAssemblies(): Set<string> {
             let patternWithoutIncludeExclude: string = getPatternWithoutIncludeExclude(testAssemblyFilter);
             let resolvedPattern: string = getResolvedPattern(patternWithoutIncludeExclude);
             if (exclude) {
-                excludeTestAssemblies.push.apply(excludeTestAssemblies, hasQuantifier ? getFilteredFiles(resolvedPattern,allFiles): [resolvedPattern]);
+                excludeTestAssemblies.push.apply(excludeTestAssemblies, hasQuantifier ? 
+                    getFilteredFiles(resolvedPattern,allFiles) : 
+                    [resolvedPattern]
+                );
             }
             else {
-                testAssemblyFiles.push.apply(testAssemblyFiles, hasQuantifier ? getFilteredFiles(resolvedPattern,allFiles): [resolvedPattern]);
+                testAssemblyFiles.push.apply(testAssemblyFiles, hasQuantifier ? 
+                    getFilteredFiles(resolvedPattern,allFiles) : 
+                    [resolvedPattern]
+                );
             }
         });
         testAssemblyFiles = testAssemblyFiles.filter(x => excludeTestAssemblies.indexOf(x) < 0);
