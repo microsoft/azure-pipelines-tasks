@@ -97,36 +97,34 @@ function getPatternWithoutIncludeExclude(pattern: string): string {
     return pattern.startsWith('-:') || pattern.startsWith('+:') ? pattern.substr(2) : pattern;
 }
 
+function getFilteredFilesFromPattern(pattern: string, hasQuantifier: boolean, allFiles: string[]): string[] {
+    return hasQuantifier ? getFilteredFiles(pattern, allFiles) : [pattern];
+}
+
 function getTestAssemblies(): Set<string> {
-    let testAssemblyFiles: Array<string> = [];
+    let testAssemblyFiles: string[] = [];
     if (testAssembly.indexOf('*') >= 0 || testAssembly.indexOf('?') >= 0) {
         tl.debug('Pattern found in solution parameter.');
-        let excludeTestAssemblies: Array<string> = [];
-        let allFiles: Array<string> = tl.find(sourcesDirectory);
-        let testAssemblyFilters: Array<string> = testAssembly.split(';');
+        let excludeTestAssemblies: string[] = [];
+        let allFiles = tl.find(sourcesDirectory);
+        let testAssemblyFilters = testAssembly.split(';');
         testAssemblyFilters.forEach(function (testAssemblyFilter) {
-            let exclude: boolean = testAssemblyFilter.startsWith('-:');
-            let hasQuantifier: boolean = Math.max(testAssembly.indexOf('*'), testAssembly.indexOf('?')) != -1;
-            let patternWithoutIncludeExclude: string = getPatternWithoutIncludeExclude(testAssemblyFilter);
-            let resolvedPattern: string = getResolvedPattern(patternWithoutIncludeExclude);
-            if (exclude) {
-                excludeTestAssemblies.push.apply(excludeTestAssemblies, hasQuantifier ? 
-                    getFilteredFiles(resolvedPattern,allFiles) : 
-                    [resolvedPattern]
-                );
+            let isExcludeFilter = testAssemblyFilter.startsWith('-:');
+            let hasQuantifier = testAssembly.indexOf('*') != -1 || testAssembly.indexOf('?') != -1;
+            let patternWithoutIncludeExclude = getPatternWithoutIncludeExclude(testAssemblyFilter);
+            let resolvedPattern = getResolvedPattern(patternWithoutIncludeExclude);
+            if (isExcludeFilter) {
+                excludeTestAssemblies.push.apply(excludeTestAssemblies, getFilteredFilesFromPattern(resolvedPattern, hasQuantifier, allFiles));
             }
             else {
-                testAssemblyFiles.push.apply(testAssemblyFiles, hasQuantifier ? 
-                    getFilteredFiles(resolvedPattern,allFiles) : 
-                    [resolvedPattern]
-                );
+                testAssemblyFiles.push.apply(testAssemblyFiles, getFilteredFilesFromPattern(resolvedPattern, hasQuantifier, allFiles));
             }
         });
         testAssemblyFiles = testAssemblyFiles.filter(x => excludeTestAssemblies.indexOf(x) < 0);
     }
     else {
         tl.debug('No Pattern found in solution parameter.');
-        let assemblies: Array<string> = testAssembly.split(';');
+        let assemblies = testAssembly.split(';');
         assemblies.forEach(function (assembly) {
             testAssemblyFiles.push(assembly);
         });
