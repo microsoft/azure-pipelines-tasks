@@ -91,7 +91,6 @@ function getResolvedPattern(pattern: string): string {
     }
     else {
         return path.join(path.join(sourcesDirectory, pattern.slice(0,indexOfFirstQuantifier)), pattern.substr(indexOfFirstQuantifier));
-        //return path.join(path.resolve(pattern.slice(0,indexOfFirstQuantifier), pattern.substr(indexOfFirstQuantifier)));
     }
 }
 
