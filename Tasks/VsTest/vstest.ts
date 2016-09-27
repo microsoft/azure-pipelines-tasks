@@ -85,13 +85,7 @@ catch (error) {
 }
 
 function getResolvedPattern(pattern: string): string {
-    var indexOfFirstQuantifier = Math.min(pattern.indexOf('?'), pattern.indexOf('*'));
-    if (indexOfFirstQuantifier == -1) {
-        return path.join(sourcesDirectory, pattern);
-    }
-    else {
-        return path.join(path.join(sourcesDirectory, pattern.slice(0,indexOfFirstQuantifier)), pattern.substr(indexOfFirstQuantifier));
-    }
+    return path.join(sourcesDirectory, pattern);
 }
 
 function getPatternWithoutIncludeExclude(pattern: string): string {
