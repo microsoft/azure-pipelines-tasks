@@ -14,7 +14,6 @@ export class NugetMockHelper {
         process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = "https://example.visualstudio.com/defaultcollection";
         process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = "c:\\agent\\home\\directory";
         process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = "https://example.visualstudio.com/defaultcollection";
-        process.env.windir = "c:\\foo";
     }
     
     public setNugetVersionInputDefault() {
@@ -49,6 +48,10 @@ export class NugetMockHelper {
             },
             locateCredentialProvider: function(path) {
                 return 'c:\\agent\\home\\directory\\externals\\nuget\\CredentialProvider';
+            },
+            setConsoleCodePage: function() {
+                var tlm = require('vsts-task-lib/mock-task');
+                tlm.debug(`setting console code page`);
             }
         } )
     }
@@ -65,11 +68,8 @@ export class NugetMockHelper {
     
     public setAnswers(a) {
         a.osType["osType"] = "Windows_NT";
-        a.checkPath["c:\\foo\\system32\\chcp.com"] = true;
-        a.which["c:\\foo\\system32\\chcp.com"] = "c:\\foo\\system32\\chcp.com";
-        a.exec["c:\\foo\\system32\\chcp.com 65001"] = {"code": 0, "stdout": "", "stderr": ""};
         a.exist["c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe"] = true;
-        a.exist["c:\\agent\\home\\directory\\externals\\nuget\\CredentialProvider.TeamBuild.exe"] = true;
+        a.exist["c:\\agent\\home\\directory\\externals\\nuget\\CredentialProvider\\CredentialProvider.TeamBuild.exe"] = true;
         this.tmr.setAnswers(a);
     }
 }

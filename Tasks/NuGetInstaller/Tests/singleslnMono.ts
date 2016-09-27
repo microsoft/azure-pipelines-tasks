@@ -56,6 +56,10 @@ tmr.registerMock('nuget-task-common/Utility', {
     },
     locateCredentialProvider: function(path) {
         return '~/myagent/_work/_tasks/NuGet/CredentialProvider';
+    },
+    setConsoleCodePage: function() {
+        var tlm = require('vsts-task-lib/mock-task');
+        tlm.debug(`setting console code page`);
     }
 } )
 

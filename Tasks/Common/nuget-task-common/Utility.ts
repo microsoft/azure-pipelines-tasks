@@ -151,3 +151,10 @@ export function getBundledNuGetLocation(version: string): string {
 export function locateCredentialProvider(): string {
     return path.join(__dirname, 'NuGet/CredentialProvider'); 
 }
+
+// set the console code page to "UTF-8"
+export function setConsoleCodePage() {
+    if (tl.osType() === 'Windows_NT') {
+        tl.execSync(path.resolve(process.env.windir, "system32", "chcp.com"), ["65001"]);
+    }
+}

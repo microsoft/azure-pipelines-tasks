@@ -28,10 +28,7 @@ async function main(): Promise<void> {
     try {
         tl.setResourcePath(path.join(__dirname, "task.json"));
 
-        // set the console code page to "UTF-8"
-        if (tl.osType() === 'Windows_NT') {
-            tl.execSync(path.resolve(process.env.windir, "system32", "chcp.com"), ["65001"]);
-        }
+        nutil.setConsoleCodePage();
 
         // read inputs
         let solution = tl.getPathInput("solution", true, false);

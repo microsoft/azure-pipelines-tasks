@@ -16,10 +16,10 @@ describe('NuGetInstaller Suite', function () {
 
         tr.run()
         assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln'), 'it should have run NuGet');
-        assert(tr.ran('c:\\foo\\system32\\chcp.com 65001'), 'it should have run chcp');
+        assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.succeeded, 'should have succeeded');
-        assert(tr.invokedToolCount == 2, 'should have run NuGet and chcp');
+        assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });
@@ -32,12 +32,12 @@ describe('NuGetInstaller Suite', function () {
 
         tr.run()
         assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln'), 'it should have run NuGet');
-        assert(tr.ran('c:\\foo\\system32\\chcp.com 65001'), 'it should have run chcp');
+        assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.stdout.indexOf('Got auth token') >= 0, "should have got Auth token");
         assert(tr.stdout.indexOf('credProviderPath = c:\\agent\\home\\directory\\externals\\nuget') >= 0, "should have found credential provider path");
         assert(tr.succeeded, 'should have succeeded');
-        assert(tr.invokedToolCount == 2, 'should have run NuGet and chcp');
+        assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert.equal(tr.warningIssues.length, 0, "should have no warnings");
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
@@ -51,10 +51,10 @@ describe('NuGetInstaller Suite', function () {
 
         tr.run()
         assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\packages.config'), 'it should have run NuGet');
-        assert(tr.ran('c:\\foo\\system32\\chcp.com 65001'), 'it should have run chcp');
+        assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.succeeded, 'should have succeeded');
-        assert(tr.invokedToolCount == 2, 'should have run NuGet and chcp');
+        assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });   
@@ -67,10 +67,10 @@ describe('NuGetInstaller Suite', function () {
 
         tr.run()
         assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln -NoCache'), 'it should have run NuGet');
-        assert(tr.ran('c:\\foo\\system32\\chcp.com 65001'), 'it should have run chcp');
+        assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.succeeded, 'should have succeeded');
-        assert(tr.invokedToolCount == 2, 'should have run NuGet and chcp');
+        assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });
@@ -83,11 +83,11 @@ describe('NuGetInstaller Suite', function () {
 
         tr.run()
         assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config'), 'it should have run NuGet with ConfigFile specified');
-        assert(tr.ran('c:\\foo\\system32\\chcp.com 65001'), 'it should have run chcp');
+        assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained("adding package source uri: mockFeedUri"), "should have added content to temp config");
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.succeeded, 'should have succeeded');
-        assert(tr.invokedToolCount == 2, 'should have run NuGet and chcp');
+        assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });
@@ -100,9 +100,10 @@ describe('NuGetInstaller Suite', function () {
 
         tr.run();
         assert(tr.ran('c:\\custompath\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln'), 'it should have run NuGet');
+        assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.succeeded, 'should have succeeded');
-        assert(tr.invokedToolCount == 2, 'should have run NuGet and chcp');
+        assert(tr.invokedToolCount == 1, 'should have run NuGet');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });
@@ -116,9 +117,10 @@ describe('NuGetInstaller Suite', function () {
         tr.run();
         assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln'), 'it should have run NuGet on single.sln');
         assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\double\\double.sln'), 'it should have run NuGet on double.sln');
+        assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
         assert(tr.succeeded, 'should have succeeded');
-        assert(tr.invokedToolCount == 3, 'should have run NuGet twice and chcp');
+        assert(tr.invokedToolCount == 2, 'should have run NuGet twice');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });
