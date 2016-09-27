@@ -88,34 +88,47 @@ catch (error) {
     throw error;
 }
 
+function getResolvedPattern(pattern: string): string {
+    if (path.isAbsolute(pattern)) {
+        return pattern;
+    }
+    else {
+        return path.join(sourcesDirectory, pattern);
+    }
+}
+
+function getPatternWithoutIncludeExclude(pattern: string): string {
+    return pattern.startsWith('-:') || pattern.startsWith('+:') ? pattern.substr(2) : pattern;
+}
+
+function getFilteredFilesFromPattern(pattern: string, hasQuantifier: boolean, allFiles: string[]): string[] {
+    return hasQuantifier ? getFilteredFiles(pattern, allFiles) : [pattern];
+}
+
 function getTestAssemblies(): Set<string> {
-    var testAssemblyFiles = [];
+    let testAssemblyFiles: string[] = [];
     if (testAssembly.indexOf('*') >= 0 || testAssembly.indexOf('?') >= 0) {
         tl.debug('Pattern found in solution parameter.');
-        var excludeTestAssemblies = [];
-        var allFiles = tl.find(sourcesDirectory);
-        var testAssemblyFilters = testAssembly.split(';');
+        let excludeTestAssemblies: string[] = [];
+        let allFiles = tl.find(sourcesDirectory);
+        let testAssemblyFilters = testAssembly.split(';');
         testAssemblyFilters.forEach(function (testAssemblyFilter) {
-            if (testAssemblyFilter.startsWith("-:")) {
-                if (testAssemblyFilter.indexOf('*') >= 0 || testAssemblyFilter.indexOf('?') >= 0) {
-                    excludeTestAssemblies = excludeTestAssemblies.concat(getFilteredFiles(testAssemblyFilter.substr(2), allFiles));
-                }
-                else {
-                    excludeTestAssemblies.push(testAssemblyFilter.substr(2));
-                }
-            }
-            else if (testAssemblyFilter.indexOf('*') >= 0 || testAssemblyFilter.indexOf('?') >= 0) {
-                testAssemblyFiles = testAssemblyFiles.concat(getFilteredFiles(testAssemblyFilter, allFiles));
+            let isExcludeFilter = testAssemblyFilter.startsWith('-:');
+            let hasQuantifier = testAssembly.indexOf('*') != -1 || testAssembly.indexOf('?') != -1;
+            let patternWithoutIncludeExclude = getPatternWithoutIncludeExclude(testAssemblyFilter);
+            let resolvedPattern = getResolvedPattern(patternWithoutIncludeExclude);
+            if (isExcludeFilter) {
+                excludeTestAssemblies.push.apply(excludeTestAssemblies, getFilteredFilesFromPattern(resolvedPattern, hasQuantifier, allFiles));
             }
             else {
-                testAssemblyFiles.push(testAssemblyFilter);
+                testAssemblyFiles.push.apply(testAssemblyFiles, getFilteredFilesFromPattern(resolvedPattern, hasQuantifier, allFiles));
             }
         });
         testAssemblyFiles = testAssemblyFiles.filter(x => excludeTestAssemblies.indexOf(x) < 0);
     }
     else {
         tl.debug('No Pattern found in solution parameter.');
-        var assemblies = testAssembly.split(';');
+        let assemblies = testAssembly.split(';');
         assemblies.forEach(function (assembly) {
             testAssemblyFiles.push(assembly);
         });
@@ -238,7 +251,7 @@ function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
     var defer = Q.defer<string>();
 
     var allFilesInResultsDirectory = tl.find(testResultsDirectory);
-    var resultFiles = tl.match(allFilesInResultsDirectory, "*.trx", { matchBase: true });
+    var resultFiles = tl.match(allFilesInResultsDirectory, path.join(testResultsDirectory, "*.trx"), { matchBase: true });
 
     var selectortool = tl.createToolRunner(getTestSelectorLocation());
     selectortool.arg("UpdateTestResults");
@@ -403,6 +416,21 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
     argsArray.push("/ListTestsTargetPath:" + tempFile);
     if (testFiltercriteria) {
         argsArray.push("/TestCaseFilter:" + testFiltercriteria);
+    }
+    if (pathtoCustomTestAdapters) {
+        if (pathExistsAsDirectory(pathtoCustomTestAdapters)) {
+            argsArray.push("/TestAdapterPath:\"" + pathtoCustomTestAdapters + "\"");
+        }
+        else {
+            argsArray.push("/TestAdapterPath:\"" + path.dirname(pathtoCustomTestAdapters) + "\"");
+        }
+    }
+    else if (sourcesDirectory && isNugetRestoredAdapterPresent(sourcesDirectory)) {
+        argsArray.push("/TestAdapterPath:\"" + sourcesDirectory + "\"");
+    }
+
+    if ((otherConsoleOptions && otherConsoleOptions.toLowerCase().indexOf("usevsixextensions:true") != -1) || (pathtoCustomTestAdapters && pathtoCustomTestAdapters.toLowerCase().indexOf("usevsixextensions:true") != -1)){
+        argsArray.push("/UseVsixExtensions:true");
     }
 
     var vstest = tl.createToolRunner(vstestLocation);
@@ -672,7 +700,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
 function publishTestResults(testResultsDirectory: string) {
     if (testResultsDirectory) {
         var allFilesInResultsDirectory = tl.find(testResultsDirectory);
-        var resultFiles = tl.match(allFilesInResultsDirectory, "*.trx", { matchBase: true });
+        var resultFiles = tl.match(allFilesInResultsDirectory, path.join(testResultsDirectory, "*.trx"), { matchBase: true });
         if (resultFiles && resultFiles.length != 0) {
             var tp = new tl.TestPublisher("VSTest");
             tp.publish(resultFiles, "false", platform, configuration, testRunTitle, publishRunAttachments);
@@ -1247,19 +1275,28 @@ function saveToFile(fileContents: string, extension: string): Q.Promise<string> 
 
 function setRunInParallellIfApplicable(vsVersion: number) {
     if (runInParallel) {
-        if (!isNaN(vsVersion) && vsVersion >= 14) {
-            if (vsVersion >= 15) { // moved away from taef
-                return;
-            }
+        if (vstestLocationMethod.toLowerCase() === 'version') {
+            if (!isNaN(vsVersion) && vsVersion >= 14) {
+                if (vsVersion >= 15) { // moved away from taef
+                    return;
+                }
 
-            // in 14.0 taef parellization needed taef enabled
-            var vs14Common = tl.getVariable("VS140COMNTools");
+                // in 14.0 taef parellization needed taef enabled
+                let vs14Common: string = tl.getVariable("VS140COMNTools");
+                if (vs14Common && pathExistsAsFile(path.join(vs14Common, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll"))) {
+                    setRegistryKeyForParallelExecution(vsVersion);
+                    return;
+                }
+            }
+            resetRunInParallel();
+        } 
+        else if (vstestLocationMethod.toLowerCase() === 'location') {
+            let vs14Common: string = tl.getVariable("VS140COMNTools");
             if (vs14Common && pathExistsAsFile(path.join(vs14Common, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll"))) {
                 setRegistryKeyForParallelExecution(vsVersion);
                 return;
             }
         }
-        resetRunInParallel();
     }
 }
 

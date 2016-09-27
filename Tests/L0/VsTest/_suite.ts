@@ -148,7 +148,7 @@ describe('VsTest Suite', function () {
     it('Vstest task with test results files filter', (done) => {
         setResponseFile('vstestGood.json');
         var tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/some/*pattern');
+        tr.setInput('testAssembly', 'some/*pattern');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
 
@@ -169,7 +169,7 @@ describe('VsTest Suite', function () {
     it('Vstest task with test results files filter and exclude filter', (done) => {
         setResponseFile('vstestGood.json');
         var tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/some/*pattern;-:/exclude/*pattern');
+        tr.setInput('testAssembly', 'some/*pattern;-:exclude/*pattern');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
 
@@ -211,7 +211,7 @@ describe('VsTest Suite', function () {
     it('Vstest task when vstest fails', (done) => {
         setResponseFile('vstestFails.json');
         var tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/some/*pattern');
+        tr.setInput('testAssembly', 'some/*pattern');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
 
