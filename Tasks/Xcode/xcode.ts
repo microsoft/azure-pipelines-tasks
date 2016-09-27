@@ -82,10 +82,14 @@ async function run() {
         xcb.argIf(scheme, ['-scheme', scheme]);
         xcb.argIf(useXctool && xctoolReporter, ['-reporter', 'plain', '-reporter', xctoolReporter]);
         xcb.arg(actions);
-        xcb.arg('DSTROOT=' + path.join(outPath, 'build.dst'));
-        xcb.arg('OBJROOT=' + path.join(outPath, 'build.obj'));
-        xcb.arg('SYMROOT=' + path.join(outPath, 'build.sym'));
-        xcb.arg('SHARED_PRECOMPS_DIR=' + path.join(outPath, 'build.pch'));
+        if(actions.toString().indexOf('archive') < 0) {
+            // redirect build output if archive action is not passed
+            // xcodebuild archive produces an invalid archive if output is redirected
+            xcb.arg('DSTROOT=' + path.join(outPath, 'build.dst'));
+            xcb.arg('OBJROOT=' + path.join(outPath, 'build.obj'));
+            xcb.arg('SYMROOT=' + path.join(outPath, 'build.sym'));
+            xcb.arg('SHARED_PRECOMPS_DIR=' + path.join(outPath, 'build.pch'));
+        }
         if (args) {
             xcb.line(args);
         }
