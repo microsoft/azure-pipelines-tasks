@@ -308,47 +308,23 @@ target.package = function() {
     // clean
     rm('-Rf', packagePath);
 
-    // stage the zip contents
-    console.log('> Staging zip contents');
-    var zipSourcePath = path.join(packagePath, 'zip-source');
-    mkdir('-p', zipSourcePath);
-    // process each item directly under _build/Tasks/
-    fs.readdirSync(buildPath).forEach(function (itemName) {
-        var taskSourcePath = path.join(buildPath, itemName);
+    console.log('> Staging content for individual task zips');
+    var individualZipStagingPath = path.join(packagePath, 'individual-zip-staging');
+    util.stageTaskZipContent(buildPath, individualZipStagingPath, /*metadataOnly*/false);
 
-        // skip Common and skip files
-        if (itemName == 'Common' || !fs.statSync(taskSourcePath).isDirectory()) {
-            return;
-        }
+    console.log();
+    console.log('> Staging metadata for wrapper zip');
+    var wrapperZipStagingPath = path.join(packagePath, 'wrapper-zip-staging');
+    util.stageTaskZipContent(buildPath, wrapperZipStagingPath, /*metadataOnly*/true);
 
-        // create the target dir
-        var taskTargetPath = path.join(zipSourcePath, itemName);
-        mkdir('-p', taskTargetPath);
+    // mark the layout with a version number. servicing needs to support both this new format
+    // and the original layout format as well.
+    fs.writeFileSync(path.join(wrapperZipStagingPath, 'layout-version.txt'), '2');
 
-        // process each file/folder within the task
-        fs.readdirSync(taskSourcePath).forEach(function (itemName) {
-            // skip the Tests folder
-            if (itemName == 'Tests') {
-                return;
-            }
-
-            // create a junction point for directories, hardlink files
-            var itemSourcePath = path.join(taskSourcePath, itemName);
-            var itemTargetPath = path.join(taskTargetPath, itemName);
-            if (fs.statSync(itemSourcePath).isDirectory()) {
-                fs.symlinkSync(itemSourcePath, itemTargetPath, 'junction');
-            }
-            else {
-                fs.linkSync(itemSourcePath, itemTargetPath);
-            }
-        });
-    });
-
-    // create the zip
+    // create the tasks zip
     var zipPath = path.join(packagePath, 'pack-source', 'contents', 'Microsoft.TeamFoundation.Build.Tasks.zip');
-    mkdir('-p', path.dirname(zipPath));
     ensureTool('powershell.exe', '-NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command "$PSVersionTable.PSVersion.ToString()"');
-    run(`powershell.exe -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command "Add-Type -Assembly 'System.IO.Compression.FileSystem'; [System.IO.Compression.ZipFile]::CreateFromDirectory('${zipSourcePath}', '${zipPath}')"`)
+    run(`powershell.exe -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command "& '${path.join(__dirname, 'Compress-Tasks.ps1')}' -IndividualZipStagingPath '${individualZipStagingPath}' -WrapperZipStagingPath '${wrapperZipStagingPath}' -ZipPath '${zipPath}'"`, /*echo:*/true);
 
     // nuspec
     var version = options.version;
@@ -361,6 +337,7 @@ target.package = function() {
     }
 
     var pkgName = 'Mseng.MS.TF.Build.Tasks';
+    console.log();
     console.log('> Generating .nuspec file');
     var contents = '<?xml version="1.0" encoding="utf-8"?>' + os.EOL;
     contents += '<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">' + os.EOL;
