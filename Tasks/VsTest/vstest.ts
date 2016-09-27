@@ -85,7 +85,12 @@ catch (error) {
 }
 
 function getResolvedPattern(pattern: string): string {
-    return path.join(sourcesDirectory, pattern);
+    if (path.isAbsolute(pattern)) {
+        return pattern;
+    }
+    else {
+        return path.join(sourcesDirectory, pattern);
+    }
 }
 
 function getPatternWithoutIncludeExclude(pattern: string): string {
