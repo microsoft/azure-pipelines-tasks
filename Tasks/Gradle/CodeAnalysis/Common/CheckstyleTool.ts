@@ -103,14 +103,19 @@ export class CheckstyleTool extends BaseTool {
     }
 
     protected findHtmlReport(xmlReport: string): string {
-        // This method overrides baseTool.findHtmlReport(), which assumes tools produces html and xml files with identical filenames
-        // Checkstyle, however, produces "checkstyle-result.xml" and "checkstyle.html".
 
-        // expecting to find an html report with the same name
         var dirName = path.dirname(xmlReport);
+        var htmlReports;
 
-        var htmlReports = glob.sync(path.join(dirName, '**', 'checkstyle.html'));
+        // On certain build engines Checkstyle produces an HTML file called "checkstyle.html". If we find it, return it.
+        htmlReports = glob.sync(path.join(dirName, '**', 'checkstyle.html'));
+        if (htmlReports.length > 0) {
+            return htmlReports[0];
+        }
 
+        // Otherwise, look for an HTML report with the same name as the XML report.
+        var reportName = path.basename(xmlReport, '.xml');
+        htmlReports = glob.sync(path.join(dirName, '**', reportName + '.html'));
         if (htmlReports.length > 0) {
             return htmlReports[0];
         }
