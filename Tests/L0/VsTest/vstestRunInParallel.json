@@ -10,7 +10,7 @@
         ]
     },
     "match": {
-        "*.trx": [
+        "\\source\\TestResults\\*.trx": [
             "a.trx"
         ]
     },

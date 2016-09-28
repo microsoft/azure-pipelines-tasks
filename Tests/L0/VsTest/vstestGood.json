@@ -20,7 +20,7 @@
             "some/path/two",
             "some/path/three"
         ],
-        "*.trx": [
+        "\\source\\TestResults\\*.trx": [
             "a.trx"
         ],
         "**\\packages\\**\\*TestAdapter.dll": []
