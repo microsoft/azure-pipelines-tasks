@@ -644,4 +644,44 @@ describe('VsTest Suite', function () {
                 done(err);
             });
     });
+
+    it('Vstest task should not use diag option when system.debug is not set', (done) => {
+        setResponseFile('vstestGood.json');
+        var tr = new trm.TaskRunner('VSTest');
+        tr.setInput('vstestLocationMethod', 'location');
+        tr.setInput('vstestLocation', '\\path\\to\\vstest\\directory');
+        tr.setInput('testAssembly', 'path/to/file');
+        tr.setInput('vsTestVersion', '14.0');
+        tr.run()
+            .then(() => {
+                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.ran('\\path\\to\\vstest\\directory\\vstest.console.exe path/to/file /logger:trx'), 'should have run vstest');
+                assert(tr.stdout.indexOf('/diag') < 0, '/diag option should not be used for vstest.console.exe');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    });
+
+    it('Vstest task should not use diag option when system.debug is set to false', (done) => {
+        setResponseFile('vstestGood.json');
+        var tr = new trm.TaskRunner('VSTest');
+        tr.setInput('vstestLocationMethod', 'location');
+        tr.setInput('vstestLocation', '\\path\\to\\vstest\\directory');
+        tr.setInput('testAssembly', 'path/to/file');
+        tr.setInput('vsTestVersion', '14.0');
+        tr.run()
+            .then(() => {
+                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.ran('\\path\\to\\vstest\\directory\\vstest.console.exe path/to/file /logger:trx'), 'should have run vstest');
+                assert(tr.stdout.indexOf('/diag') < 0, '/diag option should not be used for vstest.console.exe');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    });
 });

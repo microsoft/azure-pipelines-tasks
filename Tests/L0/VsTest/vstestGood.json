@@ -3,7 +3,8 @@
         "System.DefaultWorkingDirectory": "/source/dir",
         "VS150COMNTools": "/vs/path",
         "VS140COMNTools": "/vs/path",
-        "VS120COMNTools": "/vs/path"
+        "VS120COMNTools": "/vs/path",
+        "System.Debug": false
     },
     "find": {
         "/source/dir": [
