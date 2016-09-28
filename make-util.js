@@ -156,6 +156,11 @@ var copyTaskResources = function (taskMake, srcPath, destPath) {
     if (taskMake.hasOwnProperty('cp')) {
         copyGroups(taskMake.cp, srcPath, destPath);
     }
+
+    // remove the locally defined set of resources
+    if (taskMake.hasOwnProperty('rm')) {
+        removeGroups(taskMake.rm, destPath);
+    }
 }
 exports.copyTaskResources = copyTaskResources;
 
@@ -348,14 +353,14 @@ var copyGroup = function (group, sourceRoot, destRoot) {
     //   "source": [
     //     "foo.dll",
     //     "bar",
-    //   ]
+    //   ],
     //   "dest": "baz/",
     //   "options": "-R"
     // }
     //
     // example to multiply the copy by .NET culture names supported by TFS:
     // {
-    //   "source": "<CULTURE_NAME>/foo.dll"
+    //   "source": "<CULTURE_NAME>/foo.dll",
     //   "dest": "<CULTURE_NAME>/"
     // }
     //
@@ -404,17 +409,6 @@ var copyGroup = function (group, sourceRoot, destRoot) {
     }
 }
 
-var removeAllFoldersNamed = function(rootPath, folderName) {
-    var matches = find(rootPath).filter(function(match) { 
-        return path.basename(match) === 'vsts-task-lib'; 
-    });
-
-    matches.forEach(function(item) {
-        rm('-Rf', item);
-    });
-}
-exports.removeAllFoldersNamed = removeAllFoldersNamed;
-
 var copyGroups = function (groups, sourceRoot, destRoot) {
     assert(groups, 'groups');
     assert(groups.length, 'groups.length');
@@ -423,6 +417,49 @@ var copyGroups = function (groups, sourceRoot, destRoot) {
     })
 }
 exports.copyGroups = copyGroups;
+
+var removeGroup = function (group, pathRoot) {
+    // example structure to remove an array of files/folders:
+    // {
+    //   "items": [
+    //     "foo.dll",
+    //     "bar",
+    //   ],
+    //   "options": "-R"
+    // }
+
+    // validate parameters
+    assert(group, 'group');
+    assert(group.items, 'group.items');
+    if (typeof group.items != 'object') {
+        throw new Error('Expected group.items to be an array');
+    } else {
+        assert(group.items.length, 'group.items.length');
+        group.items.forEach(function (p) {
+            assert(p, 'group.items[i]');
+        });
+    }
+
+    assert(group.options, 'group.options');
+    assert(pathRoot, 'pathRoot');
+
+    // build the rooted items array
+    var rootedItems = group.items.map(function (val) { // root the paths
+        return path.join(pathRoot, val);
+    });
+
+    // remove the items
+    rm(group.options, rootedItems);
+}
+
+var removeGroups = function (groups, pathRoot) {
+    assert(groups, 'groups');
+    assert(groups.length, 'groups.length');
+    groups.forEach(function (group) {
+        removeGroup(group, pathRoot);
+    })
+}
+exports.removeGroups = removeGroups;
 
 var addPath = function (directory) {
     var separator;
