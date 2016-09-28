@@ -5,7 +5,6 @@ import path = require('path');
 import fs = require('fs');
 import os = require('os');
 import * as Q from "q";
-import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
 
 var isWindows = os.type().match(/^Win/);
 

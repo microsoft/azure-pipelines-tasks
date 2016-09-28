@@ -17,18 +17,6 @@ Use the next three options to manage your JUnit test results in VSTS
 
 - **Test Run Title :** This option will appear if you select the `Publish to VSTS/TFS` option. Here provide a name for the Test Run
 
-####Code Coverage
-Use the next options to manage your code coverage options. If your Build file already has Code Coverage enabled, you can ignore this section and use the Publish Code Coverage task to upload results to TFS/VSTS
-
-- **CodeCoverage Tool :** Select the code coverage tool you want to use. Currently JaCoCo and Cobertura are supported. For JaCoCo, make sure `jacocoant.jar` is available in lib folder of Ant installation. For Cobertura, set up an environment variable `COBERTURA_HOME` pointing to the Cobertura jars location.  [Click here](http://www.eclemma.org/jacoco/trunk/doc/ant.html) to know more about Jacoco and [Click here](https://github.com/cobertura/cobertura/wiki/Ant-Task-Reference) to know more about Cobertura.
-
-- **Class Files Directories :** Provide comma separated list of relative paths from Ant build file to directories containing class files, archive files(jar, war etc.). Code coverage is reported for class files present in the directories. Directories and archives are searched recursively for class files. For example: target/classes,target/testClasses.
-
-- **Class Inclusion/Exclusion Filters :** This option is enabled only when you select one tool in the above option. Provide a 
-comma separated list of filters to include or exclude classes from collecting code coverage. For example: +:com.*,+:org.*,-:my.app*.*.
-
-- **Source Files Directories :** Provide comma separated list of relative paths from Ant build file to source directories. Code coverage reports will use these to highlight source code. For example: src/java,src/Test.
-
 ####Advanced
 Use the next options to manage your `ANT_HOME` and `JAVA_HOME` attributes
 
@@ -40,3 +28,4 @@ Use the next options to manage your `ANT_HOME` and `JAVA_HOME` attributes
 
 - **JDK Architecture :** Select the approriate JDK Architecture. By default it is set to `x86`
 
+**With TFS Dev15 and Sprint 107 deployment of VSTS, we are discontinuing 'Code Coverage' functionality. Please enable Code Coverage in your Ant.xml file manually**
