@@ -120,10 +120,10 @@ export class azureclitask {
         //set the azure mode to arm to use azureRM commands
         this.throwIfError(tl.execSync("azure", "config mode arm"));
         //login using svn
-        this.throwIfError(tl.execSync("azure", "login -u " + servicePrincipalId + " -p " + servicePrincipalKey + " --tenant " + tenantId + " --service-principal"));
+        this.throwIfError(tl.execSync("azure", "login -u \"" + servicePrincipalId + "\" -p \"" + servicePrincipalKey + "\" --tenant \"" + tenantId + "\" --service-principal"));
         this.isLoggedIn = true;
         //set the subscription imported to the current subscription
-        this.throwIfError(tl.execSync("azure", "account set " + subscriptionName));
+        this.throwIfError(tl.execSync("azure", "account set \"" + subscriptionName + "\""));
     }
 
     private static loginAzureClassic(connectedService):void {
@@ -136,20 +136,20 @@ export class azureclitask {
             var subscriptionId:string = tl.getEndpointDataParameter(connectedService, "SubscriptionId", true);
             const publishSettingFileName:string = path.join(os.tmpdir() ,"subscriptions" + new Date().getTime() + ".publishsettings");
             this.createPublishSettingFile(subscriptionName, subscriptionId, bytes, publishSettingFileName);
-            var resultOfToolExecution = tl.execSync("azure", "account import " + publishSettingFileName);
+            var resultOfToolExecution = tl.execSync("azure", "account import \"" + publishSettingFileName + "\"");
             this.deleteFile(publishSettingFileName);
             this.throwIfError(resultOfToolExecution);
             this.isLoggedIn = true;
             //set the subscription imported to the current subscription
-            this.throwIfError( tl.execSync("azure", "account set " + subscriptionName));
+            this.throwIfError( tl.execSync("azure", "account set \"" + subscriptionName + "\""));
         }
         else if (endpointAuth.scheme === "UsernamePassword") {
             var username:string = endpointAuth.parameters["username"];
             var passwd:string = endpointAuth.parameters["password"];
-            this.throwIfError(tl.execSync("azure", "login -u " + username + " -p " + passwd));
+            this.throwIfError(tl.execSync("azure", "login -u \"" + username + "\" -p \"" + passwd + "\""));
             this.isLoggedIn = true;
             //set the subscription imported to the current subscription
-            this.throwIfError(tl.execSync("azure", "account set " + subscriptionName));
+            this.throwIfError(tl.execSync("azure", "account set \"" + subscriptionName + "\""));
         }
         else {
             var err;
@@ -179,7 +179,7 @@ export class azureclitask {
     private static logoutAzureRM(connectedService:string)
     {
         var subscriptionName:string = tl.getEndpointDataParameter(connectedService, "SubscriptionName", true);
-        tl.execSync("azure", " account clear -s " + subscriptionName);
+        tl.execSync("azure", " account clear -s \"" + subscriptionName + "\"");
     }
 
     private static logoutAzureClassic(connectedService:string)
@@ -188,11 +188,11 @@ export class azureclitask {
         if(endpointAuth["scheme"] === "usernamePassword")
         {
             var username:string = endpointAuth.parameters["username"];
-            tl.execSync("azure", "logout -u " + username);
+            tl.execSync("azure", "logout -u \"" + username + "\"");
         }
         else {
             var subscriptionName:string = tl.getEndpointDataParameter(connectedService, "SubscriptionName", true);
-            tl.execSync("azure", " account clear -s " + subscriptionName);
+            tl.execSync("azure", " account clear -s \"" + subscriptionName + "\"");
         }
     }
 
