@@ -650,7 +650,6 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
 }
 
 function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
-    var defer = Q.defer<number>();
     if (vsTestVersion.toLowerCase() == "latest") {
         vsTestVersion = null;
     }
@@ -662,7 +661,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                         vstestLocation = getVSTestLocation(vsVersion);
                     } catch (e) {
                         tl.error(e.message);
-                        return defer.resolve(1);
+                        return Q.resolve(1);
                     }
                     setupSettingsFileForTestImpact(vsVersion, overriddenSettingsFile)
                         .then(function (runSettingswithTestImpact) {
@@ -671,33 +670,33 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                                 .then(function (parallelRunSettingsFile) {
                                     runVStest(testResultsDirectory, parallelRunSettingsFile, vsVersion)
                                         .then(function (code) {
-                                            return defer.resolve(code);
+                                            return Q.resolve(code);
                                         })
                                         .fail(function (code) {
-                                            return defer.resolve(code);
+                                            return Q.resolve(code);
                                         });
                                 })
                                 .fail(function (err) {
                                     tl.error(err);
-                                    return defer.resolve(1);
+                                    return Q.resolve(1);
                                 });
                         })
                         .fail(function (err) {
                             tl.error(err);
-                            return defer.resolve(1);
+                            return Q.resolve(1);
                         });
                 })
                 .fail(function (err) {
                     tl.error(err);
-                    return defer.resolve(1);
+                    return Q.resolve(1);
                 });
         })
         .fail(function (err) {
             tl.error(err);
-            return defer.resolve(1);
+            return Q.resolve(1);
         });
 
-    return defer.promise;
+    return Q.resolve(0);
 }
 
 function publishTestResults(testResultsDirectory: string) {
