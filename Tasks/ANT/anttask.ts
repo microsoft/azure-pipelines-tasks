@@ -3,7 +3,6 @@ import path = require('path');
 import fs = require('fs');
 import os = require('os');
 import * as Q from "q";
-import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
 import javacommons = require('java-common/java-common');
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
