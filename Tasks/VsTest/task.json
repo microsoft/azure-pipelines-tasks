@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 69
+        "Patch": 70
     },
     "demands": [
         "vstest"
@@ -112,7 +112,7 @@
             "label": "Number Of Builds After Which To Run All Tests:",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Number of builds after which to automatically run all tests. Test Impact Analysis stores the mapping between test cases and source code. It is recommended to regenerate the mapping by running all tests, on a regular basis.",
+            "helpMarkDown": "Number of builds after which to automatically run all tests. Test Impact Analysis stores the mapping between test cases and source code. It is recommended to regenerate the mapping by running all tests, on a regular basis. Default value is 50.",
             "groupName": "tiaOptions"
         },
         {

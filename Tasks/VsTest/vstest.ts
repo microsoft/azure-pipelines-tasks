@@ -41,6 +41,7 @@ try {
     var runIdFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
     var baseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
     var useNewCollectorFlag = tl.getVariable('tia.useNewCollector');
+    var isPrFlow = tl.getVariable('tia.isPrFlow');
 
     var useNewCollector = true;
     if (useNewCollectorFlag && useNewCollectorFlag.toUpperCase() == "FALSE") {
@@ -289,6 +290,11 @@ function publishCodeChanges(): Q.Promise<string> {
     selectortool.arg("/SourcesDir:" + sourcesDir);
     selectortool.arg("/newprovider:" + newprovider);
     selectortool.arg("/BaseLineFile:" + baseLineBuildIdFile);
+
+    if (isPrFlow && isPrFlow.toUpperCase() == "TRUE") {
+        selectortool.arg("/IsPrFlow:" + "true");
+    }
+
     if (tiaRebaseLimit) {
         selectortool.arg("/RebaseLimit:" + tiaRebaseLimit);
     }
