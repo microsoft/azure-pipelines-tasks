@@ -200,9 +200,6 @@ async function execBuild() {
             if (userRunFailed || codeAnalysisFailed) {
                 tl.setResult(tl.TaskResult.Failed, "Build failed."); // Set task failure
             }
-            else {
-                tl.setResult(tl.TaskResult.Succeeded, "Build Succeeded."); // Set task success
-            }
 
             // Do not force an exit as publishing results is async and it won't have finished 
         });
