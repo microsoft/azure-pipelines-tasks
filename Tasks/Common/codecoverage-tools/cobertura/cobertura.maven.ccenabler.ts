@@ -107,17 +107,9 @@ export class CoberturaMavenCodeCoverageEnabler extends cc.CoberturaCodeCoverageE
     private getPluginDataNode(buildNode: any): any {
         let pluginsNode = {};
 
-        if (buildNode.pluginManagement) {
-            if (typeof buildNode.pluginManagement === "string") {
-                buildNode.pluginManagement = {};
-            }
-            if (buildNode.pluginManagement instanceof Array) {
-                pluginsNode = buildNode.pluginManagement[0].plugins;
-            } else {
-                pluginsNode = buildNode.pluginManagement.plugins;
-            }
-        } else {
-            if (!buildNode.plugins || typeof buildNode.plugins === "string") {
+        /* Always look for plugins node first */
+        if (buildNode.plugins) {
+            if (typeof buildNode.plugins === "string") {
                 buildNode.plugins = {};
             }
             if (buildNode.plugins instanceof Array) {
@@ -130,6 +122,20 @@ export class CoberturaMavenCodeCoverageEnabler extends cc.CoberturaCodeCoverageE
             } else {
                 pluginsNode = buildNode.plugins;
             }
+            /* if plugins node doesn't exist look for pluginManagement */
+        } else if (buildNode.pluginManagement) {
+            if (typeof buildNode.pluginManagement === "string") {
+                buildNode.pluginManagement = {};
+            }
+            if (buildNode.pluginManagement instanceof Array) {
+                pluginsNode = buildNode.pluginManagement[0].plugins;
+            } else {
+                pluginsNode = buildNode.pluginManagement.plugins;
+            }
+            /* if both doesn't exist, create plugins */
+        } else {
+            buildNode.plugins = {};
+            pluginsNode = buildNode.plugins;
         }
         return pluginsNode;
     }
