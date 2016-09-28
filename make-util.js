@@ -233,7 +233,7 @@ var matchRemove = function (pattern, sourceRoot, options) {
 }
 exports.matchRemove = matchRemove;
 
-exports.run = function (cl, echo) {
+var run = function (cl, echo) {
     console.log();
     console.log('> ' + cl);
     echo = echo || process.env['TASK_BUILD_VERBOSE'];
@@ -249,10 +249,10 @@ exports.run = function (cl, echo) {
             console.error(err.output ? err.output.toString() : err.message);
         }
 
-        exit(1);
+        process.exit(1);
     }
 }
-var run = exports.run;
+exports.run = run;
 
 var ensureTool = function (name, versionArgs, noExec) {
     console.log(name + ' tool:');
