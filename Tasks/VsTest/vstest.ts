@@ -138,7 +138,7 @@ function getTestAssemblies(): Set<string> {
 
 function addVstestDiagOption(argsArray: string[]) {
     let sysDebug = tl.getVariable("System.Debug");
-    if (sysDebug.toLowerCase() === "true") {
+    if (sysDebug !== undefined && sysDebug.toLowerCase() === "true") {
         let vstestLocationEscaped = vstestLocation.replace(/\\/g, "\\\\");
         let wmicTool = tl.createToolRunner("wmic");
         let wmicArgs = ["datafile", "where", "name='".concat(vstestLocationEscaped, "'"), "get", "Version", "/Value"];
