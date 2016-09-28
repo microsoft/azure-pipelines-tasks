@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [
     "sqlpackage"
@@ -257,6 +257,7 @@
     "SAD_InvalidDacpacFile": "ms-resource:loc.messages.SAD_InvalidDacpacFile",
     "SAD_InvalidSqlFile": "ms-resource:loc.messages.SAD_InvalidSqlFile",
     "SAD_NoPassword": "ms-resource:loc.messages.SAD_NoPassword",
-    "SAD_InvalidPublishProfile": "ms-resource:loc.messages.SAD_InvalidPublishProfile"
+    "SAD_InvalidPublishProfile": "ms-resource:loc.messages.SAD_InvalidPublishProfile",
+    "SAD_InvalidServerNameFormat": "ms-resource:loc.messages.SAD_InvalidServerNameFormat"
   }
 }

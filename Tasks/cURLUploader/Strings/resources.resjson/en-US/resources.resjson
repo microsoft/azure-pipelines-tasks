@@ -15,5 +15,7 @@
   "loc.input.label.options": "Optional Arguments",
   "loc.input.help.options": "Additional arguments that will be passed to cURL.",
   "loc.input.label.redirectStderr": "Redirect Standard Error to Standard Out",
-  "loc.input.help.redirectStderr": "Adds '--stderr -' as an argument to cURL. By default, cURL writes its progress bar to stderr, which is interpreted by the build as error output. Enabling this checkbox suppresses that behavior."
+  "loc.input.help.redirectStderr": "Adds '--stderr -' as an argument to cURL. By default, cURL writes its progress bar to stderr, which is interpreted by the build as error output. Enabling this checkbox suppresses that behavior.",
+  "loc.messages.CurlReturnCode": "curl exited with return code: %d",
+  "loc.messages.CurlFailed": "curl failed with error: %s"
 }

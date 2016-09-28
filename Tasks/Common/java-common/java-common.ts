@@ -1,6 +1,5 @@
-/// <reference path="../../../definitions/vsts-task-lib.d.ts" />
-
 import tl = require('vsts-task-lib/task');
+import trm = require('vsts-task-lib/toolrunner');
 import os = require('os');
 
 var isWindows = os.type().match(/^Win/);
@@ -17,7 +16,7 @@ function readJavaHomeFromRegistry(jdkVersion: string, arch: string): string {
             reg.arg("/reg:64");
         }
 
-        let result = reg.execSync({
+        let result = reg.execSync(<trm.IExecOptions>{
             ignoreReturnCode: true
         });
 

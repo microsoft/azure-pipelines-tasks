@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 62
+    "Patch": 64
   },
   "demands": [
     "java"
@@ -308,6 +308,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.checkstyleAnalysisEnabled"
     },
     {
+      "name": "findbugsAnalysisEnabled",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.findbugsAnalysisEnabled",
+      "required": false,
+      "defaultValue": "false",
+      "groupName": "CodeAnalysis",
+      "helpMarkDown": "ms-resource:loc.input.help.findbugsAnalysisEnabled"
+    },
+    {
       "name": "pmdAnalysisEnabled",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.pmdAnalysisEnabled",
@@ -352,6 +361,7 @@
     "codeAnalysisBuildSummaryLine_NoViolations": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_NoViolations",
     "codeAnalysisBuildSummaryTitle": "ms-resource:loc.messages.codeAnalysisBuildSummaryTitle",
     "codeAnalysisArtifactSummaryTitle": "ms-resource:loc.messages.codeAnalysisArtifactSummaryTitle",
+    "codeAnalysisDisabled": "ms-resource:loc.messages.codeAnalysisDisabled",
     "LocateJVMBasedOnVersionAndArch": "ms-resource:loc.messages.LocateJVMBasedOnVersionAndArch",
     "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM"
   }

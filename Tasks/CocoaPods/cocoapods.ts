@@ -1,27 +1,30 @@
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-
+import path = require('path');
 import tl = require('vsts-task-lib/task');
+import trm = require('vsts-task-lib/toolrunner');
 
-tl.cd(tl.getPathInput('cwd', true, true));
+async function run() {
+    try {   
+		tl.setResourcePath(path.join( __dirname, 'task.json'));
 
-tl.debug('Setting locale to UTF8 - required by CocoaPods');
-process.env['LC_ALL'] = 'en_US.UTF-8';
+        tl.cd(tl.getPathInput('cwd', true, true));
+        tl.debug('Setting locale to UTF8 - required by CocoaPods');
+        process.env['LC_ALL'] = 'en_US.UTF-8';
 
-var tool = tl.which('pod');
-if (tool) {
-    var pod = tl.createToolRunner(tool);
-    pod.arg('install');
+        var podPath: string = tl.which('pod');
+        if (!podPath) {
+            throw new Error(tl.loc('CocoaPodsNotFound'));
+        }
 
-    pod.exec()
-        .then(function(code) {
-            tl.exit(code);
-        })
-        .fail(function(err) {
-            tl.debug('taskRunner fail');
-            tl.exit(1);
-        });
-} else {
-    tl.error('command pod was not found. Please install Cocoapods on the build machine (https://cocoapods.org)');
-    tl.debug('taskRunner fail: pod not found');
-    tl.exit(1);
+        var pod: trm.ToolRunner = tl.tool(podPath);
+        pod.arg('install');
+
+		var code: number = await pod.exec();
+        tl.setResult(tl.TaskResult.Succeeded, tl.loc('PodReturnCode', code));
+    }
+    catch(err) {
+        tl.error(err.message);
+        tl.setResult(tl.TaskResult.Failed, tl.loc('PodFailed', err.message));
+    }
 }
+
+run();

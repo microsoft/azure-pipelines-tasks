@@ -1,5 +1,3 @@
-/// <reference path="../../../definitions/node.d.ts" />
-/// <reference path="../../../definitions/string.d.ts" />
 
 import * as path from "path";
 import * as util from "./utilities";
