@@ -696,7 +696,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
             return Q.resolve(1);
         });
 
-    return Q.resolve(0);
+    return Q.resolve(1);
 }
 
 function publishTestResults(testResultsDirectory: string) {
