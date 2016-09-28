@@ -25,7 +25,7 @@
   "loc.input.label.exportOptions": "Export Options",
   "loc.input.label.exportMethod": "Export Method",
   "loc.input.help.exportMethod": "Method for how Xcode should export the archive. E.g. app-store, package, ad-hoc, enterprise, development.",
-  "loc.input.label.exportTeamId": "Team Id",
+  "loc.input.label.exportTeamId": "Team ID",
   "loc.input.help.exportTeamId": "The 10 digit Team ID from the Apple Developer Portal to use for this export.",
   "loc.input.label.exportOptionsPlist": "Export Options Plist",
   "loc.input.help.exportOptionsPlist": "Path to a plist file that configures archive exporting.",

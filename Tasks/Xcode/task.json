@@ -130,7 +130,7 @@
         {
             "name": "exportTeamId",
             "type": "string",
-            "label": "Team Id",
+            "label": "Team ID",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "The 10 digit Team ID from the Apple Developer Portal to use for this export.",
