@@ -666,7 +666,7 @@ describe('VsTest Suite', function () {
     });
 
     it('Vstest task should not use diag option when system.debug is set to false', (done) => {
-        setResponseFile('vstestGood.json');
+        setResponseFile('vstestGoodSysDebugFalse.json');
         var tr = new trm.TaskRunner('VSTest');
         tr.setInput('vstestLocationMethod', 'location');
         tr.setInput('vstestLocation', '\\path\\to\\vstest\\directory');

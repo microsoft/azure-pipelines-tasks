@@ -138,37 +138,41 @@ function getTestAssemblies(): Set<string> {
 
 function addVstestDiagOption(argsArray: string[]) {
     let sysDebug = tl.getVariable("System.Debug");
-    if (sysDebug !== undefined && sysDebug.toLowerCase() === "true") {
-        let vstestLocationEscaped = vstestLocation.replace(/\\/g, "\\\\");
-        let wmicTool = tl.createToolRunner("wmic");
-        let wmicArgs = ["datafile", "where", "name='".concat(vstestLocationEscaped, "'"), "get", "Version", "/Value"];
-        wmicTool.arg(wmicArgs);
-        let output = wmicTool.execSync();
+    if (sysDebug === undefined || sysDebug.toLowerCase() === "false") {
+        return;
+    }
 
-        let verSplitArray = output.stdout.split("=");
-        if (verSplitArray.length == 2) {
-            let versionArray = verSplitArray[1].split(".");
-            if (versionArray.length == 4) {
-                let productMajorPart = parseInt(versionArray[0]);
-                let productMinorPart = parseInt(versionArray[1]);
-                let productBuildPart = parseInt(versionArray[2]);
+    let vstestLocationEscaped = vstestLocation.replace(/\\/g, "\\\\");
+    let wmicTool = tl.createToolRunner("wmic");
+    let wmicArgs = ["datafile", "where", "name='".concat(vstestLocationEscaped, "'"), "get", "Version", "/Value"];
+    wmicTool.arg(wmicArgs);
+    let output = wmicTool.execSync();
 
-                if (!isNaN(productMajorPart) && !isNaN(productMinorPart) && !isNaN(productBuildPart)) {
-                    if (productMajorPart > 15 || (productMajorPart == 15 && (productMinorPart > 0 || productBuildPart > 25428))) {
-                        argsArray.push("/diag:" + vstestDiagFile);
-                    } else {
-                        tl.warning(tl.loc("ErrorReadingVstestVersion"));
-                    }
-                } else {
-                    tl.warning(tl.loc("UnexpectedVersionNumber", verSplitArray[1]));
-                }
+    let verSplitArray = output.stdout.split("=");
+    if (verSplitArray.length != 2) {
+        tl.warning(tl.loc("ErrorReadingVstestVersion"));
+        return;
+    }
 
-            } else {
-                tl.warning(tl.loc("UnexpectedVersionString", output.stdout));
-            }
-        } else {
-            tl.warning(tl.loc("ErrorReadingVstestVersion"));
-        }
+    let versionArray = verSplitArray[1].split(".");
+    if (versionArray.length != 4) {
+        tl.warning(tl.loc("UnexpectedVersionString", output.stdout));
+        return;
+    }
+
+    let productMajorPart = parseInt(versionArray[0]);
+    let productMinorPart = parseInt(versionArray[1]);
+    let productBuildPart = parseInt(versionArray[2]);
+
+    if (isNaN(productMajorPart) || isNaN(productMinorPart) || isNaN(productBuildPart)) {
+        tl.warning(tl.loc("UnexpectedVersionNumber", verSplitArray[1]));
+        return;
+    }
+
+    if (productMajorPart > 15 || (productMajorPart == 15 && (productMinorPart > 0 || productBuildPart > 25428))) {
+        argsArray.push("/diag:" + vstestDiagFile);
+    } else {
+        tl.warning(tl.loc("VstestDiagNotSupported"));
     }
 }
 
@@ -429,7 +433,7 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
         argsArray.push("/TestAdapterPath:\"" + sourcesDirectory + "\"");
     }
 
-    if ((otherConsoleOptions && otherConsoleOptions.toLowerCase().indexOf("usevsixextensions:true") != -1) || (pathtoCustomTestAdapters && pathtoCustomTestAdapters.toLowerCase().indexOf("usevsixextensions:true") != -1)){
+    if ((otherConsoleOptions && otherConsoleOptions.toLowerCase().indexOf("usevsixextensions:true") != -1) || (pathtoCustomTestAdapters && pathtoCustomTestAdapters.toLowerCase().indexOf("usevsixextensions:true") != -1)) {
         argsArray.push("/UseVsixExtensions:true");
     }
 
@@ -658,8 +662,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                         vstestLocation = getVSTestLocation(vsVersion);
                     } catch (e) {
                         tl.error(e.message);
-                        defer.resolve(1);
-                        return defer.promise;
+                        return defer.resolve(1);
                     }
                     setupSettingsFileForTestImpact(vsVersion, overriddenSettingsFile)
                         .then(function (runSettingswithTestImpact) {
@@ -668,30 +671,30 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                                 .then(function (parallelRunSettingsFile) {
                                     runVStest(testResultsDirectory, parallelRunSettingsFile, vsVersion)
                                         .then(function (code) {
-                                            defer.resolve(code);
+                                            return defer.resolve(code);
                                         })
                                         .fail(function (code) {
-                                            defer.resolve(code);
+                                            return defer.resolve(code);
                                         });
                                 })
                                 .fail(function (err) {
                                     tl.error(err);
-                                    defer.resolve(1);
+                                    return defer.resolve(1);
                                 });
                         })
                         .fail(function (err) {
                             tl.error(err);
-                            defer.resolve(1);
+                            return defer.resolve(1);
                         });
                 })
                 .fail(function (err) {
                     tl.error(err);
-                    defer.resolve(1);
+                    return defer.resolve(1);
                 });
         })
         .fail(function (err) {
             tl.error(err);
-            defer.resolve(1);
+            return defer.resolve(1);
         });
 
     return defer.promise;
@@ -1289,7 +1292,7 @@ function setRunInParallellIfApplicable(vsVersion: number) {
                 }
             }
             resetRunInParallel();
-        } 
+        }
         else if (vstestLocationMethod.toLowerCase() === 'location') {
             let vs14Common: string = tl.getVariable("VS140COMNTools");
             if (vs14Common && pathExistsAsFile(path.join(vs14Common, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll"))) {
