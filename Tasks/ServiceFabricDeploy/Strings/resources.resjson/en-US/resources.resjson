@@ -50,6 +50,7 @@
   "loc.messages.PublishProfileRequiredServerThumbprint": "A server certificate thumbprint must be defined on the endpoint or a publish profile must be specified in the VSTS task.",
   "loc.messages.PublishProfileRequiredAppParams": "An application parameters file or a publish profile must be specified in the VSTS task.",
   "loc.messages.PublishProfileRequiredUpgrade": "Upgrade settings must be overridden or a publish profile must be specified in the VSTS task.",
+  "loc.messages.DefaultPortWarning": "The port '{0}' specified on your connection endpoint does not match the default ClientConnectionEndpoint of '19000'. This might have caused cluster communication failure.",
   "loc.messages.SFSDK_InvalidSFPackage": "{0} is not a valid Service Fabric application package.",
   "loc.messages.SFSDK_PackageValidationFailed": "Validation failed for package: {0}",
   "loc.messages.SFSDK_UnableToVerifyClusterConnection": "Unable to verify connection to Service Fabric cluster.",
