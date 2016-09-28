@@ -21,5 +21,14 @@
             ],
             "dest": "CodeAnalysis/"
         }
+    ],
+    "rm": [
+        {
+            "items": [
+                "node_modules/java-common/node_modules/vsts-task-lib",
+                "node_modules/codecoverage-tools/node_modules/vsts-task-lib"
+            ],
+            "options": "-Rf"
+        }
     ]
 }
