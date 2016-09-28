@@ -257,7 +257,7 @@ target.test = function() {
         fail(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2])}`, true);
     }
 
-    run('mocha ' + testsSpec.join(' '), true);
+    run('mocha ' + testsSpec.join(' '), /*echo:*/true);
 }
 
 //
@@ -300,8 +300,44 @@ target.testLegacy = function() {
 
     // suite path
     var suitePath = path.join(testPath, options.suite || 'L0/**', '_suite.js');
-    var tfBuild = ('' + process.env['TF_BUILD']).toLowerCase() == 'true';
-    run('mocha ' + suitePath, true);
+    suitePath = path.normalize(suitePath);
+    var testsSpec = matchFind(suitePath, path.join(testPath, 'L0'));
+    if (!testsSpec.length) {
+        fail(`Unable to find tests using the following pattern: ${suitePath}`);
+    }
+
+    // mocha doesn't always return a non-zero exit code on test failure. when only
+    // a single suite fails during a run that contains multiple suites, mocha does
+    // not appear to always return non-zero. as a workaround, the following code
+    // creates a wrapper suite with an "after" hook. in the after hook, the state
+    // of the runnable context is analyzed to determine whether any tests failed.
+    // if any tests failed, log a ##vso command to fail the build.
+    var testsSpecPath = ''
+    var testsSpecPath = path.join(testPath, 'testsSpec.js');
+    var contents = 'var __suite_to_run;' + os.EOL;
+    contents += 'describe(\'Legacy L0\', function (__outer_done) {' + os.EOL;
+    contents += '    after(function (done) {' + os.EOL;
+    contents += '        var failedCount = 0;' + os.EOL;
+    contents += '        var suites = [ this._runnable.parent ];' + os.EOL;
+    contents += '        while (suites.length) {' + os.EOL;
+    contents += '            var s = suites.pop();' + os.EOL;
+    contents += '            suites = suites.concat(s.suites); // push nested suites' + os.EOL;
+    contents += '            failedCount += s.tests.filter(function (test) { return test.state != "passed" }).length;' + os.EOL;
+    contents += '        }' + os.EOL;
+    contents += '' + os.EOL;
+    contents += '        if (failedCount && process.env.TF_BUILD) {' + os.EOL;
+    contents += '            console.log("##vso[task.logissue type=error]" + failedCount + " test(s) failed");' + os.EOL;
+    contents += '            console.log("##vso[task.complete result=Failed]" + failedCount + " test(s) failed");' + os.EOL;
+    contents += '        }' + os.EOL;
+    contents += '' + os.EOL;
+    contents += '        done();' + os.EOL;
+    contents += '    });' + os.EOL;
+    testsSpec.forEach(function (itemPath) {
+        contents += `    __suite_to_run = require(${JSON.stringify(itemPath)});` + os.EOL;
+    });
+    contents += '});' + os.EOL;
+    fs.writeFileSync(testsSpecPath, contents);
+    run('mocha ' + testsSpecPath, /*echo:*/true);
 }
 
 target.package = function() {
