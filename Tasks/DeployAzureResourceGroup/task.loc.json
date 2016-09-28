@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 90
+    "Patch": 91
   },
   "demands": [
     "azureps"
@@ -139,20 +139,6 @@
       "visibleRule": "action = Create Or Update Resource Group"
     },
     {
-      "name": "deploymentMode",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.deploymentMode",
-      "defaultValue": "Incremental",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.deploymentMode",
-      "options": {
-        "Validation": "Validation Only",
-        "Incremental": "Incremental Mode",
-        "Complete": "Complete Mode"
-      },
-      "visibleRule": "action = Create Or Update Resource Group"
-    },
-    {
       "name": "csmFile",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.csmFile",
@@ -177,6 +163,20 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.overrideParameters",
+      "visibleRule": "action = Create Or Update Resource Group"
+    },
+    {
+      "name": "deploymentMode",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.deploymentMode",
+      "defaultValue": "Incremental",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.deploymentMode",
+      "options": {
+        "Validation": "Validation Only",
+        "Incremental": "Incremental",
+        "Complete": "Complete"
+      },
       "visibleRule": "action = Create Or Update Resource Group"
     },
     {
