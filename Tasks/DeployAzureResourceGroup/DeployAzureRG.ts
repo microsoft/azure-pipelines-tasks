@@ -73,7 +73,7 @@ export class AzureResourceGroupDeployment {
            case "Create Or Update Resource Group": 
            case "DeleteRG":
            case "Select Resource Group":
-                new resourceGroup.ResourceGroup(this.action, this.connectedService, this.getARMCredentials(), this.resourceGroupName, this.location, this.csmFile, this.csmParametersFile, this.overrideParameters, this.subscriptionId, this.deploymentMode);
+                new resourceGroup.ResourceGroup(this.action, this.connectedService, this.getARMCredentials(), this.resourceGroupName, this.location, this.csmFile, this.csmParametersFile, this.overrideParameters, this.subscriptionId, this.deploymentMode, this.outputVariable);
                 break;
            case "Start":
            case "Stop":
