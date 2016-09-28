@@ -57,7 +57,7 @@ export class NugetMockHelper {
     }
     
     public registerNugetConfigMock() {
-        var nchm = require('./NugetConfigHelper-mock');
+        var nchm = require('./NuGetConfigHelper-mock');
         this.tmr.registerMock('nuget-task-common/NuGetConfigHelper', nchm);
     }
     
