@@ -12,15 +12,20 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 0,
+        "Minor": 1,
         "Patch": 1
     },
     "minimumAgentVersion": "1.102.0",
     "groups": [
-         {
+        {
             "name": "AdditionalDeploymentOptions",
             "displayName": "Additional Deployment Options",
-            "isExpanded": true
+            "isExpanded": false
+        },
+        {
+            "name": "FileTransformsAndVariableSubstitution",
+            "displayName": "File Transforms and Variable Substitutions",
+            "isExpanded": false
         },
         {
             "name": "output",
@@ -91,7 +96,7 @@
         {
             "name": "Package",
             "type": "filePath",
-            "label": "Package or Folder",
+            "label": "Project",
             "defaultValue": "$(System.DefaultWorkingDirectory)\\**\\*.zip",
             "required": true,
             "helpMarkDown": "Folder or file path to the Web App package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)\\\\\\*\\*\\\\\\*.zip."
@@ -163,6 +168,53 @@
             "groupName": "AdditionalDeploymentOptions",
             "visibleRule": "UseWebDeploy == true",
             "helpMarkDown": "Additional Web Deploy arguments that will be applied when deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension."
+        },
+        {
+            "name": "XmlTransformsAndVariableSubstitutions",
+            "type": "boolean",
+            "label": "XML Transforms & Variable Substitutions",
+            "required": false,
+            "defaultValue": false,
+            "groupName": "FileTransformsAndVariableSubstitution",
+            "helpMarkDown": ""
+        },
+        {
+            "name": "Transformation",
+            "type": "boolean",
+            "label": "Transformation",
+            "required": false,
+            "defaultValue": false,
+            "groupName": "FileTransformsAndVariableSubstitution",
+            "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
+            "helpMarkDown": "The config transfoms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`. Config transforms will be run prior to the Variable Substitution."
+        },
+        {
+            "name": "VariableSubstitution",
+            "type": "boolean",
+            "label": "Variable Substitution",
+            "required": false,
+            "defaultValue": false,
+            "groupName": "FileTransformsAndVariableSubstitution",
+            "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
+            "helpMarkDown": "Variables defined in the Build or Release Definition will be automatically substituted in the appSettings, applicationSettings, and connectionStrings section of the config files. If same variables are defined in the Release Definition and in the Environment, then the Environment variables will supersede the Release Definition variables. Variable Substitution is run after Config Transforms."
+        },
+        {
+            "name": "JSONVariableSubstitutionsFlag",
+            "type": "boolean",
+            "label": "JSON Variable Substitutions",
+            "required": false,
+            "defaultValue": false,
+            "groupName": "FileTransformsAndVariableSubstitution",
+            "helpMarkDown": "Enable this option for JSON variable Substitution"
+        },
+        {
+            "name": "JSONVariableSubstitutions",
+            "type": "multiLine",
+            "label": "Variable Substitution",
+            "required": false,
+            "groupName": "FileTransformsAndVariableSubstitution",
+            "visibleRule": "JSONVariableSubstitutionsFlag == true",
+            "helpMarkDown": "Provide a line separated list of JSON files for substituting variables in them. The files names are relative to the root folder. For substituting JSON variables that are in a hierarchy, specify them using the format Parent.Child1.key in the Environment/Definition variable.  If same variables are defined in the Definition and Environment, then the Environment variables will supersede the Definition variables. Variable Substitution is run after Config Transforms."
         }
     ],
     "dataSourceBindings": [
@@ -203,7 +255,7 @@
         "UnabletoretrieveWebAppIDforazureRMWebApp0StatusCode1": "Unable to retrieve WebApp ID for azureRM WebApp:'%s'. Status Code: %s",
         "ErrorNoSuchDeployingMethodExists": "Error : No Such Deploying Method Exists",
         "UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1": "Unable to retrieve connection details for azureRM WebApp:'%s'. Status Code: %s",
-        "Unabletoretrievewebapppublishurlforwebapp0StatusCode1" : "Unable to retrieve webapp publish url for webapp : '%s'. Status Code : '%s'",
+        "Unabletoretrievewebapppublishurlforwebapp0StatusCode1": "Unable to retrieve webapp publish url for webapp : '%s'. Status Code : '%s'",
         "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
         "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
         "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website",
@@ -231,6 +283,9 @@
         "UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove": "Unsupported installed version: %s found for MSDeploy. version should be alteast 3 or above",
         "UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)",
         "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
-        "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "More than one package matched with specified pattern. Please restrain the search patern."
-  }
+        "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "More than one package matched with specified pattern. Please restrain the search patern.",
+        "UpgradeAgent": "Task requires a 2.104.1 agent or higher. Please upgrade the agent",
+        "NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern",
+        "JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "JSON variable substitution can only be applied for JSON files"
+    }
 }
