@@ -112,7 +112,7 @@
       "name": "runAllTestsAfterXBuilds",
       "type": "string",
       "label": "ms-resource:loc.input.label.runAllTestsAfterXBuilds",
-      "defaultValue": "",
+      "defaultValue": "50",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.runAllTestsAfterXBuilds",
       "groupName": "tiaOptions"
