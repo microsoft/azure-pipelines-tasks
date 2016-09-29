@@ -48,12 +48,12 @@ try {
         useNewCollector = false;
     }
 
-    var sourcesDirectory = tl.getVariable('System.DefaultWorkingDirectory');
+    var systemDefaultWorkingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
     var artifactsDirectory = tl.getVariable('System.ArtifactsDirectory');
     var testAssemblyFiles = getTestAssemblies();
 
     if (testAssemblyFiles && testAssemblyFiles.size != 0) {
-        var workingDirectory = sourcesDir && sourcesDir != '' ? sourcesDirectory : artifactsDirectory;
+        var workingDirectory = sourcesDir && sourcesDir != '' ? systemDefaultWorkingDirectory : artifactsDirectory;
         getTestResultsDirectory(runSettingsFile, path.join(workingDirectory, 'TestResults')).then(function (resultsDirectory) {
             invokeVSTest(resultsDirectory)
                 .then(function (code) {
@@ -94,7 +94,7 @@ function getResolvedPattern(pattern: string): string {
         return pattern;
     }
     else {
-        return path.join(sourcesDirectory, pattern);
+        return path.join(systemDefaultWorkingDirectory, pattern);
     }
 }
 
@@ -111,7 +111,7 @@ function getTestAssemblies(): Set<string> {
     if (testAssembly.indexOf('*') >= 0 || testAssembly.indexOf('?') >= 0) {
         tl.debug('Pattern found in solution parameter.');
         let excludeTestAssemblies: string[] = [];
-        let allFiles = tl.find(sourcesDirectory);
+        let allFiles = tl.find(systemDefaultWorkingDirectory);
         let testAssemblyFilters = testAssembly.split(';');
         testAssemblyFilters.forEach(function (testAssemblyFilter) {
             let isExcludeFilter = testAssemblyFilter.startsWith('-:');
@@ -182,8 +182,8 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
     testAssemblyFiles.forEach(function (testAssembly) {
         var testAssemblyPath = testAssembly;
         //To maintain parity with the behaviour when test assembly was filepath, try to expand it relative to build sources directory.
-        if (sourcesDirectory && !pathExistsAsFile(testAssembly)) {
-            var expandedPath = path.join(sourcesDirectory, testAssembly);
+        if (systemDefaultWorkingDirectory && !pathExistsAsFile(testAssembly)) {
+            var expandedPath = path.join(systemDefaultWorkingDirectory, testAssembly);
             if (pathExistsAsFile(expandedPath)) {
                 testAssemblyPath = expandedPath;
             }
@@ -217,8 +217,8 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
             argsArray.push("/TestAdapterPath:\"" + path.dirname(pathtoCustomTestAdapters) + "\"");
         }
     }
-    else if (sourcesDirectory && isNugetRestoredAdapterPresent(sourcesDirectory)) {
-        argsArray.push("/TestAdapterPath:\"" + sourcesDirectory + "\"");
+    else if (systemDefaultWorkingDirectory && isNugetRestoredAdapterPresent(systemDefaultWorkingDirectory)) {
+        argsArray.push("/TestAdapterPath:\"" + systemDefaultWorkingDirectory + "\"");
     }
     addVstestDiagOption(argsArray);
     return argsArray;
@@ -406,8 +406,8 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
 
     testAssemblyFiles.forEach(function (testAssembly) {
         var testAssemblyPath = testAssembly;
-        if (sourcesDirectory && !pathExistsAsFile(testAssembly)) {
-            var expandedPath = path.join(sourcesDirectory, testAssembly);
+        if (systemDefaultWorkingDirectory && !pathExistsAsFile(testAssembly)) {
+            var expandedPath = path.join(systemDefaultWorkingDirectory, testAssembly);
             if (pathExistsAsFile(expandedPath)) {
                 testAssemblyPath = expandedPath;
             }
@@ -430,8 +430,8 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
             argsArray.push("/TestAdapterPath:\"" + path.dirname(pathtoCustomTestAdapters) + "\"");
         }
     }
-    else if (sourcesDirectory && isNugetRestoredAdapterPresent(sourcesDirectory)) {
-        argsArray.push("/TestAdapterPath:\"" + sourcesDirectory + "\"");
+    else if (systemDefaultWorkingDirectory && isNugetRestoredAdapterPresent(systemDefaultWorkingDirectory)) {
+        argsArray.push("/TestAdapterPath:\"" + systemDefaultWorkingDirectory + "\"");
     }
 
     if ((otherConsoleOptions && otherConsoleOptions.toLowerCase().indexOf("usevsixextensions:true") != -1) || (pathtoCustomTestAdapters && pathtoCustomTestAdapters.toLowerCase().indexOf("usevsixextensions:true") != -1)) {
