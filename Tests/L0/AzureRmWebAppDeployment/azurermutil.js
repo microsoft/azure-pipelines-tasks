@@ -2,7 +2,7 @@
 "use strict";
 
 const tl = require('vsts-task-lib/task');
-var kuduDeploymentLog = require ('./kuduDeploymentLog.js');
+var kuduDeploymentLog = require('./kuduDeploymentLog.js');
 
 function getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
 	
@@ -42,7 +42,8 @@ function updateDeploymentStatus(publishingProfile, isDeploymentSuccess ) {
 	else {
 		console.log('Failed to update history to kudu');
 	}
-	var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(publishingProfile, isDeploymentSuccess);
+	var webAppPublishKuduUrl = publishingProfile.publishUrl;
+	var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
 	console.log("kudu log requestBody is:" + JSON.stringify(requestDetails["requestBody"]));
 }
 exports.updateDeploymentStatus = updateDeploymentStatus;

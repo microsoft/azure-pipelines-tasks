@@ -113,7 +113,6 @@ describe('AzureRmWebAppDeployment Suite', function() {
 					details : 'https://abc.visualstudio.com/MyFirstProject/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?releaseId=1&_a=release-summary'
 				});
 				expectedRequestBody = 'kudu log requestBody is:' + expectedRequestBody;
-                console.log(tr.stdout);
 				assert(tr.stdout.indexOf(expectedRequestBody) >= 0, 'should have said: ' + expectedRequestBody);
 				done();
 
