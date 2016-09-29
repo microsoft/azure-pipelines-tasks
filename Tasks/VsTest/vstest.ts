@@ -43,9 +43,9 @@ try {
     var useNewCollectorFlag = tl.getVariable('tia.useNewCollector');
     var isPrFlow = tl.getVariable('tia.isPrFlow');
 
-    var useNewCollector = true;
-    if (useNewCollectorFlag && useNewCollectorFlag.toUpperCase() == "FALSE") {
-        useNewCollector = false;
+    var useNewCollector = false;
+    if (useNewCollectorFlag && useNewCollectorFlag.toUpperCase() == "TRUE") {
+        useNewCollector = true;
     }
 
     var sourcesDirectory = tl.getVariable('System.DefaultWorkingDirectory');
