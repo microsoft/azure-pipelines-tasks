@@ -48,6 +48,8 @@ export class AzureResourceGroupDeployment {
             }
             else {
                 this.connectedService = tl.getInput("ConnectedServiceNameClassic");
+                console.log("Not Handled yet");
+                return;
             }
             this.action = tl.getInput("action");
             this.actionClassic = tl.getInput("actionClassic");
