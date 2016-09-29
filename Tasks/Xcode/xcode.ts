@@ -63,13 +63,19 @@ async function run() {
         xcv.arg('-version');
         var xcodeVersion: number = 0;
         xcv.on('stdout', (data) => {
-            var match: string = data.toString().trim().match(/Xcode (.+)/g);
-            if(match && parseInt(match) !== NaN) {
-                xcodeVersion = parseInt(match);
+            var match = data.toString().trim().match(/Xcode (.+)/g);
+            tl.debug('match = ' + match);
+            if (match) {
+                var version: number = parseInt(match.toString().replace('Xcode', '').trim());
+                tl.debug('version = ' + version);
+                if(!isNaN(version)) {
+                    xcodeVersion = version;
+                }
             }
         });
 
         await xcv.exec();
+        tl.debug('xcodeVersion = ' + xcodeVersion);
 
         // --- Xcode build arguments ---
         var xcb: ToolRunner = tl.tool(tool);
@@ -237,7 +243,7 @@ async function run() {
                 tl.debug('Packaging apps.');
                 var buildOutputPath : string = path.join(outPath, 'build.sym');
                 tl.debug('buildOutputPath: ' + buildOutputPath);
-                var appFolders : string [] = tl.glob(buildOutputPath + '/**/*.app')
+                var appFolders : string [] = tl.glob(buildOutputPath + '/**/*.app');
                 if (appFolders) {
                     tl.debug(appFolders.length + ' apps found for packaging.');
                     var xcrunPath : string = tl.which('xcrun', true);
@@ -265,8 +271,13 @@ async function run() {
                 xcodeArchive.argIf(sdk, ['-sdk', sdk]);
                 xcodeArchive.argIf(configuration, ['-configuration', configuration]);
                 var archivePath : string = tl.getInput('archivePath');
-                if (!tl.filePathSupplied(('archivePath')) || !tl.stats(archivePath).isFile()) {
-                    archivePath = tl.resolve(archivePath, scheme + '.xcarchive');
+                var archiveFolderRoot : string;
+                if(!archivePath.endsWith('.xcarchive')) {
+                    archiveFolderRoot = archivePath;
+                    archivePath = tl.resolve(archivePath, scheme);
+                } else {
+                    //user specified a file path for archivePath
+                    archiveFolderRoot = path.dirname(archivePath);
                 }
                 xcodeArchive.arg(['-archivePath', archivePath]);
                 xcodeArchive.argIf(xcode_otherCodeSignFlags, xcode_otherCodeSignFlags);
@@ -275,45 +286,53 @@ async function run() {
 
                 await xcodeArchive.exec();
 
-                //export the archive
-                var xcodeExport : ToolRunner = tl.tool(tl.which('xcodebuild', true));
-                xcodeExport.arg(['-exportArchive', '-archivePath', archivePath]);
+                var archiveFolders : string [] = tl.glob(archiveFolderRoot + '/**/*.xcarchive');
+                if (archiveFolders) {
+                    tl.debug(archiveFolders.length + ' archives found for exporting.');
 
-                var exportPath : string = tl.getInput('exportPath');
-                exportPath = tl.resolve(exportPath, '_XcodeTaskExport_' + scheme);
-
-                xcodeExport.arg(['-exportPath', exportPath]);
-                // delete file if it already exists, otherwise export will fail
-                if(tl.exist(exportPath)) {
-                    tl.rmRF(exportPath, false);
-                }
-
-                //export options plist
-                var exportOptions : string = tl.getInput('exportOptions');
-                var exportOptionsPlist : string;
-                if(exportOptions === 'specify') {
-                    var exportMethod : string = tl.getInput('exportMethod', true);
-                    var exportTeamId : string = tl.getInput('exportTeamId');
-                    //generate the plist file
-                    var plist : string = tl.which('/usr/libexec/PlistBuddy', true);
-                    exportOptionsPlist = '_XcodeTaskExportOptions.plist';
-                    tl.tool(plist).arg(['-c', 'Clear', exportOptionsPlist]).execSync();
-                    tl.tool(plist).arg(['-c', 'Add method string ' + exportMethod, exportOptionsPlist]).execSync();
-                    if(exportTeamId) {
-                        tl.tool(plist).arg(['-c', 'Add teamID string ' + exportTeamId, exportOptionsPlist]).execSync();
+                    //export options plist
+                    var exportOptions : string = tl.getInput('exportOptions');
+                    var exportOptionsPlist : string;
+                    if(exportOptions === 'specify') {
+                        var exportMethod : string = tl.getInput('exportMethod', true);
+                        var exportTeamId : string = tl.getInput('exportTeamId');
+                        //generate the plist file
+                        var plist : string = tl.which('/usr/libexec/PlistBuddy', true);
+                        exportOptionsPlist = '_XcodeTaskExportOptions.plist';
+                        tl.tool(plist).arg(['-c', 'Clear', exportOptionsPlist]).execSync();
+                        tl.tool(plist).arg(['-c', 'Add method string ' + exportMethod, exportOptionsPlist]).execSync();
+                        if(exportTeamId) {
+                            tl.tool(plist).arg(['-c', 'Add teamID string ' + exportTeamId, exportOptionsPlist]).execSync();
+                        }
+                    } else if (exportOptions === 'plist') {
+                        exportOptionsPlist = tl.getInput('exportOptionsPlist');
+                        if(!tl.filePathSupplied('exportOptionsPlist') || !pathExistsAsFile(exportOptionsPlist)) {
+                            throw tl.loc('ExportOptionsPlistInvalidFilePath', exportOptionsPlist);
+                        }
                     }
-                } else if (exportOptions === 'plist') {
-                    exportOptionsPlist = tl.getInput('exportOptionsPlist');
-                    if(!tl.filePathSupplied('exportOptionsPlist') ||
-                        !tl.exist(exportOptionsPlist) || !tl.stats(exportOptionsPlist).isFile()) {
-                        throw tl.loc('ExportOptionsPlistInvalidFilePath', exportOptionsPlist);
+
+                    //export path
+                    var exportPath : string = tl.getInput('exportPath');
+                    if(!exportPath.endsWith('.ipa')) {
+                        exportPath = tl.resolve(exportPath, '_XcodeTaskExport_' + scheme);
+                    }
+                    // delete if it already exists, otherwise export will fail
+                    if(tl.exist(exportPath)) {
+                        tl.rmRF(exportPath, false);
+                    }
+
+                    for(var i = 0; i < archiveFolders.length; i++) {
+                        var archive : string = archiveFolders.pop();
+
+                        //export the archive
+                        var xcodeExport : ToolRunner = tl.tool(tl.which('xcodebuild', true));
+                        xcodeExport.arg(['-exportArchive', '-archivePath', archive]);
+                        xcodeExport.arg(['-exportPath', exportPath]);
+                        xcodeExport.argIf(exportOptionsPlist, ['-exportOptionsPlist', exportOptionsPlist]);
+
+                        await xcodeExport.exec();
                     }
                 }
-                if(exportOptionsPlist) {
-                    xcodeExport.arg(['-exportOptionsPlist', exportOptionsPlist]);
-                }
-
-                await xcodeExport.exec();
             }
 
         }
@@ -341,6 +360,15 @@ async function run() {
                 tl.warning(tl.loc('ProvProfileDeleteFailed', profileToDelete));
             }
         }
+    }
+}
+
+function pathExistsAsFile(path: string) {
+    try {
+        return tl.stats(path).isFile();
+    }
+    catch (error) {
+        return false;
     }
 }
 
