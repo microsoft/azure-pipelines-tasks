@@ -105,8 +105,9 @@ async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, 
         var msDeployCommand = '@echo off \n';
         msDeployCommand += 'echo "">error.txt%\n';
         msDeployCommand += '"' + msDeployPath + '" ' + msDeployCmdArgs + ' 2>error.txt\n';
-		msDeployCommand += 'set /p VAR1=<error.txt\n';
-		msDeployCommand += 'if "%VAR1%"=="Error Code: ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER" (echo "Try to deploy again with app_offline option selected.")\nif defined VAR1 ( type error.txt && exit 1 )';
+        msDeployCommand += 'set /p VAR1=<error.txt\n';
+        msDeployCommand += 'if "%VAR1%"=="Error Code: ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER" (echo "Try to deploy again with app_offline option selected.")\n';
+        msDeployCommand += 'if defined VAR1 ( type error.txt && exit 1 )';
         var batchCommand =  msDeployCommand;
 
         tl.writeFile(msDeployBatchFile, batchCommand);
