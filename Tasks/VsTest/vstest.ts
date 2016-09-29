@@ -49,10 +49,11 @@ try {
     }
 
     var sourcesDirectory = tl.getVariable('System.DefaultWorkingDirectory');
+    var artifactsDirectory = tl.getVariable('System.ArtifactsDirectory');
     var testAssemblyFiles = getTestAssemblies();
 
     if (testAssemblyFiles && testAssemblyFiles.size != 0) {
-        var workingDirectory = path.join(sourcesDirectory, "..");
+        var workingDirectory = sourcesDir && sourcesDir != '' ? sourcesDirectory : artifactsDirectory;
         getTestResultsDirectory(runSettingsFile, path.join(workingDirectory, 'TestResults')).then(function (resultsDirectory) {
             invokeVSTest(resultsDirectory)
                 .then(function (code) {

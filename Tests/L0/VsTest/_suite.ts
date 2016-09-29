@@ -564,7 +564,7 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with results directory empty in run settings file', (done) => {
         var settingsFilePath = path.join(__dirname, 'data', 'RunSettingsWithoutResultsDirectory.runsettings');
-        var resultsDirectory = '\\source\\TestResults'; // when results directory is empty in settings file, default result directory should be considered.
+        var resultsDirectory = '\\source\\dir\\TestResults'; // when results directory is empty in settings file, default result directory should be considered.
 
         var responseJsonFilePath: string = path.join(__dirname, 'vstestGood.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));

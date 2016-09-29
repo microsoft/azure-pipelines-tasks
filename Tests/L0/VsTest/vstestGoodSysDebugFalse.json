@@ -1,6 +1,7 @@
 {
     "getVariable": {
         "System.DefaultWorkingDirectory": "/source/dir",
+        "build.sourcesdirectory": "/source/dir",
         "VS150COMNTools": "/vs/path",
         "VS140COMNTools": "/vs/path",
         "VS120COMNTools": "/vs/path",
@@ -69,7 +70,7 @@
         }
     },
     "rmRF": {
-        "\\source\\TestResults": {
+        "\\source\\dir\\TestResults": {
             "success": true,
             "message": "success"
         }
