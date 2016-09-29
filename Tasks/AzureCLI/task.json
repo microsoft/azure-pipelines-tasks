@@ -14,7 +14,7 @@
   "version": {
     "Major": "0",
     "Minor": "2",
-    "Patch": "1"
+    "Patch": "2"
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -127,6 +127,6 @@
   "messages": {
     "ScriptReturnCode": "Script exited with return code: %d",
     "ScriptFailed": "Script failed with error: %s",
-    "UnsupportedEndpointScheme": "Unsupported Endpoint Authorization Scheme: Certificate and Username Password for Azure Classic and Service Principal for AzureRM"
+    "UnsupportedEndpointScheme": "Unsupported Endpoint Authorization Scheme: (certificate and usernamePassword for Azure Classic and ServicePrincipal for AzureRM "
     }
 }
