@@ -1,39 +1,53 @@
+var networkManagementClient = require("azure-arm-network");
+var computeManagementClient = require("azure-arm-compute");
+import util = require("util");
+import tl = require("vsts-task-lib/task");
 
-class Property {
-    public IsSecure: string;
+class PropertyValue {
+    public IsSecure: boolean;
     public Data: string;
 
-    constructor(data: string){
+    constructor(data: string, isSecure?: boolean) {
         this.Data = data;
-        this.IsSecure = "false";
-    }
-
-    constructor(data: string, isSecure: string){
-        this.Data = data;
-        this.IsSecure = isSecure;
+        if (isSecure)
+            this.IsSecure = isSecure;
+        else 
+            this.IsSecure = false;
     }
 }
 
 class Resource {
     public Id: number;
     public Name: string;
-    public Properties: { [property: string]: Property };
+    public Properties: { [property: string]: PropertyValue };
 
-    constructor(id: number, name: string){
+    constructor(id: number, name: string) {
         this.Id = id;
         this.Name = name;
-        
+        this.Properties = {};
     }
 
+    public addOrUpdateProperty(type: string, property: PropertyValue ) {
+        this.Properties[type] = property;
+    }
 }
 
 class Project {
     public Id: string;
     public Name: string;
+    
+    constructor(id: string, name: string) {
+        this.Id = id;
+        this.Name = name;
+    }
 }
 
 class User {
     public Name: string;
+
+    constructor(name: string) {
+        this.Name = name;
+    }
 }
 
 class Environment {
@@ -43,131 +57,154 @@ class Environment {
     public Project: Project;
     public ModifiedBy: User;
     public Resources: Array<Resource>;
-    public Properties: { [property: string]: Property };
+    public Properties: { [property: string]: PropertyValue };
     public Name: string;
     public IsReserved: boolean;
     public CreatedBy: User;
     public CreatedDate: string;
     public ModifiedDate: string;
+
+    constructor(resources: Array<Resource>, userId: string, projectName: string, environmentName: string) {
+        this.Id = 0;
+        this.Url = "null";
+        this.Revision = 1;
+        this.Project = new Project(projectName, projectName);
+        this.ModifiedBy = user;
+        this.Resources = resources;
+        this.Properties = { 
+            "Microsoft-Vslabs-MG-WinRMProtocol": new PropertyValue("HTTPS"), 
+            "Microsoft-Vslabs-MG-SkipCACheck": new PropertyValue("False") 
+        };
+        this.Name = environmentName;
+        this.IsReserved = false;
+        this.CreatedBy = user;
+        var user = new User(userId);
+        var timestamp = new Date();
+        this.CreatedDate = util.format("%s-%s-%sT%s:%s:%s.%sZ", timestamp.getFullYear(), timestamp.getMonth(), timestamp.getDate(), 
+                                        timestamp.getHours(), timestamp.getMinutes(), timestamp.getSeconds(), timestamp.getMilliseconds());
+        this.ModifiedDate = "0001-01-01T00:00:00";
+    }
 }
 
-export class Environment{
-      private getConstantsForJSON() {
-        var RG = {};
-        RG["Id"] = 0;
-        RG["Url"] = null;
-        RG["Revision"] = 0;
-        RG["Project"] = {};
-        RG["Project"]["Id"] = process.env["SYSTEM_TEAMPROJECT"];
-        RG["Project"]["Name"] = process.env["SYSTEM_TEAMPROJECT"];
-        RG["ModifiedBy"] = { "Name": process.env["SYSTEM_COLLECTIONID"] };
-        RG["CreatedBy"] = { "Name": process.env["SYSTEM_COLLECTIONID"] };
-        RG["IsReserved"] = false;
-        RG["Properties"] = { "Microsoft-Vslabs-MG-WinRMProtocol": { "IsSecure": false, "Data": "HTTPS" }, "Microsoft-Vslabs-MG-SkipCACheck": { "IsSecure": false, "Data": "False" } };
-        RG["Name"] = this.outputVariable;
-        var ts = new Date();
-        var time = util.format("%s-%s-%sT%s:%s:%s.%sZ", ts.getFullYear(), ts.getMonth(), ts.getDate(), ts.getHours(), ts.getMinutes(), ts.getSeconds(), ts.getMilliseconds());
-        RG["CreatedDate"] = time;
-        RG["ModifiedDate"] = "0001-01-01T00:00:00"; 
-        return RG;
-    }
+export class RegisterEnvironment {
+    private credentials;
+    private subscriptionId;
+    private resourceGroupName;
+    private interfaces;
+    private fqdns;
+    private tags;
+    private outputVariable;
 
-    private makeRGJSON(tags) {
-        var RG = this.getConstantsForJSON();
-        var resources = [];
-        var i = 1;
-        for (var fqdn in tags) {
-            var resource = {};
-            resource["Id"] = i;
-            i++;
-            resource["Name"] = fqdn;
-            var properties = {};
-            properties["Microsoft-Vslabs-MG-Resource-FQDN"] = { "Data": fqdn, "IsSecure": false };
-            properties["WinRM_Https"] = { "IsSecure": false, "Data": "5986" };
-            if (tags[fqdn] != null || tags[fqdn] != undefined) {
-                for (var tag in tags[fqdn]) {
-                    properties[tag] = { "IsSecure": false, "Data": tags[fqdn][tag] };
-                }
-            }
-            resource["Properties"] = properties;
-            resources = resources.concat(resource);
-        }
-        RG["Resources"] = resources;
-        // Updating environment variable
-        process.env[this.outputVariable] = RG;
-    }
-
-    private setOutputVariable() {
-        if (this.networkInterfaces == null || this.publicAddresses == null || this.virtualMachines == null) {
+    constructor(credentials, subscriptionId, resourceGroupName, outputVariable) {
+        this.credentials = credentials;
+        this.subscriptionId = subscriptionId;
+        this.resourceGroupName = resourceGroupName;
+        this.outputVariable = outputVariable;
+        if (this.outputVariable == null || this.outputVariable.trim() == "") {
+            tl.setResult(tl.TaskResult.Failed, "Output variable should not be empty");
             return;
         }
-        // All required ones are set up.
-        // NetworkID : tags
-        var tags = {};
+        this.interfaces = null;
+        this.tags = null;
+        this.fqdns = null;
+        this.getVMDetails();
+        this.getNetworkInterfaceDetails();
+        this.getPublicIPAddresses();
 
-        // VMs
-        // VMName -> NetworkInterfaceId
-        // NetworkInterfaceId -> Public IP
-
-
-        for (var i = 0; i < this.virtualMachines.length; i++) {
-            var vm = this.virtualMachines[i];
-            var networkId = vm["networkProfile"]["networkInterfaces"][0]["id"];
-            if (vm["tags"] != undefined)
-                tags[networkId] = vm["tags"];
-        }
-        // PublicAddressId : tags
-        var interfaces = {};
-        for (var i = 0; i < this.networkInterfaces.length; i++) {
-            var networkInterface = this.networkInterfaces[i];
-            var networkId = networkInterface["id"];
-            interfaces[networkInterface["ipConfigurations"][0]["publicIPAddress"]["id"]] = tags[networkId];
-        }
-        // FQDN : tags
-        var fqdns = {};
-        for (var i = 0; i < this.publicAddresses.length; i++) {
-            var publicAddress = this.publicAddresses[i];
-            var publicAddressId = publicAddress["id"];
-            if (publicAddress["dnsSettings"]) {
-                fqdns[publicAddress["dnsSettings"]["fqdn"]] = interfaces[publicAddressId];
-            }
-            else {
-                fqdns[publicAddress["ipAddress"]] = interfaces[publicAddressId];
-            }
-        }
-        this.makeRGJSON(fqdns);
     }
-     private selectResourceGroup() {
-        if (this.outputVariable == null || this.outputVariable.trim() == "") {
-            // Raise Error
-            tl.setResult(tl.TaskResult.Failed, "Output variable can not be empty")
-        }
 
+    private InstantiateEnvironment() {
+        if (this.interfaces == null || this.fqdns == null || this.tags == null) {
+            return;
+        }
+        var resources = this.getResources();
+        var environment = new Environment(resources, process.env["SYSTEM_COLLECTIONID"], process.env["SYSTEM_TEAMPROJECT"], this.outputVariable);
+        console.log(JSON.stringify(environment));                
+        process.env[this.outputVariable] = JSON.stringify(environment);
+    }
+
+    private getTags(addressId: string){
+        var networkId =  this.interfaces[addressId];
+        return this.tags[networkId];
+    }
+
+    private getResources() {
+        var resources = new Array<Resource>();
+        var id = 1;
+        for (var addressId in this.fqdns) {
+            var fqdn = this.fqdns[addressId];
+            var resource = new Resource(id, fqdn);
+            resource.addOrUpdateProperty("Microsoft-Vslabs-MG-Resource-FQDN", new PropertyValue(fqdn));
+            resource.addOrUpdateProperty("WinRM_Https", new PropertyValue("5986")); 
+            var tags = this.getTags(addressId);
+            if (tags) {
+                for (var tag in tags) {
+                    resource.addOrUpdateProperty(tag, new PropertyValue(tags[tag]));
+                }
+            }
+            resources.push(resource);
+        }
+        return resources;
+    }
+
+    private getVMDetails() {
+        var armClient = new computeManagementClient(this.credentials, this.subscriptionId);
+        armClient.virtualMachines.list(this.resourceGroupName, (error, virtualMachines, request, response) => {
+            if (error){
+                console.log("Error while getting list of Virtual Machines", error);
+                throw new Error("FailedToFetchVMs");
+            }
+            var tags = {};
+            for (var i = 0; i < virtualMachines.length; i++) {
+                var vm = virtualMachines[i];
+                var networkId = vm["networkProfile"]["networkInterfaces"][0]["id"];
+                if (vm["tags"] != undefined)
+                    tags[networkId] = vm["tags"];
+            }
+            this.tags = tags;
+            this.InstantiateEnvironment();            
+        });
+    }
+
+    private getNetworkInterfaceDetails() {
         var armClient = new networkManagementClient(this.credentials, this.subscriptionId);
-        armClient.networkInterfaces.list(this.resourceGroupName, (error, result, request, response) => {
+        armClient.networkInterfaces.list(this.resourceGroupName, (error, networkInterfaces, request, response) => {
             if (error){
-                console.log("Error while getting list of Network Interfaces")
+                console.log("Error while getting list of Network Interfaces", error);
+                throw new Error("FailedToFetchNetworkInterfaces");
             }
-            this.networkInterfaces = result;
-            this.setOutputVariable();  
-        });
-
-        armClient.publicIPAddresses.list(this.resourceGroupName, (error, result, request, response) => {
-            if (error){
-                console.log("Error while getting list of Public Addresses")
+            var interfaces = {};
+            for (var i = 0; i < networkInterfaces.length; i++) {
+                var networkInterface = networkInterfaces[i];
+                var networkId = networkInterface["id"];
+                interfaces[networkInterface["ipConfigurations"][0]["publicIPAddress"]["id"]] = networkId;
             }
-            this.publicAddresses = result;
-            this.setOutputVariable();
-        });
-
-        armClient = new resourceManagementClient(this.credentials, this.subscriptionId);
-        armClient.virtualMachines.list(this.resourceGroupName, (error, result, request, response) => {
-            if (error){
-                console.log("Error while getting list of Virtual Machines")
-            }
-            this.virtualMachines = result;
-            this.setOutputVariable();            
+            this.interfaces = interfaces;
+            this.InstantiateEnvironment();  
         });
     }
 
+    private getPublicIPAddresses() {
+        var armClient = new networkManagementClient(this.credentials, this.subscriptionId);
+        armClient.publicIPAddresses.list(this.resourceGroupName, (error, publicAddresses, request, response) => {
+            if (error){
+                console.log("Error while getting list of Public Addresses", error);
+                throw new Error("FailedToFetchPublicAddresses");
+            }
+            var fqdns = {}
+            for (var i = 0; i < publicAddresses.length; i++) {
+                var publicAddress = publicAddresses[i];
+                var publicAddressId = publicAddress["id"];
+                if (publicAddress["dnsSettings"]) {
+                    fqdns[publicAddressId] = publicAddress["dnsSettings"]["fqdn"];
+                }
+                else {
+                    fqdns[publicAddressId] = publicAddress["ipAddress"];
+                }
+            }
+            this.fqdns = fqdns;
+            this.InstantiateEnvironment();
+        });
+    }
+   
 }

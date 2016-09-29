@@ -6,12 +6,12 @@ import tl = require("vsts-task-lib/task");
 import fs = require("fs");
 import util = require("util");
 
+import env = require("./Environment");
+
 var minimist = require("minimist");
 
-var networkManagementClient = require("azure-arm-network");
-var resourceManagementClient = require("azure-arm-compute");
-
 var armResource = require("azure-arm-resource");
+
 
 export class ResourceGroup {
 
@@ -132,5 +132,11 @@ export class ResourceGroup {
     }
     
     private selectResourceGroup() {
+        try {
+            new env.RegisterEnvironment(this.credentials, this.subscriptionId, this.resourceGroupName, this.outputVariable);
+        } catch(error) {            
+            tl.setResult(tl.TaskResult.Failed, "Failed while Registering Environment");
+            console.log(error);
+        }
     }
 }
