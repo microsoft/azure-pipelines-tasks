@@ -1,4 +1,11 @@
 {
+    "common": [
+        {
+            "module": "../Common/find-files",
+            "type": "node",
+            "compile": true
+        }
+    ],
     "externals": {
         "archivePackages": [
             {
