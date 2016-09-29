@@ -58,7 +58,11 @@
   "loc.messages.ErrorWhileUpdatingResponseFile": "Error occurred while updating the response file '%s'. All the tests will be executed for this run.",
   "loc.messages.ErrorWhilePublishingCodeChanges": "Error occurred while publishing the code changes. All the tests will be executed for this run.",
   "loc.messages.ErrorWhileListingDiscoveredTests": "Error occured while discovering the tests. All the tests will be exexuted for this run.",
-  "loc.messages.PublishCodeChangesPerfTime": "Total time taken to publish code changes: %d milliseconds",
-  "loc.messages.GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds",
-  "loc.messages.UploadTestResultsPerfTime": "Total time taken to upload test results: %d milliseconds"
+  "loc.messages.PublishCodeChangesPerfTime": "Total time taken to publish code changes: %d milliseconds.",
+  "loc.messages.GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds.",
+  "loc.messages.UploadTestResultsPerfTime": "Total time taken to upload test results: %d milliseconds.",
+  "loc.messages.ErrorReadingVstestVersion": "Error reading the version of vstest.console.exe.",
+  "loc.messages.UnexpectedVersionString": "Unexpected version string detected for vstest.console.exe: %s.",
+  "loc.messages.UnexpectedVersionNumber": "Unexpected version number detected for vstest.console.exe: %s.",
+  "loc.messages.VstestDiagNotSupported": "vstest.console.exe version does not support the /diag flag. Enable diagnositics via the exe.config files"
 }

@@ -4,7 +4,8 @@
         "build.sourcesdirectory": "/source/dir",
         "VS150COMNTools": "/vs/path",
         "VS140COMNTools": "/vs/path",
-        "VS120COMNTools": "/vs/path"
+        "VS120COMNTools": "/vs/path",
+        "System.Debug": "false"
     },
     "find": {
         "/source/dir": [
@@ -21,7 +22,7 @@
             "some/path/two",
             "some/path/three"
         ],
-        "\\source\\dir\\TestResults\\*.trx": [
+        "*.trx": [
             "a.trx"
         ],
         "**\\packages\\**\\*TestAdapter.dll": []

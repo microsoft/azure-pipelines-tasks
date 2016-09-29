@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 70
+        "Patch": 71
     },
     "demands": [
         "vstest"
@@ -240,8 +240,12 @@
         "ErrorWhileUpdatingResponseFile": "Error occurred while updating the response file '%s'. All the tests will be executed for this run.",
         "ErrorWhilePublishingCodeChanges": "Error occurred while publishing the code changes. All the tests will be executed for this run.",
         "ErrorWhileListingDiscoveredTests": "Error occured while discovering the tests. All the tests will be exexuted for this run.",
-        "PublishCodeChangesPerfTime": "Total time taken to publish code changes: %d milliseconds",
-        "GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds",
-        "UploadTestResultsPerfTime": "Total time taken to upload test results: %d milliseconds"
+        "PublishCodeChangesPerfTime": "Total time taken to publish code changes: %d milliseconds.",
+        "GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds.",
+        "UploadTestResultsPerfTime": "Total time taken to upload test results: %d milliseconds.",
+        "ErrorReadingVstestVersion": "Error reading the version of vstest.console.exe.",
+        "UnexpectedVersionString": "Unexpected version string detected for vstest.console.exe: %s.",
+        "UnexpectedVersionNumber": "Unexpected version number detected for vstest.console.exe: %s.",
+        "VstestDiagNotSupported": "vstest.console.exe version does not support the /diag flag. Enable diagnositics via the exe.config files"
     }
 }
