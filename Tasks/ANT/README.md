@@ -28,4 +28,4 @@ Use the next options to manage your `ANT_HOME` and `JAVA_HOME` attributes
 
 - **JDK Architecture :** Select the approriate JDK Architecture. By default it is set to `x86`
 
-**With TFS Dev15 and Sprint 107 deployment of VSTS, we are discontinuing 'Code Coverage' functionality. Please enable Code Coverage in your Ant build.xml file manually**
+**We are discontinuing the support of automated Code Coverage report generation for Ant projects starting Sprint 107 deployment of VSTS and for Team Foundation Server “15”. Please enable Code Coverage in your Ant build.xml file manually.**
