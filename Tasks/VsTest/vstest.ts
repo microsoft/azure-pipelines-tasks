@@ -42,10 +42,11 @@ try {
     var baseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
     var vstestDiagFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
     var useNewCollectorFlag = tl.getVariable('tia.useNewCollector');
+    var isPrFlow = tl.getVariable('tia.isPrFlow');
 
-    var useNewCollector = true;
-    if (useNewCollectorFlag && useNewCollectorFlag.toUpperCase() == "FALSE") {
-        useNewCollector = false;
+    var useNewCollector = false;
+    if (useNewCollectorFlag && useNewCollectorFlag.toUpperCase() == "TRUE") {
+        useNewCollector = true;
     }
 
     var systemDefaultWorkingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
@@ -337,6 +338,11 @@ function publishCodeChanges(): Q.Promise<string> {
     selectortool.arg("/SourcesDir:" + sourcesDir);
     selectortool.arg("/newprovider:" + newprovider);
     selectortool.arg("/BaseLineFile:" + baseLineBuildIdFile);
+
+    if (isPrFlow && isPrFlow.toUpperCase() == "TRUE") {
+        selectortool.arg("/IsPrFlow:" + "true");
+    }
+
     if (tiaRebaseLimit) {
         selectortool.arg("/RebaseLimit:" + tiaRebaseLimit);
     }
