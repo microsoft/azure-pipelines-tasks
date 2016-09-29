@@ -1,7 +1,7 @@
 {
     "common": [
         {
-            "module": "../Common/find-files",
+            "module": "../Common/find-files-legacy",
             "type": "node",
             "compile": true
         }

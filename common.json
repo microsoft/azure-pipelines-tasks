@@ -129,7 +129,7 @@
     ],
     "VsTest" : [
         {
-            "module": "find-files",
+            "module": "find-files-legacy",
             "dest": "node_modules"  
         }
     ]

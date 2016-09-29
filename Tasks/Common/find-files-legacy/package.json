@@ -1,5 +1,5 @@
 {
-  "name": "find-files",
+  "name": "find-files-legacy",
   "version": "1.0.0",
   "author": "Microsoft Corporation",
   "description": "Common lib for finding files with VSTS file pattern",
