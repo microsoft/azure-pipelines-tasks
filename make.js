@@ -257,7 +257,7 @@ target.test = function() {
         fail(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2])}`, true);
     }
 
-    run('mocha ' + testsSpec.join(' '), true);
+    run('mocha ' + testsSpec.join(' '), /*echo:*/true);
 }
 
 //
@@ -300,55 +300,67 @@ target.testLegacy = function() {
 
     // suite path
     var suitePath = path.join(testPath, options.suite || 'L0/**', '_suite.js');
-    var tfBuild = ('' + process.env['TF_BUILD']).toLowerCase() == 'true';
-    run('mocha ' + suitePath, true);
+    suitePath = path.normalize(suitePath);
+    var testsSpec = matchFind(suitePath, path.join(testPath, 'L0'));
+    if (!testsSpec.length) {
+        fail(`Unable to find tests using the following pattern: ${suitePath}`);
+    }
+
+    // mocha doesn't always return a non-zero exit code on test failure. when only
+    // a single suite fails during a run that contains multiple suites, mocha does
+    // not appear to always return non-zero. as a workaround, the following code
+    // creates a wrapper suite with an "after" hook. in the after hook, the state
+    // of the runnable context is analyzed to determine whether any tests failed.
+    // if any tests failed, log a ##vso command to fail the build.
+    var testsSpecPath = ''
+    var testsSpecPath = path.join(testPath, 'testsSpec.js');
+    var contents = 'var __suite_to_run;' + os.EOL;
+    contents += 'describe(\'Legacy L0\', function (__outer_done) {' + os.EOL;
+    contents += '    after(function (done) {' + os.EOL;
+    contents += '        var failedCount = 0;' + os.EOL;
+    contents += '        var suites = [ this._runnable.parent ];' + os.EOL;
+    contents += '        while (suites.length) {' + os.EOL;
+    contents += '            var s = suites.pop();' + os.EOL;
+    contents += '            suites = suites.concat(s.suites); // push nested suites' + os.EOL;
+    contents += '            failedCount += s.tests.filter(function (test) { return test.state != "passed" }).length;' + os.EOL;
+    contents += '        }' + os.EOL;
+    contents += '' + os.EOL;
+    contents += '        if (failedCount && process.env.TF_BUILD) {' + os.EOL;
+    contents += '            console.log("##vso[task.logissue type=error]" + failedCount + " test(s) failed");' + os.EOL;
+    contents += '            console.log("##vso[task.complete result=Failed]" + failedCount + " test(s) failed");' + os.EOL;
+    contents += '        }' + os.EOL;
+    contents += '' + os.EOL;
+    contents += '        done();' + os.EOL;
+    contents += '    });' + os.EOL;
+    testsSpec.forEach(function (itemPath) {
+        contents += `    __suite_to_run = require(${JSON.stringify(itemPath)});` + os.EOL;
+    });
+    contents += '});' + os.EOL;
+    fs.writeFileSync(testsSpecPath, contents);
+    run('mocha ' + testsSpecPath, /*echo:*/true);
 }
 
 target.package = function() {
     // clean
     rm('-Rf', packagePath);
 
-    // stage the zip contents
-    console.log('> Staging zip contents');
-    var zipSourcePath = path.join(packagePath, 'zip-source');
-    mkdir('-p', zipSourcePath);
-    // process each item directly under _build/Tasks/
-    fs.readdirSync(buildPath).forEach(function (itemName) {
-        var taskSourcePath = path.join(buildPath, itemName);
+    console.log('> Staging content for individual task zips');
+    var individualZipStagingPath = path.join(packagePath, 'individual-zip-staging');
+    util.stageTaskZipContent(buildPath, individualZipStagingPath, /*metadataOnly*/false);
 
-        // skip Common and skip files
-        if (itemName == 'Common' || !fs.statSync(taskSourcePath).isDirectory()) {
-            return;
-        }
+    console.log();
+    console.log('> Staging metadata for wrapper zip');
+    var wrapperZipStagingPath = path.join(packagePath, 'wrapper-zip-staging');
+    util.stageTaskZipContent(buildPath, wrapperZipStagingPath, /*metadataOnly*/true);
 
-        // create the target dir
-        var taskTargetPath = path.join(zipSourcePath, itemName);
-        mkdir('-p', taskTargetPath);
+    // mark the layout with a version number. servicing needs to support both this new format
+    // and the original layout format as well.
+    fs.writeFileSync(path.join(wrapperZipStagingPath, 'layout-version.txt'), '2');
 
-        // process each file/folder within the task
-        fs.readdirSync(taskSourcePath).forEach(function (itemName) {
-            // skip the Tests folder
-            if (itemName == 'Tests') {
-                return;
-            }
-
-            // create a junction point for directories, hardlink files
-            var itemSourcePath = path.join(taskSourcePath, itemName);
-            var itemTargetPath = path.join(taskTargetPath, itemName);
-            if (fs.statSync(itemSourcePath).isDirectory()) {
-                fs.symlinkSync(itemSourcePath, itemTargetPath, 'junction');
-            }
-            else {
-                fs.linkSync(itemSourcePath, itemTargetPath);
-            }
-        });
-    });
-
-    // create the zip
+    // create the tasks zip
     var zipPath = path.join(packagePath, 'pack-source', 'contents', 'Microsoft.TeamFoundation.Build.Tasks.zip');
-    mkdir('-p', path.dirname(zipPath));
     ensureTool('powershell.exe', '-NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command "$PSVersionTable.PSVersion.ToString()"');
-    run(`powershell.exe -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command "Add-Type -Assembly 'System.IO.Compression.FileSystem'; [System.IO.Compression.ZipFile]::CreateFromDirectory('${zipSourcePath}', '${zipPath}')"`)
+    run(`powershell.exe -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command "& '${path.join(__dirname, 'Compress-Tasks.ps1')}' -IndividualZipStagingPath '${individualZipStagingPath}' -WrapperZipStagingPath '${wrapperZipStagingPath}' -ZipPath '${zipPath}'"`, /*echo:*/true);
 
     // nuspec
     var version = options.version;
@@ -361,6 +373,7 @@ target.package = function() {
     }
 
     var pkgName = 'Mseng.MS.TF.Build.Tasks';
+    console.log();
     console.log('> Generating .nuspec file');
     var contents = '<?xml version="1.0" encoding="utf-8"?>' + os.EOL;
     contents += '<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">' + os.EOL;

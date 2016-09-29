@@ -11,7 +11,6 @@ var shell = require('shelljs');
 var syncRequest = require('sync-request');
 
 var downloadPath = path.join(__dirname, '_download');
-var testPath = path.join(__dirname, '_test');
 
 var makeOptions = require('./make-options.json');
 
@@ -157,6 +156,11 @@ var copyTaskResources = function (taskMake, srcPath, destPath) {
     if (taskMake.hasOwnProperty('cp')) {
         copyGroups(taskMake.cp, srcPath, destPath);
     }
+
+    // remove the locally defined set of resources
+    if (taskMake.hasOwnProperty('rm')) {
+        removeGroups(taskMake.rm, destPath);
+    }
 }
 exports.copyTaskResources = copyTaskResources;
 
@@ -234,7 +238,7 @@ var matchRemove = function (pattern, sourceRoot, options) {
 }
 exports.matchRemove = matchRemove;
 
-exports.run = function (cl, echo) {
+var run = function (cl, echo) {
     console.log();
     console.log('> ' + cl);
     echo = echo || process.env['TASK_BUILD_VERBOSE'];
@@ -250,10 +254,10 @@ exports.run = function (cl, echo) {
             console.error(err.output ? err.output.toString() : err.message);
         }
 
-        exit(1);
+        process.exit(1);
     }
 }
-var run = exports.run;
+exports.run = run;
 
 var ensureTool = function (name, versionArgs, noExec) {
     console.log(name + ' tool:');
@@ -349,14 +353,14 @@ var copyGroup = function (group, sourceRoot, destRoot) {
     //   "source": [
     //     "foo.dll",
     //     "bar",
-    //   ]
+    //   ],
     //   "dest": "baz/",
     //   "options": "-R"
     // }
     //
     // example to multiply the copy by .NET culture names supported by TFS:
     // {
-    //   "source": "<CULTURE_NAME>/foo.dll"
+    //   "source": "<CULTURE_NAME>/foo.dll",
     //   "dest": "<CULTURE_NAME>/"
     // }
     //
@@ -405,17 +409,6 @@ var copyGroup = function (group, sourceRoot, destRoot) {
     }
 }
 
-var removeAllFoldersNamed = function(rootPath, folderName) {
-    var matches = find(rootPath).filter(function(match) { 
-        return path.basename(match) === 'vsts-task-lib'; 
-    });
-
-    matches.forEach(function(item) {
-        rm('-Rf', item);
-    });
-}
-exports.removeAllFoldersNamed = removeAllFoldersNamed;
-
 var copyGroups = function (groups, sourceRoot, destRoot) {
     assert(groups, 'groups');
     assert(groups.length, 'groups.length');
@@ -424,6 +417,49 @@ var copyGroups = function (groups, sourceRoot, destRoot) {
     })
 }
 exports.copyGroups = copyGroups;
+
+var removeGroup = function (group, pathRoot) {
+    // example structure to remove an array of files/folders:
+    // {
+    //   "items": [
+    //     "foo.dll",
+    //     "bar",
+    //   ],
+    //   "options": "-R"
+    // }
+
+    // validate parameters
+    assert(group, 'group');
+    assert(group.items, 'group.items');
+    if (typeof group.items != 'object') {
+        throw new Error('Expected group.items to be an array');
+    } else {
+        assert(group.items.length, 'group.items.length');
+        group.items.forEach(function (p) {
+            assert(p, 'group.items[i]');
+        });
+    }
+
+    assert(group.options, 'group.options');
+    assert(pathRoot, 'pathRoot');
+
+    // build the rooted items array
+    var rootedItems = group.items.map(function (val) { // root the paths
+        return path.join(pathRoot, val);
+    });
+
+    // remove the items
+    rm(group.options, rootedItems);
+}
+
+var removeGroups = function (groups, pathRoot) {
+    assert(groups, 'groups');
+    assert(groups.length, 'groups.length');
+    groups.forEach(function (group) {
+        removeGroup(group, pathRoot);
+    })
+}
+exports.removeGroups = removeGroups;
 
 var addPath = function (directory) {
     var separator;
@@ -596,4 +632,47 @@ var validateTask = function (task) {
     }
 };
 exports.validateTask = validateTask;
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// package functions
+//------------------------------------------------------------------------------
+var stageTaskZipContent = function (sourceRoot, destRoot, metadataOnly) {
+    var metadataFileNames = [ 'TASK.JSON', 'TASK.LOC.JSON', 'STRINGS', 'ICON.PNG' ];
+    fs.readdirSync(sourceRoot).forEach(function (itemName) {
+        var taskSourcePath = path.join(sourceRoot, itemName);
+        var taskDestPath = path.join(destRoot, itemName);
+
+        // skip Common and skip files
+        if (itemName == 'Common' || !fs.statSync(taskSourcePath).isDirectory()) {
+            return;
+        }
+
+        mkdir('-p', taskDestPath);
+
+        // process each file/folder within the task
+        fs.readdirSync(taskSourcePath).forEach(function (itemName) {
+            // skip the Tests folder
+            if (itemName == 'Tests') {
+                return;
+            }
+
+            // skip if metadataOnly and not a metadata item
+            if (metadataOnly && metadataFileNames.indexOf(itemName.toUpperCase()) < 0) {
+                return;
+            }
+
+            // create a junction point for directories, hardlink files
+            var itemSourcePath = path.join(taskSourcePath, itemName);
+            var itemDestPath = path.join(taskDestPath, itemName);
+            if (fs.statSync(itemSourcePath).isDirectory()) {
+                fs.symlinkSync(itemSourcePath, itemDestPath, 'junction');
+            }
+            else {
+                fs.linkSync(itemSourcePath, itemDestPath);
+            }
+        });
+    });
+}
+exports.stageTaskZipContent = stageTaskZipContent;
 //------------------------------------------------------------------------------

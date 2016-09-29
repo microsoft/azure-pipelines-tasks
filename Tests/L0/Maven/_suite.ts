@@ -11,8 +11,8 @@ import {Url} from 'url';
 import shell = require('shelljs');
 
 // import {ToolRunner} from 'vsts-task-lib/toolrunner';
-import tr = require('../../lib/vsts-task-lib/toolRunner');
-import tl = require('../../lib/vsts-task-lib/toolRunner');
+import tr = require('../../lib/vsts-task-lib/toolrunner');
+import tl = require('../../lib/vsts-task-lib/toolrunner');
 
 let sqCommon = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/common');
 let VstsServerUtils = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/vsts-server-utils').VstsServerUtils;
