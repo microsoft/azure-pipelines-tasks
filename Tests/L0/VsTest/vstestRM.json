@@ -22,7 +22,7 @@
             "some/path/three"
         ],
         "\\artifacts\\dir\\TestResults\\*.trx": [
-            "a.trx"
+            "\\artifacts\\dir\\TestResults\\a.trx"
         ],
         "**\\packages\\**\\*TestAdapter.dll": []
     },

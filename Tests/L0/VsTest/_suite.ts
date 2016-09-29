@@ -685,7 +685,7 @@ describe('VsTest Suite', function () {
             });
     });
 
-    it('Vstest task test results drop location in release definition', (done) => {
+    it('Vstest task verify test results are dropped at correct location in case of release', (done) => {
         setResponseFile('vstestRM.json');
         var tr = new trm.TaskRunner('VSTest');
         tr.setInput('testAssembly', 'some/*pattern');
@@ -698,7 +698,7 @@ describe('VsTest Suite', function () {
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran('\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe some/path/one some/path/two /logger:trx'), 'should have run vstest');
-                assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=a.trx;\]/) >= 0, 'should publish test results.');
+                assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=\\artifacts\\dir\\TestResults\\a.trx;\]/) >= 0, 'should publish test results.');
                 done();
             })
             .fail((err) => {
