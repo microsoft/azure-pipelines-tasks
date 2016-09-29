@@ -1,11 +1,10 @@
 {
     "getVariable": {
         "System.DefaultWorkingDirectory": "/source/dir",
-        "build.sourcesdirectory": "/source/dir",
+        "System.ArtifactsDirectory": "/artifacts/dir",
         "VS150COMNTools": "/vs/path",
         "VS140COMNTools": "/vs/path",
-        "VS120COMNTools": "/vs/path",
-        "System.Debug": "false"
+        "VS120COMNTools": "/vs/path"
     },
     "find": {
         "/source/dir": [
@@ -22,8 +21,8 @@
             "some/path/two",
             "some/path/three"
         ],
-        "*.trx": [
-            "a.trx"
+        "\\artifacts\\dir\\TestResults\\*.trx": [
+            "\\artifacts\\dir\\TestResults\\a.trx"
         ],
         "**\\packages\\**\\*TestAdapter.dll": []
     },
@@ -70,7 +69,7 @@
         }
     },
     "rmRF": {
-        "\\source\\dir\\TestResults": {
+        "\\artifacts\\dir\\TestResults": {
             "success": true,
             "message": "success"
         }

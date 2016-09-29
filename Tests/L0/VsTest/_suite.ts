@@ -564,7 +564,7 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with results directory empty in run settings file', (done) => {
         var settingsFilePath = path.join(__dirname, 'data', 'RunSettingsWithoutResultsDirectory.runsettings');
-        var resultsDirectory = '\\source\\TestResults'; // when results directory is empty in settings file, default result directory should be considered.
+        var resultsDirectory = '\\source\\dir\\TestResults'; // when results directory is empty in settings file, default result directory should be considered.
 
         var responseJsonFilePath: string = path.join(__dirname, 'vstestGood.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
@@ -684,4 +684,26 @@ describe('VsTest Suite', function () {
                 done(err);
             });
     });
+
+    it('Vstest task verify test results are dropped at correct location in case of release', (done) => {
+        setResponseFile('vstestRM.json');
+        var tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testAssembly', 'some/*pattern');
+        tr.setInput('vstestLocationMethod', 'version');
+        tr.setInput('vsTestVersion', '14.0');
+
+        tr.run()
+            .then(() => {
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.ran('\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe some/path/one some/path/two /logger:trx'), 'should have run vstest');
+                assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=\\artifacts\\dir\\TestResults\\a.trx;\]/) >= 0, 'should publish test results.');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+
 });
