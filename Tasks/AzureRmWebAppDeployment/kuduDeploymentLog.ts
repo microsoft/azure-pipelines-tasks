@@ -68,7 +68,6 @@ export function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isDeployme
     var requestUrl = "https://" + encodeURIComponent(webAppHostUrl) + "/deployments/" + encodeURIComponent(deploymentId);
 
     var requestDetails = new Array<string>();
-    console.log('updating kudu logs');
     requestDetails["requestBody"] = requestBody;
     requestDetails["requestUrl"] = requestUrl;
     return requestDetails;
