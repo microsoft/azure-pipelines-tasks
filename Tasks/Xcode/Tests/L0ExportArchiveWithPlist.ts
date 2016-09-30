@@ -6,6 +6,8 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'Xcode.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
+process.env['HOME']='/users/test'; //replace with mock of setVariable when task-lib has the support
+
 tr.setInput('actions', 'build');
 tr.setInput('configuration', '$(Configuration)');
 tr.setInput('sdk', '$(SDK)');
