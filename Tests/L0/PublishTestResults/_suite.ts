@@ -11,22 +11,22 @@ function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
 }
 
-describe('Publish Test Results Suite', function() {
+describe('Publish Test Results Suite', function () {
     this.timeout(10000);
 
     before((done) => {
         // init here
+        setResponseFile('publishTestResultResponses.json');
         done();
     });
 
-    after(function() {
+    after(function () {
 
     });
 
     it('Publish test results with resultFiles filter that does not match with any files', (done) => {
-        setResponseFile('publishTestResultResponses.json');
-
-        var tr = new trm.TaskRunner('PublishTestResults');
+                
+        let tr = new trm.TaskRunner('PublishTestResults');
 
         tr.setInput('testRunner', 'JUnit');
         tr.setInput('testResultsFiles', '/invalid/*pattern');
@@ -36,7 +36,7 @@ describe('Publish Test Results Suite', function() {
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.invokedToolCount == 0, 'should exit before running PublishTestResults');
-                
+
                 done();
             })
             .fail((err) => {
@@ -45,20 +45,19 @@ describe('Publish Test Results Suite', function() {
     })
 
     it('Publish test results with resultFiles filter that matches with some files', (done) => {
-        setResponseFile('publishTestResultResponses.json');
-
-        var tr = new trm.TaskRunner('PublishTestResults');
+                
+        let tr = new trm.TaskRunner('PublishTestResults');
+        let pattern = path.join(__dirname, 'data', '*TEST.xml');
 
         tr.setInput('testRunner', 'JUnit');
-        tr.setInput('testResultsFiles', '/some/*pattern');
+        tr.setInput('testResultsFiles', pattern);
         tr.setInput('mergeTestResults', 'true');
 
         tr.run()
             .then(() => {
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
-                assert(tr.stdout.search(/##vso\[results.publish type=JUnit;mergeResults=true;resultFiles=some\/path\/one,some\/path\/two;\]/) >=0 , 'should publish test results.');
-                
+                assert(tr.stdout.search(/##vso\[results.publish type=JUnit;mergeResults=true;resultFiles=/) >= 0, 'should publish test results.');
                 done();
             })
             .fail((err) => {
@@ -67,19 +66,18 @@ describe('Publish Test Results Suite', function() {
     })
 
     it('Publish test results with resultFiles as file path', (done) => {
-        setResponseFile('publishTestResultResponses.json');
-
-        var tr = new trm.TaskRunner('PublishTestResults');
+                
+        let tr = new trm.TaskRunner('PublishTestResults');
+        let pattern = path.join(__dirname, 'data', 'junit1TEST.xml');
 
         tr.setInput('testRunner', 'JUnit');
-        tr.setInput('testResultsFiles', 'file.xml');
+        tr.setInput('testResultsFiles', pattern);
 
         tr.run()
             .then(() => {
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
-                assert(tr.stdout.search(/##vso\[results.publish type=JUnit;resultFiles=file.xml;\]/) >= 0, 'should publish test results.');
-
+                assert(tr.stdout.search(/##vso\[results.publish type=JUnit;resultFiles=/) >= 0, 'should publish test results.');
                 done();
             })
             .fail((err) => {
@@ -88,7 +86,6 @@ describe('Publish Test Results Suite', function() {
     })
 
     it('Publish test results when test result files input is not provided', (done) => {
-        setResponseFile('publishTestResultResponses.json');
 
         var tr = new trm.TaskRunner('PublishTestResults');
         tr.setInput('testRunner', 'Junit');
@@ -107,9 +104,8 @@ describe('Publish Test Results Suite', function() {
                 done(err);
             });
     })
-    
+
     it('Publish test results when test runner type input is not provided', (done) => {
-        setResponseFile('publishTestResultResponses.json');
 
         var tr = new trm.TaskRunner('PublishTestResults');
         tr.setInput('testResultsFiles', '/file.xml');
