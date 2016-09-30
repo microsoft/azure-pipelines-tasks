@@ -25,6 +25,8 @@
   "loc.messages.BuildNumberNotSpecified": "Build Number cannot be null or empty.",
   "loc.messages.VstsRestApiFailed": "Failed to communicate with VSTS: {0}",
   "loc.messages.DownloadingArtifact": "Downloading artifact '{0}'...",
+  "loc.messages.DownloadingArtifactProgress": "Progress update: '{0}' bytes received...",
+  "loc.messages.FinishedDownloadingArtifact": "Finished downloading artifact '{0}'.",
   "loc.messages.UnrecognizedArtifactType": "Unrecognized artifact type '{0}'",
   "loc.messages.PreviousBuildNumberLabel": "Previous build number: '{0}'",
   "loc.messages.PreviousBuildLocationLabel": "Previous build location: '{0}'",
