@@ -83,7 +83,7 @@
         "CurlReturnCode": "curl exited with return code: %d",
         "CurlFailed": "curl failed with error: %s",
         "NoMatchingFilesFound": "No matching files were found with search pattern: %s",
-        "UploadingFiles": "uploading file(s): %s",
-        "CurlNotFound": "curl was not found in the path"
+        "UploadingFiles": "Uploading file(s): %s",
+        "CurlNotFound": "curl was not found in the PATH."
     }    
 }
