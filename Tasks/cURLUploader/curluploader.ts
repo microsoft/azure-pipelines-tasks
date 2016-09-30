@@ -19,6 +19,8 @@ var firstWildcardIndex = function (str) {
 
 async function run() {
     try {
+        tl.setResourcePath(path.join( __dirname, 'task.json'));
+
         var filesPattern: string = tl.getInput('files', true);
         var username: string = tl.getInput('username', false);
         var password: string = tl.getInput('password', false);
