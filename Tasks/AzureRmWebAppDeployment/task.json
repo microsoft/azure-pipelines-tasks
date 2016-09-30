@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 1,
-        "Patch": 1
+        "Patch": 0
     },
     "minimumAgentVersion": "1.102.0",
     "groups": [
@@ -214,7 +214,7 @@
             "required": false,
             "groupName": "FileTransformsAndVariableSubstitution",
             "visibleRule": "JSONVariableSubstitutionsFlag == true",
-            "helpMarkDown": "Provide a line separated list of JSON files for substituting variables in them. The files names are relative to the root folder. For substituting JSON variables that are in a hierarchy, specify them using the format Parent.Child1.key in the Environment/Definition variable.  If same variables are defined in the Definition and Environment, then the Environment variables will supersede the Definition variables. Variable Substitution is run after Config Transforms."
+            "helpMarkDown": "Provide a line separated list of JSON files for substituting variables in them. The files names are relative to the root folder. For substituting JSON variables that are in a hierarchy, specify them using the format Data.DefaultConnection.ConnectionString in the Environment/Definition variable.  If same variables are defined in the Definition and Environment, then the Environment variables will supersede the Definition variables. Variable Substitution is run after Config Transforms."
         }
     ],
     "dataSourceBindings": [
