@@ -29,10 +29,13 @@ try {
 
     $logAllChanges = ((Get-VstsInput -Name logAllChanges -Require) -eq "true")
 
-    $versionSuffix = Get-VstsInput -Name versionSuffix -Require
-    Write-Host (Get-VstsLocString -Key VersionSuffixLabel -ArgumentList $versionSuffix)
+    $replaceVersion = ((Get-VstsInput -Name versionBehavior) -eq "Replace")
+
+    $versionValue = Get-VstsInput -Name versionSuffix -Require
+    Write-Host (Get-VstsLocString -Key VersionValueLabel -ArgumentList $versionValue)
     $versionPrefix = $newAppManifestXml.ApplicationManifest.ApplicationTypeVersion
-    $newVersion = $versionPrefix + $versionSuffix
+
+    $newVersion = if ($replaceVersion) { $versionValue } else { $versionPrefix + $versionValue }
 #endregion
 
     if (!$updateAllVersions)
@@ -80,7 +83,7 @@ try {
     $logIndent = "".PadLeft(2)
     foreach ($serviceManifestImport in $newAppManifestXml.ApplicationManifest.ServiceManifestImport)
     {
-        $serviceVersion = Update-ServiceVersions -VersionSuffix $versionSuffix -ServiceName $serviceManifestImport.ServiceManifestRef.ServiceManifestName -NewPackageRoot $newAppPackagePath -OldPackageRoot $oldAppPackagePath -LogIndent $logIndent -UpdateAllVersions:$updateAllVersions -LogAllChanges:$logAllChanges
+        $serviceVersion = Update-ServiceVersions -VersionValue $versionValue -ServiceName $serviceManifestImport.ServiceManifestRef.ServiceManifestName -NewPackageRoot $newAppPackagePath -OldPackageRoot $oldAppPackagePath -LogIndent $logIndent -UpdateAllVersions:$updateAllVersions -LogAllChanges:$logAllChanges -ReplaceVersion:$replaceVersion 
         $serviceManifestImport.ServiceManifestRef.ServiceManifestVersion = $serviceVersion
     }
 
@@ -90,7 +93,7 @@ try {
         Write-Host (Get-VstsLocString -Key UpdatedApplicationTypeVersion -ArgumentList @($appTypeName,$newVersion))
         $newAppManifestXml.ApplicationManifest.ApplicationTypeVersion = $newVersion
     }
-    elseif (!$oldAppManifestXml.ApplicationManifest.ApplicationTypeVersion.StartsWith($versionPrefix) -or !(Test-XmlEqual $oldAppManifestXml $newAppManifestXml))
+    elseif ((!$replaceVersion -and !$oldAppManifestXml.ApplicationManifest.ApplicationTypeVersion.StartsWith($versionPrefix)) -or !(Test-XmlEqual $oldAppManifestXml $newAppManifestXml))
     {
         # Update the application type version if the application manifest has changed for any of the following reasons:
         # 1. The user edited the manifest itself (including changes to the version prefix)

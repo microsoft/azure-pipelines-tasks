@@ -28,11 +28,23 @@
         },
         {
             "name": "versionSuffix",
+            "_name_comment": "Intentionally leaving the name as 'versionSuffix' in order to be backwards compatible",
             "type": "string",
-            "label": "Version Suffix",
+            "label": "Version Value",
             "defaultValue": ".$(Build.BuildNumber)",
-            "required": true,
-            "helpMarkDown": "Value to append to the version values in the manifest files."
+            "required": true
+        },
+        {
+            "name": "versionBehavior",
+            "type": "pickList",
+            "label": "Version Behavior",
+            "defaultValue": "Append",
+            "required": false,
+            "helpMarkDown": "Specify whether to append the version value to existing values in the manifest files or replace them.",
+            "options": {
+                "Append": "Append",
+                "Replace": "Replace"
+            }
         },
         {
             "name": "updateOnlyChanged",
@@ -93,7 +105,7 @@
         "ItemSearchNoFilesFound": "No items were found with search pattern {0}.",
         "SearchingForApplicationPackage": "Searching for application package: {0}",
         "FoundApplicationPackage": "Found application package: {0}",
-        "VersionSuffixLabel": "Version Suffix: '{0}'",
+        "VersionValueLabel": "Version Value: '{0}'",
         "BuildNumberNotSpecified": "Build Number cannot be null or empty.",
         "VstsRestApiFailed": "Failed to communicate with VSTS: {0}",
         "DownloadingArtifact": "Downloading artifact '{0}'...",
