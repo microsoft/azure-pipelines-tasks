@@ -89,6 +89,7 @@ try {
     elseif ($publishProfile)
     {
         $applicationParameterFile = $publishProfile.ApplicationParameterFile
+        Assert-VstsPath -LiteralPath $applicationParameterFile -PathType Leaf
     }
     else
     {
