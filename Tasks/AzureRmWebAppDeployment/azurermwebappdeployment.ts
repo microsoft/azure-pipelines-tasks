@@ -57,24 +57,20 @@ async function run() {
             tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
         }
 
-        if(jsonVariableSubsFlag) { // (jsonVariableSubsFlag || variable substitution)
+        if(jsonVariableSubsFlag) { // (jsonVariableSubsFlag || variable substitution) 
             var folderPath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package_folder');
             if(isFolderBasedDeployment) {
                 tl.cp(path.join(webDeployPkg, '/'), folderPath, '-rf', false);
-                webDeployPkg = folderPath;
             }
             else {
-                webDeployPkg = zipUtility.unzip(webDeployPkg, folderPath);
+                zipUtility.unzip(webDeployPkg, folderPath);
             }
-        }
-        if(jsonVariableSubsFlag) {
-            jsonVariableSubs.jsonVariableSubstitution(webDeployPkg, jsonVariableSubsFiles);
-        }
-        if(jsonVariableSubsFlag) { // (jsonVariableSubsFlag || variable substitution)
-            if(!isFolderBasedDeployment) {
-                webDeployPkg = await zipUtility.archiveFolder(webDeployPkg, tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package.zip');
+            if(jsonVariableSubsFlag) {
+                jsonVariableSubs.jsonVariableSubstitution(folderPath, jsonVariableSubsFiles);
             }
+            webDeployPkg = (isFolderBasedDeployment) ? folderPath :  await zipUtility.archiveFolder(webDeployPkg, tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package.zip');
         }
+
         if(canUseWebDeploy(useWebDeploy)) {
            tl._writeLine("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);         
            tl._writeLine("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);

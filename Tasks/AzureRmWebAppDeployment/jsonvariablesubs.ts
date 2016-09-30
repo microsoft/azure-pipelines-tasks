@@ -14,9 +14,9 @@ function createEnvTree() {
     }
     for(let envVariable of envVariables) {
         var envVarTreeIterator = envVarTree;
-        var envVariableName = (envVariable.name).split('.');
+        var envVariableNameArray = (envVariable.name).split('.');
         
-        for(let variableName of envVariableName) {
+        for(let variableName of envVariableNameArray) {
             if(envVarTreeIterator.child[variableName] === undefined) {
                 envVarTreeIterator.child[variableName] = {
                     value: null,
@@ -42,7 +42,7 @@ function checkEnvTreePath(jsonObjectKey, index, jsonObjectKeyLength, envVarTree)
     return checkEnvTreePath(jsonObjectKey, index + 1, jsonObjectKeyLength, envVarTree.child[ jsonObjectKey[index] ]);
 }
 
-function jsonVariableSubstitutionUtil(jsonObject, envObject) {
+function substituteJSONVariable(jsonObject, envObject) {
     for(var jsonChild in jsonObject) {
         var jsonChildArray = jsonChild.split('.');
         var resultNode = checkEnvTreePath(jsonChildArray, 0, jsonChildArray.length, envObject);
@@ -51,7 +51,7 @@ function jsonVariableSubstitutionUtil(jsonObject, envObject) {
                 jsonObject[jsonChild] = resultNode.value;
             }
             else {
-                jsonVariableSubstitutionUtil(jsonObject[jsonChild], resultNode);
+                substituteJSONVariable(jsonObject[jsonChild], resultNode);
             }
         }
     }
@@ -78,7 +78,7 @@ export function jsonVariableSubstitution(absolutePath, jsonSubFiles) {
             fileContent = fileContent.slice(1);
         }
         var jsonObject = JSON.parse(fileContent);
-        jsonVariableSubstitutionUtil(jsonObject, envVarObject);
+        substituteJSONVariable(jsonObject, envVarObject);
         tl.writeFile(file, JSON.stringify(jsonObject));
     }
 }
