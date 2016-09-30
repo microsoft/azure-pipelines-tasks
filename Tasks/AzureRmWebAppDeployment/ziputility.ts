@@ -10,7 +10,6 @@ export function unzip(zipLocation, unzipLocation) {
     var unzipper = new admzip(zipLocation);
     tl.debug('extracting ' + zipLocation + ' to ' + unzipLocation);
     unzipper.extractAllTo(unzipLocation);
-    return unzipLocation;
 }
 
 export function archiveFolder(folderPath, targetPath, zipName) {
