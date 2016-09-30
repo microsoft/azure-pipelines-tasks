@@ -38,6 +38,14 @@ function InitializeRestHeaders()
     return $restHeaders
 }
 
+function InvokeRestMethod($headers, $contentType, $uri , $method= "Get", $body)
+{
+  $ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($uri)
+  $result = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -TimeoutSec $global:RestTimeout -Uri $uri -Method $method -Headers $headers -Body $body
+  $ServicePoint.CloseConnectionGroup("")
+  return $result
+}
+
 function ComposeTestDropJson($name, $duration, $homepage, $vu)
 {
 $tdjson = @"
@@ -61,14 +69,6 @@ $tdjson = @"
 "@
 
     return $tdjson
-}
-
-function InvokeRestMethod($headers, $contentType, $uri , $method= "Get", $body)
-{
-  $ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($uri)
-  $result = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -TimeoutSec $global:RestTimeout -Uri $uri -Method $method -Headers $headers -Body $body
-  $ServicePoint.CloseConnectionGroup("")
-  return $result
 }
 
 function CreateTestDrop($headers, $dropJson)
@@ -104,7 +104,7 @@ function GetTestRuns($headers)
     return $runs
 }
 
-function GetTestRunUri($testRunId)
+function GetTestRunUri($testRunId, $headers)
 {
  $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?api-version=1.0", $CltAccountUrl,$testRunId)
  $run = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers
@@ -225,7 +225,6 @@ function UploadSummaryMdReport($summaryMdPath)
 
 	if (($env:SYSTEM_HOSTTYPE -eq "build") -and (Test-Path($summaryMdPath)))
 	{	
-	    Write-Output "This is a build task and hence summary is being uploaded"
 		Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=Load test results;]$summaryMdPath"
 	}
 }
@@ -251,6 +250,7 @@ ValidateInputs
 $connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
 
 $Username = $connectedServiceDetails.Authorization.Parameters.Username
+Write-Verbose "Username = $Username" -Verbose
 $Password = $connectedServiceDetails.Authorization.Parameters.Password
 $VSOAccountUrl = $connectedServiceDetails.Url.AbsoluteUri
 $CltAccountUrl = ComposeAccountUrl($VSOAccountUrl).TrimEnd('/')
@@ -262,18 +262,14 @@ Write-Verbose "CLT account Url = $CltAccountUrl" -Verbose
 $headers = InitializeRestHeaders
 
 $dropjson = ComposeTestDropJson $testName $runDuration $websiteUrl $vuLoad
-
 $drop = CreateTestDrop $headers $dropjson
-
 if ($drop.dropType -eq "InPlaceDrop")
 {
     $runJson = ComposeTestRunJson $testName $drop.id
 
-	Write-Output "Queuing test run"
     $run = QueueTestRun $headers $runJson
-	Write-Output "Test run queued"
     MonitorTestRun $headers $run
-    $webResultsUrl = GetTestRunUri($run.id)
+    $webResultsUrl = GetTestRunUri $run.id $headers
 	
     Write-Output ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name)
     Write-Output ("To view run details navigate to {0}" -f $webResultsUrl)
@@ -298,5 +294,5 @@ else
 }
 
 	
-Write-Output "Finished Quick Perf Test Script"
+Write-Output "Quick Perf Test Script execution completed"
 

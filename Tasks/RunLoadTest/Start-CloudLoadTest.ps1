@@ -204,7 +204,7 @@ function ShowMessages($headers, $run)
 }
 
 function UploadTestDrop($testdrop, $src)
-{
+{   
     $dest = $testdrop.accessData.dropContainerUrl
     $sas = $testdrop.accessData.sasKey
 
@@ -390,7 +390,6 @@ $global:TFSAccountUrl = $env:System_TeamFoundationCollectionUri.TrimEnd('/')
 Write-Verbose "VSO account Url = $global:TFSAccountUrl" -Verbose
 Write-Verbose "CLT account Url = $global:ElsAccountUrl" -Verbose
 
-Write-Output "Initializing Rest Headers"
 #Setting Headers and account Url accordingly
 $headers = InitializeRestHeaders
 
@@ -406,6 +405,7 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
 
     #Queue the test run
     $runJson = ComposeTestRunJson $LoadTest $drop.id
+
     $run = QueueTestRun $headers $runJson
     MonitorAcquireResource $headers $run
 
@@ -432,8 +432,11 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
         WriteTaskMessages "The load test completed successfully."
     }
 
-    Write-Output ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name)
-    Write-Output ("To view run details navigate to {0}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={1}" -f $global:TFSAccountUrl, $run.id)
+	$run = GetTestRun $headers $run.id
+	$webResultsUri = $run.WebResultUrl
+	
+    Write-Output ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name)	
+    Write-Output ("To view run details navigate to {0}" -f $webResultsUri)
     Write-Output "To view detailed results navigate to Load Test | Load Test Manager in Visual Studio IDE, and open this run."
 
     $resultsMDFolder = New-Item -ItemType Directory -Force -Path "$env:Temp\LoadTestResultSummary"
@@ -463,9 +466,8 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
         $thresholdImage="bowtie-status-success"
 	}
 	
-	$run = GetTestRun $headers $run.id
-	$webResultsUri = $run.WebResultUrl
-    $summary = ('<span class="bowtie-icon {3}" />   {4}<br/>[Test Run: {0}](1) using {2}.<br/>' -f  $run.runNumber, $webResultsUri , $run.name, $thresholdImage, $thresholdMessage)
+	
+    $summary = ('<span class="bowtie-icon {3}" />   {4}<br/>[Test Run: {0}]({1}) using {2}.<br/>' -f  $run.runNumber, $webResultsUri , $run.name, $thresholdImage, $thresholdMessage)
     
 	('<p>{0}</p>' -f $summary) >>  $summaryFile
     UploadSummaryMdReport $summaryFile
@@ -475,5 +477,5 @@ else
     Write-Error ("Connection '{0}' failed for service '{1}'" -f $connectedServiceName, $connectedServiceDetails.Url.AbsoluteUri)
 }
 
-WriteTaskMessages "Finished Load Test Script"
+WriteTaskMessages "Load Test Script execution completed"
 
