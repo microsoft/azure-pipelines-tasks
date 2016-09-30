@@ -43,10 +43,18 @@ function InitializeRestHeaders()
     return $restHeaders
 }
 
+function InvokeRestMethod($headers, $contentType, $uri , $method= "Get", $body)
+{
+  $ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($uri)
+  $result = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -TimeoutSec $global:RestTimeout -Uri $uri -Method $method -Headers $headers -Body $body
+  $ServicePoint.CloseConnectionGroup("")
+  return $result
+}
+
 function CreateTestDrop($headers)
 {
     $uri = [String]::Format("{0}/_apis/clt/testdrops?{1}", $global:ElsAccountUrl, $apiVersion)
-    $drop = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers -Method Post -Body "{ ""dropType"": ""TestServiceBlobDrop"" }"
+    $drop = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers -method Post -body "{ ""dropType"": ""TestServiceBlobDrop"" }"
     return $drop
 }
 
@@ -54,7 +62,7 @@ function Get($headers, $uri)
 {
     try
     {
-        $result = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -TimeoutSec $global:RestTimeout -Uri $uri -Headers $headers
+        $result = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers
         return $result
     }
     catch
@@ -87,7 +95,7 @@ function GetTestErrors($headers, $run)
 function QueueTestRun($headers, $runJson)
 {
     $uri = [String]::Format("{0}/_apis/clt/testruns?{1}", $global:ElsAccountUrl, $apiVersion)
-    $run = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Method Post -Headers $headers -Body $runJson
+    $run = InvokeRestMethod -contentType "application/json" -uri $uri -method Post -headers $headers -body $runJson
 
 $start = @"
     {
@@ -96,8 +104,8 @@ $start = @"
 "@
 
     $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?{2}", $global:ElsAccountUrl, $run.id, $apiVersion)
-    Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Method Patch -Headers $headers -Body $start
-    $run = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
+    InvokeRestMethod -contentType "application/json" -uri $uri -method Patch -headers $headers -body $start
+    $run = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers
 
     return $run
 }
@@ -110,8 +118,8 @@ $stop = @"
     }
 "@
     $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?{2}", $global:ElsAccountUrl, $run.id, $apiVersion)
-    Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Method Patch -Headers $headers -Body $stop
-    $run = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
+    InvokeRestMethod -contentType "application/json" -uri $uri -method Patch -headers $headers -body $stop
+    $run = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers
     return $run
 
 }
@@ -157,7 +165,7 @@ function CheckTestErrors($headers, $run)
     if ($global:MonitorThresholds)
     {
         $uri = [String]::Format("{0}/_apis/clt/testruns/{1}/errors?type=ThresholdMessage&detailed=True&{2}", $global:ElsAccountUrl, $run.id, $apiVersion)
-        $errors = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
+        $errors = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers
 
         if ($errors -and $errors.count -gt 0 -and  $errors.types.count -gt 0)
         {
@@ -177,7 +185,7 @@ function CheckTestErrors($headers, $run)
 function ShowMessages($headers, $run)
 {
     $uri = [String]::Format("{0}/_apis/clt/testruns/{1}/messages?{2}", $global:ElsAccountUrl, $run.id, $apiVersion)
-    $messages = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
+    $messages = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers
     if ($messages)
     {
         $sMessages = $messages.value | Sort-Object loggedDate
@@ -382,6 +390,7 @@ $global:TFSAccountUrl = $env:System_TeamFoundationCollectionUri.TrimEnd('/')
 Write-Verbose "VSO account Url = $global:TFSAccountUrl" -Verbose
 Write-Verbose "CLT account Url = $global:ElsAccountUrl" -Verbose
 
+Write-Output "Initializing Rest Headers"
 #Setting Headers and account Url accordingly
 $headers = InitializeRestHeaders
 
@@ -423,11 +432,8 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
         WriteTaskMessages "The load test completed successfully."
     }
 
-	$run = GetTestRun $headers $run.id
-	$webResultsUri = $run.WebResultUrl
-	
-    Write-Output ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name)	
-    Write-Output ("To view run details navigate to {0}" -f $webResultsUri)
+    Write-Output ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name)
+    Write-Output ("To view run details navigate to {0}/_apps/hub/ms.vss-cloudloadtest-web.hub-loadtest-account?_a=summary&runId={1}" -f $global:TFSAccountUrl, $run.id)
     Write-Output "To view detailed results navigate to Load Test | Load Test Manager in Visual Studio IDE, and open this run."
 
     $resultsMDFolder = New-Item -ItemType Directory -Force -Path "$env:Temp\LoadTestResultSummary"
@@ -457,8 +463,9 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
         $thresholdImage="bowtie-status-success"
 	}
 	
-	
-    $summary = ('<span class="bowtie-icon {3}" />   {4}<br/>[Test Run: {0}]({1}) using {2}.<br/>' -f  $run.runNumber, $webResultsUri , $run.name, $thresholdImage, $thresholdMessage)
+	$run = GetTestRun $headers $run.id
+	$webResultsUri = $run.WebResultUrl
+    $summary = ('<span class="bowtie-icon {3}" />   {4}<br/>[Test Run: {0}](1) using {2}.<br/>' -f  $run.runNumber, $webResultsUri , $run.name, $thresholdImage, $thresholdMessage)
     
 	('<p>{0}</p>' -f $summary) >>  $summaryFile
     UploadSummaryMdReport $summaryFile

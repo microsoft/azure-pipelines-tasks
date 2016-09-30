@@ -63,10 +63,18 @@ $tdjson = @"
     return $tdjson
 }
 
+function InvokeRestMethod($headers, $contentType, $uri , $method= "Get", $body)
+{
+  $ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($uri)
+  $result = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -TimeoutSec $global:RestTimeout -Uri $uri -Method $method -Headers $headers -Body $body
+  $ServicePoint.CloseConnectionGroup("")
+  return $result
+}
+
 function CreateTestDrop($headers, $dropJson)
 {
     $uri = [String]::Format("{0}/_apis/clt/testdrops?api-version=1.0", $CltAccountUrl)
-    $drop = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Method Post -Headers $headers -Body $dropJson
+    $drop = InvokeRestMethod -contentType "application/json" -uri $uri -method Post -headers $headers -body $dropJson
 
     return $drop
 }
@@ -74,7 +82,7 @@ function CreateTestDrop($headers, $dropJson)
 function GetTestDrop($headers, $drop)
 {
     $uri = [String]::Format("{0}/_apis/clt/testdrops/{1}?api-version=1.0", $CltAccountUrl, $drop.id)
-    $testdrop = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -TimeoutSec $global:RestTimeout -Uri $uri -Headers $headers
+    $testdrop = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers
 
     return $testdrop
 }
@@ -91,15 +99,15 @@ function UploadTestDrop($testdrop)
 function GetTestRuns($headers)
 {
     $uri = [String]::Format("{0}/_apis/clt/testruns?api-version=1.0", $CltAccountUrl)
-    $runs = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -TimeoutSec $global:RestTimeout -Uri $uri -Headers $headers
+    $runs = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers
 
     return $runs
 }
 
-function GetTestRunUri($testRunId, $headers)
+function GetTestRunUri($testRunId)
 {
  $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?api-version=1.0", $CltAccountUrl,$testRunId)
- $run = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -TimeoutSec $global:RestTimeout -Uri $uri -Headers $headers
+ $run = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers
  
  return $run.WebResultUrl
 }
@@ -119,7 +127,7 @@ function MonitorTestRun($headers, $run)
     do
     {
         Start-Sleep -s 5
-        $run = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
+        $run = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers
         if ($prevState -ne $run.state -or $prevSubState -ne $run.subState)
         {
             $prevState = $run.state
@@ -129,10 +137,10 @@ function MonitorTestRun($headers, $run)
     }
     while (RunInProgress $run)
 
-    $run = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
+    $run = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers
     Write-Output "------------------------------------"
     $uri = [String]::Format("{0}/_apis/clt/testruns/{1}/messages?api-version=1.0", $CltAccountUrl, $run.id)
-    $messages = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
+    $messages = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers
 
     if ($messages)
     {
@@ -172,7 +180,7 @@ $trjson = @"
 function QueueTestRun($headers, $runJson)
 {
     $uri = [String]::Format("{0}/_apis/clt/testruns?api-version=1.0", $CltAccountUrl)
-    $run = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Method Post -Headers $headers -Body $runJson
+    $run = InvokeRestMethod -contentType "application/json" -uri $uri -method Post -headers $headers -body $runJson
 
 $start = @"
 {
@@ -181,8 +189,8 @@ $start = @"
 "@
 
     $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?api-version=1.0", $CltAccountUrl, $run.id)
-    Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Method Patch -Headers $headers -Body $start
-    $run = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -Uri $uri -Headers $headers
+    InvokeRestMethod -contentType "application/json" -uri $uri -method Patch -headers $headers -body $start
+    $run = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers
 
     return $run
 }
@@ -217,6 +225,7 @@ function UploadSummaryMdReport($summaryMdPath)
 
 	if (($env:SYSTEM_HOSTTYPE -eq "build") -and (Test-Path($summaryMdPath)))
 	{	
+	    Write-Output "This is a build task and hence summary is being uploaded"
 		Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=Load test results;]$summaryMdPath"
 	}
 }
@@ -242,7 +251,6 @@ ValidateInputs
 $connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
 
 $Username = $connectedServiceDetails.Authorization.Parameters.Username
-Write-Verbose "Username = $Username" -Verbose
 $Password = $connectedServiceDetails.Authorization.Parameters.Password
 $VSOAccountUrl = $connectedServiceDetails.Url.AbsoluteUri
 $CltAccountUrl = ComposeAccountUrl($VSOAccountUrl).TrimEnd('/')
@@ -254,14 +262,18 @@ Write-Verbose "CLT account Url = $CltAccountUrl" -Verbose
 $headers = InitializeRestHeaders
 
 $dropjson = ComposeTestDropJson $testName $runDuration $websiteUrl $vuLoad
+
 $drop = CreateTestDrop $headers $dropjson
+
 if ($drop.dropType -eq "InPlaceDrop")
 {
     $runJson = ComposeTestRunJson $testName $drop.id
 
+	Write-Output "Queuing test run"
     $run = QueueTestRun $headers $runJson
+	Write-Output "Test run queued"
     MonitorTestRun $headers $run
-    $webResultsUrl = GetTestRunUri $run.id $headers
+    $webResultsUrl = GetTestRunUri($run.id)
 	
     Write-Output ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name)
     Write-Output ("To view run details navigate to {0}" -f $webResultsUrl)
