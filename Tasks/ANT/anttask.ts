@@ -3,7 +3,6 @@ import path = require('path');
 import fs = require('fs');
 import os = require('os');
 import * as Q from "q";
-import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
 import javacommons = require('java-common/java-common');
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -81,90 +80,6 @@ function processAntOutputLine(line) {
 
 async function doWork() {
 
-    function execEnableCodeCoverage(): Q.Promise<string> {
-        return enableCodeCoverage()
-            .then(function (resp) {
-                tl.debug("Enabled code coverage successfully");
-                return "CodeCoverage_9064e1d0";
-            }).catch(function (err) {
-                tl.warning("Failed to enable code coverage: " + err);
-                return "";
-            });
-    };
-
-    function enableCodeCoverage(): Q.Promise<any> {
-        if (!isCodeCoverageOpted) {
-            return Q.resolve(true);
-        }
-
-        var classFilter: string = tl.getInput('classFilter');
-        var classFilesDirectories: string = tl.getInput('classFilesDirectories', true);
-        var sourceDirectories: string = tl.getInput('srcDirectories');
-        // appending with small guid to keep it unique. Avoiding full guid to ensure no long path issues.
-        var reportDirectoryName = "CCReport43F6D5EF";
-        reportDirectory = path.join(buildRootPath, reportDirectoryName);
-        var reportBuildFileName = "CCReportBuildA4D283EG.xml";
-        reportBuildFile = path.join(buildRootPath, reportBuildFileName);
-        var summaryFileName = "coverage.xml";
-        summaryFile = path.join(buildRootPath, reportDirectoryName);
-        summaryFile = path.join(summaryFile, summaryFileName);
-        var coberturaCCFile = path.join(buildRootPath, "cobertura.ser");
-        var instrumentedClassesDirectory = path.join(buildRootPath, "InstrumentedClasses");
-
-        // clean any previous reports.
-        try {
-            tl.rmRF(coberturaCCFile, true);
-            tl.rmRF(reportDirectory, true);
-            tl.rmRF(reportBuildFile, true);
-            tl.rmRF(instrumentedClassesDirectory, true);
-        } catch (err) {
-            tl.debug("Error removing previous cc files: " + err);
-        }
-
-        var buildProps: { [key: string]: string } = {};
-        buildProps['buildfile'] = antBuildFile;
-        buildProps['classfilter'] = classFilter
-        buildProps['classfilesdirectories'] = classFilesDirectories;
-        buildProps['sourcedirectories'] = sourceDirectories;
-        buildProps['summaryfile'] = summaryFileName;
-        buildProps['reportdirectory'] = reportDirectory;
-        buildProps['ccreporttask'] = "CodeCoverage_9064e1d0"
-        buildProps['reportbuildfile'] = reportBuildFile;
-
-        let ccEnabler = new CodeCoverageEnablerFactory().getTool("ant", ccTool.toLowerCase());
-        return ccEnabler.enableCodeCoverage(buildProps);
-    }
-
-    function publishCodeCoverage(codeCoverageOpted: boolean, ccReportTask: string) {
-        if (codeCoverageOpted && ccReportTask) {
-            tl.debug("Collecting code coverage reports");
-            var antRunner = tl.tool(anttool);
-            antRunner.arg('-buildfile');
-            if (pathExistsAsFile(reportBuildFile)) {
-                antRunner.arg(reportBuildFile);
-                antRunner.arg(ccReportTask);
-            }
-            else {
-                antRunner.arg(antBuildFile);
-                antRunner.arg(ccReportTask);
-            }
-            antRunner.exec().then(function (code) {
-                if (pathExistsAsFile(summaryFile)) {
-                    tl.debug("Summary file = " + summaryFile);
-                    tl.debug("Report directory = " + reportDirectory);
-                    tl.debug("Publishing code coverage results to TFS");
-                    var ccPublisher = new tl.CodeCoveragePublisher();
-                    ccPublisher.publish(ccTool, summaryFile, reportDirectory, "");
-                }
-                else {
-                    tl.warning("No code coverage results found to be published. This could occur if there were no tests executed or there was a build failure. Check the ant output for details.");
-                }
-            }).fail(function (err) {
-                tl.warning("No code coverage results found to be published. This could occur if there were no tests executed or there was a build failure. Check the ant output for details.");
-            });
-        }
-    }
-
     try {
         var anttool = tl.which('ant', true);
         var antv = tl.tool(anttool);
@@ -220,15 +135,12 @@ async function doWork() {
         var ccTool = tl.getInput('codeCoverageTool');
         var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
         var buildRootPath = path.dirname(antBuildFile);
-        
-        var summaryFile: string = null;
-        var reportDirectory: string = null;
-        var ccReportTask: string = null;
-        var reportBuildFile: string = null;
         var publishJUnitResults = tl.getInput('publishJUnitResults');
         var testResultsFiles = tl.getInput('testResultsFiles', true);
 
-        ccReportTask = await execEnableCodeCoverage();
+        if(isCodeCoverageOpted){
+            tl.warning(tl.loc('DiscontinueAntCodeCoverage'));
+        }
 
         await antv.exec();
         var buffer;
@@ -248,7 +160,6 @@ async function doWork() {
         antb.exec()
             .then(function (code) {
                 publishTestResults(publishJUnitResults, testResultsFiles);
-                publishCodeCoverage(isCodeCoverageOpted, ccReportTask);
                 tl.setResult(tl.TaskResult.Succeeded, "Task succeeded");
             })
             .fail(function (err) {
