@@ -6,6 +6,8 @@ import fs = require('fs');
 import os = require('os');
 import * as Q from "q";
 
+tl.setResourcePath(path.join(__dirname, 'task.json'));
+
 var isWindows = os.type().match(/^Win/);
 
 function pathExistsAsFile(path: string) {
@@ -182,7 +184,7 @@ async function doWork() {
         var testResultsFiles = tl.getInput('testResultsFiles', true);
 
         if(isCodeCoverageOpted){
-            tl.warning('We are discontinuing the support of Automated code coverage report generation for Ant projects. Please refer https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/ANT/README.md for more details.');
+            tl.warning(tl.loc('DiscontinueAntCodeCoverage'));
         }
 
         await antv.exec();

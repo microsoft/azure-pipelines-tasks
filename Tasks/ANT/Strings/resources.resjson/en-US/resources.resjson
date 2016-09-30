@@ -26,12 +26,6 @@
   "loc.input.label.jdkUserInputPath": "JDK Path",
   "loc.input.help.jdkUserInputPath": "Sets JAVA_HOME to the given path.",
   "loc.input.label.jdkArchitecture": "JDK Architecture",
-<<<<<<< HEAD
-  "loc.input.help.jdkArchitecture": "Optionally supply the architecture (x86, x64) of the JDK."
-=======
   "loc.input.help.jdkArchitecture": "Optionally supply the architecture (x86, x64) of the JDK.",
-  "loc.messages.LocateJVMBasedOnVersionAndArch": "Locate JAVA_HOME for Java %s %s",
-  "loc.messages.FailedToLocateSpecifiedJVM": "Failed to find specified JDK version. Please make sure environment variable '%s' exists and is set to the location of a corresponding JDK.",
   "loc.messages.DiscontinueAntCodeCoverage": "We are discontinuing the support of automated Code Coverage report generation for Ant projects. Please refer https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/ANT/README.md for more details."
->>>>>>> 2d2dd6a... added UT to verify warning
 }
