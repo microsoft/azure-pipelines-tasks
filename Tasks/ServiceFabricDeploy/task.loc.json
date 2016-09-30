@@ -254,6 +254,7 @@
     "PublishProfileRequiredServerThumbprint": "ms-resource:loc.messages.PublishProfileRequiredServerThumbprint",
     "PublishProfileRequiredAppParams": "ms-resource:loc.messages.PublishProfileRequiredAppParams",
     "PublishProfileRequiredUpgrade": "ms-resource:loc.messages.PublishProfileRequiredUpgrade",
+    "DefaultPortWarning": "ms-resource:loc.messages.DefaultPortWarning",
     "SFSDK_InvalidSFPackage": "ms-resource:loc.messages.SFSDK_InvalidSFPackage",
     "SFSDK_PackageValidationFailed": "ms-resource:loc.messages.SFSDK_PackageValidationFailed",
     "SFSDK_UnableToVerifyClusterConnection": "ms-resource:loc.messages.SFSDK_UnableToVerifyClusterConnection",
