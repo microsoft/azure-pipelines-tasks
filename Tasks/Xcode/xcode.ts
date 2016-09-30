@@ -284,6 +284,11 @@ async function run() {
                 xcodeArchive.argIf(xcode_codeSignIdentity, xcode_codeSignIdentity);
                 xcodeArchive.argIf(xcode_provProfile, xcode_provProfile);
 
+                if(useXcpretty) {
+                    var xcPrettyTool:ToolRunner = tl.tool(tl.which('xcpretty', true));
+                    xcPrettyTool.arg('--no-color');
+                    xcodeArchive.pipeExecOutputToTool(xcPrettyTool);
+                }
                 await xcodeArchive.exec();
 
                 var archiveFolders : string [] = tl.glob(archiveFolderRoot + '/**/*.xcarchive');
@@ -330,6 +335,11 @@ async function run() {
                         xcodeExport.arg(['-exportPath', exportPath]);
                         xcodeExport.argIf(exportOptionsPlist, ['-exportOptionsPlist', exportOptionsPlist]);
 
+                        if(useXcpretty) {
+                            var xcPrettyTool:ToolRunner = tl.tool(tl.which('xcpretty', true));
+                            xcPrettyTool.arg('--no-color');
+                            xcodeExport.pipeExecOutputToTool(xcPrettyTool);
+                        }
                         await xcodeExport.exec();
                     }
                 }
