@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 4
+    "Patch": 5
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -28,11 +28,23 @@
     },
     {
       "name": "versionSuffix",
+      "_name_comment": "Intentionally leaving the name as 'versionSuffix' in order to be backwards compatible",
       "type": "string",
       "label": "ms-resource:loc.input.label.versionSuffix",
       "defaultValue": ".$(Build.BuildNumber)",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.versionSuffix"
+      "required": true
+    },
+    {
+      "name": "versionBehavior",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.versionBehavior",
+      "defaultValue": "Append",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.versionBehavior",
+      "options": {
+        "Append": "Append",
+        "Replace": "Replace"
+      }
     },
     {
       "name": "updateOnlyChanged",
@@ -93,7 +105,7 @@
     "ItemSearchNoFilesFound": "ms-resource:loc.messages.ItemSearchNoFilesFound",
     "SearchingForApplicationPackage": "ms-resource:loc.messages.SearchingForApplicationPackage",
     "FoundApplicationPackage": "ms-resource:loc.messages.FoundApplicationPackage",
-    "VersionSuffixLabel": "ms-resource:loc.messages.VersionSuffixLabel",
+    "VersionValueLabel": "ms-resource:loc.messages.VersionValueLabel",
     "BuildNumberNotSpecified": "ms-resource:loc.messages.BuildNumberNotSpecified",
     "VstsRestApiFailed": "ms-resource:loc.messages.VstsRestApiFailed",
     "DownloadingArtifact": "ms-resource:loc.messages.DownloadingArtifact",
