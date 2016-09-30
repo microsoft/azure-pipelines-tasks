@@ -91,10 +91,10 @@ async function run() {
         if(actions.toString().indexOf('archive') < 0) {
             // redirect build output if archive action is not passed
             // xcodebuild archive produces an invalid archive if output is redirected
-            xcb.arg('DSTROOT=' + path.join(outPath, 'build.dst'));
-            xcb.arg('OBJROOT=' + path.join(outPath, 'build.obj'));
-            xcb.arg('SYMROOT=' + path.join(outPath, 'build.sym'));
-            xcb.arg('SHARED_PRECOMPS_DIR=' + path.join(outPath, 'build.pch'));
+            xcb.arg('DSTROOT=' + tl.resolve(outPath, 'build.dst'));
+            xcb.arg('OBJROOT=' + tl.resolve(outPath, 'build.obj'));
+            xcb.arg('SYMROOT=' + tl.resolve(outPath, 'build.sym'));
+            xcb.arg('SHARED_PRECOMPS_DIR=' + tl.resolve(outPath, 'build.pch'));
         }
         if (args) {
             xcb.line(args);
@@ -119,7 +119,7 @@ async function run() {
 
             if(tl.filePathSupplied('p12') && tl.exist(p12)) {
                 p12 = tl.resolve(workingDir, p12);
-                var keychain : string = path.join(workingDir, '_xcodetasktmp.keychain');
+                var keychain : string = tl.resolve(workingDir, '_xcodetasktmp.keychain');
                 var keychainPwd : string = '_xcodetask_TmpKeychain_Pwd#1';
 
                 //create a temporary keychain and install the p12 into that keychain
@@ -241,7 +241,7 @@ async function run() {
                 // use xcrun to package apps if xcodeversion is < 7
                 // or if workspace or scheme are not specified since we cannot create the archive
                 tl.debug('Packaging apps.');
-                var buildOutputPath : string = path.join(outPath, 'build.sym');
+                var buildOutputPath : string = tl.resolve(outPath, 'build.sym');
                 tl.debug('buildOutputPath: ' + buildOutputPath);
                 var appFolders : string [] = tl.glob(buildOutputPath + '/**/*.app');
                 if (appFolders) {
