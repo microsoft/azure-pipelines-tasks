@@ -31,7 +31,7 @@ async function run() {
         // Find location of curl 
         var curlPath: string = tl.which('curl');
         if (!curlPath) {
-            throw new Error('curl was not found in the path.');
+            throw new Error(tl.loc('CurlNotFound'));
         }
 
         // Prepare curl upload command line
@@ -64,12 +64,12 @@ async function run() {
 
             // Fail if no matching app files were found
             if (!uploadFilesList || uploadFilesList.length == 0) {
-                throw new Error('No matching files were found with search pattern: ' + filesPattern);
+                throw new Error(tl.loc('NoMatchingFilesFound', filesPattern));
             }
 
             var uploadFiles = '{' + uploadFilesList.join(',') + '}'
         }
-        tl.debug("uploading file(s): " + uploadFiles);
+        tl.debug(tl.loc('UploadingFiles', uploadFiles));
 
         curlRunner.arg('-T')
         // arrayify the arg so vsts-task-lib does not try to break args at space
