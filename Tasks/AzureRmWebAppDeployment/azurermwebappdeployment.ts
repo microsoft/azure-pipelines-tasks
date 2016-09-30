@@ -219,7 +219,7 @@ function fileExists(path): boolean {
  */
 function getSetParamFilePath(setParametersFile: string) : string {
 
-    if(!tl.filePathSupplied('SetParametersFile')) {
+    if((!tl.filePathSupplied('SetParametersFile')) || setParametersFile == tl.getVariable('System.DefaultWorkingDirectory')) {
         setParametersFile = null;
     }
     else if (!fileExists(setParametersFile)) {
