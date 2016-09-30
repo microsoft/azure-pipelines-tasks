@@ -1,6 +1,7 @@
 {
     "getVariable": {
         "System.DefaultWorkingDirectory": "/source/dir",
+        "build.sourcesdirectory": "/source/dir",
         "VS140COMNTools": "/vs/path"
     },
     "find": {
@@ -10,7 +11,7 @@
         ]
     },
     "match": {
-        "\\source\\TestResults\\*.trx": [
+        "\\source\\dir\\TestResults\\*.trx": [
             "a.trx"
         ]
     },
@@ -21,7 +22,7 @@
         }
     },
     "rmRF": {
-        "\\source\\TestResults": {
+        "\\source\\dir\\TestResults": {
             "success": true,
             "message": "success"
         }

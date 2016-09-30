@@ -42,17 +42,19 @@ try {
     var baseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
     var vstestDiagFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
     var useNewCollectorFlag = tl.getVariable('tia.useNewCollector');
+    var isPrFlow = tl.getVariable('tia.isPrFlow');
 
-    var useNewCollector = true;
-    if (useNewCollectorFlag && useNewCollectorFlag.toUpperCase() == "FALSE") {
-        useNewCollector = false;
+    var useNewCollector = false;
+    if (useNewCollectorFlag && useNewCollectorFlag.toUpperCase() == "TRUE") {
+        useNewCollector = true;
     }
 
-    var sourcesDirectory = tl.getVariable('System.DefaultWorkingDirectory');
+    var systemDefaultWorkingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
+    var artifactsDirectory = tl.getVariable('System.ArtifactsDirectory');
     var testAssemblyFiles = getTestAssemblies();
 
     if (testAssemblyFiles && testAssemblyFiles.size != 0) {
-        var workingDirectory = path.join(sourcesDirectory, "..");
+        var workingDirectory = sourcesDir && sourcesDir != '' ? systemDefaultWorkingDirectory : artifactsDirectory;
         getTestResultsDirectory(runSettingsFile, path.join(workingDirectory, 'TestResults')).then(function (resultsDirectory) {
             invokeVSTest(resultsDirectory)
                 .then(function (code) {
@@ -93,7 +95,7 @@ function getResolvedPattern(pattern: string): string {
         return pattern;
     }
     else {
-        return path.join(sourcesDirectory, pattern);
+        return path.join(systemDefaultWorkingDirectory, pattern);
     }
 }
 
@@ -110,7 +112,7 @@ function getTestAssemblies(): Set<string> {
     if (testAssembly.indexOf('*') >= 0 || testAssembly.indexOf('?') >= 0) {
         tl.debug('Pattern found in solution parameter.');
         let excludeTestAssemblies: string[] = [];
-        let allFiles = tl.find(sourcesDirectory);
+        let allFiles = tl.find(systemDefaultWorkingDirectory);
         let testAssemblyFilters = testAssembly.split(';');
         testAssemblyFilters.forEach(function (testAssemblyFilter) {
             let isExcludeFilter = testAssemblyFilter.startsWith('-:');
@@ -181,8 +183,8 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
     testAssemblyFiles.forEach(function (testAssembly) {
         var testAssemblyPath = testAssembly;
         //To maintain parity with the behaviour when test assembly was filepath, try to expand it relative to build sources directory.
-        if (sourcesDirectory && !pathExistsAsFile(testAssembly)) {
-            var expandedPath = path.join(sourcesDirectory, testAssembly);
+        if (systemDefaultWorkingDirectory && !pathExistsAsFile(testAssembly)) {
+            var expandedPath = path.join(systemDefaultWorkingDirectory, testAssembly);
             if (pathExistsAsFile(expandedPath)) {
                 testAssemblyPath = expandedPath;
             }
@@ -216,8 +218,8 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
             argsArray.push("/TestAdapterPath:\"" + path.dirname(pathtoCustomTestAdapters) + "\"");
         }
     }
-    else if (sourcesDirectory && isNugetRestoredAdapterPresent(sourcesDirectory)) {
-        argsArray.push("/TestAdapterPath:\"" + sourcesDirectory + "\"");
+    else if (systemDefaultWorkingDirectory && isNugetRestoredAdapterPresent(systemDefaultWorkingDirectory)) {
+        argsArray.push("/TestAdapterPath:\"" + systemDefaultWorkingDirectory + "\"");
     }
     addVstestDiagOption(argsArray);
     return argsArray;
@@ -336,6 +338,11 @@ function publishCodeChanges(): Q.Promise<string> {
     selectortool.arg("/SourcesDir:" + sourcesDir);
     selectortool.arg("/newprovider:" + newprovider);
     selectortool.arg("/BaseLineFile:" + baseLineBuildIdFile);
+
+    if (isPrFlow && isPrFlow.toUpperCase() == "TRUE") {
+        selectortool.arg("/IsPrFlow:" + "true");
+    }
+
     if (tiaRebaseLimit) {
         selectortool.arg("/RebaseLimit:" + tiaRebaseLimit);
     }
@@ -405,8 +412,8 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
 
     testAssemblyFiles.forEach(function (testAssembly) {
         var testAssemblyPath = testAssembly;
-        if (sourcesDirectory && !pathExistsAsFile(testAssembly)) {
-            var expandedPath = path.join(sourcesDirectory, testAssembly);
+        if (systemDefaultWorkingDirectory && !pathExistsAsFile(testAssembly)) {
+            var expandedPath = path.join(systemDefaultWorkingDirectory, testAssembly);
             if (pathExistsAsFile(expandedPath)) {
                 testAssemblyPath = expandedPath;
             }
@@ -429,8 +436,8 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
             argsArray.push("/TestAdapterPath:\"" + path.dirname(pathtoCustomTestAdapters) + "\"");
         }
     }
-    else if (sourcesDirectory && isNugetRestoredAdapterPresent(sourcesDirectory)) {
-        argsArray.push("/TestAdapterPath:\"" + sourcesDirectory + "\"");
+    else if (systemDefaultWorkingDirectory && isNugetRestoredAdapterPresent(systemDefaultWorkingDirectory)) {
+        argsArray.push("/TestAdapterPath:\"" + systemDefaultWorkingDirectory + "\"");
     }
 
     if ((otherConsoleOptions && otherConsoleOptions.toLowerCase().indexOf("usevsixextensions:true") != -1) || (pathtoCustomTestAdapters && pathtoCustomTestAdapters.toLowerCase().indexOf("usevsixextensions:true") != -1)) {
@@ -650,6 +657,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
 }
 
 function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
+    var defer = Q.defer<number>();
     if (vsTestVersion.toLowerCase() == "latest") {
         vsTestVersion = null;
     }
@@ -661,7 +669,8 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                         vstestLocation = getVSTestLocation(vsVersion);
                     } catch (e) {
                         tl.error(e.message);
-                        return Q.resolve(1);
+                        defer.resolve(1);
+                        return defer.promise;
                     }
                     setupSettingsFileForTestImpact(vsVersion, overriddenSettingsFile)
                         .then(function (runSettingswithTestImpact) {
@@ -670,33 +679,33 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                                 .then(function (parallelRunSettingsFile) {
                                     runVStest(testResultsDirectory, parallelRunSettingsFile, vsVersion)
                                         .then(function (code) {
-                                            return Q.resolve(code);
+                                            defer.resolve(code);
                                         })
                                         .fail(function (code) {
-                                            return Q.resolve(code);
+                                            defer.resolve(code);
                                         });
                                 })
                                 .fail(function (err) {
                                     tl.error(err);
-                                    return Q.resolve(1);
+                                    defer.resolve(1);
                                 });
                         })
                         .fail(function (err) {
                             tl.error(err);
-                            return Q.resolve(1);
+                            defer.resolve(1);
                         });
                 })
                 .fail(function (err) {
                     tl.error(err);
-                    return Q.resolve(1);
+                    defer.resolve(1);
                 });
         })
         .fail(function (err) {
             tl.error(err);
-            return Q.resolve(1);
+            defer.resolve(1);
         });
 
-    return Q.resolve(1);
+    return defer.promise;
 }
 
 function publishTestResults(testResultsDirectory: string) {

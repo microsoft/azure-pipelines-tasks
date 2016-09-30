@@ -1,6 +1,7 @@
 {
     "getVariable": {
         "System.DefaultWorkingDirectory": "/source/dir",
+        "build.sourcesdirectory": "/source/dir",
         "VS150COMNTools": "/vs/path",
         "VS140COMNTools": "/vs/path",
         "VS120COMNTools": "/vs/path"
@@ -20,7 +21,7 @@
             "some/path/two",
             "some/path/three"
         ],
-        "\\source\\TestResults\\*.trx": [
+        "\\source\\dir\\TestResults\\*.trx": [
             "a.trx"
         ],
         "**\\packages\\**\\*TestAdapter.dll": []
@@ -68,7 +69,7 @@
         }
     },
     "rmRF": {
-        "\\source\\TestResults": {
+        "\\source\\dir\\TestResults": {
             "success": true,
             "message": "success"
         }
