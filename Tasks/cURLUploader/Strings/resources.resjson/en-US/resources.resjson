@@ -17,5 +17,8 @@
   "loc.input.label.redirectStderr": "Redirect Standard Error to Standard Out",
   "loc.input.help.redirectStderr": "Adds '--stderr -' as an argument to cURL. By default, cURL writes its progress bar to stderr, which is interpreted by the build as error output. Enabling this checkbox suppresses that behavior.",
   "loc.messages.CurlReturnCode": "curl exited with return code: %d",
-  "loc.messages.CurlFailed": "curl failed with error: %s"
+  "loc.messages.CurlFailed": "curl failed with error: %s",
+  "loc.messages.NoMatchingFilesFound": "No matching files were found with search pattern: %s",
+  "loc.messages.UploadingFiles": "uploading file(s): %s",
+  "loc.messages.CurlNotFound": "curl was not found in the path"
 }
