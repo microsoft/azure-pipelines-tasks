@@ -35,7 +35,7 @@ export function findFiles(pattern: any, includeDir: boolean, cwd?: string): stri
 
 function appendCwd(filterPattern: string[], cwd: string): string[] {
     let result: string[] = [];
-    filterPattern.forEach(p => p.startsWith('*') ? result.push(path.join(cwd, p)) : result.push(p));
+    filterPattern.forEach(p => result.push(path.isAbsolute(p) ? p : path.join(cwd, p)));
     return result;
 }
 
