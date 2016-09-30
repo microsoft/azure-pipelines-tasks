@@ -68,7 +68,7 @@ async function run() {
             if(jsonVariableSubsFlag) {
                 jsonVariableSubs.jsonVariableSubstitution(folderPath, jsonVariableSubsFiles);
             }
-            webDeployPkg = (isFolderBasedDeployment) ? folderPath : await zipUtility.archiveFolder(webDeployPkg, tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package.zip')
+            webDeployPkg = (isFolderBasedDeployment) ? folderPath : await zipUtility.archiveFolder(folderPath, tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package.zip')
         }
 
         if(canUseWebDeploy(useWebDeploy)) {
