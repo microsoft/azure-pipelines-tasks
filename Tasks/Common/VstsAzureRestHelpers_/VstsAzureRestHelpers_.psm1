@@ -192,7 +192,7 @@ function Get-AzStorageKeys
     
     try
     {
-        $subscriptionId = $endpoint.Data.SubscriptionId
+        $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
         $azureUri = Get-AzureUri $endpoint
 
         $uri="$azureUri/$subscriptionId/services/storageservices/$storageAccountName/keys"
@@ -356,7 +356,7 @@ function Get-AzStorageAccount
 
     try
     {
-        $subscriptionId = $endpoint.Data.SubscriptionId
+        $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
         $azureUri = Get-AzureUri $endpoint
 
         $uri="$azureUri/$subscriptionId/services/storageservices/$storageAccountName"
@@ -452,7 +452,7 @@ function Get-AzRmResourceGroup
     try
     {
         $accessToken = Get-SpnAccessToken $endpoint
-        $subscriptionId = $endpoint.Data.SubscriptionId
+        $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
 
         $method="GET"
         $uri = "$script:azureRmUri/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName" + '?api-version=2016-02-01'
@@ -491,7 +491,7 @@ function Get-AzureSqlDatabaseServerResourceId
           [Object] [Parameter(Mandatory = $true)] $accessToken)
 
     $serverType = "Microsoft.Sql/servers"
-    $subscriptionId = $endpoint.Data.SubscriptionId
+    $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
 
     Write-Verbose "[Azure Rest Call] Get Resource Groups"
     $method = "GET"
@@ -519,7 +519,7 @@ function Add-LegacyAzureSqlServerFirewall
           [String] [Parameter(Mandatory = $true)] $serverName,
           [String] [Parameter(Mandatory = $true)] $firewallRuleName)
 
-    $subscriptionId = $endpoint.Data.SubscriptionId
+    $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
     $azureUri = Get-AzureUri $endpoint
 
     $uri = "$azureUri/$subscriptionId/services/sqlservers/servers/$serverName/firewallrules"
@@ -582,7 +582,7 @@ function Remove-LegacyAzureSqlServerFirewall
           [String] [Parameter(Mandatory = $true)] $serverName,
           [String] [Parameter(Mandatory = $true)] $firewallRuleName)
 
-    $subscriptionId = $endpoint.Data.SubscriptionId
+    $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
     $azureUri = Get-AzureUri $endpoint
     $uri = "$azureUri/$subscriptionId/services/sqlservers/servers/$serverName/firewallrules/$firewallRuleName"
 
