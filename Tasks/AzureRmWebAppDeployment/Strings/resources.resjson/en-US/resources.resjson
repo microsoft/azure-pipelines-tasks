@@ -42,7 +42,7 @@
   "loc.input.label.JSONVariableSubstitutionsFlag": "JSON Variable Substitutions",
   "loc.input.help.JSONVariableSubstitutionsFlag": "Enable this option for JSON variable Substitution",
   "loc.input.label.JSONVariableSubstitutions": "Variable Substitution",
-  "loc.input.help.JSONVariableSubstitutions": "Provide a line separated list of JSON files for substituting variables in them. The files names are relative to the root folder. For substituting JSON variables that are in a hierarchy, specify them using the format Data.DefaultConnection.ConnectionString in the Environment/Definition variable.  If same variables are defined in the Definition and Environment, then the Environment variables will supersede the Definition variables. Variable Substitution is run after Config Transforms.",
+  "loc.input.help.JSONVariableSubstitutions": "Provide a line separated list of JSON files for substituting variables in them. The files names are relative to the root folder. For substituting JSON variables that are in a hierarchy, specify them using the format Data.DefaultConnection.ConnectionString in the Environment/Definition variable.  If same variables are defined in the Definition and Environment, then the Environment variables will supersede the Definition variables. Variable Substitution is run after Config Transforms. Build/Release/System defintion variables are eliminated in substitution.",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "Invalid webapp package or folder path provided: %s",
   "loc.messages.SetParamFilenotfound0": "Set parameters file not found: %s",
   "loc.messages.GotconnectiondetailsforazureRMWebApp0": "Got connection details for azureRM WebApp:'%s'",
