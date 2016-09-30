@@ -93,6 +93,14 @@ describe('Code Coverage enable tool tests', function () {
         done();
     });
 
+    it('Search simple pattern (relative path)', (done) => {
+        let test = ff.findFiles('..\\_test\\Tests\\L0\\Common-FindFiles-Legacy\\data\\*.log');
+        assert(test.length === 2, 'count should be 2');
+        assert(test[0] === posixFormat(path.join(data, 'a.log')));
+        assert(test[1] === posixFormat(path.join(data, 'b.log')));
+        done();
+    });
+
 });
 
 function posixFormat(p: string): string {
