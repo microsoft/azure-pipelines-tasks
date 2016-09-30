@@ -1,15 +1,14 @@
-/// <reference path="../../definitions/node.d.ts" />
-/// <reference path="../../definitions/Q.d.ts" />
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
+/// <reference path="typings/index.d.ts" />
 
 import path = require('path');
 import tl = require('vsts-task-lib/task');
+import trm = require('vsts-task-lib/toolrunner');
 
 async function run() {
     try {    
         tl.setResourcePath(path.join( __dirname, 'task.json'));
 
-        var bash = tl.createToolRunner(tl.which('bash', true));
+        var bash: trm.ToolRunner  = tl.tool(tl.which('bash', true));
 
         var scriptPath: string = tl.getPathInput('scriptPath', true, true);
         var cwd: string = tl.getPathInput('cwd', true, false);
@@ -22,10 +21,10 @@ async function run() {
         tl.mkdirP(cwd);
         tl.cd(cwd);
 
-        bash.pathArg(scriptPath);
+        bash.arg(scriptPath);
 
         // additional args should always call argString.  argString() parses quoted arg strings
-        bash.argString(tl.getInput('args', false));
+        bash.line(tl.getInput('args', false));
 
         // determines whether output to stderr will fail a task.
         // some tools write progress and other warnings to stderr.  scripts can also redirect.
@@ -35,6 +34,7 @@ async function run() {
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('BashReturnCode', code));
     }
     catch(err) {
+        tl.error(err.message);
         tl.setResult(tl.TaskResult.Failed, tl.loc('BashFailed', err.message));
     }    
 }

@@ -1,5 +1,22 @@
 {
-  "devDependencies": {
-    "vsts-task-lib": "0.9.17"
+  "name": "vsts-tasks-xcode",
+  "version": "1.0.0",
+  "description": "VSTS Xcode Task",
+  "main": "xcode.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "vsts-task-lib": "^0.9.20"
   }
 }

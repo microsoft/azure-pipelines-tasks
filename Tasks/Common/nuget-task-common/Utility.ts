@@ -1,4 +1,3 @@
-import * as os from "os";
 import * as path from "path";
 
 import * as tl from "vsts-task-lib/task";
@@ -45,7 +44,7 @@ export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEm
 }
 
 export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: boolean): string[] {
-    let isWindows = os.platform() === "win32";
+    let isWindows = tl.osType() === 'Windows_NT';
 
     // Resolve files for the specified value or pattern
     let filesList: string[];
@@ -147,4 +146,15 @@ export function getBundledNuGetLocation(version: string): string {
         return path.join(__dirname, 'NuGet/3.3.0/NuGet.exe');
     }
     throw new Error(tl.loc("NGCommon_UnabletoDetectNuGetVersion"));
+}
+
+export function locateCredentialProvider(): string {
+    return path.join(__dirname, 'NuGet/CredentialProvider'); 
+}
+
+// set the console code page to "UTF-8"
+export function setConsoleCodePage() {
+    if (tl.osType() === 'Windows_NT') {
+        tl.execSync(path.resolve(process.env.windir, "system32", "chcp.com"), ["65001"]);
+    }
 }

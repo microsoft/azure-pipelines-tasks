@@ -283,14 +283,12 @@ describe('AzureRmWebAppDeployment Suite', function() {
         
         tr.run()
             .then(() => {
-
                 assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
                 var expectedErr = 'More than one package matched with specified pattern. Please restrain the search patern.'; 
                 assert(tr.stdErrContained(expectedErr), 'should have said: ' + expectedErr); 
                 assert(tr.failed, 'task should have failed');
                 done();
-
             })
             .fail((err) => {
                 done(err);

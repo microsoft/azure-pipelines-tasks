@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 90
+    "Patch": 91
   },
   "demands": [
     "azureps"
@@ -166,6 +166,20 @@
       "visibleRule": "action = Create Or Update Resource Group"
     },
     {
+      "name": "deploymentMode",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.deploymentMode",
+      "defaultValue": "Incremental",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.deploymentMode",
+      "options": {
+        "Validation": "Validation Only",
+        "Incremental": "Incremental",
+        "Complete": "Complete"
+      },
+      "visibleRule": "action = Create Or Update Resource Group"
+    },
+    {
       "name": "enableDeploymentPrerequisitesForCreate",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.enableDeploymentPrerequisitesForCreate",
@@ -182,20 +196,6 @@
       "visibleRule": "action = Select Resource Group",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.enableDeploymentPrerequisitesForSelect"
-    },
-    {
-      "name": "deploymentMode",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.deploymentMode",
-      "defaultValue": "Incremental",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.deploymentMode",
-      "options": {
-        "Validation": "Validation Only",
-        "Incremental": "Incremental",
-        "Complete": "Complete"
-      },
-      "visibleRule": "action = Create Or Update Resource Group"
     },
     {
       "name": "outputVariable",

@@ -12,5 +12,7 @@
   "loc.input.label.outFile": "Decrypted File Path",
   "loc.input.help.outFile": "Optional filename for decrypted file. Defaults to the Encrypted File with a \".out\" extension",
   "loc.input.label.cwd": "Working Directory",
-  "loc.input.help.cwd": "Working directory for decryption. Defaults to the root of the repository."
+  "loc.input.help.cwd": "Working directory for decryption. Defaults to the root of the repository.",
+  "loc.messages.OpenSSLReturnCode": "openssl exited with return code: %d",
+  "loc.messages.OpenSSLFailed": "openssl failed with error: %s"
 }
