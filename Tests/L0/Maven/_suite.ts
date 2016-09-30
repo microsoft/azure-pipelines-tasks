@@ -1347,8 +1347,7 @@ describe('Maven Suite', function () {
                 var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
 
                 // Test files copied for root module, build 1
-                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_checkstyle-result_Checkstyle.xml');
-                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_checkstyle_Checkstyle.html');
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_checkstyle_Checkstyle.xml');
 
                 done();
             })
@@ -1592,8 +1591,7 @@ describe('Maven Suite', function () {
                 var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
 
                 // Test files copied for root module, build 1
-                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_checkstyle-result_Checkstyle.xml');
-                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_checkstyle_Checkstyle.html');
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_checkstyle_Checkstyle.xml');
                 assertFileExistsInDir(codeAnalysisStgDir, 'root/1_findbugs_FindBugs.xml');
                 assertFileExistsInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.html');
                 assertFileExistsInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.xml');
@@ -1669,8 +1667,7 @@ describe('Maven Suite', function () {
                 var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
 
                 // No files should have been copied since they all report no violations
-                assertFileDoesNotExistInDir(codeAnalysisStgDir, 'root/1_checkstyle-result_Checkstyle.xml');
-                assertFileDoesNotExistInDir(codeAnalysisStgDir, 'root/1_checkstyle_Checkstyle.html');
+                assertFileDoesNotExistInDir(codeAnalysisStgDir, 'root/1_checkstyle_Checkstyle.xml');
                 assertFileDoesNotExistInDir(codeAnalysisStgDir, 'root/1_findbugs_FindBugs.xml');
                 assertFileDoesNotExistInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.html');
                 assertFileDoesNotExistInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.xml');
@@ -1746,8 +1743,7 @@ describe('Maven Suite', function () {
                 var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
 
                 // Test files copied for root module, build 1
-                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_checkstyle-result_Checkstyle.xml');
-                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_checkstyle_Checkstyle.html');
+                assertFileExistsInDir(codeAnalysisStgDir, 'root/1_checkstyle_Checkstyle.xml');
                 assertFileExistsInDir(codeAnalysisStgDir, 'root/1_findbugs_FindBugs.xml');
                 assertFileExistsInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.html');
                 assertFileExistsInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.xml');

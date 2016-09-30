@@ -1,11 +1,4 @@
 {
-    "common": [
-        {
-            "module": "../Common/find-files-legacy",
-            "type": "node",
-            "compile": true
-        }
-    ],
     "externals": {
         "archivePackages": [
             {

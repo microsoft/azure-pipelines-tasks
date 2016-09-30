@@ -1,3 +1,4 @@
+import * as os from "os";
 import * as path from "path";
 import * as url from "url";
 import * as tl from "vsts-task-lib/task";
@@ -68,13 +69,13 @@ export class NuGetToolRunner extends ToolRunner {
     private settings: NuGetEnvironmentSettings;
 
     constructor(nuGetExePath: string, settings: NuGetEnvironmentSettings) {
-        if (tl.osType() === 'Windows_NT' || !nuGetExePath.trim().toLowerCase().endsWith(".exe")) {
+        if (os.platform() === "win32" || !nuGetExePath.trim().toLowerCase().endsWith(".exe")) {
             super(nuGetExePath);
         }
         else {
             let monoPath = tl.which("mono", true);
             super(monoPath);
-            this.arg(nuGetExePath);
+            this.pathArg(nuGetExePath);
         }
 
         this.settings = settings;
@@ -144,7 +145,7 @@ function locateTool(tool: string, opts?: LocateOptions) {
 
 export function locateNuGetExe(userNuGetExePath: string): string {
     if (userNuGetExePath) {
-        if (tl.osType() === 'Windows_NT') {
+        if (os.platform() === "win32") {
             userNuGetExePath = ngutil.stripLeadingAndTrailingQuotes(userNuGetExePath);
         }
 
@@ -154,7 +155,7 @@ export function locateNuGetExe(userNuGetExePath: string): string {
     }
 
     let toolPath = locateTool("NuGet", {
-        fallbackToSystemPath: tl.osType() !== 'Windows_NT',
+        fallbackToSystemPath: os.platform() !== "win32",
         toolFilenames: ["nuget.exe", "NuGet.exe", "nuget", "NuGet"],
     });
 
@@ -267,4 +268,8 @@ export function isCredentialConfigEnabled(quirks: NuGetQuirks): boolean {
 
     tl.debug("Credential config is enabled.");
     return true;
+}
+
+export function locateCredentialProvider(): string {
+    return path.join(__dirname, 'NuGet/CredentialProvider');
 }

@@ -1,4 +1,5 @@
 ﻿import * as fs from "fs";
+import * as os from "os";
 import * as path from "path";
 import * as Q from "q";
 import * as tl from "vsts-task-lib/task";
@@ -123,7 +124,7 @@ export class NuGetConfigHelper {
             nugetTool.arg("-Name");
             nugetTool.arg(source.feedName);
             nugetTool.arg("-ConfigFile");
-            nugetTool.arg(this.tempNugetConfigPath);
+            nugetTool.pathArg(this.tempNugetConfigPath);
 
             // short run, use execSync 
             nugetTool.execSync();
@@ -146,9 +147,9 @@ export class NuGetConfigHelper {
             nugetTool.arg("-Password");
             nugetTool.arg(this.authInfo.accessToken);
             nugetTool.arg("-ConfigFile");
-            nugetTool.arg(this.tempNugetConfigPath);
+            nugetTool.pathArg(this.tempNugetConfigPath);
 
-            if (tl.osType() !== 'Windows_NT') {
+            if (os.platform() !== "win32") {
                 // only Windows supports DPAPI. Older NuGets fail to add credentials at all if DPAPI fails. 
                 nugetTool.arg("-StorePasswordInClearText");
             }

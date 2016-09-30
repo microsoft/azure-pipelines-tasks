@@ -38,7 +38,7 @@
         "Npm",
         "NuGetInstaller",
         "NugetPackager",
-        "NuGetPublisher",
+        "NugetPublisher",
         "powerShell",
         "PowerShellOnTargetMachines",
         "PublishBuildArtifacts",

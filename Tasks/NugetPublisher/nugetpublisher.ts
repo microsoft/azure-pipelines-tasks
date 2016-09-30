@@ -27,7 +27,10 @@ async function main(): Promise<void> {
     try {
         tl.setResourcePath(path.join(__dirname, "task.json"));
 
-        nutil.setConsoleCodePage();
+        // set the console code page to "UTF-8"
+        if (process.platform === "win32") {
+            tl.execSync(path.resolve(process.env.windir, "system32", "chcp.com"), ["65001"]);
+        }
 
         // read inputs
         let searchPattern = tl.getPathInput("searchPattern", true, false);
@@ -81,7 +84,7 @@ async function main(): Promise<void> {
         let serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
 
         //find nuget location to use
-        let credProviderPath = nutil.locateCredentialProvider();
+        let credProviderPath = ngToolRunner.locateCredentialProvider();
 
         const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
 
@@ -168,7 +171,7 @@ function publishPackageAsync(packageFile: string, options: PublishOptions): Q.Pr
 
     nugetTool.arg("-NonInteractive");
 
-    nugetTool.arg(packageFile);
+    nugetTool.pathArg(packageFile);
 
     nugetTool.arg(["-Source", options.feedUri]);
 
@@ -176,7 +179,7 @@ function publishPackageAsync(packageFile: string, options: PublishOptions): Q.Pr
 
     if (options.configFile) {
         nugetTool.arg("-ConfigFile");
-        nugetTool.arg(options.configFile);
+        nugetTool.pathArg(options.configFile);
     }
 
     if (options.verbosity && options.verbosity !== "-") {

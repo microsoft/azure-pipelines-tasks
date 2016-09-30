@@ -171,7 +171,7 @@
             "label": "Deployment Mode",
             "defaultValue": "Incremental",
             "required": true,
-            "helpMarkDown": "Incremental mode handles deployments as incremental updates to the resource group . It leaves unchanged resources that exist in the resource group but are not specified in the template. \n\n Complete mode deletes resources that are not in your template. \n\n Validate mode enables you to find problems with the template before creating actual resources. \n\n By default, Incremental mode is used.",
+            "helpMarkDown": "Incremental mode handles deployments as incremental updates to the resource group . It leaves unchanged resources that exist in the resource group but are not specified in the template. Complete mode deletes resources that are not in your template. \n\n By default, incremental mode is used. \n\n Validate mode enables you to find problems with the template before creating actual resources.",
             "options": {
                 "Validation": "Validation Only",
                 "Incremental" : "Incremental",

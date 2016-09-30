@@ -101,25 +101,4 @@ export class CheckstyleTool extends BaseTool {
 
         return [violationCount, fileCount];
     }
-
-    protected findHtmlReport(xmlReport: string): string {
-
-        var dirName = path.dirname(xmlReport);
-        var htmlReports;
-
-        // On certain build engines Checkstyle produces an HTML file called "checkstyle.html". If we find it, return it.
-        htmlReports = glob.sync(path.join(dirName, '**', 'checkstyle.html'));
-        if (htmlReports.length > 0) {
-            return htmlReports[0];
-        }
-
-        // Otherwise, look for an HTML report with the same name as the XML report.
-        var reportName = path.basename(xmlReport, '.xml');
-        htmlReports = glob.sync(path.join(dirName, '**', reportName + '.html'));
-        if (htmlReports.length > 0) {
-            return htmlReports[0];
-        }
-
-        return null;
-    }
 }

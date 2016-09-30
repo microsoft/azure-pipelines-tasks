@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 72
+        "Patch": 71
     },
     "demands": [
         "vstest"
@@ -110,7 +110,7 @@
             "name": "runAllTestsAfterXBuilds",
             "type": "string",
             "label": "Number Of Builds After Which To Run All Tests:",
-            "defaultValue": "50",
+            "defaultValue": "",
             "required": false,
             "helpMarkDown": "Number of builds after which to automatically run all tests. Test Impact Analysis stores the mapping between test cases and source code. It is recommended to regenerate the mapping by running all tests, on a regular basis.",
             "groupName": "tiaOptions"
