@@ -216,14 +216,11 @@ export class SonarQubeMetrics {
             .then((isDone:boolean) => {
                 // If done on the first try, return fast
                 if (isDone) {
-                    return isDone;
+                    return Q.resolve(true);
                 }
 
                 // Otherwise, setup the delayed/repeating wait task
                 return this.setupTaskCompleteWait(timeout, delay);
-            })
-            .then((isDone:boolean) => { // This block required to avoid Promise<Promise<boolean>> return type
-                return isDone;
             });
     }
 
