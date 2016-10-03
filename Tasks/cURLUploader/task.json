@@ -9,7 +9,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 17
+        "Patch": 18
     },
     "demands": [
         "curl"
@@ -81,6 +81,9 @@
     },
     "messages": {
         "CurlReturnCode": "curl exited with return code: %d",
-        "CurlFailed": "curl failed with error: %s"
+        "CurlFailed": "curl failed with error: %s",
+        "NoMatchingFilesFound": "No matching files were found with search pattern: %s",
+        "UploadingFiles": "Uploading file(s): %s",
+        "CurlNotFound": "curl was not found in the PATH."
     }    
 }

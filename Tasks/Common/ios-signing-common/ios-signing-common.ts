@@ -4,7 +4,7 @@ import Q = require('q');
 import tl = require('vsts-task-lib/task');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
 
-var userProvisioningProfilesPath = path.join(tl.getVariable('HOME'), 'Library', 'MobileDevice', 'Provisioning Profiles');
+var userProvisioningProfilesPath = tl.resolve(tl.getVariable('HOME'), 'Library', 'MobileDevice', 'Provisioning Profiles');
 
 /**
  * Creates a temporary keychain and installs the P12 cert in the temporary keychain
@@ -63,7 +63,7 @@ export async function installCertInTemporaryKeychain(keychainPath : string, keyc
         //login keychain is not in the search path,
         //this might have happened with the 2.1.21 version of Xcode task
         //add it back explicitly, this can be removed after a couple of sprints
-        allKeychainsArr.push(path.join(tl.getVariable('HOME'), 'Library', 'Keychains', 'login.keychain'));
+        allKeychainsArr.push(tl.resolve(tl.getVariable('HOME'), 'Library', 'Keychains', 'login.keychain'));
     }
 
     //add the temporary keychain to list path along with existing keychains
@@ -227,7 +227,7 @@ export async function deleteProvisioningProfile(uuid: string) {
 }
 
 function getProvisioningProfilePath(uuid: string) : string {
-    return path.join(userProvisioningProfilesPath, uuid.trim().concat('.mobileprovision'));
+    return tl.resolve(userProvisioningProfilesPath, uuid.trim().concat('.mobileprovision'));
 }
 
 /**

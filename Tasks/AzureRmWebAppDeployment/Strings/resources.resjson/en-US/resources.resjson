@@ -80,5 +80,6 @@
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "More than one package matched with specified pattern. Please restrain the search patern.",
   "loc.messages.UpgradeAgent": "Task requires a 2.104.1 agent or higher. Please upgrade the agent",
   "loc.messages.NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern",
-  "loc.messages.JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "JSON variable substitution can only be applied for JSON files"
+  "loc.messages.JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "JSON variable substitution can only be applied for JSON files",
+  "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected."
 }
