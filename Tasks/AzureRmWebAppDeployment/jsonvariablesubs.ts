@@ -18,9 +18,6 @@ function createEnvTree() {
         child: {}
     };
     var envVariables = tl.getVariables();
-    if(envVariables.length == 0) {
-        throw new Error(tl.loc('UpgradeAgent'));
-    }
     for(let envVariable of envVariables) {
         var envVarTreeIterator = envVarTree;
         if(isPredefinedVariable(envVariable.name)) {
