@@ -25,7 +25,7 @@ describe('Publish Test Results Suite', function () {
     });
 
     it('Publish test results with resultFiles filter that does not match with any files', (done) => {
-                
+
         let tr = new trm.TaskRunner('PublishTestResults');
 
         tr.setInput('testRunner', 'JUnit');
@@ -45,7 +45,7 @@ describe('Publish Test Results Suite', function () {
     })
 
     it('Publish test results with resultFiles filter that matches with some files', (done) => {
-                
+
         let tr = new trm.TaskRunner('PublishTestResults');
         let pattern = path.join(__dirname, 'data', '*TEST.xml');
 
@@ -66,7 +66,7 @@ describe('Publish Test Results Suite', function () {
     })
 
     it('Publish test results with resultFiles as file path', (done) => {
-                
+
         let tr = new trm.TaskRunner('PublishTestResults');
         let pattern = path.join(__dirname, 'data', 'junit1TEST.xml');
 
@@ -87,7 +87,7 @@ describe('Publish Test Results Suite', function () {
 
     it('Publish test results when test result files input is not provided', (done) => {
 
-        var tr = new trm.TaskRunner('PublishTestResults');
+        let tr = new trm.TaskRunner('PublishTestResults');
         tr.setInput('testRunner', 'Junit');
 
         tr.run()
@@ -107,7 +107,7 @@ describe('Publish Test Results Suite', function () {
 
     it('Publish test results when test runner type input is not provided', (done) => {
 
-        var tr = new trm.TaskRunner('PublishTestResults');
+        let tr = new trm.TaskRunner('PublishTestResults');
         tr.setInput('testResultsFiles', '/file.xml');
 
         tr.run()
