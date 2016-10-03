@@ -50,6 +50,13 @@ try {
     if (useNewCollectorFlag && useNewCollectorFlag.toUpperCase() == "TRUE") {
         useNewCollector = true;
     }
+    
+    var releaseuri = tl.getVariable("release.releaseUri")
+	var context = "CI";
+	if(releaseuri)
+	{
+		context = "CD";
+	}
 
     var systemDefaultWorkingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
     var artifactsDirectory = tl.getVariable('System.ArtifactsDirectory');
@@ -268,7 +275,18 @@ function generateResponseFile(discoveredTests: string): Q.Promise<string> {
     selectortool.arg("GetImpactedtests");
     selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
     selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
-    selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
+
+    if(context == "CD")
+	{	
+        // Release context. Passing Release Id.
+        selectortool.arg("/buildid:" + tl.getVariable("Release.ReleaseId"));	
+	}
+	else
+	{
+        // Build context. Passing build id.
+        selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
+	}
+    
     selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
     selectortool.arg("/responsefile:" + respFile);
     selectortool.arg("/DiscoveredTests:" + discoveredTests);
@@ -277,6 +295,9 @@ function generateResponseFile(discoveredTests: string): Q.Promise<string> {
     selectortool.arg("/BaseLineFile:" + baseLineBuildIdFile);
     selectortool.arg("/platform:" + platform);
     selectortool.arg("/configuration:" + configuration);
+    selectortool.arg("/releaseuri:" + tl.getVariable("release.releaseUri"));
+    selectortool.arg("/releaseenvuri:" + tl.getVariable("release.environmentUri"));
+	selectortool.arg("/Context:" + context);
 
     selectortool.exec()
         .then(function (code) {
@@ -307,8 +328,19 @@ function publishCodeChanges(): Q.Promise<string> {
     selectortool.arg("PublishCodeChanges");
     selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
     selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
+
+    if(context == "CD")
+	{	
+        // Release context. Passing Release Id.
+        selectortool.arg("/buildid:" + tl.getVariable("Release.ReleaseId"));	
+	}
+	else
+	{
+        // Build context. Passing build id.
+        selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
+	}
+
     selectortool.arg("/Definitionid:" + tl.getVariable("System.DefinitionId"));
-    selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
     selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
     selectortool.arg("/SourcesDir:" + sourcesDir);
     selectortool.arg("/newprovider:" + newprovider);
@@ -321,7 +353,8 @@ function publishCodeChanges(): Q.Promise<string> {
     if (tiaRebaseLimit) {
         selectortool.arg("/RebaseLimit:" + tiaRebaseLimit);
     }
-
+    selectortool.arg("/Context:" + context);
+    
     selectortool.exec()
         .then(function (code) {
             endTime = perf();
@@ -888,13 +921,25 @@ function pushImpactLevelAndRootPathIfNotFound(dataCollectorArray): void {
                 dataCollectorArray[i] = { Configuration: {} };
             }
             if (dataCollectorArray[i].Configuration.TestImpact && !dataCollectorArray[i].Configuration.RootPath) {
-                dataCollectorArray[i].Configuration = { RootPath: sourcesDir };
+                if (context && context == "CD")
+                {
+                    dataCollectorArray[i].Configuration = { RootPath: "" };
+                }
+                else{
+                    dataCollectorArray[i].Configuration = { RootPath: sourcesDir };
+                }
             }
             else if (!dataCollectorArray[i].Configuration.TestImpact && dataCollectorArray[i].Configuration.RootPath) {
                 dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel() };
             }
             else if (dataCollectorArray[i].Configuration && !dataCollectorArray[i].Configuration.TestImpact && !dataCollectorArray[i].Configuration.RootPath) {
-                dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), RootPath: sourcesDir };
+                if (context && context == "CD")
+                {
+                    dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), RootPath: "" };
+                }
+                else{
+                    dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), RootPath: sourcesDir };
+                }
             }
 
             //Adding the codebase attribute to TestImpact collector 
@@ -908,34 +953,48 @@ function pushImpactLevelAndRootPathIfNotFound(dataCollectorArray): void {
     }
 }
 
+function roothPathGenerator() : any
+{
+    if (context)
+    {
+        if (context == "CD")
+        {
+            return { ImpactLevel: getTIALevel(), RootPath: "" };
+        }
+        else{
+            return { ImpactLevel: getTIALevel(), RootPath: sourcesDir };
+        }
+    }
+}
+
 function updateRunSettings(result: any, vsVersion: number) {
     var dataCollectorNode = null;
     if (!result.RunSettings) {
         tl.debug("Updating runsettings file from RunSettings node");
-        result.RunSettings = { DataCollectionRunSettings: { DataCollectors: { DataCollector: { Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } } } } };
+        result.RunSettings = { DataCollectionRunSettings: { DataCollectors: { DataCollector: { Configuration: roothPathGenerator()} } } };
         dataCollectorNode = result.RunSettings.DataCollectionRunSettings.DataCollectors.DataCollector;
     }
     else if (!result.RunSettings.DataCollectionRunSettings) {
         tl.debug("Updating runsettings file from DataCollectionSettings node");
-        result.RunSettings.DataCollectionRunSettings = { DataCollectors: { DataCollector: { Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } } } };
+        result.RunSettings.DataCollectionRunSettings = { DataCollectors: { DataCollector: { Configuration: roothPathGenerator() } } };
         dataCollectorNode = result.RunSettings.DataCollectionRunSettings.DataCollectors.DataCollector;
     }
     else if (!result.RunSettings.DataCollectionRunSettings[0].DataCollectors) {
         tl.debug("Updating runsettings file from DataCollectors node");
-        result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: { Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } } } };
+        result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: { Configuration: roothPathGenerator() } } };
         dataCollectorNode = result.RunSettings.DataCollectionRunSettings[0].DataCollectors.DataCollector;
     }
     else {
         var dataCollectorArray = result.RunSettings.DataCollectionRunSettings[0].DataCollectors[0].DataCollector;
         if (!dataCollectorArray) {
             tl.debug("Updating runsettings file from DataCollector node");
-            result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: { Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } } } };
+            result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: { Configuration: roothPathGenerator() } } };
             dataCollectorNode = result.RunSettings.DataCollectionRunSettings[0].DataCollectors.DataCollector;
         }
         else {
             if (!isTestImapctCollectorPresent(dataCollectorArray)) {
                 tl.debug("Updating runsettings file, adding a DataCollector node");
-                dataCollectorArray.push({ Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } });
+                dataCollectorArray.push({ Configuration: roothPathGenerator() });
                 dataCollectorNode = dataCollectorArray[dataCollectorArray.length - 1];
             }
             else {
@@ -992,39 +1051,39 @@ function updatTestSettings(result: any, vsVersion: number) {
     var dataCollectorNode = null;
     if (!result.TestSettings) {
         tl.debug("Updating testsettings file from TestSettings node");
-        result.TestSettings = { Execution: { AgentRule: { DataCollectors: { DataCollector: { Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } } } } } };
+        result.TestSettings = { Execution: { AgentRule: { DataCollectors: { DataCollector: { Configuration: roothPathGenerator() } } } } };
         result.TestSettings.Execution.AgentRule.$ = { name: TITestSettingsAgentNameTag };
         result.TestSettings.$ = { name: TITestSettingsNameTag, id: TITestSettingsIDTag, xmlns: TITestSettingsXmlnsTag };
         dataCollectorNode = result.TestSettings.Execution.AgentRule.DataCollectors.DataCollector;
     }
     else if (!result.TestSettings.Execution) {
         tl.debug("Updating testsettings file from Execution node");
-        result.TestSettings.Execution = { AgentRule: { DataCollectors: { DataCollector: { Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } } } } };
+        result.TestSettings.Execution = { AgentRule: { DataCollectors: { DataCollector: { Configuration: roothPathGenerator() } } } };
         result.TestSettings.Execution.AgentRule.$ = { name: TITestSettingsAgentNameTag };
         dataCollectorNode = result.TestSettings.Execution.AgentRule.DataCollectors.DataCollector;
     }
     else if (!result.TestSettings.Execution[0].AgentRule) {
         tl.debug("Updating testsettings file from AgentRule node");
-        result.TestSettings.Execution[0] = { AgentRule: { DataCollectors: { DataCollector: { Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } } } } };
+        result.TestSettings.Execution[0] = { AgentRule: { DataCollectors: { DataCollector: { Configuration: roothPathGenerator() } } } };
         result.TestSettings.Execution[0].AgentRule.$ = { name: TITestSettingsAgentNameTag };
         dataCollectorNode = result.TestSettings.Execution[0].AgentRule.DataCollectors.DataCollector;
     }
     else if (!result.TestSettings.Execution[0].AgentRule[0].DataCollectors) {
         tl.debug("Updating testsettings file from DataCollectors node");
-        result.TestSettings.Execution[0].AgentRule[0] = { DataCollectors: { DataCollector: { Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } } } };
+        result.TestSettings.Execution[0].AgentRule[0] = { DataCollectors: { DataCollector: { Configuration: roothPathGenerator() } } };
         dataCollectorNode = result.TestSettings.Execution[0].AgentRule[0].DataCollectors.DataCollector;
     }
     else {
         var dataCollectorArray = result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector;
         if (!dataCollectorArray) {
             tl.debug("Updating testsettings file from DataCollector node");
-            result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0] = { DataCollector: { Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } } };
+            result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0] = { DataCollector: { Configuration: roothPathGenerator() } };
             dataCollectorNode = result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector;
         }
         else {
             if (!isTestImapctCollectorPresent(dataCollectorArray)) {
                 tl.debug("Updating testsettings file, adding a DataCollector node");
-                dataCollectorArray.push({ Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } });
+                dataCollectorArray.push({ Configuration: roothPathGenerator() });
                 dataCollectorNode = dataCollectorArray[dataCollectorArray.length - 1];
             }
             else {
@@ -1113,7 +1172,7 @@ function createRunSettingsForTestImpact(vsVersion: number, settingsFile: string,
         ' >' +
         '<Configuration>' +
         '<ImpactLevel>' + getTIALevel() + '</ImpactLevel>' +
-        '<RootPath>' + sourcesDir + '</RootPath>' +
+        '<RootPath>' + (context == "CD" ? "" : sourcesDir) + '</RootPath>' +
         '</Configuration>' +
         '</DataCollector>' +
         '</DataCollectors></DataCollectionRunSettings></RunSettings>';
