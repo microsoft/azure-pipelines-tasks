@@ -6,6 +6,7 @@ import * as path from "path";
 import * as str from "string";
 import * as xml2js from "xml2js";
 import * as fse from "fs-extra";
+import * as cheerio from "cheerio";
 
 export interface GetOrCreateResult<T> {
     created: boolean;
@@ -180,5 +181,10 @@ export function addPropToJson(obj: any, propName: string, value: any): void {
     } else {
         obj[propName] = value;
     }
+}
+
+export function readXmlFileAsDom(filePath: string): CheerioStatic {
+    tl.debug("Reading XML file: " + filePath);
+    return cheerio.load(fs.readFileSync(filePath, "utf-8"), {xmlMode: true, withDomLvl1: false});
 }
 
