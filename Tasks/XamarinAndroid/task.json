@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 18
+        "Patch": 19
     },
     "demands": [
         "AndroidSDK",
@@ -145,10 +145,8 @@
     ],
     "instanceNameFormat": "Build Xamarin.Android Project $(project)",
     "execution": {
-        "PowerShell": {
-            "target": "$(currentDirectory)\\XamarinAndroid.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)",
+        "PowerShell3": {
+            "target": "XamarinAndroid.ps1",
             "platforms": [
                 "windows"
             ]
