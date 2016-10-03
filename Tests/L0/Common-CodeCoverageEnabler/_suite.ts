@@ -231,13 +231,14 @@ describe('Code Coverage enable tool tests', function () {
     it('Ant build file with Jacoco CC', (done) => {
         let buildFile = path.join(data, "ant_build.xml");
         buildProps['buildfile'] = buildFile;
+         buildProps['sourcedirectories'] = "";
 
         let ccEnabler = new CodeCoverageEnablerFactory().getTool("ant", "jacoco");
         ccEnabler.enableCodeCoverage(buildProps).then(function (resp) {
             let content = fs.readFileSync(buildFile, "utf-8");
             assert.notEqual(content.indexOf(`excludes="com.xyz"`), -1, "Exclude filter must be present");
             assert.notEqual(content.indexOf(`includes="com.abc`), -1, "Include filter must be present");
-            assert.notEqual(content.indexOf(`jacoco:coverage destfile="CCReport43F6D5EF\\jacoco.exec"`), -1, "Jacoco Plugin must be present");
+            assert.notEqual(content.indexOf(`jacoco:coverage destfile`), -1, "Jacoco Plugin must be present");
             done();
         }).catch(function (err) {
             done(err);
