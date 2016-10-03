@@ -237,7 +237,7 @@ function Get-VstsUpgradeParameters
 
     $upgradeMode = Get-VstsInput -Name upgradeMode -Require
 
-    $parameters[$upgradeMode] = $null
+    $parameters[$upgradeMode] = $true
 
     if ($upgradeMode -eq "Monitored")
     {

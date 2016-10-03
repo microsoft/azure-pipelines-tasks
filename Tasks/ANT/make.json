@@ -3,12 +3,15 @@
         {
             "module": "../Common/java-common",
             "type": "node",
-            "compile": true  
-        },
+            "compile": true
+        }
+    ],
+    "rm": [
         {
-            "module": "../Common/codecoverage-tools",
-            "type": "node",
-            "compile": true  
-        }    
+            "items": [
+                "node_modules/java-common/node_modules/vsts-task-lib"
+            ],
+            "options": "-Rf"
+        }
     ]
 }

@@ -7,7 +7,7 @@
         [Parameter(Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
         [string]
-        $VersionSuffix,
+        $VersionValue,
 
         [Parameter(Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
@@ -37,7 +37,10 @@
         $UpdateAllVersions,
 
         [Switch]
-        $LogAllChanges
+        $LogAllChanges,
+
+        [Switch]
+        $ReplaceVersion
     )
 
     Trace-VstsEnteringInvocation $MyInvocation
@@ -46,7 +49,7 @@
 
         $packageName = $NewPackageXml.Name
         $versionPrefix = $NewPackageXml.Version
-        $newVersion = $versionPrefix + $VersionSuffix
+        $newVersion = if ($ReplaceVersion) { $versionValue } else { $versionPrefix + $VersionValue }
 
         if (!$UpdateAllVersions)
         {
@@ -62,7 +65,7 @@
                 $NewPackageXml.Version = $oldPackageXml.Version
 
                 $updatePackageVersion = $false
-                if (!$oldPackageXml.Version.StartsWith($versionPrefix) -or !(Test-XmlEqual $oldPackageXml $NewPackageXml))
+                if ((!$ReplaceVersion -and !$oldPackageXml.Version.StartsWith($versionPrefix)) -or !(Test-XmlEqual $oldPackageXml $NewPackageXml))
                 {
                     # The package has changed because the xml in the manifest changed
                     Write-Host "$LogIndent$(Get-VstsLocString -Key PackageManifestChanged -ArgumentList $packageName)"
