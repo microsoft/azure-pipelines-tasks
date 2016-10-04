@@ -135,8 +135,7 @@ export class ResourceGroup {
         try {
             new env.RegisterEnvironment(this.credentials, this.subscriptionId, this.resourceGroupName, this.outputVariable);
         } catch(error) {            
-            tl.setResult(tl.TaskResult.Failed, "Failed while Registering Environment");
-            console.log(error);
+            tl.setResult(tl.TaskResult.Failed, tl.loc("FailedRegisteringEnvironment", error));
         }
     }
 }

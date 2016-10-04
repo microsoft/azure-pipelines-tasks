@@ -9,10 +9,7 @@ class PropertyValue {
 
     constructor(data: string, isSecure?: boolean) {
         this.Data = data;
-        if (isSecure)
-            this.IsSecure = isSecure;
-        else 
-            this.IsSecure = false;
+        this.IsSecure = !!isSecure;
     }
 }
 
@@ -88,12 +85,12 @@ class Environment {
 
 export class RegisterEnvironment {
     private credentials;
-    private subscriptionId;
-    private resourceGroupName;
-    private interfaces;
-    private fqdns;
-    private tags;
-    private outputVariable;
+    private subscriptionId: string;
+    private resourceGroupName: string;
+    private publicAddressToNetworkIdMap;
+    private publicAddressToFqdnMap;
+    private networkIdToTagsMap;
+    private outputVariable: string;
 
     constructor(credentials, subscriptionId, resourceGroupName, outputVariable) {
         this.credentials = credentials;
@@ -104,9 +101,9 @@ export class RegisterEnvironment {
             tl.setResult(tl.TaskResult.Failed, "Output variable should not be empty");
             return;
         }
-        this.interfaces = null;
-        this.tags = null;
-        this.fqdns = null;
+        this.publicAddressToNetworkIdMap = null;
+        this.networkIdToTagsMap = null;
+        this.publicAddressToFqdnMap = null;
         this.getVMDetails();
         this.getNetworkInterfaceDetails();
         this.getPublicIPAddresses();
@@ -114,7 +111,7 @@ export class RegisterEnvironment {
     }
 
     private InstantiateEnvironment() {
-        if (this.interfaces == null || this.fqdns == null || this.tags == null) {
+        if (this.publicAddressToNetworkIdMap == null || this.publicAddressToFqdnMap == null || this.networkIdToTagsMap == null) {
             return;
         }
         var resources = this.getResources();
@@ -124,17 +121,18 @@ export class RegisterEnvironment {
     }
 
     private getTags(addressId: string){
-        var networkId =  this.interfaces[addressId];
-        return this.tags[networkId];
+        var networkId =  this.publicAddressToNetworkIdMap[addressId];
+        return this.networkIdToTagsMap[networkId];
     }
 
     private getResources() {
         var resources = new Array<Resource>();
         var id = 1;
-        for (var addressId in this.fqdns) {
-            var fqdn = this.fqdns[addressId];
-            var resource = new Resource(id, fqdn);
+        for (var addressId in this.publicAddressToFqdnMap) {
+            var fqdn = this.publicAddressToFqdnMap[addressId];
+            var resource = new Resource(id++ , fqdn);
             resource.addOrUpdateProperty("Microsoft-Vslabs-MG-Resource-FQDN", new PropertyValue(fqdn));
+            // Default
             resource.addOrUpdateProperty("WinRM_Https", new PropertyValue("5986")); 
             var tags = this.getTags(addressId);
             if (tags) {
@@ -161,7 +159,7 @@ export class RegisterEnvironment {
                 if (vm["tags"] != undefined)
                     tags[networkId] = vm["tags"];
             }
-            this.tags = tags;
+            this.networkIdToTagsMap = tags;
             this.InstantiateEnvironment();            
         });
     }
@@ -179,7 +177,7 @@ export class RegisterEnvironment {
                 var networkId = networkInterface["id"];
                 interfaces[networkInterface["ipConfigurations"][0]["publicIPAddress"]["id"]] = networkId;
             }
-            this.interfaces = interfaces;
+            this.publicAddressToNetworkIdMap = interfaces;
             this.InstantiateEnvironment();  
         });
     }
@@ -202,7 +200,7 @@ export class RegisterEnvironment {
                     fqdns[publicAddressId] = publicAddress["ipAddress"];
                 }
             }
-            this.fqdns = fqdns;
+            this.publicAddressToFqdnMap = fqdns;
             this.InstantiateEnvironment();
         });
     }

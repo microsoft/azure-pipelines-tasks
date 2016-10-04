@@ -11,6 +11,7 @@ var msRestAzure = require("ms-rest-azure");
 
 import virtualMachine = require("./VirtualMachine");
 import resourceGroup = require("./ResourceGroup");
+import env = require("./Environment");
 
 try {
     tl.setResourcePath(path.join( __dirname, "task.json"));
@@ -85,6 +86,13 @@ export class AzureResourceGroupDeployment {
                break;
            default:
                tl.setResult(tl.TaskResult.Succeeded, tl.loc("InvalidAction"));
+        }
+        if (this.outputVariable && this.outputVariable.trim()!="" && this.action!="Select Resource Group"){
+            try {
+                new env.RegisterEnvironment(this.getARMCredentials(), this.subscriptionId, this.resourceGroupName, this.outputVariable);
+            } catch(error) {            
+                tl.setResult(tl.TaskResult.Failed, tl.loc("FailedRegisteringEnvironment", error));
+            }
         }
     }
 
