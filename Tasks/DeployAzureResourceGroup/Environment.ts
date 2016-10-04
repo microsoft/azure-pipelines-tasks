@@ -117,7 +117,7 @@ export class RegisterEnvironment {
         var resources = this.getResources();
         var environment = new Environment(resources, process.env["SYSTEM_COLLECTIONID"], process.env["SYSTEM_TEAMPROJECT"], this.outputVariable);
         console.log(JSON.stringify(environment));                
-        process.env[this.outputVariable] = JSON.stringify(environment);
+        tl.setVariable(this.outputVariable, JSON.stringify(environment));
     }
 
     private getTags(addressId: string){

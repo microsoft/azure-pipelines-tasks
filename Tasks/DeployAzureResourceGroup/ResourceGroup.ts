@@ -134,8 +134,11 @@ export class ResourceGroup {
     private selectResourceGroup() {
         try {
             new env.RegisterEnvironment(this.credentials, this.subscriptionId, this.resourceGroupName, this.outputVariable);
+
         } catch(error) {            
             tl.setResult(tl.TaskResult.Failed, tl.loc("FailedRegisteringEnvironment", error));
+            return;
         }
+        tl.setResult(tl.TaskResult.Succeeded, tl.loc("selectResourceGroupSuccessfull", this.resourceGroupName, this.outputVariable))
     }
 }

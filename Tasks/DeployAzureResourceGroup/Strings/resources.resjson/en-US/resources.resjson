@@ -88,6 +88,8 @@
   "loc.messages.RGO_DeletedResourceGroup": "[Azure Resource Manager]Deleted resource group '{0}'",
   "loc.messages.InvalidAction": "This action is not defined. Please check with the author.",
   "loc.messages.VM_ListFetchFailed": "Task failed while fetching VMs list from '%s' due to the following error: %s",
-  "loc.messages.TaskNotFound": "Task.json file could not be found: %s"
+  "loc.messages.TaskNotFound": "Task.json file could not be found: %s",
+  "loc.message.FailedRegisteringEnvironment": "Task failed while registering environment, due to the following error: %s",
+  "loc.message.selectResourceGroupSuccessfull": "Selected Resource Group: '%s' and stored it in '%s'"
   
 }
