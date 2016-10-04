@@ -18,7 +18,7 @@ let PmdTool = require('../../../Tasks/Gradle/CodeAnalysis/Common/PmdTool').PmdTo
 
 import os = require('os');
 
-var isWindows = os.type().match(/^Win/); 
+var isWindows = os.type().match(/^Win/);
 var gradleWrapper = isWindows ? 'gradlew.bat' : 'gradlew';
 
 function setResponseFile(name: string) {
@@ -46,19 +46,6 @@ function setDefaultInputs(tr: TaskRunner, enableSonarQubeAnalysis: boolean): Tas
     }
 
     return tr;
-}
-
-function createTempDirsForCodeAnalysisTests(): void {
-    var testTempDir: string = path.join(__dirname, '_temp');
-    var caTempDir: string = path.join(testTempDir, '.codeAnalysis');
-
-    if (!fs.existsSync(testTempDir)) {
-        fs.mkdirSync(testTempDir);
-    }
-
-    if (!fs.existsSync(caTempDir)) {
-        fs.mkdirSync(caTempDir);
-    }
 }
 
 function cleanTempDirsForCodeAnalysisTests():void {
@@ -1168,7 +1155,6 @@ describe('gradle Suite', function () {
 
     it('Single Module Gradle with Checkstyle and FindBugs and PMD', function (done) {
 
-        createTempDirsForCodeAnalysisTests();
 
         var testSrcDir: string = path.join(__dirname, 'data', 'singlemodule');
         var testStgDir: string = path.join(__dirname, '_temp');
@@ -1234,8 +1220,6 @@ describe('gradle Suite', function () {
     });
 
     it('Gradle with code analysis - Only shows empty results for tools which are enabled', function (done) {
-
-        createTempDirsForCodeAnalysisTests();
 
         var testSrcDir: string = path.join(__dirname, 'data', 'singlemodule-noviolations');
         var testStgDir: string = path.join(__dirname, '_temp');
@@ -1351,7 +1335,6 @@ describe('gradle Suite', function () {
 
     it('Multi Module Gradle with Checkstyle and FindBugs and PMD', function (done) {
 
-        createTempDirsForCodeAnalysisTests();
 
         var testSrcDir: string = path.join(__dirname, 'data', 'multimodule');
         var testStgDir: string = path.join(__dirname, '_temp');
@@ -1464,7 +1447,7 @@ describe('gradle Suite', function () {
     //     }
     //  }
 
-     it('Pmd tool retrieves results', function (done) {
+    it('Pmd tool retrieves results', function (done) {
 
         var testSrcDir: string = path.join(__dirname, 'data', 'multimodule');
 
@@ -1496,7 +1479,6 @@ describe('gradle Suite', function () {
         tool.isEnabled = () => true;
         let results/*: AnalysisResult[]*/ = tool.processResults();
 
-        console.log(JSON.stringify(results));
         assert(results.length == 1, "Unexpected number of results. Expected 1 (only module-three has a findbugs XML), actual " + results.length);
         verifyModuleResult(results, "module-three", 5, 1, ["main.xml"] /* empty report files are not copied in */);
 

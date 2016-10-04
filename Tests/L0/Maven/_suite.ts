@@ -99,15 +99,6 @@ function setupMockResponsesForPaths(responseObject: any, paths: string[]) { // C
 }
 
 // Create temp dirs for mavencodeanalysis tests to save into
-function createTempDirsForCodeAnalysisTests(): void {
-    var caTempDir: string = path.join(createTempDir(), '.codeAnalysis');
-
-    if (!fs.existsSync(caTempDir)) {
-        fs.mkdirSync(caTempDir);
-    }
-}
-
-// Create temp dirs for mavencodeanalysis tests to save into
 function createTempDirsForSonarQubeTests(): void {
     var sqTempDir: string = path.join(createTempDir(), '.sqAnalysis');
 
@@ -1035,7 +1026,7 @@ describe('Maven Suite', function () {
     it('Maven with SonarQube - Warns when report-task.txt is missing', function (done) {
         // Arrange
         createTempDirsForSonarQubeTests();
-       var testSrcDir: string = path.join(__dirname, 'data', 'singlemodule'); // no report-task.txt here
+        var testSrcDir: string = path.join(__dirname, 'data', 'singlemodule'); // no report-task.txt here
         var testStgDir: string = path.join(__dirname, '_temp');
 
         // not a valid PR branch
@@ -1072,7 +1063,7 @@ describe('Maven Suite', function () {
                 assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=SonarQube Analysis Report') < 0,
                     'should not have uploaded a SonarQube Analysis Report build summary');
 
-                assert(tr.stdout.indexOf('vso[task.issue type=warning;]Could not find report-task.txt')> -1, 
+                assert(tr.stdout.indexOf('vso[task.issue type=warning;]Could not find report-task.txt')> -1,
                     'Should have fired a warning about the missing report-task.txt');
 
                 done();
@@ -1091,7 +1082,6 @@ describe('Maven Suite', function () {
         var testSrcDir: string = __dirname;
         var testStgDir: string = path.join(__dirname, '_temp');
         var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis'); // overall directory for all tools
-        createTempDirsForCodeAnalysisTests();
 
         mockHelper.setResponseAndBuildVars(
             path.join(__dirname, 'response.json'),
@@ -1175,7 +1165,6 @@ describe('Maven Suite', function () {
         // Expected: one module, root.
 
         // Arrange
-        createTempDirsForCodeAnalysisTests();
         var testSrcDir: string = path.join(__dirname, 'data', 'singlemodule');
         var testStgDir: string = path.join(__dirname, '_temp');
         var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis'); // overall directory for all tools
@@ -1244,7 +1233,6 @@ describe('Maven Suite', function () {
 
     it('Maven with PMD - Should succeed even if XML output cannot be found', function (done) {
         // Arrange
-        createTempDirsForCodeAnalysisTests();
         var testStgDir: string = path.join(__dirname, '_temp');
         var testSrcDir: string = path.join(__dirname, 'data');
 
@@ -1299,7 +1287,6 @@ describe('Maven Suite', function () {
         // Expected: one module, root.
 
         // Arrange
-        createTempDirsForCodeAnalysisTests();
         var testSrcDir: string = path.join(__dirname, 'data', 'singlemodule');
         var testStgDir: string = path.join(__dirname, '_temp');
 
@@ -1365,7 +1352,6 @@ describe('Maven Suite', function () {
 
     it('Maven with Checkstyle - Should succeed even if XML output cannot be found', function (done) {
         // Arrange
-        createTempDirsForCodeAnalysisTests();
         var testStgDir: string = path.join(__dirname, '_temp');
         var testSrcDir: string = path.join(__dirname, 'data');
 
@@ -1420,7 +1406,6 @@ describe('Maven Suite', function () {
         // Expected: one module, root.
 
         // Arrange
-        createTempDirsForCodeAnalysisTests();
         var testSrcDir: string = path.join(__dirname, 'data', 'singlemodule');
         var testStgDir: string = path.join(__dirname, '_temp');
 
@@ -1485,7 +1470,6 @@ describe('Maven Suite', function () {
 
     it('Maven with FindBugs - Should succeed even if XML output cannot be found', function (done) {
         // Arrange
-        createTempDirsForCodeAnalysisTests();
         var testStgDir: string = path.join(__dirname, '_temp');
         var testSrcDir: string = path.join(__dirname, 'data');
 
@@ -1540,7 +1524,6 @@ describe('Maven Suite', function () {
         // Expected: one module, root.
 
         // Arrange
-        createTempDirsForCodeAnalysisTests();
         var testSrcDir: string = path.join(__dirname, 'data', 'singlemodule');
         var testStgDir: string = path.join(__dirname, '_temp');
 
@@ -1617,7 +1600,6 @@ describe('Maven Suite', function () {
         // Expected: one module, root.
 
         // Arrange
-        createTempDirsForCodeAnalysisTests();
         var testSrcDir: string = path.join(__dirname, 'data', 'singlemodule-noviolations');
         var testStgDir: string = path.join(__dirname, '_temp');
 
