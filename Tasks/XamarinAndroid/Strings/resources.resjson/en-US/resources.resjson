@@ -14,8 +14,13 @@
   "loc.input.label.configuration": "Configuration",
   "loc.input.label.clean": "Clean",
   "loc.input.help.clean": "Passes the clean target (/t:clean) during build.",
+  "loc.input.label.msbuildLocationMethod": "MSBuild",
+  "loc.input.label.msbuildVersion": "MSBuild Version",
+  "loc.input.help.msbuildVersion": "If the preferred version cannot be found, the latest version found will be used instead. On a Mac xbuild(Mono) will be used.",
   "loc.input.label.msbuildLocation": "MSBuild Location",
-  "loc.input.help.msbuildLocation": "Optionally supply the path to MSBuild (on Windows) or xbuild (on Mac).  It defaults to searching for latest version.",
+  "loc.input.help.msbuildLocation": "Optionally supply the path to MSBuild (on Windows) or xbuild (on Mac).",
+  "loc.input.label.msbuildArchitecture": "MSBuild Architecture",
+  "loc.input.help.msbuildArchitecture": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
   "loc.input.label.msbuildArguments": "Additional Arguments",
   "loc.input.help.msbuildArguments": "Additional arguments passed to MSBuild (on Windows) or xbuild (on Mac).",
   "loc.input.label.jdkSelection": "Select JDK to use for the build",
@@ -25,5 +30,7 @@
   "loc.input.label.jdkUserInputPath": "JDK Path",
   "loc.input.help.jdkUserInputPath": "Use the JDK version at specified path during build.",
   "loc.input.label.jdkArchitecture": "JDK Architecture",
-  "loc.input.help.jdkArchitecture": "Optionally supply the architecture (x86, x64) of JDK."
+  "loc.input.help.jdkArchitecture": "Optionally supply the architecture (x86, x64) of JDK.",
+  "loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "Unable to find MSBuild: Version = {0}, Architecture = {1}. Looking for the latest version.",
+  "loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent": "MSBuild not found: Version = {0}, Architecture = {1}. Try a different version/architecture combination, specify a location, or install the appropriate MSBuild version/architecture."
 }

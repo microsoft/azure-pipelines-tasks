@@ -11,7 +11,10 @@ try {
     [string]$configuration = Get-VstsInput -Name configuration
     [bool]$clean = Get-VstsInput -Name clean -AsBool
     [string]$outputDir = Get-VstsInput -Name outputDir
+    [string]$msbuildLocationMethod = Get-VstsInput -Name msbuildLocationMethod
     [string]$msbuildLocation = Get-VstsInput -Name msbuildLocation
+    [string]$msbuildVersion = Get-VstsInput -Name msbuildVersion
+    [string]$msbuildArchitecture = Get-VstsInput -Name msbuildArchitecture
     [string]$msbuildArguments = Get-VstsInput -Name msbuildArguments
     [string]$jdkVersion = Get-VstsInput -Name jdkVersion
     [string]$jdkArchitecture = Get-VstsInput -Name jdkArchitecture
@@ -49,11 +52,19 @@ try {
     }
 
     # Resolve the MSBuild location.
-    $msbuildLocationMethod = "version"
-    if($msbuildLocation) {
+    if ($msbuildLocationMethod -eq 'location') {
         $msbuildLocationMethod = "location"
     }
-    $msbuildLocation = Select-MSBuildLocation -Method $msbuildLocationMethod -Location $msbuildLocation -Version "latest"
+    ElseIf ($msbuildLocation -and $msbuildVersion -eq 'latest') {
+        # Use location if msbuildLocation is set and verison is 'latest' for back compat
+        $msbuildLocationMethod = "location"
+    }
+    else {
+        $msbuildLocationMethod = "version"
+    }
+    Write-Verbose "msbuildLocationMethod = $msbuildLocationMethod"
+
+    $msbuildLocation = Select-MSBuildLocation -Method $msbuildLocationMethod -Location $msbuildLocation -Version $msbuildVersion -Architecture $msbuildArchitecture
 
     # build each project file
     Invoke-BuildTools -SolutionFiles $projectFiles -MSBuildLocation $msbuildLocation -MSBuildArguments $msBuildArguments -Clean:$clean

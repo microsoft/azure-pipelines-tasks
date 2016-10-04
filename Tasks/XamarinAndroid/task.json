@@ -11,8 +11,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 19
+        "Minor": 1,
+        "Patch": 0
     },
     "demands": [
         "AndroidSDK",
@@ -73,13 +73,56 @@
             "helpMarkDown": "Passes the clean target (/t:clean) during build."
         },
         {
+            "name": "msbuildLocationMethod",
+            "type": "radio",
+            "label": "MSBuild",
+            "required": false,
+            "groupName": "msbuildOptions",
+            "defaultValue": "version",
+            "options": {
+                "version": "Version",
+                "location": "Specify Location"
+            }
+        },
+        {
+            "name": "msbuildVersion",
+            "type": "pickList",
+            "label": "MSBuild Version",
+            "required": false,
+            "groupName": "msbuildOptions",
+            "defaultValue": "latest",
+            "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead. On a Mac xbuild(Mono) will be used.",
+            "options": {
+                "latest": "Latest (stable)",
+                "15.0": "MSBuild 15.0 (preview)",
+                "14.0": "MSBuild 14.0",
+                "12.0": "MSBuild 12.0",
+                "4.0": "MSBuild 4.0"
+            },
+            "visibleRule": "msbuildLocationMethod = version"
+        },
+        {
             "name": "msbuildLocation",
             "type": "string",
             "label": "MSBuild Location",
             "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Optionally supply the path to MSBuild (on Windows) or xbuild (on Mac).",
+            "groupName": "msbuildOptions",
+            "visibleRule": "msbuildLocationMethod = location"
+        },
+        {
+            "name": "msbuildArchitecture",
+            "type": "pickList",
+            "label": "MSBuild Architecture",
+            "defaultValue": "x86",
             "required": false,
-            "helpMarkDown": "Optionally supply the path to MSBuild (on Windows) or xbuild (on Mac).  It defaults to searching for latest version.",
-            "groupName": "msbuildOptions"
+            "helpMarkDown": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
+            "groupName": "msbuildOptions",
+            "options": {
+                "x86": "MSBuild x86",
+                "x64": "MSBuild x64"
+            }
         },
         {
             "name": "msbuildArguments",
@@ -155,5 +198,9 @@
             "target": "xamarinandroid.js",
             "argumentFormat": ""
         }
+    },
+    "messages": {
+        "UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "Unable to find MSBuild: Version = {0}, Architecture = {1}. Looking for the latest version.",
+        "MSBuildNotFoundVersion0Architecture1TryDifferent": "MSBuild not found: Version = {0}, Architecture = {1}. Try a different version/architecture combination, specify a location, or install the appropriate MSBuild version/architecture."
     }
 }
