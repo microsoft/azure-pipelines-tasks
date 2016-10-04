@@ -287,6 +287,14 @@
     "Trytodeploywebappagainwithappofflineoptionselected": "ms-resource:loc.messages.Trytodeploywebappagainwithappofflineoptionselected",
     "UpgradeAgent": "ms-resource:loc.messages.UpgradeAgent",
     "NOJSONfilematchedwithspecificpattern": "ms-resource:loc.messages.NOJSONfilematchedwithspecificpattern",
-    "JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "ms-resource:loc.messages.JSONvariablesubstitutioncanonlybeappliedforJSONfiles"
+    "JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "ms-resource:loc.messages.JSONvariablesubstitutioncanonlybeappliedforJSONfiles",
+    "Unabletofindnodewithtaginprovidedxmlfile": "ms-resource:loc.messages.Unabletofindnodewithtaginprovidedxmlfile",
+    "Configfiledoesntexists": "ms-resource:loc.messages.Configfiledoesntexists",
+    "Providednodeisempty": "ms-resource:loc.messages.Providednodeisempty",
+    "Configfileupdated": "ms-resource:loc.messages.Configfileupdated",
+    "Failedtowritetoconfigfilewitherror": "ms-resource:loc.messages.Failedtowritetoconfigfilewitherror",
+    "Erroroccurredwhileprocessingxmlnode": "ms-resource:loc.messages.Erroroccurredwhileprocessingxmlnode",
+    "Processingsubstitutionforxmlnode": "ms-resource:loc.messages.Processingsubstitutionforxmlnode",
+    "Initiatedvariablesubstitutioninconfigfile": "ms-resource:loc.messages.Initiatedvariablesubstitutioninconfigfile"
   }
 }
