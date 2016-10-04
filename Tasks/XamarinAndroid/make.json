@@ -1,0 +1,8 @@
+{
+  "common": [
+    {
+      "module": "../Common/MSBuildHelpers",
+      "type": "ps"
+    }
+  ]
+}
