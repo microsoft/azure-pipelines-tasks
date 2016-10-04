@@ -221,8 +221,8 @@
     ],
     "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
     "execution": {
-        "PowerShell3": {
-            "target": "DeployAzureResourceGroup.ps1"
+        "Node": {
+            "target": "DeployAzureRG.js"
         }
     },
     "messages": {

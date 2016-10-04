@@ -74,5 +74,22 @@
   "loc.messages.ARG_SetExtensionFailed": "Setting the custom script extension '{0}' for virtual machine '{1}' failed with error : {2}",
   "loc.messages.ARG_NetworkSecurityConfigFailed": "Failed to add the network security rule: {0}",
   "loc.messages.ARG_SetExtensionFailedForVm": "Unable to set the custom script extension '{0}' for virtual machine '{1}': {2}",
-  "loc.messages.ARG_DeploymentPrereqFailed": "Failed to enable deployment prerequisites. {0}"
+  "loc.messages.ARG_DeploymentPrereqFailed": "Failed to enable deployment prerequisites. {0}",
+
+  "loc.messages.SucceededOnVMOperation": "The %s operation on all VMs succeeded",
+  "loc.messages.FailureOnVMOperation": "The %s operation on all VMs failed with an error: %s",
+  "loc.messages.ARGD_ConstructorFailed": "Task failed while initializing with the following error: %s",
+  "loc.messages.VMOperationsInitiationFailed": "Task failed while creating a computeManagement Client, due to the following error: %s",
+  "loc.messages.TemplateParsingFailed": "Please ensure the Template file is correct. Task failed while parsing due to the following error: %s",
+  "loc.messages.ParametersFileParsingFailed": "Please ensure the Parameters file is correct. Task failed while parsing due to the following error: %s",
+  "loc.messages.RGO_createTemplateDeploymentFailed": "Task failed while creating a template deployment, due to : %s",
+  "loc.messages.RGO_createTemplateDeploymentSucceeded": "Successfully created template deploy on '%s'",
+  "loc.messages.RGO_CouldNotDeletedResourceGroup": "[Azure Resource Manager]Could not delete resource group '%s' due to the following error: %s",
+  "loc.messages.RGO_DeletedResourceGroup": "[Azure Resource Manager]Deleted resource group '{0}'",
+  "loc.messages.InvalidAction": "This action is not defined. Please check with the author.",
+  "loc.messages.VM_ListFetchFailed": "Task failed while fetching VMs list from '%s' due to the following error: %s",
+  "loc.messages.TaskNotFound": "Task.json file could not be found: %s",
+  "loc.message.FailedRegisteringEnvironment": "Task failed while registering environment, due to the following error: %s",
+  "loc.message.selectResourceGroupSuccessfull": "Selected Resource Group: '%s' and stored it in '%s'"
+  
 }

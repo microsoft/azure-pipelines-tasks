@@ -221,8 +221,8 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "PowerShell3": {
-      "target": "DeployAzureResourceGroup.ps1"
+    "Node": {
+      "target": "DeployAzureRG.js"
     }
   },
   "messages": {
