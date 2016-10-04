@@ -52,8 +52,8 @@ export class CodeAnalysisOrchestrator {
 
             let resultPublisher = new CodeAnalysisResultPublisher(analysisResults, stagingDir);
 
-            resultPublisher.uploadBuildSummary();
-            resultPublisher.uploadArtifacts(buildNumber);
+            var uploadedArtifacts:number = resultPublisher.uploadArtifacts(buildNumber);
+            resultPublisher.uploadBuildSummary(uploadedArtifacts);
         }
     }
 

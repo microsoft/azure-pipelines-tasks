@@ -17,7 +17,7 @@ import tl = require('vsts-task-lib/task');
 
 /**
  * Orcheestrates the processing and publishing of code analysis data and artifacts (PMD, FindBugs etc. but not SonarQube)
- * 
+ *
  * @export
  * @class CodeAnalysisOrchestrator
  */
@@ -33,7 +33,7 @@ export class CodeAnalysisOrchestrator {
                 toolRunner = tool.configureBuild(toolRunner);
             }
         }
-        
+
         return toolRunner;
     }
 
@@ -52,8 +52,8 @@ export class CodeAnalysisOrchestrator {
 
             let resultPublisher = new CodeAnalysisResultPublisher(analysisResults, stagingDir);
 
-            resultPublisher.uploadBuildSummary();
-            resultPublisher.uploadArtifacts(buildNumber);
+            var uploadedArtifacts:number = resultPublisher.uploadArtifacts(buildNumber);
+            resultPublisher.uploadBuildSummary(uploadedArtifacts);
         }
     }
 
