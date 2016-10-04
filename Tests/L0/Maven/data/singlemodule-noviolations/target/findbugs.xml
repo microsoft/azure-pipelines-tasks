@@ -8,7 +8,7 @@
     <FindBugsSummary num_packages='1' total_classes='1' priority_1='1' priority_2='4' total_size='27' clock_seconds='1.07' referenced_classes='15' vm_version='25.60-b23' total_bugs='0' java_version='1.8.0_60' gc_seconds='0.01' alloc_mbytes='491.00' cpu_seconds='4.69' peak_mbytes='169.54' timestamp='Thu, 8 Sep 2016 12:06:03 +0100'>
         <FileStats path='main/java/TestClassWithErrors.java' size='8' bugCount='0'></FileStats>
         <FileStats path='main/java/TestProgram.java' size='19' bugHash='0d7d7ff7f4cd490aa22d0c1ca686118e' bugCount='0'></FileStats>
-        <PackageStats package='main.java' priority_1='1' total_bugs='0' priority_2='4' total_size='27' total_types='2'>
+        <PackageStats package='main.java' priority_1='1' total_bugs='0' total_size='27' total_types='2'>
             <ClassStats bugs='0' size='8' interface='false' sourceFile='TestClassWithErrors.java' class='main.java.TestClassWithErrors'></ClassStats>
             <ClassStats bugs='0' size='19' priority_1='1' priority_2='4' interface='false' sourceFile='TestProgram.java' class='main.java.TestProgram'></ClassStats>
         </PackageStats>

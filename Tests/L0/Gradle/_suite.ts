@@ -1253,6 +1253,7 @@ describe('gradle Suite', function () {
         tr = setDefaultInputs(tr, false);
         tr.setInput('pmdAnalysisEnabled', 'true');
         tr.setInput('checkstyleAnalysisEnabled', 'false');
+        tr.setInput('findbugsAnalysisEnabled', 'false');
 
         // Act
         tr.run()
@@ -1265,17 +1266,75 @@ describe('gradle Suite', function () {
                 assert(tr.ran(gradleWrapper + ' build -I /Gradle/CodeAnalysis/pmd.gradle'), 'Ran Gradle with PMD');
                 assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
                     'should have uploaded a Code Analysis Report build summary');
-                assert(tr.stdout.indexOf('artifact.upload artifactname=Code Analysis Results;') > -1,
-                    'should have uploaded code analysis build artifacts');
+                assert(tr.stdout.indexOf('artifact.upload artifactname=Code Analysis Results;') < 0,
+                    'should not have uploaded code analysis build artifacts');
 
+                assertCodeAnalysisBuildSummaryDoesNotContain(testStgDir, 'FindBugs found no violations.');
                 assertCodeAnalysisBuildSummaryDoesNotContain(testStgDir, 'Checkstyle found no violations.');
                 assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found no violations.');
 
-                var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
+                // There were no files to be uploaded - the CA folder should not exist
+                var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis');
+                assertFileDoesNotExistInDir(codeAnalysisStgDir, 'CA');
 
-                // Test files were copied for module "root", build 14
-                assertFileDoesNotExistInDir(codeAnalysisStgDir, '/root/14_main_Checkstyle.xml');
-                assertFileDoesNotExistInDir(codeAnalysisStgDir, '/root/14_main_PMD.xml');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                console.log(tr.stderr);
+                console.log(err);
+                done(err);
+            });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
+    });
+
+    it('Gradle with code analysis - Does not upload artifacts if code analysis reports were empty', function (done) {
+
+        var testSrcDir: string = path.join(__dirname, 'data', 'singlemodule-noviolations');
+        var testStgDir: string = path.join(__dirname, '_temp');
+
+        setResponseAndBuildVars(
+            'gradleCA.json',
+            this.test.title + '_response.json',
+            [
+                ["build.buildNumber", "14"],
+                ['build.sourcesDirectory', testSrcDir],
+                ['build.artifactStagingDirectory', testStgDir]
+            ]);
+
+        var tr = new TaskRunner('Gradle', true, true);
+        tr = setDefaultInputs(tr, false);
+        tr.setInput('pmdAnalysisEnabled', 'true');
+        tr.setInput('checkstyleAnalysisEnabled', 'true');
+        tr.setInput('findbugsAnalysisEnabled', 'true');
+
+        // Act
+        tr.run()
+            .then(() => {
+                // Assert
+                assert(tr.resultWasSet, 'should have set a result');
+                assert(tr.stdout.length > 0, 'should have written to stdout');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.ran(gradleWrapper +
+                        ' build -I /Gradle/CodeAnalysis/checkstyle.gradle -I /Gradle/CodeAnalysis/findbugs.gradle -I /Gradle/CodeAnalysis/pmd.gradle'),
+                    'should have run Gradle with code analysis tools');
+                assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
+                    'should have uploaded a Code Analysis Report build summary');
+
+                assert(tr.stdout.indexOf('##vso[artifact.upload artifactname=Code Analysis Results;]') < 0,
+                    'should not have uploaded a code analysis build artifact');
+
+                assertCodeAnalysisBuildSummaryContains(testStgDir, 'Checkstyle found no violations.');
+                assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found no violations.');
+                assertCodeAnalysisBuildSummaryContains(testStgDir, 'FindBugs found no violations.');
+
+                // The .codeAnalysis dir should have been created to store the build summary, but not the report dirs
+                var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis');
+                assertFileDoesNotExistInDir(codeAnalysisStgDir, 'CA');
 
                 done();
             })
@@ -1316,11 +1375,13 @@ describe('gradle Suite', function () {
         tr.run()
             .then(() => {
                 // Assert
-                    assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.invokedToolCount == 1, 'should have only run gradle 1 time');
                 assert(tr.resultWasSet, 'task should have set a result');
-                 assert(tr.stderr.length == 0, 'should not have written to stderr');
-                assert(tr.ran(gradleWrapper + ' build -I /Gradle/CodeAnalysis/checkstyle.gradle -I /Gradle/CodeAnalysis/findbugs.gradle -I /Gradle/CodeAnalysis/pmd.gradle'), 'Ran Gradle with Checkstyle and Pmd');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.ran(gradleWrapper +
+                    ' build -I /Gradle/CodeAnalysis/checkstyle.gradle -I /Gradle/CodeAnalysis/findbugs.gradle -I /Gradle/CodeAnalysis/pmd.gradle'),
+                'should have run Gradle with code analysis tools');
                 assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
                     'should have uploaded a Code Analysis Report build summary');
                 assert(tr.stdout.indexOf('artifact.upload artifactname=Code Analysis Results;') > -1,

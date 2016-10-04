@@ -1659,21 +1659,16 @@ describe('Maven Suite', function () {
                     'should have run maven with the correct arguments');
                 assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
                     'should have uploaded a Code Analysis Report build summary');
-                assert(taskRunner.stdout.indexOf('##vso[artifact.upload artifactname=Code Analysis Results;]') > -1,
-                    'should have uploaded a code analysis build artifact');
+                assert(taskRunner.stdout.indexOf('##vso[artifact.upload artifactname=Code Analysis Results;]') < 0,
+                    'should not have uploaded a code analysis build artifact');
 
                 assertCodeAnalysisBuildSummaryDoesNotContain(testStgDir, 'Checkstyle found no violations.');
                 assertCodeAnalysisBuildSummaryDoesNotContain(testStgDir, 'PMD found no violations.');
                 assertCodeAnalysisBuildSummaryContains(testStgDir, 'FindBugs found no violations.');
 
-                var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
-
-                // No files should have been copied since they all report no violations
-                assertFileDoesNotExistInDir(codeAnalysisStgDir, 'root/1_checkstyle-result_Checkstyle.xml');
-                assertFileDoesNotExistInDir(codeAnalysisStgDir, 'root/1_checkstyle_Checkstyle.html');
-                assertFileDoesNotExistInDir(codeAnalysisStgDir, 'root/1_findbugs_FindBugs.xml');
-                assertFileDoesNotExistInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.html');
-                assertFileDoesNotExistInDir(codeAnalysisStgDir, 'root/1_pmd_PMD.xml');
+                // There were no files to be uploaded - the CA folder should not exist
+                var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis');
+                assertFileDoesNotExistInDir(codeAnalysisStgDir, 'CA');
 
                 done();
             })
@@ -1688,13 +1683,84 @@ describe('Maven Suite', function () {
         cleanTempDirsForCodeAnalysisTests();
     });
 
-    it('Maven with code analysis - Executes and uploads results for all enabled tools', function (done) {
+    it('Maven with code analysis - Does not upload artifacts if code analysis reports were empty', function (done) {
         // In the test data:
         // /: pom.xml, target/.
         // Expected: one module, root.
 
         // Arrange
-        createTempDirsForCodeAnalysisTests();
+        var testSrcDir: string = path.join(__dirname, 'data', 'singlemodule-noviolations');
+        var testStgDir: string = path.join(__dirname, '_temp');
+
+        var responseJsonFilePath: string = path.join(__dirname, 'response.json');
+        var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
+
+        // Add fields corresponding to responses for mock filesystem operations for the following paths
+        // Staging directories
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testStgDir));
+        // Test data files
+        responseJsonContent = mockHelper.setupMockResponsesForPaths(responseJsonContent, listFolderContents(testSrcDir));
+
+        // Set mocked build variables
+        responseJsonContent.getVariable = responseJsonContent.getVariable || {};
+        responseJsonContent.getVariable['build.sourcesDirectory'] = testSrcDir;
+        responseJsonContent.getVariable['build.artifactStagingDirectory'] = testStgDir;
+
+        // Write and set the newly-changed response file
+        var newResponseFilePath: string = path.join(__dirname, this.test.title + '_response.json');
+        fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
+        setResponseFile(path.basename(newResponseFilePath));
+
+        // Set up the task runner with the test settings
+        var taskRunner: trm.TaskRunner = setupDefaultMavenTaskRunner();
+        taskRunner.setInput('checkstyleAnalysisEnabled', 'true');
+        taskRunner.setInput('pmdAnalysisEnabled', 'true');
+        taskRunner.setInput('findbugsAnalysisEnabled', 'true');
+
+        // Act
+        taskRunner.run()
+            .then(() => {
+                // Assert
+                assert(taskRunner.resultWasSet, 'should have set a result');
+                assert(taskRunner.stdout.length > 0, 'should have written to stdout');
+                assert(taskRunner.stderr.length == 0, 'should not have written to stderr');
+                assert(taskRunner.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
+                assert(taskRunner.succeeded, 'task should have succeeded');
+                assert(taskRunner.ran('/home/bin/maven/bin/mvn -f pom.xml package checkstyle:checkstyle findbugs:findbugs pmd:pmd'),
+                    'should have run maven with the correct arguments');
+                assert(taskRunner.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=Code Analysis Report') > -1,
+                    'should have uploaded a Code Analysis Report build summary');
+
+                assert(taskRunner.stdout.indexOf('##vso[artifact.upload artifactname=Code Analysis Results;]') < 0,
+                    'should not have uploaded a code analysis build artifact');
+
+                assertCodeAnalysisBuildSummaryContains(testStgDir, 'Checkstyle found no violations.');
+                assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found no violations.');
+                assertCodeAnalysisBuildSummaryContains(testStgDir, 'FindBugs found no violations.');
+
+                // The .codeAnalysis dir should have been created to store the build summary, but not the report dirs
+                var codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis');
+                assertFileDoesNotExistInDir(codeAnalysisStgDir, 'CA');
+
+                done();
+            })
+            .fail((err) => {
+                console.log(taskRunner.stdout);
+                console.log(taskRunner.stderr);
+                console.log(err);
+                done(err);
+            });
+
+        // Clean up
+        cleanTempDirsForCodeAnalysisTests();
+    });
+
+    it('Maven with code analysis - Executes and uploads discovered results even if the tools were not enabled', function (done) {
+        // In the test data:
+        // /: pom.xml, target/.
+        // Expected: one module, root.
+
+        // Arrange
         var testSrcDir: string = path.join(__dirname, 'data', 'singlemodule');
         var testStgDir: string = path.join(__dirname, '_temp');
 
