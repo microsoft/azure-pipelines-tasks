@@ -47,9 +47,9 @@ function Get-RegistryValue {
 
         [string]$ValueName)
 
-    Write-Host "Checking: hive '$Hive', view '$View', key name '$KeyName', value name '$ValueName'"
+    Write-Verbose "Checking: hive '$Hive', view '$View', key name '$KeyName', value name '$ValueName'"
     if ($View -eq 'Registry64' -and !([System.Environment]::Is64BitOperatingSystem)) {
-        Write-Host "Skipping."
+        Write-Verbose "Skipping."
         return
     }
 
@@ -64,7 +64,7 @@ function Get-RegistryValue {
 
         # Check if the sub key was found.
         if (!$subKey) {
-            Write-Host "Key not found."
+            Write-Verbose "Key not found."
             return
         }
 
@@ -75,12 +75,12 @@ function Get-RegistryValue {
         if ([System.Object]::ReferenceEquals($value, $null) -or
             ($value -is [string] -and !$value)) {
 
-            Write-Host "Value not found or is empty."
+            Write-Verbose "Value not found or is empty."
             return
         }
 
         # Return the value.
-        Write-Host "Found $($value.GetType().Name) value: '$value'"
+        Write-Verbose "Found $($value.GetType().Name) value: '$value'"
         return $value
     } finally {
         # Dispose the sub key.

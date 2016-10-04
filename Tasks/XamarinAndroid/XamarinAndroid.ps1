@@ -29,6 +29,9 @@ try {
 
     # Format the MSBuild args.
     $msBuildArguments = Format-MSBuildArguments -MSBuildArguments $msbuildArguments -Configuration $configuration
+    if($clean) {
+        $msBuildArguments = "$msBuildArguments /t:clean"
+    }
     if($target) {
         $msBuildArguments = "$msBuildArguments /t:$target"
     }
@@ -52,10 +55,10 @@ try {
     }
 
     # Resolve the MSBuild location.
-    if ($msbuildLocationMethod -eq 'location') {
+    if ($msbuildLocationMethod.ToLower() -eq 'location') {
         $msbuildLocationMethod = "location"
     }
-    ElseIf ($msbuildLocation -and $msbuildVersion -eq 'latest') {
+    ElseIf ($msbuildLocation -and $msbuildVersion.ToLower() -eq 'latest') {
         # Use location if msbuildLocation is set and verison is 'latest' for back compat
         $msbuildLocationMethod = "location"
     }
