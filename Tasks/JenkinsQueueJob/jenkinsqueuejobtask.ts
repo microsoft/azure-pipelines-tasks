@@ -87,6 +87,8 @@ export class TaskOptions {
 
 async function doWork() {
     try {
+        tl.setResourcePath(path.join( __dirname, 'task.json'));
+        
         var taskOptions: TaskOptions = new TaskOptions();
 
         var jobQueue: JobQueue = new JobQueue(taskOptions);
