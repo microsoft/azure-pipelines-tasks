@@ -1,4 +1,7 @@
 {
+    "getVariable": {
+        "HOME": "/user/home"
+    },
     "checkPath" : {
         "/home/bin2/xbuild": true,
         "src/project.sln": true  
