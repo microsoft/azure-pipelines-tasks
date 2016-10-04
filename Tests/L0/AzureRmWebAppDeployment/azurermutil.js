@@ -2,7 +2,7 @@
 "use strict";
 
 const tl = require('vsts-task-lib/task');
-var kuduDeploymentLog = require('./kuduDeploymentLog.js');
+var kuduDeploymentLog = require('./kududeploymentlog.js');
 
 function getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
 	

@@ -1,8 +1,8 @@
 {
     "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
     "name": "AzureRmWebAppDeployment",
-    "friendlyName": "AzureRM App Service Deployment",
-    "description": "Deploy the web project using AzureRM App Service",
+    "friendlyName": "Azure App Service Deployment: ARM",
+    "description": "Update Azure App Service using Web Deploy / Kudu REST APIs",
     "helpMarkDown": "[More Information](https://aka.ms/azurermwebdeployreadme)",
     "category": "Deploy",
     "visibility": [
@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 4
     },
     "minimumAgentVersion": "1.102.0",
     "groups": [
