@@ -1,8 +1,8 @@
 {
     "id": "DCBEF2C9-E4F4-4929-82B2-EA7FC9166109",
     "name": "AzureWebPowerShellDeployment",
-    "friendlyName": "Azure Web App Deployment",
-    "description": "Publish a Visual Studio Web project to a Microsoft Azure Web App using Web Deploy",
+    "friendlyName": "Azure App Service Deployment: Classic",
+    "description": "Create or update Azure App Service using Azure PowerShell",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613750)",
     "category": "Deploy",
     "visibility": [
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 38
+        "Patch": 39
     },
     "demands": [
         "azureps"
