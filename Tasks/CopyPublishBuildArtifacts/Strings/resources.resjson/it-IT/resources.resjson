@@ -12,5 +12,6 @@
   "loc.input.label.ArtifactType": "Tipo di artefatto",
   "loc.input.help.ArtifactType": "Tipo dell'artefatto da creare.",
   "loc.input.label.TargetPath": "Percorso",
-  "loc.input.help.TargetPath": "Condivisione file in cui copiare i file"
+  "loc.input.help.TargetPath": "Condivisione file in cui copiare i file",
+  "loc.messages.ErrorFileShareLinux": "Cannot publish artifacts from an OSX or Linux agent to a file share. You can change the artifact type to server or use a Windows agent."
 }

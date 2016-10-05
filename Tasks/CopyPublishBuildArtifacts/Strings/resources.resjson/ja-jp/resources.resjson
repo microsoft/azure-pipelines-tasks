@@ -12,5 +12,6 @@
   "loc.input.label.ArtifactType": "成果物の種類",
   "loc.input.help.ArtifactType": "作成する成果物の種類。",
   "loc.input.label.TargetPath": "パス",
-  "loc.input.help.TargetPath": "ファイルのコピー先となるファイル共有"
+  "loc.input.help.TargetPath": "ファイルのコピー先となるファイル共有",
+  "loc.messages.ErrorFileShareLinux": "Cannot publish artifacts from an OSX or Linux agent to a file share. You can change the artifact type to server or use a Windows agent."
 }

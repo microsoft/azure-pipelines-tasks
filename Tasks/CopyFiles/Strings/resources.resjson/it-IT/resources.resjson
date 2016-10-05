@@ -9,7 +9,7 @@
   "loc.input.label.Contents": "Contenuti",
   "loc.input.help.Contents": "Percorsi di file da includere nella copia. Sono supportate più righe di criteri di corrispondenza minima. [Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=708389)",
   "loc.input.label.TargetFolder": "Cartella di destinazione",
-  "loc.input.help.TargetFolder": "Target folder or UNC path files will copy to. You can use [variables](http://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)",
+  "loc.input.help.TargetFolder": "Cartella di destinazione o percorso UNC in cui verranno copiati i file. È possibile usare [variabili](http://go.microsoft.com/fwlink/?LinkID=550988). Esempio: $(build.artifactstagingdirectory)",
   "loc.input.label.CleanTargetFolder": "Pulisci cartella di destinazione",
   "loc.input.help.CleanTargetFolder": "Elimina tutti i file esistenti nella cartella di destinazione prima della copia",
   "loc.input.label.OverWrite": "Sovrascrivi",

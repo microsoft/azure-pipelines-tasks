@@ -4,8 +4,8 @@
   "loc.description": "Azure-Clouddienst bereitstellen",
   "loc.instanceNameFormat": "Azure-Bereitstellung: $(CsPkg)",
   "loc.group.displayName.newServiceAdvancedOptions": "Erweiterte Optionen für das Erstellen des neuen Diensts.",
-  "loc.input.label.ConnectedServiceName": "Azure Subscription (Classic)",
-  "loc.input.help.ConnectedServiceName": "Azure Classic subscription to target for deployment.",
+  "loc.input.label.ConnectedServiceName": "Azure-Abonnement (klassisch)",
+  "loc.input.help.ConnectedServiceName": "Klassisches Azure-Zielabonnement für die Bereitstellung.",
   "loc.input.label.StorageAccount": "Speicherkonto",
   "loc.input.help.StorageAccount": "Das Speicherkonto muss vor der Bereitstellung vorhanden sein.",
   "loc.input.label.ServiceName": "Dienstname",
@@ -26,10 +26,10 @@
   "loc.input.help.NewServiceAdditionalArguments": "Übergeben Sie weitere Argumente beim Erstellen eines ganz neuen Dienstes. Diese werden an das Cmdlet \"New-AzureService\" übergeben, z. B. \"-label 'MeinTestDienst'\".",
   "loc.input.label.NewServiceAffinityGroup": "AffinityGroup",
   "loc.input.help.NewServiceAffinityGroup": "Beim Erstellen des neuen Diensts wird diese Affinitätsgruppe anstelle eines Dienstspeicherorts berücksichtigt.",
-  "loc.messages.Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions": "Could not get the primary storage key for storage account '{0}'. Unable to apply any diagnostics extensions.",
-  "loc.messages.Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions": "Could not get the primary storage key for the public config storage account '{0}'. Unable to apply any diagnostics extensions.",
-  "loc.messages.Applyinganyconfigureddiagnosticsextensions": "Applying any configured diagnostics extensions.",
-  "loc.messages._0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "'{0}' could not be parsed into parts for registering diagnostics extensions.",
-  "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}",
-  "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one."
+  "loc.messages.Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions": "Der primäre Speicherschlüssel für das Speicherkonto \"{0}\" konnte nicht abgerufen werden. Es können keine Diagnoseextensions angewendet werden.",
+  "loc.messages.Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions": "Der primäre Speicherschlüssel für das öffentliche Konfigurationsspeicherkonto \"{0}\" konnte nicht abgerufen werden. Es können keine Diagnoseextensions angewendet werden.",
+  "loc.messages.Applyinganyconfigureddiagnosticsextensions": "Alle konfigurierten Diagnoseextensions werden angewendet.",
+  "loc.messages._0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "'{0}' konnte nicht in Teile für die Registrierungsdiagnoseextensions analysiert werden.",
+  "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "Es wurden keine Dateien zum Bereitstellen mit dem Suchmuster \"{0}\" gefunden.",
+  "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Es wurde mehrere Dateien zum Bereitstellen mit dem Suchmuster \"{0}\" gefunden. Es darf maximal eine Datei vorhanden sein."
 }

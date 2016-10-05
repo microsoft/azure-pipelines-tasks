@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Compilación de Xcode",
+  "loc.friendlyName": "Compilar Xcode",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613730)",
   "loc.description": "Compile un área de trabajo de Xcode en Mac OS",
   "loc.instanceNameFormat": "Xcode $(actions)",
@@ -48,15 +48,15 @@
   "loc.input.help.xctoolReporter": "Formato del notificador de pruebas que se usará cuando esté especificada la acción \"test\" y esté marcado \"Use xctool\". Especifique \"junit:output-file-path-here.xml\" para generar un formato de archivo compatible con la tarea de publicar resultados de la prueba. Si se especifica, \"plain\" se agrega también automáticamente. Requiere que xctool esté instalado en los hosts de agente. Consulte [xctool](https://github.com/facebook/xctool) para obtener más información.",
   "loc.input.label.publishJUnitResults": "Publicar en VSTS/TFS",
   "loc.input.help.publishJUnitResults": "Seleccione esta opción para publicar en VSTS/TFS los resultados de las pruebas JUnit generados anteriormente con xctool.",
-  "loc.messages.SignIdNotFound": "Failed to find iOS signing identity. Verify the signing and provisioning information provided.",
-  "loc.messages.TempKeychainSetupFailed": "Failed to add the temporary keychain to the keychains search path.",
-  "loc.messages.ProvProfileDetailsNotFound": "Failed to find the details for provisioning profile: %s",
-  "loc.messages.ProvProfileUUIDNotFound": "Failed to find provisioning profile UUID for provisioning profile: %s",
-  "loc.messages.MultipleWorkspacesFound": "Multiple xcode workspace matches were found. Using the first match: %s",
-  "loc.messages.WorkspaceDoesNotExist": "Xcode workspace was specified but it does not exist or is not a directory",
-  "loc.messages.UseXcToolForTestPublishing": "Check the 'Use xctool' checkbox and specify the xctool reporter format to publish test results. No results published.",
-  "loc.messages.NoTestResultsFound": "No test result files matching %s were found, so publishing JUnit test results is being skipped.",
-  "loc.messages.XcodeSuccess": "Xcode task execution completed with no errors.",
-  "loc.messages.TempKeychainDeleteFailed": "Failed to delete temporary keychain %s created during the build.",
-  "loc.messages.ProvProfileDeleteFailed": "Failed to delete the provisioning profile %s."
+  "loc.messages.SignIdNotFound": "No se encontró la identidad de firma de iOS. Compruebe la información de firma y de aprovisionamiento proporcionada.",
+  "loc.messages.TempKeychainSetupFailed": "No se pudo agregar la cadena de claves temporal a la ruta de acceso de búsqueda de cadenas de claves.",
+  "loc.messages.ProvProfileDetailsNotFound": "No se encontraron los detalles del perfil de aprovisionamiento: %s.",
+  "loc.messages.ProvProfileUUIDNotFound": "No se encontró el UUID del perfil de aprovisionamiento: %s.",
+  "loc.messages.MultipleWorkspacesFound": "Se encontraron varias coincidencias en el área de trabajo de xcode. Se usará la primera: %s.",
+  "loc.messages.WorkspaceDoesNotExist": "Se especificó un área de trabajo de Xcode, pero no existe o no es un directorio.",
+  "loc.messages.UseXcToolForTestPublishing": "Active la casilla \"Usar xctool\" y especifique el formato del generador de informes de xctool para publicar los resultados de pruebas. No hay ningún resultado publicado.",
+  "loc.messages.NoTestResultsFound": "No se encontraron archivos de resultados de pruebas que coincidan con %s, por lo que se omite la publicación de los resultados de las pruebas JUnit.",
+  "loc.messages.XcodeSuccess": "La ejecución de la tarea de Xcode se completó sin errores.",
+  "loc.messages.TempKeychainDeleteFailed": "No se pudo eliminar la cadena de claves temporal %s creada durante la compilación.",
+  "loc.messages.ProvProfileDeleteFailed": "No se pudo eliminar el perfil de aprovisionamiento %s."
 }

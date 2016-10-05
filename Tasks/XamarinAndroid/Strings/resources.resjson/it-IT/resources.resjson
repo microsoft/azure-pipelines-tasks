@@ -14,8 +14,13 @@
   "loc.input.label.configuration": "Configurazione",
   "loc.input.label.clean": "Pulisci",
   "loc.input.help.clean": "Passa la destinazione pulita (/t:clean) durante la compilazione.",
+  "loc.input.label.msbuildLocationMethod": "MSBuild",
+  "loc.input.label.msbuildVersion": "MSBuild Version",
+  "loc.input.help.msbuildVersion": "If the preferred version cannot be found, the latest version found will be used instead. On a Mac xbuild (Mono) will be used.",
   "loc.input.label.msbuildLocation": "Percorso MSBuild",
-  "loc.input.help.msbuildLocation": "Consente, facoltativamente, di specificare il percorso di MSBuild (in Windows) o xbuild (in Mac). Per impostazione predefinita, verrà cercata la versione più recente.",
+  "loc.input.help.msbuildLocation": "Optionally supply the path to MSBuild (on Windows) or xbuild (on Mac).",
+  "loc.input.label.msbuildArchitecture": "MSBuild Architecture",
+  "loc.input.help.msbuildArchitecture": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
   "loc.input.label.msbuildArguments": "Argomenti aggiuntivi",
   "loc.input.help.msbuildArguments": "Argomenti aggiuntivi passati a MSBuild (in Windows) o xbuild (in Mac).",
   "loc.input.label.jdkSelection": "Seleziona JDK da usare per la compilazione",
@@ -25,5 +30,7 @@
   "loc.input.label.jdkUserInputPath": "Percorso JDK",
   "loc.input.help.jdkUserInputPath": "Consente di usare la versione di JDK nel percorso specificato durante la compilazione.",
   "loc.input.label.jdkArchitecture": "Architettura JDK",
-  "loc.input.help.jdkArchitecture": "Consente, facoltativamente, di specificare l'architettura (x86, x64) di JDK."
+  "loc.input.help.jdkArchitecture": "Consente, facoltativamente, di specificare l'architettura (x86, x64) di JDK.",
+  "loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "Unable to find MSBuild: Version = {0}, Architecture = {1}. Looking for the latest version.",
+  "loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent": "MSBuild not found: Version = {0}, Architecture = {1}. Try a different version/architecture combination, specify a location, or install the appropriate MSBuild version/architecture."
 }

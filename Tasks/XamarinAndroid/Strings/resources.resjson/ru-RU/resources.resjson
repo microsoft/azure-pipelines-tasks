@@ -14,8 +14,13 @@
   "loc.input.label.configuration": "Конфигурация",
   "loc.input.label.clean": "Очистить",
   "loc.input.help.clean": "Передает чистый целевой объект (/t:clean) во время сборки.",
+  "loc.input.label.msbuildLocationMethod": "MSBuild",
+  "loc.input.label.msbuildVersion": "MSBuild Version",
+  "loc.input.help.msbuildVersion": "If the preferred version cannot be found, the latest version found will be used instead. On a Mac xbuild (Mono) will be used.",
   "loc.input.label.msbuildLocation": "Расположение MSBuild",
-  "loc.input.help.msbuildLocation": "При необходимости укажите путь к MSBuild (в Windows) или xbuild (в Mac OS). По умолчанию ищется последняя версия.",
+  "loc.input.help.msbuildLocation": "Optionally supply the path to MSBuild (on Windows) or xbuild (on Mac).",
+  "loc.input.label.msbuildArchitecture": "MSBuild Architecture",
+  "loc.input.help.msbuildArchitecture": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
   "loc.input.label.msbuildArguments": "Дополнительные аргументы",
   "loc.input.help.msbuildArguments": "Дополнительные аргументы, передаваемые в MSBuild (в Windows) или xbuild (в Mac OS).",
   "loc.input.label.jdkSelection": "Выберите пакет JDK, который необходимо использовать для сборки",
@@ -25,5 +30,7 @@
   "loc.input.label.jdkUserInputPath": "Путь к JDK",
   "loc.input.help.jdkUserInputPath": "Использовать при сборке версию JDK по указанному пути.",
   "loc.input.label.jdkArchitecture": "Архитектура JDK",
-  "loc.input.help.jdkArchitecture": "Дополнительно укажите архитектуру JDK (x86, x64)."
+  "loc.input.help.jdkArchitecture": "Дополнительно укажите архитектуру JDK (x86, x64).",
+  "loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "Unable to find MSBuild: Version = {0}, Architecture = {1}. Looking for the latest version.",
+  "loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent": "MSBuild not found: Version = {0}, Architecture = {1}. Try a different version/architecture combination, specify a location, or install the appropriate MSBuild version/architecture."
 }

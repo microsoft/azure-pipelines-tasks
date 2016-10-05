@@ -12,5 +12,6 @@
   "loc.input.label.ArtifactType": "Тип артефакта",
   "loc.input.help.ArtifactType": "Тип создаваемого артефакта.",
   "loc.input.label.TargetPath": "Путь",
-  "loc.input.help.TargetPath": "Общая папка, в которую копируются файлы"
+  "loc.input.help.TargetPath": "Общая папка, в которую копируются файлы",
+  "loc.messages.ErrorFileShareLinux": "Cannot publish artifacts from an OSX or Linux agent to a file share. You can change the artifact type to server or use a Windows agent."
 }

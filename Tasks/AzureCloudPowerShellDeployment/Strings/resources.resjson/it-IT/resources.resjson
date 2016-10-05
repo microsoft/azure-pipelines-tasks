@@ -4,8 +4,8 @@
   "loc.description": "Consente di distribuire un servizio cloud di Azure",
   "loc.instanceNameFormat": "Distribuzione Azure: $(CsPkg)",
   "loc.group.displayName.newServiceAdvancedOptions": "Opzioni avanzate per la creazione del nuovo servizio",
-  "loc.input.label.ConnectedServiceName": "Azure Subscription (Classic)",
-  "loc.input.help.ConnectedServiceName": "Azure Classic subscription to target for deployment.",
+  "loc.input.label.ConnectedServiceName": "Sottoscrizione di Azure (classico)",
+  "loc.input.help.ConnectedServiceName": "Sottoscrizione di Azure classico usata come destinazione della distribuzione.",
   "loc.input.label.StorageAccount": "Account di archiviazione",
   "loc.input.help.StorageAccount": "L'account di archiviazione deve esistere prima della distribuzione.",
   "loc.input.label.ServiceName": "Nome del servizio",
@@ -26,10 +26,10 @@
   "loc.input.help.NewServiceAdditionalArguments": "Consente di passare al cmdlet `New-AzureService` argomenti aggiuntivi durante la creazione di un nuovo servizio, ad esempio `-Label 'MyTestService'`",
   "loc.input.label.NewServiceAffinityGroup": "Gruppo di affinità",
   "loc.input.help.NewServiceAffinityGroup": "Durante la creazione del nuovo servizio invece della posizione del servizio verrà considerato questo gruppo di affinità.",
-  "loc.messages.Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions": "Could not get the primary storage key for storage account '{0}'. Unable to apply any diagnostics extensions.",
-  "loc.messages.Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions": "Could not get the primary storage key for the public config storage account '{0}'. Unable to apply any diagnostics extensions.",
-  "loc.messages.Applyinganyconfigureddiagnosticsextensions": "Applying any configured diagnostics extensions.",
-  "loc.messages._0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "'{0}' could not be parsed into parts for registering diagnostics extensions.",
-  "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}",
-  "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one."
+  "loc.messages.Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions": "Non è stato possibile ottenere la chiave di archiviazione primaria per l'account di archiviazione '{0}'. Non è possibile applicare le estensioni di diagnostica.",
+  "loc.messages.Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions": "Non è stato possibile ottenere la chiave di archiviazione primaria per l'account di archiviazione '{0}' della configurazione pubblica. Non è possibile applicare le estensioni di diagnostica.",
+  "loc.messages.Applyinganyconfigureddiagnosticsextensions": "Applicazione delle eventuali estensioni di diagnostica configurate.",
+  "loc.messages._0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "Non è stato possibile analizzare '{0}' in parti per la registrazione delle estensioni di diagnostica.",
+  "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "Non sono stati trovati file da distribuire con il criterio di ricerca {0}",
+  "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Con il criterio di ricerca {0} sono stati trovati più file da distribuire. È possibile distribuirne uno solo."
 }

@@ -14,8 +14,13 @@
   "loc.input.label.configuration": "組態",
   "loc.input.label.clean": "清除",
   "loc.input.help.clean": "在建置期間傳遞 Clean 目標 (/t:clean)。",
+  "loc.input.label.msbuildLocationMethod": "MSBuild",
+  "loc.input.label.msbuildVersion": "MSBuild Version",
+  "loc.input.help.msbuildVersion": "If the preferred version cannot be found, the latest version found will be used instead. On a Mac xbuild (Mono) will be used.",
   "loc.input.label.msbuildLocation": "MSBuild 位置",
-  "loc.input.help.msbuildLocation": "選擇性地提供 MSBuild (在 Windows 上) 或 xbuild (在 Mac 上) 的路徑。其預設為搜尋最新版本。",
+  "loc.input.help.msbuildLocation": "Optionally supply the path to MSBuild (on Windows) or xbuild (on Mac).",
+  "loc.input.label.msbuildArchitecture": "MSBuild Architecture",
+  "loc.input.help.msbuildArchitecture": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
   "loc.input.label.msbuildArguments": "額外引數",
   "loc.input.help.msbuildArguments": "傳遞至 MSBuild (在 Windows 上) 或 xbuild (在 Mac 上) 的額外引數。",
   "loc.input.label.jdkSelection": "選取要用於組建的 JDK",
@@ -25,5 +30,7 @@
   "loc.input.label.jdkUserInputPath": "JDK 路徑",
   "loc.input.help.jdkUserInputPath": "在建置期間，使用所指定路徑中的 JDK 版本。",
   "loc.input.label.jdkArchitecture": "JDK 架構",
-  "loc.input.help.jdkArchitecture": "選擇性地提供 JDK 的架構 (x86、x64)。"
+  "loc.input.help.jdkArchitecture": "選擇性地提供 JDK 的架構 (x86、x64)。",
+  "loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "Unable to find MSBuild: Version = {0}, Architecture = {1}. Looking for the latest version.",
+  "loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent": "MSBuild not found: Version = {0}, Architecture = {1}. Try a different version/architecture combination, specify a location, or install the appropriate MSBuild version/architecture."
 }

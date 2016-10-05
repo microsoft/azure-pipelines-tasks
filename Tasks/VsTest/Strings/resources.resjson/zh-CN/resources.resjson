@@ -21,8 +21,8 @@
   "loc.input.label.vstestLocationMethod": "VSTest",
   "loc.input.label.vsTestVersion": "VSTest 版本",
   "loc.input.help.vsTestVersion": "要使用的 VSTest 的版本。",
-  "loc.input.label.vstestLocation": "Path to vstest.console.exe",
-  "loc.input.help.vstestLocation": "Optionally supply the path to VSTest.",
+  "loc.input.label.vstestLocation": "vstest.console.exe 的路径",
+  "loc.input.help.vstestLocation": "可以提供 VSTest 的路径。",
   "loc.input.label.pathtoCustomTestAdapters": "自定义测试适配器的路径",
   "loc.input.help.pathtoCustomTestAdapters": "自定义测试适配器的目录路径。将自动搜索 Nuget 还原的适配器。",
   "loc.input.label.otherConsoleOptions": "其他控制台选项",
@@ -50,7 +50,7 @@
   "loc.messages.ErrorWhileSettingTestImpactCollectorRunSettings": "在运行设置文件中设置测试影响收集器时发生错误。",
   "loc.messages.ErrorWhileCreatingResponseFile": "在创建响应文件时发生错误。将对此运行执行所有的测试。",
   "loc.messages.ErrorWhileUpdatingResponseFile": "在更新响应文件 \"%s\" 时发生错误。将对此运行执行所有的测试。",
-  "loc.messages.ErrorWhilePublishingCodeChanges": "Error occurred while publishing the code changes. All the tests will be executed for this run.",
-  "loc.messages.PublishCodeChangesPerfTime": "Total time taken to publish code changes: %d milliseconds",
-  "loc.messages.GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds"
+  "loc.messages.ErrorWhilePublishingCodeChanges": "发布代码更改时出错。将对此运行执行所有的测试。",
+  "loc.messages.PublishCodeChangesPerfTime": "发布代码更改所用的总时间: %d 毫秒",
+  "loc.messages.GenerateResponseFilePerfTime": "获取响应文件所用的总时间: %d 毫秒"
 }

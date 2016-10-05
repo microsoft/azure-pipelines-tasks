@@ -4,8 +4,8 @@
   "loc.description": "Azure 클라우드 서비스 배포",
   "loc.instanceNameFormat": "Azure 배포: $(CsPkg)",
   "loc.group.displayName.newServiceAdvancedOptions": "새 서비스 만들기에 대한 고급 옵션",
-  "loc.input.label.ConnectedServiceName": "Azure Subscription (Classic)",
-  "loc.input.help.ConnectedServiceName": "Azure Classic subscription to target for deployment.",
+  "loc.input.label.ConnectedServiceName": "Azure 구독(클래식)",
+  "loc.input.help.ConnectedServiceName": "배포를 위한 대상으로 지정할 Azure 클래식 구독입니다.",
   "loc.input.label.StorageAccount": "저장소 계정",
   "loc.input.help.StorageAccount": "배포하려면 먼저 저장소 계정이 있어야 합니다.",
   "loc.input.label.ServiceName": "서비스 이름",
@@ -26,10 +26,10 @@
   "loc.input.help.NewServiceAdditionalArguments": "새 서비스를 만드는 동안 추가 인수에서 전달합니다. 이러한 인수는 `New-AzureService` commandlet에 전달됩니다. 예: `-Label 'MyTestService'`",
   "loc.input.label.NewServiceAffinityGroup": "선호도 그룹",
   "loc.input.help.NewServiceAffinityGroup": "새 서비스를 만드는 동안 서비스 위치를 사용하는 대신 이 선호도 그룹이 고려됩니다.",
-  "loc.messages.Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions": "Could not get the primary storage key for storage account '{0}'. Unable to apply any diagnostics extensions.",
-  "loc.messages.Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions": "Could not get the primary storage key for the public config storage account '{0}'. Unable to apply any diagnostics extensions.",
-  "loc.messages.Applyinganyconfigureddiagnosticsextensions": "Applying any configured diagnostics extensions.",
-  "loc.messages._0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "'{0}' could not be parsed into parts for registering diagnostics extensions.",
-  "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}",
-  "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one."
+  "loc.messages.Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions": "저장소 계정 '{0}'의 기본 저장소 키를 가져올 수 없습니다. 진단 확장을 적용할 수 없습니다.",
+  "loc.messages.Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions": "공용 구성 저장소 계정 '{0}'의 기본 저장소 키를 가져올 수 없습니다. 진단 확장을 적용할 수 없습니다.",
+  "loc.messages.Applyinganyconfigureddiagnosticsextensions": "구성된 모든 진단 확장을 적용하는 중입니다.",
+  "loc.messages._0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "진단 확장을 등록하기 위해 '{0}'을(를) 파트로 구문 분석할 수 없습니다.",
+  "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "검색 패턴 {0}(으)로 배포할 파일을 찾을 수 없습니다.",
+  "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "검색 패턴 {0}(으)로 배포할 파일을 두 개 이상 찾았습니다. 하나만 있을 수 있습니다."
 }

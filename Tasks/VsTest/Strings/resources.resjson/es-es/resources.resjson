@@ -21,8 +21,8 @@
   "loc.input.label.vstestLocationMethod": "VSTest",
   "loc.input.label.vsTestVersion": "Versión de VSTest",
   "loc.input.help.vsTestVersion": "Versión de VSTest que se va a usar.",
-  "loc.input.label.vstestLocation": "Path to vstest.console.exe",
-  "loc.input.help.vstestLocation": "Optionally supply the path to VSTest.",
+  "loc.input.label.vstestLocation": "Ruta de acceso a vstest.console.exe",
+  "loc.input.help.vstestLocation": "Opcionalmente, puede proporcionar la ruta de acceso de VSTest.",
   "loc.input.label.pathtoCustomTestAdapters": "Ruta de acceso de los adaptadores de pruebas personalizados",
   "loc.input.help.pathtoCustomTestAdapters": "Ruta de acceso del directorio a los adaptadores de prueba personalizados. Se buscan automáticamente los adaptadores restaurados de NuGet.",
   "loc.input.label.otherConsoleOptions": "Otras opciones de la consola",
@@ -50,7 +50,7 @@
   "loc.messages.ErrorWhileSettingTestImpactCollectorRunSettings": "Error al configurar el recopilador de impactos en pruebas en el archivo de configuración de ejecución.",
   "loc.messages.ErrorWhileCreatingResponseFile": "Error al crear el archivo de respuesta. Todas las pruebas se ejecutarán para esta ejecución.",
   "loc.messages.ErrorWhileUpdatingResponseFile": "Error al actualizar el archivo de respuesta '%s'. Todas las pruebas se ejecutarán para esta ejecución.",
-  "loc.messages.ErrorWhilePublishingCodeChanges": "Error occurred while publishing the code changes. All the tests will be executed for this run.",
-  "loc.messages.PublishCodeChangesPerfTime": "Total time taken to publish code changes: %d milliseconds",
-  "loc.messages.GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds"
+  "loc.messages.ErrorWhilePublishingCodeChanges": "Error al publicar los cambios de código. Se ejecutarán todas las pruebas de esta serie.",
+  "loc.messages.PublishCodeChangesPerfTime": "Tiempo total que se tarda en publicar los cambios de código: %d milisegundos.",
+  "loc.messages.GenerateResponseFilePerfTime": "Tiempo total que se tarda en obtener el archivo de respuesta: %d milisegundos."
 }

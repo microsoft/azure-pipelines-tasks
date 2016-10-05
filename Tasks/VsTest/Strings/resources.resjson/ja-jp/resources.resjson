@@ -21,8 +21,8 @@
   "loc.input.label.vstestLocationMethod": "VSTest",
   "loc.input.label.vsTestVersion": "VSTest のバージョン",
   "loc.input.help.vsTestVersion": "使用する VSTest のバージョン。",
-  "loc.input.label.vstestLocation": "Path to vstest.console.exe",
-  "loc.input.help.vstestLocation": "Optionally supply the path to VSTest.",
+  "loc.input.label.vstestLocation": "vstest.console.exe へのパス",
+  "loc.input.help.vstestLocation": "必要に応じて、VSTest へのパスを指定します。",
   "loc.input.label.pathtoCustomTestAdapters": "カスタム テスト アダプターへのパス",
   "loc.input.help.pathtoCustomTestAdapters": "カスタム テスト アダプターへのディレクトリ パス。Nuget 復元アダプターが自動的に検索されます。",
   "loc.input.label.otherConsoleOptions": "その他のコンソールのオプション",
@@ -50,7 +50,7 @@
   "loc.messages.ErrorWhileSettingTestImpactCollectorRunSettings": "実行設定ファイルでテスト影響コレクターの設定中にエラーが発生しました。",
   "loc.messages.ErrorWhileCreatingResponseFile": "応答ファイルの作成中にエラーが発生しました。この実行に対してすべてのテストが実行されます。",
   "loc.messages.ErrorWhileUpdatingResponseFile": "応答ファイル '%s' の更新中にエラーが発生しました。この実行に対してすべてのテストが実行されます。",
-  "loc.messages.ErrorWhilePublishingCodeChanges": "Error occurred while publishing the code changes. All the tests will be executed for this run.",
-  "loc.messages.PublishCodeChangesPerfTime": "Total time taken to publish code changes: %d milliseconds",
-  "loc.messages.GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds"
+  "loc.messages.ErrorWhilePublishingCodeChanges": "コード変更の発行中にエラーが発生しました。この実行についてはすべてのテストが実行されます。",
+  "loc.messages.PublishCodeChangesPerfTime": "コード変更の発行にかかった合計時間: %d ミリ秒",
+  "loc.messages.GenerateResponseFilePerfTime": "応答ファイルの取得にかかった合計時間: %d ミリ秒"
 }

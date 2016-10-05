@@ -9,7 +9,7 @@
   "loc.input.label.Contents": "コンテンツ",
   "loc.input.help.Contents": "コピーの一部として含むファイル パス。複数行の minimatch パターンをサポートします。[詳細](https://go.microsoft.com/fwlink/?LinkID=708389)",
   "loc.input.label.TargetFolder": "ターゲット フォルダー",
-  "loc.input.help.TargetFolder": "Target folder or UNC path files will copy to. You can use [variables](http://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)",
+  "loc.input.help.TargetFolder": "ファイルをコピーするターゲット フォルダーまたは UNC パス。[変数](http://go.microsoft.com/fwlink/?LinkID=550988) を使用できます。例: $(build.artifactstagingdirectory)",
   "loc.input.label.CleanTargetFolder": "ターゲット フォルダーの消去",
   "loc.input.help.CleanTargetFolder": "コピーする前にターゲット フォルダーにある既存のファイルをすべて削除する",
   "loc.input.label.OverWrite": "上書き",

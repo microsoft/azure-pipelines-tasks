@@ -4,8 +4,8 @@
   "loc.description": "Развертывание облачной службы Azure",
   "loc.instanceNameFormat": "Развертывание Azure: $(CsPkg)",
   "loc.group.displayName.newServiceAdvancedOptions": "Расширенные параметры для создания новой службы",
-  "loc.input.label.ConnectedServiceName": "Azure Subscription (Classic)",
-  "loc.input.help.ConnectedServiceName": "Azure Classic subscription to target for deployment.",
+  "loc.input.label.ConnectedServiceName": "Подписка Azure (классическая)",
+  "loc.input.help.ConnectedServiceName": "Целевая классическая подписка Azure, которая должна использоваться развертыванием.",
   "loc.input.label.StorageAccount": "Учетная запись хранения",
   "loc.input.help.StorageAccount": "Учетная запись хранения должна существовать до развертывания.",
   "loc.input.label.ServiceName": "Имя службы",
@@ -26,10 +26,10 @@
   "loc.input.help.NewServiceAdditionalArguments": "Передайте дополнительные аргументы во время создания новой службы. Они будут отправлены в командлет New-AzureService. Например, -Label 'MyTestService'",
   "loc.input.label.NewServiceAffinityGroup": "AffinityGroup",
   "loc.input.help.NewServiceAffinityGroup": "При создании новой службы будет учитываться эта территориальная группа, а не расположение службы.",
-  "loc.messages.Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions": "Could not get the primary storage key for storage account '{0}'. Unable to apply any diagnostics extensions.",
-  "loc.messages.Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions": "Could not get the primary storage key for the public config storage account '{0}'. Unable to apply any diagnostics extensions.",
-  "loc.messages.Applyinganyconfigureddiagnosticsextensions": "Applying any configured diagnostics extensions.",
-  "loc.messages._0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "'{0}' could not be parsed into parts for registering diagnostics extensions.",
-  "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}",
-  "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one."
+  "loc.messages.Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions": "Не удалось получить первичный ключ к хранилищу данных для учетной записи хранения \"{0}\". Не удается применить расширения диагностики.",
+  "loc.messages.Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions": "Не удалось получить первичный ключ к хранилищу данных для учетной записи общедоступного хранилища конфигураций \"{0}\". Не удается применить расширения диагностики.",
+  "loc.messages.Applyinganyconfigureddiagnosticsextensions": "Применение настроенных расширений диагностики.",
+  "loc.messages._0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "Не удалось проанализировать \"{0}\" и выделить в анализируемом части для регистрации расширений диагностики.",
+  "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "Не удалось найти файлы для развертывания с шаблоном поиска \"{0}\"",
+  "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Найдено несколько файлов для развертывания с шаблоном поиска \"{0}\". Файл может быть только один."
 }

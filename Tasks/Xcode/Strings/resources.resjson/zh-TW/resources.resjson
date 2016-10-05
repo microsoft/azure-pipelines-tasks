@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Xcode 組建",
+  "loc.friendlyName": "Xcode 建置",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613730)",
   "loc.description": "在 Mac OS 上建置 Xcode 工作區",
   "loc.instanceNameFormat": "Xcode $(actions)",
@@ -48,15 +48,15 @@
   "loc.input.help.xctoolReporter": "在已指定「測試」動作並核取「使用 xctool」的情形下，要使用的測試報告格式。指定 \"junit:output-file-path-here.xml\" 以產生與發行測試結果工作相容的檔案格式。指定後，\"plain\" 也會自動加入。代理程式主機上必須安裝 xctool。如需詳細資訊，請參閱 [xctool](https://github.com/facebook/xctool)。",
   "loc.input.label.publishJUnitResults": "發行至 VSTS/TFS",
   "loc.input.help.publishJUnitResults": "選取此選項可使用 xctool 將前述所產生的 JUnit 測試結果發行到 VSTS/TFS。",
-  "loc.messages.SignIdNotFound": "Failed to find iOS signing identity. Verify the signing and provisioning information provided.",
-  "loc.messages.TempKeychainSetupFailed": "Failed to add the temporary keychain to the keychains search path.",
-  "loc.messages.ProvProfileDetailsNotFound": "Failed to find the details for provisioning profile: %s",
-  "loc.messages.ProvProfileUUIDNotFound": "Failed to find provisioning profile UUID for provisioning profile: %s",
-  "loc.messages.MultipleWorkspacesFound": "Multiple xcode workspace matches were found. Using the first match: %s",
-  "loc.messages.WorkspaceDoesNotExist": "Xcode workspace was specified but it does not exist or is not a directory",
-  "loc.messages.UseXcToolForTestPublishing": "Check the 'Use xctool' checkbox and specify the xctool reporter format to publish test results. No results published.",
-  "loc.messages.NoTestResultsFound": "No test result files matching %s were found, so publishing JUnit test results is being skipped.",
-  "loc.messages.XcodeSuccess": "Xcode task execution completed with no errors.",
-  "loc.messages.TempKeychainDeleteFailed": "Failed to delete temporary keychain %s created during the build.",
-  "loc.messages.ProvProfileDeleteFailed": "Failed to delete the provisioning profile %s."
+  "loc.messages.SignIdNotFound": "找不到 iOS 簽署識別。請驗證提供的簽署及佈建資訊。",
+  "loc.messages.TempKeychainSetupFailed": "無法將暫存的 Keychain 新增至 Keychain 搜尋路徑。",
+  "loc.messages.ProvProfileDetailsNotFound": "找不到佈建設定檔的詳細資料: %s",
+  "loc.messages.ProvProfileUUIDNotFound": "找不到佈建設定檔的佈建設定檔 UUID: %s",
+  "loc.messages.MultipleWorkspacesFound": "找到多個 xcode 工作區相符。正在使用最初相符: %s",
+  "loc.messages.WorkspaceDoesNotExist": "已指定 Xcode 工作區，但其不存在或並非目錄",
+  "loc.messages.UseXcToolForTestPublishing": "核取 [使用 xctool] 核取方塊，並指定要用以發行測試結果的 xctool 報告程式格式。未發行任何結果。",
+  "loc.messages.NoTestResultsFound": "找不到任何符合 %s 的測試結果，因此跳過發行 JUnit 測試結果。",
+  "loc.messages.XcodeSuccess": "Xcode 工作執行完成，未發生錯誤。",
+  "loc.messages.TempKeychainDeleteFailed": "無法刪除建置期間所建立的暫存 Keychain %s。",
+  "loc.messages.ProvProfileDeleteFailed": "無法刪除佈建設定檔 %s。"
 }
