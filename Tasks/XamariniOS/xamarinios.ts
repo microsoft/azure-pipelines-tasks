@@ -34,14 +34,14 @@ async function run() {
         // Restore NuGet packages of the solution
         var nugetRunner = tl.tool(nugetPath);
         nugetRunner.arg(['restore', solutionPath]);
-        await nugetRunner.exec()
+        await nugetRunner.exec();
 
         //Process working directory
         var cwd = cwd || tl.getVariable('build.sourceDirectory') || tl.getVariable('build.sourcesDirectory');
         tl.cd(cwd);
 
         var signMethod:string = tl.getInput('signMethod', false);
-        var keychainToDelete:string;
+        var codesignKeychain:string;
         var profileToDelete:string;
         var provProfileUUID = null;
         var signIdentity = null;
@@ -59,7 +59,7 @@ async function run() {
 
                 //create a temporary keychain and install the p12 into that keychain
                 await sign.installCertInTemporaryKeychain(keychain, keychainPwd, p12, p12pwd);
-                keychainToDelete = keychain;
+                codesignKeychain = keychain;
 
                 //find signing identity
                 signIdentity = await sign.findSigningIdentity(keychain);
@@ -94,6 +94,7 @@ async function run() {
         if (args) {
             xbuildRunner.line(args);
         }
+        xbuildRunner.argIf(codesignKeychain, '/p:CodesignKeychain=' + codesignKeychain);
         xbuildRunner.argIf(provProfileUUID, '/p:CodesignProvision=' + provProfileUUID);
         xbuildRunner.argIf(signIdentity, '/p:Codesignkey=' + signIdentity);
 
@@ -106,12 +107,12 @@ async function run() {
         tl.setResult(tl.TaskResult.Failed, tl.loc('XamariniOSFailed', err));
     } finally {
         //clean up the temporary keychain, so it is not used to search for code signing identity in future builds
-        if (keychainToDelete) {
+        if (codesignKeychain) {
             try {
-                await sign.deleteKeychain(keychainToDelete);
+                await sign.deleteKeychain(codesignKeychain);
             } catch (err) {
                 tl.debug('Failed to delete temporary keychain. Error = ' + err);
-                tl.warning(tl.loc('TempKeychainDeleteFailed', keychainToDelete));
+                tl.warning(tl.loc('TempKeychainDeleteFailed', codesignKeychain));
             }
         }
 
