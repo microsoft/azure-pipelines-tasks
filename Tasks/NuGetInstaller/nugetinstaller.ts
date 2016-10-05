@@ -195,7 +195,7 @@ function restorePackagesAsync(solutionFile: string, options: RestoreOptions): Q.
     }
 
     if (options.extraArgs) {
-        nugetTool.argString(options.extraArgs);
+        nugetTool.line(options.extraArgs);
     }
 
     return nugetTool.exec({ cwd: path.dirname(solutionFile) });
