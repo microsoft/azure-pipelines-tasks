@@ -42,13 +42,13 @@
   "loc.input.help.EndIpAddress": "Die IP-Endadresse des Computerpools des Automations-Agents, z. B. 196.21.30.65.",
   "loc.input.label.DeleteFirewallRule": "Regel nach Beendigung des Tasks löschen",
   "loc.input.help.DeleteFirewallRule": "Wenn diese Option aktiviert ist, werden die hier angegebenen IP-Adressen nach der Beendigung des Tasks aus der Liste \"Zulässige IP-Adressen\" der Firewall von Azure SQL Server gelöscht.",
-  "loc.messages.SAD_InvalidServerAddress": "Either IPAddress mentioned is not a valid IPv4 address or Sql database server: '{0}' does not exist.",
-  "loc.messages.SAD_ServerNotFound": "Sql Database Server: '{0}' not found.",
-  "loc.messages.SAD_InvalidIPv4Address": "IPAddress mentioned is not a valid IPv4 address.",
-  "loc.messages.SAD_FoundMoreFiles": "Found more than one file to deploy with search pattern {0}. There can be only one.",
-  "loc.messages.SAD_NoFilesMatch": "No files were found to deploy with search pattern {0}",
-  "loc.messages.SAD_InvalidDacpacFile": "Invalid Dacpac file '{0}' provided",
+  "loc.messages.SAD_InvalidServerAddress": "Die angegebene IPAddress ist keine gültige IPv4-Adresse, oder der SQL-Datenbankserver \"{0}\" ist nicht vorhanden.",
+  "loc.messages.SAD_ServerNotFound": "Der SQL-Datenbankserver \"{0}\" wurde nicht gefunden.",
+  "loc.messages.SAD_InvalidIPv4Address": "Die angegebene IPAddress ist keine gültige IPv4-Adresse.",
+  "loc.messages.SAD_FoundMoreFiles": "Es wurde mehrere Dateien zum Bereitstellen mit dem Suchmuster \"{0}\" gefunden. Es darf maximal eine Datei vorhanden sein.",
+  "loc.messages.SAD_NoFilesMatch": "Es wurden keine Dateien zum Bereitstellen mit dem Suchmuster \"{0}\" gefunden.",
+  "loc.messages.SAD_InvalidDacpacFile": "Es wurde eine ungültige DACPAC-Datei \"{0}\" angegeben.",
   "loc.messages.SAD_InvalidSqlFile": "Invalid Sql file '{0}' provided",
-  "loc.messages.SAD_NoPassword": "No password specified for the SQL User: '{0}'",
-  "loc.messages.SAD_InvalidPublishProfile": "Invalid Publish Profile '{0}' provided"
+  "loc.messages.SAD_NoPassword": "Es wurde kein Kennwort für den SQL-Benutzer angegeben: \"{0}\"",
+  "loc.messages.SAD_InvalidPublishProfile": "Es wurde ein ungültiges Veröffentlichungsprofil \"{0}\" angegeben."
 }

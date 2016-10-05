@@ -9,7 +9,7 @@
   "loc.input.label.Contents": "Contenido",
   "loc.input.help.Contents": "Rutas de acceso de archivo que se incluirán como parte de la copia. Se admiten varias líneas de patrones de minimatch. [Más información](https://go.microsoft.com/fwlink/?LinkID=708389)",
   "loc.input.label.TargetFolder": "Carpeta de destino",
-  "loc.input.help.TargetFolder": "Target folder or UNC path files will copy to. You can use [variables](http://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)",
+  "loc.input.help.TargetFolder": "La carpeta de destino o la ruta UNC en la que se copiarán los archivos. Puede usar [variables](http://go.microsoft.com/fwlink/?LinkID=550988). Ejemplo: $(build.artifactstagingdirectory)",
   "loc.input.label.CleanTargetFolder": "Borrar carpeta de destino",
   "loc.input.help.CleanTargetFolder": "Eliminar todos los archivos existentes en la carpeta de destino antes de copiar",
   "loc.input.label.OverWrite": "Sobrescribir",

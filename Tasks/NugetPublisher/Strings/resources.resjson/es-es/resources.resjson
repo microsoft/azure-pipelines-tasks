@@ -13,7 +13,7 @@
   "loc.input.help.feedName": "La dirección URL de una fuente NuGet hospedada en esta cuenta.",
   "loc.input.label.nuGetAdditionalArgs": "Argumentos de NuGet",
   "loc.input.help.nuGetAdditionalArgs": "Argumentos adicionales que se pasan al comando push de NuGet.exe. [Más información](https://docs.nuget.org/consume/command-line-reference#user-content-push-command).",
-  "loc.input.label.verbosity": "Verbosity",
+  "loc.input.label.verbosity": "Nivel de detalle",
   "loc.input.help.verbosity": "NuGet's verbosity level",
   "loc.input.label.nuGetPath": "Ruta de acceso a NuGet.exe",
   "loc.input.help.nuGetPath": "También puede indicarse la ruta de acceso a NuGet.exe",

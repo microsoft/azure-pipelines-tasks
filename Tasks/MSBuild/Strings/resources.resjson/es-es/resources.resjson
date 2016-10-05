@@ -17,7 +17,7 @@
   "loc.input.label.restoreNugetPackages": "Restaurar paquetes NuGet",
   "loc.input.help.restoreNugetPackages": "Esta opción está en desuso. Agregue un paso en el instalador de NuGet antes de la compilación para restaurar paquetes de NuGet.",
   "loc.input.label.logProjectEvents": "Registrar detalles del proyecto",
-  "loc.input.help.logProjectEvents": "Optionally record timeline details for each project.",
+  "loc.input.help.logProjectEvents": "Registrar opcionalmente detalles de la escala de tiempo para cada proyecto.",
   "loc.input.label.createLogFile": "Crear archivo de registro",
   "loc.input.help.createLogFile": "Si quiere, puede crear un archivo de registro (solo en Windows).",
   "loc.input.label.msbuildLocationMethod": "MSBuild",

@@ -4,8 +4,8 @@
   "loc.description": "部署 Azure 云服务",
   "loc.instanceNameFormat": "Azure 部署: $(CsPkg)",
   "loc.group.displayName.newServiceAdvancedOptions": "创建新服务的高级选项",
-  "loc.input.label.ConnectedServiceName": "Azure Subscription (Classic)",
-  "loc.input.help.ConnectedServiceName": "Azure Classic subscription to target for deployment.",
+  "loc.input.label.ConnectedServiceName": "Azure 订阅(经典)",
+  "loc.input.help.ConnectedServiceName": "要作为部署目标的 Azure 经典订阅。",
   "loc.input.label.StorageAccount": "存储帐户",
   "loc.input.help.StorageAccount": "存储帐户必须在部署之前便存在。",
   "loc.input.label.ServiceName": "服务名称",
@@ -26,10 +26,10 @@
   "loc.input.help.NewServiceAdditionalArguments": "创建全新服务时传入其他参数。这些参数将传递给 \"New-AzureService\" commandlet。例如: \"-Label 'MyTestService'\"。",
   "loc.input.label.NewServiceAffinityGroup": "AffinityGroup",
   "loc.input.help.NewServiceAffinityGroup": "创建新服务时，将考虑此地缘组而不使用服务位置。",
-  "loc.messages.Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions": "Could not get the primary storage key for storage account '{0}'. Unable to apply any diagnostics extensions.",
-  "loc.messages.Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions": "Could not get the primary storage key for the public config storage account '{0}'. Unable to apply any diagnostics extensions.",
-  "loc.messages.Applyinganyconfigureddiagnosticsextensions": "Applying any configured diagnostics extensions.",
-  "loc.messages._0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "'{0}' could not be parsed into parts for registering diagnostics extensions.",
-  "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}",
-  "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one."
+  "loc.messages.Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions": "无法获取存储帐户“{0}”的主存储密钥。无法应用任何诊断扩展。",
+  "loc.messages.Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions": "无法获取公共配置存储帐户“{0}”的主存储密钥。无法应用任何诊断扩展。",
+  "loc.messages.Applyinganyconfigureddiagnosticsextensions": "正在应用任何配置的诊断扩展。",
+  "loc.messages._0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "无法将“{0}”分析为注册诊断扩展的部分。",
+  "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "使用搜索模式“{0}”没有找到要部署的文件",
+  "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "使用搜索模式“{0}”找到了多个要部署的文件。只能有一个要部署的文件。"
 }

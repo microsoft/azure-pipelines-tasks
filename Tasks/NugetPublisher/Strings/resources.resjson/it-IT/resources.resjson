@@ -13,7 +13,7 @@
   "loc.input.help.feedName": "URL di un feed NuGet ospitato in questo account.",
   "loc.input.label.nuGetAdditionalArgs": "Argomenti NuGet",
   "loc.input.help.nuGetAdditionalArgs": "Argomenti aggiuntivi passati a NuGet.exe push. [Altre informazioni](https://docs.nuget.org/consume/command-line-reference#user-content-push-command).",
-  "loc.input.label.verbosity": "Verbosity",
+  "loc.input.label.verbosity": "Livello di dettaglio",
   "loc.input.help.verbosity": "NuGet's verbosity level",
   "loc.input.label.nuGetPath": "Percorso di NuGet.exe",
   "loc.input.help.nuGetPath": "Consente, facoltativamente, di specificare il percorso di NuGet.exe.",

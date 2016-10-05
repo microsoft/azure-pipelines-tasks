@@ -15,7 +15,7 @@
   "loc.input.label.emulatorTarget": "Kit de développement logiciel (SDK) cible AVD",
   "loc.input.help.emulatorTarget": "ID cible du nouvel appareil virtuel Android.",
   "loc.input.label.emulatorDevice": "Appareil AVD",
-  "loc.input.help.emulatorDevice": "The optional device definition to use. Can be a device index or ID.",
+  "loc.input.help.emulatorDevice": "Définition facultative de l'appareil à utiliser. Peut être un index ou un ID d'appareil.",
   "loc.input.label.avdAbi": "ABI AVD",
   "loc.input.help.avdAbi": "ABI à utiliser pour l'appareil virtuel Android.",
   "loc.input.label.avdForce": "Remplacer l'AVD existant",

@@ -14,5 +14,5 @@
   "loc.input.help.workingFolder": "執行指令碼後的目前工作目錄。預設為指令碼所在的資料夾。",
   "loc.input.label.inlineScript": "內嵌指令碼",
   "loc.input.label.failOnStandardError": "發生標準錯誤的失敗",
-  "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely solely on $LASTEXITCODE and the exit code to determine failure."
+  "loc.input.help.failOnStandardError": "這為 true 時，如果在錯誤管線中寫入任何錯誤，或在標準錯誤資料流中寫入任何資料，則此工作將失敗。否則，工作將只依賴 $LASTEXITCODE 和結束代碼來判斷失敗。"
 }

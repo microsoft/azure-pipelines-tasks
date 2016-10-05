@@ -55,7 +55,7 @@
   "loc.input.help.sqDbPassword": "Solo server SonarQube 5.1 e versioni precedenti. Immettere la password per l'utente del database, ad esempio sonar.jdbc.password",
   "loc.input.label.sqAnalysisIncludeFullReport": "Includi il report di analisi completa nel riepilogo della compilazione (SQ 5.3+)",
   "loc.input.help.sqAnalysisIncludeFullReport": "Questa opzione consente di ritardare la compilazione fino al completamento dell'analisi SonarQube.",
-  "loc.input.label.sqAnalysisBreakBuildIfQualityGateFailed": "Fail the build on quality gate failure (SQ 5.3+)",
+  "loc.input.label.sqAnalysisBreakBuildIfQualityGateFailed": "Interrompi compilazione in caso di errore al quality gate (SonarQube 5.3 e versioni successive)",
   "loc.input.help.sqAnalysisBreakBuildIfQualityGateFailed": "Questa opzione è disponibile solo quando si usa un server SonarQube 5.3 o versione successiva. Consente di introdurre ritardi perché la compilazione deve attendere che SonarQube completi l'analisi. [Altre informazioni](https://go.microsoft.com/fwlink/?LinkId=722407)",
   "loc.input.label.pmdAnalysisEnabled": "Esegui analisi PMD",
   "loc.input.help.pmdAnalysisEnabled": "Consente di usare lo strumento di analisi statica Java PMD per cercare bug nel codice.",

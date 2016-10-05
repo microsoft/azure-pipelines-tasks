@@ -37,7 +37,7 @@
   "loc.input.label.configuration": "組態",
   "loc.input.help.configuration": "測試應該針對此組態而進行回報。若您已為建置工作定義組態變數，請將其使用於此。",
   "loc.input.label.testConfigurations": "測試組態",
-  "loc.input.help.testConfigurations": "Optionally associate a testcase filter against a testconfiguration ID. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: `FullyQualifiedName~Chrome:12`",
+  "loc.input.help.testConfigurations": "選擇性地建立測試案例篩選器與 testconfiguration ID 間的關聯。語法: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;。例如: `FullyQualifiedName~Chrome:12`",
   "loc.input.label.autMachineGroup": "位於測試電腦下的應用程式",
   "loc.input.help.autMachineGroup": "以逗號分隔的清單，包含伺服器處理序 (如 W3WP.exe) 執行所在的電腦、輸出變數或電腦群組名稱"
 }

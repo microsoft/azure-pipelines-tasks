@@ -42,13 +42,13 @@
   "loc.input.help.EndIpAddress": "自动化代理计算机池的结束 IP 地址，如 196.21.30.65。",
   "loc.input.label.DeleteFirewallRule": "在任务结束后删除规则",
   "loc.input.help.DeleteFirewallRule": "如果选中，则将在任务结束后从 Azure SQL Server 防火墙的“允许的 IP 地址”列表中删除此处指定的 IP 地址。",
-  "loc.messages.SAD_InvalidServerAddress": "Either IPAddress mentioned is not a valid IPv4 address or Sql database server: '{0}' does not exist.",
-  "loc.messages.SAD_ServerNotFound": "Sql Database Server: '{0}' not found.",
-  "loc.messages.SAD_InvalidIPv4Address": "IPAddress mentioned is not a valid IPv4 address.",
-  "loc.messages.SAD_FoundMoreFiles": "Found more than one file to deploy with search pattern {0}. There can be only one.",
-  "loc.messages.SAD_NoFilesMatch": "No files were found to deploy with search pattern {0}",
-  "loc.messages.SAD_InvalidDacpacFile": "Invalid Dacpac file '{0}' provided",
+  "loc.messages.SAD_InvalidServerAddress": "提到的 IPAddress 不是有效的 IPv4 地址或 SQL Database 服务器“{0}”不存在。",
+  "loc.messages.SAD_ServerNotFound": "未找到 SQL Database 服务器“{0}”。",
+  "loc.messages.SAD_InvalidIPv4Address": "提到的 IPAddress 不是有效的 IPv4 地址。",
+  "loc.messages.SAD_FoundMoreFiles": "使用搜索模式 {0} 找到多个要部署的文件。可能只有一个。",
+  "loc.messages.SAD_NoFilesMatch": "使用搜索模式 {0} 未找到要部署的文件",
+  "loc.messages.SAD_InvalidDacpacFile": "提供的 Dacpac 文件“{0}”无效",
   "loc.messages.SAD_InvalidSqlFile": "Invalid Sql file '{0}' provided",
-  "loc.messages.SAD_NoPassword": "No password specified for the SQL User: '{0}'",
-  "loc.messages.SAD_InvalidPublishProfile": "Invalid Publish Profile '{0}' provided"
+  "loc.messages.SAD_NoPassword": "未指定 SQL 用户“{0}”的密码",
+  "loc.messages.SAD_InvalidPublishProfile": "提供的发布配置文件“{0}”无效"
 }

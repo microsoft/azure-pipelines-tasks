@@ -55,7 +55,7 @@
   "loc.input.help.sqDbPassword": "Только при использовании сервера SonarQube версии 5.1 или более ранней: введите пароль пользователя базы данных, например sonar.jdbc.password.",
   "loc.input.label.sqAnalysisIncludeFullReport": "Включить полный отчет об анализе в сводку сборки (SQ 5.3+)",
   "loc.input.help.sqAnalysisIncludeFullReport": "При выборе этого параметра сборка откладывается до тех пор, пока не будет завершен анализ SonarQube.",
-  "loc.input.label.sqAnalysisBreakBuildIfQualityGateFailed": "Fail the build on quality gate failure (SQ 5.3+)",
+  "loc.input.label.sqAnalysisBreakBuildIfQualityGateFailed": "Завершать сборку неудачей при сбое шлюза качества (SQ 5.3+)",
   "loc.input.help.sqAnalysisBreakBuildIfQualityGateFailed": "Этот параметр доступен только при использовании сервера SonarQube 5.3 или более поздней версии. Он вызывает задержки, так как сборка должна дождаться завершения анализа SonarQube. [Дополнительные сведения](https://go.microsoft.com/fwlink/?LinkId=722407)",
   "loc.input.label.pmdAnalysisEnabled": "Выполнить анализ PMD",
   "loc.input.help.pmdAnalysisEnabled": "Используйте средство статического анализа Java PMD для поиска ошибок в коде.",

@@ -15,7 +15,7 @@
   "loc.input.label.emulatorTarget": "SDK de destino AVD",
   "loc.input.help.emulatorTarget": "Id. de destino del nuevo dispositivo virtual Android (AVD).",
   "loc.input.label.emulatorDevice": "Dispositivo AVD",
-  "loc.input.help.emulatorDevice": "The optional device definition to use. Can be a device index or ID.",
+  "loc.input.help.emulatorDevice": "Definición de dispositivo opcional que se va a usar. Puede ser un id. o un índice de dispositivo.",
   "loc.input.label.avdAbi": "ABI AVD",
   "loc.input.help.avdAbi": "ABI que se va a usar para el dispositivo virtual Android (AVD).",
   "loc.input.label.avdForce": "Sobrescribir AVD existente",

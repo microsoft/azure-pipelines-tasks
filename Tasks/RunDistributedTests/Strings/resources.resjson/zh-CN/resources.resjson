@@ -37,7 +37,7 @@
   "loc.input.label.configuration": "配置",
   "loc.input.help.configuration": "应对其报告测试的配置。如果在生成任务中为配置定义了变量，请在此处使用该变量。",
   "loc.input.label.testConfigurations": "测试配置",
-  "loc.input.help.testConfigurations": "Optionally associate a testcase filter against a testconfiguration ID. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: `FullyQualifiedName~Chrome:12`",
+  "loc.input.help.testConfigurations": "可以选择针对测试配置 ID 关联测试用例筛选器。语法: <筛选器 1> : <ID 1> ; DefaultTestConfiguration: <ID 3> 。例如 \"FullyQualifiedName~Chrome:12\"。 ",
   "loc.input.label.autMachineGroup": "测试计算机下的应用程序",
   "loc.input.help.autMachineGroup": "正在对其运行服务器进程(如 W3WP.exe)的计算机或输出变量或计算机组的逗号分隔列表"
 }
