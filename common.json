@@ -10,7 +10,7 @@
             "module": "VstsAzureHelpers_",
             "dest": "ps_modules"
         },
-		{
+        {
             "module": "VstsAzureRestHelpers_",
             "dest": "ps_modules"
         }
@@ -20,7 +20,7 @@
             "module": "VstsAzureHelpers_",
             "dest": "ps_modules"
         },
-		{
+        {
             "module": "VstsAzureRestHelpers_",
             "dest": "ps_modules"
         }
@@ -85,48 +85,52 @@
             "dest": "node_modules"
         }
     ],
-    "NuGetInstaller" : [
+    "NuGetInstaller": [
         {
             "module": "nuget-task-common",
-            "dest": "node_modules"  
+            "dest": "node_modules"
         }
     ],
-    "NuGetPublisher" : [
+    "NuGetPublisher": [
         {
             "module": "nuget-task-common",
-            "dest": "node_modules"  
+            "dest": "node_modules"
         }
     ],
-    "Gradle" : [
+    "Gradle": [
         {
             "module": "codecoverage-tools",
-            "dest": "node_modules"  
+            "dest": "node_modules"
         },
-	{
+        {
             "module": "java-common",
-            "dest": "node_modules"  
-	}
+            "dest": "node_modules"
+        }
     ],
-    "Maven" : [
+    "Maven": [
         {
             "module": "codecoverage-tools",
-            "dest": "node_modules"  
+            "dest": "node_modules"
         },
-	    {
+        {
             "module": "java-common",
-            "dest": "node_modules"  
-	    }
-    ],
-    "Ant" : [
-	    {
-            "module": "java-common",
-            "dest": "node_modules"  
-    	}
-    ],
-    "VsTest" : [
+            "dest": "node_modules"
+        },
         {
             "module": "find-files-legacy",
-            "dest": "node_modules"  
+            "dest": "node_modules"
+        }
+    ],
+    "Ant": [
+        {
+            "module": "java-common",
+            "dest": "node_modules"
+        }
+    ],
+    "VsTest": [
+        {
+            "module": "find-files-legacy",
+            "dest": "node_modules"
         }
     ]
 }
