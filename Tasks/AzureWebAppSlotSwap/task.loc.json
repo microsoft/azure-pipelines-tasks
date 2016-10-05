@@ -50,26 +50,35 @@
       "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName"
     },
     {
-      "name": "Source",
+      "name": "Slot1",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.Source",
+      "label": "ms-resource:loc.input.label.Slot1",
       "defaultValue": "",
       "required": true,
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.Source"
+      "helpMarkDown": "ms-resource:loc.input.help.Slot1"
     },
     {
-      "name": "Destination",
+      "name": "SwapWithProduction",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.SwapWithProduction",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.SwapWithProduction"
+    },
+    {
+      "name": "Slot2",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.Destination",
+      "label": "ms-resource:loc.input.label.Slot2",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.Destination"
+      "helpMarkDown": "ms-resource:loc.input.help.Slot2",
+      "visibleRule": "SwapWithProduction = false"
     },
     {
       "name": "PreserveVnet",
@@ -94,7 +103,7 @@
       }
     },
     {
-      "target": "Source",
+      "target": "Slot1",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureRMWebAppSlotsId",
       "parameters": {
@@ -104,7 +113,7 @@
       "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
     },
     {
-      "target": "Destination",
+      "target": "Slot2",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureRMWebAppSlotsId",
       "parameters": {

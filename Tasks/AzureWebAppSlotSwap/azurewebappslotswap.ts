@@ -10,26 +10,21 @@ var httpObj = new httpClient.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"))
 var armUrl = 'https://management.azure.com/';
 var azureApiVersion = 'api-version=2015-08-01';
 
-
 async function run() {
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
         var connectedServiceName = tl.getInput('ConnectedServiceName', true);
         var webAppName: string = tl.getInput('WebAppName', true);
         var resourceGroupName: string = tl.getInput('ResourceGroupName', true);
-        var source: string = tl.getInput('Source', true);
-        var destination: string = tl.getInput('Destination', true);
+        var slot1: string = tl.getInput('Slot1', true);
+        var swapWithProduction = tl.getBoolInput('SwapWithProduction', true);
+        var slot2: string = tl.getInput('Slot2', false);
         var preserveVnet: boolean = tl.getBoolInput('PreserveVnet', false);
-        var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
 
         var isSlotSwapSuccess = true;
-        var SPN = new Array();
-        SPN["servicePrincipalClientID"] = endPointAuthCreds.parameters["serviceprincipalid"];
-        SPN["servicePrincipalKey"] = endPointAuthCreds.parameters["serviceprincipalkey"];
-        SPN["tenantID"] = endPointAuthCreds.parameters["tenantid"];
-        SPN["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
+        var SPN: ISPN = initializeSPN(connectedServiceName);
 
-        await swapSlot(SPN, resourceGroupName, webAppName, source, destination, preserveVnet);
+        await swapSlot(SPN, resourceGroupName, webAppName, slot1, slot2, preserveVnet);
     }
     catch(error)
     {
@@ -37,29 +32,49 @@ async function run() {
         tl.setResult(tl.TaskResult.Failed, error);
     }
     try{
-        //push swap slot log to source url
-        var sourcePublishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, resourceGroupName, webAppName, source);
-        tl._writeLine(await azureRmUtil.updateSlotSwapStatus(sourcePublishingProfile, isSlotSwapSuccess, source, destination));
+        //push swap slot log to slot1 url
+        var sourcePublishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, resourceGroupName, webAppName, slot1);
+        tl._writeLine(await azureRmUtil.updateSlotSwapStatus(sourcePublishingProfile, isSlotSwapSuccess, slot1, slot2));
 
-        //push swap slot log to destination url
-        var destinationPublishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, resourceGroupName, webAppName, destination);
-        tl._writeLine(await azureRmUtil.updateSlotSwapStatus(destinationPublishingProfile, isSlotSwapSuccess, source, destination));
+        //push swap slot log to slot2 url
+        var destinationPublishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, resourceGroupName, webAppName, slot2);
+        tl._writeLine(await azureRmUtil.updateSlotSwapStatus(destinationPublishingProfile, isSlotSwapSuccess, slot1, slot2));
     }
     catch(error) {
         tl.warning(error);
     }
 }
 
-async function swapSlot(SPN, resourceGroupName: string, webAppName: string, source: string, destination: string,preserveVnet: boolean) {
-    var deferred = Q.defer();
-    var slotUrl = (source == "Production") ? "" : "/slots/" + source;
+interface ISPN{
+    servicePrincipalClientID: string,
+    servicePrincipalKey: string,
+    tenantID: string,
+    subscriptionId: string
+}
+
+function initializeSPN(connectedServiceName: string): ISPN{
+    var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
+    var subscriptionId = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
+    return {
+        servicePrincipalClientID: endPointAuthCreds.parameters["serviceprincipalid"],
+        servicePrincipalKey: endPointAuthCreds.parameters["serviceprincipalkey"],
+        tenantID: endPointAuthCreds.parameters["tenantid"],
+        subscriptionId: subscriptionId
+    }
+}
+
+async function swapSlot(SPN, resourceGroupName: string, webAppName: string, slot1: string, slot2: string,preserveVnet: boolean) {
+    var deferred = Q.defer<any>();
     var accessToken = await azureRmUtil.getAuthorizationToken(SPN);
     
     var url = armUrl + 'subscriptions/' + SPN["subscriptionId"] + '/resourceGroups/' + resourceGroupName +
-                 '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + '/slotsswap?' + azureApiVersion;
+                 '/providers/Microsoft.Web/sites/' + webAppName + "/slots/" + slot1 + '/slotsswap?' + azureApiVersion;
+
+    if(!slot2)
+        slot2 = "production";
     
     var body = {
-        targetSlot: destination,
+        targetSlot: slot2,
         preserveVnet: preserveVnet
     }
     

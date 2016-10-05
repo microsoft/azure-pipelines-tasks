@@ -51,10 +51,9 @@
         },
         {
 
-            "name": "Source",
+            "name": "Slot1",
             "type": "pickList",
-
-            "label": "Source",
+            "label": "Slot Name 1",
             "defaultValue": "",
             "required": true,
             "properties": {
@@ -63,20 +62,29 @@
             "helpMarkDown": "Enter or Select an existing Slot."
         },
         {
-            "name": "Destination",
+            "name": "SwapWithProduction",
+            "type": "boolean",
+            "label": "Swap with Production",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "Select the option to swap slot with Production."
+        },
+        {
+            "name": "Slot2",
             "type": "pickList",
-            "label": "Destination",
+            "label": "Slot Name 2",
             "defaultValue": "",
-            "required": true,
+            "required": false,
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Enter or Select an existing Slot."
+            "helpMarkDown": "Enter or Select an existing Slot.",
+            "visibleRule": "SwapWithProduction = false"
         },
         {
             "name": "PreserveVnet",
             "type": "boolean",
-            "label": "PreserveVnet",
+            "label": "Preserve Vnet",
             "defaultValue": "false",
             "required": false
         }
@@ -96,7 +104,7 @@
             }
         },
         {
-            "target": "Source",
+            "target": "Slot1",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureRMWebAppSlotsId",
             "parameters": {
@@ -106,7 +114,7 @@
             "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
         },
         {
-            "target": "Destination",
+            "target": "Slot2",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureRMWebAppSlotsId",
             "parameters": {
@@ -127,7 +135,7 @@
         "ErrorNoSuchDeployingMethodExists": "Error : No Such Deploying Method Exists",
         "UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1": "Unable to retrieve connection details for azureRM WebApp:'%s'. Status Code: %s",
         "Unabletoretrievewebapppublishurlforwebapp0StatusCode1" : "Unable to retrieve webapp publish url for webapp : '%s'. Status Code : '%s'",
-        "Successfullyupdatedslotswaphistory": "Successfully updated slot swap History at %s",
+        "Successfullyupdatedslotswaphistory": "Successfully updated slot swap history at %s",
         "Failedtoupdateslotswaphistory": "Failed to update slot swap history.",
         "WARNINGCannotupdateslotswapstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update slot swap status : SCM endpoint is not enabled for this website",
         "ErrorFetchingDeploymentPublishProfileStausCode0": "Error Fetching Deployment Publish Profile [Staus Code : '%s']",

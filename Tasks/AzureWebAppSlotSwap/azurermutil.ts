@@ -21,17 +21,17 @@ var azureApiVersion = 'api-version=2015-08-01';
  * 
  * @param   publishingProfile     Publish Profile details
  * @param   isSlotSwapSuccess     Status of Slot Swap
- * @param   source                Source slot for swap
- * @param   destination           Destination slot for swap
+ * @param   slot1                 Slot Name 1 for swap
+ * @param   slot2                 Slot Name 2 for swap
  * 
  * @returns promise with string
  */
-export function updateSlotSwapStatus(publishingProfile, isSlotSwapSuccess: boolean, source: string, destination: string): Q.Promise<string>  {
+export function updateSlotSwapStatus(publishingProfile, isSlotSwapSuccess: boolean, slot1: string, slot2: string): Q.Promise<string>  {
     var deferred = Q.defer<string>();
 
     var webAppPublishKuduUrl = publishingProfile.publishUrl;
     if(webAppPublishKuduUrl) {
-        var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isSlotSwapSuccess, source, destination);
+        var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isSlotSwapSuccess, slot1, slot2);
         var accessToken = 'Basic ' + (new Buffer(publishingProfile.userName + ':' + publishingProfile.userPWD).toString('base64'));
         var headers = {
             authorization: accessToken
@@ -71,7 +71,7 @@ export function updateSlotSwapStatus(publishingProfile, isSlotSwapSuccess: boole
  */
 export async function getAzureRMWebAppPublishProfile(SPN, resourceGroupName:string, webAppName: string, slotName: string) {
     var deferred = Q.defer();
-    var slotUrl = (slotName == "Production") ? "" : "/slots/" + slotName;
+    var slotUrl = (slotName) ? "/slots/" + slotName : "";
     var accessToken = await getAuthorizationToken(SPN);
     
     var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +

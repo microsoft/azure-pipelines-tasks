@@ -1,6 +1,6 @@
 import tl = require('vsts-task-lib/task');
 
-export function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isSlotSwapSuccess: boolean, source: string, destination: string): any {
+export function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isSlotSwapSuccess: boolean, slot1: string, slot2: string): any {
     
     var status = isSlotSwapSuccess ? 4 : 3;
     var status_text = (status == 4) ? "success" : "failed";
@@ -40,8 +40,8 @@ export function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isSlotSwap
 
     var message = JSON.stringify({
 		type : type,
-        source : source,
-        destination : destination,
+        slot1 : slot1,
+        slot2 : slot2,
 		commitId : commitId,
 		buildId : buildId,
 		releaseId : releaseId,
