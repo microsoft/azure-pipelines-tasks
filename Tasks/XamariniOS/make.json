@@ -1,7 +1,17 @@
 {
-    "cp": [
+    "common": [
         {
-            "source": "xcode-task-utils.js"
+            "module": "../Common/ios-signing-common",
+            "type": "node",
+            "compile": true
+        }
+    ],
+    "rm": [
+        {
+            "items": [
+                "node_modules/ios-signing-common/node_modules/vsts-task-lib"
+            ],
+            "options": "-Rf"
         }
     ]
 }
