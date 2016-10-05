@@ -21,17 +21,17 @@ var azureApiVersion = 'api-version=2015-08-01';
  * 
  * @param   publishingProfile     Publish Profile details
  * @param   isSlotSwapSuccess     Status of Slot Swap
- * @param   slot1                 Slot Name 1 for swap
- * @param   slot2                 Slot Name 2 for swap
+ * @param   sourceSlot            Name of source slot for swap
+ * @param   targetSlot            Name of target slot for swap
  * 
  * @returns promise with string
  */
-export function updateSlotSwapStatus(publishingProfile, isSlotSwapSuccess: boolean, slot1: string, slot2: string): Q.Promise<string>  {
+export function updateSlotSwapStatus(publishingProfile, deploymentId: string, isSlotSwapSuccess: boolean, sourceSlot: string, targetSlot: string): Q.Promise<string>  {
     var deferred = Q.defer<string>();
 
     var webAppPublishKuduUrl = publishingProfile.publishUrl;
     if(webAppPublishKuduUrl) {
-        var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isSlotSwapSuccess, slot1, slot2);
+        var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, deploymentId, isSlotSwapSuccess, sourceSlot, targetSlot);
         var accessToken = 'Basic ' + (new Buffer(publishingProfile.userName + ':' + publishingProfile.userPWD).toString('base64'));
         var headers = {
             authorization: accessToken

@@ -4,6 +4,7 @@ import path = require('path');
 import httpClient = require('vso-node-api/HttpClient');
 
 var azureRmUtil = require ('./azurermutil.js');
+var kuduDeploymentLog = require('./kududeploymentlog.js');
 
 var httpObj = new httpClient.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
 
@@ -16,19 +17,19 @@ async function run() {
         var connectedServiceName = tl.getInput('ConnectedServiceName', true);
         var webAppName: string = tl.getInput('WebAppName', true);
         var resourceGroupName: string = tl.getInput('ResourceGroupName', true);
-        var slot1: string = tl.getInput('Slot1', true);
+        var sourceSlot: string = tl.getInput('SourceSlot', true);
         var swapWithProduction = tl.getBoolInput('SwapWithProduction', true);
-        var slot2: string = tl.getInput('Slot2', false);
+        var targetSlot: string = tl.getInput('TargetSlot', false);
         var preserveVnet: boolean = tl.getBoolInput('PreserveVnet', false);
 
-        if(!slot2)
-            slot2 = "production";
+        if(swapWithProduction)
+            targetSlot = "production";
     
         var isSlotSwapSuccess = true;
-        var SPN: ISPN = azureRmUtil.initializeSPN(connectedServiceName);
+        var SPN: ISPN = initializeSPN(connectedServiceName);
         var accessToken = await azureRmUtil.getAuthorizationToken(SPN);
 
-        tl._writeLine(await swapWebAppSlot(SPN, accessToken, resourceGroupName, webAppName, slot1, slot2, preserveVnet));
+        tl._writeLine(await swapWebAppSlot(SPN, accessToken, resourceGroupName, webAppName, sourceSlot, targetSlot, preserveVnet));
     }
     catch(error)
     {
@@ -36,13 +37,14 @@ async function run() {
         tl.setResult(tl.TaskResult.Failed, error);
     }
     try{
-        //push swap slot log to slot1 url
-        var sourcePublishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, resourceGroupName, webAppName, slot1);
-        tl._writeLine(await azureRmUtil.updateSlotSwapStatus(sourcePublishingProfile, isSlotSwapSuccess, slot1, slot2));
+        var deploymentId = kuduDeploymentLog.generateDeploymentId();
+        //push swap slot log to sourceSlot url
+        var sourcePublishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, resourceGroupName, webAppName, sourceSlot);
+        tl._writeLine(await azureRmUtil.updateSlotSwapStatus(sourcePublishingProfile, deploymentId, isSlotSwapSuccess, sourceSlot, targetSlot));
 
-        //push swap slot log to slot2 url
-        var destinationPublishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, resourceGroupName, webAppName, slot2);
-        tl._writeLine(await azureRmUtil.updateSlotSwapStatus(destinationPublishingProfile, isSlotSwapSuccess, slot1, slot2));
+        //push swap slot log to targetSlot url
+        var destinationPublishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, resourceGroupName, webAppName, targetSlot);
+        tl._writeLine(await azureRmUtil.updateSlotSwapStatus(destinationPublishingProfile, deploymentId, isSlotSwapSuccess, sourceSlot, targetSlot));
     }
     catch(error) {
         tl.warning(error);
@@ -67,12 +69,12 @@ function initializeSPN(connectedServiceName: string): ISPN{
     }
 }
 
-function swapWebAppSlot(SPN: ISPN, accessToken: any, resourceGroupName: string, webAppName: string, slot1: string, slot2: string,preserveVnet: boolean): Q.Promise<string> {
+function swapWebAppSlot(SPN: ISPN, accessToken: any, resourceGroupName: string, webAppName: string, sourceSlot: string, targetSlot: string,preserveVnet: boolean): Q.Promise<string> {
     var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
-                 '/providers/Microsoft.Web/sites/' + webAppName + "/slots/" + slot1 + '/slotsswap?' + azureApiVersion;
+                 '/providers/Microsoft.Web/sites/' + webAppName + "/slots/" + sourceSlot + '/slotsswap?' + azureApiVersion;
 
     var body = {
-        targetSlot: slot2,
+        targetSlot: targetSlot,
         preserveVnet: preserveVnet
     }
     var headers = {

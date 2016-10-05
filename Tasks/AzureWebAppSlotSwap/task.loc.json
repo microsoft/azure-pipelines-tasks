@@ -50,15 +50,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName"
     },
     {
-      "name": "Slot1",
+      "name": "SourceSlot",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.Slot1",
+      "label": "ms-resource:loc.input.label.SourceSlot",
       "defaultValue": "",
       "required": true,
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.Slot1"
+      "helpMarkDown": "ms-resource:loc.input.help.SourceSlot"
     },
     {
       "name": "SwapWithProduction",
@@ -69,15 +69,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.SwapWithProduction"
     },
     {
-      "name": "Slot2",
+      "name": "TargetSlot",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.Slot2",
+      "label": "ms-resource:loc.input.label.TargetSlot",
       "defaultValue": "",
       "required": false,
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.Slot2",
+      "helpMarkDown": "ms-resource:loc.input.help.TargetSlot",
       "visibleRule": "SwapWithProduction = false"
     },
     {
@@ -103,7 +103,7 @@
       }
     },
     {
-      "target": "Slot1",
+      "target": "SourceSlot",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureRMWebAppSlotsId",
       "parameters": {
@@ -113,7 +113,7 @@
       "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
     },
     {
-      "target": "Slot2",
+      "target": "TargetSlot",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureRMWebAppSlotsId",
       "parameters": {

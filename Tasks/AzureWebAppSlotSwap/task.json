@@ -4,7 +4,7 @@
   "friendlyName": "Azure WebApp Slot Swap",
   "description": "swap slot for azure web app",
   "author": "Microsoft Corporation",
-  "helpMarkDown": "Replace with markdown to show in help",
+  "helpMarkDown": "Swaps Azure Web App slots",
   "category": "Utility",
   "visibility": [
     "Build",
@@ -51,9 +51,9 @@
         },
         {
 
-            "name": "Slot1",
+            "name": "SourceSlot",
             "type": "pickList",
-            "label": "Slot Name 1",
+            "label": "Source Slot",
             "defaultValue": "",
             "required": true,
             "properties": {
@@ -70,9 +70,9 @@
             "helpMarkDown": "Select the option to swap slot with Production."
         },
         {
-            "name": "Slot2",
+            "name": "TargetSlot",
             "type": "pickList",
-            "label": "Slot Name 2",
+            "label": "Target Slot",
             "defaultValue": "",
             "required": false,
             "properties": {
@@ -104,7 +104,7 @@
             }
         },
         {
-            "target": "Slot1",
+            "target": "SourceSlot",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureRMWebAppSlotsId",
             "parameters": {
@@ -114,7 +114,7 @@
             "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
         },
         {
-            "target": "Slot2",
+            "target": "TargetSlot",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureRMWebAppSlotsId",
             "parameters": {

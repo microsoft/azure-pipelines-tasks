@@ -1,6 +1,24 @@
 import tl = require('vsts-task-lib/task');
 
-export function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isSlotSwapSuccess: boolean, slot1: string, slot2: string): any {
+export function generateDeploymentId(): string{
+    var buildUrl = tl.getVariable('build.buildUri');
+    var releaseUrl = tl.getVariable('release.releaseUri');
+
+    var buildId = tl.getVariable('build.buildId');
+    var releaseId = tl.getVariable('release.releaseId');
+
+    if(releaseUrl !== undefined) {
+        return releaseId + Date.now();
+    }
+    else if(buildUrl !== undefined) {
+        return buildId + Date.now();
+    }
+    else {
+        throw new Error(tl.loc('CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved'));
+    }
+}
+
+export function getUpdateHistoryRequest(webAppPublishKuduUrl: string, deploymentId: string, isSlotSwapSuccess: boolean, sourceSlot: string, targetSlot: string): any {
     
     var status = isSlotSwapSuccess ? 4 : 3;
     var status_text = (status == 4) ? "success" : "failed";
@@ -24,24 +42,18 @@ export function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isSlotSwap
  	var repoProvider = tl.getVariable('build.repository.provider');
 
     var buildOrReleaseUrl = "" ;
-    var deploymentId = "";
 
     if(releaseUrl !== undefined) {
-        deploymentId = releaseId + Date.now();
         buildOrReleaseUrl = collectionUrl + teamProject + "/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?releaseId=" + releaseId + "&_a=release-summary";
     }
     else if(buildUrl !== undefined) {
-        deploymentId = buildId + Date.now();
         buildOrReleaseUrl = collectionUrl + teamProject + "/_build?buildId=" + buildId + "&_a=summary";
-    }
-    else {
-        throw new Error(tl.loc('CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved'));
     }
 
     var message = JSON.stringify({
 		type : type,
-        slot1 : slot1,
-        slot2 : slot2,
+        sourceSlot : sourceSlot,
+        targetSlot : targetSlot,
 		commitId : commitId,
 		buildId : buildId,
 		releaseId : releaseId,
