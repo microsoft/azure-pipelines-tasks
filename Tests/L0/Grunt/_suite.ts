@@ -32,7 +32,7 @@ describe('Grunt Suite', function () {
 		var tr = new trm.TaskRunner('Grunt');
 		tr.setInput('gruntFile', 'gruntfile.js');
 		tr.setInput('publishJUnitResults', 'true');
-		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
+		tr.setInput('testResultsFiles', '**/build/test-results/test-*.xml');
 		tr.setInput('enableCodeCoverage', 'false');
 		if (os.type().match(/^Win/)) {
 			tr.setInput('cwd', 'c:/fake/wd');
@@ -61,7 +61,7 @@ describe('Grunt Suite', function () {
 		var tr = new trm.TaskRunner('Grunt');
 		tr.setInput('gruntFile', 'gruntfile.js');
 		tr.setInput('publishJUnitResults', 'true');
-		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
+		tr.setInput('testResultsFiles', '**/build/test-results/test-*.xml');
 		tr.setInput('enableCodeCoverage', 'false');
 		if (os.type().match(/^Win/)) {
 			tr.setInput('cwd', 'c:/fake/wd');
@@ -96,7 +96,7 @@ describe('Grunt Suite', function () {
 		var tr = new trm.TaskRunner('Grunt');
 		tr.setInput('gruntFile', 'gruntfile.js');
 		tr.setInput('publishJUnitResults', 'true');
-		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
+		tr.setInput('testResultsFiles', '**/build/test-results/test-*.xml');
 		tr.setInput('enableCodeCoverage', 'true');
 		tr.setInput('testFramework', 'Mocha');
 		tr.setInput('srcFiles', '**/build/src/*.js');
@@ -154,7 +154,7 @@ describe('Grunt Suite', function () {
 		var tr = new trm.TaskRunner('Grunt');
 		tr.setInput('gruntFile', 'gruntfile.js');
 		tr.setInput('publishJUnitResults', 'true');
-		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
+		tr.setInput('testResultsFiles', '**/build/test-results/test-*.xml');
 		tr.setInput('enableCodeCoverage', 'false');
 		if (os.type().match(/^Win/)) {
 			tr.setInput('cwd', 'c:/fake/wd');
@@ -209,7 +209,7 @@ describe('Grunt Suite', function () {
 		var tr = new trm.TaskRunner('Grunt');
 		tr.setInput('gruntFile', 'gruntfile.js');
 		tr.setInput('publishJUnitResults', 'true');
-		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
+		tr.setInput('testResultsFiles', '**/build/test-results/test-*.xml');
 		tr.setInput('enableCodeCoverage', 'true');
 		tr.setInput('testFramework', 'Mocha');
 		tr.setInput('srcFiles', '**/build/src/*.js');
@@ -243,7 +243,7 @@ describe('Grunt Suite', function () {
 		var tr = new trm.TaskRunner('Grunt');
 		tr.setInput('gruntFile', 'gruntfile.js');
 		tr.setInput('publishJUnitResults', 'true');
-		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
+		tr.setInput('testResultsFiles', '**/build/test-results/test-*.xml');
 		tr.setInput('enableCodeCoverage', 'false');
 		if (os.type().match(/^Win/)) {
 			tr.setInput('cwd', 'c:/fake/wd');
@@ -278,7 +278,7 @@ describe('Grunt Suite', function () {
 		var tr = new trm.TaskRunner('Grunt');
 		tr.setInput('gruntFile', 'gruntfile.js');
 		tr.setInput('publishJUnitResults', 'true');
-		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
+		tr.setInput('testResultsFiles', '**/build/test-results/test-*.xml');
 		tr.setInput('enableCodeCoverage', 'true');
 		tr.setInput('testFramework', 'Mocha');
 		tr.setInput('srcFiles', '**/build/src/*.js');
@@ -430,7 +430,7 @@ describe('Grunt Suite', function () {
 		var tr = new trm.TaskRunner('Grunt');
 		tr.setInput('gruntFile', 'gruntfile.js');
 		tr.setInput('publishJUnitResults', 'true');
-		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
+		tr.setInput('testResultsFiles', '**/build/test-results/test-*.xml');
 		tr.setInput('enableCodeCoverage', 'true');
 		tr.setInput('testFramework', 'Mocha');
 		tr.setInput('srcFiles', '**/build/src/*.js');
@@ -461,7 +461,7 @@ describe('Grunt Suite', function () {
 		var tr = new trm.TaskRunner('Grunt');
 		tr.setInput('gruntFile', 'gruntfile.js');
 		tr.setInput('publishJUnitResults', 'true');
-		tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
+		tr.setInput('testResultsFiles', '**/build/test-results/test-*.xml');
 		tr.setInput('enableCodeCoverage', 'true');
 		tr.setInput('testFramework', 'Mocha');
 		tr.setInput('srcFiles', '**/build/src/*.js');
