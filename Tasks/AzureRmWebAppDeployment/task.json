@@ -13,11 +13,11 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 5
     },
     "minimumAgentVersion": "1.102.0",
     "groups": [
-         {
+        {
             "name": "AdditionalDeploymentOptions",
             "displayName": "Additional Deployment Options",
             "isExpanded": true
@@ -203,7 +203,7 @@
         "UnabletoretrieveWebAppIDforazureRMWebApp0StatusCode1": "Unable to retrieve WebApp ID for azureRM WebApp:'%s'. Status Code: %s",
         "ErrorNoSuchDeployingMethodExists": "Error : No Such Deploying Method Exists",
         "UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1": "Unable to retrieve connection details for azureRM WebApp:'%s'. Status Code: %s",
-        "Unabletoretrievewebapppublishurlforwebapp0StatusCode1" : "Unable to retrieve webapp publish url for webapp : '%s'. Status Code : '%s'",
+        "Unabletoretrievewebapppublishurlforwebapp0StatusCode1": "Unable to retrieve webapp publish url for webapp : '%s'. Status Code : '%s'",
         "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
         "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
         "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website",
@@ -233,5 +233,5 @@
         "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
         "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "More than one package matched with specified pattern. Please restrain the search patern.",
         "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected."
-  }
+    }
 }
