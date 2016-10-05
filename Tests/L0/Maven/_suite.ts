@@ -691,7 +691,7 @@ describe('Maven Suite', function () {
 
     it('run maven and publish tests', (done) => {
         let resultFilesPattern = posixFormat(path.join(__dirname, "data", "test*.xml"));
-        let resultFilesOutput = posixFormat(path.join(__dirname, "data", "testResult.xml"));
+        let resultFilesOutput = posixFormat(path.join(__dirname, "data", "testResult1.xml"));
         
         let tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'Default');
@@ -1147,7 +1147,7 @@ describe('Maven Suite', function () {
         setResponseFile('response.json');
         
         let resultFilesPattern = posixFormat(path.join(__dirname, "data", "test*.xml"));
-        let resultFilesOutput = posixFormat(path.join(__dirname, "data", "testResult.xml"));
+        let resultFilesOutput = posixFormat(path.join(__dirname, "data", "testResult1.xml"));
           
         let tr = new trm.TaskRunner('Maven', true);
         tr.setInput('mavenVersionSelection', 'default');
