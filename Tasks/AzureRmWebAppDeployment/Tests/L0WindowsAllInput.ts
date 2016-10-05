@@ -157,31 +157,5 @@ tr.registerMock('./azurermutil.js', {
 }
 });
 
-tr.registerMock('./kuduutility.js', {
-    deployWebAppPackage: function(webAppPackage, virtualApplicationMappings, publishingProfile, virtualApplication) {
-        console.log ('Deployed using KuduDeploy');
-    },
-    getVirtualAndPhysicalPaths: function (virtualApplication, virtualApplicationMappings) {
-        // construct URL depending on virtualApplication or root of webapplication 
-        var physicalPath = "/site/wwwroot";
-        var virtualPath = "/";
-        if (virtualApplication) {
-            virtualPath = "/" + virtualApplication;
-        }
-        for (var index in virtualApplicationMappings) {
-            var mapping = virtualApplicationMappings[index];
-            if (mapping.virtualPath == virtualPath) {
-                physicalPath = mapping.physicalPath;
-                break;
-            }
-        }
-        return [virtualPath, physicalPath];
-    },
-    containsParamFile: function (webAppPackage) {
-    var isParamFilePresent = false;
-        return isParamFilePresent;
-    }
-});
-
 tr.setAnswers(a);
 tr.run();

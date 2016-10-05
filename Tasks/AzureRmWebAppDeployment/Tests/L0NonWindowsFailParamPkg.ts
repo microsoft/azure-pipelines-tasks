@@ -153,7 +153,7 @@ tr.registerMock('./azurermutil.js', {
 });
 
 tr.registerMock('./kuduutility.js', {
-    deployWebAppPackage: function(webAppPackage, virtualApplicationMappings, publishingProfile, virtualApplication) {
+    deployWebAppPackage: function(webAppPackage, webAppZipFile) {
         throw new Error('Folder Archiving Failed');
     },
     getVirtualAndPhysicalPaths: function (virtualApplication, virtualApplicationMappings) {

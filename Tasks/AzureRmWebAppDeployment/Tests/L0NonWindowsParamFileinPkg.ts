@@ -145,7 +145,7 @@ tr.registerMock('./azurermutil.js', {
 });
 
 tr.registerMock('./kuduutility.js', {
-    deployWebAppPackage: function(webAppPackage, virtualApplicationMappings, publishingProfile, virtualApplication) {
+    deployWebAppPackage: function(webAppPackage, webAppZipFile) {
         console.log ('Deployed using KuduDeploy');
     },
     getVirtualAndPhysicalPaths: function (virtualApplication, virtualApplicationMappings) {
