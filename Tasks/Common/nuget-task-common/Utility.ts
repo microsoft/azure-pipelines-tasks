@@ -139,11 +139,11 @@ export function stripLeadingAndTrailingQuotes(path: string): string {
     return path.substring(left, right + 1);
 }
 
-export function getBundledNuGetLocation(version: string): string {
-    if (version === "3.5.0.1829"){
-        return path.join(__dirname, 'NuGet/3.5.0.1829/NuGet.exe')
+export function getBundledNuGetLocation(uxOption: string): string {
+    if (uxOption === "3.5.0.1829"){
+        return path.join(__dirname, 'NuGet/3.5.0/NuGet.exe')
     }
-    else if (version === "3.3.0"){
+    else if (uxOption === "3.3.0"){
         return path.join(__dirname, 'NuGet/3.3.0/NuGet.exe');
     }
     throw new Error(tl.loc("NGCommon_UnabletoDetectNuGetVersion"));
