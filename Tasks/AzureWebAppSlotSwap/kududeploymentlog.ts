@@ -59,6 +59,7 @@ export function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isSlotSwap
         message : message,
         author : author,
         deployer : 'VSTS',
+        active : false,
         details : buildOrReleaseUrl
     };
 

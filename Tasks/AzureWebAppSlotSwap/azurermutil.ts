@@ -71,7 +71,7 @@ export function updateSlotSwapStatus(publishingProfile, isSlotSwapSuccess: boole
  */
 export async function getAzureRMWebAppPublishProfile(SPN, resourceGroupName:string, webAppName: string, slotName: string) {
     var deferred = Q.defer();
-    var slotUrl = (slotName) ? "/slots/" + slotName : "";
+    var slotUrl = (slotName == "production") ? "" : "/slots/" + slotName;
     var accessToken = await getAuthorizationToken(SPN);
     
     var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +

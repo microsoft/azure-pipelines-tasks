@@ -21,10 +21,14 @@ async function run() {
         var slot2: string = tl.getInput('Slot2', false);
         var preserveVnet: boolean = tl.getBoolInput('PreserveVnet', false);
 
+        if(!slot2)
+            slot2 = "production";
+    
         var isSlotSwapSuccess = true;
-        var SPN: ISPN = initializeSPN(connectedServiceName);
+        var SPN: ISPN = azureRmUtil.initializeSPN(connectedServiceName);
+        var accessToken = await azureRmUtil.getAuthorizationToken(SPN);
 
-        await swapSlot(SPN, resourceGroupName, webAppName, slot1, slot2, preserveVnet);
+        tl._writeLine(await swapWebAppSlot(SPN, accessToken, resourceGroupName, webAppName, slot1, slot2, preserveVnet));
     }
     catch(error)
     {
@@ -63,30 +67,23 @@ function initializeSPN(connectedServiceName: string): ISPN{
     }
 }
 
-async function swapSlot(SPN, resourceGroupName: string, webAppName: string, slot1: string, slot2: string,preserveVnet: boolean) {
-    var deferred = Q.defer<any>();
-    var accessToken = await azureRmUtil.getAuthorizationToken(SPN);
-    
-    var url = armUrl + 'subscriptions/' + SPN["subscriptionId"] + '/resourceGroups/' + resourceGroupName +
+function swapWebAppSlot(SPN: ISPN, accessToken: any, resourceGroupName: string, webAppName: string, slot1: string, slot2: string,preserveVnet: boolean): Q.Promise<string> {
+    var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
                  '/providers/Microsoft.Web/sites/' + webAppName + "/slots/" + slot1 + '/slotsswap?' + azureApiVersion;
 
-    if(!slot2)
-        slot2 = "production";
-    
     var body = {
         targetSlot: slot2,
         preserveVnet: preserveVnet
     }
-    
     var headers = {
         'Authorization': 'Bearer '+ accessToken,
         'Content-Type': 'application/json'
     };
 
+    var deferred = Q.defer<any>();
     httpObj.send('POST', url, body, headers, (error, response, body) => {
         if(response.statusCode === 202)
         {
-            tl._writeLine(tl.loc("Successfullyswappedslots"));
             deferred.resolve(tl.loc("Successfullyswappedslots"));
         }
         else {
