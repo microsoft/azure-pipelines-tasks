@@ -103,7 +103,7 @@ $start = @"
 
     $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?{2}", $global:ElsAccountUrl, $run.id, $apiVersion)
     InvokeRestMethod -contentType "application/json" -uri $uri -method Patch -headers $headers -body $start
-    $run = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers
+    $run = InvokeRestMethod -contentType "application/json" -userAgent $userAgent -uri $uri -headers $headers
 
     return $run
 }
@@ -310,7 +310,6 @@ Write-Verbose "VSO account Url = $global:TFSAccountUrl" -Verbose
 Write-Verbose "CLT account Url = $global:ElsAccountUrl" -Verbose
 
 #Setting Headers and account Url accordingly
-Write-Output "Initializing Rest headers."
 $headers = InitializeRestHeaders
 
 #Upload the test drop
@@ -369,5 +368,5 @@ else
     ("Connection '{0}' failed for service '{1}'" -f $connectedServiceName, $connectedServiceDetails.Url.AbsoluteUri) >> $summaryFile
 }
 
-WriteTaskMessages "Finished JMeter Test Script"
+WriteTaskMessages "JMeter Test Script execution completed"
 
