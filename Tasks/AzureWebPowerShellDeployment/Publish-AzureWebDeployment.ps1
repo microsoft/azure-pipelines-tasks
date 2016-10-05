@@ -168,7 +168,6 @@ try{
             })
 
             $userAgent = Get-VstsTaskVariable -Name AZURE_HTTP_USER_AGENT
-            $userAgent = ($userAgent)? $userAgent : ""
 
             $url = [string]::Format("https://{0}/deployments/{1}",[System.Web.HttpUtility]::UrlEncode($matchedWebSiteName),[System.Web.HttpUtility]::UrlEncode($deploymentId))
 
