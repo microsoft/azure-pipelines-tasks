@@ -21,8 +21,8 @@
   "loc.input.label.vstestLocationMethod": "VSTest",
   "loc.input.label.vsTestVersion": "Version de VSTest",
   "loc.input.help.vsTestVersion": "Version de VSTest à utiliser.",
-  "loc.input.label.vstestLocation": "Path to vstest.console.exe",
-  "loc.input.help.vstestLocation": "Optionally supply the path to VSTest.",
+  "loc.input.label.vstestLocation": "Chemin de vstest.console.exe",
+  "loc.input.help.vstestLocation": "Indiquez éventuellement le chemin de VSTest.",
   "loc.input.label.pathtoCustomTestAdapters": "Chemin d'accès des adaptateurs de tests personnalisés",
   "loc.input.help.pathtoCustomTestAdapters": "Chemin d'accès au répertoire des adaptateurs de test personnalisés. Une recherche des adaptateurs Nuget restaurés est automatiquement effectuée.",
   "loc.input.label.otherConsoleOptions": "Autres options de console",
@@ -50,7 +50,7 @@
   "loc.messages.ErrorWhileSettingTestImpactCollectorRunSettings": "Une erreur s'est produite pendant la définition du Collecteur d'impact de test dans le fichier de paramètres d'exécution.",
   "loc.messages.ErrorWhileCreatingResponseFile": "Une erreur s'est produite pendant la création du fichier réponse. Tous les tests de cette série vont être exécutés.",
   "loc.messages.ErrorWhileUpdatingResponseFile": "Une erreur s'est produite pendant la mise à jour du fichier réponse '%s'. Tous les tests de cette série vont être exécutés.",
-  "loc.messages.ErrorWhilePublishingCodeChanges": "Error occurred while publishing the code changes. All the tests will be executed for this run.",
-  "loc.messages.PublishCodeChangesPerfTime": "Total time taken to publish code changes: %d milliseconds",
-  "loc.messages.GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds"
+  "loc.messages.ErrorWhilePublishingCodeChanges": "Une erreur s'est produite durant la publication des modifications du code. Tous les tests vont être exécutés pour cette série.",
+  "loc.messages.PublishCodeChangesPerfTime": "Temps total de publication des modifications du code : %d millisecondes",
+  "loc.messages.GenerateResponseFilePerfTime": "Temps total d'obtention du fichier réponse : %d millisecondes"
 }

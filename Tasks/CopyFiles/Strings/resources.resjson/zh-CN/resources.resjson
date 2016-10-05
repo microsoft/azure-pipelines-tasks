@@ -9,7 +9,7 @@
   "loc.input.label.Contents": "内容",
   "loc.input.help.Contents": "要包含在副本中的文件路径。支持多行或最小匹配模式。[详细信息](https://go.microsoft.com/fwlink/?LinkID=708389)",
   "loc.input.label.TargetFolder": "目标文件夹",
-  "loc.input.help.TargetFolder": "Target folder or UNC path files will copy to. You can use [variables](http://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)",
+  "loc.input.help.TargetFolder": "文件将复制到的目标文件夹或 UNC 路径。可以使用 [variables](http://go.microsoft.com/fwlink/?LinkID=550988)。示例: $(build.artifactstagingdirectory)",
   "loc.input.label.CleanTargetFolder": "清理目标文件夹",
   "loc.input.help.CleanTargetFolder": "复制之前，先删除目标文件夹中的现有全部文件",
   "loc.input.label.OverWrite": "覆盖",

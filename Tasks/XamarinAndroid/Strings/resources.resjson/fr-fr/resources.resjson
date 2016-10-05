@@ -14,8 +14,13 @@
   "loc.input.label.configuration": "Configuration",
   "loc.input.label.clean": "Nettoyer",
   "loc.input.help.clean": "Passe la cible clean (/t:clean) pendant la génération.",
+  "loc.input.label.msbuildLocationMethod": "MSBuild",
+  "loc.input.label.msbuildVersion": "MSBuild Version",
+  "loc.input.help.msbuildVersion": "If the preferred version cannot be found, the latest version found will be used instead. On a Mac xbuild (Mono) will be used.",
   "loc.input.label.msbuildLocation": "Emplacement de MSBuild",
-  "loc.input.help.msbuildLocation": "Indiquez éventuellement le chemin de MSBuild (Windows) ou xbuild (Mac). Par défaut, la recherche porte sur la dernière version.",
+  "loc.input.help.msbuildLocation": "Optionally supply the path to MSBuild (on Windows) or xbuild (on Mac).",
+  "loc.input.label.msbuildArchitecture": "MSBuild Architecture",
+  "loc.input.help.msbuildArchitecture": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
   "loc.input.label.msbuildArguments": "Arguments supplémentaires",
   "loc.input.help.msbuildArguments": "Arguments supplémentaires passés à MSBuild (Windows) ou xbuild (Mac).",
   "loc.input.label.jdkSelection": "Sélectionner le JDK à utiliser pour la build",
@@ -25,5 +30,7 @@
   "loc.input.label.jdkUserInputPath": "Chemin d'accès à JDK",
   "loc.input.help.jdkUserInputPath": "Utilisez la version JDK à l'emplacement du chemin spécifié pendant la génération.",
   "loc.input.label.jdkArchitecture": "Architecture de JDK",
-  "loc.input.help.jdkArchitecture": "Indiquez éventuellement l'architecture (x86, x64) du JDK."
+  "loc.input.help.jdkArchitecture": "Indiquez éventuellement l'architecture (x86, x64) du JDK.",
+  "loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "Unable to find MSBuild: Version = {0}, Architecture = {1}. Looking for the latest version.",
+  "loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent": "MSBuild not found: Version = {0}, Architecture = {1}. Try a different version/architecture combination, specify a location, or install the appropriate MSBuild version/architecture."
 }

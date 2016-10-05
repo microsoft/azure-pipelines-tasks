@@ -9,7 +9,7 @@
   "loc.input.label.Contents": "Inhalte",
   "loc.input.help.Contents": "Dateipfade, die als Teil der Kopie eingeschlossen werden sollen. Unterstützt mehrere Zeilen von Minimatchmustern. [Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=708389)",
   "loc.input.label.TargetFolder": "Zielordner",
-  "loc.input.help.TargetFolder": "Target folder or UNC path files will copy to. You can use [variables](http://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)",
+  "loc.input.help.TargetFolder": "Der Zielordner oder UNC-Pfad, in den die Dateien kopiert werden. Sie können [Variablen](http://go.microsoft.com/fwlink/?LinkID=550988) verwenden. Beispiel: \"$(build.artifactstagingdirectory)\".",
   "loc.input.label.CleanTargetFolder": "Zielordner bereinigen",
   "loc.input.help.CleanTargetFolder": "Alle vorhandenen Dateien im Zielordner vor dem Kopieren löschen",
   "loc.input.label.OverWrite": "Überschreiben",

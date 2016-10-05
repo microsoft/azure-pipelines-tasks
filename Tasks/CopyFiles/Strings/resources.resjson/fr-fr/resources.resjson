@@ -9,7 +9,7 @@
   "loc.input.label.Contents": "Contenu",
   "loc.input.help.Contents": "Chemins d'accès de fichiers à inclure dans la copie. Prend en charge plusieurs lignes de modèles minimatch. [Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=708389)",
   "loc.input.label.TargetFolder": "Dossier cible",
-  "loc.input.help.TargetFolder": "Target folder or UNC path files will copy to. You can use [variables](http://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)",
+  "loc.input.help.TargetFolder": "Dossier cible ou chemin UNC vers lequel les fichiers sont copiés. Vous pouvez utiliser [variables](http://go.microsoft.com/fwlink/?LinkID=550988). Exemple : $(build.artifactstagingdirectory)",
   "loc.input.label.CleanTargetFolder": "Effacer le dossier cible",
   "loc.input.help.CleanTargetFolder": "Supprimer tous les fichiers existants dans le dossier cible avant de copier",
   "loc.input.label.OverWrite": "Remplacer",

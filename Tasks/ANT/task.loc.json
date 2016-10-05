@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 54
+    "Patch": 55
   },
   "demands": [
     "ant"

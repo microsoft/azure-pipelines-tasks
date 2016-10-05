@@ -37,7 +37,7 @@
   "loc.input.label.configuration": "Configurazione",
   "loc.input.help.configuration": "Configurazione da usare per i test. Usare qui l'eventuale variabile definita per la configurazione nell'attività di compilazione.",
   "loc.input.label.testConfigurations": "Configurazioni di test",
-  "loc.input.help.testConfigurations": "Optionally associate a testcase filter against a testconfiguration ID. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: `FullyQualifiedName~Chrome:12`",
+  "loc.input.help.testConfigurations": "Consente, facoltativamente, di associare un filtro del test case a un ID di configurazione di test. Sintassi: &lt;Filtro1&gt;:&lt;Id1&gt;;ConfigurazioneTestPredefinita:&lt;Id3&gt;. Ad esempio: `FullyQualifiedName~Chrome:12`",
   "loc.input.label.autMachineGroup": "Computer applicazione sottoposta a test",
   "loc.input.help.autMachineGroup": "Elenco delimitato da virgole di computer, variabili di output o nomi di gruppo di computer in cui sono in esecuzione processi server, come W3WP.exe"
 }

@@ -21,8 +21,8 @@
   "loc.input.label.vstestLocationMethod": "VSTest",
   "loc.input.label.vsTestVersion": "VSTest 버전",
   "loc.input.help.vsTestVersion": "사용할 VSTest의 버전입니다.",
-  "loc.input.label.vstestLocation": "Path to vstest.console.exe",
-  "loc.input.help.vstestLocation": "Optionally supply the path to VSTest.",
+  "loc.input.label.vstestLocation": "vstest.console.exe 경로",
+  "loc.input.help.vstestLocation": "선택적으로 VSTest 경로를 제공합니다.",
   "loc.input.label.pathtoCustomTestAdapters": "사용자 지정 테스트 어댑터 경로",
   "loc.input.help.pathtoCustomTestAdapters": "사용자 지정 테스트 어댑터의 디렉터리 경로입니다. Nuget 복원 어댑터가 자동으로 검색됩니다.",
   "loc.input.label.otherConsoleOptions": "기타 콘솔 옵션",
@@ -50,7 +50,7 @@
   "loc.messages.ErrorWhileSettingTestImpactCollectorRunSettings": "실행 설정 파일에서 테스트 영향 수집기를 설정하는 동안 오류가 발생했습니다.",
   "loc.messages.ErrorWhileCreatingResponseFile": "지시 파일을 만드는 동안 오류가 발생했습니다. 모든 테스트는 이 실행에 대해 실행됩니다.",
   "loc.messages.ErrorWhileUpdatingResponseFile": "지시 파일 '%s'을(를) 업데이트하는 동안 오류가 발생했습니다. 모든 테스트는 이 실행에 대해 실행됩니다.",
-  "loc.messages.ErrorWhilePublishingCodeChanges": "Error occurred while publishing the code changes. All the tests will be executed for this run.",
-  "loc.messages.PublishCodeChangesPerfTime": "Total time taken to publish code changes: %d milliseconds",
-  "loc.messages.GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds"
+  "loc.messages.ErrorWhilePublishingCodeChanges": "코드 변경 내용을 게시하는 동안 오류가 발생했습니다. 모든 테스트는 이 실행에 대해 실행됩니다.",
+  "loc.messages.PublishCodeChangesPerfTime": "코드 변경 내용을 게시하는 데 걸린 총 시간: %d밀리초",
+  "loc.messages.GenerateResponseFilePerfTime": "지시 파일을 가져오는 데 걸린 총 시간: %d밀리초"
 }

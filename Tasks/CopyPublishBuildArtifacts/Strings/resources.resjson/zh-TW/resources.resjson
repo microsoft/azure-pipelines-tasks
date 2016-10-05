@@ -12,5 +12,6 @@
   "loc.input.label.ArtifactType": "成品類型",
   "loc.input.help.ArtifactType": "要建立之成品的類型。",
   "loc.input.label.TargetPath": "路徑",
-  "loc.input.help.TargetPath": "要接受所複製之檔案的檔案共用"
+  "loc.input.help.TargetPath": "要接受所複製之檔案的檔案共用",
+  "loc.messages.ErrorFileShareLinux": "Cannot publish artifacts from an OSX or Linux agent to a file share. You can change the artifact type to server or use a Windows agent."
 }

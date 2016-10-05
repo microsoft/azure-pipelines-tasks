@@ -37,7 +37,7 @@
   "loc.input.label.configuration": "Конфигурация",
   "loc.input.help.configuration": "Конфигурация, на основе которой создаются отчеты о тестировании. Если вы определили переменную для конфигурации в задаче сборки, используйте ее здесь.",
   "loc.input.label.testConfigurations": "Конфигурации тестирования",
-  "loc.input.help.testConfigurations": "Optionally associate a testcase filter against a testconfiguration ID. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: `FullyQualifiedName~Chrome:12`",
+  "loc.input.help.testConfigurations": "При необходимости свяжите фильтр тестовых случаев с идентификатором конфигурации теста. Синтаксис: &lt;фильтр1&gt;:&lt;ИД1&gt;;конфигурация_теста_по_умолчанию:&lt;ИД3&gt;. Пример: FullyQualifiedName~Chrome:12",
   "loc.input.label.autMachineGroup": "Приложение на тестовых компьютерах",
   "loc.input.help.autMachineGroup": "Разделенный запятыми список компьютеров либо выходная переменная или имя группы компьютеров, где выполняются серверные процессы, такие как W3WP.exe"
 }

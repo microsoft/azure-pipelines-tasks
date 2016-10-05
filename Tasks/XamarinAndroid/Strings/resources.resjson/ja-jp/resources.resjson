@@ -14,8 +14,13 @@
   "loc.input.label.configuration": "構成",
   "loc.input.label.clean": "消去",
   "loc.input.help.clean": "ビルド中に Clean ターゲット (/t:clean) を渡します。",
+  "loc.input.label.msbuildLocationMethod": "MSBuild",
+  "loc.input.label.msbuildVersion": "MSBuild Version",
+  "loc.input.help.msbuildVersion": "If the preferred version cannot be found, the latest version found will be used instead. On a Mac xbuild (Mono) will be used.",
   "loc.input.label.msbuildLocation": "MSBuild の場所",
-  "loc.input.help.msbuildLocation": "必要に応じて、MSBuild (Windows) または xbuild (Mac) へのパスを指定します。指定しない場合は、既定で最新のバージョンが検索されます。",
+  "loc.input.help.msbuildLocation": "Optionally supply the path to MSBuild (on Windows) or xbuild (on Mac).",
+  "loc.input.label.msbuildArchitecture": "MSBuild Architecture",
+  "loc.input.help.msbuildArchitecture": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
   "loc.input.label.msbuildArguments": "追加引数",
   "loc.input.help.msbuildArguments": "MSBuild (Windows) または xbuild (Mac) に渡す追加の引数。",
   "loc.input.label.jdkSelection": "ビルドに使用する JDK を選ぶ",
@@ -25,5 +30,7 @@
   "loc.input.label.jdkUserInputPath": "JDK パス",
   "loc.input.help.jdkUserInputPath": "ビルド中に指定したパスにある JDK のバージョンを使用します。",
   "loc.input.label.jdkArchitecture": "JDK アーキテクチャ",
-  "loc.input.help.jdkArchitecture": "必要に応じて、JDK のアーキテクチャ (x86、x64) を指定します。"
+  "loc.input.help.jdkArchitecture": "必要に応じて、JDK のアーキテクチャ (x86、x64) を指定します。",
+  "loc.messages.UnableToFindMSBuildVersion0Architecture1LookingForLatestVersion": "Unable to find MSBuild: Version = {0}, Architecture = {1}. Looking for the latest version.",
+  "loc.messages.MSBuildNotFoundVersion0Architecture1TryDifferent": "MSBuild not found: Version = {0}, Architecture = {1}. Try a different version/architecture combination, specify a location, or install the appropriate MSBuild version/architecture."
 }

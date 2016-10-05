@@ -9,7 +9,7 @@
   "loc.input.label.Contents": "Оглавление",
   "loc.input.help.Contents": "Пути к файлам, которые будут включены в операцию копирования. Есть поддержка многострочных шаблонов Minimatch. [Подробнее...](https://go.microsoft.com/fwlink/?LinkID=708389)",
   "loc.input.label.TargetFolder": "Целевая папка",
-  "loc.input.help.TargetFolder": "Target folder or UNC path files will copy to. You can use [variables](http://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)",
+  "loc.input.help.TargetFolder": "Целевая папка или UNC-путь для копирования файлов. Можно использовать [переменные](http://go.microsoft.com/fwlink/?LinkID=550988). Например: $(build.artifactstagingdirectory)",
   "loc.input.label.CleanTargetFolder": "Очистить целевую папку",
   "loc.input.help.CleanTargetFolder": "Удалить все существующие файлы в целевой папке перед копированием",
   "loc.input.label.OverWrite": "Перезаписать",

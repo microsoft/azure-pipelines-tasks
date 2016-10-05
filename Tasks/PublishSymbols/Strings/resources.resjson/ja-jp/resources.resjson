@@ -25,7 +25,7 @@
   "loc.messages.CleanedUpSemaphoreFile0": "セマフォ ファイル '{0}' を正常にクリーンアップしました。",
   "loc.messages.CleanUpSemaphoreFile0Error1": "既存のセマフォ ファイル '{0}' をクリーンアップできませんでした。{1}",
   "loc.messages.Error0AccessingSemaphoreFile1Retrying2Seconds": "セマフォ ファイル '{1}' にアクセス中にエラー '{0}' が発生しました。{2:N0} 秒後に再試行します。",
-  "loc.messages.FailedToLoadDbghelpDllFrom0ErrorCode1": "Failed to load dbghelp.dll from '{0}' with error code '{1}'.",
+  "loc.messages.FailedToLoadDbghelpDllFrom0ErrorCode1": "'{0}' からの dbghelp.dll のロードに失敗し、エラー コード '{1}' が返されました。",
   "loc.messages.Found0Files": "{0:N0} ファイルが見つかりました。",
   "loc.messages.FreeLibraryDbghelpDllError0": "ライブラリ dbghelp.dll を解放できませんでした。エラー コード '{0}'。",
   "loc.messages.NoFilesForIndexing": "インデックスを作成するファイルが選択されていません。",

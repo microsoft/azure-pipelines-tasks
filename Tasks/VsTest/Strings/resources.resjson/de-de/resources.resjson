@@ -21,8 +21,8 @@
   "loc.input.label.vstestLocationMethod": "VSTest",
   "loc.input.label.vsTestVersion": "VSTest-Version",
   "loc.input.help.vsTestVersion": "Die zu verwendende VSTest-Version.",
-  "loc.input.label.vstestLocation": "Path to vstest.console.exe",
-  "loc.input.help.vstestLocation": "Optionally supply the path to VSTest.",
+  "loc.input.label.vstestLocation": "Der Pfad zu \"vstest.console.exe\".",
+  "loc.input.help.vstestLocation": "Geben Sie optional den Pfad zu VSTest an.",
   "loc.input.label.pathtoCustomTestAdapters": "Pfad zu benutzerdefinierten Testadaptern",
   "loc.input.help.pathtoCustomTestAdapters": "Der Verzeichnispfad zu benutzerdefinierten Testadaptern. Es wird automatisch nach Adaptern gesucht, die NuGet wiederhergestellt hat.",
   "loc.input.label.otherConsoleOptions": "Andere Konsolenoptionen",
@@ -50,7 +50,7 @@
   "loc.messages.ErrorWhileSettingTestImpactCollectorRunSettings": "Fehler beim Festlegen des Testauswirkungssammlers in der Datei mit den Ausführungseinstellungen.",
   "loc.messages.ErrorWhileCreatingResponseFile": "Fehler beim Erstellen der Antwortdatei. Für diesen Lauf werden alle Tests ausgeführt.",
   "loc.messages.ErrorWhileUpdatingResponseFile": "Fehler beim Aktualisieren der Antwortdatei \"%s\". Für diesen Lauf werden alle Tests ausgeführt.",
-  "loc.messages.ErrorWhilePublishingCodeChanges": "Error occurred while publishing the code changes. All the tests will be executed for this run.",
-  "loc.messages.PublishCodeChangesPerfTime": "Total time taken to publish code changes: %d milliseconds",
-  "loc.messages.GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds"
+  "loc.messages.ErrorWhilePublishingCodeChanges": "Fehler beim Veröffentlichen der Codeänderungen. Für diesen Lauf werden alle Tests ausgeführt.",
+  "loc.messages.PublishCodeChangesPerfTime": "Gesamtzeit für das Veröffentlichen von Änderungen: %d Millisekunden",
+  "loc.messages.GenerateResponseFilePerfTime": "Gesamtzeit für das Abrufen der Antwortdatei: %d Millisekunden"
 }

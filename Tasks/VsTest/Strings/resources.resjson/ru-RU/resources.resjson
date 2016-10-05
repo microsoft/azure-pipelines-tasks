@@ -21,8 +21,8 @@
   "loc.input.label.vstestLocationMethod": "VSTest",
   "loc.input.label.vsTestVersion": "Версия VSTest",
   "loc.input.help.vsTestVersion": "Используемая версия VSTest.",
-  "loc.input.label.vstestLocation": "Path to vstest.console.exe",
-  "loc.input.help.vstestLocation": "Optionally supply the path to VSTest.",
+  "loc.input.label.vstestLocation": "Путь к vstest.console.exe",
+  "loc.input.help.vstestLocation": "При необходимости укажите путь к VSTest.",
   "loc.input.label.pathtoCustomTestAdapters": "Путь к пользовательским адаптерам теста",
   "loc.input.help.pathtoCustomTestAdapters": "Путь к пользовательским тестовым адаптерам. Автоматически выполняется поиск адаптеров, восстановленных с помощью Nuget.",
   "loc.input.label.otherConsoleOptions": "Другие параметры консоли",
@@ -50,7 +50,7 @@
   "loc.messages.ErrorWhileSettingTestImpactCollectorRunSettings": "При задании сборщика данных, задействованных в тестировании, в файле параметров запуска произошла ошибка.",
   "loc.messages.ErrorWhileCreatingResponseFile": "При создании файла ответов произошла ошибка. Для этого запуска будут выполнены все тесты.",
   "loc.messages.ErrorWhileUpdatingResponseFile": "При обновлении файла ответов \"%s\" произошла ошибка. Для этого запуска будут выполнены все тесты.",
-  "loc.messages.ErrorWhilePublishingCodeChanges": "Error occurred while publishing the code changes. All the tests will be executed for this run.",
-  "loc.messages.PublishCodeChangesPerfTime": "Total time taken to publish code changes: %d milliseconds",
-  "loc.messages.GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds"
+  "loc.messages.ErrorWhilePublishingCodeChanges": "Произошла ошибка при публикации изменений кода. Все тесты будут выполнены для этого запуска.",
+  "loc.messages.PublishCodeChangesPerfTime": "Общее время, затраченное на публикацию изменений кода: %d мс",
+  "loc.messages.GenerateResponseFilePerfTime": "Общее время, затраченное на получение файла ответов: %d мс"
 }

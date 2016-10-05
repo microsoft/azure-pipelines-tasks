@@ -21,8 +21,8 @@
   "loc.input.label.vstestLocationMethod": "VSTest",
   "loc.input.label.vsTestVersion": "Versione di VSTest",
   "loc.input.help.vsTestVersion": "Versione di VSTest da usare.",
-  "loc.input.label.vstestLocation": "Path to vstest.console.exe",
-  "loc.input.help.vstestLocation": "Optionally supply the path to VSTest.",
+  "loc.input.label.vstestLocation": "Percorso di vstest.console.exe",
+  "loc.input.help.vstestLocation": "Consente, facoltativamente, di specificare il percorso di VSTest.",
   "loc.input.label.pathtoCustomTestAdapters": "Percorso degli adattatori di test personalizzati",
   "loc.input.help.pathtoCustomTestAdapters": "Percorso della directory degli adattatori di test personalizzati. La ricerca viene estesa automaticamente agli adattatori NuGet ripristinati.",
   "loc.input.label.otherConsoleOptions": "Altre opzioni della console",
@@ -50,7 +50,7 @@
   "loc.messages.ErrorWhileSettingTestImpactCollectorRunSettings": "Si è verificato un errore durante l'impostazione di Agente di raccolta impatto test nel file delle impostazioni esecuzione test.",
   "loc.messages.ErrorWhileCreatingResponseFile": "Si è verificato un errore durante la creazione del file di risposta. Verranno eseguiti tutti i test per questa esecuzione.",
   "loc.messages.ErrorWhileUpdatingResponseFile": "Si è verificato un errore durante l'aggiornamento del file di risposta '%s'. Verranno eseguiti tutti i test per questa esecuzione.",
-  "loc.messages.ErrorWhilePublishingCodeChanges": "Error occurred while publishing the code changes. All the tests will be executed for this run.",
-  "loc.messages.PublishCodeChangesPerfTime": "Total time taken to publish code changes: %d milliseconds",
-  "loc.messages.GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds"
+  "loc.messages.ErrorWhilePublishingCodeChanges": "Si è verificato un errore durante la pubblicazione delle modifiche apportate al codice. Verranno eseguiti tutti i test per questa esecuzione.",
+  "loc.messages.PublishCodeChangesPerfTime": "Tempo totale necessario per pubblicare le modifiche apportate al codice: %d millisecondi",
+  "loc.messages.GenerateResponseFilePerfTime": "Tempo totale necessario per ottenere il file di risposta: %d millisecondi"
 }

@@ -9,7 +9,7 @@
   "loc.input.label.Contents": "콘텐츠",
   "loc.input.help.Contents": "복사의 일부로 포함할 파일 경로입니다. 여러 줄의 minimatch 패턴을 지원합니다. [자세한 정보](https://go.microsoft.com/fwlink/?LinkID=708389)",
   "loc.input.label.TargetFolder": "대상 폴더",
-  "loc.input.help.TargetFolder": "Target folder or UNC path files will copy to. You can use [variables](http://go.microsoft.com/fwlink/?LinkID=550988). Example: $(build.artifactstagingdirectory)",
+  "loc.input.help.TargetFolder": "파일이 복사될 대상 폴더 또는 UNC 경로입니다. [변수](http://go.microsoft.com/fwlink/?LinkID=550988)를 사용할 수 있습니다. 예: $(build.artifactstagingdirectory)",
   "loc.input.label.CleanTargetFolder": "대상 폴더 정리",
   "loc.input.help.CleanTargetFolder": "복사 전 대상 폴더에서 기존 파일 모두 삭제",
   "loc.input.label.OverWrite": "덮어쓰기",
