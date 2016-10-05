@@ -28,6 +28,7 @@ export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: b
     var deferred = Q.defer<string>();
 
     var webAppPublishKuduUrl = publishingProfile.publishUrl;
+    tl.debug('Web App Publish Kudu URL: ' + webAppPublishKuduUrl);
     if(webAppPublishKuduUrl) {
         var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
         var accessToken = 'Basic ' + (new Buffer(publishingProfile.userName + ':' + publishingProfile.userPWD).toString('base64'));
@@ -194,7 +195,7 @@ export async function getAzureRMWebAppConfigDetails(SPN, webAppName: string, res
         }
         else {
             tl.error(response.statusMessage);
-            deferred.reject(tl.loc('ErrorOccurredStausCode0',response.statusCode));
+            deferred.reject(tl.loc('UnabletoretrieveAzureRMWebAppConfigDetails', response.statusCode, response.statusMessage));
         }
     });
     return deferred.promise;

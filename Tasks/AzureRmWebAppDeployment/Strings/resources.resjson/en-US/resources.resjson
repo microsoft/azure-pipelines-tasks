@@ -43,7 +43,7 @@
   "loc.messages.Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
   "loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website",
   "loc.messages.ErrorFetchingDeploymentPublishProfileStausCode0": "Error Fetching Deployment Publish Profile [Staus Code : '%s']",
-  "loc.messages.ErrorOccurredStausCode0": "Error Occurred : [Staus Code : '%s']",
+  "loc.messages.UnabletoretrieveAzureRMWebAppConfigDetails": "Unable to retrieve AzureRM Web App Config Details: [Staus Code : '%s' (%s)]",
   "loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update deployment status : Unique Deployment ID cannot be retrieved",
   "loc.messages.WebappsuccessfullypublishedatUrl0": "Web App successfully deployed at url %s",
   "loc.messages.Failedtodeploywebsite": "Failed to deploy website.",
