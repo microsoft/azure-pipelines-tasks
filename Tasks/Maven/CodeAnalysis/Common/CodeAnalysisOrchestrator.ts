@@ -63,7 +63,7 @@ export class CodeAnalysisOrchestrator {
 
         for (var tool of tools) {
             var results: AnalysisResult[] = tool.processResults();
-            if (results) {
+            if (results != undefined && results != null && results.length > 0) {
                 analysisResults = analysisResults.concat(results);
             }
         }

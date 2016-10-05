@@ -56,7 +56,8 @@ export abstract class BaseTool implements IAnalysisTool {
     public processResults(): AnalysisResult[] {
 
         if (!this.isEnabled()) {
-            tl.debug(`[CA] ${this.toolName} analysis is not enabled, searching for reports anyway.`);
+            tl.debug(`[CA] ${this.toolName} analysis is not enabled.`);
+            return [];
         }
 
         var results: AnalysisResult[] = [];
