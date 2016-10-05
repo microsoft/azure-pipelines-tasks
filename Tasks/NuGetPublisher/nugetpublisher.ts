@@ -185,7 +185,7 @@ function publishPackageAsync(packageFile: string, options: PublishOptions): Q.Pr
     }
 
     if (options.extraArgs) {
-        nugetTool.argString(options.extraArgs);
+        nugetTool.line(options.extraArgs);
     }
 
     return nugetTool.exec();
