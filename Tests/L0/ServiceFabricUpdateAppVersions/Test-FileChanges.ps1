@@ -42,7 +42,8 @@ Register-Mock Get-VstsLocString
 
 $NewFiles = $NewFiles | ForEach-Object { "$newPkg\$_" }
 $OldFiles = $OldFiles | ForEach-Object { "$oldPkg\$_" }
-Register-Mock Find-VstsFiles { $NewFiles } -ArgumentsEvaluator { $args[1] -eq $newPkg }
+Register-Mock Find-VstsFiles { $NewFiles } -- -LiteralDirectory $newPkg -LegacyPattern "**" -Force
+Register-Mock Find-VstsFiles { $null } -- -LiteralDirectory $newPkg -LegacyPattern "**\*.pdb" -Force
 Register-Mock Find-VstsFiles { $OldFiles } -ArgumentsEvaluator { $args[1] -eq $oldPkg }
 
 $ChangedFiles = $ChangedFiles | ForEach-Object { "$newPkg\$_" }
