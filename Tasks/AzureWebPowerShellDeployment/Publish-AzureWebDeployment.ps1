@@ -168,10 +168,11 @@ try{
             })
 
             $userAgent = Get-VstsTaskVariable -Name AZURE_HTTP_USER_AGENT
+            $userAgent = ($userAgent)? $userAgent : ""
 
             $url = [string]::Format("https://{0}/deployments/{1}",[System.Web.HttpUtility]::UrlEncode($matchedWebSiteName),[System.Web.HttpUtility]::UrlEncode($deploymentId))
 
-            Write-Verbose "##[command]Invoke-RestMethod $url -Credential $credential  -Method PUT -Body $body -ContentType `"application/json`" -UserAgent `"myuseragent`""
+            Write-Verbose "##[command]Invoke-RestMethod $url -Credential $credential  -Method PUT -Body $body -ContentType `"application/json`" -UserAgent $userAgent"
             Write-Host (Get-VstsLocString -Key "Updatingdeploymentstatus")
             try {
                 Invoke-RestMethod $url -Credential $credential  -Method PUT -Body $body -ContentType "application/json" -UserAgent $userAgent
