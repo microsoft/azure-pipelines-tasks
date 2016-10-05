@@ -7,8 +7,8 @@
         },
         {
             "archiveName": "NuGet.exe",
-            "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGet/3.5.0-1829/NuGet.zip",
-            "dest": "./NuGet/3.5.0.1829/"
+            "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGet/3.5.0.1938-rtm/NuGet.zip",
+            "dest": "./NuGet/3.5.0/"
         },
         {
             "archiveName": "CredentialProvider.TeamBuild.exe",
