@@ -38,7 +38,7 @@ try {
     # Always build the APK file
     $msBuildArguments = "$msBuildArguments /t:PackageForAndroid"
     if ($outputDir) {
-        $args = "$args /p:OutputPath=""$outputDir"""
+        $msBuildArguments = "$msBuildArguments /p:OutputPath=""$outputDir"""
     }
     if ($jdkVersion -and $jdkVersion -ne "default")
     {
