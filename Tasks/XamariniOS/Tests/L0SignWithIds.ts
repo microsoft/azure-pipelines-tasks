@@ -3,7 +3,7 @@ import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 
-let taskPath = path.join(__dirname, '..', 'XamariniOS.js');
+let taskPath = path.join(__dirname, '..', 'xamarinios.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 process.env['HOME']='/user/home'; //replace with mock of setVariable when task-lib has the support
