@@ -18,6 +18,9 @@ async function substituteXmlVariables(configFile, tags){
     if(!tl.exist(configFile)) {
         throw new Error(tl.loc("Configfiledoesntexists", configFile));
     }
+    if( !tl.stats(configFile).isFile()){
+        return;
+    }
     tl.debug(tl.loc("Initiatedvariablesubstitutioninconfigfile", configFile));
     var webConfigContent = fs.readFileSync(configFile);
     var DOMParser = require('xmldom').DOMParser;
