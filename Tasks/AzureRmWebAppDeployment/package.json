@@ -26,7 +26,10 @@
     "gulp-zip": "^3.2.0",
     "vso-node-api": "^5.0.5"
   },
-  "optionalDependencies":{
+  "optionalDependencies": {
     "regedit": "^2.2.5"
+  },
+  "devDependencies": {
+    "mocha": "^3.1.0"
   }
 }
