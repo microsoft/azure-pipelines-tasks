@@ -1,6 +1,8 @@
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 import Q = require('q');
+import ffl = require('find-files-legacy/findfiles.legacy');
+
 var os = require('os');
 var regedit = require('regedit');
 var uuid = require('node-uuid');
@@ -108,34 +110,7 @@ function getFilteredFilesFromPattern(pattern: string, hasQuantifier: boolean, al
 }
 
 function getTestAssemblies(): Set<string> {
-    let testAssemblyFiles: string[] = [];
-    if (testAssembly.indexOf('*') >= 0 || testAssembly.indexOf('?') >= 0) {
-        tl.debug('Pattern found in solution parameter.');
-        let excludeTestAssemblies: string[] = [];
-        let allFiles = tl.find(systemDefaultWorkingDirectory);
-        let testAssemblyFilters = testAssembly.split(';');
-        testAssemblyFilters.forEach(function (testAssemblyFilter) {
-            let isExcludeFilter = testAssemblyFilter.startsWith('-:');
-            let hasQuantifier = testAssembly.indexOf('*') != -1 || testAssembly.indexOf('?') != -1;
-            let patternWithoutIncludeExclude = getPatternWithoutIncludeExclude(testAssemblyFilter);
-            let resolvedPattern = getResolvedPattern(patternWithoutIncludeExclude);
-            if (isExcludeFilter) {
-                excludeTestAssemblies.push.apply(excludeTestAssemblies, getFilteredFilesFromPattern(resolvedPattern, hasQuantifier, allFiles));
-            }
-            else {
-                testAssemblyFiles.push.apply(testAssemblyFiles, getFilteredFilesFromPattern(resolvedPattern, hasQuantifier, allFiles));
-            }
-        });
-        testAssemblyFiles = testAssemblyFiles.filter(x => excludeTestAssemblies.indexOf(x) < 0);
-    }
-    else {
-        tl.debug('No Pattern found in solution parameter.');
-        let assemblies = testAssembly.split(';');
-        assemblies.forEach(function (assembly) {
-            testAssemblyFiles.push(assembly);
-        });
-    }
-    return new Set(testAssemblyFiles);
+    return new Set(ffl.findFiles(testAssembly, false, systemDefaultWorkingDirectory));
 }
 
 function addVstestDiagOption(argsArray: string[]) {
