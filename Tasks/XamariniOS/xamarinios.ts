@@ -54,10 +54,12 @@ async function run() {
 
             if (tl.filePathSupplied('p12') && tl.exist(p12)) {
                 p12 = tl.resolve(cwd, p12);
+                tl.debug('cwd = ' + cwd);
                 var keychain:string = tl.resolve(cwd, '_xamariniostasktmp.keychain');
                 var keychainPwd:string = '_xamariniostask_TmpKeychain_Pwd#1';
 
                 //create a temporary keychain and install the p12 into that keychain
+                tl.debug('installed cert in temp keychain');
                 await sign.installCertInTemporaryKeychain(keychain, keychainPwd, p12, p12pwd);
                 codesignKeychain = keychain;
 
@@ -95,8 +97,8 @@ async function run() {
             xbuildRunner.line(args);
         }
         xbuildRunner.argIf(codesignKeychain, '/p:CodesignKeychain=' + codesignKeychain);
-        xbuildRunner.argIf(provProfileUUID, '/p:CodesignProvision=' + provProfileUUID);
         xbuildRunner.argIf(signIdentity, '/p:Codesignkey=' + signIdentity);
+        xbuildRunner.argIf(provProfileUUID, '/p:CodesignProvision=' + provProfileUUID);
 
         // Execute build
         await xbuildRunner.exec();

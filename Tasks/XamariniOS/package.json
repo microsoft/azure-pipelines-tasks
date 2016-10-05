@@ -18,5 +18,8 @@
   "homepage": "https://github.com/microsoft/vsts-tasks#readme",
   "dependencies": {
     "vsts-task-lib": "0.9.20"
+  },
+  "devDependencies": {
+    "mocha": "^3.1.0"
   }
 }
