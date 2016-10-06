@@ -152,7 +152,7 @@ export function writeFile(filePath: string, fileContent: string): Q.Promise<void
     tl.debug("Creating dir if not exists: " + path.dirname(filePath));
     fse.mkdirpSync(path.dirname(filePath));
     tl.debug("Check dir: " + fs.existsSync(path.dirname(filePath)));
-    return Q.nfcall<void>(fs.writeFile, filePath, fileContent);
+    return Q.nfcall<void>(fs.writeFile, filePath, fileContent, { encoding: "utf-8" });
 }
 
 export function addPropToJson(obj: any, propName: string, value: any): void {
