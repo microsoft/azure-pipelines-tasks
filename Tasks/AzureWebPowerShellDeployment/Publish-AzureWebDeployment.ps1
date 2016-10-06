@@ -92,11 +92,11 @@ try{
 
     if ($Slot)
     {
-        $azureCommandArguments = "-Name `"$WebSiteName`" -Package `"$packageFile`" -Slot `"$Slot`" $AdditionalArguments -ErrorVariable publishAzureWebsiteError"
+        $azureCommandArguments = "-Name `"$WebSiteName`" -Package `"$packageFile`" -Slot `"$Slot`" $AdditionalArguments -ErrorVariable publishAzureWebsiteError -ErrorAction SilentlyContinue"
     }
     else
     {
-        $azureCommandArguments = "-Name `"$WebSiteName`" -Package `"$packageFile`" $AdditionalArguments -ErrorVariable publishAzureWebSiteError"
+        $azureCommandArguments = "-Name `"$WebSiteName`" -Package `"$packageFile`" $AdditionalArguments -ErrorVariable publishAzureWebSiteError -ErrorAction SilentlyContinue"
     }
 
     $finalCommand = "$azureCommand $azureCommandArguments"
@@ -198,5 +198,8 @@ try{
 
 
 } finally {
+    if($publishAzureWebsiteError) {
+        throw (Get-VstsLocString -Key "FailedtodeployWebsiteError0" -ArgumentList $publishAzureWebsiteError)
+    }
     Trace-VstsLeavingInvocation $MyInvocation
 }
