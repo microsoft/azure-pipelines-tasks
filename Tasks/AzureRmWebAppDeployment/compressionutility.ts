@@ -18,10 +18,10 @@ export async function zip(webAppFolder:string) {
     await gulp.src(path.join(webAppFolder, '**', '*'), {dot: true})
         .pipe(gulpZip(tempPackageName))
         .pipe(gulp.dest(defaultWorkingDirectory)).on('end',function(error){
-             if(error){
-                 throw new Error(error);
-             }
-             deferred.resolve(path.join(defaultWorkingDirectory, tempPackageName));
+            if(error){
+                throw new Error(error);
+            }
+            deferred.resolve(path.join(defaultWorkingDirectory, tempPackageName));
         });
     return deferred.promise;
 }

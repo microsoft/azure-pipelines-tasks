@@ -52,20 +52,18 @@ async function run() {
         
         if(xmlTransformationAndVariableSubstitution && xmlTransformation) {
             if(canUseWebDeploy(useWebDeploy)) {
-                var tempPackagePath;
+                var tempPackagePath = tempPackagePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), '_temp_package_path');
+                if (tl.exist(tempPackagePath)) {
+                    tl._writeLine('Cleaning the directory: ' + tempPackagePath);
+                    tl.rmRF(tempPackagePath);
+                }
                 if(!isFolderBasedDeployment) {
-                    tempPackagePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), '_temp_package_path');
-                    if(tl.exist(tempPackagePath)){
-                        tl.rmRF(tempPackagePath);
-                    }
                     tl._writeLine("Unzipping the package at location : " + tempPackagePath);
-                    compressor.unzip(webDeployPkg, tempPackagePath);
+                    compressor.unzip(webDeployPkg + '/.', tempPackagePath);
                 }
                 else {
-                    tempPackagePath = tl.getVariable('System.DefaultWorkingDirectory');
                     tl._writeLine("Copying the package at location : " + tempPackagePath);
                     tl.cp(webDeployPkg, tempPackagePath, "-rf");
-                    tempPackagePath = path.join(tempPackagePath, path.win32.basename(webDeployPkg));
                 }
 
                 var environmentName = tl.getVariable('Release.EnvironmentName');
@@ -86,7 +84,7 @@ async function run() {
                 } 
             }
             else {
-                throw new Error(tl.loc("CannotPerformXdtTransformationWithoutWebDeploy"));
+                throw new Error(tl.loc("CannotPerformXdtTransformationOnNonWindowsPlatform"));
             }
         }
 
