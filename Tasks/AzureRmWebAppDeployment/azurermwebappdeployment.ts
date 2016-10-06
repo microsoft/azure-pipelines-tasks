@@ -52,8 +52,9 @@ async function run() {
         
         if(xmlTransformationAndVariableSubstitution && xmlTransformation) {
             if(canUseWebDeploy(useWebDeploy)) {
-                var tempPackagePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), '_temp_package_path');
+                var tempPackagePath;
                 if(!isFolderBasedDeployment) {
+                    tempPackagePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), '_temp_package_path');
                     if(tl.exist(tempPackagePath)){
                         tl.rmRF(tempPackagePath);
                     }
@@ -61,8 +62,10 @@ async function run() {
                     compressor.unzip(webDeployPkg, tempPackagePath);
                 }
                 else {
+                    tempPackagePath = tl.getVariable('System.DefaultWorkingDirectory');
                     tl._writeLine("Copying the package at location : " + tempPackagePath);
                     tl.cp(webDeployPkg, tempPackagePath, "-rf");
+                    tempPackagePath = path.join(tempPackagePath, path.win32.basename(webDeployPkg));
                 }
 
                 var environmentName = tl.getVariable('Release.EnvironmentName');
