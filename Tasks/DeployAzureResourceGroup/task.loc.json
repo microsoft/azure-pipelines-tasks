@@ -267,6 +267,22 @@
     "ARG_SetExtensionFailed": "ms-resource:loc.messages.ARG_SetExtensionFailed",
     "ARG_NetworkSecurityConfigFailed": "ms-resource:loc.messages.ARG_NetworkSecurityConfigFailed",
     "ARG_SetExtensionFailedForVm": "ms-resource:loc.messages.ARG_SetExtensionFailedForVm",
-    "ARG_DeploymentPrereqFailed": "ms-resource:loc.messages.ARG_DeploymentPrereqFailed"
+    "ARG_DeploymentPrereqFailed": "ms-resource:loc.messages.ARG_DeploymentPrereqFailed",
+    "SucceededOnVMOperation": "ms-resource:loc.messages.SucceededOnVMOperation",
+    "FailureOnVMOperation": "ms-resource:loc.messages.FailureOnVMOperation",
+    "ARGD_ConstructorFailed": "ms-resource:loc.messages.ARGD_ConstructorFailed",
+    "VMOperationsInitiationFailed": "ms-resource:loc.messages.VMOperationsInitiationFailed",
+    "TemplateParsingFailed": "ms-resource:loc.messages.TemplateParsingFailed",
+    "ParametersFileParsingFailed": "ms-resource:loc.messages.ParametersFileParsingFailed",
+    "RGO_createTemplateDeploymentFailed":  "ms-resource:loc.messages.RGO_createTemplateDeploymentFailed",
+    "RGO_createTemplateDeploymentSucceeded": "ms-resource:loc.messages.RGO_createTemplateDeploymentSucceeded",
+    "RGO_CouldNotDeletedResourceGroup":  "ms-resource:loc.messages.RGO_CouldNotDeletedResourceGroup",
+    "RGO_DeletedResourceGroup": "ms-resource:loc.messages.RGO_DeletedResourceGroup",
+    "InvalidAction": "ms-resource:loc.messages.InvalidAction",
+    "VM_ListFetchFailed": "ms-resource:loc.messages.VM_ListFetchFailed",
+    "TaskNotFound": "ms-resource:loc.messages.TaskNotFound",
+    "FailedRegisteringEnvironment": "ms-resource:loc.message.FailedRegisteringEnvironment",
+    "selectResourceGroupSuccessfull":"ms-resource:loc.message.selectResourceGroupSuccessfull",
+    "ValidatingCredentialsFailure": "ms-resource:loc.message.ValidatingCredentialsFailure"
   }
 }
