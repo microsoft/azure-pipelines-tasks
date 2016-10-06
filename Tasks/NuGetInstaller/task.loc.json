@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 18
+    "Patch": 22
   },
   "minimumAgentVersion": "1.83.0",
   "groups": [
@@ -90,7 +90,7 @@
       "groupName": "advanced",
       "options": {
         "3.3.0": "3.3.0",
-        "3.5.0.1829": "3.5.0 – build 1829 (rc2)",
+        "3.5.0.1829": "3.5.0 - build 1938 (rc2)",
         "custom": "Custom"
       }
     },

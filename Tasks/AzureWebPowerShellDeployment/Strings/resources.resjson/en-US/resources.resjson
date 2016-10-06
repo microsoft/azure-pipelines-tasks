@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure Web App Deployment",
+  "loc.friendlyName": "Azure App Service Deployment: Classic",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613750)",
-  "loc.description": "Publish a Visual Studio Web project to a Microsoft Azure Web App using Web Deploy",
+  "loc.description": "Create or update Azure App Service using Azure PowerShell",
   "loc.instanceNameFormat": "Azure Deployment: $(WebSiteName)",
   "loc.input.label.ConnectedServiceName": "Azure Subscription (Classic)",
   "loc.input.help.ConnectedServiceName": "Azure Classic subscription to target for deployment.",

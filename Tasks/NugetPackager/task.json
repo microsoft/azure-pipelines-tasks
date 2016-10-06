@@ -9,33 +9,33 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 68
+        "Patch": 69
     },
     "demands": [
-    "Cmd"
+        "Cmd"
     ],
     "minimumAgentVersion": "1.83.0",
     "groups": [
         {
-            "name":"versioning",
-            "displayName":"Pack options",
-            "isExpanded":true
+            "name": "versioning",
+            "displayName": "Pack options",
+            "isExpanded": true
         },
         {
-            "name":"advanced",
-            "displayName":"Advanced",
-            "isExpanded":false
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
         }
-    ],    
+    ],
     "instanceNameFormat": "NuGet Packager $(solution)",
     "inputs": [
         {
             "name": "searchPattern",
             "type": "filePath",
             "label": "Path to csproj or nuspec file(s) to pack",
-            "defaultValue":"**\\*.csproj",
+            "defaultValue": "**\\*.csproj",
             "helpMarkDown": "Pattern to search for csproj or nuspec files to pack.\n\nYou can separate multiple patterns with a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**\\*.csproj;-:**\\*.Tests.csproj`",
-            "required":true
+            "required": true
         },
         {
             "name": "outputdir",
@@ -43,7 +43,7 @@
             "label": "Package Folder",
             "defaultValue": "",
             "helpMarkDown": "Folder where packages will be created. If empty, packages will be created alongside the csproj or nuspec file.",
-            "required":false
+            "required": false
         },
         {
             "name": "includeReferencedProjects",
@@ -57,9 +57,9 @@
             "name": "versionByBuild",
             "type": "pickList",
             "label": "Automatic package versioning",
-            "defaultValue":"false",
+            "defaultValue": "false",
             "helpMarkDown": "Cannot be used with include referenced projects. If you choose 'Use the date and time', this will generate a [SemVer](http://semver.org/spec/v1.0.0.html)-compliant version formatted as `X.Y.Z-ci-datetime` where you choose X, Y, and Z.\n\nIf you choose 'Use an environment variable', you must select an environment variable and ensure it contains the version number you want to use.\n\nIf you choose 'Use the build number', this will use the build number to version you package. **Note:** Under General set the build format to be '[$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)](https://go.microsoft.com/fwlink/?LinkID=627416)'.",
-            "required":true,
+            "required": true,
             "groupName": "versioning",
             "options": {
                 "false": "Off",
@@ -72,9 +72,9 @@
             "name": "versionEnvVar",
             "type": "string",
             "label": "Environment variable",
-            "defaultValue":"",
+            "defaultValue": "",
             "helpMarkDown": "Enter the variable name without $, $env, or %.",
-            "required":true,
+            "required": true,
             "groupName": "versioning",
             "visibleRule": "versionByBuild = byEnvVar"
         },
@@ -82,9 +82,9 @@
             "name": "requestedMajorVersion",
             "type": "string",
             "label": "Major",
-            "defaultValue":"1",
+            "defaultValue": "1",
             "helpMarkDown": "The 'X' in version [X.Y.Z](http://semver.org/spec/v1.0.0.html)",
-            "required":true,
+            "required": true,
             "groupName": "versioning",
             "visibleRule": "versionByBuild = byPrereleaseNumber"
         },
@@ -92,9 +92,9 @@
             "name": "requestedMinorVersion",
             "type": "string",
             "label": "Minor",
-            "defaultValue":"0",
+            "defaultValue": "0",
             "helpMarkDown": "The 'Y' in version [X.Y.Z](http://semver.org/spec/v1.0.0.html)",
-            "required":true,
+            "required": true,
             "groupName": "versioning",
             "visibleRule": "versionByBuild = byPrereleaseNumber"
         },
@@ -102,9 +102,9 @@
             "name": "requestedPatchVersion",
             "type": "string",
             "label": "Patch",
-            "defaultValue":"0",
+            "defaultValue": "0",
             "helpMarkDown": "The 'Z' in version [X.Y.Z](http://semver.org/spec/v1.0.0.html)",
-            "required":true,
+            "required": true,
             "groupName": "versioning",
             "visibleRule": "versionByBuild = byPrereleaseNumber"
         },
@@ -112,9 +112,9 @@
             "name": "configurationToPack",
             "type": "string",
             "label": "Configuration to Package",
-            "defaultValue":"$(BuildConfiguration)",
+            "defaultValue": "$(BuildConfiguration)",
             "helpMarkDown": "When using a csproj file this specifies the configuration to package",
-            "required":false,
+            "required": false,
             "groupName": "advanced"
         },
         {
@@ -144,7 +144,6 @@
             "helpMarkDown": "Optionally supply the path to NuGet.exe",
             "groupName": "advanced"
         }
-
     ],
     "execution": {
         "PowerShell": {
