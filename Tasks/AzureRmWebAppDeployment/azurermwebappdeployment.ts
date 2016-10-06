@@ -54,6 +54,9 @@ async function run() {
             if(canUseWebDeploy(useWebDeploy)) {
                 var tempPackagePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), '_temp_package_path');
                 if(!isFolderBasedDeployment) {
+                    if(tl.exist(tempPackagePath)){
+                        tl.rmRF(tempPackagePath);
+                    }
                     tl._writeLine("Unzipping the package at location : " + tempPackagePath);
                     compressor.unzip(webDeployPkg, tempPackagePath);
                 }
