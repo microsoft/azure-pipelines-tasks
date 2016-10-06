@@ -201,6 +201,8 @@
     "GotconnectiondetailsforazureRMWebApp0": "ms-resource:loc.messages.GotconnectiondetailsforazureRMWebApp0",
     "UnabletoretrieveWebAppID": "ms-resource:loc.messages.UnabletoretrieveWebAppID",
     "ErrorNoSuchDeployingMethodExists": "ms-resource:loc.messages.ErrorNoSuchDeployingMethodExists",
+    "UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1": "ms-resource:loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1",
+    "Unabletoretrievewebapppublishurlforwebapp0StatusCode1": "ms-resource:loc.messages.Unabletoretrievewebapppublishurlforwebapp0StatusCode1",
     "UnabletoretrieveconnectiondetailsforazureRMWebApp": "ms-resource:loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp",
     "Successfullyupdateddeploymenthistory": "ms-resource:loc.messages.Successfullyupdateddeploymenthistory",
     "Failedtoupdatedeploymenthistory": "ms-resource:loc.messages.Failedtoupdatedeploymenthistory",

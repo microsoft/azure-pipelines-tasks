@@ -237,4 +237,5 @@
         "Failedtoenableappofflinemode": "Failed to enable app offline mode. Status Code: %s (%s)",
         "AppOflineModedisabled": "App Offline Mode disabled.",
         "FailedtodisableAppOfflineMode": "Failed to disable App Offline Mode. Status Code: %s (%s)"
+    }
 }
