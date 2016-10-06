@@ -121,7 +121,11 @@
 	    {
             "module": "java-common",
             "dest": "node_modules"  
-    	}
+    	},
+        {
+            "module": "find-files-legacy",
+            "dest": "node_modules"  
+        }
     ],
     "VsTest" : [
         {
