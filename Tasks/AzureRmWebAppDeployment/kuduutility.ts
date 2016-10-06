@@ -19,7 +19,7 @@ export async function appOffineKuduService(publishUrl: string, physicalPath: str
             if (error) {
                 defer.reject(error);
             }
-            else if (response.statusCode === 201 || response.statusCode === 204) {
+            else if (response.statusCode === 200 || response.statusCode === 201 || response.statusCode === 204) {
                 tl.debug('App Offline Mode Enabled at ' + physicalPath);
                 defer.resolve(tl.loc('AppOfflineModeenabled'));
             }
