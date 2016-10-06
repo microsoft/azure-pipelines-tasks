@@ -74,6 +74,22 @@ describe('NuGetInstaller Suite', function () {
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });
+	
+    it('restore single solution with extra args', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, 'singleslnExtraArgs.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run()
+        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe restore -NonInteractive c:\\agent\\home\\directory\\single.sln -Foo'), 'it should have run NuGet');
+        assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
+        assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
+        assert(tr.succeeded, 'should have succeeded');
+        assert(tr.invokedToolCount == 1, 'should have run NuGet');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });
     
     it('restore single solution with nuget config', (done: MochaDone) => {
         this.timeout(1000);
