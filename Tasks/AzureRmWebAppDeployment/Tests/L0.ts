@@ -119,8 +119,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'L0NonWindowsXdtTransformationFail.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        
-        var expectedErr = "Error: loc_mock_CannotPerformXdtTransformationWithoutWebDeploy";
+        var expectedErr = "Error: loc_mock_CannotPerformXdtTransformationOnNonWindowsPlatform";
         assert(tr.invokedToolCount == 0, 'should not have invoked tool any tool');
         assert(tr.stderr.length > 0 || tr.errorIssues.length > 0, 'should have written to stderr');
         assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'E should have said: ' + expectedErr); 
