@@ -41,7 +41,7 @@ async function run() {
                 }
             }
             else {
-                throw tl.loc('WorkspaceDoesNotExist');
+                throw tl.loc('WorkspaceDoesNotExist', ws);
             }
         }
 
@@ -110,6 +110,7 @@ async function run() {
         var xcode_otherCodeSignFlags: string;
         var xcode_codeSignIdentity: string;
         var xcode_provProfile: string;
+        var xcode_devTeam: string;
 
         if(signMethod === 'file') {
             var p12 : string = tl.getPathInput('p12', false, false);
@@ -168,7 +169,10 @@ async function run() {
         xcb.argIf(xcode_provProfile, xcode_provProfile);
 
         var teamId : string = tl.getInput('teamId');
-        xcb.argIf(teamId && automaticSigningWithXcode, 'DEVELOPMENT_TEAM=' + teamId);
+        if(teamId && automaticSigningWithXcode) {
+            xcode_devTeam = 'DEVELOPMENT_TEAM=' + teamId;
+        }
+        xcb.argIf(xcode_devTeam, xcode_devTeam);
 
         //--- Enable Xcpretty formatting if using xcodebuild ---
         if(useXctool && useXcpretty) {
@@ -236,7 +240,11 @@ async function run() {
         // Package app to generate .ipa
         //--------------------------------------------------------
         if(tl.getBoolInput('packageApp', true) && sdk !== 'iphonesimulator') {
-            if (useXctool || !ws || !scheme || xcodeVersion < 7) {
+            var useXcrun: string = tl.getVariable('useXcrun');
+            if(useXcrun) {
+                useXcrun = useXcrun.toString().toLowerCase();
+            }
+            if (useXcrun === 'true' || useXctool || !ws || !scheme || xcodeVersion < 7) {
                 // xcrun has been deprecated in Xcode 7 and higher
                 // use xcrun to package apps if xcodeversion is < 7
                 // or if workspace or scheme are not specified since we cannot create the archive
@@ -252,7 +260,8 @@ async function run() {
                         tl.debug('Packaging ' + app);
                         var ipa : string = app.substring(0, app.length-3) + 'ipa';
                         var xcr : ToolRunner = tl.tool(xcrunPath);
-                        xcr.arg(['-sdk', sdk, 'PackageApplication', '-v', app, '-o', ipa]);
+                        xcr.argIf(sdk, ['-sdk', sdk]);
+                        xcr.arg(['PackageApplication', '-v', app, '-o', ipa]);
                         await xcr.exec();
                     }
                 }
@@ -283,6 +292,7 @@ async function run() {
                 xcodeArchive.argIf(xcode_otherCodeSignFlags, xcode_otherCodeSignFlags);
                 xcodeArchive.argIf(xcode_codeSignIdentity, xcode_codeSignIdentity);
                 xcodeArchive.argIf(xcode_provProfile, xcode_provProfile);
+                xcodeArchive.argIf(xcode_devTeam, xcode_devTeam);
 
                 if(useXcpretty) {
                     var xcPrettyTool:ToolRunner = tl.tool(tl.which('xcpretty', true));
