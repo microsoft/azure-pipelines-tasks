@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 62
+        "Patch": 66
     },
     "demands": [
         "java"
@@ -308,6 +308,15 @@
             "helpMarkDown": "Run the Checkstyle tool with the default Sun checks. Results are uploaded as build artifacts."
         },
         {
+            "name": "findbugsAnalysisEnabled",
+            "type": "boolean",
+            "label": "Run FindBugs",
+            "required": false,
+            "defaultValue": "false",
+            "groupName": "CodeAnalysis",
+            "helpMarkDown": "Use the FindBugs static analysis tool to look for bugs in the code. Results are uploaded as build artifacts."
+        },
+        {
             "name": "pmdAnalysisEnabled",
             "type": "boolean",
             "label": "Run PMD",
@@ -352,6 +361,7 @@
         "codeAnalysisBuildSummaryLine_NoViolations": "%s found no violations.",
         "codeAnalysisBuildSummaryTitle": "Code Analysis Report",
         "codeAnalysisArtifactSummaryTitle": "Code Analysis Results",
+        "codeAnalysisDisabled": "Code analysis is disabled outside of the build enviroment. Could not find a value for: %s",
         "LocateJVMBasedOnVersionAndArch": "Locate JAVA_HOME for Java %s %s",
         "FailedToLocateSpecifiedJVM": "Failed to find specified JDK version. Please make sure environment variable '%s' exists and is set to the location of a corresponding JDK."
     }

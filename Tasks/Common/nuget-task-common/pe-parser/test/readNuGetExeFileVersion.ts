@@ -4,7 +4,7 @@ import * as https from "https";
 import * as path from "path";
 import * as Q from "q";
 
-import * as peReader from "..";
+import * as peReader from "./..";
 
 import VersionInfoVersion from "../VersionInfoVersion";
 

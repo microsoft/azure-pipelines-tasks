@@ -78,6 +78,21 @@ export abstract class BaseTool implements IAnalysisTool {
         return tl.getBoolInput(this.uiInputName, false);
     }
 
+    protected findHtmlReport(xmlReport: string): string {
+
+        // expecting to find an html report with the same name
+        var reportName = path.basename(xmlReport, '.xml');
+        var dirName = path.dirname(xmlReport);
+
+        var htmlReports = glob.sync(path.join(dirName, '**', reportName + '.html'));
+
+        if (htmlReports.length > 0) {
+            return htmlReports[0];
+        }
+
+        return null;
+    }
+
     private parseModuleOutput(output: ModuleOutput): AnalysisResult {
 
         let reportDir = this.getBuildReportDir(output);
@@ -123,23 +138,5 @@ export abstract class BaseTool implements IAnalysisTool {
 
         return new AnalysisResult(this, moduleName, artifacts, violationCount, fileCount);
     }
-
-    private findHtmlReport(xmlReport: string): string {
-
-        // expecting to find an html report with the same name
-        var reportName = path.basename(xmlReport, '.xml');
-        var dirName = path.dirname(xmlReport);
-
-        var htmlReports = glob.sync(path.join(dirName, '**', reportName + '.html'));
-
-        if (htmlReports.length > 0) {
-            return htmlReports[0];
-        }
-
-        return null;
-    }
-
-
-
 
 }

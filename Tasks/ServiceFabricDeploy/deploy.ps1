@@ -33,8 +33,9 @@ try {
         throw (Get-VstsLocString -Key ServiceFabricSDKNotInstalled)
     }
 
+    $connectionEndpointUrl = [System.Uri]$connectedServiceEndpoint.url
     # Override the publish profile's connection endpoint with the one defined on the associated service endpoint
-    $clusterConnectionParameters["ConnectionEndpoint"] = ([System.Uri]$connectedServiceEndpoint.url).Authority # Authority includes just the hostname and port
+    $clusterConnectionParameters["ConnectionEndpoint"] = $connectionEndpointUrl.Authority # Authority includes just the hostname and port
 
     # Configure cluster connection pre-reqs
     if ($connectedServiceEndpoint.Auth.Scheme -ne "None")
@@ -76,7 +77,17 @@ try {
     }
 
     # Connect to cluster
-    [void](Connect-ServiceFabricCluster @clusterConnectionParameters)
+    try {
+        [void](Connect-ServiceFabricCluster @clusterConnectionParameters)
+    }
+    catch {
+        if ($connectionEndpointUrl.Port -ne "19000") {
+            Write-Warning (Get-VstsLocString -Key DefaultPortWarning $connectionEndpointUrl.Port)
+        }
+
+        throw $_
+    }
+    
     Write-Host (Get-VstsLocString -Key ConnectedToCluster)
     
     . "$PSScriptRoot\ServiceFabricSDK\ServiceFabricSDK.ps1"
@@ -89,6 +100,7 @@ try {
     elseif ($publishProfile)
     {
         $applicationParameterFile = $publishProfile.ApplicationParameterFile
+        Assert-VstsPath -LiteralPath $applicationParameterFile -PathType Leaf
     }
     else
     {

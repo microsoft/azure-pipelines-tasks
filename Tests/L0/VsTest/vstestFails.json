@@ -1,6 +1,7 @@
 {
     "getVariable": {
         "System.DefaultWorkingDirectory": "/source/dir",
+        "build.sourcesdirectory": "/source/dir",
         "VS140COMNTools": "/vs/path",
         "VSTest_14.0": "/vs/IDE/CommonExtensions/Microsoft/TestWindow"
     },
@@ -11,7 +12,7 @@
         ]
     },
     "match": {
-        "/some/*pattern": [
+        "\\source\\dir\\some\\*pattern": [
             "some/path/one",
             "some/path/two"
         ],
@@ -25,7 +26,7 @@
         }
     },
     "rmRF": {
-        "\\source\\TestResults": {
+        "\\source\\dir\\TestResults": {
             "success": true,
             "message": "success"
         }

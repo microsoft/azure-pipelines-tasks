@@ -1,5 +1,3 @@
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-/// <reference path="../../definitions/codecoveragefactory.d.ts" />
 
 import Q = require('q');
 import os = require('os');

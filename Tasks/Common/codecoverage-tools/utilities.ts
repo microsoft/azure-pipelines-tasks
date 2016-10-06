@@ -1,8 +1,3 @@
-/// <reference path="../../../definitions/Q.d.ts" />
-/// <reference path="../../../definitions/string.d.ts" />
-/// <reference path="../../../definitions/xml2js.d.ts" />
-/// <reference path="../../../definitions/vsts-task-lib.d.ts" />
-/// <reference path="../../../definitions/node.d.ts" />
 
 import * as Q from "q";
 import * as fs from "fs";

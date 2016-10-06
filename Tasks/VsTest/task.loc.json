@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 65
+    "Patch": 74
   },
   "demands": [
     "vstest"
@@ -112,7 +112,7 @@
       "name": "runAllTestsAfterXBuilds",
       "type": "string",
       "label": "ms-resource:loc.input.label.runAllTestsAfterXBuilds",
-      "defaultValue": "",
+      "defaultValue": "50",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.runAllTestsAfterXBuilds",
       "groupName": "tiaOptions"
@@ -224,7 +224,7 @@
     }
   },
   "messages": {
-    "AccessDeniedToPath": "ms-resource:loc.messages.AccessDeniedToPath",
+    "PathDoesNotExist": "ms-resource:loc.messages.PathDoesNotExist",
     "VstestReturnCode": "ms-resource:loc.messages.VstestReturnCode",
     "NoMatchingTestAssemblies": "ms-resource:loc.messages.NoMatchingTestAssemblies",
     "VstestNotFound": "ms-resource:loc.messages.VstestNotFound",
@@ -244,6 +244,10 @@
     "ErrorWhileListingDiscoveredTests": "ms-resource:loc.messages.ErrorWhileListingDiscoveredTests",
     "PublishCodeChangesPerfTime": "ms-resource:loc.messages.PublishCodeChangesPerfTime",
     "GenerateResponseFilePerfTime": "ms-resource:loc.messages.GenerateResponseFilePerfTime",
-    "UploadTestResultsPerfTime": "ms-resource:loc.messages.UploadTestResultsPerfTime"
+    "UploadTestResultsPerfTime": "ms-resource:loc.messages.UploadTestResultsPerfTime",
+    "ErrorReadingVstestVersion": "ms-resource:loc.messages.ErrorReadingVstestVersion",
+    "UnexpectedVersionString": "ms-resource:loc.messages.UnexpectedVersionString",
+    "UnexpectedVersionNumber": "ms-resource:loc.messages.UnexpectedVersionNumber",
+    "VstestDiagNotSupported": "ms-resource:loc.messages.VstestDiagNotSupported"
   }
 }

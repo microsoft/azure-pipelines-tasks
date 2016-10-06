@@ -1,16 +1,22 @@
 # Preview Tasks and Tools
 
-## Overview
-
-Provide the ability to have preview tasks while still offering stable versions which are patched.  There is also the related desire to make breaking changes in tasks that customers might need to react to during that event.
-
-Tasks typically are just tool runners.  There are two types of tools.  
-
-For some tools, the user needs to be able select/lock the version.  Examples are msbuild/csc for compilation to lock a maintenance branch to.  Another example would be I want to test my node lib against node 4,5 and 6 (select plus matrix option).
-
-For other tools, you typically always just want latest or a single stable version.  Examples of this is git, tfsvc, nuget.
+## Related Docs
 
 [Related document on tools here](tools.md)
+
+## Overview
+
+Provide the ability to have preview tasks while still offering stable versions which are patched.  Adopting a preview version should be a conscious decision based on advisement the task author provides.  
+
+There is also the related desire to make breaking changes in tasks that customers might need to react to during that event.  Adopting a new major version may require entering new inputs.
+
+Adopting a preview or new breaking change major version is done on a case by case basis.  That's per task and per definition.  This is critical since a particular definition might try the new nuget task without forcing every build in the account to use it.
+
+Releasing a new major version should not be taken lightly.  Some common reasons:
+
+  - Introduced a new version that was significantly rewritten (preview)
+  - Break input compat and reset the task.  Requires new inputs from the user or removes existing functionality or inputs (deprecating an aspect of the task).
+  - Requiring a new major version of the agent (2.x) as the minimum.  
 
 ## Caution
 
@@ -18,7 +24,7 @@ Because there is often a desire to lock to a working state, the typical request 
 
 Tasks bundle libs and http clients.  Especially in an emerging preview task, it could use APIs which are in preview and could take breaking changes before they release.  Locking to those could break.  Tasks also drive external tools and service which may deprecate features over long periods of time.
 
-The other challenges are complexity and the testing challenges.  End to end testing and automating every possible locked version against a service which is constantly moving forward is challenging.  Tasks drive large integration scenarios.
+Minor version updates are simply to communicate new capabilities.  Patches are bugs fixes.  Neither can break existing compat and functionality.
 
 Finally, although locked, users should get critical small targetted fixes.  We need the ability to ensure customers get small updates to stable versions (security bug).
 
@@ -26,35 +32,29 @@ Finally, although locked, users should get critical small targetted fixes.  We n
 
 Allow user to select major versions of the task in the editor.  Each of these is a channel.  Each channel is either marked as stable or preview.  
 
-When a new major version of the task is available, the definition editor will advise the user that there is a new version.  If that major version is preview, the message will to 'try it out'.  You can always go back.  If it's stable the message should be a little stronger.  If they are more than one major version back, another stronger message.  As noted above, staying back too far also adds risk.
+When a new major version of the task is available, the definition editor will advise the user that there is a new version.  If that major version is preview, the message will be to 'try it out'.  You can always go back.  If it's stable the message should be a little stronger.  If they are more than one major version back, another stronger message.  As noted above, staying back too far also adds risk.
 
-The user selects a major version (2.x) and we display the channel quality.  Even though there may be a 3.0.0-preview, the user does not lock to that.  They lock to 3.x and we advertise it's preview.  Users just get fixes to stable versions and latest on preview.  There is the possibility of subsequent preview versions breaking you (added required field - will fail at runtime).  That's OK.  They are trying out the preview task because they need a new emerging capability.  They will understand.
+The user selects a major version (2.x) and we display the channel quality.  Even though there may be a 3.0.0-preview, the user does not lock to that.  They lock to 3.x and we advertise it's preview.  It's about setting expectations. When that task comes out of preview, user's bound to 3.x will not have to change their binding.  They slide along that major channel.
 
-When a task is added, the default version is latest released or preview if that's all there is.  So a newly added task with a stable and preview available means the immediate experience is advisement that there's also a preview version to try out.  
+When a task is added, the default version is latest released or preview if that's all there is.  So tasks in new definitions will be locked by default. 
 
-Newly created tasks always start at 0.x preview.  They should have a few sprints of usage before going to 1.x.
+On upgrade, we will update everyone's definition to lock to the current major version. This is what they currently get but will protect them going forward just as new defintions are protected. 
 
-We can't force one stable version because there is another desire to make breaking changes in tasks that require user interaction.  For example, new required fields or deprecating an option.  For that reason, each major version should have an adoption message in the json which is localized and displayed when advertising the new version.  Task authors must create a new major version in significant rewrites and breaking changes.  The editor will ensure the fill in the new appropriate data.  Issue - going back might require them to add inputs that were dropped.
+We will optionally support binding to "*" which is latest non-preview.
 
-A version of a task will use the [tools api](tools.md) to either lock to a specific version or range (which is downloaded to a tools cache) or in some cases where appropriate, offer the user the ability to select the version.  That should be a combo box so the user can enter versions of external tools that ship after our product does.  Very useful for on-prem.
+## Deprecation and Breaking Changes
 
-This also benefits hosted build for tools that can be pulled (packages, zips) where customers have been frustrated by a single locked version that always moves forward.
+We can't force one stable version because there is another desire to make breaking changes in tasks that require user interaction.  For example, new required fields or deprecating an option.  For that reason, each major version should have an adoption message in the json which is localized and displayed when advertising the new version.  Task authors must create a new major version in significant rewrites and breaking changes.  The editor will ensure they fill in the new appropriate data.  Going back might require them to add inputs that were dropped.  They will be in history.
 
-We have also had sprints where a task-lib change broke multiple tasks which didn't react.  At that time, all our tasks just picked up a single defined lib to use.  We recently added the ability for a task to declare which version of the lib to consume (linked in at build time via npm install or ps-get).  But if you don't, you got the single defined version.  We need to change it to the task must declare.  There is an illusion that if I didn't change the task, it will continue to work.  We need to ensure that is true via libs and tools.
+## Rollback
+
+The definition view has a history of the definition changes.  We will provide the ability to select a revision in the history view and rollback to it.  It will do that by adding a new version to the history and applying those changes.
 
 ## Engineering
 
-The good news is tasks are semver versioned.  The backend also supports storing and advertising multiple versions.  The distributed task automation also supports taking a version.  Before 1.0 shipped, we had the ability in the UI to select a version but our thinking had not formed so we hid the ability to lock.
+For in the box tasks, almost nothing needs to change.  Existing tasks rollout with sprintly releases.  We have the ability run a config change to patch previous versions of tasks.  We need to ensure that along with latest rolling out (which might be preview) we need to be able to patch a previous released version via a config change.  This essentially inserts in the versioning lineage.
 
-We will need to add version selection back but only by major version.  We need to communicate channel quality.  We will need to add advisement that there's a new version along with a description of what that new version offers. 
-
-Our in the box tasks are in one repo which builds on CI and produces a nuget package for VSTS build consumption.  Tasks are then imported into the system during servicing and immutable versions of the tasks are appended to the tasks table and file container storage.
-
-Tasks will have to be able to ship patches to previous major versions (likely just the last) and preview versions.  For that reason, the monolithic repo will have to be split up into a github repo per task.  Each task needs it's own branching since it has to patch previous versions but will need to conform to convention in order to be consumed.  The main tasks repo will still exist as an entry point, an index to the other tasks (issue tracking in each repo - team triages there own issues) and will contain the manifest on the other tasks and versions to publish.  The build will need to be able to build multiple branches/versions of the same task for that sprints package.
-
-The main task repo currently gets branched for each release (e.g. releases/m104).  That will continue to occur but what will branch is the manifest.  The task author needs to update the manifest which branches (convention is version) to build and include in this sprints release.  This needs some detailed design work.  We could consider detecting but explicit is probably better to choose when to ship that preview version.  The fact that it's branch exists should mean it ships.
-
-Custom tasks in the gallery can take advantage of the same versioning strategies by setting the task semver and promotion messaging.  Extensions can carry multiple tasks.  We need to ensure they can carry multiple versions of the same task.  Since users just get updates to extensions, when they go to the definition again, they will see new versions advertised.
+For custom extensions, channels are needed.  This is currently being designed.  The requirements and capabilities of build tasks are the same regardless of whether they are in the box or acquired via the market place.  That includes multiple versions of a task installed with the ability to bind per definition, the ability to deprecate and the ability to introduce a breaking change.  The gallery experience is being thought through. 
 
 
 

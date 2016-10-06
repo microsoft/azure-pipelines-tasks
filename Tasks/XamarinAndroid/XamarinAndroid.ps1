@@ -1,113 +1,86 @@
-param(
-    [string]$project, 
-    [string]$target, 
-    [string]$configuration,
-    [string]$clean,
-    [string]$outputDir,
-    [string]$msbuildLocation, 
-    [string]$msbuildArguments,
-    [string]$jdkVersion,
-    [string]$jdkArchitecture
-)
+[CmdletBinding()]
+param()
 
-Write-Verbose "Entering script XamarinAndroid.ps1"
-Write-Verbose "project = $project"
-Write-Verbose "target = $target"
-Write-Verbose "configuration = $configuration"
-Write-Verbose "clean = $clean"
-Write-Verbose "outputDir = $outputDir"
-Write-Verbose "msbuildLocation = $msbuildLocation"
-Write-Verbose "msbuildArguments = $msbuildArguments"
-Write-Verbose "jdkVersion = $jdkVersion"
-Write-Verbose "jdkArchitecture = $jdkArchitecture"
+Trace-VstsEnteringInvocation $MyInvocation
+try {
+    Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
-# Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+    # Get the inputs.
+    [string]$project = Get-VstsInput -Name project -Require
+    [string]$target = Get-VstsInput -Name target
+    [string]$configuration = Get-VstsInput -Name configuration
+    [bool]$clean = Get-VstsInput -Name clean -AsBool
+    [string]$outputDir = Get-VstsInput -Name outputDir
+    [string]$msbuildLocationMethod = Get-VstsInput -Name msbuildLocationMethod
+    [string]$msbuildLocation = Get-VstsInput -Name msbuildLocation
+    [string]$msbuildVersion = Get-VstsInput -Name msbuildVersion
+    [string]$msbuildArchitecture = Get-VstsInput -Name msbuildArchitecture
+    [string]$msbuildArguments = Get-VstsInput -Name msbuildArguments
+    [string]$jdkVersion = Get-VstsInput -Name jdkVersion
+    [string]$jdkArchitecture = Get-VstsInput -Name jdkArchitecture
 
-if (!$project)
-{
-    throw "project parameter not set on script"
-}
+    # Import the helpers.
+    . $PSScriptRoot\Select-MSBuildLocation.ps1
+    Import-Module -Name $PSScriptRoot\ps_modules\MSBuildHelpers\MSBuildHelpers.psm1
+    . $PSScriptRoot\Get-JavaDevelopmentKitPath.ps1
 
-# check for project pattern
-if ($project.Contains("*") -or $project.Contains("?"))
-{
-    Write-Verbose "Pattern found in solution parameter. Calling Find-Files."
-    Write-Verbose "Find-Files -SearchPattern $project"
-    $projectFiles = Find-Files -SearchPattern $project
-    Write-Verbose "projectFiles = $projectFiles"
-}
-else
-{
-    Write-Verbose "No Pattern found in project parameter."
-    $projectFiles = ,$project
-}
+    # Resolve project patterns.
+    $projectFiles = Get-SolutionFiles -Solution $project
 
-if (!$projectFiles)
-{
-    throw "No project with search pattern '$project' was found."
-}
-
-$args = $msbuildArguments;
-
-if ($configuration)
-{
-    Write-Verbose "adding configuration: $configuration"
-    $args = "$args /p:configuration=$configuration"
-}
-
-if ($clean.ToLower() -eq 'true')
-{
-    Write-Verbose "adding /t:clean"
-    $args = "$args /t:clean"
-}
-
-if ($target)
-{
-    Write-Verbose "adding target: $target"
-    $args = "$args /t:$target"
-}
-
-# Always build the APK file
-Write-Verbose "adding target: PackageForAndroid"
-$args = "$args /t:PackageForAndroid"
-
-if ($outputDir) 
-{
-    Write-Verbose "adding OutputPath: $outputDir"
-    $args = "$args /p:OutputPath=""$outputDir"""
-}
-
-if ($jdkVersion -and $jdkVersion -ne "default")
-{
-    $jdkPath = Get-JavaDevelopmentKitPath -Version $jdkVersion -Arch $jdkArchitecture
-    if (!$jdkPath) 
+    # Format the MSBuild args.
+    $msBuildArguments = Format-MSBuildArguments -MSBuildArguments $msbuildArguments -Configuration $configuration
+    if($clean) {
+        $msBuildArguments = "$msBuildArguments /t:clean"
+    }
+    if($target) {
+        $msBuildArguments = "$msBuildArguments /t:$target"
+    }
+    # Always build the APK file
+    $msBuildArguments = "$msBuildArguments /t:PackageForAndroid"
+    if ($outputDir) {
+        $args = "$args /p:OutputPath=""$outputDir"""
+    }
+    if ($jdkVersion -and $jdkVersion -ne "default")
     {
-        throw "Could not find JDK $jdkVersion $jdkArchitecture, please make sure the selected JDK is installed properly"
+        $jdkPath = Get-JavaDevelopmentKitPath -Version $jdkVersion -Arch $jdkArchitecture
+        if (!$jdkPath)
+        {
+            throw "Could not find JDK $jdkVersion $jdkArchitecture, please make sure the selected JDK is installed properly"
+        }
+
+        Write-Verbose "adding JavaSdkDirectory: $jdkPath"
+        $msBuildArguments = "$msBuildArguments /p:JavaSdkDirectory=`"$jdkPath`""
+
+        Write-Verbose "msBuildArguments = $msBuildArguments"
     }
 
-    Write-Verbose "adding JavaSdkDirectory: $jdkPath"
-    $args = "$args /p:JavaSdkDirectory=`"$jdkPath`""
-}
-
-Write-Verbose "args = $args"
-
-# build each project file
-$exitCode = 0;
-foreach ($pf in $projectFiles)
-{
-    try {
-        Invoke-MSBuild $pf -LogFile "$pf.log" -ToolLocation $msBuildLocation -CommandLineArgs $args
+    # Resolve the MSBuild location.
+    if ($msbuildLocationMethod.ToLower() -eq 'location') {
+        $msbuildLocationMethod = "location"
     }
-    catch [System.Exception] {
-        Write-Error $error[0]
-        $exitCode = 1
+    ElseIf ($msbuildLocation -and $msbuildVersion.ToLower() -eq 'latest') {
+        # Use location if msbuildLocation is set and verison is 'latest' for back compat
+        $msbuildLocationMethod = "location"
     }
+    else {
+        $msbuildLocationMethod = "version"
+    }
+    Write-Verbose "msbuildLocationMethod = $msbuildLocationMethod"
+
+    $msbuildLocation = Select-MSBuildLocation -Method $msbuildLocationMethod -Location $msbuildLocation -Version $msbuildVersion -Architecture $msbuildArchitecture
+
+    # build each project file
+    Invoke-BuildTools -SolutionFiles $projectFiles -MSBuildLocation $msbuildLocation -MSBuildArguments $msBuildArguments -Clean:$clean
+} finally {
+     Trace-VstsLeavingInvocation $MyInvocation
 }
 
-if ($exitCode -ne 0) {
-    Write-Error "See https://go.microsoft.com/fwlink/?LinkId=760847"
-}
 
-Write-Verbose "Leaving script XamarinAndroid.ps1"
+
+
+
+
+
+
+
+

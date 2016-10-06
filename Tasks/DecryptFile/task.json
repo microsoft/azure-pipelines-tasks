@@ -67,5 +67,9 @@
             "target": "decrypt.js",
             "argumentFormat": ""
         }
-    }
+    },
+    "messages": {
+        "OpenSSLReturnCode": "openssl exited with return code: %d",
+        "OpenSSLFailed": "openssl failed with error: %s"
+    }    
 }

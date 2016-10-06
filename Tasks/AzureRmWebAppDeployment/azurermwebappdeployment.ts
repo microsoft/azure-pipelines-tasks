@@ -1,7 +1,3 @@
-/// <reference path="../../definitions/node.d.ts" />
-/// <reference path="../../definitions/q.d.ts" />
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
@@ -102,11 +98,10 @@ async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, 
     try {
 
         var msDeployBatchFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'msDeployCommand.bat';
-        var silentCommand = '@echo off \n';
-        var msDeployCommand = '"' + msDeployPath + '" ' + msDeployCmdArgs;
-        var batchCommand = silentCommand + msDeployCommand;
-
-        tl.writeFile(msDeployBatchFile, batchCommand);
+        var msDeployCommand = '@echo off \n';
+        msDeployCommand += '"' + msDeployPath + '" ' + msDeployCmdArgs + ' 2>error.txt\n';
+        msDeployCommand += 'if %errorlevel% neq 0 exit /b %errorlevel%';
+        tl.writeFile(msDeployBatchFile, msDeployCommand);
         tl._writeLine(tl.loc("Runningcommand", msDeployCommand));
         await tl.exec("cmd", ['/C', msDeployBatchFile], <any> {failOnStdErr: true});
         tl._writeLine(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
@@ -115,6 +110,7 @@ async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, 
         tl.error(tl.loc('Failedtodeploywebsite'));
         isDeploymentSuccess = false;
         deploymentError = error;
+        redirectMSDeployErrorToConsole();
     }
 
     try {
@@ -223,7 +219,7 @@ function fileExists(path): boolean {
  */
 function getSetParamFilePath(setParametersFile: string) : string {
 
-    if(!tl.filePathSupplied('SetParametersFile')) {
+    if((!tl.filePathSupplied('SetParametersFile')) || setParametersFile == tl.getVariable('System.DefaultWorkingDirectory')) {
         setParametersFile = null;
     }
     else if (!fileExists(setParametersFile)) {
@@ -241,6 +237,22 @@ function getSetParamFilePath(setParametersFile: string) : string {
 function canUseWebDeploy(useWebDeploy: boolean) {
     var win = tl.osType().match(/^Win/);
     return (useWebDeploy || win);
+}
+
+/**
+ * 1. Checks if msdeploy during execution redirected any error to 
+ * error stream ( saved in error.txt) , display error to console
+ * 2. Checks if there is file in use error , suggest to try app offline.
+ */
+function redirectMSDeployErrorToConsole() {
+    var msDeployErrorFilePath = tl.getVariable('System.DefaultWorkingDirectory') + '\\error.txt';
+    if(tl.exist(msDeployErrorFilePath)) {
+        var errorFileContent = fs.readFileSync(msDeployErrorFilePath);
+        if(errorFileContent.toString().indexOf("ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER") !== -1){
+            tl.warning(tl.loc("Trytodeploywebappagainwithappofflineoptionselected"));
+        }
+        tl.error(errorFileContent.toString());
+    }
 }
 
 run();

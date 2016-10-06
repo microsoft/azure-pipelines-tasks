@@ -45,8 +45,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
         shell.mv('-f', path.join (taskSrcPath, 'kuduutility_backup.js'), path.join (taskSrcPath,'kuduutility.js'));
 
     });
-    
-    it('Runs successfully with default inputs', (done) => {
+	
+	it('Runs successfully with default inputs', (done) => {
         
         setResponseFile('armgood.json');
 
@@ -65,6 +65,56 @@ describe('AzureRmWebAppDeployment Suite', function() {
                 var expectedOut = 'Updated history to kudu'; 
                 assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
                 done();
+
+            })
+            .fail((err) => {
+                done(err);
+            });
+    });
+	
+	it('Verify logs pushed to Kudu when task runs successfully with default inputs and env variables found', (done) => {
+        
+        setResponseFile('armgood.json');
+
+        var tr = new trm.TaskRunner('AzureRmWebAppDeployment');
+        tr.setInput('ConnectedServiceName', 'AzureRMSpn');
+        tr.setInput('WebAppName', 'mytestapp');
+        tr.setInput('Package', 'webAppPkg.zip');
+        tr.setInput('UseWebDeploy', 'true');
+       
+        tr.run()
+            .then(() => {
+
+                assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.succeeded, 'task should have succeeded');
+                var expectedOut = 'Updated history to kudu'; 
+                assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
+
+				var expectedMessage = JSON.stringify({
+					type : 'Deployment',
+					commitId : '46da24f35850f455185b9188b4742359b537076f',
+					buildId : 1,
+					releaseId : 1,
+					buildNumber : 1,
+					releaseName : 'Release-1',
+					repoProvider : 'TfsGit',
+					repoName : 'MyFirstProject',
+					collectionUrl : 'https://abc.visualstudio.com/',
+					teamProject : 'MyFirstProject',
+					slotName : 'Production'
+				});
+				var expectedRequestBody = JSON.stringify({
+					status : 4,
+					status_text : 'success', 
+					message : expectedMessage,
+					author : 'author',
+					deployer : 'VSTS',
+					details : 'https://abc.visualstudio.com/MyFirstProject/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?releaseId=1&_a=release-summary'
+				});
+				expectedRequestBody = 'kudu log requestBody is:' + expectedRequestBody;
+				assert(tr.stdout.indexOf(expectedRequestBody) >= 0, 'should have said: ' + expectedRequestBody);
+				done();
 
             })
             .fail((err) => {
@@ -132,7 +182,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
                 done(err);
             });
     });
-    
+	
     it('Fails if msdeploy cmd fails to execute', (done) => {
         
         setResponseFile('armbad.json');
@@ -161,6 +211,54 @@ describe('AzureRmWebAppDeployment Suite', function() {
             });
     });
 
+	it('Verify logs pushed to kudu when task fails if msdeploy cmd fails to execute and some env variables not found', (done) => {
+        
+        setResponseFile('armbad.json');
+
+        var tr = new trm.TaskRunner('AzureRmWebAppDeployment');
+        tr.setInput('ConnectedServiceName', 'AzureRMSpn');
+        tr.setInput('WebAppName', 'mytestapp');
+        tr.setInput('Package', 'webAppPkg.zip');
+        tr.setInput('UseWebDeploy', 'true');
+       
+        tr.run()
+            .then(() => {
+
+                assert(tr.invokedToolCount == 2, 'should have invoked tool once');
+                assert(tr.stderr.length > 0, 'should have written to stderr');
+                var expectedErr = 'Error: cmd failed with return code: 1';
+                assert(tr.stdErrContained(expectedErr), 'should have said: ' + expectedErr);
+                var expectedOut = 'Failed to update history to kudu'; 
+                assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
+                assert(tr.failed, 'task should have failed');
+				
+				var expectedMessage = JSON.stringify({
+					type : 'Deployment',
+					releaseId : 1,
+					releaseName : 'Release-1',
+					collectionUrl : 'https://abc.visualstudio.com/',
+					teamProject : 'MyFirstProject',
+					slotName : 'Production'
+				});
+				
+				var expectedRequestBody = JSON.stringify({
+					status : 3,
+					status_text : 'failed', 
+					message : expectedMessage,
+					author : 'agent',
+					deployer : 'VSTS',
+					details : 'https://abc.visualstudio.com/MyFirstProject/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?releaseId=1&_a=release-summary'
+				});
+				expectedRequestBody = 'kudu log requestBody is:' + expectedRequestBody;
+				assert(tr.stdout.indexOf(expectedRequestBody) >= 0, 'should have said: ' + expectedRequestBody);
+                done();
+
+            })
+            .fail((err) => {
+                done(err);
+            });
+    });
+	
     it('Runs successfully with parameter file present in package', (done) => {
         
         setResponseFile('armgoodwithparamfile.json');
@@ -283,14 +381,12 @@ describe('AzureRmWebAppDeployment Suite', function() {
         
         tr.run()
             .then(() => {
-
                 assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
                 var expectedErr = 'More than one package matched with specified pattern. Please restrain the search patern.'; 
                 assert(tr.stdErrContained(expectedErr), 'should have said: ' + expectedErr); 
                 assert(tr.failed, 'task should have failed');
                 done();
-
             })
             .fail((err) => {
                 done(err);

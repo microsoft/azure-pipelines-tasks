@@ -1,8 +1,3 @@
-/// <reference path="../../definitions/node.d.ts"/>
-/// <reference path="../../definitions/Q.d.ts" />
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-/// <reference path="../../definitions/nuget-task-common.d.ts" />
-
 import * as path from "path";
 import * as Q  from "q";
 import * as tl from "vsts-task-lib/task";
@@ -33,10 +28,7 @@ async function main(): Promise<void> {
     try {
         tl.setResourcePath(path.join(__dirname, "task.json"));
 
-        // set the console code page to "UTF-8"
-        if (process.platform === "win32") {
-            tl.execSync(path.resolve(process.env.windir, "system32", "chcp.com"), ["65001"]);
-        }
+        nutil.setConsoleCodePage();
 
         // read inputs
         let solution = tl.getPathInput("solution", true, false);
@@ -95,7 +87,7 @@ async function main(): Promise<void> {
         let serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
 
         //find nuget location to use
-        let credProviderPath = ngToolRunner.locateCredentialProvider();
+        let credProviderPath = nutil.locateCredentialProvider();
 
         const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
 
@@ -186,11 +178,11 @@ function restorePackagesAsync(solutionFile: string, options: RestoreOptions): Q.
     nugetTool.arg(options.restoreMode);
     nugetTool.arg("-NonInteractive");
 
-    nugetTool.pathArg(solutionFile);
+    nugetTool.arg(solutionFile);
 
     if (options.configFile) {
         nugetTool.arg("-ConfigFile");
-        nugetTool.pathArg(options.configFile);
+        nugetTool.arg(options.configFile);
     }
 
     if (options.noCache) {

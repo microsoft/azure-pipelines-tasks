@@ -26,7 +26,7 @@ $xml = ([xml]'<CodePackage Name="Code" Version="1.0.0"></CodePackage>').CodePack
 $oldXmlList = @( ([xml]$OldXmlString).CodePackage )
 
 # Act
-$result = Update-PackageVersion -VersionSuffix ".NewSuffix" -ServiceName "Service1Pkg" -NewPackageXml $xml -NewPackageRoot "$PSScriptRoot\data\CurrentPkg" -OldPackageXmlList $oldXmlList -OldPackageRoot "$PSScriptRoot\data\PreviousPkg"
+$result = Update-PackageVersion -VersionValue ".NewSuffix" -ServiceName "Service1Pkg" -NewPackageXml $xml -NewPackageRoot "$PSScriptRoot\data\CurrentPkg" -OldPackageXmlList $oldXmlList -OldPackageRoot "$PSScriptRoot\data\PreviousPkg"
 
 # Assert
 Assert-AreEqual "1.0.0$expectedSuffix" $result "Package version did not match."

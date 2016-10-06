@@ -1,0 +1,8 @@
+{
+    "common": [
+        {
+            "module": "../Common/VstsAzureRestHelpers_",
+            "type": "ps"
+        }
+    ]
+}

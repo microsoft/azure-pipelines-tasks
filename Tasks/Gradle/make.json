@@ -1,0 +1,34 @@
+{
+    "common": [
+        {
+            "module": "../Common/java-common",
+            "type": "node",
+            "compile": true
+        },
+        {
+            "module": "../Common/codecoverage-tools",
+            "type": "node",
+            "compile": true
+        }
+    ],
+    "cp": [
+        {
+            "source": [
+                "CodeAnalysis/checkstyle.gradle",
+                "CodeAnalysis/checkstyle.xml",
+                "CodeAnalysis/pmd.gradle",
+                "CodeAnalysis/sonar.gradle"
+            ],
+            "dest": "CodeAnalysis/"
+        }
+    ],
+    "rm": [
+        {
+            "items": [
+                "node_modules/java-common/node_modules/vsts-task-lib",
+                "node_modules/codecoverage-tools/node_modules/vsts-task-lib"
+            ],
+            "options": "-Rf"
+        }
+    ]
+}

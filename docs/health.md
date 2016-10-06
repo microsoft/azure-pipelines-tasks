@@ -61,7 +61,7 @@ Per the [Contribution Guidelines](https://github.com/Microsoft/vsts-tasks/blob/m
 | Npm                            |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)| |
 | NuGetInstaller                 |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Red](res/red.png)| No Tests |
 | NugetPackager                  |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Red](res/red.png)| No Tests |
-| NugetPublisher                 |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Red](res/red.png)| No Tests |
+| NuGetPublisher                 |![Green](res/green.png)|![Green](res/green.png)|![Green](res/green.png)|![Red](res/red.png)| No Tests |
 
 ## Utilities
 
