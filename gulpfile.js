@@ -448,7 +448,7 @@ var QExec = function (commandLine) {
     return defer.promise;
 }
 
-gulp.task('zip', ['build'], function (done) {
+gulp.task('zip', function (done) {
     shell.mkdir('-p', _wkRoot);
     var zipPath = path.join(_wkRoot, 'contents');
 
@@ -464,12 +464,6 @@ gulp.task('package', ['zip'], function (done) {
     var nugetPath = shell.which('nuget');
     if (!nugetPath) {
         done(new gutil.PluginError('PackageTask', 'nuget.exe needs to be in the path.  could not find.'));
-        return;
-    }
-
-    var nuget3Path = shell.which('nuget3');
-    if (!nuget3Path) {
-        done(new gutil.PluginError('PackageTask', 'nuget3.exe needs to be in the path.  could not find.'));
         return;
     }
 
@@ -541,4 +535,44 @@ gulp.task('package', ['zip'], function (done) {
             })
 
     });
+});
+
+//
+// gulp publish --server <nugetServerLocation>
+//
+gulp.task('publish', function (done) {
+    var nuget3Path = shell.which('nuget3');
+    if (!nuget3Path) {
+        done(new gutil.PluginError('PackageTask', 'nuget3.exe needs to be in the path.  could not find.'));
+        return;
+    }
+
+    if (!shell.test('-d', _pkgRoot)) {
+        done(new gutil.PluginError('PublishTask', '_pkgRoot directory does not exist: ' + _pkgRoot));
+        return;
+    }
+
+    var options = minimist(process.argv.slice(2), {});
+    var server = options.server;
+
+    // find the nupkg file
+    var nupkgFile = fs.readdirSync(_pkgRoot)
+        .filter(function (itemName) {
+            return itemName.endsWith('.nupkg');
+        });
+    if (nupkgFile.length != 1) {
+        done(new gutil.PluginError('PublishTask', 'Expected exactly one nupkg file. Actual: ' + nupkgFile.length));
+        return;
+    }
+    nupkgFile = path.join(_pkgRoot, nupkgFile[0]);
+
+    // publish
+    var cmdline = '"' + nuget3Path + '" push ' + nupkgFile + ' -Source ' + server + ' -apikey Skyrise';
+    QExec(cmdline)
+        .then(function () {
+            done();
+        })
+        .fail(function (err) {
+            done(new gutil.PluginError('PublishTask', err.message));
+        });
 });
