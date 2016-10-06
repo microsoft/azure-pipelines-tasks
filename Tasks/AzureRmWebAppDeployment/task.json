@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 0,
-        "Patch": 5
+        "Minor": 1,
+        "Patch": 0
     },
     "minimumAgentVersion": "1.102.0",
     "groups": [
@@ -25,6 +25,11 @@
         {
             "name": "output",
             "displayName": "Output",
+            "isExpanded": true
+        },
+        {
+            "name": "FileTransformsAndVariableSubstitution",
+            "displayName": "File Transforms and Variable Substitutions",
             "isExpanded": true
         }
     ],
@@ -163,6 +168,25 @@
             "groupName": "AdditionalDeploymentOptions",
             "visibleRule": "UseWebDeploy == true",
             "helpMarkDown": "Additional Web Deploy arguments that will be applied when deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension."
+        },
+        {
+            "name": "XmlTransformsAndVariableSubstitutions",
+            "type": "boolean",
+            "label": "XML Transforms & Variable Substitutions",
+            "required": false,
+            "defaultValue": false,
+            "groupName": "FileTransformsAndVariableSubstitution",
+            "helpMarkDown": ""
+        },
+        {   
+            "name": "XdtTransformation",
+            "type": "boolean",
+            "label": "Transformation",
+            "required": false,
+            "defaultValue": false,
+            "groupName": "FileTransformsAndVariableSubstitution",
+            "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
+            "helpMarkDown": "The config transfoms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`. Config transforms will be run prior to the Variable Substitution."
         }
     ],
     "dataSourceBindings": [
@@ -232,6 +256,8 @@
         "UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)",
         "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
         "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "More than one package matched with specified pattern. Please restrain the search patern.",
-        "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected."
+        "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected.",
+        "CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot Perform XDT Transformations on a Non-Windows platform.",
+        "XdtTransformationErrorWhileTransforming": "XDT Transformation Error while transforming %s using %s."
     }
 }

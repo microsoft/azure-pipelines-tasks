@@ -5,6 +5,7 @@
   "loc.instanceNameFormat": "Deploy AzureRM App Service: $(WebAppName)",
   "loc.group.displayName.AdditionalDeploymentOptions": "Additional Deployment Options",
   "loc.group.displayName.output": "Output",
+  "loc.group.displayName.FileTransformsAndVariableSubstitution": "File Transforms and Variable Substitutions",
   "loc.input.label.ConnectedServiceName": "AzureRM Subscription",
   "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription for the deployment.",
   "loc.input.label.WebAppName": "App Service Name",
@@ -33,6 +34,9 @@
   "loc.input.help.TakeAppOfflineFlag": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully.",
   "loc.input.label.AdditionalArguments": "Additional Arguments",
   "loc.input.help.AdditionalArguments": "Additional Web Deploy arguments that will be applied when deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension.",
+  "loc.input.label.XmlTransformsAndVariableSubstitutions": "XML Transforms & Variable Substitutions",
+  "loc.input.label.XdtTransformation": "Transformation",
+  "loc.input.help.XdtTransformation": "The config transfoms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`. Config transforms will be run prior to the Variable Substitution.",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "Invalid webapp package or folder path provided: %s",
   "loc.messages.SetParamFilenotfound0": "Set parameters file not found: %s",
   "loc.messages.GotconnectiondetailsforazureRMWebApp0": "Got connection details for azureRM WebApp:'%s'",
@@ -68,5 +72,7 @@
   "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)",
   "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "More than one package matched with specified pattern. Please restrain the search patern.",
-  "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected."
+  "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected.",
+  "loc.messages.CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot Perform XDT Transformations on a Non-Windows platform.",
+  "loc.messages.XdtTransformationErrorWhileTransforming": "XDT Transformation Error while transforming %s using %s."
 }
