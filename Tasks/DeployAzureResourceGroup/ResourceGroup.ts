@@ -54,7 +54,7 @@ export class ResourceGroup {
     private execute() {
         switch(this.action) {
            case "Create Or Update Resource Group": 
-                this.createTemplateDeployment();
+                this.createOrUpdateRG();
                 break;
            case "DeleteRG":
                 this.deleteResourceGroup();
@@ -75,16 +75,41 @@ export class ResourceGroup {
     } 
 
     private updateOverrideParameters(params) {
-        var override = minimist(this.overrideParameters);
+        var override = minimist([this.overrideParameters]);
         for (var key in override) {
-            if(params[key] != undefined)
-                params[key] = override[key];
+            if (params[key] != undefined)
+                params[key]["value"] = override[key];
         }
         return params;
     }
     
-    private createTemplateDeployment() {
-        var armClient = new armResource.ResourceManagementClient(this.credentials, this.subscriptionId); 
+    private createOrUpdateRG() {
+        var armClient = new armResource.ResourceManagementClient(this.credentials, this.subscriptionId);
+        armClient.resourceGroups.checkExistence(this.resourceGroupName, (error, exists, request, response) => {
+            if (error) {
+                tl.setResult(tl.TaskResult.Failed, tl.loc("ResourceGroupStatusFetchFailed", error))
+            }
+            if (exists) {
+                this.createTemplateDeployment(armClient);
+            } else {
+                this.createRGIfNotExist(armClient);
+            }
+        });
+    }
+
+    private createRGIfNotExist(armClient) {
+        console.log(this.resourceGroupName+" resource Group Not found");
+        console.log("Creating a new Resource Group:"+ this.resourceGroupName);
+        armClient.resourceGroups.createOrUpdate(this.resourceGroupName, {"name": this.resourceGroupName, "location": this.location}, (error, result, request, response) => {
+            if (error) {
+                tl.setResult(tl.TaskResult.Failed, tl.loc("ResourceGroupCreationFailed", error))
+            } else {
+                this.createTemplateDeployment(armClient);
+            }
+        });
+    }
+    
+    private createTemplateDeployment(armClient) {
         var template;
         try { 
             template= JSON.parse(fs.readFileSync(this.csmFile, 'UTF-8'));
@@ -110,7 +135,7 @@ export class ResourceGroup {
         properties["debugSetting"] = {"detailLevel": "requestContent, responseContent"};
         var deployment = {"properties": properties};
         deployment["location"] = this.location;
-        armClient.deployments.createOrUpdate(this.resourceGroupName, this.createDeploymentName(this.csmFile), deployment, null, (error, result, request, response) =>{
+        armClient.deployments.createOrUpdate(this.resourceGroupName, this.createDeploymentName(this.csmFile), deployment, null, (error, result, request, response) => {
             if (error) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("RGO_createTemplateDeploymentFailed", error.message));
                 return;
