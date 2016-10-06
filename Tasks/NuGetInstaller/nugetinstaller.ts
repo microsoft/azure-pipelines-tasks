@@ -1,6 +1,7 @@
 import * as path from "path";
 import * as Q  from "q";
 import * as tl from "vsts-task-lib/task";
+import {IExecOptions} from "vsts-task-lib/toolrunner";
 
 import * as auth from "nuget-task-common/Authentication";
 import INuGetCommandOptions from "nuget-task-common/INuGetCommandOptions";
@@ -198,5 +199,5 @@ function restorePackagesAsync(solutionFile: string, options: RestoreOptions): Q.
         nugetTool.argString(options.extraArgs);
     }
 
-    return nugetTool.exec({ cwd: path.dirname(solutionFile) });
+    return nugetTool.exec({ cwd: path.dirname(solutionFile) } as IExecOptions);
 }
