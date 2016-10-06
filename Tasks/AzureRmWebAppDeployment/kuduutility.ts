@@ -8,10 +8,10 @@ var gulp = require('gulp');
 var zip = require('gulp-zip');
 var AdmZip = require('adm-zip');
 
-export async function appOffineKuduService(method: string, publishUrl: string, physicalPath: string, headers) {
+export async function appOffineKuduService(publishUrl: string, physicalPath: string, headers, enableFeature: boolean) {
     var defer = Q.defer<string>();
     var kuduDeploymentURL = "https://" + publishUrl + "/api/vfs/" + physicalPath + '/app_offline.htm';
-    if(method === 'PUT') {
+    if(enableFeature) {
         var offlineFilePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'app_offline.htm');
         fs.writeFileSync(offlineFilePath, '<h1>The Web Page is temporarily unavailable !</h1>');
         var webAppReadStream = fs.createReadStream(offlineFilePath);
@@ -93,7 +93,7 @@ export async function deployWebAppPackage(webAppPackage: string, publishingProfi
     };
     if(takeAppOfflineFlag) {
         tl.debug('Trying to enable app offline mode.');
-        await appOffineKuduService('PUT', publishingProfile.publishUrl, physicalPath, headers); 
+        await appOffineKuduService(publishingProfile.publishUrl, physicalPath, headers, true); 
     }
     tl._writeLine(tl.loc("Deployingwebapplicationatvirtualpathandphysicalpath", webAppPackage, virtualPath, physicalPath));
     var webAppReadStream = fs.createReadStream(webAppPackage);
@@ -106,7 +106,7 @@ export async function deployWebAppPackage(webAppPackage: string, publishingProfi
             if(takeAppOfflineFlag) {
                 tl.debug('Trying to disable app offline mode.');
                 try {
-                    await appOffineKuduService('DELETE', publishingProfile.publishUrl, physicalPath, headers);
+                    await appOffineKuduService(publishingProfile.publishUrl, physicalPath, headers, false);
                 }
                 catch(error) {
                     deferred.reject(error);
