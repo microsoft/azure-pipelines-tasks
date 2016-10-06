@@ -29,10 +29,10 @@
   "loc.input.help.RemoveAdditionalFilesFlag": "Select the option to delete files on the AzureRM Web App that have no matching files in the Web App zip package.",
   "loc.input.label.ExcludeFilesFromAppDataFlag": "Exclude Files from the App_Data Folder",
   "loc.input.help.ExcludeFilesFromAppDataFlag": "Select the option to prevent files in the App_Data folder from being deployed to the AzureRM Web App.",
-  "loc.input.label.TakeAppOfflineFlag": "Take App Offline",
-  "loc.input.help.TakeAppOfflineFlag": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully.",
   "loc.input.label.AdditionalArguments": "Additional Arguments",
   "loc.input.help.AdditionalArguments": "Additional Web Deploy arguments that will be applied when deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension.",
+  "loc.input.label.TakeAppOfflineFlag": "Take App Offline",
+  "loc.input.help.TakeAppOfflineFlag": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully.",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "Invalid webapp package or folder path provided: %s",
   "loc.messages.SetParamFilenotfound0": "Set parameters file not found: %s",
   "loc.messages.GotconnectiondetailsforazureRMWebApp0": "Got connection details for azureRM WebApp:'%s'",
@@ -57,7 +57,7 @@
   "loc.messages.Deployingwebapplicationatvirtualpathandphysicalpath": "Deploying web package : %s at virtual path (physical path) : %s (%s)",
   "loc.messages.Successfullydeployedpackageusingkuduserviceat": "Successfully deployed package %s using kudu service at %s",
   "loc.messages.Failedtodeploywebapppackageusingkuduservice": "Failed to deploy webapp package using kudu service : %s",
-  "loc.messages.Unabletodeploywebappresponsecode": "Unable to deploy webapp due to error code : %s",
+  "loc.messages.Unabletodeploywebappresponsecode": "Unable to deploy webapp due to error code : %s (%s)",
   "loc.messages.Unabletopackagecontentoffolder": "Unable to package content of folder : %s",
   "loc.messages.Compressedfolderintozip": "Compressed folder %s into zip : %s",
   "loc.messages.Webappfolderisbeingarchivedtobytescompressed": "Webapp folder : %s is being archived to %s. %s bytes compressed.",
@@ -67,5 +67,9 @@
   "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)",
   "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "More than one package matched with specified pattern. Please restrain the search patern.",
-  "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected."
+  "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected.",
+  "loc.messages.AppOfflineModeenabled": "App Offline Mode enabled.",
+  "loc.messages.Failedtoenableappofflinemode": "Failed to enable app offline mode. Status Code: %s (%s)",
+  "loc.messages.AppOflineModedisabled": "App Ofline Mode disabled.",
+  "loc.messages.FailedtodisableAppOfflineMode": "Failed to disable App Offline Mode. Status Code: %s (%s)"
 }

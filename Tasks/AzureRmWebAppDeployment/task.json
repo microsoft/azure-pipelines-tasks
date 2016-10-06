@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 5
     },
     "minimumAgentVersion": "1.102.0",
     "groups": [
@@ -145,16 +145,6 @@
             "helpMarkDown": "Select the option to prevent files in the App_Data folder from being deployed to the AzureRM Web App."
         },
         {
-            "name": "TakeAppOfflineFlag",
-            "type": "boolean",
-            "label": "Take App Offline",
-            "defaultValue": "false",
-            "required": false,
-            "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "UseWebDeploy == true",
-            "helpMarkDown": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully."
-        },
-        {
             "name": "AdditionalArguments",
             "type": "string",
             "label": "Additional Arguments",
@@ -163,6 +153,15 @@
             "groupName": "AdditionalDeploymentOptions",
             "visibleRule": "UseWebDeploy == true",
             "helpMarkDown": "Additional Web Deploy arguments that will be applied when deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension."
+        },
+        {
+            "name": "TakeAppOfflineFlag",
+            "type": "boolean",
+            "label": "Take App Offline",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "AdditionalDeploymentOptions",
+            "helpMarkDown": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully."
         }
     ],
     "dataSourceBindings": [
@@ -221,7 +220,7 @@
         "Deployingwebapplicationatvirtualpathandphysicalpath": "Deploying web package : %s at virtual path (physical path) : %s (%s)",
         "Successfullydeployedpackageusingkuduserviceat": "Successfully deployed package %s using kudu service at %s",
         "Failedtodeploywebapppackageusingkuduservice": "Failed to deploy webapp package using kudu service : %s",
-        "Unabletodeploywebappresponsecode": "Unable to deploy webapp due to error code : %s",
+        "Unabletodeploywebappresponsecode": "Unable to deploy webapp due to error code : %s (%s)",
         "Unabletopackagecontentoffolder": "Unable to package content of folder : %s",
         "Compressedfolderintozip": "Compressed folder %s into zip : %s",
         "Webappfolderisbeingarchivedtobytescompressed": "Webapp folder : %s is being archived to %s. %s bytes compressed.",
@@ -231,6 +230,10 @@
         "UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)",
         "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
         "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "More than one package matched with specified pattern. Please restrain the search patern.",
-        "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected."
+        "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected.",
+        "AppOfflineModeenabled": "App Offline Mode enabled.",
+        "Failedtoenableappofflinemode": "Failed to enable app offline mode. Status Code: %s (%s)",
+        "AppOflineModedisabled": "App Ofline Mode disabled.",
+        "FailedtodisableAppOfflineMode": "Failed to disable App Offline Mode. Status Code: %s (%s)"
   }
 }
