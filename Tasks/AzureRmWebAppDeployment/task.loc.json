@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 0,
-    "Patch": 5
+    "Minor": 2,
+    "Patch": 0
   },
   "minimumAgentVersion": "1.102.0",
   "groups": [
@@ -25,6 +25,11 @@
     {
       "name": "output",
       "displayName": "ms-resource:loc.group.displayName.output",
+      "isExpanded": true
+    },
+    {
+      "name": "FileTransformsAndVariableSubstitution",
+      "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
       "isExpanded": true
     }
   ],
@@ -163,6 +168,25 @@
       "groupName": "AdditionalDeploymentOptions",
       "visibleRule": "UseWebDeploy == true",
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
+    },
+    {
+      "name": "XmlTransformsAndVariableSubstitutions",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.XmlTransformsAndVariableSubstitutions",
+      "required": false,
+      "defaultValue": false,
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "XdtTransformation",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.XdtTransformation",
+      "required": false,
+      "defaultValue": false,
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
+      "helpMarkDown": "ms-resource:loc.input.help.XdtTransformation"
     }
   ],
   "dataSourceBindings": [
@@ -232,6 +256,8 @@
     "UnabletofindthelocationofMSDeployfromregistryonmachineError": "ms-resource:loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError",
     "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern",
     "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "ms-resource:loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern",
-    "Trytodeploywebappagainwithappofflineoptionselected": "ms-resource:loc.messages.Trytodeploywebappagainwithappofflineoptionselected"
+    "Trytodeploywebappagainwithappofflineoptionselected": "ms-resource:loc.messages.Trytodeploywebappagainwithappofflineoptionselected",
+    "CannotPerformXdtTransformationWithoutWebDeploy": "ms-resource:loc.messages.CannotPerformXdtTransformationWithoutWebDeploy",
+    "XdtTransformationErrorWhileTransforming": "ms-resource:loc.messages.XdtTransformationErrorWhileTransforming"
   }
 }

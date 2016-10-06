@@ -5,6 +5,8 @@ import fs = require('fs');
 var azureRmUtil = require ('./azurermutil.js');
 var msDeployUtility = require('./msdeployutility.js');
 var kuduUtility = require('./kuduutility.js');
+var compressor = require('./compressionutility.js');
+var xdtUtility = require('./xdtutility.js');
 
 async function run() {
     try {
@@ -24,6 +26,8 @@ async function run() {
         var takeAppOfflineFlag: boolean = tl.getBoolInput('TakeAppOfflineFlag', false);
         var additionalArguments: string = tl.getInput('AdditionalArguments', false);
         var webAppUri:string = tl.getInput('WebAppUri', false);
+        var xmlTransformationAndVariableSubstitution: boolean = tl.getBoolInput('XmlTransformsAndVariableSubstitutions', false);
+        var xmlTransformation: boolean = tl.getBoolInput('XdtTransformation', false);
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
 
         var SPN = new Array();
@@ -45,6 +49,40 @@ async function run() {
         var isFolderBasedDeployment = await isInputPkgIsFolder(webDeployPkg);
         var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
         tl._writeLine(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
+        
+        if(xmlTransformationAndVariableSubstitution && xmlTransformation) {
+            if(canUseWebDeploy(useWebDeploy)) {
+                var tempPackagePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), '_temp_package_path');
+                if(!isFolderBasedDeployment) {
+                    tl._writeLine("Unzipping the package at location : " + tempPackagePath);
+                    compressor.unzip(webDeployPkg, tempPackagePath);
+                }
+                else {
+                    tl._writeLine("Copying the package at location : " + tempPackagePath);
+                    tl.cp(webDeployPkg, tempPackagePath, "-rf");
+                }
+
+                var environmentName = tl.getVariable('Release.EnvironmentName');
+                if(xmlTransformation) {
+                    var transformConfigs = ["Release.config"];
+                    if(environmentName) {
+                        transformConfigs.push(environmentName + ".config");
+                    }
+                    xdtUtility.basicXdtTransformation(path.join(tempPackagePath,'**', '*.config'), transformConfigs);  
+                }
+
+                if(!isFolderBasedDeployment) {
+                    tl._writeLine("Zipping back the package");
+                    webDeployPkg = await compressor.zip(tempPackagePath);
+                }
+                else {
+                    webDeployPkg = tempPackagePath;
+                } 
+            }
+            else {
+                throw new Error(tl.loc("CannotPerformXdtTransformationWithoutWebDeploy"));
+            }
+        }
 
         if(virtualApplication) {
             publishingProfile.destinationAppUrl += "/" + virtualApplication;
@@ -53,7 +91,6 @@ async function run() {
         if(webAppUri) {
             tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
         }
-
         if(canUseWebDeploy(useWebDeploy)) {
            tl._writeLine("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);         
            tl._writeLine("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);
