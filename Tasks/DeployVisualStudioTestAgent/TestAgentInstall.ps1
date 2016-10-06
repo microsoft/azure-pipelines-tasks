@@ -68,7 +68,7 @@ function Install-Product($SetupPath, $UserName, $Password, $ProductVersion, $Arg
 			}
 		}
 
-		if($exitCode -eq 2147205120)
+		if($exitCode -eq -2147205120)
 		{
 			# pending windows update.
 			throw ("Pending windows update. The return code {0} was not expected during installation of Test Agent. Install windows update and try again." -f $exitCode.ToString())
