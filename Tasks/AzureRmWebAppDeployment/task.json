@@ -257,7 +257,7 @@
         "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
         "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "More than one package matched with specified pattern. Please restrain the search patern.",
         "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected.",
-        "CannotPerformXdtTransformationWithoutWebDeploy": "Cannot Perform XDT Transformations without Web Deploy Option Selected.",
+        "CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot Perform XDT Transformations on a Non-Windows platform.",
         "XdtTransformationErrorWhileTransforming": "XDT Transformation Error while transforming %s using %s."
     }
 }

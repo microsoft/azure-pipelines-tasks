@@ -73,6 +73,6 @@
   "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "More than one package matched with specified pattern. Please restrain the search patern.",
   "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected.",
-  "loc.messages.CannotPerformXdtTransformationWithoutWebDeploy": "Cannot Perform XDT Transformations without Web Deploy Option Selected.",
+  "loc.messages.CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot Perform XDT Transformations on a Non-Windows platform.",
   "loc.messages.XdtTransformationErrorWhileTransforming": "XDT Transformation Error while transforming %s using %s."
 }
