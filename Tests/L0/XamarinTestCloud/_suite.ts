@@ -62,6 +62,44 @@ describe('XamarinTestCloud Suite', function() {
         });
     })
 
+    it('run XamarinTestCloud with optional arguments', (done) => {
+        setResponseFile('response.json');
+
+        var tr = new trm.TaskRunner('XamarinTestCloud', true, true);
+        // required inputs
+        tr.setInput('app', 'bin/project.apk');
+        tr.setInput('teamApiKey', 'key1');
+        tr.setInput('user', 'me@ms.com');
+        tr.setInput('devices', 'devices1');
+        tr.setInput('series', 'master');
+        tr.setInput('testDir', 'tests/bin');
+        tr.setInput('parallelization', 'none');
+        tr.setInput('locale', 'en_US');
+        tr.setInput('testCloudLocation', '**/packages/**/tools/test-cloud.exe');
+        // optional inputs
+        //tr.setInput('dsym', ''); // iOS only
+        //tr.setInput('userDefinedLocale', ''); // shown when locale = user
+        tr.setInput('optionalArgs', '--test-param screencapture:true');
+        //tr.setInput('publishNUnitResults', ''); // boolean
+
+        tr.run()
+        .then(() => {
+            if (isWin) {
+                assert(tr.ran('/home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin --test-param screencapture:true'), 'it should have run xamarinTestCloud');
+            } else {
+                assert(tr.ran('/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin --test-param screencapture:true'), 'it should have run xamarinTestCloud');
+            }
+            assert(tr.invokedToolCount == 1, 'should have only run XamarinTestCloud 1 time');
+            assert(tr.resultWasSet, 'task should have set a result');
+            assert(tr.stderr.length == 0, 'should not have written to stderr');
+            assert(tr.succeeded, 'task should have succeeded');
+            done();
+        })
+        .fail((err) => {
+            done(err);
+        });
+    })
+
     // check all required inputs
     it('fails when app is missing', (done) => {
         setResponseFile('response.json');

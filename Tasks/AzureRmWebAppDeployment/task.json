@@ -201,6 +201,8 @@
         "GotconnectiondetailsforazureRMWebApp0": "Got connection details for azureRM WebApp:'%s'",
         "UnabletoretrieveWebAppID": "Unable to retrieve WebApp ID for azureRM WebApp:'%s'. Status Code: %s (%s)",
         "ErrorNoSuchDeployingMethodExists": "Error : No Such Deploying Method Exists",
+        "UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1": "Unable to retrieve connection details for azureRM WebApp:'%s'. Status Code: %s",
+        "Unabletoretrievewebapppublishurlforwebapp0StatusCode1": "Unable to retrieve webapp publish url for webapp : '%s'. Status Code : '%s'",
         "UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve connection details for azureRM WebApp:'%s'. Status Code: %s (%s)",
         "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
         "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
@@ -235,5 +237,4 @@
         "Failedtoenableappofflinemode": "Failed to enable app offline mode. Status Code: %s (%s)",
         "AppOflineModedisabled": "App Offline Mode disabled.",
         "FailedtodisableAppOfflineMode": "Failed to disable App Offline Mode. Status Code: %s (%s)"
-  }
 }

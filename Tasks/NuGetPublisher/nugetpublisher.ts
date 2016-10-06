@@ -58,12 +58,12 @@ async function main(): Promise<void> {
         // due to a bug where we accidentally allowed nuGetPath to be surrounded by quotes before,
         // locateNuGetExe() will strip them and check for existence there.
         let nuGetPath = tl.getPathInput("nuGetPath", false, false);
-        let nugetVersion = tl.getInput("nuGetversion");
+        let nugetUxOption = tl.getInput("nuGetversion");
         let userNuGetProvided = false;
         if (nuGetPath !== null && tl.filePathSupplied("nuGetPath")) {
             nuGetPath = nutil.stripLeadingAndTrailingQuotes(nuGetPath);
             userNuGetProvided = true;
-            if (nugetVersion !== "custom")
+            if (nugetUxOption !== "custom")
             {
                 // For back compat, if a path has already been specified then use it.
                 // However, warn the user in the build of this behavior.
@@ -71,11 +71,11 @@ async function main(): Promise<void> {
             }
         }
         else {
-            if (nugetVersion === "custom")
+            if (nugetUxOption === "custom")
             {
                 throw new Error(tl.loc("NoNuGetSpecified"))
             }
-            nuGetPath = nutil.getBundledNuGetLocation(nugetVersion);
+            nuGetPath = nutil.getBundledNuGetLocation(nugetUxOption);
         }
 
         let serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
@@ -185,7 +185,7 @@ function publishPackageAsync(packageFile: string, options: PublishOptions): Q.Pr
     }
 
     if (options.extraArgs) {
-        nugetTool.argString(options.extraArgs);
+        nugetTool.line(options.extraArgs);
     }
 
     return nugetTool.exec();

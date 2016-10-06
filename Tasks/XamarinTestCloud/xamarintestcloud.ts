@@ -218,7 +218,7 @@ var submitToTestCloud = function (index) {
         testCloudRunner.arg(parallelization);
     }
     if (optionalArgs) {
-        testCloudRunner.argString(optionalArgs);
+        testCloudRunner.line(optionalArgs);
     }
     if (publishNUnitResults == 'true') {
         var nunitFile = path.join(testDir, '/xamarintest_' + buildId + '.' + index + '.xml');

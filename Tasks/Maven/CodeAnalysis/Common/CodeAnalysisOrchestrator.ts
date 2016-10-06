@@ -45,10 +45,15 @@ export class CodeAnalysisOrchestrator {
         if (this.checkBuildContext() && this.tools.length > 0) {
             tl.debug(`[CA] Attempting to find report files from ${this.tools.length} code analysis tool(s)`);
 
+            let analysisResults = this.processResults(this.tools);
+
+            if (analysisResults.length < 1) {
+                tl.debug('[CA] Skipping artifact upload: No analysis results');
+                return;
+            }
+
             let stagingDir = path.join(tl.getVariable('build.artifactStagingDirectory'), ".codeAnalysis");
             let buildNumber: string = tl.getVariable('build.buildNumber');
-
-            let analysisResults = this.processResults(this.tools);
 
             let resultPublisher = new CodeAnalysisResultPublisher(analysisResults, stagingDir);
 
@@ -63,7 +68,7 @@ export class CodeAnalysisOrchestrator {
 
         for (var tool of tools) {
             var results: AnalysisResult[] = tool.processResults();
-            if (results) {
+            if (results != undefined && results != null && results.length > 0) {
                 analysisResults = analysisResults.concat(results);
             }
         }

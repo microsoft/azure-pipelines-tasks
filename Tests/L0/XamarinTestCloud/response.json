@@ -7,6 +7,10 @@
             "code": 0,
             "stdout": "Xamarin test cloud"
         },
+        "/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin --test-param screencapture:true": {
+            "code": 0,
+            "stdout": "Xamarin test cloud"
+        },
         "/home/bin/mono /home/build/packages/project1/tools/test-cloud.exe submit bin/FAIL/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin": {
             "code": 2,
             "stdout": "FAILED"
@@ -32,6 +36,10 @@
             "stdout": "Xamarin test cloud"
         },
         "/home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin": {
+            "code": 0,
+            "stdout": "Xamarin test cloud"
+        },
+        "/home/build/packages/project1/tools/test-cloud.exe submit bin/project.apk key1 --user me@ms.com --devices devices1 --series master --locale en_US --assembly-dir tests/bin --test-param screencapture:true": {
             "code": 0,
             "stdout": "Xamarin test cloud"
         },
