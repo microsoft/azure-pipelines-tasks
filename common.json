@@ -114,5 +114,11 @@
             "module": "codecoverage-tools",
             "dest": "node_modules"  
         }
+    ],
+    "XamarinAndroid": [
+        {
+            "module": "MSBuildHelpers",
+            "dest": "ps_modules"
+        }
     ]
 }
