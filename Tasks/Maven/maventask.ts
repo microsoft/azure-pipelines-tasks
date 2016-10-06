@@ -15,6 +15,7 @@ import {CheckstyleTool} from './CodeAnalysis/Common/CheckstyleTool';
 import {PmdTool} from './CodeAnalysis/Common/PmdTool';
 import {FindbugsTool} from './CodeAnalysis/Common/FindbugsTool';
 import javacommons = require('java-common/java-common');
+import ffl = require('find-files-legacy/findfiles.legacy');
 
 var isWindows = os.type().match(/^Win/);
 
@@ -220,29 +221,13 @@ function configureMavenOpts() {
 
 // Publishes JUnit test results from files matching the specified pattern.
 function publishJUnitTestResults(testResultsFiles: string) {
-    var matchingJUnitResultFiles: string[] = undefined;
-
-    // Check for pattern in testResultsFiles
-    if (testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
-        tl.debug('Pattern found in testResultsFiles parameter');
-        var buildFolder = tl.getVariable('System.DefaultWorkingDirectory');
-        tl.debug(`buildFolder=${buildFolder}`);
-        var allFiles = tl.find(buildFolder);
-        matchingJUnitResultFiles = tl.match(allFiles, testResultsFiles, {
-            matchBase: true
-        });
-    }
-    else {
-        tl.debug('No pattern found in testResultsFiles parameter');
-        matchingJUnitResultFiles = [testResultsFiles];
-    }
-
+    let matchingJUnitResultFiles: string[] = ffl.findFiles(testResultsFiles, false, tl.getVariable('System.DefaultWorkingDirectory'));
     if (!matchingJUnitResultFiles || matchingJUnitResultFiles.length == 0) {
         tl.warning('No test result files matching ' + testResultsFiles + ' were found, so publishing JUnit test results is being skipped.');
         return 0;
     }
 
-    var tp = new tl.TestPublisher("JUnit");
+    let tp = new tl.TestPublisher("JUnit");
     tp.publish(matchingJUnitResultFiles, true, "", "", "", true);
 }
 
