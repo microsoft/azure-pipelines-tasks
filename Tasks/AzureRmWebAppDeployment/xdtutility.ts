@@ -26,7 +26,6 @@ export function applyXdtTransformation(sourceFile, transformFile) {
 	var cttArgs = ' s:"' + sourceFile + '" t:"' + transformFile + '" d:"' + sourceFile + '" pw';
     var cttCommand = '"' + cttPath + '" ' + cttArgs + '\n';
     tl.writeFile(cttBatchFile, cttCommand);
-    console.log(cttCommand);
     tl._writeLine(tl.loc("Runningcommand", cttCommand));
 	var cttExecutionResult = tl.execSync("cmd", ['/C', cttBatchFile]);
 	if(cttExecutionResult.stderr) {
@@ -43,12 +42,10 @@ export function applyXdtTransformation(sourceFile, transformFile) {
 */
 export function basicXdtTransformation(sourcePattern, transformConfigs) {
 	var sourceXmlFiles = expandWildcardPattern(sourcePattern);
-	console.log(sourceXmlFiles);
 	Object.keys(sourceXmlFiles).forEach( function(sourceXmlFile) {
 		var sourceBasename = path.win32.basename(sourceXmlFile, ".config");	
 		transformConfigs.forEach( function(transformConfig) {
 			var transformXmlFile = path.join(path.dirname(sourceXmlFile), sourceBasename + "." + transformConfig);
-			console.log(transformXmlFile);
 			if(sourceXmlFiles[transformXmlFile]) {
 				tl._writeLine('Applying XDT Transformation : ' + transformXmlFile + '->' + sourceXmlFile);
 				applyXdtTransformation(sourceXmlFile, transformXmlFile);
