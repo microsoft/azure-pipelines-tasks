@@ -233,7 +233,7 @@
         "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected.",
         "AppOfflineModeenabled": "App Offline Mode enabled.",
         "Failedtoenableappofflinemode": "Failed to enable app offline mode. Status Code: %s (%s)",
-        "AppOflineModedisabled": "App Ofline Mode disabled.",
+        "AppOflineModedisabled": "App Offline Mode disabled.",
         "FailedtodisableAppOfflineMode": "Failed to disable App Offline Mode. Status Code: %s (%s)"
   }
 }

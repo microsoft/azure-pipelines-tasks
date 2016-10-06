@@ -70,6 +70,6 @@
   "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected.",
   "loc.messages.AppOfflineModeenabled": "App Offline Mode enabled.",
   "loc.messages.Failedtoenableappofflinemode": "Failed to enable app offline mode. Status Code: %s (%s)",
-  "loc.messages.AppOflineModedisabled": "App Ofline Mode disabled.",
+  "loc.messages.AppOflineModedisabled": "App Offline Mode disabled.",
   "loc.messages.FailedtodisableAppOfflineMode": "Failed to disable App Offline Mode. Status Code: %s (%s)"
 }
