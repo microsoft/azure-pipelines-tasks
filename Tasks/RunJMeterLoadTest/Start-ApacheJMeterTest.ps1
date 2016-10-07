@@ -359,7 +359,7 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
 
     $summary = ('[Test Run: {0}]({1}) using {2}.<br/>' -f  $run.runNumber, $webResultsUrl , $run.name)
      	
-	('<p>{0}</p>' -f $summary) >>  $summaryFile
+	('<p>{0}</p>' -f $summary) | Out-File  $summaryFile -Encoding ascii -Append
     UploadSummaryMdReport $summaryFile
 }
 else
