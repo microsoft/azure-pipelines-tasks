@@ -72,7 +72,7 @@
   "loc.messages.ProvProfileDetailsNotFound": "Failed to find the details for provisioning profile: %s",
   "loc.messages.ProvProfileUUIDNotFound": "Failed to find provisioning profile UUID for provisioning profile: %s",
   "loc.messages.MultipleWorkspacesFound": "Multiple xcode workspace matches were found. Using the first match: %s",
-  "loc.messages.WorkspaceDoesNotExist": "Xcode workspace was specified but it does not exist or is not a directory",
+  "loc.messages.WorkspaceDoesNotExist": "Xcode workspace was specified but it does not exist or is not a directory: %s",
   "loc.messages.UseXcToolForTestPublishing": "When using xctool, specify the xctool reporter format to publish test results. No results will be published.",
   "loc.messages.UseXcprettyForTestPublishing": "When using xcodebuild, check 'Use xcpretty' to publish test results. No results will be published.",
   "loc.messages.XcodebuildRequiredForXcpretty": "To use xcpretty, the build tool has to be xcodebuild. Uncheck the 'Use xctool' checkbox to use xcpretty.",

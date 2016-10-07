@@ -6,16 +6,16 @@
     "helpMarkDown": "[More Information](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/ChefKnife/README.md)",
     "category": "Deploy",
     "visibility": [
-                "Preview",
-                "Build"
-                  ],
+        "Preview",
+        "Build"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 10
+        "Patch": 11
     },
-    "demands" : [
+    "demands": [
         "Chef",
         "DotNetFramework"
     ],
