@@ -51,7 +51,7 @@ async function run() {
         tl._writeLine(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
         
         if(xmlTransformationAndVariableSubstitution && xmlTransformation) {
-            if(canUseWebDeploy(useWebDeploy)) {
+            if(tl.osType().match(/^Win/)) {
                 var tempPackagePath = tempPackagePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), '_temp_package_path');
                 if (tl.exist(tempPackagePath)) {
                     tl._writeLine('Cleaning the directory: ' + tempPackagePath);
@@ -59,11 +59,11 @@ async function run() {
                 }
                 if(!isFolderBasedDeployment) {
                     tl._writeLine("Unzipping the package at location : " + tempPackagePath);
-                    compressor.unzip(webDeployPkg + '/.', tempPackagePath);
+                    compressor.unzip(webDeployPkg, tempPackagePath);
                 }
                 else {
                     tl._writeLine("Copying the package at location : " + tempPackagePath);
-                    tl.cp(webDeployPkg, tempPackagePath, "-rf");
+                    tl.cp(webDeployPkg + '/.', tempPackagePath, "-rf");
                 }
 
                 var environmentName = tl.getVariable('Release.EnvironmentName');
