@@ -267,6 +267,23 @@
         "ARG_SetExtensionFailed": "Setting the custom script extension '{0}' for virtual machine '{1}' failed with error : {2}",
         "ARG_NetworkSecurityConfigFailed": "Failed to add the network security rule: {0}",
         "ARG_SetExtensionFailedForVm": "Unable to set the custom script extension '{0}' for virtual machine '{1}': {2}",
-        "ARG_DeploymentPrereqFailed": "Failed to enable deployment prerequisites. {0}"
+        "ARG_DeploymentPrereqFailed": "Failed to enable deployment prerequisites. {0}",
+
+        "SucceededOnVMOperation": "The %s operation on all VMs succeeded",
+        "FailureOnVMOperation": "The %s operation on all VMs failed with an error: %s",
+        "ARGD_ConstructorFailed": "Task failed while initializing with the following error: %s",
+        "VMOperationsInitiationFailed": "Task failed while creating a computeManagement Client, due to the following error: %s",
+        "TemplateParsingFailed": "Please ensure the Template file is correct. Task failed while parsing due to the following error: %s",
+        "ParametersFileParsingFailed": "Please ensure the Parameters file is correct. Task failed while parsing due to the following error: %s",
+        "RGO_createTemplateDeploymentFailed": "Task failed while creating a template deployment, due to : %s",
+        "RGO_createTemplateDeploymentSucceeded": "Successfully created template deploy on '%s'",
+        "RGO_CouldNotDeletedResourceGroup": "[Azure Resource Manager]Could not delete resource group '%s' due to the following error: %s",
+        "RGO_DeletedResourceGroup": "[Azure Resource Manager]Deleted resource group '{0}'",
+        "InvalidAction": "This action is not defined. Please check with the author.",
+        "VM_ListFetchFailed": "Task failed while fetching VMs list from '%s' due to the following error: %s",
+        "TaskNotFound": "Task.json file could not be found: %s",
+        "FailedRegisteringEnvironment": "Task failed while registering environment, due to the following error: %s",
+        "selectResourceGroupSuccessfull": "Selected Resource Group: '%s' and stored it in '%s'",
+        "ValidatingCredentialsFailure": "Failed while validating credentials due to following error: %s"
     }
 }
