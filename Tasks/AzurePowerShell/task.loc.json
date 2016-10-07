@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [
     "azureps"
@@ -68,7 +68,10 @@
       "label": "ms-resource:loc.input.label.ScriptArguments",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.ScriptArguments"
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptArguments",
+      "properties" : {
+        "editorExtension": "ms.vss-service-distributed-task.key-value-grid"
+      }
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

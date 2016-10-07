@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 91
+    "Patch": 92
   },
   "demands": [
     "azureps"
@@ -163,6 +163,9 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.overrideParameters",
+      "properties": {
+        "editorExtension": "ms.vss-service-distributed-task.key-value-grid"
+      },
       "visibleRule": "action = Create Or Update Resource Group"
     },
     {
