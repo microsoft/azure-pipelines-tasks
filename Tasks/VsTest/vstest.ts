@@ -279,7 +279,9 @@ function generateResponseFile(discoveredTests: string): Q.Promise<string> {
     if(context == "CD")
 	{	
         // Release context. Passing Release Id.
-        selectortool.arg("/buildid:" + tl.getVariable("Release.ReleaseId"));	
+        selectortool.arg("/buildid:" + tl.getVariable("Release.ReleaseId"));
+        selectortool.arg("/releaseuri:" + tl.getVariable("release.releaseUri"));
+        selectortool.arg("/releaseenvuri:" + tl.getVariable("release.environmentUri"));	
 	}
 	else
 	{
@@ -294,9 +296,7 @@ function generateResponseFile(discoveredTests: string): Q.Promise<string> {
     selectortool.arg("/testruntitle:" + testRunTitle);
     selectortool.arg("/BaseLineFile:" + baseLineBuildIdFile);
     selectortool.arg("/platform:" + platform);
-    selectortool.arg("/configuration:" + configuration);
-    selectortool.arg("/releaseuri:" + tl.getVariable("release.releaseUri"));
-    selectortool.arg("/releaseenvuri:" + tl.getVariable("release.environmentUri"));
+    selectortool.arg("/configuration:" + configuration);    
 	selectortool.arg("/Context:" + context);
 
     selectortool.exec()
