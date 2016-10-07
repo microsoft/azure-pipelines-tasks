@@ -1,19 +1,20 @@
 {
   "id": "f045e430-8704-11e6-968f-e717e6411619",
   "name": "AzureWebAppSlotSwap",
-  "friendlyName": "Azure WebApp Slot Swap",
-  "description": "swap slot for azure web app",
+  "friendlyName": "AzureRM App Service Slot Swap",
+  "description": "Directs destination Azure Web App slot's traffic to the source slot by performing swap",
   "author": "Microsoft Corporation",
   "helpMarkDown": "Swaps Azure Web App slots",
-  "category": "Utility",
+  "category": "Deploy",
   "visibility": [
-    "Build",
-    "Release"
+      "Build",
+      "Release",
+      "Preview"
   ],
   "demands": [],
   "version": {
-    "Major": "1",
-    "Minor": "0",
+    "Major": "0",
+    "Minor": "1",
     "Patch": "0"
   },
   "minimumAgentVersion": "1.102.0",
@@ -25,7 +26,7 @@
             "label": "AzureRM Subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
+            "helpMarkDown": "Select the Azure Resource Manager subscription."
         },
         {
             "name": "WebAppName",
@@ -59,7 +60,7 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Enter or Select an existing Slot."
+            "helpMarkDown": "The swap action directs destination slot's traffic to the source slot. [Learn more]()"
         },
         {
             "name": "SwapWithProduction",
@@ -67,18 +68,18 @@
             "label": "Swap with Production",
             "defaultValue": "true",
             "required": false,
-            "helpMarkDown": "Select the option to swap slot with Production."
+            "helpMarkDown": "Select the option to swap the traffic of source slot with production. If this option is not selected, then you will have to provide source and target slot names."
         },
         {
             "name": "TargetSlot",
             "type": "pickList",
             "label": "Target Slot",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Enter or Select an existing Slot.",
+            "helpMarkDown": "The swap action directs destination slot's traffic to the source slot. [Learn more]()",
             "visibleRule": "SwapWithProduction = false"
         },
         {
@@ -130,18 +131,14 @@
         }
     },
    "messages": {
-        "GotconnectiondetailsforazureRMWebApp0": "Got connection details for azureRM WebApp:'%s'",
-        "UnabletoretrieveWebAppIDforazureRMWebApp0StatusCode1": "Unable to retrieve WebApp ID for azureRM WebApp:'%s'. Status Code: %s",
-        "ErrorNoSuchDeployingMethodExists": "Error : No Such Deploying Method Exists",
-        "UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1": "Unable to retrieve connection details for azureRM WebApp:'%s'. Status Code: %s",
-        "Unabletoretrievewebapppublishurlforwebapp0StatusCode1" : "Unable to retrieve webapp publish url for webapp : '%s'. Status Code : '%s'",
-        "Successfullyupdatedslotswaphistory": "Successfully updated slot swap history at %s",
-        "Failedtoupdateslotswaphistory": "Failed to update slot swap history.",
-        "WARNINGCannotupdateslotswapstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update slot swap status : SCM endpoint is not enabled for this website",
-        "ErrorFetchingDeploymentPublishProfileStausCode0": "Error Fetching Deployment Publish Profile [Staus Code : '%s']",
-        "ErrorOccurredStausCode0": "Error Occurred : [Staus Code : '%s']",
-        "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update slot swap status : uniquedeploymentIdCannotBeRetrieved",
-        "Failedtoswapslots": "Failed to swap slots. Status %s",
-        "Successfullyswappedslots": "Successfully swapped web app slots" 
+        "ErrorNoSuchDeployingMethodExists": "Error : Deploy method MSDeploy does not exists for Azure Web App: %s",
+        "UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1": "Unable to retrieve connection details for Azure Web App: %s . Status Code: %s",
+        "Successfullyupdatedslotswaphistory": "Successfully updated slot swap history at %s for Azure Web App : %s",
+        "Failedtoupdateslotswaphistory": "Failed to update slot swap history for Azure Web App : %s",
+        "WARNINGCannotupdateslotswapstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update slot swap status : SCM (Source Control Manager) endpoint is not enabled for this Azure Web App",
+        "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update slot swap status as unique deployment ID cannot be retrieved for this Azure Web App",
+        "Failedtoswapslots": "Failed to swap slots. Status %s for Azure Web App : %s",
+        "Successfullyswappedslots": "Successfully swapped web app %s slots from %s to %s",
+        "SourceAndTargetSlotCannotBeSame": "Source and target slot cannot be same"
   }
 }

@@ -30,6 +30,7 @@ export function updateSlotSwapStatus(publishingProfile, deploymentId: string, is
     var deferred = Q.defer<string>();
 
     var webAppPublishKuduUrl = publishingProfile.publishUrl;
+    var msDeploySite = publishingProfile.msdeploySite;
     if(webAppPublishKuduUrl) {
         var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, deploymentId, isSlotSwapSuccess, sourceSlot, targetSlot);
         var accessToken = 'Basic ' + (new Buffer(publishingProfile.userName + ':' + publishingProfile.userPWD).toString('base64'));
@@ -43,11 +44,11 @@ export function updateSlotSwapStatus(publishingProfile, deploymentId: string, is
                     deferred.reject(error);
                 }
                 else if(response === 200) {
-                    deferred.resolve(tl.loc("Successfullyupdatedslotswaphistory", body.url));
+                    deferred.resolve(tl.loc("Successfullyupdatedslotswaphistory", body.url, msDeploySite));
                 }
                 else {
                     tl.warning(body);
-                    deferred.reject(tl.loc("Failedtoupdateslotswaphistory"));
+                    deferred.reject(tl.loc("Failedtoupdateslotswaphistory", msDeploySite));
                 }
         });
     }
@@ -64,7 +65,6 @@ export function updateSlotSwapStatus(publishingProfile, deploymentId: string, is
  * @param   SPN                 Service Principal Name
  * @param   webAppName          Name of the web App
  * @param   resourceGroupName   Resource Group Name
- * @param   deployToSlotFlag    Flag to check slot deployment
  * @param   slotName            Name of the slot
  * 
  * @returns (JSON)            
@@ -91,7 +91,7 @@ export async function getAzureRMWebAppPublishProfile(SPN, resourceGroupName:stri
                     if (result.publishData.publishProfile[index].$.publishMethod === "MSDeploy")
                         deferred.resolve(result.publishData.publishProfile[index].$);
                 }
-                deferred.reject(tl.loc('ErrorNoSuchDeployingMethodExists'));
+                deferred.reject(tl.loc('ErrorNoSuchDeployingMethodExists', webAppName));
             });
         }
         else {

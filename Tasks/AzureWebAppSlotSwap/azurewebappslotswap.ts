@@ -18,12 +18,19 @@ async function run() {
         var webAppName: string = tl.getInput('WebAppName', true);
         var resourceGroupName: string = tl.getInput('ResourceGroupName', true);
         var sourceSlot: string = tl.getInput('SourceSlot', true);
-        var swapWithProduction = tl.getBoolInput('SwapWithProduction', true);
+        var swapWithProduction = tl.getBoolInput('SwapWithProduction', false);
         var targetSlot: string = tl.getInput('TargetSlot', false);
         var preserveVnet: boolean = tl.getBoolInput('PreserveVnet', false);
 
+        var updateSlotSwapStatus: boolean = true;
+
         if(swapWithProduction)
             targetSlot = "production";
+
+        if(sourceSlot === targetSlot){
+            updateSlotSwapStatus = false;
+            throw new Error(tl.loc("SourceAndTargetSlotCannotBeSame"));
+        }
     
         var isSlotSwapSuccess = true;
         var SPN: ISPN = initializeSPN(connectedServiceName);
@@ -36,18 +43,20 @@ async function run() {
         isSlotSwapSuccess = false;
         tl.setResult(tl.TaskResult.Failed, error);
     }
-    try{
-        var deploymentId = kuduDeploymentLog.generateDeploymentId();
-        //push swap slot log to sourceSlot url
-        var sourcePublishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, resourceGroupName, webAppName, sourceSlot);
-        tl._writeLine(await azureRmUtil.updateSlotSwapStatus(sourcePublishingProfile, deploymentId, isSlotSwapSuccess, sourceSlot, targetSlot));
+    if(updateSlotSwapStatus){
+        try{
+            var deploymentId = kuduDeploymentLog.generateDeploymentId();
+            //push swap slot log to sourceSlot url
+            var sourcePublishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, resourceGroupName, webAppName, sourceSlot);
+            tl._writeLine(await azureRmUtil.updateSlotSwapStatus(sourcePublishingProfile, deploymentId, isSlotSwapSuccess, sourceSlot, targetSlot));
 
-        //push swap slot log to targetSlot url
-        var destinationPublishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, resourceGroupName, webAppName, targetSlot);
-        tl._writeLine(await azureRmUtil.updateSlotSwapStatus(destinationPublishingProfile, deploymentId, isSlotSwapSuccess, sourceSlot, targetSlot));
-    }
-    catch(error) {
-        tl.warning(error);
+            //push swap slot log to targetSlot url
+            var destinationPublishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, resourceGroupName, webAppName, targetSlot);
+            tl._writeLine(await azureRmUtil.updateSlotSwapStatus(destinationPublishingProfile, deploymentId, isSlotSwapSuccess, sourceSlot, targetSlot));
+        }
+        catch(error) {
+            tl.warning(error);
+        }
     }
 }
 
@@ -86,11 +95,11 @@ function swapWebAppSlot(SPN: ISPN, accessToken: any, resourceGroupName: string, 
     httpObj.send('POST', url, body, headers, (error, response, body) => {
         if(response.statusCode === 202)
         {
-            deferred.resolve(tl.loc("Successfullyswappedslots"));
+            deferred.resolve(tl.loc("Successfullyswappedslots", webAppName, sourceSlot, targetSlot));
         }
         else {
             tl.error(response.statusMessage);
-            deferred.reject(tl.loc("Failedtoswapslots",response.statusMessage));
+            deferred.reject(tl.loc("Failedtoswapslots",response.statusCode, webAppName));
         }
     });
 
