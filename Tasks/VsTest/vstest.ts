@@ -333,14 +333,16 @@ function publishCodeChanges(): Q.Promise<string> {
 	{	
         // Release context. Passing Release Id.
         selectortool.arg("/buildid:" + tl.getVariable("Release.ReleaseId"));	
+        selectortool.arg("/Definitionid:" + tl.getVariable("release.DefinitionId"));
 	}
 	else
 	{
         // Build context. Passing build id.
         selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
+        selectortool.arg("/Definitionid:" + tl.getVariable("System.DefinitionId"));
 	}
 
-    selectortool.arg("/Definitionid:" + tl.getVariable("System.DefinitionId"));
+    
     selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
     selectortool.arg("/SourcesDir:" + sourcesDir);
     selectortool.arg("/newprovider:" + newprovider);
