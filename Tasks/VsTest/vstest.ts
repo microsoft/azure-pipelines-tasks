@@ -237,9 +237,13 @@ function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
     var endTime;
     var elapsedTime;
     var defer = Q.defer<string>();
-
-    var allFilesInResultsDirectory = tl.find(testResultsDirectory);
-    var resultFiles = tl.match(allFilesInResultsDirectory, path.join(testResultsDirectory, "*.trx"), { matchBase: true });
+    var allFilesInResultsDirectory;
+    var resultFiles;
+    if (testResultsDirectory && testResultsDirectory !== "")
+    {
+        allFilesInResultsDirectory = tl.find(testResultsDirectory);
+        resultFiles = tl.match(allFilesInResultsDirectory, path.join(testResultsDirectory, "*.trx"), { matchBase: true });
+    }
 
     var selectortool = tl.createToolRunner(getTestSelectorLocation());
     selectortool.arg("UpdateTestResults");
@@ -247,7 +251,11 @@ function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
     selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
     selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
     selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
-    selectortool.arg("/ResultFile:" + resultFiles[0]);
+
+    if (resultFiles && resultFiles[0])
+    {
+        selectortool.arg("/ResultFile:" + resultFiles[0]);
+    }
     selectortool.arg("/runidfile:" + runIdFile);
     selectortool.exec()
         .then(function (code) {
@@ -530,11 +538,25 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                 else {
                                     responseContainsNoTests(responseFile)
                                         .then(function (noTestsAvailable) {
-                                            if (noTestsAvailable) {
+                                            if (noTestsAvailable) {                                                
                                                 tl.debug("No tests impacted. Not running any tests.");
-                                                tl.debug("Deleting the response file " + responseFile)
-                                                tl.rmRF(responseFile, true);
-                                            }
+                                                uploadTestResults("")
+                                                    .then(function (code) {
+                                                        if (!isNaN(+code) && +code != 0) {
+                                                            defer.resolve(+code);
+                                                        }   
+                                                        defer.resolve(0);
+                                                    })
+                                                    .fail(function (code) {
+                                                        tl.debug("Test Run Updation failed!");
+                                                        defer.resolve(1);
+                                                    })
+                                                    .finally(function () {
+                                                        cleanFiles(responseFile, listFile);
+                                                        tl.debug("Deleting the run id file" + runIdFile);
+                                                        tl.rmRF(runIdFile, true);
+                                                    });
+                                            }                                                
                                             else {
                                                 updateResponseFile(getVstestArguments(settingsFile, true), responseFile)
                                                     .then(function (updatedFile) {
