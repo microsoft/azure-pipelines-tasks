@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 6
+        "Patch": 7
     },
     "minimumAgentVersion": "1.102.0",
     "groups": [
@@ -201,23 +201,16 @@
         "GotconnectiondetailsforazureRMWebApp0": "Got connection details for azureRM WebApp:'%s'",
         "UnabletoretrieveWebAppID": "Unable to retrieve WebApp ID for azureRM WebApp:'%s'. Status Code: %s (%s)",
         "ErrorNoSuchDeployingMethodExists": "Error : No Such Deploying Method Exists",
-        "UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1": "Unable to retrieve connection details for azureRM WebApp:'%s'. Status Code: %s",
-        "Unabletoretrievewebapppublishurlforwebapp0StatusCode1": "Unable to retrieve webapp publish url for webapp : '%s'. Status Code : '%s'",
         "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
         "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
         "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website",
-        "ErrorFetchingDeploymentPublishProfileStausCode0": "Error Fetching Deployment Publish Profile [Staus Code : '%s']",
         "UnabletoretrieveAzureRMWebAppConfigDetails": "Unable to retrieve AzureRM Web App Config Details: [Staus Code : '%s' (%s)]",
         "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update deployment status : Unique Deployment ID cannot be retrieved",
         "WebappsuccessfullypublishedatUrl0": "Web App successfully deployed at url %s",
         "Failedtodeploywebsite": "Failed to deploy website.",
         "Runningcommand": "Running command: %s",
         "ConstructedmsDeploycomamndlinearguments": "Constructed msDeploy comamnd line arguments",
-        "CannotfindMSDeployexe": "Cannot find MSDeploy.exe",
-        "Runningmsdeploycommandtocheckifpackagecontainsparamfile0": "Running msdeploy command to check if package contains param file : %s",
-        "Paramscontentofwebpackage0": "Params content of web package : %s",
         "Isparameterfilepresentinwebpackage0": "Is parameter file is present in web package : %s",
-        "Requestingconfigdetails": "Requesting for config details : %s",
         "Deployingwebapplicationatvirtualpathandphysicalpath": "Deploying web package : %s at virtual path (physical path) : %s (%s)",
         "Successfullydeployedpackageusingkuduserviceat": "Successfully deployed package %s using kudu service at %s",
         "Failedtodeploywebapppackageusingkuduservice": "Failed to deploy webapp package using kudu service : %s",
@@ -236,6 +229,6 @@
         "Failedtoenableappofflinemode": "Failed to enable app offline mode. Status Code: %s (%s)",
         "AppOflineModedisabled": "App Offline Mode disabled.",
         "FailedtodisableAppOfflineMode": "Failed to disable App Offline Mode. Status Code: %s (%s)",
-        "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected."
+        "UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve connection details for azureRM WebApp: %s [Status Code: %s (%s)]"
     }
 }

@@ -13,7 +13,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 7
   },
   "minimumAgentVersion": "1.102.0",
   "groups": [
@@ -201,23 +201,16 @@
     "GotconnectiondetailsforazureRMWebApp0": "ms-resource:loc.messages.GotconnectiondetailsforazureRMWebApp0",
     "UnabletoretrieveWebAppID": "ms-resource:loc.messages.UnabletoretrieveWebAppID",
     "ErrorNoSuchDeployingMethodExists": "ms-resource:loc.messages.ErrorNoSuchDeployingMethodExists",
-    "UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1": "ms-resource:loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1",
-    "Unabletoretrievewebapppublishurlforwebapp0StatusCode1": "ms-resource:loc.messages.Unabletoretrievewebapppublishurlforwebapp0StatusCode1",
     "Successfullyupdateddeploymenthistory": "ms-resource:loc.messages.Successfullyupdateddeploymenthistory",
     "Failedtoupdatedeploymenthistory": "ms-resource:loc.messages.Failedtoupdatedeploymenthistory",
     "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "ms-resource:loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite",
-    "ErrorFetchingDeploymentPublishProfileStausCode0": "ms-resource:loc.messages.ErrorFetchingDeploymentPublishProfileStausCode0",
     "UnabletoretrieveAzureRMWebAppConfigDetails": "ms-resource:loc.messages.UnabletoretrieveAzureRMWebAppConfigDetails",
     "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "ms-resource:loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved",
     "WebappsuccessfullypublishedatUrl0": "ms-resource:loc.messages.WebappsuccessfullypublishedatUrl0",
     "Failedtodeploywebsite": "ms-resource:loc.messages.Failedtodeploywebsite",
     "Runningcommand": "ms-resource:loc.messages.Runningcommand",
     "ConstructedmsDeploycomamndlinearguments": "ms-resource:loc.messages.ConstructedmsDeploycomamndlinearguments",
-    "CannotfindMSDeployexe": "ms-resource:loc.messages.CannotfindMSDeployexe",
-    "Runningmsdeploycommandtocheckifpackagecontainsparamfile0": "ms-resource:loc.messages.Runningmsdeploycommandtocheckifpackagecontainsparamfile0",
-    "Paramscontentofwebpackage0": "ms-resource:loc.messages.Paramscontentofwebpackage0",
     "Isparameterfilepresentinwebpackage0": "ms-resource:loc.messages.Isparameterfilepresentinwebpackage0",
-    "Requestingconfigdetails": "ms-resource:loc.messages.Requestingconfigdetails",
     "Deployingwebapplicationatvirtualpathandphysicalpath": "ms-resource:loc.messages.Deployingwebapplicationatvirtualpathandphysicalpath",
     "Successfullydeployedpackageusingkuduserviceat": "ms-resource:loc.messages.Successfullydeployedpackageusingkuduserviceat",
     "Failedtodeploywebapppackageusingkuduservice": "ms-resource:loc.messages.Failedtodeploywebapppackageusingkuduservice",
@@ -235,6 +228,7 @@
     "AppOfflineModeenabled": "ms-resource:loc.messages.AppOfflineModeenabled",
     "Failedtoenableappofflinemode": "ms-resource:loc.messages.Failedtoenableappofflinemode",
     "AppOflineModedisabled": "ms-resource:loc.messages.AppOflineModedisabled",
-    "FailedtodisableAppOfflineMode": "ms-resource:loc.messages.FailedtodisableAppOfflineMode"
+    "FailedtodisableAppOfflineMode": "ms-resource:loc.messages.FailedtodisableAppOfflineMode",
+    "UnabletoretrieveconnectiondetailsforazureRMWebApp": "ms-resource:loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp"
   }
 }
