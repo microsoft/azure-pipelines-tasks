@@ -12,7 +12,7 @@
     "version": {
         "Major": 2,
         "Minor": 3,
-        "Patch": 1
+        "Patch": 3
     },
     "demands": [
         "xcode"
@@ -23,6 +23,11 @@
             "name": "sign",
             "displayName": "Signing & Provisioning",
             "isExpanded": true
+        },
+        {
+            "name": "package",
+            "displayName": "Package Options",
+            "isExpanded": false
         },
         {
             "name": "advanced",
@@ -80,15 +85,75 @@
             "label": "Create App Package",
             "defaultValue": true,
             "required": true,
-            "helpMarkDown": "Indicates whether an IPA should be generated as a part of the build."
+            "helpMarkDown": "Indicates whether an IPA should be generated as a part of the build. For exporting archives with Xcode 7 and Xcode 8, review additional inputs in the `Package Options` section."
+        },
+        {
+            "name": "archivePath",
+            "type": "filePath",
+            "label": "Archive Path",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optionally specify a directory where created archives should be placed.",
+            "groupName": "package"
+        },
+        {
+            "name": "exportPath",
+            "type": "filePath",
+            "label": "Export Path",
+            "defaultValue": "output/$(SDK)/$(Configuration)",
+            "required": false,
+            "helpMarkDown": "Optionally specify the destination for the product exported from the archive.",
+            "groupName": "package"
+        },
+        {
+            "name": "exportOptions",
+            "type": "pickList",
+            "label": "Export Options",
+            "defaultValue": "specify",
+            "required": false,
+            "groupName": "package",
+            "options": {
+                "plist": "Plist",
+                "specify": "Specify"
+            }
+        },
+        {
+            "name": "exportMethod",
+            "type": "string",
+            "label": "Export Method",
+            "defaultValue": "development",
+            "required": true,
+            "helpMarkDown": "Method for how Xcode should export the archive. E.g. app-store, package, ad-hoc, enterprise, development.",
+            "groupName": "package",
+            "visibleRule": "exportOptions == specify"
+        },
+        {
+            "name": "exportTeamId",
+            "type": "string",
+            "label": "Team ID",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The 10 digit Team ID from the Apple Developer Portal to use for this export.",
+            "groupName": "package",
+            "visibleRule": "exportOptions == specify"
+        },
+        {
+            "name": "exportOptionsPlist",
+            "type": "filePath",
+            "label": "Export Options Plist",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Path to a plist file that configures archive exporting.",
+            "groupName": "package",
+            "visibleRule": "exportOptions == plist"
         },
         {
             "name": "xcode8AutomaticSigning",
             "type": "boolean",
-            "label": "Automatic Signing with Xcode 8",
+            "label": "Xcode 8 Automatic Signing",
             "defaultValue": false,
             "required": false,
-            "helpMarkDown": "Select this if you have an Xcode 8 project setup for Automatic Signing",
+            "helpMarkDown": "Select this if you have an Xcode 8 project setup for Automatic Signing.",
             "groupName": "sign"
         },
         {
@@ -269,13 +334,14 @@
         "ProvProfileDetailsNotFound": "Failed to find the details for provisioning profile: %s",
         "ProvProfileUUIDNotFound": "Failed to find provisioning profile UUID for provisioning profile: %s",
         "MultipleWorkspacesFound": "Multiple xcode workspace matches were found. Using the first match: %s",
-        "WorkspaceDoesNotExist": "Xcode workspace was specified but it does not exist or is not a directory",
+        "WorkspaceDoesNotExist": "Xcode workspace was specified but it does not exist or is not a directory: %s",
         "UseXcToolForTestPublishing": "When using xctool, specify the xctool reporter format to publish test results. No results will be published.",
         "UseXcprettyForTestPublishing": "When using xcodebuild, check 'Use xcpretty' to publish test results. No results will be published.",
         "XcodebuildRequiredForXcpretty": "To use xcpretty, the build tool has to be xcodebuild. Uncheck the 'Use xctool' checkbox to use xcpretty.",
         "NoTestResultsFound": "No test result files matching %s were found, so publishing JUnit test results is being skipped.",
         "XcodeSuccess": "Xcode task execution completed with no errors.",
         "TempKeychainDeleteFailed": "Failed to delete temporary keychain %s created during the build.",
-        "ProvProfileDeleteFailed": "Failed to delete the provisioning profile %s."
+        "ProvProfileDeleteFailed": "Failed to delete the provisioning profile %s.",
+        "ExportOptionsPlistInvalidFilePath": "Export Options Plist file does not exist at %s. Provide the path to a valid Plist file."
     }
 }

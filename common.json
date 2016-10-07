@@ -112,19 +112,21 @@
             "module": "codecoverage-tools",
             "dest": "node_modules"  
         },
-	{
+	    {
             "module": "java-common",
             "dest": "node_modules"  
-	}
+	    }
     ],
     "Ant" : [
-        {
-            "module": "codecoverage-tools",
-            "dest": "node_modules"  
-        },
-	{
+	    {
             "module": "java-common",
             "dest": "node_modules"  
-	}
+    	}
+    ],
+    "VsTest" : [
+        {
+            "module": "find-files-legacy",
+            "dest": "node_modules"  
+        }
     ]
 }

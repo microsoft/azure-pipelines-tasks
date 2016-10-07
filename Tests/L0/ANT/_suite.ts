@@ -319,4 +319,30 @@ describe('ANT Suite', function() {
                 done(err);
             });
     })
+
+     it('Ant build throws warning for Code Coverage.', (done) => {
+        setResponseFile('antGood.json');
+
+        var tr = new trm.TaskRunner('Ant');
+        tr.setInput('antBuildFile', '/build/build.xml'); // Make that checkPath returns true for this filename in the response file
+        tr.setInput('javaHomeSelection', 'JDKVersion');
+        tr.setInput('jdkVersion', 'default');
+        tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('publishJUnitResults', 'false');
+        tr.setInput('codeCoverageTool', 'Jacoco');
+
+        tr.run()
+            .then(() => {
+                assert(tr.stdout.search(/##vso\[results.publish\]/) < 0, 'publish test results should not have got called.');
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');                
+                assert(tr.stdout.search(/##vso\[task.issue type=warning;\]We are discontinuing the support of automated Code Coverage report generation for Ant projects/) >= 0, 'should have produced warning.');
+                assert(tr.succeeded, 'task should have succeeded');
+                done();
+            })
+            .fail((err) => {
+                assert.fail("task should not have failed");
+                done(err);
+            });
+    })
 });

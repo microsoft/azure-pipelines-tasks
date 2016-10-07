@@ -1,10 +1,25 @@
 {
+    "common": [
+        {
+            "module": "../Common/find-files-legacy",
+            "type": "node",
+            "compile": true
+        }
+    ],
     "externals": {
         "archivePackages": [
             {
-                "url": "https://testselector.blob.core.windows.net/testselector/3272864/TestSelector.zip",
+                "url": "https://testselector.blob.core.windows.net/testselector/3311420/TestSelector.zip",
                 "dest": "./"
             }
         ]
-    }
+    },
+    "rm": [
+        {
+            "items": [
+                "node_modules/find-files-legacy/node_modules/vsts-task-lib"
+            ],
+            "options": "-Rf"
+        }
+    ]
 }

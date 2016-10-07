@@ -48,10 +48,6 @@ var createResjson = util.createResjson;
 var createTaskLocJson = util.createTaskLocJson;
 var validateTask = util.validateTask;
 
-// default tasks to build
-var makeOptions = require('./make-options.json');
-var taskList = makeOptions['tasks'];
-
 // global paths
 var buildPath = path.join(__dirname, '_build', 'Tasks');
 var buildTestsPath = path.join(__dirname, '_build', 'Tests');
@@ -73,6 +69,23 @@ if (!test('-d', binPath)) {
 }
 addPath(binPath);
 
+// resolve list of tasks
+var taskList;
+if (options.task) {
+    // find using --task parameter
+    taskList = matchFind(options.task, path.join(__dirname, 'Tasks'), { noRecurse: true })
+        .map(function (item) {
+            return path.basename(item);
+        });
+    if (!taskList.length) {
+        fail('Unable to find any tasks matching pattern ' + options.task);
+    }
+}
+else {
+    // load the default list
+    taskList = JSON.parse(fs.readFileSync(path.join(__dirname, 'make-options.json'))).tasks;
+}
+
 target.clean = function () {
     rm('-Rf', path.join(__dirname, '_build'));
     mkdir('-p', buildPath);
@@ -88,22 +101,7 @@ target.build = function() {
 
     ensureTool('tsc', '--version');
 
-    // filter tasks
-    var tasksToBuild;
-    if (options.task) {
-        tasksToBuild = matchFind(options.task, path.join(__dirname, 'Tasks'), { noRecurse: true })
-            .map(function (item) {
-                return path.basename(item);
-            });
-        if (!tasksToBuild.length) {
-            fail('Unable to find any tasks matching pattern ' + options.task);
-        }
-    }
-    else {
-        tasksToBuild = taskList;
-    }
-
-    tasksToBuild.forEach(function(taskName) {
+    taskList.forEach(function(taskName) {
         banner('Building: ' + taskName);
         var taskPath = path.join(__dirname, 'Tasks', taskName);
         ensureExists(taskPath);
@@ -419,4 +417,18 @@ target.publish = function() {
     // publish the package
     ensureTool('nuget3.exe', '', true);
     run(`nuget3.exe push ${nupkgFile} -Source ${server} -apikey Skyrise`);
+}
+
+// used to bump the patch version in task.json files
+target.bump = function() {
+    taskList.forEach(function (taskName) {
+        var taskJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.json');
+        var taskJson = JSON.parse(fs.readFileSync(taskJsonPath));
+        if (typeof taskJson.version.Patch != 'number') {
+            fail(`Error processing '${taskName}'. version.Patch should be a number.`);
+        }
+
+        taskJson.version.Patch = taskJson.version.Patch + 1;
+        fs.writeFileSync(taskJsonPath, JSON.stringify(taskJson, null, 4));
+    });
 }

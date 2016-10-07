@@ -5,8 +5,9 @@
   "loc.instanceNameFormat": "Update Service Fabric App Versions",
   "loc.input.label.applicationPackagePath": "Application Package",
   "loc.input.help.applicationPackagePath": "Path to the application package. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path.",
-  "loc.input.label.versionSuffix": "Version Suffix",
-  "loc.input.help.versionSuffix": "Value to append to the version values in the manifest files.",
+  "loc.input.label.versionSuffix": "Version Value",
+  "loc.input.label.versionBehavior": "Version Behavior",
+  "loc.input.help.versionBehavior": "Specify whether to append the version value to existing values in the manifest files or replace them.",
   "loc.input.label.updateOnlyChanged": "Update only if changed",
   "loc.input.help.updateOnlyChanged": "Incrementally update only the packages that have changed. Use the [deterministic compiler flag](https://go.microsoft.com/fwlink/?LinkId=808668) to ensure builds with the same inputs produce the same outputs.",
   "loc.input.label.pkgArtifactName": "Package Artifact Name",
@@ -21,10 +22,12 @@
   "loc.messages.ItemSearchNoFilesFound": "No items were found with search pattern {0}.",
   "loc.messages.SearchingForApplicationPackage": "Searching for application package: {0}",
   "loc.messages.FoundApplicationPackage": "Found application package: {0}",
-  "loc.messages.VersionSuffixLabel": "Version Suffix: '{0}'",
+  "loc.messages.VersionValueLabel": "Version Value: '{0}'",
   "loc.messages.BuildNumberNotSpecified": "Build Number cannot be null or empty.",
   "loc.messages.VstsRestApiFailed": "Failed to communicate with VSTS: {0}",
   "loc.messages.DownloadingArtifact": "Downloading artifact '{0}'...",
+  "loc.messages.DownloadingArtifactProgress": "Progress update: '{0}' bytes received...",
+  "loc.messages.FinishedDownloadingArtifact": "Finished downloading artifact '{0}'.",
   "loc.messages.UnrecognizedArtifactType": "Unrecognized artifact type '{0}'",
   "loc.messages.PreviousBuildNumberLabel": "Previous build number: '{0}'",
   "loc.messages.PreviousBuildLocationLabel": "Previous build location: '{0}'",
@@ -46,5 +49,6 @@
   "loc.messages.FileRemoved": "The file '{0}' has been removed.",
   "loc.messages.FileAdded": "The file '{0}' has been added.",
   "loc.messages.FileChanged": "The file '{0}' has changed.",
-  "loc.messages.NoChanges": "Found no changes."
+  "loc.messages.NoChanges": "Found no changes.",
+  "loc.messages.PdbWarning": "This package contains '*.pdb' files, which will change in every build even if the 'deterministic' compiler flag is used.  Exclude these files from your package in order to accurately detect if the package has changed."
 }

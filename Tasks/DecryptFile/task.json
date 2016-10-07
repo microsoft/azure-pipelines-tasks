@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 14
+        "Patch": 15
     },
     "groups": [
         {
@@ -71,5 +71,5 @@
     "messages": {
         "OpenSSLReturnCode": "openssl exited with return code: %d",
         "OpenSSLFailed": "openssl failed with error: %s"
-    }    
+    }
 }

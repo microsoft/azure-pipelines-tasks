@@ -76,9 +76,11 @@
                 }
 
                 Write-Host (Get-VstsLocString -Key DownloadingArtifact -ArgumentList $PkgArtifactName)
-
+                
                 # Download the artifact to the agent's temp folder and unzip it
-                Invoke-WebRequest -Uri $artifact.resource.downloadUrl -Headers $authHeader -OutFile $artifactZipFile
+                Get-FileWithProgress $artifact.resource.downloadUrl $artifactZipFile $authHeader["Authorization"]
+
+                Write-Host (Get-VstsLocString -Key FinishedDownloadingArtifact -ArgumentList $PkgArtifactName)
 
                 Add-Type -AssemblyName System.IO.Compression.FileSystem
                 [System.IO.Compression.ZipFile]::ExtractToDirectory("$artifactZipFile", "$agentTmpFolder")
@@ -95,3 +97,66 @@
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }
+
+function Get-FileWithProgress
+{
+    [CmdletBinding()]
+    Param
+    (
+        [Parameter(Mandatory=$true)]
+        [ValidateNotNullOrEmpty()]
+        [string]
+        $Url,
+
+        [Parameter(Mandatory=$true)]
+        [ValidateNotNullOrEmpty()]
+        [string]
+        $FileName,
+
+        [Parameter(Mandatory=$true)]
+        [ValidateNotNullOrEmpty()]
+        [string]
+        $AuthorizationHeader
+    )
+
+    Trace-VstsEnteringInvocation $MyInvocation
+    try {
+        $webClient = New-Object System.Net.WebClient
+
+        try
+        {
+            $webClient.Headers.Add("Authorization", $AuthorizationHeader)
+
+            $global:timer = [System.Diagnostics.Stopwatch]::StartNew()
+
+            Register-ObjectEvent -InputObject $webClient -EventName DownloadProgressChanged -Action {
+                # Report progress every 10 seconds
+                if ($global:timer.Elapsed.Seconds -gt 10)
+                {
+                    # For some reason 'TotalBytesToReceive' always reports '-1' and 'ProgressPercentage' reports '0'
+                    # We'll do the best we can and at least report the bytes received
+                    Write-Host (Get-VstsLocString -Key DownloadingArtifactProgress -ArgumentList $EventArgs.BytesReceived)
+                    $global:timer.Restart()
+                }
+            } | Out-Null
+
+            Register-ObjectEvent $webClient DownloadFileCompleted -SourceIdentifier FinishedDownload
+
+            # This is much faster than using 'Invoke-WebRequest'
+            # I tested on a 69MB zip file and it went from over 5 minutes (and failing) to about 50 seconds
+            $webClient.DownloadFileAsync($Url, $FileName)
+
+            Wait-Event -SourceIdentifier FinishedDownload | Out-Null
+        }
+        finally
+        {
+            $webClient.Dispose()
+            Remove-Event -SourceIdentifier FinishedDownload
+            Unregister-Event -SourceIdentifier FinishedDownload
+        }
+    } finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
+
+Export-ModuleMember -Function Get-VstsBuild
