@@ -41,11 +41,11 @@ function Validation-Deploy-AzureResourceGroup
 
     if (!$csmParametersFile)
     {
-        $finalCommand = "`$azureResourceGroupValidationError = Test-AzureRMResourceGroupDeployment -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue"
+        $finalCommand = "`$azureResourceGroupValidationError = Test-AzureRmResourceGroupDeployment -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue"
     }
     else
     {
-        $finalCommand = "`$azureResourceGroupValidationError = Test-AzureRMResourceGroupDeployment -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" -TemplateParameterFile `"$csmParametersFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue"
+        $finalCommand = "`$azureResourceGroupValidationError = Test-AzureRmResourceGroupDeployment -ResourceGroupName `"$resourceGroupName`" -TemplateFile `"$csmFile`" -TemplateParameterFile `"$csmParametersFile`" $overrideParameters -Verbose -ErrorAction silentlycontinue"
     }
     Invoke-Expression -Command $finalCommand
     $azureResourceGroupValidationError
