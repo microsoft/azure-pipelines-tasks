@@ -52,11 +52,10 @@ try {
     }
     
     var releaseuri = tl.getVariable("release.releaseUri")
-	var context = "CI";
-	if(releaseuri)
-	{
-		context = "CD";
-	}
+    var context = "CI";
+    if(releaseuri) {
+        context = "CD";
+    }
 
     var systemDefaultWorkingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
     var artifactsDirectory = tl.getVariable('System.ArtifactsDirectory');
@@ -276,18 +275,16 @@ function generateResponseFile(discoveredTests: string): Q.Promise<string> {
     selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
     selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
 
-    if(context == "CD")
-	{	
+    if(context == "CD") {	
         // Release context. Passing Release Id.
         selectortool.arg("/buildid:" + tl.getVariable("Release.ReleaseId"));
         selectortool.arg("/releaseuri:" + tl.getVariable("release.releaseUri"));
         selectortool.arg("/releaseenvuri:" + tl.getVariable("release.environmentUri"));	
-	}
-	else
-	{
+    }
+    else {
         // Build context. Passing build id.
         selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
-	}
+    }
     
     selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
     selectortool.arg("/responsefile:" + respFile);
@@ -297,7 +294,7 @@ function generateResponseFile(discoveredTests: string): Q.Promise<string> {
     selectortool.arg("/BaseLineFile:" + baseLineBuildIdFile);
     selectortool.arg("/platform:" + platform);
     selectortool.arg("/configuration:" + configuration);    
-	selectortool.arg("/Context:" + context);
+    selectortool.arg("/Context:" + context);
 
     selectortool.exec()
         .then(function (code) {
@@ -329,18 +326,16 @@ function publishCodeChanges(): Q.Promise<string> {
     selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
     selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
 
-    if(context == "CD")
-	{	
+    if(context == "CD")	{	
         // Release context. Passing Release Id.
         selectortool.arg("/buildid:" + tl.getVariable("Release.ReleaseId"));	
         selectortool.arg("/Definitionid:" + tl.getVariable("release.DefinitionId"));
-	}
-	else
-	{
+    }
+    else {
         // Build context. Passing build id.
         selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
         selectortool.arg("/Definitionid:" + tl.getVariable("System.DefinitionId"));
-	}
+    }
 
     
     selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
@@ -923,11 +918,10 @@ function pushImpactLevelAndRootPathIfNotFound(dataCollectorArray): void {
                 dataCollectorArray[i] = { Configuration: {} };
             }
             if (dataCollectorArray[i].Configuration.TestImpact && !dataCollectorArray[i].Configuration.RootPath) {
-                if (context && context == "CD")
-                {
+                if (context && context == "CD") {
                     dataCollectorArray[i].Configuration = { RootPath: "" };
                 }
-                else{
+                else {
                     dataCollectorArray[i].Configuration = { RootPath: sourcesDir };
                 }
             }
@@ -955,8 +949,7 @@ function pushImpactLevelAndRootPathIfNotFound(dataCollectorArray): void {
     }
 }
 
-function roothPathGenerator() : any
-{
+function roothPathGenerator() : any {
     if (context)
     {
         if (context == "CD")
