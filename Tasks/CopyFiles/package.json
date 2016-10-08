@@ -10,6 +10,6 @@
   "author": "Microsoft Corporation",
   "license": "MIT",
   "dependencies": {
-    "vsts-task-lib": "^0.9.20"
+    "vsts-task-lib": "1.0.0"
   }
 }

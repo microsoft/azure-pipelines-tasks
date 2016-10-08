@@ -17,5 +17,6 @@
   "loc.messages.FoundNFiles": "found %d files",
   "loc.messages.CleaningTargetFolder": "Cleaning target folder: %s",
   "loc.messages.FileAlreadyExistAt": "File %s already exist at %s",
-  "loc.messages.CopyingTo": "Copying %s to %s"
+  "loc.messages.CopyingTo": "Copying %s to %s",
+  "loc.messages.TargetIsDir": "Unable to copy file %s to %s. The target path already exists as a directory."
 }
