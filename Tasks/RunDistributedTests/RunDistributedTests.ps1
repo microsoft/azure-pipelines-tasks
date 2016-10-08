@@ -60,6 +60,9 @@ Write-Verbose "Calling Invoke-RunDistributedTests"
 $checkTestAgentCompatScriptLocationMemberExists  = CmdletHasMember "CheckTestAgentCompatScriptLocation"
 $checkCustomSlicingEnabledMemberExists  = CmdletHasMember "CustomSlicingEnabled"
 $taskContextMemberExists  = CmdletHasMember "TaskContext"
+$baseLineDefinitionRunMemberExists  = CmdletHasMember "BaseLineDefinitionRun"
+$IsTestImpactOnMemberExists  = CmdletHasMember "IsTestImpactOn"
+$ReBaseValueMemberExists  = CmdletHasMember "ReBaseValue"
 
 $suites = $testSuite.Split(",")
 $testSuites = @()
@@ -80,7 +83,13 @@ if([int]::TryParse($testConfiguration, [ref]$testConfigurationId)){}
 
 $customSlicingEnabledFlag = $false
 if([bool]::TryParse($customSlicingEnabled, [ref]$customSlicingEnabledFlag)){}
- 
+
+$isTestImpactOnFlag = $false
+if([bool]::TryParse($runOnlyImpactedTests, [ref]$isTestImpactOnFlag)){}
+
+$reBaseValue = 0
+if([int]::TryParse($runAllTestsAfterXBuilds, [ref]$reBaseValue)){}
+
 if([string]::Equals($testSelection, "testPlan")) 
 {
     if($checkCustomSlicingEnabledMemberExists)
