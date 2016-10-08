@@ -37,6 +37,8 @@ Write-Verbose "CodeCoverage Enabled = $codeCoverageEnabled"
 Write-Verbose "TestRun Parameters to override = $overrideRunParams"
 Write-Verbose "TestConfiguration = $testConfigurations"
 Write-Verbose "Application Under Test Machine Group = $autTestMachineGroup"
+Write-Verbose "Run Only Impacted Tests = $runOnlyImpactedTests"
+Write-Verbose "Run All tests After X Builds = $runAllTestsAfterXBuilds"
 
 
 # Import the Task.Internal dll that has all the cmdlets we need for Build

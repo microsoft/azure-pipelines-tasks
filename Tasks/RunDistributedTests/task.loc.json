@@ -32,6 +32,14 @@
       "name": "reportingOptions",
       "displayName": "ms-resource:loc.group.displayName.reportingOptions",
       "isExpanded": false
+    },
+    {
+      "name": "tiaOptions",
+      "displayName": "ms-resource:loc.group.displayName.tiaOptions",
+      "isExpanded": true,
+      "tags": [
+        "Preview"
+      ]
     }
   ],
   "inputs": [
@@ -161,6 +169,24 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.customSlicingEnabled",
       "groupName": "executionOptions"
+    },
+    {
+      "name": "runOnlyImpactedTests",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.runOnlyImpactedTests",
+      "defaultValue": "False",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.runOnlyImpactedTests",
+      "groupName": "tiaOptions"
+    },
+    {
+      "name": "runAllTestsAfterXBuilds",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.runAllTestsAfterXBuilds",
+      "defaultValue": "50",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.runAllTestsAfterXBuilds",
+      "groupName": "tiaOptions"
     },
     {
       "name": "testRunTitle",
