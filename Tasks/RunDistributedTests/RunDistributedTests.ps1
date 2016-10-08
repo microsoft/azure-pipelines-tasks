@@ -15,8 +15,9 @@ param(
     [string]$testPlan,
     [string]$testSuite,
     [string]$testConfiguration,
-    [string]$customSlicingEnabled
-
+    [string]$customSlicingEnabled,
+    [string]$runOnlyImpactedTests,
+    [string]$runAllTestsAfterXBuilds
 )
 
 Function CmdletHasMember($memberName) {
