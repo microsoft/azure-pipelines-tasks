@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",
@@ -82,6 +82,7 @@
     "FoundNFiles": "ms-resource:loc.messages.FoundNFiles",
     "CleaningTargetFolder": "ms-resource:loc.messages.CleaningTargetFolder",
     "FileAlreadyExistAt": "ms-resource:loc.messages.FileAlreadyExistAt",
-    "CopyingTo": "ms-resource:loc.messages.CopyingTo"
+    "CopyingTo": "ms-resource:loc.messages.CopyingTo",
+    "TargetIsDir": "ms-resource:loc.messages.TargetIsDir"
   }
 }
