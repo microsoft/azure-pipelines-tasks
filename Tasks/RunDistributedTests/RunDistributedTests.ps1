@@ -29,6 +29,11 @@ Function Get-PersonalAccessToken($vssEndPoint) {
     return $vssEndpoint.Authorization.Parameters.AccessToken
 }
 
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.DTA"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
+
 Write-Verbose "Entering script RunDistributedTests.ps1"
 Write-Verbose "TestMachineGroup = $testMachineGroup"
 Write-Verbose "Test Drop Location = $dropLocation"
@@ -44,7 +49,6 @@ Write-Verbose "Application Under Test Machine Group = $autTestMachineGroup"
 Write-Verbose "Run Only Impacted Tests = $runOnlyImpactedTests"
 Write-Verbose "Run All tests After X Builds = $runAllTestsAfterXBuilds"
 
-
 # Import the Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
@@ -52,6 +56,10 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.DTA"
 
 Write-Verbose "Getting the connection object"
 $connection = Get-VssConnection -TaskContext $distributedTaskContext
+
+Write-Verbose "Getting Personal Access Token for the Run"
+$vssEndPoint = Get-ServiceEndPoint -Context $distributedTaskContext -Name "SystemVssConnection"
+$personalAccessToken = Get-PersonalAccessToken $vssEndpoint
 
 # Get current directory.
 $currentDirectory = Convert-Path .
@@ -92,69 +100,62 @@ if([bool]::TryParse($runOnlyImpactedTests, [ref]$isTestImpactOnFlag)){}
 $reBaseValue = 0
 if([int]::TryParse($runAllTestsAfterXBuilds, [ref]$reBaseValue)){}
 
+Write-Verbose "IsTestImpactOnMemberExists = $IsTestImpactOnMemberExists"
+Write-Verbose "isTestImpactOnFlag = $isTestImpactOnFlag"
+
 # If the agent is new and test impact is on publish code changes
 if($IsTestImpactOnMemberExists -and $isTestImpactOnFlag)
-{    
-    $releaseUri = Get-TaskVariable -Name 'release.releaseUri' # used to check if this is CD
-    Write-Verbose "Getting the connection object"
-    $connection = Get-VssConnection -TaskContext $distributedTaskContext
-
-    Write-Verbose "Getting Personal Access Token for the Run"
-    $vssEndPoint = Get-ServiceEndPoint -Context $distributedTaskContext -Name "SystemVssConnection"
-    $personalAccessToken = Get-PersonalAccessToken $vssEndpoint
-
+{
+    $releaseUri = Get-TaskVariable -Context $distributedTaskContext -Name 'release.releaseUri' # used to check if this is CD
 
     # Get current directory.
     $currentDirectory = Convert-Path .
     $testSelectorToolPath = Join-Path -Path $currentDirectory -ChildPath "TestSelector\TestSelector.exe"
-    $projectCollectionUrl = Get-TaskVariable -Name 'System.TeamFoundationCollectionUri'
-    $projectId = Get-TaskVariable -Name 'System.TeamProject'
+    $projectCollectionUrl = Get-TaskVariable -Context $distributedTaskContext -Name 'System.TeamFoundationCollectionUri' 
+    $projectId = Get-TaskVariable -Context $distributedTaskContext -Name 'System.TeamProject'
     $tiaRebaseLimit = $reBaseValue
-    $isPrFlow = Get-TaskVariable -Name 'tia.isPrFlow'
+    $isPrFlow = Get-TaskVariable -Context $distributedTaskContext -Name 'tia.isPrFlow'
     $isPrFlowBool = $false
     $tiaBaseLineDefinitionRunIdFile = [System.IO.Path]::GetTempFileName()
 
     if([string]::IsNullOrEmpty($releaseUri))
     {
         $context = "CI"
-        $definitionRunId = Get-TaskVariable -Name 'Build.BuildId'
-        $definitionId = Get-TaskVariable -Name 'System.DefinitionId'
-        $sourcesDir = Get-TaskVariable -Name 'build.sourcesdirectory'
+        $definitionRunId = Get-TaskVariable -Context $distributedTaskContext -Name 'Build.BuildId'
+        $definitionId = Get-TaskVariable -Context $distributedTaskContext -Name 'System.DefinitionId'
+        $sourcesDir = Get-TaskVariable -Context $distributedTaskContext -Name 'build.sourcesdirectory'
     }
     else 
     {
         $context = "CD"
-        $definitionRunId = Get-TaskVariable -Name 'Release.ReleaseId'
-        $definitionId = Get-TaskVariable -Name 'release.DefinitionId'
+        $definitionRunId = Get-TaskVariable -Context $distributedTaskContext -Name 'Release.ReleaseId'
+        $definitionId = Get-TaskVariable -Context $distributedTaskContext -Name 'release.DefinitionId' 
         $sourcesDir = ''
     }
     
     $testSelectorSuceeded = $true
 
-    $args[0] = "PublishCodeChanges"
-    $args[1] = "/TfsTeamProjectCollection:" + $projectCollectionUrl
-    $args[2] = "/ProjectId:" + $projectId
-    $args[3] = "/buildid:" + $definitionRunId
-    $args[4] = "/Definitionid:" + $definitionId
-    $args[5] = "/token:" + $personalAccessToken
-    $args[6] = "/SourcesDir:" + $sourcesDir
-    $args[7] = "/RebaseLimit:" + $reBaseValue
-    $args[8] = "/Context:" + $context
-    $args[9] = "/BaseLineFile:" + $tiaBaseLineDefinitionRunIdFile
+    $argsPack = "PublishCodeChanges"
+    $argsPack = $argsPack + " /TfsTeamProjectCollection:" + $projectCollectionUrl
+    $argsPack = $argsPack + " /ProjectId:" + $projectId
+    $argsPack = $argsPack + " /buildid:" + $definitionRunId
+    $argsPack = $argsPack + " /Definitionid:" + $definitionId
+    $argsPack = $argsPack + " /token:" + $personalAccessToken
+    $argsPack = $argsPack + " /SourcesDir:" + $sourcesDir
+    $argsPack = $argsPack + " /RebaseLimit:" + $reBaseValue
+    $argsPack = $argsPack + " /Context:" + $context
+    $argsPack = $argsPack + " /BaseLineFile:" + $tiaBaseLineDefinitionRunIdFile
 
     if([bool]::TryParse($isPrFlow, [ref]$isPrFlowBool))
     {
-        $args[10] = "/IsPrFlow:" + $isPrFlowBool
-    }
-    else 
-    {
-        $args[10] = "/IsPrFlow:false"
+        $argsPack = $argsPack + " /IsPrFlow:" + $isPrFlowBool
     }
 
     # invoke TestSelector.exe
     try 
     {
-        Invoke-Command -ScriptBlock $testSelectorToolPath -ArgumentList $args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6], $args[7], $args[8], $args[9], $args[10]
+        Write-Verbose "Invoking TestSelector with $argsPack"
+        Invoke-Tool -Path $testSelectorToolPath -Arguments "$argsPack"
     }
     catch
     {
