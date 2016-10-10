@@ -63,6 +63,16 @@ function isEmpty(object){
     return false;
 }
 
+function isPredefinedVariable(variable: string): boolean {
+    var predefinedVarPrefix = ['agent.', 'azure_http_user_agent', 'build.', 'common.', 'release.', 'system', 'tf_'];
+    for(let varPrefix of predefinedVarPrefix) {
+        if(variable.toLowerCase().startsWith(varPrefix)) {
+            return true;
+        }
+    }
+    return false;
+} 
+
 async function updateXmlConfigNodeAttribute(xmlDocument, xmlNode) {
     var sections = xmlNode.getElementsByTagName("section");
     for(var i=0; i < sections.length; i++) {
@@ -91,7 +101,7 @@ async function updateXmlNodeAttribute(xmlDomNode) {
         var childAttributes = childNode.attributes;
         for(var j=0; j< childAttributes.length; j++){
             var attribute = childAttributes[j];
-            if(!isEmpty(attribute)) {
+            if(!isEmpty(attribute) && !isPredefinedVariable(attribute.localName)) {
                 var taskContextVariableValue = tl.getVariable(attribute.localName);
                 if(taskContextVariableValue){
                     childNode.setAttribute(attribute.localName, taskContextVariableValue);
@@ -99,7 +109,7 @@ async function updateXmlNodeAttribute(xmlDomNode) {
             }
         }
         var valueOfKeyAttribute = childNode.getAttribute("key");
-        if(!isEmpty(valueOfKeyAttribute)) {
+        if(!isEmpty(valueOfKeyAttribute) && !isPredefinedVariable(valueOfKeyAttribute)) {
             var taskContextValueOfKeyAttribute = tl.getVariable(valueOfKeyAttribute);
             if(taskContextValueOfKeyAttribute) {
                 childNode.setAttribute("value",taskContextValueOfKeyAttribute);
