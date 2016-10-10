@@ -302,27 +302,46 @@ async function run() {
                 await xcodeArchive.exec();
 
                 var archiveFolders : string [] = tl.glob(archiveFolderRoot + '/**/*.xcarchive');
-                if (archiveFolders) {
+                if (archiveFolders && archiveFolders.length > 0) {
                     tl.debug(archiveFolders.length + ' archives found for exporting.');
 
                     //export options plist
                     var exportOptions : string = tl.getInput('exportOptions');
+                    var exportMethod: string;
+                    var exportTeamId: string;
                     var exportOptionsPlist : string;
-                    if(exportOptions === 'specify') {
-                        var exportMethod : string = tl.getInput('exportMethod', true);
-                        var exportTeamId : string = tl.getInput('exportTeamId');
-                        //generate the plist file
+
+                    if(exportOptions === 'auto') {
+                        // Automatically try to detect the export-method to use from the provisioning profile
+                        // embedded in the .xcarchive file
+                        var archiveToCheck : string = archiveFolders[0];
+                        var embeddedProvProfile: string [] = tl.glob(archiveToCheck + '/**/embedded.mobileprovision');
+                        if(embeddedProvProfile && embeddedProvProfile.length > 0) {
+                            tl.debug('embedded prov profile = ' + embeddedProvProfile);
+                            exportMethod = await sign.getProvisioningProfileType(embeddedProvProfile[0]);
+                            tl.debug('Using export method = ' + exportMethod);
+                            if(!exportMethod) {
+                                tl.warning(tl.loc('ExportMethodNotIdentified'));
+                            }
+                        }
+                    } else if(exportOptions === 'specify') {
+                        exportMethod = tl.getInput('exportMethod', true);
+                        exportTeamId = tl.getInput('exportTeamId');
+                    } else if (exportOptions === 'plist') {
+                        exportOptionsPlist = tl.getInput('exportOptionsPlist');
+                        if(!tl.filePathSupplied('exportOptionsPlist') || !pathExistsAsFile(exportOptionsPlist)) {
+                            throw tl.loc('ExportOptionsPlistInvalidFilePath', exportOptionsPlist);
+                        }
+                    }
+
+                    if(exportMethod) {
+                        // generate the plist file if we have an exportMethod set from exportOptions = auto or specify
                         var plist : string = tl.which('/usr/libexec/PlistBuddy', true);
                         exportOptionsPlist = '_XcodeTaskExportOptions.plist';
                         tl.tool(plist).arg(['-c', 'Clear', exportOptionsPlist]).execSync();
                         tl.tool(plist).arg(['-c', 'Add method string ' + exportMethod, exportOptionsPlist]).execSync();
                         if(exportTeamId) {
                             tl.tool(plist).arg(['-c', 'Add teamID string ' + exportTeamId, exportOptionsPlist]).execSync();
-                        }
-                    } else if (exportOptions === 'plist') {
-                        exportOptionsPlist = tl.getInput('exportOptionsPlist');
-                        if(!tl.filePathSupplied('exportOptionsPlist') || !pathExistsAsFile(exportOptionsPlist)) {
-                            throw tl.loc('ExportOptionsPlistInvalidFilePath', exportOptionsPlist);
                         }
                     }
 
