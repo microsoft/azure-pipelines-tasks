@@ -60,7 +60,7 @@ async function run() {
         if(jsonVariableSubsFlag) { // (jsonVariableSubsFlag || variable substitution)
             var folderPath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package_folder');
             if(isFolderBasedDeployment) {
-                tl.cp(path.join(webDeployPkg, '/'), folderPath, '-rf', false);
+                tl.cp(path.join(webDeployPkg, '/*'), folderPath, '-rf', false);
             }
             else {
                 zipUtility.unzip(webDeployPkg, folderPath);
@@ -72,8 +72,8 @@ async function run() {
         }
 
         if(canUseWebDeploy(useWebDeploy)) {
-           tl._writeLine("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);         
-           tl._writeLine("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);
+            tl._writeLine("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);         
+            tl._writeLine("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);
             await DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
                             excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile,
                             additionalArguments, isFolderBasedDeployment);

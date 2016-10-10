@@ -87,7 +87,8 @@ export function jsonVariableSubstitution(absolutePath, jsonSubFiles) {
             fileContent = fileContent.slice(1);
         }
         var jsonObject = JSON.parse(fileContent);
+        tl.debug('Applying JSON variable substitution for ' + file);
         substituteJsonVariable(jsonObject, envVarObject);
-        tl.writeFile(file, JSON.stringify(jsonObject));
+        tl.writeFile(file, JSON.stringify(jsonObject, null, 4));
     }
 }
