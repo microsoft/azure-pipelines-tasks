@@ -59,12 +59,20 @@ function makeAbsolute(normalizedPath: string): string {
 }
 
 function getOptions() {
+    var dirName: string;
     if (includeRootFolder) {
-        tl.debug("cwd (include root folder)= " + path.dirname(rootFolder));
-        return { cwd: path.dirname(rootFolder) };
+        dirName = path.dirname(rootFolder);
+        tl.debug("cwd (include root folder)= " + dirName);
+        return { cwd: dirName };
     } else {
-        tl.debug("cwd (exclude root folder)= " + rootFolder);
-        return { cwd: rootFolder };
+        var stats: tl.FsStats = tl.stats(rootFolder);
+        if (stats.isFile()) {
+            dirName = path.dirname(rootFolder);
+        } else {
+            dirName = rootFolder;
+        }
+        tl.debug("cwd (exclude root folder)= " + dirName);
+        return { cwd: dirName };
     }
 }
 
@@ -260,8 +268,8 @@ function doWork() {
         if (tl.exist(archiveFile)) {
             if (replaceExistingArchive) {
                 try {
-                    var stats = tl.stats(archiveFile);
-                    if (stats.isFile) {
+                    var stats: tl.FsStats = tl.stats(archiveFile);
+                    if (stats.isFile()) {
                         console.log('removing existing archive file before creation: ' + archiveFile);
                     } else {
                         failTask('Specified archive file: ' + archiveFile + ' already exists and is not a file.');
