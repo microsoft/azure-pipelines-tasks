@@ -7,6 +7,8 @@ import os = require('os');
 import * as Q from "q";
 import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
 
+tl.setResourcePath(path.join(__dirname, 'task.json'));
+
 var isWindows = os.type().match(/^Win/);
 
 function pathExistsAsFile(path: string) {
