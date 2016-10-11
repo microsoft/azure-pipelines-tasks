@@ -12,10 +12,10 @@ declare module 'ios-signing-common/ios-signing-common' {
     export function installCertInTemporaryKeychain(keychainPath : string, keychainPwd: string, p12CertPath : string, p12Pwd: string);
 
     /**
-    * Finds an iOS codesigning identity in the specified keychain
-    * @param keychainPath
-    * @returns {string} signing identity found
-    */
+     * Finds an iOS codesigning identity in the specified keychain
+     * @param keychainPath
+     * @returns {string} signing identity found
+     */
     export function findSigningIdentity(keychainPath: string) : string;
 
     /**
@@ -24,6 +24,13 @@ declare module 'ios-signing-common/ios-signing-common' {
      * @returns {string} UUID
      */
     export function getProvisioningProfileUUID(provProfilePath: string) : string;
+
+    /**
+     * Find the type of the provisioning profile - development, app-store or ad-hoc
+     * @param provProfilePath
+     * @returns {string} type
+     */
+    export function getProvisioningProfileType(provProfilePath: string): string;
 
     /**
      * Delete specified iOS keychain
