@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1024"
+   height="1024"
+   id="svg3336"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="icon.svg"
+   inkscape:export-filename="C:\Users\Jamie\Sources\vsts-tasks\Tasks\VsTest\icon.png"
+   inkscape:export-xdpi="2.8099999"
+   inkscape:export-ydpi="2.8099999">
+  <defs
+     id="defs3344" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="20"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="3440"
+     inkscape:window-height="1377"
+     id="namedview3342"
+     showgrid="true"
+     inkscape:zoom="0.5"
+     inkscape:cx="15.91585"
+     inkscape:cy="680.64597"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg3336"
+     inkscape:snap-bbox="true"
+     inkscape:snap-global="true"
+     inkscape:bbox-paths="false"
+     inkscape:bbox-nodes="true"
+     showguides="false"
+     inkscape:object-nodes="true">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4170"
+       spacingx="32"
+       spacingy="32"
+       empspacing="4"
+       dotted="false" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata3338">
+    <rdf:RDF>
+      <cc:Work>
+        <dc:subject>
+                    Miscellaneous
+                </dc:subject>
+        <dc:identifier>
+                    visual-studio-online
+                </dc:identifier>
+        <dc:title />
+        <dc:format>
+                    image/svg+xml
+                </dc:format>
+        <dc:publisher>
+                    Amido Limited
+                </dc:publisher>
+        <dc:creator>
+                    Richard Slater
+                </dc:creator>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="g4712"
+     transform="matrix(1.2364006,0,0,1.3333334,-94.259301,-170.66663)"
+     style="fill:#69207a;fill-opacity:1">
+    <path
+       inkscape:export-ydpi="2.8099999"
+       inkscape:export-xdpi="2.8099999"
+       sodipodi:nodetypes="cccccccccccccc"
+       id="path4136"
+       overflow="visible"
+       d="m 309.17083,127.99996 2.4e-4,72 51.76316,0 0,167.99999 -232.93421,431.99998 77.64474,96 569.39474,0 77.64474,-96 -232.93422,-431.99998 0,-167.99999 51.76316,0 0,-72 -362.34211,0 z"
+       inkscape:connector-curvature="0"
+       style="color:#000000;overflow:visible;fill:#ffffff;fill-opacity:1;enable-background:accumulate" />
+    <path
+       style="color:#000000;overflow:visible;fill:#69207a;fill-opacity:1;enable-background:accumulate"
+       inkscape:connector-curvature="0"
+       d="m 309.17083,127.99996 2.4e-4,72 51.76316,0 0,167.99999 -232.93421,431.99998 77.64474,96 569.39474,0 77.64474,-96 -232.93422,-431.99998 0,-167.99999 51.76316,0 0,-72 -362.34211,0 z m 103.52656,72 155.28948,0 0,167.99999 77.64473,143.99999 -181.17105,0 -155.28948,335.99999 -77.64473,0 -51.76316,-48 232.93421,-431.99998 z"
+       overflow="visible"
+       id="path8"
+       sodipodi:nodetypes="cccccccccccccccccccccccc"
+       inkscape:export-xdpi="2.8099999"
+       inkscape:export-ydpi="2.8099999" />
+  </g>
+</svg>

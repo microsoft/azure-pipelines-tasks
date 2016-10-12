@@ -1,0 +1,253 @@
+{
+    "id": "EF087383-EE5E-42C7-9A53-AB56C98420F9",
+    "name": "PreviewVSTest",
+    "friendlyName": "Visual Studio Test Preview",
+    "description": "Run tests with Visual Studio test runner. Preview Task for Test Impact functionality.",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=624539)",
+    "category": "Test",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 3
+    },
+    "demands": [
+        "vstest"
+    ],
+    "minimumAgentVersion": "1.89.0",
+    "groups": [
+        {
+            "name": "executionOptions",
+            "displayName": "Execution Options",
+            "isExpanded": true
+        },
+        {
+            "name": "tiaOptions",
+            "displayName": "Test Impact Analysis",
+            "isExpanded": true,
+            "tags": [
+                "Preview"
+            ]
+        },
+        {
+            "name": "advancedExecutionOptions",
+            "displayName": "Advanced Execution Options",
+            "isExpanded": false
+        },
+        {
+            "name": "reportingOptions",
+            "displayName": "Reporting Options",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "testAssembly",
+            "type": "string",
+            "label": "Test Assembly",
+            "defaultValue": "**\\*test*.dll;-:**\\obj\\**",
+            "required": true,
+            "helpMarkDown": "Test binaries to run tests on.  Wildcards can be used.  For example, `**\\*test*.dll;-:**\\obj\\**` for all dlls with test in name while excluding files in any sub-directory named obj.",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "testFiltercriteria",
+            "type": "string",
+            "label": "Test Filter criteria",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Additional criteria to filter tests from Test assemblies. For example: `Priority=1|Name=MyTestMethod`",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "runSettingsFile",
+            "type": "filePath",
+            "label": "Run Settings File",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Path to runsettings file to use with the tests. Use `$(Build.SourcesDirectory)` to access the Project folder.",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "overrideTestrunParameters",
+            "type": "string",
+            "label": "Override TestRun Parameters",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `AppURL=$(DeployURL);Port=8080`",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "codeCoverageEnabled",
+            "type": "boolean",
+            "label": "Code Coverage Enabled",
+            "defaultValue": "False",
+            "required": false,
+            "helpMarkDown": "Collect code coverage information from the Test run.",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "runInParallel",
+            "type": "boolean",
+            "label": "Run In Parallel",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Enable parallel execution of your tests.",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "runOnlyImpactedTests",
+            "type": "boolean",
+            "label": "Run Only Impacted Tests",
+            "defaultValue": "False",
+            "required": false,
+            "helpMarkDown": "Automatically select, and run only the tests needed to validate the code change.",
+            "groupName": "tiaOptions"
+        },
+        {
+            "name": "runAllTestsAfterXBuilds",
+            "type": "string",
+            "label": "Number Of Builds After Which To Run All Tests:",
+            "defaultValue": "50",
+            "required": false,
+            "helpMarkDown": "Number of builds after which to automatically run all tests. Test Impact Analysis stores the mapping between test cases and source code. It is recommended to regenerate the mapping by running all tests, on a regular basis.",
+            "groupName": "tiaOptions"
+        },
+        {
+            "name": "vstestLocationMethod",
+            "type": "radio",
+            "label": "VSTest",
+            "required": false,
+            "groupName": "advancedExecutionOptions",
+            "defaultValue": "version",
+            "options": {
+                "version": "Version",
+                "location": "Specify Location"
+            }
+        },
+        {
+            "name": "vsTestVersion",
+            "type": "pickList",
+            "label": "VSTest version",
+            "defaultValue": "14.0",
+            "required": false,
+            "helpMarkDown": "The version of VSTest to use.",
+            "groupName": "advancedExecutionOptions",
+            "visibleRule": "vstestLocationMethod = version",
+            "options": {
+                "latest": "Latest",
+                "14.0": "Visual Studio 2015",
+                "12.0": "Visual Studio 2013"
+            }
+        },
+        {
+            "name": "vstestLocation",
+            "type": "string",
+            "label": "Path to vstest.console.exe",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optionally supply the path to VSTest.",
+            "visibleRule": "vstestLocationMethod = location",
+            "groupName": "advancedExecutionOptions"
+        },
+        {
+            "name": "pathtoCustomTestAdapters",
+            "type": "string",
+            "label": "Path to Custom Test Adapters",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Directory path to custom test adapters. Nuget restored adapters are automatically searched for.",
+            "groupName": "advancedExecutionOptions"
+        },
+        {
+            "name": "otherConsoleOptions",
+            "type": "string",
+            "label": "Other console options",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Other Console options that can be passed to vstest.console.exe. Click on the help link below for more details.",
+            "groupName": "advancedExecutionOptions"
+        },
+        {
+            "name": "testRunTitle",
+            "type": "string",
+            "label": "Test Run Title",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Provide a name for the Test Run.",
+            "groupName": "reportingOptions"
+        },
+        {
+            "name": "platform",
+            "type": "string",
+            "label": "Platform",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Platform against which the tests should be reported. If you have defined a variable for platform in your build task, use that here.",
+            "groupName": "reportingOptions"
+        },
+        {
+            "name": "configuration",
+            "type": "string",
+            "label": "Configuration",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here.",
+            "groupName": "reportingOptions"
+        },
+        {
+            "name": "publishRunAttachments",
+            "type": "boolean",
+            "label": "Upload Test Attachments",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "Opt in/out of publishing test run level attachments.",
+            "groupName": "reportingOptions"
+        }
+    ],
+    "instanceNameFormat": "Test Assemblies $(testAssembly)",
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\VSTest.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)",
+            "platforms": [
+                "windows"
+            ]
+        },
+        "Node": {
+            "target": "vstest.js"
+        }
+    },
+    "messages": {
+        "PathDoesNotExist": "%s path does not exist.",
+        "VstestReturnCode": "Vstest exited with return code: %d.",
+        "NoMatchingTestAssemblies": "No test assemblies found matching the pattern: %s.",
+        "VstestNotFound": "Vstest of version %d is not found. Try again with a visual studio version that exists on your build agent machine.",
+        "VstestFailed": "Vstest failed with error. Check logs for failures. There might be failed tests.",
+        "NoResultsToPublish": "No results found to publish.",
+        "ErrorWhileReadingRunSettings": "Error occured while reading run settings file. Error : %s.",
+        "ErrorWhileReadingTestSettings": "Error occured while reading test settings file. Error : %s.",
+        "RunInParallelNotSupported": "Run in Parallel is not supported with testsettings file.",
+        "FailedToSetRunInParallel": "Failed to set run in parallel. Invalid run settings file.",
+        "UpdateOneOrHigherRequired": "Install Visual Studio 2015 Update 1 or higher on your build agent machine to run the tests in parallel.",
+        "ErrorOccuredWhileSettingRegistry": "Error occured while setting registry key, Error: %s.",
+        "ErrorWhileSettingTestImpactCollectorTestSettings": "Error occurred while setting Test Impact Collector in test settings file.",
+        "ErrorWhileSettingTestImpactCollectorRunSettings": "Error occurred while setting Test Impact Collector in run settings file.",
+        "ErrorWhileCreatingResponseFile": "Error occurred while creating the response file. All the tests will be executed for this run.",
+        "ErrorWhileUpdatingResponseFile": "Error occurred while updating the response file '%s'. All the tests will be executed for this run.",
+        "ErrorWhilePublishingCodeChanges": "Error occurred while publishing the code changes. All the tests will be executed for this run.",
+        "ErrorWhileListingDiscoveredTests": "Error occured while discovering the tests. All the tests will be exexuted for this run.",
+        "PublishCodeChangesPerfTime": "Total time taken to publish code changes: %d milliseconds.",
+        "GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds.",
+        "UploadTestResultsPerfTime": "Total time taken to upload test results: %d milliseconds.",
+        "ErrorReadingVstestVersion": "Error reading the version of vstest.console.exe.",
+        "UnexpectedVersionString": "Unexpected version string detected for vstest.console.exe: %s.",
+        "UnexpectedVersionNumber": "Unexpected version number detected for vstest.console.exe: %s.",
+        "VstestDiagNotSupported": "vstest.console.exe version does not support the /diag flag. Enable diagnositics via the exe.config files"
+    }
+}

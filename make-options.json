@@ -59,6 +59,7 @@
         "SSH",
         "VSBuild",
         "VsTest",
+	    "VsTestPreview",
         "WindowsMachineFileCopy",
         "XamarinAndroid",
         "XamarinComponentRestore",
