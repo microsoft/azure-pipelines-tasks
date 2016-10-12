@@ -66,28 +66,24 @@ function substituteJsonVariable(jsonObject, envObject) {
 }
 
 export function jsonVariableSubstitution(absolutePath, jsonSubFiles) {
-    var files = [];
+    var envVarObject = createEnvTree(tl.getVariables());
     for(let jsonSubFile of jsonSubFiles) {
         var matchFiles = tl.glob(path.join(absolutePath, jsonSubFile));
         if(matchFiles.length === 0) {
             throw new Error(tl.loc('NOJSONfilematchedwithspecificpattern'));
         }
-        for(let matchFile of matchFiles) {
-            if(path.extname(matchFile) !== '.json') {
+        for(let file of matchFiles) {
+            if(path.extname(file) !== '.json') {
                 throw new Error(tl.loc('JSONvariablesubstitutioncanonlybeappliedforJSONfiles'));
             }
-            files.push(matchFile);
+            var fileContent: string = fs.readFileSync(file, 'utf8').toString();
+            if(fileContent.indexOf('\uFEFF') === 0) {
+                fileContent = fileContent.slice(1);
+            }
+            var jsonObject = JSON.parse(fileContent);
+            tl.debug('Applying JSON variable substitution for ' + file);
+            substituteJsonVariable(jsonObject, envVarObject);
+            tl.writeFile(file, JSON.stringify(jsonObject, null, 4));
         }
-    }
-    var envVarObject = createEnvTree(tl.getVariables());
-    for(let file of files) {
-        var fileContent:string = fs.readFileSync(file, 'utf8').toString();
-        if(fileContent.indexOf('\uFEFF') === 0) {
-            fileContent = fileContent.slice(1);
-        }
-        var jsonObject = JSON.parse(fileContent);
-        tl.debug('Applying JSON variable substitution for ' + file);
-        substituteJsonVariable(jsonObject, envVarObject);
-        tl.writeFile(file, JSON.stringify(jsonObject, null, 4));
     }
 }
