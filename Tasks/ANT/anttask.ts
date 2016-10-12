@@ -108,6 +108,7 @@ function readJavaHomeFromRegistry(jdkVersion: string, arch: string): string {
     return javaHome;
 }
 
+
 async function doWork() {
 
     function execEnableCodeCoverage(): Q.Promise<string> {
@@ -134,9 +135,13 @@ async function doWork() {
         reportDirectory = path.join(buildRootPath, reportDirectoryName);
         var reportBuildFileName = "CCReportBuildA4D283EG.xml";
         reportBuildFile = path.join(buildRootPath, reportBuildFileName);
-        var summaryFileName = "coverage.xml";
-        summaryFile = path.join(buildRootPath, reportDirectoryName);
-        summaryFile = path.join(summaryFile, summaryFileName);
+        var summaryFileName = "";
+        if (ccTool.toLowerCase() == "jacoco") {
+            summaryFileName = "summary.xml";
+        }else if (ccTool.toLowerCase() == "cobertura") {
+            summaryFileName = "coverage.xml";
+        }
+        summaryFile = path.join(buildRootPath, reportDirectoryName, summaryFileName);
         var coberturaCCFile = path.join(buildRootPath, "cobertura.ser");
         var instrumentedClassesDirectory = path.join(buildRootPath, "InstrumentedClasses");
 
@@ -263,7 +268,7 @@ async function doWork() {
         var ccTool = tl.getInput('codeCoverageTool');
         var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
         var buildRootPath = path.dirname(antBuildFile);
-        
+
         var summaryFile: string = null;
         var reportDirectory: string = null;
         var ccReportTask: string = null;
