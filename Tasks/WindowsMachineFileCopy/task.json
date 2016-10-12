@@ -6,21 +6,21 @@
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=627415)",
     "category": "Deploy",
     "visibility": [
-                "Build",
-                "Release"
-                  ],
+        "Build",
+        "Release"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 35
+        "Patch": 36
     },
     "minimumAgentVersion": "1.104.0",
     "groups": [
         {
-            "name":"advanced",
-            "displayName":"Advanced Options",
-            "isExpanded":false
+            "name": "advanced",
+            "displayName": "Advanced Options",
+            "isExpanded": false
         }
     ],
     "inputs": [
@@ -30,7 +30,7 @@
             "label": "Source",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Absolute path of the source folder or file on the local machine, or a UNC Share like c:\\fabrikamfiber or \\\\\\\\fabrikamshare\\fabrikamfiber." 
+            "helpMarkDown": "Absolute path of the source folder or file on the local machine, or a UNC Share like c:\\fabrikamfiber or \\\\\\\\fabrikamshare\\fabrikamfiber."
         },
         {
             "name": "EnvironmentName",
@@ -70,7 +70,7 @@
             "label": "Clean Target",
             "defaultValue": "false",
             "required": false,
-            "groupName":"advanced",
+            "groupName": "advanced",
             "helpMarkDown": "Selecting it will clean the destination folder before copying the files."
         },
         {
@@ -92,15 +92,15 @@
             "helpMarkDown": "Additional robocopy arguments that will be applied when copying files like, /min:33553332 /l."
         },
         {
-            "name":"ResourceFilteringMethod",
-            "type":"radio",
-            "label":"Select Machines By",
-            "required":false,
+            "name": "ResourceFilteringMethod",
+            "type": "radio",
+            "label": "Select Machines By",
+            "required": false,
             "defaultValue": "machineNames",
             "groupName": "advanced",
             "options": {
-                "machineNames":"Machine Names",
-                "tags":"Tags"
+                "machineNames": "Machine Names",
+                "tags": "Tags"
             }
         },
         {

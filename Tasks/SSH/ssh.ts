@@ -16,7 +16,7 @@ async function run() {
         var sshEndpoint = tl.getInput('sshEndpoint', true);
         var username:string = tl.getEndpointAuthorizationParameter(sshEndpoint, 'username', false);
         var password:string = tl.getEndpointAuthorizationParameter(sshEndpoint, 'password', true); //passphrase is optional
-        var privateKey:string = tl.getEndpointDataParameter(sshEndpoint, 'privateKey', true); //private key is optional, password can be used for connecting
+        var privateKey:string = process.env['ENDPOINT_DATA_' + sshEndpoint + '_PRIVATEKEY']; //private key is optional, password can be used for connecting
         var hostname:string = tl.getEndpointDataParameter(sshEndpoint, 'host', false);
         var port:string = tl.getEndpointDataParameter(sshEndpoint, 'port', true); //port is optional, will use 22 as default port if not specified
         if(!port || port === '') {

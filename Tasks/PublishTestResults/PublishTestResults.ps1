@@ -97,7 +97,7 @@ try
 }
 catch
 {
-    Write-Host "##vso[task.logissue type=error;code=" $_.Exception.Message ";TaskName=VSTest]"
+    Write-Host "##vso[task.logissue type=error;code=" $_.Exception.Message ";TaskName=PublishTestResults]"
     throw
 }
 

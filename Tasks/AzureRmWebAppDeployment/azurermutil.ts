@@ -28,6 +28,7 @@ export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: b
     var deferred = Q.defer<string>();
 
     var webAppPublishKuduUrl = publishingProfile.publishUrl;
+    tl.debug('Web App Publish Kudu URL: ' + webAppPublishKuduUrl);
     if(webAppPublishKuduUrl) {
         var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
         var accessToken = 'Basic ' + (new Buffer(publishingProfile.userName + ':' + publishingProfile.userPWD).toString('base64'));
@@ -70,7 +71,9 @@ export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: b
 export async function getAzureRMWebAppPublishProfile(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
     if(!deployToSlotFlag) {
         var webAppID = await getAzureRMWebAppID(SPN, webAppName, 'Microsoft.Web/Sites');
+        tl.debug('Web App details : ' + webAppID.id);
         resourceGroupName = webAppID.id.split ('/')[4];
+        tl.debug('AzureRM Resource Group Name : ' + resourceGroupName);
     }
     var deferred = Q.defer();
     var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
@@ -83,6 +86,7 @@ export async function getAzureRMWebAppPublishProfile(SPN, webAppName: string, re
 
     };
 
+    tl.debug('Requesting AzureRM Publish Profile: ' + url);
     httpObj.get('POST', url, headers, (error, response, body) => {
         if(error) {
             deferred.reject(error);
@@ -98,7 +102,7 @@ export async function getAzureRMWebAppPublishProfile(SPN, webAppName: string, re
         }
         else {
             tl.error(response.statusMessage);
-            deferred.reject(tl.loc('UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1', webAppName, response.statusCode));
+            deferred.reject(tl.loc('UnabletoretrieveconnectiondetailsforazureRMWebApp', webAppName, response.statusCode, response.statusMessage));
         }
     });
 
@@ -111,6 +115,8 @@ function getAuthorizationToken(SPN): Q.Promise<string> {
     var authorityUrl = authUrl + SPN.tenantID;
 
     var context = new AuthenticationContext(authorityUrl);
+
+    tl.debug('Requesting for Auth Token: ' + authorityUrl);
     context.acquireTokenWithClientCredentials(armUrl, SPN.servicePrincipalClientID, SPN.servicePrincipalKey, (error, tokenResponse) => {
         if(error) {
             deferred.reject(error);
@@ -134,6 +140,7 @@ async function getAzureRMWebAppID(SPN, webAppName: string, resourceType: string)
         authorization: 'Bearer '+ accessToken
     };
 
+    tl.debug('Requesting AzureRM Web App ID: ' + url);
     httpObj.get('GET', url, headers, (error, response, body) => {
         if(error) {
             deferred.reject(error);
@@ -144,7 +151,7 @@ async function getAzureRMWebAppID(SPN, webAppName: string, resourceType: string)
         }
         else {
             tl.error(response.statusMessage);
-            deferred.reject(tl.loc('UnabletoretrieveWebAppIDforazureRMWebApp0StatusCode1', webAppName, response.statusCode));
+            deferred.reject(tl.loc('UnabletoretrieveWebAppID', webAppName, response.statusCode, response.statusMessage));
         }
     });
 
@@ -164,6 +171,7 @@ export async function getAzureRMWebAppConfigDetails(SPN, webAppName: string, res
     if(!deployToSlotFlag) {
         var webAppID = await getAzureRMWebAppID(SPN, webAppName, 'Microsoft.Web/Sites');
         resourceGroupName = webAppID.id.split ('/')[4];
+        tl.debug('AzureRM Resource Group Name : ' + resourceGroupName);
     }
 
     var deferred = Q.defer<any>();
@@ -175,8 +183,8 @@ export async function getAzureRMWebAppConfigDetails(SPN, webAppName: string, res
     var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
     var configUrl = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
              '/providers/Microsoft.Web/sites/' + webAppName + slotUrl +  '/config/web?' + azureApiVersion;
-    tl.debug(tl.loc("Requestingconfigdetails", configUrl));
 
+    tl.debug('Requesting AzureRM Config Details: ' + configUrl);
     httpObj.get('GET', configUrl, headers, (error, response, body) => {
         if( error ) {
             deferred.reject(error);
@@ -187,9 +195,8 @@ export async function getAzureRMWebAppConfigDetails(SPN, webAppName: string, res
         }
         else {
             tl.error(response.statusMessage);
-            deferred.reject(tl.loc('ErrorOccurredStausCode0',response.statusCode));
+            deferred.reject(tl.loc('UnabletoretrieveAzureRMWebAppConfigDetails', response.statusCode, response.statusMessage));
         }
     });
-
     return deferred.promise;
 }

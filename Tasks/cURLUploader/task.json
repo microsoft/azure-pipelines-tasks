@@ -9,7 +9,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 18
+        "Patch": 19
     },
     "demands": [
         "curl"
@@ -85,5 +85,5 @@
         "NoMatchingFilesFound": "No matching files were found with search pattern: %s",
         "UploadingFiles": "Uploading file(s): %s",
         "CurlNotFound": "curl was not found in the PATH."
-    }    
+    }
 }
