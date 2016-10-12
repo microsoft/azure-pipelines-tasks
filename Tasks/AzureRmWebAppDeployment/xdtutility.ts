@@ -26,7 +26,7 @@ export function applyXdtTransformation(sourceFile, transformFile) {
 	var cttArgs = ' s:"' + sourceFile + '" t:"' + transformFile + '" d:"' + sourceFile + '" pw';
 	var cttCommand = '"' + cttPath + '" ' + cttArgs + '\n';
 	tl.writeFile(cttBatchFile, cttCommand);
-	tl._writeLine(tl.loc("Runningcommand", cttCommand));
+	tl.debug(tl.loc("Runningcommand", cttCommand));
 	var cttExecutionResult = tl.execSync("cmd", ['/C', cttBatchFile]);
 	if(cttExecutionResult.stderr) {
 		throw new Error(tl.loc("XdtTransformationErrorWhileTransforming", sourceFile, transformFile));
@@ -47,7 +47,7 @@ export function basicXdtTransformation(sourcePattern, transformConfigs) {
 		transformConfigs.forEach( function(transformConfig) {
 			var transformXmlFile = path.join(path.dirname(sourceXmlFile), sourceBasename + "." + transformConfig);
 			if(sourceXmlFiles[transformXmlFile]) {
-				tl._writeLine('Applying XDT Transformation : ' + transformXmlFile + '->' + sourceXmlFile);
+				tl.debug('Applying XDT Transformation : ' + transformXmlFile + '->' + sourceXmlFile);
 				applyXdtTransformation(sourceXmlFile, transformXmlFile);
 			}
 		});

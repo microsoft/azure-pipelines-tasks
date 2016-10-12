@@ -54,15 +54,15 @@ async function run() {
             if(tl.osType().match(/^Win/)) {
                 var tempPackagePath = tempPackagePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), '_temp_package_path');
                 if (tl.exist(tempPackagePath)) {
-                    tl._writeLine('Cleaning the directory: ' + tempPackagePath);
+                    tl.debug('Cleaning the directory: ' + tempPackagePath);
                     tl.rmRF(tempPackagePath);
                 }
                 if(!isFolderBasedDeployment) {
-                    tl._writeLine("Unzipping the package at location : " + tempPackagePath);
+                    tl.debug("Unzipping the package at location : " + tempPackagePath);
                     compressor.unzip(webDeployPkg, tempPackagePath);
                 }
                 else {
-                    tl._writeLine("Copying the package at location : " + tempPackagePath);
+                    tl.debug("Copying the package at location : " + tempPackagePath);
                     tl.cp(webDeployPkg + '/.', tempPackagePath, "-rf");
                 }
 
@@ -73,10 +73,11 @@ async function run() {
                         transformConfigs.push(environmentName + ".config");
                     }
                     xdtUtility.basicXdtTransformation(path.join(tempPackagePath,'**', '*.config'), transformConfigs);  
+                    tl._writeLine("XDT Transformations applied successfully");
                 }
 
                 if(!isFolderBasedDeployment) {
-                    tl._writeLine("Zipping back the package");
+                    tl.debug("Zipping back the package");
                     webDeployPkg = await compressor.zip(tempPackagePath);
                 }
                 else {
