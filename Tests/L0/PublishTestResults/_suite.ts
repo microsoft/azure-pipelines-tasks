@@ -44,31 +44,31 @@ describe('Publish Test Results Suite', function () {
             });
     })
 
-    // it('Publish test results with resultFiles filter that matches with some files', (done) => {
+    it('Publish test results with resultFiles filter that matches with some files', (done) => {
 
-    //     let tr = new trm.TaskRunner('PublishTestResults');
-    //     let pattern = path.join(__dirname, 'data', '*TEST.xml');
+        let tr = new trm.TaskRunner('PublishTestResults');
+        let pattern = path.join(__dirname, 'data', '*TEST.xml');
 
-    //     tr.setInput('testRunner', 'JUnit');
-    //     tr.setInput('testResultsFiles', pattern);
-    //     tr.setInput('mergeTestResults', 'true');
+        tr.setInput('testRunner', 'JUnit');
+        tr.setInput('testResultsFiles', pattern);
+        tr.setInput('mergeTestResults', 'true');
 
-    //     tr.run()
-    //         .then(() => {
-    //             assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
-    //             assert(tr.succeeded, 'task should have succeeded');
-    //             assert(tr.stdout.search(/##vso\[results.publish type=JUnit;mergeResults=true;resultFiles=/) >= 0, 'should publish test results.');
-    //             done();
-    //         })
-    //         .fail((err) => {
-    //             done(err);
-    //         });
-    // })
+        tr.run()
+            .then(() => {
+                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.stdout.search(/##vso\[results.publish type=JUnit;mergeResults=true;resultFiles=/) >= 0, 'should publish test results.');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
 
     it('Publish test results with resultFiles as file path', (done) => {
 
         let tr = new trm.TaskRunner('PublishTestResults');
-        let pattern = path.join(__dirname, 'data', 'junit1TEST.xml');
+        let pattern = path.join(__dirname, 'data', 'jUnit1TEST.xml');
 
         tr.setInput('testRunner', 'JUnit');
         tr.setInput('testResultsFiles', pattern);
