@@ -122,6 +122,7 @@ async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, 
         tl.writeFile(msDeployBatchFile, msDeployCommand);
         tl._writeLine(tl.loc("Runningcommand", msDeployCommand));
         await tl.exec("cmd", ['/C', msDeployBatchFile], <any> {failOnStdErr: true});
+        tl.rmRF(msDeployBatchFile, true);
         tl._writeLine(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
     }
     catch(error) {
