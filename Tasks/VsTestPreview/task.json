@@ -1,7 +1,7 @@
 {
     "id": "FAC24BCD-B2D1-4FD0-8FCA-7F4645EE9A98",
     "name": "PreviewVSTest",
-    "friendlyName": "Visual Studio Test Preview",
+    "friendlyName": "Visual Studio Test [Preview]",
     "description": "Run tests with Visual Studio test runner. Preview Task for Test Impact.",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=624539)",
     "category": "Test",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [
         "vstest"
@@ -101,7 +101,7 @@
             "name": "runOnlyImpactedTests",
             "type": "boolean",
             "label": "Run Only Impacted Tests",
-            "defaultValue": "False",
+            "defaultValue": "True",
             "required": false,
             "helpMarkDown": "Automatically select, and run only the tests needed to validate the code change.",
             "groupName": "tiaOptions"
@@ -121,7 +121,7 @@
             "label": "VSTest",
             "required": false,
             "groupName": "advancedExecutionOptions",
-            "defaultValue": "version",
+            "defaultValue": "Specify Location",
             "options": {
                 "version": "Version",
                 "location": "Specify Location"
@@ -146,7 +146,7 @@
             "name": "vstestLocation",
             "type": "string",
             "label": "Path to vstest.console.exe",
-            "defaultValue": "",
+            "defaultValue": "C:\\Program Files (x86)\\Microsoft Visual Studio\\VS15Preview\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe",
             "required": false,
             "helpMarkDown": "Optionally supply the path to VSTest.",
             "visibleRule": "vstestLocationMethod = location",

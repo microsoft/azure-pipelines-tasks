@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Visual Studio Test Preview",
+  "loc.friendlyName": "Visual Studio Test [Preview]",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=624539)",
   "loc.description": "Run tests with Visual Studio test runner. Preview Task for Test Impact.",
   "loc.instanceNameFormat": "Test Assemblies $(testAssembly)",

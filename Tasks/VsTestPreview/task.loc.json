@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [
     "vstest"
@@ -103,7 +103,7 @@
       "name": "runOnlyImpactedTests",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.runOnlyImpactedTests",
-      "defaultValue": "False",
+      "defaultValue": "True",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.runOnlyImpactedTests",
       "groupName": "tiaOptions"
@@ -123,7 +123,7 @@
       "label": "ms-resource:loc.input.label.vstestLocationMethod",
       "required": false,
       "groupName": "advancedExecutionOptions",
-      "defaultValue": "version",
+      "defaultValue": "Specify Location",
       "options": {
         "version": "Version",
         "location": "Specify Location"
@@ -148,7 +148,7 @@
       "name": "vstestLocation",
       "type": "string",
       "label": "ms-resource:loc.input.label.vstestLocation",
-      "defaultValue": "",
+      "defaultValue": "C:\\Program Files (x86)\\Microsoft Visual Studio\\VS15Preview\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.vstestLocation",
       "visibleRule": "vstestLocationMethod = location",
