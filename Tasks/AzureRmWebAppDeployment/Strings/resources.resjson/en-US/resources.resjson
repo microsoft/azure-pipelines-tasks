@@ -89,5 +89,6 @@
   "loc.messages.Failedtowritetoconfigfilewitherror": "Failed to write to config file %s with error : %s",
   "loc.messages.Erroroccurredwhileprocessingxmlnode": "Error occurred while processing xml node : %s.",
   "loc.messages.Processingsubstitutionforxmlnode": "Processing substitution for xml node : %s",
-  "loc.messages.Initiatedvariablesubstitutioninconfigfile": "Initiated variable substitution in config file : %s"
+  "loc.messages.Initiatedvariablesubstitutioninconfigfile": "Initiated variable substitution in config file : %s",
+  "loc.messages.JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "JSON variable substitution can only be applied for JSON files"
 }
