@@ -275,9 +275,9 @@ describe('Code Coverage enable tool tests', function () {
         let ccEnabler = new CodeCoverageEnablerFactory().getTool("ant", "jacoco");
         ccEnabler.enableCodeCoverage(buildProps).then(function (resp) {
             let content = fs.readFileSync(buildFile, "utf-8");
-            assert.notEqual(content.indexOf(`excludes="**/com/xyz.class"`), -1, "Exclude filter must be present");
-            assert.notEqual(content.indexOf(`includes="**/com/abc.class"`), -1, "Include filter must be present");
-            assert.notEqual(content.indexOf(`jacoco:coverage destfile="jacoco.exec"`), -1, "Jacoco Plugin must be present");
+            assert.notEqual(content.indexOf(`excludes="com.xyz"`), -1, "Exclude filter must be present");
+            assert.notEqual(content.indexOf(`includes="com.abc"`), -1, "Include filter must be present");
+            assert.notEqual(content.indexOf(`jacoco:coverage destfile`), -1, "Jacoco Plugin must be present");
             done();
         }).catch(function (err) {
             done(err);
