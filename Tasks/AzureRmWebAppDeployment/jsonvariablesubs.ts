@@ -11,13 +11,12 @@ function isPredefinedVariable(variable: string): boolean {
     }
     return false;
 } 
-function createEnvTree() {
+function createEnvTree(envVariables) {
     var envVarTree = {
         value: null,
         isEnd: false,
         child: {}
     };
-    var envVariables = tl.getVariables();
     for(let envVariable of envVariables) {
         var envVarTreeIterator = envVarTree;
         if(isPredefinedVariable(envVariable.name)) {
@@ -80,7 +79,7 @@ export function jsonVariableSubstitution(absolutePath, jsonSubFiles) {
             files.push(matchFile);
         }
     }
-    var envVarObject = createEnvTree();
+    var envVarObject = createEnvTree(tl.getVariables());
     for(let file of files) {
         var fileContent:string = fs.readFileSync(file, 'utf8').toString();
         if(fileContent.indexOf('\uFEFF') === 0) {
