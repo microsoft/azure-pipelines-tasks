@@ -68,7 +68,7 @@ describe('Publish Test Results Suite', function () {
     it('Publish test results with resultFiles as file path', (done) => {
 
         let tr = new trm.TaskRunner('PublishTestResults');
-        let pattern = path.join(__dirname, 'data', 'junit1TEST.xml');
+        let pattern = path.join(__dirname, 'data', 'jUnit1TEST.xml');
 
         tr.setInput('testRunner', 'JUnit');
         tr.setInput('testResultsFiles', pattern);
