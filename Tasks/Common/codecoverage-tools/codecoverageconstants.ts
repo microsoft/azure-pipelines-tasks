@@ -371,34 +371,34 @@ export function coberturaMavenReport(): Q.Promise<any> {
 }
 
 export function jacocoAntReport(reportDir: string, classData: string, sourceData: string): string {
-    return `
-      <?xml version='1.0'?>
-        <project name='JacocoReport'>
-               <target name='CodeCoverage_9064e1d0'>
-                  <jacoco:report xmlns:jacoco='antlib:org.jacoco.ant'>
-                      <executiondata>
-                         <file file='${path.join(reportDir, "jacoco.exec")}'/>
-                      </executiondata>
-                      <structure name = 'Jacoco report'>
-                            <classfiles>${classData}</classfiles>
-                            <sourcefiles>${sourceData}</sourcefiles>
-                      </structure>
-                      <html destdir='${reportDir}' />
-                      <csv destfile='${reportDir + path.sep}summary.csv' />
-                      <xml destfile='${reportDir + path.sep}summary.xml' />
-                  </jacoco:report>
-              </target>
-        </project>
+    return `<?xml version="1.0"?>
+<project name="JacocoReport">
+    <target name="CodeCoverage_9064e1d0">
+        <jacoco:report xmlns:jacoco="antlib:org.jacoco.ant">
+            <executiondata>
+                <file file="${path.join(reportDir, "jacoco.exec")}"/>
+            </executiondata>
+            <structure name="Jacoco report">
+                <classfiles>${classData}</classfiles>
+                <sourcefiles>${sourceData}</sourcefiles>
+            </structure>
+            <html destdir="${reportDir}" />
+            <csv destfile="${reportDir + path.sep}summary.csv" />
+            <xml destfile="${reportDir + path.sep}summary.xml" />
+        </jacoco:report>
+    </target>
+</project>
     `;
 }
 
-export function jacocoAntCoverageEnable(): any {
+export function jacocoAntCoverageEnable(reportDir: string): any {
+    let file = path.join(reportDir,"jacoco.exec");
     return {
         $:
         {
-            "destfile": "jacoco.exec",
+            "destfile": file,
             "append": true,
-            "xlmns:jacoco": "antlib:org.jacoco.ant"
+            "xmlns:jacoco": "antlib:org.jacoco.ant"
         }
     };
 }
@@ -422,80 +422,38 @@ export function coberturaAntReport(srcDir: string, reportDir: string): string {
     `;
 }
 
-export function coberturaAntCoverageEnable(buildJsonContent: any): void {
-    let propertyNode = {
-        $: {
-            environment: "env"
-        }
-    };
-    util.addPropToJson(buildJsonContent, "property", propertyNode);
-
-    let pathNode = {
-        $: {
-            id: "cobertura-classpath",
-            description: "classpath for instrumenting classes"
-        },
-        fileset: {
-            $: {
-                dir: "${env.COBERTURA_HOME}"
-            },
-            include: [
-                {
-                    $: {
-                        name: "cobertura*.jar"
-                    }
-                },
-                {
-                    $: {
-                        name: "**/lib/**/*.jar"
-                    }
-                }
-            ]
-        }
-    };
-    util.addPropToJson(buildJsonContent, "path", pathNode);
-
-    let taskdefNode = {
-        $: {
-            classpathref: "cobertura-classpath",
-            resource: "tasks.properties"
-        }
-    };
-    util.addPropToJson(buildJsonContent, "taskdef", taskdefNode);
+export function coberturaAntCoverageEnable(): string {
+    return `
+<property environment="env" />
+<path id="cobertura-classpath-vsts" description="classpath for instrumenting classes">
+    <fileset dir="\${env.COBERTURA_HOME}">
+        <include name="cobertura*.jar" />
+        <include name="**/lib/**/*.jar" />
+    </fileset>
+</path>
+<taskdef classpathref="cobertura-classpath-vsts" resource="tasks.properties" />
+`;
 }
 
-export function coberturaAntInstrumentedClasses(baseDir: string, reportDir: string): any {
-    let ccProperty = {
-        $: {
-            todir: path.join(baseDir, "InstrumentedClasses"),
-            datafile: path.join(baseDir, reportDir, "cobertura.ser")
-        },
-        fileset: []
-    };
-    return ccProperty;
+export function coberturaAntInstrumentedClasses(baseDir: string, reportDir: string, classData: string): any {
+  return `
+<cobertura-instrument todir="${path.join(baseDir,"InstrumentedClasses")}" datafile="${path.join(reportDir,"cobertura.ser")}">
+    ${classData}
+</cobertura-instrument>
+  `;
 }
 
-export function coberturaAntProperties(node: any, reportDir: string, baseDir: string): any {
-    node.sysproperty = {
-        $: {
-            key: "net.sourceforge.cobertura.datafile",
-            file: path.join(baseDir, reportDir, "cobertura.ser")
-        }
-    };
+export function coberturaAntProperties(reportDir: string, baseDir: string): any {
+    return `
+        <sysproperty key="net.sourceforge.cobertura.datafile" file="${path.join(reportDir,"cobertura.ser")}" />
+        <classpath location="${path.join(baseDir,"InstrumentedClasses")}" />
+`;
+}
 
-    let classpath = [
-        {
-            $: {
-                location: path.join(baseDir, "InstrumentedClasses"),
-            }
-        }
-    ];
-
-    if (node.classpath && node.classpath instanceof Array) {
-        node.classpath = classpath.concat(node.classpath);
-    } else {
-        node.classpath = classpath;
-    }
+export function coberturaAntClasspathRef(): string {
+    return `
+        <classpath refid="cobertura-classpath-vsts" />
+`;
 }
 
 // Gradle Coberutra plugin

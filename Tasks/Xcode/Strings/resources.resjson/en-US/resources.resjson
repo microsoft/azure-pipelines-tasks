@@ -23,6 +23,7 @@
   "loc.input.label.exportPath": "Export Path",
   "loc.input.help.exportPath": "Optionally specify the destination for the product exported from the archive.",
   "loc.input.label.exportOptions": "Export Options",
+  "loc.input.help.exportOptions": "Pick a way to pass in Export Options when exporting the archive.",
   "loc.input.label.exportMethod": "Export Method",
   "loc.input.help.exportMethod": "Method for how Xcode should export the archive. E.g. app-store, package, ad-hoc, enterprise, development.",
   "loc.input.label.exportTeamId": "Team ID",
@@ -80,5 +81,6 @@
   "loc.messages.XcodeSuccess": "Xcode task execution completed with no errors.",
   "loc.messages.TempKeychainDeleteFailed": "Failed to delete temporary keychain %s created during the build.",
   "loc.messages.ProvProfileDeleteFailed": "Failed to delete the provisioning profile %s.",
+  "loc.messages.ExportMethodNotIdentified": "Failed to identify the export method to use automatically from the archive file. This might cause errors during build or produce an invalid package. Set `Export Options` to `Specify` or `Plist`.",
   "loc.messages.ExportOptionsPlistInvalidFilePath": "Export Options Plist file does not exist at %s. Provide the path to a valid Plist file."
 }
