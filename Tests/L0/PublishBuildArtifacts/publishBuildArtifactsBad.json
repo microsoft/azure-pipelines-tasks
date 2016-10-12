@@ -1,9 +1,10 @@
 {
     "checkPath": {
-        "/bin/release": true
+        "/bin/release": true,
+        "C:\\bin\\release": true
     },
     "exec": {
-        "powershell.exe -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command & '\\PublishBuildArtifacts\\Invoke-Robocopy.ps1' -Source '/bin/release' -Target '\\\\UNCShare\\drop\\'": {
+        "powershell.exe -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command & '\\PublishBuildArtifacts\\Invoke-Robocopy.ps1' -Source 'C:\\bin\\release' -Target '\\\\UNCShare\\subdir\\drop'": {
             "stdout": "test stdout from robocopy middle-man",
             "stderr": "",
             "code": 1
