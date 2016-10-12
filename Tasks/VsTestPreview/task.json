@@ -216,7 +216,7 @@
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)",
             "platforms": [
-                "windows"
+                "windows1"
             ]
         },
         "Node": {
