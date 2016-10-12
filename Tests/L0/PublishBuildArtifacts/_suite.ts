@@ -45,18 +45,62 @@ describe('Publish Build Artifacts Suite', function () {
 	if (os.platform() == 'win32') {
 		it('Publish to UNC', (done: MochaDone) => {
 			setResponseFile('publishBuildArtifactsGood.json');
-			
+
 			let tr = new trm.TaskRunner('PublishBuildArtifacts', false, true);
-			tr.setInput('PathtoPublish', '/bin/release');
+			tr.setInput('PathtoPublish', 'C:\\bin\\release');
 			tr.setInput('ArtifactName', 'drop');
 			tr.setInput('ArtifactType', 'FilePath');
-			tr.setInput('TargetPath', '\\\\UNCShare');
-			
+			tr.setInput('TargetPath', '\\\\UNCShare\\subdir');
+
 			tr.run()
 			.then(() => {
 				assert(!tr.stderr, 'should not have written to stderr. error: ' + tr.stderr);
 				assert(tr.succeeded, 'task should have succeeded');
-				assert(tr.stdout.match(/test stdout from robocopy/gi).length === 1, 'should copy files.');
+				assert(tr.stdout.indexOf('test stdout from robocopy (no trailing slashes)') >= 0, 'should copy files.');
+				assert(tr.stdout.search(/artifact.associate/gi) >= 0, 'should associate artifact.');
+				done();
+			})
+			.fail((err) => {
+				done(err);
+			});
+		})
+
+		it('Appends . to robocopy source with trailing slash', (done: MochaDone) => {
+			setResponseFile('publishBuildArtifactsGood.json');
+
+			let tr = new trm.TaskRunner('PublishBuildArtifacts', false, true);
+			tr.setInput('PathtoPublish', 'C:\\bin\\release\\');
+			tr.setInput('ArtifactName', 'drop');
+			tr.setInput('ArtifactType', 'FilePath');
+			tr.setInput('TargetPath', '\\\\UNCShare\\subdir');
+
+			tr.run()
+			.then(() => {
+				assert(!tr.stderr, 'should not have written to stderr. error: ' + tr.stderr);
+				assert(tr.succeeded, 'task should have succeeded');
+				assert(tr.stdout.indexOf('test stdout from robocopy (source with trailing slash)') >= 0, 'should copy files.');
+				assert(tr.stdout.search(/artifact.associate/gi) >= 0, 'should associate artifact.');
+				done();
+			})
+			.fail((err) => {
+				done(err);
+			});
+		})
+
+		it('Appends . to robocopy target with trailing slash', (done: MochaDone) => {
+			setResponseFile('publishBuildArtifactsGood.json');
+
+			let tr = new trm.TaskRunner('PublishBuildArtifacts', false, true);
+			tr.setInput('PathtoPublish', 'C:\\bin\\release');
+			tr.setInput('ArtifactName', 'drop');
+			tr.setInput('ArtifactType', 'FilePath');
+			tr.setInput('TargetPath', '\\\\UNCShare');
+
+			tr.run()
+			.then(() => {
+				assert(!tr.stderr, 'should not have written to stderr. error: ' + tr.stderr);
+				assert(tr.succeeded, 'task should have succeeded');
+				assert(tr.stdout.indexOf('test stdout from robocopy (target with trailing slash)') >= 0, 'should copy files.');
 				assert(tr.stdout.search(/artifact.associate/gi) >= 0, 'should associate artifact.');
 				done();
 			})
@@ -69,10 +113,10 @@ describe('Publish Build Artifacts Suite', function () {
 			setResponseFile('publishBuildArtifactsBad.json');
 			
 			let tr = new trm.TaskRunner('PublishBuildArtifacts', false, true);
-			tr.setInput('PathtoPublish', '/bin/release');
+			tr.setInput('PathtoPublish', 'C:\\bin\\release');
 			tr.setInput('ArtifactName', 'drop');
 			tr.setInput('ArtifactType', 'FilePath');
-			tr.setInput('TargetPath', '\\\\UNCShare');
+			tr.setInput('TargetPath', '\\\\UNCShare\\subdir');
 			
 			tr.run()
 			.then(() => {
@@ -90,16 +134,16 @@ describe('Publish Build Artifacts Suite', function () {
 			setResponseFile('publishBuildArtifactsGood.json');
 
 			let tr = new trm.TaskRunner('PublishBuildArtifacts', false, true);
-			tr.setInput('PathtoPublish', '/bin/release');
+			tr.setInput('PathtoPublish', 'C:\\bin\\release');
 			tr.setInput('ArtifactName', 'drop');
 			tr.setInput('ArtifactType', 'FilePath');
-			tr.setInput('TargetPath', '\\\\UNCShare');
+			tr.setInput('TargetPath', '\\\\UNCShare\\subdir');
 
 			tr.run()
 			.then(() => {
 				assert(!tr.stderr, 'should not have written to stderr. error: ' + tr.stderr);
 				assert(tr.succeeded, 'task should have succeeded');
-				assert(tr.stdout.indexOf('##vso[artifact.associate artifacttype=filepath;artifactname=drop;artifactlocation=\\\\UNCShare;]\\\\UNCShare') >= 0, 'should associate artifact.');
+				assert(tr.stdout.indexOf('##vso[artifact.associate artifacttype=filepath;artifactname=drop;artifactlocation=\\\\UNCShare\\subdir;]\\\\UNCShare\\subdir') >= 0, 'should associate artifact.');
 				done();
 			})
 			.fail((err) => {
@@ -115,7 +159,7 @@ describe('Publish Build Artifacts Suite', function () {
 			tr.setInput('PathtoPublish', '/bin/release');
 			tr.setInput('ArtifactName', 'drop');
 			tr.setInput('ArtifactType', 'FilePath');
-			tr.setInput('TargetPath', '\\\\UNCShare');
+			tr.setInput('TargetPath', '\\\\UNCShare\\subdir');
 
 			tr.run()
 			.then(() => {
