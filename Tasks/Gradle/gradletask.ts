@@ -104,13 +104,14 @@ async function execBuild() {
         })
         .then(() => {
             tl.debug(`Gradle result: ${gradleResult}`);
-            return "Success";
+            return Q.resolve("Success");
         })
         .fail(function (err) {
             console.error(err);
             tl.debug('taskRunner fail');
             gradleResult = -1;
-            return err;
+            statusFailed = true;
+            return Q.resolve(err);
         })
         .then(function (resp) {
             // We should always publish test results and code coverage
