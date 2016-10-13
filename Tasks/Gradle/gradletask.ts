@@ -98,9 +98,7 @@ async function execBuild() {
     var gradleResult;
     gb.exec()
         .then(function (code) {
-            gradleResult = code;
-            publishTestResults(publishJUnitResults, testResultsFiles);
-            publishCodeCoverage(isCodeCoverageOpted);
+            gradleResult = code;            
             return processCodeAnalysisResults();
         })
         .then(() => {
@@ -115,6 +113,11 @@ async function execBuild() {
             console.error(err);
             tl.debug('taskRunner fail');
             tl.setResult(tl.TaskResult.Failed, err); 
+        })
+        .then( function() {
+            // We should always publish test results and code coverage
+            publishTestResults(publishJUnitResults, testResultsFiles);
+            publishCodeCoverage(isCodeCoverageOpted);
         });
 }
 
