@@ -102,22 +102,28 @@ async function execBuild() {
             return processCodeAnalysisResults();
         })
         .then(() => {
-            tl.debug(`Gradle result: ${gradleResult}`); 
-            if (gradleResult === 0) { 
-                tl.setResult(tl.TaskResult.Succeeded, "Build succeeded."); 
-            } else { 
-                tl.setResult(tl.TaskResult.Failed, "Build failed."); 
-            } 
+            tl.debug(`Gradle result: ${gradleResult}`);
+            return "Success";            
         })
         .fail(function (err) {
             console.error(err);
             tl.debug('taskRunner fail');
-            tl.setResult(tl.TaskResult.Failed, err); 
+            gradleResult = -1;
+            return err;            
         })
-        .then( function() {
+        .then( function(resp) {
             // We should always publish test results and code coverage
             publishTestResults(publishJUnitResults, testResultsFiles);
             publishCodeCoverage(isCodeCoverageOpted);
+
+            if (gradleResult === 0) { 
+                tl.setResult(tl.TaskResult.Succeeded, "Build succeeded."); 
+            } else if (gradleResult === -1) { 
+                tl.setResult(tl.TaskResult.Failed, resp);
+            } 
+            else {
+                tl.setResult(tl.TaskResult.Failed, "Build failed."); 
+            }
         });
 }
 
