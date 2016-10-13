@@ -96,6 +96,7 @@ async function execBuild() {
     
     enableSonarQubeAnalysis();
     var gradleResult;
+    var statusFailed = false;
     gb.exec()
         .then(function (code) {
             gradleResult = code;            
@@ -118,7 +119,7 @@ async function execBuild() {
 
             if (gradleResult === 0) { 
                 tl.setResult(tl.TaskResult.Succeeded, "Build succeeded."); 
-            } else if (gradleResult === -1) { 
+            } else if (gradleResult === -1 && statusFailed === true) { 
                 tl.setResult(tl.TaskResult.Failed, resp);
             } 
             else {
