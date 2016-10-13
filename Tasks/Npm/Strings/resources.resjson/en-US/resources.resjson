@@ -3,14 +3,15 @@
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613746)",
   "loc.description": "Run a npm command",
   "loc.instanceNameFormat": "npm $(command)",
-  "loc.group.displayName.advanced": "Advanced",
-  "loc.input.label.command": "Command",
+  "loc.input.label.cwd": "Working Directory",
+  "loc.input.help.cwd": "Current working directory where npm command is run.  Defaults to the root of the repo.",
+  "loc.input.label.command": "npm command to execute",
   "loc.input.help.command": "npm command to run. [More Information](https://docs.npmjs.com/).",
   "loc.input.label.arguments": "Arguments",
   "loc.input.help.arguments": "Additional arguments passed to npm.",
-  "loc.input.label.cwd": "Working Directory",
-  "loc.input.help.cwd": "Current working directory where npm command is run.  Defaults to the root of the repo.",
   "loc.messages.InvalidCommand": "Only one command should be used for npm. Use arguments input for additional arguments.",
   "loc.messages.NpmReturnCode": "Npm exited with return code: %d",
-  "loc.messages.NpmFailed": "Npm failed with error: %s"
+  "loc.messages.NpmFailed": "Npm failed with error: %s",
+  "loc.messages.NpmConfigFailed": "Failed to run npm config list for logging. Error: ",
+  "loc.messages.NpmAuthFailed": "Failed to get the required auth tokens for Npm. Error: "
 }
