@@ -12,6 +12,7 @@ try{
     $DeploymentLabel = Get-VstsInput -Name DeploymentLabel
     $AppendDateTimeToLabel = Get-VstsInput -Name AppendDateTimeToLabel -Require
     $AllowUpgrade = Get-VstsInput -Name AllowUpgrade -Require -AsBool
+    $StorageAccountKeys = Get-VstsInput -Name StorageAccountKeys
     $NewServiceAdditionalArguments = Get-VstsInput -Name NewServiceAdditionalArguments
     $NewServiceAffinityGroup = Get-VstsInput -Name NewServiceAffinityGroup
 
@@ -21,6 +22,8 @@ try{
 
     # Load all dependent files for execution
     . $PSScriptRoot/Utility.ps1
+
+    $storageAccountKeysMap = Parse-StorageKeys -StorageAccountKeys $StorageAccountKeys
 
     Write-Host "Finding $CsCfg"
     $serviceConfigFile = Find-VstsFiles -LegacyPattern "$CsCfg"
@@ -57,7 +60,7 @@ try{
         $azureService = Invoke-Expression -Command $azureService
     }
 
-    $diagnosticExtensions = Get-DiagnosticsExtensions $StorageAccount $serviceConfigFile
+    $diagnosticExtensions = Get-DiagnosticsExtensions $StorageAccount $serviceConfigFile $storageAccountKeysMap
 
     $label = $DeploymentLabel
 

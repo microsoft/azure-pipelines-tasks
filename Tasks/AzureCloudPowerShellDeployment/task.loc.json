@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 31
+    "Patch": 32
   },
   "demands": [
     "azureps"
@@ -115,6 +115,15 @@
       "required": true
     },
     {
+      "name": "StorageAccountKeys",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.StorageAccountKeys",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.StorageAccountKeys",
+      "groupName": "newServiceAdvancedOptions"
+    },
+    {
       "name": "NewServiceAdditionalArguments",
       "type": "string",
       "label": "ms-resource:loc.input.label.NewServiceAdditionalArguments",
@@ -170,6 +179,7 @@
     "Applyinganyconfigureddiagnosticsextensions": "ms-resource:loc.messages.Applyinganyconfigureddiagnosticsextensions",
     "_0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "ms-resource:loc.messages._0couldnotbeparsedintopartsforregisteringdiagnosticsextensions",
     "Nofileswerefoundtodeploywithsearchpattern0": "ms-resource:loc.messages.Nofileswerefoundtodeploywithsearchpattern0",
-    "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "ms-resource:loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone"
+    "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "ms-resource:loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone",
+    "Storagekeysaredefinedininvalidformat": "ms-resource:loc.messages.Storagekeysaredefinedininvalidformat"
   }
 }

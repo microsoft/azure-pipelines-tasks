@@ -53,7 +53,7 @@ function Get-RoleName($extPath)
     return $roleName
 }
 
-function Get-DiagnosticsExtensions($storageAccount, $extensionsPath)
+function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAccountKeysMap)
 {
     $diagnosticsConfigurations = @()
     
@@ -75,8 +75,6 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath)
 
         if ($primaryStorageKey)
         {
-            Write-Verbose "##[command]New-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey <key>"
-            $definitionStorageContext = New-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $primaryStorageKey
 
             Write-Verbose "##[command]Get-ChildItem -Path $extensionsSearchPath -Filter PaaSDiagnostics.*.PubConfig.xml"
             $diagnosticsExtensions = Get-ChildItem -Path $extensionsSearchPath -Filter "PaaSDiagnostics.*.PubConfig.xml"
@@ -99,11 +97,34 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath)
                         $publicConfigStorageAccountName = $publicConfig.PublicConfig.StorageAccount
                         Write-Verbose "Found PublicConfig.StorageAccount= '$publicConfigStorageAccountName'"
 
-                        $publicConfigStorageKey = Get-AzureStorageKey -StorageAccountName $publicConfigStorageAccountName
+                        try
+                        {
+                            $publicConfigStorageKey = Get-AzureStorageKey -StorageAccountName $publicConfigStorageAccountName
+                        }
+                        catch
+                        {
+                            Write-Warning $_.Exception.Message
+                        }
                         if ($publicConfigStorageKey)
                         {
-                            Write-Verbose "##[command]New-AzureStorageContext -StorageAccountName $publicConfigStorageAccountName -StorageAccountKey <key>"
-                            $storageContext = New-AzureStorageContext -StorageAccountName $publicConfigStorageAccountName -StorageAccountKey $publicConfigStorageKey.Primary
+                            Write-Verbose "##Getting storage account name and key from diagnostics config file"
+
+                            Write-Verbose "##$storageAccountName = $publicConfigStorageAccountName"
+                            $storageAccountName = $publicConfigStorageAccountName
+
+                            Write-Verbose "##$storageAccountKey = $publicConfigStorageKey.Primary"
+                            $storageAccountKey = $publicConfigStorageKey.Primary
+                        }                    
+                        elseif($storageAccountKeysMap.containsKey($role))
+                        {
+                            Write-Verbose "##Getting diagnostics storage account name and key from passed in storage connection string"
+
+                            Write-Verbose "##$storageAccountName = $publicConfigStorageAccountName"
+                            $storageAccountName = $publicConfigStorageAccountName
+                            
+                            Write-Verbose "##$storageAccountKey = $storageAccountKeysMap.Get_Item($role)"
+                            $storageAccountKey = $storageAccountKeysMap.Get_Item($role)
+                        
                         }
                         else
                         {
@@ -115,11 +136,12 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath)
                     {
                         #If we don't find a StorageAccount in the XML file, use the one associated with the definition's storage account
                         Write-Verbose "No StorageAccount found in PublicConfig.  Using the storage account set on the definition..."
-                        $storageContext = $definitionStorageContext
+                        $storageAccountName = $storageAccount
+                        $storageAccountKey = $primaryStorageKey
                     }
 
-                    Write-Host "New-AzureServiceDiagnosticsExtensionConfig -Role $role -StorageContext <context> -DiagnosticsConfigurationPath $fullExtPath"
-                    $wadconfig = New-AzureServiceDiagnosticsExtensionConfig -Role $role -StorageContext $storageContext -DiagnosticsConfigurationPath $fullExtPath 
+                    Write-Host "New-AzureServiceDiagnosticsExtensionConfig -Role $role -StorageAccountName $storageAccountName -StorageAccountKey <storageKey> -DiagnosticsConfigurationPath $fullExtPath"
+                    $wadconfig = New-AzureServiceDiagnosticsExtensionConfig -Role $role -StorageAccountName $storageAccountName -StorageAccountKey $storageAccountKey -DiagnosticsConfigurationPath $fullExtPath 
 
                     #Add each extension configuration to the array for use by caller
                     $diagnosticsConfigurations += $wadconfig
@@ -133,4 +155,23 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath)
     }
     
     return $diagnosticsConfigurations
+}
+
+function Parse-StorageKeys($storageAccountKeys)
+{
+    $roleStorageKeyMap = @{}
+    if($storageAccountKeys)
+    {
+        $roleKeyPairs = $storageAccountKeys.split(",")
+        foreach($roleKeyPair in $roleKeyPairs) 
+        {
+            $roleKeyArray = $roleKeyPair.split(":")
+            if($roleKeyArray.Length -ne 2) 
+            {
+                throw (Get-VstsLocString -Key "Storagekeysaredefinedininvalidformat" -ArgumentList $pattern)
+            }
+            $roleStorageKeyMap.Add($roleKeyArray[0],$roleKeyArray[1])
+        }
+    }
+    return $roleStorageKeyMap
 }

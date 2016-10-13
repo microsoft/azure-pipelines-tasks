@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 31
+        "Patch": 32
     },
     "demands": [
         "azureps"
@@ -115,6 +115,15 @@
             "required": true
         },
         {
+            "name": "StorageAccountKeys",
+            "type": "multiLine",
+            "label": "Storage Account Keys",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Define storage keys corresponding to storage accounts being defined for diagnosticsExtensions.Format is WebRole1:Key1,WorkerRole1:Key2",
+            "groupName": "newServiceAdvancedOptions"
+        },
+        {
             "name": "NewServiceAdditionalArguments",
             "type": "string",
             "label": "Additional Arguments",
@@ -170,6 +179,7 @@
         "Applyinganyconfigureddiagnosticsextensions": "Applying any configured diagnostics extensions.",
         "_0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "'{0}' could not be parsed into parts for registering diagnostics extensions.",
         "Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}",
-        "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one."
+        "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one.",
+        "Storagekeysaredefinedininvalidformat": "Storage keys are defined in invalid format."
     }
 }
