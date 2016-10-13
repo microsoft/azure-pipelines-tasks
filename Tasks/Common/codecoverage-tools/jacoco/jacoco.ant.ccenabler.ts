@@ -10,6 +10,7 @@ import * as cc from "../codecoverageenabler";
 import * as str from "string";
 import * as os from "os";
 import * as Q from "q";
+import * as path from "path";
 
 export class JacocoAntCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler {
 
@@ -19,6 +20,8 @@ export class JacocoAntCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler {
     sourceDirs: string;
     classDirs: string;
     reportBuildFile: string;
+    excludeFilterExec: string;
+    includeFilterExec: string;
 
     // -----------------------------------------------------
     // Enable code coverage for Jacoco Ant Builds
@@ -37,6 +40,8 @@ export class JacocoAntCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler {
 
         let classFilter = ccProps["classfilter"];
         let filter = _this.extractFilters(classFilter);
+        _this.excludeFilterExec = filter.excludeFilter.startsWith(":") ? filter.excludeFilter.substr(1) : filter.excludeFilter;
+        _this.includeFilterExec = filter.includeFilter.startsWith(":") ? filter.includeFilter.substr(1) : filter.includeFilter;
         _this.excludeFilter = _this.applyFilterPattern(filter.excludeFilter).join(",");
         _this.includeFilter = _this.applyFilterPattern(filter.includeFilter).join(",");
 
@@ -64,14 +69,15 @@ export class JacocoAntCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler {
 
     protected getSourceFilter(): string {
         let srcData = "";
-        this.sourceDirs.split(",").forEach(dir => {
+        let srcDirs = this.sourceDirs === null ? "" : this.sourceDirs;
+        srcDirs.split(",").forEach(dir => {
             if (!str(dir).isEmpty()) {
-                srcData += `<fileset dir='${dir}'/>`;
+                srcData += `<fileset dir="${dir}"/>`;
                 srcData += os.EOL;
             }
         });
         if (str(srcData).isEmpty()) {
-            srcData = `<fileset dir='.'/>`;
+            srcData = `<fileset dir="."/>`;
             srcData += os.EOL;
         }
         return srcData;
@@ -80,11 +86,18 @@ export class JacocoAntCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler {
     protected getClassData(): string {
         let classData = "";
         this.classDirs.split(",").forEach(dir => {
-            classData += `<fileset dir='${dir}' includes="${this.includeFilter}"  excludes="${this.excludeFilter}" />`;
+            classData += `<fileset dir="${dir}" `;
+            if (!util.isNullOrWhitespace(this.includeFilter)) {
+                classData += `includes="${this.includeFilter}" `;
+            }
+            if (!util.isNullOrWhitespace(this.excludeFilter)) {
+                classData += `excludes="${this.excludeFilter}" `;
+            }
+            classData +=  `/>`;
             classData += os.EOL;
         });
         if (str(classData).isEmpty()) {
-            classData += `<fileset dir='.'${this.includeFilter} ${this.excludeFilter} />`;
+            classData += `<fileset dir="."${this.includeFilter} ${this.excludeFilter} />`;
             classData += os.EOL;
         }
         return classData;
@@ -134,13 +147,13 @@ export class JacocoAntCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler {
     protected enableForking(targetNode: any) {
         let _this = this;
         let testNodes = ["junit", "java", "testng", "batchtest"];
-        let coverageNode = ccc.jacocoAntCoverageEnable();
+        let coverageNode = ccc.jacocoAntCoverageEnable(_this.reportDir);
 
         if (!str(_this.includeFilter).isEmpty()) {
-            coverageNode.$.includes = _this.includeFilter;
+            coverageNode.$.includes = _this.includeFilterExec;
         }
         if (!str(_this.excludeFilter).isEmpty()) {
-            coverageNode.$.excludes = _this.excludeFilter;
+            coverageNode.$.excludes = _this.excludeFilterExec;
         }
 
         if (targetNode.javac) {

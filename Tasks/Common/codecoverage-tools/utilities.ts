@@ -11,6 +11,9 @@ import * as path from "path";
 import * as str from "string";
 import * as xml2js from "xml2js";
 import * as fse from "fs-extra";
+import * as cheerio from "cheerio";
+
+let stripbom = require("strip-bom");
 
 export interface GetOrCreateResult<T> {
     created: boolean;
@@ -141,7 +144,7 @@ export function readFile(filePath: string, encoding: string): Q.Promise<string> 
 
 export function convertXmlStringToJson(xmlContent: string): Q.Promise<any> {
     tl.debug("Converting XML file to JSON");
-    return Q.nfcall<any>(xml2js.parseString, xmlContent);
+    return Q.nfcall<any>(xml2js.parseString, stripbom(xmlContent));
 }
 
 export function writeJsonAsXmlFile(filePath: string, jsonContent: any): Q.Promise<void> {
@@ -156,7 +159,7 @@ export function writeFile(filePath: string, fileContent: string): Q.Promise<void
     tl.debug("Creating dir if not exists: " + path.dirname(filePath));
     fse.mkdirpSync(path.dirname(filePath));
     tl.debug("Check dir: " + fs.existsSync(path.dirname(filePath)));
-    return Q.nfcall<void>(fs.writeFile, filePath, fileContent);
+    return Q.nfcall<void>(fs.writeFile, filePath, fileContent, { encoding: "utf-8" });
 }
 
 export function addPropToJson(obj: any, propName: string, value: any): void {
@@ -185,5 +188,10 @@ export function addPropToJson(obj: any, propName: string, value: any): void {
     } else {
         obj[propName] = value;
     }
+}
+
+export function readXmlFileAsDom(filePath: string): CheerioStatic {
+    tl.debug("Reading XML file: " + filePath);
+    return cheerio.load(stripbom(fs.readFileSync(filePath, "utf-8")), { xmlMode: true, withDomLvl1: false });
 }
 
