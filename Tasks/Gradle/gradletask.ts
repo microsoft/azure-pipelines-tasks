@@ -58,7 +58,7 @@ if (isWindows) {
         tl.debug("Append .bat extension name to gradlew script.");
         wrapperScript += '.bat';
     }
-} 
+}
 
 if (fs.existsSync(wrapperScript)) {
     // (The exists check above is not necessary, but we need to avoid this call when we are running L0 tests.)
@@ -116,7 +116,7 @@ if (javaHomeSelection == 'JDKVersion') {
                 specifiedJavaHome = readJavaHomeFromRegistry(jdkVersion, jdkArchitecture);
             }
 
-            if (!specifiedJavaHome) { 
+            if (!specifiedJavaHome) {
                 throw new Error('Failed to find specified JDK version. Please make sure environment variable ' + envName + ' exists and is set to the location of a corresponding JDK.');
             }
         }
@@ -131,36 +131,47 @@ if (specifiedJavaHome) {
     tl.debug('Set JAVA_HOME to ' + specifiedJavaHome);
     process.env['JAVA_HOME'] = specifiedJavaHome;
 }
- 
+
 /* Actual execution of Build and further flows*/
 async function execBuild() {
     await execEnableCodeCoverage();
     if (reportingTaskName && reportingTaskName != "") {
         gb.arg(reportingTaskName);
     }
-    
+
     enableSonarQubeAnalysis();
     var gradleResult;
+    var statusFailed = false;
     gb.exec()
         .then(function (code) {
             gradleResult = code;
             tl.debug(`exit code: ${code}`);
-            publishTestResults(publishJUnitResults, testResultsFiles);
-            publishCodeCoverage(isCodeCoverageOpted);
             return processCodeAnalysisResults();
         })
         .then(() => {
             tl.debug(`Gradle result: ${gradleResult}`);
-            if (gradleResult === 0) {
-                tl.setResult(tl.TaskResult.Succeeded, "Build succeeded.");
-            } else {
-                tl.setResult(tl.TaskResult.Failed, "Build failed.");
-            }
+            return Q.resolve("Success");
         })
         .fail(function (err) {
             console.error(err);
             tl.debug('taskRunner fail');
-            tl.setResult(tl.TaskResult.Failed, err);
+            gradleResult = -1;
+            statusFailed = true;
+            return Q.resolve(err);
+        })
+        .then(function (resp) {
+            // We should always publish test results and code coverage
+            publishTestResults(publishJUnitResults, testResultsFiles);
+            publishCodeCoverage(isCodeCoverageOpted);
+
+            if (gradleResult === 0) {
+                tl.setResult(tl.TaskResult.Succeeded, "Build succeeded.");
+            } else if (gradleResult === -1 && statusFailed === true) {
+                tl.setResult(tl.TaskResult.Failed, resp);
+            }
+            else {
+                tl.setResult(tl.TaskResult.Failed, "Build failed.");
+            }
         });
 }
 
