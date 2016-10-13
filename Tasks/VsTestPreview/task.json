@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 3
     },
     "demands": [
         "vstest"
@@ -121,7 +121,7 @@
             "label": "VSTest",
             "required": false,
             "groupName": "advancedExecutionOptions",
-            "defaultValue": "Specify Location",
+            "defaultValue": "location",
             "options": {
                 "version": "Version",
                 "location": "Specify Location"
