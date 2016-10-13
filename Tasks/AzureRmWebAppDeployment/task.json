@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 6
+        "Patch": 7
     },
     "minimumAgentVersion": "1.102.0",
     "groups": [
@@ -110,7 +110,7 @@
             "type": "boolean",
             "label": "Publish using Web Deploy",
             "required": false,
-            "defaultValue": "true",
+            "defaultValue": "false",
             "groupName": "AdditionalDeploymentOptions",
             "helpMarkDown": "Publish using web deploy options are supported only when using Windows agent. On other platforms, the task relies on [Kudu REST APIs](https://github.com/projectkudu/kudu/wiki/REST-API) to deploy the Web App, and following options are not supported"
         },
