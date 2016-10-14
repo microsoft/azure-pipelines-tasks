@@ -48,17 +48,7 @@ async function run() {
         }
         webDeployPkg = availableWebPackages[0];
 
-        var isFolderBasedDeployment = await isInputPkgIsFolder(webDeployPkg);
-        var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-        tl._writeLine(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
-
-        if(virtualApplication) {
-            publishingProfile.destinationAppUrl += "/" + virtualApplication;
-        }
-
-        if(webAppUri) {
-            tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
-        }
+        var isFolderBasedDeployment = isInputPkgIsFolder(webDeployPkg);
 
         if(jsonVariableSubsFlag || xmlTransformsAndVariableSubstitutions) { // (jsonVariableSubsFlag || variable substitution)
             var folderPath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package_folder');
@@ -75,6 +65,17 @@ async function run() {
                 jsonVariableSubs.jsonVariableSubstitution(folderPath, jsonVariableSubsFiles);
             }
             webDeployPkg = (isFolderBasedDeployment) ? folderPath : await zipUtility.archiveFolder(folderPath, tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package.zip')
+        }
+
+        var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+        tl._writeLine(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
+
+        if(virtualApplication) {
+            publishingProfile.destinationAppUrl += "/" + virtualApplication;
+        }
+
+        if(webAppUri) {
+            tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
         }
 
         if(canUseWebDeploy(useWebDeploy)) {
@@ -127,6 +128,7 @@ async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, 
         tl.writeFile(msDeployBatchFile, msDeployCommand);
         tl._writeLine(tl.loc("Runningcommand", msDeployCommand));
         await tl.exec("cmd", ['/C', msDeployBatchFile], <any> {failOnStdErr: true});
+        tl.rmRF(msDeployBatchFile, true);
         tl._writeLine(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
     }
     catch(error) {
@@ -205,7 +207,7 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
  * 
  * @return true/false based on input package type.
  */
-async function isInputPkgIsFolder(webDeployPkg: string) {
+function isInputPkgIsFolder(webDeployPkg: string) {
     if (!tl.exist(webDeployPkg)) {
         throw new Error(tl.loc('Invalidwebapppackageorfolderpathprovided', webDeployPkg));
     }

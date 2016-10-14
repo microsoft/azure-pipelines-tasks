@@ -7,6 +7,9 @@ var gulp = require('gulp');
 var zip = require('gulp-zip');
 
 export function unzip(zipLocation, unzipLocation) {
+    if(tl.exist(unzipLocation)) {
+      tl.rmRF(unzipLocation, false);
+    }
     var unzipper = new admzip(zipLocation);
     tl.debug('extracting ' + zipLocation + ' to ' + unzipLocation);
     unzipper.extractAllTo(unzipLocation);
@@ -21,7 +24,7 @@ export function archiveFolder(folderPath, targetPath, zipName) {
       })
       .pipe(zip(zipName))
       .pipe(gulp.dest(targetPath)).on('end', function(error){
-         if(error){
+         if(error) {
             defer.reject(error);
          }
         defer.resolve(path.join(targetPath, zipName));
