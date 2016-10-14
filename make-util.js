@@ -259,15 +259,23 @@ var run = function (cl, echo) {
 }
 exports.run = run;
 
-var ensureTool = function (name, versionArgs, noExec) {
+var ensureTool = function (name, versionArgs, validate) {
     console.log(name + ' tool:');
     var toolPath = which(name);
     if (!toolPath) {
         fail(name + ' not found.  might need to run npm install');
     }
 
-    if (!noExec) {
-        exec(name + ' ' + versionArgs);
+    if (versionArgs) {
+        var result = exec(name + ' ' + versionArgs);
+        if (typeof validate == 'string') {
+            if (result.output.trim() != validate) {
+                fail('expected version: ' + validate);
+            }
+        }
+        else {
+            validate(result.output.trim());
+        }
     }
 
     console.log(toolPath + '');
