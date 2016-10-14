@@ -99,7 +99,12 @@ target.clean = function () {
 target.build = function() {
     target.clean();
 
-    ensureTool('tsc', '--version');
+    ensureTool('tsc', '--version', 'Version 1.8.7');
+    ensureTool('npm', '--version', function (output) {
+        if (semver.lt(output, '3.0.0')) {
+            fail('expected 3.0.0 or higher');
+        }
+    });
 
     taskList.forEach(function(taskName) {
         banner('Building: ' + taskName);
@@ -233,7 +238,8 @@ target.build = function() {
 // node make.js test --task ShellScript --suite L0
 //
 target.test = function() {
-    ensureTool('mocha', '--version');
+    ensureTool('tsc', '--version', 'Version 1.8.7');
+    ensureTool('mocha', '--version', '2.3.3');
 
     // build/copy the ps test infra
     rm('-Rf', buildTestsPath);
@@ -252,7 +258,7 @@ target.test = function() {
     var testsSpec = matchFind(pattern1, buildPath)
         .concat(matchFind(pattern2, buildPath));
     if (!testsSpec.length) {
-        fail(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2])}`, true);
+        fail(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2])}`);
     }
 
     run('mocha ' + testsSpec.join(' '), /*echo:*/true);
@@ -264,7 +270,8 @@ target.test = function() {
 //
 
 target.testLegacy = function() {
-    ensureTool('mocha', '--version');
+    ensureTool('tsc', '--version', 'Version 1.8.7');
+    ensureTool('mocha', '--version', '2.3.3');
 
     // clean
     console.log('removing _test');
@@ -357,7 +364,13 @@ target.package = function() {
 
     // create the tasks zip
     var zipPath = path.join(packagePath, 'pack-source', 'contents', 'Microsoft.TeamFoundation.Build.Tasks.zip');
-    ensureTool('powershell.exe', '-NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command "$PSVersionTable.PSVersion.ToString()"');
+    ensureTool('powershell.exe',
+        '-NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command "$PSVersionTable.PSVersion.Major"',
+        function (output) {
+            if (!Number.parseInt(output) >= 5) {
+                fail('expected version 5 or higher');
+            }
+        });
     run(`powershell.exe -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command "& '${path.join(__dirname, 'Compress-Tasks.ps1')}' -IndividualZipStagingPath '${individualZipStagingPath}' -WrapperZipStagingPath '${wrapperZipStagingPath}' -ZipPath '${zipPath}'"`, /*echo:*/true);
 
     // nuspec
@@ -389,7 +402,7 @@ target.package = function() {
     fs.writeFileSync(nuspecPath, contents);
 
     // package
-    ensureTool('nuget.exe', '', true);
+    ensureTool('nuget.exe');
     var nupkgPath = path.join(packagePath, 'pack-target', `${pkgName}.${version}.nupkg`);
     mkdir('-p', path.dirname(nupkgPath));
     run(`nuget.exe pack ${nuspecPath} -OutputDirectory ${path.dirname(nupkgPath)}`);
@@ -415,7 +428,7 @@ target.publish = function() {
     nupkgFile = path.join(nupkgDir, fileNames[0]);
 
     // publish the package
-    ensureTool('nuget3.exe', '', true);
+    ensureTool('nuget3.exe');
     run(`nuget3.exe push ${nupkgFile} -Source ${server} -apikey Skyrise`);
 }
 
