@@ -7,6 +7,7 @@ var msDeployUtility = require('./msdeployutility.js');
 var kuduUtility = require('./kuduutility.js');
 var jsonVariableSubs = require('./jsonvariablesubs.js');
 var zipUtility = require('./ziputility.js');
+var xmlSubstitutionUtility = require('./xmlsubstitutionutil.js');
 
 async function run() {
     try {
@@ -29,6 +30,8 @@ async function run() {
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
         var jsonVariableSubsFlag = tl.getBoolInput('JSONVariableSubstitutionsFlag', false);
         var jsonVariableSubsFiles = tl.getDelimitedInput('JSONVariableSubstitutions', '\n', false);
+        var xmlTransformsAndVariableSubstitutions = tl.getBoolInput('XmlTransformsAndVariableSubstitutions', false);
+        var variableSubstitution = tl.getBoolInput('VariableSubstitution', false);
         var SPN = new Array();
         SPN["servicePrincipalClientID"] = endPointAuthCreds.parameters["serviceprincipalid"];
         SPN["servicePrincipalKey"] = endPointAuthCreds.parameters["serviceprincipalkey"];
@@ -47,13 +50,16 @@ async function run() {
 
         var isFolderBasedDeployment = isInputPkgIsFolder(webDeployPkg);
 
-        if(jsonVariableSubsFlag) { // (jsonVariableSubsFlag || variable substitution)
+        if(jsonVariableSubsFlag || xmlTransformsAndVariableSubstitutions) { // (jsonVariableSubsFlag || variable substitution)
             var folderPath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package_folder');
             if(isFolderBasedDeployment) {
                 tl.cp(path.join(webDeployPkg, '/*'), folderPath, '-rf', false);
             }
             else {
                 zipUtility.unzip(webDeployPkg, folderPath);
+            }
+            if(variableSubstitution) {
+                await xmlSubstitutionUtility.substituteAppSettingsVariables(folderPath);
             }
             if(jsonVariableSubsFlag) {
                 jsonVariableSubs.jsonVariableSubstitution(folderPath, jsonVariableSubsFiles);
