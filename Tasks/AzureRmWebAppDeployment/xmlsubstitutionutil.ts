@@ -2,12 +2,13 @@ import Q = require('q');
 import tl = require('vsts-task-lib/task');
 import fs = require('fs');
 
+var azureRmUtil = require ('./azurermutil.js');
 var xmldom = require('xmldom');
 var serializer = new xmldom.XMLSerializer;
 var implementation = new xmldom.DOMImplementation;
 
-export async function substituteVariable(folderPath) {
-    var configFiles = tl.glob(folderPath+ "/**/*config");
+export async function substituteAppSettingsVariables(folderPath) {
+    var configFiles = tl.glob(folderPath + "/**/*config");
     var tags = ["applicationSettings", "appSettings", "connectionStrings", "configSections"];
     for(var index in configFiles) {
         await substituteXmlVariables(configFiles[index], tags);
@@ -62,17 +63,7 @@ function isEmpty(object){
         return true;
     return false;
 }
-
-function isPredefinedVariable(variable: string): boolean {
-    var predefinedVarPrefix = ['agent.', 'azure_http_user_agent', 'build.', 'common.', 'release.', 'system', 'tf_'];
-    for(let varPrefix of predefinedVarPrefix) {
-        if(variable.toLowerCase().startsWith(varPrefix)) {
-            return true;
-        }
-    }
-    return false;
-} 
-
+ 
 async function updateXmlConfigNodeAttribute(xmlDocument, xmlNode) {
     var sections = xmlNode.getElementsByTagName("section");
     for(var i=0; i < sections.length; i++) {
@@ -101,7 +92,7 @@ async function updateXmlNodeAttribute(xmlDomNode) {
         var childAttributes = childNode.attributes;
         for(var j=0; j< childAttributes.length; j++){
             var attribute = childAttributes[j];
-            if(!isEmpty(attribute) && !isPredefinedVariable(attribute.localName)) {
+            if(!isEmpty(attribute) && !azureRmUtil.isPredefinedVariable(attribute.localName)) {
                 var taskContextVariableValue = tl.getVariable(attribute.localName);
                 if(taskContextVariableValue){
                     childNode.setAttribute(attribute.localName, taskContextVariableValue);
@@ -109,7 +100,7 @@ async function updateXmlNodeAttribute(xmlDomNode) {
             }
         }
         var valueOfKeyAttribute = childNode.getAttribute("key");
-        if(!isEmpty(valueOfKeyAttribute) && !isPredefinedVariable(valueOfKeyAttribute)) {
+        if(!isEmpty(valueOfKeyAttribute) && !azureRmUtil.isPredefinedVariable(valueOfKeyAttribute)) {
             var taskContextValueOfKeyAttribute = tl.getVariable(valueOfKeyAttribute);
             if(taskContextValueOfKeyAttribute) {
                 childNode.setAttribute("value",taskContextValueOfKeyAttribute);

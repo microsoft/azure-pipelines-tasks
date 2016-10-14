@@ -69,7 +69,7 @@ async function run() {
                 zipUtility.unzip(webDeployPkg, folderPath);
             }
             if(variableSubstitution) {
-                await xmlSubstitutionUtility.substituteVariable(folderPath);
+                await xmlSubstitutionUtility.substituteAppSettingsVariables(folderPath);
             }
             if(jsonVariableSubsFlag) {
                 jsonVariableSubs.jsonVariableSubstitution(folderPath, jsonVariableSubsFiles);

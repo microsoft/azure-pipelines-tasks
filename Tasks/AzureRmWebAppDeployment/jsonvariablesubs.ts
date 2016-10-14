@@ -2,15 +2,8 @@ import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
 
-function isPredefinedVariable(variable: string): boolean {
-    var predefinedVarPrefix = ['agent.', 'azure_http_user_agent', 'build.', 'common.', 'release.', 'system', 'tf_'];
-    for(let varPrefix of predefinedVarPrefix) {
-        if(variable.toLowerCase().startsWith(varPrefix)) {
-            return true;
-        }
-    }
-    return false;
-} 
+var azureRmUtil = require ('./azurermutil.js');
+
 function createEnvTree() {
     var envVarTree = {
         value: null,
@@ -20,7 +13,7 @@ function createEnvTree() {
     var envVariables = tl.getVariables();
     for(let envVariable of envVariables) {
         var envVarTreeIterator = envVarTree;
-        if(isPredefinedVariable(envVariable.name)) {
+        if(azureRmUtil.isPredefinedVariable(envVariable.name)) {
             continue;
         } 
         var envVariableNameArray = (envVariable.name).split('.');
