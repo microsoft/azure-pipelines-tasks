@@ -162,15 +162,18 @@ function Parse-StorageKeys($storageAccountKeys)
     $roleStorageKeyMap = @{}
     if($storageAccountKeys)
     {
-        $roleKeyPairs = $storageAccountKeys.split(",")
+        $roleKeyPairs = $storageAccountKeys.split(" ")
         foreach($roleKeyPair in $roleKeyPairs) 
         {
-            $roleKeyArray = $roleKeyPair.split(":")
-            if($roleKeyArray.Length -ne 2) 
+            if($roleKeyPair)
             {
-                throw (Get-VstsLocString -Key "Storagekeysaredefinedininvalidformat" -ArgumentList $pattern)
+                $roleKeyArray = $roleKeyPair.split(":")
+                if($roleKeyArray.Length -ne 2) 
+                {
+                    throw (Get-VstsLocString -Key "Storagekeysaredefinedininvalidformat" -ArgumentList $pattern)
+                }
+                $roleStorageKeyMap.Add($roleKeyArray[0],$roleKeyArray[1])
             }
-            $roleStorageKeyMap.Add($roleKeyArray[0],$roleKeyArray[1])
         }
     }
     return $roleStorageKeyMap
