@@ -8,7 +8,7 @@
     "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
   },
   "dependencies": {
-    "glob": "^7.1.0",
+    "glob": "7.1.0",
     "request": "^2.74.0",
     "vsts-task-lib": "0.9.7",
     "xml2js": "^0.4.16"
