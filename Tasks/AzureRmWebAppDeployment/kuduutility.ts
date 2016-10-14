@@ -6,7 +6,7 @@ import httpClient = require('vso-node-api/HttpClient');
 var httpObj = new httpClient.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
 var gulp = require('gulp');
 var zip = require('gulp-zip');
-var AdmZip = require('adm-zip');
+var DecompressZip = require('decompress-zip');
 
 export async function appOffineKuduService(publishUrl: string, physicalPath: string, headers, enableFeature: boolean) {
     var defer = Q.defer<string>();
@@ -145,10 +145,29 @@ export async function archiveFolder(webAppFolder:string) {
  */
 export async  function containsParamFile(webAppPackage: string ) {
     var isParamFilePresent = false;
-    var zip = new AdmZip(webAppPackage);
-    if (zip.getEntry("parameters.xml") || zip.getEntry("Parameters.xml")) {
+    var pacakgeComponent = await getArchivedEntries(webAppPackage);
+    if ((pacakgeComponent["entries"].indexOf("parameters.xml") > -1) || (pacakgeComponent["entries"].indexOf("Parameters.xml") > -1)) {
         isParamFilePresent = true;
     }
     tl.debug(tl.loc("Isparameterfilepresentinwebpackage0", isParamFilePresent));
     return isParamFilePresent;
+}
+
+/**
+ *  Returns array of files present in archived package
+ */
+export async function getArchivedEntries(archivedPackage: string)  {
+    var deferred = Q.defer();
+    var unzipper = new DecompressZip(archivedPackage);
+    unzipper.on('error', function (error) {
+        deferred.reject(error);
+    });
+    unzipper.on('list', function (files) {
+        var pacakgeComponent = {
+            "entries":files
+        };
+        deferred.resolve(pacakgeComponent); 
+    });
+    unzipper.list();
+    return deferred.promise;
 }
