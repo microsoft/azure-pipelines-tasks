@@ -52,7 +52,7 @@ async function substituteXmlVariables(configFile, tags){
         if (error) {
             throw new Error(tl.loc("Failedtowritetoconfigfilewitherror",configFile, error));
         } else {
-            console.log(tl.loc("Configfileupdated",configFile));
+            tl.debug(tl.loc("Configfileupdated",configFile));
         }
     });
     
