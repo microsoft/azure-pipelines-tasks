@@ -5,8 +5,9 @@ import fs = require('fs');
 var azureRmUtil = require ('./azurermutil.js');
 var msDeployUtility = require('./msdeployutility.js');
 var kuduUtility = require('./kuduutility.js');
-var compressor = require('./compressionutility.js');
-var xdtUtility = require('./xdtutility.js');
+var jsonVariableSubs = require('./jsonvariablesubs.js');
+var zipUtility = require('./ziputility.js');
+var xmlSubstitutionUtility = require('./xmlsubstitutionutil.js');
 
 async function run() {
     try {
@@ -29,7 +30,10 @@ async function run() {
         var xmlTransformationAndVariableSubstitution: boolean = tl.getBoolInput('XmlTransformsAndVariableSubstitutions', false);
         var xmlTransformation: boolean = tl.getBoolInput('XdtTransformation', false);
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
-
+        var jsonVariableSubsFlag = tl.getBoolInput('JSONVariableSubstitutionsFlag', false);
+        var jsonVariableSubsFiles = tl.getDelimitedInput('JSONVariableSubstitutions', '\n', false);
+        var xmlTransformsAndVariableSubstitutions = tl.getBoolInput('XmlTransformsAndVariableSubstitutions', false);
+        var variableSubstitution = tl.getBoolInput('VariableSubstitution', false);
         var SPN = new Array();
         SPN["servicePrincipalClientID"] = endPointAuthCreds.parameters["serviceprincipalid"];
         SPN["servicePrincipalKey"] = endPointAuthCreds.parameters["serviceprincipalkey"];
@@ -46,7 +50,25 @@ async function run() {
         }
         webDeployPkg = availableWebPackages[0];
 
-        var isFolderBasedDeployment = await isInputPkgIsFolder(webDeployPkg);
+        var isFolderBasedDeployment = isInputPkgIsFolder(webDeployPkg);
+
+        if(jsonVariableSubsFlag || xmlTransformsAndVariableSubstitutions) { // (jsonVariableSubsFlag || variable substitution)
+            var folderPath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package_folder');
+            if(isFolderBasedDeployment) {
+                tl.cp(path.join(webDeployPkg, '/*'), folderPath, '-rf', false);
+            }
+            else {
+                zipUtility.unzip(webDeployPkg, folderPath);
+            }
+            if(variableSubstitution) {
+                await xmlSubstitutionUtility.substituteAppSettingsVariables(folderPath);
+            }
+            if(jsonVariableSubsFlag) {
+                jsonVariableSubs.jsonVariableSubstitution(folderPath, jsonVariableSubsFiles);
+            }
+            webDeployPkg = (isFolderBasedDeployment) ? folderPath : await zipUtility.archiveFolder(folderPath, tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package.zip')
+        }
+
         var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
         tl._writeLine(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
         
@@ -97,8 +119,8 @@ async function run() {
             tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
         }
         if(canUseWebDeploy(useWebDeploy)) {
-           tl._writeLine("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);         
-           tl._writeLine("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);
+            tl._writeLine("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);         
+            tl._writeLine("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);
             await DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
                             excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile,
                             additionalArguments, isFolderBasedDeployment);
@@ -146,6 +168,7 @@ async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, 
         tl.writeFile(msDeployBatchFile, msDeployCommand);
         tl._writeLine(tl.loc("Runningcommand", msDeployCommand));
         await tl.exec("cmd", ['/C', msDeployBatchFile], <any> {failOnStdErr: true});
+        tl.rmRF(msDeployBatchFile, true);
         tl._writeLine(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
     }
     catch(error) {
@@ -224,7 +247,7 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
  * 
  * @return true/false based on input package type.
  */
-async function isInputPkgIsFolder(webDeployPkg: string) {
+function isInputPkgIsFolder(webDeployPkg: string) {
     if (!tl.exist(webDeployPkg)) {
         throw new Error(tl.loc('Invalidwebapppackageorfolderpathprovided', webDeployPkg));
     }
