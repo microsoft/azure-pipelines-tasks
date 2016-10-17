@@ -177,15 +177,15 @@
             "groupName": "FileTransformsAndVariableSubstitution",
             "helpMarkDown": ""
         },
-        {
-            "name": "Transformation",
+        {   
+            "name": "XdtTransformation",
             "type": "boolean",
             "label": "Transformation",
             "required": false,
             "defaultValue": false,
             "groupName": "FileTransformsAndVariableSubstitution",
             "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
-            "helpMarkDown": "The config transfoms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`. Config transforms will be run prior to the Variable Substitution."
+            "helpMarkDown": "Provide a line separated list of JSON files for substituting variables in them. The files names are relative to the root folder. For substituting JSON variables that are in a hierarchy, specify them using the format Data.DefaultConnection.ConnectionString in the Environment/Definition variable.  If same variables are defined in the Definition and Environment, then the Environment variables will supersede the Definition variables. Variable Substitution is run after Config Transforms. Build/Release/System definition variables are eliminated in substitution."
         },
         {
             "name": "VariableSubstitution",
@@ -214,25 +214,6 @@
             "groupName": "FileTransformsAndVariableSubstitution",
             "visibleRule": "JSONVariableSubstitutionsFlag == true",
             "helpMarkDown": "Provide a line separated list of JSON files for substituting variables in them. The files names are relative to the root folder. For substituting JSON variables that are in a hierarchy, specify them using the format Data.DefaultConnection.ConnectionString in the Environment/Definition variable.  If same variables are defined in the Definition and Environment, then the Environment variables will supersede the Definition variables. Variable Substitution is run after Config Transforms. Build/Release/System defintion variables are eliminated in substitution."
-        },
-        {
-            "name": "XmlTransformsAndVariableSubstitutions",
-            "type": "boolean",
-            "label": "XML Transforms & Variable Substitutions",
-            "required": false,
-            "defaultValue": false,
-            "groupName": "FileTransformsAndVariableSubstitution",
-            "helpMarkDown": ""
-        },
-        {   
-            "name": "XdtTransformation",
-            "type": "boolean",
-            "label": "Transformation",
-            "required": false,
-            "defaultValue": false,
-            "groupName": "FileTransformsAndVariableSubstitution",
-            "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
-            "helpMarkDown": "Provide a line separated list of JSON files for substituting variables in them. The files names are relative to the root folder. For substituting JSON variables that are in a hierarchy, specify them using the format Data.DefaultConnection.ConnectionString in the Environment/Definition variable.  If same variables are defined in the Definition and Environment, then the Environment variables will supersede the Definition variables. Variable Substitution is run after Config Transforms. Build/Release/System definition variables are eliminated in substitution."
         }
     ],
     "dataSourceBindings": [

@@ -178,14 +178,14 @@
       "helpMarkDown": ""
     },
     {
-      "name": "Transformation",
+      "name": "XdtTransformation",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.Transformation",
+      "label": "ms-resource:loc.input.label.XdtTransformation",
       "required": false,
       "defaultValue": false,
       "groupName": "FileTransformsAndVariableSubstitution",
       "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
-      "helpMarkDown": "ms-resource:loc.input.help.Transformation"
+      "helpMarkDown": "ms-resource:loc.input.help.XdtTransformation"
     },
     {
       "name": "VariableSubstitution",
@@ -214,25 +214,6 @@
       "groupName": "FileTransformsAndVariableSubstitution",
       "visibleRule": "JSONVariableSubstitutionsFlag == true",
       "helpMarkDown": "ms-resource:loc.input.help.JSONVariableSubstitutions"
-    },
-    {
-      "name": "XmlTransformsAndVariableSubstitutions",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.XmlTransformsAndVariableSubstitutions",
-      "required": false,
-      "defaultValue": false,
-      "groupName": "FileTransformsAndVariableSubstitution",
-      "helpMarkDown": ""
-    },
-    {
-      "name": "XdtTransformation",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.XdtTransformation",
-      "required": false,
-      "defaultValue": false,
-      "groupName": "FileTransformsAndVariableSubstitution",
-      "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
-      "helpMarkDown": "ms-resource:loc.input.help.XdtTransformation"
     }
   ],
   "dataSourceBindings": [
