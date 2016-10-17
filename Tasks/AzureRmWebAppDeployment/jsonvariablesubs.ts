@@ -4,7 +4,7 @@ import fs = require('fs');
 
 var azureRmUtil = require ('./azurermutil.js');
 
-function createEnvTree() {
+function createEnvTree(envVariables) {
     var envVarTree = {
         value: null,
         isEnd: false,
