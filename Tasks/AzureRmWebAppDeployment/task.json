@@ -1,8 +1,8 @@
 {
     "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
     "name": "AzureRmWebAppDeployment",
-    "friendlyName": "AzureRM App Service Deployment",
-    "description": "Deploy the web project using AzureRM App Service",
+    "friendlyName": "Azure App Service Deployment: ARM",
+    "description": "Update Azure App Service using Web Deploy / Kudu REST APIs",
     "helpMarkDown": "[More Information](https://aka.ms/azurermwebdeployreadme)",
     "category": "Deploy",
     "visibility": [
@@ -115,7 +115,7 @@
             "type": "boolean",
             "label": "Publish using Web Deploy",
             "required": false,
-            "defaultValue": "true",
+            "defaultValue": "false",
             "groupName": "AdditionalDeploymentOptions",
             "helpMarkDown": "Publish using web deploy options are supported only when using Windows agent. On other platforms, the task relies on [Kudu REST APIs](https://github.com/projectkudu/kudu/wiki/REST-API) to deploy the Web App, and following options are not supported"
         },
@@ -150,16 +150,6 @@
             "helpMarkDown": "Select the option to prevent files in the App_Data folder from being deployed to the AzureRM Web App."
         },
         {
-            "name": "TakeAppOfflineFlag",
-            "type": "boolean",
-            "label": "Take App Offline",
-            "defaultValue": "false",
-            "required": false,
-            "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "UseWebDeploy == true",
-            "helpMarkDown": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully."
-        },
-        {
             "name": "AdditionalArguments",
             "type": "string",
             "label": "Additional Arguments",
@@ -168,6 +158,15 @@
             "groupName": "AdditionalDeploymentOptions",
             "visibleRule": "UseWebDeploy == true",
             "helpMarkDown": "Additional Web Deploy arguments that will be applied when deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension."
+        },
+        {
+            "name": "TakeAppOfflineFlag",
+            "type": "boolean",
+            "label": "Take App Offline",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "AdditionalDeploymentOptions",
+            "helpMarkDown": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully."
         },
         {
             "name": "XmlTransformsAndVariableSubstitutions",
@@ -252,16 +251,17 @@
         "Invalidwebapppackageorfolderpathprovided": "Invalid webapp package or folder path provided: %s",
         "SetParamFilenotfound0": "Set parameters file not found: %s",
         "GotconnectiondetailsforazureRMWebApp0": "Got connection details for azureRM WebApp:'%s'",
-        "UnabletoretrieveWebAppIDforazureRMWebApp0StatusCode1": "Unable to retrieve WebApp ID for azureRM WebApp:'%s'. Status Code: %s",
+        "UnabletoretrieveWebAppID": "Unable to retrieve WebApp ID for azureRM WebApp:'%s'. Status Code: %s (%s)",
         "ErrorNoSuchDeployingMethodExists": "Error : No Such Deploying Method Exists",
         "UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1": "Unable to retrieve connection details for azureRM WebApp:'%s'. Status Code: %s",
         "Unabletoretrievewebapppublishurlforwebapp0StatusCode1": "Unable to retrieve webapp publish url for webapp : '%s'. Status Code : '%s'",
+        "UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve connection details for azureRM WebApp:'%s'. Status Code: %s (%s)",
         "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
         "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
         "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website",
         "ErrorFetchingDeploymentPublishProfileStausCode0": "Error Fetching Deployment Publish Profile [Staus Code : '%s']",
-        "ErrorOccurredStausCode0": "Error Occurred : [Staus Code : '%s']",
-        "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update deployment status : uniquedeploymentIdCannotBeRetrieved",
+        "UnabletoretrieveAzureRMWebAppConfigDetails": "Unable to retrieve AzureRM Web App Config Details: [Staus Code : '%s' (%s)]",
+        "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update deployment status : Unique Deployment ID cannot be retrieved",
         "WebappsuccessfullypublishedatUrl0": "Web App successfully deployed at url %s",
         "Failedtodeploywebsite": "Failed to deploy website.",
         "Runningcommand": "Running command: %s",
@@ -274,7 +274,7 @@
         "Deployingwebapplicationatvirtualpathandphysicalpath": "Deploying web package : %s at virtual path (physical path) : %s (%s)",
         "Successfullydeployedpackageusingkuduserviceat": "Successfully deployed package %s using kudu service at %s",
         "Failedtodeploywebapppackageusingkuduservice": "Failed to deploy webapp package using kudu service : %s",
-        "Unabletodeploywebappresponsecode": "Unable to deploy webapp due to error code : %s",
+        "Unabletodeploywebappresponsecode": "Unable to deploy webapp due to error code : %s (%s)",
         "Unabletopackagecontentoffolder": "Unable to package content of folder : %s",
         "Compressedfolderintozip": "Compressed folder %s into zip : %s",
         "Webappfolderisbeingarchivedtobytescompressed": "Webapp folder : %s is being archived to %s. %s bytes compressed.",
@@ -295,6 +295,11 @@
         "Failedtowritetoconfigfilewitherror": "Failed to write to config file %s with error : %s",
         "Erroroccurredwhileprocessingxmlnode": "Error occurred while processing xml node : %s.",
         "Processingsubstitutionforxmlnode": "Processing substitution for xml node : %s",
-        "Initiatedvariablesubstitutioninconfigfile": "Initiated variable substitution in config file : %s"
+        "Initiatedvariablesubstitutioninconfigfile": "Initiated variable substitution in config file : %s",
+        "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected.",
+        "AppOfflineModeenabled": "App Offline Mode enabled.",
+        "Failedtoenableappofflinemode": "Failed to enable app offline mode. Status Code: %s (%s)",
+        "AppOflineModedisabled": "App Offline Mode disabled.",
+        "FailedtodisableAppOfflineMode": "Failed to disable App Offline Mode. Status Code: %s (%s)"
     }
 }

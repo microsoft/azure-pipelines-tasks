@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
+    "winreg": "^1.2.2",
     "vsts-task-lib": "^0.9.7",
     "q": "^1.4.1",
     "adal-node": "^0.1.15",
@@ -26,8 +27,5 @@
     "gulp-zip": "^3.2.0",
     "vso-node-api": "^5.0.5",
     "xmldom": "^0.1.22"
-  },
-  "optionalDependencies":{
-    "regedit": "^2.2.5"
   }
 }

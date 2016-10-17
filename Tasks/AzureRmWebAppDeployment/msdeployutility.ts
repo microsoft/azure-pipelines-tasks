@@ -3,7 +3,7 @@ import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
 import fs = require('fs');
 
-var regedit = require('regedit');
+var winreg = require('winreg');
 var azureRmUtil = require('./azurermutil.js');
 var parseString = require('xml2js').parseString;
 
@@ -26,7 +26,8 @@ var parseString = require('xml2js').parseString;
  */
 export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, publishingProfile,
                              removeAdditionalFilesFlag: boolean, excludeFilesFromAppDataFlag: boolean, takeAppOfflineFlag: boolean,
-                             virtualApplication: string, setParametersFile: string, additionalArguments: string, isParamFilePresentInPacakge: boolean, isFolderBasedDeployment: boolean) : string {
+                             virtualApplication: string, setParametersFile: string, additionalArguments: string, isParamFilePresentInPacakge: boolean,
+                             isFolderBasedDeployment: boolean, useWebDeploy: boolean) : string {
 
     var msDeployCmdArgs: string = " -verb:sync";
 
@@ -54,24 +55,27 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
         msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='" + webApplicationDeploymentPath + "'";
     }
 
-    if(setParametersFile) {
-        msDeployCmdArgs += " -setParamFile=\"" + setParametersFile + "\"";
+    if(useWebDeploy) {
+
+        if(setParametersFile) {
+            msDeployCmdArgs += " -setParamFile=\"" + setParametersFile + "\"";
+        }
+
+        if(takeAppOfflineFlag) {
+            msDeployCmdArgs += ' -enableRule:AppOffline';
+        }
+
+        if(excludeFilesFromAppDataFlag) {
+            msDeployCmdArgs += ' -skip:Directory=App_Data';
+        }
+        
+        if(additionalArguments) {
+            msDeployCmdArgs += ' ' + additionalArguments;
+        }
     }
 
-    if(!removeAdditionalFilesFlag) {
+    if(!(removeAdditionalFilesFlag && useWebDeploy)) {
         msDeployCmdArgs += " -enableRule:DoNotDeleteRule";
-    }
-
-    if(takeAppOfflineFlag) {
-        msDeployCmdArgs += ' -enableRule:AppOffline';
-    }
-
-    if(excludeFilesFromAppDataFlag) {
-        msDeployCmdArgs += ' -skip:Directory=App_Data';
-    }
-    
-    if(additionalArguments) {
-        msDeployCmdArgs += ' ' + additionalArguments;
     }
 
     var userAgent = tl.getVariable("AZURE_HTTP_USER_AGENT");
@@ -124,9 +128,8 @@ export async  function containsParamFile(webAppPackage: string ) {
  */
 export async function getMSDeployFullPath() {
     try {
-        var msDeployInstallPathRegKey = "HKLM\\SOFTWARE\\Microsoft\\IIS Extensions\\MSDeploy";
-        var msDeployVersion = await getMSDeployVersion(msDeployInstallPathRegKey);
-        var msDeployLatestPathRegKey = msDeployInstallPathRegKey + "\\" + msDeployVersion;
+        var msDeployInstallPathRegKey = "\\SOFTWARE\\Microsoft\\IIS Extensions\\MSDeploy";
+        var msDeployLatestPathRegKey = await getMSDeployLatestRegKey(msDeployInstallPathRegKey);
         var msDeployFullPath = await getMSDeployInstallPath(msDeployLatestPathRegKey);
         msDeployFullPath = msDeployFullPath + "msdeploy.exe";
         return msDeployFullPath;
@@ -137,32 +140,51 @@ export async function getMSDeployFullPath() {
     }
 }
 
-function getMSDeployVersion(registryKey: string): Q.Promise<String> {
-    var defer = Q.defer<String>();
-    regedit.list(registryKey)
-    .on('data', (entry) => {
-        var keys = entry.data.keys;
-        keys.sort();
-        if(parseFloat(keys[keys.length-1]) < 3) {
-            defer.reject(tl.loc("UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove", keys[keys.length-1]));
-        }
-        defer.resolve(keys[keys.length-1]);
+function getMSDeployLatestRegKey(registryKey: string): Q.Promise<string> {
+    var defer = Q.defer<string>();
+    var regKey = new winreg({
+      hive: winreg.HKLM,
+      key:  registryKey
     })
-    .on('error', (error) => {
-        defer.reject(tl.loc("UnabletofindthelocationofMSDeployfromregistryonmachineError", error));
+
+    regKey.keys(function(err, subRegKeys) {
+        if(err) {
+            defer.reject(tl.loc("UnabletofindthelocationofMSDeployfromregistryonmachineError", err));
+        }
+        var latestKeyVersion = 0 ;
+        var latestSubKey;
+        for(var index in subRegKeys) {
+            var subRegKey = subRegKeys[index].key;
+            var subKeyVersion = subRegKey.substr(subRegKey.lastIndexOf('\\') + 1, subRegKey.length - 1);
+            if(!isNaN(subKeyVersion)){
+                var subKeyVersionNumber = parseFloat(subKeyVersion);
+                if(subKeyVersionNumber > latestKeyVersion) {
+                    latestKeyVersion = subKeyVersionNumber;
+                    latestSubKey = subRegKey;
+                }
+            }
+        }
+        if(latestKeyVersion < 3) {
+            defer.reject(tl.loc("UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove", latestKeyVersion));
+        }
+         defer.resolve(latestSubKey);
     });
-    
     return defer.promise;
 }
 
 function getMSDeployInstallPath(registryKey: string): Q.Promise<string> {
     var defer = Q.defer<string>();
-    regedit.list(registryKey)
-    .on('data', (entry) => {
-        defer.resolve(entry.data.values.InstallPath.value);
+
+    var regKey = new winreg({
+      hive: winreg.HKLM,
+      key:  registryKey
     })
-    .on('error', (error) => {
-        defer.reject(tl.loc("UnabletofindthelocationofMSDeployfromregistryonmachineError", error));
+
+    regKey.get("InstallPath", function(err,item) {
+        if(err) {
+            defer.reject(tl.loc("UnabletofindthelocationofMSDeployfromregistryonmachineError", err));
+        }
+        defer.resolve(item.value);
     });
 
     return defer.promise;

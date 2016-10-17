@@ -5,21 +5,19 @@
     "description": "Deploy and configure Test Agent to run tests on a set of machines",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=625976)",
     "category": "Test",
-    "visibility": [     
-                  "Build",
-                  "Release"
-                  ],
+    "visibility": [
+        "Build",
+        "Release"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 39
+        "Patch": 40
     },
-    "demands": [
-
-    ],
+    "demands": [],
     "minimumAgentVersion": "1.104.0",
-    "groups":  [
+    "groups": [
         {
             "name": "testMachineGroups",
             "displayName": "Test Machine Group",
@@ -37,7 +35,7 @@
         }
     ],
     "inputs": [
-		{
+        {
             "name": "testMachineGroup",
             "type": "multiLine",
             "label": "Machines",
@@ -88,14 +86,14 @@
             "groupName": "testMachineGroups"
         },
         {
-            "name":"resourceFilteringMethod",
-            "type":"radio",
-            "label":"Select Machines By",
-            "required":false,
-            "defaultValue":"machineNames",
+            "name": "resourceFilteringMethod",
+            "type": "radio",
+            "label": "Select Machines By",
+            "required": false,
+            "defaultValue": "machineNames",
             "options": {
-                "machineNames":"Machine Names",
-                "tags":"Tags"
+                "machineNames": "Machine Names",
+                "tags": "Tags"
             },
             "groupName": "testMachineGroups"
         },

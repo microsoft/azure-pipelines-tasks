@@ -70,6 +70,19 @@ Try
 
         #Ensure that a single package (.dacpac) file is found
         ThrowIfMultipleFilesOrNoFilePresent -files $FilePath -pattern $DacpacFile
+
+        # Do Profile Path Validations here as it only matters for Dacpac Task
+
+        $PublishProfilePath = ""
+        if( [string]::IsNullOrWhitespace($PublishProfile) -eq $false -and $PublishProfile -ne $env:SYSTEM_DEFAULTWORKINGDIRECTORY -and $PublishProfile -ne [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\"))
+        {
+            Write-Host "PublishProfilePath = Find-VstsFiles LegacyPattern $PublishProfile"
+            $PublishProfilePath = Find-VstsFiles LegacyPattern $PublishProfile
+            Write-Host "Publish profile path = $PublishProfilePath"
+
+            #Ensure that only one publish profile file is found
+            ThrowIfMultipleFilesOrNoFilePresent -files $PublishProfilePath -pattern $PublishProfile
+        }
     }
     ElseIf ($TaskNameSelector -eq "SqlTask")
     {
@@ -94,17 +107,6 @@ Try
         Write-Host "tempFile= $FilePath"
     
         $SqlAdditionalArguments = $InlineAdditionalArguments
-    }
-
-    $PublishProfilePath = ""
-    if( [string]::IsNullOrWhitespace($PublishProfile) -eq $false -and $PublishProfile -ne $env:SYSTEM_DEFAULTWORKINGDIRECTORY -and $PublishProfile -ne [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\"))
-    {
-        Write-Host "PublishProfilePath = Find-VstsFiles LegacyPattern $PublishProfile"
-        $PublishProfilePath = Find-VstsFiles LegacyPattern $PublishProfile
-        Write-Host "Publish profile path = $PublishProfilePath"
-
-        #Ensure that only one publish profile file is found
-        ThrowIfMultipleFilesOrNoFilePresent -files $PublishProfilePath -pattern $PublishProfile
     }
 
     if ($connectedServiceNameSelector -eq "ConnectedServiceNameARM")

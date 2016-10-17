@@ -1,9 +1,0 @@
-{
-    "archivePackages": [
-        {
-            "archiveName": "TestSelector.zip",
-            "url": "https://testselector.blob.core.windows.net/testselector/3308834/TestSelector.zip",
-            "dest": "./"
-        }
-    ]
-}

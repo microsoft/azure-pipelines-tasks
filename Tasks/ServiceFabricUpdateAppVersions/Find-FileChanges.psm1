@@ -1,7 +1,6 @@
 ﻿function Get-PackageFiles ($Path)
 {
-    # List all files except '.pdb' files because their content changes every build even with the 'deterministic' compiler flag
-    Find-VstsFiles -LiteralDirectory $Path -LegacyPattern "**;-:**\*.pdb" -Force |
+    Find-VstsFiles -LiteralDirectory $Path -LegacyPattern "**" -Force |
         ForEach-Object { $_.ToLower() } |
         Sort-Object
 }
@@ -32,6 +31,11 @@ function Find-FileChanges
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         $LogIndent += "".PadLeft(2)
+
+        if (Find-VstsFiles -LiteralDirectory $NewPackageRoot -LegacyPattern "**\*.pdb" -Force)
+        {
+            Write-Warning (Get-VstsLocString -Key PdbWarning)
+        }
 
         $newFilesQueue = [System.Collections.Queue] @(Get-PackageFiles $NewPackageRoot)
         $oldFilesQueue = [System.Collections.Queue] @(Get-PackageFiles $OldPackageRoot)
