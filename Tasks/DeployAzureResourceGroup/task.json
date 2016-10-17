@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 93
+        "Patch": 94
     },
     "demands": [
         "azureps"
@@ -163,6 +163,9 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Specify the template parameters to override like, <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword (ConvertTo-SecureString -String '$(password)' -AsPlainText -Force) –azureKeyVaultName $(fabrikamFibre).",
+            "properties": {
+                "editorExtension": "ms.vss-distributed-task-input-editor.parameters-grid"
+            },
             "visibleRule": "action = Create Or Update Resource Group"
         },
         {
