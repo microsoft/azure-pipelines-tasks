@@ -120,8 +120,13 @@
             "label": "Storage Account Keys",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Define storage keys corresponding to storage accounts being defined for diagnosticsExtensions.Format is WebRole1:Key1,WorkerRole1:Key2",
-            "groupName": "newServiceAdvancedOptions"
+            "helpMarkDown": "Define storage keys corresponding to storage accounts being defined for diagnosticsExtensions.Format is WebRole1:Key1 WorkerRole1:Key2",
+            "groupName": "newServiceAdvancedOptions",
+            "properties": {
+                "resizable": "true",
+                "rows": "10",
+                "maxLength": "500"
+            }
         },
         {
             "name": "NewServiceAdditionalArguments",
@@ -180,6 +185,7 @@
         "_0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "'{0}' could not be parsed into parts for registering diagnostics extensions.",
         "Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}",
         "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one.",
-        "Storagekeysaredefinedininvalidformat": "Storage keys are defined in invalid format."
+        "Storagekeysaredefinedininvalidformat": "Storage keys are defined in invalid format.",
+        "Unabletofind0usingprovidedsubscriptionLookinginstoragekeys" :"Unable to find {0} using provided subscription.Looking in storage keys."
     }
 }

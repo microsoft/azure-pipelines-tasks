@@ -102,8 +102,9 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAcc
                             $publicConfigStorageKey = Get-AzureStorageKey -StorageAccountName $publicConfigStorageAccountName
                         }
                         catch
-                        {
-                            Write-Warning $_.Exception.Message
+                        {   
+                            Write-Host (Get-VstsLocString -Key "Unabletofind0usingprovidedsubscriptionLookinginstoragekeys" -ArgumentList "$publicConfigStorageAccountName")
+                            Write-Verbose $_.Exception.Message
                         }
                         if ($publicConfigStorageKey)
                         {

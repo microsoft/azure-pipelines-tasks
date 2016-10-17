@@ -121,7 +121,12 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.StorageAccountKeys",
-      "groupName": "newServiceAdvancedOptions"
+      "groupName": "newServiceAdvancedOptions",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "500"
+      }
     },
     {
       "name": "NewServiceAdditionalArguments",
@@ -180,6 +185,7 @@
     "_0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "ms-resource:loc.messages._0couldnotbeparsedintopartsforregisteringdiagnosticsextensions",
     "Nofileswerefoundtodeploywithsearchpattern0": "ms-resource:loc.messages.Nofileswerefoundtodeploywithsearchpattern0",
     "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "ms-resource:loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone",
-    "Storagekeysaredefinedininvalidformat": "ms-resource:loc.messages.Storagekeysaredefinedininvalidformat"
+    "Storagekeysaredefinedininvalidformat": "ms-resource:loc.messages.Storagekeysaredefinedininvalidformat",
+    "Unabletofind0usingprovidedsubscriptionLookinginstoragekeys": "ms-resource:loc.messages.Unabletofind0usingprovidedsubscriptionLookinginstoragekeys"
   }
 }
