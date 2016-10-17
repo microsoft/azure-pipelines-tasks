@@ -26,6 +26,13 @@ declare module 'ios-signing-common/ios-signing-common' {
     export function getProvisioningProfileUUID(provProfilePath: string) : string;
 
     /**
+     * Find the type of the provisioning profile - development, app-store or ad-hoc
+     * @param provProfilePath
+     * @returns {string} type
+     */
+    export function getProvisioningProfileType(provProfilePath: string) : string;
+
+    /**
      * Delete specified iOS keychain
      * @param keychainPath
      */

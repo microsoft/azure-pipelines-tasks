@@ -132,6 +132,7 @@
     "FileRemoved": "ms-resource:loc.messages.FileRemoved",
     "FileAdded": "ms-resource:loc.messages.FileAdded",
     "FileChanged": "ms-resource:loc.messages.FileChanged",
-    "NoChanges": "ms-resource:loc.messages.NoChanges"
+    "NoChanges": "ms-resource:loc.messages.NoChanges",
+    "PdbWarning": "ms-resource:loc.messages.PdbWarning"
   }
 }
