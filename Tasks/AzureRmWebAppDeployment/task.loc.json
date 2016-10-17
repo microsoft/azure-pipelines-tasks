@@ -115,7 +115,7 @@
       "type": "boolean",
       "label": "ms-resource:loc.input.label.UseWebDeploy",
       "required": false,
-      "defaultValue": "true",
+      "defaultValue": "false",
       "groupName": "AdditionalDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.UseWebDeploy"
     },
@@ -158,6 +158,15 @@
       "groupName": "AdditionalDeploymentOptions",
       "visibleRule": "UseWebDeploy == true",
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
+    },
+    {
+      "name": "TakeAppOfflineFlag",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.TakeAppOfflineFlag",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "AdditionalDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
     },
     {
       "name": "XmlTransformsAndVariableSubstitutions",
@@ -286,6 +295,10 @@
     "Failedtowritetoconfigfilewitherror": "ms-resource:loc.messages.Failedtowritetoconfigfilewitherror",
     "Erroroccurredwhileprocessingxmlnode": "ms-resource:loc.messages.Erroroccurredwhileprocessingxmlnode",
     "Processingsubstitutionforxmlnode": "ms-resource:loc.messages.Processingsubstitutionforxmlnode",
-    "Initiatedvariablesubstitutioninconfigfile": "ms-resource:loc.messages.Initiatedvariablesubstitutioninconfigfile"
+    "Initiatedvariablesubstitutioninconfigfile": "ms-resource:loc.messages.Initiatedvariablesubstitutioninconfigfile",
+    "AppOfflineModeenabled": "ms-resource:loc.messages.AppOfflineModeenabled",
+    "Failedtoenableappofflinemode": "ms-resource:loc.messages.Failedtoenableappofflinemode",
+    "AppOflineModedisabled": "ms-resource:loc.messages.AppOflineModedisabled",
+    "FailedtodisableAppOfflineMode": "ms-resource:loc.messages.FailedtodisableAppOfflineMode"
   }
 }
