@@ -16,13 +16,13 @@ describe('AzureRmWebAppDeployment Suite', function() {
     it('Runs successfully with default inputs', (done:MochaDone) => {
         let tp = path.join(__dirname, 'L0WindowsDefault.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
+        tr.run()
 
         assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
         var expectedOut = 'Updated history to kudu'; 
         assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
+        assert(tr.succeeded, 'task should have succeeded');
         done();
     });
 
@@ -81,6 +81,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'L0WindowsSpecificSlot.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
+
         var expectedOut = 'Updated history to kudu';
         assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
         assert(tr.stderr.length == 0  && tr.errorIssues.length == 0, 'should not have written to stderr');
@@ -92,7 +93,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
     it('Runs Successfully with XDT Transformation', (done) => {
         let tp = path.join(__dirname, 'L0WindowsXdtTransformation.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run();
+        tr.run()
 
         var expectedOut = 'Updated history to kudu';
         assert(tr.invokedToolCount == 3, 'should have invoked tool thrice');
@@ -106,7 +107,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'L0WindowsXdtTransformationFail.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-
+        
         var expectedErr = "Error: loc_mock_XdtTransformationErrorWhileTransforming";
         assert(tr.invokedToolCount == 1, 'should have invoked tool only once');
         assert(tr.stderr.length > 0 || tr.errorIssues.length > 0, 'should have written to stderr');
@@ -119,6 +120,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'L0NonWindowsXdtTransformationFail.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
+
         var expectedErr = "Error: loc_mock_CannotPerformXdtTransformationOnNonWindowsPlatform";
         assert(tr.invokedToolCount == 0, 'should not have invoked tool any tool');
         assert(tr.stderr.length > 0 || tr.errorIssues.length > 0, 'should have written to stderr');

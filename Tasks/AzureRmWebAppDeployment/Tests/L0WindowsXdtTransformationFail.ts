@@ -69,7 +69,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "Invalid_webAppPkg" : [],
         "webAppPkg.zip": ["webAppPkg.zip"],
         "webAppPkg": ["webAppPkg"],
-        "DefaultWorkingDirectory\\_temp_package_path\\**\\*.config": ["path1/web.config", "path1/web.Release.config", "path1/web.Debug.config", "path2/web.config", "path2/web.Debug.config"]
+        "DefaultWorkingDirectory\\temp_web_package_folder\\**\\*.config": ["path1/web.config", "path1/web.Release.config", "path1/web.Debug.config", "path2/web.config", "path2/web.Debug.config"]
     },
     "getVariable": {
     	"ENDPOINT_AUTH_AzureRMSpn": "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}",
@@ -156,12 +156,12 @@ tr.registerMock('./azurermutil.js', {
 }
 });
 
-tr.registerMock('./compressionutility.js', {
+tr.registerMock('./ziputility.js', {
     unzip: function() {
 
     },
-    zip: function() {
-        return "DefaultWorkingDirectory\\_temp_package_path.zip"
+    archiveFolder: function() {
+        return "DefaultWorkingDirectory\\temp_web_package.zip"
     }
 });
 

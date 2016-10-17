@@ -61,6 +61,11 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "stdout": "Executed Successfully"
         }
     },
+    "rmRF": {
+        "DefaultWorkingDirectory\\msDeployCommand.bat": {
+            "success": true
+        }
+    },
     "exist": {
     	"webAppPkg.zip": true,
         "webAppPkg": true

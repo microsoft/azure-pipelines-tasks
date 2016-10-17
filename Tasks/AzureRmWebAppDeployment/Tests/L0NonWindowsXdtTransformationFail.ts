@@ -150,6 +150,14 @@ tr.registerMock('./azurermutil.js', {
     return config;
 }
 });
+tr.registerMock('./ziputility.js', {
+    unzip: function() {
+
+    },
+    archiveFolder: function() {
+        return "DefaultWorkingDirectory\\temp_web_package.zip"
+    }
+});
 
 tr.setAnswers(a);
 tr.run();

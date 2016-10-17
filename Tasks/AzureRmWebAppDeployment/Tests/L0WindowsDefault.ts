@@ -44,6 +44,11 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "checkPath": {
         "cmd": true
     },
+    "rmRF": {
+        "DefaultWorkingDirectory\\msDeployCommand.bat": {
+            "success": true
+        }
+    },
     "exec": {
         "cmd /C DefaultWorkingDirectory\\msDeployCommand.bat": {
             "code": 0,
