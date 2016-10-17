@@ -8,6 +8,7 @@ var kuduUtility = require('./kuduutility.js');
 var jsonVariableSubs = require('./jsonvariablesubs.js');
 var zipUtility = require('./ziputility.js');
 var xmlSubstitutionUtility = require('./xmlsubstitutionutil.js');
+var xdtUtility = require('./xdtutility.js');
 
 async function run() {
     try {
@@ -27,6 +28,7 @@ async function run() {
         var takeAppOfflineFlag: boolean = tl.getBoolInput('TakeAppOfflineFlag', false);
         var additionalArguments: string = tl.getInput('AdditionalArguments', false);
         var webAppUri:string = tl.getInput('WebAppUri', false);
+        var xmlTransformation: boolean = tl.getBoolInput('XdtTransformation', false);
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
         var jsonVariableSubsFlag = tl.getBoolInput('JSONVariableSubstitutionsFlag', false);
         var jsonVariableSubsFiles = tl.getDelimitedInput('JSONVariableSubstitutions', '\n', false);
@@ -58,6 +60,19 @@ async function run() {
             else {
                 zipUtility.unzip(webDeployPkg, folderPath);
             }
+            if(xmlTransformation){
+                var environmentName = tl.getVariable('Release.EnvironmentName');
+                if(tl.osType().match(/^Win/)) {
+                    var transformConfigs = ["Release.config"];
+                    if(environmentName) {
+                        transformConfigs.push(environmentName + ".config");
+                    }
+                    xdtUtility.basicXdtTransformation(path.join(folderPath,'**', '*.config'), transformConfigs);  
+                    tl._writeLine("XDT Transformations applied successfully");
+                } else {
+                    throw new Error(tl.loc("CannotPerformXdtTransformationOnNonWindowsPlatform"));
+                }
+            }
             if(variableSubstitution) {
                 await xmlSubstitutionUtility.substituteAppSettingsVariables(folderPath);
             }
@@ -77,8 +92,10 @@ async function run() {
         if(webAppUri) {
             tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
         }
-
         if(canUseWebDeploy(useWebDeploy)) {
+            if(!tl.osType().match(/^Win/)){
+                throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
+            }
             tl._writeLine("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);         
             tl._writeLine("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);
             await DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,

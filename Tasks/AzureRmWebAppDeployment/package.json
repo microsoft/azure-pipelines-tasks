@@ -27,5 +27,8 @@
     "gulp-zip": "^3.2.0",
     "vso-node-api": "^5.0.5",
     "xmldom": "^0.1.22"
+  },
+  "devDependencies": {
+    "mocha": "^3.1.0"
   }
 }
