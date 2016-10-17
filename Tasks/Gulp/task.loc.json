@@ -12,7 +12,7 @@
   "version": {
     "Major": 0,
     "Minor": 5,
-    "Patch": 27
+    "Patch": 28
   },
   "demands": [
     "node.js"

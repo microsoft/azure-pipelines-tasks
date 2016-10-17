@@ -1,0 +1,143 @@
+{
+  "id": "f045e430-8704-11e6-968f-e717e6411619",
+  "name": "AzureWebAppSlotSwap",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release",
+    "Preview"
+  ],
+  "demands": [],
+  "version": {
+    "Major": "0",
+    "Minor": "1",
+    "Patch": "0"
+  },
+  "minimumAgentVersion": "1.102.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
+      "name": "WebAppName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.WebAppName",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.WebAppName"
+    },
+    {
+      "name": "ResourceGroupName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ResourceGroupName",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName"
+    },
+    {
+      "name": "SourceSlot",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.SourceSlot",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.SourceSlot"
+    },
+    {
+      "name": "SwapWithProduction",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.SwapWithProduction",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.SwapWithProduction"
+    },
+    {
+      "name": "TargetSlot",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.TargetSlot",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.TargetSlot",
+      "visibleRule": "SwapWithProduction = false"
+    },
+    {
+      "name": "PreserveVnet",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.PreserveVnet",
+      "defaultValue": "false",
+      "required": false
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "WebAppName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppNames"
+    },
+    {
+      "target": "ResourceGroupName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppResourceGroup",
+      "parameters": {
+        "WebAppName": "$(WebAppName)"
+      }
+    },
+    {
+      "target": "SourceSlot",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppSlotsId",
+      "parameters": {
+        "WebAppName": "$(WebAppName)",
+        "ResourceGroupName": "$(ResourceGroupName)"
+      },
+      "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
+    },
+    {
+      "target": "TargetSlot",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppSlotsId",
+      "parameters": {
+        "WebAppName": "$(WebAppName)",
+        "ResourceGroupName": "$(ResourceGroupName)"
+      },
+      "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "azurewebappslotswap.js"
+    }
+  },
+  "messages": {
+    "ErrorNoSuchDeployingMethodExists": "ms-resource:loc.messages.ErrorNoSuchDeployingMethodExists",
+    "UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1": "ms-resource:loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1",
+    "Successfullyupdatedslotswaphistory": "ms-resource:loc.messages.Successfullyupdatedslotswaphistory",
+    "Failedtoupdateslotswaphistory": "ms-resource:loc.messages.Failedtoupdateslotswaphistory",
+    "WARNINGCannotupdateslotswapstatusSCMendpointisnotenabledforthiswebsite": "ms-resource:loc.messages.WARNINGCannotupdateslotswapstatusSCMendpointisnotenabledforthiswebsite",
+    "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "ms-resource:loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved",
+    "Failedtoswapslots": "ms-resource:loc.messages.Failedtoswapslots",
+    "Successfullyswappedslots": "ms-resource:loc.messages.Successfullyswappedslots",
+    "SourceAndTargetSlotCannotBeSame": "ms-resource:loc.messages.SourceAndTargetSlotCannotBeSame"
+  }
+}

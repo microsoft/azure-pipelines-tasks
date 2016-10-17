@@ -12,7 +12,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 19
+        "Patch": 21
     },
     "instanceNameFormat": "Xcode Package $(appName)",
     "demands": [

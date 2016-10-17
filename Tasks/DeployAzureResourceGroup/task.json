@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 91
+        "Patch": 93
     },
     "demands": [
         "azureps"
@@ -174,9 +174,9 @@
             "helpMarkDown": "Incremental mode handles deployments as incremental updates to the resource group . It leaves unchanged resources that exist in the resource group but are not specified in the template. \n\n Complete mode deletes resources that are not in your template. \n\n Validate mode enables you to find problems with the template before creating actual resources. \n\n By default, Incremental mode is used.",
             "options": {
                 "Validation": "Validation Only",
-                "Incremental" : "Incremental",
-                "Complete" : "Complete"
-                },
+                "Incremental": "Incremental",
+                "Complete": "Complete"
+            },
             "visibleRule": "action = Create Or Update Resource Group"
         },
         {

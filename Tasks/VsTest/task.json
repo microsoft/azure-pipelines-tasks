@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 73
+        "Patch": 77
     },
     "demands": [
         "vstest"
@@ -29,7 +29,9 @@
             "name": "tiaOptions",
             "displayName": "Test Impact Analysis",
             "isExpanded": true,
-			"tags" : [ "Preview" ]
+            "tags": [
+                "Preview"
+            ]
         },
         {
             "name": "advancedExecutionOptions",

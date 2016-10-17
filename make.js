@@ -48,10 +48,6 @@ var createResjson = util.createResjson;
 var createTaskLocJson = util.createTaskLocJson;
 var validateTask = util.validateTask;
 
-// default tasks to build
-var makeOptions = require('./make-options.json');
-var taskList = makeOptions['tasks'];
-
 // global paths
 var buildPath = path.join(__dirname, '_build', 'Tasks');
 var buildTestsPath = path.join(__dirname, '_build', 'Tests');
@@ -73,6 +69,23 @@ if (!test('-d', binPath)) {
 }
 addPath(binPath);
 
+// resolve list of tasks
+var taskList;
+if (options.task) {
+    // find using --task parameter
+    taskList = matchFind(options.task, path.join(__dirname, 'Tasks'), { noRecurse: true })
+        .map(function (item) {
+            return path.basename(item);
+        });
+    if (!taskList.length) {
+        fail('Unable to find any tasks matching pattern ' + options.task);
+    }
+}
+else {
+    // load the default list
+    taskList = JSON.parse(fs.readFileSync(path.join(__dirname, 'make-options.json'))).tasks;
+}
+
 target.clean = function () {
     rm('-Rf', path.join(__dirname, '_build'));
     mkdir('-p', buildPath);
@@ -86,24 +99,14 @@ target.clean = function () {
 target.build = function() {
     target.clean();
 
-    ensureTool('tsc', '--version');
-
-    // filter tasks
-    var tasksToBuild;
-    if (options.task) {
-        tasksToBuild = matchFind(options.task, path.join(__dirname, 'Tasks'), { noRecurse: true })
-            .map(function (item) {
-                return path.basename(item);
-            });
-        if (!tasksToBuild.length) {
-            fail('Unable to find any tasks matching pattern ' + options.task);
+    ensureTool('tsc', '--version', 'Version 1.8.7');
+    ensureTool('npm', '--version', function (output) {
+        if (semver.lt(output, '3.0.0')) {
+            fail('expected 3.0.0 or higher');
         }
-    }
-    else {
-        tasksToBuild = taskList;
-    }
+    });
 
-    tasksToBuild.forEach(function(taskName) {
+    taskList.forEach(function(taskName) {
         banner('Building: ' + taskName);
         var taskPath = path.join(__dirname, 'Tasks', taskName);
         ensureExists(taskPath);
@@ -235,7 +238,8 @@ target.build = function() {
 // node make.js test --task ShellScript --suite L0
 //
 target.test = function() {
-    ensureTool('mocha', '--version');
+    ensureTool('tsc', '--version', 'Version 1.8.7');
+    ensureTool('mocha', '--version', '2.3.3');
 
     // build/copy the ps test infra
     rm('-Rf', buildTestsPath);
@@ -254,7 +258,7 @@ target.test = function() {
     var testsSpec = matchFind(pattern1, buildPath)
         .concat(matchFind(pattern2, buildPath));
     if (!testsSpec.length) {
-        fail(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2])}`, true);
+        fail(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2])}`);
     }
 
     run('mocha ' + testsSpec.join(' '), /*echo:*/true);
@@ -266,7 +270,8 @@ target.test = function() {
 //
 
 target.testLegacy = function() {
-    ensureTool('mocha', '--version');
+    ensureTool('tsc', '--version', 'Version 1.8.7');
+    ensureTool('mocha', '--version', '2.3.3');
 
     // clean
     console.log('removing _test');
@@ -359,7 +364,13 @@ target.package = function() {
 
     // create the tasks zip
     var zipPath = path.join(packagePath, 'pack-source', 'contents', 'Microsoft.TeamFoundation.Build.Tasks.zip');
-    ensureTool('powershell.exe', '-NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command "$PSVersionTable.PSVersion.ToString()"');
+    ensureTool('powershell.exe',
+        '-NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command "$PSVersionTable.PSVersion.Major"',
+        function (output) {
+            if (!Number.parseInt(output) >= 5) {
+                fail('expected version 5 or higher');
+            }
+        });
     run(`powershell.exe -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command "& '${path.join(__dirname, 'Compress-Tasks.ps1')}' -IndividualZipStagingPath '${individualZipStagingPath}' -WrapperZipStagingPath '${wrapperZipStagingPath}' -ZipPath '${zipPath}'"`, /*echo:*/true);
 
     // nuspec
@@ -391,7 +402,7 @@ target.package = function() {
     fs.writeFileSync(nuspecPath, contents);
 
     // package
-    ensureTool('nuget.exe', '', true);
+    ensureTool('nuget.exe');
     var nupkgPath = path.join(packagePath, 'pack-target', `${pkgName}.${version}.nupkg`);
     mkdir('-p', path.dirname(nupkgPath));
     run(`nuget.exe pack ${nuspecPath} -OutputDirectory ${path.dirname(nupkgPath)}`);
@@ -417,6 +428,20 @@ target.publish = function() {
     nupkgFile = path.join(nupkgDir, fileNames[0]);
 
     // publish the package
-    ensureTool('nuget3.exe', '', true);
+    ensureTool('nuget3.exe');
     run(`nuget3.exe push ${nupkgFile} -Source ${server} -apikey Skyrise`);
+}
+
+// used to bump the patch version in task.json files
+target.bump = function() {
+    taskList.forEach(function (taskName) {
+        var taskJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.json');
+        var taskJson = JSON.parse(fs.readFileSync(taskJsonPath));
+        if (typeof taskJson.version.Patch != 'number') {
+            fail(`Error processing '${taskName}'. version.Patch should be a number.`);
+        }
+
+        taskJson.version.Patch = taskJson.version.Patch + 1;
+        fs.writeFileSync(taskJsonPath, JSON.stringify(taskJson, null, 4));
+    });
 }

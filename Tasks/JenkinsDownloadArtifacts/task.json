@@ -14,64 +14,64 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 3
     },
     "groups": [
         {
-            "name":"advanced",
-            "displayName":"Advanced",
+            "name": "advanced",
+            "displayName": "Advanced",
             "isExpanded": false
-        } 
+        }
     ],
     "instanceNameFormat": "Download artifacts produced by $(jobName)",
     "inputs": [
-      {
-        "name": "serverEndpoint",
-        "type": "connectedService:Jenkins",
-        "label": "Jenkins service endpoint",
-        "defaultValue": "",
-        "required": true,
-        "helpMarkDown": "Select the service endpoint for your Jenkins instance.  To create one, click the Manage link and create a new Jenkins Service Endpoint."
-      },     
-      {
-        "name": "jobName",
-        "type": "string",
-        "label": "Job name",
-        "defaultValue": "",
-        "required": true,
-        "helpMarkDown": "The name of the Jenkins job to download artifacts from.  This must exactly match the job name on the Jenkins server."
-      },
-      {
-        "name": "saveTo",
-        "type": "filePath",
-        "label": "Save to",
-        "defaultValue": "jenkinsArtifacts",
-        "required": true,
-        "helpMarkDown": "Jenkins artifacts will be downloaded and saved to this directory.  This directory will be created if it does not exist."
-      },
-      {   
-        "name": "jenkinsBuild",  
-        "type": "radio",
-        "label": "Download artifacts produced by",  
-        "defaultValue": "LastSuccessfulBuild",  
-        "required": true,  
-        "groupName": "advanced",
-        "helpMarkDown": "Download artifacts produced by the last successful build, or from a specific build instance.",
-        "options" : {
-            "LastSuccessfulBuild":"Last Successful Build",
-            "BuildNumber":"Build Number"
-        } 
-       },
-       {
-         "name": "jenkinsBuildNumber",  
-         "type": "string",
-         "label": "Jenkins build number",  
-         "defaultValue": "1",  
-         "required": true,  
-         "groupName": "advanced",
-         "visibleRule": "jenkinsBuild == BuildNumber",
-         "helpMarkDown": "Download artifacts produced by this build."
-       }
+        {
+            "name": "serverEndpoint",
+            "type": "connectedService:Jenkins",
+            "label": "Jenkins service endpoint",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select the service endpoint for your Jenkins instance.  To create one, click the Manage link and create a new Jenkins Service Endpoint."
+        },
+        {
+            "name": "jobName",
+            "type": "string",
+            "label": "Job name",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The name of the Jenkins job to download artifacts from.  This must exactly match the job name on the Jenkins server."
+        },
+        {
+            "name": "saveTo",
+            "type": "filePath",
+            "label": "Save to",
+            "defaultValue": "jenkinsArtifacts",
+            "required": true,
+            "helpMarkDown": "Jenkins artifacts will be downloaded and saved to this directory.  This directory will be created if it does not exist."
+        },
+        {
+            "name": "jenkinsBuild",
+            "type": "radio",
+            "label": "Download artifacts produced by",
+            "defaultValue": "LastSuccessfulBuild",
+            "required": true,
+            "groupName": "advanced",
+            "helpMarkDown": "Download artifacts produced by the last successful build, or from a specific build instance.",
+            "options": {
+                "LastSuccessfulBuild": "Last Successful Build",
+                "BuildNumber": "Build Number"
+            }
+        },
+        {
+            "name": "jenkinsBuildNumber",
+            "type": "string",
+            "label": "Jenkins build number",
+            "defaultValue": "1",
+            "required": true,
+            "groupName": "advanced",
+            "visibleRule": "jenkinsBuild == BuildNumber",
+            "helpMarkDown": "Download artifacts produced by this build."
+        }
     ],
     "execution": {
         "Node": {
