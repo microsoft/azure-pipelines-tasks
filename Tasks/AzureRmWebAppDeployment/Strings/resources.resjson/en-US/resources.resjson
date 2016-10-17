@@ -95,5 +95,6 @@
   "loc.messages.FailedtodisableAppOfflineMode": "Failed to disable App Offline Mode. Status Code: %s (%s)",
   "loc.messages.Initiatedvariablesubstitutioninconfigfile": "Initiated variable substitution in config file : %s",
   "loc.messages.CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot Perform XDT Transformations on a Non-Windows platform.",
-  "loc.messages.XdtTransformationErrorWhileTransforming": "XDT Transformation Error while transforming %s using %s."
+  "loc.messages.XdtTransformationErrorWhileTransforming": "XDT Transformation Error while transforming %s using %s.",
+  "loc.messages.PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "Publish using web deploy options are supported only when using Windows agent. On other platforms, the task relies on Kudu REST APIs."
 }
