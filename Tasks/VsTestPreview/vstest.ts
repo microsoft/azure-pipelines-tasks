@@ -526,9 +526,16 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                     responseContainsNoTests(responseFile)
                                         .then(function (noTestsAvailable) {
                                             if (noTestsAvailable) {
-                                                tl.debug("No tests impacted. Not running any tests.");
-                                                tl.debug("Deleting the response file " + responseFile)
-                                                tl.rmRF(responseFile, true);
+                                                uploadTestResults("undefined")
+                                                    .then(function (code){
+                                                        tl.debug("No tests impacted. Not running any tests.");
+                                                        tl.debug("Deleting the response file " + responseFile)
+                                                        tl.rmRF(responseFile, true);
+                                                }).fail(function (code) {
+                                                    tl.debug("No tests impacted. Not running any tests.");
+                                                    tl.debug("Deleting the response file " + responseFile)
+                                                    tl.rmRF(responseFile, true);
+                                                })
                                             }
                                             else {
                                                 updateResponseFile(getVstestArguments(settingsFile, true), responseFile)
