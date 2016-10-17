@@ -8,6 +8,7 @@ var kuduUtility = require('./kuduutility.js');
 var jsonVariableSubs = require('./jsonvariablesubs.js');
 var zipUtility = require('./ziputility.js');
 var xmlSubstitutionUtility = require('./xmlsubstitutionutil.js');
+var xdtUtility = require('./xdtutility.js');
 
 async function run() {
     try {
@@ -27,7 +28,6 @@ async function run() {
         var takeAppOfflineFlag: boolean = tl.getBoolInput('TakeAppOfflineFlag', false);
         var additionalArguments: string = tl.getInput('AdditionalArguments', false);
         var webAppUri:string = tl.getInput('WebAppUri', false);
-        var xmlTransformationAndVariableSubstitution: boolean = tl.getBoolInput('XmlTransformsAndVariableSubstitutions', false);
         var xmlTransformation: boolean = tl.getBoolInput('XdtTransformation', false);
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
         var jsonVariableSubsFlag = tl.getBoolInput('JSONVariableSubstitutionsFlag', false);
@@ -60,6 +60,19 @@ async function run() {
             else {
                 zipUtility.unzip(webDeployPkg, folderPath);
             }
+            if(xmlTransformation){
+                var environmentName = tl.getVariable('Release.EnvironmentName');
+                if(tl.osType().match(/^Win/)) {
+                    var transformConfigs = ["Release.config"];
+                    if(environmentName) {
+                        transformConfigs.push(environmentName + ".config");
+                    }
+                    xdtUtility.basicXdtTransformation(path.join(folderPath,'**', '*.config'), transformConfigs);  
+                    tl._writeLine("XDT Transformations applied successfully");
+                } else {
+                    throw new Error(tl.loc("CannotPerformXdtTransformationOnNonWindowsPlatform"));
+                }
+            }
             if(variableSubstitution) {
                 await xmlSubstitutionUtility.substituteAppSettingsVariables(folderPath);
             }
@@ -71,45 +84,6 @@ async function run() {
 
         var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
         tl._writeLine(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
-        
-        if(xmlTransformationAndVariableSubstitution && xmlTransformation) {
-            if(tl.osType().match(/^Win/)) {
-                var tempPackagePath = tempPackagePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), '_temp_package_path');
-                if (tl.exist(tempPackagePath)) {
-                    tl.debug('Cleaning the directory: ' + tempPackagePath);
-                    tl.rmRF(tempPackagePath);
-                }
-                if(!isFolderBasedDeployment) {
-                    tl.debug("Unzipping the package at location : " + tempPackagePath);
-                    compressor.unzip(webDeployPkg, tempPackagePath);
-                }
-                else {
-                    tl.debug("Copying the package at location : " + tempPackagePath);
-                    tl.cp(webDeployPkg + '/.', tempPackagePath, "-rf");
-                }
-
-                var environmentName = tl.getVariable('Release.EnvironmentName');
-                if(xmlTransformation) {
-                    var transformConfigs = ["Release.config"];
-                    if(environmentName) {
-                        transformConfigs.push(environmentName + ".config");
-                    }
-                    xdtUtility.basicXdtTransformation(path.join(tempPackagePath,'**', '*.config'), transformConfigs);  
-                    tl._writeLine("XDT Transformations applied successfully");
-                }
-
-                if(!isFolderBasedDeployment) {
-                    tl.debug("Zipping back the package");
-                    webDeployPkg = await compressor.zip(tempPackagePath);
-                }
-                else {
-                    webDeployPkg = tempPackagePath;
-                } 
-            }
-            else {
-                throw new Error(tl.loc("CannotPerformXdtTransformationOnNonWindowsPlatform"));
-            }
-        }
 
         if(virtualApplication) {
             publishingProfile.destinationAppUrl += "/" + virtualApplication;
