@@ -97,7 +97,7 @@
       "name": "Package",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.Package",
-      "defaultValue": "$(System.DefaultWorkingDirectory)\\**\\*.zip",
+      "defaultValue": "$(System.DefaultWorkingDirectory)//**//*.zip",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.Package"
     },
