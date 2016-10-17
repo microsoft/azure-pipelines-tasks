@@ -68,6 +68,9 @@
       "label": "ms-resource:loc.input.label.ScriptArguments",
       "defaultValue": "",
       "required": false,
+      "properties": {
+        "editorExtension": "ms.vss-distributed-task-input-editor.parameters-grid"
+      },
       "helpMarkDown": "ms-resource:loc.input.help.ScriptArguments"
     }
   ],

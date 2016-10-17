@@ -163,6 +163,9 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.overrideParameters",
+      "properties": {
+        "editorExtension": "ms.vss-distributed-task-input-editor.parameters-grid"
+      },
       "visibleRule": "action = Create Or Update Resource Group"
     },
     {

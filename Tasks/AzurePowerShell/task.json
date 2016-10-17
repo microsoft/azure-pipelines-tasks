@@ -68,6 +68,9 @@
             "label": "Script Arguments",
             "defaultValue": "",
             "required": false,
+            "properties": {
+                "editorExtension": "ms.vss-distributed-task-input-editor.parameters-grid"
+            },
             "helpMarkDown": "Additional parameters to pass to PowerShell.  Can be either ordinal or named parameters."
         }
     ],
