@@ -115,7 +115,7 @@
             "type": "boolean",
             "label": "Publish using Web Deploy",
             "required": false,
-            "defaultValue": "true",
+            "defaultValue": "false",
             "groupName": "AdditionalDeploymentOptions",
             "helpMarkDown": "Publish using web deploy options are supported only when using Windows agent. On other platforms, the task relies on [Kudu REST APIs](https://github.com/projectkudu/kudu/wiki/REST-API) to deploy the Web App, and following options are not supported"
         },
@@ -150,16 +150,6 @@
             "helpMarkDown": "Select the option to prevent files in the App_Data folder from being deployed to the AzureRM Web App."
         },
         {
-            "name": "TakeAppOfflineFlag",
-            "type": "boolean",
-            "label": "Take App Offline",
-            "defaultValue": "false",
-            "required": false,
-            "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "UseWebDeploy == true",
-            "helpMarkDown": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully."
-        },
-        {
             "name": "AdditionalArguments",
             "type": "string",
             "label": "Additional Arguments",
@@ -170,6 +160,15 @@
             "helpMarkDown": "Additional Web Deploy arguments that will be applied when deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension."
         },
         {
+            "name": "TakeAppOfflineFlag",
+            "type": "boolean",
+            "label": "Take App Offline",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "AdditionalDeploymentOptions",
+            "helpMarkDown": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully."
+        },
+        {
             "name": "XmlTransformsAndVariableSubstitutions",
             "type": "boolean",
             "label": "XML Transforms & Variable Substitutions",
@@ -178,16 +177,16 @@
             "groupName": "FileTransformsAndVariableSubstitution",
             "helpMarkDown": ""
         },
-        {
-            "name": "Transformation",
-            "type": "boolean",
-            "label": "Transformation",
-            "required": false,
-            "defaultValue": false,
-            "groupName": "FileTransformsAndVariableSubstitution",
-            "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
-            "helpMarkDown": "The config transfoms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`. Config transforms will be run prior to the Variable Substitution."
-        },
+      {
+        "name": "XdtTransformation",
+        "type": "boolean",
+        "label": "Transformation",
+        "required": false,
+        "defaultValue": false,
+        "groupName": "FileTransformsAndVariableSubstitution",
+        "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
+        "helpMarkDown": "The config transfoms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`. Config transforms will be run prior to the Variable Substitution."
+      },
         {
             "name": "VariableSubstitution",
             "type": "boolean",
@@ -254,14 +253,14 @@
         "GotconnectiondetailsforazureRMWebApp0": "Got connection details for azureRM WebApp:'%s'",
         "UnabletoretrieveWebAppIDforazureRMWebApp0StatusCode1": "Unable to retrieve WebApp ID for azureRM WebApp:'%s'. Status Code: %s",
         "ErrorNoSuchDeployingMethodExists": "Error : No Such Deploying Method Exists",
-        "UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1": "Unable to retrieve connection details for azureRM WebApp:'%s'. Status Code: %s",
+        "UnabletoretrieveWebAppID": "Unable to retrieve connection details for azureRM WebApp:'%s'. Status Code: %s",
         "Unabletoretrievewebapppublishurlforwebapp0StatusCode1": "Unable to retrieve webapp publish url for webapp : '%s'. Status Code : '%s'",
         "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
         "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
         "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website",
         "ErrorFetchingDeploymentPublishProfileStausCode0": "Error Fetching Deployment Publish Profile [Staus Code : '%s']",
-        "ErrorOccurredStausCode0": "Error Occurred : [Staus Code : '%s']",
-        "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update deployment status : uniquedeploymentIdCannotBeRetrieved",
+        "UnabletoretrieveAzureRMWebAppConfigDetails": "Error Occurred : [Staus Code : '%s']",
+        "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update deployment status : Unique Deployment ID cannot be retrieved",
         "WebappsuccessfullypublishedatUrl0": "Web App successfully deployed at url %s",
         "Failedtodeploywebsite": "Failed to deploy website.",
         "Runningcommand": "Running command: %s",
@@ -295,9 +294,13 @@
         "Failedtowritetoconfigfilewitherror": "Failed to write to config file %s with error : %s",
         "Erroroccurredwhileprocessingxmlnode": "Error occurred while processing xml node : %s.",
         "Processingsubstitutionforxmlnode": "Processing substitution for xml node : %s",
+        "AppOfflineModeenabled": "App Offline Mode enabled.",		
+        "Failedtoenableappofflinemode": "Failed to enable app offline mode. Status Code: %s (%s)",		
+        "AppOflineModedisabled": "App Offline Mode disabled.",		
+        "FailedtodisableAppOfflineMode": "Failed to disable App Offline Mode. Status Code: %s (%s)",
         "Initiatedvariablesubstitutioninconfigfile": "Initiated variable substitution in config file : %s",
-        "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected.",
         "CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot Perform XDT Transformations on a Non-Windows platform.",
-        "XdtTransformationErrorWhileTransforming": "XDT Transformation Error while transforming %s using %s."
+        "XdtTransformationErrorWhileTransforming": "XDT Transformation Error while transforming %s using %s.",
+        "PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "Publish using webdeploy options are supportedonly when using Windows agent"
     }
 }
