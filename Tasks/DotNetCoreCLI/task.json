@@ -1,0 +1,94 @@
+{
+    "id": "5541a522-603c-47ad-91fc-a4b1d163081b",
+    "name": "DotNetCoreCLI",
+    "friendlyName": ".NET Core (PREVIEW)",
+    "description": "Build, test and publish using dotnet core command-line.",
+    "author": "Microsoft Corporation",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=832194)",
+    "category": "Build",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "runsOn": [
+        "Agent"
+    ],
+    "demands": [],
+    "version": {
+        "Major": 0,
+        "Minor": 0,
+        "Patch": 36
+    },
+    "minimumAgentVersion": "1.95.0",
+    "instanceNameFormat": "dotnet $(command)",
+    "groups": [
+    ],
+    "inputs": [
+        {
+            "name": "command",
+            "type": "pickList",
+            "label": "Command",
+            "defaultValue": "build",
+            "required": true,
+            "helpMarkDown": "Select or type a dotnet command",
+            "options": {
+                "build": "build",
+                "publish": "publish",
+                "restore": "restore",
+                "test": "test",
+                "run": "run"
+            },
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "publishWebProjects",
+            "type": "boolean",
+            "visibleRule": "command = publish",
+            "label": "Publish Web Projects",
+            "defaultValue": "true",
+            "required": true,
+            "helpMarkDown": "If true, the task will try to find the web projects in the repository and run the publish command on them. Web projects are identified by presence of either a web.config file or wwwroot folder in the directory."
+        },
+        {
+            "name": "projects",
+            "type": "string",
+            "label": "Project(s)",
+            "defaultValue": "",
+            "visibleRule": "command != publish || publishWebProjects = false",
+            "required": false,
+            "helpMarkDown": "Relative path of the project.json file(s) from repo root. Wildcards can be used. For example, **/project.json for all project.json files in all the sub folders."
+        },
+        {
+            "name": "arguments",
+            "type": "string",
+            "label": "Arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Arguments to the selected command. For example, build configuration, output folder, rutime. The arguments depend on the command selected."
+        },
+        {
+            "name": "zipAfterPublish",
+            "type": "boolean",
+            "visibleRule": "command = publish",
+            "label": "Zip Published Projects",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "If true, folder created by the publish command will be zipped."
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "dotnetcore.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "noProjectFilesFound":"Project file(s) matching the specified pattern were not found.",
+        "noWebProjctFound":"No web project was found in the repository. Web projects are identified by presence of either a web.config file or wwwroot folder in the directory.",
+        "dotnetCommandFailed":"Dotnet command failed with non-zero exit code: %d.",
+        "zipFailed":"Zip failed with error: %s",
+        "noPublishFolderFoundToZip": "A publish folder could not be found to zip for project file: %s."
+    }
+}
