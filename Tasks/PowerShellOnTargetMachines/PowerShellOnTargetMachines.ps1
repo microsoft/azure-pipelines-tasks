@@ -53,7 +53,8 @@ $ErrorActionPreference = 'Stop'
 $deploymentOperation = 'Deployment'
 
 $envOperationStatus = "Passed"
-$telemetrySet = $false
+
+$taskId = "3B5693D4-5777-4FEE-862A-BD2B7A374C68"
 
 # enabling detailed logging only when system.debug is true
 $enableDetailedLoggingString = $env:system_debug
@@ -63,27 +64,11 @@ if ($enableDetailedLoggingString -ne "true")
 }
 
 # Telemetry
-
 $telemetryCodes = 
 @{
-  "PREREQ_NoWinRMHTTP_Port" = "PREREQ001";
-  "PREREQ_NoWinRMHTTPSPort" = "PREREQ002";
-  "PREREQ_NoResources" = "PREREQ003";
-  "PREREQ_NoOutputVariableForSelectActionInAzureRG" = "PREREQ004";
-  "UNKNOWNPREDEP_Error" = "UNKNOWNPREDEP001";
-  "DEPLOYMENT_Failed" = "DEP001";
-  "AZUREPLATFORM_BlobUploadFailed" = "AZUREPLATFORM_BlobUploadFailed";
-  "PREREQ_NoVMResources" = "PREREQ_NoVMResources";
-  "UNKNOWNDEP_Error" = "UNKNOWNDEP_Error";
-  "PREREQ_StorageAccountNotFound" = "PREREQ_StorageAccountNotFound";
-  "AZUREPLATFORM_UnknownGetRMVMError" = "AZUREPLATFORM_UnknownGetRMVMError";
-  "DEPLOYMENT_FetchPropertyFromMap" = "DEPLOYMENT_FetchPropertyFromMap";
-  "PREREQ_UnsupportedAzurePSVersion" = "PREREQ_UnsupportedAzurePSVersion";
-  "DEPLOYMENT_CSMDeploymentFailed" = "DEPLOYMENT_CSMDeploymentFailed";
-  "PREREQ_InvalidServiceConnectionType" = "PREREQ_InvalidServiceConnectionType";
-  "PREREQ_AzureRMModuleNotFound" = "PREREQ_AzureRMModuleNotFound";
-  "PREREQ_InvalidFilePath" = "PREREQ_InvalidFilePath";
-  "DEPLOYMENT_PerformActionFailed" = "DEPLOYMENT_PerformActionFailed"
+  "Input_Validation" = "Input_Validation_Error";
+  "Task_InternalError" = "Task_Run_Time_Error";
+  "DTLSDK_Error" = "DTL_SDK_ERROR";  
  }
 
 function Write-Telemetry
@@ -94,26 +79,16 @@ function Write-Telemetry
     [string]$codeKey,
 
     [Parameter(Mandatory=$True,Position=2)]
-    [string]$taskId
+    [string]$errorMsg
     )
   
-  if($telemetrySet)
-  {
-    return
-  }
-
-  $code = $telemetryCodes[$codeKey]
-  $telemetryString = "##vso[task.logissue type=error;code=" + $code + ";TaskId=" + $taskId + ";]"
+  $erroCodeMsg = $telemetryCodes[$codeKey]
+  $erroCode = ('"{0}":{1}' -f $erroCodeMsg, $errorMsg)
+  ## Form errorcode as json string 
+  $erroCode = '{' + $erroCode + '}'
+  
+  $telemetryString = "##vso[task.logissue type=error;code=" + $erroCode + ";TaskId=" + $taskId + ";]"
   Write-Host $telemetryString
-  $telemetrySet = $true
-}
-
-function Write-TaskSpecificTelemetry
-{
-    param(
-      [string]$codeKey
-      )
-    Write-Telemetry "$codeKey" "3B5693D4-5777-4FEE-862A-BD2B7A374C68"
 }
 
 function Get-ResourceWinRmConfig
@@ -139,7 +114,7 @@ function Get-ResourceWinRmConfig
     
         if([string]::IsNullOrWhiteSpace($winrmPortToUse))
         {
-            Write-TaskSpecificTelemetry "PREREQ_NoWinRMHTTPSPort"
+            Write-Telemetry "Input_Validation" "WinRM HTTPS port not provided"
             throw(Get-LocalizedString -Key "{0} port was not provided for resource '{1}'" -ArgumentList "WinRM HTTPS", $resourceName)
         }
     }
@@ -153,7 +128,7 @@ function Get-ResourceWinRmConfig
     
         if([string]::IsNullOrWhiteSpace($winrmPortToUse))
         {
-            Write-TaskSpecificTelemetry "PREREQ_NoWinRMHTTPPort"
+            Write-Telemetry "Input_Validation" "WinRM HTTP port not provided"
             throw(Get-LocalizedString -Key "{0} port was not provided for resource '{1}'" -ArgumentList "WinRM HTTP", $resourceName)
         }
     }
@@ -176,7 +151,7 @@ function Get-ResourceWinRmConfig
 
                if ([string]::IsNullOrEmpty($winrmHttpPort))
                {
-                   Write-TaskSpecificTelemetry "PREREQ_NoWinRMHTTPPort"
+                   Write-Telemetry "Input_Validation" "WinRM port not available"
                    throw(Get-LocalizedString -Key "Resource: '{0}' does not have WinRM service configured. Configure WinRM service on the Azure VM Resources. Refer for more details '{1}'" -ArgumentList $resourceName, "https://aka.ms/azuresetup" )
                }
                else
@@ -211,7 +186,7 @@ function Get-ResourceWinRmConfig
 
                if ([string]::IsNullOrEmpty($winrmHttpsPort))
                {
-                   Write-TaskSpecificTelemetry "PREREQ_NoWinRMHTTPSPort"
+                   Write-Telemetry "Input_Validation" "WinRM port not available"
                    throw(Get-LocalizedString -Key "Resource: '{0}' does not have WinRM service configured. Configure WinRM service on the Azure VM Resources. Refer for more details '{1}'" -ArgumentList $resourceName, "https://aka.ms/azuresetup" )
                }
                else
@@ -315,7 +290,7 @@ try
 
     if ($resources.Count -eq 0)
     {
-        Write-TaskSpecificTelemetry "PREREQ_NoResources"
+        Write-Telemetry "Input_Validation" "No machine exists for given environment"
         throw (Get-LocalizedString -Key "No machine exists under environment: '{0}' for deployment" -ArgumentList $environmentName)
     }
 
@@ -323,10 +298,7 @@ try
 }
 catch
 {
-    if(-not $telemetrySet)
-    {
-        Write-TaskSpecificTelemetry "UNKNOWNPREDEP_Error"
-    }
+    Write-Telemetry "Task_InternalError" $_.exception.Message
 
     throw
 }
@@ -348,7 +320,7 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 
         if ($status -ne "Passed")
         {
-            Write-TaskSpecificTelemetry "DEPLOYMENT_Failed"
+            Write-Telemetry "DTLSDK_Error" $deploymentResponse.DeploymentSummary
             Write-Verbose $deploymentResponse.Error.ToString()
             $errorMessage =  $deploymentResponse.Error.Message
             throw $errorMessage
@@ -358,6 +330,7 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 else
 {
     [hashtable]$Jobs = @{} 
+    $dtlsdkErrors = @()
 
     foreach($resource in $resources)
     {
@@ -393,6 +366,7 @@ else
                         $errorMessage = $output.Error.Message
                     }
                     Write-Output (Get-LocalizedString -Key "Deployment failed on machine '{0}' with following message : '{1}'" -ArgumentList $displayName, $errorMessage)
+                    $dtlsdkErrors += $output.DeploymentSummary
                 }
                 $Jobs.Remove($job.Id)
             }
@@ -402,7 +376,10 @@ else
 
 if($envOperationStatus -ne "Passed")
 {
-    Write-TaskSpecificTelemetry "DEPLOYMENT_Failed"
+    foreach ($error in $dtlsdkErrors) {
+      Write-Telemetry "DTLSDK_Error" $error
+    }
+    
     $errorMessage = (Get-LocalizedString -Key 'Deployment on one or more machines failed.')
     throw $errorMessage
 }
