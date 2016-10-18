@@ -58,7 +58,7 @@ async function run() {
                 tl.cp(path.join(webDeployPkg, '/*'), folderPath, '-rf', false);
             }
             else {
-                zipUtility.unzip(webDeployPkg, folderPath);
+                await zipUtility.unzip(webDeployPkg, folderPath);
             }
             if(xmlTransformation){
                 var environmentName = tl.getVariable('Release.EnvironmentName');
@@ -187,7 +187,7 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
         var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
         var webAppZipFile = webDeployPkg;
         if(isFolderBasedDeployment) {
-            webAppZipFile = await kuduUtility.archiveFolder(webDeployPkg);
+            webAppZipFile = await zipUtility.archiveFolder(webDeployPkg, tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_app_package.zip');
             tl.debug(tl.loc("Compressedfolderintozip", webDeployPkg, webAppZipFile));
         } else {
             if (await kuduUtility.containsParamFile(webAppZipFile)) {
