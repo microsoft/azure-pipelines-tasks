@@ -32,8 +32,6 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        console.log(tr);
-        console.log(tr.stdout);
         var expectedOut = 'Updated history to kudu'; 
         var expectedMessage = JSON.stringify({
             type : 'Deployment',
@@ -57,8 +55,6 @@ describe('AzureRmWebAppDeployment Suite', function() {
             details : 'https://abc.visualstudio.com/MyFirstProject/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?releaseId=1&_a=release-summary'
         });
         expectedRequestBody = 'kudu log requestBody is:' + expectedRequestBody;
-        console.log(tr.stdout.indexOf('kudu log requestBody'));
-        console.log('INDEX : ' + tr.stdout.indexOf(expectedRequestBody));
         assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
         assert(tr.stderr.length == 0 && tr.errorIssues.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
@@ -183,7 +179,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         assert(tr.failed, 'task should have failed');
 
         expectedRequestBody = 'kudu log requestBody is:' + expectedRequestBody;
-        assert(tr.stdout.indexOf(expectedRequestBody) >= 0, 'should have said: ' + expectedRequestBody);
+        assert(tr.stdout.indexOf(expectedRequestBody) != -1, 'should have said: ' + expectedRequestBody);
         done();
     });
 
