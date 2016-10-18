@@ -47,6 +47,7 @@
   "loc.messages.SetParamFilenotfound0": "Set parameters file not found: %s",
   "loc.messages.GotconnectiondetailsforazureRMWebApp0": "Got connection details for azureRM WebApp:'%s'",
   "loc.messages.ErrorNoSuchDeployingMethodExists": "Error : No Such Deploying Method Exists",
+  "loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve connectiondetails for azureRM WebApp : %s. Status Code: %s (%s)",
   "loc.messages.UnabletoretrieveWebAppID": "Unable to retrieve connection details for azureRM WebApp:'%s'. Status Code: %s",
   "loc.messages.Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
   "loc.messages.Failedtoupdatedeploymenthistory": "Failed to update deployment history.",

@@ -253,6 +253,7 @@
         "SetParamFilenotfound0": "Set parameters file not found: %s",
         "GotconnectiondetailsforazureRMWebApp0": "Got connection details for azureRM WebApp:'%s'",
         "ErrorNoSuchDeployingMethodExists": "Error : No Such Deploying Method Exists",
+        "UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve connectiondetails for azureRM WebApp : %s. Status Code: %s (%s)",
         "UnabletoretrieveWebAppID": "Unable to retrieve connection details for azureRM WebApp:'%s'. Status Code: %s",
         "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
         "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
