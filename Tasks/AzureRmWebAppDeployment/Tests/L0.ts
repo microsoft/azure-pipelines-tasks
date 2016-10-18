@@ -31,6 +31,9 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'L0WindowsDefault.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
+        console.log(tr);
+        console.log(tr.stdout);
+        console.log("END");
         var expectedOut = 'Updated history to kudu'; 
         var expectedMessage = JSON.stringify({
             type : 'Deployment',
