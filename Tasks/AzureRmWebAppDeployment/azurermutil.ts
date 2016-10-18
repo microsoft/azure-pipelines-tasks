@@ -140,7 +140,7 @@ async function getAzureRMWebAppID(SPN, webAppName: string,url: string) {
     };
 
     tl.debug('Requesting AzureRM Web App ID: ' + url);
-    httpObj.get('GET', url, headers, (error, response, body) => {
+    httpObj.get('GET', url, headers, async (error, response, body) => {
         if(error) {
             deferred.reject(error);
         }
@@ -148,7 +148,7 @@ async function getAzureRMWebAppID(SPN, webAppName: string,url: string) {
             var webAppIDDetails = JSON.parse(body);
             if(webAppIDDetails.nextLink){
                 tl.debug("Requesting nextLink to accesss webappId for webapp " + webAppName);
-                getAzureRMWebAppID(SPN, webAppName, webAppIDDetails.nextLink);
+                deferred.resolve(await getAzureRMWebAppID(SPN, webAppName, webAppIDDetails.nextLink));
             } else {
                 deferred.resolve(webAppIDDetails.value[0]);
             }
