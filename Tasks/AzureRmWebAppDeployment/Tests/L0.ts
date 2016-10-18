@@ -31,7 +31,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'L0WindowsDefault.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-
+        console.log(tr);
         var expectedOut = 'Updated history to kudu'; 
         var expectedMessage = JSON.stringify({
             type : 'Deployment',
@@ -146,7 +146,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'L0WindowsFailDefault.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-
+        console.log(tr);
         var expectedErr = 'Error: Error: cmd failed with return code: 1';
         var expectedOut = 'Failed to update history to kudu';
         var expectedMessage = JSON.stringify({
