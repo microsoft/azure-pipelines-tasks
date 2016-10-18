@@ -128,6 +128,7 @@ tr.registerMock('./azurermutil.js', {
         var webAppPublishKuduUrl = publishingProfile.publishUrl;
         var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
         console.log("kudu log requestBody is:" + JSON.stringify(requestDetails["requestBody"]));
+        requestDetails["requestBody"].author = 'author';
     },
     getAzureRMWebAppConfigDetails: function(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
 	var config = { 
