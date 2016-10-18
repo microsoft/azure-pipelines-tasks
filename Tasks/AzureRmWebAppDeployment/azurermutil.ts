@@ -147,7 +147,7 @@ async function getAzureRMWebAppID(SPN, webAppName: string,url: string) {
         else if(response.statusCode === 200) {
             var webAppIDDetails = JSON.parse(body);
             if(webAppIDDetails.nextLink){
-                tl.debug("Requesting nextLink to accesss webappId : " + url);
+                tl.debug("Requesting nextLink to accesss webappId for webapp " + webAppName);
                 getAzureRMWebAppID(SPN, webAppName, webAppIDDetails.nextLink);
             } else {
                 deferred.resolve(webAppIDDetails.value[0]);
