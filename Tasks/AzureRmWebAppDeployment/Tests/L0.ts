@@ -63,7 +63,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         assert(tr.stderr.length == 0 && tr.errorIssues.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
-        assert(tr.stdout.search(expectedRequestBody) >= 0, 'should have said: ' + expectedRequestBody);
+        assert(tr.stdout.indexOf(expectedRequestBody) >= 0, 'should have said: ' + expectedRequestBody);
         done();
     });
 
@@ -183,7 +183,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         assert(tr.failed, 'task should have failed');
 
         expectedRequestBody = 'kudu log requestBody is:' + expectedRequestBody;
-        assert(tr.stdout.search(expectedRequestBody) >= 0, 'should have said: ' + expectedRequestBody);
+        assert(tr.stdout.indexOf(expectedRequestBody) >= 0, 'should have said: ' + expectedRequestBody);
         done();
     });
 
