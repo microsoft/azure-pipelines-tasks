@@ -177,5 +177,14 @@ tr.registerMock('./kuduutility.js', {
     }
 });
 
+var zipUtility = require('../ziputility.js');
+tr.registerMock('./ziputility.js', {
+    archiveFolder: function(webAppPackage, webAppZipFile) {
+        throw new Error('Folder Archiving Failed');
+    },
+    unzip: zipUtility.unzip,
+    getArchivedEntries: zipUtility.getArchivedEntries
+});
+
 tr.setAnswers(a);
 tr.run();

@@ -203,6 +203,7 @@
       "label": "ms-resource:loc.input.label.JSONVariableSubstitutionsFlag",
       "required": false,
       "defaultValue": false,
+      "visibleRule": false,
       "groupName": "FileTransformsAndVariableSubstitution",
       "helpMarkDown": "ms-resource:loc.input.help.JSONVariableSubstitutionsFlag"
     },

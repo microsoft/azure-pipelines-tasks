@@ -52,10 +52,10 @@ export async function getArchivedEntries(archivedPackage: string)  {
         deferred.reject(error);
     });
     unzipper.on('list', function (files) {
-        var pacakgeComponent = {
+        var packageComponent = {
             "entries":files
         };
-        deferred.resolve(pacakgeComponent); 
+        deferred.resolve(packageComponent); 
     });
     unzipper.list();
     return deferred.promise;
