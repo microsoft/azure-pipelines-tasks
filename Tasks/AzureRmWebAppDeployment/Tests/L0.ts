@@ -32,6 +32,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
+        console.log(tr);
+        console.log(tr.stdout);
         var expectedOut = 'Updated history to kudu'; 
         var expectedMessage = JSON.stringify({
             type : 'Deployment',
