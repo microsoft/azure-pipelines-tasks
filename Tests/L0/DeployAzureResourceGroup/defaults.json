@@ -1,0 +1,12 @@
+{
+  "getVariable": {
+    "ENDPOINT_AUTH_AzureClassicFail": "{\"parameters\":{\"certificate\":\"cert\"},\"scheme\":\"Certificate\"}",
+    "ENDPOINT_DATA_AzureClassicFail_SUBSCRIPTIONNAME": "sName",
+    "ENDPOINT_DATA_AzureClassicFail_SUBSCRIPTIONID": "sId",
+    "ENDPOINT_AUTH_AzureRM": "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}",
+    "ENDPOINT_DATA_AzureRM_SUBSCRIPTIONID": "sId",
+    "ENDPOINT_AUTH_AzureRMFail": "{\"parameters\":{\"serviceprincipalid\":\"idf\",\"serviceprincipalkey\":\"keyf\",\"tenantid\":\"tenantf\"},\"scheme\":\"ServicePrincipal\"}",
+    "ENDPOINT_DATA_AzureRM_SUBSCRIPTIONNAME": "sName",
+    "ENDPOINT_DATA_AzureRMFail_SUBSCRIPTIONNAME": "sName"
+  }
+}
