@@ -46,38 +46,40 @@ my build job:
 
   steps:
     
-    # each line is handed to the language plugin.
-    # in this case, because toolset is VS2015 (above) it knows to add msbuild task
-    - src/mywebapp.sln
+    # The dotnet toolset knows that cmdlines that first arg ends in ps1 means to inject a powershell task (defaults apply) 
+    - src/ci/before.ps1 arg1 $(foo)
+    - "src/ci/before with space.ps1" arg1 $(foo)
 
     # the dotnet language plugin also understands that "proj" maps to msbuild task
     # you can pass other inputs to the msbuild task
-    - task: msbuild
-      path: src/mywebApp.csproj
-      additonalArguments: /m
-
-    # The dotnet toolset knows that cmdlines that first arg ends in ps1 means to inject a powershell task (defaults apply) 
-    - src/ci/after.ps1 arg1 $(foo)
-    - "src/ci/after with space.ps1" arg1 $(foo)
+    # conditions supported
+    - task: msbuild 
+      condition: $(foo) -eq "bar"
+      inputs: 
+        path: src/mywebApp.csproj
+        additonalArguments: /m      
 
     # if I need to specify other inputs for script tasks ...
-    # variables map into inputs  
+    # always control option is an option
     - task: powershell
-      path: src/ci/try.ps1 $(baz) "arg two"
-      failOnStandardError: true
+      always: $(foo) -eq "bar"
+      inputs:
+        path: src/ci/try.ps1 $(baz) "arg two"
+        failOnStandardError: true
 
     # arbitrary tasks from the server can be invoked and optionally locked to a major version
     # based on the task.json metadata we know how to cast values from a string
     - task: MyCustomTask@2.x
-      input1: input1 value
-      input2: false
+      inputs:
+        input1: input1 value
+        input2: false
 
     # if it falls through all the special base project handlers, 
     # ends up with exec command line task
     - echo Hello World
 
   finally:
-    # always run
+    # always run inferred from finally
     - src/ci/cleanup.ps1
 ```
 
@@ -118,21 +120,24 @@ my build job:
 
     # this would use the servers installed xcode task locked to 2.x and the rest of defaults
     - task: XCode@2.x
-      workspace: src/MyProject/My.xcworkspace    
+      inputs:
+        workspace: src/MyProject/My.xcworkspace    
 
     # This would look for the task checked into source (starts with /) relative to the root of the repo
     # other properties besides 'task' is mapped to an input 
     # SDK overwrides the highlevel property
     - task: /tasks/xcode
-      actions: build
-      SDK: $(SDK)
-      workspace: src/MyProject/My.xcworkspace
+      inputs:
+        actions: build
+        SDK: $(SDK)
+        workspace: src/MyProject/My.xcworkspace
 
     # This would look for the task checked into source (starts with /) relative to the root of the repo
     # cloned from myTaskRepo
     - task: /tasks/xcode @ myTaskRepo
-      actions: build
-      workspace: src/MyProject/My.xcworkspace      
+      inputs:
+        actions: build
+        workspace: src/MyProject/My.xcworkspace      
 ```
 
 ## Testing Across Different Versions on Runtimes (using Installers and Tools)
@@ -157,12 +162,16 @@ my build job:
   # if steps do not exist the nodejs toolset plugin will npm install, npm test
   # you can specify
   steps:
-    - task: npm 
-      action: install
+    - task: npm
+      inputs: 
+        action: install
+
     - task: gulp
-    - task: gulp 
-      gulpfile: gulpfile.js
-      action: test
+
+    - task: gulp
+      inputs: 
+        gulpfile: gulpfile.js
+        action: test
 ```
 
 ## Common Utility Tasks
