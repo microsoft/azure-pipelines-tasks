@@ -27,7 +27,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
     });
 
     it('Verify logs pushed to Kudu when task runs successfully with default inputs and env variables found', (done) => {
-        
+        this.timeout(1000);
         let tp = path.join(__dirname, 'L0WindowsDefault.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -93,6 +93,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
     });
 
     it('Runs Successfully with XDT Transformation', (done) => {
+        this.timeout(1000);
         let tp = path.join(__dirname, 'L0WindowsXdtTransformation.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run()
@@ -145,6 +146,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
     });
 
     it('Verify logs pushed to kudu when task fails if msdeploy cmd fails to execute and some env variables not found', (done) => {
+        this.timeout(1000);
         let tp = path.join(__dirname, 'L0WindowsFailDefault.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
