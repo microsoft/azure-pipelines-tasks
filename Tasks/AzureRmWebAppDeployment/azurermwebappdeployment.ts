@@ -58,7 +58,7 @@ async function run() {
                 tl.cp(path.join(webDeployPkg, '/*'), folderPath, '-rf', false);
             }
             else {
-                zipUtility.unzip(webDeployPkg, folderPath);
+                await zipUtility.unzip(webDeployPkg, folderPath);
             }
             if(xmlTransformation){
                 var environmentName = tl.getVariable('Release.EnvironmentName');
