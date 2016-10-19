@@ -35,8 +35,7 @@
             "helpMarkDown": "",
             "defaultValue": "ConnectedServiceName",
             "options": {
-                "ConnectedServiceName": "Azure Resource Manager",
-                "ConnectedServiceNameClassic": "Azure Classic"
+                "ConnectedServiceName": "Azure Resource Manager"
             }
         },
         {
@@ -76,18 +75,6 @@
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
         },
         {
-            "name": "actionClassic",
-            "type": "pickList",
-            "label": "Action",
-            "defaultValue": "Select Resource Group",
-            "required": true,
-            "helpMarkDown": "Action to be performed on the Azure resources or cloud service.",
-            "options": {
-                "Select Resource Group": "Select Cloud Service"
-            },
-            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
-        },
-        {
             "name": "resourceGroupName",
             "type": "pickList",
             "label": "Resource Group",
@@ -97,17 +84,6 @@
                 "EditableOptions": "True"
             },
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
-        },
-        {
-            "name": "cloudService",
-            "type": "pickList",
-            "label": "Cloud Service",
-            "required": true,
-            "helpMarkDown": "Provide the name of the cloud service.",
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
         },
         {
             "name": "location",
@@ -211,11 +187,6 @@
         }
     ],
     "dataSourceBindings": [
-        {
-            "target": "cloudService",
-            "endpointId": "$(ConnectedServiceNameClassic)",
-            "dataSourceName": "AzureHostedServiceNames"
-        },
         {
             "target": "resourceGroupName",
             "endpointId": "$(ConnectedServiceName)",
