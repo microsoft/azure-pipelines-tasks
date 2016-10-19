@@ -1,4 +1,7 @@
 {
+    "getVariable": {
+        "HOME": "/user/home"
+    },
     "which": {
         "xbuild": "/home/bin/xbuild",
         "nuget": "/home/bin/nuget"

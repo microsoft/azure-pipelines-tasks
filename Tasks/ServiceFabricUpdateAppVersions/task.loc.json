@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 5
+    "Patch": 6
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -132,6 +132,7 @@
     "FileRemoved": "ms-resource:loc.messages.FileRemoved",
     "FileAdded": "ms-resource:loc.messages.FileAdded",
     "FileChanged": "ms-resource:loc.messages.FileChanged",
-    "NoChanges": "ms-resource:loc.messages.NoChanges"
+    "NoChanges": "ms-resource:loc.messages.NoChanges",
+    "PdbWarning": "ms-resource:loc.messages.PdbWarning"
   }
 }

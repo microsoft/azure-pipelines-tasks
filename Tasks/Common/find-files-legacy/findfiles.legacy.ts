@@ -44,7 +44,7 @@ function extractPattern(patterns: string[], cwd: string): any {
     let excludePatterns: string[] = [];
 
     patterns.forEach(p => {
-        p.split(',').forEach(inputFilter => {
+        p.split(';').forEach(inputFilter => {
             if (isNullOrWhitespace(inputFilter) || inputFilter.length < 2) {
                 tl.warning('Ignoring this filter: ' + inputFilter);
             }

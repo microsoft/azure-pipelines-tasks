@@ -1,7 +1,4 @@
 {
-    "getVariable": {
-        "System.DefaultWorkingDirectory": "/someDir"
-    },
     "find": {
         "/someDir": [
             "someDir/someFile2",

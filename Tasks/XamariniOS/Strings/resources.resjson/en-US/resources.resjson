@@ -36,5 +36,13 @@
   "loc.input.label.provProfile": "Provisioning Profile File",
   "loc.input.help.provProfile": "Optional relative path to file containing provisioning profile override to be used for this build.",
   "loc.input.label.removeProfile": "Remove Profile After Build",
-  "loc.input.help.removeProfile": "Specifies that the contents of the Provisioning Profile File should be removed from the build agent after the build is complete. **Only check if you are running one agent per user.**"
+  "loc.input.help.removeProfile": "Specifies that the contents of the Provisioning Profile File should be removed from the build agent after the build is complete. **Only check if you are running one agent per user.**",
+  "loc.messages.SignIdNotFound": "Failed to find iOS signing identity. Verify the signing and provisioning information provided.",
+  "loc.messages.TempKeychainSetupFailed": "Failed to add the temporary keychain to the keychains search path.",
+  "loc.messages.ProvProfileDetailsNotFound": "Failed to find the details for provisioning profile: %s",
+  "loc.messages.ProvProfileUUIDNotFound": "Failed to find provisioning profile UUID for provisioning profile: %s",
+  "loc.messages.TempKeychainDeleteFailed": "Failed to delete temporary keychain %s created during the build.",
+  "loc.messages.ProvProfileDeleteFailed": "Failed to delete the provisioning profile %s.",
+  "loc.messages.XamariniOSSucceeded": "XamariniOS task execution completed with no errors.",
+  "loc.messages.XamariniOSFailed": "XamariniOS task failed with error %s. For guidance on setting up the build definition, see https://go.microsoft.com/fwlink/?LinkId=760847."
 }
