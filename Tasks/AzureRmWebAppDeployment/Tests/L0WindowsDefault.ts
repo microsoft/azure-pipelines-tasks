@@ -131,6 +131,19 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
         }
         return mockPublishProfile;
     },
+    getAzureRMWebAppConfigDetails: function(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
+	var config = { 
+			id: 'appid',
+			properties: { 
+				virtualApplications: [ ['Object'], ['Object'], ['Object'] ],
+			} 
+		}
+
+		return config;
+	}
+});
+
+tr.registerMock('./azurerestutility.js', {
     updateDeploymentStatus: function(publishingProfile, isDeploymentSuccess ) {
         if(isDeploymentSuccess) {
             console.log('Updated history to kudu');
@@ -142,17 +155,7 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
         var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
         requestDetails["requestBody"].author = 'author';
         console.log("kudu log requestBody is:" + JSON.stringify(requestDetails["requestBody"]));
-    },
-    getAzureRMWebAppConfigDetails: function(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
-	var config = { 
-		id: 'appid',
-  		properties: { 
-     		virtualApplications: [ ['Object'], ['Object'], ['Object'] ],
-    	} 
-  	}
-
-    return config;
-}
+    }
 });
 
 tr.setAnswers(a);

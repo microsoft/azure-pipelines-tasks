@@ -2,7 +2,7 @@ import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 
-let taskPath = path.join(__dirname, 'webdeployment-common', 'azurermwebappdeployment.js');
+let taskPath = path.join(__dirname, '..', 'azurermwebappdeployment.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput('ConnectedServiceName', 'AzureRMSpn');
@@ -90,7 +90,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 import mockTask = require('vsts-task-lib/mock-task');
 var kuduDeploymentLog = require('webdeployment-common/kududeploymentstatusutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js'); 
-tr.registerMock('webdeployment-common/msdeployutility.js', {
+tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
     getMSDeployFullPath : function() {
         var msDeployFullPath =  "msdeploypath\\msdeploy.exe";
@@ -151,7 +151,21 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
 }
 });
 
-tr.registerMock('../kuduutility.js', {
+tr.registerMock('./azurerestutility.js', {
+    updateDeploymentStatus: function(publishingProfile, isDeploymentSuccess ) {
+        if(isDeploymentSuccess) {
+            console.log('Updated history to kudu');
+        }
+        else {
+            console.log('Failed to update history to kudu');
+        }
+        var webAppPublishKuduUrl = publishingProfile.publishUrl;
+        var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
+        console.log("kudu log requestBody is:" + JSON.stringify(requestDetails["requestBody"]));
+    }
+});
+
+tr.registerMock('./kuduutility.js', {
     archiveFolder: function(webAppPackage, webAppZipFile) {
         throw new Error('Folder Archiving Failed');
     },

@@ -16,11 +16,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
     it('Runs successfully with default inputs', (done:MochaDone) => {
         let tp = path.join(__dirname, 'L0WindowsDefault.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run()
-		console.log(tr);
-		console.log(tr.stderr);
-		console.log(tr.stdout);
-		
+        tr.run();
         assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         var expectedOut = 'Updated history to kudu'; 
@@ -203,7 +199,10 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'L0NonWindowsParamFileinPkg.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-
+	    console.log(tr);
+		console.log(tr.stderr);
+		console.log(tr.stdout);
+		
         var expectedOut = 'Deployed using KuduDeploy';
         assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
         assert(tr.stderr.length == 0, 'should not have written to stderr');

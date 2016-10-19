@@ -101,7 +101,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 import mockTask = require('vsts-task-lib/mock-task');
 var kuduDeploymentLog = require('webdeployment-common/kududeploymentstatusutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js'); 
-tr.registerMock('webdeployment-common/msdeployutility.js', {
+tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
     getMSDeployFullPath : function() {
         var msDeployFullPath =  "msdeploypath\\msdeploy.exe";
@@ -139,17 +139,6 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
         }
         return mockPublishProfile;
     },
-    updateDeploymentStatus: function(publishingProfile, isDeploymentSuccess ) {
-        if(isDeploymentSuccess) {
-            console.log('Updated history to kudu');
-        }
-        else {
-            console.log('Failed to update history to kudu');
-        }
-        var webAppPublishKuduUrl = publishingProfile.publishUrl;
-        var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
-        console.log("kudu log requestBody is:" + JSON.stringify(requestDetails["requestBody"]));
-    },
     getAzureRMWebAppConfigDetails: function(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
 	var config = { 
 		id: 'appid',
@@ -160,6 +149,21 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
 
     return config;
 }
+});
+
+tr.registerMock('./azurerestutility.js', {
+    updateDeploymentStatus: function(publishingProfile, isDeploymentSuccess ) {
+        if(isDeploymentSuccess) {
+            console.log('Updated history to kudu');
+        }
+        else {
+            console.log('Failed to update history to kudu');
+        }
+        var webAppPublishKuduUrl = publishingProfile.publishUrl;
+        var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
+        requestDetails["requestBody"].author = 'author';
+        console.log("kudu log requestBody is:" + JSON.stringify(requestDetails["requestBody"]));
+    }
 });
 
 tr.registerMock('webdeployment-common/ziputility.js', {
