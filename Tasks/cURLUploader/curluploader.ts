@@ -68,6 +68,9 @@ async function run() {
             }
 
             var uploadFiles = '{' + uploadFilesList.join(',') + '}'
+
+            // replace all backslash with slash, because curl will fail on windows
+            uploadFiles = uploadFiles.split('\\').join('/');
         }
         tl.debug(tl.loc('UploadingFiles', uploadFiles));
 
