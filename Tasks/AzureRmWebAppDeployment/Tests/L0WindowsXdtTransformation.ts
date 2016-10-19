@@ -99,9 +99,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 
 import mockTask = require('vsts-task-lib/mock-task');
-var kuduDeploymentLog = require('../kududeploymentlog.js');
-var msDeployUtility = require('../msdeployutility.js'); 
-tr.registerMock('./msdeployutility.js', {
+var kuduDeploymentLog = require('webdeployment-common/kududeploymentstatusutility.js');
+var msDeployUtility = require('webdeployment-common/msdeployutility.js'); 
+tr.registerMock('webdeployment-common/msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
     getMSDeployFullPath : function() {
         var msDeployFullPath =  "msdeploypath\\msdeploy.exe";
@@ -113,7 +113,7 @@ tr.registerMock('./msdeployutility.js', {
     }
 }); 
 
-tr.registerMock('./azurermutil.js', {
+tr.registerMock('webdeployment-common/azurerestutility.js', {
     getAzureRMWebAppPublishProfile: function(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
         var mockPublishProfile = {
             profileName: 'mytestapp - Web Deploy',
@@ -162,7 +162,7 @@ tr.registerMock('./azurermutil.js', {
 }
 });
 
-tr.registerMock('./ziputility.js', {
+tr.registerMock('webdeployment-common/ziputility.js', {
     unzip: function() {
 
     },

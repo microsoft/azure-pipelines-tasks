@@ -6,7 +6,7 @@ import httpClient = require('vso-node-api/HttpClient');
 var httpObj = new httpClient.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
 var gulp = require('gulp');
 var zip = require('gulp-zip');
-var zipUtility = require('./ziputility.js');
+var zipUtility = require('webdeployment-common/ziputility.js');
 
 export async function appOffineKuduService(publishUrl: string, physicalPath: string, headers, enableFeature: boolean) {
     var defer = Q.defer<string>();

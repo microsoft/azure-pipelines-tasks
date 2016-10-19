@@ -17,7 +17,10 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'L0WindowsDefault.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run()
-
+		console.log(tr);
+		console.log(tr.stderr);
+		console.log(tr.stdout);
+		
         assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         var expectedOut = 'Updated history to kudu'; 
