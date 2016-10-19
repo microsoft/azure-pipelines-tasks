@@ -15,7 +15,7 @@ function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
 }
 
-describe('Resource Group Operations', function () {
+describe('Azure Resource Group Deployment', function () {
     this.timeout(30000);
     var taskSrcPath = path.join (__dirname, '..', '..', '..', 'Tasks', 'AzureResourceGroupDeployment');
     var testSrcPath = path.join (__dirname, '..', '..', '..', "..", 'Tests', 'L0', 'DeployAzureResourceGroup');
@@ -41,32 +41,47 @@ describe('Resource Group Operations', function () {
     after(function () {
     });
 
-    function createOrUpdateRG_Success() {
+    function createOrUpdateRG() {
         var tr = new trm.TaskRunner('AzureResourceGroupDeployment');
         tr.setInput("action", "Create Or Update Resource Group");
         tr.setInput("ConnectedServiceNameSelector", "ConnectedServiceName");
         tr.setInput("ConnectedServiceName", "AzureRM");
         tr.setInput("resourceGroupName", "dummy");
         tr.setInput("location", "West US");
-        tr.setInput("csmFile", testSrcPath + "\\defaults.json");
-        tr.setInput("csmParametersFile", testSrcPath + "\\defaults.json");
+        tr.setInput("csmFile", testSrcPath + "\\CSM.json");
         tr.setInput("overrideParameters", "");
         tr.setInput("deploymentMode","Complete");
         return tr;
     }
 
-    it('Successfully triggered createOrUpdate', (done) => {
-        var tr = createOrUpdateRG_Success();
+    it('Successfully triggered createOrUpdate deployment', (done) => {
+        var tr = createOrUpdateRG();
+        tr.setInput("csmParametersFile",testSrcPath + "\\CSM.json" );
         tr.run()
             .then(() => {
                 assert(tr.succeeded, "Should have succeeded");
                 done();
           }).fail((err) => {
-              console.log(tr.stdout);
-              console.log(tr.stderr);
+                console.log(tr.stdout);
+                console.error(tr.stderr);
                 done(err);
         });
     });
+
+    it('Create or Update RG, failed on faulty CSM template file', (done) => {
+        var tr = createOrUpdateRG();
+        tr.setInput("csmFile", testSrcPath+"\\faultyCSM.json");
+        tr.run()
+            .then(()=> {
+                assert(tr.failed, "Task should have failed");
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                console.error(tr.stderr);
+                done(err);
+            });
+    })
 
     
     function selectRG() {
@@ -87,6 +102,8 @@ describe('Resource Group Operations', function () {
                 assert(tr.stdout.indexOf("set output.variable.custom")>=0, "Should have written to the output variable ......... ");
                 done();                
             }).fail((err) => {
+                console.log(tr.stdout);
+                console.error(tr.stderr);
                 done(err);
             });
     });
@@ -96,9 +113,9 @@ describe('Resource Group Operations', function () {
         tr.run()
             .then(() => {
                 assert(tr.failed, "Task should have failed");
-                done();                
             }).fail((err) => {
                 console.log(tr.stdout);
+                console.error(tr.stderr);
                 done(err);
         });
 
@@ -109,8 +126,77 @@ describe('Resource Group Operations', function () {
                 done();                
             }).fail((err) => {
                 console.log(tr.stdout);
+                console.error(tr.stderr);
                 done(err);
             });
     });
 
+    function VMOperations(operation) {
+        var tr = new trm.TaskRunner('AzureResourceGroupDeployment');
+        tr.setInput("action", operation);
+        tr.setInput("ConnectedServiceNameSelector", "ConnectedServiceName");
+        tr.setInput("ConnectedServiceName", "AzureRM");
+        tr.setInput("resourceGroupName", "dummy");
+        return tr;
+    }
+
+    it('Started VMs', (done) => {
+        var tr = VMOperations("Start");
+        tr.run()
+            .then(( )=> {
+                assert(tr.succeeded, "Task should have succeeded");
+                assert(tr.stdout.indexOf("Starting... customVM") > 0, "Should have started VM");
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                console.error(tr.stderr);
+                done(err);
+            })
+    });
+
+    it('Stopped VMs', (done) => {
+        var tr = VMOperations("Stop");
+        tr.run()
+            .then(( )=> {
+                assert(tr.succeeded, "Task should have succeeded");
+                assert(tr.stdout.indexOf("Stopping... customVM") > 0, "Should have started VM");
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                console.error(tr.stderr);
+                done(err);
+            })
+    });
+
+    it('Restarted VMs', (done) => {
+        var tr = VMOperations("Restart");
+        tr.run()
+            .then(( )=> {
+                assert(tr.succeeded, "Task should have succeeded");
+                assert(tr.stdout.indexOf("Restarting... customVM") > 0, "Should have started VM");
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                console.error(tr.stderr);
+                done(err);
+            })
+    });
+
+    it('Deleted VMs', (done) => {
+        var tr = VMOperations("Delete");
+        tr.run()
+            .then(( )=> {
+                assert(tr.succeeded, "Task should have succeeded");
+                assert(tr.stdout.indexOf("Deleting... customVM") > 0, "Should have started VM");
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
+                console.error(tr.stderr);
+                done(err);
+            })
+    });
 });
