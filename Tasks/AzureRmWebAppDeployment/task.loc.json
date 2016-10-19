@@ -196,25 +196,6 @@
       "groupName": "FileTransformsAndVariableSubstitution",
       "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
       "helpMarkDown": "ms-resource:loc.input.help.VariableSubstitution"
-    },
-    {
-      "name": "JSONVariableSubstitutionsFlag",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.JSONVariableSubstitutionsFlag",
-      "required": false,
-      "defaultValue": false,
-      "visibleRule": false,
-      "groupName": "FileTransformsAndVariableSubstitution",
-      "helpMarkDown": "ms-resource:loc.input.help.JSONVariableSubstitutionsFlag"
-    },
-    {
-      "name": "JSONVariableSubstitutions",
-      "type": "multiLine",
-      "label": "ms-resource:loc.input.label.JSONVariableSubstitutions",
-      "required": false,
-      "groupName": "FileTransformsAndVariableSubstitution",
-      "visibleRule": "JSONVariableSubstitutionsFlag == true",
-      "helpMarkDown": "ms-resource:loc.input.help.JSONVariableSubstitutions"
     }
   ],
   "dataSourceBindings": [
