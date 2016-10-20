@@ -29,6 +29,9 @@ export class AzureResourceGroupDeployment {
     private location:string;
     private csmFile:string;
     private csmParametersFile:string;
+    private templateLocation:string;
+    private csmFileLink:string;
+    private csmParametersFileLink:string;
     private overrideParameters:string;
     private enableDeploymentPrerequisitesForCreate:boolean;
     private enableDeploymentPrerequisitesForSelect:boolean;
@@ -48,6 +51,9 @@ export class AzureResourceGroupDeployment {
             this.location = tl.getInput("location");
             this.csmFile = tl.getPathInput("csmFile");
             this.csmParametersFile = tl.getPathInput("csmParametersFile");
+            this.csmFileLink = tl.getInput("csmFileLink");
+            this.csmParametersFileLink = tl.getInput("csmParametersFile");
+            this.templateLocation = tl.getInput("templateLocation");
             this.overrideParameters = tl.getInput("overrideParameters");
             this.enableDeploymentPrerequisitesForCreate = tl.getBoolInput("enableDeploymentPrerequisitesForCreate");
             this.enableDeploymentPrerequisitesForSelect = tl.getBoolInput("enableDeploymentPrerequisitesForSelect");
@@ -65,7 +71,7 @@ export class AzureResourceGroupDeployment {
            case "Create Or Update Resource Group": 
            case "DeleteRG":
            case "Select Resource Group":
-                new resourceGroup.ResourceGroup(this.action, this.connectedService, this.getARMCredentials(), this.resourceGroupName, this.location, this.csmFile, this.csmParametersFile, this.overrideParameters, this.subscriptionId, this.deploymentMode, this.outputVariable);
+                new resourceGroup.ResourceGroup(this);
                 break;
            case "Start":
            case "Stop":

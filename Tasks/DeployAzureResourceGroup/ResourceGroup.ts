@@ -22,6 +22,9 @@ export class ResourceGroup {
     private location:string;
     private csmFile:string;
     private csmParametersFile:string;
+    private templateLocation:string;
+    private csmFileLink:string;
+    private csmParametersFileLink:string;
     private overrideParameters:string;
     private subscriptionId:string;
     private connectedService:string;
@@ -33,18 +36,21 @@ export class ResourceGroup {
     private publicAddresses;
     private virtualMachines;
     
-    constructor(action, connectedService, credentials, resourceGroupName, location, csmFile, csmParametersFile, overrideParameters, subscriptionId, deploymentMode, outputVariable) {
-            this.connectedService = connectedService;
-            this.action = action;
-            this.resourceGroupName = resourceGroupName;
-            this.location = location;
-            this.csmFile = csmFile;
-            this.csmParametersFile = csmParametersFile;
-            this.overrideParameters = overrideParameters;
-            this.subscriptionId = subscriptionId;    
-            this.deploymentMode = deploymentMode
-            this.credentials = credentials;
-            this.outputVariable = outputVariable;
+    constructor(deployRGObj) {
+            this.connectedService = deployRGObj.connectedService;
+            this.action = deployRGObj.action;
+            this.resourceGroupName = deployRGObj.resourceGroupName;
+            this.location = deployRGObj.location;
+            this.csmFile = deployRGObj.csmFile;
+            this.csmParametersFile = deployRGObj.csmParametersFile;
+            this.overrideParameters = deployRGObj.overrideParameters;
+            this.subscriptionId = deployRGObj.subscriptionId;    
+            this.deploymentMode = deployRGObj.deploymentMode
+            this.credentials = deployRGObj.credentials;
+            this.outputVariable = deployRGObj.outputVariable;
+            this.csmFileLink = deployRGObj.templateLocation;
+            this.csmParametersFileLink = deployRGObj.csmParametersFileLink;
+            this.templateLocation = deployRGObj.templateLocation;
             this.networkInterfaces = null;
             this.publicAddresses = null;
             this.virtualMachines = null;
@@ -109,7 +115,18 @@ export class ResourceGroup {
         });
     }
     
-    private createTemplateDeployment(armClient) {
+    private getDeploymentDataFromExternalLinks() {
+        var properties = {}
+        properties["templateLink"] = this.csmFileLink;
+        properties["parametersLink"] = this.csmParametersFileLink;
+        properties["mode"] = this.deploymentMode;
+        properties["debugSetting"] = {"detailLevel": "requestContent, responseContent"};
+        var deployment = {"properties": properties};
+        deployment["location"] = this.location;
+        return deployment;
+    }
+
+    private getDeploymentDataFromLinkedArtifact() {
         var template;
         try { 
             template= JSON.parse(fs.readFileSync(this.csmFile, 'UTF-8'));
@@ -135,6 +152,16 @@ export class ResourceGroup {
         properties["debugSetting"] = {"detailLevel": "requestContent, responseContent"};
         var deployment = {"properties": properties};
         deployment["location"] = this.location;
+        return deployment;
+    }
+    
+    private createTemplateDeployment(armClient) {
+        var deployment;
+        if (this.templateLocation === "Linked Artifact") {
+            deployment = this.getDeploymentDataFromLinkedArtifact();
+        } else {
+            deployment = this.getDeploymentDataFromExternalLinks();
+        }
         armClient.deployments.createOrUpdate(this.resourceGroupName, this.createDeploymentName(this.csmFile), deployment, null, (error, result, request, response) => {
             if (error) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("RGO_createTemplateDeploymentFailed", error.message));

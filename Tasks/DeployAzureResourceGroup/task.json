@@ -172,7 +172,7 @@
             "properties": {
                 "editorExtension": "ms.vss-distributed-task-input-editor.parameters-grid"
             },
-            "visibleRule": "action = Create Or Update Resource Group"
+            "visibleRule": "action = Create Or Update Resource Group && templateLocation = Linked Artifact"
         },
         {
             "name": "deploymentMode",
