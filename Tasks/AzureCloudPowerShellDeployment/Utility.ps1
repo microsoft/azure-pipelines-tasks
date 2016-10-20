@@ -97,28 +97,9 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAcc
                         $publicConfigStorageAccountName = $publicConfig.PublicConfig.StorageAccount
                         Write-Verbose "Found PublicConfig.StorageAccount= '$publicConfigStorageAccountName'"
 
-                        try
+                        if ($storageAccountKeysMap.containsKey($role))
                         {
-                            $publicConfigStorageKey = Get-AzureStorageKey -StorageAccountName $publicConfigStorageAccountName
-                        }
-                        catch
-                        {   
-                            Write-Host (Get-VstsLocString -Key "Unabletofind0usingprovidedsubscriptionLookinginstoragekeys" -ArgumentList "$publicConfigStorageAccountName")
-                            Write-Verbose $_.Exception.Message
-                        }
-                        if ($publicConfigStorageKey)
-                        {
-                            Write-Verbose "##Getting storage account name and key from diagnostics config file"
-
-                            Write-Verbose "##$storageAccountName = $publicConfigStorageAccountName"
-                            $storageAccountName = $publicConfigStorageAccountName
-
-                            Write-Verbose "##$storageAccountKey = $publicConfigStorageKey.Primary"
-                            $storageAccountKey = $publicConfigStorageKey.Primary
-                        }                    
-                        elseif($storageAccountKeysMap.containsKey($role))
-                        {
-                            Write-Verbose "##Getting diagnostics storage account name and key from passed in storage connection string"
+                            Write-Verbose "##Getting diagnostics storage account name and key from passed as storage keys."
 
                             Write-Verbose "##$storageAccountName = $publicConfigStorageAccountName"
                             $storageAccountName = $publicConfigStorageAccountName
@@ -129,8 +110,31 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAcc
                         }
                         else
                         {
-                            Write-Warning (Get-VstsLocString -Key "Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions" -ArgumentList "$publicConfigStorageAccountName")
-                            return
+                            try
+                            {
+                                $publicConfigStorageKey = Get-AzureStorageKey -StorageAccountName $publicConfigStorageAccountName
+                            }
+                            catch
+                            {   
+                                Write-Host (Get-VstsLocString -Key "Unabletofind0usingprovidedsubscription" -ArgumentList "$publicConfigStorageAccountName")
+                                Write-Verbose $_.Exception.Message
+                            }
+                            if ($publicConfigStorageKey)
+                            {
+                                Write-Verbose "##Getting storage account name and key from diagnostics config file"
+
+                                Write-Verbose "##$storageAccountName = $publicConfigStorageAccountName"
+                                $storageAccountName = $publicConfigStorageAccountName
+
+                                Write-Verbose "##$storageAccountKey = $publicConfigStorageKey.Primary"
+                                $storageAccountKey = $publicConfigStorageKey.Primary
+                                Write-Verbose "Storage account : $storageAccountName and Key : $storageAccountKey"
+                            }                    
+                            else
+                            {
+                                Write-Warning (Get-VstsLocString -Key "Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions" -ArgumentList "$publicConfigStorageAccountName")
+                                return
+                            }
                         }
                     }
                     else
@@ -163,7 +167,7 @@ function Parse-StorageKeys($storageAccountKeys)
     $roleStorageKeyMap = @{}
     if($storageAccountKeys)
     {
-        $roleKeyPairs = $storageAccountKeys.split(" ")
+        $roleKeyPairs = $storageAccountKeys.split()
         foreach($roleKeyPair in $roleKeyPairs) 
         {
             if($roleKeyPair)

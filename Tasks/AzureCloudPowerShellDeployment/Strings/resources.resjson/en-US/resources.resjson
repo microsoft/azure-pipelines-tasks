@@ -22,8 +22,8 @@
   "loc.input.label.AppendDateTimeToLabel": "Append current date and time",
   "loc.input.help.AppendDateTimeToLabel": "Appends current date and time to deployment label",
   "loc.input.label.AllowUpgrade": "Allow Upgrade",
-  "loc.input.label.StorageAccountKeys": "Storage Account Keys",
-  "loc.input.help.StorageAccountKeys": "Define storage keys corresponding to storage accounts being defined for diagnosticsExtensions.Format is WebRole1:Key1 WorkerRole1:Key2",
+  "loc.input.label.DiagnosticStorageAccountKeys": "Diagnostic Storage Account Keys",
+  "loc.input.help.DiagnosticStorageAccountKeys": "Provide storage keys for diagnostics in Role:Storagekey format. The storage account for the roles mentioned will be picked from diagnostics config file. If there are no matching storage accounts in the config file, then the key will be ignored.",
   "loc.input.label.NewServiceAdditionalArguments": "Additional Arguments",
   "loc.input.help.NewServiceAdditionalArguments": "Pass in additional arguments while creating a brand new service. These will be passed on to `New-AzureService` commandlet. Eg: `-Label 'MyTestService'`",
   "loc.input.label.NewServiceAffinityGroup": "AffinityGroup",
@@ -35,5 +35,5 @@
   "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}",
   "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one.",
   "loc.messages.Storagekeysaredefinedininvalidformat": "Storage keys are defined in invalid format.",
-  "loc.messages.Unabletofind0usingprovidedsubscriptionLookinginstoragekeys": "Unable to find {0} using provided subscription.Looking in storage keys."
+  "loc.messages.Unabletofind0usingprovidedsubscription": "Unable to find {0} using provided subscription"
 }

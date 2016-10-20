@@ -115,16 +115,16 @@
             "required": true
         },
         {
-            "name": "StorageAccountKeys",
+            "name": "DiagnosticStorageAccountKeys",
             "type": "multiLine",
-            "label": "Storage Account Keys",
+            "label": "Diagnostic Storage Account Keys",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Define storage keys corresponding to storage accounts being defined for diagnosticsExtensions.Format is WebRole1:Key1 WorkerRole1:Key2",
+            "helpMarkDown": "Provide storage keys for diagnostics in Role:Storagekey format. The storage account for the roles mentioned will be picked from diagnostics config file. If there are no matching storage accounts in the config file, then the key will be ignored.",
             "groupName": "newServiceAdvancedOptions",
             "properties": {
                 "resizable": "true",
-                "rows": "10",
+                "rows": "6",
                 "maxLength": "500"
             }
         },
@@ -186,6 +186,6 @@
         "Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}",
         "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one.",
         "Storagekeysaredefinedininvalidformat": "Storage keys are defined in invalid format.",
-        "Unabletofind0usingprovidedsubscriptionLookinginstoragekeys" :"Unable to find {0} using provided subscription.Looking in storage keys."
+        "Unabletofind0usingprovidedsubscription" :"Unable to find {0} using provided subscription"
     }
 }
