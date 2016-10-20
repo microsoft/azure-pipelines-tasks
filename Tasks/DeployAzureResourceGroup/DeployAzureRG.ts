@@ -25,9 +25,7 @@ export class AzureResourceGroupDeployment {
 
     private connectedServiceNameSelector:string;
     private action:string;
-    private actionClassic:string;
     private resourceGroupName:string;
-    private cloudService:string;
     private location:string;
     private csmFile:string;
     private csmParametersFile:string;
@@ -44,18 +42,9 @@ export class AzureResourceGroupDeployment {
         try { 
             this.connectedServiceNameSelector = tl.getInput("ConnectedServiceNameSelector", true);
             this.connectedService = null;
-            if (this.connectedServiceNameSelector === "ConnectedServiceName") {
-                this.connectedService = tl.getInput("ConnectedServiceName");
-            }
-            else {
-                this.connectedService = tl.getInput("ConnectedServiceNameClassic");
-                console.log("Not Handled yet");
-                return;
-            }
+            this.connectedService = tl.getInput("ConnectedServiceName");
             this.action = tl.getInput("action");
-            this.actionClassic = tl.getInput("actionClassic");
             this.resourceGroupName = tl.getInput("resourceGroupName");
-            this.cloudService = tl.getInput("cloudService");
             this.location = tl.getInput("location");
             this.csmFile = tl.getPathInput("csmFile");
             this.csmParametersFile = tl.getPathInput("csmParametersFile");
