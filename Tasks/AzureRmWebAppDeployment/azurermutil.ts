@@ -70,8 +70,8 @@ export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: b
  */
 export async function getAzureRMWebAppPublishProfile(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
     if(!deployToSlotFlag) {
-        var requestURL = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\''+
-                         +'AND name EQ \'' + webAppName + '\'&api-version=2016-07-01';
+        var requestURL = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\' AND name EQ \'' + 
+                         webAppName + '\'&api-version=2016-07-01';
         var webAppID = await getAzureRMWebAppID(SPN, webAppName, requestURL);
         tl.debug('Web App details : ' + webAppID.id);
         resourceGroupName = webAppID.id.split ('/')[4];
@@ -150,6 +150,9 @@ async function getAzureRMWebAppID(SPN, webAppName: string,url: string) {
                 tl.debug("Requesting nextLink to accesss webappId for webapp " + webAppName);
                 deferred.resolve(await getAzureRMWebAppID(SPN, webAppName, webAppIDDetails.nextLink));
             } else {
+                if(webAppIDDetails.value.length == 0){
+                    deferred.reject(tl.loc("WebAppDoesntExist", webAppName));
+                }
                 deferred.resolve(webAppIDDetails.value[0]);
             }
         }

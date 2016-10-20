@@ -13,7 +13,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 7
   },
   "minimumAgentVersion": "1.102.0",
   "groups": [
@@ -110,7 +110,7 @@
       "type": "boolean",
       "label": "ms-resource:loc.input.label.UseWebDeploy",
       "required": false,
-      "defaultValue": "true",
+      "defaultValue": "false",
       "groupName": "AdditionalDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.UseWebDeploy"
     },
@@ -236,6 +236,7 @@
     "AppOfflineModeenabled": "ms-resource:loc.messages.AppOfflineModeenabled",
     "Failedtoenableappofflinemode": "ms-resource:loc.messages.Failedtoenableappofflinemode",
     "AppOflineModedisabled": "ms-resource:loc.messages.AppOflineModedisabled",
-    "FailedtodisableAppOfflineMode": "ms-resource:loc.messages.FailedtodisableAppOfflineMode"
+    "FailedtodisableAppOfflineMode": "ms-resource:loc.messages.FailedtodisableAppOfflineMode",
+    "WebAppDoesntExist": "ms-resource:loc.messages.WebAppDoesntExist"
   }
 }
