@@ -229,6 +229,7 @@
         "NoMatchingTestAssemblies": "No test assemblies found matching the pattern: %s.",
         "VstestNotFound": "Vstest of version %d is not found. Try again with a visual studio version that exists on your build agent machine.",
         "VstestFailed": "Vstest failed with error. Check logs for failures. There might be failed tests.",
+        "VstestTIANotSupported": "vstest.console.exe version does not support Test Impact Analysis. TIA will be disabled for this run.",
         "NoResultsToPublish": "No results found to publish.",
         "ErrorWhileReadingRunSettings": "Error occured while reading run settings file. Error : %s.",
         "ErrorWhileReadingTestSettings": "Error occured while reading test settings file. Error : %s.",
