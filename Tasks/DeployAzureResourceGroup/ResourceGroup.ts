@@ -7,8 +7,8 @@ import fs = require("fs");
 import util = require("util");
 
 import env = require("./Environment");
-import parameterParse = require("./parser").parameterParse;
 
+var parameterParse = require("./parser").parse;
 var armResource = require("azure-arm-resource");
 
 
@@ -152,8 +152,14 @@ export class ResourceGroup {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("RGO_createTemplateDeploymentFailed", error.message));
                 return;
             }
+            try {
+                new env.RegisterEnvironment(this.credentials, this.subscriptionId, this.resourceGroupName, this.outputVariable);
+            } catch(error) {            
+                tl.setResult(tl.TaskResult.Failed, tl.loc("FailedRegisteringEnvironment", error));
+                return;
+            }
             tl.setResult(tl.TaskResult.Succeeded, tl.loc("RGO_createTemplateDeploymentSucceeded", this.resourceGroupName));
-        } );
+        });
     }
 
     private deleteResourceGroup() {

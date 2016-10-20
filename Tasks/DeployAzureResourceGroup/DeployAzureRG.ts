@@ -76,13 +76,6 @@ export class AzureResourceGroupDeployment {
            default:
                tl.setResult(tl.TaskResult.Succeeded, tl.loc("InvalidAction"));
         }
-        if (this.outputVariable && this.outputVariable.trim()!="" && this.action!="Select Resource Group"){
-            try {
-                new env.RegisterEnvironment(this.getARMCredentials(), this.subscriptionId, this.resourceGroupName, this.outputVariable);
-            } catch(error) {            
-                tl.setResult(tl.TaskResult.Failed, tl.loc("FailedRegisteringEnvironment", error));
-            }
-        }
     }
 
      private getARMCredentials() {
