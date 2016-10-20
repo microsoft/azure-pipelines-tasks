@@ -2,7 +2,7 @@ import Q = require('q');
 import tl = require('vsts-task-lib/task');
 import fs = require('fs');
 
-var azureRmUtil = require ('./azurermutil.js');
+var utility = require ('./utility.js');
 var xmldom = require('xmldom');
 var serializer = new xmldom.XMLSerializer;
 var implementation = new xmldom.DOMImplementation;
@@ -92,7 +92,7 @@ async function updateXmlNodeAttribute(xmlDomNode) {
         var childAttributes = childNode.attributes;
         for(var j=0; j< childAttributes.length; j++){
             var attribute = childAttributes[j];
-            if(!isEmpty(attribute) && !azureRmUtil.isPredefinedVariable(attribute.localName)) {
+            if(!isEmpty(attribute) && !utility.isPredefinedVariable(attribute.localName)) {
                 var taskContextVariableValue = tl.getVariable(attribute.localName);
                 if(taskContextVariableValue){
                     childNode.setAttribute(attribute.localName, taskContextVariableValue);
@@ -100,7 +100,7 @@ async function updateXmlNodeAttribute(xmlDomNode) {
             }
         }
         var valueOfKeyAttribute = childNode.getAttribute("key");
-        if(!isEmpty(valueOfKeyAttribute) && !azureRmUtil.isPredefinedVariable(valueOfKeyAttribute)) {
+        if(!isEmpty(valueOfKeyAttribute) && !utility.isPredefinedVariable(valueOfKeyAttribute)) {
             var taskContextValueOfKeyAttribute = tl.getVariable(valueOfKeyAttribute);
             if(taskContextValueOfKeyAttribute) {
                 childNode.setAttribute("value",taskContextValueOfKeyAttribute);
