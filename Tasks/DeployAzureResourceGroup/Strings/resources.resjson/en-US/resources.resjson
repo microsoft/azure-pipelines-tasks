@@ -48,5 +48,9 @@
   "loc.messages.TaskNotFound": "Task.json file could not be found: %s",
   "loc.messages.FailedRegisteringEnvironment": "Task failed while registering environment, due to the following error: %s",
   "loc.messages.selectResourceGroupSuccessfull": "Selected Resource Group: '%s' and stored it in '%s'",
-  "loc.messages.ValidatingCredentialsFailure": "Failed while validating credentials due to following error: %s"
+  "loc.messages.ValidatingCredentialsFailure": "Failed while validating credentials due to following error: %s",
+  "loc.messages.VM_Start": "Starting... %s",
+  "loc.messages.VM_Restart": "Restarting... %s",
+  "loc.messages.VM_Stop": "Stopping... %s",
+  "loc.messages.VM_Delete": "Deleting... %s"
 }
