@@ -91,9 +91,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 
 
 import mockTask = require('vsts-task-lib/mock-task');
-var kuduDeploymentLog = require('../node_modules/webdeployment-common/kududeploymentstatusutility.js');
+var kuduDeploymentLog = require('webdeployment-common/kududeploymentstatusutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js'); 
-tr.registerMock('webdeployment-common/msdeployutility.js', {
+tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
     getMSDeployFullPath : function() {
         var msDeployFullPath =  "msdeploypath\\msdeploy.exe";
@@ -131,7 +131,7 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
         }
         return mockPublishProfile;
     },
-    updateDeploymentStatus: function(publishingProfile, isDeploymentSuccess ) {
+	updateDeploymentStatus: function(publishingProfile, isDeploymentSuccess ) {
         if(isDeploymentSuccess) {
             console.log('Updated history to kudu');
         }
@@ -144,17 +144,18 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
     },
     getAzureRMWebAppConfigDetails: function(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
 	var config = { 
-		id: 'appid',
-  		properties: { 
-     		virtualApplications: [ ['Object'], ['Object'], ['Object'] ],
-    	} 
-  	}
+			id: 'appid',
+			properties: { 
+				virtualApplications: [ ['Object'], ['Object'], ['Object'] ],
+			} 
+		}
 
-    return config;
-}
+		return config;
+	}
 });
 
-tr.registerMock('webdeployment-common/kuduutility.js', {
+
+tr.registerMock('./kuduutility.js', {
     deployWebAppPackage: function(webAppPackage, webAppZipFile) {
         console.log ('Deployed using KuduDeploy');
     },
