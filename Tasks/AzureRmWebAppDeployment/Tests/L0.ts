@@ -66,7 +66,6 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'L0WindowsAllInput.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-
         var expectedOut = 'Updated history to kudu'; 
         assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
         assert(tr.stderr.length == 0 && tr.errorIssues.length == 0, 'should not have written to stderr');
@@ -79,7 +78,6 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'L0WindowsSpecificSlot.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-
         var expectedOut = 'Updated history to kudu';
         assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
         assert(tr.stderr.length == 0  && tr.errorIssues.length == 0, 'should not have written to stderr');
@@ -93,7 +91,6 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'L0WindowsXdtTransformation.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run()
-
         var expectedOut = 'Updated history to kudu';
         assert(tr.invokedToolCount == 3, 'should have invoked tool thrice');
         assert(tr.stderr.length == 0  && tr.errorIssues.length == 0, 'should not have written to stderr');
@@ -199,10 +196,6 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'L0NonWindowsParamFileinPkg.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-	    console.log(tr);
-		console.log(tr.stderr);
-		console.log(tr.stdout);
-		
         var expectedOut = 'Deployed using KuduDeploy';
         assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
         assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -263,7 +256,6 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'L0NonWindowsDefault.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-
         var expectedOut = 'Deployed using KuduDeploy'; 
         assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
         assert(tr.stderr.length == 0 && tr.errorIssues.length == 0, 'should not have written to stderr');
@@ -278,7 +270,6 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'L0NonWindowsFolderPkg.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-
         assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
         assert(tr.stderr.length == 0 && tr.errorIssues.length == 0, 'should not have written to stderr');
         var expectedOut = 'loc_mock_Compressedfolderintozip'; 
@@ -295,7 +286,6 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'L0NonWindowsFailParamPkg.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-
         assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
         assert(tr.stderr.length > 0 || tr.errorIssues.length > 0, 'should have written to stderr');
         var expectedErr = 'Error: Error: loc_mock_MSDeploygeneratedpackageareonlysupportedforWindowsplatform'
@@ -310,7 +300,6 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'L0NonWindowsFailArchive.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-
         assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
         assert(tr.stderr.length >  0 || tr.errorIssues.length > 0, 'should have written to stderr');
         var expectedErr = 'Error: Error: Folder Archiving Failed'; 
