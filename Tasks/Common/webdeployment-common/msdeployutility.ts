@@ -26,7 +26,7 @@ var parseString = require('xml2js').parseString;
 export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, publishingProfile,
                              removeAdditionalFilesFlag: boolean, excludeFilesFromAppDataFlag: boolean, takeAppOfflineFlag: boolean,
                              virtualApplication: string, setParametersFile: string, additionalArguments: string, isParamFilePresentInPacakge: boolean,
-                             isFolderBasedDeployment: boolean, useWebDeploy: boolean,overRideParams) : string {
+                             isFolderBasedDeployment: boolean, useWebDeploy: boolean, overRideParams : string[]) : string {
 
     var msDeployCmdArgs: string = " -verb:sync";
 
@@ -47,9 +47,12 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
         }
     }
 
-    msDeployCmdArgs += ",ComputerName='https://" + publishingProfile.publishUrl + "/msdeploy.axd?site=" + webAppName + "',";
-    msDeployCmdArgs += "UserName='" + publishingProfile.userName + "',Password='" + publishingProfile.userPWD + "',AuthType='Basic'";
-
+	if(publishingProfile != null)
+	{
+		msDeployCmdArgs += ",ComputerName='https://" + publishingProfile.publishUrl + "/msdeploy.axd?site=" + webAppName + "',";
+		msDeployCmdArgs += "UserName='" + publishingProfile.userName + "',Password='" + publishingProfile.userPWD + "',AuthType='Basic'";
+	}
+	
     if(isParamFilePresentInPacakge) {
         msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='" + webApplicationDeploymentPath + "'";
     }
@@ -85,8 +88,8 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
 			msDeployCmdArgs += ' -userAgent:' + userAgent;
 		}
 	}
-	
-	if(overRideParams != null && overRideParams != "")
+
+	if(overRideParams != null && overRideParams != undefined && overRideParams.length !=0)
 	{
 		var overRideParamsCmdlineArgs = getOverRideParams(overRideParams);
 		if(overRideParamsCmdlineArgs == "")
@@ -107,7 +110,7 @@ function getOverRideParams(overRideParams :string[]): string
 		var indexOfFirstEqualToSign = overRideParams[i].indexOf("=");
 		var parameterName = overRideParams[i].slice(0,indexOfFirstEqualToSign);
 		var parameterValue = overRideParams[i].slice(indexOfFirstEqualToSign+1, overRideParams[i].length);
-		if(indexOfFirstEqualToSign == -1 || parameterName == "" || parameterValue == "")
+		if(indexOfFirstEqualToSign == -1 || parameterName == "" || parameterValue == "" || parameterName.replace(" ","") == "" || parameterValue.replace(" ","") == "")
 		{
 			return "";
 		}

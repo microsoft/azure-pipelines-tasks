@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
+    "winreg": "^1.2.2",
     "vsts-task-lib": "^0.9.7",
     "q": "^1.4.1",
     "adal-node": "^0.1.15",

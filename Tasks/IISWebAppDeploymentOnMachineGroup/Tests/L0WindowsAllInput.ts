@@ -55,10 +55,16 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "stdout": "Executed Successfully"
         }
     },
+	"rmRF": {
+        "DefaultWorkingDirectory\\msDeployCommand.bat": {
+            "success": true
+        }
+    },
     "exist": {
     	"webAppPkg.zip": true,
         "webAppPkg": true
-    }, 
+    },
+	
     "glob": {
         "webAppPkgPattern" : ["webAppPkg1", "webAppPkg2"],
         "Invalid_webAppPkg" : [],
@@ -84,8 +90,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 
 
 import mockTask = require('vsts-task-lib/mock-task');
-var msdeployutilitypath = path.join(__dirname,"..","node_modules","msdeploy","msdeployutility.js");
-var msDeployUtility = require(msdeployutilitypath);
+var msDeployUtility = require('webdeployment-common/msdeployutility.js');
 
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,

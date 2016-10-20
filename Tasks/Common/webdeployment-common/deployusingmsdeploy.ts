@@ -41,7 +41,8 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
         tl._writeLine(tl.loc("Runningcommand", msDeployCommand));
         await tl.exec("cmd", ['/C', msDeployBatchFile], <any> {failOnStdErr: true});
         tl.rmRF(msDeployBatchFile, true);
-        tl._writeLine(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
+		if(publishingProfile != null){
+        tl._writeLine(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));}
     }
     catch(error) {
         tl.error(tl.loc('Failedtodeploywebsite'));
@@ -50,7 +51,7 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
         msDeployUtility.redirectMSDeployErrorToConsole();
     }
 
-    if(publishingProfile){
+    if(publishingProfile != null){
         try {
             tl._writeLine(await azureRESTUtility.updateDeploymentStatus(publishingProfile, isDeploymentSuccess));
         }
@@ -62,5 +63,4 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
     if(!isDeploymentSuccess) {
         throw Error(deploymentError);
     }
-    
 }

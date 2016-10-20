@@ -16,9 +16,7 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         let tp = path.join(__dirname, 'L0WindowsDefault.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-		console.log(tr.stdout);
-		console.log(tr.stderr);
-        assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
+		assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         done();
@@ -28,9 +26,7 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         let tp = path.join(__dirname, 'L0WindowsAllInput.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-
-        var expectedOut = 'Updated history to kudu'; 
-        assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
+		assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
         assert(tr.stderr.length == 0 && tr.errorIssues.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         done();
@@ -56,7 +52,6 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         assert(tr.stderr.length == 0 && tr.errorIssues.length == 0, 'should not have written to stderr'); 
         assert(tr.succeeded, 'task should have succeeded');
         done();
-
     });
 
     it('Fails if parameters file provided by user is not present', (done) => {

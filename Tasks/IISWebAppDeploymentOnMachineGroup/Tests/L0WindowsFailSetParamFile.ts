@@ -45,6 +45,11 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     "osType": {
         "osType": "Windows"
     },
+	 "rmRF": {
+        "DefaultWorkingDirectory\\msDeployCommand.bat": {
+            "success": true
+        }
+    },
     "exec": {
         "cmd /C DefaultWorkingDirectory\\msDeployCommand.bat": {
             "code" : 0,
@@ -70,9 +75,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
 };
 
 import mockTask = require('vsts-task-lib/mock-task');
-var msdeployutilitypath = path.join(__dirname,"..","node_modules","msdeploy","msdeployutility.js");
-var msDeployUtility = require(msdeployutilitypath);
-
+var msDeployUtility = require('webdeployment-common/msdeployutility.js');
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
     getMSDeployFullPath : function() {
@@ -82,7 +85,8 @@ tr.registerMock('./msdeployutility.js', {
     containsParamFile: function(webAppPackage: string) {
         var taskResult = mockTask.execSync("cmd", ['/C',"DefaultWorkingDirectory\\msDeployParam.bat"]);
         return true;
-    }
+    },
+	redirectMSDeployErrorToConsole : msDeployUtility.redirectMSDeployErrorToConsole
 }); 
 
 tr.setAnswers(a);

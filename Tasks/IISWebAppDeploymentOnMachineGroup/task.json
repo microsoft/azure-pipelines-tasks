@@ -152,6 +152,6 @@
         "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
         "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "More than one package matched with specified pattern. Please restrain the search patern.",
         "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected.",
-		"overrideparametershavenotbeenpassedcorrectly" : "The parameters have not been specified correctly please specify the override parameters in the mentioned format"
+		"overrideparametershavenotbeenpassedcorrectly" : "The OverRide parameters have not been specified correctly please specify the override parameters in the mentioned format"
   }
 }
