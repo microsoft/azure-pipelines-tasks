@@ -140,6 +140,25 @@ describe('Azure Resource Group Deployment', function () {
         return tr;
     }
 
+    it("Deleted Resource Group", (done) => {
+        var tr = new trm.TaskRunner('AzureResourceGroupDeployment');
+        tr.setInput("action", "DeleteRG");
+        tr.setInput("ConnectedServiceNameSelector", "ConnectedServiceName");
+        tr.setInput("ConnectedServiceName", "AzureRM");
+        tr.setInput("resourceGroupName", "dummy");
+        tr.run()
+        .then(() => {
+            assert(tr.succeeded, "Task should have succeeded");
+            assert(tr.stdout.indexOf("Deleting resource group") > 0, "Delete Resource Group function should have been called");
+            done();
+        }).fail((err) => {
+                console.log(tr.stdout);
+                console.error(tr.stderr);
+                done(err);
+        });
+
+    })
+
     it('Started VMs', (done) => {
         var tr = VMOperations("Start");
         tr.run()
