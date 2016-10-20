@@ -106,6 +106,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAcc
                             
                             Write-Verbose "##$storageAccountKey = $storageAccountKeysMap.Get_Item($role)"
                             $storageAccountKey = $storageAccountKeysMap.Get_Item($role)
+                            Write-Verbose "Storage account : $storageAccountName and Key : $storageAccountKey"
                         
                         }
                         else
@@ -128,7 +129,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAcc
 
                                 Write-Verbose "##$storageAccountKey = $publicConfigStorageKey.Primary"
                                 $storageAccountKey = $publicConfigStorageKey.Primary
-                                Write-Verbose "Storage account : $storageAccountName and Key : $storageAccountKey"
+                                
                             }                    
                             else
                             {
