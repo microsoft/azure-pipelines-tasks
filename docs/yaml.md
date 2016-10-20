@@ -2,12 +2,13 @@
 
 ## Goals
 
-- **Process follows code through branches**: History, diff, merge your build process.
+- **Process follows code through branches**: History, diff, merge your build process including tasks!
 - **Keep the spirit of simple builds that use yaml**:  The spirit is to define your language with key simple data points which derives an execution plan.  We do not want it to define an execution plan (our job) but just serialized in a different format.  If we do that, we're missing the point.
 - **Easy intuitive format per language type**: Having a language type allows infered execution without having to tediously define everything. 
 - **Consistent execution with web defined process**: Switching because you have a preference in yaml and code based process should lead to a consistent build.
-- **Leverage heavy investment in tasks**: Multiple teams have been developing tasks for a few years.  We should leverage that effort.
+- **Leverage heavy investment in tasks**: Multiple teams have been developing tasks for a few years.  We should leverage that effort while also providing the option to have all assets in source.
 - **Execute Locally**: Should be able to execute and diagnose locally. (nice to have tool after main server impl)
+- **Migrate to Yaml**: Adopt yaml.  Option in definition to create a yaml file.
 
 ## Non Goals
 
@@ -17,15 +18,15 @@
 
 [Tools](tools.md): Build and test yaml can define which toolset version to build with.  The language knows which tools has to work with. 
 
-[Task Versions](preview.md): Yaml allows reference to task including major locked version.
+[Task Versions](preview.md): Yaml allows reference to task including major locked version.  In addition there will be an option to reference a task checked into source.
 
 ## Language Type and Execution
 
 The key to being easy to use is the language.  Because of this context, much can be infered.
 
-The current build system has a json job format which describes the steps, the tasks, the variables which the agent uses to execute.  At a high level, we are simply using the language context to execute the proper language plugin (extensible - initially just be us) which is essentially a yaml to job json translator.  Because the language plugin understands that programming eco system, it knows how to infer what to execute based on declarative data.
+The current build system has a lower level job instruction format which describes the steps, the tasks, the variables which the agent uses to execute.  Yaml will offer the ability to describe higher level intent using the language to compile to a lower level job which the agent understands.  Because the language plugin understands that programming eco system, it knows how to infer what to execute based on declarative data.
 
-In entries that are paths that end with .sh, .cmd, .ps1, the base language handler knows to map that to the relevant task.
+In entries that are paths that end with .sln, .csproj, .sh, .cmd, .ps1, the base language handler knows to map that to the relevant task.
 
 Finally, all yaml entries that fall through essentially map to the cmd line task.
 
@@ -36,11 +37,7 @@ Example:
 # a definition will be able to have multiple jobs
 my build job:
 
-  ## specify language.
-  language: dotnet
-
-  ## drives which msbuild is called.  hint to msbuild below
-  toolset: VisualStudio2015
+  toolset: dotnet
  
   ## variables are merged and overlayed over variables defined in the web definition editor.
   variables:
@@ -49,35 +46,101 @@ my build job:
 
   steps:
     
-    # each line is handed to the language plugin.
-    # in this case, because toolset is VS2015 (above) it knows to add msbuild task
-    - src/mywebapp.sln
+    # The dotnet toolset knows that cmdlines that first arg ends in ps1 means to inject a powershell task (defaults apply) 
+    - src/ci/before.ps1 arg1 $(foo)
+    - "src/ci/before with space.ps1" arg1 $(foo)
 
     # the dotnet language plugin also understands that "proj" maps to msbuild task
     # you can pass other inputs to the msbuild task
-    - proj: src/mywebApp.csproj
-      msbuildArguments: /m
-
-    # if it's not something handled by project plugin, goes to the base
-    # base plugin has handlers for sh, cmd, ps1 etc... and auto maps to the powershell task
-    # language pluging understands that everything after the script is additional arguments to script 
-    - src/ci/after.ps1 arg1 $(foo)
+    # conditions supported
+    - task: msbuild 
+      condition: $(foo) -eq "bar"
+      inputs: 
+        path: src/mywebApp.csproj
+        additonalArguments: /m      
 
     # if I need to specify other inputs for script tasks ...
-    # variables map into inputs  
-    - script: src/ci/try.ps1 $(baz) "arg two"
-      failOnStandardError: true
+    # always control option is an option
+    - task: powershell
+      always: $(foo) -eq "bar"
+      inputs:
+        path: src/ci/try.ps1 $(baz) "arg two"
+        failOnStandardError: true
+
+    # arbitrary tasks from the server can be invoked and optionally locked to a major version
+    # based on the task.json metadata we know how to cast values from a string
+    - task: MyCustomTask@2.x
+      inputs:
+        input1: input1 value
+        input2: false
 
     # if it falls through all the special base project handlers, 
     # ends up with exec command line task
     - echo Hello World
 
   finally:
-    # always run
+    # always run inferred from finally
     - src/ci/cleanup.ps1
 ```
 
-## Installers and Tools
+## Checking in Task Assets to Source
+
+Tasks can also be locked down to ensure all build assets can be:
+
+  - Locked down
+  - Repeatable (build a patch from an old branch)
+  - Test all changes (tasks, scripts, ) and then merge 
+  - Use a forked and modified version of an open source task
+
+Tasks from source can be retrieved from the same repro (relative path in same repo) and external repos at a ref.   This offers complete control.
+
+Example:
+
+```yaml
+
+# a definition will be able to have multiple jobs
+my build job:
+
+  ## Tasks
+  tasks:
+     myTaskRepo:
+        type: git 
+        location: http://somegitserver
+        ref: refs/heads/mybranch
+
+  ## specify language.
+  toolset: Xcode
+ 
+  ## variables are merged and overlayed over variables defined in the web definition editor.
+  variables:
+    foo: bar
+    baz: foo
+
+  steps:
+
+    # this would use the servers installed xcode task locked to 2.x and the rest of defaults
+    - task: XCode@2.x
+      inputs:
+        workspace: src/MyProject/My.xcworkspace    
+
+    # This would look for the task checked into source (starts with /) relative to the root of the repo
+    # other properties besides 'task' is mapped to an input 
+    # SDK overwrides the highlevel property
+    - task: /tasks/xcode
+      inputs:
+        actions: build
+        SDK: $(SDK)
+        workspace: src/MyProject/My.xcworkspace
+
+    # This would look for the task checked into source (starts with /) relative to the root of the repo
+    # cloned from myTaskRepo
+    - task: /tasks/xcode @ myTaskRepo
+      inputs:
+        actions: build
+        workspace: src/MyProject/My.xcworkspace      
+```
+
+## Testing Across Different Versions on Runtimes (using Installers and Tools)
 
 Language plug-ins have associate [tool installers](tools.md).  The language plugin in this case (jsnode) has first class knowledge of node and npm and will ensure the proper version is installed and pre-pended to the path.
 
@@ -85,31 +148,30 @@ Variables can also be used to leverage the build service side matrix option.  Th
 
 ```yaml
 my build job:
-  language: jsnode
+  toolset: node
+    # node language plugin knows it's so it will insert a node installer task.  So it knows nodejs element is a matrix.
+    # We will have a set of 'Set xxx Runtime Version' tasks.  In this case 'Set Node Runtime Version' (think nvm)
+    # Same for other runtimes like jvm, python, etc...
+    # The server will create a job for each of this and add the 'Set Node Runtime Version' task first in the job with a value
+    # The 'Set xxx Runtime Tasks' will use the tool installers feature above. 
+    #   
+    nodejs:
+      - 0.12.7
+      - 4.3.2
 
-  # jsnode language plugin knows it's node that it installs and had the node installer.  So it knows nodejs element is a matrix.
-  # We will have a set of 'Set xxx Runtime Version' tasks.  In this case 'Set Node Runtime Version' (think nvm)
-  # Same for other runtimes like jvm, python, etc...
-  # The server will create a job for each of this and add the 'Set Node Runtime Version' task first in the job with a value
-  # The 'Set xxx Runtime Tasks' will use the tool installers feature above. 
-  #   
-  nodejs:
-    - 0.12.7
-    - 4.3.2
-
-  # if steps do not exist the nodejs lang plugin will npm install, npm test
+  # if steps do not exist the nodejs toolset plugin will npm install, npm test
   # you can specify
   steps:
-    - npm install
-    - gulp
-    - gulp test
+    - task: npm
+      inputs: 
+        action: install
 
+    - task: gulp
 
-    # the jsnode language plugin knows if a gulpfile to inject a gulp task
-    - src/gulpfile.js
-
-    - gulp src/gulptest.js test
-    - gulp test
+    - task: gulp
+      inputs: 
+        gulpfile: gulpfile.js
+        action: test
 ```
 
 ## Common Utility Tasks
@@ -127,44 +189,9 @@ publish:
   - server $(Build.ArtifactsDirectory)/*.zip as AppZip
 ```
 
-## Task Hints and Locking
+## Service Endpoints
 
-We need to be able to lock to certain versions of tasks.  
-
-**The default is latest non preview task** 
-
-The language plugin will sometimes have to decide which task to use.  A good example of this is ps1 paths.  It could be a generic ps1 task or an azure powershell task.  We will figure it out by cracking the file. 
-
-```yaml
-steps:
-  # This will use the latest non-preview version of the task
-  # It will also use the powershell version of the task 
-  - src/ci/start.ps1
-
-  # This will use the 2.0.1-preview version of the powershell task 
-  - (PowerShell@2) src/ci/setupenv.ps1
-
-  # This will use the azure powershell task.  It's a hint to the base language handler
-  - (AzurePowerShell) src/ci/prepazure.ps1
-```
-
-## Generic Task Invocation
-
-The goal is to create a simple and expressive yaml where language offers the opportunity to infer context.
-
-However, in the event you just want literal task invocation that the language plugin does not have first class knowledge of, then that is possible (but not in the spirit of yaml and languages)
-
-```yaml
-steps:
-
-  # only task names are used.
-  # input name or label name (what they see in the web UI) can be used 
-  # especially useful for one off custom tasks.
-  # yaml entry is dictionary instead of string with "task" key
-  - task: CredScan
-    format: PREFast
-    scanfolder: $(Build.SourcesDirectory)
-```
+## Docker
 
 ## CI Triggers
 

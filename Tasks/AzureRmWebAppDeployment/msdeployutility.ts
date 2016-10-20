@@ -117,6 +117,7 @@ export async  function containsParamFile(webAppPackage: string ) {
         }
     });
     tl.debug(tl.loc("Isparameterfilepresentinwebpackage0", isParamFilePresent));
+    tl.rmRF(msDeployParamFile, true);
     return isParamFilePresent;
 }
 

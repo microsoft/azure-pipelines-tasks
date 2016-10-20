@@ -243,8 +243,11 @@ async function run() {
             var useXcrun: string = tl.getVariable('useXcrun');
             if(useXcrun) {
                 useXcrun = useXcrun.toString().toLowerCase();
+            } else {
+                //useXcrun is not set, default to use xcrun
+                useXcrun = 'true';
             }
-            if (useXcrun === 'true' || useXctool || !ws || !scheme || xcodeVersion < 7) {
+            if (useXcrun === 'true' || useXctool || !ws || !scheme) {
                 // xcrun has been deprecated in Xcode 7 and higher
                 // use xcrun to package apps if xcodeversion is < 7
                 // or if workspace or scheme are not specified since we cannot create the archive
