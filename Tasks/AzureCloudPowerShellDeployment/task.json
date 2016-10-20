@@ -120,7 +120,7 @@
             "label": "Diagnostic Storage Account Keys",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Provide storage keys for diagnostics in Role:Storagekey format. The storage account for the roles mentioned will be picked from diagnostics config file. If there are no matching storage accounts in the config file, then the key will be ignored.",
+            "helpMarkDown": "Provide storage keys for diagnostics in Role:Storagekey format. The storage account for the roles mentioned will be picked from diagnostics config file. If there are no matching role specific config file or the storage account is missing for the given role, then the key will be ignored. <br/><br/>For example, <br/>  WebRole:<StorageAccountKey> <br/>  WorkerRole:<StorageAccountKey>",
             "groupName": "newServiceAdvancedOptions",
             "properties": {
                 "resizable": "true",
