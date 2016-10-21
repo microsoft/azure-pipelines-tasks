@@ -49,7 +49,7 @@
             "defaultValue": "",
             "required": true,
             "properties": {
-                "EditableOptions": "True"
+                "EditableOptions": "False"
             },
             "helpMarkDown": "Enter or Select the name of an existing AzureRM Web Application."
         },
@@ -68,7 +68,7 @@
             "defaultValue": "",
             "required": true,
             "properties": {
-                "EditableOptions": "True"
+                "EditableOptions": "False"
             },
             "helpMarkDown": "Enter or Select the Azure Resource Group that contains the AzureRM Web App specified above.",
             "visibleRule": "DeployToSlotFlag = true"
@@ -80,7 +80,7 @@
             "defaultValue": "",
             "required": true,
             "properties": {
-                "EditableOptions": "True"
+                "EditableOptions": "False"
             },
             "helpMarkDown": "Enter or Select an existing Slot other than the Production slot.",
             "visibleRule": "DeployToSlotFlag = true"

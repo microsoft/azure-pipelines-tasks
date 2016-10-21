@@ -49,7 +49,7 @@
       "defaultValue": "",
       "required": true,
       "properties": {
-        "EditableOptions": "True"
+        "EditableOptions": "False"
       },
       "helpMarkDown": "ms-resource:loc.input.help.WebAppName"
     },
@@ -68,7 +68,7 @@
       "defaultValue": "",
       "required": true,
       "properties": {
-        "EditableOptions": "True"
+        "EditableOptions": "False"
       },
       "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName",
       "visibleRule": "DeployToSlotFlag = true"
@@ -80,7 +80,7 @@
       "defaultValue": "",
       "required": true,
       "properties": {
-        "EditableOptions": "True"
+        "EditableOptions": "False"
       },
       "helpMarkDown": "ms-resource:loc.input.help.SlotName",
       "visibleRule": "DeployToSlotFlag = true"
