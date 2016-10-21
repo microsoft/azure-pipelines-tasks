@@ -35,8 +35,6 @@
   "loc.input.label.TakeAppOfflineFlag": "Take App Offline",
   "loc.input.help.TakeAppOfflineFlag": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully.",
   "loc.input.label.XmlTransformsAndVariableSubstitutions": "XML Transforms & Variable Substitutions",
-  "loc.input.label.XdtTransformation": "Transformation",
-  "loc.input.help.XdtTransformation": "The config transfoms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`. Config transforms will be run prior to the Variable Substitution.",
   "loc.input.label.VariableSubstitution": "Variable Substitution",
   "loc.input.help.VariableSubstitution": "Variables defined in the Build or Release Definition will be automatically substituted in the appSettings, applicationSettings, and connectionStrings section of the config files. If same variables are defined in the Release Definition and in the Environment, then the Environment variables will supersede the Release Definition variables. Variable Substitution is run after Config Transforms.",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "Invalid webapp package or folder path provided: %s",
