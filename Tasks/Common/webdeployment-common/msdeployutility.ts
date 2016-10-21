@@ -4,7 +4,6 @@ import trm = require('vsts-task-lib/toolrunner');
 import fs = require('fs');
 
 var winreg = require('winreg');
-var azureRmUtil = require('./azurermutil.js');
 var parseString = require('xml2js').parseString;
 
 /**
@@ -27,7 +26,7 @@ var parseString = require('xml2js').parseString;
 export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, publishingProfile,
                              removeAdditionalFilesFlag: boolean, excludeFilesFromAppDataFlag: boolean, takeAppOfflineFlag: boolean,
                              virtualApplication: string, setParametersFile: string, additionalArguments: string, isParamFilePresentInPacakge: boolean,
-                             isFolderBasedDeployment: boolean, useWebDeploy: boolean) : string {
+                             isFolderBasedDeployment: boolean, useWebDeploy: boolean, overRideParams : string[]) : string {
 
     var msDeployCmdArgs: string = " -verb:sync";
 
@@ -35,22 +34,25 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
     
     if(isFolderBasedDeployment) {
         msDeployCmdArgs += " -source:IisApp=\"" + webAppPackage + "\"";
-        msDeployCmdArgs += " -dest:iisApp=\"" + webApplicationDeploymentPath + "\",";
+        msDeployCmdArgs += " -dest:iisApp=\"" + webApplicationDeploymentPath + "\"";
     }
     else {       
         msDeployCmdArgs += " -source:package=\"" + webAppPackage + "\"";
 
         if(isParamFilePresentInPacakge) {
-            msDeployCmdArgs += " -dest:auto,";
+            msDeployCmdArgs += " -dest:auto";
         }
         else {
-            msDeployCmdArgs += " -dest:contentPath=\"" + webApplicationDeploymentPath + "\",";
+            msDeployCmdArgs += " -dest:contentPath=\"" + webApplicationDeploymentPath + "\"";
         }
     }
 
-    msDeployCmdArgs += "ComputerName='https://" + publishingProfile.publishUrl + "/msdeploy.axd?site=" + webAppName + "',";
-    msDeployCmdArgs += "UserName='" + publishingProfile.userName + "',Password='" + publishingProfile.userPWD + "',AuthType='Basic'";
-
+	if(publishingProfile != null)
+	{
+		msDeployCmdArgs += ",ComputerName='https://" + publishingProfile.publishUrl + "/msdeploy.axd?site=" + webAppName + "',";
+		msDeployCmdArgs += "UserName='" + publishingProfile.userName + "',Password='" + publishingProfile.userPWD + "',AuthType='Basic'";
+	}
+	
     if(isParamFilePresentInPacakge) {
         msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='" + webApplicationDeploymentPath + "'";
     }
@@ -78,12 +80,46 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
         msDeployCmdArgs += " -enableRule:DoNotDeleteRule";
     }
 
-    var userAgent = tl.getVariable("AZURE_HTTP_USER_AGENT");
-    if(userAgent) {
-        msDeployCmdArgs += ' -userAgent:' + userAgent;
-    }
+    if(publishingProfile != null)
+	{
+		var userAgent = tl.getVariable("AZURE_HTTP_USER_AGENT");
+		if(userAgent)
+		{
+			msDeployCmdArgs += ' -userAgent:' + userAgent;
+		}
+	}
+
+	if(overRideParams != null && overRideParams != undefined && overRideParams.length !=0)
+	{
+		var overRideParamsCmdlineArgs = getOverRideParams(overRideParams);
+		if(overRideParamsCmdlineArgs == "")
+		{
+			throw Error(tl.loc('overrideparametershavenotbeenpassedcorrectly'));
+		}
+		msDeployCmdArgs += overRideParamsCmdlineArgs;
+	}
     tl.debug(tl.loc('ConstructedmsDeploycomamndlinearguments'));
     return msDeployCmdArgs;
+}
+
+function getOverRideParams(overRideParams :string[]): string
+{
+	var overRideParamsCmdlineArgs="";
+	for(var i = 0; i < overRideParams.length ; i++)
+	{
+		var indexOfFirstEqualToSign = overRideParams[i].indexOf("=");
+		var parameterName = overRideParams[i].slice(0,indexOfFirstEqualToSign);
+		var parameterValue = overRideParams[i].slice(indexOfFirstEqualToSign+1, overRideParams[i].length);
+		if(indexOfFirstEqualToSign == -1 || parameterName == "" || parameterValue == "" || parameterName.replace(" ","") == "" || parameterValue.replace(" ","") == "")
+		{
+			return "";
+		}
+		overRideParamsCmdlineArgs += " -setParam:name=";
+		overRideParamsCmdlineArgs += parameterName;
+		overRideParamsCmdlineArgs += ",value=" + parameterValue;
+	}
+	
+	return overRideParamsCmdlineArgs;
 }
 
 /**
@@ -188,4 +224,20 @@ function getMSDeployInstallPath(registryKey: string): Q.Promise<string> {
     });
 
     return defer.promise;
+}
+
+/**
+ * 1. Checks if msdeploy during execution redirected any error to 
+ * error stream ( saved in error.txt) , display error to console
+ * 2. Checks if there is file in use error , suggest to try app offline.
+ */
+export function redirectMSDeployErrorToConsole() {
+    var msDeployErrorFilePath = tl.getVariable('System.DefaultWorkingDirectory') + '\\error.txt';
+    if(tl.exist(msDeployErrorFilePath)) {
+        var errorFileContent = fs.readFileSync(msDeployErrorFilePath);
+        if(errorFileContent.toString().indexOf("ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER") !== -1){
+            tl.warning(tl.loc("Trytodeploywebappagainwithappofflineoptionselected"));
+        }
+        tl.error(errorFileContent.toString());
+    }
 }

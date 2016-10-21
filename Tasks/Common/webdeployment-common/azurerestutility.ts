@@ -6,7 +6,7 @@ import Q = require('q');
 import httpClient = require('vso-node-api/HttpClient');
 import restClient = require('vso-node-api/RestClient');
 
-var kuduDeploymentLog = require('./kududeploymentlog.js');
+var kuduDeploymentStatusUtility = require('./kududeploymentstatusutility.js');
 
 var httpObj = new httpClient.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
 var restObj = new restClient.RestClient(httpObj);
@@ -30,7 +30,7 @@ export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: b
     var webAppPublishKuduUrl = publishingProfile.publishUrl;
     tl.debug('Web App Publish Kudu URL: ' + webAppPublishKuduUrl);
     if(webAppPublishKuduUrl) {
-        var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
+        var requestDetails = kuduDeploymentStatusUtility.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
         var accessToken = 'Basic ' + (new Buffer(publishingProfile.userName + ':' + publishingProfile.userPWD).toString('base64'));
         var headers = {
             authorization: accessToken
@@ -199,15 +199,4 @@ export async function getAzureRMWebAppConfigDetails(SPN, webAppName: string, res
         }
     });
     return deferred.promise;
-}
-
-
-export function isPredefinedVariable(variable: string): boolean {
-    var predefinedVarPrefix = ['agent.', 'azure_http_user_agent', 'build.', 'common.', 'release.', 'system', 'tf_'];
-    for(let varPrefix of predefinedVarPrefix) {
-        if(variable.toLowerCase().startsWith(varPrefix)) {
-            return true;
-        }
-    }
-    return false;
 }
