@@ -264,6 +264,7 @@
         "Initiatedvariablesubstitutioninconfigfile": "Initiated variable substitution in config file : %s",
         "CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot Perform XDT Transformations on a Non-Windows platform.",
         "XdtTransformationErrorWhileTransforming": "XDT Transformation Error while transforming %s using %s.",
-        "PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "Publish using webdeploy options are supported only when using Windows agent"
+        "PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "Publish using webdeploy options are supported only when using Windows agent",
+        "WebAppDoesntExist": "Webapp '%s' doesn't exist. Webapp should exist before deployment."
     }
 }

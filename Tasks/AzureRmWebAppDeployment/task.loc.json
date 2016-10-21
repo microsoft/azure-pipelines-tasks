@@ -264,6 +264,7 @@
     "Initiatedvariablesubstitutioninconfigfile": "ms-resource:loc.messages.Initiatedvariablesubstitutioninconfigfile",
     "CannotPerformXdtTransformationOnNonWindowsPlatform": "ms-resource:loc.messages.CannotPerformXdtTransformationOnNonWindowsPlatform",
     "XdtTransformationErrorWhileTransforming": "ms-resource:loc.messages.XdtTransformationErrorWhileTransforming",
-    "PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "ms-resource:loc.messages.PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"
+    "PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "ms-resource:loc.messages.PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent",
+    "WebAppDoesntExist": "ms-resource:loc.messages.WebAppDoesntExist"
   }
 }
