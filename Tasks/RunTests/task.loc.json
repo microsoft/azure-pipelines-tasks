@@ -1,0 +1,59 @@
+{
+    "id": "B7C4FE2A-9DD1-4DAE-8B77-8412002DE5A4",
+    "name": "RunTests",
+    "friendlyName": "Run Tests",
+    "description": "Run Tests",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=625976)",
+    "category": "Test",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "demands": [],
+    "instanceNameFormat": "Run Tests",
+    "inputs": [
+        {
+            "name": "adminUserName",
+            "type": "string",
+            "label": "Admin Username",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Admin username"
+        },
+        {
+            "name": "adminPassword",
+            "type": "string",
+            "label": "Admin Password",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Admin Password"
+        },
+        {
+            "name": "testUserName",
+            "type": "string",
+            "label": "Test Username",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Test username"
+        },
+        {
+            "name": "testUserPassword",
+            "type": "string",
+            "label": "Test Password",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Test Password"
+        }
+    ],
+    "execution": {
+        "PowerShell3": {
+            "target": "RunTests.ps1"
+        }
+    }
+}

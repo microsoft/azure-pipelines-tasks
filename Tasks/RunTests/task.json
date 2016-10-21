@@ -1,0 +1,270 @@
+{
+    "id": "B7C4FE2A-9DD1-4DAE-8B77-8412002DE5A4",
+    "name": "RunTests",
+    "friendlyName": "Run Tests",
+    "description": "Run Tests",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=625976)",
+    "category": "Test",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "demands": [],
+    "instanceNameFormat": "Run Tests",
+    "groups": [
+        {
+            "name": "setupOptions",
+            "displayName": "Setup Options",
+            "isExpanded": true
+        },
+        {
+            "name": "executionOptions",
+            "displayName": "Execution Options",
+            "isExpanded": true
+        },
+        {
+            "name": "reportingOptions",
+            "displayName": "Reporting Options",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "adminUserName",
+            "type": "string",
+            "label": "Admin Username",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Admin username"
+        },
+        {
+            "name": "adminPassword",
+            "type": "string",
+            "label": "Admin Password",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Admin Password"
+        },
+        {
+            "name": "testUserName",
+            "type": "string",
+            "label": "Test Username",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Test username"
+        },
+        {
+            "name": "testUserPassword",
+            "type": "string",
+            "label": "Test Password",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Test Password"
+        },
+        {
+            "name": "dropLocation",
+            "type": "string",
+            "label": "Test Drop Location",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Windows Machine File Copy' or 'Azure File Copy' task. System Environment Variables can also be used in location string. e.g., `%systemdrive%\\Tests`, `%temp%\\DropLocation` etc.",
+            "groupName": "setupOptions"
+        },
+        {
+            "name": "runUITests",
+            "type": "boolean",
+            "label": "Run UI Tests",
+            "defaultValue": "false",
+            "required": true,
+            "helpMarkDown": "Select if you are running the UI Tests",
+            "groupName": "setupOptions"
+        },
+        {
+            "name": "testSelection",
+            "type": "pickList",
+            "label": "Test Selection",
+            "defaultValue": "testAssembly",
+            "required": true,
+            "helpMarkDown": "Select the way you want to run tests : using Test Assemblies or using Test Plan.",
+            "options": {
+                "testAssembly": "Test Assembly",
+                "testPlan": "Test Plan"
+            },
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "testPlan",
+            "type": "pickList",
+            "label": "Test Plan",
+            "defaultValue": "",
+            "required": false,
+            "properties": {
+                "DisableManageLink": "True"
+            },
+            "helpMarkDown": "Select a Test Plan.",
+            "visibleRule": "testSelection = testPlan",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "testSuite",
+            "type": "pickList",
+            "label": "Test Suite",
+            "defaultValue": "",
+            "required": false,
+            "properties": {
+                "MultiSelect": "True",
+                "DisableManageLink": "True"
+            },
+            "helpMarkDown": "Select Test Suites from the Test Plan.",
+            "visibleRule": "testSelection = testPlan",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "testPlanConfigId",
+            "type": "pickList",
+            "label": "Test Configuration",
+            "defaultValue": "",
+            "required": false,
+            "properties": {
+                "DisableManageLink": "True"
+            },
+            "helpMarkDown": "Select Test Configuration.",
+            "visibleRule": "testSelection = testPlan",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "sourcefilters",
+            "type": "string",
+            "label": "Test Assembly",
+            "defaultValue": "**\\*test*.dll",
+            "required": true,
+            "helpMarkDown": "Test binaries to run tests on. Wildcards can be used. For example, `**\\*test*.dll;` for all dlls containing 'test' in their name.",
+            "visibleRule": "testSelection = testAssembly",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "testFilterCriteria",
+            "type": "string",
+            "label": "Test Filter criteria",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optionally specify the test case filter criteria. For example, `Owner=james&Priority=1`",
+            "visibleRule": "testSelection = testAssembly",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "runSettingsFile",
+            "type": "filePath",
+            "label": "Run Settings File",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Path to runsettings or testsettings file to use with the tests. Use `$(agent.BuildDirectory)\\$(system.teamProject)` to access the Project folder.",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "overrideRunParams",
+            "type": "string",
+            "label": "Override Test Run Parameters",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `AppURL=$(DeployURL);Port=8080`",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "codeCoverageEnabled",
+            "type": "boolean",
+            "label": "Code Coverage Enabled",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Whether code coverage needs to be enabled.",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "customSlicingEnabled",
+            "type": "boolean",
+            "label": "Distribute tests by number of machines",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Tests will be distributed based on the number of machines provided instead of number of test containers. Note that tests within a dll might also be distributed to multiple machines.",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "testRunTitle",
+            "type": "string",
+            "label": "Test Run Title",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Provide a name for the Test Run.",
+            "groupName": "reportingOptions"
+        },
+        {
+            "name": "buildPlatform",
+            "type": "string",
+            "label": "Platform",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Platform against which the tests should be reported. If you have defined a variable for platform in your build task, use that here.",
+            "groupName": "reportingOptions"
+        },
+        {
+            "name": "buildConfiguration",
+            "type": "string",
+            "label": "Configuration",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here.",
+            "groupName": "reportingOptions"
+        },
+        {
+            "name": "testConfigurations",
+            "type": "string",
+            "label": "Test Configurations",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optionally associate a testcase filter against a testconfiguration ID. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: `FullyQualifiedName~Chrome:12`",
+            "groupName": "reportingOptions"
+        },
+        {
+            "name": "autMachineGroup",
+            "type": "multiLine",
+            "label": "Application Under Test Machines",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Comma separated list of machines or output variable or Machine Group Name on which server processes such as W3WP.exe is running",
+            "groupName": "reportingOptions"
+        }
+    ],
+    "sourceDefinitions": [
+        {
+            "target": "testPlan",
+            "endpoint": "/$(system.teamProject)/_apis/test/plans",
+            "selector": "jsonpath:$.value[*].name",
+            "keySelector": "jsonpath:$.value[*].id",
+            "authKey": "tfs:teamfoundation"
+        },
+        {
+            "target": "testPlanConfigId",
+            "endpoint": "/$(system.teamProject)/_apis/test/configurations",
+            "selector": "jsonpath:$.value[*].name",
+            "keySelector": "jsonpath:$.value[*].id",
+            "authKey": "tfs:teamfoundation"
+        },
+        {
+            "target": "testSuite",
+            "endpoint": "/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites?$asTreeView=true",
+            "selector": "jsonpath:$.value[*]",
+            "authKey": "tfs:teamfoundation"
+        }
+    ],
+    "execution": {
+        "PowerShell3": {
+            "target": "RunTests.ps1"
+        }
+    }
+}
