@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 6
+        "Patch": 7
     },
     "minimumAgentVersion": "1.102.0",
     "groups": [
@@ -229,6 +229,7 @@
         "Failedtoenableappofflinemode": "Failed to enable app offline mode. Status Code: %s (%s)",
         "AppOflineModedisabled": "App Offline Mode disabled.",
         "FailedtodisableAppOfflineMode": "Failed to disable App Offline Mode. Status Code: %s (%s)",
-        "UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve connection details for azureRM WebApp: %s [Status Code: %s (%s)]"
+        "UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve connection details for azureRM WebApp: %s [Status Code: %s (%s)]",
+        "WebAppDoesntExist": "Webapp '%s' doesn't exist. Webapp should exist before deployment."
     }
 }

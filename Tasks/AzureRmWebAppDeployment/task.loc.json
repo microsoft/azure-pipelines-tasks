@@ -13,7 +13,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 7
   },
   "minimumAgentVersion": "1.102.0",
   "groups": [
@@ -229,6 +229,7 @@
     "Failedtoenableappofflinemode": "ms-resource:loc.messages.Failedtoenableappofflinemode",
     "AppOflineModedisabled": "ms-resource:loc.messages.AppOflineModedisabled",
     "FailedtodisableAppOfflineMode": "ms-resource:loc.messages.FailedtodisableAppOfflineMode",
-    "UnabletoretrieveconnectiondetailsforazureRMWebApp": "ms-resource:loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp"
+    "UnabletoretrieveconnectiondetailsforazureRMWebApp": "ms-resource:loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp",
+    "WebAppDoesntExist": "ms-resource:loc.messages.WebAppDoesntExist"
   }
 }
