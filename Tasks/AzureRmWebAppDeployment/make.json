@@ -11,11 +11,6 @@
                 "archiveName": "MSDeploy.zip",
                 "url": "https://vstsagenttools.blob.core.windows.net/tools/MSDeploy/3.6/MSDeploy.zip",
                 "dest": "./"
-            },
-            {
-                "archiveName": "ctt.zip",
-                "url": "https://ashapp.blob.core.windows.net/ashapp/ctt.zip",
-                "dest":"./ctt"
             }
         ]
     }

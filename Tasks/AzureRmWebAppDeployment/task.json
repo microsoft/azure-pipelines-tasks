@@ -178,16 +178,6 @@
             "helpMarkDown": ""
         },
         {
-            "name": "XdtTransformation",
-            "type": "boolean",
-            "label": "Transformation",
-            "required": false,
-            "defaultValue": false,
-            "groupName": "FileTransformsAndVariableSubstitution",
-            "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
-            "helpMarkDown": "The config transfoms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`. Config transforms will be run prior to the Variable Substitution."
-      },
-      {
             "name": "VariableSubstitution",
             "type": "boolean",
             "label": "Variable Substitution",
