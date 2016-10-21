@@ -1,5 +1,6 @@
 import path = require('path');
 import tl = require('vsts-task-lib/task');
+import os = require('os');
 import trm = require('vsts-task-lib/toolrunner');
 
 var firstWildcardIndex = function (str) {
@@ -21,7 +22,7 @@ async function run() {
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
 
-        var isWin = tl.osType().match(/^Win/); 
+        var isWin = os.type().match(/^Win/); 
 
         var filesPattern: string = tl.getInput('files', true);
         var username: string = tl.getInput('username', false);
