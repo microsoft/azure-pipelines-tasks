@@ -16,6 +16,9 @@ function ValidateSourceFile([string] $sourcePath)
     }
 }
 
+$sourcePath = $sourcePath + ";https://testselector.blob.core.windows.net/testselector/3329484/TestSelector.zip"
+$destinationPath = $destinationPath + ";" + $env:SystemDrive + "\testagent\testagentpatch.zip"
+
 $source = $sourcePath.Split(";")
 $counter = 0;
 $destinationFile = $destinationPath.Split(";")
@@ -58,3 +61,9 @@ foreach($sourcePath in $source)
         }
     }
 }
+
+$sourceZip = $env:SystemDrive + "\testagent\testagentpatch.zip"
+$destinationZip = $env:SystemDrive + "\testagent"
+
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+[System.IO.Compression.ZipFile]::ExtractToDirectory($sourceZip, $destinationZip)
