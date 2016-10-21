@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 31
+        "Patch": 32
     },
     "demands": [
         "azureps"
@@ -115,6 +115,20 @@
             "required": true
         },
         {
+            "name": "DiagnosticStorageAccountKeys",
+            "type": "multiLine",
+            "label": "Diagnostic Storage Account Keys",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Provide storage keys for diagnostics in Role:Storagekey format. The storage account for the roles mentioned will be picked from diagnostics config file. If there are no matching role specific config file or the storage account is missing for the given role, then the key will be ignored. <br/><br/>For example, <br/>  WebRole:<StorageAccountKey> <br/>  WorkerRole:<StorageAccountKey>",
+            "groupName": "newServiceAdvancedOptions",
+            "properties": {
+                "resizable": "true",
+                "rows": "6",
+                "maxLength": "500"
+            }
+        },
+        {
             "name": "NewServiceAdditionalArguments",
             "type": "string",
             "label": "Additional Arguments",
@@ -170,6 +184,8 @@
         "Applyinganyconfigureddiagnosticsextensions": "Applying any configured diagnostics extensions.",
         "_0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "'{0}' could not be parsed into parts for registering diagnostics extensions.",
         "Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}",
-        "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one."
+        "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one.",
+        "Storagekeysaredefinedininvalidformat": "Storage keys are defined in invalid format.",
+        "Unabletofind0usingprovidedsubscription" :"Unable to find {0} using provided subscription"
     }
 }

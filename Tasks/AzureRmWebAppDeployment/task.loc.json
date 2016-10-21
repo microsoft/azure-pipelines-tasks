@@ -178,16 +178,6 @@
       "helpMarkDown": ""
     },
     {
-      "name": "XdtTransformation",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.XdtTransformation",
-      "required": false,
-      "defaultValue": false,
-      "groupName": "FileTransformsAndVariableSubstitution",
-      "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
-      "helpMarkDown": "ms-resource:loc.input.help.XdtTransformation"
-    },
-    {
       "name": "VariableSubstitution",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.VariableSubstitution",
