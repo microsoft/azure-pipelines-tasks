@@ -21,6 +21,8 @@ async function run() {
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
 
+        var isWin = tl.osType().match(/^Win/); 
+
         var filesPattern: string = tl.getInput('files', true);
         var username: string = tl.getInput('username', false);
         var password: string = tl.getInput('password', false);
@@ -60,7 +62,9 @@ async function run() {
             var allFiles = tl.find(findPathRoot);
 
             // Now matching the pattern against all files
-            var uploadFilesList = tl.match(allFiles, filesPattern, {matchBase: true});
+            var uploadFilesList = tl.match(allFiles, filesPattern, {matchBase: true}).map( (s) => {
+                return isWin ? s.replace(/\\/g, '/') : s;
+            });
 
             // Fail if no matching app files were found
             if (!uploadFilesList || uploadFilesList.length == 0) {
