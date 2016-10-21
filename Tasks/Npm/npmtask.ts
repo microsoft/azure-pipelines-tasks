@@ -22,9 +22,9 @@ async function executeTask() {
         tl.setResult(tl.TaskResult.Failed, tl.loc("InvalidCommand"));
     }
 
-    var npmRunner = tl.createToolRunner(tl.which('npm', true));
+    var npmRunner = tl.tool(tl.which('npm', true));
     npmRunner.arg(command);
-    npmRunner.argString(tl.getInput('arguments', false));
+    npmRunner.line(tl.getInput('arguments', false));
 
 
     if(shouldUseDeprecatedTask()) {
@@ -51,8 +51,9 @@ async function executeTask() {
             await runNpmAuthHelperAsync(getNpmAuthHelperRunner(npmrcPath, tempNpmrcPath, debugLog));
 
             // set required environment variables for npm execution
-            var npmExecOptions: trm.IExecOptions = {};
-            npmExecOptions.env = process.env;
+            let npmExecOptions = <trm.IExecOptions>{
+                env: process.env
+            };
             npmExecOptions.env['npm_config_userconfig'] = tempNpmrcPath;
             if(debugLog) {
                 npmExecOptions.env['npm_config_loglevel'] =  'verbose';
@@ -71,8 +72,10 @@ async function executeTask() {
 
 async function runNpmAuthHelperAsync(npmAuthRunner: trm.ToolRunner) : Promise<number> {
     try{
-        var execOptions : trm.IExecOptions = {};
-        execOptions.env = process.env || getBuildCredProviderEnv();
+        var execOptions = <trm.IExecOptions>{
+            env: process.env || getBuildCredProviderEnv()
+        };
+
         var code : number = await npmAuthRunner.exec(execOptions);
         tl.debug('Authentication succeeded with code: ' + code);
         return Q(code);
@@ -107,15 +110,15 @@ function shouldUseDeprecatedTask() : boolean {
 }
 
 function getNpmAuthHelperRunner(npmrcPath: string, tempUserNpmrcPath: string, includeDebugLogs: boolean): trm.ToolRunner {
-    var npmAuthHelper = tl.createToolRunner(path.join(__dirname, 'Npm/vsts-npm-auth/bin/vsts-npm-auth.exe'));
+    var npmAuthHelper = tl.tool(path.join(__dirname, 'Npm/vsts-npm-auth/bin/vsts-npm-auth.exe'));
     var verbosityString = includeDebugLogs ? 'Detailed' : 'Normal';
-    npmAuthHelper.argString(`-NonInteractive -Verbosity ${verbosityString} -Config "${npmrcPath}" -TargetConfig "${tempUserNpmrcPath}"`);
+    npmAuthHelper.line(`-NonInteractive -Verbosity ${verbosityString} -Config "${npmrcPath}" -TargetConfig "${tempUserNpmrcPath}"`);
     return npmAuthHelper;
 }
 
 function getNpmConfigRunner(includeDebugLogs: boolean): trm.ToolRunner {
-    var npmConfig = tl.createToolRunner(tl.which('npm', true));
-    npmConfig.argString('config list');
+    var npmConfig = tl.tool(tl.which('npm', true));
+    npmConfig.line('config list');
     if(includeDebugLogs) {
         npmConfig.arg('-l');
     }
