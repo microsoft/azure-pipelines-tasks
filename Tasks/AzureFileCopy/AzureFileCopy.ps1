@@ -72,7 +72,7 @@ if ($enableDetailedLoggingString -ne "true")
 }
 
 # Telemetry
-. $PSScriptRoot\ps_modules\Telemetry\Telemetry.ps1
+. $PSScriptRoot\ps_modules\Telemetry\TelemetryHelper.ps1
 
 #### MAIN EXECUTION OF AZURE FILE COPY TASK BEGINS HERE ####
 try

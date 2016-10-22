@@ -2,8 +2,8 @@
 $telemetryCodes = 
 @{
   "Input_Validation" = "Input_Validation_Error";
-  "Task_InternalError" = "Task_InternalError";
-  "DTLSDK_Error" = "DTL_SDK_ERROR";  
+  "Task_InternalError" = "Task_Internal_Error";
+  "DTLSDK_Error" = "Dtl_Sdk_Error";  
  }
 
  # Telemetry Write Method
