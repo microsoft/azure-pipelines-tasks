@@ -54,8 +54,6 @@ $deploymentOperation = 'Deployment'
 
 $envOperationStatus = "Passed"
 
-$taskId = "3B5693D4-5777-4FEE-862A-BD2B7A374C68"
-
 # enabling detailed logging only when system.debug is true
 $enableDetailedLoggingString = $env:system_debug
 if ($enableDetailedLoggingString -ne "true")
@@ -64,32 +62,7 @@ if ($enableDetailedLoggingString -ne "true")
 }
 
 # Telemetry
-$telemetryCodes = 
-@{
-  "Input_Validation" = "Input_Validation_Error";
-  "Task_InternalError" = "Task_Run_Time_Error";
-  "DTLSDK_Error" = "DTL_SDK_ERROR";  
- }
-
-function Write-Telemetry
-{
-  [CmdletBinding()]
-  param(
-    [Parameter(Mandatory=$True,Position=1)]
-    [string]$codeKey,
-
-    [Parameter(Mandatory=$True,Position=2)]
-    [string]$errorMsg
-    )
-  
-  $erroCodeMsg = $telemetryCodes[$codeKey]
-  $erroCode = ('"{0}":{1}' -f $erroCodeMsg, $errorMsg)
-  ## Form errorcode as json string 
-  $erroCode = '{' + $erroCode + '}'
-  
-  $telemetryString = "##vso[task.logissue type=error;code=" + $erroCode + ";TaskId=" + $taskId + ";]"
-  Write-Host $telemetryString
-}
+. $PSScriptRoot\ps_modules\Telemetry\Telemetry.ps1
 
 function Get-ResourceWinRmConfig
 {

@@ -2,43 +2,6 @@
 
 $ErrorActionPreference = 'Stop'
 
-$taskId = "EB72CB01-A7E5-427B-A8A1-1B31CCAC8A43"
-
-# Telemetry
-$telemetryCodes = 
-@{
-  "Input_Validation" = "Input_Validation_Error";
-  "Task_InternalError" = "Task_Run_Time_Error";
-  "DTLSDK_Error" = "DTL_SDK_ERROR";  
- }
-
-function Write-Telemetry
-{
-  [CmdletBinding()]
-  param(
-    [Parameter(Mandatory=$True,Position=1)]
-    [string]$codeKey,
-
-    [Parameter(Mandatory=$True,Position=2)]
-    [string]$errorMsg
-    )
-  
-  $erroCodeMsg = $telemetryCodes[$codeKey]
-  $erroCode = ("'{0}':'{1}'" -f $erroCodeMsg, $errorMsg)
-  ## Form errorcode as json string 
-  $erroCode = '{' + $erroCode + '}'
-  
-  $telemetryString = "##vso[task.logissue type=error;code=" + $erroCode + ";TaskId=" + $taskId + ";]"
-  Write-Host $telemetryString
-}
-
-function Write-TaskSpecificTelemetry
-{
-    param([string]$codeKey)
-
-    Write-Telemetry "$codeKey" "EB72CB01-A7E5-427B-A8A1-1B31CCAC8A43"
-}
-
 function Get-DeploymentModulePath
 {
     Write-Output "$PSScriptRoot\DeploymentUtilities"

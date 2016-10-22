@@ -7,6 +7,10 @@
         {
             "module": "../Common/VstsAzureRestHelpers_",
             "type": "ps"
+        },
+        {
+            "module": "../Common/Deployment/Telemetry",
+            "type": "ps"
         }
     ],
     "externals": {

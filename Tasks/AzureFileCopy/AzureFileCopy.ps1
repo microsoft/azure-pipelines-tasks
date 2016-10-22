@@ -71,6 +71,9 @@ if ($enableDetailedLoggingString -ne "true")
     $enableDetailedLoggingString = "false"
 }
 
+# Telemetry
+. $PSScriptRoot\ps_modules\Telemetry\Telemetry.ps1
+
 #### MAIN EXECUTION OF AZURE FILE COPY TASK BEGINS HERE ####
 try
 {
@@ -111,11 +114,7 @@ try
 }
 catch
 {
-    if(-not $telemetrySet)
-    {
-        Write-TaskSpecificTelemetry "UNKNOWNPREDEP_Error"
-    }
-
+    Write-Telemetry "Task_InternalError" $_.Exception.Message
     throw
 }
 
@@ -175,7 +174,7 @@ catch
 {
     Write-Verbose $_.Exception.ToString() -Verbose
 
-    Write-TaskSpecificTelemetry "UNKNOWNDEP_Error"
+    Write-Telemetry "Task_InternalError" $_.Exception.Message
     throw
 }
 finally
