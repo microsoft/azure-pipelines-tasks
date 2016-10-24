@@ -20,6 +20,7 @@ async function executeTask() {
     var command = tl.getInput('command', true);
     if (command.indexOf(' ') >= 0) {
         tl.setResult(tl.TaskResult.Failed, tl.loc("InvalidCommand"));
+        return;
     }
 
     var npmRunner = tl.tool(tl.which('npm', true));
