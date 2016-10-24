@@ -110,7 +110,7 @@ describe('DotNetCoreExe Suite', function () {
 
     it ('publish works with publishWebProjects option', (done: MochaDone) => {
 
-        process.env["__projects__"] = "dummy/project.json"; // this to verify that we ignore this.
+        process.env["__projects__"] = "";
         process.env["__publishWebProjects__"] = "true";
         let tp = path.join(__dirname, 'publishInputs.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);

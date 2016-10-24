@@ -28,7 +28,10 @@ export class dotNetExe {
         this.extractOutputArgument();
 
         // Use empty string when no project file is specified to operate on the current directory
-        var projectFiles = this.projects ? this.getProjectFiles(): [""]; 
+        var projectFiles = [""];
+        if (this.projects || (this.isPublishCommand() && this.publishWebProjects)) {
+            projectFiles = this.getProjectFiles();
+        } 
 
         for (var fileIndex in projectFiles) {
             var projectFile = projectFiles[fileIndex];
