@@ -16,7 +16,7 @@
   "loc.input.label.verbosity": "Уровень детализации",
   "loc.input.help.verbosity": "Уровень детализации NuGet",
   "loc.input.label.nuGetVersion": "NuGet Version",
-  "loc.input.help.nuGetVersion": "The version of NuGet to use, or custom verson.",
+  "loc.input.help.nuGetVersion": "The version of NuGet to use, or custom version.",
   "loc.input.label.nuGetPath": "Путь к NuGet.exe",
   "loc.input.help.nuGetPath": "Optionally supply the path to NuGet.exe. Will override version selection.",
   "loc.messages.Warning_NoConfigForOldNuGet": "Чтобы подключиться к каналам NuGet, размещенным в вашей учетной записи Team Services или коллекции проектов TFS, используя NuGet 3.1 или предшествующую версию, измените определение сборки и укажите путь к файлу NuGet.config, в котором содержатся нужные вам источники пакетов.",

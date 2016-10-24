@@ -17,7 +17,7 @@
   "loc.input.label.verbosity": "Nivel de detalle",
   "loc.input.help.verbosity": "Nivel de detalle de NuGet",
   "loc.input.label.nuGetVersion": "NuGet Version",
-  "loc.input.help.nuGetVersion": "The version of NuGet to use, or external verson.",
+  "loc.input.help.nuGetVersion": "The version of NuGet to use, or external version.",
   "loc.input.label.nuGetPath": "Ruta de acceso de NuGet.exe",
   "loc.input.help.nuGetPath": "Optionally supply the path to NuGet.exe. Will override version selection.",
   "loc.messages.Warning_NoConfigForOldNuGet": "Para conectarse a las fuentes NuGet hospedadas en la cuenta de Team Services o la colección de proyectos de TFS con NuGet 3.1 o versiones anteriores, edite la definición de compilación para especificar una ruta de acceso a un archivo NuGet.config que contenga los orígenes del paquete que desea usar.",

@@ -16,7 +16,7 @@
   "loc.input.label.verbosity": "Livello di dettaglio",
   "loc.input.help.verbosity": "Livello di dettaglio di NuGet",
   "loc.input.label.nuGetVersion": "NuGet Version",
-  "loc.input.help.nuGetVersion": "The version of NuGet to use, or custom verson.",
+  "loc.input.help.nuGetVersion": "The version of NuGet to use, or custom version.",
   "loc.input.label.nuGetPath": "Percorso di NuGet.exe",
   "loc.input.help.nuGetPath": "Optionally supply the path to NuGet.exe. Will override version selection.",
   "loc.messages.Warning_NoConfigForOldNuGet": "Per connettersi ai feed NuGet ospitati nell'account di Team Services e/o nella raccolta di progetti TFS con NuGet 3.1 o versione precedente, modificare la definizione di compilazione in modo che specifichi il percorso di un file NuGet.config contenente le origini pacchetto che si vogliono usare.",

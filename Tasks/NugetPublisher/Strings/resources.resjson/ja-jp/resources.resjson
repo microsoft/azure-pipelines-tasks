@@ -16,7 +16,7 @@
   "loc.input.label.verbosity": "詳細",
   "loc.input.help.verbosity": "NuGet の詳細レベル",
   "loc.input.label.nuGetVersion": "NuGet Version",
-  "loc.input.help.nuGetVersion": "The version of NuGet to use, or custom verson.",
+  "loc.input.help.nuGetVersion": "The version of NuGet to use, or custom version.",
   "loc.input.label.nuGetPath": "NuGet.exe へのパス",
   "loc.input.help.nuGetPath": "Optionally supply the path to NuGet.exe. Will override version selection.",
   "loc.messages.Warning_NoConfigForOldNuGet": "NuGet 3.1 以前で Team Services アカウント/TFS プロジェクト コレクションでホストされている NuGet フィードに接続するには、ビルド定義を編集して、使用するパッケージ ソースを含む NuGet.config へのパスを指定します。",

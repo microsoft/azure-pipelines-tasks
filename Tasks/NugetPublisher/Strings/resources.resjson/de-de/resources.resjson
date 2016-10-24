@@ -16,7 +16,7 @@
   "loc.input.label.verbosity": "Ausführlichkeit",
   "loc.input.help.verbosity": "Ausführlichkeitsgrad von NuGet",
   "loc.input.label.nuGetVersion": "NuGet Version",
-  "loc.input.help.nuGetVersion": "The version of NuGet to use, or custom verson.",
+  "loc.input.help.nuGetVersion": "The version of NuGet to use, or custom version.",
   "loc.input.label.nuGetPath": "Pfad zu \"NuGet.exe\"",
   "loc.input.help.nuGetPath": "Optionally supply the path to NuGet.exe. Will override version selection.",
   "loc.messages.Warning_NoConfigForOldNuGet": "Bearbeiten Sie zum Herstellen einer Verbindung mit NuGet-Feeds, die in Ihrem Team Services-Konto bzw. Ihrer TFS-Projektsammlung mit NuGet 3.1 oder niedriger gehostet werden, die Builddefinition so, dass ein Pfad zu einer Datei \"NuGet.config\" angegeben wird, die die Paketquellen enthält, die Sie verwenden möchten.",
