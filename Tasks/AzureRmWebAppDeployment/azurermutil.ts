@@ -70,7 +70,7 @@ export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: b
  */
 export async function getAzureRMWebAppPublishProfile(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
     if(!deployToSlotFlag) {
-          var requestURL = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\' AND name EQ \'' + 
+        var requestURL = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\' AND name EQ \'' + 
                           webAppName + '\'&api-version=2016-07-01';
         var accessToken = await getAuthorizationToken(SPN);
         var headers = {
