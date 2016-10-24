@@ -700,7 +700,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                     try {
                         vstestLocation = getVSTestLocation(vsVersion);
                         vsTestVersionForTIA = getVsTestVersion();
-                        if (vsTestVersionForTIA == null || (vsTestVersionForTIA[0] < 15 || (vsTestVersionForTIA[0] == 15 && vsTestVersionForTIA[1] == 0 && vsTestVersionForTIA[2] <= 25428))) {
+                        if (vsTestVersionForTIA == null || (vsTestVersionForTIA[0] < 15 || (vsTestVersionForTIA[0] == 15 && vsTestVersionForTIA[1] == 0 && vsTestVersionForTIA[2] < 25807))) {
                             tl.warning(tl.loc("VstestTIANotSupported"));
                             tiaEnabled = false;
                         }                        
