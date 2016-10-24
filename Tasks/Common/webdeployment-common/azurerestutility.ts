@@ -137,7 +137,6 @@ function getAuthorizationToken(SPN): Q.Promise<string> {
 
 async function getAzureRMWebAppID(SPN, webAppName: string, url: string, headers) {
     var deferred = Q.defer<any>();
-    var accessToken = await getAuthorizationToken(SPN);
 
     tl.debug('Requesting AzureRM Web App ID: ' + url);
     httpObj.get('GET', url, headers, async (error, response, body) => {
