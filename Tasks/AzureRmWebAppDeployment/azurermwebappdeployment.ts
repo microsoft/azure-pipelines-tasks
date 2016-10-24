@@ -52,7 +52,10 @@ async function run() {
 
         var isFolderBasedDeployment = isInputPkgIsFolder(webDeployPkg);
 
-        if(jsonVariableSubsFlag || xmlTransformsAndVariableSubstitutions) { // (jsonVariableSubsFlag || variable substitution)
+        var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+        tl._writeLine(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
+
+        if(xmlTransformsAndVariableSubstitutions && xmlTransformation) { // (jsonVariableSubsFlag || variable substitution)
             var folderPath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package_folder');
             if(isFolderBasedDeployment) {
                 tl.cp(path.join(webDeployPkg, '/*'), folderPath, '-rf', false);
@@ -81,9 +84,6 @@ async function run() {
             }
             webDeployPkg = (isFolderBasedDeployment) ? folderPath : await zipUtility.archiveFolder(folderPath, tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package.zip')
         }
-
-        var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-        tl._writeLine(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
 
         if(virtualApplication) {
             publishingProfile.destinationAppUrl += "/" + virtualApplication;
