@@ -70,7 +70,9 @@ export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: b
  */
 export async function getAzureRMWebAppPublishProfile(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
     if(!deployToSlotFlag) {
-        var webAppID = await getAzureRMWebAppID(SPN, webAppName, 'Microsoft.Web/Sites');
+        var requestURL = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\' AND name EQ \'' + 
+                         webAppName + '\'&api-version=2016-07-01';
+        var webAppID = await getAzureRMWebAppID(SPN, webAppName, requestURL);
         tl.debug('Web App details : ' + webAppID.id);
         resourceGroupName = webAppID.id.split ('/')[4];
         tl.debug('AzureRM Resource Group Name : ' + resourceGroupName);
@@ -129,25 +131,30 @@ function getAuthorizationToken(SPN): Q.Promise<string> {
     return deferred.promise;
 }
 
-async function getAzureRMWebAppID(SPN, webAppName: string, resourceType: string) {
+async function getAzureRMWebAppID(SPN, webAppName: string,url: string) {
 
     var deferred = Q.defer<any>();
     var accessToken = await getAuthorizationToken(SPN);
-
-    var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'' + resourceType +
-                        '\' AND name EQ \'' + webAppName + '\'&api-version=2016-07-01';
     var headers = {
         authorization: 'Bearer '+ accessToken
     };
 
     tl.debug('Requesting AzureRM Web App ID: ' + url);
-    httpObj.get('GET', url, headers, (error, response, body) => {
+    httpObj.get('GET', url, headers, async (error, response, body) => {
         if(error) {
             deferred.reject(error);
         }
         else if(response.statusCode === 200) {
             var webAppIDDetails = JSON.parse(body);
-            deferred.resolve(webAppIDDetails.value[0]);
+            if((webAppIDDetails.value.length == 0) && (webAppIDDetails.nextLink)){
+                tl.debug("Requesting nextLink to accesss webappId for webapp " + webAppName);
+                deferred.resolve(await getAzureRMWebAppID(SPN, webAppName, webAppIDDetails.nextLink));
+            } else {
+                if(webAppIDDetails.value.length == 0){
+                    deferred.reject(tl.loc("WebAppDoesntExist", webAppName));
+                }
+                deferred.resolve(webAppIDDetails.value[0]);
+            }
         }
         else {
             tl.error(response.statusMessage);
