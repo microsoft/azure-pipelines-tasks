@@ -23,7 +23,7 @@
             "label": "Working Directory",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Current working directory where npm command is run.  Defaults to the root of the repo."
+            "helpMarkDown": "Working directory where the npm command is run. Defaults to the root of the repo."
         },
         {
             "name": "command",
@@ -50,9 +50,9 @@
     },
     "messages": {
         "InvalidCommand": "Only one command should be used for npm. Use arguments input for additional arguments.",
-        "NpmReturnCode": "Npm exited with return code: %d",
-        "NpmFailed": "Npm failed with error: %s",
-        "NpmConfigFailed": "Failed to run npm config list for logging. Error: ",
-        "NpmAuthFailed": "Failed to get the required auth tokens for Npm. Error: "
+        "NpmReturnCode": "npm exited with return code: %d",
+        "NpmFailed": "npm failed with error: %s",
+        "NpmConfigFailed": "Failed to run 'npm config list' for logging. Error: ",
+        "NpmAuthFailed": "Failed to get the required authentication tokens for npm. Error: "
     }
 }

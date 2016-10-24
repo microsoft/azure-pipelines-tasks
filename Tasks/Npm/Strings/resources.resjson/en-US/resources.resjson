@@ -4,14 +4,14 @@
   "loc.description": "Run a npm command",
   "loc.instanceNameFormat": "npm $(command)",
   "loc.input.label.cwd": "Working Directory",
-  "loc.input.help.cwd": "Current working directory where npm command is run.  Defaults to the root of the repo.",
+  "loc.input.help.cwd": "Working directory where the npm command is run. Defaults to the root of the repo.",
   "loc.input.label.command": "npm command to execute",
   "loc.input.help.command": "npm command to run. [More Information](https://docs.npmjs.com/).",
   "loc.input.label.arguments": "Arguments",
   "loc.input.help.arguments": "Additional arguments passed to npm.",
   "loc.messages.InvalidCommand": "Only one command should be used for npm. Use arguments input for additional arguments.",
-  "loc.messages.NpmReturnCode": "Npm exited with return code: %d",
-  "loc.messages.NpmFailed": "Npm failed with error: %s",
-  "loc.messages.NpmConfigFailed": "Failed to run npm config list for logging. Error: ",
-  "loc.messages.NpmAuthFailed": "Failed to get the required auth tokens for Npm. Error: "
+  "loc.messages.NpmReturnCode": "npm exited with return code: %d",
+  "loc.messages.NpmFailed": "npm failed with error: %s",
+  "loc.messages.NpmConfigFailed": "Failed to run 'npm config list' for logging. Error: ",
+  "loc.messages.NpmAuthFailed": "Failed to get the required authentication tokens for npm. Error: "
 }
