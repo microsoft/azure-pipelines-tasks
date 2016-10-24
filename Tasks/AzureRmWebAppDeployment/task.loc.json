@@ -23,11 +23,6 @@
       "isExpanded": false
     },
     {
-      "name": "FileTransformsAndVariableSubstitution",
-      "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
-      "isExpanded": false
-    },
-    {
       "name": "output",
       "displayName": "ms-resource:loc.group.displayName.output",
       "isExpanded": true
@@ -167,15 +162,6 @@
       "required": false,
       "groupName": "AdditionalDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
-    },
-    {
-      "name": "XmlTransformsAndVariableSubstitutions",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.XmlTransformsAndVariableSubstitutions",
-      "required": false,
-      "defaultValue": false,
-      "groupName": "FileTransformsAndVariableSubstitution",
-      "helpMarkDown": ""
     }
   ],
   "dataSourceBindings": [
