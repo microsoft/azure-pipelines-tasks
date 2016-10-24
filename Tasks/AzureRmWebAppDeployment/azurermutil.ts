@@ -70,9 +70,13 @@ export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: b
  */
 export async function getAzureRMWebAppPublishProfile(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
     if(!deployToSlotFlag) {
-         var requestURL = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\' AND name EQ \'' + 
+          var requestURL = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\' AND name EQ \'' + 
                           webAppName + '\'&api-version=2016-07-01';
-         var webAppID = await getAzureRMWebAppID(SPN, webAppName, requestURL);
+        var accessToken = await getAuthorizationToken(SPN);
+        var headers = {
+            authorization: 'Bearer '+ accessToken
+        };
+        var webAppID = await getAzureRMWebAppID(SPN, webAppName, requestURL, headers);
         tl.debug('Web App details : ' + webAppID.id);
         resourceGroupName = webAppID.id.split ('/')[4];
         tl.debug('AzureRM Resource Group Name : ' + resourceGroupName);
@@ -131,13 +135,9 @@ function getAuthorizationToken(SPN): Q.Promise<string> {
     return deferred.promise;
 }
 
-async function getAzureRMWebAppID(SPN, webAppName: string,url: string) {
-
+async function getAzureRMWebAppID(SPN, webAppName: string, url: string, headers) {
     var deferred = Q.defer<any>();
     var accessToken = await getAuthorizationToken(SPN);
-    var headers = {
-        authorization: 'Bearer '+ accessToken
-    };
 
     tl.debug('Requesting AzureRM Web App ID: ' + url);
     httpObj.get('GET', url, headers, async (error, response, body) => {
@@ -146,22 +146,20 @@ async function getAzureRMWebAppID(SPN, webAppName: string,url: string) {
         }
         else if(response.statusCode === 200) {
             var webAppIDDetails = JSON.parse(body);
-            if((webAppIDDetails.value.length == 0) && (webAppIDDetails.nextLink)){
-                tl.debug("Requesting nextLink to accesss webappId for webapp " + webAppName);
-                deferred.resolve(await getAzureRMWebAppID(SPN, webAppName, webAppIDDetails.nextLink));
-            } else {
-                if(webAppIDDetails.value.length == 0){
-                    deferred.reject(tl.loc("WebAppDoesntExist", webAppName));
+            if(webAppIDDetails.value.length === 0) {
+                if(webAppIDDetails.nextLink) {
+                    tl.debug("Requesting nextLink to accesss webappId for webapp " + webAppName);
+                    deferred.resolve(await getAzureRMWebAppID(SPN, webAppName, webAppIDDetails.nextLink, headers));
                 }
-                deferred.resolve(webAppIDDetails.value[0]);
+                deferred.reject(tl.loc("WebAppDoesntExist", webAppName));
             }
+            deferred.resolve(webAppIDDetails.value[0]);
         }
         else {
             tl.error(response.statusMessage);
             deferred.reject(tl.loc('UnabletoretrieveWebAppID', webAppName, response.statusCode, response.statusMessage));
         }
     });
-
     return deferred.promise;
 }
 
@@ -176,7 +174,13 @@ async function getAzureRMWebAppID(SPN, webAppName: string,url: string) {
 export async function getAzureRMWebAppConfigDetails(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
 
     if(!deployToSlotFlag) {
-        var webAppID = await getAzureRMWebAppID(SPN, webAppName, 'Microsoft.Web/Sites');
+        var requestURL = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\' AND name EQ \'' + 
+                          webAppName + '\'&api-version=2016-07-01';
+        var accessToken = await getAuthorizationToken(SPN);
+        var headers = {
+            authorization: 'Bearer '+ accessToken
+        };
+        var webAppID = await getAzureRMWebAppID(SPN, webAppName, requestURL, headers);
         resourceGroupName = webAppID.id.split ('/')[4];
         tl.debug('AzureRM Resource Group Name : ' + resourceGroupName);
     }
