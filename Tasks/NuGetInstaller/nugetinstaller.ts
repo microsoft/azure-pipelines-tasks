@@ -89,7 +89,7 @@ async function main(): Promise<void> {
                 throw new Error(tl.loc("NoNuGetSpecified"))
             }
             // Pull the pre-installed path for NuGet.
-            nuGetPath = nutil.getBundledNuGetLocation(nugetUxOption);
+            nuGetPath = ngToolRunner.getBundledNuGetLocation(nugetUxOption);
         }
 
         let serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);

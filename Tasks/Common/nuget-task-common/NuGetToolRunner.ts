@@ -106,14 +106,23 @@ interface LocateOptions {
 
     /** Array of filenames to use when searching for the tool. Defaults to the tool name. */
     toolFilenames?: string[];
+
+    /** Array of paths to search under. Defaults to agent NuGet locations */
+    searchPath?: string[];
+
+    /** root that searchPaths are relative to. Defaults to the Agent.HomeDirectory build variable */
+    root?: string;
 }
 
 function locateTool(tool: string, opts?: LocateOptions) {
-    let searchPath = ["externals/nuget", "agent/Worker/Tools/NuGetCredentialProvider", "agent/Worker/Tools"];
-    let agentRoot = tl.getVariable("Agent.HomeDirectory");
+    const defaultSearchPath = ["externals/nuget", "agent/Worker/Tools/NuGetCredentialProvider", "agent/Worker/Tools"];
+    const defaultAgentRoot = tl.getVariable("Agent.HomeDirectory");
 
     opts = opts || {};
     opts.toolFilenames = opts.toolFilenames || [tool];
+
+    let searchPath = opts.searchPath || defaultSearchPath;
+    let agentRoot = opts.root || defaultAgentRoot;
 
     tl.debug(`looking for tool ${tool}`);
 
@@ -271,5 +280,24 @@ export function isCredentialConfigEnabled(quirks: NuGetQuirks): boolean {
 }
 
 export function locateCredentialProvider(): string {
-    return path.join(__dirname, 'NuGet/CredentialProvider');
+    return path.join(__dirname, "NuGet/CredentialProvider");
+}
+
+export function getBundledNuGetLocation(uxOption: string): string {
+    let nuGetDir;
+    if (uxOption === "3.5.0.1829") {
+        nuGetDir = "NuGet/3.5.0";
+    }
+    else if (uxOption === "3.3.0") {
+        nuGetDir = "NuGet/3.3.0";
+    }
+    else {
+        throw new Error(tl.loc("NGCommon_UnabletoDetectNuGetVersion"));
+    }
+
+    return locateTool("NuGet", {
+        root: __dirname,
+        searchPath: [nuGetDir],
+        toolFilenames: ["NuGet.exe", "nuget.exe"],
+    });
 }
