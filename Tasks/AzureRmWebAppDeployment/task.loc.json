@@ -176,45 +176,6 @@
       "defaultValue": false,
       "groupName": "FileTransformsAndVariableSubstitution",
       "helpMarkDown": ""
-    },
-    {
-      "name": "XdtTransformation",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.XdtTransformation",
-      "required": false,
-      "defaultValue": false,
-      "groupName": "FileTransformsAndVariableSubstitution",
-      "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
-      "helpMarkDown": "ms-resource:loc.input.help.XdtTransformation"
-    },
-    {
-      "name": "VariableSubstitution",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.VariableSubstitution",
-      "required": false,
-      "defaultValue": false,
-      "groupName": "FileTransformsAndVariableSubstitution",
-      "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
-      "helpMarkDown": "ms-resource:loc.input.help.VariableSubstitution"
-    },
-    {
-      "name": "JSONVariableSubstitutionsFlag",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.JSONVariableSubstitutionsFlag",
-      "required": false,
-      "defaultValue": false,
-      "visibleRule": false,
-      "groupName": "FileTransformsAndVariableSubstitution",
-      "helpMarkDown": "ms-resource:loc.input.help.JSONVariableSubstitutionsFlag"
-    },
-    {
-      "name": "JSONVariableSubstitutions",
-      "type": "multiLine",
-      "label": "ms-resource:loc.input.label.JSONVariableSubstitutions",
-      "required": false,
-      "groupName": "FileTransformsAndVariableSubstitution",
-      "visibleRule": "JSONVariableSubstitutionsFlag == true",
-      "helpMarkDown": "ms-resource:loc.input.help.JSONVariableSubstitutions"
     }
   ],
   "dataSourceBindings": [
@@ -293,6 +254,7 @@
     "Initiatedvariablesubstitutioninconfigfile": "ms-resource:loc.messages.Initiatedvariablesubstitutioninconfigfile",
     "CannotPerformXdtTransformationOnNonWindowsPlatform": "ms-resource:loc.messages.CannotPerformXdtTransformationOnNonWindowsPlatform",
     "XdtTransformationErrorWhileTransforming": "ms-resource:loc.messages.XdtTransformationErrorWhileTransforming",
-    "PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "ms-resource:loc.messages.PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"
+    "PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "ms-resource:loc.messages.PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent",
+    "WebAppDoesntExist": "ms-resource:loc.messages.WebAppDoesntExist"
   }
 }
