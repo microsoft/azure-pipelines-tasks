@@ -245,6 +245,7 @@ declare module 'nuget-task-common/NuGetToolRunner' {
 	export function isCredentialProviderEnabled(quirks: NuGetQuirks): boolean;
 	export function isCredentialConfigEnabled(quirks: NuGetQuirks): boolean;
 	export function locateCredentialProvider(): string;
+	export function getBundledNuGetLocation(version: string): string;
 
 }
 declare module 'nuget-task-common/INuGetCommandOptions' {
@@ -375,5 +376,4 @@ declare module 'nuget-task-common/Utility' {
 	export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEmptyMatch?: boolean): string[];
 	export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: boolean): string[];
 	export function stripLeadingAndTrailingQuotes(path: string): string;
-	export function getBundledNuGetLocation(version: string): string;
 }
