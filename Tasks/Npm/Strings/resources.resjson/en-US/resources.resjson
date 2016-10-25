@@ -13,5 +13,6 @@
   "loc.messages.NpmReturnCode": "npm exited with return code: %d",
   "loc.messages.NpmFailed": "npm failed with error: %s",
   "loc.messages.NpmConfigFailed": "Failed to run 'npm config list' for logging. Error: ",
-  "loc.messages.NpmAuthFailed": "Failed to get the required authentication tokens for npm. Error: "
+  "loc.messages.NpmAuthFailed": "Failed to get the required authentication tokens for npm. Error: ",
+  "loc.messages.BuildCredentialsWarn": "Could not determine credentials to use for Npm"
 }

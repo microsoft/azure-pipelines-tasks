@@ -5,6 +5,8 @@ import url = require('url');
 import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
 
+interface EnvironmentDictionary { [key: string]: string; }
+
 tl.setResourcePath(path.join( __dirname, 'task.json'));
 
 executeTask();
@@ -45,16 +47,19 @@ async function executeTask() {
             debugLog = false;
         }
 
-        // set required environment variables
-        if(debugLog) {
-            tl.setEnvVar('npm_config_loglevel', 'verbose');
-        }
-        tl.setEnvVar('npm_config_userconfig', tempNpmrcPath);
-
         try{
             await runNpmAuthHelperAsync(getNpmAuthHelperRunner(npmrcPath, tempNpmrcPath, debugLog));
-            await tryRunNpmConfigAsync(getNpmConfigRunner(debugLog));
-            var code : number =  await runNpmCommandAsync(npmRunner);
+
+            // set required environment variables for npm execution
+            var npmExecOptions: trm.IExecOptions = {};
+            npmExecOptions.env = process.env;
+            npmExecOptions.env['npm_config_userconfig'] = tempNpmrcPath;
+            if(debugLog) {
+                npmExecOptions.env['npm_config_loglevel'] =  'verbose';
+            }
+
+            await tryRunNpmConfigAsync(getNpmConfigRunner(debugLog), npmExecOptions);
+            var code : number =  await runNpmCommandAsync(npmRunner, npmExecOptions);
             tl.setResult(code, tl.loc('NpmReturnCode', code));
         } catch (err) {
             cleanUpTempNpmrcPath(tempNpmrcPath);
@@ -65,7 +70,9 @@ async function executeTask() {
 
 async function runNpmAuthHelperAsync(npmAuthRunner: trm.ToolRunner) : Promise<number> {
     try{
-        var code : number = await npmAuthRunner.exec();
+        var execOptions : trm.IExecOptions = {};
+        execOptions.env = process.env || getBuildCredProviderEnv();
+        var code : number = await npmAuthRunner.exec(execOptions);
         tl.debug('Authentication succeeded with code: ' + code);
         return Q(code);
     } catch (err) {
@@ -74,18 +81,18 @@ async function runNpmAuthHelperAsync(npmAuthRunner: trm.ToolRunner) : Promise<nu
     }
 }
 
-async function tryRunNpmConfigAsync(npmConfigRunner: trm.ToolRunner) {
+async function tryRunNpmConfigAsync(npmConfigRunner: trm.ToolRunner, execOptions : trm.IExecOptions) {
     try {
-        var code = await npmConfigRunner.exec();
+        var code = await npmConfigRunner.exec(execOptions);
     } catch (err) {
         // do not throw on this failure.
         tl.warning(tl.loc('NpmConfigFailed', err.Message));
     }
 }
 
-async function runNpmCommandAsync(npmCommandRunner: trm.ToolRunner) : Promise<number> {
+async function runNpmCommandAsync(npmCommandRunner: trm.ToolRunner, execOptions : trm.IExecOptions) : Promise<number> {
     try{
-        var code: number = await npmCommandRunner.exec();
+        var code: number = await npmCommandRunner.exec(execOptions);
         tl.debug('Npm command succeeded with code: ' + code);
         return Q(code);
     } catch (err) {
@@ -127,10 +134,56 @@ function getTempNpmrcPath() : string {
 
 function cleanUpTempNpmrcPath(tempUserNpmrcPath: string) {
     tl.debug('cleaning up...')
-    tl.setEnvVar('npm_config_userconfig', '');
-    tl.setEnvVar('npm_config_loglevel', '');
     if(tl.exist(tempUserNpmrcPath)) {
         tl.debug('deleting temporary npmrc...');
         tl.rmRF(tempUserNpmrcPath, /* continueOnError */ false);
     }
+}
+
+function getBuildCredProviderEnv() : EnvironmentDictionary {
+
+	var env : EnvironmentDictionary = {};
+    let credProviderPath : string = path.join(__dirname, 'NuGet/CredentialProvider');;
+	
+    // get build access token
+	var accessToken : string = getSystemAccessToken();
+
+    // get uri prefixes
+    var serviceUri : string = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
+    var urlPrefixes : string[] = assumeNpmUriPrefixes(serviceUri);
+	tl.debug(`discovered URL prefixes: ${urlPrefixes}`);
+	
+    //TODO these env variables should NOT use NUGET...
+	env["VSS_NUGET_ACCESSTOKEN"] = accessToken;
+	env["VSS_NUGET_URI_PREFIXES"] = urlPrefixes.join(";");
+	env["NPM_CREDENTIALPROVIDERS_PATH"] =  credProviderPath;
+    return env;
+}
+
+function getSystemAccessToken(): string {
+    tl.debug("Getting credentials for local feeds");
+    let auth = tl.getEndpointAuthorization("SYSTEMVSSCONNECTION", false);
+    if (auth.scheme === "OAuth") {
+        tl.debug("Got auth token");
+        return auth.parameters["AccessToken"];
+    } else {
+        tl.warning(tl.loc("BuildCredentialsWarn"));
+    }
+}
+
+function assumeNpmUriPrefixes(collectionUri: string): string[] {
+    let prefixes = [collectionUri];
+
+    let collectionUrlObject = url.parse(collectionUri);
+    if(collectionUrlObject.hostname.toUpperCase().endsWith(".VISUALSTUDIO.COM"))
+    {
+        let hostparts = collectionUrlObject.hostname.split(".");
+        let packagingHostName = hostparts[0] + ".pkgs.visualstudio.com";
+        collectionUrlObject.hostname = packagingHostName;
+        // remove the host property so it doesn't override the hostname property for url.format
+        delete collectionUrlObject.host;
+        prefixes.push(url.format(collectionUrlObject));
+    }
+
+    return prefixes;
 }

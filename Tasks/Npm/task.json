@@ -53,6 +53,7 @@
         "NpmReturnCode": "npm exited with return code: %d",
         "NpmFailed": "npm failed with error: %s",
         "NpmConfigFailed": "Failed to run 'npm config list' for logging. Error: ",
-        "NpmAuthFailed": "Failed to get the required authentication tokens for npm. Error: "
+        "NpmAuthFailed": "Failed to get the required authentication tokens for npm. Error: ",
+        "BuildCredentialsWarn": "Could not determine credentials to use for Npm"
     }
 }

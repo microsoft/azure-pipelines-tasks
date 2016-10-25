@@ -53,6 +53,7 @@
     "NpmReturnCode": "ms-resource:loc.messages.NpmReturnCode",
     "NpmFailed": "ms-resource:loc.messages.NpmFailed",
     "NpmConfigFailed": "ms-resource:loc.messages.NpmConfigFailed",
-    "NpmAuthFailed": "ms-resource:loc.messages.NpmAuthFailed"
+    "NpmAuthFailed": "ms-resource:loc.messages.NpmAuthFailed",
+    "BuildCredentialsWarn": "ms-resource:loc.messages.BuildCredentialsWarn"
   }
 }
