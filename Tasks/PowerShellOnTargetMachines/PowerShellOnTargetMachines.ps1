@@ -62,7 +62,7 @@ if ($enableDetailedLoggingString -ne "true")
 }
 
 # Telemetry
-Import-Module $PSScriptRoot\ps_modules\Telemetry
+Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
 
 function Get-ResourceWinRmConfig
 {
