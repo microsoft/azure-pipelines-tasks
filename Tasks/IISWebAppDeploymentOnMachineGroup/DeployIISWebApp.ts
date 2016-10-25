@@ -18,9 +18,8 @@ async function run()
 		var excludeFilesFromAppDataFlag: boolean = tl.getBoolInput('ExcludeFilesFromAppDataFlag', false);
 		var takeAppOfflineFlag: boolean = tl.getBoolInput('TakeAppOfflineFlag', false);
 		var additionalArguments: string = tl.getInput('AdditionalArguments', false);
-		var overRideParams = tl.getDelimitedInput('OverRideParams','\n',false);
-	
 		var availableWebPackages = tl.glob(webDeployPkg);
+
 		if(availableWebPackages.length == 0)
 		{
 			throw new Error(tl.loc('Nopackagefoundwithspecifiedpattern'));
@@ -36,7 +35,7 @@ async function run()
 		
 		await msDeploy.DeployUsingMSDeploy(webDeployPkg, webSiteName, null, removeAdditionalFilesFlag,
                         excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile,
-                        additionalArguments, isFolderBasedDeployment, true, overRideParams);
+                        additionalArguments, isFolderBasedDeployment, true);
         
 	}
 	catch(error)

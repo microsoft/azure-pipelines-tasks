@@ -26,7 +26,7 @@ var parseString = require('xml2js').parseString;
 export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, publishingProfile,
                              removeAdditionalFilesFlag: boolean, excludeFilesFromAppDataFlag: boolean, takeAppOfflineFlag: boolean,
                              virtualApplication: string, setParametersFile: string, additionalArguments: string, isParamFilePresentInPacakge: boolean,
-                             isFolderBasedDeployment: boolean, useWebDeploy: boolean, overRideParams : string[]) : string {
+                             isFolderBasedDeployment: boolean, useWebDeploy: boolean) : string {
 
     var msDeployCmdArgs: string = " -verb:sync";
 
@@ -89,37 +89,8 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
 		}
 	}
 
-	if(overRideParams != null && overRideParams != undefined && overRideParams.length !=0)
-	{
-		var overRideParamsCmdlineArgs = getOverRideParams(overRideParams);
-		if(overRideParamsCmdlineArgs == "")
-		{
-			throw Error(tl.loc('overrideparametershavenotbeenpassedcorrectly'));
-		}
-		msDeployCmdArgs += overRideParamsCmdlineArgs;
-	}
     tl.debug(tl.loc('ConstructedmsDeploycomamndlinearguments'));
     return msDeployCmdArgs;
-}
-
-function getOverRideParams(overRideParams :string[]): string
-{
-	var overRideParamsCmdlineArgs="";
-	for(var i = 0; i < overRideParams.length ; i++)
-	{
-		var indexOfFirstEqualToSign = overRideParams[i].indexOf("=");
-		var parameterName = overRideParams[i].slice(0,indexOfFirstEqualToSign);
-		var parameterValue = overRideParams[i].slice(indexOfFirstEqualToSign+1, overRideParams[i].length);
-		if(indexOfFirstEqualToSign == -1 || parameterName == "" || parameterValue == "" || parameterName.replace(" ","") == "" || parameterValue.replace(" ","") == "")
-		{
-			return "";
-		}
-		overRideParamsCmdlineArgs += " -setParam:name=";
-		overRideParamsCmdlineArgs += parameterName;
-		overRideParamsCmdlineArgs += ",value=" + parameterValue;
-	}
-	
-	return overRideParamsCmdlineArgs;
 }
 
 /**

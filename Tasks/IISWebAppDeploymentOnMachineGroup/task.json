@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 2,
-    "Patch": 3
+    "Minor": 0,
+    "Patch": 1
   },
   "demands": [
   ],
@@ -62,15 +62,6 @@
       "required": false,
       "groupName": "advanceDeploymentOptions",
       "helpMarkDown": "Optional: location of the SetParameters.xml file to use."
-    },
-	{
-      "name": "OverRideParams",
-      "type": "multiLine",
-      "label": "Override Parameters",
-      "required": false,
-      "groupName": "advanceDeploymentOptions",
-      "defaultValue": "",
-      "helpMarkDown": "Parameters specified here will override the parameters in the MSDeploy zip file and the Parameter file. To override more than one parameter use line separator, e.g., <br/> \"IIS Web Application Name\"=\"Fabrikam\" <br/> \"ConnectionString\"=\"Server=localhost;Database=Fabrikam;\""
     },
     {
       "name": "RemoveAdditionalFilesFlag",
@@ -152,6 +143,5 @@
         "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
         "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "More than one package matched with specified pattern. Please restrain the search patern.",
         "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected.",
-		"overrideparametershavenotbeenpassedcorrectly" : "The OverRide parameters have not been specified correctly please specify the override parameters in the mentioned format"
   }
 }

@@ -154,7 +154,6 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
 	}
 });
 
-
 tr.registerMock('./kuduutility.js', {
     deployWebAppPackage: function(webAppPackage, webAppZipFile) {
         console.log ('Deployed using KuduDeploy');
