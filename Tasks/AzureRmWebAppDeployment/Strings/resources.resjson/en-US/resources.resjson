@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Azure App Service Deployment: ARM",
+  "loc.friendlyName": "Azure App Service Deploy",
   "loc.helpMarkDown": "[More Information](https://aka.ms/azurermwebdeployreadme)",
   "loc.description": "Update Azure App Service using Web Deploy / Kudu REST APIs",
   "loc.instanceNameFormat": "Deploy AzureRM App Service: $(WebAppName)",
