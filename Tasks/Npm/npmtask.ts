@@ -176,8 +176,7 @@ function assumeNpmUriPrefixes(collectionUri: string): string[] {
     let prefixes = [collectionUri];
 
     let collectionUrlObject = url.parse(collectionUri);
-    if(collectionUrlObject.hostname.toUpperCase().endsWith(".VISUALSTUDIO.COM"))
-    {
+    if(collectionUrlObject.hostname.toUpperCase().endsWith(".VISUALSTUDIO.COM")) {
         let hostparts = collectionUrlObject.hostname.split(".");
         let packagingHostName = hostparts[0] + ".pkgs.visualstudio.com";
         collectionUrlObject.hostname = packagingHostName;
