@@ -99,20 +99,29 @@ export function createNuGetToolRunner(nuGetExePath: string, settings: NuGetEnvir
     return runner;
 }
 
-interface LocateOptions {
+export interface LocateOptions {
     /** if true, search along the system path in addition to the hard-coded NuGet tool paths */
     fallbackToSystemPath?: boolean;
 
     /** Array of filenames to use when searching for the tool. Defaults to the tool name. */
     toolFilenames?: string[];
+
+    /** Array of paths to search under. Defaults to agent NuGet locations */
+    searchPath?: string[];
+
+    /** root that searchPaths are relative to. Defaults to the Agent.HomeDirectory build variable */
+    root?: string;
 }
 
-function locateTool(tool: string, opts?: LocateOptions) {
-    let searchPath = ["externals/nuget", "agent/Worker/Tools/NuGetCredentialProvider", "agent/Worker/Tools"];
-    let agentRoot = tl.getVariable("Agent.HomeDirectory");
+export function locateTool(tool: string, opts?: LocateOptions) {
+    const defaultSearchPath = ["externals/nuget", "agent/Worker/Tools/NuGetCredentialProvider", "agent/Worker/Tools"];
+    const defaultAgentRoot = tl.getVariable("Agent.HomeDirectory");
 
     opts = opts || {};
     opts.toolFilenames = opts.toolFilenames || [tool];
+
+    let searchPath = opts.searchPath || defaultSearchPath;
+    let agentRoot = opts.root || defaultAgentRoot;
 
     tl.debug(`looking for tool ${tool}`);
 
