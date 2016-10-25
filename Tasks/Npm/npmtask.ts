@@ -60,6 +60,7 @@ async function executeTask() {
 
             await tryRunNpmConfigAsync(getNpmConfigRunner(debugLog), npmExecOptions);
             var code : number =  await runNpmCommandAsync(npmRunner, npmExecOptions);
+            cleanUpTempNpmrcPath(tempNpmrcPath);
             tl.setResult(code, tl.loc('NpmReturnCode', code));
         } catch (err) {
             cleanUpTempNpmrcPath(tempNpmrcPath);
@@ -135,7 +136,7 @@ function getTempNpmrcPath() : string {
 function cleanUpTempNpmrcPath(tempUserNpmrcPath: string) {
     tl.debug('cleaning up...')
     if(tl.exist(tempUserNpmrcPath)) {
-        tl.debug('deleting temporary npmrc...');
+        tl.debug(`deleting temporary npmrc at '${tempUserNpmrcPath}'` );
         tl.rmRF(tempUserNpmrcPath, /* continueOnError */ false);
     }
 }
@@ -143,7 +144,7 @@ function cleanUpTempNpmrcPath(tempUserNpmrcPath: string) {
 function getBuildCredProviderEnv() : EnvironmentDictionary {
 
 	var env : EnvironmentDictionary = {};
-    let credProviderPath : string = path.join(__dirname, 'NuGet/CredentialProvider');;
+    let credProviderPath : string = path.join(__dirname, 'Npm/CredentialProvider');
 	
     // get build access token
 	var accessToken : string = getSystemAccessToken();
