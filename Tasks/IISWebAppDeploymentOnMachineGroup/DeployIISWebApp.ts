@@ -10,8 +10,8 @@ async function run()
 	try
 	{
 		tl.setResourcePath(path.join( __dirname, 'task.json'));
-		var webSiteName: string = tl.getInput('WebSiteName',true);
-		var virtualApplication: string = tl.getInput('VirtualApplication',false);
+		var webSiteName: string = tl.getInput('WebSiteName', true);
+		var virtualApplication: string = tl.getInput('VirtualApplication', false);
 		var webDeployPkg: string = tl.getPathInput('Package', true);
 		var setParametersFile: string = tl.getPathInput('SetParametersFile', false);
 		var removeAdditionalFilesFlag: boolean = tl.getBoolInput('RemoveAdditionalFilesFlag', false);
