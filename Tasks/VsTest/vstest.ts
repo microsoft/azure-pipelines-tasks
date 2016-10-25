@@ -164,7 +164,7 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
                 testAssemblyPath = expandedPath;
             }
         }
-        argsArray.push(testAssemblyPath);
+        argsArray.push("\"" + testAssemblyPath + "\"");
     });
     if (testFiltercriteria) {
         if (!tiaEnabled) {
