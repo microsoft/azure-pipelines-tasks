@@ -61,14 +61,14 @@ try {
 
     var systemDefaultWorkingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
     var artifactsDirectory = tl.getVariable('System.ArtifactsDirectory');
-    var testAssemblyFiles = getTestAssemblies();   
+    var testAssemblyFiles = getTestAssemblies();
 
     if (testAssemblyFiles && testAssemblyFiles.size != 0) {
         var workingDirectory = sourcesDir && sourcesDir != '' ? systemDefaultWorkingDirectory : artifactsDirectory;
         getTestResultsDirectory(runSettingsFile, path.join(workingDirectory, 'TestResults')).then(function (resultsDirectory) {
             invokeVSTest(resultsDirectory)
                 .then(function (code) {
-                    try {                      
+                    try {
                         if (!isTiaAllowed()) {
                             publishTestResults(resultsDirectory);
                         }
