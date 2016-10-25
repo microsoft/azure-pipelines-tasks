@@ -1,0 +1,17 @@
+{
+  "loc.messages.PSLIB_ContainerPathNotFound0": "Le chemin du conteneur est introuvable : '{0}'",
+  "loc.messages.PSLIB_EndpointAuth0": "Informations d'identification du point de terminaison de service '{0}'",
+  "loc.messages.PSLIB_EndpointUrl0": "URL du point de terminaison de service '{0}'",
+  "loc.messages.PSLIB_EnumeratingSubdirectoriesFailedForPath0": "Échec de l'énumération des sous-répertoires pour le chemin : '{0}'",
+  "loc.messages.PSLIB_FileNotFound0": "Fichier introuvable : {0}.",
+  "loc.messages.PSLIB_Input0": "Entrée '{0}'",
+  "loc.messages.PSLIB_InvalidPattern0": "Modèle non valide : '{0}'",
+  "loc.messages.PSLIB_LeafPathNotFound0": "Le chemin feuille est introuvable : '{0}'",
+  "loc.messages.PSLIB_PathLengthNotReturnedFor0": "Échec de la normalisation/l'expansion du chemin. La longueur du chemin n'a pas été retournée par le sous-système Kernel32 pour : '{0}'",
+  "loc.messages.PSLIB_PathNotFound0": "Chemin introuvable : '{0}'",
+  "loc.messages.PSLIB_Process0ExitedWithCode1": "Le processus '{0}' s'est arrêté avec le code '{1}'.",
+  "loc.messages.PSLIB_Required0": "Obligatoire : {0}",
+  "loc.messages.PSLIB_StringFormatFailed": "Échec du format de la chaîne.",
+  "loc.messages.PSLIB_StringResourceKeyNotFound0": "Clé de la ressource de type chaîne introuvable : '{0}'",
+  "loc.messages.PSLIB_TaskVariable0": "Variable de tâche '{0}'"
+}

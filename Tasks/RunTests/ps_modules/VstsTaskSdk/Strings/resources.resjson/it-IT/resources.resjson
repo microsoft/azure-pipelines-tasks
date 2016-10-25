@@ -1,0 +1,17 @@
+{
+  "loc.messages.PSLIB_ContainerPathNotFound0": "Percorso del contenitore non trovato: '{0}'",
+  "loc.messages.PSLIB_EndpointAuth0": "Credenziali dell'endpoint servizio '{0}'",
+  "loc.messages.PSLIB_EndpointUrl0": "URL dell'endpoint servizio '{0}'",
+  "loc.messages.PSLIB_EnumeratingSubdirectoriesFailedForPath0": "L'enumerazione delle sottodirectory per il percorso '{0}' non è riuscita",
+  "loc.messages.PSLIB_FileNotFound0": "File non trovato: '{0}'",
+  "loc.messages.PSLIB_Input0": "Input di '{0}'",
+  "loc.messages.PSLIB_InvalidPattern0": "Criterio non valido: '{0}'",
+  "loc.messages.PSLIB_LeafPathNotFound0": "Percorso foglia non trovato: '{0}'",
+  "loc.messages.PSLIB_PathLengthNotReturnedFor0": "La normalizzazione o l'espansione del percorso non è riuscita. Il sottosistema Kernel32 non ha restituito la lunghezza del percorso per '{0}'",
+  "loc.messages.PSLIB_PathNotFound0": "Percorso non trovato: '{0}'",
+  "loc.messages.PSLIB_Process0ExitedWithCode1": "Il processo '{0}' è stato terminato ed è stato restituito il codice '{1}'.",
+  "loc.messages.PSLIB_Required0": "Obbligatorio: {0}",
+  "loc.messages.PSLIB_StringFormatFailed": "Errore nel formato della stringa.",
+  "loc.messages.PSLIB_StringResourceKeyNotFound0": "La chiave della risorsa stringa non è stata trovata: '{0}'",
+  "loc.messages.PSLIB_TaskVariable0": "Variabile dell'attività '{0}'"
+}

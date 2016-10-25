@@ -1,0 +1,19 @@
+{
+  "messages": {
+    "PSLIB_ContainerPathNotFound0": "Container path not found: '{0}'",
+    "PSLIB_EndpointAuth0": "'{0}' service endpoint credentials",
+    "PSLIB_EndpointUrl0": "'{0}' service endpoint URL",
+    "PSLIB_EnumeratingSubdirectoriesFailedForPath0": "Enumerating subdirectories failed for path: '{0}'",
+    "PSLIB_FileNotFound0": "File not found: '{0}'",
+    "PSLIB_Input0": "'{0}' input",
+    "PSLIB_InvalidPattern0": "Invalid pattern: '{0}'",
+    "PSLIB_LeafPathNotFound0": "Leaf path not found: '{0}'",
+    "PSLIB_PathLengthNotReturnedFor0": "Path normalization/expansion failed. The path length was not returned by the Kernel32 subsystem for: '{0}'",
+    "PSLIB_PathNotFound0": "Path not found: '{0}'",
+    "PSLIB_Process0ExitedWithCode1": "Process '{0}' exited with code '{1}'.",
+    "PSLIB_Required0": "Required: {0}",
+    "PSLIB_StringFormatFailed": "String format failed.",
+    "PSLIB_StringResourceKeyNotFound0": "String resource key not found: '{0}'",
+    "PSLIB_TaskVariable0": "'{0}' task variable"
+  } 
+}

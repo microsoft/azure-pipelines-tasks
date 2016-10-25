@@ -1,0 +1,17 @@
+{
+  "loc.messages.PSLIB_ContainerPathNotFound0": "找不到容器路徑: '{0}'",
+  "loc.messages.PSLIB_EndpointAuth0": "'{0}' 服務端點認證",
+  "loc.messages.PSLIB_EndpointUrl0": "'{0}' 服務端點 URL",
+  "loc.messages.PSLIB_EnumeratingSubdirectoriesFailedForPath0": "為路徑列舉子目錄失敗: '{0}'",
+  "loc.messages.PSLIB_FileNotFound0": "找不到檔案: '{0}'",
+  "loc.messages.PSLIB_Input0": "'{0}' 輸入",
+  "loc.messages.PSLIB_InvalidPattern0": "模式無效: '{0}'",
+  "loc.messages.PSLIB_LeafPathNotFound0": "找不到分葉路徑: '{0}'",
+  "loc.messages.PSLIB_PathLengthNotReturnedFor0": "路徑正規化/展開失敗。Kernel32 子系統未傳回 '{0}' 的路徑長度",
+  "loc.messages.PSLIB_PathNotFound0": "找不到路徑: '{0}'",
+  "loc.messages.PSLIB_Process0ExitedWithCode1": "處理序 '{0}' 以返回碼 '{1}' 結束。",
+  "loc.messages.PSLIB_Required0": "必要項: {0}",
+  "loc.messages.PSLIB_StringFormatFailed": "字串格式失敗。",
+  "loc.messages.PSLIB_StringResourceKeyNotFound0": "找不到字串資源索引鍵: '{0}'",
+  "loc.messages.PSLIB_TaskVariable0": "'{0}' 工作變數"
+}
