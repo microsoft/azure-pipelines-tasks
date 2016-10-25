@@ -23,6 +23,7 @@ export class dotNetExe {
     }
 
     public async execute() {
+        tl.setResourcePath(path.join( __dirname, "task.json"));
         var dotnetPath = tl.which("dotnet", true);
 
         this.extractOutputArgument();
@@ -73,7 +74,8 @@ export class dotNetExe {
                 }
             }
 
-            if (outputSource && tl.exist(outputSource)) {
+            tl.debug("Zip Source: " + outputSource);
+            if (outputSource) {
                 var outputTarget = outputSource + ".zip";
                 await this.zip(outputSource, outputTarget);
                 tl.rmRF(outputSource, true);
@@ -97,7 +99,7 @@ export class dotNetExe {
     private getCommandArguments(projectFile: string): string {
         if (this.isPublishCommand() && this.outputArgument) {
             var output = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
-            var commandArgument = this.remainingArgument + ' --output ' + output;
+            var commandArgument = this.remainingArgument + ' --output "' + output + '"';
             tl.debug("CommandArguments: " + commandArgument);
             return commandArgument;
         }
@@ -106,64 +108,77 @@ export class dotNetExe {
     }
 
     private extractOutputArgument(): void {
+        if (!this.isPublishCommand() || !this.arguments) {
+            return;
+        }
+
         this.outputArgument = this.remainingArgument = "";
-        if (this.isPublishCommand() && this.arguments) {
-            var args = this.arguments.trim();
-            var i = 0;
-            var isOutputOption = false;
-            while (i < args.length) {
-                var nextIndex = this.getNextTokenStartIndex(args, i);
-                var token = args.substr(i, nextIndex - i).trim();
-                var tokenUpper = token.toUpperCase();
-                if (isOutputOption) {
-                    this.outputArgument = token;
-                    isOutputOption = false;
+
+        var argString = this.arguments.trim();
+        var isOutputOption = false;
+        var inQuotes = false;
+        var escaped = false;
+        var arg = '';
+        var i = 0;
+        var append = function (c) {
+            // we only escape double quotes.
+            if (escaped && c !== '"') {
+                arg += '\\';
+            }
+            arg += c;
+            escaped = false;
+        };
+        var nextArg = function() {
+            arg = '';
+            for (; i < argString.length; i++) {
+                var c = argString.charAt(i);
+                if (isOutputOption && c === '"') {
+                    if (!escaped) {
+                        inQuotes = !inQuotes;
+                    }
+                    else {
+                        append(c);
+                    }
+                    continue;
                 }
-                else if (tokenUpper === "--OUTPUT" || tokenUpper === "-O") {
+                if (c === "\\" && inQuotes) {
+                    escaped = true;
+                    continue;
+                }
+                if (c === ' ' && !inQuotes) {
+                    if (arg.length > 0) {
+                        return arg.trim();
+                    }
+                    continue;
+                }
+                append(c);
+            }
+
+            if (arg.length > 0) {
+                return arg.trim();
+            }
+
+            return null;
+        }
+
+        var token = nextArg();
+        while (token) {
+            if (isOutputOption) {
+                this.outputArgument = token;
+                isOutputOption = false;
+            }
+            else {
+                var tokenUpper = token.toUpperCase();
+                if (tokenUpper === "--OUTPUT" || tokenUpper === "-O") {
                     isOutputOption = true;
                 }
                 else {
                     this.remainingArgument += (" " + token);
                 }
-
-                i = nextIndex;
             }
+
+            token = nextArg();
         }
-    }
-
-    private getNextTokenStartIndex (input, currentPosition): number {
-        for(; currentPosition < input.length; currentPosition++)
-        {
-            if(input[currentPosition] == " " || input[currentPosition] == "\t") {
-                // Skip all whitespaces.
-                for(currentPosition++; currentPosition < input.length; currentPosition++) {
-                    if(input[currentPosition] != " " && input[currentPosition] != "\t") {
-                        break;
-                    }
-                }
-
-                break;
-            }
-            else if(input[currentPosition] === "\"") {
-                currentPosition = this.findClosingQuoteIndex(input, currentPosition + 1, "\"");
-            }
-            else if(input[currentPosition] === "'") {
-                currentPosition = this.findClosingQuoteIndex(input, currentPosition + 1, "'");
-            }
-        }
-
-        return currentPosition;
-    }
-
-    private findClosingQuoteIndex (input, currentPosition, closingQuote): number {
-        for(; currentPosition < input.length; currentPosition++) {
-            if(input[currentPosition] === closingQuote)
-            {
-                break;
-            }
-        }
-
-        return currentPosition;
     }
 
      private getProjectFiles(): string [] {
