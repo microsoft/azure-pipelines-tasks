@@ -21,7 +21,7 @@ function Get-AzureRMVMsInResourceGroup
             $exceptionMessage = $_.Exception.Message.ToString()
             Write-Verbose "ExceptionMessage: $exceptionMessage"
 
-            Write-TaskSpecificTelemetry "PREREQ_ResourceGroupNotFound"
+            Write-Telemetry "Task_InternalError" "ResourceGroupNotFound"
             throw (Get-VstsLocString -Key "AFC_ResourceGroupNotFound" -ArgumentList $resourceGroupName)
         }
     }
