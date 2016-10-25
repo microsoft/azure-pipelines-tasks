@@ -1,6 +1,6 @@
 {
   "id": "f045e430-8704-11e6-968f-e717e6411619",
-  "name": "AzureWebAppSlotSwap",
+  "name": "AzureAppServiceManage",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
@@ -8,8 +8,7 @@
   "category": "Deploy",
   "visibility": [
     "Build",
-    "Release",
-    "Preview"
+    "Release"
   ],
   "demands": [],
   "version": {
@@ -86,7 +85,8 @@
       "type": "boolean",
       "label": "ms-resource:loc.input.label.PreserveVnet",
       "defaultValue": "false",
-      "required": false
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.PreserveVnet"
     }
   ],
   "dataSourceBindings": [
