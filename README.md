@@ -4,9 +4,11 @@
 <br/>
 
 ## Overview
-This repo contains the tasks that are provided out of the box with Visual Studio Team Services and Team Foundation Server.
+This repo contains the source code for tasks that are provided out of the box with Visual Studio Team Services and Team Foundation Server.
 
-This provides open examples on how we write tasks which will help you write other tasks which can be uploaded to your account or server.  See writing tasks below.
+This provides open examples on how we write tasks.  The goal of this repo is to help you write tasks, which can be uploaded to your account or server.  See writing tasks below.
+
+Note, this is not a delivery mechanism to acquire prerelease tasks for an older server. We don't test these tasks against older servers and it may not work.
 
 ## Status
 |   | Build & Test |
