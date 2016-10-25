@@ -7,7 +7,6 @@ let taskPath = path.join(__dirname, '..', 'xcode.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 process.env['HOME']='/users/test'; //replace with mock of setVariable when task-lib has the support
-process.env['USEXCRUN']='false';
 
 tr.setInput('actions', 'build');
 tr.setInput('configuration', '$(Configuration)');
@@ -30,7 +29,7 @@ tr.setInput('args', '');
 tr.setInput('cwd', '/user/build');
 tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
 tr.setInput('xcodeDeveloperDir', '');
-tr.setInput('useXctool', 'false');
+tr.setInput('packageTool', 'xcodebuild');
 tr.setInput('xctoolReporter', '');
 tr.setInput('publishJUnitResults', 'false');
 tr.setInput('archivePath', '/user/build');

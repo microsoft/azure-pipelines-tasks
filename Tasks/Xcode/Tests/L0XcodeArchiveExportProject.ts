@@ -11,10 +11,11 @@ process.env['HOME']='/users/test'; //replace with mock of setVariable when task-
 tr.setInput('actions', 'build');
 tr.setInput('configuration', '$(Configuration)');
 tr.setInput('sdk', '$(SDK)');
-tr.setInput('xcWorkspacePath', '**/*.xcodeproj/*.xcworkspace');
+tr.setInput('xcWorkspacePath', '**/*.xcodeproj');
 tr.setInput('scheme', 'testScheme');
 tr.setInput('packageApp', 'true');
 tr.setInput('xcode8AutomaticSigning', 'true');
+tr.setInput('teamId', 'testDevTeamId');
 tr.setInput('signMethod', 'file');
 tr.setInput('p12', '/user/build/cert.p12');
 tr.setInput('p12pwd', 'p12password');
@@ -69,8 +70,8 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         }
     },
     "glob": {
-        "**/*.xcodeproj/*.xcworkspace": [
-            "/user/build/fun.xcodeproj/project.xcworkspace"
+        "**/*.xcodeproj": [
+            "/user/build/fun.xcodeproj"
         ],
         "/user/build/output/$(SDK)/$(Configuration)/build.sym/**/*.app": [
             "/user/build/output/$(SDK)/$(Configuration)/build.sym/Release.iphoneos/fun.app"
@@ -84,11 +85,11 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "Xcode 8.0"
         },
-        "/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain": {
+        "/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -project /user/build/fun.xcodeproj -scheme testScheme build DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain DEVELOPMENT_TEAM=testDevTeamId": {
             "code": 0,
             "stdout": "xcodebuild output here"
         },
-        "/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme archive -sdk $(SDK) -configuration $(Configuration) -archivePath /user/build/testScheme OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain" : {
+        "/home/bin/xcodebuild -project /user/build/fun.xcodeproj -scheme testScheme archive -sdk $(SDK) -configuration $(Configuration) -archivePath /user/build/testScheme OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain DEVELOPMENT_TEAM=testDevTeamId" : {
             "code": 0,
             "stdout": "xcodebuild archive output here"
         },

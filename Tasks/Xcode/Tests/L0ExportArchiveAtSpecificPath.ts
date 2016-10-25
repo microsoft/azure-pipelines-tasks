@@ -25,7 +25,6 @@ tr.setInput('args', '');
 tr.setInput('cwd', '/user/build');
 tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
 tr.setInput('xcodeDeveloperDir', '');
-tr.setInput('useXctool', 'false');
 tr.setInput('xctoolReporter', '');
 tr.setInput('publishJUnitResults', 'false');
 tr.setInput('archivePath', '/user/output/myarchive.xcarchive');
