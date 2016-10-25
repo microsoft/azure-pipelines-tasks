@@ -69,11 +69,9 @@ try {
     }
     [System.AppDomain]::CurrentDomain.add_AssemblyResolve($onAssemblyResolve)
 
-    # Get PAT Token
+    # Get PAT Token, Collection URL and Phase info
     $endpoint = (Get-VstsEndpoint -Name SystemVssConnection -Require)
     $personalAccessToken = [string]$endpoint.auth.parameters.AccessToken
-
-    # Get Collection URL
     $tfsCollectionUrl = Get-VstsTaskVariable -Name System.TeamFoundationCollectionUri -Require
     $phaseId = Get-VstsTaskVariable -Name Release.DeployPhaseId -Require  # *** There has to be common variable across Build and RM and instance id usage *** 
 
