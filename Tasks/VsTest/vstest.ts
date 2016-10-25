@@ -45,7 +45,6 @@ try {
     var vstestDiagFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
     var useNewCollectorFlag = tl.getVariable('tia.useNewCollector');
     var isPrFlow = tl.getVariable('tia.isPrFlow');
-    var vsTestVersionForTIA: number[] = [];
 
     var useNewCollector = false;
     if (useNewCollectorFlag && useNewCollectorFlag.toUpperCase() == "TRUE") {
@@ -61,14 +60,14 @@ try {
 
     var systemDefaultWorkingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
     var artifactsDirectory = tl.getVariable('System.ArtifactsDirectory');
-    var testAssemblyFiles = getTestAssemblies();   
+    var testAssemblyFiles = getTestAssemblies();
 
     if (testAssemblyFiles && testAssemblyFiles.size != 0) {
         var workingDirectory = sourcesDir && sourcesDir != '' ? systemDefaultWorkingDirectory : artifactsDirectory;
         getTestResultsDirectory(runSettingsFile, path.join(workingDirectory, 'TestResults')).then(function (resultsDirectory) {
             invokeVSTest(resultsDirectory)
                 .then(function (code) {
-                    try {                      
+                    try {
                         if (!isTiaAllowed()) {
                             publishTestResults(resultsDirectory);
                         }
@@ -121,7 +120,12 @@ function getTestAssemblies(): Set<string> {
     return new Set(ffl.findFiles(testAssembly, false, systemDefaultWorkingDirectory));
 }
 
-function getVsTestVersion(): number[] {
+function addVstestDiagOption(argsArray: string[]) {
+    let sysDebug = tl.getVariable("System.Debug");
+    if (sysDebug === undefined || sysDebug.toLowerCase() === "false") {
+        return;
+    }
+
     let vstestLocationEscaped = vstestLocation.replace(/\\/g, "\\\\");
     let wmicTool = tl.createToolRunner("wmic");
     let wmicArgs = ["datafile", "where", "name='".concat(vstestLocationEscaped, "'"), "get", "Version", "/Value"];
@@ -131,26 +135,29 @@ function getVsTestVersion(): number[] {
     let verSplitArray = output.stdout.split("=");
     if (verSplitArray.length != 2) {
         tl.warning(tl.loc("ErrorReadingVstestVersion"));
-        return null;
+        return;
     }
 
     let versionArray = verSplitArray[1].split(".");
     if (versionArray.length != 4) {
         tl.warning(tl.loc("UnexpectedVersionString", output.stdout));
-        return null;
+        return;
     }
 
-    let vsVersion: number[] = [];
-    vsVersion[0] = parseInt(versionArray[0]);
-    vsVersion[1] = parseInt(versionArray[1]);
-    vsVersion[2] = parseInt(versionArray[2]);
+    let productMajorPart = parseInt(versionArray[0]);
+    let productMinorPart = parseInt(versionArray[1]);
+    let productBuildPart = parseInt(versionArray[2]);
 
-    if (isNaN(vsVersion[0]) || isNaN(vsVersion[1]) || isNaN(vsVersion[2])) {
+    if (isNaN(productMajorPart) || isNaN(productMinorPart) || isNaN(productBuildPart)) {
         tl.warning(tl.loc("UnexpectedVersionNumber", verSplitArray[1]));
-        return null;
+        return;
     }
 
-    return vsVersion;    
+    if (productMajorPart > 15 || (productMajorPart == 15 && (productMinorPart > 0 || productBuildPart > 25428))) {
+        argsArray.push("/diag:" + vstestDiagFile);
+    } else {
+        tl.warning(tl.loc("VstestDiagNotSupported"));
+    }
 }
 
 function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[] {
@@ -164,7 +171,7 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
                 testAssemblyPath = expandedPath;
             }
         }
-        argsArray.push(testAssemblyPath);
+        argsArray.push("\"" + testAssemblyPath + "\"");
     });
     if (testFiltercriteria) {
         if (!tiaEnabled) {
@@ -196,14 +203,7 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
     else if (systemDefaultWorkingDirectory && isNugetRestoredAdapterPresent(systemDefaultWorkingDirectory)) {
         argsArray.push("/TestAdapterPath:\"" + systemDefaultWorkingDirectory + "\"");
     }
-
-    if (vsTestVersionForTIA !== null && (vsTestVersionForTIA[0] > 15 || (vsTestVersionForTIA[0] == 15 && (vsTestVersionForTIA[1] > 0 || vsTestVersionForTIA[2] > 25428)))) {
-        argsArray.push("/diag:" + vstestDiagFile);
-    }
-    else {
-        tl.warning(tl.loc("VstestDiagNotSupported"));
-    }
-    
+    addVstestDiagOption(argsArray);
     return argsArray;
 }
 
@@ -699,11 +699,10 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                 .then(function (vsVersion) {
                     try {
                         vstestLocation = getVSTestLocation(vsVersion);
-                        vsTestVersionForTIA = getVsTestVersion();
-                        if (vsTestVersionForTIA == null || (vsTestVersionForTIA[0] < 15 || (vsTestVersionForTIA[0] == 15 && vsTestVersionForTIA[1] == 0 && vsTestVersionForTIA[2] < 25807))) {
-                            tl.warning(tl.loc("VstestTIANotSupported"));
+                        let disableTIA = tl.getVariable("DisableTestImpactAnalysis");
+                        if (!(disableTIA === undefined || disableTIA.toLowerCase() === "false")) {
                             tiaEnabled = false;
-                        }                        
+                        }
                     } catch (e) {
                         tl.error(e.message);
                         defer.resolve(1);
