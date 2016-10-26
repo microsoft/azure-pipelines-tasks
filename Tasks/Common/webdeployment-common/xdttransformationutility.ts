@@ -1,4 +1,3 @@
-import path = require('path');
 import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
 import path = require('path');
