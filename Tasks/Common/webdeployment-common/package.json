@@ -23,9 +23,6 @@
     "vso-node-api": "^5.0.5",
 	"winreg" : "^1.2.2"
   },
-  "optionalDependencies": {
-    "regedit": "^2.2.5"
-  },
   "devDependencies": {
     "mocha": "^3.1.2"
   }

@@ -2,6 +2,8 @@ import * as path from "path";
 
 import * as tl from "vsts-task-lib/task";
 
+import * as ngToolRunner from "./NuGetToolRunner";
+
 // Attempts to resolve paths the same way the legacy PowerShell's Find-Files worked
 export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEmptyMatch?: boolean): string[] {
     // make sure to remove any empty entries, or else we'll accidentally match the current directory.
@@ -139,13 +141,28 @@ export function stripLeadingAndTrailingQuotes(path: string): string {
 }
 
 export function getBundledNuGetLocation(uxOption: string): string {
-    if (uxOption === "3.5.0.1829"){
-        return path.join(__dirname, 'NuGet/3.5.0/NuGet.exe')
+    let nuGetDir;
+    if (uxOption === "3.5.0.1829") {
+        nuGetDir = "NuGet/3.5.0";
     }
-    else if (uxOption === "3.3.0"){
-        return path.join(__dirname, 'NuGet/3.3.0/NuGet.exe');
+    else if (uxOption === "3.3.0") {
+        nuGetDir = "NuGet/3.3.0";
     }
-    throw new Error(tl.loc("NGCommon_UnabletoDetectNuGetVersion"));
+    else {
+        throw new Error(tl.loc("NGCommon_UnabletoDetectNuGetVersion"));
+    }
+
+    const toolPath = ngToolRunner.locateTool("NuGet", {
+        root: __dirname,
+        searchPath: [nuGetDir],
+        toolFilenames: ["NuGet.exe", "nuget.exe"],
+    });
+
+    if (!toolPath) {
+        throw new Error(tl.loc("NGCommon_UnableToFindTool", "NuGet"));
+    }
+
+    return toolPath;
 }
 
 export function locateCredentialProvider(): string {

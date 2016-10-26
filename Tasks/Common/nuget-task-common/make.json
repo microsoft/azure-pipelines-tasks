@@ -6,8 +6,8 @@
                 "dest": "./NuGet/3.3.0/"
             },
             {
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGet/3.5.0-1829/NuGet.zip",
-                "dest": "./NuGet/3.5.0.1829/"
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGet/3.5.0.1938-rtm/NuGet.zip",
+                "dest": "./NuGet/3.5.0/"
             },
             {
                 "url": "https://vstsagenttools.blob.core.windows.net/tools/CredentialProvider.TeamBuild/15.105.25712.0/CredentialProvider.TeamBuild.zip",

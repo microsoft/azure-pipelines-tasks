@@ -20,10 +20,7 @@
     "vsts-task-lib": "^0.9.20",
     "q": "^1.4.1"
   },
-  "optionalDependencies": {
-    "regedit": "^2.2.5"
-  },
-  "devDependencies": {
+   "devDependencies": {
     "mocha": "^3.1.2"
   }
 }

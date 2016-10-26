@@ -77,6 +77,7 @@ export async function getAzureRMWebAppPublishProfile(SPN, webAppName: string, re
             authorization: 'Bearer '+ accessToken
         };
         var webAppID = await getAzureRMWebAppID(SPN, webAppName, requestURL, headers);
+
         tl.debug('Web App details : ' + webAppID.id);
         resourceGroupName = webAppID.id.split ('/')[4];
         tl.debug('AzureRM Resource Group Name : ' + resourceGroupName);
@@ -145,6 +146,7 @@ async function getAzureRMWebAppID(SPN, webAppName: string, url: string, headers)
         }
         else if(response.statusCode === 200) {
             var webAppIDDetails = JSON.parse(body);
+
             if(webAppIDDetails.value.length === 0) {
                 if(webAppIDDetails.nextLink) {
                     tl.debug("Requesting nextLink to accesss webappId for webapp " + webAppName);
