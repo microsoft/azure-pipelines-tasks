@@ -15,7 +15,7 @@ mock.exec = () => {
 };
 
 var execResult: ma.TaskLibAnswerExecResult = {
-    code: 0,
+    code: 1,
     stdout: "",
     stderr: "some error"
 };
