@@ -1,0 +1,8 @@
+{
+    "name": "Agent.Tasks.PRCA",
+    "dependencies": {},
+    "globalDependencies": {
+        "node": "registry:dt/node#6.0.0+20160613154055",
+        "q": "registry:dt/q#0.0.0+20161004185634"
+    }
+}

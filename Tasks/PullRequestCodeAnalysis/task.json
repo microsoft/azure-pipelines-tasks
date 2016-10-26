@@ -1,0 +1,42 @@
+{
+    "id": "683B88A0-96C3-11E6-8625-95B67567393D",
+    "name": "PullRequestCodeAnalysis",
+    "friendlyName": "Pull Request Code Analysis",
+    "description": "SonarQube Pull Request Code Analysis (Preview)",
+    "helpMarkDown": "[More Information](   NEEDS LINK    )",
+    "category": "Build",
+    "visibility": [
+        "Build"
+    ],
+    "author": "Microsoft Corporation",
+    "demands": [],
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 0
+    },
+    "instanceNameFormat": "Post comments to pull request",
+    "inputs": [
+        {
+            "name": "messageLimit",
+            "type": "string",
+            "label": "Maximum comments to post",
+            "defaultValue": "100",
+            "required": true,
+            "helpMarkDown": "Posting too many comments makes the PR hard to read (highest severity messages will always be posted first)."
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "prcatask.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "Error_InvalidMessageLimit": "Expected message limit to be a number, but instead it was %s",
+        "Error_NotPullRequest": "Skipping pull request commenting - this build was not triggered by a pull request.",
+        "Error_InvalidPullRequestId": "Could not retrieve pull request ID from the server.",
+        "Result_Fail": "Pull Request Code Analysis failed.",
+        "Result_Success": "Pull Request Code Analysis succeeded."
+    }
+}
