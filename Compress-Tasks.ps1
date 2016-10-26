@@ -1,24 +1,37 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)]
-    [string]$IndividualZipStagingPath,
+    [string]$SourceRoot,
 
     [Parameter(Mandatory = $true)]
-    [string]$WrapperZipStagingPath,
+    [string]$TargetPath,
 
-    [Parameter(Mandatory = $true)]
-    [string]$ZipPath)
+    [switch]$Individually)
 
 $ErrorActionPreference = 'Stop'
 Add-Type -Assembly 'System.IO.Compression.FileSystem'
-Get-ChildItem -LiteralPath $IndividualZipStagingPath |
-    ForEach-Object {
-        $sourceDir = $_.FullName
-        $targetDir = [System.IO.Path]::Combine($WrapperZipStagingPath, $_.Name)
-        Write-Host "Compressing $($_.Name)"
-        [System.IO.Compression.ZipFile]::CreateFromDirectory($sourceDir, "$targetDir\task.zip")
+if ($Individually) {
+    # Create the target root directory.
+    if (!(Test-Path -LiteralPath $TargetPath -PathType Container)) {
+        $null = New-Item -Path $TargetPath -ItemType Directory
     }
 
-Write-Host "Creating $([System.IO.Path]::GetFileName($ZipPath))"
-$null = New-Item -Path ([System.IO.Path]::GetDirectoryName($ZipPath)) -ItemType Directory
-[System.IO.Compression.ZipFile]::CreateFromDirectory($WrapperZipStagingPath, $ZipPath)
+    # Create each task zip.
+    Get-ChildItem -LiteralPath $SourceRoot |
+        ForEach-Object {
+            $sourceDir = $_.FullName
+            $targetDir = [System.IO.Path]::Combine($TargetPath, $_.Name)
+            Write-Host "Compressing $($_.Name)"
+            $null = New-Item -Path $targetDir -ItemType Directory
+            [System.IO.Compression.ZipFile]::CreateFromDirectory($sourceDir, "$targetDir\task.zip")
+        }
+} else {
+    # Create the target directory.
+    $targetDir = [System.IO.Path]::GetDirectoryName($TargetPath)
+    if (!(Test-Path -LiteralPath $targetDir -PathType Container)) {
+        $null = New-Item -Path $targetDir -ItemType Directory
+    }
+
+    # Create the zip.
+    [System.IO.Compression.ZipFile]::CreateFromDirectory($SourceRoot, $TargetPath)
+}

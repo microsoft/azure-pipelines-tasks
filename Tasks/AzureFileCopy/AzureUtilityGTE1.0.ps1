@@ -38,7 +38,7 @@ function Get-AzureStorageAccountResourceGroupName
             {
                 Write-Verbose "(ARM)Storage account: $storageAccountName not found"
 
-                Write-TaskSpecificTelemetry "PREREQ_RMStorageAccountNotFound"
+                Write-Telemetry "Task_InternalError" "RMStorageAccountNotFound"
                 Throw (Get-VstsLocString -Key "AFC_StorageAccountNotFound" -ArgumentList $storageAccountName)
             }
         }
@@ -277,7 +277,7 @@ function Get-AzureRMVMsInResourceGroup
             $exceptionMessage = $_.Exception.Message.ToString()
             Write-Verbose "ExceptionMessage: $exceptionMessage"
 
-            Write-TaskSpecificTelemetry "PREREQ_ResourceGroupNotFound"
+            Write-Telemetry "Task_InternalError" "ResourceGroupNotFound"
             throw (Get-VstsLocString -Key "AFC_ResourceGroupNotFound" -ArgumentList $resourceGroupName)
         }
     }

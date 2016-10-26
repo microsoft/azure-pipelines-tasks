@@ -699,6 +699,10 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                 .then(function (vsVersion) {
                     try {
                         vstestLocation = getVSTestLocation(vsVersion);
+                        let disableTIA = tl.getVariable("DisableTestImpactAnalysis");
+                        if (disableTIA !== undefined && disableTIA.toLowerCase() === "true") {
+                            tiaEnabled = false;
+                        }
                         vsTestVersionForTIA = getVsTestVersion();
                         if (vsTestVersionForTIA == null || (vsTestVersionForTIA[0] < 15 || (vsTestVersionForTIA[0] == 15 && vsTestVersionForTIA[1] == 0 && vsTestVersionForTIA[2] < 25807))) {
                             tl.warning(tl.loc("VstestTIANotSupported"));

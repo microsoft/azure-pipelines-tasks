@@ -1,0 +1,21 @@
+{
+  "loc.friendlyName": ".NET Core (PREVIEW)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=832194)",
+  "loc.description": "Build, test and publish using dotnet core command-line.",
+  "loc.instanceNameFormat": "dotnet $(command)",
+  "loc.input.label.command": "Command",
+  "loc.input.help.command": "Select or type a dotnet command",
+  "loc.input.label.publishWebProjects": "Publish Web Projects",
+  "loc.input.help.publishWebProjects": "If true, the task will try to find the web projects in the repository and run the publish command on them. Web projects are identified by presence of either a web.config file or wwwroot folder in the directory.",
+  "loc.input.label.projects": "Project(s)",
+  "loc.input.help.projects": "Relative path of the project.json file(s) from repo root. Wildcards can be used. For example, **/project.json for all project.json files in all the sub folders.",
+  "loc.input.label.arguments": "Arguments",
+  "loc.input.help.arguments": "Arguments to the selected command. For example, build configuration, output folder, rutime. The arguments depend on the command selected.",
+  "loc.input.label.zipAfterPublish": "Zip Published Projects",
+  "loc.input.help.zipAfterPublish": "If true, folder created by the publish command will be zipped.",
+  "loc.messages.noProjectFilesFound": "Project file(s) matching the specified pattern were not found.",
+  "loc.messages.noWebProjctFound": "No web project was found in the repository. Web projects are identified by presence of either a web.config file or wwwroot folder in the directory.",
+  "loc.messages.dotnetCommandFailed": "Dotnet command failed with non-zero exit code: %d.",
+  "loc.messages.zipFailed": "Zip failed with error: %s",
+  "loc.messages.noPublishFolderFoundToZip": "A publish folder could not be found to zip for project file: %s."
+}
