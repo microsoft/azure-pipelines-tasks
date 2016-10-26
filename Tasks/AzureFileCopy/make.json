@@ -9,7 +9,7 @@
             "type": "ps"
         },
         {
-            "module": "../Common/Deployment/Telemetry",
+            "module": "../Common/Deployment/TelemetryHelper",
             "type": "ps"
         }
     ],

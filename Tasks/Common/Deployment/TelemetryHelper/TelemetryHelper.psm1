@@ -9,7 +9,7 @@ $telemetryCodes =
  # Telemetry Write Method
 function Write-Telemetry
 {
-  [CmdletBinding()]
+ [CmdletBinding()]
   param(
     [Parameter(Mandatory=$True,Position=1)]
     [string]$codeKey,
@@ -26,3 +26,7 @@ function Write-Telemetry
   $telemetryString = "##vso[task.logissue type=error;code=" + $erroCode + ";]"
   Write-Host $telemetryString
 }
+
+# Export only the public function.
+Export-ModuleMember -Function Write-Telemetry
+Export-ModuleMember -Variable telemetryCodes
