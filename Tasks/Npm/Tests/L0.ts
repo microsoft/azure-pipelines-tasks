@@ -9,11 +9,11 @@ describe('Npm Task', function () {
 
     after(() => {
     });
-    
+
     /* Deprecated behavior */
     it("should execute 'npm config list' successfully (deprecated task)", (done: MochaDone) => {
         this.timeout(1000);
-        let tp = path.join(__dirname, 'test-configlist.js')
+        let tp = path.join(__dirname, 'test-configlist-deprecated.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run()
@@ -30,7 +30,7 @@ describe('Npm Task', function () {
     
     it('should pass when no arguments are supplied (deprecated task)', (done: MochaDone) => {
         this.timeout(1000);
-        let tp = path.join(__dirname, 'test-commandWithoutArguments.js')
+        let tp = path.join(__dirname, 'test-commandWithoutArguments-deprecated.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run()
@@ -48,7 +48,7 @@ describe('Npm Task', function () {
     
     it('should fail when command contains spaces (deprecated task)', (done: MochaDone) => {
         this.timeout(1000);
-        let tp = path.join(__dirname, 'test-commandContainsSpaces.js')
+        let tp = path.join(__dirname, 'test-commandContainsSpaces-deprecated.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run()
@@ -61,7 +61,7 @@ describe('Npm Task', function () {
       
     it('should fail when task fails (deprecated task)', (done: MochaDone) => {
         this.timeout(1000);
-        let tp = path.join(__dirname, 'test-npmFailure.js')
+        let tp = path.join(__dirname, 'test-npmFailure-deprecated.js')
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run()
