@@ -18,7 +18,7 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         tr.run();
 		console.log(tr.stdout);
 		console.log(tr.stderr);
-		assert(tr.invokedToolCount == 1, 'should have invoked tool once');
+		assert(tr.invokedToolCount == 2, 'should have invoked tool once');
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         done();
