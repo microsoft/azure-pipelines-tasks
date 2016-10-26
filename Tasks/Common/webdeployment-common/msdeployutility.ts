@@ -2,6 +2,7 @@ import Q = require('q');
 import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
 import fs = require('fs');
+import path = require('path');
 
 var winreg = require('winreg');
 var parseString = require('xml2js').parseString;
@@ -143,7 +144,7 @@ export async function getMSDeployFullPath() {
     }
     catch(error) {
         tl.warning(error);
-        return __dirname + "\\MSDeploy3.6\\msdeploy.exe";
+        return path.join(__dirname, "..", "..", "MSDeploy3.6", "msdeploy.exe"); 
     }
 }
 

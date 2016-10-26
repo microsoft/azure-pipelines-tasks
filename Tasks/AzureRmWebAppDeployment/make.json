@@ -13,11 +13,6 @@
                 "archiveName": "MSDeploy.zip",
                 "url": "https://vstsagenttools.blob.core.windows.net/tools/MSDeploy/3.6/MSDeploy.zip",
                 "dest": "./"
-            },
-            {
-                "archiveName": "ctt.zip",
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/ctt/1.6/ctt.zip",
-                "dest":"./"
             }
         ]
     }
