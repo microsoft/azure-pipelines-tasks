@@ -3,7 +3,7 @@ import * as assert from 'assert';
 import * as ttm from 'vsts-task-lib/mock-test';
 
 describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
-     var taskSrcPath = path.join(__dirname, '..','DeployIISWebApp.js');
+     var taskSrcPath = path.join(__dirname, '..','deployiiswebapp.js');
 
      before((done) => {
         done();
