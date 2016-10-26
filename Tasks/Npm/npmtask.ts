@@ -74,9 +74,8 @@ async function executeTask() {
 async function runNpmAuthHelperAsync(npmAuthRunner: trm.ToolRunner) : Promise<number> {
     try{
         var execOptions = <trm.IExecOptions>{
-            env: process.env
+            env: addBuildCredProviderEnv(process.env)
         };
-        execOptions.env = addBuildCredProviderEnv(execOptions.env);
 
         var code : number = await npmAuthRunner.exec(execOptions);
         tl.debug('Auth helper exitted with code: ' + code);
