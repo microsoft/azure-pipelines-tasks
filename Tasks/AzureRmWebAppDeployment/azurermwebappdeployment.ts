@@ -30,12 +30,13 @@ async function run() {
         var takeAppOfflineFlag: boolean = tl.getBoolInput('TakeAppOfflineFlag', false);
         var additionalArguments: string = tl.getInput('AdditionalArguments', false);
         var webAppUri:string = tl.getInput('WebAppUri', false);
-        var xmlTransformation: boolean = tl.getBoolInput('XdtTransformation', false);
-        var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
-        var jsonVariableSubsFlag = tl.getBoolInput('JSONVariableSubstitutionsFlag', false);
-        var jsonVariableSubsFiles = tl.getDelimitedInput('JSONVariableSubstitutions', '\n', false);
         var xmlTransformsAndVariableSubstitutions = tl.getBoolInput('XmlTransformsAndVariableSubstitutions', false);
-        var variableSubstitution = tl.getBoolInput('VariableSubstitution', false);
+        var xmlTransformation: boolean = tl.getBoolInput('XdtTransformation', false);
+        var jsonVariableSubsFlag: boolean = tl.getBoolInput('JSONVariableSubstitutionsFlag', false);
+        var jsonVariableSubsFiles = tl.getDelimitedInput('JSONVariableSubstitutions', '\n', false);
+        var variableSubstitution: boolean = tl.getBoolInput('VariableSubstitution', false);
+        var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
+
         var SPN = new Array();
         SPN["servicePrincipalClientID"] = endPointAuthCreds.parameters["serviceprincipalid"];
         SPN["servicePrincipalKey"] = endPointAuthCreds.parameters["serviceprincipalkey"];
@@ -54,7 +55,10 @@ async function run() {
 
         var isFolderBasedDeployment = utility.isInputPkgIsFolder(webDeployPkg);
 
-        if(jsonVariableSubsFlag || xmlTransformsAndVariableSubstitutions) { // (jsonVariableSubsFlag || variable substitution)
+        var publishingProfile = await azureRESTUtility.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+        tl._writeLine(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
+
+        if(jsonVariableSubsFlag || (xmlTransformsAndVariableSubstitutions && (xmlTransformation || variableSubstitution))) { 
             var folderPath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package_folder');
             if(isFolderBasedDeployment) {
                 tl.cp(path.join(webDeployPkg, '/*'), folderPath, '-rf', false);
@@ -83,9 +87,6 @@ async function run() {
             }
             webDeployPkg = (isFolderBasedDeployment) ? folderPath : await zipUtility.archiveFolder(folderPath, tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package.zip')
         }
-
-        var publishingProfile = await azureRESTUtility.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-        tl._writeLine(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
 
         if(virtualApplication) {
             publishingProfile.destinationAppUrl += "/" + virtualApplication;
