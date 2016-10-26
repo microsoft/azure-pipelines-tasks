@@ -16,7 +16,9 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         let tp = path.join(__dirname, 'L0WindowsDefault.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-		assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
+		console.log(tr.stdout);
+		console.log(tr.stderr);
+		assert(tr.invokedToolCount == 1, 'should have invoked tool twice');
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         done();
