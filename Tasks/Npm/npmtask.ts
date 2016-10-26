@@ -74,15 +74,15 @@ async function executeTask() {
 async function runNpmAuthHelperAsync(npmAuthRunner: trm.ToolRunner) : Promise<number> {
     try{
         var execOptions = <trm.IExecOptions>{
-            env: process.env || getBuildCredProviderEnv()
+            env: addBuildCredProviderEnv(process.env)
         };
 
         var code : number = await npmAuthRunner.exec(execOptions);
-        tl.debug('Authentication succeeded with code: ' + code);
+        tl.debug('Auth helper exitted with code: ' + code);
         return Q(code);
     } catch (err) {
+        // ignore any auth failure and try to run the task.
         tl.debug(tl.loc('NpmAuthFailed', err.message));
-        throw err;
     }
 }
 
@@ -145,23 +145,24 @@ function cleanUpTempNpmrcPath(tempUserNpmrcPath: string) {
     }
 }
 
-function getBuildCredProviderEnv() : EnvironmentDictionary {
+function addBuildCredProviderEnv(env: EnvironmentDictionary) : EnvironmentDictionary {
 
-	var env : EnvironmentDictionary = {};
     let credProviderPath : string = path.join(__dirname, 'Npm/CredentialProvider');
-	
+
     // get build access token
-	var accessToken : string = getSystemAccessToken();
+    var accessToken : string = getSystemAccessToken();
 
     // get uri prefixes
     var serviceUri : string = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
     var urlPrefixes : string[] = assumeNpmUriPrefixes(serviceUri);
-	tl.debug(`discovered URL prefixes: ${urlPrefixes}`);
-	
-    //TODO these env variables should NOT use NUGET...
-	env["VSS_NUGET_ACCESSTOKEN"] = accessToken;
-	env["VSS_NUGET_URI_PREFIXES"] = urlPrefixes.join(";");
-	env["NPM_CREDENTIALPROVIDERS_PATH"] =  credProviderPath;
+    tl.debug(`discovered URL prefixes: ${urlPrefixes}`);
+
+    // These env variables are using NUGET because the credential provider that is being used
+    // was built only when NuGet was supported. It is basically using environment variable to
+    // pull out the access token, hence can be used in Npm scenario as well.
+    env["VSS_NUGET_ACCESSTOKEN"] = accessToken;
+    env["VSS_NUGET_URI_PREFIXES"] = urlPrefixes.join(";");
+    env["NPM_CREDENTIALPROVIDERS_PATH"] =  credProviderPath;
     return env;
 }
 
