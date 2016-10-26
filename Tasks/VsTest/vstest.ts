@@ -699,6 +699,10 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                 .then(function (vsVersion) {
                     try {
                         vstestLocation = getVSTestLocation(vsVersion);
+                        let disableTIA = tl.getVariable("DisableTestImpactAnalysis");
+                        if (disableTIA !== undefined && disableTIA.toLowerCase() === "true") {
+                            tiaEnabled = false;
+                        }
                     } catch (e) {
                         tl.error(e.message);
                         defer.resolve(1);
