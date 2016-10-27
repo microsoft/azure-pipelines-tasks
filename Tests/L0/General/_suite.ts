@@ -93,7 +93,7 @@ describe('General Suite', function() {
 		
 		var taskFolders: string[] = [];
 		fs.readdirSync(tasksRootFolder).forEach(folderName=> {
-			if(folderName != 'Common' && fs.statSync(path.join(tasksRootFolder, folderName)).isDirectory()) {
+			if(folderName != 'Common' && folderName != 'PullRequestCodeAnalysis' && fs.statSync(path.join(tasksRootFolder, folderName)).isDirectory()) {
 				taskFolders.push(path.join(tasksRootFolder, folderName));	
 			}
 		})
