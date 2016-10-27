@@ -2,9 +2,9 @@ import Q = require('q');
 import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
 import fs = require('fs');
+import path = require('path');
 
 var winreg = require('winreg');
-var azureRmUtil = require('./azurermutil.js');
 var parseString = require('xml2js').parseString;
 
 /**
@@ -35,22 +35,25 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
     
     if(isFolderBasedDeployment) {
         msDeployCmdArgs += " -source:IisApp=\"" + webAppPackage + "\"";
-        msDeployCmdArgs += " -dest:iisApp=\"" + webApplicationDeploymentPath + "\",";
+        msDeployCmdArgs += " -dest:iisApp=\"" + webApplicationDeploymentPath + "\"";
     }
     else {       
         msDeployCmdArgs += " -source:package=\"" + webAppPackage + "\"";
 
         if(isParamFilePresentInPacakge) {
-            msDeployCmdArgs += " -dest:auto,";
+            msDeployCmdArgs += " -dest:auto";
         }
         else {
-            msDeployCmdArgs += " -dest:contentPath=\"" + webApplicationDeploymentPath + "\",";
+            msDeployCmdArgs += " -dest:contentPath=\"" + webApplicationDeploymentPath + "\"";
         }
     }
 
-    msDeployCmdArgs += "ComputerName='https://" + publishingProfile.publishUrl + "/msdeploy.axd?site=" + webAppName + "',";
-    msDeployCmdArgs += "UserName='" + publishingProfile.userName + "',Password='" + publishingProfile.userPWD + "',AuthType='Basic'";
-
+	if(publishingProfile != null)
+	{
+		msDeployCmdArgs += ",ComputerName='https://" + publishingProfile.publishUrl + "/msdeploy.axd?site=" + webAppName + "',";
+		msDeployCmdArgs += "UserName='" + publishingProfile.userName + "',Password='" + publishingProfile.userPWD + "',AuthType='Basic'";
+	}
+	
     if(isParamFilePresentInPacakge) {
         msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='" + webApplicationDeploymentPath + "'";
     }
@@ -78,10 +81,15 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
         msDeployCmdArgs += " -enableRule:DoNotDeleteRule";
     }
 
-    var userAgent = tl.getVariable("AZURE_HTTP_USER_AGENT");
-    if(userAgent) {
-        msDeployCmdArgs += ' -userAgent:' + userAgent;
-    }
+    if(publishingProfile != null)
+	{
+		var userAgent = tl.getVariable("AZURE_HTTP_USER_AGENT");
+		if(userAgent)
+		{
+			msDeployCmdArgs += ' -userAgent:' + userAgent;
+		}
+	}
+
     tl.debug(tl.loc('ConstructedmsDeploycomamndlinearguments'));
     return msDeployCmdArgs;
 }
@@ -136,7 +144,7 @@ export async function getMSDeployFullPath() {
     }
     catch(error) {
         tl.warning(error);
-        return __dirname + "\\MSDeploy3.6\\msdeploy.exe";
+        return path.join(__dirname, "..", "..", "MSDeploy3.6", "msdeploy.exe"); 
     }
 }
 
@@ -188,4 +196,20 @@ function getMSDeployInstallPath(registryKey: string): Q.Promise<string> {
     });
 
     return defer.promise;
+}
+
+/**
+ * 1. Checks if msdeploy during execution redirected any error to 
+ * error stream ( saved in error.txt) , display error to console
+ * 2. Checks if there is file in use error , suggest to try app offline.
+ */
+export function redirectMSDeployErrorToConsole() {
+    var msDeployErrorFilePath = tl.getVariable('System.DefaultWorkingDirectory') + '\\error.txt';
+    if(tl.exist(msDeployErrorFilePath)) {
+        var errorFileContent = fs.readFileSync(msDeployErrorFilePath);
+        if(errorFileContent.toString().indexOf("ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER") !== -1){
+            tl.warning(tl.loc("Trytodeploywebappagainwithappofflineoptionselected"));
+        }
+        tl.error(errorFileContent.toString());
+    }
 }

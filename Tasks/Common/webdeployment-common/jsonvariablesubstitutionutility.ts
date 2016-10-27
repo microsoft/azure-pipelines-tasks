@@ -2,7 +2,7 @@ import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
 
-var azureRmUtil = require ('./azurermutil.js');
+var utility = require ('./utility.js');
 
 function createEnvTree(envVariables) {
     var envVarTree = {
@@ -12,7 +12,7 @@ function createEnvTree(envVariables) {
     };
     for(let envVariable of envVariables) {
         var envVarTreeIterator = envVarTree;
-        if(azureRmUtil.isPredefinedVariable(envVariable.name)) {
+        if(utility.isPredefinedVariable(envVariable.name)) {
             continue;
         } 
         var envVariableNameArray = (envVariable.name).split('.');

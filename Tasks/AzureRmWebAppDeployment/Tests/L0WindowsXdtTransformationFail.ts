@@ -94,8 +94,8 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 
 import mockTask = require('vsts-task-lib/mock-task');
-var kuduDeploymentLog = require('../kududeploymentlog.js');
-var msDeployUtility = require('../msdeployutility.js'); 
+var kuduDeploymentLog = require('webdeployment-common/kududeploymentstatusutility.js');
+var msDeployUtility = require('webdeployment-common/msdeployutility.js'); 
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
     getMSDeployFullPath : function() {
@@ -108,7 +108,7 @@ tr.registerMock('./msdeployutility.js', {
     }
 }); 
 
-tr.registerMock('./azurermutil.js', {
+tr.registerMock('webdeployment-common/azurerestutility.js', {
     getAzureRMWebAppPublishProfile: function(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
         var mockPublishProfile = {
             profileName: 'mytestapp - Web Deploy',
@@ -134,17 +134,6 @@ tr.registerMock('./azurermutil.js', {
         }
         return mockPublishProfile;
     },
-    updateDeploymentStatus: function(publishingProfile, isDeploymentSuccess ) {
-        if(isDeploymentSuccess) {
-            console.log('Updated history to kudu');
-        }
-        else {
-            console.log('Failed to update history to kudu');
-        }
-        var webAppPublishKuduUrl = publishingProfile.publishUrl;
-        var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
-        console.log("kudu log requestBody is:" + JSON.stringify(requestDetails["requestBody"]));
-    },
     getAzureRMWebAppConfigDetails: function(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
 	var config = { 
 		id: 'appid',
@@ -157,7 +146,22 @@ tr.registerMock('./azurermutil.js', {
 }
 });
 
-tr.registerMock('./ziputility.js', {
+tr.registerMock('./azurerestutility.js', {
+    updateDeploymentStatus: function(publishingProfile, isDeploymentSuccess ) {
+        if(isDeploymentSuccess) {
+            console.log('Updated history to kudu');
+        }
+        else {
+            console.log('Failed to update history to kudu');
+        }
+        var webAppPublishKuduUrl = publishingProfile.publishUrl;
+        var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
+        requestDetails["requestBody"].author = 'author';
+        console.log("kudu log requestBody is:" + JSON.stringify(requestDetails["requestBody"]));
+    }
+});
+
+tr.registerMock('webdeployment-common/ziputility.js', {
     unzip: function() {
 
     },

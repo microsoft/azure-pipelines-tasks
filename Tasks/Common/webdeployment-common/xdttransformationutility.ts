@@ -1,6 +1,6 @@
-import path = require('path');
 import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
+import path = require('path');
 
 export function expandWildcardPattern(wildcardPattern : string) {
 	var matchingFiles = tl.glob(wildcardPattern);
@@ -22,7 +22,7 @@ export function expandWildcardPattern(wildcardPattern : string) {
 */
 export function applyXdtTransformation(sourceFile, transformFile) {
 	var cttBatchFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'cttCommand.bat';
-	var cttPath = path.join(__dirname, "ctt", "ctt.exe");
+	var cttPath = path.join(__dirname, "..", "..", "ctt", "ctt.exe"); 
 	var cttArgs = ' s:"' + sourceFile + '" t:"' + transformFile + '" d:"' + sourceFile + '" pw';
 	var cttCommand = '"' + cttPath + '" ' + cttArgs + '\n';
 	tl.writeFile(cttBatchFile, cttCommand);
