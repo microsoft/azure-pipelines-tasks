@@ -88,7 +88,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     }
 }
 
-
+import mockTask = require('vsts-task-lib/mock-task');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js');
 
 tr.registerMock('./msdeployutility.js', {
@@ -98,9 +98,10 @@ tr.registerMock('./msdeployutility.js', {
         return msDeployFullPath;
     },
     containsParamFile: function(webAppPackage: string) {
+		var taskResult = mockTask.execSync("cmd", ['/C', "DefaultWorkingDirectory\\msDeployParam.bat"]);
         return true;
     }
-}); 
+});
 
 tr.setAnswers(a);
 tr.run();

@@ -74,7 +74,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     }
 };
 
+import mockTask = require('vsts-task-lib/mock-task');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js');
+
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
     getMSDeployFullPath : function() {
@@ -82,10 +84,10 @@ tr.registerMock('./msdeployutility.js', {
         return msDeployFullPath;
     },
     containsParamFile: function(webAppPackage: string) {
+		var taskResult = mockTask.execSync("cmd", ['/C', "DefaultWorkingDirectory\\msDeployParam.bat"]);
         return true;
-    },
-	redirectMSDeployErrorToConsole : msDeployUtility.redirectMSDeployErrorToConsole
-}); 
+    }
+});
 
 tr.setAnswers(a);
 tr.run();
