@@ -4,13 +4,14 @@ import fs = require('fs');
 
 var azureRESTUtility = require ('webdeployment-common/azurerestutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js');
-var kuduUtility = require('./kuduutility.js');
 var zipUtility = require('webdeployment-common/ziputility.js');
 var utility = require('webdeployment-common/utility.js');
 var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
 var jsonSubstitutionUtility = require('webdeployment-common/jsonvariablesubstitutionutility.js');
-var xmlSubstitutionUtility = require('webdeployment-common/xmlvariablesubstitutionutility.js');
+//var xmlSubstitutionUtility = require('webdeployment-common/xmlvariablesubstitutionutility.js');
 var xdtTransformationUtility = require('webdeployment-common/xdttransformationutility.js');
+
+var kuduUtility = require('./kuduutility.js');
 
 async function run() {
     try {
@@ -80,7 +81,7 @@ async function run() {
                 }
             }
             if(variableSubstitution) {
-                await xmlSubstitutionUtility.substituteAppSettingsVariables(folderPath);
+                //await xmlSubstitutionUtility.substituteAppSettingsVariables(folderPath);
             }
             if(jsonVariableSubsFlag) {
                 jsonSubstitutionUtility.jsonVariableSubstitution(folderPath, jsonVariableSubsFiles);

@@ -15,13 +15,13 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 10,
+    "Major": 0,
     "Minor": 0,
     "Patch": 1
   },
   "demands": [
   ],
-  "minimumAgentVersion": "2.104.1",
+  "minimumAgentVersion": "1.102.0",
   "groups": [
     {
       "name": "advanceDeploymentOptions",
