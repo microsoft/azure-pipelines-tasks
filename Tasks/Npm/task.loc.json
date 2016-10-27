@@ -30,7 +30,6 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.command",
       "defaultValue": "install",
-      "helpMarkDown": "ms-resource:loc.input.help.command",
       "required": true
     },
     {
