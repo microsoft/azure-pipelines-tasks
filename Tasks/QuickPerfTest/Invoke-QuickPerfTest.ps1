@@ -6,7 +6,7 @@ param
     [String]
     $env:BUILD_BUILDID,
 
-    [String] [Parameter(Mandatory = $true)]
+    [String] [Parameter(Mandatory = $false)]
     $connectedServiceName,
 
     [String] [Parameter(Mandatory = $true)]
@@ -23,211 +23,12 @@ param
     $machineType
 )
 
+  # Load all dependent files for execution
+  . $PSScriptRoot/CltTasksUtility.ps1
+  . $PSScriptRoot/VssConnectionHelper.ps1
+  
 $userAgent = "QuickPerfTestBuildTask"
-
 $global:RestTimeout = 60
-
-function InitializeRestHeaders()
-{
-    $restHeaders = New-Object -TypeName "System.Collections.Generic.Dictionary[[String], [String]]"
-
-    $alternateCreds = [String]::Concat($Username, ":", $Password)
-    $basicAuth = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($alternateCreds))
-    $restHeaders.Add("Authorization", [String]::Concat("Basic ", $basicAuth))
-
-    return $restHeaders
-}
-
-function InvokeRestMethod($headers, $contentType, $uri , $method= "Get", $body)
-{
-  $ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($uri)
-  $result = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -TimeoutSec $global:RestTimeout -Uri $uri -Method $method -Headers $headers -Body $body
-  $ServicePoint.CloseConnectionGroup("")
-  return $result
-}
-
-function ComposeTestDropJson($name, $duration, $homepage, $vu)
-{
-$tdjson = @"
-{
-    "dropType": "InplaceDrop",
-    "loadTestDefinition":{
-        "loadTestName":"$name",
-        "runDuration":$duration,
-        "urls":["$homepage"],
-        "browserMixs":[
-            {"browserName":"Internet Explorer 11.0","browserPercentage":60.0},
-            {"browserName":"Chrome 2","browserPercentage":40.0}
-        ],
-        "loadPatternName":"Constant",
-        "maxVusers":$vu,
-        "loadGenerationGeoLocations":[
-            {"Location":"$geoLocation","Percentage":100}
-        ]
-    }
-}
-"@
-
-    return $tdjson
-}
-
-function CreateTestDrop($headers, $dropJson)
-{
-    $uri = [String]::Format("{0}/_apis/clt/testdrops?api-version=1.0", $CltAccountUrl)
-    $drop = InvokeRestMethod -contentType "application/json" -uri $uri -method Post -headers $headers -body $dropJson
-
-    return $drop
-}
-
-function GetTestDrop($headers, $drop)
-{
-    $uri = [String]::Format("{0}/_apis/clt/testdrops/{1}?api-version=1.0", $CltAccountUrl, $drop.id)
-    $testdrop = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers
-
-    return $testdrop
-}
-
-function UploadTestDrop($testdrop)
-{
-    $uri = New-Object System.Uri($testdrop.accessData.dropContainerUrl)
-    $sas = New-Object Microsoft.WindowsAzure.Storage.Auth.StorageCredentials($testdrop.accessData.sasKey)
-    $container = New-Object Microsoft.WindowsAzure.Storage.Blob.CloudBlobContainer($uri, $sas)
-
-    return $container
-}
-
-function GetTestRuns($headers)
-{
-    $uri = [String]::Format("{0}/_apis/clt/testruns?api-version=1.0", $CltAccountUrl)
-    $runs = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers
-
-    return $runs
-}
-
-function GetTestRunUri($testRunId, $headers)
-{
- $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?api-version=1.0", $CltAccountUrl,$testRunId)
- $run = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers
- 
- return $run.WebResultUrl
-}
-
-function RunInProgress($run)
-{
-    return $run.state -eq "queued" -or $run.state -eq "inProgress"
-}
-
-function MonitorTestRun($headers, $run)
-{
-    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?api-version=1.0", $CltAccountUrl, $run.id)
-    $prevState = $run.state
-    $prevSubState = $run.subState
-    Write-Output ("Load test '{0}' is in state '{1}|{2}'." -f  $run.name, $run.state, $run.subState)
-
-    do
-    {
-        Start-Sleep -s 5
-        $run = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers
-        if ($prevState -ne $run.state -or $prevSubState -ne $run.subState)
-        {
-            $prevState = $run.state
-            $prevSubState = $run.subState
-            Write-Output ("Load test '{0}' is in state '{1}|{2}'." -f  $run.name, $run.state, $run.subState)
-        }
-    }
-    while (RunInProgress $run)
-
-    $run = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers
-    Write-Output "------------------------------------"
-    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}/messages?api-version=1.0", $CltAccountUrl, $run.id)
-    $messages = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers
-
-    if ($messages)
-    {
-        $timeSorted = $messages.value | Sort-Object loggedDate
-        foreach ($message in $timeSorted)
-        {
-            switch ($message.messageType)
-            {
-                "info"      { Write-Host -NoNewline ("[Message]{0}" -f $message.message) }
-                "output"    { Write-Host -NoNewline ("[Output]{0}" -f $message.message) }
-                "warning"   { Write-Warning $message.message }
-                "error"     { Write-Error $message.message }
-                "critical"  { Write-Error $message.message }
-            }
-        }
-    }
-
-    Write-Output "------------------------------------"
-}
-
-function ComposeTestRunJson($name, $tdid)
-{
-$trjson = @"
-{
-    "name":"$name",
-    "description":"Quick perf test from automation task",
-    "testSettings":{"cleanupCommand":"", "hostProcessPlatform":"x86", "setupCommand":""},
-    "superSedeRunSettings":{"loadGeneratorMachinesType":"$MachineType"},
-    "testDrop":{"id":"$tdid"},
-    "runSourceIdentifier":"build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
-}
-"@
-
-    return $trjson
-}
-
-function QueueTestRun($headers, $runJson)
-{
-    $uri = [String]::Format("{0}/_apis/clt/testruns?api-version=1.0", $CltAccountUrl)
-    $run = InvokeRestMethod -contentType "application/json" -uri $uri -method Post -headers $headers -body $runJson
-
-$start = @"
-{
-  "state": "queued"
-}
-"@
-
-    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?api-version=1.0", $CltAccountUrl, $run.id)
-    InvokeRestMethod -contentType "application/json" -uri $uri -method Patch -headers $headers -body $start
-    $run = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers
-
-    return $run
-}
-
-function ComposeAccountUrl($vsoUrl)
-{
-    $elsUrl = $vsoUrl
-
-    if ($vsoUrl -notlike "*VSCLT.VISUALSTUDIO.COM*")
-    {
-        if ($vsoUrl -like "*VISUALSTUDIO.COM*")
-        {
-            $accountName = $vsoUrl.Split('//')[2].Split('.')[0]
-            $elsUrl = ("https://{0}.vsclt.visualstudio.com" -f $accountName)
-        }
-    }
-
-    return $elsUrl
-}
-
-function ValidateInputs()
-{
-    if (![System.Uri]::IsWellFormedUriString($websiteUrl, [System.UriKind]::Absolute))
-    {
-        throw "Website Url is not well formed."
-    }
-}
-
-function UploadSummaryMdReport($summaryMdPath)
-{
-	Write-Verbose "Summary Markdown Path = $summaryMdPath"
-
-	if (($env:SYSTEM_HOSTTYPE -eq "build") -and (Test-Path($summaryMdPath)))
-	{	
-		Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=Load test results;]$summaryMdPath"
-	}
-}
 
 ############################################## PS Script execution starts here ##########################################
 Write-Output "Starting Quick Perf Test Script"
@@ -244,32 +45,57 @@ Write-Output "Load location = $geoLocation"
 Write-Output "Load generator machine type = $machineType"
 Write-Output "Run source identifier = build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
 
+Write-Output "visuri- Validating inputs"
 #Validate Input
-ValidateInputs
+ValidateInputs $websiteUrl
+Write-Output "visuri- Validating inputs succeeded"
 
-$connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
+if($connectedServiceName)
+{
+    $connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
+}
+else
+{
+	$connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name SystemVssConnection
+}
+
 
 $Username = $connectedServiceDetails.Authorization.Parameters.Username
 Write-Verbose "Username = $Username" -Verbose
 $Password = $connectedServiceDetails.Authorization.Parameters.Password
 $VSOAccountUrl = $connectedServiceDetails.Url.AbsoluteUri
-$CltAccountUrl = ComposeAccountUrl($VSOAccountUrl).TrimEnd('/')
+Write-Output "visuri- Compose Account Url called"
+Write-Output "VSO Account URL is : $VSOAccountUrl"
+$CltAccountUrl = ComposeAccountUrl($VSOAccountUrl)
 $TFSAccountUrl = $env:System_TeamFoundationCollectionUri.TrimEnd('/')
+Write-Output "visuri- Compose Account Url succeeded"
 
-Write-Verbose "VSO account Url = $TFSAccountUrl" -Verbose
-Write-Verbose "CLT account Url = $CltAccountUrl" -Verbose
+Write-Output "VSO account Url = $TFSAccountUrl" -Verbose
+Write-Output "CLT account Url = $CltAccountUrl" -Verbose
 
-$headers = InitializeRestHeaders
+Write-Output "visuri- Initializing Rest Headers"
+$headers = InitializeRestHeaders($connectedServiceName)
+Write-Output "visuri- Initializing Rest Headers succeeded"
 
-$dropjson = ComposeTestDropJson $testName $runDuration $websiteUrl $vuLoad
-$drop = CreateTestDrop $headers $dropjson
+Write-Output "visuri- Compose Test Drop"
+$dropjson = ComposeTestDropJson $testName $runDuration $websiteUrl $vuLoad $geoLocation
+Write-Output "visuri- Compose Test Drop succeeded"
+
+Write-Output "visuri- Create Test Drop"
+$drop = CreateTestDrop $headers $dropjson $CltAccountUrl
+Write-Output "visuri- Create Test Drop succeeded"
+
 if ($drop.dropType -eq "InPlaceDrop")
 {
-    $runJson = ComposeTestRunJson $testName $drop.id
+    $runJson = ComposeTestRunJson $testName $drop.id $MachineType
 
-    $run = QueueTestRun $headers $runJson
-    MonitorTestRun $headers $run
-    $webResultsUrl = GetTestRunUri $run.id $headers
+	Write-Output "visuri- Queuing Test run"
+    $run = QueueTestRun $headers $runJson $CltAccountUrl
+	Write-Output "visuri- Queuing Test run succeeded"
+	Write-Output "visuri- Monitor Test run"
+    MonitorTestRun $headers $run $CltAccountUrl
+	Write-Output "visuri- Get Test run Uri"
+    $webResultsUrl = GetTestRunUri $run.id $headers $CltAccountUrl
 	
     Write-Output ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name)
     Write-Output ("To view run details navigate to {0}" -f $webResultsUrl)

@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 11
+    "Patch": 12
   },
   "demands": [
     "msbuild",
@@ -26,7 +26,6 @@
       "type": "connectedService:Generic",
       "label": "Registered connection",
       "defaultValue": "",
-      "required": true,
       "helpMarkDown": "Select a previously registered service connection to talk to the cloud-based load test service. Choose 'Manage' to register a new connection."
     },
     {
