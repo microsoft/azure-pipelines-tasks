@@ -21,7 +21,7 @@
   },
   "demands": [
   ],
-  "minimumAgentVersion": "2.104.1",
+  "minimumAgentVersion": "1.102.0",
   "groups": [
     {
       "name": "advanceDeploymentOptions",
