@@ -772,7 +772,7 @@ var getRefs = function () {
     var branch;
     if (process.env.TF_BUILD) {
         // during CI agent checks out a commit, not a branch.
-        // $(build.sourceBranch) indicates the branch name, e.g. refs/heads/releases/m107
+        // $(build.sourceBranch) indicates the branch name, e.g. refs/heads/releases/m108
         branch = process.env.BUILD_SOURCEBRANCH;
     }
     else {
@@ -810,8 +810,8 @@ var getRefs = function () {
 
             var release = parseInt(branch.split('/').pop().substr(1));
 
-            // filter out releases less than 107 and greater than HEAD
-            if (release < 107 ||
+            // filter out releases less than 108 and greater than HEAD
+            if (release < 108 ||
                 release > (info.head.release || 999)) {
 
                 return;
