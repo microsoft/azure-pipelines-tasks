@@ -20,7 +20,7 @@
         {
             "name": "cwd",
             "type": "filePath",
-            "label": "Working Directory",
+            "label": "Working directory",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Working directory where the npm command is run. Defaults to the root of the repo."
@@ -30,7 +30,6 @@
             "type": "string",
             "label": "npm command to execute",
             "defaultValue": "install",
-            "helpMarkDown": "npm command to run. [More Information](https://docs.npmjs.com/).",
             "required": true
         },
         {
@@ -49,11 +48,11 @@
         }
     },
     "messages": {
-        "InvalidCommand": "Only one command should be used for npm. Use arguments input for additional arguments.",
+        "InvalidCommand": "Only one command should be used for npm. Use 'Arguments' input for additional arguments.",
         "NpmReturnCode": "npm exited with return code: %d",
         "NpmFailed": "npm failed with error: %s",
-        "NpmConfigFailed": "Failed to run 'npm config list' for logging. Error: ",
-        "NpmAuthFailed": "Failed to get the required authentication tokens for npm. Error: ",
-        "BuildCredentialsWarn": "Could not determine credentials to use for Npm"
+        "NpmConfigFailed": "Failed to log the npm config information. Error : %s",
+        "NpmAuthFailed": "Failed to get the required authentication tokens for npm. Error: %s",
+        "BuildCredentialsWarn": "Could not determine credentials to use for npm"
     }
 }
