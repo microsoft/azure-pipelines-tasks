@@ -14,7 +14,7 @@
   "dependencies": {
     "fs": "0.0.2",
     "q": "1.4.1",
-    "vso-node-api": "5.1.1",
+    "vso-node-api": "^5.0.5",
     "vsts-task-lib": "0.9.7"
   }
 }

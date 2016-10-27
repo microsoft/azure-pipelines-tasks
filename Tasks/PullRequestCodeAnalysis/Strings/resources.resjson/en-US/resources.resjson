@@ -1,10 +1,10 @@
 {
   "loc.friendlyName": "Pull Request Code Analysis",
   "loc.helpMarkDown": "[More Information](   NEEDS LINK    )",
-  "loc.description": "SonarQube Pull Request Code Analysis (Preview)",
+  "loc.description": "Post code analysis issues as comments on a pull request",
   "loc.instanceNameFormat": "Post comments to pull request",
-  "loc.input.label.messageLimit": "Maximum comments to post",
-  "loc.input.help.messageLimit": "Posting too many comments makes the PR hard to read (highest severity messages will always be posted first).",
+  "loc.input.label.messageLimit": "Comment limit",
+  "loc.input.help.messageLimit": "The maximum number of comments that can be posted. Larger values may take longer to complete.",
   "loc.messages.Error_InvalidMessageLimit": "Expected message limit to be a number, but instead it was %s",
   "loc.messages.Error_NotPullRequest": "Skipping pull request commenting - this build was not triggered by a pull request.",
   "loc.messages.Error_InvalidPullRequestId": "Could not retrieve pull request ID from the server.",
