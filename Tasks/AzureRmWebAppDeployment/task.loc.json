@@ -15,7 +15,7 @@
     "Minor": 1,
     "Patch": 2
   },
-  "minimumAgentVersion": "2.104.1",
+  "minimumAgentVersion": "1.102.0",
   "groups": [
     {
       "name": "AdditionalDeploymentOptions",
