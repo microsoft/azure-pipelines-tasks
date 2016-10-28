@@ -3,7 +3,7 @@ import path = require('path');
 import fs = require('fs');
 
 var utility = require ('./utility.js');
-
+var fileEncoding = require('./filencoding.js');
 function createEnvTree(envVariables) {
     var envVarTree = {
         value: null,
@@ -69,8 +69,10 @@ export function jsonVariableSubstitution(absolutePath, jsonSubFiles) {
             if(path.extname(file) !== '.json') {
                 throw new Error(tl.loc('JSONvariablesubstitutioncanonlybeappliedforJSONfiles'));
             }
-            var fileContent: string = fs.readFileSync(file, 'utf8').toString();
-            if(fileContent.indexOf('\uFEFF') === 0) {
+            var fileBuffer: Buffer = fs.readFileSync(file);
+            var fileEncodeType = fileEncoding.detectFileEncoding(fileBuffer)
+            var fileContent: string = fileBuffer.toString(fileEncodeType[0]);
+            if(fileEncodeType[1]) {
                 fileContent = fileContent.slice(1);
             }
             var jsonObject = JSON.parse(fileContent);
