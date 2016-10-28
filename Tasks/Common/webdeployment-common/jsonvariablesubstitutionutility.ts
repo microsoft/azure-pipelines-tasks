@@ -3,7 +3,7 @@ import path = require('path');
 import fs = require('fs');
 
 var utility = require ('./utility.js');
-var fileEncoding = require('./filencoding.js');
+var fileEncoding = require('./fileencoding.js');
 function createEnvTree(envVariables) {
     var envVarTree = {
         value: null,
