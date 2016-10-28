@@ -22,8 +22,6 @@ npmMockHelper.setDebugState(true);
 npmMockHelper.mockAuthHelper();
 npmMockHelper.mockNpmConfigList();
 
-npmMockHelper.useDeprecatedTask();
-
 var execResult: ma.TaskLibAnswerExecResult = {
     code: 1,
     stdout: "",

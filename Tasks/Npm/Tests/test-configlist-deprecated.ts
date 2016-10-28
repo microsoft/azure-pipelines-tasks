@@ -7,6 +7,16 @@ let taskPath = path.join(__dirname, '..', 'npmtask.js');
 let taskMockRunner = new tmrm.TaskMockRunner(taskPath);
 let npmMockHelper = new util.NpmMockHelper(taskMockRunner, "config", "list");
 
+if (process.argv.length == 3) {
+    if (process.argv[2] === "useDeprecated") {
+        npmMockHelper.useDeprecatedTask();
+    }
+} 
+
+npmMockHelper.setDebugState(true);
+npmMockHelper.mockAuthHelper();
+npmMockHelper.mockNpmConfigList();
+
 npmMockHelper.useDeprecatedTask();
 
 var execResult: ma.TaskLibAnswerExecResult = {

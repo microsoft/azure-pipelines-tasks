@@ -7,11 +7,6 @@ let taskPath = path.join(__dirname, '..', 'npmtask.js');
 let taskMockRunner = new tmrm.TaskMockRunner(taskPath);
 let npmMockHelper = new util.NpmMockHelper(taskMockRunner, "root", "");
 
-let mock = require('vsts-task-lib/mock-toolrunner');
-mock.exec = () => {
-    throw "tool failure";
-};
-
 if (process.argv.length == 3) {
     if (process.argv[2] === "useDeprecated") {
         npmMockHelper.useDeprecatedTask();
@@ -22,12 +17,12 @@ npmMockHelper.setDebugState(true);
 npmMockHelper.mockAuthHelper();
 npmMockHelper.mockNpmConfigList();
 
-npmMockHelper.useDeprecatedTask();
+let root = path.join(process.env['INPUT_CWD'], "node_modules");
 
 var execResult: ma.TaskLibAnswerExecResult = {
-    code: 1,
-    stdout: "",
-    stderr: "some error"
+    code: 0,
+    stdout: root,
+    stderr: ""
 };
 
 npmMockHelper.run(execResult);
