@@ -244,6 +244,10 @@
     "TaskNotFound": "ms-resource:loc.messages.TaskNotFound",
     "FailedRegisteringEnvironment": "ms-resource:loc.message.FailedRegisteringEnvironment",
     "selectResourceGroupSuccessfull":"ms-resource:loc.message.selectResourceGroupSuccessfull",
-    "ValidatingCredentialsFailure": "ms-resource:loc.message.ValidatingCredentialsFailure"
+    "ValidatingCredentialsFailure": "ms-resource:loc.message.ValidatingCredentialsFailure",
+    "VM_Start": "ms-resource:loc.message.VM_Start",
+    "VM_Restart": "ms-resource:loc.message.VM_Restart",
+    "VM_Stop": "ms-resource:loc.message.VM_Stop",
+    "VM_Delete": "ms-resource:loc.message.VM_Delete"
   }
 }

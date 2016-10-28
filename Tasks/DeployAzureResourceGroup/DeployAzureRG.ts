@@ -38,6 +38,8 @@ export class AzureResourceGroupDeployment {
     private outputVariable:string;
     private subscriptionId:string;
     private connectedService:string;
+    private quickStartTemplate:string;
+    private commitID:string;
     private isLoggedIn:boolean = false;
     private deploymentMode:string;
     
@@ -58,6 +60,8 @@ export class AzureResourceGroupDeployment {
             this.enableDeploymentPrerequisitesForCreate = tl.getBoolInput("enableDeploymentPrerequisitesForCreate");
             this.enableDeploymentPrerequisitesForSelect = tl.getBoolInput("enableDeploymentPrerequisitesForSelect");
             this.outputVariable = tl.getInput("outputVariable");
+            this.commitID = tl.getInput("commitID");
+            this.quickStartTemplate = tl.getInput("quickStartTemplate");
             this.subscriptionId = tl.getEndpointDataParameter(this.connectedService, "SubscriptionId", true);    
             this.deploymentMode = tl.getInput("deploymentMode");
         }
@@ -81,13 +85,6 @@ export class AzureResourceGroupDeployment {
                break;
            default:
                tl.setResult(tl.TaskResult.Succeeded, tl.loc("InvalidAction"));
-        }
-        if (this.outputVariable && this.outputVariable.trim()!="" && this.action!="Select Resource Group"){
-            try {
-                new env.RegisterEnvironment(this.getARMCredentials(), this.subscriptionId, this.resourceGroupName, this.outputVariable);
-            } catch(error) {            
-                tl.setResult(tl.TaskResult.Failed, tl.loc("FailedRegisteringEnvironment", error));
-            }
         }
     }
 
