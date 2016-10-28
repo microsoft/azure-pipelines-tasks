@@ -30,7 +30,7 @@ function detectFileEncodingWithoutBOM(buffer: Buffer) {
         throw Error('File buffer is too short to detect encoding type');
     }
     var typeCode = 0;
-    for(var index = 0; index<4; index += 1) {
+    for(var index = 0; index < 4; index++) {
         typeCode = typeCode << 1;
         typeCode = typeCode | (buffer[index] > 0 ? 1 : 0);
     }
