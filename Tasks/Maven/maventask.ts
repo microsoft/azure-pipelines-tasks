@@ -37,7 +37,7 @@ var reportPOMFile: string = null;
 var execFileJacoco: string = null;
 var ccReportTask: string = null;
 
-let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('build.sourcesDirectory'), BuildEngine.Maven);
+let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('System.DefaultWorkingDirectory'), BuildEngine.Maven);
 var codeAnalysisOrchestrator:CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
     [new CheckstyleTool(buildOutput, 'checkstyleAnalysisEnabled'),
         new FindbugsTool(buildOutput, 'findbugsAnalysisEnabled'),

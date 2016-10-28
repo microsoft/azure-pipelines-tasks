@@ -73,7 +73,8 @@
         "ENDPOINT_URL_ID1": "http://sonarqubeserver:9000",
         "ENDPOINT_AUTH_ID1": "{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}",
         "build.sourcesDirectory": "/user/build/s",
-        "build.artifactStagingDirectory": "/user/build/a"
+        "build.artifactStagingDirectory": "/user/build/a",
+        "System.DefaultWorkingDirectory": "/user/build/s"
     },
     "find": {
         "/user/build": [

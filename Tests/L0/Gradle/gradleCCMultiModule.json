@@ -73,7 +73,8 @@
         "JAVA_HOME_8_X86": "/user/local/bin/Java8",
         "build.buildNumber": "14",
         "build.sourcesDirectory": "/user/build/s",
-        "build.artifactStagingDirectory": "/user/build/a"
+        "build.artifactStagingDirectory": "/user/build/a",
+        "System.DefaultWorkingDirectory": "/user/build/s"
     },
     "exist": {
         "CCReport43F6D5EF\\summary.xml": true,

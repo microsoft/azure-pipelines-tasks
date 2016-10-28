@@ -1189,6 +1189,7 @@ describe('Maven Suite', function () {
         // Set mocked build variables
         responseJsonContent.getVariable = responseJsonContent.getVariable || {};
         responseJsonContent.getVariable['build.sourcesDirectory'] = testSrcDir;
+        responseJsonContent.getVariable['System.DefaultWorkingDirectory'] = testSrcDir;
         responseJsonContent.getVariable['build.artifactStagingDirectory'] = testStgDir;
 
         // Write and set the newly-changed response file
@@ -1311,6 +1312,7 @@ describe('Maven Suite', function () {
         // Set mocked build variables
         responseJsonContent.getVariable = responseJsonContent.getVariable || {};
         responseJsonContent.getVariable['build.sourcesDirectory'] = testSrcDir;
+        responseJsonContent.getVariable['System.DefaultWorkingDirectory'] = testSrcDir;
         responseJsonContent.getVariable['build.artifactStagingDirectory'] = testStgDir;
 
         // Write and set the newly-changed response file
@@ -1433,6 +1435,7 @@ describe('Maven Suite', function () {
         // Set mocked build variables
         responseJsonContent.getVariable = responseJsonContent.getVariable || {};
         responseJsonContent.getVariable['build.sourcesDirectory'] = testSrcDir;
+        responseJsonContent.getVariable['System.DefaultWorkingDirectory'] = testSrcDir;
         responseJsonContent.getVariable['build.artifactStagingDirectory'] = testStgDir;
 
         // Write and set the newly-changed response file
@@ -1554,6 +1557,7 @@ describe('Maven Suite', function () {
         // Set mocked build variables
         responseJsonContent.getVariable = responseJsonContent.getVariable || {};
         responseJsonContent.getVariable['build.sourcesDirectory'] = testSrcDir;
+        responseJsonContent.getVariable['System.DefaultWorkingDirectory'] = testSrcDir;
         responseJsonContent.getVariable['build.artifactStagingDirectory'] = testStgDir;
 
         // Write and set the newly-changed response file
@@ -1625,6 +1629,7 @@ describe('Maven Suite', function () {
         // Set mocked build variables
         responseJsonContent.getVariable = responseJsonContent.getVariable || {};
         responseJsonContent.getVariable['build.sourcesDirectory'] = testSrcDir;
+        responseJsonContent.getVariable['System.DefaultWorkingDirectory'] = testSrcDir;
         responseJsonContent.getVariable['build.artifactStagingDirectory'] = testStgDir;
 
         // Write and set the newly-changed response file
