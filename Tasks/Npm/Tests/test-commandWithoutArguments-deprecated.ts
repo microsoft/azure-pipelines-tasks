@@ -7,6 +7,16 @@ let taskPath = path.join(__dirname, '..', 'npmtask.js');
 let taskMockRunner = new tmrm.TaskMockRunner(taskPath);
 let npmMockHelper = new util.NpmMockHelper(taskMockRunner, "root", "");
 
+if (process.argv.length == 3) {
+    if (process.argv[2] === "useDeprecated") {
+        npmMockHelper.useDeprecatedTask();
+    }
+} 
+
+npmMockHelper.setDebugState(true);
+npmMockHelper.mockAuthHelper();
+npmMockHelper.mockNpmConfigList();
+
 npmMockHelper.useDeprecatedTask();
 
 let root = path.join(process.env['INPUT_CWD'], "node_modules");
