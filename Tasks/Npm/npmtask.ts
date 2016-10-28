@@ -43,10 +43,7 @@ async function executeTask() {
         // new task version with auth support
         var npmrcPath: string = path.join(cwd, '.npmrc');
         var tempNpmrcPath : string = getTempNpmrcPath();
-        var debugLog: boolean = true;
-        if (tl.getVariable('system.debug') != undefined && tl.getVariable('system.debug').toLowerCase() === 'false') {
-            debugLog = false;
-        }
+        var debugLog: boolean = tl.getVariable('system.debug') && tl.getVariable('system.debug').toLowerCase() === 'true';
 
         try{
             await runNpmAuthHelperAsync(getNpmAuthHelperRunner(npmrcPath, tempNpmrcPath, debugLog));
@@ -111,7 +108,7 @@ function shouldUseDeprecatedTask() : boolean {
 }
 
 function getNpmAuthHelperRunner(npmrcPath: string, tempUserNpmrcPath: string, includeDebugLogs: boolean): trm.ToolRunner {
-    var npmAuthHelper = tl.tool(path.join(__dirname, 'Npm/vsts-npm-auth/bin/vsts-npm-auth.exe'));
+    var npmAuthHelper = tl.tool(tl.which('vsts-npm-auth', true));
     var verbosityString = includeDebugLogs ? 'Detailed' : 'Normal';
     npmAuthHelper.line(`-NonInteractive -Verbosity ${verbosityString} -Config "${npmrcPath}" -TargetConfig "${tempUserNpmrcPath}"`);
     return npmAuthHelper;
