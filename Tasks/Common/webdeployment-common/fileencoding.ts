@@ -9,7 +9,7 @@ function detectFileEncodingWithBOM(buffer: Buffer) {
         return ['utf-8', true];
     }
     else if(buffer.slice(0,4).equals(new Buffer([255, 254, 0, 0]))) {
-        throw Error(tl.loc('EncodeNotSupported', 'UTF-32BE'));
+        throw Error(tl.loc('EncodeNotSupported', 'UTF-32LE'));
     }
     else if(buffer.slice(0,2).equals(new Buffer([254, 255]))) {
         throw Error(tl.loc('EncodeNotSupported', 'UTF-16BE'));
@@ -18,7 +18,7 @@ function detectFileEncodingWithBOM(buffer: Buffer) {
         return ['utf-16le', true];
     }
     else if(buffer.slice(0,4).equals(new Buffer([0, 0, 254, 255]))) {
-        throw Error(tl.loc('EncodeNotSupported', 'UTF-32LE'));
+        throw Error(tl.loc('EncodeNotSupported', 'UTF-32BE'));
     }
     tl.debug('Unable to detect File encoding using BOM');
     return null;
