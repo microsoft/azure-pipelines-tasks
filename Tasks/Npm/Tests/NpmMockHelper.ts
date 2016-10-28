@@ -64,6 +64,14 @@ export class NpmMockHelper {
         NpmMockHelper.setVariable('system.debug', isDebugging ? 'true' : 'false');
     }
 
+    public setOsType(osTypeVal : string) {
+        if(!this.answers['osType']) {
+            this.answers['osType'] = {};
+        }
+
+        this.answers['osType']['osType'] = osTypeVal;
+    }
+
     private static setVariable(name: string, value: string) {
         let key = NpmMockHelper.getVariableKey(name);
         process.env[key] = value;
@@ -91,6 +99,7 @@ export class NpmMockHelper {
 
     private setDefaultAnswers() {
         this.setToolPath(this.answers, "npm", NpmMockHelper.NpmCmdPath);
+        this.setOsType('WiNdOWs_nT');
     }
 
     private setToolPath(answers: ma.TaskLibAnswers, tool: string, path: string) {

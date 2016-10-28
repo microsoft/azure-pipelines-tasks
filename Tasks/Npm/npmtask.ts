@@ -4,6 +4,7 @@ import path = require('path');
 import url = require('url');
 import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
+var extend = require('util')._extend;
 
 interface EnvironmentDictionary { [key: string]: string; }
 
@@ -19,7 +20,7 @@ async function executeTask() {
 
     var command = tl.getInput('command', true);
     if (command.indexOf(' ') >= 0) {
-        tl.setResult(tl.TaskResult.Failed, tl.loc("InvalidCommand"));
+        tl.setResult(tl.TaskResult.Failed, tl.loc('InvalidCommand'));
         return;
     }
 
@@ -46,11 +47,13 @@ async function executeTask() {
         var debugLog: boolean = tl.getVariable('system.debug') && tl.getVariable('system.debug').toLowerCase() === 'true';
 
         try{
-            await runNpmAuthHelperAsync(getNpmAuthHelperRunner(npmrcPath, tempNpmrcPath, debugLog));
+            if(tl.osType().toLowerCase() === 'windows_nt') {
+                await runNpmAuthHelperAsync(getNpmAuthHelperRunner(npmrcPath, tempNpmrcPath, debugLog));
+            }
 
             // set required environment variables for npm execution
-            let npmExecOptions = <trm.IExecOptions>{
-                env: process.env
+            var npmExecOptions = <trm.IExecOptions>{
+                env: extend({}, process.env)
             };
             npmExecOptions.env['npm_config_userconfig'] = tempNpmrcPath;
             if(debugLog) {
@@ -71,8 +74,9 @@ async function executeTask() {
 async function runNpmAuthHelperAsync(npmAuthRunner: trm.ToolRunner) : Promise<number> {
     try{
         var execOptions = <trm.IExecOptions>{
-            env: addBuildCredProviderEnv(process.env)
+            env: extend({}, process.env)
         };
+        execOptions.env = addBuildCredProviderEnv(execOptions.env);
 
         var code : number = await npmAuthRunner.exec(execOptions);
         tl.debug('Auth helper exitted with code: ' + code);
@@ -87,7 +91,8 @@ async function tryRunNpmConfigAsync(npmConfigRunner: trm.ToolRunner, execOptions
     try {
         var code = await npmConfigRunner.exec(execOptions);
     } catch (err) {
-        // do not throw on this failure.
+        // 'npm config list' comamnd is run only for debugging/diagnostic
+        // purposes only. Failure of this shouldn't be fatal.
         tl.warning(tl.loc('NpmConfigFailed', err.Message));
     }
 }
@@ -104,10 +109,17 @@ async function runNpmCommandAsync(npmCommandRunner: trm.ToolRunner, execOptions 
 }
 
 function shouldUseDeprecatedTask() : boolean {
-    return tl.getVariable('USE_DEPRECATED_TASK_VERSION') != undefined && tl.getVariable('USE_DEPRECATED_TASK_VERSION').toLowerCase() === 'true';
+    return tl.getVariable('USE_DEPRECATED_TASK_VERSION') && tl.getVariable('USE_DEPRECATED_TASK_VERSION').toLowerCase() === 'true';
+}
+
+function addAuthHelperLocationToPath() {
+    tl.debug(`Current process.env['PATH'] = ${process.env['PATH']}`);
+    process.env['PATH'] = process.env['PATH'] + ';' + path.join(__dirname, 'Npm/vsts-npm-auth/bin');
+    tl.debug(`Updated process.env['PATH'] = ${process.env['PATH']}`);
 }
 
 function getNpmAuthHelperRunner(npmrcPath: string, tempUserNpmrcPath: string, includeDebugLogs: boolean): trm.ToolRunner {
+    addAuthHelperLocationToPath();
     var npmAuthHelper = tl.tool(tl.which('vsts-npm-auth', true));
     var verbosityString = includeDebugLogs ? 'Detailed' : 'Normal';
     npmAuthHelper.line(`-NonInteractive -Verbosity ${verbosityString} -Config "${npmrcPath}" -TargetConfig "${tempUserNpmrcPath}"`);
@@ -144,43 +156,46 @@ function cleanUpTempNpmrcPath(tempUserNpmrcPath: string) {
 
 function addBuildCredProviderEnv(env: EnvironmentDictionary) : EnvironmentDictionary {
 
-    let credProviderPath : string = path.join(__dirname, 'Npm/CredentialProvider');
+    var credProviderPath : string = path.join(__dirname, 'Npm/CredentialProvider');
 
     // get build access token
     var accessToken : string = getSystemAccessToken();
 
     // get uri prefixes
-    var serviceUri : string = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
+    var serviceUri : string = tl.getEndpointUrl('SYSTEMVSSCONNECTION', false);
     var urlPrefixes : string[] = assumeNpmUriPrefixes(serviceUri);
     tl.debug(`discovered URL prefixes: ${urlPrefixes}`);
 
     // These env variables are using NUGET because the credential provider that is being used
     // was built only when NuGet was supported. It is basically using environment variable to
     // pull out the access token, hence can be used in Npm scenario as well.
-    env["VSS_NUGET_ACCESSTOKEN"] = accessToken;
-    env["VSS_NUGET_URI_PREFIXES"] = urlPrefixes.join(";");
-    env["NPM_CREDENTIALPROVIDERS_PATH"] =  credProviderPath;
+    env['VSS_NUGET_ACCESSTOKEN'] = accessToken;
+    env['VSS_NUGET_URI_PREFIXES'] = urlPrefixes.join(';');
+    env['NPM_CREDENTIALPROVIDERS_PATH'] =  credProviderPath;
     return env;
 }
 
+// Below logic exists in nuget common module as well, but due to tooling issue
+// where two tasks which use different tasks lib versions can't use the same common
+// module, it's being duplicated here. 
 function getSystemAccessToken(): string {
-    tl.debug("Getting credentials for local feeds");
-    let auth = tl.getEndpointAuthorization("SYSTEMVSSCONNECTION", false);
-    if (auth.scheme === "OAuth") {
-        tl.debug("Got auth token");
-        return auth.parameters["AccessToken"];
+    tl.debug('Getting credentials for local feeds');
+    var auth = tl.getEndpointAuthorization('SYSTEMVSSCONNECTION', false);
+    if (auth.scheme === 'OAuth') {
+        tl.debug('Got auth token');
+        return auth.parameters['AccessToken'];
     } else {
-        tl.warning(tl.loc("BuildCredentialsWarn"));
+        tl.warning(tl.loc('BuildCredentialsWarn'));
     }
 }
 
 function assumeNpmUriPrefixes(collectionUri: string): string[] {
-    let prefixes = [collectionUri];
+    var prefixes = [collectionUri];
 
-    let collectionUrlObject = url.parse(collectionUri);
-    if(collectionUrlObject.hostname.toUpperCase().endsWith(".VISUALSTUDIO.COM")) {
-        let hostparts = collectionUrlObject.hostname.split(".");
-        let packagingHostName = hostparts[0] + ".pkgs.visualstudio.com";
+    var collectionUrlObject = url.parse(collectionUri);
+    if(collectionUrlObject.hostname.toUpperCase().endsWith('.VISUALSTUDIO.COM')) {
+        var hostparts = collectionUrlObject.hostname.split('.');
+        var packagingHostName = hostparts[0] + '.pkgs.visualstudio.com';
         collectionUrlObject.hostname = packagingHostName;
         // remove the host property so it doesn't override the hostname property for url.format
         delete collectionUrlObject.host;
