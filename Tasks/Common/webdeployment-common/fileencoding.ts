@@ -3,6 +3,7 @@
 //'File buffer is too short to detect encoding type'
 var fs = require('fs');
 import tl = require('vsts-task-lib');
+
 function detectFileEncodingWithBOM(buffer: Buffer) {
     tl.debug('Detecting file encoding using BOM');
     if(buffer.slice(0,3).equals(new Buffer([239, 187, 191]))) {
