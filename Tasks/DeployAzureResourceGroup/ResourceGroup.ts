@@ -8,8 +8,7 @@ import util = require("util");
 
 import env = require("./Environment");
 
-var minimist = require("minimist");
-
+var parameterParse = require("./parser").parse;
 var armResource = require("azure-arm-resource");
 
 
@@ -75,7 +74,7 @@ export class ResourceGroup {
     } 
 
     private updateOverrideParameters(params) {
-        var override = minimist([this.overrideParameters]);
+        var override = parameterParse(this.overrideParameters);
         for (var key in override) {
             if (params[key] != undefined)
                 params[key]["value"] = override[key];
@@ -109,6 +108,14 @@ export class ResourceGroup {
         });
     }
     
+    private getParametersFromTemplate(template) {
+        var params = {};
+        for (var key in template.parameters) {
+            params[key] = { value: template.parameters[key]["defaultValue"] };
+        }
+        return params;
+    }
+
     private createTemplateDeployment(armClient) {
         var template;
         try { 
@@ -118,9 +125,16 @@ export class ResourceGroup {
             tl.setResult(tl.TaskResult.Failed, tl.loc("TemplateParsingFailed", error.message));
             return;
         }
-        var parameters;
+        var parameters = this.getParametersFromTemplate(template);
         try {
-            parameters = JSON.parse(fs.readFileSync(this.csmParametersFile, 'UTF-8'));
+            if (this.csmParametersFile != undefined && this.csmParametersFile != null && this.csmParametersFile.trim() != "") {
+                var parameterFile = JSON.parse(fs.readFileSync(this.csmParametersFile, 'UTF-8'));
+                for (var param in parameterFile) {
+                    parameters[param] = parameterFile[param];
+                }
+            }
+            if (this.overrideParameters && this.overrideParameters!=null)
+                parameters = this.updateOverrideParameters(properties["parameters"]);
         }
         catch (error) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("ParametersFileParsingFailed", error.message));
@@ -128,9 +142,7 @@ export class ResourceGroup {
         }
         var properties = {}
         properties["template"] = template;
-        properties["parameters"] = parameters["parameters"];
-        if (this.overrideParameters!=null)
-            properties["parameters"] = this.updateOverrideParameters(properties["parameters"]);
+        properties["parameters"] = parameters;
         properties["mode"] = this.deploymentMode;
         properties["debugSetting"] = {"detailLevel": "requestContent, responseContent"};
         var deployment = {"properties": properties};
@@ -140,8 +152,14 @@ export class ResourceGroup {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("RGO_createTemplateDeploymentFailed", error.message));
                 return;
             }
+            try {
+                new env.RegisterEnvironment(this.credentials, this.subscriptionId, this.resourceGroupName, this.outputVariable);
+            } catch(error) {            
+                tl.setResult(tl.TaskResult.Failed, tl.loc("FailedRegisteringEnvironment", error));
+                return;
+            }
             tl.setResult(tl.TaskResult.Succeeded, tl.loc("RGO_createTemplateDeploymentSucceeded", this.resourceGroupName));
-        } );
+        });
     }
 
     private deleteResourceGroup() {

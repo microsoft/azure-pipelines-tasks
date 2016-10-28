@@ -215,6 +215,10 @@
         "TaskNotFound": "Task.json file could not be found: %s",
         "FailedRegisteringEnvironment": "Task failed while registering environment, due to the following error: %s",
         "selectResourceGroupSuccessfull": "Selected Resource Group: '%s' and stored it in '%s'",
-        "ValidatingCredentialsFailure": "Failed while validating credentials due to following error: %s"
+        "ValidatingCredentialsFailure": "Failed while validating credentials due to following error: %s",
+        "VM_Start": "Starting... %s",
+        "VM_Restart": "Restarting... %s",
+        "VM_Stop": "Stopping... %s",
+        "VM_Delete": "Deleting... %s"
     }
 }
