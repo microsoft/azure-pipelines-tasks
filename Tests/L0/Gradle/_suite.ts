@@ -1166,6 +1166,7 @@ describe('gradle Suite', function () {
             [
                 ["build.buildNumber", "14"],
                 ['build.sourcesDirectory', testSrcDir],
+                ['System.DefaultWorkingDirectory', testSrcDir],
                 ['build.artifactStagingDirectory', testStgDir]
             ]);
 
@@ -1231,6 +1232,7 @@ describe('gradle Suite', function () {
             [
                 ["build.buildNumber", "14"],
                 ['build.sourcesDirectory', testSrcDir],
+                ['System.DefaultWorkingDirectory', testSrcDir],
                 ['build.artifactStagingDirectory', testStgDir]
             ]);
 
@@ -1286,6 +1288,7 @@ describe('gradle Suite', function () {
             [
                 ["build.buildNumber", "14"],
                 ['build.sourcesDirectory', testSrcDir],
+                ['System.DefaultWorkingDirectory', testSrcDir],
                 ['build.artifactStagingDirectory', testStgDir]
             ]);
 
@@ -1400,6 +1403,7 @@ describe('gradle Suite', function () {
             [
                 ["build.buildNumber", "211"],
                 ['build.sourcesDirectory', testSrcDir],
+                ['System.DefaultWorkingDirectory', testSrcDir],
                 ['build.artifactStagingDirectory', testStgDir]
             ]);
 

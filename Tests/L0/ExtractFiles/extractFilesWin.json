@@ -3,7 +3,7 @@
         "osType" : "Windows"
     },
     "getVariable": {
-        "build.sourcesDirectory": "mockedBuildSources"
+        "System.DefaultWorkingDirectory": "mockedBuildSources"
     },
     "stats": {
         "mockedBuildSources": {

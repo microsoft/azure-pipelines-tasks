@@ -5,7 +5,10 @@ import trm = require('vsts-task-lib/toolrunner');
 async function run() {
 	try {
 		//Process working directory
-		var cwd = tl.getInput('cwd') || tl.getVariable('build.sourceDirectory') || tl.getVariable('build.sourcesDirectory');
+		var cwd = tl.getInput('cwd')
+			|| tl.getVariable('build.sourceDirectory')
+			|| tl.getVariable('build.sourcesDirectory')
+			|| tl.getVariable('System.DefaultWorkingDirectory');
 		tl.cd(cwd);
 
 		var openssl: trm.ToolRunner = tl.tool(tl.which('openssl', true));
