@@ -1,13 +1,24 @@
 import ma = require('vsts-task-lib/mock-answer');
+import path = require('path');
 import tmrm = require('vsts-task-lib/mock-run');
 
 export class NpmMockHelper {
     static NpmCmdPath = "C:\\Program Files (x86)\\nodejs\\npm";
     static NpmAuthPath = "C:\\tool\\vsts-npm-auth\\vsts-npm-auth.exe";
     static FakeWorkingDirectory = "fake\\wd";
+    static AgentBuildDirectory = 'c:\\agent\\work\\build';
+    static BuildBuildId = '12345';
 
-    public answers: ma.TaskLibAnswers = {};
-    
+    public answers: ma.TaskLibAnswers = {
+        which: {},
+        exec: {},
+        checkPath: {},
+        exist: {},
+        filter: {},
+        find: {},
+        match: {}
+    };
+
     constructor(
         private tmr: tmrm.TaskMockRunner,
         public command: string,
@@ -18,8 +29,8 @@ export class NpmMockHelper {
         process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = "https://example.visualstudio.com/defaultcollection";
         NpmMockHelper.setVariable('System.DefaultWorkingDirectory', 'c:\\agent\\home\\directory');
         NpmMockHelper.setVariable('System.TeamFoundationCollectionUri', 'https://example.visualstudio.com/defaultcollection');
-        NpmMockHelper.setVariable('Agent.BuildDirectory', 'c:\\agent\\work\\build');
-        NpmMockHelper.setVariable('Build.BuildId', '12345');
+        NpmMockHelper.setVariable('Agent.BuildDirectory', NpmMockHelper.AgentBuildDirectory);
+        NpmMockHelper.setVariable('Build.BuildId', NpmMockHelper.BuildBuildId);
 
         tmr.setInput('cwd', NpmMockHelper.FakeWorkingDirectory);
         tmr.setInput('command', command);
@@ -45,9 +56,15 @@ export class NpmMockHelper {
     }
 
     public mockAuthHelper() {
-        this.setToolPath(this.answers, "vsts-npm-auth", NpmMockHelper.NpmAuthPath);
+        let npmTaskDirName = path.dirname(__dirname);
+        let authHelperExternalPath = path.join(npmTaskDirName, 'Npm', 'vsts-npm-auth');
+        let authHelperExePath = path.join(authHelperExternalPath, 'bin', 'vsts-npm-auth.exe');
+        this.answers.find[authHelperExternalPath] = [npmTaskDirName, authHelperExePath, authHelperExePath + ".config"];
+        this.answers.filter['vsts-npm-auth.exe'] = [authHelperExePath];
 
-        let command = `${NpmMockHelper.NpmAuthPath} -NonInteractive -Verbosity Detailed -Config ${NpmMockHelper.FakeWorkingDirectory}\\.npmrc -TargetConfig ${process.env['AGENT_BUILDDIRECTORY']}\\npm\\auth.${process.env['BUILD_BUILDID']}.npmrc`;
+        let targetNpmrcFile = `${NpmMockHelper.AgentBuildDirectory}\\npm\\auth.${NpmMockHelper.BuildBuildId}.npmrc`;
+        let sourceNpmrcFile = `${NpmMockHelper.FakeWorkingDirectory}\\.npmrc`;
+        let command = `${authHelperExePath} -NonInteractive -Verbosity Detailed -Config ${sourceNpmrcFile} -TargetConfig ${targetNpmrcFile}`;
         this.setExecResponse(command, { code: 0, stdout: "", stderr: "" });
     }
 
@@ -83,12 +100,6 @@ export class NpmMockHelper {
     }
 
     private setExecResponse(command: string, result:ma.TaskLibAnswerExecResult) {
-        // let mtm = require('vsts-task-lib/mock-task');
-        // mtm.debug(`mocking 'exec' call: ${command}`);
-        if (!this.answers.exec) {
-            this.answers.exec = {};
-        }
-
         this.answers.exec[command] = result;
     }
 
@@ -103,13 +114,7 @@ export class NpmMockHelper {
     }
 
     private setToolPath(answers: ma.TaskLibAnswers, tool: string, path: string) {
-        if (!answers.which) {
-            answers.which = {};
-        }
         answers.which[tool] = path;
-        if (!answers.checkPath) {
-            answers.checkPath = {};
-        }
         answers.checkPath[path] = true;
     }
 }

@@ -112,18 +112,24 @@ function shouldUseDeprecatedTask() : boolean {
     return tl.getVariable('USE_DEPRECATED_TASK_VERSION') && tl.getVariable('USE_DEPRECATED_TASK_VERSION').toLowerCase() === 'true';
 }
 
-function addAuthHelperLocationToPath() {
-    tl.debug(`Current process.env['PATH'] = ${process.env['PATH']}`);
-    process.env['PATH'] = process.env['PATH'] + ';' + path.join(__dirname, 'Npm/vsts-npm-auth/bin');
-    tl.debug(`Updated process.env['PATH'] = ${process.env['PATH']}`);
-}
-
 function getNpmAuthHelperRunner(npmrcPath: string, tempUserNpmrcPath: string, includeDebugLogs: boolean): trm.ToolRunner {
-    addAuthHelperLocationToPath();
-    var npmAuthHelper = tl.tool(tl.which('vsts-npm-auth', true));
-    var verbosityString = includeDebugLogs ? 'Detailed' : 'Normal';
+    let npmAuthHelper = tl.tool(getNpmAuthHelperPath());
+    let verbosityString = includeDebugLogs ? 'Detailed' : 'Normal';
     npmAuthHelper.line(`-NonInteractive -Verbosity ${verbosityString} -Config "${npmrcPath}" -TargetConfig "${tempUserNpmrcPath}"`);
     return npmAuthHelper;
+}
+
+function getNpmAuthHelperPath(): string {
+    let authHelperExternalPath = path.join(__dirname, 'Npm', 'vsts-npm-auth');
+    let allFiles = tl.find(authHelperExternalPath);
+    var matchingFiles = allFiles.filter(tl.filter('vsts-npm-auth.exe', {nocase: true, matchBase: true}));
+
+    if (matchingFiles.length !== 1) {
+        // Let the framework produce the desired error message
+        tl.checkPath(path.join(authHelperExternalPath, "bin", "vsts-npm-auth.exe"), 'vsts-npm-auth');
+    }
+
+    return matchingFiles[0];
 }
 
 function getNpmConfigRunner(includeDebugLogs: boolean): trm.ToolRunner {
