@@ -82,8 +82,8 @@ async function runNpmAuthHelperAsync(npmAuthRunner: trm.ToolRunner) : Promise<nu
         tl.debug('Auth helper exitted with code: ' + code);
         return Q(code);
     } catch (err) {
-        // ignore any auth failure and try to run the task.
-        tl.debug(tl.loc('NpmAuthFailed', err.message));
+        // warn on any auth failure and try to run the task.
+        tl.warning(tl.loc('NpmAuthFailed', err.message));
     }
 }
 
