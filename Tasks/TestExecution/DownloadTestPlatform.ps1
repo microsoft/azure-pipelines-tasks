@@ -1,6 +1,31 @@
-# DownloadTestAgent.ps1 takes two parameters , sourcePath and destinationPath
-# $sourcePath is the semi colon separated set of  paths from which the test agent/msi is to be downloaded or copied.
-# $destinationPath is the semi colon separated set of location to which the test agent/msi will be downloaded or copied.
+function DownloadTestPlatform {
+    param
+    (
+        [String] $ProductVersion
+    )
+
+    . $PSScriptRoot\CheckTestAgentInstallation.ps1
+
+    # Check if test agent is already installed 
+    $isTaInstalled = CheckInstallation -ProductVersion $ProductVersion
+    if(-Not $isTaInstalled) {
+        # Import Agent installation helpers
+        . $PSScriptRoot\DownloadTestAgent.ps1
+        . $PSScriptRoot\TestAgentInstall.ps1
+
+        $sourcePath = "https://go.microsoft.com/fwlink/?LinkId=615472"
+        $destPath = Join-Path "$env:SystemDrive" "TestAgent"
+        $taPath = Join-Path $destPath "vstf_testagent.exe"
+
+        Write-Verbose "Test Agent is not installed. It will be downloaded and installed"
+        Write-Host "Downloading from $sourcePath to $destPath"
+        
+        DownloadTestAgent -SourcePath $sourcePath -DestinationPath $destPath
+        $installationCode = Install-Product -SetupPath $taPath -ProductVersion "14.0" -Arguments "/Quiet /NoRestart"
+        
+        Write-Host "Test Agent installation is completed with code: $installationCode" 
+    }
+}
 
 # Validate that the given source path exists and is not a directory.
 function ValidateSourceFile([string] $sourcePath)
@@ -16,6 +41,8 @@ function ValidateSourceFile([string] $sourcePath)
     }
 }
 
+# $sourcePath is the semi colon separated set of  paths from which the test agent/msi is to be downloaded or copied.
+# $destinationPath is the semi colon separated set of location to which the test agent/msi will be downloaded or copied.
 function DownloadAgent {
     param
     (

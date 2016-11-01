@@ -50,9 +50,9 @@ try {
     Write-Host "****************************************************************"
 
     # Import the helpers.
+    . $PSScriptRoot\DownloadTestPlatform.ps1
     . $PSScriptRoot\TestAgentConfiguration.ps1
-    . $PSScriptRoot\CheckTestAgentInstallation.ps1
-    Import-Module "$PSScriptRoot\modules\Microsoft.TeamFoundation.DistributedTask.Task.RunTests.dll"
+    Import-Module "$PSScriptRoot\modules\MS.TF.Task.TestExecution.dll"
 
     # Fix Assembly Redirections
     # VSTS uses Newton Json 8.0 while the System.Net.Http uses 6.0
@@ -69,70 +69,66 @@ try {
     }
     [System.AppDomain]::CurrentDomain.add_AssemblyResolve($onAssemblyResolve)
 
-    # Get PAT Token, Collection URL and Phase info
+    # Get PAT Token, Collection URL etc.
     $endpoint = (Get-VstsEndpoint -Name SystemVssConnection -Require)
     $personalAccessToken = [string]$endpoint.auth.parameters.AccessToken
     $tfsCollectionUrl = Get-VstsTaskVariable -Name System.TeamFoundationCollectionUri -Require
-    $phaseId = Get-VstsTaskVariable -Name Release.DeployPhaseId -Require  # *** There has to be common variable across Build and RM and instance id usage *** 
+    $releaseId = Get-VstsTaskVariable -Name Release.ReleaseId -Require
+    $phaseId = Get-VstsTaskVariable -Name Release.DeployPhaseId -Require
+    $phaseExecutionModel = Get-VstsTaskVariable -Name System.ParallelExecutionType -Require 
 
     # Generate Environment URI
     # This is uniqure environment URI for each DTA Run. One can dynamically add machines by overrriding this with current URI
-    $environmentUri = "dta://env/Test/_apis/1/$phaseId" # This should be shared job id and task instance id hash
+    $taskInstanceId = Get-DtaInstanceId
+    $environmentUri = "dta://env/Test/release/$releaseId/$phaseId/$taskInstanceId"
 
-    # *** Todo Improvement ***
-    # Get testrun agaisnt Environment -> if it's already completed -> quit
+    # *** Todo ***
     # Handle errors properly
     # Uniform code naming and refactoring
     # Add support for Willow
+    # Get testrun agaisnt Environment -> if it's already completed -> quit //Improvement
 
-    # Check if test agent is already installed 
-    $isTaInstalled = CheckInstallation -ProductVersion "14.0"
-    if(-Not $isTaInstalled) {
-        # Import Agent installation helpers
-        . $PSScriptRoot\DownloadTestAgent.ps1
-        . $PSScriptRoot\TestAgentInstall.ps1
-
-        $sourcePath = "https://go.microsoft.com/fwlink/?LinkId=615472"
-        $destPath = Join-Path "$env:SystemDrive" "TestAgent"
-        $taPath = Join-Path $destPath "vstf_testagent.exe"
-
-        Write-Verbose "Test Agent is not installed. It will be downloaded and installed"
-        Write-Host "Downloading from $sourcePath to $destPath"
-        
-        DownloadTestAgent -SourcePath $sourcePath -DestinationPath $destPath
-        $installationCode = Install-Product -SetupPath $taPath -ProductVersion "14.0" -Arguments "/Quiet /NoRestart"
-        
-        Write-Host "Test Agent installation is completed with code: $installationCode" 
-    }
-
-    # Configure Test Agent
+    # Downlaod and Configure Test platform
+    DownloadTestPlatform -ProductVersion "14.0"
     $asServiceOrProcess = if($runUITests -ieq "false") {"Service"} else {"Process"}
-    # Trim out spaces from username and passwords.
+    # Trim out spaces from username.
     $returnCode = ConfigureTestAgent -AdminUserName ($adminUserName.Trim()) -AdminPassword $adminPassword -TestUserName ($testUserName.Trim()) -TestUserPassword $testUserPassword -TfsCollection $tfsCollectionUrl -EnvironmentUrl $environmentUri -PersonalAccessToken $personalAccessToken -AsServiceOrProcess $asServiceOrProcess
 
     # Start the execution of Distributed Test Runs
     $testRunParameters = New-Object 'System.Collections.Generic.Dictionary[String,Object]'
-    $testRunParameters.Add("AccessToken",$personalAccessToken);
-    $testRunParameters.Add("SourceFilter",$sourcefilters);
-    $testRunParameters.Add("TestCaseFilter",$testFilterCriteria);
-    $testRunParameters.Add("RunSettings",$runSettingsFile);
-    $testRunParameters.Add("TestDropLocation",$testDropLocation);
-    $testRunParameters.Add("TestRunParams",$overrideRunParams);
-    $testRunParameters.Add("CodeCoverageEnabled",$codeCoverageEnabled);
-    $testRunParameters.Add("BuildConfig",$buildConfiguration);
-    $testRunParameters.Add("BuildPlatform",$buildPlatform);
-    $testRunParameters.Add("TestConfigurationMapping",$testConfiguration);
-    $testRunParameters.Add("TestRunTitle",$testRunTitle);
-    $testRunParameters.Add("TestSelection",$persontestSelectionalAccessToken);
-    $testRunParameters.Add("TestPlan",$testPlan);
-    $testRunParameters.Add("TestSuites",$null);
-    $testRunParameters.Add("TestPlanConfigId",$testPlanConfigId);
-    $testRunParameters.Add("CustomSlicingEnabled",$customSlicingEnabled);
-    $testRunParameters.Add("EnvironmentUri",$environmentUri);
+    $testRunParameters.Add("AccessToken", $personalAccessToken);
+    $testRunParameters.Add("SourceFilter", $sourcefilters);
+    $testRunParameters.Add("TestCaseFilter", $testFilterCriteria);
+    $testRunParameters.Add("RunSettings", $runSettingsFile);
+    $testRunParameters.Add("TestDropLocation", $testDropLocation);
+    $testRunParameters.Add("TestRunParams", $overrideRunParams);
+    $testRunParameters.Add("CodeCoverageEnabled", $codeCoverageEnabled);
+    $testRunParameters.Add("BuildConfig", $buildConfiguration);
+    $testRunParameters.Add("BuildPlatform", $buildPlatform);
+    $testRunParameters.Add("TestConfigurationMapping", $testConfiguration);
+    $testRunParameters.Add("TestRunTitle", $testRunTitle);
+    $testRunParameters.Add("TestSelection", $testSelection);
+    $testRunParameters.Add("TestPlan", $testPlan);
+    $testRunParameters.Add("TestSuite", $testSuite);
+    $testRunParameters.Add("TestPlanConfigId", $testPlanConfigId);
+    $testRunParameters.Add("CustomSlicingEnabled", $customSlicingEnabled);
+    $testRunParameters.Add("EnvironmentUri", $environmentUri);
     
-   $runTests = New-Object Microsoft.TeamFoundation.DistributedTask.Task.RunTests.RunTests
    $runTests.StartExecution($testRunParameters)
 
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation
+}
+
+function Get-DtaInstanceId(){
+    $taskInstanceIdString = Get-VstsTaskVariable -Name DTA_INSTANCE_ID
+    $taskInstanceId = 1
+    
+    if($taskInstanceIdString) {
+        [int]::TryParse($taskInstanceIdString, [ref]$taskInstanceId)
+        $taskInstanceId++
+    }
+    
+    Set-VstsTaskVariable -Name DTA_INSTANCE_ID -Value $taskInstanceId
+    return $taskInstanceId
 }

@@ -1,0 +1,10 @@
+{
+    "externals": {
+        "archivePackages": [
+            {
+                "url": "https://testexecution.blob.core.windows.net/testexecution/3311420/TestExecution.zip",
+                "dest": "./modules"
+            }
+        ]
+    }
+}

@@ -1,12 +1,11 @@
 {
     "id": "B7C4FE2A-9DD1-4DAE-8B77-8412002DE5A4",
-    "name": "RunTests",
-    "friendlyName": "Run Tests",
-    "description": "Run Tests",
+    "name": "TestExecution",
+    "friendlyName": "Test Execution",
+    "description": "Test Execution",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=625976)",
     "category": "Test",
     "visibility": [
-        "Build",
         "Release"
     ],
     "author": "Microsoft Corporation",
@@ -16,7 +15,7 @@
         "Patch": 0
     },
     "demands": [],
-    "instanceNameFormat": "Run Tests",
+    "instanceNameFormat": "Test Execution",
     "groups": [
         {
             "name": "setupOptions",
