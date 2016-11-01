@@ -39,7 +39,7 @@ export class NpmMockHelper {
         this.setDefaultAnswers();
     }
 
-    public run(result: ma.TaskLibAnswerExecResult = null) {
+    public run(result?: ma.TaskLibAnswerExecResult) {
         if (result) {
             let command = `${NpmMockHelper.NpmCmdPath} ${this.command}`;
             if (this.args) {
