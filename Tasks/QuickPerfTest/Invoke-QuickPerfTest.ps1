@@ -23,6 +23,23 @@ param
     $machineType
 )
 
+function InitializeRestHeaders()
+{
+    $restHeaders = New-Object -TypeName "System.Collections.Generic.Dictionary[[String], [String]]"
+	if([string]::IsNullOrWhiteSpace($connectedServiceName))
+	{
+		$restHeaders.Add("Authorization", [String]::Concat("Bearer ", $env:SYSTEM_ACCESSTOKEN))
+       
+    }
+	else
+	{
+	   $alternateCreds = [String]::Concat($Username, ":", $Password)
+       $basicAuth = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($alternateCreds))
+       $restHeaders.Add("Authorization", [String]::Concat("Basic ", $basicAuth))
+	}
+    return $restHeaders
+}
+
   # Load all dependent files for execution
   . $PSScriptRoot/CltTasksUtility.ps1
   . $PSScriptRoot/VssConnectionHelper.ps1
@@ -45,56 +62,44 @@ Write-Output "Load location = $geoLocation"
 Write-Output "Load generator machine type = $machineType"
 Write-Output "Run source identifier = build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
 
-Write-Output "visuri- Validating inputs"
 #Validate Input
-ValidateInputs $websiteUrl
-Write-Output "visuri- Validating inputs succeeded"
+ValidateInputs $websiteUrl $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI $connectedServiceName
 
-if($connectedServiceName)
-{
-    $connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
-}
-else
+if([string]::IsNullOrWhiteSpace($connectedServiceName))
 {
 	$connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name SystemVssConnection
 }
-
+else
+{
+    $connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
+}
 
 $Username = $connectedServiceDetails.Authorization.Parameters.Username
 Write-Verbose "Username = $Username" -Verbose
 $Password = $connectedServiceDetails.Authorization.Parameters.Password
 $VSOAccountUrl = $connectedServiceDetails.Url.AbsoluteUri
-Write-Output "visuri- Compose Account Url called"
 Write-Output "VSO Account URL is : $VSOAccountUrl"
-$CltAccountUrl = ComposeAccountUrl($VSOAccountUrl)
+
+$headers = InitializeRestHeaders
+
+$CltAccountUrl = ComposeAccountUrl $VSOAccountUrl.TrimEnd('/') $headers
 $TFSAccountUrl = $env:System_TeamFoundationCollectionUri.TrimEnd('/')
-Write-Output "visuri- Compose Account Url succeeded"
 
 Write-Output "VSO account Url = $TFSAccountUrl" -Verbose
 Write-Output "CLT account Url = $CltAccountUrl" -Verbose
 
-Write-Output "visuri- Initializing Rest Headers"
-$headers = InitializeRestHeaders($connectedServiceName)
-Write-Output "visuri- Initializing Rest Headers succeeded"
 
-Write-Output "visuri- Compose Test Drop"
+
 $dropjson = ComposeTestDropJson $testName $runDuration $websiteUrl $vuLoad $geoLocation
-Write-Output "visuri- Compose Test Drop succeeded"
 
-Write-Output "visuri- Create Test Drop"
 $drop = CreateTestDrop $headers $dropjson $CltAccountUrl
-Write-Output "visuri- Create Test Drop succeeded"
 
 if ($drop.dropType -eq "InPlaceDrop")
 {
     $runJson = ComposeTestRunJson $testName $drop.id $MachineType
 
-	Write-Output "visuri- Queuing Test run"
     $run = QueueTestRun $headers $runJson $CltAccountUrl
-	Write-Output "visuri- Queuing Test run succeeded"
-	Write-Output "visuri- Monitor Test run"
     MonitorTestRun $headers $run $CltAccountUrl
-	Write-Output "visuri- Get Test run Uri"
     $webResultsUrl = GetTestRunUri $run.id $headers $CltAccountUrl
 	
     Write-Output ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name)

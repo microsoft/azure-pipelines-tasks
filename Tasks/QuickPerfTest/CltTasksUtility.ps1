@@ -1,25 +1,8 @@
-function InitializeRestHeaders($connectedServiceName)
-{
-    $restHeaders = New-Object -TypeName "System.Collections.Generic.Dictionary[[String], [String]]"
-
-	if($connectedServiceName)
-	{
-       $alternateCreds = [String]::Concat($Username, ":", $Password)
-       $basicAuth = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($alternateCreds))
-       $restHeaders.Add("Authorization", [String]::Concat("Basic ", $basicAuth))
-    }
-	else
-	{
-	   $restHeaders.Add("Authorization", [String]::Concat("Bearer ", $env:SYSTEM_ACCESSTOKEN))
-	}
-    return $restHeaders
-}
-
 function InvokeRestMethod($headers, $contentType, $uri , $method= "Get", $body)
 {
-  $ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($uri)
+  #$ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($uri)
   $result = Invoke-RestMethod -ContentType "application/json" -UserAgent $global:userAgent -TimeoutSec $global:RestTimeout -Uri $uri -Method $method -Headers $headers -Body $body
-  $ServicePoint.CloseConnectionGroup("")
+  #$ServicePoint.CloseConnectionGroup("")
   return $result
 }
 
@@ -140,16 +123,16 @@ function MonitorTestRun($headers, $run, $CltAccountUrl)
 
 function ComposeTestRunJson($name, $tdid, $MachineType)
 {
-$trjson = @"
-{
-    "name":"$name",
-    "description":"Quick perf test from automation task",
-    "testSettings":{"cleanupCommand":"", "hostProcessPlatform":"x86", "setupCommand":""},
-    "superSedeRunSettings":{"loadGeneratorMachinesType":"$MachineType"},
-    "testDrop":{"id":"$tdid"},
-    "runSourceIdentifier":"build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
-}
-"@
+	$trjson = @"
+	{
+		"name":"$name",
+		"description":"Quick perf test from automation task",
+		"testSettings":{"cleanupCommand":"", "hostProcessPlatform":"x86", "setupCommand":""},
+		"superSedeRunSettings":{"loadGeneratorMachinesType":"$MachineType"},
+		"testDrop":{"id":"$tdid"},
+		"runSourceIdentifier":"build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
+	}
+	"@
 
     return $trjson
 }
@@ -159,10 +142,10 @@ function QueueTestRun($headers, $runJson, $CltAccountUrl)
     $uri = [String]::Format("{0}/_apis/clt/testruns?api-version=1.0", $CltAccountUrl)
     $run = InvokeRestMethod -contentType "application/json" -uri $uri -method Post -headers $headers -body $runJson
 
-$start = @"
-{
-  "state": "queued"
-}
+	$start = @"
+	{
+	  "state": "queued"
+	}
 "@
 
     $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?api-version=1.0", $CltAccountUrl, $run.id)
@@ -172,37 +155,28 @@ $start = @"
     return $run
 }
 
-#function ComposeAccountUrl($connectedServiceDetails, $headers)
-#{
-#	  # Load all dependent files for execution
-#  . $PSScriptRoot/VssConnectionHelper.ps1
+function ComposeAccountUrl($connectedServiceUrl, $headers)
+{
+	#Load all dependent files for execution
+    . $PSScriptRoot/VssConnectionHelper.ps1
 
-#	Write-Output "Getting Clt Endpoint"
-#	$elsUrl = Get-CltEndpoint($connectedServiceDetails, $headers)
-#  #  if ($vsoUrl -notlike "*VSCLT.VISUALSTUDIO.COM*")
-#  #  {
-#  #      if ($vsoUrl -like "*VISUALSTUDIO.COM*")
-#  #      {
-#  #          $accountName = $vsoUrl.Split('//')[2].Split('.')[0]
-#  #          $elsUrl = ("https://{0}.vsclt.visualstudio.com" -f $accountName)
-#  #      }
-		
-#		#if($vsoUrl -like "*TFSALLIN.NET*")
-#		#{
-#		# $accountName = $vsoUrl.Split('//')[2].Split('.')[0]
-#		# $elsUrl = ("http://{0}.me.tfsallin.net:9980" -f $accountName)
-#		#}
-#  #  }
+	Write-Host "Getting Clt Endpoint:"
+	$elsUrl = Get-CltEndpoint $connectedServiceUrl $headers
 
-#    return $elsUrl
-#}
+    return $elsUrl
+}
 
-function ValidateInputs($websiteUrl)
+function ValidateInputs($websiteUrl, $tfsCollectionUrl, $connectedServiceName)
 {
     if (![System.Uri]::IsWellFormedUriString($websiteUrl, [System.UriKind]::Absolute))
     {
         throw "Website Url is not well formed."
     }
+	
+	if([string]::IsNullOrWhiteSpace($connectedServiceName) -and $tfsCollectionUrl -notlike "*VISUALSTUDIO.COM*" -and $tfsCollectionUrl -notlike "*TFSALLIN.NET*")
+	{
+	 throw "VS Team Services Connection is mandatory for non hosted TFS builds "
+	}
 }
 
 function UploadSummaryMdReport($summaryMdPath)

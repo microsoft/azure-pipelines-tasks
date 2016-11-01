@@ -24,7 +24,7 @@
     {
       "name": "connectedServiceName",
       "type": "connectedService:Generic",
-      "label": "Registered connection",
+      "label": "VS Team Services Connection",
       "defaultValue": "",
       "helpMarkDown": "Select a previously registered service connection to talk to the cloud-based load test service. Choose 'Manage' to register a new connection."
     },
