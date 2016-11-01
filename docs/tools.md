@@ -8,8 +8,8 @@ The tool installers will leverage existing distribution mechanisms such as zips 
 
 ## Scenarios
 
-  - Can download and advertise self contained tool sets (download, extract)
-  - Can scan for pre-installed tools as well (VS, Xcode, msbuild, etc...) instead of relying on non-extensible hardcoded agents
+  - Can download and advertise self contained tool sets (download, extract, nuget, npm, etc...)
+  - Test my library against a matrix of runtime versions.
   - Download external tools and even APIs and object models.  Essentially a set of binaries by name.
   - The community can create tool installers and share via the market place.
 
