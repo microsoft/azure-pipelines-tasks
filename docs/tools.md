@@ -52,7 +52,28 @@ Some tools have specific  env vars like M2_HOME.
 
 Tasks typically demand a capability of the agent which demonstrates the tool is found and installed on that agent.  By adding the task to the job, it implicitly adds the demand so the build routes to the proper agent.
 
-Since using a tool installer means the tool will be acquired if not present, the demand is not necessary.  By using the tool installer, the server will nullify demands.  The installer tasks will have a demands string array like other tasks, but it will represent the demands to remove from the job if used.
+Since using a tool installer means the tool will be acquired if not present, the demand is satisfied by adding the installer task.  The tool installer task will declare capabilities it satisfies as well any demands it has.
+
+As an example, consider writing a tool installer task for [choclatey](https://choclatey.org) and there is a separate choclatey task.  Choclatey is a windows only tool.
+
+Choclatey task:
+```
+demands: [
+    "choclatey"
+]
+``` 
+
+Choclatey tool installer task:
+```
+demands: [
+    "powershell"
+],
+capabilities: [
+    "choclatey"
+]
+```
+
+So, adding the choclatey task will mean the definition demands choclatey but the choclatey installer task will bring the choclatey capability and satisfy that demand.  The choclatey installer tasks needs powershell to install so it would route to a windows machine with powershell.
 
 The tool installer may demand on OS .  Locator aspect.
 
