@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Pull Request Code Analysis",
-  "loc.helpMarkDown": "[More Information](   NEEDS LINK    )",
+  "loc.helpMarkDown": "[More Information](https://aka.ms/prcabuildtask)",
   "loc.description": "SonarQube Pull Request Code Analysis (Preview)",
   "loc.instanceNameFormat": "Post comments to pull request",
   "loc.input.label.messageLimit": "Maximum comments to post",

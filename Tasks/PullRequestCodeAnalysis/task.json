@@ -3,7 +3,7 @@
     "name": "PullRequestCodeAnalysis",
     "friendlyName": "Pull Request Code Analysis",
     "description": "SonarQube Pull Request Code Analysis (Preview)",
-    "helpMarkDown": "[More Information](   NEEDS LINK    )",
+    "helpMarkDown": "[More Information](https://aka.ms/prcabuildtask)",
     "category": "Build",
     "visibility": [
         "Build"

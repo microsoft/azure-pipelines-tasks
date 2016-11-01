@@ -1,0 +1,6 @@
+{
+    "version": "5.6",
+    "issues": [
+        {
+            "key": "AVVJ4Fsm81YvBKfSP6_Q",
+            "component": "com.mycompany.app:my-app:src/main/java/com/mycompany/app/App.java"

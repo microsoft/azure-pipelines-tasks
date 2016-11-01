@@ -2,7 +2,14 @@
     "name": "Agent.Tasks.PRCA",
     "dependencies": {},
     "globalDependencies": {
+        "mocha": "registry:dt/mocha#2.2.5+20160720003353",
         "node": "registry:dt/node#6.0.0+20160613154055",
         "q": "registry:dt/q#0.0.0+20161004185634"
+    },
+    "devDependencies": {
+        "chai": "registry:npm/chai#3.5.0+20160723033700"
+    },
+    "globalDevDependencies": {
+        "mocha": "registry:dt/mocha#2.2.5+20160720003353"
     }
 }
