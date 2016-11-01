@@ -11,9 +11,9 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
+        "Major": 2,
         "Minor": 0,
-        "Patch": 95
+        "Patch": 0
     },
     "demands": [
         "azureps"
@@ -122,7 +122,8 @@
             "defaultValue": "Linked Artifact",
             "options": {
                 "Linked Artifact": "Linked Artifact",
-                "External URL": "External URL"
+                "External URL": "External URL",
+                "Quick Start Template": "Quick Start Template"
             },
             "visibleRule": "action = Create Or Update Resource Group"
         },
@@ -145,15 +146,6 @@
             "label": "Commit ID",
             "required": true,
             "visibleRule": "action = Create Or Update Resource Group && templateLocation = Quick Start Template"
-        },
-        {
-            "name": "csmFileLink",
-            "type": "filePath",
-            "label": "Template Link",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate.",
-            "visibleRule": "action = Create Or Update Resource Group && templateLocation = External URL"
         },
         {
             "name": "csmFileLink",
@@ -201,7 +193,7 @@
             "properties": {
                 "editorExtension": "ms.vss-distributed-task-input-editor.parameters-grid"
             },
-            "visibleRule": "action = Create Or Update Resource Group && templateLocation = Linked Artifact"
+            "visibleRule": "action = Create Or Update Resource Group"
         },
         {
             "name": "deploymentMode",

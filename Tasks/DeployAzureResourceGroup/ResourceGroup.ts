@@ -10,7 +10,7 @@ import env = require("./Environment");
 
 var parameterParse = require("./parser").parse;
 var armResource = require("azure-arm-resource");
-var request = require("request-sync");
+var request = require("sync-request");
 
 export class ResourceGroup {
 
@@ -31,8 +31,8 @@ export class ResourceGroup {
     private outputVariable: string;
     private commitID:  string;
     private quickStartTemplate: string;
+
     private credentials;
-    
     private networkInterfaces;
     private publicAddresses;
     private virtualMachines;
@@ -77,17 +77,22 @@ export class ResourceGroup {
     }
 
     private createDeploymentName(filePath: string): string {
-        var fileName = path.basename(filePath).split(".")[0].replace(" ", "");
+        var name;
+        if (this.templateLocation === "Quick Start Template") {
+            name = this.quickStartTemplate;
+        } else {
+            name = path.basename(filePath).split(".")[0].replace(" ", "");
+        }
+        
         var ts = new Date(Date.now());
-        var depName = util.format("%s-%s%s%s-%s%s",fileName,ts.getFullYear(), ts.getMonth(), ts.getDate(),ts.getHours(), ts.getMinutes());
+        var depName = util.format("%s-%s%s%s-%s%s", name, ts.getFullYear(), ts.getMonth(), ts.getDate(),ts.getHours(), ts.getMinutes());
         return depName;
     } 
 
     private updateOverrideParameters(params) {
         var override = parameterParse(this.overrideParameters);
         for (var key in override) {
-            if (params[key] != undefined)
-                params[key]["value"] = override[key];
+            params[key] = override[key];
         }
         return params;
     }
@@ -120,15 +125,15 @@ export class ResourceGroup {
     
     private getDeploymentDataForExternalLinks() {
         var properties = {}
-        properties["templateLink"] = this.csmFileLink;
+        properties["templateLink"] = {"uri" : this.csmFileLink};
         if (this.csmParametersFileLink && this.csmParametersFileLink.trim()!="" && this.overrideParameters.trim()=="")
-            properties["parametersLink"] = this.csmParametersFileLink;
+            properties["parametersLink"] = {"uri" : this.csmParametersFileLink };
         else {
             var params = {};
             if (this.csmParametersFileLink && this.csmParametersFileLink.trim()!="") {
-                var response = request(this.csmParametersFileLink, {method:"GET"});
+                var response = request("GET", this.csmParametersFileLink);
                 try { 
-                    params = JSON.parse(response.body);
+                    params = JSON.parse(response.body).parameters;
                 } catch(error) {
                     tl.setResult(tl.TaskResult.Failed, "Make sure the end point is a JSON");
                 }
@@ -146,7 +151,7 @@ export class ResourceGroup {
     private getDeploymentDataForQuickStartTemplates() {
         var url = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/%s/%s/azuredeploy.json";
         this.csmFileLink = util.format(url, this.commitID, this.quickStartTemplate);
-        this.csmParametersFileLink = "";
+        this.csmParametersFileLink = util.format("https://raw.githubusercontent.com/Azure/azure-quickstart-templates/%s/%s/azuredeploy.parameters.json", this.commitID, this.quickStartTemplate);
         return this.getDeploymentDataForExternalLinks();
     }
 
@@ -196,6 +201,8 @@ export class ResourceGroup {
         var deployment;
         if (this.templateLocation === "Linked Artifact") {
             deployment = this.getDeploymentDataForLinkedArtifact();
+        } else if (this.templateLocation === "Quick Start Template") { 
+            deployment = this.getDeploymentDataForQuickStartTemplates();
         } else {
             deployment = this.getDeploymentDataForExternalLinks();
         }
@@ -205,7 +212,8 @@ export class ResourceGroup {
                 return;
             }
             try {
-                new env.RegisterEnvironment(this.credentials, this.subscriptionId, this.resourceGroupName, this.outputVariable);
+                if (this.outputVariable && this.outputVariable.trim() != "")
+                    new env.RegisterEnvironment(this.credentials, this.subscriptionId, this.resourceGroupName, this.outputVariable);
             } catch(error) {            
                 tl.setResult(tl.TaskResult.Failed, tl.loc("FailedRegisteringEnvironment", error));
                 return;

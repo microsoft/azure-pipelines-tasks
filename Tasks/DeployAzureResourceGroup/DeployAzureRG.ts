@@ -42,6 +42,7 @@ export class AzureResourceGroupDeployment {
     private commitID:string;
     private isLoggedIn:boolean = false;
     private deploymentMode:string;
+    private credentials;
     
     constructor() {
         try { 
@@ -64,6 +65,7 @@ export class AzureResourceGroupDeployment {
             this.quickStartTemplate = tl.getInput("quickStartTemplate");
             this.subscriptionId = tl.getEndpointDataParameter(this.connectedService, "SubscriptionId", true);    
             this.deploymentMode = tl.getInput("deploymentMode");
+            this.credentials = this.getARMCredentials();
         }
         catch (error) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("ARGD_ConstructorFailed", error.message));
