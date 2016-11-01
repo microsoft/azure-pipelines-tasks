@@ -1,0 +1,360 @@
+{
+    "value": [
+        {
+            "pullRequestThreadContext": null,
+            "id": 1058,
+            "publishedDate": "2016-10-19T16:39:17.623Z",
+            "lastUpdatedDate": "2016-10-19T16:39:17.623Z",
+            "comments": [
+                {
+                    "id": 1,
+                    "parentCommentId": 0,
+                    "author": {
+                        "id": "3c1b7b45-2c40-4693-bc87-442a4b194fd5",
+                        "displayName": "[bgavril]\\Project Collection Service Accounts",
+                        "url": "https://app.vssps.visualstudio.com/A728e0545-679e-4c45-9eb3-b40edbd5f100/_apis/Identities/3c1b7b45-2c40-4693-bc87-442a4b194fd5",
+                        "imageUrl": "https://bgavril.visualstudio.com/_api/_common/identityImage?id=3c1b7b45-2c40-4693-bc87-442a4b194fd5",
+                        "isContainer": true
+                    },
+                    "content": "The pull request is mergable and the target commit would be c37d7ab6898ebe44861350040786ccbc41975762.",
+                    "publishedDate": "2016-10-19T16:39:17.623Z",
+                    "lastUpdatedDate": "2016-10-19T16:39:17.623Z",
+                    "commentType": "system",
+                    "isDeleted": false,
+                    "usersLiked": []
+                }
+            ],
+            "threadContext": null,
+            "properties": {
+                "CodeReviewMergeCommit": {
+                    "$type": "System.String",
+                    "$value": "c37d7ab6898ebe44861350040786ccbc41975762"
+                },
+                "CodeReviewMergeStatus": {
+                    "$type": "System.String",
+                    "$value": "Succeeded"
+                },
+                "CodeReviewSourceCommit": {
+                    "$type": "System.String",
+                    "$value": "056c4151453aa7d2b2f779e031ba2e6873ebaf86"
+                },
+                "CodeReviewTargetCommit": {
+                    "$type": "System.String",
+                    "$value": "324352467a58dfc0ed9f755525fc1ad524867cf1"
+                },
+                "CodeReviewThreadType": {
+                    "$type": "System.String",
+                    "$value": "MergeAttempt"
+                }
+            },
+            "isDeleted": false
+        },
+        {
+            "pullRequestThreadContext": {
+                "iterationContext": {
+                    "firstComparingIteration": 1,
+                    "secondComparingIteration": 1
+                }
+            },
+            "id": 1059,
+            "publishedDate": "2016-10-19T16:54:26.93Z",
+            "lastUpdatedDate": "2016-10-19T17:09:47.993Z",
+            "comments": [
+                {
+                    "id": 1,
+                    "parentCommentId": 0,
+                    "author": {
+                        "id": "ebb07d9e-f73c-4ef5-be9e-5429f89e3c3b",
+                        "displayName": "Bogdan Gavril",
+                        "uniqueName": "bogdan.gavril@outlook.com",
+                        "url": "https://app.vssps.visualstudio.com/A728e0545-679e-4c45-9eb3-b40edbd5f100/_apis/Identities/ebb07d9e-f73c-4ef5-be9e-5429f89e3c3b",
+                        "imageUrl": "https://bgavril.visualstudio.com/_api/_common/identityImage?id=ebb07d9e-f73c-4ef5-be9e-5429f89e3c3b"
+                    },
+                    "publishedDate": "2016-10-19T16:54:26.93Z",
+                    "lastUpdatedDate": "2016-10-19T17:09:47.993Z",
+                    "isDeleted": true,
+                    "commentType": "text",
+                    "usersLiked": []
+                }
+            ],
+            "status": "active",
+            "threadContext": {
+                "filePath": "/Extractor/Program.cs",
+                "rightFileStart": {
+                    "line": 1,
+                    "offset": 1
+                },
+                "rightFileEnd": {
+                    "line": 1,
+                    "offset": 1
+                }
+            },
+            "properties": {
+                "Microsoft.TeamFoundation.CodeAnalysis.PRCA": {
+                    "$type": "System.Int32",
+                    "$value": 1
+                }
+            },
+            "isDeleted": true
+        },
+        {
+            "pullRequestThreadContext": {
+                "iterationContext": {
+                    "firstComparingIteration": 1,
+                    "secondComparingIteration": 1
+                }
+            },
+            "id": 1060,
+            "publishedDate": "2016-10-20T13:49:14.11Z",
+            "lastUpdatedDate": "2016-10-20T17:04:44.627Z",
+            "comments": [
+                {
+                    "id": 1,
+                    "parentCommentId": 0,
+                    "author": {
+                        "id": "ebb07d9e-f73c-4ef5-be9e-5429f89e3c3b",
+                        "displayName": "Bogdan Gavril",
+                        "uniqueName": "bogdan.gavril@outlook.com",
+                        "url": "https://app.vssps.visualstudio.com/A728e0545-679e-4c45-9eb3-b40edbd5f100/_apis/Identities/ebb07d9e-f73c-4ef5-be9e-5429f89e3c3b",
+                        "imageUrl": "https://bgavril.visualstudio.com/_api/_common/identityImage?id=ebb07d9e-f73c-4ef5-be9e-5429f89e3c3b"
+                    },
+                    "publishedDate": "2016-10-20T13:49:14.11Z",
+                    "lastUpdatedDate": "2016-10-20T17:04:44.627Z",
+                    "isDeleted": true,
+                    "commentType": "text",
+                    "usersLiked": []
+                }
+            ],
+            "status": "active",
+            "threadContext": {
+                "filePath": "/Extractor/Program123.cs",
+                "rightFileStart": {
+                    "line": 1,
+                    "offset": 1
+                },
+                "rightFileEnd": {
+                    "line": 1,
+                    "offset": 1
+                }
+            },
+            "properties": {
+                "Microsoft.TeamFoundation.CodeAnalysis.PRCA": {
+                    "$type": "System.Int32",
+                    "$value": 1
+                }
+            },
+            "isDeleted": true
+        },
+        {
+            "pullRequestThreadContext": {
+                "iterationContext": {
+                    "firstComparingIteration": 1,
+                    "secondComparingIteration": 1
+                }
+            },
+            "id": 1061,
+            "publishedDate": "2016-10-20T17:06:44.987Z",
+            "lastUpdatedDate": "2016-10-20T17:07:28.817Z",
+            "comments": [
+                {
+                    "id": 1,
+                    "parentCommentId": 0,
+                    "author": {
+                        "id": "ebb07d9e-f73c-4ef5-be9e-5429f89e3c3b",
+                        "displayName": "Bogdan Gavril",
+                        "uniqueName": "bogdan.gavril@outlook.com",
+                        "url": "https://app.vssps.visualstudio.com/A728e0545-679e-4c45-9eb3-b40edbd5f100/_apis/Identities/ebb07d9e-f73c-4ef5-be9e-5429f89e3c3b",
+                        "imageUrl": "https://bgavril.visualstudio.com/_api/_common/identityImage?id=ebb07d9e-f73c-4ef5-be9e-5429f89e3c3b"
+                    },
+                    "publishedDate": "2016-10-20T17:06:44.987Z",
+                    "lastUpdatedDate": "2016-10-20T17:07:28.817Z",
+                    "isDeleted": true,
+                    "commentType": "text",
+                    "usersLiked": []
+                }
+            ],
+            "status": "active",
+            "threadContext": {
+                "filePath": "/Extractor/Program123.cs",
+                "rightFileStart": {
+                    "line": 1,
+                    "offset": 1
+                },
+                "rightFileEnd": {
+                    "line": 1,
+                    "offset": 1
+                }
+            },
+            "properties": {
+                "Microsoft.TeamFoundation.CodeAnalysis.PRCA": {
+                    "$type": "System.Int32",
+                    "$value": 1
+                }
+            },
+            "isDeleted": true
+        },
+        {
+            "pullRequestThreadContext": {
+                "iterationContext": {
+                    "firstComparingIteration": 1,
+                    "secondComparingIteration": 1
+                }
+            },
+            "id": 1062,
+            "publishedDate": "2016-10-20T17:07:43.597Z",
+            "lastUpdatedDate": "2016-10-20T17:07:43.597Z",
+            "comments": [
+                {
+                    "id": 1,
+                    "parentCommentId": 0,
+                    "author": {
+                        "id": "ebb07d9e-f73c-4ef5-be9e-5429f89e3c3b",
+                        "displayName": "Bogdan Gavril",
+                        "uniqueName": "bogdan.gavril@outlook.com",
+                        "url": "https://app.vssps.visualstudio.com/A728e0545-679e-4c45-9eb3-b40edbd5f100/_apis/Identities/ebb07d9e-f73c-4ef5-be9e-5429f89e3c3b",
+                        "imageUrl": "https://bgavril.visualstudio.com/_api/_common/identityImage?id=ebb07d9e-f73c-4ef5-be9e-5429f89e3c3b"
+                    },
+                    "content": "Foo",
+                    "publishedDate": "2016-10-20T17:07:43.597Z",
+                    "lastUpdatedDate": "2016-10-20T17:07:43.597Z",
+                    "commentType": "text",
+                    "usersLiked": []
+                }
+            ],
+            "status": "active",
+            "threadContext": {
+                "filePath": "/Extractor/Program.cs",
+                "rightFileStart": {
+                    "line": 1,
+                    "offset": 1
+                },
+                "rightFileEnd": {
+                    "line": 1,
+                    "offset": 1
+                }
+            },
+            "properties": {
+                "Microsoft.TeamFoundation.CodeAnalysis.PRCA": {
+                    "$type": "System.Int32",
+                    "$value": 1
+                }
+            },
+            "isDeleted": false
+        },
+        {
+            "pullRequestThreadContext": {
+                "iterationContext": {
+                    "firstComparingIteration": 1,
+                    "secondComparingIteration": 1
+                }
+            },
+            "id": 1063,
+            "publishedDate": "2016-10-20T17:07:44.237Z",
+            "lastUpdatedDate": "2016-10-20T17:08:19.923Z",
+            "comments": [
+                {
+                    "id": 1,
+                    "parentCommentId": 0,
+                    "author": {
+                        "id": "ebb07d9e-f73c-4ef5-be9e-5429f89e3c3b",
+                        "displayName": "Bogdan Gavril",
+                        "uniqueName": "bogdan.gavril@outlook.com",
+                        "url": "https://app.vssps.visualstudio.com/A728e0545-679e-4c45-9eb3-b40edbd5f100/_apis/Identities/ebb07d9e-f73c-4ef5-be9e-5429f89e3c3b",
+                        "imageUrl": "https://bgavril.visualstudio.com/_api/_common/identityImage?id=ebb07d9e-f73c-4ef5-be9e-5429f89e3c3b"
+                    },
+                    "content": "Bar",
+                    "publishedDate": "2016-10-20T17:07:44.237Z",
+                    "lastUpdatedDate": "2016-10-20T17:07:44.237Z",
+                    "commentType": "text",
+                    "usersLiked": []
+                },
+                {
+                    "id": 2,
+                    "parentCommentId": 1,
+                    "author": {
+                        "id": "ebb07d9e-f73c-4ef5-be9e-5429f89e3c3b",
+                        "displayName": "Bogdan Gavril",
+                        "uniqueName": "bogdan.gavril@outlook.com",
+                        "url": "https://app.vssps.visualstudio.com/A728e0545-679e-4c45-9eb3-b40edbd5f100/_apis/Identities/ebb07d9e-f73c-4ef5-be9e-5429f89e3c3b",
+                        "imageUrl": "https://bgavril.visualstudio.com/_api/_common/identityImage?id=ebb07d9e-f73c-4ef5-be9e-5429f89e3c3b"
+                    },
+                    "content": "User reply",
+                    "publishedDate": "2016-10-20T17:08:19.923Z",
+                    "lastUpdatedDate": "2016-10-20T17:08:19.923Z",
+                    "commentType": "text",
+                    "usersLiked": []
+                }
+            ],
+            "status": "active",
+            "threadContext": {
+                "filePath": "/ConsoleApplication1/App.config",
+                "rightFileStart": {
+                    "line": 3,
+                    "offset": 1
+                },
+                "rightFileEnd": {
+                    "line": 3,
+                    "offset": 1
+                }
+            },
+            "properties": {
+                "Microsoft.TeamFoundation.CodeAnalysis.PRCA": {
+                    "$type": "System.Int32",
+                    "$value": 1
+                }
+            },
+            "isDeleted": false
+        },
+        {
+            "pullRequestThreadContext": {
+                "iterationContext": {
+                    "firstComparingIteration": 1,
+                    "secondComparingIteration": 1
+                },
+                "changeTrackingId": 6
+            },
+            "id": 1064,
+            "publishedDate": "2016-10-20T17:08:28.22Z",
+            "lastUpdatedDate": "2016-10-20T17:08:28.22Z",
+            "comments": [
+                {
+                    "id": 1,
+                    "parentCommentId": 0,
+                    "author": {
+                        "id": "ebb07d9e-f73c-4ef5-be9e-5429f89e3c3b",
+                        "displayName": "Bogdan Gavril",
+                        "uniqueName": "bogdan.gavril@outlook.com",
+                        "url": "https://app.vssps.visualstudio.com/A728e0545-679e-4c45-9eb3-b40edbd5f100/_apis/Identities/ebb07d9e-f73c-4ef5-be9e-5429f89e3c3b",
+                        "imageUrl": "https://bgavril.visualstudio.com/_api/_common/identityImage?id=ebb07d9e-f73c-4ef5-be9e-5429f89e3c3b"
+                    },
+                    "content": "User comment",
+                    "publishedDate": "2016-10-20T17:08:28.22Z",
+                    "lastUpdatedDate": "2016-10-20T17:08:28.22Z",
+                    "commentType": "text",
+                    "usersLiked": [],
+                    "isDeleted": false
+                }
+            ],
+            "status": "active",
+            "threadContext": {
+                "filePath": "/ConsoleApplication1/App.config",
+                "rightFileStart": {
+                    "line": 5,
+                    "offset": 1
+                },
+                "rightFileEnd": {
+                    "line": 5,
+                    "offset": 218
+                }
+            },
+            "properties": {
+                "Microsoft.TeamFoundation.Discussion.SupportsMarkdown": {
+                    "$type": "System.Int32",
+                    "$value": 1
+                }
+            },
+            "isDeleted": false
+        }
+    ],
+    "count": 7
+}

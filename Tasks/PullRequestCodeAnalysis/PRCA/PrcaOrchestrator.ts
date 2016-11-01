@@ -1,3 +1,5 @@
+/// <reference path="../typings/index.d.ts" />
+
 import * as path from 'path';
 
 import * as web from 'vso-node-api/WebApi';
@@ -65,7 +67,7 @@ export class PrcaOrchestrator {
             throw new ReferenceError('token');
         }
 
-        let creds = web.getPersonalAccessTokenHandler(token);
+        let creds = web.getBearerHandler(token);
         var connection = new WebApi(collectionUrl, creds);
 
         let prcaService: IPrcaService = new PrcaService(logger, connection.getGitApi(), repositoryId, pullRequestId);

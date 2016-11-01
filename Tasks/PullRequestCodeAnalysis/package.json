@@ -11,10 +11,14 @@
   "bugs": {
     "url": "https://github.com/Microsoft/vsts-tasks/issues"
   },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.5.3"
+  },
   "dependencies": {
     "fs": "0.0.2",
     "q": "1.4.1",
     "vso-node-api": "5.1.1",
-    "vsts-task-lib": "0.9.7"
+    "vsts-task-lib": "0.9.20"
   }
 }

@@ -1,3 +1,5 @@
+/// <reference path="../typings/index.d.ts" />
+
 import { IGitApi } from 'vso-node-api/GitApi';
 import * as gitInterfaces from 'vso-node-api/interfaces/GitInterfaces';
 

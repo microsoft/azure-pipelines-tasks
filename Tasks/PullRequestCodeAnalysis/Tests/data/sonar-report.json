@@ -1,0 +1,139 @@
+{
+    "version": "5.6",
+    "issues": [
+        {
+            "key": "Valid issue",
+            "component": "com.mycompany.app:my-app:src/main/java/com/mycompany/app/App.java",
+            "line": 12,
+            "startLine": 12,
+            "endLine": 12,
+            "message": "Remove this unused \"x\" local variable.",
+            "severity": "MAJOR",
+            "rule": "squid:S1481",
+            "status": "OPEN",
+            "isNew": true,
+            "creationDate": "2016-06-13T14:08:05+0100"
+        },
+        {
+            "key": "Issue on line 0",
+            "component": "com.mycompany.app:my-app:src/main/java/com/mycompany/app/App.java",
+            "line": 0,
+            "startLine": 0,
+            "endLine": 0,
+            "message": "Remove this useless assignment to local variable \"x\".",
+            "severity": "MAJOR",
+            "rule": "squid:S1854",
+            "status": "OPEN",
+            "isNew": true,
+            "creationDate": "2016-06-13T14:08:05+0100"
+        },
+        {
+            "key": "Issue with no line",
+            "component": "com.mycompany.app:my-app:src/main/java/com/mycompany/app/App.java",
+            "message": "Add a private constructor to hide the implicit public one.",
+            "severity": "MAJOR",
+            "rule": "squid:S1118",
+            "status": "OPEN",
+            "isNew": true,
+            "creationDate": "2016-06-13T12:03:43+0100"
+        },
+        {
+            "key": "Another valid issue",
+            "component": "com.mycompany.app:my-app:src/test/java/com/mycompany/app/AppTest.java",
+            "line": 11,
+            "startLine": 11,
+            "endLine": 11,
+            "message": "Replace this usage of System.out or System.err by a logger.",
+            "severity": "MinOr",
+            "rule": "squid:S106",
+            "status": "OPEN",
+            "isNew": true,
+            "creationDate": "2016-06-13T12:03:43+0100"
+        },       
+        {
+            "key": "Issue with no severity",
+            "component": "com.mycompany.app:my-app:src/main/java/com/mycompany/app/App.java",
+            "line": 15,
+            "startLine": 15,
+            "endLine": 15,
+            "message": "Bad code right here...",
+            "status": "OPEN",
+            "rule": "squid:S106",
+            "isNew": true,
+            "creationDate": "2016-06-13T12:03:43+0100"
+        },
+        {
+            "key": "Old issue",
+            "component": "com.mycompany.app:my-app:src/main/java/com/mycompany/app/App.java",
+            "line": 15,
+            "startLine": 15,
+            "endLine": 15,
+            "message": "Rename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.",
+            "severity": "MINOR",
+            "rule": "squid:S00100",
+            "status": "OPEN",
+            "isNew": false,
+            "creationDate": "2016-06-13T12:03:43+0100"
+        }
+    ],
+    "components": [
+        {
+            "key": "com.mycompany.app:my-app"
+        },
+        {
+            "key": "com.mycompany.app:my-app:src/main/java/com/mycompany/app/App.java",
+            "path": "src/main/java/com/mycompany/app/App.java",
+            "moduleKey": "com.mycompany.app:my-app",
+            "status": "SAME"
+        },
+        {
+            "key": "com.mycompany.app:my-app:src/test/java/com/mycompany/app/AppTest.java",
+            "path": "src/test/java/com/mycompany/app/AppTest.java",
+            "moduleKey": "com.mycompany.app:my-app",
+            "status": "SAME"
+        },
+        {
+            "key": "com.mycompany.app:my-app:src/main/java/com/mycompany/app",
+            "path": "src/main/java/com/mycompany/app",
+            "moduleKey": "com.mycompany.app:my-app"
+        },
+        {
+            "key": "com.mycompany.app:my-app:src/test/java/com/mycompany/app",
+            "path": "src/test/java/com/mycompany/app",
+            "moduleKey": "com.mycompany.app:my-app"
+        }
+    ],
+    "rules": [
+        {
+            "key": "squid:S1481",
+            "rule": "S1481",
+            "repository": "squid",
+            "name": "Unused local variables should be removed"
+        },
+        {
+            "key": "squid:S1854",
+            "rule": "S1854",
+            "repository": "squid",
+            "name": "Dead stores should be removed"
+        },
+        {
+            "key": "squid:S106",
+            "rule": "S106",
+            "repository": "squid",
+            "name": "Standard outputs should not be used directly to log anything"
+        },
+        {
+            "key": "squid:S1118",
+            "rule": "S1118",
+            "repository": "squid",
+            "name": "Utility classes should not have public constructors"
+        },
+        {
+            "key": "squid:S00100",
+            "rule": "S00100",
+            "repository": "squid",
+            "name": "Method names should comply with a naming convention"
+        }
+    ],
+    "users": []
+}
