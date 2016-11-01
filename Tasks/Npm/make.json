@@ -2,7 +2,7 @@
     "externals": {
         "archivePackages": [
             {
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/vsts-npm-auth/0.20.0/vsts-npm-auth.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/vsts-npm-auth/0.21.0/vsts-npm-auth.zip",
                 "dest": "./Npm/vsts-npm-auth/"
             },
             {
