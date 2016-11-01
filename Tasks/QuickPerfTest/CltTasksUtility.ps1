@@ -1,8 +1,8 @@
 function InvokeRestMethod($headers, $contentType, $uri , $method= "Get", $body)
 {
-  #$ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($uri)
+  $ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($uri)
   $result = Invoke-RestMethod -ContentType "application/json" -UserAgent $global:userAgent -TimeoutSec $global:RestTimeout -Uri $uri -Method $method -Headers $headers -Body $body
-  #$ServicePoint.CloseConnectionGroup("")
+  $ServicePoint.CloseConnectionGroup("")
   return $result
 }
 
