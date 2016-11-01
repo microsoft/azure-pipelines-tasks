@@ -1,0 +1,9 @@
+{
+  "name": "vsts-npm-task",
+  "dependencies": {},
+  "globalDependencies": {
+    "mocha": "registry:dt/mocha#2.2.5+20160720003353",
+    "node": "registry:dt/node#6.0.0+20160928143418",
+    "q": "registry:dt/q#0.0.0+20160613154756"
+  }
+}
