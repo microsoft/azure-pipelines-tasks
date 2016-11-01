@@ -107,7 +107,6 @@ export class RegisterEnvironment {
         this.getVMDetails();
         this.getNetworkInterfaceDetails();
         this.getPublicIPAddresses();
-
     }
 
     private InstantiateEnvironment() {
@@ -192,7 +191,7 @@ export class RegisterEnvironment {
             var fqdns = {}
             for (var i = 0; i < publicAddresses.length; i++) {
                 var publicAddress = publicAddresses[i];
-                var publicAddressId = publicAddress["id"];
+                var publicAddressId = publicAddress["id"]; //Didn't convert to lowercase
                 if (publicAddress["dnsSettings"]) {
                     fqdns[publicAddressId] = publicAddress["dnsSettings"]["fqdn"];
                 }
@@ -204,5 +203,123 @@ export class RegisterEnvironment {
             this.InstantiateEnvironment();
         });
     }
-   
+
+    private AddWinRMHttpsNetworkSecurityRuleConfig(vmName: string){
+    }
+
+    public AddAzureVMCustomScriptExtension(vmId: string, vmName: string, dnsName: string, location: string){
+        var _extensionName: string ="CustomScriptExtension"; 
+
+        console.log("Adding custom script extension for virtual machine %s",vmName);
+        console.log("VM Location: %s", location);
+        console.log("VM DNS: %s", dnsName);
+
+        try{
+            /*
+            Steps:
+                1. Check if CustomScriptExtension exists.
+                2. If not install it
+                3.Add the inbound rule to allow traffic on winrmHttpsPort
+            */
+            var computeClient = new computeManagementClient(this.credentials, this.subscriptionId);
+
+            console.log("Checking if the extension %s is present on vm %s", _extensionName, vmName);
+            
+            computeClient.virtualMachineExtensions.get(this.resourceGroupName, vmName, _extensionName, (error, result, request , response)=>{
+                if(error){
+                    console.log("Failed to get the extension!!");
+                    //Adding the extension
+                    this.AddExtensionVM(vmName, computeClient, dnsName, _extensionName, location);
+                }
+                else if(result!=null){
+                    console.log("Skipping the addition of the extension %s on the vm %s", _extensionName, vmName);
+                    if(result["provisioningState"] != 'Succeeded'){
+                        this.RemoveExtensionFromVM(_extensionName, vmName, computeClient);
+                        this.AddExtensionVM(vmName, computeClient, dnsName, _extensionName, location);
+                    }
+                    else{
+                        //Validate the Custom Script Execution status: if ok add the rule else add the extension
+                        this.ValidateCustomScriptExecutionStatus(vmName, computeClient, dnsName, _extensionName, location);
+                    }
+                }
+            });
+        }
+        catch(exception){
+            throw new Error("ARG_DeploymentPrereqFailed" + exception.message);
+        }
+    }
+
+    private ValidateCustomScriptExecutionStatus(vmName: string, computeClient, dnsName: string, extensionName: string, location: string){
+        console.log("Validating the winrm configuration custom script extension status");
+
+        computeClient.virtualMachines.get(this.resourceGroupName, vmName, {expand: 'instanceView'}, (error, result, request, response)=>{
+            if(error){
+                console.log("Error in getting the instance view of the virtual machine %s", util.inspect(error, {depth: null}));
+                throw new Error("FailedToFetchInstanceViewVM");
+            }
+            console.log(util.inspect(result, {depth: null}));
+            var invalidExecutionStatus: boolean = false;
+            var extensions = result["instanceView"]["extensions"];
+            for(var i =0; i < extensions.length; i++){
+                var extension = extensions[i];
+                if(extension["name"] === extensionName){
+                    for(var j =0; j < extension["substatuses"]; j++){
+                        var substatus = extension["substatuses"][j];
+                        if(substatus["code"].include("ComponentStatus/StdErr") && !!substatus["message"] && substatus["message"] != ""){
+                            invalidExecutionStatus = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if(invalidExecutionStatus){
+                this.RemoveExtensionFromVM(extensionName, vmName, computeClient);
+                this.AddExtensionVM(vmName, computeClient, dnsName, extensionName, location);
+            }
+            else{
+                this.AddWinRMHttpsNetworkSecurityRuleConfig(vmName);
+            }
+        });
+    }
+
+    private AddExtensionVM(vmName: string, computeClient, dnsName: string, extensionName: string, location: string){
+        var _configWinRMScriptFile: string ="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/ConfigureWinRM.ps1";
+        var _makeCertFile: string ="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/makecert.exe";
+        var _winrmConfFile: string ="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/winrmconf.cmd";
+        var _commandToExecute: string ="powershell.exe -File ConfigureWinRM.ps1 "+dnsName;
+        var _extensionType: string = 'Microsoft.Compute/virtualMachines/extensions';
+        var _virtualMachineExtensionType: string = 'CustomScriptExtension';
+        var _typeHandlerVersion: string = '1.7';
+        var _publisher: string = 'Microsoft.Compute';
+
+        var _protectedSettings = {commandToExecute: _commandToExecute};
+        var parameters = { type: _extensionType, virtualMachineExtensionType: _virtualMachineExtensionType, typeHandlerVersion: _typeHandlerVersion, publisher: _publisher ,location: location, settings: {fileUris: [_configWinRMScriptFile, _makeCertFile, _winrmConfFile]}, protectedSettings: _protectedSettings};
+        console.log("Adding the extension %s", extensionName);
+        computeClient.virtualMachineExtensions.createOrUpdate(this.resourceGroupName, vmName, extensionName, parameters, (error, result, request, response) =>{
+            if(error){
+                console.log("Failed to add the extension %s", util.inspect(error, { depth: null}));
+                throw new Error("Failed To add the extension");
+            }
+            console.log("Addition of extension completed with response %s", util.inspect(result, {depth: null}));
+            if(result["provisioningState"] != 'Succeeded'){
+                this.RemoveExtensionFromVM(extensionName, vmName, computeClient);
+                throw new Error("ARG_CreateOrUpdatextensionForVMFailed");
+            }
+            //Add the network security rule
+            this.AddWinRMHttpsNetworkSecurityRuleConfig(vmName);
+        });
+    }
+
+    private RemoveExtensionFromVM(extensionName, vmName, computeClient){
+        console.log("Removing the extension %s from vm %s", extensionName, vmName);
+        //delete the extension
+        computeClient.virtualMachineExtensions.deleteMethod(this.resourceGroupName, vmName, extensionName, (error, result, request, response)=>{
+            if(error){
+                console.log("Failed to delete the extension %s on the vm %s, with error Message: %s", extensionName, vmName, util.inspect(error, {depth: null}));
+            }
+            else{
+                console.log("Successfully removed the extension %s from the VM %s", extensionName, vmName);
+            }
+        });
+    }
 }
