@@ -231,8 +231,7 @@ export class RegisterEnvironment {
                     if(result.length > 0){
                         console.log("Got network security group %s in resource group %s", securityGrpName, this.resourceGroupName);
                         if(retryCnt>0){
-                            retryCnt = retryCnt - 1;
-                            this.AddInboundNetworkSecurityRule(retryCnt, securityGrpName, networkClient, ruleName, rulePriority, winrmHttpsPort);
+                            this.AddInboundNetworkSecurityRule(retryCnt - 1, securityGrpName, networkClient, ruleName, rulePriority, winrmHttpsPort);
                         }
                     }
                 });
@@ -245,7 +244,6 @@ export class RegisterEnvironment {
             var securityGrp = securityGroups[i];
             var securityGrpName = securityGrp["name"];
 
-            var maxtries = 3;
             try{
                 console.log("Getting the network security rule config %s under security group %s", ruleName, securityGrpName);
 
@@ -307,7 +305,6 @@ export class RegisterEnvironment {
                 3.Add the inbound rule to allow traffic on winrmHttpsPort
             */
             var computeClient = new computeManagementClient(this.credentials, this.subscriptionId);
-            
             console.log("Checking if the extension %s is present on vm %s", _extensionName, vmName);
             
             computeClient.virtualMachineExtensions.get(this.resourceGroupName, vmName, _extensionName, (error, result, request , response)=>{
