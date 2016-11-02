@@ -111,10 +111,15 @@ export class NpmMockHelper {
     private setDefaultAnswers() {
         this.setToolPath(this.answers, "npm", NpmMockHelper.NpmCmdPath);
         this.setOsType('WiNdOWs_nT');
+        this.setProjectNpmrcExists();
     }
 
     private setToolPath(answers: ma.TaskLibAnswers, tool: string, path: string) {
         answers.which[tool] = path;
         answers.checkPath[path] = true;
+    }
+
+    private setProjectNpmrcExists() {
+        this.answers.exist[path.join(NpmMockHelper.FakeWorkingDirectory, '.npmrc')] = true;
     }
 }
