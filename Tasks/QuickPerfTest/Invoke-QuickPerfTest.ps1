@@ -73,16 +73,13 @@ else
 {
     $connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
 }
-
 $Username = $connectedServiceDetails.Authorization.Parameters.Username
 Write-Verbose "Username = $Username" -Verbose
 $Password = $connectedServiceDetails.Authorization.Parameters.Password
 $VSOAccountUrl = $connectedServiceDetails.Url.AbsoluteUri
 Write-Output "VSO Account URL is : $VSOAccountUrl"
-
 $headers = InitializeRestHeaders
-
-$CltAccountUrl = ComposeAccountUrl $VSOAccountUrl.TrimEnd('/') $headers
+$CltAccountUrl = ComposeAccountUrl $VSOAccountUrl $headers
 $TFSAccountUrl = $env:System_TeamFoundationCollectionUri.TrimEnd('/')
 
 Write-Output "VSO account Url = $TFSAccountUrl" -Verbose
@@ -97,7 +94,6 @@ $drop = CreateTestDrop $headers $dropjson $CltAccountUrl
 if ($drop.dropType -eq "InPlaceDrop")
 {
     $runJson = ComposeTestRunJson $testName $drop.id $MachineType
-
     $run = QueueTestRun $headers $runJson $CltAccountUrl
     MonitorTestRun $headers $run $CltAccountUrl
     $webResultsUrl = GetTestRunUri $run.id $headers $CltAccountUrl
@@ -106,14 +102,11 @@ if ($drop.dropType -eq "InPlaceDrop")
     Write-Output ("To view run details navigate to {0}" -f $webResultsUrl)
     Write-Output "To view detailed results navigate to Load Test | Load Test Manager in Visual Studio IDE, and open this run."
 
-    $resultsMDFolder = New-Item -ItemType Directory -Force -Path "$env:Temp\LoadTestResultSummary"
-	
+    $resultsMDFolder = New-Item -ItemType Directory -Force -Path "$env:Temp\LoadTestResultSummary"	
     $resultFilePattern = ("QuickPerfTestResults_{0}_{1}_*.md" -f $env:AGENT_ID, $env:SYSTEM_DEFINITIONID)
-	
     $excludeFilePattern = ("QuickPerfTestResults_{0}_{1}_{2}_*.md" -f $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID)   
     Remove-Item $resultsMDFolder\$resultFilePattern -Exclude $excludeFilePattern -Force	
     $summaryFile =  ("{0}\QuickPerfTestResults_{1}_{2}_{3}_{4}.md" -f $resultsMDFolder, $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID, $run.id)	
-	
     $summary = ('[Test Run: {0}]({1}) using {2}.<br/>' -f  $run.runNumber, $webResultsUrl ,$run.name)
 
 	('<p>{0}</p>' -f $summary) >>  $summaryFile

@@ -8,24 +8,24 @@ function InvokeRestMethod($headers, $contentType, $uri , $method= "Get", $body)
 
 function ComposeTestDropJson($name, $duration, $homepage, $vu, $geoLocation)
 {
-$tdjson = @"
-{
-    "dropType": "InplaceDrop",
-    "loadTestDefinition":{
-        "loadTestName":"$name",
-        "runDuration":$duration,
-        "urls":["$homepage"],
-        "browserMixs":[
-            {"browserName":"Internet Explorer 11.0","browserPercentage":60.0},
-            {"browserName":"Chrome 2","browserPercentage":40.0}
-        ],
-        "loadPatternName":"Constant",
-        "maxVusers":$vu,
-        "loadGenerationGeoLocations":[
-            {"Location":"$geoLocation","Percentage":100}
-        ]
-    }
-}
+	$tdjson = @"
+	{
+		"dropType": "InplaceDrop",
+		"loadTestDefinition":{
+			"loadTestName":"$name",
+			"runDuration":$duration,
+			"urls":["$homepage"],
+			"browserMixs":[
+				{"browserName":"Internet Explorer 11.0","browserPercentage":60.0},
+				{"browserName":"Chrome 2","browserPercentage":40.0}
+			],
+			"loadPatternName":"Constant",
+			"maxVusers":$vu,
+			"loadGenerationGeoLocations":[
+				{"Location":"$geoLocation","Percentage":100}
+			]
+		}
+	}
 "@
 
     return $tdjson
@@ -56,13 +56,13 @@ function UploadTestDrop($testdrop)
     return $container
 }
 
-function GetTestRuns($headers, $CltAccountUrl)
-{
-    $uri = [String]::Format("{0}/_apis/clt/testruns?api-version=1.0", $CltAccountUrl)
-    $runs = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers
+#function GetTestRuns($headers, $CltAccountUrl)
+#{
+#    $uri = [String]::Format("{0}/_apis/clt/testruns?api-version=1.0", $CltAccountUrl)
+#    $runs = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers
 
-    return $runs
-}
+#    return $runs
+#}
 
 function GetTestRunUri($testRunId, $headers, $CltAccountUrl)
 {
@@ -86,7 +86,7 @@ function MonitorTestRun($headers, $run, $CltAccountUrl)
 
     do
     {
-        Start-Sleep -s 5
+        Start-Sleep -s 15
         $run = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers
         if ($prevState -ne $run.state -or $prevSubState -ne $run.subState)
         {
@@ -121,18 +121,18 @@ function MonitorTestRun($headers, $run, $CltAccountUrl)
     Write-Output "------------------------------------"
 }
 
-function ComposeTestRunJson($name, $tdid, $MachineType)
+function ComposeTestRunJson($name, $tdid, $machineType)
 {
 	$trjson = @"
 	{
 		"name":"$name",
 		"description":"Quick perf test from automation task",
-		"testSettings":{"cleanupCommand":"", "hostProcessPlatform":"x86", "setupCommand":""},
-		"superSedeRunSettings":{"loadGeneratorMachinesType":"$MachineType"},
+		"testSettings":{"cleanupCommand":"", "hostProcessPlatform":"x64", "setupCommand":""},
+		"superSedeRunSettings":{"loadGeneratorMachinesType":"$machineType"},
 		"testDrop":{"id":"$tdid"},
 		"runSourceIdentifier":"build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
 	}
-	"@
+"@
 
     return $trjson
 }
@@ -159,7 +159,7 @@ function ComposeAccountUrl($connectedServiceUrl, $headers)
 {
 	#Load all dependent files for execution
     . $PSScriptRoot/VssConnectionHelper.ps1
-
+	$connectedServiceUrl = $connectedServiceUrl.TrimEnd('/')
 	Write-Host "Getting Clt Endpoint:"
 	$elsUrl = Get-CltEndpoint $connectedServiceUrl $headers
 
@@ -175,7 +175,7 @@ function ValidateInputs($websiteUrl, $tfsCollectionUrl, $connectedServiceName)
 	
 	if([string]::IsNullOrWhiteSpace($connectedServiceName) -and $tfsCollectionUrl -notlike "*VISUALSTUDIO.COM*" -and $tfsCollectionUrl -notlike "*TFSALLIN.NET*")
 	{
-	 throw "VS Team Services Connection is mandatory for non hosted TFS builds "
+		throw "VS Team Services Connection is mandatory for non hosted TFS builds "
 	}
 }
 
