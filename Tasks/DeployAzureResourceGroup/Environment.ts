@@ -61,7 +61,7 @@ class Environment {
     public CreatedDate: string;
     public ModifiedDate: string;
 
-    constructor(resources: Array<Resource>, userId: string, projectName: string, environmentName: string) {
+    constructor(resources: Array<Resource>, userId: string, projectName: string, environmentName: string, enablePrereqs?) {
         this.Id = 0;
         this.Url = "null";
         this.Revision = 1;
@@ -107,6 +107,7 @@ export class RegisterEnvironment {
         this.getVMDetails();
         this.getNetworkInterfaceDetails();
         this.getPublicIPAddresses();
+        ///TODO: WinRmHttpsPort opening here
     }
 
     private InstantiateEnvironment() {
@@ -117,6 +118,7 @@ export class RegisterEnvironment {
         var environment = new Environment(resources, process.env["SYSTEM_COLLECTIONID"], process.env["SYSTEM_TEAMPROJECT"], this.outputVariable);
         console.log(JSON.stringify(environment));                
         tl.setVariable(this.outputVariable, JSON.stringify(environment));
+        return environment;
     }
 
     private getTags(addressId: string){
@@ -203,11 +205,94 @@ export class RegisterEnvironment {
             this.InstantiateEnvironment();
         });
     }
+    
+    private AddInboundNetworkSecurityRule(retryCnt: number, securityGrpName, networkClient, ruleName, rulePriority, winrmHttpsPort){
+           try{
+               console.log("Adding inbound network security rule config %s with priority %s for port %s under security group %s", ruleName, rulePriority, winrmHttpsPort, securityGrpName);
+               var securityRuleParameters = {direction: "Inbound", access: "Allow", sourceAddressPrefix: "*", sourcePortRange: "*", destinationAddressPrefix: "*", destinationPortRange: winrmHttpsPort, protocol: "*", priority: rulePriority};
+                           
+               networkClient.securityRules.createOrUpdate(this.resourceGroupName, securityGrpName, ruleName, securityRuleParameters, (error, result, request, response)=>{
+                   if(error){
+                       console.log("Error in adding network security rule %s", util.inspect(error, {depth: null}));
+                       throw "FailedToAddRuleToNetworkSecurityGroup";
+                    }    
+                    console.log("Added inbound network security rule config %s with priority %s for port %s under security group %s with result: %s", ruleName, rulePriority, winrmHttpsPort, securityGrpName, util.inspect(result, {depth: null}));              
+                });
+           }
+            catch(exception){
+                console.log("Failed to add inbound network security rule config %s with priority %s for port %s under security group %s: %s", ruleName, rulePriority, winrmHttpsPort, securityGrpName, exception.message);
+                rulePriority = rulePriority + 50;
+                console.log("Getting network security group %s in resource group %s", securityGrpName, this.resourceGroupName);
+                networkClient.networkSecurityGroups.list(this.resourceGroupName, (error, result, request, response)=>{
+                    if(error){
+                        console.log("Error in getting the list of network Security Groups for the resource-group %s", this.resourceGroupName);
+                        throw "FetchingOfNetworkSecurityGroupFailed";
+                    }
+                    if(result.length > 0){
+                        console.log("Got network security group %s in resource group %s", securityGrpName, this.resourceGroupName);
+                        if(retryCnt>0){
+                            retryCnt = retryCnt - 1;
+                            this.AddInboundNetworkSecurityRule(retryCnt, securityGrpName, networkClient, ruleName, rulePriority, winrmHttpsPort);
+                        }
+                    }
+                });
+            }
+        }
 
-    private AddWinRMHttpsNetworkSecurityRuleConfig(vmName: string){
+    private AddNetworkSecurityRuleConfig(securityGroups: [Object], ruleName: string, rulePriority: number, winrmHttpsPort: string){
+        for(var i =0; i < securityGroups.length; i++){
+            console.log("Adding Security rule for the network security group: %s", util.inspect(securityGroups[i], {depth: null}));
+            var securityGrp = securityGroups[i];
+            var securityGrpName = securityGrp["name"];
+
+            var maxtries = 3;
+            try{
+                console.log("Getting the network security rule config %s under security group %s", ruleName, securityGrpName);
+
+                var networkClient = new networkManagementClient(this.credentials, this.subscriptionId);
+                networkClient.securityRules.get(this.resourceGroupName, securityGrpName, ruleName, (error, result, request, response)=>{
+                    if(error){
+                        console.log("Rule %s not found under security Group %s",ruleName, securityGrpName);
+                        var maxRetries = 3;
+                        this.AddInboundNetworkSecurityRule(maxRetries, securityGrpName, networkClient, ruleName, rulePriority, winrmHttpsPort);
+                    }
+                    else{
+                        console.log("Got network security rule %s under security Group %s", ruleName, securityGrpName);
+                    }
+                });
+            }
+            catch(exception){
+                console.log("Failed to add the network security rule with exception: %s", exception.message);
+            }
+        }
     }
 
-    public AddAzureVMCustomScriptExtension(vmId: string, vmName: string, dnsName: string, location: string){
+    private AddWinRMHttpsNetworkSecurityRuleConfig(vmName: string){
+        console.log("Trying to add a network security group rule");
+
+        var _ruleName: string = "VSO-Custom-WinRM-Https-Port";
+        var _rulePriority: number =3986;
+        var _winrmHttpsPort: string = "5986";
+        
+        try{
+            var networkClient = new networkManagementClient(this.credentials, this.subscriptionId);
+            networkClient.networkSecurityGroups.list(this.resourceGroupName, (error, result, request, response)=>{
+                if(error){
+                    console.log("Error in getting the list of network Security Groups for the resource-group %s", this.resourceGroupName);
+                    throw new Error("FetchingOfNetworkSecurityGroupFailed")
+                }
+
+                if(result.length > 0){
+                    this.AddNetworkSecurityRuleConfig(result, _ruleName, _rulePriority, _winrmHttpsPort);
+                }
+            });
+        }
+        catch(exception){
+            console.warn("ARG_NetworkSecurityConfigFailed with exception: %s", exception.message);
+        }
+    }
+
+    private AddAzureVMCustomScriptExtension(vmId: string, vmName: string, dnsName: string, location: string){
         var _extensionName: string ="CustomScriptExtension"; 
 
         console.log("Adding custom script extension for virtual machine %s",vmName);
@@ -222,7 +307,7 @@ export class RegisterEnvironment {
                 3.Add the inbound rule to allow traffic on winrmHttpsPort
             */
             var computeClient = new computeManagementClient(this.credentials, this.subscriptionId);
-
+            
             console.log("Checking if the extension %s is present on vm %s", _extensionName, vmName);
             
             computeClient.virtualMachineExtensions.get(this.resourceGroupName, vmName, _extensionName, (error, result, request , response)=>{
@@ -232,8 +317,9 @@ export class RegisterEnvironment {
                     this.AddExtensionVM(vmName, computeClient, dnsName, _extensionName, location);
                 }
                 else if(result!=null){
-                    console.log("Skipping the addition of the extension %s on the vm %s", _extensionName, vmName);
+                    console.log("Extension %s is present on the vm %s", _extensionName, vmName);
                     if(result["provisioningState"] != 'Succeeded'){
+                        console.log("Provisioning State of extension %s on vm %s is not Succeeded", _extensionName, vmName);
                         this.RemoveExtensionFromVM(_extensionName, vmName, computeClient);
                         this.AddExtensionVM(vmName, computeClient, dnsName, _extensionName, location);
                     }
@@ -245,8 +331,9 @@ export class RegisterEnvironment {
             });
         }
         catch(exception){
+            //skipped writing telemetry data
             throw new Error("ARG_DeploymentPrereqFailed" + exception.message);
-        }
+        } 
     }
 
     private ValidateCustomScriptExecutionStatus(vmName: string, computeClient, dnsName: string, extensionName: string, location: string){
@@ -257,7 +344,7 @@ export class RegisterEnvironment {
                 console.log("Error in getting the instance view of the virtual machine %s", util.inspect(error, {depth: null}));
                 throw new Error("FailedToFetchInstanceViewVM");
             }
-            console.log(util.inspect(result, {depth: null}));
+
             var invalidExecutionStatus: boolean = false;
             var extensions = result["instanceView"]["extensions"];
             for(var i =0; i < extensions.length; i++){
@@ -273,7 +360,6 @@ export class RegisterEnvironment {
                 }
             }
             if(invalidExecutionStatus){
-                this.RemoveExtensionFromVM(extensionName, vmName, computeClient);
                 this.AddExtensionVM(vmName, computeClient, dnsName, extensionName, location);
             }
             else{
@@ -300,12 +386,13 @@ export class RegisterEnvironment {
                 console.log("Failed to add the extension %s", util.inspect(error, { depth: null}));
                 throw new Error("Failed To add the extension");
             }
+
             console.log("Addition of extension completed with response %s", util.inspect(result, {depth: null}));
             if(result["provisioningState"] != 'Succeeded'){
                 this.RemoveExtensionFromVM(extensionName, vmName, computeClient);
                 throw new Error("ARG_CreateOrUpdatextensionForVMFailed");
             }
-            //Add the network security rule
+
             this.AddWinRMHttpsNetworkSecurityRuleConfig(vmName);
         });
     }
