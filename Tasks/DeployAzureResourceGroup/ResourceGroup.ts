@@ -7,6 +7,7 @@ import fs = require("fs");
 import util = require("util");
 
 import env = require("./Environment");
+import deployAzureRG = require("./DeployAzureRG");
 
 var parameterParse = require("./parser").parse;
 var armResource = require("azure-arm-resource");
@@ -37,7 +38,7 @@ export class ResourceGroup {
     private publicAddresses;
     private virtualMachines;
     
-    constructor(deployRGObj) {
+    constructor(deployRGObj: deployAzureRG.AzureResourceGroupDeployment) {
             this.connectedService = deployRGObj.connectedService;
             this.action = deployRGObj.action;
             this.resourceGroupName = deployRGObj.resourceGroupName;
@@ -151,7 +152,7 @@ export class ResourceGroup {
     private getDeploymentDataForQuickStartTemplates() {
         var url = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/%s/%s/azuredeploy.json";
         this.csmFileLink = util.format(url, this.commitID, this.quickStartTemplate);
-        this.csmParametersFileLink = util.format("https://raw.githubusercontent.com/Azure/azure-quickstart-templates/%s/%s/azuredeploy.parameters.json", this.commitID, this.quickStartTemplate);
+        this.csmParametersFileLink = "";
         return this.getDeploymentDataForExternalLinks();
     }
 

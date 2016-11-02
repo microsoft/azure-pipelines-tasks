@@ -2,7 +2,6 @@
 /// <reference path="../../definitions/Q.d.ts" /> 
 /// <reference path="../../definitions/vsts-task-lib.d.ts" /> 
  
-import path = require("path");
 import tl = require("vsts-task-lib/task");
 import fs = require("fs");
 import util = require("util");
@@ -13,36 +12,28 @@ import virtualMachine = require("./VirtualMachine");
 import resourceGroup = require("./ResourceGroup");
 import env = require("./Environment");
 
-try {
-    tl.setResourcePath(path.join( __dirname, "task.json"));
-}
-catch (err) {
-    tl.setResult(tl.TaskResult.Failed, tl.loc("TaskNotFound", err));
-    process.exit();
-}
-
 export class AzureResourceGroupDeployment {
 
-    private connectedServiceNameSelector:string;
-    private action:string;
-    private resourceGroupName:string;
-    private location:string;
-    private csmFile:string;
-    private csmParametersFile:string;
-    private templateLocation:string;
-    private csmFileLink:string;
-    private csmParametersFileLink:string;
-    private overrideParameters:string;
-    private enableDeploymentPrerequisitesForCreate:boolean;
-    private enableDeploymentPrerequisitesForSelect:boolean;
-    private outputVariable:string;
-    private subscriptionId:string;
-    private connectedService:string;
-    private quickStartTemplate:string;
-    private commitID:string;
-    private isLoggedIn:boolean = false;
-    private deploymentMode:string;
-    private credentials;
+    public connectedServiceNameSelector:string;
+    public action:string;
+    public resourceGroupName:string;
+    public location:string;
+    public csmFile:string;
+    public csmParametersFile:string;
+    public templateLocation:string;
+    public csmFileLink:string;
+    public csmParametersFileLink:string;
+    public overrideParameters:string;
+    public enableDeploymentPrerequisitesForCreate:boolean;
+    public enableDeploymentPrerequisitesForSelect:boolean;
+    public outputVariable:string;
+    public subscriptionId:string;
+    public connectedService:string;
+    public quickStartTemplate:string;
+    public commitID:string;
+    public isLoggedIn:boolean = false;
+    public deploymentMode:string;
+    public credentials;
     
     constructor() {
         try { 
@@ -99,7 +90,3 @@ export class AzureResourceGroupDeployment {
         return credentials;
     }
 }
-
-
-var azureResourceGroupDeployment = new AzureResourceGroupDeployment();
-azureResourceGroupDeployment.execute();

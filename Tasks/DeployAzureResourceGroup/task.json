@@ -247,7 +247,7 @@
     "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
     "execution": {
         "Node": {
-            "target": "DeployAzureRG.js"
+            "target": "main.js"
         }
     },
     "messages": {
