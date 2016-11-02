@@ -4,7 +4,7 @@ import Q = require('q');
 import tl = require('vsts-task-lib/task');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
 
-var userProvisioningProfilesPath = path.join(tl.getVariable('HOME'), 'Library', 'MobileDevice', 'Provisioning Profiles');
+var userProvisioningProfilesPath = tl.resolve(tl.getVariable('HOME'), 'Library', 'MobileDevice', 'Provisioning Profiles');
 
 /**
  * Creates a temporary keychain and installs the P12 cert in the temporary keychain
@@ -63,7 +63,7 @@ export async function installCertInTemporaryKeychain(keychainPath : string, keyc
         //login keychain is not in the search path,
         //this might have happened with the 2.1.21 version of Xcode task
         //add it back explicitly, this can be removed after a couple of sprints
-        allKeychainsArr.push(path.join(tl.getVariable('HOME'), 'Library', 'Keychains', 'login.keychain'));
+        allKeychainsArr.push(tl.resolve(tl.getVariable('HOME'), 'Library', 'Keychains', 'login.keychain'));
     }
 
     //add the temporary keychain to list path along with existing keychains
@@ -186,6 +186,95 @@ export async function getProvisioningProfileUUID(provProfilePath: string) {
     }
 }
 
+
+/**
+ * Find the type of the provisioning profile - development, app-store or ad-hoc
+ * @param provProfilePath
+ * @returns {string} type
+ */
+export async function getProvisioningProfileType(provProfilePath: string) {
+    var provProfileType: string;
+    try {
+        //find the provisioning profile details
+        var provProfileDetails:string;
+        var getProvProfileDetailsCmd:ToolRunner = tl.tool(tl.which('security', true));
+        getProvProfileDetailsCmd.arg(['cms', '-D', '-i', provProfilePath]);
+        getProvProfileDetailsCmd.on('stdout', function (data) {
+            if (data) {
+                if (provProfileDetails) {
+                    provProfileDetails = provProfileDetails.concat(data.toString().trim().replace(/[,\n\r\f\v]/gm, ''));
+                } else {
+                    provProfileDetails = data.toString().trim().replace(/[,\n\r\f\v]/gm, '');
+                }
+            }
+        })
+        await getProvProfileDetailsCmd.exec();
+
+        if (provProfileDetails) {
+            //write the provisioning profile to a plist
+            var tmpPlist = '_xcodetasktmp.plist';
+            fs.writeFileSync(tmpPlist, provProfileDetails);
+        } else {
+            throw tl.loc('ProvProfileDetailsNotFound', provProfilePath);
+        }
+
+        //get ProvisionsAllDevices - this will exist for enterprise profiles
+        var provisionsAllDevices: string = await printFromPlist('ProvisionsAllDevices', tmpPlist);
+        tl.debug('provisionsAllDevices = ' + provisionsAllDevices);
+        if(provisionsAllDevices && provisionsAllDevices.toLowerCase() === 'true') {
+            //ProvisionsAllDevices = true in enterprise profiles
+            provProfileType = 'enterprise';
+        } else {
+            var getTaskAllow: string = await printFromPlist('Entitlements:get-task-allow', tmpPlist);
+            tl.debug('getTaskAllow = ' + getTaskAllow);
+            if (getTaskAllow && getTaskAllow.trim().toLowerCase() === 'true') {
+                //get-task-allow = true means it is a development profile
+                provProfileType = 'development';
+            } else {
+                var provisionedDevices:string = await printFromPlist('ProvisionedDevices', tmpPlist);
+                if (!provisionedDevices) {
+                    // no provisioned devices for non-development profile means it is an app-store profile
+                    provProfileType = 'app-store';
+                } else {
+                    // non-development profile with provisioned devices - use ad-hoc
+                    provProfileType = 'ad-hoc';
+                }
+            }
+        }
+
+        //delete the temporary plist file
+        var deletePlistCommand:ToolRunner = tl.tool(tl.which('rm', true));
+        deletePlistCommand.arg(['-f', tmpPlist]);
+        await deletePlistCommand.exec();
+    } catch (err) {
+        tl.debug(err);
+    }
+
+    return provProfileType;
+}
+
+async function printFromPlist(itemToPrint: string, plistPath: string) {
+    var plist = tl.which('/usr/libexec/PlistBuddy', true);
+    var plistTool:ToolRunner = tl.tool(plist);
+    plistTool.arg(['-c', 'Print ' + itemToPrint, plistPath]);
+
+    var printedValue: string;
+    plistTool.on('stdout', function (data) {
+        if (data) {
+            printedValue = data.toString();
+        }
+    });
+
+    try {
+        await plistTool.exec();
+    } catch (err) {
+        tl.debug('Exception when looking for ' + itemToPrint + ' in plist.');
+        printedValue = null;
+    }
+
+    return printedValue;
+}
+
 /**
  * Delete specified iOS keychain
  * @param keychainPath
@@ -227,7 +316,7 @@ export async function deleteProvisioningProfile(uuid: string) {
 }
 
 function getProvisioningProfilePath(uuid: string) : string {
-    return path.join(userProvisioningProfilesPath, uuid.trim().concat('.mobileprovision'));
+    return tl.resolve(userProvisioningProfilesPath, uuid.trim().concat('.mobileprovision'));
 }
 
 /**

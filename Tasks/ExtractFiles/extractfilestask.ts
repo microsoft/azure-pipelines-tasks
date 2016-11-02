@@ -1,5 +1,3 @@
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-
 import path = require('path');
 import tl = require('vsts-task-lib/task');
 import tr = require('vsts-task-lib/toolrunner');
@@ -9,7 +7,7 @@ var archiveFilePatterns: string[] = tl.getDelimitedInput('archiveFilePatterns', 
 var destinationFolder: string = path.normalize(tl.getPathInput('destinationFolder', true, false).trim());
 var cleanDestinationFolder: boolean = tl.getBoolInput('cleanDestinationFolder', false);
 
-var repoRoot: string = tl.getVariable('build.sourcesDirectory');
+var repoRoot: string = tl.getVariable('System.DefaultWorkingDirectory');
 tl.debug('repoRoot: ' + repoRoot);
 
 var win = tl.osType().match(/^Win/);
@@ -189,7 +187,7 @@ function unzipExtract(file, destinationFolder) {
     if (typeof xpUnzipLocation == "undefined") {
         xpUnzipLocation = tl.which('unzip', true);
     }
-    var unzip = tl.createToolRunner(xpUnzipLocation);
+    var unzip = tl.tool(xpUnzipLocation);
     unzip.arg(file);
     unzip.arg('-d');
     unzip.arg(destinationFolder);
@@ -198,7 +196,7 @@ function unzipExtract(file, destinationFolder) {
 
 function sevenZipExtract(file, destinationFolder) {
     console.log('Extracting file: ' + file);
-    var sevenZip = tl.createToolRunner(getSevenZipLocation());
+    var sevenZip = tl.tool(getSevenZipLocation());
     sevenZip.arg('x');
     sevenZip.arg('-o' + destinationFolder);
     sevenZip.arg(file);
@@ -210,7 +208,7 @@ function tarExtract(file, destinationFolder) {
     if (typeof xpTarLocation == "undefined") {
         xpTarLocation = tl.which('tar', true);
     }
-    var tar = tl.createToolRunner(xpTarLocation);
+    var tar = tl.tool(xpTarLocation);
     tar.arg('-xvf'); // tar will correctly handle compression types outlined in isTar()
     tar.arg(file);
     tar.arg('-C');

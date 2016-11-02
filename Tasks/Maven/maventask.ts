@@ -1,5 +1,3 @@
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-/// <reference path="../../definitions/codecoveragefactory.d.ts" />
 
 import Q = require('q');
 import os = require('os');
@@ -39,7 +37,7 @@ var reportPOMFile: string = null;
 var execFileJacoco: string = null;
 var ccReportTask: string = null;
 
-let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('build.sourcesDirectory'), BuildEngine.Maven);
+let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('System.DefaultWorkingDirectory'), BuildEngine.Maven);
 var codeAnalysisOrchestrator:CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
     [new CheckstyleTool(buildOutput, 'checkstyleAnalysisEnabled'),
         new FindbugsTool(buildOutput, 'findbugsAnalysisEnabled'),
@@ -76,7 +74,7 @@ else {
 }
 
 // On Windows, append .cmd or .bat to the executable as necessary
-if (os.type().match(/^Win/) &&
+if (isWindows &&
     !mvnExec.toLowerCase().endsWith('.cmd') &&
     !mvnExec.toLowerCase().endsWith('.bat')) {
     if (tl.exist(mvnExec + '.cmd')) {
@@ -364,13 +362,16 @@ function processMavenOutput(data) {
             severity = data.substring(1, rightIndex);
 
             if (severity === 'ERROR' || severity === 'WARNING') {
-                // Try to match output like:
-                // /Users/user/agent/_work/4/s/project/src/main/java/com/contoso/billingservice/file.java:[linenumber, columnnumber] error message here
+                // Try to match Posix output like:
+                // /Users/user/agent/_work/4/s/project/src/main/java/com/contoso/billingservice/file.java:[linenumber, columnnumber] error message here 
+                // or Windows output like:
+                // /C:/a/1/s/project/src/main/java/com/contoso/billingservice/file.java:[linenumber, columnnumber] error message here 
                 // A successful match will return an array of 5 strings - full matched string, file path, line number, column number, error message
                 input = input.substring(rightIndex + 1);
                 var match: any;
                 var matches: any[] = [];
-                var compileErrorsRegex = /([a-zA-Z0-9_ \-\/.]+):\[([0-9]+),([0-9]+)\](.*)/g;
+                var compileErrorsRegex = isWindows ? /\/([^:]+:[^:]+):\[([\d]+),([\d]+)\](.*)/g   //Windows path format - leading slash with drive letter
+                                                   : /([a-zA-Z0-9_ \-\/.]+):\[([0-9]+),([0-9]+)\](.*)/g;  // Posix path format
                 while (match = compileErrorsRegex.exec(input.toString())) {
                     matches = matches.concat(match);
                 }

@@ -1,0 +1,17 @@
+{
+    "common": [
+        {
+            "module": "../Common/nuget-task-common",
+            "type": "node",
+            "compile": true
+        }
+    ],
+    "rm": [
+        {
+            "items": [
+                "node_modules/nuget-task-common/node_modules/vsts-task-lib"
+            ],
+            "options": "-Rf"
+        }
+    ]
+}

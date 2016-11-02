@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Azure Web App Deployment",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613750)",
-  "loc.description": "Publish a Visual Studio Web project to a Microsoft Azure Web App using Web Deploy",
+  "loc.friendlyName": "Azure App Service: Classic (Deprecated)",
+  "loc.helpMarkDown": "More Information : “Azure App Service: Classic” Task will be deprecated. We recommend migrating your definition to use “Azure App Service Deploy” Task instead. For more information please refer [this](https://go.microsoft.com/fwlink/?LinkID=613750).",
+  "loc.description": "Create or update Azure App Service using Azure PowerShell",
   "loc.instanceNameFormat": "Azure Deployment: $(WebSiteName)",
   "loc.input.label.ConnectedServiceName": "Azure Subscription (Classic)",
   "loc.input.help.ConnectedServiceName": "Azure Classic subscription to target for deployment.",
@@ -23,5 +23,6 @@
   "loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved": "Cannot update deployment status, unique deploymentId cannot be retrieved",
   "loc.messages.Updatingdeploymenthistoryfordeployment0": "Updating deployment history for deployment {0}",
   "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}",
-  "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one."
+  "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one.",
+  "loc.messages.FailedtodeployWebsiteError0": "Failed to deploy Website. Error : {0}"
 }

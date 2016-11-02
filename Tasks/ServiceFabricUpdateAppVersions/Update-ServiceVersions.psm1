@@ -7,7 +7,7 @@
         [Parameter(Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
         [string]
-        $VersionSuffix,
+        $VersionValue,
 
         [Parameter(Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
@@ -29,7 +29,10 @@
         $UpdateAllVersions,
 
         [Switch]
-        $LogAllChanges
+        $LogAllChanges,
+
+        [Switch]
+        $ReplaceVersion
     )
 
     Trace-VstsEnteringInvocation $MyInvocation
@@ -43,7 +46,7 @@
         $newManifest = [XML](Get-Content $newManifestPath)
 
         $versionPrefix = $newManifest.ServiceManifest.Version
-        $newVersion = $versionPrefix + $VersionSuffix
+        $newVersion = if ($ReplaceVersion) { $versionValue } else { $versionPrefix + $VersionValue }
 
         $newPackagesXml = @()
         $newPackagesXml += $newManifest.ServiceManifest.CodePackage
@@ -84,7 +87,7 @@
         # Update the versions of all child packages
         foreach ($newPackageXml in $newPackagesXml)
         {
-            $newPackageXml.Version = Update-PackageVersion -VersionSuffix $VersionSuffix -ServiceName $ServiceName -NewPackageXml $newPackageXml -NewPackageRoot $newPackagePath -OldPackageXmlList $oldPackagesXml -OldPackageRoot $oldPackagePath -LogIndent $LogIndent -UpdateAllVersions:$UpdateAllVersions -LogAllChanges:$LogAllChanges
+            $newPackageXml.Version = Update-PackageVersion -VersionValue $VersionValue -ServiceName $ServiceName -NewPackageXml $newPackageXml -NewPackageRoot $newPackagePath -OldPackageXmlList $oldPackagesXml -OldPackageRoot $oldPackagePath -LogIndent $LogIndent -UpdateAllVersions:$UpdateAllVersions -LogAllChanges:$LogAllChanges -ReplaceVersion:$ReplaceVersion
         }
 
         if ($UpdateAllVersions)
@@ -93,7 +96,7 @@
             $newManifest.ServiceManifest.Version = $newVersion
             Write-Host "$LogIndent$(Get-VstsLocString -Key UpdatedServiceVerison -ArgumentList @($ServiceName,$newVersion))"
         }
-        elseif (!$oldManifest.ServiceManifest.Version.StartsWith($versionPrefix) -or !(Test-XmlEqual $oldManifest $newManifest))
+        elseif ((!$ReplaceVersion -and !$oldManifest.ServiceManifest.Version.StartsWith($versionPrefix)) -or !(Test-XmlEqual $oldManifest $newManifest))
         {
             # Update the service version if the service manifest has changed for any of the following reasons:
             # 1. The user edited the manifest itself (including changes to the version prefix)

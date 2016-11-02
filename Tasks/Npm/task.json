@@ -9,27 +9,27 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 15
+        "Patch": 17
     },
     "demands": [
         "npm"
     ],
     "minimumAgentVersion": "1.91.0",
-    "groups": [
-        {
-            "name": "advanced",
-            "displayName": "Advanced",
-            "isExpanded": false
-        }
-    ],
     "instanceNameFormat": "npm $(command)",
     "inputs": [
         {
+            "name": "cwd",
+            "type": "filePath",
+            "label": "Working directory",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Working directory where the npm command is run. Defaults to the root of the repo."
+        },
+        {
             "name": "command",
             "type": "string",
-            "label": "Command",
+            "label": "npm command to execute",
             "defaultValue": "install",
-            "helpMarkDown": "npm command to run. [More Information](https://docs.npmjs.com/).",
             "required": true
         },
         {
@@ -39,15 +39,6 @@
             "defaultValue": "",
             "helpMarkDown": "Additional arguments passed to npm.",
             "required": false
-        },
-        {
-            "name": "cwd",
-            "type": "filePath",
-            "label": "Working Directory",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Current working directory where npm command is run.  Defaults to the root of the repo.",
-            "groupName": "advanced"
         }
     ],
     "execution": {
@@ -57,8 +48,11 @@
         }
     },
     "messages": {
-        "InvalidCommand": "Only one command should be used for npm. Use arguments input for additional arguments.",
-        "NpmReturnCode": "Npm exited with return code: %d",
-        "NpmFailed": "Npm failed with error: %s"
+        "InvalidCommand": "Only one command should be used for npm. Use 'Arguments' input for additional arguments.",
+        "NpmReturnCode": "npm exited with return code: %d",
+        "NpmFailed": "npm failed with error: %s",
+        "NpmConfigFailed": "Failed to log the npm config information. Error : %s",
+        "NpmAuthFailed": "Failed to get the required authentication tokens for npm. Error: %s",
+        "BuildCredentialsWarn": "Could not determine credentials to use for npm"
     }
 }

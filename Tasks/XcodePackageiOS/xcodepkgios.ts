@@ -1,9 +1,7 @@
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 
-var sourceDir = tl.getVariable('build.sourcesDirectory');
+var sourceDir = tl.getVariable('build.sourcesDirectory') || tl.getVariable('System.DefaultWorkingDirectory');
 
 var tool = tl.which('xcrun', true);
 var xcv = tl.createToolRunner(tool);

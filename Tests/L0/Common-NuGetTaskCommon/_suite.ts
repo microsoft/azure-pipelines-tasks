@@ -6,17 +6,10 @@ import trm = require('../../lib/taskRunner');
 import path = require('path');
 import util = require('util');
 
-// Paths aren't the same between compile time and run time. This will need some work
-let realrequire = require;
-function myrequire(module: string): any {
-    return realrequire(path.join(__dirname, "../../../Tasks/NuGetInstaller/node_modules", module));
-}
-require = <typeof require>myrequire;
-
-
-import locationHelper = require('nuget-task-common/LocationHelpers');
-import {NuGetQuirkName, NuGetQuirks} from 'nuget-task-common/NuGetQuirks';
-import VersionInfoVersion from 'nuget-task-common/pe-parser/VersionInfoVersion'
+let locationHelper = require('../../../Tasks/Common/nuget-task-common/LocationHelpers');
+let NuGetQuirkName = require('../../../Tasks/Common/nuget-task-common/NuGetQuirks').NuGetQuirkName;
+let NuGetQuirks = require('../../../Tasks/Common/nuget-task-common/NuGetQuirks').NuGetQuirks;
+let VersionInfoVersion = require('../../../Tasks/Common/nuget-task-common/pe-parser/VersionInfoVersion').VersionInfoVersion;
 
 describe("Common-NuGetTaskCommon Suite", () => {
 
@@ -62,13 +55,13 @@ describe("Common-NuGetTaskCommon Suite", () => {
     });
 
     describe("NuGetQuirks", function () {
-        interface VersionQuirks {
-            version: VersionInfoVersion;
-            displayVersion: string;
-            quirks: Set<NuGetQuirkName>;
-        }
+        // interface VersionQuirks {
+        //     version: VersionInfoVersion;
+        //     displayVersion: string;
+        //     quirks: Set<NuGetQuirkName>;
+        // }
 
-        let expectedQuirksByVersion: VersionQuirks[] = [
+        let expectedQuirksByVersion/*: VersionQuirks[]*/ = [
             {
                 version: new VersionInfoVersion(2, 8, 60717, 93),
                 displayVersion: "2.8.6",
@@ -154,7 +147,7 @@ describe("Common-NuGetTaskCommon Suite", () => {
                 for (const quirkInActualSet of actualQuirks) {
                     assert(
                         expected.quirks.has(quirkInActualSet),
-                        `version unexpectedly reports quirk ${NuGetQuirkName[quirkInActualSet]}`
+                        `version unexpectedly reports quirk ${NuGetQuirkName[quirkInActualSet as any]}`
                     )
                 }
             })

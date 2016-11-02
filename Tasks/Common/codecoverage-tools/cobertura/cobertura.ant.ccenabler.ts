@@ -1,8 +1,3 @@
-/// <reference path="../../../../definitions/Q.d.ts" />
-/// <reference path="../../../../definitions/string.d.ts" />
-/// <reference path="../../../../definitions/vsts-task-lib.d.ts" />
-/// <reference path="../../../../definitions/node.d.ts" />
-
 import * as Q from "q";
 import * as util from "../utilities";
 import * as tl from "vsts-task-lib/task";
@@ -46,10 +41,8 @@ export class CoberturaAntCodeCoverageEnabler extends cc.CoberturaCodeCoverageEna
 
         tl.debug("Reading the build file: " + _this.buildFile);
 
-        return util.readXmlFileAsJson(_this.buildFile)
-            .then(function (resp) {
-                return _this.addCodeCoverageData(resp);
-            })
+        let buildContent = util.readXmlFileAsDom(_this.buildFile);
+        return _this.addCodeCoverageData(buildContent)
             .thenResolve(true);
     }
 
@@ -68,25 +61,20 @@ export class CoberturaAntCodeCoverageEnabler extends cc.CoberturaCodeCoverageEna
         return ccfilter;
     }
 
-    protected getClassData(): any {
+    protected getClassData(): string {
         let _this = this;
-        let fileset = [];
+        let classData = "";
         let classDirs = _this.classDirs;
 
         if (str(classDirs).isEmpty()) {
             classDirs = ".";
         }
         classDirs.split(",").forEach(cdir => {
-            let filter = {
-                $: {
-                    dir: cdir,
-                    includes: _this.includeFilter,
-                    excludes: _this.excludeFilter
-                }
-            };
-            fileset.push(filter);
+            classData += classData + `
+            <fileset dir="${cdir}" includes="${_this.includeFilter}" excludes="${_this.excludeFilter}" />
+            `;
         });
-        return fileset;
+        return classData;
     }
 
     protected createReportFile(reportContent: string): Q.Promise<void> {
@@ -97,10 +85,10 @@ export class CoberturaAntCodeCoverageEnabler extends cc.CoberturaCodeCoverageEna
         return util.writeFile(reportFile, reportContent);
     }
 
-    protected addCodeCoverageData(pomJson: any): Q.Promise<any[]> {
+    protected addCodeCoverageData(pomJson: CheerioStatic): Q.Promise<any[]> {
         let _this = this;
 
-        if (!pomJson || !pomJson.project) {
+        if (!pomJson || !pomJson("project")) {
             return Q.reject<any>(tl.loc("InvalidBuildFile"));
         }
 
@@ -108,83 +96,59 @@ export class CoberturaAntCodeCoverageEnabler extends cc.CoberturaCodeCoverageEna
         return Q.all([_this.addCodeCoverageNodes(pomJson), _this.createReportFile(reportPluginData)]);
     }
 
-    protected addCodeCoverageNodes(buildJsonContent: any): Q.Promise<any> {
+    protected addCodeCoverageNodes(buildJsonContent: CheerioStatic): Q.Promise<any> {
         let _this = this;
 
-        if (!buildJsonContent.project.target) {
-            tl.debug("Build tag is not present");
+        if (!buildJsonContent("project").children("target")) {
+            tl.debug("Target tasks are not present");
             return Q.reject(tl.loc("InvalidBuildFile"));
         }
 
-        ccc.coberturaAntCoverageEnable(buildJsonContent.project);
+        buildJsonContent("project").prepend(ccc.coberturaAntCoverageEnable());
+        buildJsonContent("project").children("target").each(function (i, elem) {
+            _this.enableForking(buildJsonContent, elem);
+        });
 
-        if (!buildJsonContent.project.target || typeof buildJsonContent.project.target === "string") {
-            buildJsonContent.project.target = {};
-        }
-
-        if (buildJsonContent.project.target instanceof Array) {
-            buildJsonContent.project.target.forEach(element => {
-                _this.enableForking(element);
-            });
-        } else {
-            _this.enableForking(buildJsonContent.project.target);
-        }
-        return util.writeJsonAsXmlFile(_this.buildFile, buildJsonContent);
+        return util.writeFile(_this.buildFile, buildJsonContent.xml());
     }
 
-    protected enableForking(targetNode: any) {
+    protected enableForking(buildJsonContent: CheerioStatic, targetNode: CheerioElement) {
         let _this = this;
-        let coberturaNode = ccc.coberturaAntInstrumentedClasses(path.dirname(_this.buildFile), _this.reportDir);
-        coberturaNode.fileset = _this.getClassData();
         let testNodes = ["junit", "java", "testng", "batchtest"];
+        let buildDir = path.dirname(_this.buildFile);
+        let coberturaNode = ccc.coberturaAntProperties(path.join(buildDir, _this.reportDir), path.dirname(_this.buildFile));
+        let classData = ccc.coberturaAntInstrumentedClasses(buildDir, path.join(buildDir, _this.reportDir), _this.getClassData());
 
-        if (targetNode.javac) {
-            if (targetNode.javac instanceof Array) {
-                targetNode.javac.forEach(jn => {
-                    jn.$.debug = "true";
-                });
-            }
+        if (targetNode.children) {
+            targetNode.children.forEach(n => {
+                if (n.name && n.name === "javac") {
+                    n.attribs["debug"] = "true";
+                }
+            });
         }
 
         testNodes.forEach(tn => {
-            if (!targetNode[tn]) {
+            if (!targetNode.children) {
                 return;
             }
 
-            let node = targetNode[tn];
-            _this.enableForkOnTestNodes(node, true);
-            if (node instanceof Array) {
-                node.forEach(n => {
-                    ccc.coberturaAntProperties(n, _this.reportDir, path.dirname(_this.buildFile));
-                });
-            } else {
-                ccc.coberturaAntProperties(node, _this.reportDir, path.dirname(_this.buildFile));
+            targetNode.children.forEach(node => {
+                if (node.name && node.name === tn) {
+                    _this.enableForkOnTestNodes(node);
+                    buildJsonContent("project").children("target").children(tn).prepend(coberturaNode);
+                    buildJsonContent("project").children("target").children(tn).append(ccc.coberturaAntClasspathRef());
+                };
+            });
+            if (buildJsonContent("project").children("target").children(tn)
+                    && (!buildJsonContent("project").children("target").children("cobertura-instrument")
+                        || buildJsonContent("project").children("target").children("cobertura-instrument").length === 0)) {
+                buildJsonContent("project").children("target").children(tn).before(classData);
             }
-
-            targetNode["cobertura-instrument"] = coberturaNode;
         });
     }
 
-    protected enableForkOnTestNodes(testNode: any, enableForkMode: boolean) {
-        if (testNode instanceof Array) {
-            testNode.forEach(element => {
-                if (!element.$) {
-                    element.$ = {};
-                }
-                if (enableForkMode) {
-                    element.$.forkmode = "once";
-                }
-                element.$.fork = "true";
-
-            });
-        } else {
-            if (!testNode.$) {
-                testNode.$ = {};
-            }
-            if (enableForkMode) {
-                testNode.$.forkmode = "once";
-            }
-            testNode.$.fork = "true";
-        }
+    protected enableForkOnTestNodes(testNode: CheerioElement) {
+        testNode.attribs["forkmode"] = "once";
+        testNode.attribs["fork"] = "true";
     }
 }

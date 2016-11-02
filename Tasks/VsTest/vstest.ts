@@ -1,8 +1,8 @@
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 import Q = require('q');
+import ffl = require('find-files-legacy/findfiles.legacy');
+
 var os = require('os');
 var regedit = require('regedit');
 var uuid = require('node-uuid');
@@ -42,18 +42,29 @@ try {
     var sourcesDir = tl.getVariable('build.sourcesdirectory');
     var runIdFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
     var baseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
+    var vstestDiagFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
     var useNewCollectorFlag = tl.getVariable('tia.useNewCollector');
+    var isPrFlow = tl.getVariable('tia.isPrFlow');
+    var vsTestVersionForTIA: number[] = null;
 
-    var useNewCollector = true;
-    if (useNewCollectorFlag && useNewCollectorFlag.toUpperCase() == "FALSE") {
-        useNewCollector = false;
+    var useNewCollector = false;
+    if (useNewCollectorFlag && useNewCollectorFlag.toUpperCase() == "TRUE") {
+        useNewCollector = true;
     }
+    
+    var releaseuri = tl.getVariable("release.releaseUri")
+	var context = "CI";
+	if(releaseuri)
+	{
+		context = "CD";
+	}
 
-    var sourcesDirectory = tl.getVariable('System.DefaultWorkingDirectory');
+    var systemDefaultWorkingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
+    var artifactsDirectory = tl.getVariable('System.ArtifactsDirectory');
     var testAssemblyFiles = getTestAssemblies();
 
     if (testAssemblyFiles && testAssemblyFiles.size != 0) {
-        var workingDirectory = path.join(sourcesDirectory, "..");
+        var workingDirectory = sourcesDir && sourcesDir != '' ? systemDefaultWorkingDirectory : artifactsDirectory;
         getTestResultsDirectory(runSettingsFile, path.join(workingDirectory, 'TestResults')).then(function (resultsDirectory) {
             invokeVSTest(resultsDirectory)
                 .then(function (code) {
@@ -62,61 +73,84 @@ try {
                             publishTestResults(resultsDirectory);
                         }
                         tl.setResult(code, tl.loc('VstestReturnCode', code));
+                        deleteVstestDiagFile();
                     }
                     catch (error) {
+                        deleteVstestDiagFile();
                         tl._writeLine("##vso[task.logissue type=error;code=" + error + ";TaskName=VSTest]");
                         throw error;
                     }
                 })
                 .fail(function (err) {
+                    deleteVstestDiagFile();
                     tl._writeLine("##vso[task.logissue type=error;code=" + err + ";TaskName=VSTest]");
                     throw err;
                 });
         });
     }
     else {
+        deleteVstestDiagFile();
         tl._writeLine("##vso[task.logissue type=warning;code=002004;]");
         tl.warning(tl.loc('NoMatchingTestAssemblies', testAssembly));
     }
 }
 catch (error) {
+    deleteVstestDiagFile();
     tl._writeLine("##vso[task.logissue type=error;code=" + error + ";TaskName=VSTest]");
     throw error;
 }
 
-function getTestAssemblies(): Set<string> {
-    var testAssemblyFiles = [];
-    if (testAssembly.indexOf('*') >= 0 || testAssembly.indexOf('?') >= 0) {
-        tl.debug('Pattern found in solution parameter.');
-        var excludeTestAssemblies = [];
-        var allFiles = tl.find(sourcesDirectory);
-        var testAssemblyFilters = testAssembly.split(';');
-        testAssemblyFilters.forEach(function (testAssemblyFilter) {
-            if (testAssemblyFilter.startsWith("-:")) {
-                if (testAssemblyFilter.indexOf('*') >= 0 || testAssemblyFilter.indexOf('?') >= 0) {
-                    excludeTestAssemblies = excludeTestAssemblies.concat(getFilteredFiles(testAssemblyFilter.substr(2), allFiles));
-                }
-                else {
-                    excludeTestAssemblies.push(testAssemblyFilter.substr(2));
-                }
-            }
-            else if (testAssemblyFilter.indexOf('*') >= 0 || testAssemblyFilter.indexOf('?') >= 0) {
-                testAssemblyFiles = testAssemblyFiles.concat(getFilteredFiles(testAssemblyFilter, allFiles));
-            }
-            else {
-                testAssemblyFiles.push(testAssemblyFilter);
-            }
-        });
-        testAssemblyFiles = testAssemblyFiles.filter(x => excludeTestAssemblies.indexOf(x) < 0);
+function getResolvedPattern(pattern: string): string {
+    if (path.isAbsolute(pattern)) {
+        return pattern;
     }
     else {
-        tl.debug('No Pattern found in solution parameter.');
-        var assemblies = testAssembly.split(';');
-        assemblies.forEach(function (assembly) {
-            testAssemblyFiles.push(assembly);
-        });
+        return path.join(systemDefaultWorkingDirectory, pattern);
     }
-    return new Set(testAssemblyFiles);
+}
+
+function getPatternWithoutIncludeExclude(pattern: string): string {
+    return pattern.startsWith('-:') || pattern.startsWith('+:') ? pattern.substr(2) : pattern;
+}
+
+function getFilteredFilesFromPattern(pattern: string, hasQuantifier: boolean, allFiles: string[]): string[] {
+    return hasQuantifier ? getFilteredFiles(pattern, allFiles) : [pattern];
+}
+
+function getTestAssemblies(): Set<string> {
+    return new Set(ffl.findFiles(testAssembly, false, systemDefaultWorkingDirectory));
+}
+
+function getVsTestVersion(): number[] {
+    let vstestLocationEscaped = vstestLocation.replace(/\\/g, "\\\\");
+    let wmicTool = tl.createToolRunner("wmic");
+    let wmicArgs = ["datafile", "where", "name='".concat(vstestLocationEscaped, "'"), "get", "Version", "/Value"];
+    wmicTool.arg(wmicArgs);
+    let output = wmicTool.execSync();
+
+    let verSplitArray = output.stdout.split("=");
+    if (verSplitArray.length != 2) {
+        tl.warning(tl.loc("ErrorReadingVstestVersion"));
+        return null;
+    }
+
+    let versionArray = verSplitArray[1].split(".");
+    if (versionArray.length != 4) {
+        tl.warning(tl.loc("UnexpectedVersionString", output.stdout));
+        return null;
+    }
+
+    let vsVersion: number[] = [];
+    vsVersion[0] = parseInt(versionArray[0]);
+    vsVersion[1] = parseInt(versionArray[1]);
+    vsVersion[2] = parseInt(versionArray[2]);
+
+    if (isNaN(vsVersion[0]) || isNaN(vsVersion[1]) || isNaN(vsVersion[2])) {
+        tl.warning(tl.loc("UnexpectedVersionNumber", verSplitArray[1]));
+        return null;
+    }
+
+    return vsVersion;    
 }
 
 function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[] {
@@ -124,13 +158,13 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
     testAssemblyFiles.forEach(function (testAssembly) {
         var testAssemblyPath = testAssembly;
         //To maintain parity with the behaviour when test assembly was filepath, try to expand it relative to build sources directory.
-        if (sourcesDirectory && !pathExistsAsFile(testAssembly)) {
-            var expandedPath = path.join(sourcesDirectory, testAssembly);
+        if (systemDefaultWorkingDirectory && !pathExistsAsFile(testAssembly)) {
+            var expandedPath = path.join(systemDefaultWorkingDirectory, testAssembly);
             if (pathExistsAsFile(expandedPath)) {
                 testAssemblyPath = expandedPath;
             }
         }
-        argsArray.push(testAssemblyPath);
+       argsArray.push(testAssemblyPath);       
     });
     if (testFiltercriteria) {
         if (!tiaEnabled) {
@@ -159,20 +193,36 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
             argsArray.push("/TestAdapterPath:\"" + path.dirname(pathtoCustomTestAdapters) + "\"");
         }
     }
-    else if (sourcesDirectory && isNugetRestoredAdapterPresent(sourcesDirectory)) {
-        argsArray.push("/TestAdapterPath:\"" + sourcesDirectory + "\"");
+    else if (systemDefaultWorkingDirectory && isNugetRestoredAdapterPresent(systemDefaultWorkingDirectory)) {
+        argsArray.push("/TestAdapterPath:\"" + systemDefaultWorkingDirectory + "\"");
     }
+
+    let sysDebug = tl.getVariable("System.Debug");
+    if (sysDebug !== undefined && sysDebug.toLowerCase() === "true") {
+        if (vsTestVersionForTIA !== null && (vsTestVersionForTIA[0] > 15 || (vsTestVersionForTIA[0] == 15 && (vsTestVersionForTIA[1] > 0 || vsTestVersionForTIA[2] > 25428)))) {
+            argsArray.push("/diag:" + vstestDiagFile);
+        }
+        else {
+            tl.warning(tl.loc("VstestDiagNotSupported"));
+        }
+    }
+    
     return argsArray;
 }
 
 function addVstestArgs(argsArray: string[], vstest: any) {
-    argsArray.forEach(function (arr) {
+    argsArray.forEach(function (arr) {            
         vstest.arg(arr);
     });
 }
 
 function updateResponseFile(argsArray: string[], responseFile: string): Q.Promise<string> {
     var defer = Q.defer<string>();
+    argsArray.forEach(function (arr, i) {
+        if (!arr.startsWith('/')) {
+            argsArray[i] = "\"" + arr + "\"";
+        }
+    }); 
     fs.appendFile(responseFile, os.EOL + argsArray.join(os.EOL), function (err) {
         if (err) {
             defer.reject(err);
@@ -195,9 +245,13 @@ function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
     var endTime;
     var elapsedTime;
     var defer = Q.defer<string>();
-
-    var allFilesInResultsDirectory = tl.find(testResultsDirectory);
-    var resultFiles = tl.match(allFilesInResultsDirectory, "*.trx", { matchBase: true });
+    var allFilesInResultsDirectory;
+    var resultFiles;
+    if (testResultsDirectory && testResultsDirectory !== "")
+    {
+        allFilesInResultsDirectory = tl.find(testResultsDirectory);
+        resultFiles = tl.match(allFilesInResultsDirectory, path.join(testResultsDirectory, "*.trx"), { matchBase: true });
+    }
 
     var selectortool = tl.createToolRunner(getTestSelectorLocation());
     selectortool.arg("UpdateTestResults");
@@ -205,7 +259,11 @@ function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
     selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
     selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
     selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
-    selectortool.arg("/ResultFile:" + resultFiles[0]);
+
+    if (resultFiles && resultFiles[0])
+    {
+        selectortool.arg("/ResultFile:" + resultFiles[0]);
+    }
     selectortool.arg("/runidfile:" + runIdFile);
     selectortool.exec()
         .then(function (code) {
@@ -233,13 +291,29 @@ function generateResponseFile(discoveredTests: string): Q.Promise<string> {
     selectortool.arg("GetImpactedtests");
     selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
     selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
-    selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
+
+    if(context == "CD")
+	{	
+        // Release context. Passing Release Id.
+        selectortool.arg("/buildid:" + tl.getVariable("Release.ReleaseId"));
+        selectortool.arg("/releaseuri:" + tl.getVariable("release.releaseUri"));
+        selectortool.arg("/releaseenvuri:" + tl.getVariable("release.environmentUri"));	
+	}
+	else
+	{
+        // Build context. Passing build id.
+        selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
+	}
+    
     selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
     selectortool.arg("/responsefile:" + respFile);
     selectortool.arg("/DiscoveredTests:" + discoveredTests);
     selectortool.arg("/runidfile:" + runIdFile);
     selectortool.arg("/testruntitle:" + testRunTitle);
     selectortool.arg("/BaseLineFile:" + baseLineBuildIdFile);
+    selectortool.arg("/platform:" + platform);
+    selectortool.arg("/configuration:" + configuration);    
+	selectortool.arg("/Context:" + context);
 
     selectortool.exec()
         .then(function (code) {
@@ -270,16 +344,35 @@ function publishCodeChanges(): Q.Promise<string> {
     selectortool.arg("PublishCodeChanges");
     selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
     selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
-    selectortool.arg("/Definitionid:" + tl.getVariable("System.DefinitionId"));
-    selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
+
+    if(context == "CD")
+	{	
+        // Release context. Passing Release Id.
+        selectortool.arg("/buildid:" + tl.getVariable("Release.ReleaseId"));	
+        selectortool.arg("/Definitionid:" + tl.getVariable("release.DefinitionId"));
+	}
+	else
+	{
+        // Build context. Passing build id.
+        selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
+        selectortool.arg("/Definitionid:" + tl.getVariable("System.DefinitionId"));
+	}
+
+    
     selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
     selectortool.arg("/SourcesDir:" + sourcesDir);
     selectortool.arg("/newprovider:" + newprovider);
     selectortool.arg("/BaseLineFile:" + baseLineBuildIdFile);
+
+    if (isPrFlow && isPrFlow.toUpperCase() == "TRUE") {
+        selectortool.arg("/IsPrFlow:" + "true");
+    }
+
     if (tiaRebaseLimit) {
         selectortool.arg("/RebaseLimit:" + tiaRebaseLimit);
     }
-
+    selectortool.arg("/Context:" + context);
+    
     selectortool.exec()
         .then(function (code) {
             endTime = perf();
@@ -298,13 +391,17 @@ function getVSTestLocation(vsVersion: number): string {
     if (vstestLocationMethod.toLowerCase() === 'version') {
         let vsCommon: string = tl.getVariable('VS' + vsVersion + '0COMNTools');
         if (!vsCommon) {
-            throw(new Error(tl.loc('VstestNotFound', vsVersion)));
+            throw (new Error(tl.loc('VstestNotFound', vsVersion)));
         } else {
             return path.join(vsCommon, '..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe');
         }
-    } else if(vstestLocationMethod.toLowerCase() === 'location') {
+    } else if (vstestLocationMethod.toLowerCase() === 'location') {
         if (!pathExistsAsFile(vstestLocation)) {
-            throw(new Error(tl.loc('AccessDeniedToPath', vstestLocation)));
+            if (pathExistsAsDirectory(vstestLocation)) {
+                return path.join(vstestLocation, 'vstest.console.exe');
+            } else {
+                throw (new Error(tl.loc('PathDoesNotExist', vstestLocation)));
+            }
         } else {
             return vstestLocation;
         }
@@ -313,13 +410,6 @@ function getVSTestLocation(vsVersion: number): string {
 
 function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: string, vsVersion: number, argsArray: string[]): Q.Promise<number> {
     var defer = Q.defer<number>();
-    try {
-        vstestLocation = getVSTestLocation(vsVersion);
-    } catch (e) {
-        tl.error(e.message);
-        defer.resolve(1);
-        return defer.promise;
-    }
     var vstest = tl.createToolRunner(vstestLocation);
     addVstestArgs(argsArray, vstest);
 
@@ -348,8 +438,8 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
 
     testAssemblyFiles.forEach(function (testAssembly) {
         var testAssemblyPath = testAssembly;
-        if (sourcesDirectory && !pathExistsAsFile(testAssembly)) {
-            var expandedPath = path.join(sourcesDirectory, testAssembly);
+        if (systemDefaultWorkingDirectory && !pathExistsAsFile(testAssembly)) {
+            var expandedPath = path.join(systemDefaultWorkingDirectory, testAssembly);
             if (pathExistsAsFile(expandedPath)) {
                 testAssemblyPath = expandedPath;
             }
@@ -364,14 +454,22 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
     if (testFiltercriteria) {
         argsArray.push("/TestCaseFilter:" + testFiltercriteria);
     }
-
-    var vsCommon = tl.getVariable("VS" + vsVersion + "0COMNTools");
-    if (!vsCommon) {
-        tl.error(tl.loc('VstestNotFound', vsVersion));
-        defer.resolve(tl.loc('VstestNotFound', vsVersion));
-        return defer.promise;
+    if (pathtoCustomTestAdapters) {
+        if (pathExistsAsDirectory(pathtoCustomTestAdapters)) {
+            argsArray.push("/TestAdapterPath:\"" + pathtoCustomTestAdapters + "\"");
+        }
+        else {
+            argsArray.push("/TestAdapterPath:\"" + path.dirname(pathtoCustomTestAdapters) + "\"");
+        }
     }
-    var vstestLocation = path.join(vsCommon, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe");
+    else if (systemDefaultWorkingDirectory && isNugetRestoredAdapterPresent(systemDefaultWorkingDirectory)) {
+        argsArray.push("/TestAdapterPath:\"" + systemDefaultWorkingDirectory + "\"");
+    }
+
+    if ((otherConsoleOptions && otherConsoleOptions.toLowerCase().indexOf("usevsixextensions:true") != -1) || (pathtoCustomTestAdapters && pathtoCustomTestAdapters.toLowerCase().indexOf("usevsixextensions:true") != -1)) {
+        argsArray.push("/UseVsixExtensions:true");
+    }
+
     var vstest = tl.createToolRunner(vstestLocation);
     addVstestArgs(argsArray, vstest);
 
@@ -386,6 +484,22 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
             defer.resolve(err);
         });
     return defer.promise;
+}
+
+function cleanFiles(responseFile: string, listFile: string): void {
+    tl.debug("Deleting the response file " + responseFile);
+    tl.rmRF(responseFile, true);
+    tl.debug("Deleting the discovered tests file " + listFile);
+    tl.rmRF(listFile, true);
+    tl.debug("Deleting the baseline build id file " + baseLineBuildIdFile);
+    tl.rmRF(baseLineBuildIdFile, true);
+}
+
+function deleteVstestDiagFile(): void {
+    if (pathExistsAsFile(vstestDiagFile)) {
+        tl.debug("Deleting vstest diag file " + vstestDiagFile);
+        tl.rmRF(vstestDiagFile, true);
+    }
 }
 
 function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion: number): Q.Promise<number> {
@@ -403,12 +517,10 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                         .then(function (vscode) {
                                             uploadTestResults(testResultsDirectory)
                                                 .then(function (code) {
-                                                    if (!isNaN(+code) && +code != 0)
-                                                    {
+                                                    if (!isNaN(+code) && +code != 0) {
                                                         defer.resolve(+code);
                                                     }
-                                                    else if (vscode != 0)
-                                                    {
+                                                    else if (vscode != 0) {
                                                         defer.resolve(vscode);
                                                     }
 
@@ -419,30 +531,40 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                     defer.resolve(1);
                                                 })
                                                 .finally(function () {
-                                                    tl.debug("Deleting the response file" + responseFile);
-                                                    tl.rmRF(responseFile, true);
-                                                    tl.debug("Deleting the discovered tests file" + listFile);
-                                                    tl.rmRF(listFile, true);
+                                                    cleanFiles(responseFile, listFile);
+                                                    tl.debug("Deleting the run id file" + runIdFile);
+                                                    tl.rmRF(runIdFile, true);
                                                 });
                                         })
                                         .fail(function (code) {
                                             defer.resolve(code);
                                         })
                                         .finally(function () {
-                                            tl.debug("Deleting the response file" + responseFile);
-                                            tl.rmRF(responseFile, true);
-                                            tl.debug("Deleting the discovered tests file" + listFile);
-                                            tl.rmRF(listFile, true);
+                                            cleanFiles(responseFile, listFile);
                                         });
                                 }
                                 else {
                                     responseContainsNoTests(responseFile)
                                         .then(function (noTestsAvailable) {
-                                            if (noTestsAvailable) {
+                                            if (noTestsAvailable) {                                                
                                                 tl.debug("No tests impacted. Not running any tests.");
-                                                tl.debug("Deleting the response file " + responseFile)
-                                                tl.rmRF(responseFile, true);
-                                            }
+                                                uploadTestResults("")
+                                                    .then(function (code) {
+                                                        if (!isNaN(+code) && +code != 0) {
+                                                            defer.resolve(+code);
+                                                        }   
+                                                        defer.resolve(0);
+                                                    })
+                                                    .fail(function (code) {
+                                                        tl.debug("Test Run Updation failed!");
+                                                        defer.resolve(1);
+                                                    })
+                                                    .finally(function () {
+                                                        cleanFiles(responseFile, listFile);
+                                                        tl.debug("Deleting the run id file" + runIdFile);
+                                                        tl.rmRF(runIdFile, true);
+                                                    });
+                                            }                                                
                                             else {
                                                 updateResponseFile(getVstestArguments(settingsFile, true), responseFile)
                                                     .then(function (updatedFile) {
@@ -450,12 +572,10 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                             .then(function (vscode) {
                                                                 uploadTestResults(testResultsDirectory)
                                                                     .then(function (code) {
-                                                                        if (!isNaN(+code) && +code != 0)
-                                                                        {
+                                                                        if (!isNaN(+code) && +code != 0) {
                                                                             defer.resolve(+code);
                                                                         }
-                                                                        else if (vscode != 0)
-                                                                        {
+                                                                        else if (vscode != 0) {
                                                                             defer.resolve(vscode);
                                                                         }
 
@@ -466,20 +586,16 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                                         defer.resolve(1);
                                                                     })
                                                                     .finally(function () {
-                                                                        tl.debug("Deleting the response file" + responseFile);
-                                                                        tl.rmRF(responseFile, true);
-                                                                        tl.debug("Deleting the discovered tests file" + listFile);
-                                                                        tl.rmRF(listFile, true);
+                                                                        cleanFiles(responseFile, listFile);
+                                                                        tl.debug("Deleting the run id file" + runIdFile);
+                                                                        tl.rmRF(runIdFile, true);
                                                                     });
                                                             })
                                                             .fail(function (code) {
                                                                 defer.resolve(code);
                                                             })
                                                             .finally(function () {
-                                                                tl.debug("Deleting the response file" + responseFile)
-                                                                tl.rmRF(responseFile, true);
-                                                                tl.debug("Deleting the discovered tests file" + listFile);
-                                                                tl.rmRF(listFile, true);
+                                                                cleanFiles(responseFile, listFile);
                                                             });
                                                     })
                                                     .fail(function (err) {
@@ -489,12 +605,10 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                             .then(function (vscode) {
                                                                 uploadTestResults(testResultsDirectory)
                                                                     .then(function (code) {
-                                                                        if (!isNaN(+code) && +code != 0)
-                                                                        {
+                                                                        if (!isNaN(+code) && +code != 0) {
                                                                             defer.resolve(+code);
                                                                         }
-                                                                        else if (vscode != 0)
-                                                                        {
+                                                                        else if (vscode != 0) {
                                                                             defer.resolve(vscode);
                                                                         }
 
@@ -505,19 +619,15 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                                         defer.resolve(1);
                                                                     })
                                                                     .finally(function () {
-                                                                        tl.debug("Deleting the response file" + responseFile);
-                                                                        tl.rmRF(responseFile, true);
-                                                                        tl.debug("Deleting the discovered tests file" + listFile);
-                                                                        tl.rmRF(listFile, true);
+                                                                        cleanFiles(responseFile, listFile);
+                                                                        tl.debug("Deleting the run id file" + runIdFile);
+                                                                        tl.rmRF(runIdFile, true);
                                                                     });
                                                             })
                                                             .fail(function (code) {
                                                                 defer.resolve(code);
                                                             }).finally(function () {
-                                                                tl.debug("Deleting the response file" + responseFile)
-                                                                tl.rmRF(responseFile, true);
-                                                                tl.debug("Deleting the discovered tests file" + listFile);
-                                                                tl.rmRF(listFile, true);
+                                                                cleanFiles(responseFile, listFile);
                                                             });
                                                     });
                                             }
@@ -531,12 +641,10 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                     .then(function (vscode) {
                                         uploadTestResults(testResultsDirectory)
                                             .then(function (code) {
-                                                if (!isNaN(+code) && +code != 0)
-                                                {
+                                                if (!isNaN(+code) && +code != 0) {
                                                     defer.resolve(+code);
                                                 }
-                                                else if (vscode != 0)
-                                                {
+                                                else if (vscode != 0) {
                                                     defer.resolve(vscode);
                                                 }
 
@@ -597,6 +705,26 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
         .then(function (overriddenSettingsFile) {
             locateVSVersion()
                 .then(function (vsVersion) {
+                    try {
+                        vstestLocation = getVSTestLocation(vsVersion);
+                        let disableTIA = tl.getVariable("DisableTestImpactAnalysis");
+                        if (disableTIA !== undefined && disableTIA.toLowerCase() === "true") {
+                            tiaEnabled = false;
+                        }
+                        let sysDebug = tl.getVariable("System.Debug");
+                        if ((sysDebug !== undefined && sysDebug.toLowerCase() === "true") || tiaEnabled) {
+                            vsTestVersionForTIA = getVsTestVersion();
+
+                            if (tiaEnabled && (vsTestVersionForTIA == null || (vsTestVersionForTIA[0] < 15 || (vsTestVersionForTIA[0] == 15 && vsTestVersionForTIA[1] == 0 && vsTestVersionForTIA[2] < 25727)))) {
+                                tl.warning(tl.loc("VstestTIANotSupported"));
+                                tiaEnabled = false;
+                            }
+                        }                                            
+                    } catch (e) {
+                        tl.error(e.message);
+                        defer.resolve(1);
+                        return defer.promise;
+                    }
                     setupSettingsFileForTestImpact(vsVersion, overriddenSettingsFile)
                         .then(function (runSettingswithTestImpact) {
                             setRunInParallellIfApplicable(vsVersion);
@@ -636,7 +764,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
 function publishTestResults(testResultsDirectory: string) {
     if (testResultsDirectory) {
         var allFilesInResultsDirectory = tl.find(testResultsDirectory);
-        var resultFiles = tl.match(allFilesInResultsDirectory, "*.trx", { matchBase: true });
+        var resultFiles = tl.match(allFilesInResultsDirectory, path.join(testResultsDirectory, "*.trx"), { matchBase: true });
         if (resultFiles && resultFiles.length != 0) {
             var tp = new tl.TestPublisher("VSTest");
             tp.publish(resultFiles, "false", platform, configuration, testRunTitle, publishRunAttachments);
@@ -795,7 +923,7 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
 
 
 function getTIAssemblyQualifiedName(vsVersion: number): String {
-    return "Microsoft.VisualStudio.TraceCollector.TestImpactDataCollector, Microsoft.VisualStudio.TraceCollector, Version=" + vsVersion + ".0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
+    return "Microsoft.VisualStudio.TraceCollector.TestImpactDataCollector, Microsoft.VisualStudio.TraceCollector, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
 }
 
 function getTestImpactAttributes(vsVersion: number) {
@@ -811,7 +939,7 @@ function getTestImpactAttributesWithoutNewCollector(vsVersion: number) {
     return {
         uri: TICollectorURI,
         assemblyQualifiedName: getTIAssemblyQualifiedName(vsVersion),
-        friendlyName: TIFriendlyName        
+        friendlyName: TIFriendlyName
     };
 }
 
@@ -838,13 +966,41 @@ function pushImpactLevelAndRootPathIfNotFound(dataCollectorArray): void {
                 dataCollectorArray[i] = { Configuration: {} };
             }
             if (dataCollectorArray[i].Configuration.TestImpact && !dataCollectorArray[i].Configuration.RootPath) {
-                dataCollectorArray[i].Configuration = { RootPath: sourcesDir };
+                if (context && context == "CD")
+                {
+                    dataCollectorArray[i].Configuration = { RootPath: "" };
+                }
+                else{
+                    dataCollectorArray[i].Configuration = { RootPath: sourcesDir };
+                }
             }
             else if (!dataCollectorArray[i].Configuration.TestImpact && dataCollectorArray[i].Configuration.RootPath) {
-                dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel() };
+                if (getTIALevel() == 'file') {
+                    dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), LogFilePath: 'true' };
+                }
+                else {
+                    dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel() };
+                }
             }
             else if (dataCollectorArray[i].Configuration && !dataCollectorArray[i].Configuration.TestImpact && !dataCollectorArray[i].Configuration.RootPath) {
-                dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), RootPath: sourcesDir };
+                if (context && context == "CD")
+                {
+                    if (getTIALevel() == 'file') {
+                        dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), LogFilePath: 'true', RootPath: "" };
+                    }
+                    else {
+                        dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), RootPath: "" };
+                    }                    
+                }
+                else
+                {
+                    if (getTIALevel() == 'file') {
+                        dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), LogFilePath: 'true', RootPath: sourcesDir };
+                    }
+                    else {
+                        dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), RootPath: sourcesDir };
+                    }
+                }
             }
 
             //Adding the codebase attribute to TestImpact collector 
@@ -853,7 +1009,21 @@ function pushImpactLevelAndRootPathIfNotFound(dataCollectorArray): void {
                 if (!dataCollectorArray[i].$.codebase) {
                     dataCollectorArray[i].$.codebase = getTraceCollectorUri();
                 }
-            }            
+            }
+        }
+    }
+}
+
+function roothPathGenerator() : any
+{
+    if (context)
+    {
+        if (context == "CD")
+        {
+            return { ImpactLevel: getTIALevel(), RootPath: "" };
+        }
+        else{
+            return { ImpactLevel: getTIALevel(), RootPath: sourcesDir };
         }
     }
 }
@@ -862,30 +1032,30 @@ function updateRunSettings(result: any, vsVersion: number) {
     var dataCollectorNode = null;
     if (!result.RunSettings) {
         tl.debug("Updating runsettings file from RunSettings node");
-        result.RunSettings = { DataCollectionRunSettings: { DataCollectors: { DataCollector: { Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } } } } };
+        result.RunSettings = { DataCollectionRunSettings: { DataCollectors: { DataCollector: { Configuration: roothPathGenerator()} } } };
         dataCollectorNode = result.RunSettings.DataCollectionRunSettings.DataCollectors.DataCollector;
     }
     else if (!result.RunSettings.DataCollectionRunSettings) {
         tl.debug("Updating runsettings file from DataCollectionSettings node");
-        result.RunSettings.DataCollectionRunSettings = { DataCollectors: { DataCollector: { Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } } } };
+        result.RunSettings.DataCollectionRunSettings = { DataCollectors: { DataCollector: { Configuration: roothPathGenerator() } } };
         dataCollectorNode = result.RunSettings.DataCollectionRunSettings.DataCollectors.DataCollector;
     }
     else if (!result.RunSettings.DataCollectionRunSettings[0].DataCollectors) {
         tl.debug("Updating runsettings file from DataCollectors node");
-        result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: { Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } } } };
+        result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: { Configuration: roothPathGenerator() } } };
         dataCollectorNode = result.RunSettings.DataCollectionRunSettings[0].DataCollectors.DataCollector;
     }
     else {
         var dataCollectorArray = result.RunSettings.DataCollectionRunSettings[0].DataCollectors[0].DataCollector;
         if (!dataCollectorArray) {
             tl.debug("Updating runsettings file from DataCollector node");
-            result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: { Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } } } };
+            result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: { Configuration: roothPathGenerator() } } };
             dataCollectorNode = result.RunSettings.DataCollectionRunSettings[0].DataCollectors.DataCollector;
         }
         else {
             if (!isTestImapctCollectorPresent(dataCollectorArray)) {
                 tl.debug("Updating runsettings file, adding a DataCollector node");
-                dataCollectorArray.push({ Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } });
+                dataCollectorArray.push({ Configuration: roothPathGenerator() });
                 dataCollectorNode = dataCollectorArray[dataCollectorArray.length - 1];
             }
             else {
@@ -900,7 +1070,7 @@ function updateRunSettings(result: any, vsVersion: number) {
         }
         else {
             dataCollectorNode.$ = getTestImpactAttributesWithoutNewCollector(vsVersion);
-        }        
+        }
     }
 }
 
@@ -942,39 +1112,39 @@ function updatTestSettings(result: any, vsVersion: number) {
     var dataCollectorNode = null;
     if (!result.TestSettings) {
         tl.debug("Updating testsettings file from TestSettings node");
-        result.TestSettings = { Execution: { AgentRule: { DataCollectors: { DataCollector: { Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } } } } } };
+        result.TestSettings = { Execution: { AgentRule: { DataCollectors: { DataCollector: { Configuration: roothPathGenerator() } } } } };
         result.TestSettings.Execution.AgentRule.$ = { name: TITestSettingsAgentNameTag };
         result.TestSettings.$ = { name: TITestSettingsNameTag, id: TITestSettingsIDTag, xmlns: TITestSettingsXmlnsTag };
         dataCollectorNode = result.TestSettings.Execution.AgentRule.DataCollectors.DataCollector;
     }
     else if (!result.TestSettings.Execution) {
         tl.debug("Updating testsettings file from Execution node");
-        result.TestSettings.Execution = { AgentRule: { DataCollectors: { DataCollector: { Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } } } } };
+        result.TestSettings.Execution = { AgentRule: { DataCollectors: { DataCollector: { Configuration: roothPathGenerator() } } } };
         result.TestSettings.Execution.AgentRule.$ = { name: TITestSettingsAgentNameTag };
         dataCollectorNode = result.TestSettings.Execution.AgentRule.DataCollectors.DataCollector;
     }
     else if (!result.TestSettings.Execution[0].AgentRule) {
         tl.debug("Updating testsettings file from AgentRule node");
-        result.TestSettings.Execution[0] = { AgentRule: { DataCollectors: { DataCollector: { Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } } } } };
+        result.TestSettings.Execution[0] = { AgentRule: { DataCollectors: { DataCollector: { Configuration: roothPathGenerator() } } } };
         result.TestSettings.Execution[0].AgentRule.$ = { name: TITestSettingsAgentNameTag };
         dataCollectorNode = result.TestSettings.Execution[0].AgentRule.DataCollectors.DataCollector;
     }
     else if (!result.TestSettings.Execution[0].AgentRule[0].DataCollectors) {
         tl.debug("Updating testsettings file from DataCollectors node");
-        result.TestSettings.Execution[0].AgentRule[0] = { DataCollectors: { DataCollector: { Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } } } };
+        result.TestSettings.Execution[0].AgentRule[0] = { DataCollectors: { DataCollector: { Configuration: roothPathGenerator() } } };
         dataCollectorNode = result.TestSettings.Execution[0].AgentRule[0].DataCollectors.DataCollector;
     }
     else {
         var dataCollectorArray = result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector;
         if (!dataCollectorArray) {
             tl.debug("Updating testsettings file from DataCollector node");
-            result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0] = { DataCollector: { Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } } };
+            result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0] = { DataCollector: { Configuration: roothPathGenerator() } };
             dataCollectorNode = result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector;
         }
         else {
             if (!isTestImapctCollectorPresent(dataCollectorArray)) {
                 tl.debug("Updating testsettings file, adding a DataCollector node");
-                dataCollectorArray.push({ Configuration: { ImpactLevel: getTIALevel(), RootPath: sourcesDir } });
+                dataCollectorArray.push({ Configuration: roothPathGenerator() });
                 dataCollectorNode = dataCollectorArray[dataCollectorArray.length - 1];
             }
             else {
@@ -989,7 +1159,7 @@ function updatTestSettings(result: any, vsVersion: number) {
         }
         else {
             dataCollectorNode.$ = getTestImpactAttributesWithoutNewCollector(vsVersion);
-        }        
+        }
     }
 }
 
@@ -1062,8 +1232,15 @@ function createRunSettingsForTestImpact(vsVersion: number, settingsFile: string,
     runSettingsForTIA = runSettingsForTIA +
         ' >' +
         '<Configuration>' +
-        '<ImpactLevel>' + getTIALevel() + '</ImpactLevel>' +
-        '<RootPath>' + sourcesDir + '</RootPath>' +
+        '<ImpactLevel>' + getTIALevel() + '</ImpactLevel>';
+
+    if (getTIALevel() == 'file') {
+        runSettingsForTIA = runSettingsForTIA +
+            '<LogFilePath>' + 'true' + '</LogFilePath>';
+    }
+
+    runSettingsForTIA = runSettingsForTIA +
+        '<RootPath>' + (context == "CD" ? "" : sourcesDir) + '</RootPath>' +
         '</Configuration>' +
         '</DataCollector>' +
         '</DataCollectors></DataCollectionRunSettings></RunSettings>';
@@ -1211,19 +1388,28 @@ function saveToFile(fileContents: string, extension: string): Q.Promise<string> 
 
 function setRunInParallellIfApplicable(vsVersion: number) {
     if (runInParallel) {
-        if (!isNaN(vsVersion) && vsVersion >= 14) {
-            if (vsVersion >= 15) { // moved away from taef
-                return;
-            }
+        if (vstestLocationMethod.toLowerCase() === 'version') {
+            if (!isNaN(vsVersion) && vsVersion >= 14) {
+                if (vsVersion >= 15) { // moved away from taef
+                    return;
+                }
 
-            // in 14.0 taef parellization needed taef enabled
-            var vs14Common = tl.getVariable("VS140COMNTools");
+                // in 14.0 taef parellization needed taef enabled
+                let vs14Common: string = tl.getVariable("VS140COMNTools");
+                if (vs14Common && pathExistsAsFile(path.join(vs14Common, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll"))) {
+                    setRegistryKeyForParallelExecution(vsVersion);
+                    return;
+                }
+            }
+            resetRunInParallel();
+        }
+        else if (vstestLocationMethod.toLowerCase() === 'location') {
+            let vs14Common: string = tl.getVariable("VS140COMNTools");
             if (vs14Common && pathExistsAsFile(path.join(vs14Common, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll"))) {
                 setRegistryKeyForParallelExecution(vsVersion);
                 return;
             }
         }
-        resetRunInParallel();
     }
 }
 

@@ -109,7 +109,7 @@ if ($drop.dropType -eq "InPlaceDrop")
     $summaryFile =  ("{0}\QuickPerfTestResults_{1}_{2}_{3}_{4}.md" -f $resultsMDFolder, $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID, $run.id)	
     $summary = ('[Test Run: {0}]({1}) using {2}.<br/>' -f  $run.runNumber, $webResultsUrl ,$run.name)
 
-	('<p>{0}</p>' -f $summary) >>  $summaryFile
+	('<p>{0}</p>' -f $summary) | Out-File  $summaryFile -Encoding ascii -Append
     UploadSummaryMdReport $summaryFile
 }
 else
