@@ -58,7 +58,7 @@ async function substituteXmlVariables(configFile, tags){
             }  
         }
     }
-    fs.writeFile(configFile, xmlDocument.root().toString(), function(error) {
+    fs.writeFile(configFile, ltxdomutility.getContentWithHeader(xmlDocument), function(error) {
         if (error) {
             throw new Error(tl.loc("Failedtowritetoconfigfilewitherror",configFile, error));
         } else {
