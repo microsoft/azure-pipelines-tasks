@@ -75,3 +75,54 @@ export function canUseWebDeploy(useWebDeploy: boolean) {
     var win = tl.osType().match(/^Win/);
     return (useWebDeploy || win);
 }
+
+export function findfiles(filepath){
+    var filesList : string [];
+    if (filepath.indexOf('*') == -1 && filepath.indexOf('?') == -1) {
+        // No pattern found, check literal path to a single file
+        tl.checkPath(filepath, 'files');
+
+        // Use the specified single file
+        filesList = [filepath];
+
+    } else {
+        var firstWildcardIndex = function(str) {
+            var idx = str.indexOf('*');
+
+            var idxOfWildcard = str.indexOf('?');
+            if (idxOfWildcard > -1) {
+                return (idx > -1) ?
+                    Math.min(idx, idxOfWildcard) : idxOfWildcard;
+            }
+
+            return idx;
+        }
+
+        // Find app files matching the specified pattern
+        tl.debug('Matching glob pattern: ' + filepath);
+
+        // First find the most complete path without any matching patterns
+        var idx = firstWildcardIndex(filepath);
+        tl.debug('Index of first wildcard: ' + idx);
+        var slicedPath = filepath.slice(0, idx);
+        var findPathRoot = path.dirname(slicedPath);
+        if(slicedPath.endsWith("\\") || slicedPath.endsWith("/")){
+            findPathRoot = slicedPath;
+        }
+
+        tl.debug('find root dir: ' + findPathRoot);
+
+        // Now we get a list of all files under this root
+        var allFiles = tl.find(findPathRoot);
+
+        // Now matching the pattern against all files
+        filesList = tl.match(allFiles, filepath, {matchBase: true});
+
+        // Fail if no matching .csproj files were found
+        if (!filesList || filesList.length == 0) {
+            tl.error('No matching files were found with search pattern: ' + filepath);
+            throw new Error("Nopackagefoundwithspecifiedpattern")
+        }
+    }
+    return filesList;
+}
