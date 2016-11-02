@@ -47,17 +47,11 @@ async function executeTask() {
             var npmrcPath: string = path.join(cwd, '.npmrc');
             var tempNpmrcPath : string = getTempNpmrcPath();
 
-            // copy the user level npmrc contents, if it exists.
-            var currentUserNpmrcPath : string = getUserNpmrcPath();
-            if(tl.exist(currentUserNpmrcPath)) {
-                tl.debug(`Copying ${currentUserNpmrcPath} to ${tempNpmrcPath} ...`);
-                tl.cp(currentUserNpmrcPath, tempNpmrcPath, /* options */ null, /* continueOnError */ true);
-            }
-
             var debugLog: boolean = tl.getVariable('system.debug') && tl.getVariable('system.debug').toLowerCase() === 'true';
 
-
-            if(tl.osType().toLowerCase() === 'windows_nt' && tl.exist(npmrcPath)) {
+            var shouldRunAuthHelper: boolean = tl.osType().toLowerCase() === 'windows_nt' && tl.exist(npmrcPath); 
+            if(shouldRunAuthHelper) {
+                copyUserNpmrc(tempNpmrcPath);
                 await runNpmAuthHelperAsync(getNpmAuthHelperRunner(npmrcPath, tempNpmrcPath, debugLog));
             }
 
@@ -65,7 +59,11 @@ async function executeTask() {
             var npmExecOptions = <trm.IExecOptions>{
                 env: extend({}, process.env)
             };
-            npmExecOptions.env['npm_config_userconfig'] = tempNpmrcPath;
+
+            if(shouldRunAuthHelper){
+                npmExecOptions.env['npm_config_userconfig'] = tempNpmrcPath;
+            }
+            
             if(debugLog) {
                 npmExecOptions.env['npm_config_loglevel'] =  'verbose';
             }
@@ -94,6 +92,15 @@ async function runNpmAuthHelperAsync(npmAuthRunner: trm.ToolRunner) : Promise<nu
     } catch (err) {
         // warn on any auth failure and try to run the task.
         tl.warning(tl.loc('NpmAuthFailed', err.message));
+    }
+}
+
+function copyUserNpmrc(tempNpmrcPath: string) {
+    // copy the user level npmrc contents, if it exists.
+    var currentUserNpmrcPath : string = getUserNpmrcPath();
+    if(tl.exist(currentUserNpmrcPath)) {
+        tl.debug(`Copying ${currentUserNpmrcPath} to ${tempNpmrcPath} ...`);
+        tl.cp(currentUserNpmrcPath, tempNpmrcPath, /* options */ null, /* continueOnError */ true);
     }
 }
 
