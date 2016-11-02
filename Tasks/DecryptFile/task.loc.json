@@ -12,7 +12,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 14
+    "Patch": 16
   },
   "groups": [
     {
@@ -67,6 +67,10 @@
       "target": "decrypt.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "OpenSSLReturnCode": "ms-resource:loc.messages.OpenSSLReturnCode",
+    "OpenSSLFailed": "ms-resource:loc.messages.OpenSSLFailed"
   },
   "helpMarkDown": "ms-resource:loc.helpMarkDown"
 }

@@ -1,7 +1,4 @@
-﻿/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-/// <reference path="../../definitions/codecoveragefactory.d.ts" />
-
-import tl = require('vsts-task-lib/task');
+﻿import tl = require('vsts-task-lib/task');
 import fs = require('fs');
 import path = require('path');
 import * as Q from "q";
@@ -13,6 +10,7 @@ import {CodeAnalysisOrchestrator} from './CodeAnalysis/Common/CodeAnalysisOrches
 import {BuildOutput, BuildEngine} from './CodeAnalysis/Common/BuildOutput';
 import {PmdTool} from './CodeAnalysis/Common/PmdTool';
 import {CheckstyleTool} from './CodeAnalysis/Common/CheckstyleTool';
+import {FindbugsTool} from './CodeAnalysis/Common/FindbugsTool';
 import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
 import javacommons = require('java-common/java-common');
 
@@ -28,7 +26,7 @@ if (isWindows) {
         tl.debug("Append .bat extension name to gradlew script.");
         wrapperScript += '.bat';
     }
-} 
+}
 
 if (fs.existsSync(wrapperScript)) {
     // (The exists check above is not necessary, but we need to avoid this call when we are running L0 tests.)
@@ -56,9 +54,10 @@ var inputTasks: string[] = tl.getDelimitedInput('tasks', ' ', true);
 var isSonarQubeEnabled: boolean = sqCommon.isSonarQubeAnalysisEnabled();
 let reportingTaskName = "";
 
-let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('build.sourcesDirectory'), BuildEngine.Gradle);
-var codeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
+let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('System.DefaultWorkingDirectory'), BuildEngine.Gradle);
+var codeAnalysisOrchestrator: CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
     [new CheckstyleTool(buildOutput, 'checkstyleAnalysisEnabled'),
+        new FindbugsTool(buildOutput, 'findbugsAnalysisEnabled'),
         new PmdTool(buildOutput, 'pmdAnalysisEnabled')]);
 
 if (isCodeCoverageOpted && inputTasks.indexOf('clean') == -1) {
@@ -75,7 +74,7 @@ if (javaHomeSelection == 'JDKVersion') {
     var jdkArchitecture = tl.getInput('jdkArchitecture');
 
     if (jdkVersion != 'default') {
-       specifiedJavaHome = javacommons.findJavaHome(jdkVersion, jdkArchitecture);
+        specifiedJavaHome = javacommons.findJavaHome(jdkVersion, jdkArchitecture);
     }
 }
 else {
@@ -87,35 +86,46 @@ if (specifiedJavaHome) {
     tl.debug('Set JAVA_HOME to ' + specifiedJavaHome);
     process.env['JAVA_HOME'] = specifiedJavaHome;
 }
- 
+
 /* Actual execution of Build and further flows*/
 async function execBuild() {
     await execEnableCodeCoverage();
     if (reportingTaskName && reportingTaskName != "") {
         gb.arg(reportingTaskName);
     }
-    
+
     enableSonarQubeAnalysis();
     var gradleResult;
+    var statusFailed = false;
     gb.exec()
         .then(function (code) {
             gradleResult = code;
-            publishTestResults(publishJUnitResults, testResultsFiles);
-            publishCodeCoverage(isCodeCoverageOpted);
             return processCodeAnalysisResults();
         })
         .then(() => {
-            tl.debug(`Gradle result: ${gradleResult}`); 
-            if (gradleResult === 0) { 
-                tl.setResult(tl.TaskResult.Succeeded, "Build succeeded."); 
-            } else { 
-                tl.setResult(tl.TaskResult.Failed, "Build failed."); 
-            } 
+            tl.debug(`Gradle result: ${gradleResult}`);
+            return Q.resolve("Success");
         })
         .fail(function (err) {
             console.error(err);
             tl.debug('taskRunner fail');
-            tl.setResult(tl.TaskResult.Failed, err); 
+            gradleResult = -1;
+            statusFailed = true;
+            return Q.resolve(err);
+        })
+        .then(function (resp) {
+            // We should always publish test results and code coverage
+            publishTestResults(publishJUnitResults, testResultsFiles);
+            publishCodeCoverage(isCodeCoverageOpted);
+
+            if (gradleResult === 0) {
+                tl.setResult(tl.TaskResult.Succeeded, "Build succeeded.");
+            } else if (gradleResult === -1 && statusFailed === true) {
+                tl.setResult(tl.TaskResult.Failed, resp);
+            }
+            else {
+                tl.setResult(tl.TaskResult.Failed, "Build failed.");
+            }
         });
 }
 

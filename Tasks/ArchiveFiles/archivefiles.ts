@@ -1,9 +1,7 @@
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-
 import path = require('path');
 import tl = require('vsts-task-lib/task');
 
-var repoRoot: string = tl.getVariable('build.sourcesDirectory');
+var repoRoot: string = tl.getVariable('System.DefaultWorkingDirectory');
 
 var rootFolder: string = makeAbsolute(path.normalize(tl.getPathInput('rootFolder', true, false).trim()));
 var includeRootFolder: boolean = tl.getBoolInput('includeRootFolder', true);
@@ -66,7 +64,7 @@ function getOptions() {
         return { cwd: dirName };
     } else {
         var stats: tl.FsStats = tl.stats(rootFolder);
-        if (stats.isFile) {
+        if (stats.isFile()) {
             dirName = path.dirname(rootFolder);
         } else {
             dirName = rootFolder;
@@ -269,7 +267,7 @@ function doWork() {
             if (replaceExistingArchive) {
                 try {
                     var stats: tl.FsStats = tl.stats(archiveFile);
-                    if (stats.isFile) {
+                    if (stats.isFile()) {
                         console.log('removing existing archive file before creation: ' + archiveFile);
                     } else {
                         failTask('Specified archive file: ' + archiveFile + ' already exists and is not a file.');

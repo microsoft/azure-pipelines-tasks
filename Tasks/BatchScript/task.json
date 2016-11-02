@@ -6,9 +6,9 @@
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613733)",
     "category": "Utility",
     "visibility": [
-                  "Build",
-                  "Release"
-                  ],    
+        "Build",
+        "Release"
+    ],
     "runsOn": [
         "Agent",
         "MachineGroup"
@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [
         "Cmd"
@@ -25,9 +25,9 @@
     "minimumAgentVersion": "1.83.0",
     "groups": [
         {
-            "name":"advanced",
-            "displayName":"Advanced",
-            "isExpanded":false
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
         }
     ],
     "inputs": [
@@ -35,7 +35,7 @@
             "name": "filename",
             "type": "filePath",
             "label": "Path",
-            "defaultValue":"",
+            "defaultValue": "",
             "required": true,
             "helpMarkDown": "Path of the cmd or bat script to execute. Should be fully qualified path or relative to the default working directory."
         },
@@ -43,8 +43,8 @@
             "name": "arguments",
             "type": "string",
             "label": "Arguments",
-            "defaultValue":"",
-            "required":false,
+            "defaultValue": "",
+            "required": false,
             "helpMarkDown": "Arguments passed to the cmd or bat script"
         },
         {
@@ -53,25 +53,25 @@
             "label": "Modify Environment",
             "defaultValue": "False",
             "required": false,
-            "helpMarkDown": "Determines whether environment variable modifications will affect subsequent tasks." 
+            "helpMarkDown": "Determines whether environment variable modifications will affect subsequent tasks."
         },
         {
             "name": "workingFolder",
             "type": "filePath",
             "label": "Working folder",
-            "defaultValue":"",
-            "required":false,
+            "defaultValue": "",
+            "required": false,
             "helpMarkDown": "Current working directory when script is run.  Defaults to the folder where the script is located.",
-            "groupName":"advanced"
+            "groupName": "advanced"
         },
-        { 
-            "name": "failOnStandardError", 
+        {
+            "name": "failOnStandardError",
             "type": "boolean",
-            "label": "Fail on Standard Error", 
-            "defaultValue": "false", 
+            "label": "Fail on Standard Error",
+            "defaultValue": "false",
             "required": false,
             "helpMarkDown": "If this is true, this task will fail if any errors are written to the StandardError stream.",
-            "groupName":"advanced"
+            "groupName": "advanced"
         }
     ],
     "instanceNameFormat": "Run script $(filename)",

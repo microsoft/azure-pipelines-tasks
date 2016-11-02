@@ -24,8 +24,20 @@ export class CodeAnalysisResultPublisher {
      *
      * @param {string} prefix - used to discriminate between artifacts comming from different builds of the same projects (e.g. the build number)
      */
-    public uploadArtifacts(prefix: string):void {
+    public uploadArtifacts(prefix: string):number {
+        // If there are no results to upload, return
         if (this.analysisResults.length === 0) {
+            tl.debug('[CA] Skipping artifact upload: No analysis results');
+            return;
+        }
+
+        // If there are no files to upload, return
+        var analysisResultsWithFiles:AnalysisResult[] = this.analysisResults.filter(
+            (analysisResult:AnalysisResult) => {
+                return analysisResult.resultFiles != undefined && analysisResult.resultFiles != null && analysisResult.resultFiles.length > 0;
+        });
+        if (analysisResultsWithFiles.length === 0) {
+            tl.debug('[CA] Skipping artifact upload: No files to upload');
             return;
         }
 
@@ -34,7 +46,7 @@ export class CodeAnalysisResultPublisher {
         let artifactBaseDir = path.join(this.stagingDir, 'CA');
         FileSystemInteractions.createDirectory(artifactBaseDir);
 
-        for (var analysisResult of this.analysisResults) {
+        for (var analysisResult of analysisResultsWithFiles) {
 
             // Group artifacts in folders representing the module name
             let destinationDir = path.join(artifactBaseDir, analysisResult.moduleName);
@@ -44,7 +56,7 @@ export class CodeAnalysisResultPublisher {
                 let extension = path.extname(resultFile);
                 let reportName = path.basename(resultFile, extension);
 
-                let artifactName = `${prefix}_${reportName}_${analysisResult.toolName}${extension}`;
+                let artifactName = `${prefix}_${reportName}_${analysisResult.originatingTool.toolName}${extension}`;
                 FileSystemInteractions.copyFile(resultFile, path.join(destinationDir, artifactName));
             }
         }
@@ -52,6 +64,7 @@ export class CodeAnalysisResultPublisher {
         tl.command("artifact.upload", {
             'artifactname': tl.loc('codeAnalysisArtifactSummaryTitle')
         }, artifactBaseDir);
+        return analysisResultsWithFiles.length;
     }
 
 
@@ -62,14 +75,14 @@ export class CodeAnalysisResultPublisher {
      *
      * Code analysis results can be found in the 'Artifacts' tab.
      */
-    public uploadBuildSummary():void {
+    public uploadBuildSummary(uploadedArtifacts:number):void {
 
         if (this.analysisResults.length === 0) {
             return;
         }
 
         tl.debug('[CA] Preparing a build summary');
-        let content: string = this.createSummaryContent();
+        let content: string = this.createSummaryContent(uploadedArtifacts);
         this.uploadMdSummary(content);
     }
 
@@ -98,31 +111,34 @@ export class CodeAnalysisResultPublisher {
         }, buildSummaryFilePath);
     }
 
-    private createSummaryContent(): string {
+    private createSummaryContent(uploadedArtifacts:number): string {
 
         var buildSummaryLines: string[] = [];
-        var resultsGroupedByTool: AnalysisResult[][] = this.groupBy(this.analysisResults, (o: AnalysisResult) => { return o.toolName; });
+        var resultsGroupedByTool: AnalysisResult[][] =
+            this.groupBy(this.analysisResults, (o: AnalysisResult) => { return o.originatingTool.toolName; });
 
         for (var resultGroup of resultsGroupedByTool) {
             var summaryLine = this.createSummaryLine(resultGroup);
-            buildSummaryLines.push(summaryLine);
+            if (summaryLine != null) {
+                buildSummaryLines.push(summaryLine);
+            }
         }
 
-        tl.debug(`[CA] Build Summary: ${buildSummaryLines}`);
-
-        if (buildSummaryLines.length > 0) {
+        if (buildSummaryLines.length > 0 && uploadedArtifacts > 0) { // Do not print this last line if there were no results uploaded
             buildSummaryLines.push('');
             buildSummaryLines.push('Code analysis results can be found in the \'Artifacts\' tab.');
         }
 
-        return buildSummaryLines.join('  \r\n');
+        var buildSummaryString = buildSummaryLines.join('  \r\n');
+        tl.debug(`[CA] Build Summary: ${buildSummaryString}`);
+        return buildSummaryString;
     }
 
     // For a given code analysis tool, create a one-line summary from multiple AnalysisResult objects.
     private createSummaryLine(analysisResultsGroup: AnalysisResult[]): string {
         var violationCount: number = 0;
         var affectedFileCount: number = 0;
-        var toolName = analysisResultsGroup[0].toolName;
+        var toolName = analysisResultsGroup[0].originatingTool.toolName;
 
         analysisResultsGroup.forEach((analysisResult: AnalysisResult) => {
             violationCount += analysisResult.violationCount;
@@ -144,6 +160,12 @@ export class CodeAnalysisResultPublisher {
             return tl.loc('codeAnalysisBuildSummaryLine_OneViolationOneFile', toolName);
         }
         if (violationCount === 0) {
+            // Tools produce an AnalysisResult regardless of whether they were enabled through the UI or not
+            // Therefore, only show "X did not find any violations" messages if the tool was enabled
+            if (!analysisResultsGroup[0].originatingTool.isEnabled()) {
+                return null;
+            }
+
             // Looks like: 'PMD found no violations.'
             return tl.loc('codeAnalysisBuildSummaryLine_NoViolations', toolName);
         }

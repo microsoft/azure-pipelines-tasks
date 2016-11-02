@@ -14,73 +14,73 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 1
+        "Patch": 3
     },
     "groups": [
         {
-          "name": "advanced",
-          "displayName": "Advanced",
-          "isExpanded": true
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": true
         }
     ],
     "instanceNameFormat": "Queue Jenkins Job: $(jobName)",
     "inputs": [
-      {
-        "name": "serverEndpoint",
-        "type": "connectedService:Jenkins",
-        "label": "Jenkins service endpoint",
-        "defaultValue": "",
-        "required": true,
-        "helpMarkDown": "Select the service endpoint for your Jenkins instance.  To create one, click the Manage link and create a new Jenkins Service Endpoint."
-      },     
-      {
-        "name": "jobName",
-        "type": "string",
-        "label": "Job name",
-        "defaultValue": "",
-        "required": true,
-        "helpMarkDown": "The name of the Jenkins job to queue.  This must exactly match the job name on the Jenkins server."
-      },
-      {
-        "name": "captureConsole",
-        "type": "boolean",
-        "label": "Capture console output and wait for completion",
-        "defaultValue": true,
-        "required": true,
-        "helpMarkDown": "If selected, this step will capture the Jenkins build console output, wait for the Jenkins build to complete, and succeed/fail based on the Jenkins build result.  Otherwise, once the Jenkins job is successfully queued, this step will successfully complete without waiting for the Jenkins build to run."
-      },
-      {
-        "name": "capturePipeline",
-        "type": "boolean",
-        "label": "Capture pipeline output and wait for pipeline completion",
-        "defaultValue": true,
-        "required": true,
-        "helpMarkDown": "If selected, this step will capture the full Jenkins build pipeline console output, wait for the full Jenkins build pipeline to complete, and succeed/fail based on the Jenkins build pipeline result.  Otherwise, once the Jenkins job is completes, this step will successfully complete without waiting for full Jenkins build pipeline to run.",
-        "visibleRule":"captureConsole = true"
-      },
-      {
-        "name": "parameterizedJob",
-        "type": "boolean",
-        "label": "Parameterized job",
-        "defaultValue": false,
-        "required": true,
-        "helpMarkDown": "Select if the Jenkins job accepts parameters. This should be selected even if all the default parameters are used and no parameters are actually specified.",
-        "groupName": "advanced"
-      },
-      {
-        "name": "jobParameters",
-        "type": "multiLine",
-        "label": "Job parameters",
-        "defaultValue": "",
-        "required": false,
-        "helpMarkDown": "Specify job parameters, one per line, in the form <b>`<parameterName>=<parameterValue>`</b><p>To set a parameter to an empty value (useful for overriding a default value) leave off the paramter value, e.g. specify <b>`<parameterName>=`</b><p>Variables are supported, e.g. to define the <b>`commitId`</b> paramter to be the <b>`git commit ID`</b> for the build, use: <b>`commitId=$(Build.SourceVersion)`</b>. See the [documentation on variables](https://www.visualstudio.com/docs/build/define/variables) for more details.<p>Supported Jenkins parameter types are: <ul><li>`Boolean`</li><li>`String`</li><li>`Choice`</li><li>`Password`</li></ul>",
-        "groupName": "advanced",
-        "visibleRule":"parameterizedJob = true",
-        "properties": {
-            "resizable": "true",
-            "rows" : "4"
+        {
+            "name": "serverEndpoint",
+            "type": "connectedService:Jenkins",
+            "label": "Jenkins service endpoint",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select the service endpoint for your Jenkins instance.  To create one, click the Manage link and create a new Jenkins Service Endpoint."
+        },
+        {
+            "name": "jobName",
+            "type": "string",
+            "label": "Job name",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The name of the Jenkins job to queue.  This must exactly match the job name on the Jenkins server."
+        },
+        {
+            "name": "captureConsole",
+            "type": "boolean",
+            "label": "Capture console output and wait for completion",
+            "defaultValue": true,
+            "required": true,
+            "helpMarkDown": "If selected, this step will capture the Jenkins build console output, wait for the Jenkins build to complete, and succeed/fail based on the Jenkins build result.  Otherwise, once the Jenkins job is successfully queued, this step will successfully complete without waiting for the Jenkins build to run."
+        },
+        {
+            "name": "capturePipeline",
+            "type": "boolean",
+            "label": "Capture pipeline output and wait for pipeline completion",
+            "defaultValue": true,
+            "required": true,
+            "helpMarkDown": "If selected, this step will capture the full Jenkins build pipeline console output, wait for the full Jenkins build pipeline to complete, and succeed/fail based on the Jenkins build pipeline result.  Otherwise, once the Jenkins job is completes, this step will successfully complete without waiting for full Jenkins build pipeline to run.",
+            "visibleRule": "captureConsole = true"
+        },
+        {
+            "name": "parameterizedJob",
+            "type": "boolean",
+            "label": "Parameterized job",
+            "defaultValue": false,
+            "required": true,
+            "helpMarkDown": "Select if the Jenkins job accepts parameters. This should be selected even if all the default parameters are used and no parameters are actually specified.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "jobParameters",
+            "type": "multiLine",
+            "label": "Job parameters",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Specify job parameters, one per line, in the form <b>`<parameterName>=<parameterValue>`</b><p>To set a parameter to an empty value (useful for overriding a default value) leave off the paramter value, e.g. specify <b>`<parameterName>=`</b><p>Variables are supported, e.g. to define the <b>`commitId`</b> paramter to be the <b>`git commit ID`</b> for the build, use: <b>`commitId=$(Build.SourceVersion)`</b>. See the [documentation on variables](https://www.visualstudio.com/docs/build/define/variables) for more details.<p>Supported Jenkins parameter types are: <ul><li>`Boolean`</li><li>`String`</li><li>`Choice`</li><li>`Password`</li></ul>",
+            "groupName": "advanced",
+            "visibleRule": "parameterizedJob = true",
+            "properties": {
+                "resizable": "true",
+                "rows": "4"
+            }
         }
-      }
     ],
     "execution": {
         "Node": {

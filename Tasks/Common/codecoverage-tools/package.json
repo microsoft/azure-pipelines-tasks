@@ -1,17 +1,28 @@
 {
-    "name": "codecoverage-tools",
-    "version": "1.0.0",
-    "author": "Microsoft Corporation",
-    "description": "Build with Gradle",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
-    },
-    "dependencies": {
-        "xml2js": "^0.4.17",
-        "fs-extra": "^0.30.0",
-        "os": "^0.1.1",
-        "string": "^3.3.1",
-        "vsts-task-lib": "0.9.7"
-    }
+  "name": "codecoverage-tools",
+  "version": "1.0.0",
+  "author": "Microsoft Corporation",
+  "description": "Build with Gradle",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
+  },
+  "dependencies": {
+    "fs-extra": "^0.30.0",
+    "os": "^0.1.1",
+    "string": "^3.3.1",
+    "vsts-task-lib": "^0.9.7",
+    "xml2js": "^0.4.17",
+    "cheerio": "^0.22.0",
+    "strip-bom": "^3.0.0"
+  },
+  "main": "VSTS Tasks Code Coverage Tools",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/vsts-tasks.git"
+  },
+  "homepage": "https://github.com/Microsoft/vsts-tasks#readme"
 }

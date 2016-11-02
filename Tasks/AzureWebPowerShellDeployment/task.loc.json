@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 38
+    "Patch": 42
   },
   "demands": [
     "azureps"
@@ -111,6 +111,7 @@
     "CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved": "ms-resource:loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdcannotberetrieved",
     "Updatingdeploymenthistoryfordeployment0": "ms-resource:loc.messages.Updatingdeploymenthistoryfordeployment0",
     "Nofileswerefoundtodeploywithsearchpattern0": "ms-resource:loc.messages.Nofileswerefoundtodeploywithsearchpattern0",
-    "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "ms-resource:loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone"
+    "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "ms-resource:loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone",
+    "FailedtodeployWebsiteError0": "ms-resource:loc.messages.FailedtodeployWebsiteError0"
   }
 }

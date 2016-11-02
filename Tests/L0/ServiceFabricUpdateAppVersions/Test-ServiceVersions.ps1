@@ -49,7 +49,7 @@ try
     }
 
     # Act
-    $result = Update-ServiceVersions -VersionSuffix $newSuffix -ServiceName $serviceName -NewPackageRoot $appPkgPath -OldPackageRoot "$PSScriptRoot\data\$PreviousPkgName\pkg"
+    $result = Update-ServiceVersions -VersionValue $newSuffix -ServiceName $serviceName -NewPackageRoot $appPkgPath -OldPackageRoot "$PSScriptRoot\data\$PreviousPkgName\pkg"
     
     # Assert
     Assert-AreEqual "1.0.0$ExpectedServiceSuffix" $result "Function returned incorrect result."

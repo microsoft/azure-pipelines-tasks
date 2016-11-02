@@ -1,35 +1,39 @@
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-
 import fs = require('fs');
 import tl = require('vsts-task-lib/task');
+import trm = require('vsts-task-lib/toolrunner');
 
-//Process working directory
-var cwd = tl.getInput('cwd') || tl.getVariable('build.sourceDirectory') || tl.getVariable('build.sourcesDirectory');
-tl.cd(cwd);
+async function run() {
+	try {
+		//Process working directory
+		var cwd = tl.getInput('cwd')
+			|| tl.getVariable('build.sourceDirectory')
+			|| tl.getVariable('build.sourcesDirectory')
+			|| tl.getVariable('System.DefaultWorkingDirectory');
+		tl.cd(cwd);
 
-var tr = tl.createToolRunner(tl.which('openssl', true));
+		var openssl: trm.ToolRunner = tl.tool(tl.which('openssl', true));
+		openssl.arg(tl.getInput('cipher', true))
 
-tr.arg(tl.getInput('cipher', true))
+		var inFile = tl.getInput('inFile', true);
+		openssl.arg(['-d', '-in', inFile]);
+		openssl.arg('-out');
 
-var inFile = tl.getInput('inFile', true);
-tr.arg(['-d', '-in', inFile]);
+		var outFile = tl.getPathInput('outFile', false);
+		if(fs.existsSync(outFile) && fs.lstatSync(outFile).isDirectory()) {
+			openssl.arg(inFile + '.out');
+		} else {
+			openssl.arg(outFile)	
+		}
 
-tr.arg('-out');
-var outFile = tl.getPathInput('outFile', false);
-if(fs.existsSync(outFile) && fs.lstatSync(outFile).isDirectory()) {
-	tr.pathArg(inFile + '.out');
-} else {
-	tr.pathArg(outFile)	
+		openssl.arg(['-pass','pass:' + tl.getInput('passphrase')]);
+
+        var code: number = await openssl.exec();
+        tl.setResult(tl.TaskResult.Succeeded, tl.loc('OpenSSLReturnCode', code));
+    }
+    catch(err) {
+        tl.error(err.message);
+        tl.setResult(tl.TaskResult.Failed, tl.loc('OpenSSLFailed', err.message));
+    }   
 }
 
-tr.arg(['-pass','pass:' + tl.getInput('passphrase')])
-
-tr.exec()
-.then(function(code) {
-	tl.exit(code);
-})
-.fail(function(err) {
-	console.error(err.message);
-	tl.debug('taskRunner fail');
-	tl.exit(1);
-})
+run();

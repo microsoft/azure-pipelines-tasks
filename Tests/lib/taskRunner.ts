@@ -1,7 +1,6 @@
 /// <reference path="../../definitions/node.d.ts"/>
 /// <reference path="../../definitions/Q.d.ts"/>
 /// <reference path="../../definitions/shelljs.d.ts"/>
-/// <reference path="../../definitions/vsts-task-lib.d.ts"/>
 
 import Q = require('q');
 import events = require('events');
@@ -9,7 +8,7 @@ import fs = require('fs');
 import path = require('path');
 import child_process = require('child_process');
 import shell = require('shelljs');
-import tcm = require('vsts-task-lib/taskcommand');
+import tcm = require('./vsts-task-lib/taskcommand');
 
 function debug(message) {
     if (process.env['TASK_TEST_TRACE']) {
@@ -96,7 +95,7 @@ export class TaskRunner extends events.EventEmitter {
 		var modPath = path.join(this._tempPath, 'node_modules');
 		if (!shell.test('-d', modPath)) {
 			shell.mkdir('-p', modPath);
-			shell.cp('-R', path.join(__dirname, 'node_modules/vsts-task-lib'), path.join(modPath));			
+			shell.cp('-R', path.join(__dirname, 'vsts-task-lib'), path.join(modPath));			
 		}
 
 		// copy the task over so we can execute from Temp 
@@ -107,11 +106,13 @@ export class TaskRunner extends events.EventEmitter {
 			shell.cp('-R', this._taskSrcPath, this._tempPath);
 		}
 
-		// delete it's linked copy of vsts-task-lib so it uses the mocked task-lib above
-		var taskLibPath = path.join(this._taskPath, 'node_modules', 'vsts-task-lib');
-		if (shell.test('-d', taskLibPath)) {
-			shell.rm('-rf', taskLibPath);
-		}
+		// delete all nested copies of vsts-task-lib so the mock vsts-task-lib is used (copied above)
+		shell.find(this._taskPath)
+			.forEach(function (item) {
+				if (path.basename(item) == 'vsts-task-lib' && path.basename(path.dirname(item)) == 'node_modules') {
+					shell.rm('-rf', item);
+				}
+			});
 
 		var jsonPath = path.join(this._taskPath, 'task.json');
 		if (!fs.existsSync(jsonPath)) {
@@ -155,7 +156,6 @@ export class TaskRunner extends events.EventEmitter {
 
 			if (line.indexOf('##vso[') >= 0) {
 				var cmd = tcm.commandFromString(line);
-				//console.log(JSON.stringify(cmd, null, 2));
 
   				if (cmd.command === "task.complete") {
   					if (cmd.properties['result'] === 'Failed') {

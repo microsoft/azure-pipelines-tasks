@@ -38,27 +38,27 @@ describe('SSH Suite', function() {
                 done(err);
             });
     })
-    it('Fails for invalid private key', (done) => {
-        setResponseFile('responseEndpoint.json');
-        var tr = new trm.TaskRunner('SSH', true, true);
-        tr.setInput('sshEndpoint', 'IDInvalidKey');
-        tr.setInput('runOptions', 'commands');
-        tr.setInput('commands', 'ls -l');
-
-        tr.run()
-            .then(() => {
-                assert(tr.invokedToolCount == 0, 'should not have run any tools');
-                assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length > 0, 'should have written to stderr');
-                assert(tr.failed, 'task should have failed');
-                assert(tr.stderr.indexOf('Failed to connect to remote machine. Verify the SSH endpoint details. Error:') >= 0, 'wrong error message: "' + tr.stderr + '"');
-                assert(tr.stderr.indexOf('Error: Cannot parse privateKey: Unsupported key format') >= 0, 'wrong error message: "' + tr.stderr + '"');
-                done();
-            })
-            .fail((err) => {
-                done(err);
-            });
-    })
+    //it('Fails for invalid private key', (done) => {
+    //    setResponseFile('responseEndpoint.json');
+    //    var tr = new trm.TaskRunner('SSH', true, true);
+    //    tr.setInput('sshEndpoint', 'IDInvalidKey');
+    //    tr.setInput('runOptions', 'commands');
+    //    tr.setInput('commands', 'ls -l');
+    //
+    //    tr.run()
+    //        .then(() => {
+    //            assert(tr.invokedToolCount == 0, 'should not have run any tools');
+    //            assert(tr.resultWasSet, 'task should have set a result');
+    //            assert(tr.stderr.length > 0, 'should have written to stderr');
+    //            assert(tr.failed, 'task should have failed');
+    //            assert(tr.stderr.indexOf('Failed to connect to remote machine. Verify the SSH endpoint details. Error:') >= 0, 'wrong error message: "' + tr.stderr + '"');
+    //            assert(tr.stderr.indexOf('Error: Cannot parse privateKey: Unsupported key format') >= 0, 'wrong error message: "' + tr.stderr + '"');
+    //            done();
+    //        })
+    //        .fail((err) => {
+    //            done(err);
+    //        });
+    //})
     it('Fails when user name is not provided in the endpoint', (done) => {
         setResponseFile('responseEndpoint.json');
         var tr = new trm.TaskRunner('SSH', true, true);

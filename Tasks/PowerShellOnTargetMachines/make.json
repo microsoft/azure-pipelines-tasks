@@ -1,0 +1,8 @@
+{
+    "common": [
+        {
+            "module": "../Common/Deployment/TelemetryHelper",
+            "type": "ps"
+        }
+    ]
+}

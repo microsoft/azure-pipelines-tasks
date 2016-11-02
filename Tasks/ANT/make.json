@@ -1,0 +1,23 @@
+{
+    "common": [
+        {
+            "module": "../Common/java-common",
+            "type": "node",
+            "compile": true
+        },
+        {
+            "module": "../Common/codecoverage-tools",
+            "type": "node",
+            "compile": true
+        }
+    ],
+    "rm": [
+        {
+            "items": [
+                "node_modules/java-common/node_modules/vsts-task-lib",
+                "node_modules/codecoverage-tools/node_modules/vsts-task-lib"
+            ],
+            "options": "-Rf"
+        }
+    ]
+}

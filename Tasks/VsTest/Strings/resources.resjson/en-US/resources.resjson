@@ -40,10 +40,12 @@
   "loc.input.help.configuration": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here.",
   "loc.input.label.publishRunAttachments": "Upload Test Attachments",
   "loc.input.help.publishRunAttachments": "Opt in/out of publishing test run level attachments.",
+  "loc.messages.PathDoesNotExist": "%s path does not exist.",
   "loc.messages.VstestReturnCode": "Vstest exited with return code: %d.",
   "loc.messages.NoMatchingTestAssemblies": "No test assemblies found matching the pattern: %s.",
   "loc.messages.VstestNotFound": "Vstest of version %d is not found. Try again with a visual studio version that exists on your build agent machine.",
   "loc.messages.VstestFailed": "Vstest failed with error. Check logs for failures. There might be failed tests.",
+  "loc.messages.VstestTIANotSupported": "Install Visual Studio version 15.0.25807 or higher to run Test Impact Analysis.",
   "loc.messages.NoResultsToPublish": "No results found to publish.",
   "loc.messages.ErrorWhileReadingRunSettings": "Error occured while reading run settings file. Error : %s.",
   "loc.messages.ErrorWhileReadingTestSettings": "Error occured while reading test settings file. Error : %s.",
@@ -56,6 +58,12 @@
   "loc.messages.ErrorWhileCreatingResponseFile": "Error occurred while creating the response file. All the tests will be executed for this run.",
   "loc.messages.ErrorWhileUpdatingResponseFile": "Error occurred while updating the response file '%s'. All the tests will be executed for this run.",
   "loc.messages.ErrorWhilePublishingCodeChanges": "Error occurred while publishing the code changes. All the tests will be executed for this run.",
-  "loc.messages.PublishCodeChangesPerfTime": "Total time taken to publish code changes: %d milliseconds",
-  "loc.messages.GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds"
+  "loc.messages.ErrorWhileListingDiscoveredTests": "Error occured while discovering the tests. All the tests will be exexuted for this run.",
+  "loc.messages.PublishCodeChangesPerfTime": "Total time taken to publish code changes: %d milliseconds.",
+  "loc.messages.GenerateResponseFilePerfTime": "Total time taken to get response file: %d milliseconds.",
+  "loc.messages.UploadTestResultsPerfTime": "Total time taken to upload test results: %d milliseconds.",
+  "loc.messages.ErrorReadingVstestVersion": "Error reading the version of vstest.console.exe.",
+  "loc.messages.UnexpectedVersionString": "Unexpected version string detected for vstest.console.exe: %s.",
+  "loc.messages.UnexpectedVersionNumber": "Unexpected version number detected for vstest.console.exe: %s.",
+  "loc.messages.VstestDiagNotSupported": "vstest.console.exe version does not support the /diag flag. Enable diagnositics via the exe.config files"
 }

@@ -1,6 +1,8 @@
 Trace-VstsEnteringInvocation $MyInvocation
 Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
+Write-Warning "'Azure App Service: Classic' task will be deprecated soon. 'Azure App Service Deploy' task will replace 'Azure App Service: Classic' task and the recommendation is to migrate your Build or Release process to use the 'Azure App Service Deploy' task. Refer https://go.microsoft.com/fwlink/?LinkID=613750 for more details."
+
 function Get-SingleFile($files, $pattern)
 {
     if ($files -is [system.array])
@@ -92,11 +94,11 @@ try{
 
     if ($Slot)
     {
-        $azureCommandArguments = "-Name `"$WebSiteName`" -Package `"$packageFile`" -Slot `"$Slot`" $AdditionalArguments -ErrorVariable publishAzureWebsiteError"
+        $azureCommandArguments = "-Name `"$WebSiteName`" -Package `"$packageFile`" -Slot `"$Slot`" $AdditionalArguments -ErrorVariable publishAzureWebsiteError -ErrorAction SilentlyContinue"
     }
     else
     {
-        $azureCommandArguments = "-Name `"$WebSiteName`" -Package `"$packageFile`" $AdditionalArguments -ErrorVariable publishAzureWebSiteError"
+        $azureCommandArguments = "-Name `"$WebSiteName`" -Package `"$packageFile`" $AdditionalArguments -ErrorVariable publishAzureWebSiteError -ErrorAction SilentlyContinue"
     }
 
     $finalCommand = "$azureCommand $azureCommandArguments"
@@ -167,12 +169,14 @@ try{
                 details = $buildUrl
             })
 
+            $userAgent = Get-VstsTaskVariable -Name AZURE_HTTP_USER_AGENT
+
             $url = [string]::Format("https://{0}/deployments/{1}",[System.Web.HttpUtility]::UrlEncode($matchedWebSiteName),[System.Web.HttpUtility]::UrlEncode($deploymentId))
 
-            Write-Verbose "##[command]Invoke-RestMethod $url -Credential $credential  -Method PUT -Body $body -ContentType `"application/json`" -UserAgent `"myuseragent`""
+            Write-Verbose "##[command]Invoke-RestMethod $url -Credential $credential  -Method PUT -Body $body -ContentType `"application/json`" -UserAgent `"$userAgent`""
             Write-Host (Get-VstsLocString -Key "Updatingdeploymentstatus")
             try {
-                Invoke-RestMethod $url -Credential $credential  -Method PUT -Body $body -ContentType "application/json" -UserAgent "myuseragent"
+                Invoke-RestMethod $url -Credential $credential  -Method PUT -Body $body -ContentType "application/json" -UserAgent "$userAgent"
             } 
             catch {
                 Write-Verbose $_.Exception.ToString()
@@ -196,5 +200,8 @@ try{
 
 
 } finally {
+    if($publishAzureWebsiteError) {
+        throw (Get-VstsLocString -Key "FailedtodeployWebsiteError0" -ArgumentList $publishAzureWebsiteError)
+    }
     Trace-VstsLeavingInvocation $MyInvocation
 }

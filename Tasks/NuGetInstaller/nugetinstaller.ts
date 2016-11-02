@@ -1,11 +1,7 @@
-/// <reference path="../../definitions/node.d.ts"/>
-/// <reference path="../../definitions/Q.d.ts" />
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-/// <reference path="../../definitions/nuget-task-common.d.ts" />
-
 import * as path from "path";
 import * as Q  from "q";
 import * as tl from "vsts-task-lib/task";
+import {IExecOptions} from "vsts-task-lib/toolrunner";
 
 import * as auth from "nuget-task-common/Authentication";
 import INuGetCommandOptions from "nuget-task-common/INuGetCommandOptions";
@@ -33,10 +29,7 @@ async function main(): Promise<void> {
     try {
         tl.setResourcePath(path.join(__dirname, "task.json"));
 
-        // set the console code page to "UTF-8"
-        if (process.platform === "win32") {
-            tl.execSync(path.resolve(process.env.windir, "system32", "chcp.com"), ["65001"]);
-        }
+        nutil.setConsoleCodePage();
 
         // read inputs
         let solution = tl.getPathInput("solution", true, false);
@@ -67,35 +60,35 @@ async function main(): Promise<void> {
             nugetConfigPath = null;
         }
 
-        let nugetVersion = tl.getInput('nuGetVersion');
+        let nugetUxOption = tl.getInput('nuGetVersion');
 
         // due to a bug where we accidentally allowed nuGetPath to be surrounded by quotes before,
         // locateNuGetExe() will strip them and check for existence there.
         let nuGetPath = tl.getPathInput("nuGetPath", false, false);
         let userNuGetProvided = false;
-        if(tl.filePathSupplied("nuGetPath")){
+        if(nuGetPath !== null && tl.filePathSupplied("nuGetPath")){
             nuGetPath = nutil.stripLeadingAndTrailingQuotes(nuGetPath);
             // True if the user provided their own version of NuGet
             userNuGetProvided = true;
-            if (nugetVersion !== "custom"){
+            if (nugetUxOption !== "custom"){
                 // For back compat, if a path has already been specificed then use it.
                 // However warn the user in the build of this behavior
                 tl.warning(tl.loc("Warning_ConflictingNuGetPreference"));
             }
         }
         else {
-            if (nugetVersion === "custom")
+            if (nugetUxOption === "custom")
             {
                 throw new Error(tl.loc("NoNuGetSpecified"))
             }
             // Pull the pre-installed path for NuGet.
-            nuGetPath = nutil.getBundledNuGetLocation(nugetVersion);
+            nuGetPath = nutil.getBundledNuGetLocation(nugetUxOption);
         }
 
         let serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
 
         //find nuget location to use
-        let credProviderPath = ngToolRunner.locateCredentialProvider();
+        let credProviderPath = nutil.locateCredentialProvider();
 
         const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
 
@@ -141,12 +134,7 @@ async function main(): Promise<void> {
                 }
             }
             else {
-                if (credProviderPath) {
-                    tl.warning(tl.loc("Warning_NoConfigForOldNuGet"));
-                }
-                else {
-                    tl._writeLine(tl.loc("Warning_NoConfigForNoCredentialProvider"));
-                }
+                tl._writeLine(tl.loc("Warning_NoConfigForNoCredentialProvider"));
             }
         }
 
@@ -186,11 +174,11 @@ function restorePackagesAsync(solutionFile: string, options: RestoreOptions): Q.
     nugetTool.arg(options.restoreMode);
     nugetTool.arg("-NonInteractive");
 
-    nugetTool.pathArg(solutionFile);
+    nugetTool.arg(solutionFile);
 
     if (options.configFile) {
         nugetTool.arg("-ConfigFile");
-        nugetTool.pathArg(options.configFile);
+        nugetTool.arg(options.configFile);
     }
 
     if (options.noCache) {
@@ -203,8 +191,8 @@ function restorePackagesAsync(solutionFile: string, options: RestoreOptions): Q.
     }
 
     if (options.extraArgs) {
-        nugetTool.argString(options.extraArgs);
+        nugetTool.line(options.extraArgs);
     }
 
-    return nugetTool.exec({ cwd: path.dirname(solutionFile) });
+    return nugetTool.exec({ cwd: path.dirname(solutionFile) } as IExecOptions);
 }

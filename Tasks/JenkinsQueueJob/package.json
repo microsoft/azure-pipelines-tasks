@@ -2,6 +2,17 @@
   "name": "vsts-tasks-jenkinsqueuejob",
   "dependencies": {
     "request": "^2.65.0",
-    "vsts-task-lib": "0.8.5"
-  }
+    "vsts-task-lib": "0.9.20"
+  },
+  "description": "VSTS Jenkins Queue Job Task",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/microsoft/vsts-tasks#readme"
 }

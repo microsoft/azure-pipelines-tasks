@@ -1,13 +1,10 @@
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-/// <reference path="../../definitions/java-common.d.ts" />
-
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
 import os = require('os');
 import * as Q from "q";
-import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
 import javacommons = require('java-common/java-common');
+import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
@@ -82,6 +79,7 @@ function processAntOutputLine(line) {
 }
 
 
+
 async function doWork() {
 
     function execEnableCodeCoverage(): Q.Promise<string> {
@@ -108,9 +106,13 @@ async function doWork() {
         reportDirectory = path.join(buildRootPath, reportDirectoryName);
         var reportBuildFileName = "CCReportBuildA4D283EG.xml";
         reportBuildFile = path.join(buildRootPath, reportBuildFileName);
-        var summaryFileName = "coverage.xml";
-        summaryFile = path.join(buildRootPath, reportDirectoryName);
-        summaryFile = path.join(summaryFile, summaryFileName);
+        var summaryFileName = "";
+        if (ccTool.toLowerCase() == "jacoco") {
+            summaryFileName = "summary.xml";
+        }else if (ccTool.toLowerCase() == "cobertura") {
+            summaryFileName = "coverage.xml";
+        }
+        summaryFile = path.join(buildRootPath, reportDirectoryName, summaryFileName);
         var coberturaCCFile = path.join(buildRootPath, "cobertura.ser");
         var instrumentedClassesDirectory = path.join(buildRootPath, "InstrumentedClasses");
 
@@ -223,11 +225,13 @@ async function doWork() {
         var ccTool = tl.getInput('codeCoverageTool');
         var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
         var buildRootPath = path.dirname(antBuildFile);
-        
+
         var summaryFile: string = null;
         var reportDirectory: string = null;
         var ccReportTask: string = null;
         var reportBuildFile: string = null;
+        var publishJUnitResults = tl.getInput('publishJUnitResults');
+        var testResultsFiles = tl.getInput('testResultsFiles', true);
         var publishJUnitResults = tl.getInput('publishJUnitResults');
         var testResultsFiles = tl.getInput('testResultsFiles', true);
 

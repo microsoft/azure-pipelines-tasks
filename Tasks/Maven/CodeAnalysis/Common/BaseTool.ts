@@ -22,7 +22,7 @@ import tl = require('vsts-task-lib/task');
  */
 export abstract class BaseTool implements IAnalysisTool {
 
-    constructor(protected toolName: string, protected buildOutput: BuildOutput, private uiInputName: string) {
+    constructor(public toolName: string, protected buildOutput: BuildOutput, private uiInputName: string) {
 
     }
 
@@ -56,7 +56,8 @@ export abstract class BaseTool implements IAnalysisTool {
     public processResults(): AnalysisResult[] {
 
         if (!this.isEnabled()) {
-            tl.debug(`[CA] ${this.toolName} analysis is not enabled, searching for reports anyway.`);
+            tl.debug(`[CA] ${this.toolName} analysis is not enabled.`);
+            return [];
         }
 
         var results: AnalysisResult[] = [];
@@ -74,8 +75,23 @@ export abstract class BaseTool implements IAnalysisTool {
         return results;
     }
 
-    protected /* for test purposes, otherwise private */ isEnabled(): boolean {
+    public isEnabled(): boolean {
         return tl.getBoolInput(this.uiInputName, false);
+    }
+
+    protected findHtmlReport(xmlReport: string): string {
+
+        // expecting to find an html report with the same name
+        var reportName = path.basename(xmlReport, '.xml');
+        var dirName = path.dirname(xmlReport);
+
+        var htmlReports = glob.sync(path.join(dirName, '**', reportName + '.html'));
+
+        if (htmlReports.length > 0) {
+            return htmlReports[0];
+        }
+
+        return null;
     }
 
     private parseModuleOutput(output: ModuleOutput): AnalysisResult {
@@ -121,25 +137,7 @@ export abstract class BaseTool implements IAnalysisTool {
 
         }
 
-        return new AnalysisResult(this.toolName, moduleName, artifacts, violationCount, fileCount);
+        return new AnalysisResult(this, moduleName, artifacts, violationCount, fileCount);
     }
-
-    private findHtmlReport(xmlReport: string): string {
-
-        // expecting to find an html report with the same name
-        var reportName = path.basename(xmlReport, '.xml');
-        var dirName = path.dirname(xmlReport);
-
-        var htmlReports = glob.sync(path.join(dirName, '**', reportName + '.html'));
-
-        if (htmlReports.length > 0) {
-            return htmlReports[0];
-        }
-
-        return null;
-    }
-
-
-
 
 }
