@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 17
+        "Patch": 18
     },
     "demands": [
         "npm"
@@ -20,7 +20,7 @@
         {
             "name": "cwd",
             "type": "filePath",
-            "label": "Working directory",
+            "label": "working folder",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Working directory where the npm command is run. Defaults to the root of the repo."
@@ -28,14 +28,14 @@
         {
             "name": "command",
             "type": "string",
-            "label": "npm command to execute",
+            "label": "npm command",
             "defaultValue": "install",
             "required": true
         },
         {
             "name": "arguments",
             "type": "string",
-            "label": "Arguments",
+            "label": "arguments",
             "defaultValue": "",
             "helpMarkDown": "Additional arguments passed to npm.",
             "required": false

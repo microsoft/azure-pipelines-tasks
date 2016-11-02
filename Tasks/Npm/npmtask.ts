@@ -42,12 +42,16 @@ async function executeTask() {
     } else {
 
         // new task version with auth support
-        var npmrcPath: string = path.join(cwd, '.npmrc');
-        var tempNpmrcPath : string = getTempNpmrcPath();
-        var debugLog: boolean = tl.getVariable('system.debug') && tl.getVariable('system.debug').toLowerCase() === 'true';
-
         try{
-            if(tl.osType().toLowerCase() === 'windows_nt') {
+
+            var npmrcPath: string = path.join(cwd, '.npmrc');
+            var tempNpmrcPath : string = getTempNpmrcPath();
+
+            var debugLog: boolean = tl.getVariable('system.debug') && tl.getVariable('system.debug').toLowerCase() === 'true';
+
+            var shouldRunAuthHelper: boolean = tl.osType().toLowerCase() === 'windows_nt' && tl.exist(npmrcPath); 
+            if(shouldRunAuthHelper) {
+                copyUserNpmrc(tempNpmrcPath);
                 await runNpmAuthHelperAsync(getNpmAuthHelperRunner(npmrcPath, tempNpmrcPath, debugLog));
             }
 
@@ -55,7 +59,11 @@ async function executeTask() {
             var npmExecOptions = <trm.IExecOptions>{
                 env: extend({}, process.env)
             };
-            npmExecOptions.env['npm_config_userconfig'] = tempNpmrcPath;
+
+            if(shouldRunAuthHelper){
+                npmExecOptions.env['npm_config_userconfig'] = tempNpmrcPath;
+            }
+
             if(debugLog) {
                 npmExecOptions.env['npm_config_loglevel'] =  'verbose';
             }
@@ -85,6 +93,25 @@ async function runNpmAuthHelperAsync(npmAuthRunner: trm.ToolRunner) : Promise<nu
         // warn on any auth failure and try to run the task.
         tl.warning(tl.loc('NpmAuthFailed', err.message));
     }
+}
+
+function copyUserNpmrc(tempNpmrcPath: string) {
+    // copy the user level npmrc contents, if it exists.
+    var currentUserNpmrcPath : string = getUserNpmrcPath();
+    if(tl.exist(currentUserNpmrcPath)) {
+        tl.debug(`Copying ${currentUserNpmrcPath} to ${tempNpmrcPath} ...`);
+        tl.cp(currentUserNpmrcPath, tempNpmrcPath, /* options */ null, /* continueOnError */ true);
+    }
+}
+
+function getUserNpmrcPath() {
+    var userNpmRc = process.env['npm_config_userconfig'];
+    if(!userNpmRc){
+        // default npm rc is located at user's home folder.
+        userNpmRc = path.join(process.env['HOMEDRIVE'], process.env['HOMEPATH'], '.npmrc');
+    }
+    tl.debug(`User npm rc: ${userNpmRc}`);
+    return userNpmRc;
 }
 
 async function tryRunNpmConfigAsync(npmConfigRunner: trm.ToolRunner, execOptions : trm.IExecOptions) {
@@ -178,6 +205,7 @@ function addBuildCredProviderEnv(env: EnvironmentDictionary) : EnvironmentDictio
     env['VSS_NUGET_ACCESSTOKEN'] = accessToken;
     env['VSS_NUGET_URI_PREFIXES'] = urlPrefixes.join(';');
     env['NPM_CREDENTIALPROVIDERS_PATH'] =  credProviderPath;
+    env['VSS_DISABLE_DEFAULTCREDENTIALPROVIDER'] = '1';
     return env;
 }
 
