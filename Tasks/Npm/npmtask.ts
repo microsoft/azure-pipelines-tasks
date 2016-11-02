@@ -63,7 +63,7 @@ async function executeTask() {
             if(shouldRunAuthHelper){
                 npmExecOptions.env['npm_config_userconfig'] = tempNpmrcPath;
             }
-            
+
             if(debugLog) {
                 npmExecOptions.env['npm_config_loglevel'] =  'verbose';
             }
@@ -205,6 +205,7 @@ function addBuildCredProviderEnv(env: EnvironmentDictionary) : EnvironmentDictio
     env['VSS_NUGET_ACCESSTOKEN'] = accessToken;
     env['VSS_NUGET_URI_PREFIXES'] = urlPrefixes.join(';');
     env['NPM_CREDENTIALPROVIDERS_PATH'] =  credProviderPath;
+    env['VSS_DISABLE_DEFAULTCREDENTIALPROVIDER'] = '1';
     return env;
 }
 
