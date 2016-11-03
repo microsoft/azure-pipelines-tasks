@@ -88,45 +88,45 @@ async function updateXmlConfigNodeAttribute(xmlDocument, xmlNode) {
 async function updateXmlNodeAttribute(xmlDomNode)
 {
 
-	if (utility.isEmpty(xmlDomNode) || !utility.isObject(xmlDomNode) || xmlDomNode.name == "#comment") 
-	{
-		tl.debug(tl.loc("Providednodeisempty"));
+    if (utility.isEmpty(xmlDomNode) || !utility.isObject(xmlDomNode) || xmlDomNode.name == "#comment") 
+    {
+        tl.debug(tl.loc("Providednodeisempty"));
         return;
-    }	
-	var xmlDomNodeAttributes = xmlDomNode.attrs;	
-	for(var attributeName in xmlDomNodeAttributes)
-	{
-		if(attributeName != "key")
-		{
-			if(!utility.isPredefinedVariable(attributeName))
-			{
-				var taskContextVariableValue = tl.getVariable(attributeName);
-				if(taskContextVariableValue)
-				{
-					xmlDomNode.attr(attributeName, taskContextVariableValue);
-				}
-			}
-		}
-		else
-		{
-			attributeName = xmlDomNodeAttributes[attributeName];
-			if(!utility.isPredefinedVariable(attributeName))
-			{
-				var taskContextVariableValue = tl.getVariable(attributeName);
-				if(taskContextVariableValue)
-				{
-					xmlDomNode.attr("value", taskContextVariableValue);
-				}
-			}	
-		}
-	}
+    }
+    var xmlDomNodeAttributes = xmlDomNode.attrs;	
+    for(var attributeName in xmlDomNodeAttributes)
+    {
+        if(attributeName != "key")
+        {
+            if(!utility.isPredefinedVariable(attributeName))
+            {
+                var taskContextVariableValue = tl.getVariable(attributeName);
+                if(taskContextVariableValue)
+                {
+                     xmlDomNode.attr(attributeName, taskContextVariableValue);
+                }
+            }
+        }
+        else
+        {
+            attributeName = xmlDomNodeAttributes[attributeName];
+            if(!utility.isPredefinedVariable(attributeName))
+            {
+                var taskContextVariableValue = tl.getVariable(attributeName);
+                if(taskContextVariableValue)
+                {
+                     xmlDomNode.attr("value", taskContextVariableValue);
+                }
+            }
+        }
+    }
 
-	var children = xmlDomNode.children;
+    var children = xmlDomNode.children;
     for(var i=0; i < children.length; i++)
-	{
-		var childNode = children[i];
+        {
+        var childNode = children[i];
         if(!utility.isEmpty(childNode) && typeof(childNode) == 'object')
-		{
+        {
             updateXmlNodeAttribute(childNode);
         }
     }
