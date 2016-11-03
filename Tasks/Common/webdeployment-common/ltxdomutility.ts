@@ -6,9 +6,9 @@ var xmlDomLookUpTable = {};
 var headerContent;
 
 export function initializeDOM(xmlContent) {
-    var xmlDom = ltx.parse(xmlContent);
     xmlDomLookUpTable = {};
     headerContent = null;
+    var xmlDom = ltx.parse(xmlContent);
     buildLookUpTable(xmlDom);
     return xmlDom;
 }
@@ -57,7 +57,7 @@ function buildLookUpTable(node) {
  *  Returns array of nodes which match with the tag name.
  */
 export function getElementsByTagName(nodeName) {
-    if(nodeName == null || nodeName == "")
+    if(utility.isEmpty(nodeName))
         return [];
     var selectedElements = xmlDomLookUpTable[nodeName.toLowerCase()];
     if(!selectedElements){
@@ -70,7 +70,7 @@ export function getElementsByTagName(nodeName) {
  *  Search in subtree with provided node name
  */
 export function getChildElementsByTagName(node, tagName){
-    if(utility.isEmpty(node) || !utility.isObject(node) )
+    if(!utility.isObject(node) )
         return [];
     var children = node.children;
     var liveNodes = [];
