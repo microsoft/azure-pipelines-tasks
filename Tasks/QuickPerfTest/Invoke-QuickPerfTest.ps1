@@ -28,16 +28,34 @@ function InitializeRestHeaders()
     $restHeaders = New-Object -TypeName "System.Collections.Generic.Dictionary[[String], [String]]"
 	if([string]::IsNullOrWhiteSpace($connectedServiceName))
 	{
-		$restHeaders.Add("Authorization", [String]::Concat("Bearer ", $env:SYSTEM_ACCESSTOKEN))
+		$patToken = Get-PersonalAccessToken $connectedServiceDetails
+		ValidatePatToken $patToken
+		$restHeaders.Add("Authorization", [String]::Concat("Bearer ", $patToken))
        
     }
 	else
 	{
+	   $Username = $connectedServiceDetails.Authorization.Parameters.Username
+	   Write-Verbose "Username = $Username" -Verbose
+	   $Password = $connectedServiceDetails.Authorization.Parameters.Password
 	   $alternateCreds = [String]::Concat($Username, ":", $Password)
        $basicAuth = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($alternateCreds))
        $restHeaders.Add("Authorization", [String]::Concat("Basic ", $basicAuth))
 	}
     return $restHeaders
+}
+
+function Get-PersonalAccessToken($vssEndPoint) 
+{
+    return $vssEndpoint.Authorization.Parameters.AccessToken
+}
+
+function ValidatePatToken($token)
+{
+	if([string]::IsNullOrWhiteSpace($token))
+	{
+		throw "Unable to generate Personal Access Token for the user. Contact Project Collection Administrator"
+	}
 }
 
   # Load all dependent files for execution
@@ -52,6 +70,8 @@ Write-Output "Starting Quick Perf Test Script"
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.DTA"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
 $testName = $testName + ".loadtest"
 Write-Output "Test name = $testName"
@@ -73,9 +93,7 @@ else
 {
     $connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
 }
-$Username = $connectedServiceDetails.Authorization.Parameters.Username
-Write-Verbose "Username = $Username" -Verbose
-$Password = $connectedServiceDetails.Authorization.Parameters.Password
+
 $VSOAccountUrl = $connectedServiceDetails.Url.AbsoluteUri
 Write-Output "VSO Account URL is : $VSOAccountUrl"
 $headers = InitializeRestHeaders
@@ -84,8 +102,6 @@ $TFSAccountUrl = $env:System_TeamFoundationCollectionUri.TrimEnd('/')
 
 Write-Output "VSO account Url = $TFSAccountUrl" -Verbose
 Write-Output "CLT account Url = $CltAccountUrl" -Verbose
-
-
 
 $dropjson = ComposeTestDropJson $testName $runDuration $websiteUrl $vuLoad $geoLocation
 

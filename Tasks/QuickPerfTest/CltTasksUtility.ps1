@@ -175,7 +175,7 @@ function ValidateInputs($websiteUrl, $tfsCollectionUrl, $connectedServiceName)
 	
 	if([string]::IsNullOrWhiteSpace($connectedServiceName) -and $tfsCollectionUrl -notlike "*VISUALSTUDIO.COM*" -and $tfsCollectionUrl -notlike "*TFSALLIN.NET*")
 	{
-		throw "VS Team Services Connection is mandatory for non hosted TFS builds "
+		throw "VS Team Services Connection is mandatory for non hosted TFS builds.Please specify a VS Team Services connection and try again "
 	}
 }
 
