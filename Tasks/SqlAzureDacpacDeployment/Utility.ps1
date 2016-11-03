@@ -246,6 +246,10 @@ function Run-Command
            cmd.exe /c "$command" 2>&1
         }
 
+        if ($LastExitCode -ne 0)
+        {
+            throw [System.Management.Automation.RuntimeException] "$command failed with exit code $LastExitCode"
+        }
     }
 	catch [System.Exception]
     {
