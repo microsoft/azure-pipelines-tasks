@@ -28,7 +28,7 @@ function InitializeRestHeaders()
     $restHeaders = New-Object -TypeName "System.Collections.Generic.Dictionary[[String], [String]]"
 	if([string]::IsNullOrWhiteSpace($connectedServiceName))
 	{
-		$patToken = Get-PersonalAccessToken $connectedServiceDetails
+		$patToken = Get-AccessToken $connectedServiceDetails
 		ValidatePatToken $patToken
 		$restHeaders.Add("Authorization", [String]::Concat("Bearer ", $patToken))
        
@@ -45,7 +45,7 @@ function InitializeRestHeaders()
     return $restHeaders
 }
 
-function Get-PersonalAccessToken($vssEndPoint) 
+function Get-AccessToken($vssEndPoint) 
 {
     return $vssEndpoint.Authorization.Parameters.AccessToken
 }
