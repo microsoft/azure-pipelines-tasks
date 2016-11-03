@@ -1,8 +1,8 @@
-# AzureRM Web App Deployment
+#  Azure App Service Deployment: ARM 
 
 ## Overview
 
-The AzureRM Web App Deployment task is used to deploy [Web Apps](https://azure.microsoft.com/en-in/documentation/articles/app-service-web-overview/) and [WebJobs](https://azure.microsoft.com/en-us/blog/webjobs-goes-into-full-production/) to Azure. The task works with the [Azure Resource Manager APIs](https://msdn.microsoft.com/en-us/library/azure/dn790568.aspx) only. The task works on cross platform agents running Windows, Linux or Mac and uses the underlying deployment technologies of [Web Deploy](https://www.iis.net/downloads/microsoft/web-deploy) and [Kudu](https://github.com/projectkudu/kudu/wiki/REST-API).
+The Azure App Service Deployment task is used to update Azure App Service to deploy [Web Apps](https://azure.microsoft.com/en-in/documentation/articles/app-service-web-overview/) and [WebJobs](https://azure.microsoft.com/en-us/blog/webjobs-goes-into-full-production/) to Azure. The task works with the [Azure Resource Manager APIs](https://msdn.microsoft.com/en-us/library/azure/dn790568.aspx) only. The task works on cross platform agents running Windows, Linux or Mac and uses the underlying deployment technologies of [Web Deploy](https://www.iis.net/downloads/microsoft/web-deploy) and [Kudu](https://github.com/projectkudu/kudu/wiki/REST-API).
 The task works for ASP.NET, ASP.NET Core 1 and Node.js based web applications.
 
 The task is **under development and is available to a limited set of accounts on Visual Studio Team Services (VSTS)**. The [video](https://www.youtube.com/watch?v=uQ2qCmaZ_Ag&feature=youtu.be) describes the features that are available in the task currently.
@@ -55,13 +55,13 @@ The task is used to deploy a Web  project to an existing Azure Web App. The mand
 
 * **Publish using Web Deploy:** Select the option to use Web Deploy technology on a Windows Agent. On other platforms, the task implicitly relies on [Kudu REST APIs](https://github.com/projectkudu/kudu/wiki/REST-API) to deploy the web App and following Web deploy options are not supported.
 
-* **SetParameters File:** (Optional) The parameter file is used to override the default settings in the web deploy zip package file like, the IIS Web application name or the database connection string. This helps in having a single package that can be deployed across dev, test, staging, and production, with a specific parameter file for each environment.
+* **Parameters File:** (Optional) The parameter file is used to override the default settings in the web deploy zip package file like, the IIS Web application name or the database connection string. This helps in having a single package that can be deployed across dev, test, staging, and production, with a specific parameter file for each environment.
 
 * **Remove Additional Files at Destination:** Select the option to delete the files in the AzureRM Web App that have no matching files in the Web App zip package. This will ensure that during the Web project deployment any additional files in the AzureRM Web App are deleted, and the only files in the AzureRM Web App are the ones in the Web App zip package.
 
 * **Exclude Files from the App_Data Folder:** Select the option to prevent files in the App_Data folder from being deployed to the AzureRM Web App. This is a useful option to select, if a local database or a WebJob has been deployed earlier to the AzureRM Web App, and they should not be deleted in the subsequent deployments of the Web project.
 
-* **Take App Offline:** Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully.
+* **Take Application Offline:** Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully.
 
 * **Additional Arguments:** Additional Web Deploy arguments that will be appended to the MSDeploy command while deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension. A useful parameter for enabling and disabling rules and for skipping syncing of certain folders.
 
