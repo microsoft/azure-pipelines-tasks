@@ -11,9 +11,9 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
+        "Major": 2,
         "Minor": 0,
-        "Patch": 95
+        "Patch": 0
     },
     "demands": [
         "azureps"
@@ -115,13 +115,64 @@
             "visibleRule": "action = Create Or Update Resource Group"
         },
         {
+            "name": "templateLocation",
+            "type": "pickList",
+            "label": "Template Location",
+            "required": true,
+            "defaultValue": "Linked Artifact",
+            "options": {
+                "Linked Artifact": "Linked Artifact",
+                "External URL": "External URL",
+                "Quick Start Template": "Quick Start Template"
+            },
+            "visibleRule": "action = Create Or Update Resource Group"
+        },
+        {
+            "name": "quickStartTemplate",
+            "type": "pickList",
+            "label": "Quick Start Template",
+            "required": true,
+            "defaultValue": "101-vm-simple-windows",
+            "options": {
+                "101-vm-simple-windows": "Deploy a simple Windows VM",
+                "101-vm-simple-linux": "Deploy a simple Linux VM",
+                "201-web-app-sql-database": "Provision a web app with a SQL Database"
+            },
+            "visibleRule": "action = Create Or Update Resource Group && templateLocation = Quick Start Template"
+        },
+        {
+            "name": "commitID",
+            "type": "string",
+            "label": "Commit ID",
+            "required": true,
+            "visibleRule": "action = Create Or Update Resource Group && templateLocation = Quick Start Template"
+        },
+        {
+            "name": "csmFileLink",
+            "type": "filePath",
+            "label": "Template Link",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate.",
+            "visibleRule": "action = Create Or Update Resource Group && templateLocation = External URL"
+        },
+        {
+            "name": "csmParametersFileLink",
+            "type": "filePath",
+            "label": "Template Parameters Link",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Specify the path for the parameters file for the Azure Resource Manager Template.",
+            "visibleRule": "action = Create Or Update Resource Group && templateLocation = External URL"
+        },
+        {
             "name": "csmFile",
             "type": "filePath",
             "label": "Template",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate.",
-            "visibleRule": "action = Create Or Update Resource Group"
+            "visibleRule": "action = Create Or Update Resource Group && templateLocation = Linked Artifact"
         },
         {
             "name": "csmParametersFile",
@@ -130,7 +181,7 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Specify the path for the parameters file for the Azure Resource Manager Template.",
-            "visibleRule": "action = Create Or Update Resource Group"
+            "visibleRule": "action = Create Or Update Resource Group && templateLocation = Linked Artifact"
         },
         {
             "name": "overrideParameters",
@@ -156,7 +207,7 @@
                 "Incremental": "Incremental",
                 "Complete": "Complete"
             },
-            "visibleRule": "action = Create Or Update Resource Group"
+            "visibleRule": "action = Create Or Update Resource Group && templateLocation = Linked Artifact"
         },
         {
             "name": "enableDeploymentPrerequisitesForCreate",
@@ -196,7 +247,7 @@
     "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
     "execution": {
         "Node": {
-            "target": "DeployAzureRG.js"
+            "target": "main.js"
         }
     },
     "messages": {
