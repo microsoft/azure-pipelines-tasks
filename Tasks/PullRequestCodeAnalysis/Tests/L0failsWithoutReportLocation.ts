@@ -8,7 +8,7 @@ let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 process.env['BUILD_SOURCEBRANCH'] = 'refs/pull/6/master'; //task-lib doesn't support getVariable yet, so we need these
 process.env['BUILD_REPOSITORY_ID'] = '00000000-0000-0000-0000-000000000000';
 process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = '{\"scheme\":\"OAuth\", \"parameters\": {\"AccessToken\": \"foobar\"}}';
-process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = 'https://youraccount.visualstudio.com/DefaultCollection';
+process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = 'https://notanaccount.notvisualstudio.com/DefaultCollection';
 
 tmr.setInput('messageLimit', '100');
 
@@ -18,7 +18,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "Build.SourceBranch": "refs/pull/6/master",
         "Build.Repository.Id": "00000000-0000-0000-0000-000000000000",
         "ENDPOINT_AUTH_SYSTEMVSSCONNECTION": "{\"scheme\":\"OAuth\", \"parameters\": {\"AccessToken\": \"foobar\"}}",
-        "System.TeamFoundationCollectionUri": "https://youraccount.visualstudio.com/DefaultCollection"
+        "System.TeamFoundationCollectionUri": "https://notanaccount.notvisualstudio.com/DefaultCollection",
     },
 };
 tmr.setAnswers(a);
