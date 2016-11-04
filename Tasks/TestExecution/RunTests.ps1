@@ -52,7 +52,7 @@ try {
     # Import the helpers.
     . $PSScriptRoot\DownloadTestPlatform.ps1
     . $PSScriptRoot\TestAgentConfiguration.ps1
-    Import-Module "$PSScriptRoot\modules\MS.TF.Task.TestExecution.dll"
+    Import-Module "$PSScriptRoot\modules\Microsoft.TeamFoundation.DistributedTask.Task.TestExecution.dll"
 
     # Fix Assembly Redirections
     # VSTS uses Newton Json 8.0 while the System.Net.Http uses 6.0
@@ -79,8 +79,18 @@ try {
 
     # Generate Environment URI
     # This is uniqure environment URI for each DTA Run. One can dynamically add machines by overrriding this with current URI
-    $taskInstanceId = Get-DtaInstanceId
-    $environmentUri = "dta://env/Test/release/$releaseId/$phaseId/$taskInstanceId"
+    $taskInstanceIdString = Get-VstsTaskVariable -Name DTA_INSTANCE_ID
+    $taskInstanceId = 1
+    
+    if($taskInstanceIdString) {
+        [int]::TryParse($taskInstanceIdString, [ref]$taskInstanceId)
+        $taskInstanceId++
+    }
+    
+    Set-VstsTaskVariable -Name DTA_INSTANCE_ID -Value $taskInstanceId
+
+    $taskInstanceId = Get-VstsTaskVariable -Name DTA_INSTANCE_ID
+    $environmentUri = "dta://env/Test/_apis/release/$releaseId/$phaseId/$taskInstanceId"
 
     # *** Todo ***
     # Handle errors properly
@@ -109,26 +119,14 @@ try {
     $testRunParameters.Add("TestRunTitle", $testRunTitle);
     $testRunParameters.Add("TestSelection", $testSelection);
     $testRunParameters.Add("TestPlan", $testPlan);
-    $testRunParameters.Add("TestSuite", $testSuite);
+    $testRunParameters.Add("TestSuites", $testSuite);
     $testRunParameters.Add("TestPlanConfigId", $testPlanConfigId);
     $testRunParameters.Add("CustomSlicingEnabled", $customSlicingEnabled);
     $testRunParameters.Add("EnvironmentUri", $environmentUri);
     
-   $runTests.StartExecution($testRunParameters)
+    $runTests = New-Object 'Microsoft.TeamFoundation.DistributedTask.Task.TestExecution.RunTests'
+    $runTests.StartExecution($testRunParameters)
 
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation
-}
-
-function Get-DtaInstanceId(){
-    $taskInstanceIdString = Get-VstsTaskVariable -Name DTA_INSTANCE_ID
-    $taskInstanceId = 1
-    
-    if($taskInstanceIdString) {
-        [int]::TryParse($taskInstanceIdString, [ref]$taskInstanceId)
-        $taskInstanceId++
-    }
-    
-    Set-VstsTaskVariable -Name DTA_INSTANCE_ID -Value $taskInstanceId
-    return $taskInstanceId
 }
