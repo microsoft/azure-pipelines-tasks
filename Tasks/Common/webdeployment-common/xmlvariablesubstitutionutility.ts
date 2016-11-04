@@ -5,9 +5,7 @@ import fs = require('fs');
 var ltx = require("ltx");
 var utility = require ('./utility.js');
 var ltxdomutility = require("./ltxdomutility.js");
-var xmldom = require('xmldom');
-var serializer = new xmldom.XMLSerializer;
-var implementation = new xmldom.DOMImplementation;
+var fileEncoding = require('./fileencoding.js');
 
 export async function substituteAppSettingsVariables(folderPath) {
     var configFiles = tl.glob(folderPath + "/**/*config");
@@ -25,7 +23,12 @@ async function substituteXmlVariables(configFile, tags){
         return;
     }
     tl.debug(tl.loc("Initiatedvariablesubstitutioninconfigfile", configFile));
-    var webConfigContent = fs.readFileSync(configFile);
+    var fileBuffer: Buffer = fs.readFileSync(configFile);
+    var fileEncodeType = fileEncoding.detectFileEncoding(fileBuffer);
+    var webConfigContent: string = fileBuffer.toString(fileEncodeType[0]);
+    if(fileEncodeType[1]) {
+        webConfigContent = webConfigContent.slice(1);
+    }
     var xmlDocument;
     try{
         xmlDocument = ltxdomutility.initializeDOM(webConfigContent);
@@ -58,7 +61,8 @@ async function substituteXmlVariables(configFile, tags){
             }  
         }
     }
-    fs.writeFile(configFile, ltxdomutility.getContentWithHeader(xmlDocument), function(error) {
+    var domContent = (fileEncodeType[1]?'\UFEFF':'') + ltxdomutility.getContentWithHeader(xmlDocument);
+    fs.writeFile(configFile, domContent, fileEncodeType[0], function(error) {
         if (error) {
             throw new Error(tl.loc("Failedtowritetoconfigfilewitherror",configFile, error));
         } else {
@@ -89,7 +93,7 @@ async function updateXmlNodeAttribute(xmlDomNode)
 {
 
     if (utility.isEmpty(xmlDomNode) || !utility.isObject(xmlDomNode) || xmlDomNode.name == "#comment") {
-        tl.debug(tl.loc("Providednodeisempty"));
+        tl.debug(tl.loc("Providednodeisemptyorcomment"));
         return;
     }
     var xmlDomNodeAttributes = xmlDomNode.attrs;	

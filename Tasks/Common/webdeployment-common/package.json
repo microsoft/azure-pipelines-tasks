@@ -14,7 +14,7 @@
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
     "vsts-task-lib": "^0.9.20",
-	  "q": "^1.4.1",
+    "q": "^1.4.1",
     "adal-node": "^0.1.15",
     "xml2js": "^0.4.13",
     "decompress-zip": "^0.3.0",

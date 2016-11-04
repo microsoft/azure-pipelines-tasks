@@ -252,7 +252,7 @@
         "JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "JSON variable substitution can only be applied for JSON files",
         "Unabletofindnodewithtaginprovidedxmlfile": "Unable to find node with tag '%s' in provided xml file.",
         "Configfiledoesntexists": "Config file %s doesn't exist.",
-        "Providednodeisempty": "Provided node is empty.",
+        "Providednodeisemptyorcomment": "Provided node is empty or a comment.",
         "Configfileupdated": "Config file %s updated.",
         "Failedtowritetoconfigfilewitherror": "Failed to write to config file %s with error : %s",
         "Erroroccurredwhileprocessingxmlnode": "Error occurred while processing xml node : %s.",
