@@ -107,7 +107,6 @@ export class RegisterEnvironment {
         this.getVMDetails();
         this.getNetworkInterfaceDetails();
         this.getPublicIPAddresses();
-        ///TODO: WinRmHttpsPort opening here
     }
 
     private InstantiateEnvironment() {
@@ -190,6 +189,7 @@ export class RegisterEnvironment {
                 console.log("Error while getting list of Public Addresses", error);
                 throw new Error("FailedToFetchPublicAddresses");
             }
+            console.log("Result: %s", util.inspect(publicAddresses, {depth: null}));
             var fqdns = {}
             for (var i = 0; i < publicAddresses.length; i++) {
                 var publicAddress = publicAddresses[i];
@@ -205,6 +205,23 @@ export class RegisterEnvironment {
             this.InstantiateEnvironment();
         });
     }
+    
+}
+
+export class WinRMExtension{
+    private resourceGroupName: string;
+    private credentials;
+    private subscriptionId: string;
+    private enablePrereq: boolean;
+
+    constructor(resourceGroupName: string, credentials, subscriptionId: string, enablePrereq: boolean){
+        this.resourceGroupName = resourceGroupName;
+        this.credentials = credentials;
+        this.subscriptionId = subscriptionId;
+        this.enablePrereq = enablePrereq;
+        this.GetAzureRMVMsConnectionDetailsInResourceGroup(this.enablePrereq);
+    }
+
     
     private AddInboundNetworkSecurityRule(retryCnt: number, securityGrpName, networkClient, ruleName, rulePriority, winrmHttpsPort){
            try{
@@ -223,15 +240,18 @@ export class RegisterEnvironment {
                 console.log("Failed to add inbound network security rule config %s with priority %s for port %s under security group %s: %s", ruleName, rulePriority, winrmHttpsPort, securityGrpName, exception.message);
                 rulePriority = rulePriority + 50;
                 console.log("Getting network security group %s in resource group %s", securityGrpName, this.resourceGroupName);
+
                 networkClient.networkSecurityGroups.list(this.resourceGroupName, (error, result, request, response)=>{
                     if(error){
                         console.log("Error in getting the list of network Security Groups for the resource-group %s", this.resourceGroupName);
                         throw "FetchingOfNetworkSecurityGroupFailed";
                     }
+
                     if(result.length > 0){
                         console.log("Got network security group %s in resource group %s", securityGrpName, this.resourceGroupName);
                         if(retryCnt>0){
-                            this.AddInboundNetworkSecurityRule(retryCnt - 1, securityGrpName, networkClient, ruleName, rulePriority, winrmHttpsPort);
+                            retryCnt = retryCnt - 1;
+                            this.AddInboundNetworkSecurityRule(retryCnt, securityGrpName, networkClient, ruleName, rulePriority, winrmHttpsPort);
                         }
                     }
                 });
@@ -244,6 +264,7 @@ export class RegisterEnvironment {
             var securityGrp = securityGroups[i];
             var securityGrpName = securityGrp["name"];
 
+            var maxtries = 3;
             try{
                 console.log("Getting the network security rule config %s under security group %s", ruleName, securityGrpName);
 
@@ -305,6 +326,8 @@ export class RegisterEnvironment {
                 3.Add the inbound rule to allow traffic on winrmHttpsPort
             */
             var computeClient = new computeManagementClient(this.credentials, this.subscriptionId);
+            var networkClient = new networkManagementClient(this.credentials, this.subscriptionId);
+
             console.log("Checking if the extension %s is present on vm %s", _extensionName, vmName);
             
             computeClient.virtualMachineExtensions.get(this.resourceGroupName, vmName, _extensionName, (error, result, request , response)=>{
@@ -405,5 +428,286 @@ export class RegisterEnvironment {
                 console.log("Successfully removed the extension %s from the VM %s", extensionName, vmName);
             }
         });
+    }
+
+    private GetAzureRMVMsConnectionDetailsInResourceGroup(enablePrereqs: boolean){
+        var fqdnMap = {};
+        var winRmHttpsPortMap = {};
+        var vmResourceDetails = {};
+
+        var debugLogsFlag = process.env["SYSTEM_DEBUG"];
+        
+        var networkClient = new networkManagementClient(this.credentials, this.subscriptionId);
+        var computeClient = new computeManagementClient(this.credentials, this.subscriptionId);
+
+        computeClient.virtualMachines.list(this.resourceGroupName, (error, virtualMachines, request, response) => {
+            if(error){
+                console.log("Error in getting the list of virtual Machines %s", error);
+                throw new Error("FailedToFetchVMList");
+            }
+            networkClient.publicIPAddresses.list(this.resourceGroupName, (error, publicIPAddresses, request, response) => {
+                if (error){
+                    console.log("Error while getting list of Public Addresses %s", error);
+                    throw new Error("FailedToFetchPublicAddresses");
+                }
+                networkClient.networkInterfaces.list(this.resourceGroupName, (error, networkInterfaces, request, response) => {
+                    if(error){
+                        console.log("Failed to get the list of networkInterfaces list %s", util.inspect(error, {depth: null}));
+                        throw new Error("Failed to get the list of network Interfaces");
+                    }
+
+                    //get the load balancer details 
+                    networkClient.loadBalancers.list(this.resourceGroupName, (error, result, request, response)=>{
+                        if(error){
+                            console.log("Error while getting the list of load Balancers %s", util.inspect(error, {depth: null}));
+                            throw new Error("FailedToFetchLoadBalancers");
+                        }
+
+                        //console.log("result: %s", util.inspect(result, {depth: null}));
+                        if(result.length > 0){
+                            for(var i = 0; i < result.length; i++){
+                                var lbName = result[i]["name"];
+                                var frontEndIPConfigs = result[i]["frontendIPConfigurations"];
+                                var inboundRules = result[i]["inboundNATRules"];
+                                
+                                fqdnMap = this.GetMachinesFqdnForLB(publicIPAddresses, networkInterfaces, frontEndIPConfigs, fqdnMap, debugLogsFlag);
+
+                                winRmHttpsPortMap = this.GetFrontEndPorts("5986", winRmHttpsPortMap, networkInterfaces, inboundRules, debugLogsFlag);
+                            }
+
+                            winRmHttpsPortMap = this.GetMachineNameFromId(winRmHttpsPortMap, "Front End port", virtualMachines, false, debugLogsFlag);
+                        }
+                        
+                        fqdnMap = this.GetMachinesFqdnsForPublicIP(publicIPAddresses, networkInterfaces, virtualMachines, fqdnMap, debugLogsFlag);
+
+                        fqdnMap = this.GetMachineNameFromId(fqdnMap, "FQDN", virtualMachines, true, debugLogsFlag);
+
+                        for(var i =0; i < virtualMachines.length; i++){
+                            var vm = virtualMachines[i];
+                            var resourceName = vm["name"];
+                            var resourceId = vm["id"];
+                            var resourceFQDN = fqdnMap[resourceName];
+                            var resourceWinRmHttpsPort = winRmHttpsPortMap[resourceName];
+
+                            if(resourceWinRmHttpsPort || resourceWinRmHttpsPort === ""){
+                                console.log("Defaulting WinRmHttpsPort of %s to 5986", resourceName);
+                                resourceWinRmHttpsPort = "5986";
+                            }
+
+                            if(enablePrereqs === true){
+                                console.log("Enabling winrm for virtual machine %s", resourceName);
+                                this.AddAzureVMCustomScriptExtension(resourceId, resourceName, resourceFQDN, vm["location"]);
+                            }
+                        }
+
+                    });
+                    
+                });
+
+            });
+
+        });
+    }
+
+    private GetMachinesFqdnsForPublicIP(publicIPAddressResources: [Object], networkInterfaceResources: [Object], azureRMVMResources: [Object], fqdnMap: {}, debugLogsFlag: string): {} {
+        if(!!this.resourceGroupName && this.resourceGroupName != "" && !!publicIPAddressResources && networkInterfaceResources){
+            console.log("Trying to get FQDN for the azureRM VM resources under public IP from resource group %s", this.resourceGroupName);
+
+            //Map the ipc to fqdn
+            for(var i =0; i < publicIPAddressResources.length; i++){
+                var publicIp = publicIPAddressResources[i];
+                if(!!publicIp["ipConfiguration"] && !!publicIp["ipConfiguration"]["id"] && publicIp["ipConfiguration"]["id"] != ""){
+                    if(!!publicIp["dnsSettings"] && !!publicIp["dnsSettings"]["fqdn"] && publicIp["dnsSettings"]["fqdn"] != ""){
+                        fqdnMap[publicIp["ipConfiguration"]["id"]] = publicIp["dnsSettings"]["fqdn"];
+                    }
+                    else if(!!publicIp["ipAddress"] && publicIp["ipAddress"] != ""){
+                        fqdnMap[publicIp["ipConfiguration"]["id"]] = publicIp["ipAddress"];
+                    }
+                    else if(!publicIp["ipAddress"]){
+                        fqdnMap[publicIp["ipConfiguration"]["id"]] = "Not Assigned";
+                    }
+                }
+            }
+
+            if(debugLogsFlag === "true"){
+                //fill here
+            }
+
+            //Find out the NIC and thus the VM corresponding to a given ipc
+            for(var i =0; i < networkInterfaceResources.length; i++){
+                var nic = networkInterfaceResources[i];
+                if(!!nic["ipConfigurations"]){
+                    for(var j=0; j < nic["ipConfigurations"].length; j++){
+                        var ipc = nic["ipConfigurations"][j];
+                        if(!!ipc["id"] && ipc["id"] != ""){
+                            var fqdn = fqdnMap[ipc["id"]];
+                            if(!!fqdn && fqdn != ""){
+                                delete fqdnMap[ipc["id"]];
+                                if(!!nic["virtualMachine"] && !!nic["virtualMachine"]["id"] && nic["virtualMachine"]["id"] != ""){
+                                    fqdnMap[nic["virtualMachine"]["id"]] = fqdn;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if(debugLogsFlag == "true"){
+                //fill here
+            }
+        }
+
+        console.log("Got FQDN for the azureRM VM resources under public IP from resource Group %s", this.resourceGroupName);
+        return fqdnMap;
+    }
+
+    private GetMachineNameFromId(map: {}, mapParameter: string, azureRMVMResources: [Object], throwOnTotalUnavailability: boolean, debugLogsFlag: string): {} {
+        if(!!map){
+            if(debugLogsFlag == "true"){
+                //fill here
+            }
+
+            console.log("throwOnTotalUnavailability: %s", throwOnTotalUnavailability);
+
+            var errorCount = 0;
+            for(var i =0; i < azureRMVMResources.length; i++){
+                var vm = azureRMVMResources[i];
+                if(!!vm["id"] && vm["id"] != ""){
+                    var value = map[vm["id"]];
+                    var resourceName = vm["name"];
+                    if(!!value && value != ""){
+                        console.log("%s value for resource %s is %s", mapParameter, resourceName, value);
+                        delete map[vm["id"]];
+                        map[resourceName] = value;
+                    }
+                    else{
+                        errorCount = errorCount + 1;
+                        console.log("Unable to find %s for resource %s", mapParameter, resourceName);
+                    }
+                }
+            }
+
+            if(throwOnTotalUnavailability === true){
+                //fill here
+            }
+        }
+
+        return map;
+    }
+
+    private GetFrontEndPorts(backEndPort: string, portList: {}, networkInterfaceResources: [Object], inboundRules: [Object], debugLogsFlag: string): {} {
+        if(!!backEndPort && backEndPort != "" && !!networkInterfaceResources && !!inboundRules){
+            console.log("Trying to get front end ports for %s", backEndPort);
+            
+            for(var i =0; i < inboundRules.length; i++){
+                var rule = inboundRules[i];
+                if(rule["backendPort"] == backEndPort && !!rule["backendIPConfiguration"] && !!rule["backendIPConfiguration"]["id"] && rule["backendIPConfiguration"]["id"] != ""){
+                    portList[rule["backendIPConfiguration"]["id"]] = rule["frontendPort"];
+                }
+            }
+
+            if(debugLogsFlag === "true"){
+                //fill here
+            }
+
+            //get the nic and the corrresponding machine id for a given back end ipc
+            for(var i = 0; i < networkInterfaceResources.length; i++){
+                var nic = networkInterfaceResources[i];
+                if(!!nic["ipConfigurations"]){
+                    for(var j =0; j < nic["ipConfigurations"].length; j++){
+                        var ipc = nic["ipConfigurations"][j];
+                        if(!!ipc && !!ipc["id"] && ipc["id"] != ""){
+                            var frontendPort = portList[ipc["id"]];
+                            if(!!frontendPort && frontendPort != ""){
+                                delete portList[ipc["id"]];
+                                if(!!nic["virtualMachine"] && !!nic["virtualMachine"]["id"] && nic["virtualMachine"]["id"] != ""){
+                                    portList[nic["virtualMachine"]["id"]] = frontendPort;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if(debugLogsFlag == "true"){
+                //fill here
+            }
+        }
+
+        console.log("Got front end ports for %s", backEndPort);
+        return portList;
+    }
+
+    private GetMachinesFqdnForLB(publicIPAddress: [Object], networkInterfaceResources: [Object], frontEndIPConfigs: [Object], fqdnMap: {}, debugLogsFlag: string) : {} {
+        if(!!this.resourceGroupName && this.resourceGroupName != "" && !!publicIPAddress && !!networkInterfaceResources && !!frontEndIPConfigs){
+            console.log("Trying to get the FQDN for the azureVM resources under load balancer from resource group %s", this.resourceGroupName);
+
+            for(var i =0; i < publicIPAddress.length; i++) {
+                var publicIp = publicIPAddress[i];
+                if(!!publicIp["ipConfiguration"] && !!publicIp["ipConfiguration"]["id"] && publicIp["ipConfiguration"]["id"] != "") {
+                    if(!!publicIp["dnsSettings"] && !!publicIp["dnsSettings"]["fqdn"] && publicIp["dnsSettings"]["fqdn"] != "") {
+                        fqdnMap[publicIp["id"]] = publicIp["dnsSettings"]["fqdn"];
+                    }
+                    else if(!!publicIp["ipAddress"] && publicIp["ipAddress"] != "") {
+                        fqdnMap[publicIp["id"]] = publicIp["ipAddress"];
+                    }
+                    else if(!publicIp["ipAddress"]) {
+                        fqdnMap[publicIp["id"]] = "Not Assigned";
+                    }
+                }
+            }
+            
+            if(debugLogsFlag === "true") {
+                //fill here
+            }
+
+            //Get the NAT rule for a given ip id
+            for(var i =0; i < frontEndIPConfigs.length; i++) {
+                var config = frontEndIPConfigs[i];
+                if(!!config["publicIPAddress"] && !!config["publicIPAddress"]["id"] && config["publicIPAddress"]["id"] != "") {
+                    var fqdn = fqdnMap[config["publicIPAddress"]["id"]];
+                    if(!!fqdn && fqdn != "") {
+                        delete fqdnMap[config["publicIPAddress"]["id"]];
+                        for(var j =0; j < config["inboundNatRules"].length; j++) {
+                            fqdnMap[config["inboundNatRules"][j]["id"]] = fqdn;
+                        }
+                    }
+                }
+            }
+
+            if(debugLogsFlag === "true") {
+                //fill here
+            }
+
+            for(var i = 0 ; i < networkInterfaceResources.length; i++) {
+                var nic = networkInterfaceResources[i];
+                if(!!nic["ipConfigurations"]){
+                    for(var j = 0; j < nic["ipConfigurations"].length; j++) {
+                        var ipc = nic["ipConfigurations"][j];
+                        if(!!ipc["loadBalancerInboundNatRules"]){
+                            for(var k =0; k < ipc["loadBalancerInboundNatRules"].length; k++) {
+                                var rule = ipc["loadBalancerInboundNatRules"][k];
+                                if(!!rule && !!rule["id"] && rule["id"] != "") {
+                                    var fqdn = fqdnMap[rule["id"]];
+                                    if(!!fqdn && fqdn!= "") {
+                                        delete fqdnMap[rule["id"]];
+                                        if(!!nic["virtualMachine"] && !!nic["virtualMachine"]["id"] && nic["virtualMachine"]["id"] != "") {
+                                            fqdnMap[nic["virtualMachine"]["id"]] = fqdn;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if(debugLogsFlag === "true"){
+                //fill here
+            }
+        }
+
+        console.log("Got FQDN for the RM azureVM resources under load balancer from resource Group %s", this.resourceGroupName);
+        return fqdnMap;
     }
 }
