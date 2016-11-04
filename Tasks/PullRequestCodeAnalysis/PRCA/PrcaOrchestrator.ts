@@ -105,6 +105,7 @@ export class PrcaOrchestrator {
                 return this.PrcaService.getModifiedFilesInPr()
                     .catch((error) => {
                         this.logger.LogDebug(`Failed to get the files modified by the pull request. Reason: ${error}`);
+                        // Looks like: "Failed to get the files modified by the pull request."
                         return Promise.reject(tl.loc('Info_ResultFail_FailedToGetModifiedFiles'));
                     });
             })
@@ -118,6 +119,7 @@ export class PrcaOrchestrator {
                 return this.PrcaService.deleteCodeAnalysisComments()
                     .catch((error) => {
                         this.logger.LogDebug(`Failed to delete previous PRCA comments. Reason: ${error}`);
+                        // Looks like: "Failed to delete previous PRCA comments."
                         return Promise.reject(tl.loc('Info_ResultFail_FailedToDeleteOldComments'));
                     });
             })
@@ -127,6 +129,7 @@ export class PrcaOrchestrator {
                 return this.PrcaService.createCodeAnalysisThreads(messagesToPost)
                     .catch((error) => {
                         this.logger.LogDebug(`Failed to post new PRCA comments. Reason: ${error}`);
+                        // Looks like: "Failed to post new PRCA comments."
                         return Promise.reject(tl.loc('Info_ResultFail_FailedToPostNewComments'));
                     });
             });
