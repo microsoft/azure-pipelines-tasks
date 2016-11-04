@@ -34,9 +34,13 @@
   },
   "messages": {
     "Error_InvalidMessageLimit": "ms-resource:loc.messages.Error_InvalidMessageLimit",
-    "Error_NotPullRequest": "ms-resource:loc.messages.Error_NotPullRequest",
     "Error_InvalidPullRequestId": "ms-resource:loc.messages.Error_InvalidPullRequestId",
-    "Result_Fail": "ms-resource:loc.messages.Result_Fail",
-    "Result_Success": "ms-resource:loc.messages.Result_Success"
+    "Error_FailedToGetAuthToken": "ms-resource:loc.messages.Error_FailedToGetAuthToken",
+    "Info_NotPullRequest": "ms-resource:loc.messages.Info_NotPullRequest",
+    "Info_ResultFail_FailedToGetModifiedFiles": "ms-resource:loc.messages.Info_ResultFail_FailedToGetModifiedFiles",
+    "Info_ResultFail_FailedToDeleteOldComments": "ms-resource:loc.messages.Info_ResultFail_FailedToDeleteOldComments",
+    "Info_ResultFail_FailedToPostNewComments": "ms-resource:loc.messages.Info_ResultFail_FailedToPostNewComments",
+    "Info_ResultFail": "ms-resource:loc.messages.Info_ResultFail",
+    "Info_ResultSuccess": "ms-resource:loc.messages.Info_ResultSuccess"
   }
 }
