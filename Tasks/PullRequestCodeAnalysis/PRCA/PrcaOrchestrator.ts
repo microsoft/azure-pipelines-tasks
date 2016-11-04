@@ -2,6 +2,7 @@
 
 import * as path from 'path';
 
+import tl = require('vsts-task-lib/task');
 import * as web from 'vso-node-api/WebApi';
 import { WebApi } from 'vso-node-api/WebApi';
 
@@ -94,12 +95,19 @@ export class PrcaOrchestrator {
     public postSonarQubeIssuesToPullRequest(sqReportPath: string): Promise<void> {
         this.logger.LogDebug(`SonarQube report path: ${sqReportPath}`);
         if (sqReportPath === undefined || sqReportPath === null) {
-            throw new Error("Make sure a SonarQube enabled build task ran before this step.");
+            return Promise.reject('Make sure a SonarQube-enabled build task ran before this step.');
         }
 
         var allMessages:Message[] = this.sqReportProcessor.FetchCommentsFromReport(sqReportPath);
         var messagesToPost:Message[] = null;
-        return this.PrcaService.getModifiedFilesInPr()
+        return Promise.resolve()
+            .then(() => {
+                return this.PrcaService.getModifiedFilesInPr()
+                    .catch((error) => {
+                        this.logger.LogDebug(`Failed to get the files modified by the pull request. Reason: ${error}`);
+                        return Promise.reject(tl.loc('Info_ResultFail_FailedToGetModifiedFiles'));
+                    });
+            })
             .then((filesChanged: string[]) => {
                 this.logger.LogDebug(`${filesChanged.length} changed files in the PR.`);
 
@@ -107,12 +115,20 @@ export class PrcaOrchestrator {
             })
             .then(() => {
                 // Delete previous messages
-                return this.PrcaService.deleteCodeAnalysisComments();
+                return this.PrcaService.deleteCodeAnalysisComments()
+                    .catch((error) => {
+                        this.logger.LogDebug(`Failed to delete previous PRCA comments. Reason: ${error}`);
+                        return Promise.reject(tl.loc('Info_ResultFail_FailedToDeleteOldComments'));
+                    });
             })
             .then(() => {
                 // Create new messages
                 this.logger.LogDebug(`${messagesToPost.length} messages are to be posted.`);
-                return this.PrcaService.createCodeAnalysisThreads(messagesToPost);
+                return this.PrcaService.createCodeAnalysisThreads(messagesToPost)
+                    .catch((error) => {
+                        this.logger.LogDebug(`Failed to post new PRCA comments. Reason: ${error}`);
+                        return Promise.reject(tl.loc('Info_ResultFail_FailedToPostNewComments'));
+                    });
             });
     }
 

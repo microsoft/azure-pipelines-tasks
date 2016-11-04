@@ -50,6 +50,10 @@ function VerifyMessage(
     chai.expect(actualMessage.priority).to.equal(expectedPriority, 'Priority mismatch');
 }
 
+function AssertMessageInStdout(stdout: string, message:string):void {
+    assert(stdout.indexOf(message) > -1, `Expected to see message in stdout, but did not: "${message}"`);
+}
+
 describe('The PRCA', function () {
     describe('unit', () => {
         describe('Orchestrator', () => {
@@ -746,4 +750,53 @@ describe('The PRCA', function () {
             });
         });
     });
+
+    describe('task', () => {
+
+        it('succeeds but skips on a non-PR build', (done:MochaDone) => {
+            this.timeout(1000);
+
+            let tp: string = path.join(__dirname, 'L0skipsNotPr.js');
+            let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+            tr.run();
+            assert(tr.stderr.length == 0, 'should not have written to stderr');
+            assert(tr.succeeded, 'task should have succeeded');
+
+            done();
+        });
+
+        it('fails if the SonarQube report location is not available', (done:MochaDone) => {
+            this.timeout(1000);
+
+            let tp: string = path.join(__dirname, 'L0failsWithoutReportLocation.js');
+            let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+            tr.run();
+            assert(tr.stderr.length == 0, 'should not have written to stderr');
+            assert(tr.failed, 'task should have failed');
+            AssertMessageInStdout(tr.stdout, 'Make sure a SonarQube-enabled build task ran before this step.');
+
+            done();
+        });
+
+        it('fails correctly when a connection cannot be made to the server', (done:MochaDone) => {
+            // NB: This is not an integration test.
+            // Therefore, we expect a failure when the API calls against a non-existent VSTS server.
+
+            this.timeout(1000);
+
+            let tp: string = path.join(__dirname, 'L0runsWithReportLocation.js');
+            let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+            tr.run();
+            assert(tr.stderr.length == 0, 'should not have written to stderr');
+            assert(tr.failed, 'task should have failed');
+            AssertMessageInStdout(tr.stdout, 'Failed to get the files modified by the pull request.');
+            AssertMessageInStdout(tr.stdout, 'Task failed with the following error: loc_mock_Info_ResultFail_FailedToGetModifiedFiles');
+
+            done();
+        });
+
+    })
 });

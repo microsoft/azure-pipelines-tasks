@@ -34,9 +34,13 @@
     },
     "messages": {
         "Error_InvalidMessageLimit": "Expected message limit to be a number, but instead it was %s",
-        "Error_NotPullRequest": "Skipping pull request commenting - this build was not triggered by a pull request.",
         "Error_InvalidPullRequestId": "Could not retrieve pull request ID from the server.",
-        "Result_Fail": "Pull Request Code Analysis failed.",
-        "Result_Success": "Pull Request Code Analysis succeeded."
+        "Error_FailedToGetAuthToken": "Could not get an authentication token from the build agent.",
+        "Info_NotPullRequest": "Skipping pull request commenting - this build was not triggered by a pull request.",
+        "Info_ResultFail_FailedToGetModifiedFiles": "Failed to get the files modified by the pull request.",
+        "Info_ResultFail_FailedToDeleteOldComments": "Failed to delete previous PRCA comments.",
+        "Info_ResultFail_FailedToPostNewComments": "Failed to post new PRCA comments.",
+        "Info_ResultFail": "Pull Request Code Analysis failed.",
+        "Info_ResultSuccess": "Pull Request Code Analysis succeeded."
     }
 }
