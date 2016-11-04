@@ -33,15 +33,16 @@ if (!sourceBranch.startsWith('refs/pull/')) {
     var repositoryId: string = tl.getVariable('Build.Repository.Id');
 
     // Get authentication from the agent itself
-    let token = "";
     var auth = tl.getEndpointAuthorization("SYSTEMVSSCONNECTION", false);
     if (auth.scheme !== "OAuth") {
         // We cannot get the access token, fail the task
+        // Looks like: "Could not get an authentication token from the build agent."
         tl.error(tl.loc('Error_FailedToGetAuthToken'));
+        // Looks like: "Pull Request Code Analysis failed."
         tl.setResult(tl.TaskResult.Failed, tl.loc('Info_ResultFail')); // Set task failure
     }
 
-    token = auth.parameters["AccessToken"];
+    let token = auth.parameters["AccessToken"];
     var pullRequestId: number = Number.parseInt(sourceBranch.replace('refs/pull/', ''));
     if (isNaN(pullRequestId)) {
         tl.debug(`Expected pull request ID to be a number. Attempted to parse: ${sourceBranch.replace('refs/pull/', '')}`);
@@ -56,6 +57,7 @@ if (!sourceBranch.startsWith('refs/pull/')) {
         })
         .catch((error:any) => {
             tlLogger.LogDebug(`Task failed with the following error: ${error}`);
+            // Looks like: "Pull Request Code Analysis failed."
             tl.setResult(tl.TaskResult.Failed, tl.loc('Info_ResultFail')); // Set task failure
         });
 }
