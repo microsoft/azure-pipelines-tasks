@@ -61,7 +61,7 @@ class Environment {
     public CreatedDate: string;
     public ModifiedDate: string;
 
-    constructor(resources: Array<Resource>, userId: string, projectName: string, environmentName: string, enablePrereqs?) {
+    constructor(resources: Array<Resource>, userId: string, projectName: string, environmentName: string) {
         this.Id = 0;
         this.Url = "null";
         this.Revision = 1;
@@ -117,7 +117,6 @@ export class RegisterEnvironment {
         var environment = new Environment(resources, process.env["SYSTEM_COLLECTIONID"], process.env["SYSTEM_TEAMPROJECT"], this.outputVariable);
         console.log(JSON.stringify(environment));                
         tl.setVariable(this.outputVariable, JSON.stringify(environment));
-        return environment;
     }
 
     private getTags(addressId: string){
@@ -189,11 +188,10 @@ export class RegisterEnvironment {
                 console.log("Error while getting list of Public Addresses", error);
                 throw new Error("FailedToFetchPublicAddresses");
             }
-            console.log("Result: %s", util.inspect(publicAddresses, {depth: null}));
             var fqdns = {}
             for (var i = 0; i < publicAddresses.length; i++) {
                 var publicAddress = publicAddresses[i];
-                var publicAddressId = publicAddress["id"]; //Didn't convert to lowercase
+                var publicAddressId = publicAddress["id"];
                 if (publicAddress["dnsSettings"]) {
                     fqdns[publicAddressId] = publicAddress["dnsSettings"]["fqdn"];
                 }
@@ -250,8 +248,7 @@ export class WinRMExtension{
                     if(result.length > 0){
                         console.log("Got network security group %s in resource group %s", securityGrpName, this.resourceGroupName);
                         if(retryCnt>0){
-                            retryCnt = retryCnt - 1;
-                            this.AddInboundNetworkSecurityRule(retryCnt, securityGrpName, networkClient, ruleName, rulePriority, winrmHttpsPort);
+                            this.AddInboundNetworkSecurityRule(retryCnt - 1, securityGrpName, networkClient, ruleName, rulePriority, winrmHttpsPort);
                         }
                     }
                 });
@@ -263,8 +260,6 @@ export class WinRMExtension{
             console.log("Adding Security rule for the network security group: %s", util.inspect(securityGroups[i], {depth: null}));
             var securityGrp = securityGroups[i];
             var securityGrpName = securityGrp["name"];
-
-            var maxtries = 3;
             try{
                 console.log("Getting the network security rule config %s under security group %s", ruleName, securityGrpName);
 
@@ -307,7 +302,7 @@ export class WinRMExtension{
             });
         }
         catch(exception){
-            console.warn("ARG_NetworkSecurityConfigFailed with exception: %s", exception.message);
+            console.warn(tl.loc("ARG_NetworkSecurityConfigFailed", [exception.message]));
         }
     }
 
@@ -326,7 +321,6 @@ export class WinRMExtension{
                 3.Add the inbound rule to allow traffic on winrmHttpsPort
             */
             var computeClient = new computeManagementClient(this.credentials, this.subscriptionId);
-            var networkClient = new networkManagementClient(this.credentials, this.subscriptionId);
 
             console.log("Checking if the extension %s is present on vm %s", _extensionName, vmName);
             
@@ -352,7 +346,7 @@ export class WinRMExtension{
         }
         catch(exception){
             //skipped writing telemetry data
-            throw new Error("ARG_DeploymentPrereqFailed" + exception.message);
+            throw tl.loc("ARG_DeploymentPrereqFailed", [exception.message]);
         } 
     }
 
@@ -410,7 +404,7 @@ export class WinRMExtension{
             console.log("Addition of extension completed with response %s", util.inspect(result, {depth: null}));
             if(result["provisioningState"] != 'Succeeded'){
                 this.RemoveExtensionFromVM(extensionName, vmName, computeClient);
-                throw new Error("ARG_CreateOrUpdatextensionForVMFailed");
+                throw tl.loc("ARG_SetExtensionFailedForVm", [this.resourceGroupName, vmName, result]);
             }
 
             this.AddWinRMHttpsNetworkSecurityRuleConfig(vmName);
@@ -588,7 +582,14 @@ export class WinRMExtension{
             }
 
             if(throwOnTotalUnavailability === true){
-                //fill here
+                if(errorCount == azureRMVMResources.length && azureRMVMResources.length != 0){
+                    throw tl.loc("ARG_AllResourceNotFound", [mapParameter, this.resourceGroupName]);
+                }
+                else{
+                    if(errorCount > 0 && errorCount != azureRMVMResources.length){
+                        console.warn(tl.loc("ARG_ResourceNotFound", [mapParameter, errorCount, this.resourceGroupName]));
+                    }
+                }
             }
         }
 
