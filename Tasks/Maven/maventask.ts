@@ -320,7 +320,7 @@ function publishCodeCoverage(isCodeCoverageOpted: boolean) {
             }
             else {
                 mvnReport.arg(mavenPOMFile);
-                mvnReport.arg("verify");
+                mvnReport.arg("jacoco:report");
             }
             mvnReport.exec().then(function (code) {
                 publishCCToTfs();
