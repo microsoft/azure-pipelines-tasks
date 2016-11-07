@@ -77,19 +77,6 @@ describe('The PRCA', function () {
                     orchestrator = new PrcaOrchestrator(testLogger, sqReportProcessor, server);
                 });
 
-                it('is called with invalid arguments', () => {
-                    var message: any = undefined;
-
-                    // Arrange
-                    var expectedMessages: Message[] = [fakeMessage, fakeMessage];
-                    server.createCodeAnalysisThreads(expectedMessages); // post some messages to test that the orchestrator doesn't delete them
-
-                    // Act & Assert
-                    expect(() => orchestrator.postSonarQubeIssuesToPullRequest(undefined)).to.throw(Error, /Make sure a SonarQube enabled build task ran before this step./);
-                    expect(() => orchestrator.postSonarQubeIssuesToPullRequest(null)).to.throw(Error, /Make sure a SonarQube enabled build task ran before this step./);
-                    expect(server.getSavedMessages()).to.eql(expectedMessages, 'Expected existing PRCA messages to still be on the server');
-                });
-
                 it('fails retrieving the list of files in the pull request', () => {
                     // Arrange
                     var expectedMessages: Message[] = [fakeMessage, fakeMessage];
@@ -753,6 +740,32 @@ describe('The PRCA', function () {
 
     describe('task', () => {
 
+        it('rejects negative message limit inputs', (done:MochaDone) => {
+            this.timeout(1000);
+
+            let tp: string = path.join(__dirname, 'L0messageLimitNegative.js');
+            let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+            tr.run();
+            assert(tr.stderr.length == 0, 'should not have written to stderr');
+            assert(tr.failed, 'task should have failed');
+
+            done();
+        });
+
+        it('rejects fractional message limit inputs', (done:MochaDone) => {
+            this.timeout(1000);
+
+            let tp: string = path.join(__dirname, 'L0messageLimitNegative.js');
+            let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+            tr.run();
+            assert(tr.stderr.length == 0, 'should not have written to stderr');
+            assert(tr.failed, 'task should have failed');
+
+            done();
+        });
+
         it('succeeds but skips on a non-PR build', (done:MochaDone) => {
             this.timeout(1000);
 
@@ -775,7 +788,7 @@ describe('The PRCA', function () {
             tr.run();
             assert(tr.stderr.length == 0, 'should not have written to stderr');
             assert(tr.failed, 'task should have failed');
-            AssertMessageInStdout(tr.stdout, 'Make sure a SonarQube-enabled build task ran before this step.');
+            AssertMessageInStdout(tr.stdout, 'Task failed with the following error: loc_mock_Error_NoReportPathFound');
 
             done();
         });

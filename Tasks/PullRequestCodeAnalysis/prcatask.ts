@@ -22,8 +22,11 @@ if (!sourceBranch.startsWith('refs/pull/')) {
 } else {
 
     var messageLimitInput:string = tl.getInput('messageLimit');
-    var messageLimit: number = Number(messageLimitInput);
-    if (isNaN(messageLimit)) {
+    var messageLimit: number = ~~Number(messageLimitInput); // Convert to a number and truncate (~~) any fraction
+    if (isNaN(messageLimit) // if a number could not be constructed out of messageLimitInput
+        || String(messageLimit) !== messageLimitInput // or if the strings are not equal when converted back (should pass for expected number values)
+        || messageLimit < 1) // or if the input was "0" or negative
+    {
         // Looks like: "Expected message limit to be a number, but instead it was NOT_A_NUMBER"
         tl.setResult(tl.TaskResult.Failed, tl.loc('Error_InvalidMessageLimit', messageLimitInput));
     }
