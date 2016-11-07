@@ -87,16 +87,12 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 		"build.sourceVersionAuthor": "author",
 		"release.releaseUri": "vstfs:///ReleaseManagement/Release/1",
 		"agent.name": "agent"
-    },
-    "getVariables": {
-        
     }
 }
 
 import mockTask = require('vsts-task-lib/mock-task');
 var kuduDeploymentLog = require('webdeployment-common/kududeploymentstatusutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js');
-var jsonSubUtil = require('webdeployment-common/jsonvariablesubstitutionutility.js');
 
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
