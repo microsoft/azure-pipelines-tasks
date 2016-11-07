@@ -1,6 +1,6 @@
 {
   "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
-  "name": "AzureRmWebAppDeployment",
+  "name": "AzureRmWebAppDeploy",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
