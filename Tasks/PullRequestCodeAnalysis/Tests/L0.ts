@@ -45,7 +45,7 @@ function VerifyMessage(
     expectedPriority: number) {
 
     chai.expect(actualMessage.content).to.equal(expectedContent, 'Content mismatch');
-    chai.expect(actualMessage.file).to.equal(expectedFile, 'File mismatch');
+    chai.expect(path.normalize(actualMessage.file)).to.equal(path.normalize(expectedFile), 'File mismatch');
     chai.expect(actualMessage.line).to.equal(expectedLine, 'Line mismatch');
     chai.expect(actualMessage.priority).to.equal(expectedPriority, 'Priority mismatch');
 }
@@ -193,7 +193,7 @@ describe('The PRCA', function () {
 
                 it('has multiple comments to post', () => {
                     // Arrange
-                    server.setModifiedFilesInPr(['src/main/java/com/mycompany/app/App.java']);
+                    server.setModifiedFilesInPr(['my-app/src/main/java/com/mycompany/app/App.java']);
                     var sqReportPath: string = path.join(__dirname, 'data', 'sonar-report.json');
 
                     // Act
@@ -381,15 +381,15 @@ describe('The PRCA', function () {
                     // Assert
                     chai.expect(messages).to.have.length(3, 'There are 3 new issues in the report');
 
-                    // valid issue
+                    // valid issue in a module with a path
                     VerifyMessage(
                         messages[0],
                         'Remove this unused "x" local variable. (squid:S1481)',
-                        'src/main/java/com/mycompany/app/App.java',
+                        'my-app/src/main/java/com/mycompany/app/App.java',
                         12,
                         3);
 
-                    // another valid issue in a different file
+                    // another valid issue in a different file, but in a module without a path
                     VerifyMessage(
                         messages[1],
                         'Replace this usage of System.out or System.err by a logger. (squid:S106)',
@@ -401,7 +401,7 @@ describe('The PRCA', function () {
                     VerifyMessage(
                         messages[2],
                         'Bad code right here... (squid:S106)',
-                        'src/main/java/com/mycompany/app/App.java',
+                        'my-app/src/main/java/com/mycompany/app/App.java',
                         15,
                         6);
 

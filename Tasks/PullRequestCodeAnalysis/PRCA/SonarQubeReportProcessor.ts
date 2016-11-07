@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import * as path from 'path';
 import * as util from 'util';
 
 import { PRInjectorError } from './PRInjectorError';
@@ -61,8 +62,18 @@ export class SonarQubeReportProcessor implements ISonarQubeReportProcessor {
                 throw new PRInjectorError('Invalid SonarQube report - some components do not have keys');
             }
 
-            if (component.path) {
-                map.set(component.key, component.path);
+            if (component.path != null) {
+                var fullPath = component.path;
+
+                if (component.moduleKey != null) { // if the component belongs to a module, we need to prepend the module path
+                    // #TODO: Support nested modules once the SonarQube report correctly lists moduleKey in nested modules
+                    var module:any = this.GetObjectWithKey(sonarQubeReport.components, component.moduleKey);
+                    if (module.path != null) { // some modules do not list a path
+                        fullPath = path.join('/', module.path, component.path); // paths must start with a path seperator
+                    }
+                }
+
+                map.set(component.key, path.normalize(fullPath));
             }
         }
 
@@ -178,6 +189,29 @@ export class SonarQubeReportProcessor implements ISonarQubeReportProcessor {
                 return 5;
             default:
                 return 6;
+        }
+    }
+
+    /**
+     * Finds and returns the first object with the given key from a given section of the SonarQube report.
+     * @param sonarQubeReportSection
+     * @param searchKey
+     * @returns {any} Null if object not found, otherwise the first object with a "key" field matching searchKey.
+     */
+    private GetObjectWithKey(sonarQubeReportSection: any, searchKey: string): any {
+
+        if (!sonarQubeReportSection) {
+            return null;
+        }
+
+        for (var component of sonarQubeReportSection) {
+            if (!component.key) {
+                throw new PRInjectorError('Invalid SonarQube report - some components do not have keys');
+            }
+
+            if (component.key == searchKey) {
+                return component;
+            }
         }
     }
 }

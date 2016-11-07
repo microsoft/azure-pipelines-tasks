@@ -78,7 +78,11 @@
     ],
     "components": [
         {
-            "key": "com.mycompany.app:my-app"
+            "key": "com.mycompany.app:my-app",
+            "path":"my-app"
+        },
+        {
+            "key": "com.mycompany.test:test"
         },
         {
             "key": "com.mycompany.app:my-app:src/main/java/com/mycompany/app/App.java",
@@ -89,7 +93,7 @@
         {
             "key": "com.mycompany.app:my-app:src/test/java/com/mycompany/app/AppTest.java",
             "path": "src/test/java/com/mycompany/app/AppTest.java",
-            "moduleKey": "com.mycompany.app:my-app",
+            "moduleKey": "com.mycompany.test:test",
             "status": "SAME"
         },
         {
