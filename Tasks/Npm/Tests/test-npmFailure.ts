@@ -6,8 +6,7 @@ import util = require('./NpmMockHelper');
 let taskPath = path.join(__dirname, '..', 'npmtask.js');
 let taskMockRunner = new tmrm.TaskMockRunner(taskPath);
 let npmMockHelper = new util.NpmMockHelper(taskMockRunner, "root", "");
-process.env['HOMEDRIVE'] = 'C:\\';
-process.env['HOMEPATH'] = 'Users\\none';
+process.env['USERPROFILE'] = 'C:\\Users\\none';
 
 let mock = require('vsts-task-lib/mock-toolrunner');
 mock.exec = () => {
