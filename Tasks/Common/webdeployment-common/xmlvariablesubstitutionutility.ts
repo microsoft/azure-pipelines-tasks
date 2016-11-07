@@ -24,7 +24,7 @@ async function substituteXmlVariables(configFile, tags){
     }
     tl.debug(tl.loc("Initiatedvariablesubstitutioninconfigfile", configFile));
     var fileBuffer: Buffer = fs.readFileSync(configFile);
-    var fileEncodeType = fileEncoding.detectFileEncoding(fileBuffer);
+    var fileEncodeType = fileEncoding.detectFileEncoding(configFile, fileBuffer);
     var webConfigContent: string = fileBuffer.toString(fileEncodeType[0]);
     if(fileEncodeType[1]) {
         webConfigContent = webConfigContent.slice(1);
