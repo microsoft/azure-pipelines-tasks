@@ -43,7 +43,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "osType": "Linux"
     },
     "checkPath": {
-        "cmd": true
+        "cmd": true,
+		"webAppPkg.zip": true,
+		"webAppPkg": true
     },
     "exec": {
         "cmd /C DefaultWorkingDirectory\\msDeployCommand.bat": {

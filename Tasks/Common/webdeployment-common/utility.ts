@@ -121,7 +121,7 @@ export function findfiles(filepath){
         // Fail if no matching .csproj files were found
         if (!filesList || filesList.length == 0) {
             tl.error('No matching files were found with search pattern: ' + filepath);
-            throw new Error("Nopackagefoundwithspecifiedpattern")
+            return [];
         }
     }
     return filesList;
