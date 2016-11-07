@@ -61,7 +61,7 @@ async function substituteXmlVariables(configFile, tags){
             }  
         }
     }
-    var domContent = (fileEncodeType[1]?'\UFEFF':'') + ltxdomutility.getContentWithHeader(xmlDocument);
+    var domContent = (fileEncodeType[1]?'\uFEFF':'') + ltxdomutility.getContentWithHeader(xmlDocument);
     fs.writeFile(configFile, domContent, fileEncodeType[0], function(error) {
         if (error) {
             throw new Error(tl.loc("Failedtowritetoconfigfilewitherror",configFile, error));

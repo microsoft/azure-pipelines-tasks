@@ -252,7 +252,7 @@
     "JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "ms-resource:loc.messages.JSONvariablesubstitutioncanonlybeappliedforJSONfiles",
     "Unabletofindnodewithtaginprovidedxmlfile": "ms-resource:loc.messages.Unabletofindnodewithtaginprovidedxmlfile",
     "Configfiledoesntexists": "ms-resource:loc.messages.Configfiledoesntexists",
-    "Providednodeisempty": "ms-resource:loc.messages.Providednodeisempty",
+    "Providednodeisemptyorcomment": "ms-resource:loc.messages.Providednodeisemptyorcomment",
     "Configfileupdated": "ms-resource:loc.messages.Configfileupdated",
     "Failedtowritetoconfigfilewitherror": "ms-resource:loc.messages.Failedtowritetoconfigfilewitherror",
     "Erroroccurredwhileprocessingxmlnode": "ms-resource:loc.messages.Erroroccurredwhileprocessingxmlnode",
