@@ -2,9 +2,9 @@ import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
 
-var utility = require ('./utility.js');
+var varUtility = require ('./variableutility.js');
 var fileEncoding = require('./fileencoding.js');
-function createEnvTree(envVariables) {
+export function createEnvTree(envVariables) {
     var envVarTree = {
         value: null,
         isEnd: false,
@@ -12,7 +12,7 @@ function createEnvTree(envVariables) {
     };
     for(let envVariable of envVariables) {
         var envVarTreeIterator = envVarTree;
-        if(utility.isPredefinedVariable(envVariable.name)) {
+        if(varUtility.isPredefinedVariable(envVariable.name)) {
             continue;
         } 
         var envVariableNameArray = (envVariable.name).split('.');
@@ -43,7 +43,7 @@ function checkEnvTreePath(jsonObjectKey, index, jsonObjectKeyLength, envVarTree)
     return checkEnvTreePath(jsonObjectKey, index + 1, jsonObjectKeyLength, envVarTree.child[ jsonObjectKey[index] ]);
 }
 
-function substituteJsonVariable(jsonObject, envObject) {
+export function substituteJsonVariable(jsonObject, envObject) {
     for(var jsonChild in jsonObject) {
         var jsonChildArray = jsonChild.split('.');
         var resultNode = checkEnvTreePath(jsonChildArray, 0, jsonChildArray.length, envObject);
