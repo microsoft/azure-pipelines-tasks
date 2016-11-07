@@ -108,7 +108,7 @@ function getUserNpmrcPath() {
     var userNpmRc = process.env['npm_config_userconfig'];
     if(!userNpmRc){
         // default npm rc is located at user's home folder.
-        userNpmRc = path.join(process.env['HOMEDRIVE'], process.env['HOMEPATH'], '.npmrc');
+        userNpmRc = path.join(process.env['USERPROFILE'], '.npmrc');
     }
     tl.debug(`User npm rc: ${userNpmRc}`);
     return userNpmRc;
