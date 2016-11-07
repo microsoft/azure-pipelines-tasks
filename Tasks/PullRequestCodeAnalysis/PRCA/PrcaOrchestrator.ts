@@ -95,7 +95,8 @@ export class PrcaOrchestrator {
     public postSonarQubeIssuesToPullRequest(sqReportPath: string): Promise<void> {
         this.logger.LogDebug(`SonarQube report path: ${sqReportPath}`);
         if (sqReportPath === undefined || sqReportPath === null) {
-            return Promise.reject('Make sure a SonarQube-enabled build task ran before this step.');
+            // Looks like: "Make sure a SonarQube-enabled build task ran before this step."
+            return Promise.reject(tl.loc('Error_NoReportPathFound'));
         }
 
         var allMessages:Message[] = this.sqReportProcessor.FetchCommentsFromReport(sqReportPath);

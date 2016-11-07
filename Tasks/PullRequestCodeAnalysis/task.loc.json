@@ -33,6 +33,7 @@
     }
   },
   "messages": {
+    "Error_NoReportPathFound": "ms-resource:loc.messages.Error_NoReportPathFound",
     "Error_InvalidMessageLimit": "ms-resource:loc.messages.Error_InvalidMessageLimit",
     "Error_InvalidPullRequestId": "ms-resource:loc.messages.Error_InvalidPullRequestId",
     "Error_FailedToGetAuthToken": "ms-resource:loc.messages.Error_FailedToGetAuthToken",
