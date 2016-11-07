@@ -9,7 +9,7 @@
         "AzureCloudPowerShellDeployment",
         "AzureFileCopy",
         "AzurePowerShell",
-        "AzureRmWebAppDeployment",
+        "AzureRmWebAppDeploy",
         "AzureWebPowerShellDeployment",
         "BatchScript",
         "Chef",
