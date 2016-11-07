@@ -26,6 +26,11 @@
       "name": "output",
       "displayName": "ms-resource:loc.group.displayName.output",
       "isExpanded": true
+    },
+    {
+      "name": "FileTransformsAndVariableSubstitution",
+      "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
+      "isExpanded": false
     }
   ],
   "inputs": [
@@ -162,6 +167,25 @@
       "required": false,
       "groupName": "AdditionalDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
+    },
+    {
+      "name": "XmlTransformsAndVariableSubstitutions",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.XmlTransformsAndVariableSubstitutions",
+      "required": false,
+      "defaultValue": false,
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "VariableSubstitution",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.VariableSubstitution",
+      "required": false,
+      "defaultValue": false,
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
+      "helpMarkDown": "ms-resource:loc.input.help.VariableSubstitution"
     }
   ],
   "dataSourceBindings": [
@@ -228,7 +252,7 @@
     "JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "ms-resource:loc.messages.JSONvariablesubstitutioncanonlybeappliedforJSONfiles",
     "Unabletofindnodewithtaginprovidedxmlfile": "ms-resource:loc.messages.Unabletofindnodewithtaginprovidedxmlfile",
     "Configfiledoesntexists": "ms-resource:loc.messages.Configfiledoesntexists",
-    "Providednodeisempty": "ms-resource:loc.messages.Providednodeisempty",
+    "Providednodeisemptyorcomment": "ms-resource:loc.messages.Providednodeisemptyorcomment",
     "Configfileupdated": "ms-resource:loc.messages.Configfileupdated",
     "Failedtowritetoconfigfilewitherror": "ms-resource:loc.messages.Failedtowritetoconfigfilewitherror",
     "Erroroccurredwhileprocessingxmlnode": "ms-resource:loc.messages.Erroroccurredwhileprocessingxmlnode",
