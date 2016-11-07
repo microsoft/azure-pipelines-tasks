@@ -4,28 +4,28 @@
 var fs = require('fs');
 import tl = require('vsts-task-lib');
 
-function detectFileEncodingWithBOM(buffer: Buffer) {
+function detectFileEncodingWithBOM(fileName: string, buffer: Buffer) {
     tl.debug('Detecting file encoding using BOM');
     if(buffer.slice(0,3).equals(new Buffer([239, 187, 191]))) {
         return ['utf-8', true];
     }
     else if(buffer.slice(0,4).equals(new Buffer([255, 254, 0, 0]))) {
-        throw Error(tl.loc('EncodeNotSupported', 'UTF-32LE'));
+        throw Error(tl.loc('EncodeNotSupported', fileName, 'UTF-32LE', 'UTF-32LE'));
     }
     else if(buffer.slice(0,2).equals(new Buffer([254, 255]))) {
-        throw Error(tl.loc('EncodeNotSupported', 'UTF-16BE'));
+        throw Error(tl.loc('EncodeNotSupported', fileName, 'UTF-16BE', 'UTF-16BE'));
     }
     else if(buffer.slice(0,2).equals(new Buffer([255, 254]))) {
         return ['utf-16le', true];
     }
     else if(buffer.slice(0,4).equals(new Buffer([0, 0, 254, 255]))) {
-        throw Error(tl.loc('EncodeNotSupported', 'UTF-32BE'));
+        throw Error(tl.loc('EncodeNotSupported', fileName, 'UTF-32BE', 'UTF-32BE'));
     }
     tl.debug('Unable to detect File encoding using BOM');
     return null;
 }
 
-function detectFileEncodingWithoutBOM(buffer: Buffer) {
+function detectFileEncodingWithoutBOM(fileName: string, buffer: Buffer) {
     tl.debug('Detecting file encoding without BOM');
     if(buffer.length < 4) {
         throw Error('File buffer is too short to detect encoding type');
@@ -37,11 +37,11 @@ function detectFileEncodingWithoutBOM(buffer: Buffer) {
     }
     switch(typeCode) {
         case 1:
-            throw Error(tl.loc('EncodeNotSupported', 'UTF-32BE'));
+            throw Error(tl.loc('EncodeNotSupported', fileName, 'UTF-32BE', 'UTF-32BE'));
         case 5:
-            throw Error(tl.loc('EncodeNotSupported', 'UTF-16BE'));
+            throw Error(tl.loc('EncodeNotSupported', fileName, 'UTF-16BE', 'UTF-16BE'));
         case 8:
-            throw Error(tl.loc('EncodeNotSupported', 'UTF-32LE'));
+            throw Error(tl.loc('EncodeNotSupported', fileName, 'UTF-32LE', 'UTF-32LE'));
         case 10:
             return ['utf-16le', false];
         case 15:
@@ -50,11 +50,11 @@ function detectFileEncodingWithoutBOM(buffer: Buffer) {
             throw Error(tl.loc('UnknownFileEncodeError', typeCode));
     }
 }
-export function detectFileEncoding(buffer: Buffer) {
+export function detectFileEncoding(fileName: string, buffer: Buffer) {
     if(buffer.length < 4) {
         throw Error('ShortFileBufferError');
     }
-    var fileEncoding = detectFileEncodingWithBOM(buffer) || detectFileEncodingWithoutBOM(buffer);
+    var fileEncoding = detectFileEncodingWithBOM(fileName, buffer) || detectFileEncodingWithoutBOM(fileName, buffer);
     return fileEncoding;
 }
 

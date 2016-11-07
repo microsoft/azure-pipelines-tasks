@@ -70,7 +70,7 @@ export function jsonVariableSubstitution(absolutePath, jsonSubFiles) {
                 throw new Error(tl.loc('JSONvariablesubstitutioncanonlybeappliedforJSONfiles'));
             }
             var fileBuffer: Buffer = fs.readFileSync(file);
-            var fileEncodeType = fileEncoding.detectFileEncoding(fileBuffer)
+            var fileEncodeType = fileEncoding.detectFileEncoding(file, fileBuffer);
             var fileContent: string = fileBuffer.toString(fileEncodeType[0]);
             if(fileEncodeType[1]) {
                 fileContent = fileContent.slice(1);

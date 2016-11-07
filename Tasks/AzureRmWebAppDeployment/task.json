@@ -242,6 +242,7 @@
         "XdtTransformationErrorWhileTransforming": "XDT Transformation Error while transforming %s using %s.",
         "PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "Publish using webdeploy options are supported only when using Windows agent",
         "WebAppDoesntExist": "Webapp '%s' doesn't exist. Webapp should exist before deployment.",
-        "EncodeNotSupported": "File Encoding detected to be : %s, which is not supported by Node.js"
+        "EncodeNotSupported": "Detected file encoding of the file %s as %s. Variable substitution and Transformation is not supported with file encoding %s. Supported encodings are UTF-8 and UTF-16 LE.",
+        "UnknownFileEncodeError": "Unable to detect encoding of the file %s. Supported encodings are UTF-8 and UTF-16 LE."
     }
 }
