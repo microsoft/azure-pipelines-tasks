@@ -7,7 +7,6 @@
   "category": "Deploy",
   "visibility": [
     "Preview",
-    "Build",
     "Release"
   ],
   "runsOn" : [
