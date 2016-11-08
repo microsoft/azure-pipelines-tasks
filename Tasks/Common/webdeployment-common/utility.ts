@@ -76,6 +76,20 @@ export function canUseWebDeploy(useWebDeploy: boolean) {
     return (useWebDeploy || win);
 }
 
+export function isEmpty(object){
+    if(object == null || object == "")
+        return true;
+    return false;
+}
+
+export function isObject(object){
+    if(object == null || object == "" || typeof(object) != 'object'){
+        return false;
+    }
+    return true;
+}
+}
+
 export function findfiles(filepath){
     var filesList : string [];
     if (filepath.indexOf('*') == -1 && filepath.indexOf('?') == -1) {
