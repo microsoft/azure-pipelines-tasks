@@ -71,26 +71,30 @@ export class VirtualMachine {
             this.vmCount = listOfVms.length;
             switch (this.action) {
                 case "Start":
-                    for (var i=0; i<listOfVms.length; i++) {
+                    for (var i = 0; i < listOfVms.length; i++) {
                         var vmName = listOfVms[i]["name"];
+                        console.log(tl.loc("VMStart", vmName));
                         this.client.virtualMachines.start(this.resourceGroupName, vmName, this.postOperationCallBack);
                     }
                     break;
                 case "Stop":
-                    for (var i=0; i<listOfVms.length; i++) {
+                    for (var i = 0; i < listOfVms.length; i++) {
                         var vmName = listOfVms[i]["name"];
+                        console.log(tl.loc("VM_Stop", vmName));
                         this.client.virtualMachines.powerOff(this.resourceGroupName, vmName, this.postOperationCallBack);
                     }
                     break;
                 case "Restart":
-                    for (var i=0; i<listOfVms.length; i++) {
+                    for (var i = 0; i < listOfVms.length; i++) {
                         var vmName = listOfVms[i]["name"];
+                        console.log(tl.loc("VM_Restart", vmName));
                         this.client.virtualMachines.restart(this.resourceGroupName, vmName, this.postOperationCallBack);
                     }
                     break;
                 case "Delete":
-                    for (var i=0; i<listOfVms.length; i++) {
+                    for (var i = 0; i < listOfVms.length; i++) {
                         var vmName = listOfVms[i]["name"];
+                        console.log(tl.loc("VM_Delete", vmName));
                         this.client.virtualMachines.deleteMethod(this.resourceGroupName, vmName, this.postOperationCallBack);
                     }
             }

@@ -2,7 +2,6 @@
 /// <reference path="../../definitions/Q.d.ts" /> 
 /// <reference path="../../definitions/vsts-task-lib.d.ts" /> 
  
-import path = require("path");
 import tl = require("vsts-task-lib/task");
 import fs = require("fs");
 import util = require("util");
@@ -13,58 +12,51 @@ import virtualMachine = require("./VirtualMachine");
 import resourceGroup = require("./ResourceGroup");
 import env = require("./Environment");
 
-try {
-    tl.setResourcePath(path.join( __dirname, "task.json"));
-}
-catch (err) {
-    tl.setResult(tl.TaskResult.Failed, tl.loc("TaskNotFound", err));
-    process.exit();
-}
-
 export class AzureResourceGroupDeployment {
 
-    private connectedServiceNameSelector:string;
-    private action:string;
-    private actionClassic:string;
-    private resourceGroupName:string;
-    private cloudService:string;
-    private location:string;
-    private csmFile:string;
-    private csmParametersFile:string;
-    private overrideParameters:string;
-    private enableDeploymentPrerequisitesForCreate:boolean;
-    private enableDeploymentPrerequisitesForSelect:boolean;
-    private outputVariable:string;
-    private subscriptionId:string;
-    private connectedService:string;
-    private isLoggedIn:boolean = false;
-    private deploymentMode:string;
+    public connectedServiceNameSelector:string;
+    public action:string;
+    public resourceGroupName:string;
+    public location:string;
+    public csmFile:string;
+    public csmParametersFile:string;
+    public templateLocation:string;
+    public csmFileLink:string;
+    public csmParametersFileLink:string;
+    public overrideParameters:string;
+    public enableDeploymentPrerequisitesForCreate:boolean;
+    public enableDeploymentPrerequisitesForSelect:boolean;
+    public outputVariable:string;
+    public subscriptionId:string;
+    public connectedService:string;
+    public quickStartTemplate:string;
+    public commitID:string;
+    public isLoggedIn:boolean = false;
+    public deploymentMode:string;
+    public credentials;
     
     constructor() {
         try { 
             this.connectedServiceNameSelector = tl.getInput("ConnectedServiceNameSelector", true);
             this.connectedService = null;
-            if (this.connectedServiceNameSelector === "ConnectedServiceName") {
-                this.connectedService = tl.getInput("ConnectedServiceName");
-            }
-            else {
-                this.connectedService = tl.getInput("ConnectedServiceNameClassic");
-                console.log("Not Handled yet");
-                return;
-            }
+            this.connectedService = tl.getInput("ConnectedServiceName");
             this.action = tl.getInput("action");
-            this.actionClassic = tl.getInput("actionClassic");
             this.resourceGroupName = tl.getInput("resourceGroupName");
-            this.cloudService = tl.getInput("cloudService");
             this.location = tl.getInput("location");
             this.csmFile = tl.getPathInput("csmFile");
             this.csmParametersFile = tl.getPathInput("csmParametersFile");
+            this.csmFileLink = tl.getInput("csmFileLink");
+            this.csmParametersFileLink = tl.getInput("csmParametersFile");
+            this.templateLocation = tl.getInput("templateLocation");
             this.overrideParameters = tl.getInput("overrideParameters");
             this.enableDeploymentPrerequisitesForCreate = tl.getBoolInput("enableDeploymentPrerequisitesForCreate");
             this.enableDeploymentPrerequisitesForSelect = tl.getBoolInput("enableDeploymentPrerequisitesForSelect");
             this.outputVariable = tl.getInput("outputVariable");
+            this.commitID = tl.getInput("commitID");
+            this.quickStartTemplate = tl.getInput("quickStartTemplate");
             this.subscriptionId = tl.getEndpointDataParameter(this.connectedService, "SubscriptionId", true);    
             this.deploymentMode = tl.getInput("deploymentMode");
+            this.credentials = this.getARMCredentials();
         }
         catch (error) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("ARGD_ConstructorFailed", error.message));
@@ -76,7 +68,7 @@ export class AzureResourceGroupDeployment {
            case "Create Or Update Resource Group": 
            case "DeleteRG":
            case "Select Resource Group":
-                new resourceGroup.ResourceGroup(this.action, this.connectedService, this.getARMCredentials(), this.resourceGroupName, this.location, this.csmFile, this.csmParametersFile, this.overrideParameters, this.subscriptionId, this.deploymentMode, this.outputVariable);
+                new resourceGroup.ResourceGroup(this);
                 break;
            case "Start":
            case "Stop":
@@ -86,13 +78,6 @@ export class AzureResourceGroupDeployment {
                break;
            default:
                tl.setResult(tl.TaskResult.Succeeded, tl.loc("InvalidAction"));
-        }
-        if (this.outputVariable && this.outputVariable.trim()!="" && this.action!="Select Resource Group"){
-            try {
-                new env.RegisterEnvironment(this.getARMCredentials(), this.subscriptionId, this.resourceGroupName, this.outputVariable);
-            } catch(error) {            
-                tl.setResult(tl.TaskResult.Failed, tl.loc("FailedRegisteringEnvironment", error));
-            }
         }
     }
 
@@ -105,7 +90,3 @@ export class AzureResourceGroupDeployment {
         return credentials;
     }
 }
-
-
-var azureResourceGroupDeployment = new AzureResourceGroupDeployment();
-azureResourceGroupDeployment.execute();

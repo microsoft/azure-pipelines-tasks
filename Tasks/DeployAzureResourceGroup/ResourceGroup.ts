@@ -7,44 +7,54 @@ import fs = require("fs");
 import util = require("util");
 
 import env = require("./Environment");
+import deployAzureRG = require("./DeployAzureRG");
 
-var minimist = require("minimist");
-
+var parameterParse = require("./parser").parse;
 var armResource = require("azure-arm-resource");
-
+var request = require("sync-request");
 
 export class ResourceGroup {
 
-    private connectedServiceNameSelector:string;
-    private action:string;
-    private actionClassic:string;
-    private resourceGroupName:string;
-    private location:string;
-    private csmFile:string;
-    private csmParametersFile:string;
-    private overrideParameters:string;
-    private subscriptionId:string;
-    private connectedService:string;
-    private deploymentMode:string;
-    private outputVariable:string;
+    private connectedServiceNameSelector: string;
+    private action: string;
+    private actionClassic: string;
+    private resourceGroupName: string;
+    private location: string;
+    private csmFile: string;
+    private csmParametersFile: string;
+    private templateLocation: string;
+    private csmFileLink: string;
+    private csmParametersFileLink: string;
+    private overrideParameters: string;
+    private subscriptionId: string;
+    private connectedService: string;
+    private deploymentMode: string;
+    private outputVariable: string;
+    private commitID:  string;
+    private quickStartTemplate: string;
+
     private credentials;
-    
     private networkInterfaces;
     private publicAddresses;
     private virtualMachines;
     
-    constructor(action, connectedService, credentials, resourceGroupName, location, csmFile, csmParametersFile, overrideParameters, subscriptionId, deploymentMode, outputVariable) {
-            this.connectedService = connectedService;
-            this.action = action;
-            this.resourceGroupName = resourceGroupName;
-            this.location = location;
-            this.csmFile = csmFile;
-            this.csmParametersFile = csmParametersFile;
-            this.overrideParameters = overrideParameters;
-            this.subscriptionId = subscriptionId;    
-            this.deploymentMode = deploymentMode
-            this.credentials = credentials;
-            this.outputVariable = outputVariable;
+    constructor(deployRGObj: deployAzureRG.AzureResourceGroupDeployment) {
+            this.connectedService = deployRGObj.connectedService;
+            this.action = deployRGObj.action;
+            this.resourceGroupName = deployRGObj.resourceGroupName;
+            this.location = deployRGObj.location;
+            this.csmFile = deployRGObj.csmFile;
+            this.csmParametersFile = deployRGObj.csmParametersFile;
+            this.overrideParameters = deployRGObj.overrideParameters;
+            this.subscriptionId = deployRGObj.subscriptionId;    
+            this.deploymentMode = deployRGObj.deploymentMode
+            this.credentials = deployRGObj.credentials;
+            this.outputVariable = deployRGObj.outputVariable;
+            this.csmFileLink = deployRGObj.templateLocation;
+            this.csmParametersFileLink = deployRGObj.csmParametersFileLink;
+            this.templateLocation = deployRGObj.templateLocation;
+            this.commitID = deployRGObj.commitID;
+            this.quickStartTemplate = deployRGObj.quickStartTemplate;
             this.networkInterfaces = null;
             this.publicAddresses = null;
             this.virtualMachines = null;
@@ -67,18 +77,23 @@ export class ResourceGroup {
         }
     }
 
-    private createDeploymentName(filePath:string):string {
-        var fileName = path.basename(filePath).split(".")[0].replace(" ", "");
+    private createDeploymentName(filePath: string): string {
+        var name;
+        if (this.templateLocation === "Quick Start Template") {
+            name = this.quickStartTemplate;
+        } else {
+            name = path.basename(filePath).split(".")[0].replace(" ", "");
+        }
+        
         var ts = new Date(Date.now());
-        var depName = util.format("%s-%s%s%s-%s%s",fileName,ts.getFullYear(), ts.getMonth(), ts.getDate(),ts.getHours(), ts.getMinutes());
+        var depName = util.format("%s-%s%s%s-%s%s", name, ts.getFullYear(), ts.getMonth(), ts.getDate(),ts.getHours(), ts.getMinutes());
         return depName;
     } 
 
     private updateOverrideParameters(params) {
-        var override = minimist([this.overrideParameters]);
+        var override = parameterParse(this.overrideParameters);
         for (var key in override) {
-            if (params[key] != undefined)
-                params[key]["value"] = override[key];
+            params[key] = override[key];
         }
         return params;
     }
@@ -109,7 +124,47 @@ export class ResourceGroup {
         });
     }
     
-    private createTemplateDeployment(armClient) {
+    private getDeploymentDataForExternalLinks() {
+        var properties = {}
+        properties["templateLink"] = {"uri" : this.csmFileLink};
+        if (this.csmParametersFileLink && this.csmParametersFileLink.trim()!="" && this.overrideParameters.trim()=="")
+            properties["parametersLink"] = {"uri" : this.csmParametersFileLink };
+        else {
+            var params = {};
+            if (this.csmParametersFileLink && this.csmParametersFileLink.trim()!="") {
+                var response = request("GET", this.csmParametersFileLink);
+                try { 
+                    params = JSON.parse(response.body).parameters;
+                } catch(error) {
+                    tl.setResult(tl.TaskResult.Failed, "Make sure the end point is a JSON");
+                }
+            }
+            params = this.updateOverrideParameters(params);
+            properties["parameters"] = params;
+        }
+        properties["mode"] = this.deploymentMode;
+        properties["debugSetting"] = {"detailLevel": "requestContent, responseContent"};
+        var deployment = {"properties": properties};
+        deployment["location"] = this.location;
+        return deployment;
+    }
+    
+    private getDeploymentDataForQuickStartTemplates() {
+        var url = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/%s/%s/azuredeploy.json";
+        this.csmFileLink = util.format(url, this.commitID, this.quickStartTemplate);
+        this.csmParametersFileLink = "";
+        return this.getDeploymentDataForExternalLinks();
+    }
+
+    private getParametersFromTemplate(template) {
+        var params = {};
+        for (var key in template.parameters) {
+            params[key] = { value: template.parameters[key]["defaultValue"] };
+        }
+        return params;
+    }
+
+    private getDeploymentDataForLinkedArtifact() {
         var template;
         try { 
             template= JSON.parse(fs.readFileSync(this.csmFile, 'UTF-8'));
@@ -118,9 +173,16 @@ export class ResourceGroup {
             tl.setResult(tl.TaskResult.Failed, tl.loc("TemplateParsingFailed", error.message));
             return;
         }
-        var parameters;
+        var parameters = this.getParametersFromTemplate(template);
         try {
-            parameters = JSON.parse(fs.readFileSync(this.csmParametersFile, 'UTF-8'));
+            if (this.csmParametersFile != undefined && this.csmParametersFile != null && this.csmParametersFile.trim() != "") {
+                var parameterFile = JSON.parse(fs.readFileSync(this.csmParametersFile, 'UTF-8'));
+                for (var param in parameterFile) {
+                    parameters[param] = parameterFile[param];
+                }
+            }
+            if (this.overrideParameters && this.overrideParameters!=null)
+                parameters = this.updateOverrideParameters(properties["parameters"]);
         }
         catch (error) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("ParametersFileParsingFailed", error.message));
@@ -128,20 +190,37 @@ export class ResourceGroup {
         }
         var properties = {}
         properties["template"] = template;
-        properties["parameters"] = parameters["parameters"];
-        if (this.overrideParameters!=null)
-            properties["parameters"] = this.updateOverrideParameters(properties["parameters"]);
+        properties["parameters"] = parameters;
         properties["mode"] = this.deploymentMode;
         properties["debugSetting"] = {"detailLevel": "requestContent, responseContent"};
         var deployment = {"properties": properties};
         deployment["location"] = this.location;
+        return deployment;
+    }
+
+    private createTemplateDeployment(armClient) {
+        var deployment;
+        if (this.templateLocation === "Linked Artifact") {
+            deployment = this.getDeploymentDataForLinkedArtifact();
+        } else if (this.templateLocation === "Quick Start Template") { 
+            deployment = this.getDeploymentDataForQuickStartTemplates();
+        } else {
+            deployment = this.getDeploymentDataForExternalLinks();
+        }
         armClient.deployments.createOrUpdate(this.resourceGroupName, this.createDeploymentName(this.csmFile), deployment, null, (error, result, request, response) => {
             if (error) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("RGO_createTemplateDeploymentFailed", error.message));
                 return;
             }
+            try {
+                if (this.outputVariable && this.outputVariable.trim() != "")
+                    new env.RegisterEnvironment(this.credentials, this.subscriptionId, this.resourceGroupName, this.outputVariable);
+            } catch(error) {            
+                tl.setResult(tl.TaskResult.Failed, tl.loc("FailedRegisteringEnvironment", error));
+                return;
+            }
             tl.setResult(tl.TaskResult.Succeeded, tl.loc("RGO_createTemplateDeploymentSucceeded", this.resourceGroupName));
-        } );
+        });
     }
 
     private deleteResourceGroup() {
