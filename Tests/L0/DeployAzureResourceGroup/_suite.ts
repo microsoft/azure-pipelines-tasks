@@ -60,6 +60,7 @@ describe('Azure Resource Group Deployment', function () {
         tr.run()
             .then(() => {
                 assert(tr.succeeded, "Should have succeeded");
+                assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
                 done();
           }).fail((err) => {
                 console.log(tr.stdout);
@@ -74,6 +75,7 @@ describe('Azure Resource Group Deployment', function () {
         tr.run()
             .then(()=> {
                 assert(tr.failed, "Task should have failed");
+                assert(tr.stdout.indexOf("deployments.createOrUpdate is called") == -1, "Task should have failed before calling deployments.createOrUpdate function from azure-sdk");
                 done();
             })
             .fail((err) => {
@@ -99,7 +101,10 @@ describe('Azure Resource Group Deployment', function () {
         tr.run()
             .then(() => {
                 assert(tr.succeeded, "Task should have succeeded");
-                assert(tr.stdout.indexOf("set output.variable.custom")>=0, "Should have written to the output variable ......... ");
+                assert(tr.stdout.indexOf("set output.variable.custom") >= 0, "Should have written to the output variable.");
+                assert(tr.stdout.indexOf("networkInterfaces.list is called")>0, "Should have called networkInterfaces.list from azure-sdk");
+                assert(tr.stdout.indexOf("publicIPAddresses.list is called")>0, "Should have called publicIPAddresses.list from azure-sdk");
+                assert(tr.stdout.indexOf("virtualMachines.list is called")>0, "Should have called virtualMachines.list from azure-sdk");
                 done();                
             }).fail((err) => {
                 console.log(tr.stdout);
@@ -113,6 +118,7 @@ describe('Azure Resource Group Deployment', function () {
         tr.run()
             .then(() => {
                 assert(tr.failed, "Task should have failed");
+                assert(tr.stdout.indexOf("Output variable should not be empty") > 0, "Should have logged the output variable requirement.");
             }).fail((err) => {
                 console.log(tr.stdout);
                 console.error(tr.stderr);
@@ -123,6 +129,7 @@ describe('Azure Resource Group Deployment', function () {
         tr.run()
             .then(() => {
                 assert(tr.failed, "Task should have failed");
+                assert(tr.stdout.indexOf("Output variable should not be empty") > 0, "Should have logged the output variable requirement.");
                 done();                
             }).fail((err) => {
                 console.log(tr.stdout);
@@ -150,6 +157,7 @@ describe('Azure Resource Group Deployment', function () {
         .then(() => {
             assert(tr.succeeded, "Task should have succeeded");
             assert(tr.stdout.indexOf("Deleting resource group") > 0, "Delete Resource Group function should have been called");
+            assert(tr.stdout.indexOf("resourceGroups.deleteMethod is called") > 0, "Task should have called resourceGroups.deleteMethod function from azure-sdk");
             done();
         }).fail((err) => {
                 console.log(tr.stdout);
@@ -165,6 +173,7 @@ describe('Azure Resource Group Deployment', function () {
             .then(( )=> {
                 assert(tr.succeeded, "Task should have succeeded");
                 assert(tr.stdout.indexOf("Starting... customVM") > 0, "Should have started VM");
+                assert(tr.stdout.indexOf("virtualMachines.start is called") > 0, "Should have called virtualMachines.start function from azure-sdk")
                 done();
             })
             .fail((err) => {
@@ -180,6 +189,7 @@ describe('Azure Resource Group Deployment', function () {
             .then(( )=> {
                 assert(tr.succeeded, "Task should have succeeded");
                 assert(tr.stdout.indexOf("Stopping... customVM") > 0, "Should have started VM");
+                assert(tr.stdout.indexOf("virtualMachines.powerOff is called") > 0, "Should have called virtualMachines.powerOff function from azure-sdk");
                 done();
             })
             .fail((err) => {
@@ -195,6 +205,7 @@ describe('Azure Resource Group Deployment', function () {
             .then(( )=> {
                 assert(tr.succeeded, "Task should have succeeded");
                 assert(tr.stdout.indexOf("Restarting... customVM") > 0, "Should have started VM");
+                assert(tr.stdout.indexOf("virtualMachines.restart is called") > 0, "Should have called virtualMachines.restart function from azure-sdk");
                 done();
             })
             .fail((err) => {
@@ -210,6 +221,7 @@ describe('Azure Resource Group Deployment', function () {
             .then(( )=> {
                 assert(tr.succeeded, "Task should have succeeded");
                 assert(tr.stdout.indexOf("Deleting... customVM") > 0, "Should have started VM");
+                assert(tr.stdout.indexOf("virtualMachines.deleteMethod is called") > 0, "Should have called virtualMachines.deleteMethod function from azure-sdk")
                 done();
             })
             .fail((err) => {
