@@ -44,8 +44,8 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "checkPath": {
         "cmd": true,
-		"webAppPkg.zip": true,
-		"webAppPkg": true
+        "webAppPkg.zip": true,
+        "webAppPkg": true
     },
     "match": {
 		"C:\\pattern\\**\\*.zip":["webAppPkg1", "webAppPkg2"]
