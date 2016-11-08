@@ -7,7 +7,7 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput('ConnectedServiceName', 'AzureRMSpn');
 tr.setInput('WebAppName', 'mytestapp');
-tr.setInput('Package', 'webAppPkgPattern');
+tr.setInput('Package', 'C:\\pattern\\**\\*.zip');
 tr.setInput('UseWebDeploy', 'true');
 
 process.env['TASK_TEST_TRACE'] = 1;
@@ -43,7 +43,15 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "osType": "Windows"
     },
     "checkPath": {
-        "cmd": true
+        "cmd": true,
+        "webAppPkg.zip": true,
+        "webAppPkg": true
+    },
+    "match": {
+		"C:\\pattern\\**\\*.zip":["webAppPkg1", "webAppPkg2"]
+	},
+    "find" : {
+        "C:\\pattern\\":['C:\\pattern\\webAppPkg.zip']
     },
     "exec": {
         "cmd /C DefaultWorkingDirectory\\msDeployCommand.bat": {
