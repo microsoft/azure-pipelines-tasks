@@ -1,6 +1,6 @@
 {
   "name": "vsts-tasks-azurecli",
-  "version": "0.2.2",
+  "version": "0.2.4",
   "description": "VSTS Azure CLI Task",
   "main": "azureclitask.js",
   "scripts": {
@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
-    "vsts-task-lib": "1.0.0"
+    "vsts-task-lib": "^1.0.0"
   }
 }
