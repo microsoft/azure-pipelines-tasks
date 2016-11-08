@@ -88,7 +88,7 @@ export function isObject(object){
     }
     return true;
 }
-}
+
 
 export function findfiles(filepath){
     var filesList : string [];
