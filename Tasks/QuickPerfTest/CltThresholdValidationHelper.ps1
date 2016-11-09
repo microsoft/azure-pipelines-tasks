@@ -14,7 +14,6 @@ function ValidateThresholdRule($cltAccountUrl,$headers,[ThresholdRule]$threshold
 function ValidateThreshold($cltAccountUrl,$headers,[ThresholdRule]$thresholdRule,$testRunId,$counterInstances)
 {
  $counterInstanceId = GetCounterInstanceId $counterInstances $thresholdRule.counterInstanceName
-
  $samplesRemaining = $true
  $startInterval = 0
  $endInterval = 2000

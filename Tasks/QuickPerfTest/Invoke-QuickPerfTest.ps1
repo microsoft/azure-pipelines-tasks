@@ -90,7 +90,6 @@ ValidateInputs $websiteUrl $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI $connectedSer
 
 #Process Threshold Rules
 Write-Output "Initializing threshold rule for avg. response time with value(ms) : $avgResponseTimeThreshold "
-
 $avgResponseTimeThresholdRule = CreateAvgResponseTimeThresholdRule $avgResponseTimeThreshold
 
 #Initialize Connected Service Details
