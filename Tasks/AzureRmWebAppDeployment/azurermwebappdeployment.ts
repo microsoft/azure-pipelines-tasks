@@ -67,7 +67,7 @@ async function run() {
             else {
                 await zipUtility.unzip(webDeployPkg, folderPath);
             }
-            if(xmlTransformation){
+            if(xmlTransformation) {
                 var environmentName = tl.getVariable('Release.EnvironmentName');
                 if(tl.osType().match(/^Win/)) {
                     var transformConfigs = ["Release.config"];
