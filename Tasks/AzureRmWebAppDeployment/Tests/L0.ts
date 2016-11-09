@@ -1,16 +1,23 @@
+import { request } from 'https';
 import * as path from 'path';
 import * as assert from 'assert';
 import * as ttm from 'vsts-task-lib/mock-test';
+import tl = require('vsts-task-lib');
+var ltx = require('ltx');
+import fs = require('fs');
 
 describe('AzureRmWebAppDeployment Suite', function() {
      var taskSrcPath = path.join(__dirname, '..');
      var testSrcPath = path.join(__dirname);
 
      before((done) => {
+        tl.cp(path.join(__dirname, 'L1XmlVarSub/Web.config'), path.join(__dirname, 'L1XmlVarSub/Web_test.config'), null, false);
+        tl.cp(path.join(__dirname, 'L1XmlVarSub/Web.Debug.config'), path.join(__dirname, 'L1XmlVarSub/Web_test.Debug.config'), null, false);
         done();
     });
     after(function() {
-
+        tl.rmRF(path.join(__dirname, 'L1XmlVarSub/Web_test.config'));
+        tl.rmRF(path.join(__dirname, 'L1XmlVarSub/Web_test.Debug.config'));
     });
 
     it('Runs successfully with default inputs', (done:MochaDone) => {
@@ -338,6 +345,21 @@ describe('AzureRmWebAppDeployment Suite', function() {
         assert(tr.stdout.search('JSON - special variables validated') > 0, 'JSON - special variables validation error');
         assert(tr.stdout.search('JSON - varaibles with dot character validated') > 0, 'JSON varaibles with dot character validated');
         assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
+
+    it('Runs successfully with XML variable substitution (L1)', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'L0XmlVarSub.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+		
+        var resultFile = ltx.parse(fs.readFileSync(path.join(__dirname, 'L1XmlVarSub/Web_test.config')));
+        var expectFile = ltx.parse(fs.readFileSync(path.join(__dirname, 'L1XmlVarSub/Web_Expected.config')));
+        assert(ltx.equal(resultFile, expectFile) , 'Should have substituted variables in Web.config file');
+
+        var resultFile = ltx.parse(fs.readFileSync(path.join(__dirname, 'L1XmlVarSub/Web_test.Debug.config')));
+        var expectFile = ltx.parse(fs.readFileSync(path.join(__dirname, 'L1XmlVarSub/Web_Expected.Debug.config')));
+        assert(ltx.equal(resultFile, expectFile) , 'Should have substituted variables in Web.Debug.config file');
         done();
     });
 

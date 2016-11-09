@@ -65,16 +65,3 @@ export function canUseWebDeploy(useWebDeploy: boolean) {
     var win = tl.osType().match(/^Win/);
     return (useWebDeploy || win);
 }
-
-export function isEmpty(object){
-    if(object == null || object == "")
-        return true;
-    return false;
-}
-
-export function isObject(object){
-    if(object == null || object == "" || typeof(object) != 'object'){
-        return false;
-    }
-    return true;
-}

@@ -8,3 +8,16 @@ export function isPredefinedVariable(variable: string): boolean {
     }
     return false;
 }
+
+export function isEmpty(object){
+    if(object == null || object == "")
+        return true;
+    return false;
+}
+
+export function isObject(object){
+    if(object == null || object == "" || typeof(object) != 'object'){
+        return false;
+    }
+    return true;
+}
