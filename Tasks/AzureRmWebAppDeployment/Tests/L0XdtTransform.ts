@@ -44,7 +44,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "osType": "Windows"
     },
     "checkPath": {
-        "cmd": true
+        "cmd": true,
+        "webAppPkg.zip": true,
+        "webAppPkg": true
     },
     "rmRF": {
         "DefaultWorkingDirectory\\msDeployCommand.bat": {
