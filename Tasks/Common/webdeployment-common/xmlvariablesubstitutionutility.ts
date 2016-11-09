@@ -3,19 +3,19 @@ import tl = require('vsts-task-lib/task');
 import fs = require('fs');
 
 var ltx = require("ltx");
-var utility = require ('./utility.js');
+var varUtility = require ('./variableutility.js');
 var ltxdomutility = require("./ltxdomutility.js");
 var fileEncoding = require('./fileencoding.js');
 
 export async function substituteAppSettingsVariables(folderPath) {
-    var configFiles = tl.glob(folderPath + "/**/*config");
+    var configFiles = tl.glob(folderPath + "/**/*.config");
     var tags = ["applicationSettings", "appSettings", "connectionStrings", "configSections"];
-    for(var index in configFiles) {
-        await substituteXmlVariables(configFiles[index], tags);
+    for(var configFile of configFiles) {
+        await substituteXmlVariables(configFile, tags);
     }
 }
 
-async function substituteXmlVariables(configFile, tags){
+export async function substituteXmlVariables(configFile, tags){
     if(!tl.exist(configFile)) {
         throw new Error(tl.loc("Configfiledoesntexists", configFile));
     }
@@ -24,7 +24,7 @@ async function substituteXmlVariables(configFile, tags){
     }
     tl.debug(tl.loc("Initiatedvariablesubstitutioninconfigfile", configFile));
     var fileBuffer: Buffer = fs.readFileSync(configFile);
-    var fileEncodeType = fileEncoding.detectFileEncoding(fileBuffer);
+    var fileEncodeType = fileEncoding.detectFileEncoding(configFile, fileBuffer);
     var webConfigContent: string = fileBuffer.toString(fileEncodeType[0]);
     if(fileEncodeType[1]) {
         webConfigContent = webConfigContent.slice(1);
@@ -46,7 +46,7 @@ async function substituteXmlVariables(configFile, tags){
         }
         for(var i=0; i<nodes.length; i++) {
             var xmlNode = nodes[i];
-            if(utility.isObject(xmlNode)){
+            if(varUtility.isObject(xmlNode)){
                 tl.debug(tl.loc("Processingsubstitutionforxmlnode", xmlNode.name));
                 try {
                     if(xmlNode.name == "configSections") {
@@ -76,9 +76,9 @@ async function updateXmlConfigNodeAttribute(xmlDocument, xmlNode) {
     var sections = ltxdomutility.getChildElementsByTagName(xmlNode, "section");
     for(var i=0; i < sections.length; i++) {
         var section  = sections[i];
-        if(utility.isObject(section)){
+        if(varUtility.isObject(section)){
             var sectionName = sections[i].attr('name');
-            if(!utility.isEmpty(sectionName)) {
+            if(!varUtility.isEmpty(sectionName)) {
                 var customSectionNodes = ltxdomutility.getElementsByTagName(sectionName);
                 if( customSectionNodes.length != 0) {
                     var customNode = customSectionNodes[0];
@@ -92,14 +92,14 @@ async function updateXmlConfigNodeAttribute(xmlDocument, xmlNode) {
 async function updateXmlNodeAttribute(xmlDomNode)
 {
 
-    if (utility.isEmpty(xmlDomNode) || !utility.isObject(xmlDomNode) || xmlDomNode.name == "#comment") {
+    if (varUtility.isEmpty(xmlDomNode) || !varUtility.isObject(xmlDomNode) || xmlDomNode.name == "#comment") {
         tl.debug(tl.loc("Providednodeisemptyorcomment"));
         return;
     }
     var xmlDomNodeAttributes = xmlDomNode.attrs;	
     for(var attributeName in xmlDomNodeAttributes) {
         if(attributeName != "key") {
-            if(!utility.isPredefinedVariable(attributeName)) {
+            if(!varUtility.isPredefinedVariable(attributeName)) {
                 var taskContextVariableValue = tl.getVariable(attributeName);
                 if(taskContextVariableValue) {
                      xmlDomNode.attr(attributeName, taskContextVariableValue);
@@ -108,7 +108,7 @@ async function updateXmlNodeAttribute(xmlDomNode)
         }
         else {
             attributeName = xmlDomNodeAttributes[attributeName];
-            if(!utility.isPredefinedVariable(attributeName)) {
+            if(!varUtility.isPredefinedVariable(attributeName)) {
                 var taskContextVariableValue = tl.getVariable(attributeName);
                 if(taskContextVariableValue) {
                      xmlDomNode.attr("value", taskContextVariableValue);
@@ -120,7 +120,7 @@ async function updateXmlNodeAttribute(xmlDomNode)
     var children = xmlDomNode.children;
     for(var i=0; i < children.length; i++) {
         var childNode = children[i];
-        if(!utility.isEmpty(childNode) && typeof(childNode) == 'object') {
+        if(!varUtility.isEmpty(childNode) && typeof(childNode) == 'object') {
             updateXmlNodeAttribute(childNode);
         }
     }

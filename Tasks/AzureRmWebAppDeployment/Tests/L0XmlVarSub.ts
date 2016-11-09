@@ -8,6 +8,8 @@ tr.setInput('ConnectedServiceName', 'AzureRMSpn');
 tr.setInput('WebAppName', 'mytestapp');
 tr.setInput('Package', 'webAppPkg.zip');
 tr.setInput('UseWebDeploy', 'true');
+tr.setInput('XmlTransformsAndVariableSubstitutions', 'true');
+tr.setInput('VariableSubstitution', 'true');
 
 process.env['TASK_TEST_TRACE'] = 1;
 process.env["ENDPOINT_AUTH_AzureRMSpn"] = "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
@@ -27,6 +29,13 @@ process.env["SYSTEM_TEAMPROJECT"] = "MyFirstProject";
 process.env["BUILD_SOURCEVERISONAUTHOR"] = "author";
 process.env["RELEASE_RELEASEURI"] = "vstfs:///ReleaseManagement/Release/1";
 process.env["AGENT_NAME"] = "author";
+process.env['CONNTYPE'] = 'new_connType';
+process.env['CONNECTIONSTRING'] = 'database_connection_string';
+process.env['WEBPAGES:VERSION'] = '1.1.7.3';
+process.env['RMTYPE'] = 'newRM@type';
+process.env['XDT:TRANSFORM'] = 'DelAttributes';
+process.env['XDT:LOCATOR'] = 'Match(tag)';
+
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
@@ -88,13 +97,20 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 		"system.teamProject": "MyFirstProject",
 		"build.sourceVersionAuthor": "author",
 		"release.releaseUri": "vstfs:///ReleaseManagement/Release/1",
-		"agent.name": "agent"
+		"agent.name": "agent",
+        "conntype": "new_connType",
+        "connectionString": 'database_connection_string',
+        "webpages:Version": "1.1.7.3",
+        "rmtype": "newRM@type",
+        "xdt:Transform": "DelAttributes",
+        "xdt:Locator": "Match(tag)"
     }
 }
 
 import mockTask = require('vsts-task-lib/mock-task');
 var kuduDeploymentLog = require('webdeployment-common/kududeploymentstatusutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js');
+var xmlSubstitutionUtility = require('webdeployment-common/xmlvariablesubstitutionutility.js');
 
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
@@ -158,6 +174,25 @@ tr.registerMock('./azurerestutility.js', {
         var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
         requestDetails["requestBody"].author = 'author';
         console.log("kudu log requestBody is:" + JSON.stringify(requestDetails["requestBody"]));
+    }
+});
+
+tr.registerMock('webdeployment-common/ziputility.js', {
+    'unzip': function(zipLocation, unzipLocation) {
+        console.log('Extracting ' + zipLocation + ' to ' + unzipLocation);
+    },
+    archiveFolder: function(folderPath, targetPath, zipName) {
+        console.log('Archiving ' + folderPath + ' to ' + targetPath + '/' + zipName);
+    }
+});
+
+tr.registerMock('webdeployment-common/xmlvariablesubstitutionutility.js', {
+    substituteAppSettingsVariables: async function(folderPath) {
+        var tags = ["applicationSettings", "appSettings", "connectionStrings", "configSections"];
+        var configFiles = [path.join(__dirname, 'L1XmlVarSub/Web_test.config'), path.join(__dirname, 'L1XmlVarSub/Web_test.Debug.config')];
+        for(var configFile of configFiles) {
+            await xmlSubstitutionUtility.substituteXmlVariables(configFile, tags);
+        }
     }
 });
 
