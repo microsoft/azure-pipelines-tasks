@@ -11,12 +11,12 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
+        "Major": 2,
         "Minor": 0,
-        "Patch": 95
+        "Patch": 0
     },
     "demands": [
-        "azureps"
+        "nodejs"
     ],
     "minimumAgentVersion": "1.103.0",
     "groups": [
@@ -28,33 +28,12 @@
     ],
     "inputs": [
         {
-            "name": "ConnectedServiceNameSelector",
-            "type": "pickList",
-            "label": "Azure Connection Type",
-            "required": false,
-            "helpMarkDown": "",
-            "defaultValue": "ConnectedServiceName",
-            "options": {
-                "ConnectedServiceName": "Azure Resource Manager"
-            }
-        },
-        {
             "name": "ConnectedServiceName",
             "type": "connectedService:AzureRM",
             "label": "Azure RM Subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment.",
-            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
-        },
-        {
-            "name": "ConnectedServiceNameClassic",
-            "type": "connectedService:Azure",
-            "label": "Azure Classic Subscription",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Select the Azure Classic subscription for the deployment.",
-            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
         },
         {
             "name": "action",
@@ -71,8 +50,7 @@
                 "Restart": "Restart Virtual Machines",
                 "Delete": "Delete Virtual Machines",
                 "DeleteRG": "Delete Resource Group"
-            },
-            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
+            }
         },
         {
             "name": "resourceGroupName",
@@ -82,8 +60,7 @@
             "helpMarkDown": "Provide the name of the resource group.",
             "properties": {
                 "EditableOptions": "True"
-            },
-            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
+            }
         },
         {
             "name": "location",
@@ -138,7 +115,7 @@
             "label": "Override Template Parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the template parameters to override like, <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword (ConvertTo-SecureString -String '$(password)' -AsPlainText -Force) –azureKeyVaultName $(fabrikamFibre).",
+            "helpMarkDown": "Specify the template parameters to override like, <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre).",
             "properties": {
                 "editorExtension": "ms.vss-distributed-task-input-editor.parameters-grid"
             },
@@ -159,20 +136,11 @@
             "visibleRule": "action = Create Or Update Resource Group"
         },
         {
-            "name": "enableDeploymentPrerequisitesForCreate",
+            "name": "enableDeploymentPrerequisites",
             "type": "boolean",
             "label": "Enable Deployment Prerequisites",
             "defaultValue": "false",
-            "visibleRule": "action = Create Or Update Resource Group",
-            "required": false,
-            "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
-        },
-        {
-            "name": "enableDeploymentPrerequisitesForSelect",
-            "type": "boolean",
-            "label": "Enable Deployment Prerequisites",
-            "defaultValue": "false",
-            "visibleRule": "action = Select Resource Group",
+            "visibleRule": "action = Create Or Update Resource Group || action = Select Resource Group",
             "required": false,
             "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
         },
@@ -216,6 +184,7 @@
         "FailedRegisteringEnvironment": "Task failed while registering environment, due to the following error: %s",
         "selectResourceGroupSuccessfull": "Selected Resource Group: '%s' and stored it in '%s'",
         "ValidatingCredentialsFailure": "Failed while validating credentials due to following error: %s",
+        "ARG_DeletingResourceGroup": "Deleting Resource Group.. %s",
         "VM_Start": "Starting... %s",
         "VM_Restart": "Restarting... %s",
         "VM_Stop": "Stopping... %s",

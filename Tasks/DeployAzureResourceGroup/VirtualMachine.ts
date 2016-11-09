@@ -73,7 +73,7 @@ export class VirtualMachine {
                 case "Start":
                     for (var i = 0; i < listOfVms.length; i++) {
                         var vmName = listOfVms[i]["name"];
-                        console.log(tl.loc("VMStart", vmName));
+                        console.log(tl.loc("VM_Start", vmName));
                         this.client.virtualMachines.start(this.resourceGroupName, vmName, this.postOperationCallBack);
                     }
                     break;

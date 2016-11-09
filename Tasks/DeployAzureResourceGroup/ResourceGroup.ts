@@ -128,7 +128,7 @@ export class ResourceGroup {
         var parameters = this.getParametersFromTemplate(template);
         try {
             if (this.csmParametersFile != undefined && this.csmParametersFile != null && this.csmParametersFile.trim() != "") {
-                var parameterFile = JSON.parse(fs.readFileSync(this.csmParametersFile, 'UTF-8'));
+                var parameterFile = JSON.parse(fs.readFileSync(this.csmParametersFile, 'UTF-8')).parameters;
                 for (var param in parameterFile) {
                     parameters[param] = parameterFile[param];
                 }
@@ -153,7 +153,8 @@ export class ResourceGroup {
                 return;
             }
             try {
-                new env.RegisterEnvironment(this.credentials, this.subscriptionId, this.resourceGroupName, this.outputVariable);
+                if (this.outputVariable && this.outputVariable.trim() != "")
+                    new env.RegisterEnvironment(this.credentials, this.subscriptionId, this.resourceGroupName, this.outputVariable);
             } catch(error) {            
                 tl.setResult(tl.TaskResult.Failed, tl.loc("FailedRegisteringEnvironment", error));
                 return;
