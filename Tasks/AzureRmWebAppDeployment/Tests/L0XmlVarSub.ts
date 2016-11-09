@@ -29,12 +29,12 @@ process.env["SYSTEM_TEAMPROJECT"] = "MyFirstProject";
 process.env["BUILD_SOURCEVERISONAUTHOR"] = "author";
 process.env["RELEASE_RELEASEURI"] = "vstfs:///ReleaseManagement/Release/1";
 process.env["AGENT_NAME"] = "author";
-process.env['conntype'] = 'new_connType';
-process.env['connectionString'] = 'database_connection_string';
-process.env['webpages:Version'] = '1.1.7.3';
-process.env['rmtype'] = 'newRM@type';
-process.env['xdt:Transform'] = 'DelAttributes';
-process.env['xdt:Locator'] = 'Match(tag)';
+process.env['CONNTYPE'] = 'new_connType';
+process.env['CONNECTIONSTRING'] = 'database_connection_string';
+process.env['WEBPAGES:VERSION'] = '1.1.7.3';
+process.env['RMTYPE'] = 'newRM@type';
+process.env['XDT:TRANSFORM'] = 'DelAttributes';
+process.env['XDT:LOCATOR'] = 'Match(tag)';
 
 
 // provide answers for task mock
@@ -95,7 +95,13 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 		"system.teamProject": "MyFirstProject",
 		"build.sourceVersionAuthor": "author",
 		"release.releaseUri": "vstfs:///ReleaseManagement/Release/1",
-		"agent.name": "agent"
+		"agent.name": "agent",
+        "conntype": "new_connType",
+        "connectionString": 'database_connection_string',
+        "webpages:Version": "1.1.7.3",
+        "rmtype": "newRM@type",
+        "xdt:Transform": "DelAttributes",
+        "xdt:Locator": "Match(tag)"
     }
 }
 
