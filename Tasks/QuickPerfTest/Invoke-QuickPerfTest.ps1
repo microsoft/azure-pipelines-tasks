@@ -20,7 +20,9 @@ param
     [String] [Parameter(Mandatory = $true)]
     $geoLocation,
     [String] [Parameter(Mandatory = $true)]
-    $machineType
+    $machineType,
+	[String] [Parameter(Mandatory = $false)]
+	$avgResponseTimeThreshold
 )
 
 function InitializeRestHeaders()
@@ -61,6 +63,7 @@ function ValidatePatToken($token)
   # Load all dependent files for execution
   . $PSScriptRoot/CltTasksUtility.ps1
   . $PSScriptRoot/VssConnectionHelper.ps1
+  . $PSScriptRoot/CltThresholdValidationHelper
   
 $userAgent = "QuickPerfTestBuildTask"
 $global:RestTimeout = 60
@@ -85,6 +88,12 @@ Write-Output "Run source identifier = build/$env:SYSTEM_DEFINITIONID/$env:BUILD_
 #Validate Input
 ValidateInputs $websiteUrl $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI $connectedServiceName
 
+#Process Threshold Rules
+Write-Output "Initializing threshold rule for avg. response time with value(ms) : $avgResponseTimeThreshold "
+
+$avgResponseTimeThresholdRule = CreateAvgResponseTimeThresholdRule $avgResponseTimeThreshold
+
+#Initialize Connected Service Details
 if([string]::IsNullOrWhiteSpace($connectedServiceName))
 {
 	$connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name SystemVssConnection
@@ -120,10 +129,34 @@ if ($drop.dropType -eq "InPlaceDrop")
 
     $resultsMDFolder = New-Item -ItemType Directory -Force -Path "$env:Temp\LoadTestResultSummary"	
     $resultFilePattern = ("QuickPerfTestResults_{0}_{1}_*.md" -f $env:AGENT_ID, $env:SYSTEM_DEFINITIONID)
-    $excludeFilePattern = ("QuickPerfTestResults_{0}_{1}_{2}_*.md" -f $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID)   
+    $excludeFilePattern = ("QuickPerfTestResults_{0}_{1}_{2}_*.md" -f $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID)
+	
+	if($avgResponseTimeThresholdRule)
+	{
+	 $thresholdViolationsCount = ValidateThresholdRule $CltAccountUrl  $headers $avgResponseTimeThresholdRule $run.id
+	 if($thresholdViolationsCount -gt 0)
+		{
+		 Write-Output "There were $thresholdViolationsCount violations for the Avg.Response Time threshold value of $avgResponseTimeThreshold"
+		 Write-Output "To view detailed results navigate to Load Test | Load Test Manager in Visual Studio IDE, and open this run."
+         Write-Error "Load test task is marked as failed, as there were threshold violations for the Avg. Response Time"
+		}
+	}
+
     Remove-Item $resultsMDFolder\$resultFilePattern -Exclude $excludeFilePattern -Force	
     $summaryFile =  ("{0}\QuickPerfTestResults_{1}_{2}_{3}_{4}.md" -f $resultsMDFolder, $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID, $run.id)	
+
+	if ($thresholdViolationsCount -gt 0)
+	{
+        $thresholdMessage=("{0} thresholds violated." -f $thresholdViolationsCount)
+        $thresholdImage="bowtie-status-error"
+	}
+	else
+    {
+        $thresholdMessage="No thresholds violated."
+        $thresholdImage="bowtie-status-success"
+	}
     $summary = ('[Test Run: {0}]({1}) using {2}.<br/>' -f  $run.runNumber, $webResultsUrl ,$run.name)
+	$summary = ('<span class="bowtie-icon {3}" />   {4}<br/>[Test Run: {0}]({1}) using {2}.<br/>' -f  $run.runNumber, $webResultsUri , $run.name, $thresholdImage, $thresholdMessage)
 
 	('<p>{0}</p>' -f $summary) >>  $summaryFile
     UploadSummaryMdReport $summaryFile

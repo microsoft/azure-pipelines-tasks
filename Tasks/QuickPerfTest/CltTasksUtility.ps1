@@ -189,3 +189,9 @@ function UploadSummaryMdReport($summaryMdPath)
 	}
 }
 
+function isNumericValue ($str) {
+    $numericValue = 0
+    $isNum = [System.Int32]::TryParse($str, [ref]$numericValue)
+    return $isNum
+}
+
