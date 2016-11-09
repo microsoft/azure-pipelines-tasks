@@ -43,8 +43,7 @@ async function run() {
         SPN["servicePrincipalKey"] = endPointAuthCreds.parameters["serviceprincipalkey"];
         SPN["tenantID"] = endPointAuthCreds.parameters["tenantid"];
         SPN["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
-
-        var availableWebPackages = tl.glob(webDeployPkg);
+        var availableWebPackages = utility.findfiles(webDeployPkg);
         if(availableWebPackages.length == 0) {
             throw new Error(tl.loc('Nopackagefoundwithspecifiedpattern'));
         }

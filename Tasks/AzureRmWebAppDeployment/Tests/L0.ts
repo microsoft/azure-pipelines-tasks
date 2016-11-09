@@ -213,7 +213,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
 		
         assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
         assert(tr.stderr.length > 0 || tr.errorIssues.length > 0, 'should have written to stderr');
-        var expectedErr = 'Error: loc_mock_Nopackagefoundwithspecifiedpattern'; 
+        var expectedErr = 'Error: Not found Invalid_webAppPkg'; 
         assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr); 
         assert(tr.failed, 'task should have failed');
         done();
