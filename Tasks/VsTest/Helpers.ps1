@@ -30,6 +30,19 @@ function Test-Leaf {
     return $false
 }
 
+function Get-VSTestConsole15Path {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path)
+        
+    $shellFolder15 = $Path.TrimEnd('\'[0]) + '\'
+    $installDir15 = ([System.IO.Path]::Combine($shellFolder15, 'Common7', 'IDE')) + '\'
+    $testWindowDir15 = [System.IO.Path]::Combine($installDir15, 'CommonExtensions', 'Microsoft', 'TestWindow') + '\'
+    $vstestConsole15 = [System.IO.Path]::Combine($testWindowDir15, 'vstest.console.exe')
+    return $vstestConsole15
+}
+
 function Get-VisualStudio_15_0 {
 
     [CmdletBinding()]
