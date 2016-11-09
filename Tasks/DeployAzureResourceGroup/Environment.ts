@@ -107,7 +107,6 @@ export class RegisterEnvironment {
         this.getVMDetails();
         this.getNetworkInterfaceDetails();
         this.getPublicIPAddresses();
-
     }
 
     private InstantiateEnvironment() {
@@ -204,5 +203,5 @@ export class RegisterEnvironment {
             this.InstantiateEnvironment();
         });
     }
-   
+    
 }
