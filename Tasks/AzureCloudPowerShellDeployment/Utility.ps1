@@ -140,8 +140,25 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAcc
                         $storageAccountKey = $primaryStorageKey
                     }
 
-                    Write-Host "New-AzureServiceDiagnosticsExtensionConfig -Role $role -StorageAccountName $storageAccountName -StorageAccountKey <storageKey> -DiagnosticsConfigurationPath $fullExtPath"
-                    $wadconfig = New-AzureServiceDiagnosticsExtensionConfig -Role $role -StorageAccountName $storageAccountName -StorageAccountKey $storageAccountKey -DiagnosticsConfigurationPath $fullExtPath 
+                    if((CmdletHasMember "StorageAccountName") -and (CmdletHasMember "StorageAccountKey"))
+                    {
+                        Write-Host "New-AzureServiceDiagnosticsExtensionConfig -Role $role -StorageAccountName $storageAccountName -StorageAccountKey <storageKey> -DiagnosticsConfigurationPath $fullExtPath"
+                        $wadconfig = New-AzureServiceDiagnosticsExtensionConfig -Role $role -StorageAccountName $storageAccountName -StorageAccountKey $storageAccountKey -DiagnosticsConfigurationPath $fullExtPath
+                    } 
+                    else
+                    {
+                        try
+                        {
+                            $storageContext = New-AzureStorageContext -StorageAccountName $storageAccountName -StorageAccountKey $storageAccountKey
+                            Write-Host "New-AzureServiceDiagnosticsExtensionConfig -Role $role -StorageContext $StorageContext -DiagnosticsConfigurationPath $fullExtPath"
+                            $wadconfig = New-AzureServiceDiagnosticsExtensionConfig -Role $role -StorageContext $StorageContext -DiagnosticsConfigurationPath $fullExtPath 
+                        }
+                        catch
+                        {
+                            Write-Warning (Get-VstsLocString -Key "Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics")
+                            throw $_.Exception
+                        }
+                    }
 
                     #Add each extension configuration to the array for use by caller
                     $diagnosticsConfigurations += $wadconfig
@@ -177,4 +194,15 @@ function Parse-StorageKeys($storageAccountKeys)
         }
     }
     return $roleStorageKeyMap
+}
+
+function CmdletHasMember($memberName) {
+    try{
+        $cmdletParameter = (gcm New-AzureServiceDiagnosticsExtensionConfig).Parameters.Keys.Contains($memberName)
+        return $cmdletParameter
+    }
+    catch
+    {
+        return false;
+    }  
 }

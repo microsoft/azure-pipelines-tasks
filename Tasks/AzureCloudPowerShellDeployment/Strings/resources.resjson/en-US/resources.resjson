@@ -35,5 +35,6 @@
   "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}",
   "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one.",
   "loc.messages.Storagekeysaredefinedininvalidformat": "Storage keys are defined in invalid format.",
-  "loc.messages.Unabletofind0usingprovidedsubscription": "Unable to find {0} using provided subscription"
+  "loc.messages.Unabletofind0usingprovidedsubscription": "Unable to find {0} using provided subscription",
+  "loc.messages.Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "Current version of azure powershell don't support external storage account for configuring diagnostics."
 }
