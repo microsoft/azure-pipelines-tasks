@@ -11,6 +11,8 @@ export class WinRMHttpsListener {
     private fqdnMap;
     private winRmHttpsPortMap;
     private virtualMachines;
+    private customScriptExtensionInstalled: boolean;
+    private ruleAddedToNsg: boolean;
 
     constructor(resourceGroupName: string, credentials, subscriptionId: string, enablePrereq: boolean) {
         this.resourceGroupName = resourceGroupName;
@@ -19,6 +21,8 @@ export class WinRMHttpsListener {
         this.enablePrereq = enablePrereq;
         this.fqdnMap = {};
         this.winRmHttpsPortMap = {};
+        this.customScriptExtensionInstalled = false;
+        this.ruleAddedToNsg = false;
         return this;
     }
 
@@ -33,12 +37,12 @@ export class WinRMHttpsListener {
                     var resourceWinRmHttpsPort = this.winRmHttpsPortMap[resourceName];
 
                     if (!resourceWinRmHttpsPort || resourceWinRmHttpsPort === "") {
-                        console.log("Defaulting WinRmHttpsPort of %s to 5986", resourceName);
+                        tl.debug("Defaulting WinRmHttpsPort of " + resourceName + " to 5986");
                         this.winRmHttpsPortMap[resourceName] = "5986";
                     }
 
                     if (this.enablePrereq === true) {
-                        console.log("Enabling winrm for virtual machine %s", resourceName);
+                        tl.debug("Enabling winrm for virtual machine " + resourceName);
                         this.AddAzureVMCustomScriptExtension(resourceId, resourceName, resourceFQDN, vm["location"]);
                     }
                 }
@@ -53,36 +57,241 @@ export class WinRMHttpsListener {
         });
     }
 
+    private AddRule(lb, frontendPortMap) {
+        var ruleIdMap = {};
+        var lbName = lb["name"];
+        var addedRulesId = [];
+
+        var networkClient = new networkManagementClient(this.credentials, this.subscriptionId);
+
+        tl.debug("Updating the load balancers with the appropriate Inbound Nat rules");
+
+        networkClient.loadBalancers.createOrUpdate(this.resourceGroupName, lbName, { "frontendIPConfigurations": lb["frontendIPConfigurations"], "inboundNatRules": lb["inboundNatRules"], "location": lb["location"], "backendAddressPools": lb["backendAddressPools"] }, (error, result, request, response) => {
+            if (error) {
+                tl.debug("Failed with error " + util.inspect(error, { depth: null }));
+                throw tl.loc("FailedToUpdateInboundNatRuleLB", [lbName]);
+            }
+            console.log(tl.loc("AddedInboundNatRuleLB", [lbName]));
+
+            var addedRulesId = [];
+
+            for (var rule of result["inboundNatRules"]) {
+                var index = rule["frontendPort"].toString();
+                var ipc = frontendPortMap[index];
+
+                if (!!ipc && ipc != "") {
+                    if (!ruleIdMap[ipc]) {
+                        ruleIdMap[ipc] = [];
+                    }
+                    ruleIdMap[ipc].push(rule["id"]);
+                    addedRulesId.push(rule["id"]);
+                }
+            }
+
+            console.log("Added rules id are:");
+            for (var id of addedRulesId) {
+                console.log("Id: %s", id);
+            }
+
+            networkClient.networkInterfaces.list(this.resourceGroupName, (error, networkInterfaces, request, response) => {
+                if (error) {
+                    tl.debug("Error in fetching the list of network Interfaces " + util.inspect(error, { depth: null }));
+                    throw new Error(tl.loc("FailedToFetchNetworkInterfaces"));
+                }
+
+                for (var nic of networkInterfaces) {
+                    var flag: boolean = false;
+                    for (var ipc of nic["ipConfigurations"]) {
+                        if (!!ruleIdMap[ipc["id"]] && ruleIdMap[ipc["id"]] != "") {
+                            for (var rule of ruleIdMap[ipc["id"]]) {
+                                if (!ipc["loadBalancerInboundNatRules"]) {
+                                    ipc["loadBalancerInboundNatRules"] = [];
+                                }
+                                ipc["loadBalancerInboundNatRules"].push({ "id": rule });
+                                location = nic["location"];
+                                flag = true;
+                            }
+                        }
+                    }
+                    if (!!flag) {
+                        tl.debug("Updating the NIC of the concerned vms");
+                        networkClient.networkInterfaces.createOrUpdate(this.resourceGroupName, nic["name"], { "ipConfigurations": nic["ipConfigurations"], "location": nic["location"] }, (error, res, response, request) => {
+                            if (error) {
+                                tl.debug("Error in updating the list of Network Interfaces: " + util.inspect(error, { depth: null }));
+                                throw new Error("FailedToUpdateNICOfVm");
+                            }
+                            tl.debug("Result of updating network interfaces: " + util.inspect(res, { depth: null }));
+                            console.log(tl.loc("AddedTargetInboundNatRuleLB", [lbName]));
+
+                            //Remove the rules which has no target virtual machines
+                            this.removeIrrelevantRules(lb, networkClient, addedRulesId);
+                        });
+                    }
+                }
+            });
+        });
+    }
+
+    private removeIrrelevantRules(lb, networkClient, addedRulesId) {
+        var lbName = lb["name"];
+        networkClient.loadBalancers.get(this.resourceGroupName, lbName, (error, lbDetails, request, response) => {
+            if (error) {
+                tl.debug("Error in getting the details of the load Balancer: " + lbName);
+                throw new Error("Error in getting the details of the load Balnacer " + lbName);
+            }
+
+            var updateRequired = false;
+            var relevantRules = [];
+
+            if (lbDetails["inboundNatRules"]) {
+                for (var rule of lbDetails["inboundNatRules"]) {
+                    if (addedRulesId.find((x) => x == rule["id"])) {
+                        if (rule["backendPort"] === 5986 && rule["backendIPConfiguration"] && rule["backendIPConfiguration"]["id"] && rule["backendIPConfiguration"]["id"] != "") {
+                            relevantRules.push(rule);
+                        }
+                        else {
+                            updateRequired = true;
+                        }
+                    }
+                }
+            }
+
+            if (updateRequired) {
+                tl.debug("Removing irrelevant rules");
+                networkClient.loadBalancers.createOrUpdate(this.resourceGroupName, lbName, { "frontendIPConfigurations": lb["frontendIPConfigurations"], "inboundNatRules": relevantRules, "location": lb["location"], "backendAddressPools": lb["backendAddressPools"] }, (error, result, request, response) => {
+                    if (error) {
+                        tl.debug("Failed to update the inbound Nat rules of Load balancer " + lbName + "to remove irrelevant rules");
+                        throw new Error("Failed to update LB inbound Nat rules");
+                    }
+                    tl.debug("Successfully Updated the inbound Nat Rules: " + util.inspect(result, { depth: null }));
+                });
+            }
+        });
+    }
+
+    public AddInboundNatRuleLB() {
+        var inboundWinrmHttpPort = {};
+        var networkClient = new networkManagementClient(this.credentials, this.subscriptionId);
+        console.log("Adding Inbound Nat Rule for LB");
+        networkClient.loadBalancers.list(this.resourceGroupName, (error, loadBalancers, request, response) => {
+            if (error) {
+                tl.debug("Failed to fetch the list of load balancers with error " + util.inspect(error, { depth: null }));
+                throw new Error("FailedToFetchLoadBalancers");
+            }
+            for (var lb of loadBalancers) {
+                /*1. Find all the busy ports
+                  2. Find the vms which are in backend Pools but their winRMPort is not mapped
+                  3. Next add the inbound NAT rules
+                */
+                var vmsInBackendPool = {};
+                var UnallocatedVMs = [];
+                var usedPorts = [];
+                var lbName = lb["name"];
+
+                //console.log(lb["name"]);
+                var pools = lb["backendAddressPools"];
+                for (var pool of pools) {
+                    //console.log("pool: %s", util.inspect(pool, { depth: null }));
+                    if (pool && pool["backendIPConfigurations"]) {
+                        var ipConfigs = pool["backendIPConfigurations"];
+                        for (var ipc of ipConfigs) {
+                            vmsInBackendPool[ipc["id"]] = "Exists";
+                        }
+                    }
+                }
+
+                for (var rule of lb["inboundNatRules"]) {
+                    usedPorts.push(rule["frontendPort"]);
+                    if (rule["backendPort"] === 5986 && rule["backendIPConfiguration"] && rule["backendIPConfiguration"]["id"]) {
+                        if (!!vmsInBackendPool[rule["backendIPConfiguration"]["id"]] && vmsInBackendPool[rule["backendIPConfiguration"]["id"]] === "Exists") {
+                            delete vmsInBackendPool[rule["backendIPConfiguration"]["id"]];
+                        }
+                    }
+                }
+
+                var port: number = 5986;
+                var frontendPortMap = {};
+                var frontendPorts = [];
+
+                for (var key in vmsInBackendPool) {
+                    //find the port which is free
+                    var found: boolean = false;
+                    while (!found) {
+                        if (!usedPorts.find((x) => x == port)) {
+                            found = true;
+                            vmsInBackendPool[key] = port;
+                            frontendPortMap[port] = key;
+                            frontendPorts.push(port);
+                        }
+                        port++;
+                    }
+                }
+
+                var newRule = {};
+                var empty = true;
+                var addedRules = [];
+
+                for (var key in vmsInBackendPool) {
+                    empty = false;
+                    var random: number = Math.floor(Math.random() * 10000 + 100);
+                    var name: string = "winRMHttpsRule" + random.toString();
+                    newRule = {
+                        "name": name,
+                        "backendPort": 5986,
+                        "frontendPort": vmsInBackendPool[key],
+                        "frontendIPConfiguration": { "id": lb["frontendIPConfigurations"][0]["id"] },
+                        "protocol": "Tcp",
+                        "idleTimeoutInMinutes": 4,
+                        "enableFloatingIP": false,
+                    };
+                    lb["inboundNatRules"].push(newRule);
+                }
+                var ruleIdMap = {};
+                if (!empty) {
+                    this.AddRule(lb, frontendPortMap);
+                }
+                else {
+                    tl.debug("No vms left for adding inbound nat rules for load balancer " + lbName);
+                    console.log(tl.loc("InboundNatRuleLBPresent", lbName));
+                }
+            }
+        });
+    }
+
     private AddInboundNetworkSecurityRule(retryCnt: number, securityGrpName, networkClient, ruleName, rulePriority, winrmHttpsPort) {
         try {
-            console.log("Adding inbound network security rule config %s with priority %s for port %s under security group %s", ruleName, rulePriority, winrmHttpsPort, securityGrpName);
+            tl.debug("Adding inbound network security rule config " + ruleName + " with priority " + rulePriority + " for port " + winrmHttpsPort + " under security group " + securityGrpName);
             var securityRuleParameters = { direction: "Inbound", access: "Allow", sourceAddressPrefix: "*", sourcePortRange: "*", destinationAddressPrefix: "*", destinationPortRange: winrmHttpsPort, protocol: "*", priority: rulePriority };
 
             var networkClient1 = new networkManagementClient(this.credentials, this.subscriptionId);
             networkClient1.securityRules.createOrUpdate(this.resourceGroupName, securityGrpName, ruleName, securityRuleParameters, (error, result, request, response) => {
                 if (error) {
-                    console.log("Error in adding network security rule %s", util.inspect(error, { depth: null }));
-                    throw "FailedToAddRuleToNetworkSecurityGroup";
+                    tl.debug("Error in adding network security rule " + util.inspect(error, { depth: null }));
+                    throw tl.loc("FailedToAddRuleToNetworkSecurityGroup", [securityGrpName]);
                 }
-                console.log("Added inbound network security rule config %s with priority %s for port %s under security group %s with result: %s", ruleName, rulePriority, winrmHttpsPort, securityGrpName, util.inspect(result, { depth: null }));
+                console.log(tl.loc("AddedSecurityRuleNSG", [ruleName, rulePriority, winrmHttpsPort, securityGrpName, util.inspect(result, { depth: null })]));
+                this.ruleAddedToNsg = true;
             });
         }
         catch (exception) {
-            console.log("Failed to add inbound network security rule config %s with priority %s for port %s under security group %s: %s", ruleName, rulePriority, winrmHttpsPort, securityGrpName, exception.message);
+            tl.debug("Failed to add inbound network security rule config " + ruleName + " with priority " + rulePriority + " for port " + winrmHttpsPort + " under security group " + securityGrpName + " : " + exception.message);
             rulePriority = rulePriority + 50;
-            console.log("Getting network security group %s in resource group %s", securityGrpName, this.resourceGroupName);
+            tl.debug("Getting network security group" + securityGrpName + " in resource group " + this.resourceGroupName);
 
             networkClient.networkSecurityGroups.list(this.resourceGroupName, (error, result, request, response) => {
                 if (error) {
-                    console.log("Error in getting the list of network Security Groups for the resource-group %s", this.resourceGroupName);
-                    throw "FetchingOfNetworkSecurityGroupFailed";
+                    tl.debug("Error in getting the list of network Security Groups for the resource-group " + this.resourceGroupName);
+                    throw tl.loc("FetchingOfNetworkSecurityGroupFailed");
                 }
 
                 if (result.length > 0) {
-                    console.log("Got network security group %s in resource group %s", securityGrpName, this.resourceGroupName);
+                    tl.debug("Got network security group " + securityGrpName + " in resource group " + this.resourceGroupName);
                     if (retryCnt > 0) {
-                        retryCnt = retryCnt - 1;
-                        this.AddInboundNetworkSecurityRule(retryCnt, securityGrpName, networkClient, ruleName, rulePriority, winrmHttpsPort);
+                        this.AddInboundNetworkSecurityRule(retryCnt - 1, securityGrpName, networkClient, ruleName, rulePriority, winrmHttpsPort);
+                    }
+                    else {
+                        tl.debug("Failed to add the NSG rule on security group " + securityGrpName + " after trying for 3 times ");
+                        throw tl.loc("FailedAddingNSGRule3Times", [securityGrpName]);
                     }
                 }
             });
@@ -90,43 +299,45 @@ export class WinRMHttpsListener {
     }
 
     private TryAddNetworkSecurityRule(securityGrpName, ruleName, rulePriority: number, winrmHttpsPort: string) {
-        console.log("here I am %s", securityGrpName);
         var networkClient = new networkManagementClient(this.credentials, this.subscriptionId);
         try {
             networkClient.securityRules.get(this.resourceGroupName, securityGrpName, ruleName, (error, result, request, response) => {
                 if (error) {
-                    console.log("Rule %s not found under security Group %s", ruleName, securityGrpName);
+                    tl.debug("Rule " + ruleName + " not found under security Group " + securityGrpName);
                     var maxRetries = 3;
                     this.AddInboundNetworkSecurityRule(maxRetries, securityGrpName, networkClient, ruleName, rulePriority, winrmHttpsPort);
                 }
                 else {
-                    console.log("Got network security rule %s under security Group %s", ruleName, securityGrpName);
+                    console.log(tl.loc("RuleExistsAlready", [ruleName, securityGrpName]));
+                    this.ruleAddedToNsg = true;
+                    //call the function
                 }
             });
         }
         catch (exception) {
-            throw "FailedToAddRuleToNetworkSecurityGroup";
+            throw tl.loc("FailedToAddRuleToNetworkSecurityGroup", [securityGrpName]);
         }
     }
 
     private AddNetworkSecurityRuleConfig(securityGroups: [Object], ruleName: string, rulePriority: number, winrmHttpsPort: string) {
         for (var i = 0; i < securityGroups.length; i++) {
-            console.log("Adding Security rule for the network security group: %s", securityGroups[i]["name"]);
+            console.log(tl.loc("AddingSecurityRuleNSG", [securityGroups[i]["name"]]));
             var securityGrp = securityGroups[i];
             var securityGrpName = securityGrp["name"];
 
             try {
-                console.log("Getting the network security rule config %s under security group %s", ruleName, securityGrpName);
+                tl.debug("Getting the network security rule config " + ruleName + " under security group " + securityGrpName);
                 this.TryAddNetworkSecurityRule(securityGrpName, ruleName, rulePriority, winrmHttpsPort);
             }
             catch (exception) {
-                console.log("Failed to add the network security rule with exception: %s", exception.message);
+                tl.debug("Failed to add the network security rule with exception: " + exception.message);
+                throw tl.loc("FailedToAddNetworkSecurityRule", [securityGrpName]);
             }
         }
     }
 
     private AddWinRMHttpsNetworkSecurityRuleConfig() {
-        console.log("Trying to add a network security group rule");
+        tl.debug("Trying to add a network security group rule");
 
         var _ruleName: string = "VSO-Custom-WinRM-Https-Port";
         var _rulePriority: number = 3986;
@@ -136,27 +347,28 @@ export class WinRMHttpsListener {
             var networkClient = new networkManagementClient(this.credentials, this.subscriptionId);
             networkClient.networkSecurityGroups.list(this.resourceGroupName, (error, result, request, response) => {
                 if (error) {
-                    console.log("Error in getting the list of network Security Groups for the resource-group %s", this.resourceGroupName);
-                    throw new Error("FetchingOfNetworkSecurityGroupFailed")
+                    tl.debug("Error in getting the list of network Security Groups for the resource-group" + this.resourceGroupName + "error" + util.inspect(error, { depth: null }));
+                    this.ruleAddedToNsg = true;
+                    throw new Error(tl.loc("FetchingOfNetworkSecurityGroupFailed"));
                 }
 
                 if (result.length > 0) {
                     this.AddNetworkSecurityRuleConfig(result, _ruleName, _rulePriority, _winrmHttpsPort);
-                    console.log("Over 1");
                 }
             });
         }
         catch (exception) {
-            console.warn(tl.loc("ARG_NetworkSecurityConfigFailed", [exception.message]));
+            this.ruleAddedToNsg = true;
+            throw new Error(tl.loc("ARG_NetworkSecurityConfigFailed", [exception.message]));
         }
     }
 
     private AddAzureVMCustomScriptExtension(vmId: string, vmName: string, dnsName: string, location: string) {
         var _extensionName: string = "CustomScriptExtension";
 
-        console.log("Adding custom script extension for virtual machine %s", vmName);
-        console.log("VM Location: %s", location);
-        console.log("VM DNS: %s", dnsName);
+        tl.debug("Adding custom script extension for virtual machine " + vmName);
+        tl.debug("VM Location: " + location);
+        tl.debug("VM DNS: " + dnsName);
 
         try {
             /*
@@ -167,18 +379,18 @@ export class WinRMHttpsListener {
             */
             var computeClient = new computeManagementClient(this.credentials, this.subscriptionId);
 
-            console.log("Checking if the extension %s is present on vm %s", _extensionName, vmName);
+            tl.debug("Checking if the extension " + _extensionName + " is present on vm " + vmName);
 
             computeClient.virtualMachineExtensions.get(this.resourceGroupName, vmName, _extensionName, (error, result, request, response) => {
                 if (error) {
-                    console.log("Failed to get the extension!!");
+                    tl.debug("Failed to get the extension!!");
                     //Adding the extension
                     this.AddExtensionVM(vmName, computeClient, dnsName, _extensionName, location);
                 }
                 else if (result != null) {
-                    console.log("Extension %s is present on the vm %s", _extensionName, vmName);
+                    console.log(tl.loc("ExtensionAlreadyPresentVm ", [_extensionName, vmName]));
                     if (result["provisioningState"] != 'Succeeded') {
-                        console.log("Provisioning State of extension %s on vm %s is not Succeeded", _extensionName, vmName);
+                        tl.debug("Provisioning State of extension " + _extensionName + " on vm " + vmName + " is not Succeeded");
                         this.RemoveExtensionFromVM(_extensionName, vmName, computeClient);
                         this.AddExtensionVM(vmName, computeClient, dnsName, _extensionName, location);
                     }
@@ -187,21 +399,22 @@ export class WinRMHttpsListener {
                         this.ValidateCustomScriptExecutionStatus(vmName, computeClient, dnsName, _extensionName, location);
                     }
                 }
-                throw tl.loc("FailedToAddExtension");
+                else {
+                    throw tl.loc("FailedToAddExtension");
+                }
             });
         }
         catch (exception) {
-            //skipped writing telemetry data
             throw tl.loc("ARG_DeploymentPrereqFailed", [exception.message]);
         }
     }
 
     private ValidateCustomScriptExecutionStatus(vmName: string, computeClient, dnsName: string, extensionName: string, location: string) {
-        console.log("Validating the winrm configuration custom script extension status");
+        tl.debug("Validating the winrm configuration custom script extension status");
 
         computeClient.virtualMachines.get(this.resourceGroupName, vmName, { expand: 'instanceView' }, (error, result, request, response) => {
             if (error) {
-                console.log("Error in getting the instance view of the virtual machine %s", util.inspect(error, { depth: null }));
+                tl.debug("Error in getting the instance view of the virtual machine " + util.inspect(error, { depth: null }));
                 throw tl.loc("FailedToFetchInstanceViewVM");
             }
 
@@ -222,6 +435,9 @@ export class WinRMHttpsListener {
             if (invalidExecutionStatus) {
                 this.AddExtensionVM(vmName, computeClient, dnsName, extensionName, location);
             }
+            else {
+                this.customScriptExtensionInstalled = true;
+            }
         });
     }
 
@@ -237,31 +453,32 @@ export class WinRMHttpsListener {
 
         var _protectedSettings = { commandToExecute: _commandToExecute };
         var parameters = { type: _extensionType, virtualMachineExtensionType: _virtualMachineExtensionType, typeHandlerVersion: _typeHandlerVersion, publisher: _publisher, location: location, settings: { fileUris: [_configWinRMScriptFile, _makeCertFile, _winrmConfFile] }, protectedSettings: _protectedSettings };
-        console.log("Adding the extension %s", extensionName);
+        console.log(tl.loc("AddExtension", [extensionName, vmName]));
         computeClient.virtualMachineExtensions.createOrUpdate(this.resourceGroupName, vmName, extensionName, parameters, (error, result, request, response) => {
             if (error) {
-                console.log("Failed to add the extension %s", util.inspect(error, { depth: null }));
+                tl.debug("Failed to add the extension " + util.inspect(error, { depth: null }));
                 throw tl.loc("CreationOfExtensionFailed");
             }
 
-            console.log("Addition of extension completed with response %s", util.inspect(result, { depth: null }));
+            tl.debug("Addition of extension completed ");
             if (result["provisioningState"] != 'Succeeded') {
                 this.RemoveExtensionFromVM(extensionName, vmName, computeClient);
                 throw tl.loc("ARG_SetExtensionFailedForVm", [this.resourceGroupName, vmName, result]);
             }
+            this.customScriptExtensionInstalled = true;
         });
     }
 
     private RemoveExtensionFromVM(extensionName, vmName, computeClient) {
-        console.log("Removing the extension %s from vm %s", extensionName, vmName);
+        tl.debug("Removing the extension " + extensionName + "from vm " + vmName);
         //delete the extension
         computeClient.virtualMachineExtensions.deleteMethod(this.resourceGroupName, vmName, extensionName, (error, result, request, response) => {
             if (error) {
-                console.log("Failed to delete the extension %s on the vm %s, with error Message: %s", extensionName, vmName, util.inspect(error, { depth: null }));
+                tl.debug("Failed to delete the extension " + extensionName + " on the vm " + vmName + ", with error Message: " + util.inspect(error, { depth: null }));
                 throw tl.loc("FailedToDeleteExtension");
             }
             else {
-                console.log("Successfully removed the extension %s from the VM %s", extensionName, vmName);
+                tl.debug("Successfully removed the extension " + extensionName + " from the VM " + vmName);
             }
         });
     }
@@ -276,72 +493,48 @@ export class WinRMHttpsListener {
 
         computeClient.virtualMachines.list(this.resourceGroupName, (error, virtualMachines, request, response) => {
             if (error) {
-                console.log("Error in getting the list of virtual Machines %s", error);
-                throw new Error("FailedToFetchVMList");
+                tl.debug("Error in getting the list of virtual Machines " + util.inspect(error, { depth: null }));
+                throw new Error(tl.loc("FailedToFetchVMList"));
             }
-
-            //console.log("Virtual Machines:");
-            //console.log(util.inspect(virtualMachines, {depth: null}));
-
             networkClient.publicIPAddresses.list(this.resourceGroupName, (error, publicIPAddresses, request, response) => {
                 if (error) {
-                    console.log("Error while getting list of Public Addresses %s", error);
-                    throw new Error("FailedToFetchPublicAddresses");
+                    tl.debug("Error while getting list of Public Addresses " + util.inspect(error, { depth: null }));
+                    throw new Error(tl.loc("FailedToFetchPublicAddresses"));
                 }
-
-
-                //console.log("PublicIpAddresses:");
-                //console.log(util.inspect(publicIPAddresses, {depth: null}));
-
                 networkClient.networkInterfaces.list(this.resourceGroupName, (error, networkInterfaces, request, response) => {
                     if (error) {
-                        console.log("Failed to get the list of networkInterfaces list %s", util.inspect(error, { depth: null }));
-                        throw new Error("Failed to get the list of network Interfaces");
+                        tl.debug("Failed to get the list of networkInterfaces list " + util.inspect(error, { depth: null }));
+                        throw new Error(tl.loc("FailedToFetchNetworkInterfaces"));
                     }
-
-                    //console.log("Listing network Interfaces:");
-                    //console.log(util.inspect(networkInterfaces, {depth: null}));
-                    //get the load balancer details 
                     networkClient.loadBalancers.list(this.resourceGroupName, (error, result, request, response) => {
                         if (error) {
-                            console.log("Error while getting the list of load Balancers %s", util.inspect(error, { depth: null }));
-                            throw new Error("FailedToFetchLoadBalancers");
+                            tl.debug("Error while getting the list of load Balancers " + util.inspect(error, { depth: null }));
+                            throw new Error(tl.loc("FailedToFetchLoadBalancers"));
                         }
-
-                        console.log("LoadBalancers:");
-                        console.log("result: %s", util.inspect(result, { depth: null }));
-
                         if (result.length > 0) {
                             for (var i = 0; i < result.length; i++) {
                                 var lbName = result[i]["name"];
                                 var frontEndIPConfigs = result[i]["frontendIPConfigurations"];
                                 var inboundRules = result[i]["inboundNatRules"];
 
-                                console.log("FrontEnd thing: %s %s", util.inspect(frontEndIPConfigs, { depth: null }), lbName);
-
                                 this.fqdnMap = this.GetMachinesFqdnForLB(publicIPAddresses, networkInterfaces, frontEndIPConfigs, this.fqdnMap, debugLogsFlag);
 
-                                console.log("FQDN Map: %s", util.inspect(this.fqdnMap, { depth: null }));
-
                                 this.winRmHttpsPortMap = this.GetFrontEndPorts("5986", this.winRmHttpsPortMap, networkInterfaces, inboundRules, debugLogsFlag);
-
-                                console.log("FQDN Map: %s", util.inspect(this.winRmHttpsPortMap, { depth: null }));
                             }
 
                             this.winRmHttpsPortMap = this.GetMachineNameFromId(this.winRmHttpsPortMap, "Front End port", virtualMachines, false, debugLogsFlag);
-
-                            console.log("WinRmHttpsPort Map 2: %s", util.inspect(this.winRmHttpsPortMap, { depth: null }));
                         }
 
                         this.fqdnMap = this.GetMachinesFqdnsForPublicIP(publicIPAddresses, networkInterfaces, virtualMachines, this.fqdnMap, debugLogsFlag);
 
-                        console.log("FQDN Map 2: %s", util.inspect(this.fqdnMap, { depth: null }));
-
                         this.fqdnMap = this.GetMachineNameFromId(this.fqdnMap, "FQDN", virtualMachines, true, debugLogsFlag);
 
-                        console.log("FQDN Map 3: %s", util.inspect(this.fqdnMap, { depth: null }));
+                        tl.debug("FQDN map: " + util.inspect(this.fqdnMap, { depth: null }));
+                        tl.debug("WinRMHttpPort map: " + util.inspect(this.winRmHttpsPortMap, { depth: null }));
 
                         this.virtualMachines = virtualMachines;
+
+                        callback();
                     });
 
                 });
@@ -353,7 +546,7 @@ export class WinRMHttpsListener {
 
     private GetMachinesFqdnsForPublicIP(publicIPAddressResources: [Object], networkInterfaceResources: [Object], azureRMVMResources: [Object], fqdnMap: {}, debugLogsFlag: string): {} {
         if (!!this.resourceGroupName && this.resourceGroupName != "" && !!publicIPAddressResources && networkInterfaceResources) {
-            console.log("Trying to get FQDN for the azureRM VM resources under public IP from resource group %s", this.resourceGroupName);
+            tl.debug("Trying to get FQDN for the azureRM VM resources under public IP from resource group " + this.resourceGroupName);
 
             //Map the ipc to fqdn
             for (var i = 0; i < publicIPAddressResources.length; i++) {
@@ -370,10 +563,6 @@ export class WinRMHttpsListener {
                     }
                 }
             }
-
-            console.log("printing the value of FQDN Map 1");
-            this.printValue(fqdnMap);
-
             if (debugLogsFlag === "true") {
                 //fill here
             }
@@ -397,17 +586,10 @@ export class WinRMHttpsListener {
                 }
             }
 
-            console.log("printing the value of FQDN Map 1");
-            this.printValue(fqdnMap);
-
-
             if (debugLogsFlag == "true") {
                 //fill here
             }
         }
-
-        console.log("Got FQDN for the azureRM VM resources under public IP from resource Group %s", this.resourceGroupName);
-        console.log("***********************************************************************************************************");
         return fqdnMap;
     }
 
@@ -417,22 +599,22 @@ export class WinRMHttpsListener {
                 //fill here
             }
 
-            console.log("throwOnTotalUnavailability: %s", throwOnTotalUnavailability);
+            tl.debug("throwOnTotalUnavailability: " + throwOnTotalUnavailability);
 
             var errorCount = 0;
             for (var i = 0; i < azureRMVMResources.length; i++) {
                 var vm = azureRMVMResources[i];
-                if (!!vm["id"] && vm["id"] != "") {
+                if (vm["id"] && vm["id"] != "") {
                     var value = map[vm["id"]];
                     var resourceName = vm["name"];
-                    if (!!value && value != "") {
-                        console.log("%s value for resource %s is %s", mapParameter, resourceName, value);
+                    if (value && value != "") {
+                        tl.debug(mapParameter + " value for resource " + resourceName + " is " + value);
                         delete map[vm["id"]];
                         map[resourceName] = value;
                     }
                     else {
                         errorCount = errorCount + 1;
-                        console.log("Unable to find %s for resource %s", mapParameter, resourceName);
+                        tl.debug("Unable to find " + mapParameter + " for resource " + resourceName);
                     }
                 }
             }
@@ -453,21 +635,15 @@ export class WinRMHttpsListener {
     }
 
     private GetFrontEndPorts(backEndPort: string, portList: {}, networkInterfaceResources: [Object], inboundRules: [Object], debugLogsFlag: string): {} {
-        console.log("%s : %s : %s", backEndPort, networkInterfaceResources, inboundRules);
         if (!!backEndPort && backEndPort != "" && !!networkInterfaceResources && !!inboundRules) {
-            console.log("Trying to get front end ports for %s", backEndPort);
+            tl.debug("Trying to get front end ports for " + backEndPort);
 
             for (var i = 0; i < inboundRules.length; i++) {
                 var rule = inboundRules[i];
-                console.log("BackendPort: %s : %s : %s : %s", rule["backendPort"], typeof (backEndPort), backEndPort, rule["name"]);
                 if (rule["backendPort"] == backEndPort && !!rule["backendIPConfiguration"] && !!rule["backendIPConfiguration"]["id"] && rule["backendIPConfiguration"]["id"] != "") {
                     portList[rule["backendIPConfiguration"]["id"]] = rule["frontendPort"];
                 }
             }
-
-            console.log("Inside frontEnd 1");
-            this.printValue(portList);
-
             if (debugLogsFlag === "true") {
                 //fill here
             }
@@ -491,55 +667,43 @@ export class WinRMHttpsListener {
                 }
             }
 
-            console.log("Inside frontEnd 2");
-            this.printValue(portList);
-
             if (debugLogsFlag == "true") {
                 //fill here
             }
         }
 
-        console.log("Got front end ports for %s", backEndPort);
         return portList;
     }
 
     private GetMachinesFqdnForLB(publicIPAddress: [Object], networkInterfaceResources: [Object], frontEndIPConfigs: [Object], fqdnMap: {}, debugLogsFlag: string): {} {
-        if (!!this.resourceGroupName && this.resourceGroupName != "" && !!publicIPAddress && !!networkInterfaceResources && !!frontEndIPConfigs) {
-            console.log("Trying to get the FQDN for the azureVM resources under load balancer from resource group %s", this.resourceGroupName);
+        if (this.resourceGroupName && this.resourceGroupName != "" && publicIPAddress && networkInterfaceResources && frontEndIPConfigs) {
+            tl.debug("Trying to get the FQDN for the azureVM resources under load balancer from resource group " + this.resourceGroupName);
 
             for (var i = 0; i < publicIPAddress.length; i++) {
                 var publicIp = publicIPAddress[i];
                 if (!!publicIp["ipConfiguration"] && !!publicIp["ipConfiguration"]["id"] && publicIp["ipConfiguration"]["id"] != "") {
                     if (!!publicIp["dnsSettings"] && !!publicIp["dnsSettings"]["fqdn"] && publicIp["dnsSettings"]["fqdn"] != "") {
-                        console.log("Problem: %s", publicIp["name"]);
                         fqdnMap[publicIp["id"]] = publicIp["dnsSettings"]["fqdn"];
                     }
                     else if (!!publicIp["ipAddress"] && publicIp["ipAddress"] != "") {
-                        console.log("Problem 2: %s", publicIp["name"]);
                         fqdnMap[publicIp["id"]] = publicIp["ipAddress"];
                     }
                     else if (!publicIp["ipAddress"]) {
-                        console.log("Problem 3: %s", publicIp["name"]);
                         fqdnMap[publicIp["id"]] = "Not Assigned";
                     }
                 }
             }
 
-            console.log("Inside lb 1");
-            this.printValue(fqdnMap);
-
             if (debugLogsFlag === "true") {
                 //fill here
             }
 
-            console.log("rjfjrpeoit: %s", util.inspect(frontEndIPConfigs, { depth: null }));
             //Get the NAT rule for a given ip id
             for (var i = 0; i < frontEndIPConfigs.length; i++) {
-                console.log("here");
                 var config = frontEndIPConfigs[i];
-                if (!!config["publicIPAddress"] && !!config["publicIPAddress"]["id"] && config["publicIPAddress"]["id"] != "") {
+                if (config["publicIPAddress"] && config["publicIPAddress"]["id"] && config["publicIPAddress"]["id"] != "") {
                     var fqdn = fqdnMap[config["publicIPAddress"]["id"]];
-                    if (!!fqdn && fqdn != "") {
+                    if (fqdn && fqdn != "") {
                         delete fqdnMap[config["publicIPAddress"]["id"]];
                         if (!!config["inboundNatRules"]) {
                             for (var j = 0; j < config["inboundNatRules"].length; j++) {
@@ -550,26 +714,23 @@ export class WinRMHttpsListener {
                 }
             }
 
-            console.log("Inside lb 2");
-            this.printValue(fqdnMap);
-
             if (debugLogsFlag === "true") {
                 //fill here
             }
 
             for (var i = 0; i < networkInterfaceResources.length; i++) {
                 var nic = networkInterfaceResources[i];
-                if (!!nic["ipConfigurations"]) {
+                if (nic["ipConfigurations"]) {
                     for (var j = 0; j < nic["ipConfigurations"].length; j++) {
                         var ipc = nic["ipConfigurations"][j];
-                        if (!!ipc["loadBalancerInboundNatRules"]) {
+                        if (ipc["loadBalancerInboundNatRules"]) {
                             for (var k = 0; k < ipc["loadBalancerInboundNatRules"].length; k++) {
                                 var rule = ipc["loadBalancerInboundNatRules"][k];
-                                if (!!rule && !!rule["id"] && rule["id"] != "") {
+                                if (rule && rule["id"] && rule["id"] != "") {
                                     var fqdn = fqdnMap[rule["id"]];
-                                    if (!!fqdn && fqdn != "") {
+                                    if (fqdn && fqdn != "") {
                                         delete fqdnMap[rule["id"]];
-                                        if (!!nic["virtualMachine"] && !!nic["virtualMachine"]["id"] && nic["virtualMachine"]["id"] != "") {
+                                        if (nic["virtualMachine"] && nic["virtualMachine"]["id"] && nic["virtualMachine"]["id"] != "") {
                                             fqdnMap[nic["virtualMachine"]["id"]] = fqdn;
                                         }
                                     }
@@ -580,21 +741,11 @@ export class WinRMHttpsListener {
                 }
             }
 
-            console.log("Inside lb 3");
-            this.printValue(fqdnMap);
-
             if (debugLogsFlag === "true") {
                 //fill here
             }
         }
 
-        console.log("Got FQDN for the RM azureVM resources under load balancer from resource Group %s", this.resourceGroupName);
         return fqdnMap;
-    }
-
-    printValue(map: {}) {
-        console.log("************************************************************");
-        console.log("%s", util.inspect(map, { depth: null }));
-        console.log("************************************************************");
     }
 }
