@@ -65,9 +65,9 @@ try {
 
     if (testAssemblyFiles && testAssemblyFiles.length != 0) {
         var workingDirectory = !isNullOrWhitespace(sourcesDir) ? systemDefaultWorkingDirectory : artifactsDirectory;
-        getTestResultsDirectory(runSettingsFile, path.join(workingDirectory, 'TestResults')).then(function (resultsDirectory) {
+        getTestResultsDirectory(runSettingsFile, path.join(workingDirectory, 'TestResults')).then(function(resultsDirectory) {
             invokeVSTest(resultsDirectory)
-                .then(function (code) {
+                .then(function(code) {
                     try {
                         if (!isTiaAllowed()) {
                             publishTestResults(resultsDirectory);
@@ -81,7 +81,7 @@ try {
                         throw error;
                     }
                 })
-                .fail(function (err) {
+                .fail(function(err) {
                     deleteVstestDiagFile();
                     tl._writeLine("##vso[task.logissue type=error;code=" + err + ";TaskName=VSTest]");
                     throw err;
@@ -146,7 +146,7 @@ function getTestAssemblies(): string[] {
         matchOptions["nocase"] = true;
     }
 
-    testAssembly.forEach(function (p) {
+    testAssembly.forEach(function(p) {
         let patternInfo: any = getPatternInfo(p);
         patternInfo.negate ? excludePattern.push(patternInfo.pattern) : includePattern.push(patternInfo.pattern);
     });
@@ -161,13 +161,13 @@ function getTestAssemblies(): string[] {
     let allFiles: string[] = tl.find(searchDirectory);
     tl.debug("Total files found: " + allFiles.length);
 
-    includePattern.forEach(function (pattern) {
+    includePattern.forEach(function(pattern) {
         let matchFiles = tl.match(allFiles, pattern, matchOptions);
         matchFiles.forEach(m => assemblySet.add(m));
     });
 
     let result: string[] = Array.from(assemblySet);
-    excludePattern.forEach(function (pattern) {
+    excludePattern.forEach(function(pattern) {
         result = tl.match(result, pattern, matchOptions);
     });
 
@@ -209,7 +209,7 @@ function getVsTestVersion(): number[] {
 
 function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[] {
     var argsArray: string[] = [];
-    testAssemblyFiles.forEach(function (testAssembly) {
+    testAssemblyFiles.forEach(function(testAssembly) {
         var testAssemblyPath = testAssembly;
         //To maintain parity with the behaviour when test assembly was filepath, try to expand it relative to build sources directory.
         if (systemDefaultWorkingDirectory && !pathExistsAsFile(testAssembly)) {
@@ -265,19 +265,19 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
 }
 
 function addVstestArgs(argsArray: string[], vstest: any) {
-    argsArray.forEach(function (arr) {
+    argsArray.forEach(function(arr) {
         vstest.arg(arr);
     });
 }
 
 function updateResponseFile(argsArray: string[], responseFile: string): Q.Promise<string> {
     var defer = Q.defer<string>();
-    argsArray.forEach(function (arr, i) {
+    argsArray.forEach(function(arr, i) {
         if (!arr.startsWith('/')) {
             argsArray[i] = "\"" + arr + "\"";
         }
     });
-    fs.appendFile(responseFile, os.EOL + argsArray.join(os.EOL), function (err) {
+    fs.appendFile(responseFile, os.EOL + argsArray.join(os.EOL), function(err) {
         if (err) {
             defer.reject(err);
         }
@@ -318,14 +318,14 @@ function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
     }
     selectortool.arg("/runidfile:" + runIdFile);
     selectortool.exec()
-        .then(function (code) {
+        .then(function(code) {
             endTime = perf();
             elapsedTime = endTime - startTime;
             tl._writeLine("##vso[task.logissue type=warning;SubTaskName=UploadTestResults;SubTaskDuration=" + elapsedTime + "]");
             tl.debug(tl.loc("UploadTestResultsPerfTime", elapsedTime));
             defer.resolve(String(code));
         })
-        .fail(function (err) {
+        .fail(function(err) {
             defer.reject(err);
         });
     return defer.promise;
@@ -349,8 +349,7 @@ function generateResponseFile(discoveredTests: string): Q.Promise<string> {
         selectortool.arg("/buildid:" + tl.getVariable("Release.ReleaseId"));
         selectortool.arg("/releaseuri:" + tl.getVariable("release.releaseUri"));
         selectortool.arg("/releaseenvuri:" + tl.getVariable("release.environmentUri"));
-    }
-    else {
+    } else {
         // Build context. Passing build id.
         selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
     }
@@ -366,13 +365,13 @@ function generateResponseFile(discoveredTests: string): Q.Promise<string> {
     selectortool.arg("/Context:" + context);
 
     selectortool.exec()
-        .then(function (code) {
+        .then(function(code) {
             endTime = perf();
             elapsedTime = endTime - startTime;
             tl.debug(tl.loc("GenerateResponseFilePerfTime", elapsedTime));
             defer.resolve(respFile);
         })
-        .fail(function (err) {
+        .fail(function(err) {
             defer.reject(err);
         });
 
@@ -405,7 +404,6 @@ function publishCodeChanges(): Q.Promise<string> {
         selectortool.arg("/Definitionid:" + tl.getVariable("System.DefinitionId"));
     }
 
-
     selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
     selectortool.arg("/SourcesDir:" + sourcesDir);
     selectortool.arg("/newprovider:" + newprovider);
@@ -421,13 +419,13 @@ function publishCodeChanges(): Q.Promise<string> {
     selectortool.arg("/Context:" + context);
 
     selectortool.exec()
-        .then(function (code) {
+        .then(function(code) {
             endTime = perf();
             elapsedTime = endTime - startTime;
             tl.debug(tl.loc("PublishCodeChangesPerfTime", elapsedTime));
             defer.resolve(String(code));
         })
-        .fail(function (err) {
+        .fail(function(err) {
             defer.reject(err);
         });
 
@@ -464,11 +462,11 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
     tl.mkdirP(testResultsDirectory);
     tl.cd(workingDirectory);
     vstest.exec({ failOnStdErr: true })
-        .then(function (code) {
+        .then(function(code) {
             cleanUp(parallelRunSettingsFile);
             defer.resolve(code);
         })
-        .fail(function (err) {
+        .fail(function(err) {
             cleanUp(parallelRunSettingsFile);
             tl.warning(tl.loc('VstestFailed'));
             tl.error(err);
@@ -483,7 +481,7 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
     tl.debug("Discovered tests listed at: " + tempFile);
     var argsArray: string[] = [];
 
-    testAssemblyFiles.forEach(function (testAssembly) {
+    testAssemblyFiles.forEach(function(testAssembly) {
         var testAssemblyPath = testAssembly;
         if (systemDefaultWorkingDirectory && !pathExistsAsFile(testAssembly)) {
             var expandedPath = path.join(systemDefaultWorkingDirectory, testAssembly);
@@ -522,10 +520,10 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
 
     tl.cd(workingDirectory);
     vstest.exec({ failOnStdErr: true })
-        .then(function (code) {
+        .then(function(code) {
             defer.resolve(tempFile);
         })
-        .fail(function (err) {
+        .fail(function(err) {
             tl.debug("Listing tests from VsTest failed.");
             tl.error(err);
             defer.resolve(err);
@@ -553,17 +551,17 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
     var defer = Q.defer<number>();
     if (isTiaAllowed()) {
         publishCodeChanges()
-            .then(function (status) {
+            .then(function(status) {
                 getVstestTestsList(vsVersion)
-                    .then(function (listFile) {
+                    .then(function(listFile) {
                         generateResponseFile(listFile)
-                            .then(function (responseFile) {
+                            .then(function(responseFile) {
                                 if (isEmptyResponseFile(responseFile)) {
                                     tl.debug("Empty response file detected. All tests will be executed.");
                                     executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
-                                        .then(function (vscode) {
+                                        .then(function(vscode) {
                                             uploadTestResults(testResultsDirectory)
-                                                .then(function (code) {
+                                                .then(function(code) {
                                                     if (!isNaN(+code) && +code != 0) {
                                                         defer.resolve(+code);
                                                     }
@@ -573,40 +571,40 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
 
                                                     defer.resolve(0);
                                                 })
-                                                .fail(function (code) {
+                                                .fail(function(code) {
                                                     tl.debug("Test Run Updation failed!");
                                                     defer.resolve(1);
                                                 })
-                                                .finally(function () {
+                                                .finally(function() {
                                                     cleanFiles(responseFile, listFile);
                                                     tl.debug("Deleting the run id file" + runIdFile);
                                                     tl.rmRF(runIdFile, true);
                                                 });
                                         })
-                                        .fail(function (code) {
+                                        .fail(function(code) {
                                             defer.resolve(code);
                                         })
-                                        .finally(function () {
+                                        .finally(function() {
                                             cleanFiles(responseFile, listFile);
                                         });
                                 }
                                 else {
                                     responseContainsNoTests(responseFile)
-                                        .then(function (noTestsAvailable) {
+                                        .then(function(noTestsAvailable) {
                                             if (noTestsAvailable) {
                                                 tl.debug("No tests impacted. Not running any tests.");
                                                 uploadTestResults("")
-                                                    .then(function (code) {
+                                                    .then(function(code) {
                                                         if (!isNaN(+code) && +code != 0) {
                                                             defer.resolve(+code);
                                                         }
                                                         defer.resolve(0);
                                                     })
-                                                    .fail(function (code) {
+                                                    .fail(function(code) {
                                                         tl.debug("Test Run Updation failed!");
                                                         defer.resolve(1);
                                                     })
-                                                    .finally(function () {
+                                                    .finally(function() {
                                                         cleanFiles(responseFile, listFile);
                                                         tl.debug("Deleting the run id file" + runIdFile);
                                                         tl.rmRF(runIdFile, true);
@@ -614,11 +612,11 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                             }
                                             else {
                                                 updateResponseFile(getVstestArguments(settingsFile, true), responseFile)
-                                                    .then(function (updatedFile) {
+                                                    .then(function(updatedFile) {
                                                         executeVstest(testResultsDirectory, settingsFile, vsVersion, ["@" + updatedFile])
-                                                            .then(function (vscode) {
+                                                            .then(function(vscode) {
                                                                 uploadTestResults(testResultsDirectory)
-                                                                    .then(function (code) {
+                                                                    .then(function(code) {
                                                                         if (!isNaN(+code) && +code != 0) {
                                                                             defer.resolve(+code);
                                                                         }
@@ -628,30 +626,30 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
 
                                                                         defer.resolve(0);
                                                                     })
-                                                                    .fail(function (code) {
+                                                                    .fail(function(code) {
                                                                         tl.debug("Test Run Updation failed!");
                                                                         defer.resolve(1);
                                                                     })
-                                                                    .finally(function () {
+                                                                    .finally(function() {
                                                                         cleanFiles(responseFile, listFile);
                                                                         tl.debug("Deleting the run id file" + runIdFile);
                                                                         tl.rmRF(runIdFile, true);
                                                                     });
                                                             })
-                                                            .fail(function (code) {
+                                                            .fail(function(code) {
                                                                 defer.resolve(code);
                                                             })
-                                                            .finally(function () {
+                                                            .finally(function() {
                                                                 cleanFiles(responseFile, listFile);
                                                             });
                                                     })
-                                                    .fail(function (err) {
+                                                    .fail(function(err) {
                                                         tl.error(err);
                                                         tl.warning(tl.loc('ErrorWhileUpdatingResponseFile', responseFile));
                                                         executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
-                                                            .then(function (vscode) {
+                                                            .then(function(vscode) {
                                                                 uploadTestResults(testResultsDirectory)
-                                                                    .then(function (code) {
+                                                                    .then(function(code) {
                                                                         if (!isNaN(+code) && +code != 0) {
                                                                             defer.resolve(+code);
                                                                         }
@@ -661,19 +659,19 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
 
                                                                         defer.resolve(0);
                                                                     })
-                                                                    .fail(function (code) {
+                                                                    .fail(function(code) {
                                                                         tl.debug("Test Run Updation failed!");
                                                                         defer.resolve(1);
                                                                     })
-                                                                    .finally(function () {
+                                                                    .finally(function() {
                                                                         cleanFiles(responseFile, listFile);
                                                                         tl.debug("Deleting the run id file" + runIdFile);
                                                                         tl.rmRF(runIdFile, true);
                                                                     });
                                                             })
-                                                            .fail(function (code) {
+                                                            .fail(function(code) {
                                                                 defer.resolve(code);
-                                                            }).finally(function () {
+                                                            }).finally(function() {
                                                                 cleanFiles(responseFile, listFile);
                                                             });
                                                     });
@@ -681,13 +679,13 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                         });
                                 }
                             })
-                            .fail(function (err) {
+                            .fail(function(err) {
                                 tl.error(err);
                                 tl.warning(tl.loc('ErrorWhileCreatingResponseFile'));
                                 executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
-                                    .then(function (vscode) {
+                                    .then(function(vscode) {
                                         uploadTestResults(testResultsDirectory)
-                                            .then(function (code) {
+                                            .then(function(code) {
                                                 if (!isNaN(+code) && +code != 0) {
                                                     defer.resolve(+code);
                                                 }
@@ -697,35 +695,35 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
 
                                                 defer.resolve(0);
                                             })
-                                            .fail(function (code) {
+                                            .fail(function(code) {
                                                 tl.debug("Test Run Updation failed!");
                                                 defer.resolve(1);
                                             })
-                                            .finally(function () {
+                                            .finally(function() {
                                                 tl.debug("Deleting the discovered tests file" + listFile);
                                                 tl.rmRF(listFile, true);
                                             });
                                     })
-                                    .fail(function (code) {
+                                    .fail(function(code) {
                                         defer.resolve(code);
                                     });
                             });
                     })
-                    .fail(function (err) {
+                    .fail(function(err) {
                         tl.error(err);
                         tl.warning(tl.loc('ErrorWhileListingDiscoveredTests'));
                         defer.resolve(1);
                     });
             })
-            .fail(function (err) {
+            .fail(function(err) {
                 tl.error(err);
                 tl.warning(tl.loc('ErrorWhilePublishingCodeChanges'));
                 executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
-                    .then(function (code) {
+                    .then(function(code) {
                         publishTestResults(testResultsDirectory);
                         defer.resolve(code);
                     })
-                    .fail(function (code) {
+                    .fail(function(code) {
                         defer.resolve(code);
                     });
             });
@@ -733,10 +731,10 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
     else {
         tl.debug("Non TIA mode of test execution");
         executeVstest(testResultsDirectory, settingsFile, vsVersion, getVstestArguments(settingsFile, false))
-            .then(function (code) {
+            .then(function(code) {
                 defer.resolve(code);
             })
-            .fail(function (code) {
+            .fail(function(code) {
                 defer.resolve(code);
             });
     }
@@ -749,9 +747,9 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
         vsTestVersion = null;
     }
     overrideTestRunParametersIfRequired(runSettingsFile)
-        .then(function (overriddenSettingsFile) {
+        .then(function(overriddenSettingsFile) {
             locateVSVersion()
-                .then(function (vsVersion) {
+                .then(function(vsVersion) {
                     try {
                         vstestLocation = getVSTestLocation(vsVersion);
                         let disableTIA = tl.getVariable("DisableTestImpactAnalysis");
@@ -773,34 +771,34 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                         return defer.promise;
                     }
                     setupSettingsFileForTestImpact(vsVersion, overriddenSettingsFile)
-                        .then(function (runSettingswithTestImpact) {
+                        .then(function(runSettingswithTestImpact) {
                             setRunInParallellIfApplicable(vsVersion);
                             setupRunSettingsFileForParallel(runInParallel, runSettingswithTestImpact)
-                                .then(function (parallelRunSettingsFile) {
+                                .then(function(parallelRunSettingsFile) {
                                     runVStest(testResultsDirectory, parallelRunSettingsFile, vsVersion)
-                                        .then(function (code) {
+                                        .then(function(code) {
                                             defer.resolve(code);
                                         })
-                                        .fail(function (code) {
+                                        .fail(function(code) {
                                             defer.resolve(code);
                                         });
                                 })
-                                .fail(function (err) {
+                                .fail(function(err) {
                                     tl.error(err);
                                     defer.resolve(1);
                                 });
                         })
-                        .fail(function (err) {
+                        .fail(function(err) {
                             tl.error(err);
                             defer.resolve(1);
                         });
                 })
-                .fail(function (err) {
+                .fail(function(err) {
                     tl.error(err);
                     defer.resolve(1);
                 });
         })
-        .fail(function (err) {
+        .fail(function(err) {
             tl.error(err);
             defer.resolve(1);
         });
@@ -846,7 +844,7 @@ function overrideTestRunParametersIfRequired(settingsFile: string): Q.Promise<st
     var overrideParameters = {};
 
     var parameterStrings = overrideTestrunParameters.split(";");
-    parameterStrings.forEach(function (parameterString) {
+    parameterStrings.forEach(function(parameterString) {
         var pair = parameterString.split("=", 2);
         if (pair.length == 2) {
             var key = pair[0];
@@ -858,9 +856,9 @@ function overrideTestRunParametersIfRequired(settingsFile: string): Q.Promise<st
     });
 
     readFileContents(runSettingsFile, "utf-8")
-        .then(function (xmlContents) {
+        .then(function(xmlContents) {
             var parser = new xml2js.Parser();
-            parser.parseString(xmlContents, function (err, result) {
+            parser.parseString(xmlContents, function(err, result) {
                 if (err) {
                     tl.warning(tl.loc('ErrorWhileReadingRunSettings', err));
                     tl.debug("Error occured while overriding test run parameters. Continuing...");
@@ -871,7 +869,7 @@ function overrideTestRunParametersIfRequired(settingsFile: string): Q.Promise<st
                 if (result.RunSettings && result.RunSettings.TestRunParameters && result.RunSettings.TestRunParameters[0] &&
                     result.RunSettings.TestRunParameters[0].Parameter) {
                     var parametersArray = result.RunSettings.TestRunParameters[0].Parameter;
-                    parametersArray.forEach(function (parameter) {
+                    parametersArray.forEach(function(parameter) {
                         var key = parameter.$.name;
                         if (overrideParameters[key]) {
                             parameter.$.value = overrideParameters[key];
@@ -881,10 +879,10 @@ function overrideTestRunParametersIfRequired(settingsFile: string): Q.Promise<st
                     var builder = new xml2js.Builder();
                     var overridedRunSettings = builder.buildObject(result);
                     saveToFile(overridedRunSettings, runSettingsExt)
-                        .then(function (fileName) {
+                        .then(function(fileName) {
                             defer.resolve(fileName);
                         })
-                        .fail(function (err) {
+                        .fail(function(err) {
                             tl.debug("Error occured while overriding test run parameters. Continuing...");
                             tl.warning(err);
                             defer.resolve(settingsFile);
@@ -896,7 +894,7 @@ function overrideTestRunParametersIfRequired(settingsFile: string): Q.Promise<st
                 }
             });
         })
-        .fail(function (err) {
+        .fail(function(err) {
             tl.debug("Error occured while overriding test run parameters. Continuing...");
             tl.warning(err);
             defer.resolve(settingsFile);
@@ -930,9 +928,9 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
     }
 
     readFileContents(runSettingsFile, "utf-8")
-        .then(function (xmlContents) {
+        .then(function(xmlContents) {
             var parser = new xml2js.Parser();
-            parser.parseString(xmlContents, function (err, result) {
+            parser.parseString(xmlContents, function(err, result) {
                 if (!err && result.RunSettings && result.RunSettings.RunConfiguration && result.RunSettings.RunConfiguration[0] &&
                     result.RunSettings.RunConfiguration[0].ResultsDirectory && result.RunSettings.RunConfiguration[0].ResultsDirectory[0].length > 0) {
                     var resultDirectory = result.RunSettings.RunConfiguration[0].ResultsDirectory[0];
@@ -951,7 +949,7 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
                 }
             });
         })
-        .fail(function (err) {
+        .fail(function(err) {
             tl.debug("Error occured while reading test result directory from run settings. Continuing...")
             tl.warning(err);
             defer.resolve(defaultResultsDirectory);
@@ -1102,9 +1100,9 @@ function updateRunSettingsFileForTestImpact(vsVersion: number, settingsFile: str
     var defer = Q.defer<string>();
     tl.debug("Adding test impact data collector element to runsettings file provided.");
     readFileContents(settingsFile, "utf-8")
-        .then(function (xmlContents) {
+        .then(function(xmlContents) {
             var parser = new xml2js.Parser();
-            parser.parseString(xmlContents, function (err, result) {
+            parser.parseString(xmlContents, function(err, result) {
                 if (err) {
                     tl.warning(tl.loc('ErrorWhileReadingRunSettings', err));
                     tl.debug(exitErrorMessage);
@@ -1118,13 +1116,13 @@ function updateRunSettingsFileForTestImpact(vsVersion: number, settingsFile: str
                 }
                 updateRunSettings(result, vsVersion);
                 writeXmlFile(result, settingsFile, runSettingsExt, exitErrorMessage)
-                    .then(function (filename) {
+                    .then(function(filename) {
                         defer.resolve(filename);
                         return defer.promise;
                     });
             });
         })
-        .fail(function (err) {
+        .fail(function(err) {
             tl.warning(err);
             tl.debug(exitErrorMessage);
             defer.resolve(settingsFile);
@@ -1192,12 +1190,12 @@ function writeXmlFile(result: any, settingsFile: string, fileExt: string, exitEr
     var builder = new xml2js.Builder();
     var runSettingsForTestImpact = builder.buildObject(result);
     saveToFile(runSettingsForTestImpact, fileExt)
-        .then(function (fileName) {
+        .then(function(fileName) {
             cleanUp(settingsFile);
             defer.resolve(fileName);
             return defer.promise;
         })
-        .fail(function (err) {
+        .fail(function(err) {
             tl.debug(exitErrorMessage);
             tl.warning(err);
             defer.resolve(settingsFile);
@@ -1209,9 +1207,9 @@ function updateTestSettingsFileForTestImpact(vsVersion: number, settingsFile: st
     var defer = Q.defer<string>();
     tl.debug("Adding test impact data collector element to testsettings file provided.");
     readFileContents(settingsFile, "utf-8")
-        .then(function (xmlContents) {
+        .then(function(xmlContents) {
             var parser = new xml2js.Parser();
-            parser.parseString(xmlContents, function (err, result) {
+            parser.parseString(xmlContents, function(err, result) {
                 if (err) {
                     tl.warning(tl.loc('ErrorWhileReadingTestSettings', err));
                     tl.debug(exitErrorMessage);
@@ -1225,13 +1223,13 @@ function updateTestSettingsFileForTestImpact(vsVersion: number, settingsFile: st
                 }
                 updatTestSettings(result, vsVersion);
                 writeXmlFile(result, settingsFile, testSettingsExt, exitErrorMessage)
-                    .then(function (filename) {
+                    .then(function(filename) {
                         defer.resolve(filename);
                         return defer.promise;
                     });
             });
         })
-        .fail(function (err) {
+        .fail(function(err) {
             tl.warning(err);
             tl.debug(exitErrorMessage);
             defer.resolve(settingsFile);
@@ -1269,11 +1267,11 @@ function createRunSettingsForTestImpact(vsVersion: number, settingsFile: string,
         '</DataCollector>' +
         '</DataCollectors></DataCollectionRunSettings></RunSettings>';
     saveToFile(runSettingsForTIA, runSettingsExt)
-        .then(function (fileName) {
+        .then(function(fileName) {
             defer.resolve(fileName);
             return defer.promise;
         })
-        .fail(function (err) {
+        .fail(function(err) {
             tl.debug(exitErrorMessage);
             tl.warning(err);
             defer.resolve(settingsFile);
@@ -1287,21 +1285,21 @@ function setupSettingsFileForTestImpact(vsVersion: number, settingsFile: string)
     if (isTiaAllowed()) {
         if (settingsFile && settingsFile.split('.').pop().toLowerCase() == "testsettings") {
             updateTestSettingsFileForTestImpact(vsVersion, settingsFile, exitErrorMessage)
-                .then(function (updatedFile) {
+                .then(function(updatedFile) {
                     defer.resolve(updatedFile);
                     return defer.promise;
                 });
         }
         else if (!settingsFile || settingsFile.split('.').pop().toLowerCase() != "runsettings" || !pathExistsAsFile(settingsFile)) {
             createRunSettingsForTestImpact(vsVersion, settingsFile, exitErrorMessage)
-                .then(function (updatedFile) {
+                .then(function(updatedFile) {
                     defer.resolve(updatedFile);
                     return defer.promise;
                 });
         }
         else {
             updateRunSettingsFileForTestImpact(vsVersion, settingsFile, exitErrorMessage)
-                .then(function (updatedFile) {
+                .then(function(updatedFile) {
                     defer.resolve(updatedFile);
                     return defer.promise;
                 });
@@ -1328,11 +1326,11 @@ function setupRunSettingsFileForParallel(runInParallel: boolean, settingsFile: s
             tl.debug("No settings file provided or the provided settings file does not exist.");
             var runSettingsForParallel = '<?xml version="1.0" encoding="utf-8"?><RunSettings><RunConfiguration><MaxCpuCount>0</MaxCpuCount></RunConfiguration></RunSettings>';
             saveToFile(runSettingsForParallel, runSettingsExt)
-                .then(function (fileName) {
+                .then(function(fileName) {
                     defer.resolve(fileName);
                     return defer.promise;
                 })
-                .fail(function (err) {
+                .fail(function(err) {
                     tl.debug(exitErrorMessage);
                     tl.warning(err);
                     defer.resolve(settingsFile);
@@ -1341,9 +1339,9 @@ function setupRunSettingsFileForParallel(runInParallel: boolean, settingsFile: s
         else {
             tl.debug("Adding maxcpucount element to runsettings file provided.");
             readFileContents(settingsFile, "utf-8")
-                .then(function (xmlContents) {
+                .then(function(xmlContents) {
                     var parser = new xml2js.Parser();
-                    parser.parseString(xmlContents, function (err, result) {
+                    parser.parseString(xmlContents, function(err, result) {
                         if (err) {
                             tl.warning(tl.loc('ErrorWhileReadingRunSettings', err));
                             tl.debug(exitErrorMessage);
@@ -1371,19 +1369,19 @@ function setupRunSettingsFileForParallel(runInParallel: boolean, settingsFile: s
                         var builder = new xml2js.Builder();
                         var runSettingsForParallel = builder.buildObject(result);
                         saveToFile(runSettingsForParallel, runSettingsExt)
-                            .then(function (fileName) {
+                            .then(function(fileName) {
                                 cleanUp(settingsFile);
                                 defer.resolve(fileName);
                                 return defer.promise;
                             })
-                            .fail(function (err) {
+                            .fail(function(err) {
                                 tl.debug(exitErrorMessage);
                                 tl.warning(err);
                                 defer.resolve(settingsFile);
                             });
                     });
                 })
-                .fail(function (err) {
+                .fail(function(err) {
                     tl.warning(err);
                     tl.debug(exitErrorMessage);
                     defer.resolve(settingsFile);
@@ -1400,7 +1398,7 @@ function setupRunSettingsFileForParallel(runInParallel: boolean, settingsFile: s
 function saveToFile(fileContents: string, extension: string): Q.Promise<string> {
     var defer = Q.defer<string>();
     var tempFile = path.join(os.tmpdir(), uuid.v1() + extension);
-    fs.writeFile(tempFile, fileContents, function (err) {
+    fs.writeFile(tempFile, fileContents, function(err) {
         if (err) {
             defer.reject(err);
         }
@@ -1450,7 +1448,7 @@ function locateVSVersion(): Q.Promise<number> {
         return defer.promise;
     }
     var regPath = "HKLM\\SOFTWARE\\Microsoft\\VisualStudio";
-    regedit.list(regPath).on('data', function (entry) {
+    regedit.list(regPath).on('data', function(entry) {
         if (entry && entry.data && entry.data.keys) {
             var subkeys = entry.data.keys;
             var versions = getFloatsFromStringArray(subkeys);
@@ -1481,7 +1479,7 @@ function getFloatsFromStringArray(inputArray: string[]): number[] {
 
 function setRegistryKeyForParallelExecution(vsVersion: number) {
     var regKey = "HKCU\\SOFTWARE\\Microsoft\\VisualStudio\\" + vsVersion.toFixed(1) + "_Config\\FeatureFlags\\TestingTools\\UnitTesting\\Taef";
-    regedit.createKey(regKey, function (err) {
+    regedit.createKey(regKey, function(err) {
         if (!err) {
             var values = {
                 [regKey]: {
@@ -1491,7 +1489,7 @@ function setRegistryKeyForParallelExecution(vsVersion: number) {
                     }
                 }
             };
-            regedit.putValue(values, function (err) {
+            regedit.putValue(values, function(err) {
                 if (err) {
                     tl.warning(tl.loc('ErrorOccuredWhileSettingRegistry', err));
                 }
@@ -1547,7 +1545,7 @@ function getTIALevel() {
 }
 
 function responseContainsNoTests(filePath: string): Q.Promise<boolean> {
-    return readFileContents(filePath, "utf-8").then(function (resp) {
+    return readFileContents(filePath, "utf-8").then(function(resp) {
         if (resp == "/Tests:") {
             return true;
         }
