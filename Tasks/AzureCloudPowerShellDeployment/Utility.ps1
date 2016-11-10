@@ -140,12 +140,13 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAcc
                         $storageAccountKey = $primaryStorageKey
                     }
 
-                    $minimumAzureVersion = New-Object System.Version(1, 3, 2)
-                    $currentAzureVersion = Get-AzurePowerShellVersion
-
-                    if($currentAzureVersion -le $minimumAzureVersion)
+                    if((CmdletHasMember "StorageAccountName") -and (CmdletHasMember "StorageAccountKey"))
                     {
- 
+                        Write-Host "New-AzureServiceDiagnosticsExtensionConfig -Role $role -StorageAccountName $storageAccountName -StorageAccountKey <storageKey> -DiagnosticsConfigurationPath $fullExtPath"
+                        $wadconfig = New-AzureServiceDiagnosticsExtensionConfig -Role $role -StorageAccountName $storageAccountName -StorageAccountKey $storageAccountKey -DiagnosticsConfigurationPath $fullExtPath
+                    } 
+                    else
+                    {
                         try
                         {
                             $storageContext = New-AzureStorageContext -StorageAccountName $storageAccountName -StorageAccountKey $storageAccountKey
@@ -154,15 +155,9 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAcc
                         }
                         catch
                         {
-                            Write-Warning "Check if external storage account is being provided. To provide storage account external to subscription will work for azure powershell version greater than 1.3.1"
+                            Write-Warning "Current version of azure powershell don't support external storage account. Update version to greater than 1.3.0"
                             throw $_.Exception
                         }
-                        
-                    }
-                    else
-                    {
-                        Write-Host "New-AzureServiceDiagnosticsExtensionConfig -Role $role -StorageAccountName $storageAccountName -StorageAccountKey <storageKey> -DiagnosticsConfigurationPath $fullExtPath"
-                        $wadconfig = New-AzureServiceDiagnosticsExtensionConfig -Role $role -StorageAccountName $storageAccountName -StorageAccountKey $storageAccountKey -DiagnosticsConfigurationPath $fullExtPath
                     }
 
                     #Add each extension configuration to the array for use by caller
@@ -201,15 +196,13 @@ function Parse-StorageKeys($storageAccountKeys)
     return $roleStorageKeyMap
 }
 
-function Get-AzurePowerShellVersion()
-{
-    $azureModule = Get-Module -ListAvailable -Name Azure -Refresh
-    if($azureModule)
-    {
-        return $azureModule.Version
+function CmdletHasMember($memberName) {
+    try{
+        $cmdletParameter = (gcm New-AzureServiceDiagnosticsExtensionConfig).Parameters.Keys.Contains($memberName)
+        return $cmdletParameter
     }
-    else
+    catch
     {
-        return New-Object System.Version(0, 0, 0)
-    }
+        return false;
+    }  
 }
