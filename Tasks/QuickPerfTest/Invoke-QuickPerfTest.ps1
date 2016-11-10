@@ -135,8 +135,8 @@ if ($drop.dropType -eq "InPlaceDrop")
 	 $thresholdViolationsCount = ValidateThresholdRule $CltAccountUrl  $headers $avgResponseTimeThresholdRule $run.id
 	 if($thresholdViolationsCount -gt 0)
 		{
-		 Write-Output "There were $thresholdViolationsCount violations for the Avg.Response Time threshold value of $avgResponseTimeThreshold"
-		 Write-Output "To view detailed results navigate to Load Test | Load Test Manager in Visual Studio IDE, and open this run."
+         Write-Output "There were $thresholdViolationsCount violations for the Avg.Response Time threshold value of $avgResponseTimeThreshold"
+         Write-Output "To view detailed results navigate to Load Test | Load Test Manager in Visual Studio IDE, and open this run."
          Write-Error "Load test task is marked as failed, as there were threshold violations for the Avg. Response Time"
 		}
 	}
@@ -150,7 +150,7 @@ if ($drop.dropType -eq "InPlaceDrop")
         $thresholdImage="bowtie-status-error"
 	}
 	else
-    {
+	{
         $thresholdMessage="No thresholds violated."
         $thresholdImage="bowtie-status-success"
 	}
