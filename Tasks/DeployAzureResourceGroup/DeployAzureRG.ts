@@ -23,15 +23,13 @@ catch (err) {
 
 export class AzureResourceGroupDeployment {
 
-    private connectedServiceNameSelector:string;
     private action:string;
     private resourceGroupName:string;
     private location:string;
     private csmFile:string;
     private csmParametersFile:string;
     private overrideParameters:string;
-    private enableDeploymentPrerequisitesForCreate:boolean;
-    private enableDeploymentPrerequisitesForSelect:boolean;
+    private enableDeploymentPrerequisites:boolean;
     private outputVariable:string;
     private subscriptionId:string;
     private connectedService:string;
@@ -40,7 +38,6 @@ export class AzureResourceGroupDeployment {
     
     constructor() {
         try { 
-            this.connectedServiceNameSelector = tl.getInput("ConnectedServiceNameSelector", true);
             this.connectedService = null;
             this.connectedService = tl.getInput("ConnectedServiceName");
             this.action = tl.getInput("action");
@@ -49,8 +46,7 @@ export class AzureResourceGroupDeployment {
             this.csmFile = tl.getPathInput("csmFile");
             this.csmParametersFile = tl.getPathInput("csmParametersFile");
             this.overrideParameters = tl.getInput("overrideParameters");
-            this.enableDeploymentPrerequisitesForCreate = tl.getBoolInput("enableDeploymentPrerequisitesForCreate");
-            this.enableDeploymentPrerequisitesForSelect = tl.getBoolInput("enableDeploymentPrerequisitesForSelect");
+            this.enableDeploymentPrerequisites = tl.getBoolInput("enableDeploymentPrerequisites");
             this.outputVariable = tl.getInput("outputVariable");
             this.subscriptionId = tl.getEndpointDataParameter(this.connectedService, "SubscriptionId", true);    
             this.deploymentMode = tl.getInput("deploymentMode");
@@ -75,13 +71,6 @@ export class AzureResourceGroupDeployment {
                break;
            default:
                tl.setResult(tl.TaskResult.Succeeded, tl.loc("InvalidAction"));
-        }
-        if (this.outputVariable && this.outputVariable.trim()!="" && this.action!="Select Resource Group"){
-            try {
-                new env.RegisterEnvironment(this.getARMCredentials(), this.subscriptionId, this.resourceGroupName, this.outputVariable);
-            } catch(error) {            
-                tl.setResult(tl.TaskResult.Failed, tl.loc("FailedRegisteringEnvironment", error));
-            }
         }
     }
 
