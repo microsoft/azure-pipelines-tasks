@@ -47,11 +47,24 @@
     "inputs": [
         {
             "name": "testAssembly",
-            "type": "string",
+            "type": "multiLine",
             "label": "Test Assembly",
-            "defaultValue": "**\\*test*.dll;-:**\\obj\\**",
+            "defaultValue": "**\\*test*.dll\n!**\\obj\\**",
             "required": true,
-            "helpMarkDown": "Test binaries to run tests on.  Wildcards can be used.  For example, `**\\*test*.dll;-:**\\obj\\**` for all dlls with test in name while excluding files in any sub-directory named obj.",
+            "helpMarkDown": "Test binaries to run tests on. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkID=NewLinkID",
+            "groupName": "executionOptions",
+            "properties": {
+                "rows": "5",
+                "resizable": "true"
+            }
+        },
+        {
+            "name": "searchDirectory",
+            "type": "string",
+            "label": "Search Directory",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Directory to search for the test assemblies.",
             "groupName": "executionOptions"
         },
         {
@@ -209,7 +222,7 @@
             "groupName": "reportingOptions"
         }
     ],
-    "instanceNameFormat": "Test Assemblies $(testAssembly)",
+    "instanceNameFormat": "Test Assemblies",
     "execution": {
         "PowerShell": {
             "target": "$(currentDirectory)\\VSTest.ps1",
@@ -249,6 +262,7 @@
         "ErrorReadingVstestVersion": "Error reading the version of vstest.console.exe.",
         "UnexpectedVersionString": "Unexpected version string detected for vstest.console.exe: %s.",
         "UnexpectedVersionNumber": "Unexpected version number detected for vstest.console.exe: %s.",
-        "VstestDiagNotSupported": "vstest.console.exe version does not support the /diag flag. Enable diagnositics via the exe.config files"
+        "VstestDiagNotSupported": "vstest.console.exe version does not support the /diag flag. Enable diagnositics via the exe.config files",
+        "NoIncludePatternFound": "No include pattern found to search test assemblies."
     }
 }

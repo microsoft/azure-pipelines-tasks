@@ -1,7 +1,6 @@
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 import Q = require('q');
-import ffl = require('find-files-legacy/findfiles.legacy');
 
 var os = require('os');
 var regedit = require('regedit');
@@ -24,7 +23,7 @@ try {
     var vsTestVersion: string = tl.getInput('vsTestVersion');
     var vstestLocationMethod: string = tl.getInput('vstestLocationMethod');
     var vstestLocation: string = tl.getPathInput('vsTestLocation');
-    var testAssembly: string = tl.getInput('testAssembly', true);
+    var testAssembly: string[] = tl.getDelimitedInput('testAssembly', '\n', true);
     var testFiltercriteria: string = tl.getInput('testFiltercriteria');
     var runSettingsFile: string = tl.getPathInput('runSettingsFile');
     var codeCoverageEnabled: boolean = tl.getBoolInput('codeCoverageEnabled');
@@ -37,8 +36,10 @@ try {
     var publishRunAttachments: string = tl.getInput('publishRunAttachments');
     var runInParallel: boolean = tl.getBoolInput('runInParallel');
     var tiaEnabled: boolean = tl.getBoolInput('runOnlyImpactedTests');
-    var fileLevel = tl.getVariable('tia.filelevel');
     var tiaRebaseLimit: string = tl.getInput('runAllTestsAfterXBuilds');
+    var searchDirectory: string = tl.getInput('searchDirectory');
+
+    var fileLevel = tl.getVariable('tia.filelevel');
     var sourcesDir = tl.getVariable('build.sourcesdirectory');
     var runIdFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
     var baseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
@@ -51,20 +52,19 @@ try {
     if (useNewCollectorFlag && useNewCollectorFlag.toUpperCase() == "TRUE") {
         useNewCollector = true;
     }
-    
+
     var releaseuri = tl.getVariable("release.releaseUri")
-	var context = "CI";
-	if(releaseuri)
-	{
-		context = "CD";
-	}
+    var context = "CI";
+    if (releaseuri) {
+        context = "CD";
+    }
 
     var systemDefaultWorkingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
     var artifactsDirectory = tl.getVariable('System.ArtifactsDirectory');
     var testAssemblyFiles = getTestAssemblies();
 
-    if (testAssemblyFiles && testAssemblyFiles.size != 0) {
-        var workingDirectory = sourcesDir && sourcesDir != '' ? systemDefaultWorkingDirectory : artifactsDirectory;
+    if (testAssemblyFiles && testAssemblyFiles.length != 0) {
+        var workingDirectory = !isNullOrWhitespace(sourcesDir) ? systemDefaultWorkingDirectory : artifactsDirectory;
         getTestResultsDirectory(runSettingsFile, path.join(workingDirectory, 'TestResults')).then(function (resultsDirectory) {
             invokeVSTest(resultsDirectory)
                 .then(function (code) {
@@ -100,25 +100,81 @@ catch (error) {
     throw error;
 }
 
-function getResolvedPattern(pattern: string): string {
+function getResolvedPattern(pattern: string, searchDirectory: string): string {
     if (path.isAbsolute(pattern)) {
         return pattern;
     }
     else {
-        return path.join(systemDefaultWorkingDirectory, pattern);
+        return path.join(searchDirectory, pattern);
     }
 }
 
-function getPatternWithoutIncludeExclude(pattern: string): string {
-    return pattern.startsWith('-:') || pattern.startsWith('+:') ? pattern.substr(2) : pattern;
+function getPatternInfo(p: string): any {
+    let pattern = p.trim();
+    let negate: Boolean = false;
+    let negateOffset: number = 0;
+    let patternInfo: any = {};
+
+    for (var j = 0; j < pattern.length && pattern[j] === '!'; j++) {
+        negate = !negate;
+        negateOffset++;
+    }
+    patternInfo.negate = negate;
+    if (negate) {
+        tl.debug('exclude pattern: ' + pattern);
+        patternInfo.pattern = pattern.substring(0, negateOffset) + getResolvedPattern(pattern.substring(negateOffset), searchDirectory);
+    }
+    else {
+        tl.debug('include pattern: ' + pattern);
+        patternInfo.pattern = getResolvedPattern(pattern, searchDirectory);
+    }
+    return patternInfo;
 }
 
-function getFilteredFilesFromPattern(pattern: string, hasQuantifier: boolean, allFiles: string[]): string[] {
-    return hasQuantifier ? getFilteredFiles(pattern, allFiles) : [pattern];
-}
+function getTestAssemblies(): string[] {
+    if (isNullOrWhitespace(searchDirectory)) {
+        searchDirectory = isNullOrWhitespace(sourcesDir) ? artifactsDirectory : systemDefaultWorkingDirectory;
+        tl.debug("Search directory empty, defaulting to " + searchDirectory);
+    }
+    tl.debug("Searching for test assemblies in: " + searchDirectory);
 
-function getTestAssemblies(): Set<string> {
-    return new Set(ffl.findFiles(testAssembly, false, systemDefaultWorkingDirectory));
+    let includePattern: string[] = [];
+    let excludePattern: string[] = [];
+
+    let matchOptions: any = { matchBase: true };
+    if (tl.osType().match(/^Win/)) {
+        matchOptions["nocase"] = true;
+    }
+
+    //check if there is no inc patt
+    testAssembly.forEach(function (p) {
+        //base case just the first char
+        let patternInfo: any = getPatternInfo(p);
+        patternInfo.negate ? excludePattern.push(patternInfo.pattern) : includePattern.push(patternInfo.pattern);
+    });
+    tl.debug("Include pattern count: " + includePattern.length + ", Exclude pattern count: " + excludePattern.length);
+
+    let assemblySet: Set<string> = new Set<string>();
+    if (includePattern.length == 0) {
+        tl.warning(tl.loc('NoIncludePatternFound'));
+        return [];
+    }
+
+    let allFiles: string[] = tl.find(searchDirectory);
+    tl.debug("Total files found: " + allFiles.length);
+
+    includePattern.forEach(function (pattern) {
+        let matchFiles = tl.match(allFiles, pattern, matchOptions);
+        matchFiles.forEach(m => assemblySet.add(m));
+    });
+
+    let result: string[] = Array.from(assemblySet);
+    excludePattern.forEach(function (pattern) {
+        result = tl.match(result, pattern, matchOptions);
+    });
+
+    tl.debug("Test assemblies selected for execution: " + result.length);
+    return result;
 }
 
 function getVsTestVersion(): number[] {
@@ -150,7 +206,7 @@ function getVsTestVersion(): number[] {
         return null;
     }
 
-    return vsVersion;    
+    return vsVersion;
 }
 
 function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[] {
@@ -164,7 +220,7 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
                 testAssemblyPath = expandedPath;
             }
         }
-       argsArray.push(testAssemblyPath);       
+        argsArray.push(testAssemblyPath);
     });
     if (testFiltercriteria) {
         if (!tiaEnabled) {
@@ -206,12 +262,12 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
             tl.warning(tl.loc("VstestDiagNotSupported"));
         }
     }
-    
+
     return argsArray;
 }
 
 function addVstestArgs(argsArray: string[], vstest: any) {
-    argsArray.forEach(function (arr) {            
+    argsArray.forEach(function (arr) {
         vstest.arg(arr);
     });
 }
@@ -222,7 +278,7 @@ function updateResponseFile(argsArray: string[], responseFile: string): Q.Promis
         if (!arr.startsWith('/')) {
             argsArray[i] = "\"" + arr + "\"";
         }
-    }); 
+    });
     fs.appendFile(responseFile, os.EOL + argsArray.join(os.EOL), function (err) {
         if (err) {
             defer.reject(err);
@@ -247,8 +303,7 @@ function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
     var defer = Q.defer<string>();
     var allFilesInResultsDirectory;
     var resultFiles;
-    if (testResultsDirectory && testResultsDirectory !== "")
-    {
+    if (!isNullOrWhitespace(testResultsDirectory)) {
         allFilesInResultsDirectory = tl.find(testResultsDirectory);
         resultFiles = tl.match(allFilesInResultsDirectory, path.join(testResultsDirectory, "*.trx"), { matchBase: true });
     }
@@ -260,8 +315,7 @@ function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
     selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
     selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
 
-    if (resultFiles && resultFiles[0])
-    {
+    if (resultFiles && resultFiles[0]) {
         selectortool.arg("/ResultFile:" + resultFiles[0]);
     }
     selectortool.arg("/runidfile:" + runIdFile);
@@ -292,19 +346,17 @@ function generateResponseFile(discoveredTests: string): Q.Promise<string> {
     selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
     selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
 
-    if(context == "CD")
-	{	
+    if (context == "CD") {
         // Release context. Passing Release Id.
         selectortool.arg("/buildid:" + tl.getVariable("Release.ReleaseId"));
         selectortool.arg("/releaseuri:" + tl.getVariable("release.releaseUri"));
-        selectortool.arg("/releaseenvuri:" + tl.getVariable("release.environmentUri"));	
-	}
-	else
-	{
+        selectortool.arg("/releaseenvuri:" + tl.getVariable("release.environmentUri"));
+    }
+    else {
         // Build context. Passing build id.
         selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
-	}
-    
+    }
+
     selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
     selectortool.arg("/responsefile:" + respFile);
     selectortool.arg("/DiscoveredTests:" + discoveredTests);
@@ -312,8 +364,8 @@ function generateResponseFile(discoveredTests: string): Q.Promise<string> {
     selectortool.arg("/testruntitle:" + testRunTitle);
     selectortool.arg("/BaseLineFile:" + baseLineBuildIdFile);
     selectortool.arg("/platform:" + platform);
-    selectortool.arg("/configuration:" + configuration);    
-	selectortool.arg("/Context:" + context);
+    selectortool.arg("/configuration:" + configuration);
+    selectortool.arg("/Context:" + context);
 
     selectortool.exec()
         .then(function (code) {
@@ -345,20 +397,17 @@ function publishCodeChanges(): Q.Promise<string> {
     selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
     selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
 
-    if(context == "CD")
-	{	
+    if (context == "CD") {
         // Release context. Passing Release Id.
-        selectortool.arg("/buildid:" + tl.getVariable("Release.ReleaseId"));	
+        selectortool.arg("/buildid:" + tl.getVariable("Release.ReleaseId"));
         selectortool.arg("/Definitionid:" + tl.getVariable("release.DefinitionId"));
-	}
-	else
-	{
+    } else {
         // Build context. Passing build id.
         selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
         selectortool.arg("/Definitionid:" + tl.getVariable("System.DefinitionId"));
-	}
+    }
 
-    
+
     selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
     selectortool.arg("/SourcesDir:" + sourcesDir);
     selectortool.arg("/newprovider:" + newprovider);
@@ -372,7 +421,7 @@ function publishCodeChanges(): Q.Promise<string> {
         selectortool.arg("/RebaseLimit:" + tiaRebaseLimit);
     }
     selectortool.arg("/Context:" + context);
-    
+
     selectortool.exec()
         .then(function (code) {
             endTime = perf();
@@ -546,13 +595,13 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                 else {
                                     responseContainsNoTests(responseFile)
                                         .then(function (noTestsAvailable) {
-                                            if (noTestsAvailable) {                                                
+                                            if (noTestsAvailable) {
                                                 tl.debug("No tests impacted. Not running any tests.");
                                                 uploadTestResults("")
                                                     .then(function (code) {
                                                         if (!isNaN(+code) && +code != 0) {
                                                             defer.resolve(+code);
-                                                        }   
+                                                        }
                                                         defer.resolve(0);
                                                     })
                                                     .fail(function (code) {
@@ -564,7 +613,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                         tl.debug("Deleting the run id file" + runIdFile);
                                                         tl.rmRF(runIdFile, true);
                                                     });
-                                            }                                                
+                                            }
                                             else {
                                                 updateResponseFile(getVstestArguments(settingsFile, true), responseFile)
                                                     .then(function (updatedFile) {
@@ -719,7 +768,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                                 tl.warning(tl.loc("VstestTIANotSupported"));
                                 tiaEnabled = false;
                             }
-                        }                                            
+                        }
                     } catch (e) {
                         tl.error(e.message);
                         defer.resolve(1);
@@ -773,15 +822,6 @@ function publishTestResults(testResultsDirectory: string) {
             tl._writeLine("##vso[task.logissue type=warning;code=002003;]");
             tl.warning(tl.loc('NoResultsToPublish'));
         }
-    }
-}
-
-function getFilteredFiles(filesFilter: string, allFiles: string[]): string[] {
-    if (os.type().match(/^Win/)) {
-        return tl.match(allFiles, filesFilter, { matchBase: true, nocase: true });
-    }
-    else {
-        return tl.match(allFiles, filesFilter, { matchBase: true });
     }
 }
 
@@ -966,38 +1006,28 @@ function pushImpactLevelAndRootPathIfNotFound(dataCollectorArray): void {
                 dataCollectorArray[i] = { Configuration: {} };
             }
             if (dataCollectorArray[i].Configuration.TestImpact && !dataCollectorArray[i].Configuration.RootPath) {
-                if (context && context == "CD")
-                {
+                if (context && context == "CD") {
                     dataCollectorArray[i].Configuration = { RootPath: "" };
-                }
-                else{
+                } else {
                     dataCollectorArray[i].Configuration = { RootPath: sourcesDir };
                 }
-            }
-            else if (!dataCollectorArray[i].Configuration.TestImpact && dataCollectorArray[i].Configuration.RootPath) {
+            } else if (!dataCollectorArray[i].Configuration.TestImpact && dataCollectorArray[i].Configuration.RootPath) {
                 if (getTIALevel() == 'file') {
                     dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), LogFilePath: 'true' };
-                }
-                else {
+                } else {
                     dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel() };
                 }
-            }
-            else if (dataCollectorArray[i].Configuration && !dataCollectorArray[i].Configuration.TestImpact && !dataCollectorArray[i].Configuration.RootPath) {
-                if (context && context == "CD")
-                {
+            } else if (dataCollectorArray[i].Configuration && !dataCollectorArray[i].Configuration.TestImpact && !dataCollectorArray[i].Configuration.RootPath) {
+                if (context && context == "CD") {
                     if (getTIALevel() == 'file') {
                         dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), LogFilePath: 'true', RootPath: "" };
-                    }
-                    else {
+                    } else {
                         dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), RootPath: "" };
-                    }                    
-                }
-                else
-                {
+                    }
+                } else {
                     if (getTIALevel() == 'file') {
                         dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), LogFilePath: 'true', RootPath: sourcesDir };
-                    }
-                    else {
+                    } else {
                         dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), RootPath: sourcesDir };
                     }
                 }
@@ -1014,15 +1044,11 @@ function pushImpactLevelAndRootPathIfNotFound(dataCollectorArray): void {
     }
 }
 
-function roothPathGenerator() : any
-{
-    if (context)
-    {
-        if (context == "CD")
-        {
+function roothPathGenerator(): any {
+    if (context) {
+        if (context == "CD") {
             return { ImpactLevel: getTIALevel(), RootPath: "" };
-        }
-        else{
+        } else {
             return { ImpactLevel: getTIALevel(), RootPath: sourcesDir };
         }
     }
@@ -1032,7 +1058,7 @@ function updateRunSettings(result: any, vsVersion: number) {
     var dataCollectorNode = null;
     if (!result.RunSettings) {
         tl.debug("Updating runsettings file from RunSettings node");
-        result.RunSettings = { DataCollectionRunSettings: { DataCollectors: { DataCollector: { Configuration: roothPathGenerator()} } } };
+        result.RunSettings = { DataCollectionRunSettings: { DataCollectors: { DataCollector: { Configuration: roothPathGenerator() } } } };
         dataCollectorNode = result.RunSettings.DataCollectionRunSettings.DataCollectors.DataCollector;
     }
     else if (!result.RunSettings.DataCollectionRunSettings) {
@@ -1531,4 +1557,11 @@ function responseContainsNoTests(filePath: string): Q.Promise<boolean> {
             return false;
         }
     });
+}
+
+function isNullOrWhitespace(input) {
+    if (typeof input === 'undefined' || input == null) {
+        return true;
+    }
+    return input.replace(/\s/g, '').length < 1;
 }

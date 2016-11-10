@@ -47,11 +47,24 @@
   "inputs": [
     {
       "name": "testAssembly",
-      "type": "string",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.testAssembly",
-      "defaultValue": "**\\*test*.dll;-:**\\obj\\**",
+      "defaultValue": "**\\*test*.dll\n!**\\obj\\**",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.testAssembly",
+      "groupName": "executionOptions",
+      "properties": {
+        "rows": "5",
+        "resizable": "true"
+      }
+    },
+    {
+      "name": "searchDirectory",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.searchDirectory",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.searchDirectory",
       "groupName": "executionOptions"
     },
     {
@@ -249,6 +262,7 @@
     "ErrorReadingVstestVersion": "ms-resource:loc.messages.ErrorReadingVstestVersion",
     "UnexpectedVersionString": "ms-resource:loc.messages.UnexpectedVersionString",
     "UnexpectedVersionNumber": "ms-resource:loc.messages.UnexpectedVersionNumber",
-    "VstestDiagNotSupported": "ms-resource:loc.messages.VstestDiagNotSupported"
+    "VstestDiagNotSupported": "ms-resource:loc.messages.VstestDiagNotSupported",
+    "NoIncludePatternFound": "ms-resource:loc.messages.NoIncludePatternFound"
   }
 }

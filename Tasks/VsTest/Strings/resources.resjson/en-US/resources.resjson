@@ -2,13 +2,15 @@
   "loc.friendlyName": "Visual Studio Test",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=624539)",
   "loc.description": "Run tests with Visual Studio test runner",
-  "loc.instanceNameFormat": "Test Assemblies $(testAssembly)",
+  "loc.instanceNameFormat": "Test Assemblies",
   "loc.group.displayName.executionOptions": "Execution Options",
   "loc.group.displayName.tiaOptions": "Test Impact Analysis",
   "loc.group.displayName.advancedExecutionOptions": "Advanced Execution Options",
   "loc.group.displayName.reportingOptions": "Reporting Options",
   "loc.input.label.testAssembly": "Test Assembly",
-  "loc.input.help.testAssembly": "Test binaries to run tests on.  Wildcards can be used.  For example, `**\\*test*.dll;-:**\\obj\\**` for all dlls with test in name while excluding files in any sub-directory named obj.",
+  "loc.input.help.testAssembly": "Test binaries to run tests on. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkID=NewLinkID",
+  "loc.input.label.searchDirectory": "Search Directory",
+  "loc.input.help.searchDirectory": "Directory to search for the test assemblies.",
   "loc.input.label.testFiltercriteria": "Test Filter criteria",
   "loc.input.help.testFiltercriteria": "Additional criteria to filter tests from Test assemblies. For example: `Priority=1|Name=MyTestMethod`",
   "loc.input.label.runSettingsFile": "Run Settings File",
@@ -65,5 +67,6 @@
   "loc.messages.ErrorReadingVstestVersion": "Error reading the version of vstest.console.exe.",
   "loc.messages.UnexpectedVersionString": "Unexpected version string detected for vstest.console.exe: %s.",
   "loc.messages.UnexpectedVersionNumber": "Unexpected version number detected for vstest.console.exe: %s.",
-  "loc.messages.VstestDiagNotSupported": "vstest.console.exe version does not support the /diag flag. Enable diagnositics via the exe.config files"
+  "loc.messages.VstestDiagNotSupported": "vstest.console.exe version does not support the /diag flag. Enable diagnositics via the exe.config files",
+  "loc.messages.NoIncludePatternFound": "No include pattern found to search test assemblies."
 }
