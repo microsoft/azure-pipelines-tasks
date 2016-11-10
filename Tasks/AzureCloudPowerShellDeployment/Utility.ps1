@@ -155,7 +155,7 @@ function Get-DiagnosticsExtensions($storageAccount, $extensionsPath, $storageAcc
                         }
                         catch
                         {
-                            Write-Warning "Current version of azure powershell don't support external storage account. Update version to greater than 1.3.0"
+                            Write-Warning (Get-VstsLocString -Key "Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics")
                             throw $_.Exception
                         }
                     }
