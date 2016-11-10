@@ -146,9 +146,7 @@ function getTestAssemblies(): string[] {
         matchOptions["nocase"] = true;
     }
 
-    //check if there is no inc patt
     testAssembly.forEach(function (p) {
-        //base case just the first char
         let patternInfo: any = getPatternInfo(p);
         patternInfo.negate ? excludePattern.push(patternInfo.pattern) : includePattern.push(patternInfo.pattern);
     });
