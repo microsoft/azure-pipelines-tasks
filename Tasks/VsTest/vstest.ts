@@ -39,7 +39,7 @@ try {
     var tiaEnabled: boolean = tl.getBoolInput('runOnlyImpactedTests');
     var fileLevel = tl.getVariable('tia.filelevel');
     var tiaRebaseLimit: string = tl.getInput('runAllTestsAfterXBuilds');
-    var sourcesDir = tl.getVariable('build.sourcesdirectory');
+    var sourcesDir = tl.getVariable('System.DefaultWorkingDirectory');
     var runIdFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
     var baseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
     var vstestDiagFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
