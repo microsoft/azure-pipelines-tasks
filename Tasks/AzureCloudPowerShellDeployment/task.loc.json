@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 33
+    "Patch": 34
   },
   "demands": [
     "azureps"
@@ -186,6 +186,7 @@
     "Nofileswerefoundtodeploywithsearchpattern0": "ms-resource:loc.messages.Nofileswerefoundtodeploywithsearchpattern0",
     "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "ms-resource:loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone",
     "Storagekeysaredefinedininvalidformat": "ms-resource:loc.messages.Storagekeysaredefinedininvalidformat",
-    "Unabletofind0usingprovidedsubscription": "ms-resource:loc.messages.Unabletofind0usingprovidedsubscription"
+    "Unabletofind0usingprovidedsubscription": "ms-resource:loc.messages.Unabletofind0usingprovidedsubscription",
+    "Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "ms-resource:loc.messages.Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics"
   }
 }
