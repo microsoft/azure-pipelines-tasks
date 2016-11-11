@@ -1,7 +1,7 @@
 {
     "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
     "name": "AzureRmWebAppDeploy",
-    "friendlyName": "Azure App Service Deploy(Test)",
+    "friendlyName": "Azure App Service Deploy(Test 1)",
     "description": "Update Azure App Service using Web Deploy / Kudu REST APIs",
     "helpMarkDown": "[More Information](https://aka.ms/azurermwebdeployreadme)",
     "category": "Deploy",
