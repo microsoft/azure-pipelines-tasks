@@ -14,14 +14,17 @@
     "match": {
         "*.trx": [
             "a.trx"
+        ],
+        "/source/dir/someFile1" : [
+            "/source/dir/someFile1"
         ]
     },
     "exec": {
-        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /logger:trx": {
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /logger:trx": {
             "code": 0,
             "stdout": "vstest"
         },
-		"\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /Settings:settings.runsettings /logger:trx": {
+		"\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /Settings:settings.runsettings /logger:trx": {
             "code": 0,
             "stdout": "vstest"
         }
@@ -47,5 +50,8 @@
 		"settings.testsettings": {
             "isFile": true
         }
+    },
+    "osType" : {
+        "osType": "Windows"
     }
 }

@@ -7,19 +7,22 @@
     },
     "find": {
         "/source/dir": [
-            "someDir/someFile2",
-            "/someDir/someFile1"
+            "/source/dir/someFile2",
+            "/source/dir/someFile1"
         ]
     },
     "match": {
-        "\\source\\dir\\some\\*pattern": [
-            "some/path/one",
-            "some/path/two"
+        "/source/dir/some/*pattern": [
+            "/source/dir/someFile2",
+            "/source/dir/someFile1"
         ],
-        "**\\packages\\**\\*TestAdapter.dll": []
+        "**\\packages\\**\\*TestAdapter.dll": [],
+        "/source/dir/someFile1": [
+            "/source/dir/someFile1"            
+        ]
     },
     "exec": {
-        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe some/path/one some/path/two /logger:trx": {
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile2 /source/dir/someFile1 /logger:trx": {
             "code": 1,
             "stdout": "running vstest",
             "stderr": "error occured while running vstest"
@@ -30,5 +33,8 @@
             "success": true,
             "message": "success"
         }
+    },
+    "osType" : {
+        "osType": "Windows"
     }
 }

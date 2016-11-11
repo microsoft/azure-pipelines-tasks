@@ -42,5 +42,8 @@
 		"settings.testsettings": {
             "isFile": true
         }
+    },
+    "osType" : {
+        "osType": "Windows"
     }
 }

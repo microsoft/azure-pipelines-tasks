@@ -8,7 +8,7 @@
   "loc.group.displayName.advancedExecutionOptions": "Advanced Execution Options",
   "loc.group.displayName.reportingOptions": "Reporting Options",
   "loc.input.label.testAssembly": "Test Assembly",
-  "loc.input.help.testAssembly": "Test binaries to run tests on. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkID=NewLinkID",
+  "loc.input.help.testAssembly": "Test binaries to run tests on. Supports multiple lines of minimatch patterns.",
   "loc.input.label.searchDirectory": "Search Directory",
   "loc.input.help.searchDirectory": "Directory to search for the test assemblies.",
   "loc.input.label.testFiltercriteria": "Test Filter criteria",
