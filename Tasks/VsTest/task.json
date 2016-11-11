@@ -225,16 +225,16 @@
     ],
     "instanceNameFormat": "Test Assemblies",
     "execution": {
+        "Node": {
+            "target": "vstest.js"
+        },
         "PowerShell": {
             "target": "$(currentDirectory)\\VSTest.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)",
             "platforms": [
-                "windows1"
+                "windows"
             ]
-        },
-        "Node": {
-            "target": "vstest.js"
         }
     },
     "messages": {
@@ -264,6 +264,6 @@
         "UnexpectedVersionString": "Unexpected version string detected for vstest.console.exe: %s.",
         "UnexpectedVersionNumber": "Unexpected version number detected for vstest.console.exe: %s.",
         "VstestDiagNotSupported": "vstest.console.exe version does not support the /diag flag. Enable diagnositics via the exe.config files",
-        "NoIncludePatternFound": "No include pattern found to search test assemblies."
+        "NoIncludePatternFound": "No include pattern found. Specify atleast one include pattern to search test assemblies."
     }
 }

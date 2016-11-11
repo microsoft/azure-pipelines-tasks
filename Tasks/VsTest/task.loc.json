@@ -225,16 +225,16 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
+    "Node": {
+      "target": "vstest.js"
+    },
     "PowerShell": {
       "target": "$(currentDirectory)\\VSTest.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)",
       "platforms": [
-        "windows1"
+        "windows"
       ]
-    },
-    "Node": {
-      "target": "vstest.js"
     }
   },
   "messages": {

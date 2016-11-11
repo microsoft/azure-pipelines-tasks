@@ -68,5 +68,5 @@
   "loc.messages.UnexpectedVersionString": "Unexpected version string detected for vstest.console.exe: %s.",
   "loc.messages.UnexpectedVersionNumber": "Unexpected version number detected for vstest.console.exe: %s.",
   "loc.messages.VstestDiagNotSupported": "vstest.console.exe version does not support the /diag flag. Enable diagnositics via the exe.config files",
-  "loc.messages.NoIncludePatternFound": "No include pattern found to search test assemblies."
+  "loc.messages.NoIncludePatternFound": "No include pattern found. Specify atleast one include pattern to search test assemblies."
 }
