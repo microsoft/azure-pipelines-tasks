@@ -18,9 +18,7 @@
     "demands": [
         "vstest"
     ],
-    "editorHints": {
-        "preview": "true"
-    },
+    "preview": "true",
     "minimumAgentVersion": "1.89.0",
     "groups": [
         {
