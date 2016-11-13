@@ -3,6 +3,7 @@
 import Q = require('q');
 import path = require('path');
 import fs = require('fs');
+import glob = require('glob');
 
 import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
@@ -50,6 +51,9 @@ export function processSonarQubeIntegration(): Q.Promise<void> {
         return Q.when();
     }
 
-    var sqBuildFolder: string = path.join(tl.getVariable('build.sourcesDirectory'), 'build', 'sonar');
-    return sqCommon.processSonarQubeIntegration(sqBuildFolder);
+      // the output folder may not be directly in the build root, for example if the entire project is in a top-lvel dir
+    var reportTaskGlob: string = path.join(tl.getVariable('build.sourcesDirectory'), '**', 'build', 'sonar', 'report-task.txt');
+   
+    return sqCommon.processSonarQubeIntegration(reportTaskGlob);
 }
+

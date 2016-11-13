@@ -1,8 +1,8 @@
 {
     "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
-    "name": "AzureRMWebAppDeployment",
-    "friendlyName": "AzureRM App Service Deployment",
-    "description": "Deploy the web project using AzureRM App Service",
+    "name": "AzureRmWebAppDeployment",
+    "friendlyName": "Azure App Service Deployment: ARM",
+    "description": "Update Azure App Service using Web Deploy / Kudu REST APIs",
     "helpMarkDown": "[More Information](https://aka.ms/azurermwebdeployreadme)",
     "category": "Deploy",
     "visibility": [
@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 4
     },
     "minimumAgentVersion": "1.102.0",
     "groups": [
@@ -94,7 +94,7 @@
             "label": "Package or Folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)\\**\\*.zip",
             "required": true,
-            "helpMarkDown": "Folder or file path to the Web App package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)\\**\\*.zip."
+            "helpMarkDown": "Folder or file path to the Web App package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)\\\\\\*\\*\\\\\\*.zip."
         },
         {
             "name": "WebAppUri",
@@ -148,7 +148,7 @@
             "name": "TakeAppOfflineFlag",
             "type": "boolean",
             "label": "Take App Offline",
-            "defaultValue": "true",
+            "defaultValue": "false",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
             "visibleRule": "UseWebDeploy == true",
@@ -231,6 +231,7 @@
         "UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove": "Unsupported installed version: %s found for MSDeploy. version should be alteast 3 or above",
         "UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)",
         "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
-        "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "More than one package matched with specified pattern. Please restrain the search patern."
+        "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "More than one package matched with specified pattern. Please restrain the search patern.",
+        "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected."
   }
 }

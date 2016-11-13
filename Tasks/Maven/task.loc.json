@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 67
+    "Patch": 73
   },
   "minimumAgentVersion": "1.89.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -360,12 +360,15 @@
     "sqAnalysis_QualityGatePassed": "ms-resource:loc.messages.sqAnalysis_QualityGatePassed",
     "sqAnalysis_UnknownComparatorString": "ms-resource:loc.messages.sqAnalysis_UnknownComparatorString",
     "sqAnalysis_NoUnitsFound": "ms-resource:loc.messages.sqAnalysis_NoUnitsFound",
+    "sqAnalysis_NoReportTask": "ms-resource:loc.messages.sqAnalysis_NoReportTask",
+    "sqAnalysis_MultipleReportTasks": "ms-resource:loc.messages.sqAnalysis_MultipleReportTasks",
     "codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles",
     "codeAnalysisBuildSummaryLine_SomeViolationsOneFile": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_SomeViolationsOneFile",
     "codeAnalysisBuildSummaryLine_OneViolationOneFile": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_OneViolationOneFile",
     "codeAnalysisBuildSummaryLine_NoViolations": "ms-resource:loc.messages.codeAnalysisBuildSummaryLine_NoViolations",
     "codeAnalysisBuildSummaryTitle": "ms-resource:loc.messages.codeAnalysisBuildSummaryTitle",
     "codeAnalysisArtifactSummaryTitle": "ms-resource:loc.messages.codeAnalysisArtifactSummaryTitle",
+    "codeAnalysisDisabled": "ms-resource:loc.messages.codeAnalysisDisabled",
     "LocateJVMBasedOnVersionAndArch": "ms-resource:loc.messages.LocateJVMBasedOnVersionAndArch",
     "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM"
   }

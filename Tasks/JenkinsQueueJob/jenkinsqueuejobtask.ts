@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+<<<<<<< HEAD
 /// <reference path="../../definitions/node.d.ts"/>
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
 /// <reference path="../../definitions/shelljs.d.ts"/>
@@ -9,6 +10,13 @@ var tl = require('vsts-task-lib/task');
 var fs = require('fs');
 var path = require('path');
 var shell = require('shelljs');
+=======
+import tl = require('vsts-task-lib/task');
+import fs = require('fs');
+import path = require('path');
+import shell = require('shelljs');
+import Q = require('q');
+>>>>>>> upstream/master
 
 // node js modules
 var request = require('request');

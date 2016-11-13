@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 88
+        "Patch": 91
     },
     "demands": [
         "azureps"
@@ -166,6 +166,20 @@
             "visibleRule": "action = Create Or Update Resource Group"
         },
         {
+            "name": "deploymentMode",
+            "type": "pickList",
+            "label": "Deployment Mode",
+            "defaultValue": "Incremental",
+            "required": true,
+            "helpMarkDown": "Incremental mode handles deployments as incremental updates to the resource group . It leaves unchanged resources that exist in the resource group but are not specified in the template. \n\n Complete mode deletes resources that are not in your template. \n\n Validate mode enables you to find problems with the template before creating actual resources. \n\n By default, Incremental mode is used.",
+            "options": {
+                "Validation": "Validation Only",
+                "Incremental" : "Incremental",
+                "Complete" : "Complete"
+                },
+            "visibleRule": "action = Create Or Update Resource Group"
+        },
+        {
             "name": "enableDeploymentPrerequisitesForCreate",
             "type": "boolean",
             "label": "Enable Deployment Prerequisites",
@@ -182,20 +196,6 @@
             "visibleRule": "action = Select Resource Group",
             "required": false,
             "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
-        },
-        {
-            "name": "deploymentMode",
-            "type": "pickList",
-            "label": "Deployment Mode",
-            "defaultValue": "Incremental",
-            "required": true,
-            "helpMarkDown": "Incremental mode handles deployments as incremental updates to the resource group . It leaves unchanged resources that exist in the resource group but are not specified in the template. Complete mode deletes resources that are not in your template. \n\n By default, incremental mode is used. \n\n Validate mode enables you to find problems with the template before creating actual resources.",
-            "options": {
-                "Validation": "Validation Only",
-                "Incremental" : "Incremental",
-                "Complete" : "Complete"
-                },
-            "visibleRule": "action = Create Or Update Resource Group"
         },
         {
             "name": "outputVariable",

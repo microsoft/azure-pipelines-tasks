@@ -1,6 +1,5 @@
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-
 import tl = require('vsts-task-lib/task');
+import ffl = require('find-files-legacy/findfiles.legacy');
 
 var testRunner = tl.getInput('testRunner', true);
 var testResultsFiles = tl.getInput('testResultsFiles', true);
@@ -18,23 +17,12 @@ tl.debug('config: ' + config);
 tl.debug('testRunTitle: ' + testRunTitle);
 tl.debug('publishRunAttachments: ' + publishRunAttachments);
 
-//check for pattern in testResultsFiles
-if(testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
-  tl.debug('Pattern found in testResultsFiles parameter');
-  var buildFolder = tl.getVariable('System.DefaultWorkingDirectory');
-  var allFiles = tl.find(buildFolder);
-  var matchingTestResultsFiles = tl.match(allFiles, testResultsFiles, { matchBase: true });
-}
-else {
-  tl.debug('No pattern found in testResultsFiles parameter');
-  var matchingTestResultsFiles = [testResultsFiles];
-}
-
+let matchingTestResultsFiles = ffl.findFiles(testResultsFiles, false, tl.getVariable('System.DefaultWorkingDirectory'));
 if(!matchingTestResultsFiles || matchingTestResultsFiles.length == 0) {
   tl.warning('No test result files matching ' + testResultsFiles + ' were found.');  
   tl.exit(0);
 }
 else{
-  var tp = new tl.TestPublisher(testRunner);
+  let tp = new tl.TestPublisher(testRunner);
   tp.publish(matchingTestResultsFiles, mergeResults, platform, config, testRunTitle, publishRunAttachments);
 }

@@ -1,8 +1,3 @@
-/// <reference path="../../definitions/node.d.ts" />
-/// <reference path="../../definitions/q.d.ts" />
-/// <reference path="../../definitions/vsts-task-lib.d.ts" />
-/// <reference path="../../definitions/vso-node-api.d.ts" />
-
 var adal = require ('adal-node');
 var parseString = require('xml2js').parseString;
 
@@ -10,6 +5,8 @@ import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import httpClient = require('vso-node-api/HttpClient');
 import restClient = require('vso-node-api/RestClient');
+
+var kuduDeploymentLog = require('./kududeploymentlog.js');
 
 var httpObj = new httpClient.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
 var restObj = new restClient.RestClient(httpObj);
@@ -32,7 +29,7 @@ export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: b
 
     var webAppPublishKuduUrl = publishingProfile.publishUrl;
     if(webAppPublishKuduUrl) {
-        var requestDetails = getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
+        var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
         var accessToken = 'Basic ' + (new Buffer(publishingProfile.userName + ':' + publishingProfile.userPWD).toString('base64'));
         var headers = {
             authorization: accessToken
@@ -124,73 +121,6 @@ function getAuthorizationToken(SPN): Q.Promise<string> {
     });
 
     return deferred.promise;
-}
-
-function getDeploymentAuthor(): string {
-    var author = tl.getVariable('build.sourceVersionAuthor');
-
-    if(author === undefined) {
-        author = tl.getVariable('build.requestedfor');
-    }
-
-    if(author === undefined) {
-        author = tl.getVariable('release.requestedfor');
-    }
-
-    if(author === undefined) {
-        author = tl.getVariable('agent.name');
-    }
-
-    return author;
-}
-
-function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isDeploymentSuccess: boolean): any {
-    
-    var status = isDeploymentSuccess ? 4 : 3;
-    var status_text = (status == 4) ? "success" : "failed";
-    var author = getDeploymentAuthor();
-
-    var buildUrl = tl.getVariable('build.buildUri');
-    var releaseUrl = tl.getVariable('release.releaseUri');
-
-    var buildId = tl.getVariable('build.buildId');
-    var releaseId = tl.getVariable('release.releaseId');
-
-    var collectionUrl = tl.getVariable('system.TeamFoundationCollectionUri'); 
-    var teamProject = tl.getVariable('system.teamProject');
-
-    var buildOrReleaseUrl = "" ;
-    var deploymentId = "";
-
-    if(releaseUrl !== undefined) {
-        deploymentId = releaseId + Date.now();
-        buildOrReleaseUrl = collectionUrl + teamProject + "/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?releaseId=" + releaseId + "&_a=release-summary";
-    }
-    else if(buildUrl !== undefined) {
-        deploymentId = buildId + Date.now();
-        buildOrReleaseUrl = collectionUrl + teamProject + "/_build?buildId=" + buildId + "&_a=summary";
-    }
-    else {
-        throw new Error(tl.loc('CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved'));
-    }
-
-    var message = "Updating Deployment History For Deployment " + buildOrReleaseUrl;
-    var requestBody = {
-        status : status,
-        status_text : status_text, 
-        message : message,
-        author : author,
-        deployer : 'VSTS',
-        details : buildOrReleaseUrl
-    };
-
-    var webAppHostUrl = webAppPublishKuduUrl.split(':')[0];
-    var requestUrl = "https://" + encodeURIComponent(webAppHostUrl) + "/deployments/" + encodeURIComponent(deploymentId);
-
-    var requestDetails = new Array<string>();
-    requestDetails["requestBody"] = requestBody;
-    requestDetails["requestUrl"] = requestUrl;
-    return requestDetails;
 }
 
 async function getAzureRMWebAppID(SPN, webAppName: string, resourceType: string) {

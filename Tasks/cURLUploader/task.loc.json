@@ -9,7 +9,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 17
+    "Patch": 18
   },
   "demands": [
     "curl"
@@ -78,5 +78,12 @@
       "target": "curluploader.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "CurlReturnCode": "ms-resource:loc.messages.CurlReturnCode",
+    "CurlFailed": "ms-resource:loc.messages.CurlFailed",
+    "NoMatchingFilesFound": "ms-resource:loc.messages.NoMatchingFilesFound",
+    "UploadingFiles": "ms-resource:loc.messages.UploadingFiles",
+    "CurlNotFound": "ms-resource:loc.messages.CurlNotFound"
   }
 }

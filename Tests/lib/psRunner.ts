@@ -29,9 +29,8 @@ export class PSRunner extends events.EventEmitter {
 	public start(): void {
 		this.emit('starting');
 		var defer = Q.defer<void>();
-		var powershell = shell.which('powershell.exe');
 		this._childProcess = child.spawn(
-			powershell, // command
+			"powershell.exe", // command
 			[ // args
 				'-NoLogo',
 				'-Sta',
@@ -66,7 +65,7 @@ export class PSRunner extends events.EventEmitter {
 			(data) => {
 				// Stderr indicates an error record was written to PowerShell's error pipeline.
 				debug('stderr: ' + data);
-				this._errors.push(data);
+				this._errors.push('' + data);
 			});
 	}
 

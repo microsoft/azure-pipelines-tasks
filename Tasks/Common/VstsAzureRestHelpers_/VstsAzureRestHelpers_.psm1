@@ -192,7 +192,7 @@ function Get-AzStorageKeys
     
     try
     {
-        $subscriptionId = $endpoint.Data.SubscriptionId
+        $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
         $azureUri = Get-AzureUri $endpoint
 
         $uri="$azureUri/$subscriptionId/services/storageservices/$storageAccountName/keys"
@@ -289,13 +289,13 @@ function Get-AzRmVmCustomScriptExtension
         {
             $customScriptExt=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
             Write-Verbose "No proxy settings"
-            return $customScriptExt
+            return $customScriptExt.properties
         }
         else
         {
             $customScriptExt=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
             Write-Verbose "Using proxy settings"
-            return $customScriptExt
+            return $customScriptExt.properties
         }
     }
     catch
@@ -356,7 +356,7 @@ function Get-AzStorageAccount
 
     try
     {
-        $subscriptionId = $endpoint.Data.SubscriptionId
+        $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
         $azureUri = Get-AzureUri $endpoint
 
         $uri="$azureUri/$subscriptionId/services/storageservices/$storageAccountName"
@@ -452,32 +452,26 @@ function Get-AzRmResourceGroup
     try
     {
         $accessToken = Get-SpnAccessToken $endpoint
-        $subscriptionId = $endpoint.Data.SubscriptionId
+        $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
 
         $method="GET"
-        $uri = "$script:azureRmUri/subscriptions/$subscriptionId/resourceGroups" + '?api-version=2016-02-01'
+        $uri = "$script:azureRmUri/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName" + '?api-version=2016-02-01'
 
         $headers = @{"Authorization" = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
         $proxyUri = Get-ProxyUri $uri
-        $resourceGroups=$null
-        
+
         if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
         {
-            $resourceGroups=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
+            $resourceGroup=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
             Write-Verbose "No Proxy settings"
+            return $resourceGroup
         }
         else
         {
-            $resourceGroups=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
+            $resourceGroup=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
             Write-Verbose "Using Proxy settings"
-        }
-        foreach ($resourceGroup in $resourceGroups.value)
-        {
-            if ($resourceGroup.name -eq $resourceGroupName)
-            {
-                return $resourceGroup
-            }
+            return $resourceGroup
         }
     }
     catch
@@ -497,7 +491,7 @@ function Get-AzureSqlDatabaseServerResourceId
           [Object] [Parameter(Mandatory = $true)] $accessToken)
 
     $serverType = "Microsoft.Sql/servers"
-    $subscriptionId = $endpoint.Data.SubscriptionId
+    $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
 
     Write-Verbose "[Azure Rest Call] Get Resource Groups"
     $method = "GET"
@@ -525,7 +519,7 @@ function Add-LegacyAzureSqlServerFirewall
           [String] [Parameter(Mandatory = $true)] $serverName,
           [String] [Parameter(Mandatory = $true)] $firewallRuleName)
 
-    $subscriptionId = $endpoint.Data.SubscriptionId
+    $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
     $azureUri = Get-AzureUri $endpoint
 
     $uri = "$azureUri/$subscriptionId/services/sqlservers/servers/$serverName/firewallrules"
@@ -588,7 +582,7 @@ function Remove-LegacyAzureSqlServerFirewall
           [String] [Parameter(Mandatory = $true)] $serverName,
           [String] [Parameter(Mandatory = $true)] $firewallRuleName)
 
-    $subscriptionId = $endpoint.Data.SubscriptionId
+    $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
     $azureUri = Get-AzureUri $endpoint
     $uri = "$azureUri/$subscriptionId/services/sqlservers/servers/$serverName/firewallrules/$firewallRuleName"
 

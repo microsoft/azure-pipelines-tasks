@@ -23,14 +23,14 @@ describe('AzureRmWebAppDeployment Suite', function() {
         if(shell.test ('-d', taskSrcPath)) {
              
             // Move mocked AzureRMUtil, MSDeployUtility and KuduUtility Libraries to task's test location
-            shell.mv( '-f', path.join (taskSrcPath,'AzureRMUtil.js'), path.join (taskSrcPath,'AzureRMUtil_backup.js'));
-            shell.cp(path.join (testSrcPath, 'AzureRMUtil.js'), path.join (taskSrcPath,'AzureRMUtil.js'));
+            shell.mv( '-f', path.join (taskSrcPath,'azurermutil.js'), path.join (taskSrcPath,'azurermutil_backup.js'));
+            shell.cp(path.join (testSrcPath, 'azurermutil.js'), path.join (taskSrcPath,'azurermutil.js'));
 
-            shell.mv( '-f', path.join (taskSrcPath,'MSDeployUtility.js'), path.join (taskSrcPath,'MSDeployUtility_backup.js'));
-            shell.cp(path.join (testSrcPath, 'MSDeployUtility.js'), path.join (taskSrcPath,'MSDeployUtility.js'));
+            shell.mv( '-f', path.join (taskSrcPath,'msdeployutility.js'), path.join (taskSrcPath,'msdeployutility_backup.js'));
+            shell.cp(path.join (testSrcPath, 'msdeployutility.js'), path.join (taskSrcPath,'msdeployutility.js'));
 
-            shell.mv( '-f', path.join (taskSrcPath,'kuduUtility.js'), path.join (taskSrcPath,'kuduUtility_backup.js'));
-            shell.cp(path.join (testSrcPath, 'kuduUtility.js'), path.join (taskSrcPath,'kuduUtility.js'));
+            shell.mv( '-f', path.join (taskSrcPath,'kuduutility.js'), path.join (taskSrcPath,'kuduutility_backup.js'));
+            shell.cp(path.join (testSrcPath, 'kuduutility.js'), path.join (taskSrcPath,'kuduutility.js'));
 
         }
         
@@ -40,15 +40,15 @@ describe('AzureRmWebAppDeployment Suite', function() {
     after(function() {
 
         // Restore the original libraries
-        shell.mv('-f', path.join (taskSrcPath, 'AzureRMUtil_backup.js'), path.join (taskSrcPath,'AzureRMUtil.js'));
-        shell.mv('-f', path.join (taskSrcPath, 'MSDeployUtility_backup.js'), path.join (taskSrcPath,'MSDeployUtility.js'));
-        shell.mv('-f', path.join (taskSrcPath, 'kuduUtility_backup.js'), path.join (taskSrcPath,'kuduUtility.js'));
+        shell.mv('-f', path.join (taskSrcPath, 'azurermutil_backup.js'), path.join (taskSrcPath,'azurermutil.js'));
+        shell.mv('-f', path.join (taskSrcPath, 'msdeployutility_backup.js'), path.join (taskSrcPath,'msdeployutility.js'));
+        shell.mv('-f', path.join (taskSrcPath, 'kuduutility_backup.js'), path.join (taskSrcPath,'kuduutility.js'));
 
     });
-    
-    it('Runs successfully with default inputs', (done) => {
+	
+	it('Runs successfully with default inputs', (done) => {
         
-        setResponseFile('armGood.json');
+        setResponseFile('armgood.json');
 
         var tr = new trm.TaskRunner('AzureRmWebAppDeployment');
         tr.setInput('ConnectedServiceName', 'AzureRMSpn');
@@ -71,10 +71,60 @@ describe('AzureRmWebAppDeployment Suite', function() {
                 done(err);
             });
     });
+	
+	it('Verify logs pushed to Kudu when task runs successfully with default inputs and env variables found', (done) => {
+        
+        setResponseFile('armgood.json');
+
+        var tr = new trm.TaskRunner('AzureRmWebAppDeployment');
+        tr.setInput('ConnectedServiceName', 'AzureRMSpn');
+        tr.setInput('WebAppName', 'mytestapp');
+        tr.setInput('Package', 'webAppPkg.zip');
+        tr.setInput('UseWebDeploy', 'true');
+       
+        tr.run()
+            .then(() => {
+
+                assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
+                assert(tr.stderr.length == 0, 'should not have written to stderr');
+                assert(tr.succeeded, 'task should have succeeded');
+                var expectedOut = 'Updated history to kudu'; 
+                assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
+
+				var expectedMessage = JSON.stringify({
+					type : 'Deployment',
+					commitId : '46da24f35850f455185b9188b4742359b537076f',
+					buildId : 1,
+					releaseId : 1,
+					buildNumber : 1,
+					releaseName : 'Release-1',
+					repoProvider : 'TfsGit',
+					repoName : 'MyFirstProject',
+					collectionUrl : 'https://abc.visualstudio.com/',
+					teamProject : 'MyFirstProject',
+					slotName : 'Production'
+				});
+				var expectedRequestBody = JSON.stringify({
+					status : 4,
+					status_text : 'success', 
+					message : expectedMessage,
+					author : 'author',
+					deployer : 'VSTS',
+					details : 'https://abc.visualstudio.com/MyFirstProject/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?releaseId=1&_a=release-summary'
+				});
+				expectedRequestBody = 'kudu log requestBody is:' + expectedRequestBody;
+				assert(tr.stdout.indexOf(expectedRequestBody) >= 0, 'should have said: ' + expectedRequestBody);
+				done();
+
+            })
+            .fail((err) => {
+                done(err);
+            });
+    });
 
     it('Runs successfully with all other inputs', (done) => {
         
-        setResponseFile('armGood.json');
+        setResponseFile('armgood.json');
 
         var tr = new trm.TaskRunner('AzureRmWebAppDeployment');
         tr.setInput('ConnectedServiceName', 'AzureRMSpn');
@@ -106,7 +156,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
 
     it('Runs successfully with default inputs for deployment to specific slot', (done) => {
         
-        setResponseFile('armGood.json');
+        setResponseFile('armgood.json');
 
         var tr = new trm.TaskRunner('AzureRmWebAppDeployment');
         tr.setInput('ConnectedServiceName', 'AzureRMSpn');
@@ -132,10 +182,10 @@ describe('AzureRmWebAppDeployment Suite', function() {
                 done(err);
             });
     });
-    
+	
     it('Fails if msdeploy cmd fails to execute', (done) => {
         
-        setResponseFile('armBad.json');
+        setResponseFile('armbad.json');
 
         var tr = new trm.TaskRunner('AzureRmWebAppDeployment');
         tr.setInput('ConnectedServiceName', 'AzureRMSpn');
@@ -161,9 +211,57 @@ describe('AzureRmWebAppDeployment Suite', function() {
             });
     });
 
+	it('Verify logs pushed to kudu when task fails if msdeploy cmd fails to execute and some env variables not found', (done) => {
+        
+        setResponseFile('armbad.json');
+
+        var tr = new trm.TaskRunner('AzureRmWebAppDeployment');
+        tr.setInput('ConnectedServiceName', 'AzureRMSpn');
+        tr.setInput('WebAppName', 'mytestapp');
+        tr.setInput('Package', 'webAppPkg.zip');
+        tr.setInput('UseWebDeploy', 'true');
+       
+        tr.run()
+            .then(() => {
+
+                assert(tr.invokedToolCount == 2, 'should have invoked tool once');
+                assert(tr.stderr.length > 0, 'should have written to stderr');
+                var expectedErr = 'Error: cmd failed with return code: 1';
+                assert(tr.stdErrContained(expectedErr), 'should have said: ' + expectedErr);
+                var expectedOut = 'Failed to update history to kudu'; 
+                assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
+                assert(tr.failed, 'task should have failed');
+				
+				var expectedMessage = JSON.stringify({
+					type : 'Deployment',
+					releaseId : 1,
+					releaseName : 'Release-1',
+					collectionUrl : 'https://abc.visualstudio.com/',
+					teamProject : 'MyFirstProject',
+					slotName : 'Production'
+				});
+				
+				var expectedRequestBody = JSON.stringify({
+					status : 3,
+					status_text : 'failed', 
+					message : expectedMessage,
+					author : 'agent',
+					deployer : 'VSTS',
+					details : 'https://abc.visualstudio.com/MyFirstProject/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?releaseId=1&_a=release-summary'
+				});
+				expectedRequestBody = 'kudu log requestBody is:' + expectedRequestBody;
+				assert(tr.stdout.indexOf(expectedRequestBody) >= 0, 'should have said: ' + expectedRequestBody);
+                done();
+
+            })
+            .fail((err) => {
+                done(err);
+            });
+    });
+	
     it('Runs successfully with parameter file present in package', (done) => {
         
-        setResponseFile('armGoodWithParamFile.json');
+        setResponseFile('armgoodwithparamfile.json');
 
         var tr = new trm.TaskRunner('AzureRmWebAppDeployment');
         tr.setInput('ConnectedServiceName', 'AzureRMSpn');
@@ -190,7 +288,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
 
     it('Runs successfully with parameter file present in package on non-windows', (done) => {
         
-        setResponseFile('armGoodWithParamFileNonWindows.json');
+        setResponseFile('armgoodwithparamfilenonwindows.json');
 
         var tr = new trm.TaskRunner('AzureRmWebAppDeployment');
         tr.setInput('ConnectedServiceName', 'AzureRMSpn');
@@ -219,7 +317,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
 
     it('Runs successfully with parameter file provided by user on windows', (done) => {
         
-        setResponseFile('armGoodWithParamFile.json');
+        setResponseFile('armgoodwithparamfile.json');
 
         var tr = new trm.TaskRunner('AzureRmWebAppDeployment');
         tr.setInput('ConnectedServiceName', 'AzureRMSpn');
@@ -246,7 +344,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
     
     it('Fails if parameters file provided by user is not present', (done) => {
         
-        setResponseFile('armGoodWithParamFile.json');
+        setResponseFile('armgoodwithparamfile.json');
 
         var tr = new trm.TaskRunner('AzureRmWebAppDeployment');
         tr.setInput('ConnectedServiceName', 'AzureRMSpn');
@@ -273,7 +371,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
     
     it('Fails if more than one package matched with specified pattern', (done) => {
         
-        setResponseFile('armGood.json');
+        setResponseFile('armgood.json');
 
         var tr = new trm.TaskRunner('AzureRmWebAppDeployment');
         tr.setInput('ConnectedServiceName', 'AzureRMSpn');
@@ -283,14 +381,12 @@ describe('AzureRmWebAppDeployment Suite', function() {
         
         tr.run()
             .then(() => {
-
                 assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
                 var expectedErr = 'More than one package matched with specified pattern. Please restrain the search patern.'; 
                 assert(tr.stdErrContained(expectedErr), 'should have said: ' + expectedErr); 
                 assert(tr.failed, 'task should have failed');
                 done();
-
             })
             .fail((err) => {
                 done(err);
@@ -300,7 +396,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
     
     it('Fails if package or folder name is invalid', (done) => {
         
-        setResponseFile('armGood.json');
+        setResponseFile('armgood.json');
 
         var tr = new trm.TaskRunner('AzureRmWebAppDeployment');
         tr.setInput('ConnectedServiceName', 'AzureRMSpn');
@@ -326,7 +422,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
 
     it('Runs successfully with Folder Deployment', (done) => {
         
-        setResponseFile('armGood.json');
+        setResponseFile('armgood.json');
 
         var tr = new trm.TaskRunner('AzureRmWebAppDeployment');
         tr.setInput('ConnectedServiceName', 'AzureRMSpn');
@@ -350,7 +446,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
 
     it('Runs KuduDeploy successfully with default inputs on non-windows agent', (done) => {
         
-        setResponseFile('armGoodNonWindows.json');
+        setResponseFile('armgoodnonwindows.json');
 
         var tr = new trm.TaskRunner('AzureRmWebAppDeployment');
         tr.setInput('ConnectedServiceName', 'AzureRMSpn');
@@ -378,7 +474,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
 
     it('Runs KuduDeploy successfully with folder archiving on non-windows agent', (done) => {
         
-        setResponseFile('armGoodNonWindows.json');
+        setResponseFile('armgoodnonwindows.json');
 
         var tr = new trm.TaskRunner('AzureRmWebAppDeployment');
         tr.setInput('ConnectedServiceName', 'AzureRMSpn');
@@ -407,14 +503,14 @@ describe('AzureRmWebAppDeployment Suite', function() {
     });
     it('Fails KuduDeploy if parameter file is present in package', (done) => {
 
-        setResponseFile('armGoodNonWindows.json');
+        setResponseFile('armgoodnonwindows.json');
 
         var tr = new trm.TaskRunner('AzureRmWebAppDeployment');
         tr.setInput('ConnectedServiceName', 'AzureRMSpn');
         tr.setInput('WebAppName', 'mytestapp');
         tr.setInput('Package', 'webAppPkg.zip');
         tr.setInput('UseWebDeploy', 'false');
-        shell.cp("-f", path.join (testSrcPath,'kuduUtilityBad.js'), path.join (__dirname, '..', '..', 'Temp', 'AzureRmWebAppDeployment', 'kuduUtility.js'));
+        shell.cp("-f", path.join (testSrcPath,'kuduutilitybad.js'), path.join (__dirname, '..', '..', 'Temp', 'AzureRmWebAppDeployment', 'kuduutility.js'));
         tr.run()
             .then(() => {
 
@@ -434,7 +530,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
     });
     it('Fails KuduDeploy if folder archiving fails', (done) => {
            
-        setResponseFile('armGoodNonWindows.json');
+        setResponseFile('armgoodnonwindows.json');
 
         var tr = new trm.TaskRunner('AzureRmWebAppDeployment');
         tr.setInput('ConnectedServiceName', 'AzureRMSpn');
@@ -442,7 +538,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         tr.setInput('Package', 'webAppPkg');
         tr.setInput('UseWebDeploy', 'false');
 
-        shell.cp("-f", path.join (testSrcPath,'kuduUtilityBad.js'), path.join (__dirname, '..', '..', 'Temp', 'AzureRmWebAppDeployment', 'kuduUtility.js'));
+        shell.cp("-f", path.join (testSrcPath,'kuduutilitybad.js'), path.join (__dirname, '..', '..', 'Temp', 'AzureRmWebAppDeployment', 'kuduutility.js'));
         tr.run()
             .then(() => {
 
