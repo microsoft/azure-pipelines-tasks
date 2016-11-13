@@ -1,7 +1,6 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-<<<<<<< HEAD
 /// <reference path="../../definitions/node.d.ts"/>
 /// <reference path="../../definitions/vsts-task-lib.d.ts" />
 /// <reference path="../../definitions/shelljs.d.ts"/>
@@ -10,13 +9,6 @@ var tl = require('vsts-task-lib/task');
 var fs = require('fs');
 var path = require('path');
 var shell = require('shelljs');
-=======
-import tl = require('vsts-task-lib/task');
-import fs = require('fs');
-import path = require('path');
-import shell = require('shelljs');
-import Q = require('q');
->>>>>>> upstream/master
 
 // node js modules
 var request = require('request');
@@ -240,9 +232,9 @@ if (token) {
         } else if (httpResponse.statusCode != 200) {
             failReturnCode(httpResponse, 'crumb request failed.');
         } else {
-            crumb = body;
+            crumb = body.replace('Jenkins-Crumb:','');
             console.log('crumb created:' + crumb);
-            request.post({ url: jobQueueUrl + '&' + crumb }, function (err, httpResponse, body) {
+            request.post({ url: jobQueueUrl, headers:{'.crumb':crumb } }, function (err, httpResponse, body) {
                 if (err) {
                     tl.setResult(tl.TaskResult.Failed, err);
                 } else if (httpResponse.statusCode != 201) {
