@@ -11,13 +11,14 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
+        "Major": 2,
         "Minor": 0,
-        "Patch": 79
+        "Patch": 1
     },
     "demands": [
         "vstest"
-    ],
+    ],	
+	"preview": "true",
     "minimumAgentVersion": "1.89.0",
     "groups": [
         {
@@ -216,7 +217,7 @@
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)",
             "platforms": [
-                "windows"
+                "windows1"
             ]
         },
         "Node": {
