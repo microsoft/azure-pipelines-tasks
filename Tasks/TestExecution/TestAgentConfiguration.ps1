@@ -1,149 +1,4 @@
-﻿function Get-TestAgentType([string] $Version)
-{
-	$Version = Get-TestAgentVersion
-	$testAgentPath = "HKLM:\SOFTWARE\Microsoft\VisualStudio\{0}\EnterpriseTools\QualityTools\Agent" -f $Version
-	
-	if (-not (Test-Path $testAgentPath))
-	{
-		$testAgentPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\{0}\EnterpriseTools\QualityTools\Agent" -f $Version
-	}
-	
-	if (-not (Test-Path $testAgentPath))
-	{
-		return $null
-	}
-	
-	$testAgentServiceConfig = (Get-ItemProperty $testAgentPath -ErrorAction SilentlyContinue).AgentRunMode
-	if (($testAgentServiceConfig -eq $null) -or ($testAgentServiceConfig.Length -eq 0))
-    {
-		return $null
-	}
-	return $testAgentServiceConfig
-}
-
-
-function Get-TestAgentVersion()
-{
-	#Find the latest version
-	$regPath = "HKLM:\SOFTWARE\Microsoft\DevDiv\vstf\Servicing"
-	if (-not (Test-Path $regPath))
-	{
-		$regPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\DevDiv\vstf\Servicing"
-	}
-	$keys = Get-ChildItem $regPath | Where-Object {$_.GetSubKeyNames() -contains "testagentcore"}
-	$Version = Get-SubKeysInFloatFormat $keys | Sort-Object -Descending | Select-Object -First 1
-
-	if ([string]::IsNullOrWhiteSpace($Version))
-	{
-		return $null
-	}
-	return $Version
-}
-
-function Get-TestAgentVersionAndVsRoot([string] $Version)
-{
-    if ([string]::IsNullOrWhiteSpace($Version))
-    {
-        $Version = Get-TestAgentVersion
-    }
-
-    # Lookup the install location
-    $installRegPath = ("SOFTWARE\Microsoft\VisualStudio\{0}\EnterpriseTools\QualityTools" -f $Version)
-
-    $installRoot = Get-RegistryValueIgnoreError CurrentUser "$installRegPath" "InstallDir" Registry32
-    if (-not $installRoot)
-    {
-        $installRoot = Get-RegistryValueIgnoreError CurrentUser "$installRegPath" "InstallDir" Registry64
-    }
-
-    if (-not $installRoot)
-    {
-        $installRoot = Get-RegistryValueIgnoreError LocalMachine "$installRegPath" "InstallDir" Registry32
-        if (-not $installRoot)
-        {
-            $installRoot = Get-RegistryValueIgnoreError LocalMachine "$installRegPath" "InstallDir" Registry64
-        }
-    }
-
-    if (-not $installRoot)
-    {
-        # We still got nothing
-        throw "Unable to find TestAgent installation path"
-    }
-    return $installRoot
-}
-
-function Get-SubKeysInFloatFormat($keys)
-{
-    $targetKeys = @()      # New array
-    foreach ($key in $keys)
-    {
-      $targetKeys += [decimal] $key.PSChildName
-    }
-
-    return $targetKeys
-}
-
-function DeleteDTAAgentExecutionService([String] $ServiceName)
-{
-    if(Get-Service $ServiceName -ErrorAction SilentlyContinue)
-    {
-        $service = (Get-WmiObject Win32_Service -filter "name='$ServiceName'")
-        Write-Verbose -Message("Trying to delete service {0}" -f $ServiceName) -Verbose
-        if($service)
-        {
-            $service.StopService()
-            $deleteServiceCode = $service.Delete()
-            if($deleteServiceCode -eq 0)
-            {
-                Write-Verbose -Message ("Deleting service {0} failed with Error code {1}" -f $ServiceName, $deleteServiceCode) -Verbose
-            }
-        }
-    }
-    else
-    {
-        Write-Verbose -Message("{0} is not present on the machine" -f $ServiceName) -Verbose
-    }
-}
-
-function Get-RegistryValueIgnoreError
-{
-    param
-    (
-        [parameter(Mandatory = $true)]
-        [Microsoft.Win32.RegistryHive]
-        $RegistryHive,
-
-        [parameter(Mandatory = $true)]
-        [System.String]
-        $Key,
-
-        [parameter(Mandatory = $true)]
-        [System.String]
-        $Value,
-
-        [parameter(Mandatory = $true)]
-        [Microsoft.Win32.RegistryView]
-        $RegistryView
-    )
-
-    try
-    {
-        $baseKey = [Microsoft.Win32.RegistryKey]::OpenBaseKey($RegistryHive, $RegistryView)
-        $subKey =  $baseKey.OpenSubKey($Key)
-        if($subKey -ne $null)
-        {
-            return $subKey.GetValue($Value)
-        }
-    }
-    catch
-    {
-        #ignore
-    }
-    return $null
-}
-
-function Set-TestAgentConfiguration
+﻿function Set-TestAgentConfiguration
 {
     param
     (
@@ -282,6 +137,28 @@ function Set-TestAgentConfiguration
     return 0
 }
 
+function DeleteDTAAgentExecutionService([String] $ServiceName)
+{
+    if(Get-Service $ServiceName -ErrorAction SilentlyContinue)
+    {
+        $service = (Get-WmiObject Win32_Service -filter "name='$ServiceName'")
+        Write-Verbose -Message("Trying to delete service {0}" -f $ServiceName) -Verbose
+        if($service)
+        {
+            $service.StopService()
+            $deleteServiceCode = $service.Delete()
+            if($deleteServiceCode -eq 0)
+            {
+                Write-Verbose -Message ("Deleting service {0} failed with Error code {1}" -f $ServiceName, $deleteServiceCode) -Verbose
+            }
+        }
+    }
+    else
+    {
+        Write-Verbose -Message("{0} is not present on the machine" -f $ServiceName) -Verbose
+    }
+}
+
 function IsAnySessionActive()
 {
     $wtssig = @'
@@ -411,125 +288,6 @@ function IsDtaExecutionHostRunning
     return $false
 }
 
-function LoadDependentDlls
-{
-    param
-    (
-        [string] $TestAgentVersion
-    )
-
-    $vsRoot = Get-TestAgentVersionAndVsRoot $TestAgentVersion
-    $assemblylist =
-            (Join-Path -Path $vsRoot  -ChildPath "TestAgent\Microsoft.TeamFoundation.Client.dll").ToString(),
-            (Join-Path -Path $vsRoot  -ChildPath "TestAgent\Microsoft.TeamFoundation.Common.dll").ToString(),
-            (Join-Path -Path $vsRoot  -ChildPath "TestAgent\Microsoft.VisualStudio.Services.Common.dll").ToString(),
-            (Join-Path -Path $vsRoot  -ChildPath "PrivateAssemblies\Microsoft.VisualStudio.TestService.Common.dll").ToString()
-
-    foreach ($asm in $assemblylist)
-    {
-            [Reflection.Assembly]::LoadFrom($asm)
-    }
-}
-
-function ReadCredentials
-{
-    param
-    (
-        [String] $TFSCollectionUrl,
-        [String] $TestAgentVersion
-    )
-
-    LoadDependentDlls($TestAgentVersion) | Out-Null
-    $creds = [Microsoft.VisualStudio.TestService.Common.CredentialStoreHelper]::GetStoredCredential($TFSCollectionUrl)
-
-    return $creds
-}
-
-function EnableDtaTracing
-{
-    param
-    (
-        [Parameter(Mandatory=$true)]
-        [String] $TestAgentVersion
-    )
-
-    $configFilePath = Get-TestAgentVersionAndVsRoot $TestAgentVersion
-    if ([string]::IsNullOrWhiteSpace($configFilePath))
-    {
-        if ($env:processor_architecture -eq "amd64")
-        {
-            $programFilesPath =  ${env:ProgramFiles(x86)}
-        }
-        else
-        {
-            $programFilesPath = ${env:ProgramFiles}
-        }
-        $configFilePath = Join-Path "$programFilesPath" -ChildPath "Microsoft Visual Studio $TestAgentVersion" | Join-Path -ChildPath "Common7" | Join-Path -ChildPath "Ide"
-    }    
-
-    $logFilePath = Join-Path "$env:SystemDrive" "DtaLogs"
-    $dtaExecutable = "DTAExecutionHost"
-    $dtaExecutableLogFilePath = Join-Path $logFilePath "$dtaExecutable.exe.log"
-    $traceLevel = 4
-
-    # Add listener and modify trace level
-    $file = Join-Path "$configFilePath" "$dtaExecutable.exe.config"
-    Write-Verbose -Message ("Trying to open the config file : {0}" -f $file) -Verbose
-
-    [xml]$configFile = Get-Content -Path $file
-
-    # Get XML Document Object from String
-    [xml]$listenerToAdd = '
-            <listeners>
-            <add name="autoListener"
-                type="System.Diagnostics.TextWriterTraceListener"
-                initializeData="{0}" />
-            </listeners>' -f $dtaExecutableLogFilePath
-
-    $exists = $false
-
-    if($configFile.SelectSingleNode("configuration/system.diagnostics/trace/listeners"))
-    {
-        # Get the target config node and the node which is to migrate if there is already a listeners node
-        $configTarget = $configFile.selectSingleNode("configuration/system.diagnostics/trace/listeners")
-        $newTraces = $listenerToAdd.selectSingleNode("listeners/add")
-
-        foreach ($node in $configTarget.selectNodes("add"))
-        {
-            if(($node.type -eq $newTraces.type) -and ($node.initializeData -eq $newTraces.initializeData))
-            {
-                $exists = $true
-                break
-            }
-        }
-    }
-    else
-    {
-        # Get the target config node and the node which is to migrate if there is no listeners node
-        $configTarget = $configFile.selectSingleNode("configuration/system.diagnostics/trace")
-        $newTraces = $listenerToAdd.selectSingleNode("listeners")
-    }
-
-    if (-not $exists)
-    {
-        $configTarget.appendChild($configFile.ImportNode($newTraces,$true))
-    }
-
-    # Update trace level
-    Write-Verbose -Message ("Changing trace level...") -Verbose
-    $configFile.selectSingleNode("configuration/system.diagnostics/switches/add") | foreach { if ($_.name -eq 'TestAgentTraceLevel') { $_.value = "$traceLevel" } }
-    $configFile.Save("$file")
-
-    # Create folder for DTA Execution host logs
-    if (-not (test-path -Path $logFilePath))
-    {
-        Write-Verbose -Message ("Creating log directory as it does not exist") -Verbose
-        New-Item -Path $logFilePath -ItemType directory
-    }
-
-    Write-Verbose -Message ("Logs will now be stored at : {0}" -f $logFilePath) -Verbose
-}
-
 function InvokeDTAExecHostExe([string] $Version)
 {
     $ExeName = "DTAExecutionHost.exe"
@@ -582,13 +340,7 @@ function InvokeTestAgentConfigExe([string[]] $Arguments, [string] $Version)
         throw "You need to be an Administrator to run this tool."
     }
 
-    $vsRoot = Get-TestAgentVersionAndVsRoot $Version
-    if ([string]::IsNullOrWhiteSpace($vsRoot))
-    {
-        throw "Could not locate TestAgent installation directory for `$Version=$Version. Ensure that TestAgent is installed."
-    }
-
-    $exePath = Join-Path -Path $vsRoot -ChildPath $ExeName
+    $exePath = $PSScriptRoot + "\modules\" + $ExeName
     if (Test-Path $exePath)
     {
         $pinfo = New-Object System.Diagnostics.ProcessStartInfo
@@ -637,8 +389,6 @@ function ConfigureTestAgent
         [ValidateSet("Service", "Process")]
         [String] $AsServiceOrProcess
     )
-
-    EnableDtaTracing -TestAgentVersion $TestAgentVersion | Out-Null
 
     # Admin Credential for installing test agent
     $MachineCredential = New-Object System.Management.Automation.PSCredential -ArgumentList $AdminUserName, (ConvertTo-SecureString -String $AdminPassword -AsPlainText -Force)

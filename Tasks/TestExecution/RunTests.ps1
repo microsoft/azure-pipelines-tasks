@@ -52,12 +52,12 @@ try {
     # Import the helpers.
     . $PSScriptRoot\DownloadTestPlatform.ps1
     . $PSScriptRoot\TestAgentConfiguration.ps1
-    Import-Module "$PSScriptRoot\modules\Microsoft.TeamFoundation.DistributedTask.Task.TestExecution.dll"
+    Import-Module "$PSScriptRoot\modules\TFS.Modules\Microsoft.TeamFoundation.DistributedTask.Task.TestExecution.dll"
 
     # Fix Assembly Redirections
     # VSTS uses Newton Json 8.0 while the System.Net.Http uses 6.0
     # Redirection to Newton Json 8.0
-    $jsonAssembly = [reflection.assembly]::LoadFrom($PSScriptRoot + "\modules\Newtonsoft.Json.dll") 
+    $jsonAssembly = [reflection.assembly]::LoadFrom($PSScriptRoot + "\modules\TFS.Modules\Newtonsoft.Json.dll") 
     $onAssemblyResolve = [System.ResolveEventHandler] {
         param($sender, $e)
         if ($e.Name -eq "Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed") { return $jsonAssembly }
@@ -99,7 +99,7 @@ try {
     # Get testrun agaisnt Environment -> if it's already completed -> quit //Improvement
 
     # Downlaod and Configure Test platform
-    DownloadTestPlatform -ProductVersion "14.0"
+    # DownloadTestPlatform -ProductVersion "14.0"
     $asServiceOrProcess = if($runUITests -ieq "false") {"Service"} else {"Process"}
     # Trim out spaces from username.
     $returnCode = ConfigureTestAgent -AdminUserName ($adminUserName.Trim()) -AdminPassword $adminPassword -TestUserName ($testUserName.Trim()) -TestUserPassword $testUserPassword -TfsCollection $tfsCollectionUrl -EnvironmentUrl $environmentUri -PersonalAccessToken $personalAccessToken -AsServiceOrProcess $asServiceOrProcess
