@@ -105,7 +105,7 @@
         },
         {
             "name": "csmFileLink",
-            "type": "filePath",
+            "type": "string",
             "label": "Template Link",
             "defaultValue": "",
             "required": true,
@@ -114,7 +114,7 @@
         },
         {
             "name": "csmParametersFileLink",
-            "type": "filePath",
+            "type": "string",
             "label": "Template Parameters Link",
             "defaultValue": "",
             "required": false,
@@ -194,7 +194,7 @@
     "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
     "execution": {
         "Node": {
-            "target": "DeployAzureRG.js"
+            "target": "main.js"
         }
     },
     "messages": {
