@@ -169,7 +169,7 @@ export class RegisterEnvironment {
                 }
             }
         }
-        return port;      
+        return port.toString();      
     }
 
     private getFQDN(networkId) {
