@@ -34,11 +34,14 @@ export class AzureRGTaskParameters {
             this.resourceGroupName = tl.getInput("resourceGroupName", true);
             this.action = tl.getInput("action");
             this.location = tl.getInput("location");
-            this.csmFile = tl.getPathInput("csmFile");
-            this.csmParametersFile = tl.getPathInput("csmParametersFile");
-            this.csmFileLink = tl.getInput("csmFileLink");
-            this.csmParametersFileLink = tl.getInput("csmParametersFileLink");
             this.templateLocation = tl.getInput("templateLocation");
+            if (this.templateLocation === "Linked Artifact") {
+                this.csmFile = tl.getPathInput("csmFile");
+                this.csmParametersFile = tl.getPathInput("csmParametersFile");
+            } else {
+                this.csmFileLink = tl.getInput("csmFileLink");
+                this.csmParametersFileLink = tl.getInput("csmParametersFileLink");
+            }
             this.overrideParameters = tl.getInput("overrideParameters");
             this.enableDeploymentPrerequisites = tl.getBoolInput("enableDeploymentPrerequisites");
             this.outputVariable = tl.getInput("outputVariable");

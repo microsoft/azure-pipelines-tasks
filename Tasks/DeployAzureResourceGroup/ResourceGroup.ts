@@ -1,11 +1,15 @@
 /// <reference path="../../definitions/node.d.ts" /> 
 /// <reference path="../../definitions/vsts-task-lib.d.ts" /> 
- /// <reference path="../../definitions/Q.d.ts" />
+/// <reference path="../../definitions/Q.d.ts" />
+/// <reference path="../../definitions/vso-node-api.d.ts" /> 
+
 import path = require("path");
 import tl = require("vsts-task-lib/task");
 import fs = require("fs");
 import util = require("util");
 import q = require("q");
+import httpClient = require('vso-node-api/HttpClient');
+var httpObj = new httpClient.HttpClient("VSTS_AGENT");
 
 import env = require("./Environment");
 import deployAzureRG = require("./DeployAzureRG");
@@ -13,7 +17,6 @@ import winRM = require("./WinRMHttpsListener");
 
 var parameterParse = require("./parameterParse").parse;
 var armResource = require("azure-arm-resource");
-var request = require("sync-request");
 
 class Deployment {
     public properties: Object;
@@ -46,6 +49,9 @@ export class ResourceGroup {
     } 
 
     private updateOverrideParameters(params) {
+        if (!this.taskParameters.overrideParameters || !this.taskParameters.overrideParameters.trim()) {
+            return params;
+        }
         var override = parameterParse(this.taskParameters.overrideParameters);
         for (var key in override) {
             params[key] = override[key];
@@ -53,18 +59,18 @@ export class ResourceGroup {
         return params;
     }
     
-    public createOrUpdateRG() {
+    public  createOrUpdateRG() {
         var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
-        armClient.resourceGroups.checkExistence(this.taskParameters.resourceGroupName, (error, exists, request, response) => {
+        armClient.resourceGroups.checkExistence(this.taskParameters.resourceGroupName,  (error, exists, request, response) => {
             if (error) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ResourceGroupStatusFetchFailed", error));
                 process.exit();
             }
             if (exists) {
-                this.createTemplateDeployment(armClient);
+                 this.createTemplateDeployment(armClient);
             } else {
                 this.createRG(armClient).then((Succeeded) => {
-                    this.createTemplateDeployment(armClient);
+                     this.createTemplateDeployment(armClient);
                 });
             }
         });
@@ -84,29 +90,44 @@ export class ResourceGroup {
         return deferred.promise;
     }
     
-    private getDeploymentDataForExternalLinks() {
+    private parseParameters(contents) {
+        var params;
+        try { 
+            params = JSON.parse(contents).parameters;
+        } catch(error) {
+            tl.setResult(tl.TaskResult.Failed, tl.loc("ParametersFileParsingFailed", error.message));
+            process.exit();
+        }
+        return params;
+    }
+
+    private request(url): q.Promise<string> {
+        var deferred = q.defer<string>();
+        httpObj.get("GET", url, null, (error, result, contents) => {
+            if (error) {
+                tl.setResult(tl.TaskResult.Failed, tl.loc("URLFetchFailed", error));
+                process.exit();
+            }
+            deferred.resolve(contents);
+        })
+        return deferred.promise;
+    }
+
+    private createDeployment(contents) {
         var properties = {}
         properties["templateLink"] = {"uri" : this.taskParameters.csmFileLink};
         if (this.taskParameters.csmParametersFileLink && this.taskParameters.csmParametersFileLink.trim()!="" && this.taskParameters.overrideParameters.trim()=="")
             properties["parametersLink"] = {"uri" : this.taskParameters.csmParametersFileLink };
         else {
-            var params = {};
-            if (this.taskParameters.csmParametersFileLink && this.taskParameters.csmParametersFileLink.trim()) {
-                var response = request("GET", this.taskParameters.csmParametersFileLink);
-                try { 
-                    params = JSON.parse(response.body).parameters;
-                } catch(error) {
-                    tl.setResult(tl.TaskResult.Failed, "Make sure the end point is a JSON");
-                    process.exit();
-                }
-            }
-            params = this.updateOverrideParameters(params);
+            var params = contents;
             properties["parameters"] = params;
+            properties["mode"] = this.taskParameters.deploymentMode;
+            properties["debugSetting"] = {"detailLevel": "requestContent, responseContent"};
+            params = this.updateOverrideParameters(params);
         }
-        properties["mode"] = this.taskParameters.deploymentMode;
-        properties["debugSetting"] = {"detailLevel": "requestContent, responseContent"};
-        return new Deployment(properties, this.taskParameters.location);
+        return new Deployment(properties, this.taskParameters.location)
     }
+
 
     private getDeploymentDataForLinkedArtifact() {
         var template;
@@ -121,31 +142,19 @@ export class ResourceGroup {
         try {
             if (this.taskParameters.csmParametersFile && this.taskParameters.csmParametersFile.trim()) {
                 var parameterFile = JSON.parse(fs.readFileSync(this.taskParameters.csmParametersFile, 'UTF-8'));
-                parameters = parameterFile.parameters;
+                parameters = this.parseParameters(parameterFile);
             }
-            if (this.taskParameters.overrideParameters)
-                parameters = this.updateOverrideParameters(parameters);
+            parameters = this.updateOverrideParameters(parameters);
         }
         catch (error) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("ParametersFileParsingFailed", error.message));
             process.exit();
         }
-        var properties = {}
-        properties["template"] = template;
-        properties["parameters"] = parameters;
-        properties["mode"] = this.taskParameters.deploymentMode;
-        properties["debugSetting"] = {"detailLevel": "requestContent, responseContent"};
-        return new Deployment(properties, this.taskParameters.location);
+        return this.createDeployment(parameters);
     }
 
-    private createTemplateDeployment(armClient) {
-        var deployment;
-        if (this.taskParameters.templateLocation === "Linked Artifact") {
-            deployment = this.getDeploymentDataForLinkedArtifact();
-        }  else {
-            deployment = this.getDeploymentDataForExternalLinks();
-        }
-        armClient.deployments.createOrUpdate(this.taskParameters.resourceGroupName, this.createDeploymentName(this.taskParameters.csmFile), deployment, null, (error, result, request, response) => {
+    private startDeployment(armClient, deployment) {
+         armClient.deployments.createOrUpdate(this.taskParameters.resourceGroupName, this.createDeploymentName(this.taskParameters.csmFile), deployment, null, (error, result, request, response) => {
             if (error) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("RGO_createTemplateDeploymentFailed", error.message));
                 process.exit();
@@ -164,6 +173,24 @@ export class ResourceGroup {
             }
             tl.setResult(tl.TaskResult.Succeeded, tl.loc("RGO_createTemplateDeploymentSucceeded", this.taskParameters.resourceGroupName));
         });
+    }
+
+    private createTemplateDeployment(armClient) {
+        if (this.taskParameters.templateLocation === "Linked Artifact") {
+            var deployment = this.getDeploymentDataForLinkedArtifact();
+            this.startDeployment(armClient, deployment);
+        } else {
+            if (this.taskParameters.csmParametersFileLink && this.taskParameters.csmParametersFileLink.trim() && !this.taskParameters.overrideParameters && !this.taskParameters.overrideParameters.trim()) {
+                var deployment = this.createDeployment({});
+                this.startDeployment(armClient, this.taskParameters.location)
+            } else {
+                this.request(this.taskParameters.csmParametersFileLink).then((contents) => {
+                    var parameters = JSON.parse(contents).parameters;
+                    var deployment = this.createDeployment(parameters);
+                    this.startDeployment(armClient, this.taskParameters.location);
+                });
+            }
+        }
     }
 
     public deleteResourceGroup() {

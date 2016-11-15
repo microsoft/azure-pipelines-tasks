@@ -17,23 +17,27 @@ var taskParameters = new deployAzureRG.AzureRGTaskParameters();
 var resourceGroupOperationsController = new resourceGroup.ResourceGroup(taskParameters);
 var virtualMachineOperationsController = new virtualMachine.VirtualMachine(taskParameters);
 
-switch (taskParameters.action) {
-        case "Create Or Update Resource Group": 
-            resourceGroupOperationsController.createOrUpdateRG();
-            break;
-        case "DeleteRG":
-            resourceGroupOperationsController.deleteResourceGroup();
-            break;
-        case "Select Resource Group":
-            resourceGroupOperationsController.selectResourceGroup();
-            break;
-        case "Start":
-        case "Stop":
-        case "Restart":
-        case "Delete":
-            virtualMachineOperationsController.execute();
-            break;
-        default:
-            tl.setResult(tl.TaskResult.Succeeded, tl.loc("InvalidAction"));
-            process.exit();
+function run () {
+    switch (taskParameters.action) {
+            case "Create Or Update Resource Group": 
+                resourceGroupOperationsController.createOrUpdateRG();
+                break;
+            case "DeleteRG":
+                resourceGroupOperationsController.deleteResourceGroup();
+                break;
+            case "Select Resource Group":
+                resourceGroupOperationsController.selectResourceGroup();
+                break;
+            case "Start":
+            case "Stop":
+            case "Restart":
+            case "Delete":
+                virtualMachineOperationsController.execute();
+                break;
+            default:
+                tl.setResult(tl.TaskResult.Succeeded, tl.loc("InvalidAction"));
+                process.exit();
+    }
 }
+
+run();
