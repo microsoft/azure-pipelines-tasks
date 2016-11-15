@@ -91,10 +91,10 @@
             "name": "testResultsFiles",
             "type": "filePath",
             "label": "Test Results Files",
-            "defaultValue": "**/TEST-*.xml",
+            "defaultValue": "**/test-*.xml",
             "required": true,
             "groupName": "junitTestResults",
-            "helpMarkDown": "Test results files path. Wildcards can be used. For example, `**/TEST-*.xml` for all XML files whose name starts with TEST-.",
+            "helpMarkDown": "Test results files path. Wildcards can be used. For example, `**/test-*.xml` for all XML files whose name starts with test-. (case sensitive match)",
             "visibleRule": "publishJUnitResults = true"
         },
         {

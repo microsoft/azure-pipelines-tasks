@@ -19,7 +19,7 @@
   "loc.input.label.publishJUnitResults": "Publier sur TFS/Team Services",
   "loc.input.help.publishJUnitResults": "Sélectionnez cette option pour publier les résultats des tests JUnit produits par la build Grunt sur TFS/Team Services.",
   "loc.input.label.testResultsFiles": "Test Results Files",
-  "loc.input.help.testResultsFiles": "Chemin des fichiers de résultats des tests. Les caractères génériques sont autorisés. Par exemple, '**/TEST-*.xml' correspond à tous les fichiers XML dont le nom commence par TEST-.",
+  "loc.input.help.testResultsFiles": "Chemin des fichiers de résultats des tests. Les caractères génériques sont autorisés. Par exemple, '**/test-*.xml' correspond à tous les fichiers XML dont le nom commence par test-.",
   "loc.input.label.testRunTitle": "Test Run Title",
   "loc.input.help.testRunTitle": "Indiquez le nom de la série de tests.",
   "loc.input.label.enableCodeCoverage": "Activer la couverture du code",

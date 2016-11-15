@@ -91,7 +91,7 @@
       "name": "testResultsFiles",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.testResultsFiles",
-      "defaultValue": "**/TEST-*.xml",
+      "defaultValue": "**/test-*.xml",
       "required": true,
       "groupName": "junitTestResults",
       "helpMarkDown": "ms-resource:loc.input.help.testResultsFiles",
