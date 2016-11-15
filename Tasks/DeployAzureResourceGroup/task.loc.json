@@ -11,14 +11,14 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
+    "Major": 2,
     "Minor": 0,
-    "Patch": 95
+    "Patch": 0
   },
   "demands": [
-    "azureps"
+    "nodejs"
   ],
-  "minimumAgentVersion": "1.103.0",
+  "minimumAgentVersion": "2.0.0",
   "groups": [
     {
       "name": "output",
@@ -28,34 +28,12 @@
   ],
   "inputs": [
     {
-      "name": "ConnectedServiceNameSelector",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.ConnectedServiceNameSelector",
-      "required": false,
-      "helpMarkDown": "",
-      "defaultValue": "ConnectedServiceName",
-      "options": {
-        "ConnectedServiceName": "Azure Resource Manager",
-        "ConnectedServiceNameClassic": "Azure Classic"
-      }
-    },
-    {
       "name": "ConnectedServiceName",
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
-      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
-    },
-    {
-      "name": "ConnectedServiceNameClassic",
-      "type": "connectedService:Azure",
-      "label": "ms-resource:loc.input.label.ConnectedServiceNameClassic",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameClassic",
-      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
       "name": "action",
@@ -72,20 +50,7 @@
         "Restart": "Restart Virtual Machines",
         "Delete": "Delete Virtual Machines",
         "DeleteRG": "Delete Resource Group"
-      },
-      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
-    },
-    {
-      "name": "actionClassic",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.actionClassic",
-      "defaultValue": "Select Resource Group",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.actionClassic",
-      "options": {
-        "Select Resource Group": "Select Cloud Service"
-      },
-      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
+      }
     },
     {
       "name": "resourceGroupName",
@@ -95,19 +60,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.resourceGroupName",
       "properties": {
         "EditableOptions": "True"
-      },
-      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
-    },
-    {
-      "name": "cloudService",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.cloudService",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.cloudService",
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
+      }
     },
     {
       "name": "location",
@@ -120,6 +73,9 @@
         "Australia East": "Australia East",
         "Australia Southeast": "Australia Southeast",
         "Brazil South": "Brazil South",
+        "Canada Central": "Canada Central",
+        "Canada East": "Canada East",
+        "Central India": "Central India",
         "Central US": "Central US",
         "East Asia": "East Asia",
         "East US": "East US",
@@ -129,14 +85,50 @@
         "North Central US": "North Central US",
         "North Europe": "North Europe",
         "South Central US": "South Central US",
+        "South India": "South India",
         "Southeast Asia": "Southeast Asia",
+        "UK South": "UK South",
+        "UK West": "UK West",
+        "West Central US": "West Central US",
         "West Europe": "West Europe",
-        "West US": "West US"
+        "West India": "West India",
+        "West US": "West US",
+        "West US 2": "West US 2"
       },
       "properties": {
         "EditableOptions": "True"
       },
       "visibleRule": "action = Create Or Update Resource Group"
+    },
+    {
+      "name": "templateLocation",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.templateLocation",
+      "required": true,
+      "defaultValue": "Linked Artifact",
+      "options": {
+        "Linked Artifact": "Linked Artifact",
+        "Public URL": "Public URL"
+      },
+      "visibleRule": "action = Create Or Update Resource Group"
+    },
+    {
+      "name": "csmFileLink",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.csmFileLink",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.csmFileLink",
+      "visibleRule": "action = Create Or Update Resource Group && templateLocation = Public URL"
+    },
+    {
+      "name": "csmParametersFileLink",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.csmParametersFileLink",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.csmParametersFileLink",
+      "visibleRule": "action = Create Or Update Resource Group && templateLocation = Public URL"
     },
     {
       "name": "csmFile",
@@ -145,7 +137,7 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.csmFile",
-      "visibleRule": "action = Create Or Update Resource Group"
+      "visibleRule": "action = Create Or Update Resource Group && templateLocation = Linked Artifact"
     },
     {
       "name": "csmParametersFile",
@@ -154,7 +146,7 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.csmParametersFile",
-      "visibleRule": "action = Create Or Update Resource Group"
+      "visibleRule": "action = Create Or Update Resource Group && templateLocation = Linked Artifact"
     },
     {
       "name": "overrideParameters",
@@ -163,6 +155,9 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.overrideParameters",
+      "properties": {
+        "editorExtension": "ms.vss-distributed-task-input-editor.parameters-grid"
+      },
       "visibleRule": "action = Create Or Update Resource Group"
     },
     {
@@ -180,22 +175,13 @@
       "visibleRule": "action = Create Or Update Resource Group"
     },
     {
-      "name": "enableDeploymentPrerequisitesForCreate",
+      "name": "enableDeploymentPrerequisites",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.enableDeploymentPrerequisitesForCreate",
+      "label": "ms-resource:loc.input.label.enableDeploymentPrerequisites",
       "defaultValue": "false",
-      "visibleRule": "action = Create Or Update Resource Group",
+      "visibleRule": "action = Create Or Update Resource Group || action = Select Resource Group",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.enableDeploymentPrerequisitesForCreate"
-    },
-    {
-      "name": "enableDeploymentPrerequisitesForSelect",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.enableDeploymentPrerequisitesForSelect",
-      "defaultValue": "false",
-      "visibleRule": "action = Select Resource Group",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.enableDeploymentPrerequisitesForSelect"
+      "helpMarkDown": "ms-resource:loc.input.help.enableDeploymentPrerequisites"
     },
     {
       "name": "outputVariable",
@@ -209,11 +195,6 @@
   ],
   "dataSourceBindings": [
     {
-      "target": "cloudService",
-      "endpointId": "$(ConnectedServiceNameClassic)",
-      "dataSourceName": "AzureHostedServiceNames"
-    },
-    {
       "target": "resourceGroupName",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureResourceGroups"
@@ -222,49 +203,48 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node": {
-      "target": "DeployAzureRG.js"
+      "target": "main.js"
     }
   },
   "messages": {
-    "ValidatingCredentialsFailure": "ms-resource:loc.messages.ValidatingCredentialsFailure",
-    "RuleExistsAlready": "ms-resource: loc.messages.RuleExistsAlready",
-    "ExtensionAlreadyPresentVm": "ms-resource: loc.messages.ExtensionAlreadyPresentVm",
-    "AddExtension": "ms-resource: loc.messages.AddExtension",
-    "FailedToAddExtension": "ms-resource: loc.messages.FailedToAddExtension",
-    "AddingSecurityRuleNSG": "ms-resource: loc.messages.AddingSecurityRuleNSG",
-    "AddedSecurityRuleNSG": "ms-resource: loc.messages.AddedSecurityRuleNSG",
-    "FailedToAddRuleToNetworkSecurityGroup": "ms-resource: loc.messages.FailedToAddRuleToNetworkSecurityGroup",
-    "FetchingOfNetworkSecurityGroupFailed": "ms-resource: loc.messages.FetchingOfNetworkSecurityGroupFailed",
-    "FailedToAddNetworkSecurityRule": "ms-resource: loc.messages.FailedToAddNetworkSecurityRule",
-    "FailedToEnablePrereqs": "ms-resource: loc.messages.FailedToEnablePrereqs",
-    "FailedToFetchInstanceViewVM": "ms-resource: loc.messages.FailedToFetchInstanceViewVM",
-    "FailedToFetchNetworkInterfaces": "ms-resource: loc.messages.FailedToFetchNetworkInterfaces",
-    "FailedToFetchLoadBalancers": "ms-resource: loc.messages.FailedToFetchLoadBalancers",
-    "FailedToFetchPublicAddresses": "ms-resource: loc.messages.FailedToFetchPublicAddresses",
-    "FailedToFetchVMList": "ms-resource: loc.messages.FailedToFetchVMList",
-    "CreationOfExtensionFailed": "ms-resource: loc.messages.CreationOfExtensionFailed",
-    "FailedToDeleteExtension": "ms-resource: loc.messages.FailedToDeleteExtension",
-    "AddedInboundNatRuleLB": "ms-resource: loc.messages.AddedInboundNatRuleLB",
-    "AddedTargetInboundNatRuleLB": "ms-resource: loc.messages.AddedTargetInboundNatRuleLB",
-    "InboundNatRuleLBPresent": "ms-resource: loc.messages.InboundNatRuleLBPresent",
+    "FailedToAddExtension": "ms-resource:loc.messages.FailedToAddExtension",
+    "AddingSecurityRuleNSG": "ms-resource:loc.messages.AddingSecurityRuleNSG",
+    "AddedSecurityRuleNSG": "ms-resource:loc.messages.AddedSecurityRuleNSG",
+    "FailedToAddRuleToNetworkSecurityGroup": "ms-resource:loc.messages.FailedToAddRuleToNetworkSecurityGroup",
+    "FetchingOfNetworkSecurityGroupFailed": "ms-resource:loc.messages.FetchingOfNetworkSecurityGroupFailed",
+    "FailedAddingNSGRule3Times": "ms-resource:loc.messages.FailedAddingNSGRule3Times",
+    "FailedToAddNetworkSecurityRule": "ms-resource:loc.messages.FailedToAddNetworkSecurityRule",
+    "FailedToFetchNetworkInterfaces": "ms-resource:loc.messages.FailedToFetchNetworkInterfaces",
+    "FailedToFetchLoadBalancers": "ms-resource:loc.messages.FailedToFetchLoadBalancers",
+    "FailedToFetchPublicAddresses": "ms-resource:loc.messages.FailedToFetchPublicAddresses",
+    "FailedToFetchVMList": "ms-resource:loc.messages.FailedToFetchVMList",
+    "FailedToEnablePrereqs": "ms-resource:loc.messages.FailedToEnablePrereqs",
+    "FailedToFetchInstanceViewVM": "ms-resource:loc.messages.FailedToFetchInstanceViewVM",
+    "CreationOfExtensionFailed": "ms-resource:loc.messages.CreationOfExtensionFailed",
+    "FailedToDeleteExtension": "ms-resource:loc.messages.FailedToDeleteExtension",
+    "AddedTargetInboundNatRuleLB": "ms-resource:loc.messages.AddedTargetInboundNatRuleLB",
+    "AddedInboundNatRuleLB": "ms-resource:loc.messages.AddedInboundNatRuleLB",
+    "InboundNatRuleLBPresent": "ms-resource:loc.messages.InboundNatRuleLBPresent",
     "SucceededOnVMOperation": "ms-resource:loc.messages.SucceededOnVMOperation",
     "FailureOnVMOperation": "ms-resource:loc.messages.FailureOnVMOperation",
     "ARGD_ConstructorFailed": "ms-resource:loc.messages.ARGD_ConstructorFailed",
     "VMOperationsInitiationFailed": "ms-resource:loc.messages.VMOperationsInitiationFailed",
     "TemplateParsingFailed": "ms-resource:loc.messages.TemplateParsingFailed",
     "ParametersFileParsingFailed": "ms-resource:loc.messages.ParametersFileParsingFailed",
-    "RGO_createTemplateDeploymentFailed":  "ms-resource:loc.messages.RGO_createTemplateDeploymentFailed",
+    "RGO_createTemplateDeploymentFailed": "ms-resource:loc.messages.RGO_createTemplateDeploymentFailed",
     "RGO_createTemplateDeploymentSucceeded": "ms-resource:loc.messages.RGO_createTemplateDeploymentSucceeded",
-    "RGO_CouldNotDeletedResourceGroup":  "ms-resource:loc.messages.RGO_CouldNotDeletedResourceGroup",
+    "RGO_CouldNotDeletedResourceGroup": "ms-resource:loc.messages.RGO_CouldNotDeletedResourceGroup",
     "RGO_DeletedResourceGroup": "ms-resource:loc.messages.RGO_DeletedResourceGroup",
     "InvalidAction": "ms-resource:loc.messages.InvalidAction",
     "VM_ListFetchFailed": "ms-resource:loc.messages.VM_ListFetchFailed",
     "TaskNotFound": "ms-resource:loc.messages.TaskNotFound",
-    "FailedRegisteringEnvironment": "ms-resource:loc.message.FailedRegisteringEnvironment",
-    "selectResourceGroupSuccessfull":"ms-resource:loc.message.selectResourceGroupSuccessfull",
-    "VM_Start": "ms-resource:loc.message.VM_Start",
-    "VM_Restart": "ms-resource:loc.message.VM_Restart",
-    "VM_Stop": "ms-resource:loc.message.VM_Stop",
-    "VM_Delete": "ms-resource:loc.message.VM_Delete"
+    "FailedRegisteringEnvironment": "ms-resource:loc.messages.FailedRegisteringEnvironment",
+    "selectResourceGroupSuccessfull": "ms-resource:loc.messages.selectResourceGroupSuccessfull",
+    "ValidatingCredentialsFailure": "ms-resource:loc.messages.ValidatingCredentialsFailure",
+    "ARG_DeletingResourceGroup": "ms-resource:loc.messages.ARG_DeletingResourceGroup",
+    "VM_Start": "ms-resource:loc.messages.VM_Start",
+    "VM_Restart": "ms-resource:loc.messages.VM_Restart",
+    "VM_Stop": "ms-resource:loc.messages.VM_Stop",
+    "VM_Delete": "ms-resource:loc.messages.VM_Delete"
   }
 }

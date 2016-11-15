@@ -9,69 +9,32 @@ import q = require("q");
 
 import env = require("./Environment");
 import deployAzureRG = require("./DeployAzureRG");
+import winRM = require("./WinRMHttpsListener");
 
 var parameterParse = require("./parameterParse").parse;
 var armResource = require("azure-arm-resource");
 var request = require("sync-request");
 
+class Deployment {
+    public properties: Object;
+    public location: string;
+
+    constructor(properties: Object, location: string) {
+        this.properties = properties;
+        this.location = location;
+    }
+}
+
 export class ResourceGroup {
 
-    private connectedServiceNameSelector: string;
-    private action: string;
-    private actionClassic: string;
-    private resourceGroupName: string;
-    private location: string;
-    private csmFile: string;
-    private csmParametersFile: string;
-    private templateLocation: string;
-    private csmFileLink: string;
-    private csmParametersFileLink: string;
-    private overrideParameters: string;
-    private subscriptionId: string;
-    private connectedService: string;
-    private deploymentMode: string;
-    private outputVariable: string;
+    private taskParameters: deployAzureRG.AzureRGTaskParameters;
+    private WinRMHttpsListener: winRM.WinRMHttpsListener;
+    private envController: env.RegisterEnvironment;
 
-    private credentials;
-    private networkInterfaces;
-    private publicAddresses;
-    private virtualMachines;
-    
-    constructor(deployRGObj: deployAzureRG.AzureResourceGroupDeployment) {
-            this.connectedService = deployRGObj.connectedService;
-            this.action = deployRGObj.action;
-            this.resourceGroupName = deployRGObj.resourceGroupName;
-            this.location = deployRGObj.location;
-            this.csmFile = deployRGObj.csmFile;
-            this.csmParametersFile = deployRGObj.csmParametersFile;
-            this.overrideParameters = deployRGObj.overrideParameters;
-            this.subscriptionId = deployRGObj.subscriptionId;    
-            this.deploymentMode = deployRGObj.deploymentMode;
-            this.credentials = deployRGObj.credentials;
-            this.outputVariable = deployRGObj.outputVariable;
-            this.csmFileLink = deployRGObj.csmFileLink;
-            this.csmParametersFileLink = deployRGObj.csmParametersFileLink;
-            this.templateLocation = deployRGObj.templateLocation;
-            this.networkInterfaces = null;
-            this.publicAddresses = null;
-            this.virtualMachines = null;
-            this.execute();
-    }
-
-    private execute() {
-        switch(this.action) {
-           case "Create Or Update Resource Group": 
-                this.createOrUpdateRG();
-                break;
-           case "DeleteRG":
-                this.deleteResourceGroup();
-                break;
-           case "Select Resource Group":
-                this.selectResourceGroup();
-                break;
-           default:
-               tl.setResult(tl.TaskResult.Succeeded, tl.loc("InvalidAction"));
-        }
+    constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
+        this.taskParameters = taskParameters;
+        this.WinRMHttpsListener = new winRM.WinRMHttpsListener(this.taskParameters.resourceGroupName, this.taskParameters.credentials, this.taskParameters.subscriptionId);
+        this.envController = new env.RegisterEnvironment(this.taskParameters);
     }
 
     private createDeploymentName(filePath: string): string {
@@ -83,18 +46,19 @@ export class ResourceGroup {
     } 
 
     private updateOverrideParameters(params) {
-        var override = parameterParse(this.overrideParameters);
+        var override = parameterParse(this.taskParameters.overrideParameters);
         for (var key in override) {
             params[key] = override[key];
         }
         return params;
     }
     
-    private createOrUpdateRG() {
-        var armClient = new armResource.ResourceManagementClient(this.credentials, this.subscriptionId);
-        armClient.resourceGroups.checkExistence(this.resourceGroupName, (error, exists, request, response) => {
+    public createOrUpdateRG() {
+        var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
+        armClient.resourceGroups.checkExistence(this.taskParameters.resourceGroupName, (error, exists, request, response) => {
             if (error) {
-                tl.setResult(tl.TaskResult.Failed, tl.loc("ResourceGroupStatusFetchFailed", error))
+                tl.setResult(tl.TaskResult.Failed, tl.loc("ResourceGroupStatusFetchFailed", error));
+                process.exit();
             }
             if (exists) {
                 this.createTemplateDeployment(armClient);
@@ -108,12 +72,12 @@ export class ResourceGroup {
 
     private createRG(armClient): q.Promise<any> {
         var deferred = q.defer<any>();
-        console.log(this.resourceGroupName+" resource Group Not found");
-        console.log("Creating a new Resource Group:"+ this.resourceGroupName);
-        armClient.resourceGroups.createOrUpdate(this.resourceGroupName, {"name": this.resourceGroupName, "location": this.location}, (error, result, request, response) => {
+        console.log(this.taskParameters.resourceGroupName+" resource Group Not found");
+        console.log("Creating a new Resource Group:"+ this.taskParameters.resourceGroupName);
+        armClient.resourceGroups.createOrUpdate(this.taskParameters.resourceGroupName, {"name": this.taskParameters.resourceGroupName, "location": this.taskParameters.location}, (error, result, request, response) => {
             if (error) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ResourceGroupCreationFailed", error));
-                deferred.reject(error);
+                process.exit();
             } 
             deferred.resolve("Succeeded");
         });
@@ -122,104 +86,108 @@ export class ResourceGroup {
     
     private getDeploymentDataForExternalLinks() {
         var properties = {}
-        properties["templateLink"] = {"uri" : this.csmFileLink};
-        if (this.csmParametersFileLink && this.csmParametersFileLink.trim()!="" && this.overrideParameters.trim()=="")
-            properties["parametersLink"] = {"uri" : this.csmParametersFileLink };
+        properties["templateLink"] = {"uri" : this.taskParameters.csmFileLink};
+        if (this.taskParameters.csmParametersFileLink && this.taskParameters.csmParametersFileLink.trim()!="" && this.taskParameters.overrideParameters.trim()=="")
+            properties["parametersLink"] = {"uri" : this.taskParameters.csmParametersFileLink };
         else {
             var params = {};
-            if (this.csmParametersFileLink && this.csmParametersFileLink.trim()) {
-                var response = request("GET", this.csmParametersFileLink);
+            if (this.taskParameters.csmParametersFileLink && this.taskParameters.csmParametersFileLink.trim()) {
+                var response = request("GET", this.taskParameters.csmParametersFileLink);
                 try { 
                     params = JSON.parse(response.body).parameters;
                 } catch(error) {
                     tl.setResult(tl.TaskResult.Failed, "Make sure the end point is a JSON");
+                    process.exit();
                 }
             }
             params = this.updateOverrideParameters(params);
             properties["parameters"] = params;
         }
-        properties["mode"] = this.deploymentMode;
+        properties["mode"] = this.taskParameters.deploymentMode;
         properties["debugSetting"] = {"detailLevel": "requestContent, responseContent"};
-        var deployment = {"properties": properties};
-        deployment["location"] = this.location;
-        return deployment;
+        return new Deployment(properties, this.taskParameters.location);
     }
 
     private getDeploymentDataForLinkedArtifact() {
         var template;
         try { 
-            template = JSON.parse(fs.readFileSync(this.csmFile, 'UTF-8'));
+            template = JSON.parse(fs.readFileSync(this.taskParameters.csmFile, 'UTF-8'));
         }
         catch (error) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("TemplateParsingFailed", error.message));
-            return;
+            process.exit();
         }
         var parameters;
         try {
-            if (this.csmParametersFile && this.csmParametersFile.trim()) {
-                var parameterFile = JSON.parse(fs.readFileSync(this.csmParametersFile, 'UTF-8'));
+            if (this.taskParameters.csmParametersFile && this.taskParameters.csmParametersFile.trim()) {
+                var parameterFile = JSON.parse(fs.readFileSync(this.taskParameters.csmParametersFile, 'UTF-8'));
                 parameters = parameterFile.parameters;
             }
-            if (this.overrideParameters)
+            if (this.taskParameters.overrideParameters)
                 parameters = this.updateOverrideParameters(parameters);
         }
         catch (error) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("ParametersFileParsingFailed", error.message));
-            return;
+            process.exit();
         }
         var properties = {}
         properties["template"] = template;
         properties["parameters"] = parameters;
-        properties["mode"] = this.deploymentMode;
+        properties["mode"] = this.taskParameters.deploymentMode;
         properties["debugSetting"] = {"detailLevel": "requestContent, responseContent"};
-        var deployment = {"properties": properties};
-        deployment["location"] = this.location;
-        return deployment;
+        return new Deployment(properties, this.taskParameters.location);
     }
 
     private createTemplateDeployment(armClient) {
         var deployment;
-        if (this.templateLocation === "Linked Artifact") {
+        if (this.taskParameters.templateLocation === "Linked Artifact") {
             deployment = this.getDeploymentDataForLinkedArtifact();
         }  else {
             deployment = this.getDeploymentDataForExternalLinks();
         }
-        armClient.deployments.createOrUpdate(this.resourceGroupName, this.createDeploymentName(this.csmFile), deployment, null, (error, result, request, response) => {
+        armClient.deployments.createOrUpdate(this.taskParameters.resourceGroupName, this.createDeploymentName(this.taskParameters.csmFile), deployment, null, (error, result, request, response) => {
             if (error) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("RGO_createTemplateDeploymentFailed", error.message));
-                return;
+                process.exit();
             }
+            if (this.taskParameters.enableDeploymentPrerequisites) {
+                this.WinRMHttpsListener.EnableWinRMHttpsListener();
+            }
+
             try {
-                if (this.outputVariable && this.outputVariable.trim() != "")
-                    new env.RegisterEnvironment(this.credentials, this.subscriptionId, this.resourceGroupName, this.outputVariable);
+                if (this.taskParameters.outputVariable && this.taskParameters.outputVariable.trim() != ""){
+                    this.envController.RegisterEnvironment();
+                }
             } catch(error) {            
                 tl.setResult(tl.TaskResult.Failed, tl.loc("FailedRegisteringEnvironment", error));
-                return;
+                process.exit();
             }
-            tl.setResult(tl.TaskResult.Succeeded, tl.loc("RGO_createTemplateDeploymentSucceeded", this.resourceGroupName));
+            tl.setResult(tl.TaskResult.Succeeded, tl.loc("RGO_createTemplateDeploymentSucceeded", this.taskParameters.resourceGroupName));
         });
     }
 
-    private deleteResourceGroup() {
-        var armClient = new armResource.ResourceManagementClient(this.credentials, this.subscriptionId);
-        console.log(tl.loc("ARG_DeletingResourceGroup", this.resourceGroupName));
-        armClient.resourceGroups.deleteMethod(this.resourceGroupName,(error, result, request, response) => {
+    public deleteResourceGroup() {
+        var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
+        console.log(tl.loc("ARG_DeletingResourceGroup", this.taskParameters.resourceGroupName));
+        armClient.resourceGroups.deleteMethod(this.taskParameters.resourceGroupName,(error, result, request, response) => {
             if (error) {
-                tl.setResult(tl.TaskResult.Failed, tl.loc("RGO_CouldNotDeletedResourceGroup", this.resourceGroupName, error.message));
-                return;
+                tl.setResult(tl.TaskResult.Failed, tl.loc("RGO_CouldNotDeletedResourceGroup", this.taskParameters.resourceGroupName, error.message));
+                process.exit();
             }
-            tl.setResult(tl.TaskResult.Succeeded, tl.loc("RGO_DeletedResourceGroup", this.resourceGroupName));
+            tl.setResult(tl.TaskResult.Succeeded, tl.loc("RGO_DeletedResourceGroup", this.taskParameters.resourceGroupName));
         });
     }
     
-    private selectResourceGroup() {
+    public selectResourceGroup() {
+        if (this.taskParameters.enableDeploymentPrerequisites) {
+            this.WinRMHttpsListener.EnableWinRMHttpsListener();
+        }
         try {
-            new env.RegisterEnvironment(this.credentials, this.subscriptionId, this.resourceGroupName, this.outputVariable);
-
+            this.envController.RegisterEnvironment();
         } catch(error) {            
             tl.setResult(tl.TaskResult.Failed, tl.loc("FailedRegisteringEnvironment", error));
-            return;
+            process.exit();
         }
-        tl.setResult(tl.TaskResult.Succeeded, tl.loc("selectResourceGroupSuccessfull", this.resourceGroupName, this.outputVariable))
+        tl.setResult(tl.TaskResult.Succeeded, tl.loc("selectResourceGroupSuccessfull", this.taskParameters.resourceGroupName, this.taskParameters.outputVariable))
     }
 }

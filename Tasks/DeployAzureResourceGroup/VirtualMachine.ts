@@ -6,34 +6,20 @@ import tl = require("vsts-task-lib/task");
 
 var computeManagementClient = require('azure-arm-compute');
 
+import deployAzureRG = require("./DeployAzureRG");
+
 export class VirtualMachine {
-    private action:string;
-    private resourceGroupName:string;
-    private subscriptionId:string;
-    private connectedService:string;
-    private credentials;
-    private operation;
+    private taskParameters: deployAzureRG.AzureRGTaskParameters;
     private client;
     private failureCount:number;
     private successCount:number;
     private vmCount:number;
     private errors:string;
 
-    constructor(resourceGroupName, action, subscriptionID, connectedService, credentials) {
-        try {
-            this.resourceGroupName = resourceGroupName;
-            this.subscriptionId = subscriptionID;
-            this.connectedService = connectedService;
-            this.credentials = credentials;
-            this.client = new computeManagementClient(this.credentials, this.subscriptionId);
-            this.action = action;
-        } catch (error) {
-            tl.setResult(tl.TaskResult.Failed, tl.loc("VMOperationsInitiationFailed", this.action, error.message));
-            return;
-        }
+    constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
+        this.taskParameters = taskParameters;
         this.successCount = 0;
         this.failureCount = 0;
-        this.execute();
     }
 
     private postOperationCallBack = (error, result, request, response) => {
@@ -50,52 +36,53 @@ export class VirtualMachine {
     private setTaskResult() {
         if (this.failureCount + this.successCount == this.vmCount) {
             if(this.failureCount>0) {
-                tl.setResult(tl.TaskResult.Failed,tl.loc("FailureOnVMOperation", this.action, this.errors));
-            } else {
-                tl.setResult(tl.TaskResult.Succeeded,tl.loc("SucceededOnVMOperation", this.action));
-            }
+                tl.setResult(tl.TaskResult.Failed,tl.loc("FailureOnVMOperation", this.taskParameters.action, this.errors));
+                process.exit();
+            } 
+            tl.setResult(tl.TaskResult.Succeeded,tl.loc("SucceededOnVMOperation", this.taskParameters.action));
         }
     }
 
-    private execute() {
-        this.client.virtualMachines.list(this.resourceGroupName, (error, listOfVms, request, response) => {
+    public execute() {
+        var client = new computeManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
+        client.virtualMachines.list(this.taskParameters.resourceGroupName, (error, listOfVms, request, response) => {
             if (error != undefined){
-                tl.setResult(tl.TaskResult.Failed, tl.loc("VM_ListFetchFailed", this.resourceGroupName, error.message));
-                return;
+                tl.setResult(tl.TaskResult.Failed, tl.loc("VM_ListFetchFailed", this.taskParameters.resourceGroupName, error.message));
+                process.exit();
             }
             if (listOfVms.length == 0) {
                 console.log("No VMs found");
-                tl.setResult(tl.TaskResult.Succeeded,tl.loc("SucceededOnVMOperation", this.action));
-                return;
+                tl.setResult(tl.TaskResult.Succeeded,tl.loc("SucceededOnVMOperation", this.taskParameters.action));
+                process.exit();
             }
             this.vmCount = listOfVms.length;
-            switch (this.action) {
+            switch (this.taskParameters.action) {
                 case "Start":
                     for (var i = 0; i < listOfVms.length; i++) {
                         var vmName = listOfVms[i]["name"];
                         console.log(tl.loc("VM_Start", vmName));
-                        this.client.virtualMachines.start(this.resourceGroupName, vmName, this.postOperationCallBack);
+                       client.virtualMachines.start(this.taskParameters.resourceGroupName, vmName, this.postOperationCallBack);
                     }
                     break;
                 case "Stop":
                     for (var i = 0; i < listOfVms.length; i++) {
                         var vmName = listOfVms[i]["name"];
                         console.log(tl.loc("VM_Stop", vmName));
-                        this.client.virtualMachines.powerOff(this.resourceGroupName, vmName, this.postOperationCallBack);
+                        client.virtualMachines.powerOff(this.taskParameters.resourceGroupName, vmName, this.postOperationCallBack);
                     }
                     break;
                 case "Restart":
                     for (var i = 0; i < listOfVms.length; i++) {
                         var vmName = listOfVms[i]["name"];
                         console.log(tl.loc("VM_Restart", vmName));
-                        this.client.virtualMachines.restart(this.resourceGroupName, vmName, this.postOperationCallBack);
+                        client.virtualMachines.restart(this.taskParameters.resourceGroupName, vmName, this.postOperationCallBack);
                     }
                     break;
                 case "Delete":
                     for (var i = 0; i < listOfVms.length; i++) {
                         var vmName = listOfVms[i]["name"];
                         console.log(tl.loc("VM_Delete", vmName));
-                        this.client.virtualMachines.deleteMethod(this.resourceGroupName, vmName, this.postOperationCallBack);
+                        client.virtualMachines.deleteMethod(this.taskParameters.resourceGroupName, vmName, this.postOperationCallBack);
                     }
             }
         });

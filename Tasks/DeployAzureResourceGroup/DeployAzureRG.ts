@@ -1,5 +1,4 @@
 /// <reference path="../../definitions/node.d.ts" /> 
-/// <reference path="../../definitions/Q.d.ts" /> 
 /// <reference path="../../definitions/vsts-task-lib.d.ts" /> 
  
 import tl = require("vsts-task-lib/task");
@@ -8,11 +7,8 @@ import util = require("util");
 
 var msRestAzure = require("ms-rest-azure");
 
-import virtualMachine = require("./VirtualMachine");
-import resourceGroup = require("./ResourceGroup");
-import env = require("./Environment");
 
-export class AzureResourceGroupDeployment {
+export class AzureRGTaskParameters {
 
     public action:string;
     public resourceGroupName:string;
@@ -46,30 +42,11 @@ export class AzureResourceGroupDeployment {
             this.overrideParameters = tl.getInput("overrideParameters");
             this.enableDeploymentPrerequisites = tl.getBoolInput("enableDeploymentPrerequisites");
             this.outputVariable = tl.getInput("outputVariable");
-             
             this.deploymentMode = tl.getInput("deploymentMode");
             this.credentials = this.getARMCredentials();
         }
         catch (error) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("ARGD_ConstructorFailed", error.message));
-        }
-    }
-
-    public execute() {
-        switch (this.action) {
-           case "Create Or Update Resource Group": 
-           case "DeleteRG":
-           case "Select Resource Group":
-                new resourceGroup.ResourceGroup(this);
-                break;
-           case "Start":
-           case "Stop":
-           case "Restart":
-           case "Delete":
-               new virtualMachine.VirtualMachine(this.resourceGroupName, this.action, this.subscriptionId, this.connectedService, this.getARMCredentials());
-               break;
-           default:
-               tl.setResult(tl.TaskResult.Succeeded, tl.loc("InvalidAction"));
         }
     }
 

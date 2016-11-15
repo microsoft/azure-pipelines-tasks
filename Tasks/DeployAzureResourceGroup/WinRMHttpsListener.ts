@@ -15,11 +15,10 @@ export class WinRMHttpsListener {
     private customScriptExtensionInstalled: boolean;
     private ruleAddedToNsg: boolean;
 
-    constructor(resourceGroupName: string, credentials, subscriptionId: string, enablePrereq: boolean) {
+    constructor(resourceGroupName: string, credentials, subscriptionId: string) {
         this.resourceGroupName = resourceGroupName;
         this.credentials = credentials;
         this.subscriptionId = subscriptionId;
-        this.enablePrereq = enablePrereq;
         this.fqdnMap = {};
         this.winRmHttpsPortMap = {};
         this.customScriptExtensionInstalled = false;
@@ -49,9 +48,7 @@ export class WinRMHttpsListener {
                     await this.AddAzureVMCustomScriptExtension(resourceId, resourceName, resourceFQDN, vm["location"]);
                 }
             }
-            if (this.enablePrereq === true) {
-                await this.AddWinRMHttpsNetworkSecurityRuleConfig();
-            }
+            await this.AddWinRMHttpsNetworkSecurityRuleConfig();
         }
         catch (exception) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToEnablePrereqs", [exception.message]));
@@ -114,7 +111,7 @@ export class WinRMHttpsListener {
                 }
                 //Remove the rules which has no target virtual machines
                 await this.removeIrrelevantRules(lb, networkClient, addedRulesId);
-                deferred.resolve();
+                deferred.resolve("");
             });
 
         });
@@ -132,7 +129,7 @@ export class WinRMHttpsListener {
             }
             tl.debug("Result of updating network interfaces: " + util.inspect(res, { depth: null }));
             console.log(tl.loc("AddedTargetInboundNatRuleLB", [lbName]));
-            deferred.resolve();
+            deferred.resolve(null);
         });
         return deferred.promise;
     }

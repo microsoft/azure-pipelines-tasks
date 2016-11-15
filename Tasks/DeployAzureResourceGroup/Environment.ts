@@ -2,7 +2,7 @@ var networkManagementClient = require("azure-arm-network");
 var computeManagementClient = require("azure-arm-compute");
 import util = require("util");
 import tl = require("vsts-task-lib/task");
-
+import deployAzureRG = require("./DeployAzureRG");
 class PropertyValue {
     public IsSecure: boolean;
     public Data: string;
@@ -84,9 +84,8 @@ class Environment {
 }
 
 export class RegisterEnvironment {
-    private credentials;
-    private subscriptionId: string;
-    private resourceGroupName: string;
+    
+    private taskParameters: deployAzureRG.AzureRGTaskParameters;
     private publicAddressToNetworkIdMap;
     private publicAddressToFqdnMap;
     private networkIdToTagsMap;
@@ -94,17 +93,14 @@ export class RegisterEnvironment {
     private networkIds;
     private loadBalancerToPortMap;
     private loadBalancerToPublicIPAddressMap;
-    private outputVariable: string;
 
-    constructor(credentials, subscriptionId, resourceGroupName, outputVariable) {
-        this.credentials = credentials;
-        this.subscriptionId = subscriptionId;
-        this.resourceGroupName = resourceGroupName;
-        this.outputVariable = outputVariable;
-        if (this.outputVariable == null || this.outputVariable.trim() == "") {
+    constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
+        if (!taskParameters.outputVariable || !taskParameters.outputVariable.trim()) {
             tl.setResult(tl.TaskResult.Failed, "Output variable should not be empty");
+            process.exit();
             return;
         }
+        this.taskParameters = taskParameters;
         this.publicAddressToNetworkIdMap = null;
         this.networkIdToTagsMap = null;
         this.publicAddressToFqdnMap = null;
@@ -112,16 +108,18 @@ export class RegisterEnvironment {
         this.networkIds = null;
         this.loadBalancerToPublicIPAddressMap = null;
         this.inboundNatRuleMap = null;
+    }
+
+    public RegisterEnvironment () {
         this.getVMDetails();
         this.getNetworkInterfaceDetails();
         this.getPublicIPAddresses();
         this.getLoadBalancers();
-
     }
     
     private getLoadBalancers() {
-        var armClient = new networkManagementClient(this.credentials, this.subscriptionId);
-        armClient.loadBalancers.list(this.resourceGroupName, (error, loadbalancers, request, response) => {
+        var armClient = new networkManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
+        armClient.loadBalancers.list(this.taskParameters.resourceGroupName, (error, loadbalancers, request, response) => {
             if (error){
                 console.log("Error while getting list of Load Balancers", error);
                 throw new Error("FailedToFetchLoadBalancers");
@@ -149,9 +147,9 @@ export class RegisterEnvironment {
             return;
         }
         var resources = this.getResources();
-        var environment = new Environment(resources, process.env["SYSTEM_COLLECTIONID"], process.env["SYSTEM_TEAMPROJECT"], this.outputVariable);
+        var environment = new Environment(resources, process.env["SYSTEM_COLLECTIONID"], process.env["SYSTEM_TEAMPROJECT"], this.taskParameters.outputVariable);
         console.log(JSON.stringify(environment));                
-        tl.setVariable(this.outputVariable, JSON.stringify(environment));
+        tl.setVariable(this.taskParameters.outputVariable, JSON.stringify(environment));
     }
 
     private getTags(networkId: string) {
@@ -206,8 +204,8 @@ export class RegisterEnvironment {
     }
 
     private getVMDetails() {
-        var armClient = new computeManagementClient(this.credentials, this.subscriptionId);
-        armClient.virtualMachines.list(this.resourceGroupName, (error, virtualMachines, request, response) => {
+        var armClient = new computeManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
+        armClient.virtualMachines.list(this.taskParameters.resourceGroupName, (error, virtualMachines, request, response) => {
             if (error){
                 console.log("Error while getting list of Virtual Machines", error);
                 throw new Error("FailedToFetchVMs");
@@ -227,8 +225,8 @@ export class RegisterEnvironment {
     }
 
     private getNetworkInterfaceDetails() {
-        var armClient = new networkManagementClient(this.credentials, this.subscriptionId);
-        armClient.networkInterfaces.list(this.resourceGroupName, (error, networkInterfaces, request, response) => {
+        var armClient = new networkManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
+        armClient.networkInterfaces.list(this.taskParameters.resourceGroupName, (error, networkInterfaces, request, response) => {
             if (error){
                 console.log("Error while getting list of Network Interfaces", error);
                 throw new Error("FailedToFetchNetworkInterfaces");
@@ -250,8 +248,8 @@ export class RegisterEnvironment {
     }
 
     private getPublicIPAddresses() {
-        var armClient = new networkManagementClient(this.credentials, this.subscriptionId);
-        armClient.publicIPAddresses.list(this.resourceGroupName, (error, publicAddresses, request, response) => {
+        var armClient = new networkManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
+        armClient.publicIPAddresses.list(this.taskParameters.resourceGroupName, (error, publicAddresses, request, response) => {
             if (error){
                 console.log("Error while getting list of Public Addresses", error);
                 throw new Error("FailedToFetchPublicAddresses");
