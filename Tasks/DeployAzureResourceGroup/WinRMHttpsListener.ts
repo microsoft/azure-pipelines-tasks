@@ -8,7 +8,6 @@ export class WinRMHttpsListener {
     private resourceGroupName: string;
     private credentials;
     private subscriptionId: string;
-    private enablePrereq: boolean;
     private fqdnMap;
     private winRmHttpsPortMap;
     private virtualMachines;
@@ -29,7 +28,7 @@ export class WinRMHttpsListener {
     public async EnableWinRMHttpsListener() {
         try {
             await this.AddInboundNatRuleLB();
-            await this.SetAzureRMVMsConnectionDetailsInResourceGroup(this.enablePrereq);
+            await this.SetAzureRMVMsConnectionDetailsInResourceGroup();
 
             for (var i = 0; i < this.virtualMachines.length; i++) {
                 var vm = this.virtualMachines[i];
@@ -42,17 +41,15 @@ export class WinRMHttpsListener {
                     tl.debug("Defaulting WinRmHttpsPort of " + resourceName + " to 5986");
                     this.winRmHttpsPortMap[resourceName] = "5986";
                 }
-
-                if (this.enablePrereq === true) {
-                    tl.debug("Enabling winrm for virtual machine " + resourceName);
-                    await this.AddAzureVMCustomScriptExtension(resourceId, resourceName, resourceFQDN, vm["location"]);
-                }
+                tl.debug("Enabling winrm for virtual machine " + resourceName);
+                await this.AddAzureVMCustomScriptExtension(resourceId, resourceName, resourceFQDN, vm["location"]);
             }
             await this.AddWinRMHttpsNetworkSecurityRuleConfig();
         }
         catch (exception) {
-            tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToEnablePrereqs", [exception.message]));
-            throw new Error(tl.loc("FailedToEnablePrereqs", [exception.message]));
+            console.log(tl.loc("FailedToEnablePrereqs", exception.message));
+            tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToEnablePrereqs", exception.message));
+            process.exit();
         }
     }
 
@@ -68,9 +65,9 @@ export class WinRMHttpsListener {
         networkClient.loadBalancers.createOrUpdate(this.resourceGroupName, lbName, { "frontendIPConfigurations": lb["frontendIPConfigurations"], "inboundNatRules": lb["inboundNatRules"], "location": lb["location"], "backendAddressPools": lb["backendAddressPools"] }, async (error, result, request, response) => {
             if (error) {
                 tl.debug("Failed with error " + util.inspect(error, { depth: null }));
-                throw tl.loc("FailedToUpdateInboundNatRuleLB", [lbName]);
+                throw tl.loc("FailedToUpdateInboundNatRuleLB", lbName);
             }
-            console.log(tl.loc("AddedInboundNatRuleLB", [lbName]));
+            console.log(tl.loc("AddedInboundNatRuleLB", lbName));
 
             var addedRulesId = [];
 
@@ -87,12 +84,19 @@ export class WinRMHttpsListener {
                 }
             }
 
+            console.log("Added rules id are:");
+            for (var id of addedRulesId) {
+                console.log("Id: %s", id);
+            }
+
             networkClient.networkInterfaces.list(this.resourceGroupName, async (error, networkInterfaces, request, response) => {
                 if (error) {
                     tl.debug("Error in fetching the list of network Interfaces " + util.inspect(error, { depth: null }));
                     throw new Error(tl.loc("FailedToFetchNetworkInterfaces"));
                 }
+                console.log("Network Interfaces: %s", util.inspect(networkInterfaces, { depth: null }));
                 for (var nic of networkInterfaces) {
+                    console.log("NIC: %s", util.inspect(nic, { depth: null }));
                     var flag: boolean = false;
                     for (var ipc of nic["ipConfigurations"]) {
                         if (!!ruleIdMap[ipc["id"]] && ruleIdMap[ipc["id"]] != "") {
@@ -128,7 +132,9 @@ export class WinRMHttpsListener {
                 throw new Error("FailedToUpdateNICOfVm");
             }
             tl.debug("Result of updating network interfaces: " + util.inspect(res, { depth: null }));
-            console.log(tl.loc("AddedTargetInboundNatRuleLB", [lbName]));
+            console.log(tl.loc("AddedTargetInboundNatRuleLB", lbName));
+
+
             deferred.resolve(null);
         });
         return deferred.promise;
@@ -182,9 +188,9 @@ export class WinRMHttpsListener {
     public async AddInboundNatRuleLB() {
         var inboundWinrmHttpPort = {};
         var networkClient = new networkManagementClient(this.credentials, this.subscriptionId);
-        var deferred = Q.defer();
+        var deferred = Q.defer<string>();
 
-        tl.debug("Adding Inbound Nat Rule for LB");
+        console.log("Adding Inbound Nat Rule for LB");
         networkClient.loadBalancers.list(this.resourceGroupName, async (error, loadBalancers, request, response) => {
             if (error) {
                 tl.debug("Failed to fetch the list of load balancers with error " + util.inspect(error, { depth: null }));
@@ -200,8 +206,10 @@ export class WinRMHttpsListener {
                 var usedPorts = [];
                 var lbName = lb["name"];
 
+                //console.log(lb["name"]);
                 var pools = lb["backendAddressPools"];
                 for (var pool of pools) {
+                    //console.log("pool: %s", util.inspect(pool, { depth: null }));
                     if (pool && pool["backendIPConfigurations"]) {
                         var ipConfigs = pool["backendIPConfigurations"];
                         for (var ipc of ipConfigs) {
@@ -271,7 +279,7 @@ export class WinRMHttpsListener {
     }
 
     private async AddInboundNetworkSecurityRule(retryCnt: number, securityGrpName, networkClient, ruleName, rulePriority, winrmHttpsPort) {
-        var deferred = Q.defer();
+        var deferred = Q.defer<string>();
         try {
             tl.debug("Adding inbound network security rule config " + ruleName + " with priority " + rulePriority + " for port " + winrmHttpsPort + " under security group " + securityGrpName);
             var securityRuleParameters = { direction: "Inbound", access: "Allow", sourceAddressPrefix: "*", sourcePortRange: "*", destinationAddressPrefix: "*", destinationPortRange: winrmHttpsPort, protocol: "*", priority: rulePriority };
@@ -280,9 +288,9 @@ export class WinRMHttpsListener {
             networkClient1.securityRules.createOrUpdate(this.resourceGroupName, securityGrpName, ruleName, securityRuleParameters, (error, result, request, response) => {
                 if (error) {
                     tl.debug("Error in adding network security rule " + util.inspect(error, { depth: null }));
-                    throw tl.loc("FailedToAddRuleToNetworkSecurityGroup", [securityGrpName]);
+                    throw tl.loc("FailedToAddRuleToNetworkSecurityGroup", securityGrpName);
                 }
-                console.log(tl.loc("AddedSecurityRuleNSG", [ruleName, rulePriority, winrmHttpsPort, securityGrpName, util.inspect(result, { depth: null })]));
+                console.log(tl.loc("AddedSecurityRuleNSG", ruleName, rulePriority, winrmHttpsPort, securityGrpName, util.inspect(result, { depth: null })));
                 this.ruleAddedToNsg = true;
                 deferred.resolve("");
             });
@@ -308,7 +316,7 @@ export class WinRMHttpsListener {
                     else {
                         tl.debug("Failed to add the NSG rule on security group " + securityGrpName + " after trying for 3 times ");
                         deferred.reject("");
-                        throw tl.loc("FailedAddingNSGRule3Times", [securityGrpName]);
+                        throw tl.loc("FailedAddingNSGRule3Times", securityGrpName);
                     }
                 }
             });
@@ -317,7 +325,7 @@ export class WinRMHttpsListener {
     }
 
     private async TryAddNetworkSecurityRule(securityGrpName, ruleName, rulePriority: number, winrmHttpsPort: string) {
-        var deferred = Q.defer();
+        var deferred = Q.defer<string>();
         var networkClient = new networkManagementClient(this.credentials, this.subscriptionId);
         try {
             networkClient.securityRules.get(this.resourceGroupName, securityGrpName, ruleName, async (error, result, request, response) => {
@@ -327,25 +335,24 @@ export class WinRMHttpsListener {
                     await this.AddInboundNetworkSecurityRule(maxRetries, securityGrpName, networkClient, ruleName, rulePriority, winrmHttpsPort);
                 }
                 else {
-                    console.log(tl.loc("RuleExistsAlready", [ruleName, securityGrpName]));
+                    console.log(tl.loc("RuleExistsAlready", ruleName, securityGrpName));
                     this.ruleAddedToNsg = true;
-                    //call the function
                 }
                 deferred.resolve("");
             });
         }
         catch (exception) {
             deferred.reject(exception);
-            throw tl.loc("FailedToAddRuleToNetworkSecurityGroup", [securityGrpName]);
+            throw tl.loc("FailedToAddRuleToNetworkSecurityGroup", securityGrpName);
         }
         return deferred.promise;
     }
 
     private async AddNetworkSecurityRuleConfig(securityGroups: [Object], ruleName: string, rulePriority: number, winrmHttpsPort: string) {
-        var deferred = Q.defer();
+        var deferred = Q.defer<string>();
 
         for (var i = 0; i < securityGroups.length; i++) {
-            console.log(tl.loc("AddingSecurityRuleNSG", [securityGroups[i]["name"]]));
+            console.log(tl.loc("AddingSecurityRuleNSG", securityGroups[i]["name"]));
             var securityGrp = securityGroups[i];
             var securityGrpName = securityGrp["name"];
 
@@ -356,7 +363,7 @@ export class WinRMHttpsListener {
             catch (exception) {
                 tl.debug("Failed to add the network security rule with exception: " + exception.message);
                 deferred.reject(exception);
-                throw tl.loc("FailedToAddNetworkSecurityRule", [securityGrpName]);
+                throw tl.loc("FailedToAddNetworkSecurityRule", securityGrpName);
             }
         }
 
@@ -370,7 +377,7 @@ export class WinRMHttpsListener {
         var _ruleName: string = "VSO-Custom-WinRM-Https-Port";
         var _rulePriority: number = 3986;
         var _winrmHttpsPort: string = "5986";
-        var deferred = Q.defer();
+        var deferred = Q.defer<string>();
 
         try {
             var networkClient = new networkManagementClient(this.credentials, this.subscriptionId);
@@ -391,14 +398,14 @@ export class WinRMHttpsListener {
         catch (exception) {
             this.ruleAddedToNsg = true;
             deferred.reject(exception);
-            throw new Error(tl.loc("ARG_NetworkSecurityConfigFailed", [exception.message]));
+            throw new Error(tl.loc("ARG_NetworkSecurityConfigFailed", exception.message));
         }
         return deferred.promise;
     }
 
     private async AddAzureVMCustomScriptExtension(vmId: string, vmName: string, dnsName: string, location: string) {
         var _extensionName: string = "CustomScriptExtension";
-        var deferred = Q.defer();
+        var deferred = Q.defer<string>();
 
         tl.debug("Adding custom script extension for virtual machine " + vmName);
         tl.debug("VM Location: " + location);
@@ -421,7 +428,7 @@ export class WinRMHttpsListener {
                     await this.AddExtensionVM(vmName, computeClient, dnsName, _extensionName, location);
                 }
                 else if (result != null) {
-                    console.log(tl.loc("ExtensionAlreadyPresentVm ", [_extensionName, vmName]));
+                    console.log(tl.loc("ExtensionAlreadyPresentVm ", _extensionName, vmName));
                     if (result["provisioningState"] != 'Succeeded') {
                         tl.debug("Provisioning State of extension " + _extensionName + " on vm " + vmName + " is not Succeeded");
                         await this.RemoveExtensionFromVM(_extensionName, vmName, computeClient);
@@ -441,7 +448,7 @@ export class WinRMHttpsListener {
         }
         catch (exception) {
             deferred.reject(exception);
-            throw tl.loc("ARG_DeploymentPrereqFailed", [exception.message]);
+            throw tl.loc("ARG_DeploymentPrereqFailed", exception.message);
         }
 
         return deferred.promise;
@@ -449,7 +456,7 @@ export class WinRMHttpsListener {
 
     private async ValidateCustomScriptExecutionStatus(vmName: string, computeClient, dnsName: string, extensionName: string, location: string) {
         tl.debug("Validating the winrm configuration custom script extension status");
-        var deferred = Q.defer();
+        var deferred = Q.defer<void>();
 
         computeClient.virtualMachines.get(this.resourceGroupName, vmName, { expand: 'instanceView' }, async (error, result, request, response) => {
             if (error) {
@@ -479,7 +486,7 @@ export class WinRMHttpsListener {
                 this.customScriptExtensionInstalled = true;
                 tl.debug("Status of the customScriptExtension is valid on VM " + vmName);
             }
-            deferred.resolve("");
+            deferred.resolve(null);
         });
     }
 
@@ -493,10 +500,10 @@ export class WinRMHttpsListener {
         var _typeHandlerVersion: string = '1.7';
         var _publisher: string = 'Microsoft.Compute';
 
-        var deferred = Q.defer();
+        var deferred = Q.defer<void>();
         var _protectedSettings = { commandToExecute: _commandToExecute };
         var parameters = { type: _extensionType, virtualMachineExtensionType: _virtualMachineExtensionType, typeHandlerVersion: _typeHandlerVersion, publisher: _publisher, location: location, settings: { fileUris: [_configWinRMScriptFile, _makeCertFile, _winrmConfFile] }, protectedSettings: _protectedSettings };
-        console.log(tl.loc("AddExtension", [extensionName, vmName]));
+        console.log(tl.loc("AddExtension", extensionName, vmName));
         computeClient.virtualMachineExtensions.createOrUpdate(this.resourceGroupName, vmName, extensionName, parameters, async (error, result, request, response) => {
             if (error) {
                 tl.debug("Failed to add the extension " + util.inspect(error, { depth: null }));
@@ -508,12 +515,12 @@ export class WinRMHttpsListener {
             if (result["provisioningState"] != 'Succeeded') {
                 tl.debug("Provisioning State of CustomScriptExtension is not suceeded on vm " + vmName);
                 await this.RemoveExtensionFromVM(extensionName, vmName, computeClient);
-                deferred.reject("");
-                throw tl.loc("ARG_SetExtensionFailedForVm", [this.resourceGroupName, vmName, result]);
+                deferred.reject(tl.loc("ARG_SetExtensionFailedForVm", this.resourceGroupName, vmName, result));
+                throw tl.loc("ARG_SetExtensionFailedForVm", this.resourceGroupName, vmName, result);
             }
             tl.debug("Provisioning of CustomScriptExtension on vm " + vmName + " is in Succeeded State");
             this.customScriptExtensionInstalled = true;
-            deferred.resolve("");
+            deferred.resolve(null);
         });
         return deferred.promise;
     }
@@ -521,7 +528,7 @@ export class WinRMHttpsListener {
     private async RemoveExtensionFromVM(extensionName, vmName, computeClient) {
         tl.debug("Removing the extension " + extensionName + "from vm " + vmName);
         //delete the extension
-        var deferred = Q.defer();
+        var deferred = Q.defer<void>();
 
         computeClient.virtualMachineExtensions.deleteMethod(this.resourceGroupName, vmName, extensionName, async (error, result, request, response) => {
             if (error) {
@@ -532,18 +539,18 @@ export class WinRMHttpsListener {
             else {
                 tl.debug("Successfully removed the extension " + extensionName + " from the VM " + vmName);
             }
-            deferred.resolve("");
+            deferred.resolve(null);
         });
     }
 
-    private async SetAzureRMVMsConnectionDetailsInResourceGroup(enablePrereqs: boolean) {
+    private async SetAzureRMVMsConnectionDetailsInResourceGroup() {
         var vmResourceDetails = {};
 
         var debugLogsFlag = process.env["SYSTEM_DEBUG"];
 
         var networkClient = new networkManagementClient(this.credentials, this.subscriptionId);
         var computeClient = new computeManagementClient(this.credentials, this.subscriptionId);
-        var deferred = Q.defer();
+        var deferred = Q.defer<string>();
 
         computeClient.virtualMachines.list(this.resourceGroupName, (error, virtualMachines, request, response) => {
             if (error) {
@@ -681,11 +688,11 @@ export class WinRMHttpsListener {
 
             if (throwOnTotalUnavailability === true) {
                 if (errorCount == azureRMVMResources.length && azureRMVMResources.length != 0) {
-                    throw tl.loc("ARG_AllResourceNotFound", [mapParameter, this.resourceGroupName]);
+                    throw tl.loc("ARG_AllResourceNotFound", mapParameter, this.resourceGroupName);
                 }
                 else {
                     if (errorCount > 0 && errorCount != azureRMVMResources.length) {
-                        console.warn(tl.loc("ARG_ResourceNotFound", [mapParameter, errorCount, this.resourceGroupName]));
+                        console.warn(tl.loc("ARG_ResourceNotFound", mapParameter, errorCount, this.resourceGroupName));
                     }
                 }
             }
