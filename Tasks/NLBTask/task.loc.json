@@ -1,0 +1,92 @@
+{
+  "id": "e94f1750-a6a8-11e6-be69-bdf37a7b15d8",
+  "name": "NLBTask",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "MachineGroup"
+  ],
+  "version": {
+    "Major": "1",
+    "Minor": "0",
+    "Patch": "0"
+  },
+  "minimumAgentVersion": "1.95.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
+      "name": "ResourceGroupName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ResourceGroupName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "LoadBalancer",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.LoadBalancer",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.LoadBalancer",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "Operation",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.Operation",
+      "defaultValue": "",
+      "required": true,
+      "options": {
+        "Remove": "Remove",
+        "Add": "Add"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.Operation"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "ResourceGroupName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureResourceGroups"
+    },
+    {
+      "target": "LoadBalancer",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMLoadBalancers",
+      "parameters": {
+        "ResourceGroupName": "$(ResourceGroupName)"
+      }
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "nlbtask.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "CouldNotFetchNicDetails": "ms-resource:loc.messages.CouldNotFetchNicDetails",
+    "NicDetailsFetched": "ms-resource:loc.messages.NicDetailsFetched",
+    "GettingAllNetworkInterfacesInTheResourceGroup": "ms-resource:loc.messages.GettingAllNetworkInterfacesInTheResourceGroup",
+    "RequestingForAuthToken": "ms-resource:loc.messages.RequestingForAuthToken"
+  }
+}
