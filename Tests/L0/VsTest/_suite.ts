@@ -163,6 +163,14 @@ describe('VsTest Suite', function () {
         it('(TestResultsDirectoryVariableIsUsedIfOverrideParamsAreUsed) vstest invoked with  default test results directory if override run parameters is used', (done) => {
             psr.run(path.join(__dirname, 'TestResultsDirectoryVariableIsUsedIfOverrideParamsAreUsed.ps1'), done);
         })
+
+        it('Latest option chosen with VS 15 Willow installed', (done) => {
+            psr.run(path.join(__dirname, 'LatestSelectedwithVS15Installed.ps1'), done);
+        })
+
+        it('v14 option chosen with VS 15 Willow installed', (done) => {
+            psr.run(path.join(__dirname, 'V14SelectedwithVS15Installed.ps1'), done);
+        })
     }
 
     if (!os.type().match(/^Win/)) {

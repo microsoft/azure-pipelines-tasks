@@ -1,11 +1,11 @@
 {
-  "loc.friendlyName": "Azure App Service Deployment: ARM",
+  "loc.friendlyName": "Azure App Service Deploy",
   "loc.helpMarkDown": "[More Information](https://aka.ms/azurermwebdeployreadme)",
   "loc.description": "Update Azure App Service using Web Deploy / Kudu REST APIs",
   "loc.instanceNameFormat": "Deploy AzureRM App Service: $(WebAppName)",
   "loc.group.displayName.AdditionalDeploymentOptions": "Additional Deployment Options",
-  "loc.group.displayName.FileTransformsAndVariableSubstitution": "File Transforms and Variable Substitutions",
   "loc.group.displayName.output": "Output",
+  "loc.group.displayName.FileTransformsAndVariableSubstitution": "File Transforms and Variable Substitutions",
   "loc.input.label.ConnectedServiceName": "AzureRM Subscription",
   "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription for the deployment.",
   "loc.input.label.WebAppName": "App Service Name",
@@ -35,8 +35,6 @@
   "loc.input.label.TakeAppOfflineFlag": "Take App Offline",
   "loc.input.help.TakeAppOfflineFlag": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully.",
   "loc.input.label.XmlTransformsAndVariableSubstitutions": "XML Transforms & Variable Substitutions",
-  "loc.input.label.XdtTransformation": "Transformation",
-  "loc.input.help.XdtTransformation": "The config transfoms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`. Config transforms will be run prior to the Variable Substitution.",
   "loc.input.label.VariableSubstitution": "Variable Substitution",
   "loc.input.help.VariableSubstitution": "Variables defined in the Build or Release Definition will be automatically substituted in the appSettings, applicationSettings, and connectionStrings section of the config files. If same variables are defined in the Release Definition and in the Environment, then the Environment variables will supersede the Release Definition variables. Variable Substitution is run after Config Transforms.",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "Invalid webapp package or folder path provided: %s",
@@ -71,7 +69,7 @@
   "loc.messages.JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "JSON variable substitution can only be applied for JSON files",
   "loc.messages.Unabletofindnodewithtaginprovidedxmlfile": "Unable to find node with tag '%s' in provided xml file.",
   "loc.messages.Configfiledoesntexists": "Config file %s doesn't exist.",
-  "loc.messages.Providednodeisempty": "Provided node is empty.",
+  "loc.messages.Providednodeisemptyorcomment": "Provided node is empty or a comment.",
   "loc.messages.Configfileupdated": "Config file %s updated.",
   "loc.messages.Failedtowritetoconfigfilewitherror": "Failed to write to config file %s with error : %s",
   "loc.messages.Erroroccurredwhileprocessingxmlnode": "Error occurred while processing xml node : %s.",
@@ -83,5 +81,8 @@
   "loc.messages.Initiatedvariablesubstitutioninconfigfile": "Initiated variable substitution in config file : %s",
   "loc.messages.CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot Perform XDT Transformations on a Non-Windows platform.",
   "loc.messages.XdtTransformationErrorWhileTransforming": "XDT Transformation Error while transforming %s using %s.",
-  "loc.messages.PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "Publish using webdeploy options are supported only when using Windows agent"
+  "loc.messages.PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "Publish using webdeploy options are supported only when using Windows agent",
+  "loc.messages.WebAppDoesntExist": "Webapp '%s' doesn't exist. Webapp should exist before deployment.",
+  "loc.messages.EncodeNotSupported": "Detected file encoding of the file %s as %s. Variable substitution and Transformation is not supported with file encoding %s. Supported encodings are UTF-8 and UTF-16 LE.",
+  "loc.messages.UnknownFileEncodeError": "Unable to detect encoding of the file %s. Supported encodings are UTF-8 and UTF-16 LE."
 }

@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 77
+    "Patch": 79
   },
   "demands": [
     "vstest"
@@ -229,6 +229,7 @@
     "NoMatchingTestAssemblies": "ms-resource:loc.messages.NoMatchingTestAssemblies",
     "VstestNotFound": "ms-resource:loc.messages.VstestNotFound",
     "VstestFailed": "ms-resource:loc.messages.VstestFailed",
+    "VstestTIANotSupported": "ms-resource:loc.messages.VstestTIANotSupported",
     "NoResultsToPublish": "ms-resource:loc.messages.NoResultsToPublish",
     "ErrorWhileReadingRunSettings": "ms-resource:loc.messages.ErrorWhileReadingRunSettings",
     "ErrorWhileReadingTestSettings": "ms-resource:loc.messages.ErrorWhileReadingTestSettings",

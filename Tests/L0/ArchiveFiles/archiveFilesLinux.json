@@ -16,7 +16,7 @@
         "osType" : "Linux"
     },
     "getVariable": {
-        "build.sourcesDirectory": "mockedBuildSources"
+        "System.DefaultWorkingDirectory": "mockedBuildSources"
     },
     "stats": {
         "mockedBuildSources": {

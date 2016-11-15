@@ -43,7 +43,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "osType": "Windows"
     },
     "checkPath": {
-        "cmd": true
+        "cmd": true,
+        "webAppPkg.zip": true,
+        "webAppPkg": true
     },
     "exec": {
         "cmd /C DefaultWorkingDirectory\\msDeployCommand.bat": {
@@ -93,8 +95,8 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 
 
 import mockTask = require('vsts-task-lib/mock-task');
-var kuduDeploymentLog = require('../kududeploymentlog.js');
-var msDeployUtility = require('../msdeployutility.js'); 
+var kuduDeploymentLog = require('webdeployment-common/kududeploymentstatusutility.js');
+var msDeployUtility = require('webdeployment-common/msdeployutility.js'); 
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
     getMSDeployFullPath : function() {
@@ -107,7 +109,7 @@ tr.registerMock('./msdeployutility.js', {
     }
 }); 
 
-tr.registerMock('./azurermutil.js', {
+tr.registerMock('webdeployment-common/azurerestutility.js', {
     getAzureRMWebAppPublishProfile: function(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
         var mockPublishProfile = {
             profileName: 'mytestapp - Web Deploy',
@@ -133,6 +135,19 @@ tr.registerMock('./azurermutil.js', {
         }
         return mockPublishProfile;
     },
+    getAzureRMWebAppConfigDetails: function(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
+	var config = { 
+			id: 'appid',
+			properties: { 
+				virtualApplications: [ ['Object'], ['Object'], ['Object'] ],
+			} 
+		}
+
+		return config;
+	}
+});
+
+tr.registerMock('./azurerestutility.js', {
     updateDeploymentStatus: function(publishingProfile, isDeploymentSuccess ) {
         if(isDeploymentSuccess) {
             console.log('Updated history to kudu');
@@ -143,17 +158,7 @@ tr.registerMock('./azurermutil.js', {
         var webAppPublishKuduUrl = publishingProfile.publishUrl;
         var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
         console.log("kudu log requestBody is:" + JSON.stringify(requestDetails["requestBody"]));
-    },
-    getAzureRMWebAppConfigDetails: function(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
-	var config = { 
-		id: 'appid',
-  		properties: { 
-     		virtualApplications: [ ['Object'], ['Object'], ['Object'] ],
-    	} 
-  	}
-
-    return config;
-}
+    }
 });
 
 tr.setAnswers(a);

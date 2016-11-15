@@ -54,7 +54,7 @@ var inputTasks: string[] = tl.getDelimitedInput('tasks', ' ', true);
 var isSonarQubeEnabled: boolean = sqCommon.isSonarQubeAnalysisEnabled();
 let reportingTaskName = "";
 
-let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('build.sourcesDirectory'), BuildEngine.Gradle);
+let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('System.DefaultWorkingDirectory'), BuildEngine.Gradle);
 var codeAnalysisOrchestrator: CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
     [new CheckstyleTool(buildOutput, 'checkstyleAnalysisEnabled'),
         new FindbugsTool(buildOutput, 'findbugsAnalysisEnabled'),
