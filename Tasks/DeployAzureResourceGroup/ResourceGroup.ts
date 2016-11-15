@@ -1,15 +1,16 @@
 /// <reference path="../../definitions/node.d.ts" /> 
 /// <reference path="../../definitions/vsts-task-lib.d.ts" /> 
- 
+ /// <reference path="../../definitions/Q.d.ts" />
 import path = require("path");
 import tl = require("vsts-task-lib/task");
 import fs = require("fs");
 import util = require("util");
+import q = require("q");
 
 import env = require("./Environment");
 import deployAzureRG = require("./DeployAzureRG");
 
-var parameterParse = require("./parser").parse;
+var parameterParse = require("./parameterParse").parse;
 var armResource = require("azure-arm-resource");
 var request = require("sync-request");
 
@@ -48,7 +49,7 @@ export class ResourceGroup {
             this.deploymentMode = deployRGObj.deploymentMode;
             this.credentials = deployRGObj.credentials;
             this.outputVariable = deployRGObj.outputVariable;
-            this.csmFileLink = deployRGObj.templateLocation;
+            this.csmFileLink = deployRGObj.csmFileLink;
             this.csmParametersFileLink = deployRGObj.csmParametersFileLink;
             this.templateLocation = deployRGObj.templateLocation;
             this.networkInterfaces = null;
@@ -98,21 +99,25 @@ export class ResourceGroup {
             if (exists) {
                 this.createTemplateDeployment(armClient);
             } else {
-                this.createRGIfNotExist(armClient);
+                this.createRG(armClient).then((Succeeded) => {
+                    this.createTemplateDeployment(armClient);
+                });
             }
         });
     }
 
-    private createRGIfNotExist(armClient) {
+    private createRG(armClient): q.Promise<any> {
+        var deferred = q.defer<any>();
         console.log(this.resourceGroupName+" resource Group Not found");
         console.log("Creating a new Resource Group:"+ this.resourceGroupName);
         armClient.resourceGroups.createOrUpdate(this.resourceGroupName, {"name": this.resourceGroupName, "location": this.location}, (error, result, request, response) => {
             if (error) {
-                tl.setResult(tl.TaskResult.Failed, tl.loc("ResourceGroupCreationFailed", error))
-            } else {
-                this.createTemplateDeployment(armClient);
-            }
+                tl.setResult(tl.TaskResult.Failed, tl.loc("ResourceGroupCreationFailed", error));
+                deferred.reject(error);
+            } 
+            deferred.resolve("Succeeded");
         });
+        return deferred.promise;
     }
     
     private getDeploymentDataForExternalLinks() {
@@ -122,7 +127,7 @@ export class ResourceGroup {
             properties["parametersLink"] = {"uri" : this.csmParametersFileLink };
         else {
             var params = {};
-            if (this.csmParametersFileLink && this.csmParametersFileLink.trim()!="") {
+            if (this.csmParametersFileLink && this.csmParametersFileLink.trim()) {
                 var response = request("GET", this.csmParametersFileLink);
                 try { 
                     params = JSON.parse(response.body).parameters;
@@ -140,33 +145,23 @@ export class ResourceGroup {
         return deployment;
     }
 
-    private getParametersFromTemplate(template) {
-        var params = {};
-        for (var key in template.parameters) {
-            params[key] = { value: template.parameters[key]["defaultValue"] };
-        }
-        return params;
-    }
-
     private getDeploymentDataForLinkedArtifact() {
         var template;
         try { 
-            template= JSON.parse(fs.readFileSync(this.csmFile, 'UTF-8'));
+            template = JSON.parse(fs.readFileSync(this.csmFile, 'UTF-8'));
         }
         catch (error) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("TemplateParsingFailed", error.message));
             return;
         }
-        var parameters = this.getParametersFromTemplate(template);
+        var parameters;
         try {
-            if (this.csmParametersFile != undefined && this.csmParametersFile != null && this.csmParametersFile.trim() != "") {
+            if (this.csmParametersFile && this.csmParametersFile.trim()) {
                 var parameterFile = JSON.parse(fs.readFileSync(this.csmParametersFile, 'UTF-8'));
-                for (var param in parameterFile) {
-                    parameters[param] = parameterFile[param];
-                }
+                parameters = parameterFile.parameters;
             }
-            if (this.overrideParameters && this.overrideParameters!=null)
-                parameters = this.updateOverrideParameters(properties["parameters"]);
+            if (this.overrideParameters)
+                parameters = this.updateOverrideParameters(parameters);
         }
         catch (error) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("ParametersFileParsingFailed", error.message));

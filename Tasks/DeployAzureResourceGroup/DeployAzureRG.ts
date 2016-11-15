@@ -33,20 +33,20 @@ export class AzureResourceGroupDeployment {
     
     constructor() {
         try { 
-            this.connectedService = null;
-            this.connectedService = tl.getInput("ConnectedServiceName");
+            this.connectedService = tl.getInput("ConnectedServiceName", true);
+            this.subscriptionId = tl.getEndpointDataParameter(this.connectedService, "SubscriptionId", true);   
+            this.resourceGroupName = tl.getInput("resourceGroupName", true);
             this.action = tl.getInput("action");
-            this.resourceGroupName = tl.getInput("resourceGroupName");
             this.location = tl.getInput("location");
             this.csmFile = tl.getPathInput("csmFile");
             this.csmParametersFile = tl.getPathInput("csmParametersFile");
             this.csmFileLink = tl.getInput("csmFileLink");
-            this.csmParametersFileLink = tl.getInput("csmParametersFile");
+            this.csmParametersFileLink = tl.getInput("csmParametersFileLink");
             this.templateLocation = tl.getInput("templateLocation");
             this.overrideParameters = tl.getInput("overrideParameters");
             this.enableDeploymentPrerequisites = tl.getBoolInput("enableDeploymentPrerequisites");
             this.outputVariable = tl.getInput("outputVariable");
-            this.subscriptionId = tl.getEndpointDataParameter(this.connectedService, "SubscriptionId", true);    
+             
             this.deploymentMode = tl.getInput("deploymentMode");
             this.credentials = this.getARMCredentials();
         }
