@@ -163,9 +163,6 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.overrideParameters",
-      "properties": {
-        "editorExtension": "ms.vss-distributed-task-input-editor.parameters-grid"
-      },
       "visibleRule": "action = Create Or Update Resource Group"
     },
     {
@@ -229,6 +226,27 @@
     }
   },
   "messages": {
+    "ValidatingCredentialsFailure": "ms-resource:loc.messages.ValidatingCredentialsFailure",
+    "RuleExistsAlready": "ms-resource: loc.messages.RuleExistsAlready",
+    "ExtensionAlreadyPresentVm": "ms-resource: loc.messages.ExtensionAlreadyPresentVm",
+    "AddExtension": "ms-resource: loc.messages.AddExtension",
+    "FailedToAddExtension": "ms-resource: loc.messages.FailedToAddExtension",
+    "AddingSecurityRuleNSG": "ms-resource: loc.messages.AddingSecurityRuleNSG",
+    "AddedSecurityRuleNSG": "ms-resource: loc.messages.AddedSecurityRuleNSG",
+    "FailedToAddRuleToNetworkSecurityGroup": "ms-resource: loc.messages.FailedToAddRuleToNetworkSecurityGroup",
+    "FetchingOfNetworkSecurityGroupFailed": "ms-resource: loc.messages.FetchingOfNetworkSecurityGroupFailed",
+    "FailedToAddNetworkSecurityRule": "ms-resource: loc.messages.FailedToAddNetworkSecurityRule",
+    "FailedToEnablePrereqs": "ms-resource: loc.messages.FailedToEnablePrereqs",
+    "FailedToFetchInstanceViewVM": "ms-resource: loc.messages.FailedToFetchInstanceViewVM",
+    "FailedToFetchNetworkInterfaces": "ms-resource: loc.messages.FailedToFetchNetworkInterfaces",
+    "FailedToFetchLoadBalancers": "ms-resource: loc.messages.FailedToFetchLoadBalancers",
+    "FailedToFetchPublicAddresses": "ms-resource: loc.messages.FailedToFetchPublicAddresses",
+    "FailedToFetchVMList": "ms-resource: loc.messages.FailedToFetchVMList",
+    "CreationOfExtensionFailed": "ms-resource: loc.messages.CreationOfExtensionFailed",
+    "FailedToDeleteExtension": "ms-resource: loc.messages.FailedToDeleteExtension",
+    "AddedInboundNatRuleLB": "ms-resource: loc.messages.AddedInboundNatRuleLB",
+    "AddedTargetInboundNatRuleLB": "ms-resource: loc.messages.AddedTargetInboundNatRuleLB",
+    "InboundNatRuleLBPresent": "ms-resource: loc.messages.InboundNatRuleLBPresent",
     "SucceededOnVMOperation": "ms-resource:loc.messages.SucceededOnVMOperation",
     "FailureOnVMOperation": "ms-resource:loc.messages.FailureOnVMOperation",
     "ARGD_ConstructorFailed": "ms-resource:loc.messages.ARGD_ConstructorFailed",
@@ -244,7 +262,6 @@
     "TaskNotFound": "ms-resource:loc.messages.TaskNotFound",
     "FailedRegisteringEnvironment": "ms-resource:loc.message.FailedRegisteringEnvironment",
     "selectResourceGroupSuccessfull":"ms-resource:loc.message.selectResourceGroupSuccessfull",
-    "ValidatingCredentialsFailure": "ms-resource:loc.message.ValidatingCredentialsFailure",
     "VM_Start": "ms-resource:loc.message.VM_Start",
     "VM_Restart": "ms-resource:loc.message.VM_Restart",
     "VM_Stop": "ms-resource:loc.message.VM_Stop",
