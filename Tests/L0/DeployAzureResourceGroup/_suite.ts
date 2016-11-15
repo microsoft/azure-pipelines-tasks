@@ -44,10 +44,10 @@ describe('Azure Resource Group Deployment', function () {
     function createOrUpdateRG() {
         var tr = new trm.TaskRunner('AzureResourceGroupDeployment');
         tr.setInput("action", "Create Or Update Resource Group");
-        tr.setInput("ConnectedServiceNameSelector", "ConnectedServiceName");
         tr.setInput("ConnectedServiceName", "AzureRM");
         tr.setInput("resourceGroupName", "dummy");
         tr.setInput("location", "West US");
+        tr.setInput("templateLocation", "Linked Artifact")
         tr.setInput("csmFile", testSrcPath + "\\CSM.json");
         tr.setInput("overrideParameters", "");
         tr.setInput("deploymentMode","Complete");
@@ -89,7 +89,6 @@ describe('Azure Resource Group Deployment', function () {
     function selectRG() {
         var tr = new trm.TaskRunner('AzureResourceGroupDeployment');
         tr.setInput("action", "Select Resource Group");
-        tr.setInput("ConnectedServiceNameSelector", "ConnectedServiceName");
         tr.setInput("ConnectedServiceName", "AzureRM");
         tr.setInput("resourceGroupName", "AzureRM");
         return tr;
@@ -141,7 +140,6 @@ describe('Azure Resource Group Deployment', function () {
     function VMOperations(operation) {
         var tr = new trm.TaskRunner('AzureResourceGroupDeployment');
         tr.setInput("action", operation);
-        tr.setInput("ConnectedServiceNameSelector", "ConnectedServiceName");
         tr.setInput("ConnectedServiceName", "AzureRM");
         tr.setInput("resourceGroupName", "dummy");
         return tr;
@@ -150,13 +148,12 @@ describe('Azure Resource Group Deployment', function () {
     it("Deleted Resource Group", (done) => {
         var tr = new trm.TaskRunner('AzureResourceGroupDeployment');
         tr.setInput("action", "DeleteRG");
-        tr.setInput("ConnectedServiceNameSelector", "ConnectedServiceName");
         tr.setInput("ConnectedServiceName", "AzureRM");
         tr.setInput("resourceGroupName", "dummy");
         tr.run()
         .then(() => {
             assert(tr.succeeded, "Task should have succeeded");
-            assert(tr.stdout.indexOf("Deleting resource group") > 0, "Delete Resource Group function should have been called");
+            assert(tr.stdout.indexOf("Deleting Resource Group") > 0, "Delete Resource Group function should have been called");
             assert(tr.stdout.indexOf("resourceGroups.deleteMethod is called") > 0, "Task should have called resourceGroups.deleteMethod function from azure-sdk");
             done();
         }).fail((err) => {

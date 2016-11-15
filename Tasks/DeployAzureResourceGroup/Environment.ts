@@ -95,11 +95,6 @@ export class RegisterEnvironment {
     private loadBalancerToPublicIPAddressMap;
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
-        if (!taskParameters.outputVariable || !taskParameters.outputVariable.trim()) {
-            tl.setResult(tl.TaskResult.Failed, "Output variable should not be empty");
-            process.exit();
-            return;
-        }
         this.taskParameters = taskParameters;
         this.publicAddressToNetworkIdMap = null;
         this.networkIdToTagsMap = null;
@@ -111,6 +106,11 @@ export class RegisterEnvironment {
     }
 
     public RegisterEnvironment () {
+        if (!this.taskParameters.outputVariable || !this.taskParameters.outputVariable.trim()) {
+            tl.setResult(tl.TaskResult.Failed, "Output variable should not be empty");
+            process.exit();
+            return;
+        }
         this.getVMDetails();
         this.getNetworkInterfaceDetails();
         this.getPublicIPAddresses();
