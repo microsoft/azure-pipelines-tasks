@@ -22,7 +22,7 @@
 	"instanceNameFormat": "NLBTask: $(Operation)",
 	"inputs": [
 		{
-			"name": "ConnectedServiceName",
+            "name": "ConnectedServiceName",
             "type": "connectedService:AzureRM",
             "label": "AzureRM Subscription",
             "defaultValue": "",
@@ -40,7 +40,7 @@
             }
         }, 
         {
-        	"name": "LoadBalancer",
+            "name": "LoadBalancer",
             "type": "pickList",
             "label": "Load Balancer Name",
             "required": true,

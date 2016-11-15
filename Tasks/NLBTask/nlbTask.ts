@@ -11,21 +11,21 @@ async function run() {
 		tl.setResourcePath(path.join( __dirname, 'task.json'));
 		var connectedServiceName = tl.getInput('ConnectedServiceName', true);
 		var resourceGroupName: string = tl.getInput("ResourceGroupName", true);
-        var loadBalancerName: string = tl.getInput("LoadBalancer", true);
-        var operation: string = tl.getInput("Operation", true);
+		var loadBalancerName: string = tl.getInput("LoadBalancer", true);
+		var operation: string = tl.getInput("Operation", true);
 		var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
 		var endpointUrl = tl.getEndpointUrl(connectedServiceName, true);
 
 		var SPN = new Array();
-        SPN["servicePrincipalClientID"] = endPointAuthCreds.parameters["serviceprincipalid"];
-        SPN["servicePrincipalKey"] = endPointAuthCreds.parameters["serviceprincipalkey"];
-        SPN["tenantID"] = endPointAuthCreds.parameters["tenantid"];
-        SPN["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
+		SPN["servicePrincipalClientID"] = endPointAuthCreds.parameters["serviceprincipalid"];
+		SPN["servicePrincipalKey"] = endPointAuthCreds.parameters["serviceprincipalkey"];
+		SPN["tenantID"] = endPointAuthCreds.parameters["tenantid"];
+		SPN["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
 
-        var nicVm = await getNetworkInterface(SPN, endpointUrl, resourceGroupName);
-        tl.debug(tl.loc("NicDetailsFetched", process.env["computername"]));
+		var nicVm = await getNetworkInterface(SPN, endpointUrl, resourceGroupName);
+		tl.debug(tl.loc("NicDetailsFetched", process.env["computername"]));
 
-        var obj = null;
+		var obj = null;
 		if (operation == "Add") {
 			tl._writeLine("Adding VM to LB");
 			var lb = await nlbUtility.getLoadBalancer(SPN, endpointUrl, resourceGroupName, loadBalancerName);

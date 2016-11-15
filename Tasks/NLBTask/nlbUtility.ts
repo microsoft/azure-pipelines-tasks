@@ -13,17 +13,17 @@ var azureApiVersion = '2016-09-01';
 export function getAccessToken(SPN, endpointUrl: string): Q.Promise<string> {
 
 	var deferred = Q.defer<string>();
-    var authorityUrl = authUrl + SPN.tenantID + "/oauth2/token/";
+	var authorityUrl = authUrl + SPN.tenantID + "/oauth2/token/";
 
-    var post_data = queryString.stringify({
-    	resource: endpointUrl, 
+	var post_data = queryString.stringify({
+		resource: endpointUrl, 
 		client_id: SPN.servicePrincipalClientID,
 		grant_type: "client_credentials", 
 		client_secret: SPN.servicePrincipalKey
-    });
+	});
 
-    tl.debug(tl.loc('RequestingForAuthToken', authorityUrl));
-    httpObj.send("POST", authorityUrl, post_data, {}, (error, response, body) => {
+	tl.debug(tl.loc('RequestingForAuthToken', authorityUrl));
+	httpObj.send("POST", authorityUrl, post_data, {}, (error, response, body) => {
 		if(error) {
 			deferred.reject(error);
 		}
