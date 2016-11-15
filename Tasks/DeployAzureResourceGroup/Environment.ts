@@ -118,6 +118,7 @@ export class RegisterEnvironment {
         this.getLoadBalancers();
 
     }
+    
     private getLoadBalancers() {
         var armClient = new networkManagementClient(this.credentials, this.subscriptionId);
         armClient.loadBalancers.list(this.resourceGroupName, (error, loadbalancers, request, response) => {
@@ -270,5 +271,6 @@ export class RegisterEnvironment {
             this.InstantiateEnvironment();
         });
     }
-   
+    
 }
+

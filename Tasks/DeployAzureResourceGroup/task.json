@@ -28,6 +28,7 @@
     ],
     "inputs": [
         {
+
             "name": "ConnectedServiceName",
             "type": "connectedService:AzureRM",
             "label": "Azure RM Subscription",
@@ -198,6 +199,24 @@
         }
     },
     "messages": {
+        "FailedToAddExtension": "Failed to add the network security rule with exception: %s",
+        "AddingSecurityRuleNSG": "Adding Security rule for the network security group: %s",
+        "AddedSecurityRuleNSG": "Added inbound network security rule config {0} with priority {1} for port {2} under security group {3} with result: {4}",
+        "FailedToAddRuleToNetworkSecurityGroup": "Failed to add the network security rule to the Nsg od security group %s",
+        "FetchingOfNetworkSecurityGroupFailed": "Fetching of Network Security Groups Failed",
+        "FailedAddingNSGRule3Times": "Failed to add the Network Security rule to the security Group %s after trying for 3 times",
+        "FailedToAddNetworkSecurityRule": "Failed to add the Network Security Rule to the security Group %s",
+        "FailedToFetchNetworkInterfaces": "Failed to fetch the list of Network Interfaces",
+        "FailedToFetchLoadBalancers": "Failed to fetch the list of Load Balancers",
+        "FailedToFetchPublicAddresses": "Failed to fetch the list of Public Addresses",
+        "FailedToFetchVMList": "Failed to fetch the list of virtual machines",
+        "FailedToEnablePrereqs": "Failed to Enable Prerequisites",
+        "FailedToFetchInstanceViewVM": "Failed to fetch the instance view of the virtual machine",
+        "CreationOfExtensionFailed": "Failed to add the extension",
+        "FailedToDeleteExtension": "Deletion of Extension failed",
+        "AddedTargetInboundNatRuleLB": "Added the target virtual machine for the Inbound Nat Rules of LB %s",
+        "AddedInboundNatRuleLB": "Adding Inbound Nat rule to the load balancer %s ",
+        "InboundNatRuleLBPresent": "Relevant Inbound Nat rules already present for the load balancer %s",
         "SucceededOnVMOperation": "The %s operation on all VMs succeeded",
         "FailureOnVMOperation": "The %s operation on all VMs failed with an error: %s",
         "ARGD_ConstructorFailed": "Task failed while initializing with the following error: %s",
