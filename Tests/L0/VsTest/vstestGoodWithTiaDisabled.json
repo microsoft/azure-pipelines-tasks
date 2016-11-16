@@ -3,19 +3,13 @@
         "System.DefaultWorkingDirectory": "/source/dir",
         "build.sourcesdirectory": "/source/dir",
         "VS140COMNTools": "/vs/path",
-		"tia.enabled": "false"
+        "tia.enabled": "false"
     },
-    "find": {
-        "/source/dir": [
-            "someDir/someFile2",
-            "/someDir/someFile1"
-        ]
-    },
-    "match": {
+    "findMatch": {
         "*.trx": [
             "a.trx"
         ],
-        "/source/dir/someFile1" : [
+        "/source/dir/someFile1": [
             "/source/dir/someFile1"
         ]
     },
@@ -24,7 +18,7 @@
             "code": 0,
             "stdout": "vstest"
         },
-		"\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /Settings:settings.runsettings /logger:trx": {
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /Settings:settings.runsettings /logger:trx": {
             "code": 0,
             "stdout": "vstest"
         }
@@ -37,21 +31,18 @@
     },
     "exist": {
         "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": true,
-		"settings.runsettings": true,
-		"settings.testsettings": true
+        "settings.runsettings": true,
+        "settings.testsettings": true
     },
     "stats": {
         "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": {
             "isFile": true
         },
-		"settings.runsettings": {
+        "settings.runsettings": {
             "isFile": true
         },
-		"settings.testsettings": {
+        "settings.testsettings": {
             "isFile": true
         }
-    },
-    "osType" : {
-        "osType": "Windows"
     }
 }

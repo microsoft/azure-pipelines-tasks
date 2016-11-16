@@ -2,15 +2,9 @@
     "getVariable": {
         "System.DefaultWorkingDirectory": "/source/dir",
         "VS140COMNTools": "/vs/path",
-		"tia.enabled": "true"
+        "tia.enabled": "true"
     },
-    "find": {
-        "/source/dir": [
-            "someDir/someFile2",
-            "/someDir/someFile1"
-        ]
-    },
-    "match": {
+    "findMatch": {
         "*.trx": [
             "a.trx"
         ]
@@ -29,21 +23,18 @@
     },
     "exist": {
         "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": true,
-		"settings.runsettings": true,
-		"settings.testsettings": true
+        "settings.runsettings": true,
+        "settings.testsettings": true
     },
     "stats": {
         "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": {
             "isFile": true
         },
-		"settings.runsettings": {
+        "settings.runsettings": {
             "isFile": true
         },
-		"settings.testsettings": {
+        "settings.testsettings": {
             "isFile": true
         }
-    },
-    "osType" : {
-        "osType": "Windows"
     }
 }

@@ -160,7 +160,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/source/dir/some/*pattern');
+        tr.setInput('testAssemblyVer2', '/source/dir/some/*pattern');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
 
@@ -184,7 +184,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/source/dir/some/*pattern\n!/source/dir/some/*excludePattern');
+        tr.setInput('testAssemblyVer2', '/source/dir/some/*pattern\n!/source/dir/some/*excludePattern');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
 
@@ -208,7 +208,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/source/dir/someFile1');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
 
@@ -232,7 +232,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestFails.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/source/dir/some/*pattern');
+        tr.setInput('testAssemblyVer2', '/source/dir/some/*pattern');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
 
@@ -256,7 +256,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestFails.json'); // this response file does not have vs 2013
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/source/dir/someFile1');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '12.0');
 
@@ -281,7 +281,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/source/dir/someFile1');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('testFiltercriteria', 'testFilter');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
@@ -306,7 +306,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/source/dir/someFile1');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('codeCoverageEnabled', 'true');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
@@ -331,7 +331,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/source/dir/someFile1');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('otherConsoleOptions', 'consoleOptions');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
@@ -356,7 +356,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/source/dir/someFile1');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
         tr.setInput('runSettingsFile', "settings.runsettings");
@@ -381,7 +381,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/source/dir/someFile1');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '12.0');
         tr.setInput('runInParallel', 'true');
@@ -407,7 +407,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/source/dir/someFile1');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0'); // response file sets below update1
         tr.setInput('runInParallel', 'true');
@@ -433,7 +433,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/source/dir/someFile1');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '15.0');
         tr.setInput('runInParallel', 'true');
@@ -459,7 +459,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestRunInParallel.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/source/dir/someFile1');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0'); // response file sets above update1
         tr.setInput('runInParallel', 'true');
@@ -485,7 +485,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/source/dir/someFile1');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
         tr.setInput('pathtoCustomTestAdapters', "path/to/customadapters");
@@ -510,7 +510,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGoodWithTiaDisabled.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/source/dir/someFile1');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
         tr.setInput('runSettingsFile', "settings.runsettings");
@@ -536,7 +536,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/source/dir/someFile1');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
         tr.setInput('runSettingsFile', "settings.runsettings");
@@ -572,7 +572,7 @@ describe('VsTest Suite', function () {
         setResponseFile(path.basename(newResponseFilePath));
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/source/dir/someFile1');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
         tr.setInput('runSettingsFile', settingsFilePath);
@@ -602,7 +602,7 @@ describe('VsTest Suite', function () {
         setResponseFile(path.basename(newResponseFilePath));
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/source/dir/someFile1');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
         tr.setInput('runSettingsFile', settingsFilePath);
@@ -633,7 +633,7 @@ describe('VsTest Suite', function () {
         setResponseFile(path.basename(newResponseFilePath));
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/source/dir/someFile1');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
         tr.setInput('runSettingsFile', settingsFilePath);
@@ -655,7 +655,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/source/dir/someFile1');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'location');
         tr.setInput('vstestLocation', 'some\\path\\to\\vstest.console.exe');
         tr.setInput('vsTestVersion', '14.0');
@@ -677,7 +677,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/source/dir/someFile1');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'location');
         tr.setInput('vstestLocation', 'some\\illegal\\path\\to\\vstest.console.exe');
         tr.setInput('vsTestVersion', '14.0');
@@ -697,7 +697,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/source/dir/someFile1');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'location');
         tr.setInput('vstestLocation', '\\path\\to\\vstest\\directory');
         tr.setInput('vsTestVersion', '14.0');
@@ -719,7 +719,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/source/dir/someFile1');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'location');
         tr.setInput('vstestLocation', '\\path\\to\\vstest\\directory');
         tr.setInput('vsTestVersion', '14.0');
@@ -742,7 +742,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGoodSysDebugFalse.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/source/dir/someFile1');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'location');
         tr.setInput('vstestLocation', '\\path\\to\\vstest\\directory');
         tr.setInput('vsTestVersion', '14.0');
@@ -765,7 +765,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestRM.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/artifacts/dir/someFile1');
+        tr.setInput('testAssemblyVer2', '/artifacts/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
 
@@ -789,7 +789,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', '/search/dir/someFile1');
+        tr.setInput('testAssemblyVer2', '/search/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
         tr.setInput('searchDirectory', '/search/dir')

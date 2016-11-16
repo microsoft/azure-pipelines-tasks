@@ -47,12 +47,12 @@
   ],
   "inputs": [
     {
-      "name": "testAssembly",
+      "name": "testAssemblyVer2",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.testAssembly",
+      "label": "ms-resource:loc.input.label.testAssemblyVer2",
       "defaultValue": "**\\*test*.dll\n!**\\obj\\**",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.testAssembly",
+      "helpMarkDown": "ms-resource:loc.input.help.testAssemblyVer2",
       "groupName": "executionOptions",
       "properties": {
         "rows": "5",
@@ -60,12 +60,12 @@
       }
     },
     {
-      "name": "searchDirectory",
+      "name": "searchFolder",
       "type": "string",
-      "label": "ms-resource:loc.input.label.searchDirectory",
+      "label": "ms-resource:loc.input.label.searchFolder",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.searchDirectory",
+      "helpMarkDown": "ms-resource:loc.input.help.searchFolder",
       "groupName": "executionOptions"
     },
     {

@@ -6,28 +6,22 @@
         "VS140COMNTools": "/vs/path",
         "VS120COMNTools": "/vs/path"
     },
-    "find": {
-        "/source/dir": [
-            "/source/dir/someFile2",
-            "/source/dir/someFile1"
-        ],
-        "/search/dir": [
-            "/search/dir/someFile1"
-        ]
-    },
     "match": {
+        "**\\packages\\**\\*TestAdapter.dll": []
+    },
+    "findMatch": {
         "/source/dir/some/*pattern": [
             "/source/dir/someFile2",
             "/source/dir/someFile1"
         ],
-        "!/source/dir/some/*excludePattern": [
+        "/source/dir/some/*pattern,!/source/dir/some/*excludePattern": [
             "/source/dir/someFile1"
         ],
         "\\source\\dir\\TestResults\\*.trx": [
             "a.trx"
         ],
         "**\\packages\\**\\*TestAdapter.dll": [],
-        "/source/dir/someFile1" : [
+        "/source/dir/someFile1": [
             "/source/dir/someFile1"
         ],
         "/search/dir/someFile1": [
@@ -103,8 +97,5 @@
         "\\path\\to\\vstest\\directory": {
             "isDirectory": true
         }
-    },
-    "osType" : {
-        "osType": "Windows"
     }
 }

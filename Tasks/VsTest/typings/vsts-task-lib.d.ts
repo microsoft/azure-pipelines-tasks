@@ -1,12 +1,12 @@
 declare module 'vsts-task-lib/taskcommand' {
 	export class TaskCommand {
-	    constructor(command: any, properties: any, message: any);
-	    command: string;
-	    message: string;
-	    properties: {
-	        [key: string]: string;
-	    };
-	    toString(): string;
+		constructor(command: any, properties: any, message: any);
+		command: string;
+		message: string;
+		properties: {
+			[key: string]: string;
+		};
+		toString(): string;
 	}
 	export function commandFromString(commandLine: any): TaskCommand;
 
@@ -25,15 +25,15 @@ declare module 'vsts-task-lib/toolrunner' {
 	 * @param     ignoreReturnCode     optional.  defaults to failing on non zero.  ignore will not fail leaving it up to the caller
 	 */
 	export interface IExecOptions {
-	    cwd?: string;
-	    env?: {
-	        [key: string]: string;
-	    };
-	    silent?: boolean;
-	    failOnStdErr?: boolean;
-	    ignoreReturnCode?: boolean;
-	    outStream?: stream.Writable;
-	    errStream?: stream.Writable;
+		cwd?: string;
+		env?: {
+			[key: string]: string;
+		};
+		silent?: boolean;
+		failOnStdErr?: boolean;
+		ignoreReturnCode?: boolean;
+		outStream?: stream.Writable;
+		errStream?: stream.Writable;
 	}
 	/**
 	 * Interface for exec results returned from synchronous exec functions
@@ -44,19 +44,19 @@ declare module 'vsts-task-lib/toolrunner' {
 	 * @param     error       Error on failure
 	 */
 	export interface IExecResult {
-	    stdout: string;
-	    stderr: string;
-	    code: number;
-	    error: Error;
+		stdout: string;
+		stderr: string;
+		code: number;
+		error: Error;
 	}
 	export function debug(message: any): void;
 	export class ToolRunner extends events.EventEmitter {
-	    constructor(toolPath: any);
-	    toolPath: string;
-	    args: string[];
-	    silent: boolean;
-	    private _debug(message);
-	    private _argStringToArray(argString);
+		constructor(toolPath: any);
+		toolPath: string;
+		args: string[];
+		silent: boolean;
+		private _debug(message);
+		private _argStringToArray(argString);
 	    /**
 	     * Add argument
 	     * Append an argument or an array of arguments
@@ -64,7 +64,7 @@ declare module 'vsts-task-lib/toolrunner' {
 	     * @param     val        string cmdline or array of strings
 	     * @returns   void
 	     */
-	    arg(val: string | string[]): void;
+		arg(val: string | string[]): void;
 	    /**
 	     * Append argument command line string
 	     * e.g. '"arg one" two -z' would append args[]=['arg one', 'two', '-z']
@@ -72,7 +72,7 @@ declare module 'vsts-task-lib/toolrunner' {
 	     * @param     val        string cmdline
 	     * @returns   void
 	     */
-	    argString(val: string): void;
+		argString(val: string): void;
 		/**
 		 * Append argument command line string
 		 * e.g. '"arg one" two -z' would append args[]=['arg one', 'two', '-z']
@@ -90,7 +90,7 @@ declare module 'vsts-task-lib/toolrunner' {
 	     * @param     val        string cmdline
 	     * @returns   ToolRunner 
 	     */
-	    line(val: string): ToolRunner;
+		line(val: string): ToolRunner;
 	    /**
 	     * Add path argument
 	     * Add path string to argument, path string should not contain double quoted
@@ -99,7 +99,7 @@ declare module 'vsts-task-lib/toolrunner' {
 	     * @param     val     path argument string
 	     * @returns   void
 	     */
-	    pathArg(val: string): void;
+		pathArg(val: string): void;
 	    /**
 	     * Add argument(s) if a condition is met
 	     * Wraps arg().  See arg for details
@@ -108,13 +108,13 @@ declare module 'vsts-task-lib/toolrunner' {
 	     * @param     val     string cmdline or array of strings
 	     * @returns   void
 	     */
-	    argIf(condition: any, val: any): void;
+		argIf(condition: any, val: any): void;
 		/**
 		 * Pipe output of exec() to another tool
 		 * @param tool
 		 * @returns {ToolRunner}
 		 */
-		public pipeExecOutputToTool(tool: ToolRunner) : ToolRunner;
+		public pipeExecOutputToTool(tool: ToolRunner): ToolRunner;
 		/**
 	     * Exec a tool.
 	     * Output will be streamed to the live console.
@@ -124,7 +124,7 @@ declare module 'vsts-task-lib/toolrunner' {
 	     * @param     options  optional exec options.  See IExecOptions
 	     * @returns   number
 	     */
-	    exec(options?: IExecOptions): Q.Promise<number>;
+		exec(options?: IExecOptions): Q.Promise<number>;
 	    /**
 	     * Exec a tool synchronously.
 	     * Output will be *not* be streamed to the live console.  It will be returned after execution is complete.
@@ -135,20 +135,20 @@ declare module 'vsts-task-lib/toolrunner' {
 	     * @param     options  optionalexec options.  See IExecOptions
 	     * @returns   IExecResult
 	     */
-	    execSync(options?: IExecOptions): IExecResult;
+		execSync(options?: IExecOptions): IExecResult;
 	}
 
 }
 declare module 'vsts-task-lib/vault' {
 	export class Vault {
-	    constructor();
-	    private _keyFile;
-	    private _store;
-	    initialize(): void;
-	    storeSecret(name: string, data: string): boolean;
-	    retrieveSecret(name: string): string;
-	    private getKey();
-	    private genKey();
+		constructor();
+		private _keyFile;
+		private _store;
+		initialize(): void;
+		storeSecret(name: string, data: string): boolean;
+		retrieveSecret(name: string): string;
+		private getKey();
+		private genKey();
 	}
 
 }
@@ -158,8 +158,8 @@ declare module 'vsts-task-lib/task' {
 	import fs = require('fs');
 	import trm = require('vsts-task-lib/toolrunner');
 	export enum TaskResult {
-	    Succeeded = 0,
-	    Failed = 1,
+		Succeeded = 0,
+		Failed = 1,
 	}
 	export var _outStream: any;
 	export var _errStream: any;
@@ -299,10 +299,10 @@ declare module 'vsts-task-lib/task' {
 	 * @param     scheme            auth scheme such as OAuth or username/password etc...
 	 */
 	export interface EndpointAuthorization {
-	    parameters: {
-	        [key: string]: string;
-	    };
-	    scheme: string;
+		parameters: {
+			[key: string]: string;
+		};
+		scheme: string;
 	}
 	/**
 	 * Gets the authorization details for a service endpoint
@@ -369,7 +369,7 @@ declare module 'vsts-task-lib/task' {
 	/**
 	 * Interface to wrap file options
 	 */
-	export interface FsOptions {}
+	export interface FsOptions { }
 
 	/**
 	 * Synchronously writes data to a file, replacing the file if it already exists.
@@ -377,7 +377,7 @@ declare module 'vsts-task-lib/task' {
 	 * @param data
 	 * @param options
 	 */
-	export function writeFile(file: string, data:string|Buffer, options?:string|FsOptions);
+	export function writeFile(file: string, data: string | Buffer, options?: string | FsOptions);
 	/**
 	 * Useful for determining the host operating system.
 	 * see [os.type](https://nodejs.org/api/os.html#os_os_type)
@@ -545,34 +545,52 @@ declare module 'vsts-task-lib/task' {
 	 * @param     tool     path to tool to exec
 	 * @returns   ToolRunner
 	 */
-	export function createToolRunner(tool: string): trm.ToolRunner;
+	export function tool(tool: string): trm.ToolRunner;
+	export interface MatchOptions {
+		debug?: boolean;
+		nobrace?: boolean;
+		noglobstar?: boolean;
+		dot?: boolean;
+		noext?: boolean;
+		nocase?: boolean;
+		nonull?: boolean;
+		matchBase?: boolean;
+		nocomment?: boolean;
+		nonegate?: boolean;
+		flipNegate?: boolean;
+	}
 
-	/**
-	 * Convenience factory to create a ToolRunner.
-	 *
-	 * @param     tool     path to tool to exec
-	 * @returns   ToolRunner
-	 */
-	export function tool(tool: string) : trm.ToolRunner;
 
 	export function match(list: any, pattern: any, options: any): string[];
 	export function filter(pattern: any, options: any): (element: string, indexed: number, array: string[]) => boolean;
+	/**
+	 * Determines the find root from a list of patterns. Performs the find and then applies the glob patterns.
+	 * Supports interleaved exclude patterns. Unrooted patterns are rooted using defaultRoot, unless
+	 * matchOptions.matchBase is specified and the pattern is a basename only. For matchBase cases, the
+	 * defaultRoot is used as the find root.
+	 *
+	 * @param  defaultRoot   default path to root unrooted patterns. falls back to System.DefaultWorkingDirectory or process.cwd().
+	 * @param  patterns      pattern or array of patterns to apply
+	 * @param  findOptions   defaults to { followSymbolicLinks: true }. following soft links is generally appropriate unless deleting files.
+	 * @param  matchOptions  defaults to { dot: true, nobrace: true, nocase: process.platform == 'win32' }
+	 */
+	export function findMatch(defaultRoot: string, patterns: string[] | string, findOptions?: FindOptions, matchOptions?: MatchOptions): string[];
 	export class TestPublisher {
-	    constructor(testRunner: any);
-	    testRunner: string;
-	    publish(resultFiles: any, mergeResults: any, platform: any, config: any, runTitle: any, publishRunAttachments: any): void;
+		constructor(testRunner: any);
+		testRunner: string;
+		publish(resultFiles: any, mergeResults: any, platform: any, config: any, runTitle: any, publishRunAttachments: any): void;
 	}
 	export class CodeCoveragePublisher {
-	    constructor();
-	    publish(codeCoverageTool: any, summaryFileLocation: any, reportDirectory: any, additionalCodeCoverageFiles: any): void;
+		constructor();
+		publish(codeCoverageTool: any, summaryFileLocation: any, reportDirectory: any, additionalCodeCoverageFiles: any): void;
 	}
 	export class CodeCoverageEnabler {
-	    private buildTool;
-	    private ccTool;
-	    constructor(buildTool: string, ccTool: string);
-	    enableCodeCoverage(buildProps: {
-	        [key: string]: string;
-	    }): void;
+		private buildTool;
+		private ccTool;
+		constructor(buildTool: string, ccTool: string);
+		enableCodeCoverage(buildProps: {
+			[key: string]: string;
+		}): void;
 	}
 	export function _loadData(): void;
 

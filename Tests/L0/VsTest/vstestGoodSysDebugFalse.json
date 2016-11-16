@@ -7,13 +7,10 @@
         "VS120COMNTools": "/vs/path",
         "System.Debug": "false"
     },
-    "find": {
-        "/source/dir": [
-            "/source/dir/someFile2",
-            "/source/dir/someFile1"
-        ]
-    },
     "match": {
+        "**\\packages\\**\\*TestAdapter.dll": []
+    },
+    "findMatch": {
         "\\source\\dir\\some\\*pattern": [
             "some/path/one",
             "some/path/two"
@@ -25,8 +22,9 @@
         "*.trx": [
             "a.trx"
         ],
-        "**\\packages\\**\\*TestAdapter.dll": [],
-        "/source/dir/someFile1" : ["/source/dir/someFile1"]
+        "/source/dir/someFile1": [
+            "/source/dir/someFile1"
+        ]
     },
     "exec": {
         "\\path\\to\\vstest\\directory\\vstest.console.exe /source/dir/someFile1 /logger:trx": {
@@ -61,8 +59,5 @@
         "\\path\\to\\vstest\\directory": {
             "isDirectory": true
         }
-    },
-    "osType" : {
-        "osType": "Windows"
     }
 }

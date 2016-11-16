@@ -5,20 +5,16 @@
         "VS140COMNTools": "/vs/path",
         "VSTest_14.0": "/vs/IDE/CommonExtensions/Microsoft/TestWindow"
     },
-    "find": {
-        "/source/dir": [
-            "/source/dir/someFile2",
-            "/source/dir/someFile1"
-        ]
-    },
     "match": {
+        "**\\packages\\**\\*TestAdapter.dll": []
+    },
+    "findMatch": {
         "/source/dir/some/*pattern": [
             "/source/dir/someFile2",
             "/source/dir/someFile1"
         ],
-        "**\\packages\\**\\*TestAdapter.dll": [],
         "/source/dir/someFile1": [
-            "/source/dir/someFile1"            
+            "/source/dir/someFile1"
         ]
     },
     "exec": {
@@ -33,8 +29,5 @@
             "success": true,
             "message": "success"
         }
-    },
-    "osType" : {
-        "osType": "Windows"
     }
 }

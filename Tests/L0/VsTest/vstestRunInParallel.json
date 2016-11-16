@@ -4,17 +4,11 @@
         "build.sourcesdirectory": "/source/dir",
         "VS140COMNTools": "/vs/path"
     },
-    "find": {
-        "/source/dir": [
-            "/source/dir/someFile2",
-            "/source/dir/someFile1"
-        ]
-    },
-    "match": {
+    "findMatch": {
         "\\source\\dir\\TestResults\\*.trx": [
             "a.trx"
         ],
-        "/source/dir/someFile1" : [
+        "/source/dir/someFile1": [
             "/source/dir/someFile1"
         ]
     },
@@ -37,8 +31,5 @@
         "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": {
             "isFile": true
         }
-    },
-    "osType" : {
-        "osType": "Windows"
     }
 }

@@ -47,12 +47,12 @@
     ],
     "inputs": [
         {
-            "name": "testAssembly",
+            "name": "testAssemblyVer2",
             "type": "multiLine",
             "label": "Test Assembly",
             "defaultValue": "**\\*test*.dll\n!**\\obj\\**",
             "required": true,
-            "helpMarkDown": "Test binaries to run tests on. Supports multiple lines of minimatch patterns.",
+            "helpMarkDown": "Run tests from the specified files. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkId=624539)",
             "groupName": "executionOptions",
             "properties": {
                 "rows": "5",
@@ -60,12 +60,12 @@
             }
         },
         {
-            "name": "searchDirectory",
+            "name": "searchFolder",
             "type": "string",
-            "label": "Search Directory",
+            "label": "Search Folder",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Directory to search for the test assemblies.",
+            "helpMarkDown": "Folder to search for the test assemblies. Defaults to $(System.DefaultWorkingDirectory) for build and $(System.ArtifactsDirectory) for release.",
             "groupName": "executionOptions"
         },
         {

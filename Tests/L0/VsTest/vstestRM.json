@@ -6,23 +6,18 @@
         "VS140COMNTools": "/vs/path",
         "VS120COMNTools": "/vs/path"
     },
-    "find": {
-        "/artifacts/dir": [
-            "/artifacts/dir/someFile2",
-            "/artifacts/dir/someFile1"
-        ]
-    },
     "match": {
+        "**\\packages\\**\\*TestAdapter.dll": []
+    },
+    "findMatch": {
+        "/artifacts/dir/someFile1": [
+            "/artifacts/dir/someFile1"
+        ],
         "\\artifacts\\dir\\TestResults\\*.trx": [
             "\\artifacts\\dir\\TestResults\\a.trx"
-        ],
-        "**\\packages\\**\\*TestAdapter.dll": [],
-        "/artifacts/dir/someFile1":  [
-            "/artifacts/dir/someFile1"
         ]
-
     },
-    "exec": {        
+    "exec": {
         "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /artifacts/dir/someFile1 /logger:trx": {
             "code": 0,
             "stdout": "vstest"
@@ -55,8 +50,5 @@
         "\\path\\to\\vstest\\directory": {
             "isDirectory": true
         }
-    },
-    "osType" : {
-        "osType": "Windows"
     }
 }
