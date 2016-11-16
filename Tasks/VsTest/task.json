@@ -55,7 +55,7 @@
             "helpMarkDown": "Run tests from the specified files. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkId=624539)",
             "groupName": "executionOptions",
             "properties": {
-                "rows": "5",
+                "rows": "3",
                 "resizable": "true"
             }
         },

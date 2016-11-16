@@ -55,7 +55,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.testAssemblyVer2",
       "groupName": "executionOptions",
       "properties": {
-        "rows": "5",
+        "rows": "3",
         "resizable": "true"
       }
     },
