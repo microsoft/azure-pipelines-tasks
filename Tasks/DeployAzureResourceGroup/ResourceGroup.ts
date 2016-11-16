@@ -49,13 +49,17 @@ export class ResourceGroup {
     } 
 
     private updateOverrideParameters(params) {
+        
+
         if (!this.taskParameters.overrideParameters || !this.taskParameters.overrideParameters.trim()) {
             return params;
         }
+        tl.debug("Overriding Parameters..");
         var override = parameterParse(this.taskParameters.overrideParameters);
         for (var key in override) {
             params[key] = override[key];
         }
+        tl.debug("Parameters after overriding." + JSON.stringify(params));
         return params;
     }
     
@@ -104,8 +108,7 @@ export class ResourceGroup {
 
     private request(url): q.Promise<string> {
         var deferred = q.defer<string>();
-        var headers = {"User-Agent": "VSTS_AGENT"}
-        httpObj.get("GET", url, null, (error, result, contents) => {
+        httpObj.get("GET", url, {}, (error, result, contents) => {
             if (error) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("URLFetchFailed", error));
                 process.exit();
@@ -115,7 +118,7 @@ export class ResourceGroup {
         return deferred.promise;
     }
 
-    private createDeployment(contents, templateLink?, template?) {
+    private createDeployment(parameters, templateLink?, template?) {
         var properties = {}
         if (templateLink) {
             properties["templateLink"] = {"uri" : templateLink};
@@ -126,11 +129,11 @@ export class ResourceGroup {
         if (this.taskParameters.csmParametersFileLink && this.taskParameters.csmParametersFileLink.trim()!="" && this.taskParameters.overrideParameters.trim()=="")
             properties["parametersLink"] = {"uri" : this.taskParameters.csmParametersFileLink };
         else {
-            var params = contents;
+            var params = parameters;
+            params = this.updateOverrideParameters(params);
             properties["parameters"] = params;
             properties["mode"] = this.taskParameters.deploymentMode;
             properties["debugSetting"] = {"detailLevel": "requestContent, responseContent"};
-            params = this.updateOverrideParameters(params);
         }
         return new Deployment(properties, this.taskParameters.location)
     }
@@ -149,7 +152,7 @@ export class ResourceGroup {
             tl.setResult(tl.TaskResult.Failed, tl.loc("TemplateParsingFailed", error.message));
             process.exit();
         }
-        var parameters;
+        var parameters = {};
         try {
             if (this.taskParameters.csmParametersFile && this.taskParameters.csmParametersFile.trim()) {
                 tl.debug("Loading Parameters File.. " + this.taskParameters.csmParametersFile); 
@@ -158,9 +161,7 @@ export class ResourceGroup {
                 parameters = this.parseParameters(parameterFile);
                 tl.debug("Parameters file data: " + JSON.stringify(parameters));
             }
-            tl.debug("Overriding Parameters..");
-            parameters = this.updateOverrideParameters(parameters);
-            tl.debug("Parameters after overriding." + JSON.stringify(parameters));
+            
         }
         catch (error) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("ParametersFileParsingFailed", error.message));
@@ -199,12 +200,12 @@ export class ResourceGroup {
         } else {
             if (this.taskParameters.csmParametersFileLink && this.taskParameters.csmParametersFileLink.trim() && !this.taskParameters.overrideParameters && !this.taskParameters.overrideParameters.trim()) {
                 var deployment = this.createDeployment({});
-                this.startDeployment(armClient, this.taskParameters.location)
+                this.startDeployment(armClient, deployment);
             } else {
                 this.request(this.taskParameters.csmParametersFileLink).then((contents) => {
                     var parameters = JSON.parse(contents).parameters;
                     var deployment = this.createDeployment(parameters, this.taskParameters.csmFileLink);
-                    this.startDeployment(armClient, this.taskParameters.location);
+                    this.startDeployment(armClient, deployment);
                 });
             }
         }
