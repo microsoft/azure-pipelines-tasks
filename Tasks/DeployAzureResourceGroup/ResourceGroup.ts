@@ -171,12 +171,15 @@ export class ResourceGroup {
     }
 
     private startDeployment(armClient, deployment) {
+         console.log("Starting Deployment");
          armClient.deployments.createOrUpdate(this.taskParameters.resourceGroupName, this.createDeploymentName(this.taskParameters.csmFile), deployment, null, (error, result, request, response) => {
             if (error) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("RGO_createTemplateDeploymentFailed", error.message));
                 process.exit();
             }
+            console.log("Completed Deployment");
             if (this.taskParameters.enableDeploymentPrerequisites) {
+                console.log("Enabling winRM Https Listener on your windows machines..");
                 this.WinRMHttpsListener.EnableWinRMHttpsListener();
             }
 
@@ -225,7 +228,7 @@ export class ResourceGroup {
     
     public selectResourceGroup() {
         if (this.taskParameters.enableDeploymentPrerequisites) {
-            console.log("Enabling winRM Https Listener on your windows machines..")
+            console.log("Enabling winRM Https Listener on your windows machines..");
             this.WinRMHttpsListener.EnableWinRMHttpsListener();
         }
         try {
