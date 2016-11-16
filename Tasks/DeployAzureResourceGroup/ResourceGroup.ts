@@ -40,17 +40,19 @@ export class ResourceGroup {
         this.envController = new env.RegisterEnvironment(this.taskParameters);
     }
 
-    private createDeploymentName(filePath: string): string {
+    private createDeploymentName(): string {
         var name;
-        name = path.basename(filePath).split(".")[0].replace(" ", "");
+        if (this.taskParameters.templateLocation == "Linked Artifact")
+            name = this.taskParameters.csmFile;    
+        else 
+            name = this.taskParameters.csmFileLink;
+        name = path.basename(this.taskParameters.csmFile).split(".")[0].replace(" ", "");
         var ts = new Date(Date.now());
         var depName = util.format("%s-%s%s%s-%s%s", name, ts.getFullYear(), ts.getMonth(), ts.getDate(),ts.getHours(), ts.getMinutes());
         return depName;
     } 
 
     private updateOverrideParameters(params) {
-        
-
         if (!this.taskParameters.overrideParameters || !this.taskParameters.overrideParameters.trim()) {
             return params;
         }
@@ -83,7 +85,7 @@ export class ResourceGroup {
     private createRG(armClient): q.Promise<any> {
         var deferred = q.defer<any>();
         console.log(this.taskParameters.resourceGroupName+" Resource Group Not found");
-        console.log("Creating a new Resource Group:"+ this.taskParameters.resourceGroupName,"..");
+        console.log("Creating a new Resource Group:"+ this.taskParameters.resourceGroupName);
         armClient.resourceGroups.createOrUpdate(this.taskParameters.resourceGroupName, {"name": this.taskParameters.resourceGroupName, "location": this.taskParameters.location}, (error, result, request, response) => {
             if (error) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ResourceGroupCreationFailed", error));
@@ -171,8 +173,8 @@ export class ResourceGroup {
     }
 
     private startDeployment(armClient, deployment) {
-         console.log("Starting Deployment");
-         armClient.deployments.createOrUpdate(this.taskParameters.resourceGroupName, this.createDeploymentName(this.taskParameters.csmFile), deployment, null, (error, result, request, response) => {
+         console.log("Starting Deployment..");
+         armClient.deployments.createOrUpdate(this.taskParameters.resourceGroupName, this.createDeploymentName(), deployment, null, (error, result, request, response) => {
             if (error) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("RGO_createTemplateDeploymentFailed", error.message));
                 process.exit();

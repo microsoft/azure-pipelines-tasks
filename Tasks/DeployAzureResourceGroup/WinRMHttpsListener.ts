@@ -434,7 +434,7 @@ export class WinRMHttpsListener {
                     await this.AddExtensionVM(vmName, computeClient, dnsName, _extensionName, location, fileUris);
                 }
                 else if (result != null) {
-                    console.log(tl.loc("ExtensionAlreadyPresentVm ", _extensionName, vmName));
+                    console.log(tl.loc("ExtensionAlreadyPresentVm", _extensionName, vmName));
                     tl.debug("Checking if the Custom Script Extension enables Https Listener for winrm on VM " + vmName);
                     if(result["settings"]["fileUris"].length == fileUris.length && fileUris.every((element, index) => { return element === result["settings"]["fileUris"][index]; })){
                         tl.debug("Custom Script extension is for enabling Https Listener on VM" + vmName);

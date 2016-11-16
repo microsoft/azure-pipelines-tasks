@@ -60,10 +60,10 @@ class Environment {
     public CreatedBy: User;
     public CreatedDate: string;
     public ModifiedDate: string;
-
+ 
     constructor(resources: Array<Resource>, userId: string, projectName: string, environmentName: string) {
         this.Id = 0;
-        this.Url = "null";
+        this.Url = null;
         this.Revision = 1;
         this.Project = new Project(projectName, projectName);
         var user = new User(userId);
@@ -77,9 +77,21 @@ class Environment {
         this.IsReserved = false;
         this.CreatedBy = user;
         var timestamp = new Date();
-        this.CreatedDate = util.format("%s-%s-%sT%s:%s:%s.%sZ", timestamp.getFullYear(), timestamp.getMonth(), timestamp.getDate(), 
-                                        timestamp.getHours(), timestamp.getMinutes(), timestamp.getSeconds(), timestamp.getMilliseconds());
+        this.CreatedDate = this.formatDate(timestamp);
         this.ModifiedDate = "0001-01-01T00:00:00";
+    }
+       
+    private pad(num) {
+        return ("0" + num).slice(-2);
+    }
+
+    private formatDate(d) {
+        return [d.getUTCFullYear(), 
+                this.pad(d.getUTCMonth() + 1), 
+                this.pad(d.getUTCDate())].join("-") + "T" + 
+            [this.pad(d.getUTCHours()), 
+                this.pad(d.getUTCMinutes()), 
+                this.pad(d.getUTCSeconds())].join(":") + "Z";
     }
 }
 
