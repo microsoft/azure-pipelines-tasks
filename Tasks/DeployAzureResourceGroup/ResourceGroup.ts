@@ -78,13 +78,14 @@ export class ResourceGroup {
 
     private createRG(armClient): q.Promise<any> {
         var deferred = q.defer<any>();
-        console.log(this.taskParameters.resourceGroupName+" resource Group Not found");
-        console.log("Creating a new Resource Group:"+ this.taskParameters.resourceGroupName);
+        console.log(this.taskParameters.resourceGroupName+" Resource Group Not found");
+        console.log("Creating a new Resource Group:"+ this.taskParameters.resourceGroupName,"..");
         armClient.resourceGroups.createOrUpdate(this.taskParameters.resourceGroupName, {"name": this.taskParameters.resourceGroupName, "location": this.taskParameters.location}, (error, result, request, response) => {
             if (error) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ResourceGroupCreationFailed", error));
                 process.exit();
             } 
+            console.log("Created Resource Group!");
             deferred.resolve("Succeeded");
         });
         return deferred.promise;
@@ -113,9 +114,14 @@ export class ResourceGroup {
         return deferred.promise;
     }
 
-    private createDeployment(contents) {
+    private createDeployment(contents, templateLink?, template?) {
         var properties = {}
-        properties["templateLink"] = {"uri" : this.taskParameters.csmFileLink};
+        if (templateLink) {
+            properties["templateLink"] = {"uri" : templateLink};
+        }
+        if (template) {
+            properties["template"] = template;
+        }
         if (this.taskParameters.csmParametersFileLink && this.taskParameters.csmParametersFileLink.trim()!="" && this.taskParameters.overrideParameters.trim()=="")
             properties["parametersLink"] = {"uri" : this.taskParameters.csmParametersFileLink };
         else {
@@ -150,7 +156,7 @@ export class ResourceGroup {
             tl.setResult(tl.TaskResult.Failed, tl.loc("ParametersFileParsingFailed", error.message));
             process.exit();
         }
-        return this.createDeployment(parameters);
+        return this.createDeployment(parameters, null, template);
     }
 
     private startDeployment(armClient, deployment) {
@@ -176,6 +182,7 @@ export class ResourceGroup {
     }
 
     private createTemplateDeployment(armClient) {
+        console.log("Creating Template Deployment")
         if (this.taskParameters.templateLocation === "Linked Artifact") {
             var deployment = this.getDeploymentDataForLinkedArtifact();
             this.startDeployment(armClient, deployment);
@@ -186,7 +193,7 @@ export class ResourceGroup {
             } else {
                 this.request(this.taskParameters.csmParametersFileLink).then((contents) => {
                     var parameters = JSON.parse(contents).parameters;
-                    var deployment = this.createDeployment(parameters);
+                    var deployment = this.createDeployment(parameters, this.taskParameters.csmFileLink);
                     this.startDeployment(armClient, this.taskParameters.location);
                 });
             }
