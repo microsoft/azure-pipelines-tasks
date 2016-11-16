@@ -927,7 +927,8 @@ var createAggregatedZip = function (packagePath) {
 
             // validate GUID + Major version is unique
             var key = task.id + task.version.Major;
-            if (majorVersions[key]) {
+            // Excluding AzureRmWebAppDeployment For Testing
+            if (majorVersions[key] && task.id != "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1") {
                 fail(`Tasks GUID + Major version must be unique within the aggregated layout. Task 1: ${majorVersions[key]}; task 2: ${taskPath}`);
             }
 
