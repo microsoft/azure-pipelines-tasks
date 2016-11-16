@@ -264,7 +264,17 @@ export class JobSearch {
                      * So, for all jobs being tracked (within this code), one is consisdered the main job (which will be followed), and
                      * all others are considered joined and will not be tracked further.
                      */
-                    var causes : any = parsedBody.actions[0].causes;
+                    var findCauses = function(actions) { 
+                        for (var i in actions) {
+                            if (actions[i].causes) {
+                                return actions[i].causes; 
+                            }
+                        } 
+
+                        return null;
+                    };
+
+                    var causes : any = findCauses(parsedBody.actions);
                     thisSearch.foundCauses[thisSearch.nextSearchBuildNumber] = causes;
                     thisSearch.determineMainJob(thisSearch.nextSearchBuildNumber, function (mainJob: Job, secondaryJobs: Job[]) {
                         if (mainJob != null) {
