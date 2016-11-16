@@ -42,8 +42,9 @@ export class WinRMHttpsListener {
                     this.winRmHttpsPortMap[resourceName] = "5986";
                 }
                 tl.debug("Enabling winrm for virtual machine " + resourceName);
-                if (vm["storageProfile"]["osDisk"]["osType"] === 'Windows')
+                if (vm["storageProfile"]["osDisk"]["osType"] === 'Windows'){
                     await this.AddAzureVMCustomScriptExtension(resourceId, resourceName, resourceFQDN, vm["location"]);
+                }
             }
             await this.AddWinRMHttpsNetworkSecurityRuleConfig();
         }
@@ -406,6 +407,10 @@ export class WinRMHttpsListener {
 
     private async AddAzureVMCustomScriptExtension(vmId: string, vmName: string, dnsName: string, location: string) {
         var _extensionName: string = "CustomScriptExtension";
+        var _configWinRMScriptFile: string = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/ConfigureWinRM.ps1";
+        var _makeCertFile: string = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/makecert.exe";
+        var _winrmConfFile: string = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/winrmconf.cmd";
+        var fileUris  = [_configWinRMScriptFile, _makeCertFile, _winrmConfFile]; 
         var deferred = Q.defer<string>();
 
         tl.debug("Adding custom script extension for virtual machine " + vmName);
@@ -426,18 +431,26 @@ export class WinRMHttpsListener {
                 if (error) {
                     tl.debug("Failed to get the extension!!");
                     //Adding the extension
-                    await this.AddExtensionVM(vmName, computeClient, dnsName, _extensionName, location);
+                    await this.AddExtensionVM(vmName, computeClient, dnsName, _extensionName, location, fileUris);
                 }
                 else if (result != null) {
                     console.log(tl.loc("ExtensionAlreadyPresentVm ", _extensionName, vmName));
-                    if (result["provisioningState"] != 'Succeeded') {
-                        tl.debug("Provisioning State of extension " + _extensionName + " on vm " + vmName + " is not Succeeded");
-                        await this.RemoveExtensionFromVM(_extensionName, vmName, computeClient);
-                        await this.AddExtensionVM(vmName, computeClient, dnsName, _extensionName, location);
+                    tl.debug("Checking if the Custom Script Extension enables Https Listener for winrm on VM " + vmName);
+                    if(result["settings"]["fileUris"].length == fileUris.length && fileUris.every((element, index) => { return element === result["settings"]["fileUris"][index]; })){
+                        tl.debug("Custom Script extension is for enabling Https Listener on VM" + vmName);
+                        if (result["provisioningState"] != 'Succeeded') {
+                            tl.debug("Provisioning State of extension " + _extensionName + " on vm " + vmName + " is not Succeeded");
+                            await this.RemoveExtensionFromVM(_extensionName, vmName, computeClient);
+                            await this.AddExtensionVM(vmName, computeClient, dnsName, _extensionName, location, fileUris);
+                        }
+                        else {
+                            //Validate the Custom Script Execution status: if ok add the rule else add the extension
+                            await this.ValidateCustomScriptExecutionStatus(vmName, computeClient, dnsName, _extensionName, location, fileUris);
+                        }
                     }
-                    else {
-                        //Validate the Custom Script Execution status: if ok add the rule else add the extension
-                        await this.ValidateCustomScriptExecutionStatus(vmName, computeClient, dnsName, _extensionName, location);
+                    else{
+                        tl.debug("Custom Script Extension present doesn't enable Https Listener on VM" + vmName);
+                        await this.AddExtensionVM(vmName, computeClient, dnsName, _extensionName, location, fileUris);
                     }
                 }
                 else {
@@ -455,7 +468,7 @@ export class WinRMHttpsListener {
         return deferred.promise;
     }
 
-    private async ValidateCustomScriptExecutionStatus(vmName: string, computeClient, dnsName: string, extensionName: string, location: string) {
+    private async ValidateCustomScriptExecutionStatus(vmName: string, computeClient, dnsName: string, extensionName: string, location: string, fileUris) {
         tl.debug("Validating the winrm configuration custom script extension status");
         var deferred = Q.defer<void>();
 
@@ -481,7 +494,7 @@ export class WinRMHttpsListener {
                 }
             }
             if (invalidExecutionStatus) {
-                await this.AddExtensionVM(vmName, computeClient, dnsName, extensionName, location);
+                await this.AddExtensionVM(vmName, computeClient, dnsName, extensionName, location, fileUris);
             }
             else {
                 this.customScriptExtensionInstalled = true;
@@ -491,10 +504,7 @@ export class WinRMHttpsListener {
         });
     }
 
-    private async AddExtensionVM(vmName: string, computeClient, dnsName: string, extensionName: string, location: string) {
-        var _configWinRMScriptFile: string = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/ConfigureWinRM.ps1";
-        var _makeCertFile: string = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/makecert.exe";
-        var _winrmConfFile: string = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/winrmconf.cmd";
+    private async AddExtensionVM(vmName: string, computeClient, dnsName: string, extensionName: string, location: string, _fileUris) {
         var _commandToExecute: string = "powershell.exe -File ConfigureWinRM.ps1 " + dnsName;
         var _extensionType: string = 'Microsoft.Compute/virtualMachines/extensions';
         var _virtualMachineExtensionType: string = 'CustomScriptExtension';
@@ -503,7 +513,7 @@ export class WinRMHttpsListener {
 
         var deferred = Q.defer<void>();
         var _protectedSettings = { commandToExecute: _commandToExecute };
-        var parameters = { type: _extensionType, virtualMachineExtensionType: _virtualMachineExtensionType, typeHandlerVersion: _typeHandlerVersion, publisher: _publisher, location: location, settings: { fileUris: [_configWinRMScriptFile, _makeCertFile, _winrmConfFile] }, protectedSettings: _protectedSettings };
+        var parameters = { type: _extensionType, virtualMachineExtensionType: _virtualMachineExtensionType, typeHandlerVersion: _typeHandlerVersion, publisher: _publisher, location: location, settings: { fileUris: _fileUris }, protectedSettings: _protectedSettings };
         console.log(tl.loc("AddExtension", extensionName, vmName));
         computeClient.virtualMachineExtensions.createOrUpdate(this.resourceGroupName, vmName, extensionName, parameters, async (error, result, request, response) => {
             if (error) {
@@ -595,8 +605,15 @@ export class WinRMHttpsListener {
 
                         this.fqdnMap = this.GetMachineNameFromId(this.fqdnMap, "FQDN", virtualMachines, true, debugLogsFlag);
 
-                        tl.debug("FQDN map: " + util.inspect(this.fqdnMap, { depth: null }));
-                        tl.debug("WinRMHttpPort map: " + util.inspect(this.winRmHttpsPortMap, { depth: null }));
+                        tl.debug("FQDN map: " );
+                        for( var index in this.fqdnMap){
+                            tl.debug(index + " : " + this.fqdnMap[index]);
+                        }
+                        
+                        tl.debug("WinRMHttpPort map: ");
+                        for( var index in this.winRmHttpsPortMap){
+                            tl.debug(index + " : " + this.winRmHttpsPortMap[index]);
+                        }
 
                         this.virtualMachines = virtualMachines;
 
@@ -631,9 +648,6 @@ export class WinRMHttpsListener {
                     }
                 }
             }
-            if (debugLogsFlag === "true") {
-                //fill here
-            }
 
             //Find out the NIC and thus the VM corresponding to a given ipc
             for (var i = 0; i < networkInterfaceResources.length; i++) {
@@ -652,10 +666,6 @@ export class WinRMHttpsListener {
                         }
                     }
                 }
-            }
-
-            if (debugLogsFlag == "true") {
-                //fill here
             }
         }
         return fqdnMap;
