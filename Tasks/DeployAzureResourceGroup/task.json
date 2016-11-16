@@ -1,6 +1,6 @@
 {
     "id": "94A74903-F93F-4075-884F-DC11F34058B4",
-    "name": "AzureResourceGroupDeployment",
+    "name": "DeployAzureResourceGroup",
     "friendlyName": "Azure Resource Group Deployment",
     "description": "Deploy, start, stop, delete Azure Resource Groups",
     "helpMarkDown": "[More Information](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
@@ -16,7 +16,7 @@
         "Patch": 0
     },
     "demands": [
-        "nodejs"
+        "node.js"
     ],
     "minimumAgentVersion": "2.0.0",
     "groups": [

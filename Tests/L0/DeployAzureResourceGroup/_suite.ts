@@ -17,7 +17,7 @@ function setResponseFile(name: string) {
 
 describe('Azure Resource Group Deployment', function () {
     this.timeout(30000);
-    var taskSrcPath = path.join (__dirname, '..', '..', '..', 'Tasks', 'AzureResourceGroupDeployment');
+    var taskSrcPath = path.join (__dirname, '..', '..', '..', 'Tasks', 'DeployAzureResourceGroup');
     var testSrcPath = path.join (__dirname, '..', '..', '..', "..", 'Tests', 'L0', 'DeployAzureResourceGroup');
 
     before((done) => {
@@ -31,7 +31,7 @@ describe('Azure Resource Group Deployment', function () {
             shell.cp( '-rf', path.join (testSrcPath,'mock_node_modules',"azure-arm-resource"), path.join (taskSrcPath,'node_modules'));
             shell.cp( '-rf', path.join (testSrcPath,'mock_node_modules',"azure-arm-network"), path.join (taskSrcPath,'node_modules'));
         }
-        setResponseFile("defaults.json")
+        setResponseFile("defaults.json");
         done();
     });
     before((done) => {
@@ -42,7 +42,7 @@ describe('Azure Resource Group Deployment', function () {
     });
 
     function createOrUpdateRG() {
-        var tr = new trm.TaskRunner('AzureResourceGroupDeployment');
+        var tr = new trm.TaskRunner('DeployAzureResourceGroup');
         tr.setInput("action", "Create Or Update Resource Group");
         tr.setInput("ConnectedServiceName", "AzureRM");
         tr.setInput("resourceGroupName", "dummy");
@@ -87,7 +87,7 @@ describe('Azure Resource Group Deployment', function () {
 
     
     function selectRG() {
-        var tr = new trm.TaskRunner('AzureResourceGroupDeployment');
+        var tr = new trm.TaskRunner('DeployAzureResourceGroup');
         tr.setInput("action", "Select Resource Group");
         tr.setInput("ConnectedServiceName", "AzureRM");
         tr.setInput("resourceGroupName", "AzureRM");
@@ -138,7 +138,7 @@ describe('Azure Resource Group Deployment', function () {
     });
 
     function VMOperations(operation) {
-        var tr = new trm.TaskRunner('AzureResourceGroupDeployment');
+        var tr = new trm.TaskRunner('DeployAzureResourceGroup');
         tr.setInput("action", operation);
         tr.setInput("ConnectedServiceName", "AzureRM");
         tr.setInput("resourceGroupName", "dummy");
@@ -146,7 +146,7 @@ describe('Azure Resource Group Deployment', function () {
     }
 
     it("Deleted Resource Group", (done) => {
-        var tr = new trm.TaskRunner('AzureResourceGroupDeployment');
+        var tr = new trm.TaskRunner('DeployAzureResourceGroup');
         tr.setInput("action", "DeleteRG");
         tr.setInput("ConnectedServiceName", "AzureRM");
         tr.setInput("resourceGroupName", "dummy");

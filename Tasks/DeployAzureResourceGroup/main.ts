@@ -13,11 +13,10 @@ catch (err) {
     process.exit();
 }
 
-var taskParameters = new deployAzureRG.AzureRGTaskParameters();
-var resourceGroupOperationsController = new resourceGroup.ResourceGroup(taskParameters);
-var virtualMachineOperationsController = new virtualMachine.VirtualMachine(taskParameters);
-
 function run () {
+    var taskParameters = new deployAzureRG.AzureRGTaskParameters();
+    var resourceGroupOperationsController = new resourceGroup.ResourceGroup(taskParameters);
+    var virtualMachineOperationsController = new virtualMachine.VirtualMachine(taskParameters);
     switch (taskParameters.action) {
             case "Create Or Update Resource Group": 
                 resourceGroupOperationsController.createOrUpdateRG();

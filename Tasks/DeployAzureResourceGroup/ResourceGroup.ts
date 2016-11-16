@@ -141,7 +141,7 @@ export class ResourceGroup {
         var parameters;
         try {
             if (this.taskParameters.csmParametersFile && this.taskParameters.csmParametersFile.trim()) {
-                var parameterFile = JSON.parse(fs.readFileSync(this.taskParameters.csmParametersFile, 'UTF-8'));
+                var parameterFile = fs.readFileSync(this.taskParameters.csmParametersFile, 'UTF-8');
                 parameters = this.parseParameters(parameterFile);
             }
             parameters = this.updateOverrideParameters(parameters);
