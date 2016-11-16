@@ -177,7 +177,7 @@ export class ResourceGroup {
             }
             console.log("Completed Deployment");
             if (this.taskParameters.enableDeploymentPrerequisites) {
-                console.log("Enabling winRM Https Listener on your windows machines..")'
+                console.log("Enabling winRM Https Listener on your windows machines..");
                 this.WinRMHttpsListener.EnableWinRMHttpsListener();
             }
 
@@ -226,7 +226,7 @@ export class ResourceGroup {
     
     public selectResourceGroup() {
         if (this.taskParameters.enableDeploymentPrerequisites) {
-            console.log("Enabling winRM Https Listener on your windows machines..")'
+            console.log("Enabling winRM Https Listener on your windows machines..");
             this.WinRMHttpsListener.EnableWinRMHttpsListener();
         }
         try {
