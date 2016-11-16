@@ -498,14 +498,18 @@ function Get-AzureSqlDatabaseServerResourceId
     $uri = "$script:azureRmUri/subscriptions/$subscriptionId/resources?api-version=$apiVersion"
     $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
-    $ResourceDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
-    foreach ($resourceDetail in $ResourceDetails.Value)
-    {
-        if ($resourceDetail.name -eq $serverName -and $resourceDetail.type -eq $serverType)
+    do {
+        Write-Verbose "Fetching Resources from $uri"
+        $ResourceDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+        foreach ($resourceDetail in $ResourceDetails.Value)
         {
-            return $resourceDetail.id
+            if ($resourceDetail.name -eq $serverName -and $resourceDetail.type -eq $serverType)
+            {
+                return $resourceDetail.id
+            }
         }
-    }
+        $uri = $ResourceDetails.nextLink
+    } until([string]::IsNullOrEmpty($ResourceDetails.nextLink))
 
     throw (Get-VstsLocString -Key AZ_NoValidResourceIdFound -ArgumentList $serverName, $serverType, $subscriptionId)
 }
