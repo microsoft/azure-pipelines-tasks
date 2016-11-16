@@ -8,13 +8,15 @@ tr.setInput('ConnectedServiceName', 'AzureRMSpn');
 tr.setInput('WebAppName', 'mytestapp');
 tr.setInput('Package', 'webAppPkg.zip');
 tr.setInput('UseWebDeploy', 'true');
+tr.setInput('XmlTransformsAndVariableSubstitutions', 'true');
+tr.setInput('XdtTransformation', 'true');
 
 process.env['TASK_TEST_TRACE'] = 1;
 process.env["ENDPOINT_AUTH_AzureRMSpn"] = "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONNAME"] = "sName";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONID"] =  "sId";
 process.env["AZURE_HTTP_USER_AGENT"] = "TFS_useragent";
-process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  "DefaultWorkingDirectory";
+process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  'DefaultWorkingDirectory';
 process.env["BUILD_SOURCEVERSION"] = "46da24f35850f455185b9188b4742359b537076f";
 process.env["BUILD_BUILDID"] = 1,
 process.env["RELEASE_RELEASEID"] = 1;
@@ -95,6 +97,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 import mockTask = require('vsts-task-lib/mock-task');
 var kuduDeploymentLog = require('webdeployment-common/kududeploymentstatusutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js');
+var xdtTransform = require('webdeployment-common/xdttransformationutility.js');
 
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
@@ -158,6 +161,23 @@ tr.registerMock('./azurerestutility.js', {
         var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
         requestDetails["requestBody"].author = 'author';
         console.log("kudu log requestBody is:" + JSON.stringify(requestDetails["requestBody"]));
+    }
+});
+
+tr.registerMock('webdeployment-common/ziputility.js', {
+    'unzip': function(zipLocation, unzipLocation) {
+        console.log('Extracting ' + zipLocation + ' to ' + unzipLocation);
+    },
+    archiveFolder: function(folderPath, targetPath, zipName) {
+        console.log('Archiving ' + folderPath + ' to ' + targetPath + '/' + zipName);
+    }
+});
+
+tr.registerMock('webdeployment-common/xdttransformationutility.js', {
+    basicXdtTransformation: function() {
+        process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] = path.join(__dirname, 'L0XdtTransform');
+        xdtTransform.applyXdtTransformation(path.join(__dirname, 'L0XdtTransform', 'Web_test.config'), path.join(__dirname, 'L0XdtTransform', 'Web.Debug.config'));
+        process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = 'DefaultWorkingDirectory';
     }
 });
 

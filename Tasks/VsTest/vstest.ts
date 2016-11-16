@@ -252,6 +252,7 @@ function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
         selectortool.arg("/ResultFile:" + resultFiles[0]);
     }
     selectortool.arg("/runidfile:" + runIdFile);
+    selectortool.arg("/Context:" + context);
     selectortool.exec()
         .then(function (code) {
             endTime = perf();

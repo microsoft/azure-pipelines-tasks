@@ -8,6 +8,8 @@ tr.setInput('ConnectedServiceName', 'AzureRMSpn');
 tr.setInput('WebAppName', 'mytestapp');
 tr.setInput('Package', 'webAppPkg.zip');
 tr.setInput('UseWebDeploy', 'true');
+tr.setInput('JSONVariableSubstitutionsFlag', 'true');
+tr.setInput('JSONVariableSubstitutions', '');
 
 process.env['TASK_TEST_TRACE'] = 1;
 process.env["ENDPOINT_AUTH_AzureRMSpn"] = "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
@@ -95,6 +97,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 import mockTask = require('vsts-task-lib/mock-task');
 var kuduDeploymentLog = require('webdeployment-common/kududeploymentstatusutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js');
+var jsonSubUtil = require('webdeployment-common/jsonvariablesubstitutionutility.js');
 
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
@@ -158,6 +161,68 @@ tr.registerMock('./azurerestutility.js', {
         var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
         requestDetails["requestBody"].author = 'author';
         console.log("kudu log requestBody is:" + JSON.stringify(requestDetails["requestBody"]));
+    }
+});
+
+tr.registerMock('webdeployment-common/ziputility.js', {
+    'unzip': function(zipLocation, unzipLocation) {
+        console.log('Extracting ' + zipLocation + ' to ' + unzipLocation);
+    },
+    archiveFolder: function(folderPath, targetPath, zipName) {
+        console.log('Archiving ' + folderPath + ' to ' + targetPath + '/' + zipName);
+    }
+});
+
+tr.registerMock('webdeployment-common/jsonvariablesubstitutionutility.js', {
+    jsonVariableSubstitution: function(absolutePath, jsonSubFiles) {
+        var envVarObject = jsonSubUtil.createEnvTree([
+            { name: 'system.debug', value: 'true', secret: false},
+            { name: 'data.ConnectionString', value: 'database_connection', secret: false},
+            { name: 'data.userName', value: 'db_admin', secret: false},
+            { name: 'data.password', value: 'db_pass', secret: true},
+            { name: '&pl.ch@r@cter.k^y', value: '*.config', secret: false},
+            { name: 'build.sourceDirectory', value: 'DefaultWorkingDirectory', secret: false},
+            { name: 'user.profile.name.first', value: 'firstName', secret: false},
+            { name: 'user.profile', value: 'replace_all', secret: false}
+        ]);
+        var jsonObject = {
+            'User.Profile': 'do_not_replace',
+            'data': {
+                'ConnectionString' : 'connect_string',
+                'userName': 'name',
+                'password': 'pass'
+            },
+            '&pl': {
+                'ch@r@cter.k^y': 'v@lue'
+            },
+            'system': {
+                'debug' : 'no_change'
+            },
+            'user.profile': {
+                'name.first' : 'fname'
+            }
+        }
+        // Method to be checked for JSON variable substitution
+        jsonSubUtil.substituteJsonVariable(jsonObject, envVarObject);
+
+        if(typeof jsonObject['user.profile'] === 'object') {
+            console.log('JSON - eliminating object variables validated');
+        }
+        if(jsonObject['data']['ConnectionString'] === 'database_connection' && jsonObject['data']['userName'] === 'db_admin') {
+            console.log('JSON - simple string change validated');
+        }
+        if(jsonObject['system']['debug'] === 'no_change') {
+            console.log('JSON - system variable elimination validated');
+        }
+        if(jsonObject['&pl']['ch@r@cter.k^y'] === '*.config') {
+            console.log('JSON - special variables validated');
+        }
+        if(jsonObject['user.profile']['name.first'] === 'firstName') {
+            console.log('JSON - varaibles with dot character validated');
+        }
+        if(jsonObject['User.Profile'] === 'do_not_replace') {
+            console.log('JSON - case sensitive variables validated');
+        }
     }
 });
 

@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 1,
-        "Patch": 3
+        "Patch": 5
     },
     "minimumAgentVersion": "1.102.0",
     "groups": [
@@ -265,6 +265,8 @@
         "CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot Perform XDT Transformations on a Non-Windows platform.",
         "XdtTransformationErrorWhileTransforming": "XDT Transformation Error while transforming %s using %s.",
         "PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "Publish using webdeploy options are supported only when using Windows agent",
-        "WebAppDoesntExist": "Webapp '%s' doesn't exist. Webapp should exist before deployment."
+        "WebAppDoesntExist": "Webapp '%s' doesn't exist. Webapp should exist before deployment.",
+        "EncodeNotSupported": "Detected file encoding of the file %s as %s. Variable substitution and Transformation is not supported with file encoding %s. Supported encodings are UTF-8 and UTF-16 LE.",
+        "UnknownFileEncodeError": "Unable to detect encoding of the file %s. Supported encodings are UTF-8 and UTF-16 LE."
     }
 }

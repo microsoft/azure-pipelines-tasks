@@ -1,5 +1,5 @@
 var ltx = require("ltx");
-var utility = require("./utility.js");
+var varUtility = require("./variableutility.js");
 var Q = require('q');
 
 var xmlDomLookUpTable = {};
@@ -57,7 +57,7 @@ function buildLookUpTable(node) {
  *  Returns array of nodes which match with the tag name.
  */
 export function getElementsByTagName(nodeName) {
-    if(utility.isEmpty(nodeName))
+    if(varUtility.isEmpty(nodeName))
         return [];
     var selectedElements = xmlDomLookUpTable[nodeName.toLowerCase()];
     if(!selectedElements){
@@ -69,15 +69,15 @@ export function getElementsByTagName(nodeName) {
 /**
  *  Search in subtree with provided node name
  */
-export function getChildElementsByTagName(node, tagName){
-    if(!utility.isObject(node) )
+export function getChildElementsByTagName(node, tagName) {
+    if(!varUtility.isObject(node) )
         return [];
     var children = node.children;
     var liveNodes = [];
     if(children){
         for( var i=0; i < children.length; i++ ){
             var childName = children[i].name;
-            if( !utility.isEmpty(childName) && tagName == childName){
+            if( !varUtility.isEmpty(childName) && tagName == childName){
                 liveNodes.push(children[i]);
             }
             var liveChildNodes = getChildElementsByTagName(children[i], tagName);
