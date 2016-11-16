@@ -136,9 +136,13 @@ export class ResourceGroup {
 
 
     private getDeploymentDataForLinkedArtifact() {
+        console.log("Getting deployment data from a linked artifact..");
         var template;
-        try { 
+        try {
+            tl.debug("Loading CSM Template File.. " + this.taskParameters.csmFile);
             template = JSON.parse(fs.readFileSync(this.taskParameters.csmFile, 'UTF-8'));
+            tl.debug("Loaded CSM File");
+            tl.debug("CSM File data: " + JSON.stringify(template));
         }
         catch (error) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("TemplateParsingFailed", error.message));
@@ -147,10 +151,15 @@ export class ResourceGroup {
         var parameters;
         try {
             if (this.taskParameters.csmParametersFile && this.taskParameters.csmParametersFile.trim()) {
+                tl.debug("Loading Parameters File.. " + this.taskParameters.csmParametersFile); 
                 var parameterFile = fs.readFileSync(this.taskParameters.csmParametersFile, 'UTF-8');
+                tl.debug("Loaded Parameters File");
                 parameters = this.parseParameters(parameterFile);
+                tl.debug("Parameters file data: " + JSON.stringify(parameters));
             }
+            tl.debug("Overriding Parameters..");
             parameters = this.updateOverrideParameters(parameters);
+            tl.debug("Parameters after overriding." + JSON.stringify(parameters));
         }
         catch (error) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("ParametersFileParsingFailed", error.message));
@@ -214,6 +223,7 @@ export class ResourceGroup {
     
     public selectResourceGroup() {
         if (this.taskParameters.enableDeploymentPrerequisites) {
+            console.log("Enabling winRM Https Listener on your windows machines..")
             this.WinRMHttpsListener.EnableWinRMHttpsListener();
         }
         try {

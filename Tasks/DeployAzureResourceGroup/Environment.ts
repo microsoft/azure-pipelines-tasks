@@ -86,21 +86,21 @@ class Environment {
 export class RegisterEnvironment {
     
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
-    private publicAddressToNetworkIdMap;
+    private publicAddressToNicIdMap;
     private publicAddressToFqdnMap;
-    private networkIdToTagsMap;
+    private nicIdToTagsMap;
     private inboundNatRuleMap;
-    private networkIds;
+    private nicIds;
     private loadBalancerToPortMap;
     private loadBalancerToPublicIPAddressMap;
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
         this.taskParameters = taskParameters;
-        this.publicAddressToNetworkIdMap = null;
-        this.networkIdToTagsMap = null;
+        this.publicAddressToNicIdMap = null;
+        this.nicIdToTagsMap = null;
         this.publicAddressToFqdnMap = null;
         this.loadBalancerToPortMap = null;
-        this.networkIds = null;
+        this.nicIds = null;
         this.loadBalancerToPublicIPAddressMap = null;
         this.inboundNatRuleMap = null;
     }
@@ -111,6 +111,7 @@ export class RegisterEnvironment {
             process.exit();
             return;
         }
+        console.log("Registering Environment Variable..");
         this.getVMDetails();
         this.getNetworkInterfaceDetails();
         this.getPublicIPAddresses();
@@ -143,21 +144,22 @@ export class RegisterEnvironment {
     }
 
     private InstantiateEnvironment() {
-        if (this.publicAddressToNetworkIdMap == null || this.publicAddressToFqdnMap == null || this.networkIdToTagsMap == null || this.inboundNatRuleMap == null) {
+        if (this.publicAddressToNicIdMap == null || this.publicAddressToFqdnMap == null || this.nicIdToTagsMap == null || this.inboundNatRuleMap == null) {
             return;
         }
         var resources = this.getResources();
+        tl.debug("Got resources..");
         var environment = new Environment(resources, process.env["SYSTEM_COLLECTIONID"], process.env["SYSTEM_TEAMPROJECT"], this.taskParameters.outputVariable);
-        console.log(JSON.stringify(environment));                
         tl.setVariable(this.taskParameters.outputVariable, JSON.stringify(environment));
+        console.log("Added the Environment", this.taskParameters.outputVariable,"to output variable")
     }
 
-    private getTags(networkId: string) {
-        return this.networkIdToTagsMap[networkId];
+    private getTags(nicId: string) {
+        return this.nicIdToTagsMap[nicId];
     }
 
-    private getPort(networkId: string) {
-        var interfaceDetails = this.publicAddressToNetworkIdMap[networkId];
+    private getPort(nicId: string) {
+        var interfaceDetails = this.publicAddressToNicIdMap[nicId];
         var port = "5986";
         if (interfaceDetails.inboundNatRule) {
             var natRules = interfaceDetails.inboundNatRule;
@@ -171,8 +173,8 @@ export class RegisterEnvironment {
         return port.toString();      
     }
 
-    private getFQDN(networkId) {
-        var interfaceDetails = this.publicAddressToNetworkIdMap[networkId];
+    private getFQDN(nicId) {
+        var interfaceDetails = this.publicAddressToNicIdMap[nicId];
         if (interfaceDetails.publicAddress) {
             return this.publicAddressToFqdnMap[interfaceDetails.publicAddress];
         } else {
@@ -186,13 +188,13 @@ export class RegisterEnvironment {
     private getResources() {
         var resources = new Array<Resource>();
         var id = 1;
-        for (var i=0; i < this.networkIds.length; i++) {
-            var networkId = this.networkIds[i];
-            var fqdn = this.getFQDN(networkId);
+        for (var i=0; i < this.nicIds.length; i++) {
+            var nicId = this.nicIds[i];
+            var fqdn = this.getFQDN(nicId);
             var resource = new Resource(id++ , fqdn);
             resource.addOrUpdateProperty("Microsoft-Vslabs-MG-Resource-FQDN", new PropertyValue(fqdn));
-            resource.addOrUpdateProperty("WinRM_Https", new PropertyValue(this.getPort(networkId)));
-            var tags = this.getTags(networkId);
+            resource.addOrUpdateProperty("WinRM_Https", new PropertyValue(this.getPort(nicId)));
+            var tags = this.getTags(nicId);
             if (tags) {
                 for (var tag in tags) {
                     resource.addOrUpdateProperty(tag, new PropertyValue(tags[tag]));
@@ -210,16 +212,16 @@ export class RegisterEnvironment {
                 console.log("Error while getting list of Virtual Machines", error);
                 throw new Error("FailedToFetchVMs");
             }
-            this.networkIds = [];
+            this.nicIds = [];
             var tags = {};
             for (var i = 0; i < virtualMachines.length; i++) {
                 var vm = virtualMachines[i];
-                var networkId = vm["networkProfile"]["networkInterfaces"][0]["id"];
-                this.networkIds.push(networkId);
+                var nicId = vm["networkProfile"]["networkInterfaces"][0]["id"];
+                this.nicIds.push(nicId);
                 if (vm["tags"] != undefined)
-                    tags[networkId] = vm["tags"];
+                    tags[nicId] = vm["tags"];
             }
-            this.networkIdToTagsMap = tags;
+            this.nicIdToTagsMap = tags;
             this.InstantiateEnvironment();            
         });
     }
@@ -234,15 +236,15 @@ export class RegisterEnvironment {
             var interfaces = {};
             for (var i = 0; i < networkInterfaces.length; i++) {
                 var networkInterface = networkInterfaces[i];
-                var networkId = networkInterface["id"];
+                var nicId = networkInterface["id"];
                 var ipConfig = networkInterface["ipConfigurations"][0];
                 if (ipConfig["publicIPAddress"]){
-                    interfaces[networkId] = { publicAddress: ipConfig["publicIPAddress"]["id"] };
+                    interfaces[nicId] = { publicAddress: ipConfig["publicIPAddress"]["id"] };
                 } else if (ipConfig["loadBalancerInboundNatRules"]) {
-                    interfaces[networkId] ={ inboundNatRule: ipConfig["loadBalancerInboundNatRules"] };
+                    interfaces[nicId] ={ inboundNatRule: ipConfig["loadBalancerInboundNatRules"] };
                 }
             }
-            this.publicAddressToNetworkIdMap = interfaces;
+            this.publicAddressToNicIdMap = interfaces;
             this.InstantiateEnvironment();  
         });
     }
