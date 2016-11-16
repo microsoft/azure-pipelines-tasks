@@ -104,6 +104,7 @@ export class ResourceGroup {
 
     private request(url): q.Promise<string> {
         var deferred = q.defer<string>();
+        var headers = {"User-Agent": "VSTS_AGENT"}
         httpObj.get("GET", url, null, (error, result, contents) => {
             if (error) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("URLFetchFailed", error));
