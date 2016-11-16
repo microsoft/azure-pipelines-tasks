@@ -51,6 +51,10 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
         msDeployUtility.redirectMSDeployErrorToConsole();
     }
 
+    if(!isDeploymentSuccess) {
+        throw Error(deploymentError);
+    }
+
     if(publishingProfile != null){
         try {
             tl._writeLine(await azureRESTUtility.updateDeploymentStatus(publishingProfile, isDeploymentSuccess));
@@ -58,9 +62,5 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
         catch(error) {
             tl.warning(error);
         }
-    }
-
-    if(!isDeploymentSuccess) {
-        throw Error(deploymentError);
     }
 }

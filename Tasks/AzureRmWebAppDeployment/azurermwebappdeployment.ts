@@ -44,6 +44,10 @@ async function run() {
         SPN["tenantID"] = endPointAuthCreds.parameters["tenantid"];
         SPN["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
         var availableWebPackages = utility.findfiles(webDeployPkg);
+
+        var publishingProfile = await azureRESTUtility.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+        tl._writeLine(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
+        
         if(availableWebPackages.length == 0) {
             throw new Error(tl.loc('Nopackagefoundwithspecifiedpattern'));
         }
@@ -54,9 +58,6 @@ async function run() {
         webDeployPkg = availableWebPackages[0];
 
         var isFolderBasedDeployment = utility.isInputPkgIsFolder(webDeployPkg);
-
-        var publishingProfile = await azureRESTUtility.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-        tl._writeLine(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
 
         if(jsonVariableSubsFlag || (xmlTransformsAndVariableSubstitutions && (xmlTransformation || variableSubstitution))) { 
             var folderPath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package_folder');
@@ -110,6 +111,14 @@ async function run() {
             await DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment, takeAppOfflineFlag);
         }
     } catch (error) {
+        if(publishingProfile!=null) {
+        try {
+                tl._writeLine(await azureRESTUtility.updateDeploymentStatus(publishingProfile, false));
+            }
+        catch(error) {
+                tl.warning(error);
+            }
+        }
         tl.setResult(tl.TaskResult.Failed, error);
     }
 }
@@ -151,15 +160,15 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
         deploymentError = error;
     }
 
+    if(!isDeploymentSuccess) {
+        throw Error(deploymentError);
+    }
+
     try {
         tl._writeLine(await azureRESTUtility.updateDeploymentStatus(publishingProfile, isDeploymentSuccess));
     }
     catch(error) {
         tl.warning(error);
-    }
-    
-    if(!isDeploymentSuccess) {
-        throw Error(deploymentError);
     }
 }
 
