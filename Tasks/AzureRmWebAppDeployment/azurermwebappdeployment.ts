@@ -38,6 +38,8 @@ async function run() {
         var variableSubstitution: boolean = tl.getBoolInput('VariableSubstitution', false);
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
 
+        var isDeploymentSuccess: boolean = true;
+
         var SPN = new Array();
         SPN["servicePrincipalClientID"] = endPointAuthCreds.parameters["serviceprincipalid"];
         SPN["servicePrincipalKey"] = endPointAuthCreds.parameters["serviceprincipalkey"];
@@ -109,18 +111,22 @@ async function run() {
             tl.debug(tl.loc("Initiateddeploymentviakuduserviceforwebapppackage", webDeployPkg));
             var azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
             await DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment, takeAppOfflineFlag);
+
         }
+        
     } catch (error) {
-        if(publishingProfile != null) {
-            try {
-                tl._writeLine(await azureRESTUtility.updateDeploymentStatus(publishingProfile, false));
-            }
-            catch(error) {
-                tl.warning(error);
-            }
-        }
-        tl.setResult(tl.TaskResult.Failed, error);
+        isDeploymentSuccess = false;
     }
+    if(publishingProfile != null) {
+        try {
+            tl._writeLine(await azureRESTUtility.updateDeploymentStatus(publishingProfile, isDeploymentSuccess));
+        }
+        catch(error) {
+            tl.warning(error);
+        }
+    }
+    if(!isDeploymentSuccess)
+        tl.setResult(tl.TaskResult.Failed, error);
 }
 
 
@@ -154,13 +160,6 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
     catch(error) {
         tl.error(tl.loc('Failedtodeploywebsite'));
         throw Error(error);
-    }
-
-    try {
-        tl._writeLine(await azureRESTUtility.updateDeploymentStatus(publishingProfile, true));
-    }
-    catch(error) {
-        tl.warning(error);
     }
 }
 
