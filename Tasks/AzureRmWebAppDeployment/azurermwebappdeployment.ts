@@ -136,9 +136,6 @@ async function run() {
  */
 async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment, takeAppOfflineFlag) {
 
-    var isDeploymentSuccess = true;
-    var deploymentError = null;
-
     try {
         var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
         var webAppZipFile = webDeployPkg;
@@ -156,16 +153,11 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
     }
     catch(error) {
         tl.error(tl.loc('Failedtodeploywebsite'));
-        isDeploymentSuccess = false;
-        deploymentError = error;
-    }
-
-    if(!isDeploymentSuccess) {
-        throw Error(deploymentError);
+        throw Error(error);
     }
 
     try {
-        tl._writeLine(await azureRESTUtility.updateDeploymentStatus(publishingProfile, isDeploymentSuccess));
+        tl._writeLine(await azureRESTUtility.updateDeploymentStatus(publishingProfile, true));
     }
     catch(error) {
         tl.warning(error);
