@@ -1,0 +1,17 @@
+{
+    "externals": {
+       "nugetv2": [
+            {
+                "name": "TaskModuleSqlUtility",
+                "version": "0.1.0",
+                "repository": "https://www.powershellgallery.com/api/v2/",
+                "cp": [
+                    {
+                      "source": "*.ps*",
+                      "dest":"ps_modules/TaskModuleSqlUtility"
+                    }
+                ]
+            }
+        ]
+    }
+}
