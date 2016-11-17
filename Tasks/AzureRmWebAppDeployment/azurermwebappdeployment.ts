@@ -43,11 +43,11 @@ async function run() {
         SPN["servicePrincipalKey"] = endPointAuthCreds.parameters["serviceprincipalkey"];
         SPN["tenantID"] = endPointAuthCreds.parameters["tenantid"];
         SPN["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
-        var availableWebPackages = utility.findfiles(webDeployPkg);
 
         var publishingProfile = await azureRESTUtility.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
         tl._writeLine(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
-        
+
+        var availableWebPackages = utility.findfiles(webDeployPkg);
         if(availableWebPackages.length == 0) {
             throw new Error(tl.loc('Nopackagefoundwithspecifiedpattern'));
         }
@@ -111,11 +111,11 @@ async function run() {
             await DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment, takeAppOfflineFlag);
         }
     } catch (error) {
-        if(publishingProfile!=null) {
-        try {
+        if(publishingProfile != null) {
+            try {
                 tl._writeLine(await azureRESTUtility.updateDeploymentStatus(publishingProfile, false));
             }
-        catch(error) {
+            catch(error) {
                 tl.warning(error);
             }
         }
