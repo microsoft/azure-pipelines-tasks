@@ -26,6 +26,7 @@ export class WinRMHttpsListener {
     }
 
     public async EnableWinRMHttpsListener() {
+        var deferred = Q.defer();
         try {
             await this.AddInboundNatRuleLB();
             await this.SetAzureRMVMsConnectionDetailsInResourceGroup();
@@ -42,17 +43,19 @@ export class WinRMHttpsListener {
                     this.winRmHttpsPortMap[resourceName] = "5986";
                 }
                 tl.debug("Enabling winrm for virtual machine " + resourceName);
-                if (vm["storageProfile"]["osDisk"]["osType"] === 'Windows'){
+                if (vm["storageProfile"]["osDisk"]["osType"] === 'Windows') {
                     await this.AddAzureVMCustomScriptExtension(resourceId, resourceName, resourceFQDN, vm["location"]);
                 }
             }
             await this.AddWinRMHttpsNetworkSecurityRuleConfig();
+            deferred.resolve(null);
         }
         catch (exception) {
             console.log(tl.loc("FailedToEnablePrereqs", exception.message));
             tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToEnablePrereqs", exception.message));
-            process.exit();
+            deferred.reject(tl.loc("FailedToEnablePrereqs", exception.message));
         }
+        return deferred.promise;
     }
 
     private async AddRule(lb, frontendPortMap) {
@@ -86,9 +89,9 @@ export class WinRMHttpsListener {
                 }
             }
 
-            console.log("Added rules id are:");
+            tl.debug("Added rules id are:");
             for (var id of addedRulesId) {
-                console.log("Id: %s", id);
+                tl.debug("Id: " + id);
             }
 
             networkClient.networkInterfaces.list(this.resourceGroupName, async (error, networkInterfaces, request, response) => {
@@ -96,9 +99,7 @@ export class WinRMHttpsListener {
                     tl.debug("Error in fetching the list of network Interfaces " + util.inspect(error, { depth: null }));
                     throw new Error(tl.loc("FailedToFetchNetworkInterfaces"));
                 }
-                console.log("Network Interfaces: %s", util.inspect(networkInterfaces, { depth: null }));
                 for (var nic of networkInterfaces) {
-                    console.log("NIC: %s", util.inspect(nic, { depth: null }));
                     var flag: boolean = false;
                     for (var ipc of nic["ipConfigurations"]) {
                         if (!!ruleIdMap[ipc["id"]] && ruleIdMap[ipc["id"]] != "") {
@@ -145,8 +146,6 @@ export class WinRMHttpsListener {
     private async removeIrrelevantRules(lb, networkClient, addedRulesId) {
         var lbName = lb["name"];
         var deferred = Q.defer<string>();
-        console.log("Removing irrelevant rules");
-
         networkClient.loadBalancers.get(this.resourceGroupName, lbName, (error, lbDetails, request, response) => {
             if (error) {
                 tl.debug("Error in getting the details of the load Balancer: " + lbName);
@@ -192,7 +191,6 @@ export class WinRMHttpsListener {
         var networkClient = new networkManagementClient(this.credentials, this.subscriptionId);
         var deferred = Q.defer<string>();
 
-        console.log("Adding Inbound Nat Rule for LB");
         networkClient.loadBalancers.list(this.resourceGroupName, async (error, loadBalancers, request, response) => {
             if (error) {
                 tl.debug("Failed to fetch the list of load balancers with error " + util.inspect(error, { depth: null }));
@@ -374,8 +372,6 @@ export class WinRMHttpsListener {
     }
 
     private async AddWinRMHttpsNetworkSecurityRuleConfig() {
-        tl.debug("Trying to add a network security group rule");
-
         var _ruleName: string = "VSO-Custom-WinRM-Https-Port";
         var _rulePriority: number = 3986;
         var _winrmHttpsPort: string = "5986";
@@ -392,6 +388,7 @@ export class WinRMHttpsListener {
                 }
 
                 if (result.length > 0) {
+                    tl.debug("Trying to add a network security group rule");
                     await this.AddNetworkSecurityRuleConfig(result, _ruleName, _rulePriority, _winrmHttpsPort);
                 }
                 deferred.resolve("");
@@ -410,7 +407,7 @@ export class WinRMHttpsListener {
         var _configWinRMScriptFile: string = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/ConfigureWinRM.ps1";
         var _makeCertFile: string = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/makecert.exe";
         var _winrmConfFile: string = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/winrmconf.cmd";
-        var fileUris  = [_configWinRMScriptFile, _makeCertFile, _winrmConfFile]; 
+        var fileUris = [_configWinRMScriptFile, _makeCertFile, _winrmConfFile];
         var deferred = Q.defer<string>();
 
         tl.debug("Adding custom script extension for virtual machine " + vmName);
@@ -436,7 +433,7 @@ export class WinRMHttpsListener {
                 else if (result != null) {
                     console.log(tl.loc("ExtensionAlreadyPresentVm", _extensionName, vmName));
                     tl.debug("Checking if the Custom Script Extension enables Https Listener for winrm on VM " + vmName);
-                    if(result["settings"]["fileUris"].length == fileUris.length && fileUris.every((element, index) => { return element === result["settings"]["fileUris"][index]; })){
+                    if (result["settings"]["fileUris"].length == fileUris.length && fileUris.every((element, index) => { return element === result["settings"]["fileUris"][index]; })) {
                         tl.debug("Custom Script extension is for enabling Https Listener on VM" + vmName);
                         if (result["provisioningState"] != 'Succeeded') {
                             tl.debug("Provisioning State of extension " + _extensionName + " on vm " + vmName + " is not Succeeded");
@@ -448,7 +445,7 @@ export class WinRMHttpsListener {
                             await this.ValidateCustomScriptExecutionStatus(vmName, computeClient, dnsName, _extensionName, location, fileUris);
                         }
                     }
-                    else{
+                    else {
                         tl.debug("Custom Script Extension present doesn't enable Https Listener on VM" + vmName);
                         await this.AddExtensionVM(vmName, computeClient, dnsName, _extensionName, location, fileUris);
                     }
@@ -502,6 +499,7 @@ export class WinRMHttpsListener {
             }
             deferred.resolve(null);
         });
+        return deferred.promise;
     }
 
     private async AddExtensionVM(vmName: string, computeClient, dnsName: string, extensionName: string, location: string, _fileUris) {
@@ -552,6 +550,8 @@ export class WinRMHttpsListener {
             }
             deferred.resolve(null);
         });
+
+        return deferred.promise;
     }
 
     private async SetAzureRMVMsConnectionDetailsInResourceGroup() {
@@ -605,13 +605,13 @@ export class WinRMHttpsListener {
 
                         this.fqdnMap = this.GetMachineNameFromId(this.fqdnMap, "FQDN", virtualMachines, true, debugLogsFlag);
 
-                        tl.debug("FQDN map: " );
-                        for( var index in this.fqdnMap){
+                        tl.debug("FQDN map: ");
+                        for (var index in this.fqdnMap) {
                             tl.debug(index + " : " + this.fqdnMap[index]);
                         }
-                        
+
                         tl.debug("WinRMHttpPort map: ");
-                        for( var index in this.winRmHttpsPortMap){
+                        for (var index in this.winRmHttpsPortMap) {
                             tl.debug(index + " : " + this.winRmHttpsPortMap[index]);
                         }
 
