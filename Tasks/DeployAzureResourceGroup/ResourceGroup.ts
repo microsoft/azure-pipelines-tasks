@@ -46,7 +46,7 @@ export class ResourceGroup {
             name = this.taskParameters.csmFile;    
         else 
             name = this.taskParameters.csmFileLink;
-        name = path.basename(this.taskParameters.csmFile).split(".")[0].replace(" ", "");
+        name = path.basename(name).split(".")[0].replace(" ", "");
         var ts = new Date(Date.now());
         var depName = util.format("%s-%s%s%s-%s%s", name, ts.getFullYear(), ts.getMonth(), ts.getDate(),ts.getHours(), ts.getMinutes());
         return depName;
