@@ -11,6 +11,10 @@
     "Minor": 2,
     "Patch": 24
   },
+  "runsOn": [
+    "Agent",
+    "MachineGroup"
+  ],
   "demands": [
     "Cmd"
   ],

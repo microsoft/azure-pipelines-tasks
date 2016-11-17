@@ -11,6 +11,10 @@
     "Minor": 0,
     "Patch": 20
   },
+  "runsOn": [
+    "Agent",
+    "MachineGroup"
+  ],
   "demands": [
     "curl"
   ],

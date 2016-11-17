@@ -11,6 +11,10 @@
     "Minor": 2,
     "Patch": 19
   },
+  "runsOn": [
+    "Agent",
+    "MachineGroup"
+  ],
   "demands": [
     "npm"
   ],
