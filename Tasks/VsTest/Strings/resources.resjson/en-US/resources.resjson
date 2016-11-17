@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio Test",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=624539)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
   "loc.description": "Run tests with Visual Studio test runner",
   "loc.instanceNameFormat": "Test Assemblies",
   "loc.group.displayName.executionOptions": "Execution Options",
@@ -8,7 +8,7 @@
   "loc.group.displayName.advancedExecutionOptions": "Advanced Execution Options",
   "loc.group.displayName.reportingOptions": "Reporting Options",
   "loc.input.label.testAssemblyVer2": "Test Assembly",
-  "loc.input.help.testAssemblyVer2": "Run tests from the specified files. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkId=624539)",
+  "loc.input.help.testAssemblyVer2": "Run tests from the specified files. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
   "loc.input.label.searchFolder": "Search Folder",
   "loc.input.help.searchFolder": "Folder to search for the test assemblies. Defaults to $(System.DefaultWorkingDirectory) for build and $(System.ArtifactsDirectory) for release.",
   "loc.input.label.testFiltercriteria": "Test Filter criteria",
