@@ -1,8 +1,0 @@
-{
-    "common": [
-        {
-            "module": "../Common/VstsAzureHelpers_",
-            "type": "ps"
-        }
-    ]
-}
