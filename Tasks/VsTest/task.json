@@ -3,7 +3,7 @@
     "name": "VSTest",
     "friendlyName": "Visual Studio Test",
     "description": "Run tests with Visual Studio test runner",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=624539)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
     "category": "Test",
     "visibility": [
         "Build",
@@ -52,7 +52,7 @@
             "label": "Test Assembly",
             "defaultValue": "**\\*test*.dll\n!**\\obj\\**",
             "required": true,
-            "helpMarkDown": "Run tests from the specified files. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkId=624539)",
+            "helpMarkDown": "Run tests from the specified files. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
             "groupName": "executionOptions",
             "properties": {
                 "rows": "3",

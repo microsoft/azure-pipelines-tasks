@@ -546,6 +546,21 @@ declare module 'vsts-task-lib/task' {
 	 * @returns   ToolRunner
 	 */
 	export function tool(tool: string): trm.ToolRunner;
+	/**
+	 * Interface for MatchOptions
+	 *
+	 * @param     debug        	optional	Print debug messages.
+	 * @param     nobrace       optional	Do not expand {a,b} and {1..3} brace sets.
+	 * @param     noglobstar	optional	Disable ** matching against multiple folder names.
+	 * @param     dot     		optional	Allow patterns to match filenames starting with a period, even if the pattern does not explicitly have a period in that spot.
+	 * @param     noext     	optional	Disable "extglob" style patterns like +(a|b).
+	 * @param     nocase     	optional	Perform a case-insensitive match.
+	 * @param     nonull     	optional	When a match is not found by minimatch.match, return a list containing the pattern itself if this option is set. When not set, an empty list is returned if there are no matches.
+	 * @param     matchBase     optional	If set, then patterns without slashes will be matched against the basename of the path if it contains slashes.
+	 * @param     nocomment     optional	Suppress the behavior of treating # at the start of a pattern as a comment.
+	 * @param     nonegate     	optional	Suppress the behavior of treating a leading ! character as negation.
+	 * @param     flipNegate    optional	Returns from negate expressions the same as if they were not negated.
+	 */
 	export interface MatchOptions {
 		debug?: boolean;
 		nobrace?: boolean;
