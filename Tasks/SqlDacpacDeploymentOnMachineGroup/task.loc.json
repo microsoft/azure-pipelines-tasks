@@ -163,5 +163,10 @@
       "target": "$(currentDirectory)\\Main.ps1"
     }
   },
-  "messages": {}
+  "messages": {
+    "SQLPowershellModuleisnotinstalledonyouragentmachine": "ms-resource:loc.messages.SQLPowershellModuleisnotinstalledonyouragentmachine",
+    "InstallPowershellToolsharedManagementObjectsdependency": "ms-resource:loc.messages.InstallPowershellToolsharedManagementObjectsdependency",
+    "RestartagentmachineafterinstallingtoolstoregisterModulepathupdates": "ms-resource:loc.messages.RestartagentmachineafterinstallingtoolstoregisterModulepathupdates",
+    "RunImportModuleSQLPSonyouragentPowershellprompt": "ms-resource:loc.messages.RunImportModuleSQLPSonyouragentPowershellprompt"
+  }
 }

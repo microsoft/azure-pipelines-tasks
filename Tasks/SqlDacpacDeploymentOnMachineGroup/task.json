@@ -1,9 +1,9 @@
 {
   "id": "4B506F7F-720F-47BB-BF21-029BAC6A690D",
   "name": "SqlDacpacDeploymentOnMachineGroup",
-  "friendlyName": "SQL Dacpac Deployment On Machine Group",
+  "friendlyName": "Deploy SQL Dacpac Machine Group(Preview)",
   "description": "Deploy DB using sqlpackage.exe or Invoke-Sqlcmd",
-  "helpMarkDown": "",
+  "helpMarkDown": "[More Information](https://aka.ms/sqldacpacmachinegroupreadme)",
   "category": "Deploy",
   "visibility": [
     "Preview",
@@ -166,6 +166,9 @@
     }
   },
   "messages": {
-
+      "SQLPowershellModuleisnotinstalledonyouragentmachine": "SQL Powershell Module is not installed on your agent machine. Please follow steps given below to execute this task",
+      "InstallPowershellToolsharedManagementObjectsdependency": "1. Install PowershellTools & SharedManagementObjects(dependency), from https://www.microsoft.com/en-us/download/details.aspx?id=52676 (2016)",
+      "RestartagentmachineafterinstallingtoolstoregisterModulepathupdates": "2. Restart agent machine after installing tools to register Module path updates",
+      "RunImportModuleSQLPSonyouragentPowershellprompt": "3. Run Import-Module SQLPS on your agent Powershell prompt. (This step is not required on Powershell 3.0 enabled machines)"
   }
 }

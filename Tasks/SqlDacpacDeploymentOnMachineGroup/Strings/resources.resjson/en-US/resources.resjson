@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "SQL Dacpac Deployment On Machine Group",
-  "loc.helpMarkDown": "",
+  "loc.friendlyName": "Deploy SQL Dacpac Machine Group(Preview)",
+  "loc.helpMarkDown": "[More Information](https://aka.ms/sqldacpacmachinegroupreadme)",
   "loc.description": "Deploy DB using sqlpackage.exe or Invoke-Sqlcmd",
   "loc.instanceNameFormat": "Deploy using : $(TaskType)",
   "loc.input.label.TaskType": "Deploy SQL Using",
@@ -28,5 +28,9 @@
   "loc.input.label.AdditionalArguments": "Additional Arguments",
   "loc.input.help.AdditionalArguments": "Additional SqlPackage.exe arguments that will be applied when deploying the SQL Server database like, /p:IgnoreAnsiNulls=True /p:IgnoreComments=True. These arguments will override the settings in the Publish profile XML file (if provided).",
   "loc.input.label.AdditionalArgumentsSql": "Additional Arguments",
-  "loc.input.help.AdditionalArgumentsSql": "Additional Invoke-Sqlcmd arguments that will be applied when deploying the SQL Server database."
+  "loc.input.help.AdditionalArgumentsSql": "Additional Invoke-Sqlcmd arguments that will be applied when deploying the SQL Server database.",
+  "loc.messages.SQLPowershellModuleisnotinstalledonyouragentmachine": "SQL Powershell Module is not installed on your agent machine. Please follow steps given below to execute this task",
+  "loc.messages.InstallPowershellToolsharedManagementObjectsdependency": "1. Install PowershellTools & SharedManagementObjects(dependency), from https://www.microsoft.com/en-us/download/details.aspx?id=52676 (2016)",
+  "loc.messages.RestartagentmachineafterinstallingtoolstoregisterModulepathupdates": "2. Restart agent machine after installing tools to register Module path updates",
+  "loc.messages.RunImportModuleSQLPSonyouragentPowershellprompt": "3. Run Import-Module SQLPS on your agent Powershell prompt. (This step is not required on Powershell 3.0 enabled machines)"
 }

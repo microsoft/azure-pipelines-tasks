@@ -29,13 +29,10 @@ Try
         $additionalArguments = $additionalArgumentsSql
         $targetMethod = "server"
     }
+    $additionalArguments = Escape-SpecialChars -str $additionalArguments
+
     if ($taskType -eq "dacpac")
     {
-        if ([System.IO.Path]::GetExtension($dacpacFile) -ne ".dacpac")
-        {
-            throw "Invalid Dacpac file [ $dacpacFile ] provided"
-        }
-
         Execute-DacpacDeployment -dacpacFile $dacpacFile -targetMethod $targetMethod -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -publishProfile $publishProfile -additionalArguments $additionalArguments
     }
     else
@@ -48,10 +45,10 @@ Catch [System.Management.Automation.CommandNotFoundException]
 {
     if ($_.Exception.CommandName -ieq "Invoke-Sqlcmd")
     {
-        Write-Output "SQL Powershell Module is not installed on your agent machine. Please follow steps given below to execute this task"  -ForegroundColor Red
-        Write-Output "1. Install PowershellTools & SharedManagementObjects(dependency), from https://www.microsoft.com/en-us/download/details.aspx?id=52676 (2016)"
-        Write-Output "2. Restart agent machine after installing tools to register Module path updates"
-        Write-Output "3. Run Import-Module SQLPS on your agent Powershell prompt. (This step is not required on Powershell 3.0 enabled machines)"
+        Write-Error (Get-VstsLocString -Key "SQLPowershellModuleisnotinstalledonyouragentmachine")
+        Write-Error (Get-VstsLocString -Key "InstallPowershellToolsharedManagementObjectsdependency")
+        Write-Error (Get-VstsLocString -Key "RestartagentmachineafterinstallingtoolstoregisterModulepathupdates")
+        Write-Error (Get-VstsLocString -Key "RunImportModuleSQLPSonyouragentPowershellprompt")
     }
 
     Write-Error ($_.Exception|Format-List -Force|Out-String)
@@ -61,13 +58,4 @@ Catch [Exception]
 {
     Write-Error ($_.Exception|Format-List -Force|Out-String)
     throw
-}
-Finally
-{
-    # Delete Temp file Created During inline Task Execution
-    if ($taskType -eq "inlineSql" -and (Test-Path $FilePath) -eq $true)
-    {
-        Write-Verbose "Removing File $FilePath"
-        Remove-Item $FilePath -ErrorAction 'SilentlyContinue'
-    }
 }
