@@ -5,15 +5,13 @@ function Get-MSBuildPath {
     [CmdletBinding()]
     param(
         [string]$Version,
-        [string]$Architecture,
-        [switch]$SearchCom)
+        [string]$Architecture)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         # Attempt to find Microsoft.Build.Utilities.Core.dll from a VS 15 Willow install.
         [System.Reflection.Assembly]$msUtilities = $null
-        if ($SearchCom -and
-            ($visualStudio15 = Get-VisualStudio_15_0) -and
+        if (($visualStudio15 = Get-VisualStudio_15_0) -and
             $visualStudio15.Path) {
 
             $msbuildUtilitiesPath = [System.IO.Path]::Combine($visualStudio15.Path, "MSBuild\15.0\Bin\Microsoft.Build.Utilities.Core.dll")
