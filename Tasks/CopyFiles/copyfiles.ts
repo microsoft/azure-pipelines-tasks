@@ -85,6 +85,7 @@ var targetFolder: string = tl.getPathInput('TargetFolder', true);
 
 var cleanTargetFolder: boolean = tl.getBoolInput('CleanTargetFolder', false);
 var overWrite: boolean = tl.getBoolInput('OverWrite', false);
+var flattenFolders: boolean = tl.getBoolInput('flattenFolders', false);
 
 // not use common root for now. 
 //var useCommonRoot: boolean = tl.getBoolInput('UseCommonRoot', false);
@@ -215,9 +216,14 @@ if (files.length > 0) {
     try {
         var createdFolders = {};
         files.forEach((file: string) => {
-            var relativePath = file.substring(sourceFolder.length)
+            var relativePath;
+            if(flattenFolders) {
+                relativePath = path.basename(file);
+            } else {
+                relativePath = file.substring(sourceFolder.length)
                     .replace(/^\\/g, "")
                     .replace(/^\//g, "");
+            }
 
             if (useCommonRoot) {
                 relativePath = file.substring(commonRoot.length)
