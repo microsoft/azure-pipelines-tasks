@@ -45,9 +45,6 @@ describe('MSBuild Suite', function () {
         it('(Select-MSBuildLocation) reverts to version if no location specified', (done) => {
             psr.run(path.join(__dirname, 'Select-MSBuildLocation.RevertsToVersionIfNoLocationSpecified.ps1'), done);
         })
-        it('(Select-MSBuildLocation) searches COM for version 15', (done) => {
-            psr.run(path.join(__dirname, 'Select-MSBuildLocation.SearchesComForVersion15.ps1'), done);
-        })
         it('(Select-MSBuildLocation) throws if version not found', (done) => {
             psr.run(path.join(__dirname, 'Select-MSBuildLocation.ThrowsIfVersionNotFound.ps1'), done);
         })
