@@ -26,6 +26,7 @@
       "type": "connectedService:Generic",
       "label": "ms-resource:loc.input.label.connectedServiceName",
       "defaultValue": "",
+	  "required":true,
       "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
     },
     {
