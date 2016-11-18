@@ -8,10 +8,6 @@
   "visibility": [
     "Build"
   ],
-  "runsOn": [
-    "Agent",
-    "MachineGroup"
-  ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
