@@ -96,7 +96,7 @@ export class WinRMHttpsListener {
 
             networkClient.networkInterfaces.list(this.resourceGroupName, async (error, networkInterfaces, request, response) => {
                 if (error) {
-                    tl.debug("Error in fetching the list of network Interfaces " + util.inspect(error, { depth: null }));
+                    tl.debug("Error in fetching the list of network Interfaces " + error);
                     throw new Error(tl.loc("FailedToFetchNetworkInterfaces"));
                 }
                 for (var nic of networkInterfaces) {
@@ -134,7 +134,7 @@ export class WinRMHttpsListener {
                 tl.debug("Error in updating the list of Network Interfaces: " + util.inspect(error, { depth: null }));
                 throw new Error("FailedToUpdateNICOfVm");
             }
-            tl.debug("Result of updating network interfaces: " + util.inspect(res, { depth: null }));
+            tl.debug("Successfully updated network interfaces: ");
             console.log(tl.loc("AddedTargetInboundNatRuleLB", lbName));
 
 
@@ -175,7 +175,7 @@ export class WinRMHttpsListener {
                         tl.debug("Failed to update the inbound Nat rules of Load balancer " + lbName + "to remove irrelevant rules");
                         throw new Error("Failed to update LB inbound Nat rules");
                     }
-                    tl.debug("Successfully Updated the inbound Nat Rules: " + util.inspect(result, { depth: null }));
+                    tl.debug("Successfully Updated the inbound Nat Rules: " + lbName);
                     deferred.resolve("");
                 });
             }
