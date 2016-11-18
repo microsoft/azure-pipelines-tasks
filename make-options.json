@@ -55,6 +55,7 @@
         "SonarQubePostTest",
         "SonarQubePreBuild",
         "SqlAzureDacpacDeployment",
+        "SqlDacpacDeploymentOnMachineGroup",
         "SSH",
         "VSBuild",
         "VsTest",
