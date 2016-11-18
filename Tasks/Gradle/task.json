@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 70
+        "Patch": 71
     },
     "demands": [
         "java"
