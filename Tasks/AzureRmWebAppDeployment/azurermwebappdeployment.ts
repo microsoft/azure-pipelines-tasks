@@ -127,8 +127,9 @@ async function run() {
             tl.warning(error);
         }
     }
-    if(!isDeploymentSuccess)
+    if(!isDeploymentSuccess) {
         tl.setResult(tl.TaskResult.Failed, deploymentErrorMessage);
+    }
 }
 
 
