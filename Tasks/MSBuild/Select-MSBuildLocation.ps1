@@ -33,10 +33,7 @@ function Select-MSBuildLocation {
             # Look for a specific version of MSBuild.
             if ($Version -and "$Version".ToUpperInvariant() -ne 'LATEST') {
 
-                # Only search Willow installs if 15.0 was explicitly chosen.
-                $searchCom = $Version -eq "15.0"
-
-                $Location = Get-MSBuildPath -Version $Version -Architecture $Architecture -SearchCom:$searchCom
+                $Location = Get-MSBuildPath -Version $Version -Architecture $Architecture
 
                 # Warn if not found.
                 if (!$Location) {
@@ -47,7 +44,7 @@ function Select-MSBuildLocation {
             # Look for the latest version of MSBuild.
             if (!$Location) {
                 Write-Verbose 'Searching for latest MSBuild version.'
-                $Location = Get-MSBuildPath -Version '' -Architecture $Architecture -SearchCom:$false
+                $Location = Get-MSBuildPath -Version '' -Architecture $Architecture
 
                 # Throw if not found.
                 if (!$Location) {
