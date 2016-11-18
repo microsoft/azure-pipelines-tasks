@@ -39,6 +39,7 @@ async function run() {
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
 
         var isDeploymentSuccess: boolean = true;
+        var deploymentErrorMessage: string;
 
         var SPN = new Array();
         SPN["servicePrincipalClientID"] = endPointAuthCreds.parameters["serviceprincipalid"];
@@ -116,6 +117,7 @@ async function run() {
         
     } catch (error) {
         isDeploymentSuccess = false;
+        deploymentErrorMessage = error;
     }
     if(publishingProfile != null) {
         try {
@@ -126,7 +128,7 @@ async function run() {
         }
     }
     if(!isDeploymentSuccess)
-        tl.setResult(tl.TaskResult.Failed, error);
+        tl.setResult(tl.TaskResult.Failed, deploymentErrorMessage);
 }
 
 

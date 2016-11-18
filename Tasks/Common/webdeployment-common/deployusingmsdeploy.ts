@@ -3,7 +3,6 @@ import fs = require('fs');
 
 var msDeployUtility = require('./msdeployutility.js');
 var utility = require('./utility.js');
-var azureRESTUtility = require ('./azurerestutility.js'); // should be removed
 
 /**
  * Executes Web Deploy command
