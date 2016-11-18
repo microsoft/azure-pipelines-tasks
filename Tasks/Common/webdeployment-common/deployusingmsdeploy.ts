@@ -3,7 +3,6 @@ import fs = require('fs');
 
 var msDeployUtility = require('./msdeployutility.js');
 var utility = require('./utility.js');
-var azureRESTUtility = require ('./azurerestutility.js'); // should be removed
 
 /**
  * Executes Web Deploy command
@@ -29,8 +28,6 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
         excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments, isParamFilePresentInPackage, isFolderBasedDeployment, 
         useWebDeploy);
 
-    var isDeploymentSuccess = true;
-    var deploymentError = null;
     try {
 
         var msDeployBatchFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'msDeployCommand.bat';
@@ -46,21 +43,7 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
     }
     catch(error) {
         tl.error(tl.loc('Failedtodeploywebsite'));
-        isDeploymentSuccess = false;
-        deploymentError = error;
         msDeployUtility.redirectMSDeployErrorToConsole();
-    }
-
-    if(publishingProfile != null){
-        try {
-            tl._writeLine(await azureRESTUtility.updateDeploymentStatus(publishingProfile, isDeploymentSuccess));
-        }
-        catch(error) {
-            tl.warning(error);
-        }
-    }
-
-    if(!isDeploymentSuccess) {
-        throw Error(deploymentError);
+        throw Error(error);
     }
 }

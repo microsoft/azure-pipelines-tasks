@@ -189,7 +189,9 @@ describe('AzureRmWebAppDeployment Suite', function() {
         assert(tr.stderr.length > 0 || tr.errorIssues.length > 0, 'should have written to stderr');
         var expectedErr = 'Error: loc_mock_SetParamFilenotfound0'; 
         assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr);
-        assert(tr.failed, 'task should have succeeded');
+        var expectedOut = 'Failed to update history to kudu';
+        assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
+        assert(tr.failed, 'task should have failed');
         done();
     });
 
@@ -202,6 +204,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
         assert(tr.stderr.length > 0 || tr.errorIssues.length > 0, 'should have written to stderr');
         var expectedErr = 'Error: loc_mock_MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern'; 
         assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr); 
+        var expectedOut = 'Failed to update history to kudu';
+        assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
         assert(tr.failed, 'task should have failed');
         done();
     });
@@ -214,7 +218,9 @@ describe('AzureRmWebAppDeployment Suite', function() {
         assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
         assert(tr.stderr.length > 0 || tr.errorIssues.length > 0, 'should have written to stderr');
         var expectedErr = 'Error: Not found Invalid_webAppPkg'; 
-        assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr); 
+        assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr);
+        var expectedOut = 'Failed to update history to kudu';
+        assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut); 
         assert(tr.failed, 'task should have failed');
         done();
     });
@@ -226,7 +232,9 @@ describe('AzureRmWebAppDeployment Suite', function() {
 		
         assert(tr.invokedToolCount == 1, 'should have invoked tool once');
         assert(tr.stderr.length == 0 && tr.errorIssues.length == 0, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have failed');
+        assert(tr.succeeded, 'task should have succeeded');
+        var expectedOut = 'Updated history to kudu'; 
+        assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
         done();
     });
 
@@ -286,6 +294,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
         assert(tr.stderr.length >  0 || tr.errorIssues.length > 0, 'should have written to stderr');
         var expectedErr = 'Error: Error: Folder Archiving Failed'; 
         assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr); 
+        var expectedOut = 'Failed to update history to kudu'; 
+        assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
         assert(tr.failed, 'task should have failed');
         done();
     });
@@ -328,7 +338,9 @@ describe('AzureRmWebAppDeployment Suite', function() {
         var expectedErr = "Error: loc_mock_XdtTransformationErrorWhileTransforming";
         assert(tr.invokedToolCount == 1, 'should have invoked tool only once');
         assert(tr.stderr.length > 0 || tr.errorIssues.length > 0, 'should have written to stderr');
-        assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'E should have said: ' + expectedErr); 
+        assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'E should have said: ' + expectedErr);
+        var expectedOut = 'Failed to update history to kudu'; 
+        assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut); 
         assert(tr.failed, 'task should have failed');
         done();
     });
@@ -341,7 +353,9 @@ describe('AzureRmWebAppDeployment Suite', function() {
         var expectedErr = "Error: loc_mock_CannotPerformXdtTransformationOnNonWindowsPlatform";
         assert(tr.invokedToolCount == 0, 'should not have invoked tool any tool');
         assert(tr.stderr.length > 0 || tr.errorIssues.length > 0, 'should have written to stderr');
-        assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'E should have said: ' + expectedErr); 
+        assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'E should have said: ' + expectedErr);
+        var expectedOut = 'Failed to update history to kudu'; 
+        assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
         assert(tr.failed, 'task should have failed');
         done();
     });
@@ -358,6 +372,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
         var resultFile = ltx.parse(fs.readFileSync(path.join(__dirname, 'L1XmlVarSub/Web_test.Debug.config')));
         var expectFile = ltx.parse(fs.readFileSync(path.join(__dirname, 'L1XmlVarSub/Web_Expected.Debug.config')));
         assert(ltx.equal(resultFile, expectFile) , 'Should have substituted variables in Web.Debug.config file');
+        var expectedOut = 'Updated history to kudu'; 
+        assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
         done();
     });
 

@@ -146,10 +146,7 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
 		}
 
 		return config;
-	}
-});
-
-tr.registerMock('./azurerestutility.js', {
+	},
     updateDeploymentStatus: function(publishingProfile, isDeploymentSuccess ) {
         if(isDeploymentSuccess) {
             console.log('Updated history to kudu');
