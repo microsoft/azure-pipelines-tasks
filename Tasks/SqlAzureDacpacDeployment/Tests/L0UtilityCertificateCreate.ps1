@@ -1,7 +1,3 @@
-#connection certificate
-# 1) Should throw when IP is out of range
-# 2) Should throw when server doesn't exists
-
 [CmdletBinding()]
 param()
 

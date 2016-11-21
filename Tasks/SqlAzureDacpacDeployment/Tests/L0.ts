@@ -12,7 +12,7 @@ var shell = require('shelljs');
 var ps = shell.which('powershell.exe');
 var psr = null;
 
-describe('SqlAzureDacpacDeployment - Utility (Create-AzureSqlDatabaseServerFirewallRule) Suite', function () {
+describe('SqlAzureDacpacDeployment  Suite', function () {
     this.timeout(20000);
 
     before((done) => {
@@ -20,7 +20,6 @@ describe('SqlAzureDacpacDeployment - Utility (Create-AzureSqlDatabaseServerFirew
             psr = new psm.PSRunner();
             psr.start();
         }
-
         done();
     });
 
@@ -29,67 +28,62 @@ describe('SqlAzureDacpacDeployment - Utility (Create-AzureSqlDatabaseServerFirew
     });
 
     if(ps) {
-        it('Validate Username end point', (done) => {
+        it('(DACPAC) Should throw if Multiple Dacpac files or none present', (done) => {
+            psr.run(path.join(__dirname, 'L0DacpacTaskFileCheck.ps1'), done);
+        });
+
+        it('(SQL) Should throw if Multiple Sql files or none present', (done) => {
+            psr.run(path.join(__dirname, 'L0SqlTaskFileCheck.ps1'), done);
+        });
+        it('(DACPAC) Should run successfully for all valid inputs', (done) => {
+            psr.run(path.join(__dirname, 'L0ValidDacpacInput.ps1'), done);
+        });
+        it('(SQL) Should run successfully for all valid inputs', (done) => {
+            psr.run(path.join(__dirname, 'L0ValidSqlInput.ps1'), done);
+        });
+    }
+});
+
+describe('SqlAzureDacpacDeployment - Utility Suite', function () {
+    this.timeout(10000);
+
+    before((done) => {
+        if (ps) {
+            psr = new psm.PSRunner();
+            psr.start();
+        }
+        done();
+    });
+
+    after(function () {
+        psr.kill();
+    });
+
+    if(ps) {
+        it('Validate Username end point (Create-AzureSqlDatabaseServerFirewallRule)', (done) => {
             psr.run(path.join(__dirname, 'L0UtilityUsernameCreate.ps1'), done);
         });
-        it('Validate SPN end point', (done) => {
+        it('Validate SPN end point (Create-AzureSqlDatabaseServerFirewallRule) ', (done) => {
             psr.run(path.join(__dirname, 'L0UtilitySPNCreate.ps1'), done);
         });
-        it('Validate Certificate end point', (done) => {
+        it('Validate Certificate end point (Create-AzureSqlDatabaseServerFirewallRule)', (done) => {
             psr.run(path.join(__dirname, 'L0UtilityCertificateCreate.ps1'), done);
         });
-    }
-});
-
-describe('SqlAzureDacpacDeployment - Utility (Delete-AzureSqlDatabaseServerFirewallRule) Suite', function () {
-    this.timeout(20000);
-
-    before((done) => {
-        if (ps) {
-            psr = new psm.PSRunner();
-            psr.start();
-        }
-
-        done();
-    });
-
-    after(function () {
-        psr.kill();
-    });
-
-    if(ps) {
-        it('Validate Username end point', (done) => {
+        it('Validate Username end point (Delete-AzureSqlDatabaseServerFirewallRule)', (done) => {
             psr.run(path.join(__dirname, 'L0UtilityUsernameDelete.ps1'), done);
         });
-        it('Validate SPN end point', (done) => {
+        it('Validate SPN end point (Delete-AzureSqlDatabaseServerFirewallRule)', (done) => {
             psr.run(path.join(__dirname, 'L0UtilitySPNDelete.ps1'), done);
         });
-        it('Validate Certificate end point', (done) => {
+        it('Validate Certificate end point (Delete-AzureSqlDatabaseServerFirewallRule)', (done) => {
             psr.run(path.join(__dirname, 'L0UtilityCertificateDelete.ps1'), done);
         });
-    }
-});
-
-describe('SqlAzureDacpacDeployment - Utility (Get-AgentIPAddress) Suite', function () {
-    this.timeout(20000);
-
-    before((done) => {
-        if (ps) {
-            psr = new psm.PSRunner();
-            psr.start();
-        }
-
-        done();
-    });
-
-    after(function () {
-        psr.kill();
-    });
-
-    if(ps) {
-        it('IP Address Range Check', (done) => {
+        it('IP Address Range Check (Get-AgentIPAddress)', (done) => {
             psr.run(path.join(__dirname, 'L0UtilityIPRange.ps1'), done);
+        });
+        //L0UtilityGetSqlCmdArgs.ps1
+        it('Validate SQL Package Command Line Arguments (Get-SqlPackageCommandArguments)', (done) => {
+            psr.run(path.join(__dirname, 'L0UtilityGetSqlCmdArgs.ps1'), done);
         });
     }
 });
-

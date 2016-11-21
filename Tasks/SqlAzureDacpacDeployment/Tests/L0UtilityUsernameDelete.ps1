@@ -8,7 +8,7 @@ param()
 . "$PSScriptRoot\..\Utility.ps1"
 
 Register-Mock Remove-AzureSqlDatabaseServerFirewallRule { throw "Invalid Firewall Rule provided" } -ParametersEvaluator { $firewallRuleName -eq $invalidfirewallRuleName }
-Register-Mock Remove-AzureSqlDatabaseServerFirewallRule {  } -ParametersEvaluator { $firewallRuleName -eq $credentialsFirewallRuleName }
+Register-Mock Remove-AzureSqlDatabaseServerFirewallRule { } -ParametersEvaluator { $firewallRuleName -eq $credentialsFirewallRuleName }
 
 Assert-Throws {
     Delete-AzureSqlDatabaseServerFirewallRule -serverName $azureSqlServerName -firewallRuleName $invalidfirewallRuleName -endpoint $certEndpoint -deleteFireWallRule $true -isFirewallConfigured $true 

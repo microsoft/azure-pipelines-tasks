@@ -30,3 +30,23 @@ $spnEndpoint.Scheme='ServicePrincipal'
 $spnEndpoint.Auth =$spnEndpoint
 
 $ipDetectionMethod = "IPAddressRange";
+
+#### Main File Mock Constants ####
+
+$validInputConnectedServiceName = "validConnectedServiceName"
+$dacpacFile = "C:\Test\Test.ps1"
+$serverName = "a0nuel7r2k.database.windows.net"
+$serverFriendlyName = "a0nuel7r2k"
+$databaseName = "TestDatabase"
+$sqlUsername = "TestUser"
+$sqlPassword = "TestPassword"
+$publishProfile = "C:\Test\publish.xml"
+$ipDetectionMethodAuto = "AutoDetect"
+$ipDetectionMethodRange = "IPAddressRange"
+$deleteFirewallRuleTrue = $true
+$deleteFirewallRuleFalse = $false
+$startIPAddress = "10.10.10.10"
+$endIPAddress = "10.10.10.11"
+
+$autoIp = "10.10.10.10"
+$sqlPackageArguments = "Test Arguments"
