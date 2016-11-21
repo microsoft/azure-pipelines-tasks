@@ -8,6 +8,9 @@ $endIP="167.220.236.2"
 $outOfRangeIPAddress = "167.220.236.256"
 
 $invalidfirewallRuleName = "invalidFirewallRule"
+$certificateFirewallRuleName= "certificateFirewallRuleName"
+$credentialsFirewallRuleName = "credentialsFirewallRuleName"
+$spnFirewallRuleName = "spnFirewallRuleName"
 
 $certEndpoint=@{}
 $usernameEndpoint=@{}
@@ -25,3 +28,5 @@ $usernameEndpoint.Auth =$usernameAuth
 
 $spnEndpoint.Scheme='ServicePrincipal'
 $spnEndpoint.Auth =$spnEndpoint
+
+$ipDetectionMethod = "IPAddressRange";
