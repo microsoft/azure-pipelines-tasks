@@ -1,4 +1,5 @@
 import tl = require('vsts-task-lib/task');
+import tr = require('vsts-task-lib/toolrunner');
 import path = require('path');
 import Q = require('q');
 
@@ -50,7 +51,7 @@ try {
     var vsTestVersionForTIA: number[] = null;
 
     var useNewCollector = false;
-    if (useNewCollectorFlag && useNewCollectorFlag.toUpperCase() == "TRUE") {
+    if (useNewCollectorFlag && useNewCollectorFlag.toUpperCase() === "TRUE") {
         useNewCollector = true;
     }
 
@@ -61,11 +62,10 @@ try {
     }
 
     var systemDefaultWorkingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
-    var artifactsDirectory = tl.getVariable('System.ArtifactsDirectory');
     var testAssemblyFiles = getTestAssemblies();
 
     if (testAssemblyFiles && testAssemblyFiles.length != 0) {
-        var workingDirectory = !isNullOrWhitespace(sourcesDir) ? systemDefaultWorkingDirectory : artifactsDirectory;
+        var workingDirectory = systemDefaultWorkingDirectory;
         getTestResultsDirectory(runSettingsFile, path.join(workingDirectory, 'TestResults')).then(function(resultsDirectory) {
             invokeVSTest(resultsDirectory)
                 .then(function(code) {
@@ -103,11 +103,10 @@ catch (error) {
 
 function getTestAssemblies(): string[] {
     if (isNullOrWhitespace(searchFolder)) {
-        searchFolder = isNullOrWhitespace(sourcesDir) ? artifactsDirectory : systemDefaultWorkingDirectory;
+        searchFolder = systemDefaultWorkingDirectory;
         tl.debug("Search directory empty, defaulting to " + searchFolder);
     }
     tl.debug("Searching for test assemblies in: " + searchFolder);
-
     return tl.findMatch(searchFolder, testAssembly, null, getTaskMatchOption());
 }
 
@@ -189,7 +188,7 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
 
     let sysDebug = tl.getVariable("System.Debug");
     if (sysDebug !== undefined && sysDebug.toLowerCase() === "true") {
-        if (vsTestVersionForTIA !== null && (vsTestVersionForTIA[0] > 15 || (vsTestVersionForTIA[0] == 15 && (vsTestVersionForTIA[1] > 0 || vsTestVersionForTIA[2] > 25428)))) {
+        if (vsTestVersionForTIA !== null && (vsTestVersionForTIA[0] > 15 || (vsTestVersionForTIA[0] === 15 && (vsTestVersionForTIA[1] > 0 || vsTestVersionForTIA[2] > 25428)))) {
             argsArray.push("/diag:" + vstestDiagFile);
         }
         else {
@@ -280,7 +279,7 @@ function generateResponseFile(discoveredTests: string): Q.Promise<string> {
     selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
     selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
 
-    if (context == "CD") {
+    if (context === "CD") {
         // Release context. Passing Release Id.
         selectortool.arg("/buildid:" + tl.getVariable("Release.ReleaseId"));
         selectortool.arg("/releaseuri:" + tl.getVariable("release.releaseUri"));
@@ -321,7 +320,7 @@ function publishCodeChanges(): Q.Promise<string> {
     var defer = Q.defer<string>();
 
     var newprovider = "true";
-    if (getTIALevel() == 'method') {
+    if (getTIALevel() === 'method') {
         newprovider = "false";
     }
 
@@ -330,7 +329,7 @@ function publishCodeChanges(): Q.Promise<string> {
     selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
     selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
 
-    if (context == "CD") {
+    if (context === "CD") {
         // Release context. Passing Release Id.
         selectortool.arg("/buildid:" + tl.getVariable("Release.ReleaseId"));
         selectortool.arg("/Definitionid:" + tl.getVariable("release.DefinitionId"));
@@ -345,7 +344,7 @@ function publishCodeChanges(): Q.Promise<string> {
     selectortool.arg("/newprovider:" + newprovider);
     selectortool.arg("/BaseLineFile:" + baseLineBuildIdFile);
 
-    if (isPrFlow && isPrFlow.toUpperCase() == "TRUE") {
+    if (isPrFlow && isPrFlow.toUpperCase() === "TRUE") {
         selectortool.arg("/IsPrFlow:" + "true");
     }
 
@@ -397,7 +396,7 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
     tl.rmRF(testResultsDirectory, true);
     tl.mkdirP(testResultsDirectory);
     tl.cd(workingDirectory);
-    vstest.exec({ failOnStdErr: true })
+    vstest.exec(<tr.IExecOptions>{ failOnStdErr: true })
         .then(function(code) {
             cleanUp(parallelRunSettingsFile);
             defer.resolve(code);
@@ -451,11 +450,11 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
         argsArray.push("/UseVsixExtensions:true");
     }
 
-    var vstest = tl.tool(vstestLocation);
+    let vstest = tl.tool(vstestLocation);
     addVstestArgs(argsArray, vstest);
 
     tl.cd(workingDirectory);
-    vstest.exec({ failOnStdErr: true })
+    vstest.exec(<tr.IExecOptions>{ failOnStdErr: true })
         .then(function(code) {
             defer.resolve(tempFile);
         })
@@ -679,7 +678,7 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
 
 function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     var defer = Q.defer<number>();
-    if (vsTestVersion.toLowerCase() == "latest") {
+    if (vsTestVersion.toLowerCase() === "latest") {
         vsTestVersion = null;
     }
     overrideTestRunParametersIfRequired(runSettingsFile)
@@ -696,7 +695,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                         if ((sysDebug !== undefined && sysDebug.toLowerCase() === "true") || tiaEnabled) {
                             vsTestVersionForTIA = getVsTestVersion();
 
-                            if (tiaEnabled && (vsTestVersionForTIA == null || (vsTestVersionForTIA[0] < 15 || (vsTestVersionForTIA[0] == 15 && vsTestVersionForTIA[1] == 0 && vsTestVersionForTIA[2] < 25727)))) {
+                            if (tiaEnabled && (vsTestVersionForTIA === null || (vsTestVersionForTIA[0] < 15 || (vsTestVersionForTIA[0] === 15 && vsTestVersionForTIA[1] === 0 && vsTestVersionForTIA[2] < 25727)))) {
                                 tl.warning(tl.loc("VstestTIANotSupported"));
                                 tiaEnabled = false;
                             }
@@ -771,7 +770,7 @@ function cleanUp(temporarySettingsFile: string) {
 
 function overrideTestRunParametersIfRequired(settingsFile: string): Q.Promise<string> {
     var defer = Q.defer<string>();
-    if (!settingsFile || !pathExistsAsFile(settingsFile) || !overrideTestrunParameters || overrideTestrunParameters.trim().length == 0) {
+    if (!settingsFile || !pathExistsAsFile(settingsFile) || !overrideTestrunParameters || overrideTestrunParameters.trim().length === 0) {
         defer.resolve(settingsFile);
         return defer.promise;
     }
@@ -782,7 +781,7 @@ function overrideTestRunParametersIfRequired(settingsFile: string): Q.Promise<st
     var parameterStrings = overrideTestrunParameters.split(";");
     parameterStrings.forEach(function(parameterString) {
         var pair = parameterString.split("=", 2);
-        if (pair.length == 2) {
+        if (pair.length === 2) {
             var key = pair[0];
             var value = pair[1];
             if (!overrideParameters[key]) {
@@ -938,26 +937,26 @@ function pushImpactLevelAndRootPathIfNotFound(dataCollectorArray): void {
                 dataCollectorArray[i] = { Configuration: {} };
             }
             if (dataCollectorArray[i].Configuration.TestImpact && !dataCollectorArray[i].Configuration.RootPath) {
-                if (context && context == "CD") {
+                if (context && context === "CD") {
                     dataCollectorArray[i].Configuration = { RootPath: "" };
                 } else {
                     dataCollectorArray[i].Configuration = { RootPath: sourcesDir };
                 }
             } else if (!dataCollectorArray[i].Configuration.TestImpact && dataCollectorArray[i].Configuration.RootPath) {
-                if (getTIALevel() == 'file') {
+                if (getTIALevel() === 'file') {
                     dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), LogFilePath: 'true' };
                 } else {
                     dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel() };
                 }
             } else if (dataCollectorArray[i].Configuration && !dataCollectorArray[i].Configuration.TestImpact && !dataCollectorArray[i].Configuration.RootPath) {
-                if (context && context == "CD") {
-                    if (getTIALevel() == 'file') {
+                if (context && context === "CD") {
+                    if (getTIALevel() === 'file') {
                         dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), LogFilePath: 'true', RootPath: "" };
                     } else {
                         dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), RootPath: "" };
                     }
                 } else {
-                    if (getTIALevel() == 'file') {
+                    if (getTIALevel() === 'file') {
                         dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), LogFilePath: 'true', RootPath: sourcesDir };
                     } else {
                         dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), RootPath: sourcesDir };
@@ -978,7 +977,7 @@ function pushImpactLevelAndRootPathIfNotFound(dataCollectorArray): void {
 
 function roothPathGenerator(): any {
     if (context) {
-        if (context == "CD") {
+        if (context === "CD") {
             return { ImpactLevel: getTIALevel(), RootPath: "" };
         } else {
             return { ImpactLevel: getTIALevel(), RootPath: sourcesDir };
@@ -1192,13 +1191,13 @@ function createRunSettingsForTestImpact(vsVersion: number, settingsFile: string,
         '<Configuration>' +
         '<ImpactLevel>' + getTIALevel() + '</ImpactLevel>';
 
-    if (getTIALevel() == 'file') {
+    if (getTIALevel() === 'file') {
         runSettingsForTIA = runSettingsForTIA +
             '<LogFilePath>' + 'true' + '</LogFilePath>';
     }
 
     runSettingsForTIA = runSettingsForTIA +
-        '<RootPath>' + (context == "CD" ? "" : sourcesDir) + '</RootPath>' +
+        '<RootPath>' + (context === "CD" ? "" : sourcesDir) + '</RootPath>' +
         '</Configuration>' +
         '</DataCollector>' +
         '</DataCollectors></DataCollectionRunSettings></RunSettings>';
@@ -1219,7 +1218,7 @@ function setupSettingsFileForTestImpact(vsVersion: number, settingsFile: string)
     var defer = Q.defer<string>();
     var exitErrorMessage = "Error occured while setting in test impact data collector. Continuing...";
     if (isTiaAllowed()) {
-        if (settingsFile && settingsFile.split('.').pop().toLowerCase() == "testsettings") {
+        if (settingsFile && settingsFile.split('.').pop().toLowerCase() === "testsettings") {
             updateTestSettingsFileForTestImpact(vsVersion, settingsFile, exitErrorMessage)
                 .then(function(updatedFile) {
                     defer.resolve(updatedFile);
@@ -1252,7 +1251,7 @@ function setupRunSettingsFileForParallel(runInParallel: boolean, settingsFile: s
     var defer = Q.defer<string>();
     var exitErrorMessage = "Error occured while setting run in parallel. Continuing...";
     if (runInParallel) {
-        if (settingsFile && settingsFile.split('.').pop().toLowerCase() == "testsettings") {
+        if (settingsFile && settingsFile.split('.').pop().toLowerCase() === "testsettings") {
             tl.warning(tl.loc('RunInParallelNotSupported'));
             defer.resolve(settingsFile);
             return defer.promise;
@@ -1474,7 +1473,7 @@ function isTiaAllowed(): boolean {
 }
 
 function getTIALevel() {
-    if (fileLevel && fileLevel.toUpperCase() == "FALSE") {
+    if (fileLevel && fileLevel.toUpperCase() === "FALSE") {
         return "method";
     }
     return "file";
@@ -1482,7 +1481,7 @@ function getTIALevel() {
 
 function responseContainsNoTests(filePath: string): Q.Promise<boolean> {
     return readFileContents(filePath, "utf-8").then(function(resp) {
-        if (resp == "/Tests:") {
+        if (resp === "/Tests:") {
             return true;
         }
         else {
@@ -1492,7 +1491,7 @@ function responseContainsNoTests(filePath: string): Q.Promise<boolean> {
 }
 
 function isNullOrWhitespace(input) {
-    if (typeof input === 'undefined' || input == null) {
+    if (typeof input === 'undefined' || input === null) {
         return true;
     }
     return input.replace(/\s/g, '').length < 1;
@@ -1500,6 +1499,8 @@ function isNullOrWhitespace(input) {
 
 function getTaskMatchOption(): any {
     return {
+        dot: true,
+        nobrace: true,
         nocase: process.platform == 'win32',
         matchBase: true
     };

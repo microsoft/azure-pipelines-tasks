@@ -1,6 +1,5 @@
 {
   "name": "vsts-tasks-vstest",
-  "version": "2.0.0",
   "description": "VSTS VSTEST Task",
   "main": "VSTest.js",
   "scripts": {

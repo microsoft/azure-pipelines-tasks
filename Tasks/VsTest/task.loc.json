@@ -19,6 +19,7 @@
     "vstest"
   ],
   "preview": "true",
+  "releaseNotes": "Test Impact and support for minimatch patterns.",
   "minimumAgentVersion": "1.89.0",
   "groups": [
     {
@@ -231,10 +232,7 @@
     "PowerShell": {
       "target": "$(currentDirectory)\\VSTest.ps1",
       "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)",
-      "platforms": [
-        "windows"
-      ]
+      "workingDirectory": "$(currentDirectory)"
     }
   },
   "messages": {
