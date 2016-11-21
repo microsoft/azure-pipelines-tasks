@@ -13,7 +13,7 @@
   "version": {
     "Major": 2,
     "Minor": 1,
-    "Patch": 5
+    "Patch": 6
   },
   "minimumAgentVersion": "1.102.0",
   "groups": [
@@ -26,11 +26,6 @@
       "name": "output",
       "displayName": "ms-resource:loc.group.displayName.output",
       "isExpanded": true
-    },
-    {
-      "name": "FileTransformsAndVariableSubstitution",
-      "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
-      "isExpanded": false
     }
   ],
   "inputs": [
@@ -167,25 +162,6 @@
       "required": false,
       "groupName": "AdditionalDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
-    },
-    {
-      "name": "XmlTransformsAndVariableSubstitutions",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.XmlTransformsAndVariableSubstitutions",
-      "required": false,
-      "defaultValue": false,
-      "groupName": "FileTransformsAndVariableSubstitution",
-      "helpMarkDown": ""
-    },
-    {
-      "name": "VariableSubstitution",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.VariableSubstitution",
-      "required": false,
-      "defaultValue": false,
-      "groupName": "FileTransformsAndVariableSubstitution",
-      "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
-      "helpMarkDown": "ms-resource:loc.input.help.VariableSubstitution"
     }
   ],
   "dataSourceBindings": [
