@@ -29,7 +29,6 @@ Try
         $additionalArguments = $additionalArgumentsSql
         $targetMethod = "server"
     }
-    $additionalArguments = Escape-SpecialChars -str $additionalArguments
 
     if ($taskType -eq "dacpac")
     {
@@ -39,7 +38,6 @@ Try
     {
         Execute-SqlQueryDeployment -taskType $taskType -sqlFile $sqlFile -inlineSql $inlineSql -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlUsername $sqlUsername -sqlPassword $sqlPassword -additionalArguments $additionalArguments
     }
-
 }
 Catch [System.Management.Automation.CommandNotFoundException]
 {
