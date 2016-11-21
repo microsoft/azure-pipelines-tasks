@@ -20,67 +20,13 @@
   },
   "demands": [],
   "minimumAgentVersion": "1.102.0",
-  "groups": [
-    {
-      "name": "target",
-      "displayName": "ms-resource:loc.group.displayName.target",
-      "isExpanded": true
-    },
-    {
-      "name": "taskDetails",
-      "displayName": "ms-resource:loc.group.displayName.taskDetails",
-      "isExpanded": true
-    }
-  ],
+  "groups": [],
   "inputs": [
-    {
-      "name": "DatabaseName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.DatabaseName",
-      "required": true,
-      "groupName": "target",
-      "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.DatabaseName"
-    },
-    {
-      "name": "AuthScheme",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.AuthScheme",
-      "required": true,
-      "groupName": "target",
-      "defaultValue": "Windows Authentication",
-      "options": {
-        "windowsAuthentication": "Windows Authentication",
-        "sqlServerAuthentication": "SQL Server Authentication"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.AuthScheme"
-    },
-    {
-      "name": "SqlUsername",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.SqlUsername",
-      "required": true,
-      "groupName": "target",
-      "defaultValue": "",
-      "visibleRule": "AuthScheme = sqlServerAuthentication",
-      "helpMarkDown": "ms-resource:loc.input.help.SqlUsername"
-    },
-    {
-      "name": "SqlPassword",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.SqlPassword",
-      "required": true,
-      "groupName": "target",
-      "defaultValue": "",
-      "visibleRule": "AuthScheme = sqlServerAuthentication",
-      "helpMarkDown": "ms-resource:loc.input.help.SqlPassword"
-    },
     {
       "name": "TaskType",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.TaskType",
       "required": true,
-      "groupName": "taskDetails",
       "defaultValue": "dacpac",
       "options": {
         "dacpac": "Sql Dacpac",
@@ -94,7 +40,6 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.DacpacFile",
       "required": true,
-      "groupName": "taskDetails",
       "visibleRule": "TaskType = dacpac",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.DacpacFile"
@@ -104,7 +49,6 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.SqlFile",
       "required": true,
-      "groupName": "taskDetails",
       "visibleRule": "TaskType = sqlQuery",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.SqlFile"
@@ -114,7 +58,6 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.InlineSql",
       "required": true,
-      "groupName": "taskDetails",
       "visibleRule": "TaskType = sqlInline",
       "defaultValue": "",
       "properties": {
@@ -128,7 +71,6 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.TargetMethod",
       "required": true,
-      "groupName": "taskDetails",
       "defaultValue": "server",
       "visibleRule": "TaskType = dacpac",
       "options": {
@@ -139,11 +81,50 @@
       "helpMarkDown": "ms-resource:loc.input.help.TargetMethod"
     },
     {
+      "name": "DatabaseName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.DatabaseName",
+      "required": true,
+      "defaultValue": "",
+      "visibleRule": "TargetMethod = server || TaskType = sqlQuery || TaskType = sqlInline",
+      "helpMarkDown": "ms-resource:loc.input.help.DatabaseName"
+    },
+    {
+      "name": "AuthScheme",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.AuthScheme",
+      "required": true,
+      "defaultValue": "Windows Authentication",
+      "visibleRule": "TargetMethod = server || TaskType = sqlQuery || TaskType = sqlInline",
+      "options": {
+        "windowsAuthentication": "Windows Authentication",
+        "sqlServerAuthentication": "SQL Server Authentication"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.AuthScheme"
+    },
+    {
+      "name": "SqlUsername",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SqlUsername",
+      "required": true,
+      "defaultValue": "",
+      "visibleRule": "AuthScheme = sqlServerAuthentication",
+      "helpMarkDown": "ms-resource:loc.input.help.SqlUsername"
+    },
+    {
+      "name": "SqlPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SqlPassword",
+      "required": true,
+      "defaultValue": "",
+      "visibleRule": "AuthScheme = sqlServerAuthentication",
+      "helpMarkDown": "ms-resource:loc.input.help.SqlPassword"
+    },
+    {
       "name": "ConnectionString",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.ConnectionString",
       "required": true,
-      "groupName": "taskDetails",
       "defaultValue": "",
       "visibleRule": "TargetMethod = connectionString",
       "helpMarkDown": "ms-resource:loc.input.help.ConnectionString"
@@ -153,7 +134,6 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.PublishProfile",
       "required": false,
-      "groupName": "taskDetails",
       "defaultValue": "",
       "visibleRule": "TaskType = dacpac",
       "helpMarkDown": "ms-resource:loc.input.help.PublishProfile"
@@ -163,7 +143,6 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.AdditionalArguments",
       "required": false,
-      "groupName": "taskDetails",
       "defaultValue": "",
       "visibleRule": "TaskType = dacpac",
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
@@ -173,7 +152,6 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.AdditionalArgumentsSql",
       "required": false,
-      "groupName": "taskDetails",
       "defaultValue": "",
       "visibleRule": "TaskType = sqlQuery || TaskType = sqlInline",
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArgumentsSql"
