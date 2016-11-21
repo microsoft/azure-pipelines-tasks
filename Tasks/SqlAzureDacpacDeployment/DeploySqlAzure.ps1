@@ -188,9 +188,7 @@ Try
         $commandToLog += " -Inputfile `"$FilePath`" " + $SqlAdditionalArguments
 
         Write-Host $commandToLog
-        $commandToRun | Out-File "F:\W\debug.txt"
         Invoke-Expression $commandToRun
-
     }
     
 }
