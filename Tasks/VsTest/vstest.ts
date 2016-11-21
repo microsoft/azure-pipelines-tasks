@@ -107,7 +107,7 @@ function getTestAssemblies(): string[] {
         tl.debug("Search directory empty, defaulting to " + searchFolder);
     }
     tl.debug("Searching for test assemblies in: " + searchFolder);
-    return tl.findMatch(searchFolder, testAssembly, null, getTaskMatchOption());
+    return tl.findMatch(searchFolder, testAssembly);
 }
 
 function getVsTestVersion(): number[] {
@@ -237,7 +237,7 @@ function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
     var allFilesInResultsDirectory;
     var resultFiles;
     if (!isNullOrWhitespace(testResultsDirectory)) {
-        resultFiles = tl.findMatch(testResultsDirectory, path.join(testResultsDirectory, "*.trx"), null, getTaskMatchOption());
+        resultFiles = tl.findMatch(testResultsDirectory, path.join(testResultsDirectory, "*.trx"));
     }
 
     var selectortool = tl.tool(getTestSelectorLocation());
@@ -743,7 +743,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
 
 function publishTestResults(testResultsDirectory: string) {
     if (testResultsDirectory) {
-        let resultFiles = tl.findMatch(testResultsDirectory, path.join(testResultsDirectory, "*.trx"), null, getTaskMatchOption());
+        let resultFiles = tl.findMatch(testResultsDirectory, path.join(testResultsDirectory, "*.trx"));
 
         if (resultFiles && resultFiles.length != 0) {
             var tp = new tl.TestPublisher("VSTest");
@@ -1495,13 +1495,4 @@ function isNullOrWhitespace(input) {
         return true;
     }
     return input.replace(/\s/g, '').length < 1;
-}
-
-function getTaskMatchOption(): any {
-    return {
-        dot: true,
-        nobrace: true,
-        nocase: process.platform == 'win32',
-        matchBase: true
-    };
 }
