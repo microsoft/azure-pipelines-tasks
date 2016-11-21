@@ -1,33 +1,53 @@
-# Visual Studio Team Services Tasks
-<br/>
-![Tasks](/taskbanner.png?raw=true "Tasks")
-<br/>
+# IIS Web Application Deployment
 
 ## Overview
-This repo contains the tasks that are provided out of the box with Visual Studio Team Services and Team Foundation Server.
 
-This provides open examples on how we write tasks which will help you write other tasks which can be uploaded to your account or server.  See writing tasks below.
+The task is used to deploy a web application or a website to IIS web server, and the underlying technologies used by the task is [Web Deploy](https://www.iis.net/downloads/microsoft/web-deploy). Web Deploy packages the web application content, configuration and any other artifacts like registry, GAC assemblies etc. that can be used deployment. If the package needs to be redeployed to a different environment, configuration values within the package can be parameterized during deployment without requiring modifications to the packages themselves. Web deploy works with IIS 7, IIS 7.5, IIS 8, and IIS 8.5. 
 
-## Status
-|   | Build & Test |
-|---|:-----:|
-|![Win](docs/res/win_med.png) **Windows**|![Build & Test](https://mseng.visualstudio.com/_apis/public/build/definitions/b924d696-3eae-4116-8443-9a18392d8544/1474/badge?branch=master)| 
-|![OSX](docs/res/apple_med.png) **OSX**|![Build & Test](https://mseng.visualstudio.com/_apis/public/build/definitions/b924d696-3eae-4116-8443-9a18392d8544/4213/badge?branch=master)| 
-|![Ubuntu14](docs/res/ubuntu_med.png) **Ubuntu 14.04**|![Build & Test](https://mseng.visualstudio.com/_apis/public/build/definitions/b924d696-3eae-4116-8443-9a18392d8544/4088/badge?branch=master)|
+The task runs on the deployment target machine(s)registered with the Machine Group configured for the task/phase. Machine Groups are logical groups of deployment target machines with agents installed on each of them. They also specify the security context and runtime targets for the agents. When authoring VSTS Release definition, you can specify the deployments targets for a Phase using the machine group. 
 
-## How to Use Tasks
 
-[Documentation is here](https://aka.ms/tfbuild)
+## Contact Information
 
-## Writing Tasks
+Please contact the alias RM\_Customer\_Queries at microsoft dot com, if you are facing problems in making this task work. Also, if you would like to share feedback about the task and the new features that you would like to see in it, then do send an email to the alias.
 
-Before writing a task, consider simply customizing your build using the script running tasks such as PowerShell or shell scripts.  That is often the most appropriate path.
+## Pre-requisites for the task
 
-Tasks are simply tool runners.  They know how to run MSBuild, VSTest, etc... in a first class way and handle return codes, how to treat std/err out, and how to write timeline records based on expected output.  They also get access to credentials to write back to TFS/Team Services. 
+The following pre-requisites need to be setup for the task to work properly.
 
-For uploading custom tasks to VSTS use the [TFS Cross Platform Command Line utility](https://github.com/Microsoft/tfs-cli).
+### Web Deploy
 
-Tasks can also be deployed with an Visual Studio Team Service Extension. See [this tutorial](https://www.visualstudio.com/en-us/docs/integrate/extensions/develop/add-build-task) how to package tasks inside an extension.
+Web Deploy (msdeploy.exe) is used to deploy the web application on the IIS server, and needs to be installed on the target machines, and can be easily done so using [Microsoft Web Platform Installer](https://www.microsoft.com/web/gallery/install.aspx?appid=wdeploynosmo). Note that the link will open Web PI with the Web Deploy showing-up ready to install. The WebDeploy 3.5 needs to be installed without the bundled SQL support and using the default settings. There is no need to choose any custom settings while installing web deploy. After installation the Web Deploy is available at C:\Program Files (x86)\IIS\Microsoft Web Deploy V3. The task [PowerShell on Target Machines](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/PowerShellOnTargetMachines) can be used to deploy Web Deploy to Azure virtual machines or domain-joined/workgroup machines.
 
-## Contributing
-We take contributions.  [Read here](docs/contribute.md) how to contribute.
+### IIS Web Server
+
+There should be a IIS web server already installed and configured on the pre-existing machines or virtual machines. The task updates websites and application pools, and deploys IIS web applications but does not install or configure IIS web server on the machines.
+
+### Pre-existing Machine Group
+
+This task requires a machine group to execute. If the web application is being deployed on pre-existing machines (physical or virtual machines) then download the agent installer on each of the machines and register them with an existing machine group by following these [instructions](). If there is no pre-existing machine group, you can create one in the Machine groups hub. 
+Note that the IP Address or the FDQN of Azure virtual machines can be also added in the machine group. 
+The difference between using the domain-joined/workgroup machines and the Azure virtual machines is that copying files to them uses separate tasks wiz. [Windows Machine File Copy](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/WindowsMachineFileCopy) for the domain-joined/workgroup machines and [Azure File Copy](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzureFileCopy) for the Azure virtual machines. Note that the IIS Web Application Deployment task expects the web application's package zip files to be available on the machines or on a UNC path that is accessible by the machine administrator's login. Prior to using the IIS Web Application Deployment task ensure that the zip files are available for the deployment by copying them to the machines using the Windows Machine File Copy or the Azure File Copy tasks.
+
+## Parameters of the task
+
+The task can be used to deploy a web application to an existing website in the IIS web server using web deploy. The task parameters are described in detail below. The parameters listed with a \* are required parameters for the task.
+
+The task deploys the web application to the website using the web deploy.
+
+* **Website Name\*:** The name of the IIS website where the Web App will be deployed. The name of the website should be same as that specified in the web deploy zip package file. If a Parameter file and override Parameters setting is also specified, then the name of the website should be same as that in the override Parameters setting.
+
+* **Virtual Application:** Specify the name of the Virtual Application that has been configured on the IIS Server. The option is not required for deployments to the website root. The Virtual Application should have been configured prior to deploying the Web project to it using the task.
+
+* **Package or Folder\*:** Location of the Web App zip package or folder on the automation agent or on a UNC path accessible to the automation agent like, \\\\BudgetIT\\Web\\Deploy\\Fabrikam.zip. Predefined system variables and wild cards like, $(System.DefaultWorkingDirectory)\\\***.zip can be also used here. 
+
+### Advanced Deployment Options
+* **Set Parameters File:** The parameter file is used to override the default settings in the web deploy zip package file like, the IIS Web application name or the database connection string. This helps in having a single package that can be deployed across dev, test, staging, and production, with a specific parameter file for each environment.
+
+* **Remove Additional Files at Destination:** Select the option to delete the files in the Web App that have no matching files in the Web App zip package. This will ensure that during the Web project deployment any additional files in the Web App are deleted, and the only files in the Web App are the ones in the Web App zip package.
+
+* **Exclude Files from the App_Data Folder:** Select the option to prevent files in the App_Data folder from being deployed to the Web App/Website. This is a useful option to select, if a local database or a WebJob has been deployed earlier to the Web App, and they should not be deleted in the subsequent deployments of the Web project.
+
+* **Take Application Offline:** Select the option to take the Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully.
+
+* **Additional Arguments:** Additional Web Deploy arguments that will be appended to the MSDeploy command while deploying the Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension. A useful parameter for enabling and disabling rules and for skipping syncing of certain folders.
