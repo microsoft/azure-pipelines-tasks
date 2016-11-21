@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 3
+    "Patch": 4
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",
@@ -68,6 +68,15 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.OverWrite",
+      "groupName": "advanced"
+    },
+    {
+      "name": "flattenFolders",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.flattenFolders",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.flattenFolders",
       "groupName": "advanced"
     }
   ],
