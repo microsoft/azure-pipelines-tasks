@@ -9,12 +9,6 @@ Register-Mock Get-VstsInput { "MultipleSqlTaskFiles" } -ParametersEvaluator { $N
 Register-Mock Get-VstsInput { "Mock Value" } -ParametersEvaluator { $Name -ne "TaskNameSelector"  -and $Name -ne "SqlFile"}
 Register-Mock Find-VstsFiles { return @("Dacpac1.sql", "Dacpac2.sql", "DacpacN.sql") } -ArgumentsEvaluator {$args.count -eq 2 -and $args[0] -like "LegacyPattern" -and $args[1] -like "MultipleSqlTaskFiles"}
 
-Register-Mock Get-VstsLocString {
-    param([string]$Key,
-          [string]$ArgumentList)
-    return $Key -f $ArgumentList
-}
-
 Assert-Throws {
     & "$PSScriptRoot\..\DeploySqlAzure.ps1"
 } -MessagePattern "*SAD_FoundMoreFiles*"
