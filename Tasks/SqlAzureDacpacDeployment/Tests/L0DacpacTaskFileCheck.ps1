@@ -9,11 +9,6 @@ Register-Mock Get-VstsInput { "MultipleDacpacFiles" } -ParametersEvaluator { $Na
 Register-Mock Get-VstsInput { "Mock Value"} -ParametersEvaluator { $Name -ne "TaskNameSelector"  -and $Name -ne "DacpacFile"}
 Register-Mock Find-VstsFiles { return @("Dacpac1.dacpac", "Dacpac2.dacpac", "DacpacN.dacpac") } -ArgumentsEvaluator {$args.count -eq 2 -and $args[0] -like "LegacyPattern" -and $args[1] -like "MultipleDacpacFiles"} # 'MultipleDacpacFiles'
 
-Register-Mock Get-VstsLocString {
-    param([string]$Key,
-          [string]$ArgumentList)
-    return $Key -f $ArgumentList
-}
 
 Assert-Throws {
     & "$PSScriptRoot\..\DeploySqlAzure.ps1"
