@@ -1,5 +1,6 @@
 import path = require('path');
 import tl = require('vsts-task-lib/task');
+import os = require('os');
 import trm = require('vsts-task-lib/toolrunner');
 
 var firstWildcardIndex = function (str) {
@@ -20,6 +21,8 @@ var firstWildcardIndex = function (str) {
 async function run() {
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
+
+        var isWin = os.type().match(/^Win/); 
 
         var filesPattern: string = tl.getInput('files', true);
         var username: string = tl.getInput('username', false);
@@ -60,7 +63,9 @@ async function run() {
             var allFiles = tl.find(findPathRoot);
 
             // Now matching the pattern against all files
-            var uploadFilesList = tl.match(allFiles, filesPattern, {matchBase: true});
+            var uploadFilesList = tl.match(allFiles, filesPattern, {matchBase: true}).map( (s) => {
+                return isWin ? s.replace(/\\/g, '/') : s;
+            });
 
             // Fail if no matching app files were found
             if (!uploadFilesList || uploadFilesList.length == 0) {

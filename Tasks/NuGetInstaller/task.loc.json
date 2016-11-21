@@ -9,8 +9,12 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 18
+    "Patch": 25
   },
+  "runsOn": [
+    "Agent",
+    "MachineGroup"
+  ],
   "minimumAgentVersion": "1.83.0",
   "groups": [
     {
@@ -90,7 +94,7 @@
       "groupName": "advanced",
       "options": {
         "3.3.0": "3.3.0",
-        "3.5.0.1829": "3.5.0 – build 1829 (rc2)",
+        "3.5.0.1829": "3.5.0 - build 1938 (rc2)",
         "custom": "Custom"
       }
     },
@@ -111,7 +115,6 @@
     }
   },
   "messages": {
-    "Warning_NoConfigForOldNuGet": "ms-resource:loc.messages.Warning_NoConfigForOldNuGet",
     "Warning_NoConfigForNoCredentialProvider": "ms-resource:loc.messages.Warning_NoConfigForNoCredentialProvider",
     "Warning_ConflictingNuGetPreference": "ms-resource:loc.messages.Warning_ConflictingNuGetPreference",
     "PackagesInstalledSuccessfully": "ms-resource:loc.messages.PackagesInstalledSuccessfully",

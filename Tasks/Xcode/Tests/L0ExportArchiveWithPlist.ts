@@ -3,10 +3,11 @@ import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 
-let taskPath = path.join(__dirname, '..', 'Xcode.js');
+let taskPath = path.join(__dirname, '..', 'xcode.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 process.env['HOME']='/users/test'; //replace with mock of setVariable when task-lib has the support
+process.env['USEXCRUN']='false';
 
 tr.setInput('actions', 'build');
 tr.setInput('configuration', '$(Configuration)');

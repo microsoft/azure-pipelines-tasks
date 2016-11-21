@@ -8,11 +8,15 @@
     "visibility": [
         "Build"
     ],
+	"runsOn": [
+        "Agent",
+        "MachineGroup"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 15
+        "Patch": 17
     },
     "demands": [],
     "minimumAgentVersion": "1.90.0",

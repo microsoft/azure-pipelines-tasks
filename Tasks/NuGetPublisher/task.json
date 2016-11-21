@@ -9,39 +9,43 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 18
+        "Patch": 25
     },
+	"runsOn": [
+        "Agent",
+        "MachineGroup"
+    ],
     "demands": [
         "Cmd"
     ],
     "minimumAgentVersion": "1.83.0",
     "groups": [
         {
-            "name":"advanced",
-            "displayName":"Advanced",
-            "isExpanded":false
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
         }
-    ],    
+    ],
     "instanceNameFormat": "NuGet Publisher $(solution)",
     "inputs": [
         {
             "name": "searchPattern",
             "type": "filePath",
             "label": "Path/Pattern to nupkg",
-            "defaultValue":"**/*.nupkg;-:**/packages/**/*.nupkg;-:**/*.symbols.nupkg",
+            "defaultValue": "**/*.nupkg;-:**/packages/**/*.nupkg;-:**/*.symbols.nupkg",
             "helpMarkDown": "The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon.",
-            "required":true
+            "required": true
         },
         {
-            "name":"nuGetFeedType",
-            "type":"radio",
-            "label":"Feed type",
-            "required":true,
-            "defaultValue":"external",
+            "name": "nuGetFeedType",
+            "type": "radio",
+            "label": "Feed type",
+            "required": true,
+            "defaultValue": "external",
             "options": {
-                "external":"External NuGet Feed",
-                "internal":"Internal NuGet Feed"
-            }   
+                "external": "External NuGet Feed",
+                "internal": "Internal NuGet Feed"
+            }
         },
         {
             "name": "connectedServiceName",
@@ -94,8 +98,8 @@
             "groupName": "advanced",
             "options": {
                 "3.3.0": "3.3.0",
-                "3.5.0.1829": "3.5.0 – build 1829 (rc2)",
-                "custom" : "Custom"
+                "3.5.0.1829": "3.5.0 - build 1829 (rc2)",
+                "custom": "Custom"
             }
         },
         {
@@ -107,7 +111,6 @@
             "helpMarkDown": "Optionally supply the path to NuGet.exe. Will override version selection.",
             "groupName": "advanced"
         }
-
     ],
     "execution": {
         "Node": {
@@ -118,7 +121,7 @@
     "messages": {
         "Warning_NoConfigForOldNuGet": "To connect to NuGet feeds hosted in your Team Services account/TFS project collection with NuGet 3.1 or below, edit your build definition to specify a path to a NuGet.config containing the package sources you wish to use.",
         "Warning_NoConfigForNoCredentialProvider": "To connect to NuGet feeds hosted in your Team Services account/TFS project collection on this build agent, edit your build definition to specify a path to a NuGet.config containing the package sources you wish to use.",
-        "Warning_ConflictingNuGetPreference" : "NuGet 3.3 was selected, but a custom NuGet path was provided. The custom path will be preferred. To resolve this warning, edit your build task and select 'custom' for NuGet version under Advanced.",
+        "Warning_ConflictingNuGetPreference": "NuGet 3.3 was selected, but a custom NuGet path was provided. The custom path will be preferred. To resolve this warning, edit your build task and select 'custom' for NuGet version under Advanced.",
         "PackagesPublishedSuccessfully": "Packages were published successfully",
         "PackagesFailedToPublish": "Packages failed to publish",
         "ConnectingAs": "Connecting to feeds in your Team Services account/TFS project collection as '%s' [%s]",
@@ -127,8 +130,7 @@
         "NotARegularFile": "%s is not a regular file. Check the 'Path/Pattern to nupkg' property of the NuGetPublisher task.",
         "UnknownFeedType": "Unknown feed type '%s'",
         "CouldNotFindNuGetService": "Could not find the NuGet service. This task will be unable to authenticate to feeds hosted in your Team Services account/TFS project collection.",
-        "NoNuGetSpecified" : "If 'custom' is selected, you must provide a path to NuGet.exe",
-
+        "NoNuGetSpecified": "If 'custom' is selected, you must provide a path to NuGet.exe",
         "NGCommon_DetectedNuGetVersion": "Detected NuGet version %s / %s",
         "NGCommon_IgnoringNuGetExtensionsPath": "Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable). Extensions are ignored when using the built-in NuGet client",
         "NGCommon_DetectedNuGetExtensionsPath": "Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable): %s",
@@ -140,6 +142,6 @@
         "NGCommon_RemovingSources": "Preparing to set credentials in NuGet.config",
         "NGCommon_AddingSources": "Setting credentials in NuGet.config",
         "NGCommon_NoSourcesFoundInConfig": "No package sources were found in the NuGet.config file at %s",
-        "NGCommon_UnabletoDetectNuGetVersion" : "Unknown NuGet version selected."
+        "NGCommon_UnabletoDetectNuGetVersion": "Unknown NuGet version selected."
     }
 }

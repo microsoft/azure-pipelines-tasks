@@ -9,27 +9,31 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 15
+    "Patch": 20
   },
+  "runsOn": [
+    "Agent",
+    "MachineGroup"
+  ],
   "demands": [
     "npm"
   ],
   "minimumAgentVersion": "1.91.0",
-  "groups": [
-    {
-      "name": "advanced",
-      "displayName": "ms-resource:loc.group.displayName.advanced",
-      "isExpanded": false
-    }
-  ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
+    {
+      "name": "cwd",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.cwd",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cwd"
+    },
     {
       "name": "command",
       "type": "string",
       "label": "ms-resource:loc.input.label.command",
       "defaultValue": "install",
-      "helpMarkDown": "ms-resource:loc.input.help.command",
       "required": true
     },
     {
@@ -39,15 +43,6 @@
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.arguments",
       "required": false
-    },
-    {
-      "name": "cwd",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.cwd",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.cwd",
-      "groupName": "advanced"
     }
   ],
   "execution": {
@@ -59,6 +54,9 @@
   "messages": {
     "InvalidCommand": "ms-resource:loc.messages.InvalidCommand",
     "NpmReturnCode": "ms-resource:loc.messages.NpmReturnCode",
-    "NpmFailed": "ms-resource:loc.messages.NpmFailed"
+    "NpmFailed": "ms-resource:loc.messages.NpmFailed",
+    "NpmConfigFailed": "ms-resource:loc.messages.NpmConfigFailed",
+    "NpmAuthFailed": "ms-resource:loc.messages.NpmAuthFailed",
+    "BuildCredentialsWarn": "ms-resource:loc.messages.BuildCredentialsWarn"
   }
 }

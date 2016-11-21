@@ -9,6 +9,10 @@
         "Build",
         "Release"
     ],
+	"runsOn": [
+        "Agent",
+        "MachineGroup"
+    ],
     "author": "Microsoft Corporation",
     "demands": [
         "maven"
@@ -16,7 +20,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 73
+        "Patch": 77
     },
     "minimumAgentVersion": "1.89.0",
     "instanceNameFormat": "Maven $(mavenPOMFile)",
@@ -222,7 +226,7 @@
             "helpMarkDown": "Sets the M2_HOME variable to a custom Maven installation path.",
             "visibleRule": "mavenVersionSelection = Path"
         },
-           {
+        {
             "name": "mavenOpts",
             "type": "string",
             "label": "Set MAVEN_OPTS to",
@@ -371,6 +375,5 @@
         "codeAnalysisDisabled": "Code analysis is disabled outside of the build enviroment. Could not find a value for: %s",
         "LocateJVMBasedOnVersionAndArch": "Locate JAVA_HOME for Java %s %s",
         "FailedToLocateSpecifiedJVM": "Failed to find specified JDK version. Please make sure environment variable '%s' exists and is set to the location of a corresponding JDK."
-       
     }
 }

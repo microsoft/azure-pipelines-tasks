@@ -8,11 +8,15 @@
         "Build",
         "Release"
     ],
+	"runsOn": [
+        "Agent",
+        "MachineGroup"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 14
+        "Patch": 17
     },
     "groups": [
         {
@@ -71,5 +75,5 @@
     "messages": {
         "OpenSSLReturnCode": "openssl exited with return code: %d",
         "OpenSSLFailed": "openssl failed with error: %s"
-    }    
+    }
 }

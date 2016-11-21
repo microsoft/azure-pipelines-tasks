@@ -12,15 +12,15 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 0,
-    "Patch": 4
+    "Minor": 1,
+    "Patch": 7
   },
   "minimumAgentVersion": "1.102.0",
   "groups": [
     {
       "name": "AdditionalDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
-      "isExpanded": true
+      "isExpanded": false
     },
     {
       "name": "output",
@@ -92,7 +92,7 @@
       "name": "Package",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.Package",
-      "defaultValue": "$(System.DefaultWorkingDirectory)\\**\\*.zip",
+      "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.Package"
     },
@@ -110,7 +110,7 @@
       "type": "boolean",
       "label": "ms-resource:loc.input.label.UseWebDeploy",
       "required": false,
-      "defaultValue": "true",
+      "defaultValue": "false",
       "groupName": "AdditionalDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.UseWebDeploy"
     },
@@ -145,16 +145,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.ExcludeFilesFromAppDataFlag"
     },
     {
-      "name": "TakeAppOfflineFlag",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.TakeAppOfflineFlag",
-      "defaultValue": "false",
-      "required": false,
-      "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "UseWebDeploy == true",
-      "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
-    },
-    {
       "name": "AdditionalArguments",
       "type": "string",
       "label": "ms-resource:loc.input.label.AdditionalArguments",
@@ -163,6 +153,15 @@
       "groupName": "AdditionalDeploymentOptions",
       "visibleRule": "UseWebDeploy == true",
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
+    },
+    {
+      "name": "TakeAppOfflineFlag",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.TakeAppOfflineFlag",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "AdditionalDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
     }
   ],
   "dataSourceBindings": [
@@ -200,38 +199,50 @@
     "Invalidwebapppackageorfolderpathprovided": "ms-resource:loc.messages.Invalidwebapppackageorfolderpathprovided",
     "SetParamFilenotfound0": "ms-resource:loc.messages.SetParamFilenotfound0",
     "GotconnectiondetailsforazureRMWebApp0": "ms-resource:loc.messages.GotconnectiondetailsforazureRMWebApp0",
-    "UnabletoretrieveWebAppIDforazureRMWebApp0StatusCode1": "ms-resource:loc.messages.UnabletoretrieveWebAppIDforazureRMWebApp0StatusCode1",
     "ErrorNoSuchDeployingMethodExists": "ms-resource:loc.messages.ErrorNoSuchDeployingMethodExists",
-    "UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1": "ms-resource:loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1",
-    "Unabletoretrievewebapppublishurlforwebapp0StatusCode1": "ms-resource:loc.messages.Unabletoretrievewebapppublishurlforwebapp0StatusCode1",
+    "UnabletoretrieveconnectiondetailsforazureRMWebApp": "ms-resource:loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp",
+    "UnabletoretrieveWebAppID": "ms-resource:loc.messages.UnabletoretrieveWebAppID",
     "Successfullyupdateddeploymenthistory": "ms-resource:loc.messages.Successfullyupdateddeploymenthistory",
     "Failedtoupdatedeploymenthistory": "ms-resource:loc.messages.Failedtoupdatedeploymenthistory",
     "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "ms-resource:loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite",
-    "ErrorFetchingDeploymentPublishProfileStausCode0": "ms-resource:loc.messages.ErrorFetchingDeploymentPublishProfileStausCode0",
-    "ErrorOccurredStausCode0": "ms-resource:loc.messages.ErrorOccurredStausCode0",
+    "UnabletoretrieveAzureRMWebAppConfigDetails": "ms-resource:loc.messages.UnabletoretrieveAzureRMWebAppConfigDetails",
     "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "ms-resource:loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved",
     "WebappsuccessfullypublishedatUrl0": "ms-resource:loc.messages.WebappsuccessfullypublishedatUrl0",
     "Failedtodeploywebsite": "ms-resource:loc.messages.Failedtodeploywebsite",
     "Runningcommand": "ms-resource:loc.messages.Runningcommand",
     "ConstructedmsDeploycomamndlinearguments": "ms-resource:loc.messages.ConstructedmsDeploycomamndlinearguments",
-    "CannotfindMSDeployexe": "ms-resource:loc.messages.CannotfindMSDeployexe",
-    "Runningmsdeploycommandtocheckifpackagecontainsparamfile0": "ms-resource:loc.messages.Runningmsdeploycommandtocheckifpackagecontainsparamfile0",
-    "Paramscontentofwebpackage0": "ms-resource:loc.messages.Paramscontentofwebpackage0",
     "Isparameterfilepresentinwebpackage0": "ms-resource:loc.messages.Isparameterfilepresentinwebpackage0",
-    "Requestingconfigdetails": "ms-resource:loc.messages.Requestingconfigdetails",
     "Deployingwebapplicationatvirtualpathandphysicalpath": "ms-resource:loc.messages.Deployingwebapplicationatvirtualpathandphysicalpath",
     "Successfullydeployedpackageusingkuduserviceat": "ms-resource:loc.messages.Successfullydeployedpackageusingkuduserviceat",
     "Failedtodeploywebapppackageusingkuduservice": "ms-resource:loc.messages.Failedtodeploywebapppackageusingkuduservice",
     "Unabletodeploywebappresponsecode": "ms-resource:loc.messages.Unabletodeploywebappresponsecode",
-    "Unabletopackagecontentoffolder": "ms-resource:loc.messages.Unabletopackagecontentoffolder",
     "Compressedfolderintozip": "ms-resource:loc.messages.Compressedfolderintozip",
-    "Webappfolderisbeingarchivedtobytescompressed": "ms-resource:loc.messages.Webappfolderisbeingarchivedtobytescompressed",
     "Initiateddeploymentviakuduserviceforwebapppackage": "ms-resource:loc.messages.Initiateddeploymentviakuduserviceforwebapppackage",
     "MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "ms-resource:loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform",
     "UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove": "ms-resource:loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove",
     "UnabletofindthelocationofMSDeployfromregistryonmachineError": "ms-resource:loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError",
     "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern",
     "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "ms-resource:loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern",
-    "Trytodeploywebappagainwithappofflineoptionselected": "ms-resource:loc.messages.Trytodeploywebappagainwithappofflineoptionselected"
+    "Trytodeploywebappagainwithappofflineoptionselected": "ms-resource:loc.messages.Trytodeploywebappagainwithappofflineoptionselected",
+    "NOJSONfilematchedwithspecificpattern": "ms-resource:loc.messages.NOJSONfilematchedwithspecificpattern",
+    "JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "ms-resource:loc.messages.JSONvariablesubstitutioncanonlybeappliedforJSONfiles",
+    "Unabletofindnodewithtaginprovidedxmlfile": "ms-resource:loc.messages.Unabletofindnodewithtaginprovidedxmlfile",
+    "Configfiledoesntexists": "ms-resource:loc.messages.Configfiledoesntexists",
+    "Providednodeisemptyorcomment": "ms-resource:loc.messages.Providednodeisemptyorcomment",
+    "Configfileupdated": "ms-resource:loc.messages.Configfileupdated",
+    "Failedtowritetoconfigfilewitherror": "ms-resource:loc.messages.Failedtowritetoconfigfilewitherror",
+    "Erroroccurredwhileprocessingxmlnode": "ms-resource:loc.messages.Erroroccurredwhileprocessingxmlnode",
+    "Processingsubstitutionforxmlnode": "ms-resource:loc.messages.Processingsubstitutionforxmlnode",
+    "AppOfflineModeenabled": "ms-resource:loc.messages.AppOfflineModeenabled",
+    "Failedtoenableappofflinemode": "ms-resource:loc.messages.Failedtoenableappofflinemode",
+    "AppOflineModedisabled": "ms-resource:loc.messages.AppOflineModedisabled",
+    "FailedtodisableAppOfflineMode": "ms-resource:loc.messages.FailedtodisableAppOfflineMode",
+    "Initiatedvariablesubstitutioninconfigfile": "ms-resource:loc.messages.Initiatedvariablesubstitutioninconfigfile",
+    "CannotPerformXdtTransformationOnNonWindowsPlatform": "ms-resource:loc.messages.CannotPerformXdtTransformationOnNonWindowsPlatform",
+    "XdtTransformationErrorWhileTransforming": "ms-resource:loc.messages.XdtTransformationErrorWhileTransforming",
+    "PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "ms-resource:loc.messages.PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent",
+    "WebAppDoesntExist": "ms-resource:loc.messages.WebAppDoesntExist",
+    "EncodeNotSupported": "ms-resource:loc.messages.EncodeNotSupported",
+    "UnknownFileEncodeError": "ms-resource:loc.messages.UnknownFileEncodeError"
   }
 }

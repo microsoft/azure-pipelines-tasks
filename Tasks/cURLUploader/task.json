@@ -9,8 +9,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 18
+        "Patch": 21
     },
+	"runsOn": [
+        "Agent",
+        "MachineGroup"
+    ],
     "demands": [
         "curl"
     ],
@@ -85,5 +89,5 @@
         "NoMatchingFilesFound": "No matching files were found with search pattern: %s",
         "UploadingFiles": "Uploading file(s): %s",
         "CurlNotFound": "curl was not found in the PATH."
-    }    
+    }
 }

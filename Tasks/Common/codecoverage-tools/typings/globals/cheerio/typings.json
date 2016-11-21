@@ -1,0 +1,8 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/8acf2ed755604e8602aa9f2f8d5942b55b8dceae/cheerio/cheerio.d.ts",
+    "raw": "registry:dt/cheerio#0.17.0+20160930124405",
+    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/8acf2ed755604e8602aa9f2f8d5942b55b8dceae/cheerio/cheerio.d.ts"
+  }
+}

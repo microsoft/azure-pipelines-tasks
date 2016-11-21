@@ -111,6 +111,22 @@ describe('Code Coverage enable tool tests', function () {
         done();
     });
 
+    it('Search pattern seperated by semi-colon(delimiter)', (done) => {
+        let test = ff.findFiles(path.join(data, '*.log') + ";" +path.join(data, '*.txt'));
+        assert(test.length === 4);
+        assert(test[0] === posixFormat(path.join(data, 'a.log')));
+        assert(test[1] === posixFormat(path.join(data, 'b.log')));
+        assert(test[2] === posixFormat(path.join(data, 'a.txt')));
+        assert(test[3] === posixFormat(path.join(data, 'b.txt')));
+        done();
+    });
+    
+    it('Search pattern seperated by semi-colon(delimiter)', (done) => {
+        let test = ff.findFiles(path.join(data, 'a*') + ";-:" + path.join(data, 'a.txt'));
+        assert(test.length === 1);
+        assert(test[0] === posixFormat(path.join(data, 'a.log')));
+        done();
+    });
 });
 
 function posixFormat(p: string): string {

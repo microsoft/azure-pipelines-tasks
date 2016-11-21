@@ -2,8 +2,15 @@ import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
 
-var azureRmUtil = require ('./azurermutil.js');
-var msDeployUtility = require('./msdeployutility.js');
+var azureRESTUtility = require ('webdeployment-common/azurerestutility.js');
+var msDeployUtility = require('webdeployment-common/msdeployutility.js');
+var zipUtility = require('webdeployment-common/ziputility.js');
+var utility = require('webdeployment-common/utility.js');
+var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
+var jsonSubstitutionUtility = require('webdeployment-common/jsonvariablesubstitutionutility.js');
+var xmlSubstitutionUtility = require('webdeployment-common/xmlvariablesubstitutionutility.js');
+var xdtTransformationUtility = require('webdeployment-common/xdttransformationutility.js');
+
 var kuduUtility = require('./kuduutility.js');
 
 async function run() {
@@ -24,7 +31,15 @@ async function run() {
         var takeAppOfflineFlag: boolean = tl.getBoolInput('TakeAppOfflineFlag', false);
         var additionalArguments: string = tl.getInput('AdditionalArguments', false);
         var webAppUri:string = tl.getInput('WebAppUri', false);
+        var xmlTransformsAndVariableSubstitutions = tl.getBoolInput('XmlTransformsAndVariableSubstitutions', false);
+        var xmlTransformation: boolean = tl.getBoolInput('XdtTransformation', false);
+        var jsonVariableSubsFlag: boolean = tl.getBoolInput('JSONVariableSubstitutionsFlag', false);
+        var jsonVariableSubsFiles = tl.getDelimitedInput('JSONVariableSubstitutions', '\n', false);
+        var variableSubstitution: boolean = tl.getBoolInput('VariableSubstitution', false);
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
+
+        var isDeploymentSuccess: boolean = true;
+        var deploymentErrorMessage: string;
 
         var SPN = new Array();
         SPN["servicePrincipalClientID"] = endPointAuthCreds.parameters["serviceprincipalid"];
@@ -32,7 +47,10 @@ async function run() {
         SPN["tenantID"] = endPointAuthCreds.parameters["tenantid"];
         SPN["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
 
-        var availableWebPackages = tl.glob(webDeployPkg);
+        var publishingProfile = await azureRESTUtility.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+        tl._writeLine(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
+
+        var availableWebPackages = utility.findfiles(webDeployPkg);
         if(availableWebPackages.length == 0) {
             throw new Error(tl.loc('Nopackagefoundwithspecifiedpattern'));
         }
@@ -42,9 +60,37 @@ async function run() {
         }
         webDeployPkg = availableWebPackages[0];
 
-        var isFolderBasedDeployment = await isInputPkgIsFolder(webDeployPkg);
-        var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-        tl._writeLine(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
+        var isFolderBasedDeployment = utility.isInputPkgIsFolder(webDeployPkg);
+
+        if(jsonVariableSubsFlag || (xmlTransformsAndVariableSubstitutions && (xmlTransformation || variableSubstitution))) { 
+            var folderPath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package_folder');
+            if(isFolderBasedDeployment) {
+                tl.cp(path.join(webDeployPkg, '/*'), folderPath, '-rf', false);
+            }
+            else {
+                await zipUtility.unzip(webDeployPkg, folderPath);
+            }
+            if(xmlTransformation) {
+                var environmentName = tl.getVariable('Release.EnvironmentName');
+                if(tl.osType().match(/^Win/)) {
+                    var transformConfigs = ["Release.config"];
+                    if(environmentName) {
+                        transformConfigs.push(environmentName + ".config");
+                    }
+                    xdtTransformationUtility.basicXdtTransformation(path.join(folderPath,'**', '*.config'), transformConfigs);  
+                    tl._writeLine("XDT Transformations applied successfully");
+                } else {
+                    throw new Error(tl.loc("CannotPerformXdtTransformationOnNonWindowsPlatform"));
+                }
+            }
+            if(variableSubstitution) {
+                await xmlSubstitutionUtility.substituteAppSettingsVariables(folderPath);
+            }
+            if(jsonVariableSubsFlag) {
+                jsonSubstitutionUtility.jsonVariableSubstitution(folderPath, jsonVariableSubsFiles);
+            }
+            webDeployPkg = (isFolderBasedDeployment) ? folderPath : await zipUtility.archiveFolder(folderPath, tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package.zip')
+        }
 
         if(virtualApplication) {
             publishingProfile.destinationAppUrl += "/" + virtualApplication;
@@ -53,78 +99,39 @@ async function run() {
         if(webAppUri) {
             tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
         }
-
-        if(canUseWebDeploy(useWebDeploy)) {
-           tl._writeLine("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);         
-           tl._writeLine("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);
-            await DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
+        if(utility.canUseWebDeploy(useWebDeploy)) {
+            if(!tl.osType().match(/^Win/)){
+                throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
+            }
+            tl._writeLine("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);         
+            tl._writeLine("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);
+            await msDeploy.DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
                             excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile,
-                            additionalArguments, isFolderBasedDeployment);
+                            additionalArguments, isFolderBasedDeployment, useWebDeploy);
         } else {
             tl.debug(tl.loc("Initiateddeploymentviakuduserviceforwebapppackage", webDeployPkg));
-            var azureWebAppDetails = await azureRmUtil.getAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-            await DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment);
+            var azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+            await DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment, takeAppOfflineFlag);
+
         }
+        
     } catch (error) {
-        tl.setResult(tl.TaskResult.Failed, error);
-    }
-}
-
-/**
- * Executes Web Deploy command
- * 
- * @param   webDeployPkg                   Web deploy package
- * @param   webAppName                      web App Name
- * @param   publishingProfile               Azure RM Connection Details
- * @param   removeAdditionalFilesFlag       Flag to set DoNotDeleteRule rule
- * @param   excludeFilesFromAppDataFlag     Flag to prevent App Data from publishing
- * @param   takeAppOfflineFlag              Flag to enable AppOffline rule
- * @param   virtualApplication              Virtual Application Name
- * @param   setParametersFile               Set Parameter File path
- * @param   additionalArguments             Arguments provided by user
- * 
- */
-async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag, 
-        excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments, isFolderBasedDeployment) {
-
-    var isParamFilePresentInPackage = isFolderBasedDeployment ? false : await msDeployUtility.containsParamFile(webDeployPkg);
-    setParametersFile = getSetParamFilePath(setParametersFile);
-    var msDeployPath = await msDeployUtility.getMSDeployFullPath();
-    var msDeployCmdArgs = msDeployUtility.getMSDeployCmdArgs(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
-        excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments, isParamFilePresentInPackage, isFolderBasedDeployment);
-
-    var isDeploymentSuccess = true;
-    var deploymentError = null;
-    try {
-
-        var msDeployBatchFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'msDeployCommand.bat';
-        var msDeployCommand = '@echo off \n';
-        msDeployCommand += '"' + msDeployPath + '" ' + msDeployCmdArgs + ' 2>error.txt\n';
-        msDeployCommand += 'if %errorlevel% neq 0 exit /b %errorlevel%';
-        tl.writeFile(msDeployBatchFile, msDeployCommand);
-        tl._writeLine(tl.loc("Runningcommand", msDeployCommand));
-        await tl.exec("cmd", ['/C', msDeployBatchFile], <any> {failOnStdErr: true});
-        tl._writeLine(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
-    }
-    catch(error) {
-        tl.error(tl.loc('Failedtodeploywebsite'));
         isDeploymentSuccess = false;
-        deploymentError = error;
-        redirectMSDeployErrorToConsole();
+        deploymentErrorMessage = error;
     }
-
-    try {
-        tl._writeLine(await azureRmUtil.updateDeploymentStatus(publishingProfile, isDeploymentSuccess));
+    if(publishingProfile != null) {
+        try {
+            tl._writeLine(await azureRESTUtility.updateDeploymentStatus(publishingProfile, isDeploymentSuccess));
+        }
+        catch(error) {
+            tl.warning(error);
+        }
     }
-    catch(error) {
-        tl.warning(error);
-    }
-
     if(!isDeploymentSuccess) {
-        throw Error(deploymentError);
+        tl.setResult(tl.TaskResult.Failed, deploymentErrorMessage);
     }
-    
 }
+
 
 /**
  * Deploys website using Kudu REST API
@@ -136,16 +143,13 @@ async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, 
  * @param   isFolderBasedDeployment        Input is folder or not
  *
  */
-async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment) {
-
-    var isDeploymentSuccess = true;
-    var deploymentError = null;
+async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment, takeAppOfflineFlag) {
 
     try {
         var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
         var webAppZipFile = webDeployPkg;
         if(isFolderBasedDeployment) {
-            webAppZipFile = await kuduUtility.archiveFolder(webDeployPkg);
+            webAppZipFile = await zipUtility.archiveFolder(webDeployPkg, tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_app_package.zip');
             tl.debug(tl.loc("Compressedfolderintozip", webDeployPkg, webAppZipFile));
         } else {
             if (await kuduUtility.containsParamFile(webAppZipFile)) {
@@ -153,105 +157,12 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
             }
         }
         var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
-        await kuduUtility.deployWebAppPackage(webAppZipFile, publishingProfile, pathMappings[0], pathMappings[1]);
+        await kuduUtility.deployWebAppPackage(webAppZipFile, publishingProfile, pathMappings[0], pathMappings[1], takeAppOfflineFlag);
         tl._writeLine(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
     }
     catch(error) {
         tl.error(tl.loc('Failedtodeploywebsite'));
-        isDeploymentSuccess = false;
-        deploymentError = error;
-    }
-
-    try {
-        tl._writeLine(await azureRmUtil.updateDeploymentStatus(publishingProfile, isDeploymentSuccess));
-    }
-    catch(error) {
-        tl.warning(error);
-    }
-    
-    if(!isDeploymentSuccess) {
-        throw Error(deploymentError);
-    }
-
-}
-
-/**
- * Validates the input package and finds out input type
- * 
- * @param webDeployPkg Web Deploy Package input
- * 
- * @return true/false based on input package type.
- */
-async function isInputPkgIsFolder(webDeployPkg: string) {
-    if (!tl.exist(webDeployPkg)) {
-        throw new Error(tl.loc('Invalidwebapppackageorfolderpathprovided', webDeployPkg));
-    }
-
-    return !fileExists(webDeployPkg);
-}
-
-/**
- * Checks whether the given path is file or not.
- * @param path input file path
- * 
- * @return true/false based on input is file or not.
-
- */
-function fileExists(path): boolean {
-  try  {
-    return tl.stats(path).isFile();
-  }
-  catch(error) {
-    if(error.code == 'ENOENT') {
-      return false;
-    }
-    tl.debug("Exception tl.stats (" + path + "): " + error);
-    throw Error(error);
-  }
-}
-
-/**
- * Validates whether input for path and returns right path.
- * 
- * @param path input
- * 
- * @returns null when input is empty, otherwise returns same path.
- */
-function getSetParamFilePath(setParametersFile: string) : string {
-
-    if((!tl.filePathSupplied('SetParametersFile')) || setParametersFile == tl.getVariable('System.DefaultWorkingDirectory')) {
-        setParametersFile = null;
-    }
-    else if (!fileExists(setParametersFile)) {
-        throw Error(tl.loc('SetParamFilenotfound0', setParametersFile));
-    }
-
-    return setParametersFile;
-}
-
-/**
- * Checks if WebDeploy should be used to deploy webapp package or folder
- * 
- * @param useWebDeploy if user explicitly checked useWebDeploy
- */
-function canUseWebDeploy(useWebDeploy: boolean) {
-    var win = tl.osType().match(/^Win/);
-    return (useWebDeploy || win);
-}
-
-/**
- * 1. Checks if msdeploy during execution redirected any error to 
- * error stream ( saved in error.txt) , display error to console
- * 2. Checks if there is file in use error , suggest to try app offline.
- */
-function redirectMSDeployErrorToConsole() {
-    var msDeployErrorFilePath = tl.getVariable('System.DefaultWorkingDirectory') + '\\error.txt';
-    if(tl.exist(msDeployErrorFilePath)) {
-        var errorFileContent = fs.readFileSync(msDeployErrorFilePath);
-        if(errorFileContent.toString().indexOf("ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER") !== -1){
-            tl.warning(tl.loc("Trytodeploywebappagainwithappofflineoptionselected"));
-        }
-        tl.error(errorFileContent.toString());
+        throw Error(error);
     }
 }
 

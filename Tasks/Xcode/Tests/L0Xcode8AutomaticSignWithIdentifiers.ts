@@ -3,10 +3,11 @@ import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 
-let taskPath = path.join(__dirname, '..', 'Xcode.js');
+let taskPath = path.join(__dirname, '..', 'xcode.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 process.env['HOME']='/users/test'; //replace with mock of setVariable when task-lib has the support
+process.env['USEXCRUN']='false';
 
 tr.setInput('actions', 'build');
 tr.setInput('configuration', '$(Configuration)');
@@ -82,7 +83,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exec": {
         "/home/bin/xcodebuild -version": {
             "code": 0,
-            "stdout": "Xcode 7.3.1"
+            "stdout": "Xcode 8.0"
         },
         "/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch": {
             "code": 0,

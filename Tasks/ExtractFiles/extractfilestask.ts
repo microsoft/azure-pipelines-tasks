@@ -7,7 +7,7 @@ var archiveFilePatterns: string[] = tl.getDelimitedInput('archiveFilePatterns', 
 var destinationFolder: string = path.normalize(tl.getPathInput('destinationFolder', true, false).trim());
 var cleanDestinationFolder: boolean = tl.getBoolInput('cleanDestinationFolder', false);
 
-var repoRoot: string = tl.getVariable('build.sourcesDirectory');
+var repoRoot: string = tl.getVariable('System.DefaultWorkingDirectory');
 tl.debug('repoRoot: ' + repoRoot);
 
 var win = tl.osType().match(/^Win/);

@@ -498,14 +498,18 @@ function Get-AzureSqlDatabaseServerResourceId
     $uri = "$script:azureRmUri/subscriptions/$subscriptionId/resources?api-version=$apiVersion"
     $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
-    $ResourceDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
-    foreach ($resourceDetail in $ResourceDetails.Value)
-    {
-        if ($resourceDetail.name -eq $serverName -and $resourceDetail.type -eq $serverType)
+    do {
+        Write-Verbose "Fetching Resources from $uri"
+        $ResourceDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+        foreach ($resourceDetail in $ResourceDetails.Value)
         {
-            return $resourceDetail.id
+            if ($resourceDetail.name -eq $serverName -and $resourceDetail.type -eq $serverType)
+            {
+                return $resourceDetail.id
+            }
         }
-    }
+        $uri = $ResourceDetails.nextLink
+    } until([string]::IsNullOrEmpty($ResourceDetails.nextLink))
 
     throw (Get-VstsLocString -Key AZ_NoValidResourceIdFound -ArgumentList $serverName, $serverType, $subscriptionId)
 }
@@ -632,25 +636,38 @@ function Add-AzureSqlDatabaseServerFirewallRule
           [String] [Parameter(Mandatory = $true)] $firewallRuleName)
     
     Trace-VstsEnteringInvocation $MyInvocation
-    Write-Verbose "Creating firewall rule $firewallRuleName"
 
-    $connectionType = Get-ConnectionType -serviceEndpoint $endpoint
-
-    if(IsLegacyAzureConnection $connectionType)
+    try
     {
-        Add-LegacyAzureSqlServerFirewall -endpoint $endpoint -serverName $serverName -startIPAddress $startIPAddress -endIPAddress $endIPAddress -firewallRuleName $firewallRuleName
-    }
-    elseif (IsAzureRmConnection $connectionType)
-    {
+        Write-Verbose "Creating firewall rule $firewallRuleName"
 
-        Add-AzureRmSqlServerFirewall -endpoint $endpoint -serverName $serverName -startIPAddress $startIPAddress -endIPAddress $endIPAddress -firewallRuleName $firewallRuleName
-    }
-    else
-    {
-        throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $connectionType)
-    }
+        $connectionType = Get-ConnectionType -serviceEndpoint $endpoint
 
-    Write-Verbose "Firewall rule $firewallRuleName created"
+        if(IsLegacyAzureConnection $connectionType)
+        {
+            Add-LegacyAzureSqlServerFirewall -endpoint $endpoint -serverName $serverName -startIPAddress $startIPAddress -endIPAddress $endIPAddress -firewallRuleName $firewallRuleName
+        }
+        elseif (IsAzureRmConnection $connectionType)
+        {
+
+            Add-AzureRmSqlServerFirewall -endpoint $endpoint -serverName $serverName -startIPAddress $startIPAddress -endIPAddress $endIPAddress -firewallRuleName $firewallRuleName
+        }
+        else
+        {
+            throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $connectionType)
+        }
+
+        Write-Verbose "Firewall rule $firewallRuleName created"
+    }
+    catch 
+    {
+        $parsedException = Parse-Exception($_.Exception)
+        if($parsedException)
+        {
+            throw  $parsedException
+        }
+        throw $_.Exception.ToString()
+    }
 }
 
 function Remove-AzureSqlDatabaseServerFirewallRule
@@ -661,24 +678,54 @@ function Remove-AzureSqlDatabaseServerFirewallRule
           [String] [Parameter(Mandatory = $true)] $firewallRuleName)
 
     Trace-VstsEnteringInvocation $MyInvocation
-    Write-Verbose "Removing firewall rule $firewallRuleName on azure database server: $serverName"
 
-    $connectionType = Get-ConnectionType -serviceEndpoint $endpoint
+    try
+    {
+        Write-Verbose "Removing firewall rule $firewallRuleName on azure database server: $serverName"
 
-    if(IsLegacyAzureConnection $connectionType)
-    {
-        Remove-LegacyAzureSqlServerFirewall -endpoint $endpoint -serverName $serverName -firewallRuleName $firewallRuleName
-    }
-    elseif (IsAzureRmConnection $connectionType)
-    {
-        Remove-AzureRmSqlServerFirewall -endpoint $endpoint -serverName $serverName -firewallRuleName $firewallRuleName
-    }
-    else
-    {
-        throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $connectionType)
-    }
+        $connectionType = Get-ConnectionType -serviceEndpoint $endpoint
 
-    Write-Verbose "Removed firewall rule $firewallRuleName on azure database server: $serverName"
+        if(IsLegacyAzureConnection $connectionType)
+        {
+            Remove-LegacyAzureSqlServerFirewall -endpoint $endpoint -serverName $serverName -firewallRuleName $firewallRuleName
+        }
+        elseif (IsAzureRmConnection $connectionType)
+        {
+            Remove-AzureRmSqlServerFirewall -endpoint $endpoint -serverName $serverName -firewallRuleName $firewallRuleName
+        }
+        else
+        {
+            throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $connectionType)
+        }
+
+        Write-Verbose "Removed firewall rule $firewallRuleName on azure database server: $serverName"
+    }
+    catch 
+    {
+        $parsedException = Parse-Exception($_.Exception)
+        if($parsedException)
+        {
+            throw  $parsedException
+        }
+        throw $_.Exception.ToString()
+    }
+}
+
+function Parse-Exception($exception){
+    if($exception) {
+        $response = $exception.Response
+        if($response) {
+            $responseStream =  $response.GetResponseStream()
+            $streamReader = New-Object System.IO.StreamReader($responseStream)
+            $streamReader.BaseStream.Position = 0
+            $streamReader.DiscardBufferedData()
+            $responseBody = $streamReader.ReadToEnd()
+            $streamReader.Close()
+            Write-Verbose "Exception message extracted from response $responseBody"
+            return $responseBody
+        }
+    }
+    return $null
 }
 
 # Export only the public function.
