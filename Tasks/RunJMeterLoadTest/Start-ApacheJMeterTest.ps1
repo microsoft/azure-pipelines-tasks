@@ -1,294 +1,82 @@
 [CmdletBinding(DefaultParameterSetName = 'None')]
 param
 (
-    [String]
-    $env:SYSTEM_DEFINITIONID,
-    [String]
-    $env:BUILD_BUILDID,
+[String]
+$env:SYSTEM_DEFINITIONID,
+[String]
+$env:BUILD_BUILDID,
 
-    [String] [Parameter(Mandatory = $true)]
-    $connectedServiceName,
+[String] [Parameter(Mandatory = $false)]
+$connectedServiceName,
 
-    [String] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()]
-    $TestDrop,
-    [String] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()]
-    $LoadTest,
+[String] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()]
+$TestDrop,
+[String] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()]
+$LoadTest,
 
-    [String] [Parameter(Mandatory = $true)]
-    $agentCount,
-    [String] [Parameter(Mandatory = $true)]
-    $runDuration,
-    [String] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()]
-    $machineType
+[String] [Parameter(Mandatory = $true)]
+$agentCount,
+[String] [Parameter(Mandatory = $true)]
+$runDuration,
+[String] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()]
+$machineType
 )
 
 $userAgent = "ApacheJmeterTestBuildTask"
-$apiVersion = "api-version=1.0"
-
 $global:RestTimeout = 60
-$global:ElsAccountUrl = "http://www.visualstudio.com"
-$global:TFSAccountUrl = "http://www.visualstudio.com"
-$global:ScopedTestDrop = $TestDrop
+$global:apiVersion = "api-version=1.0"
 
 function InitializeRestHeaders()
 {
-    $restHeaders = New-Object -TypeName "System.Collections.Generic.Dictionary[[String], [String]]"
-
-    $alternateCreds = [String]::Concat($Username, ":", $Password)
-    $basicAuth = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($alternateCreds))
-    $restHeaders.Add("Authorization", [String]::Concat("Basic ", $basicAuth))
-
-    return $restHeaders
+	$restHeaders = New-Object -TypeName "System.Collections.Generic.Dictionary[[String], [String]]"
+	if([string]::IsNullOrWhiteSpace($connectedServiceName))
+	{
+		$patToken = GetAccessToken $connectedServiceDetails
+		ValidatePatToken $patToken
+		$restHeaders.Add("Authorization", [String]::Concat("Bearer ", $patToken))
+		
+	}
+	else
+	{
+		$Username = $connectedServiceDetails.Authorization.Parameters.Username
+		Write-Verbose "Username = $Username" -Verbose
+		$Password = $connectedServiceDetails.Authorization.Parameters.Password
+		$alternateCreds = [String]::Concat($Username, ":", $Password)
+		$basicAuth = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($alternateCreds))
+		$restHeaders.Add("Authorization", [String]::Concat("Basic ", $basicAuth))
+	}
+	return $restHeaders
 }
 
-function InvokeRestMethod($headers, $contentType, $uri , $method= "Get", $body)
+function GetAccessToken($vssEndPoint) 
 {
-  $ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($uri)
-  $result = Invoke-RestMethod -ContentType "application/json" -UserAgent $userAgent -TimeoutSec $global:RestTimeout -Uri $uri -Method $method -Headers $headers -Body $body
-  $ServicePoint.CloseConnectionGroup("")
-  return $result
+	return $vssEndpoint.Authorization.Parameters.AccessToken
 }
 
-function CreateTestDrop($headers)
+function ValidatePatToken($token)
 {
-    $uri = [String]::Format("{0}/_apis/clt/testdrops?{1}", $global:ElsAccountUrl, $apiVersion)
-    $drop = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers -method Post -body "{ ""dropType"": ""TestServiceBlobDrop"" }"
-    return $drop
-}
-
-function Get($headers, $uri)
-{
-    try
-    {
-        $result = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers
-        return $result
-    }
-    catch
-    {
-        Write-Host -NoNewline $_.Exception.Message
-    }
-}
-
-function GetTestDrop($drop, $headers)
-{
-    $uri = [String]::Format("{0}/_apis/clt/testdrops/{1}?{2}", $global:ElsAccountUrl, $drop.id, $apiVersion)
-    $testdrop = Get $headers $uri
-    return $testdrop
-}
-
-function GetTestRun($headers, $runId)
-{
-    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?{2}", $global:ElsAccountUrl, $runId, $apiVersion)
-    $run = Get $headers $uri
-    return $run
-}
-
-function GetTestErrors($headers, $run)
-{
-    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}/errors?detailed=true&{2}", $global:ElsAccountUrl, $run.id, $apiVersion)
-    $testerrors = Get $headers $uri
-    return $testerrors
-}
-
-function QueueTestRun($headers, $runJson)
-{
-    $uri = [String]::Format("{0}/_apis/clt/testruns?{1}", $global:ElsAccountUrl, $apiVersion)
-    $run = InvokeRestMethod -contentType "application/json" -uri $uri -method Post -headers $headers -body $runJson
-
-$start = @"
-    {
-      "state": "queued"
-    }
-"@
-
-    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}?{2}", $global:ElsAccountUrl, $run.id, $apiVersion)
-    InvokeRestMethod -contentType "application/json" -uri $uri -method Patch -headers $headers -body $start
-    $run = InvokeRestMethod -contentType "application/json" -userAgent $userAgent -uri $uri -headers $headers
-
-    return $run
-}
-
-function RunInProgress($run)
-{
-    return $run.state -ne "completed" -and $run.state -ne "error" -and $run.state -ne "aborted"
-}
-
-function PrintErrorSummary($headers, $run)
-{
-    $errors = GetTestErrors $headers $run
-    if ($errors -and $errors.count -gt 0 -and  $errors.types.count -gt 0)
-    {
-        foreach ($type in $errors.types)
-        {
-            foreach ($subType in $type.subTypes)
-            {
-                foreach ($errorDetail in $subType.errorDetailList)
-                {
-                    Write-Warning ( "[{0}] {1} occurrences of ['{2}','{3}','{4}'] : {5} " -f $type.typeName, $errorDetail.occurrences, $errorDetail.scenarioName, $errorDetail.testCaseName,
-                    $subType.subTypeName, $errorDetail.messageText)
-                }
-            }
-        }
-    }
-}
-
-function ShowMessages($headers, $run)
-{
-    $uri = [String]::Format("{0}/_apis/clt/testruns/{1}/messages?{2}", $global:ElsAccountUrl, $run.id, $apiVersion)
-    $messages = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers
-    if ($messages)
-    {
-        $sMessages = $messages.value | Sort-Object loggedDate
-        foreach ($message in $sMessages)
-        {
-            switch ($message.messageType)
-            {
-                "info"     { Write-Host -NoNewline ("[Message]{0}" -f $message.message) }
-                "output"   { Write-Host -NoNewline ("[Message]{0}" -f $message.message) }
-                "warning"  { Write-Warning $message.message }
-                "error"    { Write-Error $message.message }
-                "critical" { Write-Error $message.message }
-            }
-        }
-    }
-}
-
-function UploadTestDrop($testdrop, $src)
-{
-    $dest = $testdrop.accessData.dropContainerUrl
-    $sas = $testdrop.accessData.sasKey
-
-    $azcopy = Get-ToolPath -Name "AzCopy\AzCopy.exe"
-    Write-Verbose "Calling AzCopy = $azcopy" -Verbose
-
-    $azlog = ("{0}\..\azlog" -f $src)
-    $args = ("/Source:`"{0}`" /Dest:{1} /DestSAS:{2} /S /Z:`"{3}`"" -f $src, $dest, $sas, $azlog)
-    Write-Verbose "AzCopy Args = $args" -Verbose
-
-    Invoke-Tool -Path $azcopy -Arguments $args
-}
-
-function ComposeTestRunJson($name, $tdid)
-{
-    $processPlatform = "x86"
-    $setupScript=""
-    $cleanupScript=""
-
-$trjson = @"
-    {
-        "name":"$name",
-        "runType":"jMeterLoadTest",
-        "description":"Apache Jmeter test queued from build",
-        "testSettings":{"cleanupCommand":"$cleanupScript", "hostProcessPlatform":"$processPlatform", "setupCommand":"$setupScript"},
-        "runSpecificDetails":{"coreCount":"$agentCount", "duration":"$runDuration", "samplingInterval":15},
-        "superSedeRunSettings":{"loadGeneratorMachinesType":"$MachineType"},
-        "testDrop":{"id":"$tdid"},
-        "runSourceIdentifier":"build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
-    }
-"@
-    return $trjson
+	if([string]::IsNullOrWhiteSpace($token))
+	{
+		throw "Unable to generate Personal Access Token for the user. Contact Project Collection Administrator"
+	}
 }
 
 function WriteTaskMessages($message)
 {
-    Write-Host ("{0}" -f $message ) -NoNewline
-}
-
-function MonitorTestRun($headers, $run)
-{
-    $runId = $run.id
-    if ($runId)
-    {
-        do
-        {
-            Start-Sleep -s 15
-            $run = GetTestRun $headers $runId
-        }
-        while (RunInProgress $run)
-    }
-}
-
-function MonitorAcquireResource($headers, $run)
-{
-    $runId = $run.id
-    if ($runId)
-    {
-        $elapsed = [System.Diagnostics.Stopwatch]::StartNew()
-        do
-        {
-            Start-Sleep -s 5
-            $run = GetTestRun $headers $runId
-        }
-        while ($run.state -eq "queued")
-        if ($run.state -eq "inProgress")
-        {
-            WriteTaskMessages ("Acquiring test resources took {0}. Starting test execution." -f $($elapsed.Elapsed.ToString()))
-        }
-    }
-}
-
-function ComposeAccountUrl($vsoUrl)
-{
-    $elsUrl = $vsoUrl
-
-    if ($vsoUrl -notlike "*VSCLT.VISUALSTUDIO.COM*")
-    {
-        if ($vsoUrl -like "*VISUALSTUDIO.COM*")
-        {
-            $accountName = $vsoUrl.Split('//')[2].Split('.')[0]
-            $elsUrl = ("https://{0}.vsclt.visualstudio.com" -f $accountName)
-        }
-    }
-
-    return $elsUrl
-}
-
-function ErrorMessage($message)
-{
-    Write-Error $message
-    exit $LastExitCode
-}
-
-function ValidateFiles($inputName, $fileName)
-{
-    $file = Get-ChildItem -Path $TestDrop -recurse | where {$_.Name -eq $fileName} | Select -First 1
-    if ($file)
-    {
-        # Check for fileName
-        $global:ScopedTestDrop = $file.Directory.FullName
-        Write-Host -NoNewline ("Selected {0} is '{1}' under '{2}'"  -f $inputName, $file.FullName, $global:ScopedTestDrop)
-    }
-    else
-    {
-        ErrorMessage "No $inputName is present in the test drop."
-    }
-}
-
-function Validate()
-{
-    if (-Not (Test-Path $TestDrop))
-    {
-        ErrorMessage "The path for the load test files does not exist. Please provide a valid path."
-    }
-
-    ValidateFiles "load test file" $LoadTest
-}
-
-function UploadSummaryMdReport($summaryMdPath)
-{
-	Write-Verbose "Summary Markdown Path = $summaryMdPath"
-
-	if (($env:SYSTEM_HOSTTYPE -eq "build") -and (Test-Path($summaryMdPath)))
-	{	
-		Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=Load test results;]$summaryMdPath"
-	}
+	Write-Host ("{0}" -f $message ) -NoNewline
 }
 
 ############################################## PS Script execution starts here ##########################################
 WriteTaskMessages "Starting Load Test Script"
 
+# Load all dependent files for execution
+. $PSScriptRoot/CltTasksUtility.ps1
+. $PSScriptRoot/VssConnectionHelper.ps1
+
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.DTA"
+import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
 Write-Output "Test drop = $TestDrop"
 Write-Output "Load test = $LoadTest"
@@ -296,76 +84,81 @@ Write-Output "Load generator machine type = $machineType"
 Write-Output "Run source identifier = build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
 
 #Validate Input
-Validate
+ValidateInputs $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI $connectedServiceName $testDrop $loadTest
 
-$connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
-
-$Username = $connectedServiceDetails.Authorization.Parameters.Username
-Write-Verbose "Username = $userName" -Verbose
-$Password = $connectedServiceDetails.Authorization.Parameters.Password
-$global:ElsAccountUrl = ComposeAccountUrl($connectedServiceDetails.Url.AbsoluteUri).TrimEnd('/')
-$global:TFSAccountUrl = $env:System_TeamFoundationCollectionUri.TrimEnd('/')
-
-Write-Verbose "VSO account Url = $global:TFSAccountUrl" -Verbose
-Write-Verbose "CLT account Url = $global:ElsAccountUrl" -Verbose
-
-#Setting Headers and account Url accordingly
-$headers = InitializeRestHeaders
-
-#Upload the test drop
-$elapsed = [System.Diagnostics.Stopwatch]::StartNew()
-$drop = CreateTestDrop $headers
-
-if ($drop.dropType -eq "TestServiceBlobDrop")
+#Initialize Connected Service Details
+if([string]::IsNullOrWhiteSpace($connectedServiceName))
 {
-    $drop = GetTestDrop $drop $headers
-    UploadTestDrop $drop $global:ScopedTestDrop
-    WriteTaskMessages ("Uploading test files took {0}. Queuing the test run." -f $($elapsed.Elapsed.ToString()))
-
-    #Queue the test run
-    $runJson = ComposeTestRunJson $LoadTest $drop.id
-    $run = QueueTestRun $headers $runJson
-    MonitorAcquireResource $headers $run
-
-    #Monitor the test run
-    $elapsed = [System.Diagnostics.Stopwatch]::StartNew()
-    MonitorTestRun $headers $run
-    WriteTaskMessages ( "Run execution took {0}. Collecting results." -f $($elapsed.Elapsed.ToString()))
-
-    #Print the error and messages
-    $run = GetTestRun $headers $run.id
-    ShowMessages $headers $run
-    PrintErrorSummary $headers $run
-
-    if ($run.state -ne "completed")
-    {
-        Write-Error "Load test has failed. Please check error messages to fix the problem."
-    }
-    else
-    {
-        WriteTaskMessages "The load test completed successfully."
-    }
-
-	$run = GetTestRun $headers $run.id
-	$webResultsUrl = $run.WebResultUrl
-    Write-Output ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name)
-    Write-Output ("To view run details navigate to {0}" -f $webResultsUrl)
-
-    $resultsMDFolder = New-Item -ItemType Directory -Force -Path "$env:Temp\LoadTestResultSummary"
-    $resultFilePattern = ("ApacheJMeterTestResults_{0}_{1}_*.md" -f $env:AGENT_ID, $env:SYSTEM_DEFINITIONID)
-    $excludeFilePattern = ("ApacheJMeterTestResults_{0}_{1}_{2}_*.md" -f $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID)
-    Remove-Item $resultsMDFolder\$resultFilePattern -Exclude $excludeFilePattern -Force
-    $summaryFile =  ("{0}\ApacheJMeterTestResults_{1}_{2}_{3}_{4}.md" -f $resultsMDFolder, $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID, $run.id)
-
-    $summary = ('[Test Run: {0}]({1}) using {2}.<br/>' -f  $run.runNumber, $webResultsUrl , $run.name)
-     	
-	('<p>{0}</p>' -f $summary) | Out-File  $summaryFile -Encoding ascii -Append
-    UploadSummaryMdReport $summaryFile
+	$connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name SystemVssConnection
 }
 else
 {
-    Write-Error ("Connection '{0}' failed for service '{1}'" -f $connectedServiceName, $connectedServiceDetails.Url.AbsoluteUri)
-    ("Connection '{0}' failed for service '{1}'" -f $connectedServiceName, $connectedServiceDetails.Url.AbsoluteUri) >> $summaryFile
+	$connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
+}
+
+$VSOAccountUrl = $connectedServiceDetails.Url.AbsoluteUri
+Write-Output "VSO Account URL is : $VSOAccountUrl"
+$headers = InitializeRestHeaders
+$CltAccountUrl = ComposeAccountUrl $VSOAccountUrl $headers
+$TFSAccountUrl = $env:System_TeamFoundationCollectionUri.TrimEnd('/')
+
+Write-Output "TFS account Url = $TFSAccountUrl" -Verbose
+Write-Output "CLT account Url = $CltAccountUrl" -Verbose
+
+#Upload the test drop
+$elapsed = [System.Diagnostics.Stopwatch]::StartNew()
+$drop = CreateTestDrop $headers $CltAccountUrl
+
+if ($drop.dropType -eq "TestServiceBlobDrop")
+{
+	$drop = GetTestDrop $headers $drop $CltAccountUrl
+	UploadTestDrop $drop $global:ScopedTestDrop
+	WriteTaskMessages ("Uploading test files took {0}. Queuing the test run." -f $($elapsed.Elapsed.ToString()))
+
+	#Queue the test run
+	$runJson = ComposeTestRunJson $LoadTest $drop.id $agentCount $runDuration $machineType
+	$run = QueueTestRun $headers $runJson $CltAccountUrl
+	MonitorAcquireResource $headers $run $CltAccountUrl
+
+	#Monitor the test run
+	$elapsed = [System.Diagnostics.Stopwatch]::StartNew()
+	MonitorTestRun $headers $run $CltAccountUrl
+	WriteTaskMessages ( "Run execution took {0}. Collecting results." -f $($elapsed.Elapsed.ToString()))
+
+	#Print the error and messages
+	$run = GetTestRun $headers $run.id $CltAccountUrl
+	ShowMessages $headers $run $CltAccountUrl
+	PrintErrorSummary $headers $run $CltAccountUrl
+
+	if ($run.state -ne "completed")
+	{
+		Write-Error "Load test has failed. Please check error messages to fix the problem."
+	}
+	else
+	{
+		WriteTaskMessages "The load test completed successfully."
+	}
+
+	$run = GetTestRun $headers $run.id $CltAccountUrl
+	$webResultsUrl = $run.WebResultUrl
+	Write-Output ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name)
+	Write-Output ("To view run details navigate to {0}" -f $webResultsUrl)
+
+	$resultsMDFolder = New-Item -ItemType Directory -Force -Path "$env:Temp\LoadTestResultSummary"
+	$resultFilePattern = ("ApacheJMeterTestResults_{0}_{1}_*.md" -f $env:AGENT_ID, $env:SYSTEM_DEFINITIONID)
+	$excludeFilePattern = ("ApacheJMeterTestResults_{0}_{1}_{2}_*.md" -f $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID)
+	Remove-Item $resultsMDFolder\$resultFilePattern -Exclude $excludeFilePattern -Force
+	$summaryFile =  ("{0}\ApacheJMeterTestResults_{1}_{2}_{3}_{4}.md" -f $resultsMDFolder, $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID, $run.id)
+
+	$summary = ('[Test Run: {0}]({1}) using {2}.<br/>' -f  $run.runNumber, $webResultsUrl , $run.name)
+	
+	('<p>{0}</p>' -f $summary) >>  $summaryFile
+	UploadSummaryMdReport $summaryFile
+}
+else
+{
+	Write-Error ("Connection '{0}' failed for service '{1}'" -f $connectedServiceName, $connectedServiceDetails.Url.AbsoluteUri)
+	("Connection '{0}' failed for service '{1}'" -f $connectedServiceName, $connectedServiceDetails.Url.AbsoluteUri) >> $summaryFile
 }
 
 WriteTaskMessages "JMeter Test Script execution completed"
