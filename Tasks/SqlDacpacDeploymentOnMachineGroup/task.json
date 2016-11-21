@@ -22,13 +22,66 @@
   ],
   "minimumAgentVersion": "1.102.0",
   "groups": [
+       {
+            "name": "target",
+            "displayName": "SQL DB Details",
+            "isExpanded": true
+        },
+        {
+            "name": "taskDetails",
+            "displayName": "Deployment Details",
+            "isExpanded": true
+        }
   ],
   "inputs": [
+    {
+      "name": "DatabaseName",
+      "type": "string",
+      "label": "Database Name",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "",
+      "helpMarkDown": "Provide the name of the SQL Server database."
+    },
+    {
+      "name": "AuthScheme",
+      "type": "pickList",
+      "label": "Authentication",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "Windows Authentication",
+      "options": {
+        "windowsAuthentication": "Windows Authentication",
+        "sqlServerAuthentication": "SQL Server Authentication"
+      },
+      "helpMarkDown": "Select the authentication mode for connecting to the SQL Server. In Windows authentication mode, the administrator's account, as specified in the Machines section, is used to connect to the SQL Server. In SQL Server Authentication mode, the SQL login and Password have to be provided in the parameters below."
+    },
+    {
+      "name": "SqlUsername",
+      "type": "string",
+      "label": "SQL User name",
+      "required": true,
+      "groupName": "target",      
+      "defaultValue": "",
+      "visibleRule": "AuthScheme = sqlServerAuthentication",
+      "helpMarkDown": "Provide the SQL login to connect to the SQL Server. The option is only available if SQL Server Authentication mode has been selected."
+    },
+    {
+      "name": "SqlPassword",
+      "type": "string",
+      "label": "SQL Password",
+      "required": true,
+      "groupName": "target",
+      "defaultValue": "",
+      "visibleRule": "AuthScheme = sqlServerAuthentication",
+      "helpMarkDown": "Provide the Password of the SQL login. The option is only available if SQL Server Authentication mode has been selected."
+    },
     {
       "name": "TaskType",
       "type": "pickList",
       "label": "Deploy SQL Using",
       "required": true,
+      "groupName": "taskDetails", 
       "defaultValue": "dacpac",
       "options": {
         "dacpac": "Sql Dacpac",
@@ -42,6 +95,7 @@
       "type": "string",
       "label": "DACPAC File",
       "required": true,
+      "groupName": "taskDetails",      
       "visibleRule": "TaskType = dacpac",
       "defaultValue": "",
       "helpMarkDown": "Location of the DACPAC file on the target machines or on a UNC path like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. The UNC path should be accessible to the machine's administrator account. Environment variables are also supported, like $env:windir, $env:systemroot, $env:windir\\FabrikamFibre\\DB."
@@ -51,6 +105,7 @@
       "type": "string",
       "label": "Sql File",
       "required": true,
+      "groupName": "taskDetails",
       "visibleRule": "TaskType = sqlQuery",
       "defaultValue": "",
       "helpMarkDown": "Location of the SQL file on the target machines or on a UNC path like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.sql. The UNC path should be accessible to the machine's administrator account. Environment variables are also supported, like $env:windir, $env:systemroot, $env:windir\\FabrikamFibre\\DB."
@@ -60,6 +115,7 @@
       "type": "multiLine",
       "label": "Inline Sql",
       "required": true,
+      "groupName": "taskDetails",
       "visibleRule": "TaskType = sqlInline",
       "defaultValue": "",
       "properties": {
@@ -73,6 +129,7 @@
       "type": "pickList",
       "label": "Specify SQL Using",
       "required": true,
+      "groupName": "taskDetails",
       "defaultValue": "server",
       "visibleRule": "TaskType = dacpac",
       "options": {
@@ -83,50 +140,11 @@
       "helpMarkDown": "Specify the option to connect to the target SQL Server Database. The options are either to provide the SQL Server Database details, or the SQL Server connection string, or the Publish profile XML file."
     },
     {
-      "name": "DatabaseName",
-      "type": "string",
-      "label": "Database Name",
-      "required": true,
-      "defaultValue": "",
-      "visibleRule": "TargetMethod = server || TaskType = sqlQuery || TaskType = sqlInline",
-      "helpMarkDown": "Provide the name of the SQL Server database."
-    },
-    {
-      "name": "AuthScheme",
-      "type": "pickList",
-      "label": "Authentication",
-      "required": true,
-      "defaultValue": "Windows Authentication",
-      "visibleRule": "TargetMethod = server || TaskType = sqlQuery || TaskType = sqlInline",
-      "options": {
-        "windowsAuthentication": "Windows Authentication",
-        "sqlServerAuthentication": "SQL Server Authentication"
-      },
-      "helpMarkDown": "Select the authentication mode for connecting to the SQL Server. In Windows authentication mode, the administrator's account, as specified in the Machines section, is used to connect to the SQL Server. In SQL Server Authentication mode, the SQL login and Password have to be provided in the parameters below."
-    },
-    {
-      "name": "SqlUsername",
-      "type": "string",
-      "label": "SQL User name",
-      "required": true,
-      "defaultValue": "",
-      "visibleRule": "AuthScheme = sqlServerAuthentication",
-      "helpMarkDown": "Provide the SQL login to connect to the SQL Server. The option is only available if SQL Server Authentication mode has been selected."
-    },
-    {
-      "name": "SqlPassword",
-      "type": "string",
-      "label": "SQL Password",
-      "required": true,
-      "defaultValue": "",
-      "visibleRule": "AuthScheme = sqlServerAuthentication",
-      "helpMarkDown": "Provide the Password of the SQL login. The option is only available if SQL Server Authentication mode has been selected."
-    },
-    {
       "name": "ConnectionString",
       "type": "multiLine",
       "label": "Connection String",
       "required": true,
+      "groupName": "taskDetails",      
       "defaultValue": "",
       "visibleRule": "TargetMethod = connectionString",
       "helpMarkDown": "Specify the SQL Server connection string like \"Server=localhost;Database=Fabrikam;User ID=sqluser;Password=password;\"."
@@ -136,6 +154,7 @@
       "type": "string",
       "label": "Publish Profile",
       "required": false,
+      "groupName": "taskDetails",
       "defaultValue": "",
       "visibleRule": "TaskType = dacpac",
       "helpMarkDown": "Publish profile provide fine-grained control over SQL Server database deployments. Specify the path to the Publish profile XML file on the target machine or on a UNC share that is accessible by the machine administrator's credentials."
@@ -145,6 +164,7 @@
       "type": "multiLine",
       "label": "Additional Arguments",
       "required": false,
+      "groupName": "taskDetails",
       "defaultValue": "",
       "visibleRule": "TaskType = dacpac",
       "helpMarkDown": "Additional SqlPackage.exe arguments that will be applied when deploying the SQL Server database like, /p:IgnoreAnsiNulls=True /p:IgnoreComments=True. These arguments will override the settings in the Publish profile XML file (if provided)."
@@ -154,10 +174,12 @@
       "type": "multiLine",
       "label": "Additional Arguments",
       "required": false,
+      "groupName": "taskDetails",
       "defaultValue": "",
       "visibleRule": "TaskType = sqlQuery || TaskType = sqlInline",
       "helpMarkDown": "Additional Invoke-Sqlcmd arguments that will be applied when deploying the SQL Server database."
     }
+    
   ],
   "instanceNameFormat": "Deploy using : $(TaskType)",
   "execution": {
