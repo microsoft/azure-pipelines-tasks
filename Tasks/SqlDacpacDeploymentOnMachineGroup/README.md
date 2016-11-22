@@ -33,7 +33,6 @@ SqlPackage.exe is used to create or upgrade the database and it is installed dur
 * [SQL Server Management Studio](https://www.microsoft.com/en-in/download/details.aspx?id=42299) for SQL Server 2014 or SQL Server Express or SQL Server 2012 and SQL Server 2014 and [DAC Framework](http://www.microsoft.com/en-us/download/details.aspx?id=42293) MSIs install SqlPackage.exe at C:\Program Files (x86)\Microsoft SQL Server\120\DAC\bin. **Note that this is an older version as compared to the link given above for the July 2015 release**.
 * Visual Studio 2015 installs the SqlPackage.exe at - C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\Microsoft\SQLDB\DAC\120. Here the install location of Visual Studio is - C:\Program Files (x86)\Microsoft Visual Studio 14.0. **Note that this is an older version as compared to the link given above for the July 2015 release**.
 
-The task [PowerShell on Target Machines](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/PowerShellOnTargetMachines) can be used to deploy SqlPackage.exe to Azure virtual machines or domain-joined/workgroup machines.
 
 #### Specifying Machine Details in the Task
 
