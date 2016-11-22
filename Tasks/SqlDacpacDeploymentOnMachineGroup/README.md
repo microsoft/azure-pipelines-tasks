@@ -38,7 +38,7 @@ SqlPackage.exe is used to create or upgrade the database and it is installed dur
 
 The parameters of the task are described in details, including examples, to show how to input the parameters. The parameters listed with a \* are required parameters for the task:
 
-### Deploy SQL Server Database
+### Deploy SQL Server Database on Machine Group
 This section of the task is used to deploy SQL Server Database to an existing SQL Server using sqlpackage.exe.
 
   - **DACPAC File\*:** Location of the DACPAC file on the target machine or on a UNC path that is accessible to the administrator credentials of the machine like, \\BudgetIT\Web\Deploy\FabrikamDB.dacpac. Environment variables are also supported like $env:windir, $env:systemroot etc. For example, $env:windir\FabrikamFibre\Web.
