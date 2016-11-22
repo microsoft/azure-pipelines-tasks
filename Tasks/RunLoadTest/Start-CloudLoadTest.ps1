@@ -185,8 +185,8 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
 	
 	
 	$summary = ('<span class="bowtie-icon {3}" />   {4}<br/>[Test Run: {0}]({1}) using {2}.<br/>' -f  $run.runNumber, $webResultsUri , $run.name, $thresholdImage, $thresholdMessage)
-	('<p>{0}</p>' -f $summary) >>  $summaryFile
 	('<p>{0}</p>' -f $summary) | Out-File  $summaryFile -Encoding ascii -Append
+	UploadSummaryMdReport $summaryFile
 }
 else
 {
