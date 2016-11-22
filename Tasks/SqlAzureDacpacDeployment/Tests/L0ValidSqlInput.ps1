@@ -10,7 +10,6 @@ Register-Mock Get-VstsInput { "ConnectedServiceName" } -ParametersEvaluator { $N
 Register-Mock Get-VstsInput { "SqlTask" } -ParametersEvaluator { $Name -eq "TaskNameSelector" }
 Register-Mock Get-VstsInput { "DacpacFile.dacpac" } -ParametersEvaluator { $Name -eq "DacpacFile" }
 Register-Mock Get-VstsInput { "SqlFile.sql" } -ParametersEvaluator { $Name -eq "SqlFile" }
-Register-Mock Get-VstsInput { "select * from SqlInline" } -ParametersEvaluator { $Name -eq "SqlInline" }
 Register-Mock Get-VstsInput { $databaseName } -ParametersEvaluator { $Name -eq "DatabaseName" }
 Register-Mock Get-VstsInput { $serverName } -ParametersEvaluator { $Name -eq "ServerName" }
 Register-Mock Get-VstsInput { "ConnectedServiceName" } -ParametersEvaluator { $Name -eq "ConnectedServiceName" }
@@ -30,7 +29,7 @@ Register-Mock Find-VstsFiles { "PublishProfile.xml" } -ArgumentsEvaluator {$args
 
 Register-Mock Import-SqlPs
 
-Register-Mock Get-Endpoint { $usernameEndpoint } -ParametersEvaluator { $connectedServiceName  -eq "connectedServiceName"}
+Register-Mock Get-Endpoint { $usernameEndpoint } -ParametersEvaluator { $connectedServiceName  -eq "connectedServiceName" }
 
 Register-Mock Add-AzureSqlDatabaseServerFirewallRule { 
     $fireWallRule = @{ }
@@ -41,7 +40,13 @@ Register-Mock Add-AzureSqlDatabaseServerFirewallRule {
 
 Register-Mock Remove-AzureSqlDatabaseServerFirewallRule { }
 
-Register-Mock Invoke-Expression { "Executing Command : $args" }  -ArgumentsEvaluator {$args.count -eq 1 -and $args[0] -eq 'Invoke-Sqlcmd -ServerInstance "a0nuel7r2k.database.windows.net" -Database "TestDatabase" -Username "TestUser"  -Password "TestPassword"  -Inputfile "SqlFile.sql" SqlAdditionalArguments -ConnectionTimeout 120' }
+Register-Mock Invoke-Expression { "Executing Command : $args" }  -ArgumentsEvaluator {
+    $args.count -eq 1 -and $args[0] -eq 'Invoke-Sqlcmd -ServerInstance "a0nuel7r2k.database.windows.net" -Database "TestDatabase" -Username "TestUser"  -Password "TestPassword"  -Inputfile "SqlFile.sql" SqlAdditionalArguments -ConnectionTimeout 120' 
+}
+
+Register-Mock Invoke-Expression { throw 'Invalid Argument passed !' } -ArgumentsEvaluator {
+    $args.count -eq 1 -and $args[0] -ne 'Invoke-Sqlcmd -ServerInstance "a0nuel7r2k.database.windows.net" -Database "TestDatabase" -Username "TestUser"  -Password "TestPassword"  -Inputfile "SqlFile.sql" SqlAdditionalArguments -ConnectionTimeout 120' 
+}
 
 & "$PSScriptRoot\..\DeploySqlAzure.ps1"
 

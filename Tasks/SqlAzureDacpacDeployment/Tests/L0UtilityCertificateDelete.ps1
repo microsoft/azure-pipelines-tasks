@@ -11,8 +11,10 @@ Register-Mock Remove-AzureSqlDatabaseServerFirewallRule { throw "Invalid Firewal
 Register-Mock Remove-AzureSqlDatabaseServerFirewallRule { } -ParametersEvaluator { $firewallRuleName -eq $certificateFirewallRuleName }
 
 Assert-Throws {
-    Delete-AzureSqlDatabaseServerFirewallRule -serverName $azureSqlServerName -firewallRuleName $invalidfirewallRuleName -endpoint $usernameEndpoint -deleteFireWallRule $true -isFirewallConfigured $true 
+    Delete-AzureSqlDatabaseServerFirewallRule -serverName $azureSqlServerName -firewallRuleName $invalidfirewallRuleName `
+                                                        -endpoint $usernameEndpoint -deleteFireWallRule $true -isFirewallConfigured $true 
 } -MessagePattern "Invalid Firewall Rule provided"
 
 #should not throw
-Delete-AzureSqlDatabaseServerFirewallRule -serverName $azureSqlServerName -firewallRuleName $certificateFirewallRuleName -endpoint $usernameEndpoint -deleteFireWallRule $true -isFirewallConfigured $true
+Delete-AzureSqlDatabaseServerFirewallRule -serverName $azureSqlServerName -firewallRuleName $certificateFirewallRuleName `
+                                                        -endpoint $usernameEndpoint -deleteFireWallRule $true -isFirewallConfigured $true

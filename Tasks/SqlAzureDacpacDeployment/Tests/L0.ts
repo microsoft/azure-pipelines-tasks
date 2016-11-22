@@ -2,7 +2,6 @@
 /// <reference path="../../../definitions/node.d.ts"/>
 /// <reference path="../../../definitions/Q.d.ts"/>
 
-
 import Q = require('q');
 import assert = require('assert');
 import path = require('path');
@@ -81,7 +80,6 @@ describe('SqlAzureDacpacDeployment - Utility Suite', function () {
         it('IP Address Range Check (Get-AgentIPAddress)', (done) => {
             psr.run(path.join(__dirname, 'L0UtilityIPRange.ps1'), done);
         });
-        //L0UtilityGetSqlCmdArgs.ps1
         it('Validate SQL Package Command Line Arguments (Get-SqlPackageCommandArguments)', (done) => {
             psr.run(path.join(__dirname, 'L0UtilityGetSqlCmdArgs.ps1'), done);
         });

@@ -9,7 +9,6 @@ Register-Mock Get-VstsInput { "ConnectedServiceName" } -ParametersEvaluator { $N
 Register-Mock Get-VstsInput { "DacpacTask" } -ParametersEvaluator { $Name -eq "TaskNameSelector" }
 Register-Mock Get-VstsInput { "DacpacFile.dacpac" } -ParametersEvaluator { $Name -eq "DacpacFile" }
 Register-Mock Get-VstsInput { "SqlFile.sql" } -ParametersEvaluator { $Name -eq "SqlFile" }
-Register-Mock Get-VstsInput { "select * from SqlInline" } -ParametersEvaluator { $Name -eq "SqlInline" }
 Register-Mock Get-VstsInput { $databaseName } -ParametersEvaluator { $Name -eq "DatabaseName" }
 Register-Mock Get-VstsInput { $serverName } -ParametersEvaluator { $Name -eq "ServerName" }
 Register-Mock Get-VstsInput { "ConnectedServiceName" } -ParametersEvaluator { $Name -eq "ConnectedServiceName" }
@@ -40,9 +39,13 @@ Register-Mock Get-SqlPackageOnTargetMachine { 'path/to/dac/bin/sqlpackage.exe' }
 
 Register-Mock Delete-AzureSqlDatabaseServerFirewallRule { }
 
-Register-Mock Run-Command { 'executed command ! '}  -ArgumentsEvaluator {$args.count -eq 1 -and $args[0] -eq '"path/to/dac/bin/sqlpackage.exe" /SourceFile:"dacpacFile.dacpac" /Action:Publish /TargetServerName:"a0nuel7r2k.database.windows.net" /TargetDatabaseName:"TestDatabase" /TargetUser:"TestUser" /TargetPassword:"TestPassword" /Profile:"PublishProfile.xml" AdditionalArguments /TargetTimeout:120' }
+Register-Mock Run-Command { 'executed command ! '}  -ArgumentsEvaluator {
+    $args.count -eq 1 -and $args[0] -eq '"path/to/dac/bin/sqlpackage.exe" /SourceFile:"dacpacFile.dacpac" /Action:Publish /TargetServerName:"a0nuel7r2k.database.windows.net" /TargetDatabaseName:"TestDatabase" /TargetUser:"TestUser" /TargetPassword:"TestPassword" /Profile:"PublishProfile.xml" AdditionalArguments /TargetTimeout:120'
+}
 
-Register-Mock Run-Command { throw 'Invalid Command passed !' } -ArgumentsEvaluator {$args.count -eq 1 -and $args[0] -ne '"path/to/dac/bin/sqlpackage.exe" /SourceFile:"dacpacFile.dacpac" /Action:Publish /TargetServerName:"a0nuel7r2k.database.windows.net" /TargetDatabaseName:"TestDatabase" /TargetUser:"TestUser" /TargetPassword:"TestPassword" /Profile:"PublishProfile.xml" AdditionalArguments /TargetTimeout:120' }
+Register-Mock Run-Command { throw 'Invalid Command passed !' } -ArgumentsEvaluator {
+    $args.count -eq 1 -and $args[0] -ne '"path/to/dac/bin/sqlpackage.exe" /SourceFile:"dacpacFile.dacpac" /Action:Publish /TargetServerName:"a0nuel7r2k.database.windows.net" /TargetDatabaseName:"TestDatabase" /TargetUser:"TestUser" /TargetPassword:"TestPassword" /Profile:"PublishProfile.xml" AdditionalArguments /TargetTimeout:120'
+}
 
 & "$PSScriptRoot\..\DeploySqlAzure.ps1"
 
