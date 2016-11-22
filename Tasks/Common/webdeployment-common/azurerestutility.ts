@@ -116,7 +116,7 @@ export async function getAzureRMWebAppPublishProfile(SPN, webAppName: string, re
     return deferred.promise;
 }
 
-function getAuthorizationToken(SPN): Q.Promise<string> {
+export function getAuthorizationToken(SPN): Q.Promise<string> {
 
     var deferred = Q.defer<string>();
     var authorityUrl = authUrl + SPN.tenantID;
@@ -136,7 +136,7 @@ function getAuthorizationToken(SPN): Q.Promise<string> {
     return deferred.promise;
 }
 
-async function getAzureRMWebAppID(SPN, webAppName: string, url: string, headers) {
+export async function getAzureRMWebAppID(SPN, webAppName: string, url: string, headers) {
     var deferred = Q.defer<any>();
 
     tl.debug('Requesting AzureRM Web App ID: ' + url);
@@ -209,6 +209,99 @@ export async function getAzureRMWebAppConfigDetails(SPN, webAppName: string, res
         else {
             tl.error(response.statusMessage);
             deferred.reject(tl.loc('UnabletoretrieveAzureRMWebAppConfigDetails', response.statusCode, response.statusMessage));
+        }
+    });
+    return deferred.promise;
+}
+
+export async function getAzureRMWebAppMetadata(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
+
+    if(!deployToSlotFlag) {
+       var requestURL = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\' AND name EQ \'' + 
+                          webAppName + '\'&api-version=2016-07-01';
+        var accessToken = await getAuthorizationToken(SPN);
+        var headers = {
+            authorization: 'Bearer '+ accessToken
+        };
+        var webAppID = await getAzureRMWebAppID(SPN, webAppName, requestURL, headers);
+        tl.debug('Web App details : ' + webAppID.id);
+        resourceGroupName = webAppID.id.split ('/')[4];
+        tl.debug('AzureRM Resource Group Name : ' + resourceGroupName);
+    }
+    var deferred = Q.defer<any>();
+    var accessToken = await getAuthorizationToken(SPN);
+    var headers = {
+        authorization: 'Bearer '+ accessToken
+    };
+
+    var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
+    var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
+             '/providers/Microsoft.Web/sites/' + webAppName + slotUrl +  '/config/metadata/list?' + azureApiVersion;
+
+    tl.debug('Requesting AzureRM Metadata: ' + url);
+    httpObj.get('POST', url, headers, (error, response, body) => {
+        if( error ) {
+            deferred.reject(error);
+        }
+        else if(response.statusCode === 200) {
+            var obj = JSON.parse(body);
+            deferred.resolve(obj);
+        }
+        else {
+            tl.warning(response.statusMessage);
+            deferred.reject(tl.loc('UnabletoretrieveAzureRMWebAppMetadataDetails', webAppName, response.statusCode));
+        }
+    });
+    return deferred.promise;
+}
+
+export async function updateAzureRMWebAppConfigDetails(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string, webConfigBody: any) {
+    var deferred = Q.defer<any>();
+    var accessToken = await getAuthorizationToken(SPN);
+    var headers = {
+        'Authorization': 'Bearer '+ accessToken,
+        'Content-Type': 'application/json'
+    };
+
+    var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
+    var configUrl = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
+             '/providers/Microsoft.Web/sites/' + webAppName + slotUrl +  '/config/web?' + azureApiVersion;
+
+    tl.debug('Updating AzureRM config details: ' + configUrl);
+    httpObj.send('PATCH', configUrl, webConfigBody, headers, (error, response, body) => {
+        if(response.statusCode === 200)
+        {
+            deferred.resolve(tl.loc("SuccessfullyUpdatedAzureRMWebAppConfigDetails", webAppName));
+        }
+        else {
+            tl.warning(response.statusMessage);
+            deferred.reject(tl.loc("FailedToUpdatAzureRMWebAppConfigDetails",webAppName, response.statusCode));
+        }
+    });
+    return deferred.promise;
+}
+
+export async function updateAzureRMWebAppMetadata(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string, metadata: any) {
+    var deferred = Q.defer<any>();
+    var accessToken = await getAuthorizationToken(SPN);
+    var headers = {
+        'Authorization': 'Bearer '+ accessToken,
+        'Content-Type': 'application/json'
+    };
+
+    var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
+    var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
+             '/providers/Microsoft.Web/sites/' + webAppName + slotUrl +  '/config/metadata?' + azureApiVersion;
+
+    tl.debug('Updating AzureRM metadata: ' + url);
+    httpObj.send('PUT', url, metadata, headers, (error, response, body) => {
+        if(response.statusCode === 200)
+        {
+            deferred.resolve(tl.loc("SuccessfullyUpdatedAzureRMWebAppMetadata", webAppName));
+        }
+        else {
+            tl.warning(response.statusMessage);
+            deferred.reject(tl.loc("FailedUpdatAzureRMWebAppMetadata",webAppName, response.statusCode));
         }
     });
     return deferred.promise;
