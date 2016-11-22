@@ -22,15 +22,15 @@ function make (target, cb) {
 }
 
 gulp.task('build', function (cb) {
-    console.log('DONE build!');
+    console.log('DONE ********* build!');
 });
 
 gulp.task('default', ['build']);
 
 gulp.task('test', function (cb) {
-    console.log('DONE test!');
+    console.log('DONE *********** test!');
 });
 
 gulp.task('package', function (cb) {
-    console.log('DONE package!');
+    console.log('DONE ************ package!');
 });
