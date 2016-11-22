@@ -16,7 +16,7 @@ function ValidateAvgResponseTimeThresholdInput($avgResponseTimeThreshold)
 		return $null
 	}
 
-	if(((isNumericValue $avgResponseTimeThreshold) -ne $true) -or [System.Int32]$avgResponseTimeThreshold -lt 0)
+	if(((IsNumericValue $avgResponseTimeThreshold) -ne $true) -or [System.Int32]$avgResponseTimeThreshold -lt 0)
 	{
 		throw "Avg. Response Time threshold should be a positive numeric value.Please specify a valid threshold value and try again "
 	}
@@ -28,11 +28,7 @@ function ValidateAvgResponseTimeThreshold($cltAccountUrl,$headers,$testRunId,$av
 	$resultsSummary = GetResultsSummary  $cltAccountUrl  $headers $testRunId
 	if($resultsSummary -and $resultsSummary.overallRequestSummary -and $resultsSummary.overallRequestSummary.averageResponseTime)
 	{
-		if($resultsSummary.overallRequestSummary.averageResponseTime -gt ($avgResponseTimeThreshold/1000))
-		{
-			return $false
-		}
-		return $true
+		return ($resultsSummary.overallRequestSummary.averageResponseTime -lt ($avgResponseTimeThreshold/1000))
 	}
 	else
 	{
