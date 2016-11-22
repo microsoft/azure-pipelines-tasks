@@ -32,11 +32,6 @@ gulp.task('test', function (cb) {
     make('testLegacy', cb);
 });
 
-gulp.task('layout', function (cb) {
-    make('build', cb) &&
-    make('layout', cb);
-});
-
 gulp.task('package', function (cb) {
     var publish = process.argv.filter(function (arg) { return arg == '--server' }).length > 0;
     make('build', cb) &&

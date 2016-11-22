@@ -345,7 +345,7 @@ target.testLegacy = function() {
     run('mocha ' + testsSpecPath, /*inheritStreams:*/true);
 }
 
-target.layout = function() {
+target.package = function() {
      // validate powershell 5
     ensureTool('powershell.exe',
         '-NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command "$PSVersionTable.PSVersion.Major"',
@@ -363,14 +363,12 @@ target.layout = function() {
 
     // create the aggregated tasks layout
     util.createAggregatedZip(packagePath);
-}
 
-target.package = function() {
-    target.layout();
     // nuspec
     var version = options.version;
     if (!version) {
-        fail('supply version with --version');
+        console.log('ERROR: supply version with --version');
+        process.exit(0);
     }
 
     if (!semver.valid(version)) {
