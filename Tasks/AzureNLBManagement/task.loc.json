@@ -1,6 +1,6 @@
 {
   "id": "e94f1750-a6a8-11e6-be69-bdf37a7b15d8",
-  "name": "NLBTask",
+  "name": "AzureNLBManagement",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
@@ -16,7 +16,7 @@
   "version": {
     "Major": "1",
     "Minor": "0",
-    "Patch": "0"
+    "Patch": "21"
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -50,16 +50,37 @@
       }
     },
     {
-      "name": "Operation",
+      "name": "Action",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.Operation",
+      "label": "ms-resource:loc.input.label.Action",
       "defaultValue": "",
       "required": true,
       "options": {
-        "Remove": "Remove",
-        "Add": "Add"
+        "Disconnect": "Disconnect",
+        "Connect": "Connect"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.Operation"
+      "helpMarkDown": "ms-resource:loc.input.help.Action"
+    },
+    {
+      "name": "NICDetection",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.NICDetection",
+      "required": true,
+      "options": {
+        "AutoDetectNic": "Auto Detect NIC",
+        "CustomNic": "Custom VM:NIC Details"
+      },
+      "defaultValue": "AutoDetectNic",
+      "helpMarkDown": "ms-resource:loc.input.help.NICDetection"
+    },
+    {
+      "name": "VmNicMapping",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.VmNicMapping",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "NICDetection = CustomNic",
+      "helpMarkDown": "ms-resource:loc.input.help.VmNicMapping"
     }
   ],
   "dataSourceBindings": [
@@ -79,14 +100,18 @@
   ],
   "execution": {
     "Node": {
-      "target": "nlbtask.js",
-      "argumentFormat": ""
+      "target": "nlbtask.js"
     }
   },
   "messages": {
     "CouldNotFetchNicDetails": "ms-resource:loc.messages.CouldNotFetchNicDetails",
     "NicDetailsFetched": "ms-resource:loc.messages.NicDetailsFetched",
     "GettingAllNetworkInterfacesInTheResourceGroup": "ms-resource:loc.messages.GettingAllNetworkInterfacesInTheResourceGroup",
-    "RequestingForAuthToken": "ms-resource:loc.messages.RequestingForAuthToken"
+    "RequestingForAuthToken": "ms-resource:loc.messages.RequestingForAuthToken",
+    "ConnectingVMtoLB": "ms-resource:loc.messages.ConnectingVMtoLB",
+    "DisconnectingVMfromLB": "ms-resource:loc.messages.DisconnectingVMfromLB",
+    "setNICStatus": "ms-resource:loc.messages.setNICStatus",
+    "MaxRetriesExceededForPut": "ms-resource:loc.messages.MaxRetriesExceededForPut",
+    "FailedPutResponse": "ms-resource:loc.messages.FailedPutResponse"
   }
 }

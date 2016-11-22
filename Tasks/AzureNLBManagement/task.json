@@ -1,0 +1,117 @@
+{
+	"id": "e94f1750-a6a8-11e6-be69-bdf37a7b15d8",
+	"name": "AzureNLBManagement",
+	"friendlyName": "Azure Network Load Balancer (Preview)",
+	"description": "Connect/Disconnect an Azure virtual machine's network interface to a Load Balancer's backend address pool",
+	"author": "Microsoft Corporation",
+	"helpMarkDown": "Replace with markdown to show in help",
+	"category": "Utility",
+	"visibility": [
+		"Build",
+		"Release"	
+    ],
+    "runsOn": [
+        "MachineGroup"
+    ],
+	"version": {
+		"Major": "1",
+		"Minor": "0",
+		"Patch": "0"
+	},
+	"minimumAgentVersion": "1.95.0",
+	"instanceNameFormat": "Azure Network Load Balancer: Connect/Disconnect VMs from $(LoadBalancer)",
+	"inputs": [
+		{
+            "name": "ConnectedServiceName",
+            "type": "connectedService:AzureRM",
+            "label": "AzureRM Subscription",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
+		}, 
+		{
+            "name": "ResourceGroupName",
+            "type": "pickList",
+            "label": "Resource Group",
+            "required": true,
+            "helpMarkDown": "Provide the name of the resource group.",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        }, 
+        {
+            "name": "LoadBalancer",
+            "type": "pickList",
+            "label": "Load Balancer Name",
+            "required": true,
+            "helpMarkDown": "Provide the name of the load balancer.",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        }, 
+        {
+            "name": "Action",
+            "type": "pickList",
+            "label": "Action",
+            "defaultValue": "",
+            "required": true,
+            "options": {
+                "Disconnect": "Disconnect",
+                "Connect": "Connect"
+            },
+            "helpMarkDown": "Select the option to connect or Disconnect an Azure Virtual Machine's network interface to the load balancer's backend address pool."
+        },
+        {
+            "name": "NICDetection",
+            "type": "pickList",
+            "label": "NIC Detection",
+            "required": true,
+            "options": {
+                "AutoDetectNic": "Auto Detect NIC",
+                "CustomNic": "Custom VM:NIC Details"
+            },
+            "defaultValue": "AutoDetectNic",
+            "helpMarkDown": "Select the option to select NIC of VM. Auto Detect NIC will assume that there is only one nic per VM."
+        },
+        {
+            "name": "VmNicMapping",
+            "type": "multiLine",
+            "label": "VM:NIC Mapping",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "NICDetection = CustomNic",
+            "helpMarkDown": "Provide the vm names and the correspoding nics as VM:NIC separated by spaces. Ex: MyVM0:MyNIC0 MyVM1:MyNIC1."
+        }
+	],
+	"dataSourceBindings": [
+        {
+            "target": "ResourceGroupName",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureResourceGroups"
+        },
+        {
+            "target": "LoadBalancer",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureRMLoadBalancers",
+            "parameters": {
+                "ResourceGroupName": "$(ResourceGroupName)"
+            }
+        }
+    ],
+    "execution": {
+		"Node": {
+			"target": "nlbtask.js"
+		}
+	},
+    "messages": {
+        "CouldNotFetchNicDetails": "Could not fetch NIC configuration details for the Azure Virtual Machine : %s",
+        "NicDetailsFetched": "NIC configuration details fetched for the Azure Virtual Machine : %s",
+        "GettingAllNetworkInterfacesInTheResourceGroup": "Getting all network interfaces in the Resource Group : %s",
+        "RequestingForAuthToken": "Requesting for authorization token : %s",
+        "ConnectingVMtoLB": "Connecting the Azure Virtual Machine to the Load Balancer - %s's backend pool.",
+        "DisconnectingVMfromLB": "Disconnect the Azure Virtual Machine from the Load Balancer - %s's backend pool.",
+        "setNICStatus": "Network interface %s set successfully",
+        "MaxRetriesExceededForPut": "Maximum retries exceeded for making the PUT request for the Network Interface : %s",
+        "FailedPutResponse": "PUT request for setting the Network Interface %s failed with response %s" 
+    }
+}
