@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 2
+    "Patch": 3
   },
   "minimumAgentVersion": "1.95.0",
   "groups": [
@@ -56,6 +56,22 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.applicationParameterPath"
+    },
+    {
+      "name": "copyPackageTimeoutSec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.copyPackageTimeoutSec",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.copyPackageTimeoutSec"
+    },
+    {
+      "name": "registerPackageTimeoutSec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.registerPackageTimeoutSec",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.registerPackageTimeoutSec"
     },
     {
       "name": "overridePublishProfileSettings",
@@ -126,15 +142,6 @@
       "label": "ms-resource:loc.input.label.TimeoutSec",
       "defaultValue": "",
       "required": false,
-      "groupname": "upgrade",
-      "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
-    },
-    {
-      "name": "Force",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.Force",
-      "defaultValue": "true",
-      "required": true,
       "groupname": "upgrade",
       "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
     },
@@ -281,6 +288,7 @@
     "SFSDK_UpgradeSuccess": "ms-resource:loc.messages.SFSDK_UpgradeSuccess",
     "SFSDK_UpgradeRolledBack": "ms-resource:loc.messages.SFSDK_UpgradeRolledBack",
     "SFSDK_UnzipPackage": "ms-resource:loc.messages.SFSDK_UnzipPackage",
-    "SFSDK_UnexpectedError": "ms-resource:loc.messages.SFSDK_UnexpectedError"
+    "SFSDK_UnexpectedError": "ms-resource:loc.messages.SFSDK_UnexpectedError",
+    "CopyPackageTimeoutSecWarning": "ms-resource:loc.messages.CopyPackageTimeoutSecWarning"
   }
 }
