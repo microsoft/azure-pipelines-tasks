@@ -22,22 +22,15 @@ function make (target, cb) {
 }
 
 gulp.task('build', function (cb) {
-    make('build', cb);
+    console.log('DONE build!');
 });
 
 gulp.task('default', ['build']);
 
 gulp.task('test', function (cb) {
-    make('test', cb);
-    make('testLegacy', cb);
+    console.log('DONE test!');
 });
 
 gulp.task('package', function (cb) {
-    var publish = process.argv.filter(function (arg) { return arg == '--server' }).length > 0;
-    make('build', cb) &&
-        make('package', cb) &&
-        make('test', cb) &&
-        make('testLegacy', cb) &&
-        publish &&
-        make('publish', cb);
+    console.log('DONE package!');
 });
