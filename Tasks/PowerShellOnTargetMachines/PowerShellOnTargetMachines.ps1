@@ -26,7 +26,7 @@ Write-Verbose "initializationScriptPath = $initializationScriptPath"
 Write-Verbose "runPowershellInParallel = $runPowershellInParallel"
 Write-Verbose "sessionVariables = $sessionVariables"
 
-. ./PowerShellJob.ps1
+. $PSScriptRoot/PowerShellJob.ps1
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
@@ -144,7 +144,7 @@ function Get-ResourceWinRmConfig
    else
    {
         Write-Verbose "`t Environment is standard environment. Http port has higher precedence"
-
+        
         Write-Verbose "Starting Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpPortKeyName"
         $winrmHttpPort = Get-EnvironmentProperty -Environment $environment -Key $resourceWinRMHttpPortKeyName -ResourceId $resourceId
         Write-Verbose "Completed Get-EnvironmentProperty cmdlet call on environment name: $environmentName with resource id: $resourceId(Name : $resourceName) and key: $resourceWinRMHttpPortKeyName"
