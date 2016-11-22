@@ -30,5 +30,5 @@ Register-Mock Remove-Job { $testJobs.RemoveAt(0) }
 & "$remotePowershellRunnerPath" -environmentName $validEnvironmentNameWithDuplicateResourceName -machineNames "" -scriptPath $validScriptPath -runPowershellInParallel $true
 
 Assert-WasCalled Start-Job -Times 2
-#Assert-WasCalled Get-EnvironmentProperty -Times 1 -ParametersEvaluator {$Key -eq $resourceFQDNKeyName -and $ResourceId -eq $validMachineId1Duplicate}
+Assert-WasCalled Get-EnvironmentProperty -Times 1 -ParametersEvaluator {$Key -eq $resourceFQDNKeyName -and $ResourceId -eq $validMachineId1Duplicate}
 Assert-WasCalled Get-EnvironmentProperty -Times 1 -ParametersEvaluator {$Key -eq $resourceWinRMHttpPortKeyName -and $ResourceId -eq $validMachineId1Duplicate}
