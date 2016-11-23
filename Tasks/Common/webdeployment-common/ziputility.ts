@@ -1,12 +1,12 @@
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 import Q = require('q');
-import fs = require('fs');
 
+var gulp = require('gulp');
+var zip = require('gulp-zip');
 var DecompressZip = require('decompress-zip');
-var archiver = require('archiver');
 
-export async function unzip(zipLocation, unzipLocation) {
+export function unzip(zipLocation, unzipLocation) {
     var defer = Q.defer();
     if(tl.exist(unzipLocation)) {
       tl.rmRF(unzipLocation, false);
@@ -25,28 +25,21 @@ export async function unzip(zipLocation, unzipLocation) {
     return defer.promise;
 }
 
-export async function archiveFolder(folderPath, targetPath, zipName) {
+export function archiveFolder(folderPath, targetPath, zipName) {
     var defer = Q.defer();
     tl.debug('Archiving ' + folderPath + ' to ' + zipName);
-    var outputZipPath = path.join(targetPath, zipName);
-    var output = fs.createWriteStream(path.join(targetPath, zipName));
-    var archive = archiver('zip', {
-            store: true
-        });
-    output.on('close', function () {
-        tl.debug('Successfully created archive ' + zipName);
-        defer.resolve(outputZipPath);
-    });
-
-    output.on('error', function(error) {
-        defer.reject(error);
-    });
-
-    archive.pipe(output);
-    archive.directory(folderPath, '/');
-    archive.finalize();
-
-    return defer.promise;
+     gulp.src(path.join(folderPath, '**', '*'),
+      {
+        dot: true
+      })
+      .pipe(zip(zipName))
+      .pipe(gulp.dest(targetPath)).on('end', function(error){
+         if(error) {
+            defer.reject(error);
+         }
+        defer.resolve(path.join(targetPath, zipName));
+      });
+      return defer.promise;
 }
 
 /**
