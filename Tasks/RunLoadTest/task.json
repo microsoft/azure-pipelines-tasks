@@ -66,8 +66,8 @@
       "required": true,
       "defaultValue": "0",
       "options": {
-        "2": "Self-provisioned agents",
-        "0": "Automatically provisioned agents"
+        "0": "Automatically provisioned agents",
+		"2": "Self-provisioned agents"
       }
     }
   ],
