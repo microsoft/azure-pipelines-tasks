@@ -16,23 +16,6 @@ function setResponseFile(name: string) {
 
 describe('Azure Resource Group Deployment', function () {
     this.timeout(30000);
-    var taskSrcPath = path.join (__dirname, '..');
-    var testSrcPath = path.join (__dirname );
-
-    before((done) => {
-        // init here
-        if(shell.test ('-d', taskSrcPath)) {
-            shell.mv( '-f', path.join (taskSrcPath,'node_modules',"azure-arm-compute"), path.join (taskSrcPath,'azure-arm-compute-backup'));
-            shell.mv( '-f', path.join (taskSrcPath,'node_modules',"azure-arm-network"), path.join (taskSrcPath,'azure-arm-network-backup'));
-            shell.mv( '-f', path.join (taskSrcPath,'node_modules',"azure-arm-resource"), path.join (taskSrcPath,'azure-arm-resource-backup'));
-            
-            shell.cp( '-rf', path.join (testSrcPath,'mock_node_modules',"azure-arm-compute"), path.join (taskSrcPath,'node_modules'));
-            shell.cp( '-rf', path.join (testSrcPath,'mock_node_modules',"azure-arm-resource"), path.join (taskSrcPath,'node_modules'));
-            shell.cp( '-rf', path.join (testSrcPath,'mock_node_modules',"azure-arm-network"), path.join (taskSrcPath,'node_modules'));
-        }
-        setResponseFile("defaults.json")
-        done();
-    });
     before((done) => {
         done();
     });
@@ -40,184 +23,159 @@ describe('Azure Resource Group Deployment', function () {
     after(function () {
     });
 
-    function createOrUpdateRG() {
-        var tr = new tmrm.TaskMockRunner('AzureResourceGroupDeployment');
-        tr.setInput("action", "Create Or Update Resource Group");
-        tr.setInput("ConnectedServiceName", "AzureRM");
-        tr.setInput("resourceGroupName", "dummy");
-        tr.setInput("location", "West US");
-        tr.setInput("templateLocation", "Linked Artifact")
-        tr.setInput("csmFile", testSrcPath + "\\CSM.json");
-        tr.setInput("overrideParameters", "");
-        tr.setInput("deploymentMode","Complete");
-        return tr;
-    }
-
     it('Successfully triggered createOrUpdate deployment', (done) => {
-        let tp = path.join(__dirname, 'createOrUpdate.js')
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "\\CSM.json";
+        process.env["csmParametersFile"] = "\\CSM.json";
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        tr.run()
-        assert(tr.succeeded, "Should have succeeded");
-        assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
-        done();
+        tr.run();
+        try {
+            assert(tr.succeeded, "Should have succeeded");
+            assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
+            done();
+        } catch(error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+        
     });
 
-    // it('Create or Update RG, failed on faulty CSM template file', (done) => {
-    //     var tr = createOrUpdateRG();
-    //     tr.setInput("csmFile", testSrcPath+"\\faultyCSM.json");
-    //     tr.run()
-    //         .then(()=> {
-    //             assert(tr.failed, "Task should have failed");
-    //             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") == -1, "Task should have failed before calling deployments.createOrUpdate function from azure-sdk");
-    //             done();
-    //         })
-    //         .fail((err) => {
-    //             console.log(tr.stdout);
-    //             console.error(tr.stderr);
-    //             done(err);
-    //         });
-    // })
+    it('Create or Update RG, failed on faulty CSM template file', (done) => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "\\faultyCSM.json";
+        process.env["csmParametersFile"] = "\\faultyCSM.json";
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run()
+        try{
+            assert(tr.failed, "Task should have failed");
+            assert(tr.stdout.indexOf("deployments.createOrUpdate is called") == -1, "Task should have failed before calling deployments.createOrUpdate function from azure-sdk");
+        } catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+        done();
+    })
 
     
-    // function selectRG() {
-    //     var tr = new trm.TaskRunner('AzureResourceGroupDeployment');
-    //     tr.setInput("action", "Select Resource Group");
-    //     tr.setInput("ConnectedServiceName", "AzureRM");
-    //     tr.setInput("resourceGroupName", "AzureRM");
-    //     return tr;
-    // }
+    it('Selected Resource Group successfully', (done) => {
+        let tp = path.join(__dirname, 'selectResourceGroup.js');
+        process.env["outputVariable"] = "output.variable.custom";
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(tr.succeeded, "Task should have succeeded");
+            assert(tr.stdout.indexOf("set output.variable.custom") >= 0, "Should have written to the output variable.");
+            assert(tr.stdout.indexOf("networkInterfaces.list is called")>0, "Should have called networkInterfaces.list from azure-sdk");
+            assert(tr.stdout.indexOf("publicIPAddresses.list is called")>0, "Should have called publicIPAddresses.list from azure-sdk");
+            assert(tr.stdout.indexOf("virtualMachines.list is called")>0, "Should have called virtualMachines.list from azure-sdk");
+            done(); 
+        } catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }               
+    });
 
-    // it('Selected Resource Group successfully', (done) => {
-    //     var tr = selectRG();
-    //     tr.setInput("outputVariable", "output.variable.custom");
-    //     tr.run()
-    //         .then(() => {
-    //             assert(tr.succeeded, "Task should have succeeded");
-    //             assert(tr.stdout.indexOf("set output.variable.custom") >= 0, "Should have written to the output variable.");
-    //             assert(tr.stdout.indexOf("networkInterfaces.list is called")>0, "Should have called networkInterfaces.list from azure-sdk");
-    //             assert(tr.stdout.indexOf("publicIPAddresses.list is called")>0, "Should have called publicIPAddresses.list from azure-sdk");
-    //             assert(tr.stdout.indexOf("virtualMachines.list is called")>0, "Should have called virtualMachines.list from azure-sdk");
-    //             done();                
-    //         }).fail((err) => {
-    //             console.log(tr.stdout);
-    //             console.error(tr.stderr);
-    //             done(err);
-    //         });
-    // });
+    it('Select Resource Group failed on empty output Variable', (done) => {
+        let tp = path.join(__dirname, 'selectResourceGroup.js');
+        process.env["outputVariable"] = "";
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(tr.failed, "Task should have failed");
+            assert(tr.stdout.indexOf("Output variable should not be empty") > 0, "Should have logged the output variable requirement.");
+            done();
+        } catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }                
+    });
 
-    // it('Select Resource Group failed on null or empty output Variable', (done) => {
-    //     var tr = selectRG();
-    //     tr.run()
-    //         .then(() => {
-    //             assert(tr.failed, "Task should have failed");
-    //             assert(tr.stdout.indexOf("Output variable should not be empty") > 0, "Should have logged the output variable requirement.");
-    //         }).fail((err) => {
-    //             console.log(tr.stdout);
-    //             console.error(tr.stderr);
-    //             done(err);
-    //     });
+    it("Deleted Resource Group", (done) => {
+        let tp = path.join(__dirname, 'deleteResourceGroup.js');
+        process.env["outputVariable"] = null;
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(tr.succeeded, "Task should have succeeded");
+            assert(tr.stdout.indexOf("loc_mock_ARG_DeletingResourceGroup") > 0, "Delete Resource Group function should have been called");
+            assert(tr.stdout.indexOf("resourceGroups.deleteMethod is called") > 0, "Task should have called resourceGroups.deleteMethod function from azure-sdk");
+            done();
+        } catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    })
 
-    //     tr.setInput("outputVariable", "");
-    //     tr.run()
-    //         .then(() => {
-    //             assert(tr.failed, "Task should have failed");
-    //             assert(tr.stdout.indexOf("Output variable should not be empty") > 0, "Should have logged the output variable requirement.");
-    //             done();                
-    //         }).fail((err) => {
-    //             console.log(tr.stdout);
-    //             console.error(tr.stderr);
-    //             done(err);
-    //         });
-    // });
+    it('Started VMs', (done) => {
+        let tp = path.join(__dirname, 'VMOperations.js');
+        process.env["operation"] = "Start";
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(tr.succeeded, "Task should have succeeded");
+            assert(tr.stdout.indexOf("loc_mock_VM_Start") > 0, "Should have started VM");
+            assert(tr.stdout.indexOf("virtualMachines.start is called") > 0, "Should have called virtualMachines.start function from azure-sdk")
+            done();
+        } catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
 
-    // function VMOperations(operation) {
-    //     var tr = new trm.TaskRunner('AzureResourceGroupDeployment');
-    //     tr.setInput("action", operation);
-    //     tr.setInput("ConnectedServiceName", "AzureRM");
-    //     tr.setInput("resourceGroupName", "dummy");
-    //     return tr;
-    // }
+    it('Stopped VMs', (done) => {
+        let tp = path.join(__dirname, 'VMOperations.js');
+        process.env["operation"] = "Stop";
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(tr.succeeded, "Task should have succeeded");
+            assert(tr.stdout.indexOf("loc_mock_VM_Stop") > 0, "Should have started VM");
+            assert(tr.stdout.indexOf("virtualMachines.powerOff is called") > 0, "Should have called virtualMachines.powerOff function from azure-sdk");
+            done();
+        } catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
 
-    // it("Deleted Resource Group", (done) => {
-    //     var tr = new trm.TaskRunner('AzureResourceGroupDeployment');
-    //     tr.setInput("action", "DeleteRG");
-    //     tr.setInput("ConnectedServiceName", "AzureRM");
-    //     tr.setInput("resourceGroupName", "dummy");
-    //     tr.run()
-    //     .then(() => {
-    //         assert(tr.succeeded, "Task should have succeeded");
-    //         assert(tr.stdout.indexOf("Deleting Resource Group") > 0, "Delete Resource Group function should have been called");
-    //         assert(tr.stdout.indexOf("resourceGroups.deleteMethod is called") > 0, "Task should have called resourceGroups.deleteMethod function from azure-sdk");
-    //         done();
-    //     }).fail((err) => {
-    //             console.log(tr.stdout);
-    //             console.error(tr.stderr);
-    //             done(err);
-    //     });
+    it('Restarted VMs', (done) => {
+        let tp = path.join(__dirname, 'VMOperations.js');
+        process.env["operation"] = "Restart";
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(tr.succeeded, "Task should have succeeded");
+            assert(tr.stdout.indexOf("loc_mock_VM_Restart") > 0, "Should have started VM");
+            assert(tr.stdout.indexOf("virtualMachines.restart is called") > 0, "Should have called virtualMachines.restart function from azure-sdk");
+            done();
+        } catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
 
-    // })
-
-    // it('Started VMs', (done) => {
-    //     var tr = VMOperations("Start");
-    //     tr.run()
-    //         .then(( )=> {
-    //             assert(tr.succeeded, "Task should have succeeded");
-    //             assert(tr.stdout.indexOf("Starting... customVM") > 0, "Should have started VM");
-    //             assert(tr.stdout.indexOf("virtualMachines.start is called") > 0, "Should have called virtualMachines.start function from azure-sdk")
-    //             done();
-    //         })
-    //         .fail((err) => {
-    //             console.log(tr.stdout);
-    //             console.error(tr.stderr);
-    //             done(err);
-    //         })
-    // });
-
-    // it('Stopped VMs', (done) => {
-    //     var tr = VMOperations("Stop");
-    //     tr.run()
-    //         .then(( )=> {
-    //             assert(tr.succeeded, "Task should have succeeded");
-    //             assert(tr.stdout.indexOf("Stopping... customVM") > 0, "Should have started VM");
-    //             assert(tr.stdout.indexOf("virtualMachines.powerOff is called") > 0, "Should have called virtualMachines.powerOff function from azure-sdk");
-    //             done();
-    //         })
-    //         .fail((err) => {
-    //             console.log(tr.stdout);
-    //             console.error(tr.stderr);
-    //             done(err);
-    //         })
-    // });
-
-    // it('Restarted VMs', (done) => {
-    //     var tr = VMOperations("Restart");
-    //     tr.run()
-    //         .then(( )=> {
-    //             assert(tr.succeeded, "Task should have succeeded");
-    //             assert(tr.stdout.indexOf("Restarting... customVM") > 0, "Should have started VM");
-    //             assert(tr.stdout.indexOf("virtualMachines.restart is called") > 0, "Should have called virtualMachines.restart function from azure-sdk");
-    //             done();
-    //         })
-    //         .fail((err) => {
-    //             console.log(tr.stdout);
-    //             console.error(tr.stderr);
-    //             done(err);
-    //         })
-    // });
-
-    // it('Deleted VMs', (done) => {
-    //     var tr = VMOperations("Delete");
-    //     tr.run()
-    //         .then(( )=> {
-    //             assert(tr.succeeded, "Task should have succeeded");
-    //             assert(tr.stdout.indexOf("Deleting... customVM") > 0, "Should have started VM");
-    //             assert(tr.stdout.indexOf("virtualMachines.deleteMethod is called") > 0, "Should have called virtualMachines.deleteMethod function from azure-sdk")
-    //             done();
-    //         })
-    //         .fail((err) => {
-    //             console.log(tr.stdout);
-    //             console.error(tr.stderr);
-    //             done(err);
-    //         })
-    // });
+    it('Deleted VMs', (done) => {
+        let tp = path.join(__dirname, 'VMOperations.js');
+        process.env["operation"] = "Delete";
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(tr.succeeded, "Task should have succeeded");
+            assert(tr.stdout.indexOf("loc_mock_VM_Delete") > 0, "Should have started VM");
+            assert(tr.stdout.indexOf("virtualMachines.deleteMethod is called") > 0, "Should have called virtualMachines.deleteMethod function from azure-sdk")
+            done();
+        } catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
 });
