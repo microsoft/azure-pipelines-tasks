@@ -14,9 +14,7 @@ param(
     [string]$publishRunAttachments,
     [string]$runInParallel,
     [string]$vstestLocationMethod,
-    [string]$vstestLocation,
-    [string]$runOnlyImpactedTests,
-    [string]$runAllTestsAfterXBuilds
+    [string]$vstestLocation
     )
 
 Write-Verbose "Entering script VSTest.ps1"
@@ -171,12 +169,6 @@ try
         }
 
         Write-Verbose "Test results directory: $testResultsDirectory"
-
-        if($runOnlyImpactedTests -eq "True")
-        {
-            Write-Warning ("Running all tests. To run only impacted tests, move the task to the node implementation.")
-        }
-
 
         if (![String]::IsNullOrWhiteSpace($vstestLocationInput) -And (InvokeVsTestCmdletHasMember "VSTestLocation"))
         {

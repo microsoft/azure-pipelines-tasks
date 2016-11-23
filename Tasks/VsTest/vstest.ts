@@ -36,9 +36,7 @@ try {
     var configuration: string = tl.getInput('configuration');
     var publishRunAttachments: string = tl.getInput('publishRunAttachments');
     var runInParallel: boolean = tl.getBoolInput('runInParallel');
-    var tiaEnabled: boolean = tl.getBoolInput('runOnlyImpactedTests');
     var fileLevel = tl.getVariable('tia.filelevel');
-    var tiaRebaseLimit: string = tl.getInput('runAllTestsAfterXBuilds');
     var sourcesDir = tl.getVariable('build.sourcesdirectory');
     var runIdFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
     var baseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
@@ -46,6 +44,9 @@ try {
     var useNewCollectorFlag = tl.getVariable('tia.useNewCollector');
     var isPrFlow = tl.getVariable('tia.isPrFlow');
     var vsTestVersionForTIA: number[] = null;
+
+    var tiaEnabled: boolean = false;
+    var tiaRebaseLimit: string = "";
 
     var useNewCollector = false;
     if (useNewCollectorFlag && useNewCollectorFlag.toUpperCase() == "TRUE") {

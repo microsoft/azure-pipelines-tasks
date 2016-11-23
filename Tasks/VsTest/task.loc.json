@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 82
+    "Patch": 83
   },
   "demands": [
     "vstest"
@@ -28,14 +28,6 @@
       "name": "executionOptions",
       "displayName": "ms-resource:loc.group.displayName.executionOptions",
       "isExpanded": true
-    },
-    {
-      "name": "tiaOptions",
-      "displayName": "ms-resource:loc.group.displayName.tiaOptions",
-      "isExpanded": true,
-      "tags": [
-        "Preview"
-      ]
     },
     {
       "name": "advancedExecutionOptions",
@@ -102,24 +94,6 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.runInParallel",
       "groupName": "executionOptions"
-    },
-    {
-      "name": "runOnlyImpactedTests",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.runOnlyImpactedTests",
-      "defaultValue": "False",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.runOnlyImpactedTests",
-      "groupName": "tiaOptions"
-    },
-    {
-      "name": "runAllTestsAfterXBuilds",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.runAllTestsAfterXBuilds",
-      "defaultValue": "50",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.runAllTestsAfterXBuilds",
-      "groupName": "tiaOptions"
     },
     {
       "name": "vstestLocationMethod",
