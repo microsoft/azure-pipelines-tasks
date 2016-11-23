@@ -23,6 +23,6 @@ Register-Mock Get-EnvironmentProperty { return '' } -ParametersEvaluator {$Envir
 Assert-Throws {
     & "$remotePowershellRunnerPath" -environmentName $environmentWithSkipCASet  -machineNames $validMachineName1 -scriptPath $validScriptPath -runPowershellInParallel $false -protocol "HTTP"
 }
-Assert-WasCalled Get-EnvironmentProperty -Times 0 -ParametersEvaluator {$Environment.Name -eq $environmentWithSkipCASet -and $Key -eq $resourceWinRMHttpsPortKeyName}
 
+Assert-WasCalled Get-EnvironmentProperty -Times 0 -ParametersEvaluator {$Environment.Name -eq $environmentWithSkipCASet -and $Key -eq $resourceWinRMHttpsPortKeyName}
 Assert-WasCalled Get-EnvironmentProperty -Times 1 -ParametersEvaluator {$Environment.Name -eq $environmentWithSkipCASet -and $Key -eq $resourceWinRMHttpPortKeyName}

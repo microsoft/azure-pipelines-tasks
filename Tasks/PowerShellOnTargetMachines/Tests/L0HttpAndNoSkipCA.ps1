@@ -23,5 +23,6 @@ Register-Mock Get-EnvironmentProperty { return $environmentWinRMHttpPort } -Para
 & "$remotePowershellRunnerPath" -environmentName $environmentWithSkipCANotSet  -machineNames $validMachineName1 -scriptPath $validScriptPath -runPowershellInParallel $false -protocol "HTTP"
 
 Assert-WasCalled Get-EnvironmentProperty -Times 0 -ParametersEvaluator {$Environment.Name -eq $environmentWithSkipCANotSet -and $Key -eq $resourceWinRMHttpsPortKeyName}
+
 # Function called twice
 Assert-WasCalled Get-EnvironmentProperty -Times 2 -ParametersEvaluator {$Environment.Name -eq $environmentWithSkipCANotSet -and $Key -eq $resourceWinRMHttpPortKeyName}

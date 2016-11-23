@@ -19,7 +19,6 @@ describe('PowerShellOnTargetMachine Suite', function () {
             psr = new psm.PSRunner();
             psr.start();
         }
-
         done();
     });
 
@@ -61,7 +60,6 @@ describe('PowerShellOnTargetMachine - (Get-SkipCACheckOption and Get-ResourceWin
             psr = new psm.PSRunner();
             psr.start();
         }
-
         done();
     });
 
@@ -90,8 +88,6 @@ describe('PowerShellOnTargetMachine - (Get-SkipCACheckOption and Get-ResourceWin
         });
         it('Should try to get Https Port and not Http Port. Should throw when Https port not found', (done) => {
             psr.run(path.join(__dirname, 'L0SkipCAandNoHttpsPort.ps1'), done);
-        });
-        
+        }); 
     }
-
 });
