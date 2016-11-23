@@ -4,19 +4,16 @@
         "build.sourcesdirectory": "/source/dir",
         "VS140COMNTools": "/vs/path"
     },
-    "find": {
-        "/source/dir": [
-            "someDir/someFile2",
-            "/someDir/someFile1"
-        ]
-    },
-    "match": {
+    "findMatch": {
         "\\source\\dir\\TestResults\\*.trx": [
             "a.trx"
+        ],
+        "/source/dir/someFile1": [
+            "/source/dir/someFile1"
         ]
     },
     "exec": {
-        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /logger:trx": {
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /logger:trx": {
             "code": 0,
             "stdout": "vstest"
         }
