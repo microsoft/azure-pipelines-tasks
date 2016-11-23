@@ -33,5 +33,26 @@ describe('AzureFileCopy Suite', function () {
         it('Validate AzureFileCopy.Utility Validate-AzurePowershellVersion', (done) => {
             psr.run(path.join(__dirname, 'L0ValidateAzurePSVersion.ps1'), done);
         });
+       /*it('Validate AzureFileCopy.Utility Get-StorageKey', (done) => {
+            psr.run(path.join(__dirname, 'L0ValidateGetStorageKey.ps1'), done);
+        });*/
+        it('Validate AzureFileCopy.Utility Get-StorageKey', (done) => {
+            psr.run(path.join(__dirname, 'L0UtilityThrowError.ps1'), done);
+        });
+        it('Validate AzureFileCopy.Utility Upload-FilesToAzureContainer', (done) => {
+            psr.run(path.join(__dirname, 'L0UploadFilesToAzureContainer.ps1'), done);
+        });
+        it('Validate AzureFileCopy.Utility Does-AzureVMMatchTagFilterCriteria', (done) => {
+            psr.run(path.join(__dirname, 'L0DoesAzureVMMatchTagFilter.ps1'), done);
+        });
+        it('Validate AzureFileCopy.Utility Get-TagBasedFilteredAzureVMs', (done) => {
+            psr.run(path.join(__dirname, 'L0GetTagBasedFilteredAzureVMs.ps1'), done);
+        });
+        it('Validate AzureFileCopy.Utility Get-MachineBasedFilteredAzureVMs', (done) => {
+            psr.run(path.join(__dirname, 'L0GetMachineBasedFilteredAzureVMs.ps1'), done);
+        });
+        it('Validate AzureFileCopy.Utility Get-FilteredAzureVMsInResourceGroup', (done) => {
+            psr.run(path.join(__dirname, 'L0GetFilteredAzureVmsInResourceGroup.ps1'), done);
+        });
     }
 });
