@@ -44,7 +44,7 @@ export class dotNetExe {
 
                 var result = dotnet.execSync();
                 if (result.code != 0) {
-				    tl.error(result.stderr.replace("\r\n", "%0D%0A"));
+                    tl.error(result.stderr.replace("\r\n", "%0D%0A"));
                     tl.setResult(result.code, tl.loc("dotnetCommandFailed", result.code));
                 }
 
