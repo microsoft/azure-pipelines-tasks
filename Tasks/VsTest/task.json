@@ -228,11 +228,6 @@
     "execution": {
         "Node": {
             "target": "vstest.js"
-        },
-        "PowerShell": {
-            "target": "$(currentDirectory)\\VSTest.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
         }
     },
     "messages": {
