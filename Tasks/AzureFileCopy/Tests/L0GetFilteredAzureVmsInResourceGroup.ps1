@@ -21,6 +21,7 @@ $filteredAzureVMResources = Get-FilteredAzureVMsInResourceGroup -azureVMResource
 Assert-AreEqual 0 $filteredAzureVMResources.Count
 
 Register-Mock Get-MachineBasedFilteredAzureVMs { }
+
 # Test 3 "should call Get-MachineBasedFilteredAzureVMs for machineNames filter with non-empty filter"
 $filteredAzureVMResources = Get-FilteredAzureVMsInResourceGroup -azureVMResources $azureRMVMResources -resourceFilteringMethod "machineNames" -filter "vm0"
 Assert-AreEqual 0 $filteredAzureVMResources.Count
