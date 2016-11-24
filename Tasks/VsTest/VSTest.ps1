@@ -14,7 +14,9 @@ param(
     [string]$publishRunAttachments,
     [string]$runInParallel,
     [string]$vstestLocationMethod,
-    [string]$vstestLocation
+    [string]$vstestLocation,
+    [string]$runOnlyImpactedTests,
+    [string]$runAllTestsAfterXBuilds
     )
 
 Write-Verbose "Entering script VSTest.ps1"
