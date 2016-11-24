@@ -30,9 +30,7 @@ export async function archiveFolder(folderPath, targetPath, zipName) {
     tl.debug('Archiving ' + folderPath + ' to ' + zipName);
     var outputZipPath = path.join(targetPath, zipName);
     var output = fs.createWriteStream(path.join(targetPath, zipName));
-    var archive = archiver('zip', {
-            store: true
-        });
+    var archive = archiver('zip');
     output.on('close', function () {
         tl.debug('Successfully created archive ' + zipName);
         defer.resolve(outputZipPath);
