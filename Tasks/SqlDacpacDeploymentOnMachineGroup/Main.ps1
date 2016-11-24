@@ -31,13 +31,16 @@ Try
     }
     $additionalArguments = Escape-SpecialChars -str $additionalArguments
 
+    $secureAdminPassword = "$sqlPassword" | ConvertTo-SecureString  -AsPlainText -Force
+    $psCredential = New-Object System.Management.Automation.PSCredential ("$sqlUserName", $secureAdminPassword)
+
     if ($taskType -eq "dacpac")
     {
-        Execute-DacpacDeployment -dacpacFile $dacpacFile -targetMethod $targetMethod -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -publishProfile $publishProfile -additionalArguments $additionalArguments
+        Execute-DacpacDeployment -dacpacFile $dacpacFile -targetMethod $targetMethod -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlPSCredential $psCredential -connectionString $connectionString -publishProfile $publishProfile -additionalArguments $additionalArguments
     }
     else
     {
-        Execute-SqlQueryDeployment -taskType $taskType -sqlFile $sqlFile -inlineSql $inlineSql -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlUsername $sqlUsername -sqlPassword $sqlPassword -additionalArguments $additionalArguments
+        Execute-SqlQueryDeployment -taskType $taskType -sqlFile $sqlFile -inlineSql $inlineSql -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlPSCredential $psCredential -additionalArguments $additionalArguments
     }
 
 }
