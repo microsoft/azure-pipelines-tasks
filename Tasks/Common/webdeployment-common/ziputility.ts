@@ -29,7 +29,7 @@ export async function archiveFolder(folderPath, targetPath, zipName) {
     var defer = Q.defer();
     tl.debug('Archiving ' + folderPath + ' to ' + zipName);
     var outputZipPath = path.join(targetPath, zipName);
-    var output = fs.createWriteStream(path.join(targetPath, zipName));
+    var output = fs.createWriteStream(outputZipPath);
     var archive = archiver('zip');
     output.on('close', function () {
         tl.debug('Successfully created archive ' + zipName);
