@@ -13,4 +13,4 @@ Register-Mock Get-Endpoint { return $null }
 
 Assert-Throws {
     Get-StorageKey -storageAccountName $invalidClassicStorage -connectionType 'Certificate' -connectedServiceName $connectedServiceName
-} -MessagePattern "VI"
+}
