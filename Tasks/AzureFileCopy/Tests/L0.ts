@@ -88,5 +88,13 @@ describe('AzureFileCopy Suite', function () {
         it('Validate AzureFileCopy.Utility Copy-FilesParallelyToAzureVMs', (done) => {
             psr.run(path.join(__dirname, 'L0CopyFilesParallelyToAzureVMs.ps1'), done);
         });
+        it('Validate AzureFileCopy.Utility Copy-FilesToAzureVMsFromStorageContainer', (done) => {
+            psr.run(path.join(__dirname, 'L0CopyFilesToAzureVMsFromStorageContainer.ps1'), done);
+        });
+        //Validate-CustomScriptExecutionStatus
+        
+        it('Validate AzureFileCopy.Utility Validate-CustomScriptExecutionStatus', (done) => {
+            psr.run(path.join(__dirname, 'L0ValidateCustomScriptExecutionStatus.ps1'), done);
+        });
     }   
 });
