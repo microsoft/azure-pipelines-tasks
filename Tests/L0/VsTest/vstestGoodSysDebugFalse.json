@@ -7,13 +7,10 @@
         "VS120COMNTools": "/vs/path",
         "System.Debug": "false"
     },
-    "find": {
-        "/source/dir": [
-            "someDir/someFile2",
-            "/someDir/someFile1"
-        ]
-    },
     "match": {
+        "**\\packages\\**\\*TestAdapter.dll": []
+    },
+    "findMatch": {
         "\\source\\dir\\some\\*pattern": [
             "some/path/one",
             "some/path/two"
@@ -25,46 +22,12 @@
         "*.trx": [
             "a.trx"
         ],
-        "**\\packages\\**\\*TestAdapter.dll": []
+        "/source/dir/someFile1": [
+            "/source/dir/someFile1"
+        ]
     },
     "exec": {
-        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe some/path/one some/path/two /logger:trx": {
-            "code": 0,
-            "stdout": "vstest"
-        },
-        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe some/path/one /logger:trx": {
-            "code": 0,
-            "stdout": "vstest"
-        },
-        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /logger:trx": {
-            "code": 0,
-            "stdout": "vstest"
-        },
-        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /TestCaseFilter:testFilter /logger:trx": {
-            "code": 0,
-            "stdout": "vstest"
-        },
-        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /EnableCodeCoverage /logger:trx": {
-            "code": 0,
-            "stdout": "vstest"
-        },
-        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file consoleOptions /logger:trx": {
-            "code": 0,
-            "stdout": "vstest"
-        },
-        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /Settings:settings.runsettings /logger:trx": {
-            "code": 0,
-            "stdout": "vstest"
-        },
-        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /logger:trx /TestAdapterPath:path/to/customadapters": {
-            "code": 0,
-            "stdout": "vstest"
-        },
-        "some\\path\\to\\vstest.console.exe path/to/file /logger:trx": {
-            "code": 0,
-            "stdout": "vstest"
-        },
-        "\\path\\to\\vstest\\directory\\vstest.console.exe path/to/file /logger:trx": {
+        "\\path\\to\\vstest\\directory\\vstest.console.exe /source/dir/someFile1 /logger:trx": {
             "code": 0,
             "stdout": "vstest"
         }

@@ -1,53 +1,55 @@
 [CmdletBinding(DefaultParameterSetName = 'None')]
 param
 (
-    [String]
-    $env:SYSTEM_DEFINITIONID,
-    [String]
-    $env:BUILD_BUILDID,
+[String]
+$env:SYSTEM_DEFINITIONID,
+[String]
+$env:BUILD_BUILDID,
 
-    [String] [Parameter(Mandatory = $false)]
-    $connectedServiceName,
+[String] [Parameter(Mandatory = $false)]
+$connectedServiceName,
 
-    [String] [Parameter(Mandatory = $true)]
-    $websiteUrl,
-    [String] [Parameter(Mandatory = $true)]
-    $testName,
-    [String] [Parameter(Mandatory = $true)]
-    $vuLoad,
-    [String] [Parameter(Mandatory = $true)]
-    $runDuration,
-    [String] [Parameter(Mandatory = $true)]
-    $geoLocation,
-    [String] [Parameter(Mandatory = $true)]
-    $machineType
+[String] [Parameter(Mandatory = $true)]
+$websiteUrl,
+[String] [Parameter(Mandatory = $true)]
+$testName,
+[String] [Parameter(Mandatory = $true)]
+$vuLoad,
+[String] [Parameter(Mandatory = $true)]
+$runDuration,
+[String] [Parameter(Mandatory = $true)]
+$geoLocation,
+[String] [Parameter(Mandatory = $true)]
+$machineType,
+[String] [Parameter(Mandatory = $false)]
+$avgResponseTimeThreshold
 )
 
 function InitializeRestHeaders()
 {
-    $restHeaders = New-Object -TypeName "System.Collections.Generic.Dictionary[[String], [String]]"
+	$restHeaders = New-Object -TypeName "System.Collections.Generic.Dictionary[[String], [String]]"
 	if([string]::IsNullOrWhiteSpace($connectedServiceName))
 	{
-		$patToken = Get-AccessToken $connectedServiceDetails
+		$patToken = GetAccessToken $connectedServiceDetails
 		ValidatePatToken $patToken
 		$restHeaders.Add("Authorization", [String]::Concat("Bearer ", $patToken))
-       
-    }
+		
+	}
 	else
 	{
-	   $Username = $connectedServiceDetails.Authorization.Parameters.Username
-	   Write-Verbose "Username = $Username" -Verbose
-	   $Password = $connectedServiceDetails.Authorization.Parameters.Password
-	   $alternateCreds = [String]::Concat($Username, ":", $Password)
-       $basicAuth = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($alternateCreds))
-       $restHeaders.Add("Authorization", [String]::Concat("Basic ", $basicAuth))
+		$Username = $connectedServiceDetails.Authorization.Parameters.Username
+		Write-Verbose "Username = $Username" -Verbose
+		$Password = $connectedServiceDetails.Authorization.Parameters.Password
+		$alternateCreds = [String]::Concat($Username, ":", $Password)
+		$basicAuth = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($alternateCreds))
+		$restHeaders.Add("Authorization", [String]::Concat("Basic ", $basicAuth))
 	}
-    return $restHeaders
+	return $restHeaders
 }
 
-function Get-AccessToken($vssEndPoint) 
+function GetAccessToken($vssEndPoint) 
 {
-    return $vssEndpoint.Authorization.Parameters.AccessToken
+	return $vssEndpoint.Authorization.Parameters.AccessToken
 }
 
 function ValidatePatToken($token)
@@ -58,10 +60,11 @@ function ValidatePatToken($token)
 	}
 }
 
-  # Load all dependent files for execution
-  . $PSScriptRoot/CltTasksUtility.ps1
-  . $PSScriptRoot/VssConnectionHelper.ps1
-  
+# Load all dependent files for execution
+. $PSScriptRoot/CltTasksUtility.ps1
+. $PSScriptRoot/VssConnectionHelper.ps1
+. $PSScriptRoot/CltThresholdValidationHelper
+
 $userAgent = "QuickPerfTestBuildTask"
 $global:RestTimeout = 60
 
@@ -85,13 +88,18 @@ Write-Output "Run source identifier = build/$env:SYSTEM_DEFINITIONID/$env:BUILD_
 #Validate Input
 ValidateInputs $websiteUrl $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI $connectedServiceName
 
+#Process Threshold Rules
+Write-Output "Initializing threshold rule for avg. response time with value(ms) : $avgResponseTimeThreshold "
+$avgResponseTimeThreshold = ValidateAvgResponseTimeThresholdInput $avgResponseTimeThreshold
+
+#Initialize Connected Service Details
 if([string]::IsNullOrWhiteSpace($connectedServiceName))
 {
 	$connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name SystemVssConnection
 }
 else
 {
-    $connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
+	$connectedServiceDetails = Get-ServiceEndpoint -Context $distributedTaskContext -Name $connectedServiceName
 }
 
 $VSOAccountUrl = $connectedServiceDetails.Url.AbsoluteUri
@@ -109,30 +117,54 @@ $drop = CreateTestDrop $headers $dropjson $CltAccountUrl
 
 if ($drop.dropType -eq "InPlaceDrop")
 {
-    $runJson = ComposeTestRunJson $testName $drop.id $MachineType
-    $run = QueueTestRun $headers $runJson $CltAccountUrl
-    MonitorTestRun $headers $run $CltAccountUrl
-    $webResultsUrl = GetTestRunUri $run.id $headers $CltAccountUrl
+	$runJson = ComposeTestRunJson $testName $drop.id $MachineType
+	$run = QueueTestRun $headers $runJson $CltAccountUrl
+	MonitorTestRun $headers $run $CltAccountUrl
+	$webResultsUrl = GetTestRunUri $run.id $headers $CltAccountUrl
 	
-    Write-Output ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name)
-    Write-Output ("To view run details navigate to {0}" -f $webResultsUrl)
-    Write-Output "To view detailed results navigate to Load Test | Load Test Manager in Visual Studio IDE, and open this run."
+	Write-Output ("Run-id for this load test is {0} and its name is '{1}'." -f  $run.runNumber, $run.name)
+	Write-Output ("To view run details navigate to {0}" -f $webResultsUrl)
+	Write-Output "To view detailed results navigate to Load Test | Load Test Manager in Visual Studio IDE, and open this run."
 
-    $resultsMDFolder = New-Item -ItemType Directory -Force -Path "$env:Temp\LoadTestResultSummary"	
-    $resultFilePattern = ("QuickPerfTestResults_{0}_{1}_*.md" -f $env:AGENT_ID, $env:SYSTEM_DEFINITIONID)
-    $excludeFilePattern = ("QuickPerfTestResults_{0}_{1}_{2}_*.md" -f $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID)   
-    Remove-Item $resultsMDFolder\$resultFilePattern -Exclude $excludeFilePattern -Force	
-    $summaryFile =  ("{0}\QuickPerfTestResults_{1}_{2}_{3}_{4}.md" -f $resultsMDFolder, $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID, $run.id)	
-    $summary = ('[Test Run: {0}]({1}) using {2}.<br/>' -f  $run.runNumber, $webResultsUrl ,$run.name)
+	$resultsMDFolder = New-Item -ItemType Directory -Force -Path "$env:Temp\LoadTestResultSummary"	
+	$resultFilePattern = ("QuickPerfTestResults_{0}_{1}_*.md" -f $env:AGENT_ID, $env:SYSTEM_DEFINITIONID)
+	$excludeFilePattern = ("QuickPerfTestResults_{0}_{1}_{2}_*.md" -f $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID)
+	
+	if($avgResponseTimeThreshold)
+	{
+		$avgResponseTimeThresholdValidationResult = ValidateAvgResponseTimeThreshold $CltAccountUrl $headers $run.id $avgResponseTimeThreshold 
+		if($avgResponseTimeThresholdValidationResult -eq $false)
+		{
+			Write-Output "The Avg.Response Time for the run is greater than the threshold value of $avgResponseTimeThreshold specified for the run "
+			Write-Output "To view detailed results navigate to Load Test | Load Test Manager in Visual Studio IDE, and open this run."
+			Write-Error "Load test task is marked as failed, as there were threshold violations for the Avg. Response Time"
+		}
+	}
 
-	('<p>{0}</p>' -f $summary) >>  $summaryFile
-    UploadSummaryMdReport $summaryFile
+	Remove-Item $resultsMDFolder\$resultFilePattern -Exclude $excludeFilePattern -Force	
+	$summaryFile =  ("{0}\QuickPerfTestResults_{1}_{2}_{3}_{4}.md" -f $resultsMDFolder, $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID, $run.id)	
+
+	if ($thresholdViolationsCount -gt 0)
+	{
+		$thresholdMessage=("{0} thresholds violated." -f $thresholdViolationsCount)
+		$thresholdImage="bowtie-status-error"
+	}
+	else
+	{
+		$thresholdMessage="No thresholds violated."
+		$thresholdImage="bowtie-status-success"
+	}
+	$summary = ('[Test Run: {0}]({1}) using {2}.<br/>' -f  $run.runNumber, $webResultsUrl ,$run.name)
+	$summary = ('<span class="bowtie-icon {3}" />   {4}<br/>[Test Run: {0}]({1}) using {2}.<br/>' -f  $run.runNumber, $webResultsUri , $run.name, $thresholdImage, $thresholdMessage)
+
+	('<p>{0}</p>' -f $summary) | Out-File  $summaryFile -Encoding ascii -Append
+	UploadSummaryMdReport $summaryFile
 }
 else
 {
-    Write-Error ("Failed to connect to the endpoint '{0}' for VSO account '{1}'" -f $EndpointName, $VSOAccountUrl)
+	Write-Error ("Failed to connect to the endpoint '{0}' for VSO account '{1}'" -f $EndpointName, $VSOAccountUrl)
 }
 
-	
+
 Write-Output "Quick Perf Test Script execution completed"
 
