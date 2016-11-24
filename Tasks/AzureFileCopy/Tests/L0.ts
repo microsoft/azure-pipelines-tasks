@@ -91,8 +91,6 @@ describe('AzureFileCopy Suite', function () {
         it('Validate AzureFileCopy.Utility Copy-FilesToAzureVMsFromStorageContainer', (done) => {
             psr.run(path.join(__dirname, 'L0CopyFilesToAzureVMsFromStorageContainer.ps1'), done);
         });
-        //Validate-CustomScriptExecutionStatus
-        
         it('Validate AzureFileCopy.Utility Validate-CustomScriptExecutionStatus', (done) => {
             psr.run(path.join(__dirname, 'L0ValidateCustomScriptExecutionStatus.ps1'), done);
         });
@@ -101,6 +99,9 @@ describe('AzureFileCopy Suite', function () {
         });
         it('Validate AzureFileCopy.Utility Is-WinRMCustomScriptExtensionExists', (done) => {
             psr.run(path.join(__dirname, 'L0IsWinRMCustomScriptExtensionExists.ps1'), done);
+        });
+        it('Validate AzureFileCopy.Utility Copy-FilesSequentiallyToAzureVMs', (done) => {
+            psr.run(path.join(__dirname, 'L0CopyFilesSequentiallyToAzureVMs.ps1'), done);
         });
     }   
 });
