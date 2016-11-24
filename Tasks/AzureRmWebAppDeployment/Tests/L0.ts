@@ -257,7 +257,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'L0NonWindowsFolderPkg.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-		
+
         assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
         assert(tr.stderr.length == 0 && tr.errorIssues.length == 0, 'should not have written to stderr');
         var expectedOut = 'loc_mock_Compressedfolderintozip'; 

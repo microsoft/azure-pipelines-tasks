@@ -177,7 +177,10 @@ tr.registerMock('./kuduutility.js', {
     containsParamFile: function (webAppPackage) {
     var isParamFilePresent = false;
         return isParamFilePresent;
-    },
+    }
+});
+
+tr.registerMock('webdeployment-common/ziputility.js', {
     archiveFolder : function() {
          console.log('Folder Archiving Successful');
     }
