@@ -155,9 +155,6 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
 });
 
 tr.registerMock('./kuduutility.js', {
-    archiveFolder: function(webAppPackage, webAppZipFile) {
-        throw new Error('Folder Archiving Failed');
-    },
     getVirtualAndPhysicalPaths: function (virtualApplication, virtualApplicationMappings) {
         // construct URL depending on virtualApplication or root of webapplication 
         var physicalPath = "/site/wwwroot";
