@@ -2,69 +2,11 @@
 param()
 
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
+. $PSScriptRoot\MockVariable.ps1
 . $PSScriptRoot\..\Utility.ps1
+. $PSScriptRoot\MockHelper.ps1
 
-### Mocked Modules #####
-function Get-AzureMachineStatus {
-    param([string]$resourceGroupName,
-          [string]$name)
-    if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($name)) {
-        if(-not $resourceGroups.ContainsKey($resourceGroupName)) {
-            throw "Resource group '$resourceGroupName' could not be found."
-        }
-        $VMs = $resourceGroups[$resourceGroupName].VMsDetails
-        if($VMs -and $VMs.ContainsKey($name)) {
-            $tempExts = $vmInstanceViews[$name]["Extensions"]
-            if($tempExts -and $tempExts.Count -ge 1) {
-                $status = @{}
-                $status["Extensions"] = $tempExts
-                #$customScriptExtension=$tempExts[0]
-            }
-            else {
-                throw "No extension exists with name '$winrmCustomScriptExtension'"
-            }
-        }
-        else {
-            throw "The Resource 'Microsoft.Compute/virtualMachines/$name/extensions/$winrmCustomScriptExtension' under resource group '$resourceGroupName' was not found."
-        }
-    }
-    return $status
-}
-
-function Remove-AzureMachineCustomScriptExtension {
-    param([string]$resourceGroupName,
-          [string]$vmName,
-          [string]$name)
-
-    if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName) -and -not [string]::IsNullOrEmpty($name)) {
-        if(-not [string]::IsNullOrEmpty($resourceGroupName) -and -not [string]::IsNullOrEmpty($vmName)) {
-            $response = @{}
-            $VMs = $resourceGroups[$resourceGroupName].VMsDetails
-            if($VMs -and $VMs.ContainsKey($vmName)) {
-                $tempExts = $vmInstanceViews[$vmName]["Extensions"]
-                if($tempExts -and $tempExts.Count -ge 1) {
-                    $vmInstanceViews[$vmName]["extensions"]=@()
-                    $response["Status"]="Succeeded"
-                }
-                else {
-                    $response["Status"]="Succeeded"
-                }
-            }
-            else {
-                $response["Status"]="Succeeded"
-            }
-        }
-    }
-    return $response
-}
-
-### Mocked Variables
-$vm0Name = "myVM0"
-$validRG = "AzureFileCopyTaskPlatformTestDoNotDelete"
-$extensionName="WinRMCustomScriptExtension"
-$invalidMachineName = "invalidMachine"
-$invalidExtensionName="InvalidWinRMCustomScriptExtension"
-$resourceGroups = @{}
+$extensionName="WinRMCustomScriptExtension"  
 
 # Test 1 "Should throw Resource group name is null"
 Assert-Throws {
@@ -75,6 +17,7 @@ Assert-Throws {
 Assert-Throws {
     $response =  Validate-CustomScriptExecutionStatus -resourceGroupName $validRG -vmName $null -extensionName $extensionName
 } -MessagePattern "AFC_SetCustomScriptExtensionFailed *"
+
 
 # Test 3 "Should throw when VM name is invalid"
 Assert-Throws {
@@ -87,6 +30,37 @@ Assert-Throws {
 } -MessagePattern "AFC_SetCustomScriptExtensionFailed *"
 
 # Test 5 "should throw when Extension name is invalid"
+$invalidExtensionName="InvalidWinRMCustomScriptExtension"
 Assert-Throws {
     $response =  Validate-CustomScriptExecutionStatus -resourceGroupName $validRG -vmName $vm0Name -extensionName $invalidExtensionName
 } -MessagePattern "AFC_SetCustomScriptExtensionFailed *"
+
+# Test 6 "Should not throw" "For valid values, if previous extension deployed successfully"
+Register-Mock Remove-AzureMachineCustomScriptExtension { return @{}}
+$vmInstanceViews[$vm0Name]["Extensions"]=$extensions
+
+Validate-CustomScriptExecutionStatus -resourceGroupName $validRG -vmName $vm0Name -extensionName $extensionName
+Assert-WasCalled Remove-AzureMachineCustomScriptExtension -Times 0
+
+# Test 7 "Should throw for valid values, if previous extension failed to deploy" 
+$extensions[0]["SubStatuses"][1]["Message"]="Extension script execution failed."
+$vmInstanceViews[$vm0Name]["Extensions"]=$extensions
+
+Assert-Throws {
+    Validate-CustomScriptExecutionStatus -resourceGroupName $validRG -vmName $vm0Name -extensionName $extensionName
+} -MessagePattern "AFC_SetCustomScriptExtensionFailed *"
+Assert-WasCalled Remove-AzureMachineCustomScriptExtension -Times 1
+
+# Test 8 "For valid values, if previous extension failed to provision"
+Unregister-Mock Remove-AzureMachineCustomScriptExtension
+Register-Mock Remove-AzureMachineCustomScriptExtension { return @{}}
+$extensions[0]["SubStatuses"][1]["Message"]="Failed to apply the extension."
+$vmInstanceViews[$vm0Name]["Extensions"]=$extensions 
+
+Assert-Throws {
+    Validate-CustomScriptExecutionStatus -resourceGroupName $validRG -vmName $vm0Name -extensionName $extensionName
+} -MessagePattern "AFC_SetCustomScriptExtensionFailed *"
+Assert-WasCalled Remove-AzureMachineCustomScriptExtension -Times 1
+
+#Clean the extension
+$vmInstanceViews[$vm0Name]["Extensions"]=@()

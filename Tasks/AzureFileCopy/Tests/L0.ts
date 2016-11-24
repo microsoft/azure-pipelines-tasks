@@ -96,5 +96,11 @@ describe('AzureFileCopy Suite', function () {
         it('Validate AzureFileCopy.Utility Validate-CustomScriptExecutionStatus', (done) => {
             psr.run(path.join(__dirname, 'L0ValidateCustomScriptExecutionStatus.ps1'), done);
         });
+        it('Validate AzureFileCopy.Utility Add-AzureVMCustomScriptExtension', (done) => {
+            psr.run(path.join(__dirname, 'L0AddAzureVMCustomScriptExtension.ps1'), done);
+        });
+        it('Validate AzureFileCopy.Utility Is-WinRMCustomScriptExtensionExists', (done) => {
+            psr.run(path.join(__dirname, 'L0IsWinRMCustomScriptExtensionExists.ps1'), done);
+        });
     }   
 });
