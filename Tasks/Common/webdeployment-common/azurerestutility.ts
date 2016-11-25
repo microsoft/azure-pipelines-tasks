@@ -14,7 +14,7 @@ var restObj = new restClient.RestClient(httpObj);
 var AuthenticationContext = adal.AuthenticationContext;
 var authUrl = 'https://login.windows.net/';
 var armUrl = 'https://management.azure.com/';
-var azureApiVersion = 'api-version=2015-08-01';
+var azureApiVersion = 'api-version=2016-08-01';
 
 /**
  * updates the deployment status in kudu service
@@ -212,4 +212,96 @@ export async function getAzureRMWebAppConfigDetails(SPN, webAppName: string, res
         }
     });
     return deferred.promise;
+}
+
+export async function getWebAppAppSettings(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string, obj: Object)
+{
+	if(!deployToSlotFlag) {
+       var requestURL = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\' AND name EQ \'' + 
+                          webAppName + '\'&api-version=2016-07-01';
+        var accessToken = await getAuthorizationToken(SPN);
+        var headers = {
+            authorization: 'Bearer '+ accessToken
+        };
+        var webAppID = await getAzureRMWebAppID(SPN, webAppName, requestURL, headers);
+        tl.debug('Web App details : ' + webAppID.id);
+        resourceGroupName = webAppID.id.split ('/')[4];
+        tl.debug('AzureRM Resource Group Name : ' + resourceGroupName);
+    }
+
+    var deferred = Q.defer<any>();
+	
+	var accessToken = await getAuthorizationToken(SPN);
+    var headers = {
+        authorization: 'Bearer '+ accessToken
+    };
+	
+	var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
+    var configUrl = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
+             '/providers/Microsoft.Web/sites/' + webAppName + slotUrl +  '/config/appsettings/list?' + azureApiVersion;
+	
+	tl.debug('Requesting for the Current List of App Settings: ' + configUrl);
+
+	httpObj.send('POST', configUrl, null, headers, (error, response, body) =>{
+		if(error){
+			deferred.reject(error);
+		}
+		else if(response.statusCode === 200) {
+							
+							/*var tempObj = JSON.parse(body);
+							obj[0] = tempObj;*/
+							obj[0]=JSON.parse(body);
+							deferred.resolve(JSON.parse(body));
+		}
+		else {
+			tl.error(response.statusMessage);
+			deferred.reject(tl.loc('UnabletoretrieveAzureRMWebAppAppSettings', response.statusCode, response.statusMessage));
+		}
+	})
+	
+	return deferred.promise;
+}
+
+export async function updateWebAppAppSettings(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string, obj: Object) {
+	if(!deployToSlotFlag) {
+       var requestURL = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\' AND name EQ \'' + 
+                          webAppName + '\'&api-version=2016-07-01';
+        var accessToken = await getAuthorizationToken(SPN);
+        var headers = {
+            authorization: 'Bearer '+ accessToken
+        };
+        var webAppID = await getAzureRMWebAppID(SPN, webAppName, requestURL, headers);
+        tl.debug('Web App details : ' + webAppID.id);
+        resourceGroupName = webAppID.id.split ('/')[4];
+        tl.debug('AzureRM Resource Group Name : ' + resourceGroupName);
+    }
+
+    var deferred = Q.defer<any>();
+	
+	var accessToken = await getAuthorizationToken(SPN);
+    var headers = {
+        authorization: 'Bearer '+ accessToken
+    };
+	
+	var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
+    var configUrl = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
+             '/providers/Microsoft.Web/sites/' + webAppName + slotUrl +  '/config/appsettings?' + azureApiVersion;
+	
+	tl.debug('Updating the Current List of App Settings: ' + configUrl);
+	
+	restObj._sendJson('PUT', configUrl, "", obj, headers, null, (error, response, body) =>{
+								if(error){
+									deferred.reject(error);
+								}
+								else if(response === 200){
+									deferred.resolve(obj);
+								}
+								else {
+									tl.error(error);
+									deferred.reject(tl.loc('UnabletoupdateAzureRMWebAppAppSettings', response, error));
+								}
+							});
+							
+							return deferred.promise;
+							
 }

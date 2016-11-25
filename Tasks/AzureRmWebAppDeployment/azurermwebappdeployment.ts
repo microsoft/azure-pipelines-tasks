@@ -29,6 +29,7 @@ async function run() {
         var removeAdditionalFilesFlag: boolean = tl.getBoolInput('RemoveAdditionalFilesFlag', false);
         var excludeFilesFromAppDataFlag: boolean = tl.getBoolInput('ExcludeFilesFromAppDataFlag', false);
         var takeAppOfflineFlag: boolean = tl.getBoolInput('TakeAppOfflineFlag', false);
+		var renameFilesFlag: boolean = tl.getBoolInput('RenameFilesFlag', false);
         var additionalArguments: string = tl.getInput('AdditionalArguments', false);
         var webAppUri:string = tl.getInput('WebAppUri', false);
         var xmlTransformsAndVariableSubstitutions = tl.getBoolInput('XmlTransformsAndVariableSubstitutions', false);
@@ -37,7 +38,7 @@ async function run() {
         var jsonVariableSubsFiles = tl.getDelimitedInput('JSONVariableSubstitutions', '\n', false);
         var variableSubstitution: boolean = tl.getBoolInput('VariableSubstitution', false);
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
-
+		
         var isDeploymentSuccess: boolean = true;
         var deploymentErrorMessage: string;
 
@@ -99,6 +100,14 @@ async function run() {
         if(webAppUri) {
             tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
         }
+		
+		if(renameFilesFlag){
+			var obj = [];
+			await azureRESTUtility.getWebAppAppSettings(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, obj);
+			obj[0].properties.MSDEPLOY_RENAME_LOCKED_FILES='1';
+			await azureRESTUtility.updateWebAppAppSettings(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, obj[0]);
+		}
+		
         if(utility.canUseWebDeploy(useWebDeploy)) {
             if(!tl.osType().match(/^Win/)){
                 throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
