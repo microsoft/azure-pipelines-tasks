@@ -46,6 +46,7 @@ export class WinRMHttpsListener {
                 if (vm["storageProfile"]["osDisk"]["osType"] === 'Windows') {
                     await this.AddAzureVMCustomScriptExtension(resourceId, resourceName, resourceFQDN, vm["location"]);
                 }
+                console.log("Here 2");
             }
             await this.AddWinRMHttpsNetworkSecurityRuleConfig();
             deferred.resolve(null);
@@ -345,6 +346,7 @@ export class WinRMHttpsListener {
         }
         catch (exception) {
             deferred.reject(exception);
+            
             throw tl.loc("FailedToAddRuleToNetworkSecurityGroup", securityGrpName);
         }
         return deferred.promise;
@@ -485,7 +487,7 @@ export class WinRMHttpsListener {
                 if (extension["name"] === extensionName) {
                     for (var j = 0; j < extension["substatuses"]; j++) {
                         var substatus = extension["substatuses"][j];
-                        if (substatus["code"].include("ComponentStatus/StdErr") && !!substatus["message"] && substatus["message"] != "") {
+                        if (substatus["code"].indexOf("ComponentStatus/StdErr") >= 0 && !!substatus["message"] && substatus["message"] != "") {
                             invalidExecutionStatus = true;
                             break;
                         }
