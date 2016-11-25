@@ -19,17 +19,12 @@ Import-Module $PSScriptRoot\ps_modules\TaskModuleSqlUtility
 
 Try
 {
-    $connectionString = Escape-SpecialChars -str $connectionString
-    $sqlPassword = Escape-SpecialChars -str $sqlPassword
-    $additionalArguments = Escape-SpecialChars -str $additionalArguments
-    $databaseName = Escape-SpecialChars -str $databaseName
     $serverName = "localhost"
     if ($taskType -ne "dacpac")
     {
         $additionalArguments = $additionalArgumentsSql
         $targetMethod = "server"
     }
-    $additionalArguments = Escape-SpecialChars -str $additionalArguments
 
     if($sqlUsername -and $sqlPassword)
     {
@@ -43,6 +38,10 @@ Try
     }
     else
     {
+        $connectionString = Escape-SpecialChars -str $connectionString
+        $sqlPassword = Escape-SpecialChars -str $sqlPassword
+        $additionalArguments = Escape-SpecialChars -str $additionalArguments
+        $databaseName = Escape-SpecialChars -str $databaseName
         Execute-SqlQueryDeployment -taskType $taskType -sqlFile $sqlFile -inlineSql $inlineSql -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
     }
 
