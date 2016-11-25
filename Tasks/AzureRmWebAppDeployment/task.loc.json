@@ -13,10 +13,15 @@
   "version": {
     "Major": 2,
     "Minor": 1,
-    "Patch": 8
+    "Patch": 9
   },
-  "minimumAgentVersion": "1.102.0",
+  "minimumAgentVersion": "2.104.1",
   "groups": [
+    {
+      "name": "FileTransformsAndVariableSubstitution",
+      "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
+      "isExpanded": false
+    },
     {
       "name": "AdditionalDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
@@ -162,6 +167,55 @@
       "required": false,
       "groupName": "AdditionalDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
+    },
+    {
+      "name": "XmlTransformsAndVariableSubstitutions",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.XmlTransformsAndVariableSubstitutions",
+      "required": false,
+      "defaultValue": false,
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": "ms-resource:loc.input.help.XmlTransformsAndVariableSubstitutions"
+    },
+    {
+      "name": "XdtTransformation",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.XdtTransformation",
+      "required": false,
+      "defaultValue": false,
+      "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": "ms-resource:loc.input.help.XdtTransformation"
+    },
+    {
+      "name": "VariableSubstitution",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.VariableSubstitution",
+      "required": false,
+      "defaultValue": false,
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
+      "helpMarkDown": "ms-resource:loc.input.help.VariableSubstitution"
+    },
+    {
+      "name": "JSONVariableSubstitutionsFlag",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.JSONVariableSubstitutionsFlag",
+      "required": false,
+      "defaultValue": false,
+      "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": "ms-resource:loc.input.help.JSONVariableSubstitutionsFlag"
+    },
+    {
+      "name": "JSONVariableSubstitutions",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.JSONVariableSubstitutions",
+      "required": false,
+      "defaultValue": "",
+      "visibleRule": "JSONVariableSubstitutionsFlag == true",
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": "ms-resource:loc.input.help.JSONVariableSubstitutions"
     }
   ],
   "dataSourceBindings": [
@@ -201,6 +255,7 @@
     "GotconnectiondetailsforazureRMWebApp0": "ms-resource:loc.messages.GotconnectiondetailsforazureRMWebApp0",
     "ErrorNoSuchDeployingMethodExists": "ms-resource:loc.messages.ErrorNoSuchDeployingMethodExists",
     "UnabletoretrieveconnectiondetailsforazureRMWebApp": "ms-resource:loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp",
+    "CouldnotfetchacccesstokenforAzure.StatusCode": "ms-resource:loc.messages.CouldnotfetchacccesstokenforAzure.StatusCode",
     "UnabletoretrieveWebAppID": "ms-resource:loc.messages.UnabletoretrieveWebAppID",
     "Successfullyupdateddeploymenthistory": "ms-resource:loc.messages.Successfullyupdateddeploymenthistory",
     "Failedtoupdatedeploymenthistory": "ms-resource:loc.messages.Failedtoupdatedeploymenthistory",

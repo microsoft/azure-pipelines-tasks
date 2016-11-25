@@ -41,13 +41,14 @@ async function run() {
         var isDeploymentSuccess: boolean = true;
         var deploymentErrorMessage: string;
 
-        var SPN = new Array();
-        SPN["servicePrincipalClientID"] = endPointAuthCreds.parameters["serviceprincipalid"];
-        SPN["servicePrincipalKey"] = endPointAuthCreds.parameters["serviceprincipalkey"];
-        SPN["tenantID"] = endPointAuthCreds.parameters["tenantid"];
-        SPN["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
+        var endPoint = new Array();
+        endPoint["servicePrincipalClientID"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'serviceprincipalid', true);
+        endPoint["servicePrincipalKey"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'serviceprincipalkey', true);
+        endPoint["tenantID"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'tenantid', true);
+        endPoint["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
+        endPoint["url"] = tl.getEndpointUrl(connectedServiceName, true);
 
-        var publishingProfile = await azureRESTUtility.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+        var publishingProfile = await azureRESTUtility.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
         tl._writeLine(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
 
         var availableWebPackages = utility.findfiles(webDeployPkg);
@@ -110,7 +111,7 @@ async function run() {
                             additionalArguments, isFolderBasedDeployment, useWebDeploy);
         } else {
             tl.debug(tl.loc("Initiateddeploymentviakuduserviceforwebapppackage", webDeployPkg));
-            var azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+            var azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
             await DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment, takeAppOfflineFlag);
 
         }

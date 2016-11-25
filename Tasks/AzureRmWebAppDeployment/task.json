@@ -13,10 +13,15 @@
     "version": {
         "Major": 2,
         "Minor": 1,
-        "Patch": 8
+        "Patch": 9
     },
-    "minimumAgentVersion": "1.102.0",
+    "minimumAgentVersion": "2.104.1",
     "groups": [
+        {
+            "name": "FileTransformsAndVariableSubstitution",
+            "displayName": "File Transforms and Variable Substitutions",
+            "isExpanded": false
+        },
         {
             "name": "AdditionalDeploymentOptions",
             "displayName": "Additional Deployment Options",
@@ -162,6 +167,55 @@
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
             "helpMarkDown": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully."
+        },
+        {
+            "name": "XmlTransformsAndVariableSubstitutions",
+            "type": "boolean",
+            "label": "XML Transforms & Variable Substitutions",
+            "required": false,
+            "defaultValue": false,
+            "groupName": "FileTransformsAndVariableSubstitution",
+            "helpMarkDown": "Select to enable xml transforms"
+        },
+        {
+            "name": "XdtTransformation",
+            "type": "boolean",
+            "label": "Transformation",
+            "required": false,
+            "defaultValue": false,
+            "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
+            "groupName": "FileTransformsAndVariableSubstitution",
+            "helpMarkDown": "The config transfoms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`. Config transforms will be run prior to the Variable Substitution." 
+        },
+        {
+            "name": "VariableSubstitution",
+            "type": "boolean",
+            "label": "Variable Substitution",
+            "required": false,
+            "defaultValue": false,
+            "groupName": "FileTransformsAndVariableSubstitution",
+            "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
+            "helpMarkDown": "Variables defined in the Build or Release Definition will be automatically substituted in the appSettings, applicationSettings, and connectionStrings section of the config files. If same variables are defined in the Release Definition and in the Environment, then the Environment variables will supersede the Release Definition variables. Variable Substitution is run after Config Transforms."
+        },
+        {
+            "name": "JSONVariableSubstitutionsFlag",
+            "type": "boolean",
+            "label": "JSON Variable Substitutions",
+            "required": false,
+            "defaultValue": false,
+            "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
+            "groupName": "FileTransformsAndVariableSubstitution",
+            "helpMarkDown": "Enable this option for JSON variable Substitution"
+        },
+        {
+            "name": "JSONVariableSubstitutions",
+            "type": "multiLine",
+            "label": "Variable Substitution",
+            "required": false,
+            "defaultValue": "",
+            "visibleRule": "JSONVariableSubstitutionsFlag == true",
+            "groupName": "FileTransformsAndVariableSubstitution",
+            "helpMarkDown": "Provide a line separated list of JSON files for substituting variables in them. The files names are relative to the root folder. For substituting JSON variables that are in a hierarchy, specify them using the format Data.DefaultConnection.ConnectionString in the Environment/Definition variable. If same variables are defined in the Definition and Environment, then the Environment variables will supersede the Definition variables. Variable Substitution is run after Config Transforms. Build/Release/System defintion variables are eliminated in substitution."
         }
     ],
     "dataSourceBindings": [
@@ -201,6 +255,7 @@
         "GotconnectiondetailsforazureRMWebApp0": "Got connection details for azureRM WebApp:'%s'",
         "ErrorNoSuchDeployingMethodExists": "Error : No Such Deploying Method Exists",
         "UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve connectiondetails for azureRM WebApp : %s. Status Code: %s (%s)",
+        "CouldnotfetchacccesstokenforAzure.StatusCode": "Could not fetch acccess token for Azure. Status Code: %s (%s)",
         "UnabletoretrieveWebAppID": "Unable to retrieve connection details for azureRM WebApp:'%s'. Status Code: %s",
         "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
         "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
