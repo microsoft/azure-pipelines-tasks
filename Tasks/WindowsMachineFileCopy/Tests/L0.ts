@@ -29,12 +29,12 @@ describe('WindowsMachineFileCopy Suite', function () {
     });
 
     if(ps) {
-        it('Throw error if Source Path is invalid', (done) => {
-            psr.run(path.join(__dirname, 'L0InvalidSourcePath.ps1'), done);
+        it('Throw error if Source Path is invalid or empty', (done) => {
+            psr.run(path.join(__dirname, 'L0ValidateSourcePath.ps1'), done);
         });
 
-        it('Throw error if Destination Path is invalid', (done) => {
-            psr.run(path.join(__dirname, 'L0InvalidDestinationPath.ps1'), done);
+        it('Throw error if Destination Path is invalid or empty', (done) => {
+            psr.run(path.join(__dirname, 'L0ValidateDestinationPath.ps1'), done);
         });
 
         it('Should copy on local machine when no machine name is given', (done) => {

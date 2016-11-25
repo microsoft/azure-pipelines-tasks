@@ -3,6 +3,16 @@ param()
 
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 . $PSScriptRoot\MockVariable.ps1 -Force
-. $PSScriptRoot\MockHelper.ps1 -Force
 
-& "$copyFilesToMachinesPath" -environmentName "" -sourcePath $validSourcePackage -targetPath $validApplicationPath -cleanTargetBeforeCopy $true -copyFilesInParallel $false -adminUserName $userName -adminPassword $password
+. $PSScriptRoot\..\Utility.ps1
+. $PSScriptRoot\..\WindowsMachineFileCopyJob.ps1
+
+Register-Mock Invoke-Command { }
+
+Copy-OnLocalMachine -sourcePath $validSourcePackage -targetPath $validApplicationPath -adminUserName $userName -adminPassword $password `
+                    -cleanTargetBeforeCopy $true -additionalArguments ""
+
+Assert-WasCalled Invoke-Command -Times 1 -ParametersEvaluator {
+    $ScriptBlock -eq $CopyJob -and $ArgumentList -contains $validSourcePackage -and $ArgumentList -contains $validApplicationPath -and `
+    $ArgumentList -contains $true
+}
