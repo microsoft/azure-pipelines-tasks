@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 5
+        "Patch": 6
     },
     "groups": [
         {
@@ -76,6 +76,19 @@
             "helpMarkDown": "Specify job parameters, one per line, in the form <b>`<parameterName>=<parameterValue>`</b><p>To set a parameter to an empty value (useful for overriding a default value), leave off the parameter value. For example, specify <b>`<parameterName>=`</b><p>Variables are supported. For example, to set a <b>`commitId`</b> parameter value to the Git commit ID of the build, use: <b>`commitId=$(Build.SourceVersion)`</b>. See the [documentation on variables](https://www.visualstudio.com/docs/build/define/variables) for more details.<p>Supported Jenkins parameter types are: <ul><li>`Boolean`</li><li>`Choice`</li><li>`Password`</li><li>`String`</li></ul>",
             "groupName": "advanced",
             "visibleRule": "parameterizedJob = true",
+            "properties": {
+                "resizable": "true",
+                "rows": "4"
+            }
+        },
+        {
+            "name": "addLinks",
+            "type": "multiLine",
+            "label": "Job Links",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Specify additional links to be published in the Jenkins result section of the build summary page. E.g. links to the additional reports. Links are relative to the jobUrl",
+            "groupName": "advanced",
             "properties": {
                 "resizable": "true",
                 "rows": "4"

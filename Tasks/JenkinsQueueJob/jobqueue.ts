@@ -80,7 +80,7 @@ export class JobQueue {
         var running = [];
         for (var i in this.allJobs) {
             var job = this.allJobs[i];
-            if (job.state == JobState.Streaming || job.state==JobState.Downloading || job.state == JobState.Finishing) {
+            if (job.state == JobState.Streaming || job.state==JobState.Downloading || job.state == JobState.Finishing || job.state == JobState.TestResults) {
                 running.push(job);
             }
         }
@@ -193,11 +193,17 @@ export class JobQueue {
 
             // if this job was joined to another follow that one instead
             job = findWorkingJob(job);
-            
+
+            //publish test Results
+            let tp = new tl.TestPublisher("VSTest");
+            tp.publish(job.testResults,true,"","",job.name,true);
+
             if (job.executableNumber == -1) {
                 jobContents += indent + job.name + ' ' + job.getResultString() + '<br>\n';
             } else {
                 jobContents += indent + '[' + job.name + ' #' + job.executableNumber + '](' + job.executableUrl + ') ' + job.getResultString() + '<br>\n';
+                thisQueue.taskOptions.additionalLinks.forEach(it => jobContents+=`[${it}](${job.executableUrl}/${it})<br>\n`)
+                jobContents+='<br>\n';
             }
 
             var childContents = "";
