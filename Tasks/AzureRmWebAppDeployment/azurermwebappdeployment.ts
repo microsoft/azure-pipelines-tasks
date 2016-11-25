@@ -12,6 +12,7 @@ var xmlSubstitutionUtility = require('webdeployment-common/xmlvariablesubstituti
 var xdtTransformationUtility = require('webdeployment-common/xdttransformationutility.js');
 
 var kuduUtility = require('./kuduutility.js');
+var armUrl = 'https://management.azure.com/';
 
 async function run() {
     try {
@@ -130,6 +131,8 @@ async function run() {
     if(!isDeploymentSuccess) {
         tl.setResult(tl.TaskResult.Failed, deploymentErrorMessage);
     }
+    tl.debug("Updating config details for Web App");
+    await updateConfigDetailsForWebApp(SPN, resourceGroupName, webAppName, deployToSlotFlag, slotName);
 }
 
 
@@ -163,6 +166,44 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
     catch(error) {
         tl.error(tl.loc('Failedtodeploywebsite'));
         throw Error(error);
+    }
+}
+
+async function updateConfigDetailsForWebApp(SPN, resourceGroupName: string, webAppName: string, deployToSlotFlag: boolean, slotName: string) {
+    try {
+
+        if(!deployToSlotFlag) {
+            var requestURL = armUrl + 'subscriptions/' + SPN["subscriptionId"] + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\' AND name EQ \'' + 
+                            webAppName + '\'&api-version=2016-07-01';
+            var accessToken = await azureRESTUtility.getAuthorizationToken(SPN);
+            var headers = {
+                authorization: 'Bearer '+ accessToken
+            };
+            var webAppID = await azureRESTUtility.getAzureRMWebAppID(SPN, webAppName, requestURL, headers);
+            tl.debug('Web App details : ' + webAppID.id);
+            resourceGroupName = webAppID.id.split ('/')[4];
+            tl.debug('AzureRM Resource Group Name : ' + resourceGroupName);
+        }
+        
+        var webAppConfigDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+        if(webAppConfigDetails.properties.scmType == "None") {
+        var webConfigBody = {
+            "properties": {
+                "scmType": "VSTSRM"
+            }
+        };
+        var metadata = await azureRESTUtility.getAzureRMWebAppMetadata(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+        if(deployToSlotFlag)
+            metadata.properties["VSTSRM_SlotName"] = webAppName + "-" + slotName;
+        else
+            metadata.properties["VSTSRM_ProdAppName"] = webAppName;
+        tl.debug("new metadata: "+JSON.stringify(metadata));
+        tl._writeLine(await azureRESTUtility.updateAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, webConfigBody));
+        tl._writeLine(await azureRESTUtility.updateAzureRMWebAppMetadata(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, metadata));
+        }
+    }
+    catch(error) {
+        tl.warning(tl.loc("FailedToUpdateConfigDetails", webAppName));
     }
 }
 

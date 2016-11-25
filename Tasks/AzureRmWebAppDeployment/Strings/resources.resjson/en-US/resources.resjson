@@ -80,5 +80,11 @@
   "loc.messages.PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "Publish using webdeploy options are supported only when using Windows agent",
   "loc.messages.WebAppDoesntExist": "Webapp '%s' doesn't exist. Webapp should exist before deployment.",
   "loc.messages.EncodeNotSupported": "Detected file encoding of the file %s as %s. Variable substitution and Transformation is not supported with file encoding %s. Supported encodings are UTF-8 and UTF-16 LE.",
-  "loc.messages.UnknownFileEncodeError": "Unable to detect encoding of the file %s. Supported encodings are UTF-8 and UTF-16 LE."
+  "loc.messages.UnknownFileEncodeError": "Unable to detect encoding of the file %s. Supported encodings are UTF-8 and UTF-16 LE.",
+  "loc.messages.FailedUpdatAzureRMWebAppMetadata": "Failed to update metadata for Web App %s: [Status code: %s]",
+  "loc.messages.SuccessfullyUpdatedAzureRMWebAppMetadata": "Successfully updated metadata for Web App %s.",
+  "loc.messages.FailedToUpdatAzureRMWebAppConfigDetails": "Failed to update config details for Web App %s: [Status code: %s]",
+  "loc.messages.SuccessfullyUpdatedAzureRMWebAppConfigDetails": "Successfully updated congif details for Web App %s.",
+  "loc.messages.UnabletoretrieveAzureRMWebAppMetadataDetails": "Failed to retrieve metadata for Web App %s. [Status code: %s]",
+  "loc.messages.FailedToUpdateConfigDetails": "Failed to update config details for Web App %s."
 }
