@@ -34,16 +34,16 @@ Try
     if($sqlUsername -and $sqlPassword)
     {
         $secureAdminPassword = "$sqlPassword" | ConvertTo-SecureString  -AsPlainText -Force
-        $sqlPSCredentails = New-Object System.Management.Automation.PSCredential ("$sqlUserName", $secureAdminPassword)
+        $sqlServerCredentials = New-Object System.Management.Automation.PSCredential ("$sqlUserName", $secureAdminPassword)
     }
 
     if ($taskType -eq "dacpac")
     {
-        Execute-DacpacDeployment -dacpacFile $dacpacFile -targetMethod $targetMethod -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlPSCredential $sqlPSCredentails -connectionString $connectionString -publishProfile $publishProfile -additionalArguments $additionalArguments
+        Execute-DacpacDeployment -dacpacFile $dacpacFile -targetMethod $targetMethod -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -connectionString $connectionString -publishProfile $publishProfile -additionalArguments $additionalArguments
     }
     else
     {
-        Execute-SqlQueryDeployment -taskType $taskType -sqlFile $sqlFile -inlineSql $inlineSql -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlPSCredential $sqlPSCredentails -additionalArguments $additionalArguments
+        Execute-SqlQueryDeployment -taskType $taskType -sqlFile $sqlFile -inlineSql $inlineSql -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
     }
 
 }
