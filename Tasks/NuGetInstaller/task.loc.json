@@ -9,8 +9,12 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 22
+    "Patch": 25
   },
+  "runsOn": [
+    "Agent",
+    "MachineGroup"
+  ],
   "minimumAgentVersion": "1.83.0",
   "groups": [
     {
@@ -111,7 +115,6 @@
     }
   },
   "messages": {
-    "Warning_NoConfigForOldNuGet": "ms-resource:loc.messages.Warning_NoConfigForOldNuGet",
     "Warning_NoConfigForNoCredentialProvider": "ms-resource:loc.messages.Warning_NoConfigForNoCredentialProvider",
     "Warning_ConflictingNuGetPreference": "ms-resource:loc.messages.Warning_ConflictingNuGetPreference",
     "PackagesInstalledSuccessfully": "ms-resource:loc.messages.PackagesInstalledSuccessfully",

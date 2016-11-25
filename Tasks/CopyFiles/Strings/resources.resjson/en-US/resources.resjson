@@ -14,8 +14,11 @@
   "loc.input.help.CleanTargetFolder": "Delete all existing files in target folder before copy",
   "loc.input.label.OverWrite": "Overwrite",
   "loc.input.help.OverWrite": "Replace existing file in target folder",
+  "loc.input.label.flattenFolders": "Flatten Folders",
+  "loc.input.help.flattenFolders": "Flatten the folder structure and copy all files into the specified target folder.",
   "loc.messages.FoundNFiles": "found %d files",
   "loc.messages.CleaningTargetFolder": "Cleaning target folder: %s",
   "loc.messages.FileAlreadyExistAt": "File %s already exist at %s",
-  "loc.messages.CopyingTo": "Copying %s to %s"
+  "loc.messages.CopyingTo": "Copying %s to %s",
+  "loc.messages.TargetIsDir": "Unable to copy file %s to %s. The target path already exists as a directory."
 }

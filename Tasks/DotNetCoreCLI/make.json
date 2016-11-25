@@ -1,0 +1,17 @@
+{
+    "common": [
+        {
+            "module": "../Common/find-files-legacy",
+            "type": "node",
+            "compile": true
+        }
+    ],
+    "rm": [
+        {
+            "items": [
+                "node_modules/find-files-legacy/node_modules/vsts-task-lib"
+            ],
+            "options": "-Rf"
+        }
+    ]
+}

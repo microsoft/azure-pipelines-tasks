@@ -1,7 +1,6 @@
 /// <reference path="../../../definitions/mocha.d.ts"/>
 /// <reference path="../../../definitions/node.d.ts"/>
 /// <reference path="../../../definitions/Q.d.ts"/>
-/// <reference path="../../../definitions/node-uuid.d.ts"/>
 
 import Q = require('q');
 import assert = require('assert');
@@ -12,46 +11,13 @@ import os = require('os');
 import mockHelper = require('../../lib/mockHelper');
 import fs = require('fs');
 import shell = require('shelljs');
-import uuid = require('node-uuid');
+
 var ps = shell.which('powershell.exe');
 var psr = null;
-const tmpFileName = path.join(os.tmpdir(), uuid.v1() + ".json");
-const testDllPath = path.join(__dirname, "data", "testDlls");
 const sysVstestLocation = "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe";
 
-function setResponseFile(name: string, vstestCmd?: string, isPass?: boolean) {
-    let fileName = path.join(__dirname, name);
-    if (typeof vstestCmd !== "undefined") {
-        if (typeof isPass === "undefined") {
-            isPass = true;
-        }
-        let fileContent: string = fs.readFileSync(fileName, 'utf8');
-        let fileJson = JSON.parse(fileContent);
-        let errCode: number = isPass ? 0 : 1;
-        let stdErr: string = isPass ? "" : "Error string";
-
-        fileJson.exec[vstestCmd] = { "code": errCode, "stdout": "vstest", "stderr": stdErr };
-        fs.writeFileSync(tmpFileName, JSON.stringify(fileJson));
-        fileName = tmpFileName;
-    }
-    process.env['MOCK_RESPONSES'] = fileName;
-}
-
-function posixFormat(p: string): string {
-    let path_regex = /\/\//;
-    p = p.replace(/\\/g, '/');
-    while (p.match(path_regex)) {
-        p = p.replace(path_regex, '/');
-    }
-    return p;
-}
-
-function getTestDllString(testDlls: string[]): string {
-    let dllString: string = "";
-    testDlls.forEach(function (part, index) {
-        testDlls[index] = posixFormat(path.join(testDllPath, testDlls[index]));
-    });
-    return testDlls.join(" ");
+function setResponseFile(name: string) {
+    process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
 }
 
 describe('VsTest Suite', function () {
@@ -62,17 +28,11 @@ describe('VsTest Suite', function () {
             psr = new psm.PSRunner();
             psr.start();
         }
-
         done();
     });
 
     after(function () {
         psr.kill();
-        fs.unlink(tmpFileName, function (err) {
-            if (err) {
-                console.log("Error encountered deleting temp file: " + err);
-            }
-        });
     });
 
     if (ps) {
@@ -163,6 +123,14 @@ describe('VsTest Suite', function () {
         it('(TestResultsDirectoryVariableIsUsedIfOverrideParamsAreUsed) vstest invoked with  default test results directory if override run parameters is used', (done) => {
             psr.run(path.join(__dirname, 'TestResultsDirectoryVariableIsUsedIfOverrideParamsAreUsed.ps1'), done);
         })
+
+        it('Latest option chosen with VS 15 Willow installed', (done) => {
+            psr.run(path.join(__dirname, 'LatestSelectedwithVS15Installed.ps1'), done);
+        })
+
+        it('v14 option chosen with VS 15 Willow installed', (done) => {
+            psr.run(path.join(__dirname, 'V14SelectedwithVS15Installed.ps1'), done);
+        })
     }
 
     if (!os.type().match(/^Win/)) {
@@ -188,15 +156,11 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with test results files filter', (done) => {
 
-        let filePattern = getTestDllString(["testAssembly1.dll", "testAssembly2.dll"]);
-        let vstestCmd = [sysVstestLocation, filePattern, "/logger:trx"].join(" ");
-
-        setResponseFile('vstestGood.json', vstestCmd);
+        let vstestCmd = [sysVstestLocation, "/source/dir/someFile2 /source/dir/someFile1", "/logger:trx"].join(" ");
+        setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        let assemblyPattern = path.join(__dirname, "data", "testDlls", "*.dll");
-
-        tr.setInput('testAssembly', assemblyPattern);
+        tr.setInput('testAssemblyVer2', '/source/dir/some/*pattern');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
 
@@ -216,15 +180,11 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with test results files filter and exclude filter', (done) => {
 
-        let filePattern = getTestDllString(["testAssembly1.dll"]);
-        let vstestCmd = [sysVstestLocation, filePattern, "/logger:trx"].join(" ");
-
-        setResponseFile('vstestGood.json', vstestCmd);
+        let vstestCmd = [sysVstestLocation, "/source/dir/someFile1", "/logger:trx"].join(" ");
+        setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        let assemblyPattern = path.join(__dirname, "data", "testDlls", "*1.dll") + ";-:" + path.join(__dirname, "data", "testDlls", "*2.dll");
-
-        tr.setInput('testAssembly', assemblyPattern);
+        tr.setInput('testAssemblyVer2', '/source/dir/some/*pattern\n!/source/dir/some/*excludePattern');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
 
@@ -244,13 +204,11 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with test results files as path', (done) => {
 
-        let filePattern = getTestDllString(["testAssembly1.dll"]);
-        let vstestCmd = [sysVstestLocation, filePattern, "/logger:trx"].join(" ");
-
-        setResponseFile('vstestGood.json', vstestCmd);
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx"].join(" ");
+        setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testAssembly', filePattern);
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
 
@@ -270,15 +228,11 @@ describe('VsTest Suite', function () {
 
     it('Vstest task when vstest fails', (done) => {
 
-        let filePattern = getTestDllString(["testAssembly1.dll", "testAssembly2.dll"]);
-        let vstestCmd = [sysVstestLocation, filePattern, "/logger:trx"].join(" ");
-
-        setResponseFile('vstestFails.json', vstestCmd, false);
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile2 /source/dir/someFile1', "/logger:trx"].join(" ");
+        setResponseFile('vstestFails.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        let assemblyPattern = path.join(__dirname, "data", "testDlls", "*.dll");
-
-        tr.setInput('testAssembly', assemblyPattern);
+        tr.setInput('testAssemblyVer2', '/source/dir/some/*pattern');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
 
@@ -298,15 +252,11 @@ describe('VsTest Suite', function () {
 
     it('Vstest task when vstest of specified version is not found', (done) => {
 
-        let filePattern = getTestDllString(["testAssembly1.dll"]);
-        let vstestCmd = [sysVstestLocation, filePattern, "/logger:trx"].join(" ");
-
-        setResponseFile('vstestFails.json', vstestCmd, false); // this response file does not have vs 2013
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx"].join(" ");
+        setResponseFile('vstestFails.json'); // this response file does not have vs 2013
 
         let tr = new trm.TaskRunner('VSTest');
-        let assemblyPattern = path.join(__dirname, "data", "testDlls", "*1.dll");
-
-        tr.setInput('testAssembly', assemblyPattern);
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '12.0');
 
@@ -327,15 +277,11 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with test case filter', (done) => {
 
-        let filePattern = getTestDllString(["testAssembly1.dll"]);
-        let vstestCmd = [sysVstestLocation, filePattern, "/TestCaseFilter:testFilter", "/logger:trx"].join(" ");
-
-        setResponseFile('vstestGood.json', vstestCmd);
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/TestCaseFilter:testFilter", "/logger:trx"].join(" ");
+        setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        let assemblyPattern = path.join(__dirname, "data", "testDlls", "*1.dll");
-
-        tr.setInput('testAssembly', assemblyPattern);
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('testFiltercriteria', 'testFilter');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
@@ -355,15 +301,12 @@ describe('VsTest Suite', function () {
     })
 
     it('Vstest task with enable code coverage', (done) => {
-        let filePattern = getTestDllString(["testAssembly1.dll"]);
-        let vstestCmd = [sysVstestLocation, filePattern, "/EnableCodeCoverage", "/logger:trx"].join(" ");
 
-        setResponseFile('vstestGood.json', vstestCmd);
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/EnableCodeCoverage", "/logger:trx"].join(" ");
+        setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        let assemblyPattern = path.join(__dirname, "data", "testDlls", "*1.dll");
-
-        tr.setInput('testAssembly', assemblyPattern);
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('codeCoverageEnabled', 'true');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
@@ -384,15 +327,11 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with other console options', (done) => {
 
-        let filePattern = getTestDllString(["testAssembly1.dll"]);
-        let vstestCmd = [sysVstestLocation, filePattern, "consoleOptions", "/logger:trx"].join(" ");
-
-        setResponseFile('vstestGood.json', vstestCmd);
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "consoleOptions", "/logger:trx"].join(" ");
+        setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        let assemblyPattern = path.join(__dirname, "data", "testDlls", "*1.dll");
-
-        tr.setInput('testAssembly', assemblyPattern);
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('otherConsoleOptions', 'consoleOptions');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
@@ -413,15 +352,11 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with settings file', (done) => {
 
-        let filePattern = getTestDllString(["testAssembly1.dll"]);
-        let vstestCmd = [sysVstestLocation, filePattern, "/Settings:settings.runsettings", "/logger:trx"].join(" ");
-
-        setResponseFile('vstestGood.json', vstestCmd);
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/Settings:settings.runsettings", "/logger:trx"].join(" ");
+        setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        let assemblyPattern = path.join(__dirname, "data", "testDlls", "*1.dll");
-
-        tr.setInput('testAssembly', assemblyPattern);
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
         tr.setInput('runSettingsFile', "settings.runsettings");
@@ -442,15 +377,11 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with run in parallel and vs 2013', (done) => {
 
-        let filePattern = getTestDllString(["testAssembly1.dll"]);
-        let vstestCmd = [sysVstestLocation, filePattern, "/logger:trx"].join(" ");
-
-        setResponseFile('vstestGood.json', vstestCmd);
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx"].join(" ");
+        setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        let assemblyPattern = path.join(__dirname, "data", "testDlls", "*1.dll");
-
-        tr.setInput('testAssembly', assemblyPattern);
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '12.0');
         tr.setInput('runInParallel', 'true');
@@ -472,15 +403,11 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with run in parallel and vs 2014 below update1', (done) => {
 
-        let filePattern = getTestDllString(["testAssembly1.dll"]);
-        let vstestCmd = [sysVstestLocation, filePattern, "/logger:trx"].join(" ");
-
-        setResponseFile('vstestGood.json', vstestCmd);
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx"].join(" ");
+        setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        let assemblyPattern = path.join(__dirname, "data", "testDlls", "*1.dll");
-
-        tr.setInput('testAssembly', assemblyPattern);
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0'); // response file sets below update1
         tr.setInput('runInParallel', 'true');
@@ -502,15 +429,11 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with run in parallel and vs 2015', (done) => {
 
-        let filePattern = getTestDllString(["testAssembly1.dll"]);
-        let vstestCmd = [sysVstestLocation, filePattern, "/logger:trx"].join(" ");
-
-        setResponseFile('vstestGood.json', vstestCmd);
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx"].join(" ");
+        setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        let assemblyPattern = path.join(__dirname, "data", "testDlls", "*1.dll");
-
-        tr.setInput('testAssembly', assemblyPattern);
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '15.0');
         tr.setInput('runInParallel', 'true');
@@ -532,15 +455,11 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with run in parallel and vs 2014 update1 or higher', (done) => {
 
-        let filePattern = getTestDllString(["testAssembly1.dll"]);
-        let vstestCmd = [sysVstestLocation, filePattern, "/logger:trx"].join(" ");
-
-        setResponseFile('vstestRunInParallel.json', vstestCmd);
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx"].join(" ");
+        setResponseFile('vstestRunInParallel.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        let assemblyPattern = path.join(__dirname, "data", "testDlls", "*1.dll");
-
-        tr.setInput('testAssembly', assemblyPattern);
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0'); // response file sets above update1
         tr.setInput('runInParallel', 'true');
@@ -562,15 +481,11 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with custom adapter path', (done) => {
 
-        let filePattern = getTestDllString(["testAssembly1.dll"]);
-        let vstestCmd = [sysVstestLocation, filePattern, "/logger:trx", "/TestAdapterPath:path/to/customadapters"].join(" ");
-
-        setResponseFile('vstestGood.json', vstestCmd);
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx", "/TestAdapterPath:path/to/customadapters"].join(" ");
+        setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        let assemblyPattern = path.join(__dirname, "data", "testDlls", "*1.dll");
-
-        tr.setInput('testAssembly', assemblyPattern);
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
         tr.setInput('pathtoCustomTestAdapters', "path/to/customadapters");
@@ -591,15 +506,11 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with runsettings file and tia.enabled set to false', (done) => {
 
-        let filePattern = getTestDllString(["testAssembly1.dll"]);
-        let vstestCmd = [sysVstestLocation, filePattern, "/Settings:settings.runsettings", "/logger:trx"].join(" ");
-
-        setResponseFile('vstestGoodWithTiaDisabled.json', vstestCmd);
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/Settings:settings.runsettings", "/logger:trx"].join(" ");
+        setResponseFile('vstestGoodWithTiaDisabled.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        let assemblyPattern = path.join(__dirname, "data", "testDlls", "*1.dll");
-
-        tr.setInput('testAssembly', assemblyPattern);
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
         tr.setInput('runSettingsFile', "settings.runsettings");
@@ -621,15 +532,11 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with runsettings file and tia.enabled undefined', (done) => {
 
-        let filePattern = getTestDllString(["testAssembly1.dll"]);
-        let vstestCmd = [sysVstestLocation, filePattern, "/Settings:settings.runsettings", "/logger:trx"].join(" ");
-
-        setResponseFile('vstestGood.json', vstestCmd);
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/Settings:settings.runsettings", "/logger:trx"].join(" ");
+        setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        let assemblyPattern = path.join(__dirname, "data", "testDlls", "*1.dll");
-
-        tr.setInput('testAssembly', assemblyPattern);
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
         tr.setInput('runSettingsFile', "settings.runsettings");
@@ -660,15 +567,12 @@ describe('VsTest Suite', function () {
         var newResponseFilePath: string = path.join(__dirname, 'newresponse.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
 
-        let filePattern = getTestDllString(["testAssembly1.dll"]);
-        let vstestCmd = [sysVstestLocation, filePattern, "/logger:trx"].join(" ");
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx"].join(" ");
 
-        setResponseFile(path.basename(newResponseFilePath), vstestCmd);
+        setResponseFile(path.basename(newResponseFilePath));
 
         let tr = new trm.TaskRunner('VSTest');
-        let assemblyPattern = path.join(__dirname, "data", "testDlls", "*1.dll");
-
-        tr.setInput('testAssembly', assemblyPattern);
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
         tr.setInput('runSettingsFile', settingsFilePath);
@@ -694,15 +598,11 @@ describe('VsTest Suite', function () {
         let newResponseFilePath: string = path.join(__dirname, 'newresponse.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
 
-        let filePattern = getTestDllString(["testAssembly1.dll"]);
-        let vstestCmd = [sysVstestLocation, filePattern, "/logger:trx"].join(" ");
-
-        setResponseFile(path.basename(newResponseFilePath), vstestCmd);
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx"].join(" ");
+        setResponseFile(path.basename(newResponseFilePath));
 
         let tr = new trm.TaskRunner('VSTest');
-        let assemblyPattern = path.join(__dirname, "data", "testDlls", "*1.dll");
-
-        tr.setInput('testAssembly', assemblyPattern);
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
         tr.setInput('runSettingsFile', settingsFilePath);
@@ -729,15 +629,11 @@ describe('VsTest Suite', function () {
         let newResponseFilePath: string = path.join(__dirname, 'newresponse.json');
         fs.writeFileSync(newResponseFilePath, JSON.stringify(responseJsonContent));
 
-        let filePattern = getTestDllString(["testAssembly1.dll"]);
-        let vstestCmd = [sysVstestLocation, filePattern, "/logger:trx"].join(" ");
-
-        setResponseFile(path.basename(newResponseFilePath), vstestCmd);
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx"].join(" ");
+        setResponseFile(path.basename(newResponseFilePath));
 
         let tr = new trm.TaskRunner('VSTest');
-        let assemblyPattern = path.join(__dirname, "data", "testDlls", "*1.dll");
-
-        tr.setInput('testAssembly', assemblyPattern);
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
         tr.setInput('runSettingsFile', settingsFilePath);
@@ -755,15 +651,11 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with custom vstest.console.exe path', (done) => {
 
-        let filePattern = getTestDllString(["testAssembly1.dll"]);
-        let vstestCmd = ["some\\path\\to\\vstest.console.exe", filePattern, "/logger:trx"].join(" ");
-
-        setResponseFile('vstestGood.json', vstestCmd);
+        let vstestCmd = ["some\\path\\to\\vstest.console.exe", '/source/dir/someFile1', "/logger:trx"].join(" ");
+        setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        let assemblyPattern = path.join(__dirname, "data", "testDlls", "*1.dll");
-
-        tr.setInput('testAssembly', assemblyPattern);
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'location');
         tr.setInput('vstestLocation', 'some\\path\\to\\vstest.console.exe');
         tr.setInput('vsTestVersion', '14.0');
@@ -781,15 +673,11 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with custom vstest.console.exe path should throw on illegal path', (done) => {
 
-        let filePattern = getTestDllString(["testAssembly1.dll"]);
-        let vstestCmd = ["some\\illegal\\path\\to\\vstest.console.exe", filePattern, "/logger:trx"].join(" ");
-
-        setResponseFile('vstestGood.json', vstestCmd);
+        let vstestCmd = ["some\\illegal\\path\\to\\vstest.console.exe", '/source/dir/someFile1', "/logger:trx"].join(" ");
+        setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        let assemblyPattern = path.join(__dirname, "data", "testDlls", "*1.dll");
-
-        tr.setInput('testAssembly', assemblyPattern);
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'location');
         tr.setInput('vstestLocation', 'some\\illegal\\path\\to\\vstest.console.exe');
         tr.setInput('vsTestVersion', '14.0');
@@ -805,15 +693,11 @@ describe('VsTest Suite', function () {
 
     it('Vstest task specifying vstest.console directory in vstest location', (done) => {
 
-        let filePattern = getTestDllString(["testAssembly1.dll"]);
-        let vstestCmd = ["\\path\\to\\vstest\\directory\\vstest.console.exe", filePattern, "/logger:trx"].join(" ");
-
-        setResponseFile('vstestGood.json', vstestCmd);
+        let vstestCmd = ["\\path\\to\\vstest\\directory\\vstest.console.exe", '/source/dir/someFile1', "/logger:trx"].join(" ");
+        setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        let assemblyPattern = path.join(__dirname, "data", "testDlls", "*1.dll");
-
-        tr.setInput('testAssembly', assemblyPattern);
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'location');
         tr.setInput('vstestLocation', '\\path\\to\\vstest\\directory');
         tr.setInput('vsTestVersion', '14.0');
@@ -831,15 +715,11 @@ describe('VsTest Suite', function () {
 
     it('Vstest task should not use diag option when system.debug is not set', (done) => {
 
-        let filePattern = getTestDllString(["testAssembly1.dll"]);
-        let vstestCmd = ["\\path\\to\\vstest\\directory\\vstest.console.exe", filePattern, "/logger:trx"].join(" ");
-
-        setResponseFile('vstestGood.json', vstestCmd);
+        let vstestCmd = ["\\path\\to\\vstest\\directory\\vstest.console.exe", '/source/dir/someFile1', "/logger:trx"].join(" ");
+        setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        let assemblyPattern = path.join(__dirname, "data", "testDlls", "*1.dll");
-
-        tr.setInput('testAssembly', assemblyPattern);
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'location');
         tr.setInput('vstestLocation', '\\path\\to\\vstest\\directory');
         tr.setInput('vsTestVersion', '14.0');
@@ -858,15 +738,11 @@ describe('VsTest Suite', function () {
 
     it('Vstest task should not use diag option when system.debug is set to false', (done) => {
 
-        let filePattern = getTestDllString(["testAssembly1.dll"]);
-        let vstestCmd = ["\\path\\to\\vstest\\directory\\vstest.console.exe", filePattern, "/logger:trx"].join(" ");
-
-        setResponseFile('vstestGoodSysDebugFalse.json', vstestCmd);
+        let vstestCmd = ["\\path\\to\\vstest\\directory\\vstest.console.exe", '/source/dir/someFile1', "/logger:trx"].join(" ");
+        setResponseFile('vstestGoodSysDebugFalse.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        let assemblyPattern = path.join(__dirname, "data", "testDlls", "*1.dll");
-
-        tr.setInput('testAssembly', assemblyPattern);
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'location');
         tr.setInput('vstestLocation', '\\path\\to\\vstest\\directory');
         tr.setInput('vsTestVersion', '14.0');
@@ -885,15 +761,11 @@ describe('VsTest Suite', function () {
 
     it('Vstest task verify test results are dropped at correct location in case of release', (done) => {
 
-        let filePattern = getTestDllString(["testAssembly1.dll"]);
-        let vstestCmd = [sysVstestLocation, filePattern, "/logger:trx"].join(" ");
-
-        setResponseFile('vstestRM.json', vstestCmd);
+        let vstestCmd = [sysVstestLocation, '/artifacts/dir/someFile1', "/logger:trx"].join(" ");
+        setResponseFile('vstestRM.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        let assemblyPattern = path.join(__dirname, "data", "testDlls", "*1.dll");
-
-        tr.setInput('testAssembly', assemblyPattern);
+        tr.setInput('testAssemblyVer2', '/artifacts/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0');
 
@@ -909,5 +781,28 @@ describe('VsTest Suite', function () {
             .fail((err) => {
                 done(err);
             });
-    })
+    });
+
+    it('Vstest task with serach directory input', (done) => {
+
+        let vstestCmd = [sysVstestLocation, '/search/dir/someFile1', "/logger:trx"].join(" ");
+        setResponseFile('vstestGood.json');
+
+        let tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testAssemblyVer2', '/search/dir/someFile1');
+        tr.setInput('vstestLocationMethod', 'version');
+        tr.setInput('vsTestVersion', '14.0');
+        tr.setInput('searchDirectory', '/search/dir')
+        tr.run()
+            .then(() => {
+                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.ran(vstestCmd), 'should have run vstest');
+                assert(tr.stdout.indexOf('/diag') < 0, '/diag option should not be used for vstest.console.exe');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    });
 });

@@ -10,11 +10,15 @@
         "Build",
         "Release"
     ],
+	"runsOn": [
+        "Agent",
+        "MachineGroup"
+    ],
     "demands": [],
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 7
+        "Patch": 9
     },
     "groups": [
         {

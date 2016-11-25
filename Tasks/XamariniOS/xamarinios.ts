@@ -37,7 +37,10 @@ async function run() {
         await nugetRunner.exec();
 
         //Process working directory
-        var cwd = cwd || tl.getVariable('build.sourceDirectory') || tl.getVariable('build.sourcesDirectory');
+        var cwd = cwd
+            || tl.getVariable('build.sourceDirectory')
+            || tl.getVariable('build.sourcesDirectory')
+            || tl.getVariable('System.DefaultWorkingDirectory');
         tl.cd(cwd);
 
         var signMethod:string = tl.getInput('signMethod', false);

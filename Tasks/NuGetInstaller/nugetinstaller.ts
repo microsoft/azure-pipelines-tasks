@@ -134,12 +134,7 @@ async function main(): Promise<void> {
                 }
             }
             else {
-                if (credProviderPath) {
-                    tl.warning(tl.loc("Warning_NoConfigForOldNuGet"));
-                }
-                else {
-                    tl._writeLine(tl.loc("Warning_NoConfigForNoCredentialProvider"));
-                }
+                tl._writeLine(tl.loc("Warning_NoConfigForNoCredentialProvider"));
             }
         }
 

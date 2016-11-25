@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 31
+        "Patch": 34
     },
     "demands": [
         "azureps"
@@ -115,6 +115,20 @@
             "required": true
         },
         {
+            "name": "DiagnosticStorageAccountKeys",
+            "type": "multiLine",
+            "label": "Diagnostic Storage Account Keys",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Provide storage keys for diagnostics storage account in Role:Storagekey format. The diagnostics storage account name for each role will be obtained from diagnostics config file (.wadcfgx). If the .wadcfgx file for a role is not found, diagnostics extensions won’t be set for the role. If the storage account name is missing in the .wadcfgx file, the default storage account will be used for storing diagnostics results and the storage key parameters from deployment task will be ignored. It’s recommended to save <storage_account_key> as a secret variable unless there is no sensitive information in the diagnostics result for your environment. <br/><br/>For example,<br/> WebRole: &lt;WebRole_storage_account_key&gt;<br/>WorkerRole: &lt;WorkerRole_stoarge_accoubt_key&gt;",
+            "groupName": "newServiceAdvancedOptions",
+            "properties": {
+                "resizable": "true",
+                "rows": "6",
+                "maxLength": "500"
+            }
+        },
+        {
             "name": "NewServiceAdditionalArguments",
             "type": "string",
             "label": "Additional Arguments",
@@ -170,6 +184,9 @@
         "Applyinganyconfigureddiagnosticsextensions": "Applying any configured diagnostics extensions.",
         "_0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "'{0}' could not be parsed into parts for registering diagnostics extensions.",
         "Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}",
-        "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one."
+        "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one.",
+        "Storagekeysaredefinedininvalidformat": "Storage keys are defined in invalid format.",
+        "Unabletofind0usingprovidedsubscription" :"Unable to find {0} using provided subscription",
+        "Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics":"Current version of azure powershell don't support external storage account for configuring diagnostics."
     }
 }

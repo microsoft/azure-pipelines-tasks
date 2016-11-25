@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 31
+    "Patch": 34
   },
   "demands": [
     "azureps"
@@ -115,6 +115,20 @@
       "required": true
     },
     {
+      "name": "DiagnosticStorageAccountKeys",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.DiagnosticStorageAccountKeys",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.DiagnosticStorageAccountKeys",
+      "groupName": "newServiceAdvancedOptions",
+      "properties": {
+        "resizable": "true",
+        "rows": "6",
+        "maxLength": "500"
+      }
+    },
+    {
       "name": "NewServiceAdditionalArguments",
       "type": "string",
       "label": "ms-resource:loc.input.label.NewServiceAdditionalArguments",
@@ -170,6 +184,9 @@
     "Applyinganyconfigureddiagnosticsextensions": "ms-resource:loc.messages.Applyinganyconfigureddiagnosticsextensions",
     "_0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "ms-resource:loc.messages._0couldnotbeparsedintopartsforregisteringdiagnosticsextensions",
     "Nofileswerefoundtodeploywithsearchpattern0": "ms-resource:loc.messages.Nofileswerefoundtodeploywithsearchpattern0",
-    "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "ms-resource:loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone"
+    "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "ms-resource:loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone",
+    "Storagekeysaredefinedininvalidformat": "ms-resource:loc.messages.Storagekeysaredefinedininvalidformat",
+    "Unabletofind0usingprovidedsubscription": "ms-resource:loc.messages.Unabletofind0usingprovidedsubscription",
+    "Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "ms-resource:loc.messages.Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics"
   }
 }

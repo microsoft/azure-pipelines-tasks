@@ -12,7 +12,7 @@
   "version": {
     "Major": 2,
     "Minor": 3,
-    "Patch": 3
+    "Patch": 5
   },
   "demands": [
     "xcode"
@@ -109,13 +109,15 @@
       "name": "exportOptions",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.exportOptions",
-      "defaultValue": "specify",
+      "defaultValue": "auto",
       "required": false,
       "groupName": "package",
       "options": {
+        "auto": "Auto",
         "plist": "Plist",
         "specify": "Specify"
-      }
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.exportOptions"
     },
     {
       "name": "exportMethod",
@@ -342,6 +344,7 @@
     "XcodeSuccess": "ms-resource:loc.messages.XcodeSuccess",
     "TempKeychainDeleteFailed": "ms-resource:loc.messages.TempKeychainDeleteFailed",
     "ProvProfileDeleteFailed": "ms-resource:loc.messages.ProvProfileDeleteFailed",
+    "ExportMethodNotIdentified": "ms-resource:loc.messages.ExportMethodNotIdentified",
     "ExportOptionsPlistInvalidFilePath": "ms-resource:loc.messages.ExportOptionsPlistInvalidFilePath"
   }
 }

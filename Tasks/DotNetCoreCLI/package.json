@@ -1,0 +1,26 @@
+{
+  "name": "vsts-tasks-dotnetcoreexe",
+  "version": "0.1.0",
+  "description": "Dotnet core exe",
+  "main": "dotnetexe.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "vsts-task-lib": "^0.9.20",
+    "q": "^1.4.1",
+    "vso-node-api": "^5.0.5",
+    "gulp": "^3.9.1",
+    "gulp-zip": "^3.2.0"
+  }
+}

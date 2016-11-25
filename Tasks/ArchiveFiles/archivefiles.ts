@@ -1,7 +1,7 @@
 import path = require('path');
 import tl = require('vsts-task-lib/task');
 
-var repoRoot: string = tl.getVariable('build.sourcesDirectory');
+var repoRoot: string = tl.getVariable('System.DefaultWorkingDirectory');
 
 var rootFolder: string = makeAbsolute(path.normalize(tl.getPathInput('rootFolder', true, false).trim()));
 var includeRootFolder: boolean = tl.getBoolInput('includeRootFolder', true);

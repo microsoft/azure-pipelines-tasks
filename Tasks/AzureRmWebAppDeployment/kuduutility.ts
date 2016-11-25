@@ -4,9 +4,7 @@ import path = require("path");
 import fs = require("fs");
 import httpClient = require('vso-node-api/HttpClient');
 var httpObj = new httpClient.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
-var gulp = require('gulp');
-var zip = require('gulp-zip');
-var AdmZip = require('adm-zip');
+var zipUtility = require('webdeployment-common/ziputility.js');
 
 export async function appOffineKuduService(publishUrl: string, physicalPath: string, headers, enableFeature: boolean) {
     var defer = Q.defer<string>();
@@ -122,22 +120,6 @@ export async function deployWebAppPackage(webAppPackage: string, publishingProfi
     return deferred.promise;
 }
 
-export async function archiveFolder(webAppFolder:string) {
-    var deferred = Q.defer<string>();
-    var defaultWorkingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
-    var tempPackageName = 'temp_web_app_package.zip';
-    await gulp.src(path.join(webAppFolder, '**', '*'))
-        .pipe(zip(tempPackageName))
-        .pipe(gulp.dest(defaultWorkingDirectory)).on('end',function(error){
-             if(error){
-                 throw new Error(error)
-             }
-             deferred.resolve(path.join(defaultWorkingDirectory, tempPackageName));
-        });
-    return deferred.promise;
-}
-
-
 /**
  * Check whether the package contains parameter.xml file
  * @param   webAppPackage   web deploy package
@@ -145,8 +127,8 @@ export async function archiveFolder(webAppFolder:string) {
  */
 export async  function containsParamFile(webAppPackage: string ) {
     var isParamFilePresent = false;
-    var zip = new AdmZip(webAppPackage);
-    if (zip.getEntry("parameters.xml") || zip.getEntry("Parameters.xml")) {
+    var pacakgeComponent = await zipUtility.getArchivedEntries(webAppPackage);
+    if ((pacakgeComponent["entries"].indexOf("parameters.xml") > -1) || (pacakgeComponent["entries"].indexOf("Parameters.xml") > -1)) {
         isParamFilePresent = true;
     }
     tl.debug(tl.loc("Isparameterfilepresentinwebpackage0", isParamFilePresent));

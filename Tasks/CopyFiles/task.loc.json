@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 2
+    "Patch": 4
   },
   "demands": [],
   "minimumAgentVersion": "1.91.0",
@@ -69,6 +69,15 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.OverWrite",
       "groupName": "advanced"
+    },
+    {
+      "name": "flattenFolders",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.flattenFolders",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.flattenFolders",
+      "groupName": "advanced"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -82,6 +91,7 @@
     "FoundNFiles": "ms-resource:loc.messages.FoundNFiles",
     "CleaningTargetFolder": "ms-resource:loc.messages.CleaningTargetFolder",
     "FileAlreadyExistAt": "ms-resource:loc.messages.FileAlreadyExistAt",
-    "CopyingTo": "ms-resource:loc.messages.CopyingTo"
+    "CopyingTo": "ms-resource:loc.messages.CopyingTo",
+    "TargetIsDir": "ms-resource:loc.messages.TargetIsDir"
   }
 }

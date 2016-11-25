@@ -6,64 +6,66 @@
         "VS140COMNTools": "/vs/path",
         "VS120COMNTools": "/vs/path"
     },
-    "find": {
-        "/source/dir": [
-            "someDir/someFile2",
-            "/someDir/someFile1"
-        ]
-    },
     "match": {
-        "\\source\\dir\\some\\*pattern": [
-            "some/path/one",
-            "some/path/two"
+        "**\\packages\\**\\*TestAdapter.dll": []
+    },
+    "findMatch": {
+        "/source/dir/some/*pattern": [
+            "/source/dir/someFile2",
+            "/source/dir/someFile1"
         ],
-        "\\source\\dir\\exclude\\*pattern": [
-            "some/path/two",
-            "some/path/three"
+        "/source/dir/some/*pattern,!/source/dir/some/*excludePattern": [
+            "/source/dir/someFile1"
         ],
         "\\source\\dir\\TestResults\\*.trx": [
             "a.trx"
         ],
-        "**\\packages\\**\\*TestAdapter.dll": []
+        "**\\packages\\**\\*TestAdapter.dll": [],
+        "/source/dir/someFile1": [
+            "/source/dir/someFile1"
+        ],
+        "/search/dir/someFile1": [
+            "/search/dir/someFile1"
+        ]
     },
     "exec": {
-        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe some/path/one some/path/two /logger:trx": {
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile2 /source/dir/someFile1 /logger:trx": {
             "code": 0,
             "stdout": "vstest"
         },
-        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe some/path/one /logger:trx": {
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /logger:trx": {
             "code": 0,
             "stdout": "vstest"
         },
-        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /logger:trx": {
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /TestCaseFilter:testFilter /logger:trx": {
             "code": 0,
             "stdout": "vstest"
         },
-        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /TestCaseFilter:testFilter /logger:trx": {
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /EnableCodeCoverage /logger:trx": {
             "code": 0,
             "stdout": "vstest"
         },
-        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /EnableCodeCoverage /logger:trx": {
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 consoleOptions /logger:trx": {
             "code": 0,
             "stdout": "vstest"
         },
-        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file consoleOptions /logger:trx": {
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /Settings:settings.runsettings /logger:trx": {
             "code": 0,
             "stdout": "vstest"
         },
-        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /Settings:settings.runsettings /logger:trx": {
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /logger:trx /TestAdapterPath:path/to/customadapters": {
             "code": 0,
             "stdout": "vstest"
         },
-        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /logger:trx /TestAdapterPath:path/to/customadapters": {
+        "some\\path\\to\\vstest.console.exe /source/dir/someFile1 /logger:trx": {
             "code": 0,
             "stdout": "vstest"
         },
-        "some\\path\\to\\vstest.console.exe path/to/file /logger:trx": {
+        "\\path\\to\\vstest\\directory\\vstest.console.exe /source/dir/someFile1 /logger:trx": {
             "code": 0,
             "stdout": "vstest"
         },
-        "\\path\\to\\vstest\\directory\\vstest.console.exe path/to/file /logger:trx": {
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /search/dir/someFile1 /logger:trx": {
             "code": 0,
             "stdout": "vstest"
         }

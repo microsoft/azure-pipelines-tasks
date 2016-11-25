@@ -1,6 +1,9 @@
+import fs = require('fs');
 import path = require('path');
 import os = require('os');
 import tl = require('vsts-task-lib/task');
+
+let isWindows: Boolean = os.platform() == 'win32';
 
 function getCommonLocalPath(files: string[]): string {
     if (!files || files.length === 0) {
@@ -82,6 +85,7 @@ var targetFolder: string = tl.getPathInput('TargetFolder', true);
 
 var cleanTargetFolder: boolean = tl.getBoolInput('CleanTargetFolder', false);
 var overWrite: boolean = tl.getBoolInput('OverWrite', false);
+var flattenFolders: boolean = tl.getBoolInput('flattenFolders', false);
 
 // not use common root for now. 
 //var useCommonRoot: boolean = tl.getBoolInput('UseCommonRoot', false);
@@ -138,8 +142,7 @@ if (includeContents.length > 0 && allFiles.length > 0) {
     
     // minimatch options
     var matchOptions = { matchBase: true };
-    if(os.type().match(/^Win/))
-    {
+    if (isWindows) {
         matchOptions["nocase"] = true;
     }
         
@@ -213,30 +216,78 @@ if (files.length > 0) {
     try {
         var createdFolders = {};
         files.forEach((file: string) => {
-            var relativePath = file.substring(sourceFolder.length)
+            var relativePath;
+            if(flattenFolders) {
+                relativePath = path.basename(file);
+            } else {
+                relativePath = file.substring(sourceFolder.length)
                     .replace(/^\\/g, "")
                     .replace(/^\//g, "");
+            }
 
             if (useCommonRoot) {
                 relativePath = file.substring(commonRoot.length)
                     .replace(/^\\/g, "")
                     .replace(/^\//g, "");
             }
-            
+
             var targetPath = path.join(targetFolder, relativePath);
             var targetDir = path.dirname(targetPath);
-                           
+
             if (!createdFolders[targetDir]) {
-                tl.debug("Creating folder " + targetDir);
                 tl.mkdirP(targetDir);
                 createdFolders[targetDir] = true;
             }
 
-            if (tl.exist(targetPath) && tl.stats(targetPath).isFile() && !overWrite) {
-                console.log(tl.loc('FileAlreadyExistAt', file, targetPath));
+            // stat the target
+            let targetStats: tl.FsStats;
+            if (!cleanTargetFolder) { // skip if clean
+                try {
+                    targetStats = tl.stats(targetPath);
+                }
+                catch (err) {
+                    if (err.code != 'ENOENT') {
+                        throw err;
+                    }
+                }
+            }
+
+            // validate the target is not a directory
+            if (targetStats && targetStats.isDirectory()) {
+                throw new Error(tl.loc('TargetIsDir', file, targetPath));
+            }
+
+            if (!overWrite) {
+                if (targetStats) { // exists, skip
+                    console.log(tl.loc('FileAlreadyExistAt', file, targetPath));
+                }
+                else { // copy
+                    console.log(tl.loc('CopyingTo', file, targetPath));
+                    tl.cp(file, targetPath);
+                }
             }
             else {
                 console.log(tl.loc('CopyingTo', file, targetPath));
+                if (isWindows && targetStats && (targetStats.mode & 146) != 146) {
+                    // The readonly attribute can be interpreted by performing a bitwise-AND operation on
+                    // "fs.Stats.mode" and the integer 146. The integer 146 represents "-w--w--w-" or (128 + 16 + 2),
+                    // see following chart:
+                    //     R   W  X  R  W X R W X
+                    //   256 128 64 32 16 8 4 2 1
+                    //
+                    // "fs.Stats.mode" on Windows is based on whether the readonly attribute is set.
+                    // If the readonly attribute is set, then the mode is set to "r--r--r--".
+                    // If the readonly attribute is not set, then the mode is set to "rw-rw-rw-".
+                    //
+                    // Note, additional bits may also be set (e.g. if directory). Therefore, a bitwise
+                    // comparison is appropriate.
+                    //
+                    // For additional information, refer to the fs source code and ctrl+f "st_mode":
+                    //   https://github.com/nodejs/node/blob/v5.x/deps/uv/src/win/fs.c#L1064
+                    tl.debug(`removing readonly attribute on '${targetPath}'`);
+                    fs.chmodSync(targetPath, targetStats.mode | 146);
+                }
+
                 tl.cp(file, targetPath, "-f");
             }
         });

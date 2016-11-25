@@ -22,6 +22,8 @@
   "loc.input.label.AppendDateTimeToLabel": "Append current date and time",
   "loc.input.help.AppendDateTimeToLabel": "Appends current date and time to deployment label",
   "loc.input.label.AllowUpgrade": "Allow Upgrade",
+  "loc.input.label.DiagnosticStorageAccountKeys": "Diagnostic Storage Account Keys",
+  "loc.input.help.DiagnosticStorageAccountKeys": "Provide storage keys for diagnostics storage account in Role:Storagekey format. The diagnostics storage account name for each role will be obtained from diagnostics config file (.wadcfgx). If the .wadcfgx file for a role is not found, diagnostics extensions won’t be set for the role. If the storage account name is missing in the .wadcfgx file, the default storage account will be used for storing diagnostics results and the storage key parameters from deployment task will be ignored. It’s recommended to save <storage_account_key> as a secret variable unless there is no sensitive information in the diagnostics result for your environment. <br/><br/>For example,<br/> WebRole: &lt;WebRole_storage_account_key&gt;<br/>WorkerRole: &lt;WorkerRole_stoarge_accoubt_key&gt;",
   "loc.input.label.NewServiceAdditionalArguments": "Additional Arguments",
   "loc.input.help.NewServiceAdditionalArguments": "Pass in additional arguments while creating a brand new service. These will be passed on to `New-AzureService` commandlet. Eg: `-Label 'MyTestService'`",
   "loc.input.label.NewServiceAffinityGroup": "AffinityGroup",
@@ -31,5 +33,8 @@
   "loc.messages.Applyinganyconfigureddiagnosticsextensions": "Applying any configured diagnostics extensions.",
   "loc.messages._0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "'{0}' could not be parsed into parts for registering diagnostics extensions.",
   "loc.messages.Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}",
-  "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one."
+  "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one.",
+  "loc.messages.Storagekeysaredefinedininvalidformat": "Storage keys are defined in invalid format.",
+  "loc.messages.Unabletofind0usingprovidedsubscription": "Unable to find {0} using provided subscription",
+  "loc.messages.Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "Current version of azure powershell don't support external storage account for configuring diagnostics."
 }

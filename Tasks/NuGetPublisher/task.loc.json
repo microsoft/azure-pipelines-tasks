@@ -9,8 +9,12 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 22
+    "Patch": 25
   },
+  "runsOn": [
+    "Agent",
+    "MachineGroup"
+  ],
   "demands": [
     "Cmd"
   ],

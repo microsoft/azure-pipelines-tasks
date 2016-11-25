@@ -590,6 +590,7 @@ describe('gradle Suite', function () {
                 assert(tr.stderr.length > 0, 'should have written to stderr');
                 assert(tr.failed, 'task should have failed');
                 assert(tr.stdout.indexOf('FAILED') >= 0, 'It should have failed');
+                assert(tr.stdout.search(/##vso\[results.publish type=JUnit;mergeResults=true;publishRunAttachments=true;resultFiles=\/user\/build\/fun\/test-results\/test-123.xml;\]/) >= 0)
                 done();
             })
             .fail((err) => {
@@ -1165,6 +1166,7 @@ describe('gradle Suite', function () {
             [
                 ["build.buildNumber", "14"],
                 ['build.sourcesDirectory', testSrcDir],
+                ['System.DefaultWorkingDirectory', testSrcDir],
                 ['build.artifactStagingDirectory', testStgDir]
             ]);
 
@@ -1230,6 +1232,7 @@ describe('gradle Suite', function () {
             [
                 ["build.buildNumber", "14"],
                 ['build.sourcesDirectory', testSrcDir],
+                ['System.DefaultWorkingDirectory', testSrcDir],
                 ['build.artifactStagingDirectory', testStgDir]
             ]);
 
@@ -1285,6 +1288,7 @@ describe('gradle Suite', function () {
             [
                 ["build.buildNumber", "14"],
                 ['build.sourcesDirectory', testSrcDir],
+                ['System.DefaultWorkingDirectory', testSrcDir],
                 ['build.artifactStagingDirectory', testStgDir]
             ]);
 
@@ -1399,6 +1403,7 @@ describe('gradle Suite', function () {
             [
                 ["build.buildNumber", "211"],
                 ['build.sourcesDirectory', testSrcDir],
+                ['System.DefaultWorkingDirectory', testSrcDir],
                 ['build.artifactStagingDirectory', testStgDir]
             ]);
 
