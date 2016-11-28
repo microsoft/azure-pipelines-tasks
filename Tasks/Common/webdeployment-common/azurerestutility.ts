@@ -28,7 +28,7 @@ export async function getResourceGroupName(SPN, webAppName: string)
         var webAppID = await getAzureRMWebAppID(SPN, webAppName, requestURL, headers);
 
         tl.debug('Web App details : ' + webAppID.id);
-        resourceGroupName = webAppID.id.split ('/')[4];
+        var resourceGroupName = webAppID.id.split ('/')[4];
         tl.debug('AzureRM Resource Group Name : ' + resourceGroupName);
 		return resourceGroupName;
 }
