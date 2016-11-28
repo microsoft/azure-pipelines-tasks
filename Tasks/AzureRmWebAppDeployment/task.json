@@ -40,7 +40,7 @@
         {
             "name": "WebAppName",
             "type": "pickList",
-            "label": "App service same",
+            "label": "App service name",
             "defaultValue": "",
             "required": true,
             "properties": {

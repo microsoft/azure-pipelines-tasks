@@ -7,7 +7,7 @@
   "loc.group.displayName.output": "Output",
   "loc.input.label.ConnectedServiceName": "Azure subscription",
   "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription for the deployment.",
-  "loc.input.label.WebAppName": "App service same",
+  "loc.input.label.WebAppName": "App service name",
   "loc.input.help.WebAppName": "Enter or Select the name of an existing Azure App Service.",
   "loc.input.label.DeployToSlotFlag": "Deploy to slot",
   "loc.input.help.DeployToSlotFlag": "Select the option to deploy to an existing slot other than the Production slot. If this option is not selected, then the Azure App Service will be deployed to the Production slot.",
