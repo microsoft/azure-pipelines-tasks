@@ -243,6 +243,7 @@
     "PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "ms-resource:loc.messages.PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent",
     "WebAppDoesntExist": "ms-resource:loc.messages.WebAppDoesntExist",
     "EncodeNotSupported": "ms-resource:loc.messages.EncodeNotSupported",
-    "UnknownFileEncodeError": "ms-resource:loc.messages.UnknownFileEncodeError"
+    "UnknownFileEncodeError": "ms-resource:loc.messages.UnknownFileEncodeError",
+    "ShortFileBufferError": "ms-resource:loc.messages.ShortFileBufferError"
   }
 }
