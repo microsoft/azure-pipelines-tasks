@@ -140,24 +140,26 @@ export async function getAzureRMWebAppPublishProfile(SPN, webAppName: string, re
 
 function getAuthorizationToken(SPN): Q.Promise<string> {
 
-    if(accessToken !== ""){
-		return accessToken;
+    var deferred = Q.defer<string>();
+	if(accessToken !== ""){
+		deferred.resolve(accessToken);
 	}
-	var deferred = Q.defer<string>();
-    var authorityUrl = authUrl + SPN.tenantID;
+	else{
+		var authorityUrl = authUrl + SPN.tenantID;
 
-    var context = new AuthenticationContext(authorityUrl);
+		var context = new AuthenticationContext(authorityUrl);
 
-    tl.debug('Requesting for Auth Token: ' + authorityUrl);
-    context.acquireTokenWithClientCredentials(armUrl, SPN.servicePrincipalClientID, SPN.servicePrincipalKey, (error, tokenResponse) => {
-        if(error) {
-            deferred.reject(error);
-        }
-        else {
-            deferred.resolve(tokenResponse.accessToken);
-        }
-    });
-
+		tl.debug('Requesting for Auth Token: ' + authorityUrl);
+		context.acquireTokenWithClientCredentials(armUrl, SPN.servicePrincipalClientID, SPN.servicePrincipalKey, (error, tokenResponse) => {
+			if(error) {
+				deferred.reject(error);
+			}
+			else {
+				accessToken = tokenResponse.accessToken;
+				deferred.resolve(tokenResponse.accessToken);
+			}
+		});
+	}
     return deferred.promise;
 }
 
