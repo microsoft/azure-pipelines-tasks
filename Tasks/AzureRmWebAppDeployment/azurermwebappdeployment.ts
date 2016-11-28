@@ -109,11 +109,10 @@ async function run() {
                 throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
             }
 			
-			var appSettings = [];
-			await azureRESTUtility.getWebAppAppSettings(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
-			if((renameFilesFlag?1:0) ^ appSettings[0].properties.MSDEPLOY_RENAME_LOCKED_FILES){
-				appSettings[0].properties.MSDEPLOY_RENAME_LOCKED_FILES = (!appSettings[0].properties.MSDEPLOY_RENAME_LOCKED_FILES ? "1" : "0");
-				await azureRESTUtility.updateWebAppAppSettings(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings[0]);
+			var appSettings = await azureRESTUtility.getWebAppAppSettings(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+			if((renameFilesFlag ? 1 : 0) ^ appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES){
+				appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES = (!appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES ? "1" : "0");
+				await azureRESTUtility.updateWebAppAppSettings(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
 			}
 			
             tl._writeLine("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);         

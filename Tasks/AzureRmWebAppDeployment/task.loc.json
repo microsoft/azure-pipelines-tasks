@@ -155,15 +155,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
     },
     {
-      "name": "TakeAppOfflineFlag",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.TakeAppOfflineFlag",
-      "defaultValue": "false",
-      "required": false,
-      "groupName": "AdditionalDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
-    },
-    {
       "name": "RenameFilesFlag",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.RenameFilesFlag",
@@ -172,6 +163,15 @@
       "visibleRule": "UseWebDeploy == true",
       "groupName": "AdditionalDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.RenameFilesFlag"
+    },
+    {
+      "name": "TakeAppOfflineFlag",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.TakeAppOfflineFlag",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "AdditionalDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
     }
   ],
   "dataSourceBindings": [

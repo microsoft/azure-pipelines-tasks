@@ -155,15 +155,6 @@
             "helpMarkDown": "Additional Web Deploy arguments that will be applied when deploying the Azure App Service like,-disableLink:AppPoolExtension -disableLink:ContentExtension."
         },
         {
-            "name": "TakeAppOfflineFlag",
-            "type": "boolean",
-            "label": "Take App Offline",
-            "defaultValue": "false",
-            "required": false,
-            "groupName": "AdditionalDeploymentOptions",
-            "helpMarkDown": "Select the option to take the Azure App Service offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully."
-        },
-        {
             "name": "RenameFilesFlag",
             "type": "boolean",
             "label": "Rename Files",
@@ -172,6 +163,15 @@
 			"visibleRule": "UseWebDeploy == true",
             "groupName": "AdditionalDeploymentOptions",
             "helpMarkDown": "Select the option to enable msdeploy flag MSDEPLOY_RENAME_FILES_FLAG in Azure web site's appsetting. The option if set enables msdeploy to rename files that are locked during app deployment"
+        },
+        {
+            "name": "TakeAppOfflineFlag",
+            "type": "boolean",
+            "label": "Take Application Offline",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "AdditionalDeploymentOptions",
+            "helpMarkDown": "Select the option to take the Azure App Service offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully."
         }
     ],
     "dataSourceBindings": [
