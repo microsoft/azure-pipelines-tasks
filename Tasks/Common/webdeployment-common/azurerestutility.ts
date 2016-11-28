@@ -241,7 +241,7 @@ export async function getAzureRMWebAppConfigDetails(SPN, webAppName: string, res
     return deferred.promise;
 }
 
-export async function getWebAppAppSettings(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string, appSettings: Object)
+export async function getWebAppAppSettings(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string/*, appSettings: Object*/)
 {
 	/*if(!deployToSlotFlag) {
        var requestURL = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\' AND name EQ \'' + 
@@ -255,7 +255,7 @@ export async function getWebAppAppSettings(SPN, webAppName: string, resourceGrou
         resourceGroupName = webAppID.id.split ('/')[4];
         tl.debug('AzureRM Resource Group Name : ' + resourceGroupName);
     }*/
-
+	//var appSettings = [];
     var deferred = Q.defer<any>();
 	
 	var accessToken = await getAuthorizationToken(SPN);
@@ -274,7 +274,7 @@ export async function getWebAppAppSettings(SPN, webAppName: string, resourceGrou
 			deferred.reject(error);
 		}
 		else if(response.statusCode === 200) {
-			appSettings[0]=JSON.parse(body);
+			//appSettings[0]=JSON.parse(body);
 			deferred.resolve(JSON.parse(body));
 		}
 		else {
