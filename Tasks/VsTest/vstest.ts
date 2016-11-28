@@ -49,6 +49,7 @@ try {
     var useNewCollectorFlag = tl.getVariable('tia.useNewCollector');
     var isPrFlow = tl.getVariable('tia.isPrFlow');
     var vsTestVersionForTIA: number[] = null;
+	var ignoreVstestFailure: string = tl.getVariable("vstest.ignorefailure");
 
     var useNewCollector = false;
     if (useNewCollectorFlag && useNewCollectorFlag.toUpperCase() === "TRUE") {
@@ -402,10 +403,16 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
             defer.resolve(code);
         })
         .fail(function(err) {
-            cleanUp(parallelRunSettingsFile);
+			cleanUp(parallelRunSettingsFile);
             tl.warning(tl.loc('VstestFailed'));
-            tl.error(err);
-            defer.resolve(1);
+			if (ignoreVstestFailure && ignoreVstestFailure.toLowerCase() === "true") {
+				tl.warning(err);
+				defer.resolve(0);
+			}
+			else {
+				tl.error(err);
+				defer.resolve(1);
+			}
         });
     return defer.promise;
 }
