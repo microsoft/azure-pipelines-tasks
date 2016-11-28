@@ -15,7 +15,7 @@ var AuthenticationContext = adal.AuthenticationContext;
 var authUrl = 'https://login.windows.net/';
 var armUrl = 'https://management.azure.com/';
 var azureApiVersion = 'api-version=2016-08-01';
-var accessToken;
+var accessToken = "";
 
 /**
  * gets the name of the ResourceGroup that contains the webApp
@@ -27,7 +27,7 @@ export async function getResourceGroupName(SPN, webAppName: string)
 {
         var requestURL = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\' AND name EQ \'' + 
                           webAppName + '\'&api-version=2016-07-01';
-        accessToken = await getAuthorizationToken(SPN);
+        var accessToken = await getAuthorizationToken(SPN);
         var headers = {
             authorization: 'Bearer '+ accessToken
         };
@@ -106,7 +106,7 @@ export async function getAzureRMWebAppPublishProfile(SPN, webAppName: string, re
     }*/
     var deferred = Q.defer();
     var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
-    //var accessToken = await getAuthorizationToken(SPN);
+    var accessToken = await getAuthorizationToken(SPN);
     
     var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
                  '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + '/publishxml?' + azureApiVersion;
@@ -140,7 +140,10 @@ export async function getAzureRMWebAppPublishProfile(SPN, webAppName: string, re
 
 function getAuthorizationToken(SPN): Q.Promise<string> {
 
-    var deferred = Q.defer<string>();
+    if(accessToken !== ""){
+		return accessToken;
+	}
+	var deferred = Q.defer<string>();
     var authorityUrl = authUrl + SPN.tenantID;
 
     var context = new AuthenticationContext(authorityUrl);
@@ -210,7 +213,7 @@ export async function getAzureRMWebAppConfigDetails(SPN, webAppName: string, res
     }*/
 
     var deferred = Q.defer<any>();
-    //var accessToken = await getAuthorizationToken(SPN);
+    var accessToken = await getAuthorizationToken(SPN);
     var headers = {
         authorization: 'Bearer '+ accessToken
     };
@@ -253,7 +256,7 @@ export async function getWebAppAppSettings(SPN, webAppName: string, resourceGrou
 
     var deferred = Q.defer<any>();
 	
-	//var accessToken = await getAuthorizationToken(SPN);
+	var accessToken = await getAuthorizationToken(SPN);
     var headers = {
         authorization: 'Bearer '+ accessToken
     };
@@ -297,7 +300,7 @@ export async function updateWebAppAppSettings(SPN, webAppName: string, resourceG
 
     var deferred = Q.defer<any>();
 	
-	//var accessToken = await getAuthorizationToken(SPN);
+	var accessToken = await getAuthorizationToken(SPN);
     var headers = {
         authorization: 'Bearer '+ accessToken
     };
