@@ -32,7 +32,7 @@
         {
             "name": "ConnectedServiceName",
             "type": "connectedService:AzureRM",
-            "label": "AzureRM Subscription",
+            "label": "Azure subscription",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
@@ -40,7 +40,7 @@
         {
             "name": "WebAppName",
             "type": "pickList",
-            "label": "App Service Name",
+            "label": "App service same",
             "defaultValue": "",
             "required": true,
             "properties": {
@@ -51,7 +51,7 @@
         {
             "name": "DeployToSlotFlag",
             "type": "boolean",
-            "label": "Deploy to Slot",
+            "label": "Deploy to slot",
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Select the option to deploy to an existing slot other than the Production slot. If this option is not selected, then the Azure App Service will be deployed to the Production slot."
@@ -59,7 +59,7 @@
         {
             "name": "ResourceGroupName",
             "type": "pickList",
-            "label": "Resource Group",
+            "label": "Resource group",
             "defaultValue": "",
             "required": true,
             "properties": {
@@ -83,7 +83,7 @@
         {
             "name": "VirtualApplication",
             "type": "string",
-            "label": "Virtual Application",
+            "label": "Virtual application",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Specify the name of the Virtual Application that has been configured in the Azure portal. The option is not required for deployments to the website root."
@@ -91,7 +91,7 @@
         {
             "name": "Package",
             "type": "filePath",
-            "label": "Package or Folder",
+            "label": "Package or folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
             "required": true,
             "helpMarkDown": "Folder or file path to the Web App package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
@@ -99,7 +99,7 @@
         {
             "name": "WebAppUri",
             "type": "string",
-            "label": "Web App URL",
+            "label": "App service URL",
             "required": false,
             "defaultValue": "",
             "groupName": "output",
@@ -108,7 +108,7 @@
         {
             "name": "UseWebDeploy",
             "type": "boolean",
-            "label": "Publish using Web Deploy",
+            "label": "Publish using web deploy",
             "required": false,
             "defaultValue": "false",
             "groupName": "AdditionalDeploymentOptions",
@@ -117,7 +117,7 @@
         {
             "name": "SetParametersFile",
             "type": "filePath",
-            "label": "SetParameters File",
+            "label": "SetParameters file",
             "defaultValue": "",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
@@ -127,7 +127,7 @@
         {
             "name": "RemoveAdditionalFilesFlag",
             "type": "boolean",
-            "label": "Remove Additional Files at Destination",
+            "label": "Remove additional files at destination",
             "defaultValue": "false",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
@@ -137,7 +137,7 @@
         {
             "name": "ExcludeFilesFromAppDataFlag",
             "type": "boolean",
-            "label": "Exclude Files from the App_Data Folder",
+            "label": "Exclude files from the App_Data folder",
             "defaultValue": "false",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
@@ -147,7 +147,7 @@
         {
             "name": "AdditionalArguments",
             "type": "string",
-            "label": "Additional Arguments",
+            "label": "Additional arguments",
             "required": false,
             "defaultValue": "",
             "groupName": "AdditionalDeploymentOptions",
@@ -157,7 +157,7 @@
         {
             "name": "RenameFilesFlag",
             "type": "boolean",
-            "label": "Rename Files",
+            "label": "Rename files",
             "defaultValue": "false",
             "required": false,
 			"visibleRule": "UseWebDeploy == true",
@@ -167,7 +167,7 @@
         {
             "name": "TakeAppOfflineFlag",
             "type": "boolean",
-            "label": "Take Application Offline",
+            "label": "Take application offline",
             "defaultValue": "false",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
@@ -199,7 +199,7 @@
             "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
         }
     ],
-    "instanceNameFormat": "Deploy AzureRM App Service: $(WebAppName)",
+    "instanceNameFormat": "Deploy Azure App Service: $(WebAppName)",
     "execution": {
         "Node": {
             "target": "azurermwebappdeployment.js"

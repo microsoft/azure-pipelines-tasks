@@ -166,7 +166,7 @@ function getAuthorizationToken(SPN): Q.Promise<string> {
 async function getAzureRMWebAppID(SPN, webAppName: string, url: string, headers) {
     var deferred = Q.defer<any>();
 
-    tl.debug('Requesting AzureRM Web App ID: ' + url);
+    tl.debug('Requesting Azure App Service ID: ' + url);
     httpObj.get('GET', url, headers, async (error, response, body) => {
         if(error) {
             deferred.reject(error);
@@ -224,7 +224,7 @@ export async function getAzureRMWebAppConfigDetails(SPN, webAppName: string, res
     var configUrl = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
              '/providers/Microsoft.Web/sites/' + webAppName + slotUrl +  '/config/web?' + azureApiVersion;
 
-    tl.debug('Requesting AzureRM Config Details: ' + configUrl);
+    tl.debug('Requesting Azure App Service Config Details: ' + configUrl);
     httpObj.get('GET', configUrl, headers, (error, response, body) => {
         if( error ) {
             deferred.reject(error);
