@@ -47,7 +47,8 @@ async function run() {
         SPN["servicePrincipalKey"] = endPointAuthCreds.parameters["serviceprincipalkey"];
         SPN["tenantID"] = endPointAuthCreds.parameters["tenantid"];
         SPN["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
-
+		
+		resourceGroupName = getResourceGroupName(SPN, webAppName);
         var publishingProfile = await azureRESTUtility.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
         tl._writeLine(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
 
@@ -101,17 +102,21 @@ async function run() {
             tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
         }
 		
-		if(renameFilesFlag){
-			var obj = [];
-			await azureRESTUtility.getWebAppAppSettings(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, obj);
-			obj[0].properties.MSDEPLOY_RENAME_LOCKED_FILES='1';
-			await azureRESTUtility.updateWebAppAppSettings(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, obj[0]);
-		}
+		
+
 		
         if(utility.canUseWebDeploy(useWebDeploy)) {
             if(!tl.osType().match(/^Win/)){
                 throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
             }
+			
+			var appSettings = [];
+			await azureRESTUtility.getWebAppAppSettings(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
+			if(renameFilesFlag ^ appSettings[0].properties.MSDEPLOY_RENAME_LOCKED_FILES){
+				appSettings[0].properties.MSDEPLOY_RENAME_LOCKED_FILES = (!appSettings[0].properties.MSDEPLOY_RENAME_LOCKED_FILES ? "1" : "0");
+				await azureRESTUtility.updateWebAppAppSettings(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings[0]);
+			}
+			
             tl._writeLine("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);         
             tl._writeLine("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);
             await msDeploy.DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,

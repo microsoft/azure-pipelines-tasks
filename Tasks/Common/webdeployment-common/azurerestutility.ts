@@ -15,7 +15,23 @@ var AuthenticationContext = adal.AuthenticationContext;
 var authUrl = 'https://login.windows.net/';
 var armUrl = 'https://management.azure.com/';
 var azureApiVersion = 'api-version=2016-08-01';
+var accessToken;
 
+export async function getResourceGroupName(SPN, webAppName: string)
+{
+        var requestURL = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\' AND name EQ \'' + 
+                          webAppName + '\'&api-version=2016-07-01';
+        accessToken = await getAuthorizationToken(SPN);
+        var headers = {
+            authorization: 'Bearer '+ accessToken
+        };
+        var webAppID = await getAzureRMWebAppID(SPN, webAppName, requestURL, headers);
+
+        tl.debug('Web App details : ' + webAppID.id);
+        resourceGroupName = webAppID.id.split ('/')[4];
+        tl.debug('AzureRM Resource Group Name : ' + resourceGroupName);
+		return resourceGroupName;
+}
 /**
  * updates the deployment status in kudu service
  * 
@@ -69,7 +85,7 @@ export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: b
  * @returns (JSON)            
  */
 export async function getAzureRMWebAppPublishProfile(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
-    if(!deployToSlotFlag) {
+    /*if(!deployToSlotFlag) {
          var requestURL = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\' AND name EQ \'' + 
                           webAppName + '\'&api-version=2016-07-01';
         var accessToken = await getAuthorizationToken(SPN);
@@ -81,10 +97,10 @@ export async function getAzureRMWebAppPublishProfile(SPN, webAppName: string, re
         tl.debug('Web App details : ' + webAppID.id);
         resourceGroupName = webAppID.id.split ('/')[4];
         tl.debug('AzureRM Resource Group Name : ' + resourceGroupName);
-    }
+    }*/
     var deferred = Q.defer();
     var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
-    var accessToken = await getAuthorizationToken(SPN);
+    //var accessToken = await getAuthorizationToken(SPN);
     
     var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
                  '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + '/publishxml?' + azureApiVersion;
@@ -174,7 +190,7 @@ async function getAzureRMWebAppID(SPN, webAppName: string, url: string, headers)
  */
 export async function getAzureRMWebAppConfigDetails(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
 
-    if(!deployToSlotFlag) {
+    /*if(!deployToSlotFlag) {
        var requestURL = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\' AND name EQ \'' + 
                           webAppName + '\'&api-version=2016-07-01';
         var accessToken = await getAuthorizationToken(SPN);
@@ -185,10 +201,10 @@ export async function getAzureRMWebAppConfigDetails(SPN, webAppName: string, res
         tl.debug('Web App details : ' + webAppID.id);
         resourceGroupName = webAppID.id.split ('/')[4];
         tl.debug('AzureRM Resource Group Name : ' + resourceGroupName);
-    }
+    }*/
 
     var deferred = Q.defer<any>();
-    var accessToken = await getAuthorizationToken(SPN);
+    //var accessToken = await getAuthorizationToken(SPN);
     var headers = {
         authorization: 'Bearer '+ accessToken
     };
@@ -214,9 +230,9 @@ export async function getAzureRMWebAppConfigDetails(SPN, webAppName: string, res
     return deferred.promise;
 }
 
-export async function getWebAppAppSettings(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string, obj: Object)
+export async function getWebAppAppSettings(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string, appSettings: Object)
 {
-	if(!deployToSlotFlag) {
+	/*if(!deployToSlotFlag) {
        var requestURL = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\' AND name EQ \'' + 
                           webAppName + '\'&api-version=2016-07-01';
         var accessToken = await getAuthorizationToken(SPN);
@@ -227,11 +243,11 @@ export async function getWebAppAppSettings(SPN, webAppName: string, resourceGrou
         tl.debug('Web App details : ' + webAppID.id);
         resourceGroupName = webAppID.id.split ('/')[4];
         tl.debug('AzureRM Resource Group Name : ' + resourceGroupName);
-    }
+    }*/
 
     var deferred = Q.defer<any>();
 	
-	var accessToken = await getAuthorizationToken(SPN);
+	//var accessToken = await getAuthorizationToken(SPN);
     var headers = {
         authorization: 'Bearer '+ accessToken
     };
@@ -247,11 +263,8 @@ export async function getWebAppAppSettings(SPN, webAppName: string, resourceGrou
 			deferred.reject(error);
 		}
 		else if(response.statusCode === 200) {
-							
-							/*var tempObj = JSON.parse(body);
-							obj[0] = tempObj;*/
-							obj[0]=JSON.parse(body);
-							deferred.resolve(JSON.parse(body));
+			appSettings[0]=JSON.parse(body);
+			deferred.resolve(JSON.parse(body));
 		}
 		else {
 			tl.error(response.statusMessage);
@@ -262,8 +275,8 @@ export async function getWebAppAppSettings(SPN, webAppName: string, resourceGrou
 	return deferred.promise;
 }
 
-export async function updateWebAppAppSettings(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string, obj: Object) {
-	if(!deployToSlotFlag) {
+export async function updateWebAppAppSettings(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string, appSettings: Object) {
+	/*if(!deployToSlotFlag) {
        var requestURL = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\' AND name EQ \'' + 
                           webAppName + '\'&api-version=2016-07-01';
         var accessToken = await getAuthorizationToken(SPN);
@@ -274,11 +287,11 @@ export async function updateWebAppAppSettings(SPN, webAppName: string, resourceG
         tl.debug('Web App details : ' + webAppID.id);
         resourceGroupName = webAppID.id.split ('/')[4];
         tl.debug('AzureRM Resource Group Name : ' + resourceGroupName);
-    }
+    }*/
 
     var deferred = Q.defer<any>();
 	
-	var accessToken = await getAuthorizationToken(SPN);
+	//var accessToken = await getAuthorizationToken(SPN);
     var headers = {
         authorization: 'Bearer '+ accessToken
     };
@@ -289,12 +302,12 @@ export async function updateWebAppAppSettings(SPN, webAppName: string, resourceG
 	
 	tl.debug('Updating the Current List of App Settings: ' + configUrl);
 	
-	restObj._sendJson('PUT', configUrl, "", obj, headers, null, (error, response, body) =>{
+	restObj._sendJson('PUT', configUrl, "", appSettings, headers, null, (error, response, body) =>{
 								if(error){
 									deferred.reject(error);
 								}
 								else if(response === 200){
-									deferred.resolve(obj);
+									deferred.resolve(appSettings);
 								}
 								else {
 									tl.error(error);

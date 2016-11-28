@@ -210,6 +210,10 @@ export function redirectMSDeployErrorToConsole() {
         if(errorFileContent.toString().indexOf("ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER") !== -1){
             tl.warning(tl.loc("Trytodeploywebappagainwithappofflineoptionselected"));
         }
+		if(errorFileContent.toString().indexOf("FILE_IN_USE") !== -1){
+            tl.warning(tl.loc("Trytodeploywebappagainwithrenamefileoptionselected"));
+        }
+		
         tl.error(errorFileContent.toString());
     }
 }
