@@ -17,6 +17,12 @@ var armUrl = 'https://management.azure.com/';
 var azureApiVersion = 'api-version=2016-08-01';
 var accessToken;
 
+/**
+ * gets the name of the ResourceGroup that contains the webApp
+ *
+ * @param   SPN                 Service Principal Name
+ * @param   webAppName          Name of the web App
+*/
 export async function getResourceGroupName(SPN, webAppName: string)
 {
         var requestURL = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\' AND name EQ \'' + 
