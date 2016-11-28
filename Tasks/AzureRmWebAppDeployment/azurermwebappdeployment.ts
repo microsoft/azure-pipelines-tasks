@@ -101,10 +101,7 @@ async function run() {
         if(webAppUri) {
             tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
         }
-		
-		
 
-		
         if(utility.canUseWebDeploy(useWebDeploy)) {
             if(!tl.osType().match(/^Win/)){
                 throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
