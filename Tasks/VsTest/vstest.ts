@@ -10,7 +10,6 @@ var fs = require('fs');
 var xml2js = require('xml2js');
 var perf = require("performance-now");
 var process = require('process');
-var shelljs = require('shelljs');
 
 const runSettingsExt = ".runsettings";
 const testSettingsExt = ".testsettings";
@@ -1396,7 +1395,10 @@ function getLatestVSTestConsolePathFromRegistry(): Q.Promise<[number, string]> {
 }
 
 function getVSTestConsole15Path(): Q.Promise<string> {
-    var xml = shelljs.exec('powershell.exe -file ' +  path.join(__dirname, './vs15Helper.ps1'), {silent:true}).output;
+    let powershellTool = tl.tool('powershell');
+    let powershellArgs = ['-file', path.join(__dirname, 'vs15Helper.ps1')]
+    powershellTool.arg(powershellArgs);
+    let xml = powershellTool.execSync().stdout;
     let deferred = Q.defer<string>();
     Q.nfcall(xml2js.parseString, xml).then((data) => {
         try {
