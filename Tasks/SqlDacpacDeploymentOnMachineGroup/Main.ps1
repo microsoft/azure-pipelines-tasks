@@ -19,25 +19,30 @@ Import-Module $PSScriptRoot\ps_modules\TaskModuleSqlUtility
 
 Try
 {
-    $connectionString = Escape-SpecialChars -str $connectionString
-    $sqlPassword = Escape-SpecialChars -str $sqlPassword
-    $additionalArguments = Escape-SpecialChars -str $additionalArguments
-    $databaseName = Escape-SpecialChars -str $databaseName
     $serverName = "localhost"
     if ($taskType -ne "dacpac")
     {
         $additionalArguments = $additionalArgumentsSql
         $targetMethod = "server"
     }
-    $additionalArguments = Escape-SpecialChars -str $additionalArguments
+
+    if($sqlUsername -and $sqlPassword)
+    {
+        $secureAdminPassword = "$sqlPassword" | ConvertTo-SecureString  -AsPlainText -Force
+        $sqlServerCredentials = New-Object System.Management.Automation.PSCredential ("$sqlUserName", $secureAdminPassword)
+    }
 
     if ($taskType -eq "dacpac")
     {
-        Execute-DacpacDeployment -dacpacFile $dacpacFile -targetMethod $targetMethod -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlUsername $sqlUsername -sqlPassword $sqlPassword -connectionString $connectionString -publishProfile $publishProfile -additionalArguments $additionalArguments
+        Execute-DacpacDeployment -dacpacFile $dacpacFile -targetMethod $targetMethod -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -connectionString $connectionString -publishProfile $publishProfile -additionalArguments $additionalArguments
     }
     else
     {
-        Execute-SqlQueryDeployment -taskType $taskType -sqlFile $sqlFile -inlineSql $inlineSql -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlUsername $sqlUsername -sqlPassword $sqlPassword -additionalArguments $additionalArguments
+        $connectionString = Escape-SpecialChars -str $connectionString
+        $sqlPassword = Escape-SpecialChars -str $sqlPassword
+        $additionalArguments = Escape-SpecialChars -str $additionalArguments
+        $databaseName = Escape-SpecialChars -str $databaseName
+        Execute-SqlQueryDeployment -taskType $taskType -sqlFile $sqlFile -inlineSql $inlineSql -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
     }
 
 }
