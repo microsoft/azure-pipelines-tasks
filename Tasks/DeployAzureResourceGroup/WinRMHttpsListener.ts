@@ -42,8 +42,8 @@ export class WinRMHttpsListener {
                     tl.debug("Defaulting WinRmHttpsPort of " + resourceName + " to 5986");
                     this.winRmHttpsPortMap[resourceName] = "5986";
                 }
-                tl.debug("Enabling winrm for virtual machine " + resourceName);
                 if (vm["storageProfile"]["osDisk"]["osType"] === 'Windows') {
+                    tl.debug("Enabling winrm for virtual machine " + resourceName);
                     await this.AddAzureVMCustomScriptExtension(resourceId, resourceName, resourceFQDN, vm["location"]);
                 }
                 console.log("Here 2");

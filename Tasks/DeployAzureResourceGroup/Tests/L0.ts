@@ -173,8 +173,6 @@ describe('Azure Resource Group Deployment', function () {
     it('Vms doesnot have windows VM', (done) => {
         let tp = path.join(__dirname, 'EnablePrereq.js');
         process.env["resourceGroupName"] = "NonWindowsVM";
-        process.env["csmFile"] = "\\CSM.json";
-        process.env["csmParametersFile"] = "\\CSM.json";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 

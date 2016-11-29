@@ -13,7 +13,8 @@ tr.setInput("templateLocation", "Linked Artifact")
 tr.setInput("overrideParameters", "");
 tr.setInput("deploymentMode","Complete");        
 tr.setInput("enableDeploymentPrerequisites", "true");
-tr.setInput("csmParametersFile", __dirname + process.env["csmParametersFile"]);
+tr.setInput("csmFile", __dirname+"\\CSM.json");
+tr.setInput("csmParametersFile", __dirname + "\\CSM.json");
 
 process.env[ "ENDPOINT_AUTH_AzureRM"] = "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_DATA_AzureRM_SUBSCRIPTIONID"] = "sId";
@@ -22,4 +23,5 @@ process.env["ENDPOINT_DATA_AzureRM_SUBSCRIPTIONNAME"] = "sName";
 tr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunner'));
 tr.registerMock('azure-arm-compute', require('./mock_node_modules/azure-arm-compute'));
 tr.registerMock('azure-arm-network', require('./mock_node_modules/azure-arm-network'));
+tr.registerMock('azure-arm-resource', require('./mock_node_modules/azure-arm-resource'));
 tr.run();
