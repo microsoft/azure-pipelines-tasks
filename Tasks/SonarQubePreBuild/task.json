@@ -2,9 +2,10 @@
     "id": "EAE5B2CC-AC5E-4CBA-B022-A06621F9C01F",
     "name": "SonarQubePreBuild",
     "friendlyName": "SonarQube for MSBuild - Begin Analysis",
-    "description": "Fetch the Quality Profile from SonarQube to configure the analysis",
+    "description": "[DEPRECATED] Fetch the Quality Profile from SonarQube to configure the analysis",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=620063)",
     "category": "Build",
+    "deprecated": true,
     "visibility": [
         "Build"
     ],
@@ -12,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 48
+        "Patch": 49
     },
     "minimumAgentVersion": "1.99.0",
     "demands": [

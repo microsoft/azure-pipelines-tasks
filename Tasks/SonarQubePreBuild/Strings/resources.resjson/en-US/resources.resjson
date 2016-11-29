@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "SonarQube for MSBuild - Begin Analysis",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=620063)",
-  "loc.description": "Fetch the Quality Profile from SonarQube to configure the analysis",
+  "loc.description": "[DEPRECATED] Fetch the Quality Profile from SonarQube to configure the analysis",
   "loc.instanceNameFormat": "Fetch the Quality Profile from SonarQube",
   "loc.group.displayName.serverSettings": "SonarQube Server",
   "loc.group.displayName.project": "SonarQube Project Settings",
