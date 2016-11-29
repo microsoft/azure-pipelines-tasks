@@ -40,7 +40,7 @@
         {
             "name": "WebAppName",
             "type": "pickList",
-            "label": "App service name",
+            "label": "App Service name",
             "defaultValue": "",
             "required": true,
             "properties": {
@@ -65,7 +65,7 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Enter or Select the Azure Resource Group that contains the Azure App Service specified above.",
+            "helpMarkDown": "Enter or Select the Azure Resource group that contains the Azure App Service specified above.",
             "visibleRule": "DeployToSlotFlag = true"
         },
         {
@@ -86,7 +86,7 @@
             "label": "Virtual application",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the name of the Virtual Application that has been configured in the Azure portal. The option is not required for deployments to the website root."
+            "helpMarkDown": "Specify the name of the Virtual application that has been configured in the Azure portal. The option is not required for deployments to the website root."
         },
         {
             "name": "Package",
@@ -94,12 +94,12 @@
             "label": "Package or folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
             "required": true,
-            "helpMarkDown": "Folder or file path to the Web App package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
+            "helpMarkDown": "Folder or file path to the App Service package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
         },
         {
             "name": "WebAppUri",
             "type": "string",
-            "label": "App service URL",
+            "label": "App Service URL",
             "required": false,
             "defaultValue": "",
             "groupName": "output",
@@ -108,11 +108,11 @@
         {
             "name": "UseWebDeploy",
             "type": "boolean",
-            "label": "Publish using web deploy",
+            "label": "Publish using Web Deploy",
             "required": false,
             "defaultValue": "false",
             "groupName": "AdditionalDeploymentOptions",
-            "helpMarkDown": "Publish using web deploy options are supported only when using Windows agent. On other platforms, the task relies on [Kudu REST APIs](https://github.com/projectkudu/kudu/wiki/REST-API) to deploy the Azure App Service, and following options are not supported"
+            "helpMarkDown": "Publish using Web Deploy options are supported only when using Windows agent. On other platforms, the task relies on [Kudu REST APIs](https://github.com/projectkudu/kudu/wiki/REST-API) to deploy the Azure App Service, and following options are not supported"
         },
         {
             "name": "SetParametersFile",
@@ -132,7 +132,7 @@
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
             "visibleRule": "UseWebDeploy == true",
-            "helpMarkDown": "Select the option to delete files on the Azure App Service that have no matching files in the Web App zip package."
+            "helpMarkDown": "Select the option to delete files on the Azure App Service that have no matching files in the App Service zip package."
         },
         {
             "name": "ExcludeFilesFromAppDataFlag",
@@ -157,12 +157,12 @@
         {
             "name": "RenameFilesFlag",
             "type": "boolean",
-            "label": "Rename files",
+            "label": "Rename locked files",
             "defaultValue": "false",
             "required": false,
 			"visibleRule": "UseWebDeploy == true",
             "groupName": "AdditionalDeploymentOptions",
-            "helpMarkDown": "Select the option to enable msdeploy flag MSDEPLOY_RENAME_FILES_FLAG in Azure web site's appsetting. The option if set enables msdeploy to rename files that are locked during app deployment"
+            "helpMarkDown": "Select the option to enable msdeploy flag MSDEPLOY_RENAME_FILES_FLAG in Azure web site's appsetting. The option if set enables msdeploy to rename locked files that are locked during app deployment"
         },
         {
             "name": "TakeAppOfflineFlag",
@@ -171,7 +171,7 @@
             "defaultValue": "false",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
-            "helpMarkDown": "Select the option to take the Azure App Service offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully."
+            "helpMarkDown": "Select the option to take the Azure App Service offline by placing an app_offline.htm file in the root directory of the App Service before the sync operation begins. The file will be removed after the sync operation completes successfully."
         }
     ],
     "dataSourceBindings": [
@@ -199,7 +199,7 @@
             "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
         }
     ],
-    "instanceNameFormat": "Deploy Azure App Service: $(WebAppName)",
+    "instanceNameFormat": "Azure App Service Deploy: $(WebAppName)",
     "execution": {
         "Node": {
             "target": "azurermwebappdeployment.js"
@@ -215,11 +215,11 @@
         "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
         "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
         "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website",
-        "UnabletoretrieveAzureRMWebAppConfigDetails": "Error Occurred : [Staus Code : '%s']",
-		"UnabletoretrieveAzureRMWebAppAppSettings": "Error Occurred : [Staus Code : '%s', Error Message: '%s']",
-		"UnabletoupdateAzureRMWebAppAppSettings": "Error Occurred : [Staus Code : '%s', Error Message: '%s']",
+        "UnabletoretrieveAzureRMWebAppConfigDetails": "Error Occurred : [Status Code : '%s']",
+		"UnabletoretrieveAzureRMWebAppAppSettings": "Error Occurred : [Status Code : '%s', Error Message: '%s']",
+		"UnabletoupdateAzureRMWebAppAppSettings": "Error Occurred : [Status Code : '%s', Error Message: '%s']",
         "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update deployment status : Unique Deployment ID cannot be retrieved",
-        "WebappsuccessfullypublishedatUrl0": "Web App successfully deployed at url %s",
+        "WebappsuccessfullypublishedatUrl0": "App Service successfully deployed at url %s",
         "Failedtodeploywebsite": "Failed to deploy website.",
         "Runningcommand": "Running command: %s",
         "ConstructedmsDeploycomamndlinearguments": "Constructed msDeploy comamnd line arguments",
@@ -235,8 +235,8 @@
         "UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)",
         "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
         "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "More than one package matched with specified pattern. Please restrain the search patern.",
-        "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected.",
-		"Trytodeploywebappagainwithrenamefileoptionselected": "Try to deploy web app again with Rename Files option selected.",
+        "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy app service again with app_offline option selected.",
+		"Trytodeploywebappagainwithrenamefileoptionselected": "Try to deploy app service again with Rename locked files option selected.",
         "NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern",
         "JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "JSON variable substitution can only be applied for JSON files",
         "Unabletofindnodewithtaginprovidedxmlfile": "Unable to find node with tag '%s' in provided xml file.",
