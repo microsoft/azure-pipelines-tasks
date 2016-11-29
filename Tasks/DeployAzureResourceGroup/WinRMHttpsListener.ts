@@ -42,8 +42,8 @@ export class WinRMHttpsListener {
                     tl.debug("Defaulting WinRmHttpsPort of " + resourceName + " to 5986");
                     this.winRmHttpsPortMap[resourceName] = "5986";
                 }
-                tl.debug("Enabling winrm for virtual machine " + resourceName);
                 if (vm["storageProfile"]["osDisk"]["osType"] === 'Windows') {
+                    tl.debug("Enabling winrm for virtual machine " + resourceName);
                     await this.AddAzureVMCustomScriptExtension(resourceId, resourceName, resourceFQDN, vm["location"]);
                 }
             }
@@ -93,7 +93,6 @@ export class WinRMHttpsListener {
             for (var id of addedRulesId) {
                 tl.debug("Id: " + id);
             }
-
             networkClient.networkInterfaces.list(this.resourceGroupName, async (error, networkInterfaces, request, response) => {
                 if (error) {
                     tl.debug("Error in fetching the list of network Interfaces " + error);
@@ -206,10 +205,8 @@ export class WinRMHttpsListener {
                 var usedPorts = [];
                 var lbName = lb["name"];
 
-                //console.log(lb["name"]);
                 var pools = lb["backendAddressPools"];
                 for (var pool of pools) {
-                    //console.log("pool: %s", util.inspect(pool, { depth: null }));
                     if (pool && pool["backendIPConfigurations"]) {
                         var ipConfigs = pool["backendIPConfigurations"];
                         for (var ipc of ipConfigs) {
@@ -343,6 +340,7 @@ export class WinRMHttpsListener {
         }
         catch (exception) {
             deferred.reject(exception);
+            
             throw tl.loc("FailedToAddRuleToNetworkSecurityGroup", securityGrpName);
         }
         return deferred.promise;
@@ -481,9 +479,8 @@ export class WinRMHttpsListener {
             for (var i = 0; i < extensions.length; i++) {
                 var extension = extensions[i];
                 if (extension["name"] === extensionName) {
-                    for (var j = 0; j < extension["substatuses"]; j++) {
-                        var substatus = extension["substatuses"][j];
-                        if (substatus["code"].include("ComponentStatus/StdErr") && !!substatus["message"] && substatus["message"] != "") {
+                    for (var substatus of extension["substatuses"]) {
+                        if (substatus["code"] && substatus["code"].indexOf("ComponentStatus/StdErr") >= 0 && !!substatus["message"] && substatus["message"] != "") {
                             invalidExecutionStatus = true;
                             break;
                         }
