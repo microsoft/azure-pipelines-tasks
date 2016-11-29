@@ -48,8 +48,8 @@ export class WinRMHttpsListener {
                     tl.debug("Defaulting WinRmHttpsPort of " + resourceName + " to 5986");
                     this.winRmHttpsPortMap[resourceName] = "5986";
                 }
-                tl.debug("Enabling winrm for virtual machine " + resourceName);
                 if (vm["storageProfile"]["osDisk"]["osType"] === 'Windows') {
+                    tl.debug("Enabling winrm for virtual machine " + resourceName);
                     await this.AddAzureVMCustomScriptExtension(resourceId, resourceName, resourceFQDN, vm["location"]);
                 }
             }
@@ -337,6 +337,7 @@ export class WinRMHttpsListener {
         }
         catch (exception) {
             deferred.reject(exception);
+            
             throw tl.loc("FailedToAddRuleToNetworkSecurityGroup", securityGrpName);
         }
         return deferred.promise;
@@ -475,9 +476,8 @@ export class WinRMHttpsListener {
             for (var i = 0; i < extensions.length; i++) {
                 var extension = extensions[i];
                 if (extension["name"] === extensionName) {
-                    for (var j = 0; j < extension["substatuses"]; j++) {
-                        var substatus = extension["substatuses"][j];
-                        if (substatus["code"].include("ComponentStatus/StdErr") && !!substatus["message"] && substatus["message"] != "") {
+                    for (var substatus of extension["substatuses"]) {
+                        if (substatus["code"] && substatus["code"].indexOf("ComponentStatus/StdErr") >= 0 && !!substatus["message"] && substatus["message"] != "") {
                             invalidExecutionStatus = true;
                             break;
                         }

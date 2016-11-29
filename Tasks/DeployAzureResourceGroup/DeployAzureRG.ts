@@ -35,7 +35,7 @@ export class AzureRGTaskParameters {
             this.action = tl.getInput("action");
             this.location = tl.getInput("location");
             this.templateLocation = tl.getInput("templateLocation");
-            if (this.templateLocation === "Linked Artifact") {
+            if (this.templateLocation === "Linked artifact") {
                 this.csmFile = tl.getPathInput("csmFile");
                 this.csmParametersFile = tl.getPathInput("csmParametersFile");
             } else {
