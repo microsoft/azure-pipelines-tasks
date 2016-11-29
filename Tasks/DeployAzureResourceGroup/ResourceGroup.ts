@@ -36,17 +36,17 @@ export class ResourceGroup {
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
         this.taskParameters = taskParameters;
-        this.WinRMHttpsListener = new winRM.WinRMHttpsListener(this.taskParameters.resourceGroupName, this.taskParameters.credentials, this.taskParameters.subscriptionId);
+        this.WinRMHttpsListener = new winRM.WinRMHttpsListener(this.taskParameters);
         this.envController = new env.RegisterEnvironment(this.taskParameters);
     }
 
     private createDeploymentName(): string {
         var name;
-        if (this.taskParameters.templateLocation == "Linked Artifact")
+        if (this.taskParameters.templateLocation == "Linked artifact")
             name = this.taskParameters.csmFile;    
         else 
             name = this.taskParameters.csmFileLink;
-        name = path.basename(this.taskParameters.csmFile).split(".")[0].replace(" ", "");
+        name = path.basename(name).split(".")[0].replace(" ", "");
         var ts = new Date(Date.now());
         var depName = util.format("%s-%s%s%s-%s%s", name, ts.getFullYear(), ts.getMonth(), ts.getDate(),ts.getHours(), ts.getMinutes());
         return depName;
@@ -199,7 +199,7 @@ export class ResourceGroup {
 
     private createTemplateDeployment(armClient) {
         console.log("Creating Template Deployment")
-        if (this.taskParameters.templateLocation === "Linked Artifact") {
+        if (this.taskParameters.templateLocation === "Linked artifact") {
             var deployment = this.getDeploymentDataForLinkedArtifact();
             this.startDeployment(armClient, deployment);
         } else {

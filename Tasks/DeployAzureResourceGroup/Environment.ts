@@ -1,5 +1,8 @@
+/// <reference path="../../definitions/Q.d.ts" />
 var networkManagementClient = require("azure-arm-network");
 var computeManagementClient = require("azure-arm-compute");
+
+import q = require("q");
 import util = require("util");
 import tl = require("vsts-task-lib/task");
 import deployAzureRG = require("./DeployAzureRG");
@@ -154,7 +157,7 @@ export class RegisterEnvironment {
         }
         this.inboundNatRuleMap = inboundNatRuleMap;
     }
-
+    
     private InstantiateEnvironment() {
         var resources = this.getResources();
         tl.debug("Got resources..");
@@ -172,11 +175,15 @@ export class RegisterEnvironment {
         var port = "5986";
         if (interfaceDetails.inboundNatRule) {
             var natRules = interfaceDetails.inboundNatRule;
-            for (var i=0; i < natRules.length; i++) {
-                var natRule = natRules[i];
-                if (this.inboundNatRuleMap[natRule.id].backendPort == 5986) {
-                    port = this.inboundNatRuleMap[natRule.id].frontendPort
+            try {
+                for (var i=0; i < natRules.length; i++) {
+                    var natRule = natRules[i];
+                    if (this.inboundNatRuleMap[natRule.id].backendPort == 5986) {
+                        port = this.inboundNatRuleMap[natRule.id].frontendPort
+                    }
                 }
+            } catch (error) {
+                throw new Error("Error while fetching Nat rules");
             }
         }
         return port.toString();      
@@ -184,12 +191,16 @@ export class RegisterEnvironment {
 
     private getFQDN(nicId) {
         var interfaceDetails = this.publicAddressToNicIdMap[nicId];
-        if (interfaceDetails.publicAddress) {
-            return this.publicAddressToFqdnMap[interfaceDetails.publicAddress];
-        } else {
-            var natRule = interfaceDetails.inboundNatRule[0].id;
-            var publicAddress = this.inboundNatRuleMap[natRule].publicAddress;
-            return this.publicAddressToFqdnMap[publicAddress];
+        try {
+            if (interfaceDetails.publicAddress) {
+                return this.publicAddressToFqdnMap[interfaceDetails.publicAddress];
+            } else {
+                var natRule = interfaceDetails.inboundNatRule[0].id;
+                var publicAddress = this.inboundNatRuleMap[natRule].publicAddress;
+                return this.publicAddressToFqdnMap[publicAddress];
+            }
+        } catch (error) {
+            throw new Error("Unable to fetch FQDN data from one or more VMs");
         }
     }
 
@@ -256,6 +267,5 @@ export class RegisterEnvironment {
         }
         this.publicAddressToFqdnMap = fqdns;
     }
-    
 }
 
