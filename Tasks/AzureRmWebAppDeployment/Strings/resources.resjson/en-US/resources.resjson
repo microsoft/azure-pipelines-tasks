@@ -64,7 +64,7 @@
   "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)",
   "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "More than one package matched with specified pattern. Please restrain the search patern.",
-  "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy app service again with app_offline option selected.",
+  "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy app service again with Take application offline option selected.",
   "loc.messages.Trytodeploywebappagainwithrenamefileoptionselected": "Try to deploy app service again with Rename locked files option selected.",
   "loc.messages.NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern",
   "loc.messages.JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "JSON variable substitution can only be applied for JSON files",
