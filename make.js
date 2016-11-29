@@ -345,8 +345,8 @@ target.testLegacy = function() {
     run('mocha ' + testsSpecPath, /*inheritStreams:*/true);
 }
 
-target.package = function() {
-    // validate powershell 5
+target.layout = function() {
+     // validate powershell 5
     ensureTool('powershell.exe',
         '-NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command "$PSVersionTable.PSVersion.Major"',
         function (output) {
@@ -363,7 +363,10 @@ target.package = function() {
 
     // create the aggregated tasks layout
     util.createAggregatedZip(packagePath);
+}
 
+target.package = function() {
+    target.layout();
     // nuspec
     var version = options.version;
     if (!version) {
