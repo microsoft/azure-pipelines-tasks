@@ -18,17 +18,13 @@ export class AzureUtil {
         var deferred = q.defer();
         var details = [this.getLoadBalancers(), this.getNetworkInterfaceDetails(), this.getPublicIPAddresses(), this.getVMDetails()];
         q.all(details).then(() => {
-            this.loadBalancersDetails = details[0];
-            this.vmDetails = details[3];
-            this.networkInterfaceDetails = details[1];
-            this.publicAddressDetails = details[2];
             q.resolve(this);
         })
         return deferred.promise;
     }
 
     
-    private getLoadBalancers() {
+    public getLoadBalancers() {
         var deferred = q.defer();
         var armClient = new networkManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
         armClient.loadBalancers.list(this.taskParameters.resourceGroupName, (error, loadbalancers, request, response) => {
@@ -36,12 +32,13 @@ export class AzureUtil {
                 console.log("Error while getting list of Load Balancers", error);
                 throw new Error("FailedToFetchLoadBalancers");
             }
+            this.loadBalancersDetails = loadbalancers;
             deferred.resolve(loadbalancers);
         });
         return deferred.promise;
     }
 
-    private getVMDetails() {
+    public getVMDetails() {
         var deferred = q.defer();
         var armClient = new computeManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
         armClient.virtualMachines.list(this.taskParameters.resourceGroupName, (error, virtualMachines, request, response) => {
@@ -49,12 +46,13 @@ export class AzureUtil {
                 console.log("Error while getting list of Virtual Machines", error);
                 throw new Error("FailedToFetchVMs");
             }
+            this.vmDetails = virtualMachines;
             deferred.resolve(virtualMachines);
         });
         return deferred.promise;
     }
 
-    private getNetworkInterfaceDetails() {
+    public getNetworkInterfaceDetails() {
         var deferred = q.defer();
         var armClient = new networkManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
         armClient.networkInterfaces.list(this.taskParameters.resourceGroupName, (error, networkInterfaces, request, response) => {
@@ -62,12 +60,13 @@ export class AzureUtil {
                 console.log("Error while getting list of Network Interfaces", error);
                 throw new Error("FailedToFetchNetworkInterfaces");
             }
+            this.networkInterfaceDetails = networkInterfaces;
             deferred.resolve(networkInterfaces);
         });
         return deferred.promise;
     }
 
-    private getPublicIPAddresses() {
+    public getPublicIPAddresses() {
         var deferred = q.defer();
         var armClient = new networkManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
         armClient.publicIPAddresses.list(this.taskParameters.resourceGroupName, (error, publicAddresses, request, response) => {
@@ -75,6 +74,7 @@ export class AzureUtil {
                 console.log("Error while getting list of Public Addresses", error);
                 throw new Error("FailedToFetchPublicAddresses");
             }
+            this.publicAddressDetails = publicAddresses;
             deferred.resolve(publicAddresses);
         });
         return deferred.promise;

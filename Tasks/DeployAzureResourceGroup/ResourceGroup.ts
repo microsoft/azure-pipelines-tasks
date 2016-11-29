@@ -36,7 +36,7 @@ export class ResourceGroup {
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
         this.taskParameters = taskParameters;
-        this.WinRMHttpsListener = new winRM.WinRMHttpsListener(this.taskParameters.resourceGroupName, this.taskParameters.credentials, this.taskParameters.subscriptionId);
+        this.WinRMHttpsListener = new winRM.WinRMHttpsListener(this.taskParameters);
         this.envController = new env.RegisterEnvironment(this.taskParameters);
     }
 
