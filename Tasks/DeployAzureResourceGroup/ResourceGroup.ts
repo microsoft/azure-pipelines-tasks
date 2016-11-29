@@ -128,7 +128,7 @@ export class ResourceGroup {
         if (template) {
             properties["template"] = template;
         }
-        if (this.taskParameters.csmParametersFileLink && this.taskParameters.csmParametersFileLink.trim()!="" && this.taskParameters.overrideParameters.trim()=="")
+        if (this.taskParameters.csmParametersFileLink && this.taskParameters.csmParametersFileLink.trim()!="" && (!this.taskParameters.overrideParameters || this.taskParameters.overrideParameters.trim()==""))
             properties["parametersLink"] = {"uri" : this.taskParameters.csmParametersFileLink };
         else {
             var params = parameters;
@@ -203,7 +203,7 @@ export class ResourceGroup {
             var deployment = this.getDeploymentDataForLinkedArtifact();
             this.startDeployment(armClient, deployment);
         } else {
-            if (this.taskParameters.csmParametersFileLink && this.taskParameters.csmParametersFileLink.trim() && !this.taskParameters.overrideParameters && !this.taskParameters.overrideParameters.trim()) {
+            if (this.taskParameters.csmParametersFileLink && this.taskParameters.csmParametersFileLink.trim() && (!this.taskParameters.overrideParameters || this.taskParameters.overrideParameters.trim()=="")) {
                 var deployment = this.createDeployment({});
                 this.startDeployment(armClient, deployment);
             } else {
