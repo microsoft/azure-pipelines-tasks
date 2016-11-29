@@ -137,5 +137,12 @@
       "target": "vsmobilecenterupload.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "CannotDecodeEndpoint": "ms-resource:loc.messages.CannotDecodeEndpoint",
+    "NoResponseFromServer": "ms-resource:loc.messages.NoResponseFromServer",
+    "FailedToUploadFile": "ms-resource:loc.messages.FailedToUploadFile",
+    "NoApiTokenFound": "ms-resource:loc.messages.NoApiTokenFound",
+    "Succeeded": "ms-resource:loc.messages.Succeeded"
   }
 }

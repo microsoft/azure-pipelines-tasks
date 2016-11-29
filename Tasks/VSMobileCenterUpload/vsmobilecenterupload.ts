@@ -20,7 +20,7 @@ class SymbolsUploadInfo {
 }
 
 function getEndpointDetails(endpointInputFieldName) {
-    var errorMessage = "Could not decode the endpoint.";
+    var errorMessage = tl.loc("CannotDecodeEndpoint");
     var endpoint = tl.getInput(endpointInputFieldName, true);
 
     if (!endpoint) {
@@ -51,7 +51,7 @@ function responseHandler(defer, err, res, body, handler: () => void) {
     } 
 
     if (!res) {
-        defer.reject("No response from server");
+        defer.reject(tl.loc("NoResponseFromServer"));
         return;
     }
 
@@ -123,7 +123,7 @@ function commitPackage(apiServer: string, apiVersion: string, appSlug: string, u
             if (body && body['package_url']) {
                 defer.resolve(body['package_url']);
             } else {
-                defer.reject('Failed to complete file upload.');
+                defer.reject(tl.loc("FailedToUploadFile"));
             }
         });
     })
@@ -261,6 +261,8 @@ function commitSymbols(apiServer: string, apiVersion: string, appSlug: string, s
 
 async function run() {
     try {
+        tl.setResourcePath(path.join( __dirname, 'task.json'));
+
         // Get build inputs
         let apiEndpointData = getEndpointDetails('serverEndpoint');
         let apiToken: string = apiEndpointData.authToken;
@@ -303,7 +305,7 @@ async function run() {
 
         // Validate inputs
         if (!apiToken) {
-            throw new Error("No API token found on Sonoma Connection.");
+            throw new Error(tl.loc("NoApiTokenFound"));
         }
         
         let app = utils.resolveSinglePath(appFilePattern);
@@ -337,7 +339,7 @@ async function run() {
             await commitSymbols(effectiveApiServer, effectiveApiVersion, appSlug, symbolsUploadInfo.symbol_upload_id, apiToken);
         } 
 
-        tl.setResult(tl.TaskResult.Succeeded, "Succeeded");
+        tl.setResult(tl.TaskResult.Succeeded, tl.loc("Succeeded"));
     } catch (err) {
         tl.setResult(tl.TaskResult.Failed, `${err}`);
     }

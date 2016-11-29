@@ -25,5 +25,10 @@
   "loc.input.label.releaseNotesFile": "Release Notes File",
   "loc.input.help.releaseNotesFile": "Select a UTF-8 encoded text file which contains the Release Notes for this version.",
   "loc.input.label.distributionGroupId": "Distribution Group Id",
-  "loc.input.help.distributionGroupId": "Id of the distribution group app will deploy to, leave it empty for the default group."
+  "loc.input.help.distributionGroupId": "Id of the distribution group app will deploy to, leave it empty for the default group.",
+  "loc.messages.CannotDecodeEndpoint": "Could not decode the endpoint.",
+  "loc.messages.NoResponseFromServer": "No response from serve.",
+  "loc.messages.FailedToUploadFile": "Failed to complete file upload.",
+  "loc.messages.NoApiTokenFound": "No API token found on Sonoma Connection.",
+  "loc.messages.Succeeded": "Task succeeded"
 }

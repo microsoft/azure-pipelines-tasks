@@ -36,7 +36,7 @@
             "label": "App Slug",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The app slug is in the format of {username}/{app_identifier}.  To locate {username} and {app_identifier} for an app, click on its name from https://mobile.azure.com/apps, and the resulting url is in the format of https://mobile.azure.com/users/{username}/apps/{app_identifier}" 
+            "helpMarkDown": "The app slug is in the format of {username}/{app_identifier}.  To locate {username} and {app_identifier} for an app, click on its name from https://mobile.azure.com/apps, and the resulting url is in the format of https://mobile.azure.com/users/{username}/apps/{app_identifier}"
         },
         {
             "name": "app",
@@ -57,7 +57,7 @@
                 "Apple": "Apple",
                 "AndroidJava": "Android (Java)",
                 "AndroidNative": "Android (Native)",
-                "Windows": "Windows"                
+                "Windows": "Windows"
             }
         },
         {
@@ -105,7 +105,7 @@
                 "input": "Enter Release Notes",
                 "file": "Select Release Notes File"
             }
-        },       
+        },
         {
             "name": "releaseNotesInput",
             "type": "multiLine",
@@ -128,7 +128,7 @@
             "defaultValue": "",
             "label": "Distribution Group Id",
             "helpMarkDown": "Id of the distribution group app will deploy to, leave it empty for the default group.",
-            "required": false 
+            "required": false
         }
     ],
     "instanceNameFormat": "Deploy $(app) to Visual Studio Mobile Center",
@@ -137,5 +137,12 @@
             "target": "vsmobilecenterupload.js",
             "argumentFormat": ""
         }
+    },
+    "messages": {
+        "CannotDecodeEndpoint": "Could not decode the endpoint.",
+        "NoResponseFromServer": "No response from serve.",
+        "FailedToUploadFile": "Failed to complete file upload.",
+        "NoApiTokenFound": "No API token found on Sonoma Connection.",
+        "Succeeded":"Task succeeded"
     }
 }
