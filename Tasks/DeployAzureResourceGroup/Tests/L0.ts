@@ -420,7 +420,6 @@ describe('Azure Resource Group Deployment', function () {
             assert(tr.stdout.indexOf("virtualMachineExtensions.get is called") > 0, "Should get the status for Custom Script Extension");
             assert(tr.stdout.indexOf("Custom Script extension is for enabling Https Listener on VM") > 0, "The present custom script extension should enable winrm Https Listener");
             assert(tr.stdout.indexOf("Validating the winrm configuration custom script extension status") > 0, "Should validate the substatus of the extension");
-            assert(tr.stdout.indexOf("Validating the winrm configuration custom script extension status") > 0, "Should validate the substatus of the extension");
             assert(tr.stdout.indexOf("virtualMachines.get is called with options: { expand: 'instanceView' }") > 0, "Should try to get the substatus of the extension");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") <= 0, "Should not add Custom Script Extension");
             assert(tr.stdout.indexOf("Trying to add a network security group rule") <= 0, "Shouldn't try adding NSG rule");            

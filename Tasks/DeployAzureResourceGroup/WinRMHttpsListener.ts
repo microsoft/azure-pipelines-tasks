@@ -46,7 +46,6 @@ export class WinRMHttpsListener {
                     tl.debug("Enabling winrm for virtual machine " + resourceName);
                     await this.AddAzureVMCustomScriptExtension(resourceId, resourceName, resourceFQDN, vm["location"]);
                 }
-                console.log("Here 2");
             }
             await this.AddWinRMHttpsNetworkSecurityRuleConfig();
             deferred.resolve(null);
@@ -90,19 +89,12 @@ export class WinRMHttpsListener {
                 }
             }
 
-            console.log("Added rules id are:");
-            for (var id of addedRulesId) {
-                console.log("Id: %s", id);
-            }
-
             networkClient.networkInterfaces.list(this.resourceGroupName, async (error, networkInterfaces, request, response) => {
                 if (error) {
                     tl.debug("Error in fetching the list of network Interfaces " + util.inspect(error, { depth: null }));
                     throw new Error(tl.loc("FailedToFetchNetworkInterfaces"));
                 }
-                console.log("Network Interfaces: %s", util.inspect(networkInterfaces, { depth: null }));
                 for (var nic of networkInterfaces) {
-                    console.log("NIC: %s", util.inspect(nic, { depth: null }));
                     var flag: boolean = false;
                     for (var ipc of nic["ipConfigurations"]) {
                         if (!!ruleIdMap[ipc["id"]] && ruleIdMap[ipc["id"]] != "") {
@@ -209,10 +201,8 @@ export class WinRMHttpsListener {
                 var usedPorts = [];
                 var lbName = lb["name"];
 
-                //console.log(lb["name"]);
                 var pools = lb["backendAddressPools"];
                 for (var pool of pools) {
-                    //console.log("pool: %s", util.inspect(pool, { depth: null }));
                     if (pool && pool["backendIPConfigurations"]) {
                         var ipConfigs = pool["backendIPConfigurations"];
                         for (var ipc of ipConfigs) {
@@ -485,9 +475,8 @@ export class WinRMHttpsListener {
             for (var i = 0; i < extensions.length; i++) {
                 var extension = extensions[i];
                 if (extension["name"] === extensionName) {
-                    for (var j = 0; j < extension["substatuses"]; j++) {
-                        var substatus = extension["substatuses"][j];
-                        if (substatus["code"].indexOf("ComponentStatus/StdErr") >= 0 && !!substatus["message"] && substatus["message"] != "") {
+                    for (var substatus of extension["substatuses"]) {
+                        if (substatus["code"] && substatus["code"].indexOf("ComponentStatus/StdErr") >= 0 && !!substatus["message"] && substatus["message"] != "") {
                             invalidExecutionStatus = true;
                             break;
                         }
