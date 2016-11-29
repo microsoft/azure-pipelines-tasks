@@ -192,7 +192,7 @@ export class WinRMHttpsListener {
         var networkClient = new networkManagementClient(this.credentials, this.subscriptionId);
         var deferred = Q.defer<string>();
 
-        var loadBalancers = await this.azureUtils.getLoadBalancer();
+        var loadBalancers = await this.azureUtils.getLoadBalancers();
         for (var lb of loadBalancers) {
             /*1. Find all the busy ports
               2. Find the vms which are in backend Pools but their winRMPort is not mapped
