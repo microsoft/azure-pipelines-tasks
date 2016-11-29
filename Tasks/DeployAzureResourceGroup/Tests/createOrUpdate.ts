@@ -5,11 +5,11 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'main.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tr.setInput("action", "Create Or Update Resource Group");
+tr.setInput("action", "Create or update resource group");
 tr.setInput("ConnectedServiceName", "AzureRM");
 tr.setInput("resourceGroupName", "dummy");
 tr.setInput("location", "West US");
-tr.setInput("templateLocation", "Linked Artifact")
+tr.setInput("templateLocation", "Linked artifact")
 tr.setInput("csmFile", __dirname + process.env["csmFile"]);
 tr.setInput("overrideParameters", "");
 tr.setInput("deploymentMode","Complete");        

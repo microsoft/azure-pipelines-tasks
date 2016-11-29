@@ -42,7 +42,7 @@ export class ResourceGroup {
 
     private createDeploymentName(): string {
         var name;
-        if (this.taskParameters.templateLocation == "Linked Artifact")
+        if (this.taskParameters.templateLocation == "Linked artifact")
             name = this.taskParameters.csmFile;    
         else 
             name = this.taskParameters.csmFileLink;
@@ -199,7 +199,7 @@ export class ResourceGroup {
 
     private createTemplateDeployment(armClient) {
         console.log("Creating Template Deployment")
-        if (this.taskParameters.templateLocation === "Linked Artifact") {
+        if (this.taskParameters.templateLocation === "Linked artifact") {
             var deployment = this.getDeploymentDataForLinkedArtifact();
             this.startDeployment(armClient, deployment);
         } else {
