@@ -6,7 +6,8 @@
     "helpMarkDown": "Upload mobile app packages to Visual Stuidio Mobile Center",
     "category": "Deploy",
     "visibility": [
-        "Build"
+        "Build",
+        "Release"
     ],
     "author": "Microsoft Corporation",
     "version": {
