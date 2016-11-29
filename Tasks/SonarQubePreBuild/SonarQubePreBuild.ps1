@@ -27,9 +27,9 @@ Write-Verbose "includeFullReport = $includeFullReport"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 
-Write-Warning "We are transferring ownership of the SonarQube related build tasks to Sonar Source. Please replace these build tasks with the ones provided by Sonar Source. 
-To do this, visit the marketplace to install the extension created by Sonar Source: https://aka.ms/sqextension
-For more details go to https://aka.ms/sqdeprecation"
+Write-Warning " The ownership of the SonarQube related build tasks is being transferred to SonarSource." 
+Write-Warning " Please replace this build task with the one brought by SonarSource's extension on the marketplace: https://aka.ms/sqextension"
+Write-Warning " For more details go to https://aka.ms/sqtransfer"
 
 . $PSScriptRoot/Common/SonarQubeHelpers/SonarQubeHelper.ps1
 
@@ -40,9 +40,3 @@ ExitOnPRBuild
 . $PSScriptRoot/SonarQubePreBuildImpl.ps1
 
 InvokePreBuildTask
-
-
-
-
-
-

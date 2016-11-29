@@ -20,7 +20,7 @@
         "msbuild",
         "java"
     ],
-    "instanceNameFormat": "Finish the analysis and upload the results to SonarQube",
+    "instanceNameFormat": "[DEPRECATED] Finish the analysis and upload the results to SonarQube",
     "execution": {
         "PowerShell": {
             "target": "$(currentDirectory)\\SonarQubePostTest.ps1",

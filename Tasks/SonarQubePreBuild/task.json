@@ -136,7 +136,7 @@
             "groupName": "advanced"
         }
     ],
-    "instanceNameFormat": "Fetch the Quality Profile from SonarQube",
+    "instanceNameFormat": "[DEPRECATED] Fetch the Quality Profile from SonarQube",
     "execution": {
         "PowerShell": {
             "target": "$(currentDirectory)\\SonarQubePreBuild.ps1",
