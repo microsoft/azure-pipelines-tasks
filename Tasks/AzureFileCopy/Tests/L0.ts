@@ -33,11 +33,15 @@ describe('AzureFileCopy Suite', function () {
         it('Validate AzureFileCopy.Utility Validate-AzurePowershellVersion', (done) => {
             psr.run(path.join(__dirname, 'L0ValidateAzurePSVersion.ps1'), done);
         });
-        /*
         it('Validate AzureFileCopy.Utility Get-StorageKey', (done) => {
             psr.run(path.join(__dirname, 'L0GetStorageKey.ps1'), done);
         });
-        */
+        it('Validate AzureFileCopy.Utility Get-StorageAccountType', (done) => {
+            psr.run(path.join(__dirname, 'L0GetStorageAccountType.ps1'), done);
+        });
+        it('Validate AzureFileCopy.Utility Get-blobStorageEndpoint', (done) => {
+            psr.run(path.join(__dirname, 'L0GetblobStorageEndpoint.ps1'), done);
+        });
         it('Validate AzureFileCopy.Utility Get-StorageKey', (done) => {
             psr.run(path.join(__dirname, 'L0UtilityThrowError.ps1'), done);
         });
@@ -74,11 +78,9 @@ describe('AzureFileCopy Suite', function () {
         it('Validate AzureFileCopy.Utility Get-AzureRMVMsConnectionDetailsInResourceGroup', (done) => {
             psr.run(path.join(__dirname, 'L0GetRMVMConnectionDetailsInRG.ps1'), done);
         });
-        /*
         it('Validate AzureFileCopy.Utility  Check-AzureCloudServiceExists', (done) => {
             psr.run(path.join(__dirname, 'L0CheckCloudServiceExists.ps1'), done);
         });
-        */
         it('Validate AzureFileCopy.Utility Get-AzureVMResourcesProperties', (done) => {
             psr.run(path.join(__dirname, 'L0GetAzureVMResourcesProperties.ps1'), done);
         });

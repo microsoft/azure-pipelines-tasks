@@ -193,6 +193,16 @@ $vmIdWhichHasSecurityGroupLatest = "/subscriptions/c94bda7a-0577-4374-9c53-0e46a
 $vmIdWhichHasNoSecurityGroup = "/subscriptions/c94bda7a-0577-4374-9c53-0e46a9fb0f70/resourceGroups/AzureFileCopyTaskPlatformTestDoNotDelete/providers/Microsoft.Compute/virtualMachines/mytestVM0"
 $duplicateRuleName = "VSO-Custom-WinRM-Https-Port-Deplicate"
 
+#Create Mock Object type for  Hyak.Common.CloudException
+$Source = @"
+    using System;
+namespace Hyak.Common {
+    public class CloudException : Exception {
+    }
+}
+"@ 
+Add-Type -TypeDefinition $Source -Language CSharp
+
 function Get-AzureStorageKeyFromRDFE
 {
     param([string]$storageAccountName)
@@ -201,7 +211,52 @@ function Get-AzureStorageKeyFromRDFE
     {
         if(-not $storageAccounts.ContainsKey($storageAccountName))
         {
-            throw [Hyak.Common.CloudException]"ResourceNotFound"
+            throw New-Object Hyak.Common.CloudException
+        }
+
+        return  $storageAccounts[$storageAccountName]
+    }
+}
+
+function Get-AzureStorageAccountTypeFromRDFE
+{
+    param([string]$storageAccountName)
+
+    if(-not [string]::IsNullOrEmpty($storageAccountName))
+    {
+        if(-not $storageAccounts.ContainsKey($storageAccountName))
+        {
+            throw New-Object Hyak.Common.CloudException
+        }
+
+        return  $storageAccounts[$storageAccountName]
+    }
+}
+
+function Get-AzureBlobStorageEndpointFromRDFE
+{
+    param([string]$storageAccountName)
+
+    if(-not [string]::IsNullOrEmpty($storageAccountName))
+    {
+        if(-not $storageAccounts.ContainsKey($storageAccountName))
+        {
+            throw New-Object Hyak.Common.CloudException
+        }
+
+        return  $storageAccounts[$storageAccountName]
+    }
+}
+
+function Get-AzureBlobStorageEndpointFromARM
+{
+    param([string]$storageAccountName)
+
+    if(-not [string]::IsNullOrEmpty($storageAccountName))
+    {
+        if(-not $storageAccounts.ContainsKey($storageAccountName))
+        {
+            throw "Unable to find storage type $storageAccountName with Connection SPN"
         }
 
         return  $storageAccounts[$storageAccountName]
@@ -262,7 +317,7 @@ function Get-AzureCloudService
     {
         if(-not $cloudServices.ContainsKey($cloudServiceName))
         {
-            throw [Hyak.Common.CloudException]"ResourceNotFound"
+            throw New-Object Hyak.Common.CloudException
         }
 
         return
