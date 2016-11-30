@@ -29,7 +29,7 @@ async function run() {
         var removeAdditionalFilesFlag: boolean = tl.getBoolInput('RemoveAdditionalFilesFlag', false);
         var excludeFilesFromAppDataFlag: boolean = tl.getBoolInput('ExcludeFilesFromAppDataFlag', false);
         var takeAppOfflineFlag: boolean = tl.getBoolInput('TakeAppOfflineFlag', false);
-		var renameFilesFlag: boolean = tl.getBoolInput('RenameFilesFlag', false);
+        var renameFilesFlag: boolean = tl.getBoolInput('RenameFilesFlag', false);
         var additionalArguments: string = tl.getInput('AdditionalArguments', false);
         var webAppUri:string = tl.getInput('WebAppUri', false);
         var xmlTransformsAndVariableSubstitutions = tl.getBoolInput('XmlTransformsAndVariableSubstitutions', false);
@@ -48,9 +48,9 @@ async function run() {
         SPN["tenantID"] = endPointAuthCreds.parameters["tenantid"];
         SPN["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
 		
-		if(!deployToSlotFlag){
-			resourceGroupName = await azureRESTUtility.getResourceGroupName(SPN, webAppName);
-		}
+        if(!deployToSlotFlag){
+            resourceGroupName = await azureRESTUtility.getResourceGroupName(SPN, webAppName);
+        }
         var publishingProfile = await azureRESTUtility.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
         tl._writeLine(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
 
@@ -109,19 +109,19 @@ async function run() {
                 throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
             }
 			
-			var appSettings = await azureRESTUtility.getWebAppAppSettings(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-			if(renameFilesFlag){
-				if(appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES == undefined || appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES == '0'){
-					appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES = '1';
-					await azureRESTUtility.updateWebAppAppSettings(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
-				}
-			}
-			else if(!renameFilesFlag){
-				if(appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES != undefined && appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES != '0'){
-					delete appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES;
-					await azureRESTUtility.updateWebAppAppSettings(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
-				}
-			}
+            var appSettings = await azureRESTUtility.getWebAppAppSettings(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+            if(renameFilesFlag){
+                if(appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES == undefined || appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES == '0'){
+                    appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES = '1';
+                    await azureRESTUtility.updateWebAppAppSettings(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
+                }
+            }
+            else if(!renameFilesFlag){
+                if(appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES != undefined && appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES != '0'){
+                    delete appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES;
+                    await azureRESTUtility.updateWebAppAppSettings(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
+                }
+            }
             tl._writeLine("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);         
             tl._writeLine("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);
             await msDeploy.DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,

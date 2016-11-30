@@ -156,21 +156,20 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
         requestDetails["requestBody"].author = 'author';
         console.log("kudu log requestBody is:" + JSON.stringify(requestDetails["requestBody"]));
     },
-	getResourceGroupName: function(SPN, webAppName) {
-		return "foobar";
-	},
-	getWebAppAppSettings : function (SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string){
-		var appSettings = {
-			properties : {
-				MSDEPLOY_RENAME_LOCKED_FILES : '1'
-			}
-		};
-		return appSettings;
-	},
-	updateWebAppAppSettings : function (){
-		return true;
-	}
-	
+    getResourceGroupName: function (SPN, webAppName) {
+        return "foobar";
+    },
+    getWebAppAppSettings : function (SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string){
+        var appSettings = {
+            properties : {
+                MSDEPLOY_RENAME_LOCKED_FILES : '1'
+            }
+        };
+        return appSettings;
+    },
+    updateWebAppAppSettings : function (){
+        return true;
+    }
 });
 
 tr.setAnswers(a);

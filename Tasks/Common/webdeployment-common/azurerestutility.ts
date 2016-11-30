@@ -24,18 +24,17 @@ var azureApiVersion = 'api-version=2016-08-01';
 */
 export async function getResourceGroupName(SPN, webAppName: string)
 {
-        var requestURL = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\' AND name EQ \'' + 
-                          webAppName + '\'&api-version=2016-07-01';
-        var accessToken = await getAuthorizationToken(SPN);
-        var headers = {
-            authorization: 'Bearer '+ accessToken
-        };
-        var webAppID = await getAzureRMWebAppID(SPN, webAppName, requestURL, headers);
+    var requestURL = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\' AND name EQ \'' + webAppName + '\'&api-version=2016-07-01';
+    var accessToken = await getAuthorizationToken(SPN);
+    var headers = {
+        authorization: 'Bearer '+ accessToken
+    };
+    var webAppID = await getAzureRMWebAppID(SPN, webAppName, requestURL, headers);
 
-        tl.debug('Web App details : ' + webAppID.id);
-        var resourceGroupName = webAppID.id.split ('/')[4];
-        tl.debug('AzureRM Resource Group Name : ' + resourceGroupName);
-		return resourceGroupName;
+    tl.debug('Web App details : ' + webAppID.id);
+    var resourceGroupName = webAppID.id.split ('/')[4];
+    tl.debug('AzureRM Resource Group Name : ' + resourceGroupName);
+    return resourceGroupName;
 }
 /**
  * updates the deployment status in kudu service
@@ -127,22 +126,22 @@ export async function getAzureRMWebAppPublishProfile(SPN, webAppName: string, re
 
 function getAuthorizationToken(SPN): Q.Promise<string> {
 
-		var deferred = Q.defer<string>();
-		var authorityUrl = authUrl + SPN.tenantID;
+    var deferred = Q.defer<string>();
+	var authorityUrl = authUrl + SPN.tenantID;
 
-		var context = new AuthenticationContext(authorityUrl);
+	var context = new AuthenticationContext(authorityUrl);
 
-		tl.debug('Requesting for Auth Token: ' + authorityUrl);
-		context.acquireTokenWithClientCredentials(armUrl, SPN.servicePrincipalClientID, SPN.servicePrincipalKey, (error, tokenResponse) => {
-			if(error) {
-				deferred.reject(error);
-			}
-			else {
-				deferred.resolve(tokenResponse.accessToken);
-			}
-		});
-		
-		return deferred.promise;
+	tl.debug('Requesting for Auth Token: ' + authorityUrl);
+	context.acquireTokenWithClientCredentials(armUrl, SPN.servicePrincipalClientID, SPN.servicePrincipalKey, (error, tokenResponse) => {
+		if(error) {
+			deferred.reject(error);
+		}
+		else {
+			deferred.resolve(tokenResponse.accessToken);
+		}
+	});
+	
+	return deferred.promise;
 }
 
 async function getAzureRMWebAppID(SPN, webAppName: string, url: string, headers) {
@@ -255,18 +254,17 @@ export async function updateWebAppAppSettings(SPN, webAppName: string, resourceG
 	tl.debug('Updating the Current List of App Settings: ' + configUrl);
 	
 	restObj._sendJson('PUT', configUrl, "", appSettings, headers, null, (error, response, body) =>{
-								if(error){
-									deferred.reject(error);
-								}
-								else if(response === 200){
-									deferred.resolve(appSettings);
-								}
-								else {
-									tl.error(error);
-									deferred.reject(tl.loc('UnabletoupdateAzureRMWebAppAppSettings', response, error));
-								}
-							});
+		if(error){
+			deferred.reject(error);
+		}
+		else if(response === 200){
+			deferred.resolve(appSettings);
+		}
+		else {
+			tl.error(error);
+			deferred.reject(tl.loc('UnabletoupdateAzureRMWebAppAppSettings', response, error));
+		}
+	});
 							
-							return deferred.promise;
-							
+	return deferred.promise;
 }
