@@ -3,6 +3,9 @@ param
     [Parameter(Mandatory=$true, HelpMessage="Enter Azure Subscription name. You need to be Subscription Admin to execute the script")]
     [string] $subscriptionName,
 
+	[Parameter(Mandatory=$false, HelpMessage="Provide a name for the SPN application that you would create")]
+    [string] $appName = $env:USERNAME,
+	
     [Parameter(Mandatory=$true, HelpMessage="Provide a password for SPN application that you would create")]
     [string] $password,
 
@@ -13,12 +16,14 @@ param
 #Initialize
 $ErrorActionPreference = "Stop"
 $VerbosePreference = "SilentlyContinue"
-$userName = $env:USERNAME
 $newguid = [guid]::NewGuid()
-$displayName = [String]::Format("VSO.{0}.{1}", $userName, $newguid)
+if ([string]::IsNullOrEmpty($appName))
+{
+	$appName = $env:USERNAME
+}
+$displayName = [String]::Format("VSO.{0}.{1}", $appName -replace (' n','_'), $newguid)
 $homePage = "http://" + $displayName
 $identifierUri = $homePage
-
 
 #Initialize subscription
 $isAzureModulePresent = Get-Module -Name AzureRM* -ListAvailable
