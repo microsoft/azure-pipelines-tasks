@@ -15,8 +15,6 @@ var AuthenticationContext = adal.AuthenticationContext;
 var authUrl = 'https://login.windows.net/';
 var armUrl = 'https://management.azure.com/';
 var azureApiVersion = 'api-version=2016-08-01';
-var accessToken = "";
-var expirationTime;
 
 /**
  * gets the name of the ResourceGroup that contains the webApp
@@ -129,11 +127,7 @@ export async function getAzureRMWebAppPublishProfile(SPN, webAppName: string, re
 
 function getAuthorizationToken(SPN): Q.Promise<string> {
 
-    var deferred = Q.defer<string>();
-	if(accessToken !== "" && (new Date().getTime() < expirationTime)){
-		deferred.resolve(accessToken);
-	}
-	else{
+		var deferred = Q.defer<string>();
 		var authorityUrl = authUrl + SPN.tenantID;
 
 		var context = new AuthenticationContext(authorityUrl);
@@ -144,13 +138,11 @@ function getAuthorizationToken(SPN): Q.Promise<string> {
 				deferred.reject(error);
 			}
 			else {
-				expirationTime = new Date(tokenResponse.expiresOn).getTime() - 1800000;
-				accessToken = tokenResponse.accessToken;
 				deferred.resolve(tokenResponse.accessToken);
 			}
 		});
-	}
-    return deferred.promise;
+		
+		return deferred.promise;
 }
 
 async function getAzureRMWebAppID(SPN, webAppName: string, url: string, headers) {
