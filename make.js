@@ -367,8 +367,8 @@ target.package = function() {
     // nuspec
     var version = options.version;
     if (!version) {
-        console.log('ERROR: supply version with --version');
-        process.exit(0);
+        console.warn('Skipping nupkg creation. Supply version with --version.');
+        return;
     }
 
     if (!semver.valid(version)) {
