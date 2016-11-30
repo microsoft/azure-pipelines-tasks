@@ -28,14 +28,14 @@ describe('AzureFileCopy Suite', function () {
 
     if(ps) {
         it('Validate AzureFileCopy.Utility Get-AzureUtility', (done) => {
-            psr.run(path.join(__dirname, 'L0ValidateGetAzureUtility.ps1'), done);
+            psr.run(path.join(__dirname, 'L0GetAzureUtility.ps1'), done);
         });
         it('Validate AzureFileCopy.Utility Validate-AzurePowershellVersion', (done) => {
             psr.run(path.join(__dirname, 'L0ValidateAzurePSVersion.ps1'), done);
         });
         /*
         it('Validate AzureFileCopy.Utility Get-StorageKey', (done) => {
-            psr.run(path.join(__dirname, 'L0ValidateGetStorageKey.ps1'), done);
+            psr.run(path.join(__dirname, 'L0GetStorageKey.ps1'), done);
         });
         */
         it('Validate AzureFileCopy.Utility Get-StorageKey', (done) => {

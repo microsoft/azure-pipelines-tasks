@@ -10,7 +10,7 @@ $exceptionMessage = "Exception thrown"
 
 Register-Mock Write-Telemetry { }
 
-# Test 1 "Should throw if destination blob"
+# Test 1 "Should throw if destination blob is invalid"
 Register-Mock Copy-FilesToAzureBlob { throw $exceptionMessage } -ParametersEvaluator {$StorageAccountName -eq $invalidInputStorageAccount}
 Assert-Throws {
     Upload-FilesToAzureContainer -sourcePath $validInputSourcePath -storageAccountName $invalidInputStorageAccount -containerName $validInputContainerName `

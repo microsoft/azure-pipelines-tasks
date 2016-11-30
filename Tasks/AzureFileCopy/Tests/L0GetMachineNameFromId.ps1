@@ -69,7 +69,7 @@ Assert-AreEqual $false $fqdnMap.ContainsKey($vm0Name)
 Assert-AreEqual $true $fqdnMap.ContainsKey($vm1Name)
 Assert-AreEqual $vmfqdn $fqdnMap[$vm1Name]
 
-# Test 4 
+# Test 4 "throw error if no resource is available and ThrowOnTotalUnavailability is set to true"
 
 [hashtable]$fqdnMap = @{}
 [hashtable]$winRMHttpsPortMap = @{}
