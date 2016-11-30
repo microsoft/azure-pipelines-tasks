@@ -1,0 +1,33 @@
+{
+    "getVariable": {
+        "System.DefaultWorkingDirectory": "/source/dir",
+        "build.sourcesdirectory": "/source/dir",
+        "VS140COMNTools": "/vs/path",
+        "VSTest_14.0": "/vs/IDE/CommonExtensions/Microsoft/TestWindow",
+        "vstest.ignorefailure": "true"
+    },
+    "match": {
+        "**\\packages\\**\\*TestAdapter.dll": []
+    },
+    "findMatch": {
+        "/source/dir/some/*pattern": [
+            "/source/dir/someFile2",
+            "/source/dir/someFile1"
+        ],
+        "/source/dir/someFile1": [
+            "/source/dir/someFile1"
+        ]
+    },
+    "exec": {
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile2 /source/dir/someFile1 /logger:trx": {
+            "code": 1,
+            "stdout": "running vstest"
+        }
+    },
+    "rmRF": {
+        "\\source\\dir\\TestResults": {
+            "success": true,
+            "message": "success"
+        }
+    }
+}

@@ -397,7 +397,8 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
     tl.rmRF(testResultsDirectory, true);
     tl.mkdirP(testResultsDirectory);
     tl.cd(workingDirectory);
-    vstest.exec(<tr.IExecOptions>{ failOnStdErr: true })
+    var writeOnStdErr = (ignoreVstestFailure && ignoreVstestFailure.toLowerCase() === "true") ? false : true;
+    vstest.exec(<tr.IExecOptions>{ failOnStdErr: writeOnStdErr })
         .then(function(code) {
             cleanUp(parallelRunSettingsFile);
             defer.resolve(code);
