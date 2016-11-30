@@ -139,6 +139,7 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
         }
         var webAppPublishKuduUrl = publishingProfile.publishUrl;
         var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
+        requestDetails["requestBody"].author = 'author';
         console.log("kudu log requestBody is:" + JSON.stringify(requestDetails["requestBody"]));
     },
     getAzureRMWebAppConfigDetails: function(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
@@ -153,24 +154,7 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
 }
 });
 
-tr.registerMock('./azurerestutility.js', {
-    updateDeploymentStatus: function(publishingProfile, isDeploymentSuccess ) {
-        if(isDeploymentSuccess) {
-            console.log('Updated history to kudu');
-        }
-        else {
-            console.log('Failed to update history to kudu');
-        }
-        var webAppPublishKuduUrl = publishingProfile.publishUrl;
-        var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
-        console.log("kudu log requestBody is:" + JSON.stringify(requestDetails["requestBody"]));
-    }
-});
-
 tr.registerMock('./kuduutility.js', {
-    archiveFolder: function(webAppPackage, webAppZipFile) {
-        throw new Error('Folder Archiving Failed');
-    },
     getVirtualAndPhysicalPaths: function (virtualApplication, virtualApplicationMappings) {
         // construct URL depending on virtualApplication or root of webapplication 
         var physicalPath = "/site/wwwroot";

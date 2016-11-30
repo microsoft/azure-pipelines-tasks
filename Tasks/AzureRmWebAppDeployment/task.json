@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 1,
-        "Patch": 5
+        "Patch": 8
     },
     "minimumAgentVersion": "1.102.0",
     "groups": [
@@ -26,11 +26,6 @@
             "name": "output",
             "displayName": "Output",
             "isExpanded": true
-        },
-        {
-            "name": "FileTransformsAndVariableSubstitution",
-            "displayName": "File Transforms and Variable Substitutions",
-            "isExpanded": false
         }
     ],
     "inputs": [
@@ -167,26 +162,7 @@
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
             "helpMarkDown": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully."
-        },
-        {
-            "name": "XmlTransformsAndVariableSubstitutions",
-            "type": "boolean",
-            "label": "XML Transforms & Variable Substitutions",
-            "required": false,
-            "defaultValue": false,
-            "groupName": "FileTransformsAndVariableSubstitution",
-            "helpMarkDown": ""
-        },
-        {
-            "name": "VariableSubstitution",
-            "type": "boolean",
-            "label": "Variable Substitution",
-            "required": false,
-            "defaultValue": false,
-            "groupName": "FileTransformsAndVariableSubstitution",
-            "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
-            "helpMarkDown": "Variables defined in the Build or Release Definition will be automatically substituted in the appSettings, applicationSettings, and connectionStrings section of the config files. If same variables are defined in the Release Definition and in the Environment, then the Environment variables will supersede the Release Definition variables. Variable Substitution is run after Config Transforms."
-       }  
+        }
     ],
     "dataSourceBindings": [
         {
@@ -267,6 +243,7 @@
         "PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "Publish using webdeploy options are supported only when using Windows agent",
         "WebAppDoesntExist": "Webapp '%s' doesn't exist. Webapp should exist before deployment.",
         "EncodeNotSupported": "Detected file encoding of the file %s as %s. Variable substitution and Transformation is not supported with file encoding %s. Supported encodings are UTF-8 and UTF-16 LE.",
-        "UnknownFileEncodeError": "Unable to detect encoding of the file %s. Supported encodings are UTF-8 and UTF-16 LE."
+        "UnknownFileEncodeError": "Unable to detect encoding of the file %s (typeCode: %s). Supported encodings are UTF-8 and UTF-16 LE.",
+        "ShortFileBufferError": "File buffer is too short to detect encoding type : %s"
     }
 }

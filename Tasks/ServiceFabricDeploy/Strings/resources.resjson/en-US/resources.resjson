@@ -12,6 +12,10 @@
   "loc.input.help.publishProfilePath": "Path to the publish profile that defines the settings to use. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path.",
   "loc.input.label.applicationParameterPath": "Application Parameters",
   "loc.input.help.applicationParameterPath": "Path to the application parameters file. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path. If specified, this will override the value in the publish profile.",
+  "loc.input.label.copyPackageTimeoutSec": "CopyPackageTimeoutSec",
+  "loc.input.help.copyPackageTimeoutSec": "Timeout in seconds for copying application package to image store.",
+  "loc.input.label.registerPackageTimeoutSec": "RegisterPackageTimeoutSec",
+  "loc.input.help.registerPackageTimeoutSec": "Timeout in seconds for registering application package.",
   "loc.input.label.overridePublishProfileSettings": "Override All Publish Profile Upgrade Settings",
   "loc.input.help.overridePublishProfileSettings": "This will override all upgrade settings with either the value specified below or the default value if not specified.",
   "loc.input.label.isUpgrade": "Upgrade the Application",
@@ -20,7 +24,6 @@
   "loc.input.label.UpgradeReplicaSetCheckTimeoutSec": "UpgradeReplicaSetCheckTimeoutSec",
   "loc.input.label.ReplicaQuorumTimeoutSec": "ReplicaQuorumTimeoutSec",
   "loc.input.label.TimeoutSec": "TimeoutSec",
-  "loc.input.label.Force": "Force",
   "loc.input.label.ForceRestart": "ForceRestart",
   "loc.input.label.HealthCheckRetryTimeoutSec": "HealthCheckRetryTimeoutSec",
   "loc.input.label.HealthCheckWaitDurationSec": "HealthCheckWaitDurationSec",
@@ -77,5 +80,6 @@
   "loc.messages.SFSDK_UpgradeSuccess": "Upgrade completed successfully.",
   "loc.messages.SFSDK_UpgradeRolledBack": "Upgrade was rolled back.",
   "loc.messages.SFSDK_UnzipPackage": "Attempting to unzip '{0}' to location '{1}'.",
-  "loc.messages.SFSDK_UnexpectedError": "Unexpected Error. Error details: $_.Exception.Message"
+  "loc.messages.SFSDK_UnexpectedError": "Unexpected Error. Error details: $_.Exception.Message",
+  "loc.messages.CopyPackageTimeoutSecWarning": "The CopyPackageTimeoutSec parameter requires version '2.3' of the Service Fabric SDK, but the installed version is '{0}'. This parameter will be ignored."
 }

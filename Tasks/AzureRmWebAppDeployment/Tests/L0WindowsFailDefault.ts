@@ -130,10 +130,7 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
 		}
 
 		return config;
-	}
-});
-
-tr.registerMock('./azurerestutility.js', {
+	},
     updateDeploymentStatus: function(publishingProfile, isDeploymentSuccess ) {
         if(isDeploymentSuccess) {
             console.log('Updated history to kudu');
@@ -147,7 +144,6 @@ tr.registerMock('./azurerestutility.js', {
         console.log("kudu log requestBody is:" + JSON.stringify(requestDetails["requestBody"]));
     }
 });
-
 
 tr.setAnswers(a);
 tr.run();
