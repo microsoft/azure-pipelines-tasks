@@ -151,7 +151,21 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
 		}
 
 		return config;
-	}
+	},
+    getResourceGroupName: function (SPN, webAppName) {
+        return "foobar";
+    },
+    getWebAppAppSettings : function (SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string){
+        var appSettings = {
+            properties : {
+                MSDEPLOY_RENAME_LOCKED_FILES : '1'
+            }
+        };
+        return appSettings;
+    },
+    updateWebAppAppSettings : function (){
+        return true;
+    }
 });
 
 tr.registerMock('./kuduutility.js', {

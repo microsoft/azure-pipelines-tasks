@@ -151,13 +151,24 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
   	}
 
     return config;
-}
+	},
+    getResourceGroupName: function (SPN, webAppName) {
+        return "foobar";
+    },
+    getWebAppAppSettings : function (SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string){
+        var appSettings = {
+            properties : {
+                MSDEPLOY_RENAME_LOCKED_FILES : '1'
+            }
+        };
+        return appSettings;
+    },
+    updateWebAppAppSettings : function (){
+        return true;
+    }
 });
 
 tr.registerMock('./kuduutility.js', {
-    archiveFolder: function(webAppPackage, webAppZipFile) {
-        throw new Error('Folder Archiving Failed');
-    },
     getVirtualAndPhysicalPaths: function (virtualApplication, virtualApplicationMappings) {
         // construct URL depending on virtualApplication or root of webapplication 
         var physicalPath = "/site/wwwroot";

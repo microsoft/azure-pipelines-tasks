@@ -15,13 +15,15 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
+    "Major": 2,
     "Minor": 0,
-    "Patch": 81
+    "Patch": 0
   },
   "demands": [
     "vstest"
   ],
+  "preview": "true",
+  "releaseNotes": "Test Impact and support for minimatch patterns.",
   "minimumAgentVersion": "1.89.0",
   "groups": [
     {
@@ -50,12 +52,25 @@
   ],
   "inputs": [
     {
-      "name": "testAssembly",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.testAssembly",
-      "defaultValue": "**\\*test*.dll;-:**\\obj\\**",
+      "name": "testAssemblyVer2",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.testAssemblyVer2",
+      "defaultValue": "**\\*test*.dll\n!**\\obj\\**",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.testAssembly",
+      "helpMarkDown": "ms-resource:loc.input.help.testAssemblyVer2",
+      "groupName": "executionOptions",
+      "properties": {
+        "rows": "3",
+        "resizable": "true"
+      }
+    },
+    {
+      "name": "searchFolder",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.searchFolder",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.searchFolder",
       "groupName": "executionOptions"
     },
     {
@@ -215,14 +230,6 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "PowerShell": {
-      "target": "$(currentDirectory)\\VSTest.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)",
-      "platforms": [
-        "windows"
-      ]
-    },
     "Node": {
       "target": "vstest.js"
     }
@@ -253,6 +260,7 @@
     "ErrorReadingVstestVersion": "ms-resource:loc.messages.ErrorReadingVstestVersion",
     "UnexpectedVersionString": "ms-resource:loc.messages.UnexpectedVersionString",
     "UnexpectedVersionNumber": "ms-resource:loc.messages.UnexpectedVersionNumber",
-    "VstestDiagNotSupported": "ms-resource:loc.messages.VstestDiagNotSupported"
+    "VstestDiagNotSupported": "ms-resource:loc.messages.VstestDiagNotSupported",
+    "NoIncludePatternFound": "ms-resource:loc.messages.NoIncludePatternFound"
   }
 }

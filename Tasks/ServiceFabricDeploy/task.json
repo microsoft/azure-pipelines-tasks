@@ -12,8 +12,8 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 1,
-        "Patch": 2
+        "Minor": 2,
+        "Patch": 0
     },
     "minimumAgentVersion": "1.95.0",
     "groups": [
@@ -56,6 +56,22 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Path to the application parameters file. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path. If specified, this will override the value in the publish profile."
+        },
+        {
+            "name": "copyPackageTimeoutSec",
+            "type": "string",
+            "label": "CopyPackageTimeoutSec",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Timeout in seconds for copying application package to image store."
+        },
+        {
+            "name": "registerPackageTimeoutSec",
+            "type": "string",
+            "label": "RegisterPackageTimeoutSec",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Timeout in seconds for registering application package."
         },
         {
             "name": "overridePublishProfileSettings",
@@ -126,15 +142,6 @@
             "label": "TimeoutSec",
             "defaultValue": "",
             "required": false,
-            "groupname": "upgrade",
-            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
-        },
-        {
-            "name": "Force",
-            "type": "boolean",
-            "label": "Force",
-            "defaultValue": "true",
-            "required": true,
             "groupname": "upgrade",
             "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
         },
@@ -281,6 +288,7 @@
         "SFSDK_UpgradeSuccess": "Upgrade completed successfully.",
         "SFSDK_UpgradeRolledBack": "Upgrade was rolled back.",
         "SFSDK_UnzipPackage": "Attempting to unzip '{0}' to location '{1}'.",
-        "SFSDK_UnexpectedError": "Unexpected Error. Error details: $_.Exception.Message"
+        "SFSDK_UnexpectedError": "Unexpected Error. Error details: $_.Exception.Message",
+        "CopyPackageTimeoutSecWarning": "The CopyPackageTimeoutSec parameter requires version '2.3' of the Service Fabric SDK, but the installed version is '{0}'. This parameter will be ignored."
     }
 }

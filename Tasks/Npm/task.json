@@ -2,7 +2,7 @@
     "id": "FE47E961-9FA8-4106-8639-368C022D43AD",
     "name": "Npm",
     "friendlyName": "npm",
-    "description": "Run a npm command",
+    "description": "Run an npm command",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613746)",
     "category": "Package",
     "author": "Microsoft Corporation",
