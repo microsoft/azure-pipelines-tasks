@@ -110,6 +110,7 @@ try {
         throw (Get-VstsLocString -Key PublishProfileRequiredAppParams)
     }
 
+    $upgradeAction = "RegisterAndUpgrade"
     if ((Get-VstsInput -Name overridePublishProfileSettings) -eq "true")
     {
         Write-Host (Get-VstsLocString -Key OverrideUpgradeSettings)
@@ -117,6 +118,7 @@ try {
 
         if ($isUpgrade)
         {
+            $upgradeAction =  Get-VstsInput -Name upgradeAction -Require
             $upgradeParameters = Get-VstsUpgradeParameters
         }
     }
@@ -139,7 +141,7 @@ try {
         $publishParameters = @{
             'ApplicationPackagePath' = $applicationPackagePath
             'ApplicationParameterFilePath' = $applicationParameterFile
-            'Action' = "RegisterAndUpgrade"
+            'Action' = $upgradeAction
             'UpgradeParameters' = $upgradeParameters
             'UnregisterUnusedVersions' = $true
             'ErrorAction' = "Stop"
