@@ -27,6 +27,7 @@ Write-Verbose "runPowershellInParallel = $runPowershellInParallel"
 Write-Verbose "sessionVariables = $sessionVariables"
 
 . $PSScriptRoot/PowerShellJob.ps1
+. $PSScriptRoot/Utility.ps1
 
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
@@ -60,8 +61,6 @@ if ($enableDetailedLoggingString -ne "true")
 {
     $enableDetailedLoggingString = "false"
 }
-
-. $PSScriptRoot/Utility.ps1
 
 # Telemetry
 Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
