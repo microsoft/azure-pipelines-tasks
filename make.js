@@ -10,6 +10,7 @@ var mopts = {
 };
 var options = minimist(process.argv, mopts);
 
+// asdfasdfasdfasdfsdfsd
 // remove well-known parameters from argv before loading make,
 // otherwise each arg will be interpreted as a make target
 process.argv = options._;
