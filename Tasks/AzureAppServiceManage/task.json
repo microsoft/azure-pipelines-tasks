@@ -28,6 +28,19 @@
             "helpMarkDown": "Select the Azure Resource Manager subscription."
         },
         {
+            "name": "Action",
+            "type": "pickList",
+            "lablel": "Action",
+            "required": false,
+            "helpMarkDown": "",
+            "defaultValue": "StartAppService",
+            "options": {
+                "StartAppService": "Start App Service",
+                "StopAppService": "Stop App Service",
+                "SwapSlot": "Swap Slots"
+            }
+        },
+        {
             "name": "WebAppName",
             "type": "pickList",
             "label": "App Service Name",
@@ -127,7 +140,7 @@
     ],
     "execution": {
         "Node": {
-            "target": "azurewebappslotswap.js"
+            "target": "azureappservicemanage.js"
         }
     },
    "messages": {

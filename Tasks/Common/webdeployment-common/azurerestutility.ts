@@ -268,3 +268,35 @@ export async function updateWebAppAppSettings(SPN, webAppName: string, resourceG
 							
     return deferred.promise;
 }
+
+export async function swapWebAppSlot(SPN, resourceGroupName: string, webAppName: string, sourceSlot: string, targetSlot: string,preserveVnet: boolean) {
+
+    var deferred = Q.defer<any>();
+    var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
+                 '/providers/Microsoft.Web/sites/' + webAppName + "/slots/" + sourceSlot + '/slotsswap?' + azureApiVersion;
+
+    var accessToken = await getAuthorizationToken(SPN);
+    var headers = {
+        'Authorization': 'Bearer '+ accessToken,
+        'Content-Type': 'application/json'
+    };
+
+    var body = {
+        targetSlot: targetSlot,
+        preserveVnet: preserveVnet
+    }
+
+    httpObj.send('POST', url, body, headers, (error, response, body) => {
+        if(error) {
+            deferred.reject(error);
+        }
+        if(response.statusCode === 202) {
+            deferred.resolve(tl.loc("Successfullyswappedslots", webAppName, sourceSlot, targetSlot));
+        }
+        else {
+            tl.error(response.statusMessage);
+            deferred.reject(tl.loc("Failedtoswapslots",response.statusCode, webAppName));
+        }
+    });
+    return deferred.promise;
+}
