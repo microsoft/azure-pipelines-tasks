@@ -346,7 +346,7 @@ target.testLegacy = function() {
 }
 
 target.package = function() {
-    // validate powershell 5
+     // validate powershell 5
     ensureTool('powershell.exe',
         '-NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command "$PSVersionTable.PSVersion.Major"',
         function (output) {
@@ -367,7 +367,8 @@ target.package = function() {
     // nuspec
     var version = options.version;
     if (!version) {
-        fail('supply version with --version');
+        console.warn('Skipping nupkg creation. Supply version with --version.');
+        return;
     }
 
     if (!semver.valid(version)) {

@@ -35,9 +35,9 @@ gulp.task('test', function (cb) {
 gulp.task('package', function (cb) {
     var publish = process.argv.filter(function (arg) { return arg == '--server' }).length > 0;
     make('build', cb) &&
-        make('package', cb) &&
-        make('test', cb) &&
-        make('testLegacy', cb) &&
-        publish &&
-        make('publish', cb);
+    make('package', cb) &&
+    make('test', cb) &&
+    make('testLegacy', cb) &&
+    publish &&
+    make('publish', cb);
 });
