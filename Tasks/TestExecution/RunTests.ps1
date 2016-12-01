@@ -6,10 +6,6 @@ try {
     Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
     # Get the inputs.
-    $adminUserName = Get-VstsInput -Name adminUserName -Require
-    $adminPassword = Get-VstsInput -Name adminPassword -Require
-    $testUserName = Get-VstsInput -Name testUserName -Require
-    $testUserPassword = Get-VstsInput -Name testUserPassword -Require
     $testDropLocation = Get-VstsInput -Name dropLocation -Require
     $runUITests = Get-VstsInput -Name runUITests -Require
     $testSelection = Get-VstsInput -Name testSelection -Require
@@ -25,7 +21,6 @@ try {
     $testRunTitle = Get-VstsInput -Name testRunTitle
     $buildPlatform = Get-VstsInput -Name buildPlatform
     $buildConfiguration = Get-VstsInput -Name buildConfiguration
-    $autMachineGroup = Get-VstsInput -Name autMachineGroup
 
     Write-Host "****************************************************************"
     Write-Host "                    Task Input Information                      "
@@ -50,14 +45,13 @@ try {
     Write-Host "****************************************************************"
 
     # Import the helpers.
-    . $PSScriptRoot\DownloadTestPlatform.ps1
     . $PSScriptRoot\TestAgentConfiguration.ps1
-    Import-Module "$PSScriptRoot\modules\TFS.Modules\Microsoft.TeamFoundation.DistributedTask.Task.TestExecution.dll"
+    Import-Module "$PSScriptRoot\modules\TfsAssemblies\Microsoft.TeamFoundation.DistributedTask.Task.TestExecution.dll"
 
     # Fix Assembly Redirections
     # VSTS uses Newton Json 8.0 while the System.Net.Http uses 6.0
     # Redirection to Newton Json 8.0
-    $jsonAssembly = [reflection.assembly]::LoadFrom($PSScriptRoot + "\modules\TFS.Modules\Newtonsoft.Json.dll") 
+    $jsonAssembly = [reflection.assembly]::LoadFrom($PSScriptRoot + "\modules\TfsAssemblies\Newtonsoft.Json.dll") 
     $onAssemblyResolve = [System.ResolveEventHandler] {
         param($sender, $e)
         if ($e.Name -eq "Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed") { return $jsonAssembly }
@@ -78,7 +72,6 @@ try {
     $phaseExecutionModel = Get-VstsTaskVariable -Name System.ParallelExecutionType -Require 
 
     # Generate Environment URI
-    # This is uniqure environment URI for each DTA Run. One can dynamically add machines by overrriding this with current URI
     $taskInstanceIdString = Get-VstsTaskVariable -Name DTA_INSTANCE_ID
     $taskInstanceId = 1
     
@@ -86,23 +79,20 @@ try {
         [int]::TryParse($taskInstanceIdString, [ref]$taskInstanceId)
         $taskInstanceId++
     }
-    
     Set-VstsTaskVariable -Name DTA_INSTANCE_ID -Value $taskInstanceId
 
+    # This is uniqure environment URI for each DTA Run. One can dynamically add machines by overrriding this with current URI
     $taskInstanceId = Get-VstsTaskVariable -Name DTA_INSTANCE_ID
     $environmentUri = "dta://env/Test/_apis/release/$releaseId/$phaseId/$taskInstanceId"
 
     # *** Todo ***
     # Handle errors properly
-    # Uniform code naming and refactoring
-    # Add support for Willow
     # Get testrun agaisnt Environment -> if it's already completed -> quit //Improvement
 
-    # Downlaod and Configure Test platform
-    # DownloadTestPlatform -ProductVersion "14.0"
     $asServiceOrProcess = if($runUITests -ieq "false") {"Service"} else {"Process"}
+	
     # Trim out spaces from username.
-    $returnCode = ConfigureTestAgent -AdminUserName ($adminUserName.Trim()) -AdminPassword $adminPassword -TestUserName ($testUserName.Trim()) -TestUserPassword $testUserPassword -TfsCollection $tfsCollectionUrl -EnvironmentUrl $environmentUri -PersonalAccessToken $personalAccessToken -AsServiceOrProcess $asServiceOrProcess
+    $returnCode = ConfigureTestAgent -TfsCollection $tfsCollectionUrl -EnvironmentUrl$environmentUri -PersonalAccessToken $personalAccessToken -AsServiceOrProcess $asServiceOrProcess
 
     # Start the execution of Distributed Test Runs
     $testRunParameters = New-Object 'System.Collections.Generic.Dictionary[String,Object]'
@@ -126,7 +116,6 @@ try {
     
     $runTests = New-Object 'Microsoft.TeamFoundation.DistributedTask.Task.TestExecution.RunTests'
     $runTests.StartExecution($testRunParameters)
-
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation
 }
