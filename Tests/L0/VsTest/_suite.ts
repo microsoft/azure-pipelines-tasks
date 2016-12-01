@@ -239,7 +239,7 @@ describe('VsTest Suite', function () {
         tr.run()
             .then(() => {
                 assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length > 0, 'should have written to stderr.');
+                assert(tr.stderr.length > 0, 'should have written to stderr');
                 assert(tr.failed, 'task should have failed');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
                 assert(tr.stdout.search(/##vso\[results.publish/) < 0, 'should not have published test results.');
