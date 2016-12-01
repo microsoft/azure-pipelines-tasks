@@ -1,5 +1,5 @@
 {
-  "name": "Agent.Tasks.Sonoma",
+  "name": "Agent.Tasks.VSMobileCenterUpload",
   "dependencies": {
      "glob": "registry:npm/glob#6.0.0+20160723033700"
   },

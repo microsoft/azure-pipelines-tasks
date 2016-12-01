@@ -9,8 +9,7 @@ var Zip = require('jszip');
 export function checkAndFixFilePath(p, name) {
     if (p) {
         var workDir = tl.getVariable("System.DefaultWorkingDirectory");
-        var sourcesDir = tl.getVariable("Build.SourcesDirectory");
-        if (arePathEqual(p, workDir) || arePathEqual(p, sourcesDir)) {
+        if (arePathEqual(p, workDir)) {
             // Path points to the source root, ignore it
             p = null;
         } else {
@@ -87,7 +86,7 @@ export function createZipFile(zipStream : NodeJS.ReadableStream, filename : stri
                 defer.resolve();
             })
             .on('error', function(err) {
-                defer.reject(`Failed to create ${filename}. Error = ${err}`);
+                defer.reject(tl.loc("FailedToCreateFile", filename, err));
             });
 
     return defer.promise;
@@ -106,11 +105,11 @@ export function resolveSinglePath(pattern: string): string {
         let matches: string[] = glob.sync(pattern);
         
         if (!matches || matches.length === 0) {
-            throw new Error(`Cannot find any file based on ${pattern}.`);
+            throw new Error(tl.loc("CannotFindAnyFile",pattern));
         }
         
         if(matches.length != 1) {
-            throw new Error(`Found multiple files matching ${pattern}.`);
+            throw new Error(tl.loc("FoundMultipleFiles",pattern));
         }
         
         return matches[0];

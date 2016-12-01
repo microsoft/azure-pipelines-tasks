@@ -1,7 +1,7 @@
 {
   "name": "vsts-tasks-vsmobilecenterupload",
   "version": "1.0.0",
-  "description": "VSTS Visual Studio Mobile Center Upload Task",
+  "description": "Visual Studio Mobile Center Upload Task",
   "main": "vsmobilecenterupload.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
