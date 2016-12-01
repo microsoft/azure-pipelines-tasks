@@ -128,19 +128,17 @@ export class ResourceGroup {
         if (template) {
             properties["template"] = template;
         }
-        if (this.taskParameters.csmParametersFileLink && this.taskParameters.csmParametersFileLink.trim()!="" && (!this.taskParameters.overrideParameters || this.taskParameters.overrideParameters.trim()=="")) {
+        if (this.taskParameters.csmParametersFileLink && this.taskParameters.csmParametersFileLink.trim()!="" && (!this.taskParameters.overrideParameters || this.taskParameters.overrideParameters.trim()=="")) 
             properties["parametersLink"] = {"uri" : this.taskParameters.csmParametersFileLink };
-        }
         else {
             var params = parameters;
             params = this.updateOverrideParameters(params);
             properties["parameters"] = params;
         }
-            properties["mode"] = this.taskParameters.deploymentMode;
-            properties["debugSetting"] = {"detailLevel": "requestContent, responseContent"};
+        properties["mode"] = this.taskParameters.deploymentMode;
+        properties["debugSetting"] = {"detailLevel": "requestContent, responseContent"};
         return new Deployment(properties, this.taskParameters.location)
     }
-
 
     private getDeploymentDataForLinkedArtifact() {
         console.log("Getting deployment data from a linked artifact..");
