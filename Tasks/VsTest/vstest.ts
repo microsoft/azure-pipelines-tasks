@@ -397,16 +397,16 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
     tl.rmRF(testResultsDirectory, true);
     tl.mkdirP(testResultsDirectory);
     tl.cd(workingDirectory);
-    var writeOnStdErr = (ignoreVstestFailure && ignoreVstestFailure.toLowerCase() === "true") ? false : true;
-    vstest.exec(<tr.IExecOptions>{ failOnStdErr: writeOnStdErr })
+    var ignoreTestFailures = ignoreVstestFailure && ignoreVstestFailure.toLowerCase() === "true";
+    vstest.exec(<tr.IExecOptions>{ failOnStdErr: !ignoreTestFailures })
         .then(function(code) {
             cleanUp(parallelRunSettingsFile);
             defer.resolve(code);
         })
         .fail(function(err) {
-			cleanUp(parallelRunSettingsFile);
+		    cleanUp(parallelRunSettingsFile);
             tl.warning(tl.loc('VstestFailed'));
-			if (ignoreVstestFailure && ignoreVstestFailure.toLowerCase() === "true") {
+			if (ignoreTestFailures) {
 				tl.warning(err);
 				defer.resolve(0);
 			}
