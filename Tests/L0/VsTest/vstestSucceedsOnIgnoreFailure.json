@@ -4,7 +4,7 @@
         "build.sourcesdirectory": "/source/dir",
         "VS140COMNTools": "/vs/path",
         "VSTest_14.0": "/vs/IDE/CommonExtensions/Microsoft/TestWindow",
-        "vstest.ignorefailure": "true"
+        "vstest.ignoretestfailures": "true"
     },
     "match": {
         "**\\packages\\**\\*TestAdapter.dll": []

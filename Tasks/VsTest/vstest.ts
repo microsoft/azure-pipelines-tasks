@@ -49,7 +49,7 @@ try {
     var useNewCollectorFlag = tl.getVariable('tia.useNewCollector');
     var isPrFlow = tl.getVariable('tia.isPrFlow');
     var vsTestVersionForTIA: number[] = null;
-	var ignoreVstestFailure: string = tl.getVariable("vstest.ignorefailure");
+	var ignoreVstestFailure: string = tl.getVariable("vstest.ignoretestfailures");
 
     var useNewCollector = false;
     if (useNewCollectorFlag && useNewCollectorFlag.toUpperCase() === "TRUE") {
