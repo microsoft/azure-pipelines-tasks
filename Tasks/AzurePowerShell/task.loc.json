@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 3
+    "Patch": 4
   },
   "demands": [
     "azureps"
@@ -55,12 +55,39 @@
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
     },
     {
+      "name": "ScriptType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ScriptType",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptType",
+      "defaultValue": "FilePath",
+      "options": {
+        "FilePath": "AzurePowerShell Script File Path",
+        "InlineScript": "Inline AzurePowerShell Script"
+      }
+    },
+    {
       "name": "ScriptPath",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.ScriptPath",
       "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.ScriptPath"
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptPath",
+      "visibleRule": "ScriptType = FilePath"
+    },
+    {
+      "name": "AzurePowerShellInline",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.AzurePowerShellInline",
+      "required": false,
+      "defaultValue": "# You can write your azure powershell scripts inline here. \n# You can also pass predefined and custom variables to this script using arguments",
+      "helpMarkDown": "ms-resource:loc.input.help.AzurePowerShellInline",
+      "visibleRule": "ScriptType = InlineScript",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "500"
+      }
     },
     {
       "name": "ScriptArguments",

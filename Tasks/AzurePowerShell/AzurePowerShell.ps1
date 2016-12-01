@@ -2,13 +2,17 @@ Trace-VstsEnteringInvocation $MyInvocation
 Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
 # Get inputs.
-$scriptPath = Get-VstsInput -Name ScriptPath -Require
+$scriptType = Get-VstsInput -Name ScriptType -Require
+$scriptPath = Get-VstsInput -Name ScriptPath
+$scriptInline = Get-VstsInput -Name AzurePowerShellInline
 $scriptArguments = Get-VstsInput -Name ScriptArguments
 
 # Validate the script path and args do not contains new-lines. Otherwise, it will
 # break invoking the script via Invoke-Expression.
-if ($scriptPath -match '[\r\n]') {
-    throw (Get-VstsLocString -Key InvalidScriptPath0 -ArgumentList $scriptPath)
+if ($scriptType -eq "FilePath") {
+    if ($scriptPath -match '[\r\n]') {
+        throw (Get-VstsLocString -Key InvalidScriptPath0 -ArgumentList $scriptPath)
+    }
 }
 
 if ($scriptArguments -match '[\r\n]') {
@@ -20,6 +24,14 @@ Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 Initialize-Azure
 
 # Trace the expression as it will be invoked.
+If ($scriptType -eq "InlineScript") {
+    $tempFileName = [guid]::NewGuid().ToString() + ".ps1";
+    $scriptPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), $tempFileName);
+    ($scriptInline | Out-File $scriptPath)
+
+    Write-Host "tempFile= $scriptPath"
+}
+
 $scriptCommand = "& '$($scriptPath.Replace("'", "''"))' $scriptArguments"
 Remove-Variable -Name scriptPath
 Remove-Variable -Name scriptArguments
