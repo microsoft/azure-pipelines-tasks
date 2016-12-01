@@ -6,14 +6,6 @@
   "loc.group.displayName.setupOptions": "Setup Options",
   "loc.group.displayName.executionOptions": "Execution Options",
   "loc.group.displayName.reportingOptions": "Reporting Options",
-  "loc.input.label.adminUserName": "Admin Username",
-  "loc.input.help.adminUserName": "Admin username",
-  "loc.input.label.adminPassword": "Admin Password",
-  "loc.input.help.adminPassword": "Admin Password",
-  "loc.input.label.testUserName": "Test Username",
-  "loc.input.help.testUserName": "Test username",
-  "loc.input.label.testUserPassword": "Test Password",
-  "loc.input.help.testUserPassword": "Test Password",
   "loc.input.label.dropLocation": "Test Drop Location",
   "loc.input.help.dropLocation": "Location where the test binaries have been dropped in the agent machine(s) as part of the 'Windows Machine File Copy' or 'Azure File Copy' task. System Environment Variables can also be used in location string. e.g., `%systemdrive%\\Tests`, `%temp%\\DropLocation` etc.",
   "loc.input.label.runUITests": "Run UI Tests",
@@ -45,7 +37,5 @@
   "loc.input.label.buildConfiguration": "Configuration",
   "loc.input.help.buildConfiguration": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here.",
   "loc.input.label.testConfigurations": "Test Configurations",
-  "loc.input.help.testConfigurations": "Optionally associate a testcase filter against a testconfiguration ID. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: `FullyQualifiedName~Chrome:12`",
-  "loc.input.label.autMachineGroup": "Application Under Test Machines",
-  "loc.input.help.autMachineGroup": "Comma separated list of machines or output variable or Machine Group Name on which server processes such as W3WP.exe is running"
+  "loc.input.help.testConfigurations": "Optionally associate a testcase filter against a testconfiguration ID. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: `FullyQualifiedName~Chrome:12`"
 }

@@ -1,59 +1,228 @@
 {
-    "id": "B7C4FE2A-9DD1-4DAE-8B77-8412002DE5A4",
-    "name": "RunTests",
-    "friendlyName": "Run Tests",
-    "description": "Run Tests",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=625976)",
-    "category": "Test",
-    "visibility": [
-        "Build",
-        "Release"
-    ],
-    "author": "Microsoft Corporation",
-    "version": {
-        "Major": 1,
-        "Minor": 0,
-        "Patch": 0
+  "id": "B7C4FE2A-9DD1-4DAE-8B77-8412002DE5A4",
+  "name": "TestExecution",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Test",
+  "visibility": [
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "demands": [],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "setupOptions",
+      "displayName": "ms-resource:loc.group.displayName.setupOptions",
+      "isExpanded": true
     },
-    "demands": [],
-    "instanceNameFormat": "Run Tests",
-    "inputs": [
-        {
-            "name": "adminUserName",
-            "type": "string",
-            "label": "Admin Username",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Admin username"
-        },
-        {
-            "name": "adminPassword",
-            "type": "string",
-            "label": "Admin Password",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Admin Password"
-        },
-        {
-            "name": "testUserName",
-            "type": "string",
-            "label": "Test Username",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Test username"
-        },
-        {
-            "name": "testUserPassword",
-            "type": "string",
-            "label": "Test Password",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Test Password"
-        }
-    ],
-    "execution": {
-        "PowerShell3": {
-            "target": "RunTests.ps1"
-        }
+    {
+      "name": "executionOptions",
+      "displayName": "ms-resource:loc.group.displayName.executionOptions",
+      "isExpanded": true
+    },
+    {
+      "name": "reportingOptions",
+      "displayName": "ms-resource:loc.group.displayName.reportingOptions",
+      "isExpanded": false
     }
+  ],
+  "inputs": [
+    {
+      "name": "dropLocation",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.dropLocation",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.dropLocation",
+      "groupName": "setupOptions"
+    },
+    {
+      "name": "runUITests",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.runUITests",
+      "defaultValue": "false",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.runUITests",
+      "groupName": "setupOptions"
+    },
+    {
+      "name": "testSelection",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.testSelection",
+      "defaultValue": "testAssembly",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.testSelection",
+      "options": {
+        "testAssembly": "Test Assembly",
+        "testPlan": "Test Plan"
+      },
+      "groupName": "executionOptions"
+    },
+    {
+      "name": "testPlan",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.testPlan",
+      "defaultValue": "",
+      "required": false,
+      "properties": {
+        "DisableManageLink": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.testPlan",
+      "visibleRule": "testSelection = testPlan",
+      "groupName": "executionOptions"
+    },
+    {
+      "name": "testSuite",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.testSuite",
+      "defaultValue": "",
+      "required": false,
+      "properties": {
+        "MultiSelect": "True",
+        "DisableManageLink": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.testSuite",
+      "visibleRule": "testSelection = testPlan",
+      "groupName": "executionOptions"
+    },
+    {
+      "name": "testPlanConfigId",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.testPlanConfigId",
+      "defaultValue": "",
+      "required": false,
+      "properties": {
+        "DisableManageLink": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.testPlanConfigId",
+      "visibleRule": "testSelection = testPlan",
+      "groupName": "executionOptions"
+    },
+    {
+      "name": "sourcefilters",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sourcefilters",
+      "defaultValue": "**\\*test*.dll",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.sourcefilters",
+      "visibleRule": "testSelection = testAssembly",
+      "groupName": "executionOptions"
+    },
+    {
+      "name": "testFilterCriteria",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testFilterCriteria",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.testFilterCriteria",
+      "visibleRule": "testSelection = testAssembly",
+      "groupName": "executionOptions"
+    },
+    {
+      "name": "runSettingsFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.runSettingsFile",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.runSettingsFile",
+      "groupName": "executionOptions"
+    },
+    {
+      "name": "overrideRunParams",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.overrideRunParams",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.overrideRunParams",
+      "groupName": "executionOptions"
+    },
+    {
+      "name": "codeCoverageEnabled",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.codeCoverageEnabled",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.codeCoverageEnabled",
+      "groupName": "executionOptions"
+    },
+    {
+      "name": "customSlicingEnabled",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.customSlicingEnabled",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.customSlicingEnabled",
+      "groupName": "executionOptions"
+    },
+    {
+      "name": "testRunTitle",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testRunTitle",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.testRunTitle",
+      "groupName": "reportingOptions"
+    },
+    {
+      "name": "buildPlatform",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.buildPlatform",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.buildPlatform",
+      "groupName": "reportingOptions"
+    },
+    {
+      "name": "buildConfiguration",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.buildConfiguration",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.buildConfiguration",
+      "groupName": "reportingOptions"
+    },
+    {
+      "name": "testConfigurations",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.testConfigurations",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.testConfigurations",
+      "groupName": "reportingOptions"
+    }
+  ],
+  "sourceDefinitions": [
+    {
+      "target": "testPlan",
+      "endpoint": "/$(system.teamProject)/_apis/test/plans",
+      "selector": "jsonpath:$.value[*].name",
+      "keySelector": "jsonpath:$.value[*].id",
+      "authKey": "tfs:teamfoundation"
+    },
+    {
+      "target": "testPlanConfigId",
+      "endpoint": "/$(system.teamProject)/_apis/test/configurations",
+      "selector": "jsonpath:$.value[*].name",
+      "keySelector": "jsonpath:$.value[*].id",
+      "authKey": "tfs:teamfoundation"
+    },
+    {
+      "target": "testSuite",
+      "endpoint": "/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites?$asTreeView=true",
+      "selector": "jsonpath:$.value[*]",
+      "authKey": "tfs:teamfoundation"
+    }
+  ],
+  "execution": {
+    "PowerShell3": {
+      "target": "RunTests.ps1"
+    }
+  }
 }

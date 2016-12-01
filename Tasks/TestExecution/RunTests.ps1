@@ -92,7 +92,7 @@ try {
     $asServiceOrProcess = if($runUITests -ieq "false") {"Service"} else {"Process"}
 	
     # Trim out spaces from username.
-    $returnCode = ConfigureTestAgent -TfsCollection $tfsCollectionUrl -EnvironmentUrl$environmentUri -PersonalAccessToken $personalAccessToken -AsServiceOrProcess $asServiceOrProcess
+    $returnCode = ConfigureTestAgent -TfsCollection $tfsCollectionUrl -EnvironmentUrl $environmentUri -PersonalAccessToken $personalAccessToken -AsServiceOrProcess $asServiceOrProcess
 
     # Start the execution of Distributed Test Runs
     $testRunParameters = New-Object 'System.Collections.Generic.Dictionary[String,Object]'

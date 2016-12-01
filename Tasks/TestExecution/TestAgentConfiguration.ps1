@@ -135,11 +135,10 @@ function InvokeTestAgentConfigExe([string[]] $Arguments, [string] $Version)
         $p = New-Object System.Diagnostics.Process
         $p.StartInfo = $pinfo
 
-        Write-Host " ********************* Spinning the DTA Configuration Process *********************** "
+        Write-Host "Starting DTAExecutionHost process "
         $p.Start() | Out-Null
-        Write-Host " ********************* started *********************** "
         $p.WaitForExit()
-        Write-Host " ********************* Exited *********************** "        
+        Write-Host "Exiting DTAExecutionHost process"        
         return $p.ExitCode
     }
 

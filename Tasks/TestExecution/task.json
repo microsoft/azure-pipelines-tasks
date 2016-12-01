@@ -35,38 +35,6 @@
     ],
     "inputs": [
         {
-            "name": "adminUserName",
-            "type": "string",
-            "label": "Admin Username",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Admin username"
-        },
-        {
-            "name": "adminPassword",
-            "type": "string",
-            "label": "Admin Password",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Admin Password"
-        },
-        {
-            "name": "testUserName",
-            "type": "string",
-            "label": "Test Username",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Test username"
-        },
-        {
-            "name": "testUserPassword",
-            "type": "string",
-            "label": "Test Password",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Test Password"
-        },
-        {
             "name": "dropLocation",
             "type": "string",
             "label": "Test Drop Location",
@@ -227,15 +195,6 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Optionally associate a testcase filter against a testconfiguration ID. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: `FullyQualifiedName~Chrome:12`",
-            "groupName": "reportingOptions"
-        },
-        {
-            "name": "autMachineGroup",
-            "type": "multiLine",
-            "label": "Application Under Test Machines",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Comma separated list of machines or output variable or Machine Group Name on which server processes such as W3WP.exe is running",
             "groupName": "reportingOptions"
         }
     ],
