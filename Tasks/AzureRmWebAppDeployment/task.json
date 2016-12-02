@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 1,
-        "Patch": 7
+        "Patch": 9
     },
     "minimumAgentVersion": "1.102.0",
     "groups": [
@@ -32,7 +32,7 @@
         {
             "name": "ConnectedServiceName",
             "type": "connectedService:AzureRM",
-            "label": "AzureRM Subscription",
+            "label": "Azure subscription",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
@@ -40,32 +40,32 @@
         {
             "name": "WebAppName",
             "type": "pickList",
-            "label": "App Service Name",
+            "label": "App Service name",
             "defaultValue": "",
             "required": true,
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Enter or Select the name of an existing AzureRM Web Application."
+            "helpMarkDown": "Enter or Select the name of an existing Azure App Service."
         },
         {
             "name": "DeployToSlotFlag",
             "type": "boolean",
-            "label": "Deploy to Slot",
+            "label": "Deploy to slot",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Select the option to deploy to an existing slot other than the Production slot. If this option is not selected, then the AzureRM Web App will be deployed to the Production slot."
+            "helpMarkDown": "Select the option to deploy to an existing slot other than the Production slot. If this option is not selected, then the Azure App Service will be deployed to the Production slot."
         },
         {
             "name": "ResourceGroupName",
             "type": "pickList",
-            "label": "Resource Group",
+            "label": "Resource group",
             "defaultValue": "",
             "required": true,
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Enter or Select the Azure Resource Group that contains the AzureRM Web App specified above.",
+            "helpMarkDown": "Enter or Select the Azure Resource group that contains the Azure App Service specified above.",
             "visibleRule": "DeployToSlotFlag = true"
         },
         {
@@ -83,27 +83,27 @@
         {
             "name": "VirtualApplication",
             "type": "string",
-            "label": "Virtual Application",
+            "label": "Virtual application",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the name of the Virtual Application that has been configured in the Azure portal. The option is not required for deployments to the website root."
+            "helpMarkDown": "Specify the name of the Virtual application that has been configured in the Azure portal. The option is not required for deployments to the website root."
         },
         {
             "name": "Package",
             "type": "filePath",
-            "label": "Package or Folder",
+            "label": "Package or folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
             "required": true,
-            "helpMarkDown": "Folder or file path to the Web App package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
+            "helpMarkDown": "Folder or file path to the App Service package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
         },
         {
             "name": "WebAppUri",
             "type": "string",
-            "label": "Web App URL",
+            "label": "App Service URL",
             "required": false,
             "defaultValue": "",
             "groupName": "output",
-            "helpMarkDown": "Specify a name for the output variable that is generated for the URL of the Web App. The variable can be consumed in subsequent tasks."
+            "helpMarkDown": "Specify a name for the output variable that is generated for the URL of the Azure App Service. The variable can be consumed in subsequent tasks."
         },
         {
             "name": "UseWebDeploy",
@@ -112,12 +112,12 @@
             "required": false,
             "defaultValue": "false",
             "groupName": "AdditionalDeploymentOptions",
-            "helpMarkDown": "Publish using web deploy options are supported only when using Windows agent. On other platforms, the task relies on [Kudu REST APIs](https://github.com/projectkudu/kudu/wiki/REST-API) to deploy the Web App, and following options are not supported"
+            "helpMarkDown": "Publish using Web Deploy options are supported only when using Windows agent. On other platforms, the task relies on [Kudu REST APIs](https://github.com/projectkudu/kudu/wiki/REST-API) to deploy the Azure App Service, and following options are not supported"
         },
         {
             "name": "SetParametersFile",
             "type": "filePath",
-            "label": "SetParameters File",
+            "label": "SetParameters file",
             "defaultValue": "",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
@@ -127,41 +127,51 @@
         {
             "name": "RemoveAdditionalFilesFlag",
             "type": "boolean",
-            "label": "Remove Additional Files at Destination",
+            "label": "Remove additional files at destination",
             "defaultValue": "false",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
             "visibleRule": "UseWebDeploy == true",
-            "helpMarkDown": "Select the option to delete files on the AzureRM Web App that have no matching files in the Web App zip package."
+            "helpMarkDown": "Select the option to delete files on the Azure App Service that have no matching files in the App Service zip package."
         },
         {
             "name": "ExcludeFilesFromAppDataFlag",
             "type": "boolean",
-            "label": "Exclude Files from the App_Data Folder",
+            "label": "Exclude files from the App_Data folder",
             "defaultValue": "false",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
             "visibleRule": "UseWebDeploy == true",
-            "helpMarkDown": "Select the option to prevent files in the App_Data folder from being deployed to the AzureRM Web App."
+            "helpMarkDown": "Select the option to prevent files in the App_Data folder from being deployed to the Azure App Service."
         },
         {
             "name": "AdditionalArguments",
             "type": "string",
-            "label": "Additional Arguments",
+            "label": "Additional arguments",
             "required": false,
             "defaultValue": "",
             "groupName": "AdditionalDeploymentOptions",
             "visibleRule": "UseWebDeploy == true",
-            "helpMarkDown": "Additional Web Deploy arguments that will be applied when deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension."
+            "helpMarkDown": "Additional Web Deploy arguments that will be applied when deploying the Azure App Service like,-disableLink:AppPoolExtension -disableLink:ContentExtension."
+        },
+        {
+            "name": "RenameFilesFlag",
+            "type": "boolean",
+            "label": "Rename locked files",
+            "defaultValue": "false",
+            "required": false,
+			"visibleRule": "UseWebDeploy == true",
+            "groupName": "AdditionalDeploymentOptions",
+            "helpMarkDown": "Select the option to enable msdeploy flag MSDEPLOY_RENAME_FILES_FLAG in Azure web site's appsetting. The option if set enables msdeploy to rename locked files that are locked during app deployment"
         },
         {
             "name": "TakeAppOfflineFlag",
             "type": "boolean",
-            "label": "Take App Offline",
+            "label": "Take application offline",
             "defaultValue": "false",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
-            "helpMarkDown": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully."
+            "helpMarkDown": "Select the option to take the Azure App Service offline by placing an app_offline.htm file in the root directory of the App Service before the sync operation begins. The file will be removed after the sync operation completes successfully."
         }
     ],
     "dataSourceBindings": [
@@ -189,7 +199,7 @@
             "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
         }
     ],
-    "instanceNameFormat": "Deploy AzureRM App Service: $(WebAppName)",
+    "instanceNameFormat": "Azure App Service Deploy: $(WebAppName)",
     "execution": {
         "Node": {
             "target": "azurermwebappdeployment.js"
@@ -198,16 +208,18 @@
     "messages": {
         "Invalidwebapppackageorfolderpathprovided": "Invalid webapp package or folder path provided: %s",
         "SetParamFilenotfound0": "Set parameters file not found: %s",
-        "GotconnectiondetailsforazureRMWebApp0": "Got connection details for azureRM WebApp:'%s'",
+        "GotconnectiondetailsforazureRMWebApp0": "Got connection details for Azure App Service:'%s'",
         "ErrorNoSuchDeployingMethodExists": "Error : No Such Deploying Method Exists",
-        "UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve connectiondetails for azureRM WebApp : %s. Status Code: %s (%s)",
-        "UnabletoretrieveWebAppID": "Unable to retrieve connection details for azureRM WebApp:'%s'. Status Code: %s",
+        "UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve connectiondetails for Azure App Service : %s. Status Code: %s (%s)",
+        "UnabletoretrieveWebAppID": "Unable to retrieve connection details for Azure App Service:'%s'. Status Code: %s",
         "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
         "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
         "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website",
-        "UnabletoretrieveAzureRMWebAppConfigDetails": "Error Occurred : [Staus Code : '%s']",
+        "UnabletoretrieveAzureRMWebAppConfigDetails": "Error Occurred : [Status Code : '%s']",
+		"UnabletoretrieveAzureRMWebAppAppSettings": "Error Occurred : [Status Code : '%s', Error Message: '%s']",
+		"UnabletoupdateAzureRMWebAppAppSettings": "Error Occurred : [Status Code : '%s', Error Message: '%s']",
         "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update deployment status : Unique Deployment ID cannot be retrieved",
-        "WebappsuccessfullypublishedatUrl0": "Web App successfully deployed at url %s",
+        "WebappsuccessfullypublishedatUrl0": "App Service successfully deployed at url %s",
         "Failedtodeploywebsite": "Failed to deploy website.",
         "Runningcommand": "Running command: %s",
         "ConstructedmsDeploycomamndlinearguments": "Constructed msDeploy comamnd line arguments",
@@ -223,7 +235,8 @@
         "UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)",
         "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
         "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "More than one package matched with specified pattern. Please restrain the search patern.",
-        "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected.",
+        "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy app service again with Take application offline option selected.",
+		"Trytodeploywebappagainwithrenamefileoptionselected": "Try to deploy app service again with Rename locked files option selected.",
         "NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern",
         "JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "JSON variable substitution can only be applied for JSON files",
         "Unabletofindnodewithtaginprovidedxmlfile": "Unable to find node with tag '%s' in provided xml file.",
@@ -243,6 +256,7 @@
         "PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "Publish using webdeploy options are supported only when using Windows agent",
         "WebAppDoesntExist": "Webapp '%s' doesn't exist. Webapp should exist before deployment.",
         "EncodeNotSupported": "Detected file encoding of the file %s as %s. Variable substitution and Transformation is not supported with file encoding %s. Supported encodings are UTF-8 and UTF-16 LE.",
-        "UnknownFileEncodeError": "Unable to detect encoding of the file %s. Supported encodings are UTF-8 and UTF-16 LE."
+        "UnknownFileEncodeError": "Unable to detect encoding of the file %s (typeCode: %s). Supported encodings are UTF-8 and UTF-16 LE.",
+        "ShortFileBufferError": "File buffer is too short to detect encoding type : %s"
     }
 }

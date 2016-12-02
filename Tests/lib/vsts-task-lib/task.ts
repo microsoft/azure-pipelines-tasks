@@ -14,6 +14,25 @@ export enum TaskResult {
     Failed = 1
 }
 
+export interface MatchOptions {
+    debug?: boolean;
+    nobrace?: boolean;
+    noglobstar?: boolean;
+    dot?: boolean;
+    noext?: boolean;
+    nocase?: boolean;
+    nonull?: boolean;
+    matchBase?: boolean;
+    nocomment?: boolean;
+    nonegate?: boolean;
+    flipNegate?: boolean;
+}
+
+export interface FindOptions {
+    followSpecifiedSymbolicLink: boolean;
+    followSymbolicLinks: boolean;
+}
+
 //-----------------------------------------------------
 // String convenience
 //-----------------------------------------------------
@@ -295,7 +314,7 @@ export function getEndpointUrl(id: string, optional: boolean): string {
     return urlval;
 }
 
-export function getEndpointDataParameter(id: string, key: string, optional: boolean) : string {
+export function getEndpointDataParameter(id: string, key: string, optional: boolean): string {
     var dataParam = getVariable('ENDPOINT_DATA_' + id + '_' + key.toUpperCase());
     debug(id + '=' + dataParam);
 
@@ -307,7 +326,7 @@ export function getEndpointDataParameter(id: string, key: string, optional: bool
     return dataParam;
 }
 
-export function getEndpointAuthorizationScheme(id: string, optional: boolean) : string {
+export function getEndpointAuthorizationScheme(id: string, optional: boolean): string {
     var authScheme = getVariable('ENDPOINT_AUTH_SCHEME_' + id);
     debug(id + '=' + authScheme);
 
@@ -319,7 +338,7 @@ export function getEndpointAuthorizationScheme(id: string, optional: boolean) : 
     return authScheme;
 }
 
-export function getEndpointAuthorizationParameter(id: string, key: string, optional: boolean) : string {
+export function getEndpointAuthorizationParameter(id: string, key: string, optional: boolean): string {
     var authParam = getVariable('ENDPOINT_AUTH_PARAMETER_' + id + '_' + key.toUpperCase());
     debug(id + '=' + authParam);
 
@@ -449,12 +468,12 @@ export function exist(path: string): boolean {
 }
 
 export interface FsOptions {
-    encoding?:string;
-    mode?:number;
-    flag?:string;
+    encoding?: string;
+    mode?: number;
+    flag?: string;
 }
 
-export function writeFile(file: string, data: string|Buffer, options?: string|FsOptions) {
+export function writeFile(file: string, data: string | Buffer, options?: string | FsOptions) {
     //do nothing
 }
 
@@ -486,7 +505,7 @@ export function debug(message: string): void {
     command('task.debug', null, message);
 }
 
-var _argStringToArray = function(argString: string): string[] {
+var _argStringToArray = function (argString: string): string[] {
     var args = argString.match(/([^" ]*("[^"]*")[^" ]*)|[^" ]+/g);
 
     for (var i = 0; i < args.length; i++) {
@@ -547,7 +566,7 @@ export function which(tool: string, check?: boolean): string {
 
 export function ls(options: string, paths: string[]): string[] {
     var response = mock.getResponse('ls', paths[0]);
-    if(!response){
+    if (!response) {
         return [];
     }
     return response;
@@ -655,11 +674,20 @@ export function match(list: string[], pattern: any, options): string[] {
         patterns = pattern;
     }
     else {
-        patterns = [ pattern ];
+        patterns = [pattern];
     }
 
     let key: string = patterns.join(',');
     return mock.getResponse('match', key) || [];
+}
+
+export function findMatch(defaultRoot: string, patterns: string, findOptions?: FindOptions, matchOptions?: MatchOptions): string[];
+export function findMatch(defaultRoot: string, patterns: string[], findOptions?: FindOptions, matchOptions?: MatchOptions): string[]
+export function findMatch(defaultRoot: string, patterns: any, findOptions?: FindOptions, matchOptions?: MatchOptions): string[] {
+    patterns = patterns || [];
+    patterns = typeof patterns == 'string' ? [patterns] as string[] : patterns;
+    let key: string = patterns.join(',');
+    return mock.getResponse('findMatch', key) || [];
 }
 
 export function matchFile(list, pattern, options): string[] {
@@ -667,10 +695,10 @@ export function matchFile(list, pattern, options): string[] {
 }
 
 export function filter(pattern, options): any {
-	var filterList = mock.getResponse('filter', pattern) || [];
-	return function(pattern, i, arr) {
-		return filterList.indexOf(pattern) >= 0;
-	}
+    var filterList = mock.getResponse('filter', pattern) || [];
+    return function (pattern, i, arr) {
+        return filterList.indexOf(pattern) >= 0;
+    }
 }
 
 //-----------------------------------------------------
@@ -742,7 +770,7 @@ export class CodeCoveragePublisher {
             properties['additionalcodecoveragefiles'] = additionalCodeCoverageFiles;
         }
 
-        command('codecoverage.publish', properties, "");        
+        command('codecoverage.publish', properties, "");
     }
 }
 

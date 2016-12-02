@@ -6,7 +6,7 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'copyfiles.js');
 let runner: mockrun.TaskMockRunner = new mockrun.TaskMockRunner(taskPath);
 runner.setInput('Contents', '**');
-runner.setInput('TargetFolder', '/destDir');
+runner.setInput('TargetFolder', path.normalize('/destDir'));
 runner.setInput('CleanTargetFolder', 'false');
 runner.setInput('Overwrite', 'false');
 

@@ -231,8 +231,7 @@ function Get-VstsUpgradeParameters
         "UpgradeReplicaSetCheckTimeoutSec",
         "ReplicaQuorumTimeoutSec",
         "TimeoutSec",
-        "ForceRestart",
-        "Force"
+        "ForceRestart"
     )
 
     $upgradeMode = Get-VstsInput -Name upgradeMode -Require
@@ -274,6 +273,8 @@ function Get-VstsUpgradeParameters
             }
         }
     }
+
+    $parameters["Force"] = $true
 
     return $parameters
 }

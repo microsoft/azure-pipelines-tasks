@@ -25,6 +25,9 @@ try {
     $serviceConnectionName = Get-VstsInput -Name serviceConnectionName -Require
     $connectedServiceEndpoint = Get-VstsEndpoint -Name $serviceConnectionName -Require
 
+    $copyPackageTimeoutSec = Get-VstsInput -Name copyPackageTimeoutSec
+    $registerPackageTimeoutSec = Get-VstsInput -Name registerPackageTimeoutSec
+
     $clusterConnectionParameters = @{}
     
     $regKey = "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK"
@@ -129,15 +132,52 @@ try {
 
     $applicationName = Get-ApplicationNameFromApplicationParameterFile $applicationParameterFile
     $app = Get-ServiceFabricApplication -ApplicationName $applicationName
-    
+
     # Do an upgrade if configured to do so and the app actually exists
     if ($isUpgrade -and $app)
     {
-        Publish-UpgradedServiceFabricApplication -ApplicationPackagePath $applicationPackagePath -ApplicationParameterFilePath $applicationParameterFile -Action RegisterAndUpgrade -UpgradeParameters $upgradeParameters -UnregisterUnusedVersions -ErrorAction Stop
+        $publishParameters = @{
+            'ApplicationPackagePath' = $applicationPackagePath
+            'ApplicationParameterFilePath' = $applicationParameterFile
+            'Action' = "RegisterAndUpgrade"
+            'UpgradeParameters' = $upgradeParameters
+            'UnregisterUnusedVersions' = $true
+            'ErrorAction' = "Stop"
+        }
+
+        if ($copyPackageTimeoutSec)
+        {
+            $publishParameters['CopyPackageTimeoutSec'] = $copyPackageTimeoutSec
+        }
+
+        if ($registerPackageTimeoutSec)
+        {
+            $publishParameters['RegisterPackageTimeoutSec'] = $registerPackageTimeoutSec
+        }
+
+        Publish-UpgradedServiceFabricApplication @publishParameters
     }
     else
     {
-        Publish-NewServiceFabricApplication -ApplicationPackagePath $ApplicationPackagePath -ApplicationParameterFilePath $applicationParameterFile -Action RegisterAndCreate -OverwriteBehavior SameAppTypeAndVersion -ErrorAction Stop 
+        $publishParameters = @{
+            'ApplicationPackagePath' = $applicationPackagePath
+            'ApplicationParameterFilePath' = $applicationParameterFile
+            'Action' = "RegisterAndCreate"
+            'OverwriteBehavior' = "SameAppTypeAndVersion"
+            'ErrorAction' = "Stop"
+        }
+
+        if ($copyPackageTimeoutSec)
+        {
+            $publishParameters['CopyPackageTimeoutSec'] = $copyPackageTimeoutSec
+        }
+
+        if ($registerPackageTimeoutSec)
+        {
+            $publishParameters['RegisterPackageTimeoutSec'] = $registerPackageTimeoutSec
+        }
+
+        Publish-NewServiceFabricApplication @publishParameters
     }
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation

@@ -346,15 +346,6 @@ target.testLegacy = function() {
 }
 
 target.package = function() {
-    // validate powershell 5
-    ensureTool('powershell.exe',
-        '-NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command "$PSVersionTable.PSVersion.Major"',
-        function (output) {
-            if (!Number.parseInt(output) >= 5) {
-                fail('expected version 5 or higher');
-            }
-        });
-
     // clean
     rm('-Rf', packagePath);
 
@@ -367,7 +358,8 @@ target.package = function() {
     // nuspec
     var version = options.version;
     if (!version) {
-        fail('supply version with --version');
+        console.warn('Skipping nupkg creation. Supply version with --version.');
+        return;
     }
 
     if (!semver.valid(version)) {
