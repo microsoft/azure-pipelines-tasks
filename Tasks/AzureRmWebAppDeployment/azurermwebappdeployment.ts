@@ -139,8 +139,13 @@ async function run() {
         deploymentErrorMessage = error;
     }
     if(publishingProfile != null) {
+        var customMessage = {
+            type: "Deployment",
+            slotName: tl.getInput('SlotName') || "Production"
+        };
+
         try {
-            tl._writeLine(await azureRESTUtility.updateDeploymentStatus(publishingProfile, isDeploymentSuccess));
+            tl._writeLine(await azureRESTUtility.updateDeploymentStatus(publishingProfile, isDeploymentSuccess, customMessage));
         }
         catch(error) {
             tl.warning(error);

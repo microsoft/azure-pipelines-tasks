@@ -1,0 +1,10 @@
+{
+    "common": [
+        {
+            "module": "../Common/webdeployment-common",
+            "type": "node",
+			"dest": "./",
+			"compile" : true
+        }
+    ]
+}

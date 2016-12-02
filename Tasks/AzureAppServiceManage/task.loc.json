@@ -28,6 +28,19 @@
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
+      "name": "Action",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.Action",
+      "required": false,
+      "helpMarkDown": "",
+      "defaultValue": "StartAppService",
+      "options": {
+        "StartAppService": "Start App Service",
+        "StopAppService": "Stop App Service",
+        "SwapSlot": "Swap Slots"
+      }
+    },
+    {
       "name": "WebAppName",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.WebAppName",
@@ -39,6 +52,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.WebAppName"
     },
     {
+      "name": "ServiceOnSlot",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ServiceOnSlot",
+      "defaultValue": "false",
+      "required": false,
+      "visibleRule": "Action = StartAppService || Action = StopAppService"
+    },
+    {
       "name": "ResourceGroupName",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.ResourceGroupName",
@@ -47,7 +68,19 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName"
+      "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName",
+      "visibleRule": "Action = SwapSlot || ServiceOnSlot = true"
+    },
+    {
+      "name": "Slot",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.Slot",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "ServiceOnSlot = true"
     },
     {
       "name": "SourceSlot",
@@ -58,7 +91,8 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.SourceSlot"
+      "helpMarkDown": "ms-resource:loc.input.help.SourceSlot",
+      "visibleRule": "Action = SwapSlot"
     },
     {
       "name": "SwapWithProduction",
@@ -66,7 +100,8 @@
       "label": "ms-resource:loc.input.label.SwapWithProduction",
       "defaultValue": "true",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.SwapWithProduction"
+      "helpMarkDown": "ms-resource:loc.input.help.SwapWithProduction",
+      "visibleRule": "Action = SwapSlot"
     },
     {
       "name": "TargetSlot",
@@ -78,7 +113,7 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.TargetSlot",
-      "visibleRule": "SwapWithProduction = false"
+      "visibleRule": "Action = SwapSlot && SwapWithProduction = false"
     },
     {
       "name": "PreserveVnet",
@@ -86,7 +121,8 @@
       "label": "ms-resource:loc.input.label.PreserveVnet",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.PreserveVnet"
+      "helpMarkDown": "ms-resource:loc.input.help.PreserveVnet",
+      "visibleRule": "Action = SwapSlot"
     }
   ],
   "dataSourceBindings": [
@@ -102,6 +138,16 @@
       "parameters": {
         "WebAppName": "$(WebAppName)"
       }
+    },
+    {
+      "target": "Slot",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppSlotsId",
+      "parameters": {
+        "WebAppName": "$(WebAppName)",
+        "ResourceGroupName": "$(ResourceGroupName)"
+      },
+      "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
     },
     {
       "target": "SourceSlot",
@@ -126,18 +172,26 @@
   ],
   "execution": {
     "Node": {
-      "target": "azurewebappslotswap.js"
+      "target": "azureappservicemanage.js"
     }
   },
   "messages": {
     "ErrorNoSuchDeployingMethodExists": "ms-resource:loc.messages.ErrorNoSuchDeployingMethodExists",
-    "UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1": "ms-resource:loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1",
     "Successfullyupdatedslotswaphistory": "ms-resource:loc.messages.Successfullyupdatedslotswaphistory",
     "Failedtoupdateslotswaphistory": "ms-resource:loc.messages.Failedtoupdateslotswaphistory",
     "WARNINGCannotupdateslotswapstatusSCMendpointisnotenabledforthiswebsite": "ms-resource:loc.messages.WARNINGCannotupdateslotswapstatusSCMendpointisnotenabledforthiswebsite",
     "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "ms-resource:loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved",
     "Failedtoswapslots": "ms-resource:loc.messages.Failedtoswapslots",
     "Successfullyswappedslots": "ms-resource:loc.messages.Successfullyswappedslots",
-    "SourceAndTargetSlotCannotBeSame": "ms-resource:loc.messages.SourceAndTargetSlotCannotBeSame"
+    "SourceAndTargetSlotCannotBeSame": "ms-resource:loc.messages.SourceAndTargetSlotCannotBeSame",
+    "Successfullyupdateddeploymenthistory": "ms-resource:loc.messages.Successfullyupdateddeploymenthistory",
+    "Failedtoupdatedeploymenthistory": "ms-resource:loc.messages.Failedtoupdatedeploymenthistory",
+    "UnabletoretrieveconnectiondetailsforazureRMWebApp": "ms-resource:loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp",
+    "StartingAppService": "ms-resource:loc.messages.StartingAppService",
+    "StoppingAppService": "ms-resource:loc.messages.StoppingAppService",
+    "AppServicestartedsuccessfully": "ms-resource:loc.messages.AppServicestartedsuccessfully",
+    "FailedtoStartAppService": "ms-resource:loc.messages.FailedtoStartAppService",
+    "AppServicestoppedsuccessfully": "ms-resource:loc.messages.AppServicestoppedsuccessfully",
+    "FailedtoStopAppService": "ms-resource:loc.messages.FailedtoStopAppService"
   }
 }

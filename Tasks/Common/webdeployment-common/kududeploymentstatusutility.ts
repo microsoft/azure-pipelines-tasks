@@ -1,6 +1,6 @@
 import tl = require('vsts-task-lib/task');
 
-export function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isDeploymentSuccess: boolean): any {
+export function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isDeploymentSuccess: boolean, customMessage): any {
     
     var status = isDeploymentSuccess ? 4 : 3;
     var status_text = (status == 4) ? "success" : "failed";
@@ -17,8 +17,7 @@ export function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isDeployme
 
     var collectionUrl = tl.getVariable('system.TeamFoundationCollectionUri'); 
     var teamProject = tl.getVariable('system.teamProject');
-	
-	var type = "Deployment";
+
  	var commitId = tl.getVariable('build.sourceVersion');
  	var repoName = tl.getVariable('build.repository.name');
  	var repoProvider = tl.getVariable('build.repository.provider');
@@ -41,8 +40,8 @@ export function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isDeployme
         throw new Error(tl.loc('CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved'));
     }
 
-    var message = JSON.stringify({
-		type : type,
+    var message = {
+		type : customMessage.type,
 		commitId : commitId,
 		buildId : buildId,
 		releaseId : releaseId,
@@ -51,14 +50,17 @@ export function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isDeployme
 		repoProvider : repoProvider,
 		repoName : repoName,
 		collectionUrl : collectionUrl,
-		teamProject : teamProject,
-		slotName : slotName
-	});
-	
+		teamProject : teamProject
+	};
+    // Append Custom Messages to original message
+    for(var attribute in customMessage) {
+        message[attribute] = customMessage[attribute];
+    }
+
     var requestBody = {
         status : status,
         status_text : status_text, 
-        message : message,
+        message : JSON.stringify(message),
         author : author,
         deployer : 'VSTS',
         details : buildOrReleaseUrl
@@ -67,15 +69,16 @@ export function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isDeployme
     var webAppHostUrl = webAppPublishKuduUrl.split(':')[0];
     var requestUrl = "https://" + encodeURIComponent(webAppHostUrl) + "/deployments/" + encodeURIComponent(deploymentId);
 
-    var requestDetails = new Array<string>();
-    requestDetails["requestBody"] = requestBody;
-    requestDetails["requestUrl"] = requestUrl;
+    var requestDetails = {
+        "requestBody": requestBody,
+        "requestUrl": requestUrl    
+    };
     return requestDetails;
 }
 
 function getDeploymentAuthor(): string {
     var author = tl.getVariable('build.sourceVersionAuthor');
-
+ 
     if(author === undefined) {
         author = tl.getVariable('build.requestedfor');
     }
