@@ -128,6 +128,7 @@ function getVsTestVersion(): number[] {
     let wmicArgs = ["datafile", "where", "name='".concat(vstestLocationEscaped, "'"), "get", "Version", "/Value"];
     wmicTool.arg(wmicArgs);
     let output = wmicTool.execSync();
+    
     let verSplitArray = output.stdout.split("=");
     if (verSplitArray.length != 2) {
         tl.warning(tl.loc("ErrorReadingVstestVersion"));
