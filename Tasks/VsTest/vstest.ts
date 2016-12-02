@@ -46,7 +46,7 @@ try {
     var useNewCollectorFlag = tl.getVariable('tia.useNewCollector');
     var isPrFlow = tl.getVariable('tia.isPrFlow');
     var vsTestVersionForTIA: number[] = null;
-     var ignoreVstestFailure: string = tl.getVariable("vstest.ignoretestfailures"); 
+    var ignoreVstestFailure: string = tl.getVariable("vstest.ignoretestfailures"); 
 
     var useNewCollector = false;
     if (useNewCollectorFlag && useNewCollectorFlag.toUpperCase() == "TRUE") {
@@ -128,7 +128,6 @@ function getVsTestVersion(): number[] {
     let wmicArgs = ["datafile", "where", "name='".concat(vstestLocationEscaped, "'"), "get", "Version", "/Value"];
     wmicTool.arg(wmicArgs);
     let output = wmicTool.execSync();
-
     let verSplitArray = output.stdout.split("=");
     if (verSplitArray.length != 2) {
         tl.warning(tl.loc("ErrorReadingVstestVersion"));
@@ -418,7 +417,7 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
     tl.rmRF(testResultsDirectory, true);
     tl.mkdirP(testResultsDirectory);
     tl.cd(workingDirectory);
-    var ignoreTestFailures = ignoreVstestFailure && ignoreVstestFailure.toLowerCase() === "true"; 
+    var ignoreTestFailures = ignoreVstestFailure && ignoreVstestFailure.toLowerCase() === "true";
     vstest.exec({ failOnStdErr: !ignoreTestFailures })
         .then(function (code) {
             cleanUp(parallelRunSettingsFile);

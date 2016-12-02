@@ -308,7 +308,7 @@ describe('VsTest Suite', function () {
         let filePattern = getTestDllString(["testAssembly1.dll", "testAssembly2.dll"]);
         let vstestCmd = [sysVstestLocation, filePattern, "/logger:trx"].join(" ");
 
-        setResponseFile('vstestSucceedsOnIgnoreFailure.json');
+        setResponseFile('vstestSucceedsOnIgnoreFailure.json', vstestCmd, false);
         let tr = new trm.TaskRunner('VSTest');
         let assemblyPattern = path.join(__dirname, "data", "testDlls", "*.dll");
 
