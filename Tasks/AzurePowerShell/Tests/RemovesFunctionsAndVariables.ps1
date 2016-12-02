@@ -40,6 +40,5 @@ Assert-AreEqual $false $actual.FunctionNames.ContainsKey('SomeAzureHelpersFuncti
 Assert-AreEqual $false $actual.FunctionNames.ContainsKey('SomeAzureHelpersFunction2')
 
 # Assert the local variables from the task script were removed.
-Assert-AreEqual $false $actual.VariableNames.ContainsKey('scriptPath')
 Assert-AreEqual $false $actual.VariableNames.ContainsKey('scriptArguments')
 Assert-AreEqual $false $actual.VariableNames.ContainsKey('scriptCommand')

@@ -62,8 +62,8 @@
       "helpMarkDown": "ms-resource:loc.input.help.ScriptType",
       "defaultValue": "FilePath",
       "options": {
-        "FilePath": "AzurePowerShell Script File Path",
-        "InlineScript": "Inline AzurePowerShell Script"
+        "FilePath": "Script File Path",
+        "InlineScript": "Inline Script"
       }
     },
     {
@@ -76,12 +76,12 @@
       "visibleRule": "ScriptType = FilePath"
     },
     {
-      "name": "AzurePowerShellInline",
+      "name": "Inline",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.AzurePowerShellInline",
+      "label": "ms-resource:loc.input.label.Inline",
       "required": false,
       "defaultValue": "# You can write your azure powershell scripts inline here. \n# You can also pass predefined and custom variables to this script using arguments",
-      "helpMarkDown": "ms-resource:loc.input.help.AzurePowerShellInline",
+      "helpMarkDown": "ms-resource:loc.input.help.Inline",
       "visibleRule": "ScriptType = InlineScript",
       "properties": {
         "resizable": "true",

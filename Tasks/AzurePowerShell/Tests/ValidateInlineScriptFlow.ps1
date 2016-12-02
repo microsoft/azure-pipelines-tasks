@@ -5,7 +5,7 @@ param()
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 Unregister-Mock Get-VstsInput
 Register-Mock Get-VstsInput { "InlineScript" } -- -Name ScriptType -Require
-Register-Mock Get-VstsInput { ",@( 'item 1', 'item 2')" } -- -Name AzurePowerShellInline
+Register-Mock Get-VstsInput { ",@( 'item 1', 'item 2')" } -- -Name Inline
 Register-Mock Initialize-Azure
 
 # Act.
