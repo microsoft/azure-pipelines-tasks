@@ -1,14 +1,14 @@
 {
-  "loc.friendlyName": "Xamarin Component Restore",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=786653)",
-  "loc.description": "Restores Xamarin components for the specified solution",
-  "loc.instanceNameFormat": "Xamarin component restore $(solution)",
-  "loc.input.label.solution": "Path to Solution",
-  "loc.input.help.solution": "The path to the Visual Studio Solution file",
-  "loc.input.label.email": "Email",
-  "loc.input.help.email": "Xamarin account email address.",
-  "loc.input.label.password": "Password",
-  "loc.input.help.password": "Xamarin account password. Use a new build variable with its lock enabled on the Variables tab to encrypt this value.",
-  "loc.messages.XamarinComponentRestoreReturnCode": "xamarin-component.exe exited with return code: %d",
-  "loc.messages.XamarinComponentRestoreFailed": "xamarin-component.exe failed with error: %s"
+  "loc.friendlyName": "Xamarin-Komponentenwiederherstellung",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkId=786653)",
+  "loc.description": "Stellt Xamarin-Komponenten für die angegebene Projektmappe wieder her.",
+  "loc.instanceNameFormat": "Xamarin-Komponentenwiederherstellung $(solution)",
+  "loc.input.label.solution": "Pfad zur Projektmappe",
+  "loc.input.help.solution": "Der Pfad zur Visual Studio-Projektmappendatei",
+  "loc.input.label.email": "E-Mail",
+  "loc.input.help.email": "E-Mail-Adresse des Xamarin-Kontos.",
+  "loc.input.label.password": "Kennwort",
+  "loc.input.help.password": "Das Kennwort des Xamarin-Kontos. Verwenden Sie eine neue Buildvariable, deren Sperre auf der Registerkarte \"Variablen\" aktiviert ist, um diesen Wert zu verschlüsseln.",
+  "loc.messages.XamarinComponentRestoreReturnCode": "\"xamarin-component.exe\" wurde mit folgendem Rückgabecode beendet: %d",
+  "loc.messages.XamarinComponentRestoreFailed": "Fehler von \"xamarin-component.exe\": %s"
 }

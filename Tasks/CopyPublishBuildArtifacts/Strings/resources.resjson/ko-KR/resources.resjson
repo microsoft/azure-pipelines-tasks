@@ -1,16 +1,17 @@
 {
   "loc.friendlyName": "빌드 아티팩트 복사 및 게시",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613725)",
-  "loc.description": "준비 폴더에 빌드 아티팩트를 복사한 다음 minimatch 패턴을 사용하여 서버 또는 파일 공유에 빌드 아티팩트를 게시합니다.",
+  "loc.description": "빌드 아티팩트를 minimatch 패턴을 사용하여 준비 폴더에 복사한 다음 서버나 파일 공유에 게시합니다.",
   "loc.instanceNameFormat": "아티팩트 복사 및 게시: $(ArtifactName)",
   "loc.input.label.CopyRoot": "루트 복사",
-  "loc.input.help.CopyRoot": "사본 패턴을 적용할 루트 폴더입니다. 리포지토리의 루트는 [비어 있음]입니다. 빌드 단계가 리포지토리의 외부에서 빌드 중일 경우 변수를 사용하세요. 예: $(agent.builddirectory)",
+  "loc.input.help.CopyRoot": "파일 일치 패턴을 적용할 루트 폴더입니다. 값을 지정하지 않으면 리포지토리 루트가 사용됩니다. 리포지토리 외부의 폴더를 지정하려면 변수를 사용합니다(예: $(Agent.BuildDirectory)).",
   "loc.input.label.Contents": "콘텐츠",
-  "loc.input.help.Contents": "아티팩트의 일부로 포함할 파일 또는 폴더 경로입니다.  여러 줄 또는 minimatch 패턴을 지원합니다. [자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613725)",
+  "loc.input.help.Contents": "아티팩트의 일부로 포함할 파일 또는 폴더 경로입니다. 여러 줄의 minimatch 패턴을 지원합니다. [자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613725)",
   "loc.input.label.ArtifactName": "아티팩트 이름",
   "loc.input.help.ArtifactName": "만들 아티팩트의 이름입니다.",
   "loc.input.label.ArtifactType": "아티팩트 형식",
-  "loc.input.help.ArtifactType": "만들 아티팩트의 형식입니다.",
+  "loc.input.help.ArtifactType": "아티팩트를 TFS/Team Services에 저장할지 또는 빌드 에이전트에서 액세스할 수 있어야 하는 파일 공유에 복사할지를 선택합니다.",
   "loc.input.label.TargetPath": "경로",
-  "loc.input.help.TargetPath": "파일을 복사할 파일 공유"
+  "loc.input.help.TargetPath": "아티팩트를 복사할 UNC 파일 경로 위치입니다. 빌드 에이전트에서 액세스할 수 있어야 합니다.",
+  "loc.messages.ErrorFileShareLinux": "OSX 또는 Linux의 아티팩트를 파일 공유에 게시할 수 없습니다. '아티팩트 형식'을 '서버'로 변경하거나, Windows를 사용하거나, '파일 복사', 'SSH를 통해 파일 복사' 또는 'FTP 업로드' 작업을 사용할 수 있습니다."
 }

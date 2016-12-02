@@ -13,5 +13,5 @@
   "loc.input.help.LoadTest": "위에서 지정한 부하 테스트 폴더 아래에서 사용할 부하 테스트 파일 이름입니다.",
   "loc.input.label.ThresholdLimit": "허용 가능한 임계값 위반 수",
   "loc.input.help.ThresholdLimit": "부하 테스트 결과를 실패한 것으로 간주하는 최하 임계값 위반 수입니다.",
-  "loc.input.label.MachineType": "Run load test using"
+  "loc.input.label.MachineType": "다음을 사용하여 부하 테스트 실행"
 }

@@ -12,5 +12,7 @@
   "loc.input.label.outFile": "解密檔案路徑",
   "loc.input.help.outFile": "解密檔案的選擇性檔名。預設值為具副檔名 \".out\" 的加密檔案。",
   "loc.input.label.cwd": "工作目錄",
-  "loc.input.help.cwd": "解密的工作目錄。預設值為儲存機制的根目錄。"
+  "loc.input.help.cwd": "解密的工作目錄。預設值為儲存機制的根目錄。",
+  "loc.messages.OpenSSLReturnCode": "openssl 結束，傳回碼為: %d",
+  "loc.messages.OpenSSLFailed": "openssl 失敗，發生錯誤: %s"
 }

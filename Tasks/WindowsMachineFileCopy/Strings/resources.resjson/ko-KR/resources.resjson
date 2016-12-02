@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Windows 컴퓨터 파일 복사",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=627415)",
+  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=627415)",
   "loc.description": "파일을 원격 컴퓨터에 복사",
   "loc.instanceNameFormat": "$(SourcePath)에서 파일 복사",
   "loc.group.displayName.advanced": "고급 옵션",
@@ -9,7 +9,7 @@
   "loc.input.label.EnvironmentName": "컴퓨터",
   "loc.input.help.EnvironmentName": "쉼표로 구분된 컴퓨터 IP 주소 또는 FQDN 목록을 제공하세요. <br>예: dbserver.fabrikam.com,192.168.12.34 <br>또는 기타 작업의 출력 변수를 제공하세요. 예: $(variableName)",
   "loc.input.label.AdminUserName": "관리자 로그인",
-  "loc.input.help.AdminUserName": "대상 컴퓨터에 대한 관리자 로그인입니다.",
+  "loc.input.help.AdminUserName": "대상 컴퓨터의 관리자 암호입니다.",
   "loc.input.label.AdminPassword": "암호",
   "loc.input.help.AdminPassword": "대상 컴퓨터에 대한 관리자 로그인의 암호입니다. <br>빌드/릴리스 정의에 '$(passwordVariable)'(으)로 정의된 변수를 사용할 수 있습니다. <br>보호하기 위해 변수 형식을 'secret'으로 표시할 수 있습니다.",
   "loc.input.label.TargetPath": "대상 폴더",

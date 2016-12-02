@@ -1,16 +1,17 @@
 {
   "loc.friendlyName": "复制并发布生成项目",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613725)",
-  "loc.description": "将生成项目复制到暂存文件夹，然后使用最小匹配模式将生成项目发布到服务器或文件共享",
+  "loc.description": "使用 minimatch 模式将生成项目复制到暂存文件夹，然后将其发布到服务器或文件共享",
   "loc.instanceNameFormat": "复制发布项目: $(ArtifactName)",
   "loc.input.label.CopyRoot": "复制根",
-  "loc.input.help.CopyRoot": "要向其应用复制模式的根文件夹。为空表示存储库的根。如果生成步骤在存储库外部生成，请使用变量。示例: $(agent.builddirectory)",
+  "loc.input.help.CopyRoot": "文件匹配模式应该应用的根文件夹。如果未提供值，则使用存储库根路径。使用变量来指定存储库外部的文件夹，如 $(Agent.BuildDirectory)。",
   "loc.input.label.Contents": "内容",
-  "loc.input.help.Contents": "要包含在项目中的文件或文件夹路径。支持多行或最小匹配模式。[详细信息](https://go.microsoft.com/fwlink/?LinkID=613725)",
+  "loc.input.help.Contents": "要包括的作为项目一部分的文件或文件夹路径。支持多行 minimatch 模式。[详细信息](https://go.microsoft.com/fwlink/?LinkID=613725)",
   "loc.input.label.ArtifactName": "项目名称",
   "loc.input.help.ArtifactName": "要创建的项目的名称。",
   "loc.input.label.ArtifactType": "项目类型",
-  "loc.input.help.ArtifactType": "要创建的项目的类型。",
+  "loc.input.help.ArtifactType": "选择是否在 TFS/Team Services 上存储项目，或者是否将其复制到必须可从生成代理访问的文件共享上。",
   "loc.input.label.TargetPath": "路径",
-  "loc.input.help.TargetPath": "要将文件复制到的文件共享"
+  "loc.input.help.TargetPath": "要将项目复制到的 UNC 文件路径位置。它必须可从生成代理进行访问。",
+  "loc.messages.ErrorFileShareLinux": "无法将项目从 OSX 或 Linux 发布到文件共享。可将“项目类型”更改为“服务器”，使用 Windows，或者使用“复制文件”、“通过 SSH 复制文件”或“FTP 上传”任务。"
 }
