@@ -39,17 +39,17 @@
       "name": "action",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.action",
-      "defaultValue": "Create Or Update Resource Group",
+      "defaultValue": "Create or update resource group",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.action",
       "options": {
-        "Create Or Update Resource Group": "Create Or Update Resource Group",
-        "Select Resource Group": "Select Resource Group",
-        "Start": "Start Virtual Machines",
-        "Stop": "Stop Virtual Machines",
-        "Restart": "Restart Virtual Machines",
-        "Delete": "Delete Virtual Machines",
-        "DeleteRG": "Delete Resource Group"
+        "Create or update resource group": "Create or update resource group",
+        "Select resource group": "Select resource group",
+        "Start": "Start virtual machines",
+        "Stop": "Stop virtual machines",
+        "Restart": "Restart virtual machines",
+        "Delete": "Delete virtual machines",
+        "DeleteRG": "Delete resource group"
       }
     },
     {
@@ -98,19 +98,19 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "visibleRule": "action = Create Or Update Resource Group"
+      "visibleRule": "action = Create or update resource group"
     },
     {
       "name": "templateLocation",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.templateLocation",
       "required": true,
-      "defaultValue": "Linked Artifact",
+      "defaultValue": "Linked artifact",
       "options": {
-        "Linked Artifact": "Linked Artifact",
+        "Linked artifact": "Linked artifact",
         "Public URL": "Public URL"
       },
-      "visibleRule": "action = Create Or Update Resource Group"
+      "visibleRule": "action = Create or update resource group"
     },
     {
       "name": "csmFileLink",
@@ -119,7 +119,7 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.csmFileLink",
-      "visibleRule": "action = Create Or Update Resource Group && templateLocation = Public URL"
+      "visibleRule": "action = Create or update resource group && templateLocation = Public URL"
     },
     {
       "name": "csmParametersFileLink",
@@ -128,7 +128,7 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.csmParametersFileLink",
-      "visibleRule": "action = Create Or Update Resource Group && templateLocation = Public URL"
+      "visibleRule": "action = Create or update resource group && templateLocation = Public URL"
     },
     {
       "name": "csmFile",
@@ -137,7 +137,7 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.csmFile",
-      "visibleRule": "action = Create Or Update Resource Group && templateLocation = Linked Artifact"
+      "visibleRule": "action = Create or update resource group && templateLocation = Linked artifact"
     },
     {
       "name": "csmParametersFile",
@@ -146,7 +146,7 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.csmParametersFile",
-      "visibleRule": "action = Create Or Update Resource Group && templateLocation = Linked Artifact"
+      "visibleRule": "action = Create or update resource group && templateLocation = Linked artifact"
     },
     {
       "name": "overrideParameters",
@@ -158,7 +158,7 @@
       "properties": {
         "editorExtension": "ms.vss-distributed-task-input-editor.parameters-grid"
       },
-      "visibleRule": "action = Create Or Update Resource Group"
+      "visibleRule": "action = Create or update resource group"
     },
     {
       "name": "deploymentMode",
@@ -168,18 +168,18 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.deploymentMode",
       "options": {
-        "Validation": "Validation Only",
         "Incremental": "Incremental",
-        "Complete": "Complete"
+        "Complete": "Complete",
+        "Validation": "Validation only"
       },
-      "visibleRule": "action = Create Or Update Resource Group"
+      "visibleRule": "action = Create or update resource group"
     },
     {
       "name": "enableDeploymentPrerequisites",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.enableDeploymentPrerequisites",
       "defaultValue": "false",
-      "visibleRule": "action = Create Or Update Resource Group || action = Select Resource Group",
+      "visibleRule": "action = Create or update resource group || action = Select resource group",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.enableDeploymentPrerequisites"
     },
@@ -198,6 +198,15 @@
       "target": "resourceGroupName",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureResourceGroups"
+    }
+  ],
+  "sourceDefinitions": [
+    {
+      "target": "",
+      "endpoint": "/$(system.teamProject)/_apis/distributedtask/machinegroups",
+      "selector": "jsonpath:$.value[*].name",
+      "keySelector": "jsonpath:$.value[*].id",
+      "authKey": "tfs:teamfoundation"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

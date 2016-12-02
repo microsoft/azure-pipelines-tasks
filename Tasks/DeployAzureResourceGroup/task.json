@@ -201,6 +201,15 @@
             "dataSourceName": "AzureResourceGroups"
         }
     ],
+    "sourceDefinitions": [
+        {
+            "target": "",
+            "endpoint": "/$(system.teamProject)/_apis/distributedtask/machinegroups",
+            "selector": "jsonpath:$.value[*].name",
+            "keySelector": "jsonpath:$.value[*].id",
+            "authKey": "tfs:teamfoundation"
+        }
+    ],
     "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
     "execution": {
         "Node": {
