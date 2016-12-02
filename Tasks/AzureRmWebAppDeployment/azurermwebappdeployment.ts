@@ -10,8 +10,7 @@ var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
 var jsonSubstitutionUtility = require('webdeployment-common/jsonvariablesubstitutionutility.js');
 var xmlSubstitutionUtility = require('webdeployment-common/xmlvariablesubstitutionutility.js');
 var xdtTransformationUtility = require('webdeployment-common/xdttransformationutility.js');
-
-var kuduUtility = require('./kuduutility.js');
+var kuduUtility = require('webdeployment-common/kuduutility.js');
 
 async function run() {
     try {

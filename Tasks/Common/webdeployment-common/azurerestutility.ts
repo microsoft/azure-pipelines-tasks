@@ -2,13 +2,14 @@ var parseString = require('xml2js').parseString;
 
 import tl = require('vsts-task-lib/task');
 import Q = require('q');
+import querystring = require('querystring');
 import httpClient = require('vso-node-api/HttpClient');
 import restClient = require('vso-node-api/RestClient');
 
 var kuduDeploymentStatusUtility = require('./kududeploymentstatusutility.js');
 
-var httpObj = new httpClient.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
-var restObj = new restClient.RestClient(httpObj);
+var httpObj = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
+var restObj = new restClient.RestCallbackClient(httpObj);
 
 var authUrl = 'https://login.windows.net/';
 var armUrl = 'https://management.azure.com/';
@@ -90,7 +91,7 @@ export async function getAzureRMWebAppPublishProfile(endPoint, webAppName: strin
                  '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + '/publishxml?' + azureApiVersion;
 
     tl.debug('Requesting AzureRM Publish Profile: ' + url);
-    httpObj.get('POST', url, headers, (error, response, body) => {
+    httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
             deferred.reject(error);
         }
@@ -116,12 +117,12 @@ function getAuthorizationToken(endPoint): Q.Promise<string> {
 
     var deferred = Q.defer<string>();
     var authorityUrl = authUrl + endPoint.tenantID + "/oauth2/token/";
-    var requestData = {
+    var requestData = querystring.stringify({
         resource: endPoint.url,
         client_id: endPoint.servicePrincipalClientID,
         grant_type: "client_credentials",
         client_secret: endPoint.servicePrincipalKey
-    }
+    });
     var requestHeader = {
         "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
     }
