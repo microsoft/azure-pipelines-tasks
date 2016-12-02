@@ -13,5 +13,5 @@
   "loc.input.help.LoadTest": "Nom du fichier de test de charge à utiliser dans le dossier du test de charge spécifié ci-dessus.",
   "loc.input.label.ThresholdLimit": "Nombre de violations de seuils admissibles",
   "loc.input.help.ThresholdLimit": "Nombre de violations du seuil au-dessus duquel le résultat du test de charge est considéré comme ayant échoué.",
-  "loc.input.label.MachineType": "Run load test using"
+  "loc.input.label.MachineType": "Exécuter le test de charge avec"
 }

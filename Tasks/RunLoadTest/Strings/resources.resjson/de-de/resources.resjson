@@ -13,5 +13,5 @@
   "loc.input.help.LoadTest": "Der Dateiname des Auslastungstests, der unter dem oben angegebenen Auslastungstestordner verwendet werden soll.",
   "loc.input.label.ThresholdLimit": "Anzahl zulässiger Schwellenwertverstöße",
   "loc.input.help.ThresholdLimit": "Die Anzahl der Schwellenwertverstöße, ab der das Ergebnis des Auslastungstests als nicht erfolgreich betrachtet wird.",
-  "loc.input.label.MachineType": "Run load test using"
+  "loc.input.label.MachineType": "Auslastungstest ausführen mithilfe von"
 }

@@ -12,5 +12,7 @@
   "loc.input.label.outFile": "암호 해독된 파일 경로",
   "loc.input.help.outFile": "암호 해독된 파일의 선택적 파일 이름입니다. 기본값은 확장명이 \".out\"인 암호화된 파일입니다.",
   "loc.input.label.cwd": "작업 디렉터리",
-  "loc.input.help.cwd": "암호 해독에 사용할 작업 디렉터리입니다. 기본값은 리포지토리의 루트입니다."
+  "loc.input.help.cwd": "암호 해독에 사용할 작업 디렉터리입니다. 기본값은 리포지토리의 루트입니다.",
+  "loc.messages.OpenSSLReturnCode": "OpenSSL이 종료되었습니다(반환 코드: %d).",
+  "loc.messages.OpenSSLFailed": "OpenSSL이 실패했습니다(오류: %s)."
 }

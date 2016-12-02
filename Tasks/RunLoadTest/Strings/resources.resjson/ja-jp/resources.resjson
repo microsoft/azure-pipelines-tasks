@@ -13,5 +13,5 @@
   "loc.input.help.LoadTest": "上で指定されたロード テスト フォルダーで使用するロード テストのファイル名。",
   "loc.input.label.ThresholdLimit": "許容されるしきい値違反の数",
   "loc.input.help.ThresholdLimit": "これを超えるとロード テスト出力が不成功と見なされる、しきい値違反の数。",
-  "loc.input.label.MachineType": "Run load test using"
+  "loc.input.label.MachineType": "次を使用してロードテストを実行:"
 }
