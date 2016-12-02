@@ -20,6 +20,7 @@
   "loc.input.help.overridePublishProfileSettings": "This will override all upgrade settings with either the value specified below or the default value if not specified.",
   "loc.input.label.isUpgrade": "Upgrade the Application",
   "loc.input.label.upgradeMode": "Upgrade Mode",
+  "loc.input.label.upgradeAction": "Upgrade Action",
   "loc.input.label.FailureAction": "FailureAction",
   "loc.input.label.UpgradeReplicaSetCheckTimeoutSec": "UpgradeReplicaSetCheckTimeoutSec",
   "loc.input.label.ReplicaQuorumTimeoutSec": "ReplicaQuorumTimeoutSec",

@@ -106,6 +106,20 @@
             "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
         },
         {
+            "name": "upgradeAction",
+            "type": "pickList",
+            "label": "Upgrade Action",
+            "defaultValue": "RegisterAndUpgrade",
+            "required": true,
+            "options": {
+                "RegisterAndUpgrade": "RegisterAndUpgrade",
+                "Upgrade": "Upgrade",
+                "Register": "Register"
+            },
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
+        },
+        {
             "name": "FailureAction",
             "type": "pickList",
             "label": "FailureAction",
