@@ -18,11 +18,12 @@
     "editorHints": {
         "preview": "true"
     },
+    "releaseNotes" : "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
     "groups": [
         {
             "name": "FileTransformsAndVariableSubstitution",
-            "displayName": "File Transforms and Variable Substitutions",
+            "displayName": "File Transforms &. Variable Substitution Options",
             "isExpanded": false
         },
         {
@@ -114,6 +115,15 @@
             "helpMarkDown": "Specify a name for the output variable that is generated for the URL of the Web App. The variable can be consumed in subsequent tasks."
         },
         {
+            "name": "TakeAppOfflineFlag",
+            "type": "boolean",
+            "label": "Take App Offline",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "AdditionalDeploymentOptions",
+            "helpMarkDown": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully."
+        },
+        {
             "name": "UseWebDeploy",
             "type": "boolean",
             "label": "Publish using Web Deploy",
@@ -163,62 +173,31 @@
             "helpMarkDown": "Additional Web Deploy arguments that will be applied when deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension."
         },
         {
-            "name": "TakeAppOfflineFlag",
-            "type": "boolean",
-            "label": "Take App Offline",
-            "defaultValue": "false",
-            "required": false,
-            "groupName": "AdditionalDeploymentOptions",
-            "helpMarkDown": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully."
-        },
-        {
-            "name": "XmlTransformsAndVariableSubstitutions",
-            "type": "boolean",
-            "label": "XML Transforms & Variable Substitutions",
-            "required": false,
-            "defaultValue": false,
-            "groupName": "FileTransformsAndVariableSubstitution",
-            "helpMarkDown": "Select to enable xml transforms"
-        },
-        {
             "name": "XdtTransformation",
             "type": "boolean",
-            "label": "Transformation",
+            "label": "XML Transformation",
             "required": false,
             "defaultValue": false,
-            "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
             "groupName": "FileTransformsAndVariableSubstitution",
-            "helpMarkDown": "The config transfoms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`. Config transforms will be run prior to the Variable Substitution." 
+            "helpMarkDown": "The config transfoms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`.<br/> Config transforms will be run prior to the Variable Substitution." 
         },
         {
             "name": "VariableSubstitution",
             "type": "boolean",
-            "label": "Variable Substitution",
+            "label": "XML Variable Substitution",
             "required": false,
             "defaultValue": false,
             "groupName": "FileTransformsAndVariableSubstitution",
-            "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
-            "helpMarkDown": "Variables defined in the Build or Release Definition will be automatically substituted in the appSettings, applicationSettings, and connectionStrings section of the config files. If same variables are defined in the Release Definition and in the Environment, then the Environment variables will supersede the Release Definition variables. Variable Substitution is run after Config Transforms."
-        },
-        {
-            "name": "JSONVariableSubstitutionsFlag",
-            "type": "boolean",
-            "label": "JSON Variable Substitutions",
-            "required": false,
-            "defaultValue": false,
-            "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
-            "groupName": "FileTransformsAndVariableSubstitution",
-            "helpMarkDown": "Enable this option for JSON variable Substitution"
+            "helpMarkDown": "Variables defined in the Build or Release Definition will be matched against the 'key' or 'name' entries in the appSettings, applicationSettings, and connectionStrings sections of any config file. Variable Substitution is run after config transforms. <br/><br/> Note: If same variables are defined in the Release Definition and in the Environment, then the Environment variables will supersede the Release Definition variables.<br/>"
         },
         {
             "name": "JSONVariableSubstitutions",
             "type": "multiLine",
-            "label": "Variable Substitution",
+            "label": "JSON Variable Substitution",
             "required": false,
             "defaultValue": "",
-            "visibleRule": "JSONVariableSubstitutionsFlag == true",
             "groupName": "FileTransformsAndVariableSubstitution",
-            "helpMarkDown": "Provide a line separated list of JSON files for substituting variables in them. The files names are relative to the root folder. For substituting JSON variables that are in a hierarchy, specify them using the format Data.DefaultConnection.ConnectionString in the Environment/Definition variable. If same variables are defined in the Definition and Environment, then the Environment variables will supersede the Definition variables. Variable Substitution is run after Config Transforms. Build/Release/System defintion variables are eliminated in substitution."
+            "helpMarkDown": "Provide new line separated list of JSON files to substitute the variable values. Files names are to be provided relative to the root folder. <br/> To substitute JSON variables that are nested or hierarchical, specify them using JSONPath expressions. <br/> <br/> For example, to replace the value of ‘ConnectionString’ in the sample below, you need to define a variable as ‘Data.DefaultConnection.ConnectionString’ in the build/release definition (or release definition’s environment). <br/> {<br/>&nbsp;&nbsp;\"Data\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"DefaultConnection\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"ConnectionString\": \"Server=(localdb)\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/> }<br/> Variable Substitution is run after configuration transforms. <br/><br/> Note: Build/Release’s system definition variables are excluded in substitution"
         }
     ],
     "dataSourceBindings": [

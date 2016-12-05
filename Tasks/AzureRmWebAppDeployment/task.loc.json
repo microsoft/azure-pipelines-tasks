@@ -18,6 +18,7 @@
   "editorHints": {
     "preview": "true"
   },
+  "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
   "minimumAgentVersion": "2.104.1",
   "groups": [
     {
@@ -114,6 +115,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.WebAppUri"
     },
     {
+      "name": "TakeAppOfflineFlag",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.TakeAppOfflineFlag",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "AdditionalDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
+    },
+    {
       "name": "UseWebDeploy",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.UseWebDeploy",
@@ -163,30 +173,11 @@
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
     },
     {
-      "name": "TakeAppOfflineFlag",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.TakeAppOfflineFlag",
-      "defaultValue": "false",
-      "required": false,
-      "groupName": "AdditionalDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
-    },
-    {
-      "name": "XmlTransformsAndVariableSubstitutions",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.XmlTransformsAndVariableSubstitutions",
-      "required": false,
-      "defaultValue": false,
-      "groupName": "FileTransformsAndVariableSubstitution",
-      "helpMarkDown": "ms-resource:loc.input.help.XmlTransformsAndVariableSubstitutions"
-    },
-    {
       "name": "XdtTransformation",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.XdtTransformation",
       "required": false,
       "defaultValue": false,
-      "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
       "groupName": "FileTransformsAndVariableSubstitution",
       "helpMarkDown": "ms-resource:loc.input.help.XdtTransformation"
     },
@@ -197,18 +188,7 @@
       "required": false,
       "defaultValue": false,
       "groupName": "FileTransformsAndVariableSubstitution",
-      "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
       "helpMarkDown": "ms-resource:loc.input.help.VariableSubstitution"
-    },
-    {
-      "name": "JSONVariableSubstitutionsFlag",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.JSONVariableSubstitutionsFlag",
-      "required": false,
-      "defaultValue": false,
-      "visibleRule": "XmlTransformsAndVariableSubstitutions == true",
-      "groupName": "FileTransformsAndVariableSubstitution",
-      "helpMarkDown": "ms-resource:loc.input.help.JSONVariableSubstitutionsFlag"
     },
     {
       "name": "JSONVariableSubstitutions",
@@ -216,7 +196,6 @@
       "label": "ms-resource:loc.input.label.JSONVariableSubstitutions",
       "required": false,
       "defaultValue": "",
-      "visibleRule": "JSONVariableSubstitutionsFlag == true",
       "groupName": "FileTransformsAndVariableSubstitution",
       "helpMarkDown": "ms-resource:loc.input.help.JSONVariableSubstitutions"
     }

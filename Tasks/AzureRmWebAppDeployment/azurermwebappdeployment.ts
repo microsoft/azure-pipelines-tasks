@@ -30,9 +30,7 @@ async function run() {
         var takeAppOfflineFlag: boolean = tl.getBoolInput('TakeAppOfflineFlag', false);
         var additionalArguments: string = tl.getInput('AdditionalArguments', false);
         var webAppUri:string = tl.getInput('WebAppUri', false);
-        var xmlTransformsAndVariableSubstitutions = tl.getBoolInput('XmlTransformsAndVariableSubstitutions', false);
         var xmlTransformation: boolean = tl.getBoolInput('XdtTransformation', false);
-        var jsonVariableSubsFlag: boolean = tl.getBoolInput('JSONVariableSubstitutionsFlag', false);
         var jsonVariableSubsFiles = tl.getDelimitedInput('JSONVariableSubstitutions', '\n', false);
         var variableSubstitution: boolean = tl.getBoolInput('VariableSubstitution', false);
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
@@ -62,7 +60,7 @@ async function run() {
 
         var isFolderBasedDeployment = utility.isInputPkgIsFolder(webDeployPkg);
 
-        if(jsonVariableSubsFlag || (xmlTransformsAndVariableSubstitutions && (xmlTransformation || variableSubstitution))) { 
+        if(jsonVariableSubsFiles || xmlTransformation || variableSubstitution) { 
             var folderPath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package_folder');
             if(isFolderBasedDeployment) {
                 tl.cp(path.join(webDeployPkg, '/*'), folderPath, '-rf', false);
@@ -86,7 +84,7 @@ async function run() {
             if(variableSubstitution) {
                 await xmlSubstitutionUtility.substituteAppSettingsVariables(folderPath);
             }
-            if(jsonVariableSubsFlag) {
+            if(jsonVariableSubsFiles) {
                 jsonSubstitutionUtility.jsonVariableSubstitution(folderPath, jsonVariableSubsFiles);
             }
             webDeployPkg = (isFolderBasedDeployment) ? folderPath : await zipUtility.archiveFolder(folderPath, tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package.zip')
