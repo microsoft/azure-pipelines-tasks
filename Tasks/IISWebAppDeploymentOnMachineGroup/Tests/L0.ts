@@ -104,4 +104,20 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         done();
     });
 
+    it('Runs successfully with JSON variable substitution', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'L0JsonVarSub.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+		console.log(tr.stdout);
+		console.log(tr.stderr);
+        assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.stdout.search('JSON - eliminating object variables validated') > 0, 'JSON - eliminating object variables validation error');
+        assert(tr.stdout.search('JSON - simple string change validated') > 0,'JSON -simple string change validation error' );
+        assert(tr.stdout.search('JSON - system variable elimination validated') > 0, 'JSON -system variable elimination validation error');
+        assert(tr.stdout.search('JSON - special variables validated') > 0, 'JSON - special variables validation error');
+        assert(tr.stdout.search('JSON - variables with dot character validated') > 0, 'JSON varaibles with dot character validated');
+        assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
 });
