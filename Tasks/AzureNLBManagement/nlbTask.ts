@@ -39,40 +39,42 @@ async function run() {
 		nicVm.properties.ipConfigurations[0].properties['loadBalancerBackendAddressPools'] = nicLbBackendPoolConfig;
 		var setNIStatus = await nlbUtility.setNetworkInterface(SPN, endpointUrl, nicVm, resourceGroupName);
 		tl._writeLine(tl.loc(setNIStatus, nicVm.name));
+		tl._writeLine(tl.loc("ActionCompletedSuccefully", action, process.env.computername, loadBalancerName));
 	}
 	catch(error) {
 		tl.setResult(tl.TaskResult.Failed, error);
 	}
 }
 
-function getLocalIpAddress(): string[] {
-	// Return an array of ipv4Addresses 
-	var ipv4Address = [];
+function getMacAddress(): string[] {
+	// Return an array of mac address of all the network interfaces 
+	var macAddress = [];
 	var networkInterfaces = os.networkInterfaces();
 	Object.keys(networkInterfaces).forEach( (interfaceName) => {
 		networkInterfaces[interfaceName].forEach( (interFace) => {
 			if (interFace.family !== 'IPv4' || interFace.internal !== false) {
       			return;
     		}
-    		ipv4Address.push(interFace.address);
+    		macAddress.push(interFace.mac.toUpperCase().replace(/:/g, "-"));
 		});
 	});
-	return ipv4Address;
+	return macAddress;
 }
 
 async function getNetworkInterface(SPN, endpointUrl: string, resourceGroupName: string, nicDetection: string, vmNicMapping: string) {
-	var nics =  await nlbUtility.getNetworkInterfaces(SPN, endpointUrl, resourceGroupName);
-	var ipv4Address = getLocalIpAddress();
+	var nics =  await nlbUtility.getNetworkInterfacesInRG(SPN, endpointUrl, resourceGroupName);
+	var macAddress = getMacAddress();
 	var nicVm = null;
 	if(nicDetection == "AutoDetectNic"){
-		// Assuming only one NIC per VM i.e. only one ipv4 address per VM
-		// Using the ip address of the first network interface
-		for (var i in nics) {
-			if(nics[i].properties.ipConfigurations[0].properties.privateIPAddress == ipv4Address[0]) {
-				nicVm = nics[i];
-				break;
-			}
-		}	
+		tl.debug(tl.loc("GettingPrimaryNicForVm", process.env.computername));
+		for (var mac in macAddress) {
+			for (var i in nics) {
+				if(nics[i].properties.macAddress == macAddress[mac] && nics[i].properties.primary) {
+					nicVm = nics[i];
+					break;
+				}
+			}	
+		}
 	}
 	else {
 		// Handle custom vm:nic mapping 
@@ -81,9 +83,9 @@ async function getNetworkInterface(SPN, endpointUrl: string, resourceGroupName: 
 		for(var j in temp){
 			nicVmMap[temp[j].split(":")[1]] = temp[j].split(":")[0];
 		}
-		for (var ip in ipv4Address) {
+		for (var mac in macAddress) {
 			for (var nic in nics) {
-				if(nics[nic].properties.ipConfigurations[0].properties.privateIPAddress == ipv4Address[ip] && nicVmMap[nics[nic].name]) {
+				if(nics[nic].properties.macAddress == macAddress[mac] && nicVmMap[nics[nic].name]) {
 					nicVm = nics[nic];
 					break;
 				}

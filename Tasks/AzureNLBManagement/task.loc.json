@@ -8,7 +8,8 @@
   "category": "Utility",
   "visibility": [
     "Build",
-    "Release"
+    "Release",
+    "Preview"
   ],
   "runsOn": [
     "MachineGroup"
@@ -16,7 +17,7 @@
   "version": {
     "Major": "1",
     "Minor": "0",
-    "Patch": "21"
+    "Patch": "0"
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -56,8 +57,8 @@
       "defaultValue": "",
       "required": true,
       "options": {
-        "Disconnect": "Disconnect",
-        "Connect": "Connect"
+        "Disconnect": "Disconnect Network Interface",
+        "Connect": "Connect Network Interface"
       },
       "helpMarkDown": "ms-resource:loc.input.help.Action"
     },
@@ -67,8 +68,8 @@
       "label": "ms-resource:loc.input.label.NICDetection",
       "required": true,
       "options": {
-        "AutoDetectNic": "Auto Detect NIC",
-        "CustomNic": "Custom VM:NIC Details"
+        "AutoDetectNic": "Auto select primary network interface",
+        "CustomNic": "Custom - virtual machine : network interface"
       },
       "defaultValue": "AutoDetectNic",
       "helpMarkDown": "ms-resource:loc.input.help.NICDetection"
@@ -112,6 +113,8 @@
     "DisconnectingVMfromLB": "ms-resource:loc.messages.DisconnectingVMfromLB",
     "setNICStatus": "ms-resource:loc.messages.setNICStatus",
     "MaxRetriesExceededForPut": "ms-resource:loc.messages.MaxRetriesExceededForPut",
-    "FailedPutResponse": "ms-resource:loc.messages.FailedPutResponse"
+    "FailedPutResponse": "ms-resource:loc.messages.FailedPutResponse",
+    "GettingPrimaryNicForVm": "ms-resource:loc.messages.GettingPrimaryNicForVm",
+    "ActionCompletedSuccefully": "ms-resource:loc.messages.ActionCompletedSuccefully"
   }
 }

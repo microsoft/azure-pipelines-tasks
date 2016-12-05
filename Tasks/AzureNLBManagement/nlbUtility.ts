@@ -1,10 +1,11 @@
 import * as tl from 'vsts-task-lib/task';
 import * as Q from 'q';
+import * as querystring from "querystring";
 import * as httpClient from 'vso-node-api/HttpClient';
 import * as restClient from 'vso-node-api/RestClient';
 
-var httpObj = new httpClient.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
-var restObj = new restClient.RestClient(httpObj);
+var httpObj = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
+var restObj = new restClient.RestCallbackClient(httpObj);
 
 var authUrl = 'https://login.windows.net/';
 var azureApiVersion = '2016-09-01';
@@ -14,12 +15,12 @@ export function getAccessToken(SPN, endpointUrl: string): Q.Promise<string> {
 	var deferred = Q.defer<string>();
 	var authorityUrl = authUrl + SPN.tenantID + "/oauth2/token/";
 
-	var post_data = {
+	var post_data = querystring.stringify({
 		resource: endpointUrl, 
 		client_id: SPN.servicePrincipalClientID,
 		grant_type: "client_credentials", 
 		client_secret: SPN.servicePrincipalKey
-	};
+	});
 
 	var requestHeader = {
 		"Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
@@ -41,7 +42,7 @@ export function getAccessToken(SPN, endpointUrl: string): Q.Promise<string> {
     return deferred.promise;
 }
 
-export async function getNetworkInterfaces(SPN, endpointUrl: string, resourceGroupName: string) {
+export async function getNetworkInterfacesInRG(SPN, endpointUrl: string, resourceGroupName: string) {
 
 	var deferred = Q.defer<any>();
 	var restUrl = "https://management.azure.com/subscriptions/" + SPN.subscriptionId + "/resourceGroups/" + resourceGroupName + "/providers/Microsoft.Network/networkInterfaces?api-version=" + azureApiVersion;
@@ -164,7 +165,7 @@ export async function setNetworkInterface(SPN, endpointUrl: string, nic, resourc
 	        	var checkStatusWaitTime = 20000;
 	        	setTimeout(async function checkSuccessStatus() {
 	        		var provisioningState = await checkProvisioningState(SPN, endpointUrl, nic.name, resourceGroupName);
-	        		tl.debug("Provisiong State = " + provisioningState);
+	        		tl.debug("Provisioning State = " + provisioningState);
 	        		if(provisioningState == "Succeeded"){
 	            		deferred.resolve("setNICStatus");
 	        		}

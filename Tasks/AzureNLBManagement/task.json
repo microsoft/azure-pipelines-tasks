@@ -20,7 +20,7 @@
 		"Patch": "0"
 	},
 	"minimumAgentVersion": "1.95.0",
-	"instanceNameFormat": "Azure Network Load Balancer: Connect/Disconnect VMs from $(LoadBalancer)",
+	"instanceNameFormat": "Azure Network Load Balancer: $(Action) VMs from $(LoadBalancer)",
 	"inputs": [
 		{
             "name": "ConnectedServiceName",
@@ -35,7 +35,7 @@
             "type": "pickList",
             "label": "Resource Group",
             "required": true,
-            "helpMarkDown": "Provide the name of the resource group.",
+            "helpMarkDown": "Select the resource group name.",
             "properties": {
                 "EditableOptions": "True"
             }
@@ -45,7 +45,7 @@
             "type": "pickList",
             "label": "Load Balancer Name",
             "required": true,
-            "helpMarkDown": "Provide the name of the load balancer.",
+            "helpMarkDown": "Select or enter the load balancer.",
             "properties": {
                 "EditableOptions": "True"
             }
@@ -57,10 +57,10 @@
             "defaultValue": "",
             "required": true,
             "options": {
-                "Disconnect": "Disconnect",
-                "Connect": "Connect"
+                "Disconnect": "Disconnect Network Interface",
+                "Connect": "Connect Network Interface"
             },
-            "helpMarkDown": "Select the option to connect or Disconnect an Azure Virtual Machine's network interface to the load balancer's backend address pool."
+            "helpMarkDown": "Connect: Adds the virtual machine’s network interface to load balancer backend pool. So that it starts receiving network traffic based on the load balancing rules for the load balancer resource.\n\nDisconnect:  Removes the virtual machine’s network interface from the load balancer’s backend pool. So that it stops receiving network traffic."
         },
         {
             "name": "NICDetection",
@@ -68,11 +68,11 @@
             "label": "NIC Detection",
             "required": true,
             "options": {
-                "AutoDetectNic": "Auto Detect NIC",
-                "CustomNic": "Custom VM:NIC Details"
+                "AutoDetectNic": "Auto select primary network interface",
+                "CustomNic": "Custom - virtual machine : network interface"
             },
             "defaultValue": "AutoDetectNic",
-            "helpMarkDown": "Select the option to select NIC of VM. Auto Detect NIC will assume that there is only one nic per VM."
+            "helpMarkDown": "Custom: Specify mapping virtual machine and the network interface associated with the virtual machine to be added/removed from load balancer backend pool. The format to specify is: `<virtual machine1>:<network interface name1> <virtual machine2>:<network interface name2>`… and so on.\n\nAuto select:  Will select the primary network interface of the virtual machine to perform the Action of connecting/disconnecting from load balancer's backend address pool."
         },
         {
             "name": "VmNicMapping",
@@ -81,7 +81,7 @@
             "defaultValue": "",
             "required": false,
             "visibleRule": "NICDetection = CustomNic",
-            "helpMarkDown": "Provide the vm names and the correspoding nics as VM:NIC separated by spaces. Ex: MyVM0:MyNIC0 MyVM1:MyNIC1."
+            "helpMarkDown": "Specify mapping virtual machine and the network interface associated with the virtual machine to be added/removed from load balancer backend pool. Specify space delimited pairs for multiple virtual machines. For example, `<virtual machine1>:<network interface name1> <virtual machine2>:<network interface name2>…` and so on."
         }
 	],
 	"dataSourceBindings": [
@@ -113,6 +113,8 @@
         "DisconnectingVMfromLB": "Disconnect the Azure Virtual Machine from the Load Balancer - %s's backend pool.",
         "setNICStatus": "Network interface %s set successfully",
         "MaxRetriesExceededForPut": "Maximum retries exceeded for making the PUT request for the Network Interface : %s",
-        "FailedPutResponse": "PUT request for setting the Network Interface %s failed with response %s" 
+        "FailedPutResponse": "PUT request for setting the Network Interface %s failed with response %s",
+        "GettingPrimaryNicForVm": "Getting the primary nic for the vm %s",
+        "ActionCompletedSuccefully": "The Action - %s successfully completed for the VM %s and load balancer %s"
     }
 }
