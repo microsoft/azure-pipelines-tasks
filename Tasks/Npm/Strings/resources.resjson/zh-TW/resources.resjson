@@ -1,16 +1,17 @@
 {
   "loc.friendlyName": "npm",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613746)",
+  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613746)",
   "loc.description": "執行 npm 命令",
   "loc.instanceNameFormat": "npm $(command)",
-  "loc.group.displayName.advanced": "進階",
-  "loc.input.label.command": "命令",
-  "loc.input.help.command": "要執行的 npm 命令。[詳細資訊](https://docs.npmjs.com/).",
+  "loc.input.label.cwd": "工作資料夾",
+  "loc.input.help.cwd": "npm 命令執行所在的工作目錄。預設為存放庫的根。",
+  "loc.input.label.command": "npm 命令",
   "loc.input.label.arguments": "引數",
   "loc.input.help.arguments": "傳遞給 npm 的其他引數。",
-  "loc.input.label.cwd": "工作目錄",
-  "loc.input.help.cwd": "目前的工作目錄，npm 命令會在其中執行。預設值為儲存機制的根目錄。",
-  "loc.messages.InvalidCommand": "僅應將一個命令用於 npm。使用引數輸入作為額外引數。",
-  "loc.messages.NpmReturnCode": "Npm 已結束，傳回碼為: %d",
-  "loc.messages.NpmFailed": "Npm 失敗，錯誤為: %s"
+  "loc.messages.InvalidCommand": "僅應將一個命令用於 npm。使用 'Arguments' 輸入以取得額外引數。",
+  "loc.messages.NpmReturnCode": "npm 已結束，傳回碼為: %d",
+  "loc.messages.NpmFailed": "npm 失敗，發生錯誤: %s",
+  "loc.messages.NpmConfigFailed": "無法記錄 npm 組態資訊。錯誤: %s",
+  "loc.messages.NpmAuthFailed": "無法取得 npm 的必要驗證權杖。錯誤: %s",
+  "loc.messages.BuildCredentialsWarn": "無法判斷要用於 npm 的認證"
 }

@@ -19,31 +19,31 @@ describe('CopyFiles L0 Suite', function () {
             runner.succeeded,
             'should have succeeded');
         assert(
-            runner.stdOutContained(`creating path: /destDir`),
+            runner.stdOutContained(`creating path: ${path.normalize('/destDir')}`),
             'should have mkdirP destDir');
         assert(
-            runner.stdOutContained(`creating path: ${path.join('/destDir', 'someOtherDir')}`),
+            runner.stdOutContained(`creating path: ${path.normalize('/destDir/someOtherDir')}`),
             'should have mkdirP someOtherDir');
         assert(
-            runner.stdOutContained(`creating path: ${path.join('/destDir', 'someOtherDir2')}`),
+            runner.stdOutContained(`creating path: ${path.normalize('/destDir/someOtherDir2')}`),
             'should have mkdirP someOtherDir2');
         assert(
-            !runner.stdOutContained(`creating path: ${path.join('/destDir', 'someOtherDir3')}`),
+            !runner.stdOutContained(`creating path: ${path.normalize('/destDir/someOtherDir3')}`),
             'should not have mkdirP someOtherDir3');
         assert(
-            runner.stdOutContained(`copying /srcDir/someOtherDir/file1.file to ${path.join('/destDir', 'someOtherDir', 'file1.file')}`),
+            runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file1.file')} to ${path.normalize('/destDir/someOtherDir/file1.file')}`),
             'should have copied dir1 file1');
         assert(
-            runner.stdOutContained(`copying /srcDir/someOtherDir/file2.file to ${path.join('/destDir', 'someOtherDir', 'file2.file')}`),
+            runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file2.file')} to ${path.normalize('/destDir/someOtherDir/file2.file')}`),
             'should have copied dir1 file2');
         assert(
-            runner.stdOutContained(`copying /srcDir/someOtherDir2/file1.file to ${path.join('/destDir', 'someOtherDir2', 'file1.file')}`),
+            runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir2/file1.file')} to ${path.normalize('/destDir/someOtherDir2/file1.file')}`),
             'should have copied dir2 file1');
         assert(
-            runner.stdOutContained(`copying /srcDir/someOtherDir2/file2.file to ${path.join('/destDir', 'someOtherDir2', 'file2.file')}`),
+            runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir2/file2.file')} to ${path.normalize('/destDir/someOtherDir2/file2.file')}`),
             'should have copied dir2 file2');
         assert(
-            runner.stdOutContained(`copying /srcDir/someOtherDir2/file3.file to ${path.join('/destDir', 'someOtherDir2', 'file3.file')}`),
+            runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir2/file3.file')} to ${path.normalize('/destDir/someOtherDir2/file3.file')}`),
             'should have copied dir2 file3');
         done();
     });
@@ -59,22 +59,22 @@ describe('CopyFiles L0 Suite', function () {
             runner.succeeded,
             'should have succeeded');
         assert(
-            runner.stdOutContained(`creating path: /destDir`),
+            runner.stdOutContained(`creating path: ${path.normalize('/destDir')}`),
             'should have mkdirP destDir');
         assert(
-            runner.stdOutContained(`creating path: ${path.join('/destDir', 'someOtherDir')}`),
+            runner.stdOutContained(`creating path: ${path.normalize('/destDir/someOtherDir')}`),
             'should have mkdirP someOtherDir');
         assert(
-            !runner.stdOutContained(`creating path: ${path.join('/destDir', 'someOtherDir2')}`),
+            !runner.stdOutContained(`creating path: ${path.normalize('/destDir/someOtherDir2')}`),
             'should not have mkdirP someOtherDir2');
         assert(
-            runner.stdOutContained(`copying /srcDir/someOtherDir/file1.file to ${path.join('/destDir', 'someOtherDir', 'file1.file')}`),
+            runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file1.file')} to ${path.normalize('/destDir/someOtherDir/file1.file')}`),
             'should have copied dir1 file1');
         assert(
-            runner.stdOutContained(`copying /srcDir/someOtherDir/file2.file to ${path.join('/destDir', 'someOtherDir', 'file2.file')}`),
+            runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file2.file')} to ${path.normalize('/destDir/someOtherDir/file2.file')}`),
             'should have copied dir1 file2');
         assert(
-            !runner.stdOutContained(`copying /srcDir/someOtherDir2/file1.file to ${path.join('/destDir', 'someOtherDir2', 'file1.file')}`),
+            !runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir2/file1.file')} to ${path.normalize('/destDir/someOtherDir2/file1.file')}`),
             'should not have copied dir2 file1');
         done();
     });
@@ -123,7 +123,7 @@ describe('CopyFiles L0 Suite', function () {
         runner.run();
 
         assert(runner.failed, 'should have failed');
-        assert(runner.createdErrorIssue('Unhandled: Not found /srcDir'), 'should have created error issue');
+        assert(runner.createdErrorIssue(`Unhandled: Not found ${path.normalize('/srcDir')}`), 'should have created error issue');
         done();
     });
 
@@ -135,7 +135,7 @@ describe('CopyFiles L0 Suite', function () {
         runner.run();
 
         assert(runner.failed, 'should have failed');
-        assert(runner.createdErrorIssue('Error: loc_mock_TargetIsDir'), 'should have created error issue');
+        assert(runner.createdErrorIssue(`Error: loc_mock_TargetIsDir ${path.normalize('/srcDir/someOtherDir/file1.file')} ${path.normalize('/destDir/someOtherDir/file1.file')}`), 'should have created error issue');
         done();
     });
 
@@ -150,16 +150,16 @@ describe('CopyFiles L0 Suite', function () {
             runner.succeeded,
             'should have succeeded');
         assert(
-            runner.stdOutContained(`creating path: /destDir`),
+            runner.stdOutContained(`creating path: ${path.normalize('/destDir')}`),
             'should have mkdirP destDir');
         assert(
-            runner.stdOutContained(`creating path: ${path.join('/destDir', 'someOtherDir')}`),
+            runner.stdOutContained(`creating path: ${path.normalize('/destDir/someOtherDir')}`),
             'should have mkdirP someOtherDir');
         assert(
-            !runner.stdOutContained(`copying /srcDir/someOtherDir/file1.file to ${path.join('/destDir', 'someOtherDir', 'file1.file')}`),
+            !runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file1.file')} to ${path.normalize('/destDir/someOtherDir/file1.file')}`),
             'should not have copied file1');
         assert(
-            runner.stdOutContained(`copying /srcDir/someOtherDir/file2.file to ${path.join('/destDir', 'someOtherDir', 'file2.file')}`),
+            runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file2.file')} to ${path.normalize('/destDir/someOtherDir/file2.file')}`),
             'should have copied file2');
         done();
     });
@@ -175,16 +175,16 @@ describe('CopyFiles L0 Suite', function () {
             runner.succeeded,
             'should have succeeded');
         assert(
-            runner.stdOutContained(`creating path: /destDir`),
+            runner.stdOutContained(`creating path: ${path.normalize('/destDir')}`),
             'should have mkdirP destDir');
         assert(
-            runner.stdOutContained(`creating path: ${path.join('/destDir', 'someOtherDir')}`),
+            runner.stdOutContained(`creating path: ${path.normalize('/destDir/someOtherDir')}`),
             'should have mkdirP someOtherDir');
         assert(
-            runner.stdOutContained(`copying /srcDir/someOtherDir/file1.file to ${path.join('/destDir', 'someOtherDir', 'file1.file')}`),
+            runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file1.file')} to ${path.normalize('/destDir/someOtherDir/file1.file')}`),
             'should have copied file1');
         assert(
-            runner.stdOutContained(`copying /srcDir/someOtherDir/file2.file to ${path.join('/destDir', 'someOtherDir', 'file2.file')}`),
+            runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file2.file')} to ${path.normalize('/destDir/someOtherDir/file2.file')}`),
             'should have copied file2');
         done();
     });
@@ -200,20 +200,42 @@ describe('CopyFiles L0 Suite', function () {
             runner.succeeded,
             'should have succeeded');
         assert(
-            runner.stdOutContained('rmRF /destDir'),
+            runner.stdOutContained(`rmRF ${path.normalize('/destDir')}`),
             'should have cleaned destDir');
         assert(
-            runner.stdOutContained(`creating path: /destDir`),
+            runner.stdOutContained(`creating path: ${path.normalize('/destDir')}`),
             'should have mkdirP destDir');
         assert(
             runner.stdOutContained(`creating path: ${path.join('/destDir', 'someOtherDir')}`),
             'should have mkdirP someOtherDir');
         assert(
-            runner.stdOutContained(`copying /srcDir/someOtherDir/file1.file to ${path.join('/destDir', 'someOtherDir', 'file1.file')}`),
+            runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file1.file')} to ${path.normalize('/destDir/someOtherDir/file1.file')}`),
             'should have copied file1');
         assert(
-            runner.stdOutContained(`copying /srcDir/someOtherDir/file2.file to ${path.join('/destDir', 'someOtherDir', 'file2.file')}`),
+            runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file2.file')} to ${path.normalize('/destDir/someOtherDir/file2.file')}`),
             'should have copied file2');
+        done();
+    });
+
+    it('roots patterns', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let testPath = path.join(__dirname, 'L0rootsPatterns.js');
+        let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
+        runner.run();
+
+        assert(
+            runner.succeeded,
+            'should have succeeded');
+        assert(
+            runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file1.file')} to ${path.normalize('/destDir/someOtherDir/file1.file')}`),
+            'should have copied file1');
+        assert(
+            runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file2.file')} to ${path.normalize('/destDir/someOtherDir/file2.file')}`),
+            'should have copied file2');
+        assert(
+            runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir2/file2.file')} to ${path.normalize('/destDir/someOtherDir2/file2.file')}`),
+            'should have copied file1');
         done();
     });
 
@@ -229,22 +251,22 @@ describe('CopyFiles L0 Suite', function () {
                 runner.succeeded,
                 'should have succeeded');
             assert(
-                runner.stdOutContained(`creating path: /destDir`),
+                runner.stdOutContained(`creating path: ${path.normalize('/destDir')}`),
                 'should have mkdirP destDir');
             assert(
-                runner.stdOutContained(`creating path: ${path.join('/destDir', 'someOtherDir')}`),
+                runner.stdOutContained(`creating path: ${path.normalize('/destDir/someOtherDir')}`),
                 'should have mkdirP someOtherDir');
             assert(
-                runner.stdOutContained(`chmodSync ${path.join('/destDir', 'someOtherDir', 'file1.file')} ${(6 << 6) + (6 << 3) + 6}`), // rw-rw-rw-
+                runner.stdOutContained(`chmodSync ${path.normalize('/destDir/someOtherDir/file1.file')} ${(6 << 6) + (6 << 3) + 6}`), // rw-rw-rw-
                 'should have chmod file1');
             assert(
-                runner.stdOutContained(`copying /srcDir/someOtherDir/file1.file to ${path.join('/destDir', 'someOtherDir', 'file1.file')}`),
+                runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file1.file')} to ${path.normalize('/destDir/someOtherDir/file1.file')}`),
                 'should have copied file1');
             assert(
-                !runner.stdOutContained(`chmodSync ${path.join('/destDir', 'someOtherDir', 'file2.file')} ${(6 << 6) + (6 << 3) + 6}`), // rw-rw-rw-
+                !runner.stdOutContained(`chmodSync ${path.normalize('/destDir/someOtherDir/file2.file')} ${(6 << 6) + (6 << 3) + 6}`), // rw-rw-rw-
                 'should not have chmod file2');
             assert(
-                runner.stdOutContained(`copying /srcDir/someOtherDir/file2.file to ${path.join('/destDir', 'someOtherDir', 'file2.file')}`),
+                runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file2.file')} to ${path.normalize('/destDir/someOtherDir/file2.file')}`),
                 'should have copied file2');
             done();
         });

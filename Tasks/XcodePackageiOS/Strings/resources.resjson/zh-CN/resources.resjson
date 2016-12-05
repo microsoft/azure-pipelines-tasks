@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Xcode 包 iOS",
+  "loc.friendlyName": "Xcode iOS 打包",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613731)",
   "loc.description": "从 Xcode 版本输出生成 .ipa 文件",
   "loc.instanceNameFormat": "Xcode 包 $(appName)",

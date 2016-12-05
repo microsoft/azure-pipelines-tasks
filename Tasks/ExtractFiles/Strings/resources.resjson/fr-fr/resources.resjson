@@ -1,12 +1,12 @@
 {
-  "loc.friendlyName": "Extract Files",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=800269)",
-  "loc.description": "Extract a variety of archive and compression files such as .7z, .rar, .tar.gz, and .zip.",
-  "loc.instanceNameFormat": "Extract files $(message)",
-  "loc.input.label.archiveFilePatterns": "Archive file patterns",
-  "loc.input.help.archiveFilePatterns": "File paths or patterns of the archive files to extract.  Supports multiple lines of minimatch patterns.  [More Information](https://go.microsoft.com/fwlink/?LinkId=800269)",
-  "loc.input.label.destinationFolder": "Destination folder",
-  "loc.input.help.destinationFolder": "Destination folder into which archive files should be extracted.  Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988) if files are not in the repo. Example: $(agent.builddirectory)",
-  "loc.input.label.cleanDestinationFolder": "Clean destination folder before extracting",
-  "loc.input.help.cleanDestinationFolder": "Select this option to clean the destination directory before archive contents are extracted into it."
+  "loc.friendlyName": "Extraire des fichiers",
+  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkId=800269)",
+  "loc.description": "Extrayez divers fichiers d'archives et fichiers de compression tels que .7z, .rar, .tar.gz et .zip.",
+  "loc.instanceNameFormat": "Extraire les fichiers $(message)",
+  "loc.input.label.archiveFilePatterns": "Archiver les modèles de fichiers",
+  "loc.input.help.archiveFilePatterns": "Chemins de fichiers ou modèles des fichiers d'archives à extraire. Prend en charge plusieurs lignes de modèles minimatch. [Plus d'informations](https://go.microsoft.com/fwlink/?LinkId=800269)",
+  "loc.input.label.destinationFolder": "Dossier de destination",
+  "loc.input.help.destinationFolder": "Dossier de destination dans lequel les fichiers d'archives doivent être extraits. Utilisez des [variables](https://go.microsoft.com/fwlink/?LinkID=550988), si les fichiers ne sont pas dans le dépôt. Exemple : $(agent.builddirectory)",
+  "loc.input.label.cleanDestinationFolder": "Nettoyer le dossier de destination avant l'extraction",
+  "loc.input.help.cleanDestinationFolder": "Sélectionnez cette option pour nettoyer le répertoire de destination avant d'y extraire le contenu d'archive."
 }
