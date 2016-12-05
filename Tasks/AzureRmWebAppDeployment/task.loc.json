@@ -183,31 +183,31 @@
       "helpMarkDown": "ms-resource:loc.input.help.RenameFilesFlag"
     },
     {
-      "name": "XdtTransformation",
+      "name": "XmlTransformation",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.XdtTransformation",
+      "label": "ms-resource:loc.input.label.XmlTransformation",
       "required": false,
       "defaultValue": false,
       "groupName": "FileTransformsAndVariableSubstitution",
-      "helpMarkDown": "ms-resource:loc.input.help.XdtTransformation"
+      "helpMarkDown": "ms-resource:loc.input.help.XmlTransformation"
     },
     {
-      "name": "VariableSubstitution",
+      "name": "XmlVariableSubstitution",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.VariableSubstitution",
+      "label": "ms-resource:loc.input.label.XmlVariableSubstitution",
       "required": false,
       "defaultValue": false,
       "groupName": "FileTransformsAndVariableSubstitution",
-      "helpMarkDown": "ms-resource:loc.input.help.VariableSubstitution"
+      "helpMarkDown": "ms-resource:loc.input.help.XmlVariableSubstitution"
     },
     {
-      "name": "JSONVariableSubstitutions",
+      "name": "JSONFiles",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.JSONVariableSubstitutions",
+      "label": "ms-resource:loc.input.label.JSONFiles",
       "required": false,
       "defaultValue": "",
       "groupName": "FileTransformsAndVariableSubstitution",
-      "helpMarkDown": "ms-resource:loc.input.help.JSONVariableSubstitutions"
+      "helpMarkDown": "ms-resource:loc.input.help.JSONFiles"
     }
   ],
   "dataSourceBindings": [

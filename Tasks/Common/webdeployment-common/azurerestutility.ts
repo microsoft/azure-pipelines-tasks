@@ -94,16 +94,6 @@ export async function getAzureRMWebAppPublishProfile(endPoint, webAppName: strin
         authorization: 'Bearer '+ accessToken
     };
 
-    if(!deployToSlotFlag) {
-         var requestURL = armUrl + 'subscriptions/' + endPoint.subscriptionId + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\' AND name EQ \'' + 
-                          webAppName + '\'&api-version=2016-07-01';
-        var webAppID = await getAzureRMWebAppID(endPoint, webAppName, requestURL, headers);
-
-        tl.debug('Web App details : ' + webAppID.id);
-        resourceGroupName = webAppID.id.split ('/')[4];
-        tl.debug('AzureRM Resource Group Name : ' + resourceGroupName);
-    }
-
     var deferred = Q.defer();
     var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
 

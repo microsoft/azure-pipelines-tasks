@@ -31,9 +31,9 @@ async function run() {
         var renameFilesFlag: boolean = tl.getBoolInput('RenameFilesFlag', false);
         var additionalArguments: string = tl.getInput('AdditionalArguments', false);
         var webAppUri:string = tl.getInput('WebAppUri', false);
-        var xmlTransformation: boolean = tl.getBoolInput('XdtTransformation', false);
-        var jsonVariableSubsFiles = tl.getDelimitedInput('JSONVariableSubstitutions', '\n', false);
-        var variableSubstitution: boolean = tl.getBoolInput('VariableSubstitution', false);
+        var xmlTransformation: boolean = tl.getBoolInput('XmlTransformation', false);
+        var JSONFiles = tl.getDelimitedInput('JSONFiles', '\n', false);
+        var xmlVariableSubstitution: boolean = tl.getBoolInput('XmlVariableSubstitution', false);
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
 
         var isDeploymentSuccess: boolean = true;
@@ -45,6 +45,10 @@ async function run() {
         endPoint["tenantID"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'tenantid', true);
         endPoint["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
         endPoint["url"] = tl.getEndpointUrl(connectedServiceName, true);
+
+        if(!deployToSlotFlag) {
+            resourceGroupName = await azureRESTUtility.getResourceGroupName(endPoint, webAppName);
+        }
 
         var publishingProfile = await azureRESTUtility.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
         tl._writeLine(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
@@ -61,7 +65,8 @@ async function run() {
 
         var isFolderBasedDeployment = utility.isInputPkgIsFolder(webDeployPkg);
 
-        if(jsonVariableSubsFiles || xmlTransformation || variableSubstitution) { 
+        if(JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution) {
+
             var folderPath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package_folder');
             if(isFolderBasedDeployment) {
                 tl.cp(path.join(webDeployPkg, '/*'), folderPath, '-rf', false);
@@ -69,6 +74,7 @@ async function run() {
             else {
                 await zipUtility.unzip(webDeployPkg, folderPath);
             }
+
             if(xmlTransformation) {
                 var environmentName = tl.getVariable('Release.EnvironmentName');
                 if(tl.osType().match(/^Win/)) {
@@ -82,12 +88,15 @@ async function run() {
                     throw new Error(tl.loc("CannotPerformXdtTransformationOnNonWindowsPlatform"));
                 }
             }
-            if(variableSubstitution) {
+
+            if(xmlVariableSubstitution) {
                 await xmlSubstitutionUtility.substituteAppSettingsVariables(folderPath);
             }
-            if(jsonVariableSubsFiles) {
-                jsonSubstitutionUtility.jsonVariableSubstitution(folderPath, jsonVariableSubsFiles);
+
+            if(JSONFiles.length != 0) {
+                jsonSubstitutionUtility.jsonVariableSubstitution(folderPath, JSONFiles);
             }
+
             webDeployPkg = (isFolderBasedDeployment) ? folderPath : await zipUtility.archiveFolder(folderPath, tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package.zip')
         }
 
@@ -117,7 +126,7 @@ async function run() {
                     await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
                 }
             }
-            tl._writeLine("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);         
+            tl._writeLine("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);
             tl._writeLine("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);
             await msDeploy.DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
                             excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile,
