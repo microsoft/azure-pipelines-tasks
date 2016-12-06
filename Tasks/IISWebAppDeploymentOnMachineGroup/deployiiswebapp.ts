@@ -24,7 +24,7 @@ async function run()
 		var additionalArguments: string = tl.getInput('AdditionalArguments', false);
 		var availableWebPackages = tl.glob(webDeployPkg);
         var xmlTransformation: boolean = tl.getBoolInput('XmlTransformation', false);
-        var JSONFiles = tl.getDelimitedInput('JSONFiles', '\n', false);
+        var JSONFiles: string[] = tl.getDelimitedInput('JSONFiles', '\n', false);
         var xmlVariableSubstitution: boolean = tl.getBoolInput('XmlVariableSubstitution', false);
 		
 

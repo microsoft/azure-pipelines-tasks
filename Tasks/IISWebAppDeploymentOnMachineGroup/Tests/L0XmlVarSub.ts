@@ -6,7 +6,7 @@ let taskPath = path.join(__dirname, '..', 'deployiiswebapp.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tr.setInput('WebSiteName', 'mytestwebsite');
 tr.setInput('Package', 'webAppPkg.zip');
-tr.setInput('JSONFiles','file1');
+tr.setInput('XmlVariableSubstitution', 'true');
 
 process.env['TASK_TEST_TRACE'] = 1;
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  "DefaultWorkingDirectory";
@@ -22,6 +22,13 @@ process.env["SYSTEM_TEAMPROJECT"] = "MyFirstProject";
 process.env["BUILD_SOURCEVERISONAUTHOR"] = "author";
 process.env["RELEASE_RELEASEURI"] = "vstfs:///ReleaseManagement/Release/1";
 process.env["AGENT_NAME"] = "author";
+process.env['CONNTYPE'] = 'new_connType';
+process.env['CONNECTIONSTRING'] = 'database_connection_string';
+process.env['WEBPAGES:VERSION'] = '1.1.7.3';
+process.env['RMTYPE'] = 'newRM@type';
+process.env['XDT:TRANSFORM'] = 'DelAttributes';
+process.env['XDT:LOCATOR'] = 'Match(tag)';
+
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
@@ -79,13 +86,19 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 		"system.teamProject": "MyFirstProject",
 		"build.sourceVersionAuthor": "author",
 		"release.releaseUri": "vstfs:///ReleaseManagement/Release/1",
-		"agent.name": "agent"
+		"agent.name": "agent",
+        "conntype": "new_connType",
+        "connectionString": 'database_connection_string',
+        "webpages:Version": "1.1.7.3",
+        "rmtype": "newRM@type",
+        "xdt:Transform": "DelAttributes",
+        "xdt:Locator": "Match(tag)"
     }
 }
 
 import mockTask = require('vsts-task-lib/mock-task');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js');
-var jsonSubUtil = require('webdeployment-common/jsonvariablesubstitutionutility.js');
+var xmlSubstitutionUtility = require('webdeployment-common/xmlvariablesubstitutionutility.js');
 
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
@@ -108,55 +121,12 @@ tr.registerMock('webdeployment-common/ziputility.js', {
     }
 });
 
-tr.registerMock('webdeployment-common/jsonvariablesubstitutionutility.js', {
-    jsonVariableSubstitution: function(absolutePath, jsonSubFiles) {
-        var envVarObject = jsonSubUtil.createEnvTree([
-            { name: 'system.debug', value: 'true', secret: false},
-            { name: 'data.ConnectionString', value: 'database_connection', secret: false},
-            { name: 'data.userName', value: 'db_admin', secret: false},
-            { name: 'data.password', value: 'db_pass', secret: true},
-            { name: '&pl.ch@r@cter.k^y', value: '*.config', secret: false},
-            { name: 'build.sourceDirectory', value: 'DefaultWorkingDirectory', secret: false},
-            { name: 'user.profile.name.first', value: 'firstName', secret: false},
-            { name: 'user.profile', value: 'replace_all', secret: false}
-        ]);
-        var jsonObject = {
-            'User.Profile': 'do_not_replace',
-            'data': {
-                'ConnectionString' : 'connect_string',
-                'userName': 'name',
-                'password': 'pass'
-            },
-            '&pl': {
-                'ch@r@cter.k^y': 'v@lue'
-            },
-            'system': {
-                'debug' : 'no_change'
-            },
-            'user.profile': {
-                'name.first' : 'fname'
-            }
-        }
-        // Method to be checked for JSON variable substitution
-        jsonSubUtil.substituteJsonVariable(jsonObject, envVarObject);
-
-        if(typeof jsonObject['user.profile'] === 'object') {
-            console.log('JSON - eliminating object variables validated');
-        }
-        if(jsonObject['data']['ConnectionString'] === 'database_connection' && jsonObject['data']['userName'] === 'db_admin') {
-            console.log('JSON - simple string change validated');
-        }
-        if(jsonObject['system']['debug'] === 'no_change') {
-            console.log('JSON - system variable elimination validated');
-        }
-        if(jsonObject['&pl']['ch@r@cter.k^y'] === '*.config') {
-            console.log('JSON - special variables validated');
-        }
-        if(jsonObject['user.profile']['name.first'] === 'firstName') {
-            console.log('JSON - variables with dot character validated');
-        }
-        if(jsonObject['User.Profile'] === 'do_not_replace') {
-            console.log('JSON - case sensitive variables validated');
+tr.registerMock('webdeployment-common/xmlvariablesubstitutionutility.js', {
+    substituteAppSettingsVariables: async function(folderPath) {
+        var tags = ["applicationSettings", "appSettings", "connectionStrings", "configSections"];
+        var configFiles = [path.join(__dirname, 'L1XmlVarSub/Web_test.config'), path.join(__dirname, 'L1XmlVarSub/Web_test.Debug.config')];
+        for(var configFile of configFiles) {
+            await xmlSubstitutionUtility.substituteXmlVariables(configFile, tags);
         }
     }
 });

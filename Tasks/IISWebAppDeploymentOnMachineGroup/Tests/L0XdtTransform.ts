@@ -6,10 +6,10 @@ let taskPath = path.join(__dirname, '..', 'deployiiswebapp.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tr.setInput('WebSiteName', 'mytestwebsite');
 tr.setInput('Package', 'webAppPkg.zip');
-tr.setInput('JSONFiles','file1');
+tr.setInput('XmlTransformation', 'true');
 
 process.env['TASK_TEST_TRACE'] = 1;
-process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  "DefaultWorkingDirectory";
+process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  'DefaultWorkingDirectory';
 process.env["BUILD_SOURCEVERSION"] = "46da24f35850f455185b9188b4742359b537076f";
 process.env["BUILD_BUILDID"] = 1,
 process.env["RELEASE_RELEASEID"] = 1;
@@ -85,7 +85,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 
 import mockTask = require('vsts-task-lib/mock-task');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js');
-var jsonSubUtil = require('webdeployment-common/jsonvariablesubstitutionutility.js');
+var xdtTransform = require('webdeployment-common/xdttransformationutility.js');
 
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
@@ -108,56 +108,11 @@ tr.registerMock('webdeployment-common/ziputility.js', {
     }
 });
 
-tr.registerMock('webdeployment-common/jsonvariablesubstitutionutility.js', {
-    jsonVariableSubstitution: function(absolutePath, jsonSubFiles) {
-        var envVarObject = jsonSubUtil.createEnvTree([
-            { name: 'system.debug', value: 'true', secret: false},
-            { name: 'data.ConnectionString', value: 'database_connection', secret: false},
-            { name: 'data.userName', value: 'db_admin', secret: false},
-            { name: 'data.password', value: 'db_pass', secret: true},
-            { name: '&pl.ch@r@cter.k^y', value: '*.config', secret: false},
-            { name: 'build.sourceDirectory', value: 'DefaultWorkingDirectory', secret: false},
-            { name: 'user.profile.name.first', value: 'firstName', secret: false},
-            { name: 'user.profile', value: 'replace_all', secret: false}
-        ]);
-        var jsonObject = {
-            'User.Profile': 'do_not_replace',
-            'data': {
-                'ConnectionString' : 'connect_string',
-                'userName': 'name',
-                'password': 'pass'
-            },
-            '&pl': {
-                'ch@r@cter.k^y': 'v@lue'
-            },
-            'system': {
-                'debug' : 'no_change'
-            },
-            'user.profile': {
-                'name.first' : 'fname'
-            }
-        }
-        // Method to be checked for JSON variable substitution
-        jsonSubUtil.substituteJsonVariable(jsonObject, envVarObject);
-
-        if(typeof jsonObject['user.profile'] === 'object') {
-            console.log('JSON - eliminating object variables validated');
-        }
-        if(jsonObject['data']['ConnectionString'] === 'database_connection' && jsonObject['data']['userName'] === 'db_admin') {
-            console.log('JSON - simple string change validated');
-        }
-        if(jsonObject['system']['debug'] === 'no_change') {
-            console.log('JSON - system variable elimination validated');
-        }
-        if(jsonObject['&pl']['ch@r@cter.k^y'] === '*.config') {
-            console.log('JSON - special variables validated');
-        }
-        if(jsonObject['user.profile']['name.first'] === 'firstName') {
-            console.log('JSON - variables with dot character validated');
-        }
-        if(jsonObject['User.Profile'] === 'do_not_replace') {
-            console.log('JSON - case sensitive variables validated');
-        }
+tr.registerMock('webdeployment-common/xdttransformationutility.js', {
+    basicXdtTransformation: function() {
+		process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] = path.join(__dirname, 'L0XdtTransform');
+        xdtTransform.applyXdtTransformation(path.join(__dirname, 'L0XdtTransform', 'Web_test.config'), path.join(__dirname, 'L0XdtTransform', 'Web.Debug.config'));
+        process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = 'DefaultWorkingDirectory';
     }
 });
 
