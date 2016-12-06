@@ -258,10 +258,10 @@
         "EncodeNotSupported": "Detected file encoding of the file %s as %s. Variable substitution and Transformation is not supported with file encoding %s. Supported encodings are UTF-8 and UTF-16 LE.",
         "UnknownFileEncodeError": "Unable to detect encoding of the file %s (typeCode: %s). Supported encodings are UTF-8 and UTF-16 LE.",
         "ShortFileBufferError": "File buffer is too short to detect encoding type : %s",
-		"RequestedURLforkuduphysicalpath": "Requested URL for kudu physical path : %s",
-		"Physicalpathalreadyexists": "Physical path '%s' already exists",
-		"KuduPhysicalpathCreatedSuccessfully": "Kudu physical path created successfully : %s",
-		"FailedtocreateKuduPhysicalPath" : "Failed to create kudu physical path. %s: %s",
-		"FailedtocheckphysicalPath" : "Failed to check kudu physical path. %s: %s"
+        "RequestedURLforkuduphysicalpath": "Requested URL for kudu physical path : %s",
+        "Physicalpathalreadyexists": "Physical path '%s' already exists",
+        "KuduPhysicalpathCreatedSuccessfully": "Kudu physical path created successfully : %s",
+        "FailedtocreateKuduPhysicalPath" : "Failed to create kudu physical path. %s: %s",
+        "FailedtocheckphysicalPath" : "Failed to check kudu physical path. %s: %s"
     }
 }
