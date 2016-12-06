@@ -13,7 +13,7 @@
   "version": {
     "Major": 2,
     "Minor": 1,
-    "Patch": 9
+    "Patch": 10
   },
   "minimumAgentVersion": "1.102.0",
   "groups": [
@@ -257,6 +257,11 @@
     "WebAppDoesntExist": "ms-resource:loc.messages.WebAppDoesntExist",
     "EncodeNotSupported": "ms-resource:loc.messages.EncodeNotSupported",
     "UnknownFileEncodeError": "ms-resource:loc.messages.UnknownFileEncodeError",
-    "ShortFileBufferError": "ms-resource:loc.messages.ShortFileBufferError"
+    "ShortFileBufferError": "ms-resource:loc.messages.ShortFileBufferError",
+    "RequestedURLforkuduphysicalpath": "ms-resource:loc.messages.RequestedURLforkuduphysicalpath",
+    "Physicalpathalreadyexists": "ms-resource:loc.messages.Physicalpathalreadyexists",
+    "KuduPhysicalpathCreatedSuccessfully": "ms-resource:loc.messages.KuduPhysicalpathCreatedSuccessfully",
+    "FailedtocreateKuduPhysicalPath": "ms-resource:loc.messages.FailedtocreateKuduPhysicalPath",
+    "FailedtocheckphysicalPath": "ms-resource:loc.messages.FailedtocheckphysicalPath"
   }
 }
