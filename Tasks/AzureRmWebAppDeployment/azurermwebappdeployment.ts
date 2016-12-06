@@ -122,6 +122,12 @@ async function run() {
                     await azureRESTUtility.updateWebAppAppSettings(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
                 }
             }
+            if(virtualApplication) {
+                var azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+                var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
+                var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
+                await kuduUtility.createKuduPhysicalPath(publishingProfile, pathMappings[1]);
+            }
             tl._writeLine("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);         
             tl._writeLine("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);
             await msDeploy.DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,

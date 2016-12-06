@@ -115,6 +115,15 @@ tr.registerMock('./msdeployutility.js', {
     }
 }); 
 
+tr.registerMock('./kuduutility.js', {
+    createKuduPhysicalPath: function () {
+        return;
+    },
+    getVirtualAndPhysicalPaths: function() {
+        return [ '/virtualApp', 'site\\virtualApp\\wwwroot' ];
+    }
+});
+
 tr.registerMock('webdeployment-common/azurerestutility.js', {
     getAzureRMWebAppPublishProfile: function(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
         var mockPublishProfile = {
