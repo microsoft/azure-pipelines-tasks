@@ -35,7 +35,7 @@ export function getAccessToken(SPN, endpointUrl: string): Q.Promise<string> {
 			deferred.resolve(JSON.parse(body).access_token);
 		}
 		else {
-			deferred.reject(`Could not fetch access token.\nStatus Code : ${response.statusCode}\nStatus Message : ${response.statusMessage}\n${body}`);
+			deferred.reject(tl.loc("CouldNotFetchAcessToken", response.statusCode, response.statusMessage, body));
 		};
 	}); 
 
@@ -61,7 +61,7 @@ export async function getNetworkInterfacesInRG(SPN, endpointUrl: string, resourc
 			deferred.resolve(JSON.parse(body).value);
 		}
 		else {
-			deferred.reject(`Could not fetch network interfaces.\nStatus Code : ${response.statusCode}\nStatus Message : ${response.statusMessage}\n${body}`);
+			deferred.reject(tl.loc("CouldNotFetchNetworkInterfacesInRg", resourceGroupName, response.statusCode, response.statusMessage, body));
 		}
 
 	});
@@ -87,7 +87,7 @@ export async function getLoadBalancer(SPN, endpointUrl: string, name: string, re
             deferred.resolve(JSON.parse(body));
         }
         else {
-            deferred.reject(`Could not fetch load balancer.\nStatus Code : ${response.statusCode}\nStatus Message : ${response.statusMessage}\n${body}`);
+        	deferred.reject(tl.loc("CouldNotFetchLoadBalancer", name, response.statusCode, response.statusMessage, body));
         }
     });
 	
@@ -112,7 +112,7 @@ export async function getNetworkInterface(SPN, endpointUrl, name: string, resour
             deferred.resolve(JSON.parse(body));
         }
         else {
-        	deferred.reject(`Could not fetch network interface.\nStatus Code : ${response.statusCode}\nStatus Message : ${response.statusMessage}\n${body}`);
+        	deferred.reject(tl.loc("CouldNotFetchNetworkInterface", name, response.statusCode, response.statusMessage, body));
         }
     });
 	
@@ -133,14 +133,14 @@ export async function setNetworkInterface(SPN, endpointUrl: string, nic, resourc
 		"Authorization": 'Bearer ' + accessToken
 	};
 
-	tl._writeLine("Setting the network interface");
+	tl._writeLine(tl.loc("SettingTheNetworkInterface", nic.name));
 	var maxRetries = 10;	
 	var sleepTime = (Math.floor(Math.random() * 6) + 5) * 1000;	// sleep time in ms
 	var retryCount = 1;
 
 	setTimeout (function putNetworkInterface() {
 		if(retryCount > maxRetries) {
-			deferred.reject(tl.loc("MaxRetriesExceededForPut", nic.name));
+			deferred.reject(tl.loc("MaxRetriesExceededForSettingNetworkInterface", nic.name));
 			return;
 		}
 		
@@ -176,15 +176,15 @@ export async function setNetworkInterface(SPN, endpointUrl: string, nic, resourc
 	        				tl.debug("Retrying after " + sleepTime/1000 + " sec");
 	        				setTimeout(putNetworkInterface, sleepTime);
 	        			}
-	        			else {
-	        				// Re-check the status of the provisioning state
-	        				setTimeout(checkSuccessStatus, checkStatusWaitTime);
-	        			}
+						else {
+							// Re-check the status of the provisioning state
+							setTimeout(checkSuccessStatus, checkStatusWaitTime);
+						}
 	        		}
 	        	}, checkStatusWaitTime);	
 	        }
 	        else {
-	        	tl.error(tl.loc("FailedPutResponse", nic.name, response));
+	        	tl.error(tl.loc("FailedSettingNetworkInterface", nic.name, response));
 	        	deferred.reject(response);
 	        }
 		});

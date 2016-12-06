@@ -8,7 +8,7 @@
 	"category": "Utility",
 	"visibility": [
 		"Build",
-		"Release", 
+		"Release",
         "Preview"
     ],
     "runsOn": [
@@ -20,7 +20,7 @@
 		"Patch": "0"
 	},
 	"minimumAgentVersion": "1.95.0",
-	"instanceNameFormat": "Azure Network Load Balancer: $(Action) VMs from $(LoadBalancer)",
+	"instanceNameFormat": "Azure Network Load Balancer: $(LoadBalancer) - $(Action)",
 	"inputs": [
 		{
             "name": "ConnectedServiceName",
@@ -60,28 +60,28 @@
                 "Disconnect": "Disconnect Network Interface",
                 "Connect": "Connect Network Interface"
             },
-            "helpMarkDown": "Connect: Adds the virtual machine’s network interface to load balancer backend pool. So that it starts receiving network traffic based on the load balancing rules for the load balancer resource.\n\nDisconnect:  Removes the virtual machine’s network interface from the load balancer’s backend pool. So that it stops receiving network traffic."
+            "helpMarkDown": "Disconnect:  Removes the virtual machine’s network interface from the load balancer’s backend pool. So that it stops receiving network traffic.\n\nConnect: Adds the virtual machine’s network interface to load balancer backend pool. So that it starts receiving network traffic based on the load balancing rules for the load balancer resource."
         },
         {
             "name": "NICDetection",
             "type": "pickList",
-            "label": "NIC Detection",
+            "label": "Network Interface Detection",
             "required": true,
             "options": {
                 "AutoDetectNic": "Auto select primary network interface",
-                "CustomNic": "Custom - virtual machine : network interface"
+                "CustomNic": "Custom"
             },
             "defaultValue": "AutoDetectNic",
-            "helpMarkDown": "Custom: Specify mapping virtual machine and the network interface associated with the virtual machine to be added/removed from load balancer backend pool. The format to specify is: `<virtual machine1>:<network interface name1> <virtual machine2>:<network interface name2>`… and so on.\n\nAuto select:  Will select the primary network interface of the virtual machine to perform the Action of connecting/disconnecting from load balancer's backend address pool."
+            "helpMarkDown": "Auto select:  Will select the primary network interface of the virtual machine to perform the Action of connecting/disconnecting from load balancer's backend address pool.\n\nCustom: Provide a comma separated list of network interfaces which you want to connect or disconnect to the load balancer's backend address pool. Ex: vnic1,vnic2 .. "
         },
         {
-            "name": "VmNicMapping",
+            "name": "inputNics",
             "type": "multiLine",
-            "label": "VM:NIC Mapping",
+            "label": "Network Interfaces",
             "defaultValue": "",
             "required": false,
             "visibleRule": "NICDetection = CustomNic",
-            "helpMarkDown": "Specify mapping virtual machine and the network interface associated with the virtual machine to be added/removed from load balancer backend pool. Specify space delimited pairs for multiple virtual machines. For example, `<virtual machine1>:<network interface name1> <virtual machine2>:<network interface name2>…` and so on."
+            "helpMarkDown": "Provide a comma separated list of network interfaces which you want to connect or disconnect to the load balancer's backend address pool. Ex: vnic1,vnic2 .. "
         }
 	],
 	"dataSourceBindings": [
@@ -105,16 +105,21 @@
 		}
 	},
     "messages": {
-        "CouldNotFetchNicDetails": "Could not fetch NIC configuration details for the Azure Virtual Machine : %s",
-        "NicDetailsFetched": "NIC configuration details fetched for the Azure Virtual Machine : %s",
+        "CouldNotFetchNicDetails": "Could not fetch network interface configuration details for the Azure Virtual Machine : %s",
+        "NicDetailsFetched": "Network interface configuration details fetched for the Azure Virtual Machine : %s",
         "GettingAllNetworkInterfacesInTheResourceGroup": "Getting all network interfaces in the Resource Group : %s",
         "RequestingForAuthToken": "Requesting for authorization token : %s",
         "ConnectingVMtoLB": "Connecting the Azure Virtual Machine to the Load Balancer - %s's backend pool.",
         "DisconnectingVMfromLB": "Disconnect the Azure Virtual Machine from the Load Balancer - %s's backend pool.",
         "setNICStatus": "Network interface %s set successfully",
-        "MaxRetriesExceededForPut": "Maximum retries exceeded for making the PUT request for the Network Interface : %s",
-        "FailedPutResponse": "PUT request for setting the Network Interface %s failed with response %s",
-        "GettingPrimaryNicForVm": "Getting the primary nic for the vm %s",
-        "ActionCompletedSuccefully": "The Action - %s successfully completed for the VM %s and load balancer %s"
+        "MaxRetriesExceededForSettingNetworkInterface": "Maximum retries exceeded for setting the Network Interface : %s",
+        "FailedSettingNetworkInterface": "Setting the Network Interface %s failed with response %s",
+        "GettingPrimaryNicForVm": "Getting the primary network interface for the vm %s",
+        "ActionCompletedSuccefully": "The Action - %s completed successfully for the virtual machine %s and load balancer %s",
+        "CouldNotFetchAcessToken": "Could not fetch access token.\nStatus Code : %s\nStatus Message : %s\n%s",
+        "CouldNotFetchNetworkInterfacesInRg": "Could not fetch Network Interfaces in the resource group %s.\nStatus Code : %s\nStatus Message : %s\n%s",
+        "CouldNotFetchLoadBalancer": "Could not fetch Load Balancer %s.\nStatus Code : %s\nStatus Message : %s\n%s",
+        "CouldNotFetchNetworkInterface": "Could not fetch Network Interface %s.\nStatus Code : %s\nStatus Message : %s\n%s",
+        "SettingTheNetworkInterface": "Setting the network interface %s"
     }
 }

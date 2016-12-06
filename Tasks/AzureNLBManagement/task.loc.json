@@ -69,19 +69,19 @@
       "required": true,
       "options": {
         "AutoDetectNic": "Auto select primary network interface",
-        "CustomNic": "Custom - virtual machine : network interface"
+        "CustomNic": "Custom"
       },
       "defaultValue": "AutoDetectNic",
       "helpMarkDown": "ms-resource:loc.input.help.NICDetection"
     },
     {
-      "name": "VmNicMapping",
+      "name": "inputNics",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.VmNicMapping",
+      "label": "ms-resource:loc.input.label.inputNics",
       "defaultValue": "",
       "required": false,
       "visibleRule": "NICDetection = CustomNic",
-      "helpMarkDown": "ms-resource:loc.input.help.VmNicMapping"
+      "helpMarkDown": "ms-resource:loc.input.help.inputNics"
     }
   ],
   "dataSourceBindings": [
@@ -112,9 +112,14 @@
     "ConnectingVMtoLB": "ms-resource:loc.messages.ConnectingVMtoLB",
     "DisconnectingVMfromLB": "ms-resource:loc.messages.DisconnectingVMfromLB",
     "setNICStatus": "ms-resource:loc.messages.setNICStatus",
-    "MaxRetriesExceededForPut": "ms-resource:loc.messages.MaxRetriesExceededForPut",
-    "FailedPutResponse": "ms-resource:loc.messages.FailedPutResponse",
+    "MaxRetriesExceededForSettingNetworkInterface": "ms-resource:loc.messages.MaxRetriesExceededForSettingNetworkInterface",
+    "FailedSettingNetworkInterface": "ms-resource:loc.messages.FailedSettingNetworkInterface",
     "GettingPrimaryNicForVm": "ms-resource:loc.messages.GettingPrimaryNicForVm",
-    "ActionCompletedSuccefully": "ms-resource:loc.messages.ActionCompletedSuccefully"
+    "ActionCompletedSuccefully": "ms-resource:loc.messages.ActionCompletedSuccefully",
+    "CouldNotFetchAcessToken": "ms-resource:loc.messages.CouldNotFetchAcessToken",
+    "CouldNotFetchNetworkInterfacesInRg": "ms-resource:loc.messages.CouldNotFetchNetworkInterfacesInRg",
+    "CouldNotFetchLoadBalancer": "ms-resource:loc.messages.CouldNotFetchLoadBalancer",
+    "CouldNotFetchNetworkInterface": "ms-resource:loc.messages.CouldNotFetchNetworkInterface",
+    "SettingTheNetworkInterface": "ms-resource:loc.messages.SettingTheNetworkInterface"
   }
 }

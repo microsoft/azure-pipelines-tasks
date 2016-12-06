@@ -7,10 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Microsoft Corporation",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
-    "q": "^1.4.1",
-    "vso-node-api": "^6.0.1-preview",
-    "vsts-task-lib": "^0.9.20"
+    "q": "1.4.1",
+    "vso-node-api": "6.0.1-preview",
+    "vsts-task-lib": "0.9.20"
   }
 }

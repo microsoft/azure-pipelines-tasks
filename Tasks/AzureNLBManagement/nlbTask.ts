@@ -14,7 +14,7 @@ async function run() {
 		var loadBalancerName: string = tl.getInput("LoadBalancer", true);
 		var action: string = tl.getInput("Action", true);
 		var nicDetection: string = tl.getInput("NICDetection", true);		
-		var vmNicMapping: string = tl.getInput("VmNicMapping", false);
+		var inputNics: string = tl.getInput("inputNics", false);
 		var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
 		var endpointUrl = tl.getEndpointUrl(connectedServiceName, true);
 
@@ -24,7 +24,7 @@ async function run() {
 		SPN["tenantID"] = endPointAuthCreds.parameters["tenantid"];
 		SPN["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
 
-		var nicVm = await getNetworkInterface(SPN, endpointUrl, resourceGroupName, nicDetection, vmNicMapping);
+		var nicVm = await getNetworkInterface(SPN, endpointUrl, resourceGroupName, nicDetection, inputNics);
 		tl.debug(tl.loc("NicDetailsFetched", process.env["computername"]));
 
 		var nicLbBackendPoolConfig = null;
@@ -61,7 +61,7 @@ function getMacAddress(): string[] {
 	return macAddress;
 }
 
-async function getNetworkInterface(SPN, endpointUrl: string, resourceGroupName: string, nicDetection: string, vmNicMapping: string) {
+async function getNetworkInterface(SPN, endpointUrl: string, resourceGroupName: string, nicDetection: string, inputNics: string) {
 	var nics =  await nlbUtility.getNetworkInterfacesInRG(SPN, endpointUrl, resourceGroupName);
 	var macAddress = getMacAddress();
 	var nicVm = null;
@@ -77,15 +77,11 @@ async function getNetworkInterface(SPN, endpointUrl: string, resourceGroupName: 
 		}
 	}
 	else {
-		// Handle custom vm:nic mapping 
-		var nicVmMap = {};	
-		var temp = vmNicMapping.split(" ");
-		for(var j in temp){
-			nicVmMap[temp[j].split(":")[1]] = temp[j].split(":")[0];
-		}
+		inputNics = inputNics.trim().replace(/,\s*/g, ",").replace(/\s*,/g, ",");
+		var userNics = inputNics.split(",");
 		for (var mac in macAddress) {
 			for (var nic in nics) {
-				if(nics[nic].properties.macAddress == macAddress[mac] && nicVmMap[nics[nic].name]) {
+				if(nics[nic].properties.macAddress == macAddress[mac] && userNics.indexOf(nics[nic].name) != -1) {
 					nicVm = nics[nic];
 					break;
 				}
