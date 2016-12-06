@@ -70,6 +70,7 @@ try {
     $releaseId = Get-VstsTaskVariable -Name Release.ReleaseId -Require
     $phaseId = Get-VstsTaskVariable -Name Release.DeployPhaseId -Require
     $phaseExecutionModel = Get-VstsTaskVariable -Name System.ParallelExecutionType -Require 
+    $projectName = Get-VstsTaskVariable -Name System.TeamProject -Require
 
     # Generate Environment URI
     $taskInstanceIdString = Get-VstsTaskVariable -Name DTA_INSTANCE_ID
@@ -83,7 +84,7 @@ try {
 
     # This is uniqure environment URI for each DTA Run. One can dynamically add machines by overrriding this with current URI
     $taskInstanceId = Get-VstsTaskVariable -Name DTA_INSTANCE_ID
-    $environmentUri = "dta://env/Test/_apis/release/$releaseId/$phaseId/$taskInstanceId"
+    $environmentUri = "dta://env/$projectName/_apis/release/$releaseId/$phaseId/$taskInstanceId"
 
     # *** Todo ***
     # Handle errors properly
