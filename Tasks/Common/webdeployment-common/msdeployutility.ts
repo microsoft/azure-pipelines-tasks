@@ -48,12 +48,12 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
         }
     }
 
-	if(publishingProfile != null)
-	{
-		msDeployCmdArgs += ",ComputerName='https://" + publishingProfile.publishUrl + "/msdeploy.axd?site=" + webAppName + "',";
-		msDeployCmdArgs += "UserName='" + publishingProfile.userName + "',Password='" + publishingProfile.userPWD + "',AuthType='Basic'";
-	}
-	
+    if(publishingProfile != null)
+    {
+        msDeployCmdArgs += ",ComputerName='https://" + publishingProfile.publishUrl + "/msdeploy.axd?site=" + webAppName + "',";
+        msDeployCmdArgs += "UserName='" + publishingProfile.userName + "',Password='" + publishingProfile.userPWD + "',AuthType='Basic'";
+    }
+    
     if(isParamFilePresentInPacakge) {
         msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='" + webApplicationDeploymentPath + "'";
     }
@@ -82,15 +82,15 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
     }
 
     if(publishingProfile != null)
-	{
-		var userAgent = tl.getVariable("AZURE_HTTP_USER_AGENT");
-		if(userAgent)
-		{
-			msDeployCmdArgs += ' -userAgent:' + userAgent;
-		}
-	}
+    {
+        var userAgent = tl.getVariable("AZURE_HTTP_USER_AGENT");
+        if(userAgent)
+        {
+            msDeployCmdArgs += ' -userAgent:' + userAgent;
+        }
+    }
 
-    tl.debug(tl.loc('ConstructedmsDeploycomamndlinearguments'));
+    tl.debug('Constructed msDeploy comamnd line arguments');
     return msDeployCmdArgs;
 }
 
@@ -124,7 +124,7 @@ export async  function containsParamFile(webAppPackage: string ) {
             isParamFilePresent = true;
         }
     });
-    tl.debug(tl.loc("Isparameterfilepresentinwebpackage0", isParamFilePresent));
+    tl.debug("Is parameter file present in web package : " + isParamFilePresent);
     tl.rmRF(msDeployParamFile, true);
     return isParamFilePresent;
 }
@@ -210,10 +210,10 @@ export function redirectMSDeployErrorToConsole() {
         if(errorFileContent.toString().indexOf("ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER") !== -1){
             tl.warning(tl.loc("Trytodeploywebappagainwithappofflineoptionselected"));
         }
-		if(errorFileContent.toString().indexOf("FILE_IN_USE") !== -1){
+        if(errorFileContent.toString().indexOf("FILE_IN_USE") !== -1){
             tl.warning(tl.loc("Trytodeploywebappagainwithrenamefileoptionselected"));
         }
-		
+        
         tl.error(errorFileContent.toString());
     }
 }
