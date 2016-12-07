@@ -69,7 +69,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "getVariable": {
         "ENDPOINT_AUTH_AzureRMSpn": "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}",
-           "ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONNAME": "sName", 
+        "ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONNAME": "sName", 
         "ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONID": "sId",
         "AZURE_HTTP_USER_AGENT": "TFS_useragent",
         "System.DefaultWorkingDirectory": "DefaultWorkingDirectory",
@@ -151,7 +151,7 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
         }
 
         return config;
-	},
+    },
     getResourceGroupName: function (SPN, webAppName) {
         return "foobar";
     },

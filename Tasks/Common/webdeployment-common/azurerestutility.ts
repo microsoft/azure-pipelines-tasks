@@ -146,7 +146,7 @@ function getAuthorizationToken(endPoint): Q.Promise<string> {
             deferred.resolve(JSON.parse(body).access_token);
         }
         else {
-            deferred.reject(tl.loc('CouldnotfetchacccesstokenforAzure.StatusCode', response.statusCode, response.statusMessage));
+            deferred.reject(tl.loc('CouldnotfetchacccesstokenforAzureStatusCode', response.statusCode, response.statusMessage));
         }
     });
 
