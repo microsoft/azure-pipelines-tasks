@@ -9,8 +9,8 @@ var restObj = new restClient.RestCallbackClient(httpObj);
 
 var authUrl = 'https://login.windows.net/';
 var azureApiVersion = '2016-09-01';
-
-export function getAccessToken(SPN, endpointUrl: string): Q.Promise<string> {
+	
+function getAccessToken(SPN, endpointUrl: string): Q.Promise<string> {
 
 	var deferred = Q.defer<string>();
 	var authorityUrl = authUrl + SPN.tenantID + "/oauth2/token/";
@@ -26,7 +26,7 @@ export function getAccessToken(SPN, endpointUrl: string): Q.Promise<string> {
 		"Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
 	};
 
-	tl.debug(tl.loc('RequestingForAuthToken', authorityUrl));
+	tl.debug(`Requesting for bearer token ${authorityUrl}`);
 	httpObj.send("POST", authorityUrl, post_data, requestHeader, (error, response, body) => {
 		if(error) {
 			deferred.reject(error);
@@ -52,7 +52,7 @@ export async function getNetworkInterfacesInRG(SPN, endpointUrl: string, resourc
 		Authorization: 'Bearer ' + accessToken
 	};
 
-	tl.debug(tl.loc('GettingAllNetworkInterfacesInTheResourceGroup', resourceGroupName));
+	tl.debug(`Getting all network interfaces in the resource group ${resourceGroupName}`);
 	httpObj.get('GET', restUrl, requestHeader, (error, response, body) => {
 		if(error) {
 			deferred.reject(error);
@@ -78,7 +78,7 @@ export async function getLoadBalancer(SPN, endpointUrl: string, name: string, re
 		authorization: 'Bearer ' + accessToken
 	}
 
-	tl.debug('Getting the load balancer: ' + name);
+	tl.debug(`Getting the load balancer: ${name}`);
 	httpObj.get('GET', restUrl, requestHeader, (error, response, body) => {
         if(error) {
             deferred.reject(error);
@@ -103,7 +103,7 @@ export async function getNetworkInterface(SPN, endpointUrl, name: string, resour
 		authorization: 'Bearer ' + accessToken
 	}
 
-	tl.debug('Getting the Network Interface: ' + name);
+	tl.debug(`Getting the Network Interface: ${name}`);
 	httpObj.get('GET', restUrl, requestHeader, (error, response, body) => {
         if(error) {
             deferred.reject(error);
@@ -150,10 +150,12 @@ export async function setNetworkInterface(SPN, endpointUrl: string, nic, resourc
 	        	if(response == 429) {
 	        		//Handle Too Many Requests Error
 	        		retryCount++;
+	        		tl.debug(`429: Too many requests`);
 	        		tl.debug("Retrying after " + sleepTime/1000 + " sec");
 	        		setTimeout(putNetworkInterface, sleepTime);
 	        	}
 	            else {
+	            	tl.error(tl.loc("FailedSettingNetworkInterface", nic.name, response));
 	            	deferred.reject(error);
 	            }
 	        }
@@ -167,7 +169,7 @@ export async function setNetworkInterface(SPN, endpointUrl: string, nic, resourc
 	        		var provisioningState = await checkProvisioningState(SPN, endpointUrl, nic.name, resourceGroupName);
 	        		tl.debug("Provisioning State = " + provisioningState);
 	        		if(provisioningState == "Succeeded"){
-	            		deferred.resolve("setNICStatus");
+	            		deferred.resolve("setNICStatusSuccess");
 	        		}
 	        		else {
 	        			if(++checkStatusRetryCount == 10){

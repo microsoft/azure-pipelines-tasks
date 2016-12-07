@@ -3,7 +3,8 @@ import * as Q from 'q';
 import * as os from 'os';
 import * as path from 'path'
 
-var nlbUtility = require('./nlbUtility');
+var nlbUtility = require('./nlbazureutility');
+var utility = require('./utility');
 
 async function run() {
 	try {
@@ -13,8 +14,6 @@ async function run() {
 		var resourceGroupName: string = tl.getInput("ResourceGroupName", true);
 		var loadBalancerName: string = tl.getInput("LoadBalancer", true);
 		var action: string = tl.getInput("Action", true);
-		var nicDetection: string = tl.getInput("NICDetection", true);		
-		var inputNics: string = tl.getInput("inputNics", false);
 		var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
 		var endpointUrl = tl.getEndpointUrl(connectedServiceName, true);
 
@@ -24,8 +23,8 @@ async function run() {
 		SPN["tenantID"] = endPointAuthCreds.parameters["tenantid"];
 		SPN["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
 
-		var nicVm = await getNetworkInterface(SPN, endpointUrl, resourceGroupName, nicDetection, inputNics);
-		tl.debug(tl.loc("NicDetailsFetched", process.env["computername"]));
+		var nicVm = await getNetworkInterface(SPN, endpointUrl, resourceGroupName);
+		tl.debug(`Network Interface - ${nicVm.name}'s configuration details fetched for the virtual machine ${process.env["computername"]}`);
 
 		var nicLbBackendPoolConfig = null;
 		if (action == "Connect") {
@@ -46,50 +45,12 @@ async function run() {
 	}
 }
 
-function getMacAddress(): string[] {
-	// Return an array of mac address of all the network interfaces 
-	var macAddress = [];
-	var networkInterfaces = os.networkInterfaces();
-	Object.keys(networkInterfaces).forEach( (interfaceName) => {
-		networkInterfaces[interfaceName].forEach( (interFace) => {
-			if (interFace.family !== 'IPv4' || interFace.internal !== false) {
-      			return;
-    		}
-    		macAddress.push(interFace.mac.toUpperCase().replace(/:/g, "-"));
-		});
-	});
-	return macAddress;
-}
-
-async function getNetworkInterface(SPN, endpointUrl: string, resourceGroupName: string, nicDetection: string, inputNics: string) {
+async function getNetworkInterface(SPN, endpointUrl: string, resourceGroupName: string) {
 	var nics =  await nlbUtility.getNetworkInterfacesInRG(SPN, endpointUrl, resourceGroupName);
-	var macAddress = getMacAddress();
-	var nicVm = null;
-	if(nicDetection == "AutoDetectNic"){
-		tl.debug(tl.loc("GettingPrimaryNicForVm", process.env.computername));
-		for (var mac in macAddress) {
-			for (var i in nics) {
-				if(nics[i].properties.macAddress == macAddress[mac] && nics[i].properties.primary) {
-					nicVm = nics[i];
-					break;
-				}
-			}	
-		}
-	}
-	else {
-		inputNics = inputNics.trim().replace(/,\s*/g, ",").replace(/\s*,/g, ",");
-		var userNics = inputNics.split(",");
-		for (var mac in macAddress) {
-			for (var nic in nics) {
-				if(nics[nic].properties.macAddress == macAddress[mac] && userNics.indexOf(nics[nic].name) != -1) {
-					nicVm = nics[nic];
-					break;
-				}
-			}
-		}
-	}
+	tl.debug(`Getting Primary Network Interface for the virtual machine : ${process.env.computername}`);
+	var	nicVm = utility.getPrimaryNetworkInterface(nics);
 	
-	if (nicVm == null) {
+	if (!nicVm) {
 		throw tl.loc("CouldNotFetchNicDetails", process.env["computername"]);	
 	}
 	return nicVm;

@@ -57,31 +57,10 @@
       "defaultValue": "",
       "required": true,
       "options": {
-        "Disconnect": "Disconnect Network Interface",
-        "Connect": "Connect Network Interface"
+        "Disconnect": "Disconnect Primary Network Interface",
+        "Connect": "Connect Primary Network Interface"
       },
       "helpMarkDown": "ms-resource:loc.input.help.Action"
-    },
-    {
-      "name": "NICDetection",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.NICDetection",
-      "required": true,
-      "options": {
-        "AutoDetectNic": "Auto select primary network interface",
-        "CustomNic": "Custom"
-      },
-      "defaultValue": "AutoDetectNic",
-      "helpMarkDown": "ms-resource:loc.input.help.NICDetection"
-    },
-    {
-      "name": "inputNics",
-      "type": "multiLine",
-      "label": "ms-resource:loc.input.label.inputNics",
-      "defaultValue": "",
-      "required": false,
-      "visibleRule": "NICDetection = CustomNic",
-      "helpMarkDown": "ms-resource:loc.input.help.inputNics"
     }
   ],
   "dataSourceBindings": [
@@ -106,15 +85,11 @@
   },
   "messages": {
     "CouldNotFetchNicDetails": "ms-resource:loc.messages.CouldNotFetchNicDetails",
-    "NicDetailsFetched": "ms-resource:loc.messages.NicDetailsFetched",
-    "GettingAllNetworkInterfacesInTheResourceGroup": "ms-resource:loc.messages.GettingAllNetworkInterfacesInTheResourceGroup",
-    "RequestingForAuthToken": "ms-resource:loc.messages.RequestingForAuthToken",
     "ConnectingVMtoLB": "ms-resource:loc.messages.ConnectingVMtoLB",
     "DisconnectingVMfromLB": "ms-resource:loc.messages.DisconnectingVMfromLB",
-    "setNICStatus": "ms-resource:loc.messages.setNICStatus",
+    "setNICStatusSuccess": "ms-resource:loc.messages.setNICStatusSuccess",
     "MaxRetriesExceededForSettingNetworkInterface": "ms-resource:loc.messages.MaxRetriesExceededForSettingNetworkInterface",
     "FailedSettingNetworkInterface": "ms-resource:loc.messages.FailedSettingNetworkInterface",
-    "GettingPrimaryNicForVm": "ms-resource:loc.messages.GettingPrimaryNicForVm",
     "ActionCompletedSuccefully": "ms-resource:loc.messages.ActionCompletedSuccefully",
     "CouldNotFetchAcessToken": "ms-resource:loc.messages.CouldNotFetchAcessToken",
     "CouldNotFetchNetworkInterfacesInRg": "ms-resource:loc.messages.CouldNotFetchNetworkInterfacesInRg",

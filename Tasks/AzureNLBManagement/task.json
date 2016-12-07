@@ -57,31 +57,10 @@
             "defaultValue": "",
             "required": true,
             "options": {
-                "Disconnect": "Disconnect Network Interface",
-                "Connect": "Connect Network Interface"
+                "Disconnect": "Disconnect Primary Network Interface",
+                "Connect": "Connect Primary Network Interface"
             },
-            "helpMarkDown": "Disconnect:  Removes the virtual machine’s network interface from the load balancer’s backend pool. So that it stops receiving network traffic.\n\nConnect: Adds the virtual machine’s network interface to load balancer backend pool. So that it starts receiving network traffic based on the load balancing rules for the load balancer resource."
-        },
-        {
-            "name": "NICDetection",
-            "type": "pickList",
-            "label": "Network Interface Detection",
-            "required": true,
-            "options": {
-                "AutoDetectNic": "Auto select primary network interface",
-                "CustomNic": "Custom"
-            },
-            "defaultValue": "AutoDetectNic",
-            "helpMarkDown": "Auto select:  Will select the primary network interface of the virtual machine to perform the Action of connecting/disconnecting from load balancer's backend address pool.\n\nCustom: Provide a comma separated list of network interfaces which you want to connect or disconnect to the load balancer's backend address pool. Ex: vnic1,vnic2 .. "
-        },
-        {
-            "name": "inputNics",
-            "type": "multiLine",
-            "label": "Network Interfaces",
-            "defaultValue": "",
-            "required": false,
-            "visibleRule": "NICDetection = CustomNic",
-            "helpMarkDown": "Provide a comma separated list of network interfaces which you want to connect or disconnect to the load balancer's backend address pool. Ex: vnic1,vnic2 .. "
+            "helpMarkDown": "Disconnect:  Removes the virtual machine’s primary network interface from the load balancer’s backend pool. So that it stops receiving network traffic.\n\nConnect: Adds the virtual machine’s primary network interface to load balancer backend pool. So that it starts receiving network traffic based on the load balancing rules for the load balancer resource."
         }
 	],
 	"dataSourceBindings": [
@@ -105,16 +84,12 @@
 		}
 	},
     "messages": {
-        "CouldNotFetchNicDetails": "Could not fetch network interface configuration details for the Azure Virtual Machine : %s",
-        "NicDetailsFetched": "Network interface configuration details fetched for the Azure Virtual Machine : %s",
-        "GettingAllNetworkInterfacesInTheResourceGroup": "Getting all network interfaces in the Resource Group : %s",
-        "RequestingForAuthToken": "Requesting for authorization token : %s",
+        "CouldNotFetchNicDetails": "Could not fetch primary network interface configuration for the Azure Virtual Machine : %s",
         "ConnectingVMtoLB": "Connecting the Azure Virtual Machine to the Load Balancer - %s's backend pool.",
-        "DisconnectingVMfromLB": "Disconnect the Azure Virtual Machine from the Load Balancer - %s's backend pool.",
-        "setNICStatus": "Network interface %s set successfully",
+        "DisconnectingVMfromLB": "Disconnecting the Azure Virtual Machine from the Load Balancer - %s's backend pool.",
+        "setNICStatusSuccess": "Network interface %s set successfully",
         "MaxRetriesExceededForSettingNetworkInterface": "Maximum retries exceeded for setting the Network Interface : %s",
         "FailedSettingNetworkInterface": "Setting the Network Interface %s failed with response %s",
-        "GettingPrimaryNicForVm": "Getting the primary network interface for the vm %s",
         "ActionCompletedSuccefully": "The Action - %s completed successfully for the virtual machine %s and load balancer %s",
         "CouldNotFetchAcessToken": "Could not fetch access token.\nStatus Code : %s\nStatus Message : %s\n%s",
         "CouldNotFetchNetworkInterfacesInRg": "Could not fetch Network Interfaces in the resource group %s.\nStatus Code : %s\nStatus Message : %s\n%s",
