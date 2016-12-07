@@ -11,12 +11,21 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 2,
-        "Minor": 1,
-        "Patch": 10
+        "Major": 3,
+        "Minor": 0,
+        "Patch": 0
     },
-    "minimumAgentVersion": "1.102.0",
+    "editorHints": {
+        "preview": "true"
+    },
+    "releaseNotes" : "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
+    "minimumAgentVersion": "2.104.1",
     "groups": [
+        {
+            "name": "FileTransformsAndVariableSubstitution",
+            "displayName": "File Transforms & Variable Substitution Options",
+            "isExpanded": false
+        },
         {
             "name": "AdditionalDeploymentOptions",
             "displayName": "Additional Deployment Options",
@@ -106,6 +115,15 @@
             "helpMarkDown": "Specify a name for the output variable that is generated for the URL of the Azure App Service. The variable can be consumed in subsequent tasks."
         },
         {
+            "name": "TakeAppOfflineFlag",
+            "type": "boolean",
+            "label": "Take App Offline",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "AdditionalDeploymentOptions",
+            "helpMarkDown": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully."
+        },
+        {
             "name": "UseWebDeploy",
             "type": "boolean",
             "label": "Publish using Web Deploy",
@@ -160,18 +178,36 @@
             "label": "Rename locked files",
             "defaultValue": "false",
             "required": false,
-			"visibleRule": "UseWebDeploy == true",
+            "visibleRule": "UseWebDeploy == true",
             "groupName": "AdditionalDeploymentOptions",
             "helpMarkDown": "Select the option to enable msdeploy flag MSDEPLOY_RENAME_FILES_FLAG in Azure web site's appsetting. The option if set enables msdeploy to rename locked files that are locked during app deployment"
         },
         {
-            "name": "TakeAppOfflineFlag",
+            "name": "XmlTransformation",
             "type": "boolean",
-            "label": "Take application offline",
-            "defaultValue": "false",
+            "label": "XML Transformation",
             "required": false,
-            "groupName": "AdditionalDeploymentOptions",
-            "helpMarkDown": "Select the option to take the Azure App Service offline by placing an app_offline.htm file in the root directory of the App Service before the sync operation begins. The file will be removed after the sync operation completes successfully."
+            "defaultValue": false,
+            "groupName": "FileTransformsAndVariableSubstitution",
+            "helpMarkDown": "The config transfoms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`.<br/> Config transforms will be run prior to the Variable Substitution." 
+        },
+        {
+            "name": "XmlVariableSubstitution",
+            "type": "boolean",
+            "label": "XML Variable Substitution",
+            "required": false,
+            "defaultValue": false,
+            "groupName": "FileTransformsAndVariableSubstitution",
+            "helpMarkDown": "Variables defined in the Build or Release Definition will be matched against the 'key' or 'name' entries in the appSettings, applicationSettings, and connectionStrings sections of any config file. Variable Substitution is run after config transforms. <br/><br/> Note: If same variables are defined in the Release Definition and in the Environment, then the Environment variables will supersede the Release Definition variables.<br/>"
+        },
+        {
+            "name": "JSONFiles",
+            "type": "multiLine",
+            "label": "JSON Variable Substitution",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "FileTransformsAndVariableSubstitution",
+            "helpMarkDown": "Provide new line separated list of JSON files to substitute the variable values. Files names are to be provided relative to the root folder. <br/> To substitute JSON variables that are nested or hierarchical, specify them using JSONPath expressions. <br/> <br/> For example, to replace the value of ‘ConnectionString’ in the sample below, you need to define a variable as ‘Data.DefaultConnection.ConnectionString’ in the build/release definition (or release definition’s environment). <br/> {<br/>&nbsp;&nbsp;\"Data\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"DefaultConnection\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"ConnectionString\": \"Server=(localdb)\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/> }<br/> Variable Substitution is run after configuration transforms. <br/><br/> Note: Build/Release’s system definition variables are excluded in substitution"
         }
     ],
     "dataSourceBindings": [
@@ -212,12 +248,13 @@
         "ErrorNoSuchDeployingMethodExists": "Error : No Such Deploying Method Exists",
         "UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve connectiondetails for Azure App Service : %s. Status Code: %s (%s)",
         "UnabletoretrieveWebAppID": "Unable to retrieve connection details for Azure App Service:'%s'. Status Code: %s",
+        "CouldnotfetchacccesstokenforAzureStatusCode": "Could not fetch acccess token for Azure. Status Code: %s (%s)",
         "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
         "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
         "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website",
         "UnabletoretrieveAzureRMWebAppConfigDetails": "Error Occurred : [Status Code : '%s']",
-		"UnabletoretrieveAzureRMWebAppAppSettings": "Error Occurred : [Status Code : '%s', Error Message: '%s']",
-		"UnabletoupdateAzureRMWebAppAppSettings": "Error Occurred : [Status Code : '%s', Error Message: '%s']",
+        "UnabletoretrieveAzureRMWebAppAppSettings": "Error Occurred : [Status Code : '%s', Error Message: '%s']",
+        "UnabletoupdateAzureRMWebAppAppSettings": "Error Occurred : [Status Code : '%s', Error Message: '%s']",
         "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update deployment status : Unique Deployment ID cannot be retrieved",
         "WebappsuccessfullypublishedatUrl0": "App Service successfully deployed at url %s",
         "Failedtodeploywebsite": "Failed to deploy website.",
@@ -236,7 +273,7 @@
         "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
         "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "More than one package matched with specified pattern. Please restrain the search patern.",
         "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy app service again with Take application offline option selected.",
-		"Trytodeploywebappagainwithrenamefileoptionselected": "Try to deploy app service again with Rename locked files option selected.",
+        "Trytodeploywebappagainwithrenamefileoptionselected": "Try to deploy app service again with Rename locked files option selected.",
         "NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern",
         "JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "JSON variable substitution can only be applied for JSON files",
         "Unabletofindnodewithtaginprovidedxmlfile": "Unable to find node with tag '%s' in provided xml file.",
@@ -246,9 +283,9 @@
         "Failedtowritetoconfigfilewitherror": "Failed to write to config file %s with error : %s",
         "Erroroccurredwhileprocessingxmlnode": "Error occurred while processing xml node : %s.",
         "Processingsubstitutionforxmlnode": "Processing substitution for xml node : %s",
-        "AppOfflineModeenabled": "App Offline Mode enabled.",		
-        "Failedtoenableappofflinemode": "Failed to enable app offline mode. Status Code: %s (%s)",		
-        "AppOflineModedisabled": "App Offline Mode disabled.",		
+        "AppOfflineModeenabled": "App Offline Mode enabled.",        
+        "Failedtoenableappofflinemode": "Failed to enable app offline mode. Status Code: %s (%s)",        
+        "AppOflineModedisabled": "App Offline Mode disabled.",        
         "FailedtodisableAppOfflineMode": "Failed to disable App Offline Mode. Status Code: %s (%s)",
         "Initiatedvariablesubstitutioninconfigfile": "Initiated variable substitution in config file : %s",
         "CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot Perform XDT Transformations on a Non-Windows platform.",

@@ -1,17 +1,16 @@
-var adal = require ('adal-node');
 var parseString = require('xml2js').parseString;
 
 import tl = require('vsts-task-lib/task');
 import Q = require('q');
+import querystring = require('querystring');
 import httpClient = require('vso-node-api/HttpClient');
 import restClient = require('vso-node-api/RestClient');
 
 var kuduDeploymentStatusUtility = require('./kududeploymentstatusutility.js');
 
-var httpObj = new httpClient.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
-var restObj = new restClient.RestClient(httpObj);
+var httpObj = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
+var restObj = new restClient.RestCallbackClient(httpObj);
 
-var AuthenticationContext = adal.AuthenticationContext;
 var authUrl = 'https://login.windows.net/';
 var armUrl = 'https://management.azure.com/';
 var azureApiVersion = 'api-version=2016-08-01';
@@ -86,23 +85,23 @@ export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: b
  * @param   deployToSlotFlag    Flag to check slot deployment
  * @param   slotName            Name of the slot
  * 
- * @returns (JSON)            
+ * @returns (JSON)
  */
-export async function getAzureRMWebAppPublishProfile(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
-    
-    var deferred = Q.defer();
-    var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
-    var accessToken = await getAuthorizationToken(SPN);
-    
-    var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
-                 '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + '/publishxml?' + azureApiVersion;
+export async function getAzureRMWebAppPublishProfile(endPoint, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
+
+    var accessToken = await getAuthorizationToken(endPoint);
     var headers = {
         authorization: 'Bearer '+ accessToken
-
     };
 
+    var deferred = Q.defer();
+    var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
+
+    var url = armUrl + 'subscriptions/' + endPoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
+                 '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + '/publishxml?' + azureApiVersion;
+
     tl.debug('Requesting AzureRM Publish Profile: ' + url);
-    httpObj.get('POST', url, headers, (error, response, body) => {
+    httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
             deferred.reject(error);
         }
@@ -124,20 +123,30 @@ export async function getAzureRMWebAppPublishProfile(SPN, webAppName: string, re
     return deferred.promise;
 }
 
-function getAuthorizationToken(SPN): Q.Promise<string> {
+function getAuthorizationToken(endPoint): Q.Promise<string> {
 
     var deferred = Q.defer<string>();
-    var authorityUrl = authUrl + SPN.tenantID;
-
-    var context = new AuthenticationContext(authorityUrl);
+    var authorityUrl = authUrl + endPoint.tenantID + "/oauth2/token/";
+    var requestData = querystring.stringify({
+        resource: endPoint.url,
+        client_id: endPoint.servicePrincipalClientID,
+        grant_type: "client_credentials",
+        client_secret: endPoint.servicePrincipalKey
+    });
+    var requestHeader = {
+        "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+    }
 
     tl.debug('Requesting for Auth Token: ' + authorityUrl);
-    context.acquireTokenWithClientCredentials(armUrl, SPN.servicePrincipalClientID, SPN.servicePrincipalKey, (error, tokenResponse) => {
+    httpObj.send('POST', authorityUrl, requestData, requestHeader, (error, response, body) => {
         if(error) {
             deferred.reject(error);
         }
+        else if (response.statusCode == 200) {
+            deferred.resolve(JSON.parse(body).access_token);
+        }
         else {
-            deferred.resolve(tokenResponse.accessToken);
+            deferred.reject(tl.loc('CouldnotfetchacccesstokenforAzureStatusCode', response.statusCode, response.statusMessage));
         }
     });
 
