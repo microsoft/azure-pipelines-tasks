@@ -18,14 +18,7 @@
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
-  "groups": [
-    {
-      "name": "Advanced",
-      "displayName": "ms-resource:loc.group.displayName.Advanced",
-      "isExpanded": true,
-      "visibleRule": "Action = Restart Azure App Service"
-    }
-  ],
+  "groups": [],
   "inputs": [
     {
       "name": "ConnectedServiceName",
@@ -113,24 +106,6 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.PreserveVnet",
       "visibleRule": "Action = SwapSlot"
-    },
-    {
-      "name": "SoftRestart",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.SoftRestart",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.SoftRestart",
-      "groupName": "Advanced"
-    },
-    {
-      "name": "Synchronous",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.Synchronous",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.Synchronous",
-      "groupName": "Advanced"
     }
   ],
   "dataSourceBindings": [
