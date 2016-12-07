@@ -30,18 +30,17 @@
         Write-Host "Capabilities                    : ($Capabilities)"
         Write-Host "DisableScreenSaver              : ($DisableScreenSaver)"
         Write-Host "****************************************************************"
-
+        
         $DtaAgentClient = New-Object MS.VS.TestService.Client.Utility.TestExecutionServiceRestApiHelper -ArgumentList $TfsCollection, $PersonalAccessToken
         $DtaAgent = $DtaAgentClient.Register($MachineName, $EnvironmentUrl, $MachineName, $Capabilities)
-        Write-Host "Register the Agent with Id: " + $DtaAgent.Id
+        Write-Host "Register the Agent with Id: $($DtaAgent.Id)"
 
         $DtaProcess = New-Object System.Diagnostics.Process
         $Processinfo = New-Object System.Diagnostics.ProcessStartInfo
-        $EnviVariables = New-Object System.Collections.Specialized.StringDictionary
-        $EnviVariables.Add("DTA.AccessToken", $PersonalAccessToken);
-        $EnviVariables.Add("DTA.AgentId", $DtaAgent.Id);
-        $EnviVariables.Add("DTA.EnvironmentUri", $EnvironmentUrl);
-        $EnviVariables.Add("DTA.TeamFoundationCollectionUri", $TfsCollection);
+        $Processinfo.EnvironmentVariables.Add("DTA.AccessToken", $PersonalAccessToken);
+        $Processinfo.EnvironmentVariables.Add("DTA.AgentId", $DtaAgent.Id);
+        $Processinfo.EnvironmentVariables.Add("DTA.EnvironmentUri", $EnvironmentUrl);
+        $Processinfo.EnvironmentVariables.Add("DTA.TeamFoundationCollectionUri", $TfsCollection);
 
         if ($AsServiceOrProcess -eq "Service")
         {
@@ -50,10 +49,9 @@
             $Processinfo.CreateNoWindow = $true
             $Processinfo.RedirectStandardError = $true
             $Processinfo.RedirectStandardOutput = $true
-            $Processinfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden
+            $Processinfo.WindowStyle = "Hidden"
             $Processinfo.FileName = "$PSScriptRoot\modules\DTAExecutionHost.exe"
-            $Processinfo.WorkingDirectory = Path.GetDirectoryName("$PSScriptRoot\modules")
-            $Processinfo.EnvironmentVariables = $EnviVariables
+            $Processinfo.WorkingDirectory = "$PSScriptRoot\modules"
         }
         else
         {
@@ -61,16 +59,15 @@
             $Processinfo.LoadUserProfile = $false
             $Processinfo.RedirectStandardError = $true
             $Processinfo.RedirectStandardOutput = $true
-            $Processinfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal
+            $Processinfo.WindowStyle = "Normal"
             $Processinfo.FileName = "$PSScriptRoot\modules\DTAExecutionHost.exe"
-            $Processinfo.WorkingDirectory = Path.GetDirectoryName("$PSScriptRoot\modules")
-            $Processinfo.EnvironmentVariables = $EnviVariables
+            $Processinfo.WorkingDirectory = "$PSScriptRoot\modules"
         }
 
-        $dtaProcess.StartInfo = $Processinfo
-        if($dtaProcess.Start()){
-            Write-Verbose "DTAExecutionHost Process Id: " + $dtaProcess.Id
-            return $dtaProcess.Id
+        $DtaProcess.StartInfo = $Processinfo
+        if($DtaProcess.Start()){
+            Write-Verbose "DTAExecutionHost Process Id: $($DtaProcess.Id)"
+            return $($DtaProcess.Id)
         }
         
         throw "Unable to start DTAExecutionHost process"

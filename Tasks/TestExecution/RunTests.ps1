@@ -44,13 +44,6 @@ try {
     Write-Host "autMachineGroup                 : ($autMachineGroup)"
     Write-Host "****************************************************************"
 
-    # Import the helpers.
-    . $PSScriptRoot\TestAgentConfiguration.ps1
-    Import-Module "$PSScriptRoot\modules\TfsAssemblies\Microsoft.TeamFoundation.DistributedTask.Task.TestExecution.dll"
-    Import-Module "$PSScriptRoot\modules\TfsAssemblies\Microsoft.TeamFoundation.Common.dll"
-    Import-Module "$PSScriptRoot\modules\TfsAssemblies\Microsoft.TeamFoundation.Test.WebApi.dll"
-    Import-Module "$PSScriptRoot\modules\PrivateAssemblies\MS.VS.TestService.Client.Utility.dll"
-
     # Fix Assembly Redirections
     # VSTS uses Newton Json 8.0 while the System.Net.Http uses 6.0
     # Redirection to Newton Json 8.0
@@ -65,6 +58,17 @@ try {
         return $null
     }
     [System.AppDomain]::CurrentDomain.add_AssemblyResolve($onAssemblyResolve)
+
+
+    # Import the helpers.
+    . $PSScriptRoot\TestAgentConfiguration.ps1
+    Import-Module "$PSScriptRoot\modules\TfsAssemblies\Microsoft.TeamFoundation.DistributedTask.Task.TestExecution.dll"
+    Import-Module "$PSScriptRoot\modules\TfsAssemblies\Microsoft.TeamFoundation.Common.dll"
+    Import-Module "$PSScriptRoot\modules\TfsAssemblies\Microsoft.TeamFoundation.Test.WebApi.dll"
+    Import-Module "$PSScriptRoot\modules\TfsAssemblies\Microsoft.VisualStudio.Services.Common.dll"
+    Import-Module "$PSScriptRoot\modules\TfsAssemblies\Microsoft.VisualStudio.Services.WebApi.dll"
+    Import-Module "$PSScriptRoot\modules\PrivateAssemblies\MS.VS.TestService.Client.Utility.dll"
+    Import-Module "$PSScriptRoot\modules\TfsAssemblies\System.Net.Http.Formatting.dll"
 
     # Get PAT Token, Collection URL etc.
     $endpoint = (Get-VstsEndpoint -Name SystemVssConnection -Require)
