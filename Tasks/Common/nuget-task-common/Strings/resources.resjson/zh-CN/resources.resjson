@@ -1,5 +1,5 @@
 {
-  "loc.messages.NGCommon_IgnoringNuGetExtensionsPath": "Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable). Extensions are ignored when using the built-in NuGet client",
-  "loc.messages.NGCommon_DetectedNuGetExtensionsPath": "Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable): %s",
-  "loc.messages.NGCommon_UnableToFindTool": "Unable to find tool %s"
+  "loc.messages.NGCommon_IgnoringNuGetExtensionsPath": "已检测到 NuGet 扩展加载程序路径(NUGET_EXTENSIONS_PATH 环境变量)。使用内置 NuGet 客户端时忽略这些扩展",
+  "loc.messages.NGCommon_DetectedNuGetExtensionsPath": "已检测到 NuGet 扩展加载程序路径(NUGET_EXTENSIONS_PATH 环境变量): %s",
+  "loc.messages.NGCommon_UnableToFindTool": "无法找到工具 %s"
 }

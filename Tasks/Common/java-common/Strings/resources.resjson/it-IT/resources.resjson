@@ -1,0 +1,4 @@
+{
+  "loc.messages.LocateJVMBasedOnVersionAndArch": "Individuare JAVA_HOME per Java %s %s",
+  "loc.messages.FailedToLocateSpecifiedJVM": "La versione JDK specificata non è stata trovata. Assicurarsi che la variabile di ambiente '%s' sia presente e sia impostata sul percorso di un JDK corrispondente."
+}

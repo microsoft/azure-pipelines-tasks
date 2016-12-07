@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "PowerShell",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613736)",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613736)",
   "loc.description": "运行 PowerShell 脚本",
   "loc.instanceNameFormat": "PowerShell 脚本",
   "loc.group.displayName.advanced": "高级",
@@ -13,6 +13,6 @@
   "loc.input.label.workingFolder": "工作文件夹",
   "loc.input.help.workingFolder": "脚本运行时的当前工作目录。默认为脚本所处的文件夹。",
   "loc.input.label.inlineScript": "内联脚本",
-  "loc.input.label.failOnStandardError": "Fail on Standard Error",
-  "loc.input.help.failOnStandardError": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely solely on $LASTEXITCODE and the exit code to determine failure."
+  "loc.input.label.failOnStandardError": "因标准错误失败",
+  "loc.input.help.failOnStandardError": "如果为 true，那么将任何错误写入到错误管道或将任何数据写入到标准错误流时，此任务会失败。否则，此任务将单单依靠 $LASTEXITCODE 和退出代码来确定故障。"
 }

@@ -694,7 +694,7 @@ var linkNonAggregatedLayoutContent = function (sourceRoot, destRoot, metadataOnl
     });
 }
 
-var linkAggregatedLayoutContent = function (sourceRoot, destRoot, release, commit) {
+var linkAggregatedLayoutContent = function (sourceRoot, destRoot, release, commit, taskDestMap) {
     assert(sourceRoot, 'sourceRoot');
     assert(destRoot, 'destRoot');
     assert(commit, 'commit');
@@ -702,7 +702,7 @@ var linkAggregatedLayoutContent = function (sourceRoot, destRoot, release, commi
     console.log(`> Linking ${path.basename(sourceRoot)}`);
     mkdir('-p', destRoot);
 
-    // process each file/folder within the source root
+    // process each file/folder within the non-aggregated layout
     fs.readdirSync(sourceRoot).forEach(function (itemName) {
         // skip files
         var taskSourcePath = path.join(sourceRoot, itemName);
@@ -720,7 +720,13 @@ var linkAggregatedLayoutContent = function (sourceRoot, destRoot, release, commi
         }
 
         // determine the dest folder based on the major version
-        var taskDestPath = path.join(destRoot, itemName + `__v${sourceTask.version.Major}`);
+        assert(sourceTask.id, 'sourceTask.id');
+        var taskDestKey = sourceTask.id + '@' + sourceTask.version.Major;
+        var taskDestPath = taskDestMap[taskDestKey];
+        if (!taskDestPath) {
+            taskDestPath = path.join(destRoot, itemName + `__v${sourceTask.version.Major}`);
+            taskDestMap[taskDestKey] = taskDestPath;
+        }
 
         if (test('-e', taskDestPath)) {
             // validate that a newer minor+patch does not exist in an older release
@@ -772,7 +778,7 @@ var getRefs = function () {
     var branch;
     if (process.env.TF_BUILD) {
         // during CI agent checks out a commit, not a branch.
-        // $(build.sourceBranch) indicates the branch name, e.g. refs/heads/releases/m108
+        // $(build.sourceBranch) indicates the branch name, e.g. releases/m108
         branch = process.env.BUILD_SOURCEBRANCH;
     }
     else {
@@ -785,16 +791,16 @@ var getRefs = function () {
     assert(branch, 'branch');
     var commit = run('git rev-parse --short=8 HEAD', /*inheritStreams*/false, /*noHeader*/true);
     var release;
-    if (branch.match(/^refs\/heads\/releases\/m[0-9]+$/)) {
+    if (branch.match(/^(refs\/heads\/)?releases\/m[0-9]+$/)) {
         release = parseInt(branch.split('/').pop().substr(1));
     }
 
     // get the ref info for HEAD
     var info ={
         head: {
-            branch: branch,
-            commit: commit,
-            release: release
+            branch: branch,  // e.g. refs/heads/releases/m108
+            commit: commit,  // leading 8 chars only
+            release: release // e.g. 108 or undefined if not a release branch
         },
         releases: { }
     };
@@ -885,9 +891,13 @@ var createAggregatedZip = function (packagePath) {
     mkdir('-p', aggregatedLayoutPath);
     fs.writeFileSync(path.join(aggregatedLayoutPath, 'layout-version.txt'), '2');
 
+    // track task GUID + major version -> destination path
+    // task directory names can change between different release branches
+    var taskDestMap = { };
+
     // link the tasks from the non-aggregated layout into the aggregated layout
     var nonAggregatedLayoutPath = path.join(packagePath, 'non-aggregated-layout');
-    linkAggregatedLayoutContent(nonAggregatedLayoutPath, aggregatedLayoutPath, /*release:*/'', /*commit:*/refs.head.commit);
+    linkAggregatedLayoutContent(nonAggregatedLayoutPath, aggregatedLayoutPath, /*release:*/'', /*commit:*/refs.head.commit, taskDestMap);
 
     // link the tasks from previous releases into the aggregated layout
     Object.keys(refs.releases)
@@ -901,7 +911,7 @@ var createAggregatedZip = function (packagePath) {
 
             var commit = refs.releases[release].commit;
             var releaseLayout = getNonAggregatedLayout(packagePath, release, commit);
-            linkAggregatedLayoutContent(releaseLayout, aggregatedLayoutPath, /*release:*/release, /*commit:*/commit);
+            linkAggregatedLayoutContent(releaseLayout, aggregatedLayoutPath, /*release:*/release, /*commit:*/commit, taskDestMap);
         });
 
     // validate task uniqueness within the layout based on task GUID + major version

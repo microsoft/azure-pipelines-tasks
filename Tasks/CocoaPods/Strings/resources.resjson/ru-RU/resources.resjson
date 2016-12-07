@@ -4,5 +4,8 @@
   "loc.description": "CocoaPods — это диспетчер зависимостей для проектов Swift и Objective-C Cocoa. Запускает установку pod",
   "loc.instanceNameFormat": "установка pod",
   "loc.input.label.cwd": "Рабочий каталог",
-  "loc.input.help.cwd": "Текущий рабочий каталог. По умолчанию используется каталог репозитория."
+  "loc.input.help.cwd": "Текущий рабочий каталог. По умолчанию используется каталог репозитория.",
+  "loc.messages.PodReturnCode": "Pod завершила работу с кодом возврата: %d.",
+  "loc.messages.PodFailed": "Сбой Pod с ошибкой %s",
+  "loc.messages.CocoaPodsNotFound": "Команда pod не найдена. Установите Cocoapods (https://cocoapods.org) на компьютер, на котором выполняется сборка."
 }

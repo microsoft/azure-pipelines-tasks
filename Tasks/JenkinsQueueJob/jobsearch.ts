@@ -119,7 +119,11 @@ export class JobSearch {
             for (var i in causes) {
                 var job = thisSearch.queue.findJob(causes[i].upstreamUrl, causes[i].upstreamBuild);
                 if (job) { // we know about it
-                    if (job.state == JobState.Streaming || job.state == JobState.Finishing || job.state == JobState.Done) {
+                    if (job.state == JobState.Streaming ||
+                        job.state == JobState.Finishing ||
+                        job.state == JobState.Downloading ||
+                        job.state == JobState.Queued ||
+                        job.state == JobState.Done) {
                         causesThatRan.push(job);
                     } else if (job.state == JobState.New || job.state == JobState.Locating) {
                         causesThatMayRun.push(job);
@@ -264,7 +268,17 @@ export class JobSearch {
                      * So, for all jobs being tracked (within this code), one is consisdered the main job (which will be followed), and
                      * all others are considered joined and will not be tracked further.
                      */
-                    var causes : any = parsedBody.actions[0].causes;
+                    var findCauses = function(actions) { 
+                        for (var i in actions) {
+                            if (actions[i].causes) {
+                                return actions[i].causes; 
+                            }
+                        } 
+
+                        return null;
+                    };
+
+                    var causes : any = findCauses(parsedBody.actions);
                     thisSearch.foundCauses[thisSearch.nextSearchBuildNumber] = causes;
                     thisSearch.determineMainJob(thisSearch.nextSearchBuildNumber, function (mainJob: Job, secondaryJobs: Job[]) {
                         if (mainJob != null) {

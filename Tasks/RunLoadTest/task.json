@@ -1,83 +1,82 @@
 {
-    "id": "9E9DB38A-B40B-4C13-B7F0-31031C894C22",
-    "name": "CloudLoadTest",
-    "friendlyName": "Cloud-based Load Test",
-    "description": "Runs the load test in the cloud with Visual Studio Team Services",
-    "helpMarkDown": "This task triggers a cloud-based load test using Visual Studio Team Services. [Learn more](https://go.microsoft.com/fwlink/?linkid=546976).",
-    "category": "Test",
-    "visibility": [
-        "Build",
-        "Release"
-    ],
-    "author": "Microsoft Corporation",
-    "version": {
-        "Major": 1,
-        "Minor": 0,
-        "Patch": 14
+  "id": "9E9DB38A-B40B-4C13-B7F0-31031C894C22",
+  "name": "CloudLoadTest",
+  "friendlyName": "Cloud-based Load Test",
+  "description": "Runs the load test in the cloud with Visual Studio Team Services",
+  "helpMarkDown": "This task triggers a cloud-based load test using Visual Studio Team Services. [Learn more](https://go.microsoft.com/fwlink/?linkid=546976).",
+  "category": "Test",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 16
+  },
+  "demands": [
+    "msbuild",
+    "azureps"
+  ],
+  "minimumAgentVersion": "1.83.0",
+  "inputs": [
+    {
+      "name": "connectedServiceName",
+      "type": "connectedService:Generic",
+      "label": "VS Team Services Connection",
+      "defaultValue": "",
+      "helpMarkDown": "Select a previously registered service connection to talk to the cloud-based load test service. Choose 'Manage' to register a new connection."
     },
-    "demands": [
-        "msbuild",
-        "azureps"
-    ],
-    "minimumAgentVersion": "1.83.0",
-    "inputs": [
-        {
-            "name": "connectedServiceName",
-            "type": "connectedService:Generic",
-            "label": "Registered connection",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Select a previously registered service connection to talk to the Cloud-based Load Test service. Choose 'Manage' to register a new connection."
-        },
-        {
-            "name": "TestSettings",
-            "type": "filePath",
-            "label": "Test settings file",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Relative path from repo root for the test settings file to use for the load test."
-        },
-        {
-            "name": "TestDrop",
-            "type": "filePath",
-            "label": "Load test files folder",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Relative path from repo root where the load test solution build output will be available."
-        },
-        {
-            "name": "LoadTest",
-            "type": "string",
-            "label": "Load test file",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "The load test filename to be used under the load test folder specified above."
-        },
-        {
-            "name": "ThresholdLimit",
-            "type": "string",
-            "label": "Number of permissible threshold violations",
-            "required": false,
-            "helpMarkDown": "Number of threshold violations above which the load test outcome is considered unsuccessful."
-        },
-        {
-            "name": "MachineType",
-            "type": "radio",
-            "label": "Run load test using",
-            "required": true,
-            "defaultValue": "0",
-            "options": {
-                "0": "Automatically provisioned agents",
-                "2": "Self-provisioned agents"
-            }
-        }
-    ],
-    "instanceNameFormat": "Cloud Load Test $(LoadTest)",
-    "execution": {
-        "PowerShell": {
-            "target": "$(currentDirectory)\\Start-CloudLoadTest.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
-        }
+    {
+      "name": "TestSettings",
+      "type": "filePath",
+      "label": "Test settings file",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Relative path from repo root for the test settings file to use for the load test."
+    },
+    {
+      "name": "TestDrop",
+      "type": "filePath",
+      "label": "Load test files folder",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Relative path from repo root where the load test solution build output will be available."
+    },
+    {
+      "name": "LoadTest",
+      "type": "string",
+      "label": "Load test file",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "The load test filename to be used under the load test folder specified above."
+    },
+    {
+      "name": "ThresholdLimit",
+      "type": "string",
+      "label": "Number of permissible threshold violations",
+      "required": false,
+      "helpMarkDown": "Number of threshold violations above which the load test outcome is considered unsuccessful."
+    },
+    {
+      "name": "MachineType",
+      "type": "radio",
+      "label": "Run load test using",
+      "required": true,
+      "defaultValue": "0",
+      "options": {
+        "0": "Automatically provisioned agents",
+		"2": "Self-provisioned agents"
+      }
     }
+  ],
+  "instanceNameFormat": "Cloud Load Test $(LoadTest)",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\Start-CloudLoadTest.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
 }
