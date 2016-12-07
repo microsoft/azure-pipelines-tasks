@@ -15,7 +15,7 @@
   "version": {
     "Major": 8,
     "Minor": 0,
-    "Patch": 3
+    "Patch": 2
   },
   "inputs": [
     {
@@ -30,15 +30,7 @@
         "rows": "10",
         "maxLength": "500"
       }
-    },
-	{
-	"name": "SendEmailNotification",
-	"type": "boolean",
-	"label": "Send email notification",
-	"defaultValue": "false",
-	"required": false,
-	"helpMarkDown": "ms-resource:loc.input.help.SendEmailNotification"
-	}
+    }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {

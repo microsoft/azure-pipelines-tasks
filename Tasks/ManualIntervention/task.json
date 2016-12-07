@@ -15,7 +15,7 @@
     "version": {
         "Major": 8,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 2
     },
     "inputs": [
         {
@@ -30,15 +30,7 @@
                 "rows": "10",
                 "maxLength": "500"
             }
-        },
-		{
-            "name": "SendEmailNotification",
-            "type": "boolean",
-            "label": "Send email notification",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Send a manual intervention pending email to all users who have Manage deployment permission. Only users with Manage deployment permission can act on a manual intervention."
-			}
+        }
     ],
     "instanceNameFormat": "Manual Intervention",
     "execution": {
