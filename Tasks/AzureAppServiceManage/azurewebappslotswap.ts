@@ -1,15 +1,9 @@
 import tl = require('vsts-task-lib/task');
-import Q = require('q');
 import path = require('path');
-import httpClient = require('vso-node-api/HttpClient');
 
 var azureRmUtil = require ('./azurermutil.js');
 var kuduDeploymentLog = require('./kududeploymentlog.js');
-
-var httpObj = new httpClient.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
-
-var armUrl = 'https://management.azure.com/';
-var azureApiVersion = 'api-version=2015-08-01';
+var azureRESTUtility = require ('webdeployment-common/azurerestutility.js');
 
 async function run() {
     try {
@@ -23,6 +17,7 @@ async function run() {
         var preserveVnet: boolean = tl.getBoolInput('PreserveVnet', false);
 
         var updateSlotSwapStatus: boolean = true;
+        var errorMessage = "";
 
         if(swapWithProduction)
             targetSlot = "production";
@@ -34,29 +29,31 @@ async function run() {
     
         var isSlotSwapSuccess = true;
         var SPN: ISPN = initializeSPN(connectedServiceName);
-        var accessToken = await azureRmUtil.getAuthorizationToken(SPN);
 
-        tl._writeLine(await swapWebAppSlot(SPN, accessToken, resourceGroupName, webAppName, sourceSlot, targetSlot, preserveVnet));
+        tl._writeLine(await azureRmUtil.swapWebAppSlot(SPN, resourceGroupName, webAppName, sourceSlot, targetSlot, preserveVnet));
     }
     catch(error)
     {
         isSlotSwapSuccess = false;
-        tl.setResult(tl.TaskResult.Failed, error);
+        errorMessage = error;
     }
     if(updateSlotSwapStatus){
         try{
             var deploymentId = kuduDeploymentLog.generateDeploymentId();
             //push swap slot log to sourceSlot url
-            var sourcePublishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, resourceGroupName, webAppName, sourceSlot);
+            var sourcePublishingProfile = await azureRESTUtility.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, true, sourceSlot);
             tl._writeLine(await azureRmUtil.updateSlotSwapStatus(sourcePublishingProfile, deploymentId, isSlotSwapSuccess, sourceSlot, targetSlot));
 
             //push swap slot log to targetSlot url
-            var destinationPublishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, resourceGroupName, webAppName, targetSlot);
+            var destinationPublishingProfile = await azureRESTUtility.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, (!swapWithProduction), targetSlot);
             tl._writeLine(await azureRmUtil.updateSlotSwapStatus(destinationPublishingProfile, deploymentId, isSlotSwapSuccess, sourceSlot, targetSlot));
         }
         catch(error) {
             tl.warning(error);
         }
+    }
+    if(!isSlotSwapSuccess) {
+        tl.setResult(tl.TaskResult.Failed, errorMessage);
     }
 }
 
@@ -76,34 +73,6 @@ function initializeSPN(connectedServiceName: string): ISPN{
         tenantID: endPointAuthCreds.parameters["tenantid"],
         subscriptionId: subscriptionId
     }
-}
-
-function swapWebAppSlot(SPN: ISPN, accessToken: any, resourceGroupName: string, webAppName: string, sourceSlot: string, targetSlot: string,preserveVnet: boolean): Q.Promise<string> {
-    var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
-                 '/providers/Microsoft.Web/sites/' + webAppName + "/slots/" + sourceSlot + '/slotsswap?' + azureApiVersion;
-
-    var body = {
-        targetSlot: targetSlot,
-        preserveVnet: preserveVnet
-    }
-    var headers = {
-        'Authorization': 'Bearer '+ accessToken,
-        'Content-Type': 'application/json'
-    };
-
-    var deferred = Q.defer<any>();
-    httpObj.send('POST', url, body, headers, (error, response, body) => {
-        if(response.statusCode === 202)
-        {
-            deferred.resolve(tl.loc("Successfullyswappedslots", webAppName, sourceSlot, targetSlot));
-        }
-        else {
-            tl.error(response.statusMessage);
-            deferred.reject(tl.loc("Failedtoswapslots",response.statusCode, webAppName));
-        }
-    });
-
-    return deferred.promise;
 }
 
 run();

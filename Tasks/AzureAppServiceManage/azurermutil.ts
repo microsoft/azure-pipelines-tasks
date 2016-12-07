@@ -1,5 +1,4 @@
 var adal = require ('adal-node');
-var parseString = require('xml2js').parseString;
 
 import tl = require('vsts-task-lib/task');
 import Q = require('q');
@@ -59,51 +58,7 @@ export function updateSlotSwapStatus(publishingProfile, deploymentId: string, is
     return deferred.promise;
 }
 
-/**
- * Gets the Azure RM Web App Connections details from SPN
- * 
- * @param   SPN                 Service Principal Name
- * @param   webAppName          Name of the web App
- * @param   resourceGroupName   Resource Group Name
- * @param   slotName            Name of the slot
- * 
- * @returns (JSON)            
- */
-export async function getAzureRMWebAppPublishProfile(SPN, resourceGroupName:string, webAppName: string, slotName: string) {
-    var deferred = Q.defer();
-    var slotUrl = (slotName == "production") ? "" : "/slots/" + slotName;
-    var accessToken = await getAuthorizationToken(SPN);
-    
-    var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
-                 '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + '/publishxml?' + azureApiVersion;
-    var headers = {
-        authorization: 'Bearer '+ accessToken
-
-    };
-
-    httpObj.get('POST', url, headers, (error, response, body) => {
-        if(error) {
-            deferred.reject(error);
-        }
-        else if(response.statusCode === 200) {
-            parseString(body, (error, result) => {
-                for (var index in result.publishData.publishProfile) {
-                    if (result.publishData.publishProfile[index].$.publishMethod === "MSDeploy")
-                        deferred.resolve(result.publishData.publishProfile[index].$);
-                }
-                deferred.reject(tl.loc('ErrorNoSuchDeployingMethodExists', webAppName));
-            });
-        }
-        else {
-            tl.error(response.statusMessage);
-            deferred.reject(tl.loc('UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1', webAppName, response.statusCode));
-        }
-    });
-
-    return deferred.promise;
-}
-
-export function getAuthorizationToken(SPN): Q.Promise<string> {
+function getAuthorizationToken(SPN): Q.Promise<string> {
 
     var deferred = Q.defer<string>();
     var authorityUrl = authUrl + SPN.tenantID;
@@ -118,5 +73,34 @@ export function getAuthorizationToken(SPN): Q.Promise<string> {
         }
     });
 
+    return deferred.promise;
+}
+
+export async function swapWebAppSlot(SPN, resourceGroupName: string, webAppName: string, sourceSlot: string, targetSlot: string,preserveVnet: boolean) {
+    var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
+                 '/providers/Microsoft.Web/sites/' + webAppName + "/slots/" + sourceSlot + '/slotsswap?' + azureApiVersion;
+
+    var body = {
+        targetSlot: targetSlot,
+        preserveVnet: preserveVnet
+    }
+
+    var accessToken = await getAuthorizationToken(SPN);
+    var headers = {
+        'Authorization': 'Bearer '+ accessToken,
+        'Content-Type': 'application/json'
+    };
+
+    var deferred = Q.defer<any>();
+    httpObj.send('POST', url, body, headers, (error, response, body) => {
+        if(response.statusCode === 202)
+        {
+            deferred.resolve(tl.loc("Successfullyswappedslots", webAppName, sourceSlot, targetSlot));
+        }
+        else {
+            tl.error(response.statusMessage);
+            deferred.reject(tl.loc("Failedtoswapslots",response.statusCode, webAppName));
+        }
+    });
     return deferred.promise;
 }

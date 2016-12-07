@@ -22,5 +22,8 @@
     "adal-node": "^0.1.15",
     "xml2js": "^0.4.13",
     "vso-node-api": "^5.0.5"
+  },
+  "devDependencies": {
+    "mocha": "^3.1.0"
   }
 }
