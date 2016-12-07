@@ -18,14 +18,18 @@ var utility = require('./utility.js');
  * @param   additionalArguments             Arguments provided by user
  * 
  */
-export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag, 
-        excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments, isFolderBasedDeployment, useWebDeploy) {
+export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
+    excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments, isFolderBasedDeployment, useWebDeploy) {
 
     setParametersFile = utility.getSetParamFilePath(setParametersFile);
-    var isParamFilePresentInPackage = isFolderBasedDeployment ? false : await msDeployUtility.containsParamFile(webDeployPkg);
+    var paramFileContent = isFolderBasedDeployment ? null : await msDeployUtility.getParamFileContent(webDeployPkg);
+    var isInputWebDeployPkg = (paramFileContent == null) ? false : true;
+    if (paramFileContent) {
+        webDeployPkg = await msDeployUtility.processWebDeployPackage(webDeployPkg, paramFileContent, webAppName);
+    }
     var msDeployPath = await msDeployUtility.getMSDeployFullPath();
     var msDeployCmdArgs = msDeployUtility.getMSDeployCmdArgs(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
-        excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments, isParamFilePresentInPackage, isFolderBasedDeployment, 
+        excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments, isInputWebDeployPkg, isFolderBasedDeployment,
         useWebDeploy);
 
     try {
@@ -36,12 +40,13 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
         msDeployCommand += 'if %errorlevel% neq 0 exit /b %errorlevel%';
         tl.writeFile(msDeployBatchFile, msDeployCommand);
         tl._writeLine(tl.loc("Runningcommand", msDeployCommand));
-        await tl.exec("cmd", ['/C', msDeployBatchFile], <any> {failOnStdErr: true});
+        await tl.exec("cmd", ['/C', msDeployBatchFile], <any>{ failOnStdErr: true });
         tl.rmRF(msDeployBatchFile, true);
-        if(publishingProfile != null){
-        tl._writeLine(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));}
+        if (publishingProfile != null) {
+            tl._writeLine(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
+        }
     }
-    catch(error) {
+    catch (error) {
         tl.error(tl.loc('Failedtodeploywebsite'));
         msDeployUtility.redirectMSDeployErrorToConsole();
         throw Error(error);

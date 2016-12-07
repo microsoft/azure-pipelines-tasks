@@ -103,9 +103,12 @@ tr.registerMock('./msdeployutility.js', {
         var msDeployFullPath =  "msdeploypath\\msdeploy.exe";
         return msDeployFullPath;
     },
-    containsParamFile: function(webAppPackage: string) {
+    getParamFileContent: function(webAppPackage: string) {
         var taskResult = mockTask.execSync("cmd", ['/C',"DefaultWorkingDirectory\\msDeployParam.bat"]);
-        return true;
+        return '<output><parameters><parameter name="IIS Web Application Name" defaultValue="Default Web Site/AzureWebApp1_deploy" tags="IisApp"></parameter></parameters></output>';
+    },
+    processWebDeployPackage: function (webAppPackage) {
+        return webAppPackage;
     }
 }); 
 
