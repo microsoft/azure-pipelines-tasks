@@ -260,7 +260,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
 
         assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
         assert(tr.stderr.length == 0 && tr.errorIssues.length == 0, 'should not have written to stderr');
-        var expectedOut = 'loc_mock_Compressedfolderintozip'; 
+        var expectedOut = 'Compressed folder '; 
         assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
         expectedOut = 'Deployed using KuduDeploy'; 
         assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);

@@ -83,7 +83,7 @@ async function run() {
                         transformConfigs.push(environmentName + ".config");
                     }
                     xdtTransformationUtility.basicXdtTransformation(path.join(folderPath,'**', '*.config'), transformConfigs);  
-                    tl._writeLine("XDT Transformations applied successfully");
+                    tl._writeLine(tl.loc("XDTTransformationsappliedsuccessfully"));
                 } else {
                     throw new Error(tl.loc("CannotPerformXdtTransformationOnNonWindowsPlatform"));
                 }
@@ -132,7 +132,7 @@ async function run() {
                             excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile,
                             additionalArguments, isFolderBasedDeployment, useWebDeploy);
         } else {
-            tl.debug(tl.loc("Initiateddeploymentviakuduserviceforwebapppackage", webDeployPkg));
+            tl.debug("Initiated deployment via kudu service for webapp package : " + webDeployPkg);
             var azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
             await DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment, takeAppOfflineFlag);
 
@@ -173,7 +173,7 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
         var webAppZipFile = webDeployPkg;
         if(isFolderBasedDeployment) {
             webAppZipFile = await zipUtility.archiveFolder(webDeployPkg, tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_app_package.zip');
-            tl.debug(tl.loc("Compressedfolderintozip", webDeployPkg, webAppZipFile));
+            tl.debug("Compressed folder " + webDeployPkg + " into zip : " +  webAppZipFile);
         } else {
             if (await kuduUtility.containsParamFile(webAppZipFile)) {
                 throw new Error(tl.loc("MSDeploygeneratedpackageareonlysupportedforWindowsplatform")); 

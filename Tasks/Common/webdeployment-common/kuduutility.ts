@@ -131,6 +131,6 @@ export async  function containsParamFile(webAppPackage: string ) {
     if ((pacakgeComponent["entries"].indexOf("parameters.xml") > -1) || (pacakgeComponent["entries"].indexOf("Parameters.xml") > -1)) {
         isParamFilePresent = true;
     }
-    tl.debug(tl.loc("Isparameterfilepresentinwebpackage0", isParamFilePresent));
+    tl.debug("Is parameter file present in web package : " + isParamFilePresent);
     return isParamFilePresent;
 }
