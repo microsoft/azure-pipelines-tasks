@@ -3,7 +3,6 @@ import path = require('path');
 import fs = require('fs');
 
 var azureRESTUtility = require ('webdeployment-common/azurerestutility.js');
-var msDeployUtility = require('webdeployment-common/msdeployutility.js');
 var zipUtility = require('webdeployment-common/ziputility.js');
 var utility = require('webdeployment-common/utility.js');
 var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');

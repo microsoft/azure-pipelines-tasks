@@ -4,6 +4,7 @@ import trm = require('vsts-task-lib/toolrunner');
 import fs = require('fs');
 import path = require('path');
 
+var ltx = require("ltx");
 var winreg = require('winreg');
 var parseString = require('xml2js').parseString;
 
@@ -25,22 +26,22 @@ var parseString = require('xml2js').parseString;
  * @returns string 
  */
 export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, publishingProfile,
-                             removeAdditionalFilesFlag: boolean, excludeFilesFromAppDataFlag: boolean, takeAppOfflineFlag: boolean,
-                             virtualApplication: string, setParametersFile: string, additionalArguments: string, isParamFilePresentInPacakge: boolean,
-                             isFolderBasedDeployment: boolean, useWebDeploy: boolean) : string {
+    removeAdditionalFilesFlag: boolean, excludeFilesFromAppDataFlag: boolean, takeAppOfflineFlag: boolean,
+    virtualApplication: string, setParametersFile: string, additionalArguments: string, isParamFilePresentInPacakge: boolean,
+    isFolderBasedDeployment: boolean, useWebDeploy: boolean): string {
 
     var msDeployCmdArgs: string = " -verb:sync";
 
     var webApplicationDeploymentPath = (virtualApplication) ? webAppName + "/" + virtualApplication : webAppName;
-    
-    if(isFolderBasedDeployment) {
+
+    if (isFolderBasedDeployment) {
         msDeployCmdArgs += " -source:IisApp=\"" + webAppPackage + "\"";
         msDeployCmdArgs += " -dest:iisApp=\"" + webApplicationDeploymentPath + "\"";
     }
-    else {       
+    else {
         msDeployCmdArgs += " -source:package=\"" + webAppPackage + "\"";
 
-        if(isParamFilePresentInPacakge) {
+        if (isParamFilePresentInPacakge) {
             msDeployCmdArgs += " -dest:auto";
         }
         else {
@@ -48,64 +49,61 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
         }
     }
 
-	if(publishingProfile != null)
-	{
-		msDeployCmdArgs += ",ComputerName='https://" + publishingProfile.publishUrl + "/msdeploy.axd?site=" + webAppName + "',";
-		msDeployCmdArgs += "UserName='" + publishingProfile.userName + "',Password='" + publishingProfile.userPWD + "',AuthType='Basic'";
-	}
-	
-    if(isParamFilePresentInPacakge) {
+    if (publishingProfile != null) {
+        msDeployCmdArgs += ",ComputerName='https://" + publishingProfile.publishUrl + "/msdeploy.axd?site=" + webAppName + "',";
+        msDeployCmdArgs += "UserName='" + publishingProfile.userName + "',Password='" + publishingProfile.userPWD + "',AuthType='Basic'";
+    }
+
+    if (isParamFilePresentInPacakge) {
         msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='" + webApplicationDeploymentPath + "'";
     }
 
-    if(useWebDeploy) {
+    if (useWebDeploy) {
 
-        if(setParametersFile) {
+        if (setParametersFile) {
             msDeployCmdArgs += " -setParamFile=\"" + setParametersFile + "\"";
         }
 
-        if(takeAppOfflineFlag) {
+        if (takeAppOfflineFlag) {
             msDeployCmdArgs += ' -enableRule:AppOffline';
         }
 
-        if(excludeFilesFromAppDataFlag) {
+        if (excludeFilesFromAppDataFlag) {
             msDeployCmdArgs += ' -skip:Directory=App_Data';
         }
-        
-        if(additionalArguments) {
+
+        if (additionalArguments) {
             msDeployCmdArgs += ' ' + additionalArguments;
         }
     }
 
-    if(!(removeAdditionalFilesFlag && useWebDeploy)) {
+    if (!(removeAdditionalFilesFlag && useWebDeploy)) {
         msDeployCmdArgs += " -enableRule:DoNotDeleteRule";
     }
 
-    if(publishingProfile != null)
-	{
-		var userAgent = tl.getVariable("AZURE_HTTP_USER_AGENT");
-		if(userAgent)
-		{
-			msDeployCmdArgs += ' -userAgent:' + userAgent;
-		}
-	}
+    if (publishingProfile != null) {
+        var userAgent = tl.getVariable("AZURE_HTTP_USER_AGENT");
+        if (userAgent) {
+            msDeployCmdArgs += ' -userAgent:' + userAgent;
+        }
+    }
 
     tl.debug(tl.loc('ConstructedmsDeploycomamndlinearguments'));
     return msDeployCmdArgs;
 }
 
 /**
- * Check whether the package contains parameter.xml file
+ * Returns content of parameter.xml file if exists
  * @param   webAppPackage   web deploy package
- * @returns boolean
+ * @returns string
  */
-export async  function containsParamFile(webAppPackage: string ) {
+export async function getParamFileContent(webAppPackage: string) {
     var msDeployPath = await getMSDeployFullPath();
     var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package=\"" + webAppPackage + "\"";
-    
+
     var msDeployParamFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'msDeployParam.bat';
     var parameterFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'parameter.xml';
-    
+
     var silentCommand = '@echo off \n';
     var msDeployCommand = '"' + msDeployPath + '" ' + msDeployCheckParamFileCmdArgs + " > \"" + parameterFile + "\"";
     var batchCommand = silentCommand + msDeployCommand;
@@ -114,19 +112,19 @@ export async  function containsParamFile(webAppPackage: string ) {
     tl._writeLine(tl.loc("Runningcommand", msDeployCommand));
 
     var taskResult = tl.execSync("cmd", ['/C', msDeployParamFile], <trm.IExecOptions>{ failOnStdErr: true, silent: true });
-    var paramContentXML = fs.readFileSync(parameterFile);
+    var paramFileContent = fs.readFileSync(parameterFile);
     var isParamFilePresent = false;
-    await parseString(paramContentXML, (error, result) => {
-        if(error) {
+    await parseString(paramFileContent, (error, result) => {
+        if (error) {
             throw new Error(error);
         }
-        if(result['output']['parameters'][0] ) {
+        if (result['output']['parameters'][0]) {
             isParamFilePresent = true;
         }
     });
     tl.debug(tl.loc("Isparameterfilepresentinwebpackage0", isParamFilePresent));
     tl.rmRF(msDeployParamFile, true);
-    return isParamFilePresent;
+    return (isParamFilePresent) ? paramFileContent: null;
 }
 
 /**
@@ -142,40 +140,40 @@ export async function getMSDeployFullPath() {
         msDeployFullPath = msDeployFullPath + "msdeploy.exe";
         return msDeployFullPath;
     }
-    catch(error) {
+    catch (error) {
         tl.warning(error);
-        return path.join(__dirname, "..", "..", "MSDeploy3.6", "msdeploy.exe"); 
+        return path.join(__dirname, "..", "..", "MSDeploy3.6", "msdeploy.exe");
     }
 }
 
 function getMSDeployLatestRegKey(registryKey: string): Q.Promise<string> {
     var defer = Q.defer<string>();
     var regKey = new winreg({
-      hive: winreg.HKLM,
-      key:  registryKey
+        hive: winreg.HKLM,
+        key: registryKey
     })
 
-    regKey.keys(function(err, subRegKeys) {
-        if(err) {
+    regKey.keys(function (err, subRegKeys) {
+        if (err) {
             defer.reject(tl.loc("UnabletofindthelocationofMSDeployfromregistryonmachineError", err));
         }
-        var latestKeyVersion = 0 ;
+        var latestKeyVersion = 0;
         var latestSubKey;
-        for(var index in subRegKeys) {
+        for (var index in subRegKeys) {
             var subRegKey = subRegKeys[index].key;
             var subKeyVersion = subRegKey.substr(subRegKey.lastIndexOf('\\') + 1, subRegKey.length - 1);
-            if(!isNaN(subKeyVersion)){
+            if (!isNaN(subKeyVersion)) {
                 var subKeyVersionNumber = parseFloat(subKeyVersion);
-                if(subKeyVersionNumber > latestKeyVersion) {
+                if (subKeyVersionNumber > latestKeyVersion) {
                     latestKeyVersion = subKeyVersionNumber;
                     latestSubKey = subRegKey;
                 }
             }
         }
-        if(latestKeyVersion < 3) {
+        if (latestKeyVersion < 3) {
             defer.reject(tl.loc("UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove", latestKeyVersion));
         }
-         defer.resolve(latestSubKey);
+        defer.resolve(latestSubKey);
     });
     return defer.promise;
 }
@@ -184,12 +182,12 @@ function getMSDeployInstallPath(registryKey: string): Q.Promise<string> {
     var defer = Q.defer<string>();
 
     var regKey = new winreg({
-      hive: winreg.HKLM,
-      key:  registryKey
+        hive: winreg.HKLM,
+        key: registryKey
     })
 
-    regKey.get("InstallPath", function(err,item) {
-        if(err) {
+    regKey.get("InstallPath", function (err, item) {
+        if (err) {
             defer.reject(tl.loc("UnabletofindthelocationofMSDeployfromregistryonmachineError", err));
         }
         defer.resolve(item.value);
@@ -205,15 +203,85 @@ function getMSDeployInstallPath(registryKey: string): Q.Promise<string> {
  */
 export function redirectMSDeployErrorToConsole() {
     var msDeployErrorFilePath = tl.getVariable('System.DefaultWorkingDirectory') + '\\error.txt';
-    if(tl.exist(msDeployErrorFilePath)) {
+    if (tl.exist(msDeployErrorFilePath)) {
         var errorFileContent = fs.readFileSync(msDeployErrorFilePath);
-        if(errorFileContent.toString().indexOf("ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER") !== -1){
+        if (errorFileContent.toString().indexOf("ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER") !== -1) {
             tl.warning(tl.loc("Trytodeploywebappagainwithappofflineoptionselected"));
         }
-		if(errorFileContent.toString().indexOf("FILE_IN_USE") !== -1){
+        if (errorFileContent.toString().indexOf("FILE_IN_USE") !== -1) {
             tl.warning(tl.loc("Trytodeploywebappagainwithrenamefileoptionselected"));
         }
-		
+
         tl.error(errorFileContent.toString());
     }
+}
+
+/**
+ * Add 'IIS Web Application Name' parameter to provided param file
+ * @param paramFileContent
+ * @param webAppName
+ */
+export async function createParamFileWithWebAppNameAttribute(paramFileContent, webAppName) {
+    var xmlDom = ltx.parse(paramFileContent);
+    var parameterNode = xmlDom.getChild('parameters');
+    parameterNode.c('parameter', { name: 'IIS Web Application Name', defaultValue: webAppName, tags: 'IisApp' })
+        .c('parameterEntry', { kind: 'ProviderPath', scope: 'IisApp', tags: 'IisApp' }).up()
+        .c('parameterEntry', { kind: 'ProviderPath', scope: 'setAcl' })
+    var declareParamFile = path.join(tl.getVariable('System.DefaultWorkingDirectory'), "temp_declare_paramfile.txt");
+    await fs.writeFile(declareParamFile, parameterNode.toString(), function (error) {
+        if (error) {
+            throw new Error(tl.loc("Failedtowritetodeclarefilewitherror", declareParamFile, error));
+        } else {
+            tl.debug("Declare param file updated with paramter 'IIS Web Application Name' : " + declareParamFile);
+        }
+    });
+    return declareParamFile;
+}
+
+/**
+ * Create a webapp package by overridding param file with declare param file.
+ * @param webAppPackage
+ * @param declareParamFile
+ */
+export async function updatePkgWithParamFile(webAppPackage: string, declareParamFile: string) {
+    var updatedWebDeployPkg = path.join(tl.getVariable('System.DefaultWorkingDirectory'), "temp_parameterized_web_package.zip");
+    var msDeployPath = await getMSDeployFullPath();
+    var msDeployCheckParamFileCmdArgs = '-verb:sync -source:package="' + webAppPackage + '" -dest:package="' + updatedWebDeployPkg + '" -enableRule:DoNotDeleteRule -declareParamFile:"' + declareParamFile + '"';
+    var msDeployParamFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'msDeployParam.bat';
+    var silentCommand = '@echo off \n';
+    var msDeployCommand = '"' + msDeployPath + '" ' + msDeployCheckParamFileCmdArgs;
+    var batchCommand = silentCommand + msDeployCommand;
+    tl.writeFile(msDeployParamFile, batchCommand);
+    tl._writeLine(tl.loc("Runningcommand", msDeployCommand));
+    var taskResult = tl.execSync("cmd", ['/C', msDeployParamFile], <trm.IExecOptions>{ failOnStdErr: true, silent: true });
+    tl.debug("Updated web deploy package : " + updatedWebDeployPkg);
+    return updatedWebDeployPkg;
+}
+
+export async function processWebDeployPackage(webDeployPkg: string, paramFileContent: string, webAppName: string) {
+    var containsIisWebAppParam = false;
+    var updatedWebDeployPkg = webDeployPkg;
+    await parseString(paramFileContent, (error, result) => {
+        if (error) {
+            throw new Error(error);
+        }
+        if (!result['output']['parameters'][0]) {
+            throw tl.loc("InvalidParamfile")
+        }
+        var parameters = result['output']['parameters'][0]['parameter']
+        for (var paramObj of parameters) {
+            var parameter = paramObj['$'];
+            if (paramObj['$'].name === 'IIS Web Application Name') {
+                containsIisWebAppParam = true;
+                break;
+            }
+        }
+    });
+    if (!containsIisWebAppParam) {
+        tl.debug("Adding 'IIS Web Application Name' paramter to paramters.xml");
+        var declareParamFile = await createParamFileWithWebAppNameAttribute(paramFileContent, webAppName);
+        updatedWebDeployPkg = await updatePkgWithParamFile(webDeployPkg, declareParamFile);
+    }
+    tl.debug("Processed web deploy package : " + updatedWebDeployPkg);
+    return updatedWebDeployPkg;
 }
