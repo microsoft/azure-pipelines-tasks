@@ -134,8 +134,8 @@ export async function getProvisioningProfileUUID(provProfilePath: string) {
 
     //find the provisioning profile UUID
     var provProfileDetails : string;
-    var getProvProfileDetailsCmd : ToolRunner = tl.tool(tl.which('security', true));
-    getProvProfileDetailsCmd.arg(['cms', '-D', '-i', provProfilePath]);
+    var getProvProfileDetailsCmd : ToolRunner = tl.tool(tl.which('openssl', true));
+    getProvProfileDetailsCmd.arg(['smime', '-inform', 'der', '-verify', '-noverify', '-in', provProfilePath]);
     getProvProfileDetailsCmd.on('stdout', function(data) {
         if(data) {
             if(provProfileDetails) {
@@ -197,8 +197,8 @@ export async function getProvisioningProfileType(provProfilePath: string) {
     try {
         //find the provisioning profile details
         var provProfileDetails:string;
-        var getProvProfileDetailsCmd:ToolRunner = tl.tool(tl.which('security', true));
-        getProvProfileDetailsCmd.arg(['cms', '-D', '-i', provProfilePath]);
+        var getProvProfileDetailsCmd : ToolRunner = tl.tool(tl.which('openssl', true));
+        getProvProfileDetailsCmd.arg(['smime', '-inform', 'der', '-verify', '-noverify', '-in', provProfilePath]);
         getProvProfileDetailsCmd.on('stdout', function (data) {
             if (data) {
                 if (provProfileDetails) {

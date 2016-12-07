@@ -40,12 +40,14 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "which": {
         "xcodebuild": "/home/bin/xcodebuild",
         "security": "/usr/bin/security",
+        "openssl": "/usr/bin/openssl",
         "/usr/libexec/PlistBuddy": "/usr/libexec/PlistBuddy",
         "rm": "/bin/rm"
     },
     "checkPath" : {
         "/home/bin/xcodebuild": true,
         "/usr/bin/security": true,
+	"/usr/bin/openssl": true,
         "/usr/libexec/PlistBuddy": true,
         "/bin/rm": true,
     },
@@ -103,7 +105,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "plist add output here"
         },
-        "/usr/bin/security cms -D -i /user/build/testScheme.xcarchive/Products/testScheme.app/embedded.mobileprovision": {
+        "/usr/bin/openssl smime -inform der -verify -noverify -in /user/build/testScheme.xcarchive/Products/testScheme.app/embedded.mobileprovision": {
             "code": 0,
             "stdout": "prov profile details here"
         },
