@@ -47,6 +47,9 @@ try {
     # Import the helpers.
     . $PSScriptRoot\TestAgentConfiguration.ps1
     Import-Module "$PSScriptRoot\modules\TfsAssemblies\Microsoft.TeamFoundation.DistributedTask.Task.TestExecution.dll"
+    Import-Module "$PSScriptRoot\modules\TfsAssemblies\Microsoft.TeamFoundation.Common.dll"
+    Import-Module "$PSScriptRoot\modules\TfsAssemblies\Microsoft.TeamFoundation.Test.WebApi.dll"
+    Import-Module "$PSScriptRoot\modules\PrivateAssemblies\MS.VS.TestService.Client.Utility.dll"
 
     # Fix Assembly Redirections
     # VSTS uses Newton Json 8.0 while the System.Net.Http uses 6.0
@@ -75,7 +78,6 @@ try {
     # Generate Environment URI
     $taskInstanceIdString = Get-VstsTaskVariable -Name DTA_INSTANCE_ID
     $taskInstanceId = 1
-    
     if($taskInstanceIdString) {
         [int]::TryParse($taskInstanceIdString, [ref]$taskInstanceId)
         $taskInstanceId++
@@ -88,7 +90,7 @@ try {
 
     # *** Todo ***
     # Handle errors properly
-    # Get testrun agaisnt Environment -> if it's already completed -> quit //Improvement
+    # Get testrun against Environment -> if it's already completed -> quit //Improvement
 
     $asServiceOrProcess = if($runUITests -ieq "false") {"Service"} else {"Process"}
 	
