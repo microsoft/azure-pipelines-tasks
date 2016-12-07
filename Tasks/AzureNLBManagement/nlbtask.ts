@@ -48,7 +48,7 @@ async function run() {
 async function getNetworkInterface(SPN, endpointUrl: string, resourceGroupName: string) {
 	var nics =  await nlbUtility.getNetworkInterfacesInRG(SPN, endpointUrl, resourceGroupName);
 	tl.debug(`Getting Primary Network Interface for the virtual machine : ${process.env.computername}`);
-	var	nicVm = utility.getPrimaryNetworkInterface(nics);
+	var nicVm = utility.getPrimaryNetworkInterface(nics);
 	
 	if (!nicVm) {
 		throw tl.loc("CouldNotFetchNicDetails", process.env["computername"]);	
