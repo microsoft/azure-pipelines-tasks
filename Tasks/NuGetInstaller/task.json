@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 25
+        "Patch": 26
     },
 	"runsOn": [
         "Agent",
@@ -89,7 +89,7 @@
             "type": "radio",
             "label": "NuGet Version",
             "defaultValue": "3.3.0",
-            "helpMarkDown": "The version of NuGet to use, or external verson.",
+            "helpMarkDown": "The version of NuGet to use, or external version.",
             "required": "true",
             "groupName": "advanced",
             "options": {
