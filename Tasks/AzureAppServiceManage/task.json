@@ -17,7 +17,10 @@
     "Patch": 0
   },
   "minimumAgentVersion": "1.102.0",
-  "instanceNameFormat": "Azure App Service Management $(WebAppName)",
+  "instanceNameFormat": "$(Action): $(WebAppName)",
+  "groups": [
+
+    ],
   "inputs": [
         {
             "name": "ConnectedServiceName",
@@ -33,11 +36,12 @@
             "label": "Action",
             "required": false,
             "helpMarkDown": "",
-            "defaultValue": "StartAppService",
+            "defaultValue": "Manage slot for Azure App Service",
             "options": {
-                "StartAppService": "Start App Service",
-                "StopAppService": "Stop App Service",
-                "SwapSlot": "Swap Slots"
+                "Manage slot for Azure App Service": "Manage Slots",
+                "Start Azure App Service": "Start App Service",
+                "Stop Azure App Service": "Stop App Service",
+                "Restart Azure App Service": "Restart App Service"
             }
         },
         {
@@ -52,14 +56,6 @@
             "helpMarkDown": "Enter or Select the name of an existing AzureRM Web Application."
         },
         {
-            "name": "ServiceOnSlot",
-            "type": "boolean",
-            "label": "Service on Slot",
-            "defaultValue": "false",
-            "required": false,
-            "visibleRule": "Action = StartAppService || Action = StopAppService"
-        },
-        {
             "name": "ResourceGroupName",
             "type": "pickList",
             "label": "Resource Group",
@@ -69,18 +65,7 @@
                 "EditableOptions": "True"
             },
             "helpMarkDown": "Enter or Select the Azure Resource Group that contains the AzureRM Web App specified above.",
-            "visibleRule": "Action = SwapSlot || ServiceOnSlot = true"
-        },
-        {
-            "name": "Slot",
-            "type": "pickList",
-            "label": "Slot",
-            "defaultValue": "",
-            "required": true,
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "visibleRule": "ServiceOnSlot = true"
+            "visibleRule":"Action = Manage slot for Azure App Service"
         },
         {
             "name": "SourceSlot",
@@ -188,10 +173,14 @@
         "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
         "UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve connectiondetails for Azure App Service : %s. Status Code: %s (%s)",
         "StartingAppService": "Starting App Service : %s",
-        "StoppingAppService": "StoppingAppService : %s",
         "AppServicestartedsuccessfully": "App Service '%s' started successfully",
         "FailedtoStartAppService": "Failed to start App Service for '%s'. Response Code : %s (%s)",
+        "StoppingAppService": "Stopping App Service : %s",
         "AppServicestoppedsuccessfully": "App Service '%s' stopped successfully",
-        "FailedtoStopAppService": "Failed to stop App Service for '%s'. Response Code : %s (%s)"
+        "FailedtoStopAppService": "Failed to stop App Service for '%s'. Response Code : %s (%s)",
+        "RestartingAppService": "Restarting App Service : %s",
+        "AppServiceRestartedSuccessfully": "App Service '%s' restarted successfully",
+        "FailedtoRestartAppService": "Failed to restart App Service for '%s'. Response Code : %s (%s)",
+        "RestartAppServiceAccepted": "Restart request accepted by App Service : %s"
     }
 }

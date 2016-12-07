@@ -8,9 +8,7 @@ async function run() {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
         var connectedServiceName = tl.getInput('ConnectedServiceName', true);
         var action = tl.getInput('Action', true);
-        var webAppName: string = tl.getInput('WebAppName', false);
-        var serviceOnSlot = tl.getBoolInput('ServiceOnSlot', false);
-        var slot: string = tl.getInput('Slot', false);
+        var webAppName: string = tl.getInput('WebAppName', true);
         var resourceGroupName: string = tl.getInput('ResourceGroupName', false);
         var sourceSlot: string = tl.getInput('SourceSlot', false);
         var swapWithProduction = tl.getBoolInput('SwapWithProduction', false);
@@ -27,18 +25,24 @@ async function run() {
             tenantID: endPointAuthCreds.parameters["tenantid"],
             subscriptionId: subscriptionId
         };
+
         if(resourceGroupName === null) {
             resourceGroupName = await azureRmUtil.getResourceGroupName(SPN, webAppName);
         }
         switch(action) {
-            case "StartAppService": {
+            case "Start Azure App Service": {
                 tl._writeLine(tl.loc('StartingAppService', webAppName));
-                tl._writeLine(await azureRmUtil.startAppService(SPN, resourceGroupName, webAppName, serviceOnSlot, slot));
+                tl._writeLine(await azureRmUtil.startAppService(SPN, resourceGroupName, webAppName));
                 break;
             }
-            case "StopAppService": {
+            case "Stop Azure App Service": {
                 tl._writeLine(tl.loc('StoppingAppService', webAppName));
-                tl._writeLine(await azureRmUtil.stopAppService(SPN, resourceGroupName, webAppName, serviceOnSlot, slot));
+                tl._writeLine(await azureRmUtil.stopAppService(SPN, resourceGroupName, webAppName));
+                break;
+            }
+            case "Restart Azure App Service": {
+                tl._writeLine(tl.loc('RestartingAppService', webAppName));
+                tl._writeLine(await azureRmUtil.restartAppService(SPN, resourceGroupName, webAppName));
                 break;
             }
             case "SwapSlot": {

@@ -18,6 +18,14 @@
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "Advanced",
+      "displayName": "ms-resource:loc.group.displayName.Advanced",
+      "isExpanded": true,
+      "visibleRule": "Action = Restart Azure App Service"
+    }
+  ],
   "inputs": [
     {
       "name": "ConnectedServiceName",
@@ -33,11 +41,12 @@
       "label": "ms-resource:loc.input.label.Action",
       "required": false,
       "helpMarkDown": "",
-      "defaultValue": "StartAppService",
+      "defaultValue": "Manage slot for Azure App Service",
       "options": {
-        "StartAppService": "Start App Service",
-        "StopAppService": "Stop App Service",
-        "SwapSlot": "Swap Slots"
+        "Manage slot for Azure App Service": "Manage Slots",
+        "Start Azure App Service": "Start App Service",
+        "Stop Azure App Service": "Stop App Service",
+        "Restart Azure App Service": "Restart App Service"
       }
     },
     {
@@ -52,14 +61,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.WebAppName"
     },
     {
-      "name": "ServiceOnSlot",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.ServiceOnSlot",
-      "defaultValue": "false",
-      "required": false,
-      "visibleRule": "Action = StartAppService || Action = StopAppService"
-    },
-    {
       "name": "ResourceGroupName",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.ResourceGroupName",
@@ -69,18 +70,7 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName",
-      "visibleRule": "Action = SwapSlot || ServiceOnSlot = true"
-    },
-    {
-      "name": "Slot",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.Slot",
-      "defaultValue": "",
-      "required": true,
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "visibleRule": "ServiceOnSlot = true"
+      "visibleRule": "Action = Manage slot for Azure App Service"
     },
     {
       "name": "SourceSlot",
@@ -123,6 +113,24 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.PreserveVnet",
       "visibleRule": "Action = SwapSlot"
+    },
+    {
+      "name": "SoftRestart",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.SoftRestart",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.SoftRestart",
+      "groupName": "Advanced"
+    },
+    {
+      "name": "Synchronous",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.Synchronous",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.Synchronous",
+      "groupName": "Advanced"
     }
   ],
   "dataSourceBindings": [
@@ -188,10 +196,14 @@
     "Failedtoupdatedeploymenthistory": "ms-resource:loc.messages.Failedtoupdatedeploymenthistory",
     "UnabletoretrieveconnectiondetailsforazureRMWebApp": "ms-resource:loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp",
     "StartingAppService": "ms-resource:loc.messages.StartingAppService",
-    "StoppingAppService": "ms-resource:loc.messages.StoppingAppService",
     "AppServicestartedsuccessfully": "ms-resource:loc.messages.AppServicestartedsuccessfully",
     "FailedtoStartAppService": "ms-resource:loc.messages.FailedtoStartAppService",
+    "StoppingAppService": "ms-resource:loc.messages.StoppingAppService",
     "AppServicestoppedsuccessfully": "ms-resource:loc.messages.AppServicestoppedsuccessfully",
-    "FailedtoStopAppService": "ms-resource:loc.messages.FailedtoStopAppService"
+    "FailedtoStopAppService": "ms-resource:loc.messages.FailedtoStopAppService",
+    "RestartingAppService": "ms-resource:loc.messages.RestartingAppService",
+    "AppServiceRestartedSuccessfully": "ms-resource:loc.messages.AppServiceRestartedSuccessfully",
+    "FailedtoRestartAppService": "ms-resource:loc.messages.FailedtoRestartAppService",
+    "RestartAppServiceAccepted": "ms-resource:loc.messages.RestartAppServiceAccepted"
   }
 }
