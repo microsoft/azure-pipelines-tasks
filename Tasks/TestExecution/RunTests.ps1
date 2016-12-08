@@ -79,6 +79,10 @@ try {
     $phaseExecutionModel = Get-VstsTaskVariable -Name System.ParallelExecutionType -Require 
     $projectName = Get-VstsTaskVariable -Name System.TeamProject -Require
 
+    # Cleanup the logs 
+    $dtaLog = "$PSScriptRoot\modules\DTAExecutionHost.exe.log"
+    Remove-Item $dtaLog -ErrorAction SilentlyContinue
+    
     # Generate Environment URI
     $taskInstanceIdString = Get-VstsTaskVariable -Name DTA_INSTANCE_ID
     $taskInstanceId = 1
@@ -123,6 +127,14 @@ try {
     
     $runTests = New-Object 'Microsoft.TeamFoundation.DistributedTask.Task.TestExecution.RunTests'
     $runTests.StartExecution($testRunParameters)
+
+    # Finally dump the DTAExecution.log
+    if(Test-path -Path $dtaLog) 
+    {
+        Write-Verbose -Message "=== Starting to print the DTAExecutionHost [$env:COMPUTERNAME] ===" -Verbose
+        Get-Content $dtaLog | foreach { Write-Verbose -Message "[$env:COMPUTERNAME] $_" -Verbose }
+        Write-Verbose -Message "=== Done printing the testagent configuration log file for [$env:COMPUTERNAME] ===" -Verbose        
+    }
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation
 }
