@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 82
+        "Patch": 83
     },
     "demands": [
         "vstest"
@@ -28,14 +28,6 @@
             "name": "executionOptions",
             "displayName": "Execution Options",
             "isExpanded": true
-        },
-        {
-            "name": "tiaOptions",
-            "displayName": "Test Impact Analysis",
-            "isExpanded": true,
-            "tags": [
-                "Preview"
-            ]
         },
         {
             "name": "advancedExecutionOptions",
@@ -102,24 +94,6 @@
             "required": false,
             "helpMarkDown": "Enable parallel execution of your tests.",
             "groupName": "executionOptions"
-        },
-        {
-            "name": "runOnlyImpactedTests",
-            "type": "boolean",
-            "label": "Run Only Impacted Tests",
-            "defaultValue": "False",
-            "required": false,
-            "helpMarkDown": "Automatically select, and run only the tests needed to validate the code change.",
-            "groupName": "tiaOptions"
-        },
-        {
-            "name": "runAllTestsAfterXBuilds",
-            "type": "string",
-            "label": "Number Of Builds After Which To Run All Tests:",
-            "defaultValue": "50",
-            "required": false,
-            "helpMarkDown": "Number of builds after which to automatically run all tests. Test Impact Analysis stores the mapping between test cases and source code. It is recommended to regenerate the mapping by running all tests, on a regular basis.",
-            "groupName": "tiaOptions"
         },
         {
             "name": "vstestLocationMethod",
