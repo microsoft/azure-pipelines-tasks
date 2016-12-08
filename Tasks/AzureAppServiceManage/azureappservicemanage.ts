@@ -70,7 +70,7 @@ async function run() {
                 break;
             }
             default:
-                throw Error("Invalid Action selected !");
+                throw Error(tl.loc('InvalidAction'));
         }
     }
     catch(exception)

@@ -179,6 +179,11 @@
     "RestartingAppService": "ms-resource:loc.messages.RestartingAppService",
     "AppServiceRestartedSuccessfully": "ms-resource:loc.messages.AppServiceRestartedSuccessfully",
     "FailedtoRestartAppService": "ms-resource:loc.messages.FailedtoRestartAppService",
-    "RestartAppServiceAccepted": "ms-resource:loc.messages.RestartAppServiceAccepted"
+    "RestartAppServiceAccepted": "ms-resource:loc.messages.RestartAppServiceAccepted",
+    "InvalidAction": "ms-resource:loc.messages.InvalidAction",
+    "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "ms-resource:loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite",
+    "CouldnotfetchacccesstokenforAzureStatusCode": "ms-resource:loc.messages.CouldnotfetchacccesstokenforAzureStatusCode",
+    "WebAppDoesntExist": "ms-resource:loc.messages.WebAppDoesntExist",
+    "UnabletoretrieveWebAppID": "ms-resource:loc.messages.UnabletoretrieveWebAppID"
   }
 }
