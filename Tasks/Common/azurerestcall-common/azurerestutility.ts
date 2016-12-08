@@ -290,10 +290,12 @@ export async function swapWebAppSlot(SPN, resourceGroupName: string, webAppName:
         'Content-Type': 'application/json'
     };
 
-    var body = {
-        targetSlot: targetSlot,
-        preserveVnet: preserveVnet
-    }
+    var body = JSON.stringify(
+        {
+            targetSlot: targetSlot,
+            preserveVnet: preserveVnet
+        }
+    );
 
     httpObj.send('POST', url, body, headers, (error, response, body) => {
         if(error) {

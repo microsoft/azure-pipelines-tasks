@@ -109,7 +109,7 @@ tr.registerMock('./msdeployutility.js', {
     }
 }); 
 
-tr.registerMock('webdeployment-common/azurerestutility.js', {
+tr.registerMock('azurerestcall-common/azurerestutility.js', {
     getAzureRMWebAppPublishProfile: function(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
         var mockPublishProfile = {
             profileName: 'mytestapp - Web Deploy',

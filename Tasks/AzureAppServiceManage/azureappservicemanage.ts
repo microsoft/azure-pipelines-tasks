@@ -1,7 +1,7 @@
 import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import path = require('path');
-var azureRmUtil = require('webdeployment-common/azurerestutility.js');
+var azureRmUtil = require('azurerestcall-common/azurerestutility.js');
 
 async function run() {
     try {

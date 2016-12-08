@@ -1,7 +1,7 @@
 {
     "common": [
         {
-            "module": "../Common/webdeployment-common",
+            "module": "../Common/azurerestcall-common",
             "type": "node",
 			"dest": "./",
 			"compile" : true
