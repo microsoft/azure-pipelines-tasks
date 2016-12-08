@@ -5,8 +5,6 @@ import * as httpClient from 'vso-node-api/HttpClient';
 import * as restClient from 'vso-node-api/RestClient';
 
 var httpObj = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
-var restObj = new restClient.RestCallbackClient(httpObj);
-
 var authUrl = 'https://login.windows.net/';
 var azureApiVersion = '2016-09-01';
 	
@@ -119,9 +117,23 @@ export async function getNetworkInterface(SPN, endpointUrl, name: string, resour
     return deferred.promise;
 }
 
-async function checkProvisioningState(SPN, endpointUrl, nicName: string, resourceGroupName: string) {
-	var nic = await getNetworkInterface(SPN, endpointUrl, nicName, resourceGroupName);
-	return nic.properties.ipConfigurations[0].properties.provisioningState;
+async function checkProvisioningState(url: string, accessToken: string) {
+	var deferred = Q.defer();
+	var headers = {
+		Authorization: "Bearer " + accessToken
+	};
+	httpObj.get("GET", url, headers, (error, response, body) => {
+		if(error){
+			deferred.reject(error);
+		}
+		else if(response.statusCode == 200) {
+			deferred.resolve(JSON.parse(body).status);
+		}
+		else {
+			deferred.reject(body);
+		}
+	});
+	return deferred.promise;	
 }
 
 export async function setNetworkInterface(SPN, endpointUrl: string, nic, resourceGroupName: string){
@@ -130,6 +142,7 @@ export async function setNetworkInterface(SPN, endpointUrl: string, nic, resourc
 	var restUrl = "https://management.azure.com/subscriptions/" + SPN.subscriptionId + "/resourceGroups/" + resourceGroupName + "/providers/Microsoft.Network/networkInterfaces/" + nic.name + "?api-version=" + azureApiVersion;
 	var accessToken = await getAccessToken(SPN, endpointUrl);
 	var requestHeader = {
+		"Content-Type": "application/json; charset=utf-8",
 		"Authorization": 'Bearer ' + accessToken
 	};
 
@@ -145,49 +158,55 @@ export async function setNetworkInterface(SPN, endpointUrl: string, nic, resourc
 		}
 		
 		tl.debug(`Trial Count = ${retryCount}`);
-		restObj.replace(restUrl, azureApiVersion, nic, requestHeader, null, (error, response, body) => {
+		httpObj.send("PUT", restUrl, JSON.stringify(nic, null, 2), requestHeader, (error, response, body) => {
 	        if(error) {
-	        	if(response == 429) {
-	        		//Handle Too Many Requests Error
-	        		retryCount++;
-	        		tl.debug(`429: Too many requests`);
-	        		tl.debug("Retrying after " + sleepTime/1000 + " sec");
-	        		setTimeout(putNetworkInterface, sleepTime);
-	        	}
-	            else {
-	            	tl.error(tl.loc("FailedSettingNetworkInterface", nic.name, response));
-	            	deferred.reject(error);
-	            }
+	            deferred.reject(error); 
 	        }
-	        else if(response == 200) {	
+	        else if(response.statusCode == 200) {	
 
 	        	// wait for the provisioning state to be succeeded
 	        	// check after every 20 seconds
+	        	var asyncUrl = response.headers["azure-asyncoperation"];
 	        	var checkStatusRetryCount = 0;
 	        	var checkStatusWaitTime = 20000;
-	        	setTimeout(async function checkSuccessStatus() {
-	        		var provisioningState = await checkProvisioningState(SPN, endpointUrl, nic.name, resourceGroupName);
-	        		tl.debug("Provisioning State = " + provisioningState);
-	        		if(provisioningState == "Succeeded"){
-	            		deferred.resolve("setNICStatusSuccess");
-	        		}
-	        		else {
-	        			if(++checkStatusRetryCount == 10){
-	        				// Retry the SetNetworkInterface for at max 10 times
-	        				retryCount++;
-	        				tl.debug("Retrying after " + sleepTime/1000 + " sec");
-	        				setTimeout(putNetworkInterface, sleepTime);
+	        	setTimeout( async function checkSuccessStatus() {
+	        		try {
+	        			var provisioningState =  await checkProvisioningState(asyncUrl, accessToken);
+	        			tl.debug("Status = " + provisioningState);
+	        			if(provisioningState == "Succeeded") {
+	        				return deferred.resolve("setNICStatusSuccess");
 	        			}
-						else {
-							// Re-check the status of the provisioning state
-							setTimeout(checkSuccessStatus, checkStatusWaitTime);
-						}
 	        		}
-	        	}, checkStatusWaitTime);	
+	        		catch(error) {
+	        			// ignore errors and retry setting the network interface
+	        			tl.debug(`Checking provisioning state errored out : ${error}`);
+	        			retryCount++;
+	        			tl.debug("Retrying setting network interface after " + sleepTime/1000 + " sec");
+	        			return setTimeout(putNetworkInterface, sleepTime);
+	        		}
+	        		if(++checkStatusRetryCount == 10) {
+	        			// Retry setting the network interface
+	        			retryCount++;
+	        			tl.debug("Retrying setting network interface after " + sleepTime/1000 + " sec");
+	        			setTimeout(putNetworkInterface, sleepTime);
+	        		}
+					else {
+						// Re-check the status of the provisioning state
+						setTimeout(checkSuccessStatus, checkStatusWaitTime);
+					}
+	        	}, 1);
+	        }
+	        else if(response.statusCode == 429){
+	        	body = JSON.parse(body);
+	        	if(body["error"] && body["error"].code == "RetryableError") {
+	        		retryCount++;
+	        		tl.debug(JSON.stringify(body, null, 4));
+        			tl.debug("Retrying setting network interface after " + sleepTime/1000 + " sec");
+        			setTimeout(putNetworkInterface, sleepTime);
+	        	}
 	        }
 	        else {
-	        	tl.error(tl.loc("FailedSettingNetworkInterface", nic.name, response));
-	        	deferred.reject(response);
+	        	deferred.reject(tl.loc("FailedSettingNetworkInterface", nic.name, response.statusCode, response.statusMessage, body));
 	        }
 		});
 	}, 1);

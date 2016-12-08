@@ -16,11 +16,11 @@
   "loc.messages.DisconnectingVMfromLB": "Disconnecting the Azure Virtual Machine from the Load Balancer - %s's backend pool.",
   "loc.messages.setNICStatusSuccess": "Network interface %s set successfully",
   "loc.messages.MaxRetriesExceededForSettingNetworkInterface": "Maximum retries exceeded for setting the Network Interface : %s",
-  "loc.messages.FailedSettingNetworkInterface": "Setting the Network Interface %s failed with response %s",
   "loc.messages.ActionCompletedSuccefully": "The Action - %s completed successfully for the virtual machine %s and load balancer %s",
   "loc.messages.CouldNotFetchAcessToken": "Could not fetch access token.\nStatus Code : %s\nStatus Message : %s\n%s",
   "loc.messages.CouldNotFetchNetworkInterfacesInRg": "Could not fetch Network Interfaces in the resource group %s.\nStatus Code : %s\nStatus Message : %s\n%s",
   "loc.messages.CouldNotFetchLoadBalancer": "Could not fetch Load Balancer %s.\nStatus Code : %s\nStatus Message : %s\n%s",
   "loc.messages.CouldNotFetchNetworkInterface": "Could not fetch Network Interface %s.\nStatus Code : %s\nStatus Message : %s\n%s",
+  "loc.messages.FailedSettingNetworkInterface": "Failed setting the Network Interface %s.\nStatus Code : %s\nStatus Message : %s\n%s",
   "loc.messages.SettingTheNetworkInterface": "Setting the network interface %s"
 }

@@ -89,12 +89,12 @@
         "DisconnectingVMfromLB": "Disconnecting the Azure Virtual Machine from the Load Balancer - %s's backend pool.",
         "setNICStatusSuccess": "Network interface %s set successfully",
         "MaxRetriesExceededForSettingNetworkInterface": "Maximum retries exceeded for setting the Network Interface : %s",
-        "FailedSettingNetworkInterface": "Setting the Network Interface %s failed with response %s",
         "ActionCompletedSuccefully": "The Action - %s completed successfully for the virtual machine %s and load balancer %s",
         "CouldNotFetchAcessToken": "Could not fetch access token.\nStatus Code : %s\nStatus Message : %s\n%s",
         "CouldNotFetchNetworkInterfacesInRg": "Could not fetch Network Interfaces in the resource group %s.\nStatus Code : %s\nStatus Message : %s\n%s",
         "CouldNotFetchLoadBalancer": "Could not fetch Load Balancer %s.\nStatus Code : %s\nStatus Message : %s\n%s",
         "CouldNotFetchNetworkInterface": "Could not fetch Network Interface %s.\nStatus Code : %s\nStatus Message : %s\n%s",
+        "FailedSettingNetworkInterface": "Failed setting the Network Interface %s.\nStatus Code : %s\nStatus Message : %s\n%s",
         "SettingTheNetworkInterface": "Setting the network interface %s"
     }
 }

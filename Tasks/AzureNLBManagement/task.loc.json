@@ -89,12 +89,12 @@
     "DisconnectingVMfromLB": "ms-resource:loc.messages.DisconnectingVMfromLB",
     "setNICStatusSuccess": "ms-resource:loc.messages.setNICStatusSuccess",
     "MaxRetriesExceededForSettingNetworkInterface": "ms-resource:loc.messages.MaxRetriesExceededForSettingNetworkInterface",
-    "FailedSettingNetworkInterface": "ms-resource:loc.messages.FailedSettingNetworkInterface",
     "ActionCompletedSuccefully": "ms-resource:loc.messages.ActionCompletedSuccefully",
     "CouldNotFetchAcessToken": "ms-resource:loc.messages.CouldNotFetchAcessToken",
     "CouldNotFetchNetworkInterfacesInRg": "ms-resource:loc.messages.CouldNotFetchNetworkInterfacesInRg",
     "CouldNotFetchLoadBalancer": "ms-resource:loc.messages.CouldNotFetchLoadBalancer",
     "CouldNotFetchNetworkInterface": "ms-resource:loc.messages.CouldNotFetchNetworkInterface",
+    "FailedSettingNetworkInterface": "ms-resource:loc.messages.FailedSettingNetworkInterface",
     "SettingTheNetworkInterface": "ms-resource:loc.messages.SettingTheNetworkInterface"
   }
 }
