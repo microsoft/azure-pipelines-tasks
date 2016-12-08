@@ -266,10 +266,10 @@ function Publish-UpgradedServiceFabricApplication
      
             $UpgradeParameters["ApplicationParameter"] = $ApplicationParameter
 
-            $serviceTypeHealthPolicyMap = $upgradeParameters["ServiceTypeHealthPolicyMap"]
+            $serviceTypeHealthPolicyMap = $UpgradeParameters["ServiceTypeHealthPolicyMap"]
             if ($serviceTypeHealthPolicyMap -and $serviceTypeHealthPolicyMap -is [string])
             {
-                $upgradeParameters["ServiceTypeHealthPolicyMap"] = Invoke-Expression $serviceTypeHealthPolicyMap
+                $UpgradeParameters["ServiceTypeHealthPolicyMap"] = Invoke-Expression $serviceTypeHealthPolicyMap
             }
         
             Write-Host (Get-VstsLocString -Key SFSDK_StartAppUpgrade) 
