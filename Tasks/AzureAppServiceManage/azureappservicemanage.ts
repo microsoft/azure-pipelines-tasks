@@ -67,7 +67,6 @@ async function run() {
             }
             case "Swap Slots": {
                 await swapSlot(endPoint, resourceGroupName, webAppName, sourceSlot, swapWithProduction, targetSlot, preserveVnet);
-                tl._writeLine("Swap Completed !");
                 break;
             }
             default:
