@@ -372,7 +372,7 @@ export async function restartAppService(SPN, resourceGroupName: string, webAppNa
     var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
                 '/providers/Microsoft.Web/sites/' + webAppName + "/restart?" + azureApiVersion + '&synchronous=true';
 
-    tl.debug('Requesting to stop App Service : ' + url);
+    tl.debug('Requesting to restart App Service : ' + url);
     var accessToken = await getAuthorizationToken(SPN);
     var headers = {
         'Authorization': 'Bearer '+ accessToken

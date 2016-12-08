@@ -5,6 +5,12 @@
             "type": "node",
 			"dest": "./",
 			"compile" : true
+        },
+        {
+            "module": "../Common/azurerestcall-common",
+            "type": "node",
+			"dest": "./",
+			"compile" : true
         }
     ],
     "externals": {
