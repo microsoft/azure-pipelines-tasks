@@ -1,13 +1,13 @@
 {
     "common": [
         {
-            "module": "../Common/webdeployment-common",
+            "module": "../Common/azurerestcall-common",
             "type": "node",
 			"dest": "./",
 			"compile" : true
         },
         {
-            "module": "../Common/azurerestcall-common",
+            "module": "../Common/webdeployment-common",
             "type": "node",
 			"dest": "./",
 			"compile" : true
