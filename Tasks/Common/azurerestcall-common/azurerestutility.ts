@@ -386,7 +386,7 @@ export async function restartAppService(SPN, resourceGroupName: string, webAppNa
             deferred.resolve(tl.loc('AppServiceRestartedSuccessfully', webAppName));
         }
         else if(response.statusCode === 202) {
-            tl.warning('Restart Request accepted');
+            tl.warning(tl.loc('RestartAppServiceAccepted'));
             deferred.resolve(tl.loc('RestartAppServiceAccepted', webAppName));
         }
         else {
