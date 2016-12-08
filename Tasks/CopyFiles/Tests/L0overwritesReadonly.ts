@@ -6,37 +6,32 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'copyfiles.js');
 let runner: mockrun.TaskMockRunner = new mockrun.TaskMockRunner(taskPath);
 runner.setInput('Contents', '**');
-runner.setInput('SourceFolder', '/srcDir');
-runner.setInput('TargetFolder', '/destDir');
+runner.setInput('SourceFolder', path.normalize('/srcDir'));
+runner.setInput('TargetFolder', path.normalize('/destDir'));
 runner.setInput('CleanTargetFolder', 'false');
 runner.setInput('Overwrite', 'true');
 let answers = <mockanswer.TaskLibAnswers> {
-    checkPath: {
-        '/srcDir': true
-    },
-    find: {
-        '/srcDir': [
-            '/srcDir/someOtherDir',
-            '/srcDir/someOtherDir/file1.file',
-            '/srcDir/someOtherDir/file2.file',
-        ]
-    },
-    match: { }
+    checkPath: { },
+    find: { },
 };
-answers.match[path.join('/srcDir', '**')] = [
-    '/srcDir/someOtherDir/file1.file',
-    '/srcDir/someOtherDir/file2.file',
+answers.checkPath[path.normalize('/srcDir')] = true;
+answers.find[path.normalize('/srcDir')] = [
+    path.normalize('/srcDir'),
+    path.normalize('/srcDir/someOtherDir'),
+    path.normalize('/srcDir/someOtherDir/file1.file'),
+    path.normalize('/srcDir/someOtherDir/file2.file'),
 ];
 runner.setAnswers(answers);
-runner.registerMockExport('stats', (p: string): any => {
-    switch (p) {
-        case '/srcDir/someOtherDir':
-        case path.join('/destDir', 'someOtherDir'):
+runner.registerMockExport('stats', (itemPath: string): any => {
+    console.log('##vso[task.debug]stats ' + itemPath);
+    switch (itemPath) {
+        case path.normalize('/srcDir/someOtherDir'):
+        case path.normalize('/destDir/someOtherDir'):
             return { isDirectory: () => true };
-        case '/srcDir/someOtherDir/file1.file':
-        case '/srcDir/someOtherDir/file2.file':
+        case path.normalize('/srcDir/someOtherDir/file1.file'):
+        case path.normalize('/srcDir/someOtherDir/file2.file'):
             return { isDirectory: () => false };
-        case path.join('/destDir', 'someOtherDir', 'file1.file'):
+        case path.normalize('/destDir/someOtherDir/file1.file'):
             return {
                 isDirectory: () => false,
                 mode: (4 << 6) + (4 << 3) + 4, // r--r--r--
@@ -48,7 +43,7 @@ runner.registerMockExport('stats', (p: string): any => {
 
 // override fs.chmodSync. it is the only fs function called by copyfiles.
 (fs as any).chmodSync = (path: string, mode: number) => {
-    console.log(`chmodSync ${path} ${mode}`);
+    console.log(`##vso[task.debug]chmodSync ${path} ${mode}`);
 };
 runner.registerMock('fs', fs);
 

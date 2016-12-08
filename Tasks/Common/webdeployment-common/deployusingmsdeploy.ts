@@ -21,8 +21,8 @@ var utility = require('./utility.js');
 export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag, 
         excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments, isFolderBasedDeployment, useWebDeploy) {
 
-	setParametersFile = utility.getSetParamFilePath(setParametersFile);
-	var isParamFilePresentInPackage = isFolderBasedDeployment ? false : await msDeployUtility.containsParamFile(webDeployPkg);
+    setParametersFile = utility.getSetParamFilePath(setParametersFile);
+    var isParamFilePresentInPackage = isFolderBasedDeployment ? false : await msDeployUtility.containsParamFile(webDeployPkg);
     var msDeployPath = await msDeployUtility.getMSDeployFullPath();
     var msDeployCmdArgs = msDeployUtility.getMSDeployCmdArgs(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
         excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments, isParamFilePresentInPackage, isFolderBasedDeployment, 
@@ -38,7 +38,7 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
         tl._writeLine(tl.loc("Runningcommand", msDeployCommand));
         await tl.exec("cmd", ['/C', msDeployBatchFile], <any> {failOnStdErr: true});
         tl.rmRF(msDeployBatchFile, true);
-		if(publishingProfile != null){
+        if(publishingProfile != null){
         tl._writeLine(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));}
     }
     catch(error) {

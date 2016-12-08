@@ -8,8 +8,7 @@ tr.setInput('ConnectedServiceName', 'AzureRMSpn');
 tr.setInput('WebAppName', 'mytestapp');
 tr.setInput('Package', 'webAppPkg.zip');
 tr.setInput('UseWebDeploy', 'false');
-tr.setInput('XmlTransformsAndVariableSubstitutions', 'true');
-tr.setInput('XdtTransformation', 'true');
+tr.setInput('XmlTransformation', 'true');
 
 process.env['TASK_TEST_TRACE'] = 1;
 process.env["ENDPOINT_AUTH_AzureRMSpn"] = "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
@@ -150,7 +149,21 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
   	}
 
     return config;
-}
+	},
+    getResourceGroupName: function (SPN, webAppName) {
+        return "foobar";
+    },
+    getWebAppAppSettings : function (SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string){
+        var appSettings = {
+            properties : {
+                MSDEPLOY_RENAME_LOCKED_FILES : '1'
+            }
+        };
+        return appSettings;
+    },
+    updateWebAppAppSettings : function (){
+        return true;
+    }
 });
 tr.registerMock('webdeployment-common/ziputility.js', {
     unzip: function() {

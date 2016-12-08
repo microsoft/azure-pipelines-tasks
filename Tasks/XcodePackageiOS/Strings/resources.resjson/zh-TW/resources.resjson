@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Xcode 套件 iOS",
+  "loc.friendlyName": "Xcode 封裝 iOS",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613731)",
   "loc.description": "從 Xcode 組建輸出產生 .ipa 檔案",
   "loc.instanceNameFormat": "Xcode 套件 $(appName)",

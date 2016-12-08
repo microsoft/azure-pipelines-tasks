@@ -14,7 +14,7 @@
   "loc.input.label.Protocol": "通訊協定",
   "loc.input.help.Protocol": "選取 WinRM 與電腦連線時所囡使用的通訊協定。預設值為 HTTPS。",
   "loc.input.label.TestCertificate": "測試憑證",
-  "loc.input.help.TestCertificate": "選取此選項可略過驗證電腦憑證是否確實經由信任的憑證授權單位簽署。WinRM HTTPS 通訊協定需要此參數。",
+  "loc.input.help.TestCertificate": "選取選項，跳過由受信任的憑證授權單位驗證電腦憑證真確性。WinRM HTTPS 通訊協定需要參數。",
   "loc.input.label.ScriptPath": "PowerShell 指令碼",
   "loc.input.help.ScriptPath": "PowerShell 指令碼在目標電腦或 UNC 路徑上的位置，例如 C:\\BudgetIT\\Web\\Deploy\\Website.ps1",
   "loc.input.label.ScriptArguments": "指令碼引數",
@@ -26,7 +26,7 @@
   "loc.input.label.RunPowershellInParallel": "平行執行 PowerShell",
   "loc.input.help.RunPowershellInParallel": "若將其設為 Ture，將會在目標電腦中平行執行 PowerShell 指令碼。",
   "loc.input.label.ResourceFilteringMethod": "選取電腦依據 ",
-  "loc.input.help.ResourceFilteringMethod": "您可以提供電腦名稱或標記，選擇是否要選取一組電腦。",
+  "loc.input.help.ResourceFilteringMethod": "選擇性地提供電腦名稱或標記來選取電腦的子集。",
   "loc.input.label.MachineNames": "篩選準則",
   "loc.input.help.MachineNames": "此輸入只對電腦群組或輸出變數有效，電腦的簡單列表尚無法支援。請以 dbserver.fabrikam.com、webserver.fabrikam.com、192.168.12.34 等形式提供電腦清單，或以 Role:DB; OS:Win8.1 等形式提供標記清單。若提供多個標記，工作會在所有具有指定標記的電腦上執行。預設會在所有電腦上執行此工作。"
 }

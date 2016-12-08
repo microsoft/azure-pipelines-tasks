@@ -1,12 +1,12 @@
 {
-  "loc.friendlyName": "Extract Files",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=800269)",
-  "loc.description": "Extract a variety of archive and compression files such as .7z, .rar, .tar.gz, and .zip.",
-  "loc.instanceNameFormat": "Extract files $(message)",
-  "loc.input.label.archiveFilePatterns": "Archive file patterns",
-  "loc.input.help.archiveFilePatterns": "File paths or patterns of the archive files to extract.  Supports multiple lines of minimatch patterns.  [More Information](https://go.microsoft.com/fwlink/?LinkId=800269)",
-  "loc.input.label.destinationFolder": "Destination folder",
-  "loc.input.help.destinationFolder": "Destination folder into which archive files should be extracted.  Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988) if files are not in the repo. Example: $(agent.builddirectory)",
-  "loc.input.label.cleanDestinationFolder": "Clean destination folder before extracting",
-  "loc.input.help.cleanDestinationFolder": "Select this option to clean the destination directory before archive contents are extracted into it."
+  "loc.friendlyName": "ファイルの抽出",
+  "loc.helpMarkDown": "[詳細情報](https://go.microsoft.com/fwlink/?LinkId=800269)",
+  "loc.description": ".7z、.rar、.tar.gz、.zip などのさまざまなアーカイブ ファイルと圧縮ファイルを抽出します。",
+  "loc.instanceNameFormat": "ファイルの抽出 $(message)",
+  "loc.input.label.archiveFilePatterns": "アーカイブ ファイルのパターン",
+  "loc.input.help.archiveFilePatterns": "抽出するアーカイブ ファイルのファイル パスまたはパターン。複数行の minimatch パターンをサポートします。[詳細情報](https://go.microsoft.com/fwlink/?LinkId=800269)",
+  "loc.input.label.destinationFolder": "宛先フォルダー",
+  "loc.input.help.destinationFolder": "アーカイブ ファイルを抽出する宛先フォルダー。ファイルがリポジトリにない場合には [variables](https://go.microsoft.com/fwlink/?LinkID=550988) を使用します。例: $(agent.builddirectory)",
+  "loc.input.label.cleanDestinationFolder": "抽出前に宛先フォルダーを空にする",
+  "loc.input.help.cleanDestinationFolder": "アーカイブの内容を抽出する前に宛先ディレクトリを空にする場合、このオプションを選択します。"
 }

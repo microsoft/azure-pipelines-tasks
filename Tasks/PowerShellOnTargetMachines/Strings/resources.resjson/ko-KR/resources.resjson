@@ -8,7 +8,7 @@
   "loc.input.label.EnvironmentName": "컴퓨터",
   "loc.input.help.EnvironmentName": "포트와 함께 쉼표로 구분된 컴퓨터 IP 주소 또는 FQDN 목록을 제공하세요. 포트의 기본값이 선택된 프로토콜을 기준으로 설정되었습니다. <br>예: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986 <br>또는 다른 작업의 출력 변수를 제공하세요. 예: $(variableName)",
   "loc.input.label.AdminUserName": "관리자 로그인",
-  "loc.input.help.AdminUserName": "대상 컴퓨터에 대한 관리자 로그인입니다.",
+  "loc.input.help.AdminUserName": "대상 컴퓨터의 관리자 암호입니다.",
   "loc.input.label.AdminPassword": "암호",
   "loc.input.help.AdminPassword": "대상 컴퓨터에 대한 관리자 암호입니다. <br>빌드/릴리스 정의에 '$(passwordVariable)'(으)로 정의된 변수를 사용할 수 있습니다. <br>보호하기 위해 변수 형식을 'secret'으로 표시할 수 있습니다.",
   "loc.input.label.Protocol": "프로토콜",

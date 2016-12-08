@@ -1,0 +1,6 @@
+{
+  "loc.messages.AZ_UnsupportedAuthScheme0": "Modèle d'authentification '{0}' non pris en charge pour le point de terminaison Azure.",
+  "loc.messages.AZ_SpnAccessTokenFetchFailure": "Impossible de récupérer le jeton de l'ID de locataire {0}.",
+  "loc.messages.AZ_UserAccessTokenFetchFailure": "Impossible de récupérer le jeton pour l'utilisateur donné.",
+  "loc.messages.AZ_NoValidResourceIdFound": "La ressource avec serverName {0}, serverType {1} dans l'abonnement {2} est introuvable. Spécifiez des valeurs serverName/serverType correctes et réessayez."
+}
