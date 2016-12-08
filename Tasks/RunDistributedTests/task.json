@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 46
+        "Patch": 47
     },
     "demands": [],
     "minimumAgentVersion": "1.104.0",
@@ -218,7 +218,7 @@
         },
         {
             "target": "testConfiguration",
-            "endpoint": "/$(system.teamProject)/_apis/test/configurations",
+            "endpoint": "/$(system.teamProject)/_apis/test/configurations?api-version=3.0-preview.1",
             "selector": "jsonpath:$.value[*].name",
             "keySelector": "jsonpath:$.value[*].id",
             "authKey": "tfs:teamfoundation"
