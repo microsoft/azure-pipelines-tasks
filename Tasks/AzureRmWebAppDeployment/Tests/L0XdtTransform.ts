@@ -94,7 +94,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 }
 
 import mockTask = require('vsts-task-lib/mock-task');
-var kuduDeploymentLog = require('azurerestcall-common/kududeploymentstatusutility.js');
+var kuduDeploymentLog = require('azurerest-common/kududeploymentstatusutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js');
 var xdtTransform = require('webdeployment-common/xdttransformationutility.js');
 
@@ -110,7 +110,7 @@ tr.registerMock('./msdeployutility.js', {
     }
 }); 
 
-tr.registerMock('azurerestcall-common/azurerestutility.js', {
+tr.registerMock('azurerest-common/azurerestutility.js', {
     getAzureRMWebAppPublishProfile: function(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
         var mockPublishProfile = {
             profileName: 'mytestapp - Web Deploy',

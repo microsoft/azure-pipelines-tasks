@@ -1,7 +1,7 @@
 {
     "common": [
         {
-            "module": "../Common/azurerestcall-common",
+            "module": "../Common/azurerest-common",
             "type": "node",
             "dest": "./",
             "compile" : true

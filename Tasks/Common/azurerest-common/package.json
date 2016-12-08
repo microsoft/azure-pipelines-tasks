@@ -1,5 +1,5 @@
 {
-  "name": "azurerestcall-common",
+  "name": "azurerest-common",
   "version": "1.0.0",
   "description": "Common Library for Azure Rest Calls",
   "repository": {
