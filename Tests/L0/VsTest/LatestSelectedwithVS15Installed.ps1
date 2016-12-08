@@ -31,10 +31,11 @@ Register-Mock Publish-TestResults
 Register-Mock Invoke-VsTest 
 Register-Mock IsVisualStudio2015Update1OrHigherInstalled
 Register-Mock SetupRunSettingsFileForParallel
-Register-Mock InvokeVsTestCmdletHasMember { $false }
+Register-Mock InvokeVsTestCmdletHasMember { $true }
 
 Register-Mock CmdletHasMember { $false } -- -memberName "RunTitle"
 Register-Mock CmdletHasMember { $true } -- -memberName "PublishRunLevelAttachments"
+
 $vsObject = new-object PSObject
 $vsObject | add-member -type NoteProperty -Name Path -Value 'vs15ShellFolder'
 Register-Mock Get-VisualStudio_15_0 { $vsObject }
