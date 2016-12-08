@@ -34,9 +34,9 @@
       "label": "ms-resource:loc.input.label.Action",
       "required": false,
       "helpMarkDown": "",
-      "defaultValue": "Manage slot for Azure App Service",
+      "defaultValue": "Swap Slots",
       "options": {
-        "Manage slot for Azure App Service": "Manage Slots",
+        "Swap Slots": "Swap Slots",
         "Start Azure App Service": "Start App Service",
         "Stop Azure App Service": "Stop App Service",
         "Restart Azure App Service": "Restart App Service"
@@ -63,7 +63,7 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName",
-      "visibleRule": "Action = Manage slot for Azure App Service"
+      "visibleRule": "Action = Swap Slots"
     },
     {
       "name": "SourceSlot",
@@ -75,7 +75,7 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.SourceSlot",
-      "visibleRule": "Action = SwapSlot"
+      "visibleRule": "Action = Swap Slots"
     },
     {
       "name": "SwapWithProduction",
@@ -84,7 +84,7 @@
       "defaultValue": "true",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.SwapWithProduction",
-      "visibleRule": "Action = SwapSlot"
+      "visibleRule": "Action = Swap Slots"
     },
     {
       "name": "TargetSlot",
@@ -96,7 +96,7 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.TargetSlot",
-      "visibleRule": "Action = SwapSlot && SwapWithProduction = false"
+      "visibleRule": "Action = Swap Slots && SwapWithProduction = false"
     },
     {
       "name": "PreserveVnet",
@@ -105,7 +105,7 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.PreserveVnet",
-      "visibleRule": "Action = SwapSlot"
+      "visibleRule": "Action = Swap Slots"
     }
   ],
   "dataSourceBindings": [

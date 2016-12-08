@@ -19,33 +19,33 @@ async function run() {
         var updateSlotSwapStatus: boolean = true;
         var taskResult = true;
 
-        var SPN = {
-            servicePrincipalClientID: endPointAuthCreds.parameters["serviceprincipalid"],
-            servicePrincipalKey: endPointAuthCreds.parameters["serviceprincipalkey"],
-            tenantID: endPointAuthCreds.parameters["tenantid"],
-            subscriptionId: subscriptionId
-        };
+        var endPoint = new Array();
+        endPoint["servicePrincipalClientID"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'serviceprincipalid', true);
+        endPoint["servicePrincipalKey"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'serviceprincipalkey', true);
+        endPoint["tenantID"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'tenantid', true);
+        endPoint["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
+        endPoint["url"] = tl.getEndpointUrl(connectedServiceName, true);
 
         if(resourceGroupName === null) {
-            resourceGroupName = await azureRmUtil.getResourceGroupName(SPN, webAppName);
+            resourceGroupName = await azureRmUtil.getResourceGroupName(endPoint, webAppName);
         }
         switch(action) {
             case "Start Azure App Service": {
                 tl._writeLine(tl.loc('StartingAppService', webAppName));
-                tl._writeLine(await azureRmUtil.startAppService(SPN, resourceGroupName, webAppName));
+                tl._writeLine(await azureRmUtil.startAppService(endPoint, resourceGroupName, webAppName));
                 break;
             }
             case "Stop Azure App Service": {
                 tl._writeLine(tl.loc('StoppingAppService', webAppName));
-                tl._writeLine(await azureRmUtil.stopAppService(SPN, resourceGroupName, webAppName));
+                tl._writeLine(await azureRmUtil.stopAppService(endPoint, resourceGroupName, webAppName));
                 break;
             }
             case "Restart Azure App Service": {
                 tl._writeLine(tl.loc('RestartingAppService', webAppName));
-                tl._writeLine(await azureRmUtil.restartAppService(SPN, resourceGroupName, webAppName));
+                tl._writeLine(await azureRmUtil.restartAppService(endPoint, resourceGroupName, webAppName));
                 break;
             }
-            case "SwapSlot": {
+            case "Swap Slots": {
                 if(swapWithProduction) {
                     targetSlot = "production";
                 }
@@ -53,7 +53,7 @@ async function run() {
                     updateSlotSwapStatus = false;
                     throw new Error(tl.loc("SourceAndTargetSlotCannotBeSame"));
                 }
-                tl._writeLine(await azureRmUtil.swapWebAppSlot(SPN, resourceGroupName, webAppName, sourceSlot, targetSlot, preserveVnet));
+                tl._writeLine(await azureRmUtil.swapWebAppSlot(endPoint, resourceGroupName, webAppName, sourceSlot, targetSlot, preserveVnet));
                 break;
             }
             default:
@@ -75,11 +75,11 @@ async function run() {
             };
 
             //push swap slot log to sourceSlot url
-            var sourcePublishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, true, sourceSlot);
+            var sourcePublishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, true, sourceSlot);
             tl._writeLine(await azureRmUtil.updateDeploymentStatus(sourcePublishingProfile, taskResult, customMessage));
 
             //push swap slot log to targetSlot url
-            var destinationPublishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, !(swapWithProduction), targetSlot);
+            var destinationPublishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, !(swapWithProduction), targetSlot);
             tl._writeLine(await azureRmUtil.updateDeploymentStatus(destinationPublishingProfile, taskResult, customMessage));
         }
         catch(error) {

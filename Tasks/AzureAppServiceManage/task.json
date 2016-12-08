@@ -2,7 +2,7 @@
   "id": "f045e430-8704-11e6-968f-e717e6411619",
   "name": "AzureAppServiceManage",
   "friendlyName": "Azure App Service Manage (PREVIEW)",
-  "description": "Start, Stop, Create and Delete App Services",
+  "description": "Start, Stop, Restart or Slot swap an Azure App Service",
   "author": "Microsoft Corporation",
   "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=831573)",
   "category": "Deploy",
@@ -36,9 +36,9 @@
             "label": "Action",
             "required": false,
             "helpMarkDown": "",
-            "defaultValue": "Manage slot for Azure App Service",
+            "defaultValue": "Swap Slots",
             "options": {
-                "Manage slot for Azure App Service": "Manage Slots",
+                "Swap Slots": "Swap Slots",
                 "Start Azure App Service": "Start App Service",
                 "Stop Azure App Service": "Stop App Service",
                 "Restart Azure App Service": "Restart App Service"
@@ -65,7 +65,7 @@
                 "EditableOptions": "True"
             },
             "helpMarkDown": "Enter or Select the Azure Resource Group that contains the AzureRM Web App specified above.",
-            "visibleRule":"Action = Manage slot for Azure App Service"
+            "visibleRule":"Action = Swap Slots"
         },
         {
             "name": "SourceSlot",
@@ -77,7 +77,7 @@
                 "EditableOptions": "True"
             },
             "helpMarkDown": "The swap action directs destination slot's traffic to the source slot.",
-            "visibleRule": "Action = SwapSlot"
+            "visibleRule": "Action = Swap Slots"
         },
         {
             "name": "SwapWithProduction",
@@ -86,7 +86,7 @@
             "defaultValue": "true",
             "required": false,
             "helpMarkDown": "Select the option to swap the traffic of source slot with production. If this option is not selected, then you will have to provide source and target slot names.",
-            "visibleRule": "Action = SwapSlot"
+            "visibleRule": "Action = Swap Slots"
         },
         {
             "name": "TargetSlot",
@@ -98,7 +98,7 @@
                 "EditableOptions": "True"
             },
             "helpMarkDown": "The swap action directs destination slot's traffic to the source slot.",
-            "visibleRule": "Action = SwapSlot && SwapWithProduction = false"
+            "visibleRule": "Action = Swap Slots && SwapWithProduction = false"
         },
         {
             "name": "PreserveVnet",
@@ -107,7 +107,7 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Preserve the Virtual network settings",
-            "visibleRule": "Action = SwapSlot"
+            "visibleRule": "Action = Swap Slots"
         }
     ],
   "dataSourceBindings": [

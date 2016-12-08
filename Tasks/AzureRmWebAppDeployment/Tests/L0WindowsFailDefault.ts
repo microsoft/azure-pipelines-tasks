@@ -80,7 +80,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 
 import mockTask = require('vsts-task-lib/mock-task');
-var kuduDeploymentLog = require('webdeployment-common/kududeploymentstatusutility.js');
+var kuduDeploymentLog = require('azurerestcall-common/kududeploymentstatusutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js'); 
 tr.registerMock('./msdeployutility.js', {
 	redirectMSDeployErrorToConsole : msDeployUtility.redirectMSDeployErrorToConsole,
