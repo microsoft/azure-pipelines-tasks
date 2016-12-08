@@ -65,7 +65,7 @@ async function run() {
         taskResult = false;
         tl.setResult(tl.TaskResult.Failed, error);
     }
-    if(tl.getInput('Action') === "SwapSlot") {
+    if(tl.getInput('Action') === "Swap Slots") {
         try{
 
             var customMessage = {
