@@ -1,7 +1,28 @@
+import { cursorTo } from 'readline';
 import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import path = require('path');
 var azureRmUtil = require('azurerestcall-common/azurerestutility.js');
+
+async function swapSlot(endPoint, resourceGroupName: string, webAppName: string, sourceSlot: string, swapWithProduction: boolean, targetSlot: string, preserveVnet: boolean) {
+    if(swapWithProduction) {
+        targetSlot = "production";
+    }
+    if(sourceSlot === targetSlot){
+        throw new Error(tl.loc("SourceAndTargetSlotCannotBeSame"));
+    }
+    tl._writeLine(await azureRmUtil.swapWebAppSlot(endPoint, resourceGroupName, webAppName, sourceSlot, targetSlot, preserveVnet));
+}
+
+async function updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, slotFlag, slotName, taskResult, customMessage) {
+    try {
+        var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, slotFlag, slotName);
+        tl._writeLine(await azureRmUtil.updateDeploymentStatus(publishingProfile, taskResult, customMessage));
+    }
+    catch(exception) {
+        tl.warning(exception);
+    }
+}
 
 async function run() {
     try {
@@ -16,7 +37,6 @@ async function run() {
         var preserveVnet: boolean = tl.getBoolInput('PreserveVnet', false);
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
         var subscriptionId = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
-        var updateSlotSwapStatus: boolean = true;
         var taskResult = true;
 
         var endPoint = new Array();
@@ -46,45 +66,31 @@ async function run() {
                 break;
             }
             case "Swap Slots": {
-                if(swapWithProduction) {
-                    targetSlot = "production";
-                }
-                if(sourceSlot === targetSlot){
-                    updateSlotSwapStatus = false;
-                    throw new Error(tl.loc("SourceAndTargetSlotCannotBeSame"));
-                }
-                tl._writeLine(await azureRmUtil.swapWebAppSlot(endPoint, resourceGroupName, webAppName, sourceSlot, targetSlot, preserveVnet));
+                await swapSlot(endPoint, resourceGroupName, webAppName, sourceSlot, swapWithProduction, targetSlot, preserveVnet);
+                tl._writeLine("Swap Completed !");
                 break;
             }
             default:
                 throw Error("Invalid Action selected !");
         }
     }
-    catch(error)
+    catch(exception)
     {
         taskResult = false;
-        tl.setResult(tl.TaskResult.Failed, error);
+        tl.setResult(tl.TaskResult.Failed, exception);
+    }
+    var customMessage = {
+        type: action
     }
     if(tl.getInput('Action') === "Swap Slots") {
-        try{
-
-            var customMessage = {
-                type: "swapSlot",
-                sourceSlot: sourceSlot,
-                targetSlot: targetSlot
-            };
-
-            //push swap slot log to sourceSlot url
-            var sourcePublishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, true, sourceSlot);
-            tl._writeLine(await azureRmUtil.updateDeploymentStatus(sourcePublishingProfile, taskResult, customMessage));
-
-            //push swap slot log to targetSlot url
-            var destinationPublishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, !(swapWithProduction), targetSlot);
-            tl._writeLine(await azureRmUtil.updateDeploymentStatus(destinationPublishingProfile, taskResult, customMessage));
-        }
-        catch(error) {
-            tl.warning(error);
-        }
+        customMessage['sourceSlot'] = sourceSlot;
+        customMessage['targetSlot'] = swapWithProduction ? "Production" : targetSlot;
+        await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, true, sourceSlot, taskResult, customMessage);
+        await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, !(swapWithProduction), targetSlot, taskResult, customMessage);
+    }
+    else {
+        customMessage['slotName'] = 'Production';
+        await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, false, null, taskResult, customMessage);
     }
 }
 

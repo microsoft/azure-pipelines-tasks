@@ -21,9 +21,6 @@ export function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isDeployme
  	var commitId = tl.getVariable('build.sourceVersion');
  	var repoName = tl.getVariable('build.repository.name');
  	var repoProvider = tl.getVariable('build.repository.provider');
- 	var slotName = tl.getInput('SlotName');
- 	if(slotName == null)
- 		slotName = "Production";
 
     var buildOrReleaseUrl = "" ;
     var deploymentId = "";
