@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 43
+        "Patch": 44
     },
     "minimumAgentVersion": "1.104.0",
     "groups": [
@@ -35,7 +35,7 @@
             "label": "Machines",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the selected protocol. <br>Eg: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986 <br>Or provide output variable of other tasks. Eg: $(variableName)"
+            "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the selected protocol. <br>Eg: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986 <br>Or provide output variable of other tasks. Eg: $(variableName) <br>If you are using HTTPS, name/IP of machine should match the CN in the certificate."
         },
         {
             "name": "AdminUserName",

@@ -2,7 +2,7 @@
     "id": "BFC05E0D-839C-42CD-89C7-0F9FBFCAB965",
     "name": "CocoaPods",
     "friendlyName": "CocoaPods",
-    "description": "CocoaPods is the dependency manager for Swift and Objective-C Cocoa projects. Runs pod install",
+    "description": "CocoaPods is a dependency manager for Swift and Objective-C Cocoa projects. This task runs 'pod install'.",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613745)",
     "category": "Package",
     "visibility": [
@@ -16,7 +16,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 19
+        "Patch": 20
     },
     "instanceNameFormat": "pod install",
     "inputs": [
@@ -26,7 +26,7 @@
             "label": "Working Directory",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Current working directory. Defaults to the repo directory."
+            "helpMarkDown": "Specify the working directory in which to execute this step. If left empty, the repository directory will be used."
         }
     ],
     "execution": {
@@ -36,8 +36,8 @@
         }
     },
     "messages": {
-        "PodReturnCode": "Pod exited with return code: %d",
-        "PodFailed": "Pod failed with error: %s",
-        "CocoaPodsNotFound": "command pod was not found. Please install Cocoapods on the build machine (https://cocoapods.org)"
+        "PodReturnCode": "The 'pod' command exited with return code: %d",
+        "PodFailed": "The 'pod' command failed with error: %s",
+        "CocoaPodsNotFound": "The 'pod' command was not found. Please install CocoaPods on the build machine (https://cocoapods.org/)."
     }
 }

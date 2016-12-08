@@ -4,5 +4,8 @@
   "loc.description": "CocoaPods è l'utilità di gestione dipendenze per progetti Cocoa Swift e Objective-C. Consente di eseguire l'installazione dei pod",
   "loc.instanceNameFormat": "pod install",
   "loc.input.label.cwd": "Directory di lavoro",
-  "loc.input.help.cwd": "Directory di lavoro corrente. Per impostazione predefinita, corrisponde alla directory del repository."
+  "loc.input.help.cwd": "Directory di lavoro corrente. Per impostazione predefinita, corrisponde alla directory del repository.",
+  "loc.messages.PodReturnCode": "Il comando pod è stato terminato. Codice restituito: %d",
+  "loc.messages.PodFailed": "Il comando pod non è riuscito. Errore: %s",
+  "loc.messages.CocoaPodsNotFound": "Il comando pod non è stato trovato. Installare Cocoapods nel computer di compilazione (https://cocoapods.org)"
 }

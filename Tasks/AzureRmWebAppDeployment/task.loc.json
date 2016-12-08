@@ -11,12 +11,21 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 2,
-    "Minor": 1,
-    "Patch": 9
+    "Major": 3,
+    "Minor": 0,
+    "Patch": 0
   },
-  "minimumAgentVersion": "1.102.0",
+  "editorHints": {
+    "preview": "true"
+  },
+  "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
+  "minimumAgentVersion": "2.104.1",
   "groups": [
+    {
+      "name": "FileTransformsAndVariableSubstitution",
+      "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
+      "isExpanded": false
+    },
     {
       "name": "AdditionalDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
@@ -106,6 +115,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.WebAppUri"
     },
     {
+      "name": "TakeAppOfflineFlag",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.TakeAppOfflineFlag",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "AdditionalDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
+    },
+    {
       "name": "UseWebDeploy",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.UseWebDeploy",
@@ -165,13 +183,31 @@
       "helpMarkDown": "ms-resource:loc.input.help.RenameFilesFlag"
     },
     {
-      "name": "TakeAppOfflineFlag",
+      "name": "XmlTransformation",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.TakeAppOfflineFlag",
-      "defaultValue": "false",
+      "label": "ms-resource:loc.input.label.XmlTransformation",
       "required": false,
-      "groupName": "AdditionalDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
+      "defaultValue": false,
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": "ms-resource:loc.input.help.XmlTransformation"
+    },
+    {
+      "name": "XmlVariableSubstitution",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.XmlVariableSubstitution",
+      "required": false,
+      "defaultValue": false,
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": "ms-resource:loc.input.help.XmlVariableSubstitution"
+    },
+    {
+      "name": "JSONFiles",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.JSONFiles",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": "ms-resource:loc.input.help.JSONFiles"
     }
   ],
   "dataSourceBindings": [
@@ -208,10 +244,12 @@
   "messages": {
     "Invalidwebapppackageorfolderpathprovided": "ms-resource:loc.messages.Invalidwebapppackageorfolderpathprovided",
     "SetParamFilenotfound0": "ms-resource:loc.messages.SetParamFilenotfound0",
+    "XDTTransformationsappliedsuccessfully": "ms-resource:loc.messages.XDTTransformationsappliedsuccessfully",
     "GotconnectiondetailsforazureRMWebApp0": "ms-resource:loc.messages.GotconnectiondetailsforazureRMWebApp0",
     "ErrorNoSuchDeployingMethodExists": "ms-resource:loc.messages.ErrorNoSuchDeployingMethodExists",
     "UnabletoretrieveconnectiondetailsforazureRMWebApp": "ms-resource:loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp",
     "UnabletoretrieveWebAppID": "ms-resource:loc.messages.UnabletoretrieveWebAppID",
+    "CouldnotfetchacccesstokenforAzureStatusCode": "ms-resource:loc.messages.CouldnotfetchacccesstokenforAzureStatusCode",
     "Successfullyupdateddeploymenthistory": "ms-resource:loc.messages.Successfullyupdateddeploymenthistory",
     "Failedtoupdatedeploymenthistory": "ms-resource:loc.messages.Failedtoupdatedeploymenthistory",
     "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "ms-resource:loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite",
@@ -222,14 +260,10 @@
     "WebappsuccessfullypublishedatUrl0": "ms-resource:loc.messages.WebappsuccessfullypublishedatUrl0",
     "Failedtodeploywebsite": "ms-resource:loc.messages.Failedtodeploywebsite",
     "Runningcommand": "ms-resource:loc.messages.Runningcommand",
-    "ConstructedmsDeploycomamndlinearguments": "ms-resource:loc.messages.ConstructedmsDeploycomamndlinearguments",
-    "Isparameterfilepresentinwebpackage0": "ms-resource:loc.messages.Isparameterfilepresentinwebpackage0",
     "Deployingwebapplicationatvirtualpathandphysicalpath": "ms-resource:loc.messages.Deployingwebapplicationatvirtualpathandphysicalpath",
     "Successfullydeployedpackageusingkuduserviceat": "ms-resource:loc.messages.Successfullydeployedpackageusingkuduserviceat",
     "Failedtodeploywebapppackageusingkuduservice": "ms-resource:loc.messages.Failedtodeploywebapppackageusingkuduservice",
     "Unabletodeploywebappresponsecode": "ms-resource:loc.messages.Unabletodeploywebappresponsecode",
-    "Compressedfolderintozip": "ms-resource:loc.messages.Compressedfolderintozip",
-    "Initiateddeploymentviakuduserviceforwebapppackage": "ms-resource:loc.messages.Initiateddeploymentviakuduserviceforwebapppackage",
     "MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "ms-resource:loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform",
     "UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove": "ms-resource:loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove",
     "UnabletofindthelocationofMSDeployfromregistryonmachineError": "ms-resource:loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError",
@@ -239,18 +273,12 @@
     "Trytodeploywebappagainwithrenamefileoptionselected": "ms-resource:loc.messages.Trytodeploywebappagainwithrenamefileoptionselected",
     "NOJSONfilematchedwithspecificpattern": "ms-resource:loc.messages.NOJSONfilematchedwithspecificpattern",
     "JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "ms-resource:loc.messages.JSONvariablesubstitutioncanonlybeappliedforJSONfiles",
-    "Unabletofindnodewithtaginprovidedxmlfile": "ms-resource:loc.messages.Unabletofindnodewithtaginprovidedxmlfile",
     "Configfiledoesntexists": "ms-resource:loc.messages.Configfiledoesntexists",
-    "Providednodeisemptyorcomment": "ms-resource:loc.messages.Providednodeisemptyorcomment",
-    "Configfileupdated": "ms-resource:loc.messages.Configfileupdated",
     "Failedtowritetoconfigfilewitherror": "ms-resource:loc.messages.Failedtowritetoconfigfilewitherror",
-    "Erroroccurredwhileprocessingxmlnode": "ms-resource:loc.messages.Erroroccurredwhileprocessingxmlnode",
-    "Processingsubstitutionforxmlnode": "ms-resource:loc.messages.Processingsubstitutionforxmlnode",
     "AppOfflineModeenabled": "ms-resource:loc.messages.AppOfflineModeenabled",
     "Failedtoenableappofflinemode": "ms-resource:loc.messages.Failedtoenableappofflinemode",
     "AppOflineModedisabled": "ms-resource:loc.messages.AppOflineModedisabled",
     "FailedtodisableAppOfflineMode": "ms-resource:loc.messages.FailedtodisableAppOfflineMode",
-    "Initiatedvariablesubstitutioninconfigfile": "ms-resource:loc.messages.Initiatedvariablesubstitutioninconfigfile",
     "CannotPerformXdtTransformationOnNonWindowsPlatform": "ms-resource:loc.messages.CannotPerformXdtTransformationOnNonWindowsPlatform",
     "XdtTransformationErrorWhileTransforming": "ms-resource:loc.messages.XdtTransformationErrorWhileTransforming",
     "PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "ms-resource:loc.messages.PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent",

@@ -778,7 +778,7 @@ var getRefs = function () {
     var branch;
     if (process.env.TF_BUILD) {
         // during CI agent checks out a commit, not a branch.
-        // $(build.sourceBranch) indicates the branch name, e.g. refs/heads/releases/m108
+        // $(build.sourceBranch) indicates the branch name, e.g. releases/m108
         branch = process.env.BUILD_SOURCEBRANCH;
     }
     else {
@@ -791,7 +791,7 @@ var getRefs = function () {
     assert(branch, 'branch');
     var commit = run('git rev-parse --short=8 HEAD', /*inheritStreams*/false, /*noHeader*/true);
     var release;
-    if (branch.match(/^refs\/heads\/releases\/m[0-9]+$/)) {
+    if (branch.match(/^(refs\/heads\/)?releases\/m[0-9]+$/)) {
         release = parseInt(branch.split('/').pop().substr(1));
     }
 

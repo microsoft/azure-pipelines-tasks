@@ -25,7 +25,7 @@
   "loc.messages.CleanedUpSemaphoreFile0": "成功清理信号灯文件“{0}”。",
   "loc.messages.CleanUpSemaphoreFile0Error1": "无法清理现有信号灯文件“{0}”。{1}",
   "loc.messages.Error0AccessingSemaphoreFile1Retrying2Seconds": "访问信号灯文件“{1}”时出现错误“{0}”。将在 {2:N0} 秒内重试。",
-  "loc.messages.FailedToLoadDbghelpDllFrom0ErrorCode1": "Failed to load dbghelp.dll from '{0}' with error code '{1}'.",
+  "loc.messages.FailedToLoadDbghelpDllFrom0ErrorCode1": "从“{0}”加载 dbghelp.dll 失败，错误代码为“{1}”。",
   "loc.messages.Found0Files": "已找到 {0:N0} 个文件。",
   "loc.messages.FreeLibraryDbghelpDllError0": "未能释放库 dbghelp.dll。错误代码“{0}”。",
   "loc.messages.NoFilesForIndexing": "未选择要编制索引的文件。",

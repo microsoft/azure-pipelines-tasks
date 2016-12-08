@@ -250,6 +250,30 @@ describe('VsTest Suite', function () {
             });
     })
 
+    it('Vstest task when vstest is set to ignore test failures', (done) => {
+
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile2 /source/dir/someFile1', "/logger:trx"].join(" ");
+        setResponseFile('vstestSucceedsOnIgnoreFailure.json');
+
+        let tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testAssemblyVer2', '/source/dir/some/*pattern');
+        tr.setInput('vstestLocationMethod', 'version');
+        tr.setInput('vsTestVersion', '14.0');
+
+        tr.run()
+            .then(() => {
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should have not written to stderr. error: ' + tr.stderr);
+                assert(!tr.failed, 'task should not have failed');
+                assert(tr.ran(vstestCmd), 'should have run vstest');
+                assert(tr.stdout.search(/##vso\[results.publish/) < 0, 'should not have published test results.');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+
     it('Vstest task when vstest of specified version is not found', (done) => {
 
         let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx"].join(" ");

@@ -12,5 +12,7 @@
   "loc.input.label.outFile": "Percorso del file decrittografato",
   "loc.input.help.outFile": "Nome file facoltativo del file decrittografato. L'impostazione predefinita è il nome del file crittografato con un'estensione \"out\"",
   "loc.input.label.cwd": "Directory di lavoro",
-  "loc.input.help.cwd": "Directory di lavoro per la decrittografia. L'impostazione predefinita è la radice del repository."
+  "loc.input.help.cwd": "Directory di lavoro per la decrittografia. L'impostazione predefinita è la radice del repository.",
+  "loc.messages.OpenSSLReturnCode": "Il comando openssl è stato terminato. Codice restituito: %d",
+  "loc.messages.OpenSSLFailed": "Il comando openssl non è riuscito. Errore: %s"
 }

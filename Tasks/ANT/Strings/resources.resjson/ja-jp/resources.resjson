@@ -1,10 +1,9 @@
 {
   "loc.friendlyName": "Ant",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613718)",
+  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613718)",
   "loc.description": "Apache Ant を使用してビルドします",
   "loc.instanceNameFormat": "Ant $(options) $(antBuildFile)",
   "loc.group.displayName.junitTestResults": "JUnit のテスト結果",
-  "loc.group.displayName.codeCoverage": "コード カバレッジ",
   "loc.group.displayName.advanced": "詳細設定",
   "loc.input.label.antBuildFile": "Ant ビルド ファイル",
   "loc.input.help.antBuildFile": "リポジトリのルートから Ant のビルド ファイルへの相対パス。",
@@ -18,14 +17,6 @@
   "loc.input.help.testResultsFiles": "テスト結果ファイルのパス。ワイルドカードを使用できます。たとえば、名前が TEST- で始まるすべての XML ファイルの場合は `**/TEST-*.xml` です。",
   "loc.input.label.testRunTitle": "テスト実行のタイトル",
   "loc.input.help.testRunTitle": "テストの実行の名前を指定します。",
-  "loc.input.label.codeCoverageTool": "コード カバレッジ ツール",
-  "loc.input.help.codeCoverageTool": "コード カバレッジ ツールを選びます。オンプレミスのエージェントのサポートについては、以下の `詳細` リンクをご覧ください。",
-  "loc.input.label.classFilesDirectories": "クラス ファイル ディレクトリ",
-  "loc.input.help.classFilesDirectories": "クラス ファイルやアーカイブ ファイル (JAR、WAR など) を格納するディレクトリのパス (Ant ビルド ファイルから見た相対パス) のコンマ区切り一覧。コード カバレッジはこれらのディレクトリ内のクラス ファイルに関して報告されます。たとえば、target/classes,target/testClasses と指定します。",
-  "loc.input.label.classFilter": "クラス包含/除外フィルター",
-  "loc.input.help.classFilter": "コード カバレッジの収集にクラスを含めたり除いたりするためのフィルターのコンマ区切り一覧。たとえば、+:com.*,+:org.*,-:my.app*.* と指定します。",
-  "loc.input.label.srcDirectories": "ソース ファイル ディレクトリ",
-  "loc.input.help.srcDirectories": "ソース コード ディレクトリのパス (Ant ビルド ファイルから見た相対パス) のコンマ区切り一覧。コード カバレッジ レポートはこれらを使用してソース コードをハイライトします。たとえば、src/java,src/Test と指定します。",
   "loc.input.label.antHomeUserInputPath": "ANT_HOME パスの設定",
   "loc.input.help.antHomeUserInputPath": "設定されると、指定したパスの既存のあらゆる ANT_HOME 環境変数を上書きします。",
   "loc.input.label.javaHomeSelection": "次の条件で JAVA_HOME を設定します",
@@ -35,5 +26,8 @@
   "loc.input.label.jdkUserInputPath": "JDK パス",
   "loc.input.help.jdkUserInputPath": "指定したパスに JAVA_HOME を設定します。",
   "loc.input.label.jdkArchitecture": "JDK アーキテクチャ",
-  "loc.input.help.jdkArchitecture": "(省略可能) JDK のアーキテクチャ (x86、x64) を指定します。"
+  "loc.input.help.jdkArchitecture": "(省略可能) JDK のアーキテクチャ (x86、x64) を指定します。",
+  "loc.messages.LocateJVMBasedOnVersionAndArch": "Java %s %s の JAVA_HOME を検索する",
+  "loc.messages.FailedToLocateSpecifiedJVM": "指定した JDK バージョンが見つかりませんでした。環境変数 '%s' が存在し、対応する JDK の場所に設定されていることをご確認ください。",
+  "loc.messages.DiscontinueAntCodeCoverage": "Ant プロジェクト向けの自動コード カバレッジ レポート生成のサポートを中止します。詳細については、https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/ANT/README.md をご覧ください。"
 }
