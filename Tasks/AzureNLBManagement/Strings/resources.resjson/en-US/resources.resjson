@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Network Load Balancer (Preview)",
-  "loc.helpMarkDown": "Replace with markdown to show in help",
+  "loc.helpMarkDown": "[More Information](<HelpLinkHere>)",
   "loc.description": "Connect/Disconnect an Azure virtual machine's network interface to a Load Balancer's backend address pool",
   "loc.instanceNameFormat": "Azure Network Load Balancer: $(LoadBalancer) - $(Action)",
   "loc.input.label.ConnectedServiceName": "AzureRM Subscription",

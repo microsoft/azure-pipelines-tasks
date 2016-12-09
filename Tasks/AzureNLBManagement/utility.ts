@@ -6,7 +6,7 @@ export function getMacAddress(): string[] {
 	var networkInterfaces = os.networkInterfaces();
 	Object.keys(networkInterfaces).forEach( (interfaceName) => {
 		networkInterfaces[interfaceName].forEach( (interFace) => {
-			if (interFace.family !== 'IPv4' || interFace.internal !== false) {
+			if (interFace.internal) {
       			return;
     		}
     		macAddress.push(interFace.mac.toUpperCase().replace(/:/g, "-"));
