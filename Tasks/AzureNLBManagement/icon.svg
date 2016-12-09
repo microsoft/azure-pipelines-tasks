@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 20.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+<g>
+	<path style="fill:#90C23E;" d="M222.4,498.1L13.9,289.6c-18.5-18.5-18.5-48.6,0-67.1L222.4,13.9c18.5-18.5,48.6-18.5,67.1,0
+		l208.6,208.6c18.5,18.5,18.5,48.6,0,67.1L289.6,498.1C271,516.6,241,516.6,222.4,498.1z"/>
+	<g>
+		<g>
+			<rect x="239.7" y="121.3" style="fill:#FFFFFF;" width="32.7" height="287"/>
+		</g>
+		<g>
+			<g>
+				<polygon style="fill:#FFFFFF;" points="319.5,129.8 192.5,129.8 256,66.3 				"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				<circle style="fill:#FFFFFF;" cx="256" cy="406.4" r="39.3"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<rect x="121.3" y="239.7" style="fill:#FFFFFF;" width="269.4" height="32.7"/>
+		</g>
+		<g>
+			<g>
+				<polygon style="fill:#FFFFFF;" points="129.8,192.5 129.8,319.5 66.3,256 				"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				<polygon style="fill:#FFFFFF;" points="382.2,192.5 382.2,319.5 445.7,256 				"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<circle style="fill:#77C0DF;" cx="256" cy="256" r="41.2"/>
+		<path style="fill:#FFFFFF;" d="M256,191.4c-35.6,0-64.6,29-64.6,64.6c0,35.6,29,64.6,64.6,64.6s64.6-29,64.6-64.6
+			C320.6,220.4,291.6,191.4,256,191.4z M256,297.2c-22.8,0-41.2-18.5-41.2-41.2c0-22.8,18.5-41.2,41.2-41.2
+			c22.8,0,41.2,18.5,41.2,41.2C297.2,278.8,278.8,297.2,256,297.2z"/>
+	</g>
+</g>
+</svg>
