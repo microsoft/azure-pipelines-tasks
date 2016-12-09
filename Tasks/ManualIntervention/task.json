@@ -37,7 +37,7 @@
             "label": "Notify users",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Send a manual intervention pending email to specific users (or groups). Only users with Manage deployment permission can act on a manual intervention."
+            "helpMarkDown": "Send a manual intervention pending email to specific users (or groups). Only users with manage deployment permission can act on a manual intervention."
         }
     ],
     "instanceNameFormat": "Manual Intervention",
