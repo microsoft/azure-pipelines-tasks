@@ -211,7 +211,7 @@
   "sourceDefinitions": [
     {
       "target": "testPlan",
-      "endpoint": "/$(system.teamProject)/_apis/test/plans?api-version=1.0",
+      "endpoint": "/$(system.teamProject)/_apis/test/plans?api-version=3.0-preview.2",
       "selector": "jsonpath:$.value[*].name",
       "keySelector": "jsonpath:$.value[*].id",
       "authKey": "tfs:teamfoundation"
@@ -225,7 +225,7 @@
     },
     {
       "target": "testSuite",
-      "endpoint": "/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites?$asTreeView=true&api-version=2.0-preview",
+      "endpoint": "/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites?$asTreeView=true&api-version=3.0-preview.2",
       "selector": "jsonpath:$.value[*]",
       "authKey": "tfs:teamfoundation"
     }
