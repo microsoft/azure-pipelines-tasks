@@ -1,13 +1,9 @@
 /// <reference path="../../../../definitions/vsts-task-lib.d.ts" />
-
 import Q = require('q');
 
 import tl = require('vsts-task-lib/task');
-import {TaskResult} from 'vsts-task-lib/task';
-
-import {SonarQubeEndpoint} from './endpoint';
-import sqCommon = require('./common');
-import {ISonarQubeServer} from  './server';
+import { TaskResult } from 'vsts-task-lib/task';
+import { ISonarQubeServer } from  './server';
 
 /*
  SonarQube runs are represented in the API in two stages: tasks and analyses. The build system submits a task,
@@ -21,19 +17,18 @@ import {ISonarQubeServer} from  './server';
  * The metrics methods and data for a given build.
  */
 export class SonarQubeMetrics {
+    private server: ISonarQubeServer;
+    private taskId: string;
 
-    private server:ISonarQubeServer;
-    private taskId:string;
-
-    private timeout:number;
-    private delay:number;
+    private timeout: number;
+    private delay: number;
 
     // cached data to speed up operations
-    private analysisComplete:boolean = false;
-    private analysisId:string = null;
-    private taskDetails:any = null;
-    private analysisDetails:any = null;
-    private measurementUnits:SonarQubeMeasurementUnit[] = null;
+    private analysisComplete: boolean = false;
+    private analysisId: string = null;
+    private taskDetails: any = null;
+    private analysisDetails: any = null;
+    private measurementUnits: SonarQubeMeasurementUnit[] = null;
 
     /**
      * Construct a new SonarQubeMetrics instance with a specified SonarQubeServer and task ID.
@@ -42,14 +37,14 @@ export class SonarQubeMetrics {
      * @param timeout (optional) Time, in seconds, to wait for the analysis job to finish before returning the promise as false.
      * @param delay   (optional) Time, in seconds, to wait between polling attempts. Warning: Does not also wait for previous request to finish.
      */
-    constructor(server:ISonarQubeServer, taskId:string, timeout?:number, delay?:number) {
+    constructor(server: ISonarQubeServer, taskId: string, timeout?: number, delay?: number) {
         this.server = server;
         this.taskId = taskId;
 
-        if (timeout == undefined) {
+        if (timeout === undefined) {
             timeout = 300;
         }
-        if (delay == undefined) {
+        if (delay === undefined) {
             delay = 1;
         }
         this.timeout = timeout;
@@ -61,7 +56,7 @@ export class SonarQubeMetrics {
      * @param analysisDetails A JSON object representation of the analysis
      * @returns String representing the result of the project analysis
      */
-    public static getQualityGateStatus(analysisDetails:any):string {
+    public static getQualityGateStatus(analysisDetails: any): string {
         return analysisDetails.projectStatus.status;
     }
 
@@ -69,16 +64,16 @@ export class SonarQubeMetrics {
      * Returns true if the quality gate has failed.
      * @returns {Promise<boolean>} True if the quality gate has failed, false if the quality gate passed or is warning.
      */
-    public static hasQualityGateFailed(qualityGateStatus:string): boolean {
-        return qualityGateStatus.toUpperCase() == 'ERROR';
+    public static hasQualityGateFailed(qualityGateStatus: string): boolean {
+        return qualityGateStatus.toUpperCase() === 'ERROR';
     }
 
     /**
      * Returns true if the quality gate has warned.
      * @returns {Promise<boolean>} True if the quality gate has warned, false if the quality gate passed or failed.
      */
-    public static hasQualityGateWarned(qualityGateStatus:string): boolean {
-        return qualityGateStatus.toUpperCase() == 'WARN';
+    public static hasQualityGateWarned(qualityGateStatus: string): boolean {
+        return qualityGateStatus.toUpperCase() === 'WARN';
     }
 
     /**
@@ -86,13 +81,13 @@ export class SonarQubeMetrics {
      * @param analysisDetails JSON-decoded object representing the analysis details
      * @returns {SonarQubeFailureCondition[]} Array of violated failure conditions
      */
-    public static getFailedConditions(analysisDetails:any):SonarQubeFailureCondition[] {
-        var result:SonarQubeFailureCondition[] = [];
-        analysisDetails.projectStatus.conditions.forEach((condition:any) => {
-            var sqCondition = condition as SonarQubeFailureCondition;
+    public static getFailedConditions(analysisDetails: any): SonarQubeFailureCondition[] {
+        let result: SonarQubeFailureCondition[] = [];
+        analysisDetails.projectStatus.conditions.forEach((condition: any) => {
+            let sqCondition: SonarQubeFailureCondition = condition as SonarQubeFailureCondition;
 
             // Only add the condition if they caused the quality gate to warn or fail, otherwise skip it
-            if (sqCondition.status.toUpperCase() == 'WARN' || sqCondition.status.toUpperCase() == 'ERROR') {
+            if (sqCondition.status.toUpperCase() === 'WARN' || sqCondition.status.toUpperCase() === 'ERROR') {
                 result.push(sqCondition);
             }
         });
@@ -106,14 +101,14 @@ export class SonarQubeMetrics {
      *     If not specified, cached ID will be used or analysisId will be fetched
      * @returns JSON object representation of the analysis details
      */
-    public fetchAnalysisDetails(analysisId?:string):Q.Promise<Object> {
+    public fetchAnalysisDetails(analysisId?: string): Q.Promise<Object> {
         // Use the cache if available
-        if (!(this.analysisDetails == undefined || this.analysisDetails == null)) {
+        if (!this.analysisDetails) {
             return Q.when(this.analysisDetails);
         }
 
         // If analysisId was not given, get it (either from cache or live)
-        if (analysisId == undefined || analysisId == null) {
+        if (!analysisId) {
             return this.fetchAnalysisId()
                 .then((analysisId:string) => {
                     return this.fetchAnalysisDetails(analysisId);
@@ -138,7 +133,6 @@ export class SonarQubeMetrics {
      * @returns {Promise<string>} The quality gate status, as reported by the SonarQube server.
      */
     public fetchQualityGateStatus(): Q.Promise<string> {
-
         tl.debug(`[SQ] Getting the quality gate status `);
 
         if (SonarQubeMetrics.isCached(this.analysisDetails)) {
@@ -175,7 +169,7 @@ export class SonarQubeMetrics {
      * For all the units used by the server, this method returns the key and the friendly name, as well as the type and the id
      * @returns {Promise<Object>} A list of all units used by the SQ server, represented by objects with fields: id, key, type, name. Rejects if server response was invalid.
      */
-    public fetchMeasurementDetails():Q.Promise<SonarQubeMeasurementUnit[]> {
+    public fetchMeasurementDetails(): Q.Promise<SonarQubeMeasurementUnit[]> {
         if (SonarQubeMetrics.isCached(this.measurementUnits)) {
             tl.debug(`[SQ] Measurement units cache hit (cached array length ${this.measurementUnits.length})`);
             return Q.when(this.measurementUnits);
@@ -184,14 +178,12 @@ export class SonarQubeMetrics {
         return this.server.invokeApiCall('/api/metrics/search?ps=500&f=name')
             .then((response:any) => {
                 return Q.Promise<SonarQubeMeasurementUnit[]>((resolve, reject) => {
-                    if ((response == undefined || response == null) ||
-                        (response.metrics == undefined || response.metrics == null)) {
+                    if (!response || !response.metrics) {
                         reject(new Error(tl.loc('sqAnalysis_NoUnitsFound')));
                     } else {
                         this.measurementUnits = response.metrics;
                         resolve(Q.when(this.measurementUnits));
                     }
-
                 });
             });
     }
@@ -202,7 +194,7 @@ export class SonarQubeMetrics {
      * @param delay      (optional) Time, in seconds, to wait between polling attempts. Warning: Does not also wait for previous request to finish.
      * @returns A promise resolving true if the task finished or rejecting if there was an error or the timeout was exceeded.
      */
-    private waitForTaskCompletion(timeout?:number, delay?:number):Q.Promise<boolean> {
+    private waitForTaskCompletion(timeout?: number, delay?: number): Q.Promise<boolean> {
         tl.debug(`[SQ] Waiting for SonarQube analysis to complete.`);
 
         // If we have previously waited, then we can immediately return true.
@@ -213,7 +205,7 @@ export class SonarQubeMetrics {
 
         // Call isTaskComplete immediately
         return this.isTaskComplete()
-            .then((isDone:boolean) => {
+            .then((isDone: boolean) => {
                 // If done on the first try, return fast
                 if (isDone) {
                     return isDone;
@@ -222,7 +214,7 @@ export class SonarQubeMetrics {
                 // Otherwise, setup the delayed/repeating wait task
                 return this.setupTaskCompleteWait(timeout, delay);
             })
-            .then((isDone:boolean) => { // This block required to avoid Promise<Promise<boolean>> return type
+            .then((isDone: boolean) => { // This block required to avoid Promise<Promise<boolean>> return type
                 return isDone;
             });
     }
@@ -234,32 +226,34 @@ export class SonarQubeMetrics {
      * @param delay      (optional) Time, in seconds, to wait between polling attempts. Warning: Does not also wait for previous request to finish.
      * @returns A promise resolving true if the task finished or rejecting if there was an error or the timeout was exceeded.
      */
-    private setupTaskCompleteWait(timeout?:number, delay?:number):Q.Promise<boolean> {
-        var defer = Q.defer<boolean>();
+    private setupTaskCompleteWait(timeout?: number, delay?: number): Q.Promise<boolean> {
+        let defer = Q.defer<boolean>();
 
         // Default values
-        var timeout = timeout || this.timeout;
-        var delay = delay || this.delay;// Every [delay] seconds, call isTaskComplete()
+        let finalTimeout: number = timeout || this.timeout;
+        let finalDelay: number = delay || this.delay; // Every [delay] seconds, call isTaskComplete()
 
-        var intervalTask = setInterval(() => {
+        /* tslint:disable:align:arguments */
+        let intervalTask = setInterval(() => {
             this.isTaskComplete()
-                .then((isDone:boolean) => {
+                .then((isDone: boolean) => {
                     if (isDone) {
                         defer.resolve(this.analysisComplete);
                     }
                 })
                 .fail((error) => {
                     defer.reject(error); // If anything goes wrong, reject
-                })
-        }, delay * 1000);
+                });
+        }, finalDelay * 1000);
 
-        // After [timeout] seconds, reject.
-        var timeoutTask = setTimeout(() => {
+        // After [finalTimeout] seconds, reject.
+        let timeoutTask = setTimeout(() => {
             if (!this.analysisComplete) {
-                tl.debug(`Did not receive a success response before the timeout (${timeout}s) expired.`);
-                defer.reject(new Error(tl.loc('sqAnalysis_AnalysisTimeout', timeout)));
+                tl.debug(`Did not receive a success response before the timeout (${finalTimeout}s) expired.`);
+                defer.reject(new Error(tl.loc('sqAnalysis_AnalysisTimeout', finalTimeout)));
             }
-        }, timeout * 1000);
+        }, finalTimeout * 1000);
+        /* tslint:enable:align:arguments */
 
         return defer.promise
             .fin(() => {
@@ -273,18 +267,18 @@ export class SonarQubeMetrics {
      * Queries the server to determine if the task has finished, i.e. if the quality gate has been evaluated
      * @returns A promise, resolving true if the task has finished and false if it has not. Rejects on error.
      */
-    private isTaskComplete():Q.Promise<boolean> {
+    private isTaskComplete(): Q.Promise<boolean> {
         return this.fetchTaskDetails()
-            .then((responseJson:any) => {
-                var taskStatus:string = responseJson.task.status;
+            .then((responseJson: any) => {
+                let taskStatus: string = responseJson.task.status;
                 tl.debug(`[SQ] Analysis status: ${taskStatus} `);
 
-                if (taskStatus.toUpperCase() == 'SUCCESS') {
+                if (taskStatus.toUpperCase() === 'SUCCESS') {
                     tl.debug(`[SQ] Analysis complete`);
                     return true;
                 }
 
-                if (taskStatus.toUpperCase() == 'FAILED') {
+                if (taskStatus.toUpperCase() === 'FAILED') {
                     tl.debug(`[SQ] Analysis failed (fatal error)`);
                 }
 
@@ -297,8 +291,8 @@ export class SonarQubeMetrics {
      * Waits for analysis task to complete, if necessary.
      * @returns A promise, resolving with a string representing the analysis ID. Rejects on error.
      */
-    private fetchAnalysisId():Q.Promise<string> {
-        if (this.analysisId != undefined && this.analysisId != null) {
+    private fetchAnalysisId(): Q.Promise<string> {
+        if (this.analysisId) {
             return Q.when(this.analysisId);
         }
 
@@ -317,7 +311,7 @@ export class SonarQubeMetrics {
      * @param analysisId String representing the ID of the analysis to fetch the status of
      * @returns Promise resolving to a string representing the result of the project analysis
      */
-    private fetchAnalysisStatus(analysisId:string):Q.Promise<string> {
+    private fetchAnalysisStatus(analysisId: string): Q.Promise<string> {
         return this.fetchAnalysisDetails(analysisId)
             .then((analysisDetails:any) => {
                 return SonarQubeMetrics.getQualityGateStatus(analysisDetails);
@@ -329,28 +323,27 @@ export class SonarQubeMetrics {
      * Returns from the cache if analysis has completed.
      * @returns JSON object representation of the task details
      */
-    private fetchTaskDetails():Q.Promise<Object> {
+    private fetchTaskDetails(): Q.Promise<Object> {
         if (this.taskDetails != null) {
             return Q.when(this.taskDetails);
         }
 
         return this.server.invokeApiCall('/api/ce/task?id=' + this.taskId)
-            .then((responseJsonObject:any) => {
+            .then((responseJsonObject: any) => {
                 if (!responseJsonObject || !responseJsonObject.task) {
                     return Q.reject(new Error(`Invalid response when requesting task details for ID ${this.taskId}`));
                 }
 
-                var taskStatus:string = responseJsonObject.task.status;
-
+                let taskStatus: string = responseJsonObject.task.status;
                 // caching
-                if (taskStatus.toUpperCase() == 'SUCCESS' || taskStatus.toUpperCase() == 'FAILED') {
+                if (taskStatus.toUpperCase() === 'SUCCESS' || taskStatus.toUpperCase() === 'FAILED') {
                     // task is complete, set the cache (there should be no further state changes)
                     this.analysisComplete = true;
                     this.taskDetails = responseJsonObject;
                 }
 
                 // if task failed, reject
-                if (taskStatus.toUpperCase() == 'FAILED') {
+                if (taskStatus.toUpperCase() === 'FAILED') {
                     return Q.reject(new Error(`Server returned FAILED status for task ${this.taskId}`));
                 }
 
@@ -363,7 +356,7 @@ export class SonarQubeMetrics {
 
                 tl.debug(`Could not fetch task details on ID ${this.taskId}`);
                 return Q.reject(new Error(tl.loc('sqCommon_InvalidResponseFromServer')));
-            })
+            });
     }
 
     /* Static helper methods */
@@ -373,7 +366,7 @@ export class SonarQubeMetrics {
      * @param taskDetails A JSON object representation of the task
      * @returns The analysis ID associated with the task
      */
-    private static getTaskAnalysisId(taskDetails:any):string {
+    private static getTaskAnalysisId(taskDetails: any): string {
         return taskDetails.task.analysisId;
     }
 
@@ -382,8 +375,8 @@ export class SonarQubeMetrics {
      * @param cachedVar
      * @returns {boolean}
      */
-    private static isCached(cachedVar:any):boolean {
-        return (!(cachedVar == undefined || cachedVar == null));
+    private static isCached(cachedVar: any): boolean {
+        return (!(cachedVar === undefined || cachedVar === null));
     }
 }
 
@@ -392,14 +385,12 @@ export class SonarQubeMetrics {
  * Each SonarQubeFailureCondition is a fully self-contained unit of information.
  */
 export class SonarQubeFailureCondition {
-    constructor(public status:string, public metricKey:string, public comparator:string, public warningThreshold:string, public errorThreshold:string, public actualValue:string) {
-    }
+    constructor(public status: string, public metricKey: string, public comparator: string, public warningThreshold: string, public errorThreshold: string, public actualValue:string) { }
 }
 
 /**
  * Simple data class to represent a measurement unit used by SonarQube (e.g. a line of code, a minute of work, a blocking issue)
  */
 export class SonarQubeMeasurementUnit {
-    constructor(public id:string, public key:string, public type:string, public name:string) {
-    }
+    constructor(public id: string, public key: string, public type: string, public name: string) { }
 }

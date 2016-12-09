@@ -1,16 +1,13 @@
-import {AnalysisResult} from './AnalysisResult'
-import {IAnalysisTool} from './IAnalysisTool'
-import {BuildOutput, BuildEngine} from './BuildOutput'
-import {ModuleOutput} from './ModuleOutput'
-import {ToolRunner} from 'vsts-task-lib/toolrunner';
+import { AnalysisResult } from './AnalysisResult';
+import { IAnalysisTool } from './IAnalysisTool';
+import { BuildOutput } from './BuildOutput';
+import { ModuleOutput } from './ModuleOutput';
+import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
 import path = require('path');
-import fs = require('fs');
 import glob = require('glob');
-import xml2js = require('xml2js');
 
 import tl = require('vsts-task-lib/task');
-
 
 /**
  * An abstract class that is the base for both configuring a build to use an analysis tool and 
@@ -21,10 +18,7 @@ import tl = require('vsts-task-lib/task');
  * @implements {IAnalysisTool}
  */
 export abstract class BaseTool implements IAnalysisTool {
-
-    constructor(public toolName: string, protected buildOutput: BuildOutput, private uiInputName: string) {
-
-    }
+    constructor(public toolName: string, protected buildOutput: BuildOutput, private uiInputName: string) { }
 
     /**
      * This method lets implementers specify where the reports are located
@@ -33,7 +27,7 @@ export abstract class BaseTool implements IAnalysisTool {
      * @abstract
      * @param {ModuleOutput} output
      */
-    protected abstract getBuildReportDir(output: ModuleOutput);
+    protected abstract getBuildReportDir(output: ModuleOutput): string;
 
     /**
      * Report parser that extracts the number of affected files and the number of violations from a report
@@ -54,19 +48,17 @@ export abstract class BaseTool implements IAnalysisTool {
     public abstract configureBuild(toolRunner: ToolRunner): ToolRunner;
 
     public processResults(): AnalysisResult[] {
-
         if (!this.isEnabled()) {
             tl.debug(`[CA] ${this.toolName} analysis is not enabled.`);
             return [];
         }
 
-        var results: AnalysisResult[] = [];
-        var outputs: ModuleOutput[] = this.buildOutput.findModuleOutputs();
+        let results: AnalysisResult[] = [];
+        let outputs: ModuleOutput[] = this.buildOutput.findModuleOutputs();
         tl.debug(`[CA] ${this.toolName} parser found ${outputs.length} possible modules to upload results from.`);
 
-        for (var output of outputs) {
-            var result = this.parseModuleOutput(output);
-
+        for (let output of outputs) {
+            let result = this.parseModuleOutput(output);
             if (result) {
                 results.push(result);
             }
@@ -80,13 +72,11 @@ export abstract class BaseTool implements IAnalysisTool {
     }
 
     protected findHtmlReport(xmlReport: string): string {
-
         // expecting to find an html report with the same name
-        var reportName = path.basename(xmlReport, '.xml');
-        var dirName = path.dirname(xmlReport);
+        let reportName: string = path.basename(xmlReport, '.xml');
+        let dirName: string = path.dirname(xmlReport);
 
-        var htmlReports = glob.sync(path.join(dirName, '**', reportName + '.html'));
-
+        let htmlReports: string[] = glob.sync(path.join(dirName, '**', reportName + '.html'));
         if (htmlReports.length > 0) {
             return htmlReports[0];
         }
@@ -95,49 +85,40 @@ export abstract class BaseTool implements IAnalysisTool {
     }
 
     private parseModuleOutput(output: ModuleOutput): AnalysisResult {
+        let reportDir: string = this.getBuildReportDir(output);
 
-        let reportDir = this.getBuildReportDir(output);
-        let xmlReports = glob.sync(path.join(reportDir, '*.xml'));
-
+        let xmlReports: string[] = glob.sync(path.join(reportDir, '*.xml'));
         if (xmlReports.length === 0) {
             tl.debug(`[CA] No ${this.toolName} reports found for the ${output.moduleName} module. Searched in ${reportDir}`);
             return null;
         }
 
-        tl.debug(`[CA] Found ${xmlReports.length} xml reports for module ${output.moduleName}`)
+        tl.debug(`[CA] Found ${xmlReports.length} xml reports for module ${output.moduleName}`);
         return this.buildAnalysisResultFromModule(xmlReports, output.moduleName);
     }
 
     private buildAnalysisResultFromModule(xmlReports: string[], moduleName: string): AnalysisResult {
-
-        let analysisResult: AnalysisResult = null;
         let fileCount: number = 0;
         let violationCount: number = 0;
         let artifacts: string[] = [];
 
-        for (var xmlReport of xmlReports) {
-
-            var result = this.parseXmlReport(xmlReport, moduleName);
+        for (let xmlReport of xmlReports) {
+            let result: [number, number] = this.parseXmlReport(xmlReport, moduleName);
 
             if (result && (result[0] !== 0)) {
-
                 violationCount += result[0];
                 fileCount += result[1];
                 artifacts.push(xmlReport);
-                var htmlReport = this.findHtmlReport(xmlReport);
 
+                let htmlReport: string = this.findHtmlReport(xmlReport);
                 if (htmlReport) {
                     artifacts.push(htmlReport);
                 }
-            }
-            else
-            {
+            } else {
                tl.debug(`[CA] ${this.toolName} report for module ${moduleName} was empty and will be ignored.`);
             }
-
         }
 
         return new AnalysisResult(this, moduleName, artifacts, violationCount, fileCount);
     }
-
 }
