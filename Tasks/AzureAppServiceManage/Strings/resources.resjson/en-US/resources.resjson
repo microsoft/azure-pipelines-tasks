@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Azure App Service Manage (PREVIEW)",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=831573)",
-  "loc.description": "Start, Stop, Restart or Slot swap an Azure App Service",
+  "loc.description": "Start, Stop, Restart or Slot swap for an Azure App Service",
   "loc.instanceNameFormat": "$(Action): $(WebAppName)",
   "loc.input.label.ConnectedServiceName": "AzureRM Subscription",
   "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription.",
