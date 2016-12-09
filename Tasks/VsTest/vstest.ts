@@ -36,7 +36,7 @@ try {
     var configuration: string = tl.getInput('configuration');
     var publishRunAttachments: string = tl.getInput('publishRunAttachments');
     var runInParallel: boolean = tl.getBoolInput('runInParallel');
-    var tiaEnabled: boolean = tl.getBoolInput('runOnlyImpactedTests');;
+    var tiaEnabled: boolean = tl.getBoolInput('runOnlyImpactedTests');
     var fileLevel = tl.getVariable('tia.filelevel');
     var tiaRebaseLimit: string = tl.getInput('runAllTestsAfterXBuilds');
     var sourcesDir = tl.getVariable('build.sourcesdirectory');
