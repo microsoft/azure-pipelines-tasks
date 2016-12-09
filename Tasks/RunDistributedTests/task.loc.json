@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 46
+    "Patch": 47
   },
   "demands": [],
   "minimumAgentVersion": "1.104.0",
@@ -211,21 +211,21 @@
   "sourceDefinitions": [
     {
       "target": "testPlan",
-      "endpoint": "/$(system.teamProject)/_apis/test/plans",
+      "endpoint": "/$(system.teamProject)/_apis/test/plans?api-version=1.0",
       "selector": "jsonpath:$.value[*].name",
       "keySelector": "jsonpath:$.value[*].id",
       "authKey": "tfs:teamfoundation"
     },
     {
       "target": "testConfiguration",
-      "endpoint": "/$(system.teamProject)/_apis/test/configurations",
+      "endpoint": "/$(system.teamProject)/_apis/test/configurations?api-version=3.0-preview.1",
       "selector": "jsonpath:$.value[*].name",
       "keySelector": "jsonpath:$.value[*].id",
       "authKey": "tfs:teamfoundation"
     },
     {
       "target": "testSuite",
-      "endpoint": "/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites?$asTreeView=true",
+      "endpoint": "/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites?$asTreeView=true&api-version=2.0-preview",
       "selector": "jsonpath:$.value[*]",
       "authKey": "tfs:teamfoundation"
     }
