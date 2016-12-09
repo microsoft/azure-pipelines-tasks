@@ -22,15 +22,15 @@
 	"minimumAgentVersion": "1.95.0",
 	"instanceNameFormat": "Azure Network Load Balancer: $(LoadBalancer) - $(Action)",
 	"inputs": [
-		{
+        {
             "name": "ConnectedServiceName",
             "type": "connectedService:AzureRM",
             "label": "AzureRM Subscription",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
-		}, 
-		{
+        }, 
+        {
             "name": "ResourceGroupName",
             "type": "pickList",
             "label": "Resource Group",
@@ -81,8 +81,8 @@
     "execution": {
 		"Node": {
 			"target": "nlbtask.js"
-		}
-	},
+        }
+    },
     "messages": {
         "CouldNotFetchNicDetails": "Could not fetch primary network interface configuration for the Azure Virtual Machine : %s",
         "ConnectingVMtoLB": "Connecting the Azure Virtual Machine to the Load Balancer - %s's backend pool.",
