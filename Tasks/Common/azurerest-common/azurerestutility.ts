@@ -297,6 +297,7 @@ export async function swapWebAppSlot(SPN, resourceGroupName: string, webAppName:
         }
     );
 
+    tl._writeLine(tl.loc('StartingSwapSlot',webAppName));
     httpObj.send('POST', url, body, headers, (error, response, body) => {
         if(error) {
             deferred.reject(error);
@@ -317,13 +318,13 @@ export async function startAppService(SPN, resourceGroupName: string, webAppName
     var deferred = Q.defer<any>();
     var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
                 '/providers/Microsoft.Web/sites/' + webAppName + "/start?" + azureApiVersion;
-    
-    tl.debug('Requesting to start App Service : ' + url);
+
     var accessToken = await getAuthorizationToken(SPN);
     var headers = {
         'Authorization': 'Bearer '+ accessToken
     };
-
+    
+    tl._writeLine(tl.loc('StartingAppService', webAppName));
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
             deferred.reject(error);
@@ -344,13 +345,13 @@ export async function stopAppService(SPN, resourceGroupName: string, webAppName:
     var deferred = Q.defer<any>();
     var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
                 '/providers/Microsoft.Web/sites/' + webAppName + "/stop?" + azureApiVersion;
-    
-    tl.debug('Requesting to stop App Service : ' + url);
+
     var accessToken = await getAuthorizationToken(SPN);
     var headers = {
         'Authorization': 'Bearer '+ accessToken
     };
 
+    tl._writeLine(tl.loc('StoppingAppService', webAppName));
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
             deferred.reject(error);
@@ -372,12 +373,12 @@ export async function restartAppService(SPN, resourceGroupName: string, webAppNa
     var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
                 '/providers/Microsoft.Web/sites/' + webAppName + "/restart?" + azureApiVersion + '&synchronous=true';
 
-    tl.debug('Requesting to restart App Service : ' + url);
     var accessToken = await getAuthorizationToken(SPN);
     var headers = {
         'Authorization': 'Bearer '+ accessToken
     };
 
+    tl._writeLine(tl.loc('RestartingAppService', webAppName));
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
             deferred.reject(error);

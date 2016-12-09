@@ -186,6 +186,7 @@
         "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING: Cannot update deployment statu. SCM endpoint is not enabled for this website.",
         "CouldnotfetchacccesstokenforAzureStatusCode": "Could not fetch acccess token for Azure App Service. StatusCode %s (%s)",
         "WebAppDoesntExist": "Webapp '%s' doesn't exist.",
-        "UnabletoretrieveWebAppID": "Unable to retrieve connection details for Azure App Service:'%s'. Status Code: %s"
+        "UnabletoretrieveWebAppID": "Unable to retrieve connection details for Azure App Service:'%s'. Status Code: %s",
+        "StartingSwapSlot": "Requesting swap slot for Web App : %s"
     }
 }

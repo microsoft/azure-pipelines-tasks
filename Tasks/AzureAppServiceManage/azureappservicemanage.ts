@@ -1,4 +1,3 @@
-import { cursorTo } from 'readline';
 import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import path = require('path');
@@ -51,17 +50,14 @@ async function run() {
         }
         switch(action) {
             case "Start Azure App Service": {
-                tl._writeLine(tl.loc('StartingAppService', webAppName));
                 tl._writeLine(await azureRmUtil.startAppService(endPoint, resourceGroupName, webAppName));
                 break;
             }
             case "Stop Azure App Service": {
-                tl._writeLine(tl.loc('StoppingAppService', webAppName));
                 tl._writeLine(await azureRmUtil.stopAppService(endPoint, resourceGroupName, webAppName));
                 break;
             }
             case "Restart Azure App Service": {
-                tl._writeLine(tl.loc('RestartingAppService', webAppName));
                 tl._writeLine(await azureRmUtil.restartAppService(endPoint, resourceGroupName, webAppName));
                 break;
             }
@@ -81,7 +77,8 @@ async function run() {
     var customMessage = {
         type: action
     }
-    if(tl.getInput('Action') === "Swap Slots") {
+    if(action === "Swap Slots") {
+        customMessage['type'] = 'SlotSwap'; // for Ibiza CD flow
         customMessage['sourceSlot'] = sourceSlot;
         customMessage['targetSlot'] = swapWithProduction ? "Production" : targetSlot;
         await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, true, sourceSlot, taskResult, customMessage);

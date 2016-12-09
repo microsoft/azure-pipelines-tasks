@@ -184,6 +184,7 @@
     "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "ms-resource:loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite",
     "CouldnotfetchacccesstokenforAzureStatusCode": "ms-resource:loc.messages.CouldnotfetchacccesstokenforAzureStatusCode",
     "WebAppDoesntExist": "ms-resource:loc.messages.WebAppDoesntExist",
-    "UnabletoretrieveWebAppID": "ms-resource:loc.messages.UnabletoretrieveWebAppID"
+    "UnabletoretrieveWebAppID": "ms-resource:loc.messages.UnabletoretrieveWebAppID",
+    "StartingSwapSlot": "ms-resource:loc.messages.StartingSwapSlot"
   }
 }
