@@ -36,9 +36,9 @@ try {
     var configuration: string = tl.getInput('configuration');
     var publishRunAttachments: string = tl.getInput('publishRunAttachments');
     var runInParallel: boolean = tl.getBoolInput('runInParallel');
-    var tiaEnabled: boolean = false;
+    var tiaEnabled: boolean = tl.getBoolInput('runOnlyImpactedTests');;
     var fileLevel = tl.getVariable('tia.filelevel');
-    var tiaRebaseLimit: string = '1';
+    var tiaRebaseLimit: string = tl.getInput('runAllTestsAfterXBuilds');
     var sourcesDir = tl.getVariable('build.sourcesdirectory');
     var runIdFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
     var baseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
