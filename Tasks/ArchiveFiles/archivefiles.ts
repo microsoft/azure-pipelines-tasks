@@ -128,7 +128,7 @@ function tarArchive(archive: string, compression: string, files: string[]) {
 function handleExecResult(execResult, archive) {
     if (execResult.code != tl.TaskResult.Succeeded) {
         tl.debug('execResult: ' + JSON.stringify(execResult));
-        failTask(tl.loc('HandleExec', archive, execResult.code, execResult.stdout, execResult.stderr, execResult.error));
+        failTask(tl.loc('ArchiveCreationFailedWithError', archive, execResult.code, execResult.stdout, execResult.stderr, execResult.error));
     }
 }
 
@@ -264,9 +264,9 @@ function doWork() {
                 try {
                     var stats: tl.FsStats = tl.stats(archiveFile);
                     if (stats.isFile()) {
-                        console.log(tl.loc('RemoveBefore', archiveFile));
+                        console.log(tl.loc('RemoveBeforeCreation', archiveFile));
                     } else {
-                        failTask(tl.loc('ArchiveFile', archiveFile));
+                        failTask(tl.loc('ArchiveFileExistsButNotAFile', archiveFile));
                     }
                 } catch (e) {
                     failTask(tl.loc('FailedArchiveFile', archiveFile, e));

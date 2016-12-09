@@ -104,10 +104,10 @@
     "messages": {
         "Filename": "files=%s",
         "TarExists": "Intermediate tar: %s already exists.  Attempting to add files to it.",
-        "RemoveBefore": "removing existing archive file before creation: %s",
+        "RemoveBeforeCreation": "removing existing archive file before creation: %s",
         "AlreadyExists": "Archive file: %s already exists.  Attempting to add files to it.",
-        "HandleExec": "Archive creation failed for archive file: %s \ncode: %d \nstdout: %s \nstderr: %s \nerror: %s;",
-        "ArchiveFile": "Specified archive file: %s already exists and is not a file.",
+        "ArchiveCreationFailedWithError": "Archive creation failed for archive file: %s \ncode: %d \nstdout: %s \nstderr: %s \nerror: %s;",
+        "ArchiveFileExistsButNotAFile": "Specified archive file: %s already exists and is not a file.",
         "FailedArchiveFile": "Specified archive file: %s can not be created because it can not be accessed: %s"
     }
 }
