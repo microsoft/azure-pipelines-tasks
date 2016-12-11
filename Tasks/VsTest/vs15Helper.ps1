@@ -378,4 +378,4 @@ namespace CapabilityHelpers.VisualStudio.Setup.Com
 }
 
 $instance = Get-VisualStudio_15_0
-Write-Host ([System.Management.Automation.PSSerializer]::Serialize($instance))
+Write-Host ([System.Management.Automation.PSSerializer]::Serialize($instance.Path))

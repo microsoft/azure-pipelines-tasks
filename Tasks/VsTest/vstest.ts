@@ -20,6 +20,15 @@ const TITestSettingsNameTag = "testSettings-5d76a195-1e43-4b90-a6ce-4ec3de87ed25
 const TITestSettingsIDTag = "5d76a195-1e43-4b90-a6ce-4ec3de87ed25";
 const TITestSettingsXmlnsTag = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010"
 
+class VSTestConsoleInfo {
+    version: number;
+    location: string;
+    constructor(version: number, location: string) {
+        this.version = version;
+        this.location = location;
+    }
+}
+
 try {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     var vsTestVersion: string = tl.getInput('vsTestVersion');
@@ -683,10 +692,10 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     }
     overrideTestRunParametersIfRequired(runSettingsFile)
         .then(function(overriddenSettingsFile) {
-            locateVSVersion()
-                .then(function(vstest) {
-                    let vsVersion = vstest[0];
-                    vstestLocation = vstest[1];
+            locateVSVersion(vsTestVersion)
+                .then(function(vsTestConsoleInfo) {
+                    let vsVersion = vsTestConsoleInfo.version;
+                    vstestLocation = vsTestConsoleInfo.location;
                     try {
                         let disableTIA = tl.getVariable("DisableTestImpactAnalysis");
                         if (disableTIA !== undefined && disableTIA.toLowerCase() === "true") {
@@ -1377,8 +1386,8 @@ function resetRunInParallel() {
 }
 
 
-function getLatestVSTestConsolePathFromRegistry(): Q.Promise<[number, string]> {
-    let deferred = Q.defer<[number,string]>();
+function getLatestVSTestConsolePathFromRegistry(): Q.Promise<VSTestConsoleInfo> {
+    let deferred = Q.defer<VSTestConsoleInfo>();
     var regPath = 'HKLM\\SOFTWARE\\Microsoft\\VisualStudio';
     regedit.list(regPath).on('data', (entry) => {
         let subkeys = entry.data.keys;
@@ -1386,7 +1395,7 @@ function getLatestVSTestConsolePathFromRegistry(): Q.Promise<[number, string]> {
         if (versions && versions.length > 0) {
             versions.sort((a, b) => a-b);
             let selectedVersion = versions[versions.length - 1];
-            deferred.resolve([selectedVersion, getVSTestLocation(selectedVersion)]);
+            deferred.resolve(new VSTestConsoleInfo(selectedVersion, getVSTestLocation(selectedVersion)));
             return deferred.promise;
         }
     });
@@ -1394,46 +1403,44 @@ function getLatestVSTestConsolePathFromRegistry(): Q.Promise<[number, string]> {
     return deferred.promise;
 }
 
-function getVSTestConsole15Path(): Q.Promise<string> {
+function getVSTestConsole15Path(): string {
     let powershellTool = tl.tool('powershell');
     let powershellArgs = ['-file', path.join(__dirname, 'vs15Helper.ps1')]
     powershellTool.arg(powershellArgs);
     let xml = powershellTool.execSync().stdout;
     let deferred = Q.defer<string>();
-    Q.nfcall(xml2js.parseString, xml).then((data) => {
-        try {
-            let vs15InstallDir = data['Objs']['S'][0];
-            let vstestconsolePath =  path.join(vs15InstallDir, 'Common7', 'IDE', 'CommonExtensions', 'Microsoft', 'TestWindow', 'vstest.console.exe');
-            deferred.resolve(vstestconsolePath);
-        } catch (e) {
-            deferred.resolve(null);
+    let vstestconsolePath:string = null;
+    xml2js.parseString(xml, (err, result) => {
+        if(result) {
+            try {
+                let vs15InstallDir = result['Objs']['S'][0];
+                vstestconsolePath = path.join(vs15InstallDir, 'Common7', 'IDE', 'CommonExtensions', 'Microsoft', 'TestWindow', 'vstest.console.exe');
+            } catch (e) {
+                vstestconsolePath = null;
+            }
         }
-    });
-    return deferred.promise;
+    })
+    return vstestconsolePath;
 }
 
 
-function locateVSVersion(): Q.Promise<[number, string]> {
-    var defer = Q.defer<[number, string]>();
-    let vsVersion: number = parseFloat(vsTestVersion);
+function locateVSVersion(version: string): Q.Promise<VSTestConsoleInfo> {
+    let deferred = Q.defer<VSTestConsoleInfo>();
+    let vsVersion: number = parseFloat(version);
     
     if (isNaN(vsVersion) || vsVersion == 15) {
         // latest
-        let vs15 = getVSTestConsole15Path();
-        vs15.then((vstestconsole15Path) => {
-            if (vstestconsole15Path) {
-                defer.resolve([15, vstestconsole15Path]);
-            } else {
-                // fallback
-                defer.resolve(getLatestVSTestConsolePathFromRegistry());
-            }
-        }).fail(e => {
-            defer.reject(e);
-        });
+        let vstestconsole15Path = getVSTestConsole15Path();
+        if (vstestconsole15Path) {
+            deferred.resolve(new VSTestConsoleInfo(15, vstestconsole15Path));
+        } else {
+            // fallback
+            return getLatestVSTestConsolePathFromRegistry();
+        }
     } else {
-        defer.resolve([vsVersion, getVSTestLocation(vsVersion)]);
+        deferred.resolve(new VSTestConsoleInfo(vsVersion, getVSTestLocation(vsVersion)));
     }
-    return defer.promise;
+    return deferred.promise;
 }
 
 function getFloatsFromStringArray(inputArray: string[]): number[] {
