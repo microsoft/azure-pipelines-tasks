@@ -2,7 +2,7 @@ import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import path = require('path');
 var azureRmUtil = require('azurerest-common/azurerestutility.js');
-var kuduLogUtil = require('azurerest-call/kududeploymentstatusutility.js');
+var kuduLogUtil = require('azurerest-common/kududeploymentstatusutility.js');
 
 async function swapSlot(endPoint, resourceGroupName: string, webAppName: string, sourceSlot: string, swapWithProduction: boolean, targetSlot: string, preserveVnet: boolean) {
     if(swapWithProduction) {
