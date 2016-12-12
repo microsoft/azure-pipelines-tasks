@@ -209,7 +209,7 @@
             "visibleRule": "action = Create Or Update Resource Group"
         },
         {
-            "name": "enableDeploymentPrerequisitesForCreateAndSelect",
+            "name": "enableDeploymentPrerequisites",
             "type": "boolean",
             "label": "Enable Deployment Prerequisites",
             "defaultValue": "false",
