@@ -7,7 +7,7 @@
   "loc.group.displayName.agentConfiguration": "Agent Configuration",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.testMachineGroup": "Machines",
-  "loc.input.help.testMachineGroup": "Provide a comma separated list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the selected protocol. Eg: `dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986` Or provide output variable of other tasks. Eg: `$(variableName)` Or provide a Machine Group Name.",
+  "loc.input.help.testMachineGroup": "Provide a comma separated list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the selected protocol. Eg: `dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986` Or provide output variable of other tasks. Eg: `$(variableName)` Or provide a Machine Group Name.` If you are using HTTPS, name/IP of machine should match the CN in the certificate.",
   "loc.input.label.adminUserName": "Admin Login",
   "loc.input.help.adminUserName": "Administrator login for the target machines.",
   "loc.input.label.adminPassword": "Admin Password",

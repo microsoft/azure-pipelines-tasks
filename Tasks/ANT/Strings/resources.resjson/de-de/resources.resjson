@@ -1,10 +1,9 @@
 {
   "loc.friendlyName": "Ant",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613718)",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613718)",
   "loc.description": "Mit Apache Ant erstellen",
   "loc.instanceNameFormat": "Ant $(options) $(antBuildFile)",
   "loc.group.displayName.junitTestResults": "JUnit-Testergebnisse",
-  "loc.group.displayName.codeCoverage": "Code Coverage",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.antBuildFile": "Ant-Builddatei",
   "loc.input.help.antBuildFile": "Der relative Pfad vom Repositorystamm zur Ant-Builddatei.",
@@ -18,14 +17,6 @@
   "loc.input.help.testResultsFiles": "Der Pfad der Testergebnisdateien. Platzhalter können verwendet werden. Beispiel: \"**/TEST-*.xml\" für alle XML-Dateien, deren Name mit \"TEST-\" beginnt.",
   "loc.input.label.testRunTitle": "Testlauftitel",
   "loc.input.help.testRunTitle": "Geben Sie einen Namen für den Testlauf an.",
-  "loc.input.label.codeCoverageTool": "Code Coverage-Tool",
-  "loc.input.help.codeCoverageTool": "Wählen Sie das Code Coverage-Tool aus. Verwenden Sie den Link \"Weitere Informationen\" unten, um Support zum lokalen Agent zu erhalten.",
-  "loc.input.label.classFilesDirectories": "Klassendateienverzeichnisse",
-  "loc.input.help.classFilesDirectories": "Eine durch Kommas getrennte Liste der relativen Pfade von der Ant-Builddatei zu den Verzeichnissen, die Klassendateien und Archivdateien (JAR-, WAR-Dateien usw.) enthalten. Code Coverage wird für Klassendateien in diesen Verzeichnissen gemeldet, z. B. \"target/classes\", \"target/testClasses\".",
-  "loc.input.label.classFilter": "Filter für den Klasseneinschluss/-ausschluss",
-  "loc.input.help.classFilter": "Eine durch Kommas getrennte Liste der Filter, um Klassen in die Erfassung von Code Coverage ein- oder von dieser auszuschließen, z. B. \"+:com.*\", \"+:org.*\", \"-:my.app*.*\".",
-  "loc.input.label.srcDirectories": "Quelldateienverzeichnisse",
-  "loc.input.help.srcDirectories": "Eine durch Kommas getrennte Liste der relativen Pfade von der Ant-Builddatei zu den Quellcodeverzeichnissen. Code Coverage-Berichte verwenden diese, um Quellcode hervorzuheben, z. B. \"src/java\", \"src/Test\".",
   "loc.input.label.antHomeUserInputPath": "ANT_HOME-Pfad festlegen",
   "loc.input.help.antHomeUserInputPath": "Wenn festgelegt, werden alle vorhandenen ANT_HOME-Umgebungsvariablen mit dem angegebenen Pfad überschrieben.",
   "loc.input.label.javaHomeSelection": "JAVA_HOME festlegen durch",
@@ -35,5 +26,8 @@
   "loc.input.label.jdkUserInputPath": "JDK-Pfad",
   "loc.input.help.jdkUserInputPath": "Legt JAVA_HOME auf den angegebenen Pfad fest.",
   "loc.input.label.jdkArchitecture": "JDK-Architektur",
-  "loc.input.help.jdkArchitecture": "Geben Sie optional die JDK-Architektur an (x86, x64)."
+  "loc.input.help.jdkArchitecture": "Geben Sie optional die JDK-Architektur an (x86, x64).",
+  "loc.messages.LocateJVMBasedOnVersionAndArch": "JAVA_HOME für Java %s %s finden",
+  "loc.messages.FailedToLocateSpecifiedJVM": "Die angegebene JDK-Version wurde nicht gefunden. Stellen Sie sicher, dass die Umgebungsvariable \"%s\" vorhanden ist und auf den Speicherort eines entsprechenden JDK festgelegt wurde.",
+  "loc.messages.DiscontinueAntCodeCoverage": "Die Unterstützung der automatisierten Code Coverage-Berichterstellung für Ant-Projekte wird eingestellt. Weitere Informationen erhalten Sie unter https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/ANT/README.md."
 }

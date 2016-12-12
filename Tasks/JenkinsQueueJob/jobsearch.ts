@@ -119,7 +119,11 @@ export class JobSearch {
             for (var i in causes) {
                 var job = thisSearch.queue.findJob(causes[i].upstreamUrl, causes[i].upstreamBuild);
                 if (job) { // we know about it
-                    if (job.state == JobState.Streaming || job.state == JobState.Finishing || job.state == JobState.Done) {
+                    if (job.state == JobState.Streaming ||
+                        job.state == JobState.Finishing ||
+                        job.state == JobState.Downloading ||
+                        job.state == JobState.Queued ||
+                        job.state == JobState.Done) {
                         causesThatRan.push(job);
                     } else if (job.state == JobState.New || job.state == JobState.Locating) {
                         causesThatMayRun.push(job);

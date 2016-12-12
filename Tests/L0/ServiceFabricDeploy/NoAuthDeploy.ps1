@@ -42,9 +42,8 @@ Register-Mock Get-ApplicationNameFromApplicationParameterFile { $appName } -- "$
 
 # Indicate that the application does not exist on cluster
 Register-Mock Get-ServiceFabricApplication { $null } -- -ApplicationName $appName
-
-$publishArgs = @("-ApplicationPackagePath", $applicationPackagePath, "-ApplicationParameterFilePath", "$PSScriptRoot\data\ApplicationParameters.xml", "-Action", "RegisterAndCreate", "-OverwriteBehavior", "SameAppTypeAndVersion", "-ErrorAction", "Stop")
-Register-Mock Publish-NewServiceFabricApplication -Arguments $publishArgs 
+$publishArgs = @("-ApplicationParameterFilePath:", "$PSScriptRoot\data\ApplicationParameters.xml", "-ErrorAction:", "Stop", "-ApplicationPackagePath:", $applicationPackagePath, "-Action:", "RegisterAndCreate", "-OverwriteBehavior:", "SameAppTypeAndVersion")
+Register-Mock Publish-NewServiceFabricApplication -Arguments $publishArgs
 
 # Act
 @( & $PSScriptRoot/../../../Tasks/ServiceFabricDeploy/deploy.ps1 )

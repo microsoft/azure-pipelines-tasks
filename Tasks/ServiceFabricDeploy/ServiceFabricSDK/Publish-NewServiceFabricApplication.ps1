@@ -36,6 +36,12 @@
     .PARAMETER SkipPackageValidation
     Switch signaling whether the package should be validated or not before deployment.
 
+    .PARAMETER CopyPackageTimeoutSec
+    Timeout in seconds for copying application package to image store.
+
+    .PARAMETER RegisterPackageTimeoutSec
+    Timeout in seconds for registering application package.
+
     .EXAMPLE
     Publish-NewServiceFabricApplication -ApplicationPackagePath 'pkg\Debug' -ApplicationParameterFilePath 'Local.xml'
 
@@ -77,7 +83,15 @@
 
         [Parameter(ParameterSetName="ApplicationParameterFilePath")]
         [Parameter(ParameterSetName="ApplicationName")]
-        [Switch]$SkipPackageValidation
+        [Switch]$SkipPackageValidation,
+
+        [Parameter(ParameterSetName="ApplicationParameterFilePath")]
+        [Parameter(ParameterSetName="ApplicationName")]
+        [int]$CopyPackageTimeoutSec,
+
+        [Parameter(ParameterSetName="ApplicationParameterFilePath")]
+        [Parameter(ParameterSetName="ApplicationName")]
+        [int]$RegisterPackageTimeoutSec
     )
 
 
@@ -118,7 +132,7 @@
         if (!$packageValidationSuccess)
         {
             $errMsg = (Get-VstsLocString -Key SFSDK_PackageValidationFailed -ArgumentList $ApplicationPackagePath)
-            throw $errMsg
+           throw $errMsg
         }
     }
 
@@ -180,7 +194,7 @@
 
             if($removeApp)
             {
-				Write-Host (Get-VstsLocString -Key SFSDK_AppAlreadyExistsInfo -ArgumentList @($ApplicationName, $app.ApplicationTypeName, $app.ApplicationTypeVersion))
+                Write-Host (Get-VstsLocString -Key SFSDK_AppAlreadyExistsInfo -ArgumentList @($ApplicationName, $app.ApplicationTypeName, $app.ApplicationTypeVersion))
 
                 try
 				{
@@ -225,14 +239,42 @@
         $imageStoreConnectionString = Get-ImageStoreConnectionStringFromClusterManifest ([xml] $clusterManifestText)
 
         $applicationPackagePathInImageStore = $names.ApplicationTypeName
-        Copy-ServiceFabricApplicationPackage -ApplicationPackagePath $AppPkgPathToUse -ImageStoreConnectionString $imageStoreConnectionString -ApplicationPackagePathInImageStore $applicationPackagePathInImageStore
+        $copyParameters = @{
+            'ApplicationPackagePath' = $AppPkgPathToUse
+            'ImageStoreConnectionString' = $imageStoreConnectionString
+            'ApplicationPackagePathInImageStore' = $applicationPackagePathInImageStore
+        }
+
+        if ($CopyPackageTimeoutSec)
+        {
+            $InstalledSdkVersion = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK" -Name FabricSDKVersion).FabricSDKVersion
+            if ([version]$InstalledSdkVersion -gt [version]"2.3")
+            {
+                $copyParameters['TimeOutSec'] = $CopyPackageTimeoutSec
+            }
+            else
+            {
+                Write-Warning (Get-VstsLocString -Key CopyPackageTimeoutSecWarning $InstalledSdkVersion)
+            }
+        }
+
+        Copy-ServiceFabricApplicationPackage @copyParameters
         if(!$?)
         {
             throw (Get-VstsLocString -Key SFSDK_CopyingAppToImageStoreFailed)
         }
 
+        $registerParameters = @{
+            'ApplicationPathInImageStore' = $applicationPackagePathInImageStore
+        }
+        
+        if ($RegisterPackageTimeoutSec)
+        {
+            $registerParameters['TimeOutSec'] = $RegisterPackageTimeoutSec
+        }
+
         Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppType)
-        Register-ServiceFabricApplicationType -ApplicationPathInImageStore $applicationPackagePathInImageStore
+        Register-ServiceFabricApplicationType @registerParameters
         if(!$?)
         {
             throw (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailed)

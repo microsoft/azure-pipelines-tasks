@@ -1,12 +1,12 @@
 {
-  "loc.friendlyName": "Extract Files",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=800269)",
-  "loc.description": "Extract a variety of archive and compression files such as .7z, .rar, .tar.gz, and .zip.",
-  "loc.instanceNameFormat": "Extract files $(message)",
-  "loc.input.label.archiveFilePatterns": "Archive file patterns",
-  "loc.input.help.archiveFilePatterns": "File paths or patterns of the archive files to extract.  Supports multiple lines of minimatch patterns.  [More Information](https://go.microsoft.com/fwlink/?LinkId=800269)",
-  "loc.input.label.destinationFolder": "Destination folder",
-  "loc.input.help.destinationFolder": "Destination folder into which archive files should be extracted.  Use [variables](https://go.microsoft.com/fwlink/?LinkID=550988) if files are not in the repo. Example: $(agent.builddirectory)",
-  "loc.input.label.cleanDestinationFolder": "Clean destination folder before extracting",
-  "loc.input.help.cleanDestinationFolder": "Select this option to clean the destination directory before archive contents are extracted into it."
+  "loc.friendlyName": "Dateien extrahieren",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkId=800269)",
+  "loc.description": "Extrahiert eine Vielzahl von Archiv- und Komprimierungsdateien, z. B. 7z, RAR, TAR.GZ und ZIP.",
+  "loc.instanceNameFormat": "Dateien extrahieren $(message)",
+  "loc.input.label.archiveFilePatterns": "Archivdateimuster",
+  "loc.input.help.archiveFilePatterns": "Dateipfade oder Muster der zu extrahierenden Archivdateien. Unterstützt mehrere Zeilen von Minimatchmustern. [Weitere Informationen](https://go.microsoft.com/fwlink/?LinkId=800269)",
+  "loc.input.label.destinationFolder": "Zielordner",
+  "loc.input.help.destinationFolder": "Der Zielordner, in den Archivdateien extrahiert werden sollen. Verwenden Sie [Variablen](https://go.microsoft.com/fwlink/?LinkID=550988), wenn Dateien nicht im Repository vorhanden sind. Beispiel: $(agent.builddirectory)",
+  "loc.input.label.cleanDestinationFolder": "Zielordner vor dem Extrahieren bereinigen",
+  "loc.input.help.cleanDestinationFolder": "Wählen Sie diese Option aus, um das Zielverzeichnis zu bereinigen, bevor Archivinhalte in dieses extrahiert werden."
 }

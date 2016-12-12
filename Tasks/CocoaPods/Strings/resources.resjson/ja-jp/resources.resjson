@@ -4,5 +4,8 @@
   "loc.description": "CocoaPods は、Swift プロジェクトと Objective-C Cocoa プロジェクトの依存関係マネージャーです。pod install を実行します",
   "loc.instanceNameFormat": "pod install",
   "loc.input.label.cwd": "作業ディレクトリ",
-  "loc.input.help.cwd": "現行の作業ディレクトリです。指定されない場合はリポジトリのディレクトリになります。"
+  "loc.input.help.cwd": "現行の作業ディレクトリです。指定されない場合はリポジトリのディレクトリになります。",
+  "loc.messages.PodReturnCode": "pod が次のリターン コードで終了しました: %d",
+  "loc.messages.PodFailed": "pod に失敗し、次のエラーが発生しました: %s",
+  "loc.messages.CocoaPodsNotFound": "コマンド pod が見つかりません。Cocoapods をビルド コンピューター上にインストールしてください (https://cocoapods.org)"
 }

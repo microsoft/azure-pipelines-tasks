@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Paquete de Xcode de iOS",
+  "loc.friendlyName": "Crear paquete Xcode (iOS)",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613731)",
   "loc.description": "Genere un archivo .ipa a partir de los resultados de la compilación de Xcode",
   "loc.instanceNameFormat": "Paquete XCode $(appName)",

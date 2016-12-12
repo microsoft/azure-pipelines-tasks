@@ -1,0 +1,6 @@
+{
+  "loc.messages.AZ_UnsupportedAuthScheme0": "Azure 端點不支援驗證配置 '{0}'。",
+  "loc.messages.AZ_SpnAccessTokenFetchFailure": "無法為租用戶識別碼 {0} 擷取權杖。",
+  "loc.messages.AZ_UserAccessTokenFetchFailure": "無法為給定的使用者擷取權杖。",
+  "loc.messages.AZ_NoValidResourceIdFound": "訂用帳戶 {2} 中找不到 serverName {0}、serverType {1} 的資源。請指定正確的 serverName/serverType，並再試一次。"
+}

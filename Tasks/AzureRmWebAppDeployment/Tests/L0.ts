@@ -257,10 +257,10 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'L0NonWindowsFolderPkg.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-		
+
         assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
         assert(tr.stderr.length == 0 && tr.errorIssues.length == 0, 'should not have written to stderr');
-        var expectedOut = 'loc_mock_Compressedfolderintozip'; 
+        var expectedOut = 'Compressed folder '; 
         assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
         expectedOut = 'Deployed using KuduDeploy'; 
         assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
@@ -381,6 +381,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'L0JsonVarSub.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
+
         assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         var expectedOut = 'Updated history to kudu'; 
@@ -394,4 +395,25 @@ describe('AzureRmWebAppDeployment Suite', function() {
         done();
     });
 
+    it('Validate File Encoding', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'L0ValidateFileEncoding.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.stdout.search('UTF-8 with BOM validated') >= 0, 'Should have validated UTF-8 with BOM');
+        assert(tr.stdout.search('UTF-16LE with BOM validated') >= 0, 'Should have validated UTF-16LE with BOM');
+        assert(tr.stdout.search('UTF-16BE with BOM validated') >= 0, 'Should have validated UTF-16BE with BOM');
+        assert(tr.stdout.search('UTF-32LE with BOM validated') >= 0, 'Should have validated UTF-32LE with BOM');
+        assert(tr.stdout.search('UTF-32BE with BOM validated') >= 0, 'Should have validated UTF-32BE with BOM');
+
+        assert(tr.stdout.search('UTF-8 without BOM validated') >= 0, 'Should have validated UTF-8 without BOM');
+        assert(tr.stdout.search('UTF-16LE without BOM validated') >= 0, 'Should have validated UTF-16LE without BOM');
+        assert(tr.stdout.search('UTF-16BE without BOM validated') >= 0, 'Should have validated UTF-16BE without BOM');
+        assert(tr.stdout.search('UTF-32LE without BOM validated') >= 0, 'Should have validated UTF-32LE without BOM');
+        assert(tr.stdout.search('UTF-32BE without BOM validated') >= 0, 'Should have validated UTF-32BE without BOM');
+
+        assert(tr.stdout.search('Short File Buffer Error') >= 0, 'Should have validated short Buffer');
+        assert(tr.stdout.search('Unknown encoding type') >= 0, 'Should throw for Unknown File Buffer');
+        done();
+    });
 });

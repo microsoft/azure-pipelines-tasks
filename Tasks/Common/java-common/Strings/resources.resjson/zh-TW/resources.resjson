@@ -1,0 +1,4 @@
+{
+  "loc.messages.LocateJVMBasedOnVersionAndArch": "為 Java %s %s 找出 JAVA_HOME 的位置",
+  "loc.messages.FailedToLocateSpecifiedJVM": "找不到指定的 JDK 版本。請確定環境變數 '%s' 存在且設至相對應 JDK 的位置。"
+}
