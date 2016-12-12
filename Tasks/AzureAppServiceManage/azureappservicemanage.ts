@@ -2,6 +2,7 @@ import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import path = require('path');
 var azureRmUtil = require('azurerest-common/azurerestutility.js');
+var kuduLogUtil = require('azurerest-call/kududeploymentstatusutility.js');
 
 async function swapSlot(endPoint, resourceGroupName: string, webAppName: string, sourceSlot: string, swapWithProduction: boolean, targetSlot: string, preserveVnet: boolean) {
     if(swapWithProduction) {
@@ -13,10 +14,10 @@ async function swapSlot(endPoint, resourceGroupName: string, webAppName: string,
     tl._writeLine(await azureRmUtil.swapWebAppSlot(endPoint, resourceGroupName, webAppName, sourceSlot, targetSlot, preserveVnet));
 }
 
-async function updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, slotFlag, slotName, taskResult, customMessage) {
+async function updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, slotFlag, slotName, taskResult, customMessage, deploymentId) {
     try {
         var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, slotFlag, slotName);
-        tl._writeLine(await azureRmUtil.updateDeploymentStatus(publishingProfile, taskResult, customMessage));
+        tl._writeLine(await azureRmUtil.updateDeploymentStatus(publishingProfile, taskResult, customMessage, deploymentId));
     }
     catch(exception) {
         tl.warning(exception);
@@ -77,16 +78,19 @@ async function run() {
     var customMessage = {
         type: action
     }
+    var deploymentId = kuduLogUtil.generateDeploymentId();
+
     if(action === "Swap Slots") {
         customMessage['type'] = 'SlotSwap'; // for Ibiza CD flow
         customMessage['sourceSlot'] = sourceSlot;
         customMessage['targetSlot'] = swapWithProduction ? "Production" : targetSlot;
-        await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, true, sourceSlot, taskResult, customMessage);
-        await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, !(swapWithProduction), targetSlot, taskResult, customMessage);
+
+        await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, true, sourceSlot, taskResult, customMessage, deploymentId);
+        await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, !(swapWithProduction), targetSlot, taskResult, customMessage, deploymentId);
     }
     else {
         customMessage['slotName'] = 'Production';
-        await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, false, null, taskResult, customMessage);
+        await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, false, null, taskResult, customMessage, deploymentId);
     }
 }
 

@@ -22,7 +22,7 @@
   "loc.messages.Successfullyupdatedslotswaphistory": "Successfully updated slot swap history at %s for Azure Web App : %s",
   "loc.messages.Failedtoupdateslotswaphistory": "Failed to update slot swap history for Azure Web App : %s",
   "loc.messages.WARNINGCannotupdateslotswapstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update slot swap status : SCM (Source Control Manager) endpoint is not enabled for this Azure Web App",
-  "loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update slot swap status as unique deployment ID cannot be retrieved for this Azure Web App",
+  "loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update Kudu deployment log as unique deployment ID cannot be retrieved for this Azure Web App",
   "loc.messages.Failedtoswapslots": "Failed to swap slots. Status %s for Azure Web App : %s",
   "loc.messages.Successfullyswappedslots": "Successfully swapped web app %s slots from %s to %s",
   "loc.messages.SourceAndTargetSlotCannotBeSame": "Source and target slot cannot be same",

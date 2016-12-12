@@ -43,13 +43,13 @@ export async function getResourceGroupName(SPN, webAppName: string)
  * 
  * @returns promise with string
  */
-export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: boolean, customMessage): Q.Promise<string>  {
+export function updateDeploymentStatus(publishingProfile, isDeploymentSuccess: boolean, customMessage, deploymentId): Q.Promise<string>  {
     var deferred = Q.defer<string>();
 
     var webAppPublishKuduUrl = publishingProfile.publishUrl;
     tl.debug('Web App Publish Kudu URL: ' + webAppPublishKuduUrl);
     if(webAppPublishKuduUrl) {
-        var requestDetails = kuduDeploymentStatusUtility.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess, customMessage);
+        var requestDetails = kuduDeploymentStatusUtility.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess, customMessage, deploymentId);
         var accessToken = 'Basic ' + (new Buffer(publishingProfile.userName + ':' + publishingProfile.userPWD).toString('base64'));
         var headers = {
             authorization: accessToken
