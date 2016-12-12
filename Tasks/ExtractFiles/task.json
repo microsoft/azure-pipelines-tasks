@@ -58,7 +58,7 @@
         }
     },
     "messages": {
-        "ExtractDiFailed": "Specified archive: %s can not be extracted because it is a directory.",
+        "ExtractDirFailedinFindFiles": "Specified archive: %s can not be extracted because it is a directory.",
         "ExtractNotFileFailed": "Specified archive: %s can not be extracted because it is not a file.",
         "ExtractNotAccessibleFile": "Specified archive: %s can not be extracted because it can not be accessed: %s",
         "SearchInDir": "Searching for: %s under directory: %s",

@@ -58,7 +58,7 @@
     }
   },
   "messages": {
-    "ExtractDiFailed": "ms-resource:loc.messages.ExtractDiFailed",
+    "ExtractDirFailedinFindFiles": "ms-resource:loc.messages.ExtractDirFailedinFindFiles",
     "ExtractNotFileFailed": "ms-resource:loc.messages.ExtractNotFileFailed",
     "ExtractNotAccessibleFile": "ms-resource:loc.messages.ExtractNotAccessibleFile",
     "SearchInDir": "ms-resource:loc.messages.SearchInDir",

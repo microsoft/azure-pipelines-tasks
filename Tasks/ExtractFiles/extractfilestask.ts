@@ -61,7 +61,7 @@ function findFiles(): string[] {
                     }
                     matchingFilesSet.add(parseResult.file);
                 } else if (stats.isDirectory()) { // most likely error scenario is user specified a directory
-                    failTask(tl.loc('ExtractDiFailed', parseResult.file));
+                    failTask(tl.loc('ExtractDirFailedinFindFiles', parseResult.file));
                 } else { // other error scenarios -- less likely
                     failTask(tl.loc('ExtractNotFileFailed', parseResult.file));
                 }
