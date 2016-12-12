@@ -20,13 +20,9 @@ const TITestSettingsNameTag = "testSettings-5d76a195-1e43-4b90-a6ce-4ec3de87ed25
 const TITestSettingsIDTag = "5d76a195-1e43-4b90-a6ce-4ec3de87ed25";
 const TITestSettingsXmlnsTag = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010"
 
-class VSTestConsoleInfo {
+interface ExecutabaleInfo {
     version: number;
     location: string;
-    constructor(version: number, location: string) {
-        this.version = version;
-        this.location = location;
-    }
 }
 
 try {
@@ -1386,20 +1382,24 @@ function resetRunInParallel() {
 }
 
 
-function getLatestVSTestConsolePathFromRegistry(): Q.Promise<VSTestConsoleInfo> {
-    let deferred = Q.defer<VSTestConsoleInfo>();
-    var regPath = 'HKLM\\SOFTWARE\\Microsoft\\VisualStudio';
+function getLatestVSTestConsolePathFromRegistry(): Q.Promise<ExecutabaleInfo> {
+    let deferred = Q.defer<ExecutabaleInfo>();
+    let regPath = 'HKLM\\SOFTWARE\\Microsoft\\VisualStudio';
     regedit.list(regPath).on('data', (entry) => {
         let subkeys = entry.data.keys;
         let versions = getFloatsFromStringArray(subkeys);
         if (versions && versions.length > 0) {
             versions.sort((a, b) => a-b);
             let selectedVersion = versions[versions.length - 1];
-            deferred.resolve(new VSTestConsoleInfo(selectedVersion, getVSTestLocation(selectedVersion)));
-            return deferred.promise;
+            tl.debug('Registry entry found. Selected version is ' + selectedVersion.toString());
+            deferred.resolve({version: selectedVersion, location: getVSTestLocation(selectedVersion)});
+        } else {
+            deferred.resolve(null);
         }
+    }).on('error', () => {
+        tl.debug('Registry entry not found under VisualStudio node');
+        deferred.resolve(null);
     });
-    deferred.resolve(null);
     return deferred.promise;
 }
 
@@ -1416,6 +1416,7 @@ function getVSTestConsole15Path(): string {
                 let vs15InstallDir = result['Objs']['S'][0];
                 vstestconsolePath = path.join(vs15InstallDir, 'Common7', 'IDE', 'CommonExtensions', 'Microsoft', 'TestWindow', 'vstest.console.exe');
             } catch (e) {
+                tl.debug('Unable to read Visual Studio 2017 installation path');
                 vstestconsolePath = null;
             }
         }
@@ -1424,21 +1425,24 @@ function getVSTestConsole15Path(): string {
 }
 
 
-function locateVSVersion(version: string): Q.Promise<VSTestConsoleInfo> {
-    let deferred = Q.defer<VSTestConsoleInfo>();
+function locateVSVersion(version: string): Q.Promise<ExecutabaleInfo> {
+    let deferred = Q.defer<ExecutabaleInfo>();
     let vsVersion: number = parseFloat(version);
     
     if (isNaN(vsVersion) || vsVersion == 15) {
         // latest
+        tl.debug('Searching for latest Visual Studio');
         let vstestconsole15Path = getVSTestConsole15Path();
         if (vstestconsole15Path) {
-            deferred.resolve(new VSTestConsoleInfo(15, vstestconsole15Path));
+            deferred.resolve({version: 15, location: vstestconsole15Path});
         } else {
             // fallback
+            tl.debug('Unable to find an instance of Visual Studio 2017');
             return getLatestVSTestConsolePathFromRegistry();
         }
     } else {
-        deferred.resolve(new VSTestConsoleInfo(vsVersion, getVSTestLocation(vsVersion)));
+        tl.debug('Searching for Visual Studio ' + vsVersion.toString());
+        deferred.resolve({version: vsVersion, location: getVSTestLocation(vsVersion)});
     }
     return deferred.promise;
 }
