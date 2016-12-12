@@ -51,7 +51,7 @@
             "defaultValue": "",
             "required": true,
             "groupName": "AzureDetails",
-            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment.",
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
         },
         {
             "name": "action",
