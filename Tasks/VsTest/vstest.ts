@@ -1425,6 +1425,7 @@ function getVSTestConsole15Path(): string {
                 vstestconsolePath = path.join(vs15InstallDir, 'Common7', 'IDE', 'CommonExtensions', 'Microsoft', 'TestWindow', 'vstest.console.exe');
             } catch (e) {
                 tl.debug('Unable to read Visual Studio 2017 installation path');
+                tl.debug(e);
                 vstestconsolePath = null;
             }
         }
