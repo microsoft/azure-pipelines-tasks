@@ -56,6 +56,12 @@ try {
     var vsTestVersionForTIA: number[] = null;
     var ignoreVstestFailure: string = tl.getVariable("vstest.ignoretestfailures");
 
+    // only to facilitate the writing of unit tests 
+    var vs15HelperPath = tl.getVariable('vs15Helper');
+    if (!vs15HelperPath) {
+        vs15HelperPath = path.join(__dirname, 'vs15Helper.ps1');
+    }
+
     var useNewCollector = false;
     if (useNewCollectorFlag && useNewCollectorFlag.toUpperCase() === "TRUE") {
         useNewCollector = true;
@@ -1413,7 +1419,7 @@ function getLatestVSTestConsolePathFromRegistry(): Q.Promise<ExecutabaleInfo> {
 
 function getVSTestConsole15Path(): string {
     let powershellTool = tl.tool('powershell');
-    let powershellArgs = ['-file', path.join(__dirname, 'vs15Helper.ps1')]
+    let powershellArgs = ['-file', vs15HelperPath]
     powershellTool.arg(powershellArgs);
     let xml = powershellTool.execSync().stdout;
     let deferred = Q.defer<string>();
