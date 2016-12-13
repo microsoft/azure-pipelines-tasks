@@ -51,7 +51,7 @@
     },
     {
       "name": "keystoreFile",
-      "type": "string",
+      "type": "filePath",
       "label": "ms-resource:loc.input.label.keystoreFile",
       "defaultValue": "",
       "required": true,
