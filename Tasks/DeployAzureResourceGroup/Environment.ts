@@ -1,8 +1,13 @@
+/// <reference path="../../definitions/Q.d.ts" />
 var networkManagementClient = require("azure-arm-network");
 var computeManagementClient = require("azure-arm-compute");
+
+import q = require("q");
 import util = require("util");
 import tl = require("vsts-task-lib/task");
 import deployAzureRG = require("./DeployAzureRG");
+import azureUtil = require("./AzureUtil");
+
 class PropertyValue {
     public IsSecure: boolean;
     public Data: string;
@@ -124,41 +129,36 @@ export class RegisterEnvironment {
             return;
         }
         console.log("Registering Environment Variable..");
-        this.getVMDetails();
-        this.getNetworkInterfaceDetails();
-        this.getPublicIPAddresses();
-        this.getLoadBalancers();
+        var details = new azureUtil.AzureUtil(this.taskParameters);
+        details.getDetails().then(()=> {
+            this.parseVMDetails(details.vmDetails);
+            this.parseNetworkInterfaceDetails(details.networkInterfaceDetails);
+            this.parseLoadBalancerDetails(details.loadBalancersDetails);
+            this.parsePublicIPDetails(details.publicAddressDetails);
+            this.InstantiateEnvironment();
+        }).catch((error) => {
+            tl.setResult(tl.TaskResult.Failed, error);
+        })
     }
     
-    private getLoadBalancers() {
-        var armClient = new networkManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
-        armClient.loadBalancers.list(this.taskParameters.resourceGroupName, (error, loadbalancers, request, response) => {
-            if (error){
-                console.log("Error while getting list of Load Balancers", error);
-                throw new Error("FailedToFetchLoadBalancers");
-            }
-            var inboundNatRuleMap = {};
-            for (var i=0; i < loadbalancers.length; i++) {
-                var lb = loadbalancers[i];
-                var publicAddress = lb["frontendIPConfigurations"][0]["publicIPAddress"]["id"];
-                for (var j=0; j < lb["inboundNatRules"].length; j++) {
-                    var natRule = lb["inboundNatRules"][j];
-                    inboundNatRuleMap[natRule["id"]] = {
-                        frontendPort : natRule["frontendPort"],
-                        backendPort : natRule["backendPort"],
-                        publicAddress : publicAddress
-                    }
+    private parseLoadBalancerDetails(loadbalancers) {
+        var inboundNatRuleMap = {};
+        for (var i=0; i < loadbalancers.length; i++) {
+            var lb = loadbalancers[i];
+            var publicAddress = lb["frontendIPConfigurations"][0]["publicIPAddress"]["id"];
+            for (var j=0; j < lb["inboundNatRules"].length; j++) {
+                var natRule = lb["inboundNatRules"][j];
+                inboundNatRuleMap[natRule["id"]] = {
+                    frontendPort : natRule["frontendPort"],
+                    backendPort : natRule["backendPort"],
+                    publicAddress : publicAddress
                 }
             }
-            this.inboundNatRuleMap = inboundNatRuleMap;
-            this.InstantiateEnvironment();
-        });
-    }
-
-    private InstantiateEnvironment() {
-        if (this.publicAddressToNicIdMap == null || this.publicAddressToFqdnMap == null || this.nicIdToTagsMap == null || this.inboundNatRuleMap == null) {
-            return;
         }
+        this.inboundNatRuleMap = inboundNatRuleMap;
+    }
+    
+    private InstantiateEnvironment() {
         var resources = this.getResources();
         tl.debug("Got resources..");
         var environment = new Environment(resources, process.env["SYSTEM_COLLECTIONID"], process.env["SYSTEM_TEAMPROJECT"], this.taskParameters.outputVariable);
@@ -175,11 +175,15 @@ export class RegisterEnvironment {
         var port = "5986";
         if (interfaceDetails.inboundNatRule) {
             var natRules = interfaceDetails.inboundNatRule;
-            for (var i=0; i < natRules.length; i++) {
-                var natRule = natRules[i];
-                if (this.inboundNatRuleMap[natRule.id].backendPort == 5986) {
-                    port = this.inboundNatRuleMap[natRule.id].frontendPort
+            try {
+                for (var i=0; i < natRules.length; i++) {
+                    var natRule = natRules[i];
+                    if (this.inboundNatRuleMap[natRule.id].backendPort == 5986) {
+                        port = this.inboundNatRuleMap[natRule.id].frontendPort
+                    }
                 }
+            } catch (error) {
+                throw new Error("Error while fetching Nat rules");
             }
         }
         return port.toString();      
@@ -187,12 +191,16 @@ export class RegisterEnvironment {
 
     private getFQDN(nicId) {
         var interfaceDetails = this.publicAddressToNicIdMap[nicId];
-        if (interfaceDetails.publicAddress) {
-            return this.publicAddressToFqdnMap[interfaceDetails.publicAddress];
-        } else {
-            var natRule = interfaceDetails.inboundNatRule[0].id;
-            var publicAddress = this.inboundNatRuleMap[natRule].publicAddress;
-            return this.publicAddressToFqdnMap[publicAddress];
+        try {
+            if (interfaceDetails.publicAddress) {
+                return this.publicAddressToFqdnMap[interfaceDetails.publicAddress];
+            } else {
+                var natRule = interfaceDetails.inboundNatRule[0].id;
+                var publicAddress = this.inboundNatRuleMap[natRule].publicAddress;
+                return this.publicAddressToFqdnMap[publicAddress];
+            }
+        } catch (error) {
+            throw new Error("Unable to fetch FQDN data from one or more VMs");
         }
     }
 
@@ -217,72 +225,47 @@ export class RegisterEnvironment {
         return resources;
     }
 
-    private getVMDetails() {
-        var armClient = new computeManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
-        armClient.virtualMachines.list(this.taskParameters.resourceGroupName, (error, virtualMachines, request, response) => {
-            if (error){
-                console.log("Error while getting list of Virtual Machines", error);
-                throw new Error("FailedToFetchVMs");
-            }
-            this.nicIds = [];
-            var tags = {};
-            for (var i = 0; i < virtualMachines.length; i++) {
-                var vm = virtualMachines[i];
-                var nicId = vm["networkProfile"]["networkInterfaces"][0]["id"];
-                this.nicIds.push(nicId);
-                if (vm["tags"] != undefined)
-                    tags[nicId] = vm["tags"];
-            }
-            this.nicIdToTagsMap = tags;
-            this.InstantiateEnvironment();            
-        });
+    private parseVMDetails(virtualMachines) {
+        this.nicIds = [];
+        var tags = {};
+        for (var i = 0; i < virtualMachines.length; i++) {
+            var vm = virtualMachines[i];
+            var nicId = vm["networkProfile"]["networkInterfaces"][0]["id"];
+            this.nicIds.push(nicId);
+            if (vm["tags"] != undefined)
+                tags[nicId] = vm["tags"];
+        }
+        this.nicIdToTagsMap = tags;
     }
 
-    private getNetworkInterfaceDetails() {
-        var armClient = new networkManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
-        armClient.networkInterfaces.list(this.taskParameters.resourceGroupName, (error, networkInterfaces, request, response) => {
-            if (error){
-                console.log("Error while getting list of Network Interfaces", error);
-                throw new Error("FailedToFetchNetworkInterfaces");
+    private parseNetworkInterfaceDetails(networkInterfaces) {
+        var interfaces = {};
+        for (var i = 0; i < networkInterfaces.length; i++) {
+            var networkInterface = networkInterfaces[i];
+            var nicId = networkInterface["id"];
+            var ipConfig = networkInterface["ipConfigurations"][0];
+            if (ipConfig["publicIPAddress"]){
+                interfaces[nicId] = { publicAddress: ipConfig["publicIPAddress"]["id"] };
+            } else if (ipConfig["loadBalancerInboundNatRules"]) {
+                interfaces[nicId] ={ inboundNatRule: ipConfig["loadBalancerInboundNatRules"] };
             }
-            var interfaces = {};
-            for (var i = 0; i < networkInterfaces.length; i++) {
-                var networkInterface = networkInterfaces[i];
-                var nicId = networkInterface["id"];
-                var ipConfig = networkInterface["ipConfigurations"][0];
-                if (ipConfig["publicIPAddress"]){
-                    interfaces[nicId] = { publicAddress: ipConfig["publicIPAddress"]["id"] };
-                } else if (ipConfig["loadBalancerInboundNatRules"]) {
-                    interfaces[nicId] ={ inboundNatRule: ipConfig["loadBalancerInboundNatRules"] };
-                }
-            }
-            this.publicAddressToNicIdMap = interfaces;
-            this.InstantiateEnvironment();  
-        });
+        }
+        this.publicAddressToNicIdMap = interfaces;
     }
 
-    private getPublicIPAddresses() {
-        var armClient = new networkManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
-        armClient.publicIPAddresses.list(this.taskParameters.resourceGroupName, (error, publicAddresses, request, response) => {
-            if (error){
-                console.log("Error while getting list of Public Addresses", error);
-                throw new Error("FailedToFetchPublicAddresses");
+    private parsePublicIPDetails(publicAddresses) {
+        var fqdns = {}
+        for (var i = 0; i < publicAddresses.length; i++) {
+            var publicAddress = publicAddresses[i];
+            var publicAddressId = publicAddress["id"];
+            if (publicAddress["dnsSettings"]) {
+                fqdns[publicAddressId] = publicAddress["dnsSettings"]["fqdn"];
             }
-            var fqdns = {}
-            for (var i = 0; i < publicAddresses.length; i++) {
-                var publicAddress = publicAddresses[i];
-                var publicAddressId = publicAddress["id"];
-                if (publicAddress["dnsSettings"]) {
-                    fqdns[publicAddressId] = publicAddress["dnsSettings"]["fqdn"];
-                }
-                else {
-                    fqdns[publicAddressId] = publicAddress["ipAddress"];
-                }
+            else {
+                fqdns[publicAddressId] = publicAddress["ipAddress"];
             }
-            this.publicAddressToFqdnMap = fqdns;
-            this.InstantiateEnvironment();
-        });
+        }
+        this.publicAddressToFqdnMap = fqdns;
     }
-    
 }
 
