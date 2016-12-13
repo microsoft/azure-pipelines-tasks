@@ -13,11 +13,12 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 1,
+    "Minor": 2,
     "Patch": 0
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [],
   "inputs": [
     {
       "name": "ConnectedServiceName",
@@ -26,6 +27,20 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
+      "name": "Action",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.Action",
+      "required": false,
+      "helpMarkDown": "",
+      "defaultValue": "Swap Slots",
+      "options": {
+        "Swap Slots": "Swap Slots",
+        "Start Azure App Service": "Start App Service",
+        "Stop Azure App Service": "Stop App Service",
+        "Restart Azure App Service": "Restart App Service"
+      }
     },
     {
       "name": "WebAppName",
@@ -47,7 +62,8 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName"
+      "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName",
+      "visibleRule": "Action = Swap Slots"
     },
     {
       "name": "SourceSlot",
@@ -58,7 +74,8 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.SourceSlot"
+      "helpMarkDown": "ms-resource:loc.input.help.SourceSlot",
+      "visibleRule": "Action = Swap Slots"
     },
     {
       "name": "SwapWithProduction",
@@ -66,7 +83,8 @@
       "label": "ms-resource:loc.input.label.SwapWithProduction",
       "defaultValue": "true",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.SwapWithProduction"
+      "helpMarkDown": "ms-resource:loc.input.help.SwapWithProduction",
+      "visibleRule": "Action = Swap Slots"
     },
     {
       "name": "TargetSlot",
@@ -78,7 +96,7 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.TargetSlot",
-      "visibleRule": "SwapWithProduction = false"
+      "visibleRule": "Action = Swap Slots && SwapWithProduction = false"
     },
     {
       "name": "PreserveVnet",
@@ -86,7 +104,8 @@
       "label": "ms-resource:loc.input.label.PreserveVnet",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.PreserveVnet"
+      "helpMarkDown": "ms-resource:loc.input.help.PreserveVnet",
+      "visibleRule": "Action = Swap Slots"
     }
   ],
   "dataSourceBindings": [
@@ -102,6 +121,16 @@
       "parameters": {
         "WebAppName": "$(WebAppName)"
       }
+    },
+    {
+      "target": "Slot",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppSlotsId",
+      "parameters": {
+        "WebAppName": "$(WebAppName)",
+        "ResourceGroupName": "$(ResourceGroupName)"
+      },
+      "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
     },
     {
       "target": "SourceSlot",
@@ -126,18 +155,36 @@
   ],
   "execution": {
     "Node": {
-      "target": "azurewebappslotswap.js"
+      "target": "azureappservicemanage.js"
     }
   },
   "messages": {
     "ErrorNoSuchDeployingMethodExists": "ms-resource:loc.messages.ErrorNoSuchDeployingMethodExists",
-    "UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1": "ms-resource:loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1",
     "Successfullyupdatedslotswaphistory": "ms-resource:loc.messages.Successfullyupdatedslotswaphistory",
     "Failedtoupdateslotswaphistory": "ms-resource:loc.messages.Failedtoupdateslotswaphistory",
     "WARNINGCannotupdateslotswapstatusSCMendpointisnotenabledforthiswebsite": "ms-resource:loc.messages.WARNINGCannotupdateslotswapstatusSCMendpointisnotenabledforthiswebsite",
     "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "ms-resource:loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved",
     "Failedtoswapslots": "ms-resource:loc.messages.Failedtoswapslots",
     "Successfullyswappedslots": "ms-resource:loc.messages.Successfullyswappedslots",
-    "SourceAndTargetSlotCannotBeSame": "ms-resource:loc.messages.SourceAndTargetSlotCannotBeSame"
+    "SourceAndTargetSlotCannotBeSame": "ms-resource:loc.messages.SourceAndTargetSlotCannotBeSame",
+    "Successfullyupdateddeploymenthistory": "ms-resource:loc.messages.Successfullyupdateddeploymenthistory",
+    "Failedtoupdatedeploymenthistory": "ms-resource:loc.messages.Failedtoupdatedeploymenthistory",
+    "UnabletoretrieveconnectiondetailsforazureRMWebApp": "ms-resource:loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp",
+    "StartingAppService": "ms-resource:loc.messages.StartingAppService",
+    "AppServicestartedsuccessfully": "ms-resource:loc.messages.AppServicestartedsuccessfully",
+    "FailedtoStartAppService": "ms-resource:loc.messages.FailedtoStartAppService",
+    "StoppingAppService": "ms-resource:loc.messages.StoppingAppService",
+    "AppServicestoppedsuccessfully": "ms-resource:loc.messages.AppServicestoppedsuccessfully",
+    "FailedtoStopAppService": "ms-resource:loc.messages.FailedtoStopAppService",
+    "RestartingAppService": "ms-resource:loc.messages.RestartingAppService",
+    "AppServiceRestartedSuccessfully": "ms-resource:loc.messages.AppServiceRestartedSuccessfully",
+    "FailedtoRestartAppService": "ms-resource:loc.messages.FailedtoRestartAppService",
+    "RestartAppServiceAccepted": "ms-resource:loc.messages.RestartAppServiceAccepted",
+    "InvalidAction": "ms-resource:loc.messages.InvalidAction",
+    "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "ms-resource:loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite",
+    "CouldnotfetchacccesstokenforAzureStatusCode": "ms-resource:loc.messages.CouldnotfetchacccesstokenforAzureStatusCode",
+    "WebAppDoesntExist": "ms-resource:loc.messages.WebAppDoesntExist",
+    "UnabletoretrieveWebAppID": "ms-resource:loc.messages.UnabletoretrieveWebAppID",
+    "StartingSwapSlot": "ms-resource:loc.messages.StartingSwapSlot"
   }
 }
