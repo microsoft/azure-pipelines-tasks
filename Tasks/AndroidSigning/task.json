@@ -11,8 +11,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 24
+        "Minor": 111,
+        "Patch": 0
     },
     "demands": [
         "JDK",
@@ -38,7 +38,7 @@
             "label": "APK Files",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Relative path from repo root of the files(s).  Wildcards can be used.  For example, `**\\bin\\*.apk` for all APK files in bin subfolder."
+            "helpMarkDown": "Relative path from the repo root to the APK(s) you want to sign. You can use wildcards to specify multiple files. For example, `**\\bin\\*.apk` for all .APK files in the 'bin' subfolder."
         },
         {
             "name": "jarsign",
@@ -46,7 +46,8 @@
             "label": "Sign the APK",
             "defaultValue": "true",
             "required": false,
-            "groupName": "jarsignerOptions"
+            "groupName": "jarsignerOptions",
+            "helpMarkDown": "Select if you want to sign the APK with a provided keystore file."
         },
         {
             "name": "keystoreFile",
@@ -54,9 +55,9 @@
             "label": "Keystore File",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Full path to the keystore file.",
             "visibleRule": "jarsign = true",
-            "groupName": "jarsignerOptions"
+            "groupName": "jarsignerOptions",
+            "helpMarkDown": "The keystore file should be entered as a file path. It can either be checked into source control or placed on the build machine directly by an administrator. It is recommended to encrypt the keystore file in source control and use the 'Decrypt File' task to decrypt the file during the build."
         },
         {
             "name": "keystorePass",
@@ -65,7 +66,8 @@
             "defaultValue": "",
             "required": false,
             "visibleRule": "jarsign = true",
-            "groupName": "jarsignerOptions"
+            "groupName": "jarsignerOptions",
+            "helpMarkDown": "Enter the password for the provided keystore file. We recommend that you put this value in a secret variable."
         },
         {
             "name": "keystoreAlias",
@@ -74,7 +76,8 @@
             "defaultValue": "",
             "required": false,
             "visibleRule": "jarsign = true",
-            "groupName": "jarsignerOptions"
+            "groupName": "jarsignerOptions",
+            "helpMarkDown": "Enter the alias used for the keystore file."
         },
         {
             "name": "keyPass",
@@ -83,7 +86,8 @@
             "defaultValue": "",
             "required": false,
             "visibleRule": "jarsign = true",
-            "groupName": "jarsignerOptions"
+            "groupName": "jarsignerOptions",
+            "helpMarkDown": "Enter the key password for the alias and keystore file. We recommend that you put this value in a secret variable."
         },
         {
             "name": "jarsignerArguments",
@@ -92,7 +96,8 @@
             "defaultValue": "-verbose -sigalg MD5withRSA -digestalg SHA1",
             "required": false,
             "visibleRule": "jarsign = true",
-            "groupName": "jarsignerOptions"
+            "groupName": "jarsignerOptions",
+            "helpMarkDown": "Provide any options to pass to the jarsigner command line. Default is: -verbose -sigalg MD5withRSA -digestalg SHA1"
         },
         {
             "name": "zipalign",
@@ -100,7 +105,8 @@
             "label": "Zipalign",
             "defaultValue": "true",
             "required": false,
-            "groupName": "zipalignOptions"
+            "groupName": "zipalignOptions",
+            "helpMarkDown": "Select if you want to zipalign your package. This reduces the amount of RAM consumed by an app."
         },
         {
             "name": "zipalignLocation",
@@ -108,9 +114,9 @@
             "label": "Zipalign Location",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Optionally supply the path to zipalign.exe.  It defaults to use any zipalign.exe found in Android SDK folder.",
             "visibleRule": "zipalign = true",
-            "groupName": "zipalignOptions"
+            "groupName": "zipalignOptions",
+            "helpMarkDown": "Optionally specify the location of the zipalign executable used during signing. This defaults to the zipalign found in the Android SDK version folder that your application builds against."
         }
     ],
     "instanceNameFormat": "Signing and aligning APK file(s) $(files)",
