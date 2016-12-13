@@ -17,8 +17,7 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
-    "q": "1.4.1",
-    "vso-node-api": "6.0.1-preview"
+    "q": "1.4.1"
   },
   "devDependencies": {
     "mocha": "^3.1.0"
