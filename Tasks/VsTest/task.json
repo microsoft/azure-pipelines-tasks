@@ -34,10 +34,7 @@
         {
             "name": "tiaOptions",
             "displayName": "Test Impact Analysis",
-            "isExpanded": true,
-            "tags": [
-                "Preview"
-            ]
+            "isExpanded": true
         },
         {
             "name": "advancedExecutionOptions",

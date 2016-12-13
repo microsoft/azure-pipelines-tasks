@@ -34,10 +34,7 @@
     {
       "name": "tiaOptions",
       "displayName": "ms-resource:loc.group.displayName.tiaOptions",
-      "isExpanded": true,
-      "tags": [
-        "Preview"
-      ]
+      "isExpanded": true
     },
     {
       "name": "advancedExecutionOptions",
