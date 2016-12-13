@@ -15,6 +15,7 @@ import shell = require('shelljs');
 var ps = shell.which('powershell.exe');
 var psr = null;
 const sysVstestLocation = "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe";
+const sysVstest15Location = "\\vs2017\\installation\\folder\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe";
 
 function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
@@ -448,7 +449,7 @@ describe('VsTest Suite', function () {
             });
     })
 
-    it('Vstest task with run in parallel and vs 2014 below update1', (done) => {
+    it('Vstest task with run in parallel and vs 2015 below update1', (done) => {
 
         let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx"].join(" ");
         setResponseFile('vstestGood.json');
@@ -474,9 +475,9 @@ describe('VsTest Suite', function () {
             });
     })
 
-    it('Vstest task with run in parallel and vs 2015', (done) => {
+    it('Vstest task with run in parallel and vs 2017', (done) => {
 
-        let vstestCmd = ["\\vs2017\\installation\\folder\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe", '/source/dir/someFile1', "/logger:trx"].join(" ");
+        let vstestCmd = [sysVstest15Location, '/source/dir/someFile1', "/logger:trx"].join(" ");
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
@@ -500,7 +501,7 @@ describe('VsTest Suite', function () {
             });
     })
 
-    it('Vstest task with run in parallel and vs 2014 update1 or higher', (done) => {
+    it('Vstest task with run in parallel and vs 2015 update1 or higher', (done) => {
 
         let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx"].join(" ");
         setResponseFile('vstestRunInParallel.json');
