@@ -25,12 +25,14 @@ foreach($sourcePath in $source)
     Write-Verbose $sourcePath -Verbose
     # Check if the given path is a valid Uri
     $isUri = [System.Uri]::IsWellFormedUriString($sourcePath, [System.UriKind]::Absolute)
-
+    
+    #Get the destination Directory
+    $destinationDirectory = Split-Path -Path $destinationFile[$counter] -Parent
+   
     # Download the test agent to desired location if source path is Uri
     if($isUri)
     {
         # Create the parent directory if it does not exist
-        $destinationDirectory = Split-Path -Path $destinationFile[$counter] -Parent
         $isPresent = Test-Path $destinationDirectory
         if(!$isPresent)
         {
@@ -39,7 +41,6 @@ foreach($sourcePath in $source)
 
         Write-Verbose -Message "Downloading test agent from $sourcePath to test machine." -Verbose
         Invoke-WebRequest $sourcePath -OutFile $destinationFile[$counter]
-        $counter++
     }
     else
     {
@@ -47,7 +48,7 @@ foreach($sourcePath in $source)
         $sourceDirectory = Split-Path -Path $sourcePath -Parent
         $sourceFileName = Split-Path -Path $sourcePath -Leaf
 
-        Write-Verbose -Message "Copying file from $sourcePath to test machine." -f $sourcePath
+        Write-Verbose -Message "Copying file from $sourcePath to test machine." -Verbose
         Write-Verbose "robocopy $sourceDirectory $destinationDirectory $sourceFileName /Z /mir /NP /Copy:DAT /R:10 /W:30" -Verbose
         robocopy $sourceDirectory $destinationDirectory $sourceFileName /Z /mir /NP /Copy:DAT /R:10 /W:30
         # If robo copy exits with non zero exit code then throw exception.
@@ -57,4 +58,6 @@ foreach($sourcePath in $source)
             throw "Robocopy failed to copy from $sourceDirectory to $destinationDirectory. Failed with a exit code $robocopyExitCode."
         }
     }
+
+    $counter++
 }
