@@ -100,7 +100,7 @@ async function execBuild() {
     gb.exec()
         .then(function (code) {
             gradleResult = code;
-            return processCodeAnalysisResults();
+            return sqGradle.processSonarQubeIntegration();
         })
         .then(() => {
             tl.debug(`Gradle result: ${gradleResult}`);
@@ -114,6 +114,10 @@ async function execBuild() {
             return Q.resolve(err);
         })
         .then(function (resp) {
+            // We should always publish pmd/checkstyle/findbugs result
+            tl.debug('Processing code analysis results');
+            codeAnalysisOrchestrator.publishCodeAnalysisResults();
+
             // We should always publish test results and code coverage
             publishTestResults(publishJUnitResults, testResultsFiles);
             publishCodeCoverage(isCodeCoverageOpted);
@@ -138,14 +142,6 @@ function enableSonarQubeAnalysis() {
         gb = sqGradle.applySonarQubeCodeCoverageArguments(gb, isCodeCoverageOpted, ccTool, summaryFile);
     }
     gb = codeAnalysisOrchestrator.configureBuild(gb);
-}
-
-function processCodeAnalysisResults(): Q.Promise<void> {
-
-    tl.debug('Processing code analysis results');
-    codeAnalysisOrchestrator.publishCodeAnalysisResults();
-
-    return sqGradle.processSonarQubeIntegration();
 }
 
 // Configure the JVM associated with this run.
