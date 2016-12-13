@@ -178,6 +178,29 @@ describe('VsTest Suite', function () {
             });
     })
 
+    it('VSTest task with VS2017 installed on build agent and latest option is selected in definition', (done) => {
+
+        let vstestCmd = ["\\vs2017\\installation\\folder\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe", "/path/to/test.dll", "/logger:trx"].join(" ");
+        setResponseFile('vs2017.json');
+
+        let tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testAssemblyVer2', '/path/to/test.dll');
+        tr.setInput('vstestLocationMethod', 'version');
+        tr.setInput('vsTestVersion', 'latest');
+
+        tr.run()
+            .then(() => {
+                assert(tr.resultWasSet, 'task should have set a result' + tr.stderr + tr.stdout);
+                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr + tr.stdout);
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.ran(vstestCmd), 'should have run vstest' + tr.stdout + tr.stderr);
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+
     it('Vstest task with test results files filter and exclude filter', (done) => {
 
         let vstestCmd = [sysVstestLocation, "/source/dir/someFile1", "/logger:trx"].join(" ");
