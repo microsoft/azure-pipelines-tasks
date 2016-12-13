@@ -89,6 +89,6 @@
         }
     },
     "messages": {
-        "JenkinsJobQueue": "Jenkins job queued"
+        "JenkinsJobQueued": "Jenkins job queued"
     }
 }

@@ -101,7 +101,7 @@ async function doWork() {
 
         var jobQueue: JobQueue = new JobQueue(taskOptions);
         var queueUri = await util.pollSubmitJob(taskOptions);
-        console.log(tl.loc('JenkinsJobQueue'));
+        console.log(tl.loc('JenkinsJobQueued'));
         var rootJob = await util.pollCreateRootJob(queueUri, jobQueue, taskOptions);
         //start the job queue
         jobQueue.start();

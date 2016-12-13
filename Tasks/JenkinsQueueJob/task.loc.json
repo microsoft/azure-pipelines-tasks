@@ -89,6 +89,6 @@
     }
   },
   "messages": {
-    "JenkinsJobQueue": "ms-resource:loc.messages.JenkinsJobQueue"
+    "JenkinsJobQueued": "ms-resource:loc.messages.JenkinsJobQueued"
   }
 }
