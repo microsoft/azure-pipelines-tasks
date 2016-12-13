@@ -476,7 +476,7 @@ describe('VsTest Suite', function () {
 
     it('Vstest task with run in parallel and vs 2015', (done) => {
 
-        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx"].join(" ");
+        let vstestCmd = ["\\vs2017\\installation\\folder\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe", '/source/dir/someFile1', "/logger:trx"].join(" ");
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
