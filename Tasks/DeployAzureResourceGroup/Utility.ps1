@@ -171,7 +171,8 @@ function Create-AzureResourceGroup
             
             if ($azureResourceGroupValidationError)
             {
-                throw (Get-VstsLocString -Key "ARG_ValidationFailed")
+                $azureResourceGroupValidationError.Details  | ForEach-Object {$ErrorDetails += $_.Code + " : " + $_.Message + " " + $_.Details}
+                throw (Get-VstsLocString -Key "ARG_ValidationFailed" -ArgumentList $azureResourceGroupValidationError.Code, $azureResourceGroupValidationError.Message, $ErrorDetails)
             }
             
             Write-Host (Get-VstsLocString -Key "ARG_ValidationSucceeded")
