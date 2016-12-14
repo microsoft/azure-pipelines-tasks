@@ -128,18 +128,17 @@ export class ResourceGroup {
         if (template) {
             properties["template"] = template;
         }
-        if (this.taskParameters.csmParametersFileLink && this.taskParameters.csmParametersFileLink.trim()!="" && (!this.taskParameters.overrideParameters || this.taskParameters.overrideParameters.trim()==""))
+        if (this.taskParameters.csmParametersFileLink && this.taskParameters.csmParametersFileLink.trim()!="" && (!this.taskParameters.overrideParameters || this.taskParameters.overrideParameters.trim()=="")) 
             properties["parametersLink"] = {"uri" : this.taskParameters.csmParametersFileLink };
         else {
             var params = parameters;
             params = this.updateOverrideParameters(params);
             properties["parameters"] = params;
-            properties["mode"] = this.taskParameters.deploymentMode;
-            properties["debugSetting"] = {"detailLevel": "requestContent, responseContent"};
         }
+        properties["mode"] = this.taskParameters.deploymentMode;
+        properties["debugSetting"] = {"detailLevel": "requestContent, responseContent"};
         return new Deployment(properties, this.taskParameters.location)
     }
-
 
     private getDeploymentDataForLinkedArtifact() {
         console.log("Getting deployment data from a linked artifact..");
@@ -172,29 +171,57 @@ export class ResourceGroup {
         return this.createDeployment(parameters, null, template);
     }
 
-    private async startDeployment(armClient, deployment) {
-         console.log("Starting Deployment..");
-         armClient.deployments.createOrUpdate(this.taskParameters.resourceGroupName, this.createDeploymentName(), deployment, null, async (error, result, request, response) => {
-            if (error) {
-                tl.setResult(tl.TaskResult.Failed, tl.loc("RGO_createTemplateDeploymentFailed", error.message));
-                process.exit();
-            }
-            console.log("Completed Deployment");
-            if (this.taskParameters.enableDeploymentPrerequisites) {
-                console.log("Enabling winRM Https Listener on your windows machines..");
-                await this.WinRMHttpsListener.EnableWinRMHttpsListener();
-            }
-
-            try {
-                if (this.taskParameters.outputVariable && this.taskParameters.outputVariable.trim() != ""){
-                    this.envController.RegisterEnvironment();
+    private validateDeployment(armClient, deployment) {
+        console.log("Starting Validation..");
+        deployment.properties.mode = "Incremental";
+             armClient.deployments.validate(this.taskParameters.resourceGroupName, this.createDeploymentName(), deployment, (error, result, request, response) => {
+                if (error) {
+                    tl.setResult(tl.TaskResult.Failed, tl.loc("RGO_createTemplateDeploymentFailed", error.message));
+                    process.exit();
                 }
-            } catch(error) {            
-                tl.setResult(tl.TaskResult.Failed, tl.loc("FailedRegisteringEnvironment", error));
-                process.exit();
-            }
-            tl.setResult(tl.TaskResult.Succeeded, tl.loc("RGO_createTemplateDeploymentSucceeded", this.taskParameters.resourceGroupName));
-        });
+                console.log("Completed Validation");
+                if (result.error) {
+                    console.log("There are errors in your deployment");
+                    console.log("Error:", result.error.code);
+                    console.log("Error Message: ", result.error.message);
+                    console.log("Details:");
+                    for (var i= 0; i< result.error.details.length; i++) {
+                        console.log(i+1, result.error.details[i].code, result.error.details[i].message, result.error.details[i].details);
+                    }
+                } else {
+                    console.log("It's a valid Deployment")
+                    tl.setResult(tl.TaskResult.Succeeded, tl.loc("RGO_createTemplateDeploymentSucceeded", this.taskParameters.resourceGroupName));
+                }
+            });
+    }
+
+    private async startDeployment(armClient, deployment) {
+         if (deployment.properties.mode === "Validation") {
+            this.validateDeployment(armClient, deployment);             
+         } else {
+            console.log("Starting Deployment..");
+            armClient.deployments.createOrUpdate(this.taskParameters.resourceGroupName, this.createDeploymentName(), deployment, null, async (error, result, request, response) => {
+                if (error) {
+                    tl.setResult(tl.TaskResult.Failed, tl.loc("RGO_createTemplateDeploymentFailed", error.message));
+                    process.exit();
+                }
+                console.log("Completed Deployment");
+                if (this.taskParameters.enableDeploymentPrerequisites) {
+                    console.log("Enabling winRM Https Listener on your windows machines..");
+                    await this.WinRMHttpsListener.EnableWinRMHttpsListener();
+                }
+
+                try {
+                    if (this.taskParameters.outputVariable && this.taskParameters.outputVariable.trim() != "") {
+                        this.envController.RegisterEnvironment();
+                    }
+                } catch(error) {            
+                    tl.setResult(tl.TaskResult.Failed, tl.loc("FailedRegisteringEnvironment", error));
+                    process.exit();
+                }
+                tl.setResult(tl.TaskResult.Succeeded, tl.loc("RGO_createTemplateDeploymentSucceeded", this.taskParameters.resourceGroupName));
+            });
+         }
     }
 
     private createTemplateDeployment(armClient) {
@@ -204,7 +231,7 @@ export class ResourceGroup {
             this.startDeployment(armClient, deployment);
         } else {
             if (this.taskParameters.csmParametersFileLink && this.taskParameters.csmParametersFileLink.trim() && (!this.taskParameters.overrideParameters || this.taskParameters.overrideParameters.trim()=="")) {
-                var deployment = this.createDeployment({});
+                var deployment = this.createDeployment({}, this.taskParameters.csmFileLink);
                 this.startDeployment(armClient, deployment);
             } else {
                 this.request(this.taskParameters.csmParametersFileLink).then((contents) => {
