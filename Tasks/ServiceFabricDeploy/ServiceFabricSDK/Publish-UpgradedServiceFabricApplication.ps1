@@ -41,6 +41,9 @@ function Publish-UpgradedServiceFabricApplication
     .PARAMETER RegisterPackageTimeoutSec
     Timeout in seconds for registering application package.
 
+    .PARAMETER CompressPackage
+    Indicates whether the application package should be compressed before copying to the image store.
+
     .EXAMPLE
     Publish-UpgradeServiceFabricApplication -ApplicationPackagePath 'pkg\Debug' -ApplicationParameterFilePath 'AppParameters.Local.xml'
 
@@ -92,7 +95,11 @@ function Publish-UpgradedServiceFabricApplication
 
         [Parameter(ParameterSetName="ApplicationParameterFilePath")]
         [Parameter(ParameterSetName="ApplicationName")]
-        [int]$RegisterPackageTimeoutSec
+        [int]$RegisterPackageTimeoutSec,
+
+        [Parameter(ParameterSetName="ApplicationParameterFilePath")]
+        [Parameter(ParameterSetName="ApplicationName")]
+        [Switch]$CompressPackage
     )
 
 
@@ -207,16 +214,29 @@ function Publish-UpgradedServiceFabricApplication
             'ApplicationPackagePathInImageStore' = $applicationPackagePathInImageStore
         }
 
+        $InstalledSdkVersion = [version](Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK" -Name FabricSDKVersion).FabricSDKVersion
+
         if ($CopyPackageTimeoutSec)
         {
-            $InstalledSdkVersion = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK" -Name FabricSDKVersion).FabricSDKVersion
-            if ([version]$InstalledSdkVersion -gt [version]"2.3")
+            if ($InstalledSdkVersion -gt [version]"2.3")
             {
                 $copyParameters['TimeOutSec'] = $CopyPackageTimeoutSec
             }
             else
             {
-                Write-Warning (Get-VstsLocString -Key CopyPackageTimeoutSecWarning $InstalledSdkVersion)
+                Write-Warning (Get-VstsLocString -Key SFSDK_CopyPackageTimeoutSecWarning $InstalledSdkVersion)
+            }
+        }
+
+        if ($CompressPackage)
+        {
+            if ($InstalledSdkVersion -gt [version]"2.5")
+            {
+                $copyParameters['CompressPackage'] = $CompressPackage
+            }
+            else
+            {
+                Write-Warning (Get-VstsLocString -Key SFSDK_CompressPackageWarning $InstalledSdkVersion)
             }
         }
 

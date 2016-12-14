@@ -20,6 +20,7 @@ $connectionEndpoint = ([System.Uri]$connectionEndpointFullUrl).Authority
 Register-Mock Get-VstsInput { $publishProfilePath } -- -Name publishProfilePath
 Register-Mock Get-VstsInput { $applicationPackagePath } -- -Name applicationPackagePath -Require
 Register-Mock Get-VstsInput { $serviceConnectionName } -- -Name serviceConnectionName -Require
+Register-Mock Get-VstsInput { "false" } -- -Name compressPackage
 
 # Setup file resolution
 Register-Mock Find-VstsFiles { $publishProfilePath } -- -LegacyPattern $publishProfilePath
@@ -84,7 +85,7 @@ Register-Mock Get-ApplicationNameFromApplicationParameterFile { $appName } -- "$
 # Indicate that the application does not exist on cluster
 Register-Mock Get-ServiceFabricApplication { $null } -- -ApplicationName $appName
 
-$publishArgs = @("-ApplicationParameterFilePath:", "$PSScriptRoot\data\ApplicationParameters.xml", "-ErrorAction:", "Stop", "-ApplicationPackagePath:", $applicationPackagePath, "-Action:", "RegisterAndCreate", "-OverwriteBehavior:", "SameAppTypeAndVersion")
+$publishArgs = @("-ApplicationParameterFilePath:", "$PSScriptRoot\data\ApplicationParameters.xml", "-OverwriteBehavior:", "SameAppTypeAndVersion", "-ApplicationPackagePath:", $applicationPackagePath, "-ErrorAction:", "Stop", "-Action:", "RegisterAndCreate")
 Register-Mock Publish-NewServiceFabricApplication -Arguments $publishArgs 
 
 # Act
