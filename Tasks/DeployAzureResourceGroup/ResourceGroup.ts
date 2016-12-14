@@ -184,9 +184,11 @@ export class ResourceGroup {
                     console.log("There are errors in your deployment");
                     console.log("Error:", result.error.code);
                     console.log("Error Message: ", result.error.message);
-                    console.log("Details:");
-                    for (var i= 0; i< result.error.details.length; i++) {
-                        console.log(i+1, result.error.details[i].code, result.error.details[i].message, result.error.details[i].details);
+                    if(result.error.details) {
+                        console.log("Details:");
+                        for (var i= 0; i< result.error.details.length; i++) {
+                            console.log(i+1, result.error.details[i].code, result.error.details[i].message, result.error.details[i].details);
+                        }
                     }
                 } else {
                     console.log("It's a valid Deployment")
@@ -231,14 +233,14 @@ export class ResourceGroup {
             this.startDeployment(armClient, deployment);
         } else {
             if (this.taskParameters.csmParametersFileLink && this.taskParameters.csmParametersFileLink.trim() && (!this.taskParameters.overrideParameters || this.taskParameters.overrideParameters.trim()=="")) {
-                var deployment = this.createDeployment({}, this.taskParameters.csmFileLink);
-                this.startDeployment(armClient, deployment);
-            } else {
                 this.request(this.taskParameters.csmParametersFileLink).then((contents) => {
                     var parameters = JSON.parse(contents).parameters;
                     var deployment = this.createDeployment(parameters, this.taskParameters.csmFileLink);
                     this.startDeployment(armClient, deployment);
                 });
+            } else {
+                var deployment = this.createDeployment({}, this.taskParameters.csmFileLink);
+                this.startDeployment(armClient, deployment);
             }
         }
     }
