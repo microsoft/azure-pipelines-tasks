@@ -21,6 +21,23 @@
     "minimumAgentVersion": "1.103.0",
     "groups": [
         {
+            "name": "AzureDetails",
+            "displayName": "Azure Details",
+            "isExpanded": true
+        },
+        {
+            "name": "Template",
+            "displayName": "Template",
+            "isExpanded": true,
+            "visibleRule": "action = Create Or Update Resource Group"
+        },
+        {
+            "name": "AdvancedDeploymentOptions",
+            "displayName": "Advanced Deployment Options",
+            "isExpanded": true,
+            "visibleRule": "action = Create Or Update Resource Group || action = Select Resource Group"
+        },
+        {
             "name": "output",
             "displayName": "Output",
             "isExpanded": true
@@ -34,6 +51,7 @@
             "required": false,
             "helpMarkDown": "",
             "defaultValue": "ConnectedServiceName",
+            "groupName": "AzureDetails",
             "options": {
                 "ConnectedServiceName": "Azure Resource Manager",
                 "ConnectedServiceNameClassic": "Azure Classic"
@@ -45,6 +63,7 @@
             "label": "Azure RM Subscription",
             "defaultValue": "",
             "required": true,
+            "groupName": "AzureDetails",
             "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment.",
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
         },
@@ -54,6 +73,7 @@
             "label": "Azure Classic Subscription",
             "defaultValue": "",
             "required": true,
+            "groupName": "AzureDetails",
             "helpMarkDown": "Select the Azure Classic subscription for the deployment.",
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
         },
@@ -64,6 +84,7 @@
             "defaultValue": "Create Or Update Resource Group",
             "required": true,
             "helpMarkDown": "Action to be performed on the Azure resources or resource group.",
+            "groupName": "AzureDetails",
             "options": {
                 "Create Or Update Resource Group": "Create Or Update Resource Group",
                 "Select Resource Group": "Select Resource Group",
@@ -81,6 +102,7 @@
             "label": "Action",
             "defaultValue": "Select Resource Group",
             "required": true,
+            "groupName": "AzureDetails",
             "helpMarkDown": "Action to be performed on the Azure resources or cloud service.",
             "options": {
                 "Select Resource Group": "Select Cloud Service"
@@ -93,6 +115,7 @@
             "label": "Resource Group",
             "required": true,
             "helpMarkDown": "Provide the name of the resource group.",
+            "groupName": "AzureDetails",
             "properties": {
                 "EditableOptions": "True"
             },
@@ -104,6 +127,7 @@
             "label": "Cloud Service",
             "required": true,
             "helpMarkDown": "Provide the name of the cloud service.",
+            "groupName": "AzureDetails",
             "properties": {
                 "EditableOptions": "True"
             },
@@ -116,6 +140,7 @@
             "defaultValue": "East US",
             "required": true,
             "helpMarkDown": "Location for deploying the resource group. If the resource group already exists in the subscription, then this value will be ignored.",
+            "groupName": "AzureDetails",
             "options": {
                 "Australia East": "Australia East",
                 "Australia Southeast": "Australia Southeast",
@@ -144,8 +169,8 @@
             "label": "Template",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate.",
-            "visibleRule": "action = Create Or Update Resource Group"
+            "groupName": "Template",
+            "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate."
         },
         {
             "name": "csmParametersFile",
@@ -153,8 +178,8 @@
             "label": "Template Parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the path for the parameters file for the Azure Resource Manager Template.",
-            "visibleRule": "action = Create Or Update Resource Group"
+            "groupName": "Template",
+            "helpMarkDown": "Specify the path for the parameters file for the Azure Resource Manager Template."
         },
         {
             "name": "overrideParameters",
@@ -162,11 +187,11 @@
             "label": "Override Template Parameters",
             "defaultValue": "",
             "required": false,
+            "groupName": "Template",
             "helpMarkDown": "Specify the template parameters to override like, <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword (ConvertTo-SecureString -String '$(password)' -AsPlainText -Force) –azureKeyVaultName $(fabrikamFibre).",
             "properties": {
                 "editorExtension": "ms.vss-distributed-task-input-editor.parameters-grid"
-            },
-            "visibleRule": "action = Create Or Update Resource Group"
+            }
         },
         {
             "name": "deploymentMode",
@@ -174,6 +199,7 @@
             "label": "Deployment Mode",
             "defaultValue": "Incremental",
             "required": true,
+            "groupName": "AzureDetails",
             "helpMarkDown": "Incremental mode handles deployments as incremental updates to the resource group . It leaves unchanged resources that exist in the resource group but are not specified in the template. \n\n Complete mode deletes resources that are not in your template. \n\n Validate mode enables you to find problems with the template before creating actual resources. \n\n By default, Incremental mode is used.",
             "options": {
                 "Validation": "Validation Only",
@@ -183,21 +209,12 @@
             "visibleRule": "action = Create Or Update Resource Group"
         },
         {
-            "name": "enableDeploymentPrerequisitesForCreate",
+            "name": "enableDeploymentPrerequisites",
             "type": "boolean",
             "label": "Enable Deployment Prerequisites",
             "defaultValue": "false",
-            "visibleRule": "action = Create Or Update Resource Group",
             "required": false,
-            "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
-        },
-        {
-            "name": "enableDeploymentPrerequisitesForSelect",
-            "type": "boolean",
-            "label": "Enable Deployment Prerequisites",
-            "defaultValue": "false",
-            "visibleRule": "action = Select Resource Group",
-            "required": false,
+            "groupName": "AdvancedDeploymentOptions",
             "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
         },
         {

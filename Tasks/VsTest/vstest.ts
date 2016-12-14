@@ -20,6 +20,11 @@ const TITestSettingsNameTag = "testSettings-5d76a195-1e43-4b90-a6ce-4ec3de87ed25
 const TITestSettingsIDTag = "5d76a195-1e43-4b90-a6ce-4ec3de87ed25";
 const TITestSettingsXmlnsTag = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010"
 
+interface ExecutabaleInfo {
+    version: number;
+    location: string;
+}
+
 try {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     var vsTestVersion: string = tl.getInput('vsTestVersion');
@@ -50,6 +55,12 @@ try {
     var isPrFlow = tl.getVariable('tia.isPrFlow');
     var vsTestVersionForTIA: number[] = null;
     var ignoreVstestFailure: string = tl.getVariable("vstest.ignoretestfailures");
+
+    // only to facilitate the writing of unit tests 
+    var vs15HelperPath = tl.getVariable('vs15Helper');
+    if (!vs15HelperPath) {
+        vs15HelperPath = path.join(__dirname, 'vs15Helper.ps1');
+    }
 
     var useNewCollector = false;
     if (useNewCollectorFlag && useNewCollectorFlag.toUpperCase() === "TRUE") {
@@ -691,10 +702,11 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     }
     overrideTestRunParametersIfRequired(runSettingsFile)
         .then(function(overriddenSettingsFile) {
-            locateVSVersion()
-                .then(function(vsVersion) {
+            locateVSVersion(vsTestVersion)
+                .then(function(vsTestConsoleInfo) {
+                    let vsVersion = vsTestConsoleInfo.version;
+                    vstestLocation = vsTestConsoleInfo.location;
                     try {
-                        vstestLocation = getVSTestLocation(vsVersion);
                         let disableTIA = tl.getVariable("DisableTestImpactAnalysis");
                         if (disableTIA !== undefined && disableTIA.toLowerCase() === "true") {
                             tiaEnabled = false;
@@ -1383,27 +1395,71 @@ function resetRunInParallel() {
     runInParallel = false;
 }
 
-function locateVSVersion(): Q.Promise<number> {
-    var defer = Q.defer<number>();
-    var vsVersion = parseFloat(vsTestVersion);
-    if (!isNaN(vsVersion)) {
-        defer.resolve(vsVersion);
-        return defer.promise;
-    }
-    var regPath = "HKLM\\SOFTWARE\\Microsoft\\VisualStudio";
-    regedit.list(regPath).on('data', function(entry) {
-        if (entry && entry.data && entry.data.keys) {
-            var subkeys = entry.data.keys;
-            var versions = getFloatsFromStringArray(subkeys);
-            if (versions && versions.length > 0) {
-                versions.sort((a, b) => a - b);
-                defer.resolve(versions[versions.length - 1]);
-                return defer.promise;
+
+function getLatestVSTestConsolePathFromRegistry(): Q.Promise<ExecutabaleInfo> {
+    let deferred = Q.defer<ExecutabaleInfo>();
+    let regPath = 'HKLM\\SOFTWARE\\Microsoft\\VisualStudio';
+    regedit.list(regPath).on('data', (entry) => {
+        let subkeys = entry.data.keys;
+        let versions = getFloatsFromStringArray(subkeys);
+        if (versions && versions.length > 0) {
+            versions.sort((a, b) => a-b);
+            let selectedVersion = versions[versions.length - 1];
+            tl.debug('Registry entry found. Selected version is ' + selectedVersion.toString());
+            deferred.resolve({version: selectedVersion, location: getVSTestLocation(selectedVersion)});
+        } else {
+            deferred.resolve(null);
+        }
+    }).on('error', () => {
+        tl.debug('Registry entry not found under VisualStudio node');
+        deferred.resolve(null);
+    });
+    return deferred.promise;
+}
+
+function getVSTestConsole15Path(): string {
+    let powershellTool = tl.tool('powershell');
+    let powershellArgs = ['-file', vs15HelperPath]
+    powershellTool.arg(powershellArgs);
+    let xml = powershellTool.execSync().stdout;
+    let deferred = Q.defer<string>();
+    let vstestconsolePath:string = null;
+    xml2js.parseString(xml, (err, result) => {
+        if(result) {
+            try {
+                let vs15InstallDir = result['Objs']['S'][0];
+                vstestconsolePath = path.join(vs15InstallDir, 'Common7', 'IDE', 'CommonExtensions', 'Microsoft', 'TestWindow', 'vstest.console.exe');
+            } catch (e) {
+                tl.debug('Unable to read Visual Studio 2017 installation path');
+                tl.debug(e);
+                vstestconsolePath = null;
             }
         }
-        defer.resolve(null);
-    });
-    return defer.promise;
+    })
+    return vstestconsolePath;
+}
+
+
+function locateVSVersion(version: string): Q.Promise<ExecutabaleInfo> {
+    let deferred = Q.defer<ExecutabaleInfo>();
+    let vsVersion: number = parseFloat(version);
+    
+    if (isNaN(vsVersion) || vsVersion == 15) {
+        // latest
+        tl.debug('Searching for latest Visual Studio');
+        let vstestconsole15Path = getVSTestConsole15Path();
+        if (vstestconsole15Path) {
+            deferred.resolve({version: 15, location: vstestconsole15Path});
+        } else {
+            // fallback
+            tl.debug('Unable to find an instance of Visual Studio 2017');
+            return getLatestVSTestConsolePathFromRegistry();
+        }
+    } else {
+        tl.debug('Searching for Visual Studio ' + vsVersion.toString());
+        deferred.resolve({version: vsVersion, location: getVSTestLocation(vsVersion)});
+    }
+    return deferred.promise;
 }
 
 function getFloatsFromStringArray(inputArray: string[]): number[] {
