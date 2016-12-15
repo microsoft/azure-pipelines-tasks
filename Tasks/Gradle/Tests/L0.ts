@@ -390,31 +390,31 @@ describe('Gradle L0 Suite', function () {
         }
     });
 
-    // it('run gradle with jdkVersion set to 1.5', (done) => {
-    //     let tp: string = path.join(__dirname, 'L0JDKVersion15.js');
-    //     let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+    it('run gradle with jdkVersion set to 1.5', (done) => {
+        let tp: string = path.join(__dirname, 'L0JDKVersion15.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-            // try {
-    //       tr.run();
+        try {
+            tr.run();
 
-    //         if (isWindows) {
-    //             // should have run reg query toolrunner once
-        //         assert(tr.invokedToolCount === 1, 'should not have run gradle');
-    //         } else {
-        //         assert(tr.invokedToolCount === 0, 'should not have run gradle');
-        //     }
-        //     assert(tr.stderr.length > 0, 'should have written to stderr');
-        //     assert(tr.failed, 'task should have failed');
-        //     assert(tr.stdout.indexOf('Failed to find specified JDK version') >= 0, 'JAVA_HOME set?');
+            if (isWindows) {
+                // should have run reg query toolrunner once
+                assert(tr.invokedToolCount === 1, 'should not have run gradle');
+            } else {
+                assert(tr.invokedToolCount === 0, 'should not have run gradle');
+            }
+            assert(tr.failed, 'task should have failed');
+            //jeyou: loc issue
+            assert(tr.stdout.indexOf('loc_mock_FailedToLocateSpecifiedJVM') >= 0, 'JAVA_HOME set?');
 
-        //     done();
-        //         } catch (err) {
-        //     console.log(tr.stdout);
-        //     console.log(tr.stderr);
-        //     console.log(err);
-        //     done(err);
-        // }
-    // });
+            done();
+        } catch (err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
 
     it('run gradle with Valid inputs but it fails', (done) => {
         let tp: string = path.join(__dirname, 'L0ValidInputsFailure.js');
