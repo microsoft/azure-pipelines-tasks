@@ -33,7 +33,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.Action",
       "required": false,
-      "helpMarkDown": "",
+      "helpMarkDown": "ms-resource:loc.input.help.Action",
       "defaultValue": "Swap Slots",
       "options": {
         "Swap Slots": "Swap Slots",
