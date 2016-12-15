@@ -58,14 +58,14 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
         msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='" + webApplicationDeploymentPath + "'";
     }
 
+    if(takeAppOfflineFlag) {
+        msDeployCmdArgs += ' -enableRule:AppOffline';
+    }
+
     if(useWebDeploy) {
 
         if(setParametersFile) {
             msDeployCmdArgs += " -setParamFile=\"" + setParametersFile + "\"";
-        }
-
-        if(takeAppOfflineFlag) {
-            msDeployCmdArgs += ' -enableRule:AppOffline';
         }
 
         if(excludeFilesFromAppDataFlag) {
