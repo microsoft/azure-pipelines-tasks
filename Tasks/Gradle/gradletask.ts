@@ -17,12 +17,6 @@ import { CodeCoverageEnablerFactory } from 'codecoverage-tools/codecoveragefacto
 import { ICodeCoverageEnabler } from 'codecoverage-tools/codecoverageenabler';
 import javacommons = require('java-common/java-common');
 
-function processCodeAnalysisResults(codeAnalysisOrchestrator: CodeAnalysisOrchestrator): Q.Promise<void> {
-    tl.debug('Processing code analysis results');
-    codeAnalysisOrchestrator.publishCodeAnalysisResults();
-    return sqGradle.processSonarQubeIntegration();
-}
-
 // Configure the JVM associated with this run.
 function setGradleOpts(gradleOptions: string): void {
     if (gradleOptions) {
@@ -253,7 +247,7 @@ async function run() {
         let analysisError: any;
         try {
             gradleResult = await gradleRunner.exec();
-            processCodeAnalysisResults(codeAnalysisOrchestrator);
+            sqGradle.processSonarQubeIntegration();
             tl.debug(`Gradle result: ${gradleResult}`);
         } catch (err) {
             console.error(err);
@@ -262,6 +256,9 @@ async function run() {
             statusFailed = true;
             analysisError = err;
         }
+        tl.debug('Processing code analysis results');
+        codeAnalysisOrchestrator.publishCodeAnalysisResults();
+
         // We should always publish test results and code coverage
         publishTestResults(publishJUnitResults, testResultsFiles);
         publishCodeCoverage(isCodeCoverageOpted, codeCoverageTool, summaryFile, reportDirectory);
