@@ -49,7 +49,7 @@ async function run() {
         if(!deployToSlotFlag) {
             resourceGroupName = await azureRESTUtility.getResourceGroupName(endPoint, webAppName);
         }
-        if(slotName.toLowerCase() === "production") {
+        if(slotName && slotName.toLowerCase() === "production") {
             deployToSlotFlag = false;
             slotName = null;
         }
