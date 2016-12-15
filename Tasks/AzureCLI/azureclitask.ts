@@ -130,8 +130,9 @@ export class azureclitask {
         if (endpointAuth.scheme === "Certificate") {
             var bytes = endpointAuth.parameters["certificate"];
             var subscriptionId:string = tl.getEndpointDataParameter(connectedService, "SubscriptionId", true);
+            var serviceUrl:string = tl.getEndpointUrl(connectedService, false);
             const publishSettingFileName:string = path.join(os.tmpdir() ,"subscriptions" + new Date().getTime() + ".publishsettings");
-            this.createPublishSettingFile(subscriptionName, subscriptionId, bytes, publishSettingFileName);
+            this.createPublishSettingFile(subscriptionName, subscriptionId, bytes, serviceUrl, publishSettingFileName);
             var resultOfToolExecution = tl.execSync("azure", "account import \"" + publishSettingFileName + "\"");
             this.deleteFile(publishSettingFileName);
             this.throwIfError(resultOfToolExecution);
@@ -198,9 +199,21 @@ export class azureclitask {
         }
     }
 
-    private static createPublishSettingFile(subscriptionName:string, subscriptionId:string, certificate:string, publishSettingFileName:string): void  {
+    private static createPublishSettingFile(subscriptionName:string, subscriptionId:string, certificate:string, serviceUrl:string, publishSettingFileName:string): void  {
         //writing the data to the publishsetting file
-        this.createFile(publishSettingFileName, util.format('<?xml version="1.0" encoding="utf-8"?><PublishData><PublishProfile SchemaVersion="2.0" PublishMethod="AzureServiceManagementAPI"><Subscription ServiceManagementUrl="https://management.core.windows.net" Id="%s" Name="%s" ManagementCertificate="%s" /> </PublishProfile></PublishData>',subscriptionId, subscriptionName, certificate));
+        this.createFile(publishSettingFileName, util.format(`
+        <?xml version="1.0" encoding="utf-8"?>
+        <PublishData>
+            <PublishProfile 
+            SchemaVersion="2.0" 
+            PublishMethod="AzureServiceManagementAPI">
+            <Subscription 
+                ServiceManagementUrl="%s" 
+                Id="%s" 
+                Name="%s" 
+                ManagementCertificate="%s" /> 
+            </PublishProfile>
+        </PublishData>`, serviceUrl, subscriptionId, subscriptionName, certificate));
     }
 
     private static createFile (filePath:string, data:string)
