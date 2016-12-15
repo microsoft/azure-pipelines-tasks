@@ -148,7 +148,7 @@ async function run() {
     if(publishingProfile != null) {
         var customMessage = {
             type: "Deployment",
-            slotName: (deployToSlotFlag ? slotName : "production")
+            slotName: (deployToSlotFlag ? slotName : "Production")
         };
 
         try {
