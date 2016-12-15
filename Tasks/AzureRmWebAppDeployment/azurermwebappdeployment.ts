@@ -49,7 +49,10 @@ async function run() {
         if(!deployToSlotFlag) {
             resourceGroupName = await azureRESTUtility.getResourceGroupName(endPoint, webAppName);
         }
-
+        if(slotName.toLowerCase() === "production") {
+            deployToSlotFlag = false;
+            slotName = null;
+        }
         var publishingProfile = await azureRESTUtility.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
         tl._writeLine(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
 
@@ -145,7 +148,7 @@ async function run() {
     if(publishingProfile != null) {
         var customMessage = {
             type: "Deployment",
-            slotName: tl.getInput('SlotName') || "Production"
+            slotName: (deployToSlotFlag ? slotName : "production")
         };
 
         try {
