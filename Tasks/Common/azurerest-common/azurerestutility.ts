@@ -278,6 +278,49 @@ export async function updateWebAppAppSettings(SPN, webAppName: string, resourceG
     return deferred.promise;
 }
 
+async function getOperationStatus(SPN, webAppName: string, resourceGroupName: string, slotName: string, url: string) {
+    var deferred = Q.defer();
+    var accessToken = await getAuthorizationToken(SPN);
+    var headers = {
+        authorization: 'Bearer ' + accessToken
+    };
+    httpObj.get('GET', url, headers, (error, response, body) => {
+        if (error) {
+            deferred.reject(error);
+        }
+        else {
+            deferred.resolve(response.statusCode);
+        }
+    });
+    return deferred.promise;
+}
+
+function monitorSlotSwap(SPN, webAppName, resourceGroupName, sourceSlot, targetSlot, url) {
+    var deferred = Q.defer();
+    var attempts = 0;
+    var poll = async function() {
+        if (attempts < 20) {
+            attempts++;
+            await  getOperationStatus(SPN, webAppName, resourceGroupName, sourceSlot, url).then((status) => {
+                if (status === 200) {
+                    deferred.resolve(tl.loc("Successfullyswappedslots"));
+                }
+                else {
+                    tl.debug(tl.loc("SwaSlotpOperationInProgress", webAppName));
+                    setTimeout(poll, 10000);
+                }
+            }).catch((error) => {
+                deferred.reject(tl.loc("UnableToMonitorSlotSwapStatus", webAppName));
+            });
+        }
+        else {
+            deferred.reject(tl.loc("UnableToMonitorSlotSwapStatus", webAppName));
+        }
+    }
+    poll();
+    return deferred.promise;
+}
+
 export async function swapWebAppSlot(SPN, resourceGroupName: string, webAppName: string, sourceSlot: string, targetSlot: string,preserveVnet: boolean) {
 
     var deferred = Q.defer<any>();
@@ -298,16 +341,21 @@ export async function swapWebAppSlot(SPN, resourceGroupName: string, webAppName:
     );
 
     tl._writeLine(tl.loc('StartingSwapSlot',webAppName));
-    httpObj.send('POST', url, body, headers, (error, response, body) => {
+    httpObj.send('POST', url, body, headers, async (error, response, body) => {
         if(error) {
             deferred.reject(error);
         }
-        if(response.statusCode === 202) {
-            deferred.resolve(tl.loc("Successfullyswappedslots", webAppName, sourceSlot, targetSlot));
+        else if(response.statusCode === 202) {
+            await monitorSlotSwap(SPN, webAppName, resourceGroupName, sourceSlot, targetSlot, response.headers.location).then(() => {
+                deferred.resolve(tl.loc("Successfullyswappedslots", webAppName, sourceSlot, targetSlot));
+            }).catch((error) => {
+                tl.warning(error);
+                deferred.reject(error);
+            });
         }
         else {
             tl.error(response.statusMessage);
-            deferred.reject(tl.loc("Failedtoswapslots",response.statusCode, webAppName));
+            deferred.reject(tl.loc("Failedtoswapslots", response.statusCode, webAppName));
         }
     });
     return deferred.promise;
