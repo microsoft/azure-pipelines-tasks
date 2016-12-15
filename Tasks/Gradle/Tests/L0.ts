@@ -907,7 +907,7 @@ describe('Gradle L0 Suite', function () {
         }
     });
 
-    it('Maven with code analysis - Does nothing if the tools were not enabled', function (done) {
+    it('Gradle with code analysis - Does nothing if the tools were not enabled', function (done) {
         let tp: string = path.join(__dirname, 'L0CANoToolsEnabled.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
