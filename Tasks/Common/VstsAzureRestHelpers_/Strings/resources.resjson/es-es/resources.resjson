@@ -1,0 +1,6 @@
+{
+  "loc.messages.AZ_UnsupportedAuthScheme0": "Esquema de autenticación no admitido '{0}' para el punto de conexión de Azure.",
+  "loc.messages.AZ_SpnAccessTokenFetchFailure": "No se puede obtener el token del id. de inquilino {0}.",
+  "loc.messages.AZ_UserAccessTokenFetchFailure": "No se puede obtener el token del usuario dado.",
+  "loc.messages.AZ_NoValidResourceIdFound": "No se encontró ningún recurso con serverName {0} o serverType {1} en la suscripción {2}. Especifique el valor de serverName o serverType correcto y vuelva a intentarlo."
+}

@@ -6,15 +6,14 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'copyfiles.js');
 let runner: mockrun.TaskMockRunner = new mockrun.TaskMockRunner(taskPath);
 runner.setInput('Contents', '**');
-runner.setInput('SourceFolder', '/srcDir');
-runner.setInput('TargetFolder', '/destDir');
+runner.setInput('SourceFolder', path.normalize('/srcDir'));
+runner.setInput('TargetFolder', path.normalize('/destDir'));
 runner.setInput('CleanTargetFolder', 'false');
 runner.setInput('Overwrite', 'false');
 let answers = <mockanswer.TaskLibAnswers> {
-    checkPath: {
-        '/srcDir': false
-    }
+    checkPath: { },
 };
+answers.checkPath[path.normalize('/srcDir')] = false;
 runner.setAnswers(answers);
 
 // as a precaution, disable fs.chmodSync. it is the only fs function

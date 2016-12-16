@@ -22,7 +22,7 @@ export async function substituteXmlVariables(configFile, tags){
     if( !tl.stats(configFile).isFile()) {
         return;
     }
-    tl.debug(tl.loc("Initiatedvariablesubstitutioninconfigfile", configFile));
+    tl.debug("Initiated variable substitution in config file : " + configFile);
     var fileBuffer: Buffer = fs.readFileSync(configFile);
     var fileEncodeType = fileEncoding.detectFileEncoding(configFile, fileBuffer);
     var webConfigContent: string = fileBuffer.toString(fileEncodeType[0]);
@@ -41,13 +41,13 @@ export async function substituteXmlVariables(configFile, tags){
         var tag =  tags[index];
         var nodes = ltxdomutility.getElementsByTagName(tag); 
         if(nodes.length == 0) {
-            tl.debug(tl.loc("Unabletofindnodewithtaginprovidedxmlfile",tag));
+            tl.debug("Unable to find node with tag '" + tag + "' in provided xml file.");
             continue;
         }
         for(var i=0; i<nodes.length; i++) {
             var xmlNode = nodes[i];
             if(varUtility.isObject(xmlNode)){
-                tl.debug(tl.loc("Processingsubstitutionforxmlnode", xmlNode.name));
+                tl.debug("Processing substitution for xml node : " + xmlNode.name);
                 try {
                     if(xmlNode.name == "configSections") {
                         await updateXmlConfigNodeAttribute(xmlDocument, xmlNode);
@@ -55,7 +55,7 @@ export async function substituteXmlVariables(configFile, tags){
                         await updateXmlNodeAttribute(xmlNode);
                     }
                 } catch (error){
-                    tl.debug(tl.loc("Erroroccurredwhileprocessingxmlnode", xmlNode.name));
+                    tl.debug("Error occurred while processing xml node : " + xmlNode.name);
                     tl.debug(error);
                 }
             }  
@@ -66,7 +66,7 @@ export async function substituteXmlVariables(configFile, tags){
         if (error) {
             throw new Error(tl.loc("Failedtowritetoconfigfilewitherror",configFile, error));
         } else {
-            tl.debug(tl.loc("Configfileupdated",configFile));
+            tl.debug("Config file " + configFile + " updated.");
         }
     });
     
@@ -93,7 +93,7 @@ async function updateXmlNodeAttribute(xmlDomNode)
 {
 
     if (varUtility.isEmpty(xmlDomNode) || !varUtility.isObject(xmlDomNode) || xmlDomNode.name == "#comment") {
-        tl.debug(tl.loc("Providednodeisemptyorcomment"));
+        tl.debug("Provided node is empty or a comment.");
         return;
     }
     var xmlDomNodeAttributes = xmlDomNode.attrs;	

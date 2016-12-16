@@ -61,22 +61,22 @@ function findFiles(): string[] {
                     }
                     matchingFilesSet.add(parseResult.file);
                 } else if (stats.isDirectory()) { // most likely error scenario is user specified a directory
-                    failTask('Specified archive: ' + parseResult.file + ' can not be extracted because it is a directory.');
+                    failTask(tl.loc('ExtractDirFailedinFindFiles', parseResult.file));
                 } else { // other error scenarios -- less likely
-                    failTask('Specified archive: ' + parseResult.file + ' can not be extracted because it is not a file.');
+                    failTask(tl.loc('ExtractNotFileFailed', parseResult.file));
                 }
             } catch (e) { // typically because it does not exist
-                failTask('Specified archive: ' + parseResult.file + ' can not be extracted because it can not be accessed: ' + e);
+                failTask(tl.loc('ExtractNotAccessibleFile', parseResult.file, e));
             }
         } else {
-            console.log('Searching for: ' + parseResult.search + ' under directory: ' + parseResult.directory);
+            console.log(tl.loc('SearchInDir', parseResult.search, parseResult.directory));
 
             var stats = tl.stats(parseResult.directory);
 
             if (!stats) {
-                failTask('Search failed because the specified search directory: ' + parseResult.directory + ' does not exist.');
+                failTask(tl.loc('SearchNonExistDir', parseResult.directory));
             } else if (!stats.isDirectory()) {
-                failTask('Search failed because the specified search directory: ' + parseResult.directory + ' is not a directory.');
+                failTask(tl.loc('SearchNonDir', parseResult.directory));
             }
 
             var allFiles = tl.find(parseResult.directory);
@@ -130,7 +130,7 @@ function parsePattern(normalizedPattern: string): { file: string, directory: str
         }
     }
 
-    console.log('No path specified for search pattern: ' + normalizedPattern + ' defaulting to: ' + repoRoot);
+    console.log(tl.loc('NoSearchPatternPath', normalizedPattern, repoRoot));
 
     return {
         file: null,
@@ -145,7 +145,7 @@ function makeAbsolute(normalizedPath: string): string {
     var result = normalizedPath;
     if (!path.isAbsolute(normalizedPath)) {
         result = path.join(repoRoot, normalizedPath);
-        console.log('Relative file path: ' + normalizedPath + ' resolving to: ' + result);
+        console.log(tl.loc('ResolveRelativePath', normalizedPath, result));
     }
     return result;
 }
@@ -183,7 +183,7 @@ function isTar(file) {
 }
 
 function unzipExtract(file, destinationFolder) {
-    console.log('Extracting file: ' + file);
+    console.log(tl.loc('UnzipExtractFile', file));
     if (typeof xpUnzipLocation == "undefined") {
         xpUnzipLocation = tl.which('unzip', true);
     }
@@ -195,7 +195,7 @@ function unzipExtract(file, destinationFolder) {
 }
 
 function sevenZipExtract(file, destinationFolder) {
-    console.log('Extracting file: ' + file);
+    console.log(tl.loc('SevenZipExtractFile', file));
     var sevenZip = tl.tool(getSevenZipLocation());
     sevenZip.arg('x');
     sevenZip.arg('-o' + destinationFolder);
@@ -204,7 +204,7 @@ function sevenZipExtract(file, destinationFolder) {
 }
 
 function tarExtract(file, destinationFolder) {
-    console.log('Extracting file: ' + file);
+    console.log(tl.loc('TarExtractFile', file));
     if (typeof xpTarLocation == "undefined") {
         xpTarLocation = tl.which('tar', true);
     }
@@ -219,12 +219,7 @@ function tarExtract(file, destinationFolder) {
 function handleExecResult(execResult: tr.IExecResult, file) {
     if (execResult.code != tl.TaskResult.Succeeded) {
         tl.debug('execResult: ' + JSON.stringify(execResult));
-        var message = 'Extraction failed for file: ' + file +
-            '\ncode: ' + execResult.code +
-            '\nstdout: ' + execResult.stdout +
-            '\nstderr: ' + execResult.stderr +
-            '\nerror: ' + execResult.error;
-        failTask(message);
+        failTask(tl.loc('ExtractFileFailedMsg', file, execResult.code, execResult.stdout, execResult.stderr, execResult.error));
     }
 }
 
@@ -243,9 +238,9 @@ function extractFiles(files: string[]) {
         var file = files[i];
         var stats = tl.stats(file);
         if (!stats) {
-            failTask('Extraction failed for file: ' + file + ' because it does not exist.');
+            failTask(tl.loc('ExtractNonExistFile', file));
         } else if (stats.isDirectory()) {
-            failTask('Extraction failed for file: ' + file + ' because it is a directory.');
+            failTask(tl.loc('ExtractDirFailed', file));
         }
 
         if (win) {
@@ -265,21 +260,21 @@ function extractFiles(files: string[]) {
                     // e.g. 'destinationFolder/_test.tar.bz2_'
                     var tempFolder = path.normalize(destinationFolder + path.sep + '_' + shortFileName + '_');
                     if (!tl.exist(tempFolder)) {
-                        console.log('Creating temp folder: ' + tempFolder + ' to decompress: ' + file);
+                        console.log(tl.loc('CreateTempDir', tempFolder, file));
                         // 0 create temp folder
                         tl.mkdirP(tempFolder);
                         // 1 extract compressed tar
                         sevenZipExtract(file, tempFolder);
-                        console.log('tempFolder = ' + tempFolder);
+                        console.log(tl.loc('TempDir', tempFolder));
                         var tempTar = tempFolder + path.sep + tl.ls(null, [tempFolder])[0]; // should be only one
-                        console.log('Decompressed temporary tar from: ' + file + ' to: ' + tempTar);
+                        console.log(tl.loc('DecompressedTempTar', file, tempTar));
                         // 2 expand extracted tar
                         sevenZipExtract(tempTar, destinationFolder);
                         // 3 cleanup temp folder
-                        console.log('Removing temp folder: ' + tempFolder);
+                        console.log(tl.loc('RemoveTempDir', tempFolder));
                         tl.rmRF(tempFolder, false);
                     } else {
-                        failTask('Extraction failed for file: ' + file + ' because temporary location could not be created: ' + tempFolder);
+                        failTask(tl.loc('ExtractFailedCannotCreate', file, tempFolder));
                     }
                 }
             } else { // not a tar, so use sevenZip
@@ -299,27 +294,29 @@ function extractFiles(files: string[]) {
 
 function doWork() {
     try {
+        tl.setResourcePath(path.join( __dirname, 'task.json'));
+
         // Find matching archive files
         var files: string[] = findFiles();
-        console.log('Found: ' + files.length + ' files to extract:');
+        console.log(tl.loc('FoundFiles', files.length));
         for (var i = 0; i < files.length; i++) {
             console.log(files[i]);
         }
 
         // Clean the destination folder before extraction?
         if (cleanDestinationFolder && tl.exist(destinationFolder)) {
-            console.log('Cleaning destination folder before extraction: ' + destinationFolder);
+            console.log(tl.loc('CleanDestDir', destinationFolder));
             tl.rmRF(destinationFolder, false);
         }
 
         // Create the destination folder if it doesn't exist
         if (!tl.exist(destinationFolder)) {
-            console.log('Creating destination folder: ' + destinationFolder);
+            console.log(tl.loc('CreateDestDir', destinationFolder));
             tl.mkdirP(destinationFolder);
         }
 
         extractFiles(files);
-        tl.setResult(tl.TaskResult.Succeeded, 'Successfully extracted all files.');
+        tl.setResult(tl.TaskResult.Succeeded, tl.loc('SucceedMsg'));
     } catch (e) {
         tl.debug(e.message);
         tl._writeError(e);

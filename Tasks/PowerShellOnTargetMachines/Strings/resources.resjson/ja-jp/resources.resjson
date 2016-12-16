@@ -14,7 +14,7 @@
   "loc.input.label.Protocol": "プロトコル",
   "loc.input.help.Protocol": "コンピューターとの WinRM 接続に使用するプロトコルを選びます。既定は HTTPS です。",
   "loc.input.label.TestCertificate": "テスト証明書",
-  "loc.input.help.TestCertificate": "信頼された証明機関によるコンピューターの証明書の信頼性の検証をスキップするにはこのオプションを選びます。WinRM HTTPS プロトコルにはこのパラメーターが必要です。",
+  "loc.input.help.TestCertificate": "信頼された証明機関によるマシンの証明書の信頼性検証をスキップするオプションを選択します。このパラメーターは、WinRM の HTTPS プロトコルでは必須です。",
   "loc.input.label.ScriptPath": "PowerShell スクリプト",
   "loc.input.help.ScriptPath": "ターゲット コンピューター上、または UNC パス (C:\\BudgetIT\\Web\\Deploy\\Website.ps1 など) 上の、PowerShell スクリプトの場所",
   "loc.input.label.ScriptArguments": "スクリプトの引数",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "테스트 결과 게시",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613742)",
+  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613742)",
   "loc.description": "VSTS/TFS에 테스트 결과 게시",
   "loc.instanceNameFormat": "테스트 결과 $(testResultsFiles) 게시",
   "loc.group.displayName.advanced": "고급",

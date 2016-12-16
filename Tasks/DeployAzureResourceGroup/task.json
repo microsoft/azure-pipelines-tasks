@@ -46,13 +46,44 @@
     ],
     "inputs": [
         {
+<<<<<<< HEAD
+=======
+            "name": "ConnectedServiceNameSelector",
+            "type": "pickList",
+            "label": "Azure Connection Type",
+            "required": false,
+            "helpMarkDown": "",
+            "defaultValue": "ConnectedServiceName",
+            "groupName": "AzureDetails",
+            "options": {
+                "ConnectedServiceName": "Azure Resource Manager",
+                "ConnectedServiceNameClassic": "Azure Classic"
+            }
+        },
+        {
+>>>>>>> master
             "name": "ConnectedServiceName",
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "defaultValue": "",
             "required": true,
             "groupName": "AzureDetails",
+<<<<<<< HEAD
             "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
+=======
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment.",
+            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
+        },
+        {
+            "name": "ConnectedServiceNameClassic",
+            "type": "connectedService:Azure",
+            "label": "Azure Classic Subscription",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Select the Azure Classic subscription for the deployment.",
+            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
+>>>>>>> master
         },
         {
             "name": "action",
@@ -63,6 +94,7 @@
             "helpMarkDown": "Action to be performed on the Azure resources or resource group.",
             "groupName": "AzureDetails",
             "options": {
+<<<<<<< HEAD
                 "Create or update resource group": "Create or update resource group",
                 "Select resource group": "Select resource group",
                 "Start": "Start virtual machines",
@@ -71,17 +103,62 @@
                 "Delete": "Delete virtual machines",
                 "DeleteRG": "Delete resource group"
             }
+=======
+                "Create Or Update Resource Group": "Create Or Update Resource Group",
+                "Select Resource Group": "Select Resource Group",
+                "Start": "Start Virtual Machines",
+                "Stop": "Stop Virtual Machines",
+                "Restart": "Restart Virtual Machines",
+                "Delete": "Delete Virtual Machines",
+                "DeleteRG": "Delete Resource Group"
+            },
+            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
+        },
+        {
+            "name": "actionClassic",
+            "type": "pickList",
+            "label": "Action",
+            "defaultValue": "Select Resource Group",
+            "required": true,
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Action to be performed on the Azure resources or cloud service.",
+            "options": {
+                "Select Resource Group": "Select Cloud Service"
+            },
+            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
+>>>>>>> master
         },
         {
             "name": "resourceGroupName",
             "type": "pickList",
             "label": "Resource group",
             "required": true,
+<<<<<<< HEAD
             "helpMarkDown": "Provide the name of a resource group.",
             "groupName": "AzureDetails",
             "properties": {
                 "EditableOptions": "True"
             }
+=======
+            "helpMarkDown": "Provide the name of the resource group.",
+            "groupName": "AzureDetails",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
+        },
+        {
+            "name": "cloudService",
+            "type": "pickList",
+            "label": "Cloud Service",
+            "required": true,
+            "helpMarkDown": "Provide the name of the cloud service.",
+            "groupName": "AzureDetails",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
+>>>>>>> master
         },
         {
             "name": "location",

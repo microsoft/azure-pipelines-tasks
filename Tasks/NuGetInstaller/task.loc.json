@@ -9,8 +9,12 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 24
+    "Patch": 27
   },
+  "runsOn": [
+    "Agent",
+    "MachineGroup"
+  ],
   "minimumAgentVersion": "1.83.0",
   "groups": [
     {

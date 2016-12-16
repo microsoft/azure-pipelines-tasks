@@ -15,5 +15,5 @@
   "loc.input.help.runDuration": "부하 테스트 실행 지속 시간(초)입니다.",
   "loc.input.label.geoLocation": "로드 위치",
   "loc.input.help.geoLocation": "부하를 생성하는 지역입니다. 자세한 내용은 도움말을 참조하세요.",
-  "loc.input.label.machineType": "Run load test using"
+  "loc.input.label.machineType": "다음을 사용하여 부하 테스트 실행"
 }

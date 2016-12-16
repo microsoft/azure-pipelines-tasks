@@ -68,6 +68,9 @@ export function canUseWebDeploy(useWebDeploy: boolean) {
 
 
 export function findfiles(filepath){
+
+    tl.debug("Finding files matching input: " + filepath);
+
     var filesList : string [];
     if (filepath.indexOf('*') == -1 && filepath.indexOf('?') == -1) {
         // No pattern found, check literal path to a single file

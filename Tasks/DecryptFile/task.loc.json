@@ -8,11 +8,15 @@
     "Build",
     "Release"
   ],
+  "runsOn": [
+    "Agent",
+    "MachineGroup"
+  ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 16
+    "Patch": 17
   },
   "groups": [
     {

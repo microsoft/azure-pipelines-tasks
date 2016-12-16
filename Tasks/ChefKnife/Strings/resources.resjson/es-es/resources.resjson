@@ -7,6 +7,6 @@
   "loc.input.help.ConnectedServiceName": "Suscripción de Chef que se va a configurar antes de ejecutar comandos knife",
   "loc.input.label.ScriptPath": "Ruta de acceso del script",
   "loc.input.help.ScriptPath": "Ruta de acceso del script. Debe ser una ruta de acceso completa o relativa al directorio de trabajo predeterminado.",
-  "loc.input.label.ScriptArguments": "Argumentos del script",
+  "loc.input.label.ScriptArguments": "Argumentos de script",
   "loc.input.help.ScriptArguments": "Parámetros adicionales que se van a pasar al script. Pueden ser parámetros ordinales o con nombre."
 }

@@ -4,5 +4,8 @@
   "loc.description": "CocoaPods ist der Abhängigkeits-Manager für Swift- und Objective-C-Cocoa-Projekte. Führt eine Pod-Installation aus.",
   "loc.instanceNameFormat": "Pod-Installation",
   "loc.input.label.cwd": "Arbeitsverzeichnis",
-  "loc.input.help.cwd": "Aktuelles Arbeitsverzeichnis. Standardmäßig das Repositoryverzeichnis."
+  "loc.input.help.cwd": "Aktuelles Arbeitsverzeichnis. Standardmäßig das Repositoryverzeichnis.",
+  "loc.messages.PodReturnCode": "Pod wurde mit dem folgenden Rückgabecode beendet: %d",
+  "loc.messages.PodFailed": "Pod-Fehler: %s",
+  "loc.messages.CocoaPodsNotFound": "Der Befehlspod wurde nicht gefunden. Installieren Sie Cocoapods auf dem Buildcomputer (https://cocoapods.org)."
 }
