@@ -137,6 +137,7 @@ async function run() {
             await DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment, takeAppOfflineFlag);
 
         }
+        await updateConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
         
     } catch (error) {
         isDeploymentSuccess = false;
@@ -191,6 +192,24 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
     catch(error) {
         tl.error(tl.loc('Failedtodeploywebsite'));
         throw Error(error);
+    }
+}
+
+async function updateConfigDetails(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
+    try {
+        var configDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+        if(configDetails.properties.scmType === "None") {
+            var updatedConfigDetails = JSON.stringify(
+                {
+                    "properties": {
+                        "scmType": "VSTSRM"
+                    }
+                });
+            tl._writeLine(await azureRESTUtility.updateAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, updatedConfigDetails));
+        }
+    }
+    catch(error) {
+        tl.warning(error);
     }
 }
 

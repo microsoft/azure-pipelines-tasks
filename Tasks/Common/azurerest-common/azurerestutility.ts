@@ -218,6 +218,36 @@ export async function getAzureRMWebAppConfigDetails(SPN, webAppName: string, res
     return deferred.promise;
 }
 
+export async function updateAzureRMWebAppConfigDetails(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string, configDetails: string) {
+
+    var deferred = Q.defer<any>();
+	var accessToken = await getAuthorizationToken(SPN);
+    var headers = {
+        'Authorization': 'Bearer '+ accessToken,
+        'Content-Type': 'application/json'
+    };
+	
+    var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
+    var configUrl = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
+             '/providers/Microsoft.Web/sites/' + webAppName + slotUrl +  '/config/web?' + azureApiVersion;
+	
+    tl.debug('Updating config details at: ' + configUrl);
+	
+    httpObj.send('PATCH', configUrl, configDetails, headers, (error, response, body) =>{
+		if(error){
+			deferred.reject(error);
+		}
+		else if(response.statusCode === 200) {
+			deferred.resolve(tl.loc("SuccessfullyUpdatedAzureRMWebAppConfigDetails"));
+		}
+		else {
+			deferred.reject(tl.loc('UnabletoupdateAzureRMWebAppConfigDetails', response.statusCode, response.statusMessage));
+		}
+	});
+							
+    return deferred.promise;
+}
+
 export async function getWebAppAppSettings(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string/*, appSettings: Object*/)
 {
     var deferred = Q.defer<any>();
