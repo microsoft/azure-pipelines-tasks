@@ -157,8 +157,7 @@ async function run() {
         tl.cd(workingDirectory);
 
         let javaHomeSelection: string = tl.getInput('javaHomeSelection', true);
-        let codeCoverageTool: string = tl.getInput('codeCoverageTool'); //TODO: Why not make codeCoverageTool required (doing so will break 25 unit tests)
-        //let isCodeCoverageOpted: boolean = codeCoverageTool.toLowerCase() !== 'none';
+        let codeCoverageTool: string = tl.getInput('codeCoverageTool');
         let isCodeCoverageOpted: boolean = (typeof codeCoverageTool !== 'undefined' && codeCoverageTool && codeCoverageTool.toLowerCase() !== 'none');
         let publishJUnitResults: boolean = tl.getBoolInput('publishJUnitResults');
         let testResultsFiles: string = tl.getInput('testResultsFiles', true);
