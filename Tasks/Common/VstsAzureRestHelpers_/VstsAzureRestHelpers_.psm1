@@ -664,7 +664,9 @@ function Add-AzureSqlDatabaseServerFirewallRule
         $parsedException = Parse-Exception($_.Exception)
         if($parsedException)
         {
-            throw  $parsedException
+            Write-Verbose $parsedException
+            $exception = $parsedException | ConvertFrom-Json
+            throw  $exception.Message
         }
         throw $_.Exception.ToString()
     }
@@ -705,7 +707,9 @@ function Remove-AzureSqlDatabaseServerFirewallRule
         $parsedException = Parse-Exception($_.Exception)
         if($parsedException)
         {
-            throw  $parsedException
+            Write-Verbose $parsedException
+            $exception = $parsedException | ConvertFrom-Json
+            throw  $exception.Message
         }
         throw $_.Exception.ToString()
     }
@@ -722,6 +726,9 @@ function Parse-Exception($exception){
             $responseBody = $streamReader.ReadToEnd()
             $streamReader.Close()
             Write-Verbose "Exception message extracted from response $responseBody"
+            if($response.statusCode -eq 404){
+                Write-Warning "Please verify request URL : $($response.ResponseUri)" 
+            }
             return $responseBody
         }
     }

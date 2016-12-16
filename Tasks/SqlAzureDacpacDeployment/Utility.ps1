@@ -187,24 +187,25 @@ function Get-SqlPackageCommandArguments
 
 function Run-Command
 {
-    param([String][Parameter(Mandatory=$true)] $command)
-
-    try
-	{
-        if( $psversiontable.PSVersion.Major -le 4)
-        {
-           cmd.exe /c "`"$command`"" 2>&1
-        }
-        else
-        {
-           cmd.exe /c "$command" 2>&1
-        }
-
-    }
-	catch [System.Exception]
+    param(
+        [string]$command,
+        [bool] $failOnErr = $true
+    )
+    $ErrorActionPreference = 'Continue'
+    if( $psversiontable.PSVersion.Major -le 4)
     {
-        throw $_.Exception
+        $result = cmd.exe /c "`"$command`"" 2>&1
     }
+    else
+    {
+        $result = cmd.exe /c "$command" 2>&1
+    }
+    $ErrorActionPreference = 'Stop'
+    if($failOnErr -and $LASTEXITCODE -ne 0)
+    {
+        throw $result
+    }
+    return $result
 }
 
 function ConvertParamToSqlSupported
