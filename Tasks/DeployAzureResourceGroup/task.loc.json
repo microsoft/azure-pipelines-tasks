@@ -190,7 +190,7 @@
       "groupName": "Template",
       "helpMarkDown": "ms-resource:loc.input.help.overrideParameters",
       "properties": {
-        "editorExtension": "ms.vss-distributed-task-input-editor.parameters-grid"
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
       }
     },
     {
