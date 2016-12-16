@@ -1,7 +1,6 @@
 /// <reference path="../../../../definitions/vsts-task-lib.d.ts" />
 import tl = require('vsts-task-lib/task');
 
-//jeyou: why is this exported?
 export class SonarQubeEndpoint {
     private url: string;
     private username: string;
@@ -17,18 +16,16 @@ export class SonarQubeEndpoint {
         return this.password;
     }
 
-    //jeyou: why are these explicitly public? (they get exposed as public properties of the same name)
-    constructor(/*public*/ url: string, /*public*/ username: string, /*public*/ password: string) {
+    constructor(url: string, username: string, password: string) {
         this.url = url;
         this.username = username;
         this.password = password;
     }
 
     public static getTaskSonarQubeEndpoint(): SonarQubeEndpoint {
-        //jeyou: is getEndpointUrl supposed to be a function call?
+        // Check to ensure getEndpointUrl exists on the current agent
         if (tl.getEndpointUrl == null) {
             tl.debug('Could not decode the generic endpoint. Please ensure you are running the latest agent (min version 0.3.2)');
-            //jeyou: no error message (loc'd)?
             throw new Error();
         }
 
@@ -54,7 +51,6 @@ export class SonarQubeEndpoint {
         let auth: tl.EndpointAuthorization = tl.getEndpointAuthorization(endpoint, false);
 
         if (auth.scheme !== 'UsernamePassword') {
-            //jeyou: Loc this error?
             throw new Error('The authorization scheme ' + auth.scheme + ' is not supported for a SonarQube endpoint. Please use a username and a password.');
         }
 

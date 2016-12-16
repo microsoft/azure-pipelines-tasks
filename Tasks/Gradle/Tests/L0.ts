@@ -404,7 +404,6 @@ describe('Gradle L0 Suite', function () {
                 assert(tr.invokedToolCount === 0, 'should not have run gradle');
             }
             assert(tr.failed, 'task should have failed');
-            //jeyou: loc issue
             assert(tr.stdout.indexOf('loc_mock_FailedToLocateSpecifiedJVM') >= 0, 'JAVA_HOME set?');
 
             done();
@@ -622,17 +621,15 @@ describe('Gradle L0 Suite', function () {
             assert(tr.stderr.length === 0, 'should not have written to stderr');
             assert(tr.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
             assert(tr.ran(gradleWrapper + ` build sonarqube -I ${gradleFile} -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion`), 'should have run the gradle wrapper with the appropriate SonarQube arguments');
-            //jeyou: loc_mock_sqAnalysis_BuildSummaryTitle instead of SonarQube Analysis Report (do tests need to do something to set up loc?)
             assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=loc_mock_sqAnalysis_BuildSummaryTitle') > 0,
                    'should have uploaded a SonarQube Analysis Report build summary');
-            //jeyou: loc_mock_sqAnalysis_BuildSummary_LinkText instead of Detailed SonarQube report
             assertSonarQubeBuildSummaryContains(testStgDir,
                                                 '[loc_mock_sqAnalysis_BuildSummary_LinkText >](http://sonarqubeserver:9000/dashboard/index/test "test Dashboard")');
 
             cleanTemporaryFolders();
 
             done();
-        } catch (err) { //jeyou: Add this to previous tests
+        } catch (err) {
             console.log(tr.stdout);
             console.log(tr.stderr);
             console.log(err);
@@ -654,7 +651,6 @@ describe('Gradle L0 Suite', function () {
             assert(tr.stderr.length > 0, 'should have written to stderr');
             assert(tr.ran(gradleWrapper + ` build sonarqube -I ${gradleFile} -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion`), 'should have run the gradle wrapper with the appropriate SonarQube arguments');
 
-           //jeyou: loc_mock_sqAnalysis_BuildSummaryTitle instead of SonarQube Analysis Report (do tests need to do something to set up loc?)
             assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=loc_mock_sqAnalysis_BuildSummaryTitle') < 0,
                    'should not have uploaded a SonarQube Analysis Report build summary');
 
@@ -683,7 +679,6 @@ describe('Gradle L0 Suite', function () {
             assert(tr.ran(gradleWrapper + ` build sonarqube -I ${gradleFile} -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion`),
                    'should have run the gradle wrapper with the appropriate SonarQube arguments');
 
-            //jeyou: loc_mock_sqAnalysis_BuildSummaryTitle instead of SonarQube Analysis Report (do tests need to do something to set up loc?)
             assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=loc_mock_sqAnalysis_BuildSummaryTitle') < 0,
                    'should not have uploaded a SonarQube Analysis Report build summary');
 
@@ -713,7 +708,6 @@ describe('Gradle L0 Suite', function () {
             assert(tr.ran(gradleWrapper + ` build sonarqube -I ${gradleFile} -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json`),
                    'should have run the gradle wrapper with the appropriate SonarQube arguments');
 
-            //jeyou: loc_mock_sqAnalysis_BuildSummaryTitle instead of SonarQube Analysis Report (do tests need to do something to set up loc?)
             assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=loc_mock_sqAnalysis_BuildSummaryTitle') < 0,
                    'should not have uploaded a SonarQube Analysis Report build summary');
 
@@ -746,10 +740,8 @@ describe('Gradle L0 Suite', function () {
             assert(tr.ran(gradleWrapper + ` build sonarqube -I ${gradleFile} -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jdbc.url=jdbc:test:tcp://localhost:8080/sonar -Dsonar.jdbc.username=testDbUsername -Dsonar.jdbc.password=testDbPassword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion`),
                    'should have run the gradle wrapper with the appropriate SonarQube arguments');
 
-            //jeyou: loc_mock_sqAnalysis_BuildSummaryTitle instead of SonarQube Analysis Report (do tests need to do something to set up loc?)
             assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=loc_mock_sqAnalysis_BuildSummaryTitle') > 0,
                    'should have uploaded a SonarQube Analysis Report build summary');
-            //jeyou: loc_mock_sqAnalysis_BuildSummary_LinkText instead of Detailed SonarQube report
             assertSonarQubeBuildSummaryContains(testStgDir, '[loc_mock_sqAnalysis_BuildSummary_LinkText >](http://sonarqubeserver:9000/dashboard/index/test "test Dashboard")');
 
             cleanTemporaryFolders();
@@ -779,10 +771,9 @@ describe('Gradle L0 Suite', function () {
             assert(tr.stderr.length === 0, 'should not have written to stderr');
             assert(tr.ran(gradleWrapper + ` build -I ${checkstyleFile} -I ${findbugsFile} -I ${pmdFile}`),
                    'Ran Gradle with Checkstyle and Findbugs and Pmd');
-            // jeyou: loc_mock_codeAnalysisBuildSummaryTitle instead of Code Analysis Report
             assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=loc_mock_codeAnalysisBuildSummaryTitle') > -1,
                    'should have uploaded a Code Analysis Report build summary');
-            // jeyou: loc_mock_codeAnalysisArtifactSummaryTitle instead of Code Analysis Results 
+
             assert(tr.stdout.indexOf('artifact.upload artifactname=loc_mock_codeAnalysisArtifactSummaryTitle;') > -1,
                    'should have uploaded code analysis build artifacts');
 
@@ -830,16 +821,15 @@ describe('Gradle L0 Suite', function () {
             assert(tr.invokedToolCount === 1, 'should have only run gradle 1 time');
             assert(tr.stderr.length === 0, 'should not have written to stderr');
             assert(tr.ran(gradleWrapper + ` build -I ${pmdFile}`), 'Ran Gradle with PMD');
-            // jeyou: loc_mock_codeAnalysisBuildSummaryTitle instead of Code Analysis Report
             assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=loc_mock_codeAnalysisBuildSummaryTitle') > -1,
                    'should have uploaded a Code Analysis Report build summary');
-            // jeyou: loc_mock_codeAnalysisArtifactSummaryTitle instead of Code Analysis Results 
+
             assert(tr.stdout.indexOf('artifact.upload artifactname=loc_mock_codeAnalysisArtifactSummaryTitle;') < 0,
                    'should not have uploaded code analysis build artifacts');
 
             assertCodeAnalysisBuildSummaryDoesNotContain(testStgDir, 'FindBugs found no violations.');
             assertCodeAnalysisBuildSummaryDoesNotContain(testStgDir, 'Checkstyle found no violations.');
-            //jeyou: loc_mock_codeAnalysisBuildSummaryLine_NoViolations instead of PMD found no violations. 
+
             assertCodeAnalysisBuildSummaryContains(testStgDir, 'loc_mock_codeAnalysisBuildSummaryLine_NoViolations');
 
             // There were no files to be uploaded - the CA folder should not exist
@@ -877,19 +867,14 @@ describe('Gradle L0 Suite', function () {
                    ` build -I ${checkstyleFile} -I ${findbugsFile} -I ${pmdFile}`),
                    'should have run Gradle with code analysis tools');
 
-            // jeyou: loc_mock_codeAnalysisBuildSummaryTitle instead of Code Analysis Report
             assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=loc_mock_codeAnalysisBuildSummaryTitle') > -1,
                    'should have uploaded a Code Analysis Report build summary');
 
-            // jeyou: loc_mock_codeAnalysisArtifactSummaryTitle instead of Code Analysis Results
             assert(tr.stdout.indexOf('##vso[artifact.upload artifactname=loc_mock_codeAnalysisArtifactSummaryTitle;]') < 0,
                    'should not have uploaded a code analysis build artifact');
 
-            //jeyou: loc_mock_codeAnalysisBuildSummaryLine_NoViolations instead of Checkstyle found no violations.
             assertCodeAnalysisBuildSummaryContains(testStgDir, 'loc_mock_codeAnalysisBuildSummaryLine_NoViolations');
-            //jeyou: loc_mock_codeAnalysisBuildSummaryLine_NoViolations instead of PMD found no violations.
             assertCodeAnalysisBuildSummaryContains(testStgDir, 'loc_mock_codeAnalysisBuildSummaryLine_NoViolations');
-            //jeyou: loc_mock_codeAnalysisBuildSummaryLine_NoViolations instead of FindBugs found no violations.
             assertCodeAnalysisBuildSummaryContains(testStgDir, 'loc_mock_codeAnalysisBuildSummaryLine_NoViolations');
 
             // The .codeAnalysis dir should have been created to store the build summary, but not the report dirs
@@ -924,10 +909,8 @@ describe('Gradle L0 Suite', function () {
             assert(tr.stdout.indexOf('task.issue type=warning;') < 0, 'should not have produced any warnings');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.ran(gradleWrapper + ' build'), 'it should have run gradlew build');
-            // jeyou: loc_mock_codeAnalysisBuildSummaryTitle instead of Code Analysis Report
             assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=loc_mock_codeAnalysisBuildSummaryTitle') < 0,
                    'should not have uploaded a Code Analysis Report build summary');
-            // jeyou: loc_mock_codeAnalysisArtifactSummaryTitle instead of Code Analysis Results
             assert(tr.stdout.indexOf('##vso[artifact.upload artifactname=loc_mock_codeAnalysisArtifactSummaryTitle;]') < 0,
                    'should not have uploaded a code analysis build artifact');
 
@@ -962,10 +945,8 @@ describe('Gradle L0 Suite', function () {
             assert(tr.ran(gradleWrapper +
                    ` build -I ${checkstyleFile} -I ${findbugsFile} -I ${pmdFile}`),
                    'should have run Gradle with code analysis tools');
-            // jeyou: loc_mock_codeAnalysisBuildSummaryTitle instead of Code Analysis Report
             assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=loc_mock_codeAnalysisBuildSummaryTitle') > -1,
                    'should have uploaded a Code Analysis Report build summary');
-            // jeyou: loc_mock_codeAnalysisArtifactSummaryTitle instead of Code Analysis Results
             assert(tr.stdout.indexOf('artifact.upload artifactname=loc_mock_codeAnalysisArtifactSummaryTitle;') > -1,
                    'should have uploaded PMD build artifacts');
             //jeyou: The following three fail due to loc issues
