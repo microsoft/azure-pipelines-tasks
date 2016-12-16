@@ -773,15 +773,12 @@ describe('Gradle L0 Suite', function () {
                    'Ran Gradle with Checkstyle and Findbugs and Pmd');
             assert(tr.stdout.indexOf('task.addattachment type=Distributedtask.Core.Summary;name=loc_mock_codeAnalysisBuildSummaryTitle') > -1,
                    'should have uploaded a Code Analysis Report build summary');
-
             assert(tr.stdout.indexOf('artifact.upload artifactname=loc_mock_codeAnalysisArtifactSummaryTitle;') > -1,
                    'should have uploaded code analysis build artifacts');
 
-            //jeyou: the following 3 checks fail due to loc issues
-            //jassertCodeAnalysisBuildSummaryContains(testStgDir, 'Checkstyle found 35 violations in 2 file');
-            //jassertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found 4 violations in 2 files');
-            // jeyou: only 1 violation is found in 1 file (for some reason)
-            //jassertCodeAnalysisBuildSummaryContains(testStgDir, 'FindBugs found 5 violations in 1 file.');
+            assertCodeAnalysisBuildSummaryContains(testStgDir, 'loc_mock_codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles');
+            assertCodeAnalysisBuildSummaryContains(testStgDir, 'loc_mock_codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles');
+            assertCodeAnalysisBuildSummaryContains(testStgDir, 'loc_mock_codeAnalysisBuildSummaryLine_SomeViolationsOneFile');
 
             let codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
 
@@ -949,10 +946,10 @@ describe('Gradle L0 Suite', function () {
                    'should have uploaded a Code Analysis Report build summary');
             assert(tr.stdout.indexOf('artifact.upload artifactname=loc_mock_codeAnalysisArtifactSummaryTitle;') > -1,
                    'should have uploaded PMD build artifacts');
-            //jeyou: The following three fail due to loc issues
-            // assertCodeAnalysisBuildSummaryContains(testStgDir, 'PMD found 2 violations in 1 file');
-            // assertCodeAnalysisBuildSummaryContains(testStgDir, 'Checkstyle found 34 violations in 2 files');
-            // assertCodeAnalysisBuildSummaryContains(testStgDir, 'FindBugs found 5 violations in 1 file.');
+
+            assertCodeAnalysisBuildSummaryContains(testStgDir, 'loc_mock_codeAnalysisBuildSummaryLine_SomeViolationsOneFile');
+            assertCodeAnalysisBuildSummaryContains(testStgDir, 'loc_mock_codeAnalysisBuildSummaryLine_SomeViolationsSomeFiles');
+            assertCodeAnalysisBuildSummaryContains(testStgDir, 'loc_mock_codeAnalysisBuildSummaryLine_SomeViolationsOneFile');
 
             let codeAnalysisStgDir: string = path.join(testStgDir, '.codeAnalysis', 'CA');
 
