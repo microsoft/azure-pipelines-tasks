@@ -202,12 +202,26 @@ Catch [System.Management.Automation.CommandNotFoundException]
         Write-Host "3. Run Import-Module SQLPS on your agent Powershell prompt. (This step is not required on Powershell 3.0 enabled machines)"
     }
 
-    Write-Error ($_.Exception.Message)
+    if($_.Exception.Message) 
+    {
+        Write-Error ($_.Exception.Message)
+    }
+    else 
+    {
+        Write-Error ($_.Exception)
+    }
     throw
 }
 Catch [Exception]
 {
-    Write-Error ($_.Exception.Message)
+    if($_.Exception.Message) 
+    {
+        Write-Error ($_.Exception.Message)
+    }
+    else 
+    {
+        Write-Error ($_.Exception)
+    }
     throw
 }
 Finally
