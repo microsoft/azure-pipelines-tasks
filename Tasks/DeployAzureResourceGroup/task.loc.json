@@ -13,13 +13,30 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 95
+    "Patch": 96
   },
   "demands": [
     "azureps"
   ],
   "minimumAgentVersion": "1.103.0",
   "groups": [
+    {
+      "name": "AzureDetails",
+      "displayName": "ms-resource:loc.group.displayName.AzureDetails",
+      "isExpanded": true
+    },
+    {
+      "name": "Template",
+      "displayName": "ms-resource:loc.group.displayName.Template",
+      "isExpanded": true,
+      "visibleRule": "action = Create Or Update Resource Group"
+    },
+    {
+      "name": "AdvancedDeploymentOptions",
+      "displayName": "ms-resource:loc.group.displayName.AdvancedDeploymentOptions",
+      "isExpanded": true,
+      "visibleRule": "action = Create Or Update Resource Group || action = Select Resource Group"
+    },
     {
       "name": "output",
       "displayName": "ms-resource:loc.group.displayName.output",
@@ -34,6 +51,7 @@
       "required": false,
       "helpMarkDown": "",
       "defaultValue": "ConnectedServiceName",
+      "groupName": "AzureDetails",
       "options": {
         "ConnectedServiceName": "Azure Resource Manager",
         "ConnectedServiceNameClassic": "Azure Classic"
@@ -45,6 +63,7 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
+      "groupName": "AzureDetails",
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
     },
@@ -54,6 +73,7 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceNameClassic",
       "defaultValue": "",
       "required": true,
+      "groupName": "AzureDetails",
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameClassic",
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
     },
@@ -64,6 +84,7 @@
       "defaultValue": "Create Or Update Resource Group",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.action",
+      "groupName": "AzureDetails",
       "options": {
         "Create Or Update Resource Group": "Create Or Update Resource Group",
         "Select Resource Group": "Select Resource Group",
@@ -81,6 +102,7 @@
       "label": "ms-resource:loc.input.label.actionClassic",
       "defaultValue": "Select Resource Group",
       "required": true,
+      "groupName": "AzureDetails",
       "helpMarkDown": "ms-resource:loc.input.help.actionClassic",
       "options": {
         "Select Resource Group": "Select Cloud Service"
@@ -93,6 +115,7 @@
       "label": "ms-resource:loc.input.label.resourceGroupName",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.resourceGroupName",
+      "groupName": "AzureDetails",
       "properties": {
         "EditableOptions": "True"
       },
@@ -104,6 +127,7 @@
       "label": "ms-resource:loc.input.label.cloudService",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.cloudService",
+      "groupName": "AzureDetails",
       "properties": {
         "EditableOptions": "True"
       },
@@ -116,6 +140,7 @@
       "defaultValue": "East US",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.location",
+      "groupName": "AzureDetails",
       "options": {
         "Australia East": "Australia East",
         "Australia Southeast": "Australia Southeast",
@@ -144,8 +169,8 @@
       "label": "ms-resource:loc.input.label.csmFile",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.csmFile",
-      "visibleRule": "action = Create Or Update Resource Group"
+      "groupName": "Template",
+      "helpMarkDown": "ms-resource:loc.input.help.csmFile"
     },
     {
       "name": "csmParametersFile",
@@ -153,8 +178,8 @@
       "label": "ms-resource:loc.input.label.csmParametersFile",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.csmParametersFile",
-      "visibleRule": "action = Create Or Update Resource Group"
+      "groupName": "Template",
+      "helpMarkDown": "ms-resource:loc.input.help.csmParametersFile"
     },
     {
       "name": "overrideParameters",
@@ -162,11 +187,11 @@
       "label": "ms-resource:loc.input.label.overrideParameters",
       "defaultValue": "",
       "required": false,
+      "groupName": "Template",
       "helpMarkDown": "ms-resource:loc.input.help.overrideParameters",
       "properties": {
         "editorExtension": "ms.vss-distributed-task-input-editor.parameters-grid"
-      },
-      "visibleRule": "action = Create Or Update Resource Group"
+      }
     },
     {
       "name": "deploymentMode",
@@ -174,6 +199,7 @@
       "label": "ms-resource:loc.input.label.deploymentMode",
       "defaultValue": "Incremental",
       "required": true,
+      "groupName": "AzureDetails",
       "helpMarkDown": "ms-resource:loc.input.help.deploymentMode",
       "options": {
         "Validation": "Validation Only",
@@ -183,22 +209,13 @@
       "visibleRule": "action = Create Or Update Resource Group"
     },
     {
-      "name": "enableDeploymentPrerequisitesForCreate",
+      "name": "enableDeploymentPrerequisites",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.enableDeploymentPrerequisitesForCreate",
+      "label": "ms-resource:loc.input.label.enableDeploymentPrerequisites",
       "defaultValue": "false",
-      "visibleRule": "action = Create Or Update Resource Group",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.enableDeploymentPrerequisitesForCreate"
-    },
-    {
-      "name": "enableDeploymentPrerequisitesForSelect",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.enableDeploymentPrerequisitesForSelect",
-      "defaultValue": "false",
-      "visibleRule": "action = Select Resource Group",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.enableDeploymentPrerequisitesForSelect"
+      "groupName": "AdvancedDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.enableDeploymentPrerequisites"
     },
     {
       "name": "outputVariable",

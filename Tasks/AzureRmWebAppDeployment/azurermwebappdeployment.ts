@@ -2,7 +2,7 @@ import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
 
-var azureRESTUtility = require ('webdeployment-common/azurerestutility.js');
+var azureRESTUtility = require ('azurerest-common/azurerestutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js');
 var zipUtility = require('webdeployment-common/ziputility.js');
 var utility = require('webdeployment-common/utility.js');
@@ -143,8 +143,13 @@ async function run() {
         deploymentErrorMessage = error;
     }
     if(publishingProfile != null) {
+        var customMessage = {
+            type: "Deployment",
+            slotName: tl.getInput('SlotName') || "Production"
+        };
+
         try {
-            tl._writeLine(await azureRESTUtility.updateDeploymentStatus(publishingProfile, isDeploymentSuccess));
+            tl._writeLine(await azureRESTUtility.updateDeploymentStatus(publishingProfile, isDeploymentSuccess, customMessage));
         }
         catch(error) {
             tl.warning(error);

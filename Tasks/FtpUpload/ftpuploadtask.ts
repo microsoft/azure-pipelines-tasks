@@ -1,6 +1,7 @@
 import tl = require('vsts-task-lib/task');
 import url = require('url');
 import Q = require('q');
+import path = require('path');
 
 var Client = require('ftp');
 
@@ -28,6 +29,8 @@ export class FtpOptions {
 }
 
 function doWork() {
+    tl.setResourcePath(path.join( __dirname, 'task.json'));
+
     var ftpOptions: FtpOptions = new FtpOptions();
     var ftpClient: any = new Client();
     var ftpHelper: ftputils.FtpHelper = new ftputils.FtpHelper(ftpOptions, ftpClient);
@@ -40,34 +43,34 @@ function doWork() {
 
     ftpClient.on('greeting', (message: string) => {
         tl.debug('ftp client greeting');
-        console.log('connected: ' + message);
+        console.log(tl.loc('FTPConnected', message));
     });
 
     ftpClient.on('ready', async () => {
         tl.debug('ftp client ready');
         try {
             if (ftpOptions.clean) {
-                console.log('cleaning remote directory: ' + ftpOptions.remotePath);
+                console.log(tl.loc('CleanRemoteDir', ftpOptions.remotePath));
                 await ftpHelper.cleanRemote(ftpOptions.remotePath);
             }
 
-            console.log('uploading files to remote directory: ' + ftpOptions.remotePath);
+            console.log(tl.loc('UploadRemoteDir', ftpOptions.remotePath));
             await ftpHelper.uploadFiles(files);
             uploadSuccessful = true;
-            console.log('FTP upload successful ' + ftpHelper.progressTracking.getSuccessStatusMessage());
+            console.log(tl.loc('UploadSucceedMsg', ftpHelper.progressTracking.getSuccessStatusMessage()));
 
-            tl.setResult(tl.TaskResult.Succeeded, 'FTP upload successful');
+            tl.setResult(tl.TaskResult.Succeeded, tl.loc('UploadSucceedRes'));
         } catch (err) {
             failTask(err);
         } finally {
-            console.log('disconnecting from: ', ftpOptions.serverEndpointUrl.host);
+            console.log(tl.loc('DisconnectHost', ftpOptions.serverEndpointUrl.host));
             ftpClient.end();
             ftpClient.destroy();
         }
     });
 
     ftpClient.on('close', (hadErr: boolean) => {
-        console.log('disconnected');
+        console.log(tl.loc('Disconnected'));
         tl.debug('ftp client close, hadErr:' + hadErr);
     });
 
@@ -104,7 +107,7 @@ function doWork() {
         tl.debug('port not specifided, using default: ' + port);
     }
 
-    console.log('connecting to: ' + hostName + ':' + port);
+    console.log(tl.loc('ConnectPort', hostName, port));
     ftpClient.connect({ 'host': hostName, 'port': port, 'user': ftpOptions.username, 'password': ftpOptions.password, 'secure': secure, 'secureOptions': secureOptions });
 }
 

@@ -17,10 +17,6 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
-    "vsts-task-lib": "^0.9.7",
-    "q": "^1.4.1",
-    "adal-node": "^0.1.15",
-    "xml2js": "^0.4.13",
-    "vso-node-api": "^5.0.5"
+    "q": "^1.4.1"
   }
 }
