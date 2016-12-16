@@ -20,45 +20,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         'gradlew': true,
         'gradlew.bat': true
     },
-    // 'which': {
-    //     'xcodebuild': '/home/bin/xcodebuild',
-    //     'security': '/usr/bin/security',
-    //     '/usr/libexec/PlistBuddy': '/usr/libexec/PlistBuddy',
-    //     'rm': '/bin/rm',
-    //     'cp': '/bin/cp'
-    // },
-    // 'checkPath' : {
-    //     '/home/bin/xcodebuild': true,
-    //     '/usr/bin/security': true,
-    //     '/usr/libexec/PlistBuddy': true,
-    //     '/bin/rm': true,
-    //     '/bin/cp': true
-    // },
-    // 'filePathSupplied': {
-    //     'archivePath': false
-    // },
-    // 'getVariable': {
-    //     'HOME': '/users/test'
-    // },
-//    'exist': {
-//        '/home/gradlew': false
-//    },
-    // 'stats': {
-    //     '/user/build': {
-    //         'isFile': false
-    //     }
-    // },
-    // 'glob': {
-    //     '**/*.xcodeproj/*.xcworkspace': [
-    //         '/user/build/fun.xcodeproj/project.xcworkspace'
-    //     ],
-    //     '/user/build/output/$(SDK)/$(Configuration)/build.sym/**/*.app': [
-    //         '/user/build/output/$(SDK)/$(Configuration)/build.sym/Release.iphoneos/fun.app'
-    //     ],
-    //     '/user/build/**/*.xcarchive': [
-    //         '/user/build/testScheme.xcarchive'
-    //     ]
-    // },
     'exec': {
         'gradlew build': {
             'code': 0,
@@ -72,10 +33,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             'code': 222,
             'stdout': ''
         }
-    //     'gradlew.bat /o /p t i /o /n /s build test deploy': {
-    //         'code': 0,
-    //         'stdout': 'More sample gradle output'
-    //     }
     }
 };
 tr.setAnswers(a);
