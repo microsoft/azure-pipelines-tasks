@@ -23,14 +23,15 @@ process.env['MOCK_TEMP_PATH'] = path.join(__dirname, '..', '..');
 process.env['MOCK_NORMALIZE_SLASHES'] = true;
 
 process.env['JAVA_HOME_8_X86'] = '/user/local/bin/Java8';
-process.env['System_DefaultWorkingDirectory'] = '/user/build/s';
 process.env['ENDPOINT_URL_ID1'] = 'http://sonarqube/end/point';
 process.env['ENDPOINT_AUTH_ID1'] = '{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}';
-process.env['build_buildNumber'] = '14';
-process.env['build_sourcesDirectory'] = `${taskReportValidDir}`;
-process.env['build_artifactStagingDirectory'] = `${tempDir}`;
-process.env['build_sourceBranch'] = 'refs/pull/6/master';
-process.env['build_repository_provider'] = 'TFSGit';
+
+process.env['BUILD_BUILDNUMBER'] = '14';
+process.env['BUILD_SOURCESDIRECTORY'] = `${taskReportValidDir}`;
+process.env['BUILD_ARTIFACTSTAGINGDIRECTORY'] = `${tempDir}`;
+process.env['BUILD_SOURCEBRANCH'] = 'refs/pull/6/master';
+process.env['BUILD_REPOSITORY_PROVIDER'] = 'TFSGit';
+process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = '/user/build/s';
 
 tr.setInput('wrapperScript', 'gradlew');
 tr.setInput('options', '');

@@ -26,10 +26,10 @@ process.env['JAVA_HOME_8_X86'] = '/user/local/bin/Java8';
 process.env['ENDPOINT_URL_ID1'] = 'http://sonarqube/end/point';
 process.env['ENDPOINT_AUTH_ID1'] = '{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}';
 
-process.env['build_buildNumber'] = '211';
-process.env['build_sourcesDirectory'] = `${taskReportValidDir}`;
-process.env['System_DefaultWorkingDirectory'] = `${taskReportValidDir}`;
-process.env['build_artifactStagingDirectory'] = `${tempDir}`;
+process.env['BUILD_BUILDNUMBER'] = '211';
+process.env['BUILD_SOURCESDIRECTORY'] = `${taskReportValidDir}`;
+process.env['BUILD_ARTIFACTSTAGINGDIRECTORY'] = `${tempDir}`;
+process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = `${taskReportValidDir}`;
 
 tr.setInput('wrapperScript', 'gradlew');
 tr.setInput('options', '');

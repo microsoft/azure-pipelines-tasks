@@ -27,15 +27,10 @@ process.env['JAVA_HOME_8_X86'] = '/user/local/bin/Java8';
 process.env['ENDPOINT_URL_ID1'] = 'http://sonarqube/end/point';
 process.env['ENDPOINT_AUTH_ID1'] = '{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}';
 
-process.env['build_buildNumber'] = '14'; //should be able to remove this from all non-CA tests...?
-process.env['build_sourcesDirectory'] = `${taskReportValidDir}`;
-process.env['System_DefaultWorkingDirectory'] = `${taskReportValidDir}`; //'/user/build/s';
-process.env['build_artifactStagingDirectory'] = `${tempDir}`;
-
-                // ["build.buildNumber", "14"],
-                // ['build.sourcesDirectory', testSrcDir],
-                // ['System.DefaultWorkingDirectory', testSrcDir],
-                // ['build.artifactStagingDirectory', testStgDir]
+process.env['BUILD_BUILDNUMBER'] = '14';
+process.env['BUILD_SOURCESDIRECTORY'] = `${taskReportValidDir}`;
+process.env['BUILD_ARTIFACTSTAGINGDIRECTORY'] = `${tempDir}`;
+process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = `${taskReportValidDir}`; //'/user/build/s';
 
 tr.setInput('wrapperScript', 'gradlew');
 tr.setInput('options', '');

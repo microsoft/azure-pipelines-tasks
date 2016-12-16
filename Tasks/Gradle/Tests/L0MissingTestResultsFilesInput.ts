@@ -12,7 +12,7 @@ tr.setInput('javaHomeSelection', 'JDKVersion');
 tr.setInput('jdkVersion', 'default');
 tr.setInput('publishJUnitResults', 'true');
 
-//         tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
+// tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
