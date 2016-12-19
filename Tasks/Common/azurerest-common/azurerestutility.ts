@@ -350,10 +350,10 @@ export async function swapWebAppSlot(SPN, resourceGroupName: string, webAppName:
         }
         else if(response.statusCode === 202) {
             await monitorSlotSwap(SPN, webAppName, resourceGroupName, sourceSlot, targetSlot, response.headers.location).then(() => {
-                deferred.resolve(tl.loc("Successfullyswappedslots", webAppName, sourceSlot, targetSlot));
+                deferred.resolve(true);
             }).catch((error) => {
                 tl.warning(error);
-                deferred.resolve(tl.loc("Successfullyswappedslots", webAppName, sourceSlot, targetSlot));
+                deferred.resolve(false);
             });
         }
         else {
