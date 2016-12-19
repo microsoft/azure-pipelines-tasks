@@ -411,7 +411,7 @@ describe('XamarinAndroid Suite', function() {
 	it('XamarinAndroid do not create app package', (done:MochaDone) => {
         setResponseFile('L0DoNotCreateAppPackage.json');
         var tr = new trm.TaskRunner('XamarinAndroid', true);
-		tr.setInput('project', '**/test*.csproj');
+        tr.setInput('project', '**/test*.csproj');
 		tr.setInput('target', '');
 		tr.setInput('clean', 'false');
 		tr.setInput('createAppPackage', 'false');
