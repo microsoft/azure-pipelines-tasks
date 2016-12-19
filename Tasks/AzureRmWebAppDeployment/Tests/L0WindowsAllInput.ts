@@ -179,7 +179,7 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
         return true;
     },
     updateAzureRMWebAppConfigDetails: function() {
-        return true;
+        console.log("Successfully updated scmType to VSTSRM");
     }
 });
 
