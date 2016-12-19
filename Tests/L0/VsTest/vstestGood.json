@@ -4,7 +4,8 @@
         "build.sourcesdirectory": "/source/dir",
         "VS150COMNTools": "/vs/path",
         "VS140COMNTools": "/vs/path",
-        "VS120COMNTools": "/vs/path"
+        "VS120COMNTools": "/vs/path",
+        "vs15Helper": "/path/to/vs15Helper.ps1"
     },
     "match": {
         "**\\packages\\**\\*TestAdapter.dll": []
@@ -68,6 +69,14 @@
         "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /search/dir/someFile1 /logger:trx": {
             "code": 0,
             "stdout": "vstest"
+        },
+        "\\vs2017\\installation\\folder\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /logger:trx": {
+            "code": 0,
+            "stdout": "vstest"
+        },
+        "powershell -file /path/to/vs15Helper.ps1": {
+            "code": 0,
+            "stdout": "<Objs Version=\"1.1.0.1\" xmlns=\"http://schemas.microsoft.com/powershell/2004/04\"><S>\\vs2017\\installation\\folder</S></Objs>"
         }
     },
     "rmRF": {

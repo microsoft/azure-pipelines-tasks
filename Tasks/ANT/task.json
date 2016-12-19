@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 59
+        "Minor": 111,
+        "Patch": 0
     },
     "demands": [
         "ant"
@@ -89,6 +89,50 @@
             "groupName": "junitTestResults",
             "helpMarkDown": "Provide a name for the test run.",
             "visibleRule": "publishJUnitResults = true"
+        },
+        {
+            "name": "codeCoverageTool",
+            "type": "pickList",
+            "label": "Code Coverage Tool",
+            "required": false,
+            "groupName": "codeCoverage",
+            "defaultValue": "None",
+            "helpMarkDown": "Select the code coverage tool. For on-premises agent support, refer to the `More Information` link below.",
+            "options": {
+                "None": "None",
+                "Cobertura": "Cobertura",
+                "JaCoCo": "JaCoCo"
+            }
+        },
+        {
+            "name": "classFilesDirectories",
+            "type": "string",
+            "label": "Class Files Directories",
+            "defaultValue": ".",
+            "required": true,
+            "groupName": "codeCoverage",
+            "helpMarkDown": "Comma-separated list of relative paths from the Ant build file to directories containing class files and archive files (JAR, WAR, etc.). Code coverage is reported for class files in these directories. For example: target/classes,target/testClasses.",
+            "visibleRule": "codeCoverageTool != None"
+        },
+        {
+            "name": "classFilter",
+            "type": "string",
+            "label": "Class Inclusion/Exclusion Filters",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "codeCoverage",
+            "helpMarkDown": "Comma-separated list of filters to include or exclude classes from collecting code coverage. For example: +:com.*,+:org.*,-:my.app*.*.",
+            "visibleRule": "codeCoverageTool != None"
+        },
+        {
+            "name": "srcDirectories",
+            "type": "string",
+            "label": "Source Files Directories",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "codeCoverage",
+            "helpMarkDown": "Comma-separated list of relative paths from the Ant build file to source code directories. Code coverage reports will use these to highlight source code. For example: src/java,src/Test.",
+            "visibleRule": "codeCoverageTool != None"
         },
         {
             "name": "antHomeUserInputPath",

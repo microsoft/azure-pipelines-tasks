@@ -17,8 +17,8 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 8
+    "Minor": 111,
+    "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
@@ -56,5 +56,30 @@
       "target": "extractfilestask.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "ExtractDirFailedinFindFiles": "ms-resource:loc.messages.ExtractDirFailedinFindFiles",
+    "ExtractNotFileFailed": "ms-resource:loc.messages.ExtractNotFileFailed",
+    "ExtractNotAccessibleFile": "ms-resource:loc.messages.ExtractNotAccessibleFile",
+    "SearchInDir": "ms-resource:loc.messages.SearchInDir",
+    "SearchNonExistDir": "ms-resource:loc.messages.SearchNonExistDir",
+    "SearchNonDir": "ms-resource:loc.messages.SearchNonDir",
+    "NoSearchPatternPath": "ms-resource:loc.messages.NoSearchPatternPath",
+    "ResolveRelativePath": "ms-resource:loc.messages.ResolveRelativePath",
+    "UnzipExtractFile": "ms-resource:loc.messages.UnzipExtractFile",
+    "SevenZipExtractFile": "ms-resource:loc.messages.SevenZipExtractFile",
+    "TarExtractFile": "ms-resource:loc.messages.TarExtractFile",
+    "ExtractFileFailedMsg": "ms-resource:loc.messages.ExtractFileFailedMsg",
+    "ExtractNonExistFile": "ms-resource:loc.messages.ExtractNonExistFile",
+    "ExtractDirFailed": "ms-resource:loc.messages.ExtractDirFailed",
+    "CreateTempDir": "ms-resource:loc.messages.CreateTempDir",
+    "TempDir": "ms-resource:loc.messages.TempDir",
+    "DecompressedTempTar": "ms-resource:loc.messages.DecompressedTempTar",
+    "RemoveTempDir": "ms-resource:loc.messages.RemoveTempDir",
+    "ExtractFailedCannotCreate": "ms-resource:loc.messages.ExtractFailedCannotCreate",
+    "FoundFiles": "ms-resource:loc.messages.FoundFiles",
+    "CleanDestDir": "ms-resource:loc.messages.CleanDestDir",
+    "CreateDestDir": "ms-resource:loc.messages.CreateDestDir",
+    "SucceedMsg": "ms-resource:loc.messages.SucceedMsg"
   }
 }

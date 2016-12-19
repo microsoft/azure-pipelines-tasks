@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 9
+    "Patch": 10
   },
   "groups": [
     {
@@ -100,5 +100,14 @@
       "target": "archivefiles.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "Filename": "ms-resource:loc.messages.Filename",
+    "TarExists": "ms-resource:loc.messages.TarExists",
+    "RemoveBeforeCreation": "ms-resource:loc.messages.RemoveBeforeCreation",
+    "AlreadyExists": "ms-resource:loc.messages.AlreadyExists",
+    "ArchiveCreationFailedWithError": "ms-resource:loc.messages.ArchiveCreationFailedWithError",
+    "ArchiveFileExistsButNotAFile": "ms-resource:loc.messages.ArchiveFileExistsButNotAFile",
+    "FailedArchiveFile": "ms-resource:loc.messages.FailedArchiveFile"
   }
 }
