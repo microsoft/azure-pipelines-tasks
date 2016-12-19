@@ -3,21 +3,27 @@
     "name": "VSTest",
     "friendlyName": "Visual Studio Test",
     "description": "Run tests with Visual Studio test runner",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=624539)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
     "category": "Test",
     "visibility": [
         "Build",
         "Release"
     ],
+	"runsOn": [
+        "Agent",
+        "MachineGroup"
+    ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
+        "Major": 2,
         "Minor": 0,
-        "Patch": 79
+        "Patch": 3
     },
     "demands": [
         "vstest"
     ],
+    "preview": "true",
+    "releaseNotes" : "Test Impact and support for minimatch patterns.",
     "minimumAgentVersion": "1.89.0",
     "groups": [
         {
@@ -28,10 +34,7 @@
         {
             "name": "tiaOptions",
             "displayName": "Test Impact Analysis",
-            "isExpanded": true,
-            "tags": [
-                "Preview"
-            ]
+            "isExpanded": true
         },
         {
             "name": "advancedExecutionOptions",
@@ -46,12 +49,25 @@
     ],
     "inputs": [
         {
-            "name": "testAssembly",
-            "type": "string",
+            "name": "testAssemblyVer2",
+            "type": "multiLine",
             "label": "Test Assembly",
-            "defaultValue": "**\\*test*.dll;-:**\\obj\\**",
+            "defaultValue": "**\\*test*.dll\n!**\\obj\\**",
             "required": true,
-            "helpMarkDown": "Test binaries to run tests on.  Wildcards can be used.  For example, `**\\*test*.dll;-:**\\obj\\**` for all dlls with test in name while excluding files in any sub-directory named obj.",
+            "helpMarkDown": "Run tests from the specified files. The file paths are relative to the search folder. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
+            "groupName": "executionOptions",
+            "properties": {
+                "rows": "3",
+                "resizable": "true"
+            }
+        },
+        {
+            "name": "searchFolder",
+            "type": "string",
+            "label": "Search Folder",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Folder to search for the test assemblies. Defaults to $(System.DefaultWorkingDirectory).",
             "groupName": "executionOptions"
         },
         {
@@ -209,16 +225,8 @@
             "groupName": "reportingOptions"
         }
     ],
-    "instanceNameFormat": "Test Assemblies $(testAssembly)",
+    "instanceNameFormat": "Test Assemblies",
     "execution": {
-        "PowerShell": {
-            "target": "$(currentDirectory)\\VSTest.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)",
-            "platforms": [
-                "windows"
-            ]
-        },
         "Node": {
             "target": "vstest.js"
         }
@@ -249,6 +257,7 @@
         "ErrorReadingVstestVersion": "Error reading the version of vstest.console.exe.",
         "UnexpectedVersionString": "Unexpected version string detected for vstest.console.exe: %s.",
         "UnexpectedVersionNumber": "Unexpected version number detected for vstest.console.exe: %s.",
-        "VstestDiagNotSupported": "vstest.console.exe version does not support the /diag flag. Enable diagnositics via the exe.config files"
+        "VstestDiagNotSupported": "vstest.console.exe version does not support the /diag flag. Enable diagnositics via the exe.config files",
+        "NoIncludePatternFound": "No include pattern found. Specify atleast one include pattern to search test assemblies."
     }
 }

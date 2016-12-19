@@ -5,15 +5,16 @@
   "loc.instanceNameFormat": "Queue Jenkins Job: $(jobName)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.serverEndpoint": "Jenkins service endpoint",
-  "loc.input.help.serverEndpoint": "Select the service endpoint for your Jenkins instance.  To create one, click the Manage link and create a new Jenkins Service Endpoint.",
+  "loc.input.help.serverEndpoint": "Select the service endpoint for your Jenkins instance.  To create one, click the Manage link and create a new Jenkins service endpoint.",
   "loc.input.label.jobName": "Job name",
   "loc.input.help.jobName": "The name of the Jenkins job to queue.  This must exactly match the job name on the Jenkins server.",
   "loc.input.label.captureConsole": "Capture console output and wait for completion",
   "loc.input.help.captureConsole": "If selected, this step will capture the Jenkins build console output, wait for the Jenkins build to complete, and succeed/fail based on the Jenkins build result.  Otherwise, once the Jenkins job is successfully queued, this step will successfully complete without waiting for the Jenkins build to run.",
   "loc.input.label.capturePipeline": "Capture pipeline output and wait for pipeline completion",
-  "loc.input.help.capturePipeline": "If selected, this step will capture the full Jenkins build pipeline console output, wait for the full Jenkins build pipeline to complete, and succeed/fail based on the Jenkins build pipeline result.  Otherwise, once the Jenkins job is completes, this step will successfully complete without waiting for full Jenkins build pipeline to run.",
+  "loc.input.help.capturePipeline": "If selected, this step will capture the full Jenkins build pipeline console output, wait for the full Jenkins build pipeline to complete, and succeed/fail based on the Jenkins build pipeline result.  Otherwise, once the first Jenkins job completes, this step will successfully complete without waiting for full Jenkins build pipeline to run.",
   "loc.input.label.parameterizedJob": "Parameterized job",
-  "loc.input.help.parameterizedJob": "Select if the Jenkins job accepts parameters. This should be selected even if all the default parameters are used and no parameters are actually specified.",
+  "loc.input.help.parameterizedJob": "Select if the Jenkins job accepts parameters. This should be selected even if all default parameter values are used and no parameters are actually specified.",
   "loc.input.label.jobParameters": "Job parameters",
-  "loc.input.help.jobParameters": "Specify job parameters, one per line, in the form <b>`<parameterName>=<parameterValue>`</b><p>To set a parameter to an empty value (useful for overriding a default value) leave off the paramter value, e.g. specify <b>`<parameterName>=`</b><p>Variables are supported, e.g. to define the <b>`commitId`</b> paramter to be the <b>`git commit ID`</b> for the build, use: <b>`commitId=$(Build.SourceVersion)`</b>. See the [documentation on variables](https://www.visualstudio.com/docs/build/define/variables) for more details.<p>Supported Jenkins parameter types are: <ul><li>`Boolean`</li><li>`String`</li><li>`Choice`</li><li>`Password`</li></ul>"
+  "loc.input.help.jobParameters": "Specify job parameters, one per line, in the form <b>`<parameterName>=<parameterValue>`</b><p>To set a parameter to an empty value (useful for overriding a default value), leave off the parameter value. For example, specify <b>`<parameterName>=`</b><p>Variables are supported. For example, to set a <b>`commitId`</b> parameter value to the Git commit ID of the build, use: <b>`commitId=$(Build.SourceVersion)`</b>. See the [documentation on variables](https://www.visualstudio.com/docs/build/define/variables) for more details.<p>Supported Jenkins parameter types are: <ul><li>`Boolean`</li><li>`Choice`</li><li>`Password`</li><li>`String`</li></ul>",
+  "loc.messages.JenkinsJobQueued": "Jenkins job queued"
 }

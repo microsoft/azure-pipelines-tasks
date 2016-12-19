@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 15
+        "Patch": 18
     },
     "demands": [
         "msbuild",
@@ -109,6 +109,13 @@
                 "0": "Automatically provisioned agents",
                 "2": "Self-provisioned agents"
             }
+        },
+		{
+            "name": "avgResponseTimeThreshold",
+            "type": "string",
+            "label": "Fail test if Avg.Response Time(ms) exceeds",
+            "helpMarkDown": "Load test run duration in seconds.",
+            "defaultValue": "0"
         }
     ],
     "instanceNameFormat": "Quick Web Performance Test $(testName)",

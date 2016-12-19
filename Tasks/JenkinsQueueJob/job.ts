@@ -17,16 +17,25 @@ import unzip = require('./unzip');
 
 import * as Util from './util';
 
+// Jobs transition between states as follows:
+// ------------------------------------------
+// BEGINNING STATE: New
+// New →            Locating, Streaming, Joined, Cut
+// Locating →       Streaming, Joined, Cut
+// Streaming →      Finishing
+// Finishing →      Downloading, Queued, Done
+// Downloading →    Done
+// TERMINAL STATES: Done, Queued, Joined, Cut
 export enum JobState {
-    New,       // 0
-    Locating,  // 1
-    Streaming, // 2
-    Finishing, // 3
-    Done,      // 4
-    Joined,    // 5
-    Queued,    // 6
-    Cut,       // 7
-    Downloading// 8
+    New,       // 0 - The job is yet to begin
+    Locating,  // 1 - The job is being located
+    Streaming, // 2 - The job is running and its console output is streaming
+    Finishing, // 3 - The job has run and is "finishing"
+    Done,      // 4 - The job has run and is done
+    Joined,    // 5 - The job is considered complete because it has been joined to the execution of another matching job execution
+    Queued,    // 6 - The job was queued and will not be tracked for completion (as specified by the "Capture..." task setting)
+    Cut,       // 7 - The job was cut from execution by the pipeline
+    Downloading// 8 - The job has run and its results are being downloaded (occurs when the TFS Plugin for Jenkins is installed)
 }
 
 export class Job {
@@ -98,7 +107,7 @@ export class Job {
             } else if (oldState == JobState.Streaming) {
                 validStateChange = (newState == JobState.Finishing);
             } else if (oldState == JobState.Finishing) {
-                validStateChange = (newState == JobState.Downloading || newState == JobState.Done);
+                validStateChange = (newState == JobState.Downloading || newState == JobState.Queued || newState == JobState.Done);
             } else if (oldState == JobState.Downloading) {
                 validStateChange = (newState == JobState.Done);
             } else if (oldState == JobState.Done || oldState == JobState.Joined || oldState == JobState.Cut) {
@@ -281,7 +290,7 @@ export class Job {
     /**
      * Checks the success of the job
      * 
-     * JobState = Finishing, transition to Done or Queued possible
+     * JobState = Finishing, transition to Downloading, Done, or Queued possible
      */
     finish(): void {
         var thisJob: Job = this;

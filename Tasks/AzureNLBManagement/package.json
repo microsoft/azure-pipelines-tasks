@@ -1,0 +1,19 @@
+{
+  "name": "nlbtask",
+  "version": "1.0.0",
+  "description": "Add/Remove a Virtual Machine's Network Interface to the Load Balancer",
+  "main": "nlbtask.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "dependencies": {
+    "q": "1.4.1",
+    "vso-node-api": "6.0.1-preview",
+    "vsts-task-lib": "0.9.20"
+  },
+  "devDependencies": {
+    "mocha": "3.2.0"
+  }
+}

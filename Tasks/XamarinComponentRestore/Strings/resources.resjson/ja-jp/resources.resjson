@@ -1,14 +1,14 @@
 {
-  "loc.friendlyName": "Xamarin Component Restore",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=786653)",
-  "loc.description": "Restores Xamarin components for the specified solution",
-  "loc.instanceNameFormat": "Xamarin component restore $(solution)",
-  "loc.input.label.solution": "Path to Solution",
-  "loc.input.help.solution": "The path to the Visual Studio Solution file",
-  "loc.input.label.email": "Email",
-  "loc.input.help.email": "Xamarin account email address.",
-  "loc.input.label.password": "Password",
-  "loc.input.help.password": "Xamarin account password. Use a new build variable with its lock enabled on the Variables tab to encrypt this value.",
-  "loc.messages.XamarinComponentRestoreReturnCode": "xamarin-component.exe exited with return code: %d",
-  "loc.messages.XamarinComponentRestoreFailed": "xamarin-component.exe failed with error: %s"
+  "loc.friendlyName": "Xamarin コンポーネントの復元",
+  "loc.helpMarkDown": "[詳細情報](https://go.microsoft.com/fwlink/?LinkId=786653)",
+  "loc.description": "指定されたソリューションの Xamarin コンポーネントを復元します",
+  "loc.instanceNameFormat": "Xamarin コンポーネントの復元 $(solution)",
+  "loc.input.label.solution": "ソリューションへの引数",
+  "loc.input.help.solution": "Visual Studio のソリューション ファイルへのパス",
+  "loc.input.label.email": "電子メール",
+  "loc.input.help.email": "Xamarin アカウントの電子メール アドレス。",
+  "loc.input.label.password": "パスワード",
+  "loc.input.help.password": "Xamarin アカウントのパスワード。[変数] タブでロックが有効になっている新しいビルド変数を使用して、この値を暗号化します。",
+  "loc.messages.XamarinComponentRestoreReturnCode": "xamarin-component.exe は次のリターン コードで終了しました: %d",
+  "loc.messages.XamarinComponentRestoreFailed": "xamarin-component.exe は次のエラーで失敗しました: %s"
 }

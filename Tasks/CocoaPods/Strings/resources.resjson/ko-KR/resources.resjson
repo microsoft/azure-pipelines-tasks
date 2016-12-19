@@ -4,5 +4,8 @@
   "loc.description": "CocoaPods는 Swift 및 Objective-C Cocoa 프로젝트의 종속성 관리자입니다. pod install을 실행합니다.",
   "loc.instanceNameFormat": "pod install",
   "loc.input.label.cwd": "작업 디렉터리",
-  "loc.input.help.cwd": "현재 작업 디렉터리입니다. 리포지토리의 디렉터리를 기본값으로 지정합니다."
+  "loc.input.help.cwd": "현재 작업 디렉터리입니다. 리포지토리의 디렉터리를 기본값으로 지정합니다.",
+  "loc.messages.PodReturnCode": "POD가 종료되었습니다(반환 코드: %d).",
+  "loc.messages.PodFailed": "POD가 실패했습니다(오류: %s).",
+  "loc.messages.CocoaPodsNotFound": "명령 POD를 찾을 수 없습니다. 빌드 컴퓨터에 Cocoapods를 설치하세요(https://cocoapods.org)."
 }
