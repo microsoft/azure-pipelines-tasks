@@ -28,6 +28,7 @@ describe('XamarinAndroid Suite', function() {
 		tr.setInput('project', '**/Single*.csproj');
 		tr.setInput('target', '');
 		tr.setInput('clean', 'false');
+		tr.setInput('createAppPackage', 'true');
 		tr.setInput('outputDir', '');
 		tr.setInput('configuration', '');
 		tr.setInput('msbuildLocation', '');
@@ -56,6 +57,7 @@ describe('XamarinAndroid Suite', function() {
 		//tr.setInput('project', '**/*.csproj');
 		tr.setInput('target', '');
 		tr.setInput('clean', 'false');
+		tr.setInput('createAppPackage', 'true');
 		tr.setInput('outputDir', '');
 		tr.setInput('configuration', '');
 		tr.setInput('msbuildLocation', '');
@@ -84,6 +86,7 @@ describe('XamarinAndroid Suite', function() {
 		tr.setInput('project', '**/home*.csproj');
 		tr.setInput('target', '');
 		tr.setInput('clean', 'false');
+		tr.setInput('createAppPackage', 'true');
 		tr.setInput('outputDir', '');
 		tr.setInput('configuration', '');
 		tr.setInput('msbuildLocation', '');
@@ -112,6 +115,7 @@ describe('XamarinAndroid Suite', function() {
 		tr.setInput('project', '/user/build/fun/project.csproj');
 		tr.setInput('target', '');
 		tr.setInput('clean', 'false');
+		tr.setInput('createAppPackage', 'true');
 		tr.setInput('outputDir', '');
 		tr.setInput('configuration', '');
 		tr.setInput('msbuildLocation', '');
@@ -140,6 +144,7 @@ describe('XamarinAndroid Suite', function() {
 		tr.setInput('project', '/user/build/fun/project2.csproj');
 		tr.setInput('target', '');
 		tr.setInput('clean', 'false');
+		tr.setInput('createAppPackage', 'true');
 		tr.setInput('outputDir', '');
 		tr.setInput('configuration', '');
 		tr.setInput('msbuildLocation', '');
@@ -168,6 +173,7 @@ describe('XamarinAndroid Suite', function() {
 		tr.setInput('project', '**/Multiple*.csproj');
 		tr.setInput('target', '');
 		tr.setInput('clean', 'false');
+		tr.setInput('createAppPackage', 'true');
 		tr.setInput('outputDir', '');
 		tr.setInput('configuration', '');
 		tr.setInput('msbuildLocation', '');
@@ -198,6 +204,7 @@ describe('XamarinAndroid Suite', function() {
 		tr.setInput('project', '**/Single*.csproj');
 		tr.setInput('target', '');
 		tr.setInput('clean', 'false');
+		tr.setInput('createAppPackage', 'true');
 		tr.setInput('outputDir', '');
 		tr.setInput('configuration', '');
 		tr.setInput('msbuildLocation', '');
@@ -227,6 +234,7 @@ describe('XamarinAndroid Suite', function() {
 		tr.setInput('project', '**/Single*.csproj');
 		tr.setInput('target', '');
 		tr.setInput('clean', 'false');
+		tr.setInput('createAppPackage', 'true');
 		tr.setInput('outputDir', '');
 		tr.setInput('configuration', '');
 		tr.setInput('msbuildLocation', '');
@@ -257,6 +265,7 @@ describe('XamarinAndroid Suite', function() {
 		tr.setInput('project', '**/Single*.csproj');
 		tr.setInput('target', '');
 		tr.setInput('clean', 'false');
+		tr.setInput('createAppPackage', 'true');
 		tr.setInput('outputDir', '');
 		tr.setInput('configuration', '');
 		tr.setInput('msbuildLocation', '');
@@ -285,6 +294,7 @@ describe('XamarinAndroid Suite', function() {
 		tr.setInput('project', '**/Single*.csproj');
 		tr.setInput('target', '');
 		tr.setInput('clean', 'false');
+		tr.setInput('createAppPackage', 'true');
 		tr.setInput('outputDir', '');
 		tr.setInput('configuration', '');
 		tr.setInput('msbuildLocation', '/home/bin2/');
@@ -316,6 +326,7 @@ describe('XamarinAndroid Suite', function() {
 		tr.setInput('project', '**/Single*.csproj');
 		tr.setInput('target', '');
 		tr.setInput('clean', 'false');
+		tr.setInput('createAppPackage', 'true');
 		tr.setInput('outputDir', '');
 		tr.setInput('configuration', '');
 		tr.setInput('msbuildLocation', '/home/bin/INVALID');
@@ -344,6 +355,7 @@ describe('XamarinAndroid Suite', function() {
 		tr.setInput('project', '**/Single*.csproj');
 		tr.setInput('target', '"My Target"');
 		tr.setInput('clean', 'true');
+		tr.setInput('createAppPackage', 'true');
 		tr.setInput('outputDir', '"/home/o u t/dir"');
 		tr.setInput('configuration', '"For Release"');
 		tr.setInput('msbuildArguments', '/m:1 "/p:temp=/home/temp dir/" /f');
@@ -372,6 +384,7 @@ describe('XamarinAndroid Suite', function() {
 		tr.setInput('project', '**/Multiple*.csproj');
 		tr.setInput('target', '"My Target"');
 		tr.setInput('clean', 'true');
+		tr.setInput('createAppPackage', 'true');
 		tr.setInput('outputDir', '"/home/o u t/dir"');
 		tr.setInput('configuration', '"For Release"');
 		tr.setInput('msbuildArguments', '/m:1 "/p:temp=/home/temp dir/" /f');
@@ -394,5 +407,23 @@ describe('XamarinAndroid Suite', function() {
 			done(err);
 		});
 	})
+
+	it('XamarinAndroid do not create app package', (done:MochaDone) => {
+        this.timeout(1000);
+
+        setResponseFile('L0DoNotCreateAppPackage.json');
+        var tr = new trm.TaskRunner('XamarinAndroid', true);
+		
+		
+		tr.run();
+
+        assert(tr.ran('/home/bin/xbuild /user/build/fun/test.csproj'), 'it should have run xamarin android build for test project');
+        assert(tr.invokedToolCount == 1, 'should have only run XamarinAndroid 1 time');
+        assert(tr.resultWasSet, 'task should have set a result');
+        assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+			
+        done();
+    });
 
 });
