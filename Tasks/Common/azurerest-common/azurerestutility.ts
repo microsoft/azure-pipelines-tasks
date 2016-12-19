@@ -313,11 +313,12 @@ export async function swapWebAppSlot(SPN, resourceGroupName: string, webAppName:
     return deferred.promise;
 }
 
-export async function startAppService(SPN, resourceGroupName: string, webAppName: string) {
+export async function startAppService(SPN, resourceGroupName: string, webAppName: string, specifySlotFlag: boolean, slotName: string) {
     
     var deferred = Q.defer<any>();
+    var slotUrl = (specifySlotFlag) ? "/slots/" + slotName :"";
     var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
-                '/providers/Microsoft.Web/sites/' + webAppName + "/start?" + azureApiVersion;
+                '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + "/start?" + azureApiVersion;
 
     var accessToken = await getAuthorizationToken(SPN);
     var headers = {
@@ -340,11 +341,12 @@ export async function startAppService(SPN, resourceGroupName: string, webAppName
     return deferred.promise;
 }
 
-export async function stopAppService(SPN, resourceGroupName: string, webAppName: string) {
+export async function stopAppService(SPN, resourceGroupName: string, webAppName: string, specifySlotFlag: boolean, slotName: string) {
     
     var deferred = Q.defer<any>();
+    var slotUrl = (specifySlotFlag) ? "/slots/" + slotName :"";
     var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
-                '/providers/Microsoft.Web/sites/' + webAppName + "/stop?" + azureApiVersion;
+                '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + "/stop?" + azureApiVersion;
 
     var accessToken = await getAuthorizationToken(SPN);
     var headers = {
@@ -367,11 +369,12 @@ export async function stopAppService(SPN, resourceGroupName: string, webAppName:
     return deferred.promise;
 }
 
-export async function restartAppService(SPN, resourceGroupName: string, webAppName: string) {
+export async function restartAppService(SPN, resourceGroupName: string, webAppName: string, specifySlotFlag: boolean, slotName: string) {
     
     var deferred = Q.defer<any>();
+    var slotUrl = (specifySlotFlag) ? "/slots/" + slotName :"";
     var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
-                '/providers/Microsoft.Web/sites/' + webAppName + "/restart?" + azureApiVersion + '&synchronous=true';
+                '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + "/restart?" + azureApiVersion + '&synchronous=true';
 
     var accessToken = await getAuthorizationToken(SPN);
     var headers = {

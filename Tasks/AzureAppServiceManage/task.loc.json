@@ -18,7 +18,14 @@
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
-  "groups": [],
+  "groups": [
+    {
+      "name": "SlotDetails",
+      "displayName": "ms-resource:loc.group.displayName.SlotDetails",
+      "isExpanded": true,
+      "visibleRule": " = true"
+    }
+  ],
   "inputs": [
     {
       "name": "ConnectedServiceName",
@@ -43,6 +50,14 @@
       }
     },
     {
+      "name": "Specify slot",
+      "type": "boolean",
+      "required": false,
+      "helpMarkDown": "",
+      "visibleRule": "Action = Start Azure App Service || Action = Stop Azure App Service || Action = Restart Azure App Service",
+      "label": "ms-resource:loc.input.label.Specify slot"
+    },
+    {
       "name": "WebAppName",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.WebAppName",
@@ -62,6 +77,7 @@
       "properties": {
         "EditableOptions": "True"
       },
+      "groupName": "SlotDetails",
       "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName",
       "visibleRule": "Action = Swap Slots"
     },
