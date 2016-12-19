@@ -238,7 +238,7 @@ export async function updateAzureRMWebAppConfigDetails(SPN, webAppName: string, 
 			deferred.reject(error);
 		}
 		else if(response.statusCode === 200) {
-			deferred.resolve(tl.loc("SuccessfullyUpdatedAzureRMWebAppConfigDetails"));
+			deferred.resolve();
 		}
 		else {
 			deferred.reject(tl.loc('UnabletoupdateAzureRMWebAppConfigDetails', response.statusCode, response.statusMessage));

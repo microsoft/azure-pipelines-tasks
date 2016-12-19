@@ -140,6 +140,7 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
         id: 'appid',
           properties: { 
              virtualApplications: [ ['Object'], ['Object'], ['Object'] ],
+             scmType: "None"
         } 
       }
 
@@ -157,6 +158,9 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
         return appSettings;
     },
     updateWebAppAppSettings : function (){
+        return true;
+    },
+    updateAzureRMWebAppConfigDetails: function() {
         return true;
     }
 });

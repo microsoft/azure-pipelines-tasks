@@ -198,14 +198,16 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
 async function updateConfigDetails(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
     try {
         var configDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-        if(configDetails.properties.scmType === "None") {
+        var scmType: string = configDetails.properties.scmType;
+        if(scmType.toLowerCase() === "none") {
             var updatedConfigDetails = JSON.stringify(
                 {
                     "properties": {
                         "scmType": "VSTSRM"
                     }
                 });
-            tl._writeLine(await azureRESTUtility.updateAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, updatedConfigDetails));
+            await azureRESTUtility.updateAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, updatedConfigDetails);
+            tl._writeLine(tl.loc("SuccessfullyUpdatedAzureRMWebAppConfigDetails"));
         }
     }
     catch(error) {
