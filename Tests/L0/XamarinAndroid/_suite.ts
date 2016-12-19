@@ -409,21 +409,33 @@ describe('XamarinAndroid Suite', function() {
 	})
 
 	it('XamarinAndroid do not create app package', (done:MochaDone) => {
-        this.timeout(1000);
-
         setResponseFile('L0DoNotCreateAppPackage.json');
         var tr = new trm.TaskRunner('XamarinAndroid', true);
+        tr.setInput('project', '**/test*.csproj');
+		tr.setInput('target', '');
+		tr.setInput('clean', 'false');
+		tr.setInput('createAppPackage', 'false');
+		tr.setInput('outputDir', '');
+		tr.setInput('configuration', '');
+		tr.setInput('msbuildLocation', '');
+		tr.setInput('msbuildArguments', '');
+		tr.setInput('javaHomeSelection', 'JDKVersion');
+		tr.setInput('jdkVersion', 'default');
 		
-		
-		tr.run();
-
-        assert(tr.ran('/home/bin/xbuild /user/build/fun/test.csproj'), 'it should have run xamarin android build for test project');
-        assert(tr.invokedToolCount == 1, 'should have only run XamarinAndroid 1 time');
-        assert(tr.resultWasSet, 'task should have set a result');
-        assert(tr.stderr.length == 0, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
-			
-        done();
+		tr.run()
+		.then(() => {
+			assert(tr.ran('/home/bin/xbuild /user/build/fun/test.csproj'), 'it should have run xamarin android build for test project');
+			assert(tr.invokedToolCount == 1, 'should have only run XamarinAndroid 1 time');
+			assert(tr.resultWasSet, 'task should have set a result');
+			assert(tr.stderr.length == 0, 'should not have written to stderr');
+			assert(tr.succeeded, 'task should have succeeded');
+				
+			done();
+		})
+		.fail((err) => {
+			done(err);
+		});
+        
     });
 
 });
