@@ -1,4 +1,5 @@
 import tl = require("vsts-task-lib/task");
+import toolRunner = require("vsts-task-lib/toolRunner").ToolRunner;
 import path = require("path");
 import fs = require("fs");
 import ffl = require('find-files-legacy/findfiles.legacy');
@@ -12,7 +13,7 @@ export class dotNetExe {
     private publishWebProjects: boolean;
     private zipAfterPublish: boolean;
     private outputArgument: string;
-    private remainingArgument: string;
+    private remainingArgument: string[];
 
     constructor() {
         this.command = tl.getInput("command");
@@ -40,6 +41,7 @@ export class dotNetExe {
                 var dotnet = tl.tool(dotnetPath);
                 dotnet.arg(this.command);
                 dotnet.arg(projectFile);
+                this.applyArguments(dotnet, projectFile);
                 dotnet.line(this.getCommandArguments(projectFile));
 
                 var result = dotnet.execSync();
@@ -98,6 +100,18 @@ export class dotNetExe {
                 })});
     }
 
+    private applyArguments(dotnet: toolRunner, projectFile: string) {
+        if (this.isPublishCommand() && this.outputArgument) {
+            var output = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
+            dotnet.args(this.remainingArgument);
+            dotnet.args("--output");
+            dotnet.args(output);
+        }
+        else {
+            dotnet.line(this.arguments);
+        }
+    }
+
     private getCommandArguments(projectFile: string): string {
         if (this.isPublishCommand() && this.outputArgument) {
             var output = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
@@ -134,7 +148,7 @@ export class dotNetExe {
             arg = '';
             for (; i < argString.length; i++) {
                 var c = argString.charAt(i);
-                if (isOutputOption && c === '"') {
+                if (c === '"') {
                     if (!escaped) {
                         inQuotes = !inQuotes;
                     }
@@ -143,7 +157,7 @@ export class dotNetExe {
                     }
                     continue;
                 }
-                if (c === "\\" && inQuotes) {
+                if (c === "\\" && inQuotes && !escaped) {
                     escaped = true;
                     continue;
                 }
