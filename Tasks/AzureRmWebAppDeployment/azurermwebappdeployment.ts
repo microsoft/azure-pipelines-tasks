@@ -46,13 +46,15 @@ async function run() {
         endPoint["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
         endPoint["url"] = tl.getEndpointUrl(connectedServiceName, true);
 
-        if(!deployToSlotFlag) {
+        if(deployToSlotFlag) {
+            if(slotName.toLowerCase() === "production") {
+                deployToSlotFlag = false;
+            }
+        }
+        else {
             resourceGroupName = await azureRESTUtility.getResourceGroupName(endPoint, webAppName);
         }
-        if(slotName && slotName.toLowerCase() === "production") {
-            deployToSlotFlag = false;
-            slotName = null;
-        }
+
         var publishingProfile = await azureRESTUtility.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
         tl._writeLine(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
 
@@ -117,20 +119,20 @@ async function run() {
             }
 
             var appSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-            if(renameFilesFlag){
+            if(renameFilesFlag) {
                 if(appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES == undefined || appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES == '0'){
                     appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES = '1';
                     await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
                 }
             }
-            else if(!renameFilesFlag){
+            else {
                 if(appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES != undefined && appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES != '0'){
                     delete appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES;
                     await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
                 }
             }
-            tl._writeLine("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);
-            tl._writeLine("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);
+            tl.setVariable('MSDeploy.websiteUserName', publishingProfile.userName, true);
+            tl.setVariable('MSDeploy.websitePassword', publishingProfile.userPWD, true);
             await msDeploy.DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
                             excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile,
                             additionalArguments, isFolderBasedDeployment, useWebDeploy);
@@ -143,7 +145,7 @@ async function run() {
         
     } catch (error) {
         isDeploymentSuccess = false;
-        deploymentErrorMessage = error;
+        tl.setResult(tl.TaskResult.Failed, error);
     }
     if(publishingProfile != null) {
         var customMessage = {
@@ -157,9 +159,6 @@ async function run() {
         catch(error) {
             tl.warning(error);
         }
-    }
-    if(!isDeploymentSuccess) {
-        tl.setResult(tl.TaskResult.Failed, deploymentErrorMessage);
     }
 }
 
