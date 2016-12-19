@@ -186,7 +186,6 @@
     "WebAppDoesntExist": "ms-resource:loc.messages.WebAppDoesntExist",
     "UnabletoretrieveWebAppID": "ms-resource:loc.messages.UnabletoretrieveWebAppID",
     "StartingSwapSlot": "ms-resource:loc.messages.StartingSwapSlot",
-    "SwaSlotpOperationInProgress": "ms-resource:loc.messages.SwaSlotpOperationInProgress",
     "UnableToMonitorSlotSwapStatus": "ms-resource:loc.messages.UnableToMonitorSlotSwapStatus"
   }
 }

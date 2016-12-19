@@ -305,9 +305,12 @@ function monitorSlotSwap(SPN, webAppName, resourceGroupName, sourceSlot, targetS
                 if (status === 200) {
                     deferred.resolve(tl.loc("Successfullyswappedslots"));
                 }
+                else if(status === 202) {
+                    tl.debug("Slot swap operation is in progress. Attempt : "+ attempts);
+                    setTimeout(poll, 5000);
+                }
                 else {
-                    tl.debug(tl.loc("SwaSlotpOperationInProgress", webAppName));
-                    setTimeout(poll, 10000);
+                    deferred.reject(tl.loc("UnableToMonitorSlotSwapStatus", webAppName));
                 }
             }).catch((error) => {
                 deferred.reject(tl.loc("UnableToMonitorSlotSwapStatus", webAppName));

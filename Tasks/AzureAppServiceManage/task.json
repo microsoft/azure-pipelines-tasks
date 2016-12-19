@@ -188,7 +188,6 @@
         "WebAppDoesntExist": "Webapp '%s' doesn't exist.",
         "UnabletoretrieveWebAppID": "Unable to retrieve connection details for Azure App Service:'%s'. Status Code: %s",
         "StartingSwapSlot": "Requesting swap slot for Web App : %s",
-        "SwaSlotpOperationInProgress": "Swap operation for Web App %s is in progress",
         "UnableToMonitorSlotSwapStatus": "Unable to monitor slot swap status for Web App : %s"
     }
 }
