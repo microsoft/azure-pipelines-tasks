@@ -183,13 +183,14 @@ export class ResourceGroup {
                 if (result.error) {
                     console.log("There are errors in your deployment");
                     console.log("Error:", result.error.code);
-                    console.log("Error Message: ", result.error.message);
+                    tl.error(result.error.message);
                     if(result.error.details) {
                         console.log("Details:");
                         for (var i= 0; i< result.error.details.length; i++) {
                             console.log(i+1, result.error.details[i].code, result.error.details[i].message, result.error.details[i].details);
                         }
                     }
+                    tl.setResult(tl.TaskResult.Failed, tl.loc("RGO_createTemplateDeploymentFailed", this.taskParameters.resourceGroupName));
                 } else {
                     console.log("It's a valid Deployment")
                     tl.setResult(tl.TaskResult.Succeeded, tl.loc("RGO_createTemplateDeploymentSucceeded", this.taskParameters.resourceGroupName));
