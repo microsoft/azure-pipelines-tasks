@@ -15,7 +15,8 @@ To deploy to Azure, an Azure subscription has to be linked to Team Foundation Se
 - For Azure Classic resources use 'Azure' endpoint type with Certificate or Credentials based authentication. If you are using credentials based auth, ensure that the credentials are for a [**work account**](https://azure.microsoft.com/en-in/pricing/member-offers/msdn-benefits-details/work-accounts-faq/) because Microsoft accounts like [**joe@live.com**](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/DeployAzureResourceGroup) or [**joe@hotmail.com**](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/DeployAzureResourceGroup) are not supported. 
 - For [ARM](https://azure.microsoft.com/en-in/documentation/articles/resource-group-overview/), use 'Azure Resource Manager' endpoint type, for more details follow the steps listed in the link [here](https://go.microsoft.com/fwlink/?LinkID=623000&clcid=0x409).
 #### **Azure CLI**
-The task needs the Azure CLI version to be installed on the automation agent, and the details are available [here](https://azure.microsoft.com/en-us/documentation/articles/xplat-cli-install/).
+The task needs the Azure CLI version to be installed on the automation agent, and the details are available [here](https://azure.microsoft.com/en-us/documentation/articles/xplat-cli-install/). 
+After installation of Azure CLI on the machine, agent if already running will require to be restarted once.
  
 ## Parameters of the task
 The task is used to run Azure CLI commands on Cross platform agents running Windows, Linux or Mac . The mandatory fields are highlighted with a *.
