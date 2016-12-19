@@ -313,86 +313,89 @@ export async function swapWebAppSlot(SPN, resourceGroupName: string, webAppName:
     return deferred.promise;
 }
 
-export async function startAppService(SPN, resourceGroupName: string, webAppName: string) {
+export async function startAppService(SPN, resourceGroupName: string, webAppName: string, specifySlotFlag: boolean, slotName: string) {
     
     var deferred = Q.defer<any>();
+    var slotUrl = (specifySlotFlag) ? "/slots/" + slotName : "";
     var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
-                '/providers/Microsoft.Web/sites/' + webAppName + "/start?" + azureApiVersion;
+                '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + "/start?" + azureApiVersion;
 
     var accessToken = await getAuthorizationToken(SPN);
     var headers = {
         'Authorization': 'Bearer '+ accessToken
     };
-    
+    var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
     tl._writeLine(tl.loc('StartingAppService', webAppName));
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
             deferred.reject(error);
         }
         if(response.statusCode === 200 || response.statusCode === 204) {
-            deferred.resolve(tl.loc('AppServicestartedsuccessfully', webAppName));
+            deferred.resolve(tl.loc('AppServicestartedsuccessfully', webAppNameWithSlot));
         }
         else {
             tl.error(response.statusMessage);
-            deferred.reject(tl.loc("FailedtoStartAppService",webAppName, response.statusCode, response.statusMessage));
+            deferred.reject(tl.loc("FailedtoStartAppService",webAppNameWithSlot, response.statusCode, response.statusMessage));
         }
     });
     return deferred.promise;
 }
 
-export async function stopAppService(SPN, resourceGroupName: string, webAppName: string) {
+export async function stopAppService(SPN, resourceGroupName: string, webAppName: string, specifySlotFlag: boolean, slotName: string) {
     
     var deferred = Q.defer<any>();
+    var slotUrl = (specifySlotFlag) ? "/slots/" + slotName : "";
     var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
-                '/providers/Microsoft.Web/sites/' + webAppName + "/stop?" + azureApiVersion;
+                '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + "/stop?" + azureApiVersion;
 
     var accessToken = await getAuthorizationToken(SPN);
     var headers = {
         'Authorization': 'Bearer '+ accessToken
     };
-
-    tl._writeLine(tl.loc('StoppingAppService', webAppName));
+    var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
+    tl._writeLine(tl.loc('StoppingAppService', webAppNameWithSlot));
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
             deferred.reject(error);
         }
         if(response.statusCode === 200 || response.statusCode === 204) {
-            deferred.resolve(tl.loc('AppServicestoppedsuccessfully', webAppName));
+            deferred.resolve(tl.loc('AppServicestoppedsuccessfully', webAppNameWithSlot));
         }
         else {
             tl.error(response.statusMessage);
-            deferred.reject(tl.loc("FailedtoStopAppService",webAppName, response.statusCode, response.statusMessage));
+            deferred.reject(tl.loc("FailedtoStopAppService",webAppNameWithSlot, response.statusCode, response.statusMessage));
         }
     });
     return deferred.promise;
 }
 
-export async function restartAppService(SPN, resourceGroupName: string, webAppName: string) {
+export async function restartAppService(SPN, resourceGroupName: string, webAppName: string, specifySlotFlag: boolean, slotName: string) {
     
     var deferred = Q.defer<any>();
+    var slotUrl = (specifySlotFlag) ? "/slots/" + slotName : "";
     var url = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
-                '/providers/Microsoft.Web/sites/' + webAppName + "/restart?" + azureApiVersion + '&synchronous=true';
+                '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + "/restart?" + azureApiVersion + '&synchronous=true';
 
     var accessToken = await getAuthorizationToken(SPN);
     var headers = {
         'Authorization': 'Bearer '+ accessToken
     };
-
+    var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
     tl._writeLine(tl.loc('RestartingAppService', webAppName));
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
             deferred.reject(error);
         }
         if(response.statusCode === 200 || response.statusCode === 204) {
-            deferred.resolve(tl.loc('AppServiceRestartedSuccessfully', webAppName));
+            deferred.resolve(tl.loc('AppServiceRestartedSuccessfully', webAppNameWithSlot));
         }
         else if(response.statusCode === 202) {
             tl.warning(tl.loc('RestartAppServiceAccepted'));
-            deferred.resolve(tl.loc('RestartAppServiceAccepted', webAppName));
+            deferred.resolve(tl.loc('RestartAppServiceAccepted', webAppNameWithSlot));
         }
         else {
             tl.error(response.statusMessage);
-            deferred.reject(tl.loc("FailedtoRestartAppService",webAppName, response.statusCode, response.statusMessage));
+            deferred.reject(tl.loc("FailedtoRestartAppService",webAppNameWithSlot, response.statusCode, response.statusMessage));
         }
     });
     return deferred.promise;
