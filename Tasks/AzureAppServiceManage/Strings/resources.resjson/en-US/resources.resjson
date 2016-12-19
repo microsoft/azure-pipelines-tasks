@@ -45,5 +45,5 @@
   "loc.messages.WebAppDoesntExist": "Webapp '%s' doesn't exist.",
   "loc.messages.UnabletoretrieveWebAppID": "Unable to retrieve connection details for Azure App Service:'%s'. Status Code: %s",
   "loc.messages.StartingSwapSlot": "Requesting swap slot for Web App : %s",
-  "loc.messages.UnableToMonitorSlotSwapStatus": "Unable to monitor slot swap status for Web App : %s"
+  "loc.messages.UnableToMonitorSlotSwapStatus": "Unable to monitor slot swap status for Web App: %s. Status Code: %s"
 }

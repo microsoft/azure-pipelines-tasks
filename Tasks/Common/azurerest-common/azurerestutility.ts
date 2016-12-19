@@ -310,14 +310,14 @@ function monitorSlotSwap(SPN, webAppName, resourceGroupName, sourceSlot, targetS
                     setTimeout(poll, 5000);
                 }
                 else {
-                    deferred.reject(tl.loc("UnableToMonitorSlotSwapStatus", webAppName));
+                    deferred.reject(tl.loc("UnableToMonitorSlotSwapStatus", webAppName, status));
                 }
             }).catch((error) => {
-                deferred.reject(tl.loc("UnableToMonitorSlotSwapStatus", webAppName));
+                deferred.reject(tl.loc("UnableToMonitorSlotSwapStatus", webAppName, status));
             });
         }
         else {
-            deferred.reject(tl.loc("UnableToMonitorSlotSwapStatus", webAppName));
+            deferred.reject(tl.loc("UnableToMonitorSlotSwapStatus", webAppName, status));
         }
     }
     poll();
@@ -353,7 +353,7 @@ export async function swapWebAppSlot(SPN, resourceGroupName: string, webAppName:
                 deferred.resolve(tl.loc("Successfullyswappedslots", webAppName, sourceSlot, targetSlot));
             }).catch((error) => {
                 tl.warning(error);
-                deferred.reject(error);
+                deferred.resolve(tl.loc("Successfullyswappedslots", webAppName, sourceSlot, targetSlot));
             });
         }
         else {
