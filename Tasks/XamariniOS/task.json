@@ -11,8 +11,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 1,
-        "Patch": 1
+        "Minor": 111,
+        "Patch": 0
     },
     "demands": [
         "Xamarin.iOS"
@@ -45,6 +45,15 @@
             "defaultValue": "Release",
             "required": true,
             "helpMarkDown": "Standard configurations are Ad-Hoc, AppStore, Debug, Release."
+        },
+        {
+            "name": "runNugetRestore",
+            "type": "boolean",
+            "label": "Run NuGet Restore",
+            "defaultValue": "true",
+            "required": true,
+            "helpMarkDown": "Optionally run `nuget restore` on the Xamarin iOS solution to install all referenced packages before build. The nuget tool in the PATH on the build server will be used. To use a different version of nuget or set additional arguments use the [NuGet Instaler Task](https://www.visualstudio.com/en-us/docs/build/steps/package/nuget-installer).",
+            "groupName": "advanced"
         },
         {
             "name": "args",

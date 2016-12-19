@@ -18,6 +18,7 @@ async function run() {
         tl.debug('device: ' + device);
         var xbuildLocation = tl.getInput('mdtoolLocation', false);
         var cwd = tl.getInput('cwd');
+        let runNugetRestore : boolean = tl.getBoolInput('runNugetRestore');
 
         // Get path to xbuild
         var xbuildToolPath = undefined;
@@ -28,13 +29,15 @@ async function run() {
             xbuildToolPath = tl.which('xbuild', true);
         }
 
-        // Find location of nuget
-        var nugetPath = tl.which('nuget', true);
+        if(runNugetRestore) {
+            // Find location of nuget
+            var nugetPath = tl.which('nuget', true);
 
-        // Restore NuGet packages of the solution
-        var nugetRunner = tl.tool(nugetPath);
-        nugetRunner.arg(['restore', solutionPath]);
-        await nugetRunner.exec();
+            // Restore NuGet packages of the solution
+            var nugetRunner = tl.tool(nugetPath);
+            nugetRunner.arg(['restore', solutionPath]);
+            await nugetRunner.exec();
+        }
 
         //Process working directory
         var cwd = cwd
