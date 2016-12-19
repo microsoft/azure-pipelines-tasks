@@ -10,7 +10,7 @@ var fileEncoding = require('./fileencoding.js');
 export async function substituteAppSettingsVariables(folderPath) {
     var configFiles = tl.glob(folderPath + "/**/*.config");
     var variableMap = varUtility.getVariableMap();
-    var tags = ["applicationSettings", "appSettings", "connectionStrings", "configSections", "system.webServer"];
+    var tags = ["applicationSettings", "appSettings", "connectionStrings", "configSections"];
     for(var configFile of configFiles) {
         await substituteXmlVariables(configFile, tags, variableMap);
     }
