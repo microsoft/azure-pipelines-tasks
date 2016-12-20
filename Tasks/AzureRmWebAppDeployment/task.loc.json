@@ -283,6 +283,8 @@
     "WebAppDoesntExist": "ms-resource:loc.messages.WebAppDoesntExist",
     "EncodeNotSupported": "ms-resource:loc.messages.EncodeNotSupported",
     "UnknownFileEncodeError": "ms-resource:loc.messages.UnknownFileEncodeError",
-    "ShortFileBufferError": "ms-resource:loc.messages.ShortFileBufferError"
+    "ShortFileBufferError": "ms-resource:loc.messages.ShortFileBufferError",
+    "FailedToUpdateAzureRMWebAppConfigDetails": "ms-resource:loc.messages.FailedToUpdateAzureRMWebAppConfigDetails",
+    "SuccessfullyUpdatedAzureRMWebAppConfigDetails": "ms-resource:loc.messages.SuccessfullyUpdatedAzureRMWebAppConfigDetails"
   }
 }

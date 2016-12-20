@@ -126,6 +126,7 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
 			id: 'appid',
 			properties: { 
 				virtualApplications: [ ['Object'], ['Object'], ['Object'] ],
+                scmType: "None"
 			} 
 		}
 
@@ -156,6 +157,9 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
     },
     updateWebAppAppSettings : function (){
         return true;
+    },
+    updateAzureRMWebAppConfigDetails: function() {
+        console.log("Successfully updated scmType to VSTSRM");
     }
 });
 
