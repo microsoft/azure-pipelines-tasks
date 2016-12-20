@@ -3,10 +3,8 @@ import tl = require('vsts-task-lib/task');
 import path = require("path");
 import fs = require("fs");
 import httpClient = require('vso-node-api/HttpClient');
-var httpObj = new httpClient.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
-var gulp = require('gulp');
-var zip = require('gulp-zip');
-var zipUtility = require('webdeployment-common/ziputility.js');
+var httpObj = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
+var zipUtility = require('./ziputility.js');
 
 export async function appOffineKuduService(publishUrl: string, physicalPath: string, headers, enableFeature: boolean) {
     var defer = Q.defer<string>();
@@ -15,7 +13,7 @@ export async function appOffineKuduService(publishUrl: string, physicalPath: str
         var offlineFilePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'app_offline.htm');
         fs.writeFileSync(offlineFilePath, '<h1>The Web Page is temporarily unavailable !</h1>');
         var webAppReadStream = fs.createReadStream(offlineFilePath);
-        httpObj.sendFile('PUT', kuduDeploymentURL, webAppReadStream, headers, (error, response, body) => {
+        httpObj.sendStream('PUT', kuduDeploymentURL, webAppReadStream, headers, (error, response, body) => {
             if (error) {
                 defer.reject(error);
             }
@@ -97,7 +95,7 @@ export async function deployWebAppPackage(webAppPackage: string, publishingProfi
     }
     tl._writeLine(tl.loc("Deployingwebapplicationatvirtualpathandphysicalpath", webAppPackage, virtualPath, physicalPath));
     var webAppReadStream = fs.createReadStream(webAppPackage);
-    httpObj.sendFile('PUT', kuduDeploymentURL, webAppReadStream, headers, async (error, response, body) => {
+    httpObj.sendStream('PUT', kuduDeploymentURL, webAppReadStream, headers, async (error, response, body) => {
         if(error) {
             deferred.reject(tl.loc("Failedtodeploywebapppackageusingkuduservice", error));
         }
