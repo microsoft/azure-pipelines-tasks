@@ -137,7 +137,7 @@ async function run() {
             await DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment, takeAppOfflineFlag);
 
         }
-        await updateConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+        await updateScmType(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
         
     } catch (error) {
         isDeploymentSuccess = false;
@@ -195,7 +195,7 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
     }
 }
 
-async function updateConfigDetails(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
+async function updateScmType(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
     try {
         var configDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
         var scmType: string = configDetails.properties.scmType;
@@ -211,7 +211,7 @@ async function updateConfigDetails(SPN, webAppName: string, resourceGroupName: s
         }
     }
     catch(error) {
-        tl.warning(error);
+        tl.warning(tl.loc("FailedToUpdateAzureRMWebAppConfigDetails", error));
     }
 }
 

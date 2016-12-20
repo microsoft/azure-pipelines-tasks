@@ -286,7 +286,7 @@
     "EncodeNotSupported": "ms-resource:loc.messages.EncodeNotSupported",
     "UnknownFileEncodeError": "ms-resource:loc.messages.UnknownFileEncodeError",
     "ShortFileBufferError": "ms-resource:loc.messages.ShortFileBufferError",
-    "UnabletoupdateAzureRMWebAppConfigDetails": "ms-resource:loc.messages.UnabletoupdateAzureRMWebAppConfigDetails",
+    "FailedToUpdateAzureRMWebAppConfigDetails": "ms-resource:loc.messages.FailedToUpdateAzureRMWebAppConfigDetails",
     "SuccessfullyUpdatedAzureRMWebAppConfigDetails": "ms-resource:loc.messages.SuccessfullyUpdatedAzureRMWebAppConfigDetails"
   }
 }
