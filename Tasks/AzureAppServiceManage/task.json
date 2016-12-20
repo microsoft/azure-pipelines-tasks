@@ -18,8 +18,17 @@
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "$(Action): $(WebAppName)",
-  "groups": [
-
+    "groups": [
+        {
+            "name": "SlotDetailsManage",
+            "displayName": "Slot Details",
+            "visibleRule": "Action = Swap Slots"
+        },
+        {
+            "name": "SlotDetails",
+            "displayName": "Slot Details",
+            "visibleRule": "Action != Swap Slots && SpecifySlot = true"
+        }
     ],
   "inputs": [
         {
@@ -56,6 +65,13 @@
             "helpMarkDown": "Enter or select the name of an existing Azure App Service"
         },
         {
+            "name": "SpecifySlot",
+            "type": "boolean",
+            "label": "Specify Slot",
+            "required": false,
+            "visibleRule": "Action != Swap Slots"
+        },
+        {
             "name": "ResourceGroupName",
             "type": "pickList",
             "label": "Resource group",
@@ -65,7 +81,7 @@
                 "EditableOptions": "True"
             },
             "helpMarkDown": "Enter or Select the Azure Resource Group that contains the Azure App Service specified above",
-            "visibleRule":"Action = Swap Slots"
+            "groupName": "SlotDetailsManage"
         },
         {
             "name": "SourceSlot",
@@ -77,7 +93,7 @@
                 "EditableOptions": "True"
             },
             "helpMarkDown": "The swap action directs destination slot's traffic to the source slot",
-            "visibleRule": "Action = Swap Slots"
+            "groupName": "SlotDetailsManage"
         },
         {
             "name": "SwapWithProduction",
@@ -86,7 +102,7 @@
             "defaultValue": "true",
             "required": false,
             "helpMarkDown": "Select the option to swap the traffic of source slot with production. If this option is not selected, then you will have to provide source and target slot names.",
-            "visibleRule": "Action = Swap Slots"
+            "groupName": "SlotDetailsManage"
         },
         {
             "name": "TargetSlot",
@@ -98,7 +114,8 @@
                 "EditableOptions": "True"
             },
             "helpMarkDown": "The swap action directs destination slot's traffic to the source slot",
-            "visibleRule": "Action = Swap Slots && SwapWithProduction = false"
+            "visibleRule": "SwapWithProduction = false",
+            "groupName": "SlotDetailsManage"
         },
         {
             "name": "PreserveVnet",
@@ -107,7 +124,15 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Preserve the Virtual network settings",
-            "visibleRule": "Action = Swap Slots"
+            "groupName": "SlotDetailsManage"
+        },
+        {
+            "name": "Slot",
+            "type": "pickList",
+            "label": "Slot",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "SlotDetails"
         }
     ],
   "dataSourceBindings": [

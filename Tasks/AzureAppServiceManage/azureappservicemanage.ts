@@ -92,7 +92,7 @@ async function run() {
     }
     else {
         customMessage['slotName'] =  (specifySlotFlag) ? slotName : 'Production';
-        await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, false, null, taskResult, customMessage, deploymentId);
+        await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, specifySlotFlag, slotName, taskResult, customMessage, deploymentId);
     }
 }
 
