@@ -13,62 +13,62 @@ export class WebRequest {
     public headers;
 }
 
+export class WebResponse {
+    public error;
+    public body;
+    public statusCode;
+}
+
 export class ServiceClient {
     private credentials;
     constructor(credentials) {
         this.credentials = credentials;
     }
 
-    public get(request: WebRequest):Q.Promise<any> {
-        var deferred = Q.defer<any>();
+    private makeResponse(error, response, body) {
+        var res = new WebResponse();
+        if (error) {
+            error = JSON.parse(error);
+            res.error = error;
+        }
+        res.statusCode = response.statusCode;
+        try {
+            res.body = JSON.parse(body);
+        } catch (error) {
+            res.error = error;
+        }
+        return res;
+    }
+
+    private beginGet(request: WebRequest) {
+        var deferred = Q.defer<WebResponse>();
+        httpCallbackClient.send('GET', request.uri, request.body, request.headers, (error, response, body) => {
+            var HttpResponse = this.makeResponse(error, response, body);
+            deferred.resolve(HttpResponse);
+        });
+        return deferred.promise;
+    }
+
+    public get(request: WebRequest): Q.Promise<WebResponse> {
+        var deferred = Q.defer<WebResponse>();
         this.credentials.getToken().then((token) => {
-            httpCallbackClient.send('GET', request.uri, request.body, request.headers,  (error, response, body) => {
-                if(error) {
-                    deferred.reject(error);
+            request.headers["Authorization"] = "Bearer " + token;
+            this.beginGet(request).then((httpResponse: WebResponse) => {
+                // If token expires, generate a new token
+                if (httpResponse.statusCode === 401 && httpResponse.body.error.code === "ExpiredAuthenticationToken") {
+                    this.credentials.getToken(true).then((token) => {
+                        request.headers["Authorization"] = "Bearer " + token;
+                        this.beginGet(request).then((httpResponse: WebResponse) => {
+                            deferred.resolve(httpResponse);
+                        });
+                    });
+                } else {
+                    deferred.resolve(httpResponse);
                 }
-                deferred.resolve(response);
             });
+
         });
         return deferred.promise;
     }
 
 }
-
-/*client.pipeline(httpRequest, function (err, response, responseBody) {
-            if (err) {
-            return callback(err);
-            }
-            var statusCode = response.statusCode;
-            if (statusCode !== 204 && statusCode !== 404) {
-            var error = new Error(responseBody);
-            error.statusCode = response.statusCode;
-            error.request = msRest.stripRequest(httpRequest);
-            error.response = msRest.stripResponse(response);
-            if (responseBody === '') responseBody = null;
-            var parsedErrorResponse;
-            try {
-                parsedErrorResponse = JSON.parse(responseBody);
-                if (parsedErrorResponse) {
-                if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-                if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-                if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-                }
-                if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-                var resultMapper = new client.models['CloudError']().mapper();
-                error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
-                }
-            } catch (defaultError) {
-                error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
-                                '- "%s" for the default response.', defaultError.message, responseBody);
-                return callback(error);
-            }
-            return callback(error);
-            }
-            // Create Result
-            var result = null;
-            if (responseBody === '') responseBody = null;
-            result = (statusCode === 204);
-
-            return callback(null, result, httpRequest, response);
-        }); 
-*/

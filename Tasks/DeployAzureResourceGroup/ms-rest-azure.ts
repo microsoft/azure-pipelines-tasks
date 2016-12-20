@@ -18,28 +18,27 @@ export class ApplicationTokenCredentials {
     private domain;
     private secret;
     private token;
-    private token_type;
+    private token_deferred;
 
-    constructor (clientId, domain, secret, options) {
+    constructor(clientId, domain, secret) {
         if (!Boolean(clientId) || typeof clientId.valueOf() !== 'string') {
             throw new Error('clientId must be a non empty string.');
         }
-        
+
         if (!Boolean(domain) || typeof domain.valueOf() !== 'string') {
             throw new Error('domain must be a non empty string.');
         }
-        
+
         if (!Boolean(secret) || typeof secret.valueOf() !== 'string') {
             throw new Error('secret must be a non empty string.');
         }
- 
+
         this.clientId = clientId;
         this.domain = domain;
         this.secret = secret;
-        this.getAuthorizationToken();
     }
 
-    public getAuthorizationToken(): Q.Promise<string> {
+    private getAuthorizationToken(): Q.Promise<string> {
         var deferred = Q.defer<string>();
         var authorityUrl = authUrl + this.domain + "/oauth2/token/";
         var requestData = querystring.stringify({
@@ -53,7 +52,7 @@ export class ApplicationTokenCredentials {
         };
         tl.debug('Requesting for Auth Token: ' + authorityUrl);
         httpObj.send('POST', authorityUrl, requestData, requestHeader, (error, response, body) => {
-            if(error) {
+            if (error) {
                 deferred.reject(error);
             }
             else if (response.statusCode == 200) {
@@ -66,22 +65,21 @@ export class ApplicationTokenCredentials {
         return deferred.promise;
     }
 
-    public getToken(): Q.Promise<string> {
-        if(this.token) {
-            return Q.resolve(this.token);
-        } else {
+    public getToken(force?: boolean): Q.Promise<string> {
+        if (!this.token_deferred || force) {
             var deferred = Q.defer<string>();
             this.getAuthorizationToken()
                 .then((token) => {
                     this.token = token;
                     deferred.resolve(this.token);
-                })
-            return deferred.promise;
+                });
+            this.token_deferred = deferred;
         }
+        return this.token_deferred.promise;
     }
 
 }
 
-export function generateUuid () {
-  return uuid.v4();
+export function generateUuid() {
+    return uuid.v4();
 };

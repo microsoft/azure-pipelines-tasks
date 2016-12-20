@@ -103,15 +103,24 @@ export class ResourceGroups {
         httpRequest.body = null;
         // Send Request
         var client = new azureServiceClient.ServiceClient(this.client.credentials);
-        return client.get(httpRequest).then((response)=>{
-            var statusCode = response.statusCode;
-            if (statusCode !== 200 && statusCode !== 404) {
-                // Parse Error
+        return client.get(httpRequest).then((response: azureServiceClient.WebResponse)=>{
+            if (response.error) {
+                callback(response.error);
+                return;
             }
-            // Create Result
-            var result = null;
-            result = (statusCode === 204);
-            return callback(null, result);
+            try{ 
+                if (response.body.error) {
+                    if (response.body.error.code === "ResourceGroupNotFound") {
+                        callback(null, false);
+                        return;
+                    }
+                    throw new Error(response.body.error);
+                }
+                callback(null, true);
+            } catch (error) {
+                callback(error)
+                return;
+            }
         });
     }
 }
