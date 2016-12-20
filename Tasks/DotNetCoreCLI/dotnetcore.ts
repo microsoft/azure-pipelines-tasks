@@ -1,10 +1,8 @@
 import tl = require("vsts-task-lib/task");
-import toolRunner = require("vsts-task-lib/toolRunner").ToolRunner;
 import path = require("path");
 import fs = require("fs");
 import ffl = require('find-files-legacy/findfiles.legacy');
-var gulp = require('gulp');
-var zip = require('gulp-zip');
+var archiver = require('archiver');
 
 export class dotNetExe {
     private command: string;
@@ -12,8 +10,8 @@ export class dotNetExe {
     private arguments: string;
     private publishWebProjects: boolean;
     private zipAfterPublish: boolean;
-    private outputArgument: string;
-    private remainingArgument: string[];
+    private outputArgument: string = "";
+    private remainingArgument: string[] = [];
 
     constructor() {
         this.command = tl.getInput("command");
@@ -24,7 +22,7 @@ export class dotNetExe {
     }
 
     public async execute() {
-        tl.setResourcePath(path.join( __dirname, "task.json"));
+        tl.setResourcePath(path.join(__dirname, "task.json"));
         var dotnetPath = tl.which("dotnet", true);
 
         this.extractOutputArgument();
@@ -33,7 +31,7 @@ export class dotNetExe {
         var projectFiles = [""];
         if (this.projects || (this.isPublishCommand() && this.publishWebProjects)) {
             projectFiles = this.getProjectFiles();
-        } 
+        }
 
         for (var fileIndex in projectFiles) {
             var projectFile = projectFiles[fileIndex];
@@ -41,8 +39,15 @@ export class dotNetExe {
                 var dotnet = tl.tool(dotnetPath);
                 dotnet.arg(this.command);
                 dotnet.arg(projectFile);
-                this.applyArguments(dotnet, projectFile);
-                dotnet.line(this.getCommandArguments(projectFile));
+                if (this.remainingArgument.length > 0) {
+                    dotnet.arg(this.remainingArgument);
+                }
+
+                if (this.isPublishCommand() && this.outputArgument) {
+                    var output = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
+                    dotnet.arg("--output");
+                    dotnet.arg(output);
+                }
 
                 var result = dotnet.execSync();
                 if (result.code != 0) {
@@ -53,8 +58,7 @@ export class dotNetExe {
 
                 await this.zipAfterPublishIfRequired(projectFile);
             }
-            catch (err)
-            {
+            catch (err) {
                 tl.setResult(1, err.message);
             }
         }
@@ -90,45 +94,32 @@ export class dotNetExe {
         }
     }
 
-    private zip (source: string, target: string) {
+    private zip(source: string, target: string) {
         tl.debug("Zip arguments: Source: " + source + " , target: " + target);
+
         return new Promise((resolve, reject) => {
-            gulp.src(path.join(source, '**', '*'))
-            .pipe(zip(path.basename(target)))
-            .pipe(gulp.dest(path.dirname(target))).on('end', function(error){
-                error ? reject(tl.loc("zipFailed", error)) : resolve("");
-                })});
-    }
+            var output = fs.createWriteStream(target);
 
-    private applyArguments(dotnet: toolRunner, projectFile: string) {
-        if (this.isPublishCommand() && this.outputArgument) {
-            var output = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
-            dotnet.args(this.remainingArgument);
-            dotnet.args("--output");
-            dotnet.args(output);
-        }
-        else {
-            dotnet.line(this.arguments);
-        }
-    }
+            output.on('close', function () {
+                tl.debug('Successfully created archive ' + target);
+                resolve(target);
+            });
 
-    private getCommandArguments(projectFile: string): string {
-        if (this.isPublishCommand() && this.outputArgument) {
-            var output = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
-            var commandArgument = this.remainingArgument + ' --output "' + output + '"';
-            tl.debug("CommandArguments: " + commandArgument);
-            return commandArgument;
-        }
+            output.on('error', function(error) {
+                reject(error);
+            });
 
-        return this.arguments;
+            var archive = archiver('zip');
+            archive.pipe(output);
+            archive.directory(source, '/');
+            archive.finalize();
+        });
     }
 
     private extractOutputArgument(): void {
-        if (!this.isPublishCommand() || !this.arguments) {
+        if (!this.arguments || !this.arguments.trim()) {
             return;
         }
-
-        this.outputArgument = this.remainingArgument = "";
 
         var argString = this.arguments.trim();
         var isOutputOption = false;
@@ -136,7 +127,7 @@ export class dotNetExe {
         var escaped = false;
         var arg = '';
         var i = 0;
-        var append = function (c) {
+        var append = function(c) {
             // we only escape double quotes.
             if (escaped && c !== '"') {
                 arg += '\\';
@@ -179,29 +170,27 @@ export class dotNetExe {
 
         var token = nextArg();
         while (token) {
-            if (isOutputOption) {
+            var tokenUpper = token.toUpperCase();
+            if (this.isPublishCommand() && (tokenUpper === "--OUTPUT" || tokenUpper === "-O")) {
+                isOutputOption = true;
+            }
+            else if (isOutputOption) {
                 this.outputArgument = token;
                 isOutputOption = false;
             }
             else {
-                var tokenUpper = token.toUpperCase();
-                if (tokenUpper === "--OUTPUT" || tokenUpper === "-O") {
-                    isOutputOption = true;
-                }
-                else {
-                    this.remainingArgument += (" " + token);
-                }
+                this.remainingArgument.push(token);
             }
 
             token = nextArg();
         }
     }
 
-     private getProjectFiles(): string [] {
+    private getProjectFiles(): string[] {
         var projectPattern = this.projects;
         var searchWebProjects = this.isPublishCommand() && this.publishWebProjects;
         if (searchWebProjects) {
-            projectPattern = "**/project.json";
+            projectPattern = "**/project.json;**/*.csproj";
         }
 
         var projectFiles = ffl.findFiles(projectPattern, false);
@@ -213,7 +202,7 @@ export class dotNetExe {
         if (searchWebProjects) {
             projectFiles = projectFiles.filter(function(file, index, files): boolean {
                 var directory = path.dirname(file);
-                return tl.exist(path.join(directory, "web.config")) 
+                return tl.exist(path.join(directory, "web.config"))
                     || tl.exist(path.join(directory, "wwwroot"));
             });
 
@@ -229,7 +218,7 @@ export class dotNetExe {
         return this.command === "publish";
     }
 
-    private static getModifiedOutputForProjectFile(outputBase: string, projectFile: string) : string {
+    private static getModifiedOutputForProjectFile(outputBase: string, projectFile: string): string {
         return path.join(outputBase, path.basename(path.dirname(projectFile)));
     }
 }
