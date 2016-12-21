@@ -15,7 +15,9 @@
         "Minor": 0,
         "Patch": 0
     },
-    "preview": "true",
+    "editorHints": {
+        "preview": "true"
+    },
     "releaseNotes" : "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
     "groups": [
@@ -119,7 +121,7 @@
             "defaultValue": "false",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
-            "helpMarkDown": "Select the option to take the Azure App service offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully."
+            "helpMarkDown": "Select the option to take the Azure App Service offline by placing an app_offline.htm file in the root directory of the App Service before the sync operation begins. The file will be removed after the sync operation completes successfully."
         },
         {
             "name": "UseWebDeploy",
@@ -240,20 +242,20 @@
         }
     },
     "messages": {
-        "Invalidwebapppackageorfolderpathprovided": "Invalid webapp package or folder path provided: %s",
+        "Invalidwebapppackageorfolderpathprovided": "Invalid App Service package or folder path provided: %s",
         "SetParamFilenotfound0": "Set parameters file not found: %s",
         "XDTTransformationsappliedsuccessfully": "XDT Transformations applied successfully",
         "GotconnectiondetailsforazureRMWebApp0": "Got connection details for Azure App Service:'%s'",
-        "ErrorNoSuchDeployingMethodExists": "Error : No Such Deploying Method Exists",
-        "UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve connectiondetails for Azure App Service : %s. Status Code: %s (%s)",
+        "ErrorNoSuchDeployingMethodExists": "Error : No such deploying method exists",
+        "UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve connection details for Azure App Service : %s. Status Code: %s (%s)",
         "UnabletoretrieveWebAppID": "Unable to retrieve connection details for Azure App Service:'%s'. Status Code: %s",
         "CouldnotfetchacccesstokenforAzureStatusCode": "Could not fetch acccess token for Azure. Status Code: %s (%s)",
         "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
         "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
         "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website",
-        "Unabletoretrievewebconfigdetails": "Unable to retrieve web config details.[Status Code: '%s', Error Message: '%s']",
-        "Unabletoretrievewebappsettings": "Unable to retrieve web app settings. [Status Code: '%s', Error Message: '%s']",
-        "Unabletoupdatewebappsettings": "Unable to update web app settings. [Status Code: '%s', Error Message: '%s']",
+        "Unabletoretrievewebconfigdetails": "Unable to retrieve App Service configuration details.[Status Code: '%s', Error Message: '%s']",
+        "Unabletoretrievewebappsettings": "Unable to retrieve App Service application settings. [Status Code: '%s', Error Message: '%s']",
+        "Unabletoupdatewebappsettings": "Unable to update App service application settings. [Status Code: '%s', Error Message: '%s']",
         "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update deployment status : Unique Deployment ID cannot be retrieved",
         "WebappsuccessfullypublishedatUrl0": "App Service successfully deployed at url %s",
         "Failedtodeploywebsite": "Failed to deploy website.",
@@ -262,29 +264,29 @@
         "Successfullydeployedpackageusingkuduserviceat": "Successfully deployed package %s using kudu service at %s",
         "Failedtodeploywebapppackageusingkuduservice": "Failed to deploy webapp package using kudu service : %s",
         "Unabletodeploywebappresponsecode": "Unable to deploy webapp due to error code : %s",
-        "MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy generated package are only supported for Windows platform.",
+        "MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy generated packages are only supported for Windows platform.",
         "UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove": "Unsupported installed version: %s found for MSDeploy. version should be alteast 3 or above",
         "UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)",
         "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
-        "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "More than one package matched with specified pattern. Please restrain the search patern.",
+        "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "More than one package matched with specified pattern. Please restrain the search pattern.",
         "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy app service again with Take application offline option selected.",
         "Trytodeploywebappagainwithrenamefileoptionselected": "Try to deploy app service again with Rename locked files option selected.",
         "NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern",
         "JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "JSON variable substitution can only be applied for JSON files",
-        "Configfiledoesntexists": "Config file %s doesn't exist.",
+        "Configfiledoesntexists": "Configuration file %s doesn't exist.",
         "Failedtowritetoconfigfilewitherror": "Failed to write to config file %s with error : %s",
-        "AppOfflineModeenabled": "App Offline Mode enabled.",
+        "AppOfflineModeenabled": "App offline mode enabled.",
         "Failedtoenableappofflinemode": "Failed to enable app offline mode. Status Code: %s (%s)",        
-        "AppOflineModedisabled": "App Offline Mode disabled.",
-        "FailedtodisableAppOfflineMode": "Failed to disable App Offline Mode. Status Code: %s (%s)",
-        "CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot Perform XDT Transformations on a Non-Windows platform.",
-        "XdtTransformationErrorWhileTransforming": "XDT Transformation Error while transforming %s using %s.",
+        "AppOflineModedisabled": "App offline mode disabled.",
+        "FailedtodisableAppOfflineMode": "Failed to disable App offline mode. Status Code: %s (%s)",
+        "CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot perform XDT transformations on a non-Windows platform.",
+        "XdtTransformationErrorWhileTransforming": "XDT transformation error while transforming %s using %s.",
         "PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "Publish using webdeploy options are supported only when using Windows agent",
-        "WebAppDoesntExist": "Webapp '%s' doesn't exist. Webapp should exist before deployment.",
+        "WebAppDoesntExist": "App Service '%s' doesn't exist. App Service should exist before deployment.",
         "EncodeNotSupported": "Detected file encoding of the file %s as %s. Variable substitution and Transformation is not supported with file encoding %s. Supported encodings are UTF-8 and UTF-16 LE.",
         "UnknownFileEncodeError": "Unable to detect encoding of the file %s (typeCode: %s). Supported encodings are UTF-8 and UTF-16 LE.",
         "ShortFileBufferError": "File buffer is too short to detect encoding type : %s",
-        "FailedToUpdateAzureRMWebAppConfigDetails": "Failed to update Web App config details. Error: %s",
-        "SuccessfullyUpdatedAzureRMWebAppConfigDetails": "Successfully updated Web App config details"
+        "FailedToUpdateAzureRMWebAppConfigDetails": "Failed to update App Service configuration details. Error: %s",
+        "SuccessfullyUpdatedAzureRMWebAppConfigDetails": "Successfully updated App Service configuration details"
     }
 }
