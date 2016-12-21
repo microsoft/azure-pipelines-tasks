@@ -2,10 +2,6 @@
 import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
-var Readable = require('stream').Readable
-var Stats = require('fs').Stats
-
-var nock = require('nock');
 
 let taskPath = path.join(__dirname, '..', 'vsmobilecentertest.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
