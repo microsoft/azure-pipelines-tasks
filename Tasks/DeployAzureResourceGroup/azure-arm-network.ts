@@ -20,6 +20,7 @@ export class NetworkManagementClient {
     public networkInterfaces;
     public publicIPAddresses;
     public loadBalancers;
+    public securityRules;
 
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId, baseUri, options) {
         this.apiVersion = '2016-09-01';
@@ -62,12 +63,14 @@ export class NetworkManagementClient {
         this.publicIPAddresses = new publicIPAddresses(this);
         this.networkSecurityGroups = new networkSecurityGroups(this);
         this.networkInterfaces = new NetworkInterfaces(this);
+        this.securityRules = new securityRules(this);
         this.models['CloudError'] = new msRestAzure.CloudError();
         this.models['LoadBalancerListResult'] = new LoadBalancerListResultModel();
         this.models['PublicIPAddressListResult'] = new PublicIPAddressListResultModel();
         this.models['NetworkSecurityGroupListResult'] = new NetworkSecurityGroupListResultModel();
         this.models['NetworkInterfaceListResult'] = new NetworkInterfaceListResultModel();
         this.models['SecurityRule'] = new SecurityRuleModel();
+        this.models['LoadBalancer'] = new LoadBalancerModel();
     }
 }
 
@@ -1248,7 +1251,7 @@ export class securityRules{
         httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
         httpRequest.body = null;
         // Send Request
-        var clientUtils = new azureServiceClient.Utils();
+        //var clientUtils = new azureServiceClient.Utils();
         this.client.httpObj.get(httpRequest.method, httpRequest.uri, httpRequest.headers, (err, response, responseBody) => { 
             if (err) {
                 return callback(err);
@@ -1257,10 +1260,10 @@ export class securityRules{
             console.log("Response: %s", responseBody);
             var statusCode = response.statusCode;
             if (statusCode !== 200) {
-                var error = new azureServiceClient.Error(responseBody);
+                var error = new msRestAzure.Error(responseBody);
                 error.statusCode = response.statusCode;
-                error.request =  clientUtils.stripRequest(httpRequest);
-                error.response = clientUtils.stripResponse(response);
+                error.request =  new msRestAzure.stripRequest(httpRequest);
+                error.response = new msRestAzure.stripResponse(response);
                 if (responseBody === '') responseBody = null;
                 var parsedErrorResponse;
                 try {
@@ -1272,7 +1275,7 @@ export class securityRules{
                     }
                     if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
                         var resultMapper = client.models['CloudError'].mapper();
-                        error.body = clientUtils.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+                        //error.body = clientUtils.deserialize(resultMapper, parsedErrorResponse, 'error.body');
                     }
                 } catch (defaultError) {
                     error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
@@ -1292,12 +1295,12 @@ export class securityRules{
                     result = JSON.parse(responseBody);
                     if (parsedResponse !== null && parsedResponse !== undefined) {
                         var resultMapper = client.models['SecurityRule'].mapper();
-                        result = clientUtils.deserialize(resultMapper, parsedResponse, 'result');
+                        //result = clientUtils.deserialize(resultMapper, parsedResponse, 'result');
                     }
                 } catch (error) {
-                    var deserializationError = new azureServiceClient.Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-                    deserializationError.request = clientUtils.stripRequest(httpRequest);
-                    deserializationError.response = clientUtils.stripResponse(response);
+                    var deserializationError = new msRestAzure.Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+                    deserializationError.request = new msRestAzure.stripRequest(httpRequest);
+                    deserializationError.response = new msRestAzure.stripResponse(response);
                     return callback(deserializationError);
                 }
             }

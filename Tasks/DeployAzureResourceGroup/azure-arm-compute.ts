@@ -456,33 +456,33 @@ export class VirtualMachines {
         httpRequest.body = null;
 
         var serviceClient = new azureServiceClient.ServiceClient(this.client.credentials);
-        serviceClient.get(httpRequest).then((response) => {
-            var statusCode = response.statusCode;
-            if (statusCode != 200) {
-                // var error = new Error(responseBody);
-                // if (responseBody === '') {
-                //     responseBody = null;
-                // }
-            }
-            var result = null;
-            // if (responseBody === '') {
-            //     responseBody = null;
-            // }
-            if (statusCode === 200) {
-                var parsedResponse = null;
-                try {
-                    // result = JSON.parse(responseBody);
-                    if (parsedResponse != null && parsedResponse != undefined) {
-                        var resultMapper = this.client.models['VirtualMachineListResult'].mapper();
-                    }
-                }
-                catch (error) {
-                    var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', response));
-                    return callback(deserializationError);
-                }
-            }
-            return callback(null, result, requestUrl, response);
-        });
+        // serviceClient.get(httpRequest).then((response) => {
+        //     var statusCode = response.statusCode;
+        //     if (statusCode != 200) {
+        //         // var error = new Error(responseBody);
+        //         // if (responseBody === '') {
+        //         //     responseBody = null;
+        //         // }
+        //     }
+        //     var result = null;
+        //     // if (responseBody === '') {
+        //     //     responseBody = null;
+        //     // }
+        //     if (statusCode === 200) {
+        //         var parsedResponse = null;
+        //         try {
+        //             // result = JSON.parse(responseBody);
+        //             if (parsedResponse != null && parsedResponse != undefined) {
+        //                 var resultMapper = this.client.models['VirtualMachineListResult'].mapper();
+        //             }
+        //         }
+        //         catch (error) {
+        //             var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', response));
+        //             return callback(deserializationError);
+        //         }
+        //     }
+        //     return callback(null, result, requestUrl, response);
+        // });
     }
 
     public get(resourceGroupName, vmName, options, callback) {
@@ -506,7 +506,7 @@ export class VirtualMachines {
             }
             if (expand) {
                 var allowedValues = ['instanceView'];
-                if (!allowedValues.some(function(item) { return item === expand; })) {
+                if (!allowedValues.some(function (item) { return item === expand; })) {
                     throw new Error(expand + ' is not a valid value. The valid values are: ' + allowedValues);
                 }
             }
@@ -666,7 +666,7 @@ export class VirtualMachines {
         httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
         httpRequest.body = null;
         var serviceClient = new azureServiceClient.ServiceClient(this.client.credentials);
-        serviceClient.post(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        serviceClient.request(httpRequest).then((response: azureServiceClient.WebResponse) => {
             if (response.error) {
                 callback(response.error);
             }
@@ -733,7 +733,7 @@ export class VirtualMachines {
         httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
         httpRequest.body = null;
         var serviceClient = new azureServiceClient.ServiceClient(this.client.credentials);
-        serviceClient.post(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        serviceClient.request(httpRequest).then((response: azureServiceClient.WebResponse) => {
             if (response.error) {
                 callback(response.error);
             }
@@ -800,7 +800,7 @@ export class VirtualMachines {
         httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
         httpRequest.body = null;
         var serviceClient = new azureServiceClient.ServiceClient(this.client.credentials);
-        serviceClient.post(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        serviceClient.request(httpRequest).then((response: azureServiceClient.WebResponse) => {
             if (response.error) {
                 callback(response.error);
             }
@@ -867,7 +867,7 @@ export class VirtualMachines {
         httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
         httpRequest.body = null;
         var serviceClient = new azureServiceClient.ServiceClient(this.client.credentials);
-        serviceClient.deleteMethod(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        serviceClient.request(httpRequest).then((response: azureServiceClient.WebResponse) => {
             if (response.error) {
                 callback(response.error);
             }

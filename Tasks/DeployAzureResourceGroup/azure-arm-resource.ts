@@ -94,7 +94,7 @@ export class ResourceGroups {
         httpRequest.body = null;
         // Send Request
         var client = new azureServiceClient.ServiceClient(this.client.credentials);
-        return client.get(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        return client.request(httpRequest).then((response: azureServiceClient.WebResponse) => {
             if (response.error) {
                 callback(response.error);
                 return;

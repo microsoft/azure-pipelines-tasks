@@ -4,6 +4,7 @@ import querystring = require('querystring');
 var httpClient = require('vso-node-api/HttpClient');
 var restClient = require('vso-node-api/RestClient');
 var uuid = require('uuid');
+var util = require('util');
 
 var httpObj = new httpClient.HttpCallbackClient("AZURE_HTTP_USER_AGENT");
 var restObj = new restClient.RestCallbackClient(httpObj);
@@ -83,3 +84,107 @@ export class ApplicationTokenCredentials {
 export function generateUuid() {
     return uuid.v4();
 };
+
+export class CloudError {
+    constructor() { }
+
+    public mapper() {
+        return {
+            required: false,
+            serializedName: 'CloudError',
+            type: {
+                name: 'Composite',
+                className: 'CloudError',
+                modelProperties: {
+                    code: {
+                        required: false,
+                        serializedName: 'code',
+                        type: {
+                            name: 'String'
+                        }
+                    },
+                    message: {
+                        required: false,
+                        serializedName: 'message',
+                        type: {
+                            name: 'String'
+                        }
+                    },
+                    target: {
+                        required: false,
+                        serializedName: 'target',
+                        type: {
+                            name: 'String'
+                        }
+                    },
+                    details: {
+                        required: false,
+                        serializedName: 'details',
+                        type: {
+                            name: 'Sequence',
+                            element: {
+                                required: false,
+                                serializedName: 'CloudErrorElementType',
+                                type: {
+                                    name: 'Composite',
+                                    className: 'CloudError'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+    }
+}
+
+export class Error {
+    public message;
+    public statusCode;
+    public code;
+    public request;
+    public response;
+    public body;
+
+    constructor(message: string) {
+        this.message = message;
+    }
+}
+
+export class stripResponse {
+    constructor(response) {
+        var strippedResponse = {};
+        strippedResponse['body'] = response.body;
+        strippedResponse['headers'] = response.headers;
+        strippedResponse['statusCode'] = response.statusCode;
+        return strippedResponse;
+    }
+}
+
+/**
+ * Returns a stripped version of the Http Request that does not contain the 
+ * Authorization header.
+ * 
+ * @param {object} request - The Http Request object
+ * 
+ * @return {object} strippedRequest - The stripped version of Http Request.
+ */
+export class stripRequest {
+    constructor(request) {
+        var strippedRequest = {};
+        try {
+            strippedRequest = JSON.parse(JSON.stringify(request));
+            if (strippedRequest['headers'] && strippedRequest['headers']['Authorization']) {
+                delete strippedRequest['headers']['Authorization'];
+            } else if (strippedRequest['headers'] && strippedRequest['headers']['authorization']) {
+                delete strippedRequest['headers']['authorization'];
+            }
+        } catch (err) {
+            var errMsg = err.message;
+            err.message = util.format('Error - "%s" occured while creating a stripped version of the request object - "%s".', errMsg, request);
+            return err;
+        }
+
+        return strippedRequest;
+    }
+}
