@@ -13,62 +13,141 @@ export class WebRequest {
     public headers;
 }
 
+export class WebResponse {
+    public error;
+    public body;
+    public statusCode;
+    public headers;
+}
+
 export class ServiceClient {
     private credentials;
     constructor(credentials) {
         this.credentials = credentials;
     }
 
-    public get(request: WebRequest):Q.Promise<any> {
-        var deferred = Q.defer<any>();
+    private makeResponse(error, response, body) {
+        var res = new WebResponse();
+        if (error && typeof(error) === typeof("")) {
+            error = JSON.parse(error);
+            res.error = error;
+        } else if(error) {
+            res.error = error;
+        }
+        if (response) {
+            res.statusCode = response.statusCode;
+            res.headers = response.headers;
+            try {
+                res.body = JSON.parse(body);
+            }
+            catch (error) {
+                res.error = error;
+            }
+        }
+        return res;
+    }
+
+    private beginRequest(method:string, request: WebRequest) {
+        var deferred = Q.defer<WebResponse>();
+        httpCallbackClient.send(method, request.uri, request.body, request.headers, (error, response, body) => {
+            var HttpResponse = this.makeResponse(error, response, body);
+            deferred.resolve(HttpResponse);
+        });
+        return deferred.promise;
+    }
+
+    public get(request: WebRequest): Q.Promise<WebResponse> {
+        var deferred = Q.defer<WebResponse>();
         this.credentials.getToken().then((token) => {
-            httpCallbackClient.send('GET', request.uri, request.body, request.headers,  (error, response, body) => {
-                if(error) {
-                    deferred.reject(error);
+            request.headers["Authorization"] = "Bearer " + token;
+            this.beginRequest("GET", request).then((httpResponse: WebResponse) => {
+                // If token expires, generate a new token
+                if (httpResponse.statusCode === 401 && httpResponse.body.error.code === "ExpiredAuthenticationToken") {
+                    this.credentials.getToken(true).then((token) => {
+                        request.headers["Authorization"] = "Bearer " + token;
+                        this.beginRequest("GET", request).then((httpResponse: WebResponse) => {
+                            deferred.resolve(httpResponse);
+                        });
+                    });
+                } else {
+                    deferred.resolve(httpResponse);
                 }
-                deferred.resolve(response);
+            });
+
+        });
+        return deferred.promise;
+    }
+
+    public put(request: WebRequest): Q.Promise<WebResponse> {
+        var deferred = Q.defer<WebResponse>();
+        this.credentials.getToken().then((token) => {
+            request.headers["Authorization"] = "Bearer " + token;
+            this.beginRequest("PUT", request).then((httpResponse: WebResponse) => {
+                // If token expires, generate a new token
+                if (httpResponse.statusCode === 401 && httpResponse.body.error.code === "ExpiredAuthenticationToken") {
+                    this.credentials.getToken(true).then((token) => {
+                        request.headers["Authorization"] = "Bearer " + token;
+                        this.beginRequest("PUT", request).then((httpResponse: WebResponse) => {
+                            deferred.resolve(httpResponse);
+                        });
+                    });
+                } else {
+                    deferred.resolve(httpResponse);
+                }
+            });
+        });
+        return deferred.promise;
+    }
+    
+    public post(request: WebRequest): Q.Promise<WebResponse> {
+        var deferred = Q.defer<WebResponse>();
+        this.credentials.getToken().then((token) => {
+            request.headers["Authorization"] = "Bearer " + token;
+            this.beginRequest("POST", request).then((httpResponse: WebResponse) => {
+                // If token expires, generate a new token
+                if (httpResponse.statusCode === 401 && httpResponse.body.error.code === "ExpiredAuthenticationToken") {
+                    this.credentials.getToken(true).then((token) => {
+                        request.headers["Authorization"] = "Bearer " + token;
+                        this.beginRequest("POST", request).then((httpResponse: WebResponse) => {
+                            deferred.resolve(httpResponse);
+                        });
+                    });
+                } else {
+                    deferred.resolve(httpResponse);
+                }
             });
         });
         return deferred.promise;
     }
 
+    private pollUri(request:WebRequest) {
+        var deferred = Q.defer();
+        this.get(request).then((response: WebResponse) => {
+            if (response.body.status === "InProgress") {
+                setTimeout(() => {
+                    this.pollUri(request);
+                }, 300);
+            } else {
+                deferred.resolve(response);
+            }
+        });
+        return deferred.promise;
+    }
+
+    public getLongRunningOperationResult(response: WebResponse) {
+        var deferred = Q.defer();
+        var uri = response.headers["Azure-AsyncOperation"];
+        if (uri) {
+            var request = new WebRequest();
+            request.uri = uri;
+            this.pollUri(request).then(()=> {
+                deferred.resolve(response);
+            });  
+        } else {
+            var res = new WebResponse();
+            res.error = "Invalid Response Provided";
+            deferred.resolve(res);
+        }
+        return deferred.promise;
+    }
 }
-
-/*client.pipeline(httpRequest, function (err, response, responseBody) {
-            if (err) {
-            return callback(err);
-            }
-            var statusCode = response.statusCode;
-            if (statusCode !== 204 && statusCode !== 404) {
-            var error = new Error(responseBody);
-            error.statusCode = response.statusCode;
-            error.request = msRest.stripRequest(httpRequest);
-            error.response = msRest.stripResponse(response);
-            if (responseBody === '') responseBody = null;
-            var parsedErrorResponse;
-            try {
-                parsedErrorResponse = JSON.parse(responseBody);
-                if (parsedErrorResponse) {
-                if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-                if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-                if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-                }
-                if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-                var resultMapper = new client.models['CloudError']().mapper();
-                error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
-                }
-            } catch (defaultError) {
-                error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
-                                '- "%s" for the default response.', defaultError.message, responseBody);
-                return callback(error);
-            }
-            return callback(error);
-            }
-            // Create Result
-            var result = null;
-            if (responseBody === '') responseBody = null;
-            result = (statusCode === 204);
-
-            return callback(null, result, httpRequest, response);
-        }); 
-*/
