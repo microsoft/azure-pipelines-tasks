@@ -16,16 +16,14 @@ export class ComputeManagementClient {
     public models;
     private httpObj;
     private restObj;
-    public virtualMachine;
+    public virtualMachines;
     public virtualMachineExtensions;
 
-    constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId, baseUri?:any, options?:any) {
+    constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId, baseUri?: any, options?: any) {
         this.acceptLanguage = 'en-US';
         this.longRunningOperationRetryTimeout = 30;
         this.generateClientRequestId = true;
         this.models = {};
-        // this.httpObj = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
-        // this.restObj = new restClient.RestCallbackClient(this.httpObj);
 
         if (credentials === null || credentials === undefined) {
             throw new Error('\'credentials\' cannot be null');
@@ -51,7 +49,7 @@ export class ComputeManagementClient {
         if (options.generateClientRequestId !== null && options.generateClientRequestId !== undefined) {
             this.generateClientRequestId = options.generateClientRequestId;
         }
-        this.virtualMachine = new VirtualMachines(this);
+        this.virtualMachines = new VirtualMachines(this);
         this.virtualMachineExtensions = new VirtualMachineExtensions(this);
         this.models['VirtualMachineListResult'] = new VirtualMachineListResultModel();
         this.models['VirtualMachine'] = new VirtualMachineModel();
@@ -60,11 +58,11 @@ export class ComputeManagementClient {
     }
 }
 
-export class VirtualMachineListResultModel{
+export class VirtualMachineListResultModel {
     constructor() {
     }
 
-    mapper(){
+    mapper() {
         return {
             required: false,
             serializedName: 'VirtualMachineListResult',
@@ -100,11 +98,11 @@ export class VirtualMachineListResultModel{
     }
 }
 
-export class VirtualMachineModel{
-    constructor(){
+export class VirtualMachineModel {
+    constructor() {
     }
 
-    public mapper(){
+    public mapper() {
         return {
             required: false,
             serializedName: 'VirtualMachine',
@@ -113,153 +111,153 @@ export class VirtualMachineModel{
                 className: 'VirtualMachine',
                 modelProperties: {
                     id: {
-                    required: false,
-                    readOnly: true,
-                    serializedName: 'id',
-                    type: {
-                        name: 'String'
-                    }
+                        required: false,
+                        readOnly: true,
+                        serializedName: 'id',
+                        type: {
+                            name: 'String'
+                        }
                     },
                     name: {
-                    required: false,
-                    readOnly: true,
-                    serializedName: 'name',
-                    type: {
-                        name: 'String'
-                    }
+                        required: false,
+                        readOnly: true,
+                        serializedName: 'name',
+                        type: {
+                            name: 'String'
+                        }
                     },
                     type: {
-                    required: false,
-                    readOnly: true,
-                    serializedName: 'type',
-                    type: {
-                        name: 'String'
-                    }
+                        required: false,
+                        readOnly: true,
+                        serializedName: 'type',
+                        type: {
+                            name: 'String'
+                        }
                     },
                     location: {
-                    required: true,
-                    serializedName: 'location',
-                    type: {
-                        name: 'String'
-                    }
+                        required: true,
+                        serializedName: 'location',
+                        type: {
+                            name: 'String'
+                        }
                     },
                     tags: {
-                    required: false,
-                    serializedName: 'tags',
-                    type: {
-                        name: 'Dictionary',
-                        value: {
-                            required: false,
-                            serializedName: 'StringElementType',
-                            type: {
-                            name: 'String'
+                        required: false,
+                        serializedName: 'tags',
+                        type: {
+                            name: 'Dictionary',
+                            value: {
+                                required: false,
+                                serializedName: 'StringElementType',
+                                type: {
+                                    name: 'String'
+                                }
                             }
                         }
-                    }
                     },
                     plan: {
-                    required: false,
-                    serializedName: 'plan',
-                    type: {
-                        name: 'Composite',
-                        className: 'Plan'
-                    }
+                        required: false,
+                        serializedName: 'plan',
+                        type: {
+                            name: 'Composite',
+                            className: 'Plan'
+                        }
                     },
                     hardwareProfile: {
-                    required: false,
-                    serializedName: 'properties.hardwareProfile',
-                    type: {
-                        name: 'Composite',
-                        className: 'HardwareProfile'
-                    }
+                        required: false,
+                        serializedName: 'properties.hardwareProfile',
+                        type: {
+                            name: 'Composite',
+                            className: 'HardwareProfile'
+                        }
                     },
                     storageProfile: {
-                    required: false,
-                    serializedName: 'properties.storageProfile',
-                    type: {
-                        name: 'Composite',
-                        className: 'StorageProfile'
-                    }
+                        required: false,
+                        serializedName: 'properties.storageProfile',
+                        type: {
+                            name: 'Composite',
+                            className: 'StorageProfile'
+                        }
                     },
                     osProfile: {
-                    required: false,
-                    serializedName: 'properties.osProfile',
-                    type: {
-                        name: 'Composite',
-                        className: 'OSProfile'
-                    }
+                        required: false,
+                        serializedName: 'properties.osProfile',
+                        type: {
+                            name: 'Composite',
+                            className: 'OSProfile'
+                        }
                     },
                     networkProfile: {
-                    required: false,
-                    serializedName: 'properties.networkProfile',
-                    type: {
-                        name: 'Composite',
-                        className: 'NetworkProfile'
-                    }
+                        required: false,
+                        serializedName: 'properties.networkProfile',
+                        type: {
+                            name: 'Composite',
+                            className: 'NetworkProfile'
+                        }
                     },
                     diagnosticsProfile: {
-                    required: false,
-                    serializedName: 'properties.diagnosticsProfile',
-                    type: {
-                        name: 'Composite',
-                        className: 'DiagnosticsProfile'
-                    }
+                        required: false,
+                        serializedName: 'properties.diagnosticsProfile',
+                        type: {
+                            name: 'Composite',
+                            className: 'DiagnosticsProfile'
+                        }
                     },
                     availabilitySet: {
-                    required: false,
-                    serializedName: 'properties.availabilitySet',
-                    type: {
-                        name: 'Composite',
-                        className: 'SubResource'
-                    }
+                        required: false,
+                        serializedName: 'properties.availabilitySet',
+                        type: {
+                            name: 'Composite',
+                            className: 'SubResource'
+                        }
                     },
                     provisioningState: {
-                    required: false,
-                    readOnly: true,
-                    serializedName: 'properties.provisioningState',
-                    type: {
-                        name: 'String'
-                    }
+                        required: false,
+                        readOnly: true,
+                        serializedName: 'properties.provisioningState',
+                        type: {
+                            name: 'String'
+                        }
                     },
                     instanceView: {
-                    required: false,
-                    readOnly: true,
-                    serializedName: 'properties.instanceView',
-                    type: {
-                        name: 'Composite',
-                        className: 'VirtualMachineInstanceView'
-                    }
+                        required: false,
+                        readOnly: true,
+                        serializedName: 'properties.instanceView',
+                        type: {
+                            name: 'Composite',
+                            className: 'VirtualMachineInstanceView'
+                        }
                     },
                     licenseType: {
-                    required: false,
-                    serializedName: 'properties.licenseType',
-                    type: {
-                        name: 'String'
-                    }
+                        required: false,
+                        serializedName: 'properties.licenseType',
+                        type: {
+                            name: 'String'
+                        }
                     },
                     vmId: {
-                    required: false,
-                    readOnly: true,
-                    serializedName: 'properties.vmId',
-                    type: {
-                        name: 'String'
-                    }
+                        required: false,
+                        readOnly: true,
+                        serializedName: 'properties.vmId',
+                        type: {
+                            name: 'String'
+                        }
                     },
                     resources: {
-                    required: false,
-                    readOnly: true,
-                    serializedName: 'resources',
-                    type: {
-                        name: 'Sequence',
-                        element: {
-                            required: false,
-                            serializedName: 'VirtualMachineExtensionElementType',
-                            type: {
-                            name: 'Composite',
-                            className: 'VirtualMachineExtension'
+                        required: false,
+                        readOnly: true,
+                        serializedName: 'resources',
+                        type: {
+                            name: 'Sequence',
+                            element: {
+                                required: false,
+                                serializedName: 'VirtualMachineExtensionElementType',
+                                type: {
+                                    name: 'Composite',
+                                    className: 'VirtualMachineExtension'
+                                }
                             }
                         }
-                    }
                     }
                 }
             }
@@ -267,10 +265,10 @@ export class VirtualMachineModel{
     }
 }
 
-export class VirtualMachineExtensionModel{
-    constructor(){}
+export class VirtualMachineExtensionModel {
+    constructor() { }
 
-    public mapper(){
+    public mapper() {
         return {
             required: false,
             serializedName: 'VirtualMachineExtension',
@@ -303,25 +301,25 @@ export class VirtualMachineExtensionModel{
                         }
                     },
                     location: {
-                    required: true,
-                    serializedName: 'location',
-                    type: {
-                        name: 'String'
-                    }
+                        required: true,
+                        serializedName: 'location',
+                        type: {
+                            name: 'String'
+                        }
                     },
                     tags: {
-                    required: false,
-                    serializedName: 'tags',
-                    type: {
-                        name: 'Dictionary',
-                        value: {
-                            required: false,
-                            serializedName: 'StringElementType',
-                            type: {
-                                name: 'String'
+                        required: false,
+                        serializedName: 'tags',
+                        type: {
+                            name: 'Dictionary',
+                            value: {
+                                required: false,
+                                serializedName: 'StringElementType',
+                                type: {
+                                    name: 'String'
+                                }
                             }
                         }
-                    }
                     },
                     forceUpdateTag: {
                         required: false,
@@ -331,8 +329,8 @@ export class VirtualMachineExtensionModel{
                         }
                     },
                     publisher: {
-                    required: false,
-                    serializedName: 'properties.publisher',
+                        required: false,
+                        serializedName: 'properties.publisher',
                         type: {
                             name: 'String'
                         }
@@ -401,7 +399,7 @@ export class VirtualMachines {
         this.client = client;
     }
 
-    list(resourceGroupName, options, callback) {
+    public list(resourceGroupName, options, callback) {
         var client = this.client;
         if (!callback && typeof options === 'function') {
             callback = options;
@@ -431,7 +429,7 @@ export class VirtualMachines {
             '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines';
         requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
         requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
-        
+
         var queryParameters = [];
         queryParameters.push('api-version=' + encodeURIComponent(apiVersion));
         if (queryParameters.length > 0) {
@@ -487,9 +485,9 @@ export class VirtualMachines {
         });
     }
 
-    public get(resourceGroupName, vmName, options, callback){
+    public get(resourceGroupName, vmName, options, callback) {
         var client = this.client;
-        if(!callback && typeof options === 'function') {
+        if (!callback && typeof options === 'function') {
             callback = options;
             options = null;
         }
@@ -507,8 +505,8 @@ export class VirtualMachines {
                 throw new Error('vmName cannot be null or undefined and it must be of type string.');
             }
             if (expand) {
-                var allowedValues = [ 'instanceView' ];
-                if (!allowedValues.some( function(item) { return item === expand; })) {
+                var allowedValues = ['instanceView'];
+                if (!allowedValues.some(function(item) { return item === expand; })) {
                     throw new Error(expand + ' is not a valid value. The valid values are: ' + allowedValues);
                 }
             }
@@ -523,7 +521,7 @@ export class VirtualMachines {
         }
         // Construct URL
         var requestUrl = this.client.baseUri +
-                        '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}';
+            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}';
         requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
         requestUrl = requestUrl.replace('{vmName}', encodeURIComponent(vmName));
         requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
@@ -552,17 +550,17 @@ export class VirtualMachines {
         if (this.client.acceptLanguage !== undefined && this.client.acceptLanguage !== null) {
             httpRequest.headers['accept-language'] = this.client.acceptLanguage;
         }
-        if(options) {
-            for(var headerName in options['customHeaders']) {
+        if (options) {
+            for (var headerName in options['customHeaders']) {
                 if (options['customHeaders'].hasOwnProperty(headerName)) {
                     httpRequest.headers[headerName] = options['customHeaders'][headerName];
                 }
             }
         }
         httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-        httpRequest.body = null;    
-        
-        this.client.httpObj.get(httpRequest.method, httpRequest.uri, httpRequest.headers, (err, response, responseBody) => { 
+        httpRequest.body = null;
+
+        this.client.httpObj.get(httpRequest.method, httpRequest.uri, httpRequest.headers, (err, response, responseBody) => {
             if (err) {
                 return callback(err);
             }
@@ -577,16 +575,16 @@ export class VirtualMachines {
                     parsedErrorResponse = JSON.parse(responseBody);
                     if (parsedErrorResponse) {
                         if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-                    //     if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-                    //     if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+                        //     if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+                        //     if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
                     }
                     if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
                         var resultMapper = client.models['CloudError'].mapper();
                         //error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
                     }
                 } catch (defaultError) {
-                    error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
-                                    '- "%s" for the default response.', defaultError.message, responseBody);
+                    error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
+                        '- "%s" for the default response.', defaultError.message, responseBody);
                     return callback(error);
                 }
                 return callback(error);
@@ -614,20 +612,288 @@ export class VirtualMachines {
             }
             return callback(null, result, httpRequest, response);
         });
-    
+
+    }
+
+    public restart(resourceGroupName: string, vmName: string, callback) {
+        var client = this.client;
+        if (!callback) {
+            throw new Error('callback cannot be null.');
+        }
+        var apiVersion = '2016-03-30';
+        // Validate
+        try {
+            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+            }
+            if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
+                throw new Error('vmName cannot be null or undefined and it must be of type string.');
+            }
+            if (this.client.subscriptionId === null || this.client.subscriptionId === undefined || typeof this.client.subscriptionId.valueOf() !== 'string') {
+                throw new Error('this.client.subscriptionId cannot be null or undefined and it must be of type string.');
+            }
+        } catch (error) {
+            return callback(error);
+        }
+
+        // Construct URL
+        var requestUrl = this.client.baseUri +
+            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/restart';
+        requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
+        requestUrl = requestUrl.replace('{vmName}', encodeURIComponent(vmName));
+        requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
+        var queryParameters = [];
+        queryParameters.push('api-version=' + encodeURIComponent(apiVersion));
+        if (queryParameters.length > 0) {
+            requestUrl += '?' + queryParameters.join('&');
+        }
+        // trim all duplicate forward slashes in the url
+        var regex = /([^:]\/)\/+/gi;
+        requestUrl = requestUrl.replace(regex, '$1');
+
+        // Create object
+        var httpRequest = new azureServiceClient.WebRequest();
+        httpRequest.method = 'POST';
+        httpRequest.headers = {};
+        httpRequest.uri = requestUrl;
+        // Set Headers
+        if (this.client.generateClientRequestId) {
+            httpRequest.headers['x-ms-client-request-id'] = msRestAzure.generateUuid();
+        }
+        if (this.client.acceptLanguage !== undefined && this.client.acceptLanguage !== null) {
+            httpRequest.headers['accept-language'] = this.client.acceptLanguage;
+        }
+        httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+        httpRequest.body = null;
+        var serviceClient = new azureServiceClient.ServiceClient(this.client.credentials);
+        serviceClient.post(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            if (response.error) {
+                callback(response.error);
+            }
+            serviceClient.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
+                if (operationResponse.body.status === "Succeeded") {
+                    // Generate Response
+                    callback(null);
+                } else {
+                    // Generate Error
+                    callback()
+                }
+            });
+        });
+    }
+
+    public start(resourceGroupName: string, vmName: string, callback) {
+        var client = this.client;
+        if (!callback) {
+            throw new Error('callback cannot be null.');
+        }
+        var apiVersion = '2016-03-30';
+        // Validate
+        try {
+            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+            }
+            if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
+                throw new Error('vmName cannot be null or undefined and it must be of type string.');
+            }
+            if (this.client.subscriptionId === null || this.client.subscriptionId === undefined || typeof this.client.subscriptionId.valueOf() !== 'string') {
+                throw new Error('this.client.subscriptionId cannot be null or undefined and it must be of type string.');
+            }
+        } catch (error) {
+            return callback(error);
+        }
+
+        // Construct URL
+        var requestUrl = this.client.baseUri +
+            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/start';
+        requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
+        requestUrl = requestUrl.replace('{vmName}', encodeURIComponent(vmName));
+        requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
+        var queryParameters = [];
+        queryParameters.push('api-version=' + encodeURIComponent(apiVersion));
+        if (queryParameters.length > 0) {
+            requestUrl += '?' + queryParameters.join('&');
+        }
+        // trim all duplicate forward slashes in the url
+        var regex = /([^:]\/)\/+/gi;
+        requestUrl = requestUrl.replace(regex, '$1');
+
+        // Create object
+        var httpRequest = new azureServiceClient.WebRequest();
+        httpRequest.method = 'POST';
+        httpRequest.headers = {};
+        httpRequest.uri = requestUrl;
+        // Set Headers
+        if (this.client.generateClientRequestId) {
+            httpRequest.headers['x-ms-client-request-id'] = msRestAzure.generateUuid();
+        }
+        if (this.client.acceptLanguage !== undefined && this.client.acceptLanguage !== null) {
+            httpRequest.headers['accept-language'] = this.client.acceptLanguage;
+        }
+        httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+        httpRequest.body = null;
+        var serviceClient = new azureServiceClient.ServiceClient(this.client.credentials);
+        serviceClient.post(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            if (response.error) {
+                callback(response.error);
+            }
+            serviceClient.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
+                if (operationResponse.body.status === "Succeeded") {
+                    // Generate Response
+                    callback(null);
+                } else {
+                    // Generate Error
+                    callback()
+                }
+            });
+        });
+    }
+
+    public powerOff(resourceGroupName: string, vmName: string, callback) {
+        var client = this.client;
+        if (!callback) {
+            throw new Error('callback cannot be null.');
+        }
+        var apiVersion = '2016-03-30';
+        // Validate
+        try {
+            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+            }
+            if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
+                throw new Error('vmName cannot be null or undefined and it must be of type string.');
+            }
+            if (this.client.subscriptionId === null || this.client.subscriptionId === undefined || typeof this.client.subscriptionId.valueOf() !== 'string') {
+                throw new Error('this.client.subscriptionId cannot be null or undefined and it must be of type string.');
+            }
+        } catch (error) {
+            return callback(error);
+        }
+
+        // Construct URL
+        var requestUrl = this.client.baseUri +
+            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/powerOff';
+        requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
+        requestUrl = requestUrl.replace('{vmName}', encodeURIComponent(vmName));
+        requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
+        var queryParameters = [];
+        queryParameters.push('api-version=' + encodeURIComponent(apiVersion));
+        if (queryParameters.length > 0) {
+            requestUrl += '?' + queryParameters.join('&');
+        }
+        // trim all duplicate forward slashes in the url
+        var regex = /([^:]\/)\/+/gi;
+        requestUrl = requestUrl.replace(regex, '$1');
+
+        // Create object
+        var httpRequest = new azureServiceClient.WebRequest();
+        httpRequest.method = 'POST';
+        httpRequest.headers = {};
+        httpRequest.uri = requestUrl;
+        // Set Headers
+        if (this.client.generateClientRequestId) {
+            httpRequest.headers['x-ms-client-request-id'] = msRestAzure.generateUuid();
+        }
+        if (this.client.acceptLanguage !== undefined && this.client.acceptLanguage !== null) {
+            httpRequest.headers['accept-language'] = this.client.acceptLanguage;
+        }
+        httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+        httpRequest.body = null;
+        var serviceClient = new azureServiceClient.ServiceClient(this.client.credentials);
+        serviceClient.post(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            if (response.error) {
+                callback(response.error);
+            }
+            serviceClient.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
+                if (operationResponse.body.status === "Succeeded") {
+                    // Generate Response
+                    callback(null);
+                } else {
+                    // Generate Error
+                    callback()
+                }
+            });
+        });
+    }
+
+    public deleteMethod(resourceGroupName: string, vmName: string, callback) {
+        var client = this.client;
+        if (!callback) {
+            throw new Error('callback cannot be null.');
+        }
+        var apiVersion = '2016-03-30';
+        // Validate
+        try {
+            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+            }
+            if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
+                throw new Error('vmName cannot be null or undefined and it must be of type string.');
+            }
+            if (this.client.subscriptionId === null || this.client.subscriptionId === undefined || typeof this.client.subscriptionId.valueOf() !== 'string') {
+                throw new Error('this.client.subscriptionId cannot be null or undefined and it must be of type string.');
+            }
+        } catch (error) {
+            return callback(error);
+        }
+
+        // Construct URL
+        var requestUrl = this.client.baseUri +
+            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}';
+        requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
+        requestUrl = requestUrl.replace('{vmName}', encodeURIComponent(vmName));
+        requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
+        var queryParameters = [];
+        queryParameters.push('api-version=' + encodeURIComponent(apiVersion));
+        if (queryParameters.length > 0) {
+            requestUrl += '?' + queryParameters.join('&');
+        }
+        // trim all duplicate forward slashes in the url
+        var regex = /([^:]\/)\/+/gi;
+        requestUrl = requestUrl.replace(regex, '$1');
+
+        // Create object
+        var httpRequest = new azureServiceClient.WebRequest();
+        httpRequest.method = 'DELETE';
+        httpRequest.headers = {};
+        httpRequest.uri = requestUrl;
+        // Set Headers
+        if (this.client.generateClientRequestId) {
+            httpRequest.headers['x-ms-client-request-id'] = msRestAzure.generateUuid();
+        }
+        if (this.client.acceptLanguage !== undefined && this.client.acceptLanguage !== null) {
+            httpRequest.headers['accept-language'] = this.client.acceptLanguage;
+        }
+        httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+        httpRequest.body = null;
+        var serviceClient = new azureServiceClient.ServiceClient(this.client.credentials);
+        serviceClient.deleteMethod(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            if (response.error) {
+                callback(response.error);
+            }
+            serviceClient.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
+                if (operationResponse.body.status === "Succeeded") {
+                    // Generate Response
+                    callback(null);
+                } else {
+                    // Generate Error
+                    callback()
+                }
+            });
+        });
     }
 }
 
-export class VirtualMachineExtensions{
-    private client; 
+export class VirtualMachineExtensions {
+    private client;
 
-    constructor(client){
+    constructor(client) {
         this.client = client;
     }
 
-    public get(resourceGroupName, vmName, vmExtensionName, options, callback){
+    public get(resourceGroupName, vmName, vmExtensionName, options, callback) {
         var client = this.client;
-        if(!callback && typeof options === 'function') {
+        if (!callback && typeof options === 'function') {
             callback = options;
             options = null;
         }
@@ -661,7 +927,7 @@ export class VirtualMachineExtensions{
         }
         // Construct URL
         var requestUrl = this.client.baseUri +
-                        '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/extensions/{vmExtensionName}';
+            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/extensions/{vmExtensionName}';
         requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
         requestUrl = requestUrl.replace('{vmName}', encodeURIComponent(vmName));
         requestUrl = requestUrl.replace('{vmExtensionName}', encodeURIComponent(vmExtensionName));
@@ -691,8 +957,8 @@ export class VirtualMachineExtensions{
         if (this.client.acceptLanguage !== undefined && this.client.acceptLanguage !== null) {
             httpRequest.headers['accept-language'] = this.client.acceptLanguage;
         }
-        if(options) {
-            for(var headerName in options['customHeaders']) {
+        if (options) {
+            for (var headerName in options['customHeaders']) {
                 if (options['customHeaders'].hasOwnProperty(headerName)) {
                     httpRequest.headers[headerName] = options['customHeaders'][headerName];
                 }
@@ -700,8 +966,8 @@ export class VirtualMachineExtensions{
         }
         httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
         httpRequest.body = null;
-        
-        this.client.httpObj.get(httpRequest.method, httpRequest.uri, httpRequest.headers, (err, response, responseBody) => { 
+
+        this.client.httpObj.get(httpRequest.method, httpRequest.uri, httpRequest.headers, (err, response, responseBody) => {
             if (err) {
                 return callback(err);
             }
@@ -717,17 +983,17 @@ export class VirtualMachineExtensions{
                 try {
                     parsedErrorResponse = JSON.parse(responseBody);
                     if (parsedErrorResponse) {
-                    if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-                    // if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-                    // if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+                        if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+                        // if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+                        // if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
                     }
                     if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
                         var resultMapper = client.models['CloudError'].mapper();
                         //error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
                     }
                 } catch (defaultError) {
-                    error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
-                                    '- "%s" for the default response.', defaultError.message, responseBody);
+                    error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
+                        '- "%s" for the default response.', defaultError.message, responseBody);
                     return callback(error);
                 }
                 return callback(error);
@@ -752,7 +1018,7 @@ export class VirtualMachineExtensions{
                     return callback(deserializationError);
                 }
             }
-            console.log("Result: %s", util.inspect(result, {depth: null}));
+            console.log("Result: %s", util.inspect(result, { depth: null }));
             return callback(null, result, httpRequest, response);
         });
     }

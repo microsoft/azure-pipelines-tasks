@@ -128,6 +128,29 @@ export class ServiceClient {
         return deferred.promise;
     }
 
+
+    public deleteMethod(request: WebRequest): Q.Promise<WebResponse> {
+        var deferred = Q.defer<WebResponse>();
+        this.credentials.getToken().then((token) => {
+            request.headers["Authorization"] = "Bearer " + token;
+            this.beginRequest("DELETE", request).then((httpResponse: WebResponse) => {
+                // If token expires, generate a new token
+                if (httpResponse.statusCode === 401 && httpResponse.body.error.code === "ExpiredAuthenticationToken") {
+                    this.credentials.getToken(true).then((token) => {
+                        request.headers["Authorization"] = "Bearer " + token;
+                        this.beginRequest("DELETE", request).then((httpResponse: WebResponse) => {
+                            deferred.resolve(httpResponse);
+                        });
+                    });
+                } else {
+                    deferred.resolve(httpResponse);
+                }
+            });
+
+        });
+        return deferred.promise;
+    }
+
     private pollUri(request: WebRequest) {
         var deferred = Q.defer();
         this.get(request).then((response: WebResponse) => {
