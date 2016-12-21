@@ -64,5 +64,6 @@
   "loc.input.label.debug": "Enable Debug Output",
   "loc.input.help.debug": "Add --debug to mobile-center cli.",
   "loc.messages.Succeeded": "Visual Studio Mobile Center Test task succeeded.",
-  "loc.messages.CannotDecodeEndpoint": "Could not decode the endpoint."
+  "loc.messages.CannotDecodeEndpoint": "Could not decode the endpoint.",
+  "loc.messages.CannotLocateMobileCenterCLI": "Could not find mobile-center cli, install mobile-center-cli from npm first."
 }

@@ -138,4 +138,20 @@ describe('VSMobileCenterTest L0 Suite', function () {
         done();
     });
 
+    it('Favor system mobile-center cli over bundled cli', (done: MochaDone) => {
+        this.timeout(2000);
+
+        let tp = path.join(__dirname, 'L0FavorSystemToolPath.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        
+        tr.run();
+        assert(tr.failed, 'task should have failed');
+
+        assert(tr.invokedToolCount === 1, 'Should have run login only');
+        assert(tr.ran("/system/path/to/mobile-center login -u MyUsername -p MyPassword --quiet"),
+            "Should have run login");
+
+        done();
+    });
+
  });

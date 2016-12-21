@@ -348,6 +348,7 @@
   },
   "messages": {
     "Succeeded": "ms-resource:loc.messages.Succeeded",
-    "CannotDecodeEndpoint": "ms-resource:loc.messages.CannotDecodeEndpoint"
+    "CannotDecodeEndpoint": "ms-resource:loc.messages.CannotDecodeEndpoint",
+    "CannotLocateMobileCenterCLI": "ms-resource:loc.messages.CannotLocateMobileCenterCLI"
   }
 }

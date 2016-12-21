@@ -348,6 +348,7 @@
     },
     "messages": {
         "Succeeded": "Visual Studio Mobile Center Test task succeeded.",
-        "CannotDecodeEndpoint": "Could not decode the endpoint."
+        "CannotDecodeEndpoint": "Could not decode the endpoint.",
+        "CannotLocateMobileCenterCLI": "Could not find mobile-center cli, install mobile-center-cli from npm first."
     }
 }

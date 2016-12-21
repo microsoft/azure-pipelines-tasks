@@ -1,8 +1,5 @@
 import path = require('path');
 import tl = require('vsts-task-lib/task');
-import request = require('request');
-import Q = require('q');
-import fs = require('fs');
 import os = require('os');
 
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
@@ -62,11 +59,22 @@ function getCliPath(): string {
         return userDefinedPath;
     }
 
-    let isWindows = os.type().match(/^Win/);
-    let mobileCenterScript = isWindows ? "mobile-center.cmd" : "mobile-center";
-    let cliPath = path.join(__dirname, "node_modules", ".bin", mobileCenterScript);
+    let systemPath = tl.which('mobile-center', false);
+    if (systemPath) {
+        return systemPath;
+    }
 
-    return cliPath;
+    // On Windows (Hosted Agent) we attempt to use the bundled mobile-center cli as user doesn't have any
+    // chance to install the CLI themselves.  On Mac the bundled mobile-center does not work due to some
+    // path issues.
+    let isWindows = os.type().match(/^Win/);
+    if (isWindows) {
+        let cliPath = path.join(__dirname, "node_modules", ".bin", "mobile-center.cmd");
+        return cliPath;
+    }
+
+    // Failed to locate CLI
+    throw new Error(tl.loc('CannotLocateMobileCenterCLI'));;
 }
 
 async function run() {

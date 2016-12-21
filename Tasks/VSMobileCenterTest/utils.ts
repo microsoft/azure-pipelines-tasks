@@ -1,10 +1,7 @@
 import path = require("path");
 import tl = require("vsts-task-lib/task");
 import fs = require("fs");
-import Q = require('q');
 import glob = require('glob');
-
-var Zip = require('jszip');
 
 export function checkAndFixFilePath(p, name) {
     if (p) {
