@@ -154,6 +154,7 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
 			id: 'appid',
 			properties: { 
 				virtualApplications: [ ['Object'], ['Object'], ['Object'] ],
+                scmType: "None"
 			} 
 		}
 
@@ -184,6 +185,9 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
     },
     updateWebAppAppSettings : function (){
         return true;
+    },
+    updateAzureRMWebAppConfigDetails: function() {
+        console.log("Successfully updated scmType to VSTSRM");
     }
 });
 
@@ -200,8 +204,16 @@ tr.registerMock('webdeployment-common/xmlvariablesubstitutionutility.js', {
     substituteAppSettingsVariables: async function(folderPath) {
         var tags = ["applicationSettings", "appSettings", "connectionStrings", "configSections"];
         var configFiles = [path.join(__dirname, 'L1XmlVarSub/Web_test.config'), path.join(__dirname, 'L1XmlVarSub/Web_test.Debug.config')];
+        var variableMap = {
+            'conntype' : 'new_connType',
+            'connectionString' : 'database_connection_string',
+            'webpages:Version' : '1.1.7.3',
+            'rmtype' : 'newRM@type',
+            'xdt:Transform' : 'DelAttributes',
+            'xdt:Locator' : 'Match(tag)'
+        }
         for(var configFile of configFiles) {
-            await xmlSubstitutionUtility.substituteXmlVariables(configFile, tags);
+            await xmlSubstitutionUtility.substituteXmlVariables(configFile, tags, variableMap);
         }
     }
 });

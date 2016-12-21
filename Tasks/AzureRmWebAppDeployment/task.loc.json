@@ -15,9 +15,7 @@
     "Minor": 0,
     "Patch": 0
   },
-  "editorHints": {
-    "preview": "true"
-  },
+  "preview": "true",
   "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
   "minimumAgentVersion": "2.104.1",
   "groups": [
@@ -285,6 +283,8 @@
     "WebAppDoesntExist": "ms-resource:loc.messages.WebAppDoesntExist",
     "EncodeNotSupported": "ms-resource:loc.messages.EncodeNotSupported",
     "UnknownFileEncodeError": "ms-resource:loc.messages.UnknownFileEncodeError",
-    "ShortFileBufferError": "ms-resource:loc.messages.ShortFileBufferError"
+    "ShortFileBufferError": "ms-resource:loc.messages.ShortFileBufferError",
+    "FailedToUpdateAzureRMWebAppConfigDetails": "ms-resource:loc.messages.FailedToUpdateAzureRMWebAppConfigDetails",
+    "SuccessfullyUpdatedAzureRMWebAppConfigDetails": "ms-resource:loc.messages.SuccessfullyUpdatedAzureRMWebAppConfigDetails"
   }
 }

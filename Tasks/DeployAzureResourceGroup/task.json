@@ -60,7 +60,7 @@
         {
             "name": "ConnectedServiceName",
             "type": "connectedService:AzureRM",
-            "label": "Azure RM Subscription",
+            "label": "Azure Subscription",
             "defaultValue": "",
             "required": true,
             "groupName": "AzureDetails",
@@ -188,9 +188,9 @@
             "defaultValue": "",
             "required": false,
             "groupName": "Template",
-            "helpMarkDown": "Specify the template parameters to override like, <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword (ConvertTo-SecureString -String '$(password)' -AsPlainText -Force) –azureKeyVaultName $(fabrikamFibre).",
+            "helpMarkDown": "Specify the template parameters to override like, <br>-storageName fabrikam -adminUsername $(vmusername) -adminPassword (ConvertTo-SecureString -String '$(password)' -AsPlainText -Force) -azureKeyVaultName $(fabrikamFibre).",
             "properties": {
-                "editorExtension": "ms.vss-distributed-task-input-editor.parameters-grid"
+                "editorExtension": "ms.vss-services-azure.parameters-grid"
             }
         },
         {

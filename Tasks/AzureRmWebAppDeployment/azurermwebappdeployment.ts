@@ -37,7 +37,6 @@ async function run() {
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
 
         var isDeploymentSuccess: boolean = true;
-        var deploymentErrorMessage: string;
 
         var endPoint = new Array();
         endPoint["servicePrincipalClientID"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'serviceprincipalid', true);
@@ -46,7 +45,12 @@ async function run() {
         endPoint["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
         endPoint["url"] = tl.getEndpointUrl(connectedServiceName, true);
 
-        if(!deployToSlotFlag) {
+        if(deployToSlotFlag) {
+            if(slotName.toLowerCase() === "production") {
+                deployToSlotFlag = false;
+            }
+        }
+        else {
             resourceGroupName = await azureRESTUtility.getResourceGroupName(endPoint, webAppName);
         }
 
@@ -114,13 +118,13 @@ async function run() {
             }
 
             var appSettings = await azureRESTUtility.getWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
-            if(renameFilesFlag){
+            if(renameFilesFlag) {
                 if(appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES == undefined || appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES == '0'){
                     appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES = '1';
                     await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
                 }
             }
-            else if(!renameFilesFlag){
+            else {
                 if(appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES != undefined && appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES != '0'){
                     delete appSettings.properties.MSDEPLOY_RENAME_LOCKED_FILES;
                     await azureRESTUtility.updateWebAppAppSettings(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, appSettings);
@@ -137,15 +141,16 @@ async function run() {
             await DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment, takeAppOfflineFlag);
 
         }
+        await updateScmType(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
         
     } catch (error) {
         isDeploymentSuccess = false;
-        deploymentErrorMessage = error;
+        tl.setResult(tl.TaskResult.Failed, error);
     }
     if(publishingProfile != null) {
         var customMessage = {
             type: "Deployment",
-            slotName: tl.getInput('SlotName') || "Production"
+            slotName: (deployToSlotFlag ? slotName : "Production")
         };
 
         try {
@@ -154,9 +159,6 @@ async function run() {
         catch(error) {
             tl.warning(error);
         }
-    }
-    if(!isDeploymentSuccess) {
-        tl.setResult(tl.TaskResult.Failed, deploymentErrorMessage);
     }
 }
 
@@ -191,6 +193,26 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
     catch(error) {
         tl.error(tl.loc('Failedtodeploywebsite'));
         throw Error(error);
+    }
+}
+
+async function updateScmType(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string) {
+    try {
+        var configDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+        var scmType: string = configDetails.properties.scmType;
+        if(scmType.toLowerCase() === "none") {
+            var updatedConfigDetails = JSON.stringify(
+                {
+                    "properties": {
+                        "scmType": "VSTSRM"
+                    }
+                });
+            await azureRESTUtility.updateAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName, updatedConfigDetails);
+            tl._writeLine(tl.loc("SuccessfullyUpdatedAzureRMWebAppConfigDetails"));
+        }
+    }
+    catch(error) {
+        tl.warning(tl.loc("FailedToUpdateAzureRMWebAppConfigDetails", error));
     }
 }
 

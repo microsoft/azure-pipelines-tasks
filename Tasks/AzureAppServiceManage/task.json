@@ -25,17 +25,17 @@
         {
             "name": "ConnectedServiceName",
             "type": "connectedService:AzureRM",
-            "label": "AzureRM Subscription",
+            "label": "Azure subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the Azure Resource Manager subscription."
+            "helpMarkDown": "Select the Azure Resource Manager subscription"
         },
         {
             "name": "Action",
             "type": "pickList",
             "label": "Action",
             "required": false,
-            "helpMarkDown": "",
+            "helpMarkDown": "Action to be performed on the App Service. You can Start/Stop/Restart an App Service or Manage a slot swap.",
             "defaultValue": "Swap Slots",
             "options": {
                 "Swap Slots": "Swap Slots",
@@ -47,24 +47,24 @@
         {
             "name": "WebAppName",
             "type": "pickList",
-            "label": "App Service Name",
+            "label": "App Service name",
             "defaultValue": "",
             "required": true,
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Enter or Select the name of an existing Azure App Service."
+            "helpMarkDown": "Enter or select the name of an existing Azure App Service"
         },
         {
             "name": "ResourceGroupName",
             "type": "pickList",
-            "label": "Resource Group",
+            "label": "Resource group",
             "defaultValue": "",
             "required": true,
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Enter or Select the Azure Resource Group that contains the Azure App Service specified above.",
+            "helpMarkDown": "Enter or Select the Azure Resource Group that contains the Azure App Service specified above",
             "visibleRule":"Action = Swap Slots"
         },
         {
@@ -76,7 +76,7 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "The swap action directs destination slot's traffic to the source slot.",
+            "helpMarkDown": "The swap action directs destination slot's traffic to the source slot",
             "visibleRule": "Action = Swap Slots"
         },
         {
@@ -97,7 +97,7 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "The swap action directs destination slot's traffic to the source slot.",
+            "helpMarkDown": "The swap action directs destination slot's traffic to the source slot",
             "visibleRule": "Action = Swap Slots && SwapWithProduction = false"
         },
         {
