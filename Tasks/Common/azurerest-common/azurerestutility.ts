@@ -325,7 +325,7 @@ export async function startAppService(SPN, resourceGroupName: string, webAppName
         'Authorization': 'Bearer '+ accessToken
     };
     var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
-    tl._writeLine(tl.loc('StartingAppService', webAppName));
+    tl._writeLine(tl.loc('StartingAppService', webAppNameWithSlot));
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
             deferred.reject(error);
@@ -381,7 +381,7 @@ export async function restartAppService(SPN, resourceGroupName: string, webAppNa
         'Authorization': 'Bearer '+ accessToken
     };
     var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
-    tl._writeLine(tl.loc('RestartingAppService', webAppName));
+    tl._writeLine(tl.loc('RestartingAppService', webAppNameWithSlot));
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
             deferred.reject(error);

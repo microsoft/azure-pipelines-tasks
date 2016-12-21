@@ -18,18 +18,7 @@
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
-  "groups": [
-    {
-      "name": "SlotDetailsManage",
-      "displayName": "ms-resource:loc.group.displayName.SlotDetailsManage",
-      "visibleRule": "Action = Swap Slots"
-    },
-    {
-      "name": "SlotDetails",
-      "displayName": "ms-resource:loc.group.displayName.SlotDetails",
-      "visibleRule": "Action != Swap Slots && SpecifySlot = true"
-    }
-  ],
+  "groups": [],
   "inputs": [
     {
       "name": "ConnectedServiceName",
@@ -81,7 +70,7 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName",
-      "groupName": "SlotDetailsManage"
+      "visibleRule": "Action = Swap Slots || SpecifySlot = true"
     },
     {
       "name": "SourceSlot",
@@ -93,7 +82,7 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.SourceSlot",
-      "groupName": "SlotDetailsManage"
+      "visibleRule": "Action = Swap Slots"
     },
     {
       "name": "SwapWithProduction",
@@ -102,7 +91,7 @@
       "defaultValue": "true",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.SwapWithProduction",
-      "groupName": "SlotDetailsManage"
+      "visibleRule": "Action = Swap Slots"
     },
     {
       "name": "TargetSlot",
@@ -114,8 +103,7 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.TargetSlot",
-      "visibleRule": "SwapWithProduction = false",
-      "groupName": "SlotDetailsManage"
+      "visibleRule": "Action = Swap Slots && SwapWithProduction = false"
     },
     {
       "name": "PreserveVnet",
@@ -124,15 +112,18 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.PreserveVnet",
-      "groupName": "SlotDetailsManage"
+      "visibleRule": "Action = Swap Slots"
     },
     {
       "name": "Slot",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.Slot",
       "defaultValue": "",
+      "properties": {
+        "EditableOptions": "True"
+      },
       "required": true,
-      "groupName": "SlotDetails"
+      "visibleRule": "Action != Swap Slots && SpecifySlot = true"
     }
   ],
   "dataSourceBindings": [
