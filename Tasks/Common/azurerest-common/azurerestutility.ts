@@ -211,8 +211,8 @@ export async function getAzureRMWebAppConfigDetails(SPN, webAppName: string, res
             deferred.resolve(obj);
         }
         else {
-            tl.error(response.statusMessage);
-            deferred.reject(tl.loc('UnabletoretrieveAzureRMWebAppConfigDetails', response.statusCode, response.statusMessage));
+            tl.error(body);
+            deferred.reject(tl.loc('Unabletoretrievewebconfigdetails', response.statusCode, response.statusMessage));
         }
     });
     return deferred.promise;
@@ -270,8 +270,8 @@ export async function getWebAppAppSettings(SPN, webAppName: string, resourceGrou
 			deferred.resolve(JSON.parse(body));
 		}
 		else {
-			tl.error(response.statusMessage);
-			deferred.reject(tl.loc('UnabletoretrieveAzureRMWebAppAppSettings', response.statusCode, response.statusMessage));
+			tl.error(body);
+			deferred.reject(tl.loc('Unabletoretrievewebconfigdetails', response.statusCode, response.statusMessage));
 		}
 	})
 	
@@ -300,8 +300,8 @@ export async function updateWebAppAppSettings(SPN, webAppName: string, resourceG
             deferred.resolve(appSettings);
         }
         else {
-            tl.error(error);
-            deferred.reject(tl.loc('UnabletoupdateAzureRMWebAppAppSettings', response, error));
+            tl.error(body);
+            deferred.reject(tl.loc('Unabletoupdatewebappsettings', response, error));
         }
     });
 							
