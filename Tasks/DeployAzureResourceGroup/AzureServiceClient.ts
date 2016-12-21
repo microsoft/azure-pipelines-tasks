@@ -6,6 +6,11 @@ var uuid = require('uuid');
 var httpCallbackClient = new httpClient.HttpCallbackClient("VSTS_AGENT");
 var restObj = new restClient.RestCallbackClient(httpCallbackClient);
 
+function sleepFor(sleepDuration) {
+    var now = new Date().getTime();
+    while (new Date().getTime() < now + sleepDuration) { /* do nothing */ }
+}
+
 export class WebRequest {
     public method;
     public uri;
@@ -22,16 +27,19 @@ export class WebResponse {
 
 export class ServiceClient {
     private credentials;
+    private longRunningOperationTimeout;
+    
     constructor(credentials) {
         this.credentials = credentials;
+        this.longRunningOperationTimeout = 30;
     }
 
     private makeResponse(error, response, body) {
         var res = new WebResponse();
-        if (error && typeof(error) === typeof("")) {
+        if (error && typeof (error) === typeof ("")) {
             error = JSON.parse(error);
             res.error = error;
-        } else if(error) {
+        } else if (error) {
             res.error = error;
         }
         if (response) {
@@ -47,7 +55,7 @@ export class ServiceClient {
         return res;
     }
 
-    private beginRequest(method:string, request: WebRequest) {
+    private beginRequest(method: string, request: WebRequest) {
         var deferred = Q.defer<WebResponse>();
         httpCallbackClient.send(method, request.uri, request.body, request.headers, (error, response, body) => {
             var HttpResponse = this.makeResponse(error, response, body);
@@ -98,7 +106,7 @@ export class ServiceClient {
         });
         return deferred.promise;
     }
-    
+
     public post(request: WebRequest): Q.Promise<WebResponse> {
         var deferred = Q.defer<WebResponse>();
         this.credentials.getToken().then((token) => {
@@ -120,13 +128,12 @@ export class ServiceClient {
         return deferred.promise;
     }
 
-    private pollUri(request:WebRequest) {
+    private pollUri(request: WebRequest) {
         var deferred = Q.defer();
         this.get(request).then((response: WebResponse) => {
             if (response.body.status === "InProgress") {
-                setTimeout(() => {
-                    this.pollUri(request);
-                }, 300);
+                sleepFor(this.longRunningOperationTimeout);
+                this.pollUri(request);
             } else {
                 deferred.resolve(response);
             }
@@ -136,13 +143,14 @@ export class ServiceClient {
 
     public getLongRunningOperationResult(response: WebResponse) {
         var deferred = Q.defer();
-        var uri = response.headers["Azure-AsyncOperation"];
+        var uri = response.headers["azure-asyncoperation"];
         if (uri) {
             var request = new WebRequest();
             request.uri = uri;
-            this.pollUri(request).then(()=> {
+            request.headers = {};
+            this.pollUri(request).then(() => {
                 deferred.resolve(response);
-            });  
+            });
         } else {
             var res = new WebResponse();
             res.error = "Invalid Response Provided";

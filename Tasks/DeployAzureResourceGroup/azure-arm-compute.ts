@@ -1,7 +1,7 @@
 import msRestAzure = require("./ms-rest-azure");
 import azureServiceClient = require("./AzureServiceClient");
 
-export class ResourceManagementClient {
+export class ComputeManagementClient {
     public apiVersion;
     public acceptLanguage;
     private longRunningOperationRetryTimeout;
@@ -10,8 +10,7 @@ export class ResourceManagementClient {
     private credentials;
     private baseUri;
 
-    public deployments;
-    public resourceGroups;
+    public virtualMachines;
 
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId) {
         this.apiVersion = '2016-07-01';
@@ -27,35 +26,29 @@ export class ResourceManagementClient {
         this.baseUri = 'https://management.azure.com';
         this.credentials = credentials;
         this.subscriptionId = subscriptionId;
-        this.resourceGroups = new ResourceGroups(this);
+        this.virtualMachines = new VirtualMachines(this);
     }
 }
 
-export class ResourceGroups {
+class VirtualMachines {
     private client;
-    constructor(armClient: ResourceManagementClient) {
-        this.client = armClient;
+    constructor(client: ComputeManagementClient) {
+        this.client = client;
     }
 
-    public checkExistence(resourceGroupName: string, callback) {
+    public restart(resourceGroupName: string, vmName: string, callback) {
+        var client = this.client;
         if (!callback) {
             throw new Error('callback cannot be null.');
         }
+        var apiVersion = '2016-03-30';
         // Validate
         try {
             if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
                 throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
             }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error('"resourceGroupName" should satisfy the constraint - "MaxLength": 90');
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error('"resourceGroupName" should satisfy the constraint - "MinLength": 1');
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error('"resourceGroupName" should satisfy the constraint - "Pattern": /^[-\w\._\(\)]+$/');
-                }
+            if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
+                throw new Error('vmName cannot be null or undefined and it must be of type string.');
             }
             if (this.client.subscriptionId === null || this.client.subscriptionId === undefined || typeof this.client.subscriptionId.valueOf() !== 'string') {
                 throw new Error('this.client.subscriptionId cannot be null or undefined and it must be of type string.');
@@ -66,21 +59,22 @@ export class ResourceGroups {
 
         // Construct URL
         var requestUrl = this.client.baseUri +
-            '//subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}';
+            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/restart';
         requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
+        requestUrl = requestUrl.replace('{vmName}', encodeURIComponent(vmName));
         requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
-        // trim all duplicate forward slashes in the url
-        var regex = /([^:]\/)\/+/gi;
-        requestUrl = requestUrl.replace(regex, '$1');
         var queryParameters = [];
-        queryParameters.push('api-version=' + encodeURIComponent(this.client.apiVersion));
+        queryParameters.push('api-version=' + encodeURIComponent(apiVersion));
         if (queryParameters.length > 0) {
             requestUrl += '?' + queryParameters.join('&');
         }
+        // trim all duplicate forward slashes in the url
+        var regex = /([^:]\/)\/+/gi;
+        requestUrl = requestUrl.replace(regex, '$1');
 
-        // Create HTTP transport objects
+        // Create object
         var httpRequest = new azureServiceClient.WebRequest();
-        httpRequest.method = 'HEAD';
+        httpRequest.method = 'POST';
         httpRequest.headers = {};
         httpRequest.uri = requestUrl;
         // Set Headers
@@ -92,30 +86,20 @@ export class ResourceGroups {
         }
         httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
         httpRequest.body = null;
-        // Send Request
-        var client = new azureServiceClient.ServiceClient(this.client.credentials);
-        return client.get(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        var serviceClient = new azureServiceClient.ServiceClient(this.client.credentials);
+        serviceClient.post(httpRequest).then((response: azureServiceClient.WebResponse) => {
             if (response.error) {
                 callback(response.error);
-                return;
             }
-            try {
-                if (response.body.error) {
-                    if (response.body.error.code === "ResourceGroupNotFound") {
-                        callback(null, false);
-                        return;
-                    }
-                    throw new Error(response.body.error);
+            serviceClient.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse)=>{
+                if(operationResponse.body.status === "Succeeded") {
+                    // Generate Response
+                    callback(null);
+                } else {
+                    // Generate Error
+                    callback()
                 }
-                callback(null, true);
-            } catch (error) {
-                callback(error)
-                return;
-            }
+            });
         });
     }
-}
-
-export class Deployments {
-
-}
+} 
