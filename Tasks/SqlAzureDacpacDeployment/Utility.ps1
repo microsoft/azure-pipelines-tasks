@@ -185,27 +185,30 @@ function Get-SqlPackageCommandArguments
     return $scriptArgument
 }
 
-function Run-Command
+function Invoke-Command
 {
     param(
-        [string]$command,
-        [bool] $failOnErr = $true
+        [String][Parameter(Mandatory=$true)] $FileName,
+        [String][Parameter(Mandatory=$true)] $Arguments
     )
-    $ErrorActionPreference = 'Continue'
-    if( $psversiontable.PSVersion.Major -le 4)
-    {
-        $result = cmd.exe /c "`"$command`"" 2>&1
-    }
-    else
-    {
-        $result = cmd.exe /c "$command" 2>&1
+
+    $ErrorActionPreference = 'Continue' 
+    Invoke-Expression "& '$FileName' --% $Arguments" 2>&1 -ErrorVariable errors | ForEach-Object {
+        if ($_ -is [System.Management.Automation.ErrorRecord]) {
+            Write-Error $_
+        } else {
+            Write-Host $_
+        }
+    } 
+    
+    foreach($errorMsg in $errors){
+        Write-Error $errorMsg
     }
     $ErrorActionPreference = 'Stop'
-    if($failOnErr -and $LASTEXITCODE -ne 0)
+    if($LASTEXITCODE -ne 0)
     {
-        throw $result
+         throw  (Get-VstsLocString -Key "SAD_AzureSQLDacpacTaskFailed")
     }
-    return $result
 }
 
 function ConvertParamToSqlSupported

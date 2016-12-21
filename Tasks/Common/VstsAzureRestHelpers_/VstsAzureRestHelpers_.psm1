@@ -664,9 +664,7 @@ function Add-AzureSqlDatabaseServerFirewallRule
         $parsedException = Parse-Exception($_.Exception)
         if($parsedException)
         {
-            Write-Verbose $parsedException
-            $exception = $parsedException | ConvertFrom-Json
-            throw  $exception.Message
+            throw  $parsedException
         }
         throw $_.Exception.ToString()
     }
@@ -707,9 +705,7 @@ function Remove-AzureSqlDatabaseServerFirewallRule
         $parsedException = Parse-Exception($_.Exception)
         if($parsedException)
         {
-            Write-Verbose $parsedException
-            $exception = $parsedException | ConvertFrom-Json
-            throw  $exception.Message
+            throw  $parsedException
         }
         throw $_.Exception.ToString()
     }
@@ -717,6 +713,7 @@ function Remove-AzureSqlDatabaseServerFirewallRule
 
 function Parse-Exception($exception){
     if($exception) {
+        Write-Verbose "Exception message - $($exception.ToString())"
         $response = $exception.Response
         if($response) {
             $responseStream =  $response.GetResponseStream()
@@ -726,10 +723,22 @@ function Parse-Exception($exception){
             $responseBody = $streamReader.ReadToEnd()
             $streamReader.Close()
             Write-Verbose "Exception message extracted from response $responseBody"
-            if($response.statusCode -eq 404){
-                Write-Warning "Please verify request URL : $($response.ResponseUri)" 
+            $exceptionMessage = "";
+            try
+            {
+                if($responseBody)
+                {
+                    $exceptionJson = $responseBody | ConvertFrom-Json
+                    $exceptionMessage = $exceptionJson.Message
+                }
             }
-            return $responseBody
+            catch{
+                $exceptionMessage = $responseBody
+            }
+            if($response.statusCode -eq 404 -or (-not $exceptionMessage)){
+                $exceptionMessage += " Please verify request URL : $($response.ResponseUri)" 
+            }
+            return $exceptionMessage
         }
     }
     return $null

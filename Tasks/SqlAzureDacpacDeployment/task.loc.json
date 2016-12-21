@@ -258,6 +258,7 @@
     "SAD_InvalidSqlFile": "ms-resource:loc.messages.SAD_InvalidSqlFile",
     "SAD_NoPassword": "ms-resource:loc.messages.SAD_NoPassword",
     "SAD_InvalidPublishProfile": "ms-resource:loc.messages.SAD_InvalidPublishProfile",
-    "SAD_InvalidServerNameFormat": "ms-resource:loc.messages.SAD_InvalidServerNameFormat"
+    "SAD_InvalidServerNameFormat": "ms-resource:loc.messages.SAD_InvalidServerNameFormat",
+    "SAD_AzureSQLDacpacTaskFailed": "ms-resource:loc.messages.SAD_AzureSQLDacpacTaskFailed"
   }
 }
