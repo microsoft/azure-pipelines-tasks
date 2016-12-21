@@ -119,7 +119,7 @@
             "defaultValue": "false",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
-            "helpMarkDown": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully."
+            "helpMarkDown": "Select the option to take the Azure App service offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully."
         },
         {
             "name": "UseWebDeploy",

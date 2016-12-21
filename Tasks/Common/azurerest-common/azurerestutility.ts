@@ -32,7 +32,7 @@ export async function getResourceGroupName(SPN, webAppName: string)
 
     tl.debug('Web App details : ' + webAppID.id);
     var resourceGroupName = webAppID.id.split ('/')[4];
-    tl.debug('AzureRM Resource Group Name : ' + resourceGroupName);
+    tl.debug('Azure Resource Group Name : ' + resourceGroupName);
     return resourceGroupName;
 }
 /**
@@ -100,7 +100,7 @@ export async function getAzureRMWebAppPublishProfile(endPoint, webAppName: strin
     var url = armUrl + 'subscriptions/' + endPoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
                  '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + '/publishxml?' + azureApiVersion;
 
-    tl.debug('Requesting AzureRM Publish Profile: ' + url);
+    tl.debug('Requesting Azure Publish Profile: ' + url);
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
             deferred.reject(error);
