@@ -6,14 +6,14 @@ var kuduLogUtil = require('azurerest-common/kududeploymentstatusutility.js');
 
 async function swapSlot(endPoint, resourceGroupName: string, webAppName: string, sourceSlot: string, swapWithProduction: boolean, targetSlot: string, preserveVnet: boolean) {
     try {
-        var isSlotSwapSuccess = await azureRmUtil.swapWebAppSlot(endPoint, resourceGroupName, webAppName, sourceSlot, targetSlot, preserveVnet);
-        if (isSlotSwapSuccess) {
-            tl._writeLine(tl.loc("Successfullyswappedslots", webAppName, sourceSlot, targetSlot));
-        }
+        await azureRmUtil.swapWebAppSlot(endPoint, resourceGroupName, webAppName, sourceSlot, targetSlot, preserveVnet);
+        tl._writeLine(tl.loc("Successfullyswappedslots", webAppName, sourceSlot, targetSlot));
     }
-    catch (errorMessage) {
-        tl.error(errorMessage);
-        throw new Error(errorMessage);
+    catch(error) {
+        if(!!error)
+            throw new Error(tl.loc("FailedToSwapWebAppSlotsError", webAppName, error));
+        else
+            throw new Error(tl.loc("SlotSwapOperationNotCompleted", webAppName));
     }
 }
 
@@ -82,8 +82,7 @@ async function run() {
                 throw Error(tl.loc('InvalidAction'));
         }
     }
-    catch(exception)
-    {
+    catch(exception) {
         taskResult = false;
         errorMessage = exception;
     }

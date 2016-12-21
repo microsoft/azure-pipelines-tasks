@@ -164,7 +164,8 @@
     "Failedtoupdateslotswaphistory": "ms-resource:loc.messages.Failedtoupdateslotswaphistory",
     "WARNINGCannotupdateslotswapstatusSCMendpointisnotenabledforthiswebsite": "ms-resource:loc.messages.WARNINGCannotupdateslotswapstatusSCMendpointisnotenabledforthiswebsite",
     "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "ms-resource:loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved",
-    "Failedtoswapslots": "ms-resource:loc.messages.Failedtoswapslots",
+    "FailedToSwapWebAppSlots": "ms-resource:loc.messages.FailedToSwapWebAppSlots",
+    "SlotSwapOperationNotCompleted": "ms-resource:loc.messages.SlotSwapOperationNotCompleted",
     "Successfullyswappedslots": "ms-resource:loc.messages.Successfullyswappedslots",
     "SourceAndTargetSlotCannotBeSame": "ms-resource:loc.messages.SourceAndTargetSlotCannotBeSame",
     "Successfullyupdateddeploymenthistory": "ms-resource:loc.messages.Successfullyupdateddeploymenthistory",
@@ -185,7 +186,6 @@
     "CouldnotfetchacccesstokenforAzureStatusCode": "ms-resource:loc.messages.CouldnotfetchacccesstokenforAzureStatusCode",
     "WebAppDoesntExist": "ms-resource:loc.messages.WebAppDoesntExist",
     "UnabletoretrieveWebAppID": "ms-resource:loc.messages.UnabletoretrieveWebAppID",
-    "StartingSwapSlot": "ms-resource:loc.messages.StartingSwapSlot",
-    "UnableToMonitorSlotSwapStatus": "ms-resource:loc.messages.UnableToMonitorSlotSwapStatus"
+    "StartingSwapSlot": "ms-resource:loc.messages.StartingSwapSlot"
   }
 }

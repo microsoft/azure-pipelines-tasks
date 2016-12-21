@@ -24,7 +24,8 @@
   "loc.messages.Failedtoupdateslotswaphistory": "Failed to update slot swap history for Azure Web App : %s",
   "loc.messages.WARNINGCannotupdateslotswapstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update slot swap status : SCM (Source Control Manager) endpoint is not enabled for this Azure Web App",
   "loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update Kudu deployment log as unique deployment ID cannot be retrieved for this Azure Web App",
-  "loc.messages.Failedtoswapslots": "Failed to swap slots. Status %s for Azure Web App : %s",
+  "loc.messages.FailedToSwapWebAppSlots": "Failed to swap slots for Azure Web App: %s. Error: %s",
+  "loc.messages.SlotSwapOperationNotCompleted": "Slot swap operation was not completed for Azure Web App: %s",
   "loc.messages.Successfullyswappedslots": "Successfully swapped web app %s slots from %s to %s",
   "loc.messages.SourceAndTargetSlotCannotBeSame": "Source and target slot cannot be same",
   "loc.messages.Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
@@ -45,6 +46,5 @@
   "loc.messages.CouldnotfetchacccesstokenforAzureStatusCode": "Could not fetch acccess token for Azure App Service. StatusCode %s (%s)",
   "loc.messages.WebAppDoesntExist": "Webapp '%s' doesn't exist.",
   "loc.messages.UnabletoretrieveWebAppID": "Unable to retrieve connection details for Azure App Service:'%s'. Status Code: %s",
-  "loc.messages.StartingSwapSlot": "Requesting swap slot for Web App : %s",
-  "loc.messages.UnableToMonitorSlotSwapStatus": "Unable to monitor slot swap status for Web App: %s. Status Code: %s"
+  "loc.messages.StartingSwapSlot": "Requesting swap slot for Web App : %s"
 }
