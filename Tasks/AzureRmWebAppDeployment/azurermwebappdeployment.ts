@@ -10,8 +10,7 @@ var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
 var jsonSubstitutionUtility = require('webdeployment-common/jsonvariablesubstitutionutility.js');
 var xmlSubstitutionUtility = require('webdeployment-common/xmlvariablesubstitutionutility.js');
 var xdtTransformationUtility = require('webdeployment-common/xdttransformationutility.js');
-
-var kuduUtility = require('./kuduutility.js');
+var kuduUtility = require('webdeployment-common/kuduutility.js');
 
 async function run() {
     try {
@@ -38,11 +37,13 @@ async function run() {
         var variableSubstitution: boolean = tl.getBoolInput('VariableSubstitution', false);
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
 
-        var SPN = new Array();
-        SPN["servicePrincipalClientID"] = endPointAuthCreds.parameters["serviceprincipalid"];
-        SPN["servicePrincipalKey"] = endPointAuthCreds.parameters["serviceprincipalkey"];
-        SPN["tenantID"] = endPointAuthCreds.parameters["tenantid"];
-        SPN["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
+        var endPoint = new Array();
+        endPoint["servicePrincipalClientID"] = tl.getEndpointAuthorizationParameter(connectedServiceName, "serviceprincipalid", true);
+        endPoint["servicePrincipalKey"] = tl.getEndpointAuthorizationParameter(connectedServiceName, "serviceprincipalkey", true);
+        endPoint["tenantID"] = tl.getEndpointAuthorizationParameter(connectedServiceName, "tenantid", true);
+        endPoint["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
+        endPoint["url"] = tl.getEndpointUrl(connectedServiceName, true);
+
         var availableWebPackages = utility.findfiles(webDeployPkg);
         if(availableWebPackages.length == 0) {
             throw new Error(tl.loc('Nopackagefoundwithspecifiedpattern'));
@@ -55,7 +56,7 @@ async function run() {
 
         var isFolderBasedDeployment = utility.isInputPkgIsFolder(webDeployPkg);
 
-        var publishingProfile = await azureRESTUtility.getAzureRMWebAppPublishProfile(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+        var publishingProfile = await azureRESTUtility.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
         tl._writeLine(tl.loc('GotconnectiondetailsforazureRMWebApp0', webAppName));
 
         if(jsonVariableSubsFlag || (xmlTransformsAndVariableSubstitutions && (xmlTransformation || variableSubstitution))) { 
@@ -99,14 +100,14 @@ async function run() {
             if(!tl.osType().match(/^Win/)){
                 throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
             }
-            tl._writeLine("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);         
+            tl._writeLine("##vso[task.setvariable variable=websiteUserName;issecret=true;]" + publishingProfile.userName);
             tl._writeLine("##vso[task.setvariable variable=websitePassword;issecret=true;]" + publishingProfile.userPWD);
             await msDeploy.DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
                             excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile,
                             additionalArguments, isFolderBasedDeployment, useWebDeploy);
         } else {
             tl.debug(tl.loc("Initiateddeploymentviakuduserviceforwebapppackage", webDeployPkg));
-            var azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+            var azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
             await DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment, takeAppOfflineFlag);
         }
     } catch (error) {
