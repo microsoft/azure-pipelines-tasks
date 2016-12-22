@@ -291,6 +291,6 @@
         "KuduPhysicalpathCreatedSuccessfully": "Kudu physical path created successfully : %s",
         "FailedtocreateKuduPhysicalPath" : "Failed to create kudu physical path. %s: %s",
         "FailedtocheckphysicalPath" : "Failed to check kudu physical path. %s: %s",
-        "VirtualApplicationNotExist" : "Virtual application doesn't exists : %s"
+        "VirtualApplicationDoesNotExist" : "Virtual application doesn't exists : %s"
     }
 }

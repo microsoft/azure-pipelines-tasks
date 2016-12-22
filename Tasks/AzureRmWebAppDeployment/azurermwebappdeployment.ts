@@ -112,14 +112,15 @@ async function run() {
             tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
         }
 
+        var azureWebAppDetails = null;
         if(virtualApplication) {
-            var azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+            azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
             var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
             var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
             if("/site/wwwroot" != pathMappings[1]) {
-                await kuduUtility.createKuduPhysicalPath(publishingProfile, pathMappings[1]);
+                await kuduUtility.ensurePhysicalPathExists(publishingProfile, pathMappings[1]);
             } else {
-                throw Error(tl.loc("VirtualApplicationNotExist", virtualApplication));
+                throw Error(tl.loc("VirtualApplicationDoesNotExist", virtualApplication));
             }
         }
 
@@ -148,7 +149,9 @@ async function run() {
                             additionalArguments, isFolderBasedDeployment, useWebDeploy);
         } else {
             tl.debug("Initiated deployment via kudu service for webapp package : " + webDeployPkg);
-            var azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+            if(azureWebAppDetails == null) {
+                azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+            }
             await DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment, takeAppOfflineFlag);
 
         }

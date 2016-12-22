@@ -93,5 +93,5 @@
   "loc.messages.KuduPhysicalpathCreatedSuccessfully": "Kudu physical path created successfully : %s",
   "loc.messages.FailedtocreateKuduPhysicalPath": "Failed to create kudu physical path. %s: %s",
   "loc.messages.FailedtocheckphysicalPath": "Failed to check kudu physical path. %s: %s",
-  "loc.messages.VirtualApplicationNotExist": "Virtual application doesn't exists : %s"
+  "loc.messages.VirtualApplicationDoesNotExist": "Virtual application doesn't exists : %s"
 }

@@ -291,6 +291,6 @@
     "KuduPhysicalpathCreatedSuccessfully": "ms-resource:loc.messages.KuduPhysicalpathCreatedSuccessfully",
     "FailedtocreateKuduPhysicalPath": "ms-resource:loc.messages.FailedtocreateKuduPhysicalPath",
     "FailedtocheckphysicalPath": "ms-resource:loc.messages.FailedtocheckphysicalPath",
-    "VirtualApplicationNotExist": "ms-resource:loc.messages.VirtualApplicationNotExist"
+    "VirtualApplicationDoesNotExist": "ms-resource:loc.messages.VirtualApplicationDoesNotExist"
   }
 }
