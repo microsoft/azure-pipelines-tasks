@@ -34,17 +34,17 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
     var webApplicationDeploymentPath = (virtualApplication) ? webAppName + "/" + virtualApplication : webAppName;
     
     if(isFolderBasedDeployment) {
-        msDeployCmdArgs += " -source:IisApp=\"" + webAppPackage + "\"";
-        msDeployCmdArgs += " -dest:iisApp=\"" + webApplicationDeploymentPath + "\"";
+        msDeployCmdArgs += " -source:IisApp=\'" + webAppPackage + "\'";
+        msDeployCmdArgs += " -dest:iisApp=\'" + webApplicationDeploymentPath + "\'";
     }
     else {       
-        msDeployCmdArgs += " -source:package=\"" + webAppPackage + "\"";
+        msDeployCmdArgs += " -source:package=\'" + webAppPackage + "\'";
 
         if(isParamFilePresentInPacakge) {
             msDeployCmdArgs += " -dest:auto";
         }
         else {
-            msDeployCmdArgs += " -dest:contentPath=\"" + webApplicationDeploymentPath + "\"";
+            msDeployCmdArgs += " -dest:contentPath=\'" + webApplicationDeploymentPath + "\'";
         }
     }
 
@@ -65,7 +65,7 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
     if(useWebDeploy) {
 
         if(setParametersFile) {
-            msDeployCmdArgs += " -setParamFile=\"" + setParametersFile + "\"";
+            msDeployCmdArgs += " -setParamFile=" + setParametersFile + " ";
         }
 
         if(excludeFilesFromAppDataFlag) {
@@ -101,19 +101,26 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
  */
 export async  function containsParamFile(webAppPackage: string ) {
     var msDeployPath = await getMSDeployFullPath();
+    var msDeployDirectory = msDeployPath.slice(0, msDeployPath.lastIndexOf('\\') + 1);
+    var pathVar = process.env.PATH;
+    process.env.PATH = msDeployDirectory + ";" + process.env.PATH;
+
     var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package=\"" + webAppPackage + "\"";
     
-    var msDeployParamFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'msDeployParam.bat';
+    //var msDeployParamFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'msDeployParam.bat';
     var parameterFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'parameter.xml';
     
-    var silentCommand = '@echo off \n';
-    var msDeployCommand = '"' + msDeployPath + '" ' + msDeployCheckParamFileCmdArgs + " > \"" + parameterFile + "\"";
-    var batchCommand = silentCommand + msDeployCommand;
+    //var silentCommand = '@echo off \n';
+    //var msDeployCommand = '"' + msDeployPath + '" ' + msDeployCheckParamFileCmdArgs + " > \"" + parameterFile + "\"";
+    //var batchCommand = silentCommand + msDeployCommand;
+    var outputObj = fs.createWriteStream(parameterFile);
+    //tl.writeFile(msDeployParamFile, batchCommand);
+    //tl._writeLine(tl.loc("Runningcommand", msDeployCommand));
 
-    tl.writeFile(msDeployParamFile, batchCommand);
-    tl._writeLine(tl.loc("Runningcommand", msDeployCommand));
+    //var taskResult = tl.execSync("cmd", ['/C', msDeployParamFile], <trm.IExecOptions>{ failOnStdErr: true, silent: true });
+    var taskResult = tl.execSync("msdeploy", msDeployCheckParamFileCmdArgs, <any>{ failOnStdErr: true, silent: true, outStream: outputObj })
+    process.env.PATH = pathVar;
 
-    var taskResult = tl.execSync("cmd", ['/C', msDeployParamFile], <trm.IExecOptions>{ failOnStdErr: true, silent: true });
     var paramContentXML = fs.readFileSync(parameterFile);
     var isParamFilePresent = false;
     await parseString(paramContentXML, (error, result) => {
@@ -125,7 +132,7 @@ export async  function containsParamFile(webAppPackage: string ) {
         }
     });
     tl.debug("Is parameter file present in web package : " + isParamFilePresent);
-    tl.rmRF(msDeployParamFile, true);
+    //tl.rmRF(msDeployParamFile, true);
     return isParamFilePresent;
 }
 
