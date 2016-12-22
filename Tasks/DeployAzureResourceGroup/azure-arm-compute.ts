@@ -1081,4 +1081,181 @@ export class VirtualMachineExtensions {
             return callback(null, result, httpRequest, response);
         });
     }
+<<<<<<< HEAD
+
+    public createOrUpdate(resourceGroupName, vmName, vmExtensionName, extensionParameters, callback) {
+        var client = this.client;
+
+        if (!callback) {
+            throw new Error('callback cannot be null.');
+        }
+        var apiVersion = '2016-03-30';
+        // Validate
+        try {
+            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+            }
+            if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
+                throw new Error('vmName cannot be null or undefined and it must be of type string.');
+            }
+            if (vmExtensionName === null || vmExtensionName === undefined || typeof vmExtensionName.valueOf() !== 'string') {
+                throw new Error('vmExtensionName cannot be null or undefined and it must be of type string.');
+            }
+            if (extensionParameters === null || extensionParameters === undefined) {
+                throw new Error('extensionParameters cannot be null or undefined.');
+            }
+            if (this.client.subscriptionId === null || this.client.subscriptionId === undefined || typeof this.client.subscriptionId.valueOf() !== 'string') {
+                throw new Error('this.client.subscriptionId cannot be null or undefined and it must be of type string.');
+            }
+            if (this.client.acceptLanguage !== null && this.client.acceptLanguage !== undefined && typeof this.client.acceptLanguage.valueOf() !== 'string') {
+                throw new Error('this.client.acceptLanguage must be of type string.');
+            }
+        } catch (error) {
+            return callback(error);
+        }
+
+        // Construct URL
+        var requestUrl = this.client.baseUri +
+            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/extensions/{vmExtensionName}';
+        requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
+        requestUrl = requestUrl.replace('{vmName}', encodeURIComponent(vmName));
+        requestUrl = requestUrl.replace('{vmExtensionName}', encodeURIComponent(vmExtensionName));
+        requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
+        var queryParameters = [];
+        queryParameters.push('api-version=' + encodeURIComponent(apiVersion));
+        if (queryParameters.length > 0) {
+            requestUrl += '?' + queryParameters.join('&');
+        }
+        // trim all duplicate forward slashes in the url
+        var regex = /([^:]\/)\/+/gi;
+        requestUrl = requestUrl.replace(regex, '$1');
+
+        // Create HTTP transport objects
+        var httpRequest = new azureServiceClient.WebRequest();
+        httpRequest.method = 'PUT';
+        httpRequest.headers = {};
+        httpRequest.uri = requestUrl;
+        // Set Headers
+        if (this.client.generateClientRequestId) {
+            httpRequest.headers['x-ms-client-request-id'] = msRestAzure.generateUuid();
+        }
+        if (this.client.acceptLanguage !== undefined && this.client.acceptLanguage !== null) {
+            httpRequest.headers['accept-language'] = this.client.acceptLanguage;
+        }
+        httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+        // Serialize Request
+        var requestContent = null;
+        var requestModel = null;
+        try {
+            if (extensionParameters !== null && extensionParameters !== undefined) {
+                var requestModelMapper = new client.models['VirtualMachineExtension']().mapper();
+                requestModel = client.serialize(requestModelMapper, extensionParameters, 'extensionParameters');
+                requestContent = JSON.stringify(requestModel);
+            }
+        } catch (error) {
+            var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' +
+                'payload - "%s"', error.message, util.inspect(extensionParameters, { depth: null })));
+            return callback(serializationError);
+        }
+        httpRequest.body = requestContent;
+
+        // Send request
+        var serviceClient = new azureServiceClient.ServiceClient(this.client.credentials);
+        serviceClient.request(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            if (response.error) {
+                callback(response.error);
+            }
+            serviceClient.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
+                if (operationResponse.body.status === "Succeeded") {
+                    // Generate Response
+                    callback(null);
+                } else {
+                    // Generate Error
+                    callback()
+                }
+            });
+        });
+
+    }
+
+    public delete(resourceGroupName, vmName, vmExtensionName, callback) {
+        var client = this.client;
+
+        if (!callback) {
+            throw new Error('callback cannot be null.');
+        }
+
+        var apiVersion = '2016-03-30';
+        // Validate
+        try {
+            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+            }
+            if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
+                throw new Error('vmName cannot be null or undefined and it must be of type string.');
+            }
+            if (vmExtensionName === null || vmExtensionName === undefined || typeof vmExtensionName.valueOf() !== 'string') {
+                throw new Error('vmExtensionName cannot be null or undefined and it must be of type string.');
+            }
+            if (this.client.subscriptionId === null || this.client.subscriptionId === undefined || typeof this.client.subscriptionId.valueOf() !== 'string') {
+                throw new Error('this.client.subscriptionId cannot be null or undefined and it must be of type string.');
+            }
+            if (this.client.acceptLanguage !== null && this.client.acceptLanguage !== undefined && typeof this.client.acceptLanguage.valueOf() !== 'string') {
+                throw new Error('this.client.acceptLanguage must be of type string.');
+            }
+        } catch (error) {
+            return callback(error);
+        }
+
+        // Construct URL
+        var requestUrl = this.client.baseUri +
+            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/extensions/{vmExtensionName}';
+        requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
+        requestUrl = requestUrl.replace('{vmName}', encodeURIComponent(vmName));
+        requestUrl = requestUrl.replace('{vmExtensionName}', encodeURIComponent(vmExtensionName));
+        requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
+        var queryParameters = [];
+        queryParameters.push('api-version=' + encodeURIComponent(apiVersion));
+        if (queryParameters.length > 0) {
+            requestUrl += '?' + queryParameters.join('&');
+        }
+        // trim all duplicate forward slashes in the url
+        var regex = /([^:]\/)\/+/gi;
+        requestUrl = requestUrl.replace(regex, '$1');
+
+        // Create HTTP transport objects
+        var httpRequest = new azureServiceClient.WebRequest();
+        httpRequest.method = 'DELETE';
+        httpRequest.headers = {};
+        httpRequest.uri = requestUrl;
+        // Set Headers
+        if (this.client.generateClientRequestId) {
+            httpRequest.headers['x-ms-client-request-id'] = msRestAzure.generateUuid();
+        }
+        if (this.client.acceptLanguage !== undefined && this.client.acceptLanguage !== null) {
+            httpRequest.headers['accept-language'] = this.client.acceptLanguage;
+        }
+        httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+        httpRequest.body = null;
+
+        // Send request
+        var serviceClient = new azureServiceClient.ServiceClient(this.client.credentials);
+        serviceClient.request(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            if (response.error) {
+                callback(response.error);
+            }
+            serviceClient.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
+                if (operationResponse.body.status === "Succeeded") {
+                    // Generate Response
+                    callback(null);
+                } else {
+                    // Generate Error
+                    callback()
+                }
+            });
+        });
+
+    }
+=======
+>>>>>>> 68768fdc355087bdd13a84b9bf38eda4e48abd38
 }
