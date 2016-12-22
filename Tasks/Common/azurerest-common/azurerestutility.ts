@@ -313,10 +313,10 @@ export async function swapWebAppSlot(endpoint, resourceGroupName: string, webApp
     return deferred.promise;
 }
 
-export async function startAppService(endpoint, resourceGroupName: string, webAppName: string, operateOnSlot: boolean, slotName: string) {
+export async function startAppService(endpoint, resourceGroupName: string, webAppName: string, specifySlotFlag: boolean, slotName: string) {
     
     var deferred = Q.defer<any>();
-    var slotUrl = (operateOnSlot) ? "/slots/" + slotName : "";
+    var slotUrl = (specifySlotFlag) ? "/slots/" + slotName : "";
     var url = armUrl + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
                 '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + "/start?" + azureApiVersion;
 
@@ -324,7 +324,7 @@ export async function startAppService(endpoint, resourceGroupName: string, webAp
     var headers = {
         'Authorization': 'Bearer '+ accessToken
     };
-    var webAppNameWithSlot = (operateOnSlot) ? webAppName + '-' + slotName : webAppName;
+    var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
     tl._writeLine(tl.loc('StartingAppService', webAppNameWithSlot));
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
@@ -341,10 +341,10 @@ export async function startAppService(endpoint, resourceGroupName: string, webAp
     return deferred.promise;
 }
 
-export async function stopAppService(endpoint, resourceGroupName: string, webAppName: string, operateOnSlot: boolean, slotName: string) {
+export async function stopAppService(endpoint, resourceGroupName: string, webAppName: string, specifySlotFlag: boolean, slotName: string) {
     
     var deferred = Q.defer<any>();
-    var slotUrl = (operateOnSlot) ? "/slots/" + slotName : "";
+    var slotUrl = (specifySlotFlag) ? "/slots/" + slotName : "";
     var url = armUrl + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
                 '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + "/stop?" + azureApiVersion;
 
@@ -352,7 +352,7 @@ export async function stopAppService(endpoint, resourceGroupName: string, webApp
     var headers = {
         'Authorization': 'Bearer '+ accessToken
     };
-    var webAppNameWithSlot = (operateOnSlot) ? webAppName + '-' + slotName : webAppName;
+    var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
     tl._writeLine(tl.loc('StoppingAppService', webAppNameWithSlot));
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
@@ -369,10 +369,10 @@ export async function stopAppService(endpoint, resourceGroupName: string, webApp
     return deferred.promise;
 }
 
-export async function restartAppService(endpoint, resourceGroupName: string, webAppName: string, operateOnSlot: boolean, slotName: string) {
+export async function restartAppService(endpoint, resourceGroupName: string, webAppName: string, specifySlotFlag: boolean, slotName: string) {
     
     var deferred = Q.defer<any>();
-    var slotUrl = (operateOnSlot) ? "/slots/" + slotName : "";
+    var slotUrl = (specifySlotFlag) ? "/slots/" + slotName : "";
     var url = armUrl + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
                 '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + "/restart?" + azureApiVersion + '&synchronous=true';
 
@@ -380,7 +380,7 @@ export async function restartAppService(endpoint, resourceGroupName: string, web
     var headers = {
         'Authorization': 'Bearer '+ accessToken
     };
-    var webAppNameWithSlot = (operateOnSlot) ? webAppName + '-' + slotName : webAppName;
+    var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
     tl._writeLine(tl.loc('RestartingAppService', webAppNameWithSlot));
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
