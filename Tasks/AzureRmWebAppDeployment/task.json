@@ -285,7 +285,7 @@
         "UnknownFileEncodeError": "Unable to detect encoding of the file %s (typeCode: %s). Supported encodings are UTF-8 and UTF-16 LE.",
         "ShortFileBufferError": "File buffer is too short to detect encoding type : %s",
         "FailedToUpdateAzureRMWebAppConfigDetails": "Failed to update Web App config details. Error: %s",
-        "SuccessfullyUpdatedAzureRMWebAppConfigDetails": "Successfully updated Web App config details",
+        "SuccessfullyUpdatedAzureRMWebAppConfigDetails": "Successfully updated Web App service configuration details",
         "RequestedURLforkuduphysicalpath": "Requested URL for kudu physical path : %s",
         "Physicalpathalreadyexists": "Physical path '%s' already exists",
         "KuduPhysicalpathCreatedSuccessfully": "Kudu physical path created successfully : %s",

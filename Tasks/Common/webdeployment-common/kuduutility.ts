@@ -53,14 +53,10 @@ export async function appOffineKuduService(publishUrl: string, physicalPath: str
  */
 export function getVirtualAndPhysicalPaths(virtualApplication: string, virtualApplicationMappings) {
     // construct URL depending on virtualApplication or root of webapplication 
-    var physicalPath = "/site/wwwroot";
-    var virtualPath = "/";
-    if (virtualApplication) {
-        virtualPath = "/" + virtualApplication;
-    }
-
+    var physicalPath = null;
+    var virtualPath = "/" + virtualApplication;
+    
     for( var index in virtualApplicationMappings ) {
-
         var mapping = virtualApplicationMappings[index];
         if( mapping.virtualPath == virtualPath){
             physicalPath = mapping.physicalPath;
@@ -155,6 +151,7 @@ export async function ensurePhysicalPathExists(publishingProfile, physicalPath: 
             defer.resolve(tl.loc('Physicalpathalreadyexists'));
         }
         else if(response.statusCode === 404) {
+            tl.debug("Physical path doesn't exists. Creating physical path.")
             defer.resolve(await createPhysicalPath(publishingProfile, physicalPath));
         } else {
             tl.debug(body);

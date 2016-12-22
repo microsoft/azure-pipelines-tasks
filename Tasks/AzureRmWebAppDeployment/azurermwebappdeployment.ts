@@ -117,7 +117,7 @@ async function run() {
             azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
             var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
             var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
-            if("/site/wwwroot" != pathMappings[1]) {
+            if(pathMappings[1] != null) {
                 await kuduUtility.ensurePhysicalPathExists(publishingProfile, pathMappings[1]);
             } else {
                 throw Error(tl.loc("VirtualApplicationDoesNotExist", virtualApplication));
@@ -200,8 +200,18 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
                 throw new Error(tl.loc("MSDeploygeneratedpackageareonlysupportedforWindowsplatform")); 
             }
         }
-        var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
-        await kuduUtility.deployWebAppPackage(webAppZipFile, publishingProfile, pathMappings[0], pathMappings[1], takeAppOfflineFlag);
+        var physicalPath = "/site/wwwroot";
+        var virtualPath = "/";
+        if(virtualApplication) {
+            var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
+            if(pathMappings[1] != null) {
+                virtualPath = pathMappings[0];
+                physicalPath = pathMappings[1];
+            } else {
+                throw Error(tl.loc("VirtualApplicationDoesNotExist", virtualApplication));
+            }
+        }
+        await kuduUtility.deployWebAppPackage(webAppZipFile, publishingProfile, virtualPath, physicalPath, takeAppOfflineFlag);
         tl._writeLine(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
     }
     catch(error) {
