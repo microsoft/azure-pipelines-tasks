@@ -672,11 +672,25 @@ export class VirtualMachines {
             }
             serviceClient.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
                 if (operationResponse.body.status === "Succeeded") {
-                    // Generate Response
-                    callback(null);
+                    callback(null, operationResponse);
                 } else {
-                    // Generate Error
-                    callback()
+                    var error = new azureServiceClient.Error();
+                    error.statusCode = response.statusCode;
+                    if (response.body === '') response.body = null;
+                    var parsedErrorResponse;
+                    try {
+                        parsedErrorResponse = response.body;
+                        if (parsedErrorResponse) {
+                            if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+                            if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+                            if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+                        }
+                    } catch (defaultError) {
+                        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
+                            '- "%s" for the default response.', defaultError.message, response.body);
+                        return callback(error);
+                    }
+                    return callback(error);
                 }
             });
         });
@@ -742,8 +756,23 @@ export class VirtualMachines {
                     // Generate Response
                     callback(null);
                 } else {
-                    // Generate Error
-                    callback()
+                    var error = new azureServiceClient.Error();
+                    error.statusCode = response.statusCode;
+                    if (response.body === '') response.body = null;
+                    var parsedErrorResponse;
+                    try {
+                        parsedErrorResponse = response.body;
+                        if (parsedErrorResponse) {
+                            if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+                            if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+                            if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+                        }
+                    } catch (defaultError) {
+                        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
+                            '- "%s" for the default response.', defaultError.message, response.body);
+                        return callback(error);
+                    }
+                    return callback(error);
                 }
             });
         });
@@ -809,8 +838,23 @@ export class VirtualMachines {
                     // Generate Response
                     callback(null);
                 } else {
-                    // Generate Error
-                    callback()
+                   var error = new azureServiceClient.Error();
+                    error.statusCode = response.statusCode;
+                    if (response.body === '') response.body = null;
+                    var parsedErrorResponse;
+                    try {
+                        parsedErrorResponse = response.body;
+                        if (parsedErrorResponse) {
+                            if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+                            if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+                            if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+                        }
+                    } catch (defaultError) {
+                        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
+                            '- "%s" for the default response.', defaultError.message, response.body);
+                        return callback(error);
+                    }
+                    return callback(error);
                 }
             });
         });
@@ -871,13 +915,28 @@ export class VirtualMachines {
             if (response.error) {
                 callback(response.error);
             }
-            serviceClient.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
+            serviceClient.getLongRunningOperationStatus(response).then((operationResponse: azureServiceClient.WebResponse) => {
                 if (operationResponse.body.status === "Succeeded") {
                     // Generate Response
                     callback(null);
                 } else {
-                    // Generate Error
-                    callback()
+                   var error = new azureServiceClient.Error();
+                    error.statusCode = response.statusCode;
+                    if (response.body === '') response.body = null;
+                    var parsedErrorResponse;
+                    try {
+                        parsedErrorResponse = response.body;
+                        if (parsedErrorResponse) {
+                            if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+                            if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+                            if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+                        }
+                    } catch (defaultError) {
+                        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
+                            '- "%s" for the default response.', defaultError.message, response.body);
+                        return callback(error);
+                    }
+                    return callback(error);
                 }
             });
         });
