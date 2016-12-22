@@ -134,3 +134,44 @@ export async  function containsParamFile(webAppPackage: string ) {
     tl.debug("Is parameter file present in web package : " + isParamFilePresent);
     return isParamFilePresent;
 }
+
+export async function createKuduPhysicalPath(publishingProfile, physicalPath: string) {
+    var defer = Q.defer<string>();
+    physicalPath = physicalPath.replace(/[\\]/g, "/");
+    var kuduPhysicalpathUrl = "https://" + publishingProfile.publishUrl + "/api/vfs/" + physicalPath + "/";
+    var basicAuthToken = 'Basic ' + new Buffer(publishingProfile.userName + ':' + publishingProfile.userPWD).toString('base64');
+    var headers = {
+        'Authorization': basicAuthToken,
+        'If-Match': "*"
+    };
+    tl.debug(tl.loc("RequestedURLforkuduphysicalpath", kuduPhysicalpathUrl))
+
+    httpObj.send('GET', kuduPhysicalpathUrl, null, headers, (error, response, body) => {
+        if (error) {
+            defer.reject(error);
+        }
+        else if (response.statusCode === 200 || response.statusCode === 201 || response.statusCode === 204) {
+            tl.debug(tl.loc("Physicalpathalreadyexists", physicalPath));
+            defer.resolve(tl.loc('Physicalpathalreadyexists'));
+        }
+        else if(response.statusCode === 404) {
+            httpObj.send('PUT', kuduPhysicalpathUrl, null, headers, (error, response, body) => {
+                if (error) {
+                    defer.reject(error);
+                }
+                else if (response.statusCode === 200 || response.statusCode === 201 || response.statusCode === 204) {
+                    tl.debug(tl.loc('KuduPhysicalpathCreatedSuccessfully', physicalPath));
+                    defer.resolve(tl.loc('KuduPhysicalpathCreatedSuccessfully', physicalPath));
+                }
+                else {
+                    tl.error(response.statusMessage);
+                    defer.reject(tl.loc('FailedtocreateKuduPhysicalPath', response.statusCode, response.statusMessage));
+                }
+            });
+        } else {
+            tl.error(response.statusMessage);
+            defer.reject(tl.loc('FailedtocheckphysicalPath', response.statusCode, response.statusMessage));
+        }
+    });
+    return defer.promise;
+}

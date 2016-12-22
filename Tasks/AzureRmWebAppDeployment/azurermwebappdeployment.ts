@@ -112,6 +112,17 @@ async function run() {
             tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
         }
 
+        if(virtualApplication) {
+            var azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+            var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
+            var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
+            if("/site/wwwroot" != pathMappings[1]) {
+                await kuduUtility.createKuduPhysicalPath(publishingProfile, pathMappings[1]);
+            } else {
+                throw Error(tl.loc("VirtualApplicationNotExist", virtualApplication));
+            }
+        }
+
         if(utility.canUseWebDeploy(useWebDeploy)) {
             if(!tl.osType().match(/^Win/)){
                 throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
