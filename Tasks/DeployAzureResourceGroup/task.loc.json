@@ -22,23 +22,6 @@
   "minimumAgentVersion": "2.0.0",
   "groups": [
     {
-      "name": "AzureDetails",
-      "displayName": "ms-resource:loc.group.displayName.AzureDetails",
-      "isExpanded": true
-    },
-    {
-      "name": "Template",
-      "displayName": "ms-resource:loc.group.displayName.Template",
-      "isExpanded": true,
-      "visibleRule": "action = Create Or Update Resource Group"
-    },
-    {
-      "name": "AdvancedDeploymentOptions",
-      "displayName": "ms-resource:loc.group.displayName.AdvancedDeploymentOptions",
-      "isExpanded": true,
-      "visibleRule": "action = Create Or Update Resource Group || action = Select Resource Group"
-    },
-    {
       "name": "output",
       "displayName": "ms-resource:loc.group.displayName.output",
       "isExpanded": true
@@ -51,7 +34,6 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "groupName": "AzureDetails",
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
     },
     {
@@ -61,7 +43,6 @@
       "defaultValue": "Create or update resource group",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.action",
-      "groupName": "AzureDetails",
       "options": {
         "Create or update resource group": "Create or update resource group",
         "Select resource group": "Select resource group",
@@ -78,7 +59,6 @@
       "label": "ms-resource:loc.input.label.resourceGroupName",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.resourceGroupName",
-      "groupName": "AzureDetails",
       "properties": {
         "EditableOptions": "True"
       }
@@ -90,7 +70,6 @@
       "defaultValue": "East US",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.location",
-      "groupName": "AzureDetails",
       "options": {
         "Australia East": "Australia East",
         "Australia Southeast": "Australia Southeast",
@@ -158,8 +137,8 @@
       "label": "ms-resource:loc.input.label.csmFile",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.csmFile",
-      "groupName": "Template"
+      "visibleRule": "action = Create or update resource group && templateLocation = Linked artifact",
+      "helpMarkDown": "ms-resource:loc.input.help.csmFile"
     },
     {
       "name": "csmParametersFile",
@@ -168,7 +147,7 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.csmParametersFile",
-      "groupName": "Template"
+      "visibleRule": "action = Create or update resource group && templateLocation = Linked artifact"
     },
     {
       "name": "overrideParameters",
@@ -178,9 +157,9 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.overrideParameters",
       "properties": {
-        "editorExtension": "ms.vss-distributed-task-input-editor.parameters-grid"
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
       },
-      "groupName": "Template"
+      "visibleRule": "action = Create or update resource group"
     },
     {
       "name": "deploymentMode",
@@ -188,7 +167,6 @@
       "label": "ms-resource:loc.input.label.deploymentMode",
       "defaultValue": "Incremental",
       "required": true,
-      "groupName": "AzureDetails",
       "helpMarkDown": "ms-resource:loc.input.help.deploymentMode",
       "options": {
         "Incremental": "Incremental",
@@ -203,7 +181,7 @@
       "label": "ms-resource:loc.input.label.enableDeploymentPrerequisites",
       "defaultValue": "false",
       "required": false,
-      "groupName": "AdvancedDeploymentOptions",
+      "visibleRule": "action = Create or update resource group || action = Select Resource Group",
       "helpMarkDown": "ms-resource:loc.input.help.enableDeploymentPrerequisites"
     },
     {
