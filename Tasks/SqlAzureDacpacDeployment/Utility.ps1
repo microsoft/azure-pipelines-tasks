@@ -189,7 +189,7 @@ function Get-SqlPackageCommandArguments
     return $scriptArgument
 }
 
-function Invoke-Command
+function Execute-Command
 {
     param(
         [String][Parameter(Mandatory=$true)] $FileName,

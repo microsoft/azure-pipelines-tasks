@@ -39,14 +39,14 @@ Register-Mock Get-SqlPackageOnTargetMachine { 'path/to/dac/bin/sqlpackage.exe' }
 
 Register-Mock Delete-AzureSqlDatabaseServerFirewallRule { }
 
-Register-Mock Invoke-Command { 'executed command ! '}  -ArgumentsEvaluator {
+Register-Mock Execute-Command { 'executed command ! '}  -ArgumentsEvaluator {
     $args.count -eq 2 -and $args[0] -eq 'path/to/dac/bin/sqlpackage.exe' -and $args[1] -eq '/SourceFile:"dacpacFile.dacpac" /Action:Publish /TargetServerName:"a0nuel7r2k.database.windows.net" /TargetDatabaseName:"TestDatabase" /TargetUser:"TestUser" /TargetPassword:"TestPassword" /Profile:"PublishProfile.xml" AdditionalArguments /TargetTimeout:120'
 }
 
-Register-Mock Invoke-Command { throw 'Invalid Command passed !' } -ArgumentsEvaluator {
+Register-Mock Execute-Command { throw 'Invalid Command passed !' } -ArgumentsEvaluator {
     $args.count -eq 2 -and $args[0] -eq 'path/to/dac/bin/sqlpackage.exe' -and $args[1] -ne '/SourceFile:"dacpacFile.dacpac" /Action:Publish /TargetServerName:"a0nuel7r2k.database.windows.net" /TargetDatabaseName:"TestDatabase" /TargetUser:"TestUser" /TargetPassword:"TestPassword" /Profile:"PublishProfile.xml" AdditionalArguments /TargetTimeout:120'
 }
 
 & "$PSScriptRoot\..\DeploySqlAzure.ps1"
 
-Assert-WasCalled Invoke-Command -Times 1
+Assert-WasCalled Execute-Command -Times 1

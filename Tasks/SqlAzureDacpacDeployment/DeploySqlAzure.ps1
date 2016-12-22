@@ -165,7 +165,7 @@ Try
 
         Write-Verbose "Executing : $commandToBeLogged"
 
-        Invoke-Command -FileName $SqlPackagePath -Arguments $scriptArgument
+        Execute-Command -FileName $SqlPackagePath -Arguments $scriptArgument
     }
     else
     {
