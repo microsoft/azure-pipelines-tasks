@@ -211,7 +211,7 @@ export async function getAzureRMWebAppConfigDetails(SPN, webAppName: string, res
             deferred.resolve(obj);
         }
         else {
-            tl.error(body);
+            tl.debug(body);
             deferred.reject(tl.loc('Unabletoretrievewebconfigdetails', response.statusCode, response.statusMessage));
         }
     });
@@ -270,7 +270,7 @@ export async function getWebAppAppSettings(SPN, webAppName: string, resourceGrou
 			deferred.resolve(JSON.parse(body));
 		}
 		else {
-			tl.error(body);
+			tl.debug(body);
 			deferred.reject(tl.loc('Unabletoretrievewebconfigdetails', response.statusCode, response.statusMessage));
 		}
 	})
@@ -300,7 +300,7 @@ export async function updateWebAppAppSettings(SPN, webAppName: string, resourceG
             deferred.resolve(appSettings);
         }
         else {
-            tl.error(body);
+            tl.debug(body);
             deferred.reject(tl.loc('Unabletoupdatewebappsettings', response, error));
         }
     });

@@ -93,7 +93,7 @@
             "label": "Virtual application",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the name of the Virtual application that has been configured in the Azure portal. The option is not required for deployments to the website root."
+            "helpMarkDown": "Specify the name of the Virtual application that has been configured in the Azure portal. The option is not required for deployments to the App Service root."
         },
         {
             "name": "Package",
@@ -148,7 +148,7 @@
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
             "visibleRule": "UseWebDeploy == true",
-            "helpMarkDown": "Select the option to delete files on the Azure App Service that have no matching files in the App Service zip package."
+            "helpMarkDown": "Select the option to delete files on the Azure App Service that have no matching files in the App Service package or folder."
         },
         {
             "name": "ExcludeFilesFromAppDataFlag",
@@ -168,7 +168,7 @@
             "defaultValue": "",
             "groupName": "AdditionalDeploymentOptions",
             "visibleRule": "UseWebDeploy == true",
-            "helpMarkDown": "Additional Web Deploy arguments that will be applied when deploying the Azure App Service like,-disableLink:AppPoolExtension -disableLink:ContentExtension."
+            "helpMarkDown": "Additional Web Deploy arguments following the syntax -key:value .<br />These will be applied when deploying the Azure App Service. Example: -disableLink:AppPoolExtension -disableLink:ContentExtension."
         },
         {
             "name": "RenameFilesFlag",
@@ -178,21 +178,21 @@
             "required": false,
             "visibleRule": "UseWebDeploy == true",
             "groupName": "AdditionalDeploymentOptions",
-            "helpMarkDown": "Select the option to enable msdeploy flag MSDEPLOY_RENAME_FILES_FLAG in Azure web site's appsetting. The option if set enables msdeploy to rename locked files that are locked during app deployment"
+            "helpMarkDown": "Select the option to enable msdeploy flag MSDEPLOY_RENAME_FILES_FLAG in Azure App Service application settings. The option if set enables msdeploy to rename locked files that are locked during app deployment"
         },
         {
             "name": "XmlTransformation",
             "type": "boolean",
-            "label": "XML Transformation",
+            "label": "XML transformation",
             "required": false,
             "defaultValue": false,
             "groupName": "FileTransformsAndVariableSubstitution",
-            "helpMarkDown": "The config transfoms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`.<br/> Config transforms will be run prior to the Variable Substitution." 
+            "helpMarkDown": "The config transfoms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`.<br/> Config transforms will be run prior to the Variable Substitution.<br/>XML transformations are supported only for Windows platform." 
         },
         {
             "name": "XmlVariableSubstitution",
             "type": "boolean",
-            "label": "XML Variable Substitution",
+            "label": "XML variable substitution",
             "required": false,
             "defaultValue": false,
             "groupName": "FileTransformsAndVariableSubstitution",
@@ -201,7 +201,7 @@
         {
             "name": "JSONFiles",
             "type": "multiLine",
-            "label": "JSON Variable Substitution",
+            "label": "JSON variable substitution",
             "required": false,
             "defaultValue": "",
             "groupName": "FileTransformsAndVariableSubstitution",
@@ -277,7 +277,7 @@
         "Failedtoenableappofflinemode": "Failed to enable app offline mode. Status Code: %s (%s)",        
         "AppOflineModedisabled": "App offline mode disabled.",
         "FailedtodisableAppOfflineMode": "Failed to disable App offline mode. Status Code: %s (%s)",
-        "CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot perform XDT transformations on a non-Windows platform.",
+        "CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot perform XML transformations on a non-Windows platform.",
         "XdtTransformationErrorWhileTransforming": "XDT transformation error while transforming %s using %s.",
         "PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "Publish using webdeploy options are supported only when using Windows agent",
         "WebAppDoesntExist": "App Service '%s' doesn't exist. App Service should exist before deployment.",
