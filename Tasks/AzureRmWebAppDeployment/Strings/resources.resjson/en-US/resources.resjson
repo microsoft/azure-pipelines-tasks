@@ -33,7 +33,7 @@
   "loc.input.label.ExcludeFilesFromAppDataFlag": "Exclude files from the App_Data folder",
   "loc.input.help.ExcludeFilesFromAppDataFlag": "Select the option to prevent files in the App_Data folder from being deployed to the Azure App Service.",
   "loc.input.label.AdditionalArguments": "Additional arguments",
-  "loc.input.help.AdditionalArguments": "Additional Web Deploy arguments following the syntax -key:value .<br />These will be applied when deploying the Azure App Service. Example: -disableLink:AppPoolExtension -disableLink:ContentExtension.",
+  "loc.input.help.AdditionalArguments": "Additional Web Deploy arguments following the syntax -key:value .<br />These will be applied when deploying the Azure App Service. Example: -disableLink:AppPoolExtension -disableLink:ContentExtension.<br />For more examples of Web Deploy operation settings, refer to  [this](https://go.microsoft.com/fwlink/?linkid=838471).",
   "loc.input.label.RenameFilesFlag": "Rename locked files",
   "loc.input.help.RenameFilesFlag": "Select the option to enable msdeploy flag MSDEPLOY_RENAME_FILES_FLAG in Azure App Service application settings. The option if set enables msdeploy to rename locked files that are locked during app deployment",
   "loc.input.label.XmlTransformation": "XML transformation",
