@@ -308,7 +308,6 @@ export async function updateWebAppAppSettings(endpoint, webAppName: string, reso
     return deferred.promise;
 }
 
-<<<<<<< HEAD
 async function getOperationStatus(SPN, webAppName: string, resourceGroupName: string, slotName: string, url: string) {
     var deferred = Q.defer();
     var accessToken = await getAuthorizationToken(SPN);
