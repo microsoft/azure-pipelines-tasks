@@ -19,7 +19,12 @@
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "$(Action): $(WebAppName)",
   "groups": [
-
+        {
+            "name": "SlotDetails",
+            "displayName": "Slot Details",
+            "isExpanded": true,
+            "visibleRule": " = true"
+        }
     ],
   "inputs": [
         {
@@ -45,6 +50,13 @@
             }
         },
         {
+            "name": "Specify slot",
+            "type": "boolean",
+            "required": false,
+            "helpMarkDown": "",
+            "visibleRule": "Action = Start Azure App Service || Action = Stop Azure App Service || Action = Restart Azure App Service"
+        },
+        {
             "name": "WebAppName",
             "type": "pickList",
             "label": "App Service name",
@@ -64,6 +76,7 @@
             "properties": {
                 "EditableOptions": "True"
             },
+            "groupName": "SlotDetails",
             "helpMarkDown": "Enter or Select the Azure Resource Group that contains the Azure App Service specified above",
             "visibleRule":"Action = Swap Slots"
         },
