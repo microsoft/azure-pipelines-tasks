@@ -248,7 +248,7 @@ export async function updateAzureRMWebAppConfigDetails(SPN, webAppName: string, 
     return deferred.promise;
 }
 
-export async function getWebAppAppSettings(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string/*, appSettings: Object*/)
+export async function getWebAppAppSettings(endpoint, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string/*, appSettings: Object*/)
 {
     var deferred = Q.defer<any>();
     var accessToken = await getAuthorizationToken(endpoint);
