@@ -189,14 +189,14 @@
             "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
         }
     ],
-    "instanceNameFormat": "Deploy AzureRM App Service: $(WebAppName)",
+    "instanceNameFormat": "Azure App Service Deploy: $(WebAppName)",
     "execution": {
         "Node": {
             "target": "azurermwebappdeployment.js"
         }
     },
     "messages": {
-        "Invalidwebapppackageorfolderpathprovided": "Invalid webapp package or folder path provided: %s",
+        "Invalidwebapppackageorfolderpathprovided": "Invalid App Service package or folder path provided: %s",
         "SetParamFilenotfound0": "Set parameters file not found: %s",
         "GotconnectiondetailsforazureRMWebApp0": "Got connection details for Azure App Service:'%s'",
         "ErrorNoSuchDeployingMethodExists": "Error : No Such Deploying Method Exists",
@@ -208,17 +208,17 @@
         "UnabletoretrieveAzureRMWebAppConfigDetails": "Unable to retrieve Azure App Service configuration details. Error Occurred : [Staus Code : '%s']",
         "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update deployment status : Unique Deployment ID cannot be retrieved",
         "WebappsuccessfullypublishedatUrl0": "App Servicesuccessfully deployed at url %s",
-        "Failedtodeploywebsite": "Failed to deploy website.",
+        "Failedtodeploywebsite": "Failed to deploy App Service.",
         "Runningcommand": "Running command: %s",
         "ConstructedmsDeploycomamndlinearguments": "Constructed msDeploy comamnd line arguments",
-        "Isparameterfilepresentinwebpackage0": "Is parameter file is present in web package : %s",
+        "Isparameterfilepresentinwebpackage0": "Is parameter file is present in App Service package : %s",
         "Deployingwebapplicationatvirtualpathandphysicalpath": "Deploying web package : %s at virtual path (physical path) : %s (%s)",
-        "Successfullydeployedpackageusingkuduserviceat": "Successfully deployed package %s using kudu service at %s",
-        "Failedtodeploywebapppackageusingkuduservice": "Failed to deploy webapp package using kudu service : %s",
-        "Unabletodeploywebappresponsecode": "Unable to deploy webapp due to error code : %s",
+        "Successfullydeployedpackageusingkuduserviceat": "Successfully deployed App Service package %s using kudu service at %s",
+        "Failedtodeploywebapppackageusingkuduservice": "Failed to deploy App Service package using kudu service : %s",
+        "Unabletodeploywebappresponsecode": "Unable to deploy App Service due to error code : %s",
         "Compressedfolderintozip": "Compressed folder %s into zip : %s",
-        "Initiateddeploymentviakuduserviceforwebapppackage": "Initiated deployment via kudu service for webapp package : %s",
-        "MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy generated package are only supported for Windows platform.",
+        "Initiateddeploymentviakuduserviceforwebapppackage": "Initiated deployment via kudu service for App Service package : %s",
+        "MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy generated packages are only supported for Windows platform.",
         "UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove": "Unsupported installed version: %s found for MSDeploy. version should be alteast 3 or above",
         "UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)",
         "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
@@ -233,16 +233,16 @@
         "Failedtowritetoconfigfilewitherror": "Failed to write to config file %s with error : %s",
         "Erroroccurredwhileprocessingxmlnode": "Error occurred while processing xml node : %s.",
         "Processingsubstitutionforxmlnode": "Processing substitution for xml node : %s",
-        "AppOfflineModeenabled": "App Offline Mode enabled.",		
+        "AppOfflineModeenabled": "App offline mode enabled.",		
         "Failedtoenableappofflinemode": "Failed to enable app offline mode. Status Code: %s (%s)",		
-        "AppOflineModedisabled": "App Offline Mode disabled.",		
-        "FailedtodisableAppOfflineMode": "Failed to disable App Offline Mode. Status Code: %s (%s)",
+        "AppOflineModedisabled": "App offline mode disabled.",		
+        "FailedtodisableAppOfflineMode": "Failed to disable App offline mode. Status Code: %s (%s)",
         "Initiatedvariablesubstitutioninconfigfile": "Initiated variable substitution in config file : %s",
         "CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot Perform XML Transformations on a non-Windows platform.",
         "XdtTransformationErrorWhileTransforming": "XML Transformation Error while transforming %s using %s.",
         "PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "Publish using webdeploy options are supported only when using Windows agent",
-        "WebAppDoesntExist": "Webapp '%s' doesn't exist. Webapp should exist before deployment.",
-        "EncodeNotSupported": "Detected file encoding of the file %s as %s. Variable substitution and Transformation is not supported with file encoding %s. Supported encodings are UTF-8 and UTF-16 LE.",
+        "WebAppDoesntExist": "App Service '%s' doesn't exist. App Service should exist before deployment.",
+        "EncodeNotSupported": "Detected file encoding of the file %s as %s. Variable substitution is not supported with file encoding %s. Supported encodings are UTF-8 and UTF-16 LE.",
         "UnknownFileEncodeError": "Unable to detect encoding of the file %s. Supported encodings are UTF-8 and UTF-16 LE."
     }
 }
