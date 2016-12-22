@@ -19,8 +19,8 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 77
+        "Minor": 111,
+        "Patch": 0
     },
     "minimumAgentVersion": "1.89.0",
     "instanceNameFormat": "Maven $(mavenPOMFile)",

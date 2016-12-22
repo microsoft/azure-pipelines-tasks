@@ -11,8 +11,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 3,
-        "Patch": 5
+        "Minor": 111,
+        "Patch": 0
     },
     "demands": [
         "xcode"
