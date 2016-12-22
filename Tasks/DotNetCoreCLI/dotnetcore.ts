@@ -11,7 +11,7 @@ export class dotNetExe {
     private publishWebProjects: boolean;
     private zipAfterPublish: boolean;
     private outputArgument: string = "";
-    private remainingArgument: string[] = [];
+    private remainingArguments: string[] = [];
 
     constructor() {
         this.command = tl.getInput("command");
@@ -39,8 +39,8 @@ export class dotNetExe {
                 var dotnet = tl.tool(dotnetPath);
                 dotnet.arg(this.command);
                 dotnet.arg(projectFile);
-                if (this.remainingArgument.length > 0) {
-                    dotnet.arg(this.remainingArgument);
+                if (this.remainingArguments.length > 0) {
+                    dotnet.arg(this.remainingArguments);
                 }
 
                 if (this.isPublishCommand() && this.outputArgument) {
@@ -179,7 +179,7 @@ export class dotNetExe {
                 isOutputOption = false;
             }
             else {
-                this.remainingArgument.push(token);
+                this.remainingArguments.push(token);
             }
 
             token = nextArg();
