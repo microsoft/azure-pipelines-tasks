@@ -878,7 +878,7 @@ export class loadBalancers {
             if (response.error) {
                 callback(response.error);
             }
-            serviceClient.getLongRunningOperationResult(response).then((operationResponse) => {
+            serviceClient.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
                 if (operationResponse.body.status === "Succeeded") {
                     // Generate Response
                     callback(null);
@@ -1366,7 +1366,7 @@ export class NetworkInterfaces {
                 callback(response.error);
             }
             console.log("Response: %s", response);
-            serviceClient.getLongRunningOperationResult(response).then((operationResponse) => {
+            serviceClient.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
                 console.log("longRunningOperation response: %s", util.inspect(operationResponse, { depth: null }));
                 if (operationResponse.body.status === "Succeeded") {
                     // Generate Response

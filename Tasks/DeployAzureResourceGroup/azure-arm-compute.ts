@@ -1022,7 +1022,6 @@ export class VirtualMachineExtensions {
             return callback(null, result, httpRequest, response);
         });
     }
-<<<<<<< HEAD
 
     public createOrUpdate(resourceGroupName, vmName, vmExtensionName, extensionParameters, callback) {
         var client = this.client;
@@ -1089,9 +1088,7 @@ export class VirtualMachineExtensions {
         var requestModel = null;
         try {
             if (extensionParameters !== null && extensionParameters !== undefined) {
-                var requestModelMapper = new client.models['VirtualMachineExtension']().mapper();
-                requestModel = client.serialize(requestModelMapper, extensionParameters, 'extensionParameters');
-                requestContent = JSON.stringify(requestModel);
+                requestContent = JSON.stringify(extensionParameters);
             }
         } catch (error) {
             var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' +
@@ -1103,16 +1100,17 @@ export class VirtualMachineExtensions {
         // Send request
         var serviceClient = new azureServiceClient.ServiceClient(this.client.credentials);
         serviceClient.request(httpRequest).then((response: azureServiceClient.WebResponse) => {
-            if (response.error) {
-                callback(response.error);
+            if (response.error || response.body.error) {
+                var error = response.error;
+                error += response.body.error ? response.body.error.code + ': ' + response.body.error.message : '';
+                callback(error);
             }
             serviceClient.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
                 if (operationResponse.body.status === "Succeeded") {
-                    // Generate Response
-                    callback(null);
+                    var result = {"provisioningState":operationResponse.body.status}
+                    callback(null, result);
                 } else {
-                    // Generate Error
-                    callback()
+                    callback(operationResponse.body.error);
                 }
             });
         });
@@ -1182,21 +1180,17 @@ export class VirtualMachineExtensions {
         // Send request
         var serviceClient = new azureServiceClient.ServiceClient(this.client.credentials);
         serviceClient.request(httpRequest).then((response: azureServiceClient.WebResponse) => {
-            if (response.error) {
-                callback(response.error);
+            if (response.statusCode !== 202 || response.statusCode !== 204 ) {
+                callback(true);
             }
-            serviceClient.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
-                if (operationResponse.body.status === "Succeeded") {
-                    // Generate Response
+            serviceClient.getLongRunningOperationStatus(response).then((operationResponse: azureServiceClient.WebResponse) => {
+                if (operationResponse.statusCode === 200) {
                     callback(null);
                 } else {
-                    // Generate Error
-                    callback()
+                    callback(true);
                 }
             });
         });
 
     }
-=======
->>>>>>> 68768fdc355087bdd13a84b9bf38eda4e48abd38
 }
