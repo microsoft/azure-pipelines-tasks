@@ -44,7 +44,7 @@
   "loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website",
   "loc.messages.UnabletoretrieveAzureRMWebAppConfigDetails": "Unable to retrieve Azure App Service configuration details. Error Occurred : [Staus Code : '%s']",
   "loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update deployment status : Unique Deployment ID cannot be retrieved",
-  "loc.messages.WebappsuccessfullypublishedatUrl0": "App Servicesuccessfully deployed at url %s",
+  "loc.messages.WebappsuccessfullypublishedatUrl0": "App Service successfully deployed at url %s",
   "loc.messages.Failedtodeploywebsite": "Failed to deploy App Service.",
   "loc.messages.Runningcommand": "Running command: %s",
   "loc.messages.ConstructedmsDeploycomamndlinearguments": "Constructed msDeploy comamnd line arguments",

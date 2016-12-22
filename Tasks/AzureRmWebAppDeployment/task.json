@@ -207,7 +207,7 @@
         "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website",
         "UnabletoretrieveAzureRMWebAppConfigDetails": "Unable to retrieve Azure App Service configuration details. Error Occurred : [Staus Code : '%s']",
         "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update deployment status : Unique Deployment ID cannot be retrieved",
-        "WebappsuccessfullypublishedatUrl0": "App Servicesuccessfully deployed at url %s",
+        "WebappsuccessfullypublishedatUrl0": "App Service successfully deployed at url %s",
         "Failedtodeploywebsite": "Failed to deploy App Service.",
         "Runningcommand": "Running command: %s",
         "ConstructedmsDeploycomamndlinearguments": "Constructed msDeploy comamnd line arguments",
