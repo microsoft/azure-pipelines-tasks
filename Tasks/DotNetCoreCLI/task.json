@@ -16,13 +16,12 @@
     "demands": [],
     "version": {
         "Major": 0,
-        "Minor": 1,
+        "Minor": 3,
         "Patch": 0
     },
     "minimumAgentVersion": "1.95.0",
     "instanceNameFormat": "dotnet $(command)",
-    "groups": [
-    ],
+    "groups": [],
     "inputs": [
         {
             "name": "command",
@@ -85,10 +84,10 @@
         }
     },
     "messages": {
-        "noProjectFilesFound":"Project file(s) matching the specified pattern were not found.",
-        "noWebProjctFound":"No web project was found in the repository. Web projects are identified by presence of either a web.config file or wwwroot folder in the directory.",
-        "dotnetCommandFailed":"Dotnet command failed with non-zero exit code: %d.",
-        "zipFailed":"Zip failed with error: %s",
+        "noProjectFilesFound": "Project file(s) matching the specified pattern were not found.",
+        "noWebProjctFound": "No web project was found in the repository. Web projects are identified by presence of either a web.config file or wwwroot folder in the directory.",
+        "dotnetCommandFailed": "Dotnet command failed with non-zero exit code: %d.",
+        "zipFailed": "Zip failed with error: %s",
         "noPublishFolderFoundToZip": "A publish folder could not be found to zip for project file: %s."
     }
 }
