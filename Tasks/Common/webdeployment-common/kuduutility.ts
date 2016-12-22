@@ -53,14 +53,10 @@ export async function appOffineKuduService(publishUrl: string, physicalPath: str
  */
 export function getVirtualAndPhysicalPaths(virtualApplication: string, virtualApplicationMappings) {
     // construct URL depending on virtualApplication or root of webapplication 
-    var physicalPath = "/site/wwwroot";
-    var virtualPath = "/";
-    if (virtualApplication) {
-        virtualPath = "/" + virtualApplication;
-    }
-
+    var physicalPath = null;
+    var virtualPath = "/" + virtualApplication;
+    
     for( var index in virtualApplicationMappings ) {
-
         var mapping = virtualApplicationMappings[index];
         if( mapping.virtualPath == virtualPath){
             physicalPath = mapping.physicalPath;
@@ -133,4 +129,59 @@ export async  function containsParamFile(webAppPackage: string ) {
     }
     tl.debug("Is parameter file present in web package : " + isParamFilePresent);
     return isParamFilePresent;
+}
+
+export async function ensurePhysicalPathExists(publishingProfile, physicalPath: string) {
+    var defer = Q.defer<string>();
+    physicalPath = physicalPath.replace(/[\\]/g, "/");
+    var kuduPhysicalpathUrl = "https://" + publishingProfile.publishUrl + "/api/vfs/" + physicalPath + "/";
+    var basicAuthToken = 'Basic ' + new Buffer(publishingProfile.userName + ':' + publishingProfile.userPWD).toString('base64');
+    var headers = {
+        'Authorization': basicAuthToken,
+        'If-Match': "*"
+    };
+    tl.debug("Requested URL for kudu physical path : " + kuduPhysicalpathUrl);
+
+    httpObj.send('GET', kuduPhysicalpathUrl, null, headers, async (error, response, body) => {
+        if (error) {
+            defer.reject(error);
+        }
+        else if (response.statusCode === 200 || response.statusCode === 201 || response.statusCode === 204) {
+            tl.debug("Physical path '" + physicalPath + "' already exists ");
+            defer.resolve(tl.loc('Physicalpathalreadyexists'));
+        }
+        else if(response.statusCode === 404) {
+            tl.debug("Physical path doesn't exists. Creating physical path.")
+            defer.resolve(await createPhysicalPath(publishingProfile, physicalPath));
+        } else {
+            tl.debug(body);
+            defer.reject(tl.loc('FailedtocheckphysicalPath', response.statusCode, response.statusMessage));
+        }
+    });
+    return defer.promise;
+}
+
+async function createPhysicalPath(publishingProfile, physicalPath: string) {
+    var defer = Q.defer<string>();
+    var kuduPhysicalpathUrl = "https://" + publishingProfile.publishUrl + "/api/vfs/" + physicalPath + "/";
+    var basicAuthToken = 'Basic ' + new Buffer(publishingProfile.userName + ':' + publishingProfile.userPWD).toString('base64');
+    var headers = {
+        'Authorization': basicAuthToken,
+        'If-Match': "*"
+    };
+    tl.debug("Requested URL for kudu physical path : " + kuduPhysicalpathUrl);
+    httpObj.send('PUT', kuduPhysicalpathUrl, null, headers, (error, response, body) => {
+        if (error) {
+            defer.reject(error);
+        }
+        else if (response.statusCode === 200 || response.statusCode === 201 || response.statusCode === 204) {
+            tl.debug("Kudu physical path : '" + physicalPath + "' created successfully ");
+            defer.resolve(tl.loc('KuduPhysicalpathCreatedSuccessfully', physicalPath));
+        }
+        else {
+            tl.error(response.statusMessage);
+            defer.reject(tl.loc('FailedtocreateKuduPhysicalPath', response.statusCode, response.statusMessage));
+        }
+    });
+    return defer.promise;
 }

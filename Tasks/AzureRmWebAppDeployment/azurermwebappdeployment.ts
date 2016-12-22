@@ -112,6 +112,18 @@ async function run() {
             tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
         }
 
+        var azureWebAppDetails = null;
+        if(virtualApplication) {
+            azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+            var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
+            var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
+            if(pathMappings[1] != null) {
+                await kuduUtility.ensurePhysicalPathExists(publishingProfile, pathMappings[1]);
+            } else {
+                throw Error(tl.loc("VirtualApplicationDoesNotExist", virtualApplication));
+            }
+        }
+
         if(utility.canUseWebDeploy(useWebDeploy)) {
             if(!tl.osType().match(/^Win/)){
                 throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
@@ -137,7 +149,9 @@ async function run() {
                             additionalArguments, isFolderBasedDeployment, useWebDeploy);
         } else {
             tl.debug("Initiated deployment via kudu service for webapp package : " + webDeployPkg);
-            var azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+            if(azureWebAppDetails == null) {
+                azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+            }
             await DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment, takeAppOfflineFlag);
 
         }
@@ -186,8 +200,18 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
                 throw new Error(tl.loc("MSDeploygeneratedpackageareonlysupportedforWindowsplatform")); 
             }
         }
-        var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
-        await kuduUtility.deployWebAppPackage(webAppZipFile, publishingProfile, pathMappings[0], pathMappings[1], takeAppOfflineFlag);
+        var physicalPath = "/site/wwwroot";
+        var virtualPath = "/";
+        if(virtualApplication) {
+            var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
+            if(pathMappings[1] != null) {
+                virtualPath = pathMappings[0];
+                physicalPath = pathMappings[1];
+            } else {
+                throw Error(tl.loc("VirtualApplicationDoesNotExist", virtualApplication));
+            }
+        }
+        await kuduUtility.deployWebAppPackage(webAppZipFile, publishingProfile, virtualPath, physicalPath, takeAppOfflineFlag);
         tl._writeLine(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
     }
     catch(error) {
