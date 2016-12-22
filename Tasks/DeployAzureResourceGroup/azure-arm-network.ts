@@ -20,6 +20,7 @@ export class NetworkManagementClient {
     public networkInterfaces;
     public publicIPAddresses;
     public loadBalancers;
+    public securityRules;
 
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId, baseUri, options) {
         this.apiVersion = '2016-09-01';
@@ -45,16 +46,16 @@ export class NetworkManagementClient {
         this.credentials = credentials;
         this.subscriptionId = subscriptionId;
 
-        if (options.apiVersion !== null && options.apiVersion !== undefined) {
+        if(options.apiVersion !== null && options.apiVersion !== undefined) { 
             this.apiVersion = options.apiVersion;
         }
-        if (options.acceptLanguage !== null && options.acceptLanguage !== undefined) {
+        if(options.acceptLanguage !== null && options.acceptLanguage !== undefined) { 
             this.acceptLanguage = options.acceptLanguage;
         }
-        if (options.longRunningOperationRetryTimeout !== null && options.longRunningOperationRetryTimeout !== undefined) {
+        if(options.longRunningOperationRetryTimeout !== null && options.longRunningOperationRetryTimeout !== undefined) { 
             this.longRunningOperationRetryTimeout = options.longRunningOperationRetryTimeout;
         }
-        if (options.generateClientRequestId !== null && options.generateClientRequestId !== undefined) {
+        if(options.generateClientRequestId !== null && options.generateClientRequestId !== undefined) { 
             this.generateClientRequestId = options.generateClientRequestId;
         }
 
@@ -62,19 +63,21 @@ export class NetworkManagementClient {
         this.publicIPAddresses = new publicIPAddresses(this);
         this.networkSecurityGroups = new networkSecurityGroups(this);
         this.networkInterfaces = new NetworkInterfaces(this);
-        //this.models['CloudError'] = new msRestAzure.CloudError();
+        this.securityRules = new securityRules(this);
+        this.models['CloudError'] = new msRestAzure.CloudError();
         this.models['LoadBalancerListResult'] = new LoadBalancerListResultModel();
         this.models['PublicIPAddressListResult'] = new PublicIPAddressListResultModel();
         this.models['NetworkSecurityGroupListResult'] = new NetworkSecurityGroupListResultModel();
         this.models['NetworkInterfaceListResult'] = new NetworkInterfaceListResultModel();
         this.models['SecurityRule'] = new SecurityRuleModel();
+        this.models['LoadBalancer'] = new LoadBalancerModel();
     }
 }
 
-export class SecurityRuleModel {
-    constructor() { }
+export class SecurityRuleModel{
+    constructor(){}
 
-    public mapper() {
+    public mapper(){
         return {
             required: false,
             serializedName: 'SecurityRule',
@@ -179,49 +182,49 @@ export class SecurityRuleModel {
     }
 }
 
-export class NetworkInterfaceListResultModel {
-    constructor() { }
+export class NetworkInterfaceListResultModel{
+    constructor(){}
 
-    public mapper() {
+    public mapper(){
         return {
             required: false,
             serializedName: 'NetworkInterfaceListResult',
             type: {
-                name: 'Composite',
-                className: 'NetworkInterfaceListResult',
-                modelProperties: {
-                    value: {
-                        required: false,
-                        serializedName: '',
-                        type: {
-                            name: 'Sequence',
-                            element: {
-                                required: false,
-                                serializedName: 'NetworkInterfaceElementType',
-                                type: {
-                                    name: 'Composite',
-                                    className: 'NetworkInterface'
-                                }
+            name: 'Composite',
+            className: 'NetworkInterfaceListResult',
+            modelProperties: {
+                value: {
+                    required: false,
+                    serializedName: '',
+                    type: {
+                        name: 'Sequence',
+                        element: {
+                            required: false,
+                            serializedName: 'NetworkInterfaceElementType',
+                            type: {
+                            name: 'Composite',
+                            className: 'NetworkInterface'
                             }
                         }
-                    },
-                    nextLink: {
-                        required: false,
-                        serializedName: 'nextLink',
-                        type: {
-                            name: 'String'
-                        }
+                    }
+                },
+                nextLink: {
+                    required: false,
+                    serializedName: 'nextLink',
+                    type: {
+                        name: 'String'
                     }
                 }
+            }
             }
         };
     }
 }
 
-export class NetworkSecurityGroupListResultModel {
-    constructor() { }
+export class NetworkSecurityGroupListResultModel{
+    constructor(){}
 
-    public mapper() {
+    public mapper(){
         return {
             required: false,
             serializedName: 'NetworkSecurityGroupListResult',
@@ -257,283 +260,283 @@ export class NetworkSecurityGroupListResultModel {
     }
 }
 
-export class LoadBalancerListResultModel {
-    constructor() { }
+export class LoadBalancerListResultModel{
+    constructor(){}
 
-    public mapper() {
+    public mapper(){
         return {
             required: false,
             serializedName: 'LoadBalancerListResult',
             type: {
-                name: 'Composite',
-                className: 'LoadBalancerListResult',
-                modelProperties: {
-                    value: {
+            name: 'Composite',
+            className: 'LoadBalancerListResult',
+            modelProperties: {
+                value: {
+                required: false,
+                serializedName: '',
+                type: {
+                    name: 'Sequence',
+                    element: {
                         required: false,
-                        serializedName: '',
+                        serializedName: 'LoadBalancerElementType',
                         type: {
-                            name: 'Sequence',
-                            element: {
-                                required: false,
-                                serializedName: 'LoadBalancerElementType',
-                                type: {
-                                    name: 'Composite',
-                                    className: 'LoadBalancer'
-                                }
-                            }
-                        }
-                    },
-                    nextLink: {
-                        required: false,
-                        serializedName: 'nextLink',
-                        type: {
-                            name: 'String'
+                        name: 'Composite',
+                        className: 'LoadBalancer'
                         }
                     }
                 }
+                },
+                nextLink: {
+                required: false,
+                serializedName: 'nextLink',
+                type: {
+                    name: 'String'
+                }
+                }
+            }
             }
         };
     }
 }
 
-export class LoadBalancerModel {
-    constructor() {
+export class LoadBalancerModel{
+    constructor(){
     }
 
-    public mapper() {
+    public mapper(){
         return {
             required: false,
             serializedName: 'LoadBalancer',
             type: {
-                name: 'Composite',
-                className: 'LoadBalancer',
-                modelProperties: {
-                    id: {
+            name: 'Composite',
+            className: 'LoadBalancer',
+            modelProperties: {
+                id: {
+                required: false,
+                serializedName: 'id',
+                type: {
+                    name: 'String'
+                }
+                },
+                name: {
+                required: false,
+                readOnly: true,
+                serializedName: 'name',
+                type: {
+                    name: 'String'
+                }
+                },
+                type: {
+                required: false,
+                readOnly: true,
+                serializedName: 'type',
+                type: {
+                    name: 'String'
+                }
+                },
+                location: {
+                required: false,
+                serializedName: 'location',
+                type: {
+                    name: 'String'
+                }
+                },
+                tags: {
+                required: false,
+                serializedName: 'tags',
+                type: {
+                    name: 'Dictionary',
+                    value: {
                         required: false,
-                        serializedName: 'id',
+                        serializedName: 'StringElementType',
                         type: {
-                            name: 'String'
-                        }
-                    },
-                    name: {
-                        required: false,
-                        readOnly: true,
-                        serializedName: 'name',
-                        type: {
-                            name: 'String'
-                        }
-                    },
-                    type: {
-                        required: false,
-                        readOnly: true,
-                        serializedName: 'type',
-                        type: {
-                            name: 'String'
-                        }
-                    },
-                    location: {
-                        required: false,
-                        serializedName: 'location',
-                        type: {
-                            name: 'String'
-                        }
-                    },
-                    tags: {
-                        required: false,
-                        serializedName: 'tags',
-                        type: {
-                            name: 'Dictionary',
-                            value: {
-                                required: false,
-                                serializedName: 'StringElementType',
-                                type: {
-                                    name: 'String'
-                                }
-                            }
-                        }
-                    },
-                    frontendIPConfigurations: {
-                        required: false,
-                        serializedName: 'properties.frontendIPConfigurations',
-                        type: {
-                            name: 'Sequence',
-                            element: {
-                                required: false,
-                                serializedName: 'FrontendIPConfigurationElementType',
-                                type: {
-                                    name: 'Composite',
-                                    className: 'FrontendIPConfiguration'
-                                }
-                            }
-                        }
-                    },
-                    backendAddressPools: {
-                        required: false,
-                        serializedName: 'properties.backendAddressPools',
-                        type: {
-                            name: 'Sequence',
-                            element: {
-                                required: false,
-                                serializedName: 'BackendAddressPoolElementType',
-                                type: {
-                                    name: 'Composite',
-                                    className: 'BackendAddressPool'
-                                }
-                            }
-                        }
-                    },
-                    loadBalancingRules: {
-                        required: false,
-                        serializedName: 'properties.loadBalancingRules',
-                        type: {
-                            name: 'Sequence',
-                            element: {
-                                required: false,
-                                serializedName: 'LoadBalancingRuleElementType',
-                                type: {
-                                    name: 'Composite',
-                                    className: 'LoadBalancingRule'
-                                }
-                            }
-                        }
-                    },
-                    probes: {
-                        required: false,
-                        serializedName: 'properties.probes',
-                        type: {
-                            name: 'Sequence',
-                            element: {
-                                required: false,
-                                serializedName: 'ProbeElementType',
-                                type: {
-                                    name: 'Composite',
-                                    className: 'Probe'
-                                }
-                            }
-                        }
-                    },
-                    inboundNatRules: {
-                        required: false,
-                        serializedName: 'properties.inboundNatRules',
-                        type: {
-                            name: 'Sequence',
-                            element: {
-                                required: false,
-                                serializedName: 'InboundNatRuleElementType',
-                                type: {
-                                    name: 'Composite',
-                                    className: 'InboundNatRule'
-                                }
-                            }
-                        }
-                    },
-                    inboundNatPools: {
-                        required: false,
-                        serializedName: 'properties.inboundNatPools',
-                        type: {
-                            name: 'Sequence',
-                            element: {
-                                required: false,
-                                serializedName: 'InboundNatPoolElementType',
-                                type: {
-                                    name: 'Composite',
-                                    className: 'InboundNatPool'
-                                }
-                            }
-                        }
-                    },
-                    outboundNatRules: {
-                        required: false,
-                        serializedName: 'properties.outboundNatRules',
-                        type: {
-                            name: 'Sequence',
-                            element: {
-                                required: false,
-                                serializedName: 'OutboundNatRuleElementType',
-                                type: {
-                                    name: 'Composite',
-                                    className: 'OutboundNatRule'
-                                }
-                            }
-                        }
-                    },
-                    resourceGuid: {
-                        required: false,
-                        serializedName: 'properties.resourceGuid',
-                        type: {
-                            name: 'String'
-                        }
-                    },
-                    provisioningState: {
-                        required: false,
-                        serializedName: 'properties.provisioningState',
-                        type: {
-                            name: 'String'
-                        }
-                    },
-                    etag: {
-                        required: false,
-                        serializedName: 'etag',
-                        type: {
-                            name: 'String'
+                        name: 'String'
                         }
                     }
                 }
+                },
+                frontendIPConfigurations: {
+                required: false,
+                serializedName: 'properties.frontendIPConfigurations',
+                type: {
+                    name: 'Sequence',
+                    element: {
+                        required: false,
+                        serializedName: 'FrontendIPConfigurationElementType',
+                        type: {
+                        name: 'Composite',
+                        className: 'FrontendIPConfiguration'
+                        }
+                    }
+                }
+                },
+                backendAddressPools: {
+                required: false,
+                serializedName: 'properties.backendAddressPools',
+                type: {
+                    name: 'Sequence',
+                    element: {
+                        required: false,
+                        serializedName: 'BackendAddressPoolElementType',
+                        type: {
+                        name: 'Composite',
+                        className: 'BackendAddressPool'
+                        }
+                    }
+                }
+                },
+                loadBalancingRules: {
+                required: false,
+                serializedName: 'properties.loadBalancingRules',
+                type: {
+                    name: 'Sequence',
+                    element: {
+                        required: false,
+                        serializedName: 'LoadBalancingRuleElementType',
+                        type: {
+                        name: 'Composite',
+                        className: 'LoadBalancingRule'
+                        }
+                    }
+                }
+                },
+                probes: {
+                required: false,
+                serializedName: 'properties.probes',
+                type: {
+                    name: 'Sequence',
+                    element: {
+                        required: false,
+                        serializedName: 'ProbeElementType',
+                        type: {
+                        name: 'Composite',
+                        className: 'Probe'
+                        }
+                    }
+                }
+                },
+                inboundNatRules: {
+                required: false,
+                serializedName: 'properties.inboundNatRules',
+                type: {
+                    name: 'Sequence',
+                    element: {
+                        required: false,
+                        serializedName: 'InboundNatRuleElementType',
+                        type: {
+                        name: 'Composite',
+                        className: 'InboundNatRule'
+                        }
+                    }
+                }
+                },
+                inboundNatPools: {
+                required: false,
+                serializedName: 'properties.inboundNatPools',
+                type: {
+                    name: 'Sequence',
+                    element: {
+                        required: false,
+                        serializedName: 'InboundNatPoolElementType',
+                        type: {
+                        name: 'Composite',
+                        className: 'InboundNatPool'
+                        }
+                    }
+                }
+                },
+                outboundNatRules: {
+                required: false,
+                serializedName: 'properties.outboundNatRules',
+                type: {
+                    name: 'Sequence',
+                    element: {
+                        required: false,
+                        serializedName: 'OutboundNatRuleElementType',
+                        type: {
+                        name: 'Composite',
+                        className: 'OutboundNatRule'
+                        }
+                    }
+                }
+                },
+                resourceGuid: {
+                required: false,
+                serializedName: 'properties.resourceGuid',
+                type: {
+                    name: 'String'
+                }
+                },
+                provisioningState: {
+                required: false,
+                serializedName: 'properties.provisioningState',
+                type: {
+                    name: 'String'
+                }
+                },
+                etag: {
+                required: false,
+                serializedName: 'etag',
+                type: {
+                    name: 'String'
+                }
+                }
+            }
             }
         };
     }
 }
 
-export class PublicIPAddressListResultModel {
-    constructor() { }
+export class PublicIPAddressListResultModel{
+    constructor(){}
 
-    public mapper() {
+    public mapper(){
         return {
             required: false,
             serializedName: 'PublicIPAddressListResult',
             type: {
-                name: 'Composite',
-                className: 'PublicIPAddressListResult',
-                modelProperties: {
-                    value: {
+            name: 'Composite',
+            className: 'PublicIPAddressListResult',
+            modelProperties: {
+                value: {
+                required: false,
+                serializedName: '',
+                type: {
+                    name: 'Sequence',
+                    element: {
                         required: false,
-                        serializedName: '',
+                        serializedName: 'PublicIPAddressElementType',
                         type: {
-                            name: 'Sequence',
-                            element: {
-                                required: false,
-                                serializedName: 'PublicIPAddressElementType',
-                                type: {
-                                    name: 'Composite',
-                                    className: 'PublicIPAddress'
-                                }
-                            }
-                        }
-                    },
-                    nextLink: {
-                        required: false,
-                        serializedName: 'nextLink',
-                        type: {
-                            name: 'String'
+                        name: 'Composite',
+                        className: 'PublicIPAddress'
                         }
                     }
                 }
+                },
+                nextLink: {
+                required: false,
+                serializedName: 'nextLink',
+                type: {
+                    name: 'String'
+                }
+                }
+            }
             }
         };
     }
 }
 
-export class loadBalancers {
+export class loadBalancers{
     private client;
 
-    constructor(client) {
+    constructor(client){
         this.client = client;
     }
 
-    public list(resourceGroupName, options, callback) {
-        var client = this.client;
+    public list(resourceGroupName, options, callback){
+          var client = this.client;
 
-        if (!callback && typeof options === 'function') {
+        if(!callback && typeof options === 'function') {
             callback = options;
             options = null;
         }
@@ -560,7 +563,7 @@ export class loadBalancers {
 
         // Construct URL
         var requestUrl = this.client.baseUri +
-            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/loadBalancers';
+                        '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/loadBalancers';
         requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
         requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
         // trim all duplicate forward slashes in the url
@@ -584,8 +587,8 @@ export class loadBalancers {
         if (this.client.acceptLanguage !== undefined && this.client.acceptLanguage !== null) {
             httpRequest.headers['accept-language'] = this.client.acceptLanguage;
         }
-        if (options) {
-            for (var headerName in options['customHeaders']) {
+        if(options) {
+            for(var headerName in options['customHeaders']) {
                 if (options['customHeaders'].hasOwnProperty(headerName)) {
                     httpRequest.headers[headerName] = options['customHeaders'][headerName];
                 }
@@ -595,7 +598,7 @@ export class loadBalancers {
         httpRequest.body = null;
 
         //send request
-        this.client.httpObj.get(httpRequest.method, httpRequest.uri, httpRequest.headers, (err, response, responseBody) => {
+        this.client.httpObj.get(httpRequest.method, httpRequest.uri, httpRequest.headers, (err, response, responseBody) => { 
             if (err) {
                 return callback(err);
             }
@@ -620,8 +623,8 @@ export class loadBalancers {
                         //error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
                     }
                 } catch (defaultError) {
-                    error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
-                        '- "%s" for the default response.', defaultError.message, responseBody);
+                    error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+                                    '- "%s" for the default response.', defaultError.message, responseBody);
                     return callback(error);
                 }
                 return callback(error);
@@ -650,9 +653,9 @@ export class loadBalancers {
         });
     }
 
-    public get(resourceGroupName, loadBalancerName, options, callback) {
+    public get(resourceGroupName, loadBalancerName, options, callback){
         var client = this.client;
-        if (!callback && typeof options === 'function') {
+        if(!callback && typeof options === 'function') {
             callback = options;
             options = null;
         }
@@ -686,7 +689,7 @@ export class loadBalancers {
 
         // Construct URL
         var requestUrl = this.client.baseUri +
-            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/loadBalancers/{loadBalancerName}';
+                        '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/loadBalancers/{loadBalancerName}';
         requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
         requestUrl = requestUrl.replace('{loadBalancerName}', encodeURIComponent(loadBalancerName));
         requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
@@ -716,8 +719,8 @@ export class loadBalancers {
         if (this.client.acceptLanguage !== undefined && this.client.acceptLanguage !== null) {
             httpRequest.headers['accept-language'] = this.client.acceptLanguage;
         }
-        if (options) {
-            for (var headerName in options['customHeaders']) {
+        if(options) {
+            for(var headerName in options['customHeaders']) {
                 if (options['customHeaders'].hasOwnProperty(headerName)) {
                     httpRequest.headers[headerName] = options['customHeaders'][headerName];
                 }
@@ -726,7 +729,7 @@ export class loadBalancers {
         httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
         httpRequest.body = null;
 
-        this.client.httpObj.get(httpRequest.method, httpRequest.uri, httpRequest.headers, (err, response, responseBody) => {
+        this.client.httpObj.get(httpRequest.method, httpRequest.uri, httpRequest.headers, (err, response, responseBody) => { 
             if (err) {
                 return callback(err);
             }
@@ -743,17 +746,17 @@ export class loadBalancers {
                 try {
                     parsedErrorResponse = JSON.parse(responseBody);
                     if (parsedErrorResponse) {
-                        if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-                        // if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-                        // if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+                    if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+                    // if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+                    // if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
                     }
                     if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-                        var resultMapper = client.models['CloudError'].mapper();
-                        // error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+                    var resultMapper = client.models['CloudError'].mapper();
+                    // error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
                     }
                 } catch (defaultError) {
-                    error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
-                        '- "%s" for the default response.', defaultError.message, responseBody);
+                    error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+                                    '- "%s" for the default response.', defaultError.message, responseBody);
                     return callback(error);
                 }
                 return callback(error);
@@ -783,15 +786,15 @@ export class loadBalancers {
     }
 }
 
-export class publicIPAddresses {
+export class publicIPAddresses{
     private client;
-    constructor(client) {
+    constructor(client){
         this.client = client;
     }
 
-    public list(resourceGroupName, options, callback) {
+    public list(resourceGroupName, options, callback){
         var client = this.client;
-        if (!callback && typeof options === 'function') {
+        if(!callback && typeof options === 'function') {
             callback = options;
             options = null;
         }
@@ -801,16 +804,16 @@ export class publicIPAddresses {
         // Validate
         try {
             if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+            throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
             }
             if (this.client.apiVersion === null || this.client.apiVersion === undefined || typeof this.client.apiVersion.valueOf() !== 'string') {
-                throw new Error('this.client.apiVersion cannot be null or undefined and it must be of type string.');
+            throw new Error('this.client.apiVersion cannot be null or undefined and it must be of type string.');
             }
             if (this.client.subscriptionId === null || this.client.subscriptionId === undefined || typeof this.client.subscriptionId.valueOf() !== 'string') {
-                throw new Error('this.client.subscriptionId cannot be null or undefined and it must be of type string.');
+            throw new Error('this.client.subscriptionId cannot be null or undefined and it must be of type string.');
             }
             if (this.client.acceptLanguage !== null && this.client.acceptLanguage !== undefined && typeof this.client.acceptLanguage.valueOf() !== 'string') {
-                throw new Error('this.client.acceptLanguage must be of type string.');
+            throw new Error('this.client.acceptLanguage must be of type string.');
             }
         } catch (error) {
             return callback(error);
@@ -818,7 +821,7 @@ export class publicIPAddresses {
 
         // Construct URL
         var requestUrl = this.client.baseUri +
-            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/publicIPAddresses';
+                        '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/publicIPAddresses';
         requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
         requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
         // trim all duplicate forward slashes in the url
@@ -844,8 +847,8 @@ export class publicIPAddresses {
         if (this.client.acceptLanguage !== undefined && this.client.acceptLanguage !== null) {
             httpRequest.headers['accept-language'] = this.client.acceptLanguage;
         }
-        if (options) {
-            for (var headerName in options['customHeaders']) {
+        if(options) {
+            for(var headerName in options['customHeaders']) {
                 if (options['customHeaders'].hasOwnProperty(headerName)) {
                     httpRequest.headers[headerName] = options['customHeaders'][headerName];
                 }
@@ -854,7 +857,7 @@ export class publicIPAddresses {
         httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
         httpRequest.body = null;
 
-        this.client.httpObj.get(httpRequest.method, httpRequest.uri, httpRequest.headers, (err, response, responseBody) => {
+        this.client.httpObj.get(httpRequest.method, httpRequest.uri, httpRequest.headers, (err, response, responseBody) => { 
             if (err) {
                 return callback(err);
             }
@@ -862,29 +865,29 @@ export class publicIPAddresses {
             console.log("Response: %s", responseBody);
             var statusCode = response.statusCode;
             if (statusCode !== 200) {
-                var error = new Error(responseBody);
-                // error.statusCode = response.statusCode;
-                // error.request = msRest.stripRequest(httpRequest);
-                // error.response = msRest.stripResponse(response);
-                if (responseBody === '') responseBody = null;
-                var parsedErrorResponse;
-                try {
-                    parsedErrorResponse = JSON.parse(responseBody);
-                    if (parsedErrorResponse) {
-                        if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-                        // if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-                        // if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-                    }
-                    if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-                        var resultMapper = client.models['CloudError'].mapper();
-                        // error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
-                    }
-                } catch (defaultError) {
-                    error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
-                        '- "%s" for the default response.', defaultError.message, responseBody);
-                    return callback(error);
+            var error = new Error(responseBody);
+            // error.statusCode = response.statusCode;
+            // error.request = msRest.stripRequest(httpRequest);
+            // error.response = msRest.stripResponse(response);
+            if (responseBody === '') responseBody = null;
+            var parsedErrorResponse;
+            try {
+                parsedErrorResponse = JSON.parse(responseBody);
+                if (parsedErrorResponse) {
+                    if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+                    // if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+                    // if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
                 }
+                if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+                    var resultMapper = client.models['CloudError'].mapper();
+                    // error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+                }
+            } catch (defaultError) {
+                error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+                                '- "%s" for the default response.', defaultError.message, responseBody);
                 return callback(error);
+            }
+            return callback(error);
             }
             // Create Result
             var result = null;
@@ -912,15 +915,15 @@ export class publicIPAddresses {
     }
 }
 
-export class networkSecurityGroups {
+export class networkSecurityGroups{
     private client;
-    constructor(client) {
+    constructor(client){
         this.client = client;
     }
 
-    public list(resourceGroupName, options, callback) {
+    public list(resourceGroupName, options, callback){
         var client = this.client;
-        if (!callback && typeof options === 'function') {
+        if(!callback && typeof options === 'function') {
             callback = options;
             options = null;
         }
@@ -930,16 +933,16 @@ export class networkSecurityGroups {
         // Validate
         try {
             if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+            throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
             }
             if (this.client.apiVersion === null || this.client.apiVersion === undefined || typeof this.client.apiVersion.valueOf() !== 'string') {
-                throw new Error('this.client.apiVersion cannot be null or undefined and it must be of type string.');
+            throw new Error('this.client.apiVersion cannot be null or undefined and it must be of type string.');
             }
             if (this.client.subscriptionId === null || this.client.subscriptionId === undefined || typeof this.client.subscriptionId.valueOf() !== 'string') {
-                throw new Error('this.client.subscriptionId cannot be null or undefined and it must be of type string.');
+            throw new Error('this.client.subscriptionId cannot be null or undefined and it must be of type string.');
             }
             if (this.client.acceptLanguage !== null && this.client.acceptLanguage !== undefined && typeof this.client.acceptLanguage.valueOf() !== 'string') {
-                throw new Error('this.client.acceptLanguage must be of type string.');
+            throw new Error('this.client.acceptLanguage must be of type string.');
             }
         } catch (error) {
             return callback(error);
@@ -947,7 +950,7 @@ export class networkSecurityGroups {
 
         // Construct URL
         var requestUrl = this.client.baseUri +
-            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkSecurityGroups';
+                        '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkSecurityGroups';
         requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
         requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
         // trim all duplicate forward slashes in the url
@@ -973,8 +976,8 @@ export class networkSecurityGroups {
         if (this.client.acceptLanguage !== undefined && this.client.acceptLanguage !== null) {
             httpRequest.headers['accept-language'] = this.client.acceptLanguage;
         }
-        if (options) {
-            for (var headerName in options['customHeaders']) {
+        if(options) {
+            for(var headerName in options['customHeaders']) {
                 if (options['customHeaders'].hasOwnProperty(headerName)) {
                     httpRequest.headers[headerName] = options['customHeaders'][headerName];
                 }
@@ -984,7 +987,7 @@ export class networkSecurityGroups {
         httpRequest.body = null;
 
         //send request
-        this.client.httpObj.get(httpRequest.method, httpRequest.uri, httpRequest.headers, (err, response, responseBody) => {
+        this.client.httpObj.get(httpRequest.method, httpRequest.uri, httpRequest.headers, (err, response, responseBody) => { 
             if (err) {
                 return callback(err);
             }
@@ -993,11 +996,11 @@ export class networkSecurityGroups {
 
             var statusCode = response.statusCode;
             if (statusCode !== 200) {
-                var error = new Error(responseBody);
-                // error.statusCode = response.statusCode;
-                // error.request = msRest.stripRequest(httpRequest);
-                // error.response = msRest.stripResponse(response);
-                if (responseBody === '') responseBody = null;
+            var error = new Error(responseBody);
+            // error.statusCode = response.statusCode;
+            // error.request = msRest.stripRequest(httpRequest);
+            // error.response = msRest.stripResponse(response);
+            if (responseBody === '') responseBody = null;
                 var parsedErrorResponse;
                 try {
                     parsedErrorResponse = JSON.parse(responseBody);
@@ -1011,8 +1014,8 @@ export class networkSecurityGroups {
                         //error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
                     }
                 } catch (defaultError) {
-                    error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
-                        '- "%s" for the default response.', defaultError.message, responseBody);
+                    error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+                                    '- "%s" for the default response.', defaultError.message, responseBody);
                     return callback(error);
                 }
                 return callback(error);
@@ -1022,20 +1025,20 @@ export class networkSecurityGroups {
             if (responseBody === '') responseBody = null;
             // Deserialize Response
             if (statusCode === 200) {
-                var parsedResponse = null;
-                try {
-                    parsedResponse = JSON.parse(responseBody);
-                    result = JSON.parse(responseBody);
-                    if (parsedResponse !== null && parsedResponse !== undefined) {
-                        var resultMapper = client.models['NetworkSecurityGroupListResult'].mapper();
-                        // result = client.deserialize(resultMapper, parsedResponse, 'result');
-                    }
-                } catch (error) {
-                    var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-                    // deserializationError.request = msRest.stripRequest(httpRequest);
-                    // deserializationError.response = msRest.stripResponse(response);
-                    return callback(deserializationError);
+            var parsedResponse = null;
+            try {
+                parsedResponse = JSON.parse(responseBody);
+                result = JSON.parse(responseBody);
+                if (parsedResponse !== null && parsedResponse !== undefined) {
+                    var resultMapper = client.models['NetworkSecurityGroupListResult'].mapper();
+                    // result = client.deserialize(resultMapper, parsedResponse, 'result');
                 }
+            } catch (error) {
+                var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+                // deserializationError.request = msRest.stripRequest(httpRequest);
+                // deserializationError.response = msRest.stripResponse(response);
+                return callback(deserializationError);
+            }
             }
 
             return callback(null, result, httpRequest, response);
@@ -1043,15 +1046,15 @@ export class networkSecurityGroups {
     }
 }
 
-export class NetworkInterfaces {
+export class NetworkInterfaces{
     private client;
-    constructor(client) {
+    constructor(client){
         this.client = client;
     }
 
-    public list(resourceGroupName, options, callback) {
-        var client = this.client;
-        if (!callback && typeof options === 'function') {
+    public list(resourceGroupName, options, callback){
+       var client = this.client;
+        if(!callback && typeof options === 'function') {
             callback = options;
             options = null;
         }
@@ -1078,7 +1081,7 @@ export class NetworkInterfaces {
 
         // Construct URL
         var requestUrl = this.client.baseUri +
-            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces';
+                        '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces';
         requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
         requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
         // trim all duplicate forward slashes in the url
@@ -1094,24 +1097,24 @@ export class NetworkInterfaces {
         httpRequest.headers = {
             authorization: 'Bearer ' + this.client.credentials
         };
-        httpRequest.uri = requestUrl;
+        httpRequest.uri = requestUrl; 
         if (this.client.generateClientRequestId) {
             httpRequest.headers['x-ms-client-request-id'] = msRestAzure.generateUuid();
         }
         if (this.client.acceptLanguage !== undefined && this.client.acceptLanguage !== null) {
             httpRequest.headers['accept-language'] = this.client.acceptLanguage;
         }
-        if (options) {
-            for (var headerName in options['customHeaders']) {
-                if (options['customHeaders'].hasOwnProperty(headerName)) {
-                    httpRequest.headers[headerName] = options['customHeaders'][headerName];
-                }
+        if(options) {
+            for(var headerName in options['customHeaders']) {
+            if (options['customHeaders'].hasOwnProperty(headerName)) {
+                httpRequest.headers[headerName] = options['customHeaders'][headerName];
+            }
             }
         }
         httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
         httpRequest.body = null;
         // Send Request
-        this.client.httpObj.get(httpRequest.method, httpRequest.uri, httpRequest.headers, (err, response, responseBody) => {
+        this.client.httpObj.get(httpRequest.method, httpRequest.uri, httpRequest.headers, (err, response, responseBody) => { 
             if (err) {
                 return callback(err);
             }
@@ -1137,8 +1140,8 @@ export class NetworkInterfaces {
                         // error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
                     }
                 } catch (defaultError) {
-                    error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
-                        '- "%s" for the default response.', defaultError.message, responseBody);
+                    error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+                                    '- "%s" for the default response.', defaultError.message, responseBody);
                     return callback(error);
                 }
                 return callback(error);
@@ -1165,19 +1168,19 @@ export class NetworkInterfaces {
             }
 
             return callback(null, result, httpRequest, response);
-        });
+        });        
     }
 }
 
-export class securityRules {
+export class securityRules{
     private client;
-    constructor(client) {
+    constructor(client){
         this.client = client;
     }
 
-    /*public get(resourceGroupName, networkSecurityGroupName, securityRuleName, options, callback) {
+    public get(resourceGroupName, networkSecurityGroupName, securityRuleName, options, callback){
         var client = this.client;
-        if (!callback && typeof options === 'function') {
+        if(!callback && typeof options === 'function') {
             callback = options;
             options = null;
         }
@@ -1210,7 +1213,7 @@ export class securityRules {
 
         // Construct URL
         var requestUrl = this.client.baseUri +
-            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkSecurityGroups/{networkSecurityGroupName}/securityRules/{securityRuleName}';
+                        '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkSecurityGroups/{networkSecurityGroupName}/securityRules/{securityRuleName}';
         requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
         requestUrl = requestUrl.replace('{networkSecurityGroupName}', encodeURIComponent(networkSecurityGroupName));
         requestUrl = requestUrl.replace('{securityRuleName}', encodeURIComponent(securityRuleName));
@@ -1238,8 +1241,8 @@ export class securityRules {
         if (this.client.acceptLanguage !== undefined && this.client.acceptLanguage !== null) {
             httpRequest.headers['accept-language'] = this.client.acceptLanguage;
         }
-        if (options) {
-            for (var headerName in options['customHeaders']) {
+        if(options) {
+            for(var headerName in options['customHeaders']) {
                 if (options['customHeaders'].hasOwnProperty(headerName)) {
                     httpRequest.headers[headerName] = options['customHeaders'][headerName];
                 }
@@ -1248,8 +1251,8 @@ export class securityRules {
         httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
         httpRequest.body = null;
         // Send Request
-        var clientUtils = new azureServiceClient.Utils();
-        this.client.httpObj.get(httpRequest.method, httpRequest.uri, httpRequest.headers, (err, response, responseBody) => {
+        //var clientUtils = new azureServiceClient.Utils();
+        this.client.httpObj.get(httpRequest.method, httpRequest.uri, httpRequest.headers, (err, response, responseBody) => { 
             if (err) {
                 return callback(err);
             }
@@ -1257,10 +1260,10 @@ export class securityRules {
             console.log("Response: %s", responseBody);
             var statusCode = response.statusCode;
             if (statusCode !== 200) {
-                var error = new azureServiceClient.Error(responseBody);
+                var error = new msRestAzure.Error(responseBody);
                 error.statusCode = response.statusCode;
-                error.request = clientUtils.stripRequest(httpRequest);
-                error.response = clientUtils.stripResponse(response);
+                error.request =  new msRestAzure.stripRequest(httpRequest);
+                error.response = new msRestAzure.stripResponse(response);
                 if (responseBody === '') responseBody = null;
                 var parsedErrorResponse;
                 try {
@@ -1272,11 +1275,11 @@ export class securityRules {
                     }
                     if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
                         var resultMapper = client.models['CloudError'].mapper();
-                        error.body = clientUtils.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+                        //error.body = clientUtils.deserialize(resultMapper, parsedErrorResponse, 'error.body');
                     }
                 } catch (defaultError) {
-                    error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
-                        '- "%s" for the default response.', defaultError.message, responseBody);
+                    error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+                                    '- "%s" for the default response.', defaultError.message, responseBody);
                     return callback(error);
                 }
                 return callback(error);
@@ -1292,19 +1295,19 @@ export class securityRules {
                     result = JSON.parse(responseBody);
                     if (parsedResponse !== null && parsedResponse !== undefined) {
                         var resultMapper = client.models['SecurityRule'].mapper();
-                        result = clientUtils.deserialize(resultMapper, parsedResponse, 'result');
+                        //result = clientUtils.deserialize(resultMapper, parsedResponse, 'result');
                     }
                 } catch (error) {
-                    var deserializationError = new azureServiceClient.Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-                    deserializationError.request = clientUtils.stripRequest(httpRequest);
-                    deserializationError.response = clientUtils.stripResponse(response);
+                    var deserializationError = new msRestAzure.Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+                    deserializationError.request = new msRestAzure.stripRequest(httpRequest);
+                    deserializationError.response = new msRestAzure.stripResponse(response);
                     return callback(deserializationError);
                 }
             }
 
             return callback(null, result, httpRequest, response);
         });
-    }*/
+    }
 
     public createOrUpdate(resourceGroupName, networkSecurityGroupName, securityRuleName, securityRuleParameters, callback) {
         var client = this.client;

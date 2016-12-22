@@ -53,6 +53,7 @@ export class ComputeManagementClient {
         this.virtualMachineExtensions = new VirtualMachineExtensions(this);
         this.models['VirtualMachineListResult'] = new VirtualMachineListResultModel();
         this.models['VirtualMachine'] = new VirtualMachineModel();
+        this.models['CloudError'] = new msRestAzure.CloudError();
         this.models['VirtualMachineExtension'] = new VirtualMachineExtensionModel();
     }
 }
@@ -455,33 +456,33 @@ export class VirtualMachines {
         httpRequest.body = null;
 
         var serviceClient = new azureServiceClient.ServiceClient(this.client.credentials);
-        /*serviceClient.get(httpRequest).then((response) => {
-            var statusCode = response.statusCode;
-            if (statusCode != 200) {
-                // var error = new Error(responseBody);
-                // if (responseBody === '') {
-                //     responseBody = null;
-                // }
-            }
-            var result = null;
-            // if (responseBody === '') {
-            //     responseBody = null;
-            // }
-            if (statusCode === 200) {
-                var parsedResponse = null;
-                try {
-                    // result = JSON.parse(responseBody);
-                    if (parsedResponse != null && parsedResponse != undefined) {
-                        var resultMapper = this.client.models['VirtualMachineListResult'].mapper();
-                    }
-                }
-                catch (error) {
-                    var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', response));
-                    return callback(deserializationError);
-                }
-            }
-            return callback(null, result, requestUrl, response);
-        });*/
+        // serviceClient.get(httpRequest).then((response) => {
+        //     var statusCode = response.statusCode;
+        //     if (statusCode != 200) {
+        //         // var error = new Error(responseBody);
+        //         // if (responseBody === '') {
+        //         //     responseBody = null;
+        //         // }
+        //     }
+        //     var result = null;
+        //     // if (responseBody === '') {
+        //     //     responseBody = null;
+        //     // }
+        //     if (statusCode === 200) {
+        //         var parsedResponse = null;
+        //         try {
+        //             // result = JSON.parse(responseBody);
+        //             if (parsedResponse != null && parsedResponse != undefined) {
+        //                 var resultMapper = this.client.models['VirtualMachineListResult'].mapper();
+        //             }
+        //         }
+        //         catch (error) {
+        //             var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', response));
+        //             return callback(deserializationError);
+        //         }
+        //     }
+        //     return callback(null, result, requestUrl, response);
+        // });
     }
 
     public get(resourceGroupName, vmName, options, callback) {
@@ -1021,6 +1022,7 @@ export class VirtualMachineExtensions {
             return callback(null, result, httpRequest, response);
         });
     }
+<<<<<<< HEAD
 
     public createOrUpdate(resourceGroupName, vmName, vmExtensionName, extensionParameters, callback) {
         var client = this.client;
@@ -1195,4 +1197,6 @@ export class VirtualMachineExtensions {
         });
 
     }
+=======
+>>>>>>> 68768fdc355087bdd13a84b9bf38eda4e48abd38
 }

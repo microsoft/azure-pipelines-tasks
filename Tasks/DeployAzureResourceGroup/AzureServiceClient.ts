@@ -24,7 +24,11 @@ export class WebResponse {
     public statusCode;
     public headers;
 }
-
+export class Error {
+    public code;
+    public message;
+    public statusCode;
+}
 export class ServiceClient {
     private credentials;
     private longRunningOperationTimeout;
@@ -45,11 +49,13 @@ export class ServiceClient {
         if (response) {
             res.statusCode = response.statusCode;
             res.headers = response.headers;
-            try {
-                res.body = JSON.parse(body);
-            }
-            catch (error) {
-                res.error = error;
+            if (body) {
+                try {
+                    res.body = JSON.parse(body);
+                }
+                catch (error) {
+                    res.error = error;
+                }
             }
         }
         return res;
@@ -86,12 +92,35 @@ export class ServiceClient {
         return deferred.promise;
     }
 
-    private pollUri(request: WebRequest) {
-        var deferred = Q.defer();
+    private pollUri(request: WebRequest, prevDeferred?) {
+        var deferred;
+        if (prevDeferred) {
+            deferred = prevDeferred;
+        } else {
+            deferred = Q.defer();
+        }
         this.request(request).then((response: WebResponse) => {
             if (response.body.status === "InProgress") {
                 sleepFor(this.longRunningOperationTimeout);
-                this.pollUri(request);
+                this.pollUri(request, deferred);
+            } else {
+                deferred.resolve(response);
+            }
+        });
+        return deferred.promise;
+    }
+
+    private pollUriStatus(request: WebRequest, prevDeferred?) {
+        var deferred;
+        if (prevDeferred) {
+            deferred = prevDeferred;
+        } else {
+            deferred = Q.defer();
+        }
+        this.request(request).then((response: WebResponse) => {
+            if (response.statusCode === 202) {
+                sleepFor(this.longRunningOperationTimeout);
+                this.pollUriStatus(request, deferred);
             } else {
                 deferred.resolve(response);
             }
@@ -107,8 +136,27 @@ export class ServiceClient {
             request.method = "GET";
             request.uri = uri;
             request.headers = {};
-            this.pollUri(request).then(() => {
-                deferred.resolve(response);
+            this.pollUri(request).then((pollResponse) => {
+                deferred.resolve(pollResponse);
+            });
+        } else {
+            var res = new WebResponse();
+            res.error = "Invalid Response Provided";
+            deferred.resolve(res);
+        }
+        return deferred.promise;
+    }
+
+    public getLongRunningOperationStatus(response: WebResponse) {
+        var deferred = Q.defer();
+        var uri = response.headers["location"];
+        if (uri) {
+            var request = new WebRequest();
+            request.method = "GET";
+            request.uri = uri;
+            request.headers = {};
+            this.pollUriStatus(request).then((pollResponse) => {
+                deferred.resolve(pollResponse);
             });
         } else {
             var res = new WebResponse();
