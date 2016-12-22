@@ -54,6 +54,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.WebAppName"
     },
     {
+      "name": "SpecifySlot",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.SpecifySlot",
+      "required": false,
+      "visibleRule": "Action != Swap Slots"
+    },
+    {
       "name": "ResourceGroupName",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.ResourceGroupName",
@@ -63,7 +70,7 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName",
-      "visibleRule": "Action = Swap Slots"
+      "visibleRule": "Action = Swap Slots || SpecifySlot = true"
     },
     {
       "name": "SourceSlot",
@@ -106,6 +113,17 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.PreserveVnet",
       "visibleRule": "Action = Swap Slots"
+    },
+    {
+      "name": "Slot",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.Slot",
+      "defaultValue": "",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "required": true,
+      "visibleRule": "Action != Swap Slots && SpecifySlot = true"
     }
   ],
   "dataSourceBindings": [

@@ -34,6 +34,8 @@ async function run() {
         var action = tl.getInput('Action', true);
         var webAppName: string = tl.getInput('WebAppName', true);
         var resourceGroupName: string = tl.getInput('ResourceGroupName', false);
+        var specifySlotFlag: boolean = tl.getBoolInput('SpecifySlot', false);
+        var slotName: string = tl.getInput('Slot', false);
         var sourceSlot: string = tl.getInput('SourceSlot', false);
         var swapWithProduction = tl.getBoolInput('SwapWithProduction', false);
         var targetSlot: string = tl.getInput('TargetSlot', false);
@@ -56,15 +58,15 @@ async function run() {
         }
         switch(action) {
             case "Start Azure App Service": {
-                tl._writeLine(await azureRmUtil.startAppService(endPoint, resourceGroupName, webAppName));
+                tl._writeLine(await azureRmUtil.startAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
                 break;
             }
             case "Stop Azure App Service": {
-                tl._writeLine(await azureRmUtil.stopAppService(endPoint, resourceGroupName, webAppName));
+                tl._writeLine(await azureRmUtil.stopAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
                 break;
             }
             case "Restart Azure App Service": {
-                tl._writeLine(await azureRmUtil.restartAppService(endPoint, resourceGroupName, webAppName));
+                tl._writeLine(await azureRmUtil.restartAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
                 break;
             }
             case "Swap Slots": {
@@ -101,8 +103,8 @@ async function run() {
             await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, !(swapWithProduction), targetSlot, taskResult, customMessage, deploymentId);
         }
         else {
-            customMessage['slotName'] = 'Production';
-            await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, false, null, taskResult, customMessage, deploymentId);
+            customMessage['slotName'] =  (specifySlotFlag) ? slotName : 'Production';
+            await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, specifySlotFlag, slotName, taskResult, customMessage, deploymentId);
         }
     }
     if (!taskResult) {
