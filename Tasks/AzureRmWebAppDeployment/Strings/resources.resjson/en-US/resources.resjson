@@ -80,7 +80,7 @@
   "loc.messages.AppOflineModedisabled": "App offline mode disabled.",
   "loc.messages.FailedtodisableAppOfflineMode": "Failed to disable App offline mode. Status Code: %s (%s)",
   "loc.messages.CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot perform XML transformations on a non-Windows platform.",
-  "loc.messages.XdtTransformationErrorWhileTransforming": "XDT transformation error while transforming %s using %s.",
+  "loc.messages.XdtTransformationErrorWhileTransforming": "XML transformation error while transforming %s using %s.",
   "loc.messages.PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "Publish using webdeploy options are supported only when using Windows agent",
   "loc.messages.WebAppDoesntExist": "App Service '%s' doesn't exist. App Service should exist before deployment.",
   "loc.messages.EncodeNotSupported": "Detected file encoding of the file %s as %s. Variable substitution and Transformation is not supported with file encoding %s. Supported encodings are UTF-8 and UTF-16 LE.",

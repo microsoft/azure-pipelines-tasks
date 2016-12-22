@@ -278,7 +278,7 @@
         "AppOflineModedisabled": "App offline mode disabled.",
         "FailedtodisableAppOfflineMode": "Failed to disable App offline mode. Status Code: %s (%s)",
         "CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot perform XML transformations on a non-Windows platform.",
-        "XdtTransformationErrorWhileTransforming": "XDT transformation error while transforming %s using %s.",
+        "XdtTransformationErrorWhileTransforming": "XML transformation error while transforming %s using %s.",
         "PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "Publish using webdeploy options are supported only when using Windows agent",
         "WebAppDoesntExist": "App Service '%s' doesn't exist. App Service should exist before deployment.",
         "EncodeNotSupported": "Detected file encoding of the file %s as %s. Variable substitution and Transformation is not supported with file encoding %s. Supported encodings are UTF-8 and UTF-16 LE.",
