@@ -18,8 +18,7 @@
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "$(Action): $(WebAppName)",
-  "groups": [
-
+    "groups": [
     ],
   "inputs": [
         {
@@ -56,6 +55,13 @@
             "helpMarkDown": "Enter or select the name of an existing Azure App Service"
         },
         {
+            "name": "SpecifySlot",
+            "type": "boolean",
+            "label": "Specify Slot",
+            "required": false,
+            "visibleRule": "Action != Swap Slots"
+        },
+        {
             "name": "ResourceGroupName",
             "type": "pickList",
             "label": "Resource group",
@@ -65,7 +71,7 @@
                 "EditableOptions": "True"
             },
             "helpMarkDown": "Enter or Select the Azure Resource Group that contains the Azure App Service specified above",
-            "visibleRule":"Action = Swap Slots"
+            "visibleRule": "Action = Swap Slots || SpecifySlot = true"
         },
         {
             "name": "SourceSlot",
@@ -108,6 +114,17 @@
             "required": false,
             "helpMarkDown": "Preserve the Virtual network settings",
             "visibleRule": "Action = Swap Slots"
+        },
+        {
+            "name": "Slot",
+            "type": "pickList",
+            "label": "Slot",
+            "defaultValue": "",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "required": true,
+            "visibleRule": "Action != Swap Slots && SpecifySlot = true"
         }
     ],
   "dataSourceBindings": [
