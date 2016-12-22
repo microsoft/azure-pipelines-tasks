@@ -11,8 +11,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 1,
-        "Patch": 1
+        "Minor": 111,
+        "Patch": 0
     },
     "demands": [
         "AndroidSDK",
@@ -39,7 +39,7 @@
             "label": "Project",
             "defaultValue": "**/*.csproj",
             "required": true,
-            "helpMarkDown": "Relative path from repo root of Xamarin.Android project(s) to build.  Wildcards can be used.  For example, `**/*.csproj` for all csproj files in all subfolders.  The project must have a PackageForAndroid target."
+            "helpMarkDown": "Relative path from repo root of Xamarin.Android project(s) to build.  Wildcards can be used.  For example, `**/*.csproj` for all csproj files in all subfolders.  The project must have a PackageForAndroid target if `Create App Package` is selected."
         },
         {
             "name": "target",
@@ -63,6 +63,14 @@
             "label": "Configuration",
             "defaultValue": "",
             "required": false
+        },
+        {
+            "name": "createAppPackage",
+            "type": "boolean",
+            "label": "Create App Package",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "Passes the target (/t:PackageForAndroid) during build to generate an APK."
         },
         {
             "name": "clean",

@@ -1,0 +1,27 @@
+ {
+    "getVariable": {
+        "HOME": "/user/home"
+    },
+    "which": {
+        "xbuild": "/home/bin/xbuild"  
+    },
+    "exec": {
+        "/home/bin/xbuild /user/build/fun/test.csproj": {
+            "code": 0,
+            "stdout": "Xamarin android test project"
+        }
+    },
+    "checkPath" : {
+        "/user/build/fun/test.csproj": true
+    },
+    "find": {
+        "": [
+            "/user/build"
+        ]
+    },
+    "match": {
+        "**/test*.csproj": [
+            "/user/build/fun/test.csproj"
+        ]      
+    }
+ }
