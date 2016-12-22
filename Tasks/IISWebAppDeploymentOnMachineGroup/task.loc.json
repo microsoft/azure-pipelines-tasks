@@ -16,11 +16,16 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 3
+    "Patch": 4
   },
   "demands": [],
   "minimumAgentVersion": "1.102.0",
   "groups": [
+    {
+      "name": "FileTransformsAndVariableSubstitution",
+      "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
+      "isExpanded": false
+    },
     {
       "name": "advanceDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.advanceDeploymentOptions",
@@ -96,6 +101,33 @@
       "defaultValue": "",
       "groupName": "advanceDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
+    },
+    {
+      "name": "XmlTransformation",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.XmlTransformation",
+      "required": false,
+      "defaultValue": false,
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": "ms-resource:loc.input.help.XmlTransformation"
+    },
+    {
+      "name": "XmlVariableSubstitution",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.XmlVariableSubstitution",
+      "required": false,
+      "defaultValue": false,
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": "ms-resource:loc.input.help.XmlVariableSubstitution"
+    },
+    {
+      "name": "JSONFiles",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.JSONFiles",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": "ms-resource:loc.input.help.JSONFiles"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -140,6 +172,18 @@
     "UnabletofindthelocationofMSDeployfromregistryonmachineError": "ms-resource:loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError",
     "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern",
     "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "ms-resource:loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern",
-    "Trytodeploywebappagainwithappofflineoptionselected": "ms-resource:loc.messages.Trytodeploywebappagainwithappofflineoptionselected"
+    "Trytodeploywebappagainwithappofflineoptionselected": "ms-resource:loc.messages.Trytodeploywebappagainwithappofflineoptionselected",
+    "NOJSONfilematchedwithspecificpattern": "ms-resource:loc.messages.NOJSONfilematchedwithspecificpattern",
+    "JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "ms-resource:loc.messages.JSONvariablesubstitutioncanonlybeappliedforJSONfiles",
+    "Unabletofindnodewithtaginprovidedxmlfile": "ms-resource:loc.messages.Unabletofindnodewithtaginprovidedxmlfile",
+    "Providednodeisemptyorcomment": "ms-resource:loc.messages.Providednodeisemptyorcomment",
+    "Erroroccurredwhileprocessingxmlnode": "ms-resource:loc.messages.Erroroccurredwhileprocessingxmlnode",
+    "Processingsubstitutionforxmlnode": "ms-resource:loc.messages.Processingsubstitutionforxmlnode",
+    "Initiatedvariablesubstitutioninconfigfile": "ms-resource:loc.messages.Initiatedvariablesubstitutioninconfigfile",
+    "CannotPerformXdtTransformationOnNonWindowsPlatform": "ms-resource:loc.messages.CannotPerformXdtTransformationOnNonWindowsPlatform",
+    "XdtTransformationErrorWhileTransforming": "ms-resource:loc.messages.XdtTransformationErrorWhileTransforming",
+    "EncodeNotSupported": "ms-resource:loc.messages.EncodeNotSupported",
+    "UnknownFileEncodeError": "ms-resource:loc.messages.UnknownFileEncodeError",
+    "ShortFileBufferError": "ms-resource:loc.messages.ShortFileBufferError"
   }
 }
