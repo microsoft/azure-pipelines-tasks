@@ -1,0 +1,10 @@
+{
+     "externals": {
+         "archivePackages": [
+            {
+                "url": "https://testexecution.blob.core.windows.net/version1/TestPlatform.Deployment.zip",
+                "dest": "./"
+            }
+        ]
+    }
+} 

@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 42
+    "Patch": 43
   },
   "demands": [],
   "minimumAgentVersion": "1.104.0",
@@ -35,6 +35,19 @@
     }
   ],
   "inputs": [
+    {
+      "name": "testPlatform",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.testPlatform",
+      "defaultValue": "14.0",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.testPlatform",
+      "groupName": "testMachineGroups",
+      "options": {
+        "15.0": "Visual Studio 2017",
+        "14.0": "Visual Studio 2015"
+      }
+    },
     {
       "name": "testMachineGroup",
       "type": "multiLine",
@@ -163,10 +176,8 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "PowerShell": {
-      "target": "$(currentDirectory)\\DeployTestAgent.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "PowerShell3": {
+      "target": "DeployTestAgent.ps1"
     }
   }
 }
