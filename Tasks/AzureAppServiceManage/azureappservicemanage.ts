@@ -11,7 +11,7 @@ async function swapSlot(endPoint, resourceGroupName: string, webAppName: string,
     }
     catch(error) {
         if(!!error)
-            throw new Error(tl.loc("FailedToSwapWebAppSlotsError", webAppName, error));
+            throw new Error(tl.loc("FailedToSwapWebAppSlots", webAppName, error));
         else
             throw new Error(tl.loc("SlotSwapOperationNotCompleted", webAppName));
     }
