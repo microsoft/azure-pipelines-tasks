@@ -32,7 +32,7 @@ export async function getResourceGroupName(endpoint, webAppName: string)
 
     tl.debug('Web App details : ' + webAppID.id);
     var resourceGroupName = webAppID.id.split ('/')[4];
-    tl.debug('AzureRM Resource Group Name : ' + resourceGroupName);
+    tl.debug('Azure Resource Group Name : ' + resourceGroupName);
     return resourceGroupName;
 }
 /**
@@ -100,7 +100,7 @@ export async function getAzureRMWebAppPublishProfile(endPoint, webAppName: strin
     var url = armUrl + 'subscriptions/' + endPoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
                  '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + '/publishxml?' + azureApiVersion;
 
-    tl.debug('Requesting AzureRM Publish Profile: ' + url);
+    tl.debug('Requesting Azure Publish Profile: ' + url);
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
             deferred.reject(error);
@@ -211,8 +211,8 @@ export async function getAzureRMWebAppConfigDetails(endpoint, webAppName: string
             deferred.resolve(obj);
         }
         else {
-            tl.error(response.statusMessage);
-            deferred.reject(tl.loc('UnabletoretrieveAzureRMWebAppConfigDetails', response.statusCode, response.statusMessage));
+            tl.debug(body);
+            deferred.reject(tl.loc('Unabletoretrievewebconfigdetails', response.statusCode, response.statusMessage));
         }
     });
     return deferred.promise;
@@ -270,8 +270,8 @@ export async function getWebAppAppSettings(endpoint, webAppName: string, resourc
 			deferred.resolve(JSON.parse(body));
 		}
 		else {
-			tl.error(response.statusMessage);
-			deferred.reject(tl.loc('UnabletoretrieveAzureRMWebAppAppSettings', response.statusCode, response.statusMessage));
+			tl.debug(body);
+			deferred.reject(tl.loc('Unabletoretrievewebconfigdetails', response.statusCode, response.statusMessage));
 		}
 	})
 	
@@ -300,8 +300,8 @@ export async function updateWebAppAppSettings(endpoint, webAppName: string, reso
             deferred.resolve(appSettings);
         }
         else {
-            tl.error(error);
-            deferred.reject(tl.loc('UnabletoupdateAzureRMWebAppAppSettings', response, error));
+            tl.debug(body);
+            deferred.reject(tl.loc('Unabletoupdatewebappsettings', response, error));
         }
     });
 							
