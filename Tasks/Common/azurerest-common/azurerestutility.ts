@@ -308,8 +308,54 @@ export async function updateWebAppAppSettings(endpoint, webAppName: string, reso
     return deferred.promise;
 }
 
-export async function swapWebAppSlot(endpoint, resourceGroupName: string, webAppName: string, sourceSlot: string, targetSlot: string,preserveVnet: boolean) {
+async function getOperationStatus(SPN, webAppName: string, resourceGroupName: string, slotName: string, url: string) {
+    var deferred = Q.defer();
+    var accessToken = await getAuthorizationToken(SPN);
+    var headers = {
+        authorization: 'Bearer ' + accessToken
+    };
+    httpObj.get('GET', url, headers, (error, response, body) => {
+        if (error) {
+            deferred.reject(error);
+        }
+        else {
+            deferred.resolve(response);
+        }
+    });
+    return deferred.promise;
+}
 
+function monitorSlotSwap(SPN, webAppName, resourceGroupName, sourceSlot, targetSlot, url) {
+    var deferred = Q.defer();
+    var attempts = 0;
+    var poll = async function() {
+        if (attempts < 360) {
+            attempts++;
+            await  getOperationStatus(SPN, webAppName, resourceGroupName, sourceSlot, url).then((response) => {
+                if (response['statusCode'] === 200) {
+                    deferred.resolve();
+                }
+                else if(response['statusCode'] === 202) {
+                    tl.debug("Slot swap operation is in progress. Attempt : "+ attempts);
+                    setTimeout(poll, 5000);
+                }
+                else {
+                    deferred.reject(response['statusMessage']);
+                }
+            }).catch((error) => {
+                deferred.reject(error);
+            });
+        }
+        else {
+            deferred.reject("");
+        }
+    }
+    poll();
+    return deferred.promise;
+}
+
+export async function swapWebAppSlot(endpoint, resourceGroupName: string, webAppName: string, sourceSlot: string, targetSlot: string,preserveVnet: boolean) {
+    
     var deferred = Q.defer<any>();
     var url = armUrl + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
                  '/providers/Microsoft.Web/sites/' + webAppName + "/slots/" + sourceSlot + '/slotsswap?' + azureApiVersion;
@@ -328,16 +374,19 @@ export async function swapWebAppSlot(endpoint, resourceGroupName: string, webApp
     );
 
     tl._writeLine(tl.loc('StartingSwapSlot',webAppName));
-    httpObj.send('POST', url, body, headers, (error, response, body) => {
+    httpObj.send('POST', url, body, headers, async (error, response, body) => {
         if(error) {
             deferred.reject(error);
         }
-        if(response.statusCode === 202) {
-            deferred.resolve(tl.loc("Successfullyswappedslots", webAppName, sourceSlot, targetSlot));
+        else if(response.statusCode === 202) {
+            await monitorSlotSwap(endpoint, webAppName, resourceGroupName, sourceSlot, targetSlot, response.headers.location).then(() => {
+                deferred.resolve();
+            }).catch((error) => {
+                deferred.reject(error);
+            });
         }
         else {
-            tl.error(response.statusMessage);
-            deferred.reject(tl.loc("Failedtoswapslots",response.statusCode, webAppName));
+            deferred.reject(response.statusMessage);
         }
     });
     return deferred.promise;
