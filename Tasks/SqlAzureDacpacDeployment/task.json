@@ -10,8 +10,7 @@
         "Release"
     ],
     "runsOn": [
-        "Agent",
-        "MachineGroup"
+        "Agent"
     ],
     "author": "Microsoft Corporation",
     "version": {
