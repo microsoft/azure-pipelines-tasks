@@ -22,11 +22,12 @@ export class NetworkManagementClient {
     public loadBalancers;
     public securityRules;
 
-    constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId, baseUri, options) {
+    constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId, baseUri?: any, options?: any) {
         this.apiVersion = '2016-09-01';
         this.acceptLanguage = 'en-US';
         this.longRunningOperationRetryTimeout = 30;
         this.generateClientRequestId = true;
+        this.models = {};
         // this.httpObj = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
         // this.restObj = new restClient.RestCallbackClient(this.httpObj);
 
@@ -820,7 +821,7 @@ export class loadBalancers {
         }
         // Construct URL
         var requestUrl = this.client.baseUri +
-                   '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/loadBalancers/{loadBalancerName}';
+            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/loadBalancers/{loadBalancerName}';
         requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
         requestUrl = requestUrl.replace('{loadBalancerName}', encodeURIComponent(loadBalancerName));
         requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
@@ -862,7 +863,7 @@ export class loadBalancers {
             if (parameters !== null && parameters !== undefined) {
                 //var requestModelMapper = new client.models['NetworkInterface']().mapper();
                 // requestModel = JSON.parse(parameters);
-                
+
                 requestContent = JSON.stringify(parameters);
             }
         }
@@ -1360,7 +1361,7 @@ export class NetworkInterfaces {
         }
         httpRequest.body = requestContent;
         var serviceClient = new azureServiceClient.ServiceClient(this.client.credentials);
-        console.log("HttpsObject: %s", util.inspect(httpRequest, {depth: null}));
+        console.log("HttpsObject: %s", util.inspect(httpRequest, { depth: null }));
         serviceClient.request(httpRequest).then((response) => {
             if (response.error) {
                 callback(response.error);
@@ -1584,29 +1585,32 @@ export class securityRules {
         var requestModel = null;
         try {
             if (securityRuleParameters !== null && securityRuleParameters !== undefined) {
-                var requestModelMapper = new client.models['SecurityRule']().mapper();
-                requestModel = client.serialize(requestModelMapper, securityRuleParameters, 'securityRuleParameters');
-                requestContent = JSON.stringify(requestModel);
+                requestContent = JSON.stringify(securityRuleParameters);
             }
         } catch (error) {
-            var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' +
-                'payload - "%s"', error.message, util.inspect(securityRuleParameters, { depth: null })));
-            return callback(serializationError);
+            // Todo: error for json parsing the parameters
+            var stringificationError = new Error(util.format('Error "%s" occurred in reading the ' +
+                'parameters - "%s"', error.message, util.inspect(securityRuleParameters, { depth: null })));
+            return callback(stringificationError);
         }
         httpRequest.body = requestContent;
         // Send request
         var serviceClient = new azureServiceClient.ServiceClient(this.client.credentials);
         serviceClient.request(httpRequest).then((response: azureServiceClient.WebResponse) => {
-            if (response.error) {
-                callback(response.error);
+            if (response.error || response.body.error) {
+                var error = response.error;
+                error = response.body.error ? { "ErrorCode": response.body.error.code, "ErrorMessage": response.body.error.message } : "";
+                callback(error);
             }
             serviceClient.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
                 if (operationResponse.body.status === "Succeeded") {
                     // Generate Response
-                    callback(null);
+                    callback(null, response.body);
                 } else {
                     // Generate Error
-                    callback()
+                    var error = response.error;
+                    error = response.body.error ? { "ErrorCode": response.body.error.code, "ErrorMessage": response.body.error.message } : "";
+                    callback(error);
                 }
             });
         });
