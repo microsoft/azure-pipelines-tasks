@@ -24,13 +24,9 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
 
     setParametersFile = utility.getSetParamFilePath(setParametersFile);
 	var msDeployCmdArgs;
-	var tempSetParamFile = null;
 	var setParametersFileName = null;
 	var pathVar;
-	if(setParametersFile != null)
-	{
-		tempSetParamFile = path.join(tl.getVariable('System.DefaultWorkingDirectory'), "tempSetParameters.xml");
-		tl.cp(setParametersFile, tempSetParamFile);
+	if(setParametersFile != null) {
 		setParametersFileName = "tempSetParameters.xml";
 	}
     var isParamFilePresentInPackage = isFolderBasedDeployment ? false : await msDeployUtility.containsParamFile(webDeployPkg);
@@ -40,37 +36,29 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
         useWebDeploy);
 
     try {
-		
 		var msDeployDirectory = msDeployPath.slice(0, msDeployPath.lastIndexOf('\\') + 1);
 		pathVar = process.env.PATH;
         process.env.PATH = msDeployDirectory + ";" + process.env.PATH ;
 		
         var errorFile = path.join(tl.getVariable('System.DefaultWorkingDirectory'),"error.txt");
         var errObj = fs.createWriteStream(errorFile);
-
 		await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj});
 
-        //var msDeployBatchFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'msDeployCommand.bat';
-        //var msDeployCommand = '@echo off \n';
-        //msDeployCommand += '"' + msDeployPath + '" ' + msDeployCmdArgs + ' 2>error.txt\n';
-        //msDeployCommand += 'if %errorlevel% neq 0 exit /b %errorlevel%';
-        //tl.writeFile(msDeployBatchFile, msDeployCommand);
-        //tl._writeLine(tl.loc("Runningcommand", msDeployCommand));
-        //await tl.exec("cmd", ['/C', msDeployBatchFile], <any> {failOnStdErr: true});
-        //tl.rmRF(msDeployBatchFile, true);
-        if(publishingProfile != null){
-        tl._writeLine(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));}
+        if(publishingProfile != null) {
+            tl._writeLine(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
+	    }
     }
     catch(error) {
+        process.env.PATH = pathVar;
         tl.error(tl.loc('Failedtodeploywebsite'));
         msDeployUtility.redirectMSDeployErrorToConsole();
         throw Error(error);
     }
-	finally{
+	finally {
 		process.env.PATH = pathVar;
-		if(tempSetParamFile != null){
-			if(tl.exist(tempSetParamFile)){
-				tl.rmRF(tempSetParamFile, true);
+		if(setParametersFile != null) {
+			if(tl.exist(setParametersFile)) {
+				tl.rmRF(setParametersFile, true);
 			}
 		}
 	}
