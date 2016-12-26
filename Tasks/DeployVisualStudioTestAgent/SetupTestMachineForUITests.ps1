@@ -118,9 +118,6 @@ function ConfigurePowerOptions([System.Management.Automation.PSCredential] $Mach
 
 function Set-EnableAutoLogon($TestUserDomain, $TestUserName, $TestUserPassword) {
 
-    ## TODO fix this
-    $TestUserDomain = "fareast"
-
     # If the type has already been loaded once, then it is not loaded again.
         Add-Type -Language CSharp -TypeDefinition @'
 using System;
@@ -564,7 +561,13 @@ namespace MS.VS.TestTools.Config
 
 function SetupTestMachine($TestUserName, $TestUserPassword) {
     # For UI Test scenarios, we need to disable the screen saver and enable auto logon
-    Set-EnableAutoLogon("", $TestUserName, $TestUserPassword)
+    $domainUser = $TestUserName.Split("\")
+    $domain = "."
+    if($domainUser.Length -gt 1){
+        $domain = $domainUser[0]
+    }
+
+    Set-EnableAutoLogon($domain, $TestUserName, $TestUserPassword)
     Set-DisableScreenSaverReg
 
     $isSessionActive = IsAnySessionActive

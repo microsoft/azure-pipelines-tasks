@@ -15,6 +15,27 @@
     )
 
     Try {
+        # First look for DTA Archive. If not present quit
+        if(-not (Test-Path "$SetupPath\TestExecution.zip")) {
+            throw "Unable to locate Test Execution archive"   
+        }
+        
+        # Stop any existing process otherwise Archive extraction fails
+        Try { 
+            Stop-Process -Name "DTAExecutionHost" -ErrorAction SilentlyContinue
+
+            Add-Type -AssemblyName System.IO.Compression.FileSystem
+            function Unzip
+            {
+                param([string]$zipfile, [string]$outpath)
+                [System.IO.Compression.ZipFile]::ExtractToDirectory($zipfile, $outpath)
+            }
+            Unzip "$SetupPath\TestExecution.zip" $SetupPath
+        }
+        Catch {
+            Write-Warning $_
+        }
+
         # Fix Assembly Redirections
         # VSTS uses Newton Json 8.0 while the System.Net.Http uses 6.0
         # Redirection to Newton Json 8.0
@@ -66,16 +87,19 @@
         $DtaAgent = $DtaAgentClient.Register($MachineName, $EnvironmentUrl, $MachineName, $Capabilities)
         Write-Verbose "Register the Agent with Id: $($DtaAgent.Id)"
 
-        $DtaProcess = New-Object System.Diagnostics.Process
-        $Processinfo = New-Object System.Diagnostics.ProcessStartInfo
-        $Processinfo.EnvironmentVariables.Add("DTA.AccessToken", $PersonalAccessToken);
-        $Processinfo.EnvironmentVariables.Add("DTA.AgentId", $DtaAgent.Id);
-        $Processinfo.EnvironmentVariables.Add("DTA.EnvironmentUri", $EnvironmentUrl);
-        $Processinfo.EnvironmentVariables.Add("DTA.TeamFoundationCollectionUri", $TfsCollection);
-        $Processinfo.EnvironmentVariables.Add("DTA.TestPlatfromVersion", $TestAgentVersion);
+        # For all our sake, DON'T ever remove this line. It took literally 6 hours to figure out why this is needed.
+        # ​¯\_(ツ)_/¯
+        [System.AppDomain]::CurrentDomain.remove_AssemblyResolve($onAssemblyResolve)
 
         if ($AsServiceOrProcess -eq "Service")
         {
+            $DtaProcess = New-Object System.Diagnostics.Process
+            $Processinfo = New-Object System.Diagnostics.ProcessStartInfo
+            $Processinfo.EnvironmentVariables.Add("DTA.AccessToken", $PersonalAccessToken);
+            $Processinfo.EnvironmentVariables.Add("DTA.AgentId", $DtaAgent.Id);
+            $Processinfo.EnvironmentVariables.Add("DTA.EnvironmentUri", $EnvironmentUrl);
+            $Processinfo.EnvironmentVariables.Add("DTA.TeamFoundationCollectionUri", $TfsCollection);
+            $Processinfo.EnvironmentVariables.Add("DTA.TestPlatfromVersion", $TestAgentVersion);
             $Processinfo.UseShellExecute = $false
             $Processinfo.LoadUserProfile = $false
             $Processinfo.CreateNoWindow = $true
@@ -84,27 +108,31 @@
             $Processinfo.WindowStyle = "Hidden"
             $Processinfo.FileName = "$SetupPath\DTAExecutionHost.exe"
             $Processinfo.WorkingDirectory = "$SetupPath"
+
+            $DtaProcess.StartInfo = $Processinfo
+            if($DtaProcess.Start()){
+                Write-Verbose "DTAExecutionHost Process Id: $($DtaProcess.Id)"
+                return 0
+            }
+        
+            throw "Unable to start DTAExecutionHost process"
         }
         else
         {
-            $Processinfo.UseShellExecute = $false
-            $Processinfo.LoadUserProfile = $false
-            $Processinfo.RedirectStandardError = $true
-            $Processinfo.RedirectStandardOutput = $true
-            $Processinfo.WindowStyle = "Normal"
-            $Processinfo.FileName = "$SetupPath\DTAExecutionHost.exe"
-            $Processinfo.WorkingDirectory = "$SetupPath"
-        }
+            $dtaArgs = "DTA.AccessToken:$PersonalAccessToken DTA.AgentId:$($DtaAgent.Id) DTA.EnvironmentUri:$EnvironmentUrl DTA.TeamFoundationCollectionUri:$TfsCollection DTA.TestPlatfromVersion:$TestAgentVersion"
+            $action = New-ScheduledTaskAction -Execute "$SetupPath\DTAExecutionHost.exe" -Argument $dtaArgs
+            $trigger = New-ScheduledTaskTrigger -AtLogOn
+            $exePath = "$SetupPath\DTAExecutionHost.exe $dtaArgs"
 
-        $DtaProcess.StartInfo = $Processinfo
-    
-    
-        if($DtaProcess.Start()){
-            Write-Verbose "DTAExecutionHost Process Id: $($DtaProcess.Id)"
-            return $($DtaProcess.Id)
+            Unregister-ScheduledTask -TaskName "DTA" -Confirm:$false -OutVariable out -ErrorVariable err -ErrorAction SilentlyContinue | Out-Null
+            Register-ScheduledTask -Action $action -Trigger $trigger -TaskName "DTA" -Description "DTA UI" -RunLevel Highest -OutVariable out -ErrorVariable err | Out-Null
+            Write-Verbose "Registering scheduled task output: $out error: $err" -Verbose
+            
+            Start-ScheduledTask -TaskName "DTA" -OutVariable out -ErrorVariable err | Out-Null
+            Write-Verbose "Starting scheduled task output: $out error: $err" -Verbose
+            Unregister-ScheduledTask  -TaskName "DTA" -Confirm:$false -ErrorAction SilentlyContinue
+            return 0
         }
-        
-        throw "Unable to start DTAExecutionHost process"
     }
     Catch {
         Write-Error $_
