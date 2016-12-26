@@ -63,7 +63,7 @@ async function run() {
         }
 
         if(availableWebPackages.length > 1) {
-            throw new Error(tl.loc('MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern'));
+            throw new Error(tl.loc('MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern'));
         }
         webDeployPkg = availableWebPackages[0];
 
@@ -73,6 +73,9 @@ async function run() {
 
             var folderPath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package_folder');
             if(isFolderBasedDeployment) {
+                if(tl.exist(folderPath)) {
+                    tl.rmRF(folderPath, false);
+                }
                 tl.cp(path.join(webDeployPkg, '/*'), folderPath, '-rf', false);
             }
             else {
@@ -95,10 +98,12 @@ async function run() {
 
             if(xmlVariableSubstitution) {
                 await xmlSubstitutionUtility.substituteAppSettingsVariables(folderPath);
+                tl._writeLine(tl.loc('XMLvaiablesubstitutionappliedsuccessfully'));
             }
 
             if(JSONFiles.length != 0) {
                 jsonSubstitutionUtility.jsonVariableSubstitution(folderPath, JSONFiles);
+                tl._writeLine(tl.loc('JSONvariablesubstitutionappliedsuccessfully'));
             }
 
             webDeployPkg = (isFolderBasedDeployment) ? folderPath : await zipUtility.archiveFolder(folderPath, tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package.zip')
