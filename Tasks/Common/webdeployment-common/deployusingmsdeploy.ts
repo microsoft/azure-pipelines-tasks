@@ -23,68 +23,41 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
         excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments, isFolderBasedDeployment, useWebDeploy) {
 
     setParametersFile = utility.getSetParamFilePath(setParametersFile);
-	var msDeployCmdArgs;
-	var setParametersFileName = null;
-	var pathVar;
-	if(setParametersFile != null) {
-		setParametersFileName = "tempSetParameters.xml";
-	}
+    var setParametersFileName = null;
+    var pathVar;
+    if(setParametersFile != null) {
+        setParametersFileName = setParametersFile.slice(setParametersFile.lastIndexOf('\\') + 1, setParametersFile.length);
+    }
     var isParamFilePresentInPackage = isFolderBasedDeployment ? false : await msDeployUtility.containsParamFile(webDeployPkg);
     var msDeployPath = await msDeployUtility.getMSDeployFullPath();
-    msDeployCmdArgs = msDeployUtility.getMSDeployCmdArgs(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
+    var msDeployCmdArgs = msDeployUtility.getMSDeployCmdArgs(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag,
         excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFileName, additionalArguments, isParamFilePresentInPackage, isFolderBasedDeployment, 
         useWebDeploy);
 
-    //try {
-	//	var msDeployDirectory = msDeployPath.slice(0, msDeployPath.lastIndexOf('\\') + 1);
-	//	pathVar = process.env.PATH;
-      //  process.env.PATH = msDeployDirectory + ";" + process.env.PATH ;
-		
-        var errorFile = path.join(tl.getVariable('System.DefaultWorkingDirectory'),"error.txt");
-        var errObj = fs.createWriteStream(errorFile);
-        
-        errObj.on('open', async () => { 
-   		    try {
-                var msDeployDirectory = msDeployPath.slice(0, msDeployPath.lastIndexOf('\\') + 1);
-		        pathVar = process.env.PATH;
-                process.env.PATH = msDeployDirectory + ";" + process.env.PATH ;
-                await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj})
-                if(publishingProfile != null) {
-                    tl._writeLine(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
-	            }
-            }
-            catch(error) {
-                tl.error(tl.loc('Failedtodeploywebsite'));
-                errObj.on('close',() => msDeployUtility.redirectMSDeployErrorToConsole() );
-                errObj.close();
-                throw Error(error);
-            }
-            finally {
-		        process.env.PATH = pathVar;
-		        if(setParametersFile != null) {
-			        if(tl.exist(setParametersFile)) {
-				        tl.rmRF(setParametersFile, true);
-			        }
-		        }
-	        }
-        });
-
-       /* if(publishingProfile != null) {
+    var errorFile = path.join(tl.getVariable('System.DefaultWorkingDirectory'),"error.txt");
+    var fd = fs.openSync(errorFile, "w");
+    var errObj = fs.createWriteStream("", {fd: fd} );
+     
+    try {
+        var msDeployDirectory = msDeployPath.slice(0, msDeployPath.lastIndexOf('\\') + 1);
+        pathVar = process.env.PATH;
+        process.env.PATH = msDeployDirectory + ";" + process.env.PATH ;
+        await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj})
+        if(publishingProfile != null) {
             tl._writeLine(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
-    }*/
-    //}
-    /*catch(error) {
-        errObj.close();
+        }
+    }
+    catch (error) {
         tl.error(tl.loc('Failedtodeploywebsite'));
-        errObj.on('close',() => msDeployUtility.redirectMSDeployErrorToConsole() );
+        fs.closeSync(fd);
+        msDeployUtility.redirectMSDeployErrorToConsole()
         throw Error(error);
     }
-	finally {
-		process.env.PATH = pathVar;
-		if(setParametersFile != null) {
-			if(tl.exist(setParametersFile)) {
-				tl.rmRF(setParametersFile, true);
-			}
-		}
-	}*/
+    finally {
+        fs.closeSync(fd);
+        process.env.PATH = pathVar;
+        if(setParametersFile != null) {
+                tl.rmRF(setParametersFile, true);
+        }
+    }
 }

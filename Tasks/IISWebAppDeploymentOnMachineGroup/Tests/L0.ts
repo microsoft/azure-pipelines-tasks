@@ -36,7 +36,7 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         done();
     });
     
-	it('Fails if msdeploy cmd fails to execute', (done) => {
+	it('Fails if msdeploy fails to execute', (done) => {
         let tp = path.join(__dirname, 'L0WindowsFailDefault.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         

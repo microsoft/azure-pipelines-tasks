@@ -101,62 +101,46 @@ export async  function containsParamFile(webAppPackage: string ) {
     var msDeployPath = await getMSDeployFullPath();
     var parameterFile;
 
-   // try {
+    var msDeployDirectory = msDeployPath.slice(0, msDeployPath.lastIndexOf('\\') + 1);
+    var pathVar = process.env.PATH;
+    process.env.PATH = msDeployDirectory + ";" + process.env.PATH;
+    var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package=\'" + webAppPackage + "\'";
+    
+    parameterFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'parameter.xml';
+    var fd = fs.openSync(parameterFile, "w");
+    var outputObj = fs.createWriteStream("",{"fd": fd});
+    
+    try {
         var msDeployDirectory = msDeployPath.slice(0, msDeployPath.lastIndexOf('\\') + 1);
         var pathVar = process.env.PATH;
         process.env.PATH = msDeployDirectory + ";" + process.env.PATH;
         var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package=\'" + webAppPackage + "\'";
-        
-        
-        parameterFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'parameter.xml';
-        var outputObj = fs.createWriteStream(parameterFile);
-        
-        outputObj.on('open', async () => {
-            try {
-                var msDeployDirectory = msDeployPath.slice(0, msDeployPath.lastIndexOf('\\') + 1);
-                var pathVar = process.env.PATH;
-                process.env.PATH = msDeployDirectory + ";" + process.env.PATH;
-                var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package=\'" + webAppPackage + "\'";
-                await tl.exec("msdeploy", msDeployCheckParamFileCmdArgs, <any>{ failOnStdErr: true, outStream: outputObj });
-            }
-            catch(error){
-                throw Error(error);
-            }
-            finally {
-                process.env.PATH = pathVar;
-                outputObj.close();
-            }
-        });
-
-
-     //   await tl.exec("msdeploy", msDeployCheckParamFileCmdArgs, <any>{ failOnStdErr: true, outStream: outputObj });
-    //}
-    /*catch(error){
+        await tl.exec("msdeploy", msDeployCheckParamFileCmdArgs, <any>{ failOnStdErr: true, outStream: outputObj });
+    }
+    catch(error) {
         throw Error(error);
     }
     finally {
+        fs.closeSync(fd);
         process.env.PATH = pathVar;
-    }*/
+    }
 
-    outputObj.on('close',async ()=> {
-        var paramContentXML = fs.readFileSync(parameterFile);
-        paramContentXML = paramContentXML.slice(paramContentXML.indexOf('\n') + 1, paramContentXML.length);
-    
-        var isParamFilePresent = false;
-    
-        await parseString(paramContentXML, (error, result) => {
-            if(error) {
-                throw new Error(error);
-            }
-            if(result['output']['parameters'][0] ) {
-                isParamFilePresent = true;
-            }
-        });
+    var paramContentXML = fs.readFileSync(parameterFile);
+    paramContentXML = paramContentXML.slice(paramContentXML.indexOf('\n') + 1, paramContentXML.length);
+    var isParamFilePresent = false;
 
-        tl.debug("Is parameter file present in web package : " + isParamFilePresent);
-        tl.rmRF(parameterFile, true);
-        return isParamFilePresent;
+    await parseString(paramContentXML, (error, result) => {
+        if(error) {
+            throw new Error(error);
+        }
+        if(result['output']['parameters'][0] ) {
+            isParamFilePresent = true;
+        }
     });
+
+    tl.debug("Is parameter file present in web package : " + isParamFilePresent);
+    tl.rmRF(parameterFile, true);
+    return isParamFilePresent;
 }
 
 /**
@@ -237,7 +221,6 @@ export function redirectMSDeployErrorToConsole() {
     var msDeployErrorFilePath = tl.getVariable('System.DefaultWorkingDirectory') + '\\error.txt';
     
     if(tl.exist(msDeployErrorFilePath)) {
-        
         var errorFileContent = fs.readFileSync(msDeployErrorFilePath);
         
         if(errorFileContent.toString().indexOf("ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER") !== -1) {
