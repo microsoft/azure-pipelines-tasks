@@ -35,23 +35,48 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
         excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFileName, additionalArguments, isParamFilePresentInPackage, isFolderBasedDeployment, 
         useWebDeploy);
 
-    try {
-		var msDeployDirectory = msDeployPath.slice(0, msDeployPath.lastIndexOf('\\') + 1);
-		pathVar = process.env.PATH;
-        process.env.PATH = msDeployDirectory + ";" + process.env.PATH ;
+    //try {
+	//	var msDeployDirectory = msDeployPath.slice(0, msDeployPath.lastIndexOf('\\') + 1);
+	//	pathVar = process.env.PATH;
+      //  process.env.PATH = msDeployDirectory + ";" + process.env.PATH ;
 		
         var errorFile = path.join(tl.getVariable('System.DefaultWorkingDirectory'),"error.txt");
         var errObj = fs.createWriteStream(errorFile);
-		await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj});
+        
+        errObj.on('open', async () => { 
+   		    try {
+                var msDeployDirectory = msDeployPath.slice(0, msDeployPath.lastIndexOf('\\') + 1);
+		        pathVar = process.env.PATH;
+                process.env.PATH = msDeployDirectory + ";" + process.env.PATH ;
+                await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj})
+                if(publishingProfile != null) {
+                    tl._writeLine(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
+	            }
+            }
+            catch(error) {
+                tl.error(tl.loc('Failedtodeploywebsite'));
+                errObj.on('close',() => msDeployUtility.redirectMSDeployErrorToConsole() );
+                errObj.close();
+                throw Error(error);
+            }
+            finally {
+		        process.env.PATH = pathVar;
+		        if(setParametersFile != null) {
+			        if(tl.exist(setParametersFile)) {
+				        tl.rmRF(setParametersFile, true);
+			        }
+		        }
+	        }
+        });
 
-        if(publishingProfile != null) {
+       /* if(publishingProfile != null) {
             tl._writeLine(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
-	    }
-    }
-    catch(error) {
-        process.env.PATH = pathVar;
+    }*/
+    //}
+    /*catch(error) {
+        errObj.close();
         tl.error(tl.loc('Failedtodeploywebsite'));
-        msDeployUtility.redirectMSDeployErrorToConsole();
+        errObj.on('close',() => msDeployUtility.redirectMSDeployErrorToConsole() );
         throw Error(error);
     }
 	finally {
@@ -61,5 +86,5 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
 				tl.rmRF(setParametersFile, true);
 			}
 		}
-	}
+	}*/
 }

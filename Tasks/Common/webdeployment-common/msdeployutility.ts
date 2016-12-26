@@ -101,40 +101,62 @@ export async  function containsParamFile(webAppPackage: string ) {
     var msDeployPath = await getMSDeployFullPath();
     var parameterFile;
 
-    try {
+   // try {
         var msDeployDirectory = msDeployPath.slice(0, msDeployPath.lastIndexOf('\\') + 1);
         var pathVar = process.env.PATH;
         process.env.PATH = msDeployDirectory + ";" + process.env.PATH;
         var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package=\'" + webAppPackage + "\'";
+        
+        
         parameterFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'parameter.xml';
         var outputObj = fs.createWriteStream(parameterFile);
-        await tl.exec("msdeploy", msDeployCheckParamFileCmdArgs, <any>{ failOnStdErr: true, outStream: outputObj });
-    }
-    catch(error){
-        process.env.PATH = pathVar;
+        
+        outputObj.on('open', async () => {
+            try {
+                var msDeployDirectory = msDeployPath.slice(0, msDeployPath.lastIndexOf('\\') + 1);
+                var pathVar = process.env.PATH;
+                process.env.PATH = msDeployDirectory + ";" + process.env.PATH;
+                var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package=\'" + webAppPackage + "\'";
+                await tl.exec("msdeploy", msDeployCheckParamFileCmdArgs, <any>{ failOnStdErr: true, outStream: outputObj });
+            }
+            catch(error){
+                throw Error(error);
+            }
+            finally {
+                process.env.PATH = pathVar;
+                outputObj.close();
+            }
+        });
+
+
+     //   await tl.exec("msdeploy", msDeployCheckParamFileCmdArgs, <any>{ failOnStdErr: true, outStream: outputObj });
+    //}
+    /*catch(error){
         throw Error(error);
     }
     finally {
         process.env.PATH = pathVar;
-    }
+    }*/
 
-    var paramContentXML = fs.readFileSync(parameterFile);
-    paramContentXML = paramContentXML.slice(paramContentXML.indexOf('\n') + 1, paramContentXML.length);
+    outputObj.on('close',async ()=> {
+        var paramContentXML = fs.readFileSync(parameterFile);
+        paramContentXML = paramContentXML.slice(paramContentXML.indexOf('\n') + 1, paramContentXML.length);
     
-    var isParamFilePresent = false;
+        var isParamFilePresent = false;
     
-    await parseString(paramContentXML, (error, result) => {
-        if(error) {
-            throw new Error(error);
-        }
-        if(result['output']['parameters'][0] ) {
-            isParamFilePresent = true;
-        }
+        await parseString(paramContentXML, (error, result) => {
+            if(error) {
+                throw new Error(error);
+            }
+            if(result['output']['parameters'][0] ) {
+                isParamFilePresent = true;
+            }
+        });
+
+        tl.debug("Is parameter file present in web package : " + isParamFilePresent);
+        tl.rmRF(parameterFile, true);
+        return isParamFilePresent;
     });
-
-    tl.debug("Is parameter file present in web package : " + isParamFilePresent);
-    tl.rmRF(parameterFile, true);
-    return isParamFilePresent;
 }
 
 /**
