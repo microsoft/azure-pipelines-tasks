@@ -37,6 +37,7 @@ async function run() {
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
 
         var isDeploymentSuccess: boolean = true;
+        var tempPackagePath = null;
 
         var endPoint = new Array();
         endPoint["servicePrincipalClientID"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'serviceprincipalid', true);
@@ -71,11 +72,8 @@ async function run() {
 
         if(JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution) {
 
-            var folderPath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package_folder');
+            var folderPath = utility.generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWOrkingDirectory'), true);
             if(isFolderBasedDeployment) {
-                if(tl.exist(folderPath)) {
-                    tl.rmRF(folderPath, false);
-                }
                 tl.cp(path.join(webDeployPkg, '/*'), folderPath, '-rf', false);
             }
             else {
@@ -105,8 +103,16 @@ async function run() {
                 jsonSubstitutionUtility.jsonVariableSubstitution(folderPath, JSONFiles);
                 tl._writeLine(tl.loc('JSONvariablesubstitutionappliedsuccessfully'));
             }
-
-            webDeployPkg = (isFolderBasedDeployment) ? folderPath : await zipUtility.archiveFolder(folderPath, tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package.zip')
+            if(isFolderBasedDeployment) {
+                tempPackagePath = folderPath;
+                webDeployPkg = folderPath;
+            }
+            else {
+                var tempWebPackageZip = utility.generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWOrkingDirectory'), false);
+                webDeployPkg = await zipUtility.archiveFolder(folderPath, "", tempWebPackageZip);
+                tempPackagePath = webDeployPkg;
+                tl.rmRF(folderPath, true);
+            }
         }
 
         if(virtualApplication) {
@@ -179,6 +185,9 @@ async function run() {
             tl.warning(error);
         }
     }
+    if(tempPackagePath) {
+        tl.rmRF(tempPackagePath);
+    }
 }
 
 
@@ -193,12 +202,13 @@ async function run() {
  *
  */
 async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment, takeAppOfflineFlag) {
-
+    var tempPackagePath = null;
     try {
         var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
         var webAppZipFile = webDeployPkg;
         if(isFolderBasedDeployment) {
-            webAppZipFile = await zipUtility.archiveFolder(webDeployPkg, tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_app_package.zip');
+            tempPackagePath = utility.generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWOrkingDirectory'), false);
+            webAppZipFile = await zipUtility.archiveFolder(webDeployPkg, "", tempPackagePath);
             tl.debug("Compressed folder " + webDeployPkg + " into zip : " +  webAppZipFile);
         } else {
             if (await kuduUtility.containsParamFile(webAppZipFile)) {
@@ -222,6 +232,11 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
     catch(error) {
         tl.error(tl.loc('Failedtodeploywebsite'));
         throw Error(error);
+    }
+    finally {
+        if(tempPackagePath) {
+            tl.rmRF(tempPackagePath, true);
+        }
     }
 }
 
