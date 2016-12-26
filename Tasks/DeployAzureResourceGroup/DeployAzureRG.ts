@@ -19,7 +19,10 @@ export class AzureRGTaskParameters {
     public csmFileLink:string;
     public csmParametersFileLink:string;
     public overrideParameters:string;
-    public enableDeploymentPrerequisites:boolean;
+    public enableDeploymentPrerequisites:string;
+    public machineGroupName: string;
+    public copyAzureVMTags: boolean;
+    public vstsPATToken: string;
     public outputVariable:string;
     public subscriptionId:string;
     public connectedService:string;
@@ -43,7 +46,10 @@ export class AzureRGTaskParameters {
                 this.csmParametersFileLink = tl.getInput("csmParametersFileLink");
             }
             this.overrideParameters = tl.getInput("overrideParameters");
-            this.enableDeploymentPrerequisites = tl.getBoolInput("enableDeploymentPrerequisites");
+            this.enableDeploymentPrerequisites = tl.getInput("enableDeploymentPrerequisites");
+            this.machineGroupName = tl.getInput("machineGroupName");
+            this.copyAzureVMTags = tl.getBoolInput("copyAzureVMTags");
+            this.vstsPATToken = tl.getInput("vstsPATToken");
             this.outputVariable = tl.getInput("outputVariable");
             this.deploymentMode = tl.getInput("deploymentMode");
             this.credentials = this.getARMCredentials();

@@ -57,6 +57,28 @@ export class VirtualMachine {
             }
             this.vmCount = listOfVms.length;
             switch (this.taskParameters.action) {
+                case "Create or update resource group":
+                case "Select resource group":
+                    if (this.taskParameters.enableDeploymentPrerequisites == "Configure VM agent with Machine Group Agent") {
+                        for (var i = 0; i < listOfVms.length; i++) {
+                            var vmName = listOfVms[i]["name"];
+                            var extensionParameters = this.FormExtensionParameters(listOfVms[i], "enable");
+                            tl.debug("Adding team services agent extension for virtual machine " + vmName);
+                            client.virtualMachineExtensions.createOrUpdate(this.taskParameters.resourceGroupName, extensionParameters["vmName"], extensionParameters["extensionName"], extensionParameters["parameters"], this.postOperationCallBack);
+                            tl.debug("After issuing create command");
+                        }
+                    }
+                    break;
+                case "DeleteRG":
+                    if (this.taskParameters.enableDeploymentPrerequisites == "Configure VM agent with Machine Group Agent") {
+                        for (var i = 0; i < listOfVms.length; i++) {
+                            var vmName = listOfVms[i]["name"];
+                            var extensionParameters = this.FormExtensionParameters(listOfVms[i], "uninstall");
+                            tl.debug("Uninstalling team services agent extension for virtual machine " + vmName);
+                            client.virtualMachineExtensions.deleteMethod(this.taskParameters.resourceGroupName, extensionParameters["vmName"], extensionParameters["extensionName"], extensionParameters["parameters"], this.postOperationCallBack);
+                        }
+                    }
+                    break;
                 case "Start":
                     for (var i = 0; i < listOfVms.length; i++) {
                         var vmName = listOfVms[i]["name"];
@@ -82,10 +104,62 @@ export class VirtualMachine {
                     for (var i = 0; i < listOfVms.length; i++) {
                         var vmName = listOfVms[i]["name"];
                         console.log(tl.loc("VM_Delete", vmName));
-                        client.virtualMachines.deleteMethod(this.taskParameters.resourceGroupName, vmName, this.postOperationCallBack);
+                        console.log(tl.loc("VM_Delete", vmName));
+                        var extensionParameters = this.FormExtensionParameters(listOfVms[i], "uninstall");
+                        tl.debug("Uninstalling team services agent extension for virtual machine " + vmName);
+                        client.virtualMachineExtensions.deleteMethod(this.taskParameters.resourceGroupName, extensionParameters["vmName"], extensionParameters["extensionName"], extensionParameters["parameters"], (error, result, request, response) => {
+                            if (error) {
+                                tl.debug("Failed to delete the extension " + extensionParameters["extensionName"] + " on the vm " + extensionParameters["vmName"]);
+                            }
+                            else {
+                                tl.debug("Successfully removed the extension " + extensionParameters["extensionName"] + " from the VM " + extensionParameters["vmName"]);
+                            }
+                            client.virtualMachines.deleteMethod(this.taskParameters.resourceGroupName, extensionParameters["vmName"], this.postOperationCallBack);
+                        });
                     }
             }
         });
     }
+
+
+        private FormExtensionParameters(virtualMachine, extensionAction) {
+        var vmId = virtualMachine["id"];
+        var vmName = virtualMachine["name"];
+        var vmOsType = virtualMachine["storageProfile"]["osDisk"]["osType"];
+        var vmLocation = virtualMachine["location"];
+
+        if (vmOsType == "Windows") {
+            var extensionName = "TeamServicesAgent";
+            var virtualMachineExtensionType: string = 'TeamServicesAgent';
+            var typeHandlerVersion: string = '1.0';
+        }
+        else if (vmOsType == "Linux") {
+            extensionName = "TeamServicesAgentLinux";
+            virtualMachineExtensionType = 'TeamServicesAgentLinux';
+            typeHandlerVersion = '1.0';
+        }
+        var autoUpgradeMinorVersion: boolean = true;
+        var publisher: string = 'Microsoft.VisualStudio.Services';
+        var extensionType: string = 'Microsoft.Compute/virtualMachines/extensions';
+        //var collectionUri = tl.getVariable('system.TeamFoundationCollectionUri');
+        //var teamProject = tl.getVariable('system.teamProject');
+        var collectionUri = "https://testking123.visualstudio.com/";
+        var teamProject = "AzureProj";
+        var uriLength = collectionUri.length;
+        if (collectionUri[uriLength - 1] == '/') {
+            collectionUri = collectionUri.substr(0, uriLength - 1);
+        }
+        var tags = "";
+        if (!!virtualMachine["tags"]) {
+            tags = virtualMachine["tags"];
+        }
+
+        var publicSettings = { VSTSAccountName: collectionUri, TeamProject: teamProject, MachineGroup: this.taskParameters.machineGroupName, AgentName: "", Tags: tags };
+        var protectedSettings = { PATToken: this.taskParameters.vstsPATToken };
+        var parameters = { type: extensionType, virtualMachineExtensionType: virtualMachineExtensionType, typeHandlerVersion: typeHandlerVersion, publisher: publisher, autoUpgradeMinorVersion: autoUpgradeMinorVersion, location: vmLocation, settings: publicSettings, protectedSettings: protectedSettings };
+        tl.debug("VM Location: " + vmLocation);
+        return { vmName: vmName, extensionName: extensionName, parameters: parameters };
+    }
+
 }
 

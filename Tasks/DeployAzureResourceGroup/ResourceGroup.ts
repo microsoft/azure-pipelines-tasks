@@ -209,7 +209,7 @@ export class ResourceGroup {
                     process.exit();
                 }
                 console.log("Completed Deployment");
-                if (this.taskParameters.enableDeploymentPrerequisites) {
+                if (this.taskParameters.enableDeploymentPrerequisites == "Configure VM with Win RM") {
                     console.log("Enabling winRM Https Listener on your windows machines..");
                     await this.WinRMHttpsListener.EnableWinRMHttpsListener();
                 }
@@ -259,7 +259,7 @@ export class ResourceGroup {
     }
     
     public async selectResourceGroup() {
-        if (this.taskParameters.enableDeploymentPrerequisites) {
+        if (this.taskParameters.enableDeploymentPrerequisites == "Configure VM with Win RM") {
             console.log("Enabling winRM Https Listener on your windows machines..");
             await this.WinRMHttpsListener.EnableWinRMHttpsListener();
         }
@@ -269,6 +269,5 @@ export class ResourceGroup {
             tl.setResult(tl.TaskResult.Failed, tl.loc("FailedRegisteringEnvironment", error));
             process.exit();
         }
-        tl.setResult(tl.TaskResult.Succeeded, tl.loc("selectResourceGroupSuccessfull", this.taskParameters.resourceGroupName, this.taskParameters.outputVariable))
     }
 }
