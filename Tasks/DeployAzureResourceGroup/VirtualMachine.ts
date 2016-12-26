@@ -141,10 +141,8 @@ export class VirtualMachine {
         var autoUpgradeMinorVersion: boolean = true;
         var publisher: string = 'Microsoft.VisualStudio.Services';
         var extensionType: string = 'Microsoft.Compute/virtualMachines/extensions';
-        //var collectionUri = tl.getVariable('system.TeamFoundationCollectionUri');
-        //var teamProject = tl.getVariable('system.teamProject');
-        var collectionUri = "https://testking123.visualstudio.com/";
-        var teamProject = "AzureProj";
+        var collectionUri = tl.getVariable('system.TeamFoundationCollectionUri');
+        var teamProject = tl.getVariable('system.teamProject');
         var uriLength = collectionUri.length;
         if (collectionUri[uriLength - 1] == '/') {
             collectionUri = collectionUri.substr(0, uriLength - 1);
