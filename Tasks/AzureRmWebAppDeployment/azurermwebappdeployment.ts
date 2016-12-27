@@ -72,7 +72,7 @@ async function run() {
 
         if(JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution) {
 
-            var folderPath = utility.generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWOrkingDirectory'), true);
+            var folderPath = utility.generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWorkingDirectory'), true);
             if(isFolderBasedDeployment) {
                 tl.cp(path.join(webDeployPkg, '/*'), folderPath, '-rf', false);
             }
@@ -108,7 +108,7 @@ async function run() {
                 webDeployPkg = folderPath;
             }
             else {
-                var tempWebPackageZip = utility.generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWOrkingDirectory'), false);
+                var tempWebPackageZip = utility.generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWorkingDirectory'), false);
                 webDeployPkg = await zipUtility.archiveFolder(folderPath, "", tempWebPackageZip);
                 tempPackagePath = webDeployPkg;
                 tl.rmRF(folderPath, true);
@@ -207,7 +207,7 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
         var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
         var webAppZipFile = webDeployPkg;
         if(isFolderBasedDeployment) {
-            tempPackagePath = utility.generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWOrkingDirectory'), false);
+            tempPackagePath = utility.generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWorkingDirectory'), false);
             webAppZipFile = await zipUtility.archiveFolder(webDeployPkg, "", tempPackagePath);
             tl.debug("Compressed folder " + webDeployPkg + " into zip : " +  webAppZipFile);
         } else {

@@ -57,6 +57,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "rmRF": {
         "DefaultWorkingDirectory\\msDeployCommand.bat": {
             "success": true
+        },
+        "temp_web_package_random_path": {
+            "success": true
         }
     },
     "exec": {
@@ -215,6 +218,24 @@ tr.registerMock('webdeployment-common/xmlvariablesubstitutionutility.js', {
         for(var configFile of configFiles) {
             await xmlSubstitutionUtility.substituteXmlVariables(configFile, tags, variableMap);
         }
+    }
+});
+
+tr.registerMock('webdeployment-common/utility.js', {
+    isInputPkgIsFolder: function() {
+        return false;    
+    },
+    fileExists: function() {
+        return true;   
+    },
+    canUseWebDeploy: function() {
+        return true;
+    },
+    findfiles: function() {
+        return ['webDeployPkg']    
+    },
+    generateTemporaryFolderOrZipPath: function() {
+        return 'temp_web_package_random_path';
     }
 });
 
