@@ -117,6 +117,7 @@ export class MGExtensionManager {
         }
         var tags = "";
         if (!!virtualMachine["tags"]) {
+            console.log("Copying VM tags")
             tags = virtualMachine["tags"];
         }
 
