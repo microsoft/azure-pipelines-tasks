@@ -6,7 +6,7 @@
   "loc.group.displayName.deployment": "部署",
   "loc.group.displayName.advanced": "高级选项",
   "loc.input.label.EnvironmentName": "计算机",
-  "loc.input.help.EnvironmentName": "提供以逗号分隔的计算机 IP 地址或 FQDN 以及端口列表。端口默认基于选定的协议。<br>例如: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986 <br>或者提供其他任务的输出变量。例如: $(variableName)",
+  "loc.input.help.EnvironmentName": "提供以逗号分隔的计算机 IP 地址或 FQDN 以及端口列表。端口默认基于选定的协议。<br>例如: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986 <br>或者提供其他任务的输出变量。例如: $(variableName) <br>如果使用的是 HTTPS，则计算机的名称/IP 应与证书中的 CN 匹配。",
   "loc.input.label.AdminUserName": "管理员登录名",
   "loc.input.help.AdminUserName": "目标计算机的管理员登录名。",
   "loc.input.label.AdminPassword": "密码",

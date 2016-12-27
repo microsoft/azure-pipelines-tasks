@@ -9,6 +9,8 @@
   "loc.input.help.solution": "Der relative Pfad vom Repositorystamm der zu erstellenden Xamarin.iOS-Projektmappe.",
   "loc.input.label.configuration": "Konfiguration",
   "loc.input.help.configuration": "Standardkonfigurationen sind Ad-Hoc, AppStore, Debug und Release.",
+  "loc.input.label.runNugetRestore": "Run NuGet Restore",
+  "loc.input.help.runNugetRestore": "Optionally run `nuget restore` on the Xamarin iOS solution to install all referenced packages before build. The nuget tool in the PATH on the build server will be used. To use a different version of nuget or set additional arguments use the [NuGet Instaler Task](https://www.visualstudio.com/en-us/docs/build/steps/package/nuget-installer).",
   "loc.input.label.args": "Argumente",
   "loc.input.help.args": "Zusätzliche Befehlszeilenargumente, die beim Erstellen verwendet werden sollen.",
   "loc.input.label.cwd": "Arbeitsverzeichnis",

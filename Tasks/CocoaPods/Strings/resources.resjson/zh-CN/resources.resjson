@@ -1,11 +1,11 @@
 {
   "loc.friendlyName": "CocoaPods",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613745)",
-  "loc.description": "CocoaPod 是 Swift 和 Objective-C Cocoa 项目的依赖管理器。运行 pod 安装",
+  "loc.description": "CocoaPods is a dependency manager for Swift and Objective-C Cocoa projects. This task runs 'pod install'.",
   "loc.instanceNameFormat": "pod 安装",
   "loc.input.label.cwd": "工作目录",
-  "loc.input.help.cwd": "当前工作目录。默认为存储库目录。",
-  "loc.messages.PodReturnCode": "Pod 已退出，返回代码为: %d",
-  "loc.messages.PodFailed": "Pod 失败，出现错误: %s",
-  "loc.messages.CocoaPodsNotFound": "命令池未找到。请在生成计算机上安装 Cocoapods (https://cocoapods.org)"
+  "loc.input.help.cwd": "Specify the working directory in which to execute this step. If left empty, the repository directory will be used.",
+  "loc.messages.PodReturnCode": "The 'pod' command exited with return code: %d",
+  "loc.messages.PodFailed": "The 'pod' command failed with error: %s",
+  "loc.messages.CocoaPodsNotFound": "The 'pod' command was not found. Please install CocoaPods on the build machine (https://cocoapods.org/)."
 }

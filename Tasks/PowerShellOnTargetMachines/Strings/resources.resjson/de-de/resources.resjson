@@ -6,7 +6,7 @@
   "loc.group.displayName.deployment": "Bereitstellung",
   "loc.group.displayName.advanced": "Erweiterte Optionen",
   "loc.input.label.EnvironmentName": "Computer",
-  "loc.input.help.EnvironmentName": "Stellen Sie eine durch Kommas getrennte Liste der IP-Computeradressen oder FQDNs zusammen mit den Ports bereit. Die Standardeinstellung für den Port basiert auf dem ausgewählten Protokoll. <br>Beispiel: \"dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986\" <br>Sie können auch die Ausgabevariable anderer Tasks angeben. Beispiel: \"$(variableName)\".",
+  "loc.input.help.EnvironmentName": "Stellen Sie eine durch Kommas getrennte Liste der IP-Computeradressen oder FQDNs zusammen mit den Ports bereit. Die Standardeinstellung für den Port basiert auf dem ausgewählten Protokoll. <br>Beispiel: \"dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986\" <br>Sie können auch die Ausgabevariable anderer Tasks angeben. Beispiel: \"$(variableName)\". <br>Wenn Sie HTTPS verwenden, müssen Name und IP des Computers mit dem CN im Zertifikat übereinstimmen.",
   "loc.input.label.AdminUserName": "Administratoranmeldung",
   "loc.input.help.AdminUserName": "Die Administratoranmeldung für die Zielcomputer.",
   "loc.input.label.AdminPassword": "Kennwort",

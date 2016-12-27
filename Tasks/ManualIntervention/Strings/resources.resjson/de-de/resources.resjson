@@ -4,5 +4,7 @@
   "loc.description": "Bereitstellung anhalten und auf Eingriff warten",
   "loc.instanceNameFormat": "Manueller Eingriff",
   "loc.input.label.instructions": "Anweisungen",
-  "loc.input.help.instructions": "Diese Anweisungen werden dem Benutzer angezeigt, damit dieser den manuellen Eingriff fortsetzen oder ablehnen kann. Basierend auf diesen Anweisungen kann der Benutzer eine fundierte Entscheidung zu diesem manuellen Eingriff treffen."
+  "loc.input.help.instructions": "Diese Anweisungen werden dem Benutzer angezeigt, damit dieser den manuellen Eingriff fortsetzen oder ablehnen kann. Basierend auf diesen Anweisungen kann der Benutzer eine fundierte Entscheidung zu diesem manuellen Eingriff treffen.",
+  "loc.input.label.emailRecipients": "Notify users",
+  "loc.input.help.emailRecipients": "Send a manual intervention pending email to specific users (or groups). Only users with manage deployment permission can act on a manual intervention."
 }
