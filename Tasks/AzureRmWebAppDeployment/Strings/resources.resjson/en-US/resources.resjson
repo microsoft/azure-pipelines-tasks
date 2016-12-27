@@ -44,7 +44,7 @@
   "loc.input.help.JSONFiles": "Provide new line separated list of JSON files to substitute the variable values. Files names are to be provided relative to the root folder. <br/> To substitute JSON variables that are nested or hierarchical, specify them using JSONPath expressions. <br/> <br/> For example, to replace the value of ‘ConnectionString’ in the sample below, you need to define a variable as ‘Data.DefaultConnection.ConnectionString’ in the build/release definition (or release definition’s environment). <br/> {<br/>&nbsp;&nbsp;\"Data\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"DefaultConnection\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"ConnectionString\": \"Server=(localdb)\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/> }<br/> Variable Substitution is run after configuration transforms. <br/><br/> Note: Build/Release’s system definition variables are excluded in substitution",
   "loc.messages.Invalidwebapppackageorfolderpathprovided": "Invalid App Service package or folder path provided: %s",
   "loc.messages.SetParamFilenotfound0": "Set parameters file not found: %s",
-  "loc.messages.XDTTransformationsappliedsuccessfully": "XDT Transformations applied successfully",
+  "loc.messages.XDTTransformationsappliedsuccessfully": "XML Transformations applied successfully",
   "loc.messages.GotconnectiondetailsforazureRMWebApp0": "Got connection details for Azure App Service:'%s'",
   "loc.messages.ErrorNoSuchDeployingMethodExists": "Error : No such deploying method exists",
   "loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve connection details for Azure App Service : %s. Status Code: %s (%s)",
@@ -68,7 +68,7 @@
   "loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove": "Unsupported installed version: %s found for MSDeploy. version should be alteast 3 or above",
   "loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)",
   "loc.messages.Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
-  "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "More than one package matched with specified pattern. Please restrain the search pattern.",
+  "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "More than one package matched with specified pattern. Please restrain the search pattern.",
   "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy app service again with Take application offline option selected.",
   "loc.messages.Trytodeploywebappagainwithrenamefileoptionselected": "Try to deploy app service again with Rename locked files option selected.",
   "loc.messages.NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern",
@@ -93,5 +93,8 @@
   "loc.messages.KuduPhysicalpathCreatedSuccessfully": "Kudu physical path created successfully : %s",
   "loc.messages.FailedtocreateKuduPhysicalPath": "Failed to create kudu physical path. %s: %s",
   "loc.messages.FailedtocheckphysicalPath": "Failed to check kudu physical path. %s: %s",
-  "loc.messages.VirtualApplicationDoesNotExist": "Virtual application doesn't exists : %s"
+  "loc.messages.VirtualApplicationDoesNotExist": "Virtual application doesn't exists : %s",
+  "loc.messages.JSONParseError": "Unable to parse JSON file: %s. Error: %s",
+  "loc.messages.JSONvariablesubstitutionappliedsuccessfully": "JSON variable substitution applied successfully.",
+  "loc.messages.XMLvaiablesubstitutionappliedsuccessfully": "XML vaiable substitution applied successfully."
 }

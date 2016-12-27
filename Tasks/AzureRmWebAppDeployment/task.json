@@ -242,7 +242,7 @@
     "messages": {
         "Invalidwebapppackageorfolderpathprovided": "Invalid App Service package or folder path provided: %s",
         "SetParamFilenotfound0": "Set parameters file not found: %s",
-        "XDTTransformationsappliedsuccessfully": "XDT Transformations applied successfully",
+        "XDTTransformationsappliedsuccessfully": "XML Transformations applied successfully",
         "GotconnectiondetailsforazureRMWebApp0": "Got connection details for Azure App Service:'%s'",
         "ErrorNoSuchDeployingMethodExists": "Error : No such deploying method exists",
         "UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve connection details for Azure App Service : %s. Status Code: %s (%s)",
@@ -266,7 +266,7 @@
         "UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove": "Unsupported installed version: %s found for MSDeploy. version should be alteast 3 or above",
         "UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)",
         "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
-        "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "More than one package matched with specified pattern. Please restrain the search pattern.",
+        "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "More than one package matched with specified pattern. Please restrain the search pattern.",
         "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy app service again with Take application offline option selected.",
         "Trytodeploywebappagainwithrenamefileoptionselected": "Try to deploy app service again with Rename locked files option selected.",
         "NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern",
@@ -291,6 +291,9 @@
         "KuduPhysicalpathCreatedSuccessfully": "Kudu physical path created successfully : %s",
         "FailedtocreateKuduPhysicalPath" : "Failed to create kudu physical path. %s: %s",
         "FailedtocheckphysicalPath" : "Failed to check kudu physical path. %s: %s",
-        "VirtualApplicationDoesNotExist" : "Virtual application doesn't exists : %s"
+        "VirtualApplicationDoesNotExist" : "Virtual application doesn't exists : %s",
+        "JSONParseError": "Unable to parse JSON file: %s. Error: %s",
+        "JSONvariablesubstitutionappliedsuccessfully": "JSON variable substitution applied successfully.",
+        "XMLvaiablesubstitutionappliedsuccessfully": "XML vaiable substitution applied successfully."
     }
 }
