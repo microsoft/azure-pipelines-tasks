@@ -20,16 +20,12 @@ function run () {
     switch (taskParameters.action) {
             case "Create or update resource group": 
                 resourceGroupOperationsController.createOrUpdateRG();
-                virtualMachineOperationsController.execute();
                 break;
             case "DeleteRG":
-                virtualMachineOperationsController.execute();
                 resourceGroupOperationsController.deleteResourceGroup();
                 break;
             case "Select resource group":
                 resourceGroupOperationsController.selectResourceGroup();
-                virtualMachineOperationsController.execute();
-                tl.setResult(tl.TaskResult.Succeeded, tl.loc("selectResourceGroupSuccessfull", taskParameters.resourceGroupName, taskParameters.outputVariable))
                 break;
             case "Start":
             case "Stop":
