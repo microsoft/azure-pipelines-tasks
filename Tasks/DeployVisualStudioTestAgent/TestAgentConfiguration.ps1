@@ -131,7 +131,13 @@
             Start-ScheduledTask -TaskName "DTA" -OutVariable out -ErrorVariable err | Out-Null
             Write-Verbose "Starting scheduled task output: $out error: $err" -Verbose
             Unregister-ScheduledTask  -TaskName "DTA" -Confirm:$false -ErrorAction SilentlyContinue
-            return 0
+
+            $p = Get-Process -Name "DTAExecutionHost" -ErrorAction SilentlyContinue
+            if($p) {
+                return 0;
+            }
+
+            throw "Unable to start DTAExecutionHost process"
         }
     }
     Catch {
