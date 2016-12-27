@@ -2,19 +2,19 @@ import msRestAzure = require("./ms-rest-azure");
 import azureServiceClient = require("./AzureServiceClient");
 import util = require("util");
 
-export class ResourceManagementClient {
-    public apiVersion;
-    public acceptLanguage;
+export class ResourceManagementClient extends azureServiceClient.ServiceClient {
     private longRunningOperationRetryTimeout;
     private generateClientRequestId;
     private subscriptionId;
-    private credentials;
     private baseUri;
+    private apiVersion;
+    private acceptLanguage;
 
     public deployments;
     public resourceGroups;
 
-    constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId) {
+    constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId: string) {
+        super(credentials);
         this.apiVersion = '2016-07-01';
         this.acceptLanguage = 'en-US';
         this.longRunningOperationRetryTimeout = 30;
@@ -26,15 +26,48 @@ export class ResourceManagementClient {
             throw new Error('\'subscriptionId\' cannot be null.');
         }
         this.baseUri = 'https://management.azure.com';
-        this.credentials = credentials;
         this.subscriptionId = subscriptionId;
         this.resourceGroups = new ResourceGroups(this);
         this.deployments = new Deployments(this);
     }
+
+    public getRequestUri(uriFormat: string, parameters: {}, queryParameters?: string[]): string {
+        var requestUri = this.baseUri + uriFormat;
+        requestUri.replace('{subscriptionId}', encodeURIComponent(this.subscriptionId));
+        for (var key in parameters) {
+            requestUri.replace(key, encodeURIComponent(parameters[key]));
+        }
+
+        // trim all duplicate forward slashes in the url
+        var regex = /([^:]\/)\/+/gi;
+        requestUri = requestUri.replace(regex, '$1');
+
+        // process query paramerters
+        queryParameters = queryParameters || [];
+        queryParameters.push('api-version=' + encodeURIComponent(this.apiVersion));
+        requestUri += '?' + queryParameters.join('&');
+
+        return requestUri
+    }
+
+    public beginRequest(request: azureServiceClient.WebRequest): Promise<azureServiceClient.WebResponse> {
+        request.headers = request.headers || {};
+        // Set default Headers
+        if (this.generateClientRequestId) {
+            request.headers['x-ms-client-request-id'] = msRestAzure.generateUuid();
+        }
+        if (this.acceptLanguage) {
+            request.headers['accept-language'] = this.acceptLanguage;
+        }
+        request.headers['Content-Type'] = 'application/json; charset=utf-8';
+
+        return super.beginRequest(request);
+    }
 }
 
 export class ResourceGroups {
-    private client;
+    private client: ResourceManagementClient;
+
     constructor(armClient: ResourceManagementClient) {
         this.client = armClient;
     }
@@ -45,7 +78,7 @@ export class ResourceGroups {
         }
         // Validate
         try {
-            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
                 throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
             }
             if (resourceGroupName !== null && resourceGroupName !== undefined) {
@@ -59,72 +92,29 @@ export class ResourceGroups {
                     throw new Error('"resourceGroupName" should satisfy the constraint - "Pattern": /^[-\w\._\(\)]+$/');
                 }
             }
-            if (this.client.subscriptionId === null || this.client.subscriptionId === undefined || typeof this.client.subscriptionId.valueOf() !== 'string') {
-                throw new Error('this.client.subscriptionId cannot be null or undefined and it must be of type string.');
-            }
         } catch (error) {
             return callback(error);
-        }
-
-        // Construct URL
-        var requestUrl = this.client.baseUri +
-            '//subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}';
-        requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
-        requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
-        // trim all duplicate forward slashes in the url
-        var regex = /([^:]\/)\/+/gi;
-        requestUrl = requestUrl.replace(regex, '$1');
-        var queryParameters = [];
-        queryParameters.push('api-version=' + encodeURIComponent(this.client.apiVersion));
-        if (queryParameters.length > 0) {
-            requestUrl += '?' + queryParameters.join('&');
         }
 
         // Create HTTP transport objects
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'HEAD';
-        httpRequest.headers = {};
-        httpRequest.uri = requestUrl;
-        // Set Headers
-        if (this.client.generateClientRequestId) {
-            httpRequest.headers['x-ms-client-request-id'] = msRestAzure.generateUuid();
-        }
-        if (this.client.acceptLanguage !== undefined && this.client.acceptLanguage !== null) {
-            httpRequest.headers['accept-language'] = this.client.acceptLanguage;
-        }
-        httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-        httpRequest.body = null;
-        // Send Request
-        var client = new azureServiceClient.ServiceClient(this.client.credentials);
-        return client.request(httpRequest).then((response: azureServiceClient.WebResponse) => {
-            if (response.error) {
-                callback(response.error);
-                return;
+        httpRequest.uri = this.client.getRequestUri(
+            '//subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}',
+            {
+                '{resourceGroupName}': resourceGroupName
             }
+        );
+
+        // Send Request and process response.
+        return this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             if (response.statusCode == 204 || response.statusCode == 404) {
                 callback(null, response.statusCode == 204);
-                return;
-            } else {
-                // Generate Error
-                var error = new azureServiceClient.Error();
-                error.statusCode = response.statusCode;
-                if (response.body === '') response.body = null;
-                var parsedErrorResponse;
-                try {
-                    parsedErrorResponse = response.body;
-                    if (parsedErrorResponse) {
-                        if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-                        if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-                        if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-                    }
-                } catch (defaultError) {
-                    error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
-                        '- "%s" for the default response.', defaultError.message, response.body);
-                    return callback(error);
-                }
-                return callback(error);
             }
-        });
+            else {
+                return callback(azureServiceClient.ToError(response));
+            }
+        }).catch((error) => callback(error));
     }
 
     public deleteMethod(resourceGroupName, callback) {
@@ -148,80 +138,42 @@ export class ResourceGroups {
                     throw new Error('"resourceGroupName" should satisfy the constraint - "Pattern": /^[-\w\._\(\)]+$/');
                 }
             }
-            if (this.client.subscriptionId === null || this.client.subscriptionId === undefined || typeof this.client.subscriptionId.valueOf() !== 'string') {
-                throw new Error('this.client.subscriptionId cannot be null or undefined and it must be of type string.');
-            }
         } catch (error) {
             return callback(error);
-        }
-
-        // Construct URL
-        var requestUrl = this.client.baseUri +
-            '//subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}';
-        requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
-        requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
-        // trim all duplicate forward slashes in the url
-        var regex = /([^:]\/)\/+/gi;
-        requestUrl = requestUrl.replace(regex, '$1');
-        var queryParameters = [];
-        queryParameters.push('api-version=' + encodeURIComponent(this.client.apiVersion));
-        if (queryParameters.length > 0) {
-            requestUrl += '?' + queryParameters.join('&');
         }
 
         // Create HTTP transport objects
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'DELETE';
-        httpRequest.headers = {};
-        httpRequest.uri = requestUrl;
-        // Set Headers
-        if (this.client.generateClientRequestId) {
-            httpRequest.headers['x-ms-client-request-id'] = msRestAzure.generateUuid();
-        }
-        if (this.client.acceptLanguage !== undefined && this.client.acceptLanguage !== null) {
-            httpRequest.headers['accept-language'] = this.client.acceptLanguage;
-        }
-        httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-        httpRequest.body = null;
-        var serviceClient = new azureServiceClient.ServiceClient(this.client.credentials);
-        serviceClient.request(httpRequest).then((response: azureServiceClient.WebResponse) => {
-            if (response.error) {
-                return callback(response.error);
+        httpRequest.uri = this.client.getRequestUri(
+            '//subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}',
+            {
+                '{resourceGroupName}': resourceGroupName
             }
+        );
+
+        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             var statusCode = response.statusCode;
-            var error = new azureServiceClient.Error();
-            error.statusCode = statusCode;
             if (statusCode !== 202 && statusCode !== 200) {
-                if (response.body === '')
-                    response.body = null;
-                var parsedErrorResponse;
-                try {
-                    parsedErrorResponse = JSON.parse(response.body);
-                    if (parsedErrorResponse) {
-                        if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-                        if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-                        if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-                    }
-                } catch (defaultError) {
-                    error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
-                        '- "%s" for the default response.', defaultError.message, response.body);
-                    return callback(error);
-                }
-                return callback(error);
+                return callback(azureServiceClient.ToError(response));
             }
+
             // Create Result
-            serviceClient.getLongRunningOperationStatus(response).then((response: azureServiceClient.WebResponse) => {
-                var result = null;
-                if (response.body === '') response.body = null;
-                return callback(null, result);
+            this.client.getLongRunningOperationResult(response).then((response: azureServiceClient.WebResponse) => {
+                if (response.statusCode == 200) {
+                    return callback(null, response.body, httpRequest, response);
+                }
+                else {
+                    return callback(azureServiceClient.ToError(response));
+                }
             });
-        });
+        }).catch((error) => callback(error));
 
     }
 }
 
 export class Deployments {
-    private client;
+    private client: ResourceManagementClient;
 
     constructor(client: ResourceManagementClient) {
         this.client = client;
@@ -254,41 +206,21 @@ export class Deployments {
             if (parameters === null || parameters === undefined) {
                 throw new Error('parameters cannot be null or undefined.');
             }
-            if (this.client.subscriptionId === null || this.client.subscriptionId === undefined || typeof this.client.subscriptionId.valueOf() !== 'string') {
-                throw new Error('this.client.subscriptionId cannot be null or undefined and it must be of type string.');
-            }
         } catch (error) {
             return callback(error);
-        }
-
-        // Construct URL
-        var requestUrl = this.client.baseUri +
-            '//subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.Resources/deployments/{deploymentName}';
-        requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
-        requestUrl = requestUrl.replace('{deploymentName}', encodeURIComponent(deploymentName));
-        requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
-        // trim all duplicate forward slashes in the url
-        var regex = /([^:]\/)\/+/gi;
-        requestUrl = requestUrl.replace(regex, '$1');
-        var queryParameters = [];
-        queryParameters.push('api-version=' + encodeURIComponent(this.client.apiVersion));
-        if (queryParameters.length > 0) {
-            requestUrl += '?' + queryParameters.join('&');
         }
 
         // Create HTTP transport objects
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'PUT';
         httpRequest.headers = {};
-        httpRequest.uri = requestUrl;
-        // Set Headers
-        if (this.client.generateClientRequestId) {
-            httpRequest.headers['x-ms-client-request-id'] = msRestAzure.generateUuid();
-        }
-        if (this.client.acceptLanguage !== undefined && this.client.acceptLanguage !== null) {
-            httpRequest.headers['accept-language'] = this.client.acceptLanguage;
-        }
-        httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+        httpRequest.uri = this.client.getRequestUri(
+            '//subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.Resources/deployments/{deploymentName}',
+            {
+                '{resourceGroupName}': resourceGroupName,
+                '{deploymentName}': deploymentName
+            }
+        );
         // Serialize Request
         var requestContent = null;
         try {
@@ -301,120 +233,51 @@ export class Deployments {
             return callback(serializationError);
         }
         httpRequest.body = requestContent;
+
         // Send Request
-        var serviceClient = new azureServiceClient.ServiceClient(this.client.credentials);
-        return serviceClient.request(httpRequest).then((response: azureServiceClient.WebResponse) => {
-            if (response.error) {
-                return callback(response.error);
-            }
+        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             var statusCode = response.statusCode;
             if (statusCode !== 200 && statusCode !== 201) {
-                var error = new azureServiceClient.Error();
-                error.statusCode = response.statusCode;
-                if (response.body === '') response.body = null;
-                var parsedErrorResponse;
-                try {
-                    parsedErrorResponse = response.body;
-                    if (parsedErrorResponse) {
-                        if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-                        if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-                        if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-                    }
-                } catch (defaultError) {
-                    error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
-                        '- "%s" for the default response.', defaultError.message, response.body);
-                    return callback(error);
-                }
-                return callback(error);
+                callback(azureServiceClient.ToError(response));
             }
-            // Create Result
-            var result = null;
-            if (response.body === '') response.body = null;
-            // Deserialize Response
-            if (statusCode === 200 || statusCode === 201) {
-                serviceClient.getLongRunningOperationResult(response).then((operationResponse) => {
-                    return this.get(resourceGroupName, deploymentName, (error, response) => {
-                        if (error) {
-                            return callback(error);
-                        } else {
-                            if (response.body.properties.provisionState === "Succeeded") {
-                                return callback(null, response);
-                            } else {
-                                return callback(response.body.properties.error);
-                            }
-                        }
-                    });
-                });
 
-            }
+            this.client.getLongRunningOperationResult(response).then((operationResponse) => {
+                return this.get(resourceGroupName, deploymentName, (error, response) => {
+                    if (error) {
+                        return callback(error);
+                    } else {
+                        if (response.body.properties.provisionState === "Succeeded") {
+                            return callback(null, response);
+                        } else {
+                            return callback(response.body.properties.error);
+                        }
+                    }
+                });
+            });
         });
     }
 
     public get(resourceGroupName, deploymentName, callback) {
-        var client = this.client;
-        // Construct URL
-        var requestUrl = this.client.baseUri +
-            '//subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.Resources/deployments/{deploymentName}';
-        requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
-        requestUrl = requestUrl.replace('{deploymentName}', encodeURIComponent(deploymentName));
-        requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
-        // trim all duplicate forward slashes in the url
-        var regex = /([^:]\/)\/+/gi;
-        requestUrl = requestUrl.replace(regex, '$1');
-        var queryParameters = [];
-        queryParameters.push('api-version=' + encodeURIComponent(this.client.apiVersion));
-        if (queryParameters.length > 0) {
-            requestUrl += '?' + queryParameters.join('&');
-        }
-
         // Create HTTP transport objects
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'GET';
-        httpRequest.headers = {};
-        httpRequest.uri = requestUrl;
-        // Set Headers
-        if (this.client.generateClientRequestId) {
-            httpRequest.headers['x-ms-client-request-id'] = msRestAzure.generateUuid();
-        }
-        if (this.client.acceptLanguage !== undefined && this.client.acceptLanguage !== null) {
-            httpRequest.headers['accept-language'] = this.client.acceptLanguage;
-        }
-        httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-        httpRequest.body = null;
-        // Send Request
-        var serviceClient = new azureServiceClient.ServiceClient(this.client.credentials);
-        return serviceClient.request(httpRequest).then((response: azureServiceClient.WebResponse) => {
-            if (response.error) {
-                return callback(response.error);
+        httpRequest.uri = this.client.getRequestUri(
+            '//subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.Resources/deployments/{deploymentName}',
+            {
+                '{resourceGroupName}': resourceGroupName,
+                '{deploymentName}': deploymentName
             }
-            var statusCode = response.statusCode;
-            if (statusCode !== 200) {
-                var error = new azureServiceClient.Error();
-                error.statusCode = response.statusCode;
-                if (response.body === '') response.body = null;
-                var parsedErrorResponse;
-                try {
-                    parsedErrorResponse = response.body;
-                    if (parsedErrorResponse) {
-                        if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-                        if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-                        if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-                    }
-                } catch (defaultError) {
-                    error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
-                        '- "%s" for the default response.', defaultError.message, response.body);
-                    return callback(error);
-                }
-                return callback(error);
-            }
-            // Create Result
-            var result = null;
-            if (response.body === '') response.body = null;
-            // Deserialize Response
-            if (statusCode === 200) {
+        );
 
+        // Send Request and process response.
+        return this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            if (response.statusCode != 200) {
+                callback(azureServiceClient.ToError(response));
             }
-            // return callback(null, result, httpRequest, response);
-        });
+            else {
+                callback(null, response.body);
+            }
+        }).catch((error) => callback(error));
+
     }
 }

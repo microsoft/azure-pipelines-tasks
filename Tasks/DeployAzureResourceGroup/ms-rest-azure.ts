@@ -2,12 +2,10 @@ import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import querystring = require('querystring');
 var httpClient = require('vso-node-api/HttpClient');
-var restClient = require('vso-node-api/RestClient');
 var uuid = require('uuid');
 var util = require('util');
 
 var httpObj = new httpClient.HttpCallbackClient("AZURE_HTTP_USER_AGENT");
-var restObj = new restClient.RestCallbackClient(httpObj);
 
 var authUrl = 'https://login.windows.net/';
 var armUrl = 'https://management.azure.com/';
@@ -15,13 +13,12 @@ var azureApiVersion = 'api-version=2016-08-01';
 
 
 export class ApplicationTokenCredentials {
-    private clientId;
-    private domain;
-    private secret;
-    private token;
-    private token_deferred;
+    private clientId: string;
+    private domain: string;
+    private secret: string;
+    private token_deferred: Q.Promise<string>;
 
-    constructor(clientId, domain, secret) {
+    constructor(clientId: string, domain: string, secret: string) {
         if (!Boolean(clientId) || typeof clientId.valueOf() !== 'string') {
             throw new Error('clientId must be a non empty string.');
         }
@@ -39,6 +36,14 @@ export class ApplicationTokenCredentials {
         this.secret = secret;
     }
 
+    public getToken(force?: boolean): Q.Promise<string> {
+        if (!this.token_deferred || force) {
+            this.token_deferred = this.getAuthorizationToken();
+        }
+
+        return this.token_deferred;
+    }
+
     private getAuthorizationToken(): Q.Promise<string> {
         var deferred = Q.defer<string>();
         var authorityUrl = authUrl + this.domain + "/oauth2/token/";
@@ -51,6 +56,7 @@ export class ApplicationTokenCredentials {
         var requestHeader = {
             "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
         };
+
         tl.debug('Requesting for Auth Token: ' + authorityUrl);
         httpObj.send('POST', authorityUrl, requestData, requestHeader, (error, response, body) => {
             if (error) {
@@ -65,23 +71,9 @@ export class ApplicationTokenCredentials {
         });
         return deferred.promise;
     }
-
-    public getToken(force?: boolean): Q.Promise<string> {
-        if (!this.token_deferred || force) {
-            var deferred = Q.defer<string>();
-            this.getAuthorizationToken()
-                .then((token) => {
-                    this.token = token;
-                    deferred.resolve(this.token);
-                });
-            this.token_deferred = deferred;
-        }
-        return this.token_deferred.promise;
-    }
-
 }
 
-export function generateUuid() {
+export function generateUuid(): string {
     return uuid.v4();
 };
 

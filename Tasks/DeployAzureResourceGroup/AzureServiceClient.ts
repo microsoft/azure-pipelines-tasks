@@ -1,15 +1,9 @@
 var httpClient = require('vso-node-api/HttpClient');
-var restClient = require('vso-node-api/RestClient');
+import msRestAzure = require("./ms-rest-azure");
 import Q = require("q");
 var uuid = require('uuid');
 
 var httpCallbackClient = new httpClient.HttpCallbackClient("VSTS_AGENT");
-var restObj = new restClient.RestCallbackClient(httpCallbackClient);
-
-function sleepFor(sleepDuration) {
-    var now = new Date().getTime();
-    while (new Date().getTime() < now + sleepDuration) { /* do nothing */ }
-}
 
 export class WebRequest {
     public method;
@@ -19,33 +13,93 @@ export class WebRequest {
 }
 
 export class WebResponse {
-    public error;
-    public body;
     public statusCode;
     public headers;
+    public body;
 }
+
 export class Error {
     public code;
     public message;
     public statusCode;
 }
-export class ServiceClient {
-    private credentials;
-    private longRunningOperationTimeout;
 
-    constructor(credentials) {
+export function ToError(response: WebResponse): Error {
+    var error = new Error();
+    error.statusCode = response.statusCode;
+    error.message = response.body
+    if (response.body && response.body.error) {
+        error.code = response.body.error.code;
+        error.message = response.body.error.message;
+    }
+
+    return error;
+}
+
+export class ServiceClient {
+    private credentials: msRestAzure.ApplicationTokenCredentials;
+    private longRunningOperationTimeout: number;
+
+    constructor(credentials: msRestAzure.ApplicationTokenCredentials) {
         this.credentials = credentials;
         this.longRunningOperationTimeout = 30;
     }
 
-    private makeResponse(error, response, body) {
-        var res = new WebResponse();
-        if (error && typeof (error) === typeof ("")) {
-            error = JSON.parse(error);
-            res.error = error;
-        } else if (error) {
-            res.error = error;
+    public async beginRequest(request: WebRequest): Promise<WebResponse> {
+        var token = await this.credentials.getToken();
+        request.headers == request.headers || {};
+        request.headers["Authorization"] = "Bearer " + token;
+
+        var httpResponse = await this.beginRequestInternal(request);
+        if (httpResponse.statusCode === 401 && httpResponse.body.error.code === "ExpiredAuthenticationToken") {
+
+            // The access token might have expire. Re-issue the request after refreshing the token.
+            token = await this.credentials.getToken(true);
+            request.headers["Authorization"] = "Bearer " + token;
+            httpResponse = await this.beginRequestInternal(request);
         }
+
+        return httpResponse;
+    }
+
+    public async getLongRunningOperationResult(response: WebResponse, timeoutInMinutes?: number): Promise<WebResponse> {
+        var deferred = Q.defer<WebResponse>();
+        var request = new WebRequest();
+        request.method = "GET";
+        timeoutInMinutes = timeoutInMinutes | 60;
+        var timeout = new Date().getTime() + timeoutInMinutes * 60 * 1000;
+        while (true) {
+            request.uri = response.headers["azure-asyncoperation"] || response.headers["location"];
+            if (request.uri) {
+                response = await this.beginRequest(request);
+                if (response.statusCode === 202 || response.body.status == "InProgress") {
+                    // If timeout; throw;
+                    if (timeout < new Date().getTime()) {
+                        throw ("Timeout out while waiting for the operation to complete.")
+                    }
+
+                    // Retry after given interval.
+                    var sleepDuration = 15;
+                    if (response.headers["Retry-After"]) {
+                        sleepDuration = parseInt(response.headers["Retry-After"]);
+                    }
+                    await sleepFor(sleepDuration);
+                }
+                else {
+                    break;
+                }
+            }
+            else {
+                throw "Invalid response of a long running operation.";
+            }
+        }
+
+        return response;
+    }
+
+    private toWebResponse(response, body): WebResponse {
+        var res = new WebResponse();
+
         if (response) {
             res.statusCode = response.statusCode;
             res.headers = response.headers;
@@ -54,115 +108,30 @@ export class ServiceClient {
                     res.body = JSON.parse(body);
                 }
                 catch (error) {
-                    res.error = error;
+                    res.body = body;
                 }
             }
         }
         return res;
     }
 
-    private beginRequest(request: WebRequest) {
+    private beginRequestInternal(request: WebRequest): Q.Promise<WebResponse> {
         var deferred = Q.defer<WebResponse>();
         httpCallbackClient.send(request.method, request.uri, request.body, request.headers, (error, response, body) => {
-            var HttpResponse = this.makeResponse(error, response, body);
-            deferred.resolve(HttpResponse);
-        });
-        return deferred.promise;
-    }
-
-    public request(request: WebRequest): Q.Promise<WebResponse> {
-        var deferred = Q.defer<WebResponse>();
-        this.credentials.getToken().then((token) => {
-            request.headers["Authorization"] = "Bearer " + token;
-            this.beginRequest(request).then((httpResponse: WebResponse) => {
-                // If token expires, generate a new token
-                if (httpResponse.statusCode === 401 && httpResponse.body.error.code === "ExpiredAuthenticationToken") {
-                    this.credentials.getToken(true).then((token) => {
-                        request.headers["Authorization"] = "Bearer " + token;
-                        this.beginRequest(request).then((httpResponse: WebResponse) => {
-                            deferred.resolve(httpResponse);
-                        });
-                    });
-                } else {
-                    deferred.resolve(httpResponse);
-                }
-            });
-
-        });
-        return deferred.promise;
-    }
-
-    private pollUri(request: WebRequest, prevDeferred?) {
-        var deferred;
-        if (prevDeferred) {
-            deferred = prevDeferred;
-        } else {
-            deferred = Q.defer();
-        }
-        this.request(request).then((response: WebResponse) => {
-            if (response.body.status === "InProgress") {
-                sleepFor(this.longRunningOperationTimeout);
-                this.pollUri(request, deferred);
-            } else {
-                deferred.resolve(response);
+            if (error) {
+                deferred.reject(error);
+            }
+            else {
+                var httpResponse = this.toWebResponse(response, body);
+                deferred.resolve(httpResponse);
             }
         });
         return deferred.promise;
     }
 
-    private pollUriStatus(request: WebRequest, prevDeferred?) {
-        var deferred;
-        if (prevDeferred) {
-            deferred = prevDeferred;
-        } else {
-            deferred = Q.defer();
-        }
-        this.request(request).then((response: WebResponse) => {
-            if (response.statusCode === 202) {
-                sleepFor(this.longRunningOperationTimeout);
-                this.pollUriStatus(request, deferred);
-            } else {
-                deferred.resolve(response);
-            }
+    private sleepFor(sleepDurationInSeconds): Promise<any> {
+        return new Promise((resolve, reeject) => {
+            setTimeout(resolve, sleepDurationInSeconds * 1000);
         });
-        return deferred.promise;
-    }
-
-    public getLongRunningOperationResult(response: WebResponse) {
-        var deferred = Q.defer();
-        var uri = response.headers["azure-asyncoperation"];
-        if (uri) {
-            var request = new WebRequest();
-            request.method = "GET";
-            request.uri = uri;
-            request.headers = {};
-            this.pollUri(request).then((pollResponse) => {
-                deferred.resolve(pollResponse);
-            });
-        } else {
-            var res = new WebResponse();
-            res.error = "Invalid Response Provided";
-            deferred.resolve(res);
-        }
-        return deferred.promise;
-    }
-
-    public getLongRunningOperationStatus(response: WebResponse) {
-        var deferred = Q.defer();
-        var uri = response.headers["location"];
-        if (uri) {
-            var request = new WebRequest();
-            request.method = "GET";
-            request.uri = uri;
-            request.headers = {};
-            this.pollUriStatus(request).then((pollResponse) => {
-                deferred.resolve(pollResponse);
-            });
-        } else {
-            var res = new WebResponse();
-            res.error = "Invalid Response Provided";
-            deferred.resolve(res);
-        }
-        return deferred.promise;
     }
 }
