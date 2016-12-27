@@ -72,7 +72,7 @@ export class ServiceClient {
             request.uri = response.headers["azure-asyncoperation"] || response.headers["location"];
             if (request.uri) {
                 response = await this.beginRequest(request);
-                if (response.statusCode === 202 || response.body.status == "InProgress") {
+                if (response.statusCode === 202 || response.body.status == "InProgress" || response.body.status == "Running") {
                     // If timeout; throw;
                     if (timeout < new Date().getTime()) {
                         throw ("Timeout out while waiting for the operation to complete.")
@@ -83,7 +83,7 @@ export class ServiceClient {
                     if (response.headers["Retry-After"]) {
                         sleepDuration = parseInt(response.headers["Retry-After"]);
                     }
-                    await sleepFor(sleepDuration);
+                    await this.sleepFor(sleepDuration);
                 }
                 else {
                     break;

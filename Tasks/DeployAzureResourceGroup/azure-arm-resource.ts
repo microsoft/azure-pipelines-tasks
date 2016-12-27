@@ -33,9 +33,9 @@ export class ResourceManagementClient extends azureServiceClient.ServiceClient {
 
     public getRequestUri(uriFormat: string, parameters: {}, queryParameters?: string[]): string {
         var requestUri = this.baseUri + uriFormat;
-        requestUri.replace('{subscriptionId}', encodeURIComponent(this.subscriptionId));
+        requestUri = requestUri.replace('{subscriptionId}', encodeURIComponent(this.subscriptionId));
         for (var key in parameters) {
-            requestUri.replace(key, encodeURIComponent(parameters[key]));
+            requestUri = requestUri.replace(key, encodeURIComponent(parameters[key]));
         }
 
         // trim all duplicate forward slashes in the url
