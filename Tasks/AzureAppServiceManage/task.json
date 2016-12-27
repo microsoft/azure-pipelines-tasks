@@ -2,7 +2,7 @@
   "id": "f045e430-8704-11e6-968f-e717e6411619",
   "name": "AzureAppServiceManage",
   "friendlyName": "Azure App Service Manage (PREVIEW)",
-  "description": "Directs destination Azure App Service slot's traffic to the source slot by performing swap",
+  "description": "Start, Stop, Restart or Slot swap for an Azure App Service",
   "author": "Microsoft Corporation",
   "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=831573)",
   "category": "Deploy",
@@ -13,44 +13,67 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 1,
+    "Minor": 2,
     "Patch": 0
   },
   "minimumAgentVersion": "1.102.0",
-  "instanceNameFormat": "Swap Slot for Azure Web App: $(WebAppName)",
+  "instanceNameFormat": "$(Action): $(WebAppName)",
+    "groups": [
+    ],
   "inputs": [
         {
             "name": "ConnectedServiceName",
             "type": "connectedService:AzureRM",
-            "label": "AzureRM Subscription",
+            "label": "Azure subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the Azure Resource Manager subscription."
+            "helpMarkDown": "Select the Azure Resource Manager subscription"
+        },
+        {
+            "name": "Action",
+            "type": "pickList",
+            "label": "Action",
+            "required": false,
+            "helpMarkDown": "Action to be performed on the App Service. You can Start/Stop/Restart an App Service or Manage a slot swap.",
+            "defaultValue": "Swap Slots",
+            "options": {
+                "Swap Slots": "Swap Slots",
+                "Start Azure App Service": "Start App Service",
+                "Stop Azure App Service": "Stop App Service",
+                "Restart Azure App Service": "Restart App Service"
+            }
         },
         {
             "name": "WebAppName",
             "type": "pickList",
-            "label": "App Service Name",
+            "label": "App Service name",
             "defaultValue": "",
             "required": true,
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Enter or Select the name of an existing AzureRM Web Application."
+            "helpMarkDown": "Enter or select the name of an existing Azure App Service"
+        },
+        {
+            "name": "SpecifySlot",
+            "type": "boolean",
+            "label": "Specify Slot",
+            "required": false,
+            "visibleRule": "Action != Swap Slots"
         },
         {
             "name": "ResourceGroupName",
             "type": "pickList",
-            "label": "Resource Group",
+            "label": "Resource group",
             "defaultValue": "",
             "required": true,
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Enter or Select the Azure Resource Group that contains the AzureRM Web App specified above."
+            "helpMarkDown": "Enter or Select the Azure Resource Group that contains the Azure App Service specified above",
+            "visibleRule": "Action = Swap Slots || SpecifySlot = true"
         },
         {
-
             "name": "SourceSlot",
             "type": "pickList",
             "label": "Source Slot",
@@ -59,7 +82,8 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "The swap action directs destination slot's traffic to the source slot."
+            "helpMarkDown": "The swap action directs destination slot's traffic to the source slot",
+            "visibleRule": "Action = Swap Slots"
         },
         {
             "name": "SwapWithProduction",
@@ -67,7 +91,8 @@
             "label": "Swap with Production",
             "defaultValue": "true",
             "required": false,
-            "helpMarkDown": "Select the option to swap the traffic of source slot with production. If this option is not selected, then you will have to provide source and target slot names."
+            "helpMarkDown": "Select the option to swap the traffic of source slot with production. If this option is not selected, then you will have to provide source and target slot names.",
+            "visibleRule": "Action = Swap Slots"
         },
         {
             "name": "TargetSlot",
@@ -78,8 +103,8 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "The swap action directs destination slot's traffic to the source slot.",
-            "visibleRule": "SwapWithProduction = false"
+            "helpMarkDown": "The swap action directs destination slot's traffic to the source slot",
+            "visibleRule": "Action = Swap Slots && SwapWithProduction = false"
         },
         {
             "name": "PreserveVnet",
@@ -87,7 +112,19 @@
             "label": "Preserve Vnet",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Preserve the Virtual network settings"
+            "helpMarkDown": "Preserve the Virtual network settings",
+            "visibleRule": "Action = Swap Slots"
+        },
+        {
+            "name": "Slot",
+            "type": "pickList",
+            "label": "Slot",
+            "defaultValue": "",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "required": true,
+            "visibleRule": "Action != Swap Slots && SpecifySlot = true"
         }
     ],
   "dataSourceBindings": [
@@ -103,6 +140,16 @@
             "parameters": {
                 "WebAppName": "$(WebAppName)"
             }
+        },
+        {
+            "target": "Slot",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureRMWebAppSlotsId",
+            "parameters": {
+                "WebAppName": "$(WebAppName)",
+                "ResourceGroupName": "$(ResourceGroupName)"
+            },
+            "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
         },
         {
             "target": "SourceSlot",
@@ -127,18 +174,37 @@
     ],
     "execution": {
         "Node": {
-            "target": "azurewebappslotswap.js"
+            "target": "azureappservicemanage.js"
         }
     },
    "messages": {
         "ErrorNoSuchDeployingMethodExists": "Error : Deploy method MSDeploy does not exists for Azure Web App: %s",
-        "UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1": "Unable to retrieve connection details for Azure Web App: %s . Status Code: %s",
         "Successfullyupdatedslotswaphistory": "Successfully updated slot swap history at %s for Azure Web App : %s",
         "Failedtoupdateslotswaphistory": "Failed to update slot swap history for Azure Web App : %s",
         "WARNINGCannotupdateslotswapstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update slot swap status : SCM (Source Control Manager) endpoint is not enabled for this Azure Web App",
-        "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update slot swap status as unique deployment ID cannot be retrieved for this Azure Web App",
-        "Failedtoswapslots": "Failed to swap slots. Status %s for Azure Web App : %s",
+        "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update Kudu deployment log as unique deployment ID cannot be retrieved for this Azure Web App",
+        "FailedToSwapWebAppSlots": "Failed to swap slots for Azure Web App: %s. Error: %s",
+        "SlotSwapOperationNotCompleted": "Slot swap operation was not completed for Azure Web App: %s",
         "Successfullyswappedslots": "Successfully swapped web app %s slots from %s to %s",
-        "SourceAndTargetSlotCannotBeSame": "Source and target slot cannot be same"
-  }
+        "SourceAndTargetSlotCannotBeSame": "Source and target slot cannot be same",
+        "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
+        "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
+        "UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve connectiondetails for Azure App Service : %s. Status Code: %s (%s)",
+        "StartingAppService": "Starting App Service : %s",
+        "AppServicestartedsuccessfully": "App Service '%s' started successfully",
+        "FailedtoStartAppService": "Failed to start App Service for '%s'. Response Code : %s (%s)",
+        "StoppingAppService": "Stopping App Service : %s",
+        "AppServicestoppedsuccessfully": "App Service '%s' stopped successfully",
+        "FailedtoStopAppService": "Failed to stop App Service for '%s'. Response Code : %s (%s)",
+        "RestartingAppService": "Restarting App Service : %s",
+        "AppServiceRestartedSuccessfully": "App Service '%s' restarted successfully",
+        "FailedtoRestartAppService": "Failed to restart App Service for '%s'. Response Code : %s (%s)",
+        "RestartAppServiceAccepted": "Restart request accepted by App Service : %s",
+        "InvalidAction": "Invalid Action selected !",
+        "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING: Cannot update deployment statu. SCM endpoint is not enabled for this website.",
+        "CouldnotfetchacccesstokenforAzureStatusCode": "Could not fetch acccess token for Azure App Service. StatusCode %s (%s)",
+        "WebAppDoesntExist": "Webapp '%s' doesn't exist.",
+        "UnabletoretrieveWebAppID": "Unable to retrieve connection details for Azure App Service:'%s'. Status Code: %s",
+        "StartingSwapSlot": "Requesting swap slot for Web App : %s"
+    }
 }

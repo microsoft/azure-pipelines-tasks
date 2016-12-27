@@ -1,5 +1,5 @@
 {
-  "loc.messages.NGCommon_IgnoringNuGetExtensionsPath": "Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable). Extensions are ignored when using the built-in NuGet client",
-  "loc.messages.NGCommon_DetectedNuGetExtensionsPath": "Detected NuGet extensions loader path (NUGET_EXTENSIONS_PATH environment variable): %s",
-  "loc.messages.NGCommon_UnableToFindTool": "Unable to find tool %s"
+  "loc.messages.NGCommon_IgnoringNuGetExtensionsPath": "NuGet 拡張機能のローダー パス (NUGET_EXTENSIONS_PATH 環境変数) が検出されました。ビルトインの NuGet クライアントを使用するとき、拡張機能は無視されます",
+  "loc.messages.NGCommon_DetectedNuGetExtensionsPath": "NuGet 拡張機能のローダー パス (NUGET_EXTENSIONS_PATH 環境変数) が検出されました: %s",
+  "loc.messages.NGCommon_UnableToFindTool": "ツール %s が見つかりません"
 }

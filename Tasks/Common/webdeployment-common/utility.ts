@@ -68,6 +68,9 @@ export function canUseWebDeploy(useWebDeploy: boolean) {
 
 
 export function findfiles(filepath){
+
+    tl.debug("Finding files matching input: " + filepath);
+
     var filesList : string [];
     if (filepath.indexOf('*') == -1 && filepath.indexOf('?') == -1) {
         // No pattern found, check literal path to a single file
@@ -116,4 +119,13 @@ export function findfiles(filepath){
         }
     }
     return filesList;
+}
+
+export function generateTemporaryFolderOrZipPath(folderPath: string, isFolder: boolean) {
+    var randomString = Math.random().toString().split('.')[1];
+    var tempPath = path.join(folderPath, 'temp_web_package_' + randomString +  (isFolder ? "" : ".zip"));
+    if(tl.exist(tempPath)) {
+        return generateTemporaryFolderOrZipPath(folderPath, isFolder);
+    }
+    return tempPath;
 }

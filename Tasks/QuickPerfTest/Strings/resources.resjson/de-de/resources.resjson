@@ -15,5 +15,5 @@
   "loc.input.help.runDuration": "Dauer des Auslastungstestlaufs in Sekunden.",
   "loc.input.label.geoLocation": "Position laden",
   "loc.input.help.geoLocation": "Geografische Region, aus der die Auslastung generiert werden soll. Weitere Einzelheiten finden Sie in der Hilfe.",
-  "loc.input.label.machineType": "Run load test using"
+  "loc.input.label.machineType": "Auslastungstest ausführen mithilfe von"
 }

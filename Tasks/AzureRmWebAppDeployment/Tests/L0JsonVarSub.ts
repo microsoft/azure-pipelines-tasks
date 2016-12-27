@@ -8,8 +8,7 @@ tr.setInput('ConnectedServiceName', 'AzureRMSpn');
 tr.setInput('WebAppName', 'mytestapp');
 tr.setInput('Package', 'webAppPkg.zip');
 tr.setInput('UseWebDeploy', 'true');
-tr.setInput('JSONVariableSubstitutionsFlag', 'true');
-tr.setInput('JSONVariableSubstitutions', '');
+tr.setInput('JSONFiles', 'testfile.json');
 
 process.env['TASK_TEST_TRACE'] = 1;
 process.env["ENDPOINT_AUTH_AzureRMSpn"] = "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
@@ -50,6 +49,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "rmRF": {
         "DefaultWorkingDirectory\\msDeployCommand.bat": {
+            "success": true
+        },
+        "temp_web_package_random_path": {
             "success": true
         }
     },
@@ -95,7 +97,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 }
 
 import mockTask = require('vsts-task-lib/mock-task');
-var kuduDeploymentLog = require('webdeployment-common/kududeploymentstatusutility.js');
+var kuduDeploymentLog = require('azurerest-common/kududeploymentstatusutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js');
 var jsonSubUtil = require('webdeployment-common/jsonvariablesubstitutionutility.js');
 
@@ -111,7 +113,7 @@ tr.registerMock('./msdeployutility.js', {
     }
 }); 
 
-tr.registerMock('webdeployment-common/azurerestutility.js', {
+tr.registerMock('azurerest-common/azurerestutility.js', {
     getAzureRMWebAppPublishProfile: function(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
         var mockPublishProfile = {
             profileName: 'mytestapp - Web Deploy',
@@ -142,6 +144,7 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
 			id: 'appid',
 			properties: { 
 				virtualApplications: [ ['Object'], ['Object'], ['Object'] ],
+                scmType: "VSTS"
 			} 
 		}
 
@@ -158,6 +161,23 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
         var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
         requestDetails["requestBody"].author = 'author';
         console.log("kudu log requestBody is:" + JSON.stringify(requestDetails["requestBody"]));
+    },
+    getResourceGroupName: function (SPN, webAppName) {
+        return "foobar";
+    },
+    getWebAppAppSettings : function (SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string){
+        var appSettings = {
+            properties : {
+                MSDEPLOY_RENAME_LOCKED_FILES : '1'
+            }
+        };
+        return appSettings;
+    },
+    updateWebAppAppSettings : function (){
+        return true;
+    },
+    updateAzureRMWebAppConfigDetails: function() {
+        console.log("Successfully updated scmType to VSTSRM");
     }
 });
 
@@ -220,6 +240,24 @@ tr.registerMock('webdeployment-common/jsonvariablesubstitutionutility.js', {
         if(jsonObject['User.Profile'] === 'do_not_replace') {
             console.log('JSON - case sensitive variables validated');
         }
+    }
+});
+
+tr.registerMock('webdeployment-common/utility.js', {
+    isInputPkgIsFolder: function() {
+        return false;    
+    },
+    fileExists: function() {
+        return true;   
+    },
+    canUseWebDeploy: function() {
+        return true;
+    },
+    findfiles: function() {
+        return ['webDeployPkg']    
+    },
+    generateTemporaryFolderOrZipPath: function() {
+        return 'temp_web_package_random_path';
     }
 });
 

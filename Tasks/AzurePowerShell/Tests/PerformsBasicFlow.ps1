@@ -3,7 +3,8 @@ param()
 
 # Arrange.
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
-Register-Mock Get-VstsInput { "$PSScriptRoot/PerformsBasicFlow_TargetScript.ps1" } -- -Name ScriptPath -Require
+Register-Mock Get-VstsInput { "FilePath" } -- -Name ScriptType -Require
+Register-Mock Get-VstsInput { "$PSScriptRoot/PerformsBasicFlow_TargetScript.ps1" } -- -Name ScriptPath
 Register-Mock Get-VstsInput { 'arg1 arg2' } -- -Name ScriptArguments
 Register-Mock Initialize-Azure
 

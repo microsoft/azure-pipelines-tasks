@@ -13,8 +13,8 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 1,
-    "Patch": 5
+    "Minor": 111,
+    "Patch": 0
   },
   "groups": [
     {
@@ -87,5 +87,8 @@
       "target": "jenkinsqueuejobtask.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "JenkinsJobQueued": "ms-resource:loc.messages.JenkinsJobQueued"
   }
 }

@@ -8,8 +8,7 @@ tr.setInput('ConnectedServiceName', 'AzureRMSpn');
 tr.setInput('WebAppName', 'mytestapp');
 tr.setInput('Package', 'webAppPkg.zip');
 tr.setInput('UseWebDeploy', 'true');
-tr.setInput('XmlTransformsAndVariableSubstitutions', 'true');
-tr.setInput('XdtTransformation', 'true');
+tr.setInput('XmlTransformation', 'true');
 
 process.env['TASK_TEST_TRACE'] = 1;
 process.env["ENDPOINT_AUTH_AzureRMSpn"] = "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
@@ -65,6 +64,12 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "rmRF": {
         "DefaultWorkingDirectory\\msDeployCommand.bat": {
             "success": true
+        },
+        "temp_web_package_random_path": {
+            "success": true
+        },
+        "DefaultWorkingDirectory\temp_web_package.zip": {
+            "success": true
         }
     },
     "exist": {
@@ -76,8 +81,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "Invalid_webAppPkg" : [],
         "webAppPkg.zip": ["webAppPkg.zip"],
         "webAppPkg": ["webAppPkg"],
-        "DefaultWorkingDirectory\\temp_web_package_folder\\**\\*.config": ["path1/web.config", "path1/web.Release.config", "path1/web.Debug.config", "path2/web.config", "path2/web.Debug.config"],
-        "DefaultWorkingDirectory/temp_web_package_folder/**/*.config": ["web.config", "web.Release.config", "web.Debug.config"]
+        "temp_web_package_random_path\\**\\*.config": ["path1/web.config", "path1/web.Release.config", "path1/web.Debug.config", "path2/web.config", "path2/web.Debug.config"],
+        "temp_web_package_random_path\**\*.config": ["web.config", "web.Release.config", "web.Debug.config"],
+        "temp_web_package_random_path/**/*.config": ["web.config", "web.Release.config", "web.Debug.config"]
     },
     "getVariable": {
     	"ENDPOINT_AUTH_AzureRMSpn": "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}",
@@ -101,7 +107,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 
 import mockTask = require('vsts-task-lib/mock-task');
-var kuduDeploymentLog = require('webdeployment-common/kududeploymentstatusutility.js');
+var kuduDeploymentLog = require('azurerest-common/kududeploymentstatusutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js'); 
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
@@ -115,7 +121,7 @@ tr.registerMock('./msdeployutility.js', {
     }
 }); 
 
-tr.registerMock('webdeployment-common/azurerestutility.js', {
+tr.registerMock('azurerest-common/azurerestutility.js', {
     getAzureRMWebAppPublishProfile: function(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
         var mockPublishProfile = {
             profileName: 'mytestapp - Web Deploy',
@@ -146,6 +152,7 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
 		id: 'appid',
   		properties: { 
      		virtualApplications: [ ['Object'], ['Object'], ['Object'] ],
+             scmType: "None"
     	} 
   	}
 
@@ -162,6 +169,23 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
         var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
         requestDetails["requestBody"].author = 'author';
         console.log("kudu log requestBody is:" + JSON.stringify(requestDetails["requestBody"]));
+    },
+    getResourceGroupName: function (SPN, webAppName) {
+        return "foobar";
+    },
+    getWebAppAppSettings : function (SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string){
+        var appSettings = {
+            properties : {
+                MSDEPLOY_RENAME_LOCKED_FILES : '1'
+            }
+        };
+        return appSettings;
+    },
+    updateWebAppAppSettings : function (){
+        return true;
+    },
+    updateAzureRMWebAppConfigDetails: function() {
+        console.log("Successfully updated scmType to VSTSRM");
     }
 });
 
@@ -171,6 +195,24 @@ tr.registerMock('webdeployment-common/ziputility.js', {
     },
     archiveFolder: function() {
         return "DefaultWorkingDirectory\\temp_web_package.zip"
+    }
+});
+
+tr.registerMock('webdeployment-common/utility.js', {
+    isInputPkgIsFolder: function() {
+        return false;    
+    },
+    fileExists: function() {
+        return true;   
+    },
+    canUseWebDeploy: function() {
+        return true;
+    },
+    findfiles: function() {
+        return ['webDeployPkg']    
+    },
+    generateTemporaryFolderOrZipPath: function() {
+        return 'temp_web_package_random_path';
     }
 });
 

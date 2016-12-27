@@ -80,7 +80,15 @@ export class TaskOptions {
         tl.debug('teamPluginUrl=' + this.teamPluginUrl);
 
         this.teamBuildPluginAvailable = false;
-        this.saveResultsTo = path.join(tl.getVariable('Build.StagingDirectory'), 'jenkinsResults');
+        // 'Build.StagingDirectory' is available during build.
+        // It is kept here (different than what is used during release) to maintain
+        // compatibility with other tasks relying on Jenkins results being placed in this folder.
+        var resultsDirectory: string = tl.getVariable('Build.StagingDirectory');
+        if (!resultsDirectory) {
+            // 'System.DefaultWorkingDirectory' is available during build and release
+            resultsDirectory = tl.getVariable('System.DefaultWorkingDirectory');
+        }
+        this.saveResultsTo = path.join(resultsDirectory, 'jenkinsResults');
 
         this.strictSSL = ("true" !== tl.getEndpointDataParameter(this.serverEndpoint, "acceptUntrustedCerts", true));
         tl.debug('strictSSL=' + this.strictSSL);
@@ -98,7 +106,7 @@ async function doWork() {
 
         var jobQueue: JobQueue = new JobQueue(taskOptions);
         var queueUri = await util.pollSubmitJob(taskOptions);
-        console.log('Jenkins job queued');
+        console.log(tl.loc('JenkinsJobQueued'));
         var rootJob = await util.pollCreateRootJob(queueUri, jobQueue, taskOptions);
         //start the job queue
         jobQueue.start();

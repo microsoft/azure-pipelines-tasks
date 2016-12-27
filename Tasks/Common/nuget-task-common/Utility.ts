@@ -82,7 +82,11 @@ export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: b
         // First find the most complete path without any matching patterns
         let idx = firstWildcardIndex(pattern);
         tl.debug("Index of first wildcard: " + idx);
-        let findPathRoot = path.dirname(pattern.slice(0, idx));
+
+        // include the wildcard character because:
+        //  dirname(c:\foo\bar\) => c:\foo (which will make find() return a bunch of stuff we know we'll discard)
+        //  dirname(c:\foo\bar\*) => c:\foo\bar
+        let findPathRoot = path.dirname(pattern.slice(0, idx + 1));
 
         tl.debug("find root dir: " + findPathRoot);
 

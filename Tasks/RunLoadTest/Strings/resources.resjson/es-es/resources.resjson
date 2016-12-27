@@ -13,5 +13,5 @@
   "loc.input.help.LoadTest": "Nombre de archivo de la prueba de carga que se va a usar de la carpeta de pruebas de carga especificada anteriormente.",
   "loc.input.label.ThresholdLimit": "Número de infracciones del umbral permitidas",
   "loc.input.help.ThresholdLimit": "Número de infracciones de umbral a partir del cual los resultados de la prueba de carga se consideran incorrectos.",
-  "loc.input.label.MachineType": "Run load test using"
+  "loc.input.label.MachineType": "Ejecutar prueba de carga con"
 }

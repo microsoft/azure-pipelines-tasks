@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Visual Studio 测试代理部署",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=625976)",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkId=625976)",
   "loc.description": "部署并配置测试代理以对一组计算机运行测试",
   "loc.instanceNameFormat": "在 $(testMachineGroup) 上部署测试代理",
   "loc.group.displayName.testMachineGroups": "测试计算机组",
@@ -26,7 +26,7 @@
   "loc.input.label.runAsProcess": "交互进程",
   "loc.input.help.runAsProcess": "指示测试代理是否需要作为交互进程运行(编码的 UI 测试需要)。",
   "loc.input.label.agentLocation": "测试代理位置",
-  "loc.input.help.agentLocation": "Optionally supply the path to vstf_testagent.exe from network or local location. If no path is provided, it will be downloaded from `https://go.microsoft.com/fwlink/?LinkId=536423`",
+  "loc.input.help.agentLocation": "根据需要从网络或本地位置提供 vstf_testagent.exe 路径。如果未提供路径，将从 `https://go.microsoft.com/fwlink/?LinkId=827840` 下载",
   "loc.input.label.updateTestAgent": "更新测试代理",
   "loc.input.help.updateTestAgent": "可以选择指定测试代理是否需要更新。",
   "loc.input.label.isDataCollectionOnly": "仅启用数据收集",

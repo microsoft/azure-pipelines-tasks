@@ -61,6 +61,7 @@ export function substituteJsonVariable(jsonObject, envObject) {
 export function jsonVariableSubstitution(absolutePath, jsonSubFiles) {
     var envVarObject = createEnvTree(tl.getVariables());
     for(let jsonSubFile of jsonSubFiles) {
+        tl.debug('JSON variable substitution for ' + jsonSubFile);
         var matchFiles = tl.glob(path.join(absolutePath, jsonSubFile));
         if(matchFiles.length === 0) {
             throw new Error(tl.loc('NOJSONfilematchedwithspecificpattern'));
@@ -75,7 +76,12 @@ export function jsonVariableSubstitution(absolutePath, jsonSubFiles) {
             if(fileEncodeType[1]) {
                 fileContent = fileContent.slice(1);
             }
-            var jsonObject = JSON.parse(fileContent);
+            try {
+                var jsonObject = JSON.parse(fileContent);
+            }
+            catch(exception) {
+                throw Error(tl.loc('JSONParseError', file, exception));
+            }
             tl.debug('Applying JSON variable substitution for ' + file);
             substituteJsonVariable(jsonObject, envVarObject);
             tl.writeFile(file, (fileEncodeType[1] ? '\uFEFF' : '') + JSON.stringify(jsonObject, null, 4), fileEncodeType[0]);
