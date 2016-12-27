@@ -109,7 +109,7 @@ export class ResourceGroups {
         // Send Request and process response.
         return this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             if (response.statusCode == 204 || response.statusCode == 404) {
-                callback(null, response.statusCode == 204);
+                return callback(null, response.statusCode == 204);
             }
             else {
                 return callback(azureServiceClient.ToError(response));
@@ -169,6 +169,67 @@ export class ResourceGroups {
             });
         }).catch((error) => callback(error));
 
+    }
+
+    public createOrUpdate(resourceGroupName, parameters, callback) {
+        var client = this.client;
+        if (!callback) {
+            throw new Error('callback cannot be null.');
+        }
+        // Validate
+        try {
+            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+            }
+            if (resourceGroupName !== null && resourceGroupName !== undefined) {
+                if (resourceGroupName.length > 90) {
+                    throw new Error('"resourceGroupName" should satisfy the constraint - "MaxLength": 90');
+                }
+                if (resourceGroupName.length < 1) {
+                    throw new Error('"resourceGroupName" should satisfy the constraint - "MinLength": 1');
+                }
+                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
+                    throw new Error('"resourceGroupName" should satisfy the constraint - "Pattern": /^[-\w\._\(\)]+$/');
+                }
+            }
+            if (parameters === null || parameters === undefined) {
+                throw new Error('parameters cannot be null or undefined.');
+            }
+        } catch (error) {
+            return callback(error);
+        }
+
+        // Create HTTP transport objects
+        var httpRequest = new azureServiceClient.WebRequest();
+        httpRequest.method = 'PUT';
+        httpRequest.headers = {};
+        httpRequest.uri = this.client.getRequestUri(
+            '//subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}',
+            {
+                '{resourceGroupName}': resourceGroupName,
+            }
+        );
+        // Serialize Request
+        var requestContent = null;
+        try {
+            if (parameters !== null && parameters !== undefined) {
+                requestContent = JSON.stringify(parameters);
+            }
+        } catch (error) {
+            var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' +
+                'payload - "%s"', error.message, util.inspect(parameters, { depth: null })));
+            return callback(serializationError);
+        }
+        httpRequest.body = requestContent;
+
+        // Send Request
+        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            var statusCode = response.statusCode;
+            if (statusCode !== 200 && statusCode !== 201) {
+                return callback(azureServiceClient.ToError(response));
+            }
+            return callback(null);
+        });
     }
 }
 
@@ -246,14 +307,14 @@ export class Deployments {
                     if (error) {
                         return callback(error);
                     } else {
-                        if (response.body.properties.provisionState === "Succeeded") {
+                        if (response.properties.provisioningState === "Succeeded") {
                             return callback(null, response);
                         } else {
                             return callback(response.body.properties.error);
                         }
                     }
                 });
-            });
+            }).catch((error) => callback(error));
         });
     }
 
@@ -272,12 +333,11 @@ export class Deployments {
         // Send Request and process response.
         return this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             if (response.statusCode != 200) {
-                callback(azureServiceClient.ToError(response));
+                return callback(azureServiceClient.ToError(response));
             }
             else {
-                callback(null, response.body);
+                return callback(null, response.body);
             }
         }).catch((error) => callback(error));
-
     }
 }

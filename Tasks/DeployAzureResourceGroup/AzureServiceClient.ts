@@ -66,13 +66,13 @@ export class ServiceClient {
         var deferred = Q.defer<WebResponse>();
         var request = new WebRequest();
         request.method = "GET";
-        timeoutInMinutes = timeoutInMinutes | 60;
+        timeoutInMinutes = timeoutInMinutes || 60;
         var timeout = new Date().getTime() + timeoutInMinutes * 60 * 1000;
+        request.uri = response.headers["azure-asyncoperation"] || response.headers["location"];
         while (true) {
-            request.uri = response.headers["azure-asyncoperation"] || response.headers["location"];
             if (request.uri) {
                 response = await this.beginRequest(request);
-                if (response.statusCode === 202 || response.body.status == "InProgress" || response.body.status == "Running") {
+                if (response.statusCode === 202 || response.body.status == "Running") {
                     // If timeout; throw;
                     if (timeout < new Date().getTime()) {
                         throw ("Timeout out while waiting for the operation to complete.")
@@ -80,8 +80,8 @@ export class ServiceClient {
 
                     // Retry after given interval.
                     var sleepDuration = 15;
-                    if (response.headers["Retry-After"]) {
-                        sleepDuration = parseInt(response.headers["Retry-After"]);
+                    if (response.headers["retry-after"]) {
+                        sleepDuration = parseInt(response.headers["retry-after"]);
                     }
                     await this.sleepFor(sleepDuration);
                 }
