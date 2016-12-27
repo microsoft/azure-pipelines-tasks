@@ -7,14 +7,8 @@ import Q = require('q');
 
 export class MGExtensionManager {
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
-    private resourceGroupName: string;
     private credentials;
     private subscriptionId: string;
-    private fqdnMap;
-    private winRmHttpsPortMap;
-    private virtualMachines;
-    private customScriptExtensionInstalled: boolean;
-    private ruleAddedToNsg: boolean;
     private azureUtils;
     private failureCount: number;
     private successCount: number;
@@ -24,13 +18,8 @@ export class MGExtensionManager {
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
         this.taskParameters = taskParameters;
-        this.resourceGroupName = this.taskParameters.resourceGroupName;
         this.credentials = this.taskParameters.credentials;
         this.subscriptionId = this.taskParameters.subscriptionId;
-        this.fqdnMap = {};
-        this.winRmHttpsPortMap = {};
-        this.customScriptExtensionInstalled = false;
-        this.ruleAddedToNsg = false;
         this.azureUtils = new azure_utils.AzureUtil(this.taskParameters);
         this.successCount = 0;
         this.failureCount = 0;
