@@ -9,6 +9,8 @@
   "loc.input.help.solution": "要生成的 Xamarin.iOS 解决方案的存储库根路径的相对路径。",
   "loc.input.label.configuration": "配置",
   "loc.input.help.configuration": "标准配置是 Ad-Hoc、AppStore、Debug、Release。",
+  "loc.input.label.runNugetRestore": "Run NuGet Restore",
+  "loc.input.help.runNugetRestore": "Optionally run `nuget restore` on the Xamarin iOS solution to install all referenced packages before build. The nuget tool in the PATH on the build server will be used. To use a different version of nuget or set additional arguments use the [NuGet Instaler Task](https://www.visualstudio.com/en-us/docs/build/steps/package/nuget-installer).",
   "loc.input.label.args": "参数",
   "loc.input.help.args": "将用于生成的其他命令行参数。",
   "loc.input.label.cwd": "工作目录",

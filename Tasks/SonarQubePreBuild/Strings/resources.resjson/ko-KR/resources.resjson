@@ -1,8 +1,8 @@
 {
   "loc.friendlyName": "SonarQube for MSBuild - 분석 시작",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkId=620063)",
-  "loc.description": "[DEPRECATED] Fetch the Quality Profile from SonarQube to configure the analysis",
-  "loc.instanceNameFormat": "[DEPRECATED] Fetch the Quality Profile from SonarQube",
+  "loc.description": "[사용되지 않음] 분석을 구성하기 위해 SonarQube에서 품질 프로필 가져오기",
+  "loc.instanceNameFormat": "[사용되지 않음] SonarQube에서 품질 프로필 가져오기",
   "loc.group.displayName.serverSettings": "SonarQube Server",
   "loc.group.displayName.project": "SonarQube 프로젝트 설정",
   "loc.group.displayName.dbSettings": "데이터베이스 설정(SonarQube 5.2 이상에는 필요 없음)",

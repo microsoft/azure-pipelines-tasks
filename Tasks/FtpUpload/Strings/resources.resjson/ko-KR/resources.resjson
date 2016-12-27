@@ -19,5 +19,13 @@
   "loc.input.label.preservePaths": "파일 경로 유지",
   "loc.input.help.preservePaths": "선택하는 경우 파일이 업로드되는 원격 디렉터리 아래에 상대 로컬 디렉터리 구조가 다시 만들어집니다. 선택하지 않으면 추가 하위 디렉터리가 만들어지지 않고 파일이 원격 디렉터리에 직접 업로드됩니다.<p>예를 들어 소스 폴더가 <b>`/home/user/source/`</b>이고 <b>`foo/bar/foobar.txt`</b> 파일을 포함하고 있으며, 원격 디렉터리는 <b>`/uploads/`</b>라고 가정합니다.<br>선택하는 경우 파일은 <b>`/uploads/foo/bar/foobar.txt`</b>에 업로드됩니다. 선택하지 않으면 <b>`/uploads/foobar.txt`</b>에 업로드됩니다.",
   "loc.input.label.trustSSL": "서버 인증서 신뢰",
-  "loc.input.help.trustSSL": "이 옵션을 선택하면 FTP 서버의 SSL 인증서가 자체 서명되거나 CA(인증 기관)에서 그 유효성을 검사할 수 없더라도 해당 인증서가 ftps://로 신뢰됩니다."
+  "loc.input.help.trustSSL": "이 옵션을 선택하면 FTP 서버의 SSL 인증서가 자체 서명되거나 CA(인증 기관)에서 그 유효성을 검사할 수 없더라도 해당 인증서가 ftps://로 신뢰됩니다.",
+  "loc.messages.FTPConnected": "connected: %s",
+  "loc.messages.CleanRemoteDir": "cleaning remote directory: %s",
+  "loc.messages.UploadRemoteDir": "uploading files to remote directory: %s",
+  "loc.messages.UploadSucceedMsg": "FTP upload successful %s",
+  "loc.messages.UploadSucceedRes": "FTP upload successful",
+  "loc.messages.DisconnectHost": "disconnecting from: %s",
+  "loc.messages.Disconnected": "disconnected",
+  "loc.messages.ConnectPort": "connecting to: %s:%s"
 }

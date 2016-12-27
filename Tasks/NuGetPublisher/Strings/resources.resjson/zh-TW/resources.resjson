@@ -16,7 +16,7 @@
   "loc.input.label.verbosity": "詳細資訊",
   "loc.input.help.verbosity": "NuGet 的詳細資訊層級",
   "loc.input.label.nuGetVersion": "NuGet 版本",
-  "loc.input.help.nuGetVersion": "要使用的 NuGet 版本，或自訂版本。",
+  "loc.input.help.nuGetVersion": "The version of NuGet to use, or custom version.",
   "loc.input.label.nuGetPath": "NuGet.exe 的路徑",
   "loc.input.help.nuGetPath": "選擇性地提供 NuGet.exe 的路徑。將覆寫版本選取項目。",
   "loc.messages.Warning_NoConfigForOldNuGet": "若要連線到使用 NuGet 3.1 或更低版本裝載於 Team Services 帳戶/TFS 專案集合中的 NuGet 摘要，請編輯您的組建定義以指定路徑，連到包含您要使用之套件來源的 NuGet.config。",
