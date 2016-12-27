@@ -12,6 +12,7 @@ var xmlSubstitutionUtility = require('webdeployment-common/xmlvariablesubstituti
 var xdtTransformationUtility = require('webdeployment-common/xdttransformationutility.js');
 var kuduUtility = require('webdeployment-common/kuduutility.js');
 
+var pythonPackageUtility = require('./deploypythonpackage.js');
 async function run() {
     try {
 
@@ -69,6 +70,10 @@ async function run() {
         webDeployPkg = availableWebPackages[0];
 
         var isFolderBasedDeployment = utility.isInputPkgIsFolder(webDeployPkg);
+
+        if(await pythonPackageUtility.checkIfPythonPackage(webDeployPkg, isFolderBasedDeployment)) {
+            tl._writeLine(tl.loc('PythonWebPackageFound'));
+        }
 
         if(JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution) {
 

@@ -195,5 +195,11 @@ tr.registerMock('webdeployment-common/xdttransformationutility.js', {
     }
 });
 
+tr.registerMock('./deploypythonpackage.js', {
+    checkIfPythonPackage: function() {
+        return false;
+    }
+});
+
 tr.setAnswers(a);
 tr.run();
