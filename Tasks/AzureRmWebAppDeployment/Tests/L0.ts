@@ -1,3 +1,4 @@
+import * as console from 'console';
 import * as path from 'path';
 import * as assert from 'assert';
 import * as ttm from 'vsts-task-lib/mock-test';
@@ -352,7 +353,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'L0WindowsXdtTransformation.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-
+        console.log(tr.stdout);
         var expectedOut = 'Updated history to kudu';
         assert(tr.invokedToolCount == 3, 'should have invoked tool thrice');
         assert(tr.stderr.length == 0  && tr.errorIssues.length == 0, 'should not have written to stderr');
