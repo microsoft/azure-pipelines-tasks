@@ -83,7 +83,7 @@ export class VirtualMachine {
                     break;
                 case "Delete":
                     var extDelPromise = this.MGExtensionManager.removeMGExtension();
-                    extDelPromise.then(function () {
+                    extDelPromise.then((val) => {
                         for (var i = 0; i < listOfVms.length; i++) {
                             var vmName = listOfVms[i]["name"];
                             console.log(tl.loc("VM_Delete", vmName));
