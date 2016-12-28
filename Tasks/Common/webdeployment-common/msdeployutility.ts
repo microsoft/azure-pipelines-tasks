@@ -111,7 +111,7 @@ export async  function containsParamFile(webAppPackage: string ) {
     var batchCommand = silentCommand + msDeployCommand;
 
     tl.writeFile(msDeployParamFile, batchCommand);
-    tl._writeLine(tl.loc("Runningcommand", msDeployCommand));
+    console.log(tl.loc("Runningcommand", msDeployCommand));
 
     var taskResult = tl.execSync("cmd", ['/C', msDeployParamFile], <trm.IExecOptions>{ failOnStdErr: true, silent: true });
     var paramContentXML = fs.readFileSync(parameterFile);

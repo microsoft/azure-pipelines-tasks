@@ -110,7 +110,7 @@ export function findfiles(filepath){
         var allFiles = tl.find(findPathRoot);
 
         // Now matching the pattern against all files
-        filesList = tl.match(allFiles, filepath, {matchBase: true});
+        filesList = tl.match(allFiles, filepath, '', {matchBase: true});
 
         // Fail if no matching .csproj files were found
         if (!filesList || filesList.length == 0) {

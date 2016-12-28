@@ -66,7 +66,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     "exist": {
     	"webAppPkg.zip": true
     },
-    "glob": {
+    "findMatch": {
         "webAppPkg.zip": ["webAppPkg.zip"],
         "webAppPkg": ["webAppPkg"]
     },

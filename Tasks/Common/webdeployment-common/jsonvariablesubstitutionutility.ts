@@ -62,7 +62,7 @@ export function jsonVariableSubstitution(absolutePath, jsonSubFiles) {
     var envVarObject = createEnvTree(tl.getVariables());
     for(let jsonSubFile of jsonSubFiles) {
         tl.debug('JSON variable substitution for ' + jsonSubFile);
-        var matchFiles = tl.glob(path.join(absolutePath, jsonSubFile));
+        var matchFiles = tl.findMatch(absolutePath, jsonSubFile);
         if(matchFiles.length === 0) {
             throw new Error(tl.loc('NOJSONfilematchedwithspecificpattern'));
         }
