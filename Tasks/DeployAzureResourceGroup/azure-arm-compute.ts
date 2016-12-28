@@ -13,6 +13,7 @@ export class ComputeManagementClient extends azureServiceClient.ServiceClient {
     private subscriptionId;
     private credentials: msRestAzure.ApplicationTokenCredentials;
     private baseUri;
+
     public virtualMachines;
     public virtualMachineExtensions;
 
@@ -102,18 +103,6 @@ export class ComputeManagementClient extends azureServiceClient.ServiceClient {
         headers['Content-Type'] = 'application/json; charset=utf-8';
         return headers;
     }
-
-    public validate() {
-        if (this.apiVersion === null || this.apiVersion === undefined || typeof this.apiVersion.valueOf() !== 'string') {
-            throw new Error('this.client.apiVersion cannot be null or undefined and it must be of type string.');
-        }
-        if (this.subscriptionId === null || this.subscriptionId === undefined || typeof this.subscriptionId.valueOf() !== 'string') {
-            throw new Error('this.client.subscriptionId cannot be null or undefined and it must be of type string.');
-        }
-        if (this.acceptLanguage !== null && this.acceptLanguage !== undefined && typeof this.acceptLanguage.valueOf() !== 'string') {
-            throw new Error('this.client.acceptLanguage must be of type string.');
-        }
-    }
 }
 
 export class VirtualMachines {
@@ -137,7 +126,6 @@ export class VirtualMachines {
             if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
                 throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
             }
-            this.client.validate();
         }
         catch (error) {
             return callback(error);
@@ -151,17 +139,27 @@ export class VirtualMachines {
                 '{resourceGroupName}': resourceGroupName
             }
         );
-        httpRequest.body = null;
 
-        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        var result = [];
+        this.client.beginRequest(httpRequest).then(async (response: azureServiceClient.WebResponse) => {
             if (response.statusCode == 200) {
-                var result = JSON.parse(response.body);
-                return callback(null, result);
+                if (response.body.value) {
+                    result.concat(response.body.value);
+                }
+
+                if (response.body.nextLink) {
+                    var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
+                    if (nextResult.error) { return nextResult; }
+                    result.concat(nextResult.result);
+                }
+
+                return new azureServiceClient.ApiResult(null, result);
             }
             else {
-                return callback(azureServiceClient.ToError(response));
+                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
             }
-        }).catch((error) => callback(error));
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
     }
 
     public get(resourceGroupName, vmName, options, callback) {
@@ -193,6 +191,7 @@ export class VirtualMachines {
         } catch (error) {
             return callback(error);
         }
+
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}',
@@ -524,8 +523,6 @@ export class VirtualMachineExtensions {
     }
 
     public delete(resourceGroupName, vmName, vmExtensionName, callback) {
-        var client = this.client;
-
         if (!callback) {
             throw new Error('callback cannot be null.');
         }
@@ -542,7 +539,6 @@ export class VirtualMachineExtensions {
             if (vmExtensionName === null || vmExtensionName === undefined || typeof vmExtensionName.valueOf() !== 'string') {
                 throw new Error('vmExtensionName cannot be null or undefined and it must be of type string.');
             }
-            this.client.validate();
         } catch (error) {
             return callback(error);
         }
@@ -550,7 +546,6 @@ export class VirtualMachineExtensions {
         // Create HTTP transport objects
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'DELETE';
-        httpRequest.headers = this.client.setHeaders(null);
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/extensions/{vmExtensionName}',
             {
                 '{resourceGroupName}': resourceGroupName,
@@ -558,7 +553,6 @@ export class VirtualMachineExtensions {
                 '{vmExtensionName}': vmExtensionName
             }
         );
-        httpRequest.body = null;
 
         // Send request
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {

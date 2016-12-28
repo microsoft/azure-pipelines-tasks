@@ -109,12 +109,13 @@ export class ResourceGroups {
         // Send Request and process response.
         return this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             if (response.statusCode == 204 || response.statusCode == 404) {
-                return callback(null, response.statusCode == 204);
+                return new azureServiceClient.ApiResult(null, response.statusCode == 204);
             }
             else {
-                return callback(azureServiceClient.ToError(response));
+                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
             }
-        }).catch((error) => callback(error));
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
     }
 
     public deleteMethod(resourceGroupName, callback) {
@@ -155,20 +156,20 @@ export class ResourceGroups {
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             var statusCode = response.statusCode;
             if (statusCode !== 202 && statusCode !== 200) {
-                return callback(azureServiceClient.ToError(response));
+                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
             }
 
             // Create Result
             this.client.getLongRunningOperationResult(response).then((response: azureServiceClient.WebResponse) => {
                 if (response.statusCode == 200) {
-                    return callback(null, response.body, httpRequest, response);
+                    return new azureServiceClient.ApiResult(null, response.body);
                 }
                 else {
-                    return callback(azureServiceClient.ToError(response));
+                    return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
                 }
             });
-        }).catch((error) => callback(error));
-
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
     }
 
     public createOrUpdate(resourceGroupName, parameters, callback) {
@@ -209,6 +210,7 @@ export class ResourceGroups {
                 '{resourceGroupName}': resourceGroupName,
             }
         );
+
         // Serialize Request
         var requestContent = null;
         try {
@@ -226,10 +228,11 @@ export class ResourceGroups {
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             var statusCode = response.statusCode;
             if (statusCode !== 200 && statusCode !== 201) {
-                return callback(azureServiceClient.ToError(response));
+                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
             }
-            return callback(null);
-        });
+            return new azureServiceClient.ApiResult(null, response.body);
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
     }
 }
 
@@ -282,6 +285,7 @@ export class Deployments {
                 '{deploymentName}': deploymentName
             }
         );
+
         // Serialize Request
         var requestContent = null;
         try {
@@ -299,23 +303,26 @@ export class Deployments {
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             var statusCode = response.statusCode;
             if (statusCode !== 200 && statusCode !== 201) {
-                callback(azureServiceClient.ToError(response));
+                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
             }
 
-            this.client.getLongRunningOperationResult(response).then((operationResponse) => {
-                return this.get(resourceGroupName, deploymentName, (error, response) => {
-                    if (error) {
-                        return callback(error);
-                    } else {
-                        if (response.properties.provisioningState === "Succeeded") {
-                            return callback(null, response);
+            return new Promise<azureServiceClient.ApiResult>((resolve, reject) => {
+                return this.client.getLongRunningOperationResult(response).then((operationResponse) => {
+                    this.get(resourceGroupName, deploymentName, (error, response) => {
+                        if (error) {
+                            resolve(new azureServiceClient.ApiResult(error));
                         } else {
-                            return callback(response.body.properties.error);
+                            if (response.properties.provisioningState === "Succeeded") {
+                                resolve(new azureServiceClient.ApiResult(null, response));
+                            } else {
+                                resolve(new azureServiceClient.ApiResult(response.properties.error));
+                            }
                         }
-                    }
+                    });
                 });
-            }).catch((error) => callback(error));
-        });
+            })
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
     }
 
     public get(resourceGroupName, deploymentName, callback) {
@@ -333,11 +340,12 @@ export class Deployments {
         // Send Request and process response.
         return this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             if (response.statusCode != 200) {
-                return callback(azureServiceClient.ToError(response));
+                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
             }
             else {
-                return callback(null, response.body);
+                return new azureServiceClient.ApiResult(null, response.body);
             }
-        }).catch((error) => callback(error));
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
     }
 }
