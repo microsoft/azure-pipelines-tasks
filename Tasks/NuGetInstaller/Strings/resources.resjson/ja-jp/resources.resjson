@@ -17,7 +17,7 @@
   "loc.input.label.verbosity": "詳細",
   "loc.input.help.verbosity": "NuGet の詳細レベル",
   "loc.input.label.nuGetVersion": "NuGet バージョン",
-  "loc.input.help.nuGetVersion": "使用する NuGet のバージョン、または外部バージョン。",
+  "loc.input.help.nuGetVersion": "The version of NuGet to use, or external version.",
   "loc.input.label.nuGetPath": "NuGet.exe へのパス",
   "loc.input.help.nuGetPath": "(省略可能) NuGet.exe へのパスを指定します。バージョンの選択が上書きされます。",
   "loc.messages.Warning_NoConfigForNoCredentialProvider": "このビルド エージェントの Team Services アカウント/TFS プロジェクト コレクションでホストされている NuGet フィードに接続するには、ビルド定義を編集して nuget の上位バージョンを選択するか、使用するパッケージ ソースを含む NuGet.config へのパスを指定します。",

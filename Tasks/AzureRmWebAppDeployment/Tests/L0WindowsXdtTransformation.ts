@@ -82,8 +82,8 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "webAppPkg.zip": ["webAppPkg.zip"],
         "webAppPkg": ["webAppPkg"],
         "temp_web_package_random_path\\**\\*.config": ["path1/web.config", "path1/web.Release.config", "path1/web.Debug.config", "path2/web.config", "path2/web.Debug.config"],
-        "temp_web_package_random_path/**/*.config": ["web.config", "web.Release.config", "web.Debug.config"],
-        "temp_web_package_random_path\**\*.config": ["web.config", "web.Release.config", "web.Debug.config"]
+        "temp_web_package_random_path\**\*.config": ["web.config", "web.Release.config", "web.Debug.config"],
+        "temp_web_package_random_path/**/*.config": ["web.config", "web.Release.config", "web.Debug.config"]
     },
     "getVariable": {
     	"ENDPOINT_AUTH_AzureRMSpn": "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}",

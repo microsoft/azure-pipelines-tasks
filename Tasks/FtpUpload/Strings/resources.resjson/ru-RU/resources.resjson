@@ -19,5 +19,13 @@
   "loc.input.label.preservePaths": "Сохранять пути к файлам",
   "loc.input.help.preservePaths": "Если этот флажок установлен, структура относительного локального каталога пересоздается в удаленном каталоге, в который отправляются файлы. В противном случае файлы отправляются напрямую в удаленный каталог без создания дополнительных подкаталогов.<p>Предположим, ваша исходная папка — <b>/home/user/source/</b>, которая содержит файл <b>foo/bar/foobar.txt</b>, а удаленный каталог — <b>/uploads/</b>.<br>Если флажок установлен, файл отправляется в папку <b>/uploads/foo/bar/foobar.txt</b>. В противном случае он отправляется в папку <b>/uploads/foobar.txt</b>.",
   "loc.input.label.trustSSL": "Доверять сертификату сервера",
-  "loc.input.help.trustSSL": "При выборе этого параметра SSL-сертификат FTP-сервера становится доверенным для ftps://, даже если он является самозаверяющим или центр сертификации не может подтвердить его подлинность."
+  "loc.input.help.trustSSL": "При выборе этого параметра SSL-сертификат FTP-сервера становится доверенным для ftps://, даже если он является самозаверяющим или центр сертификации не может подтвердить его подлинность.",
+  "loc.messages.FTPConnected": "connected: %s",
+  "loc.messages.CleanRemoteDir": "cleaning remote directory: %s",
+  "loc.messages.UploadRemoteDir": "uploading files to remote directory: %s",
+  "loc.messages.UploadSucceedMsg": "FTP upload successful %s",
+  "loc.messages.UploadSucceedRes": "FTP upload successful",
+  "loc.messages.DisconnectHost": "disconnecting from: %s",
+  "loc.messages.Disconnected": "disconnected",
+  "loc.messages.ConnectPort": "connecting to: %s:%s"
 }

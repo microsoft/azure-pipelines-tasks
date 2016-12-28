@@ -19,5 +19,13 @@
   "loc.input.label.preservePaths": "保留檔案路徑",
   "loc.input.help.preservePaths": "如有選取，會在檔案上傳的遠端目錄下重新建立相對的本機目錄結構。否則，檔案會直接上傳到遠端目錄，而不會另外建立其他子目錄。<p>例如，假設您的來源資料來為 <b>'/home/user/source/'</b>，其中包含了檔案 <b>'foo/bar/foobar.txt'</b>，而您的遠端目錄為 <b>'/uploads/'</b>。<br>如有選取，檔案會上傳到 <b>'/uploads/foo/bar/foobar.txt'</b>，否則會上傳到 <b>'/uploads/foobar.txt'</b>。",
   "loc.input.label.trustSSL": "信任伺服器憑證",
-  "loc.input.help.trustSSL": "選取此選項會導致 FTP 伺服器的 SSL 憑證受 ftps:// 信任，即使它是自我簽署的憑證，或是憑證授權單位 (CA) 無法驗證的憑證亦然。"
+  "loc.input.help.trustSSL": "選取此選項會導致 FTP 伺服器的 SSL 憑證受 ftps:// 信任，即使它是自我簽署的憑證，或是憑證授權單位 (CA) 無法驗證的憑證亦然。",
+  "loc.messages.FTPConnected": "connected: %s",
+  "loc.messages.CleanRemoteDir": "cleaning remote directory: %s",
+  "loc.messages.UploadRemoteDir": "uploading files to remote directory: %s",
+  "loc.messages.UploadSucceedMsg": "FTP upload successful %s",
+  "loc.messages.UploadSucceedRes": "FTP upload successful",
+  "loc.messages.DisconnectHost": "disconnecting from: %s",
+  "loc.messages.Disconnected": "disconnected",
+  "loc.messages.ConnectPort": "connecting to: %s:%s"
 }

@@ -9,6 +9,8 @@
   "loc.input.help.solution": "リポジトリのルートを基準に指定した、ビルドする Xamarin.iOS ソリューションの相対パス。",
   "loc.input.label.configuration": "構成",
   "loc.input.help.configuration": "標準構成は、Ad-Hoc、AppStore、Debug、Release です。",
+  "loc.input.label.runNugetRestore": "Run NuGet Restore",
+  "loc.input.help.runNugetRestore": "Optionally run `nuget restore` on the Xamarin iOS solution to install all referenced packages before build. The nuget tool in the PATH on the build server will be used. To use a different version of nuget or set additional arguments use the [NuGet Instaler Task](https://www.visualstudio.com/en-us/docs/build/steps/package/nuget-installer).",
   "loc.input.label.args": "引数",
   "loc.input.help.args": "ビルドに使用する必要のある追加のコマンド ライン引数。",
   "loc.input.label.cwd": "作業ディレクトリ",

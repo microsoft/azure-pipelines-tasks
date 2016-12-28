@@ -4,5 +4,7 @@
   "loc.description": "배포를 일시 중지하고 작업을 대기합니다.",
   "loc.instanceNameFormat": "수동 작업",
   "loc.input.label.instructions": "지침",
-  "loc.input.help.instructions": "이 지침은 사용자가 수동 작업을 다시 시작하거나 거부하려는 경우 표시됩니다. 사용자는 이러한 지침에 따라 이 수동 작업을 합리적으로 결정하게 됩니다."
+  "loc.input.help.instructions": "이 지침은 사용자가 수동 작업을 다시 시작하거나 거부하려는 경우 표시됩니다. 사용자는 이러한 지침에 따라 이 수동 작업을 합리적으로 결정하게 됩니다.",
+  "loc.input.label.emailRecipients": "Notify users",
+  "loc.input.help.emailRecipients": "Send a manual intervention pending email to specific users (or groups). Only users with manage deployment permission can act on a manual intervention."
 }
