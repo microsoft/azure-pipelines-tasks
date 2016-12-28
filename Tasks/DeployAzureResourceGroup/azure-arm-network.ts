@@ -2,20 +2,15 @@ import msRestAzure = require("./ms-rest-azure");
 import tl = require('vsts-task-lib/task');
 import util = require("util");
 import azureServiceClient = require("./AzureServiceClient");
-import httpClient = require('vso-node-api/HttpClient');
-import restClient = require('vso-node-api/RestClient');
 
-export class NetworkManagementClient {
-    public apiVersion;
-    public acceptLanguage;
-    private longRunningOperationRetryTimeout;
+export class NetworkManagementClient extends azureServiceClient.ServiceClient {
+    private apiVersion;
+    private acceptLanguage;
+    public longRunningOperationRetryTimeout;
     private generateClientRequestId;
     private subscriptionId;
-    private credentials;
-    private baseUri;
-    public models;
-    private httpObj;
-    private restObj;
+    public credentials;
+    public baseUri;
     public networkSecurityGroups;
     public networkInterfaces;
     public publicIPAddresses;
@@ -23,13 +18,12 @@ export class NetworkManagementClient {
     public securityRules;
 
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId, baseUri?: any, options?: any) {
+        super(credentials);
         this.apiVersion = '2016-09-01';
         this.acceptLanguage = 'en-US';
         this.longRunningOperationRetryTimeout = 30;
         this.generateClientRequestId = true;
         this.models = {};
-        // this.httpObj = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
-        // this.restObj = new restClient.RestCallbackClient(this.httpObj);
 
         if (credentials === null || credentials === undefined) {
             throw new Error('\'credentials\' cannot be null.');
@@ -65,470 +59,77 @@ export class NetworkManagementClient {
         this.networkSecurityGroups = new networkSecurityGroups(this);
         this.networkInterfaces = new NetworkInterfaces(this);
         this.securityRules = new securityRules(this);
-        this.models['CloudError'] = new msRestAzure.CloudError();
-        this.models['LoadBalancerListResult'] = new LoadBalancerListResultModel();
-        this.models['PublicIPAddressListResult'] = new PublicIPAddressListResultModel();
-        this.models['NetworkSecurityGroupListResult'] = new NetworkSecurityGroupListResultModel();
-        this.models['NetworkInterfaceListResult'] = new NetworkInterfaceListResultModel();
-        this.models['SecurityRule'] = new SecurityRuleModel();
-        this.models['LoadBalancer'] = new LoadBalancerModel();
     }
-}
 
-export class SecurityRuleModel {
-    constructor() { }
+    public getRequestUri(uriFormat: string, parameters: {}, queryParameters?: string[]): string {
+        var requestUri = this.baseUri + uriFormat;
+        requestUri.replace('{subscriptionId}', encodeURIComponent(this.subscriptionId));
+        for (var key in parameters) {
+            requestUri.replace(key, encodeURIComponent(parameters[key]));
+        }
 
-    public mapper() {
-        return {
-            required: false,
-            serializedName: 'SecurityRule',
-            type: {
-                name: 'Composite',
-                className: 'SecurityRule',
-                modelProperties: {
-                    id: {
-                        required: false,
-                        serializedName: 'id',
-                        type: {
-                            name: 'String'
-                        }
-                    },
-                    description: {
-                        required: false,
-                        serializedName: 'properties.description',
-                        type: {
-                            name: 'String'
-                        }
-                    },
-                    protocol: {
-                        required: true,
-                        serializedName: 'properties.protocol',
-                        type: {
-                            name: 'String'
-                        }
-                    },
-                    sourcePortRange: {
-                        required: false,
-                        serializedName: 'properties.sourcePortRange',
-                        type: {
-                            name: 'String'
-                        }
-                    },
-                    destinationPortRange: {
-                        required: false,
-                        serializedName: 'properties.destinationPortRange',
-                        type: {
-                            name: 'String'
-                        }
-                    },
-                    sourceAddressPrefix: {
-                        required: true,
-                        serializedName: 'properties.sourceAddressPrefix',
-                        type: {
-                            name: 'String'
-                        }
-                    },
-                    destinationAddressPrefix: {
-                        required: true,
-                        serializedName: 'properties.destinationAddressPrefix',
-                        type: {
-                            name: 'String'
-                        }
-                    },
-                    access: {
-                        required: true,
-                        serializedName: 'properties.access',
-                        type: {
-                            name: 'String'
-                        }
-                    },
-                    priority: {
-                        required: false,
-                        serializedName: 'properties.priority',
-                        type: {
-                            name: 'Number'
-                        }
-                    },
-                    direction: {
-                        required: true,
-                        serializedName: 'properties.direction',
-                        type: {
-                            name: 'String'
-                        }
-                    },
-                    provisioningState: {
-                        required: false,
-                        serializedName: 'properties.provisioningState',
-                        type: {
-                            name: 'String'
-                        }
-                    },
-                    name: {
-                        required: false,
-                        serializedName: 'name',
-                        type: {
-                            name: 'String'
-                        }
-                    },
-                    etag: {
-                        required: false,
-                        serializedName: 'etag',
-                        type: {
-                            name: 'String'
-                        }
-                    }
+        // trim all duplicate forward slashes in the url
+        var regex = /([^:]\/)\/+/gi;
+        requestUri = requestUri.replace(regex, '$1');
+
+        // process query paramerters
+        queryParameters = queryParameters || [];
+        queryParameters.push('api-version=' + encodeURIComponent(this.apiVersion));
+        if (queryParameters.length > 0) {
+            requestUri += '?' + queryParameters.join('&');
+        }
+
+        return requestUri
+    }
+
+    public beginRequest(request: azureServiceClient.WebRequest): Promise<azureServiceClient.WebResponse> {
+        request.headers = request.headers || {};
+        // Set default Headers
+        if (this.generateClientRequestId) {
+            request.headers['x-ms-client-request-id'] = msRestAzure.generateUuid();
+        }
+        if (this.acceptLanguage) {
+            request.headers['accept-language'] = this.acceptLanguage;
+        }
+        request.headers['Content-Type'] = 'application/json; charset=utf-8';
+
+        return super.beginRequest(request);
+    }
+
+    public setHeaders(options): {} {
+        var headers = {};
+        if (this.generateClientRequestId) {
+            headers['x-ms-client-request-id'] = msRestAzure.generateUuid();
+        }
+        if (this.acceptLanguage !== undefined && this.acceptLanguage !== null) {
+            headers['accept-language'] = this.acceptLanguage;
+        }
+        if (options) {
+            for (var headerName in options['customHeaders']) {
+                if (options['customHeaders'].hasOwnProperty(headerName)) {
+                    headers[headerName] = options['customHeaders'][headerName];
                 }
             }
-        };
-    }
-}
-
-export class NetworkInterfaceListResultModel {
-    constructor() { }
-
-    public mapper() {
-        return {
-            required: false,
-            serializedName: 'NetworkInterfaceListResult',
-            type: {
-                name: 'Composite',
-                className: 'NetworkInterfaceListResult',
-                modelProperties: {
-                    value: {
-                        required: false,
-                        serializedName: '',
-                        type: {
-                            name: 'Sequence',
-                            element: {
-                                required: false,
-                                serializedName: 'NetworkInterfaceElementType',
-                                type: {
-                                    name: 'Composite',
-                                    className: 'NetworkInterface'
-                                }
-                            }
-                        }
-                    },
-                    nextLink: {
-                        required: false,
-                        serializedName: 'nextLink',
-                        type: {
-                            name: 'String'
-                        }
-                    }
-                }
-            }
-        };
-    }
-}
-
-export class NetworkSecurityGroupListResultModel {
-    constructor() { }
-
-    public mapper() {
-        return {
-            required: false,
-            serializedName: 'NetworkSecurityGroupListResult',
-            type: {
-                name: 'Composite',
-                className: 'NetworkSecurityGroupListResult',
-                modelProperties: {
-                    value: {
-                        required: false,
-                        serializedName: '',
-                        type: {
-                            name: 'Sequence',
-                            element: {
-                                required: false,
-                                serializedName: 'NetworkSecurityGroupElementType',
-                                type: {
-                                    name: 'Composite',
-                                    className: 'NetworkSecurityGroup'
-                                }
-                            }
-                        }
-                    },
-                    nextLink: {
-                        required: false,
-                        serializedName: 'nextLink',
-                        type: {
-                            name: 'String'
-                        }
-                    }
-                }
-            }
-        };
-    }
-}
-
-export class LoadBalancerListResultModel {
-    constructor() { }
-
-    public mapper() {
-        return {
-            required: false,
-            serializedName: 'LoadBalancerListResult',
-            type: {
-                name: 'Composite',
-                className: 'LoadBalancerListResult',
-                modelProperties: {
-                    value: {
-                        required: false,
-                        serializedName: '',
-                        type: {
-                            name: 'Sequence',
-                            element: {
-                                required: false,
-                                serializedName: 'LoadBalancerElementType',
-                                type: {
-                                    name: 'Composite',
-                                    className: 'LoadBalancer'
-                                }
-                            }
-                        }
-                    },
-                    nextLink: {
-                        required: false,
-                        serializedName: 'nextLink',
-                        type: {
-                            name: 'String'
-                        }
-                    }
-                }
-            }
-        };
-    }
-}
-
-export class LoadBalancerModel {
-    constructor() {
+        }
+        headers['Content-Type'] = 'application/json; charset=utf-8';
+        return headers;
     }
 
-    public mapper() {
-        return {
-            required: false,
-            serializedName: 'LoadBalancer',
-            type: {
-                name: 'Composite',
-                className: 'LoadBalancer',
-                modelProperties: {
-                    id: {
-                        required: false,
-                        serializedName: 'id',
-                        type: {
-                            name: 'String'
-                        }
-                    },
-                    name: {
-                        required: false,
-                        readOnly: true,
-                        serializedName: 'name',
-                        type: {
-                            name: 'String'
-                        }
-                    },
-                    type: {
-                        required: false,
-                        readOnly: true,
-                        serializedName: 'type',
-                        type: {
-                            name: 'String'
-                        }
-                    },
-                    location: {
-                        required: false,
-                        serializedName: 'location',
-                        type: {
-                            name: 'String'
-                        }
-                    },
-                    tags: {
-                        required: false,
-                        serializedName: 'tags',
-                        type: {
-                            name: 'Dictionary',
-                            value: {
-                                required: false,
-                                serializedName: 'StringElementType',
-                                type: {
-                                    name: 'String'
-                                }
-                            }
-                        }
-                    },
-                    frontendIPConfigurations: {
-                        required: false,
-                        serializedName: 'properties.frontendIPConfigurations',
-                        type: {
-                            name: 'Sequence',
-                            element: {
-                                required: false,
-                                serializedName: 'FrontendIPConfigurationElementType',
-                                type: {
-                                    name: 'Composite',
-                                    className: 'FrontendIPConfiguration'
-                                }
-                            }
-                        }
-                    },
-                    backendAddressPools: {
-                        required: false,
-                        serializedName: 'properties.backendAddressPools',
-                        type: {
-                            name: 'Sequence',
-                            element: {
-                                required: false,
-                                serializedName: 'BackendAddressPoolElementType',
-                                type: {
-                                    name: 'Composite',
-                                    className: 'BackendAddressPool'
-                                }
-                            }
-                        }
-                    },
-                    loadBalancingRules: {
-                        required: false,
-                        serializedName: 'properties.loadBalancingRules',
-                        type: {
-                            name: 'Sequence',
-                            element: {
-                                required: false,
-                                serializedName: 'LoadBalancingRuleElementType',
-                                type: {
-                                    name: 'Composite',
-                                    className: 'LoadBalancingRule'
-                                }
-                            }
-                        }
-                    },
-                    probes: {
-                        required: false,
-                        serializedName: 'properties.probes',
-                        type: {
-                            name: 'Sequence',
-                            element: {
-                                required: false,
-                                serializedName: 'ProbeElementType',
-                                type: {
-                                    name: 'Composite',
-                                    className: 'Probe'
-                                }
-                            }
-                        }
-                    },
-                    inboundNatRules: {
-                        required: false,
-                        serializedName: 'properties.inboundNatRules',
-                        type: {
-                            name: 'Sequence',
-                            element: {
-                                required: false,
-                                serializedName: 'InboundNatRuleElementType',
-                                type: {
-                                    name: 'Composite',
-                                    className: 'InboundNatRule'
-                                }
-                            }
-                        }
-                    },
-                    inboundNatPools: {
-                        required: false,
-                        serializedName: 'properties.inboundNatPools',
-                        type: {
-                            name: 'Sequence',
-                            element: {
-                                required: false,
-                                serializedName: 'InboundNatPoolElementType',
-                                type: {
-                                    name: 'Composite',
-                                    className: 'InboundNatPool'
-                                }
-                            }
-                        }
-                    },
-                    outboundNatRules: {
-                        required: false,
-                        serializedName: 'properties.outboundNatRules',
-                        type: {
-                            name: 'Sequence',
-                            element: {
-                                required: false,
-                                serializedName: 'OutboundNatRuleElementType',
-                                type: {
-                                    name: 'Composite',
-                                    className: 'OutboundNatRule'
-                                }
-                            }
-                        }
-                    },
-                    resourceGuid: {
-                        required: false,
-                        serializedName: 'properties.resourceGuid',
-                        type: {
-                            name: 'String'
-                        }
-                    },
-                    provisioningState: {
-                        required: false,
-                        serializedName: 'properties.provisioningState',
-                        type: {
-                            name: 'String'
-                        }
-                    },
-                    etag: {
-                        required: false,
-                        serializedName: 'etag',
-                        type: {
-                            name: 'String'
-                        }
-                    }
-                }
-            }
-        };
-    }
-}
-
-export class PublicIPAddressListResultModel {
-    constructor() { }
-
-    public mapper() {
-        return {
-            required: false,
-            serializedName: 'PublicIPAddressListResult',
-            type: {
-                name: 'Composite',
-                className: 'PublicIPAddressListResult',
-                modelProperties: {
-                    value: {
-                        required: false,
-                        serializedName: '',
-                        type: {
-                            name: 'Sequence',
-                            element: {
-                                required: false,
-                                serializedName: 'PublicIPAddressElementType',
-                                type: {
-                                    name: 'Composite',
-                                    className: 'PublicIPAddress'
-                                }
-                            }
-                        }
-                    },
-                    nextLink: {
-                        required: false,
-                        serializedName: 'nextLink',
-                        type: {
-                            name: 'String'
-                        }
-                    }
-                }
-            }
-        };
+    public validate() {
+        if (this.apiVersion === null || this.apiVersion === undefined || typeof this.apiVersion.valueOf() !== 'string') {
+            throw new Error('this.client.apiVersion cannot be null or undefined and it must be of type string.');
+        }
+        if (this.subscriptionId === null || this.subscriptionId === undefined || typeof this.subscriptionId.valueOf() !== 'string') {
+            throw new Error('this.client.subscriptionId cannot be null or undefined and it must be of type string.');
+        }
+        if (this.acceptLanguage !== null && this.acceptLanguage !== undefined && typeof this.acceptLanguage.valueOf() !== 'string') {
+            throw new Error('this.client.acceptLanguage must be of type string.');
+        }
     }
 }
 
 export class loadBalancers {
-    private client;
+    private client: NetworkManagementClient;
 
     constructor(client) {
         this.client = client;
@@ -549,109 +150,32 @@ export class loadBalancers {
             if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
                 throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
             }
-            if (this.client.apiVersion === null || this.client.apiVersion === undefined || typeof this.client.apiVersion.valueOf() !== 'string') {
-                throw new Error('this.client.apiVersion cannot be null or undefined and it must be of type string.');
-            }
-            if (this.client.subscriptionId === null || this.client.subscriptionId === undefined || typeof this.client.subscriptionId.valueOf() !== 'string') {
-                throw new Error('this.client.subscriptionId cannot be null or undefined and it must be of type string.');
-            }
-            if (this.client.acceptLanguage !== null && this.client.acceptLanguage !== undefined && typeof this.client.acceptLanguage.valueOf() !== 'string') {
-                throw new Error('this.client.acceptLanguage must be of type string.');
-            }
+            this.client.validate();
         } catch (error) {
             return callback(error);
-        }
-
-        // Construct URL
-        var requestUrl = this.client.baseUri +
-            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/loadBalancers';
-        requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
-        requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
-        // trim all duplicate forward slashes in the url
-        var regex = /([^:]\/)\/+/gi;
-        requestUrl = requestUrl.replace(regex, '$1');
-        var queryParameters = [];
-        queryParameters.push('api-version=' + encodeURIComponent(this.client.apiVersion));
-        if (queryParameters.length > 0) {
-            requestUrl += '?' + queryParameters.join('&');
         }
 
         // Create HTTP transport objects
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.headers = {};
-        httpRequest.uri = requestUrl;
-        // Set Headers
-        if (this.client.generateClientRequestId) {
-            httpRequest.headers['x-ms-client-request-id'] = msRestAzure.generateUuid();
-        }
-        if (this.client.acceptLanguage !== undefined && this.client.acceptLanguage !== null) {
-            httpRequest.headers['accept-language'] = this.client.acceptLanguage;
-        }
-        if (options) {
-            for (var headerName in options['customHeaders']) {
-                if (options['customHeaders'].hasOwnProperty(headerName)) {
-                    httpRequest.headers[headerName] = options['customHeaders'][headerName];
-                }
+        httpRequest.uri = this.client.getRequestUri(
+            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/loadBalancers',
+            {
+                '{resourceGroupName}': resourceGroupName
             }
-        }
-        httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+        );
+        // Set Headers
+        httpRequest.headers = this.client.setHeaders(options);
         httpRequest.body = null;
 
         //send request
-        this.client.httpObj.get(httpRequest.method, httpRequest.uri, httpRequest.headers, (err, response, responseBody) => {
-            if (err) {
-                return callback(err);
+        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            if (response.statusCode == 200) {
+                return callback(null, response.body);
             }
-
-            var statusCode = response.statusCode;
-            if (statusCode !== 200) {
-                var error = new Error(responseBody);
-                // error.statusCode = response.statusCode;
-                // error.request = msRest.stripRequest(httpRequest);
-                // error.response = msRest.stripResponse(response);
-                if (responseBody === '') responseBody = null;
-                var parsedErrorResponse;
-                try {
-                    parsedErrorResponse = JSON.parse(responseBody);
-                    if (parsedErrorResponse) {
-                        if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-                        //if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-                        //if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-                    }
-                    if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-                        var resultMapper = new client.models['CloudError']().mapper();
-                        //error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
-                    }
-                } catch (defaultError) {
-                    error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
-                        '- "%s" for the default response.', defaultError.message, responseBody);
-                    return callback(error);
-                }
-                return callback(error);
-            }
-            // Create Result
-            var result = null;
-            if (responseBody === '') responseBody = null;
-            // Deserialize Response
-            if (statusCode === 200) {
-                var parsedResponse = null;
-                try {
-                    parsedResponse = JSON.parse(responseBody);
-                    result = JSON.parse(responseBody);
-                    if (parsedResponse !== null && parsedResponse !== undefined) {
-                        var resultMapper = client.models['LoadBalancerListResult'].mapper();
-                        //result = client.deserialize(resultMapper, parsedResponse, 'result');
-                    }
-                } catch (error) {
-                    var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-                    // deserializationError.request = msRest.stripRequest(httpRequest);
-                    // deserializationError.response = msRest.stripResponse(response);
-                    return callback(deserializationError);
-                }
-            }
-            return callback(null, result, httpRequest, response);
-        });
+            return callback(azureServiceClient.ToError(response));
+        }).catch((error) => callback(error));
     }
 
     public get(resourceGroupName, loadBalancerName, options, callback) {
@@ -672,38 +196,12 @@ export class loadBalancers {
             if (loadBalancerName === null || loadBalancerName === undefined || typeof loadBalancerName.valueOf() !== 'string') {
                 throw new Error('loadBalancerName cannot be null or undefined and it must be of type string.');
             }
-            if (this.client.apiVersion === null || this.client.apiVersion === undefined || typeof this.client.apiVersion.valueOf() !== 'string') {
-                throw new Error('this.client.apiVersion cannot be null or undefined and it must be of type string.');
-            }
-            if (this.client.subscriptionId === null || this.client.subscriptionId === undefined || typeof this.client.subscriptionId.valueOf() !== 'string') {
-                throw new Error('this.client.subscriptionId cannot be null or undefined and it must be of type string.');
-            }
             if (expand !== null && expand !== undefined && typeof expand.valueOf() !== 'string') {
                 throw new Error('expand must be of type string.');
             }
-            if (this.client.acceptLanguage !== null && this.client.acceptLanguage !== undefined && typeof this.client.acceptLanguage.valueOf() !== 'string') {
-                throw new Error('this.client.acceptLanguage must be of type string.');
-            }
+            this.client.validate();
         } catch (error) {
             return callback(error);
-        }
-
-        // Construct URL
-        var requestUrl = this.client.baseUri +
-            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/loadBalancers/{loadBalancerName}';
-        requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
-        requestUrl = requestUrl.replace('{loadBalancerName}', encodeURIComponent(loadBalancerName));
-        requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
-        // trim all duplicate forward slashes in the url
-        var regex = /([^:]\/)\/+/gi;
-        requestUrl = requestUrl.replace(regex, '$1');
-        var queryParameters = [];
-        queryParameters.push('api-version=' + encodeURIComponent(this.client.apiVersion));
-        if (expand !== null && expand !== undefined) {
-            queryParameters.push('$expand=' + encodeURIComponent(expand));
-        }
-        if (queryParameters.length > 0) {
-            requestUrl += '?' + queryParameters.join('&');
         }
 
         // Create HTTP transport objects
@@ -712,78 +210,21 @@ export class loadBalancers {
         httpRequest.headers = {
             authorization: 'Bearer ' + this.client.credentials
         };
-        httpRequest.uri = requestUrl;
-        // Set Headers
-        if (this.client.generateClientRequestId) {
-            httpRequest.headers['x-ms-client-request-id'] = msRestAzure.generateUuid();
-        }
-        if (this.client.acceptLanguage !== undefined && this.client.acceptLanguage !== null) {
-            httpRequest.headers['accept-language'] = this.client.acceptLanguage;
-        }
-        if (options) {
-            for (var headerName in options['customHeaders']) {
-                if (options['customHeaders'].hasOwnProperty(headerName)) {
-                    httpRequest.headers[headerName] = options['customHeaders'][headerName];
-                }
-            }
-        }
-        httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/loadBalancers/{loadBalancerName}',
+            {
+                '{resourceGroupName}': resourceGroupName,
+                '{loadBalancerName}': loadBalancerName
+            });
+        httpRequest.headers = this.client.setHeaders(options);
         httpRequest.body = null;
 
-        this.client.httpObj.get(httpRequest.method, httpRequest.uri, httpRequest.headers, (err, response, responseBody) => {
-            if (err) {
-                return callback(err);
+        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            if (response.statusCode == 200) {
+                return callback(null, response.body);
             }
-            console.log("statusCode: %s", response.statusCode);
-            console.log("Response: %s", responseBody);
-            var statusCode = response.statusCode;
-            if (statusCode !== 200) {
-                var error = new Error(responseBody);
-                // error.statusCode = response.statusCode;
-                // error.request = msRest.stripRequest(httpRequest);
-                // error.response = msRest.stripResponse(response);
-                if (responseBody === '') responseBody = null;
-                var parsedErrorResponse;
-                try {
-                    parsedErrorResponse = JSON.parse(responseBody);
-                    if (parsedErrorResponse) {
-                        if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-                        // if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-                        // if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-                    }
-                    if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-                        var resultMapper = client.models['CloudError'].mapper();
-                        // error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
-                    }
-                } catch (defaultError) {
-                    error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
-                        '- "%s" for the default response.', defaultError.message, responseBody);
-                    return callback(error);
-                }
-                return callback(error);
-            }
-            // Create Result
-            var result = null;
-            if (responseBody === '') responseBody = null;
-            // Deserialize Response
-            if (statusCode === 200) {
-                var parsedResponse = null;
-                try {
-                    parsedResponse = JSON.parse(responseBody);
-                    result = JSON.parse(responseBody);
-                    if (parsedResponse !== null && parsedResponse !== undefined) {
-                        var resultMapper = client.models['LoadBalancer'].mapper();
-                        // result = client.deserialize(resultMapper, parsedResponse, 'result');
-                    }
-                } catch (error) {
-                    var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-                    // deserializationError.request = msRest.stripRequest(httpRequest);
-                    // deserializationError.response = msRest.stripResponse(response);
-                    return callback(deserializationError);
-                }
-            }
-            return callback(null, result, httpRequest, response);
-        });
+            return callback(azureServiceClient.ToError(response));
+
+        }).catch((error) => callback(error));
     }
 
     public createOrUpdate(resourceGroupName, loadBalancerName, parameters, options, callback) {
@@ -806,95 +247,54 @@ export class loadBalancers {
             if (parameters === null || parameters === undefined) {
                 throw new Error('parameters cannot be null or undefined.');
             }
-            if (this.client.apiVersion === null || this.client.apiVersion === undefined || typeof this.client.apiVersion.valueOf() !== 'string') {
-                throw new Error('this.client.apiVersion cannot be null or undefined and it must be of type string.');
-            }
-            if (this.client.subscriptionId === null || this.client.subscriptionId === undefined || typeof this.client.subscriptionId.valueOf() !== 'string') {
-                throw new Error('this.client.subscriptionId cannot be null or undefined and it must be of type string.');
-            }
-            if (this.client.acceptLanguage !== null && this.client.acceptLanguage !== undefined && typeof this.client.acceptLanguage.valueOf() !== 'string') {
-                throw new Error('this.client.acceptLanguage must be of type string.');
-            }
+            this.client.validate();
         }
         catch (error) {
             return callback(error);
         }
-        // Construct URL
-        var requestUrl = this.client.baseUri +
-            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/loadBalancers/{loadBalancerName}';
-        requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
-        requestUrl = requestUrl.replace('{loadBalancerName}', encodeURIComponent(loadBalancerName));
-        requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
-        var queryParameters = [];
-        queryParameters.push('api-version=' + encodeURIComponent(this.client.apiVersion));
-        if (queryParameters.length > 0) {
-            requestUrl += '?' + queryParameters.join('&');
-        }
-        // trim all duplicate forward slashes in the url
-        var regex = /([^:]\/)\/+/gi;
-        requestUrl = requestUrl.replace(regex, '$1');
-        console.log("request url: %s", requestUrl);
-        // Create HTTP transport objects
+
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'PUT';
         httpRequest.headers = {};
-        httpRequest.uri = requestUrl;
+        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/loadBalancers/{loadBalancerName}',
+            {
+                '{resourceGroupName}': resourceGroupName,
+                '{loadBalancerName}': loadBalancerName
+            });
         // Set Headers
-        if (this.client.generateClientRequestId) {
-            httpRequest.headers['x-ms-client-request-id'] = msRestAzure.generateUuid();
-        }
-        if (this.client.acceptLanguage !== undefined && this.client.acceptLanguage !== null) {
-            httpRequest.headers['accept-language'] = this.client.acceptLanguage;
-        }
-        if (options) {
-            for (var headerName in options['customHeaders']) {
-                if (options['customHeaders'].hasOwnProperty(headerName)) {
-                    httpRequest.headers[headerName] = options['customHeaders'][headerName];
-                }
-            }
-        }
-        httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-        console.log("Http header: %s", util.inspect(httpRequest.headers, { depth: null }));
+        httpRequest.headers = this.client.setHeaders(options);
 
-        // Serialize Request
+        /// Serialize Request
         var requestContent = null;
         var requestModel = null;
-        try {
-            if (parameters !== null && parameters !== undefined) {
-                //var requestModelMapper = new client.models['NetworkInterface']().mapper();
-                // requestModel = JSON.parse(parameters);
 
-                requestContent = JSON.stringify(parameters);
-            }
+        if (parameters !== null && parameters !== undefined) {
+            requestContent = JSON.stringify(parameters);
         }
-        catch (error) {
-            var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' +
-                'payload - "%s"', error.message, util.inspect(parameters, { depth: null })));
-            console.log("error: %s", error);
-            return callback(serializationError);
-        }
+
         httpRequest.body = requestContent;
-        var serviceClient = new azureServiceClient.ServiceClient(this.client.credentials);
-        serviceClient.request(httpRequest).then((response) => {
-            if (response.error) {
-                callback(response.error);
+        this.client.beginRequest(httpRequest).then((response) => {
+            var statusCode = response.statusCode;
+            if (statusCode != 200 && statusCode != 201) {
+                callback(azureServiceClient.ToError(response));
             }
-            serviceClient.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
+
+            this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
                 if (operationResponse.body.status === "Succeeded") {
                     // Generate Response
-                    callback(null);
+                    return callback(null, response.body);
                 }
                 else {
                     // Generate Error
-                    callback();
+                    return callback(azureServiceClient.ToError(response));
                 }
             });
-        });
+        }).catch((error) => callback(error));
     }
 }
 
 export class publicIPAddresses {
-    private client;
+    private client: NetworkManagementClient;
     constructor(client) {
         this.client = client;
     }
@@ -913,31 +313,9 @@ export class publicIPAddresses {
             if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
                 throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
             }
-            if (this.client.apiVersion === null || this.client.apiVersion === undefined || typeof this.client.apiVersion.valueOf() !== 'string') {
-                throw new Error('this.client.apiVersion cannot be null or undefined and it must be of type string.');
-            }
-            if (this.client.subscriptionId === null || this.client.subscriptionId === undefined || typeof this.client.subscriptionId.valueOf() !== 'string') {
-                throw new Error('this.client.subscriptionId cannot be null or undefined and it must be of type string.');
-            }
-            if (this.client.acceptLanguage !== null && this.client.acceptLanguage !== undefined && typeof this.client.acceptLanguage.valueOf() !== 'string') {
-                throw new Error('this.client.acceptLanguage must be of type string.');
-            }
+            this.client.validate();
         } catch (error) {
             return callback(error);
-        }
-
-        // Construct URL
-        var requestUrl = this.client.baseUri +
-            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/publicIPAddresses';
-        requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
-        requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
-        // trim all duplicate forward slashes in the url
-        var regex = /([^:]\/)\/+/gi;
-        requestUrl = requestUrl.replace(regex, '$1');
-        var queryParameters = [];
-        queryParameters.push('api-version=' + encodeURIComponent(this.client.apiVersion));
-        if (queryParameters.length > 0) {
-            requestUrl += '?' + queryParameters.join('&');
         }
 
         // Create HTTP transport objects
@@ -946,84 +324,26 @@ export class publicIPAddresses {
         httpRequest.headers = {
             authorization: 'Bearer ' + client.credentials
         };
-        httpRequest.uri = requestUrl;
+        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/publicIPAddresses',
+            {
+                '{resourceGroupName}': resourceGroupName
+            });
         // Set Headers
-        if (this.client.generateClientRequestId) {
-            httpRequest.headers['x-ms-client-request-id'] = msRestAzure.generateUuid();
-        }
-        if (this.client.acceptLanguage !== undefined && this.client.acceptLanguage !== null) {
-            httpRequest.headers['accept-language'] = this.client.acceptLanguage;
-        }
-        if (options) {
-            for (var headerName in options['customHeaders']) {
-                if (options['customHeaders'].hasOwnProperty(headerName)) {
-                    httpRequest.headers[headerName] = options['customHeaders'][headerName];
-                }
-            }
-        }
-        httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+        httpRequest.headers = this.client.setHeaders(options);
         httpRequest.body = null;
 
-        this.client.httpObj.get(httpRequest.method, httpRequest.uri, httpRequest.headers, (err, response, responseBody) => {
-            if (err) {
-                return callback(err);
+        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            if (response.statusCode == 200) {
+                var result = JSON.parse(response.body);
+                return callback(null, result);
             }
-            console.log("statusCode: %s", response.statusCode);
-            console.log("Response: %s", responseBody);
-            var statusCode = response.statusCode;
-            if (statusCode !== 200) {
-                var error = new Error(responseBody);
-                // error.statusCode = response.statusCode;
-                // error.request = msRest.stripRequest(httpRequest);
-                // error.response = msRest.stripResponse(response);
-                if (responseBody === '') responseBody = null;
-                var parsedErrorResponse;
-                try {
-                    parsedErrorResponse = JSON.parse(responseBody);
-                    if (parsedErrorResponse) {
-                        if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-                        // if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-                        // if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-                    }
-                    if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-                        var resultMapper = client.models['CloudError'].mapper();
-                        // error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
-                    }
-                } catch (defaultError) {
-                    error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
-                        '- "%s" for the default response.', defaultError.message, responseBody);
-                    return callback(error);
-                }
-                return callback(error);
-            }
-            // Create Result
-            var result = null;
-            if (responseBody === '') responseBody = null;
-            // Deserialize Response
-            if (statusCode === 200) {
-                var parsedResponse = null;
-                try {
-                    parsedResponse = JSON.parse(responseBody);
-                    result = JSON.parse(responseBody);
-                    if (parsedResponse !== null && parsedResponse !== undefined) {
-                        var resultMapper = client.models['PublicIPAddressListResult'].mapper();
-                        //result = client.deserialize(resultMapper, parsedResponse, 'result');
-                    }
-                } catch (error) {
-                    var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-                    // deserializationError.request = msRest.stripRequest(httpRequest);
-                    // deserializationError.response = msRest.stripResponse(response);
-                    return callback(deserializationError);
-                }
-            }
-
-            return callback(null, result, httpRequest, response);
-        });
+            return callback(azureServiceClient.ToError(response));
+        }).catch((error) => callback(error));
     }
 }
 
 export class networkSecurityGroups {
-    private client;
+    private client: NetworkManagementClient;
     constructor(client) {
         this.client = client;
     }
@@ -1042,31 +362,9 @@ export class networkSecurityGroups {
             if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
                 throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
             }
-            if (this.client.apiVersion === null || this.client.apiVersion === undefined || typeof this.client.apiVersion.valueOf() !== 'string') {
-                throw new Error('this.client.apiVersion cannot be null or undefined and it must be of type string.');
-            }
-            if (this.client.subscriptionId === null || this.client.subscriptionId === undefined || typeof this.client.subscriptionId.valueOf() !== 'string') {
-                throw new Error('this.client.subscriptionId cannot be null or undefined and it must be of type string.');
-            }
-            if (this.client.acceptLanguage !== null && this.client.acceptLanguage !== undefined && typeof this.client.acceptLanguage.valueOf() !== 'string') {
-                throw new Error('this.client.acceptLanguage must be of type string.');
-            }
+            this.client.validate();
         } catch (error) {
             return callback(error);
-        }
-
-        // Construct URL
-        var requestUrl = this.client.baseUri +
-            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkSecurityGroups';
-        requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
-        requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
-        // trim all duplicate forward slashes in the url
-        var regex = /([^:]\/)\/+/gi;
-        requestUrl = requestUrl.replace(regex, '$1');
-        var queryParameters = [];
-        queryParameters.push('api-version=' + encodeURIComponent(this.client.apiVersion));
-        if (queryParameters.length > 0) {
-            requestUrl += '?' + queryParameters.join('&');
         }
 
         // Create HTTP transport objects
@@ -1075,86 +373,28 @@ export class networkSecurityGroups {
         httpRequest.headers = {
             authorization: 'Bearer ' + this.client.credentials
         };
-        httpRequest.uri = requestUrl;
-        // Set Headers
-        if (this.client.generateClientRequestId) {
-            httpRequest.headers['x-ms-client-request-id'] = msRestAzure.generateUuid();
-        }
-        if (this.client.acceptLanguage !== undefined && this.client.acceptLanguage !== null) {
-            httpRequest.headers['accept-language'] = this.client.acceptLanguage;
-        }
-        if (options) {
-            for (var headerName in options['customHeaders']) {
-                if (options['customHeaders'].hasOwnProperty(headerName)) {
-                    httpRequest.headers[headerName] = options['customHeaders'][headerName];
-                }
+        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkSecurityGroups',
+            {
+                '{resourceGroupName}': resourceGroupName
             }
-        }
-        httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+        );
+
+        // Set Headers
+        httpRequest.headers = this.client.setHeaders(options);
         httpRequest.body = null;
 
-        //send request
-        this.client.httpObj.get(httpRequest.method, httpRequest.uri, httpRequest.headers, (err, response, responseBody) => {
-            if (err) {
-                return callback(err);
+        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            if (response.statusCode == 200) {
+                var result = JSON.parse(response.body);
+                return callback(null, result);
             }
-            console.log("statusCode: %s", response.statusCode);
-            console.log("Response: %s", responseBody);
-
-            var statusCode = response.statusCode;
-            if (statusCode !== 200) {
-                var error = new Error(responseBody);
-                // error.statusCode = response.statusCode;
-                // error.request = msRest.stripRequest(httpRequest);
-                // error.response = msRest.stripResponse(response);
-                if (responseBody === '') responseBody = null;
-                var parsedErrorResponse;
-                try {
-                    parsedErrorResponse = JSON.parse(responseBody);
-                    if (parsedErrorResponse) {
-                        if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-                        // if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-                        // if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-                    }
-                    if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-                        var resultMapper = client.models['CloudError'].mapper();
-                        //error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
-                    }
-                } catch (defaultError) {
-                    error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
-                        '- "%s" for the default response.', defaultError.message, responseBody);
-                    return callback(error);
-                }
-                return callback(error);
-            }
-            // Create Result
-            var result = null;
-            if (responseBody === '') responseBody = null;
-            // Deserialize Response
-            if (statusCode === 200) {
-                var parsedResponse = null;
-                try {
-                    parsedResponse = JSON.parse(responseBody);
-                    result = JSON.parse(responseBody);
-                    if (parsedResponse !== null && parsedResponse !== undefined) {
-                        var resultMapper = client.models['NetworkSecurityGroupListResult'].mapper();
-                        // result = client.deserialize(resultMapper, parsedResponse, 'result');
-                    }
-                } catch (error) {
-                    var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-                    // deserializationError.request = msRest.stripRequest(httpRequest);
-                    // deserializationError.response = msRest.stripResponse(response);
-                    return callback(deserializationError);
-                }
-            }
-
-            return callback(null, result, httpRequest, response);
-        });
+            callback(azureServiceClient.ToError(response));
+        }).catch((error) => callback(error));
     }
 }
 
 export class NetworkInterfaces {
-    private client;
+    private client: NetworkManagementClient;
     constructor(client) {
         this.client = client;
     }
@@ -1173,110 +413,33 @@ export class NetworkInterfaces {
             if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
                 throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
             }
-            if (this.client.apiVersion === null || this.client.apiVersion === undefined || typeof this.client.apiVersion.valueOf() !== 'string') {
-                throw new Error('this.client.apiVersion cannot be null or undefined and it must be of type string.');
-            }
-            if (this.client.subscriptionId === null || this.client.subscriptionId === undefined || typeof this.client.subscriptionId.valueOf() !== 'string') {
-                throw new Error('this.client.subscriptionId cannot be null or undefined and it must be of type string.');
-            }
-            if (this.client.acceptLanguage !== null && this.client.acceptLanguage !== undefined && typeof this.client.acceptLanguage.valueOf() !== 'string') {
-                throw new Error('this.client.acceptLanguage must be of type string.');
-            }
+            this.client.validate();
         } catch (error) {
             return callback(error);
         }
 
-        // Construct URL
-        var requestUrl = this.client.baseUri +
-            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces';
-        requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
-        requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
-        // trim all duplicate forward slashes in the url
-        var regex = /([^:]\/)\/+/gi;
-        requestUrl = requestUrl.replace(regex, '$1');
-        var queryParameters = [];
-        queryParameters.push('api-version=' + encodeURIComponent(this.client.apiVersion));
-        if (queryParameters.length > 0) {
-            requestUrl += '?' + queryParameters.join('&');
-        }
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.headers = {
             authorization: 'Bearer ' + this.client.credentials
         };
-        httpRequest.uri = requestUrl;
-        if (this.client.generateClientRequestId) {
-            httpRequest.headers['x-ms-client-request-id'] = msRestAzure.generateUuid();
-        }
-        if (this.client.acceptLanguage !== undefined && this.client.acceptLanguage !== null) {
-            httpRequest.headers['accept-language'] = this.client.acceptLanguage;
-        }
-        if (options) {
-            for (var headerName in options['customHeaders']) {
-                if (options['customHeaders'].hasOwnProperty(headerName)) {
-                    httpRequest.headers[headerName] = options['customHeaders'][headerName];
-                }
+        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces',
+            {
+                '{resourceGroupName}': resourceGroupName
             }
-        }
-        httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+        );
+        httpRequest.headers = this.client.setHeaders(options);
         httpRequest.body = null;
-        // Send Request
-        this.client.httpObj.get(httpRequest.method, httpRequest.uri, httpRequest.headers, (err, response, responseBody) => {
-            if (err) {
-                return callback(err);
-            }
-            console.log("statusCode: %s", response.statusCode);
-            console.log("Response: %s", responseBody);
-            var statusCode = response.statusCode;
-            if (statusCode !== 200) {
-                var error = new Error(responseBody);
-                // error.statusCode = response.statusCode;
-                // error.request = msRest.stripRequest(httpRequest);
-                // error.response = msRest.stripResponse(response);
-                if (responseBody === '') responseBody = null;
-                var parsedErrorResponse;
-                try {
-                    parsedErrorResponse = JSON.parse(responseBody);
-                    if (parsedErrorResponse) {
-                        if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-                        // if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-                        // if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-                    }
-                    if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-                        var resultMapper = client.models['CloudError'].mapper();
-                        // error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
-                    }
-                } catch (defaultError) {
-                    error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
-                        '- "%s" for the default response.', defaultError.message, responseBody);
-                    return callback(error);
-                }
-                return callback(error);
-            }
-            // Create Result
-            var result = null;
-            if (responseBody === '') responseBody = null;
-            // Deserialize Response
-            if (statusCode === 200) {
-                var parsedResponse = null;
-                try {
-                    parsedResponse = JSON.parse(responseBody);
-                    result = JSON.parse(responseBody);
-                    if (parsedResponse !== null && parsedResponse !== undefined) {
-                        var resultMapper = client.models['NetworkInterfaceListResult'].mapper();
-                        // result = client.deserialize(resultMapper, parsedResponse, 'result');
-                    }
-                } catch (error) {
-                    var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-                    // deserializationError.request = msRest.stripRequest(httpRequest);
-                    // deserializationError.response = msRest.stripResponse(response);
-                    return callback(deserializationError);
-                }
-            }
 
-            return callback(null, result, httpRequest, response);
-        });
+        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            if (response.statusCode == 200) {
+                var result = JSON.parse(response.body);
+                return callback(null, result);
+            }
+            return callback(azureServiceClient.ToError(response));
+        }).catch((error) => callback(error));
     }
+
     public createOrUpdate(resourceGroupName, networkInterfaceName, parameters, options, callback) {
         var client = this.client;
         if (!callback && typeof options === 'function') {
@@ -1297,61 +460,29 @@ export class NetworkInterfaces {
             if (parameters === null || parameters === undefined) {
                 throw new Error('parameters cannot be null or undefined.');
             }
-            if (this.client.apiVersion === null || this.client.apiVersion === undefined || typeof this.client.apiVersion.valueOf() !== 'string') {
-                throw new Error('this.client.apiVersion cannot be null or undefined and it must be of type string.');
-            }
-            if (this.client.subscriptionId === null || this.client.subscriptionId === undefined || typeof this.client.subscriptionId.valueOf() !== 'string') {
-                throw new Error('this.client.subscriptionId cannot be null or undefined and it must be of type string.');
-            }
-            if (this.client.acceptLanguage !== null && this.client.acceptLanguage !== undefined && typeof this.client.acceptLanguage.valueOf() !== 'string') {
-                throw new Error('this.client.acceptLanguage must be of type string.');
-            }
+            this.client.validate();
         }
         catch (error) {
             return callback(error);
         }
-        // Construct URL
-        var requestUrl = this.client.baseUri +
-            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces/{networkInterfaceName}';
-        requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
-        requestUrl = requestUrl.replace('{networkInterfaceName}', encodeURIComponent(networkInterfaceName));
-        requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
-        var queryParameters = [];
-        queryParameters.push('api-version=' + encodeURIComponent(this.client.apiVersion));
-        if (queryParameters.length > 0) {
-            requestUrl += '?' + queryParameters.join('&');
-        }
-        // trim all duplicate forward slashes in the url
-        var regex = /([^:]\/)\/+/gi;
-        requestUrl = requestUrl.replace(regex, '$1');
+
         // Create HTTP transport objects
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'PUT';
         httpRequest.headers = {};
-        httpRequest.uri = requestUrl;
-        // Set Headers
-        if (this.client.generateClientRequestId) {
-            httpRequest.headers['x-ms-client-request-id'] = msRestAzure.generateUuid();
-        }
-        if (this.client.acceptLanguage !== undefined && this.client.acceptLanguage !== null) {
-            httpRequest.headers['accept-language'] = this.client.acceptLanguage;
-        }
-        if (options) {
-            for (var headerName in options['customHeaders']) {
-                if (options['customHeaders'].hasOwnProperty(headerName)) {
-                    httpRequest.headers[headerName] = options['customHeaders'][headerName];
-                }
+        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces/{networkInterfaceName}',
+            {
+                '{networkInterfaceName}': networkInterfaceName,
+                '{resourceGroupName}': resourceGroupName
             }
-        }
-        httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-        // Serialize Request
+        );
+        httpRequest.headers = this.client.setHeaders(options);
+
         var requestContent = null;
         var requestModel = null;
         try {
             if (parameters !== null && parameters !== undefined) {
-                var requestModelMapper = new client.models['NetworkInterface']().mapper();
-                requestModel = client.serialize(requestModelMapper, parameters, 'parameters');
-                requestContent = JSON.stringify(requestModel);
+                requestContent = JSON.stringify(parameters);
             }
         }
         catch (error) {
@@ -1360,30 +491,23 @@ export class NetworkInterfaces {
             return callback(serializationError);
         }
         httpRequest.body = requestContent;
-        var serviceClient = new azureServiceClient.ServiceClient(this.client.credentials);
-        console.log("HttpsObject: %s", util.inspect(httpRequest, { depth: null }));
-        serviceClient.request(httpRequest).then((response) => {
-            if (response.error) {
-                callback(response.error);
+
+        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            if (response.statusCode != 200 && response.statusCode != 201) {
+                callback(azureServiceClient.ToError(response));
             }
-            console.log("Response: %s", response);
-            serviceClient.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
-                console.log("longRunningOperation response: %s", util.inspect(operationResponse, { depth: null }));
+            this.client.getLongRunningOperationResult(response).then((operationResponse) => {
                 if (operationResponse.body.status === "Succeeded") {
-                    // Generate Response
-                    callback(null);
+                    return callback(null, operationResponse.body);
                 }
-                else {
-                    // Generate Error
-                    callback();
-                }
-            });
-        });
+                return callback(azureServiceClient.ToError(response));
+            }).catch((error) => callback(error));
+        }).catch((error) => callback(error));
     }
 }
 
 export class securityRules {
-    private client;
+    private client: NetworkManagementClient;
     constructor(client) {
         this.client = client;
     }
@@ -1408,115 +532,31 @@ export class securityRules {
             if (securityRuleName === null || securityRuleName === undefined || typeof securityRuleName.valueOf() !== 'string') {
                 throw new Error('securityRuleName cannot be null or undefined and it must be of type string.');
             }
-            if (this.client.apiVersion === null || this.client.apiVersion === undefined || typeof this.client.apiVersion.valueOf() !== 'string') {
-                throw new Error('this.client.apiVersion cannot be null or undefined and it must be of type string.');
-            }
-            if (this.client.subscriptionId === null || this.client.subscriptionId === undefined || typeof this.client.subscriptionId.valueOf() !== 'string') {
-                throw new Error('this.client.subscriptionId cannot be null or undefined and it must be of type string.');
-            }
-            if (this.client.acceptLanguage !== null && this.client.acceptLanguage !== undefined && typeof this.client.acceptLanguage.valueOf() !== 'string') {
-                throw new Error('this.client.acceptLanguage must be of type string.');
-            }
+            this.client.validate();
         } catch (error) {
             return callback(error);
-        }
-
-        // Construct URL
-        var requestUrl = this.client.baseUri +
-            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkSecurityGroups/{networkSecurityGroupName}/securityRules/{securityRuleName}';
-        requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
-        requestUrl = requestUrl.replace('{networkSecurityGroupName}', encodeURIComponent(networkSecurityGroupName));
-        requestUrl = requestUrl.replace('{securityRuleName}', encodeURIComponent(securityRuleName));
-        requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
-        // trim all duplicate forward slashes in the url
-        var regex = /([^:]\/)\/+/gi;
-        requestUrl = requestUrl.replace(regex, '$1');
-        var queryParameters = [];
-        queryParameters.push('api-version=' + encodeURIComponent(this.client.apiVersion));
-        if (queryParameters.length > 0) {
-            requestUrl += '?' + queryParameters.join('&');
         }
 
         // Create HTTP transport objects
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'GET';
-        httpRequest.headers = {
-            authorization: 'Bearer ' + client.credentials
-        };
-        httpRequest.uri = requestUrl;
-        // Set Headers
-        if (this.client.generateClientRequestId) {
-            httpRequest.headers['x-ms-client-request-id'] = msRestAzure.generateUuid();
-        }
-        if (this.client.acceptLanguage !== undefined && this.client.acceptLanguage !== null) {
-            httpRequest.headers['accept-language'] = this.client.acceptLanguage;
-        }
-        if (options) {
-            for (var headerName in options['customHeaders']) {
-                if (options['customHeaders'].hasOwnProperty(headerName)) {
-                    httpRequest.headers[headerName] = options['customHeaders'][headerName];
-                }
+        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkSecurityGroups/{networkSecurityGroupName}/securityRules/{securityRuleName}',
+            {
+                '{resourceGroupName}': resourceGroupName,
+                '{networkSecurityGroupName}': networkSecurityGroupName,
+                '{securityRuleName}': securityRuleName
             }
-        }
-        httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+        );
+        httpRequest.headers = this.client.setHeaders(options);
         httpRequest.body = null;
         // Send Request
-        //var clientUtils = new azureServiceClient.Utils();
-        this.client.httpObj.get(httpRequest.method, httpRequest.uri, httpRequest.headers, (err, response, responseBody) => {
-            if (err) {
-                return callback(err);
+        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            if (response.statusCode == 200) {
+                var result = JSON.parse(response.body);
+                return callback(null, result);
             }
-            console.log("statusCode: %s", response.statusCode);
-            console.log("Response: %s", responseBody);
-            var statusCode = response.statusCode;
-            if (statusCode !== 200) {
-                var error = new msRestAzure.Error(responseBody);
-                error.statusCode = response.statusCode;
-                error.request = new msRestAzure.stripRequest(httpRequest);
-                error.response = new msRestAzure.stripResponse(response);
-                if (responseBody === '') responseBody = null;
-                var parsedErrorResponse;
-                try {
-                    parsedErrorResponse = JSON.parse(responseBody);
-                    if (parsedErrorResponse) {
-                        if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-                        if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-                        if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-                    }
-                    if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-                        var resultMapper = client.models['CloudError'].mapper();
-                        //error.body = clientUtils.deserialize(resultMapper, parsedErrorResponse, 'error.body');
-                    }
-                } catch (defaultError) {
-                    error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
-                        '- "%s" for the default response.', defaultError.message, responseBody);
-                    return callback(error);
-                }
-                return callback(error);
-            }
-            // Create Result
-            var result = null;
-            if (responseBody === '') responseBody = null;
-            // Deserialize Response
-            if (statusCode === 200) {
-                var parsedResponse = null;
-                try {
-                    parsedResponse = JSON.parse(responseBody);
-                    result = JSON.parse(responseBody);
-                    if (parsedResponse !== null && parsedResponse !== undefined) {
-                        var resultMapper = client.models['SecurityRule'].mapper();
-                        //result = clientUtils.deserialize(resultMapper, parsedResponse, 'result');
-                    }
-                } catch (error) {
-                    var deserializationError = new msRestAzure.Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-                    deserializationError.request = new msRestAzure.stripRequest(httpRequest);
-                    deserializationError.response = new msRestAzure.stripResponse(response);
-                    return callback(deserializationError);
-                }
-            }
-
-            return callback(null, result, httpRequest, response);
-        });
+            return callback(azureServiceClient.ToError(response));
+        }).catch((error) => callback(error));
     }
 
     public createOrUpdate(resourceGroupName, networkSecurityGroupName, securityRuleName, securityRuleParameters, callback) {
@@ -1538,48 +578,23 @@ export class securityRules {
             if (securityRuleParameters === null || securityRuleParameters === undefined) {
                 throw new Error('securityRuleParameters cannot be null or undefined.');
             }
-            if (this.client.apiVersion === null || this.client.apiVersion === undefined || typeof this.client.apiVersion.valueOf() !== 'string') {
-                throw new Error('this.client.apiVersion cannot be null or undefined and it must be of type string.');
-            }
-            if (this.client.subscriptionId === null || this.client.subscriptionId === undefined || typeof this.client.subscriptionId.valueOf() !== 'string') {
-                throw new Error('this.client.subscriptionId cannot be null or undefined and it must be of type string.');
-            }
-            if (this.client.acceptLanguage !== null && this.client.acceptLanguage !== undefined && typeof this.client.acceptLanguage.valueOf() !== 'string') {
-                throw new Error('this.client.acceptLanguage must be of type string.');
-            }
+            this.client.validate();
         } catch (error) {
             return callback(error);
-        }
-
-        // Construct URL
-        var requestUrl = this.client.baseUri +
-            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkSecurityGroups/{networkSecurityGroupName}/securityRules/{securityRuleName}';
-        requestUrl = requestUrl.replace('{resourceGroupName}', encodeURIComponent(resourceGroupName));
-        requestUrl = requestUrl.replace('{networkSecurityGroupName}', encodeURIComponent(networkSecurityGroupName));
-        requestUrl = requestUrl.replace('{securityRuleName}', encodeURIComponent(securityRuleName));
-        requestUrl = requestUrl.replace('{subscriptionId}', encodeURIComponent(this.client.subscriptionId));
-        // trim all duplicate forward slashes in the url
-        var regex = /([^:]\/)\/+/gi;
-        requestUrl = requestUrl.replace(regex, '$1');
-        var queryParameters = [];
-        queryParameters.push('api-version=' + encodeURIComponent(this.client.apiVersion));
-        if (queryParameters.length > 0) {
-            requestUrl += '?' + queryParameters.join('&');
         }
 
         // Create HTTP transport objects
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'PUT';
-        httpRequest.headers = {};
-        httpRequest.uri = requestUrl;
-        // Set Headers
-        if (this.client.generateClientRequestId) {
-            httpRequest.headers['x-ms-client-request-id'] = msRestAzure.generateUuid();
-        }
-        if (this.client.acceptLanguage !== undefined && this.client.acceptLanguage !== null) {
-            httpRequest.headers['accept-language'] = this.client.acceptLanguage;
-        }
-        httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkSecurityGroups/{networkSecurityGroupName}/securityRules/{securityRuleName}',
+            {
+                '{resourceGroupName}': resourceGroupName,
+                '{networkSecurityGroupName}': networkSecurityGroupName,
+                '{securityRuleName}': securityRuleName
+            }
+        );
+
+        httpRequest.headers = this.client.setHeaders(null);
         // Serialize Request
         var requestContent = null;
         var requestModel = null;
@@ -1594,25 +609,18 @@ export class securityRules {
             return callback(stringificationError);
         }
         httpRequest.body = requestContent;
-        // Send request
-        var serviceClient = new azureServiceClient.ServiceClient(this.client.credentials);
-        serviceClient.request(httpRequest).then((response: azureServiceClient.WebResponse) => {
-            if (response.error || response.body.error) {
-                var error = response.error;
-                error = response.body.error ? { "ErrorCode": response.body.error.code, "ErrorMessage": response.body.error.message } : "";
-                callback(error);
+
+        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            var statusCode = response.statusCode;
+            if (statusCode != 200 && statusCode != 201) {
+                return callback(azureServiceClient.ToError(response));
             }
-            serviceClient.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
+            this.client.getLongRunningOperationResult(response).then((operationResponse) => {
                 if (operationResponse.body.status === "Succeeded") {
-                    // Generate Response
-                    callback(null, response.body);
-                } else {
-                    // Generate Error
-                    var error = response.error;
-                    error = response.body.error ? { "ErrorCode": response.body.error.code, "ErrorMessage": response.body.error.message } : "";
-                    callback(error);
+                    callback(null, JSON.parse(response.body));
                 }
-            });
-        });
+                callback(azureServiceClient.ToError(operationResponse));
+            }).catch((error) => callback(error));
+        }).catch((error) => callback(error));
     }
 }
