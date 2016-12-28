@@ -110,7 +110,7 @@ export class MGExtensionManager {
             collectionUri = collectionUri.substr(0, uriLength - 1);
         }
         var tags = "";
-        if (!!virtualMachine["tags"]) {
+        if (!!virtualMachine["tags"] && this.taskParameters.copyAzureVMTags) {
             console.log("Copying VM tags")
             tags = virtualMachine["tags"];
         }

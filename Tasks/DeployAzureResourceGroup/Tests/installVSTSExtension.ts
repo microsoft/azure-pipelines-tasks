@@ -16,7 +16,7 @@ tr.setInput("overrideParameters", "");
 tr.setInput("deploymentMode","Complete");        
 tr.setInput("enableDeploymentPrerequisites", process.env["enableDeploymentPrerequisites"]);
 tr.setInput("machineGroupName", "biprasad");
-tr.setInput("copyAzureVMTags", process.env["false"]);
+tr.setInput("copyAzureVMTags", process.env["copyAzureVMTags"]);
 tr.setInput("vstsPATToken", "PAT");
 
 process.env[ "ENDPOINT_AUTH_AzureRM"] = "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
@@ -25,6 +25,6 @@ process.env["ENDPOINT_DATA_AzureRM_SUBSCRIPTIONNAME"] = "sName";
 
 tr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunner'));
 tr.registerMock('azure-arm-resource', require('./mock_node_modules/azure-arm-resource'));
-tr.registerMock('azure-arm-resource', require('./mock_node_modules/azure-arm-compute'));
+tr.registerMock('azure-arm-compute', require('./mock_node_modules/azure-arm-compute'));
 
 tr.run();
