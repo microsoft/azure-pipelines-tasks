@@ -4,6 +4,7 @@ import fs = require('fs');
 
 var varUtility = require ('./variableutility.js');
 var fileEncoding = require('./fileencoding.js');
+var utility = require('./utility.js');
 export function createEnvTree(envVariables) {
     var envVarTree = {
         value: null,
@@ -62,7 +63,7 @@ export function jsonVariableSubstitution(absolutePath, jsonSubFiles) {
     var envVarObject = createEnvTree(tl.getVariables());
     for(let jsonSubFile of jsonSubFiles) {
         tl.debug('JSON variable substitution for ' + jsonSubFile);
-        var matchFiles = tl.findMatch(absolutePath, jsonSubFile);
+        var matchFiles = utility.findfiles(path.join(absolutePath, jsonSubFile));
         if(matchFiles.length === 0) {
             throw new Error(tl.loc('NOJSONfilematchedwithspecificpattern'));
         }

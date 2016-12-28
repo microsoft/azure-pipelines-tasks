@@ -96,7 +96,7 @@ async function run() {
 
             if(xmlVariableSubstitution) {
                 await xmlSubstitutionUtility.substituteAppSettingsVariables(folderPath);
-                console.log(tl.loc('XMLvaiablesubstitutionappliedsuccessfully'));
+                console.log(tl.loc('XMLvariablesubstitutionappliedsuccessfully'));
             }
 
             if(JSONFiles.length != 0) {
