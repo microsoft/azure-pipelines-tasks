@@ -233,10 +233,10 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'L0WindowsNoPackage.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-		
+
         assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
         assert(tr.stderr.length > 0 || tr.errorIssues.length > 0, 'should have written to stderr');
-        var expectedErr = 'Error: Not found Invalid_webAppPkg'; 
+        var expectedErr = 'Error: loc_mock_Nopackagefoundwithspecifiedpattern'; 
         assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr);
         var expectedOut = 'Failed to update history to kudu';
         assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut); 

@@ -59,7 +59,8 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "exist": {
     	"webAppPkg.zip": true,
-        "webAppPkg": true
+        "webAppPkg": true,
+        "Invalid_webAppPkg": false
     }, 
     "glob": {
         "webAppPkgPattern" : ["webAppPkg1", "webAppPkg2"],
