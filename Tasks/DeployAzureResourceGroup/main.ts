@@ -34,7 +34,7 @@ function run () {
                 virtualMachineOperationsController.execute();
                 break;
             default:
-                tl.setResult(tl.TaskResult.Succeeded, tl.loc("InvalidAction"));
+                tl.setResult(tl.TaskResult.Failed, tl.loc("InvalidAction"));
                 process.exit();
     }
 }
