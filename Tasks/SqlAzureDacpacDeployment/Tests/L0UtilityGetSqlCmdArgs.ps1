@@ -32,7 +32,6 @@ $sqlPackageCommandLineArguments = Get-SqlPackageCommandArguments -dacpacFile "az
 Assert-AreEqual '/SourceFile:"azureDacpac.dacpac" /Action:Publish /TargetConnectionString:"connectionString:10/20/30" /Profile:"Profile.xml" Add_args' `
                                     $sqlPackageCommandLineArguments "Should have constructed Argument for Connection String"
 
-
 Assert-Throws {
     Get-SqlPackageCommandArguments -dacpacFile "azureDacpac.dacpac" -targetMethod "connectionString" -connectionString "connectionString:10/20/30" -publishProfile "Profile.json" `
                                     -additionalArguments "Add_args" -isOutputSecure
