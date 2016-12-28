@@ -22,6 +22,7 @@ describe('Azure Resource Group Deployment', function () {
         process.env["resourceGroupName"] = "dummy";
         process.env["enableDeploymentPrerequisites"] = "Configure VM agent with Machine Group Agent";
         process.env["copyAzureVMTags"] = "true";
+        process.env["outputVariable"] = "";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -47,6 +48,7 @@ describe('Azure Resource Group Deployment', function () {
         process.env["resourceGroupName"] = "dummy";
         process.env["enableDeploymentPrerequisites"] = "Configure VM agent with Machine Group Agent";
         process.env["copyAzureVMTags"] = "false";
+        process.env["outputVariable"] = "";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -90,6 +92,7 @@ describe('Azure Resource Group Deployment', function () {
         process.env["resourceGroupName"] = "NonWindowsVM";
         process.env["enableDeploymentPrerequisites"] = "Configure VM agent with Machine Group Agent";
         process.env["copyAzureVMTags"] = "true";
+        process.env["outputVariable"] = "";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -111,6 +114,7 @@ describe('Azure Resource Group Deployment', function () {
         process.env["resourceGroupName"] = "NonWindowsVM";
         process.env["enableDeploymentPrerequisites"] = "Configure VM with Win RM";
         process.env["copyAzureVMTags"] = "true";
+        process.env["outputVariable"] = "";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -127,8 +131,9 @@ describe('Azure Resource Group Deployment', function () {
     });
     it("Successfully removed Team Services Agent Extension on VM - Delete VMs", (done) => {
         let tp = path.join(__dirname, "removeVSTSExtension.js");
-        process.env["action"] = "Delete virtual machines";
+        process.env["action"] = "Delete";
         process.env["resourceGroupName"] = "NonWindowsVM";
+        process.env["outputVariable"] = "";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -144,8 +149,9 @@ describe('Azure Resource Group Deployment', function () {
     });
     it("Successfully removed Team Services Agent Extension on VM - Delete RG", (done) => {
         let tp = path.join(__dirname, "removeVSTSExtension.js");
-        process.env["action"] = "Delete resource group";
+        process.env["action"] = "DeleteRG";
         process.env["resourceGroupName"] = "NonWindowsVM";
+        process.env["outputVariable"] = "";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {

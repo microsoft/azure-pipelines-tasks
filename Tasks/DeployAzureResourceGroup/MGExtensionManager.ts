@@ -60,6 +60,9 @@ export class MGExtensionManager {
         this.operation = "installation";
         var listOfVms = await this.azureUtils.getVMDetails();
         this.vmCount = listOfVms.length;
+        if(this.vmCount == 0){
+            this.deferred.resolve("");
+        }
         for (var i = 0; i < listOfVms.length; i++) {
             var vmName = listOfVms[i]["name"];
             var extensionParameters = this.FormExtensionParameters(listOfVms[i], "enable");
@@ -74,11 +77,14 @@ export class MGExtensionManager {
         this.deferred = Q.defer<string>();
         var listOfVms = await this.azureUtils.getVMDetails();
         this.vmCount = listOfVms.length;
+        if(this.vmCount == 0){
+            this.deferred.resolve("");
+        }
         for (var i = 0; i < listOfVms.length; i++) {
             var vmName = listOfVms[i]["name"];
             var extensionParameters = this.FormExtensionParameters(listOfVms[i], "uninstall");
             console.log("Uninstalling " + extensionParameters["extensionName"] + " extension from virtual machine " + vmName);
-            this.computeClient.virtualMachineExtensions.deleteMethod(this.taskParameters.resourceGroupName, extensionParameters["vmName"], extensionParameters["extensionName"], extensionParameters["parameters"], this.postOperationCallBack);
+            this.computeClient.virtualMachineExtensions.deleteMethod(this.taskParameters.resourceGroupName, extensionParameters["vmName"], extensionParameters["extensionName"], this.postOperationCallBack);
         }
         return this.deferred.promise;
     }

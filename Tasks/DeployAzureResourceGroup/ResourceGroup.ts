@@ -255,7 +255,7 @@ export class ResourceGroup {
 
     public deleteResourceGroup() {
         var extDelPromise = this.MGExtensionManager.removeMGExtension();
-        extDelPromise.then(function (val) {
+        extDelPromise.then((val) => {
             var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
             console.log(tl.loc("ARG_DeletingResourceGroup", this.taskParameters.resourceGroupName));
             armClient.resourceGroups.deleteMethod(this.taskParameters.resourceGroupName, (error, result, request, response) => {
