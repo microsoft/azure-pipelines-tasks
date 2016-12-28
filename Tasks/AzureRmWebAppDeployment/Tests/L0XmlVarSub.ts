@@ -60,11 +60,11 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         }
     },
     "exec": {
-        "msdeploy -verb:getParameters -source:package=\'DefaultWorkingDirectory/temp_web_package.zip\'": {
+        "msdeploy -verb:getParameters -source:package=\'/temp_web_package_random_path\'": {
             "code": 0,
             "stdout": "Executed Successfully"
         },
-        "msdeploy -verb:sync -source:package=\'DefaultWorkingDirectory/temp_web_package.zip\' -dest:auto,ComputerName=\'https://mytestappKuduUrl/msdeploy.axd?site=mytestapp\',UserName=\'$mytestapp\',Password=\'mytestappPwd\',AuthType=\'Basic\' -setParam:name=\'IIS Web Application Name\',value=\'mytestapp\' -enableRule:DoNotDeleteRule -userAgent:TFS_useragent": {
+        "msdeploy -verb:sync -source:package=\'/temp_web_package_random_path\' -dest:auto,ComputerName=\'https://mytestappKuduUrl/msdeploy.axd?site=mytestapp\',UserName=\'$mytestapp\',Password=\'mytestappPwd\',AuthType=\'Basic\' -setParam:name=\'IIS Web Application Name\',value=\'mytestapp\' -enableRule:DoNotDeleteRule -userAgent:TFS_useragent": {
             "code": 0,
             "stdout": "Executed Successfully"
         }
