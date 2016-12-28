@@ -90,34 +90,6 @@ export class MGExtensionManager {
         return this.deferred.promise;
     }
 
-    /*public async installMGExtension() {
-        this.deferred = Q.defer<string>();
-        var listOfVms = await this.azureUtils.getVMDetails();
-        this.vmCount = listOfVms.length;
-        for (var i = 0; i < listOfVms.length; i++) {
-            var vmName = listOfVms[i]["name"];
-            var extensionParameters = this.FormExtensionParameters(listOfVms[i], "enable");
-            this.operation = "Install " + extensionParameters["extensionName"];
-            console.log("Adding " + extensionParameters["extensionName"] + " extension to virtual machine " + vmName);
-            this.computeClient.virtualMachineExtensions.createOrUpdate(this.taskParameters.resourceGroupName, extensionParameters["vmName"], extensionParameters["extensionName"], extensionParameters["parameters"], this.postOperationCallBack);
-        }
-        return this.deferred.promise;
-    }
-
-    public async removeMGExtension() {
-        this.deferred = Q.defer<string>();
-        var listOfVms = await this.azureUtils.getVMDetails();
-        this.vmCount = listOfVms.length;
-        for (var i = 0; i < listOfVms.length; i++) {
-            var vmName = listOfVms[i]["name"];
-            var extensionParameters = this.FormExtensionParameters(listOfVms[i], "uninstall");
-            this.operation = "Remove " + extensionParameters["extensionName"];
-            console.log("Uninstalling " + extensionParameters["extensionName"] + " extension from virtual machine " + vmName);
-            this.computeClient.virtualMachineExtensions.deleteMethod(this.taskParameters.resourceGroupName, extensionParameters["vmName"], extensionParameters["extensionName"], extensionParameters["parameters"], this.postOperationCallBack);
-        }
-        return this.deferred.promise;
-    }*/
-
     private FormExtensionParameters(virtualMachine, extensionAction) {
         var vmId = virtualMachine["id"];
         var vmName = virtualMachine["name"];
