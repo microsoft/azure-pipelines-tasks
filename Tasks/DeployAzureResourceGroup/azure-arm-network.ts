@@ -617,7 +617,7 @@ export class securityRules {
             }
             this.client.getLongRunningOperationResult(response).then((operationResponse) => {
                 if (operationResponse.body.status === "Succeeded") {
-                    callback(null, JSON.parse(response.body));
+                    callback(null, JSON.parse(operationResponse.body));
                 }
                 callback(azureServiceClient.ToError(operationResponse));
             }).catch((error) => callback(error));

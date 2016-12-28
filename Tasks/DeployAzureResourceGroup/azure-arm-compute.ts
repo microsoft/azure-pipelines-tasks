@@ -838,7 +838,7 @@ export class VirtualMachines {
                     // Generate Response
                     callback(null);
                 } else {
-                   var error = new azureServiceClient.Error();
+                    var error = new azureServiceClient.Error();
                     error.statusCode = response.statusCode;
                     if (response.body === '') response.body = null;
                     var parsedErrorResponse;
@@ -920,7 +920,7 @@ export class VirtualMachines {
                     // Generate Response
                     callback(null);
                 } else {
-                   var error = new azureServiceClient.Error();
+                    var error = new azureServiceClient.Error();
                     error.statusCode = response.statusCode;
                     if (response.body === '') response.body = null;
                     var parsedErrorResponse;
@@ -1158,21 +1158,19 @@ export class VirtualMachineExtensions {
 
         // Send request
         var serviceClient = new azureServiceClient.ServiceClient(this.client.credentials);
-        serviceClient.request(httpRequest).then((response: azureServiceClient.WebResponse) => {
-            if (response.error || response.body.error) {
-                var error = response.error;
-                error += response.body.error ? response.body.error.code + ': ' + response.body.error.message : '';
-                callback(error);
+        serviceClient.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            if (response.body.error) {
+                return callback(azureServiceClient.ToError(response));
             }
             serviceClient.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
                 if (operationResponse.body.status === "Succeeded") {
-                    var result = {"provisioningState":operationResponse.body.status}
+                    var result = { "provisioningState": operationResponse.body.status }
                     callback(null, result);
                 } else {
-                    callback(operationResponse.body.error);
+                    callback(azureServiceClient.ToError(operationResponse));
                 }
-            });
-        });
+            }).catch((error) => callback(error));
+        }).catch((error) => callback(error));
 
     }
 
@@ -1238,18 +1236,18 @@ export class VirtualMachineExtensions {
 
         // Send request
         var serviceClient = new azureServiceClient.ServiceClient(this.client.credentials);
-        serviceClient.request(httpRequest).then((response: azureServiceClient.WebResponse) => {
-            if (response.statusCode !== 202 || response.statusCode !== 204 ) {
-                callback(true);
+        serviceClient.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            if (response.statusCode !== 202 || response.statusCode !== 204) {
+                callback(azureServiceClient.ToError(response));
             }
-            serviceClient.getLongRunningOperationStatus(response).then((operationResponse: azureServiceClient.WebResponse) => {
+            serviceClient.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
                 if (operationResponse.statusCode === 200) {
                     callback(null);
                 } else {
-                    callback(true);
+                    callback(azureServiceClient.ToError(operationResponse));
                 }
-            });
-        });
+            }).catch((error) => callback(error));
+        }).catch((error) => callback(error));
 
     }
 }
