@@ -203,3 +203,6 @@ namespace CapabilityHelpers.VisualStudio.Setup.Com
         Write-Verbose ($_ | Out-String)
     }
 }
+
+
+

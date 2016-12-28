@@ -136,7 +136,7 @@
             if($p) {
                 return 0;
             }
-
+            
             throw "Unable to start DTAExecutionHost process"
         }
     }

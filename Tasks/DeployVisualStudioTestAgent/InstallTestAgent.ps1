@@ -1,4 +1,35 @@
-function Install-Product($SetupPath, $ProductVersion, $Update, $Arguments)
+function PrepareSku
+{
+    param
+    (
+        [String] $SetupPath,
+        [String] $LayoutPath
+    )
+
+    if(-not (Test-Path -Path $SetupPath)) {
+        throw "Test agent source path '{0}' is not accessible to the test machine. Please check if the file exists and that test machine has access to that machine" -f $SetupPath
+    }
+
+    $p = New-Object System.Diagnostics.Process
+    $Processinfo = New-Object System.Diagnostics.ProcessStartInfo
+    $Processinfo.CreateNoWindow = $true
+    $Processinfo.RedirectStandardError = $true
+    $Processinfo.RedirectStandardOutput = $true
+    $Processinfo.WindowStyle = "Hidden"
+	$Processinfo.UseShellExecute = $false
+    $Processinfo.FileName = "$SetupPath"
+    $Processinfo.Arguments = "--layout $LayoutPath --lang en-US"
+
+    $p.StartInfo = $Processinfo
+    if($p.Start()) {
+		$p.WaitForExit()
+		return $p.ExitCode
+    }
+    
+    return -1
+}
+
+function Install-Product($SetupPath, $ProductVersion, $Update)
 {
 	$exitCode = 0
 	
@@ -6,6 +37,20 @@ function Install-Product($SetupPath, $ProductVersion, $Update, $Arguments)
         Write-Verbose "Test Agent path is invalid. Skipping the installation"
         return 1801
     }
+
+	if($ProductVersion -eq "15.0") {
+		Write-Verbose "Preparing the Test platform SKU"
+
+		$LayoutPath = Join-Path $env:SystemDrive TestAgent2017Setup
+		$retCode = PrepareSku -SetupPath $SetupPath -LayoutPath $LayoutPath
+
+		if($retCode -ne 0) {
+			throw "Failed to prepare the Test platfrom SKU $retCode"	
+		}
+
+		Write-Verbose "Completed preparing the Test platform SKU"	
+		$SetupPath = Join-Path $LayoutPath $(Split-Path $SetupPath -Leaf)
+	}
 
 	$versionToInstall = ((Get-Item $SetupPath).VersionInfo.ProductVersion) 
 	$versionInstalled = Get-TestAgentInstalledVersion -ProductVersion $ProductVersion # Get installed test agent version as per user requested version
@@ -36,11 +81,17 @@ function Install-Product($SetupPath, $ProductVersion, $Update, $Arguments)
 		Write-Verbose -Message ("Test Agent will be updated from: {0} to: {1}" -f $versionInstalled, $versionToInstall) -verbose 
 	} 
 
-	# Invoke the TA installation
-	Write-Verbose -Message ("Invoking the command {0} with arguments {1}" -f $SetupPath, $Arguments) -verbose
 	try
 	{
-		$argumentsarr = $Arguments -split " "
+		if($ProductVersion -eq "15.0") {
+			$tpPath = Join-Path $env:SystemDrive TestAgent2017
+			$argumentsarr = @("--noRestart","--quiet","--installPath $tpPath")
+		} else {
+			$argumentsarr = @("/Quiet","/NoRestart")
+		}
+
+		# Invoke the TA installation
+		Write-Verbose -Message ("Invoking the command {0} with arguments {1}" -f $SetupPath, $Arguments) -verbose
 		$exitCode = Invoke-Command -ScriptBlock { cmd.exe /c $args[0] $args[1]; $LASTEXITCODE } -ArgumentList $SetupPath,$argumentsarr -ErrorAction Stop
 	}
 	catch
@@ -100,4 +151,4 @@ function Install-Product($SetupPath, $ProductVersion, $Update, $Arguments)
 	return $exitCode
 }
 
-return Install-Product -SetupPath $setupPath -ProductVersion $productVersion -Update $update -Arguments "/Quiet /NoRestart"
+return Install-Product -SetupPath $setupPath -ProductVersion $productVersion -Update $update
