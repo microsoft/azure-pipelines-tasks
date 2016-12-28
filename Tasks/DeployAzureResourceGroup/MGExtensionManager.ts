@@ -30,18 +30,18 @@ export class MGExtensionManager {
     private setTaskResult() {
         if (this.failureCount + this.successCount == this.vmCount) {
             if (this.failureCount > 0) {
-                console.log(this.operation + " extension did not succeed for all the VMs");
+                console.log("Operation " + this.operation + " did not succeed for all the VMs");
                 tl.setResult(tl.TaskResult.Failed, tl.loc("FailureOnVMOperation", this.taskParameters.action, this.errors));
             }
             else {
-                console.log(this.operation + " extension succeeded for all the VMs");
+                console.log("Operation " + this.operation + " succeeded for all the VMs");
                 tl.setResult(tl.TaskResult.Succeeded, tl.loc("SucceededOnVMOperation", this.taskParameters.action));
             }
             this.deferred.resolve("");
         }
     }
 
-    private postOperationCallBack = (error, result, request, response) => {
+    private postOperationCallBack(error, result, request, response){
         if (error) {
             this.failureCount++;
             this.errors += error.message;
@@ -53,7 +53,6 @@ export class MGExtensionManager {
     }
 
     public installMGExtension() {
-        this.operation = "Install";
         this.deferred = Q.defer<string>();
         var computeClient = new computeManagementClient(this.credentials, this.subscriptionId);
         var vmListPromise = this.azureUtils.getVMDetails();
@@ -62,6 +61,7 @@ export class MGExtensionManager {
             for (var i = 0; i < listOfVms.length; i++) {
                 var vmName = listOfVms[i]["name"];
                 var extensionParameters = this.FormExtensionParameters(listOfVms[i], "enable");
+                this.operation = "Install " + extensionParameters["extensionName"];
                 console.log("Adding " + extensionParameters["extensionName"] + " extension to virtual machine " + vmName);
                 computeClient.virtualMachineExtensions.createOrUpdate(this.taskParameters.resourceGroupName, extensionParameters["vmName"], extensionParameters["extensionName"], extensionParameters["parameters"], this.postOperationCallBack);
             }
@@ -70,15 +70,14 @@ export class MGExtensionManager {
     }
 
     public removeMGExtension() {
-        this.operation = "Remove";
         this.deferred = Q.defer<string>();
         var computeClient = new computeManagementClient(this.credentials, this.subscriptionId);
         var vmListPromise = this.azureUtils.getVMDetails();
         vmListPromise.then(function (listOfVms) {
-            var extensionParameters = this.FormExtensionParameters(listOfVms[i], "uninstall");
             for (var i = 0; i < listOfVms.length; i++) {
                 var vmName = listOfVms[i]["name"];
                 var extensionParameters = this.FormExtensionParameters(listOfVms[i], "uninstall");
+                this.operation = "Remove " + extensionParameters["extensionName"];
                 console.log("Uninstalling " + extensionParameters["extensionName"] + " extension from virtual machine " + vmName);
                 computeClient.virtualMachineExtensions.deleteMethod(this.taskParameters.resourceGroupName, extensionParameters["vmName"], extensionParameters["extensionName"], extensionParameters["parameters"], this.postOperationCallBack);        
             }
@@ -105,10 +104,10 @@ export class MGExtensionManager {
         var autoUpgradeMinorVersion: boolean = true;
         var publisher: string = 'Microsoft.VisualStudio.Services';
         var extensionType: string = 'Microsoft.Compute/virtualMachines/extensions';
-        //var collectionUri = tl.getVariable('system.TeamFoundationCollectionUri');
-        //var teamProject = tl.getVariable('system.teamProject');
-        var collectionUri = "https://testking123.visualstudio.com/";
-        var teamProject = "AzureProj";
+        var collectionUri = tl.getVariable('system.TeamFoundationCollectionUri');
+        var teamProject = tl.getVariable('system.teamProject');
+        //var collectionUri = "https://testking123.visualstudio.com/";
+        //var teamProject = "AzureProj";
         var uriLength = collectionUri.length;
         if (collectionUri[uriLength - 1] == '/') {
             collectionUri = collectionUri.substr(0, uriLength - 1);
