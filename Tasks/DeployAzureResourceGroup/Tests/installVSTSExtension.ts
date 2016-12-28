@@ -18,6 +18,7 @@ tr.setInput("enableDeploymentPrerequisites", process.env["enableDeploymentPrereq
 tr.setInput("machineGroupName", "biprasad");
 tr.setInput("copyAzureVMTags", process.env["copyAzureVMTags"]);
 tr.setInput("vstsPATToken", "PAT");
+tr.setInput("copyAzureVMTags", process.env["outputVariable"]);
 
 process.env[ "ENDPOINT_AUTH_AzureRM"] = "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_DATA_AzureRM_SUBSCRIPTIONID"] = "sId";

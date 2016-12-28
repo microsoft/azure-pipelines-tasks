@@ -27,6 +27,7 @@ export class MGExtensionManager {
         this.failureCount = 0;
         this.vmCount = 0;
         this.operation = "";
+
         this.computeClient = new computeManagementClient(this.credentials, this.subscriptionId);
         return this;
     }
@@ -34,10 +35,10 @@ export class MGExtensionManager {
     private setTaskResult() {
         if (this.failureCount + this.successCount == this.vmCount) {
             if (this.failureCount > 0) {
-                console.log("Operation " + this.operation + " did not succeed for all the VMs");
+                console.log("Machine group agent " + this.operation + " did not succeed on all VMs");
             }
             else {
-                console.log("Operation " + this.operation + " succeeded for all the VMs");
+                console.log("Machine group agent " + this.operation + " succeeded on all VMs");
             }
             this.deferred.resolve("");
         }
@@ -56,12 +57,12 @@ export class MGExtensionManager {
 
     public async installMGExtension() {
         this.deferred = Q.defer<string>();
+        this.operation = "installation";
         var listOfVms = await this.azureUtils.getVMDetails();
         this.vmCount = listOfVms.length;
         for (var i = 0; i < listOfVms.length; i++) {
             var vmName = listOfVms[i]["name"];
             var extensionParameters = this.FormExtensionParameters(listOfVms[i], "enable");
-            this.operation = "Install " + extensionParameters["extensionName"];
             console.log("Adding " + extensionParameters["extensionName"] + " extension to virtual machine " + vmName);
             this.computeClient.virtualMachineExtensions.createOrUpdate(this.taskParameters.resourceGroupName, extensionParameters["vmName"], extensionParameters["extensionName"], extensionParameters["parameters"], this.postOperationCallBack);
         }
@@ -69,13 +70,13 @@ export class MGExtensionManager {
     }
 
     public async removeMGExtension() {
+        this.operation = "removal";
         this.deferred = Q.defer<string>();
         var listOfVms = await this.azureUtils.getVMDetails();
         this.vmCount = listOfVms.length;
         for (var i = 0; i < listOfVms.length; i++) {
             var vmName = listOfVms[i]["name"];
             var extensionParameters = this.FormExtensionParameters(listOfVms[i], "uninstall");
-            this.operation = "Remove " + extensionParameters["extensionName"];
             console.log("Uninstalling " + extensionParameters["extensionName"] + " extension from virtual machine " + vmName);
             this.computeClient.virtualMachineExtensions.deleteMethod(this.taskParameters.resourceGroupName, extensionParameters["vmName"], extensionParameters["extensionName"], extensionParameters["parameters"], this.postOperationCallBack);
         }

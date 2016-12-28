@@ -27,7 +27,7 @@ describe('Azure Resource Group Deployment', function () {
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "virtualMachineExtensions.createOrUpdate  function should have been called from azure-sdk");
-            assert(tr.stdout.indexOf("Operation Install TeamServicesAgent succeeded for all the VMs") > 0, "TeamServicesAgent should have been installed on all VMs" + tr.stdout.indexOf("Operation Install TeamServicesAgent succeeded for all the VMs"));
+            assert(tr.stdout.indexOf("Machine group agent installation succeeded on all VMs") > 0, "Machine group agent should have been installed on all VMs");
             assert(tr.stdout.indexOf("Copying VM tags") > 0, "Tags should be copied");
             done();
         }
@@ -52,7 +52,7 @@ describe('Azure Resource Group Deployment', function () {
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "virtualMachineExtensions.createOrUpdate  function should have been called from azure-sdk");
-            assert(tr.stdout.indexOf("Operation Install TeamServicesAgent succeeded for all the VMs") > 0, "TeamServicesAgent should have been installed on all VMs");
+            assert(tr.stdout.indexOf("Machine group agent installation succeeded on all VMs") > 0, "Machine group agent should have been installed on all VMs");
             assert(tr.stdout.indexOf("Copying VM tags") <= 0, "Tags should not be copied");
             done();
         }
@@ -68,12 +68,13 @@ describe('Azure Resource Group Deployment', function () {
         process.env["resourceGroupName"] = "dummy";
         process.env["enableDeploymentPrerequisites"] = "Configure VM agent with Machine Group Agent";
         process.env["copyAzureVMTags"] = "true";
+        process.env["outputVariable"] = "a";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "virtualMachineExtensions.createOrUpdate  function should have been called from azure-sdk");
-            assert(tr.stdout.indexOf("Operation Install TeamServicesAgent succeeded for all the VMs") > 0, "TeamServicesAgent should have been installed on all VMs");
+            assert(tr.stdout.indexOf("Machine group agent installation succeeded on all VMs") > 0, "Machine group agent should have been installed on all VMs");
             assert(tr.stdout.indexOf("Copying VM tags") > 0, "Tags should be copied");
             done();
         }
@@ -94,8 +95,7 @@ describe('Azure Resource Group Deployment', function () {
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "virtualMachineExtensions.createOrUpdate  function should have been called from azure-sdk");
-            assert(tr.stdout.indexOf("Operation Install TeamServicesAgent succeeded for all the VMs") > 0, "TeamServicesAgent should have been installed on all VMs");
-            assert(tr.stdout.indexOf("Operation Install TeamServicesAgentLinux succeeded for all the VMs") > 0, "TeamServicesAgentLinux should have been installed on all VMs");
+            assert(tr.stdout.indexOf("Machine group agent installation succeeded on all VMs") > 0, "Machine group agent should have been installed on all VMs");
             assert(tr.stdout.indexOf("Copying VM tags") > 0, "Tags should be copied");
             done();
         }
@@ -115,8 +115,7 @@ describe('Azure Resource Group Deployment', function () {
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
-            assert(tr.stdout.indexOf("Operation Install TeamServicesAgent succeeded for all the VMs") <= 0, "TeamServicesAgent should not have been installed on all VMs");
-            assert(tr.stdout.indexOf("Operation Install TeamServicesAgentLinux succeeded for all the VMs") <= 0, "TeamServicesAgentLinux should not have been installed on all VMs");
+            assert(tr.stdout.indexOf("Machine group agent installation succeeded on all VMs") <= 0, "Machine group agent should not have been installed on all VMs");
             assert(tr.stdout.indexOf("Copying VM tags") <= 0, "Tags should not be copied");
             done();
         }
@@ -134,8 +133,7 @@ describe('Azure Resource Group Deployment', function () {
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
-            assert(tr.stdout.indexOf("Operation Remove TeamServicesAgent succeeded for all the VMs") > 0, "TeamServicesAgent should have been removed on all VMs");
-            assert(tr.stdout.indexOf("Operation Remove TeamServicesAgentLinux succeeded for all the VMs") > 0, "TeamServicesAgentLinux should have been removed on all VMs");
+            assert(tr.stdout.indexOf("Machine group agent removal succeeded on all VMs") > 0, "Machine group agent should have been removed from all VMs");
             done();
         }
         catch (error) {
@@ -152,8 +150,7 @@ describe('Azure Resource Group Deployment', function () {
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
-            assert(tr.stdout.indexOf("Operation Remove TeamServicesAgent succeeded for all the VMs") > 0, "TeamServicesAgent should have been removed on all VMs");
-            assert(tr.stdout.indexOf("Operation Remove TeamServicesAgentLinux succeeded for all the VMs") > 0, "TeamServicesAgentLinux should have been removed on all VMs");
+            assert(tr.stdout.indexOf("Machine group agent removal succeeded on all VMs") > 0, "Machine group agent should have been removed from all VMs");
             done();
         }
         catch (error) {
