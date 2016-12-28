@@ -93,7 +93,7 @@
             "label": "Virtual application",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the name of the Virtual application that has been configured in the Azure portal. The option is not required for deployments to the website root."
+            "helpMarkDown": "Specify the name of the Virtual application that has been configured in the Azure portal. The option is not required for deployments to the App Service root."
         },
         {
             "name": "Package",
@@ -119,7 +119,7 @@
             "defaultValue": "false",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
-            "helpMarkDown": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully."
+            "helpMarkDown": "Select the option to take the Azure App Service offline by placing an app_offline.htm file in the root directory of the App Service before the sync operation begins. The file will be removed after the sync operation completes successfully."
         },
         {
             "name": "UseWebDeploy",
@@ -148,7 +148,7 @@
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
             "visibleRule": "UseWebDeploy == true",
-            "helpMarkDown": "Select the option to delete files on the Azure App Service that have no matching files in the App Service zip package."
+            "helpMarkDown": "Select the option to delete files on the Azure App Service that have no matching files in the App Service package or folder."
         },
         {
             "name": "ExcludeFilesFromAppDataFlag",
@@ -168,7 +168,7 @@
             "defaultValue": "",
             "groupName": "AdditionalDeploymentOptions",
             "visibleRule": "UseWebDeploy == true",
-            "helpMarkDown": "Additional Web Deploy arguments that will be applied when deploying the Azure App Service like,-disableLink:AppPoolExtension -disableLink:ContentExtension."
+            "helpMarkDown": "Additional Web Deploy arguments following the syntax -key:value .<br />These will be applied when deploying the Azure App Service. Example: -disableLink:AppPoolExtension -disableLink:ContentExtension.<br />For more examples of Web Deploy operation settings, refer to  [this](https://go.microsoft.com/fwlink/?linkid=838471)."
         },
         {
             "name": "RenameFilesFlag",
@@ -178,21 +178,21 @@
             "required": false,
             "visibleRule": "UseWebDeploy == true",
             "groupName": "AdditionalDeploymentOptions",
-            "helpMarkDown": "Select the option to enable msdeploy flag MSDEPLOY_RENAME_FILES_FLAG in Azure web site's appsetting. The option if set enables msdeploy to rename locked files that are locked during app deployment"
+            "helpMarkDown": "Select the option to enable msdeploy flag MSDEPLOY_RENAME_FILES_FLAG in Azure App Service application settings. The option if set enables msdeploy to rename locked files that are locked during app deployment"
         },
         {
             "name": "XmlTransformation",
             "type": "boolean",
-            "label": "XML Transformation",
+            "label": "XML transformation",
             "required": false,
             "defaultValue": false,
             "groupName": "FileTransformsAndVariableSubstitution",
-            "helpMarkDown": "The config transfoms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`.<br/> Config transforms will be run prior to the Variable Substitution." 
+            "helpMarkDown": "The config transfoms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`.<br/> Config transforms will be run prior to the Variable Substitution.<br/>XML transformations are supported only for Windows platform." 
         },
         {
             "name": "XmlVariableSubstitution",
             "type": "boolean",
-            "label": "XML Variable Substitution",
+            "label": "XML variable substitution",
             "required": false,
             "defaultValue": false,
             "groupName": "FileTransformsAndVariableSubstitution",
@@ -201,7 +201,7 @@
         {
             "name": "JSONFiles",
             "type": "multiLine",
-            "label": "JSON Variable Substitution",
+            "label": "JSON variable substitution",
             "required": false,
             "defaultValue": "",
             "groupName": "FileTransformsAndVariableSubstitution",
@@ -240,51 +240,60 @@
         }
     },
     "messages": {
-        "Invalidwebapppackageorfolderpathprovided": "Invalid webapp package or folder path provided: %s",
+        "Invalidwebapppackageorfolderpathprovided": "Invalid App Service package or folder path provided: %s",
         "SetParamFilenotfound0": "Set parameters file not found: %s",
-        "XDTTransformationsappliedsuccessfully": "XDT Transformations applied successfully",
+        "XDTTransformationsappliedsuccessfully": "XML Transformations applied successfully",
         "GotconnectiondetailsforazureRMWebApp0": "Got connection details for Azure App Service:'%s'",
-        "ErrorNoSuchDeployingMethodExists": "Error : No Such Deploying Method Exists",
-        "UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve connectiondetails for Azure App Service : %s. Status Code: %s (%s)",
+        "ErrorNoSuchDeployingMethodExists": "Error : No such deploying method exists",
+        "UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve connection details for Azure App Service : %s. Status Code: %s (%s)",
         "UnabletoretrieveWebAppID": "Unable to retrieve connection details for Azure App Service:'%s'. Status Code: %s",
         "CouldnotfetchacccesstokenforAzureStatusCode": "Could not fetch acccess token for Azure. Status Code: %s (%s)",
         "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
         "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
         "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website",
-        "UnabletoretrieveAzureRMWebAppConfigDetails": "Error Occurred : [Status Code : '%s']",
-        "UnabletoretrieveAzureRMWebAppAppSettings": "Error Occurred : [Status Code : '%s', Error Message: '%s']",
-        "UnabletoupdateAzureRMWebAppAppSettings": "Error Occurred : [Status Code : '%s', Error Message: '%s']",
+        "Unabletoretrievewebconfigdetails": "Unable to retrieve App Service configuration details.[Status Code: '%s', Error Message: '%s']",
+        "Unabletoretrievewebappsettings": "Unable to retrieve App Service application settings. [Status Code: '%s', Error Message: '%s']",
+        "Unabletoupdatewebappsettings": "Unable to update App service application settings. [Status Code: '%s', Error Message: '%s']",
         "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update deployment status : Unique Deployment ID cannot be retrieved",
         "WebappsuccessfullypublishedatUrl0": "App Service successfully deployed at url %s",
         "Failedtodeploywebsite": "Failed to deploy website.",
         "Runningcommand": "Running command: %s",
         "Deployingwebapplicationatvirtualpathandphysicalpath": "Deploying web package : %s at virtual path (physical path) : %s (%s)",
         "Successfullydeployedpackageusingkuduserviceat": "Successfully deployed package %s using kudu service at %s",
-        "Failedtodeploywebapppackageusingkuduservice": "Failed to deploy webapp package using kudu service : %s",
-        "Unabletodeploywebappresponsecode": "Unable to deploy webapp due to error code : %s",
-        "MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy generated package are only supported for Windows platform.",
+        "Failedtodeploywebapppackageusingkuduservice": "Failed to deploy App Service package using kudu service : %s",
+        "Unabletodeploywebappresponsecode": "Unable to deploy App Service due to error code : %s",
+        "MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy generated packages are only supported for Windows platform.",
         "UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove": "Unsupported installed version: %s found for MSDeploy. version should be alteast 3 or above",
         "UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)",
         "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
-        "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "More than one package matched with specified pattern. Please restrain the search patern.",
+        "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "More than one package matched with specified pattern. Please restrain the search pattern.",
         "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy app service again with Take application offline option selected.",
         "Trytodeploywebappagainwithrenamefileoptionselected": "Try to deploy app service again with Rename locked files option selected.",
         "NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern",
         "JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "JSON variable substitution can only be applied for JSON files",
-        "Configfiledoesntexists": "Config file %s doesn't exist.",
+        "Configfiledoesntexists": "Configuration file %s doesn't exist.",
         "Failedtowritetoconfigfilewitherror": "Failed to write to config file %s with error : %s",
-        "AppOfflineModeenabled": "App Offline Mode enabled.",
+        "AppOfflineModeenabled": "App offline mode enabled.",
         "Failedtoenableappofflinemode": "Failed to enable app offline mode. Status Code: %s (%s)",        
-        "AppOflineModedisabled": "App Offline Mode disabled.",
-        "FailedtodisableAppOfflineMode": "Failed to disable App Offline Mode. Status Code: %s (%s)",
-        "CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot Perform XDT Transformations on a Non-Windows platform.",
-        "XdtTransformationErrorWhileTransforming": "XDT Transformation Error while transforming %s using %s.",
+        "AppOflineModedisabled": "App offline mode disabled.",
+        "FailedtodisableAppOfflineMode": "Failed to disable App offline mode. Status Code: %s (%s)",
+        "CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot perform XML transformations on a non-Windows platform.",
+        "XdtTransformationErrorWhileTransforming": "XML transformation error while transforming %s using %s.",
         "PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "Publish using webdeploy options are supported only when using Windows agent",
-        "WebAppDoesntExist": "Webapp '%s' doesn't exist. Webapp should exist before deployment.",
-        "EncodeNotSupported": "Detected file encoding of the file %s as %s. Variable substitution and Transformation is not supported with file encoding %s. Supported encodings are UTF-8 and UTF-16 LE.",
+        "WebAppDoesntExist": "App Service '%s' doesn't exist. App Service should exist before deployment.",
+        "EncodeNotSupported": "Detected file encoding of the file %s as %s. Variable substitution is not supported with file encoding %s. Supported encodings are UTF-8 and UTF-16 LE.",
         "UnknownFileEncodeError": "Unable to detect encoding of the file %s (typeCode: %s). Supported encodings are UTF-8 and UTF-16 LE.",
         "ShortFileBufferError": "File buffer is too short to detect encoding type : %s",
-        "FailedToUpdateAzureRMWebAppConfigDetails": "Failed to update Web App config details. Error: %s",
-        "SuccessfullyUpdatedAzureRMWebAppConfigDetails": "Successfully updated Web App config details"
+        "FailedToUpdateAzureRMWebAppConfigDetails": "Failed to update App Service configuration details. Error: %s",
+        "SuccessfullyUpdatedAzureRMWebAppConfigDetails": "Successfully updated App Service configuration details",
+        "RequestedURLforkuduphysicalpath": "Requested URL for kudu physical path : %s",
+        "Physicalpathalreadyexists": "Physical path '%s' already exists",
+        "KuduPhysicalpathCreatedSuccessfully": "Kudu physical path created successfully : %s",
+        "FailedtocreateKuduPhysicalPath" : "Failed to create kudu physical path. %s: %s",
+        "FailedtocheckphysicalPath" : "Failed to check kudu physical path. %s: %s",
+        "VirtualApplicationDoesNotExist" : "Virtual application doesn't exists : %s",
+        "JSONParseError": "Unable to parse JSON file: %s. Error: %s",
+        "JSONvariablesubstitutionappliedsuccessfully": "JSON variable substitution applied successfully.",
+        "XMLvaiablesubstitutionappliedsuccessfully": "XML vaiable substitution applied successfully."
     }
 }

@@ -15,5 +15,12 @@
   "loc.input.label.archiveFile": "要建立的封存檔",
   "loc.input.help.archiveFile": "請指定要建立之封存檔的名稱。例如，若要建立 <b>`foo.tgz`</b>，請選取封存類型 [tar]<b></b> 及 [gz]<b></b> 執行 tar 壓縮。",
   "loc.input.label.replaceExistingArchive": "取代現有的封存檔",
-  "loc.input.help.replaceExistingArchive": "若已有同名的封存檔，請指定是否要加以覆寫，否則只會將檔案新增至其中。"
+  "loc.input.help.replaceExistingArchive": "若已有同名的封存檔，請指定是否要加以覆寫，否則只會將檔案新增至其中。",
+  "loc.messages.Filename": "files=%s",
+  "loc.messages.TarExists": "Intermediate tar: %s already exists.  Attempting to add files to it.",
+  "loc.messages.RemoveBeforeCreation": "removing existing archive file before creation: %s",
+  "loc.messages.AlreadyExists": "Archive file: %s already exists.  Attempting to add files to it.",
+  "loc.messages.ArchiveCreationFailedWithError": "Archive creation failed for archive file: %s \ncode: %d \nstdout: %s \nstderr: %s \nerror: %s;",
+  "loc.messages.ArchiveFileExistsButNotAFile": "Specified archive file: %s already exists and is not a file.",
+  "loc.messages.FailedArchiveFile": "Specified archive file: %s can not be created because it can not be accessed: %s"
 }

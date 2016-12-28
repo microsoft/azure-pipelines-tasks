@@ -37,6 +37,7 @@ async function run() {
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
 
         var isDeploymentSuccess: boolean = true;
+        var tempPackagePath = null;
 
         var endPoint = new Array();
         endPoint["servicePrincipalClientID"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'serviceprincipalid', true);
@@ -63,7 +64,7 @@ async function run() {
         }
 
         if(availableWebPackages.length > 1) {
-            throw new Error(tl.loc('MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern'));
+            throw new Error(tl.loc('MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern'));
         }
         webDeployPkg = availableWebPackages[0];
 
@@ -71,7 +72,7 @@ async function run() {
 
         if(JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution) {
 
-            var folderPath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package_folder');
+            var folderPath = utility.generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWorkingDirectory'), true);
             if(isFolderBasedDeployment) {
                 tl.cp(path.join(webDeployPkg, '/*'), folderPath, '-rf', false);
             }
@@ -95,13 +96,23 @@ async function run() {
 
             if(xmlVariableSubstitution) {
                 await xmlSubstitutionUtility.substituteAppSettingsVariables(folderPath);
+                tl._writeLine(tl.loc('XMLvaiablesubstitutionappliedsuccessfully'));
             }
 
             if(JSONFiles.length != 0) {
                 jsonSubstitutionUtility.jsonVariableSubstitution(folderPath, JSONFiles);
+                tl._writeLine(tl.loc('JSONvariablesubstitutionappliedsuccessfully'));
             }
-
-            webDeployPkg = (isFolderBasedDeployment) ? folderPath : await zipUtility.archiveFolder(folderPath, tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_package.zip')
+            if(isFolderBasedDeployment) {
+                tempPackagePath = folderPath;
+                webDeployPkg = folderPath;
+            }
+            else {
+                var tempWebPackageZip = utility.generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWorkingDirectory'), false);
+                webDeployPkg = await zipUtility.archiveFolder(folderPath, "", tempWebPackageZip);
+                tempPackagePath = webDeployPkg;
+                tl.rmRF(folderPath, true);
+            }
         }
 
         if(virtualApplication) {
@@ -110,6 +121,18 @@ async function run() {
 
         if(webAppUri) {
             tl.setVariable(webAppUri, publishingProfile.destinationAppUrl);
+        }
+
+        var azureWebAppDetails = null;
+        if(virtualApplication) {
+            azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+            var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
+            var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
+            if(pathMappings[1] != null) {
+                await kuduUtility.ensurePhysicalPathExists(publishingProfile, pathMappings[1]);
+            } else {
+                throw Error(tl.loc("VirtualApplicationDoesNotExist", virtualApplication));
+            }
         }
 
         if(utility.canUseWebDeploy(useWebDeploy)) {
@@ -137,7 +160,9 @@ async function run() {
                             additionalArguments, isFolderBasedDeployment, useWebDeploy);
         } else {
             tl.debug("Initiated deployment via kudu service for webapp package : " + webDeployPkg);
-            var azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+            if(azureWebAppDetails == null) {
+                azureWebAppDetails = await azureRESTUtility.getAzureRMWebAppConfigDetails(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName);
+            }
             await DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment, takeAppOfflineFlag);
 
         }
@@ -160,6 +185,9 @@ async function run() {
             tl.warning(error);
         }
     }
+    if(tempPackagePath) {
+        tl.rmRF(tempPackagePath);
+    }
 }
 
 
@@ -174,25 +202,41 @@ async function run() {
  *
  */
 async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishingProfile, virtualApplication, isFolderBasedDeployment, takeAppOfflineFlag) {
-
+    var tempPackagePath = null;
     try {
         var virtualApplicationMappings = azureWebAppDetails.properties.virtualApplications;
         var webAppZipFile = webDeployPkg;
         if(isFolderBasedDeployment) {
-            webAppZipFile = await zipUtility.archiveFolder(webDeployPkg, tl.getVariable('System.DefaultWorkingDirectory'), 'temp_web_app_package.zip');
+            tempPackagePath = utility.generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWorkingDirectory'), false);
+            webAppZipFile = await zipUtility.archiveFolder(webDeployPkg, "", tempPackagePath);
             tl.debug("Compressed folder " + webDeployPkg + " into zip : " +  webAppZipFile);
         } else {
             if (await kuduUtility.containsParamFile(webAppZipFile)) {
                 throw new Error(tl.loc("MSDeploygeneratedpackageareonlysupportedforWindowsplatform")); 
             }
         }
-        var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
-        await kuduUtility.deployWebAppPackage(webAppZipFile, publishingProfile, pathMappings[0], pathMappings[1], takeAppOfflineFlag);
+        var physicalPath = "/site/wwwroot";
+        var virtualPath = "/";
+        if(virtualApplication) {
+            var pathMappings = kuduUtility.getVirtualAndPhysicalPaths(virtualApplication, virtualApplicationMappings);
+            if(pathMappings[1] != null) {
+                virtualPath = pathMappings[0];
+                physicalPath = pathMappings[1];
+            } else {
+                throw Error(tl.loc("VirtualApplicationDoesNotExist", virtualApplication));
+            }
+        }
+        await kuduUtility.deployWebAppPackage(webAppZipFile, publishingProfile, virtualPath, physicalPath, takeAppOfflineFlag);
         tl._writeLine(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
     }
     catch(error) {
         tl.error(tl.loc('Failedtodeploywebsite'));
         throw Error(error);
+    }
+    finally {
+        if(tempPackagePath) {
+            tl.rmRF(tempPackagePath, true);
+        }
     }
 }
 

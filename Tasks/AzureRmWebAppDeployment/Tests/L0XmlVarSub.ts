@@ -54,6 +54,11 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "webAppPkg.zip": true,
         "webAppPkg": true
     },
+    "rmRF": {
+        "temp_web_package_random_path": {
+            "success": true
+        }
+    },
     "exec": {
         "msdeploy -verb:getParameters -source:package=\'DefaultWorkingDirectory/temp_web_package.zip\'": {
             "code": 0,
@@ -211,6 +216,24 @@ tr.registerMock('webdeployment-common/xmlvariablesubstitutionutility.js', {
         for(var configFile of configFiles) {
             await xmlSubstitutionUtility.substituteXmlVariables(configFile, tags, variableMap);
         }
+    }
+});
+
+tr.registerMock('webdeployment-common/utility.js', {
+    isInputPkgIsFolder: function() {
+        return false;    
+    },
+    fileExists: function() {
+        return true;   
+    },
+    canUseWebDeploy: function() {
+        return true;
+    },
+    findfiles: function() {
+        return ['webDeployPkg']    
+    },
+    generateTemporaryFolderOrZipPath: function() {
+        return 'temp_web_package_random_path';
     }
 });
 

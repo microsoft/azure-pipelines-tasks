@@ -17,7 +17,7 @@
   "loc.input.label.verbosity": "Ausführlichkeit",
   "loc.input.help.verbosity": "Ausführlichkeitsgrad von NuGet",
   "loc.input.label.nuGetVersion": "NuGet-Version",
-  "loc.input.help.nuGetVersion": "Die zu verwendende Version von NuGet oder eine externe Version.",
+  "loc.input.help.nuGetVersion": "The version of NuGet to use, or external version.",
   "loc.input.label.nuGetPath": "Pfad zu \"NuGet.exe\"",
   "loc.input.help.nuGetPath": "Geben Sie optional den Pfad zu NuGet.exe an. Die Versionsauswahl wird außer Kraft gesetzt.",
   "loc.messages.Warning_NoConfigForNoCredentialProvider": "Um eine Verbindung mit NuGet-Feeds herzustellen, die in Ihrem Team Services-Konto/der TFS-Projektsammlung auf diesem Build-Agent gehostet werden, bearbeiten Sie Ihre Builddefinition, um eine höhere Nuget-Version auszuwählen oder einen Pfad zu einer NuGet.config-Datei anzugeben, die die zu verwendenden Paketquellen enthält.",

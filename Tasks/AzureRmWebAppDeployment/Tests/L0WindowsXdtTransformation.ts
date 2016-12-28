@@ -63,6 +63,14 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "stdout": "Executed Successfully"
         }
     },
+    "rmRF": {
+        "temp_web_package_random_path": {
+            "success": true
+        },
+        "DefaultWorkingDirectory\temp_web_package.zip": {
+            "success": true
+        }
+    },
     "exist": {
     	"webAppPkg.zip": true,
         "webAppPkg": true
@@ -72,8 +80,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "Invalid_webAppPkg" : [],
         "webAppPkg.zip": ["webAppPkg.zip"],
         "webAppPkg": ["webAppPkg"],
-        "DefaultWorkingDirectory\\temp_web_package_folder\\**\\*.config": ["path1/web.config", "path1/web.Release.config", "path1/web.Debug.config", "path2/web.config", "path2/web.Debug.config"],
-        "DefaultWorkingDirectory/temp_web_package_folder/**/*.config": ["web.config", "web.Release.config", "web.Debug.config"]
+        "temp_web_package_random_path\\**\\*.config": ["path1/web.config", "path1/web.Release.config", "path1/web.Debug.config", "path2/web.config", "path2/web.Debug.config"],
+        "temp_web_package_random_path\**\*.config": ["web.config", "web.Release.config", "web.Debug.config"],
+        "temp_web_package_random_path/**/*.config": ["web.config", "web.Release.config", "web.Debug.config"]
     },
     "getVariable": {
     	"ENDPOINT_AUTH_AzureRMSpn": "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}",
@@ -185,6 +194,24 @@ tr.registerMock('webdeployment-common/ziputility.js', {
     },
     archiveFolder: function() {
         return "DefaultWorkingDirectory\\temp_web_package.zip"
+    }
+});
+
+tr.registerMock('webdeployment-common/utility.js', {
+    isInputPkgIsFolder: function() {
+        return false;    
+    },
+    fileExists: function() {
+        return true;   
+    },
+    canUseWebDeploy: function() {
+        return true;
+    },
+    findfiles: function() {
+        return ['webDeployPkg']    
+    },
+    generateTemporaryFolderOrZipPath: function() {
+        return 'temp_web_package_random_path';
     }
 });
 

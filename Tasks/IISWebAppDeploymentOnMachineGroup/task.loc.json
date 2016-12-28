@@ -105,13 +105,7 @@
     }
   },
   "messages": {
-    "Invalidwebapppackageorfolderpathprovided": "ms-resource:loc.messages.Invalidwebapppackageorfolderpathprovided",
     "SetParamFilenotfound0": "ms-resource:loc.messages.SetParamFilenotfound0",
-    "GotconnectiondetailsforazureRMWebApp0": "ms-resource:loc.messages.GotconnectiondetailsforazureRMWebApp0",
-    "UnabletoretrieveWebAppIDforazureRMWebApp0StatusCode1": "ms-resource:loc.messages.UnabletoretrieveWebAppIDforazureRMWebApp0StatusCode1",
-    "ErrorNoSuchDeployingMethodExists": "ms-resource:loc.messages.ErrorNoSuchDeployingMethodExists",
-    "UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1": "ms-resource:loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1",
-    "Unabletoretrievewebapppublishurlforwebapp0StatusCode1": "ms-resource:loc.messages.Unabletoretrievewebapppublishurlforwebapp0StatusCode1",
     "Successfullyupdateddeploymenthistory": "ms-resource:loc.messages.Successfullyupdateddeploymenthistory",
     "Failedtoupdatedeploymenthistory": "ms-resource:loc.messages.Failedtoupdatedeploymenthistory",
     "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "ms-resource:loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite",
@@ -134,7 +128,6 @@
     "Unabletopackagecontentoffolder": "ms-resource:loc.messages.Unabletopackagecontentoffolder",
     "Compressedfolderintozip": "ms-resource:loc.messages.Compressedfolderintozip",
     "Webappfolderisbeingarchivedtobytescompressed": "ms-resource:loc.messages.Webappfolderisbeingarchivedtobytescompressed",
-    "Initiateddeploymentviakuduserviceforwebapppackage": "ms-resource:loc.messages.Initiateddeploymentviakuduserviceforwebapppackage",
     "MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "ms-resource:loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform",
     "UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove": "ms-resource:loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove",
     "UnabletofindthelocationofMSDeployfromregistryonmachineError": "ms-resource:loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError",

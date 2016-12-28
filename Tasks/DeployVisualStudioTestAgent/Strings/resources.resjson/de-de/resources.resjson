@@ -7,7 +7,7 @@
   "loc.group.displayName.agentConfiguration": "Agent-Konfiguration",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.testMachineGroup": "Computer",
-  "loc.input.help.testMachineGroup": "Stellen Sie eine durch Kommas getrennte Liste der IP-Computeradressen oder FQDNs zusammen mit den Ports bereit. Die Standardeinstellung für den Port basiert auf dem ausgewählten Protokoll. Beispiel: \"dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986\". Sie können auch die Ausgabevariable anderer Tasks angeben. Beispiel: \"$(variableName)\". Alternativ können Sie einen Computergruppennamen angeben.",
+  "loc.input.help.testMachineGroup": "Stellen Sie eine durch Kommas getrennte Liste der IP-Computeradressen oder FQDNs zusammen mit den Ports bereit. Die Standardeinstellung für den Port basiert auf dem ausgewählten Protokoll. Beispiel: \"dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986\". Sie können auch die Ausgabevariable anderer Tasks angeben. Beispiel: \"$(variableName)\". Alternativ können Sie einen Computergruppennamen angeben. Wenn Sie HTTPS verwenden, müssen Name und IP des Computers mit dem CN im Zertifikat übereinstimmen.",
   "loc.input.label.adminUserName": "Administratoranmeldung",
   "loc.input.help.adminUserName": "Die Administratoranmeldung für die Zielcomputer.",
   "loc.input.label.adminPassword": "Administratorkennwort",

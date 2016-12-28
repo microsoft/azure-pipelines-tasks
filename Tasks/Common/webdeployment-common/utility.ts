@@ -125,3 +125,12 @@ export function findfiles(filepath){
     }
     return filesList;
 }
+
+export function generateTemporaryFolderOrZipPath(folderPath: string, isFolder: boolean) {
+    var randomString = Math.random().toString().split('.')[1];
+    var tempPath = path.join(folderPath, 'temp_web_package_' + randomString +  (isFolder ? "" : ".zip"));
+    if(tl.exist(tempPath)) {
+        return generateTemporaryFolderOrZipPath(folderPath, isFolder);
+    }
+    return tempPath;
+}

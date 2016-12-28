@@ -1,8 +1,8 @@
 {
   "loc.friendlyName": "SonarQube para MSBuild - Iniciar el análisis",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkId=620063)",
-  "loc.description": "[DEPRECATED] Fetch the Quality Profile from SonarQube to configure the analysis",
-  "loc.instanceNameFormat": "[DEPRECATED] Fetch the Quality Profile from SonarQube",
+  "loc.description": "[EN DESUSO] Capturar el perfil de calidad desde SonarQube para configurar el análisis",
+  "loc.instanceNameFormat": "[EN DESUSO] Capturar el perfil de calidad desde SonarQube",
   "loc.group.displayName.serverSettings": "Servidor de SonarQube",
   "loc.group.displayName.project": "Configuración del proyecto de SonarQube",
   "loc.group.displayName.dbSettings": "Configuración de la base de datos (no se necesita para SonarQube 5.2+)",
