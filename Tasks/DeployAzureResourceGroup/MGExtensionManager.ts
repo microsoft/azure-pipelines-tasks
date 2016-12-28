@@ -15,6 +15,7 @@ export class MGExtensionManager {
     private errors: string;
     private vmCount: number;
     private deferred;
+    private operation:string;
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
         this.taskParameters = taskParameters;
@@ -29,10 +30,13 @@ export class MGExtensionManager {
     private setTaskResult() {
         if (this.failureCount + this.successCount == this.vmCount) {
             if (this.failureCount > 0) {
+                console.log(this.operation + " extension did not succeed for all the VMs");
                 tl.setResult(tl.TaskResult.Failed, tl.loc("FailureOnVMOperation", this.taskParameters.action, this.errors));
-                process.exit();
             }
-            tl.setResult(tl.TaskResult.Succeeded, tl.loc("SucceededOnVMOperation", this.taskParameters.action));
+            else {
+                console.log(this.operation + " extension succeeded for all the VMs");
+                tl.setResult(tl.TaskResult.Succeeded, tl.loc("SucceededOnVMOperation", this.taskParameters.action));
+            }
             this.deferred.resolve("");
         }
     }
@@ -49,6 +53,7 @@ export class MGExtensionManager {
     }
 
     public installMGExtension() {
+        this.operation = "Install";
         this.deferred = Q.defer<string>();
         var computeClient = new computeManagementClient(this.credentials, this.subscriptionId);
         var vmListPromise = this.azureUtils.getVMDetails();
@@ -65,6 +70,7 @@ export class MGExtensionManager {
     }
 
     public removeMGExtension() {
+        this.operation = "Remove";
         this.deferred = Q.defer<string>();
         var computeClient = new computeManagementClient(this.credentials, this.subscriptionId);
         var vmListPromise = this.azureUtils.getVMDetails();
@@ -74,15 +80,7 @@ export class MGExtensionManager {
                 var vmName = listOfVms[i]["name"];
                 var extensionParameters = this.FormExtensionParameters(listOfVms[i], "uninstall");
                 console.log("Uninstalling " + extensionParameters["extensionName"] + " extension from virtual machine " + vmName);
-                computeClient.virtualMachineExtensions.deleteMethod(this.taskParameters.resourceGroupName, extensionParameters["vmName"], extensionParameters["extensionName"], extensionParameters["parameters"], function (error, result, request, response) {
-                    if (error) {
-                        console.log("Failed to delete the extension " + extensionParameters["extensionName"] + " from the vm " + extensionParameters["vmName"]);
-                    }
-                    else {
-                        console.log("Successfully removed the extension " + extensionParameters["extensionName"] + " from the VM " + extensionParameters["vmName"]);
-                    }
-                }
-                );
+                computeClient.virtualMachineExtensions.deleteMethod(this.taskParameters.resourceGroupName, extensionParameters["vmName"], extensionParameters["extensionName"], extensionParameters["parameters"], this.postOperationCallBack);        
             }
         })
         return this.deferred.promise;
