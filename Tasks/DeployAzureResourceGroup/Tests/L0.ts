@@ -27,7 +27,7 @@ describe('Azure Resource Group Deployment', function () {
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "virtualMachineExtensions.createOrUpdate  function should have been called from azure-sdk");
-            assert(tr.stdout.indexOf("Adding TeamServicesAgent extension to virtual machine*") == 1, "TeamServicesAgent should have been installed on the vm");
+            assert(tr.stdout.indexOf("Operation Install TeamServicesAgent succeeded for all the VMs") == 1, "TeamServicesAgent should have been installed on all VMs");
             assert(tr.stdout.indexOf("Copying VM tags") == 1, "Tags should be copied");
             done();
         }
@@ -37,22 +37,22 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    it("Did not install extensions if no vms present", (done) => {
+    /*it("Did not install extensions if no vms present", (done) => {
         let tp = path.join(__dirname, "installVSTSExtension.js");
         process.env["action"] = "Create or update resource group";
-    });
+    });*/
     it("Tags not copied when option not checked", (done) => {
         let tp = path.join(__dirname, "installVSTSExtension.js");
         process.env["action"] = "Create or update resource group";
         process.env["resourceGroupName"] = "dummy";
         process.env["enableDeploymentPrerequisites"] = "Configure VM agent with Machine Group Agent";
-        process.env["copyAzureVMTags"] = "true";
+        process.env["copyAzureVMTags"] = "false";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "virtualMachineExtensions.createOrUpdate  function should have been called from azure-sdk");
-            assert(tr.stdout.indexOf("Adding TeamServicesAgent extension to virtual machine*") == 1, "TeamServicesAgent should have been installed on the vm");
+            assert(tr.stdout.indexOf("Operation Install TeamServicesAgent succeeded for all the VMs") == 1, "TeamServicesAgent should have been installed on all VMs");
             assert(tr.stdout.indexOf("Copying VM tags") == 0, "Tags should not be copied");
             done();
         }
@@ -65,7 +65,7 @@ describe('Azure Resource Group Deployment', function () {
     it("Successfully installed Team Services Agent Extension on VM - Select RG", (done) => {
         let tp = path.join(__dirname, "installVSTSExtension.js");
         process.env["action"] = "Select resource group";
-        process.env["resourceGroupName"] = "NonWindowsVM";
+        process.env["resourceGroupName"] = "dummy";
         process.env["enableDeploymentPrerequisites"] = "Configure VM agent with Machine Group Agent";
         process.env["copyAzureVMTags"] = "true";
         let tr = new ttm.MockTestRunner(tp);
@@ -73,8 +73,7 @@ describe('Azure Resource Group Deployment', function () {
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "virtualMachineExtensions.createOrUpdate  function should have been called from azure-sdk");
-            assert(tr.stdout.indexOf("Adding TeamServicesAgent extension to virtual machine*") == 1, "TeamServicesAgent should have been installed on the vm");
-            assert(tr.stdout.indexOf("Adding TeamServicesAgentLinux extension to virtual machine*") == 1, "TeamServicesAgent should have been installed on the vm");
+            assert(tr.stdout.indexOf("Operation Install TeamServicesAgent succeeded for all the VMs") == 1, "TeamServicesAgent should have been installed on all VMs");
             assert(tr.stdout.indexOf("Copying VM tags") == 1, "Tags should be copied");
             done();
         }
@@ -95,8 +94,8 @@ describe('Azure Resource Group Deployment', function () {
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "virtualMachineExtensions.createOrUpdate  function should have been called from azure-sdk");
-            assert(tr.stdout.indexOf("Adding TeamServicesAgent extension to virtual machine*") == 1, "TeamServicesAgent should have been installed on the vm");
-            assert(tr.stdout.indexOf("Adding TeamServicesAgentLinux extension to virtual machine*") == 1, "TeamServicesAgent should have been installed on the vm");
+            assert(tr.stdout.indexOf("Operation Install TeamServicesAgent succeeded for all the VMs") == 1, "TeamServicesAgent should have been installed on all VMs");
+            assert(tr.stdout.indexOf("Operation Install TeamServicesAgentLinux succeeded for all the VMs") == 1, "TeamServicesAgentLinux should have been installed on all VMs");
             assert(tr.stdout.indexOf("Copying VM tags") == 1, "Tags should be copied");
             done();
         }
@@ -116,9 +115,9 @@ describe('Azure Resource Group Deployment', function () {
         tr.run();
         try {
             assert(tr.succeeded, "Should have succeeded");
-            assert(tr.stdout.indexOf("Adding TeamServicesAgent extension to virtual machine*") == 0, "TeamServicesAgent should have been installed on the vm");
-            assert(tr.stdout.indexOf("Adding TeamServicesAgentLinux extension to virtual machine*") == 0, "TeamServicesAgent should have been installed on the vm");
-            assert(tr.stdout.indexOf("Copying VM tags") == 0, "Tags should be copied");
+            assert(tr.stdout.indexOf("Operation Install TeamServicesAgent succeeded for all the VMs") == 0, "TeamServicesAgent should not have been installed on all VMs");
+            assert(tr.stdout.indexOf("Operation Install TeamServicesAgentLinux succeeded for all the VMs") == 0, "TeamServicesAgentLinux should not have been installed on all VMs");
+            assert(tr.stdout.indexOf("Copying VM tags") == 0, "Tags should not be copied");
             done();
         }
         catch (error) {
@@ -130,15 +129,43 @@ describe('Azure Resource Group Deployment', function () {
     it("Successfully removed Team Services Agent Extension on VM - Delete VMs", (done) => {
         let tp = path.join(__dirname, "removeVSTSExtension.js");
         process.env["action"] = "Delete virtual machines";
+        process.env["resourceGroupName"] = "NonWindowsVM";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(tr.succeeded, "Should have succeeded");
+            assert(tr.stdout.indexOf("Operation Remove TeamServicesAgent succeeded for all the VMs") == 1, "TeamServicesAgent should have been removed on all VMs");
+            assert(tr.stdout.indexOf("Operation Remove TeamServicesAgentLinux succeeded for all the VMs") == 1, "TeamServicesAgentLinux should have been removed on all VMs");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
     });
     it("Successfully removed Team Services Agent Extension on VM - Delete RG", (done) => {
         let tp = path.join(__dirname, "removeVSTSExtension.js");
         process.env["action"] = "Delete resource group";
+        process.env["resourceGroupName"] = "NonWindowsVM";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(tr.succeeded, "Should have succeeded");
+            assert(tr.stdout.indexOf("Operation Remove TeamServicesAgent succeeded for all the VMs") == 1, "TeamServicesAgent should have been removed on all VMs");
+            assert(tr.stdout.indexOf("Operation Remove TeamServicesAgentLinux succeeded for all the VMs") == 1, "TeamServicesAgentLinux should have been removed on all VMs");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
     });
-    it("Failed to install Team Services Agent Extension on VM on incorrect inputs", (done) => {
+    /*it("Failed to install Team Services Agent Extension on VM on incorrect inputs", (done) => {
         let tp = path.join(__dirname, "installVSTSExtension.js");
         process.env["action"] = "Create or update resource group";
-    });
+    });*/
     it('Successfully triggered createOrUpdate deployment', (done) => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
         process.env["csmFile"] = "\\CSM.json";

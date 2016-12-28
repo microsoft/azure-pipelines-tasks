@@ -54,7 +54,9 @@ export class MGExtensionManager {
         this.setTaskResult();
     }
 
-    private installMGExtensionOnVMs = (listOfVms) => {
+    public async installMGExtension() {
+        this.deferred = Q.defer<string>();
+        var listOfVms = await this.azureUtils.getVMDetails();
         this.vmCount = listOfVms.length;
         for (var i = 0; i < listOfVms.length; i++) {
             var vmName = listOfVms[i]["name"];
@@ -63,16 +65,12 @@ export class MGExtensionManager {
             console.log("Adding " + extensionParameters["extensionName"] + " extension to virtual machine " + vmName);
             this.computeClient.virtualMachineExtensions.createOrUpdate(this.taskParameters.resourceGroupName, extensionParameters["vmName"], extensionParameters["extensionName"], extensionParameters["parameters"], this.postOperationCallBack);
         }
-    }
-
-    public installMGExtension() {
-        this.deferred = Q.defer<string>();
-        var vmListPromise = this.azureUtils.getVMDetails();
-        vmListPromise.then(this.installMGExtensionOnVMs);
         return this.deferred.promise;
     }
 
-    private removeMGExtensionFromVMs = (listOfVms) => {
+    public async removeMGExtension() {
+        this.deferred = Q.defer<string>();
+        var listOfVms = await this.azureUtils.getVMDetails();
         this.vmCount = listOfVms.length;
         for (var i = 0; i < listOfVms.length; i++) {
             var vmName = listOfVms[i]["name"];
@@ -81,12 +79,6 @@ export class MGExtensionManager {
             console.log("Uninstalling " + extensionParameters["extensionName"] + " extension from virtual machine " + vmName);
             this.computeClient.virtualMachineExtensions.deleteMethod(this.taskParameters.resourceGroupName, extensionParameters["vmName"], extensionParameters["extensionName"], extensionParameters["parameters"], this.postOperationCallBack);
         }
-    }
-
-    public removeMGExtension() {
-        this.deferred = Q.defer<string>();
-        var vmListPromise = this.azureUtils.getVMDetails();
-        vmListPromise.then(this.removeMGExtensionFromVMs);
         return this.deferred.promise;
     }
 
