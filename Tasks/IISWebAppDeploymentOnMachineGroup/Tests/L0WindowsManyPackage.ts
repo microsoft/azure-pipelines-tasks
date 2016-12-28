@@ -6,7 +6,7 @@ let taskPath = path.join(__dirname, '..', 'deployiiswebapp.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput('WebSiteName', 'mytestwebsite');
-tr.setInput('Package', 'webAppPkgPattern');
+tr.setInput('Package', 'webAppPkgPattern/**/*.zip');
 
 process.env['TASK_TEST_TRACE'] = 1;
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  "DefaultWorkingDirectory";
@@ -37,7 +37,8 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "osType": "Windows"
     },
     "checkPath": {
-        "cmd": true
+        "cmd": true,
+        "webAppPkgPattern": true
     },
     "exec": {
         "cmd /C DefaultWorkingDirectory\\msDeployCommand.bat": {
@@ -73,6 +74,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 		"build.sourceVersionAuthor": "author",
 		"release.releaseUri": "vstfs:///ReleaseManagement/Release/1",
 		"agent.name": "agent"
+    },
+    "find": {
+        "webAppPkgPattern/": ["webAppPkgPattern/webAppPkg1.zip", "webAppPkgPattern/webAppPkg2.zip"]
     }
 }
 

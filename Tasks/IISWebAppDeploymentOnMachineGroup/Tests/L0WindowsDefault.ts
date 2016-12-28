@@ -38,7 +38,8 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "osType": "Windows"
     },
     "checkPath": {
-        "cmd": true
+        "cmd": true,
+        "webAppPkg.zip": true
     },
 	"rmRF": {
         "DefaultWorkingDirectory\\msDeployCommand.bat": {
@@ -58,12 +59,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exist": {
     	"webAppPkg.zip": true,
         "webAppPkg": true
-    }, 
-    "glob": {
-        "webAppPkgPattern" : ["webAppPkg1", "webAppPkg2"],
-        "Invalid_webAppPkg" : [],
-        "webAppPkg.zip": ["webAppPkg.zip"],
-        "webAppPkg": ["webAppPkg"]
     },
     "getVariable": {
     	"System.DefaultWorkingDirectory": "DefaultWorkingDirectory",

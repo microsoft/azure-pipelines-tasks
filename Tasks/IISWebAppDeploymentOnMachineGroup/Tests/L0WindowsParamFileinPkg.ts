@@ -40,7 +40,8 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
         }
     },
      "checkPath": {
-        "cmd" : true
+        "cmd" : true,
+        "webAppPkg.zip": true
     },
     "osType": {
         "osType": "Windows"

@@ -40,7 +40,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
         }
     },
      "checkPath": {
-        "cmd" : true
+        "cmd" : true,
+        "webAppPkg.zip": true,
+        "webAppPkg": true
     },
     "osType": {
         "osType": "Windows"
@@ -62,10 +64,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     },
     "exist": {
     	"webAppPkg.zip": true
-    },
-    "glob": {
-        "webAppPkg.zip": ["webAppPkg.zip"],
-        "webAppPkg": ["webAppPkg"]
     },
     "getVariable": {
     	"SYSTEM_DEFAULTWORKINGDIRECTORY": "defaultWorkingDirectory",

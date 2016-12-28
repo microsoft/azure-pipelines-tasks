@@ -37,7 +37,8 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "osType": "Windows"
     },
     "checkPath": {
-        "cmd": true
+        "cmd": true,
+        "webAppPkg.zip": true
     },
     "exec": {
     	"cmd /C DefaultWorkingDirectory\\msDeployCommand.bat": {
@@ -51,9 +52,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "exist": {
     	"webAppPkg.zip": true
-    },
-    "glob": {
-        "webAppPkg.zip": ["webAppPkg.zip"]
     },
     "getVariable": {
     	"SYSTEM_DEFAULTWORKINGDIRECTORY" : "defaultWorkingDirectory",

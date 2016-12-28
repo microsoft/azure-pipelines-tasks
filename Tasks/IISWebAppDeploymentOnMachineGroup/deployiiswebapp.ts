@@ -18,7 +18,7 @@ async function run()
 		var excludeFilesFromAppDataFlag: boolean = tl.getBoolInput('ExcludeFilesFromAppDataFlag', false);
 		var takeAppOfflineFlag: boolean = tl.getBoolInput('TakeAppOfflineFlag', false);
 		var additionalArguments: string = tl.getInput('AdditionalArguments', false);
-		var availableWebPackages = tl.glob(webDeployPkg);
+		var availableWebPackages = utility.findfiles(webDeployPkg);
 
 		if(availableWebPackages.length == 0)
 		{

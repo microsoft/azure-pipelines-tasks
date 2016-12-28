@@ -37,7 +37,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "osType": "Windows"
     },
     "checkPath": {
-        "cmd": true
+        "cmd": true,
     },
     "exec": {
         "cmd /C DefaultWorkingDirectory\\msDeployCommand.bat": {
@@ -50,8 +50,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         }
     },
     "exist": {
-    	"webAppPkg.zip": true,
-        "webAppPkg": true
+        "Invalid_webAppPkg": false
     }, 
     "glob": {
         "webAppPkgPattern" : ["webAppPkg1", "webAppPkg2"],
