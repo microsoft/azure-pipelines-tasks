@@ -72,7 +72,7 @@ export function getUpdateHistoryRequest(webAppPublishKuduUrl: string, isDeployme
 
     var deploymentLogType: string = message['type'];
     var active: boolean = false;
-    if(deploymentLogType.toLowerCase() === "deployment") {
+    if(deploymentLogType.toLowerCase() === "deployment" && isDeploymentSuccess) {
         active = true;
     }
 

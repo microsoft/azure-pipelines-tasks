@@ -54,6 +54,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             slotName : 'Production'
         });
         var expectedRequestBody = JSON.stringify({
+            active : true,
             status : 4,
             status_text : 'success', 
             message : expectedMessage,
@@ -141,6 +142,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             slotName : 'Production'
         });
         var expectedRequestBody = JSON.stringify({
+            active : false,
             status : 3,
             status_text : 'failed', 
             message : expectedMessage,
