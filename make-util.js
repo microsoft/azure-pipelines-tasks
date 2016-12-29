@@ -543,14 +543,13 @@ var getExternals = function (externals, destRoot) {
         files.forEach(function (file) {
             assert(file.url, 'file.url');
             assert(file.dest, 'file.dest');
-            assert(file.filename, 'file.filename');
 
             // download the file from url
             var fileSource = downloadFile(file.url);
             // copy the files
             var fileDest = path.join(destRoot, file.dest);
-            mkdir('-p', fileDest);
-            cp(fileSource, path.join(fileDest, file.filename));
+            mkdir('-p', path.dirname(fileDest));
+            cp(fileSource, fileDest);
         });
     }
 }
