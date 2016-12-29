@@ -19,5 +19,14 @@
             ],
             "options": "-Rf"
         }
-    ]
+    ],
+    "externals": {
+         "files": [
+             {
+                 "url": "https://testexecution.blob.core.windows.net/version1/TestExecution.zip",
+                 "dest": "./",
+                 "filename": "TestExecution.zip"
+             }
+         ]
+     }
 }

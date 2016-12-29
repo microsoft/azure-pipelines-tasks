@@ -17,7 +17,7 @@ var downloadPath = path.join(__dirname, '_download');
 var makeOptions = require('./make-options.json');
 
 // list of .NET culture names
-var cultureNames = [ 'cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant' ];
+var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];
 
 //------------------------------------------------------------------------------
 // shell functions
@@ -406,7 +406,7 @@ var copyGroup = function (group, sourceRoot, destRoot) {
     }
 
     // build the source array
-    var source = typeof group.source == 'string' ? [ group.source ] : group.source;
+    var source = typeof group.source == 'string' ? [group.source] : group.source;
     source = source.map(function (val) { // root the paths
         return path.join(sourceRoot, val);
     });
@@ -536,6 +536,23 @@ var getExternals = function (externals, destRoot) {
             copyGroups(package.cp, packageSource, destRoot);
         });
     }
+
+    // for any file type that has to be shipped with task
+    if (externals.hasOwnProperty('files')) {
+        var files = externals.files;
+        files.forEach(function (file) {
+            assert(file.url, 'file.url');
+            assert(file.dest, 'file.dest');
+            assert(file.filename, 'file.filename');
+
+            // download the file from url
+            var fileSource = downloadFile(file.url);
+            // copy the files
+            var fileDest = path.join(destRoot, file.dest);
+            mkdir('-p', fileDest);
+            cp(fileSource, path.join(fileDest, file.filename));
+        });
+    }
 }
 exports.getExternals = getExternals;
 
@@ -656,7 +673,7 @@ exports.validateTask = validateTask;
 var linkNonAggregatedLayoutContent = function (sourceRoot, destRoot, metadataOnly) {
     assert(sourceRoot, 'sourceRoot');
     assert(destRoot, 'destRoot');
-    var metadataFileNames = [ 'TASK.JSON', 'TASK.LOC.JSON', 'STRINGS', 'ICON.PNG' ];
+    var metadataFileNames = ['TASK.JSON', 'TASK.LOC.JSON', 'STRINGS', 'ICON.PNG'];
     // process each file/folder within the source root
     fs.readdirSync(sourceRoot).forEach(function (itemName) {
         var taskSourcePath = path.join(sourceRoot, itemName);
@@ -774,7 +791,7 @@ var getNonAggregatedLayout = function (packagePath, release, commit) {
 var getRefs = function () {
     console.log();
     console.log('> Getting branch/commit info')
-    var info = { };
+    var info = {};
     var branch;
     if (process.env.TF_BUILD) {
         // during CI agent checks out a commit, not a branch.
@@ -796,13 +813,13 @@ var getRefs = function () {
     }
 
     // get the ref info for HEAD
-    var info ={
+    var info = {
         head: {
             branch: branch,  // e.g. refs/heads/releases/m108
             commit: commit,  // leading 8 chars only
             release: release // e.g. 108 or undefined if not a release branch
         },
-        releases: { }
+        releases: {}
     };
 
     // get the ref info for each release branch within range
@@ -893,7 +910,7 @@ var createAggregatedZip = function (packagePath) {
 
     // track task GUID + major version -> destination path
     // task directory names can change between different release branches
-    var taskDestMap = { };
+    var taskDestMap = {};
 
     // link the tasks from the non-aggregated layout into the aggregated layout
     var nonAggregatedLayoutPath = path.join(packagePath, 'non-aggregated-layout');
@@ -915,7 +932,7 @@ var createAggregatedZip = function (packagePath) {
         });
 
     // validate task uniqueness within the layout based on task GUID + major version
-    var majorVersions = { };
+    var majorVersions = {};
     fs.readdirSync(aggregatedLayoutPath) // walk each item in the aggregate layout
         .forEach(function (itemName) {
             var itemPath = path.join(aggregatedLayoutPath, itemName);
