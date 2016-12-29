@@ -108,7 +108,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 		
-        var expectedErr = 'Error: Error: cmd failed with return code: 1';
+        var expectedErr = 'Error: Error: msdeploy failed with return code: 1';
         var expectedOut = 'Failed to update history to kudu';
         assert(tr.invokedToolCount == 2, 'should have invoked tool once');
         assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have written to stderr');
@@ -126,7 +126,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 		
-        var expectedErr = 'Error: Error: cmd failed with return code: 1';
+        var expectedErr = 'Error: Error: msdeploy failed with return code: 1';
         var expectedOut = 'Failed to update history to kudu';
         var expectedMessage = JSON.stringify({
             type: "Deployment",

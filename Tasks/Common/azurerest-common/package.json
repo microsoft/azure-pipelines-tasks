@@ -15,7 +15,7 @@
   "dependencies": {
     "q": "1.4.1",
     "vso-node-api": "6.0.1-preview",
-    "vsts-task-lib": "0.9.20",
+    "vsts-task-lib": "1.1.0",
     "xml2js": "0.4.13"
   },
   "devDependencies": {

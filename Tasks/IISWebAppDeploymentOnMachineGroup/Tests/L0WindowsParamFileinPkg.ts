@@ -9,24 +9,11 @@ tr.setInput('WebSiteName', 'mytestwebsite');
 tr.setInput('Package', 'webAppPkg.zip');
 tr.setInput('SetParametersFile', 'parameterFilePresent.xml');
 
-process.env['TASK_TEST_TRACE'] = 1;
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  "DefaultWorkingDirectory";
-process.env["BUILD_SOURCEVERSION"] = "46da24f35850f455185b9188b4742359b537076f";
-process.env["BUILD_BUILDID"] = '1',
-process.env["RELEASE_RELEASEID"] = '1';
-process.env["BUILD_BUILDNUMBER"] = '1';
-process.env["RELEASE_RELEASENAME"] = "Release-1";
-process.env["BUILD_REPOSITORY_PROVIDER"] = "TfsGit";
-process.env["BUILD_REPOSITORY_NAME"] = "MyFirstProject";
-process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"] = "https://abc.visualstudio.com/";
-process.env["SYSTEM_TEAMPROJECT"] = "MyFirstProject";
-process.env["BUILD_SOURCEVERISONAUTHOR"] = "author";
-process.env["RELEASE_RELEASEURI"] = "vstfs:///ReleaseManagement/Release/1";
-process.env["AGENT_NAME"] = "author";
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     "which": {
-        "cmd": "cmd"
+        "msdeploy": "msdeploy"
     },
     "stats": {
     	"webAppPkg.zip": {
@@ -40,37 +27,32 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
         }
     },
      "checkPath": {
-        "cmd" : true
+        "msdeploy" : true
     },
     "osType": {
         "osType": "Windows"
     },
 	 "rmRF": {
-        "DefaultWorkingDirectory\\msDeployCommand.bat": {
+        "DefaultWorkingDirectory\\tempSetParameters.xml": {
             "success": true
         }
     },
     "exec": {
-        "cmd /C DefaultWorkingDirectory\\msDeployCommand.bat": {
+        "msdeploy -verb:sync -source:package='webAppPkg.zip' -dest:auto -setParam:name='IIS Web Application Name',value='mytestwebsite' -setParamFile=tempSetParameters.xml  -enableRule:DoNotDeleteRule": {
             "code" : 0,
             "stdout": "Executed Successfully"
         },
-        "cmd /C DefaultWorkingDirectory\\msDeployParam.bat": {
+        "msdeploy -verb:getParameters -source:package=\'webAppPkg.zip\'": {
             "code" : 0,
             "stdout": "Executed Successfully"
         }
     },
     "exist": {
-    	"webAppPkg.zip": true
+    	"webAppPkg.zip": true,
+        "DefaultWorkingDirectory\\tempSetParameters.xml": true        
     },
     "glob": {
-        "webAppPkg.zip": ["webAppPkg.zip"],
-        "webAppPkg": ["webAppPkg"]
-    },
-    "getVariable": {
-    	"SYSTEM_DEFAULTWORKINGDIRECTORY": "defaultWorkingDirectory",
-        "System.DefaultWorkingDirectory" : "DefaultWorkingDirectory",
-        "build.sourcesDirectory": "DefaultWorkingDirectory"
+        "webAppPkg.zip": ["webAppPkg.zip"]
     }
 };
 
@@ -84,10 +66,29 @@ tr.registerMock('./msdeployutility.js', {
         return msDeployFullPath;
     },
     containsParamFile: function(webAppPackage: string) {
-		var taskResult = mockTask.execSync("cmd", ['/C', "DefaultWorkingDirectory\\msDeployParam.bat"]);
+		var taskResult = mockTask.execSync("msdeploy", "-verb:getParameters -source:package=\'" + webAppPackage + "\'");
         return true;
     }
 });
+var fs = require('fs');
+
+tr.registerMock('fs', {
+    createWriteStream: function (filePath, options) {
+        return { "isWriteStreamObj": true };
+    },
+
+    readFileSync: function(msDeployErrorFilePath) {
+        console.log("reading the error file");
+        return "ERROR DEPLOYING WEBSITE";
+    },
+    openSync: function(fd, options) {
+        return true;
+    },
+    closeSync: function(fd) {
+        return true;
+    }
+});
+
 
 tr.setAnswers(a);
 tr.run();
