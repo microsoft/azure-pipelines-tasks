@@ -39,7 +39,7 @@ process.env['XDT:LOCATOR'] = 'Match(tag)';
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "which": {
-        "cmd": "cmd"
+        "msdeploy": "msdeploy"
     },
     "stats": {
     	"webAppPkg.zip": {
@@ -50,24 +50,21 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "osType": "Windows"
     },
     "checkPath": {
-        "cmd": true,
+        "msdeploy": true,
         "webAppPkg.zip": true,
         "webAppPkg": true
     },
     "rmRF": {
-        "DefaultWorkingDirectory\\msDeployCommand.bat": {
-            "success": true
-        },
         "temp_web_package_random_path": {
             "success": true
         }
     },
     "exec": {
-        "cmd /C DefaultWorkingDirectory\\msDeployCommand.bat": {
+        "msdeploy -verb:getParameters -source:package=\'/temp_web_package_random_path\'": {
             "code": 0,
             "stdout": "Executed Successfully"
         },
-        "cmd /C DefaultWorkingDirectory\\msDeployParam.bat": {
+        "msdeploy -verb:sync -source:package=\'/temp_web_package_random_path\' -dest:auto,ComputerName=\'https://mytestappKuduUrl/msdeploy.axd?site=mytestapp\',UserName=\'$mytestapp\',Password=\'mytestappPwd\',AuthType=\'Basic\' -setParam:name=\'IIS Web Application Name\',value=\'mytestapp\' -enableRule:DoNotDeleteRule -userAgent:TFS_useragent": {
             "code": 0,
             "stdout": "Executed Successfully"
         }
@@ -121,7 +118,7 @@ tr.registerMock('./msdeployutility.js', {
         return msDeployFullPath;
     },
     containsParamFile: function(webAppPackage: string) {
-        var taskResult = mockTask.execSync("cmd", ['/C',"DefaultWorkingDirectory\\msDeployParam.bat"]);
+        var taskResult = mockTask.execSync("msdeploy", "-verb:getParameters -source:package=\'" + webAppPackage + "\'");
         return true;
     }
 }); 
@@ -200,6 +197,7 @@ tr.registerMock('webdeployment-common/ziputility.js', {
     },
     archiveFolder: function(folderPath, targetPath, zipName) {
         console.log('Archiving ' + folderPath + ' to ' + targetPath + '/' + zipName);
+        return targetPath + '/' + zipName;
     }
 });
 
@@ -236,6 +234,21 @@ tr.registerMock('webdeployment-common/utility.js', {
     },
     generateTemporaryFolderOrZipPath: function() {
         return 'temp_web_package_random_path';
+    }
+});
+
+var fs = require('fs');
+tr.registerMock('fs', {
+    createWriteStream: function (filePath, options) {
+        return { "isWriteStreamObj": true };
+    },
+    ReadStream: fs.ReadStream,
+    WriteStream: fs.WriteStream,
+    openSync: function (fd, options) {
+        return true;
+    },
+    closeSync: function (fd) {
+        return true;
     }
 });
 

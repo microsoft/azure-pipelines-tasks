@@ -32,23 +32,23 @@ process.env["AGENT_NAME"] = "author";
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     "which": {
-        "cmd": "cmd"
+        "msdeploy": "msdeploy"
     },
     "stats": {
     	"webAppPkg.zip": {
     		"isFile": true
     	},
-        "parameterFilePresent.xml": {
-            "isFile" : true
+        "invalidparameterFile.xml": {
+            "isFile" : false
         },
         "parameterFileUser.xml": {
             "isFile" : true
         }
     },
      "checkPath": {
-        "cmd" : true,
         "webAppPkg.zip": true,
-        "webAppPkg": true
+        "webAppPkg": true,
+        "msdeploy": true
     },
     "osType": {
         "osType": "Windows"
