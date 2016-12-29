@@ -6,7 +6,7 @@
   "loc.group.displayName.deployment": "配置",
   "loc.group.displayName.advanced": "詳細設定のオプション",
   "loc.input.label.EnvironmentName": "コンピューター",
-  "loc.input.help.EnvironmentName": "コンピューターの IP アドレスまたは FQDN とポートのコンマ区切り一覧を指定します。ポートは選んだプロトコルに基づいて既定値に設定されます。<br>例: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986 <br> または他のタスクの出力変数を指定します。例: $(variableName)",
+  "loc.input.help.EnvironmentName": "コンピューターの IP アドレスまたは FQDN とポートのコンマ区切り一覧を指定します。ポートは選んだプロトコルに基づいて既定値に設定されます。<br>例: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986 <br> または他のタスクの出力変数を指定します。例: $(variableName) <br>HTTPS を使用している場合、マシンの名前/IP は証明書の CN と一致する必要があります。",
   "loc.input.label.AdminUserName": "管理者ログイン",
   "loc.input.help.AdminUserName": "ターゲット コンピューターの管理者ログイン。",
   "loc.input.label.AdminPassword": "パスワード",

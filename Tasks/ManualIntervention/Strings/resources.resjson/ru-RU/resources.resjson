@@ -4,5 +4,7 @@
   "loc.description": "Приостановка развертывания и ожидание вмешательства",
   "loc.instanceNameFormat": "Вмешательство вручную",
   "loc.input.label.instructions": "Инструкции",
-  "loc.input.help.instructions": "Эти инструкции будут показаны пользователю для возобновления или отклонения вмешательства вручную. На их основе пользователь должен принять взвешенное решение об этом вмешательстве вручную."
+  "loc.input.help.instructions": "Эти инструкции будут показаны пользователю для возобновления или отклонения вмешательства вручную. На их основе пользователь должен принять взвешенное решение об этом вмешательстве вручную.",
+  "loc.input.label.emailRecipients": "Notify users",
+  "loc.input.help.emailRecipients": "Send a manual intervention pending email to specific users (or groups). Only users with manage deployment permission can act on a manual intervention."
 }

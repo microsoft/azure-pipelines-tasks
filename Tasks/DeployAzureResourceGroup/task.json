@@ -29,12 +29,43 @@
     ],
     "inputs": [
         {
+<<<<<<< HEAD
             "name": "ConnectedServiceName",
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
+=======
+            "name": "ConnectedServiceNameSelector",
+            "type": "pickList",
+            "label": "Azure Connection Type",
+            "required": false,
+            "helpMarkDown": "",
+            "defaultValue": "ConnectedServiceName",
+            "options": {
+                "ConnectedServiceName": "Azure Resource Manager",
+                "ConnectedServiceNameClassic": "Azure Classic"
+            }
+        },
+        {
+            "name": "ConnectedServiceName",
+            "type": "connectedService:AzureRM",
+            "label": "Azure Subscription",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment.",
+            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
+        },
+        {
+            "name": "ConnectedServiceNameClassic",
+            "type": "connectedService:Azure",
+            "label": "Azure Classic Subscription",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select the Azure Classic subscription for the deployment.",
+            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
+>>>>>>> master
         },
         {
             "name": "action",
@@ -43,6 +74,27 @@
             "defaultValue": "Create or update resource group",
             "required": true,
             "helpMarkDown": "Action to be performed on the Azure resources or resource group.",
+<<<<<<< HEAD
+=======
+            "options": {
+                "Create Or Update Resource Group": "Create Or Update Resource Group",
+                "Select Resource Group": "Select Resource Group",
+                "Start": "Start Virtual Machines",
+                "Stop": "Stop Virtual Machines",
+                "Restart": "Restart Virtual Machines",
+                "Delete": "Delete Virtual Machines",
+                "DeleteRG": "Delete Resource Group"
+            },
+            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
+        },
+        {
+            "name": "actionClassic",
+            "type": "pickList",
+            "label": "Action",
+            "defaultValue": "Select Resource Group",
+            "required": true,
+            "helpMarkDown": "Action to be performed on the Azure resources or cloud service.",
+>>>>>>> master
             "options": {
                 "Create or update resource group": "Create or update resource group",
                 "Select resource group": "Select resource group",
@@ -58,10 +110,29 @@
             "type": "pickList",
             "label": "Resource group",
             "required": true,
+<<<<<<< HEAD
             "helpMarkDown": "Provide the name of a resource group.",
             "properties": {
                 "EditableOptions": "True"
             }
+=======
+            "helpMarkDown": "Provide the name of the resource group.",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
+        },
+        {
+            "name": "cloudService",
+            "type": "pickList",
+            "label": "Cloud Service",
+            "required": true,
+            "helpMarkDown": "Provide the name of the cloud service.",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
+>>>>>>> master
         },
         {
             "name": "location",
@@ -175,11 +246,21 @@
             },
             "visibleRule": "action = Create or update resource group"
         },
+        { 
+            "name": "enableDeploymentPrerequisitesForCreate", 
+            "type": "boolean", 
+            "label": "Enable Deployment Prerequisites", 
+            "defaultValue": "false", 
+            "visibleRule": "action = Create Or Update Resource Group", 
+            "required": false, 
+            "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)." 
+        }, 
         {
-            "name": "enableDeploymentPrerequisites",
+            "name": "enableDeploymentPrerequisitesForSelect",
             "type": "boolean",
             "label": "Enable deployment prerequisites",
             "defaultValue": "false",
+            "visibleRule": "action = Select Resource Group",
             "required": false,
             "visibleRule": "action = Create or update resource group || action = Select Resource Group",
             "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines."

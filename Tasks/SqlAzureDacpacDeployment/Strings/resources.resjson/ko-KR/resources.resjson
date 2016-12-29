@@ -51,5 +51,6 @@
   "loc.messages.SAD_InvalidSqlFile": "잘못된 SQL 파일 '{0}'이(가) 제공되었습니다.",
   "loc.messages.SAD_NoPassword": "SQL 사용자 '{0}'에 대해 지정된 암호가 없습니다.",
   "loc.messages.SAD_InvalidPublishProfile": "잘못된 게시 프로필 '{0}'이(가) 제공되었습니다.",
-  "loc.messages.SAD_InvalidServerNameFormat": "서버 이름 '{0}'이(가) 올바른 형식이 아닙니다. '{1}'과(와) 같은 FQDN 형식을 사용하세요."
+  "loc.messages.SAD_InvalidServerNameFormat": "서버 이름 '{0}'이(가) 올바른 형식이 아닙니다. '{1}'과(와) 같은 FQDN 형식을 사용하세요.",
+  "loc.messages.SAD_AzureSQLDacpacTaskFailed": "Azure SQL Dacpac task failed."
 }

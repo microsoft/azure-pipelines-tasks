@@ -6,7 +6,7 @@
   "loc.group.displayName.deployment": "Distribuzione",
   "loc.group.displayName.advanced": "Opzioni avanzate",
   "loc.input.label.EnvironmentName": "Computer",
-  "loc.input.help.EnvironmentName": "Consente di specificare un elenco di indirizzi IP o FQDN separati da virgola unitamente alle porte. Per impostazione predefinita, la porta è basata sul protocollo selezionato. <br>Esempio: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986 <br>In alternativa, consente di specificare la variabile di output di altre attività. Esempio: $(variableName)",
+  "loc.input.help.EnvironmentName": "Consente di specificare un elenco di indirizzi IP o FQDN separati da virgola unitamente alle porte. Per impostazione predefinita, la porta è basata sul protocollo selezionato. <br>Esempio: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986 <br>In alternativa, consente di specificare la variabile di output di altre attività. Esempio: $(variableName) <br>Se si usa HTTPS, il nome e l'IP del computer devono essere uguali al nome comune (CN) del certificato.",
   "loc.input.label.AdminUserName": "Account di accesso amministratore",
   "loc.input.help.AdminUserName": "Account di accesso dell'amministratore per i computer di destinazione.",
   "loc.input.label.AdminPassword": "Password",

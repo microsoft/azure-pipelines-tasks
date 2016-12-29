@@ -33,6 +33,7 @@ describe('XamariniOS Suite', function() {
         tr.setInput('packageApp', ''); //boolean
         tr.setInput('forSimulator', ''); //boolean
         tr.setInput('mdtoolLocation', '');
+        tr.setInput('runNugetRestore', 'true'); //boolean
         tr.setInput('unlockDefaultKeychain', ''); //boolean
         tr.setInput('defaultKeychainPassword', '');
         tr.setInput('p12', ''); //path
@@ -69,6 +70,7 @@ describe('XamariniOS Suite', function() {
         tr.setInput('packageApp', ''); //boolean
         tr.setInput('forSimulator', ''); //boolean
         tr.setInput('mdtoolLocation', '/home/bin2/');
+        tr.setInput('runNugetRestore', 'true'); //boolean
         tr.setInput('unlockDefaultKeychain', ''); //boolean
         tr.setInput('defaultKeychainPassword', '');
         tr.setInput('p12', ''); //path
@@ -281,6 +283,7 @@ describe('XamariniOS Suite', function() {
         tr.setInput('packageApp', ''); //boolean
         tr.setInput('forSimulator', ''); //boolean
         tr.setInput('mdtoolLocation', '/home/bin2');
+        tr.setInput('runNugetRestore', 'true'); //boolean
         tr.setInput('unlockDefaultKeychain', ''); //boolean
         tr.setInput('defaultKeychainPassword', '');
         tr.setInput('p12', ''); //path

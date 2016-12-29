@@ -9,6 +9,7 @@ try {
     [string]$project = Get-VstsInput -Name project -Require
     [string]$target = Get-VstsInput -Name target
     [string]$configuration = Get-VstsInput -Name configuration
+    [bool]$createAppPackage = Get-VstsInput -Name createAppPackage -AsBool
     [bool]$clean = Get-VstsInput -Name clean -AsBool
     [string]$outputDir = Get-VstsInput -Name outputDir
     [string]$msbuildLocationMethod = Get-VstsInput -Name msbuildLocationMethod
@@ -35,8 +36,10 @@ try {
     if($target) {
         $msBuildArguments = "$msBuildArguments /t:$target"
     }
-    # Always build the APK file
-    $msBuildArguments = "$msBuildArguments /t:PackageForAndroid"
+    # Build the APK file if createAppPackage is set to true
+    if($createAppPackage) {
+        $msBuildArguments = "$msBuildArguments /t:PackageForAndroid"
+    }
     if ($outputDir) {
         $msBuildArguments = "$msBuildArguments /p:OutputPath=""$outputDir"""
     }
