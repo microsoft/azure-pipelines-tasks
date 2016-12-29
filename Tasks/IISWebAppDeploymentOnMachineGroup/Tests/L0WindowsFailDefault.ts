@@ -11,7 +11,7 @@ tr.setInput('Package', 'webAppPkg.zip');
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  "DefaultWorkingDirectory";
 
 // provide answers for task mock
-let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
+let a: any = <any>{
     "which": {
         "msdeploy": "msdeploy"
     },
