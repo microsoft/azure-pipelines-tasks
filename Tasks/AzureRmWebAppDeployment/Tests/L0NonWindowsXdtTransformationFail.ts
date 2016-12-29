@@ -178,5 +178,11 @@ tr.registerMock('webdeployment-common/ziputility.js', {
     }
 });
 
+tr.registerMock('./deploypythonpackage.js', {
+    checkIfPythonPackage: function() {
+        return false;
+    }
+});
+
 tr.setAnswers(a);
 tr.run();

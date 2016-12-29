@@ -204,5 +204,11 @@ tr.registerMock('webdeployment-common/utility.js', {
     }
 });
 
+tr.registerMock('./deploypythonpackage.js', {
+    checkIfPythonPackage: function() {
+        return false;
+    }
+});
+
 tr.setAnswers(a);
 tr.run();

@@ -294,6 +294,8 @@
         "VirtualApplicationDoesNotExist" : "Virtual application doesn't exists : %s",
         "JSONParseError": "Unable to parse JSON file: %s. Error: %s",
         "JSONvariablesubstitutionappliedsuccessfully": "JSON variable substitution applied successfully.",
-        "XMLvaiablesubstitutionappliedsuccessfully": "XML vaiable substitution applied successfully."
+        "XMLvaiablesubstitutionappliedsuccessfully": "XML vaiable substitution applied successfully.",
+        "PythonWebPackageFound": "Given App Service Packge is found to be Python Package",
+        "InvalidPythonPackage": "Invalid Python App Service package provided"
     }
 }

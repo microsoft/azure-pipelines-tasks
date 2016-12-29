@@ -163,5 +163,11 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
     }
 });
 
+tr.registerMock('./deploypythonpackage.js', {
+    checkIfPythonPackage: function() {
+        return false;
+    }
+});
+
 tr.setAnswers(a);
 tr.run();
