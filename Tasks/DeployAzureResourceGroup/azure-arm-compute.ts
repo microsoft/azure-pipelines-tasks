@@ -21,7 +21,7 @@ export class ComputeManagementClient extends azureServiceClient.ServiceClient {
         this.acceptLanguage = 'en-US';
         this.longRunningOperationRetryTimeout = 30;
         this.generateClientRequestId = true;
-
+        this.apiVersion = '2016-03-30';
         if (credentials === null || credentials === undefined) {
             throw new Error('\'credentials\' cannot be null');
         }
@@ -52,9 +52,9 @@ export class ComputeManagementClient extends azureServiceClient.ServiceClient {
 
     public getRequestUri(uriFormat: string, parameters: {}, queryParameters?: string[]): string {
         var requestUri = this.baseUri + uriFormat;
-        requestUri.replace('{subscriptionId}', encodeURIComponent(this.subscriptionId));
+        requestUri = requestUri.replace('{subscriptionId}', encodeURIComponent(this.subscriptionId));
         for (var key in parameters) {
-            requestUri.replace(key, encodeURIComponent(parameters[key]));
+            requestUri = requestUri.replace(key, encodeURIComponent(parameters[key]));
         }
 
         // trim all duplicate forward slashes in the url
@@ -67,7 +67,7 @@ export class ComputeManagementClient extends azureServiceClient.ServiceClient {
         if (queryParameters.length > 0) {
             requestUri += '?' + queryParameters.join('&');
         }
-        return requestUri
+        return requestUri;
     }
 
     public beginRequest(request: azureServiceClient.WebRequest): Promise<azureServiceClient.WebResponse> {
@@ -104,9 +104,6 @@ export class ComputeManagementClient extends azureServiceClient.ServiceClient {
     }
 
     public validate() {
-        if (this.apiVersion === null || this.apiVersion === undefined || typeof this.apiVersion.valueOf() !== 'string') {
-            throw new Error('this.client.apiVersion cannot be null or undefined and it must be of type string.');
-        }
         if (this.subscriptionId === null || this.subscriptionId === undefined || typeof this.subscriptionId.valueOf() !== 'string') {
             throw new Error('this.client.subscriptionId cannot be null or undefined and it must be of type string.');
         }
@@ -155,7 +152,7 @@ export class VirtualMachines {
 
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             if (response.statusCode == 200) {
-                var result = JSON.parse(response.body);
+                var result = response.body.value;
                 return callback(null, result);
             }
             else {
@@ -199,14 +196,15 @@ export class VirtualMachines {
             {
                 '{resourceGroupName}': resourceGroupName,
                 '{vmName}': vmName
-            }
+            },
+            ['$expand=' + encodeURIComponent(expand)]
         );
         // Set Headers
         httpRequest.headers = this.client.setHeaders(options);
 
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             if (response.statusCode == 200) {
-                var result = JSON.parse(response.body);
+                var result = response.body;
                 return callback(null, result);
             }
             return callback(azureServiceClient.ToError(response));
@@ -447,7 +445,7 @@ export class VirtualMachineExtensions {
 
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             if (response.statusCode == 200) {
-                var result = JSON.parse(response.body);
+                var result = response.body;
                 return callback(null, result);
             }
             return callback(azureServiceClient.ToError(response));

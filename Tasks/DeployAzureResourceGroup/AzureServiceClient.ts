@@ -37,16 +37,16 @@ export function ToError(response: WebResponse): Error {
 }
 
 export class ServiceClient {
-    private credentials: msRestAzure.ApplicationTokenCredentials;
+    private credential: msRestAzure.ApplicationTokenCredentials;
     private longRunningOperationTimeout: number;
 
     constructor(credentials: msRestAzure.ApplicationTokenCredentials) {
-        this.credentials = credentials;
+        this.credential = credentials;
         this.longRunningOperationTimeout = 30;
     }
 
     public async beginRequest(request: WebRequest): Promise<WebResponse> {
-        var token = await this.credentials.getToken();
+        var token = await this.credential.getToken();
         request.headers == request.headers || {};
         request.headers["Authorization"] = "Bearer " + token;
 
@@ -54,7 +54,7 @@ export class ServiceClient {
         if (httpResponse.statusCode === 401 && httpResponse.body.error.code === "ExpiredAuthenticationToken") {
 
             // The access token might have expire. Re-issue the request after refreshing the token.
-            token = await this.credentials.getToken(true);
+            token = await this.credential.getToken(true);
             request.headers["Authorization"] = "Bearer " + token;
             httpResponse = await this.beginRequestInternal(request);
         }
@@ -72,7 +72,7 @@ export class ServiceClient {
         while (true) {
             if (request.uri) {
                 response = await this.beginRequest(request);
-                if (response.statusCode === 202 || response.body.status == "Running") {
+                if (response.statusCode === 202 || response.body.status == "Running" || response.body.status == "InProgress") {
                     // If timeout; throw;
                     if (timeout < new Date().getTime()) {
                         throw ("Timeout out while waiting for the operation to complete.")

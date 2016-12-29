@@ -23,7 +23,6 @@ export class NetworkManagementClient extends azureServiceClient.ServiceClient {
         this.acceptLanguage = 'en-US';
         this.longRunningOperationRetryTimeout = 30;
         this.generateClientRequestId = true;
-        this.models = {};
 
         if (credentials === null || credentials === undefined) {
             throw new Error('\'credentials\' cannot be null.');
@@ -63,9 +62,9 @@ export class NetworkManagementClient extends azureServiceClient.ServiceClient {
 
     public getRequestUri(uriFormat: string, parameters: {}, queryParameters?: string[]): string {
         var requestUri = this.baseUri + uriFormat;
-        requestUri.replace('{subscriptionId}', encodeURIComponent(this.subscriptionId));
+        requestUri = requestUri.replace('{subscriptionId}', encodeURIComponent(this.subscriptionId));
         for (var key in parameters) {
-            requestUri.replace(key, encodeURIComponent(parameters[key]));
+            requestUri = requestUri.replace(key, encodeURIComponent(parameters[key]));
         }
 
         // trim all duplicate forward slashes in the url
@@ -172,7 +171,7 @@ export class loadBalancers {
         //send request
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             if (response.statusCode == 200) {
-                return callback(null, response.body);
+                return callback(null, response.body.value);
             }
             return callback(azureServiceClient.ToError(response));
         }).catch((error) => callback(error));
@@ -288,7 +287,7 @@ export class loadBalancers {
                     // Generate Error
                     return callback(azureServiceClient.ToError(response));
                 }
-            });
+            }).catch((error) => callback(error));
         }).catch((error) => callback(error));
     }
 }
@@ -334,7 +333,7 @@ export class publicIPAddresses {
 
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             if (response.statusCode == 200) {
-                var result = JSON.parse(response.body);
+                var result = response.body.value;
                 return callback(null, result);
             }
             return callback(azureServiceClient.ToError(response));
@@ -385,7 +384,7 @@ export class networkSecurityGroups {
 
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             if (response.statusCode == 200) {
-                var result = JSON.parse(response.body);
+                var result = response.body;
                 return callback(null, result);
             }
             callback(azureServiceClient.ToError(response));
@@ -433,7 +432,7 @@ export class NetworkInterfaces {
 
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             if (response.statusCode == 200) {
-                var result = JSON.parse(response.body);
+                var result = response.body.value;
                 return callback(null, result);
             }
             return callback(azureServiceClient.ToError(response));
@@ -552,7 +551,7 @@ export class securityRules {
         // Send Request
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             if (response.statusCode == 200) {
-                var result = JSON.parse(response.body);
+                var result = response.body;
                 return callback(null, result);
             }
             return callback(azureServiceClient.ToError(response));
@@ -617,7 +616,7 @@ export class securityRules {
             }
             this.client.getLongRunningOperationResult(response).then((operationResponse) => {
                 if (operationResponse.body.status === "Succeeded") {
-                    callback(null, JSON.parse(operationResponse.body));
+                    callback(null, operationResponse.body);
                 }
                 callback(azureServiceClient.ToError(operationResponse));
             }).catch((error) => callback(error));
