@@ -17,6 +17,8 @@ describe('AzureNLBManagement Suite', () => {
         let tmr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tmr.run();
 
+        console.log(tmr.stdout);
+        console.log(tmr.stderr);
         assert(tmr.stderr.length == 0 && tmr.errorIssues.length == 0, 'should not have written to stderr');
         assert(tmr.stdOutContained("Getting Primary Network Interface for the virtual machine : test-vm"), "should have said : Getting Primary Network Interface for the virtual machine : test-vm");
         assert(tmr.stdOutContained("Network Interface - test-nic1's configuration details fetched for the virtual machine test-vm"), "should have said : Network Interface - test-nic1's configuration details fetched for the virtual machine test-vm");
@@ -27,6 +29,7 @@ describe('AzureNLBManagement Suite', () => {
         assert(tmr.succeeded, 'task should have succeeded');
     	done();
     });
+    /*
     it('connects the virtual machine successfully to the load balancer\'s backend pool', (done: MochaDone) => {
     	let tp = path.join(__dirname, 'L0ConnectSuccess.js');
         let tmr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -93,5 +96,5 @@ describe('AzureNLBManagement Suite', () => {
         assert(tmr.failed, 'task should have failed');
 
         done();
-    });
+    });*/
 });
