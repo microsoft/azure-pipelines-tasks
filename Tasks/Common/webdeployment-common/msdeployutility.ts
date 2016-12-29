@@ -98,22 +98,11 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
  * @returns boolean
  */
 export async  function containsParamFile(webAppPackage: string ) {
-    var msDeployPath = await getMSDeployFullPath();
-    var parameterFile;
-
-    var msDeployDirectory = msDeployPath.slice(0, msDeployPath.lastIndexOf('\\') + 1);
-    var pathVar = process.env.PATH;
-    process.env.PATH = msDeployDirectory + ";" + process.env.PATH;
-    var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package=\'" + webAppPackage + "\'";
-    
-    parameterFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'parameter.xml';
+    var parameterFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'parameter.xml';
     var fd = fs.openSync(parameterFile, "w");
     var outputObj = fs.createWriteStream("",{"fd": fd});
     
     try {
-        var msDeployDirectory = msDeployPath.slice(0, msDeployPath.lastIndexOf('\\') + 1);
-        var pathVar = process.env.PATH;
-        process.env.PATH = msDeployDirectory + ";" + process.env.PATH;
         var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package=\'" + webAppPackage + "\'";
         await tl.exec("msdeploy", msDeployCheckParamFileCmdArgs, <any>{ failOnStdErr: true, outStream: outputObj });
     }
@@ -122,7 +111,6 @@ export async  function containsParamFile(webAppPackage: string ) {
     }
     finally {
         fs.closeSync(fd);
-        process.env.PATH = pathVar;
     }
 
     var paramContentXML = fs.readFileSync(parameterFile);

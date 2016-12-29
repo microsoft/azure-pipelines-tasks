@@ -44,7 +44,7 @@ export function fileExists(path): boolean {
  * 
  * @returns null when input is empty, otherwise returns same path.
  */
-export function getSetParamFilePath(setParametersFile: string) : string {
+export function copySetParamFileIfItExists(setParametersFile: string) : string {
 
     if(setParametersFile === null || (!tl.filePathSupplied('SetParametersFile')) || setParametersFile == tl.getVariable('System.DefaultWorkingDirectory')) {
         setParametersFile = null;

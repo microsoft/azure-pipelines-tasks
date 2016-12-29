@@ -22,7 +22,12 @@ var utility = require('./utility.js');
 export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag, 
         excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments, isFolderBasedDeployment, useWebDeploy) {
 
-    setParametersFile = utility.getSetParamFilePath(setParametersFile);
+    var msDeployPath = await msDeployUtility.getMSDeployFullPath();
+    var msDeployDirectory = msDeployPath.slice(0, msDeployPath.lastIndexOf('\\') + 1);
+    pathVar = process.env.PATH;
+    process.env.PATH = msDeployDirectory + ";" + process.env.PATH ;
+
+    setParametersFile = utility.copySetParamFileIfItExists(setParametersFile);
     var setParametersFileName = null;
     var pathVar;
     if(setParametersFile != null) {
@@ -39,9 +44,6 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
     var errObj = fs.createWriteStream("", {fd: fd} );
      
     try {
-        var msDeployDirectory = msDeployPath.slice(0, msDeployPath.lastIndexOf('\\') + 1);
-        pathVar = process.env.PATH;
-        process.env.PATH = msDeployDirectory + ";" + process.env.PATH ;
         await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj})
         if(publishingProfile != null) {
             tl._writeLine(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
