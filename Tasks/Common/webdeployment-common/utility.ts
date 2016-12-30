@@ -117,6 +117,8 @@ export function findfiles(filepath){
         // Now we get a list of all files under this root
         var allFiles = tl.find(findPathRoot);
 
+        console.log(allFiles);
+        console.log('Pattern: ' + filepath);
         // Now matching the pattern against all files
         filesList = tl.match(allFiles, filepath, '', {matchBase: true});
 
