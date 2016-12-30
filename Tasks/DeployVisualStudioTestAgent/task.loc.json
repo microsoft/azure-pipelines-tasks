@@ -11,12 +11,14 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
+    "Major": 2,
     "Minor": 0,
-    "Patch": 43
+    "Patch": 0
   },
+  "preview": "true",
+  "releaseNotes": "Support for Test Agent 2017",
   "demands": [],
-  "minimumAgentVersion": "1.104.0",
+  "minimumAgentVersion": "2.0.0",
   "groups": [
     {
       "name": "testMachineGroups",
@@ -36,25 +38,12 @@
   ],
   "inputs": [
     {
-      "name": "testPlatform",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.testPlatform",
-      "defaultValue": "14.0",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.testPlatform",
-      "groupName": "testMachineGroups",
-      "options": {
-        "15.0": "Visual Studio 2017",
-        "14.0": "Visual Studio 2015"
-      }
-    },
-    {
-      "name": "testMachineGroup",
+      "name": "testMachines",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.testMachineGroup",
+      "label": "ms-resource:loc.input.label.testMachines",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.testMachineGroup",
+      "helpMarkDown": "ms-resource:loc.input.help.testMachines",
       "groupName": "testMachineGroups"
     },
     {
@@ -62,7 +51,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.adminUserName",
       "defaultValue": "",
-      "required": false,
+      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.adminUserName",
       "groupName": "testMachineGroups"
     },
@@ -71,7 +60,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.adminPassword",
       "defaultValue": "",
-      "required": false,
+      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.adminPassword",
       "groupName": "testMachineGroups"
     },
@@ -79,8 +68,8 @@
       "name": "winRmProtocol",
       "type": "radio",
       "label": "ms-resource:loc.input.label.winRmProtocol",
-      "required": false,
-      "defaultValue": "",
+      "required": true,
+      "defaultValue": "HTTP",
       "options": {
         "Http": "HTTP",
         "Https": "HTTPS"
@@ -96,27 +85,6 @@
       "visibleRule": "winRmProtocol = Https",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.testCertificate",
-      "groupName": "testMachineGroups"
-    },
-    {
-      "name": "resourceFilteringMethod",
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.resourceFilteringMethod",
-      "required": false,
-      "defaultValue": "machineNames",
-      "options": {
-        "machineNames": "Machine Names",
-        "tags": "Tags"
-      },
-      "groupName": "testMachineGroups"
-    },
-    {
-      "name": "testMachines",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.testMachines",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.testMachines",
       "groupName": "testMachineGroups"
     },
     {
@@ -147,6 +115,28 @@
       "groupName": "agentConfiguration"
     },
     {
+      "name": "isDataCollectionOnly",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.isDataCollectionOnly",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.isDataCollectionOnly",
+      "groupName": "agentConfiguration"
+    },
+    {
+      "name": "testPlatform",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.testPlatform",
+      "defaultValue": "14.0",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.testPlatform",
+      "groupName": "advanced",
+      "options": {
+        "15.0": "Visual Studio 2017",
+        "14.0": "Visual Studio 2015"
+      }
+    },
+    {
       "name": "agentLocation",
       "type": "string",
       "label": "ms-resource:loc.input.label.agentLocation",
@@ -159,18 +149,9 @@
       "name": "updateTestAgent",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.updateTestAgent",
-      "defaultValue": "true",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.updateTestAgent",
-      "groupName": "advanced"
-    },
-    {
-      "name": "isDataCollectionOnly",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.isDataCollectionOnly",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.isDataCollectionOnly",
+      "helpMarkDown": "ms-resource:loc.input.help.updateTestAgent",
       "groupName": "advanced"
     }
   ],

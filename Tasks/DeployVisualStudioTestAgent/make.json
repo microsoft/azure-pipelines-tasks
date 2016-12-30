@@ -9,7 +9,7 @@
         "files": [
             {
                 "url": "https://testexecution.blob.core.windows.net/version1/TestExecution.zip",
-                "dest": "./"
+                "dest": "./TestExecution.zip"
             }
         ]
     }

@@ -5,20 +5,18 @@ Trace-VstsEnteringInvocation $MyInvocation
 try {
     Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
-    $testMachineGroup           = Get-VstsInput -Name testMachineGroup -Require
-    $adminUserName              = Get-VstsInput -Name adminUserName
-    $adminPassword              = Get-VstsInput -Name adminPassword
-    $winRmProtocol              = Get-VstsInput -Name winRmProtocol
+    $testMachines               = Get-VstsInput -Name testMachines -Require
+    $adminUserName              = Get-VstsInput -Name adminUserName -Require
+    $adminPassword              = Get-VstsInput -Name adminPassword -Require
+    $winRmProtocol              = Get-VstsInput -Name winRmProtocol -Require
     $testCertificate            = Get-VstsInput -Name testCertificate
-    $resourceFilteringMethod    = Get-VstsInput -Name resourceFilteringMethod
-    $testMachines               = Get-VstsInput -Name testMachines
-    $runAsProcess               = Get-VstsInput -Name runAsProcess
     $machineUserName            = Get-VstsInput -Name machineUserName -Require
     $machinePassword            = Get-VstsInput -Name machinePassword -Require
+    $runAsProcess               = Get-VstsInput -Name runAsProcess
+    $isDataCollectionOnly       = Get-VstsInput -Name isDataCollectionOnly
+    $testPlatform               = Get-VstsInput -Name testPlatform -Require
     $agentLocation              = Get-VstsInput -Name agentLocation
     $updateTestAgent            = Get-VstsInput -Name updateTestAgent
-    $isDataCollectionOnly       = Get-VstsInput -Name isDataCollectionOnly
-    $testPlatform               = Get-VstsInput -Name testPlatform
 
     # If Run as process (Run UI Tests) is true both autologon and disable screen saver needs to be true.
     $logonAutomatically = $runAsProcess
@@ -27,20 +25,18 @@ try {
     Write-Host "****************************************************************"
     Write-Host "                    Task Input Information                      "
     Write-Host "----------------------------------------------------------------"
-    Write-Host "testMachineInput         = $testMachineGroup"
+    Write-Host "testMachineInput         = $testMachines"
     Write-Host "adminUserName            = $adminUserName"
-    Write-Host "machineUserName          = $machineUserName"
-    Write-Host "WinRmProtocal            = $winRmProtocol"
+    Write-Host "winRmProtocal            = $winRmProtocol"
     Write-Host "testCertificate          = $testCertificate"
-    Write-Host "resourceFilteringMethod  = $resourceFilteringMethod"
-    Write-Host "filter testMachines      = $testMachines"
+    Write-Host "machineUserName          = $machineUserName"
     Write-Host "runAsProcess             = $runAsProcess"
     Write-Host "logonAutomatically       = $logonAutomatically"
     Write-Host "disableScreenSaver       = $disableScreenSaver"
-    Write-Host "updateTestAgent          = $updateTestAgent"
     Write-Host "isDataCollectionOnly     = $isDataCollectionOnly"
     Write-Host "testPlatform             = $testPlatform"
     Write-Host "agentLocation            = $agentLocation"
+    Write-Host "updateTestAgent          = $updateTestAgent"
     Write-Host "****************************************************************"
 
     $downloadTestAgentScript            = "$PSScriptRoot\DownloadTestAgent.ps1"
@@ -81,11 +77,11 @@ try {
     try
     {
         Write-Verbose "Completed Register-Environment" -Verbose
-        $environment = Register-Environment -EnvironmentName $testMachineGroup -EnvironmentSpecification $testMachineGroup -ResourceFilter $testMachines -WinRmProtocol $winRmProtocol -TestCertificate ($testCertificate -eq "true") -UserName $adminUserName -Password $adminPassword
+        $environment = Register-Environment -EnvironmentName $testMachines -EnvironmentSpecification $testMachines -WinRmProtocol $winRmProtocol -TestCertificate ($testCertificate -eq "true") -UserName $adminUserName -Password $adminPassword
         Write-Verbose "Completed Register-Environment" -Verbose
 
         $deployParams = New-Object 'System.Collections.Generic.Dictionary[String,Object]'
-        $deployParams.Add("environmentname", $testMachineGroup)
+        $deployParams.Add("environmentname", $testMachines)
         $deployParams.Add("environment", $environment)
         $deployParams.Add("username", $machineUserName)
         $deployParams.Add("password", $machinePassword)

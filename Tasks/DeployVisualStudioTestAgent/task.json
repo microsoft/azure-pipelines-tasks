@@ -11,16 +11,18 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
+        "Major": 2,
         "Minor": 0,
-        "Patch": 43
+        "Patch": 0
     },
+    "preview": "true",
+    "releaseNotes" : "Support for Test Agent 2017",
     "demands": [],
-    "minimumAgentVersion": "1.104.0",
+    "minimumAgentVersion": "2.0.0",
     "groups": [
         {
             "name": "testMachineGroups",
-            "displayName": "Test Machine Group",
+            "displayName": "Test Machines",
             "isExpanded": true
         },
         {
@@ -36,25 +38,12 @@
     ],
     "inputs": [
         {
-            "name": "testPlatform",
-            "type": "pickList",
-            "label": "Test Platform version",
-            "defaultValue": "14.0",
-            "required": false,
-            "helpMarkDown": "The version of VSTest to use.",
-            "groupName": "testMachineGroups",
-            "options": {
-                "15.0": "Visual Studio 2017",
-                "14.0": "Visual Studio 2015"
-            }
-        },
-        {
-            "name": "testMachineGroup",
+            "name": "testMachines",
             "type": "multiLine",
             "label": "Machines",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the selected protocol. Eg: `dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986` Or provide output variable of other tasks. Eg: `$(variableName)` Or provide a Machine Group Name.` If you are using HTTPS, name/IP of machine should match the CN in the certificate.",
+            "helpMarkDown": "Provide a comma separated list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the selected protocol. Eg: `dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986` Or provide output variable of other tasks. Eg: `$(variableName)`. If you are using HTTPS, name/IP of machine should match the CN in the certificate.",
             "groupName": "testMachineGroups"
         },
         {
@@ -62,7 +51,7 @@
             "type": "string",
             "label": "Admin Login",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "helpMarkDown": "Administrator login for the target machines.",
             "groupName": "testMachineGroups"
         },
@@ -71,7 +60,7 @@
             "type": "string",
             "label": "Admin Password",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "helpMarkDown": "Administrator password for the target machines. <br>It can accept variable defined in Build/Release definitions as `$(passwordVariable)`. <br>You may mark variable type as 'secret' to secure it.",
             "groupName": "testMachineGroups"
         },
@@ -79,13 +68,13 @@
             "name": "winRmProtocol",
             "type": "radio",
             "label": "Protocol",
-            "required": false,
-            "defaultValue": "",
+            "required": true,
+            "defaultValue": "HTTP",
             "options": {
                 "Http": "HTTP",
                 "Https": "HTTPS"
             },
-            "helpMarkDown": "Select the protocol to use for the WinRM connection with the machine(s). Default is `HTTPS`.",
+            "helpMarkDown": "Select the protocol to use for the WinRM connection with the machine(s). Default is `HTTP`.",
             "groupName": "testMachineGroups"
         },
         {
@@ -96,27 +85,6 @@
             "visibleRule": "winRmProtocol = Https",
             "required": false,
             "helpMarkDown": "Select the option to skip validating the authenticity of the machine's certificate by a trusted certification authority. The parameter is required for the WinRM HTTPS protocol.",
-            "groupName": "testMachineGroups"
-        },
-        {
-            "name": "resourceFilteringMethod",
-            "type": "radio",
-            "label": "Select Machines By",
-            "required": false,
-            "defaultValue": "machineNames",
-            "options": {
-                "machineNames": "Machine Names",
-                "tags": "Tags"
-            },
-            "groupName": "testMachineGroups"
-        },
-        {
-            "name": "testMachines",
-            "type": "string",
-            "label": "Filter Criteria",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Provide a list of machines like `dbserver.fabrikam.com, dbserver_int.fabrikam.com, 192.168.12.34 or tags like Role:DB;OS:Win8.1`. Returns machines with either of the tags. For Azure Resource Group provide the VM Host Name for the machine name. The default is to deploy agent on all machines represented in the Machines field.",
             "groupName": "testMachineGroups"
         },
         {
@@ -147,6 +115,28 @@
             "groupName": "agentConfiguration"
         },
         {
+            "name": "isDataCollectionOnly",
+            "type": "boolean",
+            "label": "Enable Data Collection Only",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Optionally specify if test agent needs to be used only for datacollection and not for running tests. Typically done on application under test(AUT) machine group.",
+            "groupName": "agentConfiguration"
+        },
+        {
+            "name": "testPlatform",
+            "type": "pickList",
+            "label": "Test agent version",
+            "defaultValue": "14.0",
+            "required": false,
+            "helpMarkDown": "The version of Visual Studio test to use.",
+            "groupName": "advanced",
+            "options": {
+                "15.0": "Visual Studio 2017",
+                "14.0": "Visual Studio 2015"
+            }
+        },
+        {
             "name": "agentLocation",
             "type": "string",
             "label": "Test Agent Location",
@@ -159,18 +149,9 @@
             "name": "updateTestAgent",
             "type": "boolean",
             "label": "Update Test Agent",
-            "defaultValue": "true",
-            "required": false,
-            "helpMarkDown": "Optionally specify if test agent needs to be updated.",
-            "groupName": "advanced"
-        },
-        {
-            "name": "isDataCollectionOnly",
-            "type": "boolean",
-            "label": "Enable Data Collection Only",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Optionally specify if test agent needs to be used only for datacollection and not for running tests. Typically done on application under test(AUT) machine group.",
+            "helpMarkDown": "Optionally specify if test agent needs to be updated.",
             "groupName": "advanced"
         }
     ],

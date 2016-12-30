@@ -99,7 +99,7 @@
             $Processinfo.EnvironmentVariables.Add("DTA.AgentId", $DtaAgent.Id);
             $Processinfo.EnvironmentVariables.Add("DTA.EnvironmentUri", $EnvironmentUrl);
             $Processinfo.EnvironmentVariables.Add("DTA.TeamFoundationCollectionUri", $TfsCollection);
-            $Processinfo.EnvironmentVariables.Add("DTA.TestPlatfromVersion", $TestAgentVersion);
+            $Processinfo.EnvironmentVariables.Add("DTA.TestPlatformVersion", $TestAgentVersion);
             $Processinfo.UseShellExecute = $false
             $Processinfo.LoadUserProfile = $false
             $Processinfo.CreateNoWindow = $true
