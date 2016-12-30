@@ -1,6 +1,5 @@
 var httpClient = require('vso-node-api/HttpClient');
 import msRestAzure = require("./ms-rest-azure");
-import Q = require("q");
 var uuid = require('uuid');
 
 var httpCallbackClient = new httpClient.HttpCallbackClient("VSTS_AGENT");
@@ -16,6 +15,20 @@ export class WebResponse {
     public statusCode;
     public headers;
     public body;
+}
+
+export class ApiResult {
+    public error;
+    public result;
+    public request;
+    public response;
+
+    constructor(error, result?, request?, response?) {
+        this.error = error;
+        this.result = result;
+        this.request = request;
+        this.response = response;
+    }
 }
 
 export class Error {
@@ -38,11 +51,9 @@ export function ToError(response: WebResponse): Error {
 
 export class ServiceClient {
     private credential: msRestAzure.ApplicationTokenCredentials;
-    private longRunningOperationTimeout: number;
 
     constructor(credentials: msRestAzure.ApplicationTokenCredentials) {
         this.credential = credentials;
-        this.longRunningOperationTimeout = 30;
     }
 
     public async beginRequest(request: WebRequest): Promise<WebResponse> {
@@ -52,7 +63,6 @@ export class ServiceClient {
 
         var httpResponse = await this.beginRequestInternal(request);
         if (httpResponse.statusCode === 401 && httpResponse.body.error.code === "ExpiredAuthenticationToken") {
-
             // The access token might have expire. Re-issue the request after refreshing the token.
             token = await this.credential.getToken(true);
             request.headers["Authorization"] = "Bearer " + token;
@@ -63,12 +73,16 @@ export class ServiceClient {
     }
 
     public async getLongRunningOperationResult(response: WebResponse, timeoutInMinutes?: number): Promise<WebResponse> {
-        var deferred = Q.defer<WebResponse>();
-        var request = new WebRequest();
-        request.method = "GET";
         timeoutInMinutes = timeoutInMinutes || 60;
         var timeout = new Date().getTime() + timeoutInMinutes * 60 * 1000;
+
+        var request = new WebRequest();
+        request.method = "GET";
         request.uri = response.headers["azure-asyncoperation"] || response.headers["location"];
+        if (!request.uri) {
+            throw "Invalid response of a long running operation.";
+        }
+
         while (true) {
             if (request.uri) {
                 response = await this.beginRequest(request);
@@ -85,16 +99,31 @@ export class ServiceClient {
                     }
                     await this.sleepFor(sleepDuration);
                 }
-                else {
-                    break;
-                }
             }
             else {
-                throw "Invalid response of a long running operation.";
+                break;
             }
         }
 
         return response;
+    }
+
+    public async accumulateResultFromPagedResult(nextLinkUrl: string): Promise<ApiResult> {
+        var result = [];
+        while (nextLinkUrl) {
+            var nextRequest = new WebRequest();
+            nextRequest.method = 'GET';
+            nextRequest.uri = nextLinkUrl;
+            var response = await this.beginRequest(nextRequest);
+            if (response.statusCode == 200 && response.body.value) {
+                result.concat(response.body.value)
+            }
+            else {
+                return new ApiResult(ToError(response));
+            }
+        }
+
+        return new ApiResult(null, result);
     }
 
     private toWebResponse(response, body): WebResponse {
@@ -115,18 +144,18 @@ export class ServiceClient {
         return res;
     }
 
-    private beginRequestInternal(request: WebRequest): Q.Promise<WebResponse> {
-        var deferred = Q.defer<WebResponse>();
-        httpCallbackClient.send(request.method, request.uri, request.body, request.headers, (error, response, body) => {
-            if (error) {
-                deferred.reject(error);
-            }
-            else {
-                var httpResponse = this.toWebResponse(response, body);
-                deferred.resolve(httpResponse);
-            }
+    private beginRequestInternal(request: WebRequest): Promise<WebResponse> {
+        return new Promise<WebResponse>((resolve, reject) => {
+            httpCallbackClient.send(request.method, request.uri, request.body, request.headers, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                }
+                else {
+                    var httpResponse = this.toWebResponse(response, body);
+                    resolve(httpResponse);
+                }
+            });
         });
-        return deferred.promise;
     }
 
     private sleepFor(sleepDurationInSeconds): Promise<any> {
