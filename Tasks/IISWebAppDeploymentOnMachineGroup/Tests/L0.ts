@@ -1,3 +1,4 @@
+import * as tl from 'vsts-task-lib';
 import * as path from 'path';
 import * as assert from 'assert';
 import * as ttm from 'vsts-task-lib/mock-test';
@@ -12,6 +13,9 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
 
     });
 
+    if(!tl.osType().match(/^Win/)) {
+        return;
+    }
     it('Runs successfully with default inputs', (done:MochaDone) => {
         let tp = path.join(__dirname, 'L0WindowsDefault.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
