@@ -10,8 +10,8 @@ export class NetworkManagementClient extends azureServiceClient.ServiceClient {
     public longRunningOperationRetryTimeout;
     private generateClientRequestId;
     private subscriptionId;
-    public credentials;
-    public baseUri;
+    private baseUri;
+
     public networkSecurityGroups;
     public networkInterfaces;
     public publicIPAddresses;
@@ -38,7 +38,6 @@ export class NetworkManagementClient extends azureServiceClient.ServiceClient {
         if (!this.baseUri) {
             this.baseUri = 'https://management.azure.com';
         }
-        this.credentials = credentials;
         this.subscriptionId = subscriptionId;
 
         if (options.apiVersion !== null && options.apiVersion !== undefined) {
@@ -96,7 +95,7 @@ export class NetworkManagementClient extends azureServiceClient.ServiceClient {
         return super.beginRequest(request);
     }
 
-    public setHeaders(options): {} {
+    public setCustomHeaders(options): {} {
         var headers = {};
         if (options) {
             for (var headerName in options['customHeaders']) {
@@ -145,13 +144,13 @@ export class loadBalancers {
             }
         );
         // Set Headers
-        httpRequest.headers = this.client.setHeaders(options);
+        httpRequest.headers = this.client.setCustomHeaders(options);
         httpRequest.body = null;
 
         //send request
         var result = [];
         this.client.beginRequest(httpRequest).then(async (response: azureServiceClient.WebResponse) => {
-            var deferred = Q.defer();
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode == 200) {
                 if (response.body.value) {
                     result = result.concat(response.body.value);
@@ -164,6 +163,7 @@ export class loadBalancers {
                     }
                     result.concat(nextResult.result);
                 }
+
                 deferred.resolve(new azureServiceClient.ApiResult(null, result));
             }
             else {
@@ -202,19 +202,16 @@ export class loadBalancers {
         // Create HTTP transport objects
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'GET';
-        httpRequest.headers = {
-            authorization: 'Bearer ' + this.client.credentials
-        };
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/loadBalancers/{loadBalancerName}',
             {
                 '{resourceGroupName}': resourceGroupName,
                 '{loadBalancerName}': loadBalancerName
             });
-        httpRequest.headers = this.client.setHeaders(options);
+        httpRequest.headers = this.client.setCustomHeaders(options);
         httpRequest.body = null;
 
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
-            var deferred = Q.defer();
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode == 200) {
                 deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
             }
@@ -260,19 +257,14 @@ export class loadBalancers {
                 '{loadBalancerName}': loadBalancerName
             });
         // Set Headers
-        httpRequest.headers = this.client.setHeaders(options);
-
-        /// Serialize Request
-        var requestContent = null;
-        var requestModel = null;
+        httpRequest.headers = this.client.setCustomHeaders(options);
 
         if (parameters !== null && parameters !== undefined) {
-            requestContent = JSON.stringify(parameters);
+            httpRequest.body = JSON.stringify(parameters);
         }
 
-        httpRequest.body = requestContent;
         this.client.beginRequest(httpRequest).then((response) => {
-            var deferred = Q.defer();
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
             if (statusCode != 200 && statusCode != 201) {
                 deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
@@ -321,20 +313,17 @@ export class publicIPAddresses {
         // Create HTTP transport objects
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'GET';
-        httpRequest.headers = {
-            authorization: 'Bearer ' + client.credentials
-        };
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/publicIPAddresses',
             {
                 '{resourceGroupName}': resourceGroupName
             });
         // Set Headers
-        httpRequest.headers = this.client.setHeaders(options);
+        httpRequest.headers = this.client.setCustomHeaders(options);
         httpRequest.body = null;
 
         var result = [];
         this.client.beginRequest(httpRequest).then(async (response: azureServiceClient.WebResponse) => {
-            var deferred = Q.defer();
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode == 200) {
                 if (response.body.value) {
                     result = result.concat(response.body.value);
@@ -384,9 +373,6 @@ export class networkSecurityGroups {
         // Create HTTP transport objects
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'GET';
-        httpRequest.headers = {
-            authorization: 'Bearer ' + this.client.credentials
-        };
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkSecurityGroups',
             {
                 '{resourceGroupName}': resourceGroupName
@@ -394,12 +380,12 @@ export class networkSecurityGroups {
         );
 
         // Set Headers
-        httpRequest.headers = this.client.setHeaders(options);
+        httpRequest.headers = this.client.setCustomHeaders(options);
         httpRequest.body = null;
 
         var result = [];
         this.client.beginRequest(httpRequest).then(async (response: azureServiceClient.WebResponse) => {
-            var deferred = Q.defer();
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode == 200) {
                 if (response.body.value) {
                     result = result.concat(response.body.value);
@@ -448,20 +434,17 @@ export class NetworkInterfaces {
 
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'GET';
-        httpRequest.headers = {
-            authorization: 'Bearer ' + this.client.credentials
-        };
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces',
             {
                 '{resourceGroupName}': resourceGroupName
             }
         );
-        httpRequest.headers = this.client.setHeaders(options);
+        httpRequest.headers = this.client.setCustomHeaders(options);
         httpRequest.body = null;
 
         var result = [];
         this.client.beginRequest(httpRequest).then(async (response: azureServiceClient.WebResponse) => {
-            var deferred = Q.defer();
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode == 200) {
                 if (response.body.value) {
                     result = result.concat(response.body.value);
@@ -511,31 +494,19 @@ export class NetworkInterfaces {
         // Create HTTP transport objects
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'PUT';
-        httpRequest.headers = {};
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces/{networkInterfaceName}',
             {
                 '{networkInterfaceName}': networkInterfaceName,
                 '{resourceGroupName}': resourceGroupName
             }
         );
-        httpRequest.headers = this.client.setHeaders(options);
-
-        var requestContent = null;
-        var requestModel = null;
-        try {
-            if (parameters !== null && parameters !== undefined) {
-                requestContent = JSON.stringify(parameters);
-            }
+        httpRequest.headers = this.client.setCustomHeaders(options);
+        if (parameters) {
+            httpRequest.body = JSON.stringify(parameters);
         }
-        catch (error) {
-            var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' +
-                'payload - "%s"', error.message, util.inspect(parameters, { depth: null })));
-            return callback(serializationError);
-        }
-        httpRequest.body = requestContent;
 
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
-            var deferred = Q.defer();
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode != 200 && response.statusCode != 201) {
                 deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
@@ -594,18 +565,13 @@ export class securityRules {
                 '{securityRuleName}': securityRuleName
             }
         );
-        httpRequest.headers = this.client.setHeaders(options);
+        httpRequest.headers = this.client.setCustomHeaders(options);
         httpRequest.body = null;
         // Send Request
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
-            var deferred = Q.defer();
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode == 200) {
-                if (response.body.value) {
-                    deferred.resolve(new azureServiceClient.ApiResult(null, response.body.value));
-                }
-                else {
-                    deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
-                }
+                deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
             }
             else {
                 deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
@@ -649,24 +615,13 @@ export class securityRules {
             }
         );
 
-        httpRequest.headers = this.client.setHeaders(null);
-        // Serialize Request
-        var requestContent = null;
-        var requestModel = null;
-        try {
-            if (securityRuleParameters !== null && securityRuleParameters !== undefined) {
-                requestContent = JSON.stringify(securityRuleParameters);
-            }
-        } catch (error) {
-            // Todo: error for json parsing the parameters
-            var stringificationError = new Error(util.format('Error "%s" occurred in reading the ' +
-                'parameters - "%s"', error.message, util.inspect(securityRuleParameters, { depth: null })));
-            return callback(stringificationError);
+        httpRequest.headers = this.client.setCustomHeaders(null);
+        if (securityRuleParameters) {
+            httpRequest.body = JSON.stringify(securityRuleParameters);
         }
-        httpRequest.body = requestContent;
 
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
-            var deferred = Q.defer();
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
             if (statusCode != 200 && statusCode != 201) {
                 deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));

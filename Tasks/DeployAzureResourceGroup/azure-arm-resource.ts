@@ -107,7 +107,7 @@ export class ResourceGroups {
         );
 
         // Send Request and process response.
-        return this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             if (response.statusCode == 204 || response.statusCode == 404) {
                 return new azureServiceClient.ApiResult(null, response.statusCode == 204);
             }
@@ -338,7 +338,7 @@ export class Deployments {
         );
 
         // Send Request and process response.
-        return this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             if (response.statusCode != 200) {
                 return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
             }
