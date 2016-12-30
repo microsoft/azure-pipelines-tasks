@@ -16,7 +16,7 @@
         "Patch": 0
     },
     "preview": "true",
-    "releaseNotes" : "Support for Test Agent 2017",
+    "releaseNotes" : "Support for Test Agent 2017. Machine group is no longer supported.",
     "demands": [],
     "minimumAgentVersion": "2.0.0",
     "groups": [
@@ -49,7 +49,7 @@
         {
             "name": "adminUserName",
             "type": "string",
-            "label": "Admin Login",
+            "label": "Admin login",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Administrator login for the target machines.",
@@ -58,7 +58,7 @@
         {
             "name": "adminPassword",
             "type": "string",
-            "label": "Admin Password",
+            "label": "Admin password",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Administrator password for the target machines. <br>It can accept variable defined in Build/Release definitions as `$(passwordVariable)`. <br>You may mark variable type as 'secret' to secure it.",
@@ -69,10 +69,10 @@
             "type": "radio",
             "label": "Protocol",
             "required": true,
-            "defaultValue": "HTTP",
+            "defaultValue": "Http",
             "options": {
-                "Http": "HTTP",
-                "Https": "HTTPS"
+                "Http": "Http",
+                "Https": "Https"
             },
             "helpMarkDown": "Select the protocol to use for the WinRM connection with the machine(s). Default is `HTTP`.",
             "groupName": "testMachineGroups"
@@ -108,7 +108,7 @@
         {
             "name": "runAsProcess",
             "type": "boolean",
-            "label": "Run UI Tests",
+            "label": "Run UI tests",
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Denotes if test agent needs to run as an interactive process, needed for Coded UI Tests.",
@@ -117,7 +117,7 @@
         {
             "name": "isDataCollectionOnly",
             "type": "boolean",
-            "label": "Enable Data Collection Only",
+            "label": "Enable data collection only",
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Optionally specify if test agent needs to be used only for datacollection and not for running tests. Typically done on application under test(AUT) machine group.",
@@ -139,7 +139,7 @@
         {
             "name": "agentLocation",
             "type": "string",
-            "label": "Test Agent Location",
+            "label": "Test agent location",
             "defaultValue": "",
             "required": false,
             "groupName": "advanced",
@@ -148,7 +148,7 @@
         {
             "name": "updateTestAgent",
             "type": "boolean",
-            "label": "Update Test Agent",
+            "label": "Update test agent",
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Optionally specify if test agent needs to be updated.",

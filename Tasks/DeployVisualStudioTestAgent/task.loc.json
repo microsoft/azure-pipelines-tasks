@@ -69,10 +69,10 @@
       "type": "radio",
       "label": "ms-resource:loc.input.label.winRmProtocol",
       "required": true,
-      "defaultValue": "HTTP",
+      "defaultValue": "Http",
       "options": {
-        "Http": "HTTP",
-        "Https": "HTTPS"
+        "Http": "Http",
+        "Https": "Https"
       },
       "helpMarkDown": "ms-resource:loc.input.help.winRmProtocol",
       "groupName": "testMachineGroups"
