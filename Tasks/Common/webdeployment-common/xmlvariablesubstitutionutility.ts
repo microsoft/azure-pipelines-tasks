@@ -33,10 +33,9 @@ export async function substituteXmlVariables(configFile, tags, variableMap){
     var xmlDocument;
     try{
         xmlDocument = ltxdomutility.initializeDOM(webConfigContent);
-    } catch(error){
-        tl.debug("Unable to parse file : " + configFile);
-        tl.debug(error);
-        return;
+    }
+    catch(error){
+        throw Error(tl.loc('XMLParseError', configFile));
     }
     for(var index in tags) {
         var tag =  tags[index];
