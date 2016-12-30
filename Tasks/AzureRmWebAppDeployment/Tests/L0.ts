@@ -371,7 +371,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'L0WindowsManyPackage.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-        console.log(tr.stdout);
+
         assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
         assert(tr.stderr.length > 0 || tr.errorIssues.length > 0, 'should have written to stderr');
         var expectedErr = 'Error: loc_mock_MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern'; 
