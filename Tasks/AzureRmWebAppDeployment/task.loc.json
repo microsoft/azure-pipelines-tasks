@@ -294,6 +294,7 @@
     "VirtualApplicationDoesNotExist": "ms-resource:loc.messages.VirtualApplicationDoesNotExist",
     "JSONParseError": "ms-resource:loc.messages.JSONParseError",
     "JSONvariablesubstitutionappliedsuccessfully": "ms-resource:loc.messages.JSONvariablesubstitutionappliedsuccessfully",
-    "XMLvaiablesubstitutionappliedsuccessfully": "ms-resource:loc.messages.XMLvaiablesubstitutionappliedsuccessfully"
+    "XMLvaiablesubstitutionappliedsuccessfully": "ms-resource:loc.messages.XMLvaiablesubstitutionappliedsuccessfully",
+    "XMLParseError": "ms-resource:loc.messages.XMLParseError"
   }
 }
