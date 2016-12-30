@@ -7,7 +7,7 @@ var kuduLogUtil = require('azurerest-common/kududeploymentstatusutility.js');
 async function swapSlot(endPoint, resourceGroupName: string, webAppName: string, sourceSlot: string, swapWithProduction: boolean, targetSlot: string, preserveVnet: boolean) {
     try {
         await azureRmUtil.swapWebAppSlot(endPoint, resourceGroupName, webAppName, sourceSlot, targetSlot, preserveVnet);
-        tl._writeLine(tl.loc("Successfullyswappedslots", webAppName, sourceSlot, targetSlot));
+        console.log(tl.loc("Successfullyswappedslots", webAppName, sourceSlot, targetSlot));
     }
     catch(error) {
         if(!!error)
@@ -20,7 +20,7 @@ async function swapSlot(endPoint, resourceGroupName: string, webAppName: string,
 async function updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, slotFlag, slotName, taskResult, customMessage, deploymentId) {
     try {
         var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, slotFlag, slotName);
-        tl._writeLine(await azureRmUtil.updateDeploymentStatus(publishingProfile, taskResult, customMessage, deploymentId));
+        console.log(await azureRmUtil.updateDeploymentStatus(publishingProfile, taskResult, customMessage, deploymentId));
     }
     catch(exception) {
         tl.warning(exception);
@@ -58,15 +58,15 @@ async function run() {
         }
         switch(action) {
             case "Start Azure App Service": {
-                tl._writeLine(await azureRmUtil.startAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
+                console.log(await azureRmUtil.startAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
                 break;
             }
             case "Stop Azure App Service": {
-                tl._writeLine(await azureRmUtil.stopAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
+                console.log(await azureRmUtil.stopAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
                 break;
             }
             case "Restart Azure App Service": {
-                tl._writeLine(await azureRmUtil.restartAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
+                console.log(await azureRmUtil.restartAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
                 break;
             }
             case "Swap Slots": {

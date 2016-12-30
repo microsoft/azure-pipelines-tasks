@@ -51,7 +51,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 		"C:\\pattern\\**\\*.zip":["webAppPkg1", "webAppPkg2"]
 	},
     "find" : {
-        "C:\\pattern\\":['C:\\pattern\\webAppPkg.zip']
+        "C:\\pattern\\":['C:\\pattern\\webAppPkg.zip', 'C:\\pattern\\webAppPkg1.zip']
     },
     "exec": {
         "cmd /C DefaultWorkingDirectory\\msDeployCommand.bat": {

@@ -294,6 +294,6 @@
         "VirtualApplicationDoesNotExist" : "Virtual application doesn't exists : %s",
         "JSONParseError": "Unable to parse JSON file: %s. Error: %s",
         "JSONvariablesubstitutionappliedsuccessfully": "JSON variable substitution applied successfully.",
-        "XMLvaiablesubstitutionappliedsuccessfully": "XML vaiable substitution applied successfully."
+        "XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully."
     }
 }

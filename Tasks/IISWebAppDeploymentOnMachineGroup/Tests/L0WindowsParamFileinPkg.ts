@@ -26,7 +26,8 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
             "isFile" : true
         }
     },
-     "checkPath": {
+    "checkPath": {
+        "webAppPkg.zip": true,
         "msdeploy" : true
     },
     "osType": {

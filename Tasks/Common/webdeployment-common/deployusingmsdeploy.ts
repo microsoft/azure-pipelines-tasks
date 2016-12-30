@@ -46,7 +46,7 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
     try {
         await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj})
         if(publishingProfile != null) {
-            tl._writeLine(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
+            console.log(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
         }
     }
     catch (error) {

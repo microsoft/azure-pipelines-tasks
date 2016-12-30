@@ -30,7 +30,7 @@ process.env["RELEASE_RELEASEURI"] = "vstfs:///ReleaseManagement/Release/1";
 process.env["AGENT_NAME"] = "author";
 
 // provide answers for task mock
-let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
+let a: any = <any>{
     "which": {
         "msdeploy": "msdeploy"
     },
@@ -60,9 +60,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exist": {
     	"webAppPkg.zip": true,
         "DefaultWorkingDirectory\\error.txt": true        
-    },
-    "glob": {
-        "webAppPkg.zip": ["webAppPkg.zip"]
     },
     "getVariable": {
     	"ENDPOINT_AUTH_AzureRMSpn": "{\"parameters\":{\"serviceprincipalid\":\"spId\",\"serviceprincipalkey\":\"spKey\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}",

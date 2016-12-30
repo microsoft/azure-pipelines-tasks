@@ -22,9 +22,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     },
     "exist": {
     	"webAppPkg.zip": true
-    },
-    "glob": {
-        "webAppPkg.zip": ["webAppPkg.zip"]
     }
 };
 

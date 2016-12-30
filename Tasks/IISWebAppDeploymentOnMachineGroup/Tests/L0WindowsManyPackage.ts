@@ -6,7 +6,7 @@ let taskPath = path.join(__dirname, '..', 'deployiiswebapp.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput('WebSiteName', 'mytestwebsite');
-tr.setInput('Package', 'webAppPkgPattern');
+tr.setInput('Package', 'webAppPkgPattern/**/*.zip');
 
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  "DefaultWorkingDirectory";
 
@@ -17,12 +17,19 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     		"isFile": true
     	}
     },
+
+    "checkPath": {
+        "cmd": true,
+        "webAppPkgPattern": true
+    },
     "exist": {
     	"webAppPkg.zip": true,
+        "webAppPkg": true
     }, 
-    "glob": {
-        "webAppPkgPattern" : ["webAppPkg1", "webAppPkg2"]
+    "find": {
+        "webAppPkgPattern/": ["webAppPkgPattern/webAppPkg1.zip", "webAppPkgPattern/webAppPkg2.zip"]
     }
+     
 }
 
 tr.setAnswers(a);
