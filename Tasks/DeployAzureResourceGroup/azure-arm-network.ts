@@ -97,12 +97,6 @@ export class NetworkManagementClient extends azureServiceClient.ServiceClient {
 
     public setHeaders(options): {} {
         var headers = {};
-        if (this.generateClientRequestId) {
-            headers['x-ms-client-request-id'] = msRestAzure.generateUuid();
-        }
-        if (this.acceptLanguage !== undefined && this.acceptLanguage !== null) {
-            headers['accept-language'] = this.acceptLanguage;
-        }
         if (options) {
             for (var headerName in options['customHeaders']) {
                 if (options['customHeaders'].hasOwnProperty(headerName)) {
@@ -110,21 +104,9 @@ export class NetworkManagementClient extends azureServiceClient.ServiceClient {
                 }
             }
         }
-        headers['Content-Type'] = 'application/json; charset=utf-8';
         return headers;
     }
 
-    public validate() {
-        if (this.apiVersion === null || this.apiVersion === undefined || typeof this.apiVersion.valueOf() !== 'string') {
-            throw new Error('this.client.apiVersion cannot be null or undefined and it must be of type string.');
-        }
-        if (this.subscriptionId === null || this.subscriptionId === undefined || typeof this.subscriptionId.valueOf() !== 'string') {
-            throw new Error('this.client.subscriptionId cannot be null or undefined and it must be of type string.');
-        }
-        if (this.acceptLanguage !== null && this.acceptLanguage !== undefined && typeof this.acceptLanguage.valueOf() !== 'string') {
-            throw new Error('this.client.acceptLanguage must be of type string.');
-        }
-    }
 }
 
 export class loadBalancers {
@@ -149,7 +131,6 @@ export class loadBalancers {
             if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
                 throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
             }
-            this.client.validate();
         } catch (error) {
             return callback(error);
         }
@@ -198,7 +179,6 @@ export class loadBalancers {
             if (expand !== null && expand !== undefined && typeof expand.valueOf() !== 'string') {
                 throw new Error('expand must be of type string.');
             }
-            this.client.validate();
         } catch (error) {
             return callback(error);
         }
@@ -246,7 +226,6 @@ export class loadBalancers {
             if (parameters === null || parameters === undefined) {
                 throw new Error('parameters cannot be null or undefined.');
             }
-            this.client.validate();
         }
         catch (error) {
             return callback(error);
@@ -312,7 +291,6 @@ export class publicIPAddresses {
             if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
                 throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
             }
-            this.client.validate();
         } catch (error) {
             return callback(error);
         }
@@ -361,7 +339,6 @@ export class networkSecurityGroups {
             if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
                 throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
             }
-            this.client.validate();
         } catch (error) {
             return callback(error);
         }
@@ -412,7 +389,6 @@ export class NetworkInterfaces {
             if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
                 throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
             }
-            this.client.validate();
         } catch (error) {
             return callback(error);
         }
@@ -459,7 +435,6 @@ export class NetworkInterfaces {
             if (parameters === null || parameters === undefined) {
                 throw new Error('parameters cannot be null or undefined.');
             }
-            this.client.validate();
         }
         catch (error) {
             return callback(error);
@@ -531,7 +506,6 @@ export class securityRules {
             if (securityRuleName === null || securityRuleName === undefined || typeof securityRuleName.valueOf() !== 'string') {
                 throw new Error('securityRuleName cannot be null or undefined and it must be of type string.');
             }
-            this.client.validate();
         } catch (error) {
             return callback(error);
         }
@@ -577,7 +551,6 @@ export class securityRules {
             if (securityRuleParameters === null || securityRuleParameters === undefined) {
                 throw new Error('securityRuleParameters cannot be null or undefined.');
             }
-            this.client.validate();
         } catch (error) {
             return callback(error);
         }
