@@ -7,7 +7,7 @@ export function expandWildcardPattern(folderPath: string, wildcardPattern : stri
     var filesList = {};
     for (let i = 0; i < matchingFiles.length; i++) {
         matchingFiles[i] = matchingFiles[i].replace(/\//g, '\\');
-        filesList[matchingFiles[i]] = true;
+        filesList[matchingFiles[i].toLowerCase()] = true;
     }
 
     return filesList;
@@ -46,7 +46,7 @@ export function basicXdtTransformation(rootFolder, transformConfigs) {
         var sourceBasename = path.win32.basename(sourceXmlFile, ".config");    
         transformConfigs.forEach( function(transformConfig) {
             var transformXmlFile = path.join(path.dirname(sourceXmlFile), sourceBasename + "." + transformConfig);
-            if(sourceXmlFiles[transformXmlFile]) {
+            if(sourceXmlFiles[transformXmlFile.toLowerCase()]) {
                 tl.debug('Applying XDT Transformation : ' + transformXmlFile + '->' + sourceXmlFile);
                 applyXdtTransformation(sourceXmlFile, transformXmlFile);
             }
