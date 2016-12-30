@@ -19,6 +19,8 @@
   "loc.input.help.nuGetVersion": "The version of NuGet to use, or custom version.",
   "loc.input.label.nuGetPath": "Path to NuGet.exe",
   "loc.input.help.nuGetPath": "Optionally supply the path to NuGet.exe. Will override version selection.",
+  "loc.input.label.failOnEmptyNupkgMatch": "Fail on empty nupkg match",
+  "loc.input.help.failOnEmptyNupkgMatch": "Fail if no packages are found using the given path/pattern to nupkg.",
   "loc.messages.Warning_NoConfigForOldNuGet": "To connect to NuGet feeds hosted in your Team Services account/TFS project collection with NuGet 3.1 or below, edit your build definition to specify a path to a NuGet.config containing the package sources you wish to use.",
   "loc.messages.Warning_NoConfigForNoCredentialProvider": "To connect to NuGet feeds hosted in your Team Services account/TFS project collection on this build agent, edit your build definition to specify a path to a NuGet.config containing the package sources you wish to use.",
   "loc.messages.Warning_ConflictingNuGetPreference": "NuGet 3.3 was selected, but a custom NuGet path was provided. The custom path will be preferred. To resolve this warning, edit your build task and select 'custom' for NuGet version under Advanced.",

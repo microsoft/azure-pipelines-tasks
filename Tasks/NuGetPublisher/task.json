@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 27
+        "Patch": 28
     },
 	"runsOn": [
         "Agent",
@@ -109,6 +109,15 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Optionally supply the path to NuGet.exe. Will override version selection.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "failOnEmptyNupkgMatch",
+            "type": "boolean",
+            "label": "Fail on empty nupkg match",
+            "defaultValue": true,
+            "required": false,
+            "helpMarkDown": "Fail if no packages are found using the given path/pattern to nupkg.",
             "groupName": "advanced"
         }
     ],
