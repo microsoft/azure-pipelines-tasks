@@ -17,7 +17,7 @@
   "loc.input.label.verbosity": "Nivel de detalle",
   "loc.input.help.verbosity": "Nivel de detalle de NuGet",
   "loc.input.label.nuGetVersion": "Versión de NuGet",
-  "loc.input.help.nuGetVersion": "Versión de NuGet que se va a usar o versión externa.",
+  "loc.input.help.nuGetVersion": "The version of NuGet to use, or external version.",
   "loc.input.label.nuGetPath": "Ruta de acceso a NuGet.exe",
   "loc.input.help.nuGetPath": "Proporcione opcionalmente la ruta de acceso a NuGet.exe. Se invalida la selección de versión.",
   "loc.messages.Warning_NoConfigForNoCredentialProvider": "Para conectarse a las fuentes de NuGet hospedadas en la cuenta de Team Services o la colección de proyectos de TFS en este agente de compilación, edite la definición de compilación para elegir una versión superior de nuget o especifique una ruta de acceso a un archivo NuGet.config que contenga los orígenes de paquete que desea usar.",

@@ -9,6 +9,8 @@
   "loc.input.help.solution": "빌드할 Xamarin.iOS 솔루션의 리포 루트로부터의 상대 경로입니다.",
   "loc.input.label.configuration": "구성",
   "loc.input.help.configuration": "표준 구성은 임시, AppStore, 디버그, 릴리스입니다.",
+  "loc.input.label.runNugetRestore": "Run NuGet Restore",
+  "loc.input.help.runNugetRestore": "Optionally run `nuget restore` on the Xamarin iOS solution to install all referenced packages before build. The nuget tool in the PATH on the build server will be used. To use a different version of nuget or set additional arguments use the [NuGet Instaler Task](https://www.visualstudio.com/en-us/docs/build/steps/package/nuget-installer).",
   "loc.input.label.args": "인수",
   "loc.input.help.args": "빌드하는 데 사용되어야 하는 추가 명령줄 인수입니다.",
   "loc.input.label.cwd": "작업 디렉터리",

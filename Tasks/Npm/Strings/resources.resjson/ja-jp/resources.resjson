@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "npm",
   "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613746)",
-  "loc.description": "npm コマンドの実行",
+  "loc.description": "Run an npm command",
   "loc.instanceNameFormat": "npm $(command)",
   "loc.input.label.cwd": "作業フォルダー",
   "loc.input.help.cwd": "npm コマンドが実行される作業ディレクトリ。既定はリポジトリのルートに設定されます。",

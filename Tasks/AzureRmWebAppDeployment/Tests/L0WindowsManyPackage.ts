@@ -51,7 +51,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 		"C:\\pattern\\**\\*.zip":["webAppPkg1", "webAppPkg2"]
 	},
     "find" : {
-        "C:\\pattern\\":['C:\\pattern\\webAppPkg.zip']
+        "C:\\pattern\\":['C:\\pattern\\webAppPkg.zip', 'C:\\pattern\\webAppPkg1.zip']
     },
     "exec": {
         "cmd /C DefaultWorkingDirectory\\msDeployCommand.bat": {
@@ -141,6 +141,7 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
 		id: 'appid',
   		properties: { 
      		virtualApplications: [ ['Object'], ['Object'], ['Object'] ],
+             scmType: "None"
     	} 
   	}
 
@@ -171,6 +172,9 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
     },
     updateWebAppAppSettings : function (){
         return true;
+    },
+    updateAzureRMWebAppConfigDetails: function() {
+        console.log("Successfully updated scmType to VSTSRM");
     }
 });
 

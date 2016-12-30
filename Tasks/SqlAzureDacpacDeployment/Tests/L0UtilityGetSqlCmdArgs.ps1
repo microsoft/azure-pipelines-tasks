@@ -15,6 +15,12 @@ Assert-AreEqual '/SourceFile:"azureDacpac.dacpac" /Action:Publish /TargetServerN
                                     $sqlPackageCommandLineArguments "Should have constructed Argument for TargetMethod Server"
 
 $sqlPackageCommandLineArguments = Get-SqlPackageCommandArguments -dacpacFile "azureDacpac.dacpac" -targetMethod "server" -serverName "yyy.database.windows.net" `
+                                    -databaseName "databaseName" -sqlUsername "sql@Username" -sqlPassword "sqlPassword" -publishProfile "Profile.xml" -additionalArguments "Add_args"
+
+Assert-AreEqual '/SourceFile:"azureDacpac.dacpac" /Action:Publish /TargetServerName:"yyy.database.windows.net" /TargetDatabaseName:"databaseName" /TargetUser:"sql@Username@yyy.database.windows.net" /TargetPassword:"sqlPassword" /Profile:"Profile.xml" Add_args' `
+                                    $sqlPackageCommandLineArguments "Should handle username with @ special character for TargetMethod Server"
+
+$sqlPackageCommandLineArguments = Get-SqlPackageCommandArguments -dacpacFile "azureDacpac.dacpac" -targetMethod "server" -serverName "yyy.database.windows.net" `
                                     -databaseName "databaseName" -sqlUsername "sqlUsername" -sqlPassword "sqlPassword" -publishProfile "Profile.xml" `
                                     -additionalArguments "Add_args" -isOutputSecure
 

@@ -7,7 +7,7 @@
   "loc.group.displayName.agentConfiguration": "Configuration de l'agent",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.testMachineGroup": "Machines",
-  "loc.input.help.testMachineGroup": "Indiquez une liste de valeurs séparées par des virgules pour répertorier les adresses IP ou les noms de domaine complets des machines avec les ports. Par défaut, le port est basé sur le protocole sélectionné, par exemple : 'dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986'. Vous pouvez également indiquer la variable de sortie d'autres tâches, par exemple '$(variableName)', ou indiquer un nom de groupe de machines.",
+  "loc.input.help.testMachineGroup": "Indiquez une liste de valeurs séparées par des virgules pour répertorier les adresses IP ou les noms de domaine complets des machines avec les ports. Par défaut, le port est basé sur le protocole sélectionné, par exemple : 'dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986'. Vous pouvez également indiquer la variable de sortie d'autres tâches, par exemple '$(variableName)', ou indiquer un nom de groupe de machines. Si vous utilisez HTTPS, le nom ou l'adresse IP de la machine doit correspondre au CN dans le certificat.",
   "loc.input.label.adminUserName": "Informations de connexion d'administrateur",
   "loc.input.help.adminUserName": "Informations de connexion d'administrateur pour les machines cibles.",
   "loc.input.label.adminPassword": "Mot de passe d'administrateur",

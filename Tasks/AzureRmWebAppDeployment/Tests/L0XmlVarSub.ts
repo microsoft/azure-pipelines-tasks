@@ -39,7 +39,7 @@ process.env['XDT:LOCATOR'] = 'Match(tag)';
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "which": {
-        "cmd": "cmd"
+        "msdeploy": "msdeploy"
     },
     "stats": {
     	"webAppPkg.zip": {
@@ -50,21 +50,21 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "osType": "Windows"
     },
     "checkPath": {
-        "cmd": true,
+        "msdeploy": true,
         "webAppPkg.zip": true,
         "webAppPkg": true
     },
     "rmRF": {
-        "DefaultWorkingDirectory\\msDeployCommand.bat": {
+        "temp_web_package_random_path": {
             "success": true
         }
     },
     "exec": {
-        "cmd /C DefaultWorkingDirectory\\msDeployCommand.bat": {
+        "msdeploy -verb:getParameters -source:package=\'/temp_web_package_random_path\'": {
             "code": 0,
             "stdout": "Executed Successfully"
         },
-        "cmd /C DefaultWorkingDirectory\\msDeployParam.bat": {
+        "msdeploy -verb:sync -source:package=\'/temp_web_package_random_path\' -dest:auto,ComputerName=\'https://mytestappKuduUrl/msdeploy.axd?site=mytestapp\',UserName=\'$mytestapp\',Password=\'mytestappPwd\',AuthType=\'Basic\' -setParam:name=\'IIS Web Application Name\',value=\'mytestapp\' -enableRule:DoNotDeleteRule -userAgent:TFS_useragent": {
             "code": 0,
             "stdout": "Executed Successfully"
         }
@@ -118,7 +118,7 @@ tr.registerMock('./msdeployutility.js', {
         return msDeployFullPath;
     },
     containsParamFile: function(webAppPackage: string) {
-        var taskResult = mockTask.execSync("cmd", ['/C',"DefaultWorkingDirectory\\msDeployParam.bat"]);
+        var taskResult = mockTask.execSync("msdeploy", "-verb:getParameters -source:package=\'" + webAppPackage + "\'");
         return true;
     }
 }); 
@@ -154,6 +154,7 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
 			id: 'appid',
 			properties: { 
 				virtualApplications: [ ['Object'], ['Object'], ['Object'] ],
+                scmType: "None"
 			} 
 		}
 
@@ -184,6 +185,9 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
     },
     updateWebAppAppSettings : function (){
         return true;
+    },
+    updateAzureRMWebAppConfigDetails: function() {
+        console.log("Successfully updated scmType to VSTSRM");
     }
 });
 
@@ -193,6 +197,7 @@ tr.registerMock('webdeployment-common/ziputility.js', {
     },
     archiveFolder: function(folderPath, targetPath, zipName) {
         console.log('Archiving ' + folderPath + ' to ' + targetPath + '/' + zipName);
+        return targetPath + '/' + zipName;
     }
 });
 
@@ -200,9 +205,50 @@ tr.registerMock('webdeployment-common/xmlvariablesubstitutionutility.js', {
     substituteAppSettingsVariables: async function(folderPath) {
         var tags = ["applicationSettings", "appSettings", "connectionStrings", "configSections"];
         var configFiles = [path.join(__dirname, 'L1XmlVarSub/Web_test.config'), path.join(__dirname, 'L1XmlVarSub/Web_test.Debug.config')];
-        for(var configFile of configFiles) {
-            await xmlSubstitutionUtility.substituteXmlVariables(configFile, tags);
+        var variableMap = {
+            'conntype' : 'new_connType',
+            'connectionString' : 'database_connection_string',
+            'webpages:Version' : '1.1.7.3',
+            'rmtype' : 'newRM@type',
+            'xdt:Transform' : 'DelAttributes',
+            'xdt:Locator' : 'Match(tag)'
         }
+        for(var configFile of configFiles) {
+            await xmlSubstitutionUtility.substituteXmlVariables(configFile, tags, variableMap);
+        }
+    }
+});
+
+tr.registerMock('webdeployment-common/utility.js', {
+    isInputPkgIsFolder: function() {
+        return false;    
+    },
+    fileExists: function() {
+        return true;   
+    },
+    canUseWebDeploy: function() {
+        return true;
+    },
+    findfiles: function() {
+        return ['webDeployPkg']    
+    },
+    generateTemporaryFolderOrZipPath: function() {
+        return 'temp_web_package_random_path';
+    }
+});
+
+var fs = require('fs');
+tr.registerMock('fs', {
+    createWriteStream: function (filePath, options) {
+        return { "isWriteStreamObj": true };
+    },
+    ReadStream: fs.ReadStream,
+    WriteStream: fs.WriteStream,
+    openSync: function (fd, options) {
+        return true;
+    },
+    closeSync: function (fd) {
+        return true;
     }
 });
 

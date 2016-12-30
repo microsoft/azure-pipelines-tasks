@@ -51,5 +51,6 @@
   "loc.messages.SAD_InvalidSqlFile": "提供了无效的 SQL 文件“{0}”",
   "loc.messages.SAD_NoPassword": "未指定 SQL 用户“{0}”的密码",
   "loc.messages.SAD_InvalidPublishProfile": "提供的发布配置文件“{0}”无效",
-  "loc.messages.SAD_InvalidServerNameFormat": "服务器名称“{0}”的格式不正确。请使用类似“{1}”的 FQDN 格式"
+  "loc.messages.SAD_InvalidServerNameFormat": "服务器名称“{0}”的格式不正确。请使用类似“{1}”的 FQDN 格式",
+  "loc.messages.SAD_AzureSQLDacpacTaskFailed": "Azure SQL Dacpac task failed."
 }
