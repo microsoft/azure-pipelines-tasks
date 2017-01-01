@@ -238,7 +238,11 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    it('Successfully triggered createOrUpdate deployment', (done) => {
+    /*it("Failed to install Team Services Agent Extension on VM on incorrect inputs", (done) => {
+        let tp = path.join(__dirname, "installVSTSExtension.js");
+        process.env["action"] = "Create or update resource group";
+    });*/
+    /*it('Successfully triggered createOrUpdate deployment', (done) => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
         process.env["csmFile"] = "\\CSM.json";
         process.env["csmParametersFile"] = "\\CSM.json";
@@ -862,5 +866,5 @@ describe('Azure Resource Group Deployment', function () {
             console.log("STDOUT", tr.stdout);
             done(error);
         }
-    });
+    });*/
 });

@@ -3,7 +3,7 @@
 
 import path = require("path");
 import tl = require("vsts-task-lib/task");
-import vstsMG = require("./MGExtensionManager");
+import mgExtManager = require("./MachineGroupAgentExtensionManager");
 
 var computeManagementClient = require('azure-arm-compute');
 
@@ -16,13 +16,13 @@ export class VirtualMachine {
     private successCount: number;
     private vmCount: number;
     private errors: string;
-    private MGExtensionManager: vstsMG.MGExtensionManager;
+    private machineGroupAgentExtensionManager: mgExtManager.MachineGroupAgentExtensionManager;
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
         this.taskParameters = taskParameters;
         this.successCount = 0;
         this.failureCount = 0;
-        this.MGExtensionManager = new vstsMG.MGExtensionManager(this.taskParameters);
+        this.machineGroupAgentExtensionManager = new mgExtManager.MachineGroupAgentExtensionManager(this.taskParameters);
     }
 
     private postOperationCallBack = (error, result, request, response) => {
@@ -82,7 +82,7 @@ export class VirtualMachine {
                     }
                     break;
                 case "Delete":
-                    var extDelPromise = this.MGExtensionManager.removeMGExtension();
+                    var extDelPromise = this.machineGroupAgentExtensionManager.removeMGExtension();
                     extDelPromise.then((val) => {
                         for (var i = 0; i < listOfVms.length; i++) {
                             var vmName = listOfVms[i]["name"];

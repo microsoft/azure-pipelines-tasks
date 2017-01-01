@@ -14,7 +14,7 @@ var httpObj = new httpClient.HttpClient("VSTS_AGENT");
 import env = require("./Environment");
 import deployAzureRG = require("./DeployAzureRG");
 import winRM = require("./WinRMHttpsListener");
-import vstsMG = require("./MGExtensionManager");
+import mgExtManager = require("./MachineGroupAgentExtensionManager");
 
 var parameterParse = require("./parameterParse").parse;
 var armResource = require("azure-arm-resource");
@@ -34,13 +34,13 @@ export class ResourceGroup {
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
     private WinRMHttpsListener: winRM.WinRMHttpsListener;
     private envController: env.RegisterEnvironment;
-    private MGExtensionManager: vstsMG.MGExtensionManager;
+    private machineGroupAgentExtensionManager: mgExtManager.MachineGroupAgentExtensionManager;
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
         this.taskParameters = taskParameters;
         this.WinRMHttpsListener = new winRM.WinRMHttpsListener(this.taskParameters);
         this.envController = new env.RegisterEnvironment(this.taskParameters);
-        this.MGExtensionManager = new vstsMG.MGExtensionManager(this.taskParameters);
+        this.machineGroupAgentExtensionManager = new mgExtManager.MachineGroupAgentExtensionManager(this.taskParameters);
     }
 
     private createDeploymentName(): string {
@@ -216,9 +216,9 @@ export class ResourceGroup {
                     console.log("Enabling winRM Https Listener on your windows machines..");
                     await this.WinRMHttpsListener.EnableWinRMHttpsListener();
                 }
-                else if (this.taskParameters.enableDeploymentPrerequisites == "Configure VM agent with Machine Group Agent") {
+                else if (this.taskParameters.enableDeploymentPrerequisites == "ConfigureVMWithMGAgent") {
                     console.log("Installing Team Services Agent extension on the VMs");
-                    await this.MGExtensionManager.installMGExtension();
+                    await this.machineGroupAgentExtensionManager.installMGExtension();
                 }
 
                 try {
@@ -254,7 +254,7 @@ export class ResourceGroup {
     }
 
     public deleteResourceGroup() {
-        var extDelPromise = this.MGExtensionManager.removeMGExtension();
+        var extDelPromise = this.machineGroupAgentExtensionManager.removeMGExtension();
         extDelPromise.then((val) => {
             var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
             console.log(tl.loc("ARG_DeletingResourceGroup", this.taskParameters.resourceGroupName));
@@ -273,9 +273,9 @@ export class ResourceGroup {
             console.log("Enabling winRM Https Listener on your windows machines..");
             await this.WinRMHttpsListener.EnableWinRMHttpsListener();
         }
-        else if (this.taskParameters.enableDeploymentPrerequisites == "Configure VM agent with Machine Group Agent") {
+        else if (this.taskParameters.enableDeploymentPrerequisites == "ConfigureVMWithMGAgent") {
             console.log("Installing Team Services Agent extension on the VMs");
-            await this.MGExtensionManager.installMGExtension();
+            await this.machineGroupAgentExtensionManager.installMGExtension();
         }
         try {
             this.envController.RegisterEnvironment();
