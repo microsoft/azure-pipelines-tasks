@@ -536,6 +536,22 @@ var getExternals = function (externals, destRoot) {
             copyGroups(package.cp, packageSource, destRoot);
         });
     }
+
+    // for any file type that has to be shipped with task
+    if (externals.hasOwnProperty('files')) {
+        var files = externals.files;
+        files.forEach(function (file) {
+            assert(file.url, 'file.url');
+            assert(file.dest, 'file.dest');
+
+            // download the file from url
+            var fileSource = downloadFile(file.url);
+            // copy the files
+            var fileDest = path.join(destRoot, file.dest);
+            mkdir('-p', path.dirname(fileDest));
+            cp(fileSource, fileDest);
+        });
+    }
 }
 exports.getExternals = getExternals;
 

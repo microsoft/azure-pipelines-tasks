@@ -1,4 +1,4 @@
-﻿# Deploy Visual Studio Test Agent Task
+# Deploy Visual Studio Test Agent Task
 
 ###Overview
 The Deploy Test agent task is used to Deploy the Test Agent to a set of machines. This Test Agent can then be used to enable data collection or run Distributed Tests using the ‘Visual Studio Test using Test Agent’ task. 
