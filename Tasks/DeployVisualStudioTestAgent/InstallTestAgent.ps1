@@ -47,7 +47,12 @@ function Install-Product($SetupPath, $ProductVersion, $Update)
 
 		# Invoke the TA installation
 		Write-Verbose -Message ("Invoking the command {0} with arguments {1}" -f $SetupPath, $Arguments) -verbose
-		$exitCode = Invoke-Command -ScriptBlock { cmd.exe /c $args[0] $args[1]; $LASTEXITCODE } -ArgumentList $SetupPath,$argumentsarr -ErrorAction Stop
+		$retCode = Invoke-Command -ScriptBlock { cmd.exe /c $args[0] $args[1]; $LASTEXITCODE } -ArgumentList $SetupPath,$argumentsarr -ErrorAction Stop
+		if($retCode -is [System.Array]) {
+			$exitCode = $retCode[$retCode.Length-1]
+		} else {
+			$exitCode = $retCode
+		}
 	}
 	catch
 	{
