@@ -40,7 +40,7 @@ function Install-Product($SetupPath, $ProductVersion, $Update)
 	{
 		if($ProductVersion -eq "15.0") {
 			$tpPath = Join-Path $env:SystemDrive TestAgent2017
-			$argumentsarr = @("--noRestart","--quiet","--installPath $tpPath")
+			$argumentsarr = @("--noRestart","--quiet","--installPath","$tpPath")
 		} else {
 			$argumentsarr = @("/Quiet","/NoRestart")
 		}
