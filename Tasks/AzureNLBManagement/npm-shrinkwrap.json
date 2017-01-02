@@ -1,5 +1,5 @@
 {
-  "name": "azurerest-common",
+  "name": "nlbtask",
   "version": "1.0.0",
   "dependencies": {
     "balanced-match": {
@@ -62,11 +62,6 @@
       "from": "q@1.4.1",
       "resolved": "https://registry.npmjs.org/q/-/q-1.4.1.tgz"
     },
-    "sax": {
-      "version": "1.2.1",
-      "from": "sax@>=0.6.0",
-      "resolved": "https://registry.npmjs.org/sax/-/sax-1.2.1.tgz"
-    },
     "semver": {
       "version": "5.3.0",
       "from": "semver@>=5.1.0 <6.0.0",
@@ -108,16 +103,6 @@
       "version": "1.0.2",
       "from": "wrappy@>=1.0.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/wrappy/-/wrappy-1.0.2.tgz"
-    },
-    "xml2js": {
-      "version": "0.4.13",
-      "from": "xml2js@0.4.13",
-      "resolved": "https://registry.npmjs.org/xml2js/-/xml2js-0.4.13.tgz"
-    },
-    "xmlbuilder": {
-      "version": "8.2.2",
-      "from": "xmlbuilder@>=2.4.6",
-      "resolved": "https://registry.npmjs.org/xmlbuilder/-/xmlbuilder-8.2.2.tgz"
     }
   }
 }
