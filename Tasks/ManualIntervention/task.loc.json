@@ -31,14 +31,14 @@
         "maxLength": "500"
       }
     },
-    {
-      "name": "emailRecipients",
-      "type": "identities",
-      "label": "ms-resource:loc.input.label.emailRecipients",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.emailRecipients"
-    }
+	{
+	"name": "emailRecipients",
+	"type": "identities",
+	"label": "ms-resource:loc.input.label.emailRecipients",
+	"defaultValue": "",
+	"required": false,
+	"helpMarkDown": "ms-resource:loc.input.help.emailRecipients"
+	}
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {

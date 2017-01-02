@@ -16,7 +16,7 @@
     "Patch": 0
   },
   "preview": "true",
-  "releaseNotes": "Support for Test Agent 2017. Machine group is no longer supported.",
+  "releaseNotes": "Support for Test Agent 2017",
   "demands": [],
   "minimumAgentVersion": "2.0.0",
   "groups": [

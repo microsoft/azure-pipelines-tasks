@@ -26,6 +26,7 @@
       "type": "connectedService:Generic",
       "label": "ms-resource:loc.input.label.connectedServiceName",
       "defaultValue": "",
+	  "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
     },
     {
@@ -109,13 +110,6 @@
         "0": "Automatically provisioned agents",
         "2": "Self-provisioned agents"
       }
-    },
-    {
-      "name": "avgResponseTimeThreshold",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.avgResponseTimeThreshold",
-      "helpMarkDown": "ms-resource:loc.input.help.avgResponseTimeThreshold",
-      "defaultValue": "0"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
