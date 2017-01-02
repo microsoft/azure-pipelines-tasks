@@ -33,9 +33,9 @@
       "resolved": "https://registry.npmjs.org/binary/-/binary-0.3.0.tgz"
     },
     "bl": {
-      "version": "1.2.0",
+      "version": "1.1.2",
       "from": "bl@>=1.0.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/bl/-/bl-1.2.0.tgz"
+      "resolved": "https://registry.npmjs.org/bl/-/bl-1.1.2.tgz"
     },
     "brace-expansion": {
       "version": "1.1.6",
@@ -147,9 +147,9 @@
       "resolved": "https://registry.npmjs.org/lazystream/-/lazystream-1.0.0.tgz"
     },
     "lodash": {
-      "version": "4.17.4",
+      "version": "4.17.2",
       "from": "lodash@>=4.8.0 <5.0.0",
-      "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.17.4.tgz"
+      "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.17.2.tgz"
     },
     "ltx": {
       "version": "2.5.0",
