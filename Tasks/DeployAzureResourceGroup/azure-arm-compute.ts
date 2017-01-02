@@ -4,6 +4,7 @@ import util = require("util");
 import azureServiceClient = require("./AzureServiceClient");
 import httpClient = require('vso-node-api/HttpClient');
 import restClient = require('vso-node-api/RestClient');
+import Q = require("q");
 
 export class ComputeManagementClient extends azureServiceClient.ServiceClient {
     private apiVersion;
@@ -113,7 +114,6 @@ export class VirtualMachines {
         if (!callback) {
             throw new Error('callback cannot be null.');
         }
-        var apiVersion = '2016-03-30';
         // Validate
         try {
             if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
@@ -135,20 +135,23 @@ export class VirtualMachines {
 
         var result = [];
         this.client.beginRequest(httpRequest).then(async (response: azureServiceClient.WebResponse) => {
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode == 200) {
                 if (response.body.value) {
-                    result.concat(response.body.value);
+                    result = result.concat(response.body.value);
                 }
 
                 if (response.body.nextLink) {
                     var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
                     if (nextResult.error) { return nextResult; }
-                    result.concat(nextResult.result);
+                    result = result.concat(nextResult.result);
                 }
+                deferred.resolve(new azureServiceClient.ApiResult(null, result));
             }
             else {
-                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
+                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
+            return deferred.promise;
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
@@ -163,7 +166,6 @@ export class VirtualMachines {
             throw new Error('callback cannot be null.');
         }
         var expand = (options && options.expand !== undefined) ? options.expand : undefined;
-        var apiVersion = '2016-03-30';
         // Validate
         try {
             if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
@@ -195,12 +197,17 @@ export class VirtualMachines {
         httpRequest.headers = this.client.setHeaders(options);
 
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode == 200) {
                 var result = response.body;
-                return callback(null, result);
+                deferred.resolve(new azureServiceClient.ApiResult(null, result));
             }
-            return callback(azureServiceClient.ToError(response));
-        }).catch((error) => callback(error));
+            else {
+                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+            }
+            return deferred.promise;
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
     }
 
     public restart(resourceGroupName: string, vmName: string, callback) {
@@ -208,7 +215,6 @@ export class VirtualMachines {
         if (!callback) {
             throw new Error('callback cannot be null.');
         }
-        var apiVersion = '2016-03-30';
         // Validate
         try {
             if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
@@ -224,7 +230,6 @@ export class VirtualMachines {
         // Create object
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'POST';
-        httpRequest.headers = {};
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/restart',
             {
                 '{resourceGroupName}': resourceGroupName,
@@ -236,16 +241,23 @@ export class VirtualMachines {
         httpRequest.body = null;
 
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode != 200 && response.statusCode != 201) {
-                return callback(azureServiceClient.ToError(response));
+                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
-            this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
-                if (operationResponse.body.status == "Succeeded") {
-                    return callback(null, operationResponse.body);
-                }
-                return callback(azureServiceClient.ToError(operationResponse));
-            }).catch((error) => callback(error));
-        }).catch((error) => callback(error));
+            else {
+                this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
+                    if (operationResponse.body.status == "Succeeded") {
+                        deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
+                    }
+                    else {
+                        deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
+                    }
+                });
+            }
+            return deferred.promise;
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
     }
 
     public start(resourceGroupName: string, vmName: string, callback) {
@@ -253,7 +265,6 @@ export class VirtualMachines {
         if (!callback) {
             throw new Error('callback cannot be null.');
         }
-        var apiVersion = '2016-03-30';
         // Validate
         try {
             if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
@@ -277,19 +288,22 @@ export class VirtualMachines {
         httpRequest.body = null;
 
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
             if (statusCode != 200 && statusCode != 201) {
-                return callback(azureServiceClient.ToError(response));
+                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
                 if (operationResponse.body.status == "Succeeded") {
-                    return callback(null, operationResponse.body);
+                    deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
                 }
                 else {
-                    return callback(azureServiceClient.ToError(operationResponse));
+                    deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
                 }
-            }).catch((error) => callback(error));
-        }).catch((error) => callback(error));
+            });
+            return deferred.promise;
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
     }
 
     public powerOff(resourceGroupName: string, vmName: string, callback) {
@@ -297,7 +311,6 @@ export class VirtualMachines {
         if (!callback) {
             throw new Error('callback cannot be null.');
         }
-        var apiVersion = '2016-03-30';
         // Validate
         try {
             if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
@@ -320,19 +333,22 @@ export class VirtualMachines {
             }
         );
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
             if (statusCode != 200 && statusCode != 201) {
-                return callback(azureServiceClient.ToError(response));
+                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
                 if (operationResponse.body.status == "Succeeded") {
-                    return callback(null, operationResponse.body);
+                    deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
                 }
                 else {
-                    return callback(azureServiceClient.ToError(operationResponse));
+                    deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
                 }
             });
-        }).catch((error) => callback(error));
+            return deferred.promise;
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
     }
 
     public deleteMethod(resourceGroupName: string, vmName: string, callback) {
@@ -340,7 +356,6 @@ export class VirtualMachines {
         if (!callback) {
             throw new Error('callback cannot be null.');
         }
-        var apiVersion = '2016-03-30';
         // Validate
         try {
             if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
@@ -365,19 +380,22 @@ export class VirtualMachines {
         );
         httpRequest.body = null;
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
             if (statusCode != 200 && statusCode != 201) {
-                callback(azureServiceClient.ToError(response));
+                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
                 if (operationResponse.body.status === "Succeeded") {
                     // Generate Response
-                    callback(null, operationResponse.body);
+                    deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
                 } else {
-                    return callback(azureServiceClient.ToError(operationResponse));
+                    deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
                 }
             });
-        });
+            return deferred.promise;
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
     }
 }
 
@@ -398,7 +416,6 @@ export class VirtualMachineExtensions {
             throw new Error('callback cannot be null.');
         }
         var expand = (options && options.expand !== undefined) ? options.expand : undefined;
-        var apiVersion = '2016-03-30';
         // Validate
         try {
             if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
@@ -431,12 +448,17 @@ export class VirtualMachineExtensions {
         httpRequest.body = null;
 
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode == 200) {
                 var result = response.body;
-                return callback(null, result);
+                deferred.resolve(new azureServiceClient.ApiResult(null, result));
             }
-            return callback(azureServiceClient.ToError(response));
-        }).catch((error) => callback(error));
+            else {
+                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+            }
+            return deferred.promise;
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
     }
 
     public createOrUpdate(resourceGroupName, vmName, vmExtensionName, extensionParameters, callback) {
@@ -445,7 +467,6 @@ export class VirtualMachineExtensions {
         if (!callback) {
             throw new Error('callback cannot be null.');
         }
-        var apiVersion = '2016-03-30';
         // Validate
         try {
             if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
@@ -479,31 +500,27 @@ export class VirtualMachineExtensions {
         // Serialize Request
         var requestContent = null;
         var requestModel = null;
-        try {
-            if (extensionParameters !== null && extensionParameters !== undefined) {
-                requestContent = JSON.stringify(extensionParameters);
-            }
-        } catch (error) {
-            var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' +
-                'payload - "%s"', error.message, util.inspect(extensionParameters, { depth: null })));
-            return callback(serializationError);
+        if (extensionParameters !== null && extensionParameters !== undefined) {
+            httpRequest.body = JSON.stringify(extensionParameters);
         }
-        httpRequest.body = requestContent;
 
         // Send request
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode != 200 && response.statusCode != 201) {
-                return callback(azureServiceClient.ToError(response));
+                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
                 if (operationResponse.body.status === "Succeeded") {
                     var result = { "provisioningState": operationResponse.body.status }
-                    callback(null, result);
+                    deferred.resolve(new azureServiceClient.ApiResult(null, result));
                 } else {
-                    callback(azureServiceClient.ToError(operationResponse));
+                    deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
                 }
-            }).catch((error) => callback(error));
-        }).catch((error) => callback(error));
+            });
+            return deferred.promise;
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
 
     }
 
@@ -512,7 +529,6 @@ export class VirtualMachineExtensions {
             throw new Error('callback cannot be null.');
         }
 
-        var apiVersion = '2016-03-30';
         // Validate
         try {
             if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
@@ -541,16 +557,19 @@ export class VirtualMachineExtensions {
 
         // Send request
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode !== 202 || response.statusCode !== 204) {
-                callback(azureServiceClient.ToError(response));
+                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
                 if (operationResponse.statusCode === 200) {
-                    callback(null);
+                    deferred.resolve(new azureServiceClient.ApiResult(null));
                 } else {
-                    callback(azureServiceClient.ToError(operationResponse));
+                    deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
                 }
-            }).catch((error) => callback(error));
-        }).catch((error) => callback(error));
+            });
+            return deferred.promise;
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
     }
 }

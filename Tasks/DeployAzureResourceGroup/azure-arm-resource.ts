@@ -1,6 +1,7 @@
 import msRestAzure = require("./ms-rest-azure");
 import azureServiceClient = require("./AzureServiceClient");
 import util = require("util");
+import Q = require("q");
 
 export class ResourceManagementClient extends azureServiceClient.ServiceClient {
     private longRunningOperationRetryTimeout;
@@ -108,12 +109,14 @@ export class ResourceGroups {
 
         // Send Request and process response.
         return this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode == 204 || response.statusCode == 404) {
-                return new azureServiceClient.ApiResult(null, response.statusCode == 204);
+                deferred.resolve(new azureServiceClient.ApiResult(null, response.statusCode == 204));
             }
             else {
-                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
+                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
+            return deferred.promise;
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
@@ -154,20 +157,22 @@ export class ResourceGroups {
         );
 
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
             if (statusCode !== 202 && statusCode !== 200) {
-                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
+                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
 
             // Create Result
             this.client.getLongRunningOperationResult(response).then((response: azureServiceClient.WebResponse) => {
                 if (response.statusCode == 200) {
-                    return new azureServiceClient.ApiResult(null, response.body);
+                    deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
                 }
                 else {
-                    return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
+                    deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
                 }
             });
+            return deferred.promise;
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
@@ -212,25 +217,21 @@ export class ResourceGroups {
         );
 
         // Serialize Request
-        var requestContent = null;
-        try {
-            if (parameters !== null && parameters !== undefined) {
-                requestContent = JSON.stringify(parameters);
-            }
-        } catch (error) {
-            var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' +
-                'payload - "%s"', error.message, util.inspect(parameters, { depth: null })));
-            return callback(serializationError);
+        if (parameters !== null && parameters !== undefined) {
+            httpRequest.body = JSON.stringify(parameters);
         }
-        httpRequest.body = requestContent;
 
         // Send Request
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
             if (statusCode !== 200 && statusCode !== 201) {
-                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
+                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
-            return new azureServiceClient.ApiResult(null, response.body);
+            else {
+                deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
+            }
+            return deferred.promise;
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
@@ -287,23 +288,16 @@ export class Deployments {
         );
 
         // Serialize Request
-        var requestContent = null;
-        try {
-            if (parameters !== null && parameters !== undefined) {
-                requestContent = JSON.stringify(parameters);
-            }
-        } catch (error) {
-            var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' +
-                'payload - "%s"', error.message, util.inspect(parameters, { depth: null })));
-            return callback(serializationError);
+        if (parameters !== null && parameters !== undefined) {
+            httpRequest.body = JSON.stringify(parameters);
         }
-        httpRequest.body = requestContent;
 
         // Send Request
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
             if (statusCode !== 200 && statusCode !== 201) {
-                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
+                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
 
             return new Promise<azureServiceClient.ApiResult>((resolve, reject) => {
@@ -339,12 +333,14 @@ export class Deployments {
 
         // Send Request and process response.
         return this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode != 200) {
-                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
+                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             else {
-                return new azureServiceClient.ApiResult(null, response.body);
+                deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
             }
+            return deferred.promise;
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
