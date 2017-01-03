@@ -558,7 +558,7 @@ export class VirtualMachineExtensions {
         // Send request
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
-            if (response.statusCode !== 202 || response.statusCode !== 204) {
+            if (response.statusCode !== 202 && response.statusCode !== 204) {
                 deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
