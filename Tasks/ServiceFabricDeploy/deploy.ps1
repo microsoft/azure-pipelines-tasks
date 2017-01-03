@@ -140,14 +140,17 @@ try {
         'ErrorAction' = "Stop"
     }
 
-    if ($publishProfile.CopyPackageParameters.CompressPackage)
+    if ($publishProfile.CopyPackageParameters)
     {
-        $publishParameters['CompressPackage'] = [System.Boolean]::Parse($publishProfile.CopyPackageParameters.CompressPackage)
-    }
+        if ($publishProfile.CopyPackageParameters.CompressPackage)
+        {
+            $publishParameters['CompressPackage'] = [System.Boolean]::Parse($publishProfile.CopyPackageParameters.CompressPackage)
+        }
 
-    if ($publishProfile.CopyPackageParameters.CopyPackageTimeoutSec)
-    {
-        $publishParameters['CopyPackageTimeoutSec'] = $publishProfile.CopyPackageParameters.CopyPackageTimeoutSec
+        if ($publishProfile.CopyPackageParameters.CopyPackageTimeoutSec)
+        {
+            $publishParameters['CopyPackageTimeoutSec'] = $publishProfile.CopyPackageParameters.CopyPackageTimeoutSec
+        }
     }
 
     # compressPackage task input overrides the publish profile if it's enabled.
@@ -162,6 +165,7 @@ try {
         $publishParameters['CopyPackageTimeoutSec'] = $copyPackageTimeoutSec
     }
 
+    # registerPackageTimeoutSec task input overrides the publish profile if it's enabled
     if ($registerPackageTimeoutSec)
     {
         $publishParameters['RegisterPackageTimeoutSec'] = $registerPackageTimeoutSec
