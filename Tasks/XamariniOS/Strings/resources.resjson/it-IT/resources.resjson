@@ -9,6 +9,8 @@
   "loc.input.help.solution": "Percorso relativo dalla radice del repository della soluzione Xamarin.iOS da compilare.",
   "loc.input.label.configuration": "Configurazione",
   "loc.input.help.configuration": "Le configurazioni standard sono Ad-Hoc, AppStore, Debug, Release.",
+  "loc.input.label.runNugetRestore": "Run NuGet Restore",
+  "loc.input.help.runNugetRestore": "Optionally run `nuget restore` on the Xamarin iOS solution to install all referenced packages before build. The nuget tool in the PATH on the build server will be used. To use a different version of nuget or set additional arguments use the [NuGet Instaler Task](https://www.visualstudio.com/en-us/docs/build/steps/package/nuget-installer).",
   "loc.input.label.args": "Argomenti",
   "loc.input.help.args": "Argomenti aggiuntivi della riga di comando da usare per la compilazione.",
   "loc.input.label.cwd": "Directory di lavoro",
@@ -43,6 +45,6 @@
   "loc.messages.ProvProfileUUIDNotFound": "L'UUID del profilo di provisioning non è stato trovato: %s",
   "loc.messages.TempKeychainDeleteFailed": "Non è stato possibile eliminare la keychain temporanea %s creata durante la compilazione.",
   "loc.messages.ProvProfileDeleteFailed": "Non è stato possibile eliminare il profilo di provisioning %s.",
-  "loc.messages.XamariniOSSucceeded": "L'esecuzione dell'attività XamariniOS è stata completata senza errori.",
-  "loc.messages.XamariniOSFailed": "L'attività XamariniOS non è riuscita ed è stato restituito l'errore %s. Per informazioni sulla configurazione della definizione di compilazione, vedere https://go.microsoft.com/fwlink/?LinkId=760847."
+  "loc.messages.XamariniOSSucceeded": "L'esecuzione dell'attività Xamarin.iOS è stata completata senza errori.",
+  "loc.messages.XamariniOSFailed": "L'attività Xamarin.iOS non è riuscita ed è stato restituito l'errore %s. Per informazioni sulla configurazione della definizione di compilazione, vedere https://go.microsoft.com/fwlink/?LinkId=760847."
 }

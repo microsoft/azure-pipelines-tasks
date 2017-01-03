@@ -8,14 +8,15 @@ var ltxdomutility = require("./ltxdomutility.js");
 var fileEncoding = require('./fileencoding.js');
 
 export async function substituteAppSettingsVariables(folderPath) {
-    var configFiles = tl.glob(folderPath + "/**/*.config");
+    var configFiles = tl.findMatch(folderPath, "**/*.config");
+    var variableMap = varUtility.getVariableMap();
     var tags = ["applicationSettings", "appSettings", "connectionStrings", "configSections"];
     for(var configFile of configFiles) {
-        await substituteXmlVariables(configFile, tags);
+        await substituteXmlVariables(configFile, tags, variableMap);
     }
 }
 
-export async function substituteXmlVariables(configFile, tags){
+export async function substituteXmlVariables(configFile, tags, variableMap){
     if(!tl.exist(configFile)) {
         throw new Error(tl.loc("Configfiledoesntexists", configFile));
     }
@@ -50,9 +51,9 @@ export async function substituteXmlVariables(configFile, tags){
                 tl.debug("Processing substitution for xml node : " + xmlNode.name);
                 try {
                     if(xmlNode.name == "configSections") {
-                        await updateXmlConfigNodeAttribute(xmlDocument, xmlNode);
+                        await updateXmlConfigNodeAttribute(xmlDocument, xmlNode, variableMap);
                     } else {
-                        await updateXmlNodeAttribute(xmlNode);
+                        await updateXmlNodeAttribute(xmlNode, variableMap);
                     }
                 } catch (error){
                     tl.debug("Error occurred while processing xml node : " + xmlNode.name);
@@ -72,7 +73,7 @@ export async function substituteXmlVariables(configFile, tags){
     
 }
 
-async function updateXmlConfigNodeAttribute(xmlDocument, xmlNode) {
+async function updateXmlConfigNodeAttribute(xmlDocument, xmlNode, variableMap) {
     var sections = ltxdomutility.getChildElementsByTagName(xmlNode, "section");
     for(var i=0; i < sections.length; i++) {
         var section  = sections[i];
@@ -82,14 +83,14 @@ async function updateXmlConfigNodeAttribute(xmlDocument, xmlNode) {
                 var customSectionNodes = ltxdomutility.getElementsByTagName(sectionName);
                 if( customSectionNodes.length != 0) {
                     var customNode = customSectionNodes[0];
-                    await updateXmlNodeAttribute(customNode);
+                    await updateXmlNodeAttribute(customNode, variableMap);
                 }
             }
         }
     }
 }
 
-async function updateXmlNodeAttribute(xmlDomNode)
+async function updateXmlNodeAttribute(xmlDomNode, variableMap)
 {
 
     if (varUtility.isEmpty(xmlDomNode) || !varUtility.isObject(xmlDomNode) || xmlDomNode.name == "#comment") {
@@ -98,30 +99,17 @@ async function updateXmlNodeAttribute(xmlDomNode)
     }
     var xmlDomNodeAttributes = xmlDomNode.attrs;	
     for(var attributeName in xmlDomNodeAttributes) {
-        if(attributeName != "key") {
-            if(!varUtility.isPredefinedVariable(attributeName)) {
-                var taskContextVariableValue = tl.getVariable(attributeName);
-                if(taskContextVariableValue) {
-                     xmlDomNode.attr(attributeName, taskContextVariableValue);
-                }
-            }
-        }
-        else {
-            attributeName = xmlDomNodeAttributes[attributeName];
-            if(!varUtility.isPredefinedVariable(attributeName)) {
-                var taskContextVariableValue = tl.getVariable(attributeName);
-                if(taskContextVariableValue) {
-                     xmlDomNode.attr("value", taskContextVariableValue);
-                }
-            }
+        var attributeNameValue = (attributeName === "key") ? xmlDomNodeAttributes[attributeName] : attributeName;
+        var attributeName = (attributeName === "key") ? "value" : attributeName;
+        if(variableMap[attributeNameValue]) {
+            xmlDomNode.attr(attributeName, variableMap[attributeNameValue]);
         }
     }
-
     var children = xmlDomNode.children;
     for(var i=0; i < children.length; i++) {
         var childNode = children[i];
-        if(!varUtility.isEmpty(childNode) && typeof(childNode) == 'object') {
-            updateXmlNodeAttribute(childNode);
+        if(varUtility.isObject(childNode)) {
+            updateXmlNodeAttribute(childNode, variableMap);
         }
     }
 }

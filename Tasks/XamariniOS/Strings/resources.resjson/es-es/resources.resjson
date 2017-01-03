@@ -9,6 +9,8 @@
   "loc.input.help.solution": "Ruta de acceso relativa de la raíz del repositorio de la solución Xamarin.iOS que se va a compilar.",
   "loc.input.label.configuration": "Configuración",
   "loc.input.help.configuration": "Las configuraciones estándar son Ad-Hoc, AppStore, Debug, Release.",
+  "loc.input.label.runNugetRestore": "Run NuGet Restore",
+  "loc.input.help.runNugetRestore": "Optionally run `nuget restore` on the Xamarin iOS solution to install all referenced packages before build. The nuget tool in the PATH on the build server will be used. To use a different version of nuget or set additional arguments use the [NuGet Instaler Task](https://www.visualstudio.com/en-us/docs/build/steps/package/nuget-installer).",
   "loc.input.label.args": "Argumentos",
   "loc.input.help.args": "Argumentos de la línea de comandos adicionales que deben usarse para compilar.",
   "loc.input.label.cwd": "Directorio de trabajo",

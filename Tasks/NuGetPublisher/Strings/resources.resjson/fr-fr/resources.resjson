@@ -16,7 +16,7 @@
   "loc.input.label.verbosity": "Commentaires",
   "loc.input.help.verbosity": "Niveau de détail de NuGet",
   "loc.input.label.nuGetVersion": "Version NuGet",
-  "loc.input.help.nuGetVersion": "Version de NuGet à utiliser, ou version personnalisée.",
+  "loc.input.help.nuGetVersion": "The version of NuGet to use, or custom version.",
   "loc.input.label.nuGetPath": "Chemin de NuGet.exe",
   "loc.input.help.nuGetPath": "Indiquez éventuellement le chemin de NuGet.exe. Remplace la sélection de version.",
   "loc.messages.Warning_NoConfigForOldNuGet": "Pour vous connecter aux flux NuGet hébergés dans votre compte Team Services/collection de projets TFS avec NuGet 3.1 ou une version antérieure, modifiez votre définition de build et spécifiez le chemin de NuGet.config contenant les sources de package à utiliser.",

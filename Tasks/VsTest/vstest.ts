@@ -43,6 +43,7 @@ try {
     var publishRunAttachments: string = tl.getInput('publishRunAttachments');
     var runInParallel: boolean = tl.getBoolInput('runInParallel');
     var tiaEnabled: boolean = tl.getBoolInput('runOnlyImpactedTests');
+    //The name of input "runOnlyImpactedTests" need to be updated for purpose of logging onprem telemetry as well.
     var tiaRebaseLimit: string = tl.getInput('runAllTestsAfterXBuilds');
     var searchFolder: string = tl.getInput('searchFolder');
 

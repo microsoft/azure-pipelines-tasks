@@ -1,8 +1,8 @@
 {
   "loc.friendlyName": "MSBuild 用の SonarQube - 分析開始",
   "loc.helpMarkDown": "[詳細] (https://go.microsoft.com/fwlink/?LinkId=620063)",
-  "loc.description": "[DEPRECATED] Fetch the Quality Profile from SonarQube to configure the analysis",
-  "loc.instanceNameFormat": "[DEPRECATED] Fetch the Quality Profile from SonarQube",
+  "loc.description": "[非推奨] SonarQube から品質プロファイルを取得して、分析を構成します",
+  "loc.instanceNameFormat": "[非推奨] SonarQube から品質プロファイルを取得します",
   "loc.group.displayName.serverSettings": "SonarQube サーバー",
   "loc.group.displayName.project": "SonarQube プロジェクト設定",
   "loc.group.displayName.dbSettings": "データベースの設定 （SonarQube 5.2以降には必要ありません）",

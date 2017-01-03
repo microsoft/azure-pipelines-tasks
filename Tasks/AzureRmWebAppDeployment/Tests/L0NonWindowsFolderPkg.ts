@@ -85,6 +85,11 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "build.sourceVersionAuthor": "author",
         "release.releaseUri": "vstfs:///ReleaseManagement/Release/1",
         "agent.name": "agent"
+    },
+    "rmRF": {
+        "temp_web_package_random_path": {
+            "success": true
+        }
     }
 }
 
@@ -147,6 +152,7 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
             id: 'appid',
             properties: { 
                 virtualApplications: [ ['Object'], ['Object'], ['Object'] ],
+                scmType: "None"
             } 
         }
 
@@ -165,6 +171,9 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
     },
     updateWebAppAppSettings : function (){
         return true;
+    },
+    updateAzureRMWebAppConfigDetails: function() {
+        console.log("Successfully updated scmType to VSTSRM");
     }
 });
 
@@ -197,6 +206,24 @@ tr.registerMock('webdeployment-common/kuduutility.js', {
 tr.registerMock('webdeployment-common/ziputility.js', {
     archiveFolder : function() {
          console.log('Folder Archiving Successful');
+    }
+});
+
+tr.registerMock('webdeployment-common/utility.js', {
+    isInputPkgIsFolder: function() {
+        return true;    
+    },
+    fileExists: function() {
+        return true;   
+    },
+    canUseWebDeploy: function() {
+        return false;
+    },
+    findfiles: function() {
+        return ['webDeployPkg']    
+    },
+    generateTemporaryFolderOrZipPath: function() {
+        return 'temp_web_package_random_path';
     }
 });
 
