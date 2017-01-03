@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 27
+    "Patch": 28
   },
   "runsOn": [
     "Agent",
@@ -109,6 +109,15 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.nuGetPath",
+      "groupName": "advanced"
+    },
+    {
+      "name": "continueOnEmptyNupkgMatch",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.continueOnEmptyNupkgMatch",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.continueOnEmptyNupkgMatch",
       "groupName": "advanced"
     }
   ],
