@@ -33,7 +33,8 @@ async function main(): Promise<void> {
         let searchPattern = tl.getPathInput("searchPattern", true, false);
         let filesList = nutil.resolveFilterSpec(
             searchPattern,
-            tl.getVariable("System.DefaultWorkingDirectory") || process.cwd());
+            tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(),
+            true);
         filesList.forEach(packageFile => {
             if (!tl.stats(packageFile).isFile()) {
                 throw new Error(tl.loc("NotARegularFile", packageFile));
