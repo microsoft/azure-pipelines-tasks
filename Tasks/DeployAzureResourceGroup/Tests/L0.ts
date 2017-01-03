@@ -30,6 +30,7 @@ describe('Azure Resource Group Deployment', function () {
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "virtualMachineExtensions.createOrUpdate  function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("Machine group agent installation succeeded on all VMs") > 0, "Machine group agent should have been installed on all VMs");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
+            assert(tr.stdout.indexOf("Machine group extension handler major version is 1") > 0, "Machine group extension handler major version has been update.");
             assert(tr.stdout.indexOf("Copying VM tags") > 0, "Tags should be copied");
             assert(tr.stdout.indexOf("Adding TeamServicesAgent extension to virtual machine customVM") > 0, "TeamServicesAgent should have been installed on the VM");
             done();

@@ -48,7 +48,7 @@ export class VirtualMachine {
 
     public execute() {
         var client = new computeManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
-        client.virtualMachines.list(this.taskParameters.resourceGroupName, (error, listOfVms, request, response) => {
+        client.virtualMachines.list(this.taskParameters.resourceGroupName, async (error, listOfVms, request, response) => {
             if (error != undefined) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("VM_ListFetchFailed", this.taskParameters.resourceGroupName, error.message));
                 process.exit();
@@ -82,14 +82,17 @@ export class VirtualMachine {
                     }
                     break;
                 case "Delete":
-                    var extDelPromise = this.machineGroupAgentExtensionManager.removeMGExtension();
-                    extDelPromise.then((val) => {
+                    var extDelPromise = this.machineGroupAgentExtensionManager.deleteMGExtension();
+                    var deleteExtensionFromVM = (val) => {
+                        console.log('Hello');
                         for (var i = 0; i < listOfVms.length; i++) {
                             var vmName = listOfVms[i]["name"];
                             console.log(tl.loc("VM_Delete", vmName));
                             client.virtualMachines.deleteMethod(this.taskParameters.resourceGroupName, vmName, this.postOperationCallBack)
                         }
-                    })
+                    }
+                    extDelPromise.then(deleteExtensionFromVM, deleteExtensionFromVM);
+                    await extDelPromise;
             }
         });
     }

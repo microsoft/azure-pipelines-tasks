@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 14
     },
     "demands": [
         "node.js"
@@ -179,42 +179,38 @@
             "name": "enableDeploymentPrerequisites",
             "type": "pickList",
             "label": "Enable deployment prerequisites",
-            "defaultValue": "Configure VM agent with Machine Group Agent",
-            "required": true,
-            "visibleRule": "action = Create or update resource group || action = Select Resource Group",
+            "defaultValue": "None",
+            "visibleRule": "action = Create or update resource group || action = Select resource group",
             "options": {
                 "None": "None",
-                "Configure VM agent with Machine Group Agent": "Configure VM agent with Machine Group Agent",
-                "Configure VM with Win RM": "Configure VM with Win RM"
+                "ConfigureVMWithMGAgent": "Configure virtual machines with machine group agent",
+                "Configure VM with Win RM": "Configure virtual machines with WinRM"
             },
-            "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
+            "helpMarkDown": "These options would be applicable only when the Resource group contains virtual machines. <br><br>Selecting machine group option configures machine group agent on all virtual machines in the resource group. <br><br>Selecting WinRM option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
         },
         {
             "name": "machineGroupName",
             "type": "pickList",
             "label": "Machine group",
-            "visibleRule": "enableDeploymentPrerequisites = Configure VM agent with Machine Group Agent",
-            "required": true,
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
             "helpMarkDown": "Select a machine group"
         },
         {
             "name": "copyAzureVMTags",
             "type": "boolean",
-            "label": "Copy Azure virtual machine tags",
-            "defaultValue": false,
-            "visibleRule": "enableDeploymentPrerequisites = Configure VM agent with Machine Group Agent",
-            "required": false,
-            "helpMarkDown": "Enabling this option copies the virtual machine tags and configures a machine group agent with those tags."
-
+            "label": "Copy Azure VM tags to agents",
+            "defaultValue": true,
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
+            "helpMarkDown": "Choose if the tags configured on the Azure VM need to be copied to the corresponding machine group agent. <br><br>​By default all Azure tags will be copied following the format “Key: Value”. Example: An Azure Tag “Role : Web” would be copied  as-is to the Agent machine. <br><br>For more information on how tag Azure resources refer to [link]https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-using-tags​"
         },
         {
             "name": "vstsPATToken",
             "type": "string",
-            "label": "VSTS pat token",
+            "label": "Personal access token",
             "defaultValue": "",
-            "visibleRule": "enableDeploymentPrerequisites = Configure VM agent with Machine Group Agent",            
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",            
             "required": true,
-            "helpMarkDown": "Provide PAT token."
+            "helpMarkDown": "Agent registration with machine group requires access to your visual studio project. Click “Generate” to create a personal access token (PAT) with scope restricted to “machine group” and a default expiration time of 90 days. Click “Manage” to extend the expiration time.​"
         },
         {
             "name": "outputVariable",
@@ -268,6 +264,7 @@
         "ARG_NetworkSecurityConfigFailed": "Failed to add the Network Security Config Rule",
         "ExtensionAlreadyPresentVm": "Extension %s is already present on the Virtual machine %s",
         "AddExtension": "Adding extension %s on vm %s",
+        "DeleteExtension": "Deleting extension %s from vm %s",
         "ARG_AllResourceNotFound": "%s not found on resource Group %s",
         "ARG_AllResourceFound": "%s with error count %s, not found on resource Group %s",
         "FailedToAddExtension": "Failed to add the network security rule with exception: %s",
@@ -289,6 +286,12 @@
         "AddedInboundNatRuleLB": "Adding Inbound Nat rule to the load balancer %s ",
         "InboundNatRuleLBPresent": "Relevant Inbound Nat rules already present for the load balancer %s",
         "ARG_DeletingResourceGroup": "Deleting Resource Group.. %s",
+        "OperationSucceeded": "%s of %s on vm %s succeeded",
+        "OperationFailed": "%s of %s on vm %s failed",
+        "MGAgentOperationOnAllVMsFailed": "Machine group agent %s did not succeed on all VMs. %s",
+        "MGAgentOperationOnAllVMsSucceeded": "Machine group agent %s succeeded on all VMs.",
+        "PublicSettings": "Public settings are:\n VSTSAccountName: %s\nTeamProject: %s\nMachineGroup: %s\nTags: %s\n",
+        "MGAgentHandlerMajorVersion": "Machine group extension handler major version is %s",
         "VM_Start": "Starting... %s",
         "VM_Restart": "Restarting... %s",
         "VM_Stop": "Stopping... %s",

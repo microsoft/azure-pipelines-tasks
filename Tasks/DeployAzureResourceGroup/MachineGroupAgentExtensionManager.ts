@@ -3,7 +3,8 @@ import util = require("util");
 import tl = require("vsts-task-lib/task");
 import azure_utils = require("./AzureUtil");
 import deployAzureRG = require("./DeployAzureRG");
-import Q = require('q');
+import Q = require("q");
+import constants = require("./Constants");
 
 export class MachineGroupAgentExtensionManager {
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
@@ -26,54 +27,75 @@ export class MachineGroupAgentExtensionManager {
         this.successCount = 0;
         this.failureCount = 0;
         this.vmCount = 0;
-
         this.computeClient = new computeManagementClient(this.credentials, this.subscriptionId);
         return this;
     }
 
     public async installMGExtension() {
-        this.deferred = Q.defer<string>();
-        var operation = "installation";
-        var listOfVms = await this.azureUtils.getVMDetails();
-        this.vmCount = listOfVms.length;
-        if (this.vmCount == 0) {
-            this.deferred.resolve("");
+        try {
+            this.deferred = Q.defer<string>();
+            var operation = "installation";
+            var listOfVms = await this.azureUtils.getVMDetails();
+            this.vmCount = listOfVms.length;
+            if (this.vmCount == 0) {
+                this.deferred.resolve("");
+            }
+            for (var i = 0; i < listOfVms.length; i++) {
+                var vmName = listOfVms[i]["name"];
+                var resourceGroupName = this.taskParameters.resourceGroupName;
+                var extensionParameters = this.formExtensionParameters(listOfVms[i], operation);
+                this.log(tl.loc("AddExtension", extensionParameters["extensionName"], vmName));
+                var extensionName = extensionParameters["extensionName"];
+                var parameters = extensionParameters["parameters"];
+                var callback = this.givePostOperationCallBack(extensionName, vmName, operation);
+                this.computeClient.virtualMachineExtensions.createOrUpdate(resourceGroupName, vmName, extensionName, parameters, callback);
+            }
+            return this.deferred.promise;
         }
-        for (var i = 0; i < listOfVms.length; i++) {
-            var vmName = listOfVms[i]["name"];
-            var extensionParameters = this.formExtensionParameters(listOfVms[i], operation);
-            this.log("Adding " + extensionParameters["extensionName"] + " extension to virtual machine " + vmName);
-            this.computeClient.virtualMachineExtensions.createOrUpdate(this.taskParameters.resourceGroupName, extensionParameters["vmName"], extensionParameters["extensionName"], extensionParameters["parameters"], this.givePostOperationCallBack(extensionParameters["extensionName"], extensionParameters["vmName"], operation));
+        catch (exception) {
+            this.log(tl.loc("MGAgentOperationOnAllVMsFailed", exception.message));
+            tl.setResult(tl.TaskResult.Failed, tl.loc("MGAgentOperationOnAllVMsFailed", exception.message));
+            this.deferred.resolve(tl.loc("MGAgentOperationOnAllVMsFailed", exception.message));
         }
-        return this.deferred.promise;
     }
 
-    public async removeMGExtension() {
-        var operation = "uninstallation";
-        this.deferred = Q.defer<string>();
-        var listOfVms = await this.azureUtils.getVMDetails();
-        this.vmCount = listOfVms.length;
-        if (this.vmCount == 0) {
-            this.deferred.resolve("");
+    public async deleteMGExtension() {
+        try {
+            var operation = "uninstallation";
+            this.deferred = Q.defer<string>();
+            var listOfVms = await this.azureUtils.getVMDetails();
+            this.vmCount = listOfVms.length;
+            if (this.vmCount == 0) {
+                this.deferred.resolve("");
+            }
+            for (var i = 0; i < listOfVms.length; i++) {
+                var vmName = listOfVms[i]["name"];
+                var resourceGroupName = this.taskParameters.resourceGroupName;
+                var extensionParameters = this.formExtensionParameters(listOfVms[i], operation);
+                this.log(tl.loc("DeleteExtension", extensionParameters["extensionName"], vmName));
+                var extensionName = extensionParameters["extensionName"];
+                var callback = this.givePostOperationCallBack(extensionName, vmName, operation);
+                this.computeClient.virtualMachineExtensions.deleteMethod(resourceGroupName, vmName, extensionName, callback);
+            }
+            return this.deferred.promise;
         }
-        for (var i = 0; i < listOfVms.length; i++) {
-            var vmName = listOfVms[i]["name"];
-            var extensionParameters = this.formExtensionParameters(listOfVms[i], operation);
-            this.log("Uninstalling " + extensionParameters["extensionName"] + " extension from virtual machine " + vmName);
-            this.computeClient.virtualMachineExtensions.deleteMethod(this.taskParameters.resourceGroupName, extensionParameters["vmName"], extensionParameters["extensionName"], this.givePostOperationCallBack(extensionParameters["extensionName"], extensionParameters["vmName"], operation));
+        catch (exception) {
+            this.log(tl.loc("MGAgentOperationOnAllVMsFailed", operation, exception.message));
+            tl.setResult(tl.TaskResult.Failed, tl.loc("MGAgentOperationOnAllVMsFailed", operation, exception.message));
+            this.deferred.reject(tl.loc("MGAgentOperationOnAllVMsFailed", operation, exception.message));
         }
-        return this.deferred.promise;
     }
 
-    private setTaskResult() {
+    private setTaskResult(operation) {
         if (this.failureCount + this.successCount == this.vmCount) {
             if (this.failureCount > 0) {
-                this.log("Machine group agent " + this.operation + " did not succeed on all VMs");
+                this.log(tl.loc("MGAgentOperationOnAllVMsFailed", operation, ""));
+                this.deferred.reject(operation);
             }
             else {
-                this.log("Machine group agent " + this.operation + " succeeded on all VMs");
+                this.log(tl.loc("MGAgentOperationOnAllVMsSucceeded", operation));
+                this.deferred.resolve(operation);
             }
-            this.deferred.resolve("");
         }
     }
 
@@ -83,12 +105,12 @@ export class MachineGroupAgentExtensionManager {
                 this.failureCount++;
                 this.errors += error.message;
                 this.errors += "\n";
-                this.log(operation + " of " + extensionName + " on " + vmName + " failed.");
+                this.log(tl.loc("OperationFailed", operation, extensionName, vmName));
             } else {
                 this.successCount++;
-                this.log(operation + " of " + extensionName + " on " + vmName + " succeeded.");
+                this.log(tl.loc("OperationSucceeded", operation, extensionName, vmName));
             }
-            this.setTaskResult();
+            this.setTaskResult(operation);
         }
         return postOperationCallBack;
     }
@@ -101,21 +123,24 @@ export class MachineGroupAgentExtensionManager {
         this.log("Operating system on virtual machine : " + vmOsType);
         var vmLocation = virtualMachine["location"];
         if (vmOsType == "Windows") {
-            var extensionName = "TeamServicesAgent";
-            var virtualMachineExtensionType: string = 'TeamServicesAgent';
-            var typeHandlerVersion: string = '1.0';
+            var extensionName = constants.mgExtensionNameWindows;
+            var virtualMachineExtensionType: string = constants.vmExtensionTypeWindows;
+            var typeHandlerVersion: string = constants.version;
         }
         else if (vmOsType == "Linux") {
-            extensionName = "TeamServicesAgentLinux";
-            virtualMachineExtensionType = 'TeamServicesAgentLinux';
-            typeHandlerVersion = '1.0';
+            extensionName = constants.mgExtensionNameLinux;
+            virtualMachineExtensionType = constants.vmExtensionTypeLinux;
+            typeHandlerVersion = constants.version;
         }
+        this.log(tl.loc("MGAgentHandlerMajorVersion", typeHandlerVersion.split(".")[0]));
         if (operation == "installation") {
             var autoUpgradeMinorVersion: boolean = true;
-            var publisher: string = 'Microsoft.VisualStudio.Services';
-            var extensionType: string = 'Microsoft.Compute/virtualMachines/extensions';
+            var publisher: string = constants.publisher;
+            var extensionType: string = constants.extensionType;
             //var collectionUri = tl.getVariable('system.TeamFoundationCollectionUri');
             //var teamProject = tl.getVariable('system.teamProject');
+            console.log("TeamFoundationCollectionUri is " + tl.getVariable('system.TeamFoundationCollectionUri'));
+            console.log("TeamProject is " + tl.getVariable('system.teamProject'));
             var collectionUri = "https://testking123.visualstudio.com/";
             var teamProject = "AzureProj";
             var uriLength = collectionUri.length;
@@ -127,20 +152,30 @@ export class MachineGroupAgentExtensionManager {
                 this.log("Copying VM tags")
                 tags = virtualMachine["tags"];
             }
-            var publicSettings = { VSTSAccountName: collectionUri, TeamProject: teamProject, MachineGroup: this.taskParameters.machineGroupName, AgentName: "", Tags: tags };
-            this.log("Public settings are :");
-            this.log("VSTSAccountName : " + collectionUri);
-            this.log("TeamProject : " + teamProject);
-            this.log("MachineGroup : " + this.taskParameters.machineGroupName);
-            this.log("Tags: " + tags);
+            var publicSettings = { 
+                VSTSAccountName: collectionUri, 
+                TeamProject: teamProject, 
+                MachineGroup: this.taskParameters.machineGroupName, 
+                AgentName: "", 
+                Tags: tags 
+            };
+            this.log(tl.loc("PublicSettings", collectionUri, teamProject, this.taskParameters.machineGroupName, tags));
             var protectedSettings = { PATToken: this.taskParameters.vstsPATToken };
-            var parameters = { type: extensionType, virtualMachineExtensionType: virtualMachineExtensionType, typeHandlerVersion: typeHandlerVersion, publisher: publisher, autoUpgradeMinorVersion: autoUpgradeMinorVersion, location: vmLocation, settings: publicSettings, protectedSettings: protectedSettings };
+            var parameters = {
+                type: extensionType,
+                virtualMachineExtensionType: virtualMachineExtensionType,
+                typeHandlerVersion: typeHandlerVersion,
+                publisher: publisher,
+                autoUpgradeMinorVersion: autoUpgradeMinorVersion,
+                location: vmLocation,
+                settings: publicSettings,
+                protectedSettings: protectedSettings
+            };
         }
-        this.log("VM Location: " + vmLocation);
         return { vmName: vmName, extensionName: extensionName, parameters: parameters };
     }
 
-    private log(message){
+    private log(message) {
         tl.debug(message);
         console.log(message);
     }

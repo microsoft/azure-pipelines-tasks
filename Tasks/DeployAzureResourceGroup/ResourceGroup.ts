@@ -15,6 +15,7 @@ import env = require("./Environment");
 import deployAzureRG = require("./DeployAzureRG");
 import winRM = require("./WinRMHttpsListener");
 import mgExtManager = require("./MachineGroupAgentExtensionManager");
+import constants = require("./Constants");
 
 var parameterParse = require("./parameterParse").parse;
 var armResource = require("azure-arm-resource");
@@ -216,9 +217,11 @@ export class ResourceGroup {
                     console.log("Enabling winRM Https Listener on your windows machines..");
                     await this.WinRMHttpsListener.EnableWinRMHttpsListener();
                 }
-                else if (this.taskParameters.enableDeploymentPrerequisites == "ConfigureVMWithMGAgent") {
+                else if (this.taskParameters.enableDeploymentPrerequisites == constants.enablePrereqMG) {
                     console.log("Installing Team Services Agent extension on the VMs");
-                    await this.machineGroupAgentExtensionManager.installMGExtension();
+                    var enableMGPromise = this.machineGroupAgentExtensionManager.installMGExtension();
+                    enableMGPromise.then(null, (operation) => {tl.setResult(tl.TaskResult.Failed, tl.loc("MGAgentOperationOnAllVMsFailed", operation, ""))});
+                    await enableMGPromise;
                 }
 
                 try {
@@ -254,8 +257,8 @@ export class ResourceGroup {
     }
 
     public deleteResourceGroup() {
-        var extDelPromise = this.machineGroupAgentExtensionManager.removeMGExtension();
-        extDelPromise.then((val) => {
+        var extDelPromise = this.machineGroupAgentExtensionManager.deleteMGExtension();
+        var deleteRG = (val) => {
             var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
             console.log(tl.loc("ARG_DeletingResourceGroup", this.taskParameters.resourceGroupName));
             armClient.resourceGroups.deleteMethod(this.taskParameters.resourceGroupName, (error, result, request, response) => {
@@ -265,7 +268,8 @@ export class ResourceGroup {
                 }
                 tl.setResult(tl.TaskResult.Succeeded, tl.loc("RGO_DeletedResourceGroup", this.taskParameters.resourceGroupName));
             });
-        })
+        }
+        extDelPromise.then(deleteRG, deleteRG);
     }
 
     public async selectResourceGroup() {
@@ -273,9 +277,11 @@ export class ResourceGroup {
             console.log("Enabling winRM Https Listener on your windows machines..");
             await this.WinRMHttpsListener.EnableWinRMHttpsListener();
         }
-        else if (this.taskParameters.enableDeploymentPrerequisites == "ConfigureVMWithMGAgent") {
+        else if (this.taskParameters.enableDeploymentPrerequisites == constants.enablePrereqMG) {
             console.log("Installing Team Services Agent extension on the VMs");
-            await this.machineGroupAgentExtensionManager.installMGExtension();
+            var enableMGPromise = this.machineGroupAgentExtensionManager.installMGExtension();
+            enableMGPromise.then(null, (operation) => {tl.setResult(tl.TaskResult.Failed, tl.loc("MGAgentOperationOnAllVMsFailed", operation, ""))});
+            await enableMGPromise;
         }
         try {
             this.envController.RegisterEnvironment();
