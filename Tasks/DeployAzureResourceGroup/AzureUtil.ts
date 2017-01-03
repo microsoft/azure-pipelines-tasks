@@ -1,5 +1,5 @@
-var networkManagementClient = require("azure-arm-network");
-var computeManagementClient = require("azure-arm-compute");
+var networkManagementClient = require("./azure-arm-network");
+var computeManagementClient = require("./azure-arm-compute");
 import q = require("q");
 import deployAzureRG = require("./DeployAzureRG");
 
@@ -26,7 +26,7 @@ export class AzureUtil {
     
     public getLoadBalancers() {
         var deferred = q.defer();
-        var armClient = new networkManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
+        var armClient = new networkManagementClient.NetworkManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
         armClient.loadBalancers.list(this.taskParameters.resourceGroupName, (error, loadbalancers, request, response) => {
             if (error){
                 console.log("Error while getting list of Load Balancers", error);
@@ -40,7 +40,7 @@ export class AzureUtil {
 
     public getVMDetails() {
         var deferred = q.defer();
-        var armClient = new computeManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
+        var armClient = new computeManagementClient.ComputeManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
         armClient.virtualMachines.list(this.taskParameters.resourceGroupName, (error, virtualMachines, request, response) => {
             if (error){
                 console.log("Error while getting list of Virtual Machines", error);
@@ -54,7 +54,7 @@ export class AzureUtil {
 
     public getNetworkInterfaceDetails() {
         var deferred = q.defer();
-        var armClient = new networkManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
+        var armClient = new networkManagementClient.NetworkManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
         armClient.networkInterfaces.list(this.taskParameters.resourceGroupName, (error, networkInterfaces, request, response) => {
             if (error){
                 console.log("Error while getting list of Network Interfaces", error);
@@ -68,7 +68,7 @@ export class AzureUtil {
 
     public getPublicIPAddresses() {
         var deferred = q.defer();
-        var armClient = new networkManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
+        var armClient = new networkManagementClient.NetworkManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
         armClient.publicIPAddresses.list(this.taskParameters.resourceGroupName, (error, publicAddresses, request, response) => {
             if (error){
                 console.log("Error while getting list of Public Addresses", error);
