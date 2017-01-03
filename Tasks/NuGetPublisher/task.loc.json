@@ -112,12 +112,12 @@
       "groupName": "advanced"
     },
     {
-      "name": "failOnEmptyNupkgMatch",
+      "name": "continueOnEmptyNupkgMatch",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.failOnEmptyNupkgMatch",
-      "defaultValue": true,
+      "label": "ms-resource:loc.input.label.continueOnEmptyNupkgMatch",
+      "defaultValue": false,
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.failOnEmptyNupkgMatch",
+      "helpMarkDown": "ms-resource:loc.input.help.continueOnEmptyNupkgMatch",
       "groupName": "advanced"
     }
   ],

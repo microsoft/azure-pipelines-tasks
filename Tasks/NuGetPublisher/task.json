@@ -112,12 +112,12 @@
             "groupName": "advanced"
         },
         {
-            "name": "failOnEmptyNupkgMatch",
+            "name": "continueOnEmptyNupkgMatch",
             "type": "boolean",
-            "label": "Fail on empty nupkg match",
-            "defaultValue": true,
+            "label": "Continue if no packages match the \"Path/Pattern to nupkg\"",
+            "defaultValue": false,
             "required": false,
-            "helpMarkDown": "Fail if no packages are found using the given path/pattern to nupkg.",
+            "helpMarkDown": "Continue instead of fail if no packages match the \"Path/Pattern to nupkg\".",
             "groupName": "advanced"
         }
     ],

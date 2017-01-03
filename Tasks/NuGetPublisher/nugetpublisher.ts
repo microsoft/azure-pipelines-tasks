@@ -31,11 +31,11 @@ async function main(): Promise<void> {
 
         // read inputs
         let searchPattern = tl.getPathInput("searchPattern", true, false);
-        let allowEmptyMatch = !tl.getBoolInput("failOnEmptyNupkgMatch");
+        let allowEmptyNupkgMatch = tl.getBoolInput("continueOnEmptyNupkgMatch");
         let filesList = nutil.resolveFilterSpec(
             searchPattern,
             tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(),
-            allowEmptyMatch);
+            allowEmptyNupkgMatch);
         filesList.forEach(packageFile => {
             if (!tl.stats(packageFile).isFile()) {
                 throw new Error(tl.loc("NotARegularFile", packageFile));
