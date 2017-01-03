@@ -1,6 +1,6 @@
 {
   "name": "Agent.Tasks.Gradle",
-  "version": "1.0.37",
+  "version": "2.112.0",
   "author": "Microsoft Corporation",
   "description": "Build with Gradle",
   "license": "MIT",
