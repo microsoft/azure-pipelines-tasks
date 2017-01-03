@@ -20,6 +20,6 @@
     "q": "1.4.1"
   },
   "devDependencies": {
-    "mocha": "^3.1.0"
+
   }
 }

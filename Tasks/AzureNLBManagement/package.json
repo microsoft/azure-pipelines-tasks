@@ -14,6 +14,6 @@
     "vsts-task-lib": "0.9.20"
   },
   "devDependencies": {
-    "mocha": "3.2.0"
+
   }
 }
