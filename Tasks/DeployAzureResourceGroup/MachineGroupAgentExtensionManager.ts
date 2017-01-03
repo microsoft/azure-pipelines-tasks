@@ -137,12 +137,8 @@ export class MachineGroupAgentExtensionManager {
             var autoUpgradeMinorVersion: boolean = true;
             var publisher: string = constants.publisher;
             var extensionType: string = constants.extensionType;
-            //var collectionUri = tl.getVariable('system.TeamFoundationCollectionUri');
-            //var teamProject = tl.getVariable('system.teamProject');
-            console.log("TeamFoundationCollectionUri is " + tl.getVariable('system.TeamFoundationCollectionUri'));
-            console.log("TeamProject is " + tl.getVariable('system.teamProject'));
-            var collectionUri = "https://testking123.visualstudio.com/";
-            var teamProject = "AzureProj";
+            var collectionUri = tl.getVariable('system.TeamFoundationCollectionUri');
+            var teamProject = tl.getVariable('system.teamProject');
             var uriLength = collectionUri.length;
             if (collectionUri[uriLength - 1] == '/') {
                 collectionUri = collectionUri.substr(0, uriLength - 1);
