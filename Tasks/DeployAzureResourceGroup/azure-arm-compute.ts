@@ -524,7 +524,7 @@ export class VirtualMachineExtensions {
 
     }
 
-    public delete(resourceGroupName, vmName, vmExtensionName, callback) {
+    public deleteMethod(resourceGroupName, vmName, vmExtensionName, callback) {
         if (!callback) {
             throw new Error('callback cannot be null.');
         }
