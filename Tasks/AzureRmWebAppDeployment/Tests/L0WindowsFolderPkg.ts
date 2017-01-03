@@ -184,6 +184,9 @@ tr.registerMock('fs', {
     },
     closeSync: function (fd) {
         return true;
+    },
+    fsyncSync: function(fd) {
+        return true;
     }
 });
 
