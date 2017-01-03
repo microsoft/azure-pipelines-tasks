@@ -97,5 +97,5 @@
   "loc.messages.JSONParseError": "Unable to parse JSON file: %s. Error: %s",
   "loc.messages.JSONvariablesubstitutionappliedsuccessfully": "JSON variable substitution applied successfully.",
   "loc.messages.XMLvaiablesubstitutionappliedsuccessfully": "XML vaiable substitution applied successfully.",
-  "loc.messages.XMLParseError": "Unable to parse cofig file for xml variable substitution: %s"
+  "loc.messages.XMLParseError": "Unable to parse config file for xml variable substitution: %s"
 }
