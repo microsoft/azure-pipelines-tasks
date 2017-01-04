@@ -23,7 +23,7 @@ var azureRESTUtility = require ('./azurerestutility.js'); // should be removed
 export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingProfile, removeAdditionalFilesFlag, 
         excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile, additionalArguments, isFolderBasedDeployment, useWebDeploy) {
 
-	setParametersFile = utility.getSetParamFilePath(setParametersFile);
+	setParametersFile = utility.copySetParamFileIfItExists(setParametersFile);
     var msDeployPath = await msDeployUtility.getMSDeployFullPath();
     var msDeployDirectory = msDeployPath.slice(0, msDeployPath.lastIndexOf('\\') + 1);
     var pathVar = process.env.PATH;
