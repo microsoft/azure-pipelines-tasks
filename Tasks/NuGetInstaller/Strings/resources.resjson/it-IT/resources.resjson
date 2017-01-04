@@ -17,7 +17,7 @@
   "loc.input.label.verbosity": "Livello di dettaglio",
   "loc.input.help.verbosity": "Livello di dettaglio di NuGet",
   "loc.input.label.nuGetVersion": "Versione di NuGet",
-  "loc.input.help.nuGetVersion": "Versione di NuGet da usare o versione esterna.",
+  "loc.input.help.nuGetVersion": "The version of NuGet to use, or external version.",
   "loc.input.label.nuGetPath": "Percorso di NuGet.exe",
   "loc.input.help.nuGetPath": "Consente, facoltativamente, di specificare il percorso di NuGet.exe. Il percorso specificato sostituirà quello selezionato per la versione.",
   "loc.messages.Warning_NoConfigForNoCredentialProvider": "Per connettersi ai feed NuGet ospitati nell'account di Team Services e/o nella raccolta di progetti TFS in questo agente di compilazione, modificare la definizione di compilazione in modo da scegliere una versione superiore di nuget o specificare il percorso di un file NuGet.config contenente le origini pacchetto che si vogliono usare.",

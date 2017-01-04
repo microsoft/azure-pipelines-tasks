@@ -13,9 +13,9 @@
   "loc.input.label.applicationParameterPath": "응용 프로그램 매개 변수",
   "loc.input.help.applicationParameterPath": "응용 프로그램 매개 변수 파일의 경로입니다. 경로에 [변수](https://go.microsoft.com/fwlink/?LinkID=550988) 및 와일드카드를 사용할 수 있습니다. 지정하면 게시 프로필의 값이 재정의됩니다.",
   "loc.input.label.copyPackageTimeoutSec": "CopyPackageTimeoutSec",
-  "loc.input.help.copyPackageTimeoutSec": "Timeout in seconds for copying application package to image store.",
+  "loc.input.help.copyPackageTimeoutSec": "응용 프로그램 패키지를 이미지 저장소에 복사하는 제한 시간(초)입니다.",
   "loc.input.label.registerPackageTimeoutSec": "RegisterPackageTimeoutSec",
-  "loc.input.help.registerPackageTimeoutSec": "Timeout in seconds for registering application package.",
+  "loc.input.help.registerPackageTimeoutSec": "응용 프로그램 패키지를 등록하는 데 대한 제한 시간(초)입니다.",
   "loc.input.label.overridePublishProfileSettings": "모든 게시 프로필 업그레이드 설정 재정의",
   "loc.input.help.overridePublishProfileSettings": "지정하지 않으면 모든 업그레이드 설정이 아래에 지정된 값 또는 기본값으로 재정의됩니다.",
   "loc.input.label.isUpgrade": "응용 프로그램 업그레이드",
@@ -81,5 +81,5 @@
   "loc.messages.SFSDK_UpgradeRolledBack": "업그레이드가 롤백되었습니다.",
   "loc.messages.SFSDK_UnzipPackage": "'{0}'의 압축을 '{1}' 위치에 푸는 중입니다.",
   "loc.messages.SFSDK_UnexpectedError": "예기치 않은 오류입니다. 오류 정보: $_.Exception.Message",
-  "loc.messages.CopyPackageTimeoutSecWarning": "The CopyPackageTimeoutSec parameter requires version '2.3' of the Service Fabric SDK, but the installed version is '{0}'. This parameter will be ignored."
+  "loc.messages.CopyPackageTimeoutSecWarning": "CopyPackageTimeoutSec 매개 변수를 사용하려면 Service Fabric SDK의 '2.3' 버전이 필요하지만, 설치된 버전은 '{0}'입니다. 이 매개 변수는 무시됩니다."
 }

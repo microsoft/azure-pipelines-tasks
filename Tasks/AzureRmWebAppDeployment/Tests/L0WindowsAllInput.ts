@@ -115,6 +115,15 @@ tr.registerMock('./msdeployutility.js', {
     }
 }); 
 
+tr.registerMock('webdeployment-common/kuduutility.js', {
+    getVirtualAndPhysicalPaths : function() {
+        return ["/virtualApp", "/test/path"]
+    },
+    ensurePhysicalPathExists: function() {
+        return true;
+    }
+}); 
+
 tr.registerMock('azurerest-common/azurerestutility.js', {
     getAzureRMWebAppPublishProfile: function(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
         var mockPublishProfile = {
@@ -146,6 +155,7 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
 			id: 'appid',
 			properties: { 
 				virtualApplications: [ ['Object'], ['Object'], ['Object'] ],
+                scmType: "None"
 			} 
 		}
 
@@ -176,6 +186,9 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
     },
     updateWebAppAppSettings : function (){
         return true;
+    },
+    updateAzureRMWebAppConfigDetails: function() {
+        console.log("Successfully updated scmType to VSTSRM");
     }
 });
 

@@ -1,8 +1,8 @@
 {
   "loc.friendlyName": "MSBuild 的 SonarQube - 開始分析",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkId=620063)",
-  "loc.description": "[DEPRECATED] Fetch the Quality Profile from SonarQube to configure the analysis",
-  "loc.instanceNameFormat": "[DEPRECATED] Fetch the Quality Profile from SonarQube",
+  "loc.description": "[取代] 從 SonarQube 擷取 Quality Profile，以設定分析",
+  "loc.instanceNameFormat": "[取代] 從 SonarQube 擷取品質設定檔",
   "loc.group.displayName.serverSettings": "SonarQube 伺服器",
   "loc.group.displayName.project": "SonarQube 專案設定",
   "loc.group.displayName.dbSettings": "資料庫設定 (SonarQube 5.2+不需要)",

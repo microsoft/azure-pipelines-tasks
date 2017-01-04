@@ -24,7 +24,7 @@ async function run() {
 		SPN["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
 		
 		var nicVm = await getNetworkInterface(SPN, endpointUrl, resourceGroupName);
-		tl.debug(`Network Interface - ${nicVm.name}'s configuration details fetched for the virtual machine ${process.env["computername"]}`);
+		tl.debug(`Network Interface - ${nicVm.name}'s configuration details fetched for the virtual machine ${process.env.COMPUTERNAME}`);
 
 		var nicLbBackendPoolConfig = null;
 		if (action == "Connect") {
@@ -38,7 +38,7 @@ async function run() {
 		nicVm.properties.ipConfigurations[0].properties['loadBalancerBackendAddressPools'] = nicLbBackendPoolConfig;
 		var setNIStatus = await nlbUtility.setNetworkInterface(SPN, endpointUrl, nicVm, resourceGroupName);
 		tl._writeLine(tl.loc(setNIStatus, nicVm.name));
-		tl._writeLine(tl.loc("ActionCompletedSuccefully", action, process.env.computername, loadBalancerName));
+		tl._writeLine(tl.loc("ActionCompletedSuccefully", action, process.env.COMPUTERNAME, loadBalancerName));
 	}
 	catch(error) {
 		tl.setResult(tl.TaskResult.Failed, error);
@@ -47,11 +47,11 @@ async function run() {
 
 async function getNetworkInterface(SPN, endpointUrl: string, resourceGroupName: string) {
 	var nics =  await nlbUtility.getNetworkInterfacesInRG(SPN, endpointUrl, resourceGroupName);
-	tl.debug(`Getting Primary Network Interface for the virtual machine : ${process.env.computername}`);
+	tl.debug(`Getting Primary Network Interface for the virtual machine : ${process.env.COMPUTERNAME}`);
 	var nicVm = utility.getPrimaryNetworkInterface(nics);
 	
 	if (!nicVm) {
-		throw tl.loc("CouldNotFetchNicDetails", process.env["computername"]);	
+		throw tl.loc("CouldNotFetchNicDetails", process.env.COMPUTERNAME);	
 	}
 	return nicVm;
 }

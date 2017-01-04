@@ -11,7 +11,7 @@
       "stdout":"bash execution failed",
       "stderr": "bash stderr"
     },
-	"scriptfail.bat arg1": {
+    "scriptfail.bat arg1": {
       "code": 1,
       "stdout":"cmd execution failed",
       "stderr": "cmd stderr"
@@ -60,6 +60,7 @@
     "ENDPOINT_AUTH_AzureClassic": "{\"parameters\":{\"certificate\":\"cert\"},\"scheme\":\"Certificate\"}",
     "ENDPOINT_DATA_AzureClassic_SUBSCRIPTIONNAME": "sName",
     "ENDPOINT_DATA_AzureClassic_SUBSCRIPTIONID": "sId",
+    "ENDPOINT_URL_AzureClassic":"https://www.sampleServiceUrl.net/",
     "ENDPOINT_AUTH_AzureRM": "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}",
     "ENDPOINT_DATA_AzureRM_SUBSCRIPTIONNAME": "sName"
   }

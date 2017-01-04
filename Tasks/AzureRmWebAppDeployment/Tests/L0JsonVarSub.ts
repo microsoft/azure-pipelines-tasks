@@ -50,6 +50,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "rmRF": {
         "DefaultWorkingDirectory\\msDeployCommand.bat": {
             "success": true
+        },
+        "temp_web_package_random_path": {
+            "success": true
         }
     },
     "exec": {
@@ -141,6 +144,7 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
 			id: 'appid',
 			properties: { 
 				virtualApplications: [ ['Object'], ['Object'], ['Object'] ],
+                scmType: "VSTS"
 			} 
 		}
 
@@ -171,6 +175,9 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
     },
     updateWebAppAppSettings : function (){
         return true;
+    },
+    updateAzureRMWebAppConfigDetails: function() {
+        console.log("Successfully updated scmType to VSTSRM");
     }
 });
 
@@ -233,6 +240,24 @@ tr.registerMock('webdeployment-common/jsonvariablesubstitutionutility.js', {
         if(jsonObject['User.Profile'] === 'do_not_replace') {
             console.log('JSON - case sensitive variables validated');
         }
+    }
+});
+
+tr.registerMock('webdeployment-common/utility.js', {
+    isInputPkgIsFolder: function() {
+        return false;    
+    },
+    fileExists: function() {
+        return true;   
+    },
+    canUseWebDeploy: function() {
+        return true;
+    },
+    findfiles: function() {
+        return ['webDeployPkg']    
+    },
+    generateTemporaryFolderOrZipPath: function() {
+        return 'temp_web_package_random_path';
     }
 });
 
