@@ -4,7 +4,7 @@
 import path = require("path");
 import tl = require("vsts-task-lib/task");
 
-var computeManagementClient = require('azure-arm-compute');
+import armCompute = require('./azure-arm-compute');
 
 import deployAzureRG = require("./DeployAzureRG");
 
@@ -44,7 +44,7 @@ export class VirtualMachine {
     }
 
     public execute() {
-        var client = new computeManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
+        var client = new armCompute.ComputeManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
         client.virtualMachines.list(this.taskParameters.resourceGroupName, (error, listOfVms, request, response) => {
             if (error != undefined){
                 tl.setResult(tl.TaskResult.Failed, tl.loc("VM_ListFetchFailed", this.taskParameters.resourceGroupName, error.message));

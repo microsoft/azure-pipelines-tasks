@@ -242,7 +242,7 @@ export class VirtualMachines {
 
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
-            if (response.statusCode != 200 && response.statusCode != 201) {
+            if (response.statusCode != 202) {
                 deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             else {
@@ -290,7 +290,7 @@ export class VirtualMachines {
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
-            if (statusCode != 200 && statusCode != 201) {
+            if (statusCode != 202) {
                 deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
@@ -335,7 +335,7 @@ export class VirtualMachines {
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
-            if (statusCode != 200 && statusCode != 201) {
+            if (statusCode != 202) {
                 deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {

@@ -1,6 +1,6 @@
 /// <reference path="../../definitions/Q.d.ts" />
-var networkManagementClient = require("azure-arm-network");
-var computeManagementClient = require("azure-arm-compute");
+var networkManagementClient = require("./azure-arm-network");
+var computeManagementClient = require("./azure-arm-compute");
 
 import q = require("q");
 import util = require("util");
@@ -230,7 +230,7 @@ export class RegisterEnvironment {
         var tags = {};
         for (var i = 0; i < virtualMachines.length; i++) {
             var vm = virtualMachines[i];
-            var nicId = vm["networkProfile"]["networkInterfaces"][0]["id"];
+            var nicId = vm.properties["networkProfile"]["networkInterfaces"][0]["id"];
             this.nicIds.push(nicId);
             if (vm["tags"] != undefined)
                 tags[nicId] = vm["tags"];
@@ -243,7 +243,7 @@ export class RegisterEnvironment {
         for (var i = 0; i < networkInterfaces.length; i++) {
             var networkInterface = networkInterfaces[i];
             var nicId = networkInterface["id"];
-            var ipConfig = networkInterface["ipConfigurations"][0];
+            var ipConfig = networkInterface.properties["ipConfigurations"][0].properties;
             if (ipConfig["publicIPAddress"]){
                 interfaces[nicId] = { publicAddress: ipConfig["publicIPAddress"]["id"] };
             } else if (ipConfig["loadBalancerInboundNatRules"]) {
