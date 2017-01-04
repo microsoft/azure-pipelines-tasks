@@ -18,7 +18,7 @@ import mgExtManager = require("./MachineGroupAgentExtensionManager");
 import constants = require("./Constants");
 
 var parameterParse = require("./parameterParse").parse;
-var armResource = require("azure-arm-resource");
+var armResource = require("./azure-arm-resource");
 
 class Deployment {
     public properties: Object;
@@ -220,7 +220,7 @@ export class ResourceGroup {
                 else if (this.taskParameters.enableDeploymentPrerequisites == constants.enablePrereqMG) {
                     console.log("Installing Team Services Agent extension on the VMs");
                     var enableMGPromise = this.machineGroupAgentExtensionManager.installMGExtension();
-                    enableMGPromise.then(null, (operation) => {tl.setResult(tl.TaskResult.Failed, tl.loc("MGAgentOperationOnAllVMsFailed", operation, ""))});
+                    enableMGPromise.then(null, (operation) => { tl.setResult(tl.TaskResult.Failed, tl.loc("MGAgentOperationOnAllVMsFailed", operation, "")) });
                     await enableMGPromise;
                 }
 
@@ -257,7 +257,7 @@ export class ResourceGroup {
     }
 
     public deleteResourceGroup() {
-        var extDelPromise = this.machineGroupAgentExtensionManager.deleteMGExtension();
+        var extDelPromise = this.machineGroupAgentExtensionManager.deleteMGExtensionRG();
         var deleteRG = (val) => {
             var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
             console.log(tl.loc("ARG_DeletingResourceGroup", this.taskParameters.resourceGroupName));
@@ -280,7 +280,7 @@ export class ResourceGroup {
         else if (this.taskParameters.enableDeploymentPrerequisites == constants.enablePrereqMG) {
             console.log("Installing Team Services Agent extension on the VMs");
             var enableMGPromise = this.machineGroupAgentExtensionManager.installMGExtension();
-            enableMGPromise.then(null, (operation) => {tl.setResult(tl.TaskResult.Failed, tl.loc("MGAgentOperationOnAllVMsFailed", operation, ""))});
+            enableMGPromise.then(null, (operation) => { tl.setResult(tl.TaskResult.Failed, tl.loc("MGAgentOperationOnAllVMsFailed", operation, "")) });
             await enableMGPromise;
         }
         try {
