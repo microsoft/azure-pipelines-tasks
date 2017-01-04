@@ -18,7 +18,9 @@ export class AzureUtil {
         var deferred = q.defer();
         var details = [this.getLoadBalancers(), this.getNetworkInterfaceDetails(), this.getPublicIPAddresses(), this.getVMDetails()];
         q.all(details).then(() => {
-            q.resolve(this);
+            deferred.resolve(this);
+        }).catch((error) => {
+            deferred.reject(error);
         })
         return deferred.promise;
     }

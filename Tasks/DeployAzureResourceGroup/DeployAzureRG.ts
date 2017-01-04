@@ -5,7 +5,7 @@ import tl = require("vsts-task-lib/task");
 import fs = require("fs");
 import util = require("util");
 
-var msRestAzure = require("ms-rest-azure");
+var msRestAzure = require("./ms-rest-azure");
 
 
 export class AzureRGTaskParameters {
