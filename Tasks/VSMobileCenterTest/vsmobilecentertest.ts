@@ -205,7 +205,7 @@ async function run() {
             // logout
             let logoutRunner = tl.tool(cliPath);
             logoutRunner.arg(['logout', '--quiet']); 
-            logoutRunner.exec();
+            await logoutRunner.exec();
         }
     }
 }

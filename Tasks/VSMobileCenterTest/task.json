@@ -2,8 +2,8 @@
     "id": "AD5CD22A-BE4E-48BB-ADCE-181A32432DA5",
     "name": "VSMobileCenterTest",
     "friendlyName": "Visual Studio Mobile Center Test",
-    "description": "Test mobile app packages with Visual Studio Mobile Center",
-    "helpMarkDown": "Test mobile app packages to Visual Studio Mobile Center",
+    "description": "Test mobile app packages with Visual Studio Mobile Center.",
+    "helpMarkDown": "Test mobile app packages with Visual Studio Mobile Center.",
     "category": "Test",
     "visibility": [
         "Build"
@@ -11,7 +11,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 111,
+        "Minor": 112,
         "Patch": 0
     },
     "groups": [
@@ -63,7 +63,7 @@
             "label": "Mobile Center Password",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Visit https://mobile.azure.com/settings/profile to set your password.",
+            "helpMarkDown": "Visit https://mobile.azure.com/settings/profile to set your password. It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. You may mark variable type as 'secret' to secure it.",
             "visibleRule": "credsType = inputs"
         },
         {
@@ -72,7 +72,7 @@
             "label": "App Slug",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The app slug is in the format of {username}/{app_identifier}.  To locate {username} and {app_identifier} for an app, click on its name from https://mobile.azure.com/apps, and the resulting url is in the format of https://mobile.azure.com/users/{username}/apps/{app_identifier}"
+            "helpMarkDown": "The app slug is in the format of {username}/{app_identifier}.  To locate {username} and {app_identifier} for an app, click on its name from https://mobile.azure.com/apps, and the resulting url is in the format of https://mobile.azure.com/users/{username}/apps/{app_identifier}."
         },
         {
             "name": "app",
@@ -104,7 +104,7 @@
             "label": "DSym Directory",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Path to iOS symbol files"
+            "helpMarkDown": "Path to iOS symbol files."
         },
         {
             "name": "locale",
@@ -128,14 +128,6 @@
             "helpMarkDown": "If your language isn't displayed, select 'Other' and enter its locale below, such as en_US."
         },
         {
-            "name": "async",
-            "type": "boolean",
-            "label": "Do not wait for test result",
-            "defaultValue": false,
-            "required": false,
-            "helpMarkDown": "Execute command asynchronously, exit when tests are uploaded, without waiting for test results."
-        },
-        {
             "name": "userDefinedLocale",
             "type": "string",
             "label": "Other Locale",
@@ -143,6 +135,14 @@
             "required": false,
             "visibleRule": "locale = user",
             "helpMarkDown": "Enter any two-letter ISO-639 language code along with any two-letter ISO 3166 country code in the format [language]_[country], such as en_US."
+        },
+        {
+            "name": "async",
+            "type": "boolean",
+            "label": "Do not wait for test result",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Execute command asynchronously, exit when tests are uploaded, without waiting for test results."
         },
         {
             "name": "framework",
@@ -174,7 +174,7 @@
             "defaultValue":"",
             "visibleRule":"framework = appium",
             "required": true,
-            "helpMarkDown":"Path to directory with Appium tests",
+            "helpMarkDown":"Path to directory with Appium tests.",
             "groupName":"prepare"
         },
         {

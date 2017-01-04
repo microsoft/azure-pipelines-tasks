@@ -11,7 +11,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 111,
+    "Minor": 112,
     "Patch": 0
   },
   "groups": [
@@ -128,14 +128,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.locale"
     },
     {
-      "name": "async",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.async",
-      "defaultValue": false,
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.async"
-    },
-    {
       "name": "userDefinedLocale",
       "type": "string",
       "label": "ms-resource:loc.input.label.userDefinedLocale",
@@ -143,6 +135,14 @@
       "required": false,
       "visibleRule": "locale = user",
       "helpMarkDown": "ms-resource:loc.input.help.userDefinedLocale"
+    },
+    {
+      "name": "async",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.async",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.async"
     },
     {
       "name": "framework",
