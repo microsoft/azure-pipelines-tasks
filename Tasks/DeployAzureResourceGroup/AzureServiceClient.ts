@@ -50,21 +50,21 @@ export function ToError(response: WebResponse): Error {
 }
 
 export class ServiceClient {
-    private credential: msRestAzure.ApplicationTokenCredentials;
+    private credentials: msRestAzure.ApplicationTokenCredentials;
 
     constructor(credentials: msRestAzure.ApplicationTokenCredentials) {
-        this.credential = credentials;
+        this.credentials = credentials;
     }
 
     public async beginRequest(request: WebRequest): Promise<WebResponse> {
-        var token = await this.credential.getToken();
+        var token = await this.credentials.getToken();
         request.headers == request.headers || {};
         request.headers["Authorization"] = "Bearer " + token;
 
         var httpResponse = await this.beginRequestInternal(request);
         if (httpResponse.statusCode === 401 && httpResponse.body.error.code === "ExpiredAuthenticationToken") {
             // The access token might have expire. Re-issue the request after refreshing the token.
-            token = await this.credential.getToken(true);
+            token = await this.credentials.getToken(true);
             request.headers["Authorization"] = "Bearer " + token;
             httpResponse = await this.beginRequestInternal(request);
         }

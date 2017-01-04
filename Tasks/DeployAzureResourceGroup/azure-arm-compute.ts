@@ -12,7 +12,6 @@ export class ComputeManagementClient extends azureServiceClient.ServiceClient {
     private longRunningOperationRetryTimeout;
     private generateClientRequestId;
     private subscriptionId;
-    private credentials: msRestAzure.ApplicationTokenCredentials;
     private baseUri;
 
     public virtualMachines;
@@ -37,7 +36,6 @@ export class ComputeManagementClient extends azureServiceClient.ServiceClient {
         if (!this.baseUri) {
             this.baseUri = 'https://management.azure.com';
         }
-        this.credentials = credentials;
         this.subscriptionId = subscriptionId;
         if (options.acceptLanguage != null && options.acceptLanguage != undefined) {
             this.acceptLanguage = options.acceptLanguage;
