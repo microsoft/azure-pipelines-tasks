@@ -20,8 +20,7 @@
     "vsts-task-lib": "0.9.20",
     "jszip" : "^3.1.2",
     "request": "2.72.0",
-    "glob": "^7.0.6",
-    "nock": "9.0.2"
+    "glob": "^7.0.6"
   },
   "devDependencies": {
 
