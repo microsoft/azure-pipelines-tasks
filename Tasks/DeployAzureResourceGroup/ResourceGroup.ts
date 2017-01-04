@@ -16,7 +16,7 @@ import deployAzureRG = require("./DeployAzureRG");
 import winRM = require("./WinRMHttpsListener");
 
 var parameterParse = require("./parameterParse").parse;
-var armResource = require("azure-arm-resource");
+var armResource = require("./azure-arm-resource");
 
 class Deployment {
     public properties: Object;
