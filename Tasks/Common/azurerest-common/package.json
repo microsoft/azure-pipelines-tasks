@@ -17,8 +17,5 @@
     "vso-node-api": "6.0.1-preview",
     "vsts-task-lib": "2.0.1-preview",
     "xml2js": "0.4.13"
-  },
-  "devDependencies": {
-
   }
 }

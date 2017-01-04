@@ -18,8 +18,5 @@
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
     "q": "1.4.1"
-  },
-   "devDependencies": {
-
   }
 }
