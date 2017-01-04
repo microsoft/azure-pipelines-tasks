@@ -119,7 +119,7 @@
         }
         else
         {
-            $dtaArgs = "DTA.AccessToken:$PersonalAccessToken DTA.AgentId:$($DtaAgent.Id) DTA.EnvironmentUri:$EnvironmentUrl DTA.TeamFoundationCollectionUri:$TfsCollection DTA.TestPlatfromVersion:$TestAgentVersion"
+            $dtaArgs = "DTA.AccessToken:$PersonalAccessToken DTA.AgentId:$($DtaAgent.Id) DTA.EnvironmentUri:$EnvironmentUrl DTA.TeamFoundationCollectionUri:$TfsCollection DTA.TestPlatformVersion:$TestAgentVersion"
             $action = New-ScheduledTaskAction -Execute "$SetupPath\DTAExecutionHost.exe" -Argument $dtaArgs
             $trigger = New-ScheduledTaskTrigger -AtLogOn
             $exePath = "$SetupPath\DTAExecutionHost.exe $dtaArgs"
