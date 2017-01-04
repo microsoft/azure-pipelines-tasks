@@ -218,7 +218,7 @@ function Publish-UpgradedServiceFabricApplication
 
         if ($CopyPackageTimeoutSec)
         {
-            if ($InstalledSdkVersion -gt [version]"2.3")
+            if ($InstalledSdkVersion -ge [version]"2.3")
             {
                 $copyParameters['TimeOutSec'] = $CopyPackageTimeoutSec
             }
@@ -230,7 +230,7 @@ function Publish-UpgradedServiceFabricApplication
 
         if ($CompressPackage)
         {
-            if ($InstalledSdkVersion -gt [version]"2.5")
+            if ($InstalledSdkVersion -ge [version]"2.5")
             {
                 $copyParameters['CompressPackage'] = $CompressPackage
             }
