@@ -1,0 +1,363 @@
+{
+  "id": "AD5CD22A-BE4E-48BB-ADCE-181A32432DA5",
+  "name": "VSMobileCenterTest",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Test",
+  "visibility": [
+    "Build"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 112,
+    "Patch": 0
+  },
+  "groups": [
+    {
+      "name": "prepare",
+      "displayName": "ms-resource:loc.group.displayName.prepare",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "credsType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.credsType",
+      "defaultValue": "serviceEndpoint",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.credsType",
+      "options": {
+        "serviceEndpoint": "Mobile Center Connection",
+        "inputs": "Credentials"
+      }
+    },
+    {
+      "name": "serverEndpoint",
+      "type": "connectedService:vsmobilecenter",
+      "label": "ms-resource:loc.input.label.serverEndpoint",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.serverEndpoint",
+      "visibleRule": "credsType = serviceEndpoint"
+    },
+    {
+      "name": "username",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.username",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.username",
+      "visibleRule": "credsType = inputs"
+    },
+    {
+      "name": "password",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.password",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.password",
+      "visibleRule": "credsType = inputs"
+    },
+    {
+      "name": "loginOpts",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.loginOpts",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.loginOpts",
+      "visibleRule": "credsType = inputs"
+    },
+    {
+      "name": "appSlug",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.appSlug",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.appSlug"
+    },
+    {
+      "name": "app",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.app",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.app"
+    },
+    {
+      "name": "devices",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.devices",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.devices"
+    },
+    {
+      "name": "series",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.series",
+      "defaultValue": "master",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.series"
+    },
+    {
+      "name": "dsymDir",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.dsymDir",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.dsymDir"
+    },
+    {
+      "name": "locale",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.locale",
+      "defaultValue": "en_US",
+      "required": true,
+      "options": {
+        "da_DK": "Danish (Denmark)",
+        "nl_NL": "Dutch (Netherlands)",
+        "en_GB": "English (United Kingdom)",
+        "en_US": "English (United States)",
+        "fr_FR": "French (France)",
+        "de_DE": "German (Germany)",
+        "ja_JP": "Japanese (Japan)",
+        "ru_RU": "Russian (Russia)",
+        "es_MX": "Spanish (Mexico)",
+        "es_ES": "Spanish (Spain)",
+        "user": "Other"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.locale"
+    },
+    {
+      "name": "userDefinedLocale",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.userDefinedLocale",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "locale = user",
+      "helpMarkDown": "ms-resource:loc.input.help.userDefinedLocale"
+    },
+    {
+      "name": "async",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.async",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.async"
+    },
+    {
+      "name": "framework",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.framework",
+      "defaultValue": "appium",
+      "required": true,
+      "groupName": "prepare",
+      "options": {
+        "appium": "Appium",
+        "expresso": "Expresso",
+        "calabash": "Calabash",
+        "uitest": "UI Test"
+      }
+    },
+    {
+      "name": "artifactsDir",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.artifactsDir",
+      "defaultValue": "$(Build.ArtifactStagingDirectory)/MobileCenterTest",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.artifactsDir",
+      "groupName": "prepare"
+    },
+    {
+      "name": "appiumBuildDir",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.appiumBuildDir",
+      "defaultValue": "",
+      "visibleRule": "framework = appium",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.appiumBuildDir",
+      "groupName": "prepare"
+    },
+    {
+      "name": "expressoBuildDir",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.expressoBuildDir",
+      "defaultValue": "",
+      "visibleRule": "framework = expresso",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.expressoBuildDir",
+      "groupName": "prepare"
+    },
+    {
+      "name": "expressoTestApkPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.expressoTestApkPath",
+      "defaultValue": "",
+      "visibleRule": "framework = expresso",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.expressoTestApkPath",
+      "groupName": "prepare"
+    },
+    {
+      "name": "calabashProjectDir",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.calabashProjectDir",
+      "defaultValue": "",
+      "visibleRule": "framework = calabash",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.calabashProjectDir",
+      "groupName": "prepare"
+    },
+    {
+      "name": "calabashConfigFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.calabashConfigFile",
+      "defaultValue": "",
+      "visibleRule": "framework = calabash",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.calabashConfigFile",
+      "groupName": "prepare"
+    },
+    {
+      "name": "calabashProfile",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.calabashProfile",
+      "defaultValue": "",
+      "visibleRule": "framework = calabash",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.calabashProfile",
+      "groupName": "prepare"
+    },
+    {
+      "name": "calabashSkipConfigCheck",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.calabashSkipConfigCheck",
+      "defaultValue": false,
+      "visibleRule": "framework = calabash",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.calabashSkipConfigCheck",
+      "groupName": "prepare"
+    },
+    {
+      "name": "uitestBuildDir",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.uitestBuildDir",
+      "defaultValue": "",
+      "visibleRule": "framework = uitest",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.uitestBuildDir",
+      "groupName": "prepare"
+    },
+    {
+      "name": "uitestStoreFile",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.uitestStoreFile",
+      "defaultValue": "",
+      "visibleRule": "framework = uitest",
+      "required": false,
+      "groupName": "prepare"
+    },
+    {
+      "name": "uitestStorePass",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.uitestStorePass",
+      "defaultValue": "",
+      "visibleRule": "framework = uitest",
+      "required": false,
+      "groupName": "prepare"
+    },
+    {
+      "name": "uitestKeyAlias",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.uitestKeyAlias",
+      "defaultValue": "",
+      "visibleRule": "framework = uitest",
+      "required": false,
+      "groupName": "prepare"
+    },
+    {
+      "name": "uitestKeyPass",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.uitestKeyPass",
+      "defaultValue": "",
+      "visibleRule": "framework = uitest",
+      "required": false,
+      "groupName": "prepare"
+    },
+    {
+      "name": "uitestToolsDir",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.uitestToolsDir",
+      "defaultValue": "",
+      "visibleRule": "framework = uitest",
+      "helpMarkDown": "ms-resource:loc.input.help.uitestToolsDir",
+      "required": false,
+      "groupName": "prepare"
+    },
+    {
+      "name": "signInfo",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.signInfo",
+      "defaultValue": "",
+      "visibleRule": "framework = calabash || framework = uitest",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.signInfo",
+      "groupName": "prepare"
+    },
+    {
+      "name": "prepareOpts",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.prepareOpts",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.prepareOpts",
+      "groupName": "prepare"
+    },
+    {
+      "name": "cliLocationOverride",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.cliLocationOverride",
+      "groupName": "advanced",
+      "defaultValue": "",
+      "required": false
+    },
+    {
+      "name": "opts",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.opts",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.opts"
+    },
+    {
+      "name": "debug",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.debug",
+      "required": false,
+      "defaultValue": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.debug"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node": {
+      "target": "vsmobilecentertest.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "Succeeded": "ms-resource:loc.messages.Succeeded",
+    "CannotDecodeEndpoint": "ms-resource:loc.messages.CannotDecodeEndpoint",
+    "CannotLocateMobileCenterCLI": "ms-resource:loc.messages.CannotLocateMobileCenterCLI"
+  }
+}
