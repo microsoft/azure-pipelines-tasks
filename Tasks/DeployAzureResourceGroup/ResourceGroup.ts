@@ -140,7 +140,7 @@ export class ResourceGroup {
         }
         properties["mode"] = this.taskParameters.deploymentMode;
         properties["debugSetting"] = {"detailLevel": "requestContent, responseContent"};
-        return new Deployment(properties);
+        return new Deployment(properties)
     }
 
     private getDeploymentDataForLinkedArtifact() {

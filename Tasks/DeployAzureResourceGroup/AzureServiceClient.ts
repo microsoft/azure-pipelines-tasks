@@ -84,7 +84,7 @@ export class ServiceClient {
 
         while (true) {
             response = await this.beginRequest(request);
-            if (response.statusCode === 202 || response.body.status == "Running" || response.body.status == "InProgress") {
+            if (response.statusCode === 202 || response.body.status == "Accepted" || response.body.status == "Running" || response.body.status == "InProgress") {
                 // If timeout; throw;
                 if (timeout < new Date().getTime()) {
                     throw ("Timeout out while waiting for the operation to complete.")
@@ -95,7 +95,7 @@ export class ServiceClient {
                 if (response.headers["retry-after"]) {
                     sleepDuration = parseInt(response.headers["retry-after"]);
                 }
-                this.sleepFor(sleepDuration);
+                await this.sleepFor(sleepDuration);
             }
             else {
                 break;
@@ -155,10 +155,9 @@ export class ServiceClient {
         });
     }
 
-    private sleepFor(sleepDuration) {
-        var now = new Date().getTime();
-        while (new Date().getTime() < now + sleepDuration * 1000) {
-            /* busy waiting */
-        }
+    private sleepFor(sleepDurationInSeconds): Promise<any> {
+        return new Promise((resolve, reeject) => {
+            setTimeout(resolve, sleepDurationInSeconds * 1000);
+        });
     }
 }
