@@ -92,7 +92,7 @@ tr.registerMock('./msdeployutility.js', {
 
 tr.registerMock('./utility.js', {
     copySetParamFileIfItExists: function(setParamFile) {
-        return "defaultWorkingDirectory\\tempSetParameters.xml"
+        return "DefaultWorkingDirectory\\tempSetParameters.xml"
     }
 })
 
