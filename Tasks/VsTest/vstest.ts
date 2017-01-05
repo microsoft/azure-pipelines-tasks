@@ -957,32 +957,16 @@ function pushImpactLevelAndRootPathIfNotFound(dataCollectorArray): void {
             if (!dataCollectorArray[i].Configuration) {
                 dataCollectorArray[i] = { Configuration: {} };
             }
-            if (dataCollectorArray[i].Configuration.TestImpact && !dataCollectorArray[i].Configuration.RootPath) {
-                if (context && context === "CD") {
-                    dataCollectorArray[i].Configuration = { RootPath: "" };
-                } else {
-                    dataCollectorArray[i].Configuration = { RootPath: sourcesDir };
-                }
-            } else if (!dataCollectorArray[i].Configuration.TestImpact && dataCollectorArray[i].Configuration.RootPath) {
-                if (getTIALevel() === 'file') {
-                    dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), LogFilePath: 'true' };
-                } else {
-                    dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel() };
-                }
-            } else if (dataCollectorArray[i].Configuration && !dataCollectorArray[i].Configuration.TestImpact && !dataCollectorArray[i].Configuration.RootPath) {
-                if (context && context === "CD") {
-                    if (getTIALevel() === 'file') {
-                        dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), LogFilePath: 'true', RootPath: "" };
-                    } else {
-                        dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), RootPath: "" };
-                    }
-                } else {
-                    if (getTIALevel() === 'file') {
-                        dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), LogFilePath: 'true', RootPath: sourcesDir };
-                    } else {
-                        dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), RootPath: sourcesDir };
-                    }
-                }
+
+            //Add TIA level, Rootpath and LogFilePath config nodes.
+            dataCollectorArray[i].Configuration[0].ImpactLevel = getTIALevel();
+            if (getTIALevel() === 'file') {
+                dataCollectorArray[i].Configuration[0].LogFilePath = 'true';
+            }
+            if (context && context === "CD") {
+                dataCollectorArray[i].Configuration[0].RootPath = "";
+            } else {
+                dataCollectorArray[i].Configuration[0].RootPath = sourcesDir;
             }
 
             //Adding the codebase attribute to TestImpact collector 
