@@ -143,16 +143,16 @@ export class RegisterEnvironment {
     
     private parseLoadBalancerDetails(loadbalancers) {
         var inboundNatRuleMap = {};
-        for (var i=0; i < loadbalancers.length; i++) {
+        for (var i = 0; i < loadbalancers.length; i++) {
             var lb = loadbalancers[i];
-            var publicAddress = lb["frontendIPConfigurations"][0]["publicIPAddress"]["id"];
-            for (var j=0; j < lb["inboundNatRules"].length; j++) {
-                var natRule = lb["inboundNatRules"][j];
+            var publicAddress = lb.properties["frontendIPConfigurations"][0].properties["publicIPAddress"]["id"];
+            for (var j = 0; j < lb.properties["inboundNatRules"].length; j++) {
+                var natRule = lb.properties["inboundNatRules"][j];
                 inboundNatRuleMap[natRule["id"]] = {
-                    frontendPort : natRule["frontendPort"],
-                    backendPort : natRule["backendPort"],
-                    publicAddress : publicAddress
-                }
+                    frontendPort: natRule.properties["frontendPort"],
+                    backendPort: natRule.properties["backendPort"],
+                    publicAddress: publicAddress
+                };
             }
         }
         this.inboundNatRuleMap = inboundNatRuleMap;

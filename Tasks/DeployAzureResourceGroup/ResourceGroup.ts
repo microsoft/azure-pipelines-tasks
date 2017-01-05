@@ -8,8 +8,8 @@ import tl = require("vsts-task-lib/task");
 import fs = require("fs");
 import util = require("util");
 import q = require("q");
-import httpClient = require('vso-node-api/HttpClient');
-var httpObj = new httpClient.HttpClient("VSTS_AGENT");
+var httpClient = require('vso-node-api/HttpClient');
+var httpObj = new httpClient.HttpCallbackClient("VSTS_AGENT");
 
 import env = require("./Environment");
 import deployAzureRG = require("./DeployAzureRG");
@@ -20,11 +20,9 @@ var armResource = require("./azure-arm-resource");
 
 class Deployment {
     public properties: Object;
-    public location: string;
 
-    constructor(properties: Object, location: string) {
+    constructor(properties: Object) {
         this.properties = properties;
-        this.location = location;
     }
 }
 
@@ -142,7 +140,7 @@ export class ResourceGroup {
         }
         properties["mode"] = this.taskParameters.deploymentMode;
         properties["debugSetting"] = {"detailLevel": "requestContent, responseContent"};
-        return new Deployment(properties, this.taskParameters.location)
+        return new Deployment(properties);
     }
 
     private getDeploymentDataForLinkedArtifact() {
@@ -208,7 +206,7 @@ export class ResourceGroup {
             this.validateDeployment(armClient, deployment);             
          } else {
             console.log("Starting Deployment..");
-            armClient.deployments.createOrUpdate(this.taskParameters.resourceGroupName, this.createDeploymentName(), deployment, null, async (error, result, request, response) => {
+            armClient.deployments.createOrUpdate(this.taskParameters.resourceGroupName, this.createDeploymentName(), deployment, async (error, result, request, response) => {
                 if (error) {
                     tl.setResult(tl.TaskResult.Failed, tl.loc("RGO_createTemplateDeploymentFailed", error.message));
                     process.exit();
@@ -238,7 +236,7 @@ export class ResourceGroup {
             var deployment = this.getDeploymentDataForLinkedArtifact();
             this.startDeployment(armClient, deployment);
         } else {
-            if (isNonEmpty(this.taskParameters.csmParametersFileLink) && !isNonEmpty(this.taskParameters.overrideParameters)) {
+            if (isNonEmpty(this.taskParameters.csmParametersFileLink) && isNonEmpty(this.taskParameters.overrideParameters)) {
                 this.request(this.taskParameters.csmParametersFileLink).then((contents) => {
                     var parameters = JSON.parse(contents).parameters;
                     var deployment = this.createDeployment(parameters, this.taskParameters.csmFileLink);
