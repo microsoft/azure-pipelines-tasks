@@ -211,5 +211,6 @@ export function redirectMSDeployErrorToConsole() {
             tl.warning(tl.loc("Trytodeploywebappagainwithappofflineoptionselected"));
         }
         tl.error(errorFileContent.toString());
+        tl.rmRF(msDeployErrorFilePath);
     }
 }
