@@ -4,8 +4,8 @@
   "loc.description": "CocoaPods is a dependency manager for Swift and Objective-C Cocoa projects. This task runs 'pod install'.",
   "loc.instanceNameFormat": "pod 安裝",
   "loc.input.label.cwd": "工作目錄",
-  "loc.input.help.cwd": "Specify the working directory in which to execute this step. If left empty, the repository directory will be used.",
-  "loc.messages.PodReturnCode": "The 'pod' command exited with return code: %d",
+  "loc.input.help.cwd": "指定要在其中執行此步驟的工作目錄。若為空白則會使用存放庫目錄。",
+  "loc.messages.PodReturnCode": "'pod' 命令結束，傳回碼為: %d",
   "loc.messages.PodFailed": "The 'pod' command failed with error: %s",
-  "loc.messages.CocoaPodsNotFound": "The 'pod' command was not found. Please install CocoaPods on the build machine (https://cocoapods.org/)."
+  "loc.messages.CocoaPodsNotFound": "找不到 'pod' 命令。請在組建電腦上安裝 CocoaPods (https://cocoapods.org/)。"
 }

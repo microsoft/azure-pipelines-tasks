@@ -22,7 +22,7 @@
   "loc.input.help.Package": "Chemin de dossier ou de fichier du package App Service. Les variables ([Build](https://www.visualstudio.com/docs/build/define/variables) | [Version release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)) et les caractères génériques sont pris en charge. <br/> Par exemple, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip.",
   "loc.input.label.WebAppUri": "URL d'App Service",
   "loc.input.help.WebAppUri": "Spécifiez un nom pour la variable de sortie générée pour l'URL d'Azure App Service. La variable peut être consommée dans des tâches ultérieures.",
-  "loc.input.label.TakeAppOfflineFlag": "Take App Offline",
+  "loc.input.label.TakeAppOfflineFlag": "Mettre l'application hors connexion",
   "loc.input.help.TakeAppOfflineFlag": "Sélectionnez cette option pour mettre Azure App Service hors connexion en plaçant un fichier app_offline.htm dans le répertoire racine de l'App Service avant le début de l'opération de synchronisation. Le fichier est supprimé une fois l'opération de synchronisation correctement effectuée.",
   "loc.input.label.UseWebDeploy": "Publication à l'aide de Web Deploy",
   "loc.input.help.UseWebDeploy": "Les options de publication à l'aide de Web Deploy ne sont prises en charge qu'en cas d'utilisation de l'agent Windows. Sur d'autres plateformes, la tâche repose sur les [API REST Kudu](https://github.com/projectkudu/kudu/wiki/REST-API) pour déployer Azure App Service et les options suivantes ne sont pas prises en charge",
@@ -96,5 +96,5 @@
   "loc.messages.VirtualApplicationDoesNotExist": "Virtual application doesn't exists : %s",
   "loc.messages.JSONParseError": "Unable to parse JSON file: %s. Error: %s",
   "loc.messages.JSONvariablesubstitutionappliedsuccessfully": "JSON variable substitution applied successfully.",
-  "loc.messages.XMLvaiablesubstitutionappliedsuccessfully": "XML vaiable substitution applied successfully."
+  "loc.messages.XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully."
 }

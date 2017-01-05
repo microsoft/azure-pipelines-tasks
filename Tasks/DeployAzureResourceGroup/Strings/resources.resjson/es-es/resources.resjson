@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Implementación en Azure: acción $(action) en $(resourceGroupName)",
   "loc.group.displayName.output": "Salida",
   "loc.input.label.ConnectedServiceNameSelector": "Tipo de conexión de Azure",
-  "loc.input.label.ConnectedServiceName": "Azure Subscription",
+  "loc.input.label.ConnectedServiceName": "Suscripción a Azure",
   "loc.input.help.ConnectedServiceName": "Seleccione la suscripción de Azure Resource Manager para la implementación.",
   "loc.input.label.ConnectedServiceNameClassic": "Suscripción de Azure clásico",
   "loc.input.help.ConnectedServiceNameClassic": "Seleccione la suscripción de Azure clásico para la implementación.",

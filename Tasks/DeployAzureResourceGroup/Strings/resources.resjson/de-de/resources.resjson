@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Azure-Bereitstellung: $(action) Aktion für $(resourceGroupName)",
   "loc.group.displayName.output": "Ausgabe",
   "loc.input.label.ConnectedServiceNameSelector": "Azure-Verbindungstyp",
-  "loc.input.label.ConnectedServiceName": "Azure Subscription",
+  "loc.input.label.ConnectedServiceName": "Azure-Abonnement",
   "loc.input.help.ConnectedServiceName": "Wählen Sie das Azure Resource Manager-Abonnement für die Bereitstellung aus.",
   "loc.input.label.ConnectedServiceNameClassic": "Klassisches Azure-Abonnement",
   "loc.input.help.ConnectedServiceNameClassic": "Wählen Sie das klassische Azure-Abonnement für die Bereitstellung aus.",

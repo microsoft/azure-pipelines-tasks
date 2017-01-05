@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Distribuzione Azure: azione $(action) su $(resourceGroupName)",
   "loc.group.displayName.output": "Output",
   "loc.input.label.ConnectedServiceNameSelector": "Tipo di connessione ad Azure",
-  "loc.input.label.ConnectedServiceName": "Azure Subscription",
+  "loc.input.label.ConnectedServiceName": "Sottoscrizione di Azure",
   "loc.input.help.ConnectedServiceName": "Selezionare la sottoscrizione di Azure Resource Manager per la distribuzione.",
   "loc.input.label.ConnectedServiceNameClassic": "Sottoscrizione di Azure classico",
   "loc.input.help.ConnectedServiceNameClassic": "Selezionare la sottoscrizione di Azure classico per la distribuzione.",

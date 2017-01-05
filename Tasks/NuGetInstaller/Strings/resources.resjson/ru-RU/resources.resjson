@@ -17,7 +17,7 @@
   "loc.input.label.verbosity": "Уровень детализации",
   "loc.input.help.verbosity": "Уровень детализации NuGet",
   "loc.input.label.nuGetVersion": "Версия NuGet",
-  "loc.input.help.nuGetVersion": "The version of NuGet to use, or external version.",
+  "loc.input.help.nuGetVersion": "Версия NuGet для использования или внешняя версия.",
   "loc.input.label.nuGetPath": "Путь к NuGet.exe",
   "loc.input.help.nuGetPath": "При необходимости укажите путь к NuGet.exe. При этом выбранная версия будет переопределена.",
   "loc.messages.Warning_NoConfigForNoCredentialProvider": "Для подключения к каналам NuGet, размещенным в учетной записи Team Services или коллекции проектов TFS для этого агента сборки, измените определение сборки, указав более высокую версию nuget, или укажите путь к файлу NuGet.config, содержащему источники пакетов, которые вы хотите использовать.",

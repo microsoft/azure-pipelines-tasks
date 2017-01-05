@@ -22,7 +22,7 @@
   "loc.input.help.Package": "Ruta de acceso de la carpeta o el archivo al paquete de App Service. Variables ( [Compilación](https://www.visualstudio.com/docs/build/define/variables) | [Versión](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), se admiten caracteres comodín. <br/> Por ejemplo, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip.",
   "loc.input.label.WebAppUri": "Dirección URL de App Service",
   "loc.input.help.WebAppUri": "Especifique un nombre para la variable de salida que se genera para la dirección URL de Azure App Service. La variable se puede consumir en sucesivas tareas.",
-  "loc.input.label.TakeAppOfflineFlag": "Take App Offline",
+  "loc.input.label.TakeAppOfflineFlag": "Desconectar la aplicación",
   "loc.input.help.TakeAppOfflineFlag": "Seleccione esta opción para poner sin conexión Azure App Service colocando el archivo app_offline.htm en el directorio raíz de App Service antes de que comience la operación de sincronización. El archivo se quitará cuando la operación de sincronización finalice correctamente.",
   "loc.input.label.UseWebDeploy": "Publicar usando Web Deploy",
   "loc.input.help.UseWebDeploy": "Las opciones de publicación mediante Web Deploy solo se admiten cuando se usa el agente de Windows. En otras plataformas, la tarea depende de [API de REST de Kudu](https://github.com/projectkudu/kudu/wiki/REST-API) para implementar Azure App Service y no se admiten las siguientes opciones",
@@ -96,5 +96,5 @@
   "loc.messages.VirtualApplicationDoesNotExist": "Virtual application doesn't exists : %s",
   "loc.messages.JSONParseError": "Unable to parse JSON file: %s. Error: %s",
   "loc.messages.JSONvariablesubstitutionappliedsuccessfully": "JSON variable substitution applied successfully.",
-  "loc.messages.XMLvaiablesubstitutionappliedsuccessfully": "XML vaiable substitution applied successfully."
+  "loc.messages.XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully."
 }
