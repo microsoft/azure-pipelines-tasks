@@ -21,11 +21,11 @@
   "loc.input.label.trustSSL": "信任伺服器憑證",
   "loc.input.help.trustSSL": "選取此選項會導致 FTP 伺服器的 SSL 憑證受 ftps:// 信任，即使它是自我簽署的憑證，或是憑證授權單位 (CA) 無法驗證的憑證亦然。",
   "loc.messages.FTPConnected": "connected: %s",
-  "loc.messages.CleanRemoteDir": "cleaning remote directory: %s",
-  "loc.messages.UploadRemoteDir": "uploading files to remote directory: %s",
+  "loc.messages.CleanRemoteDir": "正在清理遠端目錄: %s",
+  "loc.messages.UploadRemoteDir": "正在將檔案上傳至遠端目錄: %s",
   "loc.messages.UploadSucceedMsg": "FTP upload successful %s",
-  "loc.messages.UploadSucceedRes": "FTP upload successful",
+  "loc.messages.UploadSucceedRes": "FTP 上傳成功",
   "loc.messages.DisconnectHost": "disconnecting from: %s",
-  "loc.messages.Disconnected": "disconnected",
+  "loc.messages.Disconnected": "已中斷連線",
   "loc.messages.ConnectPort": "connecting to: %s:%s"
 }

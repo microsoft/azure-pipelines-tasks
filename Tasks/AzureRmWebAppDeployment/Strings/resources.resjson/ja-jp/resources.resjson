@@ -22,7 +22,7 @@
   "loc.input.help.Package": "App Service パッケージへのフォルダーまたはファイル パス。変数 ( [ビルド](https://www.visualstudio.com/docs/build/define/variables) | [リリース](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables))、ワイルド カードをサポートしています。<br/>たとえば、$(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip などです。",
   "loc.input.label.WebAppUri": "App Service URL",
   "loc.input.help.WebAppUri": "Azure App Service の URL に対して生成される出力変数の名前を指定します。この変数は後続のタスクで使用できます。",
-  "loc.input.label.TakeAppOfflineFlag": "Take App Offline",
+  "loc.input.label.TakeAppOfflineFlag": "アプリをオフラインにする",
   "loc.input.help.TakeAppOfflineFlag": "Azure App Service をオフラインにする場合、このオプションを選択します。オフラインにするには、同期操作を開始する前に App Service のルート ディレクトリに app_offline.htm ファイルを配置します。このファイルは、同期操作が正常に完了すると削除されます。",
   "loc.input.label.UseWebDeploy": "Web 配置による公開",
   "loc.input.help.UseWebDeploy": "Web 配置オプションを使用する公開は、Windows エージェントを使用している場合のみサポートされます。その他のプラットフォームでは、Azure App Service を配置するタスクは [Kudu REST API](https://github.com/projectkudu/kudu/wiki/REST-API) に依存しており、次のオプションはサポートされません",
@@ -96,5 +96,5 @@
   "loc.messages.VirtualApplicationDoesNotExist": "Virtual application doesn't exists : %s",
   "loc.messages.JSONParseError": "Unable to parse JSON file: %s. Error: %s",
   "loc.messages.JSONvariablesubstitutionappliedsuccessfully": "JSON variable substitution applied successfully.",
-  "loc.messages.XMLvaiablesubstitutionappliedsuccessfully": "XML vaiable substitution applied successfully."
+  "loc.messages.XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully."
 }

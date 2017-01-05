@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Déploiement Azure : action $(action) sur $(resourceGroupName)",
   "loc.group.displayName.output": "Sortie",
   "loc.input.label.ConnectedServiceNameSelector": "Type de connexion Azure",
-  "loc.input.label.ConnectedServiceName": "Azure Subscription",
+  "loc.input.label.ConnectedServiceName": "Abonnement Azure",
   "loc.input.help.ConnectedServiceName": "Sélectionnez l'abonnement Azure Resource Manager pour le déploiement.",
   "loc.input.label.ConnectedServiceNameClassic": "Abonnement Azure Classic",
   "loc.input.help.ConnectedServiceNameClassic": "Sélectionnez l'abonnement Azure Classic pour le déploiement.",

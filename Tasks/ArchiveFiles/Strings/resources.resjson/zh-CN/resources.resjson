@@ -16,11 +16,11 @@
   "loc.input.help.archiveFile": "指定要创建的存档文件的名称。例如，若要创建 \"foo.tgz\"<b></b>，请选择 \"tar\" <b></b>存档类型，并用 \"gz\" 指定<b></b> tar 压缩。",
   "loc.input.label.replaceExistingArchive": "替换现有存档",
   "loc.input.help.replaceExistingArchive": "如果存在现有存档，请指定是否将其覆盖。如果不覆盖，将向其添加文件。",
-  "loc.messages.Filename": "files=%s",
-  "loc.messages.TarExists": "Intermediate tar: %s already exists.  Attempting to add files to it.",
-  "loc.messages.RemoveBeforeCreation": "removing existing archive file before creation: %s",
-  "loc.messages.AlreadyExists": "Archive file: %s already exists.  Attempting to add files to it.",
-  "loc.messages.ArchiveCreationFailedWithError": "Archive creation failed for archive file: %s \ncode: %d \nstdout: %s \nstderr: %s \nerror: %s;",
-  "loc.messages.ArchiveFileExistsButNotAFile": "Specified archive file: %s already exists and is not a file.",
-  "loc.messages.FailedArchiveFile": "Specified archive file: %s can not be created because it can not be accessed: %s"
+  "loc.messages.Filename": "文件=%s",
+  "loc.messages.TarExists": "中级 tar %s 已存在。正在尝试将文件添加到其中。",
+  "loc.messages.RemoveBeforeCreation": "在创建前删除现有存档文件: %s",
+  "loc.messages.AlreadyExists": "存档文件: %s 已存在。正在尝试将文件添加到其中。",
+  "loc.messages.ArchiveCreationFailedWithError": "存档文件的存档创建失败: %s \ncode: %d \nstdout: %s \nstderr: %s \nerror: %s;",
+  "loc.messages.ArchiveFileExistsButNotAFile": "指定的存档文件 %s 已存在，但它不是文件。",
+  "loc.messages.FailedArchiveFile": "无法创建指定的存档文件 %s，因为无法访问它: %s"
 }

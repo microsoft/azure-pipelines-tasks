@@ -22,7 +22,7 @@
   "loc.input.help.Package": "Ordner oder Dateipfad zum App Service-Paket. Variablen ([Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)) und Platzhalter werden unterstützt. <br/> Beispiel: $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip.",
   "loc.input.label.WebAppUri": "App Service-URL",
   "loc.input.help.WebAppUri": "Geben Sie einen Namen für die Ausgabevariable an, die für die Azure App Service-URL generiert wird. Die Variable kann in nachfolgenden Tasks verwendet werden.",
-  "loc.input.label.TakeAppOfflineFlag": "Take App Offline",
+  "loc.input.label.TakeAppOfflineFlag": "App offline schalten",
   "loc.input.help.TakeAppOfflineFlag": "Wählen Sie diese Option aus, um den Azure App Service offline zu schalten, indem vor dem Synchronisierungsvorgang eine Datei \"app_offline.htm\" im App Service-Stammverzeichnis platziert wird. Die Datei wird entfernt, nachdem der Synchronisierungsvorgang erfolgreich abgeschlossen wurde.",
   "loc.input.label.UseWebDeploy": "Mit Web Deploy veröffentlichen",
   "loc.input.help.UseWebDeploy": "Eine Veröffentlichung unter Verwendung von Web Deploy-Optionen wird nur unterstützt, wenn der Windows-Agent verwendet wird. Auf anderen Plattformen stützt sich der Task auf [Kudu-REST-APIs](https://github.com/projectkudu/kudu/wiki/REST-API), um den Azure App Service bereitzustellen, und die folgenden Optionen werden nicht unterstützt.",
@@ -96,5 +96,5 @@
   "loc.messages.VirtualApplicationDoesNotExist": "Virtual application doesn't exists : %s",
   "loc.messages.JSONParseError": "Unable to parse JSON file: %s. Error: %s",
   "loc.messages.JSONvariablesubstitutionappliedsuccessfully": "JSON variable substitution applied successfully.",
-  "loc.messages.XMLvaiablesubstitutionappliedsuccessfully": "XML vaiable substitution applied successfully."
+  "loc.messages.XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully."
 }

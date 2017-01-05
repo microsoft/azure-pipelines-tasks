@@ -16,5 +16,5 @@
   "loc.input.help.parameterizedJob": "选择 Jenkins 作业是否接受参数。即使要使用所有默认参数值且实际未指定任何参数，也应选择此选项。",
   "loc.input.label.jobParameters": "作业参数",
   "loc.input.help.jobParameters": "以 <b>\"<parameterName>=<parameterValue>\"</b> 的形式每行指定一个作业参数<p>若要将参数设置为空值(对于替代默认值很有用)，请将参数值留空。例如，指定 <b>\"<parameterName>=\"</b><p>支持使用变量。例如，若要将 <b>\"commitId\"</b> 参数值设置为生成的 \"Git commit ID\"，请使用: <b>\"commitId=$(Build.SourceVersion)\"</b>。请参阅[有关变量的文档](https://www.visualstudio.com/docs/build/define/variables)了解更多详细信息。<p>支持的 Jenkins 参数类型有: <ul><li>\"Boolean\"</li><li>\"Choice\"</li><li>\"Password\"</li><li>\"String\"</li></ul>",
-  "loc.messages.JenkinsJobQueued": "Jenkins job queued"
+  "loc.messages.JenkinsJobQueued": "Jenkins 作业已排队"
 }
