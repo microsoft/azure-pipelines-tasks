@@ -84,21 +84,19 @@ export class ServiceClient {
         }
 
         while (true) {
-            if (request.uri) {
-                response = await this.beginRequest(request);
-                if (response.statusCode === 202 || response.body.status == "Running" || response.body.status == "InProgress") {
-                    // If timeout; throw;
-                    if (timeout < new Date().getTime()) {
-                        throw ("Timeout out while waiting for the operation to complete.")
-                    }
-
-                    // Retry after given interval.
-                    var sleepDuration = 15;
-                    if (response.headers["retry-after"]) {
-                        sleepDuration = parseInt(response.headers["retry-after"]);
-                    }
-                    await this.sleepFor(sleepDuration);
+            response = await this.beginRequest(request);
+            if (response.statusCode === 202 || response.body.status == "Accepted" || response.body.status == "Running" || response.body.status == "InProgress") {
+                // If timeout; throw;
+                if (timeout < new Date().getTime()) {
+                    throw ("Timeout out while waiting for the operation to complete.")
                 }
+
+                // Retry after given interval.
+                var sleepDuration = 15;
+                if (response.headers["retry-after"]) {
+                    sleepDuration = parseInt(response.headers["retry-after"]);
+                }
+                await this.sleepFor(sleepDuration);
             }
             else {
                 break;

@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 40
   },
   "demands": [
     "node.js"
@@ -109,7 +109,7 @@
       "defaultValue": "Linked artifact",
       "options": {
         "Linked artifact": "Linked artifact",
-        "Public URL": "Public URL"
+        "URL of the file": "URL of the file"
       },
       "visibleRule": "action = Create or update resource group"
     },
@@ -120,7 +120,7 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.csmFileLink",
-      "visibleRule": "action = Create or update resource group && templateLocation = Public URL"
+      "visibleRule": "action = Create or update resource group && templateLocation = URL of the file"
     },
     {
       "name": "csmParametersFileLink",
@@ -129,7 +129,7 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.csmParametersFileLink",
-      "visibleRule": "action = Create or update resource group && templateLocation = Public URL"
+      "visibleRule": "action = Create or update resource group && templateLocation = URL of the file"
     },
     {
       "name": "csmFile",
@@ -157,7 +157,7 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.overrideParameters",
       "properties": {
-        "editorExtension": "ms.vss-services-azure.parameters-grid"
+        "editorExtension": "ms.vss-services-azure.azurerg-parameters-grid"
       },
       "visibleRule": "action = Create or update resource group"
     },
@@ -181,7 +181,7 @@
       "label": "ms-resource:loc.input.label.enableDeploymentPrerequisites",
       "defaultValue": "false",
       "required": false,
-      "visibleRule": "action = Create or update resource group || action = Select Resource Group",
+      "visibleRule": "action = Create or update resource group || action = Select resource group",
       "helpMarkDown": "ms-resource:loc.input.help.enableDeploymentPrerequisites"
     },
     {

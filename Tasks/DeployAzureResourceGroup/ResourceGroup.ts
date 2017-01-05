@@ -22,7 +22,7 @@ class Deployment {
     public properties: Object;
     public location: string;
 
-    constructor(properties: Object, location: string) {
+    constructor(properties: Object, location?: string) {
         this.properties = properties;
         this.location = location;
     }
@@ -142,7 +142,7 @@ export class ResourceGroup {
         }
         properties["mode"] = this.taskParameters.deploymentMode;
         properties["debugSetting"] = {"detailLevel": "requestContent, responseContent"};
-        return new Deployment(properties, this.taskParameters.location)
+        return new Deployment(properties)
     }
 
     private getDeploymentDataForLinkedArtifact() {
@@ -208,7 +208,7 @@ export class ResourceGroup {
             this.validateDeployment(armClient, deployment);             
          } else {
             console.log("Starting Deployment..");
-            armClient.deployments.createOrUpdate(this.taskParameters.resourceGroupName, this.createDeploymentName(), deployment, null, async (error, result, request, response) => {
+            armClient.deployments.createOrUpdate(this.taskParameters.resourceGroupName, this.createDeploymentName(), deployment, async (error, result, request, response) => {
                 if (error) {
                     tl.setResult(tl.TaskResult.Failed, tl.loc("RGO_createTemplateDeploymentFailed", error.message));
                     process.exit();

@@ -14,7 +14,7 @@
   "loc.input.help.location": "Location for deploying the resource group. If the resource group already exists in the subscription, then this value will be ignored.",
   "loc.input.label.templateLocation": "Template location",
   "loc.input.label.csmFileLink": "Template link",
-  "loc.input.help.csmFileLink": "Specify a HTTP/HTTPS path to an Azure Resource Manager template, which is publically accessible. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate.",
+  "loc.input.help.csmFileLink": "Specify the URI that is used to locate the template file. To deploy a private template in a storage account, retrieve a SAS token and include it in the URI for the template. For steps on setting up a template in a storage account and generating a SAS token, see [Deploy resources with Resource Manager templates and Azure PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Deploy resources with Resource Manager templates and Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911).",
   "loc.input.label.csmParametersFileLink": "Template parameters link",
   "loc.input.help.csmParametersFileLink": "Specify a HTTP/HTTPS path for the parameters file for the Azure Resource Manager template, which is publically accessible.",
   "loc.input.label.csmFile": "Template",
