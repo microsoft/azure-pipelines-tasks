@@ -50,17 +50,8 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
 
     try {
         await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj})
-
-        /*var msDeployBatchFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'msDeployCommand.bat';
-        var msDeployCommand = '@echo off \n';
-        msDeployCommand += '"' + msDeployPath + '" ' + msDeployCmdArgs + ' 2>error.txt\n';
-        msDeployCommand += 'if %errorlevel% neq 0 exit /b %errorlevel%';
-        tl.writeFile(msDeployBatchFile, msDeployCommand);
-        tl._writeLine(tl.loc("Runningcommand", msDeployCommand));
-        await tl.exec("cmd", ['/C', msDeployBatchFile], <any> {failOnStdErr: true});
-        tl.rmRF(msDeployBatchFile, true);*/
-		if(publishingProfile != null){
-        tl._writeLine(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));}
+        if(publishingProfile != null) {
+            tl._writeLine(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));}
     }
     catch (error) {
         fs.fsyncSync(fd);

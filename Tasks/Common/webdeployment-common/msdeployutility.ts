@@ -99,10 +99,6 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
  * @returns boolean
  */
 export async  function containsParamFile(webAppPackage: string ) {
-    /*var msDeployPath = await getMSDeployFullPath();
-    var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package=\"" + webAppPackage + "\"";
-    
-    var msDeployParamFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'msDeployParam.bat';*/
     var parameterFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'parameter.xml';
     var fd = fs.openSync(parameterFile, "w");
     var outputObj = fs.createWriteStream("",{fd: fd});
@@ -116,15 +112,6 @@ export async  function containsParamFile(webAppPackage: string ) {
     finally {
         fs.closeSync(fd);
     }
-    
-    //var silentCommand = '@echo off \n';
-    //var msDeployCommand = '"' + msDeployPath + '" ' + msDeployCheckParamFileCmdArgs + " > \"" + parameterFile + "\"";
-    //var batchCommand = silentCommand + msDeployCommand;
-
-    //tl.writeFile(msDeployParamFile, batchCommand);
-    //tl._writeLine(tl.loc("Runningcommand", msDeployCommand));
-
-    //var taskResult = tl.execSync("cmd", ['/C', msDeployParamFile], <trm.IExecOptions>{ failOnStdErr: true, silent: true });
     var paramContentXML = fs.readFileSync(parameterFile);
     paramContentXML = paramContentXML.slice(paramContentXML.indexOf('\n') + 1, paramContentXML.length);
     var isParamFilePresent = false;
