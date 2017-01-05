@@ -36,13 +36,13 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         done();
     });
     
-	it('Fails if msdeploy cmd fails to execute', (done) => {
+	it('Fails if msdeploy fails to execute', (done) => {
         let tp = path.join(__dirname, 'L0WindowsFailDefault.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         
 		tr.run();
 		
-		var expectedErr = 'Error: Error: cmd failed with return code: 1';
+		var expectedErr = 'Error: Error: msdeploy failed with return code: 1';
 		assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
         assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have written to stderr');
         assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'E should have said: ' + expectedErr); 
