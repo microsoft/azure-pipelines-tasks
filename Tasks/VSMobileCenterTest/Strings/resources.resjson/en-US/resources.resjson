@@ -13,6 +13,8 @@
   "loc.input.help.username": "Visit https://mobile.azure.com/settings/profile to get your username.",
   "loc.input.label.password": "Mobile Center Password",
   "loc.input.help.password": "Visit https://mobile.azure.com/settings/profile to set your password. It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. You may mark variable type as 'secret' to secure it.",
+  "loc.input.label.loginOpts": "Addtional Options for Login",
+  "loc.input.help.loginOpts": "Additional arguments passed to mobile-center login step.",
   "loc.input.label.appSlug": "App Slug",
   "loc.input.help.appSlug": "The app slug is in the format of {username}/{app_identifier}.  To locate {username} and {app_identifier} for an app, click on its name from https://mobile.azure.com/apps, and the resulting url is in the format of https://mobile.azure.com/users/{username}/apps/{app_identifier}.",
   "loc.input.label.app": "Binary File Path",

@@ -67,6 +67,15 @@
             "visibleRule": "credsType = inputs"
         },
         {
+            "name": "loginOpts",
+            "type": "string",
+            "label": "Addtional Options for Login",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Additional arguments passed to mobile-center login step.",
+            "visibleRule": "credsType = inputs"
+        },
+        {
             "name": "appSlug",
             "type": "string",
             "label": "App Slug",

@@ -103,6 +103,12 @@ async function run() {
             if (debug) {
                 loginRunner.arg('--debug');
             }
+
+            let loginOpts = tl.getInput('loginOpts', false);
+            if (loginOpts) {
+                loginRunner.line(loginOpts);
+            }
+
             loginRunner.arg('--quiet');
         } 
         
@@ -205,6 +211,7 @@ async function run() {
             // logout
             let logoutRunner = tl.tool(cliPath);
             logoutRunner.arg(['logout', '--quiet']); 
+
             await logoutRunner.exec();
         }
     }

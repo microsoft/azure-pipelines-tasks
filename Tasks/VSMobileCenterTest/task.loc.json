@@ -67,6 +67,15 @@
       "visibleRule": "credsType = inputs"
     },
     {
+      "name": "loginOpts",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.loginOpts",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.loginOpts",
+      "visibleRule": "credsType = inputs"
+    },
+    {
       "name": "appSlug",
       "type": "string",
       "label": "ms-resource:loc.input.label.appSlug",
