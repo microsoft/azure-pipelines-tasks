@@ -2,8 +2,6 @@ import msRestAzure = require("./ms-rest-azure");
 import tl = require('vsts-task-lib/task');
 import util = require("util");
 import azureServiceClient = require("./AzureServiceClient");
-import httpClient = require('vso-node-api/HttpClient');
-import restClient = require('vso-node-api/RestClient');
 import Q = require("q");
 
 export class ComputeManagementClient extends azureServiceClient.ServiceClient {
@@ -73,14 +71,10 @@ export class ComputeManagementClient extends azureServiceClient.ServiceClient {
     public beginRequest(request: azureServiceClient.WebRequest): Promise<azureServiceClient.WebResponse> {
         request.headers = request.headers || {};
         // Set default Headers
-        if (this.generateClientRequestId) {
-            request.headers['x-ms-client-request-id'] = msRestAzure.generateUuid();
-        }
         if (this.acceptLanguage) {
             request.headers['accept-language'] = this.acceptLanguage;
         }
         request.headers['Content-Type'] = 'application/json; charset=utf-8';
-
         return super.beginRequest(request);
     }
 

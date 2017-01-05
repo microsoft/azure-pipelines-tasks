@@ -54,9 +54,6 @@ export class ResourceManagementClient extends azureServiceClient.ServiceClient {
     public beginRequest(request: azureServiceClient.WebRequest): Promise<azureServiceClient.WebResponse> {
         request.headers = request.headers || {};
         // Set default Headers
-        if (this.generateClientRequestId) {
-            request.headers['x-ms-client-request-id'] = msRestAzure.generateUuid();
-        }
         if (this.acceptLanguage) {
             request.headers['accept-language'] = this.acceptLanguage;
         }
@@ -294,27 +291,27 @@ export class Deployments {
 
         // Send Request
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClient.ApiResult>();
-            var statusCode = response.statusCode;
-            if (statusCode !== 200 && statusCode !== 201) {
-                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
-            }
-
             return new Promise<azureServiceClient.ApiResult>((resolve, reject) => {
-                return this.client.getLongRunningOperationResult(response).then((operationResponse) => {
-                    this.get(resourceGroupName, deploymentName, (error, response) => {
-                        if (error) {
-                            resolve(new azureServiceClient.ApiResult(error));
-                        } else {
-                            if (response.properties.provisioningState === "Succeeded") {
-                                resolve(new azureServiceClient.ApiResult(null, response));
+                var statusCode = response.statusCode;
+                if (statusCode !== 200 && statusCode !== 201) {
+                    resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                }
+                else {
+                    this.client.getLongRunningOperationResult(response).then((operationResponse) => {
+                        this.get(resourceGroupName, deploymentName, (error, response) => {
+                            if (error) {
+                                resolve(new azureServiceClient.ApiResult(error));
                             } else {
-                                resolve(new azureServiceClient.ApiResult(response.properties.error));
+                                if (response.properties.provisioningState === "Succeeded") {
+                                    resolve(new azureServiceClient.ApiResult(null, response));
+                                } else {
+                                    resolve(new azureServiceClient.ApiResult(response.properties.error));
+                                }
                             }
-                        }
+                        });
                     });
-                });
-            })
+                }
+            });
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
@@ -334,7 +331,7 @@ export class Deployments {
         // Send Request and process response.
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
-    
+
             if (response.statusCode != 200) {
                 deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }

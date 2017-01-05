@@ -2,7 +2,6 @@ import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import querystring = require('querystring');
 var httpClient = require('vso-node-api/HttpClient');
-var uuid = require('uuid');
 var util = require('util');
 
 var httpObj = new httpClient.HttpCallbackClient("AZURE_HTTP_USER_AGENT");
@@ -72,7 +71,3 @@ export class ApplicationTokenCredentials {
         return deferred.promise;
     }
 }
-
-export function generateUuid(): string {
-    return uuid.v4();
-};

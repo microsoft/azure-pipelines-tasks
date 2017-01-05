@@ -84,9 +84,6 @@ export class NetworkManagementClient extends azureServiceClient.ServiceClient {
     public beginRequest(request: azureServiceClient.WebRequest): Promise<azureServiceClient.WebResponse> {
         request.headers = request.headers || {};
         // Set default Headers
-        if (this.generateClientRequestId) {
-            request.headers['x-ms-client-request-id'] = msRestAzure.generateUuid();
-        }
         if (this.acceptLanguage) {
             request.headers['accept-language'] = this.acceptLanguage;
         }
