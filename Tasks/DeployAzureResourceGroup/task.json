@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 14
+        "Patch": 0
     },
     "demands": [
         "node.js"
@@ -193,7 +193,10 @@
             "type": "pickList",
             "label": "Machine group",
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
-            "helpMarkDown": "Select a machine group"
+            "helpMarkDown": "Select a machine group",
+            "properties": {
+                "DisableManageLink": "True"
+            }
         },
         {
             "name": "copyAzureVMTags",
@@ -201,7 +204,7 @@
             "label": "Copy Azure VM tags to agents",
             "defaultValue": true,
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
-            "helpMarkDown": "Choose if the tags configured on the Azure VM need to be copied to the corresponding machine group agent. <br><br>​By default all Azure tags will be copied following the format “Key: Value”. Example: An Azure Tag “Role : Web” would be copied  as-is to the Agent machine. <br><br>For more information on how tag Azure resources refer to [link]https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-using-tags​"
+            "helpMarkDown": "Choose if the tags configured on the Azure VM need to be copied to the corresponding machine group agent. <br><br>​By default all Azure tags will be copied following the format “Key: Value”. Example: An Azure Tag “Role : Web” would be copied  as-is to the Agent machine. <br><br>For more information on how tag Azure resources refer to [link](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-using-tags​)"
         },
         {
             "name": "vstsPATToken",
@@ -210,7 +213,7 @@
             "defaultValue": "",
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",            
             "required": true,
-            "helpMarkDown": "Agent registration with machine group requires access to your visual studio project. Click “Generate” to create a personal access token (PAT) with scope restricted to “machine group” and a default expiration time of 90 days. Click “Manage” to extend the expiration time.​"
+            "helpMarkDown": "Agent registration with machine group requires access to your visual studio project.​"
         },
         {
             "name": "outputVariable",
@@ -289,9 +292,13 @@
         "OperationSucceeded": "%s of %s on vm %s succeeded",
         "OperationFailed": "%s of %s on vm %s failed",
         "MGAgentOperationOnAllVMsFailed": "Machine group agent %s did not succeed on all VMs. %s",
-        "MGAgentOperationOnAllVMsSucceeded": "Machine group agent %s succeeded on all VMs.",
+        "MGAgentOperationOnAllVMsSucceeded": "Machine group agent %s succeeded on all VMs",
         "PublicSettings": "Public settings are:\n VSTSAccountName: %s\nTeamProject: %s\nMachineGroup: %s\nTags: %s\n",
         "MGAgentHandlerMajorVersion": "Machine group extension handler major version is %s",
+        "SkipDeleteExtension": "Either the extension %s is not present on the virtual machine %s or the machine is stopped. Skipping extension deletion.",
+        "VMStartFailedSkipExtensionOperation": "Could not start the virtual machine %s. Skipping %s of %s extension on it.",
+        "VMTransitioningSkipExtensionOperation": "Virtual machine %s is in a transitioning state. Skipping %s of %s extension on it.",
+        "VMDetailsFetchFailedSkipExtensioOperation": "Could not get details of virtual machine %s. Skipping %s of %s on it.",
         "VM_Start": "Starting... %s",
         "VM_Restart": "Restarting... %s",
         "VM_Stop": "Stopping... %s",

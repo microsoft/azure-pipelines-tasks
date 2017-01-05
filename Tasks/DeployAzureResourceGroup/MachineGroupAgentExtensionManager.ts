@@ -35,11 +35,11 @@ export class MachineGroupAgentExtensionManager {
                     var vmName = listOfVms[i]["name"];
                     var resourceGroupName = this._taskParameters.resourceGroupName;
                     var extensionParameters = this._formExtensionParameters(listOfVms[i], operationParameters.operation);
-                    this.log(tl.loc("AddExtension", extensionParameters["extensionName"], vmName));
                     var extensionName = extensionParameters["extensionName"];
                     var parameters = extensionParameters["parameters"];
-                    var callback = this._createPostOperationCallBack(operationParameters, extensionName, vmName);
-                    this._computeClient.virtualMachineExtensions.createOrUpdate(resourceGroupName, vmName, extensionName, parameters, callback);
+                    var callback = this._getPostOperationCallBack(operationParameters, extensionName, vmName);
+                    var createOrUpdateCallback = this._getCreateOrUpdateCallback(operationParameters, extensionName, vmName, parameters, callback);
+                    this._computeClient.virtualMachines.get(resourceGroupName, vmName, { expand: 'instanceView' }, createOrUpdateCallback);
                 }
             });
             return operationParameters.deferred.promise;
@@ -65,10 +65,9 @@ export class MachineGroupAgentExtensionManager {
                     var vmName = listOfVms[i]["name"];
                     var resourceGroupName = this._taskParameters.resourceGroupName;
                     var extensionParameters = this._formExtensionParameters(listOfVms[i], operationParameters.operation);
-                    this.log(tl.loc("DeleteExtension", extensionParameters["extensionName"], vmName));
                     var extensionName = extensionParameters["extensionName"];
-                    var callback = this._createPostOperationCallBack(operationParameters, extensionName, vmName);
-                    var extensionDeletionCallback = this._createExtensionDeletionCallback(operationParameters, resourceGroupName, extensionName, vmName, callback);
+                    var callback = this._getPostOperationCallBack(operationParameters, extensionName, vmName);
+                    var extensionDeletionCallback = this._getExtensionDeletionCallback(operationParameters, resourceGroupName, extensionName, vmName, callback);
                     this._computeClient.virtualMachineExtensions.get(resourceGroupName, vmName, extensionName, extensionDeletionCallback);
                 }
             });
@@ -89,7 +88,6 @@ export class MachineGroupAgentExtensionManager {
             var resourceGroupName = this._taskParameters.resourceGroupName;
             var extensionParameters = this._formExtensionParameters(virtualMachine, operationParameters.operation);
             var extensionName = extensionParameters["extensionName"];
-            this.log(tl.loc("DeleteExtension", extensionName, vmName));
             var callback = (error, result, request, response) => {
                 if (error) {
                     operationParameters.deferred.reject("");
@@ -104,6 +102,7 @@ export class MachineGroupAgentExtensionManager {
                     operationParameters.deferred.resolve("");
                 }
                 else {
+                    this.log(tl.loc("DeleteExtension", extensionName, vmName));
                     this._computeClient.virtualMachineExtensions.deleteMethod(resourceGroupName, vmName, extensionName, callback);
                 }
             }
@@ -132,13 +131,14 @@ export class MachineGroupAgentExtensionManager {
         }
     }
 
-    private _createExtensionDeletionCallback(operationParameters, resourceGroupName, extensionName, vmName, callback) {
+    private _getExtensionDeletionCallback(operationParameters, resourceGroupName, extensionName, vmName, callback) {
         var extensionDeletionCallback = (error, result, request, response) => {
             if (error) {
                 this.log(tl.loc("SkipDeleteExtension", extensionName, vmName));
                 operationParameters.vmCount--;
             }
             else {
+                this.log(tl.loc("DeleteExtension", extensionName, vmName));
                 this._computeClient.virtualMachineExtensions.deleteMethod(resourceGroupName, vmName, extensionName, callback);
             }
             if (operationParameters.vmCount === 0) {
@@ -148,7 +148,7 @@ export class MachineGroupAgentExtensionManager {
         return extensionDeletionCallback;
     }
 
-    private _createPostOperationCallBack(operationParameters, extensionName, vmName) {
+    private _getPostOperationCallBack(operationParameters, extensionName, vmName) {
         var postOperationCallBack = (error, result, request, response) => {
             if (error) {
                 operationParameters.failureCount++;
@@ -162,6 +162,46 @@ export class MachineGroupAgentExtensionManager {
             this._settlePromise(operationParameters);
         }
         return postOperationCallBack;
+    }
+
+    private _getCreateOrUpdateCallback(operationParameters, extensionName, vmName, parameters, callback) {
+        var ceateOrUpdateCallBack = (error, result, request, response) => {
+            if (result) {
+                var statuses = result["properties"]["instanceView"]["statuses"];
+                for (var i = 0; i < statuses.length; i++) {
+                    var status = statuses[i]["code"].split("/");
+                    if (status.length > 1 && status[0] == "PowerState") {
+                        if (status[1] == "running") {
+                            this.log(tl.loc("AddExtension", extensionName, vmName));
+                            this._computeClient.virtualMachineExtensions.createOrUpdate(this._taskParameters.resourceGroupName, vmName, extensionName, parameters, callback);
+                        }
+                        else if (status[1] == "deallocated") {
+                            var invokeCreateOrUpdate = (error, result, request, response) => {
+                                if (error) {
+                                    this.log(tl.loc("VMStartFailedSkipExtensionOperation", vmName, operationParameters.operation, extensionName));
+                                    callback("error");
+                                }
+                                else if (result) {
+                                    this.log(tl.loc("AddExtension", extensionName, vmName));
+                                    this._computeClient.virtualMachineExtensions.createOrUpdate(this._taskParameters.resourceGroupName, vmName, extensionName, parameters, callback);
+                                }
+                            }
+                            this._computeClient.virtualMachines.start(this._taskParameters.resourceGroupName, vmName, invokeCreateOrUpdate);
+                        }
+                        else {
+                            this.log(tl.loc("VMTransitioningSkipExtensionOperation", vmName, operationParameters.operation, extensionName));
+                            callback("error");
+                        }
+                        break;
+                    }
+                }
+            }
+            else if (error) {
+                this.log(tl.loc("VMDetailsFetchFailedSkipExtensioOperation", vmName, operationParameters.operation, extensionName));
+                callback("error");
+            }
+        }
+        return ceateOrUpdateCallBack;
     }
 
     private _formExtensionParameters(virtualMachine, operation) {
