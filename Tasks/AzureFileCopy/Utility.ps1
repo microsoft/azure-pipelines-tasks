@@ -943,7 +943,7 @@ function Copy-FilesSequentiallyToAzureVMs
           [object][Parameter(Mandatory=$true)]$azureVMsCredentials,
           [string][Parameter(Mandatory=$true)]$cleanTargetBeforeCopy,
           [string]$communicationProtocol,
-          [string][Parameter(Mandatory=$true)]$skipCACheckOption,
+          [string]$skipCACheckOption,
           [string][Parameter(Mandatory=$true)]$enableDetailedLoggingString,
           [string]$additionalArguments,
           [string][Parameter(Mandatory=$true)]$connectionType)
@@ -996,7 +996,7 @@ function Copy-FilesParallellyToAzureVMs
           [object][Parameter(Mandatory=$true)]$azureVMsCredentials,
           [string][Parameter(Mandatory=$true)]$cleanTargetBeforeCopy,
           [string]$communicationProtocol,
-          [string][Parameter(Mandatory=$true)]$skipCACheckOption,
+          [string]$skipCACheckOption,
           [string][Parameter(Mandatory=$true)]$enableDetailedLoggingString,
           [string]$additionalArguments,
           [string][Parameter(Mandatory=$true)]$connectionType)
@@ -1082,7 +1082,7 @@ function Copy-FilesToAzureVMsFromStorageContainer
           [object][Parameter(Mandatory=$true)]$azureVMsCredentials,
           [string][Parameter(Mandatory=$true)]$cleanTargetBeforeCopy,
           [string]$communicationProtocol,
-          [string][Parameter(Mandatory=$true)]$skipCACheckOption,
+          [string]$skipCACheckOption,
           [string][Parameter(Mandatory=$true)]$enableDetailedLoggingString,
           [string]$additionalArguments,
           [string][Parameter(Mandatory=$true)]$copyFilesInParallel,
