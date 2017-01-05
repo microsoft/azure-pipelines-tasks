@@ -67,5 +67,7 @@
   "loc.input.help.debug": "Add --debug to mobile-center cli.",
   "loc.messages.Succeeded": "Visual Studio Mobile Center Test task succeeded.",
   "loc.messages.CannotDecodeEndpoint": "Could not decode the endpoint.",
-  "loc.messages.CannotLocateMobileCenterCLI": "Could not find mobile-center cli, install mobile-center-cli from npm first."
+  "loc.messages.CannotLocateMobileCenterCLI": "Could not find mobile-center cli, install mobile-center-cli from npm first.",
+  "loc.messages.CannotFindAnyFile": "Cannot find any file based on %s.",
+  "loc.messages.FoundMultipleFiles": "Found multiple files matching %s."
 }
