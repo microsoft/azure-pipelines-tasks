@@ -30,6 +30,11 @@ class Deployment {
     }
 }
 
+
+function isNonEmpty(str) {
+    return str && str.trim();
+}
+
 export class ResourceGroup {
 
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
@@ -243,7 +248,7 @@ export class ResourceGroup {
             var deployment = this.getDeploymentDataForLinkedArtifact();
             this.startDeployment(armClient, deployment);
         } else {
-            if (this.taskParameters.csmParametersFileLink && this.taskParameters.csmParametersFileLink.trim() && (!this.taskParameters.overrideParameters || this.taskParameters.overrideParameters.trim() == "")) {
+            if (isNonEmpty(this.taskParameters.csmParametersFileLink) && !isNonEmpty(this.taskParameters.overrideParameters)) {
                 this.request(this.taskParameters.csmParametersFileLink).then((contents) => {
                     var parameters = JSON.parse(contents).parameters;
                     var deployment = this.createDeployment(parameters, this.taskParameters.csmFileLink);
