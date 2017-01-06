@@ -32,7 +32,7 @@ process.env["AGENT_NAME"] = "author";
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "which": {
-        "cmd": "cmd"
+        "msdeploy": "msdeploy"
     },
     "stats": {
     	"webAppPkg.zip": {
@@ -43,22 +43,23 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "osType": "Windows"
     },
     "checkPath": {
-        "cmd": true,
+        "msdeploy": true,
         "webAppPkg.zip": true,
         "webAppPkg": true
     },
     "exec": {
-    	"cmd /C DefaultWorkingDirectory\\msDeployCommand.bat": {
-            "code": 1,
-            "stdout": "Failed to execute command"
-        },
-        "cmd /C DefaultWorkingDirectory\\msDeployParam.bat": {
+    	"msdeploy -verb:getParameters -source:package=\'webAppPkg.zip\'": {
             "code": 0,
             "stdout": "Executed Successfully"
+        },
+        "msdeploy -verb:sync -source:package=\'webAppPkg.zip\' -dest:auto,ComputerName=\'https://mytestappKuduUrl/msdeploy.axd?site=mytestapp\',UserName=\'$mytestapp\',Password=\'mytestappPwd\',AuthType=\'Basic\' -setParam:name=\'IIS Web Application Name\',value=\'mytestapp\' -enableRule:DoNotDeleteRule -userAgent:TFS_useragent": {
+            "code": 1,
+            "stdout": "Failed to deploy website"
         }
     },
     "exist": {
-    	"webAppPkg.zip": true
+    	"webAppPkg.zip": true,
+        "DefaultWorkingDirectory\\error.txt": true
     },
     "glob": {
         "webAppPkg.zip": ["webAppPkg.zip"]
@@ -76,6 +77,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 		"system.teamProject": "MyFirstProject",
 		"release.releaseUri": "vstfs:///ReleaseManagement/Release/1",
 		"agent.name": "agent"
+    },
+    "rmRF": {
+        "DefaultWorkingDirectory\\error.txt": true
     }
 };
 
@@ -90,7 +94,7 @@ tr.registerMock('./msdeployutility.js', {
         return msDeployFullPath;
     },
     containsParamFile: function(webAppPackage: string) {
-        var taskResult = mockTask.execSync("cmd", ['/C',"DefaultWorkingDirectory\\msDeployParam.bat"]);
+        var taskResult = mockTask.execSync("msdeploy", "-verb:getParameters -source:package=\'" + webAppPackage + "\'");
         return true;
     }
 }); 
@@ -148,6 +152,27 @@ tr.registerMock('./azurerestutility.js', {
     }
 });
 
+var fs = require('fs');
+tr.registerMock('fs', {
+    createWriteStream: function(fd, options) {
+        return {"isWriteStreamObj": true};
+    },
+    ReadStream: fs.ReadStream,
+    WriteStream: fs.WriteStream,
+    readFileSync: function (msDeployErrorFilePath) {
+        console.log("reading the error file");
+        return "ERROR DEPLOYING WEBSITE";
+    },
+    openSync: function (fd, options) {
+        return true;
+    },
+    closeSync: function (fd) {
+        return true;
+    },
+    fsyncSync: function (fd) {
+        return true;
+    }
+});
 
 tr.setAnswers(a);
 tr.run();

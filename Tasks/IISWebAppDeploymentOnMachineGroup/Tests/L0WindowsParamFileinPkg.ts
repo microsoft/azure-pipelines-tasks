@@ -26,7 +26,7 @@ process.env["AGENT_NAME"] = "author";
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     "which": {
-        "cmd": "cmd"
+        "msdeploy": "msdeploy"
     },
     "stats": {
     	"webAppPkg.zip": {
@@ -40,28 +40,29 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
         }
     },
      "checkPath": {
-        "cmd" : true
+        "msdeploy" : true
     },
     "osType": {
         "osType": "Windows"
     },
 	 "rmRF": {
-        "DefaultWorkingDirectory\\msDeployCommand.bat": {
+        "DefaultWorkingDirectory\\tempSetParameters.xml": {
             "success": true
         }
     },
     "exec": {
-        "cmd /C DefaultWorkingDirectory\\msDeployCommand.bat": {
+        "msdeploy -verb:sync -source:package='webAppPkg.zip' -dest:auto -setParam:name='IIS Web Application Name',value='mytestwebsite' -setParamFile=tempSetParameters.xml  -enableRule:DoNotDeleteRule": {
             "code" : 0,
             "stdout": "Executed Successfully"
         },
-        "cmd /C DefaultWorkingDirectory\\msDeployParam.bat": {
+        "msdeploy -verb:getParameters -source:package=\'webAppPkg.zip\'": {
             "code" : 0,
             "stdout": "Executed Successfully"
         }
     },
     "exist": {
-    	"webAppPkg.zip": true
+    	"webAppPkg.zip": true,
+        "DefaultWorkingDirectory\\tempSetParameters.xml": true
     },
     "glob": {
         "webAppPkg.zip": ["webAppPkg.zip"],
@@ -84,7 +85,32 @@ tr.registerMock('./msdeployutility.js', {
         return msDeployFullPath;
     },
     containsParamFile: function(webAppPackage: string) {
-		var taskResult = mockTask.execSync("cmd", ['/C', "DefaultWorkingDirectory\\msDeployParam.bat"]);
+		var taskResult = mockTask.execSync("msdeploy", "-verb:getParameters -source:package=\'" + webAppPackage + "\'");
+        return true;
+    }
+});
+
+tr.registerMock('./utility.js', {
+    copySetParamFileIfItExists: function(setParamFile) {
+        return "DefaultWorkingDirectory\\tempSetParameters.xml"
+    }
+})
+
+var fs = require('fs');
+
+tr.registerMock('fs', {
+    createWriteStream: function (fd, options) {
+        return true;
+    },
+    ReadStream: fs.ReadStream,
+    WriteStream: fs.WriteStream,
+    openSync: function( fd, options) {
+        return true;
+    },
+    closeSync: function(fd) {
+        return true;
+    },
+    fsyncSync: function( fd ) {
         return true;
     }
 });
