@@ -19,7 +19,7 @@ function run () {
     var virtualMachineOperationsController = new virtualMachine.VirtualMachine(taskParameters);
     switch (taskParameters.action) {
             case "Create or update resource group": 
-                resourceGroupOperationsController.createOrUpdateRG();
+                resourceGroupOperationsController.createOrUpdateResourceGroup();
                 break;
             case "DeleteRG":
                 resourceGroupOperationsController.deleteResourceGroup();

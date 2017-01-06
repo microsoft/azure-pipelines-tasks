@@ -2,6 +2,7 @@ var networkManagementClient = require("./azure-arm-network");
 var computeManagementClient = require("./azure-arm-compute");
 import q = require("q");
 import deployAzureRG = require("./DeployAzureRG");
+import tl = require("vsts-task-lib/task")
 
 export class AzureUtil {
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
@@ -31,8 +32,8 @@ export class AzureUtil {
         var armClient = new networkManagementClient.NetworkManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
         armClient.loadBalancers.list(this.taskParameters.resourceGroupName, (error, loadbalancers, request, response) => {
             if (error){
-                console.log("Error while getting list of Load Balancers", error);
-                throw new Error("FailedToFetchLoadBalancers");
+                console.log(tl.loc("FailedToFetchLoadBalancers"), error);
+                throw new Error(tl.loc("FailedToFetchLoadBalancers"));
             }
             this.loadBalancersDetails = loadbalancers;
             deferred.resolve(loadbalancers);
@@ -45,8 +46,8 @@ export class AzureUtil {
         var armClient = new computeManagementClient.ComputeManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
         armClient.virtualMachines.list(this.taskParameters.resourceGroupName, (error, virtualMachines, request, response) => {
             if (error){
-                console.log("Error while getting list of Virtual Machines", error);
-                throw new Error("FailedToFetchVMs");
+                console.log(tl.loc("FailedToFetchVMs"), error);
+                throw new Error(tl.loc("FailedToFetchVMs"));
             }
             this.vmDetails = virtualMachines;
             deferred.resolve(virtualMachines);
@@ -59,8 +60,8 @@ export class AzureUtil {
         var armClient = new networkManagementClient.NetworkManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
         armClient.networkInterfaces.list(this.taskParameters.resourceGroupName, (error, networkInterfaces, request, response) => {
             if (error){
-                console.log("Error while getting list of Network Interfaces", error);
-                throw new Error("FailedToFetchNetworkInterfaces");
+                console.log(tl.loc("FailedToFetchNetworkInterfaces"), error);
+                throw new Error(tl.loc("FailedToFetchNetworkInterfaces"));
             }
             this.networkInterfaceDetails = networkInterfaces;
             deferred.resolve(networkInterfaces);
@@ -73,8 +74,8 @@ export class AzureUtil {
         var armClient = new networkManagementClient.NetworkManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
         armClient.publicIPAddresses.list(this.taskParameters.resourceGroupName, (error, publicAddresses, request, response) => {
             if (error){
-                console.log("Error while getting list of Public Addresses", error);
-                throw new Error("FailedToFetchPublicAddresses");
+                console.log(tl.loc("FailedToFetchPublicAddresses"), error);
+                throw new Error(tl.loc("FailedToFetchPublicAddresses"));
             }
             this.publicAddressDetails = publicAddresses;
             deferred.resolve(publicAddresses);

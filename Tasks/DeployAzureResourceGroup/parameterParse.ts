@@ -10,7 +10,7 @@ export function parse(input: string)
         var literal = input.substr(index, nextIndex - index).trim();
         if (isName(literal, specialCharacterFlag)) {
             if (obj.name) {
-                result[obj.name] = {value: obj.value};
+                result[obj.name] = {value: obj.value.replace(/^"(.*)"$/, '$1')};
                 obj = {name:"", value:""}; 
             }
             obj.name = literal.substr(1, literal.length);
@@ -24,7 +24,7 @@ export function parse(input: string)
         index = nextIndex + 1;
     }
     if (obj.name){
-        result[obj.name] = {value: obj.value};
+        result[obj.name] = {value: obj.value.replace(/^"(.*)"$/, '$1')};
     }
     return result;
 }
