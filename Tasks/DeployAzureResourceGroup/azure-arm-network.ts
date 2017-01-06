@@ -26,10 +26,10 @@ export class NetworkManagementClient extends azureServiceClient.ServiceClient {
         this.generateClientRequestId = true;
 
         if (credentials === null || credentials === undefined) {
-            throw new Error('\'credentials\' cannot be null.');
+            throw new Error(tl.loc("CredentialsCannotBeNull"));
         }
         if (subscriptionId === null || subscriptionId === undefined) {
-            throw new Error('\'subscriptionId\' cannot be null.');
+            throw new Error(tl.loc("SubscriptionIdCannotBeNull"));
         }
 
         if (!options) options = {};
@@ -119,12 +119,23 @@ export class loadBalancers {
             options = null;
         }
         if (!callback) {
-            throw new Error('callback cannot be null.');
+            throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         // Validate
         try {
-            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+            }
+            if (resourceGroupName !== null && resourceGroupName !== undefined) {
+                if (resourceGroupName.length > 90) {
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
+                }
+                if (resourceGroupName.length < 1) {
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
+                }
+                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
+                }
             }
         } catch (error) {
             return callback(error);
@@ -178,19 +189,30 @@ export class loadBalancers {
             options = null;
         }
         if (!callback) {
-            throw new Error('callback cannot be null.');
+            throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         var expand = (options && options.expand !== undefined) ? options.expand : undefined;
         // Validate
         try {
-            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+            }
+            if (resourceGroupName !== null && resourceGroupName !== undefined) {
+                if (resourceGroupName.length > 90) {
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
+                }
+                if (resourceGroupName.length < 1) {
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
+                }
+                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
+                }
             }
             if (loadBalancerName === null || loadBalancerName === undefined || typeof loadBalancerName.valueOf() !== 'string') {
-                throw new Error('loadBalancerName cannot be null or undefined and it must be of type string.');
+                throw new Error(tl.loc("LoadBalancerNameCannotBeNull"));
             }
             if (expand !== null && expand !== undefined && typeof expand.valueOf() !== 'string') {
-                throw new Error('expand must be of type string.');
+                throw new Error(tl.loc("ExpandShouldBeOfTypeString"));
             }
         } catch (error) {
             return callback(error);
@@ -227,18 +249,30 @@ export class loadBalancers {
             options = null;
         }
         if (!callback) {
-            throw new Error('callback cannot be null.');
+            throw new Error(tl.loc("CallbackCannotBeNull"));
         }
+        var expand = (options && options.expand !== undefined) ? options.expand : undefined;
         // Validate
         try {
-            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+            }
+            if (resourceGroupName !== null && resourceGroupName !== undefined) {
+                if (resourceGroupName.length > 90) {
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
+                }
+                if (resourceGroupName.length < 1) {
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
+                }
+                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
+                }
             }
             if (loadBalancerName === null || loadBalancerName === undefined || typeof loadBalancerName.valueOf() !== 'string') {
-                throw new Error('loadBalancerName cannot be null or undefined and it must be of type string.');
+                throw new Error(tl.loc("LoadBalancerNameCannotBeNull"));
             }
             if (parameters === null || parameters === undefined) {
-                throw new Error('parameters cannot be null or undefined.');
+                throw new Error(tl.loc("ParametersCannotBeNull"));
             }
         }
         catch (error) {
@@ -296,12 +330,23 @@ export class publicIPAddresses {
             options = null;
         }
         if (!callback) {
-            throw new Error('callback cannot be null.');
+            throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         // Validate
         try {
-            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+            }
+            if (resourceGroupName !== null && resourceGroupName !== undefined) {
+                if (resourceGroupName.length > 90) {
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
+                }
+                if (resourceGroupName.length < 1) {
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
+                }
+                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
+                }
             }
         } catch (error) {
             return callback(error);
@@ -356,12 +401,23 @@ export class networkSecurityGroups {
             options = null;
         }
         if (!callback) {
-            throw new Error('callback cannot be null.');
+            throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         // Validate
         try {
-            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+            }
+            if (resourceGroupName !== null && resourceGroupName !== undefined) {
+                if (resourceGroupName.length > 90) {
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
+                }
+                if (resourceGroupName.length < 1) {
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
+                }
+                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
+                }
             }
         } catch (error) {
             return callback(error);
@@ -418,12 +474,23 @@ export class NetworkInterfaces {
             options = null;
         }
         if (!callback) {
-            throw new Error('callback cannot be null.');
+            throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         // Validate
         try {
-            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+            }
+            if (resourceGroupName !== null && resourceGroupName !== undefined) {
+                if (resourceGroupName.length > 90) {
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
+                }
+                if (resourceGroupName.length < 1) {
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
+                }
+                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
+                }
             }
         } catch (error) {
             return callback(error);
@@ -470,18 +537,29 @@ export class NetworkInterfaces {
             options = null;
         }
         if (!callback) {
-            throw new Error('callback cannot be null.');
+            throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         // Validate
         try {
-            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+            }
+            if (resourceGroupName !== null && resourceGroupName !== undefined) {
+                if (resourceGroupName.length > 90) {
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
+                }
+                if (resourceGroupName.length < 1) {
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
+                }
+                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
+                }
             }
             if (networkInterfaceName === null || networkInterfaceName === undefined || typeof networkInterfaceName.valueOf() !== 'string') {
-                throw new Error('networkInterfaceName cannot be null or undefined and it must be of type string.');
+                throw new Error(tl.loc("NetworkInterfaceNameCannotBeNull"));
             }
             if (parameters === null || parameters === undefined) {
-                throw new Error('parameters cannot be null or undefined.');
+                throw new Error(tl.loc("ParametersCannotBeNull"));
             }
         }
         catch (error) {
@@ -535,18 +613,29 @@ export class securityRules {
             options = null;
         }
         if (!callback) {
-            throw new Error('callback cannot be null.');
+            throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         // Validate
         try {
-            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+            }
+            if (resourceGroupName !== null && resourceGroupName !== undefined) {
+                if (resourceGroupName.length > 90) {
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
+                }
+                if (resourceGroupName.length < 1) {
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
+                }
+                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
+                }
             }
             if (networkSecurityGroupName === null || networkSecurityGroupName === undefined || typeof networkSecurityGroupName.valueOf() !== 'string') {
-                throw new Error('networkSecurityGroupName cannot be null or undefined and it must be of type string.');
+                throw new Error(tl.loc("NetworkSecurityGroupNameCannotBeNull"));
             }
             if (securityRuleName === null || securityRuleName === undefined || typeof securityRuleName.valueOf() !== 'string') {
-                throw new Error('securityRuleName cannot be null or undefined and it must be of type string.');
+                throw new Error(tl.loc("SecurityRuleNameCannotBeNull"));
             }
         } catch (error) {
             return callback(error);
@@ -581,21 +670,32 @@ export class securityRules {
     public createOrUpdate(resourceGroupName, networkSecurityGroupName, securityRuleName, securityRuleParameters, callback) {
         var client = this.client;
         if (!callback) {
-            throw new Error('callback cannot be null.');
+            throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         // Validate
         try {
-            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+            }
+            if (resourceGroupName !== null && resourceGroupName !== undefined) {
+                if (resourceGroupName.length > 90) {
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
+                }
+                if (resourceGroupName.length < 1) {
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
+                }
+                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
+                }
             }
             if (networkSecurityGroupName === null || networkSecurityGroupName === undefined || typeof networkSecurityGroupName.valueOf() !== 'string') {
-                throw new Error('networkSecurityGroupName cannot be null or undefined and it must be of type string.');
+                throw new Error(tl.loc("NetworkSecurityGroupNameCannotBeNull"));
             }
             if (securityRuleName === null || securityRuleName === undefined || typeof securityRuleName.valueOf() !== 'string') {
-                throw new Error('securityRuleName cannot be null or undefined and it must be of type string.');
+                throw new Error(tl.loc("SecurityRuleNameCannotBeNull"));
             }
             if (securityRuleParameters === null || securityRuleParameters === undefined) {
-                throw new Error('securityRuleParameters cannot be null or undefined.');
+                throw new Error(tl.loc("SecurityRuleParametersCannotBeNull"));
             }
         } catch (error) {
             return callback(error);
@@ -628,7 +728,7 @@ export class securityRules {
                     if (operationResponse.body.status === "Succeeded") {
                         deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
                     }
-                    else{
+                    else {
                         deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
                     }
                 });

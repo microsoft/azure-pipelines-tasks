@@ -109,7 +109,7 @@
       "defaultValue": "Linked artifact",
       "options": {
         "Linked artifact": "Linked artifact",
-        "Public URL": "Public URL"
+        "URL of the file": "URL of the file"
       },
       "visibleRule": "action = Create or update resource group"
     },
@@ -120,7 +120,7 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.csmFileLink",
-      "visibleRule": "action = Create or update resource group && templateLocation = Public URL"
+      "visibleRule": "action = Create or update resource group && templateLocation = URL of the file"
     },
     {
       "name": "csmParametersFileLink",
@@ -129,7 +129,7 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.csmParametersFileLink",
-      "visibleRule": "action = Create or update resource group && templateLocation = Public URL"
+      "visibleRule": "action = Create or update resource group && templateLocation = URL of the file"
     },
     {
       "name": "csmFile",
@@ -157,7 +157,7 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.overrideParameters",
       "properties": {
-        "editorExtension": "ms.vss-services-azure.parameters-grid"
+        "editorExtension": "ms.vss-services-azure.azurerg-parameters-grid"
       },
       "visibleRule": "action = Create or update resource group"
     },
@@ -181,7 +181,7 @@
       "label": "ms-resource:loc.input.label.enableDeploymentPrerequisites",
       "defaultValue": "false",
       "required": false,
-      "visibleRule": "action = Create or update resource group || action = Select Resource Group",
+      "visibleRule": "action = Create or update resource group || action = Select resource group",
       "helpMarkDown": "ms-resource:loc.input.help.enableDeploymentPrerequisites"
     },
     {
@@ -252,6 +252,29 @@
     "VM_Start": "ms-resource:loc.messages.VM_Start",
     "VM_Restart": "ms-resource:loc.messages.VM_Restart",
     "VM_Stop": "ms-resource:loc.messages.VM_Stop",
-    "VM_Delete": "ms-resource:loc.messages.VM_Delete"
+    "VM_Delete": "ms-resource:loc.messages.VM_Delete",
+    "CredentialsCannotBeNull": "ms-resource:loc.messages.CredentialsCannotBeNull",
+    "SubscriptionIdCannotBeNull": "ms-resource:loc.messages.SubscriptionIdCannotBeNull",
+    "CallbackCannotBeNull": "ms-resource:loc.messages.CallbackCannotBeNull",
+    "ResourceGroupCannotBeNull": "ms-resource:loc.messages.ResourceGroupCannotBeNull",
+    "ResourceGroupExceededLength": "ms-resource:loc.messages.ResourceGroupExceededLength",
+    "ResourceGroupDeceededLength": "ms-resource:loc.messages.ResourceGroupDeceededLength",
+    "ResourceGroupDoesntMatchPattern": "ms-resource:loc.messages.ResourceGroupDoesntMatchPattern",
+    "ParametersCannotBeNull": "ms-resource:loc.messages.ParametersCannotBeNull",
+    "DeploymentNameCannotBeNull": "ms-resource:loc.messages.DeploymentNameCannotBeNull",
+    "VMNameCannotBeNull": "ms-resource:loc.messages.VMNameCannotBeNull",
+    "InvalidValue": "ms-resource:loc.messages.InvalidValue",
+    "VmExtensionNameCannotBeNull": "ms-resource:loc.messages.VmExtensionNameCannotBeNull",
+    "ExpandShouldBeOfTypeString": "ms-resource:loc.messages.ExpandShouldBeOfTypeString",
+    "ExtensionParametersCannotBeNull": "ms-resource:loc.messages.ExtensionParametersCannotBeNull",
+    "ClientIdCannotBeEmpty": "ms-resource:loc.messages.ClientIdCannotBeEmpty",
+    "DomainCannotBeEmpty": "ms-resource:loc.messages.DomainCannotBeEmpty",
+    "SecretCannotBeEmpty": "ms-resource:loc.messages.SecretCannotBeEmpty",
+    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
+    "LoadBalancerNameCannotBeNull": "ms-resource:loc.messages.LoadBalancerNameCannotBeNull",
+    "NetworkInterfaceNameCannotBeNull": "ms-resource:loc.messages.NetworkInterfaceNameCannotBeNull",
+    "NetworkSecurityGroupNameCannotBeNull": "ms-resource:loc.messages.NetworkSecurityGroupNameCannotBeNull",
+    "SecurityRuleNameCannotBeNull": "ms-resource:loc.messages.SecurityRuleNameCannotBeNull",
+    "SecurityRuleParametersCannotBeNull": "ms-resource:loc.messages.SecurityRuleParametersCannotBeNull"
   }
 }

@@ -1,6 +1,7 @@
 import msRestAzure = require("./ms-rest-azure");
 import azureServiceClient = require("./AzureServiceClient");
 import util = require("util");
+import tl = require('vsts-task-lib/task');
 import Q = require("q");
 
 export class ResourceManagementClient extends azureServiceClient.ServiceClient {
@@ -21,10 +22,10 @@ export class ResourceManagementClient extends azureServiceClient.ServiceClient {
         this.longRunningOperationRetryTimeout = 30;
         this.generateClientRequestId = true;
         if (credentials === null || credentials === undefined) {
-            throw new Error('\'credentials\' cannot be null.');
+            throw new Error(tl.loc("CredentialsCannotBeNull"));
         }
         if (subscriptionId === null || subscriptionId === undefined) {
-            throw new Error('\'subscriptionId\' cannot be null.');
+            throw new Error(tl.loc("SubscriptionIdCannotBeNull"));
         }
         this.baseUri = 'https://management.azure.com';
         this.subscriptionId = subscriptionId;
@@ -72,22 +73,22 @@ export class ResourceGroups {
 
     public checkExistence(resourceGroupName: string, callback) {
         if (!callback) {
-            throw new Error('callback cannot be null.');
+            throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         // Validate
         try {
             if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
             }
             if (resourceGroupName !== null && resourceGroupName !== undefined) {
                 if (resourceGroupName.length > 90) {
-                    throw new Error('"resourceGroupName" should satisfy the constraint - "MaxLength": 90');
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
                 }
                 if (resourceGroupName.length < 1) {
-                    throw new Error('"resourceGroupName" should satisfy the constraint - "MinLength": 1');
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
                 }
                 if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error('"resourceGroupName" should satisfy the constraint - "Pattern": /^[-\w\._\(\)]+$/');
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
                 }
             }
         } catch (error) {
@@ -121,22 +122,22 @@ export class ResourceGroups {
     public deleteMethod(resourceGroupName, callback) {
         var client = this.client;
         if (!callback) {
-            throw new Error('callback cannot be null.');
+            throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         // Validate
         try {
             if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
             }
             if (resourceGroupName !== null && resourceGroupName !== undefined) {
                 if (resourceGroupName.length > 90) {
-                    throw new Error('"resourceGroupName" should satisfy the constraint - "MaxLength": 90');
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
                 }
                 if (resourceGroupName.length < 1) {
-                    throw new Error('"resourceGroupName" should satisfy the constraint - "MinLength": 1');
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
                 }
                 if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error('"resourceGroupName" should satisfy the constraint - "Pattern": /^[-\w\._\(\)]+$/');
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
                 }
             }
         } catch (error) {
@@ -177,26 +178,26 @@ export class ResourceGroups {
     public createOrUpdate(resourceGroupName, parameters, callback) {
         var client = this.client;
         if (!callback) {
-            throw new Error('callback cannot be null.');
+            throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         // Validate
         try {
             if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
             }
             if (resourceGroupName !== null && resourceGroupName !== undefined) {
                 if (resourceGroupName.length > 90) {
-                    throw new Error('"resourceGroupName" should satisfy the constraint - "MaxLength": 90');
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
                 }
                 if (resourceGroupName.length < 1) {
-                    throw new Error('"resourceGroupName" should satisfy the constraint - "MinLength": 1');
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
                 }
                 if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error('"resourceGroupName" should satisfy the constraint - "Pattern": /^[-\w\._\(\)]+$/');
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
                 }
             }
             if (parameters === null || parameters === undefined) {
-                throw new Error('parameters cannot be null or undefined.');
+                throw new Error(tl.loc("ParametersCannotBeNull"));
             }
         } catch (error) {
             return callback(error);
@@ -243,30 +244,30 @@ export class Deployments {
 
     public createOrUpdate(resourceGroupName, deploymentName, parameters, callback) {
         var client = this.client;
-        if (!callback) {
-            throw new Error('callback cannot be null.');
+         if (!callback) {
+            throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         // Validate
         try {
             if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
             }
             if (resourceGroupName !== null && resourceGroupName !== undefined) {
                 if (resourceGroupName.length > 90) {
-                    throw new Error('"resourceGroupName" should satisfy the constraint - "MaxLength": 90');
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
                 }
                 if (resourceGroupName.length < 1) {
-                    throw new Error('"resourceGroupName" should satisfy the constraint - "MinLength": 1');
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
                 }
                 if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error('"resourceGroupName" should satisfy the constraint - "Pattern": /^[-\w\._\(\)]+$/');
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
                 }
             }
             if (deploymentName === null || deploymentName === undefined || typeof deploymentName.valueOf() !== 'string') {
-                throw new Error('deploymentName cannot be null or undefined and it must be of type string.');
+                throw new Error(tl.loc("DeploymentNameCannotBeNull"));
             }
             if (parameters === null || parameters === undefined) {
-                throw new Error('parameters cannot be null or undefined.');
+                throw new Error(tl.loc("ParametersCannotBeNull"));
             }
         } catch (error) {
             return callback(error);
