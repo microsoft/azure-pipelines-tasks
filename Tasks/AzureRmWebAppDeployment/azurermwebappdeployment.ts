@@ -84,7 +84,7 @@ async function run() {
                 var environmentName = tl.getVariable('Release.EnvironmentName');
                 if(tl.osType().match(/^Win/)) {
                     var transformConfigs = ["Release.config"];
-                    if(environmentName) {
+                    if(environmentName && environmentName.toLowerCase() != "release") {
                         transformConfigs.push(environmentName + ".config");
                     }
                     xdtTransformationUtility.basicXdtTransformation(path.join(folderPath,'**', '*.config'), transformConfigs);  

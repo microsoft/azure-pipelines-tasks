@@ -64,11 +64,11 @@ export function jsonVariableSubstitution(absolutePath, jsonSubFiles) {
         tl.debug('JSON variable substitution for ' + jsonSubFile);
         var matchFiles = tl.glob(path.join(absolutePath, jsonSubFile));
         if(matchFiles.length === 0) {
-            throw new Error(tl.loc('NOJSONfilematchedwithspecificpattern'));
+            throw new Error(tl.loc('NOJSONfilematchedwithspecificpattern', jsonSubFile));
         }
         for(let file of matchFiles) {
             if(path.extname(file) !== '.json') {
-                throw new Error(tl.loc('JSONvariablesubstitutioncanonlybeappliedforJSONfiles'));
+                throw new Error(tl.loc('JSONvariablesubstitutioncanonlybeappliedforJSONfiles', jsonSubFile));
             }
             var fileBuffer: Buffer = fs.readFileSync(file);
             var fileEncodeType = fileEncoding.detectFileEncoding(file, fileBuffer);
