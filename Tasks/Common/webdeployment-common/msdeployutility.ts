@@ -110,6 +110,7 @@ export async  function containsParamFile(webAppPackage: string ) {
         throw Error(error);
     }
     finally {
+        fs.fsyncSync(fd);
         fs.closeSync(fd);
     }
     var paramContentXML = fs.readFileSync(parameterFile);
