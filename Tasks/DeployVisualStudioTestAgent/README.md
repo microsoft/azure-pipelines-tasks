@@ -45,7 +45,7 @@ To dynamically deploy Azure resource groups with virtual machines in them use th
 
   For example, Coded UI or Selenium tests that are running on full fidelity browsers would need this checked.
 
-- **Test Agent Location:**	Use this to supply a path to the Test Agent (vstf_testagent.exe) which is different from the default (https://go.microsoft.com/fwlink/?LinkId=536423).
+- **Test Agent Location:**	Use this to supply a path to the Test Agent (vstf_testagent.exe) which is different from the default (https://go.microsoft.com/fwlink/?LinkId=615472).
   
   For example, if you have stored a local copy of the Test Agent within your network, you can specify a path to that. Local path or a network location can be specified and location should be accessible by either buildagent (with the identity it is running with) OR testagent (with the identity its configured with above). For Azure test machines, web location can be provided. 
 
