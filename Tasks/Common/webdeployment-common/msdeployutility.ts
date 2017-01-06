@@ -114,7 +114,7 @@ export async  function containsParamFile(webAppPackage: string ) {
         fs.closeSync(fd);
     }
 
-    var paramContentXML = fs.readFileSync(parameterFile);
+    var paramContentXML = fs.readFileSync(parameterFile).toString();
     paramContentXML = paramContentXML.slice(paramContentXML.indexOf('\n') + 1, paramContentXML.length);
     var isParamFilePresent = false;
 
@@ -122,8 +122,10 @@ export async  function containsParamFile(webAppPackage: string ) {
         if(error) {
             throw new Error(error);
         }
-        if(result['output']['parameters'][0] ) {
-            isParamFilePresent = true;
+        if(result != null && result['output'] != null && result['output']['parameters'] != null) {
+            if(result['output']['parameters'][0] ) {
+                isParamFilePresent = true;
+            }
         }
     });
 
