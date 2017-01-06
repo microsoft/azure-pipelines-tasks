@@ -205,7 +205,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
 
             assert(tr.invokedToolCount == 0, 'should not have invoked tool');
             assert(tr.stderr.length > 0 || tr.errorIssues.length > 0, 'should have written to stderr');
-            var expectedErr = 'Error: loc_mock_SetParamFilenotfound0 invalidparameterFile.xml'; 
+            var expectedErr = 'Error: loc_mock_SetParamFilenotfound0'; 
             assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr);
             var expectedOut = 'Failed to update history to kudu';
             assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
@@ -266,7 +266,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
 
-            var expectedErr = "Error: loc_mock_XdtTransformationErrorWhileTransforming web.config web.Release.config";
+            var expectedErr = "Error: loc_mock_XdtTransformationErrorWhileTransforming";
             assert(tr.invokedToolCount == 1, 'should have invoked tool only once');
             assert(tr.stderr.length > 0 || tr.errorIssues.length > 0, 'should have written to stderr');
             assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'E should have said: ' + expectedErr);
@@ -371,7 +371,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'L0WindowsManyPackage.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-		
+
         assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
         assert(tr.stderr.length > 0 || tr.errorIssues.length > 0, 'should have written to stderr');
         var expectedErr = 'Error: loc_mock_MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern'; 
@@ -388,7 +388,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, 'L0WindowsNoPackage.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-		
+
         assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
         assert(tr.stderr.length > 0 || tr.errorIssues.length > 0, 'should have written to stderr');
         var expectedErr = 'Error: Not found Invalid_webAppPkg'; 
