@@ -127,6 +127,11 @@ export async  function containsParamFile(webAppPackage: string ) {
                 isParamFilePresent = true;
             }
         }
+        else {
+            tl.warning("Unable to parse the content of parameterFile: "+parameterFile);
+            tl.debug("Parameter File Content is:");
+            tl.debug(paramContentXML);
+        }
     });
 
     tl.debug("Is parameter file present in web package : " + isParamFilePresent);
