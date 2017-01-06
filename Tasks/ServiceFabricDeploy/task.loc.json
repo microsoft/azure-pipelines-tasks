@@ -90,6 +90,20 @@
       "helpMarkDown": "ms-resource:loc.input.help.registerPackageTimeoutSec"
     },
     {
+      "name": "overwriteBehavior",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.overwriteBehavior",
+      "defaultValue": "SameAppTypeAndVersion",
+      "required": true,
+      "options": {
+        "Always": "Always",
+        "Never": "Never",
+        "SameAppTypeAndVersion": "SameAppTypeAndVersion"
+      },
+      "groupname": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.overwriteBehavior"
+    },
+    {
       "name": "overridePublishProfileSettings",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.overridePublishProfileSettings",
