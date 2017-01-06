@@ -629,8 +629,16 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                             }).finally(function() {
                                                                 cleanFiles(responseFile, listFile);
                                                             });
+                                                    })
+                                                    .fail(function (err) {
+                                                        tl.error(err)
+                                                        defer.resolve(1);
                                                     });
                                             }
+                                        })
+                                        .fail(function (err) {
+                                            tl.error(err)
+                                            defer.resolve(1);
                                         });
                                 }
                             })
@@ -662,6 +670,10 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                     .fail(function(code) {
                                         defer.resolve(code);
                                     });
+                            })
+                            .fail(function (err) {
+                                tl.error(err)
+                                defer.resolve(1);
                             });
                     })
                     .fail(function(err) {
