@@ -22,10 +22,10 @@ export class ComputeManagementClient extends azureServiceClient.ServiceClient {
         this.generateClientRequestId = true;
         this.apiVersion = '2016-03-30';
         if (credentials === null || credentials === undefined) {
-            throw new Error('\'credentials\' cannot be null');
+            throw new Error(tl.loc("CredentialsCannotBeNull"));
         }
         if (subscriptionId === null || subscriptionId === undefined) {
-            throw new Error('\'subscriptionId\' cannot be null');
+            throw new Error(tl.loc("SubscriptionIdCannotBeNull"));
         }
         if (!options)
             options = {};
@@ -104,12 +104,23 @@ export class VirtualMachines {
             options = null;
         }
         if (!callback) {
-            throw new Error('callback cannot be null.');
+            throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         // Validate
         try {
-            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+            }
+            if (resourceGroupName !== null && resourceGroupName !== undefined) {
+                if (resourceGroupName.length > 90) {
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
+                }
+                if (resourceGroupName.length < 1) {
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
+                }
+                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
+                }
             }
         }
         catch (error) {
@@ -155,21 +166,32 @@ export class VirtualMachines {
             options = null;
         }
         if (!callback) {
-            throw new Error('callback cannot be null.');
+            throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         var expand = (options && options.expand !== undefined) ? options.expand : undefined;
         // Validate
         try {
-            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+            }
+            if (resourceGroupName !== null && resourceGroupName !== undefined) {
+                if (resourceGroupName.length > 90) {
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
+                }
+                if (resourceGroupName.length < 1) {
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
+                }
+                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
+                }
             }
             if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
-                throw new Error('vmName cannot be null or undefined and it must be of type string.');
+                throw new Error(tl.loc("VMNameCannotBeNull"));
             }
             if (expand) {
                 var allowedValues = ['instanceView'];
                 if (!allowedValues.some(function (item) { return item === expand; })) {
-                    throw new Error(expand + ' is not a valid value. The valid values are: ' + allowedValues);
+                    throw new Error(tl.loc("InvalidValue", expand, allowedValues));
                 }
             }
         } catch (error) {
@@ -205,15 +227,26 @@ export class VirtualMachines {
     public restart(resourceGroupName: string, vmName: string, callback) {
         var client = this.client;
         if (!callback) {
-            throw new Error('callback cannot be null.');
+            throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         // Validate
         try {
-            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+            }
+            if (resourceGroupName !== null && resourceGroupName !== undefined) {
+                if (resourceGroupName.length > 90) {
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
+                }
+                if (resourceGroupName.length < 1) {
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
+                }
+                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
+                }
             }
             if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
-                throw new Error('vmName cannot be null or undefined and it must be of type string.');
+                throw new Error(tl.loc("VMNameCannotBeNull"));
             }
         } catch (error) {
             return callback(error);
@@ -255,15 +288,26 @@ export class VirtualMachines {
     public start(resourceGroupName: string, vmName: string, callback) {
         var client = this.client;
         if (!callback) {
-            throw new Error('callback cannot be null.');
+            throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         // Validate
         try {
-            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+            }
+            if (resourceGroupName !== null && resourceGroupName !== undefined) {
+                if (resourceGroupName.length > 90) {
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
+                }
+                if (resourceGroupName.length < 1) {
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
+                }
+                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
+                }
             }
             if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
-                throw new Error('vmName cannot be null or undefined and it must be of type string.');
+                throw new Error(tl.loc("VMNameCannotBeNull"));
             }
         } catch (error) {
             return callback(error);
@@ -301,15 +345,26 @@ export class VirtualMachines {
     public powerOff(resourceGroupName: string, vmName: string, callback) {
         var client = this.client;
         if (!callback) {
-            throw new Error('callback cannot be null.');
+            throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         // Validate
         try {
-            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+            }
+            if (resourceGroupName !== null && resourceGroupName !== undefined) {
+                if (resourceGroupName.length > 90) {
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
+                }
+                if (resourceGroupName.length < 1) {
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
+                }
+                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
+                }
             }
             if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
-                throw new Error('vmName cannot be null or undefined and it must be of type string.');
+                throw new Error(tl.loc("VMNameCannotBeNull"));
             }
         } catch (error) {
             return callback(error);
@@ -346,15 +401,26 @@ export class VirtualMachines {
     public deleteMethod(resourceGroupName: string, vmName: string, callback) {
         var client = this.client;
         if (!callback) {
-            throw new Error('callback cannot be null.');
+            throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         // Validate
         try {
-            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+            }
+            if (resourceGroupName !== null && resourceGroupName !== undefined) {
+                if (resourceGroupName.length > 90) {
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
+                }
+                if (resourceGroupName.length < 1) {
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
+                }
+                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
+                }
             }
             if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
-                throw new Error('vmName cannot be null or undefined and it must be of type string.');
+                throw new Error(tl.loc("VMNameCannotBeNull"));
             }
         } catch (error) {
             return callback(error);
@@ -405,22 +471,33 @@ export class VirtualMachineExtensions {
             options = null;
         }
         if (!callback) {
-            throw new Error('callback cannot be null.');
+            throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         var expand = (options && options.expand !== undefined) ? options.expand : undefined;
         // Validate
         try {
-            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+            }
+            if (resourceGroupName !== null && resourceGroupName !== undefined) {
+                if (resourceGroupName.length > 90) {
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
+                }
+                if (resourceGroupName.length < 1) {
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
+                }
+                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
+                }
             }
             if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
-                throw new Error('vmName cannot be null or undefined and it must be of type string.');
+                throw new Error(tl.loc("VMNameCannotBeNull"));
             }
             if (vmExtensionName === null || vmExtensionName === undefined || typeof vmExtensionName.valueOf() !== 'string') {
-                throw new Error('vmExtensionName cannot be null or undefined and it must be of type string.');
+                throw new Error(tl.loc("VmExtensionNameCannotBeNull"));
             }
             if (expand !== null && expand !== undefined && typeof expand.valueOf() !== 'string') {
-                throw new Error('expand must be of type string.');
+                throw new Error(tl.loc("ExpandShouldBeOfTypeString"));
             }
         } catch (error) {
             return callback(error);
@@ -457,21 +534,32 @@ export class VirtualMachineExtensions {
         var client = this.client;
 
         if (!callback) {
-            throw new Error('callback cannot be null.');
+            throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         // Validate
         try {
-            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+            }
+            if (resourceGroupName !== null && resourceGroupName !== undefined) {
+                if (resourceGroupName.length > 90) {
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
+                }
+                if (resourceGroupName.length < 1) {
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
+                }
+                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
+                }
             }
             if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
-                throw new Error('vmName cannot be null or undefined and it must be of type string.');
+                throw new Error(tl.loc("VMNameCannotBeNull"));
             }
             if (vmExtensionName === null || vmExtensionName === undefined || typeof vmExtensionName.valueOf() !== 'string') {
-                throw new Error('vmExtensionName cannot be null or undefined and it must be of type string.');
+                throw new Error(tl.loc("VmExtensionNameCannotBeNull"));
             }
             if (extensionParameters === null || extensionParameters === undefined) {
-                throw new Error('extensionParameters cannot be null or undefined.');
+                throw new Error(tl.loc("ExtensionParametersCannotBeNull"));
             }
         } catch (error) {
             return callback(error);
@@ -518,19 +606,29 @@ export class VirtualMachineExtensions {
 
     public deleteMethod(resourceGroupName, vmName, vmExtensionName, callback) {
         if (!callback) {
-            throw new Error('callback cannot be null.');
+            throw new Error(tl.loc("CallbackCannotBeNull"));
         }
-
         // Validate
         try {
-            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error('resourceGroupName cannot be null or undefined and it must be of type string.');
+            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+            }
+            if (resourceGroupName !== null && resourceGroupName !== undefined) {
+                if (resourceGroupName.length > 90) {
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
+                }
+                if (resourceGroupName.length < 1) {
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
+                }
+                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
+                }
             }
             if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
-                throw new Error('vmName cannot be null or undefined and it must be of type string.');
+                throw new Error(tl.loc("VMNameCannotBeNull"));
             }
             if (vmExtensionName === null || vmExtensionName === undefined || typeof vmExtensionName.valueOf() !== 'string') {
-                throw new Error('vmExtensionName cannot be null or undefined and it must be of type string.');
+                throw new Error(tl.loc("VmExtensionNameCannotBeNull"));
             }
         } catch (error) {
             return callback(error);

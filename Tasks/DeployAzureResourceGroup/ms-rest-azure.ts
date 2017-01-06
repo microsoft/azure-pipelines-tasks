@@ -19,15 +19,15 @@ export class ApplicationTokenCredentials {
 
     constructor(clientId: string, domain: string, secret: string) {
         if (!Boolean(clientId) || typeof clientId.valueOf() !== 'string') {
-            throw new Error('clientId must be a non empty string.');
+            throw new Error(tl.loc("ClientIdCannotBeEmpty"));
         }
 
         if (!Boolean(domain) || typeof domain.valueOf() !== 'string') {
-            throw new Error('domain must be a non empty string.');
+            throw new Error(tl.loc("DomainCannotBeEmpty"));
         }
 
         if (!Boolean(secret) || typeof secret.valueOf() !== 'string') {
-            throw new Error('secret must be a non empty string.');
+            throw new Error(tl.loc("SecretCannotBeEmpty"));
         }
 
         this.clientId = clientId;
