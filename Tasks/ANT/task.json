@@ -30,6 +30,11 @@
             "isExpanded": true
         },
         {
+            "name": "codeCoverage",
+            "displayName": "Code Coverage",
+            "isExpanded": true
+        },
+        {
             "name": "advanced",
             "displayName": "Advanced",
             "isExpanded": false
