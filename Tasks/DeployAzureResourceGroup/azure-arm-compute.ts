@@ -460,7 +460,7 @@ export class VirtualMachines {
 export class VirtualMachineExtensions {
     private client: ComputeManagementClient;
 
-    constructor(client) {
+    constructor(client: ComputeManagementClient) {
         this.client = client;
     }
 
@@ -530,7 +530,7 @@ export class VirtualMachineExtensions {
             (error) => callback(error));
     }
 
-    public createOrUpdate(resourceGroupName, vmName, vmExtensionName, extensionParameters, callback) {
+    public createOrUpdate(resourceGroupName, vmName, vmExtensionName, extensionParameters, callback): void {
         var client = this.client;
 
         if (!callback) {

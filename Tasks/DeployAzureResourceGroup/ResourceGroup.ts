@@ -16,7 +16,7 @@ import deployAzureRG = require("./DeployAzureRG");
 import winRM = require("./WinRMHttpsListener");
 
 var parameterParse = require("./parameterParse").parse;
-var armResource = require("./azure-arm-resource");
+import armResource = require("./azure-arm-resource");
 
 class Deployment {
     public properties: Object;
@@ -27,7 +27,7 @@ class Deployment {
 }
 
 
-function isNonEmpty(str) {
+function isNonEmpty(str: string) {
     return str && str.trim();
 }
 
@@ -43,68 +43,94 @@ export class ResourceGroup {
         this.envController = new env.RegisterEnvironment(this.taskParameters);
     }
 
-    private createDeploymentName(): string {
-        var name;
-        if (this.taskParameters.templateLocation == "Linked artifact")
-            name = this.taskParameters.csmFile;    
-        else 
-            name = this.taskParameters.csmFileLink;
-        name = path.basename(name).split(".")[0].replace(" ", "");
-        var ts = new Date(Date.now());
-        var depName = util.format("%s-%s%s%s-%s%s", name, ts.getFullYear(), ts.getMonth(), ts.getDate(),ts.getHours(), ts.getMinutes());
-        return depName;
-    } 
-
-    private updateOverrideParameters(params) {
-        if (!this.taskParameters.overrideParameters || !this.taskParameters.overrideParameters.trim()) {
-            return params;
-        }
-        tl.debug("Overriding Parameters..");
-        var override = parameterParse(this.taskParameters.overrideParameters);
-        for (var key in override) {
-            params[key] = override[key];
-        }
-        tl.debug("Parameters after overriding." + JSON.stringify(params));
-        return params;
-    }
-    
-    public  createOrUpdateRG() {
+    public createOrUpdateResourceGroup() {
         var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
-        armClient.resourceGroups.checkExistence(this.taskParameters.resourceGroupName,  (error, exists, request, response) => {
+        armClient.resourceGroups.checkExistence(this.taskParameters.resourceGroupName, (error, exists, request, response) => {
             if (error) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ResourceGroupStatusFetchFailed", error));
                 process.exit();
             }
             if (exists) {
-                 this.createTemplateDeployment(armClient);
+                this.createTemplateDeployment(armClient);
             } else {
                 this.createRG(armClient).then((Succeeded) => {
-                     this.createTemplateDeployment(armClient);
+                    this.createTemplateDeployment(armClient);
                 });
             }
         });
     }
 
-    private createRG(armClient): q.Promise<any> {
+    public deleteResourceGroup() {
+        var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
+        console.log(tl.loc("ARG_DeletingResourceGroup", this.taskParameters.resourceGroupName));
+        armClient.resourceGroups.deleteMethod(this.taskParameters.resourceGroupName, (error, result, request, response) => {
+            if (error) {
+                tl.setResult(tl.TaskResult.Failed, tl.loc("RGO_CouldNotDeletedResourceGroup", this.taskParameters.resourceGroupName, error.message));
+                process.exit();
+            }
+            tl.setResult(tl.TaskResult.Succeeded, tl.loc("RGO_DeletedResourceGroup", this.taskParameters.resourceGroupName));
+        });
+    }
+
+    public async selectResourceGroup() {
+        if (this.taskParameters.enableDeploymentPrerequisites) {
+            console.log(tl.loc("EnablingWinRM"));
+            await this.WinRMHttpsListener.EnableWinRMHttpsListener();
+        }
+        try {
+            await this.envController.RegisterEnvironment();
+        } catch (error) {
+            tl.setResult(tl.TaskResult.Failed, tl.loc("FailedRegisteringEnvironment", error));
+            process.exit();
+        }
+        tl.setResult(tl.TaskResult.Succeeded, tl.loc("SelectResourceGroupSuccessful", this.taskParameters.resourceGroupName, this.taskParameters.outputVariable));
+    }
+
+    private createDeploymentName(): string {
+        var name;
+        if (this.taskParameters.templateLocation == "Linked artifact")
+            name = this.taskParameters.csmFile;
+        else
+            name = this.taskParameters.csmFileLink;
+        name = path.basename(name).split(".")[0].replace(" ", "");
+        var ts = new Date(Date.now());
+        var depName = util.format("%s-%s%s%s-%s%s", name, ts.getFullYear(), ts.getMonth(), ts.getDate(), ts.getHours(), ts.getMinutes());
+        return depName;
+    }
+
+    private updateOverrideParameters(parameters: Object) {
+        if (!this.taskParameters.overrideParameters || !this.taskParameters.overrideParameters.trim()) {
+            return parameters;
+        }
+        tl.debug("Overriding Parameters..");
+        var override = parameterParse(this.taskParameters.overrideParameters);
+        for (var key in override) {
+            parameters[key] = override[key];
+        }
+        tl.debug("Parameters after overriding." + JSON.stringify(parameters));
+        return parameters;
+    }
+
+    private createRG(armClient: armResource.ResourceManagementClient): q.Promise<any> {
         var deferred = q.defer<any>();
-        console.log(this.taskParameters.resourceGroupName+" Resource Group Not found");
-        console.log("Creating a new Resource Group:"+ this.taskParameters.resourceGroupName);
-        armClient.resourceGroups.createOrUpdate(this.taskParameters.resourceGroupName, {"name": this.taskParameters.resourceGroupName, "location": this.taskParameters.location}, (error, result, request, response) => {
+        console.log(tl.loc("RGNotFound", this.taskParameters.resourceGroupName));
+        console.log(tl.loc("CreatingNewRG", this.taskParameters.resourceGroupName));
+        armClient.resourceGroups.createOrUpdate(this.taskParameters.resourceGroupName, { "name": this.taskParameters.resourceGroupName, "location": this.taskParameters.location }, (error, result, request, response) => {
             if (error) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ResourceGroupCreationFailed", error));
                 process.exit();
-            } 
-            console.log("Created Resource Group!");
+            }
+            console.log(tl.loc("CreatedRG"));
             deferred.resolve("Succeeded");
         });
         return deferred.promise;
     }
-    
+
     private parseParameters(contents) {
         var params;
-        try { 
+        try {
             params = JSON.parse(contents).parameters;
-        } catch(error) {
+        } catch (error) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("ParametersFileParsingFailed", error.message));
             process.exit();
         }
@@ -123,28 +149,28 @@ export class ResourceGroup {
         return deferred.promise;
     }
 
-    private createDeployment(parameters, templateLink?, template?) {
+    private createDeployment(parameters: Object, templateLink?: string, template?: Object): Deployment {
         var properties = {}
         if (templateLink) {
-            properties["templateLink"] = {"uri" : templateLink};
+            properties["templateLink"] = { "uri": templateLink };
         }
         if (template) {
             properties["template"] = template;
         }
-        if (this.taskParameters.csmParametersFileLink && this.taskParameters.csmParametersFileLink.trim()!="" && (!this.taskParameters.overrideParameters || this.taskParameters.overrideParameters.trim()=="")) 
-            properties["parametersLink"] = {"uri" : this.taskParameters.csmParametersFileLink };
+        if (this.taskParameters.csmParametersFileLink && this.taskParameters.csmParametersFileLink.trim() != "" && (!this.taskParameters.overrideParameters || this.taskParameters.overrideParameters.trim() == ""))
+            properties["parametersLink"] = { "uri": this.taskParameters.csmParametersFileLink };
         else {
             var params = parameters;
             params = this.updateOverrideParameters(params);
             properties["parameters"] = params;
         }
         properties["mode"] = this.taskParameters.deploymentMode;
-        properties["debugSetting"] = {"detailLevel": "requestContent, responseContent"};
+        properties["debugSetting"] = { "detailLevel": "requestContent, responseContent" };
         return new Deployment(properties)
     }
 
     private getDeploymentDataForLinkedArtifact() {
-        console.log("Getting deployment data from a linked artifact..");
+        console.log(tl.loc("GettingDeploymentDataFromLinkedArtifact"));
         var template;
         try {
             tl.debug("Loading CSM Template File.. " + this.taskParameters.csmFile);
@@ -159,13 +185,14 @@ export class ResourceGroup {
         var parameters = {};
         try {
             if (this.taskParameters.csmParametersFile && this.taskParameters.csmParametersFile.trim()) {
-                tl.debug("Loading Parameters File.. " + this.taskParameters.csmParametersFile); 
-                var parameterFile = fs.readFileSync(this.taskParameters.csmParametersFile, 'UTF-8');
-                tl.debug("Loaded Parameters File");
-                parameters = this.parseParameters(parameterFile);
-                tl.debug("Parameters file data: " + JSON.stringify(parameters));
+                if (!fs.lstatSync(this.taskParameters.csmParametersFile).isDirectory()) {
+                    tl.debug("Loading Parameters File.. " + this.taskParameters.csmParametersFile);
+                    var parameterFile = fs.readFileSync(this.taskParameters.csmParametersFile, 'UTF-8');
+                    tl.debug("Loaded Parameters File");
+                    parameters = this.parseParameters(parameterFile);
+                    tl.debug("Parameters file data: " + JSON.stringify(parameters));
+                }
             }
-            
         }
         catch (error) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("ParametersFileParsingFailed", error.message));
@@ -174,37 +201,37 @@ export class ResourceGroup {
         return this.createDeployment(parameters, null, template);
     }
 
-    private validateDeployment(armClient, deployment) {
-        console.log("Starting Validation..");
+    private validateDeployment(armClient: armResource.ResourceManagementClient, deployment) {
+        console.log(tl.loc("StartingValidation"));
         deployment.properties.mode = "Incremental";
-             armClient.deployments.validate(this.taskParameters.resourceGroupName, this.createDeploymentName(), deployment, (error, result, request, response) => {
-                if (error) {
-                    tl.setResult(tl.TaskResult.Failed, tl.loc("RGO_createTemplateDeploymentFailed", error.message));
-                    process.exit();
-                }
-                console.log("Completed Validation");
-                if (result.error) {
-                    console.log("There are errors in your deployment");
-                    console.log("Error:", result.error.code);
-                    tl.error(result.error.message);
-                    if(result.error.details) {
-                        console.log("Details:");
-                        for (var i= 0; i< result.error.details.length; i++) {
-                            console.log(i+1, result.error.details[i].code, result.error.details[i].message, result.error.details[i].details);
-                        }
+        armClient.deployments.validate(this.taskParameters.resourceGroupName, this.createDeploymentName(), deployment, (error, result, request, response) => {
+            if (error) {
+                tl.setResult(tl.TaskResult.Failed, tl.loc("RGO_createTemplateDeploymentFailed", error.message));
+                process.exit();
+            }
+            console.log(tl.loc("CompletedValidation"));
+            if (result.error) {
+                console.log(tl.loc("ErrorsInYourDeployment"));
+                console.log("Error:", result.error.code);
+                tl.error(result.error.message);
+                if (result.error.details) {
+                    console.log("Details:");
+                    for (var i = 0; i < result.error.details.length; i++) {
+                        console.log(i + 1, result.error.details[i].code, result.error.details[i].message, result.error.details[i].details);
                     }
-                    tl.setResult(tl.TaskResult.Failed, tl.loc("RGO_createTemplateDeploymentFailed", this.taskParameters.resourceGroupName));
-                } else {
-                    console.log("It's a valid Deployment")
-                    tl.setResult(tl.TaskResult.Succeeded, tl.loc("RGO_createTemplateDeploymentSucceeded", this.taskParameters.resourceGroupName));
                 }
-            });
+                tl.setResult(tl.TaskResult.Failed, tl.loc("RGO_createTemplateDeploymentFailed", this.taskParameters.resourceGroupName));
+            } else {
+                console.log(tl.loc("ValidDeployment"));
+                tl.setResult(tl.TaskResult.Succeeded, tl.loc("RGO_createTemplateDeploymentSucceeded", this.taskParameters.resourceGroupName));
+            }
+        });
     }
 
-    private async startDeployment(armClient, deployment) {
-         if (deployment.properties.mode === "Validation") {
-            this.validateDeployment(armClient, deployment);             
-         } else {
+    private async startDeployment(armClient: armResource.ResourceManagementClient, deployment) {
+        if (deployment.properties.mode === "Validation") {
+            this.validateDeployment(armClient, deployment);
+        } else {
             console.log("Starting Deployment..");
             armClient.deployments.createOrUpdate(this.taskParameters.resourceGroupName, this.createDeploymentName(), deployment, async (error, result, request, response) => {
                 if (error) {
@@ -221,16 +248,16 @@ export class ResourceGroup {
                     if (this.taskParameters.outputVariable && this.taskParameters.outputVariable.trim() != "") {
                         this.envController.RegisterEnvironment();
                     }
-                } catch(error) {            
+                } catch (error) {
                     tl.setResult(tl.TaskResult.Failed, tl.loc("FailedRegisteringEnvironment", error));
                     process.exit();
                 }
                 tl.setResult(tl.TaskResult.Succeeded, tl.loc("RGO_createTemplateDeploymentSucceeded", this.taskParameters.resourceGroupName));
             });
-         }
+        }
     }
 
-    private createTemplateDeployment(armClient) {
+    private createTemplateDeployment(armClient: armResource.ResourceManagementClient) {
         console.log("Creating Template Deployment")
         if (this.taskParameters.templateLocation === "Linked artifact") {
             var deployment = this.getDeploymentDataForLinkedArtifact();
@@ -249,29 +276,4 @@ export class ResourceGroup {
         }
     }
 
-    public deleteResourceGroup() {
-        var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
-        console.log(tl.loc("ARG_DeletingResourceGroup", this.taskParameters.resourceGroupName));
-        armClient.resourceGroups.deleteMethod(this.taskParameters.resourceGroupName,(error, result, request, response) => {
-            if (error) {
-                tl.setResult(tl.TaskResult.Failed, tl.loc("RGO_CouldNotDeletedResourceGroup", this.taskParameters.resourceGroupName, error.message));
-                process.exit();
-            }
-            tl.setResult(tl.TaskResult.Succeeded, tl.loc("RGO_DeletedResourceGroup", this.taskParameters.resourceGroupName));
-        });
-    }
-    
-    public async selectResourceGroup() {
-        if (this.taskParameters.enableDeploymentPrerequisites) {
-            console.log("Enabling winRM Https Listener on your windows machines..");
-            await this.WinRMHttpsListener.EnableWinRMHttpsListener();
-        }
-        try {
-            this.envController.RegisterEnvironment();
-        } catch(error) {            
-            tl.setResult(tl.TaskResult.Failed, tl.loc("FailedRegisteringEnvironment", error));
-            process.exit();
-        }
-        tl.setResult(tl.TaskResult.Succeeded, tl.loc("selectResourceGroupSuccessfull", this.taskParameters.resourceGroupName, this.taskParameters.outputVariable))
-    }
 }
