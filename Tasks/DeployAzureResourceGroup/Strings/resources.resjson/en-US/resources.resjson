@@ -112,5 +112,6 @@
   "loc.messages.ErrorsInYourDeployment": "There are errors in your deployment",
   "loc.messages.ValidDeployment": "It's a valid Deployment",
   "loc.messages.NoVMsFound": "No VMs found",
-  "loc.messages.EnablingWinRM": "Enabling winRM Https Listener on your windows machines.."
+  "loc.messages.EnablingWinRM": "Enabling winRM Https Listener on your windows machines..",
+  "loc.messages.CreatingTemplateDeployment": "Creating Template Deployment"
 }

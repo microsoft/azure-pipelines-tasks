@@ -291,6 +291,7 @@
         "ErrorsInYourDeployment": "There are errors in your deployment",
         "ValidDeployment": "It's a valid Deployment",
         "NoVMsFound": "No VMs found",
-        "EnablingWinRM" : "Enabling winRM Https Listener on your windows machines.."
+        "EnablingWinRM" : "Enabling winRM Https Listener on your windows machines..",
+        "CreatingTemplateDeployment": "Creating Template Deployment"
     }
 }

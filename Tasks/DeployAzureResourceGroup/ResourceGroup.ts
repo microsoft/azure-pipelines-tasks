@@ -257,23 +257,21 @@ export class ResourceGroup {
         }
     }
 
-    private createTemplateDeployment(armClient: armResource.ResourceManagementClient) {
-        console.log("Creating Template Deployment")
+    private async createTemplateDeployment(armClient: armResource.ResourceManagementClient) {
+        console.log(tl.loc("CreatingTemplateDeployment"));
+        var deployment;
         if (this.taskParameters.templateLocation === "Linked artifact") {
-            var deployment = this.getDeploymentDataForLinkedArtifact();
-            this.startDeployment(armClient, deployment);
+            deployment = this.getDeploymentDataForLinkedArtifact();
         } else {
             if (isNonEmpty(this.taskParameters.csmParametersFileLink) && isNonEmpty(this.taskParameters.overrideParameters)) {
-                this.request(this.taskParameters.csmParametersFileLink).then((contents) => {
-                    var parameters = JSON.parse(contents).parameters;
-                    var deployment = this.createDeployment(parameters, this.taskParameters.csmFileLink);
-                    this.startDeployment(armClient, deployment);
-                });
+                var contents = await this.request(this.taskParameters.csmParametersFileLink)
+                var parameters = JSON.parse(contents).parameters;
+                deployment = this.createDeployment(parameters, this.taskParameters.csmFileLink);
             } else {
-                var deployment = this.createDeployment({}, this.taskParameters.csmFileLink);
-                this.startDeployment(armClient, deployment);
+                deployment = this.createDeployment({}, this.taskParameters.csmFileLink);
             }
         }
+        this.startDeployment(armClient, deployment);
     }
 
 }
