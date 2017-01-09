@@ -292,6 +292,7 @@
     "ValidDeployment": "ms-resource:loc.messages.ValidDeployment",
     "NoVMsFound": "ms-resource:loc.messages.NoVMsFound",
     "EnablingWinRM": "ms-resource:loc.messages.EnablingWinRM",
-    "CreatingTemplateDeployment": "ms-resource:loc.messages.CreatingTemplateDeployment"
+    "CreatingTemplateDeployment": "ms-resource:loc.messages.CreatingTemplateDeployment",
+    "URLFetchFailed": "ms-resource:loc.messages.URLFetchFailed"
   }
 }

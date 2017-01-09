@@ -9,7 +9,7 @@ export function parse(input: string) {
         var literal = input.substr(index, nextIndex - index).trim();
         if (isName(literal, specialCharacterFlag)) {
             if (obj.name) {
-                result[obj.name] = { value: obj.value.replace(/^"(.*)"$/, '$1') };
+                result[obj.name] = { value: obj.value };
                 obj = { name: "", value: "" };
             }
             obj.name = literal.substr(1, literal.length);
@@ -18,12 +18,14 @@ export function parse(input: string) {
             obj.value = literal;
             result[obj.name] = { value: obj.value };
             obj = { name: "", value: "" };
-
         }
         index = nextIndex + 1;
     }
     if (obj.name) {
-        result[obj.name] = { value: obj.value.replace(/^"(.*)"$/, '$1') };
+        result[obj.name] = { value: obj.value };
+    }
+    for (var name in result) {
+        result[name].value = result[name].value.replace(/^"(.*)"$/, '$1');
     }
     return result;
 }

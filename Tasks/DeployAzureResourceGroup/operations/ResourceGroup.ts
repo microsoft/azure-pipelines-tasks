@@ -1,7 +1,7 @@
-/// <reference path="../../definitions/node.d.ts" /> 
-/// <reference path="../../definitions/vsts-task-lib.d.ts" /> 
-/// <reference path="../../definitions/Q.d.ts" />
-/// <reference path="../../definitions/vso-node-api.d.ts" /> 
+/// <reference path="../../../definitions/node.d.ts" /> 
+/// <reference path="../../../definitions/vsts-task-lib.d.ts" /> 
+/// <reference path="../../../definitions/Q.d.ts" />
+/// <reference path="../../../definitions/vso-node-api.d.ts" /> 
 
 import path = require("path");
 import tl = require("vsts-task-lib/task");
@@ -12,11 +12,11 @@ var httpClient = require('vso-node-api/HttpClient');
 var httpObj = new httpClient.HttpCallbackClient("VSTS_AGENT");
 
 import env = require("./Environment");
-import deployAzureRG = require("./DeployAzureRG");
+import deployAzureRG = require("../models/DeployAzureRG");
 import winRM = require("./WinRMHttpsListener");
 
-var parameterParse = require("./parameterParse").parse;
-import armResource = require("./azure-arm-resource");
+var parameterParse = require("./ParameterParse").parse;
+import armResource = require("./azure-rest/azure-arm-resource");
 
 class Deployment {
     public properties: Object;
@@ -45,15 +45,15 @@ export class ResourceGroup {
 
     public createOrUpdateResourceGroup() {
         var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
-        armClient.resourceGroups.checkExistence(this.taskParameters.resourceGroupName, (error, exists, request, response) => {
+        armClient.resourceGroups.checkExistence(this.taskParameters.resourceGroupName, async (error, exists, request, response) => {
             if (error) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ResourceGroupStatusFetchFailed", error));
                 process.exit();
             }
             if (exists) {
-                this.createTemplateDeployment(armClient);
+                await this.createTemplateDeployment(armClient);
             } else {
-                this.createRG(armClient).then((Succeeded) => {
+                await this.createRG(armClient).then((Succeeded) => {
                     this.createTemplateDeployment(armClient);
                 });
             }
@@ -137,14 +137,19 @@ export class ResourceGroup {
         return params;
     }
 
-    private request(url): q.Promise<string> {
+    private requestParametersFile(url): q.Promise<string> {
         var deferred = q.defer<string>();
         httpObj.get("GET", url, {}, (error, result, contents) => {
             if (error) {
-                tl.setResult(tl.TaskResult.Failed, tl.loc("URLFetchFailed", error));
+                tl.setResult(tl.TaskResult.Failed, tl.loc("ParametersFileFetchFailed", error));
                 process.exit();
             }
-            deferred.resolve(contents);
+            if (result.statusCode === 200)
+                deferred.resolve(contents);
+            else {
+                var errorMessage = result.statusCode.toString() + ": " + result.statusMessage;
+                tl.setResult(tl.TaskResult.Failed, tl.loc("ParametersFileFetchFailed", errorMessage));
+            }
         })
         return deferred.promise;
     }
@@ -264,7 +269,7 @@ export class ResourceGroup {
             deployment = this.getDeploymentDataForLinkedArtifact();
         } else {
             if (isNonEmpty(this.taskParameters.csmParametersFileLink) && isNonEmpty(this.taskParameters.overrideParameters)) {
-                var contents = await this.request(this.taskParameters.csmParametersFileLink)
+                var contents = await this.requestParametersFile(this.taskParameters.csmParametersFileLink)
                 var parameters = JSON.parse(contents).parameters;
                 deployment = this.createDeployment(parameters, this.taskParameters.csmFileLink);
             } else {

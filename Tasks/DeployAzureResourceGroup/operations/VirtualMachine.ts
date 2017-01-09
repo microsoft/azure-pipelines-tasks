@@ -1,12 +1,12 @@
-/// <reference path="../../definitions/node.d.ts" /> 
-/// <reference path="../../definitions/vsts-task-lib.d.ts" /> 
+/// <reference path="../../../definitions/node.d.ts" /> 
+/// <reference path="../../../definitions/vsts-task-lib.d.ts" /> 
 
 import path = require("path");
 import tl = require("vsts-task-lib/task");
 
-import armCompute = require('./azure-arm-compute');
+import armCompute = require('./azure-rest/azure-arm-compute');
 
-import deployAzureRG = require("./DeployAzureRG");
+import deployAzureRG = require("../models/DeployAzureRG");
 
 export class VirtualMachine {
     private taskParameters: deployAzureRG.AzureRGTaskParameters;

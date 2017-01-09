@@ -1,11 +1,11 @@
-/// <reference path="../../definitions/Q.d.ts" />
-var networkManagementClient = require("./azure-arm-network");
-var computeManagementClient = require("./azure-arm-compute");
+/// <reference path="../../../definitions/Q.d.ts" />
+import networkManagementClient = require("./azure-rest/azure-arm-network");
+import computeManagementClient = require("./azure-rest/azure-arm-compute");
 
 import q = require("q");
 import util = require("util");
 import tl = require("vsts-task-lib/task");
-import deployAzureRG = require("./DeployAzureRG");
+import deployAzureRG = require("../models/DeployAzureRG");
 import azureUtil = require("./AzureUtil");
 
 class PropertyValue {

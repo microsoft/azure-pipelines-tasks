@@ -1,9 +1,9 @@
 import tl = require("vsts-task-lib/task");
 import path = require("path");
 
-import deployAzureRG = require("./DeployAzureRG");
-import virtualMachine = require("./VirtualMachine");
-import resourceGroup = require("./ResourceGroup");
+import deployAzureRG = require("./models/DeployAzureRG");
+import virtualMachine = require("./operations/VirtualMachine");
+import resourceGroup = require("./operations/ResourceGroup");
 
 try {
     tl.setResourcePath(path.join( __dirname, "task.json"));

@@ -1,11 +1,11 @@
-/// <reference path="../../definitions/node.d.ts" /> 
-/// <reference path="../../definitions/vsts-task-lib.d.ts" /> 
+/// <reference path="../../../definitions/node.d.ts" /> 
+/// <reference path="../../../definitions/vsts-task-lib.d.ts" /> 
  
 import tl = require("vsts-task-lib/task");
 import fs = require("fs");
 import util = require("util");
 
-var msRestAzure = require("./ms-rest-azure");
+import msRestAzure = require("./../operations/azure-rest/ms-rest-azure");
 
 
 export class AzureRGTaskParameters {

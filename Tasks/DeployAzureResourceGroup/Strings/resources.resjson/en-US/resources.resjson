@@ -113,5 +113,6 @@
   "loc.messages.ValidDeployment": "It's a valid Deployment",
   "loc.messages.NoVMsFound": "No VMs found",
   "loc.messages.EnablingWinRM": "Enabling winRM Https Listener on your windows machines..",
-  "loc.messages.CreatingTemplateDeployment": "Creating Template Deployment"
+  "loc.messages.CreatingTemplateDeployment": "Creating Template Deployment",
+  "loc.messages.URLFetchFailed": "Could not fetch URL due to the following error: %s"
 }

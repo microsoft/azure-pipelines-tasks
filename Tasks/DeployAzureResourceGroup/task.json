@@ -296,6 +296,7 @@
         "ARG_ResourceNotFound": "%s is not found on the resource Group %s. Error Count: %s",
         "FailedToUpdateInboundNatRuleLB": "Failed to update the load Balancer %s with the appropriate Inbound Nat Rule",
         "ARG_DeploymentPrereqFailed": "Failed to enable deployment pre-requisites with the exception: %s",
-        "ARG_SetExtensionFailedForVm": "Failed to set extension on Virtual Machine %s of Resource Group %s with result: %s"
+        "ARG_SetExtensionFailedForVm": "Failed to set extension on Virtual Machine %s of Resource Group %s with result: %s",
+        "URLFetchFailed": "Could not fetch URL due to the following error: %s"
     }
 }

@@ -1,10 +1,10 @@
-var networkManagementClient = require("./azure-arm-network");
-var computeManagementClient = require("./azure-arm-compute");
+import networkManagementClient = require("./azure-rest/azure-arm-network");
+import computeManagementClient = require("./azure-rest/azure-arm-compute");
 import Q = require('q');
 import util = require("util");
 import tl = require("vsts-task-lib/task");
 import azure_utils = require("./AzureUtil");
-import deployAzureRG = require("./DeployAzureRG");
+import deployAzureRG = require("../models/DeployAzureRG");
 
 export class WinRMHttpsListener {
     private taskParameters: deployAzureRG.AzureRGTaskParameters;

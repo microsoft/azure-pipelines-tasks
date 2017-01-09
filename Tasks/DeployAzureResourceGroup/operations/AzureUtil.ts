@@ -1,7 +1,7 @@
-var networkManagementClient = require("./azure-arm-network");
-var computeManagementClient = require("./azure-arm-compute");
+import networkManagementClient = require("./azure-rest/azure-arm-network");
+import computeManagementClient = require("./azure-rest/azure-arm-compute");
 import q = require("q");
-import deployAzureRG = require("./DeployAzureRG");
+import deployAzureRG = require("../models/DeployAzureRG");
 import tl = require("vsts-task-lib/task")
 
 export class AzureUtil {
