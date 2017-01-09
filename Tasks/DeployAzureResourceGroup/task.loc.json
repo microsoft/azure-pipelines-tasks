@@ -291,6 +291,7 @@
     "ErrorsInYourDeployment": "ms-resource:loc.messages.ErrorsInYourDeployment",
     "ValidDeployment": "ms-resource:loc.messages.ValidDeployment",
     "NoVMsFound": "ms-resource:loc.messages.NoVMsFound",
-    "EnablingWinRM": "ms-resource:loc.messages.EnablingWinRM"
+    "EnablingWinRM": "ms-resource:loc.messages.EnablingWinRM",
+    "CreatingTemplateDeployment": "ms-resource:loc.messages.CreatingTemplateDeployment"
   }
 }
