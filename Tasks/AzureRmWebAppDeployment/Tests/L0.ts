@@ -34,6 +34,29 @@ describe('AzureRmWebAppDeployment Suite', function() {
             done();
         });
 
+        it('msdeployutility.containsParamFile function runs successfully', (done:MochaDone) => {
+            let tp = path.join(__dirname, 'L0MSDeployUtility.js');
+            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            tr.run();
+            
+            assert(tr.invokedToolCount == 1, 'should have invoked tool once');
+            assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+            assert(tr.succeeded, 'task should have succeeded');
+            done();
+        });
+
+        it('msdeployutility.containsParamFile function fails', (done:MochaDone) => {
+            let tp = path.join(__dirname, 'L0MSDeployUtilityFail.js');
+            let tr = new ttm.MockTestRunner(tp);
+            tr.run();
+            assert(tr.invokedToolCount == 1, 'should have invoked tool once');
+            assert(tr.stderr.length > 0);
+            var expectedErr = "msdeploy failed to execute successfully";
+            assert(tr.stderr.search(expectedErr) >= 0, "should have said: " + expectedErr);
+            done();
+        });        
+
+
         it('Verify logs pushed to Kudu when task runs successfully with default inputs and env variables found', (done) => {
             this.timeout(1000);
             let tp = path.join(__dirname, 'L0WindowsDefault.js');

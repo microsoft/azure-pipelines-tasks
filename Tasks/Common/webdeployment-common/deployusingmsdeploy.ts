@@ -24,12 +24,11 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
 
     var msDeployPath = await msDeployUtility.getMSDeployFullPath();
     var msDeployDirectory = msDeployPath.slice(0, msDeployPath.lastIndexOf('\\') + 1);
-    pathVar = process.env.PATH;
+    var pathVar = process.env.PATH;
     process.env.PATH = msDeployDirectory + ";" + process.env.PATH ;
 
     setParametersFile = utility.copySetParamFileIfItExists(setParametersFile);
     var setParametersFileName = null;
-    var pathVar;
     if(setParametersFile != null) {
         setParametersFileName = setParametersFile.slice(setParametersFile.lastIndexOf('\\') + 1, setParametersFile.length);
     }
