@@ -4,6 +4,10 @@
             {
                 "url": "https://testselector.blob.core.windows.net/testselector/3433874/TestSelector.zip",
                 "dest": "./"
+            },
+            {
+                "url": "https://testexecution.blob.core.windows.net/version1/TestExecution.zip",
+                "dest": "./modules"
             }
         ]
     }
