@@ -291,7 +291,8 @@
         "ErrorsInYourDeployment": "There are errors in your deployment",
         "ValidDeployment": "It's a valid Deployment",
         "NoVMsFound": "No VMs found",
-        "EnablingWinRM" : "Enabling winRM Https Listener on your windows machines..",
-        "CreatingTemplateDeployment": "Creating Template Deployment"
+        "EnablingWinRM": "Enabling winRM Https Listener on your windows machines..",
+        "CreatingTemplateDeployment": "Creating Template Deployment",
+        "URLFetchFailed": "Could not fetch URL due to the following error: %s"
     }
 }

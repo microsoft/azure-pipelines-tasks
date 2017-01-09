@@ -4,46 +4,38 @@ import util = require("util");
 import azureServiceClient = require("./AzureServiceClient");
 import Q = require("q");
 
-export class NetworkManagementClient extends azureServiceClient.ServiceClient {
+export class ComputeManagementClient extends azureServiceClient.ServiceClient {
     private apiVersion;
     private acceptLanguage;
-    public longRunningOperationRetryTimeout;
+    private longRunningOperationRetryTimeout;
     private generateClientRequestId;
     private subscriptionId;
     private baseUri;
 
-    public networkSecurityGroups;
-    public networkInterfaces;
-    public publicIPAddresses;
-    public loadBalancers;
-    public securityRules;
+    public virtualMachines;
+    public virtualMachineExtensions;
 
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId, baseUri?: any, options?: any) {
         super(credentials);
-        this.apiVersion = '2016-09-01';
         this.acceptLanguage = 'en-US';
         this.longRunningOperationRetryTimeout = 30;
         this.generateClientRequestId = true;
-
+        this.apiVersion = '2016-03-30';
         if (credentials === null || credentials === undefined) {
             throw new Error(tl.loc("CredentialsCannotBeNull"));
         }
         if (subscriptionId === null || subscriptionId === undefined) {
             throw new Error(tl.loc("SubscriptionIdCannotBeNull"));
         }
-
-        if (!options) options = {};
+        if (!options)
+            options = {};
 
         this.baseUri = baseUri;
         if (!this.baseUri) {
             this.baseUri = 'https://management.azure.com';
         }
         this.subscriptionId = subscriptionId;
-
-        if (options.apiVersion !== null && options.apiVersion !== undefined) {
-            this.apiVersion = options.apiVersion;
-        }
-        if (options.acceptLanguage !== null && options.acceptLanguage !== undefined) {
+        if (options.acceptLanguage != null && options.acceptLanguage != undefined) {
             this.acceptLanguage = options.acceptLanguage;
         }
         if (options.longRunningOperationRetryTimeout !== null && options.longRunningOperationRetryTimeout !== undefined) {
@@ -52,12 +44,8 @@ export class NetworkManagementClient extends azureServiceClient.ServiceClient {
         if (options.generateClientRequestId !== null && options.generateClientRequestId !== undefined) {
             this.generateClientRequestId = options.generateClientRequestId;
         }
-
-        this.loadBalancers = new loadBalancers(this);
-        this.publicIPAddresses = new publicIPAddresses(this);
-        this.networkSecurityGroups = new networkSecurityGroups(this);
-        this.networkInterfaces = new NetworkInterfaces(this);
-        this.securityRules = new securityRules(this);
+        this.virtualMachines = new VirtualMachines(this);
+        this.virtualMachineExtensions = new VirtualMachineExtensions(this);
     }
 
     public getRequestUri(uriFormat: string, parameters: {}, queryParameters?: string[]): string {
@@ -77,8 +65,7 @@ export class NetworkManagementClient extends azureServiceClient.ServiceClient {
         if (queryParameters.length > 0) {
             requestUri += '?' + queryParameters.join('&');
         }
-
-        return requestUri
+        return requestUri;
     }
 
     public beginRequest(request: azureServiceClient.WebRequest): Promise<azureServiceClient.WebResponse> {
@@ -88,11 +75,10 @@ export class NetworkManagementClient extends azureServiceClient.ServiceClient {
             request.headers['accept-language'] = this.acceptLanguage;
         }
         request.headers['Content-Type'] = 'application/json; charset=utf-8';
-
         return super.beginRequest(request);
     }
 
-    public setCustomHeaders(options): {} {
+    public setHeaders(options): {} {
         var headers = {};
         if (options) {
             for (var headerName in options['customHeaders']) {
@@ -103,11 +89,10 @@ export class NetworkManagementClient extends azureServiceClient.ServiceClient {
         }
         return headers;
     }
-
 }
 
-export class loadBalancers {
-    private client: NetworkManagementClient;
+export class VirtualMachines {
+    private client: ComputeManagementClient;
 
     constructor(client) {
         this.client = client;
@@ -137,25 +122,20 @@ export class loadBalancers {
                     throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
                 }
             }
-        } catch (error) {
+        }
+        catch (error) {
             return callback(error);
         }
 
-        // Create HTTP transport objects
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'GET';
-        httpRequest.headers = {};
-        httpRequest.uri = this.client.getRequestUri(
-            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/loadBalancers',
+        httpRequest.headers = this.client.setHeaders(options);
+        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines',
             {
                 '{resourceGroupName}': resourceGroupName
             }
         );
-        // Set Headers
-        httpRequest.headers = this.client.setCustomHeaders(options);
-        httpRequest.body = null;
 
-        //send request
         var result = [];
         this.client.beginRequest(httpRequest).then(async (response: azureServiceClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
@@ -166,23 +146,20 @@ export class loadBalancers {
 
                 if (response.body.nextLink) {
                     var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
-                    if (nextResult.error) {
-                        deferred.reject(new azureServiceClient.ApiResult(nextResult.error));
-                    }
-                    result.concat(nextResult.result);
+                    if (nextResult.error) { return nextResult; }
+                    result = result.concat(nextResult.result);
                 }
-
                 deferred.resolve(new azureServiceClient.ApiResult(null, result));
             }
             else {
                 deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
-            (error) => callback(error));
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(null, apiResult.result),
+            (apiResult: azureServiceClient.ApiResult) => callback(apiResult.error));
     }
 
-    public get(resourceGroupName, loadBalancerName, options, callback) {
+    public get(resourceGroupName, vmName, options, callback) {
         var client = this.client;
         if (!callback && typeof options === 'function') {
             callback = options;
@@ -208,8 +185,316 @@ export class loadBalancers {
                     throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
                 }
             }
-            if (loadBalancerName === null || loadBalancerName === undefined || typeof loadBalancerName.valueOf() !== 'string') {
-                throw new Error(tl.loc("LoadBalancerNameCannotBeNull"));
+            if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
+                throw new Error(tl.loc("VMNameCannotBeNull"));
+            }
+            if (expand) {
+                var allowedValues = ['instanceView'];
+                if (!allowedValues.some(function (item) { return item === expand; })) {
+                    throw new Error(tl.loc("InvalidValue", expand, allowedValues));
+                }
+            }
+        } catch (error) {
+            return callback(error);
+        }
+
+        var httpRequest = new azureServiceClient.WebRequest();
+        httpRequest.method = 'GET';
+        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}',
+            {
+                '{resourceGroupName}': resourceGroupName,
+                '{vmName}': vmName
+            },
+            ['$expand=' + encodeURIComponent(expand)]
+        );
+        // Set Headers
+        httpRequest.headers = this.client.setHeaders(options);
+
+        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
+            if (response.statusCode == 200) {
+                var result = response.body;
+                deferred.resolve(new azureServiceClient.ApiResult(null, result));
+            }
+            else {
+                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+            }
+            return deferred.promise;
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(null, apiResult.result),
+            (apiResult: azureServiceClient.ApiResult) => callback(apiResult.error));
+    }
+
+    public restart(resourceGroupName: string, vmName: string, callback) {
+        var client = this.client;
+        if (!callback) {
+            throw new Error(tl.loc("CallbackCannotBeNull"));
+        }
+        // Validate
+        try {
+            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+            }
+            if (resourceGroupName !== null && resourceGroupName !== undefined) {
+                if (resourceGroupName.length > 90) {
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
+                }
+                if (resourceGroupName.length < 1) {
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
+                }
+                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
+                }
+            }
+            if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
+                throw new Error(tl.loc("VMNameCannotBeNull"));
+            }
+        } catch (error) {
+            return callback(error);
+        }
+
+        // Create object
+        var httpRequest = new azureServiceClient.WebRequest();
+        httpRequest.method = 'POST';
+        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/restart',
+            {
+                '{resourceGroupName}': resourceGroupName,
+                '{vmName}': vmName
+            }
+        );
+        // Set Headers
+        httpRequest.headers = this.client.setHeaders(null);
+        httpRequest.body = null;
+
+        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
+            if (response.statusCode != 202) {
+                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+            }
+            else {
+                this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
+                    if (operationResponse.body.status == "Succeeded") {
+                        deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
+                    }
+                    else {
+                        deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
+                    }
+                });
+            }
+            return deferred.promise;
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(null, apiResult.result),
+            (apiResult: azureServiceClient.ApiResult) => callback(apiResult.error));
+    }
+
+    public start(resourceGroupName: string, vmName: string, callback) {
+        var client = this.client;
+        if (!callback) {
+            throw new Error(tl.loc("CallbackCannotBeNull"));
+        }
+        // Validate
+        try {
+            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+            }
+            if (resourceGroupName !== null && resourceGroupName !== undefined) {
+                if (resourceGroupName.length > 90) {
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
+                }
+                if (resourceGroupName.length < 1) {
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
+                }
+                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
+                }
+            }
+            if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
+                throw new Error(tl.loc("VMNameCannotBeNull"));
+            }
+        } catch (error) {
+            return callback(error);
+        }
+
+        var httpRequest = new azureServiceClient.WebRequest();
+        httpRequest.method = 'POST';
+        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/start',
+            {
+                '{resourceGroupName}': resourceGroupName,
+                '{vmName}': vmName
+            });
+        httpRequest.headers = this.client.setHeaders(null);
+        httpRequest.body = null;
+
+        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
+            var statusCode = response.statusCode;
+            if (statusCode != 202) {
+                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+            }
+            this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
+                if (operationResponse.body.status == "Succeeded") {
+                    deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
+                }
+                else {
+                    deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
+                }
+            });
+            return deferred.promise;
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(null, apiResult.result),
+            (apiResult: azureServiceClient.ApiResult) => callback(apiResult.error));
+    }
+
+    public powerOff(resourceGroupName: string, vmName: string, callback) {
+        var client = this.client;
+        if (!callback) {
+            throw new Error(tl.loc("CallbackCannotBeNull"));
+        }
+        // Validate
+        try {
+            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+            }
+            if (resourceGroupName !== null && resourceGroupName !== undefined) {
+                if (resourceGroupName.length > 90) {
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
+                }
+                if (resourceGroupName.length < 1) {
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
+                }
+                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
+                }
+            }
+            if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
+                throw new Error(tl.loc("VMNameCannotBeNull"));
+            }
+        } catch (error) {
+            return callback(error);
+        }
+
+        var httpRequest = new azureServiceClient.WebRequest();
+        httpRequest.method = 'POST';
+        httpRequest.headers = this.client.setHeaders(null);
+        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/powerOff',
+            {
+                '{resourceGroupName}': resourceGroupName,
+                '{vmName}': vmName
+            }
+        );
+        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
+            var statusCode = response.statusCode;
+            if (statusCode != 202) {
+                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+            }
+            this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
+                if (operationResponse.body.status == "Succeeded") {
+                    deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
+                }
+                else {
+                    deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
+                }
+            });
+            return deferred.promise;
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(null, apiResult.result),
+            (apiResult: azureServiceClient.ApiResult) => callback(apiResult.error));
+    }
+
+    public deleteMethod(resourceGroupName: string, vmName: string, callback) {
+        var client = this.client;
+        if (!callback) {
+            throw new Error(tl.loc("CallbackCannotBeNull"));
+        }
+        // Validate
+        try {
+            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+            }
+            if (resourceGroupName !== null && resourceGroupName !== undefined) {
+                if (resourceGroupName.length > 90) {
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
+                }
+                if (resourceGroupName.length < 1) {
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
+                }
+                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
+                }
+            }
+            if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
+                throw new Error(tl.loc("VMNameCannotBeNull"));
+            }
+        } catch (error) {
+            return callback(error);
+        }
+
+        // Create object
+        var httpRequest = new azureServiceClient.WebRequest();
+        httpRequest.method = 'DELETE';
+        httpRequest.headers = this.client.setHeaders(null);
+        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}',
+            {
+                '{resourceGroupName}': resourceGroupName,
+                '{vmName}': vmName
+            }
+        );
+        httpRequest.body = null;
+        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
+            var statusCode = response.statusCode;
+            if (statusCode != 202 && statusCode != 204) {
+                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+            }
+            this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
+                if (operationResponse.body.status === "Succeeded") {
+                    // Generate Response
+                    deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
+                } else {
+                    deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
+                }
+            });
+            return deferred.promise;
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(null, apiResult.result),
+            (apiResult: azureServiceClient.ApiResult) => callback(apiResult.error));
+    }
+}
+
+export class VirtualMachineExtensions {
+    private client: ComputeManagementClient;
+
+    constructor(client: ComputeManagementClient) {
+        this.client = client;
+    }
+
+    public get(resourceGroupName, vmName, vmExtensionName, options, callback) {
+        var client = this.client;
+        if (!callback && typeof options === 'function') {
+            callback = options;
+            options = null;
+        }
+        if (!callback) {
+            throw new Error(tl.loc("CallbackCannotBeNull"));
+        }
+        var expand = (options && options.expand !== undefined) ? options.expand : undefined;
+        // Validate
+        try {
+            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+            }
+            if (resourceGroupName !== null && resourceGroupName !== undefined) {
+                if (resourceGroupName.length > 90) {
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
+                }
+                if (resourceGroupName.length < 1) {
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
+                }
+                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
+                }
+            }
+            if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
+                throw new Error(tl.loc("VMNameCannotBeNull"));
+            }
+            if (vmExtensionName === null || vmExtensionName === undefined || typeof vmExtensionName.valueOf() !== 'string') {
+                throw new Error(tl.loc("VmExtensionNameCannotBeNull"));
             }
             if (expand !== null && expand !== undefined && typeof expand.valueOf() !== 'string') {
                 throw new Error(tl.loc("ExpandShouldBeOfTypeString"));
@@ -221,37 +506,36 @@ export class loadBalancers {
         // Create HTTP transport objects
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'GET';
-        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/loadBalancers/{loadBalancerName}',
+        httpRequest.headers = this.client.setHeaders(options);
+        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/extensions/{vmExtensionName}',
             {
                 '{resourceGroupName}': resourceGroupName,
-                '{loadBalancerName}': loadBalancerName
-            });
-        httpRequest.headers = this.client.setCustomHeaders(options);
+                '{vmName}': vmName,
+                '{vmExtensionName}': vmExtensionName
+            }
+        );
         httpRequest.body = null;
 
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode == 200) {
-                deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
+                var result = response.body;
+                deferred.resolve(new azureServiceClient.ApiResult(null, result));
             }
             else {
                 deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
-            (error) => callback(error));
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(null, apiResult.result),
+            (apiResult: azureServiceClient.ApiResult) => callback(apiResult.error));
     }
 
-    public createOrUpdate(resourceGroupName, loadBalancerName, parameters, options, callback) {
+    public createOrUpdate(resourceGroupName, vmName, vmExtensionName, extensionParameters, callback): void {
         var client = this.client;
-        if (!callback && typeof options === 'function') {
-            callback = options;
-            options = null;
-        }
+
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
         }
-        var expand = (options && options.expand !== undefined) ? options.expand : undefined;
         // Validate
         try {
             if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
@@ -268,350 +552,59 @@ export class loadBalancers {
                     throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
                 }
             }
-            if (loadBalancerName === null || loadBalancerName === undefined || typeof loadBalancerName.valueOf() !== 'string') {
-                throw new Error(tl.loc("LoadBalancerNameCannotBeNull"));
+            if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
+                throw new Error(tl.loc("VMNameCannotBeNull"));
             }
-            if (parameters === null || parameters === undefined) {
-                throw new Error(tl.loc("ParametersCannotBeNull"));
+            if (vmExtensionName === null || vmExtensionName === undefined || typeof vmExtensionName.valueOf() !== 'string') {
+                throw new Error(tl.loc("VmExtensionNameCannotBeNull"));
             }
-        }
-        catch (error) {
+            if (extensionParameters === null || extensionParameters === undefined) {
+                throw new Error(tl.loc("ExtensionParametersCannotBeNull"));
+            }
+        } catch (error) {
             return callback(error);
         }
 
+        // Create HTTP transport objects
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'PUT';
-        httpRequest.headers = {};
-        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/loadBalancers/{loadBalancerName}',
+        httpRequest.headers = this.client.setHeaders(null);
+        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/extensions/{vmExtensionName}',
             {
                 '{resourceGroupName}': resourceGroupName,
-                '{loadBalancerName}': loadBalancerName
-            });
-        // Set Headers
-        httpRequest.headers = this.client.setCustomHeaders(options);
-
-        if (parameters !== null && parameters !== undefined) {
-            httpRequest.body = JSON.stringify(parameters);
-        }
-
-        this.client.beginRequest(httpRequest).then((response) => {
-            var deferred = Q.defer<azureServiceClient.ApiResult>();
-            var statusCode = response.statusCode;
-            if (statusCode != 200 && statusCode != 201) {
-                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
-            }
-
-            this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
-                if (operationResponse.body.status === "Succeeded") {
-                    // Generate Response
-                    deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
-                }
-                else {
-                    // Generate Error
-                    deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
-                }
-            })
-            return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
-            (error) => callback(error));
-    }
-}
-
-export class publicIPAddresses {
-    private client: NetworkManagementClient;
-    constructor(client) {
-        this.client = client;
-    }
-
-    public list(resourceGroupName, options, callback) {
-        var client = this.client;
-        if (!callback && typeof options === 'function') {
-            callback = options;
-            options = null;
-        }
-        if (!callback) {
-            throw new Error(tl.loc("CallbackCannotBeNull"));
-        }
-        // Validate
-        try {
-            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
-        } catch (error) {
-            return callback(error);
-        }
-
-        // Create HTTP transport objects
-        var httpRequest = new azureServiceClient.WebRequest();
-        httpRequest.method = 'GET';
-        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/publicIPAddresses',
-            {
-                '{resourceGroupName}': resourceGroupName
-            });
-        // Set Headers
-        httpRequest.headers = this.client.setCustomHeaders(options);
-        httpRequest.body = null;
-
-        var result = [];
-        this.client.beginRequest(httpRequest).then(async (response: azureServiceClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClient.ApiResult>();
-            if (response.statusCode == 200) {
-                if (response.body.value) {
-                    result = result.concat(response.body.value);
-                }
-                if (response.body.nextLink) {
-                    var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
-                    if (nextResult.error) {
-                        deferred.reject(new azureServiceClient.ApiResult(nextResult.error));
-                    }
-                    result = result.concat(nextResult);
-                }
-                deferred.resolve(new azureServiceClient.ApiResult(null, result));
-            }
-            else {
-                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
-            }
-            return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
-            (error) => callback(error));
-    }
-}
-
-export class networkSecurityGroups {
-    private client: NetworkManagementClient;
-    constructor(client) {
-        this.client = client;
-    }
-
-    public list(resourceGroupName, options, callback) {
-        var client = this.client;
-        if (!callback && typeof options === 'function') {
-            callback = options;
-            options = null;
-        }
-        if (!callback) {
-            throw new Error(tl.loc("CallbackCannotBeNull"));
-        }
-        // Validate
-        try {
-            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
-        } catch (error) {
-            return callback(error);
-        }
-
-        // Create HTTP transport objects
-        var httpRequest = new azureServiceClient.WebRequest();
-        httpRequest.method = 'GET';
-        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkSecurityGroups',
-            {
-                '{resourceGroupName}': resourceGroupName
+                '{vmName}': vmName,
+                '{vmExtensionName}': vmExtensionName
             }
         );
 
-        // Set Headers
-        httpRequest.headers = this.client.setCustomHeaders(options);
-        httpRequest.body = null;
-
-        var result = [];
-        this.client.beginRequest(httpRequest).then(async (response: azureServiceClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClient.ApiResult>();
-            if (response.statusCode == 200) {
-                if (response.body.value) {
-                    result = result.concat(response.body.value);
-                }
-                if (response.body.nextLink) {
-                    var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
-                    if (nextResult.error) {
-                        deferred.reject(new azureServiceClient.ApiResult(nextResult.error));
-                    }
-                    result = result.concat(nextResult);
-                }
-                deferred.resolve(new azureServiceClient.ApiResult(null, result));
-            }
-            else {
-                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
-            }
-            return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
-            (error) => callback(error));
-    }
-}
-
-export class NetworkInterfaces {
-    private client: NetworkManagementClient;
-    constructor(client) {
-        this.client = client;
-    }
-
-    public list(resourceGroupName, options, callback) {
-        var client = this.client;
-        if (!callback && typeof options === 'function') {
-            callback = options;
-            options = null;
-        }
-        if (!callback) {
-            throw new Error(tl.loc("CallbackCannotBeNull"));
-        }
-        // Validate
-        try {
-            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
-        } catch (error) {
-            return callback(error);
+        // Serialize Request
+        var requestContent = null;
+        var requestModel = null;
+        if (extensionParameters !== null && extensionParameters !== undefined) {
+            httpRequest.body = JSON.stringify(extensionParameters);
         }
 
-        var httpRequest = new azureServiceClient.WebRequest();
-        httpRequest.method = 'GET';
-        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces',
-            {
-                '{resourceGroupName}': resourceGroupName
-            }
-        );
-        httpRequest.headers = this.client.setCustomHeaders(options);
-        httpRequest.body = null;
-
-        var result = [];
-        this.client.beginRequest(httpRequest).then(async (response: azureServiceClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClient.ApiResult>();
-            if (response.statusCode == 200) {
-                if (response.body.value) {
-                    result = result.concat(response.body.value);
-                }
-                if (response.body.nextLink) {
-                    var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
-                    if (nextResult.error) {
-                        deferred.reject(new azureServiceClient.ApiResult(nextResult.error));
-                    }
-                    result = result.concat(nextResult);
-                }
-                deferred.resolve(new azureServiceClient.ApiResult(null, result));
-            }
-            else {
-                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
-            }
-            return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
-            (error) => callback(error));
-    }
-
-    public createOrUpdate(resourceGroupName, networkInterfaceName, parameters, options, callback) {
-        var client = this.client;
-        if (!callback && typeof options === 'function') {
-            callback = options;
-            options = null;
-        }
-        if (!callback) {
-            throw new Error(tl.loc("CallbackCannotBeNull"));
-        }
-        // Validate
-        try {
-            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
-            if (networkInterfaceName === null || networkInterfaceName === undefined || typeof networkInterfaceName.valueOf() !== 'string') {
-                throw new Error(tl.loc("NetworkInterfaceNameCannotBeNull"));
-            }
-            if (parameters === null || parameters === undefined) {
-                throw new Error(tl.loc("ParametersCannotBeNull"));
-            }
-        }
-        catch (error) {
-            return callback(error);
-        }
-
-        // Create HTTP transport objects
-        var httpRequest = new azureServiceClient.WebRequest();
-        httpRequest.method = 'PUT';
-        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces/{networkInterfaceName}',
-            {
-                '{networkInterfaceName}': networkInterfaceName,
-                '{resourceGroupName}': resourceGroupName
-            }
-        );
-        httpRequest.headers = this.client.setCustomHeaders(options);
-        if (parameters) {
-            httpRequest.body = JSON.stringify(parameters);
-        }
-
+        // Send request
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode != 200 && response.statusCode != 201) {
                 deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
-
-            this.client.getLongRunningOperationResult(response).then((operationResponse) => {
+            this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
                 if (operationResponse.body.status === "Succeeded") {
-                    deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body.value));
-                }
-                else {
+                    var result = { "provisioningState": operationResponse.body.status }
+                    deferred.resolve(new azureServiceClient.ApiResult(null, result));
+                } else {
                     deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
                 }
             });
             return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
-            (error) => callback(error));
-    }
-}
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(null, apiResult.result),
+            (apiResult: azureServiceClient.ApiResult) => callback(apiResult.error));
 
-export class securityRules {
-    private client: NetworkManagementClient;
-    constructor(client) {
-        this.client = client;
     }
 
-    public get(resourceGroupName, networkSecurityGroupName, securityRuleName, options, callback) {
-        var client = this.client;
-        if (!callback && typeof options === 'function') {
-            callback = options;
-            options = null;
-        }
+    public deleteMethod(resourceGroupName, vmName, vmExtensionName, callback) {
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
         }
@@ -631,71 +624,11 @@ export class securityRules {
                     throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
                 }
             }
-            if (networkSecurityGroupName === null || networkSecurityGroupName === undefined || typeof networkSecurityGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("NetworkSecurityGroupNameCannotBeNull"));
+            if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
+                throw new Error(tl.loc("VMNameCannotBeNull"));
             }
-            if (securityRuleName === null || securityRuleName === undefined || typeof securityRuleName.valueOf() !== 'string') {
-                throw new Error(tl.loc("SecurityRuleNameCannotBeNull"));
-            }
-        } catch (error) {
-            return callback(error);
-        }
-
-        // Create HTTP transport objects
-        var httpRequest = new azureServiceClient.WebRequest();
-        httpRequest.method = 'GET';
-        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkSecurityGroups/{networkSecurityGroupName}/securityRules/{securityRuleName}',
-            {
-                '{resourceGroupName}': resourceGroupName,
-                '{networkSecurityGroupName}': networkSecurityGroupName,
-                '{securityRuleName}': securityRuleName
-            }
-        );
-        httpRequest.headers = this.client.setCustomHeaders(options);
-        httpRequest.body = null;
-        // Send Request
-        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClient.ApiResult>();
-            if (response.statusCode == 200) {
-                deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
-            }
-            else {
-                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
-            }
-            return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
-            (error) => callback(error));
-    }
-
-    public createOrUpdate(resourceGroupName, networkSecurityGroupName, securityRuleName, securityRuleParameters, callback) {
-        var client = this.client;
-        if (!callback) {
-            throw new Error(tl.loc("CallbackCannotBeNull"));
-        }
-        // Validate
-        try {
-            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
-            if (networkSecurityGroupName === null || networkSecurityGroupName === undefined || typeof networkSecurityGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("NetworkSecurityGroupNameCannotBeNull"));
-            }
-            if (securityRuleName === null || securityRuleName === undefined || typeof securityRuleName.valueOf() !== 'string') {
-                throw new Error(tl.loc("SecurityRuleNameCannotBeNull"));
-            }
-            if (securityRuleParameters === null || securityRuleParameters === undefined) {
-                throw new Error(tl.loc("SecurityRuleParametersCannotBeNull"));
+            if (vmExtensionName === null || vmExtensionName === undefined || typeof vmExtensionName.valueOf() !== 'string') {
+                throw new Error(tl.loc("VmExtensionNameCannotBeNull"));
             }
         } catch (error) {
             return callback(error);
@@ -703,38 +636,31 @@ export class securityRules {
 
         // Create HTTP transport objects
         var httpRequest = new azureServiceClient.WebRequest();
-        httpRequest.method = 'PUT';
-        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkSecurityGroups/{networkSecurityGroupName}/securityRules/{securityRuleName}',
+        httpRequest.method = 'DELETE';
+        httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/extensions/{vmExtensionName}',
             {
                 '{resourceGroupName}': resourceGroupName,
-                '{networkSecurityGroupName}': networkSecurityGroupName,
-                '{securityRuleName}': securityRuleName
+                '{vmName}': vmName,
+                '{vmExtensionName}': vmExtensionName
             }
         );
 
-        httpRequest.headers = this.client.setCustomHeaders(null);
-        if (securityRuleParameters) {
-            httpRequest.body = JSON.stringify(securityRuleParameters);
-        }
-
+        // Send request
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
-            var statusCode = response.statusCode;
-            if (statusCode != 200 && statusCode != 201) {
+            if (response.statusCode !== 202 && response.statusCode !== 204) {
                 deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
-            else {
-                this.client.getLongRunningOperationResult(response).then((operationResponse) => {
-                    if (operationResponse.body.status === "Succeeded") {
-                        deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
-                    }
-                    else {
-                        deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
-                    }
-                });
-            }
+            this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
+                if (operationResponse.statusCode === 200) {
+                    deferred.resolve(new azureServiceClient.ApiResult(null));
+                } else {
+                    deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
+                }
+            });
             return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
-            (error) => callback(error));
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(null, apiResult.result),
+            (apiResult: azureServiceClient.ApiResult) => callback(apiResult.error));
     }
+
 }
