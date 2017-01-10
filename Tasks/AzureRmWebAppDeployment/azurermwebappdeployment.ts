@@ -7,9 +7,10 @@ var msDeployUtility = require('webdeployment-common/msdeployutility.js');
 var zipUtility = require('webdeployment-common/ziputility.js');
 var utility = require('webdeployment-common/utility.js');
 var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
-var jsonSubstitutionUtility = require('webdeployment-common/jsonvariablesubstitutionutility.js');
-var xmlSubstitutionUtility = require('webdeployment-common/xmlvariablesubstitutionutility.js');
-var xdtTransformationUtility = require('webdeployment-common/xdttransformationutility.js');
+var ft = require('webdeployment-common/fileTransformationsUtility.js');
+//var jsonSubstitutionUtility = require('webdeployment-common/jsonvariablesubstitutionutility.js');
+//var xmlSubstitutionUtility = require('webdeployment-common/xmlvariablesubstitutionutility.js');
+//var xdtTransformationUtility = require('webdeployment-common/xdttransformationutility.js');
 var kuduUtility = require('webdeployment-common/kuduutility.js');
 
 async function run() {
@@ -72,7 +73,11 @@ async function run() {
 
         if(JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution) {
 
-            var folderPath = utility.generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWorkingDirectory'), true);
+            var output = await ft.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, webDeployPkg);
+            tempPackagePath = output.tempPackagePath;
+            webDeployPkg = output.webDeployPkg;
+
+            /*var folderPath = utility.generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWorkingDirectory'), true);
             if(isFolderBasedDeployment) {
                 tl.cp(path.join(webDeployPkg, '/*'), folderPath, '-rf', false);
             }
@@ -112,7 +117,7 @@ async function run() {
                 webDeployPkg = await zipUtility.archiveFolder(folderPath, "", tempWebPackageZip);
                 tempPackagePath = webDeployPkg;
                 tl.rmRF(folderPath, true);
-            }
+            }*/
         }
 
         if(virtualApplication) {
