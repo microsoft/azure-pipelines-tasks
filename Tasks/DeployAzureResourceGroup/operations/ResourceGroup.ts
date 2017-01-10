@@ -45,15 +45,15 @@ export class ResourceGroup {
 
     public createOrUpdateResourceGroup() {
         var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
-        armClient.resourceGroups.checkExistence(this.taskParameters.resourceGroupName, async (error, exists, request, response) => {
+        armClient.resourceGroups.checkExistence(this.taskParameters.resourceGroupName, (error, exists, request, response) => {
             if (error) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ResourceGroupStatusFetchFailed", error));
                 process.exit();
             }
             if (exists) {
-                await this.createTemplateDeployment(armClient);
+                this.createTemplateDeployment(armClient);
             } else {
-                await this.createRG(armClient).then((Succeeded) => {
+                this.createRG(armClient).then((Succeeded) => {
                     this.createTemplateDeployment(armClient);
                 });
             }

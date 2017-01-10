@@ -114,5 +114,9 @@
   "loc.messages.NoVMsFound": "No VMs found",
   "loc.messages.EnablingWinRM": "Enabling winRM Https Listener on your windows machines..",
   "loc.messages.CreatingTemplateDeployment": "Creating Template Deployment",
+  "loc.messages.ARG_ResourceNotFound": "%s is not found on the resource Group %s. Error Count: %s",
+  "loc.messages.FailedToUpdateInboundNatRuleLB": "Failed to update the load Balancer %s with the appropriate Inbound Nat Rule",
+  "loc.messages.ARG_DeploymentPrereqFailed": "Failed to enable deployment pre-requisites with the exception: %s",
+  "loc.messages.ARG_SetExtensionFailedForVm": "Failed to set extension on Virtual Machine %s of Resource Group %s with result: %s",
   "loc.messages.URLFetchFailed": "Could not fetch URL due to the following error: %s"
 }

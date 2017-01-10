@@ -293,6 +293,10 @@
     "NoVMsFound": "ms-resource:loc.messages.NoVMsFound",
     "EnablingWinRM": "ms-resource:loc.messages.EnablingWinRM",
     "CreatingTemplateDeployment": "ms-resource:loc.messages.CreatingTemplateDeployment",
+    "ARG_ResourceNotFound": "ms-resource:loc.messages.ARG_ResourceNotFound",
+    "FailedToUpdateInboundNatRuleLB": "ms-resource:loc.messages.FailedToUpdateInboundNatRuleLB",
+    "ARG_DeploymentPrereqFailed": "ms-resource:loc.messages.ARG_DeploymentPrereqFailed",
+    "ARG_SetExtensionFailedForVm": "ms-resource:loc.messages.ARG_SetExtensionFailedForVm",
     "URLFetchFailed": "ms-resource:loc.messages.URLFetchFailed"
   }
 }
