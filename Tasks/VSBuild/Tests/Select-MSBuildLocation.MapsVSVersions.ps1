@@ -14,7 +14,7 @@ $mappings = @(
 )
 foreach ($mapping in $mappings) {
     Unregister-Mock Get-MSBuildPath
-    Register-Mock Get-MSBuildPath { "Some location" } -- -Version $mapping.MSBuildVersion -Architecture 'Some architecture'
+    Register-Mock Get-MSBuildPath { "Some location" } -- -Version $mapping.MSBuildVersion -Architecture 'Some architecture' -SearchCom
     
     # Act.
     $actual = Select-MSBuildLocation -VSVersion $mapping.VSVersion -Architecture 'Some architecture'
