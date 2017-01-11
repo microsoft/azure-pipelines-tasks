@@ -72,52 +72,9 @@ async function run() {
         var isFolderBasedDeployment = utility.isInputPkgIsFolder(webDeployPkg);
 
         if(JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution) {
-
             var output = await ft.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, webDeployPkg);
             tempPackagePath = output.tempPackagePath;
             webDeployPkg = output.webDeployPkg;
-
-            /*var folderPath = utility.generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWorkingDirectory'), true);
-            if(isFolderBasedDeployment) {
-                tl.cp(path.join(webDeployPkg, '/*'), folderPath, '-rf', false);
-            }
-            else {
-                await zipUtility.unzip(webDeployPkg, folderPath);
-            }
-
-            if(xmlTransformation) {
-                var environmentName = tl.getVariable('Release.EnvironmentName');
-                if(tl.osType().match(/^Win/)) {
-                    var transformConfigs = ["Release.config"];
-                    if(environmentName) {
-                        transformConfigs.push(environmentName + ".config");
-                    }
-                    xdtTransformationUtility.basicXdtTransformation(folderPath, transformConfigs);  
-                    console.log(tl.loc("XDTTransformationsappliedsuccessfully"));
-                } else {
-                    throw new Error(tl.loc("CannotPerformXdtTransformationOnNonWindowsPlatform"));
-                }
-            }
-
-            if(xmlVariableSubstitution) {
-                await xmlSubstitutionUtility.substituteAppSettingsVariables(folderPath);
-                console.log(tl.loc('XMLvariablesubstitutionappliedsuccessfully'));
-            }
-
-            if(JSONFiles.length != 0) {
-                jsonSubstitutionUtility.jsonVariableSubstitution(folderPath, JSONFiles);
-                console.log(tl.loc('JSONvariablesubstitutionappliedsuccessfully'));
-            }
-            if(isFolderBasedDeployment) {
-                tempPackagePath = folderPath;
-                webDeployPkg = folderPath;
-            }
-            else {
-                var tempWebPackageZip = utility.generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWorkingDirectory'), false);
-                webDeployPkg = await zipUtility.archiveFolder(folderPath, "", tempWebPackageZip);
-                tempPackagePath = webDeployPkg;
-                tl.rmRF(folderPath, true);
-            }*/
         }
 
         if(virtualApplication) {

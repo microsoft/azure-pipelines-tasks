@@ -2,15 +2,22 @@ import * as tl from 'vsts-task-lib';
 import * as path from 'path';
 import * as assert from 'assert';
 import * as ttm from 'vsts-task-lib/mock-test';
+var ltx = require('ltx');
+import fs = require('fs');
 
 describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
      var taskSrcPath = path.join(__dirname, '..','deployiiswebapp.js');
 
      before((done) => {
+        tl.cp(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.config'), path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.config'), null, false);
+        tl.cp(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.Debug.config'), path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.Debug.config'), null, false);
+        tl.cp(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L0XdtTransform', 'Web.config'), path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L0XdtTransform', 'Web_test.config'), null, false);
         done();
     });
     after(function() {
-
+        tl.rmRF(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L0XdtTransform', 'Web_test.config'), true);
+        tl.rmRF(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.config'), true);
+        tl.rmRF(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_Test.Debug.config'), true);
     });
 
     if(!tl.osType().match(/^Win/)) {
@@ -104,6 +111,73 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         var expectedErr = 'Error: loc_mock_Nopackagefoundwithspecifiedpattern'; 
         assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr); 
         assert(tr.failed, 'task should have failed');
+        done();
+    });
+
+    it('Runs successfully with XDT Transformation (L1)', (done:MochaDone) => {
+        let tp = path.join(__dirname, "..", "node_modules","webdeployment-common","Tests","L0XdtTransform.js");
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        if(tl.osType().match(/^Win/)) {
+            var resultFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L0XdtTransform', 'Web_test.config')));
+            var expectFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L0XdtTransform','Web_Expected.config')));
+            assert(ltx.equal(resultFile, expectFile) , 'Should Transform attributes on Web.config');
+        }
+        else {
+            tl.warning('Cannot test XDT Transformation in Non Windows Agent');
+        }
+        done();
+    });
+
+
+    it('Runs successfully with XML variable substitution', (done:MochaDone) => {
+        let tp = path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L0XmlVarSub.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+		
+        var resultFile = ltx.parse(fs.readFileSync(path.join(__dirname,  "..", "node_modules","webdeployment-common","Tests", 'L1XmlVarSub', 'Web_test.config')));
+        var expectFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XmlVarSub', 'Web_Expected.config')));
+        assert(ltx.equal(resultFile, expectFile) , 'Should have substituted variables in Web.config file');
+        var resultFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.Debug.config')));
+        var expectFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_Expected.Debug.config')));
+        assert(ltx.equal(resultFile, expectFile) , 'Should have substituted variables in Web.Debug.config file');
+        done();
+    });
+
+    it('Runs successfully with JSON variable substitution', (done:MochaDone) => {
+        let tp = path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L0JsonVarSub.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.stdout.search('JSON - eliminating object variables validated') > 0, 'JSON - eliminating object variables validation error');
+        assert(tr.stdout.search('JSON - simple string change validated') > 0,'JSON -simple string change validation error' );
+        assert(tr.stdout.search('JSON - system variable elimination validated') > 0, 'JSON -system variable elimination validation error');
+        assert(tr.stdout.search('JSON - special variables validated') > 0, 'JSON - special variables validation error');
+        assert(tr.stdout.search('JSON - varaibles with dot character validated') > 0, 'JSON varaibles with dot character validated');
+        assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
+
+    it('Validate File Encoding', (done:MochaDone) => {
+        let tp = path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L0ValidateFileEncoding.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.stdout.search('UTF-8 with BOM validated') >= 0, 'Should have validated UTF-8 with BOM');
+        assert(tr.stdout.search('UTF-16LE with BOM validated') >= 0, 'Should have validated UTF-16LE with BOM');
+        assert(tr.stdout.search('UTF-16BE with BOM validated') >= 0, 'Should have validated UTF-16BE with BOM');
+        assert(tr.stdout.search('UTF-32LE with BOM validated') >= 0, 'Should have validated UTF-32LE with BOM');
+        assert(tr.stdout.search('UTF-32BE with BOM validated') >= 0, 'Should have validated UTF-32BE with BOM');
+
+        assert(tr.stdout.search('UTF-8 without BOM validated') >= 0, 'Should have validated UTF-8 without BOM');
+        assert(tr.stdout.search('UTF-16LE without BOM validated') >= 0, 'Should have validated UTF-16LE without BOM');
+        assert(tr.stdout.search('UTF-16BE without BOM validated') >= 0, 'Should have validated UTF-16BE without BOM');
+        assert(tr.stdout.search('UTF-32LE without BOM validated') >= 0, 'Should have validated UTF-32LE without BOM');
+        assert(tr.stdout.search('UTF-32BE without BOM validated') >= 0, 'Should have validated UTF-32BE without BOM');
+
+        assert(tr.stdout.search('Short File Buffer Error') >= 0, 'Should have validated short Buffer');
+        assert(tr.stdout.search('Unknown encoding type') >= 0, 'Should throw for Unknown File Buffer');
         done();
     });
 
