@@ -8,7 +8,6 @@ var xmlSubstitutionUtility = require('webdeployment-common/xmlvariablesubstituti
 var xdtTransformationUtility = require('webdeployment-common/xdttransformationutility.js');
 
 export async function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles: any, xmlTransformation: boolean, xmlVariableSubstitution: boolean, webDeployPkg: string) {
-    //if(JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution) {
 
     var tempPackagePath;
     var folderPath = utility.generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWorkingDirectory'), true);
@@ -60,5 +59,4 @@ export async function fileTransformations(isFolderBasedDeployment: boolean, JSON
         "webDeployPkg": webDeployPkg,
         "tempPackagePath": tempPackagePath
     };
-    //}
 }

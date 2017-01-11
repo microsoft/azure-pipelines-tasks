@@ -114,6 +114,33 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         done();
     });
 
+    it('Runs Successfully with XDT Transformation (Mock)', (done) => {
+        this.timeout(1000);
+        let tp = path.join(__dirname, 'L0WindowsXdtTransformation.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 3, 'should have invoked tool thrice');
+        let expectedErr = "loc_mock_XDTTransformationsappliedsuccessfully";
+        assert(tr.stdout.search(expectedErr) >= 0);
+        assert(tr.stderr.length == 0  && tr.errorIssues.length == 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        done();
+    });
+
+    it('Fails if XDT Transformation throws error (Mock)', (done) => {
+        let tp = path.join(__dirname, 'L0WindowsXdtTransformationFail.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        var expectedErr = "Error: loc_mock_XdtTransformationErrorWhileTransforming web.config web.Release.config";
+        assert(tr.invokedToolCount == 1, 'should have invoked tool only once');
+        assert(tr.stderr.length > 0 || tr.errorIssues.length > 0, 'should have written to stderr');
+        assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'E should have said: ' + expectedErr);
+        assert(tr.failed, 'task should have failed');
+        done();
+        });
+
     it('Runs successfully with XDT Transformation (L1)', (done:MochaDone) => {
         let tp = path.join(__dirname, "..", "node_modules","webdeployment-common","Tests","L0XdtTransform.js");
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
