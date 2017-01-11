@@ -300,17 +300,17 @@ export class WinRMHttpsListener {
         try {
             tl.debug("Adding inbound network security rule config " + ruleName + " with priority " + rulePriority + " for port " + winrmHttpsPort + " under security group " + securityGrpName);
             var securityRuleParameters = {
-                    properties: {
-                        direction: "Inbound",
-                        access: "Allow",
-                        sourceAddressPrefix: "*",
-                        sourcePortRange: "*",
-                        destinationAddressPrefix: "*",
-                        destinationPortRange: winrmHttpsPort,
-                        protocol: "*",
-                        priority: rulePriority
-                    }
-                };
+                properties: {
+                    direction: "Inbound",
+                    access: "Allow",
+                    sourceAddressPrefix: "*",
+                    sourcePortRange: "*",
+                    destinationAddressPrefix: "*",
+                    destinationPortRange: winrmHttpsPort,
+                    protocol: "*",
+                    priority: rulePriority
+                }
+            };
             var networkClient1 = new networkManagementClient.NetworkManagementClient(this.credentials, this.subscriptionId);
             networkClient1.securityRules.createOrUpdate(this.resourceGroupName, securityGrpName, ruleName, securityRuleParameters, (error, result, request, response) => {
                 if (error) {
@@ -559,7 +559,7 @@ export class WinRMHttpsListener {
             }
 
             tl.debug("Addition of extension completed for vm" + vmName);
-            if (result["provisioningState"] != 'Succeeded') {
+            if (result["properties"]["provisioningState"] != 'Succeeded') {
                 tl.debug("Provisioning State of CustomScriptExtension is not suceeded on vm " + vmName);
                 await this.RemoveExtensionFromVM(extensionName, vmName, computeClient);
                 deferred.reject(tl.loc("ARG_SetExtensionFailedForVm", this.resourceGroupName, vmName, result));
@@ -778,10 +778,6 @@ export class WinRMHttpsListener {
                         fqdnMap[publicIp["id"]] = "Not Assigned";
                     }
                 }
-            }
-
-            if (debugLogsFlag === "true") {
-                //fill here
             }
 
             //Get the NAT rule for a given ip id
