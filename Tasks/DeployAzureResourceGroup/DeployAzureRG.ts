@@ -5,7 +5,7 @@ import tl = require("vsts-task-lib/task");
 import fs = require("fs");
 import util = require("util");
 
-var msRestAzure = require("ms-rest-azure");
+var msRestAzure = require("./ms-rest-azure");
 
 
 export class AzureRGTaskParameters {
@@ -29,6 +29,7 @@ export class AzureRGTaskParameters {
     public isLoggedIn:boolean = false;
     public deploymentMode:string;
     public credentials;
+    public __mg__agent__testing = "";
     
     constructor() {
         try { 
@@ -53,6 +54,8 @@ export class AzureRGTaskParameters {
             this.outputVariable = tl.getInput("outputVariable");
             this.deploymentMode = tl.getInput("deploymentMode");
             this.credentials = this.getARMCredentials();
+            this.__mg__agent__testing = tl.getVariable("__mg__agent__testing");
+
         }
         catch (error) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("ARGD_ConstructorFailed", error.message));

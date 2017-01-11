@@ -119,7 +119,7 @@ export class MachineGroupAgentExtensionManager {
     private _settlePromise(operationParameters) {
         if (operationParameters.failureCount + operationParameters.successCount == operationParameters.vmCount) {
             if (operationParameters.failureCount > 0) {
-                operationParameters.log(tl.loc("MGAgentOperationOnAllVMsFailed", operationParameters.operation, ""));
+                this.log(tl.loc("MGAgentOperationOnAllVMsFailed", operationParameters.operation, ""));
                 operationParameters.deferred.reject(operationParameters.operation);
             }
             else {
@@ -154,7 +154,7 @@ export class MachineGroupAgentExtensionManager {
                 operationParameters.failureCount++;
                 operationParameters.errors += error.message;
                 operationParameters.errors += "\n";
-                operationParameters.log(tl.loc("OperationFailed", operationParameters.operation, extensionName, vmName));
+                this.log(tl.loc("OperationFailed", operationParameters.operation, extensionName, vmName));
             } else {
                 operationParameters.successCount++;
                 this.log(tl.loc("OperationSucceeded", operationParameters.operation, extensionName, vmName));
@@ -226,8 +226,14 @@ export class MachineGroupAgentExtensionManager {
             var autoUpgradeMinorVersion: boolean = true;
             var publisher: string = constants.publisher;
             var extensionType: string = constants.extensionType;
-            var collectionUri = tl.getVariable('system.TeamFoundationCollectionUri');
-            var teamProject = tl.getVariable('system.teamProject');
+            if (this._taskParameters.__mg__agent__testing) {
+                var collectionUri = constants.collectionUri;
+                var teamProject = constants.teamProject;
+            }
+            else {
+                collectionUri = tl.getVariable('system.TeamFoundationCollectionUri');
+                teamProject = tl.getVariable('system.teamProject');
+            }
             var uriLength = collectionUri.length;
             if (collectionUri[uriLength - 1] == '/') {
                 collectionUri = collectionUri.substr(0, uriLength - 1);

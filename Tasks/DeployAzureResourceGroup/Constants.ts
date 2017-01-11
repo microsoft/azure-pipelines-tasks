@@ -6,3 +6,5 @@ export var mgExtensionNameLinux = "TeamServicesAgentLinux";
 export var vmExtensionTypeLinux = "TeamServicesAgentLinux";
 export var version = "1.0";
 export var enablePrereqMG = "ConfigureVMWithMGAgent";
+export var collectionUri = "https://testking123.visualstudio.com/";
+export var teamProject = "AzureProj";
