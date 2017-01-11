@@ -1,6 +1,6 @@
-var httpClient = require('vso-node-api/HttpClient');
+import tl = require('vsts-task-lib/task');
 import msRestAzure = require("./ms-rest-azure");
-
+var httpClient = require('vso-node-api/HttpClient');
 var httpCallbackClient = new httpClient.HttpCallbackClient("VSTS_AGENT");
 
 export class WebRequest {
@@ -30,14 +30,18 @@ export class ApiResult {
     }
 }
 
-export class Error {
+export class AzureError {
     public code;
     public message;
     public statusCode;
 }
 
-export function ToError(response: WebResponse): Error {
-    var error = new Error();
+export interface ApiCallback {
+    (error: any, result?: any, request?: any, response?: any): void
+}
+
+export function ToError(response: WebResponse): AzureError {
+    var error = new AzureError();
     error.statusCode = response.statusCode;
     error.message = response.body
     if (response.body && response.body.error) {
@@ -50,15 +54,69 @@ export function ToError(response: WebResponse): Error {
 
 export class ServiceClient {
     private credentials: msRestAzure.ApplicationTokenCredentials;
+    private subscriptionId: string;
+    protected apiVersion: string;
+    protected baseUri: string;
+    protected acceptLanguage: string;
+    protected longRunningOperationRetryTimeout: number;
+    protected generateClientRequestId: boolean;
 
-    constructor(credentials: msRestAzure.ApplicationTokenCredentials) {
+    constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId: string) {
+        if (!credentials) {
+            throw new Error(tl.loc("CredentialsCannotBeNull"));
+        }
+        if (!subscriptionId) {
+            throw new Error(tl.loc("SubscriptionIdCannotBeNull"));
+        }
+
         this.credentials = credentials;
+        this.subscriptionId = subscriptionId
+        this.baseUri = 'https://management.azure.com';
+        this.longRunningOperationRetryTimeout = 60; // In minutes
+    }
+
+    public getRequestUri(uriFormat: string, parameters: {}, queryParameters?: string[]): string {
+        var requestUri = this.baseUri + uriFormat;
+        requestUri = requestUri.replace('{subscriptionId}', encodeURIComponent(this.subscriptionId));
+        for (var key in parameters) {
+            requestUri = requestUri.replace(key, encodeURIComponent(parameters[key]));
+        }
+
+        // trim all duplicate forward slashes in the url
+        var regex = /([^:]\/)\/+/gi;
+        requestUri = requestUri.replace(regex, '$1');
+
+        // process query paramerters
+        queryParameters = queryParameters || [];
+        queryParameters.push('api-version=' + encodeURIComponent(this.apiVersion));
+        if (queryParameters.length > 0) {
+            requestUri += '?' + queryParameters.join('&');
+        }
+
+        return requestUri
+    }
+
+    public setCustomHeaders(options: Object): {} {
+        var headers = {};
+        if (options) {
+            for (var headerName in options['customHeaders']) {
+                if (options['customHeaders'].hasOwnProperty(headerName)) {
+                    headers[headerName] = options['customHeaders'][headerName];
+                }
+            }
+        }
+        return headers;
     }
 
     public async beginRequest(request: WebRequest): Promise<WebResponse> {
         var token = await this.credentials.getToken();
+
         request.headers == request.headers || {};
         request.headers["Authorization"] = "Bearer " + token;
+        if (this.acceptLanguage) {
+            request.headers['accept-language'] = this.acceptLanguage;
+        }
+        request.headers['Content-Type'] = 'application/json; charset=utf-8';
 
         var httpResponse = await this.beginRequestInternal(request);
         if (httpResponse.statusCode === 401 && httpResponse.body.error.code === "ExpiredAuthenticationToken") {
@@ -72,7 +130,7 @@ export class ServiceClient {
     }
 
     public async getLongRunningOperationResult(response: WebResponse, timeoutInMinutes?: number): Promise<WebResponse> {
-        timeoutInMinutes = timeoutInMinutes || 60;
+        timeoutInMinutes = timeoutInMinutes || this.longRunningOperationRetryTimeout;
         var timeout = new Date().getTime() + timeoutInMinutes * 60 * 1000;
 
         var request = new WebRequest();

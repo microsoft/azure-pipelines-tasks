@@ -5,14 +5,6 @@ import deployAzureRG = require("./models/DeployAzureRG");
 import virtualMachine = require("./operations/VirtualMachine");
 import resourceGroup = require("./operations/ResourceGroup");
 
-try {
-    tl.setResourcePath(path.join( __dirname, "task.json"));
-}
-catch (err) {
-    tl.setResult(tl.TaskResult.Failed, tl.loc("TaskNotFound", err));
-    process.exit();
-}
-
 function run () {
     var taskParameters = new deployAzureRG.AzureRGTaskParameters();
     var resourceGroupOperationsController = new resourceGroup.ResourceGroup(taskParameters);
@@ -34,9 +26,17 @@ function run () {
                 virtualMachineOperationsController.execute();
                 break;
             default:
-                tl.setResult(tl.TaskResult.Failed, tl.loc("InvalidAction"));
+                tl.setResult(tl.TaskResult.Failed, tl.loc("InvalidAction", taskParameters.action));
                 process.exit();
     }
+}
+
+try {
+    tl.setResourcePath(path.join( __dirname, "task.json"));
+}
+catch (err) {
+    tl.setResult(tl.TaskResult.Failed, tl.loc("TaskNotFound", err));
+    process.exit();
 }
 
 run();

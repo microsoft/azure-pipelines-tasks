@@ -5,62 +5,19 @@ import tl = require('vsts-task-lib/task');
 import Q = require("q");
 
 export class ResourceManagementClient extends azureServiceClient.ServiceClient {
-    private longRunningOperationRetryTimeout;
-    private generateClientRequestId;
-    private subscriptionId;
-    private baseUri;
-    private apiVersion;
-    private acceptLanguage;
 
-    public deployments;
-    public resourceGroups;
+    public deployments: Deployments;
+    public resourceGroups: ResourceGroups;
 
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId: string) {
-        super(credentials);
+        super(credentials, subscriptionId);
+
         this.apiVersion = '2016-07-01';
         this.acceptLanguage = 'en-US';
-        this.longRunningOperationRetryTimeout = 30;
         this.generateClientRequestId = true;
-        if (credentials === null || credentials === undefined) {
-            throw new Error(tl.loc("CredentialsCannotBeNull"));
-        }
-        if (subscriptionId === null || subscriptionId === undefined) {
-            throw new Error(tl.loc("SubscriptionIdCannotBeNull"));
-        }
-        this.baseUri = 'https://management.azure.com';
-        this.subscriptionId = subscriptionId;
+
         this.resourceGroups = new ResourceGroups(this);
         this.deployments = new Deployments(this);
-    }
-
-    public getRequestUri(uriFormat: string, parameters: {}, queryParameters?: string[]): string {
-        var requestUri = this.baseUri + uriFormat;
-        requestUri = requestUri.replace('{subscriptionId}', encodeURIComponent(this.subscriptionId));
-        for (var key in parameters) {
-            requestUri = requestUri.replace(key, encodeURIComponent(parameters[key]));
-        }
-
-        // trim all duplicate forward slashes in the url
-        var regex = /([^:]\/)\/+/gi;
-        requestUri = requestUri.replace(regex, '$1');
-
-        // process query paramerters
-        queryParameters = queryParameters || [];
-        queryParameters.push('api-version=' + encodeURIComponent(this.apiVersion));
-        requestUri += '?' + queryParameters.join('&');
-
-        return requestUri
-    }
-
-    public beginRequest(request: azureServiceClient.WebRequest): Promise<azureServiceClient.WebResponse> {
-        request.headers = request.headers || {};
-        // Set default Headers
-        if (this.acceptLanguage) {
-            request.headers['accept-language'] = this.acceptLanguage;
-        }
-        request.headers['Content-Type'] = 'application/json; charset=utf-8';
-
-        return super.beginRequest(request);
     }
 }
 
@@ -71,7 +28,7 @@ export class ResourceGroups {
         this.client = armClient;
     }
 
-    public checkExistence(resourceGroupName: string, callback) {
+    public checkExistence(resourceGroupName: string, callback: azureServiceClient.ApiCallback): void {
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
         }

@@ -5,36 +5,25 @@ import azureServiceClient = require("./AzureServiceClient");
 import Q = require("q");
 
 export class ComputeManagementClient extends azureServiceClient.ServiceClient {
-    private apiVersion;
-    private acceptLanguage;
-    private longRunningOperationRetryTimeout;
-    private generateClientRequestId;
-    private subscriptionId;
-    private baseUri;
 
     public virtualMachines;
     public virtualMachineExtensions;
 
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId, baseUri?: any, options?: any) {
-        super(credentials);
+        super(credentials, subscriptionId);
+
         this.acceptLanguage = 'en-US';
         this.longRunningOperationRetryTimeout = 30;
         this.generateClientRequestId = true;
         this.apiVersion = '2016-03-30';
-        if (credentials === null || credentials === undefined) {
-            throw new Error(tl.loc("CredentialsCannotBeNull"));
-        }
-        if (subscriptionId === null || subscriptionId === undefined) {
-            throw new Error(tl.loc("SubscriptionIdCannotBeNull"));
-        }
+
         if (!options)
             options = {};
 
-        this.baseUri = baseUri;
-        if (!this.baseUri) {
-            this.baseUri = 'https://management.azure.com';
+        if (baseUri) {
+            this.baseUri = baseUri;
         }
-        this.subscriptionId = subscriptionId;
+
         if (options.acceptLanguage != null && options.acceptLanguage != undefined) {
             this.acceptLanguage = options.acceptLanguage;
         }
@@ -46,48 +35,6 @@ export class ComputeManagementClient extends azureServiceClient.ServiceClient {
         }
         this.virtualMachines = new VirtualMachines(this);
         this.virtualMachineExtensions = new VirtualMachineExtensions(this);
-    }
-
-    public getRequestUri(uriFormat: string, parameters: {}, queryParameters?: string[]): string {
-        var requestUri = this.baseUri + uriFormat;
-        requestUri = requestUri.replace('{subscriptionId}', encodeURIComponent(this.subscriptionId));
-        for (var key in parameters) {
-            requestUri = requestUri.replace(key, encodeURIComponent(parameters[key]));
-        }
-
-        // trim all duplicate forward slashes in the url
-        var regex = /([^:]\/)\/+/gi;
-        requestUri = requestUri.replace(regex, '$1');
-
-        // process query paramerters
-        queryParameters = queryParameters || [];
-        queryParameters.push('api-version=' + encodeURIComponent(this.apiVersion));
-        if (queryParameters.length > 0) {
-            requestUri += '?' + queryParameters.join('&');
-        }
-        return requestUri;
-    }
-
-    public beginRequest(request: azureServiceClient.WebRequest): Promise<azureServiceClient.WebResponse> {
-        request.headers = request.headers || {};
-        // Set default Headers
-        if (this.acceptLanguage) {
-            request.headers['accept-language'] = this.acceptLanguage;
-        }
-        request.headers['Content-Type'] = 'application/json; charset=utf-8';
-        return super.beginRequest(request);
-    }
-
-    public setHeaders(options): {} {
-        var headers = {};
-        if (options) {
-            for (var headerName in options['customHeaders']) {
-                if (options['customHeaders'].hasOwnProperty(headerName)) {
-                    headers[headerName] = options['customHeaders'][headerName];
-                }
-            }
-        }
-        return headers;
     }
 }
 
@@ -129,7 +76,7 @@ export class VirtualMachines {
 
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'GET';
-        httpRequest.headers = this.client.setHeaders(options);
+        httpRequest.headers = this.client.setCustomHeaders(options);
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines',
             {
                 '{resourceGroupName}': resourceGroupName
@@ -208,7 +155,7 @@ export class VirtualMachines {
             ['$expand=' + encodeURIComponent(expand)]
         );
         // Set Headers
-        httpRequest.headers = this.client.setHeaders(options);
+        httpRequest.headers = this.client.setCustomHeaders(options);
 
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
@@ -262,7 +209,7 @@ export class VirtualMachines {
             }
         );
         // Set Headers
-        httpRequest.headers = this.client.setHeaders(null);
+        httpRequest.headers = this.client.setCustomHeaders(null);
         httpRequest.body = null;
 
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
@@ -320,7 +267,7 @@ export class VirtualMachines {
                 '{resourceGroupName}': resourceGroupName,
                 '{vmName}': vmName
             });
-        httpRequest.headers = this.client.setHeaders(null);
+        httpRequest.headers = this.client.setCustomHeaders(null);
         httpRequest.body = null;
 
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
@@ -372,7 +319,7 @@ export class VirtualMachines {
 
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'POST';
-        httpRequest.headers = this.client.setHeaders(null);
+        httpRequest.headers = this.client.setCustomHeaders(null);
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/powerOff',
             {
                 '{resourceGroupName}': resourceGroupName,
@@ -429,7 +376,7 @@ export class VirtualMachines {
         // Create object
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'DELETE';
-        httpRequest.headers = this.client.setHeaders(null);
+        httpRequest.headers = this.client.setCustomHeaders(null);
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}',
             {
                 '{resourceGroupName}': resourceGroupName,
@@ -506,7 +453,7 @@ export class VirtualMachineExtensions {
         // Create HTTP transport objects
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'GET';
-        httpRequest.headers = this.client.setHeaders(options);
+        httpRequest.headers = this.client.setCustomHeaders(options);
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/extensions/{vmExtensionName}',
             {
                 '{resourceGroupName}': resourceGroupName,
@@ -568,7 +515,7 @@ export class VirtualMachineExtensions {
         // Create HTTP transport objects
         var httpRequest = new azureServiceClient.WebRequest();
         httpRequest.method = 'PUT';
-        httpRequest.headers = this.client.setHeaders(null);
+        httpRequest.headers = this.client.setCustomHeaders(null);
         httpRequest.uri = this.client.getRequestUri('//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/extensions/{vmExtensionName}',
             {
                 '{resourceGroupName}': resourceGroupName,

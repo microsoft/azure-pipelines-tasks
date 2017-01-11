@@ -5,40 +5,25 @@ import azureServiceClient = require("./AzureServiceClient");
 import Q = require("q");
 
 export class NetworkManagementClient extends azureServiceClient.ServiceClient {
-    private apiVersion;
-    private acceptLanguage;
-    public longRunningOperationRetryTimeout;
-    private generateClientRequestId;
-    private subscriptionId;
-    private baseUri;
-
-    public networkSecurityGroups;
-    public networkInterfaces;
-    public publicIPAddresses;
-    public loadBalancers;
-    public securityRules;
+    public networkSecurityGroups: networkSecurityGroups;
+    public networkInterfaces: NetworkInterfaces;
+    public publicIPAddresses: publicIPAddresses;
+    public loadBalancers: loadBalancers;
+    public securityRules: securityRules;
 
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId, baseUri?: any, options?: any) {
-        super(credentials);
+        super(credentials, subscriptionId);
+
         this.apiVersion = '2016-09-01';
         this.acceptLanguage = 'en-US';
         this.longRunningOperationRetryTimeout = 30;
         this.generateClientRequestId = true;
 
-        if (credentials === null || credentials === undefined) {
-            throw new Error(tl.loc("CredentialsCannotBeNull"));
-        }
-        if (subscriptionId === null || subscriptionId === undefined) {
-            throw new Error(tl.loc("SubscriptionIdCannotBeNull"));
-        }
-
         if (!options) options = {};
 
-        this.baseUri = baseUri;
-        if (!this.baseUri) {
-            this.baseUri = 'https://management.azure.com';
+        if (baseUri) {
+            this.baseUri = baseUri;
         }
-        this.subscriptionId = subscriptionId;
 
         if (options.apiVersion !== null && options.apiVersion !== undefined) {
             this.apiVersion = options.apiVersion;
@@ -59,51 +44,6 @@ export class NetworkManagementClient extends azureServiceClient.ServiceClient {
         this.networkInterfaces = new NetworkInterfaces(this);
         this.securityRules = new securityRules(this);
     }
-
-    public getRequestUri(uriFormat: string, parameters: {}, queryParameters?: string[]): string {
-        var requestUri = this.baseUri + uriFormat;
-        requestUri = requestUri.replace('{subscriptionId}', encodeURIComponent(this.subscriptionId));
-        for (var key in parameters) {
-            requestUri = requestUri.replace(key, encodeURIComponent(parameters[key]));
-        }
-
-        // trim all duplicate forward slashes in the url
-        var regex = /([^:]\/)\/+/gi;
-        requestUri = requestUri.replace(regex, '$1');
-
-        // process query paramerters
-        queryParameters = queryParameters || [];
-        queryParameters.push('api-version=' + encodeURIComponent(this.apiVersion));
-        if (queryParameters.length > 0) {
-            requestUri += '?' + queryParameters.join('&');
-        }
-
-        return requestUri
-    }
-
-    public beginRequest(request: azureServiceClient.WebRequest): Promise<azureServiceClient.WebResponse> {
-        request.headers = request.headers || {};
-        // Set default Headers
-        if (this.acceptLanguage) {
-            request.headers['accept-language'] = this.acceptLanguage;
-        }
-        request.headers['Content-Type'] = 'application/json; charset=utf-8';
-
-        return super.beginRequest(request);
-    }
-
-    public setCustomHeaders(options): {} {
-        var headers = {};
-        if (options) {
-            for (var headerName in options['customHeaders']) {
-                if (options['customHeaders'].hasOwnProperty(headerName)) {
-                    headers[headerName] = options['customHeaders'][headerName];
-                }
-            }
-        }
-        return headers;
-    }
-
 }
 
 export class loadBalancers {
@@ -113,7 +53,10 @@ export class loadBalancers {
         this.client = client;
     }
 
-    public list(resourceGroupName, options, callback) {
+    public list(resourceGroupName: string, callback: azureServiceClient.ApiCallback): void;
+    public list(resourceGroupName: string, options: Object, callback: azureServiceClient.ApiCallback): void;
+
+    public list(resourceGroupName: string, options: any, callback?: any): void {
         if (!callback && typeof options === 'function') {
             callback = options;
             options = null;
