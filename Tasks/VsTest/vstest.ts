@@ -45,6 +45,7 @@ try {
     var tiaEnabled: boolean = tl.getBoolInput('runOnlyImpactedTests');
     //The name of input "runOnlyImpactedTests" need to be updated for purpose of logging onprem telemetry as well.
     var tiaRebaseLimit: string = tl.getInput('runAllTestsAfterXBuilds');
+    var tiaFilterPaths: string = tl.getVariable("TIA_IncludePathFilters");
     var searchFolder: string = tl.getInput('searchFolder');
 
     var fileLevel = tl.getVariable('tia.filelevel');
@@ -257,7 +258,14 @@ function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
     selectortool.arg("UpdateTestResults");
     selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
     selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
-    selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
+
+
+    if (context === "CD") {
+        selectortool.arg("/buildid:" + tl.getVariable("Release.ReleaseId"));
+    }
+    else {
+        selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
+    }
     selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
 
     if (resultFiles && resultFiles[0]) {
@@ -356,6 +364,7 @@ function publishCodeChanges(): Q.Promise<string> {
     selectortool.arg("/SourcesDir:" + sourcesDir);
     selectortool.arg("/newprovider:" + newprovider);
     selectortool.arg("/BaseLineFile:" + baseLineBuildIdFile);
+    selectortool.arg("/Context:" + context);
 
     if (isPrFlow && isPrFlow.toUpperCase() === "TRUE") {
         selectortool.arg("/IsPrFlow:" + "true");
@@ -363,8 +372,11 @@ function publishCodeChanges(): Q.Promise<string> {
 
     if (tiaRebaseLimit) {
         selectortool.arg("/RebaseLimit:" + tiaRebaseLimit);
+    }    
+
+    if (typeof tiaFilterPaths != 'undefined') {
+        selectortool.arg("/PathFilters:" + tiaFilterPaths);
     }
-    selectortool.arg("/Context:" + context);
 
     selectortool.exec()
         .then(function(code) {
