@@ -28,7 +28,7 @@ export class MachineGroupAgentExtensionManager {
             var listOfVmsPromise = this._azureUtils.getVMDetails();
             listOfVmsPromise.then((listOfVms) => {
                 operationParameters.vmCount = listOfVms.length;
-                if (operationParameters.vmCount == 0) {
+                if (operationParameters.vmCount === 0) {
                     operationParameters.deferred.resolve("");
                 }
                 for (var i = 0; i < listOfVms.length; i++) {
@@ -38,8 +38,8 @@ export class MachineGroupAgentExtensionManager {
                     var extensionName = extensionParameters["extensionName"];
                     var parameters = extensionParameters["parameters"];
                     var callback = this._getPostOperationCallBack(operationParameters, extensionName, vmName);
-                    var createOrUpdateCallback = this._getCreateOrUpdateCallback(operationParameters, extensionName, vmName, parameters, callback);
-                    this._computeClient.virtualMachines.get(resourceGroupName, vmName, { expand: 'instanceView' }, createOrUpdateCallback);
+                    var installMGExtensionCallback = this._getInstallMGExtensionCallback(operationParameters, extensionName, vmName, parameters, callback);
+                    this._computeClient.virtualMachines.get(resourceGroupName, vmName, { expand: 'instanceView' }, installMGExtensionCallback);
                 }
             });
             return operationParameters.deferred.promise;
@@ -116,8 +116,8 @@ export class MachineGroupAgentExtensionManager {
         }
     }
 
-    private _settlePromise(operationParameters) {
-        if (operationParameters.failureCount + operationParameters.successCount == operationParameters.vmCount) {
+    private _finalizeOperationStatus(operationParameters) {
+        if (operationParameters.failureCount + operationParameters.successCount === operationParameters.vmCount) {
             if (operationParameters.failureCount > 0) {
                 this.log(tl.loc("MGAgentOperationOnAllVMsFailed", operationParameters.operation, ""));
                 operationParameters.deferred.reject(operationParameters.operation);
@@ -142,7 +142,7 @@ export class MachineGroupAgentExtensionManager {
                 this._computeClient.virtualMachineExtensions.deleteMethod(resourceGroupName, vmName, extensionName, callback);
             }
             if (operationParameters.vmCount === 0) {
-                this._settlePromise(operationParameters);
+                this._finalizeOperationStatus(operationParameters);
             }
         }
         return extensionDeletionCallback;
@@ -159,34 +159,39 @@ export class MachineGroupAgentExtensionManager {
                 operationParameters.successCount++;
                 this.log(tl.loc("OperationSucceeded", operationParameters.operation, extensionName, vmName));
             }
-            this._settlePromise(operationParameters);
+            this._finalizeOperationStatus(operationParameters);
         }
         return postOperationCallBack;
     }
 
-    private _getCreateOrUpdateCallback(operationParameters, extensionName, vmName, parameters, callback) {
+    private _getInstallMGExtensionCallback(operationParameters, extensionName, vmName, parameters, callback) {
+        var installExtensionOnRunningVm = () => {
+            this.log(tl.loc("AddExtension", extensionName, vmName));
+            this._computeClient.virtualMachineExtensions.createOrUpdate(this._taskParameters.resourceGroupName, vmName, extensionName, parameters, callback);
+        }
+        var startVmAndInstallExtension = () => {
+            var invokeCreateOrUpdate = (error, result, request, response) => {
+                if (error) {
+                    this.log(tl.loc("VMStartFailedSkipExtensionOperation", vmName, operationParameters.operation, extensionName));
+                    callback("error");
+                }
+                else if (result) {
+                    installExtensionOnRunningVm();
+                }
+            }
+            this._computeClient.virtualMachines.start(this._taskParameters.resourceGroupName, vmName, invokeCreateOrUpdate);
+        }
         var ceateOrUpdateCallBack = (error, result, request, response) => {
             if (result) {
                 var statuses = result["properties"]["instanceView"]["statuses"];
                 for (var i = 0; i < statuses.length; i++) {
                     var status = statuses[i]["code"].split("/");
-                    if (status.length > 1 && status[0] == "PowerState") {
-                        if (status[1] == "running") {
-                            this.log(tl.loc("AddExtension", extensionName, vmName));
-                            this._computeClient.virtualMachineExtensions.createOrUpdate(this._taskParameters.resourceGroupName, vmName, extensionName, parameters, callback);
+                    if (status.length > 1 && status[0] === "PowerState") {
+                        if (status[1] === "running") {
+                            installExtensionOnRunningVm();
                         }
-                        else if (status[1] == "deallocated") {
-                            var invokeCreateOrUpdate = (error, result, request, response) => {
-                                if (error) {
-                                    this.log(tl.loc("VMStartFailedSkipExtensionOperation", vmName, operationParameters.operation, extensionName));
-                                    callback("error");
-                                }
-                                else if (result) {
-                                    this.log(tl.loc("AddExtension", extensionName, vmName));
-                                    this._computeClient.virtualMachineExtensions.createOrUpdate(this._taskParameters.resourceGroupName, vmName, extensionName, parameters, callback);
-                                }
-                            }
-                            this._computeClient.virtualMachines.start(this._taskParameters.resourceGroupName, vmName, invokeCreateOrUpdate);
+                        else if (status[1] === "deallocated") {
+                            startVmAndInstallExtension();
                         }
                         else {
                             this.log(tl.loc("VMTransitioningSkipExtensionOperation", vmName, operationParameters.operation, extensionName));
@@ -211,31 +216,36 @@ export class MachineGroupAgentExtensionManager {
         var vmOsType = virtualMachine["properties"]["storageProfile"]["osDisk"]["osType"];
         this.log("Operating system on virtual machine : " + vmOsType);
         var vmLocation = virtualMachine["location"];
-        if (vmOsType == "Windows") {
+        if (vmOsType === "Windows") {
             var extensionName = constants.mgExtensionNameWindows;
             var virtualMachineExtensionType: string = constants.vmExtensionTypeWindows;
             var typeHandlerVersion: string = constants.version;
         }
-        else if (vmOsType == "Linux") {
+        else if (vmOsType === "Linux") {
             extensionName = constants.mgExtensionNameLinux;
             virtualMachineExtensionType = constants.vmExtensionTypeLinux;
             typeHandlerVersion = constants.version;
         }
         this.log(tl.loc("MGAgentHandlerMajorVersion", typeHandlerVersion.split(".")[0]));
-        if (operation == "installation") {
+        if (operation === "installation") {
             var autoUpgradeMinorVersion: boolean = true;
             var publisher: string = constants.publisher;
             var extensionType: string = constants.extensionType;
-            if (this._taskParameters.__mg__agent__testing) {
-                var collectionUri = constants.collectionUri;
-                var teamProject = constants.teamProject;
+            if (this._taskParameters.__mg__internal__collection__uri) {
+                var collectionUri = this._taskParameters.__mg__internal__collection__uri;
             }
             else {
                 collectionUri = tl.getVariable('system.TeamFoundationCollectionUri');
+            }
+            if (this._taskParameters.__mg__internal__project__name) {
+                var teamProject = this._taskParameters.__mg__internal__project__name;
+            }
+            else {
+
                 teamProject = tl.getVariable('system.teamProject');
             }
             var uriLength = collectionUri.length;
-            if (collectionUri[uriLength - 1] == '/') {
+            if (collectionUri[uriLength - 1] === '/') {
                 collectionUri = collectionUri.substr(0, uriLength - 1);
             }
             var tags = "";

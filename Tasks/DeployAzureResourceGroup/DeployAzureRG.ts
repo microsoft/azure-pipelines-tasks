@@ -29,7 +29,8 @@ export class AzureRGTaskParameters {
     public isLoggedIn:boolean = false;
     public deploymentMode:string;
     public credentials;
-    public __mg__agent__testing = "";
+    public __mg__internal__collection__uri= "";
+    public __mg__internal__project__name= "";
     
     constructor() {
         try { 
@@ -54,7 +55,8 @@ export class AzureRGTaskParameters {
             this.outputVariable = tl.getInput("outputVariable");
             this.deploymentMode = tl.getInput("deploymentMode");
             this.credentials = this.getARMCredentials();
-            this.__mg__agent__testing = tl.getVariable("__mg__agent__testing");
+            this.__mg__internal__collection__uri = tl.getVariable("__mg__internal__collection__uri");
+            this.__mg__internal__project__name = tl.getVariable("__mg__internal__project__name");
 
         }
         catch (error) {
