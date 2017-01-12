@@ -77,6 +77,115 @@ function getCliPath(): string {
     throw new Error(tl.loc('CannotLocateMobileCenterCLI'));;
 }
 
+function getPrepareRunner(cliPath: string, debug: boolean, app: string, artifactsDir: string): ToolRunner {
+    // Get Test Prepare inputs
+    let prepareRunner = tl.tool(cliPath);
+    let framework: string = tl.getInput('framework', true);
+
+    // framework agnositic options 
+    prepareRunner.arg(['test', 'prepare', framework]);    
+    prepareRunner.arg(['--artifacts-dir', artifactsDir]);
+
+    // framework specific options -- appium
+    if (framework === 'appium') {
+        addStringArg('--build-dir', 'appiumBuildDir', true, prepareRunner);
+    } 
+    else if (framework === 'espresso') {
+        addStringArg('--build-dir', 'espressoBuildDir', false, prepareRunner);
+        addOptionalWildcardArg('--test-apk-path', 'espressoTestApkPath', prepareRunner);
+    }
+    else if (framework === 'calabash') {
+        prepareRunner.arg(['--app-path', app]);
+        addStringArg('--project-dir', 'calabashProjectDir', true, prepareRunner);
+        addStringArg('--sign-info', 'signInfo', false, prepareRunner);
+        addStringArg('--config', 'calabashConfigFile', false, prepareRunner);
+        addStringArg('--profile', 'calabashProfile', false, prepareRunner);
+        addBooleanArg('--skip-config-check', 'calabashSkipConfigCheck', prepareRunner);
+    } 
+    else if (framework === 'uitest') {
+        prepareRunner.arg(['--app-path', app]);
+        addStringArg('--build-dir', 'uitestBuildDir', true, prepareRunner); 
+        addStringArg('--store-file', 'uitestStoreFile',false, prepareRunner);
+        addStringArg('--store-password', 'uitestStorePass',false, prepareRunner);
+        addStringArg('--key-alias', 'uitestKeyAlias',false, prepareRunner);
+        addStringArg('--key-password', 'uitestKeyPass',false, prepareRunner);
+        addStringArg('--uitest-tools-dir', 'uitestToolsDir',false, prepareRunner);
+        addStringArg('--sign-info', 'signInfo', false, prepareRunner); 
+    }
+
+    // append user defined inputs
+    let prepareOpts = tl.getInput('prepareOpts', false);
+    if (prepareOpts) {
+        prepareRunner.line(prepareOpts);
+    }
+
+    if (debug) {
+        prepareRunner.arg('--debug');
+    }
+    prepareRunner.arg('--quiet');
+
+    return prepareRunner;
+}
+
+function getLoginRunner(cliPath: string, debug: boolean, credsType: string): ToolRunner {
+    let loginRunner = tl.tool(cliPath);
+    
+    if (credsType === 'inputs') {
+        let username: string = tl.getInput('username', true);
+        let password: string = tl.getInput('password', true);
+
+        loginRunner.arg(['login', '-u', username, '-p', password]);
+        if (debug) {
+            loginRunner.arg('--debug');
+        }
+
+        let loginOpts = tl.getInput('loginOpts', false);
+        if (loginOpts) {
+            loginRunner.line(loginOpts);
+        }
+
+        loginRunner.arg('--quiet');
+    } 
+
+    return loginRunner;
+}
+
+function getTestRunner(cliPath: string, debug: boolean, app: string, artifactsDir: string, credsType: string): ToolRunner {
+    let testRunner = tl.tool(cliPath);
+    let appSlug: string = tl.getInput('appSlug', true);
+    testRunner.arg(['test', 'run', 'manifest']);
+    testRunner.arg(['--manifest-path', `${path.join(artifactsDir, 'manifest.json')}`]);
+    testRunner.arg(['--app-path', app, '--app', appSlug]);
+
+    addStringArg('--devices', 'devices', true, testRunner); 
+    addStringArg('--test-series', 'series', false, testRunner); 
+    addStringArg('--dsym-dir', 'dsymDir', false, testRunner); 
+    addBooleanArg('--async', 'async', testRunner); 
+
+    let locale: string = tl.getInput('locale', true);
+    if (locale === 'user') {
+        tl.debug('Use user defined locale.'); 
+        locale = tl.getInput('userDefinedLocale', true);
+    } 
+    testRunner.arg(['--locale', locale]);
+
+    let runOptions: string = tl.getInput('runOpts', false);
+    if (runOptions) {
+        testRunner.line(runOptions);
+    }
+    if (debug) {
+        testRunner.arg('--debug');
+    }
+    testRunner.arg('--quiet');
+    if (credsType === 'serviceEndpoint'){
+        // add api key
+        let apiToken = getEndpointAPIToken('serverEndpoint');
+        testRunner.arg(['--token', apiToken]);
+    }
+
+    return testRunner;
+}
+
 async function run() {
     tl.setResourcePath(path.join( __dirname, 'task.json'));
     let cliPath = getCliPath();
@@ -86,122 +195,32 @@ async function run() {
         tl.checkPath(cliPath, "mobile-center");
 
         let debug: boolean = tl.getBoolInput('debug', false);
-
+        let prepareTests: boolean = tl.getBoolInput('enablePrepare', true);
+        let runTests: boolean = tl.getBoolInput('enableRun', true);
+        let artifactsDir = tl.getInput('artifactsDir', true);
         let credsType = tl.getInput('credsType', true);
-
+        
         // Get app info
-        let appSlug: string = tl.getInput('appSlug', true);
         let app = resolveInputPatternToOneFile('app', true, "Binary File");
 
-        // login only if user choose to enter credentials 
-        let loginRunner = tl.tool(cliPath);
-        if (credsType === 'inputs') {
-            let username: string = tl.getInput('username', true);
-            let password: string = tl.getInput('password', true);
-
-            loginRunner.arg(['login', '-u', username, '-p', password]);
-            if (debug) {
-                loginRunner.arg('--debug');
-            }
-
-            let loginOpts = tl.getInput('loginOpts', false);
-            if (loginOpts) {
-                loginRunner.line(loginOpts);
-            }
-
-            loginRunner.arg('--quiet');
-        } 
+        // Test prepare
+        if (prepareTests) {
+            let prepareRunner = getPrepareRunner(cliPath, debug, app, artifactsDir);
+            await prepareRunner.exec();
+        }
         
-        // Get Test Prepare inputs
-        let prepareRunner = tl.tool(cliPath);
-        let framework: string = tl.getInput('framework', true);
-
-        // framework agnositic options 
-        prepareRunner.arg(['test', 'prepare', framework]);
-        let artifactsDir = tl.getInput('artifactsDir', true);
-        prepareRunner.arg(['--artifacts-dir', artifactsDir]);
-
-        // framework specific options -- appium
-        if (framework === 'appium') {
-            addStringArg('--build-dir', 'appiumBuildDir', true, prepareRunner);
-        } 
-        else if (framework === 'expresso') {
-            addStringArg('--build-dir', 'expressoBuildDir', false, prepareRunner);
-            addOptionalWildcardArg('--test-apk-path', 'expressoTestApkPath', prepareRunner);
+        // Test run
+        if (runTests) {
+            // login if necessarye
+            if (credsType === 'inputs') {
+                let loginRunner = getLoginRunner(cliPath, debug, credsType);
+                await loginRunner.exec();
+                loggedIn = true;
+            }
+            
+            let testRunner = getTestRunner(cliPath, debug, app, artifactsDir, credsType);
+            await testRunner.exec();
         }
-        else if (framework === 'calabash') {
-            prepareRunner.arg(['--app-path', app]);
-            addStringArg('--project-dir', 'calabashProjectDir', true, prepareRunner);
-            addStringArg('--sign-info', 'signInfo', false, prepareRunner);
-            addStringArg('--config', 'calabashConfigFile', false, prepareRunner);
-            addStringArg('--profile', 'calabashProfile', false, prepareRunner);
-            addBooleanArg('--skip-config-check', 'calabashSkipConfigCheck', prepareRunner);
-        } 
-        else if (framework === 'uitest') {
-            prepareRunner.arg(['--app-path', app]);
-            addStringArg('--build-dir', 'uitestBuildDir', true, prepareRunner); 
-            addStringArg('--store-file', 'uitestStoreFile',false, prepareRunner);
-            addStringArg('--store-password', 'uitestStorePass',false, prepareRunner);
-            addStringArg('--key-alias', 'uitestKeyAlias',false, prepareRunner);
-            addStringArg('--key-password', 'uitestKeyPass',false, prepareRunner);
-            addStringArg('--uitest-tools-dir', 'uitestToolsDir',false, prepareRunner);
-            addStringArg('--sign-info', 'signInfo', false, prepareRunner); 
-        }
-
-        // append user defined inputs
-        let prepareOpts = tl.getInput('prepareOpts', false);
-        if (prepareOpts) {
-            prepareRunner.line(prepareOpts);
-        }
-
-        if (debug) {
-            prepareRunner.arg('--debug');
-        }
-        prepareRunner.arg('--quiet');
-
-        // Get build inputs
-        let testRunner = tl.tool(cliPath);
-        testRunner.arg(['test', 'run', 'manifest']);
-        testRunner.arg(['--manifest-path', `${path.join(artifactsDir, 'manifest.json')}`]);
-        testRunner.arg(['--app-path', app, '--app', appSlug]);
-
-        addStringArg('--devices', 'devices', true, testRunner); 
-        addStringArg('--test-series', 'series', false, testRunner); 
-        addStringArg('--dsym-dir', 'dsymDir', false, testRunner); 
-        addBooleanArg('--async', 'async', testRunner); 
-
-        let locale: string = tl.getInput('locale', true);
-        if (locale === 'user') {
-            tl.debug('Use user defined locale.'); 
-            locale = tl.getInput('userDefinedLocale', true);
-        } 
-        testRunner.arg(['--locale', locale]);
-
-        let options: string = tl.getInput('opts', false);
-        if (options) {
-            testRunner.line(options);
-        }
-        if (debug) {
-            testRunner.arg('--debug');
-        }
-        testRunner.arg('--quiet');
-        if (credsType === 'serviceEndpoint'){
-            // add api key
-            let apiToken = getEndpointAPIToken('serverEndpoint');
-            testRunner.arg(['--token', apiToken]);
-        }
-
-        // login if necessary
-        if (credsType === 'inputs') {
-            await loginRunner.exec();
-            loggedIn = true;
-        }
-
-        // test prepare
-        await prepareRunner.exec();
-
-        // test run
-        await testRunner.exec();
 
         tl.setResult(tl.TaskResult.Succeeded, tl.loc("Succeeded"));
     } catch (err) {
