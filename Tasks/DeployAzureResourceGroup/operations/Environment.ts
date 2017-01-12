@@ -124,9 +124,6 @@ export class RegisterEnvironment {
 
     public RegisterEnvironment(): q.Promise<string> {
         var defered = q.defer<string>();
-        if (!this.taskParameters.outputVariable || !this.taskParameters.outputVariable.trim()) {
-            defered.reject(tl.loc("OutputVariableShouldNotBeEmpty"));
-        }
         console.log(tl.loc("RegisteringEnvironmentVariable"));
         var details = new azureUtil.AzureUtil(this.taskParameters);
         details.getDetails().then(() => {
