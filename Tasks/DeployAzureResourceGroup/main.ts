@@ -20,8 +20,7 @@ function run(): Promise<void> {
         case "Stop":
         case "Restart":
         case "Delete":
-            virtualMachineOperation.execute();
-            return virtualMachineOperation.isDone();
+            return virtualMachineOperation.execute();
         default:
             throw tl.loc("InvalidAction", taskParameters.action);
     }

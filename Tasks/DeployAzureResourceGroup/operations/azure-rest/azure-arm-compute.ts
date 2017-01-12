@@ -539,7 +539,7 @@ export class VirtualMachineExtensions {
             }
             this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
                 if (operationResponse.body.status === "Succeeded") {
-                    var result = { "provisioningState": operationResponse.body.status }
+                    var result = { properties: { "provisioningState": operationResponse.body.status } };
                     deferred.resolve(new azureServiceClient.ApiResult(null, result));
                 } else {
                     deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));

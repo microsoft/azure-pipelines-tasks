@@ -74,9 +74,10 @@ export class ResourceGroup {
         if (!isNonEmpty(this.taskParameters.outputVariable)) {
             throw tl.loc("OutputVariableShouldNotBeEmpty");
         }
+
         await this.enableDeploymentPrerequestiesIfRequired(armClient);
         await this.registerEnvironmentIfRequired(armClient);
-        console.log(tl.loc("SelectResourceGroupSuccessful", this.taskParameters.resourceGroupName, this.taskParameters.outputVariable));
+        console.log(tl.loc("SelectResourceGroupSuccessful", this.taskParameters.resourceGroupName, this.taskParameters.outputVariable));        
     }
 
     private async registerEnvironmentIfRequired(armClient: armResource.ResourceManagementClient) {
@@ -112,7 +113,7 @@ export class ResourceGroup {
     }
 
     private createDeploymentName(): string {
-        var name;
+        var name: string;
         if (this.taskParameters.templateLocation == "Linked artifact")
             name = this.taskParameters.csmFile;
         else
