@@ -5,7 +5,7 @@ import deployAzureRG = require("./models/DeployAzureRG");
 import virtualMachine = require("./operations/VirtualMachine");
 import resourceGroup = require("./operations/ResourceGroup");
 
-function run(): Promise<string> {
+function run(): Promise<void> {
     var taskParameters = new deployAzureRG.AzureRGTaskParameters();
     var resourceGroupOperationsController = new resourceGroup.ResourceGroup(taskParameters);
     var virtualMachineOperation = new virtualMachine.VirtualMachine(taskParameters);
@@ -20,8 +20,7 @@ function run(): Promise<string> {
         case "Stop":
         case "Restart":
         case "Delete":
-            virtualMachineOperation.execute();
-            return virtualMachineOperation.isDone();
+            return virtualMachineOperation.execute();
         default:
             throw tl.loc("InvalidAction", taskParameters.action);
     }
@@ -35,8 +34,6 @@ catch (err) {
     process.exit();
 }
 
-run().then((result) =>
-    tl.setResult(tl.TaskResult.Succeeded, result)
-).catch((error) => 
+run().catch((error) => 
     tl.setResult(tl.TaskResult.Failed, error)
 );

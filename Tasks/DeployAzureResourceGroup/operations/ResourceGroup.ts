@@ -46,35 +46,38 @@ export class ResourceGroup {
         this.envController = new env.RegisterEnvironment(this.taskParameters);
     }
 
-    public async createOrUpdateResourceGroup(): Promise<string> {
+    public async createOrUpdateResourceGroup() {
         var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
         await this.createResourceGroupIfRequired(armClient);
         await this.createTemplateDeployment(armClient);
         await this.enableDeploymentPrerequestiesIfRequired(armClient);
         await this.registerEnvironmentIfRequired(armClient);
-        return tl.loc("RGO_createTemplateDeploymentSucceeded", this.taskParameters.resourceGroupName);
+        console.log(tl.loc("RGO_createTemplateDeploymentSucceeded", this.taskParameters.resourceGroupName));
     }
 
-    public deleteResourceGroup(): Promise<string> {
-        return new Promise<string>((resolve, reject) => {
+    public deleteResourceGroup(): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
             var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
             console.log(tl.loc("ARG_DeletingResourceGroup", this.taskParameters.resourceGroupName));
             armClient.resourceGroups.deleteMethod(this.taskParameters.resourceGroupName, (error, result, request, response) => {
                 if (error) {
                     reject(tl.loc("RGO_CouldNotDeletedResourceGroup", this.taskParameters.resourceGroupName, error.message));
                 }
-                resolve(tl.loc("RGO_DeletedResourceGroup", this.taskParameters.resourceGroupName));
+                console.log(tl.loc("RGO_DeletedResourceGroup", this.taskParameters.resourceGroupName));
+                resolve();
             });
         });
     }
 
-    public async selectResourceGroup(armClient: armResource.ResourceManagementClient): Promise<string> {
+    public async selectResourceGroup() {
+        var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
         if (!isNonEmpty(this.taskParameters.outputVariable)) {
             throw tl.loc("OutputVariableShouldNotBeEmpty");
         }
+
         await this.enableDeploymentPrerequestiesIfRequired(armClient);
         await this.registerEnvironmentIfRequired(armClient);
-        return tl.loc("SelectResourceGroupSuccessful", this.taskParameters.resourceGroupName, this.taskParameters.outputVariable);
+        console.log(tl.loc("SelectResourceGroupSuccessful", this.taskParameters.resourceGroupName, this.taskParameters.outputVariable));        
     }
 
     private async registerEnvironmentIfRequired(armClient: armResource.ResourceManagementClient) {
@@ -110,7 +113,7 @@ export class ResourceGroup {
     }
 
     private createDeploymentName(): string {
-        var name;
+        var name: string;
         if (this.taskParameters.templateLocation == "Linked artifact")
             name = this.taskParameters.csmFile;
         else
