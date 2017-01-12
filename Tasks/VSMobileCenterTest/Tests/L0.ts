@@ -116,7 +116,7 @@ describe('VSMobileCenterTest L0 Suite', function () {
         done();
     });
 
-    it('Negative path: with username and password, should always logout even test prepare failed', (done: MochaDone) => {
+    it('Negative path: with username and password, should always logout even when test run failed', (done: MochaDone) => {
         this.timeout(2000);
 
         let tp = path.join(__dirname, 'L0UITestFailRun.js');

@@ -355,7 +355,7 @@
         {
             "name": "runOpts",
             "type": "string",
-            "label": "Additonal Options for Run",
+            "label": "Additional Options for Run",
             "required": false,
             "defaultValue": "",
             "visibleRule": "enableRun = true",

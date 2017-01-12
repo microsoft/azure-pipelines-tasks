@@ -61,7 +61,7 @@
   "loc.input.help.userDefinedLocale": "Enter any two-letter ISO-639 language code along with any two-letter ISO 3166 country code in the format [language]_[country], such as en_US.",
   "loc.input.label.loginOpts": "Addtional Options for Login",
   "loc.input.help.loginOpts": "Additional arguments passed to mobile-center login step.",
-  "loc.input.label.runOpts": "Additonal Options for Run",
+  "loc.input.label.runOpts": "Additional Options for Run",
   "loc.input.help.runOpts": "Additional arguments passed to mobile-center test run.",
   "loc.input.label.async": "Do not wait for test result",
   "loc.input.help.async": "Execute command asynchronously, exit when tests are uploaded, without waiting for test results.",
