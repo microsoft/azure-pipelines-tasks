@@ -125,9 +125,7 @@ export class RegisterEnvironment {
     public RegisterEnvironment(): q.Promise<string> {
         var defered = q.defer<string>();
         if (!this.taskParameters.outputVariable || !this.taskParameters.outputVariable.trim()) {
-            tl.setResult(tl.TaskResult.Failed, tl.loc("OutputVariableShouldNotBeEmpty"));
-            process.exit();
-            return;
+            defered.reject(tl.loc("OutputVariableShouldNotBeEmpty"));
         }
         console.log(tl.loc("RegisteringEnvironmentVariable"));
         var details = new azureUtil.AzureUtil(this.taskParameters);
@@ -139,8 +137,7 @@ export class RegisterEnvironment {
             this.InstantiateEnvironment();
             defered.resolve("Completed");
         }).catch((error) => {
-            tl.setResult(tl.TaskResult.Failed, error);
-            process.exit();
+            defered.reject(error);
         })
         return defered.promise;
     }

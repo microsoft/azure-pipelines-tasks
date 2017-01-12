@@ -43,8 +43,7 @@ export class AzureRGTaskParameters {
             this.credentials = this.getARMCredentials(connectedService);
         }
         catch (error) {
-            tl.setResult(tl.TaskResult.Failed, tl.loc("ARGD_ConstructorFailed", error.message));
-            process.exit();
+            throw (tl.loc("ARGD_ConstructorFailed", error.message));
         }
     }
 

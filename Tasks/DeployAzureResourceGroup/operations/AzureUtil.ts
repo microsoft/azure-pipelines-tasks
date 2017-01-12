@@ -44,7 +44,7 @@ export class AzureUtil {
     public getVMDetails() {
         var deferred = q.defer();
         var armClient = new computeManagementClient.ComputeManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
-        armClient.virtualMachines.list(this.taskParameters.resourceGroupName, (error, virtualMachines, request, response) => {
+        armClient.virtualMachines.list(this.taskParameters.resourceGroupName, null, (error, virtualMachines, request, response) => {
             if (error){
                 console.log(tl.loc("FailedToFetchVMs"), error);
                 throw new Error(tl.loc("FailedToFetchVMs"));

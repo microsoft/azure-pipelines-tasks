@@ -452,7 +452,7 @@ export class WinRMHttpsListener {
             var computeClient = new computeManagementClient.ComputeManagementClient(this.credentials, this.subscriptionId);
             tl.debug("Checking if the extension " + _extensionName + " is present on vm " + vmName);
 
-            computeClient.virtualMachineExtensions.get(this.resourceGroupName, vmName, _extensionName, async (error, result, request, response) => {
+            computeClient.virtualMachineExtensions.get(this.resourceGroupName, vmName, _extensionName, null, async (error, result, request, response) => {
                 if (error) {
                     tl.debug("Failed to get the extension!!");
                     //Adding the extension

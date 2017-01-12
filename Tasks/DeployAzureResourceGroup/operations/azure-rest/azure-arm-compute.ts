@@ -6,8 +6,8 @@ import Q = require("q");
 
 export class ComputeManagementClient extends azureServiceClient.ServiceClient {
 
-    public virtualMachines;
-    public virtualMachineExtensions;
+    public virtualMachines: VirtualMachines;
+    public virtualMachineExtensions: VirtualMachineExtensions;
 
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId, baseUri?: any, options?: any) {
         super(credentials, subscriptionId);
