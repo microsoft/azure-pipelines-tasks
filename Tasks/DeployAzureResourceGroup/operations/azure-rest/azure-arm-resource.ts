@@ -200,8 +200,7 @@ export class Deployments {
     }
 
     public createOrUpdate(resourceGroupName, deploymentName, parameters, callback) {
-        var client = this.client;
-         if (!callback) {
+        if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
         }
         // Validate
@@ -270,8 +269,8 @@ export class Deployments {
                     });
                 }
             });
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
-            (error) => callback(error));
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(null, apiResult.result),
+            (apiResult: azureServiceClient.ApiResult) => callback(apiResult.error));
     }
 
     public get(resourceGroupName, deploymentName, callback) {
@@ -299,5 +298,68 @@ export class Deployments {
             return deferred.promise;
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
+    }
+
+    public validate(resourceGroupName, deploymentName, parameters, callback) {
+        if (!callback) {
+            throw new Error(tl.loc("CallbackCannotBeNull"));
+        }
+        // Validate
+        try {
+            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
+                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+            }
+            if (resourceGroupName !== null && resourceGroupName !== undefined) {
+                if (resourceGroupName.length > 90) {
+                    throw new Error(tl.loc("ResourceGroupExceededLength"));
+                }
+                if (resourceGroupName.length < 1) {
+                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
+                }
+                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
+                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
+                }
+            }
+            if (deploymentName === null || deploymentName === undefined || typeof deploymentName.valueOf() !== 'string') {
+                throw new Error(tl.loc("DeploymentNameCannotBeNull"));
+            }
+            if (parameters === null || parameters === undefined) {
+                throw new Error(tl.loc("ParametersCannotBeNull"));
+            }
+        } catch (error) {
+            return callback(error);
+        }
+
+        // Create HTTP transport objects
+        var httpRequest = new azureServiceClient.WebRequest();
+        httpRequest.method = 'POST';
+        httpRequest.headers = {};
+        httpRequest.uri = this.client.getRequestUri(
+            '//subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.Resources/deployments/{deploymentName}/validate',
+            {
+                '{resourceGroupName}': resourceGroupName,
+                '{deploymentName}': deploymentName
+            }
+        );
+
+        // Serialize Request
+        if (parameters !== null && parameters !== undefined) {
+            httpRequest.body = JSON.stringify(parameters);
+        }
+
+        // Send Request
+        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+            console.log(response);
+            return new Promise<azureServiceClient.ApiResult>((resolve, reject) => {
+                var statusCode = response.statusCode;
+                if (statusCode !== 200 && statusCode !== 400) {
+                    reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response.body)));
+                }
+                else {
+                    resolve(new azureServiceClient.ApiResult(null, response.body));
+                }
+            });
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(null, apiResult.result),
+            (apiResult: azureServiceClient.ApiResult) => callback(apiResult.error));
     }
 }

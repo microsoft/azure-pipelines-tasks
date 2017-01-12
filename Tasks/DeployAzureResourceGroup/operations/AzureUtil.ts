@@ -58,7 +58,7 @@ export class AzureUtil {
     public getNetworkInterfaceDetails() {
         var deferred = q.defer();
         var armClient = new networkManagementClient.NetworkManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
-        armClient.networkInterfaces.list(this.taskParameters.resourceGroupName, (error, networkInterfaces, request, response) => {
+        armClient.networkInterfaces.list(this.taskParameters.resourceGroupName, null, (error, networkInterfaces, request, response) => {
             if (error){
                 console.log(tl.loc("FailedToFetchNetworkInterfaces"), error);
                 throw new Error(tl.loc("FailedToFetchNetworkInterfaces"));
@@ -72,7 +72,7 @@ export class AzureUtil {
     public getPublicIPAddresses() {
         var deferred = q.defer();
         var armClient = new networkManagementClient.NetworkManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
-        armClient.publicIPAddresses.list(this.taskParameters.resourceGroupName, (error, publicAddresses, request, response) => {
+        armClient.publicIPAddresses.list(this.taskParameters.resourceGroupName, null, (error, publicAddresses, request, response) => {
             if (error){
                 console.log(tl.loc("FailedToFetchPublicAddresses"), error);
                 throw new Error(tl.loc("FailedToFetchPublicAddresses"));

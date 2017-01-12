@@ -111,7 +111,7 @@ export class ServiceClient {
     public async beginRequest(request: WebRequest): Promise<WebResponse> {
         var token = await this.credentials.getToken();
 
-        request.headers == request.headers || {};
+        request.headers = request.headers || {};
         request.headers["Authorization"] = "Bearer " + token;
         if (this.acceptLanguage) {
             request.headers['accept-language'] = this.acceptLanguage;
@@ -137,7 +137,7 @@ export class ServiceClient {
         request.method = "GET";
         request.uri = response.headers["azure-asyncoperation"] || response.headers["location"];
         if (!request.uri) {
-            throw "Invalid response of a long running operation.";
+            throw (tl.loc("InvalidResponseLongRunningOperation"));
         }
 
         while (true) {
@@ -145,7 +145,7 @@ export class ServiceClient {
             if (response.statusCode === 202 || response.body.status == "Accepted" || response.body.status == "Running" || response.body.status == "InProgress") {
                 // If timeout; throw;
                 if (timeout < new Date().getTime()) {
-                    throw ("Timeout out while waiting for the operation to complete.")
+                    throw (tl.loc("TimeoutWhileWaiting"));
                 }
 
                 // Retry after given interval.
