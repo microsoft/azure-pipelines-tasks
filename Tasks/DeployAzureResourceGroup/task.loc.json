@@ -297,6 +297,6 @@
     "FailedToUpdateInboundNatRuleLB": "ms-resource:loc.messages.FailedToUpdateInboundNatRuleLB",
     "ARG_DeploymentPrereqFailed": "ms-resource:loc.messages.ARG_DeploymentPrereqFailed",
     "ARG_SetExtensionFailedForVm": "ms-resource:loc.messages.ARG_SetExtensionFailedForVm",
-    "URLFetchFailed": "ms-resource:loc.messages.URLFetchFailed"
+    "ParametersFileFetchFailed": "ms-resource:loc.messages.ParametersFileFetchFailed"
   }
 }
