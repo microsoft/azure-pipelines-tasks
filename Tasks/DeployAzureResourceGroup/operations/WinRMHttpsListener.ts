@@ -123,7 +123,12 @@ export class WinRMHttpsListener {
                     }
                 }
                 if (flag) {
-                    await this.addTargetVmsToInboundNatRules(networkClient, nic, addedRulesId, lbName, lb);
+                    try {
+                        await this.addTargetVmsToInboundNatRules(networkClient, nic, addedRulesId, lbName, lb);
+                    }
+                    catch (error) {
+                        deferred.reject(error);
+                    }
                 }
             }
             //Remove the rules which has no target virtual machines
@@ -148,6 +153,7 @@ export class WinRMHttpsListener {
             if (error) {
                 tl.debug("Error in updating the list of Network Interfaces: " + util.inspect(error, { depth: null }));
                 deferred.reject(tl.loc("FailedToUpdateNICOfVm"));
+                return;
             }
             tl.debug("Successfully updated network interfaces: ");
             console.log(tl.loc("AddedTargetInboundNatRuleLB", lbName));
@@ -283,7 +289,12 @@ export class WinRMHttpsListener {
             }
             var ruleIdMap = {};
             if (!empty) {
-                await this.AddRule(lb, frontendPortMap);
+                try {
+                    await this.AddRule(lb, frontendPortMap);
+                }
+                catch (error) {
+                    deferred.reject(error);
+                }
             }
             else {
                 tl.debug("No vms left for adding inbound nat rules for load balancer " + lbName);
@@ -314,7 +325,7 @@ export class WinRMHttpsListener {
             networkClient1.securityRules.createOrUpdate(this.resourceGroupName, securityGrpName, ruleName, securityRuleParameters, (error, result, request, response) => {
                 if (error) {
                     tl.debug("Error in adding network security rule " + util.inspect(error, { depth: null }));
-                    deferred.reject(tl.loc("FailedToAddRuleToNetworkSecurityGroup", securityGrpName));
+                    throw tl.loc("FailedToAddRuleToNetworkSecurityGroup", securityGrpName);
                 }
                 console.log(tl.loc("AddedSecurityRuleNSG", ruleName, rulePriority, winrmHttpsPort, securityGrpName, util.inspect(result, { depth: null })));
                 this.ruleAddedToNsg = true;
@@ -330,12 +341,19 @@ export class WinRMHttpsListener {
                 if (error) {
                     tl.debug("Error in getting the list of network Security Groups for the resource-group " + this.resourceGroupName);
                     deferred.reject(tl.loc("FetchingOfNetworkSecurityGroupFailed", error));
+                    return;
                 }
 
                 if (result.length > 0) {
                     tl.debug("Got network security group " + securityGrpName + " in resource group " + this.resourceGroupName);
                     if (retryCnt > 0) {
-                        await this.AddInboundNetworkSecurityRule(retryCnt - 1, securityGrpName, networkClient, ruleName, rulePriority, winrmHttpsPort);
+                        try {
+                            await this.AddInboundNetworkSecurityRule(retryCnt - 1, securityGrpName, networkClient, ruleName, rulePriority, winrmHttpsPort);
+                        }
+                        catch (exception) {
+                            deferred.reject(exception);
+                            return;
+                        }
                         deferred.resolve("");
                     }
                     else {
@@ -356,7 +374,12 @@ export class WinRMHttpsListener {
                 if (error) {
                     tl.debug("Rule " + ruleName + " not found under security Group " + securityGrpName);
                     var maxRetries = 3;
-                    await this.AddInboundNetworkSecurityRule(maxRetries, securityGrpName, networkClient, ruleName, rulePriority, winrmHttpsPort);
+                    try {
+                        await this.AddInboundNetworkSecurityRule(maxRetries, securityGrpName, networkClient, ruleName, rulePriority, winrmHttpsPort);
+                    }
+                    catch (exception) {
+                        deferred.reject(exception);
+                    }
                 }
                 else {
                     console.log(tl.loc("RuleExistsAlready", ruleName, securityGrpName));
@@ -407,11 +430,17 @@ export class WinRMHttpsListener {
                     tl.debug("Error in getting the list of network Security Groups for the resource-group" + this.resourceGroupName + "error" + util.inspect(error, { depth: null }));
                     this.ruleAddedToNsg = true;
                     deferred.reject(tl.loc("FetchingOfNetworkSecurityGroupFailed", error));
+                    return;
                 }
 
                 if (result.length > 0) {
                     tl.debug("Trying to add a network security group rule");
-                    await this.AddNetworkSecurityRuleConfig(result, _ruleName, _rulePriority, _winrmHttpsPort);
+                    try {
+                        await this.AddNetworkSecurityRuleConfig(result, _ruleName, _rulePriority, _winrmHttpsPort);
+                    }
+                    catch (exception) {
+                        deferred.reject(exception);
+                    }
                 }
                 deferred.resolve("");
             });
@@ -449,7 +478,12 @@ export class WinRMHttpsListener {
                 if (error) {
                     tl.debug("Failed to get the extension!!");
                     //Adding the extension
-                    await this.AddExtensionVM(vmName, computeClient, dnsName, _extensionName, location, fileUris);
+                    try {
+                        await this.AddExtensionVM(vmName, computeClient, dnsName, _extensionName, location, fileUris);
+                    }
+                    catch (exception) {
+                        deferred.reject(exception);
+                    }
                 }
                 else if (result != null) {
                     console.log(tl.loc("ExtensionAlreadyPresentVm", _extensionName, vmName));
@@ -458,12 +492,22 @@ export class WinRMHttpsListener {
                         tl.debug("Custom Script extension is for enabling Https Listener on VM" + vmName);
                         if (result["properties"]["provisioningState"] != 'Succeeded') {
                             tl.debug("Provisioning State of extension " + _extensionName + " on vm " + vmName + " is not Succeeded");
-                            await this.RemoveExtensionFromVM(_extensionName, vmName, computeClient);
-                            await this.AddExtensionVM(vmName, computeClient, dnsName, _extensionName, location, fileUris);
+                            try {
+                                await this.RemoveExtensionFromVM(_extensionName, vmName, computeClient);
+                                await this.AddExtensionVM(vmName, computeClient, dnsName, _extensionName, location, fileUris);
+                            }
+                            catch (exception) {
+                                deferred.reject(exception);
+                            }
                         }
                         else {
-                            //Validate the Custom Script Execution status: if ok add the rule else add the extension
-                            await this.ValidateCustomScriptExecutionStatus(vmName, computeClient, dnsName, _extensionName, location, fileUris);
+                            try {
+                                //Validate the Custom Script Execution status: if ok add the rule else add the extension
+                                await this.ValidateCustomScriptExecutionStatus(vmName, computeClient, dnsName, _extensionName, location, fileUris);
+                            }
+                            catch (exception) {
+                                deferred.reject(exception);
+                            }
                         }
                     }
                     else {
@@ -492,6 +536,7 @@ export class WinRMHttpsListener {
             if (error) {
                 tl.debug("Error in getting the instance view of the virtual machine " + util.inspect(error, { depth: null }));
                 deferred.reject(tl.loc("FailedToFetchInstanceViewVM"));
+                return;
             }
 
             var invalidExecutionStatus: boolean = false;
@@ -506,7 +551,12 @@ export class WinRMHttpsListener {
             }
 
             if (invalidExecutionStatus) {
-                await this.AddExtensionVM(vmName, computeClient, dnsName, extensionName, location, fileUris);
+                try {
+                    await this.AddExtensionVM(vmName, computeClient, dnsName, extensionName, location, fileUris);
+                }
+                catch (error) {
+                    deferred.reject(error);
+                }
             }
             else {
                 this.customScriptExtensionInstalled = true;
@@ -545,6 +595,7 @@ export class WinRMHttpsListener {
             if (error) {
                 tl.debug("Failed to add the extension " + util.inspect(error, { depth: null }));
                 deferred.reject(tl.loc("CreationOfExtensionFailed"));
+                return;
             }
 
             tl.debug("Addition of extension completed for vm" + vmName);
@@ -552,6 +603,7 @@ export class WinRMHttpsListener {
                 tl.debug("Provisioning State of CustomScriptExtension is not suceeded on vm " + vmName);
                 await this.RemoveExtensionFromVM(extensionName, vmName, computeClient);
                 deferred.reject(tl.loc("ARG_SetExtensionFailedForVm", this.resourceGroupName, vmName, result));
+                return;
             }
             tl.debug("Provisioning of CustomScriptExtension on vm " + vmName + " is in Succeeded State");
             this.customScriptExtensionInstalled = true;
@@ -569,10 +621,10 @@ export class WinRMHttpsListener {
             if (error) {
                 tl.debug("Failed to delete the extension " + extensionName + " on the vm " + vmName + ", with error Message: " + util.inspect(error, { depth: null }));
                 deferred.reject(tl.loc("FailedToDeleteExtension"));
+                return;
             }
-            else {
-                tl.debug("Successfully removed the extension " + extensionName + " from the VM " + vmName);
-            }
+
+            tl.debug("Successfully removed the extension " + extensionName + " from the VM " + vmName);
             deferred.resolve(null);
         });
 
@@ -586,40 +638,44 @@ export class WinRMHttpsListener {
         var computeClient = new computeManagementClient.ComputeManagementClient(this.credentials, this.subscriptionId);
         var deferred = Q.defer<string>();
 
-        var virtualMachines = await this.azureUtils.getVMDetails();
-        var publicIPAddresses = await this.azureUtils.getPublicIPAddresses();
-        var networkInterfaces = await this.azureUtils.getNetworkInterfaceDetails();
-        var result = await this.azureUtils.getLoadBalancers();
-        if (result.length > 0) {
-            for (var i = 0; i < result.length; i++) {
-                var lbName = result[i]["name"];
-                var frontEndIPConfigs = result[i]["properties"]["frontendIPConfigurations"];
-                var inboundRules = result[i]["properties"]["inboundNatRules"];
+        try {
+            var virtualMachines = await this.azureUtils.getVMDetails();
+            var publicIPAddresses = await this.azureUtils.getPublicIPAddresses();
+            var networkInterfaces = await this.azureUtils.getNetworkInterfaceDetails();
+            var result = await this.azureUtils.getLoadBalancers();
+            if (result.length > 0) {
+                for (var i = 0; i < result.length; i++) {
+                    var lbName = result[i]["name"];
+                    var frontEndIPConfigs = result[i]["properties"]["frontendIPConfigurations"];
+                    var inboundRules = result[i]["properties"]["inboundNatRules"];
 
-                this.fqdnMap = this.GetMachinesFqdnForLB(publicIPAddresses, networkInterfaces, frontEndIPConfigs, this.fqdnMap, debugLogsFlag);
+                    this.fqdnMap = this.GetMachinesFqdnForLB(publicIPAddresses, networkInterfaces, frontEndIPConfigs, this.fqdnMap, debugLogsFlag);
 
-                this.winRmHttpsPortMap = this.GetFrontEndPorts("5986", this.winRmHttpsPortMap, networkInterfaces, inboundRules, debugLogsFlag);
+                    this.winRmHttpsPortMap = this.GetFrontEndPorts("5986", this.winRmHttpsPortMap, networkInterfaces, inboundRules, debugLogsFlag);
+                }
+
+                this.winRmHttpsPortMap = this.GetMachineNameFromId(this.winRmHttpsPortMap, "Front End port", virtualMachines, false, debugLogsFlag);
             }
 
-            this.winRmHttpsPortMap = this.GetMachineNameFromId(this.winRmHttpsPortMap, "Front End port", virtualMachines, false, debugLogsFlag);
+            this.fqdnMap = this.GetMachinesFqdnsForPublicIP(publicIPAddresses, networkInterfaces, virtualMachines, this.fqdnMap, debugLogsFlag);
+
+            this.fqdnMap = this.GetMachineNameFromId(this.fqdnMap, "FQDN", virtualMachines, true, debugLogsFlag);
+
+            tl.debug("FQDN map: ");
+            for (var index in this.fqdnMap) {
+                tl.debug(index + " : " + this.fqdnMap[index]);
+            }
+
+            tl.debug("WinRMHttpPort map: ");
+            for (var index in this.winRmHttpsPortMap) {
+                tl.debug(index + " : " + this.winRmHttpsPortMap[index]);
+            }
+
+            this.virtualMachines = virtualMachines;
         }
-
-        this.fqdnMap = this.GetMachinesFqdnsForPublicIP(publicIPAddresses, networkInterfaces, virtualMachines, this.fqdnMap, debugLogsFlag);
-
-        this.fqdnMap = this.GetMachineNameFromId(this.fqdnMap, "FQDN", virtualMachines, true, debugLogsFlag);
-
-        tl.debug("FQDN map: ");
-        for (var index in this.fqdnMap) {
-            tl.debug(index + " : " + this.fqdnMap[index]);
+        catch (error) {
+            deferred.reject(error);
         }
-
-        tl.debug("WinRMHttpPort map: ");
-        for (var index in this.winRmHttpsPortMap) {
-            tl.debug(index + " : " + this.winRmHttpsPortMap[index]);
-        }
-
-        this.virtualMachines = virtualMachines;
-
         deferred.resolve("");
         return deferred.promise;
     }
