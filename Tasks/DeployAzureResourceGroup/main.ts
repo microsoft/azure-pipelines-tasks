@@ -5,7 +5,7 @@ import deployAzureRG = require("./models/DeployAzureRG");
 import virtualMachine = require("./operations/VirtualMachine");
 import resourceGroup = require("./operations/ResourceGroup");
 
-function run(): Promise<string> {
+function run(): Promise<void> {
     var taskParameters = new deployAzureRG.AzureRGTaskParameters();
     var resourceGroupOperationsController = new resourceGroup.ResourceGroup(taskParameters);
     var virtualMachineOperation = new virtualMachine.VirtualMachine(taskParameters);
@@ -36,7 +36,7 @@ catch (err) {
 }
 
 run().then((result) =>
-    tl.setResult(tl.TaskResult.Succeeded, result)
+   tl.setResult(tl.TaskResult.Succeeded, "")
 ).catch((error) => 
     tl.setResult(tl.TaskResult.Failed, error)
 );

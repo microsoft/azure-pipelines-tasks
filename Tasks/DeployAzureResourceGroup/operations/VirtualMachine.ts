@@ -17,7 +17,7 @@ export class VirtualMachine {
     private successCount: number;
     private vmCount: number;
     private errors: string;
-    private executionDeferred: q.Deferred<string>;
+    private executionDeferred: q.Deferred<void>;
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
         this.taskParameters = taskParameters;
@@ -28,13 +28,14 @@ export class VirtualMachine {
     public execute(): void {
         var client = new armCompute.ComputeManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
         client.virtualMachines.list(this.taskParameters.resourceGroupName, null, (error, listOfVms, request, response) => {
-            this.executionDeferred = q.defer<string>();
+            this.executionDeferred = q.defer<void>();
             if (error != undefined) {
                 this.executionDeferred.reject(tl.loc("VM_ListFetchFailed", this.taskParameters.resourceGroupName, error.message));
             }
             if (listOfVms.length == 0) {
                 console.log(tl.loc("NoVMsFound"));
-                this.executionDeferred.resolve(tl.loc("SucceededOnVMOperation", this.taskParameters.action));
+                console.log(tl.loc("SucceededOnVMOperation", this.taskParameters.action))
+                this.executionDeferred.resolve(null);
             }
             this.vmCount = listOfVms.length;
             for (var i = 0; i < listOfVms.length; i++) {
@@ -60,9 +61,9 @@ export class VirtualMachine {
         });
     }
 
-    public isDone(): Promise<string> {
-        return new Promise<string>((resolve, reject) => {
-            this.executionDeferred.promise.then((result) => resolve(result))
+    public isDone(): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            this.executionDeferred.promise.then(() => resolve())
                                           .catch((error) => reject(error));
         });
     }
@@ -83,7 +84,8 @@ export class VirtualMachine {
             if (this.failureCount > 0) {
                 this.executionDeferred.reject(tl.loc("FailureOnVMOperation", this.taskParameters.action, this.errors));
             }
-            this.executionDeferred.resolve(tl.loc("SucceededOnVMOperation", this.taskParameters.action));
+            console.log(tl.loc("SucceededOnVMOperation", this.taskParameters.action));
+            this.executionDeferred.resolve(null);
         }
     }
 }

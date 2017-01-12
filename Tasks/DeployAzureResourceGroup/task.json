@@ -264,7 +264,7 @@
         "ParametersCannotBeNull": "parameters cannot be null or undefined.",
         "DeploymentNameCannotBeNull": "deploymentName cannot be null or undefined and it must be of type string.",
         "VMNameCannotBeNull": "vmName cannot be null or undefined and it must be of type string.",
-        "InvalidValue": "%sis not a valid value. The valid values are: %s",
+        "InvalidValue": "%s is not a valid value. The valid values are: %s",
         "VmExtensionNameCannotBeNull": "vmExtensionName cannot be null or undefined and it must be of type string.",
         "ExpandShouldBeOfTypeString": "expand must be of type string.",
         "ExtensionParametersCannotBeNull": "extensionParameters cannot be null or undefined.",
