@@ -46,7 +46,7 @@ export class ResourceGroup {
         this.envController = new env.RegisterEnvironment(this.taskParameters);
     }
 
-    public async createOrUpdateResourceGroup() {
+    public async createOrUpdateResourceGroup(): Promise<void> {
         var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
         await this.createResourceGroupIfRequired(armClient);
         await this.createTemplateDeployment(armClient);
@@ -69,7 +69,7 @@ export class ResourceGroup {
         });
     }
 
-    public async selectResourceGroup() {
+    public async selectResourceGroup(): Promise<void> {
         var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
         if (!isNonEmpty(this.taskParameters.outputVariable)) {
             throw tl.loc("OutputVariableShouldNotBeEmpty");

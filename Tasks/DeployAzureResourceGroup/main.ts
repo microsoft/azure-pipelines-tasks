@@ -34,6 +34,8 @@ catch (err) {
     process.exit();
 }
 
-run().catch((error) => 
+run().then((result) =>
+   tl.setResult(tl.TaskResult.Succeeded, "")
+).catch((error) => 
     tl.setResult(tl.TaskResult.Failed, error)
 );

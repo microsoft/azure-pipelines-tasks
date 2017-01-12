@@ -66,20 +66,7 @@ export class loadBalancers {
         }
         // Validate
         try {
-            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
+            this.client.isValidResourceGroupName(resourceGroupName);
         } catch (error) {
             return callback(error);
         }
@@ -137,20 +124,7 @@ export class loadBalancers {
         var expand = (options && options.expand !== undefined) ? options.expand : undefined;
         // Validate
         try {
-            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
+            this.client.isValidResourceGroupName(resourceGroupName);
             if (loadBalancerName === null || loadBalancerName === undefined || typeof loadBalancerName.valueOf() !== 'string') {
                 throw new Error(tl.loc("LoadBalancerNameCannotBeNull"));
             }
@@ -197,20 +171,7 @@ export class loadBalancers {
         var expand = (options && options.expand !== undefined) ? options.expand : undefined;
         // Validate
         try {
-            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
+            this.client.isValidResourceGroupName(resourceGroupName);
             if (loadBalancerName === null || loadBalancerName === undefined || typeof loadBalancerName.valueOf() !== 'string') {
                 throw new Error(tl.loc("LoadBalancerNameCannotBeNull"));
             }
@@ -277,20 +238,7 @@ export class publicIPAddresses {
         }
         // Validate
         try {
-            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
+            this.client.isValidResourceGroupName(resourceGroupName);
         } catch (error) {
             return callback(error);
         }
@@ -348,20 +296,7 @@ export class networkSecurityGroups {
         }
         // Validate
         try {
-            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
+            this.client.isValidResourceGroupName(resourceGroupName);
         } catch (error) {
             return callback(error);
         }
@@ -421,20 +356,7 @@ export class NetworkInterfaces {
         }
         // Validate
         try {
-            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
+            this.client.isValidResourceGroupName(resourceGroupName);
         } catch (error) {
             return callback(error);
         }
@@ -484,20 +406,7 @@ export class NetworkInterfaces {
         }
         // Validate
         try {
-            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
+            this.client.isValidResourceGroupName(resourceGroupName);
             if (networkInterfaceName === null || networkInterfaceName === undefined || typeof networkInterfaceName.valueOf() !== 'string') {
                 throw new Error(tl.loc("NetworkInterfaceNameCannotBeNull"));
             }
@@ -560,20 +469,7 @@ export class securityRules {
         }
         // Validate
         try {
-            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
+            this.client.isValidResourceGroupName(resourceGroupName);
             if (networkSecurityGroupName === null || networkSecurityGroupName === undefined || typeof networkSecurityGroupName.valueOf() !== 'string') {
                 throw new Error(tl.loc("NetworkSecurityGroupNameCannotBeNull"));
             }
@@ -617,20 +513,7 @@ export class securityRules {
         }
         // Validate
         try {
-            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
+            this.client.isValidResourceGroupName(resourceGroupName);
             if (networkSecurityGroupName === null || networkSecurityGroupName === undefined || typeof networkSecurityGroupName.valueOf() !== 'string') {
                 throw new Error(tl.loc("NetworkSecurityGroupNameCannotBeNull"));
             }
