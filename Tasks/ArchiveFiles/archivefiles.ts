@@ -36,7 +36,7 @@ function findFiles(): string[] {
     if (includeRootFolder) {
         return [path.basename(rootFolder)];
     } else {
-        var fullPaths: string[] = tl.ls(null, [rootFolder]);
+        var fullPaths: string[] = tl.ls(['-A'], [rootFolder]);
         var baseNames: string[] = [];
         for (var i = 0; i < fullPaths.length; i++) {
             baseNames[i] = path.basename(fullPaths[i]);
