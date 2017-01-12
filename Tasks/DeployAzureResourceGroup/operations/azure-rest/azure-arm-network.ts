@@ -185,7 +185,7 @@ export class loadBalancers {
             (apiResult: azureServiceClient.ApiResult) => callback(apiResult.error));
     }
 
-    public createOrUpdate(resourceGroupName, loadBalancerName, parameters, options, callback) {
+    public createOrUpdate(resourceGroupName, loadBalancerName, parameters, options?: any , callback?: any) {
         var client = this.client;
         if (!callback && typeof options === 'function') {
             callback = options;
@@ -266,7 +266,7 @@ export class publicIPAddresses {
         this.client = client;
     }
 
-    public list(resourceGroupName, options, callback) {
+    public list(resourceGroupName, options?: any, callback?: any) {
         var client = this.client;
         if (!callback && typeof options === 'function') {
             callback = options;
@@ -337,7 +337,7 @@ export class networkSecurityGroups {
         this.client = client;
     }
 
-    public list(resourceGroupName, options, callback) {
+    public list(resourceGroupName, options?: any, callback?: any) {
         var client = this.client;
         if (!callback && typeof options === 'function') {
             callback = options;
@@ -410,7 +410,7 @@ export class NetworkInterfaces {
         this.client = client;
     }
 
-    public list(resourceGroupName, options, callback) {
+    public list(resourceGroupName, options?: any, callback?: any) {
         var client = this.client;
         if (!callback && typeof options === 'function') {
             callback = options;
@@ -549,7 +549,7 @@ export class securityRules {
         this.client = client;
     }
 
-    public get(resourceGroupName, networkSecurityGroupName, securityRuleName, options, callback) {
+    public get(resourceGroupName, networkSecurityGroupName, securityRuleName, options?: any, callback?: any) {
         var client = this.client;
         if (!callback && typeof options === 'function') {
             callback = options;

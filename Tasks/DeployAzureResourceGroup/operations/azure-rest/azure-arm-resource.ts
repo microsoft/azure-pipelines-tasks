@@ -300,4 +300,9 @@ export class Deployments {
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
+
+    public validate(resourceGroupName, deploymentName, parameters, callback){
+        var result = "";
+        return callback(null, "");
+    }
 }

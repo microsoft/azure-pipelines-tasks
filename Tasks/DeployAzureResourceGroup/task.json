@@ -234,7 +234,7 @@
         "AddingSecurityRuleNSG": "Adding Security rule for the network security group: %s",
         "AddedSecurityRuleNSG": "Added inbound network security rule config %s with priority %s for port %s under security group %s with result: %s",
         "FailedToAddRuleToNetworkSecurityGroup": "Failed to add the network security rule to the Nsg od security group %s",
-        "FetchingOfNetworkSecurityGroupFailed": "Fetching of Network Security Groups Failed",
+        "FetchingOfNetworkSecurityGroupFailed": "Fetching of Network Security Groups Failed with error: %s",
         "FailedAddingNSGRule3Times": "Failed to add the Network Security rule to the security Group %s after trying for 3 times",
         "FailedToAddNetworkSecurityRule": "Failed to add the Network Security Rule to the security Group %s",
         "FailedToFetchNetworkInterfaces": "Failed to fetch the list of Network Interfaces",
@@ -297,6 +297,9 @@
         "FailedToUpdateInboundNatRuleLB": "Failed to update the load Balancer %s with the appropriate Inbound Nat Rule",
         "ARG_DeploymentPrereqFailed": "Failed to enable deployment pre-requisites with the exception: %s",
         "ARG_SetExtensionFailedForVm": "Failed to set extension on Virtual Machine %s of Resource Group %s with result: %s",
-        "URLFetchFailed": "Could not fetch URL due to the following error: %s"
+        "URLFetchFailed": "Could not fetch URL due to the following error: %s",
+        "FailedToUpdateNICOfVm": "Failed to update the NIC of the VM",
+        "FailedToFetchDetailsOfLB": "Failed to fetch the details of the load Balancer: %s",
+        "FailedToUpdateLBInboundNatRules": "Failed to update the inbound NAT rules of the Load Balancer %s to remove irrelevant rules"
     }
 }
