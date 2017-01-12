@@ -177,13 +177,17 @@
         },
         {
             "name": "enableDeploymentPrerequisites",
-            "type": "boolean",
+            "type": "pickList",
             "label": "Enable deployment prerequisites",
-            "defaultValue": "false",
-            "required": false,
-            "visibleRule": "action = Create or update resource group || action = Select Resource Group",
-            "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
+            "defaultValue": "None",
+            "visibleRule": "action = Create or update resource group || action = Select resource group",
+            "options": {
+                "None": "None",
+                "Configure VM with Win RM": "Configure virtual machines with WinRM"
+            },
+            "helpMarkDown": "These options would be applicable only when the Resource group contains virtual machines. <br><br>Selecting machine group option configures machine group agent on all virtual machines in the resource group. <br><br>Selecting WinRM option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
         },
+
         {
             "name": "outputVariable",
             "type": "string",
@@ -199,6 +203,14 @@
             "target": "resourceGroupName",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureResourceGroups"
+        }
+    ],
+    "sourceDefinitions": [
+        {
+            "target": "machineGroupName",
+            "endpoint": "/$(system.teamProject)/_apis/distributedtask/machinegroups",
+            "selector": "jsonpath:$.value[*].name",
+            "authKey": "tfs:teamfoundation"
         }
     ],
     "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
@@ -228,6 +240,7 @@
         "ARG_NetworkSecurityConfigFailed": "Failed to add the Network Security Config Rule",
         "ExtensionAlreadyPresentVm": "Extension %s is already present on the Virtual machine %s",
         "AddExtension": "Adding extension %s on vm %s",
+        "DeleteExtension": "Deleting extension %s from vm %s",
         "ARG_AllResourceNotFound": "%s not found on resource Group %s",
         "ARG_AllResourceFound": "%s with error count %s, not found on resource Group %s",
         "FailedToAddExtension": "Failed to add the network security rule with exception: %s",
@@ -249,6 +262,16 @@
         "AddedInboundNatRuleLB": "Adding Inbound Nat rule to the load balancer %s ",
         "InboundNatRuleLBPresent": "Relevant Inbound Nat rules already present for the load balancer %s",
         "ARG_DeletingResourceGroup": "Deleting Resource Group.. %s",
+        "OperationSucceeded": "%s of %s on vm %s succeeded",
+        "OperationFailed": "%s of %s on vm %s failed",
+        "MGAgentOperationOnAllVMsFailed": "Machine group agent %s did not succeed on all VMs. %s",
+        "MGAgentOperationOnAllVMsSucceeded": "Machine group agent %s succeeded on all VMs",
+        "PublicSettings": "Public settings are:\n VSTSAccountName: %s\nTeamProject: %s\nMachineGroup: %s\nTags: %s\n",
+        "MGAgentHandlerMajorVersion": "Machine group extension handler major version is %s",
+        "SkipDeleteExtension": "Either the extension %s is not present on the virtual machine %s or the machine is stopped. Skipping extension deletion.",
+        "VMStartFailedSkipExtensionOperation": "Could not start the virtual machine %s. Skipping %s of %s extension on it.",
+        "VMTransitioningSkipExtensionOperation": "Virtual machine %s is in a transitioning state. Skipping %s of %s extension on it.",
+        "VMDetailsFetchFailedSkipExtensioOperation": "Could not get details of virtual machine %s. Skipping %s of %s on it.",
         "VM_Start": "Starting... %s",
         "VM_Restart": "Restarting... %s",
         "VM_Stop": "Stopping... %s",

@@ -5,7 +5,7 @@ import tl = require("vsts-task-lib/task");
 import fs = require("fs");
 import util = require("util");
 
-var msRestAzure = require("ms-rest-azure");
+var msRestAzure = require("./ms-rest-azure");
 
 
 export class AzureRGTaskParameters {
@@ -19,13 +19,18 @@ export class AzureRGTaskParameters {
     public csmFileLink:string;
     public csmParametersFileLink:string;
     public overrideParameters:string;
-    public enableDeploymentPrerequisites:boolean;
+    public enableDeploymentPrerequisites:string;
+    public machineGroupName: string;
+    public copyAzureVMTags: boolean;
+    public vstsPATToken: string;
     public outputVariable:string;
     public subscriptionId:string;
     public connectedService:string;
     public isLoggedIn:boolean = false;
     public deploymentMode:string;
     public credentials;
+    public __mg__internal__collection__uri= "";
+    public __mg__internal__project__name= "";
     
     constructor() {
         try { 
@@ -43,10 +48,16 @@ export class AzureRGTaskParameters {
                 this.csmParametersFileLink = tl.getInput("csmParametersFileLink");
             }
             this.overrideParameters = tl.getInput("overrideParameters");
-            this.enableDeploymentPrerequisites = tl.getBoolInput("enableDeploymentPrerequisites");
+            this.enableDeploymentPrerequisites = tl.getInput("enableDeploymentPrerequisites");
+            this.machineGroupName = tl.getInput("machineGroupName");
+            this.copyAzureVMTags = tl.getBoolInput("copyAzureVMTags");
+            this.vstsPATToken = tl.getInput("vstsPATToken");
             this.outputVariable = tl.getInput("outputVariable");
             this.deploymentMode = tl.getInput("deploymentMode");
             this.credentials = this.getARMCredentials();
+            this.__mg__internal__collection__uri = tl.getVariable("__mg__internal__collection__uri");
+            this.__mg__internal__project__name = tl.getVariable("__mg__internal__project__name");
+
         }
         catch (error) {
             tl.setResult(tl.TaskResult.Failed, tl.loc("ARGD_ConstructorFailed", error.message));
