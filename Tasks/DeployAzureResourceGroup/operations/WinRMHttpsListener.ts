@@ -58,7 +58,6 @@ export class WinRMHttpsListener {
         }
         catch (exception) {
             console.log(tl.loc("FailedToEnablePrereqs", exception.message));
-            tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToEnablePrereqs", exception.message));
             deferred.reject(tl.loc("FailedToEnablePrereqs", exception.message));
         }
         return deferred.promise;
@@ -85,7 +84,7 @@ export class WinRMHttpsListener {
         networkClient.loadBalancers.createOrUpdate(this.resourceGroupName, lbName, parameters, null, async (error, result, request, response) => {
             if (error) {
                 tl.debug("Failed with error " + util.inspect(error, { depth: null }));
-                throw tl.loc("FailedToUpdateInboundNatRuleLB", lbName);
+                deferred.reject(tl.loc("FailedToUpdateInboundNatRuleLB", lbName));
             }
             console.log(tl.loc("AddedInboundNatRuleLB", lbName));
 
@@ -148,7 +147,7 @@ export class WinRMHttpsListener {
         networkClient.networkInterfaces.createOrUpdate(this.resourceGroupName, nic["name"], parameters, async (error, res, response, request) => {
             if (error) {
                 tl.debug("Error in updating the list of Network Interfaces: " + util.inspect(error, { depth: null }));
-                throw new Error("FailedToUpdateNICOfVm");
+                deferred.reject(tl.loc("FailedToUpdateNICOfVm"));
             }
             tl.debug("Successfully updated network interfaces: ");
             console.log(tl.loc("AddedTargetInboundNatRuleLB", lbName));
@@ -163,7 +162,7 @@ export class WinRMHttpsListener {
         networkClient.loadBalancers.get(this.resourceGroupName, lbName, (error, lbDetails, request, response) => {
             if (error) {
                 tl.debug("Error in getting the details of the load Balancer: " + lbName);
-                throw new Error("Error in getting the details of the load Balnacer " + lbName);
+                deferred.reject(tl.loc("FailedToFetchDetailsOfLB", lbName));
             }
 
             var updateRequired = false;
@@ -195,7 +194,7 @@ export class WinRMHttpsListener {
                 networkClient.loadBalancers.createOrUpdate(this.resourceGroupName, lbName, parameters, (error, result, request, response) => {
                     if (error) {
                         tl.debug("Failed to update the inbound Nat rules of Load balancer " + lbName + "to remove irrelevant rules");
-                        throw new Error("Failed to update LB inbound Nat rules");
+                        deferred.reject(tl.loc("FailedToUpdateLBInboundNatRules", lbName));
                     }
                     tl.debug("Successfully Updated the inbound Nat Rules: " + lbName);
                     deferred.resolve("");
@@ -315,7 +314,7 @@ export class WinRMHttpsListener {
             networkClient1.securityRules.createOrUpdate(this.resourceGroupName, securityGrpName, ruleName, securityRuleParameters, (error, result, request, response) => {
                 if (error) {
                     tl.debug("Error in adding network security rule " + util.inspect(error, { depth: null }));
-                    throw tl.loc("FailedToAddRuleToNetworkSecurityGroup", securityGrpName);
+                    deferred.reject(tl.loc("FailedToAddRuleToNetworkSecurityGroup", securityGrpName));
                 }
                 console.log(tl.loc("AddedSecurityRuleNSG", ruleName, rulePriority, winrmHttpsPort, securityGrpName, util.inspect(result, { depth: null })));
                 this.ruleAddedToNsg = true;
@@ -330,8 +329,7 @@ export class WinRMHttpsListener {
             networkClient.networkSecurityGroups.list(this.resourceGroupName, async (error, result, request, response) => {
                 if (error) {
                     tl.debug("Error in getting the list of network Security Groups for the resource-group " + this.resourceGroupName);
-                    deferred.reject(error);
-                    throw tl.loc("FetchingOfNetworkSecurityGroupFailed");
+                    deferred.reject(tl.loc("FetchingOfNetworkSecurityGroupFailed", error));
                 }
 
                 if (result.length > 0) {
@@ -342,8 +340,7 @@ export class WinRMHttpsListener {
                     }
                     else {
                         tl.debug("Failed to add the NSG rule on security group " + securityGrpName + " after trying for 3 times ");
-                        deferred.reject("");
-                        throw tl.loc("FailedAddingNSGRule3Times", securityGrpName);
+                        deferred.reject(tl.loc("FailedAddingNSGRule3Times", securityGrpName));
                     }
                 }
             });
@@ -369,9 +366,8 @@ export class WinRMHttpsListener {
             });
         }
         catch (exception) {
-            deferred.reject(exception);
-
-            throw tl.loc("FailedToAddRuleToNetworkSecurityGroup", securityGrpName);
+            tl.debug("Failed to add rule to network security Group with the exception" + exception.message);
+            deferred.reject(tl.loc("FailedToAddRuleToNetworkSecurityGroup", securityGrpName));
         }
         return deferred.promise;
     }
@@ -390,8 +386,7 @@ export class WinRMHttpsListener {
             }
             catch (exception) {
                 tl.debug("Failed to add the network security rule with exception: " + exception.message);
-                deferred.reject(exception);
-                throw tl.loc("FailedToAddNetworkSecurityRule", securityGrpName);
+                deferred.reject(tl.loc("FailedToAddNetworkSecurityRule", securityGrpName));
             }
         }
 
@@ -411,8 +406,7 @@ export class WinRMHttpsListener {
                 if (error) {
                     tl.debug("Error in getting the list of network Security Groups for the resource-group" + this.resourceGroupName + "error" + util.inspect(error, { depth: null }));
                     this.ruleAddedToNsg = true;
-                    deferred.reject(error);
-                    throw new Error(tl.loc("FetchingOfNetworkSecurityGroupFailed"));
+                    deferred.reject(tl.loc("FetchingOfNetworkSecurityGroupFailed", error));
                 }
 
                 if (result.length > 0) {
@@ -424,8 +418,7 @@ export class WinRMHttpsListener {
         }
         catch (exception) {
             this.ruleAddedToNsg = true;
-            deferred.reject(exception);
-            throw new Error(tl.loc("ARG_NetworkSecurityConfigFailed", exception.message));
+            deferred.reject(tl.loc("ARG_NetworkSecurityConfigFailed", exception.message));
         }
         return deferred.promise;
     }
@@ -479,15 +472,13 @@ export class WinRMHttpsListener {
                     }
                 }
                 else {
-                    deferred.reject("");
-                    throw tl.loc("FailedToAddExtension");
+                    deferred.reject(tl.loc("FailedToAddExtension"));
                 }
                 deferred.resolve("");
             });
         }
         catch (exception) {
-            deferred.reject(exception);
-            throw tl.loc("ARG_DeploymentPrereqFailed", exception.message);
+            deferred.reject(tl.loc("ARG_DeploymentPrereqFailed", exception.message));
         }
 
         return deferred.promise;
@@ -500,8 +491,7 @@ export class WinRMHttpsListener {
         computeClient.virtualMachines.get(this.resourceGroupName, vmName, { expand: 'instanceView' }, async (error, result, request, response) => {
             if (error) {
                 tl.debug("Error in getting the instance view of the virtual machine " + util.inspect(error, { depth: null }));
-                deferred.reject(error);
-                throw tl.loc("FailedToFetchInstanceViewVM");
+                deferred.reject(tl.loc("FailedToFetchInstanceViewVM"));
             }
 
             var invalidExecutionStatus: boolean = false;
@@ -554,8 +544,7 @@ export class WinRMHttpsListener {
         computeClient.virtualMachineExtensions.createOrUpdate(this.resourceGroupName, vmName, extensionName, parameters, async (error, result, request, response) => {
             if (error) {
                 tl.debug("Failed to add the extension " + util.inspect(error, { depth: null }));
-                deferred.reject(error);
-                throw tl.loc("CreationOfExtensionFailed");
+                deferred.reject(tl.loc("CreationOfExtensionFailed"));
             }
 
             tl.debug("Addition of extension completed for vm" + vmName);
@@ -563,7 +552,6 @@ export class WinRMHttpsListener {
                 tl.debug("Provisioning State of CustomScriptExtension is not suceeded on vm " + vmName);
                 await this.RemoveExtensionFromVM(extensionName, vmName, computeClient);
                 deferred.reject(tl.loc("ARG_SetExtensionFailedForVm", this.resourceGroupName, vmName, result));
-                throw tl.loc("ARG_SetExtensionFailedForVm", this.resourceGroupName, vmName, result);
             }
             tl.debug("Provisioning of CustomScriptExtension on vm " + vmName + " is in Succeeded State");
             this.customScriptExtensionInstalled = true;
@@ -580,8 +568,7 @@ export class WinRMHttpsListener {
         computeClient.virtualMachineExtensions.deleteMethod(this.resourceGroupName, vmName, extensionName, async (error, result, request, response) => {
             if (error) {
                 tl.debug("Failed to delete the extension " + extensionName + " on the vm " + vmName + ", with error Message: " + util.inspect(error, { depth: null }));
-                deferred.reject(error);
-                throw tl.loc("FailedToDeleteExtension");
+                deferred.reject(tl.loc("FailedToDeleteExtension"));
             }
             else {
                 tl.debug("Successfully removed the extension " + extensionName + " from the VM " + vmName);
@@ -730,9 +717,6 @@ export class WinRMHttpsListener {
                     portList[rule["properties"]["backendIPConfiguration"]["id"]] = rule["properties"]["frontendPort"];
                 }
             }
-            if (debugLogsFlag === "true") {
-                //fill here
-            }
 
             //get the nic and the corrresponding machine id for a given back end ipc
             for (var i = 0; i < networkInterfaceResources.length; i++) {
@@ -753,9 +737,6 @@ export class WinRMHttpsListener {
                 }
             }
 
-            if (debugLogsFlag == "true") {
-                //fill here
-            }
         }
 
         return portList;
@@ -796,10 +777,6 @@ export class WinRMHttpsListener {
                 }
             }
 
-            if (debugLogsFlag === "true") {
-                //fill here
-            }
-
             for (var i = 0; i < networkInterfaceResources.length; i++) {
                 var nic = networkInterfaceResources[i];
                 if (nic["properties"]["ipConfigurations"]) {
@@ -821,10 +798,6 @@ export class WinRMHttpsListener {
                         }
                     }
                 }
-            }
-
-            if (debugLogsFlag === "true") {
-                //fill here
             }
         }
 
