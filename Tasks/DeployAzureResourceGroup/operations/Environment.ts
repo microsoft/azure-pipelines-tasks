@@ -125,7 +125,7 @@ export class RegisterEnvironment {
     public RegisterEnvironment(): q.Promise<string> {
         var defered = q.defer<string>();
         console.log(tl.loc("RegisteringEnvironmentVariable"));
-        var details = new azureUtil.AzureUtil(this.taskParameters);
+        var details = new azureUtil.AzureUtil(this.taskParameters, null);
         details.getDetails().then(() => {
             this.parseVMDetails(details.vmDetails);
             this.parseNetworkInterfaceDetails(details.networkInterfaceDetails);

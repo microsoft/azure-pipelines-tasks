@@ -238,7 +238,7 @@
         "FailedAddingNSGRule3Times": "Failed to add the Network Security rule to the security Group %s after trying for 3 times",
         "FailedToAddNetworkSecurityRule": "Failed to add the Network Security Rule to the security Group %s",
         "FailedToFetchNetworkInterfaces": "Failed to fetch the list of Network Interfaces",
-        "FailedToFetchLoadBalancers": "Failed to fetch the list of Load Balancers",
+        "FailedToFetchLoadBalancers": "Failed to fetch the list of Load Balancers. Error: %s",
         "FailedToFetchPublicAddresses": "Failed to fetch the list of Public Addresses",
         "FailedToFetchVMList": "Failed to fetch the list of virtual machines",
         "FailedToFetchVMs": "Error while getting list of Virtual Machines",

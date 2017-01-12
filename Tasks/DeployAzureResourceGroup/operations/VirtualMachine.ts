@@ -7,8 +7,6 @@ import tl = require("vsts-task-lib/task");
 import armCompute = require('./azure-rest/azure-arm-compute');
 import deployAzureRG = require("../models/DeployAzureRG");
 
-import q = require("q");
-
 export class VirtualMachine {
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
 

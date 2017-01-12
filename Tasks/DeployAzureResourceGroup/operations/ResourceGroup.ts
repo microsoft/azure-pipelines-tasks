@@ -14,7 +14,7 @@ import env = require("./Environment");
 import deployAzureRG = require("../models/DeployAzureRG");
 import winRM = require("./WinRMHttpsListener");
 
-var parameterParse = require("./ParameterParse").parse;
+var parameterParser = require("./ParameterParser").parse;
 import armResource = require("./azure-rest/azure-arm-resource");
 
 class Deployment {
@@ -127,7 +127,7 @@ export class ResourceGroup {
     private updateOverrideParameters(parameters: Object): Object {
         tl.debug("Overriding Parameters..");
 
-        var override = parameterParse(this.taskParameters.overrideParameters);
+        var override = parameterParser(this.taskParameters.overrideParameters);
         for (var key in override) {
             tl.debug("Overriding key: " + key);
             parameters[key] = override[key];

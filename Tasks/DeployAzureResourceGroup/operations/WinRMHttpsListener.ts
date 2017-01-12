@@ -16,7 +16,8 @@ export class WinRMHttpsListener {
     private virtualMachines;
     private customScriptExtensionInstalled: boolean;
     private ruleAddedToNsg: boolean;
-    private azureUtils;
+    private azureUtils: azure_utils.AzureUtil;
+    private networkClient: networkManagementClient.NetworkManagementClient
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
         this.taskParameters = taskParameters;
@@ -27,12 +28,12 @@ export class WinRMHttpsListener {
         this.winRmHttpsPortMap = {};
         this.customScriptExtensionInstalled = false;
         this.ruleAddedToNsg = false;
-        this.azureUtils = new azure_utils.AzureUtil(this.taskParameters);
-        return this;
+
+        this.networkClient = new networkManagementClient.NetworkManagementClient(this.credentials, this.subscriptionId);
+        this.azureUtils = new azure_utils.AzureUtil(this.taskParameters, this.networkClient);
     }
 
     public async EnableWinRMHttpsListener() {
-        var deferred = Q.defer();
         try {
             await this.AddInboundNatRuleLB();
             await this.SetAzureRMVMsConnectionDetailsInResourceGroup();
@@ -53,14 +54,12 @@ export class WinRMHttpsListener {
                     await this.AddAzureVMCustomScriptExtension(resourceId, resourceName, resourceFQDN, vm["location"]);
                 }
             }
+
             await this.AddWinRMHttpsNetworkSecurityRuleConfig();
-            deferred.resolve(null);
         }
         catch (exception) {
-            console.log(tl.loc("FailedToEnablePrereqs", exception.message));
-            deferred.reject(tl.loc("FailedToEnablePrereqs", exception.message));
+            throw tl.loc("FailedToEnablePrereqs", exception.message);
         }
-        return deferred.promise;
     }
 
     private async AddRule(lb, frontendPortMap) {
@@ -124,7 +123,7 @@ export class WinRMHttpsListener {
                 }
                 if (flag) {
                     try {
-                        await this.addTargetVmsToInboundNatRules(networkClient, nic, addedRulesId, lbName, lb);
+                        await this.AddTargetVmsToInboundNatRules(networkClient, nic, addedRulesId, lbName, lb);
                     }
                     catch (error) {
                         deferred.reject(error);
@@ -132,7 +131,7 @@ export class WinRMHttpsListener {
                 }
             }
             //Remove the rules which has no target virtual machines
-            await this.removeIrrelevantRules(lb, networkClient, addedRulesId);
+            await this.RemoveIrrelevantRules(lb, networkClient, addedRulesId);
             deferred.resolve("");
 
         });
@@ -140,7 +139,7 @@ export class WinRMHttpsListener {
         return deferred.promise;
     }
 
-    private async addTargetVmsToInboundNatRules(networkClient, nic, addedRulesId, lbName, lb) {
+    private async AddTargetVmsToInboundNatRules(networkClient, nic, addedRulesId, lbName, lb) {
         var deferred = Q.defer<void>();
         tl.debug("Updating the NIC of the concerned vms");
         var parameters = {
@@ -162,7 +161,7 @@ export class WinRMHttpsListener {
         return deferred.promise;
     }
 
-    private async removeIrrelevantRules(lb, networkClient, addedRulesId) {
+    private async RemoveIrrelevantRules(lb, networkClient, addedRulesId) {
         var lbName = lb["name"];
         var deferred = Q.defer<string>();
         networkClient.loadBalancers.get(this.resourceGroupName, lbName, (error, lbDetails, request, response) => {
@@ -213,11 +212,24 @@ export class WinRMHttpsListener {
         return deferred.promise;
     }
 
-    public async AddInboundNatRuleLB() {
-        var inboundWinrmHttpPort = {};
-        var networkClient = new networkManagementClient.NetworkManagementClient(this.credentials, this.subscriptionId);
-        var deferred = Q.defer<string>();
+    private async AddInboundNatRuleLB() {
+/* 
+    VMs, LBs
+    foreach (var vm in VMs) {
+        if (isEmpty(vm.WinRMPortPublicIP)) {
+            var lb = lbs.find(a => a.NicIds.contains(vm.Nic));
+            if (lb) {
+                // find a Port
+                // Add the rule to the lb using lb.name
+                // Add the rule to nic using vm.nicname.
+                // update the information.
+            }
+        }
+    }
 
+*/
+
+        var inboundWinrmHttpPort = {};
         var loadBalancers = await this.azureUtils.getLoadBalancers();
         for (var lb of loadBalancers) {
             /*1. Find all the busy ports
@@ -225,24 +237,26 @@ export class WinRMHttpsListener {
               3. Next add the inbound NAT rules
             */
             var vmsInBackendPool = {};
-            var UnallocatedVMs = [];
-            var usedPorts = [];
+            var unallocatedVMs = [];
+            var usedFrontEndPorts = [];
             var lbName = lb["name"];
 
+            // Find all VMs bound to this loadbalance.
             var pools = lb["properties"]["backendAddressPools"];
             for (var pool of pools) {
-                if (pool && pool["properties"]["backendIPConfigurations"]) {
-                    var ipConfigs = pool["properties"]["backendIPConfigurations"];
+                var ipConfigs = pool["properties"]["backendIPConfigurations"];
+                if (ipConfigs) {
                     for (var ipc of ipConfigs) {
-                        vmsInBackendPool[ipc["id"]] = "Exists";
+                        vmsInBackendPool[ipc["id"]] = "UnassignedPort";
                     }
                 }
             }
 
+            // Remove the VMs which have a inbound rule mapping to Port 5986.
             for (var rule of lb["properties"]["inboundNatRules"]) {
-                usedPorts.push(rule["properties"]["frontendPort"]);
+                usedFrontEndPorts.push(rule["properties"]["frontendPort"]);
                 if (rule["properties"]["backendPort"] === 5986 && rule["properties"]["backendIPConfiguration"] && rule["properties"]["backendIPConfiguration"]["id"]) {
-                    if (!!vmsInBackendPool[rule["properties"]["backendIPConfiguration"]["id"]] && vmsInBackendPool[rule["properties"]["backendIPConfiguration"]["id"]] === "Exists") {
+                    if (vmsInBackendPool[rule["properties"]["backendIPConfiguration"]["id"]]) {
                         delete vmsInBackendPool[rule["properties"]["backendIPConfiguration"]["id"]];
                     }
                 }
@@ -256,7 +270,7 @@ export class WinRMHttpsListener {
                 //find the port which is free
                 var found: boolean = false;
                 while (!found) {
-                    if (!usedPorts.find((x) => x == port)) {
+                    if (!usedFrontEndPorts.find((x) => x == port)) {
                         found = true;
                         vmsInBackendPool[key] = port;
                         frontendPortMap[port] = key;
@@ -289,20 +303,13 @@ export class WinRMHttpsListener {
             }
             var ruleIdMap = {};
             if (!empty) {
-                try {
-                    await this.AddRule(lb, frontendPortMap);
-                }
-                catch (error) {
-                    deferred.reject(error);
-                }
+                await this.AddRule(lb, frontendPortMap);
             }
             else {
                 tl.debug("No vms left for adding inbound nat rules for load balancer " + lbName);
                 console.log(tl.loc("InboundNatRuleLBPresent", lbName));
             }
         }
-        deferred.resolve("");
-        return deferred.promise;
     }
 
     private async AddInboundNetworkSecurityRule(retryCnt: number, securityGrpName, networkClient, ruleName, rulePriority, winrmHttpsPort) {
