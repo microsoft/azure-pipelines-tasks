@@ -81,7 +81,7 @@ export class WinRMHttpsListener {
             }
         };
 
-        networkClient.loadBalancers.createOrUpdate(this.resourceGroupName, lbName, parameters, async (error, result, request, response) => {
+        networkClient.loadBalancers.createOrUpdate(this.resourceGroupName, lbName, parameters, null, async (error, result, request, response) => {
             if (error) {
                 tl.debug("Failed with error " + util.inspect(error, { depth: null }));
                 deferred.reject(tl.loc("FailedToUpdateInboundNatRuleLB", lbName));
@@ -352,7 +352,7 @@ export class WinRMHttpsListener {
         var deferred = Q.defer<string>();
         var networkClient = new networkManagementClient.NetworkManagementClient(this.credentials, this.subscriptionId);
         try {
-            networkClient.securityRules.get(this.resourceGroupName, securityGrpName, ruleName, async (error, result, request, response) => {
+            networkClient.securityRules.get(this.resourceGroupName, securityGrpName, ruleName, null, async (error, result, request, response) => {
                 if (error) {
                     tl.debug("Rule " + ruleName + " not found under security Group " + securityGrpName);
                     var maxRetries = 3;
@@ -402,7 +402,7 @@ export class WinRMHttpsListener {
 
         try {
             var networkClient = new networkManagementClient.NetworkManagementClient(this.credentials, this.subscriptionId);
-            networkClient.networkSecurityGroups.list(this.resourceGroupName, async (error, result, request, response) => {
+            networkClient.networkSecurityGroups.list(this.resourceGroupName, null, async (error, result, request, response) => {
                 if (error) {
                     tl.debug("Error in getting the list of network Security Groups for the resource-group" + this.resourceGroupName + "error" + util.inspect(error, { depth: null }));
                     this.ruleAddedToNsg = true;
