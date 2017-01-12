@@ -195,8 +195,8 @@ async function run() {
         tl.checkPath(cliPath, "mobile-center");
 
         let debug: boolean = tl.getBoolInput('debug', false);
-        let prepareTests: boolean = tl.getBoolInput('enablePrepare', true);
-        let runTests: boolean = tl.getBoolInput('enableRun', true);
+        let prepareTests: boolean = tl.getBoolInput('enablePrepare', false);
+        let runTests: boolean = tl.getBoolInput('enableRun', false);
         let artifactsDir = tl.getInput('artifactsDir', true);
         let credsType = tl.getInput('credsType', true);
         

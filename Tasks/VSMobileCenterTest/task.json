@@ -53,7 +53,6 @@
             "type": "boolean",
             "label": "Prepare Tests",
             "defaultValue": true,
-            "required": true,
             "groupName": "prepare"
         },
         {
@@ -222,7 +221,6 @@
             "type": "boolean",
             "label": "Run Tests",
             "defaultValue": true,
-            "required": true,
             "groupName": "run"
         },
         {
