@@ -34,20 +34,7 @@ export class ResourceGroups {
         }
         // Validate
         try {
-            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
+            this.client.isValidResourceGroupName(resourceGroupName);
         } catch (error) {
             return callback(error);
         }
@@ -83,20 +70,7 @@ export class ResourceGroups {
         }
         // Validate
         try {
-            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
+            this.client.isValidResourceGroupName(resourceGroupName);
         } catch (error) {
             return callback(error);
         }
@@ -139,20 +113,7 @@ export class ResourceGroups {
         }
         // Validate
         try {
-            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
+            this.client.isValidResourceGroupName(resourceGroupName);
             if (parameters === null || parameters === undefined) {
                 throw new Error(tl.loc("ParametersCannotBeNull"));
             }
@@ -205,20 +166,7 @@ export class Deployments {
         }
         // Validate
         try {
-            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
+            this.client.isValidResourceGroupName(resourceGroupName);
             if (deploymentName === null || deploymentName === undefined || typeof deploymentName.valueOf() !== 'string') {
                 throw new Error(tl.loc("DeploymentNameCannotBeNull"));
             }
@@ -306,20 +254,7 @@ export class Deployments {
         }
         // Validate
         try {
-            if (resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
+            this.client.isValidResourceGroupName(resourceGroupName);
             if (deploymentName === null || deploymentName === undefined || typeof deploymentName.valueOf() !== 'string') {
                 throw new Error(tl.loc("DeploymentNameCannotBeNull"));
             }

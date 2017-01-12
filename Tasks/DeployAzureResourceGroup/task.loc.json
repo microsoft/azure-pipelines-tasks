@@ -287,6 +287,9 @@
     "CreatedRG": "ms-resource:loc.messages.CreatedRG",
     "GettingDeploymentDataFromLinkedArtifact": "ms-resource:loc.messages.GettingDeploymentDataFromLinkedArtifact",
     "StartingValidation": "ms-resource:loc.messages.StartingValidation",
+    "StartingDeployment": "ms-resource:loc.messages.StartingDeployment",
+    "Details": "ms-resource:loc.messages.Details",
+    "Error": "ms-resource:loc.messages.Error",
     "CompletedValidation": "ms-resource:loc.messages.CompletedValidation",
     "ErrorsInYourDeployment": "ms-resource:loc.messages.ErrorsInYourDeployment",
     "ValidDeployment": "ms-resource:loc.messages.ValidDeployment",
@@ -297,6 +300,9 @@
     "FailedToUpdateInboundNatRuleLB": "ms-resource:loc.messages.FailedToUpdateInboundNatRuleLB",
     "ARG_DeploymentPrereqFailed": "ms-resource:loc.messages.ARG_DeploymentPrereqFailed",
     "ARG_SetExtensionFailedForVm": "ms-resource:loc.messages.ARG_SetExtensionFailedForVm",
-    "ParametersFileFetchFailed": "ms-resource:loc.messages.ParametersFileFetchFailed"
+    "ParametersFileFetchFailed": "ms-resource:loc.messages.ParametersFileFetchFailed",
+    "FailedToUpdateNICOfVm": "ms-resource:loc.messages.FailedToUpdateNICOfVm",
+    "FailedToFetchDetailsOfLB": "ms-resource:loc.messages.FailedToFetchDetailsOfLB",
+    "FailedToUpdateLBInboundNatRules": "ms-resource:loc.messages.FailedToUpdateLBInboundNatRules"
   }
 }

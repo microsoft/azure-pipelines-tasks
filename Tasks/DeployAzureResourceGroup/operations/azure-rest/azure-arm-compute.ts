@@ -55,20 +55,7 @@ export class VirtualMachines {
         }
         // Validate
         try {
-            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
+            this.client.isValidResourceGroupName(resourceGroupName);
         }
         catch (error) {
             return callback(error);
@@ -118,20 +105,7 @@ export class VirtualMachines {
         var expand = (options && options.expand !== undefined) ? options.expand : undefined;
         // Validate
         try {
-            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
+            this.client.isValidResourceGroupName(resourceGroupName);
             if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
                 throw new Error(tl.loc("VMNameCannotBeNull"));
             }
@@ -178,20 +152,7 @@ export class VirtualMachines {
         }
         // Validate
         try {
-            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
+            this.client.isValidResourceGroupName(resourceGroupName);
             if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
                 throw new Error(tl.loc("VMNameCannotBeNull"));
             }
@@ -239,20 +200,7 @@ export class VirtualMachines {
         }
         // Validate
         try {
-            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
+            this.client.isValidResourceGroupName(resourceGroupName);
             if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
                 throw new Error(tl.loc("VMNameCannotBeNull"));
             }
@@ -296,20 +244,7 @@ export class VirtualMachines {
         }
         // Validate
         try {
-            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
+            this.client.isValidResourceGroupName(resourceGroupName);
             if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
                 throw new Error(tl.loc("VMNameCannotBeNull"));
             }
@@ -352,20 +287,7 @@ export class VirtualMachines {
         }
         // Validate
         try {
-            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
+            this.client.isValidResourceGroupName(resourceGroupName);
             if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
                 throw new Error(tl.loc("VMNameCannotBeNull"));
             }
@@ -423,20 +345,7 @@ export class VirtualMachineExtensions {
         var expand = (options && options.expand !== undefined) ? options.expand : undefined;
         // Validate
         try {
-            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
+            this.client.isValidResourceGroupName(resourceGroupName);
             if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
                 throw new Error(tl.loc("VMNameCannotBeNull"));
             }
@@ -485,20 +394,7 @@ export class VirtualMachineExtensions {
         }
         // Validate
         try {
-            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
+            this.client.isValidResourceGroupName(resourceGroupName);
             if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
                 throw new Error(tl.loc("VMNameCannotBeNull"));
             }
@@ -557,20 +453,7 @@ export class VirtualMachineExtensions {
         }
         // Validate
         try {
-            if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
-            }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
-            }
+            this.client.isValidResourceGroupName(resourceGroupName);
             if (vmName === null || vmName === undefined || typeof vmName.valueOf() !== 'string') {
                 throw new Error(tl.loc("VMNameCannotBeNull"));
             }
