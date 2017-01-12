@@ -183,37 +183,12 @@
             "visibleRule": "action = Create or update resource group || action = Select resource group",
             "options": {
                 "None": "None",
+                "ConfigureVMWithMGAgent": "Configure virtual machines with machine group agent",
                 "Configure VM with Win RM": "Configure virtual machines with WinRM"
             },
             "helpMarkDown": "These options would be applicable only when the Resource group contains virtual machines. <br><br>Selecting machine group option configures machine group agent on all virtual machines in the resource group. <br><br>Selecting WinRM option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
         },
-        {
-            "name": "machineGroupName",
-            "type": "pickList",
-            "label": "Machine group",
-            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
-            "helpMarkDown": "Select a machine group",
-            "properties": {
-                "DisableManageLink": "True"
-            }
-        },
-        {
-            "name": "copyAzureVMTags",
-            "type": "boolean",
-            "label": "Copy Azure VM tags to agents",
-            "defaultValue": true,
-            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
-            "helpMarkDown": "Choose if the tags configured on the Azure VM need to be copied to the corresponding machine group agent. <br><br>​By default all Azure tags will be copied following the format “Key: Value”. Example: An Azure Tag “Role : Web” would be copied  as-is to the Agent machine. <br><br>For more information on how tag Azure resources refer to [link](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-using-tags​)"
-        },
-        {
-            "name": "vstsPATToken",
-            "type": "string",
-            "label": "Personal access token",
-            "defaultValue": "",
-            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",            
-            "required": true,
-            "helpMarkDown": "Agent registration with machine group requires access to your visual studio project.​"
-        },
+
         {
             "name": "outputVariable",
             "type": "string",
