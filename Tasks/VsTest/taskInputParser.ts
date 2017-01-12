@@ -5,27 +5,26 @@ import Q = require('q');
 import distributedTest = require('./distributedTest')
 import models = require('./models')
 
-var os = require('os');
-var uuid = require('node-uuid');
+let os = require('os');
+let uuid = require('node-uuid');
 
 export function getDistributedTestConfigurations(): models.dtaTestConfigurations {
-    var dtaConfiguration = {} as models.dtaTestConfigurations;
-    getTestConfigurations(dtaConfiguration);
+    const dtaConfiguration = {} as models.dtaTestConfigurations;
+    initTestConfigurations(dtaConfiguration);
     return dtaConfiguration;
 }
 
 export function getvsTestConfigurations(): models.vsTestConfigurations {
-    var vsTestConfiguration = {} as models.vsTestConfigurations;
-    getTestConfigurations(vsTestConfiguration);
-    vsTestConfiguration.vsTestVersion = tl.getInput('vsTestVersion');
+    const vsTestConfiguration = {} as models.vsTestConfigurations;
+    initTestConfigurations(vsTestConfiguration);
     vsTestConfiguration.vstestLocationMethod = tl.getInput('vstestLocationMethod');
     vsTestConfiguration.vstestLocation = tl.getPathInput('vsTestLocation');
     vsTestConfiguration.pathtoCustomTestAdapters = tl.getInput('pathtoCustomTestAdapters');   
     vsTestConfiguration.otherConsoleOptions = tl.getInput('otherConsoleOptions');
     vsTestConfiguration.publishRunAttachments = tl.getInput('publishRunAttachments');
     vsTestConfiguration.runInParallel = tl.getBoolInput('runInParallel');
-    vsTestConfiguration.vstestDiagFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
-    vsTestConfiguration.ignoreVstestFailure = tl.getVariable("vstest.ignoretestfailures");
+    vsTestConfiguration.vstestDiagFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+    vsTestConfiguration.ignoreVstestFailure = tl.getVariable('vstest.ignoretestfailures');
     vsTestConfiguration.tiaConfig = getTiaConfiguration();
 
     // only to facilitate the writing of unit tests 
@@ -36,8 +35,8 @@ export function getvsTestConfigurations(): models.vsTestConfigurations {
     return vsTestConfiguration;
 }
 
-function getTestConfigurations(testConfiguration: models.testConfigurations)
-{    
+function initTestConfigurations(testConfiguration: models.testConfigurations)
+{
     testConfiguration.sourceFilter = tl.getDelimitedInput('testAssemblyVer2', '\n', true);
     testConfiguration.testcaseFilter = tl.getInput('testFiltercriteria');
     testConfiguration.runSettingsFile = tl.getPathInput('runSettingsFile');
@@ -45,30 +44,31 @@ function getTestConfigurations(testConfiguration: models.testConfigurations)
     testConfiguration.overrideTestrunParameters = tl.getInput('overrideTestrunParameters');
     testConfiguration.codeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');
     testConfiguration.buildConfig = tl.getInput('configuration');
-    testConfiguration.buildPlatform = tl.getInput('platform');    
+    testConfiguration.buildPlatform = tl.getInput('platform');
     testConfiguration.testRunTitle = tl.getInput('testRunTitle');
+    testConfiguration.vsTestVersion = tl.getInput('vsTestVersion');
 }
 
 function getTiaConfiguration() : models.tiaConfiguration
 {
-    var tiaConfiguration = {} as models.tiaConfiguration;
+    const tiaConfiguration = {} as models.tiaConfiguration;
     tiaConfiguration.tiaEnabled =  tl.getBoolInput('runOnlyImpactedTests');
     tiaConfiguration.tiaRebaseLimit = tl.getInput('runAllTestsAfterXBuilds');
     tiaConfiguration.fileLevel = tl.getVariable('tia.filelevel');
     tiaConfiguration.sourcesDir = tl.getVariable('build.sourcesdirectory');
-    tiaConfiguration.runIdFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
-    tiaConfiguration.baseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
+    tiaConfiguration.runIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+    tiaConfiguration.baseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     tiaConfiguration.useNewCollector = false;
-    var useNewCollector = tl.getVariable('tia.useNewCollector');
-    if ( useNewCollector && useNewCollector.toUpperCase() === "TRUE") {
+    const useNewCollector = tl.getVariable('tia.useNewCollector');
+    if ( useNewCollector && useNewCollector.toUpperCase() === 'TRUE') {
         tiaConfiguration.useNewCollector = true;
     }
     tiaConfiguration.isPrFlow = tl.getVariable('tia.isPrFlow');
 
-    var releaseuri = tl.getVariable("release.releaseUri")
-    tiaConfiguration.context = "CI";
+    const releaseuri = tl.getVariable('release.releaseUri')
+    tiaConfiguration.context = 'CI';
     if (releaseuri) {
-        tiaConfiguration.context = "CD";
+        tiaConfiguration.context = 'CD';
     }
     return tiaConfiguration;
 }

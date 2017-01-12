@@ -13,6 +13,7 @@ export interface testConfigurations{
     buildConfig: string;
     buildPlatform: string;    
     testRunTitle: string;
+    vsTestVersion: string;
 }
 
 export interface dtaTestConfigurations extends testConfigurations {
@@ -25,7 +26,6 @@ export interface dtaTestConfigurations extends testConfigurations {
 }
 
 export interface vsTestConfigurations extends testConfigurations {
-    vsTestVersion: string;
     vstestLocationMethod: string;
     vstestLocation: string;
     pathtoCustomTestAdapters: string;   
