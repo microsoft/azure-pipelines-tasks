@@ -11,11 +11,11 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
      before((done) => {
         tl.cp(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.config'), path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.config'), null, false);
         tl.cp(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.Debug.config'), path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.Debug.config'), null, false);
-        tl.cp(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L0XdtTransform', 'Web.config'), path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L0XdtTransform', 'Web_test.config'), null, false);
+        tl.cp(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XdtTransform', 'Web.config'), path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XdtTransform', 'Web_test.config'), null, false);
         done();
     });
     after(function() {
-        tl.rmRF(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L0XdtTransform', 'Web_test.config'), true);
+        tl.rmRF(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XdtTransform', 'Web_test.config'), true);
         tl.rmRF(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.config'), true);
         tl.rmRF(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_Test.Debug.config'), true);
     });
@@ -142,13 +142,13 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         });
 
     it('Runs successfully with XDT Transformation (L1)', (done:MochaDone) => {
-        let tp = path.join(__dirname, "..", "node_modules","webdeployment-common","Tests","L0XdtTransform.js");
+        let tp = path.join(__dirname, "..", "node_modules","webdeployment-common","Tests","L1XdtTransform.js");
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
         if(tl.osType().match(/^Win/)) {
-            var resultFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L0XdtTransform', 'Web_test.config')));
-            var expectFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L0XdtTransform','Web_Expected.config')));
+            var resultFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XdtTransform', 'Web_test.config')));
+            var expectFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XdtTransform','Web_Expected.config')));
             assert(ltx.equal(resultFile, expectFile) , 'Should Transform attributes on Web.config');
         }
         else {
@@ -159,7 +159,7 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
 
 
     it('Runs successfully with XML variable substitution', (done:MochaDone) => {
-        let tp = path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L0XmlVarSub.js');
+        let tp = path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 		
@@ -173,7 +173,7 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
     });
 
     it('Runs successfully with JSON variable substitution', (done:MochaDone) => {
-        let tp = path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L0JsonVarSub.js');
+        let tp = path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1JsonVarSub.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -187,7 +187,7 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
     });
 
     it('Validate File Encoding', (done:MochaDone) => {
-        let tp = path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L0ValidateFileEncoding.js');
+        let tp = path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1ValidateFileEncoding.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
