@@ -304,6 +304,32 @@ describe('VsTest Suite', function () {
             });
     })
 
+    it('Vstest task when vstest is set to ignore test failures', (done) => {
+        let filePattern = getTestDllString(["testAssembly1.dll", "testAssembly2.dll"]);
+        let vstestCmd = [sysVstestLocation, filePattern, "/logger:trx"].join(" ");
+
+        setResponseFile('vstestSucceedsOnIgnoreFailure.json', vstestCmd, false);
+        let tr = new trm.TaskRunner('VSTest');
+        let assemblyPattern = path.join(__dirname, "data", "testDlls", "*.dll");
+
+        tr.setInput('testAssembly', assemblyPattern);
+        tr.setInput('vstestLocationMethod', 'version');
+        tr.setInput('vsTestVersion', '14.0');
+        
+        tr.run()
+            .then(() => {
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should have not written to stderr. error: ' + tr.stderr);
+                assert(!tr.failed, 'task should not have failed');
+                assert(tr.ran(vstestCmd), 'should have run vstest');
+                assert(tr.stdout.search(/##vso\[results.publish/) < 0, 'should not have published test results.');
+                done();
+            })
+            .fail((err) => {
+                done(err);
+            });
+    })
+
     it('Vstest task when vstest of specified version is not found', (done) => {
 
         let filePattern = getTestDllString(["testAssembly1.dll"]);
