@@ -247,6 +247,8 @@ function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
     var startTime = perf();
     var endTime;
     var elapsedTime;
+    var definitionRunId: string;
+    var resultFile: string;
     var defer = Q.defer<string>();
     var allFilesInResultsDirectory;
     var resultFiles;
@@ -255,25 +257,34 @@ function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
     }
 
     var selectortool = tl.tool(getTestSelectorLocation());
-    selectortool.arg("UpdateTestResults");
-    selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
-    selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
-
+    selectortool.arg("UpdateTestResults"); 
 
     if (context === "CD") {
-        selectortool.arg("/buildid:" + tl.getVariable("Release.ReleaseId"));
+        definitionRunId = tl.getVariable("Release.ReleaseId");        
     }
     else {
-        selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
-    }
-    selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
+        definitionRunId = tl.getVariable("Build.BuildId");
+    }   
 
     if (resultFiles && resultFiles[0]) {
-        selectortool.arg("/ResultFile:" + resultFiles[0]);
+        resultFile = resultFiles[0];        
     }
-    selectortool.arg("/runidfile:" + runIdFile);
-    selectortool.arg("/Context:" + context);
-    selectortool.exec()
+    
+    selectortool.exec({ cwd: null,
+                        env: { "collectionurl": tl.getVariable("System.TeamFoundationCollectionUri"),
+                               "projectid": tl.getVariable("System.TeamProject"),
+                               "definitionrunid": definitionRunId,
+                               "token": tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false),
+                               "resultfile": resultFile,
+                               "runidfile": runIdFile,
+                               "context": context,                         
+                        },
+                        silent: null,
+                        failOnStdErr: null,
+                        ignoreReturnCode: null,
+                        outStream: null,
+                        errStream: null,
+                        windowsVerbatimArguments: null })
         .then(function(code) {
             endTime = perf();
             elapsedTime = endTime - startTime;
@@ -291,36 +302,68 @@ function generateResponseFile(discoveredTests: string): Q.Promise<string> {
     var startTime = perf();
     var endTime: number;
     var elapsedTime: number;
+    var definitionRunId: string;
+    var title: string;
+    var platformInput: string;
+    var configurationInput: string;
     var defer = Q.defer<string>();
     var respFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
     tl.debug("Response file will be generated at " + respFile);
     tl.debug("RunId file will be generated at " + runIdFile);
     var selectortool = tl.tool(getTestSelectorLocation());
     selectortool.arg("GetImpactedtests");
-    selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
-    selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
 
     if (context === "CD") {
         // Release context. Passing Release Id.
-        selectortool.arg("/buildid:" + tl.getVariable("Release.ReleaseId"));
-        selectortool.arg("/releaseuri:" + tl.getVariable("release.releaseUri"));
-        selectortool.arg("/releaseenvuri:" + tl.getVariable("release.environmentUri"));
+        definitionRunId = tl.getVariable("Release.ReleaseId"); 
     } else {
         // Build context. Passing build id.
-        selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
+        definitionRunId = tl.getVariable("Build.BuildId");
     }
 
-    selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
-    selectortool.arg("/responsefile:" + respFile);
-    selectortool.arg("/DiscoveredTests:" + discoveredTests);
-    selectortool.arg("/runidfile:" + runIdFile);
-    selectortool.arg("/testruntitle:" + testRunTitle);
-    selectortool.arg("/BaseLineFile:" + baseLineBuildIdFile);
-    selectortool.arg("/platform:" + platform);
-    selectortool.arg("/configuration:" + configuration);
-    selectortool.arg("/Context:" + context);
+    if (platform) {
+        platformInput = platform;
+    }
+    else {
+        platformInput = "";
+    }
 
-    selectortool.exec()
+    if (testRunTitle) {
+        title = testRunTitle;
+    }
+    else {
+        title = "";
+    }
+
+    if (configuration) {
+        configurationInput = configuration;
+    }
+    else {
+        configurationInput = "";
+    }
+
+    selectortool.exec({ cwd: null,
+                        env: { "collectionurl": tl.getVariable("System.TeamFoundationCollectionUri"),
+                            "projectid": tl.getVariable("System.TeamProject"),
+                            "definitionrunid": definitionRunId,
+                            "releaseuri": tl.getVariable("release.releaseUri"),
+                            "releaseenvuri": tl.getVariable("release.environmentUri"),
+                            "token": tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false),
+                            "responsefilepath": respFile,
+                            "discoveredtestspath": discoveredTests,
+                            "runidfilepath": runIdFile,
+                            "testruntitle": title,
+                            "baselinebuildfilepath": baseLineBuildIdFile,
+                            "context": context,
+                            "platform": platformInput,
+                            "configuration": configurationInput
+                        },
+                        silent: null,
+                        failOnStdErr: null,
+                        ignoreReturnCode: null,
+                        outStream: null,
+                        errStream: null,
+                        windowsVerbatimArguments: null })
         .then(function(code) {
             endTime = perf();
             elapsedTime = endTime - startTime;
@@ -339,6 +382,11 @@ function publishCodeChanges(): Q.Promise<string> {
     var endTime: number;
     var elapsedTime: number;
     var pathFilters: string;
+    var definitionRunId: string;
+    var definitionId: string;
+    var prFlow: string;
+    var rebaseLimit: string;
+    var sourcesDirectory: string;
     var defer = Q.defer<string>();
 
     var newprovider = "true";
@@ -348,31 +396,27 @@ function publishCodeChanges(): Q.Promise<string> {
 
     var selectortool = tl.tool(getTestSelectorLocation());
     selectortool.arg("PublishCodeChanges");
-    selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
-    selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
+    
 
     if (context === "CD") {
         // Release context. Passing Release Id.
-        selectortool.arg("/buildid:" + tl.getVariable("Release.ReleaseId"));
-        selectortool.arg("/Definitionid:" + tl.getVariable("release.DefinitionId"));
+        definitionRunId = tl.getVariable("Release.ReleaseId");
+        definitionId = tl.getVariable("release.DefinitionId");
     } else {
         // Build context. Passing build id.
-        selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
-        selectortool.arg("/Definitionid:" + tl.getVariable("System.DefinitionId"));
+        definitionRunId = tl.getVariable("Build.BuildId");
+        definitionId = tl.getVariable("System.DefinitionId");
     }
 
-    selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
-    selectortool.arg("/SourcesDir:" + sourcesDir);
-    selectortool.arg("/newprovider:" + newprovider);
-    selectortool.arg("/BaseLineFile:" + baseLineBuildIdFile);
-    selectortool.arg("/Context:" + context);
-
     if (isPrFlow && isPrFlow.toUpperCase() === "TRUE") {
-        selectortool.arg("/IsPrFlow:" + "true");
+        prFlow = "true";        
+    }
+    else {
+        prFlow = "false";
     }
 
     if (tiaRebaseLimit) {
-        selectortool.arg("/RebaseLimit:" + tiaRebaseLimit);
+        rebaseLimit = tiaRebaseLimit;        
     }    
 
     if (typeof tiaFilterPaths != 'undefined') {
@@ -382,8 +426,27 @@ function publishCodeChanges(): Q.Promise<string> {
         pathFilters = "";
     }
 
+    if (typeof sourcesDir != 'undefined') {
+        sourcesDirectory = sourcesDir.trim();
+    }
+    else {
+        sourcesDirectory = "";
+    }
+
     selectortool.exec({cwd: null,
-                       env: {"filter":pathFilters},
+                       env: {"collectionurl": tl.getVariable("System.TeamFoundationCollectionUri"),
+                             "projectid": tl.getVariable("System.TeamProject"),
+                             "definitionrunid": definitionRunId,
+                             "definitionid": definitionId,
+                             "token": tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false),
+                             "sourcesdir": sourcesDirectory,
+                             "newprovider": newprovider,
+                             "prflow": prFlow,
+                             "rebaselimit": rebaseLimit,
+                             "baselinefile": baseLineBuildIdFile,
+                             "context": context,
+                             "filter":pathFilters
+                        },
                        silent: null,
                        failOnStdErr: null,
                        ignoreReturnCode: null,
