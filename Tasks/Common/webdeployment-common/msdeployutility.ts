@@ -104,7 +104,7 @@ export async  function containsParamFile(webAppPackage: string ) {
     var outputObj = fs.createWriteStream("",{fd: fd});
     try {
         var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package=\'" + webAppPackage + "\'";
-        await tl.exec("msdeploy", msDeployCheckParamFileCmdArgs, <any>{ failOnStdErr: true, outStream: outputObj});
+        await tl.exec("msdeploy", msDeployCheckParamFileCmdArgs, <any>{ failOnStdErr: true, outStream: outputObj, cwd: tl.getVariable('System.DefaultWorkingDirectory')});
     }
     catch(error) {
         throw Error(error);
