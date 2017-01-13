@@ -7,9 +7,7 @@ var msDeployUtility = require('webdeployment-common/msdeployutility.js');
 var zipUtility = require('webdeployment-common/ziputility.js');
 var utility = require('webdeployment-common/utility.js');
 var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
-var jsonSubstitutionUtility = require('webdeployment-common/jsonvariablesubstitutionutility.js');
-var xmlSubstitutionUtility = require('webdeployment-common/xmlvariablesubstitutionutility.js');
-var xdtTransformationUtility = require('webdeployment-common/xdttransformationutility.js');
+var fileTransformationsUtility = require('webdeployment-common/fileTransformationsUtility.js');
 var kuduUtility = require('webdeployment-common/kuduutility.js');
 
 async function run() {
@@ -71,48 +69,9 @@ async function run() {
         var isFolderBasedDeployment = utility.isInputPkgIsFolder(webDeployPkg);
 
         if(JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution) {
-
-            var folderPath = utility.generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWorkingDirectory'), true);
-            if(isFolderBasedDeployment) {
-                tl.cp(path.join(webDeployPkg, '/*'), folderPath, '-rf', false);
-            }
-            else {
-                await zipUtility.unzip(webDeployPkg, folderPath);
-            }
-
-            if(xmlTransformation) {
-                var environmentName = tl.getVariable('Release.EnvironmentName');
-                if(tl.osType().match(/^Win/)) {
-                    var transformConfigs = ["Release.config"];
-                    if(environmentName) {
-                        transformConfigs.push(environmentName + ".config");
-                    }
-                    xdtTransformationUtility.basicXdtTransformation(folderPath, transformConfigs);  
-                    console.log(tl.loc("XDTTransformationsappliedsuccessfully"));
-                } else {
-                    throw new Error(tl.loc("CannotPerformXdtTransformationOnNonWindowsPlatform"));
-                }
-            }
-
-            if(xmlVariableSubstitution) {
-                await xmlSubstitutionUtility.substituteAppSettingsVariables(folderPath);
-                console.log(tl.loc('XMLvariablesubstitutionappliedsuccessfully'));
-            }
-
-            if(JSONFiles.length != 0) {
-                jsonSubstitutionUtility.jsonVariableSubstitution(folderPath, JSONFiles);
-                console.log(tl.loc('JSONvariablesubstitutionappliedsuccessfully'));
-            }
-            if(isFolderBasedDeployment) {
-                tempPackagePath = folderPath;
-                webDeployPkg = folderPath;
-            }
-            else {
-                var tempWebPackageZip = utility.generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWorkingDirectory'), false);
-                webDeployPkg = await zipUtility.archiveFolder(folderPath, "", tempWebPackageZip);
-                tempPackagePath = webDeployPkg;
-                tl.rmRF(folderPath, true);
-            }
+            var output = await fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, webDeployPkg);
+            tempPackagePath = output.tempPackagePath;
+            webDeployPkg = output.webDeployPkg;
         }
 
         if(virtualApplication) {

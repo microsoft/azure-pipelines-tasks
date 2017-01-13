@@ -1,4 +1,4 @@
-var fileEncoding = require('../node_modules/webdeployment-common/fileencoding.js');
+var fileEncoding = require('../fileencoding.js');
 
 var fileEncodeType = fileEncoding.detectFileEncoding('utf-8.txt', new Buffer([239, 187, 191, 0]));
 if(fileEncodeType[0] === 'utf-8' && fileEncodeType[1]) {

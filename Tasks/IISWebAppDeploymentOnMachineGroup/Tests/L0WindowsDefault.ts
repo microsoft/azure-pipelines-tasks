@@ -54,15 +54,18 @@ tr.registerMock('./msdeployutility.js', {
         return true;
     }
 });
+
 var fs = require('fs');
 tr.registerMock('fs', {
-    createWriteStream: function (filePath: string, options){
-        return {"isWriteStreamObj": true};
+    createWriteStream: function (filePath, options) {
+        return { "isWriteStreamObj": true };
     },
-    openSync: function(fd, options) {
+    ReadStream: fs.ReadStream,
+    WriteStream: fs.WriteStream,
+    openSync: function (fd, options) {
         return true;
     },
-    closeSync: function(fd) {
+    closeSync: function (fd) {
         return true;
     },
     fsyncSync: function(fd) {

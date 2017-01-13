@@ -20,8 +20,13 @@
   },
   "demands": [
   ],
-  "minimumAgentVersion": "1.102.0",
+  "minimumAgentVersion": "2.104.1",
   "groups": [
+    {
+      "name": "FileTransformsAndVariableSubstitution",
+      "displayName": "File Transforms & Variable Substitution Options",
+      "isExpanded": false
+    },
     {
       "name": "advanceDeploymentOptions",
       "displayName": "Advanced Deployment Options",
@@ -97,6 +102,33 @@
       "defaultValue": "",
       "groupName": "advanceDeploymentOptions",
       "helpMarkDown": "Additional Web Deploy arguments that will be applied when deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension."
+    },
+    {
+      "name": "XmlTransformation",
+      "type": "boolean",
+      "label": "XML transformation",
+      "required": false,
+      "defaultValue": false,
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": "The config transfoms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`.<br/> Config transforms will be run prior to the Variable Substitution.<br/>XML transformations are supported only for Windows platform." 
+    },
+    {
+      "name": "XmlVariableSubstitution",
+      "type": "boolean",
+      "label": "XML variable substitution",
+      "required": false,
+      "defaultValue": false,
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": "Variables defined in the Build or Release Definition will be matched against the 'key' or 'name' entries in the appSettings, applicationSettings, and connectionStrings sections of any config file. Variable Substitution is run after config transforms. <br/><br/> Note: If same variables are defined in the Release Definition and in the Environment, then the Environment variables will supersede the Release Definition variables.<br/>"
+    },
+    {
+      "name": "JSONFiles",
+      "type": "multiLine",
+      "label": "JSON variable substitution",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": "Provide new line separated list of JSON files to substitute the variable values. Files names are to be provided relative to the root folder. <br/> To substitute JSON variables that are nested or hierarchical, specify them using JSONPath expressions. <br/> <br/> For example, to replace the value of ‘ConnectionString’ in the sample below, you need to define a variable as ‘Data.DefaultConnection.ConnectionString’ in the build/release definition (or release definition’s environment). <br/> {<br/>&nbsp;&nbsp;\"Data\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"DefaultConnection\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"ConnectionString\": \"Server=(localdb)\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/> }<br/> Variable Substitution is run after configuration transforms. <br/><br/> Note: Build/Release’s system definition variables are excluded in substitution"
     }
   ],
     "instanceNameFormat": "Deploy IIS Website/App: $(WebDeployPackage)",
@@ -107,6 +139,10 @@
     },
   "messages": {
         "SetParamFilenotfound0": "Set parameters file not found: %s",
+        "XDTTransformationsappliedsuccessfully": "XML Transformations applied successfully",
+        "CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot perform XML transformations on a non-Windows platform.",
+        "XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully.",
+        "JSONvariablesubstitutionappliedsuccessfully": "JSON variable substitution applied successfully.",
         "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
         "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
         "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website",
@@ -134,6 +170,15 @@
         "UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)",
         "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
         "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "More than one package matched with specified pattern. Please restrain the search patern.",
-        "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected."
+        "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected.",
+        "Configfiledoesntexists": "Configuration file %s doesn't exist.",
+        "Failedtowritetoconfigfilewitherror": "Failed to write to config file %s with error : %s",
+        "NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern",
+        "JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "JSON variable substitution can only be applied for JSON files",
+        "JSONParseError": "Unable to parse JSON file: %s. Error: %s",
+        "XdtTransformationErrorWhileTransforming": "XML transformation error while transforming %s using %s.",
+        "EncodeNotSupported": "Detected file encoding of the file %s as %s. Variable substitution is not supported with file encoding %s. Supported encodings are UTF-8 and UTF-16 LE.",
+        "UnknownFileEncodeError": "Unable to detect encoding of the file %s (typeCode: %s). Supported encodings are UTF-8 and UTF-16 LE.",
+        "ShortFileBufferError": "File buffer is too short to detect encoding type : %s"
   }
 }
