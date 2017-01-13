@@ -71,8 +71,8 @@
   "loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "More than one package matched with specified pattern. Please restrain the search pattern.",
   "loc.messages.Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy app service again with Take application offline option selected.",
   "loc.messages.Trytodeploywebappagainwithrenamefileoptionselected": "Try to deploy app service again with Rename locked files option selected.",
-  "loc.messages.NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern",
-  "loc.messages.JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "JSON variable substitution can only be applied for JSON files",
+  "loc.messages.NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern: %s.",
+  "loc.messages.JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "JSON variable substitution can only be applied for JSON files: %s.",
   "loc.messages.Configfiledoesntexists": "Configuration file %s doesn't exist.",
   "loc.messages.Failedtowritetoconfigfilewitherror": "Failed to write to config file %s with error : %s",
   "loc.messages.AppOfflineModeenabled": "App offline mode enabled.",
@@ -96,5 +96,6 @@
   "loc.messages.VirtualApplicationDoesNotExist": "Virtual application doesn't exists : %s",
   "loc.messages.JSONParseError": "Unable to parse JSON file: %s. Error: %s",
   "loc.messages.JSONvariablesubstitutionappliedsuccessfully": "JSON variable substitution applied successfully.",
-  "loc.messages.XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully."
+  "loc.messages.XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully.",
+  "loc.messages.XMLParseError": "Unable to parse .config file for xml variable substitution: %s"
 }
