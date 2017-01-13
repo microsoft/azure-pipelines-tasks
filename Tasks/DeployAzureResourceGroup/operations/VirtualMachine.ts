@@ -3,7 +3,6 @@
 
 import path = require("path");
 import tl = require("vsts-task-lib/task");
-
 import armCompute = require('./azure-rest/azure-arm-compute');
 import deployAzureRG = require("../models/DeployAzureRG");
 
@@ -14,7 +13,6 @@ export class VirtualMachine {
     private successCount: number;
     private vmCount: number;
     private errors: string;
-    private executionDeferred: q.Deferred<void>;
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
         this.taskParameters = taskParameters;
