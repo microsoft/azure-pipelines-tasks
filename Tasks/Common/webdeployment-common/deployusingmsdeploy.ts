@@ -48,7 +48,7 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
     var errObj = fs.createWriteStream("", {fd: fd});
 
     try {
-        await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj});
+        await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj, cwd: tl.getVariable('System.DefaultWorkingDirectory')});
         if(publishingProfile != null) {
             tl._writeLine(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
         }
