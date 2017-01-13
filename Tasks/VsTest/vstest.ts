@@ -338,6 +338,7 @@ function publishCodeChanges(): Q.Promise<string> {
     var startTime = perf();
     var endTime: number;
     var elapsedTime: number;
+    var pathFilters: string;
     var defer = Q.defer<string>();
 
     var newprovider = "true";
@@ -375,10 +376,20 @@ function publishCodeChanges(): Q.Promise<string> {
     }    
 
     if (typeof tiaFilterPaths != 'undefined') {
-        selectortool.arg("/PathFilters:" + tiaFilterPaths);
+        pathFilters = tiaFilterPaths.trim();
+    }
+    else {
+        pathFilters = "";
     }
 
-    selectortool.exec()
+    selectortool.exec({cwd: null,
+                       env: {"filter":pathFilters},
+                       silent: null,
+                       failOnStdErr: null,
+                       ignoreReturnCode: null,
+                       outStream: null,
+                       errStream: null,
+                       windowsVerbatimArguments: null})
         .then(function(code) {
             endTime = perf();
             elapsedTime = endTime - startTime;
