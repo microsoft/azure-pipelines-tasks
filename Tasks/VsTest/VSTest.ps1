@@ -172,12 +172,6 @@ try
 
         Write-Verbose "Test results directory: $testResultsDirectory"
 
-        if($runOnlyImpactedTests -eq "True")
-        {
-            Write-Warning ("Running all tests. To run only impacted tests, move the task to the node implementation.")
-        }
-
-
         if (![String]::IsNullOrWhiteSpace($vstestLocationInput) -And (InvokeVsTestCmdletHasMember "VSTestLocation"))
         {
             Invoke-VSTest -TestAssemblies $testAssemblyFiles -VSTestVersion $vsTestVersion -TestFiltercriteria $testFiltercriteria -RunSettingsFile $runSettingsFileWithParallel -PathtoCustomTestAdapters $pathtoCustomTestAdapters -CodeCoverageEnabled $codeCoverage -OverrideTestrunParameters $overrideTestrunParameters -OtherConsoleOptions $otherConsoleOptions -WorkingFolder $workingDirectory -TestResultsFolder $testResultsDirectory -SourcesDirectory $sourcesDirectory -VSTestLocation $vstestLocationInput
