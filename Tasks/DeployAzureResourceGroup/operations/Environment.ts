@@ -2,8 +2,6 @@
 import networkManagementClient = require("./azure-rest/azure-arm-network");
 import computeManagementClient = require("./azure-rest/azure-arm-compute");
 
-import q = require("q");
-import util = require("util");
 import tl = require("vsts-task-lib/task");
 import deployAzureRG = require("../models/DeployAzureRG");
 import azureUtil = require("./AzureUtil");
@@ -68,21 +66,22 @@ class Environment {
 
     constructor(resources: Array<Resource>, userId: string, projectName: string, environmentName: string) {
         this.Id = 0;
+        this.Name = environmentName;
         this.Url = null;
         this.Revision = 1;
         this.Project = new Project(projectName, projectName);
-        var user = new User(userId);
-        this.ModifiedBy = user;
+
         this.Resources = resources;
         this.Properties = {
             "Microsoft-Vslabs-MG-WinRMProtocol": new PropertyValue("HTTPS"),
             "Microsoft-Vslabs-MG-SkipCACheck": new PropertyValue("False")
         };
-        this.Name = environmentName;
+
         this.IsReserved = false;
+        var user = new User(userId);
         this.CreatedBy = user;
-        var timestamp = new Date();
-        this.CreatedDate = this.formatDate(timestamp);
+        this.ModifiedBy = user;
+        this.CreatedDate = this.formatDate(new Date());
         this.ModifiedDate = "0001-01-01T00:00:00";
     }
 
@@ -122,96 +121,36 @@ export class RegisterEnvironment {
         this.inboundNatRuleMap = null;
     }
 
-    public RegisterEnvironment(): q.Promise<string> {
-        var defered = q.defer<string>();
+    public async RegisterEnvironment() {
         console.log(tl.loc("RegisteringEnvironmentVariable"));
-        var details = new azureUtil.AzureUtil(this.taskParameters, null);
-        details.getDetails().then(() => {
-            this.parseVMDetails(details.vmDetails);
-            this.parseNetworkInterfaceDetails(details.networkInterfaceDetails);
-            this.parseLoadBalancerDetails(details.loadBalancersDetails);
-            this.parsePublicIPDetails(details.publicAddressDetails);
-            this.InstantiateEnvironment();
-            defered.resolve("Completed");
-        }).catch((error) => {
-            defered.reject(error);
-        })
-        return defered.promise;
+        var details = new azureUtil.AzureUtil(this.taskParameters);
+        var resourceGroupDetails = await details.getResourceGroupDetails();
+        this.InstantiateEnvironment(resourceGroupDetails);
     }
 
-    private parseLoadBalancerDetails(loadbalancers): void {
-        var inboundNatRuleMap = {};
-        for (var i = 0; i < loadbalancers.length; i++) {
-            var lb = loadbalancers[i];
-            var publicAddress = lb.properties["frontendIPConfigurations"][0].properties["publicIPAddress"]["id"];
-            for (var j = 0; j < lb.properties["inboundNatRules"].length; j++) {
-                var natRule = lb.properties["inboundNatRules"][j];
-                inboundNatRuleMap[natRule["id"]] = {
-                    frontendPort: natRule.properties["frontendPort"],
-                    backendPort: natRule.properties["backendPort"],
-                    publicAddress: publicAddress
-                };
-            }
-        }
-        this.inboundNatRuleMap = inboundNatRuleMap;
-    }
-
-    private InstantiateEnvironment(): void {
-        var resources = this.getResources();
+    private InstantiateEnvironment(resourceGroupDetails: azureUtil.ResourceGroupDetails): void {
+        var resources = this.getResources(resourceGroupDetails);
         tl.debug("Got resources..");
-        var environment = new Environment(resources, process.env["SYSTEM_COLLECTIONID"], process.env["SYSTEM_TEAMPROJECT"], this.taskParameters.outputVariable);
+        var environment = new Environment(
+            resources,
+            process.env["SYSTEM_COLLECTIONID"],
+            process.env["SYSTEM_TEAMPROJECT"],
+            this.taskParameters.outputVariable);
+
         tl.setVariable(this.taskParameters.outputVariable, JSON.stringify(environment));
+
         console.log(tl.loc("AddedToOutputVariable", this.taskParameters.outputVariable));
     }
 
-    private getTags(nicId: string): Array<string> {
-        return this.nicIdToTagsMap[nicId];
-    }
-
-    private getPort(nicId: string): string {
-        var interfaceDetails = this.publicAddressToNicIdMap[nicId];
-        var port = "5986";
-        if (interfaceDetails.inboundNatRule) {
-            var natRules = interfaceDetails.inboundNatRule;
-            try {
-                for (var i = 0; i < natRules.length; i++) {
-                    var natRule = natRules[i];
-                    if (this.inboundNatRuleMap[natRule.id].backendPort == 5986) {
-                        port = this.inboundNatRuleMap[natRule.id].frontendPort
-                    }
-                }
-            } catch (error) {
-                throw new Error(tl.loc("ErrorFetchingNatRules"));
-            }
-        }
-        return port.toString();
-    }
-
-    private getFQDN(nicId: string): string {
-        var interfaceDetails = this.publicAddressToNicIdMap[nicId];
-        try {
-            if (interfaceDetails.publicAddress) {
-                return this.publicAddressToFqdnMap[interfaceDetails.publicAddress];
-            } else {
-                var natRule = interfaceDetails.inboundNatRule[0].id;
-                var publicAddress = this.inboundNatRuleMap[natRule].publicAddress;
-                return this.publicAddressToFqdnMap[publicAddress];
-            }
-        } catch (error) {
-            throw new Error(tl.loc("UnableToFetchFQDN"));
-        }
-    }
-
-    private getResources(): Array<Resource> {
+    private getResources(resourceGroupDetails: azureUtil.ResourceGroupDetails): Array<Resource> {
         var resources = new Array<Resource>();
         var id = 1;
-        for (var i = 0; i < this.nicIds.length; i++) {
-            var nicId = this.nicIds[i];
-            var fqdn = this.getFQDN(nicId);
+        for (var virtualMachine of resourceGroupDetails.VirtualMachines) {
+            var fqdn = virtualMachine.WinRMHttpsPublicAddress;
             var resource = new Resource(id++, fqdn);
             resource.addOrUpdateProperty("Microsoft-Vslabs-MG-Resource-FQDN", new PropertyValue(fqdn));
-            resource.addOrUpdateProperty("WinRM_Https", new PropertyValue(this.getPort(nicId)));
-            var tags = this.getTags(nicId);
+            resource.addOrUpdateProperty("WinRM_Https", new PropertyValue(virtualMachine.WinRMHttpsPort.toString()));
+            var tags = virtualMachine.Tags
             if (tags) {
                 for (var tag in tags) {
                     resource.addOrUpdateProperty(tag, new PropertyValue(tags[tag]));
@@ -219,50 +158,8 @@ export class RegisterEnvironment {
             }
             resources.push(resource);
         }
+
         return resources;
-    }
-
-    private parseVMDetails(virtualMachines: Array<any>): void {
-        this.nicIds = [];
-        var tags = {};
-        for (var i = 0; i < virtualMachines.length; i++) {
-            var vm = virtualMachines[i];
-            var nicId = vm.properties["networkProfile"]["networkInterfaces"][0]["id"];
-            this.nicIds.push(nicId);
-            if (vm["tags"] != undefined)
-                tags[nicId] = vm["tags"];
-        }
-        this.nicIdToTagsMap = tags;
-    }
-
-    private parseNetworkInterfaceDetails(networkInterfaces: Array<any>): void {
-        var interfaces = {};
-        for (var i = 0; i < networkInterfaces.length; i++) {
-            var networkInterface = networkInterfaces[i];
-            var nicId = networkInterface["id"];
-            var ipConfig = networkInterface.properties["ipConfigurations"][0].properties;
-            if (ipConfig["publicIPAddress"]) {
-                interfaces[nicId] = { publicAddress: ipConfig["publicIPAddress"]["id"] };
-            } else if (ipConfig["loadBalancerInboundNatRules"]) {
-                interfaces[nicId] = { inboundNatRule: ipConfig["loadBalancerInboundNatRules"] };
-            }
-        }
-        this.publicAddressToNicIdMap = interfaces;
-    }
-
-    private parsePublicIPDetails(publicAddresses: Array<any>): void {
-        var fqdns = {}
-        for (var i = 0; i < publicAddresses.length; i++) {
-            var publicAddress = publicAddresses[i];
-            var publicAddressId = publicAddress["id"];
-            if (publicAddress["dnsSettings"]) {
-                fqdns[publicAddressId] = publicAddress["dnsSettings"]["fqdn"];
-            }
-            else {
-                fqdns[publicAddressId] = publicAddress["ipAddress"];
-            }
-        }
-        this.publicAddressToFqdnMap = fqdns;
     }
 }
 

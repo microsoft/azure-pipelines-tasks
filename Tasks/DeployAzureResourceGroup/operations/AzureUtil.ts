@@ -1,6 +1,5 @@
 import networkManagementClient = require("./azure-rest/azure-arm-network");
 import computeManagementClient = require("./azure-rest/azure-arm-compute");
-import q = require("q");
 import deployAzureRG = require("../models/DeployAzureRG");
 import tl = require("vsts-task-lib/task")
 
@@ -8,6 +7,7 @@ export class NetworkInterface {
     Name: string;
     Id: string
 }
+
 export class VirtualMachine {
     Name: string;
     NetworkInterfaces: NetworkInterface[];
@@ -32,7 +32,7 @@ export class LoadBalancer {
     }
 }
 
-export class ResourceGroupVMDetails {
+export class ResourceGroupDetails {
     VirtualMachines: VirtualMachine[];
     LoadBalancers: LoadBalancer[]
 
@@ -44,27 +44,22 @@ export class ResourceGroupVMDetails {
 
 export class AzureUtil {
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
-    public loadBalancersDetails;
-    public vmDetails: any[];
-    public networkInterfaceDetails;
-    public publicAddressDetails;
-    public networkClient: networkManagementClient.NetworkManagementClient;
+    private loadBalancersDetails;
+    private vmDetails: any[];
+    private networkInterfaceDetails;
+    private publicAddressDetails;
+    private networkClient: networkManagementClient.NetworkManagementClient;
+    private computeClient: computeManagementClient.ComputeManagementClient;
 
-    constructor(taskParameters, networkClient: networkManagementClient.NetworkManagementClient) {
+    constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
         this.taskParameters = taskParameters;
-        this.networkClient = networkClient;
+        this.computeClient = new computeManagementClient.ComputeManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
+        this.networkClient = new networkManagementClient.NetworkManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
     }
 
-    public getDetails(): q.Promise<any> {
-        var details = [this.getLoadBalancers(), this.getNetworkInterfaceDetails(), this.getPublicIPAddresses(), this.getVMDetails()];
-        return q.all(details).then(() => {
-            return this;
-        });
-    }
-
-    public async getDetails2(): Promise<ResourceGroupVMDetails> {
+    public async getResourceGroupDetails(): Promise<ResourceGroupDetails> {
         await this.getDetails();
-        var resourceGroupDetails = new ResourceGroupVMDetails();
+        var resourceGroupDetails = new ResourceGroupDetails();
 
         var fqdns = {}
         for (var publicAddress of this.publicAddressDetails) {
@@ -148,8 +143,12 @@ export class AzureUtil {
         return resourceGroupDetails;
     }
 
+    private getDetails(): Promise<any[]> {
+        var details = [this.getLoadBalancers(), this.getNetworkInterfaceDetails(), this.getPublicIPAddresses(), this.getVMDetails()];
+        return Promise.all(details);
+    }
 
-    public getLoadBalancers(): Promise<any> {
+    private getLoadBalancers(): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             this.networkClient.loadBalancers.list(this.taskParameters.resourceGroupName, (error, loadbalancers, request, response) => {
                 if (error) {
@@ -161,46 +160,42 @@ export class AzureUtil {
         });
     }
 
-    public getVMDetails() {
-        var deferred = q.defer();
-        var armClient = new computeManagementClient.ComputeManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
-        armClient.virtualMachines.list(this.taskParameters.resourceGroupName, null, (error, virtualMachines, request, response) => {
-            if (error) {
-                console.log(tl.loc("FailedToFetchVMs"), error);
-                throw new Error(tl.loc("FailedToFetchVMs"));
-            }
-            this.vmDetails = virtualMachines;
-            deferred.resolve(virtualMachines);
+    private getVMDetails(): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            this.computeClient.virtualMachines.list(this.taskParameters.resourceGroupName, null, (error, virtualMachines, request, response) => {
+                if (error) {
+                    tl.error(error);
+                    reject(tl.loc("FailedToFetchVMs"));
+                }
+                this.vmDetails = virtualMachines;
+                resolve(virtualMachines);
+            });
         });
-        return deferred.promise;
     }
 
-    public getNetworkInterfaceDetails() {
-        var deferred = q.defer();
-        var armClient = new networkManagementClient.NetworkManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
-        armClient.networkInterfaces.list(this.taskParameters.resourceGroupName, null, (error, networkInterfaces, request, response) => {
-            if (error) {
-                console.log(tl.loc("FailedToFetchNetworkInterfaces"), error);
-                throw new Error(tl.loc("FailedToFetchNetworkInterfaces"));
-            }
-            this.networkInterfaceDetails = networkInterfaces;
-            deferred.resolve(networkInterfaces);
+    private getNetworkInterfaceDetails(): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            this.networkClient.networkInterfaces.list(this.taskParameters.resourceGroupName, null, (error, networkInterfaces, request, response) => {
+                if (error) {
+                    tl.error(error);
+                    reject(tl.loc("FailedToFetchNetworkInterfaces"));
+                }
+                this.networkInterfaceDetails = networkInterfaces;
+                resolve(networkInterfaces);
+            });
         });
-        return deferred.promise;
     }
 
-    public getPublicIPAddresses() {
-        var deferred = q.defer();
-        var armClient = new networkManagementClient.NetworkManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
-        armClient.publicIPAddresses.list(this.taskParameters.resourceGroupName, null, (error, publicAddresses, request, response) => {
-            if (error) {
-                console.log(tl.loc("FailedToFetchPublicAddresses"), error);
-                throw new Error(tl.loc("FailedToFetchPublicAddresses"));
-            }
-            this.publicAddressDetails = publicAddresses;
-            deferred.resolve(publicAddresses);
+    private getPublicIPAddresses(): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            this.networkClient.publicIPAddresses.list(this.taskParameters.resourceGroupName, null, (error, publicAddresses, request, response) => {
+                if (error) {
+                    tl.error(error);
+                    reject(tl.loc("FailedToFetchPublicAddresses"));
+                }
+                this.publicAddressDetails = publicAddresses;
+                resolve(publicAddresses);
+            });
         });
-        return deferred.promise;
     }
-
 }
