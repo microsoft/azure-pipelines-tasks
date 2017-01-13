@@ -2,6 +2,7 @@ import networkManagementClient = require("./azure-rest/azure-arm-network");
 import computeManagementClient = require("./azure-rest/azure-arm-compute");
 import deployAzureRG = require("../models/DeployAzureRG");
 import tl = require("vsts-task-lib/task")
+import az = require("./azure-rest/azureModels");
 
 export class NetworkInterface {
     Name: string;
@@ -10,18 +11,19 @@ export class NetworkInterface {
 
 export class VirtualMachine {
     Name: string;
-    NetworkInterfaces: NetworkInterface[];
+    NetworkInterfaceIds: string[];
     WinRMHttpsPort: number;
     WinRMHttpsPublicAddress: string;
     Tags: any;
 
     constructor() {
-        this.NetworkInterfaces = [];
+        this.NetworkInterfaceIds = [];
+        this.WinRMHttpsPort = 5986;
     }
 }
 
 export class LoadBalancer {
-    Name: string;
+    Id: string;
     FrontEndPublicAddress: string
     FrontEndPortsInUse: number[];
     BackendNicIds: string[];
@@ -44,10 +46,10 @@ export class ResourceGroupDetails {
 
 export class AzureUtil {
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
-    private loadBalancersDetails;
-    private vmDetails: any[];
-    private networkInterfaceDetails;
-    private publicAddressDetails;
+    public loadBalancersDetails: az.LoadBalancer[];
+    public vmDetails: az.VM[];
+    public networkInterfaceDetails: az.NetworkInterface[];
+    public publicAddressDetails: az.PublicIPAddress[];
     private networkClient: networkManagementClient.NetworkManagementClient;
     private computeClient: computeManagementClient.ComputeManagementClient;
 
@@ -63,74 +65,83 @@ export class AzureUtil {
 
         var fqdns = {}
         for (var publicAddress of this.publicAddressDetails) {
-            fqdns[publicAddress["id"]] = publicAddress["dnsSettings"]
-                ? publicAddress["dnsSettings"]["fqdn"]
-                : publicAddress["ipAddress"];
+            fqdns[publicAddress.id] = publicAddress.properties.dnsSettings
+                ? publicAddress.properties.dnsSettings.fqdn
+                : publicAddress.properties.ipAddress;
         }
 
         var ipcToNicMap = {}
-        for (var nic in this.networkInterfaceDetails) {
-            for (var ipc of nic["properties"]["ipConfigurations"]) {
-                ipcToNicMap[ipc["id"]] = nic["name"];
+        for (var nic of this.networkInterfaceDetails) {
+            for (var ipc of nic.properties.ipConfigurations) {
+                ipcToNicMap[ipc.id] = nic.name;
             }
         }
 
         var ruleToFrontEndPortMap = {}
         for (var lb of this.loadBalancersDetails) {
-            var loadBalancer = new LoadBalancer();
-            var publicAddressId = lb["properties"]["frontendIPConfigurations"][0]["properties"]["publicIPAddress"]["id"];
-            loadBalancer.FrontEndPublicAddress = fqdns[publicAddressId];
-            loadBalancer.Name = lb["name"];
+            if (lb.properties.frontendIPConfigurations) {
+                var loadBalancer = new LoadBalancer();
+                var publicAddressId = lb.properties.frontendIPConfigurations[0].properties.publicIPAddress.id;
+                loadBalancer.FrontEndPublicAddress = fqdns[publicAddressId];
+                loadBalancer.Id = lb.id;
 
-            for (var rule of lb.properties["inboundNatRules"]) {
-                loadBalancer.FrontEndPortsInUse.push(rule["properties"]["fronendPort"]);
-                if (rule["properties"]["backendPort"] === 5986 && rule["properties"]["backendIPConfiguration"] && rule["properties"]["backendIPConfiguration"]["id"]) {
-                    ruleToFrontEndPortMap[rule["id"]] = {
-                        FrontEndPort: rule["properties"]["fronendPort"],
-                        PublicAddress: loadBalancer.FrontEndPublicAddress
+                if (lb.properties.inboundNatRules) {
+                    for (var rule of lb.properties.inboundNatRules) {
+                        loadBalancer.FrontEndPortsInUse.push(rule.properties.frontendPort);
+                        if (rule.properties.backendPort === 5986 && rule.properties.backendIPConfiguration) {
+                            ruleToFrontEndPortMap[rule.id] = {
+                                FrontEndPort: rule.properties.frontendPort,
+                                PublicAddress: loadBalancer.FrontEndPublicAddress
+                            }
+                        }
                     }
                 }
-            }
 
-            for (var pool of lb["properties"]["backendAddressPools"]) {
-                var ipConfigs = pool["properties"]["backendIPConfigurations"];
-                if (ipConfigs) {
-                    for (var ipc of ipConfigs) {
-                        loadBalancer.BackendNicIds.push(ipcToNicMap[ipc["id"]]);
+                if (lb.properties.backendAddressPools) {
+                    for (var pool of lb.properties.backendAddressPools) {
+                        if (pool.properties.backendIPConfigurations) {
+                            for (var ipc of pool.properties.backendIPConfigurations) {
+                                loadBalancer.BackendNicIds.push(ipcToNicMap[ipc.id]);
+                            }
+                        }
                     }
                 }
-            }
 
-            resourceGroupDetails.LoadBalancers.push(loadBalancer);
+                resourceGroupDetails.LoadBalancers.push(loadBalancer);
+            }
         }
 
         for (var vmDetail of this.vmDetails) {
             var virtualMachine = new VirtualMachine();
-            virtualMachine.Name = vmDetail["name"];
-            virtualMachine.Tags = vmDetail["tags"];
-            var networkInterfaces = vmDetail["properties"]["networkProfile"]["networkInterfaces"];
-            if (vmDetail["properties"]["networkProfile"]) {
-                for (var networkInterface of vmDetail["properties"]["networkProfile"]["networkInterfaces"]) {
-                    for (var ipc of networkInterface["properties"]["ipConfigurations"]) {
-                        if (ipc["properties"]["publicIPAddress"] && fqdns[ipc["properties"]["publicIPAddress"]["id"]]) {
-                            virtualMachine.WinRMHttpsPort = 5986;
-                            virtualMachine.WinRMHttpsPublicAddress = fqdns[ipc["properties"]["publicIPAddress"]["id"]];
-                            break;
+            virtualMachine.Name = vmDetail.name;
+            virtualMachine.Tags = vmDetail.tags;
+            if (vmDetail.properties.networkProfile && vmDetail.properties.networkProfile.networkInterfaces) {
+                for (var vmNic of vmDetail.properties.networkProfile.networkInterfaces) {
+                    virtualMachine.NetworkInterfaceIds.push(vmNic.id);
+                    var networkInterface = this.networkInterfaceDetails.find(nic => nic.id == vmNic.id);
+                    if (networkInterface.properties.ipConfigurations) {
+                        for (var ipc of networkInterface.properties.ipConfigurations) {
+                            if (ipc.properties.publicIPAddress && fqdns[ipc.properties.publicIPAddress.id]) {
+                                virtualMachine.WinRMHttpsPort = 5986;
+                                virtualMachine.WinRMHttpsPublicAddress = fqdns[ipc.properties.publicIPAddress.id];
+                                break;
+                            }
+
+                            if (ipc.properties.loadBalancerInboundNatRules) {
+                                for (var rule of ipc.properties.loadBalancerInboundNatRules) {
+                                    if (ruleToFrontEndPortMap[rule.id]) {
+                                        virtualMachine.WinRMHttpsPort = ruleToFrontEndPortMap[rule.id].FrontEndPort;
+                                        virtualMachine.WinRMHttpsPublicAddress = ruleToFrontEndPortMap[rule.id].PublicAddress;
+                                        break;
+                                    }
+                                }
+
+                                if (virtualMachine.WinRMHttpsPublicAddress) {
+                                    break;
+                                }
+                            }
                         }
                     }
-
-                    if (virtualMachine.WinRMHttpsPublicAddress) {
-                        break;
-                    }
-
-                    for (var rule of networkInterface["properties"]["inboundNatRules"]) {
-                        if (ruleToFrontEndPortMap[rule["id"]]) {
-                            virtualMachine.WinRMHttpsPort = ruleToFrontEndPortMap[rule["id"]].FrontEndPort;
-                            virtualMachine.WinRMHttpsPublicAddress = ruleToFrontEndPortMap[rule["id"]].PublicAddress;
-                            break;
-                        }
-                    }
-
                     if (virtualMachine.WinRMHttpsPublicAddress) {
                         break;
                     }
@@ -148,7 +159,7 @@ export class AzureUtil {
         return Promise.all(details);
     }
 
-    private getLoadBalancers(): Promise<any> {
+    public getLoadBalancers(): Promise<az.LoadBalancer[]> {
         return new Promise<any>((resolve, reject) => {
             this.networkClient.loadBalancers.list(this.taskParameters.resourceGroupName, (error, loadbalancers, request, response) => {
                 if (error) {
@@ -160,7 +171,7 @@ export class AzureUtil {
         });
     }
 
-    private getVMDetails(): Promise<any> {
+    public getVMDetails(): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             this.computeClient.virtualMachines.list(this.taskParameters.resourceGroupName, null, (error, virtualMachines, request, response) => {
                 if (error) {
@@ -173,7 +184,7 @@ export class AzureUtil {
         });
     }
 
-    private getNetworkInterfaceDetails(): Promise<any> {
+    public getNetworkInterfaceDetails(): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             this.networkClient.networkInterfaces.list(this.taskParameters.resourceGroupName, null, (error, networkInterfaces, request, response) => {
                 if (error) {
@@ -186,7 +197,7 @@ export class AzureUtil {
         });
     }
 
-    private getPublicIPAddresses(): Promise<any> {
+    public getPublicIPAddresses(): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             this.networkClient.publicIPAddresses.list(this.taskParameters.resourceGroupName, null, (error, publicAddresses, request, response) => {
                 if (error) {
