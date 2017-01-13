@@ -7,10 +7,7 @@ var msDeployUtility = require('webdeployment-common/msdeployutility.js');
 var zipUtility = require('webdeployment-common/ziputility.js');
 var utility = require('webdeployment-common/utility.js');
 var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
-var ft = require('webdeployment-common/fileTransformationsUtility.js');
-//var jsonSubstitutionUtility = require('webdeployment-common/jsonvariablesubstitutionutility.js');
-//var xmlSubstitutionUtility = require('webdeployment-common/xmlvariablesubstitutionutility.js');
-//var xdtTransformationUtility = require('webdeployment-common/xdttransformationutility.js');
+var fileTransformationsUtility = require('webdeployment-common/fileTransformationsUtility.js');
 var kuduUtility = require('webdeployment-common/kuduutility.js');
 
 async function run() {
@@ -72,7 +69,7 @@ async function run() {
         var isFolderBasedDeployment = utility.isInputPkgIsFolder(webDeployPkg);
 
         if(JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution) {
-            var output = await ft.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, webDeployPkg);
+            var output = await fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, webDeployPkg);
             tempPackagePath = output.tempPackagePath;
             webDeployPkg = output.webDeployPkg;
         }
