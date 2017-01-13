@@ -26,14 +26,14 @@ Do Not Translate or Localize
 20.	isarray (https://github.com/juliangruber/isarray/)
 21.	lazystream (https://github.com/jpommerening/node-lazystream)
 22.	lodash (https://lodash.com/)
-	Includes:File(s) copyright John Resig (http://ejohn.org/blog/javascript-micro-templating/)
-	Includes:File(s) copyright Laura Doktorova (https://github.com/olado/doT)
+		Includes:File(s) copyright John Resig (http://ejohn.org/blog/javascript-micro-templating/)
+		Includes:File(s) copyright Laura Doktorova (https://github.com/olado/doT)
 23.	minimatch (https://github.com/isaacs/minimatch)
 24.	normalize-path (https://github.com/jonschlinkert/normalize-path)
 25.	once (https://github.com/isaacs/once)
 26.	path-is-absolute  (https://github.com/sindresorhus/path-is-absolute)
-27.    readable-stream (https://github.com/isaacs/readable-stream)
-28.	process-nextick-args (https://github.com/calvinmetcalf/process-nextick-args)
+27.	process-nextick-args (https://github.com/calvinmetcalf/process-nextick-args)
+28.	readable-stream (https://github.com/isaacs/readable-stream)
 29.	string_decoder (https://github.com/rvagg/string_decoder)
 30.	tar-stream (https://github.com/mafintosh/tar-stream)
 31.	util-deprecate (https://github.com/TooTallNate/util-deprecate)
@@ -772,6 +772,30 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 =========================================
 END OF process-nextick-args NOTICES, INFORMATION, AND LICENSE
+
+%% readable-stream NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+Copyright Joyent, Inc. and other Node contributors. All rights reserved.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the Software), to
+deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+sell copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+IN THE SOFTWARE.
+=========================================
+END OF readable-stream NOTICES, INFORMATION, AND LICENSE
 
 %% string_decoder NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
