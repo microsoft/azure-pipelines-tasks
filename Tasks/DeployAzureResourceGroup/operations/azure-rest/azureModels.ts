@@ -1,7 +1,7 @@
 export class AzureBaseObject {
-    public name?: string;
+    public name: string;
     public id: string;
-    public tags?: string
+    public tags: string
 }
 
 export class LoadBalancerProperties {
@@ -13,7 +13,7 @@ export class LoadBalancerProperties {
 export class InboundNatRuleProperties {
     public frontendPort: number;
     public backendPort: number;
-    public backendIPConfiguration?: IPConfiguration;
+    public backendIPConfiguration: IPConfiguration;
     public frontendIPConfiguration: IPConfiguration;
     public protocol: string;
     public idleTimeoutInMinutes: number;
@@ -68,7 +68,7 @@ export class InboundNatRule extends AzureBaseObject {
 }
 
 export class IPConfiguration extends AzureBaseObject {
-    public properties?: IPConfigurationProperties
+    public properties: IPConfigurationProperties
 }
 
 export class BackendAddressPool extends AzureBaseObject {

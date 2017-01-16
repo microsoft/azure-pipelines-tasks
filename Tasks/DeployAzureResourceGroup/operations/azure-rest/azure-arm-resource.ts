@@ -284,7 +284,6 @@ export class Deployments {
 
         // Send Request
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
-            console.log(response);
             return new Promise<azureServiceClient.ApiResult>((resolve, reject) => {
                 var statusCode = response.statusCode;
                 if (statusCode !== 200 && statusCode !== 400) {

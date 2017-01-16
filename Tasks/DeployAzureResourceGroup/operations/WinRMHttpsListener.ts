@@ -11,6 +11,13 @@ function isNonEmpty(str: string) {
     return str && str.trim();
 }
 
+function ObjectCast(rawObj, constructor) {
+    var obj = new constructor();
+    for (var i in rawObj)
+        obj.i = rawObj[i];
+    return obj;
+}
+
 export class WinRMHttpsListener {
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
     private resourceGroupName: string;
@@ -96,18 +103,21 @@ export class WinRMHttpsListener {
         newRule.properties = new az.InboundNatRuleProperties();
         var loadBalancers = await this.azureUtils.getLoadBalancers();
         var loadBalancer = loadBalancers.find(l => l.id == loadBalancerId);
-        var rule: az.InboundNatRule = {
+
+        var InboundNatRuleProperties: az.InboundNatRuleProperties = ObjectCast({
+            backendPort: backendPort,
+            frontendPort: fronendPort,
+            frontendIPConfiguration: { id: loadBalancer.properties.frontendIPConfigurations[0].id },
+            protocol: "Tcp",
+            idleTimeoutInMinutes: 4,
+            enableFloatingIP: false
+        }, az.InboundNatRuleProperties);
+
+        var rule: az.InboundNatRule = ObjectCast({
             id: "",
             name: name,
-            properties: {
-                backendPort: backendPort,
-                frontendPort: fronendPort,
-                frontendIPConfiguration: { id: loadBalancer.properties.frontendIPConfigurations[0].id },
-                protocol: "Tcp",
-                idleTimeoutInMinutes: 4,
-                enableFloatingIP: false
-            }
-        };
+            properties: InboundNatRuleProperties
+        }, az.InboundNatRule);
 
         loadBalancer.properties.inboundNatRules.push(rule);
         var networkInterfaces = this.azureUtils.networkInterfaceDetails;
