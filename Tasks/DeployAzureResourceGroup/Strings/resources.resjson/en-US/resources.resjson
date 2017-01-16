@@ -121,5 +121,6 @@
   "loc.messages.ARG_SetExtensionFailedForVm": "Failed to set extension on Virtual Machine %s of Resource Group %s with result: %s",
   "loc.messages.FailedToUpdateNICOfVm": "Failed to update the NIC of the VM",
   "loc.messages.FailedToFetchDetailsOfLB": "Failed to fetch the details of the load Balancer: %s",
-  "loc.messages.FailedToUpdateLBInboundNatRules": "Failed to update the inbound NAT rules of the Load Balancer %s to remove irrelevant rules"
+  "loc.messages.FailedToUpdateLBInboundNatRules": "Failed to update the inbound NAT rules of the Load Balancer %s to remove irrelevant rules",
+  "loc.messages.InvalidResponseLongRunningOperation": "Invalid response received for fetching status of a long running operation."
 }

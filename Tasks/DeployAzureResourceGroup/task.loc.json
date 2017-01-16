@@ -300,6 +300,7 @@
     "ARG_SetExtensionFailedForVm": "ms-resource:loc.messages.ARG_SetExtensionFailedForVm",
     "FailedToUpdateNICOfVm": "ms-resource:loc.messages.FailedToUpdateNICOfVm",
     "FailedToFetchDetailsOfLB": "ms-resource:loc.messages.FailedToFetchDetailsOfLB",
-    "FailedToUpdateLBInboundNatRules": "ms-resource:loc.messages.FailedToUpdateLBInboundNatRules"
+    "FailedToUpdateLBInboundNatRules": "ms-resource:loc.messages.FailedToUpdateLBInboundNatRules",
+    "InvalidResponseLongRunningOperation": "ms-resource:loc.messages.InvalidResponseLongRunningOperation"
   }
 }

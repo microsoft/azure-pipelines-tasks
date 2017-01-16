@@ -94,7 +94,7 @@ describe('Azure Resource Group Deployment', function () {
         tr.run();
         try {
             assert(tr.succeeded, "Task should have succeeded");
-            assert(tr.stdout.indexOf("loc_mock_ARG_DeletingResourceGroup") > 0, "Delete Resource Group function should have been called");
+            assert(tr.stdout.indexOf("loc_mock_DeletingResourceGroup") > 0, "Delete Resource Group function should have been called");
             assert(tr.stdout.indexOf("resourceGroups.deleteMethod is called") > 0, "Task should have called resourceGroups.deleteMethod function from azure-sdk");
             done();
         }

@@ -106,8 +106,8 @@ export class EnvironmentHelper {
 
     public async RegisterEnvironment() {
         console.log(tl.loc("RegisteringEnvironmentVariable", this.taskParameters.resourceGroupName));
-        var azureUtil = new azureUtil.AzureUtil(this.taskParameters);
-        var resourceGroupDetails = await azureUtil.getResourceGroupDetails();
+        var azureUtilObject = new azureUtil.AzureUtil(this.taskParameters);
+        var resourceGroupDetails = await azureUtilObject.getResourceGroupDetails();
         this.instantiateEnvironment(resourceGroupDetails);
         console.log(tl.loc("AddedToOutputVariable", this.taskParameters.outputVariable));
     }
