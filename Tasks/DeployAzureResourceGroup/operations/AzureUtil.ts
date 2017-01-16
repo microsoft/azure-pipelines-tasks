@@ -45,18 +45,18 @@ export class ResourceGroupDetails {
 }
 
 export class AzureUtil {
-    private taskParameters: deployAzureRG.AzureRGTaskParameters;
     public loadBalancersDetails: az.LoadBalancer[];
     public vmDetails: az.VM[];
     public networkInterfaceDetails: az.NetworkInterface[];
     public publicAddressDetails: az.PublicIPAddress[];
+    private taskParameters: deployAzureRG.AzureRGTaskParameters;
     private networkClient: networkManagementClient.NetworkManagementClient;
     private computeClient: computeManagementClient.ComputeManagementClient;
 
-    constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
+    constructor(taskParameters: deployAzureRG.AzureRGTaskParameters, computeClient?: computeManagementClient.ComputeManagementClient, networkClient?: networkManagementClient.NetworkManagementClient) {
         this.taskParameters = taskParameters;
-        this.computeClient = new computeManagementClient.ComputeManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
-        this.networkClient = new networkManagementClient.NetworkManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
+        this.computeClient = computeClient || new computeManagementClient.ComputeManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
+        this.networkClient = networkClient || new networkManagementClient.NetworkManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
     }
 
     public async getResourceGroupDetails(): Promise<ResourceGroupDetails> {
@@ -77,38 +77,40 @@ export class AzureUtil {
             }
         }
 
-        var ruleToFrontEndPortMap = {}
+        var ruleToPortAndAddressMap = {}
         for (var lb of this.loadBalancersDetails) {
-            if (lb.properties.frontendIPConfigurations) {
-                var loadBalancer = new LoadBalancer();
-                var publicAddressId = lb.properties.frontendIPConfigurations[0].properties.publicIPAddress.id;
-                loadBalancer.FrontEndPublicAddress = fqdns[publicAddressId];
-                loadBalancer.Id = lb.id;
-
-                if (lb.properties.inboundNatRules) {
-                    for (var rule of lb.properties.inboundNatRules) {
-                        loadBalancer.FrontEndPortsInUse.push(rule.properties.frontendPort);
-                        if (rule.properties.backendPort === 5986 && rule.properties.backendIPConfiguration) {
-                            ruleToFrontEndPortMap[rule.id] = {
-                                FrontEndPort: rule.properties.frontendPort,
-                                PublicAddress: loadBalancer.FrontEndPublicAddress
-                            }
-                        }
-                    }
-                }
-
-                if (lb.properties.backendAddressPools) {
-                    for (var pool of lb.properties.backendAddressPools) {
-                        if (pool.properties.backendIPConfigurations) {
-                            for (var ipc of pool.properties.backendIPConfigurations) {
-                                loadBalancer.BackendNicIds.push(ipcToNicMap[ipc.id]);
-                            }
-                        }
-                    }
-                }
-
-                resourceGroupDetails.LoadBalancers.push(loadBalancer);
+            if (!lb.properties.frontendIPConfigurations || lb.properties.frontendIPConfigurations.length == 0) {
+                continue;
             }
+
+            var loadBalancer = new LoadBalancer();
+            var publicAddressId = lb.properties.frontendIPConfigurations[0].properties.publicIPAddress.id;
+            loadBalancer.FrontEndPublicAddress = fqdns[publicAddressId];
+            loadBalancer.Id = lb.id;
+
+            if (lb.properties.inboundNatRules) {
+                for (var rule of lb.properties.inboundNatRules) {
+                    loadBalancer.FrontEndPortsInUse.push(rule.properties.frontendPort);
+                    if (rule.properties.backendPort === 5986 && rule.properties.backendIPConfiguration) {
+                        ruleToPortAndAddressMap[rule.id] = {
+                            FrontEndPort: rule.properties.frontendPort,
+                            PublicAddress: loadBalancer.FrontEndPublicAddress
+                        }
+                    }
+                }
+            }
+
+            if (lb.properties.backendAddressPools) {
+                for (var pool of lb.properties.backendAddressPools) {
+                    if (pool.properties.backendIPConfigurations) {
+                        for (var ipc of pool.properties.backendIPConfigurations) {
+                            loadBalancer.BackendNicIds.push(ipcToNicMap[ipc.id]);
+                        }
+                    }
+                }
+            }
+
+            resourceGroupDetails.LoadBalancers.push(loadBalancer);
         }
 
         for (var vmDetail of this.vmDetails) {
@@ -129,9 +131,9 @@ export class AzureUtil {
 
                             if (ipc.properties.loadBalancerInboundNatRules) {
                                 for (var rule of ipc.properties.loadBalancerInboundNatRules) {
-                                    if (ruleToFrontEndPortMap[rule.id]) {
-                                        virtualMachine.WinRMHttpsPort = ruleToFrontEndPortMap[rule.id].FrontEndPort;
-                                        virtualMachine.WinRMHttpsPublicAddress = ruleToFrontEndPortMap[rule.id].PublicAddress;
+                                    if (ruleToPortAndAddressMap[rule.id]) {
+                                        virtualMachine.WinRMHttpsPort = ruleToPortAndAddressMap[rule.id].FrontEndPort;
+                                        virtualMachine.WinRMHttpsPublicAddress = ruleToPortAndAddressMap[rule.id].PublicAddress;
                                         break;
                                     }
                                 }
@@ -152,11 +154,6 @@ export class AzureUtil {
         }
 
         return resourceGroupDetails;
-    }
-
-    private getDetails(): Promise<any[]> {
-        var details = [this.getLoadBalancers(), this.getNetworkInterfaceDetails(), this.getPublicIPAddresses(), this.getVMDetails()];
-        return Promise.all(details);
     }
 
     public getLoadBalancers(): Promise<az.LoadBalancer[]> {
@@ -209,4 +206,10 @@ export class AzureUtil {
             });
         });
     }
+
+    private getDetails(): Promise<any[]> {
+        var details = [this.getLoadBalancers(), this.getNetworkInterfaceDetails(), this.getPublicIPAddresses(), this.getVMDetails()];
+        return Promise.all(details);
+    }
+
 }

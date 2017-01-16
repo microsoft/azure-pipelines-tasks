@@ -1,6 +1,4 @@
 /// <reference path="../../../definitions/Q.d.ts" />
-import networkManagementClient = require("./azure-rest/azure-arm-network");
-import computeManagementClient = require("./azure-rest/azure-arm-compute");
 
 import tl = require("vsts-task-lib/task");
 import deployAzureRG = require("../models/DeployAzureRG");
@@ -99,36 +97,22 @@ class Environment {
     }
 }
 
-export class RegisterEnvironment {
-
+export class EnvironmentHelper {
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
-    private publicAddressToNicIdMap;
-    private publicAddressToFqdnMap;
-    private nicIdToTagsMap;
-    private inboundNatRuleMap;
-    private nicIds;
-    private loadBalancerToPortMap;
-    private loadBalancerToPublicIPAddressMap;
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
         this.taskParameters = taskParameters;
-        this.publicAddressToNicIdMap = null;
-        this.nicIdToTagsMap = null;
-        this.publicAddressToFqdnMap = null;
-        this.loadBalancerToPortMap = null;
-        this.nicIds = null;
-        this.loadBalancerToPublicIPAddressMap = null;
-        this.inboundNatRuleMap = null;
     }
 
     public async RegisterEnvironment() {
-        console.log(tl.loc("RegisteringEnvironmentVariable"));
-        var details = new azureUtil.AzureUtil(this.taskParameters);
-        var resourceGroupDetails = await details.getResourceGroupDetails();
-        this.InstantiateEnvironment(resourceGroupDetails);
+        console.log(tl.loc("RegisteringEnvironmentVariable", this.taskParameters.resourceGroupName));
+        var azureUtil = new azureUtil.AzureUtil(this.taskParameters);
+        var resourceGroupDetails = await azureUtil.getResourceGroupDetails();
+        this.instantiateEnvironment(resourceGroupDetails);
+        console.log(tl.loc("AddedToOutputVariable", this.taskParameters.outputVariable));
     }
 
-    private InstantiateEnvironment(resourceGroupDetails: azureUtil.ResourceGroupDetails): void {
+    private instantiateEnvironment(resourceGroupDetails: azureUtil.ResourceGroupDetails): void {
         var resources = this.getResources(resourceGroupDetails);
         tl.debug("Got resources..");
         var environment = new Environment(
@@ -138,8 +122,6 @@ export class RegisterEnvironment {
             this.taskParameters.outputVariable);
 
         tl.setVariable(this.taskParameters.outputVariable, JSON.stringify(environment));
-
-        console.log(tl.loc("AddedToOutputVariable", this.taskParameters.outputVariable));
     }
 
     private getResources(resourceGroupDetails: azureUtil.ResourceGroupDetails): Array<Resource> {

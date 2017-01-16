@@ -6,10 +6,7 @@ import tl = require("vsts-task-lib/task");
 import azure_utils = require("./AzureUtil");
 import deployAzureRG = require("../models/DeployAzureRG");
 import az = require("./azure-rest/azureModels");
-
-function isNonEmpty(str: string) {
-    return str && str.trim();
-}
+var utils = require("./Utils").Utils;
 
 function ObjectCast(rawObj, constructor) {
     var obj = new constructor();
@@ -18,7 +15,7 @@ function ObjectCast(rawObj, constructor) {
     return obj;
 }
 
-export class WinRMHttpsListener {
+export class WinRMExtensionHelper {
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
     private resourceGroupName: string;
     private credentials;
@@ -29,7 +26,8 @@ export class WinRMHttpsListener {
     private customScriptExtensionInstalled: boolean;
     private ruleAddedToNsg: boolean;
     private azureUtils: azure_utils.AzureUtil;
-    private networkClient: networkManagementClient.NetworkManagementClient
+    private networkClient: networkManagementClient.NetworkManagementClient;
+    private computeClient: computeManagementClient.ComputeManagementClient;
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
         this.taskParameters = taskParameters;
@@ -42,11 +40,19 @@ export class WinRMHttpsListener {
         this.ruleAddedToNsg = false;
 
         this.networkClient = new networkManagementClient.NetworkManagementClient(this.credentials, this.subscriptionId);
-        this.azureUtils = new azure_utils.AzureUtil(this.taskParameters);
+        this.computeClient = new computeManagementClient.ComputeManagementClient(this.credentials, this.subscriptionId);
+        this.azureUtils = new azure_utils.AzureUtil(this.taskParameters, this.computeClient, this.networkClient);
     }
 
     public async EnableWinRMHttpsListener() {
-        await this.AddInboundNatRuleLB();
+        console.log(tl.loc("EnablingWinRM"));
+        await this.AddInboundNatRulesOnLoadBalancers();
+        await this.AddExtensionToVMsToConfigureWinRM();
+        await this.AddNetworkSecurityRuleConfigForWinRMPort();
+    }
+
+    private async AddExtensionToVMsToConfigureWinRM()
+    {
         var resourceGroupDetails = await this.azureUtils.getResourceGroupDetails();
 
         for (var vm of this.azureUtils.vmDetails) {
@@ -61,16 +67,14 @@ export class WinRMHttpsListener {
                 await this.AddAzureVMCustomScriptExtension(resourceId, resourceName, resourceFQDN, vm["location"]);
             }
         }
-
-        await this.AddWinRMHttpsNetworkSecurityRuleConfig();
     }
 
-    private async AddInboundNatRuleLB(): Promise<void> {
+    private async AddInboundNatRulesOnLoadBalancers(): Promise<void> {
         tl.debug("Trying to add Inbound Nat Rule to the LBs...");
         var resourceGroupDetails = await this.azureUtils.getResourceGroupDetails();
         return new Promise<any>(async (resolve, reject) => {
             for (var virtualMachine of resourceGroupDetails.VirtualMachines) {
-                if (!isNonEmpty(virtualMachine.WinRMHttpsPublicAddress)) {
+                if (!utils.isNonEmpty(virtualMachine.WinRMHttpsPublicAddress)) {
                     tl.debug("Adding Inbound Nat Rule for the VM: " + virtualMachine.Name);
                     var lb: azure_utils.LoadBalancer;
                     var nicId: string;
@@ -288,7 +292,7 @@ export class WinRMHttpsListener {
         });
     }
 
-    private async AddWinRMHttpsNetworkSecurityRuleConfig() {
+    private async AddNetworkSecurityRuleConfigForWinRMPort() {
         var _ruleName: string = "VSO-Custom-WinRM-Https-Port";
         var _rulePriority: number = 3986;
         var _winrmHttpsPort: string = "5986";
@@ -328,27 +332,25 @@ export class WinRMHttpsListener {
         tl.debug("Adding custom script extension for virtual machine " + vmName);
         tl.debug("VM Location: " + location);
         tl.debug("VM DNS: " + dnsName);
-
-        var computeClient = new computeManagementClient.ComputeManagementClient(this.credentials, this.subscriptionId);
         tl.debug("Checking if the extension " + _extensionName + " is present on vm " + vmName);
 
-        var result = await this.GetExtension(computeClient, vmName, _extensionName);
+        var result = await this.GetExtension(this.computeClient, vmName, _extensionName);
         var extensionStatusValid = false;
         if (result) {
             if (result["properties"]["settings"]["fileUris"].length == fileUris.length && fileUris.every((element, index) => { return element === result["properties"]["settings"]["fileUris"][index]; })) {
 
                 tl.debug("Custom Script extension is for enabling Https Listener on VM" + vmName);
                 if (result["properties"]["provisioningState"] === 'Succeeded') {
-                    extensionStatusValid = await this.ValidateCustomScriptExecutionStatus(vmName, computeClient, dnsName, _extensionName, location, fileUris);
+                    extensionStatusValid = await this.ValidateCustomScriptExecutionStatus(vmName, this.computeClient, dnsName, _extensionName, location, fileUris);
                 }
 
                 if (!extensionStatusValid) {
-                    await this.RemoveExtensionFromVM(_extensionName, vmName, computeClient);
+                    await this.RemoveExtensionFromVM(_extensionName, vmName, this.computeClient);
                 }
             }
         }
         if (!extensionStatusValid) {
-            await this.AddExtensionVM(vmName, computeClient, dnsName, _extensionName, location, fileUris);
+            await this.AddExtensionVM(vmName, this.computeClient, dnsName, _extensionName, location, fileUris);
         }
         deferred.resolve("");
         return deferred.promise;

@@ -7,15 +7,17 @@ import path = require("path");
 import tl = require("vsts-task-lib/task");
 import fs = require("fs");
 import util = require("util");
-var httpClient = require('vso-node-api/HttpClient');
-var httpObj = new httpClient.HttpCallbackClient("VSTS_AGENT");
 
 import env = require("./Environment");
 import deployAzureRG = require("../models/DeployAzureRG");
-import winRM = require("./WinRMHttpsListener");
+import armResource = require("./azure-rest/azure-arm-resource");
+import winRM = require("./WinRMExtensionHelper");
 
 var parameterParser = require("./ParameterParser").parse;
-import armResource = require("./azure-rest/azure-arm-resource");
+var utils = require("./utils").Utils;
+
+var httpClient = require('vso-node-api/HttpClient');
+var httpObj = new httpClient.HttpCallbackClient("VSTS_AGENT");
 
 class Deployment {
     public properties: Object;
@@ -23,27 +25,22 @@ class Deployment {
     constructor(properties: Object) {
         this.properties = properties;
     }
-    public updateCommonProperties(mode) {
+    public updateCommonProperties(mode: string) {
         this.properties["mode"] = mode;
         this.properties["debugSetting"] = { "detailLevel": "requestContent, responseContent" };
     }
 }
 
-
-function isNonEmpty(str: string) {
-    return str && str.trim();
-}
-
 export class ResourceGroup {
 
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
-    private WinRMHttpsListener: winRM.WinRMHttpsListener;
-    private envController: env.RegisterEnvironment;
+    private winRMHttpsListener: winRM.WinRMExtensionHelper;
+    private environmentHelper: env.EnvironmentHelper;
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
         this.taskParameters = taskParameters;
-        this.WinRMHttpsListener = new winRM.WinRMHttpsListener(this.taskParameters);
-        this.envController = new env.RegisterEnvironment(this.taskParameters);
+        this.winRMHttpsListener = new winRM.WinRMExtensionHelper(this.taskParameters);
+        this.environmentHelper = new env.EnvironmentHelper(this.taskParameters);
     }
 
     public async createOrUpdateResourceGroup(): Promise<void> {
@@ -70,13 +67,12 @@ export class ResourceGroup {
 
     public async selectResourceGroup(): Promise<void> {
         var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
-        if (!isNonEmpty(this.taskParameters.outputVariable)) {
+        if (!utils.isNonEmpty(this.taskParameters.outputVariable)) {
             throw tl.loc("OutputVariableShouldNotBeEmpty");
         }
 
         await this.enableDeploymentPrerequestiesIfRequired(armClient);
         await this.registerEnvironmentIfRequired(armClient);
-        console.log(tl.loc("SelectResourceGroupSuccessful", this.taskParameters.resourceGroupName, this.taskParameters.outputVariable));
     }
 
     private writeDeploymentErrors(error) {
@@ -93,16 +89,14 @@ export class ResourceGroup {
     }
 
     private async registerEnvironmentIfRequired(armClient: armResource.ResourceManagementClient) {
-        if (isNonEmpty(this.taskParameters.outputVariable)) {
-            console.log(tl.loc("RegisteringEnvironmentVariable"));
-            await this.envController.RegisterEnvironment();
+        if (utils.isNonEmpty(this.taskParameters.outputVariable)) {
+            await this.environmentHelper.RegisterEnvironment();
         }
     }
 
     private async enableDeploymentPrerequestiesIfRequired(armClient) {
         if (this.taskParameters.enableDeploymentPrerequisites) {
-            console.log(tl.loc("EnablingWinRM"));
-            await this.WinRMHttpsListener.EnableWinRMHttpsListener();
+            await this.winRMHttpsListener.EnableWinRMHttpsListener();
         }
     }
 
@@ -119,6 +113,7 @@ export class ResourceGroup {
                 if (error) {
                     reject(tl.loc("ResourceGroupStatusFetchFailed", error));
                 }
+                console.log(tl.loc("RGNotFound", this.taskParameters.resourceGroupName));
                 resolve(exists);
             });
         });
@@ -150,7 +145,6 @@ export class ResourceGroup {
 
     private createResourceGroup(armClient: armResource.ResourceManagementClient): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            console.log(tl.loc("RGNotFound", this.taskParameters.resourceGroupName));
             console.log(tl.loc("CreatingNewRG", this.taskParameters.resourceGroupName));
             armClient.resourceGroups.createOrUpdate(this.taskParameters.resourceGroupName, { "name": this.taskParameters.resourceGroupName, "location": this.taskParameters.location }, (error, result, request, response) => {
                 if (error) {
@@ -192,7 +186,7 @@ export class ResourceGroup {
 
         var parameters = {};
         try {
-            if (isNonEmpty(this.taskParameters.csmParametersFile)) {
+            if (utils.isNonEmpty(this.taskParameters.csmParametersFile)) {
                 if (!fs.lstatSync(this.taskParameters.csmParametersFile).isDirectory()) {
                     tl.debug("Loading Parameters File.. " + this.taskParameters.csmParametersFile);
                     var parameterFile = fs.readFileSync(this.taskParameters.csmParametersFile, 'UTF-8');
@@ -205,7 +199,7 @@ export class ResourceGroup {
             throw (tl.loc("ParametersFileParsingFailed", error.message));
         }
 
-        if (isNonEmpty(this.taskParameters.overrideParameters)) {
+        if (utils.isNonEmpty(this.taskParameters.overrideParameters)) {
             parameters = this.updateOverrideParameters(parameters);
         }
 
@@ -225,8 +219,8 @@ export class ResourceGroup {
         var parameters = {};
         var deployment = new Deployment(properties);
 
-        if (isNonEmpty(this.taskParameters.csmParametersFileLink)) {
-            if (isNonEmpty(this.taskParameters.overrideParameters)) {
+        if (utils.isNonEmpty(this.taskParameters.csmParametersFileLink)) {
+            if (utils.isNonEmpty(this.taskParameters.overrideParameters)) {
                 var contents = await this.downloadParametersFile(this.taskParameters.csmParametersFileLink)
                 parameters = JSON.parse(contents).parameters;
             }
@@ -237,7 +231,7 @@ export class ResourceGroup {
             }
         }
 
-        if (isNonEmpty(this.taskParameters.overrideParameters)) {
+        if (utils.isNonEmpty(this.taskParameters.overrideParameters)) {
             parameters = this.updateOverrideParameters(parameters);
             deployment.properties["parameters"] = parameters;
         }
