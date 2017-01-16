@@ -4,7 +4,7 @@ import querystring = require('querystring');
 var httpClient = require('vso-node-api/HttpClient');
 var util = require('util');
 
-var httpObj = new httpClient.HttpCallbackClient("AZURE_HTTP_USER_AGENT");
+var httpObj = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
 
 var authUrl = 'https://login.windows.net/';
 var armUrl = 'https://management.azure.com/';
