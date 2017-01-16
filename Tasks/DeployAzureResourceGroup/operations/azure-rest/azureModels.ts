@@ -1,80 +1,80 @@
-export class AzureBaseObject {
-    public name?: string;
-    public id: string;
-    public tags?: string
+export interface AzureBaseObject {
+    name?: string;
+    id: string;
+    tags?: string ;
 }
 
-export class LoadBalancerProperties {
-    public inboundNatRules: InboundNatRule[];
-    public backendAddressPools: BackendAddressPool[];
-    public frontendIPConfigurations: IPConfiguration[]
+export interface LoadBalancerProperties {
+    inboundNatRules: InboundNatRule[];
+    backendAddressPools: BackendAddressPool[];
+    frontendIPConfigurations: IPConfiguration[]
 }
 
-export class InboundNatRuleProperties {
-    public frontendPort: number;
-    public backendPort: number;
-    public backendIPConfiguration?: IPConfiguration;
-    public frontendIPConfiguration: IPConfiguration;
-    public protocol: string;
-    public idleTimeoutInMinutes: number;
-    public enableFloatingIP: boolean;
+export interface InboundNatRuleProperties {
+    frontendPort: number;
+    backendPort: number;
+    backendIPConfiguration?: IPConfiguration;
+    frontendIPConfiguration: IPConfiguration;
+    protocol: string;
+    idleTimeoutInMinutes: number;
+    enableFloatingIP: boolean;
 }
 
-export class BackendAddressPoolProperties {
-    public backendIPConfigurations: IPConfiguration[];
+export interface BackendAddressPoolProperties {
+    backendIPConfigurations: IPConfiguration[];
 }
 
-export class NetworkInterfaceProperties {
-    public ipConfigurations: IPConfiguration[]
+export interface NetworkInterfaceProperties {
+    ipConfigurations: IPConfiguration[]
 }
 
-export class IPConfigurationProperties {
-    public publicIPAddress: PublicIPAddress;
-    public loadBalancerInboundNatRules: InboundNatRule[];
+export interface IPConfigurationProperties {
+    publicIPAddress: PublicIPAddress;
+    loadBalancerInboundNatRules: InboundNatRule[];
 }
 
-export class PublicIPAddressProperties {
-    public ipAddress: string;
-    public dnsSettings: DnsSettings;
+export interface PublicIPAddressProperties {
+    ipAddress: string;
+    dnsSettings: DnsSettings;
 }
 
-export class VMProperties {
-    public networkProfile: NetworkProfile
+export interface VMProperties {
+    networkProfile: NetworkProfile
 }
 
-export class DnsSettings {
-    public fqdn: string;
+export interface DnsSettings {
+    fqdn: string;
 }
 
-export class NetworkProfile {
-    public networkInterfaces: NetworkInterface[]
+export interface NetworkProfile {
+    networkInterfaces: NetworkInterface[]
 }
 
-export class LoadBalancer extends AzureBaseObject {
-    public location: string;
-    public properties: LoadBalancerProperties
+export interface LoadBalancer extends AzureBaseObject {
+    location: string;
+    properties: LoadBalancerProperties
 }
 
-export class VM extends AzureBaseObject {
-    public properties: VMProperties
+export interface VM extends AzureBaseObject {
+    properties: VMProperties
 }
 
-export class NetworkInterface extends AzureBaseObject {
-    public properties: NetworkInterfaceProperties
+export interface NetworkInterface extends AzureBaseObject {
+    properties: NetworkInterfaceProperties
 }
 
-export class InboundNatRule extends AzureBaseObject {
-    public properties: InboundNatRuleProperties
+export interface InboundNatRule extends AzureBaseObject {
+    properties: InboundNatRuleProperties
 }
 
-export class IPConfiguration extends AzureBaseObject {
-    public properties?: IPConfigurationProperties
+export interface IPConfiguration extends AzureBaseObject {
+    properties?: IPConfigurationProperties;
 }
 
-export class BackendAddressPool extends AzureBaseObject {
-    public properties: BackendAddressPoolProperties
+export interface BackendAddressPool extends AzureBaseObject {
+    properties: BackendAddressPoolProperties
 }
 
-export class PublicIPAddress extends AzureBaseObject {
-    public properties: PublicIPAddressProperties;
+export interface PublicIPAddress extends AzureBaseObject {
+    properties: PublicIPAddressProperties;
 }

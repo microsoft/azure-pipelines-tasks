@@ -59,24 +59,33 @@ export class WinRMHttpsListener {
     }
 
     private async AddInboundNatRuleLB(): Promise<void> {
+        tl.debug("Trying to add Inbound Nat Rule to the LBs...");
         var resourceGroupDetails = await this.azureUtils.getResourceGroupDetails();
-        for (var virtualMachine of resourceGroupDetails.VirtualMachines) {
-            if (!isNonEmpty(virtualMachine.WinRMHttpsPublicAddress)) {
-                var lb: azure_utils.LoadBalancer;
-                var nicId: string;
-                for (var nic in virtualMachine.NetworkInterfaceIds) {
-                    nicId = nic;
-                    lb = resourceGroupDetails.LoadBalancers.find(l => !!l.BackendNicIds.find(id => id === nic));
-                    if (lb) break;
-                }
+        return new Promise<any>(async (resolve, reject) => {
+            for (var virtualMachine of resourceGroupDetails.VirtualMachines) {
+                if (!isNonEmpty(virtualMachine.WinRMHttpsPublicAddress)) {
+                    tl.debug("Adding Inbound Nat Rule for the VM: " + virtualMachine.Name);
+                    var lb: azure_utils.LoadBalancer;
+                    var nicId: string;
+                    for (var nic of virtualMachine.NetworkInterfaceIds) {
+                        nicId = nic;
+                        lb = resourceGroupDetails.LoadBalancers.find(l => !!l.BackendNicIds.find(id => id === nic));
+                        if (lb) break;
+                    }
 
-                if (lb) {
-                    var frontendPort: number = this.GetFreeFrontendPort(lb);
-                    await this.AddNatRuleInternal(lb.Id, nicId, frontendPort, 5986);
-                    lb.FrontEndPortsInUse.push(frontendPort);
+                    if (lb) {
+                        tl.debug("LB to which Inbound Nat Rule for VM " + virtualMachine.Name + " is to be added is " + lb.Id);
+                        var frontendPort: number = this.GetFreeFrontendPort(lb);
+                        await this.AddNatRuleInternal(lb.Id, nicId, frontendPort, 5986);
+                        lb.FrontEndPortsInUse.push(frontendPort);
+                    }
+                }
+                else {
+                    tl.debug("No need to add Inbound Nat rule for vm " + virtualMachine.Name);
                 }
             }
-        }
+            resolve("");
+        });
     }
 
     private GetFreeFrontendPort(loadBalancer: azure_utils.LoadBalancer): number {
@@ -84,16 +93,13 @@ export class WinRMHttpsListener {
         while (loadBalancer.FrontEndPortsInUse.find(p => p == port)) {
             port++;
         }
+        tl.debug("Free port for Load balancer " + loadBalancer.Id + " is " + port);
         return port;
     }
 
     private async AddNatRuleInternal(loadBalancerId: string, networkInterfaceId: string, fronendPort: number, backendPort: number): Promise<void> {
         var random: number = Math.floor(Math.random() * 10000 + 100);
         var name: string = "winRMHttpsRule" + random.toString();
-
-        var newRule: az.InboundNatRule = new az.InboundNatRule();
-        newRule.name = name;
-        newRule.properties = new az.InboundNatRuleProperties();
         var loadBalancers = await this.azureUtils.getLoadBalancers();
         var loadBalancer = loadBalancers.find(l => l.id == loadBalancerId);
         var rule: az.InboundNatRule = {
@@ -125,10 +131,11 @@ export class WinRMHttpsListener {
                 }
             }
         }
-
+        console.log("Adding Inbound Nat Rule for the Network Interface %s to the Load Balancer %s", networkInterface.name, loadBalancer.name);
         return new Promise<void>((resolve, reject) => {
             this.networkClient.loadBalancers.createOrUpdate(this.resourceGroupName, loadBalancer.name, loadBalancer, null, (error, result, request, response) => {
                 if (error) {
+                    tl.debug("Addition of Inbound Nat Rule to the Load Balancer " + loadBalancer.name + " failed with the error " + JSON.stringify(error));
                     reject(error);
                 }
                 else {
@@ -136,9 +143,11 @@ export class WinRMHttpsListener {
                     var loadBalancerUpdated = <az.LoadBalancer>result;
                     var addedRule = loadBalancerUpdated.properties.inboundNatRules.find(r => r.properties.frontendPort == fronendPort);
                     ipConfiguration.properties.loadBalancerInboundNatRules.push(addedRule);
+                    tl.debug("Updating the loadBalancerInboundNatRules of nic " + networkInterface.name);
                     this.networkClient.networkInterfaces.createOrUpdate(this.resourceGroupName, networkInterface.name, networkInterface, null,
                         (error2, result2, request2, response2) => {
                             if (error2) {
+                                tl.debug("Addition of rule Id to the loadBalancerInboundNatRules of nic " + networkInterface.name + " failed with the error: " + JSON.stringify(error2));
                                 reject(error2);
                             }
                             console.log(tl.loc("AddedTargetInboundNatRuleLB", networkInterface.name));
@@ -150,161 +159,152 @@ export class WinRMHttpsListener {
 
     }
 
-    private async AddInboundNetworkSecurityRule(retryCnt: number, securityGrpName, networkClient, ruleName, rulePriority, winrmHttpsPort) {
-        var deferred = Q.defer<string>();
-        try {
-            tl.debug("Adding inbound network security rule config " + ruleName + " with priority " + rulePriority + " for port " + winrmHttpsPort + " under security group " + securityGrpName);
-            var securityRuleParameters = {
-                properties: {
-                    direction: "Inbound",
-                    access: "Allow",
-                    sourceAddressPrefix: "*",
-                    sourcePortRange: "*",
-                    destinationAddressPrefix: "*",
-                    destinationPortRange: winrmHttpsPort,
-                    protocol: "*",
-                    priority: rulePriority
-                }
-            };
-            var networkClient1 = new networkManagementClient.NetworkManagementClient(this.credentials, this.subscriptionId);
-            networkClient1.securityRules.createOrUpdate(this.resourceGroupName, securityGrpName, ruleName, securityRuleParameters, (error, result, request, response) => {
-                if (error) {
-                    tl.debug("Error in adding network security rule " + util.inspect(error, { depth: null }));
-                    throw tl.loc("FailedToAddRuleToNetworkSecurityGroup", securityGrpName);
-                }
-                console.log(tl.loc("AddedSecurityRuleNSG", ruleName, rulePriority, winrmHttpsPort, securityGrpName, util.inspect(result, { depth: null })));
-                this.ruleAddedToNsg = true;
-                deferred.resolve("");
-            });
-        }
-        catch (exception) {
-            tl.debug("Failed to add inbound network security rule config " + ruleName + " with priority " + rulePriority + " for port " + winrmHttpsPort + " under security group " + securityGrpName + " : " + exception.message);
-            rulePriority = rulePriority + 50;
-            tl.debug("Getting network security group" + securityGrpName + " in resource group " + this.resourceGroupName);
-
-            networkClient.networkSecurityGroups.list(this.resourceGroupName, async (error, result, request, response) => {
-                if (error) {
-                    tl.debug("Error in getting the list of network Security Groups for the resource-group " + this.resourceGroupName);
-                    deferred.reject(tl.loc("FetchingOfNetworkSecurityGroupFailed", error));
-                    return;
-                }
-
-                if (result.length > 0) {
-                    tl.debug("Got network security group " + securityGrpName + " in resource group " + this.resourceGroupName);
-                    if (retryCnt > 0) {
-                        try {
-                            await this.AddInboundNetworkSecurityRule(retryCnt - 1, securityGrpName, networkClient, ruleName, rulePriority, winrmHttpsPort);
-                        }
-                        catch (exception) {
-                            deferred.reject(exception);
-                            return;
-                        }
-                        deferred.resolve("");
+    private async AddInboundNetworkSecurityRule(retryCnt: number, securityGrpName, ruleName, rulePriority, winrmHttpsPort) {
+        return new Promise<any>(async (resolve, reject) => {
+            try {
+                tl.debug("Adding inbound network security rule config " + ruleName + " with priority " + rulePriority + " for port " + winrmHttpsPort + " under security group " + securityGrpName);
+                var securityRuleParameters = {
+                    properties: {
+                        direction: "Inbound",
+                        access: "Allow",
+                        sourceAddressPrefix: "*",
+                        sourcePortRange: "*",
+                        destinationAddressPrefix: "*",
+                        destinationPortRange: winrmHttpsPort,
+                        protocol: "*",
+                        priority: rulePriority
                     }
-                    else {
-                        tl.debug("Failed to add the NSG rule on security group " + securityGrpName + " after trying for 3 times ");
-                        deferred.reject(tl.loc("FailedAddingNSGRule3Times", securityGrpName));
+                };
+                this.networkClient.securityRules.createOrUpdate(this.resourceGroupName, securityGrpName, ruleName, securityRuleParameters, (error, result, request, response) => {
+                    if (error) {
+                        tl.debug("Error in adding network security rule " + util.inspect(error, { depth: null }));
+                        throw tl.loc("FailedToAddRuleToNetworkSecurityGroup", securityGrpName);
                     }
-                }
-            });
-        }
-        return deferred.promise;
+                    console.log(tl.loc("AddedSecurityRuleNSG", ruleName, rulePriority, winrmHttpsPort, securityGrpName, util.inspect(result, { depth: null })));
+                    this.ruleAddedToNsg = true;
+                    resolve("");
+                });
+            }
+            catch (exception) {
+                tl.debug("Failed to add inbound network security rule config " + ruleName + " with priority " + rulePriority + " for port " + winrmHttpsPort + " under security group " + securityGrpName + " : " + exception.message);
+                rulePriority = rulePriority + 50;
+                tl.debug("Getting network security group" + securityGrpName + " in resource group " + this.resourceGroupName);
+
+                this.networkClient.networkSecurityGroups.list(this.resourceGroupName, async (error, result, request, response) => {
+                    if (error) {
+                        tl.debug("Error in getting the list of network Security Groups for the resource-group " + this.resourceGroupName);
+                        reject(tl.loc("FetchingOfNetworkSecurityGroupFailed", error));
+                        return;
+                    }
+
+                    if (result.length > 0) {
+                        tl.debug("Got network security group " + securityGrpName + " in resource group " + this.resourceGroupName);
+                        if (retryCnt > 0) {
+                            try {
+                                await this.AddInboundNetworkSecurityRule(retryCnt - 1, securityGrpName, ruleName, rulePriority, winrmHttpsPort);
+                            }
+                            catch (exception) {
+                                reject(exception);
+                                return;
+                            }
+                            resolve("");
+                        }
+                        else {
+                            tl.debug("Failed to add the NSG rule on security group " + securityGrpName + " after trying for 3 times ");
+                            reject(tl.loc("FailedAddingNSGRule3Times", securityGrpName));
+                        }
+                    }
+                });
+            }
+        });
     }
 
     private async TryAddNetworkSecurityRule(securityGrpName, ruleName, rulePriority: number, winrmHttpsPort: string) {
-        var deferred = Q.defer<string>();
-        var networkClient = new networkManagementClient.NetworkManagementClient(this.credentials, this.subscriptionId);
-        try {
-            networkClient.securityRules.get(this.resourceGroupName, securityGrpName, ruleName, null, async (error, result, request, response) => {
-                if (error) {
+        return new Promise<any>(async (resolve, reject) => {
+            var result = await this.getSecurityRules(securityGrpName, ruleName);
+            try {
+                if (!result) {
                     tl.debug("Rule " + ruleName + " not found under security Group " + securityGrpName);
                     var maxRetries = 3;
                     try {
-                        await this.AddInboundNetworkSecurityRule(maxRetries, securityGrpName, networkClient, ruleName, rulePriority, winrmHttpsPort);
+                        await this.AddInboundNetworkSecurityRule(maxRetries, securityGrpName, ruleName, rulePriority, winrmHttpsPort);
                     }
                     catch (exception) {
-                        deferred.reject(exception);
+                        reject(exception);
                     }
                 }
                 else {
                     console.log(tl.loc("RuleExistsAlready", ruleName, securityGrpName));
                     this.ruleAddedToNsg = true;
                 }
-                deferred.resolve("");
+                resolve("");
+            }
+            catch (exception) {
+                tl.debug("Failed to add rule to network security Group with the exception" + exception.message);
+                reject(tl.loc("FailedToAddRuleToNetworkSecurityGroup", securityGrpName));
+            }
+        });
+    }
+
+    private getSecurityRules(securityGrpName, ruleName): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.networkClient.securityRules.get(this.resourceGroupName, securityGrpName, ruleName, null, (error, result, request, response) => {
+                if (error) {
+                    resolve(null);
+                }
+                resolve(result);
             });
-        }
-        catch (exception) {
-            tl.debug("Failed to add rule to network security Group with the exception" + exception.message);
-            deferred.reject(tl.loc("FailedToAddRuleToNetworkSecurityGroup", securityGrpName));
-        }
-        return deferred.promise;
+        });
     }
 
     private async AddNetworkSecurityRuleConfig(securityGroups: [Object], ruleName: string, rulePriority: number, winrmHttpsPort: string) {
-        var deferred = Q.defer<string>();
+        return new Promise<any>(async (resolve, reject) => {
+            for (var i = 0; i < securityGroups.length; i++) {
+                console.log(tl.loc("AddingSecurityRuleNSG", securityGroups[i]["name"]));
+                var securityGrp = securityGroups[i];
+                var securityGrpName = securityGrp["name"];
 
-        for (var i = 0; i < securityGroups.length; i++) {
-            console.log(tl.loc("AddingSecurityRuleNSG", securityGroups[i]["name"]));
-            var securityGrp = securityGroups[i];
-            var securityGrpName = securityGrp["name"];
-
-            try {
-                tl.debug("Getting the network security rule config " + ruleName + " under security group " + securityGrpName);
-                await this.TryAddNetworkSecurityRule(securityGrpName, ruleName, rulePriority, winrmHttpsPort);
+                try {
+                    tl.debug("Getting the network security rule config " + ruleName + " under security group " + securityGrpName);
+                    await this.TryAddNetworkSecurityRule(securityGrpName, ruleName, rulePriority, winrmHttpsPort);
+                }
+                catch (exception) {
+                    tl.debug("Failed to add the network security rule with exception: " + exception.message);
+                    reject(tl.loc("FailedToAddNetworkSecurityRule", securityGrpName));
+                }
             }
-            catch (exception) {
-                tl.debug("Failed to add the network security rule with exception: " + exception.message);
-                deferred.reject(tl.loc("FailedToAddNetworkSecurityRule", securityGrpName));
-            }
-        }
 
-        deferred.resolve("");
-        return deferred.promise;
+            resolve("");
+        });
     }
 
     private async AddWinRMHttpsNetworkSecurityRuleConfig() {
         var _ruleName: string = "VSO-Custom-WinRM-Https-Port";
         var _rulePriority: number = 3986;
         var _winrmHttpsPort: string = "5986";
-        var deferred = Q.defer<string>();
-
-        /* 
-            var securityGroups = await this.getSecurityRuleConfigs();
-            if (securityGroups) 
-            {
-                for (var securityGroup of securityGroups) {
-                    await this.AddRuleToSecurity(securityGroup);
-                }
+        var result = await this.GetListNSG();
+        return new Promise<any>(async (resolve, reject) => {
+            if (result && result.length > 0) {
+                tl.debug("Trying to add a network security group rule");
+                await this.AddNetworkSecurityRuleConfig(result, _ruleName, _rulePriority, _winrmHttpsPort);
+                resolve("");
             }
-         */
+            else {
+                reject("");
+            }
+        });
+    }
 
-        try {
-            var networkClient = new networkManagementClient.NetworkManagementClient(this.credentials, this.subscriptionId);
-            networkClient.networkSecurityGroups.list(this.resourceGroupName, null, async (error, result, request, response) => {
+    private GetListNSG(): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            this.networkClient.networkSecurityGroups.list(this.resourceGroupName, null, (error, result, request, response) => {
                 if (error) {
-                    tl.debug("Error in getting the list of network Security Groups for the resource-group" + this.resourceGroupName + "error" + util.inspect(error, { depth: null }));
-                    this.ruleAddedToNsg = true;
-                    deferred.reject(tl.loc("FetchingOfNetworkSecurityGroupFailed", error));
-                    return;
+                    tl.debug("Failed to get the list of NSG " + JSON.stringify(error));
+                    resolve(null);
                 }
-
-                if (result.length > 0) {
-                    tl.debug("Trying to add a network security group rule");
-                    try {
-                        await this.AddNetworkSecurityRuleConfig(result, _ruleName, _rulePriority, _winrmHttpsPort);
-                    }
-                    catch (exception) {
-                        deferred.reject(exception);
-                    }
-                }
-                deferred.resolve("");
+                resolve(result);
             });
-        }
-        catch (exception) {
-            this.ruleAddedToNsg = true;
-            deferred.reject(tl.loc("ARG_NetworkSecurityConfigFailed", exception.message));
-        }
-        return deferred.promise;
+        });
     }
 
     private async AddAzureVMCustomScriptExtension(vmId: string, vmName: string, dnsName: string, location: string) {
@@ -340,7 +340,7 @@ export class WinRMHttpsListener {
         if (!extensionStatusValid) {
             await this.AddExtensionVM(vmName, computeClient, dnsName, _extensionName, location, fileUris);
         }
-
+        deferred.resolve("");
         return deferred.promise;
     }
 

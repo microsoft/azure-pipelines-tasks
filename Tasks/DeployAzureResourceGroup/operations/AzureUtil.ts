@@ -73,7 +73,7 @@ export class AzureUtil {
         var ipcToNicMap = {}
         for (var nic of this.networkInterfaceDetails) {
             for (var ipc of nic.properties.ipConfigurations) {
-                ipcToNicMap[ipc.id] = nic.name;
+                ipcToNicMap[ipc.id] = nic.id;
             }
         }
 
