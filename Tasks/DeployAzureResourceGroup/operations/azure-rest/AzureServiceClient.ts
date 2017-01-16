@@ -34,6 +34,7 @@ export class AzureError {
     public code;
     public message;
     public statusCode;
+    public details;
 }
 
 export interface ApiCallback {
@@ -47,6 +48,7 @@ export function ToError(response: WebResponse): AzureError {
     if (response.body && response.body.error) {
         error.code = response.body.error.code;
         error.message = response.body.error.message;
+        error.details = response.body.error.details;
     }
 
     return error;
@@ -183,19 +185,19 @@ export class ServiceClient {
 
     public isValidResourceGroupName(resourceGroupName: string) {
         if (!resourceGroupName === null || resourceGroupName === undefined || typeof resourceGroupName.valueOf() !== 'string') {
-                throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+            throw new Error(tl.loc("ResourceGroupCannotBeNull"));
+        }
+        if (resourceGroupName !== null && resourceGroupName !== undefined) {
+            if (resourceGroupName.length > 90) {
+                throw new Error(tl.loc("ResourceGroupExceededLength"));
             }
-            if (resourceGroupName !== null && resourceGroupName !== undefined) {
-                if (resourceGroupName.length > 90) {
-                    throw new Error(tl.loc("ResourceGroupExceededLength"));
-                }
-                if (resourceGroupName.length < 1) {
-                    throw new Error(tl.loc("ResourceGroupDeceededLength"));
-                }
-                if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
-                    throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
-                }
+            if (resourceGroupName.length < 1) {
+                throw new Error(tl.loc("ResourceGroupDeceededLength"));
             }
+            if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
+                throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
+            }
+        }
     }
     private toWebResponse(response, body): WebResponse {
         var res = new WebResponse();

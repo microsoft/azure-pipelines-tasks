@@ -3,7 +3,6 @@
 
 import path = require("path");
 import tl = require("vsts-task-lib/task");
-
 import armCompute = require('./azure-rest/azure-arm-compute');
 import deployAzureRG = require("../models/DeployAzureRG");
 
