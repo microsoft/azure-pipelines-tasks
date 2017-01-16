@@ -22,6 +22,23 @@
     "minimumAgentVersion": "2.0.0",
     "groups": [
         {
+            "name": "AzureDetails",
+            "displayName": "Azure Details",
+            "isExpanded": true
+        },
+        {
+            "name": "Template",
+            "displayName": "Template",
+            "isExpanded": true,
+            "visibleRule": "action = Create or update resource group"
+        },
+        {
+            "name": "AdvancedDeploymentOptions",
+            "displayName": "Advanced Deployment Options",
+            "isExpanded": true,
+            "visibleRule": "action = Create or update resource group || action = Select resource group"
+        },
+        {
             "name": "output",
             "displayName": "Output",
             "isExpanded": true
@@ -34,6 +51,7 @@
             "label": "Azure subscription",
             "defaultValue": "",
             "required": true,
+            "groupName": "AzureDetails",
             "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
         },
         {
@@ -42,6 +60,7 @@
             "label": "Action",
             "defaultValue": "Create or update resource group",
             "required": true,
+            "groupName": "AzureDetails",
             "helpMarkDown": "Action to be performed on the Azure resources or resource group.",
             "options": {
                 "Create or update resource group": "Create or update resource group",
@@ -58,6 +77,7 @@
             "type": "pickList",
             "label": "Resource group",
             "required": true,
+            "groupName": "AzureDetails",
             "helpMarkDown": "Provide the name of a resource group.",
             "properties": {
                 "EditableOptions": "True"
@@ -70,6 +90,7 @@
             "defaultValue": "East US",
             "required": true,
             "helpMarkDown": "Location for deploying the resource group. If the resource group already exists in the subscription, then this value will be ignored.",
+            "groupName": "AzureDetails",
             "options": {
                 "Australia East": "Australia East",
                 "Australia Southeast": "Australia Southeast",
@@ -107,11 +128,11 @@
             "label": "Template location",
             "required": true,
             "defaultValue": "Linked artifact",
+            "groupName": "Template",
             "options": {
                 "Linked artifact": "Linked artifact",
                 "URL of the file": "URL of the file"
-            },
-            "visibleRule": "action = Create or update resource group"
+            }
         },
         {
             "name": "csmFileLink",
@@ -119,8 +140,9 @@
             "label": "Template link",
             "defaultValue": "",
             "required": true,
+            "groupName": "Template",
             "helpMarkDown": "Specify the URL of the template file. Example: [https://raw.githubusercontent.com/Azure/...](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-simple-windows/azuredeploy.json) \n\nTo deploy a template stored in a private storage account, retrieve and include the shared access signature (SAS) token in the URL of the template. Example: `<blob_storage_url>/template.json?<SAStoken>` To upload a template file (or a linked template) to a storage account and generate a SAS token, you could use [Azure file copy](https://aka.ms/azurefilecopyreadme) task or follow the steps using [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911).\n\nTo  view the template parameters in a grid, click on “…” next to Override template parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS.",
-            "visibleRule": "action = Create or update resource group && templateLocation = URL of the file"
+            "visibleRule": "templateLocation = URL of the file"
         },
         {
             "name": "csmParametersFileLink",
@@ -128,8 +150,9 @@
             "label": "Template parameters link",
             "defaultValue": "",
             "required": false,
+            "groupName": "Template",
             "helpMarkDown": "Specify the URL of the parameters file. Example: [https://raw.githubusercontent.com/Azure/...](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-simple-windows/azuredeploy.parameters.json) \n\nTo use a file stored in a private storage account, retrieve and include the shared access signature (SAS) token in the URL of the template. Example: `<blob_storage_url>/template.json?<SAStoken>` To upload a parameters file to a storage account and generate a SAS token, you could use [Azure file copy](https://aka.ms/azurefilecopyreadme) task or follow the steps using [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911). \n\nTo  view the template parameters in a grid, click on “…” next to Override template parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS.",
-            "visibleRule": "action = Create or update resource group && templateLocation = URL of the file"
+            "visibleRule": " templateLocation = URL of the file"
         },
         {
             "name": "csmFile",
@@ -137,7 +160,8 @@
             "label": "Template",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "action = Create or update resource group && templateLocation = Linked artifact",
+            "groupName": "Template",
+            "visibleRule": " templateLocation = Linked artifact",
             "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate."
         },
         {
@@ -146,8 +170,9 @@
             "label": "Template parameters",
             "defaultValue": "",
             "required": false,
+            "groupName": "Template",
             "helpMarkDown": "Specify the path for the parameters file for the Azure Resource Manager template.",
-            "visibleRule": "action = Create or update resource group && templateLocation = Linked artifact"
+            "visibleRule": " templateLocation = Linked artifact"
         },
         {
             "name": "overrideParameters",
@@ -155,11 +180,11 @@
             "label": "Override template parameters",
             "defaultValue": "",
             "required": false,
+            "groupName": "Template",
             "helpMarkDown": "To  view the template parameters in a grid, click on “…” next to Override Parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS. Or type the template parameters to override in the textbox. Example, <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre).",
             "properties": {
                 "editorExtension": "ms.vss-services-azure.azurerg-parameters-grid"
-            },
-            "visibleRule": "action = Create or update resource group"
+            }
         },
         {
             "name": "deploymentMode",
@@ -167,13 +192,13 @@
             "label": "Deployment mode",
             "defaultValue": "Incremental",
             "required": true,
+            "groupName": "Template",
             "helpMarkDown": "Incremental mode handles deployments as incremental updates to the resource group . It leaves unchanged resources that exist in the resource group but are not specified in the template. \n\n Complete mode deletes resources that are not in your template. \n\n Validate mode enables you to find problems with the template before creating actual resources. \n\n By default, Incremental mode is used.",
             "options": {
                 "Incremental": "Incremental",
                 "Complete": "Complete",
                 "Validation": "Validation only"
-            },
-            "visibleRule": "action = Create or update resource group"
+            }
         },
         {
             "name": "enableDeploymentPrerequisites",
@@ -181,7 +206,7 @@
             "label": "Enable deployment prerequisites",
             "defaultValue": "false",
             "required": false,
-            "visibleRule": "action = Create or update resource group || action = Select resource group",
+            "groupName": "AdvancedDeploymentOptions",
             "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
         },
         {
@@ -227,11 +252,9 @@
         "ValidDeployment": "Template deployment validation was completed successfully.",
         "CreateTemplateDeploymentValidationFailed": "Template validation failed. Error: %s.",
         "TemplateValidationHadErrors": "Task failed while validating the template deployment.",
-
         "DeletingResourceGroup": "Deleting resource group: %s",
         "CouldNotDeletedResourceGroup": "Could not delete resource group: '%s'. Operation failed with error: %s",
         "DeletedResourceGroup": "Deleted resource group: %s",
-
         "VM_ListFetchFailed": "Failed to fetch the list of virtual machines from resource group: %s. Error: %s",
         "NoVMsFound": "No virtual machines found in the resource group.",
         "VM_Start": "Starting virtual machine: %s",
@@ -241,17 +264,14 @@
         "SucceededOnVMOperation": "Operation: '%s' succeeded on all the virtual machines.",
         "FailureOnVMOperation": "Operation: '%s' did not succeed on all the virtual machines. Errors: \n%s",
         "VirtualMachineNameAndError": "%s: %s",
-
         "RegisteringEnvironmentVariable": "Selecting the resource group details: %s.",
         "FailedToFetchNetworkInterfaces": "Failed to fetch the list of network interfaces. Error: %s.",
         "FailedToFetchLoadBalancers": "Failed to fetch the list of load balancers. Error: %s.",
         "FailedToFetchPublicAddresses": "Failed to fetch the list of public addresses. Error: %s.",
         "AddedToOutputVariable": "Resource group details were saved in following output variable: %s.",
-
         "InvalidAction": "This action is not defined. Check with the task author.",
         "TaskNotFound": "Task.json file could not be found: %s",
         "ARGD_ConstructorFailed": "Task failed while initializing. Error: %s",
-
         "ValidatingCredentialsFailure": "Failed while validating credentials due to following error: %s",
         "RuleExistsAlready": "Rule %s already exists on the security group '%s'",
         "ARG_NetworkSecurityConfigFailed": "Failed to add the network security config rule",
@@ -272,8 +292,6 @@
         "AddedTargetInboundNatRuleLB": "Added the target virtual machine for the inbound NAT rules of load balancer %s",
         "AddedInboundNatRuleLB": "Adding inbound NAT rule to the load balancer %s ",
         "InboundNatRuleLBPresent": "Relevant inbound NAT rules already present for the load balancer %s",
-
-        
         "CredentialsCannotBeNull": "'credentials' cannot be null.",
         "SubscriptionIdCannotBeNull": "'subscriptionId' cannot be null.",
         "CallbackCannotBeNull": "callback cannot be null.",
@@ -297,19 +315,14 @@
         "NetworkSecurityGroupNameCannotBeNull": "networkSecurityGroupName cannot be null or undefined and it must be of type string.",
         "SecurityRuleNameCannotBeNull": "securityRuleName cannot be null or undefined and it must be of type string.",
         "SecurityRuleParametersCannotBeNull": "securityRuleParameters cannot be null or undefined.",
-        
         "ErrorFetchingNatRules": "Error while fetching Nat rules",
         "UnableToFetchFQDN": "Unable to fetch FQDN data from one or more VMs",
         "OutputVariableShouldNotBeEmpty": "Output variable should not be empty.",
-        
-
         "EnablingWinRM": "Enabling winRM Https Listener on your windows machines..",
-        
         "ARG_ResourceNotFound": "%s is not found on the resource Group %s. Error Count: %s",
         "FailedToUpdateInboundNatRuleLB": "Failed to update the load Balancer %s with the appropriate Inbound Nat Rule",
         "ARG_DeploymentPrereqFailed": "Failed to enable deployment pre-requisites with the exception: %s",
         "ARG_SetExtensionFailedForVm": "Failed to set extension on Virtual Machine %s of Resource Group %s with result: %s",
-        
         "FailedToUpdateNICOfVm": "Failed to update the NIC of the VM",
         "FailedToFetchDetailsOfLB": "Failed to fetch the details of the load Balancer: %s",
         "FailedToUpdateLBInboundNatRules": "Failed to update the inbound NAT rules of the Load Balancer %s to remove irrelevant rules",
