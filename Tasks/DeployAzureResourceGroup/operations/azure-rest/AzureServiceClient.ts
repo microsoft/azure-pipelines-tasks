@@ -1,4 +1,5 @@
 import tl = require('vsts-task-lib/task');
+import util = require("util")
 import msRestAzure = require("./ms-rest-azure");
 var httpClient = require('vso-node-api/HttpClient');
 var httpCallbackClient = new httpClient.HttpCallbackClient("VSTS_AGENT");
@@ -218,6 +219,7 @@ export class ServiceClient {
     }
 
     private beginRequestInternal(request: WebRequest): Promise<WebResponse> {
+        tl.debug(util.format("[%s]%s", request.method, request.uri));
         return new Promise<WebResponse>((resolve, reject) => {
             httpCallbackClient.send(request.method, request.uri, request.body, request.headers, (error, response, body) => {
                 if (error) {

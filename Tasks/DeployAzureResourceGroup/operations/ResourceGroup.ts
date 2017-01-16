@@ -14,7 +14,7 @@ import armResource = require("./azure-rest/azure-arm-resource");
 import winRM = require("./WinRMExtensionHelper");
 
 var parameterParser = require("./ParameterParser").parse;
-var utils = require("./utils").Utils;
+import utils = require("./utils");
 
 var httpClient = require('vso-node-api/HttpClient');
 var httpObj = new httpClient.HttpCallbackClient("VSTS_AGENT");
@@ -34,12 +34,12 @@ class Deployment {
 export class ResourceGroup {
 
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
-    private winRMHttpsListener: winRM.WinRMExtensionHelper;
+    private winRMExtensionHelper: winRM.WinRMExtensionHelper;
     private environmentHelper: env.EnvironmentHelper;
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
         this.taskParameters = taskParameters;
-        this.winRMHttpsListener = new winRM.WinRMExtensionHelper(this.taskParameters);
+        this.winRMExtensionHelper = new winRM.WinRMExtensionHelper(this.taskParameters);
         this.environmentHelper = new env.EnvironmentHelper(this.taskParameters);
     }
 
@@ -54,23 +54,23 @@ export class ResourceGroup {
     public deleteResourceGroup(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
-            console.log(tl.loc("ARG_DeletingResourceGroup", this.taskParameters.resourceGroupName));
+            console.log(tl.loc("DeletingResourceGroup", this.taskParameters.resourceGroupName));
             armClient.resourceGroups.deleteMethod(this.taskParameters.resourceGroupName, (error, result, request, response) => {
                 if (error) {
-                    reject(tl.loc("RGO_CouldNotDeletedResourceGroup", this.taskParameters.resourceGroupName, error.message));
+                    reject(tl.loc("CouldNotDeletedResourceGroup", this.taskParameters.resourceGroupName, utils.getError(error)));
                 }
-                console.log(tl.loc("RGO_DeletedResourceGroup", this.taskParameters.resourceGroupName));
+                console.log(tl.loc("DeletedResourceGroup", this.taskParameters.resourceGroupName));
                 resolve();
             });
         });
     }
 
     public async selectResourceGroup(): Promise<void> {
-        var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
         if (!utils.isNonEmpty(this.taskParameters.outputVariable)) {
             throw tl.loc("OutputVariableShouldNotBeEmpty");
         }
 
+        var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
         await this.enableDeploymentPrerequestiesIfRequired(armClient);
         await this.registerEnvironmentIfRequired(armClient);
     }
@@ -96,7 +96,7 @@ export class ResourceGroup {
 
     private async enableDeploymentPrerequestiesIfRequired(armClient) {
         if (this.taskParameters.enableDeploymentPrerequisites) {
-            await this.winRMHttpsListener.EnableWinRMHttpsListener();
+            await this.winRMExtensionHelper.ConfigureWinRMExtension();
         }
     }
 

@@ -5,7 +5,7 @@ import tl = require("vsts-task-lib/task");
 import azure_utils = require("./AzureUtil");
 import deployAzureRG = require("../models/DeployAzureRG");
 import az = require("./azure-rest/azureModels");
-var utils = require("./Utils").Utils;
+import utils = require("./Utils");
 
 function ObjectCast(rawObj, constructor) {
     var obj = new constructor();
@@ -43,7 +43,7 @@ export class WinRMExtensionHelper {
         this.azureUtils = new azure_utils.AzureUtil(this.taskParameters, this.computeClient, this.networkClient);
     }
 
-    public async EnableWinRMHttpsListener() {
+    public async ConfigureWinRMExtension() {
         console.log(tl.loc("EnablingWinRM"));
         await this.AddInboundNatRulesOnLoadBalancers();
         await this.AddExtensionToVMsToConfigureWinRM();

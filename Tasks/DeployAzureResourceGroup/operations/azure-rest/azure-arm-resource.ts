@@ -63,7 +63,7 @@ export class ResourceGroups {
             (error) => callback(error));
     }
 
-    public deleteMethod(resourceGroupName, callback) {
+    public deleteMethod(resourceGroupName: string, callback: azureServiceClient.ApiCallback) {
         var client = this.client;
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
