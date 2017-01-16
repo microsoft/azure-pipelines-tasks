@@ -157,8 +157,7 @@ export class ServiceClient {
                     sleepDuration = parseInt(response.headers["retry-after"]);
                 }
                 await this.sleepFor(sleepDuration);
-            }
-            else {
+            } else {
                 break;
             }
         }
@@ -200,6 +199,7 @@ export class ServiceClient {
             }
         }
     }
+    
     private toWebResponse(response, body): WebResponse {
         var res = new WebResponse();
 

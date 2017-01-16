@@ -312,6 +312,7 @@
         
         "FailedToUpdateNICOfVm": "Failed to update the NIC of the VM",
         "FailedToFetchDetailsOfLB": "Failed to fetch the details of the load Balancer: %s",
-        "FailedToUpdateLBInboundNatRules": "Failed to update the inbound NAT rules of the Load Balancer %s to remove irrelevant rules"
+        "FailedToUpdateLBInboundNatRules": "Failed to update the inbound NAT rules of the Load Balancer %s to remove irrelevant rules",
+        "InvalidResponseLongRunningOperation": "Invalid response received for fetching status of a long running operation."
     }
 }

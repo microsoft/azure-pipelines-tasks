@@ -58,8 +58,8 @@ export class VirtualMachine {
         var total = count;
         var errors = "";
 
-        return function (vmName: string) {
-            return function (error, result, request, response) {
+        return (vmName: string) => {
+            return (error, result, request, response) => {
                 if (error) {
                     failureCount++;
                     errors += tl.loc("VirtualMachineNameAndError", vmName, utils.getError(error));
@@ -70,7 +70,7 @@ export class VirtualMachine {
 
                 if (successCount + failureCount == total) {
                     if (failureCount) {
-                        reject(tl.loc("FailureOnVMOperation", this.taskParameters.action, this.errors));
+                        reject(tl.loc("FailureOnVMOperation", this.taskParameters.action, errors));
                     }
                     else {
                         console.log(tl.loc("SucceededOnVMOperation", this.taskParameters.action));
