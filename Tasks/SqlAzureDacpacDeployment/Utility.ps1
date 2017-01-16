@@ -147,7 +147,7 @@ function Get-SqlPackageCommandArguments
 
         if($sqlUsername)
         {
-            if($sqlUsername.Contains('@'))
+            if((-not $sqlUsername.Contains("@" + $serverName.Trim())) -and $sqlUsername.Contains('@'))
             {
                 $sqlUsername = $sqlUsername + "@" + $serverName 
             }
