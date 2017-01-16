@@ -9,11 +9,14 @@
     "Preview",
     "Build"
   ],
+  "runsOn": [
+        "Agent"
+  ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 11
+    "Patch": 12
   },
   "demands": [
     "Chef",
