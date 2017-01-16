@@ -29,7 +29,8 @@ export class WinRMHttpsListener {
     private customScriptExtensionInstalled: boolean;
     private ruleAddedToNsg: boolean;
     private azureUtils: azure_utils.AzureUtil;
-    private networkClient: networkManagementClient.NetworkManagementClient
+    private networkClient: networkManagementClient.NetworkManagementClient;
+    private computeClient: computeManagementClient.ComputeManagementClient;
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
         this.taskParameters = taskParameters;
@@ -42,27 +43,31 @@ export class WinRMHttpsListener {
         this.ruleAddedToNsg = false;
 
         this.networkClient = new networkManagementClient.NetworkManagementClient(this.credentials, this.subscriptionId);
+        this.computeClient = new computeManagementClient.ComputeManagementClient(this.credentials, this.subscriptionId);
         this.azureUtils = new azure_utils.AzureUtil(this.taskParameters);
     }
 
     public async EnableWinRMHttpsListener() {
-        await this.AddInboundNatRuleLB();
-        var resourceGroupDetails = await this.azureUtils.getResourceGroupDetails();
+        try {
+            await this.AddInboundNatRuleLB();
+            var resourceGroupDetails = await this.azureUtils.getResourceGroupDetails();
 
-        for (var vm of this.azureUtils.vmDetails) {
-            var resourceName = vm.name;
-            var resourceId = vm.id;
-            var vmResource = resourceGroupDetails.VirtualMachines.find(v => v.Name == resourceName);
-            var resourceFQDN = vmResource.WinRMHttpsPublicAddress;
-            var resourceWinRmHttpsPort = vmResource.WinRMHttpsPort
-
-            if (vm["properties"]["storageProfile"]["osDisk"]["osType"] === 'Windows') {
-                tl.debug("Enabling winrm for virtual machine " + resourceName);
-                await this.AddAzureVMCustomScriptExtension(resourceId, resourceName, resourceFQDN, vm["location"]);
+            for (var vm of this.azureUtils.vmDetails) {
+                var resourceName = vm.name;
+                var resourceId = vm.id;
+                var vmResource = resourceGroupDetails.VirtualMachines.find(v => v.Name == resourceName);
+                var resourceFQDN = vmResource.WinRMHttpsPublicAddress;
+                var resourceWinRmHttpsPort = vmResource.WinRMHttpsPort
+                if (vm["properties"]["storageProfile"]["osDisk"]["osType"] === 'Windows') {
+                    tl.debug("Enabling winrm for virtual machine " + resourceName);
+                    await this.AddAzureVMCustomScriptExtension(resourceId, resourceName, resourceFQDN, vm["location"]);
+                }
             }
+            await this.AddWinRMHttpsNetworkSecurityRuleConfig();
         }
-
-        await this.AddWinRMHttpsNetworkSecurityRuleConfig();
+        catch (exception) {
+            throw new Error("Enabling of Deployment Prerequisites failed");
+        }
     }
 
     private async AddInboundNatRuleLB(): Promise<void> {
@@ -83,8 +88,15 @@ export class WinRMHttpsListener {
                     if (lb) {
                         tl.debug("LB to which Inbound Nat Rule for VM " + virtualMachine.Name + " is to be added is " + lb.Id);
                         var frontendPort: number = this.GetFreeFrontendPort(lb);
-                        await this.AddNatRuleInternal(lb.Id, nicId, frontendPort, 5986);
-                        lb.FrontEndPortsInUse.push(frontendPort);
+                        try {
+                            await this.AddNatRuleInternal(lb.Id, nicId, frontendPort, 5986);
+                            lb.FrontEndPortsInUse.push(frontendPort);
+                        }
+                        catch (exception) {
+                            tl.debug("Failed to add Inbound NAT rules for lb " + lb.Id);
+                            reject("");
+                            return;
+                        }
                     }
                 }
                 else {
@@ -110,20 +122,20 @@ export class WinRMHttpsListener {
         var loadBalancers = await this.azureUtils.getLoadBalancers();
         var loadBalancer = loadBalancers.find(l => l.id == loadBalancerId);
 
-        var InboundNatRuleProperties: az.InboundNatRuleProperties = ObjectCast({
+        var InboundNatRuleProperties: az.InboundNatRuleProperties = {
             backendPort: backendPort,
             frontendPort: fronendPort,
             frontendIPConfiguration: { id: loadBalancer.properties.frontendIPConfigurations[0].id },
             protocol: "Tcp",
             idleTimeoutInMinutes: 4,
             enableFloatingIP: false
-        }, az.InboundNatRuleProperties);
+        }
 
-        var rule: az.InboundNatRule = ObjectCast({
+        var rule: az.InboundNatRule = {
             id: "",
             name: name,
             properties: InboundNatRuleProperties
-        }, az.InboundNatRule);
+        };
 
         loadBalancer.properties.inboundNatRules.push(rule);
         var networkInterfaces = this.azureUtils.networkInterfaceDetails;
@@ -145,7 +157,7 @@ export class WinRMHttpsListener {
         return new Promise<void>((resolve, reject) => {
             this.networkClient.loadBalancers.createOrUpdate(this.resourceGroupName, loadBalancer.name, loadBalancer, null, (error, result, request, response) => {
                 if (error) {
-                    tl.debug("Addition of Inbound Nat Rule to the Load Balancer " + loadBalancer.name + " failed with the error " + JSON.stringify(error));
+                    console.log("Addition of Inbound Nat Rule to the Load Balancer %s failed with the error: %s ", loadBalancer.name, JSON.stringify(error));
                     reject(error);
                 }
                 else {
@@ -157,8 +169,9 @@ export class WinRMHttpsListener {
                     this.networkClient.networkInterfaces.createOrUpdate(this.resourceGroupName, networkInterface.name, networkInterface, null,
                         (error2, result2, request2, response2) => {
                             if (error2) {
-                                tl.debug("Addition of rule Id to the loadBalancerInboundNatRules of nic " + networkInterface.name + " failed with the error: " + JSON.stringify(error2));
+                                console.log("Addition of rule Id to the loadBalancerInboundNatRules of nic %s failed with the error: %s", networkInterface.name, JSON.stringify(error2));
                                 reject(error2);
+                                return;
                             }
                             console.log(tl.loc("AddedTargetInboundNatRuleLB", networkInterface.name));
                             resolve();
@@ -294,9 +307,11 @@ export class WinRMHttpsListener {
         var _winrmHttpsPort: string = "5986";
         var result = await this.GetListNSG();
         return new Promise<any>(async (resolve, reject) => {
-            if (result && result.length > 0) {
-                tl.debug("Trying to add a network security group rule");
-                await this.AddNetworkSecurityRuleConfig(result, _ruleName, _rulePriority, _winrmHttpsPort);
+            if (result) {
+                if (result.length > 0) {
+                    tl.debug("Trying to add a network security group rule");
+                    await this.AddNetworkSecurityRuleConfig(result, _ruleName, _rulePriority, _winrmHttpsPort);
+                }
                 resolve("");
             }
             else {
@@ -329,34 +344,33 @@ export class WinRMHttpsListener {
         tl.debug("VM Location: " + location);
         tl.debug("VM DNS: " + dnsName);
 
-        var computeClient = new computeManagementClient.ComputeManagementClient(this.credentials, this.subscriptionId);
         tl.debug("Checking if the extension " + _extensionName + " is present on vm " + vmName);
 
-        var result = await this.GetExtension(computeClient, vmName, _extensionName);
+        var result = await this.GetExtension(vmName, _extensionName);
         var extensionStatusValid = false;
         if (result) {
             if (result["properties"]["settings"]["fileUris"].length == fileUris.length && fileUris.every((element, index) => { return element === result["properties"]["settings"]["fileUris"][index]; })) {
-
                 tl.debug("Custom Script extension is for enabling Https Listener on VM" + vmName);
                 if (result["properties"]["provisioningState"] === 'Succeeded') {
-                    extensionStatusValid = await this.ValidateCustomScriptExecutionStatus(vmName, computeClient, dnsName, _extensionName, location, fileUris);
+                    extensionStatusValid = await this.ValidateCustomScriptExecutionStatus(vmName, dnsName, _extensionName, location, fileUris);
                 }
 
                 if (!extensionStatusValid) {
-                    await this.RemoveExtensionFromVM(_extensionName, vmName, computeClient);
+                    await this.RemoveExtensionFromVM(_extensionName, vmName);
                 }
             }
         }
         if (!extensionStatusValid) {
-            await this.AddExtensionVM(vmName, computeClient, dnsName, _extensionName, location, fileUris);
+            await this.AddExtensionVM(vmName, dnsName, _extensionName, location, fileUris);
         }
+        tl.debug("Addition of Custom Script Extension is completed");
         deferred.resolve("");
         return deferred.promise;
     }
 
-    private GetExtension(computeClient: computeManagementClient.ComputeManagementClient, vmName: string, extensionName: string): Promise<any> {
+    private GetExtension(vmName: string, extensionName: string): Promise<any> {
         return new Promise<any>((resolve, reject) => {
-            computeClient.virtualMachineExtensions.get(this.resourceGroupName, vmName, extensionName, null, async (error, result, request, response) => {
+            this.computeClient.virtualMachineExtensions.get(this.resourceGroupName, vmName, extensionName, null, async (error, result, request, response) => {
                 if (error) {
                     tl.debug("Failed to get the extension!!");
                     resolve(null);
@@ -367,34 +381,39 @@ export class WinRMHttpsListener {
         });
     }
 
-    private async ValidateCustomScriptExecutionStatus(vmName: string, computeClient, dnsName: string, extensionName: string, location: string, fileUris): Promise<boolean> {
+    private async ValidateCustomScriptExecutionStatus(vmName: string, dnsName: string, extensionName: string, location: string, fileUris): Promise<boolean> {
         tl.debug("Validating the winrm configuration custom script extension status");
 
         return new Promise<boolean>((resolve, reject) => {
-            computeClient.virtualMachines.get(this.resourceGroupName, vmName, { expand: 'instanceView' }, async (error, result, request, response) => {
+            this.computeClient.virtualMachines.get(this.resourceGroupName, vmName, { expand: 'instanceView' }, async (error, result, request, response) => {
                 if (error) {
                     tl.debug("Error in getting the instance view of the virtual machine " + util.inspect(error, { depth: null }));
                     reject(tl.loc("FailedToFetchInstanceViewVM"));
                     return;
                 }
-
+                tl.debug("Got the Instance View of the virtualMachine " + vmName + ": " + JSON.stringify(result));
                 var invalidExecutionStatus: boolean = false;
-                var extension = result["properties"]["instanceView"];
-                if (result["name"] === extensionName) {
-                    for (var substatus of extension["substatuses"]) {
-                        if (substatus["code"] && substatus["code"].indexOf("ComponentStatus/StdErr") >= 0 && !!substatus["message"] && substatus["message"] != "") {
-                            invalidExecutionStatus = true;
+                if (result["properties"]["instanceView"] && result["properties"]["instanceView"]["extensions"]) {
+                    var extensions = result["properties"]["instanceView"]["extensions"];
+                    for (var extension of extensions) {
+                        if (result["name"] === extensionName) {
+                            for (var substatus of extension["substatuses"]) {
+                                if (substatus["code"] && substatus["code"].indexOf("ComponentStatus/StdErr") >= 0 && !!substatus["message"] && substatus["message"] != "") {
+                                    invalidExecutionStatus = true;
+                                    break;
+                                }
+                            }
                             break;
                         }
                     }
                 }
-
+                tl.debug("Custom Script Extension status validated!!");
                 resolve(!invalidExecutionStatus);
             });
         });
     }
 
-    private async AddExtensionVM(vmName: string, computeClient, dnsName: string, extensionName: string, location: string, _fileUris) {
+    private async AddExtensionVM(vmName: string, dnsName: string, extensionName: string, location: string, _fileUris) {
         var _commandToExecute: string = "powershell.exe -File ConfigureWinRM.ps1 " + dnsName;
         var _extensionType: string = 'Microsoft.Compute/virtualMachines/extensions';
         var _virtualMachineExtensionType: string = 'CustomScriptExtension';
@@ -418,7 +437,7 @@ export class WinRMHttpsListener {
         };
 
         console.log(tl.loc("AddExtension", extensionName, vmName));
-        computeClient.virtualMachineExtensions.createOrUpdate(this.resourceGroupName, vmName, extensionName, parameters, async (error, result, request, response) => {
+        this.computeClient.virtualMachineExtensions.createOrUpdate(this.resourceGroupName, vmName, extensionName, parameters, async (error, result, request, response) => {
             if (error) {
                 tl.debug("Failed to add the extension " + util.inspect(error, { depth: null }));
                 deferred.reject(tl.loc("CreationOfExtensionFailed"));
@@ -438,12 +457,12 @@ export class WinRMHttpsListener {
         return deferred.promise;
     }
 
-    private async RemoveExtensionFromVM(extensionName, vmName, computeClient) {
+    private async RemoveExtensionFromVM(extensionName, vmName) {
         tl.debug("Removing the extension " + extensionName + "from vm " + vmName);
         //delete the extension
         var deferred = Q.defer<void>();
 
-        computeClient.virtualMachineExtensions.deleteMethod(this.resourceGroupName, vmName, extensionName, async (error, result, request, response) => {
+        this.computeClient.virtualMachineExtensions.deleteMethod(this.resourceGroupName, vmName, extensionName, async (error, result, request, response) => {
             if (error) {
                 tl.debug("Failed to delete the extension " + extensionName + " on the vm " + vmName + ", with error Message: " + util.inspect(error, { depth: null }));
                 deferred.reject(tl.loc("FailedToDeleteExtension"));
