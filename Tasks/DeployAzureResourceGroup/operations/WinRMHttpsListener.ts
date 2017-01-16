@@ -5,6 +5,11 @@ import util = require("util");
 import tl = require("vsts-task-lib/task");
 import azure_utils = require("./AzureUtil");
 import deployAzureRG = require("../models/DeployAzureRG");
+import az = require("./azure-rest/azureModels");
+
+function isNonEmpty(str: string) {
+    return str && str.trim();
+}
 
 export class WinRMHttpsListener {
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
@@ -30,286 +35,119 @@ export class WinRMHttpsListener {
         this.ruleAddedToNsg = false;
 
         this.networkClient = new networkManagementClient.NetworkManagementClient(this.credentials, this.subscriptionId);
-        this.azureUtils = new azure_utils.AzureUtil(this.taskParameters, this.networkClient);
+        this.azureUtils = new azure_utils.AzureUtil(this.taskParameters);
     }
 
     public async EnableWinRMHttpsListener() {
-        try {
-            await this.AddInboundNatRuleLB();
-            await this.SetAzureRMVMsConnectionDetailsInResourceGroup();
+        await this.AddInboundNatRuleLB();
+        var resourceGroupDetails = await this.azureUtils.getResourceGroupDetails();
 
-            for (var i = 0; i < this.virtualMachines.length; i++) {
-                var vm = this.virtualMachines[i];
-                var resourceName = vm["name"];
-                var resourceId = vm["id"];
-                var resourceFQDN = this.fqdnMap[resourceName];
-                var resourceWinRmHttpsPort = this.winRmHttpsPortMap[resourceName];
+        for (var vm of this.azureUtils.vmDetails) {
+            var resourceName = vm.name;
+            var resourceId = vm.id;
+            var vmResource = resourceGroupDetails.VirtualMachines.find(v => v.Name == resourceName);
+            var resourceFQDN = vmResource.WinRMHttpsPublicAddress;
+            var resourceWinRmHttpsPort = vmResource.WinRMHttpsPort
 
-                if (!resourceWinRmHttpsPort || resourceWinRmHttpsPort === "") {
-                    tl.debug("Defaulting WinRmHttpsPort of " + resourceName + " to 5986");
-                    this.winRmHttpsPortMap[resourceName] = "5986";
+            if (vm["properties"]["storageProfile"]["osDisk"]["osType"] === 'Windows') {
+                tl.debug("Enabling winrm for virtual machine " + resourceName);
+                await this.AddAzureVMCustomScriptExtension(resourceId, resourceName, resourceFQDN, vm["location"]);
+            }
+        }
+
+        await this.AddWinRMHttpsNetworkSecurityRuleConfig();
+    }
+
+    private async AddInboundNatRuleLB(): Promise<void> {
+        var resourceGroupDetails = await this.azureUtils.getResourceGroupDetails();
+        for (var virtualMachine of resourceGroupDetails.VirtualMachines) {
+            if (!isNonEmpty(virtualMachine.WinRMHttpsPublicAddress)) {
+                var lb: azure_utils.LoadBalancer;
+                var nicId: string;
+                for (var nic in virtualMachine.NetworkInterfaceIds) {
+                    nicId = nic;
+                    lb = resourceGroupDetails.LoadBalancers.find(l => !!l.BackendNicIds.find(id => id === nic));
+                    if (lb) break;
                 }
-                if (vm["properties"]["storageProfile"]["osDisk"]["osType"] === 'Windows') {
-                    tl.debug("Enabling winrm for virtual machine " + resourceName);
-                    await this.AddAzureVMCustomScriptExtension(resourceId, resourceName, resourceFQDN, vm["location"]);
+
+                if (lb) {
+                    var frontendPort: number = this.GetFreeFrontendPort(lb);
+                    await this.AddNatRuleInternal(lb.Id, nicId, frontendPort, 5986);
+                    lb.FrontEndPortsInUse.push(frontendPort);
                 }
             }
-
-            await this.AddWinRMHttpsNetworkSecurityRuleConfig();
-        }
-        catch (exception) {
-            throw tl.loc("FailedToEnablePrereqs", exception.message);
         }
     }
 
-    private async AddRule(lb, frontendPortMap) {
-        var ruleIdMap = {};
-        var lbName = lb["name"];
-        var addedRulesId = [];
-        var deferred = Q.defer();
-        var networkClient = new networkManagementClient.NetworkManagementClient(this.credentials, this.subscriptionId);
+    private GetFreeFrontendPort(loadBalancer: azure_utils.LoadBalancer): number {
+        var port: number = 5986;
+        while (loadBalancer.FrontEndPortsInUse.find(p => p == port)) {
+            port++;
+        }
+        return port;
+    }
 
-        tl.debug("Updating the load balancers with the appropriate Inbound Nat rules");
+    private async AddNatRuleInternal(loadBalancerId: string, networkInterfaceId: string, fronendPort: number, backendPort: number): Promise<void> {
+        var random: number = Math.floor(Math.random() * 10000 + 100);
+        var name: string = "winRMHttpsRule" + random.toString();
 
-        var parameters = {
-            location: lb["location"],
+        var newRule: az.InboundNatRule = new az.InboundNatRule();
+        newRule.name = name;
+        newRule.properties = new az.InboundNatRuleProperties();
+        var loadBalancers = await this.azureUtils.getLoadBalancers();
+        var loadBalancer = loadBalancers.find(l => l.id == loadBalancerId);
+        var rule: az.InboundNatRule = {
+            id: "",
+            name: name,
             properties: {
-                frontendIPConfigurations: lb["properties"]["frontendIPConfigurations"],
-                inboundNatRules: lb["properties"]["inboundNatRules"],
-                backendAddressPools: lb["properties"]["backendAddressPools"]
+                backendPort: backendPort,
+                frontendPort: fronendPort,
+                frontendIPConfiguration: { id: loadBalancer.properties.frontendIPConfigurations[0].id },
+                protocol: "Tcp",
+                idleTimeoutInMinutes: 4,
+                enableFloatingIP: false
             }
         };
 
-        networkClient.loadBalancers.createOrUpdate(this.resourceGroupName, lbName, parameters, null, async (error, result, request, response) => {
-            if (error) {
-                tl.debug("Failed with error " + util.inspect(error, { depth: null }));
-                deferred.reject(tl.loc("FailedToUpdateInboundNatRuleLB", lbName));
-            }
-            console.log(tl.loc("AddedInboundNatRuleLB", lbName));
+        loadBalancer.properties.inboundNatRules.push(rule);
+        var networkInterfaces = this.azureUtils.networkInterfaceDetails;
+        var networkInterface = networkInterfaces.find(n => n.id == networkInterfaceId);
+        var ipConfiguration: az.IPConfiguration;
 
-            var addedRulesId = [];
-
-            for (var rule of result["properties"]["inboundNatRules"]) {
-                var index = rule["properties"]["frontendPort"].toString();
-                var ipc = frontendPortMap[index];
-
-                if (!!ipc && ipc != "") {
-                    if (!ruleIdMap[ipc]) {
-                        ruleIdMap[ipc] = [];
+        for (var ipc of networkInterface.properties.ipConfigurations) {
+            for (var pool of loadBalancer.properties.backendAddressPools) {
+                if (pool.properties.backendIPConfigurations && pool.properties.backendIPConfigurations.find(x => x.id == ipc.id)) {
+                    if (!ipc.properties.loadBalancerInboundNatRules) {
+                        ipc.properties.loadBalancerInboundNatRules = [];
+                        ipConfiguration = ipc;
+                        break;
                     }
-                    ruleIdMap[ipc].push(rule["id"]);
-                    addedRulesId.push(rule["id"]);
                 }
             }
+        }
 
-            tl.debug("Added rules id are:");
-            for (var id of addedRulesId) {
-                tl.debug("Id: " + id);
-            }
-
-            var networkInterfaces = await this.azureUtils.getNetworkInterfaceDetails();
-            for (var nic of networkInterfaces) {
-                var flag: boolean = false;
-                for (var ipc of nic["properties"]["ipConfigurations"]) {
-                    if (!!ruleIdMap[ipc["id"]] && ruleIdMap[ipc["id"]] != "") {
-                        for (var rule of ruleIdMap[ipc["id"]]) {
-                            if (!ipc["properties"]["loadBalancerInboundNatRules"]) {
-                                ipc["properties"]["loadBalancerInboundNatRules"] = [];
+        return new Promise<void>((resolve, reject) => {
+            this.networkClient.loadBalancers.createOrUpdate(this.resourceGroupName, loadBalancer.name, loadBalancer, null, (error, result, request, response) => {
+                if (error) {
+                    reject(error);
+                }
+                else {
+                    console.log(tl.loc("AddedInboundNatRuleLB", loadBalancer.name));
+                    var loadBalancerUpdated = <az.LoadBalancer>result;
+                    var addedRule = loadBalancerUpdated.properties.inboundNatRules.find(r => r.properties.frontendPort == fronendPort);
+                    ipConfiguration.properties.loadBalancerInboundNatRules.push(addedRule);
+                    this.networkClient.networkInterfaces.createOrUpdate(this.resourceGroupName, networkInterface.name, networkInterface, null,
+                        (error2, result2, request2, response2) => {
+                            if (error2) {
+                                reject(error2);
                             }
-                            ipc["properties"]["loadBalancerInboundNatRules"].push({ "id": rule });
-                            flag = true;
-                        }
-                    }
+                            console.log(tl.loc("AddedTargetInboundNatRuleLB", networkInterface.name));
+                            resolve();
+                        });
                 }
-                if (flag) {
-                    try {
-                        await this.AddTargetVmsToInboundNatRules(networkClient, nic, addedRulesId, lbName, lb);
-                    }
-                    catch (error) {
-                        deferred.reject(error);
-                    }
-                }
-            }
-            //Remove the rules which has no target virtual machines
-            await this.RemoveIrrelevantRules(lb, networkClient, addedRulesId);
-            deferred.resolve("");
-
+            });
         });
 
-        return deferred.promise;
-    }
-
-    private async AddTargetVmsToInboundNatRules(networkClient, nic, addedRulesId, lbName, lb) {
-        var deferred = Q.defer<void>();
-        tl.debug("Updating the NIC of the concerned vms");
-        var parameters = {
-            location: nic["location"],
-            properties: {
-                ipConfigurations: nic["properties"]["ipConfigurations"]
-            }
-        }
-        networkClient.networkInterfaces.createOrUpdate(this.resourceGroupName, nic["name"], parameters, async (error, res, response, request) => {
-            if (error) {
-                tl.debug("Error in updating the list of Network Interfaces: " + util.inspect(error, { depth: null }));
-                deferred.reject(tl.loc("FailedToUpdateNICOfVm"));
-                return;
-            }
-            tl.debug("Successfully updated network interfaces: ");
-            console.log(tl.loc("AddedTargetInboundNatRuleLB", lbName));
-            deferred.resolve(null);
-        });
-        return deferred.promise;
-    }
-
-    private async RemoveIrrelevantRules(lb, networkClient, addedRulesId) {
-        var lbName = lb["name"];
-        var deferred = Q.defer<string>();
-        networkClient.loadBalancers.get(this.resourceGroupName, lbName, (error, lbDetails, request, response) => {
-            if (error) {
-                tl.debug("Error in getting the details of the load Balancer: " + lbName);
-                deferred.reject(tl.loc("FailedToFetchDetailsOfLB", lbName));
-            }
-
-            var updateRequired = false;
-            var relevantRules = [];
-
-            if (lbDetails["properties"]["inboundNatRules"]) {
-                for (var rule of lbDetails["properties"]["inboundNatRules"]) {
-                    if (addedRulesId.find((x) => x == rule["id"])) {
-                        if (rule["properties"]["backendPort"] === 5986 && rule["properties"]["backendIPConfiguration"] && rule["properties"]["backendIPConfiguration"]["id"] && rule["properties"]["backendIPConfiguration"]["id"] != "") {
-                            relevantRules.push(rule);
-                        }
-                        else {
-                            updateRequired = true;
-                        }
-                    }
-                }
-            }
-
-            if (updateRequired) {
-                tl.debug("Removing irrelevant rules");
-                var parameters = {
-                    location: lb["location"],
-                    properties: {
-                        frontendIPConfigurations: lb["properties"]["frontendIPConfigurations"],
-                        inboundNatRules: relevantRules,
-                        backendAddressPools: lb["properties"]["backendAddressPools"]
-                    }
-                }
-                networkClient.loadBalancers.createOrUpdate(this.resourceGroupName, lbName, parameters, (error, result, request, response) => {
-                    if (error) {
-                        tl.debug("Failed to update the inbound Nat rules of Load balancer " + lbName + "to remove irrelevant rules");
-                        deferred.reject(tl.loc("FailedToUpdateLBInboundNatRules", lbName));
-                    }
-                    tl.debug("Successfully Updated the inbound Nat Rules: " + lbName);
-                    deferred.resolve("");
-                });
-            }
-            else {
-                deferred.resolve("");
-            }
-        });
-        return deferred.promise;
-    }
-
-    private async AddInboundNatRuleLB() {
-/* 
-    VMs, LBs
-    foreach (var vm in VMs) {
-        if (isEmpty(vm.WinRMPortPublicIP)) {
-            var lb = lbs.find(a => a.NicIds.contains(vm.Nic));
-            if (lb) {
-                // find a Port
-                // Add the rule to the lb using lb.name
-                // Add the rule to nic using vm.nicname.
-                // update the information.
-            }
-        }
-    }
-
-*/
-
-        var inboundWinrmHttpPort = {};
-        var loadBalancers = await this.azureUtils.getLoadBalancers();
-        for (var lb of loadBalancers) {
-            /*1. Find all the busy ports
-              2. Find the vms which are in backend Pools but their winRMPort is not mapped
-              3. Next add the inbound NAT rules
-            */
-            var vmsInBackendPool = {};
-            var unallocatedVMs = [];
-            var usedFrontEndPorts = [];
-            var lbName = lb["name"];
-
-            // Find all VMs bound to this loadbalance.
-            var pools = lb["properties"]["backendAddressPools"];
-            for (var pool of pools) {
-                var ipConfigs = pool["properties"]["backendIPConfigurations"];
-                if (ipConfigs) {
-                    for (var ipc of ipConfigs) {
-                        vmsInBackendPool[ipc["id"]] = "UnassignedPort";
-                    }
-                }
-            }
-
-            // Remove the VMs which have a inbound rule mapping to Port 5986.
-            for (var rule of lb["properties"]["inboundNatRules"]) {
-                usedFrontEndPorts.push(rule["properties"]["frontendPort"]);
-                if (rule["properties"]["backendPort"] === 5986 && rule["properties"]["backendIPConfiguration"] && rule["properties"]["backendIPConfiguration"]["id"]) {
-                    if (vmsInBackendPool[rule["properties"]["backendIPConfiguration"]["id"]]) {
-                        delete vmsInBackendPool[rule["properties"]["backendIPConfiguration"]["id"]];
-                    }
-                }
-            }
-
-            var port: number = 5986;
-            var frontendPortMap = {};
-            var frontendPorts = [];
-
-            for (var key in vmsInBackendPool) {
-                //find the port which is free
-                var found: boolean = false;
-                while (!found) {
-                    if (!usedFrontEndPorts.find((x) => x == port)) {
-                        found = true;
-                        vmsInBackendPool[key] = port;
-                        frontendPortMap[port] = key;
-                        frontendPorts.push(port);
-                    }
-                    port++;
-                }
-            }
-
-            var newRule = {};
-            var empty = true;
-            var addedRules = [];
-
-            for (var key in vmsInBackendPool) {
-                empty = false;
-                var random: number = Math.floor(Math.random() * 10000 + 100);
-                var name: string = "winRMHttpsRule" + random.toString();
-                newRule = {
-                    "name": name,
-                    "properties": {
-                        "backendPort": 5986,
-                        "frontendPort": vmsInBackendPool[key],
-                        "frontendIPConfiguration": { "id": lb["properties"]["frontendIPConfigurations"][0]["id"] },
-                        "protocol": "Tcp",
-                        "idleTimeoutInMinutes": 4,
-                        "enableFloatingIP": false
-                    }
-                };
-                lb["properties"]["inboundNatRules"].push(newRule);
-            }
-            var ruleIdMap = {};
-            if (!empty) {
-                await this.AddRule(lb, frontendPortMap);
-            }
-            else {
-                tl.debug("No vms left for adding inbound nat rules for load balancer " + lbName);
-                console.log(tl.loc("InboundNatRuleLBPresent", lbName));
-            }
-        }
     }
 
     private async AddInboundNetworkSecurityRule(retryCnt: number, securityGrpName, networkClient, ruleName, rulePriority, winrmHttpsPort) {
@@ -430,6 +268,16 @@ export class WinRMHttpsListener {
         var _winrmHttpsPort: string = "5986";
         var deferred = Q.defer<string>();
 
+        /* 
+            var securityGroups = await this.getSecurityRuleConfigs();
+            if (securityGroups) 
+            {
+                for (var securityGroup of securityGroups) {
+                    await this.AddRuleToSecurity(securityGroup);
+                }
+            }
+         */
+
         try {
             var networkClient = new networkManagementClient.NetworkManagementClient(this.credentials, this.subscriptionId);
             networkClient.networkSecurityGroups.list(this.resourceGroupName, null, async (error, result, request, response) => {
@@ -471,107 +319,69 @@ export class WinRMHttpsListener {
         tl.debug("VM Location: " + location);
         tl.debug("VM DNS: " + dnsName);
 
-        try {
-            /*
-            Steps:
-                1. Check if CustomScriptExtension exists.
-                2. If not install it
-                3.Add the inbound rule to allow traffic on winrmHttpsPort
-            */
-            var computeClient = new computeManagementClient.ComputeManagementClient(this.credentials, this.subscriptionId);
-            tl.debug("Checking if the extension " + _extensionName + " is present on vm " + vmName);
+        var computeClient = new computeManagementClient.ComputeManagementClient(this.credentials, this.subscriptionId);
+        tl.debug("Checking if the extension " + _extensionName + " is present on vm " + vmName);
 
-            computeClient.virtualMachineExtensions.get(this.resourceGroupName, vmName, _extensionName, null, async (error, result, request, response) => {
-                if (error) {
-                    tl.debug("Failed to get the extension!!");
-                    //Adding the extension
-                    try {
-                        await this.AddExtensionVM(vmName, computeClient, dnsName, _extensionName, location, fileUris);
-                    }
-                    catch (exception) {
-                        deferred.reject(exception);
-                    }
+        var result = await this.GetExtension(computeClient, vmName, _extensionName);
+        var extensionStatusValid = false;
+        if (result) {
+            if (result["properties"]["settings"]["fileUris"].length == fileUris.length && fileUris.every((element, index) => { return element === result["properties"]["settings"]["fileUris"][index]; })) {
+
+                tl.debug("Custom Script extension is for enabling Https Listener on VM" + vmName);
+                if (result["properties"]["provisioningState"] === 'Succeeded') {
+                    extensionStatusValid = await this.ValidateCustomScriptExecutionStatus(vmName, computeClient, dnsName, _extensionName, location, fileUris);
                 }
-                else if (result != null) {
-                    console.log(tl.loc("ExtensionAlreadyPresentVm", _extensionName, vmName));
-                    tl.debug("Checking if the Custom Script Extension enables Https Listener for winrm on VM " + vmName);
-                    if (result["properties"]["settings"]["fileUris"].length == fileUris.length && fileUris.every((element, index) => { return element === result["properties"]["settings"]["fileUris"][index]; })) {
-                        tl.debug("Custom Script extension is for enabling Https Listener on VM" + vmName);
-                        if (result["properties"]["provisioningState"] != 'Succeeded') {
-                            tl.debug("Provisioning State of extension " + _extensionName + " on vm " + vmName + " is not Succeeded");
-                            try {
-                                await this.RemoveExtensionFromVM(_extensionName, vmName, computeClient);
-                                await this.AddExtensionVM(vmName, computeClient, dnsName, _extensionName, location, fileUris);
-                            }
-                            catch (exception) {
-                                deferred.reject(exception);
-                            }
-                        }
-                        else {
-                            try {
-                                //Validate the Custom Script Execution status: if ok add the rule else add the extension
-                                await this.ValidateCustomScriptExecutionStatus(vmName, computeClient, dnsName, _extensionName, location, fileUris);
-                            }
-                            catch (exception) {
-                                deferred.reject(exception);
-                            }
-                        }
-                    }
-                    else {
-                        tl.debug("Custom Script Extension present doesn't enable Https Listener on VM" + vmName);
-                        await this.AddExtensionVM(vmName, computeClient, dnsName, _extensionName, location, fileUris);
-                    }
+
+                if (!extensionStatusValid) {
+                    await this.RemoveExtensionFromVM(_extensionName, vmName, computeClient);
                 }
-                else {
-                    deferred.reject(tl.loc("FailedToAddExtension"));
-                }
-                deferred.resolve("");
-            });
+            }
         }
-        catch (exception) {
-            deferred.reject(tl.loc("ARG_DeploymentPrereqFailed", exception.message));
+        if (!extensionStatusValid) {
+            await this.AddExtensionVM(vmName, computeClient, dnsName, _extensionName, location, fileUris);
         }
 
         return deferred.promise;
     }
 
-    private async ValidateCustomScriptExecutionStatus(vmName: string, computeClient, dnsName: string, extensionName: string, location: string, fileUris) {
+    private GetExtension(computeClient: computeManagementClient.ComputeManagementClient, vmName: string, extensionName: string): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            computeClient.virtualMachineExtensions.get(this.resourceGroupName, vmName, extensionName, null, async (error, result, request, response) => {
+                if (error) {
+                    tl.debug("Failed to get the extension!!");
+                    resolve(null);
+                }
+
+                resolve(result);
+            });
+        });
+    }
+
+    private async ValidateCustomScriptExecutionStatus(vmName: string, computeClient, dnsName: string, extensionName: string, location: string, fileUris): Promise<boolean> {
         tl.debug("Validating the winrm configuration custom script extension status");
-        var deferred = Q.defer<void>();
 
-        computeClient.virtualMachines.get(this.resourceGroupName, vmName, { expand: 'instanceView' }, async (error, result, request, response) => {
-            if (error) {
-                tl.debug("Error in getting the instance view of the virtual machine " + util.inspect(error, { depth: null }));
-                deferred.reject(tl.loc("FailedToFetchInstanceViewVM"));
-                return;
-            }
+        return new Promise<boolean>((resolve, reject) => {
+            computeClient.virtualMachines.get(this.resourceGroupName, vmName, { expand: 'instanceView' }, async (error, result, request, response) => {
+                if (error) {
+                    tl.debug("Error in getting the instance view of the virtual machine " + util.inspect(error, { depth: null }));
+                    reject(tl.loc("FailedToFetchInstanceViewVM"));
+                    return;
+                }
 
-            var invalidExecutionStatus: boolean = false;
-            var extension = result["properties"]["instanceView"];
-            if (result["name"] === extensionName) {
-                for (var substatus of extension["substatuses"]) {
-                    if (substatus["code"] && substatus["code"].indexOf("ComponentStatus/StdErr") >= 0 && !!substatus["message"] && substatus["message"] != "") {
-                        invalidExecutionStatus = true;
-                        break;
+                var invalidExecutionStatus: boolean = false;
+                var extension = result["properties"]["instanceView"];
+                if (result["name"] === extensionName) {
+                    for (var substatus of extension["substatuses"]) {
+                        if (substatus["code"] && substatus["code"].indexOf("ComponentStatus/StdErr") >= 0 && !!substatus["message"] && substatus["message"] != "") {
+                            invalidExecutionStatus = true;
+                            break;
+                        }
                     }
                 }
-            }
 
-            if (invalidExecutionStatus) {
-                try {
-                    await this.AddExtensionVM(vmName, computeClient, dnsName, extensionName, location, fileUris);
-                }
-                catch (error) {
-                    deferred.reject(error);
-                }
-            }
-            else {
-                this.customScriptExtensionInstalled = true;
-                tl.debug("Status of the customScriptExtension is valid on VM " + vmName);
-            }
-            deferred.resolve(null);
+                resolve(!invalidExecutionStatus);
+            });
         });
-        return deferred.promise;
     }
 
     private async AddExtensionVM(vmName: string, computeClient, dnsName: string, extensionName: string, location: string, _fileUris) {
@@ -608,7 +418,6 @@ export class WinRMHttpsListener {
             tl.debug("Addition of extension completed for vm" + vmName);
             if (result["properties"]["provisioningState"] != 'Succeeded') {
                 tl.debug("Provisioning State of CustomScriptExtension is not suceeded on vm " + vmName);
-                await this.RemoveExtensionFromVM(extensionName, vmName, computeClient);
                 deferred.reject(tl.loc("ARG_SetExtensionFailedForVm", this.resourceGroupName, vmName, result));
                 return;
             }
@@ -636,234 +445,5 @@ export class WinRMHttpsListener {
         });
 
         return deferred.promise;
-    }
-
-    private async SetAzureRMVMsConnectionDetailsInResourceGroup() {
-        var vmResourceDetails = {};
-        var debugLogsFlag = process.env["SYSTEM_DEBUG"];
-        var networkClient = new networkManagementClient.NetworkManagementClient(this.credentials, this.subscriptionId);
-        var computeClient = new computeManagementClient.ComputeManagementClient(this.credentials, this.subscriptionId);
-        var deferred = Q.defer<string>();
-
-        try {
-            var virtualMachines = await this.azureUtils.getVMDetails();
-            var publicIPAddresses = await this.azureUtils.getPublicIPAddresses();
-            var networkInterfaces = await this.azureUtils.getNetworkInterfaceDetails();
-            var result = await this.azureUtils.getLoadBalancers();
-            if (result.length > 0) {
-                for (var i = 0; i < result.length; i++) {
-                    var lbName = result[i]["name"];
-                    var frontEndIPConfigs = result[i]["properties"]["frontendIPConfigurations"];
-                    var inboundRules = result[i]["properties"]["inboundNatRules"];
-
-                    this.fqdnMap = this.GetMachinesFqdnForLB(publicIPAddresses, networkInterfaces, frontEndIPConfigs, this.fqdnMap, debugLogsFlag);
-
-                    this.winRmHttpsPortMap = this.GetFrontEndPorts("5986", this.winRmHttpsPortMap, networkInterfaces, inboundRules, debugLogsFlag);
-                }
-
-                this.winRmHttpsPortMap = this.GetMachineNameFromId(this.winRmHttpsPortMap, "Front End port", virtualMachines, false, debugLogsFlag);
-            }
-
-            this.fqdnMap = this.GetMachinesFqdnsForPublicIP(publicIPAddresses, networkInterfaces, virtualMachines, this.fqdnMap, debugLogsFlag);
-
-            this.fqdnMap = this.GetMachineNameFromId(this.fqdnMap, "FQDN", virtualMachines, true, debugLogsFlag);
-
-            tl.debug("FQDN map: ");
-            for (var index in this.fqdnMap) {
-                tl.debug(index + " : " + this.fqdnMap[index]);
-            }
-
-            tl.debug("WinRMHttpPort map: ");
-            for (var index in this.winRmHttpsPortMap) {
-                tl.debug(index + " : " + this.winRmHttpsPortMap[index]);
-            }
-
-            this.virtualMachines = virtualMachines;
-        }
-        catch (error) {
-            deferred.reject(error);
-        }
-        deferred.resolve("");
-        return deferred.promise;
-    }
-
-    private GetMachinesFqdnsForPublicIP(publicIPAddressResources: [Object], networkInterfaceResources: [Object], azureRMVMResources: [Object], fqdnMap: {}, debugLogsFlag: string): {} {
-        if (!!this.resourceGroupName && this.resourceGroupName != "" && !!publicIPAddressResources && networkInterfaceResources) {
-            tl.debug("Trying to get FQDN for the azureRM VM resources under public IP from resource group " + this.resourceGroupName);
-
-            //Map the ipc to fqdn
-            for (var i = 0; i < publicIPAddressResources.length; i++) {
-                var publicIp = publicIPAddressResources[i];
-                if (!!publicIp["properties"]["ipConfiguration"] && !!publicIp["properties"]["ipConfiguration"]["id"] && publicIp["properties"]["ipConfiguration"]["id"] != "") {
-                    if (!!publicIp["properties"]["dnsSettings"] && !!publicIp["properties"]["dnsSettings"]["fqdn"] && publicIp["properties"]["dnsSettings"]["fqdn"] != "") {
-                        fqdnMap[publicIp["properties"]["ipConfiguration"]["id"]] = publicIp["properties"]["dnsSettings"]["fqdn"];
-                    }
-                    else if (!!publicIp["properties"]["ipAddress"] && publicIp["properties"]["ipAddress"] != "") {
-                        fqdnMap[publicIp["properties"]["ipConfiguration"]["id"]] = publicIp["properties"]["ipAddress"];
-                    }
-                    else if (!publicIp["properties"]["ipAddress"]) {
-                        fqdnMap[publicIp["properties"]["ipConfiguration"]["id"]] = "Not Assigned";
-                    }
-                }
-            }
-
-            //Find out the NIC and thus the VM corresponding to a given ipc
-            for (var i = 0; i < networkInterfaceResources.length; i++) {
-                var nic = networkInterfaceResources[i];
-                if (!!nic["properties"]["ipConfigurations"]) {
-                    for (var j = 0; j < nic["properties"]["ipConfigurations"].length; j++) {
-                        var ipc = nic["properties"]["ipConfigurations"][j];
-                        if (!!ipc["id"] && ipc["id"] != "") {
-                            var fqdn = fqdnMap[ipc["id"]];
-                            if (!!fqdn && fqdn != "") {
-                                delete fqdnMap[ipc["id"]];
-                                if (!!nic["properties"]["virtualMachine"] && !!nic["properties"]["virtualMachine"]["id"] && nic["properties"]["virtualMachine"]["id"] != "") {
-                                    fqdnMap[nic["properties"]["virtualMachine"]["id"]] = fqdn;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return fqdnMap;
-    }
-
-    private GetMachineNameFromId(map: {}, mapParameter: string, azureRMVMResources: [Object], throwOnTotalUnavailability: boolean, debugLogsFlag: string): {} {
-        if (!!map) {
-            if (debugLogsFlag == "true") {
-                //fill here
-            }
-
-            tl.debug("throwOnTotalUnavailability: " + throwOnTotalUnavailability);
-
-            var errorCount = 0;
-            for (var i = 0; i < azureRMVMResources.length; i++) {
-                var vm = azureRMVMResources[i];
-                if (vm["id"] && vm["id"] != "") {
-                    var value = map[vm["id"]];
-                    var resourceName = vm["name"];
-                    if (value && value != "") {
-                        tl.debug(mapParameter + " value for resource " + resourceName + " is " + value);
-                        delete map[vm["id"]];
-                        map[resourceName] = value;
-                    }
-                    else {
-                        errorCount = errorCount + 1;
-                        tl.debug("Unable to find " + mapParameter + " for resource " + resourceName);
-                    }
-                }
-            }
-
-            if (throwOnTotalUnavailability === true) {
-                if (errorCount == azureRMVMResources.length && azureRMVMResources.length != 0) {
-                    throw tl.loc("ARG_AllResourceNotFound", mapParameter, this.resourceGroupName);
-                }
-                else {
-                    if (errorCount > 0 && errorCount != azureRMVMResources.length) {
-                        console.warn(tl.loc("ARG_ResourceNotFound", mapParameter, errorCount, this.resourceGroupName));
-                    }
-                }
-            }
-        }
-
-        return map;
-    }
-
-    private GetFrontEndPorts(backEndPort: string, portList: {}, networkInterfaceResources: [Object], inboundRules: [Object], debugLogsFlag: string): {} {
-        if (!!backEndPort && backEndPort != "" && !!networkInterfaceResources && !!inboundRules) {
-            tl.debug("Trying to get front end ports for " + backEndPort);
-
-            for (var i = 0; i < inboundRules.length; i++) {
-                var rule = inboundRules[i];
-                if (rule["properties"]["backendPort"] == backEndPort && !!rule["properties"]["backendIPConfiguration"] && !!rule["properties"]["backendIPConfiguration"]["id"] && rule["properties"]["backendIPConfiguration"]["id"] != "") {
-                    portList[rule["properties"]["backendIPConfiguration"]["id"]] = rule["properties"]["frontendPort"];
-                }
-            }
-
-            //get the nic and the corrresponding machine id for a given back end ipc
-            for (var i = 0; i < networkInterfaceResources.length; i++) {
-                var nic = networkInterfaceResources[i];
-                if (!!nic["properties"]["ipConfigurations"]) {
-                    for (var j = 0; j < nic["properties"]["ipConfigurations"].length; j++) {
-                        var ipc = nic["properties"]["ipConfigurations"][j];
-                        if (!!ipc && !!ipc["id"] && ipc["id"] != "") {
-                            var frontendPort = portList[ipc["id"]];
-                            if (!!frontendPort && frontendPort != "") {
-                                delete portList[ipc["id"]];
-                                if (!!nic["properties"]["virtualMachine"] && !!nic["properties"]["virtualMachine"]["id"] && nic["properties"]["virtualMachine"]["id"] != "") {
-                                    portList[nic["properties"]["virtualMachine"]["id"]] = frontendPort;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-        }
-
-        return portList;
-    }
-
-    private GetMachinesFqdnForLB(publicIPAddress: [Object], networkInterfaceResources: [Object], frontEndIPConfigs: [Object], fqdnMap: {}, debugLogsFlag: string): {} {
-        if (this.resourceGroupName && this.resourceGroupName != "" && publicIPAddress && networkInterfaceResources && frontEndIPConfigs) {
-            tl.debug("Trying to get the FQDN for the azureVM resources under load balancer from resource group " + this.resourceGroupName);
-
-            for (var i = 0; i < publicIPAddress.length; i++) {
-                var publicIp = publicIPAddress[i];
-                if (!!publicIp["properties"]["ipConfiguration"] && !!publicIp["properties"]["ipConfiguration"]["id"] && publicIp["properties"]["ipConfiguration"]["id"] != "") {
-                    if (!!publicIp["properties"]["dnsSettings"] && !!publicIp["properties"]["dnsSettings"]["fqdn"] && publicIp["properties"]["dnsSettings"]["fqdn"] != "") {
-                        fqdnMap[publicIp["id"]] = publicIp["properties"]["dnsSettings"]["fqdn"];
-                    }
-                    else if (!!publicIp["properties"]["ipAddress"] && publicIp["properties"]["ipAddress"] != "") {
-                        fqdnMap[publicIp["id"]] = publicIp["properties"]["ipAddress"];
-                    }
-                    else if (!publicIp["properties"]["ipAddress"]) {
-                        fqdnMap[publicIp["id"]] = "Not Assigned";
-                    }
-                }
-            }
-
-            //Get the NAT rule for a given ip id
-            for (var i = 0; i < frontEndIPConfigs.length; i++) {
-                var config = frontEndIPConfigs[i];
-                if (config["properties"]["publicIPAddress"] && config["properties"]["publicIPAddress"]["id"] && config["properties"]["publicIPAddress"]["id"] != "") {
-                    var fqdn = fqdnMap[config["properties"]["publicIPAddress"]["id"]];
-                    if (fqdn && fqdn != "") {
-                        delete fqdnMap[config["properties"]["publicIPAddress"]["id"]];
-                        if (!!config["properties"]["inboundNatRules"]) {
-                            for (var j = 0; j < config["properties"]["inboundNatRules"].length; j++) {
-                                fqdnMap[config["properties"]["inboundNatRules"][j]["id"]] = fqdn;
-                            }
-                        }
-                    }
-                }
-            }
-
-            for (var i = 0; i < networkInterfaceResources.length; i++) {
-                var nic = networkInterfaceResources[i];
-                if (nic["properties"]["ipConfigurations"]) {
-                    for (var j = 0; j < nic["properties"]["ipConfigurations"].length; j++) {
-                        var ipc = nic["properties"]["ipConfigurations"][j];
-                        if (ipc["properties"]["loadBalancerInboundNatRules"]) {
-                            for (var k = 0; k < ipc["properties"]["loadBalancerInboundNatRules"].length; k++) {
-                                var rule = ipc["properties"]["loadBalancerInboundNatRules"][k];
-                                if (rule && rule["id"] && rule["id"] != "") {
-                                    var fqdn = fqdnMap[rule["id"]];
-                                    if (fqdn && fqdn != "") {
-                                        delete fqdnMap[rule["id"]];
-                                        if (nic["properties"]["virtualMachine"] && nic["properties"]["virtualMachine"]["id"] && nic["properties"]["virtualMachine"]["id"] != "") {
-                                            fqdnMap[nic["properties"]["virtualMachine"]["id"]] = fqdn;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return fqdnMap;
     }
 }

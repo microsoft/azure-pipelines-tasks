@@ -8,11 +8,6 @@ import deployAzureRG = require("../models/DeployAzureRG");
 
 export class VirtualMachine {
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
-    private client;
-    private failureCount: number;
-    private successCount: number;
-    private vmCount: number;
-    private errors: string;
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
         this.taskParameters = taskParameters;
