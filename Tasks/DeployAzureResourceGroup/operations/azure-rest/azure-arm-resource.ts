@@ -106,7 +106,7 @@ export class ResourceGroups {
             (error) => callback(error));
     }
 
-    public createOrUpdate(resourceGroupName, parameters, callback) {
+    public createOrUpdate(resourceGroupName: string, parameters, callback: azureServiceClient.ApiCallback) {
         var client = this.client;
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));

@@ -3,6 +3,7 @@ import computeManagementClient = require("./azure-rest/azure-arm-compute");
 import deployAzureRG = require("../models/DeployAzureRG");
 import tl = require("vsts-task-lib/task")
 import az = require("./azure-rest/azureModels");
+import utils = require("./utils");
 
 export class NetworkInterface {
     Name: string;
@@ -160,7 +161,7 @@ export class AzureUtil {
         return new Promise<any>((resolve, reject) => {
             this.networkClient.loadBalancers.list(this.taskParameters.resourceGroupName, (error, loadbalancers, request, response) => {
                 if (error) {
-                    reject(tl.loc("FailedToFetchLoadBalancers", error));
+                    reject(tl.loc("FailedToFetchLoadBalancers", utils.getError(error)));
                 }
                 this.loadBalancersDetails = loadbalancers;
                 resolve(loadbalancers);
@@ -172,8 +173,7 @@ export class AzureUtil {
         return new Promise<any>((resolve, reject) => {
             this.computeClient.virtualMachines.list(this.taskParameters.resourceGroupName, null, (error, virtualMachines, request, response) => {
                 if (error) {
-                    tl.error(error);
-                    reject(tl.loc("FailedToFetchVMs"));
+                    reject(tl.loc("VM_ListFetchFailed", this.taskParameters.resourceGroupName, utils.getError(error)));
                 }
                 this.vmDetails = virtualMachines;
                 resolve(virtualMachines);
@@ -185,8 +185,7 @@ export class AzureUtil {
         return new Promise<any>((resolve, reject) => {
             this.networkClient.networkInterfaces.list(this.taskParameters.resourceGroupName, null, (error, networkInterfaces, request, response) => {
                 if (error) {
-                    tl.error(error);
-                    reject(tl.loc("FailedToFetchNetworkInterfaces"));
+                    reject(tl.loc("FailedToFetchNetworkInterfaces", utils.getError(error)));
                 }
                 this.networkInterfaceDetails = networkInterfaces;
                 resolve(networkInterfaces);
@@ -199,7 +198,7 @@ export class AzureUtil {
             this.networkClient.publicIPAddresses.list(this.taskParameters.resourceGroupName, null, (error, publicAddresses, request, response) => {
                 if (error) {
                     tl.error(error);
-                    reject(tl.loc("FailedToFetchPublicAddresses"));
+                    reject(tl.loc("FailedToFetchPublicAddresses", utils.getError(error)));
                 }
                 this.publicAddressDetails = publicAddresses;
                 resolve(publicAddresses);

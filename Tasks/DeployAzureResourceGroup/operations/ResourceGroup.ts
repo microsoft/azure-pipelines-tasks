@@ -76,11 +76,10 @@ export class ResourceGroup {
     }
 
     private writeDeploymentErrors(error) {
-        console.log(tl.loc("ErrorsInYourDeployment"));
-        tl.error(tl.loc("Error", error.code));
+        console.log(tl.loc("ErrorsInYourDeployment", error.code));
         tl.error(error.message);
         if (error.details) {
-            console.log(tl.loc("Details"));
+            tl.error(tl.loc("Details"));
             for (var i = 0; i < error.details.length; i++) {
                 var errorMessage = util.format("%s: %s %s", error.details[i].code, error.details[i].message, error.details[i].details);
                 tl.error(errorMessage);
@@ -108,12 +107,13 @@ export class ResourceGroup {
     }
 
     private checkResourceGroupExistence(armClient: armResource.ResourceManagementClient): Promise<boolean> {
+        console.log(tl.loc("CheckResourceGroupExistence", this.taskParameters.resourceGroupName));
         return new Promise<boolean>((resolve, reject) => {
             armClient.resourceGroups.checkExistence(this.taskParameters.resourceGroupName, (error, exists, request, response) => {
                 if (error) {
-                    reject(tl.loc("ResourceGroupStatusFetchFailed", error));
+                    reject(tl.loc("ResourceGroupStatusFetchFailed", utils.getError(error)));
                 }
-                console.log(tl.loc("RGNotFound", this.taskParameters.resourceGroupName));
+                console.log(tl.loc("ResourceGroupStatus", exists));
                 resolve(exists);
             });
         });
@@ -148,7 +148,7 @@ export class ResourceGroup {
             console.log(tl.loc("CreatingNewRG", this.taskParameters.resourceGroupName));
             armClient.resourceGroups.createOrUpdate(this.taskParameters.resourceGroupName, { "name": this.taskParameters.resourceGroupName, "location": this.taskParameters.location }, (error, result, request, response) => {
                 if (error) {
-                    reject(tl.loc("ResourceGroupCreationFailed", error));
+                    reject(tl.loc("ResourceGroupCreationFailed", utils.getError(error)));
                 }
                 console.log(tl.loc("CreatedRG"));
                 resolve();
@@ -173,7 +173,6 @@ export class ResourceGroup {
     }
 
     private getDeploymentDataForLinkedArtifact(): Deployment {
-        console.log(tl.loc("GettingDeploymentDataFromLinkedArtifact"));
         var template: Object;
         try {
             tl.debug("Loading CSM Template File.. " + this.taskParameters.csmFile);
@@ -181,7 +180,7 @@ export class ResourceGroup {
             tl.debug("Loaded CSM File");
         }
         catch (error) {
-            throw (tl.loc("TemplateParsingFailed", error.message));
+            throw (tl.loc("TemplateParsingFailed", utils.getError(error.message)));
         }
 
         var parameters = {};
@@ -196,7 +195,7 @@ export class ResourceGroup {
             }
         }
         catch (error) {
-            throw (tl.loc("ParametersFileParsingFailed", error.message));
+            throw (tl.loc("ParametersFileParsingFailed", utils.getError(error.message)));
         }
 
         if (utils.isNonEmpty(this.taskParameters.overrideParameters)) {
@@ -246,9 +245,8 @@ export class ResourceGroup {
             deployment.properties["mode"] = "Incremental";
             armClient.deployments.validate(this.taskParameters.resourceGroupName, this.createDeploymentName(), deployment, (error, result, request, response) => {
                 if (error) {
-                    reject(tl.loc("RGO_createTemplateDeploymentFailed"));
+                    reject(tl.loc("CreateTemplateDeploymentValidationFailed", utils.getError(error)));
                 }
-                console.log(tl.loc("CompletedValidation"));
                 if (result.error) {
                     this.writeDeploymentErrors(result.error);
                     reject(tl.loc("RGO_createTemplateDeploymentFailed"));
@@ -269,9 +267,9 @@ export class ResourceGroup {
                 armClient.deployments.createOrUpdate(this.taskParameters.resourceGroupName, this.createDeploymentName(), deployment, (error, result, request, response) => {
                     if (error) {
                         this.writeDeploymentErrors(error);
-                        reject(tl.loc("RGO_createTemplateDeploymentFailed"));
+                        reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
-                    console.log(tl.loc("RGO_createTemplateDeploymentSucceeded", this.taskParameters.resourceGroupName));
+                    console.log(tl.loc("CreateTemplateDeploymentSucceeded"));
                     resolve();
                 });
             });

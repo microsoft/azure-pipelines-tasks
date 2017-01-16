@@ -45,7 +45,7 @@ export class VirtualMachines {
         this.client = client;
     }
 
-    public list(resourceGroupName, options, callback) {
+    public list(resourceGroupName, options, callback: azureServiceClient.ApiCallback) {
         if (!callback && typeof options === 'function') {
             callback = options;
             options = null;
@@ -93,7 +93,7 @@ export class VirtualMachines {
             (apiResult: azureServiceClient.ApiResult) => callback(apiResult.error));
     }
 
-    public get(resourceGroupName, vmName, options, callback) {
+    public get(resourceGroupName, vmName, options, callback: azureServiceClient.ApiCallback) {
         var client = this.client;
         if (!callback && typeof options === 'function') {
             callback = options;
@@ -145,7 +145,7 @@ export class VirtualMachines {
             (apiResult: azureServiceClient.ApiResult) => callback(apiResult.error));
     }
 
-    public restart(resourceGroupName: string, vmName: string, callback) {
+    public restart(resourceGroupName: string, vmName: string, callback: azureServiceClient.ApiCallback) {
         var client = this.client;
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
@@ -193,7 +193,7 @@ export class VirtualMachines {
             (apiResult: azureServiceClient.ApiResult) => callback(apiResult.error));
     }
 
-    public start(resourceGroupName: string, vmName: string, callback) {
+    public start(resourceGroupName: string, vmName: string, callback: azureServiceClient.ApiCallback) {
         var client = this.client;
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
@@ -237,7 +237,7 @@ export class VirtualMachines {
             (apiResult: azureServiceClient.ApiResult) => callback(apiResult.error));
     }
 
-    public powerOff(resourceGroupName: string, vmName: string, callback) {
+    public powerOff(resourceGroupName: string, vmName: string, callback: azureServiceClient.ApiCallback) {
         var client = this.client;
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
@@ -280,7 +280,7 @@ export class VirtualMachines {
             (apiResult: azureServiceClient.ApiResult) => callback(apiResult.error));
     }
 
-    public deleteMethod(resourceGroupName: string, vmName: string, callback) {
+    public deleteMethod(resourceGroupName: string, vmName: string, callback: azureServiceClient.ApiCallback) {
         var client = this.client;
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
