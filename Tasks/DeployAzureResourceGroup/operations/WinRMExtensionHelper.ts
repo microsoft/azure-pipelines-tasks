@@ -45,15 +45,19 @@ export class WinRMExtensionHelper {
 
     public async ConfigureWinRMExtension() {
         console.log(tl.loc("EnablingWinRM"));
-        await this.AddInboundNatRulesOnLoadBalancers();
-        await this.AddExtensionToVMsToConfigureWinRM();
-        await this.AddNetworkSecurityRuleConfigForWinRMPort();
+        try {
+            await this.AddInboundNatRulesOnLoadBalancers();
+            await this.AddExtensionToVMsToConfigureWinRM();
+            await this.AddNetworkSecurityRuleConfigForWinRMPort();
+        }
+        catch (exception) {
+            throw new Error("Enabling of Deployment Prerequisites failed");
+        }
     }
 
-    private async AddExtensionToVMsToConfigureWinRM()
-    {
+    private async AddExtensionToVMsToConfigureWinRM() {
         var resourceGroupDetails = await this.azureUtils.getResourceGroupDetails();
-        try{
+        try {
             for (var vm of this.azureUtils.vmDetails) {
                 var resourceName = vm.name;
                 var resourceId = vm.id;
@@ -67,7 +71,7 @@ export class WinRMExtensionHelper {
             }
         }
         catch (exception) {
-            throw new Error("Enabling of Deployment Prerequisites failed");
+            throw new Error("Addition of Custom Script Extension to VM failed");
         }
     }
 
@@ -98,7 +102,7 @@ export class WinRMExtensionHelper {
                         tl.debug("No need to add Inbound Nat rule for vm " + virtualMachine.Name);
                     }
                 }
-                resolve("");
+                resolve();
             }
             catch (exception) {
                 tl.debug("Failed to add Inbound Nat Rule to LB " + exception);
@@ -162,30 +166,31 @@ export class WinRMExtensionHelper {
                 }
             }
             console.log("Adding Inbound Nat Rule for the Network Interface %s to the Load Balancer %s", networkInterface.name, loadBalancer.name);
-
-            this.networkClient.loadBalancers.createOrUpdate(this.resourceGroupName, loadBalancer.name, loadBalancer, null, (error, result, request, response) => {
-                if (error) {
-                    console.log("Addition of Inbound Nat Rule to the Load Balancer %s failed with the error: %s ", loadBalancer.name, JSON.stringify(error));
-                    reject(error);
-                }
-                else {
-                    console.log(tl.loc("AddedInboundNatRuleLB", loadBalancer.name));
-                    var loadBalancerUpdated = <az.LoadBalancer>result;
-                    var addedRule = loadBalancerUpdated.properties.inboundNatRules.find(r => r.properties.frontendPort == fronendPort);
-                    ipConfiguration.properties.loadBalancerInboundNatRules.push(addedRule);
-                    tl.debug("Updating the loadBalancerInboundNatRules of nic " + networkInterface.name);
-                    this.networkClient.networkInterfaces.createOrUpdate(this.resourceGroupName, networkInterface.name, networkInterface, null,
-                        (error2, result2, request2, response2) => {
-                            if (error2) {
-                                console.log("Addition of rule Id to the loadBalancerInboundNatRules of nic %s failed with the error: %s", networkInterface.name, JSON.stringify(error2));
-                                reject(error2);
-                                return;
-                            }
-                            console.log(tl.loc("AddedTargetInboundNatRuleLB", networkInterface.name));
-                            resolve();
-                        });
-                }
-            });
+            if (!!loadBalancer && !!networkInterface) {
+                this.networkClient.loadBalancers.createOrUpdate(this.resourceGroupName, loadBalancer.name, loadBalancer, null, (error, result, request, response) => {
+                    if (error) {
+                        console.log("Addition of Inbound Nat Rule to the Load Balancer %s failed with the error: %s ", loadBalancer.name, JSON.stringify(error));
+                        reject(utils.getError(error));
+                    }
+                    else {
+                        console.log(tl.loc("AddedInboundNatRuleLB", loadBalancer.name));
+                        var loadBalancerUpdated = <az.LoadBalancer>result;
+                        var addedRule = loadBalancerUpdated.properties.inboundNatRules.find(r => r.properties.frontendPort == fronendPort);
+                        ipConfiguration.properties.loadBalancerInboundNatRules.push(addedRule);
+                        tl.debug("Updating the loadBalancerInboundNatRules of nic " + networkInterface.name);
+                        this.networkClient.networkInterfaces.createOrUpdate(this.resourceGroupName, networkInterface.name, networkInterface, null,
+                            (error2, result2, request2, response2) => {
+                                if (error2) {
+                                    console.log("Addition of rule Id to the loadBalancerInboundNatRules of nic %s failed with the error: %s", networkInterface.name, JSON.stringify(error2));
+                                    reject(utils.getError(error2));
+                                    return;
+                                }
+                                console.log(tl.loc("AddedTargetInboundNatRuleLB", networkInterface.name));
+                                resolve();
+                            });
+                    }
+                });
+            }
         });
 
     }
@@ -213,7 +218,7 @@ export class WinRMExtensionHelper {
                     }
                     console.log(tl.loc("AddedSecurityRuleNSG", ruleName, rulePriority, winrmHttpsPort, securityGrpName, util.inspect(result, { depth: null })));
                     this.ruleAddedToNsg = true;
-                    resolve("");
+                    resolve();
                 });
             }
             catch (exception) {
@@ -224,7 +229,7 @@ export class WinRMExtensionHelper {
                 this.networkClient.networkSecurityGroups.list(this.resourceGroupName, async (error, result, request, response) => {
                     if (error) {
                         tl.debug("Error in getting the list of network Security Groups for the resource-group " + this.resourceGroupName);
-                        reject(tl.loc("FetchingOfNetworkSecurityGroupFailed", error));
+                        reject(tl.loc("FetchingOfNetworkSecurityGroupFailed", utils.getError(error)));
                         return;
                     }
 
@@ -238,7 +243,7 @@ export class WinRMExtensionHelper {
                                 reject(exception);
                                 return;
                             }
-                            resolve("");
+                            resolve();
                         }
                         else {
                             tl.debug("Failed to add the NSG rule on security group " + securityGrpName + " after trying for 3 times ");
@@ -268,7 +273,7 @@ export class WinRMExtensionHelper {
                     console.log(tl.loc("RuleExistsAlready", ruleName, securityGrpName));
                     this.ruleAddedToNsg = true;
                 }
-                resolve("");
+                resolve();
             }
             catch (exception) {
                 tl.debug("Failed to add rule to network security Group with the exception" + exception.message);
@@ -281,7 +286,7 @@ export class WinRMExtensionHelper {
         return new Promise((resolve, reject) => {
             this.networkClient.securityRules.get(this.resourceGroupName, securityGrpName, ruleName, null, (error, result, request, response) => {
                 if (error) {
-                    resolve(null);
+                    resolve();
                 }
                 resolve(result);
             });
@@ -320,10 +325,10 @@ export class WinRMExtensionHelper {
                     tl.debug("Trying to add a network security group rule");
                     await this.AddNetworkSecurityRuleConfig(result, _ruleName, _rulePriority, _winrmHttpsPort);
                 }
-                resolve("");
+                resolve();
             }
             else {
-                reject("");
+                reject();
             }
         });
     }
@@ -333,7 +338,7 @@ export class WinRMExtensionHelper {
             this.networkClient.networkSecurityGroups.list(this.resourceGroupName, null, (error, result, request, response) => {
                 if (error) {
                     tl.debug("Failed to get the list of NSG " + JSON.stringify(error));
-                    resolve(null);
+                    reject(utils.getError(error));
                 }
                 resolve(result);
             });
@@ -372,7 +377,7 @@ export class WinRMExtensionHelper {
                     await this.AddExtensionVM(vmName, dnsName, _extensionName, location, fileUris);
                 }
                 tl.debug("Addition of Custom Script Extension is completed");
-                resolve("");
+                resolve();
             }
             catch (exception) {
                 tl.debug("Addition of Custom Script Extension failed");
@@ -464,7 +469,7 @@ export class WinRMExtensionHelper {
                 }
                 tl.debug("Provisioning of CustomScriptExtension on vm " + vmName + " is in Succeeded State");
                 this.customScriptExtensionInstalled = true;
-                resolve(null);
+                resolve();
             });
         });
     }
@@ -481,7 +486,7 @@ export class WinRMExtensionHelper {
                 }
 
                 tl.debug("Successfully removed the extension " + extensionName + " from the VM " + vmName);
-                resolve(null);
+                resolve();
             });
         });
     }
