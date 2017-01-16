@@ -41,7 +41,8 @@
         {
             "name": "output",
             "displayName": "Output",
-            "isExpanded": true
+            "isExpanded": true,
+            "visibleRule": "action = Create or update resource group || action = Select resource group"
         }
     ],
     "inputs": [
