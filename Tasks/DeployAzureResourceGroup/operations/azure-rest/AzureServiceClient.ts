@@ -34,6 +34,7 @@ export class AzureError {
     public code;
     public message;
     public statusCode;
+    public details;
 }
 
 export interface ApiCallback {
@@ -47,6 +48,7 @@ export function ToError(response: WebResponse): AzureError {
     if (response.body && response.body.error) {
         error.code = response.body.error.code;
         error.message = response.body.error.message;
+        error.details = response.body.error.details;
     }
 
     return error;

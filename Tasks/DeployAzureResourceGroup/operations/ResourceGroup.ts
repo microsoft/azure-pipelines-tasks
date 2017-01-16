@@ -79,14 +79,14 @@ export class ResourceGroup {
         console.log(tl.loc("SelectResourceGroupSuccessful", this.taskParameters.resourceGroupName, this.taskParameters.outputVariable));
     }
 
-    private writeErrors(result) {
+    private writeDeploymentErrors(error) {
         console.log(tl.loc("ErrorsInYourDeployment"));
-        tl.error(tl.loc("Error", result.error.code));
-        tl.error(result.error.message);
-        if (result.error.details) {
+        tl.error(tl.loc("Error", error.code));
+        tl.error(error.message);
+        if (error.details) {
             console.log(tl.loc("Details"));
-            for (var i = 0; i < result.error.details.length; i++) {
-                var errorMessage = util.format("%s: %s %s", result.error.details[i].code, result.error.details[i].message, result.error.details[i].details);
+            for (var i = 0; i < error.details.length; i++) {
+                var errorMessage = util.format("%s: %s %s", error.details[i].code, error.details[i].message, error.details[i].details);
                 tl.error(errorMessage);
             }
         }
@@ -252,12 +252,12 @@ export class ResourceGroup {
             deployment.properties["mode"] = "Incremental";
             armClient.deployments.validate(this.taskParameters.resourceGroupName, this.createDeploymentName(), deployment, (error, result, request, response) => {
                 if (error) {
-                    reject(tl.loc("RGO_createTemplateDeploymentFailed", error.message));
+                    reject(tl.loc("RGO_createTemplateDeploymentFailed"));
                 }
                 console.log(tl.loc("CompletedValidation"));
                 if (result.error) {
-                    this.writeErrors(result);
-                    reject(tl.loc("RGO_createTemplateDeploymentFailed", this.taskParameters.resourceGroupName));
+                    this.writeDeploymentErrors(result.error);
+                    reject(tl.loc("RGO_createTemplateDeploymentFailed"));
                 } else {
                     console.log(tl.loc("ValidDeployment"));
                     resolve();
@@ -274,7 +274,8 @@ export class ResourceGroup {
             return new Promise<void>((resolve, reject) => {
                 armClient.deployments.createOrUpdate(this.taskParameters.resourceGroupName, this.createDeploymentName(), deployment, (error, result, request, response) => {
                     if (error) {
-                        reject(tl.loc("RGO_createTemplateDeploymentFailed", error.message));
+                        this.writeDeploymentErrors(error);
+                        reject(tl.loc("RGO_createTemplateDeploymentFailed"));
                     }
                     console.log(tl.loc("RGO_createTemplateDeploymentSucceeded", this.taskParameters.resourceGroupName));
                     resolve();

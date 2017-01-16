@@ -119,7 +119,7 @@
             "label": "Template link",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Specify the URI that is used to locate the template file. To deploy a private template in a storage account, retrieve a SAS token and include it in the URI for the template. For steps on setting up a template in a storage account and generating a SAS token, see [Deploy resources with Resource Manager templates and Azure PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Deploy resources with Resource Manager templates and Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911).",
+            "helpMarkDown": "Specify the URL of the template file. Example: [https://raw.githubusercontent.com/Azure/...](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-simple-windows/azuredeploy.json) \n\nTo deploy a template stored in a private storage account, retrieve and include the shared access signature (SAS) token in the URL of the template. Example: `<blob_storage_url>/template.json?<SAStoken>` To upload a template file (or a linked template) to a storage account and generate a SAS token, you could use [Azure file copy](https://aka.ms/azurefilecopyreadme) task or follow the steps using [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911).\n\nTo  view the template parameters in a grid, click on “…” next to Override template parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS.",
             "visibleRule": "action = Create or update resource group && templateLocation = URL of the file"
         },
         {
@@ -128,7 +128,7 @@
             "label": "Template parameters link",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify a HTTP/HTTPS path for the parameters file for the Azure Resource Manager template, which is publically accessible.",
+            "helpMarkDown": "Specify the URL of the parameters file. Example: [https://raw.githubusercontent.com/Azure/...](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-simple-windows/azuredeploy.parameters.json) \n\nTo use a file stored in a private storage account, retrieve and include the shared access signature (SAS) token in the URL of the template. Example: `<blob_storage_url>/template.json?<SAStoken>` To upload a parameters file to a storage account and generate a SAS token, you could use [Azure file copy](https://aka.ms/azurefilecopyreadme) task or follow the steps using [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911). \n\nTo  view the template parameters in a grid, click on “…” next to Override template parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS.",
             "visibleRule": "action = Create or update resource group && templateLocation = URL of the file"
         },
         {
@@ -155,7 +155,7 @@
             "label": "Override template parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the template parameters to override. Example, <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre).",
+            "helpMarkDown": "To  view the template parameters in a grid, click on “…” next to Override Parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS. Or type the template parameters to override in the textbox. Example, <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre).",
             "properties": {
                 "editorExtension": "ms.vss-services-azure.azurerg-parameters-grid"
             },
@@ -214,7 +214,7 @@
         "VMOperationsInitiationFailed": "Task failed while creating a computeManagement client, with an error: %s",
         "TemplateParsingFailed": "Ensure the Template file is a valid JSON. Task failed while parsing with an error: %s",
         "ParametersFileParsingFailed": "Ensure the Parameters file is a valid JSON. Task failed while parsing with an error: %s",
-        "RGO_createTemplateDeploymentFailed": "Task failed while creating a template deployment, due to : %s",
+        "RGO_createTemplateDeploymentFailed": "Task failed while creating or updating a template deployment.",
         "RGO_createTemplateDeploymentSucceeded": "Successfully deployed the template on '%s'",
         "RGO_CouldNotDeletedResourceGroup": "Could not delete resource group '%s' with an error: %s",
         "RGO_DeletedResourceGroup": "Deleted resource group '%s'",
