@@ -80,7 +80,7 @@ export class AzureUtil {
 
         var ruleToPortAndAddressMap = {}
         for (var lb of this.loadBalancersDetails) {
-            if (!lb.properties.frontendIPConfigurations || lb.properties.frontendIPConfigurations.length == 0) {
+            if (!lb.properties.frontendIPConfigurations || lb.properties.frontendIPConfigurations.length == 0 || !lb.properties.frontendIPConfigurations[0].properties.publicIPAddress) {
                 continue;
             }
 
