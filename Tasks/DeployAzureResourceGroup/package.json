@@ -1,12 +1,9 @@
 
 {
-  "name": "AzureResourceGroupDeployment",
-  "main":"DeployAzureRG.js",
-  "devDependencies": {
-    "ms-rest-azure":"1.15.0",
-    "azure-arm-network": "0.17.0",
-    "azure-arm-resource": "1.5.1-preview",
-    "azure-arm-compute": "0.19.0",
-    "vsts-task-lib" : "^0.9.5"
+  "name": "DeployAzureResourceGroup",
+  "main":"main.js",
+  "dependencies": {
+    "vsts-task-lib" : "^0.9.20",
+    "vso-node-api": "6.0.1-preview"
   }
 }

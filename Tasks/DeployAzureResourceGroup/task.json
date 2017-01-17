@@ -22,9 +22,27 @@
     "minimumAgentVersion": "2.0.0",
     "groups": [
         {
+            "name": "AzureDetails",
+            "displayName": "Azure Details",
+            "isExpanded": true
+        },
+        {
+            "name": "Template",
+            "displayName": "Template",
+            "isExpanded": true,
+            "visibleRule": "action = Create or update resource group"
+        },
+        {
+            "name": "AdvancedDeploymentOptions",
+            "displayName": "Advanced Deployment Options",
+            "isExpanded": true,
+            "visibleRule": "action = Create or update resource group || action = Select resource group"
+        },
+        {
             "name": "output",
             "displayName": "Output",
-            "isExpanded": true
+            "isExpanded": true,
+            "visibleRule": "action = Create or update resource group || action = Select resource group"
         }
     ],
     "inputs": [
@@ -34,6 +52,7 @@
             "label": "Azure subscription",
             "defaultValue": "",
             "required": true,
+            "groupName": "AzureDetails",
             "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
         },
         {
@@ -42,6 +61,7 @@
             "label": "Action",
             "defaultValue": "Create or update resource group",
             "required": true,
+            "groupName": "AzureDetails",
             "helpMarkDown": "Action to be performed on the Azure resources or resource group.",
             "options": {
                 "Create or update resource group": "Create or update resource group",
@@ -58,6 +78,7 @@
             "type": "pickList",
             "label": "Resource group",
             "required": true,
+            "groupName": "AzureDetails",
             "helpMarkDown": "Provide the name of a resource group.",
             "properties": {
                 "EditableOptions": "True"
@@ -70,6 +91,7 @@
             "defaultValue": "East US",
             "required": true,
             "helpMarkDown": "Location for deploying the resource group. If the resource group already exists in the subscription, then this value will be ignored.",
+            "groupName": "AzureDetails",
             "options": {
                 "Australia East": "Australia East",
                 "Australia Southeast": "Australia Southeast",
@@ -107,11 +129,11 @@
             "label": "Template location",
             "required": true,
             "defaultValue": "Linked artifact",
+            "groupName": "Template",
             "options": {
                 "Linked artifact": "Linked artifact",
                 "URL of the file": "URL of the file"
-            },
-            "visibleRule": "action = Create or update resource group"
+            }
         },
         {
             "name": "csmFileLink",
@@ -119,8 +141,9 @@
             "label": "Template link",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Specify the URI that is used to locate the template file. To deploy a private template in a storage account, retrieve a SAS token and include it in the URI for the template. For steps on setting up a template in a storage account and generating a SAS token, see [Deploy resources with Resource Manager templates and Azure PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Deploy resources with Resource Manager templates and Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911).",
-            "visibleRule": "action = Create or update resource group && templateLocation = URL of the file"
+            "groupName": "Template",
+            "helpMarkDown": "Specify the URL of the template file. Example: [https://raw.githubusercontent.com/Azure/...](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-simple-windows/azuredeploy.json) \n\nTo deploy a template stored in a private storage account, retrieve and include the shared access signature (SAS) token in the URL of the template. Example: `<blob_storage_url>/template.json?<SAStoken>` To upload a template file (or a linked template) to a storage account and generate a SAS token, you could use [Azure file copy](https://aka.ms/azurefilecopyreadme) task or follow the steps using [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911).\n\nTo  view the template parameters in a grid, click on “…” next to Override template parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS.",
+            "visibleRule": "templateLocation = URL of the file"
         },
         {
             "name": "csmParametersFileLink",
@@ -128,8 +151,9 @@
             "label": "Template parameters link",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify a HTTP/HTTPS path for the parameters file for the Azure Resource Manager template, which is publically accessible.",
-            "visibleRule": "action = Create or update resource group && templateLocation = URL of the file"
+            "groupName": "Template",
+            "helpMarkDown": "Specify the URL of the parameters file. Example: [https://raw.githubusercontent.com/Azure/...](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-simple-windows/azuredeploy.parameters.json) \n\nTo use a file stored in a private storage account, retrieve and include the shared access signature (SAS) token in the URL of the template. Example: `<blob_storage_url>/template.json?<SAStoken>` To upload a parameters file to a storage account and generate a SAS token, you could use [Azure file copy](https://aka.ms/azurefilecopyreadme) task or follow the steps using [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911). \n\nTo  view the template parameters in a grid, click on “…” next to Override template parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS.",
+            "visibleRule": " templateLocation = URL of the file"
         },
         {
             "name": "csmFile",
@@ -137,7 +161,8 @@
             "label": "Template",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "action = Create or update resource group && templateLocation = Linked artifact",
+            "groupName": "Template",
+            "visibleRule": " templateLocation = Linked artifact",
             "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate."
         },
         {
@@ -146,8 +171,9 @@
             "label": "Template parameters",
             "defaultValue": "",
             "required": false,
+            "groupName": "Template",
             "helpMarkDown": "Specify the path for the parameters file for the Azure Resource Manager template.",
-            "visibleRule": "action = Create or update resource group && templateLocation = Linked artifact"
+            "visibleRule": " templateLocation = Linked artifact"
         },
         {
             "name": "overrideParameters",
@@ -155,11 +181,11 @@
             "label": "Override template parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the template parameters to override. Example, <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre).",
+            "groupName": "Template",
+            "helpMarkDown": "To  view the template parameters in a grid, click on “…” next to Override Parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS. Or type the template parameters to override in the textbox. Example, <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre).",
             "properties": {
                 "editorExtension": "ms.vss-services-azure.azurerg-parameters-grid"
-            },
-            "visibleRule": "action = Create or update resource group"
+            }
         },
         {
             "name": "deploymentMode",
@@ -167,13 +193,13 @@
             "label": "Deployment mode",
             "defaultValue": "Incremental",
             "required": true,
+            "groupName": "Template",
             "helpMarkDown": "Incremental mode handles deployments as incremental updates to the resource group . It leaves unchanged resources that exist in the resource group but are not specified in the template. \n\n Complete mode deletes resources that are not in your template. \n\n Validate mode enables you to find problems with the template before creating actual resources. \n\n By default, Incremental mode is used.",
             "options": {
                 "Incremental": "Incremental",
                 "Complete": "Complete",
                 "Validation": "Validation only"
-            },
-            "visibleRule": "action = Create or update resource group"
+            }
         },
         {
             "name": "enableDeploymentPrerequisites",
@@ -181,7 +207,7 @@
             "label": "Enable deployment prerequisites",
             "defaultValue": "false",
             "required": false,
-            "visibleRule": "action = Create or update resource group || action = Select Resource Group",
+            "groupName": "AdvancedDeploymentOptions",
             "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
         },
         {
@@ -208,50 +234,99 @@
         }
     },
     "messages": {
-        "SucceededOnVMOperation": "The %s operation on all VMs succeeded",
-        "FailureOnVMOperation": "The %s operation on all VMs failed with an error: %s",
-        "ARGD_ConstructorFailed": "Task failed while initializing with the following error: %s",
-        "VMOperationsInitiationFailed": "Task failed while creating a computeManagement Client, due to the following error: %s",
-        "TemplateParsingFailed": "Please ensure the Template file is correct. Task failed while parsing due to the following error: %s",
-        "ParametersFileParsingFailed": "Please ensure the Parameters file is correct. Task failed while parsing due to the following error: %s",
-        "RGO_createTemplateDeploymentFailed": "Task failed while creating a template deployment, due to : %s",
-        "RGO_createTemplateDeploymentSucceeded": "Successfully created template deploy on '%s'",
-        "RGO_CouldNotDeletedResourceGroup": "[Azure Resource Manager]Could not delete resource group '%s' due to the following error: %s",
-        "RGO_DeletedResourceGroup": "[Azure Resource Manager]Deleted resource group '{0}'",
-        "InvalidAction": "This action is not defined. Please check with the author.",
-        "VM_ListFetchFailed": "Task failed while fetching VMs list from '%s' due to the following error: %s",
+        "CheckResourceGroupExistence": "Checking if the following resource group exists: %s.",
+        "ResourceGroupStatusFetchFailed": "Failed to check the resource group status. Error: %s.",
+        "ResourceGroupStatus": "Resource group exists: %s.",
+        "ResourceGroupCreationFailed": "Failed to create the resource group. Error: %s",
+        "CreatingNewRG": "Creating resource Group: %s",
+        "CreatedRG": "Resource Group created successfully.",
+        "CreatingTemplateDeployment": "Creating deployment parameters.",
+        "TemplateParsingFailed": "Ensure the Template file is valid. Task failed while parsing with following error: %s",
+        "ParametersFileFetchFailed": "Failed to download the parameters file. Error: %s",
+        "ParametersFileParsingFailed": "Ensure the Parameters file is valid. Task failed while parsing with following error: %s",
+        "StartingDeployment": "Starting Deployment.",
+        "CreateTemplateDeploymentSucceeded": "Successfully deployed the template.",
+        "CreateTemplateDeploymentFailed": "Task failed while creating or updating the template deployment.",
+        "ErrorsInYourDeployment": "There were errors in your deployment. Error code: %s.",
+        "Details": "Details:",
+        "StartingValidation": "Starting template validation.",
+        "ValidDeployment": "Template deployment validation was completed successfully.",
+        "CreateTemplateDeploymentValidationFailed": "Template validation failed. Error: %s.",
+        "TemplateValidationHadErrors": "Task failed while validating the template deployment.",
+        "DeletingResourceGroup": "Deleting resource group: %s",
+        "CouldNotDeletedResourceGroup": "Could not delete resource group: '%s'. Operation failed with error: %s",
+        "DeletedResourceGroup": "Deleted resource group: %s",
+        "VM_ListFetchFailed": "Failed to fetch the list of virtual machines from resource group: %s. Error: %s",
+        "NoVMsFound": "No virtual machines found in the resource group.",
+        "VM_Start": "Starting virtual machine: %s",
+        "VM_Restart": "Restarting virtual machine: %s",
+        "VM_Stop": "Stopping virtual machine: %s",
+        "VM_Delete": "Deleting virtual machine: %s",
+        "SucceededOnVMOperation": "Operation: '%s' succeeded on all the virtual machines.",
+        "FailureOnVMOperation": "Operation: '%s' did not succeed on all the virtual machines. Errors: \n%s",
+        "VirtualMachineNameAndError": "%s: %s",
+        "RegisteringEnvironmentVariable": "Selecting the resource group details: %s.",
+        "FailedToFetchNetworkInterfaces": "Failed to fetch the list of network interfaces. Error: %s.",
+        "FailedToFetchLoadBalancers": "Failed to fetch the list of load balancers. Error: %s.",
+        "FailedToFetchPublicAddresses": "Failed to fetch the list of public addresses. Error: %s.",
+        "AddedToOutputVariable": "Resource group details were saved in following output variable: %s.",
+        "InvalidAction": "This action is not defined. Check with the task author.",
         "TaskNotFound": "Task.json file could not be found: %s",
-        "FailedRegisteringEnvironment": "Task failed while registering environment, due to the following error: %s",
-        "selectResourceGroupSuccessfull": "Selected Resource Group: '%s' and stored it in '%s'",
+        "ARGD_ConstructorFailed": "Task failed while initializing. Error: %s",
         "ValidatingCredentialsFailure": "Failed while validating credentials due to following error: %s",
-        "RuleExistsAlready": "Rule %s already exists on the security Group %s",
-        "ARG_NetworkSecurityConfigFailed": "Failed to add the Network Security Config Rule",
-        "ExtensionAlreadyPresentVm": "Extension %s is already present on the Virtual machine %s",
-        "AddExtension": "Adding extension %s on vm %s",
-        "ARG_AllResourceNotFound": "%s not found on resource Group %s",
-        "ARG_AllResourceFound": "%s with error count %s, not found on resource Group %s",
+        "RuleExistsAlready": "Rule %s already exists on the security group '%s'",
+        "ARG_NetworkSecurityConfigFailed": "Failed to add the network security config rule",
+        "ExtensionAlreadyPresentVm": "Extension %s is already present on the virtual machine '%s'",
+        "AddExtension": "Adding extension '%s' on virtual machine '%s'",
+        "ARG_AllResourceNotFound": "'%s' not found on resource group '%s'",
         "FailedToAddExtension": "Failed to add the network security rule with exception: %s",
-        "AddingSecurityRuleNSG": "Adding Security rule for the network security group: %s",
+        "AddingSecurityRuleNSG": "Adding security rule for the network security group: %s",
         "AddedSecurityRuleNSG": "Added inbound network security rule config %s with priority %s for port %s under security group %s with result: %s",
-        "FailedToAddRuleToNetworkSecurityGroup" : "Failed to add the network security rule to the Nsg od security group %s",
-        "FetchingOfNetworkSecurityGroupFailed" : "Fetching of Network Security Groups Failed",
-        "FailedAddingNSGRule3Times": "Failed to add the Network Security rule to the security Group %s after trying for 3 times",
-        "FailedToAddNetworkSecurityRule": "Failed to add the Network Security Rule to the security Group %s",
-        "FailedToFetchNetworkInterfaces": "Failed to fetch the list of Network Interfaces",
-        "FailedToFetchLoadBalancers": "Failed to fetch the list of Load Balancers",
-        "FailedToFetchPublicAddresses": "Failed to fetch the list of Public Addresses",
-        "FailedToFetchVMList": "Failed to fetch the list of virtual machines",
-        "FailedToEnablePrereqs": "Failed to Enable Prerequisites",
+        "FailedToAddRuleToNetworkSecurityGroup": "Failed to add the network security rule to the network security group %s",
+        "FetchingOfNetworkSecurityGroupFailed": "Fetching of network security groups failed with error: %s",
+        "FailedAddingNSGRule3Times": "Failed to add the network security rule to the security group %s after trying 3 times",
+        "FailedToAddNetworkSecurityRule": "Failed to add the network security rule to the security group %s",
+        "FailedToEnablePrereqs": "Failed to enable prerequisites",
         "FailedToFetchInstanceViewVM": "Failed to fetch the instance view of the virtual machine",
         "CreationOfExtensionFailed": "Failed to add the extension",
-        "FailedToDeleteExtension": "Deletion of Extension failed",
-        "AddedTargetInboundNatRuleLB": "Added the target virtual machine for the Inbound Nat Rules of LB %s",
-        "AddedInboundNatRuleLB": "Adding Inbound Nat rule to the load balancer %s ",
-        "InboundNatRuleLBPresent": "Relevant Inbound Nat rules already present for the load balancer %s",
-        "ARG_DeletingResourceGroup": "Deleting Resource Group.. %s",
-        "VM_Start": "Starting... %s",
-        "VM_Restart": "Restarting... %s",
-        "VM_Stop": "Stopping... %s",
-        "VM_Delete": "Deleting... %s"
+        "FailedToDeleteExtension": "Deletion of extension failed",
+        "AddedTargetInboundNatRuleLB": "Added the target virtual machine for the inbound NAT rules of load balancer %s",
+        "AddedInboundNatRuleLB": "Adding inbound NAT rule to the load balancer %s ",
+        "InboundNatRuleLBPresent": "Relevant inbound NAT rules already present for the load balancer %s",
+        "CredentialsCannotBeNull": "'credentials' cannot be null.",
+        "SubscriptionIdCannotBeNull": "'subscriptionId' cannot be null.",
+        "CallbackCannotBeNull": "callback cannot be null.",
+        "ResourceGroupCannotBeNull": "resourceGroupName cannot be null or undefined and it must be of type string.",
+        "ResourceGroupExceededLength": "\"resourceGroupName\" should satisfy the constraint - \"MaxLength\": 90",
+        "ResourceGroupDeceededLength": "\"resourceGroupName\" should satisfy the constraint - \"MinLength\": 1",
+        "ResourceGroupDoesntMatchPattern": "\"resourceGroupName\" should satisfy the constraint - \"Pattern\": /^[-\\w\\._\\(\\)]+$/",
+        "ParametersCannotBeNull": "parameters cannot be null or undefined.",
+        "DeploymentNameCannotBeNull": "deploymentName cannot be null or undefined and it must be of type string.",
+        "VMNameCannotBeNull": "vmName cannot be null or undefined and it must be of type string.",
+        "InvalidValue": "%s is not a valid value. The valid values are: %s",
+        "VmExtensionNameCannotBeNull": "vmExtensionName cannot be null or undefined and it must be of type string.",
+        "ExpandShouldBeOfTypeString": "expand must be of type string.",
+        "ExtensionParametersCannotBeNull": "extensionParameters cannot be null or undefined.",
+        "ClientIdCannotBeEmpty": "clientId must be a non empty string.",
+        "DomainCannotBeEmpty": "domain must be a non empty string.",
+        "SecretCannotBeEmpty": "secret must be a non empty string.",
+        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for azure. Status code: %s, status message: %s",
+        "LoadBalancerNameCannotBeNull": "'loadBalancerName cannot be null or undefined and it must be of type string.'",
+        "NetworkInterfaceNameCannotBeNull": "networkInterfaceName cannot be null or undefined and it must be of type string.",
+        "NetworkSecurityGroupNameCannotBeNull": "networkSecurityGroupName cannot be null or undefined and it must be of type string.",
+        "SecurityRuleNameCannotBeNull": "securityRuleName cannot be null or undefined and it must be of type string.",
+        "SecurityRuleParametersCannotBeNull": "securityRuleParameters cannot be null or undefined.",
+        "ErrorFetchingNatRules": "Error while fetching Nat rules",
+        "UnableToFetchFQDN": "Unable to fetch FQDN data from one or more VMs",
+        "OutputVariableShouldNotBeEmpty": "Output variable should not be empty.",
+        "EnablingWinRM": "Enabling winRM Https Listener on your windows machines..",
+        "ARG_ResourceNotFound": "%s is not found on the resource Group %s. Error Count: %s",
+        "FailedToUpdateInboundNatRuleLB": "Failed to update the load Balancer %s with the appropriate Inbound Nat Rule",
+        "ARG_DeploymentPrereqFailed": "Failed to enable deployment pre-requisites with the exception: %s",
+        "ARG_SetExtensionFailedForVm": "Failed to set extension on Virtual Machine %s of Resource Group %s with result: %s",
+        "FailedToUpdateNICOfVm": "Failed to update the NIC of the VM",
+        "FailedToFetchDetailsOfLB": "Failed to fetch the details of the load Balancer: %s",
+        "FailedToUpdateLBInboundNatRules": "Failed to update the inbound NAT rules of the Load Balancer %s to remove irrelevant rules",
+        "InvalidResponseLongRunningOperation": "Invalid response received for fetching status of a long running operation."
     }
 }

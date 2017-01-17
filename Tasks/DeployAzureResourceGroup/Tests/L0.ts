@@ -1,14 +1,16 @@
 /// <reference path="../../../definitions/mocha.d.ts"/>
 /// <reference path="../../../definitions/node.d.ts"/>
 /// <reference path="../../../definitions/Q.d.ts"/>
-"use strict";
+'use strict';
+
 const assert = require('assert');
 const ttm = require('vsts-task-lib/mock-test');
 const path = require('path');
-var shell = require('shelljs');
+
 function setResponseFile(name) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
 }
+
 describe('Azure Resource Group Deployment', function () {
     this.timeout(30000);
     before((done) => {
@@ -29,7 +31,7 @@ describe('Azure Resource Group Deployment', function () {
         }
         catch (error) {
             console.log("STDERR", tr.stderr);
-            console.log("STDOUT", tr.stdout);
+            console.log("STDOUT", tr.stdout);   
             done(error);
         }
     });
@@ -76,7 +78,7 @@ describe('Azure Resource Group Deployment', function () {
         tr.run();
         try {
             assert(tr.failed, "Task should have failed");
-            assert(tr.stdout.indexOf("Output variable should not be empty") > 0, "Should have logged the output variable requirement.");
+            assert(tr.stdout.indexOf("loc_mock_OutputVariableShouldNotBeEmpty") > 0, "Should have logged the output variable requirement.");
             done();
         }
         catch (error) {
@@ -92,7 +94,7 @@ describe('Azure Resource Group Deployment', function () {
         tr.run();
         try {
             assert(tr.succeeded, "Task should have succeeded");
-            assert(tr.stdout.indexOf("loc_mock_ARG_DeletingResourceGroup") > 0, "Delete Resource Group function should have been called");
+            assert(tr.stdout.indexOf("loc_mock_DeletingResourceGroup") > 0, "Delete Resource Group function should have been called");
             assert(tr.stdout.indexOf("resourceGroups.deleteMethod is called") > 0, "Task should have called resourceGroups.deleteMethod function from azure-sdk");
             done();
         }
