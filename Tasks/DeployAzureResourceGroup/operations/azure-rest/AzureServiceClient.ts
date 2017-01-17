@@ -145,7 +145,7 @@ export class ServiceClient {
 
         while (true) {
             response = await this.beginRequest(request);
-            if (response.statusCode === 202 || response.body.status == "Accepted" || response.body.status == "Running" || response.body.status == "InProgress") {
+            if (response.statusCode === 202 || (response.body && (response.body.status == "Accepted" || response.body.status == "Running" || response.body.status == "InProgress"))) {
                 // If timeout; throw;
                 if (timeout < new Date().getTime()) {
                     throw (tl.loc("TimeoutWhileWaiting"));

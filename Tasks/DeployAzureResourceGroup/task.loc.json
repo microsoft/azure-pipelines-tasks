@@ -41,7 +41,8 @@
     {
       "name": "output",
       "displayName": "ms-resource:loc.group.displayName.output",
-      "isExpanded": true
+      "isExpanded": true,
+      "visibleRule": "action = Create or update resource group || action = Select resource group"
     }
   ],
   "inputs": [
