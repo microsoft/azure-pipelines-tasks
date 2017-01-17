@@ -161,7 +161,7 @@ export class AzureUtil {
         return new Promise<any>((resolve, reject) => {
             this.networkClient.loadBalancers.list(this.taskParameters.resourceGroupName, (error, loadbalancers, request, response) => {
                 if (error) {
-                    reject(tl.loc("FailedToFetchLoadBalancers", utils.getError(error)));
+                    return reject(tl.loc("FailedToFetchLoadBalancers", utils.getError(error)));
                 }
                 this.loadBalancersDetails = loadbalancers;
                 resolve(loadbalancers);
@@ -173,7 +173,7 @@ export class AzureUtil {
         return new Promise<any>((resolve, reject) => {
             this.computeClient.virtualMachines.list(this.taskParameters.resourceGroupName, null, (error, virtualMachines, request, response) => {
                 if (error) {
-                    reject(tl.loc("VM_ListFetchFailed", this.taskParameters.resourceGroupName, utils.getError(error)));
+                    return reject(tl.loc("VM_ListFetchFailed", this.taskParameters.resourceGroupName, utils.getError(error)));
                 }
                 this.vmDetails = virtualMachines;
                 resolve(virtualMachines);
@@ -185,7 +185,7 @@ export class AzureUtil {
         return new Promise<any>((resolve, reject) => {
             this.networkClient.networkInterfaces.list(this.taskParameters.resourceGroupName, null, (error, networkInterfaces, request, response) => {
                 if (error) {
-                    reject(tl.loc("FailedToFetchNetworkInterfaces", utils.getError(error)));
+                    return reject(tl.loc("FailedToFetchNetworkInterfaces", utils.getError(error)));
                 }
                 this.networkInterfaceDetails = networkInterfaces;
                 resolve(networkInterfaces);
@@ -197,8 +197,7 @@ export class AzureUtil {
         return new Promise<any>((resolve, reject) => {
             this.networkClient.publicIPAddresses.list(this.taskParameters.resourceGroupName, null, (error, publicAddresses, request, response) => {
                 if (error) {
-                    tl.error(error);
-                    reject(tl.loc("FailedToFetchPublicAddresses", utils.getError(error)));
+                    return reject(tl.loc("FailedToFetchPublicAddresses", utils.getError(error)));
                 }
                 this.publicAddressDetails = publicAddresses;
                 resolve(publicAddresses);

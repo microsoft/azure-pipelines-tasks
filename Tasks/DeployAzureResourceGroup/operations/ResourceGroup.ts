@@ -57,7 +57,7 @@ export class ResourceGroup {
             console.log(tl.loc("DeletingResourceGroup", this.taskParameters.resourceGroupName));
             armClient.resourceGroups.deleteMethod(this.taskParameters.resourceGroupName, (error, result, request, response) => {
                 if (error) {
-                    reject(tl.loc("CouldNotDeletedResourceGroup", this.taskParameters.resourceGroupName, utils.getError(error)));
+                    return reject(tl.loc("CouldNotDeletedResourceGroup", this.taskParameters.resourceGroupName, utils.getError(error)));
                 }
                 console.log(tl.loc("DeletedResourceGroup", this.taskParameters.resourceGroupName));
                 resolve();
@@ -111,7 +111,7 @@ export class ResourceGroup {
         return new Promise<boolean>((resolve, reject) => {
             armClient.resourceGroups.checkExistence(this.taskParameters.resourceGroupName, (error, exists, request, response) => {
                 if (error) {
-                    reject(tl.loc("ResourceGroupStatusFetchFailed", utils.getError(error)));
+                    return reject(tl.loc("ResourceGroupStatusFetchFailed", utils.getError(error)));
                 }
                 console.log(tl.loc("ResourceGroupStatus", exists));
                 resolve(exists);
@@ -148,7 +148,7 @@ export class ResourceGroup {
             console.log(tl.loc("CreatingNewRG", this.taskParameters.resourceGroupName));
             armClient.resourceGroups.createOrUpdate(this.taskParameters.resourceGroupName, { "name": this.taskParameters.resourceGroupName, "location": this.taskParameters.location }, (error, result, request, response) => {
                 if (error) {
-                    reject(tl.loc("ResourceGroupCreationFailed", utils.getError(error)));
+                    return reject(tl.loc("ResourceGroupCreationFailed", utils.getError(error)));
                 }
                 console.log(tl.loc("CreatedRG"));
                 resolve();
@@ -160,13 +160,13 @@ export class ResourceGroup {
         return new Promise<string>((resolve, reject) => {
             httpObj.get("GET", url, {}, (error, result, contents) => {
                 if (error) {
-                    reject(tl.loc("ParametersFileFetchFailed", error));
+                    return reject(tl.loc("ParametersFileFetchFailed", error));
                 }
                 if (result.statusCode === 200)
                     resolve(contents);
                 else {
                     var errorMessage = result.statusCode.toString() + ": " + result.statusMessage;
-                    reject(tl.loc("ParametersFileFetchFailed", errorMessage));
+                    return reject(tl.loc("ParametersFileFetchFailed", errorMessage));
                 }
             });
         });
@@ -245,11 +245,11 @@ export class ResourceGroup {
             deployment.properties["mode"] = "Incremental";
             armClient.deployments.validate(this.taskParameters.resourceGroupName, this.createDeploymentName(), deployment, (error, result, request, response) => {
                 if (error) {
-                    reject(tl.loc("CreateTemplateDeploymentValidationFailed", utils.getError(error)));
+                    return reject(tl.loc("CreateTemplateDeploymentValidationFailed", utils.getError(error)));
                 }
                 if (result.error) {
                     this.writeDeploymentErrors(result.error);
-                    reject(tl.loc("RGO_createTemplateDeploymentFailed"));
+                    return reject(tl.loc("RGO_createTemplateDeploymentFailed"));
                 } else {
                     console.log(tl.loc("ValidDeployment"));
                     resolve();
@@ -267,7 +267,7 @@ export class ResourceGroup {
                 armClient.deployments.createOrUpdate(this.taskParameters.resourceGroupName, this.createDeploymentName(), deployment, (error, result, request, response) => {
                     if (error) {
                         this.writeDeploymentErrors(error);
-                        reject(tl.loc("CreateTemplateDeploymentFailed"));
+                        return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
                     console.log(tl.loc("CreateTemplateDeploymentSucceeded"));
                     resolve();

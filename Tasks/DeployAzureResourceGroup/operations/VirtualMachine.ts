@@ -19,11 +19,11 @@ export class VirtualMachine {
         return new Promise<void>((resolve, reject) => {
             client.virtualMachines.list(this.taskParameters.resourceGroupName, null, (error, listOfVms, request, response) => {
                 if (error) {
-                    reject(tl.loc("VM_ListFetchFailed", this.taskParameters.resourceGroupName, utils.getError(error)));
+                    return reject(tl.loc("VM_ListFetchFailed", this.taskParameters.resourceGroupName, utils.getError(error)));
                 }
                 if (listOfVms.length == 0) {
                     console.log(tl.loc("NoVMsFound"));
-                    resolve();
+                    return resolve();
                 }
 
                 var callback = this.getCallback(listOfVms.length, resolve, reject);

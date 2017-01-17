@@ -112,9 +112,9 @@ export class WinRMExtensionHelper {
                 if (pool.properties.backendIPConfigurations && pool.properties.backendIPConfigurations.find(x => x.id == ipc.id)) {
                     if (!ipc.properties.loadBalancerInboundNatRules) {
                         ipc.properties.loadBalancerInboundNatRules = [];
-                        ipConfiguration = ipc;
-                        break;
                     }
+                    ipConfiguration = ipc;
+                    break;
                 }
             }
         }
@@ -132,7 +132,6 @@ export class WinRMExtensionHelper {
                     reject(tl.loc("InboundNatRuleAdditionFailed", loadBalancer.name, utils.getError(error)));
                 }
                 else {
-                    console.log(tl.loc("AddedInboundNatRuleLB", loadBalancer.name));
                     var loadBalancerUpdated = <az.LoadBalancer>result;
                     var addedRule = loadBalancerUpdated.properties.inboundNatRules.find(r => r.properties.frontendPort == fronendPort);
                     ipConfiguration.properties.loadBalancerInboundNatRules.push(addedRule);
@@ -302,7 +301,7 @@ export class WinRMExtensionHelper {
             this.computeClient.virtualMachineExtensions.get(this.resourceGroupName, vmName, extensionName, null, async (error, result, request, response) => {
                 if (error) {
                     tl.debug("Failed to get the extension!!");
-                    resolve(null);
+                    return resolve(null);
                 }
                 resolve(result);
             });
