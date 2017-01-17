@@ -27,6 +27,18 @@ $sqlPackageCommandLineArguments = Get-SqlPackageCommandArguments -dacpacFile "az
 Assert-AreEqual '/SourceFile:"azureDacpac.dacpac" /Action:Publish /TargetServerName:"yyy.database.windows.net" /TargetDatabaseName:"databaseName" /TargetUser:"sqlUsername" /TargetPassword:"********" /Profile:"Profile.xml" Add_args' `
                 $sqlPackageCommandLineArguments "Should have mocked paasword"
 
+$sqlPackageCommandLineArguments = Get-SqlPackageCommandArguments -dacpacFile "azureDacpac.dacpac" -targetMethod "server" -serverName "yyy.database.windows.net" `
+                                    -databaseName "databaseName" -sqlUsername "user@sql" -sqlPassword "sqlPassword" -publishProfile "Profile.xml" -additionalArguments "Add_args"
+
+Assert-AreEqual '/SourceFile:"azureDacpac.dacpac" /Action:Publish /TargetServerName:"yyy.database.windows.net" /TargetDatabaseName:"databaseName" /TargetUser:"user@sql@yyy.database.windows.net" /TargetPassword:"sqlPassword" /Profile:"Profile.xml" Add_args' `
+                                    $sqlPackageCommandLineArguments "Should have constructed Argument for TargetMethod Server"
+
+$sqlPackageCommandLineArguments = Get-SqlPackageCommandArguments -dacpacFile "azureDacpac.dacpac" -targetMethod "server" -serverName "yyy.database.windows.net" `
+                                    -databaseName "databaseName" -sqlUsername "sqluser@yyy.database.windows.net" -sqlPassword "sqlPassword" -publishProfile "Profile.xml" -additionalArguments "Add_args"
+
+Assert-AreEqual '/SourceFile:"azureDacpac.dacpac" /Action:Publish /TargetServerName:"yyy.database.windows.net" /TargetDatabaseName:"databaseName" /TargetUser:"sqluser@yyy.database.windows.net" /TargetPassword:"sqlPassword" /Profile:"Profile.xml" Add_args' `
+                                    $sqlPackageCommandLineArguments "Should have constructed Argument for TargetMethod Server"
+
 $sqlPackageCommandLineArguments = Get-SqlPackageCommandArguments -dacpacFile "azureDacpac.dacpac" -targetMethod "connectionString" -connectionString "connectionString:10/20/30" `
                                     -publishProfile "Profile.xml" -additionalArguments "Add_args" -isOutputSecure
 Assert-AreEqual '/SourceFile:"azureDacpac.dacpac" /Action:Publish /TargetConnectionString:"connectionString:10/20/30" /Profile:"Profile.xml" Add_args' `
