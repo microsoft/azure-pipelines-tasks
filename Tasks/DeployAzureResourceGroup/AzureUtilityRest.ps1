@@ -18,6 +18,7 @@ function Create-AzureResourceGroupIfNotExist
         catch
         {
             #Ignoring the exception
+            Write-Verbose "[Azure Resource Manager]Azure Resource Group : $resourceGroupName Not Found"
         }
 
         if(-not $azureResourceGroup -and -not [string]::IsNullOrEmpty($location))

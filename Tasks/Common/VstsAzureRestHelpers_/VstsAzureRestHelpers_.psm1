@@ -169,7 +169,7 @@ function Get-SpnAccessToken {
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
-        Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-SpnAccessToken)"
+        Write-Verbose "ExceptionMessage: $exceptionMessage (in function: Get-SpnAccessToken)"
         throw (Get-VstsLocString -Key AZ_SpnAccessTokenFetchFailure -ArgumentList $tenantId)
     }
 }
