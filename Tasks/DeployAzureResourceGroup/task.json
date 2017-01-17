@@ -287,10 +287,7 @@
         "FailedAddingNSGRule3Times": "Failed to add the network security rule to the security group %s after trying 3 times",
         "FailedToAddNetworkSecurityRule": "Failed to add the network security rule to the security group %s",
         "FailedToEnablePrereqs": "Failed to enable prerequisites",
-        "FailedToFetchInstanceViewVM": "Failed to fetch the instance view of the virtual machine",
-        "CreationOfExtensionFailed": "Failed to add the extension",
         "FailedToDeleteExtension": "Deletion of extension failed",
-        "AddedTargetInboundNatRuleLB": "Added the target virtual machine for the inbound NAT rules of load balancer %s",
         "AddedInboundNatRuleLB": "Adding inbound NAT rule to the load balancer %s ",
         "InboundNatRuleLBPresent": "Relevant inbound NAT rules already present for the load balancer %s",
         "CredentialsCannotBeNull": "'credentials' cannot be null.",
@@ -327,6 +324,13 @@
         "FailedToUpdateNICOfVm": "Failed to update the NIC of the VM",
         "FailedToFetchDetailsOfLB": "Failed to fetch the details of the load Balancer: %s",
         "FailedToUpdateLBInboundNatRules": "Failed to update the inbound NAT rules of the Load Balancer %s to remove irrelevant rules",
-        "InvalidResponseLongRunningOperation": "Invalid response received for fetching status of a long running operation."
+        "InvalidResponseLongRunningOperation": "Invalid response received for fetching status of a long running operation.",
+        
+        "AddingInboundNatRule": "Adding Inbound Nat Rule for the Network Interface %s to the Load Balancer %s",
+        "InboundNatRuleAdditionFailed": "Addition of Inbound Nat Rule to the Load Balancer %s failed. Error: %s ",
+        "InboundNatRulesToNICFailed": "Addition of rule Id to the loadBalancerInboundNatRules of nic %s failed with the error: %s",
+        "AddedTargetInboundNatRuleLB": "Added the target virtual machine for the inbound NAT rules of load balancer %s",
+        "FailedToFetchInstanceViewVM": "Failed to fetch the instance view of the virtual machine. Error : %s",
+        "CreationOfExtensionFailed": "Failed to add the extension. Error: %s"
     }
 }
