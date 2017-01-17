@@ -23,7 +23,7 @@ function Create-AzureResourceGroupIfNotExist
         if(-not $azureResourceGroup -and -not [string]::IsNullOrEmpty($location))
         {
             Write-Verbose "[Azure Resource Manager]Creating resource group $resourceGroupName in $location"
-            $azureResourceGroup = New-AzureRMResourceGroup -Name $resourceGroupName -Location $location -Verbose -ErrorAction Stop
+            $azureResourceGroup = New-AzureRMResourceGroup -Name $resourceGroupName -Location $location -Verbose -ErrorAction Stop -Force
             Write-Host (Get-VstsLocString -Key "ARG_CreatedResourceGroup" -ArgumentList $resourceGroupName)
         }
         return $azureResourceGroup
