@@ -88,7 +88,6 @@ export class loadBalancers {
         //send request
         var result = [];
         this.client.beginRequest(httpRequest).then(async (response: azureServiceClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode == 200) {
                 if (response.body.value) {
                     result = result.concat(response.body.value);
@@ -97,19 +96,18 @@ export class loadBalancers {
                 if (response.body.nextLink) {
                     var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
                     if (nextResult.error) {
-                        deferred.reject(new azureServiceClient.ApiResult(nextResult.error));
+                        return new azureServiceClient.ApiResult(nextResult.error);
                     }
                     result.concat(nextResult.result);
                 }
 
-                deferred.resolve(new azureServiceClient.ApiResult(null, result));
+                return new azureServiceClient.ApiResult(null, result);
             }
             else {
-                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
             }
-            return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(null, apiResult.result),
-            (apiResult: azureServiceClient.ApiResult) => callback(apiResult.error));
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
     }
 
     public get(resourceGroupName, loadBalancerName, options, callback) {
@@ -152,14 +150,14 @@ export class loadBalancers {
                 deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
             }
             else {
-                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(null, apiResult.result),
-            (apiResult: azureServiceClient.ApiResult) => callback(apiResult.error));
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
     }
 
-    public createOrUpdate(resourceGroupName, loadBalancerName, parameters, options?: any , callback?: any) {
+    public createOrUpdate(resourceGroupName, loadBalancerName, parameters, options?: any, callback?: any) {
         var client = this.client;
         if (!callback && typeof options === 'function') {
             callback = options;
@@ -202,22 +200,23 @@ export class loadBalancers {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
             if (statusCode != 200 && statusCode != 201) {
-                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
-
-            this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
-                if (operationResponse.body.status === "Succeeded") {
-                    // Generate Response
-                    deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
-                }
-                else {
-                    // Generate Error
-                    deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
-                }
-            })
+            else {
+                this.client.getLongRunningOperationResult(response).then((operationResponse: azureServiceClient.WebResponse) => {
+                    if (operationResponse.body.status === "Succeeded") {
+                        // Generate Response
+                        deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
+                    }
+                    else {
+                        // Generate Error
+                        deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                    }
+                })
+            }
             return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(null, apiResult.result),
-            (apiResult: azureServiceClient.ApiResult) => callback(apiResult.error));
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
     }
 }
 
@@ -256,7 +255,6 @@ export class publicIPAddresses {
 
         var result = [];
         this.client.beginRequest(httpRequest).then(async (response: azureServiceClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode == 200) {
                 if (response.body.value) {
                     result = result.concat(response.body.value);
@@ -264,18 +262,17 @@ export class publicIPAddresses {
                 if (response.body.nextLink) {
                     var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
                     if (nextResult.error) {
-                        deferred.reject(new azureServiceClient.ApiResult(nextResult.error));
+                        return new azureServiceClient.ApiResult(nextResult.error);
                     }
                     result = result.concat(nextResult);
                 }
-                deferred.resolve(new azureServiceClient.ApiResult(null, result));
+                return new azureServiceClient.ApiResult(null, result);
             }
             else {
-                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
             }
-            return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(null, apiResult.result),
-            (apiResult: azureServiceClient.ApiResult) => callback(apiResult.error));
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
     }
 }
 
@@ -316,7 +313,6 @@ export class networkSecurityGroups {
 
         var result = [];
         this.client.beginRequest(httpRequest).then(async (response: azureServiceClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode == 200) {
                 if (response.body.value) {
                     result = result.concat(response.body.value);
@@ -324,18 +320,17 @@ export class networkSecurityGroups {
                 if (response.body.nextLink) {
                     var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
                     if (nextResult.error) {
-                        deferred.reject(new azureServiceClient.ApiResult(nextResult.error));
+                        return new azureServiceClient.ApiResult(nextResult.error);
                     }
                     result = result.concat(nextResult);
                 }
-                deferred.resolve(new azureServiceClient.ApiResult(null, result));
+                return new azureServiceClient.ApiResult(null, result);
             }
             else {
-                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
             }
-            return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(null, apiResult.result),
-            (apiResult: azureServiceClient.ApiResult) => callback(apiResult.error));
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
     }
 }
 
@@ -373,7 +368,6 @@ export class NetworkInterfaces {
 
         var result = [];
         this.client.beginRequest(httpRequest).then(async (response: azureServiceClient.WebResponse) => {
-            var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode == 200) {
                 if (response.body.value) {
                     result = result.concat(response.body.value);
@@ -381,18 +375,17 @@ export class NetworkInterfaces {
                 if (response.body.nextLink) {
                     var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
                     if (nextResult.error) {
-                        deferred.reject(new azureServiceClient.ApiResult(nextResult.error));
+                        return new azureServiceClient.ApiResult(nextResult.error);
                     }
                     result = result.concat(nextResult);
                 }
-                deferred.resolve(new azureServiceClient.ApiResult(null, result));
+                return new azureServiceClient.ApiResult(null, result);
             }
             else {
-                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
             }
-            return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(null, apiResult.result),
-            (apiResult: azureServiceClient.ApiResult) => callback(apiResult.error));
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
     }
 
     public createOrUpdate(resourceGroupName, networkInterfaceName, parameters, options, callback) {
@@ -435,20 +428,21 @@ export class NetworkInterfaces {
         this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode != 200 && response.statusCode != 201) {
-                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
-
-            this.client.getLongRunningOperationResult(response).then((operationResponse) => {
-                if (operationResponse.body.status === "Succeeded") {
-                    deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body.value));
-                }
-                else {
-                    deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
-                }
-            });
+            else {
+                this.client.getLongRunningOperationResult(response).then((operationResponse) => {
+                    if (operationResponse.body.status === "Succeeded") {
+                        deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body.value));
+                    }
+                    else {
+                        deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
+                    }
+                });
+            }
             return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(null, apiResult.result),
-            (apiResult: azureServiceClient.ApiResult) => callback(apiResult.error));
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
     }
 }
 
@@ -499,11 +493,11 @@ export class securityRules {
                 deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
             }
             else {
-                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(null, apiResult.result),
-            (apiResult: azureServiceClient.ApiResult) => callback(apiResult.error));
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
     }
 
     public createOrUpdate(resourceGroupName, networkSecurityGroupName, securityRuleName, securityRuleParameters, callback) {
@@ -547,7 +541,7 @@ export class securityRules {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
             if (statusCode != 200 && statusCode != 201) {
-                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             else {
                 this.client.getLongRunningOperationResult(response).then((operationResponse) => {
@@ -555,12 +549,12 @@ export class securityRules {
                         deferred.resolve(new azureServiceClient.ApiResult(null, operationResponse.body));
                     }
                     else {
-                        deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
+                        deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
                     }
                 });
             }
             return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(null, apiResult.result),
-            (apiResult: azureServiceClient.ApiResult) => callback(apiResult.error));
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
     }
 }

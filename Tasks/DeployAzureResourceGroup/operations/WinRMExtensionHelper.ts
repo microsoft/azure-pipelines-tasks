@@ -302,7 +302,7 @@ export class WinRMExtensionHelper {
             this.computeClient.virtualMachineExtensions.get(this.resourceGroupName, vmName, extensionName, null, async (error, result, request, response) => {
                 if (error) {
                     tl.debug("Failed to get the extension!!");
-                    resolve(null);
+                    return resolve(null);
                 }
                 resolve(result);
             });
