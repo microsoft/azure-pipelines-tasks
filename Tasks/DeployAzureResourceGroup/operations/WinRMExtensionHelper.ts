@@ -7,13 +7,6 @@ import deployAzureRG = require("../models/DeployAzureRG");
 import az = require("./azure-rest/azureModels");
 import utils = require("./Utils");
 
-function ObjectCast(rawObj, constructor) {
-    var obj = new constructor();
-    for (var i in rawObj)
-        obj.i = rawObj[i];
-    return obj;
-}
-
 export class WinRMExtensionHelper {
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
     private resourceGroupName: string;
@@ -44,60 +37,39 @@ export class WinRMExtensionHelper {
     }
 
     public async ConfigureWinRMExtension() {
-        console.log(tl.loc("EnablingWinRM"));
-        try {
-            await this.AddInboundNatRulesOnLoadBalancers();
-            await this.AddExtensionToVMsToConfigureWinRM();
-            await this.AddNetworkSecurityRuleConfigForWinRMPort();
-        }
-        catch (exception) {
-            throw new Error("Enabling of Deployment Prerequisites failed");
-        }
-    }
-
-    private async AddExtensionToVMsToConfigureWinRM() {
-        var resourceGroupDetails = await this.azureUtils.getResourceGroupDetails();
-        for (var vm of this.azureUtils.vmDetails) {
-            var resourceName = vm.name;
-            var resourceId = vm.id;
-            var vmResource = resourceGroupDetails.VirtualMachines.find(v => v.Name == resourceName);
-            var resourceFQDN = vmResource.WinRMHttpsPublicAddress;
-            var resourceWinRmHttpsPort = vmResource.WinRMHttpsPort
-            if (vm["properties"]["storageProfile"]["osDisk"]["osType"] === 'Windows') {
-                tl.debug("Enabling winrm for virtual machine " + resourceName);
-                await this.AddAzureVMCustomScriptExtension(resourceId, resourceName, resourceFQDN, vm["location"]);
-            }
-        }
+        await this.AddInboundNatRulesOnLoadBalancers();
+        await this.AddExtensionToVMsToConfigureWinRM();
+        await this.AddNetworkSecurityRuleConfigForWinRMPort();
     }
 
     private async AddInboundNatRulesOnLoadBalancers(): Promise<void> {
         tl.debug("Trying to add Inbound Nat Rule to the LBs...");
-        return new Promise<any>(async (resolve, reject) => {
-            var resourceGroupDetails = await this.azureUtils.getResourceGroupDetails();
-            for (var virtualMachine of resourceGroupDetails.VirtualMachines) {
-                if (!utils.isNonEmpty(virtualMachine.WinRMHttpsPublicAddress)) {
-                    tl.debug("Adding Inbound Nat Rule for the VM: " + virtualMachine.Name);
-                    var lb: azure_utils.LoadBalancer;
-                    var nicId: string;
-                    for (var nic of virtualMachine.NetworkInterfaceIds) {
-                        nicId = nic;
-                        lb = resourceGroupDetails.LoadBalancers.find(l => !!l.BackendNicIds.find(id => id === nic));
-                        if (lb) break;
-                    }
+        var resourceGroupDetails = await this.azureUtils.getResourceGroupDetails();
+        for (var virtualMachine of resourceGroupDetails.VirtualMachines) {
+            if (!utils.isNonEmpty(virtualMachine.WinRMHttpsPublicAddress)) {
+                tl.debug("Adding Inbound Nat Rule for the VM: " + virtualMachine.Name);
+                var lb: azure_utils.LoadBalancer;
+                var nicId: string;
+                for (var nic of virtualMachine.NetworkInterfaceIds) {
+                    nicId = nic;
+                    lb = resourceGroupDetails.LoadBalancers.find(l => !!l.BackendNicIds.find(id => id === nic));
+                    if (lb) break;
+                }
 
-                    if (lb) {
-                        tl.debug("LB to which Inbound Nat Rule for VM " + virtualMachine.Name + " is to be added is " + lb.Id);
-                        var frontendPort: number = this.GetFreeFrontendPort(lb);
-                        await this.AddNatRuleInternal(lb.Id, nicId, frontendPort, 5986);
-                        lb.FrontEndPortsInUse.push(frontendPort);
-                    }
+                if (lb) {
+                    tl.debug("LB to which Inbound Nat Rule for VM " + virtualMachine.Name + " is to be added is " + lb.Id);
+                    var frontendPort: number = this.GetFreeFrontendPort(lb);
+                    await this.AddNatRuleInternal(lb.Id, nicId, frontendPort, 5986);
+                    lb.FrontEndPortsInUse.push(frontendPort);
                 }
                 else {
-                    tl.debug("No need to add Inbound Nat rule for vm " + virtualMachine.Name);
+                    tl.warning("There is no public address to reach the virtual machine x.");
                 }
             }
-            resolve();
-        });
+            else {
+                tl.debug("No need to add Inbound Nat rule for vm " + virtualMachine.Name);
+            }
+        }
     }
 
     private GetFreeFrontendPort(loadBalancer: azure_utils.LoadBalancer): number {
@@ -112,72 +84,92 @@ export class WinRMExtensionHelper {
     private async AddNatRuleInternal(loadBalancerId: string, networkInterfaceId: string, fronendPort: number, backendPort: number): Promise<void> {
         var random: number = Math.floor(Math.random() * 10000 + 100);
         var name: string = "winRMHttpsRule" + random.toString();
-        return new Promise<void>(async (resolve, reject) => {
-            var loadBalancers = await this.azureUtils.getLoadBalancers();
-            var loadBalancer = loadBalancers.find(l => l.id == loadBalancerId);
+        var loadBalancers = await this.azureUtils.getLoadBalancers();
+        var loadBalancer = loadBalancers.find(l => l.id == loadBalancerId);
 
-            var InboundNatRuleProperties: az.InboundNatRuleProperties = {
-                backendPort: backendPort,
-                frontendPort: fronendPort,
-                frontendIPConfiguration: { id: loadBalancer.properties.frontendIPConfigurations[0].id },
-                protocol: "Tcp",
-                idleTimeoutInMinutes: 4,
-                enableFloatingIP: false
-            }
+        var InboundNatRuleProperties: az.InboundNatRuleProperties = {
+            backendPort: backendPort,
+            frontendPort: fronendPort,
+            frontendIPConfiguration: { id: loadBalancer.properties.frontendIPConfigurations[0].id },
+            protocol: "Tcp",
+            idleTimeoutInMinutes: 4,
+            enableFloatingIP: false
+        }
 
-            var rule: az.InboundNatRule = {
-                id: "",
-                name: name,
-                properties: InboundNatRuleProperties
-            };
+        var rule: az.InboundNatRule = {
+            id: "",
+            name: name,
+            properties: InboundNatRuleProperties
+        };
 
-            loadBalancer.properties.inboundNatRules.push(rule);
-            var networkInterfaces = this.azureUtils.networkInterfaceDetails;
-            var networkInterface = networkInterfaces.find(n => n.id == networkInterfaceId);
-            var ipConfiguration: az.IPConfiguration;
+        loadBalancer.properties.inboundNatRules.push(rule);
+        var networkInterfaces = this.azureUtils.networkInterfaceDetails;
+        var networkInterface = networkInterfaces.find(n => n.id == networkInterfaceId);
+        var ipConfiguration: az.IPConfiguration;
 
-            for (var ipc of networkInterface.properties.ipConfigurations) {
-                for (var pool of loadBalancer.properties.backendAddressPools) {
-                    if (pool.properties.backendIPConfigurations && pool.properties.backendIPConfigurations.find(x => x.id == ipc.id)) {
-                        if (!ipc.properties.loadBalancerInboundNatRules) {
-                            ipc.properties.loadBalancerInboundNatRules = [];
-                            ipConfiguration = ipc;
-                            break;
-                        }
+        for (var ipc of networkInterface.properties.ipConfigurations) {
+            for (var pool of loadBalancer.properties.backendAddressPools) {
+                if (pool.properties.backendIPConfigurations && pool.properties.backendIPConfigurations.find(x => x.id == ipc.id)) {
+                    if (!ipc.properties.loadBalancerInboundNatRules) {
+                        ipc.properties.loadBalancerInboundNatRules = [];
+                        ipConfiguration = ipc;
+                        break;
                     }
                 }
             }
-            console.log(tl.loc("AddingInboundNatRule", networkInterface.name, loadBalancer.name));
-            if (!!loadBalancer && !!networkInterface) {
-                this.networkClient.loadBalancers.createOrUpdate(this.resourceGroupName, loadBalancer.name, loadBalancer, null, (error, result, request, response) => {
-                    if (error) {
-                        console.log(tl.loc("InboundNatRuleAdditionFailed", loadBalancer.name, JSON.stringify(error)));
-                        reject(utils.getError(error));
-                    }
-                    else {
-                        console.log(tl.loc("AddedInboundNatRuleLB", loadBalancer.name));
-                        var loadBalancerUpdated = <az.LoadBalancer>result;
-                        var addedRule = loadBalancerUpdated.properties.inboundNatRules.find(r => r.properties.frontendPort == fronendPort);
-                        ipConfiguration.properties.loadBalancerInboundNatRules.push(addedRule);
-                        tl.debug("Updating the loadBalancerInboundNatRules of nic " + networkInterface.name);
-                        this.networkClient.networkInterfaces.createOrUpdate(this.resourceGroupName, networkInterface.name, networkInterface, null,
-                            (error2, result2, request2, response2) => {
-                                if (error2) {
-                                    console.log(tl.loc("InboundNatRulesToNICFailed", networkInterface.name, JSON.stringify(error2)));
-                                    reject(utils.getError(error2));
-                                    return;
-                                }
-                                console.log(tl.loc("AddedTargetInboundNatRuleLB", networkInterface.name));
-                                resolve();
-                            });
-                    }
-                });
-            }
-        });
+        }
 
+        if (!!loadBalancer && !!networkInterface) {
+            await this.AddInboundNatRule(networkInterface, loadBalancer, ipConfiguration, fronendPort);
+        }
     }
 
-    private async AddInboundNetworkSecurityRule(retryCnt: number, securityGrpName, ruleName, rulePriority, winrmHttpsPort) {
+    private AddInboundNatRule(networkInterface: az.NetworkInterface, loadBalancer: az.LoadBalancer, ipConfiguration: az.IPConfiguration, fronendPort: number) {
+        return new Promise<void>(async (resolve, reject) => {
+            console.log(tl.loc("AddingInboundNatRule", networkInterface.name, loadBalancer.name));
+            this.networkClient.loadBalancers.createOrUpdate(this.resourceGroupName, loadBalancer.name, loadBalancer, null, (error, result, request, response) => {
+                if (error) {
+                    reject(tl.loc("InboundNatRuleAdditionFailed", loadBalancer.name, utils.getError(error)));
+                }
+                else {
+                    console.log(tl.loc("AddedInboundNatRuleLB", loadBalancer.name));
+                    var loadBalancerUpdated = <az.LoadBalancer>result;
+                    var addedRule = loadBalancerUpdated.properties.inboundNatRules.find(r => r.properties.frontendPort == fronendPort);
+                    ipConfiguration.properties.loadBalancerInboundNatRules.push(addedRule);
+                    tl.debug("Updating the loadBalancerInboundNatRules of nic " + networkInterface.name);
+                    this.networkClient.networkInterfaces.createOrUpdate(this.resourceGroupName, networkInterface.name, networkInterface, null,
+                        (error2, result2, request2, response2) => {
+                            if (error2) {
+                                reject(tl.loc("InboundNatRulesToNICFailed", networkInterface.name, utils.getError(error2)));
+                                return;
+                            }
+                            console.log(tl.loc("AddedTargetInboundNatRuleLB", networkInterface.name));
+                            resolve();
+                        });
+                }
+            });
+        });
+    }
+
+    private async AddNetworkSecurityRuleConfigForWinRMPort() {
+        var ruleName: string = "VSO-Custom-WinRM-Https-Port";
+        var rulePriority: number = 3986;
+        var winrmHttpsPort: string = "5986";
+        var securityGroups = await this.GetNetworkSecurityGroups();
+        if (securityGroups && securityGroups.length) {
+            tl.debug("Trying to add a network security group rule");
+            for (var i = 0; i < securityGroups.length; i++) {
+                console.log(tl.loc("AddingSecurityRuleNSG", securityGroups[i]["name"]));
+                var securityGrp = securityGroups[i];
+                var securityGrpName = securityGrp["name"];
+
+                tl.debug("Getting the network security rule config " + ruleName + " under security group " + securityGrpName);
+                await this.TryAddNetworkSecurityRule(securityGrpName, ruleName, rulePriority, winrmHttpsPort);
+            }
+        }
+    }
+
+    private async AddInboundNetworkSecurityRule(securityGrpName, ruleName, rulePriority, winrmHttpsPort) {
         return new Promise<any>(async (resolve, reject) => {
             tl.debug("Adding inbound network security rule config " + ruleName + " with priority " + rulePriority + " for port " + winrmHttpsPort + " under security group " + securityGrpName);
             var securityRuleParameters = {
@@ -197,143 +189,112 @@ export class WinRMExtensionHelper {
                     tl.debug("Error in adding network security rule " + util.inspect(error, { depth: null }));
                     tl.debug("Failed to add inbound network security rule config " + ruleName + " with priority " + rulePriority + " for port " + winrmHttpsPort + " under security group " + securityGrpName);
                     rulePriority = rulePriority + 50;
-                    tl.debug("Getting network security group" + securityGrpName + " in resource group " + this.resourceGroupName);
-
-                    this.networkClient.networkSecurityGroups.list(this.resourceGroupName, async (error, result, request, response) => {
-                        if (error) {
-                            tl.debug("Error in getting the list of network Security Groups for the resource-group " + this.resourceGroupName);
-                            reject(tl.loc("FetchingOfNetworkSecurityGroupFailed", utils.getError(error)));
-                            return;
-                        }
-
-                        if (result.length > 0) {
-                            tl.debug("Got network security group " + securityGrpName + " in resource group " + this.resourceGroupName);
-                            if (retryCnt > 0) {
-                                await this.AddInboundNetworkSecurityRule(retryCnt - 1, securityGrpName, ruleName, rulePriority, winrmHttpsPort);
-                                resolve();
-                            }
-                            else {
-                                tl.debug("Failed to add the NSG rule on security group " + securityGrpName + " after trying for 3 times ");
-                                reject(tl.loc("FailedAddingNSGRule3Times", securityGrpName));
-                            }
-                        }
-                    });
+                    return reject(utils.getError(error));
                 }
-                else {
-                    console.log(tl.loc("AddedSecurityRuleNSG", ruleName, rulePriority, winrmHttpsPort, securityGrpName, util.inspect(result, { depth: null })));
-                    this.ruleAddedToNsg = true;
-                    resolve();
-                }
+                console.log(tl.loc("AddedSecurityRuleNSG", ruleName, rulePriority, winrmHttpsPort, securityGrpName, util.inspect(result, { depth: null })));
+                return resolve();
             });
         });
     }
 
-    private async TryAddNetworkSecurityRule(securityGrpName, ruleName, rulePriority: number, winrmHttpsPort: string) {
-        return new Promise<any>(async (resolve, reject) => {
-            var result = await this.getSecurityRules(securityGrpName, ruleName);
-            if (!result) {
-                tl.debug("Rule " + ruleName + " not found under security Group " + securityGrpName);
-                var maxRetries = 3;
-                await this.AddInboundNetworkSecurityRule(maxRetries, securityGrpName, ruleName, rulePriority, winrmHttpsPort);
+    private async AddInboundNetworkSecurityRuleWithRetry(retryCnt: number, securityGrpName, ruleName, rulePriority, winrmHttpsPort) {
+        for (var i = 0; i < 3; i++) {
+            try {
+                await this.AddInboundNetworkSecurityRule(securityGrpName, ruleName, rulePriority, winrmHttpsPort);
+                return;
             }
-            else {
-                console.log(tl.loc("RuleExistsAlready", ruleName, securityGrpName));
-                this.ruleAddedToNsg = true;
+            catch (exception) {
             }
-            resolve();
-        });
+        }
+
+        throw tl.loc("FailedAddingNSGRule3Times", securityGrpName);
     }
 
-    private getSecurityRules(securityGrpName, ruleName): Promise<any> {
+    private async TryAddNetworkSecurityRule(securityGrpName, ruleName, rulePriority: number, winrmHttpsPort: string) {
+        var result = await this.GetSecurityRules(securityGrpName, ruleName);
+        if (!result) {
+            tl.debug("Rule " + ruleName + " not found under security Group " + securityGrpName);
+            var maxRetries = 3;
+            await this.AddInboundNetworkSecurityRuleWithRetry(maxRetries, securityGrpName, ruleName, rulePriority, winrmHttpsPort);
+        }
+        else {
+            console.log(tl.loc("RuleExistsAlready", ruleName, securityGrpName));
+        }
+    }
+
+    private GetSecurityRules(securityGrpName, ruleName): Promise<any> {
         return new Promise((resolve, reject) => {
             this.networkClient.securityRules.get(this.resourceGroupName, securityGrpName, ruleName, null, (error, result, request, response) => {
                 if (error) {
-                    resolve();
+                    return resolve(null); // Rule doesnt exist;
                 }
                 resolve(result);
             });
         });
     }
 
-    private async AddNetworkSecurityRuleConfig(securityGroups: [Object], ruleName: string, rulePriority: number, winrmHttpsPort: string) {
-        return new Promise<any>(async (resolve, reject) => {
-            for (var i = 0; i < securityGroups.length; i++) {
-                console.log(tl.loc("AddingSecurityRuleNSG", securityGroups[i]["name"]));
-                var securityGrp = securityGroups[i];
-                var securityGrpName = securityGrp["name"];
-
-                tl.debug("Getting the network security rule config " + ruleName + " under security group " + securityGrpName);
-                await this.TryAddNetworkSecurityRule(securityGrpName, ruleName, rulePriority, winrmHttpsPort);
-            }
-
-            resolve("");
-        });
-    }
-
-    private async AddNetworkSecurityRuleConfigForWinRMPort() {
-        var _ruleName: string = "VSO-Custom-WinRM-Https-Port";
-        var _rulePriority: number = 3986;
-        var _winrmHttpsPort: string = "5986";
-        var result = await this.GetListNSG();
-        return new Promise<any>(async (resolve, reject) => {
-            if (result) {
-                if (result.length > 0) {
-                    tl.debug("Trying to add a network security group rule");
-                    await this.AddNetworkSecurityRuleConfig(result, _ruleName, _rulePriority, _winrmHttpsPort);
-                }
-                resolve();
-            }
-            else {
-                reject();
-            }
-        });
-    }
-
-    private GetListNSG(): Promise<any> {
+    private GetNetworkSecurityGroups(): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             this.networkClient.networkSecurityGroups.list(this.resourceGroupName, null, (error, result, request, response) => {
                 if (error) {
                     tl.debug("Failed to get the list of NSG " + JSON.stringify(error));
                     reject(utils.getError(error));
+                    return;
                 }
                 resolve(result);
             });
         });
     }
 
-    private async AddAzureVMCustomScriptExtension(vmId: string, vmName: string, dnsName: string, location: string): Promise<any> {
-        var _extensionName: string = "CustomScriptExtension";
-        var _configWinRMScriptFile: string = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/ConfigureWinRM.ps1";
-        var _makeCertFile: string = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/makecert.exe";
-        var _winrmConfFile: string = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/winrmconf.cmd";
-        var fileUris = [_configWinRMScriptFile, _makeCertFile, _winrmConfFile];
+    private async AddExtensionToVMsToConfigureWinRM() {
+        var resourceGroupDetails = await this.azureUtils.getResourceGroupDetails();
+        for (var vm of this.azureUtils.vmDetails) {
+            var resourceName = vm.name;
+            var resourceId = vm.id;
+            var vmResource = resourceGroupDetails.VirtualMachines.find(v => v.Name == resourceName);
+            var resourceFQDN = vmResource.WinRMHttpsPublicAddress;
+            var resourceWinRmHttpsPort = vmResource.WinRMHttpsPort
+            if (vm["properties"]["storageProfile"]["osDisk"]["osType"] === 'Windows') {
+                tl.debug("Enabling winrm for virtual machine " + resourceName);
+                await this.AddWinRMExtension(resourceId, resourceName, resourceFQDN, vm["location"]);
+            }
+            else {
+                tl.debug("WinRM extension cannot be enabled on the virtual machine: " + resourceName + "since the OS type is " +
+                    vm.properties["storageProfile"]["osDisk"]["osType"]);
+            }
+        }
+    }
+
+    private async AddWinRMExtension(vmId: string, vmName: string, dnsName: string, location: string): Promise<any> {
+        var extensionName: string = "CustomScriptExtension";
+        var configWinRMScriptFile: string = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/ConfigureWinRM.ps1";
+        var makeCertFile: string = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/makecert.exe";
+        var winrmConfFile: string = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/winrmconf.cmd";
+        var fileUris = [configWinRMScriptFile, makeCertFile, winrmConfFile];
 
         tl.debug("Adding custom script extension for virtual machine " + vmName);
         tl.debug("VM Location: " + location);
         tl.debug("VM DNS: " + dnsName);
 
-        tl.debug("Checking if the extension " + _extensionName + " is present on vm " + vmName);
-        return new Promise<any>(async (resolve, reject) => {
-            var result = await this.GetExtension(vmName, _extensionName);
-            var extensionStatusValid = false;
-            if (result) {
-                if (result["properties"]["settings"]["fileUris"].length == fileUris.length && fileUris.every((element, index) => { return element === result["properties"]["settings"]["fileUris"][index]; })) {
-                    tl.debug("Custom Script extension is for enabling Https Listener on VM" + vmName);
-                    if (result["properties"]["provisioningState"] === 'Succeeded') {
-                        extensionStatusValid = await this.ValidateCustomScriptExecutionStatus(vmName, dnsName, _extensionName, location, fileUris);
-                    }
+        tl.debug("Checking if the extension " + extensionName + " is present on vm " + vmName);
+        var result = await this.GetExtension(vmName, extensionName);
+        var extensionStatusValid = false;
+        if (result) {
+            if (result["properties"]["settings"]["fileUris"].length == fileUris.length && fileUris.every((element, index) => { return element === result["properties"]["settings"]["fileUris"][index]; })) {
+                tl.debug("Custom Script extension is for enabling Https Listener on VM" + vmName);
+                if (result["properties"]["provisioningState"] === 'Succeeded') {
+                    extensionStatusValid = await this.ValidateExtensionExecutionStatus(vmName, dnsName, extensionName, location, fileUris);
+                }
 
-                    if (!extensionStatusValid) {
-                        await this.RemoveExtensionFromVM(_extensionName, vmName);
-                    }
+                if (!extensionStatusValid) {
+                    await this.RemoveExtensionFromVM(extensionName, vmName);
                 }
             }
-            if (!extensionStatusValid) {
-                await this.AddExtensionVM(vmName, dnsName, _extensionName, location, fileUris);
-            }
-            tl.debug("Addition of Custom Script Extension is completed");
-            resolve();
-        });
+        }
+        if (!extensionStatusValid) {
+            await this.AddExtensionToVM(vmName, dnsName, extensionName, location, fileUris);
+        }
+        tl.debug("Addition of Custom Script Extension is completed");
     }
 
     private GetExtension(vmName: string, extensionName: string): Promise<any> {
@@ -348,14 +309,13 @@ export class WinRMExtensionHelper {
         });
     }
 
-    private async ValidateCustomScriptExecutionStatus(vmName: string, dnsName: string, extensionName: string, location: string, fileUris): Promise<boolean> {
+    private async ValidateExtensionExecutionStatus(vmName: string, dnsName: string, extensionName: string, location: string, fileUris): Promise<boolean> {
         tl.debug("Validating the winrm configuration custom script extension status");
 
         return new Promise<boolean>((resolve, reject) => {
             this.computeClient.virtualMachines.get(this.resourceGroupName, vmName, { expand: 'instanceView' }, async (error, result, request, response) => {
                 if (error) {
-                    console.log(tl.loc("FailedToFetchInstanceViewVM", JSON.stringify(error)));
-                    reject(tl.loc("FailedToFetchInstanceViewVM", JSON.stringify(error)));
+                    reject(tl.loc("FailedToFetchInstanceViewVM", utils.getError(error)));
                     return;
                 }
                 tl.debug("Got the Instance View of the virtualMachine " + vmName + ": " + JSON.stringify(result));
@@ -380,7 +340,7 @@ export class WinRMExtensionHelper {
         });
     }
 
-    private async AddExtensionVM(vmName: string, dnsName: string, extensionName: string, location: string, _fileUris): Promise<any> {
+    private async AddExtensionToVM(vmName: string, dnsName: string, extensionName: string, location: string, _fileUris): Promise<any> {
         var _commandToExecute: string = "powershell.exe -File ConfigureWinRM.ps1 " + dnsName;
         var _extensionType: string = 'Microsoft.Compute/virtualMachines/extensions';
         var _virtualMachineExtensionType: string = 'CustomScriptExtension';
@@ -406,8 +366,7 @@ export class WinRMExtensionHelper {
         return new Promise<any>((resolve, reject) => {
             this.computeClient.virtualMachineExtensions.createOrUpdate(this.resourceGroupName, vmName, extensionName, parameters, async (error, result, request, response) => {
                 if (error) {
-                    console.log(tl.loc("CreationOfExtensionFailed", JSON.stringify(error)));
-                    reject(tl.loc("CreationOfExtensionFailed", JSON.stringify(error)));
+                    reject(tl.loc("CreationOfExtensionFailed", utils.getError(error)));
                     return;
                 }
                 tl.debug("Addition of extension completed for vm" + vmName);
