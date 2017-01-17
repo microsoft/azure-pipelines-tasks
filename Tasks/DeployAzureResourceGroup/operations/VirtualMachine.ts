@@ -48,15 +48,16 @@ export class VirtualMachine {
                             break;
                         case "Delete":
                             var extDelPromise = this.machineGroupAgentExtensionManager.deleteMGExtension(listOfVms[i]);
-                            var deleteExtensionFromVM = this.createDeleteVMExtensionCallback(client, vmName, callback(vmName));
-                            extDelPromise.then(deleteExtensionFromVM, deleteExtensionFromVM); 
+                            var deleteVM = this.deleteVMCallbak(client, vmName, callback(vmName));
+                            extDelPromise.then(deleteVM, deleteVM);
+                            break;
                     }
                 }
             });
         });
     }
 
-    private createDeleteVMExtensionCallback(client, vmName, callback) {
+    private deleteVMCallbak(client, vmName, callback) {
         var deleteExtensionFromVM = () => {
             console.log(tl.loc("VM_Delete", vmName));
             client.virtualMachines.deleteMethod(this.taskParameters.resourceGroupName, vmName, callback);

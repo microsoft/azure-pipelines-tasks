@@ -5,25 +5,83 @@ import azure_utils = require("./AzureUtil");
 import deployAzureRG = require("../models/DeployAzureRG");
 import constants = require("./Constants");
 
-export class MachineGroupAgentExtensionManager {
+export class MachineGroupExtensionHelper {
     private _taskParameters: deployAzureRG.AzureRGTaskParameters;
-    private _credentials;
-    private _subscriptionId: string;
     private _azureUtils: azure_utils.AzureUtil;
-    private _computeClient;
+    private _computeClient: computeManagementClient.ComputeManagementClient;
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
         this._taskParameters = taskParameters;
-        this._credentials = this._taskParameters.credentials;
-        this._subscriptionId = this._taskParameters.subscriptionId;
-        this._computeClient = new computeManagementClient.ComputeManagementClient(this._credentials, this._subscriptionId);
+        var _credentials = this._taskParameters.credentials;
+        var _subscriptionId = this._taskParameters.subscriptionId;
+        this._computeClient = new computeManagementClient.ComputeManagementClient(_credentials, _subscriptionId);
         this._azureUtils = new azure_utils.AzureUtil(this._taskParameters, this._computeClient);
-        return this;
     }
-    public installMGExtension() {
+
+    public async installExtension() {
+        return new Promise<void>((resolve, reject) => {
+            this._computeClient.virtualMachines.list(this.taskParameters.resourceGroupName, null, (error, listOfVms, request, response) => {
+                if (error) {
+                    reject(tl.loc("VM_ListFetchFailed", this.taskParameters.resourceGroupName, utils.getError(error)));
+                }
+                if (listOfVms.length == 0) {
+                    console.log(tl.loc("NoVMsFound"));
+                    resolve();
+                }
+
+                var callback = this.getCallback(listOfVms.length, resolve, reject);
+
+                for (var i = 0; i < listOfVms.length; i++) {
+                    var vmName = listOfVms[i]["name"];
+                    var promise = Promise.resolve();
+                    if (/* state is stopped */) {
+                        promise = this.startVirtualMachine(vmName, callback);
+                    }
+                    if (/* state running */) {
+                        promise = promise.then(this.installVMExtension(vmName, callback));
+                    }
+                }
+            });
+        });
+    }
+
+    private startVirtualMachine(vmName, errorCallback):Promise<any> {
+        return new Promise<void>((resolve, reject) => {
+            this._computeClient.virtualMachines.start(this._taskParameters.resourceGroupName, vmName, (error, result)=> {
+                 if (error) {
+                     errorCallback(error);
+                     reject();
+                 }
+                 resolve();
+            });
+        });
+    }
+
+    private installVMExtension(vmName, callback):Promise<any> {
+    }
+
+    public async installMGExtension() {
+        console.log("Installing Team Services Agent extension on the VMs"); // Should be localized.
+        var listOfVms = await this.getVirtualMachines();
+        var promises: Promise<any>[] = [];
+        for (var vm of listOfVms) {
+            var promise = Promise.resolve();
+            if (/* state is stopped */) {
+                promise = this.startVirtualMachine(vm);
+            }
+            if (/* state running */) {
+                promise = promise.then(this.installVMExtension(vm));
+            }
+        }
+
+        Promise.all(promises).then(())
+
+        /*
+        */
+
         return new Promise((resolve, reject) => {
             var operationParameters = new OperationParameters("installation");
-            var listOfVmsPromise = this._azureUtils.getVMDetails();
+            var listOfVmsPromise = await this._azureUtils.getVMDetails();
             listOfVmsPromise.then((listOfVms) => {
                 operationParameters.vmCount = listOfVms.length;
                 if (operationParameters.vmCount === 0) {
@@ -38,6 +96,19 @@ export class MachineGroupAgentExtensionManager {
                     var callback = this._getPostOperationCallBack(operationParameters, extensionName, vmName, resolve, reject);
                     var installMGExtensionCallback = this._getInstallMGExtensionCallback(operationParameters, extensionName, vmName, parameters, callback);
                     this._computeClient.virtualMachines.get(resourceGroupName, vmName, { expand: 'instanceView' }, installMGExtensionCallback);
+                }
+            });
+        });
+    }
+
+    private getVirtualMachines(): Promise<any[]> {
+        return new Promise<any[]>((resolve, reject) => {
+            this._computeClient.virtualMachines.list("", "vmName", { expand: 'instanceView' }, (error, result) => {
+                if (error) {
+                    reject (utis..)
+                }
+                else {
+                    resolve(result);
                 }
             });
         });
@@ -98,7 +169,7 @@ export class MachineGroupAgentExtensionManager {
             if (operationParameters.failureCount + operationParameters.successCount === operationParameters.vmCount) {
                 if (operationParameters.failureCount > 0) {
                     this.log(tl.loc("MGAgentOperationOnAllVMsFailed", operationParameters.operation, ""));
-                    reject(operationParameters.operation);
+                    reject(tl.loc("MGAgentOperationOnAllVMsFailed", operationParameters.operation, ""));
                 }
                 else {
                     if (operationParameters.vmCount !== 0) {

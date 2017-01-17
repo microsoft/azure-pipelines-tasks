@@ -106,10 +106,7 @@ export class ResourceGroup {
             await this.winRMExtensionHelper.ConfigureWinRMExtension();
         }
         else if (this.taskParameters.enableDeploymentPrerequisites == constants.enablePrereqMG) {
-            console.log("Installing Team Services Agent extension on the VMs");
-            var enableMGPromise = this.machineGroupAgentExtensionManager.installMGExtension();
-            enableMGPromise.then(null, (operation) => { throw (tl.loc("MGAgentOperationOnAllVMsFailed", operation, "")) });
-            await enableMGPromise;
+            await this.machineGroupAgentExtensionManager.installMGExtension();
         }
     }
 
