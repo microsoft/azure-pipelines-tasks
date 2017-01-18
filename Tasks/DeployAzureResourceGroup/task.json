@@ -1,6 +1,6 @@
 {
     "id": "94A74903-F93F-4075-884F-DC11F34058B4",
-    "name": "DeployAzureResourceGroup",
+    "name": "AzureResourceGroupDeployment",
     "friendlyName": "Azure Resource Group Deployment",
     "description": "Deploy, start, stop, delete Azure Resource Groups",
     "helpMarkDown": "[More Information](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
@@ -30,19 +30,19 @@
             "name": "Template",
             "displayName": "Template",
             "isExpanded": true,
-            "visibleRule": "action = Create or update resource group"
+            "visibleRule": "action = Create Or Update Resource Group"
         },
         {
             "name": "AdvancedDeploymentOptions",
             "displayName": "Advanced Deployment Options",
             "isExpanded": true,
-            "visibleRule": "action = Create or update resource group || action = Select resource group"
+            "visibleRule": "action = Create Or Update Resource Group || action = Select Resource Group"
         },
         {
             "name": "output",
             "displayName": "Output",
             "isExpanded": true,
-            "visibleRule": "action = Create or update resource group || action = Select resource group"
+            "visibleRule": "action = Create Or Update Resource Group || action = Select Resource Group"
         }
     ],
     "inputs": [
@@ -59,13 +59,13 @@
             "name": "action",
             "type": "pickList",
             "label": "Action",
-            "defaultValue": "Create or update resource group",
+            "defaultValue": "Create Or Update Resource Group",
             "required": true,
             "groupName": "AzureDetails",
             "helpMarkDown": "Action to be performed on the Azure resources or resource group.",
             "options": {
-                "Create or update resource group": "Create or update resource group",
-                "Select resource group": "Select resource group",
+                "Create Or Update Resource Group": "Create Or Update Resource Group",
+                "Select Resource Group": "Select Resource Group",
                 "Start": "Start virtual machines",
                 "Stop": "Stop virtual machines",
                 "Restart": "Restart virtual machines",
@@ -121,7 +121,7 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "visibleRule": "action = Create or update resource group"
+            "visibleRule": "action = Create Or Update Resource Group"
         },
         {
             "name": "templateLocation",
