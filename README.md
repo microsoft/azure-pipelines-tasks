@@ -21,7 +21,7 @@ This provides open examples on how we write tasks which will help you write othe
 
 ## Writing Tasks
 
-Before writing a task, consider simply customizing your build using the script running tasks such as PowerShell or shell scripts.  That is often the most appropriate path.
+If you need custom functionality in your build/release, it is usually simpler to use the existing script running tasks such as the PowerShell or Shell Script tasks.  Writing a new task may be appropriate if you need deeper integration or reusability in many build definitions
 
 Tasks are simply tool runners.  They know how to run MSBuild, VSTest, etc... in a first class way and handle return codes, how to treat std/err out, and how to write timeline records based on expected output.  They also get access to credentials to write back to TFS/Team Services. 
 
