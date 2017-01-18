@@ -43,6 +43,12 @@
             "displayName": "Output",
             "isExpanded": true,
             "visibleRule": "action = Create or update resource group || action = Select resource group"
+        },
+        {
+            "name": "MachineGroupOptions",
+            "displayName": "Machine Group Options",
+            "isExpanded": true,
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent"
         }
     ],
     "inputs": [
@@ -205,10 +211,45 @@
             "name": "enableDeploymentPrerequisites",
             "type": "boolean",
             "label": "Enable deployment prerequisites",
-            "defaultValue": "false",
-            "required": false,
+            "defaultValue": "None",
             "groupName": "AdvancedDeploymentOptions",
-            "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
+            "options": {
+                "None": "None",
+                "ConfigureVMwithWinRM": "Configure virtual machines with WinRM",
+                "ConfigureVMWithMGAgent": "Configure virtual machines with machine group agent"
+            },
+            "helpMarkDown": "These options would be applicable only when the Resource group contains virtual machines. <br><br>Selecting WinRM option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
+          
+        },
+        {
+            "name": "machineGroupName",
+            "type": "pickList",
+            "label": "Machine group",
+            "groupName": "MachineGroupOptions",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
+            "helpMarkDown": "Select a machine group",
+            "properties": {
+                "DisableManageLink": "True"
+            }
+        },
+        {
+            "name": "copyAzureVMTags",
+            "type": "boolean",
+            "label": "Copy Azure VM tags to agents",
+            "groupName": "MachineGroupOptions",
+            "defaultValue": true,
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
+            "helpMarkDown": "Choose if the tags configured on the Azure VM need to be copied to the corresponding machine group agent. <br><br>​By default all Azure tags will be copied following the format “Key: Value”. Example: An Azure Tag “Role : Web” would be copied  as-is to the Agent machine. <br><br>For more information on how tag Azure resources refer to [link](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-using-tags​)"
+        },
+        {
+            "name": "vstsPATToken",
+            "type": "string",
+            "label": "Personal access token",
+            "groupName": "MachineGroupOptions",
+            "defaultValue": "",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",            
+            "required": true,
+            "helpMarkDown": "Agent registration with machine group requires access to your visual studio project.​"
         },
         {
             "name": "outputVariable",
@@ -225,6 +266,14 @@
             "target": "resourceGroupName",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureResourceGroups"
+        }
+    ],
+    "sourceDefinitions": [
+        {
+            "target": "machineGroupName",
+            "endpoint": "/$(system.teamProject)/_apis/distributedtask/machinegroups",
+            "selector": "jsonpath:$.value[*].name",
+            "authKey": "tfs:teamfoundation"
         }
     ],
     "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
@@ -278,6 +327,7 @@
         "ARG_NetworkSecurityConfigFailed": "Failed to add the network security config rule",
         "ExtensionAlreadyPresentVm": "Extension %s is already present on the virtual machine '%s'",
         "AddExtension": "Adding extension '%s' on virtual machine '%s'",
+        "DeleteExtension": "Deleting extension %s from virtual machine %s",
         "ARG_AllResourceNotFound": "'%s' not found on resource group '%s'",
         "FailedToAddExtension": "Failed to add the network security rule with exception: %s",
         "AddingSecurityRuleNSG": "Adding security rule for the network security group: %s",
@@ -325,13 +375,22 @@
         "FailedToFetchDetailsOfLB": "Failed to fetch the details of the load Balancer: %s",
         "FailedToUpdateLBInboundNatRules": "Failed to update the inbound NAT rules of the Load Balancer %s to remove irrelevant rules",
         "InvalidResponseLongRunningOperation": "Invalid response received for fetching status of a long running operation.",
-        
         "AddingInboundNatRule": "Adding Inbound Nat Rule for the Virtual Machine %s to the Load Balancer %s",
         "InboundNatRuleAdditionFailed": "Addition of Inbound Nat Rule to the Load Balancer %s failed. Error: %s ",
         "InboundNatRulesToNICFailed": "Addition of rule Id to the loadBalancerInboundNatRules of nic %s failed with the error: %s",
         "AddedTargetInboundNatRuleLB": "Added the target virtual machine for the inbound NAT rules of load balancer %s",
         "FailedToFetchInstanceViewVM": "Failed to fetch the instance view of the virtual machine. Error : %s",
         "CreationOfExtensionFailed": "Failed to add the extension. Error: %s",
-        "AddedExtension" :"Successfully added the CustomScriptExtension for the virtual Machine %s"
+        "AddedExtension" :"Successfully added the CustomScriptExtension for the virtual Machine %s",
+        "OperationSucceeded": "%s of %s on vm %s succeeded",
+        "OperationFailed": "%s of %s on vm %s failed",
+        "MGAgentOperationOnAllVMsFailed": "Machine group agent %s did not succeed on all VMs. %s",
+        "MGAgentOperationOnAllVMsSucceeded": "Machine group agent %s succeeded on all VMs",
+        "PublicSettings": "Public settings are:\n VSTSAccountName: %s\nTeamProject: %s\nMachineGroup: %s\nTags: %s\n",
+        "MGAgentHandlerMajorVersion": "Machine group extension handler major version is %s",
+        "SkipDeleteExtension": "Either the extension %s is not present on the virtual machine %s or the machine is stopped. Skipping extension deletion.",
+        "VMStartFailedSkipExtensionOperation": "Could not start the virtual machine %s. Skipping %s of %s extension on it.",
+        "VMTransitioningSkipExtensionOperation": "Virtual machine %s is in a transitioning state. Skipping %s of %s extension on it.",
+        "VMDetailsFetchFailedSkipExtensionOperation": "Could not get details of virtual machine %s. Skipping %s of team services agent on it."
     }
 }
