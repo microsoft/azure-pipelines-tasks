@@ -2,7 +2,7 @@
     "id": "0F077E3A-AF59-496D-81BC-AD971B7464E0",
     "name": "XamariniOS",
     "friendlyName": "Xamarin.iOS",
-    "description": "Build an iOS app with Xamarin on Mac OS",
+    "description": "Build an iOS app with Xamarin on macOS",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613729)",
     "category": "Build",
     "visibility": [
@@ -11,7 +11,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 111,
+        "Minor": 112,
         "Patch": 0
     },
     "demands": [
@@ -36,7 +36,7 @@
             "label": "Solution",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Relative path from repo root of the Xamarin.iOS solution to build."
+            "helpMarkDown": "Relative path from the repo root of the Xamarin.iOS solution to build."
         },
         {
             "name": "configuration",
@@ -69,7 +69,7 @@
             "label": "Working Directory",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Working directory for build runs. Defaults to the root of the repository.",
+            "helpMarkDown": "Working directory in which builds will run. When empty, the root of the repository is used.",
             "groupName": "advanced"
         },
         {
@@ -104,7 +104,6 @@
             "required": false,
             "groupName": "sign",
             "defaultValue": "file",
-            "helpMarkDown": "Indicates that the build should use different signing and/or mobile provisioning settings. Leave fields blank if you do not wish to override.",
             "options": {
                 "file": "File Contents",
                 "id": "Identifiers"
@@ -115,7 +114,7 @@
             "type": "string",
             "label": "Signing Identity",
             "required": false,
-            "helpMarkDown": "Optional signing identity override that should be used to sign the build. Defaults to Xcode Project setting. You may need to select Unlock Default Keychain if you use this option.",
+            "helpMarkDown": "Optional signing identity override that should be used to sign the build. This defaults to Xcode Project setting. You may need to select 'Unlock Default Keychain' if you use this option.",
             "groupName": "sign",
             "visibleRule": "signMethod = id"
         },
@@ -134,7 +133,7 @@
             "type": "string",
             "label": "Default Keychain Password",
             "required": false,
-            "helpMarkDown": "Password to unlock the default keychain when this option is set.",
+            "helpMarkDown": "Password to unlock the default keychain when that option is set.",
             "groupName": "sign",
             "visibleRule": "signMethod = id"
         },
@@ -152,7 +151,7 @@
             "type": "filePath",
             "label": "P12 Certificate File",
             "required": false,
-            "helpMarkDown": "Optional relative path to a PKCS12 formatted p12 certificate file containing a signing certificate to be used for this build.",
+            "helpMarkDown": "Optional relative path to a PKCS12-formatted p12 certificate file containing a signing certificate to be used for this build.",
             "groupName": "sign",
             "visibleRule": "signMethod = file"
         },
@@ -161,7 +160,7 @@
             "type": "string",
             "label": "P12 Password",
             "required": false,
-            "helpMarkDown": "Password to P12 Certificate File if specified. Use a Build Variable to encrypt.",
+            "helpMarkDown": "Password to the P12 certificate file, if specified. Use a Build Variable to encrypt this value.",
             "groupName": "sign",
             "visibleRule": "signMethod = file"
         },
@@ -170,7 +169,7 @@
             "type": "filePath",
             "label": "Provisioning Profile File",
             "required": false,
-            "helpMarkDown": "Optional relative path to file containing provisioning profile override to be used for this build.",
+            "helpMarkDown": "Optional relative path to a file containing the provisioning profile override to be used for this build.",
             "groupName": "sign",
             "visibleRule": "signMethod = file"
         },
@@ -180,7 +179,7 @@
             "label": "Remove Profile After Build",
             "defaultValue": false,
             "required": false,
-            "helpMarkDown": "Specifies that the contents of the Provisioning Profile File should be removed from the build agent after the build is complete. **Only check if you are running one agent per user.**",
+            "helpMarkDown": "Specifies that the contents of the provisioning profile file should be removed from the build agent after the build is complete. **Only enable this if you are running one agent per user.**",
             "groupName": "sign",
             "visibleRule": "signMethod = file"
         }
@@ -199,7 +198,7 @@
         "ProvProfileUUIDNotFound": "Failed to find provisioning profile UUID for provisioning profile: %s",
         "TempKeychainDeleteFailed": "Failed to delete temporary keychain %s created during the build.",
         "ProvProfileDeleteFailed": "Failed to delete the provisioning profile %s.",
-        "XamariniOSSucceeded": "XamariniOS task execution completed with no errors.",
-        "XamariniOSFailed": "XamariniOS task failed with error %s. For guidance on setting up the build definition, see https://go.microsoft.com/fwlink/?LinkId=760847."
+        "XamariniOSSucceeded": "Xamarin.iOS task execution completed with no errors.",
+        "XamariniOSFailed": "Xamarin.iOS task failed with error %s. For guidance on setting up the build definition, see https://go.microsoft.com/fwlink/?LinkId=760847."
     }
 }
