@@ -14,11 +14,13 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
+    "Major": 2,
     "Minor": 0,
-    "Patch": 17
+    "Patch": 1
   },
   "demands": [],
+  "preview": "true",
+  "releaseNotes": "Preview task rel note",
   "minimumAgentVersion": "1.90.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
@@ -60,14 +62,6 @@
     }
   ],
   "execution": {
-    "PowerShell": {
-      "target": "$(currentDirectory)\\PublishCodeCoverageResults.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)",
-      "platforms": [
-        "windows"
-      ]
-    },
     "Node": {
       "target": "publishcodecoverageresults.js",
       "argumentFormat": ""

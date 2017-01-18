@@ -11,11 +11,13 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
+    "Major": 2,
     "Minor": 0,
-    "Patch": 35
+    "Patch": 1
   },
   "demands": [],
+  "preview": "true",
+  "releaseNotes": "Preview task rel note",
   "minimumAgentVersion": "1.83.0",
   "groups": [
     {
@@ -93,14 +95,6 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "PowerShell": {
-      "target": "$(currentDirectory)\\PublishTestResults.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)",
-      "platforms": [
-        "windows"
-      ]
-    },
     "Node": {
       "target": "publishtestresults.js",
       "argumentFormat": ""
