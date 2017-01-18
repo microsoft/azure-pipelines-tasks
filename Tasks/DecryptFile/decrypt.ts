@@ -9,7 +9,7 @@ async function run() {
         tl.cd(cwd);
 
         var openssl: trm.ToolRunner = tl.tool(tl.which('openssl', true));
-        openssl.arg(tl.getInput('cipher', true))
+        openssl.arg(tl.getInput('cipher', true));
 
         var inFile = tl.getInput('inFile', true);
         openssl.arg(['-d', '-in', inFile]);
@@ -19,7 +19,7 @@ async function run() {
         if(fs.existsSync(outFile) && fs.lstatSync(outFile).isDirectory()) {
             openssl.arg(inFile + '.out');
         } else {
-            openssl.arg(outFile)    
+            openssl.arg(outFile);   
         }
 
         openssl.arg(['-pass','pass:' + tl.getInput('passphrase')]);
