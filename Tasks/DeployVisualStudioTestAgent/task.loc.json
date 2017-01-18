@@ -11,12 +11,14 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
+    "Major": 2,
     "Minor": 0,
-    "Patch": 42
+    "Patch": 1
   },
+  "preview": "true",
+  "releaseNotes": "<ul><li>Support for Visual Studio Test Agent 2017: You can now deploy and run tests using multiple versions of Visual Studio Test Agent. Versions 2015 and 2017 are supported.</li><li>Machine groups created from the Test hub are no longer supported. You can continue to use a list of machines or Azure resource groups.</li></ul>",
   "demands": [],
-  "minimumAgentVersion": "1.104.0",
+  "minimumAgentVersion": "2.0.0",
   "groups": [
     {
       "name": "testMachineGroups",
@@ -36,12 +38,12 @@
   ],
   "inputs": [
     {
-      "name": "testMachineGroup",
+      "name": "testMachines",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.testMachineGroup",
+      "label": "ms-resource:loc.input.label.testMachines",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.testMachineGroup",
+      "helpMarkDown": "ms-resource:loc.input.help.testMachines",
       "groupName": "testMachineGroups"
     },
     {
@@ -49,7 +51,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.adminUserName",
       "defaultValue": "",
-      "required": false,
+      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.adminUserName",
       "groupName": "testMachineGroups"
     },
@@ -58,7 +60,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.adminPassword",
       "defaultValue": "",
-      "required": false,
+      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.adminPassword",
       "groupName": "testMachineGroups"
     },
@@ -66,11 +68,11 @@
       "name": "winRmProtocol",
       "type": "radio",
       "label": "ms-resource:loc.input.label.winRmProtocol",
-      "required": false,
-      "defaultValue": "",
+      "required": true,
+      "defaultValue": "Http",
       "options": {
-        "Http": "HTTP",
-        "Https": "HTTPS"
+        "Http": "Http",
+        "Https": "Https"
       },
       "helpMarkDown": "ms-resource:loc.input.help.winRmProtocol",
       "groupName": "testMachineGroups"
@@ -83,27 +85,6 @@
       "visibleRule": "winRmProtocol = Https",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.testCertificate",
-      "groupName": "testMachineGroups"
-    },
-    {
-      "name": "resourceFilteringMethod",
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.resourceFilteringMethod",
-      "required": false,
-      "defaultValue": "machineNames",
-      "options": {
-        "machineNames": "Machine Names",
-        "tags": "Tags"
-      },
-      "groupName": "testMachineGroups"
-    },
-    {
-      "name": "testMachines",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.testMachines",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.testMachines",
       "groupName": "testMachineGroups"
     },
     {
@@ -134,6 +115,28 @@
       "groupName": "agentConfiguration"
     },
     {
+      "name": "isDataCollectionOnly",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.isDataCollectionOnly",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.isDataCollectionOnly",
+      "groupName": "agentConfiguration"
+    },
+    {
+      "name": "testPlatform",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.testPlatform",
+      "defaultValue": "14.0",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.testPlatform",
+      "groupName": "advanced",
+      "options": {
+        "15.0": "Visual Studio 2017",
+        "14.0": "Visual Studio 2015"
+      }
+    },
+    {
       "name": "agentLocation",
       "type": "string",
       "label": "ms-resource:loc.input.label.agentLocation",
@@ -146,27 +149,16 @@
       "name": "updateTestAgent",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.updateTestAgent",
-      "defaultValue": "true",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.updateTestAgent",
-      "groupName": "advanced"
-    },
-    {
-      "name": "isDataCollectionOnly",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.isDataCollectionOnly",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.isDataCollectionOnly",
+      "helpMarkDown": "ms-resource:loc.input.help.updateTestAgent",
       "groupName": "advanced"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "PowerShell": {
-      "target": "$(currentDirectory)\\DeployTestAgent.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+    "PowerShell3": {
+      "target": "DeployTestAgent.ps1"
     }
   }
 }

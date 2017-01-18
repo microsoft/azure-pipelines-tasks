@@ -89,14 +89,14 @@ export async function deployWebAppPackage(webAppPackage: string, publishingProfi
         tl.debug('Trying to enable app offline mode.');
         await appOffineKuduService(publishingProfile.publishUrl, physicalPath, headers, true); 
     }
-    tl._writeLine(tl.loc("Deployingwebapplicationatvirtualpathandphysicalpath", webAppPackage, virtualPath, physicalPath));
+    console.log(tl.loc("Deployingwebapplicationatvirtualpathandphysicalpath", webAppPackage, virtualPath, physicalPath));
     var webAppReadStream = fs.createReadStream(webAppPackage);
     httpObj.sendStream('PUT', kuduDeploymentURL, webAppReadStream, headers, async (error, response, body) => {
         if(error) {
             deferred.reject(tl.loc("Failedtodeploywebapppackageusingkuduservice", error));
         }
         else if(response.statusCode === 200) {
-            tl._writeLine(tl.loc("Successfullydeployedpackageusingkuduserviceat", webAppPackage, publishingProfile.publishUrl));
+            console.log(tl.loc("Successfullydeployedpackageusingkuduserviceat", webAppPackage, publishingProfile.publishUrl));
             if(takeAppOfflineFlag) {
                 tl.debug('Trying to disable app offline mode.');
                 try {

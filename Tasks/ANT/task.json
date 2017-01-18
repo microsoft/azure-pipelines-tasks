@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 111,
+        "Minor": 112,
         "Patch": 0
     },
     "demands": [
@@ -27,6 +27,11 @@
         {
             "name": "junitTestResults",
             "displayName": "JUnit Test Results",
+            "isExpanded": true
+        },
+        {
+            "name": "codeCoverage",
+            "displayName": "Code Coverage",
             "isExpanded": true
         },
         {

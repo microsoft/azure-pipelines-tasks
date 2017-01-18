@@ -9,11 +9,14 @@
         "Build",
         "Release"
     ],
+    "runsOn": [
+        "Agent"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 3
     },
     "preview": "true",
     "releaseNotes" : "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
@@ -294,6 +297,6 @@
         "VirtualApplicationDoesNotExist" : "Virtual application doesn't exists : %s",
         "JSONParseError": "Unable to parse JSON file: %s. Error: %s",
         "JSONvariablesubstitutionappliedsuccessfully": "JSON variable substitution applied successfully.",
-        "XMLvaiablesubstitutionappliedsuccessfully": "XML vaiable substitution applied successfully."
+        "XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully."
     }
 }

@@ -27,6 +27,7 @@ try {
 
     $copyPackageTimeoutSec = Get-VstsInput -Name copyPackageTimeoutSec
     $registerPackageTimeoutSec = Get-VstsInput -Name registerPackageTimeoutSec
+    $compressPackage = [System.Boolean]::Parse((Get-VstsInput -Name compressPackage))
 
     $clusterConnectionParameters = @{}
     
@@ -133,49 +134,56 @@ try {
     $applicationName = Get-ApplicationNameFromApplicationParameterFile $applicationParameterFile
     $app = Get-ServiceFabricApplication -ApplicationName $applicationName
 
+    $publishParameters = @{
+        'ApplicationPackagePath' = $applicationPackagePath
+        'ApplicationParameterFilePath' = $applicationParameterFile
+        'ErrorAction' = "Stop"
+    }
+
+    if ($publishProfile.CopyPackageParameters)
+    {
+        if ($publishProfile.CopyPackageParameters.CompressPackage)
+        {
+            $publishParameters['CompressPackage'] = [System.Boolean]::Parse($publishProfile.CopyPackageParameters.CompressPackage)
+        }
+
+        if ($publishProfile.CopyPackageParameters.CopyPackageTimeoutSec)
+        {
+            $publishParameters['CopyPackageTimeoutSec'] = $publishProfile.CopyPackageParameters.CopyPackageTimeoutSec
+        }
+    }
+
+    # compressPackage task input overrides the publish profile if it's enabled.
+    if ($compressPackage)
+    {
+        $publishParameters['CompressPackage'] = $compressPackage
+    }
+
+    # copyPackageTimeoutSec task input overrides the publish profile if it's set.
+    if ($copyPackageTimeoutSec)
+    {
+        $publishParameters['CopyPackageTimeoutSec'] = $copyPackageTimeoutSec
+    }
+
+    # registerPackageTimeoutSec task input overrides the publish profile if it's enabled
+    if ($registerPackageTimeoutSec)
+    {
+        $publishParameters['RegisterPackageTimeoutSec'] = $registerPackageTimeoutSec
+    }
+
     # Do an upgrade if configured to do so and the app actually exists
     if ($isUpgrade -and $app)
     {
-        $publishParameters = @{
-            'ApplicationPackagePath' = $applicationPackagePath
-            'ApplicationParameterFilePath' = $applicationParameterFile
-            'Action' = "RegisterAndUpgrade"
-            'UpgradeParameters' = $upgradeParameters
-            'UnregisterUnusedVersions' = $true
-            'ErrorAction' = "Stop"
-        }
-
-        if ($copyPackageTimeoutSec)
-        {
-            $publishParameters['CopyPackageTimeoutSec'] = $copyPackageTimeoutSec
-        }
-
-        if ($registerPackageTimeoutSec)
-        {
-            $publishParameters['RegisterPackageTimeoutSec'] = $registerPackageTimeoutSec
-        }
+        $publishParameters['Action'] = "RegisterAndUpgrade"
+        $publishParameters['UpgradeParameters'] = $upgradeParameters
+        $publishParameters['UnregisterUnusedVersions'] = $true
 
         Publish-UpgradedServiceFabricApplication @publishParameters
     }
     else
     {
-        $publishParameters = @{
-            'ApplicationPackagePath' = $applicationPackagePath
-            'ApplicationParameterFilePath' = $applicationParameterFile
-            'Action' = "RegisterAndCreate"
-            'OverwriteBehavior' = "SameAppTypeAndVersion"
-            'ErrorAction' = "Stop"
-        }
-
-        if ($copyPackageTimeoutSec)
-        {
-            $publishParameters['CopyPackageTimeoutSec'] = $copyPackageTimeoutSec
-        }
-
-        if ($registerPackageTimeoutSec)
-        {
-            $publishParameters['RegisterPackageTimeoutSec'] = $registerPackageTimeoutSec
-        }
+        $publishParameters['Action'] = "RegisterAndCreate"
+        $publishParameters['OverwriteBehavior'] = "SameAppTypeAndVersion"
 
         Publish-NewServiceFabricApplication @publishParameters
     }

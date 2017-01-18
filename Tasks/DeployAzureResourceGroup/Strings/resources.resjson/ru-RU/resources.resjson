@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Развертывание Azure: действие $(action) с $(resourceGroupName)",
   "loc.group.displayName.output": "Выход",
   "loc.input.label.ConnectedServiceNameSelector": "Тип подключения Azure",
-  "loc.input.label.ConnectedServiceName": "Azure Subscription",
+  "loc.input.label.ConnectedServiceName": "Подписка Azure",
   "loc.input.help.ConnectedServiceName": "Выберите подписку на Azure Resource Manager для развертывания.",
   "loc.input.label.ConnectedServiceNameClassic": "Классическая подписка Azure",
   "loc.input.help.ConnectedServiceNameClassic": "Выберите классическую подписку Azure для развертывания.",

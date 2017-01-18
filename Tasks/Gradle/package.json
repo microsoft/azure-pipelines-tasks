@@ -1,6 +1,6 @@
 {
   "name": "Agent.Tasks.Gradle",
-  "version": "1.0.37",
+  "version": "2.112.0",
   "author": "Microsoft Corporation",
   "description": "Build with Gradle",
   "license": "MIT",
@@ -10,7 +10,7 @@
   "dependencies": {
     "glob": "7.1.0",
     "request": "^2.74.0",
-    "vsts-task-lib": "0.9.7",
+    "vsts-task-lib": "^0.9.20",
     "xml2js": "^0.4.16"
   }
 }

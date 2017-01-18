@@ -20,7 +20,7 @@
   "loc.input.label.packParentFolder": "Include All Items in Parent Folder",
   "loc.input.help.packParentFolder": "Upload the selected symbols file / folder and all other items inside the same parent folder, this is required for React Native apps.",
   "loc.input.label.releaseNotesSelection": "Create Release Notes",
-  "loc.input.label.releaseNotesInput": "Release Notes",
+  "loc.input.label.releaseNotesInput": "Заметки о выпуске",
   "loc.input.help.releaseNotesInput": "Release notes for this version.",
   "loc.input.label.releaseNotesFile": "Release Notes File",
   "loc.input.help.releaseNotesFile": "Select a UTF-8 encoded text file which contains the Release Notes for this version.",

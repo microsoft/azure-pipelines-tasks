@@ -146,8 +146,8 @@ function Read-PublishProfile
     $publishProfileElement = $publishProfileXml.PublishProfile
     $publishProfile = @{}
 
-    $publishProfile.ClusterConnectionParameters = Read-XmlElementAsHashtable $publishProfileElement.Item("ClusterConnectionParameters")
     $publishProfile.UpgradeDeployment = Read-XmlElementAsHashtable $publishProfileElement.Item("UpgradeDeployment")
+    $publishProfile.CopyPackageParameters = Read-XmlElementAsHashtable $publishProfileElement.Item("CopyPackageParameters")
 
     if ($publishProfileElement.Item("UpgradeDeployment"))
     {

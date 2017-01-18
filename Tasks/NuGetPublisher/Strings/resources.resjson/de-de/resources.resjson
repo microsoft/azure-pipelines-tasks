@@ -19,6 +19,8 @@
   "loc.input.help.nuGetVersion": "The version of NuGet to use, or custom version.",
   "loc.input.label.nuGetPath": "Pfad zu \"NuGet.exe\"",
   "loc.input.help.nuGetPath": "Geben Sie optional den Pfad zu NuGet.exe an. Die Versionsauswahl wird außer Kraft gesetzt.",
+  "loc.input.label.continueOnEmptyNupkgMatch": "Continue if no packages match the \"Path/Pattern to nupkg\"",
+  "loc.input.help.continueOnEmptyNupkgMatch": "Continue instead of fail if no packages match the \"Path/Pattern to nupkg\".",
   "loc.messages.Warning_NoConfigForOldNuGet": "Bearbeiten Sie zum Herstellen einer Verbindung mit NuGet-Feeds, die in Ihrem Team Services-Konto bzw. Ihrer TFS-Projektsammlung mit NuGet 3.1 oder niedriger gehostet werden, die Builddefinition so, dass ein Pfad zu einer Datei \"NuGet.config\" angegeben wird, die die Paketquellen enthält, die Sie verwenden möchten.",
   "loc.messages.Warning_NoConfigForNoCredentialProvider": "Bearbeiten Sie zum Herstellen einer Verbindung mit NuGet-Feeds, die in Ihrem Team Services-Konto bzw. Ihrer TFS-Projektsammlung auf diesem Build-Agent gehostet werden, die Builddefinition so, dass ein Pfad zu einer Datei \"NuGet.config\" angegeben wird, die die Paketquellen enthält, die Sie verwenden möchten.",
   "loc.messages.Warning_ConflictingNuGetPreference": "NuGet 3.3 wurde ausgewählt, aber es wurde ein benutzerdefinierter NuGet-Pfad angegeben. Der benutzerdefinierte Pfad wird bevorzugt. Um diese Warnung aufzulösen, bearbeiten Sie Ihren Buildtask, und wählen Sie unter \"Erweitert\" die Option \"Benutzerdefiniert\" für die NuGet-Version.",

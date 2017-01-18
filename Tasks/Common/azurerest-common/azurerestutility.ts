@@ -373,7 +373,7 @@ export async function swapWebAppSlot(endpoint, resourceGroupName: string, webApp
         }
     );
 
-    tl._writeLine(tl.loc('StartingSwapSlot',webAppName));
+    console.log(tl.loc('StartingSwapSlot',webAppName));
     httpObj.send('POST', url, body, headers, async (error, response, body) => {
         if(error) {
             deferred.reject(error);
@@ -404,7 +404,7 @@ export async function startAppService(endpoint, resourceGroupName: string, webAp
         'Authorization': 'Bearer '+ accessToken
     };
     var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
-    tl._writeLine(tl.loc('StartingAppService', webAppNameWithSlot));
+    console.log(tl.loc('StartingAppService', webAppNameWithSlot));
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
             deferred.reject(error);
@@ -432,7 +432,7 @@ export async function stopAppService(endpoint, resourceGroupName: string, webApp
         'Authorization': 'Bearer '+ accessToken
     };
     var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
-    tl._writeLine(tl.loc('StoppingAppService', webAppNameWithSlot));
+    console.log(tl.loc('StoppingAppService', webAppNameWithSlot));
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
             deferred.reject(error);
@@ -460,7 +460,7 @@ export async function restartAppService(endpoint, resourceGroupName: string, web
         'Authorization': 'Bearer '+ accessToken
     };
     var webAppNameWithSlot = (specifySlotFlag) ? webAppName + '-' + slotName : webAppName;
-    tl._writeLine(tl.loc('RestartingAppService', webAppNameWithSlot));
+    console.log(tl.loc('RestartingAppService', webAppNameWithSlot));
     httpObj.send('POST', url, null, headers, (error, response, body) => {
         if(error) {
             deferred.reject(error);

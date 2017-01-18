@@ -22,7 +22,7 @@
   "loc.input.help.Package": "Путь к файлу или каталогу пакета службы приложений. Поддерживаются переменные ([Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)) и подстановочные знаки. <br/> Например, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip.",
   "loc.input.label.WebAppUri": "URL-адрес службы приложений",
   "loc.input.help.WebAppUri": "Укажите имя выходной переменной, которая создается для URL-адреса службы приложений Azure. Эта переменная может использоваться в последующих задачах.",
-  "loc.input.label.TakeAppOfflineFlag": "Take App Offline",
+  "loc.input.label.TakeAppOfflineFlag": "Перевести приложение в автономный режим",
   "loc.input.help.TakeAppOfflineFlag": "Выберите этот параметр, чтобы перевести службу приложений Azure в автономный режим путем размещения файла app_offline.htm в корневом каталоге службы приложений перед началом операции синхронизации. Файл будет удален после успешного завершения синхронизации.",
   "loc.input.label.UseWebDeploy": "Опубликовать при помощи веб-развертывания",
   "loc.input.help.UseWebDeploy": "Публикация с помощью параметров веб-развертывания поддерживается только при использовании агента для Windows. На других платформах для развертывания службы приложений Azure используются [API-интерфейсы REST Kudu](https://github.com/projectkudu/kudu/wiki/REST-API), и следующие параметры не поддерживаются.",
@@ -73,11 +73,11 @@
   "loc.messages.Trytodeploywebappagainwithrenamefileoptionselected": "Попробуйте снова развернуть службу приложений, используя параметр \"Переименовывать заблокированные файлы\".",
   "loc.messages.NOJSONfilematchedwithspecificpattern": "Не найден файл JSON, соответствующий заданному шаблону.",
   "loc.messages.JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "Подстановка переменных JSON может применяться только к файлам JSON.",
-  "loc.messages.Configfiledoesntexists": "Configuration file %s doesn't exist.",
+  "loc.messages.Configfiledoesntexists": "Файл конфигурации %s не существует.",
   "loc.messages.Failedtowritetoconfigfilewitherror": "Сбой записи в файл конфигурации %s. Ошибка: %s.",
-  "loc.messages.AppOfflineModeenabled": "App offline mode enabled.",
+  "loc.messages.AppOfflineModeenabled": "Автономный режим для приложения включен.",
   "loc.messages.Failedtoenableappofflinemode": "Не удалось включить автономный режим для приложения. Код состояния: %s (%s).",
-  "loc.messages.AppOflineModedisabled": "App offline mode disabled.",
+  "loc.messages.AppOflineModedisabled": "Автономный режим для приложения отключен.",
   "loc.messages.FailedtodisableAppOfflineMode": "Failed to disable App offline mode. Status Code: %s (%s)",
   "loc.messages.CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot perform XML transformations on a non-Windows platform.",
   "loc.messages.XdtTransformationErrorWhileTransforming": "XML transformation error while transforming %s using %s.",
@@ -96,5 +96,5 @@
   "loc.messages.VirtualApplicationDoesNotExist": "Virtual application doesn't exists : %s",
   "loc.messages.JSONParseError": "Unable to parse JSON file: %s. Error: %s",
   "loc.messages.JSONvariablesubstitutionappliedsuccessfully": "JSON variable substitution applied successfully.",
-  "loc.messages.XMLvaiablesubstitutionappliedsuccessfully": "XML vaiable substitution applied successfully."
+  "loc.messages.XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully."
 }

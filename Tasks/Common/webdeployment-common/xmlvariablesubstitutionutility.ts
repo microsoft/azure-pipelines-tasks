@@ -8,7 +8,7 @@ var ltxdomutility = require("./ltxdomutility.js");
 var fileEncoding = require('./fileencoding.js');
 
 export async function substituteAppSettingsVariables(folderPath) {
-    var configFiles = tl.glob(folderPath + "/**/*.config");
+    var configFiles = tl.findMatch(folderPath, "**/*.config");
     var variableMap = varUtility.getVariableMap();
     var tags = ["applicationSettings", "appSettings", "connectionStrings", "configSections"];
     for(var configFile of configFiles) {

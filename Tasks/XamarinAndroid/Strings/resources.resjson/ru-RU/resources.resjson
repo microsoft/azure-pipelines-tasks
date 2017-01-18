@@ -12,7 +12,7 @@
   "loc.input.label.outputDir": "Выходной каталог",
   "loc.input.help.outputDir": "При необходимости укажите каталог выходных данных для сборки. Пример: $(build.binariesDirectory)/bin/Release.",
   "loc.input.label.configuration": "Конфигурация",
-  "loc.input.label.createAppPackage": "Create App Package",
+  "loc.input.label.createAppPackage": "Создание пакета приложения",
   "loc.input.help.createAppPackage": "Passes the target (/t:PackageForAndroid) during build to generate an APK.",
   "loc.input.label.clean": "Очистить",
   "loc.input.help.clean": "Передает чистый целевой объект (/t:clean) во время сборки.",

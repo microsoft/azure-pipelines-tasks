@@ -1,7 +1,5 @@
 /// <reference path="../../../../definitions/vsts-task-lib.d.ts" />
-
 import fs = require('fs');
-
 import tl = require('vsts-task-lib/task');
 
 /**
@@ -18,10 +16,10 @@ export class SonarQubeRunSettings {
      * @param ceTaskUrl    A string leading to the SonarQube Web API endpoint for the details of this analysis task
      */
     constructor(public projectKey: string,
-        public serverUrl: string,
-        public dashboardUrl: string,
-        public ceTaskId: string,
-        public ceTaskUrl: string) {
+                public serverUrl: string,
+                public dashboardUrl: string,
+                public ceTaskId: string,
+                public ceTaskUrl: string) {
         if (!projectKey) {
             // Looks like: Failed to create TaskReport object. Missing field: projectKey
             throw new Error(tl.loc('sqCommon_CreateTaskReport_MissingField', 'projectKey'));
@@ -50,27 +48,26 @@ export class SonarQubeRunSettings {
      * @returns {SonarQubeRunSettings} A new SonarQubeRunSettings with appropriate fields filled
      */
     public static createRunSettingsFromFile(filePath: string): SonarQubeRunSettings {
-
         if (!SonarQubeRunSettings.fsExistsSync(filePath)) {
             tl.debug('Task report not found at: ' + filePath);
             // Looks like: Invalid or missing task report. Check SonarQube finished successfully.
             throw new Error(tl.loc('sqAnalysis_TaskReportInvalid'));
         }
 
-        var runSettingsFileString: string = fs.readFileSync(filePath, 'utf-8');
+        let runSettingsFileString: string = fs.readFileSync(filePath, 'utf-8');
         if (!runSettingsFileString || runSettingsFileString.length < 1) {
             tl.debug('Error reading file:' + runSettingsFileString);
             // Looks like: Invalid or missing task report. Check SonarQube finished successfully.
             throw new Error(tl.loc('sqAnalysis_TaskReportInvalid'));
         }
 
-        var runSettingsMap: Map<string, string> = SonarQubeRunSettings.createRunSettingsMapFromString(runSettingsFileString);
+        let runSettingsMap: Map<string, string> = SonarQubeRunSettings.createRunSettingsMapFromString(runSettingsFileString);
         try {
             return new SonarQubeRunSettings(runSettingsMap.get('projectKey'),
-                runSettingsMap.get('serverUrl'),
-                runSettingsMap.get('dashboardUrl'),
-                runSettingsMap.get('ceTaskId'),
-                runSettingsMap.get('ceTaskUrl')
+                                            runSettingsMap.get('serverUrl'),
+                                            runSettingsMap.get('dashboardUrl'),
+                                            runSettingsMap.get('ceTaskId'),
+                                            runSettingsMap.get('ceTaskUrl')
             );
         } catch (err) {
             tl.debug(err.message);
@@ -84,11 +81,11 @@ export class SonarQubeRunSettings {
      * @param runSettingsString The contents of report-task.txt as a string
      */
     private static createRunSettingsMapFromString(runSettingsString: string): Map<string, string> {
-        var lines: string[] = runSettingsString.replace(/\r\n/g, '\n').split('\n'); // proofs against xplat line-ending issues
+        let lines: string[] = runSettingsString.replace(/\r\n/g, '\n').split('\n'); // proofs against xplat line-ending issues
 
-        var runSettingsMap = new Map<string, string>();
+        let runSettingsMap: Map<string, string> = new Map<string, string>();
         lines.forEach((line: string) => {
-            var splitLine: string[] = line.split('=');
+            let splitLine: string[] = line.split('=');
             if (splitLine.length > 1) {
                 runSettingsMap.set(splitLine[0], splitLine.slice(1, splitLine.length).join());
             }
@@ -101,7 +98,7 @@ export class SonarQubeRunSettings {
         try {
             fs.accessSync(filePath);
             return true;
-        } catch (e) {
+        } catch (err) {
             return false;
         }
     }

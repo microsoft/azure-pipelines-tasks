@@ -61,6 +61,7 @@
         "VSBuild",
         "VsTest",
         "VSMobileCenterUpload",
+        "VSMobileCenterTest",
         "WindowsMachineFileCopy",
         "XamarinAndroid",
         "XamarinComponentRestore",

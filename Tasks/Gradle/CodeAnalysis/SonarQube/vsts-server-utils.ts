@@ -1,23 +1,20 @@
 /// <reference path="../../../../definitions/vsts-task-lib.d.ts" />
-
 import Q = require('q');
 import path = require('path');
 import fs = require('fs');
 
 import tl = require('vsts-task-lib/task');
-import {TaskResult} from 'vsts-task-lib/task';
+import { TaskResult } from 'vsts-task-lib/task';
 
-import {SonarQubeEndpoint} from './endpoint';
-import {SonarQubeRunSettings} from './run-settings';
-import {SonarQubeReportBuilder} from './report-builder';
-import {SonarQubeMetrics} from './metrics';
-import {FileSystemInteractions} from '../Common/FileSystemInteractions';
+import { SonarQubeRunSettings } from './run-settings';
+import { SonarQubeReportBuilder } from './report-builder';
+import { SonarQubeMetrics } from './metrics';
+import { FileSystemInteractions } from '../Common/FileSystemInteractions';
 
 /**
  * Class provides functions for effecting change on the VSTS serverside.
  */
 export class VstsServerUtils {
-
     /**
      * Determine if the current build was triggered by a pull request.
      *
@@ -29,13 +26,13 @@ export class VstsServerUtils {
         let sourceBranch: string = tl.getVariable('build.sourceBranch');
         let sccProvider: string = tl.getVariable('build.repository.provider');
 
-        tl.debug("Source Branch: " + sourceBranch);
-        tl.debug("Scc Provider: " + sccProvider);
+        tl.debug('Source Branch: ' + sourceBranch);
+        tl.debug('Scc Provider: ' + sccProvider);
 
         return !VstsServerUtils.isNullOrEmpty(sccProvider) &&
-            sccProvider.toLowerCase() === "tfsgit" &&
+            sccProvider.toLowerCase() === 'tfsgit' &&
             !VstsServerUtils.isNullOrEmpty(sourceBranch) &&
-            sourceBranch.toLowerCase().startsWith("refs/pull/");
+            sourceBranch.toLowerCase().startsWith('refs/pull/');
     }
 
     /**
@@ -45,7 +42,7 @@ export class VstsServerUtils {
      * @param sqMetrics     SonarQube metrics for the applicable run
      * @returns {Q.Promise<void>} Promise resolved when action completes.
      */
-    public static processSonarQubeBuildBreaker(sqRunSettings:SonarQubeRunSettings, sqMetrics:SonarQubeMetrics):Q.Promise<void> {
+    public static processSonarQubeBuildBreaker(sqRunSettings: SonarQubeRunSettings, sqMetrics: SonarQubeMetrics): Q.Promise<void> {
         if (!tl.getBoolInput('sqAnalysisBreakBuildIfQualityGateFailed')) {
             return Q.when<void>(null);
         }
@@ -59,9 +56,9 @@ export class VstsServerUtils {
      * @param sqMetrics     SonarQube metrics for the applicable run
      * @returns {Promise<void>} Promise resolved when action completes.
      */
-    public static processSonarQubeBuildSummary(sqRunSettings:SonarQubeRunSettings, sqMetrics:SonarQubeMetrics):Q.Promise<void> {
+    public static processSonarQubeBuildSummary(sqRunSettings: SonarQubeRunSettings, sqMetrics: SonarQubeMetrics): Q.Promise<void> {
         // During a pull request build, data necessary to create SQRunSettings is not available
-        if (sqRunSettings == null || VstsServerUtils.isPrBuild()) {
+        if (sqRunSettings === null || VstsServerUtils.isPrBuild()) {
             console.log(tl.loc('sqAnalysis_IsPullRequest_SkippingBuildSummary'));
             return Q.when<void>(null);
         }
@@ -82,22 +79,21 @@ export class VstsServerUtils {
      * @param sqMetrics     SonarQube metrics for the applicable run
      * @returns {Promise<void>} Promise resolved when action completes (NB: Setting build result to failed results in procees exit)
      */
-    private static breakBuildIfQualityGateFails(sqRunSettings:SonarQubeRunSettings, sqMetrics:SonarQubeMetrics):Q.Promise<void> {
+    private static breakBuildIfQualityGateFails(sqRunSettings: SonarQubeRunSettings, sqMetrics: SonarQubeMetrics): Q.Promise<void> {
         // During a pull request build, data necessary to create SQRunSettings is not available
-        if (sqRunSettings == null || VstsServerUtils.isPrBuild()) {
+        if (sqRunSettings === null || VstsServerUtils.isPrBuild()) {
             console.log(tl.loc('sqAnalysis_IsPullRequest_SkippingBuildBreaker'));
             return Q.when<void>(null);
         }
 
         // Necessary data is not available during a pull request build
         return sqMetrics.fetchTaskResultFromQualityGateStatus()
-            .then((taskResult:TaskResult) => {
-                if (taskResult == TaskResult.Failed) {
-// Looks like: "The SonarQube quality gate associated with this build has failed. For more details see http://mysonarqubeserver"
+            .then((taskResult: TaskResult) => {
+                if (taskResult === TaskResult.Failed) {
+                    // Looks like: "The SonarQube quality gate associated with this build has failed. For more details see http://mysonarqubeserver"
                     tl.setResult(1, tl.loc('sqAnalysis_BuildBrokenDueToQualityGateFailure', sqRunSettings.dashboardUrl));
                     return;
                 }
-
                 // Looks like: "The SonarQube quality gate associated with this build has passed (status OK)"
                 console.log(tl.loc('sqAnalysis_QualityGatePassed', sqMetrics.fetchQualityGateStatus()));
             });
@@ -109,8 +105,8 @@ export class VstsServerUtils {
      * @param sqMetrics     SonarQube metrics for the applicable run
      * @returns {any} Build summary string
      */
-    private static createSonarQubeBuildSummary(sqRunSettings:SonarQubeRunSettings, sqMetrics:SonarQubeMetrics):Q.Promise<string> {
-        var sqReportBuilder:SonarQubeReportBuilder = new SonarQubeReportBuilder(sqRunSettings, sqMetrics);
+    private static createSonarQubeBuildSummary(sqRunSettings: SonarQubeRunSettings, sqMetrics: SonarQubeMetrics): Q.Promise<string> {
+        let sqReportBuilder: SonarQubeReportBuilder = new SonarQubeReportBuilder(sqRunSettings, sqMetrics);
         return sqReportBuilder.fetchMetricsAndCreateReport(tl.getBoolInput('sqAnalysisIncludeFullReport'));
     }
 
@@ -120,8 +116,7 @@ export class VstsServerUtils {
      * @returns {string} Full path to the build summary file
      */
     private static saveSonarQubeBuildSummary(contents: string): string {
-        var filePath:string = path.join(
-            VstsServerUtils.getOrCreateSonarQubeStagingDirectory(), 'SonarQubeBuildSummary.md');
+        let filePath: string = path.join(VstsServerUtils.getOrCreateSonarQubeStagingDirectory(), 'SonarQubeBuildSummary.md');
         fs.writeFileSync(filePath, contents);
         return filePath;
     }
@@ -131,13 +126,15 @@ export class VstsServerUtils {
      * @param buildSummaryFilePath Physical location of the build summary file on disk
      * @param title    Title to be given to the build summary, shown to the user
      */
-    private static uploadBuildSummary(buildSummaryFilePath:string, title:string):void {
+    private static uploadBuildSummary(buildSummaryFilePath: string, title: string): void {
         tl.debug('Uploading build summary from ' + buildSummaryFilePath);
 
-        tl.command('task.addattachment', {
-            'type': 'Distributedtask.Core.Summary',
-            'name': title
-        }, buildSummaryFilePath);
+        tl.command('task.addattachment',
+                   {
+                       'type': 'Distributedtask.Core.Summary',
+                       'name': title
+                   },
+                   buildSummaryFilePath);
     }
 
     /**
@@ -145,7 +142,7 @@ export class VstsServerUtils {
      * @returns {string} Full path to the SonarQube staging directory
      */
     private static getOrCreateSonarQubeStagingDirectory(): string {
-        var sqStagingDir = path.join(tl.getVariable('build.artifactStagingDirectory'), ".sqAnalysis");
+        let sqStagingDir: string = path.join(tl.getVariable('build.artifactStagingDirectory'), '.sqAnalysis');
         FileSystemInteractions.createDirectory(sqStagingDir);
         return sqStagingDir;
     }
@@ -155,8 +152,7 @@ export class VstsServerUtils {
      * @param str String to examine
      * @returns {boolean}
      */
-    private static isNullOrEmpty(str):boolean {
+    private static isNullOrEmpty(str: string):boolean {
         return str === undefined || str === null || str.length === 0;
     }
-
 }

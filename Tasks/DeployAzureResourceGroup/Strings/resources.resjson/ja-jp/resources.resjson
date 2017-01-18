@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Azure の配置: $(resourceGroupName) 上の $(action) アクション",
   "loc.group.displayName.output": "出力",
   "loc.input.label.ConnectedServiceNameSelector": "Azure 接続の種類",
-  "loc.input.label.ConnectedServiceName": "Azure Subscription",
+  "loc.input.label.ConnectedServiceName": "Azure サブスクリプション",
   "loc.input.help.ConnectedServiceName": "デプロイ用の Azure Resource Manager サブスクリプションを選択します。",
   "loc.input.label.ConnectedServiceNameClassic": "Azure クラシック サブスクリプション",
   "loc.input.help.ConnectedServiceNameClassic": "配置用の Azure クラシック サブスクリプションを選びます。",

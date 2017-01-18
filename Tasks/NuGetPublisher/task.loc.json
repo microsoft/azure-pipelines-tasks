@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 27
+    "Patch": 29
   },
   "runsOn": [
     "Agent",
@@ -98,7 +98,7 @@
       "groupName": "advanced",
       "options": {
         "3.3.0": "3.3.0",
-        "3.5.0.1829": "3.5.0 - build 1829 (rc2)",
+        "3.5.0.1829": "3.5.0",
         "custom": "Custom"
       }
     },
@@ -109,6 +109,15 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.nuGetPath",
+      "groupName": "advanced"
+    },
+    {
+      "name": "continueOnEmptyNupkgMatch",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.continueOnEmptyNupkgMatch",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.continueOnEmptyNupkgMatch",
       "groupName": "advanced"
     }
   ],

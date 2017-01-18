@@ -19,6 +19,8 @@
   "loc.input.help.nuGetVersion": "The version of NuGet to use, or custom version.",
   "loc.input.label.nuGetPath": "NuGet.exe へのパス",
   "loc.input.help.nuGetPath": "(省略可能) NuGet.exe へのパスを指定します。バージョンの選択が上書きされます。",
+  "loc.input.label.continueOnEmptyNupkgMatch": "Continue if no packages match the \"Path/Pattern to nupkg\"",
+  "loc.input.help.continueOnEmptyNupkgMatch": "Continue instead of fail if no packages match the \"Path/Pattern to nupkg\".",
   "loc.messages.Warning_NoConfigForOldNuGet": "NuGet 3.1 以前で Team Services アカウント/TFS プロジェクト コレクションでホストされている NuGet フィードに接続するには、ビルド定義を編集して、使用するパッケージ ソースを含む NuGet.config へのパスを指定します。",
   "loc.messages.Warning_NoConfigForNoCredentialProvider": "このビルド エージェントの Team Services アカウント/TFS プロジェクト コレクションでホストされている NuGet フィードに接続するには、ビルド定義を編集して、使用するパッケージ ソースを含む NuGet.config へのパスを指定します。",
   "loc.messages.Warning_ConflictingNuGetPreference": "NuGet 3.3 を選ばれましたがカスタム NuGet パスが指定されました。カスタム パスが優先されます。この警告を解決するには、ビルド タスクを編集して、[詳細設定] で NuGet バージョンに [カスタム] を選びます。",

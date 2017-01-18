@@ -44,7 +44,7 @@ export function fileExists(path): boolean {
  * 
  * @returns null when input is empty, otherwise returns same path.
  */
-export function getSetParamFilePath(setParametersFile: string) : string {
+export function copySetParamFileIfItExists(setParametersFile: string) : string {
 
     if(setParametersFile === null || (!tl.filePathSupplied('SetParametersFile')) || setParametersFile == tl.getVariable('System.DefaultWorkingDirectory')) {
         setParametersFile = null;
@@ -52,7 +52,12 @@ export function getSetParamFilePath(setParametersFile: string) : string {
     else if (!fileExists(setParametersFile)) {
         throw Error(tl.loc('SetParamFilenotfound0', setParametersFile));
     }
-
+    else if(fileExists(setParametersFile)) {
+        var tempSetParametersFile = path.join(tl.getVariable('System.DefaultWorkingDirectory'),"tempSetParameters.xml");
+        tl.cp(setParametersFile, tempSetParametersFile);
+        setParametersFile = tempSetParametersFile;
+    }
+    
     return setParametersFile;
 }
 
@@ -73,12 +78,15 @@ export function findfiles(filepath){
 
     var filesList : string [];
     if (filepath.indexOf('*') == -1 && filepath.indexOf('?') == -1) {
+
         // No pattern found, check literal path to a single file
-        tl.checkPath(filepath, 'files');
-
-        // Use the specified single file
-        filesList = [filepath];
-
+        if(tl.exist(filepath)) {
+            filesList = [filepath];
+        }
+        else {
+            tl.debug('No matching files were found with search pattern: ' + filepath);
+            return [];
+        }
     } else {
         var firstWildcardIndex = function(str) {
             var idx = str.indexOf('*');
@@ -110,11 +118,11 @@ export function findfiles(filepath){
         var allFiles = tl.find(findPathRoot);
 
         // Now matching the pattern against all files
-        filesList = tl.match(allFiles, filepath, {matchBase: true});
+        filesList = tl.match(allFiles, filepath, '', {matchBase: true});
 
-        // Fail if no matching .csproj files were found
+        // Fail if no matching files were found
         if (!filesList || filesList.length == 0) {
-            tl.error('No matching files were found with search pattern: ' + filepath);
+            tl.debug('No matching files were found with search pattern: ' + filepath);
             return [];
         }
     }
