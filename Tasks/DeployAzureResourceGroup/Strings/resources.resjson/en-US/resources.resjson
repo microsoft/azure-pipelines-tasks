@@ -85,10 +85,7 @@
   "loc.messages.FailedAddingNSGRule3Times": "Failed to add the network security rule to the security group %s after trying 3 times",
   "loc.messages.FailedToAddNetworkSecurityRule": "Failed to add the network security rule to the security group %s",
   "loc.messages.FailedToEnablePrereqs": "Failed to enable prerequisites",
-  "loc.messages.FailedToFetchInstanceViewVM": "Failed to fetch the instance view of the virtual machine",
-  "loc.messages.CreationOfExtensionFailed": "Failed to add the extension",
   "loc.messages.FailedToDeleteExtension": "Deletion of extension failed",
-  "loc.messages.AddedTargetInboundNatRuleLB": "Added the target virtual machine for the inbound NAT rules of load balancer %s",
   "loc.messages.AddedInboundNatRuleLB": "Adding inbound NAT rule to the load balancer %s ",
   "loc.messages.InboundNatRuleLBPresent": "Relevant inbound NAT rules already present for the load balancer %s",
   "loc.messages.CredentialsCannotBeNull": "'credentials' cannot be null.",
@@ -125,5 +122,11 @@
   "loc.messages.FailedToUpdateNICOfVm": "Failed to update the NIC of the VM",
   "loc.messages.FailedToFetchDetailsOfLB": "Failed to fetch the details of the load Balancer: %s",
   "loc.messages.FailedToUpdateLBInboundNatRules": "Failed to update the inbound NAT rules of the Load Balancer %s to remove irrelevant rules",
-  "loc.messages.InvalidResponseLongRunningOperation": "Invalid response received for fetching status of a long running operation."
+  "loc.messages.InvalidResponseLongRunningOperation": "Invalid response received for fetching status of a long running operation.",
+  "loc.messages.AddingInboundNatRule": "Adding Inbound Nat Rule for the Network Interface %s to the Load Balancer %s",
+  "loc.messages.InboundNatRuleAdditionFailed": "Addition of Inbound Nat Rule to the Load Balancer %s failed. Error: %s ",
+  "loc.messages.InboundNatRulesToNICFailed": "Addition of rule Id to the loadBalancerInboundNatRules of nic %s failed with the error: %s",
+  "loc.messages.AddedTargetInboundNatRuleLB": "Added the target virtual machine for the inbound NAT rules of load balancer %s",
+  "loc.messages.FailedToFetchInstanceViewVM": "Failed to fetch the instance view of the virtual machine. Error : %s",
+  "loc.messages.CreationOfExtensionFailed": "Failed to add the extension. Error: %s"
 }
