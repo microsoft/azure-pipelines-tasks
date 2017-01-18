@@ -3,67 +3,69 @@ import util = require("util");
 import tl = require("vsts-task-lib/task");
 import azure_utils = require("./AzureUtil");
 import deployAzureRG = require("../models/DeployAzureRG");
-import constants = require("./Constants");
+import az = require("./azure-rest/azureModels");
 
 export class MachineGroupExtensionHelper {
-    private _taskParameters: deployAzureRG.AzureRGTaskParameters;
-    private _azureUtils: azure_utils.AzureUtil;
-    private _computeClient;
+    private taskParameters: deployAzureRG.AzureRGTaskParameters;
+    private azureUtils: azure_utils.AzureUtil;
+    private computeClient: computeManagementClient.ComputeManagementClient;
+    private constants: Constants;
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
-        this._taskParameters = taskParameters;
-        this._computeClient = new computeManagementClient.ComputeManagementClient(this._taskParameters.credentials, this._taskParameters.subscriptionId);
-        this._azureUtils = new azure_utils.AzureUtil(this._taskParameters, this._computeClient);
+        this.taskParameters = taskParameters;
+        this.computeClient = new computeManagementClient.ComputeManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
+        this.azureUtils = new azure_utils.AzureUtil(this.taskParameters, this.computeClient);
+        this.constants = new Constants();
     }
     public async installExtension() {
-        var operationParameters = new OperationParameters("installation");
-        var listOfVms = await this._azureUtils.getVMDetails();
-        var vmInstanceViewPromises: Promise<any>[] = [];
+        var operationParameters: OperationParameters = new OperationParameters("installation");
+        var listOfVms: az.VM[] = await this.azureUtils.getVMDetails();
+        var extensionInstalledOnVMsPromises: Promise<any>[] = [];
         operationParameters.vmCount = listOfVms.length;
-        for (var vm of listOfVms) {
-            var vmName = vm["name"];
-            var resourceGroupName = this._taskParameters.resourceGroupName;
-            vmInstanceViewPromises.push(this.getVmInstanceView(resourceGroupName, vmName, { expand: 'instanceView' }, operationParameters));
-        }
-        var vmInstanceViews = await Promise.all(vmInstanceViewPromises);
+        extensionInstalledOnVMsPromises.push(this.installExtensionOnSingleVM(operationParameters, listOfVms));
+        await Promise.all(extensionInstalledOnVMsPromises);
+        this.finalizeResult(operationParameters);
+    }
 
-        var installExtensionOnVmPromises: Promise<any>[] = [];
-        for (var vm of vmInstanceViews) {
+    private async installExtensionOnSingleVM(operationParameters, listOfVms) {
+        for (var vm of listOfVms) {
+            var vmName = vm.name;
+            var resourceGroupName = this.taskParameters.resourceGroupName;
+            var vmInstanceView: az.VM = await this.getVmInstanceView(resourceGroupName, vmName, { expand: 'instanceView' }, operationParameters);
             var extensionParameters = this._formExtensionParameters(vm, operationParameters.operation);
             var extensionName = extensionParameters["extensionName"];
             var parameters = extensionParameters["parameters"];
-            var statuses = vm["properties"]["instanceView"]["statuses"];
+            var statuses = vmInstanceView.properties.instanceView.statuses;
             for (var i = 0; i < statuses.length; i++) {
                 var status = statuses[i]["code"].split("/");
                 if (status.length > 1 && status[0] === "PowerState") {
                     if (status[1] === "running") {
                         this.log(tl.loc("AddExtension", extensionName, vmName));
-                        installExtensionOnVmPromises.push(this.installExtensionOnRunningVm(operationParameters, vmName, extensionName, parameters));
+                        await this.installExtensionOnRunningVm(operationParameters, vmName, extensionName, parameters);
                     }
                     else if (status[1] === "deallocated") {
-                        installExtensionOnVmPromises.push(this.startVmAndInstallExtension(operationParameters, vmName, extensionName, parameters));
+                        await this.startVmAndInstallExtension(operationParameters, vmName, extensionName, parameters);
                     }
                     else {
-                        this.log(tl.loc("VMTransitioningSkipExtensionOperation", vmName, operationParameters.operation, extensionName));
-                        var callback = this._getPostOperationCallBack(operationParameters, extensionName, vmName, Promise.resolve, Promise.reject);
-                        callback("error");
+                        var errMsg = tl.loc("VMTransitioningSkipExtensionOperation", vmName, operationParameters.operation, extensionName);
+                        this.log(errMsg);
+                        await Promise.reject(tl.loc("VMTransitioningSkipExtensionOperation", vmName, operationParameters.operation, extensionName));
                     }
                     break;
                 }
             }
+            console.log("here");
         }
-        await Promise.all(installExtensionOnVmPromises);
-        this.finalizeResult(operationParameters);
     }
 
     public async deleteMGExtensionRG(): Promise<void> {
         var operationParameters = new OperationParameters("uninstallation");
-        var listOfVms = await this._azureUtils.getVMDetails();
+        var listOfVms = await this.azureUtils.getVMDetails();
         operationParameters.vmCount = listOfVms.length;
         var deleteExtensionFromVmPromises: Promise<any>[] = [];
         for (var vm of listOfVms) {
             var vmName = vm["name"];
-            var resourceGroupName = this._taskParameters.resourceGroupName;
+            var resourceGroupName = this.taskParameters.resourceGroupName;
             var extensionParameters = this._formExtensionParameters(vm, operationParameters.operation);
             var extensionName = extensionParameters["extensionName"];
             this.log(tl.loc("DeleteExtension", extensionName, vmName));
@@ -76,11 +78,27 @@ export class MachineGroupExtensionHelper {
     public deleteMGExtension(virtualMachine, operationParameters: OperationParameters): Promise<any> {
         return new Promise((resolve, reject) => {
             var vmName = virtualMachine["name"]
-            var resourceGroupName = this._taskParameters.resourceGroupName;
+            var resourceGroupName = this.taskParameters.resourceGroupName;
             var extensionParameters = this._formExtensionParameters(virtualMachine, operationParameters.operation);
             var extensionName = extensionParameters["extensionName"];
             var callback = this._getPostOperationCallBack(operationParameters, extensionName, vmName, resolve, reject);
-            this._computeClient.virtualMachineExtensions.deleteMethod(resourceGroupName, vmName, extensionName, callback);
+            this.computeClient.virtualMachineExtensions.deleteMethod(resourceGroupName, vmName, extensionName, callback);
+        });
+    }
+
+    private getVmInstanceView(resourceGroupName, vmName, object, operationParameters): Promise<az.VM> {
+        return new Promise((resolve, reject) => {
+            var getVmInstanceViewCallback = (error, result, request, response) => {
+                if (error) {
+                    var errMsg = tl.loc("VMDetailsFetchFailedSkipExtensionOperation", vmName, operationParameters.operation);
+                    this.log(errMsg);
+                    reject(errMsg);
+                }
+                else if (result) {
+                    resolve(result);
+                }
+            }
+            this.computeClient.virtualMachines.get(resourceGroupName, vmName, object, getVmInstanceViewCallback);
         });
     }
 
@@ -89,7 +107,7 @@ export class MachineGroupExtensionHelper {
             if (operationParameters.failureCount > 0) {
                 var errMsg = tl.loc("MGAgentOperationOnAllVMsFailed", operationParameters.operation, "");
                 this.log(errMsg);
-                throw (errMsg);
+                Promise.reject(errMsg);
             }
             else {
                 if (operationParameters.vmCount !== 0) {
@@ -104,22 +122,21 @@ export class MachineGroupExtensionHelper {
             var invokeCreateOrUpdate = (error, result, request, response) => {
                 if (error) {
                     this.log(tl.loc("VMStartFailedSkipExtensionOperation", vmName, operationParameters.operation, extensionName));
-                    var callback = this._getPostOperationCallBack(operationParameters, extensionName, vmName, resolve, reject);
-                    callback("error");
+                    reject("error");
                 }
                 else if (result) {
                     var callback = this._getPostOperationCallBack(operationParameters, extensionName, vmName, resolve, reject);
-                    this._computeClient.virtualMachineExtensions.createOrUpdate(this._taskParameters.resourceGroupName, vmName, extensionName, parameters, callback);
+                    this.computeClient.virtualMachineExtensions.createOrUpdate(this.taskParameters.resourceGroupName, vmName, extensionName, parameters, callback);
                 }
             }
-            this._computeClient.virtualMachines.start(this._taskParameters.resourceGroupName, vmName, invokeCreateOrUpdate);
+            this.computeClient.virtualMachines.start(this.taskParameters.resourceGroupName, vmName, invokeCreateOrUpdate);
         });
     }
 
     private installExtensionOnRunningVm(operationParameters, vmName, extensionName, parameters): Promise<any> {
         return new Promise((resolve, reject) => {
             var callback = this._getPostOperationCallBack(operationParameters, extensionName, vmName, resolve, reject);
-            this._computeClient.virtualMachineExtensions.createOrUpdate(this._taskParameters.resourceGroupName, vmName, extensionName, parameters, callback);
+            this.computeClient.virtualMachineExtensions.createOrUpdate(this.taskParameters.resourceGroupName, vmName, extensionName, parameters, callback);
         })
     }
 
@@ -131,7 +148,7 @@ export class MachineGroupExtensionHelper {
                 operationParameters.errors += "\n";
                 var msg = tl.loc("OperationFailed", operationParameters.operation, extensionName, vmName);
                 this.log(msg);
-                resolve(msg);
+                reject(msg);
             } else {
                 operationParameters.successCount++;
                 msg = tl.loc("OperationSucceeded", operationParameters.operation, extensionName, vmName);
@@ -142,21 +159,7 @@ export class MachineGroupExtensionHelper {
         return postOperationCallBack;
     }
 
-    private getVmInstanceView(resourceGroupName, vmName, object, operationParameters): Promise<any> {
-        return new Promise((resolve, reject) => {
-            var getVmInstanceViewCallback = (error, result, request, response) => {
-                if (result) {
-                    resolve(result);
-                }
-                else if (error) {
-                    var errMsg = tl.loc("VMDetailsFetchFailedSkipExtensionOperation", vmName, operationParameters.operation);
-                    this.log(errMsg);
-                    resolve(errMsg);
-                }
-            }
-            this._computeClient.virtualMachines.get(resourceGroupName, vmName, object, getVmInstanceViewCallback);
-        });
-    }
+
 
     private _formExtensionParameters(virtualMachine, operation) {
         var vmId = virtualMachine["id"];
@@ -166,28 +169,28 @@ export class MachineGroupExtensionHelper {
         this.log("Operating system on virtual machine : " + vmOsType);
         var vmLocation = virtualMachine["location"];
         if (vmOsType === "Windows") {
-            var extensionName = constants.mgExtensionNameWindows;
-            var virtualMachineExtensionType: string = constants.vmExtensionTypeWindows;
-            var typeHandlerVersion: string = constants.version;
+            var extensionName = this.constants.mgExtensionNameWindows;
+            var virtualMachineExtensionType: string = this.constants.vmExtensionTypeWindows;
+            var typeHandlerVersion: string = this.constants.version;
         }
         else if (vmOsType === "Linux") {
-            extensionName = constants.mgExtensionNameLinux;
-            virtualMachineExtensionType = constants.vmExtensionTypeLinux;
-            typeHandlerVersion = constants.version;
+            extensionName = this.constants.mgExtensionNameLinux;
+            virtualMachineExtensionType = this.constants.vmExtensionTypeLinux;
+            typeHandlerVersion = this.constants.version;
         }
         this.log(tl.loc("MGAgentHandlerMajorVersion", typeHandlerVersion.split(".")[0]));
         if (operation === "installation") {
             var autoUpgradeMinorVersion: boolean = true;
-            var publisher: string = constants.publisher;
-            var extensionType: string = constants.extensionType;
-            if (this._taskParameters.__mg__internal__collection__uri) {
-                var collectionUri = this._taskParameters.__mg__internal__collection__uri;
+            var publisher: string = this.constants.publisher;
+            var extensionType: string = this.constants.extensionType;
+            if (this.taskParameters.CollectionUrlForMachineGroupAgentConfiguration) {
+                var collectionUri = this.taskParameters.CollectionUrlForMachineGroupAgentConfiguration;
             }
             else {
                 collectionUri = tl.getVariable('system.TeamFoundationCollectionUri');
             }
-            if (this._taskParameters.__mg__internal__project__name) {
-                var teamProject = this._taskParameters.__mg__internal__project__name;
+            if (this.taskParameters.ProjectNameForMachineGroupAgentConfiguration) {
+                var teamProject = this.taskParameters.ProjectNameForMachineGroupAgentConfiguration;
             }
             else {
 
@@ -198,19 +201,19 @@ export class MachineGroupExtensionHelper {
                 collectionUri = collectionUri.substr(0, uriLength - 1);
             }
             var tags = "";
-            if (virtualMachine["tags"] && this._taskParameters.copyAzureVMTags) {
+            if (virtualMachine["tags"] && this.taskParameters.copyAzureVMTags) {
                 this.log("Copying VM tags")
                 tags = virtualMachine["tags"];
             }
             var publicSettings = {
                 VSTSAccountName: collectionUri,
                 TeamProject: teamProject,
-                MachineGroup: this._taskParameters.machineGroupName,
+                MachineGroup: this.taskParameters.machineGroupName,
                 AgentName: "",
                 Tags: tags
             };
-            this.log(tl.loc("PublicSettings", collectionUri, teamProject, this._taskParameters.machineGroupName, tags));
-            var protectedSettings = { PATToken: this._taskParameters.vstsPATToken };
+            console.log("Public settings are:\n VSTSAccountName: %s\nTeamProject: %s\nMachineGroup: %s\nTags: %s\n", collectionUri, teamProject, this.taskParameters.machineGroupName, tags);
+            var protectedSettings = { PATToken: this.taskParameters.vstsPATToken };
             var parameters = {
                 type: extensionType,
                 location: vmLocation,
@@ -247,4 +250,17 @@ export class OperationParameters {
         this.operation = operation;
         return this;
     }
+}
+
+export class Constants {
+    publisher = "Microsoft.VisualStudio.Services";
+    extensionType = "Microsoft.Compute/virtualMachines/extensions";
+    mgExtensionNameWindows = "TeamServicesAgent";
+    vmExtensionTypeWindows = "TeamServicesAgent";
+    mgExtensionNameLinux = "TeamServicesAgentLinux";
+    vmExtensionTypeLinux = "TeamServicesAgentLinux";
+    version = "1.0";
+    enablePrereqMG = "ConfigureVMWithMGAgent";
+    enablePrereqWinRM = "ConfigureVMwithWinRM"
+    enablePrereqNone = "None";
 }

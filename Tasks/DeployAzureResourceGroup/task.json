@@ -246,7 +246,7 @@
             "groupName": "MachineGroupOptions",
             "defaultValue": "",       
             "required": true,
-            "helpMarkDown": "Agent registration with machine group requires access to your visual studio project.​"
+            "helpMarkDown": "Agent registration with machine group requires access to your visual studio project.​ It is recommended that you store the token in a secure variable and provide the variable reference here."
         },
         {
             "name": "outputVariable",
@@ -383,7 +383,6 @@
         "OperationFailed": "%s of %s on vm %s failed",
         "MGAgentOperationOnAllVMsFailed": "Machine group agent %s did not succeed on all VMs. %s",
         "MGAgentOperationOnAllVMsSucceeded": "Machine group agent %s succeeded on all VMs",
-        "PublicSettings": "Public settings are:\n VSTSAccountName: %s\nTeamProject: %s\nMachineGroup: %s\nTags: %s\n",
         "MGAgentHandlerMajorVersion": "Machine group extension handler major version is %s",
         "SkipDeleteExtension": "Either the extension %s is not present on the virtual machine %s or the machine is stopped. Skipping extension deletion.",
         "VMStartFailedSkipExtensionOperation": "Could not start the virtual machine %s. Skipping %s of %s extension on it.",

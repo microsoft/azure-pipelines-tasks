@@ -12,9 +12,9 @@ import env = require("./Environment");
 import deployAzureRG = require("../models/DeployAzureRG");
 import armResource = require("./azure-rest/azure-arm-resource");
 import winRM = require("./WinRMExtensionHelper");
-import constants = require("./Constants");
-import mgExtManager = require("./MachineGroupExtensionHelper");
+import mgExtensionHelper = require("./MachineGroupExtensionHelper");
 
+var constants = new mgExtensionHelper.Constants();
 var parameterParser = require("./ParameterParser").parse;
 import utils = require("./utils");
 
@@ -37,13 +37,13 @@ export class ResourceGroup {
 
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
     private winRMExtensionHelper: winRM.WinRMExtensionHelper;
-    private machineGroupAgentExtensionManager: mgExtManager.MachineGroupExtensionHelper;
+    private machineGroupExtensionHelper: mgExtensionHelper.MachineGroupExtensionHelper;
     private environmentHelper: env.EnvironmentHelper;
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
         this.taskParameters = taskParameters;
         this.winRMExtensionHelper = new winRM.WinRMExtensionHelper(this.taskParameters);
-        this.machineGroupAgentExtensionManager = new mgExtManager.MachineGroupExtensionHelper(this.taskParameters);
+        this.machineGroupExtensionHelper = new mgExtensionHelper.MachineGroupExtensionHelper(this.taskParameters);
         this.environmentHelper = new env.EnvironmentHelper(this.taskParameters);
     }
 
@@ -57,7 +57,7 @@ export class ResourceGroup {
 
     public deleteResourceGroup(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            var extDelPromise = this.machineGroupAgentExtensionManager.deleteMGExtensionRG();
+            var extDelPromise = this.machineGroupExtensionHelper.deleteMGExtensionRG();
             var deleteRG = (val) => {
                 var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
                 console.log(tl.loc("DeletingResourceGroup", this.taskParameters.resourceGroupName));
@@ -107,7 +107,7 @@ export class ResourceGroup {
             await this.winRMExtensionHelper.ConfigureWinRMExtension();
         }
         else if (this.taskParameters.enableDeploymentPrerequisites == constants.enablePrereqMG) {
-            await this.machineGroupAgentExtensionManager.installExtension();
+            await this.machineGroupExtensionHelper.installExtension();
         }
     }
 

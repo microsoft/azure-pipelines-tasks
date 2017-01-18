@@ -6,20 +6,20 @@ import tl = require("vsts-task-lib/task");
 import armCompute = require('./azure-rest/azure-arm-compute');
 import deployAzureRG = require("../models/DeployAzureRG");
 import utils = require("./utils")
-import mgExtManager = require("./MachineGroupExtensionHelper");
+import mgExtensionHelper = require("./MachineGroupExtensionHelper");
 
 export class VirtualMachine {
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
-    private machineGroupAgentExtensionManager: mgExtManager.MachineGroupExtensionHelper;
+    private machineGroupExtensionHelper: mgExtensionHelper.MachineGroupExtensionHelper;
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
         this.taskParameters = taskParameters;
-        this.machineGroupAgentExtensionManager = new mgExtManager.MachineGroupExtensionHelper(this.taskParameters);
+        this.machineGroupExtensionHelper = new mgExtensionHelper.MachineGroupExtensionHelper(this.taskParameters);
     }
 
     public execute(): Promise<void> {
         var client = new armCompute.ComputeManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
-        var operationParameters = new mgExtManager.OperationParameters("uninstallation");
+        var operationParameters = new mgExtensionHelper.OperationParameters("uninstallation");
         return new Promise<void>((resolve, reject) => {
             client.virtualMachines.list(this.taskParameters.resourceGroupName, null, (error, listOfVms, request, response) => {
                 if (error) {
@@ -48,7 +48,7 @@ export class VirtualMachine {
                             client.virtualMachines.restart(this.taskParameters.resourceGroupName, vmName, callback(vmName));
                             break;
                         case "Delete":
-                            var extDelPromise = this.machineGroupAgentExtensionManager.deleteMGExtension(listOfVms[i], operationParameters);
+                            var extDelPromise = this.machineGroupExtensionHelper.deleteMGExtension(listOfVms[i], operationParameters);
                             var deleteVM = this.getDeleteVMCallback(client, vmName, callback(vmName));
                             extDelPromise.then(deleteVM, deleteVM); 
                     }

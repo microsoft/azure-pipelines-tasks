@@ -39,7 +39,8 @@ export interface PublicIPAddressProperties {
 }
 
 export interface VMProperties {
-    networkProfile: NetworkProfile
+    networkProfile: NetworkProfile;
+    instanceView: InstanceView;
 }
 
 export interface DnsSettings {
@@ -48,6 +49,10 @@ export interface DnsSettings {
 
 export interface NetworkProfile {
     networkInterfaces: NetworkInterface[]
+}
+
+export interface InstanceView {
+    statuses: Map<string, string>[];
 }
 
 export interface LoadBalancer extends AzureBaseObject {
