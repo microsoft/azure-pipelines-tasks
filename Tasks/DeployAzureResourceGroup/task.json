@@ -326,11 +326,12 @@
         "FailedToUpdateLBInboundNatRules": "Failed to update the inbound NAT rules of the Load Balancer %s to remove irrelevant rules",
         "InvalidResponseLongRunningOperation": "Invalid response received for fetching status of a long running operation.",
         
-        "AddingInboundNatRule": "Adding Inbound Nat Rule for the Network Interface %s to the Load Balancer %s",
+        "AddingInboundNatRule": "Adding Inbound Nat Rule for the Virtual Machine %s to the Load Balancer %s",
         "InboundNatRuleAdditionFailed": "Addition of Inbound Nat Rule to the Load Balancer %s failed. Error: %s ",
         "InboundNatRulesToNICFailed": "Addition of rule Id to the loadBalancerInboundNatRules of nic %s failed with the error: %s",
         "AddedTargetInboundNatRuleLB": "Added the target virtual machine for the inbound NAT rules of load balancer %s",
         "FailedToFetchInstanceViewVM": "Failed to fetch the instance view of the virtual machine. Error : %s",
-        "CreationOfExtensionFailed": "Failed to add the extension. Error: %s"
+        "CreationOfExtensionFailed": "Failed to add the extension. Error: %s",
+        "AddedExtension" :"Successfully added the CustomScriptExtension for the virtual Machine %s"
     }
 }

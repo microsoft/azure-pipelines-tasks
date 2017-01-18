@@ -59,7 +59,7 @@ export class WinRMExtensionHelper {
                 if (lb) {
                     tl.debug("LB to which Inbound Nat Rule for VM " + virtualMachine.Name + " is to be added is " + lb.Id);
                     var frontendPort: number = this.GetFreeFrontendPort(lb);
-                    await this.AddNatRuleInternal(lb.Id, nicId, frontendPort, 5986);
+                    await this.AddNatRuleInternal(lb.Id, nicId, frontendPort, 5986, virtualMachine.Name);
                     lb.FrontEndPortsInUse.push(frontendPort);
                 }
                 else {
@@ -81,7 +81,7 @@ export class WinRMExtensionHelper {
         return port;
     }
 
-    private async AddNatRuleInternal(loadBalancerId: string, networkInterfaceId: string, fronendPort: number, backendPort: number): Promise<void> {
+    private async AddNatRuleInternal(loadBalancerId: string, networkInterfaceId: string, fronendPort: number, backendPort: number, virtualMachineName: string): Promise<void> {
         var random: number = Math.floor(Math.random() * 10000 + 100);
         var name: string = "winRMHttpsRule" + random.toString();
         var loadBalancers = await this.azureUtils.getLoadBalancers();
@@ -120,15 +120,16 @@ export class WinRMExtensionHelper {
         }
 
         if (!!loadBalancer && !!networkInterface) {
-            await this.AddInboundNatRule(networkInterface, loadBalancer, ipConfiguration, fronendPort);
+            await this.AddInboundNatRule(networkInterface, loadBalancer, ipConfiguration, fronendPort, virtualMachineName);
         }
     }
 
-    private AddInboundNatRule(networkInterface: az.NetworkInterface, loadBalancer: az.LoadBalancer, ipConfiguration: az.IPConfiguration, fronendPort: number) {
+    private AddInboundNatRule(networkInterface: az.NetworkInterface, loadBalancer: az.LoadBalancer, ipConfiguration: az.IPConfiguration, fronendPort: number, virtualMachineName: string) {
         return new Promise<void>(async (resolve, reject) => {
-            console.log(tl.loc("AddingInboundNatRule", networkInterface.name, loadBalancer.name));
+            console.log(tl.loc("AddingInboundNatRule", virtualMachineName, loadBalancer.name));
             this.networkClient.loadBalancers.createOrUpdate(this.resourceGroupName, loadBalancer.name, loadBalancer, null, (error, result, request, response) => {
                 if (error) {
+                    console.log(tl.loc("InboundNatRuleAdditionFailed", loadBalancer.name, utils.getError(error)));
                     reject(tl.loc("InboundNatRuleAdditionFailed", loadBalancer.name, utils.getError(error)));
                 }
                 else {
@@ -139,6 +140,7 @@ export class WinRMExtensionHelper {
                     this.networkClient.networkInterfaces.createOrUpdate(this.resourceGroupName, networkInterface.name, networkInterface, null,
                         (error2, result2, request2, response2) => {
                             if (error2) {
+                                console.log(tl.loc("InboundNatRulesToNICFailed", networkInterface.name, utils.getError(error2)));
                                 reject(tl.loc("InboundNatRulesToNICFailed", networkInterface.name, utils.getError(error2)));
                                 return;
                             }
@@ -376,6 +378,7 @@ export class WinRMExtensionHelper {
                 }
                 tl.debug("Provisioning of CustomScriptExtension on vm " + vmName + " is in Succeeded State");
                 this.customScriptExtensionInstalled = true;
+                console.log(tl.loc("AddedExtension", vmName));
                 resolve();
             });
         });
