@@ -42,7 +42,7 @@
             "name": "output",
             "displayName": "Output",
             "isExpanded": true,
-            "visibleRule": "action = Create or update resource group || action = Select resource group"
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMwithWinRM"
         },
         {
             "name": "MachineGroupOptions",
@@ -226,7 +226,6 @@
             "type": "pickList",
             "label": "Machine group",
             "groupName": "MachineGroupOptions",
-            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
             "helpMarkDown": "Select a machine group",
             "properties": {
                 "DisableManageLink": "True"
@@ -238,7 +237,6 @@
             "label": "Copy Azure VM tags to agents",
             "groupName": "MachineGroupOptions",
             "defaultValue": true,
-            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
             "helpMarkDown": "Choose if the tags configured on the Azure VM need to be copied to the corresponding machine group agent. <br><br>​By default all Azure tags will be copied following the format “Key: Value”. Example: An Azure Tag “Role : Web” would be copied  as-is to the Agent machine. <br><br>For more information on how tag Azure resources refer to [link](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-using-tags​)"
         },
         {
@@ -246,8 +244,7 @@
             "type": "string",
             "label": "Personal access token",
             "groupName": "MachineGroupOptions",
-            "defaultValue": "",
-            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",            
+            "defaultValue": "",       
             "required": true,
             "helpMarkDown": "Agent registration with machine group requires access to your visual studio project.​"
         },
