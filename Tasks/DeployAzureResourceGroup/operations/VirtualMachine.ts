@@ -19,7 +19,6 @@ export class VirtualMachine {
 
     public execute(): Promise<void> {
         var client = new armCompute.ComputeManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
-        var operationParameters = new mgExtensionHelper.OperationParameters("uninstallation");
         return new Promise<void>((resolve, reject) => {
             client.virtualMachines.list(this.taskParameters.resourceGroupName, null, (error, listOfVms, request, response) => {
                 if (error) {
@@ -48,7 +47,8 @@ export class VirtualMachine {
                             client.virtualMachines.restart(this.taskParameters.resourceGroupName, vmName, callback(vmName));
                             break;
                         case "Delete":
-                            var extDelPromise = this.machineGroupExtensionHelper.deleteMGExtension(listOfVms[i], operationParameters);
+                            var operation = "uninstallation";
+                            var extDelPromise = this.machineGroupExtensionHelper.deleteMGExtension(listOfVms[i], operation);
                             var deleteVM = this.getDeleteVMCallback(client, vmName, callback(vmName));
                             extDelPromise.then(deleteVM, deleteVM); 
                     }
