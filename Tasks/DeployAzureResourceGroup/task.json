@@ -42,7 +42,7 @@
             "name": "output",
             "displayName": "Output",
             "isExpanded": true,
-            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMwithWinRM"
+            "visibleRule": "action = Create or update resource group || action = Select resource group"
         },
         {
             "name": "MachineGroupOptions",
@@ -209,7 +209,7 @@
         },
         {
             "name": "enableDeploymentPrerequisites",
-            "type": "boolean",
+            "type": "pickList",
             "label": "Enable deployment prerequisites",
             "defaultValue": "None",
             "groupName": "AdvancedDeploymentOptions",

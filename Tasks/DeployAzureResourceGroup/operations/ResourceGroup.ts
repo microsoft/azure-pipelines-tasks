@@ -96,7 +96,7 @@ export class ResourceGroup {
     }
 
     private async registerEnvironmentIfRequired(armClient: armResource.ResourceManagementClient) {
-        if (this.taskParameters.enableDeploymentPrerequisites  == constants.enablePrereqWinRM) {
+        if (this.taskParameters.enableDeploymentPrerequisites  == constants.enablePrereqWinRM || this.taskParameters.enableDeploymentPrerequisites == constants.enablePrereqMG) {
             await this.environmentHelper.RegisterEnvironment();
         }
 
