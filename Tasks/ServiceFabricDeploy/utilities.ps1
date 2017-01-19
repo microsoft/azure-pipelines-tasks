@@ -90,8 +90,7 @@ function Get-AadSecurityToken
     Write-Host (Get-VstsLocString -Key ClientAppId -ArgumentList $clientApplicationId)
 
     # Acquire AAD access token
-    $serverOMDirectory = Get-VstsTaskVariable -Name 'Agent.ServerOMDirectory' -Require
-	Add-Type -LiteralPath "$serverOMDirectory\Microsoft.IdentityModel.Clients.ActiveDirectory.dll"	
+    Add-Type -LiteralPath "$PSScriptRoot\Microsoft.IdentityModel.Clients.ActiveDirectory.dll"
 	$authContext = Create-Object -TypeName Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext -ArgumentList @($authority)
     $authParams = $ConnectedServiceEndpoint.Auth.Parameters
 	$userCredential = Create-Object -TypeName Microsoft.IdentityModel.Clients.ActiveDirectory.UserCredential -ArgumentList @($authParams.Username, $authParams.Password)
