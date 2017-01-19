@@ -380,8 +380,8 @@
         "MGAgentUninstalledFromAllVMs": "Machine group agent uninstalled from all virtual machines of the resource group",
         "MGAgentHandlerMajorVersion": "Machine group extension handler major version is %s",
         "SkipDeleteExtension": "Either the extension %s is not present on the virtual machine %s or the machine is stopped. Skipping extension deletion.",
-        "VMStartFailedSkipExtensionInstallation": "Could not start the virtual machine %s. Skipping installation of extension on it. Error : %s",
-        "VMTransitioningSkipExtensionInstallation": "Virtual machine %s is in a transitioning state. Skipping installing extension extension on it.",
-        "VMDetailsFetchFailedSkipExtensionOperation": "Could not get details of virtual machine %s. Skipping %s of team services agent on it. Error : %s"
+        "VMStartFailed": "Could not start the virtual machine %s. Error : %s",
+        "VMTransitioningSkipExtensionInstallation": "Virtual machine %s is in a transitioning state. Skipping installing extension on it.",
+        "VMDetailsFetchFailed": "Could not get details of virtual machine %s. Error : %s"
     }
 }

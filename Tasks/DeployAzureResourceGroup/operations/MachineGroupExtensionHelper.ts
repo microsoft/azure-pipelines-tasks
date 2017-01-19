@@ -29,8 +29,7 @@ export class MachineGroupExtensionHelper {
         var listOfVms: az.VM[] = await this.azureUtils.getVMDetails();
         var extensionInstalledOnVMsPromises: Promise<any>[] = [];
         for (var vm of listOfVms) {
-            var promise = this.installExtensionOnSingleVM(vm);
-            extensionInstalledOnVMsPromises.push(promise);
+            extensionInstalledOnVMsPromises.push(this.installExtensionOnSingleVM(vm));
         }
         await Promise.all(extensionInstalledOnVMsPromises);
         if (listOfVms.length > 0) {
@@ -70,8 +69,8 @@ export class MachineGroupExtensionHelper {
     }
 
     public async deleteMGExtensionFromResourceGroup(): Promise<void> {
-        console.log("Uninstalling machine group agent from the resource group virutal machines.");
         var listOfVms: az.VM[] = await this.azureUtils.getVMDetails();
+        console.log("LIST OF VMS LENGTH IS " + listOfVms.length);
         var deleteExtensionFromVmPromises: Promise<any>[] = [];
         for (var vm of listOfVms) {
             deleteExtensionFromVmPromises.push(this.deleteMGExtension(vm));
@@ -95,7 +94,7 @@ export class MachineGroupExtensionHelper {
                     reject(errMsg);
                 }
                 console.log(tl.loc("UninstallationSucceeded", vmName));
-                resolve(result);
+                resolve();
             });
         });
     }
@@ -104,7 +103,7 @@ export class MachineGroupExtensionHelper {
         return new Promise((resolve, reject) => {
             var getVmInstanceViewCallback = (error, result, request, response) => {
                 if (error) {
-                    var errMsg = tl.loc("VMDetailsFetchFailedSkipExtensionOperation", vmName, utils.getError(error));
+                    var errMsg = tl.loc("VMDetailsFetchFailed", vmName, utils.getError(error));
                     reject(errMsg);
                 }
                 resolve(result);
@@ -117,7 +116,7 @@ export class MachineGroupExtensionHelper {
         return new Promise((resolve, reject) => {
             this.computeClient.virtualMachines.start(this.taskParameters.resourceGroupName, vmName, (error, result, request, response) => {
                 if (error) {
-                    var errMsg = tl.loc("VMStartFailedSkipExtensionInstallation", vmName, utils.getError(error));
+                    var errMsg = tl.loc("VMStartFailed", vmName, utils.getError(error));
                     reject(errMsg);
                 }
                 resolve(result);
