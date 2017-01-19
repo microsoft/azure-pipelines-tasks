@@ -123,10 +123,11 @@
   "loc.messages.FailedToFetchDetailsOfLB": "Failed to fetch the details of the load Balancer: %s",
   "loc.messages.FailedToUpdateLBInboundNatRules": "Failed to update the inbound NAT rules of the Load Balancer %s to remove irrelevant rules",
   "loc.messages.InvalidResponseLongRunningOperation": "Invalid response received for fetching status of a long running operation.",
-  "loc.messages.AddingInboundNatRule": "Adding Inbound Nat Rule for the Network Interface %s to the Load Balancer %s",
+  "loc.messages.AddingInboundNatRule": "Adding Inbound Nat Rule for the Virtual Machine %s to the Load Balancer %s",
   "loc.messages.InboundNatRuleAdditionFailed": "Addition of Inbound Nat Rule to the Load Balancer %s failed. Error: %s ",
   "loc.messages.InboundNatRulesToNICFailed": "Addition of rule Id to the loadBalancerInboundNatRules of nic %s failed with the error: %s",
   "loc.messages.AddedTargetInboundNatRuleLB": "Added the target virtual machine for the inbound NAT rules of load balancer %s",
   "loc.messages.FailedToFetchInstanceViewVM": "Failed to fetch the instance view of the virtual machine. Error : %s",
-  "loc.messages.CreationOfExtensionFailed": "Failed to add the extension. Error: %s"
+  "loc.messages.CreationOfExtensionFailed": "Failed to add the extension. Error: %s",
+  "loc.messages.AddedExtension": "Successfully added the CustomScriptExtension for the virtual Machine %s"
 }
