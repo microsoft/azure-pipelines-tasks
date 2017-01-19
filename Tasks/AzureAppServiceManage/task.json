@@ -1,29 +1,28 @@
 {
-  "id": "f045e430-8704-11e6-968f-e717e6411619",
-  "name": "AzureAppServiceManage",
-  "friendlyName": "Azure App Service Manage (PREVIEW)",
-  "description": "Start, Stop, Restart or Slot swap for an Azure App Service",
-  "author": "Microsoft Corporation",
-  "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=831573)",
-  "category": "Deploy",
-  "visibility": [
-      "Build",
-      "Release"
-  ],
-  "runsOn": [
-        "Agent"
-  ],
-  "demands": [],
-  "version": {
-    "Major": 0,
-    "Minor": 2,
-    "Patch": 1
-  },
-  "minimumAgentVersion": "1.102.0",
-  "instanceNameFormat": "$(Action): $(WebAppName)",
-    "groups": [
+    "id": "f045e430-8704-11e6-968f-e717e6411619",
+    "name": "AzureAppServiceManage",
+    "friendlyName": "Azure App Service Manage (PREVIEW)",
+    "description": "Start, Stop, Restart or Slot swap for an Azure App Service",
+    "author": "Microsoft Corporation",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=831573)",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
     ],
-  "inputs": [
+    "runsOn": [
+        "Agent"
+    ],
+    "demands": [],
+    "version": {
+        "Major": 0,
+        "Minor": 2,
+        "Patch": 2
+    },
+    "minimumAgentVersion": "1.102.0",
+    "instanceNameFormat": "$(Action): $(WebAppName)",
+    "groups": [],
+    "inputs": [
         {
             "name": "ConnectedServiceName",
             "type": "connectedService:AzureRM",
@@ -130,7 +129,7 @@
             "visibleRule": "Action != Swap Slots && SpecifySlot = true"
         }
     ],
-  "dataSourceBindings": [
+    "dataSourceBindings": [
         {
             "target": "WebAppName",
             "endpointId": "$(ConnectedServiceName)",
@@ -180,7 +179,7 @@
             "target": "azureappservicemanage.js"
         }
     },
-   "messages": {
+    "messages": {
         "ErrorNoSuchDeployingMethodExists": "Error : Deploy method MSDeploy does not exists for Azure Web App: %s",
         "Successfullyupdatedslotswaphistory": "Successfully updated slot swap history at %s for Azure Web App : %s",
         "Failedtoupdateslotswaphistory": "Failed to update slot swap history for Azure Web App : %s",
