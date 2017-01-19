@@ -37,12 +37,12 @@ export class MachineGroupExtensionHelper {
         }
     }
 
-    public async deleteMGExtensionFromResourceGroup(): Promise<void> {
+    public async deleteExtensionFromResourceGroup(): Promise<void> {
         console.log(tl.loc("DeletingMGAgentOnVMs"));
         var listOfVms: az.VM[] = await this.azureUtils.getVMDetails();
         var deleteExtensionFromVmPromises: Promise<any>[] = [];
         for (var vm of listOfVms) {
-            deleteExtensionFromVmPromises.push(this.deleteMGExtension(vm));
+            deleteExtensionFromVmPromises.push(this.deleteExtension(vm));
         }
         await Promise.all(deleteExtensionFromVmPromises);
         if (listOfVms.length > 0) {
@@ -50,7 +50,7 @@ export class MachineGroupExtensionHelper {
         }
     }
 
-    public deleteMGExtension(vm: az.VM): Promise<any> {
+    public deleteExtension(vm: az.VM): Promise<any> {
         return new Promise((resolve, reject) => {
             var vmName = vm["name"]
             var resourceGroupName = this.taskParameters.resourceGroupName;
@@ -131,7 +131,8 @@ export class MachineGroupExtensionHelper {
                 if (error) {
                     reject(tl.loc("AddingExtensionFailed", extensionName, vmName, utils.getError(error)));
                 }
-                resolve(tl.loc("AddingExtensionSucceeded", extensionName, vmName));
+                console.log(tl.loc("AddingExtensionSucceeded", extensionName, vmName));
+                resolve();
             });
         })
     }
@@ -158,8 +159,8 @@ export class MachineGroupExtensionHelper {
             var autoUpgradeMinorVersion: boolean = true;
             var publisher: string = this.publisher;
             var extensionType: string = this.extensionType;
-            var collectionUri = this.taskParameters.MachineGroupCollectionUrl;
-            var teamProject = this.taskParameters.MachineGroupProjectName;
+            var collectionUri = this.taskParameters.machineGroupCollectionUrl;
+            var teamProject = this.taskParameters.machineGroupProjectName;
             var uriLength = collectionUri.length;
             if (collectionUri[uriLength - 1] === '/') {
                 collectionUri = collectionUri.substr(0, uriLength - 1);

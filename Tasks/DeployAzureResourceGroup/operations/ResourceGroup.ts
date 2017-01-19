@@ -13,7 +13,6 @@ import deployAzureRG = require("../models/DeployAzureRG");
 import armResource = require("./azure-rest/azure-arm-resource");
 import winRM = require("./WinRMExtensionHelper");
 import mgExtensionHelper = require("./MachineGroupExtensionHelper");
-import constants = require("./Constants");
 var parameterParser = require("./ParameterParser").parse;
 import utils = require("./utils");
 
@@ -56,7 +55,7 @@ export class ResourceGroup {
 
     public deleteResourceGroup(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            var extDelPromise = this.machineGroupExtensionHelper.deleteMGExtensionFromResourceGroup();
+            var extDelPromise = this.machineGroupExtensionHelper.deleteExtensionFromResourceGroup();
             var deleteRG = (val) => {
                 var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
                 console.log(tl.loc("DeletingResourceGroup", this.taskParameters.resourceGroupName));
@@ -74,8 +73,8 @@ export class ResourceGroup {
 
     public async selectResourceGroup(): Promise<void> {
         if (!utils.isNonEmpty(this.taskParameters.outputVariable) &&
-            (this.taskParameters.enableDeploymentPrerequisites == constants.enablePrereqNone ||
-                this.taskParameters.enableDeploymentPrerequisites == constants.enablePrereqWinRM)) {
+            (this.taskParameters.enableDeploymentPrerequisites == this.enablePrereqNone ||
+                this.taskParameters.enableDeploymentPrerequisites == this.enablePrereqWinRM)) {
             throw tl.loc("OutputVariableShouldNotBeEmpty");
         }
 
@@ -98,18 +97,18 @@ export class ResourceGroup {
 
     private async registerEnvironmentIfRequired(armClient: armResource.ResourceManagementClient) {
         if (utils.isNonEmpty(this.taskParameters.outputVariable) &&
-            (this.taskParameters.enableDeploymentPrerequisites == constants.enablePrereqWinRM ||
-                this.taskParameters.enableDeploymentPrerequisites == constants.enablePrereqNone)) {
+            (this.taskParameters.enableDeploymentPrerequisites == this.enablePrereqWinRM ||
+                this.taskParameters.enableDeploymentPrerequisites == this.enablePrereqNone)) {
             await this.environmentHelper.RegisterEnvironment();
         }
 
     }
 
     private async enableDeploymentPrerequestiesIfRequired(armClient) {
-        if (this.taskParameters.enableDeploymentPrerequisites == constants.enablePrereqWinRM) {
+        if (this.taskParameters.enableDeploymentPrerequisites == this.enablePrereqWinRM) {
             await this.winRMExtensionHelper.ConfigureWinRMExtension();
         }
-        else if (this.taskParameters.enableDeploymentPrerequisites == constants.enablePrereqMG) {
+        else if (this.taskParameters.enableDeploymentPrerequisites == this.enablePrereqMG) {
             await this.machineGroupExtensionHelper.addExtensionOnResourceGroup();
         }
     }
@@ -302,4 +301,7 @@ export class ResourceGroup {
         await this.performAzureDeployment(armClient, deployment);
     }
 
+    private enablePrereqMG = "ConfigureVMWithMGAgent";
+    private enablePrereqWinRM = "ConfigureVMwithWinRM";
+    private enablePrereqNone = "None";
 }
