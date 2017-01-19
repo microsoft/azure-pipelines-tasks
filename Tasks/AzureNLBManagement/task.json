@@ -1,27 +1,27 @@
 {
-	"id": "e94f1750-a6a8-11e6-be69-bdf37a7b15d8",
-	"name": "AzureNLBManagement",
-	"friendlyName": "Azure Network Load Balancer (Preview)",
-	"description": "Connect/Disconnect an Azure virtual machine's network interface to a Load Balancer's backend address pool",
-	"author": "Microsoft Corporation",
-	"helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=837723)",
-	"category": "Utility",
-	"visibility": [
-		"Build",
-		"Release",
+    "id": "e94f1750-a6a8-11e6-be69-bdf37a7b15d8",
+    "name": "AzureNLBManagement",
+    "friendlyName": "Azure Network Load Balancer (Preview)",
+    "description": "Connect/Disconnect an Azure virtual machine's network interface to a Load Balancer's backend address pool",
+    "author": "Microsoft Corporation",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=837723)",
+    "category": "Utility",
+    "visibility": [
+        "Build",
+        "Release",
         "Preview"
     ],
     "runsOn": [
         "MachineGroup"
     ],
-	"version": {
-		"Major": 1,
-		"Minor": 0,
-		"Patch": 0
-	},
-	"minimumAgentVersion": "1.95.0",
-	"instanceNameFormat": "Azure Network Load Balancer: $(LoadBalancer) - $(Action)",
-	"inputs": [
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 1
+    },
+    "minimumAgentVersion": "1.95.0",
+    "instanceNameFormat": "Azure Network Load Balancer: $(LoadBalancer) - $(Action)",
+    "inputs": [
         {
             "name": "ConnectedServiceName",
             "type": "connectedService:AzureRM",
@@ -29,7 +29,7 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
-        }, 
+        },
         {
             "name": "ResourceGroupName",
             "type": "pickList",
@@ -39,7 +39,7 @@
             "properties": {
                 "EditableOptions": "True"
             }
-        }, 
+        },
         {
             "name": "LoadBalancer",
             "type": "pickList",
@@ -49,7 +49,7 @@
             "properties": {
                 "EditableOptions": "True"
             }
-        }, 
+        },
         {
             "name": "Action",
             "type": "pickList",
@@ -62,8 +62,8 @@
             },
             "helpMarkDown": "Disconnect:  Removes the virtual machine’s primary network interface from the load balancer’s backend pool. So that it stops receiving network traffic.\n\nConnect: Adds the virtual machine’s primary network interface to load balancer backend pool. So that it starts receiving network traffic based on the load balancing rules for the load balancer resource."
         }
-	],
-	"dataSourceBindings": [
+    ],
+    "dataSourceBindings": [
         {
             "target": "ResourceGroupName",
             "endpointId": "$(ConnectedServiceName)",
@@ -79,8 +79,8 @@
         }
     ],
     "execution": {
-		"Node": {
-			"target": "nlbtask.js"
+        "Node": {
+            "target": "nlbtask.js"
         }
     },
     "messages": {

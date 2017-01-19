@@ -16,9 +16,9 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 1
     },
-    "releaseNotes" : "Match pattern consistency.",
+    "releaseNotes": "Match pattern consistency.",
     "demands": [],
     "minimumAgentVersion": "1.91.0",
     "groups": [
