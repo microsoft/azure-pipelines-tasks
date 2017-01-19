@@ -371,17 +371,19 @@
         "FailedToFetchInstanceViewVM": "Failed to fetch the instance view of the virtual machine. Error : %s",
         "CreationOfExtensionFailed": "Failed to add the extension. Error: %s",
         "AddedExtension" :"Successfully added the CustomScriptExtension for the virtual Machine %s",
-        "InstallationSucceeded": "installation of extension on vm %s succeeded",
-        "UninstallationSucceeded": "uninstallation of extension on vm %s succeeded",
-        "InstallationFailed": "installation of %s on vm %s failed. Error : %s",
-        "UninstallationFailed": "uninstallation of %s on vm %s failed. Error : %s",
+        "AddingExtensionSucceeded": "Addition of extension on vm %s succeeded",
+        "DeletionSucceeded": "Deletion of extension on vm %s succeeded",
+        "AdditionFailed": "Addition of %s on vm %s failed. Error : %s",
+        "DeletionFailed": "Deletion of %s on vm %s failed. Error : %s",
         "MGAgentOperationOnAllVMsFailed": "Machine group agent %s did not succeed on all VMs. %s",
-        "MGAgentInstalledOnAllVMs": "Machine group agent installed on all virtual machines of the resource group",
-        "MGAgentUninstalledFromAllVMs": "Machine group agent uninstalled from all virtual machines of the resource group",
+        "MGAgentAddedOnAllVMs": "Machine group agent added on all virtual machines of the resource group",
+        "MGAgentDeletedFromAllVMs": "Machine group agent deleted from all virtual machines of the resource group",
         "MGAgentHandlerMajorVersion": "Machine group extension handler major version is %s",
         "SkipDeleteExtension": "Either the extension %s is not present on the virtual machine %s or the machine is stopped. Skipping extension deletion.",
         "VMStartFailed": "Could not start the virtual machine %s. Error : %s",
-        "VMTransitioningSkipExtensionInstallation": "Virtual machine %s is in a transitioning state. Skipping installing extension on it.",
-        "VMDetailsFetchFailed": "Could not get details of virtual machine %s. Error : %s"
+        "VMTransitioningSkipExtensionAddition": "Virtual machine %s is in a transitioning state. Skipping adding extension on it.",
+        "VMDetailsFetchFailed": "Could not get details of virtual machine %s. Error : %s",
+        "AddingMGAgentOnVMs": "Adding machine group agent on the resource group virutal machines.",
+        "DeletingMGAgentFromVMs": "Deleting machine group agent from the resource group virutal machines."
     }
 }

@@ -110,7 +110,7 @@ export class ResourceGroup {
             await this.winRMExtensionHelper.ConfigureWinRMExtension();
         }
         else if (this.taskParameters.enableDeploymentPrerequisites == constants.enablePrereqMG) {
-            await this.machineGroupExtensionHelper.installExtensionOnResourceGroup();
+            await this.machineGroupExtensionHelper.addExtensionOnResourceGroup();
         }
     }
 

@@ -24,22 +24,51 @@ export class MachineGroupExtensionHelper {
         this.azureUtils = new azure_utils.AzureUtil(this.taskParameters, this.computeClient);
     }
 
-    public async installExtensionOnResourceGroup() {
-        console.log("Installing machine group agent on the resource group virutal machines.");
+    public async addExtensionOnResourceGroup() {
+        console.log(tl.loc("AddingMGAgentOnVMs"));
         var listOfVms: az.VM[] = await this.azureUtils.getVMDetails();
-        var extensionInstalledOnVMsPromises: Promise<any>[] = [];
+        var extensionAddedOnVMsPromises: Promise<any>[] = [];
         for (var vm of listOfVms) {
-            extensionInstalledOnVMsPromises.push(this.installExtensionOnSingleVM(vm));
+            extensionAddedOnVMsPromises.push(this.addExtensionOnSingleVM(vm));
         }
-        await Promise.all(extensionInstalledOnVMsPromises);
+        await Promise.all(extensionAddedOnVMsPromises);
         if (listOfVms.length > 0) {
-            console.log(tl.loc("MGAgentInstalledOnAllVMs"));
+            console.log(tl.loc("MGAgentAddedOnAllVMs"));
         }
     }
 
-    private async installExtensionOnSingleVM(vm: az.VM) {
+    public async deleteMGExtensionFromResourceGroup(): Promise<void> {
+        console.log(tl.loc("DeletingMGAgentOnVMs"));
+        var listOfVms: az.VM[] = await this.azureUtils.getVMDetails();
+        var deleteExtensionFromVmPromises: Promise<any>[] = [];
+        for (var vm of listOfVms) {
+            deleteExtensionFromVmPromises.push(this.deleteMGExtension(vm));
+        }
+        await Promise.all(deleteExtensionFromVmPromises);
+        if (listOfVms.length > 0) {
+            console.log(tl.loc("MGAgentDeletedFromAllVMs"));
+        }
+    }
+
+    public deleteMGExtension(vm: az.VM): Promise<any> {
+        return new Promise((resolve, reject) => {
+            var vmName = vm["name"]
+            var resourceGroupName = this.taskParameters.resourceGroupName;
+            var extensionParameters = this.formExtensionParameters(vm, "delete");
+            var extensionName = extensionParameters["extensionName"];
+            console.log(tl.loc("DeleteExtension", extensionName, vmName));
+            this.computeClient.virtualMachineExtensions.deleteMethod(resourceGroupName, vmName, extensionName, (error, result, request, response) => {
+                if (error) {
+                    reject(tl.loc("DeletionFailed", vmName, utils.getError(error)));
+                }
+                resolve();
+            });
+        });
+    }
+
+    private async addExtensionOnSingleVM(vm: az.VM) {
         var vmName = vm.name;
-        var operation = "installation";
+        var operation = "add";
         var resourceGroupName = this.taskParameters.resourceGroupName;
         var vmWithInstanceView: az.VM = await this.getVmInstanceView(resourceGroupName, vmName, { expand: 'instanceView' });
         var vmPowerState = this.getVMPowerState(vmWithInstanceView);
@@ -48,10 +77,10 @@ export class MachineGroupExtensionHelper {
             vmPowerState = "running";
         }
         if (vmPowerState === "running") {
-            await this.installExtensionOnRunningVm(vm);
+            await this.addExtensionOnRunningVm(vm);
         }
         else {
-            throw (tl.loc("VMTransitioningSkipExtensionInstallation", vmName));
+            throw (tl.loc("VMTransitioningSkipExtensionAddition", vmName));
         }
     }
 
@@ -66,35 +95,6 @@ export class MachineGroupExtensionHelper {
             }
         }
         return null;
-    }
-
-    public async deleteMGExtensionFromResourceGroup(): Promise<void> {
-        var listOfVms: az.VM[] = await this.azureUtils.getVMDetails();
-        console.log("LIST OF VMS LENGTH IS " + listOfVms.length);
-        var deleteExtensionFromVmPromises: Promise<any>[] = [];
-        for (var vm of listOfVms) {
-            deleteExtensionFromVmPromises.push(this.deleteMGExtension(vm));
-        }
-        await Promise.all(deleteExtensionFromVmPromises);
-        if (listOfVms.length > 0) {
-            console.log(tl.loc("MGAgentUninstalledFromAllVMs"));
-        }
-    }
-
-    public deleteMGExtension(vm: az.VM): Promise<any> {
-        return new Promise((resolve, reject) => {
-            var vmName = vm["name"]
-            var resourceGroupName = this.taskParameters.resourceGroupName;
-            var extensionParameters = this.formExtensionParameters(vm, "uninstallation");
-            var extensionName = extensionParameters["extensionName"];
-            console.log(tl.loc("DeleteExtension", extensionName, vmName));
-            this.computeClient.virtualMachineExtensions.deleteMethod(resourceGroupName, vmName, extensionName, (error, result, request, response) => {
-                if (error) {
-                    reject(tl.loc("UninstallationFailed", vmName, utils.getError(error)));
-                }
-                resolve();
-            });
-        });
     }
 
     private getVmInstanceView(resourceGroupName, vmName, object): Promise<az.VM> {
@@ -120,18 +120,18 @@ export class MachineGroupExtensionHelper {
         });
     }
 
-    private installExtensionOnRunningVm(vm: az.VM): Promise<any> {
+    private addExtensionOnRunningVm(vm: az.VM): Promise<any> {
         return new Promise((resolve, reject) => {
             var vmName = vm.name;
-            var extensionParameters = this.formExtensionParameters(vm, "installation");
+            var extensionParameters = this.formExtensionParameters(vm, "add");
             var extensionName = extensionParameters["extensionName"];
             var parameters = extensionParameters["parameters"];
             console.log(tl.loc("AddExtension", extensionName, vmName));
             this.computeClient.virtualMachineExtensions.createOrUpdate(this.taskParameters.resourceGroupName, vmName, extensionName, parameters, (error, result, request, response) => {
                 if (error) {
-                    reject(tl.loc("InstallationFailed", extensionName, vmName, utils.getError(error)));
+                    reject(tl.loc("AddingExtensionFailed", extensionName, vmName, utils.getError(error)));
                 }
-                resolve(tl.loc("InstallationSucceeded", extensionName, vmName));
+                resolve(tl.loc("AddingExtensionSucceeded", extensionName, vmName));
             });
         })
     }
@@ -154,12 +154,12 @@ export class MachineGroupExtensionHelper {
             typeHandlerVersion = this.version;
         }
         console.log(tl.loc("MGAgentHandlerMajorVersion", typeHandlerVersion.split(".")[0]));
-        if (operation === "installation") {
+        if (operation === "add") {
             var autoUpgradeMinorVersion: boolean = true;
             var publisher: string = this.publisher;
             var extensionType: string = this.extensionType;
             var collectionUri = this.taskParameters.MachineGroupCollectionUrl;
-            var teamProject = this.taskParameters.MachineGroupAgentProjectName;
+            var teamProject = this.taskParameters.MachineGroupProjectName;
             var uriLength = collectionUri.length;
             if (collectionUri[uriLength - 1] === '/') {
                 collectionUri = collectionUri.substr(0, uriLength - 1);
