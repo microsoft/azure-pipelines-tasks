@@ -34,21 +34,9 @@
         },
         {
             "name": "AdvancedDeploymentOptions",
-            "displayName": "Advanced Deployment Options",
+            "displayName": "Advanced eployment options for virtual machines",
             "isExpanded": true,
             "visibleRule": "action = Create or update resource group || action = Select resource group"
-        },
-        {
-            "name": "output",
-            "displayName": "Output",
-            "isExpanded": true,
-            "visibleRule": "action = Create or update resource group || action = Select resource group"
-        },
-        {
-            "name": "MachineGroupOptions",
-            "displayName": "Machine Group Options",
-            "isExpanded": true,
-            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent"
         }
     ],
     "inputs": [
@@ -210,7 +198,7 @@
         {
             "name": "enableDeploymentPrerequisites",
             "type": "pickList",
-            "label": "Enable deployment prerequisites",
+            "label": "Enable prerequisites",
             "defaultValue": "None",
             "groupName": "AdvancedDeploymentOptions",
             "options": {
@@ -218,14 +206,15 @@
                 "ConfigureVMwithWinRM": "Configure virtual machines with WinRM",
                 "ConfigureVMWithMGAgent": "Configure virtual machines with machine group agent"
             },
-            "helpMarkDown": "These options would be applicable only when the Resource group contains virtual machines. <br><br>Selecting WinRM option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
+            "helpMarkDown": "These options would be applicable only when the Resource group contains virtual machines. <br><br>Choosing machine group option would configure machine group agent on each of the virtual machines. <br><br>Selecting WinRM option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
           
         },
         {
             "name": "machineGroupName",
             "type": "pickList",
             "label": "Machine group",
-            "groupName": "MachineGroupOptions",
+            "groupName": "AdvancedDeploymentOptions",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
             "helpMarkDown": "Select a machine group",
             "properties": {
                 "DisableManageLink": "True"
@@ -235,7 +224,8 @@
             "name": "copyAzureVMTags",
             "type": "boolean",
             "label": "Copy Azure VM tags to agents",
-            "groupName": "MachineGroupOptions",
+            "groupName": "AdvancedDeploymentOptions",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
             "defaultValue": true,
             "helpMarkDown": "Choose if the tags configured on the Azure VM need to be copied to the corresponding machine group agent. <br><br>​By default all Azure tags will be copied following the format “Key: Value”. Example: An Azure Tag “Role : Web” would be copied  as-is to the Agent machine. <br><br>For more information on how tag Azure resources refer to [link](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-using-tags​)"
         },
@@ -243,7 +233,8 @@
             "name": "vstsPATToken",
             "type": "string",
             "label": "Personal access token",
-            "groupName": "MachineGroupOptions",
+            "groupName": "AdvancedDeploymentOptions",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
             "defaultValue": "",       
             "required": true,
             "helpMarkDown": "Agent registration with machine group requires access to your visual studio project.​ It is recommended that you store the token in a secure variable and provide the variable reference here."
@@ -251,10 +242,11 @@
         {
             "name": "outputVariable",
             "type": "string",
-            "label": "Resource group",
+            "label": "VM details for WinRM",
             "required": false,
             "defaultValue": "",
-            "groupName": "output",
+            "groupName": "AdvancedDeploymentOptions",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMwithWinRM || enableDeploymentPrerequisites = None",
             "helpMarkDown": "Provide a name for the variable for the resource group. The variable can be used as $(variableName) to refer to the resource group in subsequent tasks like in the PowerShell on Target Machines task for deploying applications. <br>Valid only when the selected action is Create, Update or Select, and required when an existing resource group is selected."
         }
     ],
@@ -380,13 +372,13 @@
         "CreationOfExtensionFailed": "Failed to add the extension. Error: %s",
         "AddedExtension" :"Successfully added the CustomScriptExtension for the virtual Machine %s",
         "OperationSucceeded": "%s of %s on vm %s succeeded",
-        "OperationFailed": "%s of %s on vm %s failed",
+        "OperationFailed": "%s of %s on vm %s failed. Error : %s",
         "MGAgentOperationOnAllVMsFailed": "Machine group agent %s did not succeed on all VMs. %s",
         "MGAgentOperationOnAllVMsSucceeded": "Machine group agent %s succeeded on all VMs",
         "MGAgentHandlerMajorVersion": "Machine group extension handler major version is %s",
         "SkipDeleteExtension": "Either the extension %s is not present on the virtual machine %s or the machine is stopped. Skipping extension deletion.",
-        "VMStartFailedSkipExtensionOperation": "Could not start the virtual machine %s. Skipping %s of %s extension on it.",
+        "VMStartFailedSkipExtensionOperation": "Could not start the virtual machine %s. Skipping %s of %s extension on it. Error : %s",
         "VMTransitioningSkipExtensionOperation": "Virtual machine %s is in a transitioning state. Skipping %s of %s extension on it.",
-        "VMDetailsFetchFailedSkipExtensionOperation": "Could not get details of virtual machine %s. Skipping %s of team services agent on it."
+        "VMDetailsFetchFailedSkipExtensionOperation": "Could not get details of virtual machine %s. Skipping %s of team services agent on it. Error : %s"
     }
 }

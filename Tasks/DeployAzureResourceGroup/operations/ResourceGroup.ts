@@ -74,7 +74,9 @@ export class ResourceGroup {
     }
 
     public async selectResourceGroup(): Promise<void> {
-        if (!utils.isNonEmpty(this.taskParameters.outputVariable)) {
+        if (!utils.isNonEmpty(this.taskParameters.outputVariable) &&
+            (this.taskParameters.enableDeploymentPrerequisites == constants.enablePrereqNone ||
+                this.taskParameters.enableDeploymentPrerequisites == constants.enablePrereqWinRM)) {
             throw tl.loc("OutputVariableShouldNotBeEmpty");
         }
 
@@ -96,7 +98,8 @@ export class ResourceGroup {
     }
 
     private async registerEnvironmentIfRequired(armClient: armResource.ResourceManagementClient) {
-        if (this.taskParameters.enableDeploymentPrerequisites  == constants.enablePrereqWinRM || this.taskParameters.enableDeploymentPrerequisites == constants.enablePrereqMG) {
+        if (this.taskParameters.enableDeploymentPrerequisites == constants.enablePrereqWinRM ||
+            this.taskParameters.enableDeploymentPrerequisites == constants.enablePrereqNone) {
             await this.environmentHelper.RegisterEnvironment();
         }
 

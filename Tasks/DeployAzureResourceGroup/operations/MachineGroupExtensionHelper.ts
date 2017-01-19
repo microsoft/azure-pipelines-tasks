@@ -4,6 +4,7 @@ import tl = require("vsts-task-lib/task");
 import azure_utils = require("./AzureUtil");
 import deployAzureRG = require("../models/DeployAzureRG");
 import az = require("./azure-rest/azureModels");
+import utils = require("./Utils");
 
 export class MachineGroupExtensionHelper {
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
@@ -24,7 +25,7 @@ export class MachineGroupExtensionHelper {
         extensionInstalledOnVMsPromises.push(this.installExtensionOnSingleVM(operation, listOfVms));
         await Promise.all(extensionInstalledOnVMsPromises);
         if (listOfVms.length > 0) {
-            this.log(tl.loc("MGAgentOperationOnAllVMsSucceeded", operation));
+            console.log(tl.loc("MGAgentOperationOnAllVMsSucceeded", operation));
         }
     }
 
@@ -41,7 +42,7 @@ export class MachineGroupExtensionHelper {
                 var status = statuses[i]["code"].split("/");
                 if (status.length > 1 && status[0] === "PowerState") {
                     if (status[1] === "running") {
-                        this.log(tl.loc("AddExtension", extensionName, vmName));
+                        console.log(tl.loc("AddExtension", extensionName, vmName));
                         await this.installExtensionOnRunningVm(operation, vmName, extensionName, parameters);
                     }
                     else if (status[1] === "deallocated") {
@@ -49,13 +50,12 @@ export class MachineGroupExtensionHelper {
                     }
                     else {
                         var errMsg = tl.loc("VMTransitioningSkipExtensionOperation", vmName, operation, extensionName);
-                        this.log(errMsg);
-                        await Promise.reject(tl.loc("VMTransitioningSkipExtensionOperation", vmName, operation, extensionName));
+                        console.log(errMsg);
+                        await Promise.reject(errMsg);
                     }
                     break;
                 }
             }
-            console.log("here");
         }
     }
 
@@ -68,12 +68,12 @@ export class MachineGroupExtensionHelper {
             var resourceGroupName = this.taskParameters.resourceGroupName;
             var extensionParameters = this._formExtensionParameters(vm, operation);
             var extensionName = extensionParameters["extensionName"];
-            this.log(tl.loc("DeleteExtension", extensionName, vmName));
+            console.log(tl.loc("DeleteExtension", extensionName, vmName));
             deleteExtensionFromVmPromises.push(this.deleteMGExtension(vm, operation));
         }
         await Promise.all(deleteExtensionFromVmPromises);
         if (listOfVms.length > 0) {
-            this.log(tl.loc("MGAgentOperationOnAllVMsSucceeded", operation));
+            console.log(tl.loc("MGAgentOperationOnAllVMsSucceeded", operation));
         }
     }
 
@@ -92,8 +92,8 @@ export class MachineGroupExtensionHelper {
         return new Promise((resolve, reject) => {
             var getVmInstanceViewCallback = (error, result, request, response) => {
                 if (error) {
-                    var errMsg = tl.loc("VMDetailsFetchFailedSkipExtensionOperation", vmName, operation);
-                    this.log(errMsg);
+                    var errMsg = tl.loc("VMDetailsFetchFailedSkipExtensionOperation", vmName, operation, utils.getError(error));
+                    console.log(errMsg);
                     reject(errMsg);
                 }
                 else if (result) {
@@ -108,8 +108,9 @@ export class MachineGroupExtensionHelper {
         return new Promise((resolve, reject) => {
             var invokeCreateOrUpdate = (error, result, request, response) => {
                 if (error) {
-                    this.log(tl.loc("VMStartFailedSkipExtensionOperation", vmName, operation, extensionName));
-                    reject("error");
+                    var errMsg = tl.loc("VMStartFailedSkipExtensionOperation", vmName, operation, extensionName, utils.getError(error));
+                    console.log(errMsg);
+                    reject(errMsg);
                 }
                 else if (result) {
                     var callback = this._getPostOperationCallBack(operation, extensionName, vmName, resolve, reject);
@@ -130,12 +131,13 @@ export class MachineGroupExtensionHelper {
     private _getPostOperationCallBack(operation, extensionName, vmName, resolve, reject) {
         var postOperationCallBack = (error, result?, request?, response?) => {
             if (error) {
-                var msg = tl.loc("OperationFailed", operation, extensionName, vmName);
-                this.log(msg);
+                var msg = tl.loc("OperationFailed", operation, extensionName, vmName, utils.getError(error));
+                console.log(msg);
                 reject(msg);
-            } else {
+            } 
+            else {
                 msg = tl.loc("OperationSucceeded", operation, extensionName, vmName);
-                this.log(msg);
+                console.log(msg);
                 resolve(msg);
             }
         }
@@ -147,9 +149,9 @@ export class MachineGroupExtensionHelper {
     private _formExtensionParameters(virtualMachine: az.VM, operation) {
         var vmId = virtualMachine["id"];
         var vmName = virtualMachine["name"];
-        this.log("virtual machine : " + vmName);
+        console.log("virtual machine : " + vmName);
         var vmOsType = virtualMachine["properties"]["storageProfile"]["osDisk"]["osType"];
-        this.log("Operating system on virtual machine : " + vmOsType);
+        console.log("Operating system on virtual machine : " + vmOsType);
         var vmLocation = virtualMachine["location"];
         if (vmOsType === "Windows") {
             var extensionName = this.constants.mgExtensionNameWindows;
@@ -161,7 +163,7 @@ export class MachineGroupExtensionHelper {
             virtualMachineExtensionType = this.constants.vmExtensionTypeLinux;
             typeHandlerVersion = this.constants.version;
         }
-        this.log(tl.loc("MGAgentHandlerMajorVersion", typeHandlerVersion.split(".")[0]));
+        console.log(tl.loc("MGAgentHandlerMajorVersion", typeHandlerVersion.split(".")[0]));
         if (operation === "installation") {
             var autoUpgradeMinorVersion: boolean = true;
             var publisher: string = this.constants.publisher;
@@ -185,7 +187,7 @@ export class MachineGroupExtensionHelper {
             }
             var tags = "";
             if (virtualMachine["tags"] && this.taskParameters.copyAzureVMTags) {
-                this.log("Copying VM tags")
+                console.log("Copying VM tags")
                 tags = virtualMachine["tags"];
             }
             var publicSettings = {
@@ -212,12 +214,6 @@ export class MachineGroupExtensionHelper {
         }
         return { vmName: vmName, extensionName: extensionName, parameters: parameters };
     }
-
-    private log(message) {
-        tl.debug(message);
-        console.log(message);
-    }
-
 }
 
 export class Constants {
