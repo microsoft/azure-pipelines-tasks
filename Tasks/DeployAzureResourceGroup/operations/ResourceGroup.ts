@@ -13,8 +13,7 @@ import deployAzureRG = require("../models/DeployAzureRG");
 import armResource = require("./azure-rest/azure-arm-resource");
 import winRM = require("./WinRMExtensionHelper");
 import mgExtensionHelper = require("./MachineGroupExtensionHelper");
-
-var constants = new mgExtensionHelper.Constants();
+import constants = require("./Constants");
 var parameterParser = require("./ParameterParser").parse;
 import utils = require("./utils");
 
@@ -57,7 +56,7 @@ export class ResourceGroup {
 
     public deleteResourceGroup(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            var extDelPromise = this.machineGroupExtensionHelper.deleteMGExtensionRG();
+            var extDelPromise = this.machineGroupExtensionHelper.deleteMGExtensionFromResourceGroup();
             var deleteRG = (val) => {
                 var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
                 console.log(tl.loc("DeletingResourceGroup", this.taskParameters.resourceGroupName));
@@ -110,7 +109,7 @@ export class ResourceGroup {
             await this.winRMExtensionHelper.ConfigureWinRMExtension();
         }
         else if (this.taskParameters.enableDeploymentPrerequisites == constants.enablePrereqMG) {
-            await this.machineGroupExtensionHelper.installExtension();
+            await this.machineGroupExtensionHelper.installExtensionOnResourceGroup();
         }
     }
 

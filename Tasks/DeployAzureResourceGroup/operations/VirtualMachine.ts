@@ -47,8 +47,7 @@ export class VirtualMachine {
                             client.virtualMachines.restart(this.taskParameters.resourceGroupName, vmName, callback(vmName));
                             break;
                         case "Delete":
-                            var operation = "uninstallation";
-                            var extDelPromise = this.machineGroupExtensionHelper.deleteMGExtension(listOfVms[i], operation);
+                            var extDelPromise = this.machineGroupExtensionHelper.deleteMGExtension(listOfVms[i]);
                             var deleteVM = this.getDeleteVMCallback(client, vmName, callback(vmName));
                             extDelPromise.then(deleteVM, deleteVM); 
                     }

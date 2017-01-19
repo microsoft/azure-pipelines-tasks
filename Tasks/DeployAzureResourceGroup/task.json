@@ -371,14 +371,17 @@
         "FailedToFetchInstanceViewVM": "Failed to fetch the instance view of the virtual machine. Error : %s",
         "CreationOfExtensionFailed": "Failed to add the extension. Error: %s",
         "AddedExtension" :"Successfully added the CustomScriptExtension for the virtual Machine %s",
-        "OperationSucceeded": "%s of %s on vm %s succeeded",
-        "OperationFailed": "%s of %s on vm %s failed. Error : %s",
+        "InstallationSucceeded": "installation of extension on vm %s succeeded",
+        "UninstallationSucceeded": "uninstallation of extension on vm %s succeeded",
+        "InstallationFailed": "installation of %s on vm %s failed. Error : %s",
+        "UninstallationFailed": "uninstallation of %s on vm %s failed. Error : %s",
         "MGAgentOperationOnAllVMsFailed": "Machine group agent %s did not succeed on all VMs. %s",
-        "MGAgentOperationOnAllVMsSucceeded": "Machine group agent %s succeeded on all VMs",
+        "MGAgentInstalledOnAllVMs": "Machine group agent installed on all virtual machines of the resource group",
+        "MGAgentUninstalledFromAllVMs": "Machine group agent uninstalled from all virtual machines of the resource group",
         "MGAgentHandlerMajorVersion": "Machine group extension handler major version is %s",
         "SkipDeleteExtension": "Either the extension %s is not present on the virtual machine %s or the machine is stopped. Skipping extension deletion.",
-        "VMStartFailedSkipExtensionOperation": "Could not start the virtual machine %s. Skipping %s of %s extension on it. Error : %s",
-        "VMTransitioningSkipExtensionOperation": "Virtual machine %s is in a transitioning state. Skipping %s of %s extension on it.",
+        "VMStartFailedSkipExtensionInstallation": "Could not start the virtual machine %s. Skipping installation of extension on it. Error : %s",
+        "VMTransitioningSkipExtensionInstallation": "Virtual machine %s is in a transitioning state. Skipping installing extension extension on it.",
         "VMDetailsFetchFailedSkipExtensionOperation": "Could not get details of virtual machine %s. Skipping %s of team services agent on it. Error : %s"
     }
 }

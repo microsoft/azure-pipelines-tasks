@@ -23,8 +23,8 @@ export class AzureRGTaskParameters {
     public subscriptionId: string;
     public deploymentMode: string;
     public credentials: msRestAzure.ApplicationTokenCredentials;
-    public CollectionUrlForMachineGroupAgentConfiguration= "";
-    public ProjectNameForMachineGroupAgentConfiguration= "";
+    public MachineGroupCollectionUrl = "";
+    public MachineGroupAgentProjectName = "";
 
     constructor() {
         try {
@@ -49,8 +49,18 @@ export class AzureRGTaskParameters {
             this.outputVariable = tl.getInput("outputVariable");
             this.deploymentMode = tl.getInput("deploymentMode");
             this.credentials = this.getARMCredentials(connectedService);
-            this.CollectionUrlForMachineGroupAgentConfiguration = tl.getVariable("__mg__internal__collection__uri");
-            this.ProjectNameForMachineGroupAgentConfiguration = tl.getVariable("__mg__internal__project__name");
+            if (tl.getVariable("__mg__internal__collection__uri")) {
+                this.MachineGroupCollectionUrl = tl.getVariable("__mg__internal__collection__uri");
+            }
+            else {
+                this.MachineGroupCollectionUrl = tl.getVariable('system.TeamFoundationCollectionUri');
+            }
+            if (tl.getVariable("__mg__internal__project__name")) {
+                this.MachineGroupAgentProjectName = tl.getVariable("__mg__internal__project__name");
+            }
+            else {
+                this.MachineGroupAgentProjectName = tl.getVariable('system.teamProject');
+            }
         }
         catch (error) {
             throw (tl.loc("ARGD_ConstructorFailed", error.message));

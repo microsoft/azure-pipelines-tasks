@@ -41,6 +41,17 @@ export interface PublicIPAddressProperties {
 export interface VMProperties {
     networkProfile: NetworkProfile;
     instanceView: InstanceView;
+    storageProfile: StorageProfile
+}
+
+export interface StorageProfile{
+    imageReference: Map<string, string>;
+    osDisk: OSDisk;
+    dataDisks: Map<string, string>[];
+}
+
+export interface OSDisk{
+    osType: string;
 }
 
 export interface DnsSettings {
@@ -52,7 +63,11 @@ export interface NetworkProfile {
 }
 
 export interface InstanceView {
-    statuses: Map<string, string>[];
+    statuses: Status[];
+}
+
+export interface Status{
+    code: string;
 }
 
 export interface LoadBalancer extends AzureBaseObject {
@@ -61,7 +76,8 @@ export interface LoadBalancer extends AzureBaseObject {
 }
 
 export interface VM extends AzureBaseObject {
-    properties: VMProperties
+    properties: VMProperties,
+    location: string
 }
 
 export interface NetworkInterface extends AzureBaseObject {
