@@ -4,6 +4,7 @@
   "loc.description": "Consente di compilare con Apache Ant",
   "loc.instanceNameFormat": "Ant $(options) $(antBuildFile)",
   "loc.group.displayName.junitTestResults": "Risultati del test JUnit",
+  "loc.group.displayName.codeCoverage": "Code Coverage",
   "loc.group.displayName.advanced": "Avanzate",
   "loc.input.label.antBuildFile": "File di compilazione Ant",
   "loc.input.help.antBuildFile": "Percorso relativo dalla radice del repository al file di compilazione Ant.",

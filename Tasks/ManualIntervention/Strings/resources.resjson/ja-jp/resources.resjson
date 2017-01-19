@@ -5,6 +5,6 @@
   "loc.instanceNameFormat": "手動で介入",
   "loc.input.label.instructions": "手順",
   "loc.input.help.instructions": "これらの手順は、手動介入を再開するか拒否するユーザーに表示されます。これらの手順に基づいて、ユーザーはこの手動介入について、十分な情報を得たうえでの決定を行えます。",
-  "loc.input.label.emailRecipients": "Notify users",
-  "loc.input.help.emailRecipients": "Send a manual intervention pending email to specific users (or groups). Only users with manage deployment permission can act on a manual intervention."
+  "loc.input.label.emailRecipients": "ユーザーへの通知",
+  "loc.input.help.emailRecipients": "手動介入の保留の電子メールを特定のユーザー (またはグループ) に送信します。手動介入を実行できるのは、展開管理のアクセス許可があるユーザーだけです。"
 }

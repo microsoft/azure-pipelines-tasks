@@ -4,6 +4,7 @@
   "loc.description": "使用 Apache Ant 建置",
   "loc.instanceNameFormat": "Ant $(options) $(antBuildFile)",
   "loc.group.displayName.junitTestResults": "JUnit 測試結果",
+  "loc.group.displayName.codeCoverage": "Code Coverage",
   "loc.group.displayName.advanced": "進階",
   "loc.input.label.antBuildFile": "Ant 組建檔案",
   "loc.input.help.antBuildFile": "從儲存機制根路徑到 Ant 組建檔案的相對路徑。",

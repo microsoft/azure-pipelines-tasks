@@ -16,5 +16,5 @@
   "loc.input.help.parameterizedJob": "Jenkins ジョブがパラメーターを受け入れる場合に選びます。すべての既定のパラメーター値が使用され、実際に指定されているパラメーターはないという場合であっても、これを選ぶ必要があります。",
   "loc.input.label.jobParameters": "ジョブ パラメーター",
   "loc.input.help.jobParameters": "<b>`<parameterName>=<parameterValue>`</b> の形式で、1 行につき 1 つのジョブ パラメーターを指定します。<p>パラメーターを空の値に設定するには (既定値を上書きするのに便利です) パラメーター値を省略します。たとえば、<b>`<parameterName>=`</b> と指定します。<p>変数がサポートされています。たとえば、<b>`commitId`</b> パラメーター値を、ビルドの Git commit ID に設定するには、<b>`commitId=$(Build.SourceVersion)`</b> を使用します。詳細については、[変数に関するドキュメント](https://www.visualstudio.com/docs/build/define/variables) を参照してください。<p>サポートされている Jenkins パラメーターの型は次のとおりです。<ul><li>`Boolean`</li><li>`Choice`</li><li>`Password`</li><li>`String`</li></ul>",
-  "loc.messages.JenkinsJobQueued": "Jenkins job queued"
+  "loc.messages.JenkinsJobQueued": "Jenkins ジョブが処理待ち"
 }

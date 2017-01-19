@@ -17,7 +17,7 @@
   "loc.input.label.verbosity": "Commentaires",
   "loc.input.help.verbosity": "Niveau de détail de NuGet",
   "loc.input.label.nuGetVersion": "Version NuGet",
-  "loc.input.help.nuGetVersion": "The version of NuGet to use, or external version.",
+  "loc.input.help.nuGetVersion": "Version de NuGet à utiliser, ou version externe.",
   "loc.input.label.nuGetPath": "Chemin de NuGet.exe",
   "loc.input.help.nuGetPath": "Indiquez éventuellement le chemin de NuGet.exe. Remplace la sélection de version.",
   "loc.messages.Warning_NoConfigForNoCredentialProvider": "Pour se connecter aux flux NuGet hébergés dans votre compte Team Services/collection de projets TFS sur cet agent de build, modifiez votre définition de build pour choisir une version supérieure de nuget ou spécifiez le chemin d'un NuGet.config qui contient les sources de packages à utiliser.",
