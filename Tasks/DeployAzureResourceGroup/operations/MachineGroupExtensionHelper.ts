@@ -23,6 +23,7 @@ export class MachineGroupExtensionHelper {
         this.computeClient = new computeManagementClient.ComputeManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
         this.azureUtils = new azure_utils.AzureUtil(this.taskParameters, this.computeClient);
     }
+
     public async installExtensionOnResourceGroup() {
         console.log("Installing machine group agent on the resource group virutal machines.");
         var listOfVms: az.VM[] = await this.azureUtils.getVMDetails();
