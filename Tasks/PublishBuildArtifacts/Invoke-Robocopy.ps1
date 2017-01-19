@@ -33,7 +33,7 @@ $writer = New-Object System.IO.StreamWriter($stdout, $utf8)
 # PowerShell 4, Write-Host and Out-Default do not consider the updated stream writer.
 
 # Print the ##command.
-[System.Console]::WriteLine("##[command]robocopy.exe /E /COPY:DA /NP /R:3 /MT:128`"$Source`" `"$Target`" *")
+[System.Console]::WriteLine("##[command]robocopy.exe /E /COPY:DA /NP /R:3 /MT:128 `"$Source`" `"$Target`" *")
 
 # The $OutputEncoding variable instructs PowerShell how to interpret the output
 # from the external command.
