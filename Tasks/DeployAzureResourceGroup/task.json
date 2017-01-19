@@ -1,113 +1,94 @@
 {
     "id": "94A74903-F93F-4075-884F-DC11F34058B4",
-    "name": "AzureResourceGroupDeployment",
+    "name": "DeployAzureResourceGroup",
     "friendlyName": "Azure Resource Group Deployment",
     "description": "Deploy, start, stop, delete Azure Resource Groups",
     "helpMarkDown": "[More Information](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
     "category": "Deploy",
+    "releaseNotes": "- Works with Xplat agents (Windows, Linux or OSX)\n- Supports Template JSONs located at any publicly accessible http/https URLs.\n- Enhanced UX for Override parameters which can now be viewed/edited in a grid.\n- NAT rule mapping for VMs which are backed by an Load balancer.\n- Limitations: \n - No support for Classic subscriptions. Only for ARM subscriptions are supported.\n - No support for PowerShell syntax as the task is now node.js based.",
     "visibility": [
         "Build",
         "Release"
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
+        "Major": 2,
         "Minor": 0,
-        "Patch": 97
+        "Patch": 0
     },
     "demands": [
-        "azureps"
+        "node.js"
     ],
-    "minimumAgentVersion": "1.103.0",
+    "minimumAgentVersion": "2.0.0",
     "groups": [
+        {
+            "name": "AzureDetails",
+            "displayName": "Azure Details",
+            "isExpanded": true
+        },
+        {
+            "name": "Template",
+            "displayName": "Template",
+            "isExpanded": true,
+            "visibleRule": "action = Create or update resource group"
+        },
+        {
+            "name": "AdvancedDeploymentOptions",
+            "displayName": "Advanced Deployment Options",
+            "isExpanded": true,
+            "visibleRule": "action = Create or update resource group || action = Select resource group"
+        },
         {
             "name": "output",
             "displayName": "Output",
-            "isExpanded": true
+            "isExpanded": true,
+            "visibleRule": "action = Create or update resource group || action = Select resource group"
+        },
+        {
+            "name": "MachineGroupOptions",
+            "displayName": "Machine Group Options",
+            "isExpanded": true,
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent"
         }
     ],
     "inputs": [
         {
-            "name": "ConnectedServiceNameSelector",
-            "type": "pickList",
-            "label": "Azure Connection Type",
-            "required": false,
-            "helpMarkDown": "",
-            "defaultValue": "ConnectedServiceName",
-            "options": {
-                "ConnectedServiceName": "Azure Resource Manager",
-                "ConnectedServiceNameClassic": "Azure Classic"
-            }
-        },
-        {
             "name": "ConnectedServiceName",
             "type": "connectedService:AzureRM",
-            "label": "Azure Subscription",
+            "label": "Azure subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment.",
-            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
-        },
-        {
-            "name": "ConnectedServiceNameClassic",
-            "type": "connectedService:Azure",
-            "label": "Azure Classic Subscription",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Select the Azure Classic subscription for the deployment.",
-            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
         },
         {
             "name": "action",
             "type": "pickList",
             "label": "Action",
-            "defaultValue": "Create Or Update Resource Group",
+            "defaultValue": "Create or update resource group",
             "required": true,
+            "groupName": "AzureDetails",
             "helpMarkDown": "Action to be performed on the Azure resources or resource group.",
             "options": {
-                "Create Or Update Resource Group": "Create Or Update Resource Group",
-                "Select Resource Group": "Select Resource Group",
-                "Start": "Start Virtual Machines",
-                "Stop": "Stop Virtual Machines",
-                "Restart": "Restart Virtual Machines",
-                "Delete": "Delete Virtual Machines",
-                "DeleteRG": "Delete Resource Group"
-            },
-            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
-        },
-        {
-            "name": "actionClassic",
-            "type": "pickList",
-            "label": "Action",
-            "defaultValue": "Select Resource Group",
-            "required": true,
-            "helpMarkDown": "Action to be performed on the Azure resources or cloud service.",
-            "options": {
-                "Select Resource Group": "Select Cloud Service"
-            },
-            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
+                "Create or update resource group": "Create or update resource group",
+                "Select resource group": "Select resource group",
+                "Start": "Start virtual machines",
+                "Stop": "Stop virtual machines",
+                "Restart": "Restart virtual machines",
+                "Delete": "Delete virtual machines",
+                "DeleteRG": "Delete resource group"
+            }
         },
         {
             "name": "resourceGroupName",
             "type": "pickList",
-            "label": "Resource Group",
+            "label": "Resource group",
             "required": true,
-            "helpMarkDown": "Provide the name of the resource group.",
+            "groupName": "AzureDetails",
+            "helpMarkDown": "Provide the name of a resource group.",
             "properties": {
                 "EditableOptions": "True"
-            },
-            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
-        },
-        {
-            "name": "cloudService",
-            "type": "pickList",
-            "label": "Cloud Service",
-            "required": true,
-            "helpMarkDown": "Provide the name of the cloud service.",
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameClassic"
+            }
         },
         {
             "name": "location",
@@ -116,6 +97,7 @@
             "defaultValue": "East US",
             "required": true,
             "helpMarkDown": "Location for deploying the resource group. If the resource group already exists in the subscription, then this value will be ignored.",
+            "groupName": "AzureDetails",
             "options": {
                 "Australia East": "Australia East",
                 "Australia Southeast": "Australia Southeast",
@@ -145,7 +127,39 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "visibleRule": "action = Create Or Update Resource Group"
+            "visibleRule": "action = Create or update resource group"
+        },
+        {
+            "name": "templateLocation",
+            "type": "pickList",
+            "label": "Template location",
+            "required": true,
+            "defaultValue": "Linked artifact",
+            "groupName": "Template",
+            "options": {
+                "Linked artifact": "Linked artifact",
+                "URL of the file": "URL of the file"
+            }
+        },
+        {
+            "name": "csmFileLink",
+            "type": "string",
+            "label": "Template link",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "Template",
+            "helpMarkDown": "Specify the URL of the template file. Example: [https://raw.githubusercontent.com/Azure/...](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-simple-windows/azuredeploy.json) \n\nTo deploy a template stored in a private storage account, retrieve and include the shared access signature (SAS) token in the URL of the template. Example: `<blob_storage_url>/template.json?<SAStoken>` To upload a template file (or a linked template) to a storage account and generate a SAS token, you could use [Azure file copy](https://aka.ms/azurefilecopyreadme) task or follow the steps using [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911).\n\nTo  view the template parameters in a grid, click on “…” next to Override template parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS.",
+            "visibleRule": "templateLocation = URL of the file"
+        },
+        {
+            "name": "csmParametersFileLink",
+            "type": "string",
+            "label": "Template parameters link",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "Template",
+            "helpMarkDown": "Specify the URL of the parameters file. Example: [https://raw.githubusercontent.com/Azure/...](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-simple-windows/azuredeploy.parameters.json) \n\nTo use a file stored in a private storage account, retrieve and include the shared access signature (SAS) token in the URL of the template. Example: `<blob_storage_url>/template.json?<SAStoken>` To upload a parameters file to a storage account and generate a SAS token, you could use [Azure file copy](https://aka.ms/azurefilecopyreadme) task or follow the steps using [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911). \n\nTo  view the template parameters in a grid, click on “…” next to Override template parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS.",
+            "visibleRule": " templateLocation = URL of the file"
         },
         {
             "name": "csmFile",
@@ -153,66 +167,94 @@
             "label": "Template",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate.",
-            "visibleRule": "action = Create Or Update Resource Group" 
+            "groupName": "Template",
+            "visibleRule": " templateLocation = Linked artifact",
+            "helpMarkDown": "Specify the path to the Azure Resource Manager template. For more information about the templates see https://aka.ms/azuretemplates. To get started immediately use template https://aka.ms/sampletemplate."
         },
         {
             "name": "csmParametersFile",
             "type": "filePath",
-            "label": "Template Parameters",
+            "label": "Template parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the path for the parameters file for the Azure Resource Manager Template.",
-            "visibleRule": "action = Create Or Update Resource Group" 
+            "groupName": "Template",
+            "helpMarkDown": "Specify the path for the parameters file for the Azure Resource Manager template.",
+            "visibleRule": " templateLocation = Linked artifact"
         },
         {
             "name": "overrideParameters",
             "type": "multiLine",
-            "label": "Override Template Parameters",
+            "label": "Override template parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the template parameters to override like, <br>-storageName fabrikam -adminUsername $(vmusername) -adminPassword (ConvertTo-SecureString -String '$(password)' -AsPlainText -Force) -azureKeyVaultName $(fabrikamFibre).",
+            "groupName": "Template",
+            "helpMarkDown": "To  view the template parameters in a grid, click on “…” next to Override Parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS. Or type the template parameters to override in the textbox. Example, <br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre).",
             "properties": {
-                "editorExtension": "ms.vss-services-azure.parameters-grid"
-            },
-            "visibleRule": "action = Create Or Update Resource Group" 
+                "editorExtension": "ms.vss-services-azure.azurerg-parameters-grid"
+            }
         },
         {
             "name": "deploymentMode",
             "type": "pickList",
-            "label": "Deployment Mode",
+            "label": "Deployment mode",
             "defaultValue": "Incremental",
             "required": true,
+            "groupName": "Template",
             "helpMarkDown": "Incremental mode handles deployments as incremental updates to the resource group . It leaves unchanged resources that exist in the resource group but are not specified in the template. \n\n Complete mode deletes resources that are not in your template. \n\n Validate mode enables you to find problems with the template before creating actual resources. \n\n By default, Incremental mode is used.",
             "options": {
-                "Validation": "Validation Only",
                 "Incremental": "Incremental",
-                "Complete": "Complete"
-            },
-            "visibleRule": "action = Create Or Update Resource Group"
+                "Complete": "Complete",
+                "Validation": "Validation only"
+            }
         },
-        { 
-            "name": "enableDeploymentPrerequisitesForCreate", 
-            "type": "boolean", 
-            "label": "Enable Deployment Prerequisites", 
-            "defaultValue": "false", 
-            "visibleRule": "action = Create Or Update Resource Group", 
-            "required": false, 
-            "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)." 
-        }, 
         {
-            "name": "enableDeploymentPrerequisitesForSelect",
+            "name": "enableDeploymentPrerequisites",
             "type": "boolean",
-            "label": "Enable Deployment Prerequisites",
-            "defaultValue": "false",
-            "visibleRule": "action = Select Resource Group",
-            "required": false,
-            "helpMarkDown": "Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
+            "label": "Enable deployment prerequisites",
+            "defaultValue": "None",
+            "groupName": "AdvancedDeploymentOptions",
+            "options": {
+                "None": "None",
+                "ConfigureVMwithWinRM": "Configure virtual machines with WinRM",
+                "ConfigureVMWithMGAgent": "Configure virtual machines with machine group agent"
+            },
+            "helpMarkDown": "These options would be applicable only when the Resource group contains virtual machines. <br><br>Selecting WinRM option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
+          
+        },
+        {
+            "name": "machineGroupName",
+            "type": "pickList",
+            "label": "Machine group",
+            "groupName": "MachineGroupOptions",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
+            "helpMarkDown": "Select a machine group",
+            "properties": {
+                "DisableManageLink": "True"
+            }
+        },
+        {
+            "name": "copyAzureVMTags",
+            "type": "boolean",
+            "label": "Copy Azure VM tags to agents",
+            "groupName": "MachineGroupOptions",
+            "defaultValue": true,
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
+            "helpMarkDown": "Choose if the tags configured on the Azure VM need to be copied to the corresponding machine group agent. <br><br>​By default all Azure tags will be copied following the format “Key: Value”. Example: An Azure Tag “Role : Web” would be copied  as-is to the Agent machine. <br><br>For more information on how tag Azure resources refer to [link](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-using-tags​)"
+        },
+        {
+            "name": "vstsPATToken",
+            "type": "string",
+            "label": "Personal access token",
+            "groupName": "MachineGroupOptions",
+            "defaultValue": "",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",            
+            "required": true,
+            "helpMarkDown": "Agent registration with machine group requires access to your visual studio project.​"
         },
         {
             "name": "outputVariable",
             "type": "string",
-            "label": "Resource Group",
+            "label": "Resource group",
             "required": false,
             "defaultValue": "",
             "groupName": "output",
@@ -221,64 +263,134 @@
     ],
     "dataSourceBindings": [
         {
-            "target": "cloudService",
-            "endpointId": "$(ConnectedServiceNameClassic)",
-            "dataSourceName": "AzureHostedServiceNames"
-        },
-        {
             "target": "resourceGroupName",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureResourceGroups"
         }
     ],
+    "sourceDefinitions": [
+        {
+            "target": "machineGroupName",
+            "endpoint": "/$(system.teamProject)/_apis/distributedtask/machinegroups",
+            "selector": "jsonpath:$.value[*].name",
+            "authKey": "tfs:teamfoundation"
+        }
+    ],
     "instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
     "execution": {
-        "PowerShell3": {
-            "target": "DeployAzureResourceGroup.ps1"
+        "Node": {
+            "target": "main.js"
         }
     },
     "messages": {
-        "ARG_CreatedResourceGroup": "[Azure Resource Manager]Created resource group '{0}'",
-        "ARG_StartingMachine": "[Azure Resource Manager]Starting machine '{0}'",
-        "ARG_StartedMachine": "[Azure Resource Manager]Started machine '{0}' from Azure provider",
-        "ARG_StoppingMachine": "[Azure Resource Manager]Stopping machine '{0}'",
-        "ARG_StoppedMachine": "{0}' from Azure provider",
-        "ARG_DeletingMachine": "[Azure Resource Manager]Deleting machine '{0}'",
-        "ARG_DeletedMachine": "[Azure Resource Manager]Deleted machine '{0}' from Azure provider",
-        "ARG_DeletingResourceGroup": "[Azure Resource Manager]Deleting resource group '{0}'",
-        "ARG_DeletedResourceGroup": "[Azure Resource Manager]Deleted resource group '{0}'",
-        "ARG_EnsureResourceGroupWithMachine": "Ensure resource group '{0}' exists and has at least one virtual machine in it",
-        "ARG_GettingVmStatus": "[Azure Call]Getting the status for vm '{0}'",
-        "ARG_GotVmStatus": "[Azure Call]Got the status for vm '{0}'",
-        "ARG_GettingExtensionStatus": "[Azure Call]Getting the custom script extension '{0}' for vm '{1}'",
-        "ARG_GotExtensionStatus": "[Azure Call]Got the custom script extension '{0}' for vm '{1}'",
-        "ARG_SettingExtension": "[Azure Call]Setting the custom script extension '{0}' for vm '{1}'",
-        "ARG_SetExtension": "[Azure Call]Set the custom script extension '{0}' for vm '{1}'",
-        "ARG_RemovingExtension": "[Azure Call]Removing the custom script extension '{0}' for vm '{1}'",
-        "ARG_RemovedExtension": "[Azure Call]Removed the custom script extension '{0}' for vm '{1}'",
-        "ARG_NetworkInterfaceNotFound": "[Azure Call]No network interface found with virtual machine id {0} under resource group {1}",
-        "ARG_EmptyRGName": "[Azure Call]Resource group name and virtual machine ID should not be null or empty",
-        "ARG_UseSpnAuth": "Certificate based authentication only works with the 'Select Resource Group' action. Please select an Azure subscription with either Credential or SPN based authentication.",
-        "ARG_ProvideOutputVariable": "Please provide the output variable name since you have specified the 'Select Resource Group' option.",
-        "ARG_UnsupportedAzurePSVersion": "The required minimum version {0} of the Azure Powershell Cmdlets are not installed. You can follow the instructions at {1} to get the latest Azure powershell",
-        "ARG_AzureRMModuleNotFound": "The required AzureRM Powershell module is not installed. You can follow the instructions at {0} to get the latest Azure powershell",
-        "ARG_DeploymentFailed": "Resource group deployment '{0}' failed",
-        "ARG_ValidationFailed": "Resource group deployment template validation failed with following Error Code : {0}, Error Message : {1}",
-        "ARG_ValidationSucceeded": "Successfully validated resource group deployment template",
-        "ARG_DeploymentSucceeded": "Successfully created resource group deployment with name '{0}'",
-        "ARG_InvalidFilePath": "Found more than one file to deploy with search pattern '{0}'. There can be only one",
-        "ARG_FileNotFound": "No files were found to deploy with search pattern '{0}'",
-        "ARG_SpecifyValidTemplatePath": "Please specify a complete and a valid template file path",
-        "ARG_SpecifyValidParametersPath": "Please specify a complete and a valid template parameters file path",
-        "ARG_ActionNotSupported": "Action '{0}' is not supported on the provider '{1}'",
-        "ARG_OperationFailedOnMachine": "Operation '{0}' failed on the machine '{1}'",
-        "ARG_InvokeInvalidOperation": "Tried to invoke an invalid operation: '{0}'",
-        "ARG_NoVmsFound": "No VMs found in resource group: '{0}'. Could not register environment in the output variable: '{1}'",
-        "ARG_AllResourceNotFound": "Unable to get {0} for all resources in ResourceGroup : '{1}'",
-        "ARG_ResourceNotFound": "Unable to get {0} for '{1}' resources in ResourceGroup : '{2}'",
-        "ARG_SetExtensionFailed": "Setting the custom script extension '{0}' for virtual machine '{1}' failed with error : {2}",
-        "ARG_NetworkSecurityConfigFailed": "Failed to add the network security rule: {0}",
-        "ARG_SetExtensionFailedForVm": "Unable to set the custom script extension '{0}' for virtual machine '{1}': {2}",
-        "ARG_DeploymentPrereqFailed": "Failed to enable deployment prerequisites. {0}"
+        "CheckResourceGroupExistence": "Checking if the following resource group exists: %s.",
+        "ResourceGroupStatusFetchFailed": "Failed to check the resource group status. Error: %s.",
+        "ResourceGroupStatus": "Resource group exists: %s.",
+        "ResourceGroupCreationFailed": "Failed to create the resource group. Error: %s",
+        "CreatingNewRG": "Creating resource Group: %s",
+        "CreatedRG": "Resource Group created successfully.",
+        "CreatingTemplateDeployment": "Creating deployment parameters.",
+        "TemplateParsingFailed": "Ensure the Template file is valid. Task failed while parsing with following error: %s",
+        "ParametersFileFetchFailed": "Failed to download the parameters file. Error: %s",
+        "ParametersFileParsingFailed": "Ensure the Parameters file is valid. Task failed while parsing with following error: %s",
+        "StartingDeployment": "Starting Deployment.",
+        "CreateTemplateDeploymentSucceeded": "Successfully deployed the template.",
+        "CreateTemplateDeploymentFailed": "Task failed while creating or updating the template deployment.",
+        "ErrorsInYourDeployment": "There were errors in your deployment. Error code: %s.",
+        "Details": "Details:",
+        "StartingValidation": "Starting template validation.",
+        "ValidDeployment": "Template deployment validation was completed successfully.",
+        "CreateTemplateDeploymentValidationFailed": "Template validation failed. Error: %s.",
+        "TemplateValidationHadErrors": "Task failed while validating the template deployment.",
+        "DeletingResourceGroup": "Deleting resource group: %s",
+        "CouldNotDeletedResourceGroup": "Could not delete resource group: '%s'. Operation failed with error: %s",
+        "DeletedResourceGroup": "Deleted resource group: %s",
+        "VM_ListFetchFailed": "Failed to fetch the list of virtual machines from resource group: %s. Error: %s",
+        "NoVMsFound": "No virtual machines found in the resource group.",
+        "VM_Start": "Starting virtual machine: %s",
+        "VM_Restart": "Restarting virtual machine: %s",
+        "VM_Stop": "Stopping virtual machine: %s",
+        "VM_Delete": "Deleting virtual machine: %s",
+        "SucceededOnVMOperation": "Operation: '%s' succeeded on all the virtual machines.",
+        "FailureOnVMOperation": "Operation: '%s' did not succeed on all the virtual machines. Errors: \n%s",
+        "VirtualMachineNameAndError": "%s: %s",
+        "RegisteringEnvironmentVariable": "Selecting the resource group details: %s.",
+        "FailedToFetchNetworkInterfaces": "Failed to fetch the list of network interfaces. Error: %s.",
+        "FailedToFetchLoadBalancers": "Failed to fetch the list of load balancers. Error: %s.",
+        "FailedToFetchPublicAddresses": "Failed to fetch the list of public addresses. Error: %s.",
+        "AddedToOutputVariable": "Resource group details were saved in following output variable: %s.",
+        "InvalidAction": "This action is not defined. Check with the task author.",
+        "TaskNotFound": "Task.json file could not be found: %s",
+        "ARGD_ConstructorFailed": "Task failed while initializing. Error: %s",
+        "ValidatingCredentialsFailure": "Failed while validating credentials due to following error: %s",
+        "RuleExistsAlready": "Rule %s already exists on the security group '%s'",
+        "ARG_NetworkSecurityConfigFailed": "Failed to add the network security config rule",
+        "ExtensionAlreadyPresentVm": "Extension %s is already present on the virtual machine '%s'",
+        "AddExtension": "Adding extension '%s' on virtual machine '%s'",
+        "DeleteExtension": "Deleting extension %s from virtual machine %s",
+        "ARG_AllResourceNotFound": "'%s' not found on resource group '%s'",
+        "FailedToAddExtension": "Failed to add the network security rule with exception: %s",
+        "AddingSecurityRuleNSG": "Adding security rule for the network security group: %s",
+        "AddedSecurityRuleNSG": "Added inbound network security rule config %s with priority %s for port %s under security group %s with result: %s",
+        "FailedToAddRuleToNetworkSecurityGroup": "Failed to add the network security rule to the network security group %s",
+        "FetchingOfNetworkSecurityGroupFailed": "Fetching of network security groups failed with error: %s",
+        "FailedAddingNSGRule3Times": "Failed to add the network security rule to the security group %s after trying 3 times",
+        "FailedToAddNetworkSecurityRule": "Failed to add the network security rule to the security group %s",
+        "FailedToEnablePrereqs": "Failed to enable prerequisites",
+        "FailedToDeleteExtension": "Deletion of extension failed",
+        "AddedInboundNatRuleLB": "Adding inbound NAT rule to the load balancer %s ",
+        "InboundNatRuleLBPresent": "Relevant inbound NAT rules already present for the load balancer %s",
+        "CredentialsCannotBeNull": "'credentials' cannot be null.",
+        "SubscriptionIdCannotBeNull": "'subscriptionId' cannot be null.",
+        "CallbackCannotBeNull": "callback cannot be null.",
+        "ResourceGroupCannotBeNull": "resourceGroupName cannot be null or undefined and it must be of type string.",
+        "ResourceGroupExceededLength": "\"resourceGroupName\" should satisfy the constraint - \"MaxLength\": 90",
+        "ResourceGroupDeceededLength": "\"resourceGroupName\" should satisfy the constraint - \"MinLength\": 1",
+        "ResourceGroupDoesntMatchPattern": "\"resourceGroupName\" should satisfy the constraint - \"Pattern\": /^[-\\w\\._\\(\\)]+$/",
+        "ParametersCannotBeNull": "parameters cannot be null or undefined.",
+        "DeploymentNameCannotBeNull": "deploymentName cannot be null or undefined and it must be of type string.",
+        "VMNameCannotBeNull": "vmName cannot be null or undefined and it must be of type string.",
+        "InvalidValue": "%s is not a valid value. The valid values are: %s",
+        "VmExtensionNameCannotBeNull": "vmExtensionName cannot be null or undefined and it must be of type string.",
+        "ExpandShouldBeOfTypeString": "expand must be of type string.",
+        "ExtensionParametersCannotBeNull": "extensionParameters cannot be null or undefined.",
+        "ClientIdCannotBeEmpty": "clientId must be a non empty string.",
+        "DomainCannotBeEmpty": "domain must be a non empty string.",
+        "SecretCannotBeEmpty": "secret must be a non empty string.",
+        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for azure. Status code: %s, status message: %s",
+        "LoadBalancerNameCannotBeNull": "'loadBalancerName cannot be null or undefined and it must be of type string.'",
+        "NetworkInterfaceNameCannotBeNull": "networkInterfaceName cannot be null or undefined and it must be of type string.",
+        "NetworkSecurityGroupNameCannotBeNull": "networkSecurityGroupName cannot be null or undefined and it must be of type string.",
+        "SecurityRuleNameCannotBeNull": "securityRuleName cannot be null or undefined and it must be of type string.",
+        "SecurityRuleParametersCannotBeNull": "securityRuleParameters cannot be null or undefined.",
+        "ErrorFetchingNatRules": "Error while fetching Nat rules",
+        "UnableToFetchFQDN": "Unable to fetch FQDN data from one or more VMs",
+        "OutputVariableShouldNotBeEmpty": "Output variable should not be empty.",
+        "EnablingWinRM": "Enabling winRM Https Listener on your windows machines..",
+        "ARG_ResourceNotFound": "%s is not found on the resource Group %s. Error Count: %s",
+        "FailedToUpdateInboundNatRuleLB": "Failed to update the load Balancer %s with the appropriate Inbound Nat Rule",
+        "ARG_DeploymentPrereqFailed": "Failed to enable deployment pre-requisites with the exception: %s",
+        "ARG_SetExtensionFailedForVm": "Failed to set extension on Virtual Machine %s of Resource Group %s with result: %s",
+        "FailedToUpdateNICOfVm": "Failed to update the NIC of the VM",
+        "FailedToFetchDetailsOfLB": "Failed to fetch the details of the load Balancer: %s",
+        "FailedToUpdateLBInboundNatRules": "Failed to update the inbound NAT rules of the Load Balancer %s to remove irrelevant rules",
+        "InvalidResponseLongRunningOperation": "Invalid response received for fetching status of a long running operation.",
+        "AddingInboundNatRule": "Adding Inbound Nat Rule for the Virtual Machine %s to the Load Balancer %s",
+        "InboundNatRuleAdditionFailed": "Addition of Inbound Nat Rule to the Load Balancer %s failed. Error: %s ",
+        "InboundNatRulesToNICFailed": "Addition of rule Id to the loadBalancerInboundNatRules of nic %s failed with the error: %s",
+        "AddedTargetInboundNatRuleLB": "Added the target virtual machine for the inbound NAT rules of load balancer %s",
+        "FailedToFetchInstanceViewVM": "Failed to fetch the instance view of the virtual machine. Error : %s",
+        "CreationOfExtensionFailed": "Failed to add the extension. Error: %s",
+        "AddedExtension" :"Successfully added the CustomScriptExtension for the virtual Machine %s",
+        "OperationSucceeded": "%s of %s on vm %s succeeded",
+        "OperationFailed": "%s of %s on vm %s failed",
+        "MGAgentOperationOnAllVMsFailed": "Machine group agent %s did not succeed on all VMs. %s",
+        "MGAgentOperationOnAllVMsSucceeded": "Machine group agent %s succeeded on all VMs",
+        "PublicSettings": "Public settings are:\n VSTSAccountName: %s\nTeamProject: %s\nMachineGroup: %s\nTags: %s\n",
+        "MGAgentHandlerMajorVersion": "Machine group extension handler major version is %s",
+        "SkipDeleteExtension": "Either the extension %s is not present on the virtual machine %s or the machine is stopped. Skipping extension deletion.",
+        "VMStartFailedSkipExtensionOperation": "Could not start the virtual machine %s. Skipping %s of %s extension on it.",
+        "VMTransitioningSkipExtensionOperation": "Virtual machine %s is in a transitioning state. Skipping %s of %s extension on it.",
+        "VMDetailsFetchFailedSkipExtensionOperation": "Could not get details of virtual machine %s. Skipping %s of team services agent on it."
     }
 }
