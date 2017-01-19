@@ -90,10 +90,8 @@ export class MachineGroupExtensionHelper {
             console.log(tl.loc("DeleteExtension", extensionName, vmName));
             this.computeClient.virtualMachineExtensions.deleteMethod(resourceGroupName, vmName, extensionName, (error, result, request, response) => {
                 if (error) {
-                    var errMsg = tl.loc("UninstallationFailed", vmName, utils.getError(error));
-                    reject(errMsg);
+                    reject(tl.loc("UninstallationFailed", vmName, utils.getError(error)));
                 }
-                console.log(tl.loc("UninstallationSucceeded", vmName));
                 resolve();
             });
         });
@@ -103,8 +101,7 @@ export class MachineGroupExtensionHelper {
         return new Promise((resolve, reject) => {
             var getVmInstanceViewCallback = (error, result, request, response) => {
                 if (error) {
-                    var errMsg = tl.loc("VMDetailsFetchFailed", vmName, utils.getError(error));
-                    reject(errMsg);
+                    reject(tl.loc("VMDetailsFetchFailed", vmName, utils.getError(error)));
                 }
                 resolve(result);
             }
@@ -116,8 +113,7 @@ export class MachineGroupExtensionHelper {
         return new Promise((resolve, reject) => {
             this.computeClient.virtualMachines.start(this.taskParameters.resourceGroupName, vmName, (error, result, request, response) => {
                 if (error) {
-                    var errMsg = tl.loc("VMStartFailed", vmName, utils.getError(error));
-                    reject(errMsg);
+                    reject(tl.loc("VMStartFailed", vmName, utils.getError(error)));
                 }
                 resolve(result);
             });
@@ -133,12 +129,9 @@ export class MachineGroupExtensionHelper {
             console.log(tl.loc("AddExtension", extensionName, vmName));
             this.computeClient.virtualMachineExtensions.createOrUpdate(this.taskParameters.resourceGroupName, vmName, extensionName, parameters, (error, result, request, response) => {
                 if (error) {
-                    var msg = tl.loc("InstallationFailed", extensionName, vmName, utils.getError(error));
-                    reject(msg);
+                    reject(tl.loc("InstallationFailed", extensionName, vmName, utils.getError(error)));
                 }
-                msg = tl.loc("InstallationSucceeded", extensionName, vmName);
-                console.log(msg);
-                resolve(msg);
+                resolve(tl.loc("InstallationSucceeded", extensionName, vmName));
             });
         })
     }
