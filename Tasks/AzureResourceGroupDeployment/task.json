@@ -64,8 +64,8 @@
             "groupName": "AzureDetails",
             "helpMarkDown": "Action to be performed on the Azure resources or resource group.",
             "options": {
-                "Create Or Update Resource Group": "Create Or Update Resource Group",
-                "Select Resource Group": "Select Resource Group",
+                "Create Or Update Resource Group": "Create or update resource group",
+                "Select Resource Group": "Select resource group",
                 "Start": "Start virtual machines",
                 "Stop": "Stop virtual machines",
                 "Restart": "Restart virtual machines",
