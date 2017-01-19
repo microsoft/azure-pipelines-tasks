@@ -4,6 +4,7 @@
   "loc.description": "Compilar con Apache Ant",
   "loc.instanceNameFormat": "Ant $(options) $(antBuildFile)",
   "loc.group.displayName.junitTestResults": "Resultados de pruebas JUnit",
+  "loc.group.displayName.codeCoverage": "Code Coverage",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.antBuildFile": "Archivo de compilación de Ant",
   "loc.input.help.antBuildFile": "Ruta de acceso relativa de la raíz del repositorio al archivo de compilación de Ant.",

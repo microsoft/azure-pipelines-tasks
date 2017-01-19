@@ -96,5 +96,5 @@
   "loc.messages.VirtualApplicationDoesNotExist": "不存在虚拟应用程序: %s",
   "loc.messages.JSONParseError": "无法分析 JSON 文件: %s。错误: %s",
   "loc.messages.JSONvariablesubstitutionappliedsuccessfully": "JSON 变量替换已成功应用。",
-  "loc.messages.XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully."
+  "loc.messages.XMLvariablesubstitutionappliedsuccessfully": "已成功应用 XML 变量替换。"
 }

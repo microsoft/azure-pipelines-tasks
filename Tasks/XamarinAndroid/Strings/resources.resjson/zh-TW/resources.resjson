@@ -13,7 +13,7 @@
   "loc.input.help.outputDir": "選擇性地提供組建的輸出目錄。範例: $(build.binariesDirectory)/bin/Release。",
   "loc.input.label.configuration": "組態",
   "loc.input.label.createAppPackage": "建立應用程式套件",
-  "loc.input.help.createAppPackage": "Passes the target (/t:PackageForAndroid) during build to generate an APK.",
+  "loc.input.help.createAppPackage": "在建置期間傳遞目標 (/t:PackageForAndroid) 以產生 APK。",
   "loc.input.label.clean": "清除",
   "loc.input.help.clean": "在建置期間傳遞 Clean 目標 (/t:clean)。",
   "loc.input.label.msbuildLocationMethod": "MSBuild",

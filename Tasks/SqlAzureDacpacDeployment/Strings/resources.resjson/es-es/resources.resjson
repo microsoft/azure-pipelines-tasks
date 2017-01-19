@@ -25,7 +25,7 @@
   "loc.input.label.SqlFile": "Script de SQL",
   "loc.input.help.SqlFile": "Ubicación del archivo de script de SQL en el agente de automatización o en una ruta de acceso UNC accesible para el agente de automatización, como \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.sql. Se pueden usar también variables predefinidas del sistema, como $(agent.releaseDirectory).",
   "loc.input.label.SqlInline": "Script de SQL insertado",
-  "loc.input.help.SqlInline": "Escriba el script de SQL que debe ejecutarse  en la base de datos seleccionada.",
+  "loc.input.help.SqlInline": "Escriba el script de SQL que debe ejecutarse en la base de datos seleccionada.",
   "loc.input.label.PublishProfile": "Perfil de publicación",
   "loc.input.help.PublishProfile": "El perfil de publicación proporciona control específico sobre la creación o las actualizaciones de bases de datos SQL de Azure. Especifique la ruta de acceso al archivo XML del perfil de publicación en el agente de automatización o en un recurso compartido UNC. Aquí pueden usarse también variables predefinidas del sistema, como $(agent.buildDirectory) o $(agent.releaseDirectory).",
   "loc.input.label.AdditionalArguments": "Argumentos adicionales de SqlPackage.exe",
@@ -52,5 +52,5 @@
   "loc.messages.SAD_NoPassword": "No se especificó ninguna contraseña para el usuario de SQL: '{0}'.",
   "loc.messages.SAD_InvalidPublishProfile": "Se proporcionó un perfil de publicación '{0}' no válido.",
   "loc.messages.SAD_InvalidServerNameFormat": "El nombre del servidor '{0}' no tiene el formato adecuado. Use el formato de FQDN, como '{1}'",
-  "loc.messages.SAD_AzureSQLDacpacTaskFailed": "Azure SQL Dacpac task failed."
+  "loc.messages.SAD_AzureSQLDacpacTaskFailed": "Error en la tarea Dacpac de Azure SQL."
 }

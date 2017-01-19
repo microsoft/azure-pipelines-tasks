@@ -4,6 +4,7 @@
   "loc.description": "Mit Apache Ant erstellen",
   "loc.instanceNameFormat": "Ant $(options) $(antBuildFile)",
   "loc.group.displayName.junitTestResults": "JUnit-Testergebnisse",
+  "loc.group.displayName.codeCoverage": "Code Coverage",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.antBuildFile": "Ant-Builddatei",
   "loc.input.help.antBuildFile": "Der relative Pfad vom Repositorystamm zur Ant-Builddatei.",

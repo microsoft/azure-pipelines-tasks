@@ -1,11 +1,16 @@
 {
   "loc.friendlyName": "CocoaPods",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613745)",
-  "loc.description": "CocoaPods is a dependency manager for Swift and Objective-C Cocoa projects. This task runs 'pod install'.",
+  "loc.description": "CocoaPods 是 Swift 及 Objective-C Cocoa 專案的相依性管理員。此工作會執行 'pod install'。",
   "loc.instanceNameFormat": "pod 安裝",
+  "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.cwd": "工作目錄",
   "loc.input.help.cwd": "指定要在其中執行此步驟的工作目錄。若為空白則會使用存放庫目錄。",
+  "loc.input.label.forceRepoUpdate": "Force Repo Update",
+  "loc.input.help.forceRepoUpdate": "Selecting this option will force running 'pod repo update' before install.",
+  "loc.input.label.projectDirectory": "Project Directory",
+  "loc.input.help.projectDirectory": "Optionally specify the path to the root of the project directory. If left empty, the project specified in the Podfile will be used. If no project is specified, then a search for an Xcode project will be made. If more than one Xcode project is found, an error will occur.",
   "loc.messages.PodReturnCode": "'pod' 命令結束，傳回碼為: %d",
-  "loc.messages.PodFailed": "The 'pod' command failed with error: %s",
-  "loc.messages.CocoaPodsNotFound": "找不到 'pod' 命令。請在組建電腦上安裝 CocoaPods (https://cocoapods.org/)。"
+  "loc.messages.PodFailed": "'pod' 命令失敗，發生錯誤: %s",
+  "loc.messages.CocoaPodsNotFound": "The 'pod' command was not found. Please install CocoaPods on the agent machine (https://cocoapods.org/)."
 }
