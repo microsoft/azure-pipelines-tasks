@@ -16,10 +16,10 @@
     "version": {
         "Major": 3,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 4
     },
     "preview": "true",
-    "releaseNotes" : "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
+    "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
     "groups": [
         {
@@ -190,7 +190,7 @@
             "required": false,
             "defaultValue": false,
             "groupName": "FileTransformsAndVariableSubstitution",
-            "helpMarkDown": "The config transfoms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`.<br/> Config transforms will be run prior to the Variable Substitution.<br/>XML transformations are supported only for Windows platform." 
+            "helpMarkDown": "The config transfoms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`.<br/> Config transforms will be run prior to the Variable Substitution.<br/>XML transformations are supported only for Windows platform."
         },
         {
             "name": "XmlVariableSubstitution",
@@ -277,7 +277,7 @@
         "Configfiledoesntexists": "Configuration file %s doesn't exist.",
         "Failedtowritetoconfigfilewitherror": "Failed to write to config file %s with error : %s",
         "AppOfflineModeenabled": "App offline mode enabled.",
-        "Failedtoenableappofflinemode": "Failed to enable app offline mode. Status Code: %s (%s)",        
+        "Failedtoenableappofflinemode": "Failed to enable app offline mode. Status Code: %s (%s)",
         "AppOflineModedisabled": "App offline mode disabled.",
         "FailedtodisableAppOfflineMode": "Failed to disable App offline mode. Status Code: %s (%s)",
         "CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot perform XML transformations on a non-Windows platform.",
@@ -292,9 +292,9 @@
         "RequestedURLforkuduphysicalpath": "Requested URL for kudu physical path : %s",
         "Physicalpathalreadyexists": "Physical path '%s' already exists",
         "KuduPhysicalpathCreatedSuccessfully": "Kudu physical path created successfully : %s",
-        "FailedtocreateKuduPhysicalPath" : "Failed to create kudu physical path. %s: %s",
-        "FailedtocheckphysicalPath" : "Failed to check kudu physical path. %s: %s",
-        "VirtualApplicationDoesNotExist" : "Virtual application doesn't exists : %s",
+        "FailedtocreateKuduPhysicalPath": "Failed to create kudu physical path. %s: %s",
+        "FailedtocheckphysicalPath": "Failed to check kudu physical path. %s: %s",
+        "VirtualApplicationDoesNotExist": "Virtual application doesn't exists : %s",
         "JSONParseError": "Unable to parse JSON file: %s. Error: %s",
         "JSONvariablesubstitutionappliedsuccessfully": "JSON variable substitution applied successfully.",
         "XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully."
