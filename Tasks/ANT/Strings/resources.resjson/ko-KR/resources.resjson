@@ -4,6 +4,7 @@
   "loc.description": "Apache Ant로 빌드",
   "loc.instanceNameFormat": "Ant $(options) $(antBuildFile)",
   "loc.group.displayName.junitTestResults": "JUnit 테스트 결과",
+  "loc.group.displayName.codeCoverage": "Code Coverage",
   "loc.group.displayName.advanced": "고급",
   "loc.input.label.antBuildFile": "Ant 빌드 파일",
   "loc.input.help.antBuildFile": "Ant 빌드 파일의 리포지토리 루트로부터의 상대 경로입니다.",

@@ -16,5 +16,5 @@
   "loc.input.help.parameterizedJob": "Selezionare questa opzione se il processo Jenkins accetta parametri. È necessario selezionarla anche si usano tutti i valori di parametro predefiniti e non viene effettivamente specificato alcun parametro.",
   "loc.input.label.jobParameters": "Parametri del processo",
   "loc.input.help.jobParameters": "Consente di specificare i parametri del processo, uno per riga, nel formato <b>`<parameterName>=<parameterValue>`</b><p>Per impostare un parametro su un valore vuoto (utile per la sostituzione di un valore predefinito), non indicare il valore del parametro. Ad esempio specificare <b>`<parameterName>=`</b><p>Le variabili sono supportate. Ad esempio, per impostare il valore del parametro <b>`commitId`</b> sull'ID commit GIT della compilazione, usare <b>`commitId=$(Build.SourceVersion)`</b>. Per maggiori dettagli, vedere la [documentazione sulle variabili](https://www.visualstudio.com/docs/build/define/variables).<p>I tipi di parametro Jenkins supportati sono: <ul><li>`Boolean`</li><li>`Choice`</li><li>`Password`</li><li>`String`</li></ul>",
-  "loc.messages.JenkinsJobQueued": "Jenkins job queued"
+  "loc.messages.JenkinsJobQueued": "Processo Jenkins accodato"
 }

@@ -4,6 +4,7 @@
   "loc.description": "使用 Apache Ant 生成",
   "loc.instanceNameFormat": "Ant $(options) $(antBuildFile)",
   "loc.group.displayName.junitTestResults": "JUnit 测试结果",
+  "loc.group.displayName.codeCoverage": "Code Coverage",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.antBuildFile": "Ant 生成文件",
   "loc.input.help.antBuildFile": "从存储库根路径到“Ant 生成文件”的相对路径。",

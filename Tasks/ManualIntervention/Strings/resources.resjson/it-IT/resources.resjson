@@ -5,6 +5,6 @@
   "loc.instanceNameFormat": "Intervento manuale",
   "loc.input.label.instructions": "Istruzioni",
   "loc.input.help.instructions": "Queste istruzioni verranno visualizzate agli utenti per consentire loro di riprendere o rifiutare l'intervento manuale. In base a queste istruzioni l'utente potrà prendere una decisione basata su informazioni aggiornate in merito a questo intervento manuale.",
-  "loc.input.label.emailRecipients": "Notify users",
-  "loc.input.help.emailRecipients": "Send a manual intervention pending email to specific users (or groups). Only users with manage deployment permission can act on a manual intervention."
+  "loc.input.label.emailRecipients": "Invia notifica agli utenti",
+  "loc.input.help.emailRecipients": "Consente di inviare un messaggio di posta elettronica relativo a un intervento manuale in sospeso a utenti o gruppi specifici. Solo gli utenti autorizzati a gestire le distribuzioni possono agire su un intervento manuale."
 }

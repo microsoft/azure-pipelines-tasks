@@ -4,6 +4,7 @@
   "loc.description": "Générer avec Apache Ant",
   "loc.instanceNameFormat": "Ant $(options) $(antBuildFile)",
   "loc.group.displayName.junitTestResults": "Résultats du test JUnit",
+  "loc.group.displayName.codeCoverage": "Code Coverage",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.antBuildFile": "Fichier de build Ant",
   "loc.input.help.antBuildFile": "Chemin relatif de la racine de dépôt au fichier de build Ant.",

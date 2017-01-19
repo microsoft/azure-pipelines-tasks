@@ -96,5 +96,5 @@
   "loc.messages.VirtualApplicationDoesNotExist": "가상 응용 프로그램이 없습니다. %s",
   "loc.messages.JSONParseError": "JSON 파일 %s을(를) 구문 분석할 수 없습니다. 오류: %s",
   "loc.messages.JSONvariablesubstitutionappliedsuccessfully": "JSON 변수 대체를 적용했습니다.",
-  "loc.messages.XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully."
+  "loc.messages.XMLvariablesubstitutionappliedsuccessfully": "XML 변수 대체를 적용했습니다."
 }
