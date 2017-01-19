@@ -10,13 +10,13 @@
     "Release"
   ],
   "runsOn": [
-        "Agent"
+    "Agent"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 35
+    "Patch": 36
   },
   "demands": [
     "azureps"
