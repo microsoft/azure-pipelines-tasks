@@ -61,6 +61,7 @@ export class MachineGroupExtensionHelper {
                 if (error) {
                     reject(tl.loc("DeletionFailed", vmName, utils.getError(error)));
                 }
+                console.log(tl.loc("DeletionSucceeded", vmName));
                 resolve();
             });
         });
@@ -103,6 +104,7 @@ export class MachineGroupExtensionHelper {
                 if (error) {
                     reject(tl.loc("VMDetailsFetchFailed", vmName, utils.getError(error)));
                 }
+                console.log(tl.loc("VMDetailsFetchSucceeded", vmName, utils.getError(error)));
                 resolve(result);
             }
             this.computeClient.virtualMachines.get(resourceGroupName, vmName, object, getVmInstanceViewCallback);
@@ -115,6 +117,7 @@ export class MachineGroupExtensionHelper {
                 if (error) {
                     reject(tl.loc("VMStartFailed", vmName, utils.getError(error)));
                 }
+                console.log(tl.loc("VMStarted", vmName));
                 resolve(result);
             });
         });

@@ -37,8 +37,8 @@ describe('Azure Resource Group Deployment', function () {
             //assert(tr.stdout.indexOf("MGAgentHandlerMajorVersion") > 0, "Machine group extension handler major version has been update.");
             assert(tr.stdout.indexOf("Copying VM tags") > 0, "Tags should be copied");
             assert(tr.stdout.indexOf("loc_mock_AddExtension") > 0, "TeamServicesAgent should have been added on the VM");
-            assert(tr.stdout.indexOf("loc_mock_AdditionFailed") <= 0, "TeamServicesAgent should have been added on the VM");
-            assert(tr.stdout.indexOf("loc_mock_VMDetailsFetchFailed") <= 0, "VM details should have been fetched");
+            assert(tr.stdout.indexOf("loc_mock_AddingExtensionSucceeded") > 0, "TeamServicesAgent should have been added on the VM");
+            assert(tr.stdout.indexOf("loc_mock_VMDetailsFetchSucceeded") > 0, "VM details should have been fetched");
             done();
         }
         catch (error) {
@@ -65,8 +65,65 @@ describe('Azure Resource Group Deployment', function () {
             assert(tr.stdout.indexOf("Copying VM tags") <= 0, "Tags should not be copied since there are no VMs");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("loc_mock_AddExtension") <= 0, "TeamServicesAgent should not have been added since there are no VMs");
-            assert(tr.stdout.indexOf("loc_mock_AdditionFailed") <= 0, "TeamServicesAgent should not have been added since there are no VMs");
-            assert(tr.stdout.indexOf("loc_mock_VMDetailsFetchFailed") <= 0, "VM details should not have been fetched since there are no VMs");
+            assert(tr.stdout.indexOf("loc_mock_AddingExtensionSucceeded") > 0, "TeamServicesAgent should not have been added since there are no VMs");
+            assert(tr.stdout.indexOf("loc_mock_VMDetailsFetchSucceeded") > 0, "VM details should not have been fetched since there are no VMs");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
+    it("Started stopped vm and installed extension", (done) => {
+        let tp = path.join(__dirname, "addVSTSExtension.js");
+        process.env["action"] = "Create or update resource group";
+        process.env["resourceGroupName"] = "StoppedVM";
+        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
+        process.env["copyAzureVMTags"] = "true";
+        process.env["outputVariable"] = "";
+        process.env["csmFile"] = "\\CSM.json";
+        process.env["csmParametersFile"] = "\\CSM.json";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(tr.succeeded, "Should have succeeded");
+            assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "virtualMachineExtensions.createOrUpdate function should have been called from azure-sdk");
+            assert(tr.stdout.indexOf("loc_mock_MGAgentAddedOnAllVMs") > 0, "Machine group agent should have been added on all vms");
+            assert(tr.stdout.indexOf("Copying VM tags") > 0, "Tags should be copied ");
+            assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
+            assert(tr.stdout.indexOf("loc_mock_AddExtension") > 0, "TeamServicesAgent should have been added");
+            assert(tr.stdout.indexOf("loc_mock_AddingExtensionSucceeded") > 0, "TeamServicesAgent should have been added");
+            assert(tr.stdout.indexOf("loc_mock_VMDetailsFetchSucceeded") > 0, "VM details should have been fetched");
+            assert(tr.stdout.indexOf("VMStartFailed") <= 0, "");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
+    it("Task Failed when a vm was transitioning", (done) => {
+        let tp = path.join(__dirname, "addVSTSExtension.js");
+        process.env["action"] = "Create or update resource group";
+        process.env["resourceGroupName"] = "TransitioningVM";
+        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
+        process.env["copyAzureVMTags"] = "true";
+        process.env["outputVariable"] = "";
+        process.env["csmFile"] = "\\CSM.json";
+        process.env["csmParametersFile"] = "\\CSM.json";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(tr.failed, "Should have failed");
+            assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") <= 0, "virtualMachineExtensions.createOrUpdate function should not have been called from azure-sdk");
+            assert(tr.stdout.indexOf("loc_mock_MGAgentAddedOnAllVMs") <= 0, "Machine group agent should not have been added on all vms");
+            assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
+            assert(tr.stdout.indexOf("loc_mock_VMTransitioningSkipExtensionAddition") > 0, "VM is transitionin. Adding extension should be skipped and task aborted.");
+            assert(tr.stdout.indexOf("loc_mock_AddingExtensionSucceeded") < 0, "TeamServicesAgent should not have been added on the VM. Task is supposed to abort before that.");
+            assert(tr.stdout.indexOf("loc_mock_VMDetailsFetchSucceeded") > 0, "VM details should have been fetched");
+            assert(tr.stdout.indexOf("VMStartFailed") <= 0, "");
             done();
         }
         catch (error) {
@@ -93,7 +150,8 @@ describe('Azure Resource Group Deployment', function () {
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("Copying VM tags") <= 0, "Tags should not be copied because option is not checked");
             assert(tr.stdout.indexOf("loc_mock_AddExtension") > 0, "TeamServicesAgent should have been added on the VM");
-            assert(tr.stdout.indexOf("loc_mock_AdditionFailed") <= 0, "TeamServicesAgent should have been added on the VM");
+            assert(tr.stdout.indexOf("loc_mock_AddingExtensionSucceeded") > 0, "TeamServicesAgent should have been added on the VM");
+            assert(tr.stdout.indexOf("loc_mock_VMDetailsFetchSucceeded") > 0, "VM details should have been fetched");
             done();
         }
         catch (error) {
@@ -116,7 +174,8 @@ describe('Azure Resource Group Deployment', function () {
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "virtualMachineExtensions.createOrUpdate  function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("loc_mock_MGAgentAddedOnAllVMs") > 0, "Machine group agent should have been added on all VMs");
             assert(tr.stdout.indexOf("loc_mock_AddExtension") > 0, "TeamServicesAgent should have been added on the VM");
-            assert(tr.stdout.indexOf("loc_mock_AdditionFailed") <= 0, "TeamServicesAgent should have been added on the VM");
+            assert(tr.stdout.indexOf("loc_mock_AddingExtensionSucceeded") > 0, "TeamServicesAgent should have been added on the VM");
+            assert(tr.stdout.indexOf("loc_mock_VMDetailsFetchSucceeded") > 0, "VM details should have been fetched");
             assert(tr.stdout.indexOf("Copying VM tags") > 0, "Tags should be copied");
             done();
         }
@@ -141,6 +200,8 @@ describe('Azure Resource Group Deployment', function () {
             assert(tr.stdout.indexOf("loc_mock_MGAgentAddedOnAllVMs") > 0, "Machine group agent should have been added on all VMs");
             assert(tr.stdout.indexOf("Copying VM tags") > 0, "Tags should be copied");
             assert(tr.stdout.indexOf("loc_mock_AddExtension") > 0, "TeamServicesAgent should have been added on the VM");
+            assert(tr.stdout.indexOf("loc_mock_AddingExtensionSucceeded") > 0, "TeamServicesAgent should have been added on the VM");
+            assert(tr.stdout.indexOf("loc_mock_VMDetailsFetchSucceeded") > 0, "VM details should have been fetched");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
             done();
         }
@@ -165,6 +226,7 @@ describe('Azure Resource Group Deployment', function () {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("loc_mock_MGAgentAddedOnAllVMs") <= 0, "Machine group agent should not have been added on all VMs");
             assert(tr.stdout.indexOf("Copying VM tags") <= 0, "Tags should not be copied");
+            assert(tr.stdout.indexOf("loc_mock_AddingExtensionSucceeded") <= 0, "TeamServicesAgent should not have been added on the VM, since option was not specified");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
             done();
         }
@@ -186,7 +248,7 @@ describe('Azure Resource Group Deployment', function () {
             assert(tr.stdout.indexOf("virtualMachineExtensions.deleteMethod is called") > 0, "virtualMachineExtensions.deleteMethod function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("virtualMachines.deleteMethod is called") > 0, "Should have deleted VM");
             assert(tr.stdout.indexOf("loc_mock_DeleteExtension") > 0, "Machine group agent should have started to be deleted from VM");
-            assert(tr.stdout.indexOf("loc_mock_DeletionFailed") < 0, "Machine group agent should have been deleted from VM");
+            assert(tr.stdout.indexOf("loc_mock_DeletionSucceeded") > 0, "Machine group agent should have been deleted from VM");
             done();
         }
         catch (error) {
@@ -208,7 +270,7 @@ describe('Azure Resource Group Deployment', function () {
             assert(tr.stdout.indexOf("loc_mock_MGAgentDeletedFromAllVMs") > 0, "Machine group agent should have been deleted from all VMs");
             assert(tr.stdout.indexOf("resourceGroups.deleteMethod is called") > 0, "Task should have called resourceGroups.deleteMethod function from azure-sdk");
             assert(tr.stdout.indexOf("loc_mock_DeleteExtension") > 0, "Machine group agent should have started to be deleted from VM");
-            assert(tr.stdout.indexOf("loc_mock_DeletionFailed") <= 0, "Machine group agent should have been deleted from VM");
+            assert(tr.stdout.indexOf("loc_mock_DeletionSucceeded") > 0, "Machine group agent should have been deleted from VM");
             done();
         }
         catch (error) {
