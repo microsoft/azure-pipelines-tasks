@@ -4,89 +4,113 @@ import path = require('path');
 import url = require('url');
 import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
+import nutil = require('nuget-task-common/utility');
+
 var extend = require('util')._extend;
 
 interface EnvironmentDictionary { [key: string]: string; }
 
-tl.setResourcePath(path.join( __dirname, 'task.json'));
+tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 executeTask();
 
 async function executeTask() {
 
-    var cwd = tl.getPathInput('cwd', true, false);
-    tl.mkdirP(cwd);
-    tl.cd(cwd);
-
-    var command = tl.getInput('command', true);
-    if (command.indexOf(' ') >= 0) {
-        tl.setResult(tl.TaskResult.Failed, tl.loc('InvalidCommand'));
-        return;
-    }
-
-    var npmRunner = tl.tool(tl.which('npm', true));
-    npmRunner.arg(command);
-    npmRunner.line(tl.getInput('arguments', false));
-
-
-    if(shouldUseDeprecatedTask()) {
-
-        // deprecated version of task, which just runs the npm command with NO auth support.
-        try{
-            var code : number = await npmRunner.exec();
-            tl.setResult(code, tl.loc('NpmReturnCode', code));
-        } catch (err) {
-            tl.debug('taskRunner fail');
-            tl.setResult(tl.TaskResult.Failed, tl.loc('NpmFailed', err.message));
+    try {
+        var filePath = tl.getPathInput('cwd', true, false);
+        var dirList: string[] = [];
+        if (filePath.indexOf("*") !== -1 || filePath.indexOf("?") !== -1) {
+            var filesList = nutil.resolveFilterSpec(filePath, tl.getVariable("Build.SourceDirectory"));
+            tl.debug("number of files matching filePath: " + filesList.length);
+            for (var file of filesList) {
+                dirList.push(path.dirname(file));
+            }
         }
-    } else {
+        else if (fs.statSync(filePath).isFile()) {
+            dirList.push(path.dirname(filePath));
+        }
+        else {
+            dirList.push(filePath);
+        }
+    }
+    catch (error) {
+        tl.warning(error);
+    }
+    for (var cwd of dirList) {
+        tl.debug('Executing command in directory: ' + cwd);
+        tl.mkdirP(cwd);
+        tl.cd(cwd);
 
-        // new task version with auth support
-        try{
+        var command = tl.getInput('command', true);
+        if (command.indexOf(' ') >= 0) {
+            tl.setResult(tl.TaskResult.Failed, tl.loc('InvalidCommand'));
+            return;
+        }
 
-            var npmrcPath: string = path.join(cwd, '.npmrc');
-            var tempNpmrcPath : string = getTempNpmrcPath();
+        var npmRunner = tl.tool(tl.which('npm', true));
+        npmRunner.arg(command);
+        npmRunner.line(tl.getInput('arguments', false));
 
-            var debugLog: boolean = tl.getVariable('system.debug') && tl.getVariable('system.debug').toLowerCase() === 'true';
 
-            var shouldRunAuthHelper: boolean = tl.osType().toLowerCase() === 'windows_nt' && tl.exist(npmrcPath); 
-            if(shouldRunAuthHelper) {
-                copyUserNpmrc(tempNpmrcPath);
-                await runNpmAuthHelperAsync(getNpmAuthHelperRunner(npmrcPath, tempNpmrcPath, debugLog));
+        if (shouldUseDeprecatedTask()) {
+
+            // deprecated version of task, which just runs the npm command with NO auth support.
+            try {
+                var code: number = await npmRunner.exec();
+                tl.setResult(code, tl.loc('NpmReturnCode', code));
+            } catch (err) {
+                tl.debug('taskRunner fail');
+                tl.setResult(tl.TaskResult.Failed, tl.loc('NpmFailed', err.message));
             }
+        } else {
 
-            // set required environment variables for npm execution
-            var npmExecOptions = <trm.IExecOptions>{
-                env: extend({}, process.env)
-            };
+            // new task version with auth support
+            try {
 
-            if(shouldRunAuthHelper){
-                npmExecOptions.env['npm_config_userconfig'] = tempNpmrcPath;
+                var npmrcPath: string = path.join(cwd, '.npmrc');
+                var tempNpmrcPath: string = getTempNpmrcPath();
+
+                var debugLog: boolean = tl.getVariable('system.debug') && tl.getVariable('system.debug').toLowerCase() === 'true';
+
+                var shouldRunAuthHelper: boolean = tl.osType().toLowerCase() === 'windows_nt' && tl.exist(npmrcPath);
+                if (shouldRunAuthHelper) {
+                    copyUserNpmrc(tempNpmrcPath);
+                    await runNpmAuthHelperAsync(getNpmAuthHelperRunner(npmrcPath, tempNpmrcPath, debugLog));
+                }
+
+                // set required environment variables for npm execution
+                var npmExecOptions = <trm.IExecOptions>{
+                    env: extend({}, process.env)
+                };
+
+                if (shouldRunAuthHelper) {
+                    npmExecOptions.env['npm_config_userconfig'] = tempNpmrcPath;
+                }
+
+                if (debugLog) {
+                    npmExecOptions.env['npm_config_loglevel'] = 'verbose';
+                }
+
+                await tryRunNpmConfigAsync(getNpmConfigRunner(debugLog), npmExecOptions);
+                var code: number = await runNpmCommandAsync(npmRunner, npmExecOptions);
+                cleanUpTempNpmrcPath(tempNpmrcPath);
+                tl.setResult(code, tl.loc('NpmReturnCode', code));
+            } catch (err) {
+                cleanUpTempNpmrcPath(tempNpmrcPath);
+                tl.setResult(tl.TaskResult.Failed, tl.loc('NpmFailed', err.message));
             }
-
-            if(debugLog) {
-                npmExecOptions.env['npm_config_loglevel'] =  'verbose';
-            }
-
-            await tryRunNpmConfigAsync(getNpmConfigRunner(debugLog), npmExecOptions);
-            var code : number =  await runNpmCommandAsync(npmRunner, npmExecOptions);
-            cleanUpTempNpmrcPath(tempNpmrcPath);
-            tl.setResult(code, tl.loc('NpmReturnCode', code));
-        } catch (err) {
-            cleanUpTempNpmrcPath(tempNpmrcPath);
-            tl.setResult(tl.TaskResult.Failed, tl.loc('NpmFailed', err.message));
         }
     }
 }
 
-async function runNpmAuthHelperAsync(npmAuthRunner: trm.ToolRunner) : Promise<number> {
-    try{
+async function runNpmAuthHelperAsync(npmAuthRunner: trm.ToolRunner): Promise<number> {
+    try {
         var execOptions = <trm.IExecOptions>{
             env: extend({}, process.env)
         };
         execOptions.env = addBuildCredProviderEnv(execOptions.env);
 
-        var code : number = await npmAuthRunner.exec(execOptions);
+        var code: number = await npmAuthRunner.exec(execOptions);
         tl.debug('Auth helper exitted with code: ' + code);
         return Q(code);
     } catch (err) {
@@ -97,8 +121,8 @@ async function runNpmAuthHelperAsync(npmAuthRunner: trm.ToolRunner) : Promise<nu
 
 function copyUserNpmrc(tempNpmrcPath: string) {
     // copy the user level npmrc contents, if it exists.
-    var currentUserNpmrcPath : string = getUserNpmrcPath();
-    if(tl.exist(currentUserNpmrcPath)) {
+    var currentUserNpmrcPath: string = getUserNpmrcPath();
+    if (tl.exist(currentUserNpmrcPath)) {
         tl.debug(`Copying ${currentUserNpmrcPath} to ${tempNpmrcPath} ...`);
         tl.cp(currentUserNpmrcPath, tempNpmrcPath, /* options */ null, /* continueOnError */ true);
     }
@@ -106,7 +130,7 @@ function copyUserNpmrc(tempNpmrcPath: string) {
 
 function getUserNpmrcPath() {
     var userNpmRc = process.env['npm_config_userconfig'];
-    if(!userNpmRc){
+    if (!userNpmRc) {
         // default npm rc is located at user's home folder.
         userNpmRc = path.join(process.env['USERPROFILE'], '.npmrc');
     }
@@ -114,7 +138,7 @@ function getUserNpmrcPath() {
     return userNpmRc;
 }
 
-async function tryRunNpmConfigAsync(npmConfigRunner: trm.ToolRunner, execOptions : trm.IExecOptions) {
+async function tryRunNpmConfigAsync(npmConfigRunner: trm.ToolRunner, execOptions: trm.IExecOptions) {
     try {
         var code = await npmConfigRunner.exec(execOptions);
     } catch (err) {
@@ -124,8 +148,8 @@ async function tryRunNpmConfigAsync(npmConfigRunner: trm.ToolRunner, execOptions
     }
 }
 
-async function runNpmCommandAsync(npmCommandRunner: trm.ToolRunner, execOptions : trm.IExecOptions) : Promise<number> {
-    try{
+async function runNpmCommandAsync(npmCommandRunner: trm.ToolRunner, execOptions: trm.IExecOptions): Promise<number> {
+    try {
         var code: number = await npmCommandRunner.exec(execOptions);
         tl.debug('Npm command succeeded with code: ' + code);
         return Q(code);
@@ -135,7 +159,7 @@ async function runNpmCommandAsync(npmCommandRunner: trm.ToolRunner, execOptions 
     }
 }
 
-function shouldUseDeprecatedTask() : boolean {
+function shouldUseDeprecatedTask(): boolean {
     return tl.getVariable('USE_DEPRECATED_TASK_VERSION') && tl.getVariable('USE_DEPRECATED_TASK_VERSION').toLowerCase() === 'true';
 }
 
@@ -149,7 +173,7 @@ function getNpmAuthHelperRunner(npmrcPath: string, tempUserNpmrcPath: string, in
 function getNpmAuthHelperPath(): string {
     let authHelperExternalPath = path.join(__dirname, 'Npm', 'vsts-npm-auth');
     let allFiles = tl.find(authHelperExternalPath);
-    var matchingFiles = allFiles.filter(tl.filter('vsts-npm-auth.exe', {nocase: true, matchBase: true}));
+    var matchingFiles = allFiles.filter(tl.filter('vsts-npm-auth.exe', { nocase: true, matchBase: true }));
 
     if (matchingFiles.length !== 1) {
         // Let the framework produce the desired error message
@@ -162,13 +186,13 @@ function getNpmAuthHelperPath(): string {
 function getNpmConfigRunner(includeDebugLogs: boolean): trm.ToolRunner {
     var npmConfig = tl.tool(tl.which('npm', true));
     npmConfig.line('config list');
-    if(includeDebugLogs) {
+    if (includeDebugLogs) {
         npmConfig.arg('-l');
     }
     return npmConfig;
 }
 
-function getTempNpmrcPath() : string {
+function getTempNpmrcPath(): string {
     var tempNpmrcDir
         = tl.getVariable('Agent.BuildDirectory')
         || tl.getVariable('Agent.ReleaseDirectory')
@@ -181,22 +205,22 @@ function getTempNpmrcPath() : string {
 
 function cleanUpTempNpmrcPath(tempUserNpmrcPath: string) {
     tl.debug('cleaning up...')
-    if(tl.exist(tempUserNpmrcPath)) {
-        tl.debug(`deleting temporary npmrc at '${tempUserNpmrcPath}'` );
+    if (tl.exist(tempUserNpmrcPath)) {
+        tl.debug(`deleting temporary npmrc at '${tempUserNpmrcPath}'`);
         tl.rmRF(tempUserNpmrcPath, /* continueOnError */ false);
     }
 }
 
-function addBuildCredProviderEnv(env: EnvironmentDictionary) : EnvironmentDictionary {
+function addBuildCredProviderEnv(env: EnvironmentDictionary): EnvironmentDictionary {
 
-    var credProviderPath : string = path.join(__dirname, 'Npm/CredentialProvider');
+    var credProviderPath: string = path.join(__dirname, 'Npm/CredentialProvider');
 
     // get build access token
-    var accessToken : string = getSystemAccessToken();
+    var accessToken: string = getSystemAccessToken();
 
     // get uri prefixes
-    var serviceUri : string = tl.getEndpointUrl('SYSTEMVSSCONNECTION', false);
-    var urlPrefixes : string[] = assumeNpmUriPrefixes(serviceUri);
+    var serviceUri: string = tl.getEndpointUrl('SYSTEMVSSCONNECTION', false);
+    var urlPrefixes: string[] = assumeNpmUriPrefixes(serviceUri);
     tl.debug(`discovered URL prefixes: ${urlPrefixes}`);
 
     // These env variables are using NUGET because the credential provider that is being used
@@ -204,7 +228,7 @@ function addBuildCredProviderEnv(env: EnvironmentDictionary) : EnvironmentDictio
     // pull out the access token, hence can be used in Npm scenario as well.
     env['VSS_NUGET_ACCESSTOKEN'] = accessToken;
     env['VSS_NUGET_URI_PREFIXES'] = urlPrefixes.join(';');
-    env['NPM_CREDENTIALPROVIDERS_PATH'] =  credProviderPath;
+    env['NPM_CREDENTIALPROVIDERS_PATH'] = credProviderPath;
     env['VSS_DISABLE_DEFAULTCREDENTIALPROVIDER'] = '1';
     return env;
 }
@@ -227,7 +251,7 @@ function assumeNpmUriPrefixes(collectionUri: string): string[] {
     var prefixes = [collectionUri];
 
     var collectionUrlObject = url.parse(collectionUri);
-    if(collectionUrlObject.hostname.toUpperCase().endsWith('.VISUALSTUDIO.COM')) {
+    if (collectionUrlObject.hostname.toUpperCase().endsWith('.VISUALSTUDIO.COM')) {
         var hostparts = collectionUrlObject.hostname.split('.');
         var packagingHostName = hostparts[0] + '.pkgs.visualstudio.com';
         collectionUrlObject.hostname = packagingHostName;
