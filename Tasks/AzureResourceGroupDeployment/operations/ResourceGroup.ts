@@ -12,7 +12,7 @@ import env = require("./Environment");
 import deployAzureRG = require("../models/DeployAzureRG");
 import armResource = require("./azure-rest/azure-arm-resource");
 import winRM = require("./WinRMExtensionHelper");
-
+import mgExtensionHelper = require("./MachineGroupExtensionHelper");
 var parameterParser = require("./ParameterParser").parse;
 import utils = require("./utils");
 
@@ -35,11 +35,13 @@ export class ResourceGroup {
 
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
     private winRMExtensionHelper: winRM.WinRMExtensionHelper;
+    private machineGroupExtensionHelper: mgExtensionHelper.MachineGroupExtensionHelper;
     private environmentHelper: env.EnvironmentHelper;
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
         this.taskParameters = taskParameters;
         this.winRMExtensionHelper = new winRM.WinRMExtensionHelper(this.taskParameters);
+        this.machineGroupExtensionHelper = new mgExtensionHelper.MachineGroupExtensionHelper(this.taskParameters);
         this.environmentHelper = new env.EnvironmentHelper(this.taskParameters);
     }
 
@@ -53,20 +55,26 @@ export class ResourceGroup {
 
     public deleteResourceGroup(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
-            console.log(tl.loc("DeletingResourceGroup", this.taskParameters.resourceGroupName));
-            armClient.resourceGroups.deleteMethod(this.taskParameters.resourceGroupName, (error, result, request, response) => {
-                if (error) {
-                    return reject(tl.loc("CouldNotDeletedResourceGroup", this.taskParameters.resourceGroupName, utils.getError(error)));
-                }
-                console.log(tl.loc("DeletedResourceGroup", this.taskParameters.resourceGroupName));
-                resolve();
-            });
+            var extDelPromise = this.machineGroupExtensionHelper.deleteExtensionFromResourceGroup();
+            var deleteRG = (val) => {
+                var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
+                console.log(tl.loc("DeletingResourceGroup", this.taskParameters.resourceGroupName));
+                armClient.resourceGroups.deleteMethod(this.taskParameters.resourceGroupName, (error, result, request, response) => {
+                    if (error) {
+                        return reject(tl.loc("CouldNotDeletedResourceGroup", this.taskParameters.resourceGroupName, utils.getError(error)));
+                    }
+                    console.log(tl.loc("DeletedResourceGroup", this.taskParameters.resourceGroupName));
+                    resolve();
+                });
+            }
+            extDelPromise.then(deleteRG, deleteRG);
         });
     }
 
     public async selectResourceGroup(): Promise<void> {
-        if (!utils.isNonEmpty(this.taskParameters.outputVariable)) {
+        if (!utils.isNonEmpty(this.taskParameters.outputVariable) &&
+            (this.taskParameters.enableDeploymentPrerequisites == this.enablePrereqNone ||
+                this.taskParameters.enableDeploymentPrerequisites == this.enablePrereqWinRM)) {
             throw tl.loc("OutputVariableShouldNotBeEmpty");
         }
 
@@ -88,14 +96,20 @@ export class ResourceGroup {
     }
 
     private async registerEnvironmentIfRequired(armClient: armResource.ResourceManagementClient) {
-        if (utils.isNonEmpty(this.taskParameters.outputVariable)) {
+        if (utils.isNonEmpty(this.taskParameters.outputVariable) &&
+            (this.taskParameters.enableDeploymentPrerequisites == this.enablePrereqWinRM ||
+                this.taskParameters.enableDeploymentPrerequisites == this.enablePrereqNone)) {
             await this.environmentHelper.RegisterEnvironment();
         }
+
     }
 
     private async enableDeploymentPrerequestiesIfRequired(armClient) {
-        if (this.taskParameters.enableDeploymentPrerequisites) {
+        if (this.taskParameters.enableDeploymentPrerequisites == this.enablePrereqWinRM) {
             await this.winRMExtensionHelper.ConfigureWinRMExtension();
+        }
+        else if (this.taskParameters.enableDeploymentPrerequisites == this.enablePrereqMG) {
+            await this.machineGroupExtensionHelper.addExtensionOnResourceGroup();
         }
     }
 
@@ -287,4 +301,7 @@ export class ResourceGroup {
         await this.performAzureDeployment(armClient, deployment);
     }
 
+    private enablePrereqMG = "ConfigureVMWithMGAgent";
+    private enablePrereqWinRM = "ConfigureVMwithWinRM";
+    private enablePrereqNone = "None";
 }

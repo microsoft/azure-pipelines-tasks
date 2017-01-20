@@ -6,12 +6,15 @@ import tl = require("vsts-task-lib/task");
 import armCompute = require('./azure-rest/azure-arm-compute');
 import deployAzureRG = require("../models/DeployAzureRG");
 import utils = require("./utils")
+import mgExtensionHelper = require("./MachineGroupExtensionHelper");
 
 export class VirtualMachine {
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
+    private machineGroupExtensionHelper: mgExtensionHelper.MachineGroupExtensionHelper;
 
     constructor(taskParameters: deployAzureRG.AzureRGTaskParameters) {
         this.taskParameters = taskParameters;
+        this.machineGroupExtensionHelper = new mgExtensionHelper.MachineGroupExtensionHelper(this.taskParameters);
     }
 
     public execute(): Promise<void> {
@@ -44,12 +47,21 @@ export class VirtualMachine {
                             client.virtualMachines.restart(this.taskParameters.resourceGroupName, vmName, callback(vmName));
                             break;
                         case "Delete":
-                            console.log(tl.loc("VM_Delete", vmName));
-                            client.virtualMachines.deleteMethod(this.taskParameters.resourceGroupName, vmName, callback(vmName));
+                            var extDelPromise = this.machineGroupExtensionHelper.deleteExtension(listOfVms[i]);
+                            var deleteVM = this.getDeleteVMCallback(client, vmName, callback(vmName));
+                            extDelPromise.then(deleteVM, deleteVM); 
                     }
                 }
             });
         });
+    }
+
+    private getDeleteVMCallback(client, vmName, callback) {
+        var deleteExtensionFromVM = () => {
+            console.log(tl.loc("VM_Delete", vmName));
+            client.virtualMachines.deleteMethod(this.taskParameters.resourceGroupName, vmName, callback);
+        }
+        return deleteExtensionFromVM;
     }
 
     private getCallback(count: number, resolve, reject): (vmName: string ) => (error, result, request, response) => void {
