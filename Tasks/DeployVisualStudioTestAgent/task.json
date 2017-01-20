@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 3
     },
     "preview": "true",
     "releaseNotes": "<ul><li>Support for Visual Studio Test Agent 2017: You can now deploy and run tests using multiple versions of Visual Studio Test Agent. Versions 2015 and 2017 are supported.</li><li>Machine groups created from the Test hub are no longer supported. You can continue to use a list of machines or Azure resource groups.</li></ul>",
