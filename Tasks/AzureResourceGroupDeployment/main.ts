@@ -10,11 +10,11 @@ function run(): Promise<void> {
     var resourceGroupOperationsController = new resourceGroup.ResourceGroup(taskParameters);
     var virtualMachineOperation = new virtualMachine.VirtualMachine(taskParameters);
     switch (taskParameters.action) {
-        case "Create or update resource group":
+        case "Create Or Update Resource Group":
             return resourceGroupOperationsController.createOrUpdateResourceGroup();
         case "DeleteRG":
             return resourceGroupOperationsController.deleteResourceGroup();
-        case "Select resource group":
+        case "Select Resource Group":
             return resourceGroupOperationsController.selectResourceGroup();
         case "Start":
         case "Stop":

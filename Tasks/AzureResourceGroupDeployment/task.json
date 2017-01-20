@@ -1,11 +1,11 @@
 {
     "id": "94A74903-F93F-4075-884F-DC11F34058B4",
-    "name": "DeployAzureResourceGroup",
+    "name": "AzureResourceGroupDeployment",
     "friendlyName": "Azure Resource Group Deployment",
     "description": "Deploy, start, stop, delete Azure Resource Groups",
     "helpMarkDown": "[More Information](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
     "category": "Deploy",
-    "releaseNotes": "- Works with Xplat agents (Windows, Linux or OSX)\n- Supports Template JSONs located at any publicly accessible http/https URLs.\n- Enhanced UX for Override parameters which can now be viewed/edited in a grid.\n- NAT rule mapping for VMs which are backed by an Load balancer.\n- Limitations: \n - No support for Classic subscriptions. Only for ARM subscriptions are supported.\n - No support for PowerShell syntax as the task is now node.js based.",
+    "releaseNotes": "- Works with Xplat agents (Windows, Linux or OSX)\n- Supports Template JSONs located at any publicly accessible http/https URLs.\n- Enhanced UX for Override parameters which can now be viewed/edited in a grid.\n- NAT rule mapping for VMs which are backed by an Load balancer.\n- \"Resource group\" field is now renamed as \"VM details for  WinRM\" and is included in the section \"Advanced deployment options for virtual machines\".\n- Limitations: \n - No support for Classic subscriptions. Only for ARM subscriptions are supported.\n - No support for PowerShell syntax as the task is now node.js based.\nFor example, PowerShell cmdlets like \"ConvertTo-SecureString\" have to be removed when you migrate from version 1.0 to version 2.0.",
     "visibility": [
         "Build",
         "Release"
@@ -30,13 +30,13 @@
             "name": "Template",
             "displayName": "Template",
             "isExpanded": true,
-            "visibleRule": "action = Create or update resource group"
+            "visibleRule": "action = Create Or Update Resource Group"
         },
         {
             "name": "AdvancedDeploymentOptions",
             "displayName": "Advanced eployment options for virtual machines",
             "isExpanded": true,
-            "visibleRule": "action = Create or update resource group || action = Select resource group"
+            "visibleRule": "action = Create Or Update Resource Group || action = Select Resource Group"
         }
     ],
     "inputs": [
@@ -53,13 +53,13 @@
             "name": "action",
             "type": "pickList",
             "label": "Action",
-            "defaultValue": "Create or update resource group",
+            "defaultValue": "Create Or Update Resource Group",
             "required": true,
             "groupName": "AzureDetails",
             "helpMarkDown": "Action to be performed on the Azure resources or resource group.",
             "options": {
-                "Create or update resource group": "Create or update resource group",
-                "Select resource group": "Select resource group",
+                "Create Or Update Resource Group": "Create or update resource group",
+                "Select Resource Group": "Select resource group",
                 "Start": "Start virtual machines",
                 "Stop": "Stop virtual machines",
                 "Restart": "Restart virtual machines",
@@ -115,7 +115,7 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "visibleRule": "action = Create or update resource group"
+            "visibleRule": "action = Create Or Update Resource Group"
         },
         {
             "name": "templateLocation",

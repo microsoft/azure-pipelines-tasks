@@ -1,4 +1,4 @@
-import msRestAzure = require("./ms-rest-azure");
+import msRestAzure = require("./azure-arm-common");
 import azureServiceClient = require("./AzureServiceClient");
 import util = require("util");
 import tl = require('vsts-task-lib/task');

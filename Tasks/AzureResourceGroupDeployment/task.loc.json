@@ -1,11 +1,11 @@
 {
   "id": "94A74903-F93F-4075-884F-DC11F34058B4",
-  "name": "DeployAzureResourceGroup",
+  "name": "AzureResourceGroupDeployment",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
-  "releaseNotes": "- Works with Xplat agents (Windows, Linux or OSX)\n- Supports Template JSONs located at any publicly accessible http/https URLs.\n- Enhanced UX for Override parameters which can now be viewed/edited in a grid.\n- NAT rule mapping for VMs which are backed by an Load balancer.\n- Limitations: \n - No support for Classic subscriptions. Only for ARM subscriptions are supported.\n - No support for PowerShell syntax as the task is now node.js based.",
+  "releaseNotes": "- Works with Xplat agents (Windows, Linux or OSX)\n- Supports Template JSONs located at any publicly accessible http/https URLs.\n- Enhanced UX for Override parameters which can now be viewed/edited in a grid.\n- NAT rule mapping for VMs which are backed by an Load balancer.\n- \"Resource group\" field is now renamed as \"VM details for  WinRM\" and is included in the section \"Advanced deployment options for virtual machines\".\n- Limitations: \n - No support for Classic subscriptions. Only for ARM subscriptions are supported.\n - No support for PowerShell syntax as the task is now node.js based.\nFor example, PowerShell cmdlets like \"ConvertTo-SecureString\" have to be removed when you migrate from version 1.0 to version 2.0.",
   "visibility": [
     "Build",
     "Release"
@@ -30,19 +30,19 @@
       "name": "Template",
       "displayName": "ms-resource:loc.group.displayName.Template",
       "isExpanded": true,
-      "visibleRule": "action = Create or update resource group"
+      "visibleRule": "action = Create Or Update Resource Group"
     },
     {
       "name": "AdvancedDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdvancedDeploymentOptions",
       "isExpanded": true,
-      "visibleRule": "action = Create or update resource group || action = Select resource group"
+      "visibleRule": "action = Create Or Update Resource Group || action = Select Resource Group"
     },
     {
       "name": "output",
       "displayName": "ms-resource:loc.group.displayName.output",
       "isExpanded": true,
-      "visibleRule": "action = Create or update resource group || action = Select resource group"
+      "visibleRule": "action = Create Or Update Resource Group || action = Select Resource Group"
     }
   ],
   "inputs": [
@@ -59,13 +59,13 @@
       "name": "action",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.action",
-      "defaultValue": "Create or update resource group",
+      "defaultValue": "Create Or Update Resource Group",
       "required": true,
       "groupName": "AzureDetails",
       "helpMarkDown": "ms-resource:loc.input.help.action",
       "options": {
-        "Create or update resource group": "Create or update resource group",
-        "Select resource group": "Select resource group",
+        "Create Or Update Resource Group": "Create or update resource group",
+        "Select Resource Group": "Select resource group",
         "Start": "Start virtual machines",
         "Stop": "Stop virtual machines",
         "Restart": "Restart virtual machines",
@@ -121,7 +121,7 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "visibleRule": "action = Create or update resource group"
+      "visibleRule": "action = Create Or Update Resource Group"
     },
     {
       "name": "templateLocation",
@@ -287,10 +287,7 @@
     "FailedAddingNSGRule3Times": "ms-resource:loc.messages.FailedAddingNSGRule3Times",
     "FailedToAddNetworkSecurityRule": "ms-resource:loc.messages.FailedToAddNetworkSecurityRule",
     "FailedToEnablePrereqs": "ms-resource:loc.messages.FailedToEnablePrereqs",
-    "FailedToFetchInstanceViewVM": "ms-resource:loc.messages.FailedToFetchInstanceViewVM",
-    "CreationOfExtensionFailed": "ms-resource:loc.messages.CreationOfExtensionFailed",
     "FailedToDeleteExtension": "ms-resource:loc.messages.FailedToDeleteExtension",
-    "AddedTargetInboundNatRuleLB": "ms-resource:loc.messages.AddedTargetInboundNatRuleLB",
     "AddedInboundNatRuleLB": "ms-resource:loc.messages.AddedInboundNatRuleLB",
     "InboundNatRuleLBPresent": "ms-resource:loc.messages.InboundNatRuleLBPresent",
     "CredentialsCannotBeNull": "ms-resource:loc.messages.CredentialsCannotBeNull",
@@ -327,6 +324,13 @@
     "FailedToUpdateNICOfVm": "ms-resource:loc.messages.FailedToUpdateNICOfVm",
     "FailedToFetchDetailsOfLB": "ms-resource:loc.messages.FailedToFetchDetailsOfLB",
     "FailedToUpdateLBInboundNatRules": "ms-resource:loc.messages.FailedToUpdateLBInboundNatRules",
-    "InvalidResponseLongRunningOperation": "ms-resource:loc.messages.InvalidResponseLongRunningOperation"
+    "InvalidResponseLongRunningOperation": "ms-resource:loc.messages.InvalidResponseLongRunningOperation",
+    "AddingInboundNatRule": "ms-resource:loc.messages.AddingInboundNatRule",
+    "InboundNatRuleAdditionFailed": "ms-resource:loc.messages.InboundNatRuleAdditionFailed",
+    "InboundNatRulesToNICFailed": "ms-resource:loc.messages.InboundNatRulesToNICFailed",
+    "AddedTargetInboundNatRuleLB": "ms-resource:loc.messages.AddedTargetInboundNatRuleLB",
+    "FailedToFetchInstanceViewVM": "ms-resource:loc.messages.FailedToFetchInstanceViewVM",
+    "CreationOfExtensionFailed": "ms-resource:loc.messages.CreationOfExtensionFailed",
+    "AddedExtension": "ms-resource:loc.messages.AddedExtension"
   }
 }

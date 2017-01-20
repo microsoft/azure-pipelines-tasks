@@ -263,7 +263,7 @@ export class ResourceGroup {
                 }
                 if (result.error) {
                     this.writeDeploymentErrors(result.error);
-                    return reject(tl.loc("RGO_createTemplateDeploymentFailed"));
+                    return reject(tl.loc("CreateTemplateDeploymentFailed"));
                 } else {
                     console.log(tl.loc("ValidDeployment"));
                     resolve();

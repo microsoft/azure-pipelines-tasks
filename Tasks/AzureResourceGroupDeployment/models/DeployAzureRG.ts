@@ -2,7 +2,7 @@
 /// <reference path="../../../definitions/vsts-task-lib.d.ts" /> 
 
 import tl = require("vsts-task-lib/task");
-import msRestAzure = require("./../operations/azure-rest/ms-rest-azure");
+import msRestAzure = require("./../operations/azure-rest/azure-arm-common");
 
 export class AzureRGTaskParameters {
 

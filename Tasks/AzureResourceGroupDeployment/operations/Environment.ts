@@ -138,7 +138,8 @@ export class EnvironmentHelper {
                     resource.addOrUpdateProperty(tag, new PropertyValue(tags[tag]));
                 }
             }
-            resources.push(resource);
+            if (fqdn)
+                resources.push(resource);
         }
 
         return resources;

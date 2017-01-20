@@ -1,6 +1,6 @@
 import tl = require('vsts-task-lib/task');
 import util = require("util")
-import msRestAzure = require("./ms-rest-azure");
+import msRestAzure = require("./azure-arm-common");
 var httpClient = require('vso-node-api/HttpClient');
 var httpCallbackClient = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
 
