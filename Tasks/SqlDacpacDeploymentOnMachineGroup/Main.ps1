@@ -17,6 +17,19 @@ $additionalArgumentsSql = Get-VstsInput -Name "additionalArgumentsSql"
 
 Import-Module $PSScriptRoot\ps_modules\TaskModuleSqlUtility
 
+function Write-Exception($exception)
+{
+    if($exception.Message) 
+    {
+        Write-Error ($exception.Message)
+    }
+    else 
+    {
+        Write-Error ($exception)
+    }
+    throw
+}
+
 Try
 {
     $serverName = "localhost"
@@ -56,11 +69,9 @@ Catch [System.Management.Automation.CommandNotFoundException]
         Write-Error (Get-VstsLocString -Key "RunImportModuleSQLPSonyouragentPowershellprompt")
     }
 
-    Write-Error ($_.Exception|Format-List -Force|Out-String)
-    throw
+    Write-Exception($_.Exception)
 }
 Catch [Exception]
 {
-    Write-Error ($_.Exception|Format-List -Force|Out-String)
-    throw
+    Write-Exception($_.Exception)
 }
