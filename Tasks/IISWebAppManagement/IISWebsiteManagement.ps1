@@ -4,48 +4,54 @@ param()
 Trace-VstsEnteringInvocation $MyInvocation
 Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
+. $PSScriptRoot\utility
 Import-Module $PSScriptRoot\ps_modules\TaskModuleIISManageUtility
 
 try {
     
-    $CreateWebsite = Get-VstsInput -Name "CreateWebsite"
-    $WebsiteName = Get-VstsInput -Name "WebsiteName" 
-    $WebsitePhysicalPath = Get-VstsInput -Name "WebsitePhysicalPath" 
-    $WebsitePhysicalPathAuth = Get-VstsInput -Name "WebsitePhysicalPathAuth" 
-    $WebsiteAuthUserName = Get-VstsInput -Name "WebsiteAuthUserName"
-    $WebsiteAuthUserPassword = Get-VstsInput -Name "WebsiteAuthUserPassword"
-    $AddBinding = Get-VstsInput -Name "AddBinding"
-    $Protocol = Get-VstsInput -Name "Protocol" 
-    $IPAddress = Get-VstsInput -Name "IPAddress"
-    $Port = Get-VstsInput -Name "Port"
-    $ServerNameIndication = Get-VstsInput -Name "ServerNameIndication"
-    $HostNameWithOutSNI = Get-VstsInput -Name "HostNameWithOutSNI"
-    $HostNameWithHttp = Get-VstsInput -Name "HostNameWithHttpGet"
-    $HostNameWithSNI = Get-VstsInput -Name "HostNameWithSNI"
-    $SSLCertThumbPrint = Get-VstsInput -Name "SSLCertThumbPrint"
+    $createWebsite = Get-VstsInput -Name "CreateWebsite"
+    $websiteName = Get-VstsInput -Name "WebsiteName" 
+    $websitePhysicalPath = Get-VstsInput -Name "WebsitePhysicalPath" 
+    $websitePhysicalPathAuth = Get-VstsInput -Name "WebsitePhysicalPathAuth" 
+    $websiteAuthUserName = Get-VstsInput -Name "WebsiteAuthUserName"
+    $websiteAuthUserPassword = Get-VstsInput -Name "WebsiteAuthUserPassword"
+    $addBinding = Get-VstsInput -Name "AddBinding"
+    $protocol = Get-VstsInput -Name "Protocol" 
+    $ipAddress = Get-VstsInput -Name "IPAddress"
+    $port = Get-VstsInput -Name "Port"
+    $serverNameIndication = Get-VstsInput -Name "ServerNameIndication"
+    $hostNameWithOutSNI = Get-VstsInput -Name "HostNameWithOutSNI"
+    $hostNameWithHttp = Get-VstsInput -Name "HostNameWithHttp"
+    $hostNameWithSNI = Get-VstsInput -Name "HostNameWithSNI"
+    $sslCertThumbPrint = Get-VstsInput -Name "SSLCertThumbPrint"
 
-    $CreateAppPool = Get-VstsInput -Name "CreateAppPool"
-    $AppPoolName = Get-VstsInput -Name "AppPoolName"
-    $DotNetVersion = Get-VstsInput -Name "DotNetVersion"
-    $PipeLineMode = Get-VstsInput -Name "PipeLineMode"
-    $AppPoolIdentity = Get-VstsInput -Name "AppPoolIdentity"
-    $AppPoolUsername = Get-VstsInput -Name "AppPoolUsername"
-    $AppPoolPassword = Get-VstsInput -Name "AppPoolPassword"
-    $AppCmdCommands = Get-VstsInput -Name "AppCmdCommands"
-    $DeployInParallel = Get-VstsInput -Name "DeployInParallel"
+    $createAppPool = Get-VstsInput -Name "CreateAppPool"
+    $appPoolName = Get-VstsInput -Name "AppPoolName"
+    $dotNetVersion = Get-VstsInput -Name "DotNetVersion"
+    $pipeLineMode = Get-VstsInput -Name "PipeLineMode"
+    $appPoolIdentity = Get-VstsInput -Name "AppPoolIdentity"
+    $appPoolUsername = Get-VstsInput -Name "AppPoolUsername"
+    $appPoolPassword = Get-VstsInput -Name "AppPoolPassword"
+    $appCmdCommands = Get-VstsInput -Name "AppCmdCommands"
+    $deployInParallel = Get-VstsInput -Name "DeployInParallel"
 
+    $hostName = Get-HostName -protocol $protocol -hostNameWithHttp $hostNameWithHttp -hostNameWithSNI $hostNameWithSNI -hostNameWithOutSNI $hostNameWithOutSNI -sni $serverNameIndication
+    
+    Trim-Inputs -siteName ([ref]$websiteName) -physicalPath ([ref]$websitePhysicalPath)  -poolName ([ref]$appPoolName) -websitePathAuthuser ([ref]$websiteAuthUserName) -appPoolUser ([ref]$appPoolUsername) -sslCertThumbPrint ([ref]$sslCertThumbPrint)
 
-    if ($CreateWebsite -and $WebsitePhysicalPathAuth -eq "WebsiteWindowsAuth") {
-        $WebsitePhysicalPathAuthPassword = "$WebsiteAuthUserPassword" | ConvertTo-SecureString  -AsPlainText -Force
-        $WebsitePhysicalPathAuthCredentials = New-Object System.Management.Automation.PSCredential ("$WebsiteAuthUserName", $WebsitePhysicalPathAuthPassword)
+    Validate-Inputs -createWebsite $createWebsite -websiteName $websiteName -createAppPool $createAppPool -appPoolName $appPoolName -addBinding $addBinding -protocol $protocol -sslCertThumbPrint $sslCertThumbPrint
+    
+    if ($createWebsite -and $websitePhysicalPathAuth -ieq "WebsiteWindowsAuth") {
+        $websitePhysicalPathAuthPassword = "$WebsiteAuthUserPassword" | ConvertTo-SecureString  -AsPlainText -Force
+        $websitePhysicalPathAuthCredentials = New-Object System.Management.Automation.PSCredential ("$WebsiteAuthUserName", $websitePhysicalPathAuthPassword)
     }
 
-    if ($CreateAppPool -and $AppPoolIdentity -eq "SpecificUser") {
-        $AppPoolPassword = "$AppPoolPassword;" | ConvertTo-SecureString  -AsPlainText -Force
-        $AppPoolCredentials = New-Object System.Management.Automation.PSCredential ("$AppPoolUsername", $WebsitePhysicalPathAuthPassword)
+    if ($createAppPool -and $appPoolIdentity -ieq "SpecificUser") {
+        $appPoolPassword = "$AppPoolPassword;" | ConvertTo-SecureString  -AsPlainText -Force
+        $appPoolCredentials = New-Object System.Management.Automation.PSCredential ("$AppPoolUsername", $appPoolPassword)
     }
 
-    Execute-Main -CreateWebsite $createWebsite -WebsiteName $websiteName -WebsitePhysicalPath $websitePhysicalPath -WebsitePhysicalPathAuth $websitePhysicalPathAuth -websitePhysicalPathAuthCredentials $WebsitePhysicalPathAuthCredentials -AddBinding $addBinding -Protocol $protocol -IpAddress $ipAddress -Port $port -HostName $hostName -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -CreateAppPool $createAppPool -AppPoolName $appPoolName -DotNetVersion $dotNetVersion -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolCredentials $AppPoolCredentials -AppCmdCommands $appCmdCommands
+    Execute-Main -CreateWebsite $createWebsite -WebsiteName $websiteName -WebsitePhysicalPath $websitePhysicalPath -WebsitePhysicalPathAuth $websitePhysicalPathAuth -websitePhysicalPathAuthCredentials $websitePhysicalPathAuthCredentials -AddBinding $addBinding -Protocol $protocol -IpAddress $ipAddress -Port $port -HostName $hostName -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -CreateAppPool $createAppPool -AppPoolName $appPoolName -DotNetVersion $dotNetVersion -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolCredentials $appPoolCredentials -AppCmdCommands $appCmdCommands
 }
 catch [Exception] {
     

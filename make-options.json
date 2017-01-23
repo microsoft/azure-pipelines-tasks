@@ -31,6 +31,7 @@
         "Grunt",
         "Gulp",
         "IISWebAppDeploymentOnMachineGroup",
+        "IISWebAppManagement",
         "JenkinsDownloadArtifacts",
         "JenkinsQueueJob",
         "ManualIntervention",
