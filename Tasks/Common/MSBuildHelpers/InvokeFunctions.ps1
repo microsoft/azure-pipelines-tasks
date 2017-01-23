@@ -10,7 +10,8 @@ function Invoke-BuildTools {
         [string]$MSBuildArguments,
         [switch]$Clean,
         [switch]$NoTimelineLogger,
-        [switch]$CreateLogFile)
+        [switch]$CreateLogFile,
+        [switch]$RemoveTargetsForClean)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
@@ -24,8 +25,12 @@ function Invoke-BuildTools {
                 if ($CreateLogFile) {
                     $splat["LogFile"] = "$file-clean.log"
                 }
+                $AdditionalArguments = $MSBuildArguments
+                if ($RemoveTargetsForClean) {
+                    $AdditionalArguments = Remove-CustomTargets -MSBuildArguments $MSBuildArguments
+                }
 
-                Invoke-MSBuild -ProjectFile $file -Targets Clean -MSBuildPath $MSBuildLocation -AdditionalArguments $MSBuildArguments -NoTimelineLogger:$NoTimelineLogger @splat
+                Invoke-MSBuild -ProjectFile $file -Targets Clean -MSBuildPath $MSBuildLocation -AdditionalArguments $AdditionalArguments -NoTimelineLogger:$NoTimelineLogger @splat
             }
 
             $splat = @{ }
@@ -43,6 +48,20 @@ function Invoke-BuildTools {
 ########################################
 # Private functions.
 ########################################
+function Remove-CustomTargets {
+    [CmdletBinding()]
+    param(
+        [string]$MSBuildArguments)
+    
+    Trace-VstsEnteringInvocation $MyInvocation
+    try {
+        $tParamRegex = '/t:["'']?.+["'']?\s*'
+        return $MSBuildArguments -replace $tParamRegex, ''
+    } finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
+
 function Invoke-MSBuild {
     [CmdletBinding()]
     param(

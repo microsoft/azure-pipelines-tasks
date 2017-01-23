@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 55
+        "Patch": 56
     },
     "demands": [
         "msbuild"
@@ -63,6 +63,15 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Run a clean build (/t:clean) prior to the build."
+        },
+        {
+            "name": "removeTargetsForClean",
+            "type": "boolean",
+            "label": "Remove Custom Targets",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Remove all custom targets from MSBuild Arguments when running the clean build.",
+            "visibleRule": "clean = true"
         },
         {
             "name": "maximumCpuCount",

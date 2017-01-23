@@ -10,6 +10,7 @@ var platform = tl.getInput('platform');
 var configuration = tl.getInput('configuration');
 var msbuildArguments = tl.getInput('msbuildArguments');
 var clean = tl.getBoolInput('clean');
+var removeTargetsForClean = tl.getBoolInput('removeTargetsForClean');
 var logsolutionEvents = tl.getBoolInput('logsolutionEvents');
 if(logsolutionEvents) {
     tl.warning('logSolutionEvents property is not supported on the VSTS node agent.');
@@ -24,7 +25,7 @@ if(msbuildLocationMethod == 'location') {
     xbuildToolPath = tl.getInput('msbuildLocation');
 }
 
-var runxbuild = function (fn, clean) {
+var runxbuild = function (fn, clean, removeTargets) {
     return Q.fcall( () => {
         var xbuild = tl.createToolRunner(xbuildToolPath);
         xbuild.pathArg(fn);
@@ -38,7 +39,11 @@ var runxbuild = function (fn, clean) {
             xbuild.arg('/p:Configuration=' + configuration);
         }
         if (msbuildArguments) {
-            xbuild.argString(msbuildArguments);
+            var additionalArguments = msbuildArguments;
+            if (removeTargets) {
+                additionalArguments = msbuildArguments.replace(/\/t:["']?.+["']?\s*/g, '');
+            }
+            xbuild.argString(additionalArguments);
         }
 
         return xbuild.exec();
@@ -94,11 +99,11 @@ var result = Q(<any>{});
 filesList.forEach((fn) => {
     result = result.then(() => {
         if (clean) {
-            return runxbuild(fn, true).then( () => {
-                return runxbuild(fn, false);
+            return runxbuild(fn, true, removeTargetsForClean).then( () => {
+                return runxbuild(fn, false, false);
             });
         } else {
-            return runxbuild(fn, false);
+            return runxbuild(fn, false, false);
         }
     })
 })

@@ -13,6 +13,7 @@ try {
     [string]$platform = Get-VstsInput -Name Platform
     [string]$configuration = Get-VstsInput -Name Configuration
     [bool]$clean = Get-VstsInput -Name Clean -AsBool
+    [bool]$removeTargetsForClean = Get-VstsInput -Name RemoveTargetsForClean -AsBool
     [bool]$maximumCpuCount = Get-VstsInput -Name MaximumCpuCount -AsBool
     [bool]$restoreNuGetPackages = Get-VstsInput -Name RestoreNuGetPackages -AsBool
     [bool]$logProjectEvents = Get-VstsInput -Name LogProjectEvents -AsBool
@@ -41,7 +42,7 @@ try {
     $global:ErrorActionPreference = 'Continue'
 
     # Build each solution.
-    Invoke-BuildTools -NuGetRestore:$restoreNuGetPackages -SolutionFiles $solutionFiles -MSBuildLocation $msBuildLocation -MSBuildArguments $msBuildArguments -Clean:$clean -NoTimelineLogger:(!$logProjectEvents) -CreateLogFile:$createLogFile
+    Invoke-BuildTools -NuGetRestore:$restoreNuGetPackages -SolutionFiles $solutionFiles -MSBuildLocation $msBuildLocation -MSBuildArguments $msBuildArguments -Clean:$clean -RemoveTargetsForClean:$removeTargetsForClean -NoTimelineLogger:(!$logProjectEvents) -CreateLogFile:$createLogFile
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation
 }
