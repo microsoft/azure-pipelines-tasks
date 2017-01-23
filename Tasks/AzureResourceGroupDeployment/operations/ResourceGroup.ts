@@ -14,7 +14,7 @@ import armResource = require("./azure-rest/azure-arm-resource");
 import winRM = require("./WinRMExtensionHelper");
 import mgExtensionHelper = require("./MachineGroupExtensionHelper");
 var parameterParser = require("./ParameterParser").parse;
-import utils = require("./utils");
+import utils = require("./Utils");
 
 var httpClient = require('vso-node-api/HttpClient');
 var httpObj = new httpClient.HttpCallbackClient("VSTS_AGENT");
