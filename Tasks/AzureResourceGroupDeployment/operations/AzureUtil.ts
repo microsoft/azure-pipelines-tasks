@@ -3,7 +3,7 @@ import computeManagementClient = require("./azure-rest/azure-arm-compute");
 import deployAzureRG = require("../models/DeployAzureRG");
 import tl = require("vsts-task-lib/task")
 import az = require("./azure-rest/azureModels");
-import utils = require("./utils");
+import utils = require("./Utils");
 
 export class NetworkInterface {
     Name: string;

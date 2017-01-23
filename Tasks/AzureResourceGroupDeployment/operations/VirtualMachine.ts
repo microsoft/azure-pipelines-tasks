@@ -5,7 +5,7 @@ import path = require("path");
 import tl = require("vsts-task-lib/task");
 import armCompute = require('./azure-rest/azure-arm-compute');
 import deployAzureRG = require("../models/DeployAzureRG");
-import utils = require("./utils")
+import utils = require("./Utils")
 import mgExtensionHelper = require("./MachineGroupExtensionHelper");
 
 export class VirtualMachine {
