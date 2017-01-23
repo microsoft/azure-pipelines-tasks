@@ -8,7 +8,7 @@
     "visibility": [
         "Build"
     ],
-	"runsOn": [
+    "runsOn": [
         "Agent",
         "MachineGroup"
     ],
@@ -16,7 +16,7 @@
     "version": {
         "Major": 0,
         "Minor": 112,
-        "Patch": 0
+        "Patch": 1
     },
     "groups": [
         {

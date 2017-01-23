@@ -57,19 +57,6 @@ try {
         Write-Verbose "msBuildArguments = $msBuildArguments"
     }
 
-    # Resolve the MSBuild location.
-    if ($msbuildLocationMethod.ToLower() -eq 'location') {
-        $msbuildLocationMethod = "location"
-    }
-    ElseIf ($msbuildLocation -and $msbuildVersion.ToLower() -eq 'latest') {
-        # Use location if msbuildLocation is set and verison is 'latest' for back compat
-        $msbuildLocationMethod = "location"
-    }
-    else {
-        $msbuildLocationMethod = "version"
-    }
-    Write-Verbose "msbuildLocationMethod = $msbuildLocationMethod"
-
     $msbuildLocation = Select-MSBuildLocation -Method $msbuildLocationMethod -Location $msbuildLocation -Version $msbuildVersion -Architecture $msbuildArchitecture
 
     # build each project file

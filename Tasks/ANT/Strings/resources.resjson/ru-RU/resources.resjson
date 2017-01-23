@@ -4,6 +4,7 @@
   "loc.description": "Сборка с помощью Apache Ant",
   "loc.instanceNameFormat": "Ant $(options) $(antBuildFile)",
   "loc.group.displayName.junitTestResults": "Результаты теста JUnit",
+  "loc.group.displayName.codeCoverage": "Code Coverage",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.antBuildFile": "Файл сборки Ant",
   "loc.input.help.antBuildFile": "Относительный путь от корня репозитория к файлу сборки Ant.",

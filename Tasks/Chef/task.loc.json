@@ -11,13 +11,13 @@
     "Release"
   ],
   "runsOn": [
-        "Agent"
+    "Agent"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 14
+    "Patch": 15
   },
   "demands": [
     "Chef",

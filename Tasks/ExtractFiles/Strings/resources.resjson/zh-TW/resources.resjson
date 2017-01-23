@@ -16,11 +16,11 @@
   "loc.messages.SearchNonExistDir": "因為指定的搜尋目錄 %s 不存在，所以搜尋失敗。",
   "loc.messages.SearchNonDir": "因為指定的搜尋目錄 %s 不是目錄，所以搜尋失敗。",
   "loc.messages.NoSearchPatternPath": "搜尋模式 %s 沒有指定的路徑，將預設為: %s",
-  "loc.messages.ResolveRelativePath": "Relative file path: %s resolving to: %s",
+  "loc.messages.ResolveRelativePath": "正在將相對檔案路徑 %s 解析為 %s",
   "loc.messages.UnzipExtractFile": "正在解壓縮檔案: %s",
   "loc.messages.SevenZipExtractFile": "正在解壓縮檔案: %s",
   "loc.messages.TarExtractFile": "正在解壓縮檔案: %s",
-  "loc.messages.ExtractFileFailedMsg": "Extraction failed for file: %s \ncode: %d \nstdout: %s \nstderr: %s \nerror: %s;",
+  "loc.messages.ExtractFileFailedMsg": "檔案 %s 解壓縮失敗\n代碼: %d\nStdOut: %s\nSTDERR: %s\n錯誤: %s;",
   "loc.messages.ExtractNonExistFile": "因為檔案 %s 不存在，所以解壓縮失敗。",
   "loc.messages.ExtractDirFailed": "因為檔案 %s 為目錄，所以解壓縮失敗。",
   "loc.messages.CreateTempDir": "正在建立暫存資料夾 %s 以解壓縮 %s",
@@ -29,7 +29,7 @@
   "loc.messages.RemoveTempDir": "正在移除暫存資料夾: %s",
   "loc.messages.ExtractFailedCannotCreate": "因為無法建立暫存位置，所以檔案 %s 解壓縮失敗: %s",
   "loc.messages.FoundFiles": "找到 %d 個可解壓縮的檔案:",
-  "loc.messages.CleanDestDir": "Cleaning destination folder before extraction: %s",
+  "loc.messages.CleanDestDir": "正於擷取前清理目的地資料夾: %s",
   "loc.messages.CreateDestDir": "正在建立目的地資料夾: %s",
   "loc.messages.SucceedMsg": "已成功解壓縮所有檔案。"
 }
