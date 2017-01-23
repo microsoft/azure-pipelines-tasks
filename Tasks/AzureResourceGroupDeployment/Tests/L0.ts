@@ -25,8 +25,8 @@ describe('Azure Resource Group Deployment', function () {
         process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
         process.env["copyAzureVMTags"] = "true";
         process.env["outputVariable"] = "";
-        process.env["csmFile"] = "\\CSM.json";
-        process.env["csmParametersFile"] = "\\CSM.json";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -54,8 +54,8 @@ describe('Azure Resource Group Deployment', function () {
         process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
         process.env["copyAzureVMTags"] = "true";
         process.env["outputVariable"] = "";
-        process.env["csmFile"] = "\\CSM.json";
-        process.env["csmParametersFile"] = "\\CSM.json";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -82,8 +82,8 @@ describe('Azure Resource Group Deployment', function () {
         process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
         process.env["copyAzureVMTags"] = "true";
         process.env["outputVariable"] = "";
-        process.env["csmFile"] = "\\CSM.json";
-        process.env["csmParametersFile"] = "\\CSM.json";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -111,8 +111,8 @@ describe('Azure Resource Group Deployment', function () {
         process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
         process.env["copyAzureVMTags"] = "true";
         process.env["outputVariable"] = "";
-        process.env["csmFile"] = "\\CSM.json";
-        process.env["csmParametersFile"] = "\\CSM.json";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -139,8 +139,8 @@ describe('Azure Resource Group Deployment', function () {
         process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
         process.env["copyAzureVMTags"] = "false";
         process.env["outputVariable"] = "";
-        process.env["csmFile"] = "\\CSM.json";
-        process.env["csmParametersFile"] = "\\CSM.json";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -218,8 +218,8 @@ describe('Azure Resource Group Deployment', function () {
         process.env["enableDeploymentPrerequisites"] = "ConfigureVMwithWinRM";
         process.env["copyAzureVMTags"] = "true";
         process.env["outputVariable"] = "";
-        process.env["csmFile"] = "\\CSM.json";
-        process.env["csmParametersFile"] = "\\CSM.json";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -322,8 +322,8 @@ describe('Azure Resource Group Deployment', function () {
     });
     it('Successfully triggered createOrUpdate deployment', (done) => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
-        process.env["csmFile"] = "\\CSM.json";
-        process.env["csmParametersFile"] = "\\CSM.json";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
         try {
@@ -495,8 +495,8 @@ describe('Azure Resource Group Deployment', function () {
     it('No LB present, Vm Doesnot contain Custom Script Extension, Vm has no NSG', (done) => {
         let tp = path.join(__dirname, 'EnablePrereq.js');
         process.env["resourceGroupName"] = "ExtensionNotPresent";
-        process.env["csmFile"] = "\\CSM.json";
-        process.env["csmParametersFile"] = "\\CSM.json";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -522,8 +522,8 @@ describe('Azure Resource Group Deployment', function () {
         // VM has WinRMHttps Listener enabled, but no NSG
         let tp = path.join(__dirname, 'EnablePrereq.js');
         process.env["resourceGroupName"] = "OneLBOneVM";
-        process.env["csmFile"] = "\\CSM.json";
-        process.env["csmParametersFile"] = "\\CSM.json";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -548,8 +548,8 @@ describe('Azure Resource Group Deployment', function () {
         // VM has WinRMHttps Listener enabled, but no NSG
         let tp = path.join(__dirname, 'EnablePrereq.js');
         process.env["resourceGroupName"] = "OneLBTwoVMs";
-        process.env["csmFile"] = "\\CSM.json";
-        process.env["csmParametersFile"] = "\\CSM.json";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -573,8 +573,8 @@ describe('Azure Resource Group Deployment', function () {
         // VM has WinRMHttps Listener enabled, but no NSG
         let tp = path.join(__dirname, 'EnablePrereq.js');
         process.env["resourceGroupName"] = "OneLBOneVMInboundNatRulesPresent";
-        process.env["csmFile"] = "\\CSM.json";
-        process.env["csmParametersFile"] = "\\CSM.json";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -599,8 +599,8 @@ describe('Azure Resource Group Deployment', function () {
         // VM has WinRMHttps Listener enabled, but no NSG
         let tp = path.join(__dirname, 'EnablePrereq.js');
         process.env["resourceGroupName"] = "OneLBTwoVMsInboundNatRulesPresent";
-        process.env["csmFile"] = "\\CSM.json";
-        process.env["csmParametersFile"] = "\\CSM.json";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -624,8 +624,8 @@ describe('Azure Resource Group Deployment', function () {
         // VM has WinRMHttps Listener enabled, but no NSG
         let tp = path.join(__dirname, 'EnablePrereq.js');
         process.env["resourceGroupName"] = "OneLBOneVMInboundNatRulesPresentVMAttached";
-        process.env["csmFile"] = "\\CSM.json";
-        process.env["csmParametersFile"] = "\\CSM.json";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -648,8 +648,8 @@ describe('Azure Resource Group Deployment', function () {
         // VM has WinRMHttps Listener enabled, but no NSG
         let tp = path.join(__dirname, 'EnablePrereq.js');
         process.env["resourceGroupName"] = "OneLBTwoVMsInboundNatRulesPresentVMsAttached";
-        process.env["csmFile"] = "\\CSM.json";
-        process.env["csmParametersFile"] = "\\CSM.json";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -672,8 +672,8 @@ describe('Azure Resource Group Deployment', function () {
         // No LB present, No NSg
         let tp = path.join(__dirname, 'EnablePrereq.js');
         process.env["resourceGroupName"] = "ExtensionNotPresent";
-        process.env["csmFile"] = "\\CSM.json";
-        process.env["csmParametersFile"] = "\\CSM.json";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -699,8 +699,8 @@ describe('Azure Resource Group Deployment', function () {
         //No NSG
         let tp = path.join(__dirname, 'EnablePrereq.js');
         process.env["resourceGroupName"] = "ExtensionPresent";
-        process.env["csmFile"] = "\\CSM.json";
-        process.env["csmParametersFile"] = "\\CSM.json";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -730,8 +730,8 @@ describe('Azure Resource Group Deployment', function () {
         //No NSG
         let tp = path.join(__dirname, 'EnablePrereq.js');
         process.env["resourceGroupName"] = "ExtensionPresentInvalidSubstatus";
-        process.env["csmFile"] = "\\CSM.json";
-        process.env["csmParametersFile"] = "\\CSM.json";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -760,8 +760,8 @@ describe('Azure Resource Group Deployment', function () {
         //No NSG
         let tp = path.join(__dirname, 'EnablePrereq.js');
         process.env["resourceGroupName"] = "ExtensionPresentProvisioningStateIsNotSucceeded";
-        process.env["csmFile"] = "\\CSM.json";
-        process.env["csmParametersFile"] = "\\CSM.json";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -790,8 +790,8 @@ describe('Azure Resource Group Deployment', function () {
         //WinRMHttps Listener enabled
         let tp = path.join(__dirname, 'EnablePrereq.js');
         process.env["resourceGroupName"] = "ExtensionPresentNSGPresent";
-        process.env["csmFile"] = "\\CSM.json";
-        process.env["csmParametersFile"] = "\\CSM.json";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -821,8 +821,8 @@ describe('Azure Resource Group Deployment', function () {
         // 1 VM, No Nsg
         let tp = path.join(__dirname, 'EnablePrereq.js');
         process.env["resourceGroupName"] = "ExtensionPresentWinRMHttpsListenerNotEnabled";
-        process.env["csmFile"] = "\\CSM.json";
-        process.env["csmParametersFile"] = "\\CSM.json";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -847,8 +847,8 @@ describe('Azure Resource Group Deployment', function () {
     it('Custom Script is not present, VM has NSG associated', (done) => {
         let tp = path.join(__dirname, 'EnablePrereq.js');
         process.env["resourceGroupName"] = "ExtensionNotPresentNSGPresent";
-        process.env["csmFile"] = "\\CSM.json";
-        process.env["csmParametersFile"] = "\\CSM.json";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -873,8 +873,8 @@ describe('Azure Resource Group Deployment', function () {
     it('1 LB 1 VM, Custom Script extension is not present, VM has NSG associated', (done) => {
         let tp = path.join(__dirname, 'EnablePrereq.js');
         process.env["resourceGroupName"] = "OneLBOneVMExtensionNotPresentNSGPresent";
-        process.env["csmFile"] = "\\CSM.json";
-        process.env["csmParametersFile"] = "\\CSM.json";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -900,8 +900,8 @@ describe('Azure Resource Group Deployment', function () {
     it('1 LB 2 Vms, Custom Script Extension is not present, VMs have NSG associated', (done) => {
         let tp = path.join(__dirname, 'EnablePrereq.js');
         process.env["resourceGroupName"] = "OneLBTwoVMsExtensionNotPresentNSGPresent";
-        process.env["csmFile"] = "\\CSM.json";
-        process.env["csmParametersFile"] = "\\CSM.json";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
         let tr = new ttm.MockTestRunner(tp);
         tr.run();
 

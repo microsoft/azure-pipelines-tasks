@@ -10,11 +10,11 @@ tr.setInput("ConnectedServiceName", "AzureRM");
 tr.setInput("resourceGroupName", "dummy");
 tr.setInput("location", "West US");
 tr.setInput("templateLocation", "Linked artifact")
-tr.setInput("csmFile", __dirname + process.env["csmFile"]);
+tr.setInput("csmFile", path.join(__dirname, process.env["csmFile"]));
 tr.setInput("overrideParameters", "");
 tr.setInput("deploymentMode","Complete");        
 tr.setInput("enableDeploymentPrerequisites", "None"); 
-tr.setInput("csmParametersFile", __dirname + process.env["csmParametersFile"]);
+tr.setInput("csmParametersFile", path.join(__dirname, process.env["csmParametersFile"]));
 
 process.env[ "ENDPOINT_AUTH_AzureRM"] = "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_DATA_AzureRM_SUBSCRIPTIONID"] = "sId";

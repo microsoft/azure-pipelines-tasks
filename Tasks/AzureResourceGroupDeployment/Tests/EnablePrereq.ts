@@ -11,12 +11,12 @@ tr.setInput("resourceGroupName", process.env["resourceGroupName"]);
 tr.setInput("location", "West US");
 tr.setInput("templateLocation", "Linked artifact")
 tr.setInput("overrideParameters", "");
-tr.setInput("deploymentMode","Complete");        
-tr.setInput("enableDeploymentPrerequisites", "ConfigureVMwithWinRM"); 
-tr.setInput("csmFile", __dirname+"\\CSM.json");
-tr.setInput("csmParametersFile", __dirname + "\\CSM.json");
+tr.setInput("deploymentMode", "Complete");
+tr.setInput("enableDeploymentPrerequisites", "ConfigureVMwithWinRM");
+tr.setInput("csmFile", path.join(__dirname, "CSM.json"));
+tr.setInput("csmParametersFile", path.join(__dirname, "CSM.json"));
 
-process.env[ "ENDPOINT_AUTH_AzureRM"] = "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
+process.env["ENDPOINT_AUTH_AzureRM"] = "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_DATA_AzureRM_SUBSCRIPTIONID"] = "sId";
 process.env["ENDPOINT_DATA_AzureRM_SUBSCRIPTIONNAME"] = "sName";
 
