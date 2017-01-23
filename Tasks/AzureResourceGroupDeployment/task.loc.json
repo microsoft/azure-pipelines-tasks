@@ -203,8 +203,7 @@
       "groupName": "AdvancedDeploymentOptions",
       "options": {
         "None": "None",
-        "ConfigureVMwithWinRM": "Configure virtual machines with WinRM",
-        "ConfigureVMWithMGAgent": "Configure virtual machines with machine group agent"
+        "ConfigureVMwithWinRM": "Configure virtual machines with WinRM"
       },
       "helpMarkDown": "ms-resource:loc.input.help.enableDeploymentPrerequisites"
     },
@@ -385,6 +384,9 @@
     "VMDetailsFetchFailed": "ms-resource:loc.messages.VMDetailsFetchFailed",
     "VMDetailsFetchSucceeded": "ms-resource:loc.messages.VMDetailsFetchSucceeded",
     "AddingMGAgentOnVMs": "ms-resource:loc.messages.AddingMGAgentOnVMs",
-    "DeletingMGAgentFromVMs": "ms-resource:loc.messages.DeletingMGAgentFromVMs"
+    "DeletingMGAgentFromVMs": "ms-resource:loc.messages.DeletingMGAgentFromVMs",
+    "DeletingMGAgentOnVMs": "ms-resource:loc.messages.DeletingMGAgentOnVMs",
+    "AddingExtensionFailed": "ms-resource:loc.messages.AddingExtensionFailed",
+    "TimeoutWhileWaiting": "ms-resource:loc.messages.TimeoutWhileWaiting"
   }
 }

@@ -203,8 +203,7 @@
             "groupName": "AdvancedDeploymentOptions",
             "options": {
                 "None": "None",
-                "ConfigureVMwithWinRM": "Configure virtual machines with WinRM",
-                "ConfigureVMWithMGAgent": "Configure virtual machines with machine group agent"
+                "ConfigureVMwithWinRM": "Configure virtual machines with WinRM"
             },
             "helpMarkDown": "These options would be applicable only when the Resource group contains virtual machines. <br><br>Choosing machine group option would configure machine group agent on each of the virtual machines. <br><br>Selecting WinRM option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
           
@@ -386,6 +385,9 @@
         "VMDetailsFetchFailed": "Could not get details of virtual machine %s. Error : %s",
         "VMDetailsFetchSucceeded": "Fetched details of virtual machine %s.",
         "AddingMGAgentOnVMs": "Adding machine group agent on the resource group virutal machines.",
-        "DeletingMGAgentFromVMs": "Deleting machine group agent from the resource group virutal machines."
+        "DeletingMGAgentFromVMs": "Deleting machine group agent from the resource group virutal machines.",
+        "DeletingMGAgentOnVMs": "Deleting machine group agent on virtual machines",
+        "AddingExtensionFailed": "Addition of extension on vm %s failed", 
+        "TimeoutWhileWaiting": "Timed out while waiting"
     }
 }
