@@ -151,5 +151,8 @@
   "loc.messages.VMDetailsFetchFailed": "Could not get details of virtual machine %s. Error : %s",
   "loc.messages.VMDetailsFetchSucceeded": "Fetched details of virtual machine %s.",
   "loc.messages.AddingMGAgentOnVMs": "Adding machine group agent on the resource group virutal machines.",
-  "loc.messages.DeletingMGAgentFromVMs": "Deleting machine group agent from the resource group virutal machines."
+  "loc.messages.DeletingMGAgentFromVMs": "Deleting machine group agent from the resource group virutal machines.",
+  "loc.messages.DeletingMGAgentOnVMs": "Deleting machine group agent on virtual machines",
+  "loc.messages.AddingExtensionFailed": "Addition of extension on vm %s failed",
+  "loc.messages.TimeoutWhileWaiting": "Timed out while waiting"
 }
