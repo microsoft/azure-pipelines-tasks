@@ -104,7 +104,7 @@ describe('Code Coverage enable tool tests', function () {
 
     it('Search simple pattern (relative path)', (done) => {
         let relativePath = path.relative(process.cwd(), path.join(__dirname, 'data', '*.log'));
-        let test = ff.findFiles(path.join('L0', '..' , relativePath));
+        let test = ff.findFiles(path.join('L0', '..', relativePath));
         assert(test.length === 2);
         assert(test[0] === posixFormat(path.join(data, 'a.log')));
         assert(test[1] === posixFormat(path.join(data, 'b.log')));
@@ -112,7 +112,7 @@ describe('Code Coverage enable tool tests', function () {
     });
 
     it('Search pattern seperated by semi-colon(delimiter)', (done) => {
-        let test = ff.findFiles(path.join(data, '*.log') + ";" +path.join(data, '*.txt'));
+        let test = ff.findFiles(path.join(data, '*.log') + ";" + path.join(data, '*.txt'));
         assert(test.length === 4);
         assert(test[0] === posixFormat(path.join(data, 'a.log')));
         assert(test[1] === posixFormat(path.join(data, 'b.log')));
@@ -120,11 +120,59 @@ describe('Code Coverage enable tool tests', function () {
         assert(test[3] === posixFormat(path.join(data, 'b.txt')));
         done();
     });
-    
+
     it('Search pattern seperated by semi-colon(delimiter)', (done) => {
         let test = ff.findFiles(path.join(data, 'a*') + ";-:" + path.join(data, 'a.txt'));
         assert(test.length === 1);
         assert(test[0] === posixFormat(path.join(data, 'a.log')));
+        done();
+    });
+
+    it('Search for file name without pattern', (done) => {
+        let test = ff.findFiles(path.join(data, 'a.log'));
+        assert(test.length === 1);
+        assert(test[0] === posixFormat(path.join(data, 'a.log')));
+        done();
+    });
+
+    it('Search recursively for file name', (done) => {
+        let test = ff.findFiles(path.join(data, '**', 'a.log'));
+        assert(test.length === 2);
+        assert(test[0] === posixFormat(path.join(data, 'a.log')));
+        assert(test[1] === posixFormat(path.join(data, 'rec', 'a.log')));
+        done();
+    });
+
+    it('Search recursively for file name specifying root folder', (done) => {
+        let test = ff.findFiles(path.join('**', 'a.log'), false, data);
+        assert(test.length === 2);
+        assert(test[0] === posixFormat(path.join(data, 'a.log')));
+        assert(test[1] === posixFormat(path.join(data, 'rec', 'a.log')));
+        done();
+    });
+
+    it('Search file name without root folder should not find file', (done) => {
+        let test = ff.findFiles('a.log', data);
+        assert(test.length === 0);
+        done();
+    });
+
+    it('Search with complex pattern 1', (done) => {
+        let test = ff.findFiles(path.join('**', '*.log') + ";-:" + path.join('**', 'rec', '*.log'), false, data);
+        assert(test.length === 2);
+        assert(test[0] === posixFormat(path.join(data, 'a.log')));
+        assert(test[1] === posixFormat(path.join(data, 'b.log')));
+        done();
+    });
+
+    it('Search with complex pattern 2', (done) => {
+        let test = ff.findFiles(path.join('**', '*') + ";-:" + path.join('**', 'rec', '*'), false, data);
+        assert(test.length === 5);
+        assert(test[0] === posixFormat(path.join(data, 'a.log')));
+        assert(test[1] === posixFormat(path.join(data, 'a.txt')));
+        assert(test[2] === posixFormat(path.join(data, 'b.log')));
+        assert(test[3] === posixFormat(path.join(data, 'b.txt')));
+        assert(test[4] === posixFormat(path.join(data, 'c.zip')));
         done();
     });
 });

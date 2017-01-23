@@ -78,7 +78,7 @@ function isNullOrWhitespace(input) {
 
 function isFile(path: string): boolean {
     try {
-        return fs.lstatSync(path).isFile();
+        return fs.statSync(path).isFile();
     } catch (err) {
         return true;
     }
