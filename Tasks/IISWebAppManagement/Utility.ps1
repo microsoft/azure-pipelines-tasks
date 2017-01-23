@@ -75,5 +75,10 @@ function Escape-SpecialChars
         [string]$str
     )
 
+    if([string]::IsNullOrWhiteSpace($str)) 
+    {
+        return $null
+    } 
+    
     return $str.Replace('`', '``').Replace('"', '`"').Replace('$', '`$')
 }

@@ -1,8 +1,8 @@
 {
 	"id": "1b2aec60-dc49-11e6-9b76-63056e018cac",
 	"name": "IISWebAppManagement",
-	"friendlyName": "IIS Web App Management",
-	"description": "Create or update the Website and App Pool on an IIS using machine group",
+	"friendlyName": "IIS Web App Manage On Machine Group",
+	"description": "Create or update a Website and an App Pool on an IIS using machine group",
 	"author": "Microsoft Corporation",
 	"helpMarkDown": "Replace with markdown to show in help",
 	"category": "Deploy",
@@ -42,7 +42,7 @@
 		{
 			"name": "CreateWebsite",
 			"type": "boolean",
-			"label": "Create or Update Website",
+			"label": "Create or Update website",
 			"required": false,
 			"groupName": "website",
 			"defaultValue": "false",
@@ -51,7 +51,7 @@
 		{
 			"name": "WebsiteName",
 			"type": "string",
-			"label": "Website Name",
+			"label": "Website name",
 			"required": true,
 			"groupName": "website",
 			"defaultValue": "",
@@ -61,7 +61,7 @@
 		{
 			"name": "WebsitePhysicalPath",
 			"type": "string",
-			"label": "Physical Path",
+			"label": "Physical path",
 			"required": true,
 			"groupName": "website",
 			"defaultValue": "%SystemDrive%\\inetpub\\wwwroot",
@@ -71,7 +71,7 @@
 		{
 			"name": "WebsitePhysicalPathAuth",
 			"type": "pickList",
-			"label": "Physical Path Authentication",
+			"label": "Physical path authentication",
 			"required": true,
 			"groupName": "website",
 			"defaultValue": "Application User (Pass-through)",
@@ -85,7 +85,7 @@
 		{
 			"name": "WebsiteAuthUserName",
 			"type": "string",
-			"label": "User Name",
+			"label": "Username",
 			"required": true,
 			"groupName": "website",
 			"defaultValue": "",
@@ -105,7 +105,7 @@
 		{
 			"name": "AddBinding",
 			"type": "boolean",
-			"label": "Add Binding",
+			"label": "Add binding",
 			"required": false,
 			"groupName": "website",
 			"defaultValue": "true",
@@ -129,7 +129,7 @@
 		{
 			"name": "IPAddress",
 			"type": "string",
-			"label": "IP Address",
+			"label": "IP address",
 			"required": true,
 			"groupName": "website",
 			"visibleRule": "AddBinding = true",
@@ -149,7 +149,7 @@
 		{
 			"name": "ServerNameIndication",
 			"type": "boolean",
-			"label": "Server Name Indication Required",
+			"label": "Server Name Indication required",
 			"required": false,
 			"groupName": "website",
 			"defaultValue": "false",
@@ -159,7 +159,7 @@
 		{
 			"name": "HostNameWithOutSNI",
 			"type": "string",
-			"label": "Host Name",
+			"label": "Host name",
 			"required": false,
 			"groupName": "website",
 			"defaultValue": "",
@@ -169,7 +169,7 @@
 		{
 			"name": "HostNameWithHttp",
 			"type": "string",
-			"label": "Host Name",
+			"label": "Host name",
 			"required": false,
 			"groupName": "website",
 			"defaultValue": "",
@@ -179,7 +179,7 @@
 		{
 			"name": "HostNameWithSNI",
 			"type": "string",
-			"label": "Host Name",
+			"label": "Host name",
 			"required": true,
 			"groupName": "website",
 			"defaultValue": "",
@@ -189,7 +189,7 @@
 		{
 			"name": "SSLCertThumbPrint",
 			"type": "string",
-			"label": "SSL Certificate Thumb Print",
+			"label": "SSL Certificate Thumbprint",
 			"required": true,
 			"groupName": "website",
 			"defaultValue": "",
@@ -199,7 +199,7 @@
 		{
 			"name": "CreateAppPool",
 			"type": "boolean",
-			"label": "Create or Update Application Pool",
+			"label": "Create or Update application pool",
 			"required": false,
 			"groupName": "applicationPool",
 			"defaultValue": "false",
@@ -218,7 +218,7 @@
 		{
 			"name": "DotNetVersion",
 			"type": "pickList",
-			"label": ".NET Version",
+			"label": ".NET version",
 			"defaultValue": "v4.0",
 			"required": true,
 			"groupName": "applicationPool",
@@ -233,7 +233,7 @@
 		{
 			"name": "PipeLineMode",
 			"type": "pickList",
-			"label": "Managed Pipeline Mode",
+			"label": "Managed pipeline mode",
 			"defaultValue": "Integrated",
 			"required": true,
 			"groupName": "applicationPool",
@@ -283,7 +283,7 @@
 		{
 			"name": "AppCmdCommands",
 			"type": "multiLine",
-			"label": "Additional AppCmd.exe Commands",
+			"label": "Additional appCmd.exe commands",
 			"required": false,
 			"groupName": "advanced",
 			"defaultValue": "",
@@ -292,7 +292,7 @@
 		{
 			"name": "DeployInParallel",
 			"type": "boolean",
-			"label": "Deploy in Parallel",
+			"label": "Deploy in parallel",
 			"defaultValue": "true",
 			"required": false,
 			"groupName": "advanced",

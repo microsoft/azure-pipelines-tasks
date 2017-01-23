@@ -4,7 +4,7 @@ param()
 Trace-VstsEnteringInvocation $MyInvocation
 Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
-. $PSScriptRoot\utility
+. $PSScriptRoot\Utility.ps1
 Import-Module $PSScriptRoot\ps_modules\TaskModuleIISManageUtility
 
 try {
@@ -42,14 +42,18 @@ try {
     Validate-Inputs -createWebsite $createWebsite -websiteName $websiteName -createAppPool $createAppPool -appPoolName $appPoolName -addBinding $addBinding -protocol $protocol -sslCertThumbPrint $sslCertThumbPrint
     
     if ($createWebsite -and $websitePhysicalPathAuth -ieq "WebsiteWindowsAuth") {
-        $websitePhysicalPathAuthPassword = "$WebsiteAuthUserPassword" | ConvertTo-SecureString  -AsPlainText -Force
-        $websitePhysicalPathAuthCredentials = New-Object System.Management.Automation.PSCredential ("$WebsiteAuthUserName", $websitePhysicalPathAuthPassword)
+        $websiteAuthUserPassword = Escape-SpecialChars -str $WebsiteAuthUserPassword
+        $websitePhysicalPathAuthPassword = "$websiteAuthUserPassword" | ConvertTo-SecureString -AsPlainText -Force
+        $websitePhysicalPathAuthCredentials = New-Object System.Management.Automation.PSCredential ("$websiteAuthUserName", $websitePhysicalPathAuthPassword)
     }
 
     if ($createAppPool -and $appPoolIdentity -ieq "SpecificUser") {
-        $appPoolPassword = "$AppPoolPassword;" | ConvertTo-SecureString  -AsPlainText -Force
-        $appPoolCredentials = New-Object System.Management.Automation.PSCredential ("$AppPoolUsername", $appPoolPassword)
+        $appPoolPassword = Escape-SpecialChars -str $appPoolPassword
+        $appPoolPassword = "$appPoolPassword" | ConvertTo-SecureString -AsPlainText -Force
+        $appPoolCredentials = New-Object System.Management.Automation.PSCredential ("$appPoolUsername", $appPoolPassword)
     }
+
+    $appCmdCommands = Escape-SpecialChars -str $appCmdCommands
 
     Execute-Main -CreateWebsite $createWebsite -WebsiteName $websiteName -WebsitePhysicalPath $websitePhysicalPath -WebsitePhysicalPathAuth $websitePhysicalPathAuth -websitePhysicalPathAuthCredentials $websitePhysicalPathAuthCredentials -AddBinding $addBinding -Protocol $protocol -IpAddress $ipAddress -Port $port -HostName $hostName -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -CreateAppPool $createAppPool -AppPoolName $appPoolName -DotNetVersion $dotNetVersion -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolCredentials $appPoolCredentials -AppCmdCommands $appCmdCommands
 }
