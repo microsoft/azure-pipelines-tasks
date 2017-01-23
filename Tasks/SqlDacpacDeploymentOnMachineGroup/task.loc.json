@@ -167,6 +167,8 @@
     "SQLPowershellModuleisnotinstalledonyouragentmachine": "ms-resource:loc.messages.SQLPowershellModuleisnotinstalledonyouragentmachine",
     "InstallPowershellToolsharedManagementObjectsdependency": "ms-resource:loc.messages.InstallPowershellToolsharedManagementObjectsdependency",
     "RestartagentmachineafterinstallingtoolstoregisterModulepathupdates": "ms-resource:loc.messages.RestartagentmachineafterinstallingtoolstoregisterModulepathupdates",
-    "RunImportModuleSQLPSonyouragentPowershellprompt": "ms-resource:loc.messages.RunImportModuleSQLPSonyouragentPowershellprompt"
+    "RunImportModuleSQLPSonyouragentPowershellprompt": "ms-resource:loc.messages.RunImportModuleSQLPSonyouragentPowershellprompt",
+    "Nofileswerefoundtodeploywithsearchpattern0": "ms-resource:loc.messages.Nofileswerefoundtodeploywithsearchpattern0",
+    "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "ms-resource:loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone"
   }
 }
