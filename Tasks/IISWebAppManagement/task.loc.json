@@ -301,7 +301,7 @@
   ],
   "execution": {
     "PowerShell3": {
-      "target": "IISWebsiteManagement.ps1"
+      "target": "IISWebAppManagement.ps1"
     }
   }
 }
