@@ -37,12 +37,6 @@
       "displayName": "ms-resource:loc.group.displayName.AdvancedDeploymentOptions",
       "isExpanded": true,
       "visibleRule": "action = Create Or Update Resource Group || action = Select Resource Group"
-    },
-    {
-      "name": "output",
-      "displayName": "ms-resource:loc.group.displayName.output",
-      "isExpanded": true,
-      "visibleRule": "action = Create Or Update Resource Group || action = Select Resource Group"
     }
   ],
   "inputs": [
@@ -203,12 +197,46 @@
     },
     {
       "name": "enableDeploymentPrerequisites",
-      "type": "boolean",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.enableDeploymentPrerequisites",
-      "defaultValue": "false",
-      "required": false,
+      "defaultValue": "None",
       "groupName": "AdvancedDeploymentOptions",
+      "options": {
+        "None": "None",
+        "ConfigureVMwithWinRM": "Configure virtual machines with WinRM",
+        "ConfigureVMWithMGAgent": "Configure virtual machines with machine group agent"
+      },
       "helpMarkDown": "ms-resource:loc.input.help.enableDeploymentPrerequisites"
+    },
+    {
+      "name": "machineGroupName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.machineGroupName",
+      "groupName": "AdvancedDeploymentOptions",
+      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
+      "helpMarkDown": "ms-resource:loc.input.help.machineGroupName",
+      "properties": {
+        "DisableManageLink": "True"
+      }
+    },
+    {
+      "name": "copyAzureVMTags",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.copyAzureVMTags",
+      "groupName": "AdvancedDeploymentOptions",
+      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
+      "defaultValue": true,
+      "helpMarkDown": "ms-resource:loc.input.help.copyAzureVMTags"
+    },
+    {
+      "name": "vstsPATToken",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.vstsPATToken",
+      "groupName": "AdvancedDeploymentOptions",
+      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.vstsPATToken"
     },
     {
       "name": "outputVariable",
@@ -216,7 +244,8 @@
       "label": "ms-resource:loc.input.label.outputVariable",
       "required": false,
       "defaultValue": "",
-      "groupName": "output",
+      "groupName": "AdvancedDeploymentOptions",
+      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMwithWinRM || enableDeploymentPrerequisites = None",
       "helpMarkDown": "ms-resource:loc.input.help.outputVariable"
     }
   ],
@@ -225,6 +254,14 @@
       "target": "resourceGroupName",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureResourceGroups"
+    }
+  ],
+  "sourceDefinitions": [
+    {
+      "target": "machineGroupName",
+      "endpoint": "/$(system.teamProject)/_apis/distributedtask/machinegroups",
+      "selector": "jsonpath:$.value[*].name",
+      "authKey": "tfs:teamfoundation"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -278,6 +315,7 @@
     "ARG_NetworkSecurityConfigFailed": "ms-resource:loc.messages.ARG_NetworkSecurityConfigFailed",
     "ExtensionAlreadyPresentVm": "ms-resource:loc.messages.ExtensionAlreadyPresentVm",
     "AddExtension": "ms-resource:loc.messages.AddExtension",
+    "DeleteExtension": "ms-resource:loc.messages.DeleteExtension",
     "ARG_AllResourceNotFound": "ms-resource:loc.messages.ARG_AllResourceNotFound",
     "FailedToAddExtension": "ms-resource:loc.messages.FailedToAddExtension",
     "AddingSecurityRuleNSG": "ms-resource:loc.messages.AddingSecurityRuleNSG",
@@ -331,6 +369,22 @@
     "AddedTargetInboundNatRuleLB": "ms-resource:loc.messages.AddedTargetInboundNatRuleLB",
     "FailedToFetchInstanceViewVM": "ms-resource:loc.messages.FailedToFetchInstanceViewVM",
     "CreationOfExtensionFailed": "ms-resource:loc.messages.CreationOfExtensionFailed",
-    "AddedExtension": "ms-resource:loc.messages.AddedExtension"
+    "AddedExtension": "ms-resource:loc.messages.AddedExtension",
+    "AddingExtensionSucceeded": "ms-resource:loc.messages.AddingExtensionSucceeded",
+    "DeletionSucceeded": "ms-resource:loc.messages.DeletionSucceeded",
+    "AdditionFailed": "ms-resource:loc.messages.AdditionFailed",
+    "DeletionFailed": "ms-resource:loc.messages.DeletionFailed",
+    "MGAgentOperationOnAllVMsFailed": "ms-resource:loc.messages.MGAgentOperationOnAllVMsFailed",
+    "MGAgentAddedOnAllVMs": "ms-resource:loc.messages.MGAgentAddedOnAllVMs",
+    "MGAgentDeletedFromAllVMs": "ms-resource:loc.messages.MGAgentDeletedFromAllVMs",
+    "MGAgentHandlerMajorVersion": "ms-resource:loc.messages.MGAgentHandlerMajorVersion",
+    "SkipDeleteExtension": "ms-resource:loc.messages.SkipDeleteExtension",
+    "VMStartFailed": "ms-resource:loc.messages.VMStartFailed",
+    "VMStarted": "ms-resource:loc.messages.VMStarted",
+    "VMTransitioningSkipExtensionAddition": "ms-resource:loc.messages.VMTransitioningSkipExtensionAddition",
+    "VMDetailsFetchFailed": "ms-resource:loc.messages.VMDetailsFetchFailed",
+    "VMDetailsFetchSucceeded": "ms-resource:loc.messages.VMDetailsFetchSucceeded",
+    "AddingMGAgentOnVMs": "ms-resource:loc.messages.AddingMGAgentOnVMs",
+    "DeletingMGAgentFromVMs": "ms-resource:loc.messages.DeletingMGAgentFromVMs"
   }
 }

@@ -18,9 +18,9 @@ describe('Azure Resource Group Deployment', function () {
     });
     after(function () {
     });
-    it("Successfully added Team Services Agent Extension on VM when option specified - Crete or update RG", (done) => {
+    it("Successfully added Team Services Agent Extension on VM when option specified - Create or update RG", (done) => {
         let tp = path.join(__dirname, "addVSTSExtension.js");
-        process.env["action"] = "Create or update resource group";
+        process.env["action"] = "Create Or Update Resource Group";
         process.env["resourceGroupName"] = "dummy";
         process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
         process.env["copyAzureVMTags"] = "true";
@@ -49,7 +49,7 @@ describe('Azure Resource Group Deployment', function () {
     });
     it("Did not add extensions if no vms present", (done) => {
         let tp = path.join(__dirname, "addVSTSExtension.js");
-        process.env["action"] = "Create or update resource group";
+        process.env["action"] = "Create Or Update Resource Group";
         process.env["resourceGroupName"] = "noVMs";
         process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
         process.env["copyAzureVMTags"] = "true";
@@ -65,8 +65,8 @@ describe('Azure Resource Group Deployment', function () {
             assert(tr.stdout.indexOf("Copying VM tags") <= 0, "Tags should not be copied since there are no VMs");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("loc_mock_AddExtension") <= 0, "TeamServicesAgent should not have been added since there are no VMs");
-            assert(tr.stdout.indexOf("loc_mock_AddingExtensionSucceeded") > 0, "TeamServicesAgent should not have been added since there are no VMs");
-            assert(tr.stdout.indexOf("loc_mock_VMDetailsFetchSucceeded") > 0, "VM details should not have been fetched since there are no VMs");
+            assert(tr.stdout.indexOf("loc_mock_AddingExtensionSucceeded") <= 0, "TeamServicesAgent should not have been added since there are no VMs");
+            assert(tr.stdout.indexOf("loc_mock_VMDetailsFetchSucceeded") <= 0, "VM details should not have been fetched since there are no VMs");
             done();
         }
         catch (error) {
@@ -77,7 +77,7 @@ describe('Azure Resource Group Deployment', function () {
     });
     it("Started stopped vm and installed extension", (done) => {
         let tp = path.join(__dirname, "addVSTSExtension.js");
-        process.env["action"] = "Create or update resource group";
+        process.env["action"] = "Create Or Update Resource Group";
         process.env["resourceGroupName"] = "StoppedVM";
         process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
         process.env["copyAzureVMTags"] = "true";
@@ -106,7 +106,7 @@ describe('Azure Resource Group Deployment', function () {
     });
     it("Task Failed when a vm was transitioning", (done) => {
         let tp = path.join(__dirname, "addVSTSExtension.js");
-        process.env["action"] = "Create or update resource group";
+        process.env["action"] = "Create Or Update Resource Group";
         process.env["resourceGroupName"] = "TransitioningVM";
         process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
         process.env["copyAzureVMTags"] = "true";
@@ -134,7 +134,7 @@ describe('Azure Resource Group Deployment', function () {
     });
     it("Tags not copied when option not checked", (done) => {
         let tp = path.join(__dirname, "addVSTSExtension.js");
-        process.env["action"] = "Create or update resource group";
+        process.env["action"] = "Create Or Update Resource Group";
         process.env["resourceGroupName"] = "dummy";
         process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
         process.env["copyAzureVMTags"] = "false";
@@ -162,7 +162,7 @@ describe('Azure Resource Group Deployment', function () {
     });
     it("Successfully added Team Services Agent Extension on VM - Select RG", (done) => {
         let tp = path.join(__dirname, "addVSTSExtension.js");
-        process.env["action"] = "Select resource group";
+        process.env["action"] = "Select Resource Group";
         process.env["resourceGroupName"] = "dummy";
         process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
         process.env["copyAzureVMTags"] = "true";
@@ -187,7 +187,7 @@ describe('Azure Resource Group Deployment', function () {
     });
     it("Successfully added Team Services Agent Linux Extension on Linux VM", (done) => {
         let tp = path.join(__dirname, "addVSTSExtension.js");
-        process.env["action"] = "Create or update resource group";
+        process.env["action"] = "Create Or Update Resource Group";
         process.env["resourceGroupName"] = "NonWindowsVM";
         process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
         process.env["copyAzureVMTags"] = "true";
@@ -213,7 +213,7 @@ describe('Azure Resource Group Deployment', function () {
     });
     it("Did not add Team Services Agent Extension on VM when option not specified", (done) => {
         let tp = path.join(__dirname, "addVSTSExtension.js");
-        process.env["action"] = "Create or update resource group";
+        process.env["action"] = "Create Or Update Resource Group";
         process.env["resourceGroupName"] = "dummy";
         process.env["enableDeploymentPrerequisites"] = "ConfigureVMwithWinRM";
         process.env["copyAzureVMTags"] = "true";
@@ -320,7 +320,6 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    /*
     it('Successfully triggered createOrUpdate deployment', (done) => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
         process.env["csmFile"] = "\\CSM.json";
@@ -924,5 +923,5 @@ describe('Azure Resource Group Deployment', function () {
             console.log("STDOUT", tr.stdout);
             done(error);
         }
-    });*/
+    });
 });

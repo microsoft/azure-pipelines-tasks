@@ -20,6 +20,8 @@ tr.setInput("copyAzureVMTags", process.env["copyAzureVMTags"]);
 tr.setInput("vstsPATToken", "PAT");
 tr.setInput("outputVariable", process.env["outputVariable"]);
 
+process.env["__mg__internal__collection__uri"] = "https://testking123.visualstudio.com";
+process.env["__mg__internal__project__name"] = "AzureProj";
 
 process.env[ "ENDPOINT_AUTH_AzureRM"] = "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_DATA_AzureRM_SUBSCRIPTIONID"] = "sId";
