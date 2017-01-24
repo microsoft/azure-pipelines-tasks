@@ -10,7 +10,7 @@ Azure App Service Manage incorporates third party material from the projects lis
 3.	concat-map  (https://github.com/substack/node-concat-map)
 4.	minimatch (https://github.com/isaacs/minimatch)
 5.	Mockery (https://github.com/mfncooper/mockery)
-6.  Node.js  (https://nodejs.org/)
+6.	Node.js  (https://nodejs.org/)
 7.	node-uuid (https://github.com/broofa/node-uuid/)
 8.	Q (https://github.com/kriskowal/q)
 9.	sax js (https://github.com/isaacs/sax-js)
