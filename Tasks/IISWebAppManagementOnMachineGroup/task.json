@@ -4,7 +4,7 @@
 	"friendlyName": "IIS Web App Manage On Machine Group",
 	"description": "Create or update a Website and an App Pool on an IIS using machine group",
 	"author": "Microsoft Corporation",
-	"helpMarkDown": "Replace with markdown to show in help",
+	"helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=839731)",
 	"category": "Deploy",
 	"visibility": [
 		"Release", 
