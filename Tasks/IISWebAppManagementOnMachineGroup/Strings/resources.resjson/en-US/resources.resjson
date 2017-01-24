@@ -49,8 +49,6 @@
   "loc.input.label.AppPoolUsername": "Username",
   "loc.input.label.AppPoolPassword": "Password",
   "loc.input.help.AppPoolPassword": "If you are using a gMSA, this is not required.",
-  "loc.input.label.AppCmdCommands": "Additional appCmd.exe commands",
-  "loc.input.help.AppCmdCommands": "Enter additional AppCmd.exe commands to set the website or the application pool properties. For more than one command use a line separator, like <br/> list apppools <br/> list sites<br/> recycle apppool /apppool.name:ExampleAppPoolName",
-  "loc.input.label.DeployInParallel": "Deploy in parallel",
-  "loc.input.help.DeployInParallel": "Select the option to deploy the website in-parallel on the target machines."
+  "loc.input.label.AppCmdCommands": "Additional AppCmd.exe commands",
+  "loc.input.help.AppCmdCommands": "Enter additional AppCmd.exe commands to set the website or the application pool properties. For more than one command use a line separator, like <br/> list apppools <br/> list sites<br/> recycle apppool /apppool.name:ExampleAppPoolName"
 }

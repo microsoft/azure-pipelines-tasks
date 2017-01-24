@@ -1,6 +1,6 @@
 {
   "id": "1b2aec60-dc49-11e6-9b76-63056e018cac",
-  "name": "IISWebAppManagement",
+  "name": "IISWebAppManagementOnMachineGroup",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
@@ -288,20 +288,11 @@
       "groupName": "advanced",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.AppCmdCommands"
-    },
-    {
-      "name": "DeployInParallel",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.DeployInParallel",
-      "defaultValue": "true",
-      "required": false,
-      "groupName": "advanced",
-      "helpMarkDown": "ms-resource:loc.input.help.DeployInParallel"
     }
   ],
   "execution": {
     "PowerShell3": {
-      "target": "IISWebAppManagement.ps1"
+      "target": "IISWebAppManagementOnMachineGroup.ps1"
     }
   }
 }

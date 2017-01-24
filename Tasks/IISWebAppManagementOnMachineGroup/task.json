@@ -1,6 +1,6 @@
 {
 	"id": "1b2aec60-dc49-11e6-9b76-63056e018cac",
-	"name": "IISWebAppManagement",
+	"name": "IISWebAppManagementOnMachineGroup",
 	"friendlyName": "IIS Web App Manage On Machine Group",
 	"description": "Create or update a Website and an App Pool on an IIS using machine group",
 	"author": "Microsoft Corporation",
@@ -283,25 +283,16 @@
 		{
 			"name": "AppCmdCommands",
 			"type": "multiLine",
-			"label": "Additional appCmd.exe commands",
+			"label": "Additional AppCmd.exe commands",
 			"required": false,
 			"groupName": "advanced",
 			"defaultValue": "",
 			"helpMarkDown": "Enter additional AppCmd.exe commands to set the website or the application pool properties. For more than one command use a line separator, like <br/> list apppools <br/> list sites<br/> recycle apppool /apppool.name:ExampleAppPoolName"
-		},
-		{
-			"name": "DeployInParallel",
-			"type": "boolean",
-			"label": "Deploy in parallel",
-			"defaultValue": "true",
-			"required": false,
-			"groupName": "advanced",
-			"helpMarkDown": "Select the option to deploy the website in-parallel on the target machines."
 		}
 	],
 	"execution": {
 		"PowerShell3": {
-			"target": "IISWebAppManagement.ps1"
+			"target": "IISWebAppManagementOnMachineGroup.ps1"
 		}
 	}
 }
