@@ -147,13 +147,13 @@ function Get-SqlPackageCommandArguments
 
         if($sqlUsername)
         {
-            if($serverName)
+            if ($serverName)
             {
                $serverNameSplittedArgs = $serverName.Trim().Split(".")
-               if($serverNameSplittedArgs.Length -gt 0)
+               if ($serverNameSplittedArgs.Length -gt 0)
                {
                     $sqlServerFirstName = $serverNameSplittedArgs[0]
-                    if((-not $sqlUsername.Trim().Contains("@" + $sqlServerFirstName)) -and $sqlUsername.Contains('@'))
+                    if ((-not $sqlUsername.Trim().Contains("@" + $sqlServerFirstName)) -and $sqlUsername.Contains('@'))
                     {
                         $sqlUsername = $sqlUsername + "@" + $serverName 
                     }
