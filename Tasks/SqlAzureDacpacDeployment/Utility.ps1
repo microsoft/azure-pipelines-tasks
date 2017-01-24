@@ -149,15 +149,15 @@ function Get-SqlPackageCommandArguments
         {
             if ($serverName)
             {
-               $serverNameSplittedArgs = $serverName.Trim().Split(".")
-               if ($serverNameSplittedArgs.Length -gt 0)
-               {
+                $serverNameSplittedArgs = $serverName.Trim().Split(".")
+                if ($serverNameSplittedArgs.Length -gt 0)
+                {
                     $sqlServerFirstName = $serverNameSplittedArgs[0]
                     if ((-not $sqlUsername.Trim().Contains("@" + $sqlServerFirstName)) -and $sqlUsername.Contains('@'))
                     {
                         $sqlUsername = $sqlUsername + "@" + $serverName 
                     }
-               }
+                }
             }
 
             $sqlPackageArguments += @($SqlPackageOptions.TargetUser + "`"$sqlUsername`"")
