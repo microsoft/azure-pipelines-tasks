@@ -373,6 +373,7 @@
     "DeletionSucceeded": "ms-resource:loc.messages.DeletionSucceeded",
     "AdditionFailed": "ms-resource:loc.messages.AdditionFailed",
     "DeletionFailed": "ms-resource:loc.messages.DeletionFailed",
+    "DeleteAgentManually": "ms-resource:loc.messages.DeleteAgentManually",
     "MGAgentOperationOnAllVMsFailed": "ms-resource:loc.messages.MGAgentOperationOnAllVMsFailed",
     "MGAgentAddedOnAllVMs": "ms-resource:loc.messages.MGAgentAddedOnAllVMs",
     "MGAgentDeletedFromAllVMs": "ms-resource:loc.messages.MGAgentDeletedFromAllVMs",

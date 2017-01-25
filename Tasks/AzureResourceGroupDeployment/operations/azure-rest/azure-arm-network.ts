@@ -212,7 +212,7 @@ export class loadBalancers {
                         // Generate Error
                         deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
                     }
-                })
+                }, (error) => deferred.reject(error))
             }
             return deferred.promise;
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
@@ -438,7 +438,7 @@ export class NetworkInterfaces {
                     else {
                         deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
                     }
-                });
+                }, (error) => deferred.reject(error));
             }
             return deferred.promise;
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
@@ -551,7 +551,7 @@ export class securityRules {
                     else {
                         deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
                     }
-                });
+                }, (error) => deferred.reject(error));
             }
             return deferred.promise;
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
