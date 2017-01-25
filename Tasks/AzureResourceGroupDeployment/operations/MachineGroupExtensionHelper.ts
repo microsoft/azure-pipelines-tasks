@@ -129,6 +129,12 @@ export class MachineGroupExtensionHelper {
         });
     }
 
+    private deleteFailedExtension(vm: az.VM): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.deleteExtensionFromSingleVM(vm).then(resolve, resolve);
+        });
+    }
+
     private addExtensionOnRunningVm(vm: az.VM): Promise<any> {
         return new Promise((resolve, reject) => {
             var vmName = vm.name;
@@ -136,14 +142,14 @@ export class MachineGroupExtensionHelper {
             var extensionName = extensionParameters["extensionName"];
             var parameters = extensionParameters["parameters"];
             this.computeClient.virtualMachineExtensions.get(this.taskParameters.resourceGroupName, vmName, extensionName, null, async (error, result: az.VMExtension, request, response) => {
-                if (result && result.properties.provisioningState == "Failed") {
-                    await this.deleteExtensionFromSingleVM(vm);
+                if (result && result.properties.provisioningState === "Failed") {
+                    await this.deleteFailedExtension(vm);
                 }
                 console.log(tl.loc("AddExtension", extensionName, vmName));
                 this.computeClient.virtualMachineExtensions.createOrUpdate(this.taskParameters.resourceGroupName, vmName, extensionName, parameters, async (error, result, request, response) => {
                     if (error) {
                         console.log(tl.loc("AddingExtensionFailed", extensionName, vmName, utils.getError(error)));
-                        await this.deleteExtensionFromSingleVM(vm);
+                        await this.deleteFailedExtension(vm);
                         return reject();
                     }
                     console.log(tl.loc("AddingExtensionSucceeded", extensionName, vmName));
