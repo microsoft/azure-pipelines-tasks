@@ -42,6 +42,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "which": {
         "xcodebuild": "/home/bin/xcodebuild",
         "security": "/usr/bin/security",
+        "openssl": "/usr/bin/openssl",
         "/usr/libexec/PlistBuddy": "/usr/libexec/PlistBuddy",
         "rm": "/bin/rm",
         "cp": "/bin/cp"
@@ -49,6 +50,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "checkPath" : {
         "/home/bin/xcodebuild": true,
         "/usr/bin/security": true,
+        "/usr/bin/openssl": true,
         "/usr/libexec/PlistBuddy": true,
         "/bin/rm": true,
         "/bin/cp": true
@@ -125,7 +127,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "1) 5229BFC905F473E52FAD51208174528106966930 \"iPhone Developer: XcodeTask Tester (HE432Y3E2Q)\"\n 1 valid identities found"
         },
-        "/usr/bin/security cms -D -i /user/build/testuuid.mobileprovision": {
+        "/usr/bin/openssl smime -inform der -verify -noverify -in /user/build/testuuid.mobileprovision": {
             "code": 0,
             "stdout": "prov profile details here"
         },
