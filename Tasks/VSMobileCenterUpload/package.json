@@ -23,6 +23,6 @@
     "glob": "^7.0.6"
   },
   "devDependencies": {
-    "nock": "9.0.2"
+
   }
 }
