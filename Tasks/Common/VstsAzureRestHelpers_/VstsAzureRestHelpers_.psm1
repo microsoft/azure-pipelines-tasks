@@ -40,25 +40,22 @@ function Get-ProxyUri
 {
     param([String] [Parameter(Mandatory=$true)] $serverUrl)
     
-    $proxyUri = (Get-Item env:AGENT_PROXYURL).value
-    Write-Verbose -Verbose ("Reading proxy from .proxy file. Proxy url specified={0}" -f $proxyUri)
-    $proxyCreds = [pscredential]$null
+    $proxyUri = [System.Uri]($env:AGENT_PROXYURL)
+    Write-Verbose -Verbose ("Reading proxy from the AGENT_PROXYURL environment variable. Proxy url specified={0}" -f $proxyUri.OriginalString)
 
-    if($proxyUri)
-    {
-        return [System.Uri]$proxyUri
-    }
-    else
+    if($proxyUri -eq $null)
     {
         $proxy = [System.Net.WebRequest]::GetSystemWebProxy()
-        if ($proxy)
-        {
-            $proxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
-            $proxyUri = $proxy.GetProxy("$serverUrl")
-            Write-Verbose -Verbose ("Reading proxy from IE. Proxy url specified={0}" -f $proxyUri.OriginalString)
-            return $proxyUri
-        }  
+        $proxyUri = $proxy.GetProxy("$serverUrl")
+        Write-Verbose -Verbose ("Reading proxy from IE. Proxy url specified={0}" -f $proxyUri.OriginalString)
     }
+
+    if($serverUrl -like "*$($proxyUri.Host)*")
+    {
+        return $null
+    }
+
+    return $proxyUri
 }
 
 # Check if Azure connection type is classic or not.
@@ -162,7 +159,7 @@ function Get-SpnAccessToken {
     try
     {
         $proxyUri = Get-ProxyUri $authUri
-        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($authUri -like "*$($proxyUri.Host)*"))
+        if ($proxyUri -eq $null)
         {
             Write-Verbose "No proxy settings"
             $accessToken = Invoke-RestMethod -Uri $authUri -Method $method -Body $body -ContentType $script:formContentType
@@ -177,6 +174,8 @@ function Get-SpnAccessToken {
     }
     catch
     {
+        $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Verbose "ExceptionMessage: $exceptionMessage (in function: Get-SpnAccessToken)"
         throw (Get-VstsLocString -Key AZ_SpnAccessTokenFetchFailure -ArgumentList $tenantId)
     }
 }
@@ -211,7 +210,7 @@ function Get-AzStorageKeys
         $certificate = Get-Certificate $endpoint
 
         $proxyUri = Get-ProxyUri $uri
-        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($uri -like "*$($proxyUri.Host)*"))
+        if ($proxyUri -eq $null)
         {
             $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate
             Write-Verbose "No Proxy settings"
@@ -252,7 +251,7 @@ function Get-AzRMStorageKeys
         $headers = @{"Authorization" = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
         $proxyUri = Get-ProxyUri $uri
-        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($uri -like "*$($proxyUri.Host)*"))
+        if ($proxyUri -eq $null)
         {
             $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
             Write-Verbose "No Proxy settings"
@@ -294,7 +293,7 @@ function Get-AzRmVmCustomScriptExtension
         $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
 
         $proxyUri = Get-ProxyUri $uri
-        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($uri -like "*$($proxyUri.Host)*"))
+        if ($proxyUri -eq $null)
         {
             $customScriptExt=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
             Write-Verbose "No proxy settings"
@@ -336,7 +335,7 @@ function Remove-AzRmVmCustomScriptExtension
         $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
 
         $proxyUri = Get-ProxyUri $uri
-        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($uri -like "*$($proxyUri.Host)*"))
+        if ($proxyUri -eq $null)
         {
             $response=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
             Write-Verbose "No proxy settings"
@@ -375,7 +374,7 @@ function Get-AzStorageAccount
         $certificate = Get-Certificate $endpoint
 
         $proxyUri = Get-ProxyUri $uri
-        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($uri -like "*$($proxyUri.Host)*"))
+        if ($proxyUri -eq $null)
         {
             $storageAccount=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate
             Write-Verbose "No Proxy settings"
@@ -416,7 +415,7 @@ function Get-AzRmStorageAccount
 
         $storageAccountUnformatted = $null
         $proxyUri = Get-ProxyUri $uri
-        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($uri -like "*$($proxyUri.Host)*"))
+        if ($proxyUri -eq $null)
         {
             $storageAccountUnformatted=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
             Write-Verbose "No Proxy settings"
@@ -469,8 +468,7 @@ function Get-AzRmResourceGroup
         $headers = @{"Authorization" = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
         $proxyUri = Get-ProxyUri $uri
-
-        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($uri -like "*$($proxyUri.Host)*"))
+        if ($proxyUri -eq $null)
         {
             $resourceGroup=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
             Write-Verbose "No Proxy settings"
@@ -722,6 +720,7 @@ function Remove-AzureSqlDatabaseServerFirewallRule
 
 function Parse-Exception($exception){
     if($exception) {
+        Write-Verbose "Exception message - $($exception.ToString())"
         $response = $exception.Response
         if($response) {
             $responseStream =  $response.GetResponseStream()
@@ -731,7 +730,22 @@ function Parse-Exception($exception){
             $responseBody = $streamReader.ReadToEnd()
             $streamReader.Close()
             Write-Verbose "Exception message extracted from response $responseBody"
-            return $responseBody
+            $exceptionMessage = "";
+            try
+            {
+                if($responseBody)
+                {
+                    $exceptionJson = $responseBody | ConvertFrom-Json
+                    $exceptionMessage = $exceptionJson.Message
+                }
+            }
+            catch{
+                $exceptionMessage = $responseBody
+            }
+            if($response.statusCode -eq 404 -or (-not $exceptionMessage)){
+                $exceptionMessage += " Please verify request URL : $($response.ResponseUri)" 
+            }
+            return $exceptionMessage
         }
     }
     return $null
