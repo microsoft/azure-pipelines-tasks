@@ -8,13 +8,14 @@ $applicationPackagePath = "random package path"
 $serviceConnectionName = "random connection name"
 $serviceFabricSdkModulePath = "$PSScriptRoot\data\ServiceFabricSDK.ps1"
 $appName = "AppName"
+$overwriteBehavior = "SameAppTypeAndVersion"
 
 # Setup input arguments
 Register-Mock Get-VstsInput { $publishProfilePath } -- -Name publishProfilePath
 Register-Mock Get-VstsInput { $applicationPackagePath } -- -Name applicationPackagePath -Require
 Register-Mock Get-VstsInput { $serviceConnectionName } -- -Name serviceConnectionName -Require
 Register-Mock Get-VstsInput { "false" } -- -Name compressPackage
-Register-Mock Get-VstsInput { "SameAppTypeAndVersion" } -- -Name overwriteBehavior
+Register-Mock Get-VstsInput { $overwriteBehavior } -- -Name overwriteBehavior
 
 # Setup file resolution
 Register-Mock Find-VstsFiles { $publishProfilePath } -- -LegacyPattern $publishProfilePath
@@ -44,7 +45,7 @@ Register-Mock Get-ApplicationNameFromApplicationParameterFile { $appName } -- "$
 
 # Indicate that the application does not exist on cluster
 Register-Mock Get-ServiceFabricApplication { $null } -- -ApplicationName $appName
-$publishArgs = @("-ApplicationParameterFilePath:", "$PSScriptRoot\data\ApplicationParameters.xml", "-OverwriteBehavior:", "SameAppTypeAndVersion", "-ApplicationPackagePath:", $applicationPackagePath, "-ErrorAction:", "Stop", "-Action:", "RegisterAndCreate")
+$publishArgs = @("-ApplicationParameterFilePath:", "$PSScriptRoot\data\ApplicationParameters.xml", "-OverwriteBehavior:", $overwriteBehavior, "-ApplicationPackagePath:", $applicationPackagePath, "-ErrorAction:", "Stop", "-Action:", "RegisterAndCreate")
 Register-Mock Publish-NewServiceFabricApplication -Arguments $publishArgs
 
 # Act

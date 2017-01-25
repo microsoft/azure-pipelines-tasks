@@ -181,7 +181,7 @@ try {
         Publish-UpgradedServiceFabricApplication @publishParameters
     }
     else
-    {        
+    {
         $publishParameters['Action'] = "RegisterAndCreate"
         $publishParameters['OverwriteBehavior'] = Get-VstsInput -Name overwriteBehavior
 
