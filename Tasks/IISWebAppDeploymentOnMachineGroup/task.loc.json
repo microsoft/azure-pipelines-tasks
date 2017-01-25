@@ -16,11 +16,16 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 6
   },
   "demands": [],
-  "minimumAgentVersion": "1.102.0",
+  "minimumAgentVersion": "2.104.1",
   "groups": [
+    {
+      "name": "FileTransformsAndVariableSubstitution",
+      "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
+      "isExpanded": false
+    },
     {
       "name": "advanceDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.advanceDeploymentOptions",
@@ -96,6 +101,33 @@
       "defaultValue": "",
       "groupName": "advanceDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
+    },
+    {
+      "name": "XmlTransformation",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.XmlTransformation",
+      "required": false,
+      "defaultValue": false,
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": "ms-resource:loc.input.help.XmlTransformation"
+    },
+    {
+      "name": "XmlVariableSubstitution",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.XmlVariableSubstitution",
+      "required": false,
+      "defaultValue": false,
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": "ms-resource:loc.input.help.XmlVariableSubstitution"
+    },
+    {
+      "name": "JSONFiles",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.JSONFiles",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "FileTransformsAndVariableSubstitution",
+      "helpMarkDown": "ms-resource:loc.input.help.JSONFiles"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -106,6 +138,10 @@
   },
   "messages": {
     "SetParamFilenotfound0": "ms-resource:loc.messages.SetParamFilenotfound0",
+    "XDTTransformationsappliedsuccessfully": "ms-resource:loc.messages.XDTTransformationsappliedsuccessfully",
+    "CannotPerformXdtTransformationOnNonWindowsPlatform": "ms-resource:loc.messages.CannotPerformXdtTransformationOnNonWindowsPlatform",
+    "XMLvariablesubstitutionappliedsuccessfully": "ms-resource:loc.messages.XMLvariablesubstitutionappliedsuccessfully",
+    "JSONvariablesubstitutionappliedsuccessfully": "ms-resource:loc.messages.JSONvariablesubstitutionappliedsuccessfully",
     "Successfullyupdateddeploymenthistory": "ms-resource:loc.messages.Successfullyupdateddeploymenthistory",
     "Failedtoupdatedeploymenthistory": "ms-resource:loc.messages.Failedtoupdatedeploymenthistory",
     "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "ms-resource:loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite",
@@ -133,6 +169,15 @@
     "UnabletofindthelocationofMSDeployfromregistryonmachineError": "ms-resource:loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError",
     "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern",
     "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "ms-resource:loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern",
-    "Trytodeploywebappagainwithappofflineoptionselected": "ms-resource:loc.messages.Trytodeploywebappagainwithappofflineoptionselected"
+    "Trytodeploywebappagainwithappofflineoptionselected": "ms-resource:loc.messages.Trytodeploywebappagainwithappofflineoptionselected",
+    "Configfiledoesntexists": "ms-resource:loc.messages.Configfiledoesntexists",
+    "Failedtowritetoconfigfilewitherror": "ms-resource:loc.messages.Failedtowritetoconfigfilewitherror",
+    "NOJSONfilematchedwithspecificpattern": "ms-resource:loc.messages.NOJSONfilematchedwithspecificpattern",
+    "JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "ms-resource:loc.messages.JSONvariablesubstitutioncanonlybeappliedforJSONfiles",
+    "JSONParseError": "ms-resource:loc.messages.JSONParseError",
+    "XdtTransformationErrorWhileTransforming": "ms-resource:loc.messages.XdtTransformationErrorWhileTransforming",
+    "EncodeNotSupported": "ms-resource:loc.messages.EncodeNotSupported",
+    "UnknownFileEncodeError": "ms-resource:loc.messages.UnknownFileEncodeError",
+    "ShortFileBufferError": "ms-resource:loc.messages.ShortFileBufferError"
   }
 }

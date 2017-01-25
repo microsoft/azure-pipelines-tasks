@@ -4,6 +4,7 @@ import fs = require('fs');
 
 var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
 var utility = require('webdeployment-common/utility.js');
+var fileTransformationsUtility = require('webdeployment-common/fileTransformationsUtility.js');
 
 async function run()
 {
@@ -18,7 +19,11 @@ async function run()
 		var excludeFilesFromAppDataFlag: boolean = tl.getBoolInput('ExcludeFilesFromAppDataFlag', false);
 		var takeAppOfflineFlag: boolean = tl.getBoolInput('TakeAppOfflineFlag', false);
 		var additionalArguments: string = tl.getInput('AdditionalArguments', false);
+		var xmlTransformation: boolean = tl.getBoolInput('XmlTransformation', false);
+		var JSONFiles = tl.getDelimitedInput('JSONFiles', '\n', false);
+		var xmlVariableSubstitution: boolean = tl.getBoolInput('XmlVariableSubstitution', false);		
 		var availableWebPackages = utility.findfiles(webDeployPkg);
+        var tempPackagePath = null;
 
 		if(availableWebPackages.length == 0)
 		{
@@ -32,6 +37,13 @@ async function run()
 		webDeployPkg = availableWebPackages[0];
 
 		var isFolderBasedDeployment = await utility.isInputPkgIsFolder(webDeployPkg);
+
+        if ( JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution ) {
+
+            var output = await fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, webDeployPkg);
+            tempPackagePath = output.tempPackagePath;
+            webDeployPkg = output.webDeployPkg;
+		}		
 		
 		await msDeploy.DeployUsingMSDeploy(webDeployPkg, webSiteName, null, removeAdditionalFilesFlag,
                         excludeFilesFromAppDataFlag, takeAppOfflineFlag, virtualApplication, setParametersFile,

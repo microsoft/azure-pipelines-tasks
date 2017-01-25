@@ -266,7 +266,7 @@ function extractFiles(files: string[]) {
                         // 1 extract compressed tar
                         sevenZipExtract(file, tempFolder);
                         console.log(tl.loc('TempDir', tempFolder));
-                        var tempTar = tempFolder + path.sep + tl.ls(null, [tempFolder])[0]; // should be only one
+                        var tempTar = tempFolder + path.sep + tl.ls('-A', [tempFolder])[0]; // should be only one
                         console.log(tl.loc('DecompressedTempTar', file, tempTar));
                         // 2 expand extracted tar
                         sevenZipExtract(tempTar, destinationFolder);

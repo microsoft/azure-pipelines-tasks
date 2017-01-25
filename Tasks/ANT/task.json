@@ -9,15 +9,15 @@
         "Build",
         "Release"
     ],
-	"runsOn": [
+    "runsOn": [
         "Agent",
         "MachineGroup"
     ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 111,
-        "Patch": 0
+        "Minor": 112,
+        "Patch": 1
     },
     "demands": [
         "ant"
@@ -27,6 +27,11 @@
         {
             "name": "junitTestResults",
             "displayName": "JUnit Test Results",
+            "isExpanded": true
+        },
+        {
+            "name": "codeCoverage",
+            "displayName": "Code Coverage",
             "isExpanded": true
         },
         {

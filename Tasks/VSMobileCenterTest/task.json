@@ -12,7 +12,7 @@
     "version": {
         "Major": 0,
         "Minor": 112,
-        "Patch": 0
+        "Patch": 1
     },
     "groups": [
         {
@@ -23,7 +23,7 @@
         {
             "name": "advanced",
             "displayName": "Advanced",
-            "isExpanded": true 
+            "isExpanded": true
         }
     ],
     "inputs": [
@@ -159,7 +159,7 @@
             "label": "Test Framework",
             "defaultValue": "appium",
             "required": true,
-            "groupName":"prepare",
+            "groupName": "prepare",
             "options": {
                 "appium": "Appium",
                 "expresso": "Expresso",
@@ -168,149 +168,149 @@
             }
         },
         {
-            "name":"artifactsDir",
-            "type":"filePath",
-            "label":"Artifacts Directory",
-            "defaultValue":"$(Build.ArtifactStagingDirectory)/MobileCenterTest",
+            "name": "artifactsDir",
+            "type": "filePath",
+            "label": "Artifacts Directory",
+            "defaultValue": "$(Build.ArtifactStagingDirectory)/MobileCenterTest",
             "required": true,
-            "helpMarkDown":"Where to place the artifacts produced by the prepare step.  This directory will be created if it does not exist.",
-            "groupName":"prepare"
+            "helpMarkDown": "Where to place the artifacts produced by the prepare step.  This directory will be created if it does not exist.",
+            "groupName": "prepare"
         },
         {
-            "name":"appiumBuildDir",
-            "type":"string",
-            "label":"Build Directory",
-            "defaultValue":"",
-            "visibleRule":"framework = appium",
+            "name": "appiumBuildDir",
+            "type": "string",
+            "label": "Build Directory",
+            "defaultValue": "",
+            "visibleRule": "framework = appium",
             "required": true,
-            "helpMarkDown":"Path to directory with Appium tests.",
-            "groupName":"prepare"
+            "helpMarkDown": "Path to directory with Appium tests.",
+            "groupName": "prepare"
         },
         {
-            "name":"expressoBuildDir",
-            "type":"string",
-            "label":"Build Directory",
-            "defaultValue":"",
-            "visibleRule":"framework = expresso",
+            "name": "expressoBuildDir",
+            "type": "string",
+            "label": "Build Directory",
+            "defaultValue": "",
+            "visibleRule": "framework = expresso",
             "required": false,
-            "helpMarkDown":"Path to Espresso output directory.",
-            "groupName":"prepare"
+            "helpMarkDown": "Path to Espresso output directory.",
+            "groupName": "prepare"
         },
         {
-            "name":"expressoTestApkPath",
-            "type":"string",
-            "label":"Test APK Path",
-            "defaultValue":"",
-            "visibleRule":"framework = expresso",
+            "name": "expressoTestApkPath",
+            "type": "string",
+            "label": "Test APK Path",
+            "defaultValue": "",
+            "visibleRule": "framework = expresso",
             "required": false,
-            "helpMarkDown":"Path to APK file with Espresso tests. If not set, build-dir is used to discover it. Wildcard is allowed.",
-            "groupName":"prepare"
+            "helpMarkDown": "Path to APK file with Espresso tests. If not set, build-dir is used to discover it. Wildcard is allowed.",
+            "groupName": "prepare"
         },
         {
-            "name":"calabashProjectDir",
-            "type":"string",
-            "label":"Project Directory",
-            "defaultValue":"",
-            "visibleRule":"framework = calabash",
+            "name": "calabashProjectDir",
+            "type": "string",
+            "label": "Project Directory",
+            "defaultValue": "",
+            "visibleRule": "framework = calabash",
             "required": true,
-            "helpMarkDown":"Path to Calabash workspace directory.",
-            "groupName":"prepare"
+            "helpMarkDown": "Path to Calabash workspace directory.",
+            "groupName": "prepare"
         },
         {
-            "name":"calabashConfigFile",
-            "type":"filePath",
-            "label":"Cucumber Config File",
-            "defaultValue":"",
-            "visibleRule":"framework = calabash",
+            "name": "calabashConfigFile",
+            "type": "filePath",
+            "label": "Cucumber Config File",
+            "defaultValue": "",
+            "visibleRule": "framework = calabash",
             "required": false,
-            "helpMarkDown":"Path to Cucumber configuration file, usually cucumber.yml.",
-            "groupName":"prepare"
+            "helpMarkDown": "Path to Cucumber configuration file, usually cucumber.yml.",
+            "groupName": "prepare"
         },
         {
-            "name":"calabashProfile",
-            "type":"string",
-            "label":"Profile to run",
-            "defaultValue":"",
-            "visibleRule":"framework = calabash",
+            "name": "calabashProfile",
+            "type": "string",
+            "label": "Profile to run",
+            "defaultValue": "",
+            "visibleRule": "framework = calabash",
             "required": false,
-            "helpMarkDown":"Profile to run.  This value must exists in the Cucumber configuration file.",
-            "groupName":"prepare"
+            "helpMarkDown": "Profile to run.  This value must exists in the Cucumber configuration file.",
+            "groupName": "prepare"
         },
         {
-            "name":"calabashSkipConfigCheck",
-            "type":"boolean",
-            "label":"Skip Configuration Check",
+            "name": "calabashSkipConfigCheck",
+            "type": "boolean",
+            "label": "Skip Configuration Check",
             "defaultValue": false,
-            "visibleRule":"framework = calabash",
+            "visibleRule": "framework = calabash",
             "required": false,
-            "helpMarkDown":"Force running without Cucumber profile.",
-            "groupName":"prepare"
+            "helpMarkDown": "Force running without Cucumber profile.",
+            "groupName": "prepare"
         },
         {
-            "name":"uitestBuildDir",
-            "type":"string",
-            "label":"Build Directory",
-            "defaultValue":"",
-            "visibleRule":"framework = uitest",
+            "name": "uitestBuildDir",
+            "type": "string",
+            "label": "Build Directory",
+            "defaultValue": "",
+            "visibleRule": "framework = uitest",
             "required": true,
-            "helpMarkDown":"Path to directory with built test assemblies.",
-            "groupName":"prepare"
+            "helpMarkDown": "Path to directory with built test assemblies.",
+            "groupName": "prepare"
         },
         {
-            "name":"uitestStoreFile",
-            "type":"string",
-            "label":"Store File",
-            "defaultValue":"",
-            "visibleRule":"framework = uitest",
+            "name": "uitestStoreFile",
+            "type": "string",
+            "label": "Store File",
+            "defaultValue": "",
+            "visibleRule": "framework = uitest",
             "required": false,
-            "groupName":"prepare"
+            "groupName": "prepare"
         },
         {
-            "name":"uitestStorePass",
-            "type":"string",
-            "label":"Store Password",
-            "defaultValue":"",
-            "visibleRule":"framework = uitest",
+            "name": "uitestStorePass",
+            "type": "string",
+            "label": "Store Password",
+            "defaultValue": "",
+            "visibleRule": "framework = uitest",
             "required": false,
-            "groupName":"prepare"
+            "groupName": "prepare"
         },
         {
-            "name":"uitestKeyAlias",
-            "type":"string",
-            "label":"Key Alias",
-            "defaultValue":"",
-            "visibleRule":"framework = uitest",
+            "name": "uitestKeyAlias",
+            "type": "string",
+            "label": "Key Alias",
+            "defaultValue": "",
+            "visibleRule": "framework = uitest",
             "required": false,
-            "groupName":"prepare"
+            "groupName": "prepare"
         },
         {
-            "name":"uitestKeyPass",
-            "type":"string",
-            "label":"Key Password",
-            "defaultValue":"",
-            "visibleRule":"framework = uitest",
+            "name": "uitestKeyPass",
+            "type": "string",
+            "label": "Key Password",
+            "defaultValue": "",
+            "visibleRule": "framework = uitest",
             "required": false,
-            "groupName":"prepare"
+            "groupName": "prepare"
         },
         {
-            "name":"uitestToolsDir",
-            "type":"string",
-            "label":"Test Tools Directory",
-            "defaultValue":"",
-            "visibleRule":"framework = uitest",
-            "helpMarkDown":"Path to directory with Xamarin UI Tets tools that contains test-cloud.exe.",
+            "name": "uitestToolsDir",
+            "type": "string",
+            "label": "Test Tools Directory",
+            "defaultValue": "",
+            "visibleRule": "framework = uitest",
+            "helpMarkDown": "Path to directory with Xamarin UI Tets tools that contains test-cloud.exe.",
             "required": false,
-            "groupName":"prepare"
+            "groupName": "prepare"
         },
         {
-            "name":"signInfo",
-            "type":"string",
-            "label":"Signing Information",
-            "defaultValue":"",
-            "visibleRule":"framework = calabash || framework = uitest",
+            "name": "signInfo",
+            "type": "string",
+            "label": "Signing Information",
+            "defaultValue": "",
+            "visibleRule": "framework = calabash || framework = uitest",
             "required": false,
-            "helpMarkDown":"Use Signing Infor for signing the test server.",
-            "groupName":"prepare"
+            "helpMarkDown": "Use Signing Infor for signing the test server.",
+            "groupName": "prepare"
         },
         {
             "name": "prepareOpts",
@@ -319,7 +319,7 @@
             "required": false,
             "defaultValue": "",
             "helpMarkDown": "Additional arguments passed to mobile-center test prepare step.",
-            "groupName":"prepare"
+            "groupName": "prepare"
         },
         {
             "name": "cliLocationOverride",
@@ -327,7 +327,7 @@
             "label": "mobile-center CLI Location",
             "groupName": "advanced",
             "defaultValue": "",
-            "required": false 
+            "required": false
         },
         {
             "name": "opts",

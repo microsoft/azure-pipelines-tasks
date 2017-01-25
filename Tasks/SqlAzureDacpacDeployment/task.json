@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 4
+        "Patch": 7
     },
     "demands": [
         "sqlpackage"

@@ -5,6 +5,6 @@
   "loc.instanceNameFormat": "Intervención manual",
   "loc.input.label.instructions": "Instrucciones",
   "loc.input.help.instructions": "Estas instrucciones se mostrarán al usuario para reanudar o rechazar la intervención manual. En función de ellas, el usuario tomará una decisión informada sobre esta intervención manual.",
-  "loc.input.label.emailRecipients": "Notify users",
-  "loc.input.help.emailRecipients": "Send a manual intervention pending email to specific users (or groups). Only users with manage deployment permission can act on a manual intervention."
+  "loc.input.label.emailRecipients": "Notificar a los usuarios",
+  "loc.input.help.emailRecipients": "Envíe un correo electrónico de intervención manual pendiente a usuarios (o grupos) específicos. Solo los usuarios con permiso para administrar implementación pueden realizar una intervención manual."
 }

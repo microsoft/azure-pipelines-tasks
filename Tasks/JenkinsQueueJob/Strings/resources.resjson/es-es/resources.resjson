@@ -16,5 +16,5 @@
   "loc.input.help.parameterizedJob": "Seleccione si el trabajo de Jenkins acepta parámetros. Debe seleccionarse incluso cuando se usan todos los valores de parámetros predeterminados y no se especifican parámetros realmente.",
   "loc.input.label.jobParameters": "Parámetros del trabajo",
   "loc.input.help.jobParameters": "Especifique los parámetros del trabajo, uno por línea, con el formato <b>`<nombreDeParámetro>=<valorDeParámetro>`</b><p>Para establecer un parámetro en un valor vacío (útil cuando se quiere invalidar el valor predeterminado), no incluya el valor del parámetro. Por ejemplo, especifique <b>`<nombreDeParámetro>=`</b><p>Se admiten variables. Por ejemplo, para establecer el parámetro <b>`commitId`</b> en <b>`git commit ID`</b> para la compilación, use: <b>`commitId=$(Build.SourceVersion)`</b>. Consulte la [documentación sobre variables](https://www.visualstudio.com/docs/build/define/variables) para más información.<p>Los tipos de parámetros de Jenkins admitidos son: <ul><li>`Boolean`</li><li>`Choice`</li><li>`Password`</li><li>`String`</li></ul>",
-  "loc.messages.JenkinsJobQueued": "Jenkins job queued"
+  "loc.messages.JenkinsJobQueued": "El trabajo de Jenkins se puso en cola"
 }

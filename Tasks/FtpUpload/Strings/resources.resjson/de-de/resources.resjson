@@ -20,12 +20,12 @@
   "loc.input.help.preservePaths": "Wenn diese Option ausgewählt wird, wird die relative lokale Verzeichnisstruktur unter dem Remoteverzeichnis erneut erstellt, in das Dateien hochgeladen werden. Andernfalls werden Dateien direkt in das Remoteverzeichnis hochgeladen, ohne dass zusätzliche Unterverzeichnisse erstellt werden.<p>Angenommen, der Quellordner ist <b>\"/home/user/source/\"</b>, und er enthält die Datei <b>\"foo/bar/foobar.txt\"</b>. Das Remoteverzeichnis ist <b>\"/uploads/\"</b>.<br>Wenn diese Option ausgewählt wird, wird die Datei in <b>\"/uploads/foo/bar/foobar.txt\"</b> hochgeladen. Andernfalls wird sie in <b>\"/uploads/foobar.txt\"</b> hochgeladen.",
   "loc.input.label.trustSSL": "Serverzertifikat vertrauen",
   "loc.input.help.trustSSL": "Das Auswählen dieser Option führt dazu, dass das SSL-Zertifikat des FTP-Servers mit ftps:// selbst dann als vertrauenswürdig betrachtet wird, wenn es selbstsigniert ist oder nicht von einer Zertifizierungsstelle (CA) überprüft werden kann.",
-  "loc.messages.FTPConnected": "connected: %s",
-  "loc.messages.CleanRemoteDir": "cleaning remote directory: %s",
-  "loc.messages.UploadRemoteDir": "uploading files to remote directory: %s",
-  "loc.messages.UploadSucceedMsg": "FTP upload successful %s",
-  "loc.messages.UploadSucceedRes": "FTP upload successful",
-  "loc.messages.DisconnectHost": "disconnecting from: %s",
-  "loc.messages.Disconnected": "disconnected",
-  "loc.messages.ConnectPort": "connecting to: %s:%s"
+  "loc.messages.FTPConnected": "Verbunden: %s",
+  "loc.messages.CleanRemoteDir": "Das Remoteverzeichnis wird bereinigt: %s",
+  "loc.messages.UploadRemoteDir": "Die Dateien werden in das Remoteverzeichnis hochgeladen: %s",
+  "loc.messages.UploadSucceedMsg": "FTP-Upload erfolgreich: %s",
+  "loc.messages.UploadSucceedRes": "FTP-Upload erfolgreich",
+  "loc.messages.DisconnectHost": "Verbindung wird getrennt: %s",
+  "loc.messages.Disconnected": "Getrennt",
+  "loc.messages.ConnectPort": "Verbindung wird hergestellt mit: %s:%s "
 }

@@ -9,7 +9,7 @@
         "Build",
         "Release"
     ],
-	"runsOn": [
+    "runsOn": [
         "Agent",
         "MachineGroup"
     ],
@@ -17,7 +17,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 2
+        "Patch": 3
     },
     "demands": [],
     "instanceNameFormat": "Securely copy files to the remote machine",

@@ -7,15 +7,15 @@ import fs = require('fs');
 
 describe('AzureRmWebAppDeployment Suite', function() {
      before((done) => {
-        tl.cp(path.join(__dirname, 'L1XmlVarSub/Web.config'), path.join(__dirname, 'L1XmlVarSub/Web_test.config'), null, false);
-        tl.cp(path.join(__dirname, 'L1XmlVarSub/Web.Debug.config'), path.join(__dirname, 'L1XmlVarSub/Web_test.Debug.config'), null, false);
-        tl.cp(path.join(__dirname, 'L0XdtTransform/Web.config'), path.join(__dirname, 'L0XdtTransform/Web_test.config'), null, false);
+        tl.cp(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.config'), path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.config'), null, false);
+        tl.cp(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.Debug.config'), path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.Debug.config'), null, false);
+        tl.cp(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XdtTransform', 'Web.config'), path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XdtTransform', 'Web_test.config'), null, false);
         done();
     });
     after(function() {
-        tl.rmRF(path.join(__dirname, 'L1XmlVarSub/Web_test.config'));
-        tl.rmRF(path.join(__dirname, 'L1XmlVarSub/Web_test.Debug.config'));
-        tl.rmRF(path.join(__dirname, 'L0XdtTransform/Web_test.config'), true);
+        tl.rmRF(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XdtTransform', 'Web_test.config'), true);
+        tl.rmRF(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.config'), true);
+        tl.rmRF(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_Test.Debug.config'), true);
     });
 
     if(tl.osType().match(/^Win/)) {
@@ -33,6 +33,29 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.succeeded, 'task should have succeeded');
             done();
         });
+
+        it('msdeployutility.containsParamFile function runs successfully', (done:MochaDone) => {
+            let tp = path.join(__dirname, 'L0MSDeployUtility.js');
+            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            tr.run();
+            
+            assert(tr.invokedToolCount == 1, 'should have invoked tool once');
+            assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+            assert(tr.succeeded, 'task should have succeeded');
+            done();
+        });
+
+        it('msdeployutility.containsParamFile function fails', (done:MochaDone) => {
+            let tp = path.join(__dirname, 'L0MSDeployUtilityFail.js');
+            let tr = new ttm.MockTestRunner(tp);
+            tr.run();
+            assert(tr.invokedToolCount == 1, 'should have invoked tool once');
+            assert(tr.stderr.length > 0);
+            var expectedErr = "msdeploy failed to execute successfully";
+            assert(tr.stderr.search(expectedErr) >= 0, "should have said: " + expectedErr);
+            done();
+        });        
+
 
         it('Verify logs pushed to Kudu when task runs successfully with default inputs and env variables found', (done) => {
             this.timeout(1000);
@@ -229,14 +252,15 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
             done();
         });
+
         it('Runs successfully with XDT Transformation (L1)', (done:MochaDone) => {
-            let tp = path.join(__dirname, 'L0XdtTransform.js');
+            let tp = path.join(__dirname, "..", "node_modules","webdeployment-common","Tests","L1XdtTransform.js");
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
 
             if(tl.osType().match(/^Win/)) {
-                var resultFile = ltx.parse(fs.readFileSync(path.join(__dirname, 'L0XdtTransform', 'Web_test.config')));
-                var expectFile = ltx.parse(fs.readFileSync(path.join(__dirname, 'L0XdtTransform','Web_Expected.config')));
+                var resultFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XdtTransform', 'Web_test.config')));
+                var expectFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XdtTransform','Web_Expected.config')));
                 assert(ltx.equal(resultFile, expectFile) , 'Should Transform attributes on Web.config');
             }
             else {
@@ -402,26 +426,21 @@ describe('AzureRmWebAppDeployment Suite', function() {
     });
 
     it('Runs successfully with XML variable substitution', (done:MochaDone) => {
-        let tp = path.join(__dirname, 'L0XmlVarSub.js');
+        let tp = path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 		
-        var resultFile = ltx.parse(fs.readFileSync(path.join(__dirname, 'L1XmlVarSub/Web_test.config')));
-        var expectFile = ltx.parse(fs.readFileSync(path.join(__dirname, 'L1XmlVarSub/Web_Expected.config')));
+        var resultFile = ltx.parse(fs.readFileSync(path.join(__dirname,  "..", "node_modules","webdeployment-common","Tests", 'L1XmlVarSub', 'Web_test.config')));
+        var expectFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XmlVarSub', 'Web_Expected.config')));
         assert(ltx.equal(resultFile, expectFile) , 'Should have substituted variables in Web.config file');
-
-        var resultFile = ltx.parse(fs.readFileSync(path.join(__dirname, 'L1XmlVarSub/Web_test.Debug.config')));
-        var expectFile = ltx.parse(fs.readFileSync(path.join(__dirname, 'L1XmlVarSub/Web_Expected.Debug.config')));
+        var resultFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.Debug.config')));
+        var expectFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_Expected.Debug.config')));
         assert(ltx.equal(resultFile, expectFile) , 'Should have substituted variables in Web.Debug.config file');
-        var expectedOut = 'Updated history to kudu'; 
-        assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
-        expectedOut = 'Successfully updated scmType to VSTSRM';
-        assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
         done();
     });
 
     it('Runs successfully with JSON variable substitution', (done:MochaDone) => {
-        let tp = path.join(__dirname, 'L0JsonVarSub.js');
+        let tp = path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1JsonVarSub.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -435,7 +454,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
     });
 
     it('Validate File Encoding', (done:MochaDone) => {
-        let tp = path.join(__dirname, 'L0ValidateFileEncoding.js');
+        let tp = path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1ValidateFileEncoding.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
@@ -455,4 +474,5 @@ describe('AzureRmWebAppDeployment Suite', function() {
         assert(tr.stdout.search('Unknown encoding type') >= 0, 'Should throw for Unknown File Buffer');
         done();
     });
+
 });

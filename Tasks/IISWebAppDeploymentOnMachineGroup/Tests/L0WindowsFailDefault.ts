@@ -61,20 +61,22 @@ tr.registerMock('./msdeployutility.js', {
     },
 	redirectMSDeployErrorToConsole : msDeployUtility.redirectMSDeployErrorToConsole
 });
+
 var fs = require('fs');
 tr.registerMock('fs', {
     createWriteStream: function (filePath, options) {
         return { "isWriteStreamObj": true };
     },
-
-    readFileSync: function(msDeployErrorFilePath) {
+    readFileSync: function (msDeployErrorFilePath) {
         console.log("reading the error file");
         return "ERROR DEPLOYING WEBSITE";
     },
-    openSync: function(fd, options) {
+    ReadStream: fs.ReadStream,
+    WriteStream: fs.WriteStream,
+    openSync: function (fd, options) {
         return true;
     },
-    closeSync: function(fd) {
+    closeSync: function (fd) {
         return true;
     },
     fsyncSync: function(fd) {

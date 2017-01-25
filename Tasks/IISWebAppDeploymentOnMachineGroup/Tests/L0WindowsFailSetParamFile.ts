@@ -28,5 +28,23 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
 import mockTask = require('vsts-task-lib/mock-task');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js');
 
+var fs = require('fs');
+tr.registerMock('fs', {
+    createWriteStream: function (filePath, options) {
+        return { "isWriteStreamObj": true };
+    },
+    ReadStream: fs.ReadStream,
+    WriteStream: fs.WriteStream,
+    openSync: function (fd, options) {
+        return true;
+    },
+    closeSync: function (fd) {
+        return true;
+    },
+    fsyncSync: function(fd) {
+        return true;
+    }
+});
+
 tr.setAnswers(a);
 tr.run();

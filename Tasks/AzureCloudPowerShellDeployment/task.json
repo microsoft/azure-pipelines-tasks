@@ -9,11 +9,14 @@
         "Build",
         "Release"
     ],
+    "runsOn": [
+        "Agent"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 34
+        "Patch": 36
     },
     "demands": [
         "azureps"
@@ -186,7 +189,7 @@
         "Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}",
         "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one.",
         "Storagekeysaredefinedininvalidformat": "Storage keys are defined in invalid format.",
-        "Unabletofind0usingprovidedsubscription" :"Unable to find {0} using provided subscription",
-        "Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics":"Current version of azure powershell don't support external storage account for configuring diagnostics."
+        "Unabletofind0usingprovidedsubscription": "Unable to find {0} using provided subscription",
+        "Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "Current version of azure powershell don't support external storage account for configuring diagnostics."
     }
 }
