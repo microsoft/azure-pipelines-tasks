@@ -58,10 +58,9 @@ export class MachineGroupExtensionHelper {
             console.log(tl.loc("DeleteExtension", extensionName, vmName));
             this.computeClient.virtualMachineExtensions.deleteMethod(this.taskParameters.resourceGroupName, vmName, extensionName, (error, result, request, response) => {
                 if (error) {
-                    tl.loc("DeletionFailed", vmName, utils.getError(error));
-                    tl.loc("UninstallExtensionManually", vmName);
-                    tl.loc("DeleteAgentManually", vmName, this.taskParameters.machineGroupName);
-                    return reject();
+                    tl.warning(tl.loc("UninstallExtensionManually", vmName));
+                    tl.warning(tl.loc("DeleteAgentManually", vmName, this.taskParameters.machineGroupName));
+                    return reject(tl.loc("DeletionFailed", vmName, utils.getError(error));
                 }
                 console.log(tl.loc("DeletionSucceeded", vmName));
                 resolve();
@@ -117,12 +116,22 @@ export class MachineGroupExtensionHelper {
         return new Promise((resolve, reject) => {
             this.computeClient.virtualMachines.start(this.taskParameters.resourceGroupName, vmName, async (error, result, request, response) => {
                 if (error) {
-                    var vmWithInstanceView: az.VM = await this.getVmWithInstanceView(this.taskParameters.resourceGroupName, vmName, { expand: 'instanceView' });
-                    var vmPowerState = this.getVMPowerState(vmWithInstanceView);
-                    if (vmPowerState !== "running") {
-                        console.log(tl.loc("VMStartFailed", vmName, utils.getError(error)));
-                        return reject();
+                    var isVMRunning = false;
+                    try {
+                        var vmWithInstanceView: az.VM = await this.getVmWithInstanceView(this.taskParameters.resourceGroupName, vmName, { expand: 'instanceView' });
+                        var vmPowerState = this.getVMPowerState(vmWithInstanceView);
+                        if (vmPowerState === "running") {
+                            isVMRunning = true;
+                        }
                     }
+                    catch (exception) {
+                    }
+
+                    if (!isVMRunning) {
+                        return reject(tl.loc("VMStartFailed", vmName, utils.getError(error)));
+                    }
+
+                    console.log(utils.getError(error));
                 }
                 console.log(tl.loc("VMStarted", vmName));
                 resolve(result);
@@ -130,10 +139,13 @@ export class MachineGroupExtensionHelper {
         });
     }
 
-    private deleteFailedExtension(vm: az.VM): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.deleteExtensionFromSingleVM(vm).then(resolve, resolve);
-        });
+    private async tryDeleteFailedExtension(vm: az.VM) {
+        try {
+            await this.deleteExtensionFromSingleVM(vm);
+        }
+        catch (exception) {
+            tl.warning(exception);
+        }
     }
 
     private addExtensionOnRunningVm(vm: az.VM): Promise<any> {
@@ -144,14 +156,13 @@ export class MachineGroupExtensionHelper {
             var parameters = extensionParameters["parameters"];
             this.computeClient.virtualMachineExtensions.get(this.taskParameters.resourceGroupName, vmName, extensionName, null, async (error, result: az.VMExtension, request, response) => {
                 if (result && result.properties.provisioningState === "Failed") {
-                    await this.deleteFailedExtension(vm);
+                    this.tryDeleteFailedExtension(vm);
                 }
                 console.log(tl.loc("AddExtension", extensionName, vmName));
                 this.computeClient.virtualMachineExtensions.createOrUpdate(this.taskParameters.resourceGroupName, vmName, extensionName, parameters, async (error, result, request, response) => {
                     if (error) {
-                        console.log(tl.loc("AddingExtensionFailed", extensionName, vmName, utils.getError(error)));
-                        await this.deleteFailedExtension(vm);
-                        return reject();
+                        await this.tryDeleteFailedExtension(vm);
+                        return reject(tl.loc("AddingExtensionFailed", extensionName, vmName, utils.getError(error)));
                     }
                     console.log(tl.loc("AddingExtensionSucceeded", extensionName, vmName));
                     resolve();
