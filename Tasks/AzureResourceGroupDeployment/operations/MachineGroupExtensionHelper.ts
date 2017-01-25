@@ -42,24 +42,25 @@ export class MachineGroupExtensionHelper {
         var listOfVms: az.VM[] = await this.azureUtils.getVMDetails();
         var deleteExtensionFromVmPromises: Promise<any>[] = [];
         for (var vm of listOfVms) {
-            deleteExtensionFromVmPromises.push(this.deleteExtension(vm));
+            deleteExtensionFromVmPromises.push(this.deleteExtensionFromSingleVM(vm));
         }
         await Promise.all(deleteExtensionFromVmPromises);
         if (listOfVms.length > 0) {
+            tl.loc("DeleteAgentsManually", this.taskParameters.resourceGroupName, this.taskParameters.machineGroupName);
             console.log(tl.loc("MGAgentDeletedFromAllVMs"));
         }
     }
 
-    public deleteExtension(vm: az.VM): Promise<any> {
+    public deleteExtensionFromSingleVM(vm: az.VM): Promise<any> {
         return new Promise((resolve, reject) => {
-            var vmName = vm["name"]
-            var resourceGroupName = this.taskParameters.resourceGroupName;
+            var vmName = vm["name"];
             var extensionParameters = this.formExtensionParameters(vm, "delete");
             var extensionName = extensionParameters["extensionName"];
             console.log(tl.loc("DeleteExtension", extensionName, vmName));
-            this.computeClient.virtualMachineExtensions.deleteMethod(resourceGroupName, vmName, extensionName, (error, result, request, response) => {
+            this.computeClient.virtualMachineExtensions.deleteMethod(this.taskParameters.resourceGroupName, vmName, extensionName, (error, result, request, response) => {
                 if (error) {
-                    reject(tl.loc("DeletionFailed", vmName, utils.getError(error)));
+                    tl.loc("DeletionFailed", vmName, utils.getError(error));
+                    return reject();
                 }
                 console.log(tl.loc("DeletionSucceeded", vmName));
                 resolve();
@@ -70,8 +71,7 @@ export class MachineGroupExtensionHelper {
     private async addExtensionOnSingleVM(vm: az.VM) {
         var vmName = vm.name;
         var operation = "add";
-        var resourceGroupName = this.taskParameters.resourceGroupName;
-        var vmWithInstanceView: az.VM = await this.getVmInstanceView(resourceGroupName, vmName, { expand: 'instanceView' });
+        var vmWithInstanceView: az.VM = await this.getVmWithInstanceView(this.taskParameters.resourceGroupName, vmName, { expand: 'instanceView' });
         var vmPowerState = this.getVMPowerState(vmWithInstanceView);
         if (vmPowerState === "deallocated") {
             await this.startVirtualMachine(vmName);
@@ -98,24 +98,30 @@ export class MachineGroupExtensionHelper {
         return null;
     }
 
-    private getVmInstanceView(resourceGroupName, vmName, object): Promise<az.VM> {
+    private getVmWithInstanceView(resourceGroupName, vmName, object): Promise<az.VM> {
         return new Promise((resolve, reject) => {
-            var getVmInstanceViewCallback = (error, result, request, response) => {
+            var getVmWithInstanceViewCallback = (error, result, request, response) => {
                 if (error) {
-                    reject(tl.loc("VMDetailsFetchFailed", vmName, utils.getError(error)));
+                    console.log(tl.loc("VMDetailsFetchFailed", vmName, utils.getError(error)));
+                    return reject();
                 }
-                console.log(tl.loc("VMDetailsFetchSucceeded", vmName, utils.getError(error)));
+                console.log(tl.loc("VMDetailsFetchSucceeded", vmName, JSON.stringify(result)));
                 resolve(result);
             }
-            this.computeClient.virtualMachines.get(resourceGroupName, vmName, object, getVmInstanceViewCallback);
+            this.computeClient.virtualMachines.get(resourceGroupName, vmName, object, getVmWithInstanceViewCallback);
         });
     }
 
     private startVirtualMachine(vmName: string): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.computeClient.virtualMachines.start(this.taskParameters.resourceGroupName, vmName, (error, result, request, response) => {
+            this.computeClient.virtualMachines.start(this.taskParameters.resourceGroupName, vmName, async (error, result, request, response) => {
                 if (error) {
-                    reject(tl.loc("VMStartFailed", vmName, utils.getError(error)));
+                    var vmWithInstanceView: az.VM = await this.getVmWithInstanceView(this.taskParameters.resourceGroupName, vmName, { expand: 'instanceView' });
+                    var vmPowerState = this.getVMPowerState(vmWithInstanceView);
+                    if (vmPowerState !== "running") {
+                        console.log(tl.loc("VMStartFailed", vmName, utils.getError(error)));
+                        return reject();
+                    }
                 }
                 console.log(tl.loc("VMStarted", vmName));
                 resolve(result);
@@ -129,13 +135,20 @@ export class MachineGroupExtensionHelper {
             var extensionParameters = this.formExtensionParameters(vm, "add");
             var extensionName = extensionParameters["extensionName"];
             var parameters = extensionParameters["parameters"];
-            console.log(tl.loc("AddExtension", extensionName, vmName));
-            this.computeClient.virtualMachineExtensions.createOrUpdate(this.taskParameters.resourceGroupName, vmName, extensionName, parameters, (error, result, request, response) => {
-                if (error) {
-                    reject(tl.loc("AddingExtensionFailed", extensionName, vmName, utils.getError(error)));
+            this.computeClient.virtualMachineExtensions.get(this.taskParameters.resourceGroupName, vmName, extensionName, null, async (error, result: az.VMExtension, request, response) => {
+                if (result && result.properties.provisioningState == "Failed") {
+                    await this.deleteExtensionFromSingleVM(vm);
                 }
-                console.log(tl.loc("AddingExtensionSucceeded", extensionName, vmName));
-                resolve();
+                console.log(tl.loc("AddExtension", extensionName, vmName));
+                this.computeClient.virtualMachineExtensions.createOrUpdate(this.taskParameters.resourceGroupName, vmName, extensionName, parameters, async (error, result, request, response) => {
+                    if (error) {
+                        console.log(tl.loc("AddingExtensionFailed", extensionName, vmName, utils.getError(error)));
+                        await this.deleteExtensionFromSingleVM(vm);
+                        return reject();
+                    }
+                    console.log(tl.loc("AddingExtensionSucceeded", extensionName, vmName));
+                    resolve();
+                });
             });
         })
     }
@@ -180,7 +193,7 @@ export class MachineGroupExtensionHelper {
                 AgentName: "",
                 Tags: tags
             };
-            console.log("Public settings are:\n VSTSAccountName: %s\nTeamProject: %s\nMachineGroup: %s\nTags: %s\n", collectionUri, teamProject, this.taskParameters.machineGroupName, tags);
+            console.log("Public settings are:\n VSTSAccountName: %s\nTeamProject: %s\nMachineGroup: %s\nTags: %s\n", collectionUri, teamProject, this.taskParameters.machineGroupName, JSON.stringify(tags));
             var protectedSettings = { PATToken: this.taskParameters.vstsPATToken };
             var parameters = {
                 type: extensionType,
