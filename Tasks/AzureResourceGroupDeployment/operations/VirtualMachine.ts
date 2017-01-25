@@ -49,10 +49,7 @@ export class VirtualMachine {
                         case "Delete":
                             var extDelPromise = this.machineGroupExtensionHelper.deleteExtensionFromSingleVM(listOfVms[i]);
                             var deleteVM = this.getDeleteVMCallback(client, vmName, callback(vmName));
-                            extDelPromise.then(deleteVM, () => {
-                                tl.loc("DeleteAgentManually", vmName, this.taskParameters.machineGroupName);
-                                deleteVM;
-                            });
+                            extDelPromise.then(deleteVM, deleteVM);
                     }
                 }
             });

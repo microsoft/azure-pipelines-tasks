@@ -46,7 +46,6 @@ export class MachineGroupExtensionHelper {
         }
         await Promise.all(deleteExtensionFromVmPromises);
         if (listOfVms.length > 0) {
-            tl.loc("DeleteAgentsManually", this.taskParameters.resourceGroupName, this.taskParameters.machineGroupName);
             console.log(tl.loc("MGAgentDeletedFromAllVMs"));
         }
     }
@@ -60,6 +59,8 @@ export class MachineGroupExtensionHelper {
             this.computeClient.virtualMachineExtensions.deleteMethod(this.taskParameters.resourceGroupName, vmName, extensionName, (error, result, request, response) => {
                 if (error) {
                     tl.loc("DeletionFailed", vmName, utils.getError(error));
+                    tl.loc("UninstallExtensionManually", vmName);
+                    tl.loc("DeleteAgentManually", vmName, this.taskParameters.machineGroupName);
                     return reject();
                 }
                 console.log(tl.loc("DeletionSucceeded", vmName));
