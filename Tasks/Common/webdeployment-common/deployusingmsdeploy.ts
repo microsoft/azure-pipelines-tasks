@@ -29,6 +29,7 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
 
     setParametersFile = utility.copySetParamFileIfItExists(setParametersFile);
     var setParametersFileName = null;
+    
     if(setParametersFile != null) {
         setParametersFileName = setParametersFile.slice(setParametersFile.lastIndexOf('\\') + 1, setParametersFile.length);
     }
