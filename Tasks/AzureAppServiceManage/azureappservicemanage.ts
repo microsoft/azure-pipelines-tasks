@@ -5,19 +5,22 @@ var azureRmUtil = require('azurerest-common/azurerestutility.js');
 var kuduLogUtil = require('azurerest-common/kududeploymentstatusutility.js');
 
 async function swapSlot(endPoint, resourceGroupName: string, webAppName: string, sourceSlot: string, swapWithProduction: boolean, targetSlot: string, preserveVnet: boolean) {
-    if(swapWithProduction) {
-        targetSlot = "production";
+    try {
+        await azureRmUtil.swapWebAppSlot(endPoint, resourceGroupName, webAppName, sourceSlot, targetSlot, preserveVnet);
+        console.log(tl.loc("Successfullyswappedslots", webAppName, sourceSlot, targetSlot));
     }
-    if(sourceSlot === targetSlot){
-        throw new Error(tl.loc("SourceAndTargetSlotCannotBeSame"));
+    catch(error) {
+        if(!!error)
+            throw new Error(tl.loc("FailedToSwapWebAppSlots", webAppName, error));
+        else
+            throw new Error(tl.loc("SlotSwapOperationNotCompleted", webAppName));
     }
-    tl._writeLine(await azureRmUtil.swapWebAppSlot(endPoint, resourceGroupName, webAppName, sourceSlot, targetSlot, preserveVnet));
 }
 
 async function updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, slotFlag, slotName, taskResult, customMessage, deploymentId) {
     try {
         var publishingProfile = await azureRmUtil.getAzureRMWebAppPublishProfile(endPoint, webAppName, resourceGroupName, slotFlag, slotName);
-        tl._writeLine(await azureRmUtil.updateDeploymentStatus(publishingProfile, taskResult, customMessage, deploymentId));
+        console.log(await azureRmUtil.updateDeploymentStatus(publishingProfile, taskResult, customMessage, deploymentId));
     }
     catch(exception) {
         tl.warning(exception);
@@ -31,6 +34,8 @@ async function run() {
         var action = tl.getInput('Action', true);
         var webAppName: string = tl.getInput('WebAppName', true);
         var resourceGroupName: string = tl.getInput('ResourceGroupName', false);
+        var specifySlotFlag: boolean = tl.getBoolInput('SpecifySlot', false);
+        var slotName: string = tl.getInput('Slot', false);
         var sourceSlot: string = tl.getInput('SourceSlot', false);
         var swapWithProduction = tl.getBoolInput('SwapWithProduction', false);
         var targetSlot: string = tl.getInput('TargetSlot', false);
@@ -38,6 +43,8 @@ async function run() {
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
         var subscriptionId = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
         var taskResult = true;
+        var errorMessage: string = "";
+        var updateDeploymentStatus: boolean = true;
 
         var endPoint = new Array();
         endPoint["servicePrincipalClientID"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'serviceprincipalid', true);
@@ -51,18 +58,25 @@ async function run() {
         }
         switch(action) {
             case "Start Azure App Service": {
-                tl._writeLine(await azureRmUtil.startAppService(endPoint, resourceGroupName, webAppName));
+                console.log(await azureRmUtil.startAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
                 break;
             }
             case "Stop Azure App Service": {
-                tl._writeLine(await azureRmUtil.stopAppService(endPoint, resourceGroupName, webAppName));
+                console.log(await azureRmUtil.stopAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
                 break;
             }
             case "Restart Azure App Service": {
-                tl._writeLine(await azureRmUtil.restartAppService(endPoint, resourceGroupName, webAppName));
+                console.log(await azureRmUtil.restartAppService(endPoint, resourceGroupName, webAppName, specifySlotFlag, slotName));
                 break;
             }
             case "Swap Slots": {
+                if (swapWithProduction) {
+                    targetSlot = "production";
+                }
+                if (sourceSlot === targetSlot) {
+                    updateDeploymentStatus = false;
+                    throw new Error(tl.loc("SourceAndTargetSlotCannotBeSame"));
+                }
                 await swapSlot(endPoint, resourceGroupName, webAppName, sourceSlot, swapWithProduction, targetSlot, preserveVnet);
                 break;
             }
@@ -70,27 +84,31 @@ async function run() {
                 throw Error(tl.loc('InvalidAction'));
         }
     }
-    catch(exception)
-    {
+    catch(exception) {
         taskResult = false;
-        tl.setResult(tl.TaskResult.Failed, exception);
+        errorMessage = exception;
     }
-    var customMessage = {
-        type: action
-    }
-    var deploymentId = kuduLogUtil.generateDeploymentId();
+    if (updateDeploymentStatus) {
+        var customMessage = {
+            type: action
+        }
+        var deploymentId = kuduLogUtil.generateDeploymentId();
 
-    if(action === "Swap Slots") {
-        customMessage['type'] = 'SlotSwap'; // for Ibiza CD flow
-        customMessage['sourceSlot'] = sourceSlot;
-        customMessage['targetSlot'] = swapWithProduction ? "Production" : targetSlot;
+        if(action === "Swap Slots") {
+            customMessage['type'] = 'SlotSwap'; // for Ibiza CD flow
+            customMessage['sourceSlot'] = sourceSlot;
+            customMessage['targetSlot'] = swapWithProduction ? "Production" : targetSlot;
 
-        await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, true, sourceSlot, taskResult, customMessage, deploymentId);
-        await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, !(swapWithProduction), targetSlot, taskResult, customMessage, deploymentId);
+            await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, true, sourceSlot, taskResult, customMessage, deploymentId);
+            await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, !(swapWithProduction), targetSlot, taskResult, customMessage, deploymentId);
+        }
+        else {
+            customMessage['slotName'] =  (specifySlotFlag) ? slotName : 'Production';
+            await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, specifySlotFlag, slotName, taskResult, customMessage, deploymentId);
+        }
     }
-    else {
-        customMessage['slotName'] = 'Production';
-        await updateKuduDeploymentLog(endPoint, webAppName, resourceGroupName, false, null, taskResult, customMessage, deploymentId);
+    if (!taskResult) {
+        tl.setResult(tl.TaskResult.Failed, errorMessage);
     }
 }
 

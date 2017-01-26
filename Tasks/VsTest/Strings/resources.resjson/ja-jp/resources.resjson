@@ -1,16 +1,16 @@
 {
   "loc.friendlyName": "Visual Studio テスト",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
+  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkId=835764)",
   "loc.description": "Visual Studio テスト ランナーを使用してテストを実行します",
-  "loc.instanceNameFormat": "Test Assemblies",
+  "loc.instanceNameFormat": "テスト アセンブリ",
   "loc.group.displayName.executionOptions": "実行オプション",
   "loc.group.displayName.tiaOptions": "テストの影響分析",
   "loc.group.displayName.advancedExecutionOptions": "実行の詳細設定のオプション",
   "loc.group.displayName.reportingOptions": "レポートのオプション",
-  "loc.input.label.testAssemblyVer2": "Test Assembly",
-  "loc.input.help.testAssemblyVer2": "Run tests from the specified files. The file paths are relative to the search folder. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
-  "loc.input.label.searchFolder": "Search Folder",
-  "loc.input.help.searchFolder": "Folder to search for the test assemblies. Defaults to $(System.DefaultWorkingDirectory).",
+  "loc.input.label.testAssemblyVer2": "テスト アセンブリ",
+  "loc.input.help.testAssemblyVer2": "指定されたファイルからテストを実行します。ファイル パスは検索フォルダーに対する相対パスです。minimatch パターンの複数行をサポートします。[詳細](https://go.microsoft.com/fwlink/?LinkId=835764)",
+  "loc.input.label.searchFolder": "検索フォルダー",
+  "loc.input.help.searchFolder": "テスト アセンブリを検索するフォルダー。既定は $(System.DefaultWorkingDirectory) です。",
   "loc.input.label.testFiltercriteria": "テストのフィルター条件",
   "loc.input.help.testFiltercriteria": "テスト アセンブリからテストをフィルターする追加の基準。例: `Priority=1|Name=MyTestMethod`",
   "loc.input.label.runSettingsFile": "実行設定ファイル",
@@ -68,5 +68,5 @@
   "loc.messages.UnexpectedVersionString": "vstest.console.exe で予期しないバージョン文字列が検出されました: %s。",
   "loc.messages.UnexpectedVersionNumber": "vstest.console.exe で予期しないバージョン番号が検出されました: %s。",
   "loc.messages.VstestDiagNotSupported": "vstest.console.exe バージョンは /diag フラグをサポートしていません。exe.config ファイルから診断を有効にします",
-  "loc.messages.NoIncludePatternFound": "No include pattern found. Specify atleast one include pattern to search test assemblies."
+  "loc.messages.NoIncludePatternFound": "インクルード パターンが見つかりませんでした。テスト アセンブリを検索するインクルード パターンを少なくとも 1 つ指定してください。"
 }

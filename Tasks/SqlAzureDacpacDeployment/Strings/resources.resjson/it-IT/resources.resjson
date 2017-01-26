@@ -51,5 +51,6 @@
   "loc.messages.SAD_InvalidSqlFile": "Il file SQL '{0}' specificato non è valido",
   "loc.messages.SAD_NoPassword": "Non è stata specificata alcuna password per l'utente SQL: '{0}'",
   "loc.messages.SAD_InvalidPublishProfile": "Il profilo di pubblicazione '{0}' specificato non è valido",
-  "loc.messages.SAD_InvalidServerNameFormat": "Il formato del nome del server '{0}' non è corretto. Usare il formato FQDN, ad esempio '{1}'"
+  "loc.messages.SAD_InvalidServerNameFormat": "Il formato del nome del server '{0}' non è corretto. Usare il formato FQDN, ad esempio '{1}'",
+  "loc.messages.SAD_AzureSQLDacpacTaskFailed": "L'attività Dacpac SQL di Azure non è riuscita."
 }

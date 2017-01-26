@@ -1,15 +1,11 @@
 /// <reference path="../../../../definitions/vsts-task-lib.d.ts" />
-
 import tl = require('vsts-task-lib/task');
+import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
-import {ToolRunner} from 'vsts-task-lib/toolrunner';
-
-import {SonarQubeEndpoint} from './endpoint';
-import sqCommon = require('./common');
-import {VstsServerUtils} from './vsts-server-utils';
+import { SonarQubeEndpoint } from './endpoint';
+import { VstsServerUtils } from './vsts-server-utils';
 
 export class SonarQubeParameterHelper {
-
     /**
      * Applies parameters for SonarQube features enabled by the user.
      * @param toolRunner     ToolRunner to add parameters to
@@ -28,24 +24,23 @@ export class SonarQubeParameterHelper {
      * @returns {ToolRunner} ToolRunner with parameters added
      */
     private static applySonarQubeConnectionParams(toolRunner: ToolRunner): ToolRunner {
-        var sqEndpoint: SonarQubeEndpoint = SonarQubeEndpoint.getTaskSonarQubeEndpoint();
+        let sqEndpoint: SonarQubeEndpoint = SonarQubeEndpoint.getTaskSonarQubeEndpoint();
         toolRunner.arg('-Dsonar.host.url=' + sqEndpoint.Url);
         toolRunner.arg('-Dsonar.login=' + sqEndpoint.Username);
         toolRunner.arg('-Dsonar.password=' + sqEndpoint.Password);
 
         // sqDbUrl, sqDbUsername and sqDbPassword are required if the SonarQube version is less than 5.2.
-        var sqDbUrl = tl.getInput('sqDbUrl', false);
-        var sqDbUsername = tl.getInput('sqDbUsername', false);
-        var sqDbPassword = tl.getInput('sqDbPassword', false);
+        let sqDbUrl: string = tl.getInput('sqDbUrl', false);
+        let sqDbUsername: string = tl.getInput('sqDbUsername', false);
+        let sqDbPassword: string = tl.getInput('sqDbPassword', false);
 
-        if (sqDbUrl != undefined && sqDbUrl != null) {
+        if (sqDbUrl) {
             toolRunner.arg('-Dsonar.jdbc.url=' + sqDbUrl);
         }
-        if (sqDbUsername != undefined && sqDbUsername != null) {
-
+        if (sqDbUsername) {
             toolRunner.arg('-Dsonar.jdbc.username=' + sqDbUsername);
         }
-        if (sqDbPassword != undefined && sqDbPassword != null) {
+        if (sqDbPassword) {
             toolRunner.arg('-Dsonar.jdbc.password=' + sqDbPassword);
         }
 
@@ -59,17 +54,17 @@ export class SonarQubeParameterHelper {
      * @returns {ToolRunner} ToolRunner with parameters added
      */
     private static applySonarQubeAnalysisParams(toolRunner: ToolRunner): ToolRunner {
-        var projectName:string = tl.getInput('sqProjectName', false);
-        var projectKey:string = tl.getInput('sqProjectKey', false);
-        var projectVersion:string = tl.getInput('sqProjectVersion', false);
+        let projectName: string = tl.getInput('sqProjectName', false);
+        let projectKey: string = tl.getInput('sqProjectKey', false);
+        let projectVersion: string = tl.getInput('sqProjectVersion', false);
 
-        if (projectName != null && projectName != undefined) {
+        if (projectName) {
             toolRunner.arg('-Dsonar.projectName=' + projectName);
         }
-        if (projectKey != null && projectKey != undefined) {
+        if (projectKey) {
             toolRunner.arg('-Dsonar.projectKey=' + projectKey);
         }
-        if (projectVersion != null && projectName != undefined) {
+        if (projectVersion) {
             toolRunner.arg('-Dsonar.projectVersion=' + projectVersion);
         }
 
@@ -85,15 +80,12 @@ export class SonarQubeParameterHelper {
         if (VstsServerUtils.isPrBuild()) {
             console.log(tl.loc('sqAnalysis_IncrementalMode'));
 
-            toolrunner.arg("-Dsonar.analysis.mode=issues");
-            toolrunner.arg("-Dsonar.report.export.path=sonar-report.json");
-        }
-        else
-        {
-            tl.debug("Running a full SonarQube analysis");
+            toolrunner.arg('-Dsonar.analysis.mode=issues');
+            toolrunner.arg('-Dsonar.report.export.path=sonar-report.json');
+        } else {
+            tl.debug('Running a full SonarQube analysis');
         }
 
         return toolrunner;
     }
-
 }

@@ -17,13 +17,13 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 3
+    "Patch": 10
   },
   "demands": [
     "vstest"
   ],
   "preview": "true",
-  "releaseNotes": "Test Impact and support for minimatch patterns.",
+  "releaseNotes": "<ul><li><b>Test Impact Analysis:</b> Automatically select and run only the tests needed to validate the code change.</li><li>Support for minimatch patterns for specifying test assemblies.</li></ul>",
   "minimumAgentVersion": "1.89.0",
   "groups": [
     {
@@ -156,6 +156,7 @@
       "visibleRule": "vstestLocationMethod = version",
       "options": {
         "latest": "Latest",
+        "15.0": "Visual Studio 2017",
         "14.0": "Visual Studio 2015",
         "12.0": "Visual Studio 2013"
       }

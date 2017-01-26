@@ -65,10 +65,10 @@ function responseHandler(defer, err, res, body, handler: () => void) {
     handler();
 }
 
-function beginPackageUpload(apiServer: string, apiVersion: string, appSlug: string, token: string): Q.Promise<UploadInfo> {
-    tl.debug("-- Prepare for uploading package.");
+function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, token: string): Q.Promise<UploadInfo> {
+    tl.debug("-- Prepare for uploading release.");
     let defer = Q.defer<UploadInfo>();
-    let beginUploadUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/package_uploads`;
+    let beginUploadUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/release_uploads`;
     tl.debug(`---- url: ${beginUploadUrl}`);
 
     let headers = {
@@ -90,8 +90,8 @@ function beginPackageUpload(apiServer: string, apiVersion: string, appSlug: stri
     return defer.promise;
 }
 
-function uploadPackage(uploadUrl: string, file: string): Q.Promise<void> {
-    tl.debug("-- Uploading package...");
+function uploadRelease(uploadUrl: string, file: string): Q.Promise<void> {
+    tl.debug("-- Uploading release...");
     let defer = Q.defer<void>();
     tl.debug(`---- url: ${uploadUrl}`);
     let req = request.post(uploadUrl, (err, res, body) => {
@@ -107,21 +107,21 @@ function uploadPackage(uploadUrl: string, file: string): Q.Promise<void> {
     return defer.promise;
 }
 
-function commitPackage(apiServer: string, apiVersion: string, appSlug: string, upload_id: string, token: string): Q.Promise<string> {
-    tl.debug("-- Finishing uploading package...");
+function commitRelease(apiServer: string, apiVersion: string, appSlug: string, upload_id: string, token: string): Q.Promise<string> {
+    tl.debug("-- Finishing uploading release...");
     let defer = Q.defer<string>();
-    let commitPackageUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/package_uploads/${upload_id}`;
-    tl.debug(`---- url: ${commitPackageUrl}`);
+    let commitReleaseUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/release_uploads/${upload_id}`;
+    tl.debug(`---- url: ${commitReleaseUrl}`);
     let headers = {
         "X-API-Token": token
     };
 
     let commitBody = { "status": "committed" };
 
-    request.patch({ url: commitPackageUrl, headers: headers, json: commitBody }, (err, res, body) => {
+    request.patch({ url: commitReleaseUrl, headers: headers, json: commitBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
-            if (body && body['package_url']) {
-                defer.resolve(body['package_url']);
+            if (body && body['release_url']) {
+                defer.resolve(body['release_url']);
             } else {
                 defer.reject(tl.loc("FailedToUploadFile"));
             }
@@ -131,11 +131,11 @@ function commitPackage(apiServer: string, apiVersion: string, appSlug: string, u
     return defer.promise;
 }
 
-function publishPackage(apiServer: string, packageUrl: string, releaseNotes: string, distributionGroupId: string, token: string) {
+function publishRelease(apiServer: string, releaseUrl: string, releaseNotes: string, distributionGroupId: string, token: string) {
     tl.debug("-- Mark package available.");
     let defer = Q.defer<void>();
-    let publishPackageUrl: string = `${apiServer}/${packageUrl}`;
-    tl.debug(`---- url: ${publishPackageUrl}`);
+    let publishReleaseUrl: string = `${apiServer}/${releaseUrl}`;
+    tl.debug(`---- url: ${publishReleaseUrl}`);
 
     let headers = {
         "X-API-Token": token
@@ -147,7 +147,7 @@ function publishPackage(apiServer: string, packageUrl: string, releaseNotes: str
         "release_notes": releaseNotes
     };
 
-    request.patch({ url: publishPackageUrl, headers: headers, json: publishBody }, (err, res, body) => {
+    request.patch({ url: publishReleaseUrl, headers: headers, json: publishBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             defer.resolve();
         });
@@ -313,17 +313,17 @@ async function run() {
 
         let symbolsPath = utils.checkAndFixFilePath(utils.resolveSinglePath(symbolsPathPattern), "symbolsPath");
 
-        // Begin package upload
-        let uploadInfo: UploadInfo = await beginPackageUpload(effectiveApiServer, effectiveApiVersion, appSlug, apiToken);
+        // Begin release upload
+        let uploadInfo: UploadInfo = await beginReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, apiToken);
 
         // Perform the upload
-        await uploadPackage(uploadInfo.upload_url, app);
+        await uploadRelease(uploadInfo.upload_url, app);
 
         // Commit the upload
-        let packageUrl = await commitPackage(effectiveApiServer, effectiveApiVersion, appSlug, uploadInfo.upload_id, apiToken);
+        let packageUrl = await commitRelease(effectiveApiServer, effectiveApiVersion, appSlug, uploadInfo.upload_id, apiToken);
 
         // Publish
-        await publishPackage(effectiveApiServer, packageUrl, releaseNotes, distributionGroupId, apiToken);
+        await publishRelease(effectiveApiServer, packageUrl, releaseNotes, distributionGroupId, apiToken);
 
         // Uploading symbols
         if (symbolsPath) {

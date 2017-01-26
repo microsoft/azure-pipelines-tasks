@@ -8,7 +8,7 @@
   "loc.input.label.command": "npm 命令",
   "loc.input.label.arguments": "引數",
   "loc.input.help.arguments": "傳遞給 npm 的其他引數。",
-  "loc.messages.InvalidCommand": "僅應將一個命令用於 npm。使用 'Arguments' 輸入以取得額外引數。",
+  "loc.messages.InvalidCommand": "npm 只應使用一個命令。如需其他引數，請使用 [引數] 輸入。",
   "loc.messages.NpmReturnCode": "npm 已結束，傳回碼為: %d",
   "loc.messages.NpmFailed": "npm 失敗，發生錯誤: %s",
   "loc.messages.NpmConfigFailed": "無法記錄 npm 組態資訊。錯誤: %s",

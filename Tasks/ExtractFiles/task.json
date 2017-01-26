@@ -10,15 +10,15 @@
         "Build",
         "Release"
     ],
-	"runsOn": [
+    "runsOn": [
         "Agent",
         "MachineGroup"
     ],
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 111,
-        "Patch": 0
+        "Minor": 112,
+        "Patch": 1
     },
     "instanceNameFormat": "Extract files $(message)",
     "inputs": [

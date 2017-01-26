@@ -10,11 +10,14 @@
     "Build",
     "Release"
   ],
+  "runsOn": [
+    "Agent"
+  ],
   "demands": [],
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 0
+    "Patch": 2
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -54,6 +57,13 @@
       "helpMarkDown": "ms-resource:loc.input.help.WebAppName"
     },
     {
+      "name": "SpecifySlot",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.SpecifySlot",
+      "required": false,
+      "visibleRule": "Action != Swap Slots"
+    },
+    {
       "name": "ResourceGroupName",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.ResourceGroupName",
@@ -63,7 +73,7 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName",
-      "visibleRule": "Action = Swap Slots"
+      "visibleRule": "Action = Swap Slots || SpecifySlot = true"
     },
     {
       "name": "SourceSlot",
@@ -106,6 +116,17 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.PreserveVnet",
       "visibleRule": "Action = Swap Slots"
+    },
+    {
+      "name": "Slot",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.Slot",
+      "defaultValue": "",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "required": true,
+      "visibleRule": "Action != Swap Slots && SpecifySlot = true"
     }
   ],
   "dataSourceBindings": [
@@ -164,7 +185,8 @@
     "Failedtoupdateslotswaphistory": "ms-resource:loc.messages.Failedtoupdateslotswaphistory",
     "WARNINGCannotupdateslotswapstatusSCMendpointisnotenabledforthiswebsite": "ms-resource:loc.messages.WARNINGCannotupdateslotswapstatusSCMendpointisnotenabledforthiswebsite",
     "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "ms-resource:loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved",
-    "Failedtoswapslots": "ms-resource:loc.messages.Failedtoswapslots",
+    "FailedToSwapWebAppSlots": "ms-resource:loc.messages.FailedToSwapWebAppSlots",
+    "SlotSwapOperationNotCompleted": "ms-resource:loc.messages.SlotSwapOperationNotCompleted",
     "Successfullyswappedslots": "ms-resource:loc.messages.Successfullyswappedslots",
     "SourceAndTargetSlotCannotBeSame": "ms-resource:loc.messages.SourceAndTargetSlotCannotBeSame",
     "Successfullyupdateddeploymenthistory": "ms-resource:loc.messages.Successfullyupdateddeploymenthistory",

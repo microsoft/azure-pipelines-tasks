@@ -27,6 +27,7 @@ describe('AzureNLBManagement Suite', () => {
         assert(tmr.succeeded, 'task should have succeeded');
     	done();
     });
+    
     it('connects the virtual machine successfully to the load balancer\'s backend pool', (done: MochaDone) => {
     	let tp = path.join(__dirname, 'L0ConnectSuccess.js');
         let tmr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
