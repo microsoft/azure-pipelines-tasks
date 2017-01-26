@@ -1,13 +1,10 @@
-import {AnalysisResult} from './AnalysisResult'
-import {IAnalysisTool} from './IAnalysisTool'
-import {BuildOutput, BuildEngine} from './BuildOutput'
-import {ModuleOutput} from './ModuleOutput'
-import {ToolRunner} from 'vsts-task-lib/toolrunner';
-import {BaseTool} from './BaseTool'
+import { BuildOutput, BuildEngine } from './BuildOutput';
+import { ModuleOutput } from './ModuleOutput';
+import { ToolRunner } from 'vsts-task-lib/toolrunner';
+import { BaseTool } from './BaseTool';
 
 import path = require('path');
 import fs = require('fs');
-import glob = require('glob');
 import xml2js = require('xml2js');
 
 import tl = require('vsts-task-lib/task');
@@ -20,7 +17,6 @@ import tl = require('vsts-task-lib/task');
  * @implements {IAnalysisToolReportParser}
  */
 export class FindbugsTool extends BaseTool {
-
     constructor(buildOutput: BuildOutput, boolInputName: string) {
         super('FindBugs', buildOutput, boolInputName);
     }
@@ -35,15 +31,15 @@ export class FindbugsTool extends BaseTool {
             console.log(tl.loc('codeAnalysis_ToolIsEnabled'), this.toolName);
 
             switch (this.buildOutput.buildEngine) {
-                case BuildEngine.Maven: {
+                case BuildEngine.Maven:
                     toolRunner.arg(['findbugs:findbugs']);
                     break;
-                }
-                case BuildEngine.Gradle: {
-                    var initScriptPath: string = path.join(__dirname, '..', 'findbugs.gradle');
+                case BuildEngine.Gradle:
+                    let initScriptPath: string = path.join(__dirname, '..', 'findbugs.gradle');
                     toolRunner.arg(['-I', initScriptPath]);
                     break;
-                }
+                default:
+                    break;
             }
         }
         return toolRunner;
@@ -52,8 +48,7 @@ export class FindbugsTool extends BaseTool {
     /**
      * Implementers must specify where the XML reports are located
      */
-    protected getBuildReportDir(output: ModuleOutput) {
-
+    protected getBuildReportDir(output: ModuleOutput): string {
         switch (this.buildOutput.buildEngine) {
             case BuildEngine.Maven:
                 return path.join(output.moduleRoot);
@@ -71,9 +66,9 @@ export class FindbugsTool extends BaseTool {
      * @returns a tuple of [affected_file_count, violation_count]
      */
     protected parseXmlReport(xmlReport: string, moduleName: string): [number, number] {
-        var jsonCounts:[number, number] = [0, 0];
+        let jsonCounts:[number, number] = [0, 0];
 
-        var reportContent = fs.readFileSync(xmlReport, 'utf-8');
+        let reportContent: string = fs.readFileSync(xmlReport, 'utf-8');
         xml2js.parseString(reportContent, (err, data) => {
             jsonCounts = FindbugsTool.parseJson(data);
             if (jsonCounts == null) {
@@ -81,10 +76,10 @@ export class FindbugsTool extends BaseTool {
                 return null;
             }
 
-            let violationCount = jsonCounts[1];
+            let violationCount: number = jsonCounts[1];
 
             // No files with violations, return now that it has been marked for upload
-            if (violationCount == 0) {
+            if (violationCount === 0) {
                 tl.debug(`[CA] A FindBugs report was found for module '${moduleName}' but it contains no violations`);
                 return null;
             }
@@ -100,7 +95,7 @@ export class FindbugsTool extends BaseTool {
      * @param data JSON object to parse
      * @returns a tuple of [affected_file_count, violation_count]
      */
-    private static parseJson(data:any):[number, number] {
+    private static parseJson(data: any): [number, number] {
         // If the file is not XML, or is not from FindBugs, return immediately
         if (!data || !data.BugCollection ||
             !data.BugCollection.FindBugsSummary || !data.BugCollection.FindBugsSummary[0] ||
@@ -109,16 +104,16 @@ export class FindbugsTool extends BaseTool {
             return null;
         }
 
-        var fileCount:number = 0;
-        var violationCount:number = 0;
+        let fileCount: number = 0;
+        let violationCount: number = 0;
 
         // Extract violation and file count data from the sourceFile attribute of ClassStats
-        var filesToViolations:Map<string, number> = new Map(); // Maps files -> number of violations
+        let filesToViolations: Map<string, number> = new Map(); // Maps files -> number of violations
         data.BugCollection.FindBugsSummary[0].PackageStats[0].ClassStats.forEach((classStats:any) => {
             // The below line takes the sourceFile attribute of the classStats tag - it looks like this in the XML
             // <ClassStats class="main.java.TestClassWithErrors" sourceFile="TestClassWithErrors.java" ... />
-            var sourceFile:string = classStats.$.sourceFile;
-            var newBugCount:number = Number(classStats.$.bugs);
+            let sourceFile: string = classStats.$.sourceFile;
+            let newBugCount: number = Number(classStats.$.bugs);
             if (newBugCount > 0) {
                 // If there was not already an entry, start at 0
                 if (!filesToViolations.has(sourceFile)) {
@@ -126,7 +121,7 @@ export class FindbugsTool extends BaseTool {
                 }
 
                 // Increment bug count
-                var oldBugCount:number = filesToViolations.get(sourceFile);
+                let oldBugCount: number = filesToViolations.get(sourceFile);
                 filesToViolations.set(sourceFile, oldBugCount + newBugCount);
             }
         });

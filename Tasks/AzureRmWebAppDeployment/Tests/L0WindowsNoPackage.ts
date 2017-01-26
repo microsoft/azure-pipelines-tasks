@@ -59,7 +59,8 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "exist": {
     	"webAppPkg.zip": true,
-        "webAppPkg": true
+        "webAppPkg": true,
+        "Invalid_webAppPkg": false
     }, 
     "glob": {
         "webAppPkgPattern" : ["webAppPkg1", "webAppPkg2"],
@@ -135,6 +136,7 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
 		id: 'appid',
   		properties: { 
      		virtualApplications: [ ['Object'], ['Object'], ['Object'] ],
+             scmType: "None"
     	} 
   	}
 
@@ -165,6 +167,9 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
     },
     updateWebAppAppSettings : function (){
         return true;
+    },
+    updateAzureRMWebAppConfigDetails: function() {
+        console.log("Successfully updated scmType to VSTSRM");
     }
 });
 

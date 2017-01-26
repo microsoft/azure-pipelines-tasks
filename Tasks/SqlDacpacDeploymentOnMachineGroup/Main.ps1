@@ -1,6 +1,47 @@
 Trace-VstsEnteringInvocation $MyInvocation
 Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
+function Write-Exception
+{
+    param (
+        $exception
+    )
+
+    if($exception.Message) 
+    {
+        Write-Error ($exception.Message)
+    }
+    else 
+    {
+        Write-Error ($exception)
+    }
+    throw
+}
+
+function Get-SingleFile
+{
+    param (
+        [string]$pattern
+    )
+
+    Write-Verbose "Finding files with pattern $pattern"
+    $files = Find-VstsFiles -LegacyPattern "$pattern"
+    Write-Verbose "Matched files = $files"
+
+    if ($files -is [system.array])
+    {
+        throw (Get-VstsLocString -Key "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone" -ArgumentList $pattern)
+    }
+    else
+    {
+        if (!$files)
+        {
+            throw (Get-VstsLocString -Key "Nofileswerefoundtodeploywithsearchpattern0" -ArgumentList $pattern)
+        }
+        return $files
+    }
+}
+
 $taskType = Get-VstsInput -Name "TaskType" -Require
 $dacpacFile = Get-VstsInput -Name "dacpacFile"
 $sqlFile = Get-VstsInput -Name "sqlFile" 
@@ -34,17 +75,26 @@ Try
 
     if ($taskType -eq "dacpac")
     {
+        $dacpacFile = Get-SingleFile -pattern $dacpacFile
         Execute-DacpacDeployment -dacpacFile $dacpacFile -targetMethod $targetMethod -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -connectionString $connectionString -publishProfile $publishProfile -additionalArguments $additionalArguments
     }
     else
     {
+
         $connectionString = Escape-SpecialChars -str $connectionString
         $sqlPassword = Escape-SpecialChars -str $sqlPassword
         $additionalArguments = Escape-SpecialChars -str $additionalArguments
         $databaseName = Escape-SpecialChars -str $databaseName
-        Execute-SqlQueryDeployment -taskType $taskType -sqlFile $sqlFile -inlineSql $inlineSql -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
+        if ($taskType -eq "sqlQuery")
+        {
+            $sqlFile = Get-SingleFile -pattern $sqlFile
+        Execute-SqlQueryDeployment -taskType $taskType -sqlFile $sqlFile -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
+        }
+        else 
+        {
+            Execute-SqlQueryDeployment -taskType $taskType -inlineSql $inlineSql -serverName $serverName -databaseName $databaseName -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
+        }
     }
-
 }
 Catch [System.Management.Automation.CommandNotFoundException]
 {
@@ -56,11 +106,9 @@ Catch [System.Management.Automation.CommandNotFoundException]
         Write-Error (Get-VstsLocString -Key "RunImportModuleSQLPSonyouragentPowershellprompt")
     }
 
-    Write-Error ($_.Exception|Format-List -Force|Out-String)
-    throw
+    Write-Exception($_.Exception)
 }
 Catch [Exception]
 {
-    Write-Error ($_.Exception|Format-List -Force|Out-String)
-    throw
+    Write-Exception($_.Exception)
 }

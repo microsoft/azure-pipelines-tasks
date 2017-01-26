@@ -11,7 +11,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 1,
+        "Minor": 112,
         "Patch": 1
     },
     "demands": [
@@ -39,7 +39,7 @@
             "label": "Project",
             "defaultValue": "**/*.csproj",
             "required": true,
-            "helpMarkDown": "Relative path from repo root of Xamarin.Android project(s) to build.  Wildcards can be used.  For example, `**/*.csproj` for all csproj files in all subfolders.  The project must have a PackageForAndroid target."
+            "helpMarkDown": "Relative path from repo root of Xamarin.Android project(s) to build.  Wildcards can be used.  For example, `**/*.csproj` for all csproj files in all subfolders.  The project must have a PackageForAndroid target if `Create App Package` is selected."
         },
         {
             "name": "target",
@@ -63,6 +63,14 @@
             "label": "Configuration",
             "defaultValue": "",
             "required": false
+        },
+        {
+            "name": "createAppPackage",
+            "type": "boolean",
+            "label": "Create App Package",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "Passes the target (/t:PackageForAndroid) during build to generate an APK."
         },
         {
             "name": "clean",
@@ -90,11 +98,11 @@
             "label": "MSBuild Version",
             "required": false,
             "groupName": "msbuildOptions",
-            "defaultValue": "latest",
+            "defaultValue": "15.0",
             "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead. On a Mac xbuild (Mono) will be used.",
             "options": {
-                "latest": "Latest (stable)",
-                "15.0": "MSBuild 15.0 (preview)",
+                "latest": "Latest",
+                "15.0": "MSBuild 15.0",
                 "14.0": "MSBuild 14.0",
                 "12.0": "MSBuild 12.0",
                 "4.0": "MSBuild 4.0"

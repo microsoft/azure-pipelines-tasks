@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "MSBuild 用の SonarQube - 分析終了",
   "loc.helpMarkDown": "[詳細] (https://go.microsoft.com/fwlink/?LinkId=620063)",
-  "loc.description": "[DEPRECATED] Finish the analysis and upload the results to SonarQube",
-  "loc.instanceNameFormat": "[DEPRECATED] Finish the analysis and upload the results to SonarQube"
+  "loc.description": "[非推奨] 分析を終了し、結果を SonarQube にアップロードします",
+  "loc.instanceNameFormat": "[非推奨] 分析を終了し、結果を SonarQube にアップロードします"
 }

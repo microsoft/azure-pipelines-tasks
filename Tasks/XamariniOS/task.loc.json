@@ -11,8 +11,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 111,
-    "Patch": 0
+    "Minor": 112,
+    "Patch": 1
   },
   "demands": [
     "Xamarin.iOS"
@@ -104,7 +104,6 @@
       "required": false,
       "groupName": "sign",
       "defaultValue": "file",
-      "helpMarkDown": "ms-resource:loc.input.help.signMethod",
       "options": {
         "file": "File Contents",
         "id": "Identifiers"

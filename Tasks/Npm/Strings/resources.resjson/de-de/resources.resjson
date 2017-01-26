@@ -8,7 +8,7 @@
   "loc.input.label.command": "npm-Befehl",
   "loc.input.label.arguments": "Argumente",
   "loc.input.help.arguments": "Weitere Argumente, die an npm übergeben werden.",
-  "loc.messages.InvalidCommand": "Nur ein Befehl sollte für npm verwendet werden. Verwenden Sie Argumenteingabe für weitere Argumente.",
+  "loc.messages.InvalidCommand": "Für npm sollte nur ein Befehl verwendet werden. Verwenden Sie die Eingabe \"Argumente\" für zusätzliche Argumente.",
   "loc.messages.NpmReturnCode": "Npm wurde mit dem folgenden Rückgabecode beendet: %d",
   "loc.messages.NpmFailed": "Npm-Fehler: %s",
   "loc.messages.NpmConfigFailed": "Fehler beim Protokollieren der npm-Konfigurationsinformationen. Fehler: %s",

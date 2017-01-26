@@ -1,11 +1,16 @@
 {
   "loc.friendlyName": "CocoaPods",
   "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=613745)",
-  "loc.description": "CocoaPods は、Swift プロジェクトと Objective-C Cocoa プロジェクトの依存関係マネージャーです。pod install を実行します",
+  "loc.description": "CocoaPods は、Swift プロジェクトと Objective-C Cocoa プロジェクトの依存関係マネージャーです。このタスクは、'pod install' を実行します。",
   "loc.instanceNameFormat": "pod install",
+  "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.cwd": "作業ディレクトリ",
-  "loc.input.help.cwd": "現行の作業ディレクトリです。指定されない場合はリポジトリのディレクトリになります。",
-  "loc.messages.PodReturnCode": "pod が次のリターン コードで終了しました: %d",
-  "loc.messages.PodFailed": "pod に失敗し、次のエラーが発生しました: %s",
-  "loc.messages.CocoaPodsNotFound": "コマンド pod が見つかりません。Cocoapods をビルド コンピューター上にインストールしてください (https://cocoapods.org)"
+  "loc.input.help.cwd": "このステップを実行する作業ディレクトリを指定します。空にすると、リポジトリのディレクトリが使用されます。",
+  "loc.input.label.forceRepoUpdate": "Force Repo Update",
+  "loc.input.help.forceRepoUpdate": "Selecting this option will force running 'pod repo update' before install.",
+  "loc.input.label.projectDirectory": "Project Directory",
+  "loc.input.help.projectDirectory": "Optionally specify the path to the root of the project directory. If left empty, the project specified in the Podfile will be used. If no project is specified, then a search for an Xcode project will be made. If more than one Xcode project is found, an error will occur.",
+  "loc.messages.PodReturnCode": "'pod' コマンドが次のリターン コードで終了しました: %d",
+  "loc.messages.PodFailed": "'pod' コマンドが失敗し、次のエラーが発生しました: %s",
+  "loc.messages.CocoaPodsNotFound": "The 'pod' command was not found. Please install CocoaPods on the agent machine (https://cocoapods.org/)."
 }

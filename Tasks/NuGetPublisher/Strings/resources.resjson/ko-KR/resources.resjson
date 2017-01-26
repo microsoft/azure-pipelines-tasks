@@ -19,6 +19,8 @@
   "loc.input.help.nuGetVersion": "사용할 NuGet 버전 또는 사용자 지정 버전입니다.",
   "loc.input.label.nuGetPath": "NuGet.exe 경로",
   "loc.input.help.nuGetPath": "필요한 경우 NuGet.exe의 경로를 제공합니다. 버전 선택을 재정의합니다.",
+  "loc.input.label.continueOnEmptyNupkgMatch": "\"nupkg에 대한 경로/패턴\"과 일치하는 패키지가 없어도 계속",
+  "loc.input.help.continueOnEmptyNupkgMatch": "\"nupkg에 대한 경로/패턴\"과 일치하는 패키지가 없어도 실패하지 않고 계속합니다.",
   "loc.messages.Warning_NoConfigForOldNuGet": "NuGet 3.1 이하에서 Team Services 계정/TFS 프로젝트 컬렉션에서 호스트되는 NuGet 피드에 연결하려면 빌드 정의를 편집하여 사용하려는 패키지 소스를 포함하는 NuGet.config의 경로를 지정하세요.",
   "loc.messages.Warning_NoConfigForNoCredentialProvider": "이 빌드 에이전트에서 Team Services 계정/TFS 프로젝트 컬렉션에서 호스트되는 NuGet 피드에 연결하려면 빌드 정의를 편집하여 사용하려는 패키지 소스를 포함하는 NuGet.config의 경로를 지정하세요.",
   "loc.messages.Warning_ConflictingNuGetPreference": "NuGet 3.3을 선택했지만 사용자 지정 NuGet 경로를 제공했습니다. 사용자 지정 경로가 우선됩니다. 이 경고를 해결하려면 빌드 작업을 편집하고 [고급]에서 NuGet 버전에 대해 '사용자 지정'을 선택합니다.",

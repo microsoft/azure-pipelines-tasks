@@ -8,7 +8,7 @@
   "loc.input.label.command": "comando npm",
   "loc.input.label.arguments": "argumentos",
   "loc.input.help.arguments": "Argumentos adicionales pasados a npm.",
-  "loc.messages.InvalidCommand": "Solo debería usarse un comando para npm. Use la entrada de argumentos si necesita argumentos adicionales.",
+  "loc.messages.InvalidCommand": "Solo debe usarse un comando para npm. Use la entrada \"Argumentos\" si necesita argumentos adicionales.",
   "loc.messages.NpmReturnCode": "npm se cerró con el código de retorno: %d",
   "loc.messages.NpmFailed": "Error de npm: %s",
   "loc.messages.NpmConfigFailed": "No se pudo registrar la información de configuración de npm. Error : %s",

@@ -1,111 +1,113 @@
-param(
-    [string]$testMachineGroup,
-    [string]$adminUserName,
-    [string]$adminPassword,
-    [string]$winRmProtocol,
-    [string]$testCertificate,
-    [string]$resourceFilteringMethod,
-    [string]$testMachines,
-    [string]$runAsProcess,
-    [string]$machineUserName,
-    [string]$machinePassword,
-    [string]$agentLocation,
-    [string]$updateTestAgent,
-    [string]$isDataCollectionOnly
-)
+[CmdletBinding()]
+param()
+ 
+Trace-VstsEnteringInvocation $MyInvocation
+try {
+    Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
-# If Run as process (Run UI Tests) is true both autologon and disable screen saver needs to be true.
-$logonAutomatically = $runAsProcess
-$disableScreenSaver = $runAsProcess
+    $testMachines               = Get-VstsInput -Name testMachines -Require
+    $adminUserName              = Get-VstsInput -Name adminUserName -Require
+    $adminPassword              = Get-VstsInput -Name adminPassword -Require
+    $winRmProtocol              = Get-VstsInput -Name winRmProtocol -Require
+    $testCertificate            = Get-VstsInput -Name testCertificate
+    $machineUserName            = Get-VstsInput -Name machineUserName -Require
+    $machinePassword            = Get-VstsInput -Name machinePassword -Require
+    $runAsProcess               = Get-VstsInput -Name runAsProcess
+    $isDataCollectionOnly       = Get-VstsInput -Name isDataCollectionOnly
+    $testPlatform               = Get-VstsInput -Name testPlatform -Require
+    $agentLocation              = Get-VstsInput -Name agentLocation
+    $updateTestAgent            = Get-VstsInput -Name updateTestAgent
 
-Function CmdletHasMember($memberName) {
-    $cmdletParameter = (gcm Register-Environment).Parameters.Keys.Contains($memberName)
-    return $cmdletParameter
-}
+    # If Run as process (Run UI Tests) is true both autologon and disable screen saver needs to be true.
+    $logonAutomatically = $runAsProcess
+    $disableScreenSaver = $runAsProcess
 
-Function Get-PersonalAccessToken($vssEndPoint) {
-    return $vssEndpoint.Authorization.Parameters.AccessToken
-}
+    Write-Host "****************************************************************"
+    Write-Host "                    Task Input Information                      "
+    Write-Host "----------------------------------------------------------------"
+    Write-Host "testMachineInput         = $testMachines"
+    Write-Host "adminUserName            = $adminUserName"
+    Write-Host "winRmProtocal            = $winRmProtocol"
+    Write-Host "testCertificate          = $testCertificate"
+    Write-Host "machineUserName          = $machineUserName"
+    Write-Host "runAsProcess             = $runAsProcess"
+    Write-Host "logonAutomatically       = $logonAutomatically"
+    Write-Host "disableScreenSaver       = $disableScreenSaver"
+    Write-Host "isDataCollectionOnly     = $isDataCollectionOnly"
+    Write-Host "testPlatform             = $testPlatform"
+    Write-Host "agentLocation            = $agentLocation"
+    Write-Host "updateTestAgent          = $updateTestAgent"
+    Write-Host "****************************************************************"
 
-Write-Verbose "Entering script DeployTestAgent.ps1"
-Write-Verbose "testMachineInput = $testMachineGroup"
-Write-Verbose "WinRmProtocal = $winRmProtocol"
-Write-Verbose "resourceFilteringMethod = $resourceFilteringMethod" -Verbose
-Write-Verbose "filter testMachines = $testMachines"
-Write-Verbose "runAsProcess = $runAsProcess"
-Write-Verbose "logonAutomatically = $logonAutomatically"
-Write-Verbose "disableScreenSaver = $disableScreenSaver"
-Write-Verbose "updateTestAgent = $updateTestAgent"
-Write-Verbose "isDataCollectionOnly = $isDataCollectionOnly"
+    $downloadTestAgentScript            = "$PSScriptRoot\DownloadTestAgent.ps1"
+    $setupTestMachineForUITestsScript   = "$PSScriptRoot\SetupTestMachineForUITests.ps1"
+    $TestAgentConfigurationScript       = "$PSScriptRoot\TestAgentConfiguration.ps1"
+    $testAgentHelperScript              = "$PSScriptRoot\TestAgentHelper.ps1"
+    $installTestAgentScript             = "$PSScriptRoot\InstallTestAgent.ps1"
+    $verifyTestAgentInstalledScript     = "$PSScriptRoot\VerifyTestAgentInstalled.ps1"
 
-if ([string]::IsNullOrWhiteSpace($agentLocation))
-{
-   Write-Verbose "Download of testagent would begin from internet"
-}
-else
-{
-   Write-Verbose "agentLocation = $agentLocation"
-}
-
-# Get current directory.
-$currentDirectory = Convert-Path .
-$installAgentScriptLocation = Join-Path -Path $currentDirectory -ChildPath "TestAgentInstall.ps1"
-Write-Verbose "installAgentScriptLocation = $installAgentScriptLocation"
-
-$configureTestAgentScriptLocation = Join-Path -Path $currentDirectory -ChildPath "TestAgentConfiguration.ps1"
-Write-Verbose "configureTestAgentScriptLocation = $configureTestAgentScriptLocation"
-
-$checkAgentInstallationScriptLocation = Join-Path -Path $currentDirectory -ChildPath "CheckTestAgentInstallation.ps1"
-Write-Verbose "checkAgentInstallationScriptLocation = $checkAgentInstallationScriptLocation"
-
-$downloadTestAgentScriptLocation = Join-Path -Path $currentDirectory -ChildPath "DownloadTestAgent.ps1"
-Write-Verbose "downloadTestAgentScriptLocation = $downloadTestAgentScriptLocation"
-
-$verifyTestMachinesAreInUse = Join-Path -Path $currentDirectory -ChildPath "VerifyTestMachinesAreInUse.ps1"
-Write-Verbose "VerifyTestMachinesAreInUseScriptLocation = $verifyTestMachinesAreInUse"
-
-# Import the Task.Internal dll that has all the cmdlets we need for Build
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.DTA"
-import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
-
-Write-Verbose "Getting the connection object"
-$connection = Get-VssConnection -TaskContext $distributedTaskContext
-
-Write-Verbose "Getting Personal Access Token for the Run"
-$vssEndPoint = Get-ServiceEndPoint -Context $distributedTaskContext -Name "SystemVssConnection"
-$personalAccessToken = Get-PersonalAccessToken $vssEndpoint
-
-if (!$personalAccessToken)
-{
-    Write-Host "##vso[task.logissue type=error;code=Unable to generate Personal Access Token for the user;TaskName=DTA]"
-    throw (Get-LocalizedString -Key "Unable to generate Personal Access Token for the user. Contact Project Collection Administrator")
-}
-
-try
-{
-    $persistExists = CmdletHasMember "Persist"
-
-    if($persistExists)
-    {
-        Write-Verbose "Calling Register Environment cmdlet"
-        $environment = Register-Environment -EnvironmentName $testMachineGroup -EnvironmentSpecification $testMachineGroup -UserName $adminUserName -Password $adminPassword -TestCertificate ($testCertificate -eq "true") -Connection $connection -TaskContext $distributedTaskContext -WinRmProtocol $winRmProtocol -ResourceFilter $testMachines -Persist
-        Write-Verbose "Environment details $environment"
-    }
-    else
-    {
-        Write-Verbose "Calling Register Environment cmdlet"
-        $environment = Register-Environment -EnvironmentName $testMachineGroup -EnvironmentSpecification $testMachineGroup -UserName $adminUserName -Password $adminPassword -TestCertificate ($testCertificate -eq "true") -Connection $connection -TaskContext $distributedTaskContext -WinRmProtocol $winRmProtocol -ResourceFilter $testMachines
-        Write-Verbose "Environment details $environment"
+    # Fix Assembly Redirections
+    # VSTS uses Newton Json 8.0 while the System.Net.Http uses 6.0
+    # Redirection to Newton Json 8.0
+    $jsonAssembly = [reflection.assembly]::LoadFrom($PSScriptRoot + "\modules\Newtonsoft.Json.dll") 
+    $onAssemblyResolve = [System.ResolveEventHandler] {
+        param($sender, $e)
+        if ($e.Name -eq "Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed") { return $jsonAssembly }
+        foreach($a in [System.AppDomain]::CurrentDomain.GetAssemblies())
+        {
+            if($a.FullName -eq $e.Name) { return $a } else { return $null }
+        }
+        return $null
     }
 
-    Write-Verbose "Calling Deploy test agent cmdlet"
-    Invoke-DeployTestAgent -TaskContext $distributedTaskContext -MachineEnvironment $environment -UserName $machineUserName -Password $machinePassword -MachineNames $testMachineGroup -RunAsProcess $runAsProcess -LogonAutomatically $logonAutomatically -DisableScreenSaver $disableScreenSaver -AgentLocation $agentLocation -UpdateTestAgent $updateTestAgent -InstallAgentScriptLocation $installAgentScriptLocation -ConfigureTestAgentScriptLocation $configureTestAgentScriptLocation -CheckAgentInstallationScriptLocation $checkAgentInstallationScriptLocation -downloadTestAgentScriptLocation $downloadTestAgentScriptLocation -Connection $connection -PersonalAccessToken $personalAccessToken -DataCollectionOnly $isDataCollectionOnly -VerifyTestMachinesAreInUseScriptLocation $verifyTestMachinesAreInUse
-    Write-Verbose "Leaving script DeployTestAgent.ps1"
-}
-catch
-{
-    Write-Host "##vso[task.logissue type=error;code=" $_.Exception.Message ";TaskName=DTA]"
-    throw
-}
+    # Import the Task.Internal dll that has all the cmdlets we need for Build
+    Import-Module "$PSScriptRoot\modules\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll"
+    Import-Module "$PSScriptRoot\modules\MS.TF.Task.TestPlatform.Acquisition.dll"
+    
+    Write-Verbose "Getting Access Token for the Run"
+    $endpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
+    $personalAccessToken = [string]($endpoint.auth.parameters.AccessToken)
+
+    if (!$personalAccessToken)
+    {
+        Write-Host "##vso[task.logissue type=error;code=Unable to generate Personal Access Token for the user;TaskName=DTA]"
+        throw (Get-LocalizedString -Key "Unable to generate Personal Access Token for the user. Contact Project Collection Administrator")
+    }
+
+    try
+    {
+        Write-Verbose "Completed Register-Environment" -Verbose
+        $environment = Register-Environment -EnvironmentName $testMachines -EnvironmentSpecification $testMachines -WinRmProtocol $winRmProtocol -TestCertificate ($testCertificate -eq "true") -UserName $adminUserName -Password $adminPassword
+        Write-Verbose "Completed Register-Environment" -Verbose
+
+        $deployParams = New-Object 'System.Collections.Generic.Dictionary[String,Object]'
+        $deployParams.Add("environmentname", $testMachines)
+        $deployParams.Add("environment", $environment)
+        $deployParams.Add("username", $machineUserName)
+        $deployParams.Add("password", $machinePassword)
+        $deployParams.Add("personalaccesstoken", $personalAccessToken)
+        $deployParams.Add("disablescreensaver", $disableScreenSaver)
+        $deployParams.Add("logonautomatically", $logonAutomatically)
+        $deployParams.Add("runasprocess", $runAsProcess)
+        $deployParams.Add("installagentscriptlocation", $installTestAgentScript)
+        $deployParams.Add("testagentconfigurationscriptlocation", $TestAgentConfigurationScript)
+        $deployParams.Add("verifytestagentinstalledscriptlocation", $verifyTestAgentInstalledScript)
+        $deployParams.Add("downloadtestagentscriptlocation", $downloadTestAgentScript)
+        $deployParams.Add("testagenthelperscriptlocation", $testAgentHelperScript)
+        $deployParams.Add("setuptestmachineforuitestsscriptlocation", $setupTestMachineForUITestsScript)
+        $deployParams.Add("testplatformversion", $testPlatform)
+        $deployParams.Add("agentlocation", $agentLocation)
+        $deployParams.Add("updatetestagent", $updateTestAgent)
+        $deployParams.Add("datacollectiononly", $isDataCollectionOnly)
+        
+        $deployTestPlatform = New-Object 'MS.TF.Task.TestPlatform.Acquisition.DeployTestAgent'
+        $deployTestPlatform.Start($deployParams)
+    }
+    catch
+    {
+        Write-Host "##vso[task.complete result=Failed;]$_"
+    }
+
+} finally {
+    Trace-VstsLeavingInvocation $MyInvocation
+} 

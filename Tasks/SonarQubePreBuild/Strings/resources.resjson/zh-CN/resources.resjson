@@ -1,8 +1,8 @@
 {
   "loc.friendlyName": "用于 MSBuild 的 SonarQube - 开始分析",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkId=620063)",
-  "loc.description": "[DEPRECATED] Fetch the Quality Profile from SonarQube to configure the analysis",
-  "loc.instanceNameFormat": "[DEPRECATED] Fetch the Quality Profile from SonarQube",
+  "loc.description": "[已弃用]从 SonarQube 提取质量配置文件以配置分析",
+  "loc.instanceNameFormat": "[已启用]从 SonarQube 提取质量配置文件",
   "loc.group.displayName.serverSettings": "SonarQube 服务器",
   "loc.group.displayName.project": "SonarQube 项目设置",
   "loc.group.displayName.dbSettings": "数据库设置(SonarQube 5.2+ 不需要)",

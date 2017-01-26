@@ -9,9 +9,9 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 21
+        "Patch": 22
     },
-	"runsOn": [
+    "runsOn": [
         "Agent",
         "MachineGroup"
     ],

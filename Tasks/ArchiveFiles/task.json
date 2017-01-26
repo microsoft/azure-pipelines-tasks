@@ -2,7 +2,7 @@
     "id": "d8b84976-e99a-4b86-b885-4849694435b0",
     "name": "ArchiveFiles",
     "friendlyName": "Archive Files",
-    "description": "Archive files using a variety of compression formats such as .7z, .rar, .tar.gz, and .zip.",
+    "description": "Archive files using compression formats such as .7z, .rar, .tar.gz, and .zip.",
     "author": "Microsoft Corporation",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=809083)",
     "category": "Utility",
@@ -10,15 +10,15 @@
         "Build",
         "Release"
     ],
-	"runsOn": [
+    "runsOn": [
         "Agent",
         "MachineGroup"
     ],
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 10
+        "Minor": 112,
+        "Patch": 1
     },
     "groups": [
         {
@@ -66,7 +66,7 @@
             "label": "Tar compression",
             "required": false,
             "defaultValue": "gz",
-            "helpMarkDown": "Optionally choose compression scheme, or choose <b>`None`</b> to create an uncompressed tar file.",
+            "helpMarkDown": "Optionally choose a compression scheme, or choose <b>`None`</b> to create an uncompressed tar file.",
             "groupName": "archive",
             "visibleRule": "archiveType = tar",
             "options": {
@@ -82,7 +82,7 @@
             "label": "Archive file to create",
             "defaultValue": "$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip",
             "required": true,
-            "helpMarkDown": "Specify the name of the archive file to create.  For example to create <b>`foo.tgz`</b>, select the <b>`tar`</b> archive type, <b>`gz`</b> for tar compression.",
+            "helpMarkDown": "Specify the name of the archive file to create.  For example, to create <b>`foo.tgz`</b>, select the <b>`tar`</b> archive type and <b>`gz`</b> for tar compression.",
             "groupName": "archive"
         },
         {
@@ -108,6 +108,6 @@
         "AlreadyExists": "Archive file: %s already exists.  Attempting to add files to it.",
         "ArchiveCreationFailedWithError": "Archive creation failed for archive file: %s \ncode: %d \nstdout: %s \nstderr: %s \nerror: %s;",
         "ArchiveFileExistsButNotAFile": "Specified archive file: %s already exists and is not a file.",
-        "FailedArchiveFile": "Specified archive file: %s can not be created because it can not be accessed: %s"
+        "FailedArchiveFile": "Specified archive file: %s cannot be created because it cannot be accessed: %s"
     }
 }

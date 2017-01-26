@@ -9,9 +9,9 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 27
+        "Patch": 30
     },
-	"runsOn": [
+    "runsOn": [
         "Agent",
         "MachineGroup"
     ],
@@ -98,7 +98,7 @@
             "groupName": "advanced",
             "options": {
                 "3.3.0": "3.3.0",
-                "3.5.0.1829": "3.5.0 - build 1829 (rc2)",
+                "3.5.0.1829": "3.5.0",
                 "custom": "Custom"
             }
         },
@@ -109,6 +109,15 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Optionally supply the path to NuGet.exe. Will override version selection.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "continueOnEmptyNupkgMatch",
+            "type": "boolean",
+            "label": "Continue if no packages match the \"Path/Pattern to nupkg\"",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Continue instead of fail if no packages match the \"Path/Pattern to nupkg\".",
             "groupName": "advanced"
         }
     ],
