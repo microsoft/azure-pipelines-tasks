@@ -7,7 +7,7 @@ import assert = require('assert');
 import path = require('path');
 let ff = require('../../../Tasks/Common/find-files-legacy/findfiles.legacy');
 
-describe('Code Coverage enable tool tests', function () {
+describe('Common find files legacy suite', function () {
     this.timeout(20000);
 
     let data = path.join(__dirname, 'data');

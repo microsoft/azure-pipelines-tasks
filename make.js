@@ -288,8 +288,8 @@ target.testLegacy = function() {
     console.log('> copying tasks');
     taskList.forEach(function (taskName) {
         var testCopySource = path.join(__dirname, 'Tests-Legacy', 'L0', taskName);
+        // copy the L0 source files if exist
         if (test('-e', testCopySource)) {
-            // copy the L0 source files
             console.log('copying ' + taskName);
             var testCopyDest = path.join(legacyTestPath, 'L0', taskName);
             matchCopy('*', testCopySource, testCopyDest, { noRecurse: true, matchBase: true });
@@ -300,28 +300,28 @@ target.testLegacy = function() {
             var taskCopySource = path.join(buildPath, taskJson.name);
             var taskCopyDest = path.join(legacyTestTasksPath, taskJson.name);
             matchCopy('*', taskCopySource, taskCopyDest, { noRecurse: true, matchBase: true });
+        }
 
-            // copy the L0 source files for each common-module; copy the layout for each common module
-            var taskMakePath = path.join(__dirname, 'Tasks', taskName, 'make.json');
-            var taskMake = test('-f', taskMakePath) ? JSON.parse(fs.readFileSync(taskMakePath).toString()) : {};
-            if (taskMake.hasOwnProperty('common')) {
-                var common = taskMake['common'];
-                common.forEach(function(mod) {
-                    var modName = path.basename(mod['module']);
-                    console.log('copying ' + modName);
-                    var modTestCopySource = path.join(__dirname, 'Tests-Legacy', 'L0', `Common-${modName}`);
-                    var modTestCopyDest = path.join(legacyTestPath, 'L0', `Common-${modName}`);
-                    if (test('-e', modTestCopySource) && !test('-e', modTestCopyDest)) {
-                        // copy the common module L0 source files
-                        matchCopy('*', modTestCopySource, modTestCopyDest, { noRecurse: true, matchBase: true });
+        // copy each common-module L0 source files if exist
+        var taskMakePath = path.join(__dirname, 'Tasks', taskName, 'make.json');
+        var taskMake = test('-f', taskMakePath) ? JSON.parse(fs.readFileSync(taskMakePath).toString()) : {};
+        if (taskMake.hasOwnProperty('common')) {
+            var common = taskMake['common'];
+            common.forEach(function(mod) {
+                // copy the common-module L0 source files if exist and not already copied
+                var modName = path.basename(mod['module']);
+                console.log('copying ' + modName);
+                var modTestCopySource = path.join(__dirname, 'Tests-Legacy', 'L0', `Common-${modName}`);
+                var modTestCopyDest = path.join(legacyTestPath, 'L0', `Common-${modName}`);
+                if (test('-e', modTestCopySource) && !test('-e', modTestCopyDest)) {
+                    matchCopy('*', modTestCopySource, modTestCopyDest, { noRecurse: true, matchBase: true });
 
-                        // copy the common module layout
-                        var modCopySource = path.join(commonPath, modName);
-                        var modCopyDest = path.join(legacyTestTasksPath, 'Common', modName);
-                        matchCopy('*', modCopySource, modCopyDest, { noRecurse: true, matchBase: true });
-                    }
-                });
-            }
+                    // copy the common module layout
+                    var modCopySource = path.join(commonPath, modName);
+                    var modCopyDest = path.join(legacyTestTasksPath, 'Common', modName);
+                    matchCopy('*', modCopySource, modCopyDest, { noRecurse: true, matchBase: true });
+                }
+            });
         }
     });
 
