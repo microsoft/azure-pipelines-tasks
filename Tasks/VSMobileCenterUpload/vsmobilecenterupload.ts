@@ -4,7 +4,7 @@ import request = require('request');
 import Q = require('q');
 import fs = require('fs');
 
-import {ToolRunner} from 'vsts-task-lib/toolrunner';
+import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
 var utils = require('./utils.js');
 
@@ -30,13 +30,13 @@ function getEndpointDetails(endpointInputFieldName) {
     let url = tl.getEndpointUrl(endpoint, false);
     let apiServer = url.substr(0, url.lastIndexOf('/'));
     let apiVersion = url.substr(url.lastIndexOf('/') + 1);
-    let authToken = tl.getEndpointAuthorizationParameter(endpoint,'apitoken', false);
-    
-    return { 
-        apiServer: apiServer, 
+    let authToken = tl.getEndpointAuthorizationParameter(endpoint, 'apitoken', false);
+
+    return {
+        apiServer: apiServer,
         apiVersion: apiVersion,
-        authToken: authToken 
-    }; 
+        authToken: authToken
+    };
 }
 
 function responseHandler(defer, err, res, body, handler: () => void) {
@@ -48,7 +48,7 @@ function responseHandler(defer, err, res, body, handler: () => void) {
         tl.debug(`---- Failed with error: ${err}`);
         defer.reject(err);
         return;
-    } 
+    }
 
     if (!res) {
         defer.reject(tl.loc("NoResponseFromServer"));
@@ -61,7 +61,7 @@ function responseHandler(defer, err, res, body, handler: () => void) {
         defer.reject(message);
         return;
     }
-    
+
     handler();
 }
 
@@ -141,8 +141,8 @@ function publishRelease(apiServer: string, releaseUrl: string, releaseNotes: str
         "X-API-Token": token
     };
 
-    let publishBody = { 
-        "status": "available", 
+    let publishBody = {
+        "status": "available",
         "distribution_group_id": distributionGroupId,
         "release_notes": releaseNotes
     };
@@ -164,22 +164,22 @@ function publishRelease(apiServer: string, releaseUrl: string, releaseNotes: str
 function prepareSymbols(symbolsPath: string, packParentFolder: boolean): Q.Promise<string> {
     tl.debug("-- Prepare symbols")
     let defer = Q.defer<string>();
-  
+
     let stat = fs.statSync(symbolsPath);
     if (stat.isFile() && !packParentFolder) {
         // single file - Android source mapping txt file
         tl.debug(`---- symbol file: ${symbolsPath}`)
         defer.resolve(symbolsPath);
-    } else { 
+    } else {
         if (packParentFolder) {
             tl.debug(`---- Take the parent folder of ${symbolsPath}`);
-            symbolsPath = path.dirname(symbolsPath); 
+            symbolsPath = path.dirname(symbolsPath);
         }
 
         tl.debug(`---- Creating symbols from ${symbolsPath}`);
         let zipStream = utils.createZipStream(symbolsPath, utils.isDsym(symbolsPath));
         let workDir = tl.getVariable("System.DefaultWorkingDirectory");
-        let zipName = path.join(workDir, `${path.basename(symbolsPath)}.zip`); 
+        let zipName = path.join(workDir, `${path.basename(symbolsPath)}.zip`);
         utils.createZipFile(zipStream, zipName).
             then(() => {
                 tl.debug(`---- symbol file: ${zipName}`)
@@ -202,8 +202,8 @@ function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: strin
     };
 
     let symbolsUploadBody = { "symbol_type": symbol_type };
-    
-    request.post({ url: beginSymbolUploadUrl, headers: headers, json: symbolsUploadBody}, (err, res, body) => {
+
+    request.post({ url: beginSymbolUploadUrl, headers: headers, json: symbolsUploadBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             let symbolsUploadInfo: SymbolsUploadInfo = {
                 symbol_upload_id: body['symbol_upload_id'],
@@ -225,11 +225,11 @@ function uploadSymbols(uploadUrl: string, file: string): Q.Promise<void> {
 
     let stat = fs.statSync(file);
     let headers = {
-         "x-ms-blob-type": "BlockBlob",
-         "Content-Length": stat.size
+        "x-ms-blob-type": "BlockBlob",
+        "Content-Length": stat.size
     };
 
-    fs.createReadStream(file).pipe(request.put({url: uploadUrl, headers: headers}, (err, res, body) => {
+    fs.createReadStream(file).pipe(request.put({ url: uploadUrl, headers: headers }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             tl.debug('-- Symbol uploaded.');
             defer.resolve();
@@ -261,31 +261,31 @@ function commitSymbols(apiServer: string, apiVersion: string, appSlug: string, s
 
 async function run() {
     try {
-        tl.setResourcePath(path.join( __dirname, 'task.json'));
+        tl.setResourcePath(path.join(__dirname, 'task.json'));
 
         // Get build inputs
         let apiEndpointData = getEndpointDetails('serverEndpoint');
         let apiToken: string = apiEndpointData.authToken;
         let apiServer: string = apiEndpointData.apiServer;
         let apiVersion: string = apiEndpointData.apiVersion;
-    
+
         var effectiveApiServer = process.env['SONOMA_API_SERVER'] || apiServer;
         var effectiveApiVersion = process.env['SONOMA_API_VERSION'] || apiVersion;
-        
+
         tl.debug(`Effective API Url: ${effectiveApiServer}/${effectiveApiVersion}`);
-        
+
         let appSlug: string = tl.getInput('appSlug', true);
         let appFilePattern: string = tl.getInput('app', true);
         let symbolsType: string = tl.getInput('symbolsType', false);
         let symbolVariableName = null;
         switch (symbolsType) {
-            case "Apple": 
+            case "Apple":
                 symbolVariableName = "dsymPath";
                 break;
             case "AndroidJava":
                 symbolVariableName = "mappingTxtPath";
                 break;
-            default: 
+            default:
                 symbolVariableName = "symbolsPath";
         }
         let symbolsPathPattern: string = tl.getInput(symbolVariableName, false);
@@ -307,7 +307,7 @@ async function run() {
         if (!apiToken) {
             throw new Error(tl.loc("NoApiTokenFound"));
         }
-        
+
         let app = utils.resolveSinglePath(appFilePattern);
         tl.checkPath(app, "Binary file");
 
@@ -328,16 +328,16 @@ async function run() {
         // Uploading symbols
         if (symbolsPath) {
             // Prepare symbols 
-            let symbolsFile = await prepareSymbols(symbolsPath, packParentFolder);                
-            
+            let symbolsFile = await prepareSymbols(symbolsPath, packParentFolder);
+
             // Begin preparing upload symbols
             let symbolsUploadInfo = await beginSymbolUpload(effectiveApiServer, effectiveApiVersion, appSlug, symbolsType, apiToken);
-            
+
             // upload symbols 
             await uploadSymbols(symbolsUploadInfo.upload_url, symbolsFile);
 
             await commitSymbols(effectiveApiServer, effectiveApiVersion, appSlug, symbolsUploadInfo.symbol_upload_id, apiToken);
-        } 
+        }
 
         tl.setResult(tl.TaskResult.Succeeded, tl.loc("Succeeded"));
     } catch (err) {

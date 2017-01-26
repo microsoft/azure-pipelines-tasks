@@ -52,7 +52,7 @@ function getAllFiles(rootPath, recursive) {
     return files;
 }
 
-export function createZipStream(rootPath : string, includeFolder: boolean) : NodeJS.ReadableStream {
+export function createZipStream(rootPath: string, includeFolder: boolean): NodeJS.ReadableStream {
     let zip = new Zip();
     let filePaths = getAllFiles(rootPath, /*recursive=*/ true);
     for (let i = 0; i < filePaths.length; i++) {
@@ -68,7 +68,7 @@ export function createZipStream(rootPath : string, includeFolder: boolean) : Nod
         compression: 'DEFLATE',
         type: 'nodebuffer',
         streamFiles: true
-    }, function(chunk) {
+    }, function (chunk) {
         if (chunk.currentFile != currentFile) {
             currentFile = chunk.currentFile;
             tl.debug(chunk.currentFile ? "Deflating file: " + chunk.currentFile + ", progress %" + chunk.percent : "done");
@@ -78,16 +78,16 @@ export function createZipStream(rootPath : string, includeFolder: boolean) : Nod
     return zipStream;
 }
 
-export function createZipFile(zipStream : NodeJS.ReadableStream, filename : string) : Q.Promise<string> {
+export function createZipFile(zipStream: NodeJS.ReadableStream, filename: string): Q.Promise<string> {
     var defer = Q.defer<string>();
 
     zipStream.pipe(fs.createWriteStream(filename))
-            .on('finish', function() {
-                defer.resolve();
-            })
-            .on('error', function(err) {
-                defer.reject(tl.loc("FailedToCreateFile", filename, err));
-            });
+        .on('finish', function () {
+            defer.resolve();
+        })
+        .on('error', function (err) {
+            defer.reject(tl.loc("FailedToCreateFile", filename, err));
+        });
 
     return defer.promise;
 }
@@ -97,21 +97,21 @@ export function isDsym(s: string) {
 }
 
 export function removeNewLine(str: string): string {
-    return str.replace(/(\r\n|\n|\r)/gm,"");
+    return str.replace(/(\r\n|\n|\r)/gm, "");
 }
 
 export function resolveSinglePath(pattern: string): string {
     if (pattern) {
         let matches: string[] = glob.sync(pattern);
-        
+
         if (!matches || matches.length === 0) {
-            throw new Error(tl.loc("CannotFindAnyFile",pattern));
+            throw new Error(tl.loc("CannotFindAnyFile", pattern));
         }
-        
-        if(matches.length != 1) {
-            throw new Error(tl.loc("FoundMultipleFiles",pattern));
+
+        if (matches.length != 1) {
+            throw new Error(tl.loc("FoundMultipleFiles", pattern));
         }
-        
+
         return matches[0];
     }
 
