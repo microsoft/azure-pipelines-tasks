@@ -40,32 +40,24 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
 
     var errorFile = path.join(tl.getVariable('System.DefaultWorkingDirectory'),"error.txt");
     var fd = fs.openSync(errorFile, "w");
-    var isErrorFileOpen = true;
     var errObj = fs.createWriteStream("", {fd: fd} );
-     
+    
+    errObj.on('finish', () => {
+        msDeployUtility.redirectMSDeployErrorToConsole(publishingProfile);
+    });
+
     try {
         await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj})
-        if(publishingProfile != null) {
-            console.log(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
-        }
     }
     catch (error) {
         tl.error(tl.loc('Failedtodeploywebsite'));
-        fs.fsyncSync(fd);
-        fs.closeSync(fd);
-        isErrorFileOpen = false;
-        msDeployUtility.redirectMSDeployErrorToConsole()
-        throw Error(error);
+        throw Error(error.message);
     }
     finally {
-        if(isErrorFileOpen) {
-            fs.fsyncSync(fd);
-            fs.closeSync(fd);
-            isErrorFileOpen = false;
-        }
+        errObj.end();
         process.env.PATH = pathVar;
         if(setParametersFile != null) {
-                tl.rmRF(setParametersFile, true);
+            tl.rmRF(setParametersFile, true);
         }
     }
 }

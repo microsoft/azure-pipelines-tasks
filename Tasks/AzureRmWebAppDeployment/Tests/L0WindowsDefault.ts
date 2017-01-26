@@ -174,7 +174,12 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
 var fs = require('fs');
 tr.registerMock('fs', {
     createWriteStream: function (filePath, options) {
-        return { "isWriteStreamObj": true };
+        return { "isWriteStreamObj": true,
+                 "on": (event) => {
+                    console.log("event: " + event + " has occurred");
+                 },
+                 "end" : () => { return true }
+                };
     },
     ReadStream: fs.ReadStream,
     WriteStream: fs.WriteStream,
