@@ -45,6 +45,30 @@ describe('VSMobileCenterUpload L0 Suite', function () {
         done();
     });
 
+    it('Negative path: cannot continue upload without symbols', (done: MochaDone) => {
+        this.timeout(2000);
+
+        let tp = path.join(__dirname, 'L0NoSymbolsFails.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.failed, 'task should have failed');
+
+        done();
+    });
+
+    it('Postiive path: can continue upload without symbols if variable VSMobileCenterUpload.ContinueIfSymbolsNotFound is true', (done: MochaDone) => {
+        this.timeout(2000);
+
+        let tp = path.join(__dirname, 'L0NoSymbolsConditionallyPass.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
+
     it('Negative path: mobile center api rejects fail the task', (done: MochaDone) => {
         this.timeout(2000);
 

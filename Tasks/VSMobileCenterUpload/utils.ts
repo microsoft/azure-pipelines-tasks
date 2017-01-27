@@ -6,15 +6,22 @@ import glob = require('glob');
 
 var Zip = require('jszip');
 
-export function checkAndFixFilePath(p, name) {
+export function checkAndFixFilePath(p, name, continueOnError) {
     if (p) {
         var workDir = tl.getVariable("System.DefaultWorkingDirectory");
         if (arePathEqual(p, workDir)) {
             // Path points to the source root, ignore it
             p = null;
         } else {
-            // will error and fail task if it doesn't exist.
-            tl.checkPath(p, name);
+            if (continueOnError) {
+                if (!tl.exist(p)) {
+                    tl.warning(`Failed to locate ${name} at ${p}`);
+                    p = null;
+                }
+            } else {
+                // will error and fail task if it doesn't exist.
+                tl.checkPath(p, name);
+            }
         }
     }
 
@@ -100,16 +107,25 @@ export function removeNewLine(str: string): string {
     return str.replace(/(\r\n|\n|\r)/gm, "");
 }
 
-export function resolveSinglePath(pattern: string): string {
+export function resolveSinglePath(pattern: string, continueOnError: boolean): string {
     if (pattern) {
-        let matches: string[] = glob.sync(pattern);
+        let matches: string[] = tl.glob(pattern);
 
         if (!matches || matches.length === 0) {
-            throw new Error(tl.loc("CannotFindAnyFile", pattern));
+            if (continueOnError) {
+                tl.warning(tl.loc("CannotFindAnyFile", pattern));
+                return null;
+            } else {
+                throw new Error(tl.loc("CannotFindAnyFile", pattern));
+            }
         }
 
         if (matches.length != 1) {
-            throw new Error(tl.loc("FoundMultipleFiles", pattern));
+            if (continueOnError) {
+                tl.warning(tl.loc("FoundMultipleFiles", pattern));
+            } else {
+                throw new Error(tl.loc("FoundMultipleFiles", pattern));
+            }
         }
 
         return matches[0];
