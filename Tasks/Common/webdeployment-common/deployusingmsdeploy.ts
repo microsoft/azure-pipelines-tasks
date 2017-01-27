@@ -75,6 +75,7 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
         }
 
         if(!isDeploymentSuccess) {
+            tl.debug(JSON.stringify(deploymentError));
             throw Error(deploymentError.message);
         }
     }
