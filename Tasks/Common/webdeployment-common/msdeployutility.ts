@@ -133,7 +133,7 @@ export async  function containsParamFile(webAppPackage: string ) {
             tl.debug("Parameter Content that was parsed is:");
             tl.debug(paramContentXML);
         }
-        if(result != null && result['output'] != null && result['output']['parameters'] != null) {
+        else if(result != null && result['output'] != null && result['output']['parameters'] != null) {
             if(result['output']['parameters'][0] ) {
                 isParamFilePresent = true;
             }
