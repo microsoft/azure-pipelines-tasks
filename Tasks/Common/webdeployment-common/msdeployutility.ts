@@ -100,6 +100,14 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
  */
 export async  function containsParamFile(webAppPackage: string ) {
     var isParamFilePresent = false;
+    var isParamFilePresentBackup;
+    try {
+        isParamFilePresentBackup = await isMSDeployPackage(webAppPackage);
+    }
+    catch (error) {
+        isParamFilePresentBackup = false;
+        tl.debug("an error occurred in the function isMSDeployPackage");
+    }
     var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package=\'" + webAppPackage + "\'";
     var res =  tl.execSync("msdeploy", msDeployCheckParamFileCmdArgs, <any>{ failOnStdErr: true });
 
@@ -111,7 +119,7 @@ export async  function containsParamFile(webAppPackage: string ) {
         if(res.stderr) {
             tl.debug("res.stderr: " + res.stderr);
         }
-        isParamFilePresent = await isMSDeployPackage(webAppPackage);
+        isParamFilePresent = isParamFilePresentBackup;
         tl.debug("Is parameter file present in web package : " + isParamFilePresent);
         return isParamFilePresent;
     }
@@ -120,7 +128,7 @@ export async  function containsParamFile(webAppPackage: string ) {
 
     await parseString(paramContentXML, (error, result) => {
         if(error) {
-            throw new Error(error);
+            isParamFilePresent = isParamFilePresentBackup;
         }
         if(result != null && result['output'] != null && result['output']['parameters'] != null) {
             if(result['output']['parameters'][0] ) {
@@ -128,6 +136,7 @@ export async  function containsParamFile(webAppPackage: string ) {
             }
         }
         else {
+            isParamFilePresent = isParamFilePresentBackup;
             tl.warning("Parameter file is not well formed");
             tl.debug("Parameter File Content is:");
             tl.debug(paramContentXML);
