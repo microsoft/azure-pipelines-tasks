@@ -2,7 +2,6 @@ import path = require("path");
 import tl = require("vsts-task-lib/task");
 import fs = require("fs");
 import Q = require('q');
-import glob = require('glob');
 
 var Zip = require('jszip');
 
@@ -15,7 +14,7 @@ export function checkAndFixFilePath(p, name, continueOnError) {
         } else {
             if (continueOnError) {
                 if (!tl.exist(p)) {
-                    tl.warning(`Failed to locate ${name} at ${p}`);
+                    tl.warning(tl.loc("FailedToFindFile", name, p));
                     p = null;
                 }
             } else {
