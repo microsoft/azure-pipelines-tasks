@@ -116,7 +116,7 @@ export async  function containsParamFile(webAppPackage: string ) {
         if(execResult.error) {
             tl.debug("res.error: " + execResult.error.message);
         }
-        if(execResult.stderr) {
+        else if(execResult.stderr) {
             tl.debug("res.stderr: " + execResult.stderr);
         }
         isParamFilePresent = isParamFilePresentBackup;
