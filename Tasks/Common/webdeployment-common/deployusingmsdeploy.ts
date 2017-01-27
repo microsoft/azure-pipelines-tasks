@@ -52,6 +52,7 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
     }
     catch (error) {
         tl.error(tl.loc('Failedtodeploywebsite'));
+        tl.debug(JSON.stringify(error));        
         throw Error(error.message);
     }
     finally {

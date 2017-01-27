@@ -109,26 +109,28 @@ export async  function containsParamFile(webAppPackage: string ) {
         tl.debug("an error occurred in the function isMSDeployPackage");
     }
     var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package=\'" + webAppPackage + "\'";
-    var res =  tl.execSync("msdeploy", msDeployCheckParamFileCmdArgs, <any>{ failOnStdErr: true });
+    var execResult =  tl.execSync("msdeploy", msDeployCheckParamFileCmdArgs, <any>{ failOnStdErr: true });
 
-    if((res.error && res.error.message.length > 0 ) || (res.stderr && res.stderr.length > 0)) {
+    if((execResult.error && execResult.error.message.length > 0 ) || (execResult.stderr && execResult.stderr.length > 0)) {
         tl.debug("[COMMAND FAILED]: msdeploy " + msDeployCheckParamFileCmdArgs);
-        if(res.error) {
-            tl.debug("res.error: " + res.error.message);
+        if(execResult.error) {
+            tl.debug("res.error: " + execResult.error.message);
         }
-        if(res.stderr) {
-            tl.debug("res.stderr: " + res.stderr);
+        if(execResult.stderr) {
+            tl.debug("res.stderr: " + execResult.stderr);
         }
         isParamFilePresent = isParamFilePresentBackup;
         tl.debug("Is parameter file present in web package : " + isParamFilePresent);
         return isParamFilePresent;
     }
 
-    var paramContentXML = res.stdout;
+    var paramContentXML = execResult.stdout;
 
     await parseString(paramContentXML, (error, result) => {
         if(error) {
             isParamFilePresent = isParamFilePresentBackup;
+            tl.debug("Parameter Content that was parsed is:");
+            tl.debug(paramContentXML);
         }
         if(result != null && result['output'] != null && result['output']['parameters'] != null) {
             if(result['output']['parameters'][0] ) {
@@ -136,7 +138,7 @@ export async  function containsParamFile(webAppPackage: string ) {
             }
         }
         else {
-            isParamFilePresent = isParamFilePresentBackup;
+            isParamFilePresent = false;
             tl.warning("Parameter file is not well formed");
             tl.debug("Parameter File Content is:");
             tl.debug(paramContentXML);
@@ -159,7 +161,7 @@ async function isMSDeployPackage(webAppPackage: string ) {
     ((pacakgeComponent["entries"].indexOf("systeminfo.xml") > -1) || (pacakgeComponent["entries"].indexOf("systemInfo.xml") > -1))) {
         isParamFilePresent = true;
     }
-    tl.debug("Is parameter file present in web package : " + isParamFilePresent);
+    tl.debug("Is the package an msdeploy package : " + isParamFilePresent);
     return isParamFilePresent;
 }
 
@@ -241,23 +243,23 @@ export function redirectMSDeployErrorToConsole(publishProfile: any) {
     var msDeployErrorFilePath = tl.getVariable('System.DefaultWorkingDirectory') + '\\error.txt';
     
     if(tl.exist(msDeployErrorFilePath)) {
-        var errorFileContent = fs.readFileSync(msDeployErrorFilePath);
+        var errorFileContent = fs.readFileSync(msDeployErrorFilePath).toString();
 
-        if(errorFileContent.toString() === "") {
+        if(errorFileContent === "") {
             if(publishProfile != null) {
                 console.log(tl.loc('WebappsuccessfullypublishedatUrl0', publishProfile.destinationAppUrl));
             }
         }
         else {
-            if(errorFileContent.toString().indexOf("ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER") !== -1) {
+            if(errorFileContent.indexOf("ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER") !== -1) {
                 tl.warning(tl.loc("Trytodeploywebappagainwithappofflineoptionselected"));
             }
 
-            if(errorFileContent.toString().indexOf("FILE_IN_USE") !== -1) {
+            if(errorFileContent.indexOf("FILE_IN_USE") !== -1) {
                 tl.warning(tl.loc("Trytodeploywebappagainwithrenamefileoptionselected"));
             }
           
-            tl.error(errorFileContent.toString());
+            tl.error(errorFileContent);
             tl.rmRF(msDeployErrorFilePath);
         }
     }
