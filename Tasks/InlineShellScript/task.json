@@ -12,14 +12,14 @@
     ],
     "version": {
         "Major": "0",
-        "Minor": "0",
-        "Patch": "9"
+        "Minor": "2",
+        "Patch": "0"
     },
     "demands": [
         "sh",
         "Agent.OS -equals linux"
     ],
-    "instanceNameFormat": "Inline Script $(customTool)",
+    "instanceNameFormat": "Inline $(customTool) Script",
     "groups": [
         {
             "name": "advanced",
@@ -50,9 +50,33 @@
             "name": "script",
             "type": "multiLine",
             "label": "Script Content",
-            "defaultValue": "#!/bin/bash",
+            "defaultValue": "#!/bin/bash \nset -e\n\n##Add your script here ...",
             "required": true,
             "helpMarkDown": "Content of the shell script file to run."
+        },
+        {
+            "name": "fileExtension",
+            "type": "pickList",
+            "label": "Script File Extension",
+            "defaultValue": ".sh",
+            "required": true,
+            "helpMarkDown": "script file type.",
+            "groupName": "advanced",
+            "options": {
+                ".sh": ".sh",
+                ".py": ".py",
+                ".pl": ".pl",
+                ".js": ".js",
+                ".rb": ".rb"
+            }
+        },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+        {
+            "name": "arguments",
+            "type": "string",
+            "label": "Script Arguments",
+            "defaultValue": "",
+            "helpMarkDown": "argments for the script (in case you don't want to use them in line).",
+            "groupName": "advanced"
         },
         {
             "name": "failOnStandardError",

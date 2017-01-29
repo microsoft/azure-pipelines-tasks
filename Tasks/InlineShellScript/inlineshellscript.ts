@@ -6,15 +6,20 @@ import fs = require('fs');
 tl.setResourcePath(path.join( __dirname, 'task.json'));
 
 var runner = tl.getInput('customTool', true);
+var args = tl.getInput('arguments');
 var tool = tl.createToolRunner(tl.which(runner, true));
 var content = tl.getInput('script');
 var cwd = tl.getPathInput('cwd', true, false);
+var ext = tl.getInput('fileExtension');
 tl.mkdirP(cwd);
 tl.cd(cwd);
-var tempScript = cwd + "/inlineShellScript.sh";
+var tempScript = cwd + "/inlineScript" + ext;
  
 fs.writeFileSync(tempScript,content,'utf8');
 tool.pathArg(tempScript);
+if (args) {
+	tool.arg(args);
+}
 
 var failOnStdErr = tl.getBoolInput('failOnStandardError', false);
 
