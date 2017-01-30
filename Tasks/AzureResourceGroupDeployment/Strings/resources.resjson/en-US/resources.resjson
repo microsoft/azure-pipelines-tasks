@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Resource Group Deployment",
-  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
+  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/AzureResourceGroupDeployment/README.md)",
   "loc.description": "Deploy, start, stop, delete Azure Resource Groups",
   "loc.instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
   "loc.group.displayName.AzureDetails": "Azure Details",
