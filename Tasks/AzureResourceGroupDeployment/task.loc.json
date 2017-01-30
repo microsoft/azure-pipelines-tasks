@@ -16,9 +16,7 @@
     "Minor": 0,
     "Patch": 0
   },
-  "demands": [
-    "node.js"
-  ],
+  "demands": [],
   "minimumAgentVersion": "2.0.0",
   "groups": [
     {
