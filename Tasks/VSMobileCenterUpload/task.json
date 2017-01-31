@@ -147,7 +147,11 @@
         "Succeeded": "Visual Studio Mobile Center Upload Task succeeded",
         "CannotFindAnyFile": "Cannot find any file based on %s.",
         "FoundMultipleFiles": "Found multiple files matching %s.",
+<<<<<<< HEAD
         "FailedToCreateFile": "Failed to create %s with error: %s.",
         "FailedToFindFile": "Failed to find %s at %s."
+=======
+        "FailedToCreateFile": "Failed to create %s with error: %s."
+>>>>>>> users/arjgupta/badfdfixM112
     }
 }

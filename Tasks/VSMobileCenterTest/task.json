@@ -71,61 +71,118 @@
             }
         },
         {
+<<<<<<< HEAD
             "name":"appiumBuildDir",
             "type":"string",
             "label":"Build Directory",
             "defaultValue":"",
             "visibleRule":"enablePrepare = true && framework = appium",
+=======
+            "name": "artifactsDir",
+            "type": "filePath",
+            "label": "Artifacts Directory",
+            "defaultValue": "$(Build.ArtifactStagingDirectory)/MobileCenterTest",
+            "required": true,
+            "helpMarkDown": "Where to place the artifacts produced by the prepare step.  This directory will be created if it does not exist.",
+            "groupName": "prepare"
+        },
+        {
+            "name": "appiumBuildDir",
+            "type": "string",
+            "label": "Build Directory",
+            "defaultValue": "",
+            "visibleRule": "framework = appium",
+>>>>>>> users/arjgupta/badfdfixM112
             "required": true,
             "helpMarkDown": "Path to directory with Appium tests.",
             "groupName": "prepare"
         },
         {
+<<<<<<< HEAD
             "name":"espressoBuildDir",
             "type":"string",
             "label":"Build Directory",
             "defaultValue":"",
             "visibleRule":"enablePrepare = true && framework = espresso",
+=======
+            "name": "expressoBuildDir",
+            "type": "string",
+            "label": "Build Directory",
+            "defaultValue": "",
+            "visibleRule": "framework = expresso",
+>>>>>>> users/arjgupta/badfdfixM112
             "required": false,
             "helpMarkDown": "Path to Espresso output directory.",
             "groupName": "prepare"
         },
         {
+<<<<<<< HEAD
             "name":"espressoTestApkPath",
             "type":"string",
             "label":"Test APK Path",
             "defaultValue":"",
             "visibleRule":"enablePrepare = true && framework = espresso",
+=======
+            "name": "expressoTestApkPath",
+            "type": "string",
+            "label": "Test APK Path",
+            "defaultValue": "",
+            "visibleRule": "framework = expresso",
+>>>>>>> users/arjgupta/badfdfixM112
             "required": false,
             "helpMarkDown": "Path to APK file with Espresso tests. If not set, build-dir is used to discover it. Wildcard is allowed.",
             "groupName": "prepare"
         },
         {
+<<<<<<< HEAD
             "name":"calabashProjectDir",
             "type":"string",
             "label":"Project Directory",
             "defaultValue":"",
             "visibleRule":"enablePrepare = true && framework = calabash",
+=======
+            "name": "calabashProjectDir",
+            "type": "string",
+            "label": "Project Directory",
+            "defaultValue": "",
+            "visibleRule": "framework = calabash",
+>>>>>>> users/arjgupta/badfdfixM112
             "required": true,
             "helpMarkDown": "Path to Calabash workspace directory.",
             "groupName": "prepare"
         },
         {
+<<<<<<< HEAD
             "name":"calabashConfigFile",
             "type":"filePath",
             "label":"Cucumber Config File",
             "defaultValue":"",
             "visibleRule":"enablePrepare = true && framework = calabash",
+=======
+            "name": "calabashConfigFile",
+            "type": "filePath",
+            "label": "Cucumber Config File",
+            "defaultValue": "",
+            "visibleRule": "framework = calabash",
+>>>>>>> users/arjgupta/badfdfixM112
             "required": false,
             "helpMarkDown": "Path to Cucumber configuration file, usually cucumber.yml.",
             "groupName": "prepare"
         },
         {
+<<<<<<< HEAD
             "name":"calabashProfile",
             "type":"string",
             "label":"Profile to run",
             "defaultValue":"",
             "visibleRule":"enablePrepare = true && framework = calabash",
+=======
+            "name": "calabashProfile",
+            "type": "string",
+            "label": "Profile to run",
+            "defaultValue": "",
+            "visibleRule": "framework = calabash",
+>>>>>>> users/arjgupta/badfdfixM112
             "required": false,
             "helpMarkDown": "Profile to run.  This value must exists in the Cucumber configuration file.",
             "groupName": "prepare"
@@ -135,64 +192,117 @@
             "type": "boolean",
             "label": "Skip Configuration Check",
             "defaultValue": false,
+<<<<<<< HEAD
             "visibleRule":"enablePrepare = true && framework = calabash",
+=======
+            "visibleRule": "framework = calabash",
+>>>>>>> users/arjgupta/badfdfixM112
             "required": false,
             "helpMarkDown": "Force running without Cucumber profile.",
             "groupName": "prepare"
         },
         {
+<<<<<<< HEAD
             "name":"uitestBuildDir",
             "type":"string",
             "label":"Build Directory",
             "defaultValue":"",
             "visibleRule":"enablePrepare = true && framework = uitest",
+=======
+            "name": "uitestBuildDir",
+            "type": "string",
+            "label": "Build Directory",
+            "defaultValue": "",
+            "visibleRule": "framework = uitest",
+>>>>>>> users/arjgupta/badfdfixM112
             "required": true,
             "helpMarkDown": "Path to directory with built test assemblies.",
             "groupName": "prepare"
         },
         {
+<<<<<<< HEAD
             "name":"uitestStoreFile",
             "type":"string",
             "label":"Store File",
             "defaultValue":"",
             "visibleRule":"enablePrepare = true && framework = uitest",
+=======
+            "name": "uitestStoreFile",
+            "type": "string",
+            "label": "Store File",
+            "defaultValue": "",
+            "visibleRule": "framework = uitest",
+>>>>>>> users/arjgupta/badfdfixM112
             "required": false,
             "groupName": "prepare"
         },
         {
+<<<<<<< HEAD
             "name":"uitestStorePass",
             "type":"string",
             "label":"Store Password",
             "defaultValue":"",
             "visibleRule":"enablePrepare = true && framework = uitest",
+=======
+            "name": "uitestStorePass",
+            "type": "string",
+            "label": "Store Password",
+            "defaultValue": "",
+            "visibleRule": "framework = uitest",
+>>>>>>> users/arjgupta/badfdfixM112
             "required": false,
             "groupName": "prepare"
         },
         {
+<<<<<<< HEAD
             "name":"uitestKeyAlias",
             "type":"string",
             "label":"Key Alias",
             "defaultValue":"",
             "visibleRule":"enablePrepare = true && framework = uitest",
+=======
+            "name": "uitestKeyAlias",
+            "type": "string",
+            "label": "Key Alias",
+            "defaultValue": "",
+            "visibleRule": "framework = uitest",
+>>>>>>> users/arjgupta/badfdfixM112
             "required": false,
             "groupName": "prepare"
         },
         {
+<<<<<<< HEAD
             "name":"uitestKeyPass",
             "type":"string",
             "label":"Key Password",
             "defaultValue":"",
             "visibleRule":"enablePrepare = true && framework = uitest",
+=======
+            "name": "uitestKeyPass",
+            "type": "string",
+            "label": "Key Password",
+            "defaultValue": "",
+            "visibleRule": "framework = uitest",
+>>>>>>> users/arjgupta/badfdfixM112
             "required": false,
             "groupName": "prepare"
         },
         {
+<<<<<<< HEAD
             "name":"uitestToolsDir",
             "type":"string",
             "label":"Test Tools Directory",
             "defaultValue":"",
             "visibleRule":"enablePrepare = true && framework = uitest",
             "helpMarkDown":"Path to directory with Xamarin UI Tets tools that contains test-cloud.exe.",
+=======
+            "name": "uitestToolsDir",
+            "type": "string",
+            "label": "Test Tools Directory",
+            "defaultValue": "",
+            "visibleRule": "framework = uitest",
+            "helpMarkDown": "Path to directory with Xamarin UI Tets tools that contains test-cloud.exe.",
+>>>>>>> users/arjgupta/badfdfixM112
             "required": false,
             "groupName": "prepare"
         },
@@ -242,10 +352,14 @@
             "type": "connectedService:vsmobilecenter",
             "label": "Mobile Center Connection",
             "defaultValue": "",
+<<<<<<< HEAD
             "required": true,
             "groupName": "run",
             "helpMarkDown": "Select the service endpoint for your Visual Studio Mobile Center connection. To create one, click the Manage link and create a new service endpoint.",
             "visibleRule": "enableRun = true && credsType = serviceEndpoint"
+=======
+            "required": false
+>>>>>>> users/arjgupta/badfdfixM112
         },
         {
             "name": "username",
