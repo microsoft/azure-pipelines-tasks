@@ -183,7 +183,7 @@ try {
     else
     {
         $publishParameters['Action'] = "RegisterAndCreate"
-        $publishParameters['OverwriteBehavior'] = "SameAppTypeAndVersion"
+        $publishParameters['OverwriteBehavior'] = Get-VstsInput -Name overwriteBehavior
 
         Publish-NewServiceFabricApplication @publishParameters
     }

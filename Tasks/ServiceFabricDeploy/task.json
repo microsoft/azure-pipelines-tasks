@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 3,
-        "Patch": 3
+        "Patch": 4
     },
     "minimumAgentVersion": "1.95.0",
     "groups": [
@@ -91,6 +91,20 @@
             "required": false,
             "groupname": "advanced",
             "helpMarkDown": "Timeout in seconds for registering application package."
+        },
+        {
+            "name": "overwriteBehavior",
+            "type": "pickList",
+            "label": "Overwrite Behavior",
+            "defaultValue": "SameAppTypeAndVersion",
+            "required": true,
+            "options": {
+                "Always": "Always",
+                "Never": "Never",
+                "SameAppTypeAndVersion": "SameAppTypeAndVersion"
+            },
+            "groupname": "advanced",
+            "helpMarkDown": "Overwrite Behavior if an application exists in the cluster with the same name, and upgrades have not been configured."
         },
         {
             "name": "overridePublishProfileSettings",

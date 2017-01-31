@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 3,
-    "Patch": 3
+    "Patch": 4
   },
   "minimumAgentVersion": "1.95.0",
   "groups": [
@@ -91,6 +91,20 @@
       "required": false,
       "groupname": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.registerPackageTimeoutSec"
+    },
+    {
+      "name": "overwriteBehavior",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.overwriteBehavior",
+      "defaultValue": "SameAppTypeAndVersion",
+      "required": true,
+      "options": {
+        "Always": "Always",
+        "Never": "Never",
+        "SameAppTypeAndVersion": "SameAppTypeAndVersion"
+      },
+      "groupname": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.overwriteBehavior"
     },
     {
       "name": "overridePublishProfileSettings",
