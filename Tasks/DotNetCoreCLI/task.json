@@ -1,7 +1,7 @@
 {
     "id": "5541a522-603c-47ad-91fc-a4b1d163081b",
     "name": "DotNetCoreCLI",
-    "friendlyName": ".NET Core (PREVIEW)",
+    "friendlyName": ".NET Core",
     "description": "Build, test and publish using dotnet core command-line.",
     "author": "Microsoft Corporation",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=832194)",
@@ -15,9 +15,9 @@
     ],
     "demands": [],
     "version": {
-        "Major": 0,
-        "Minor": 3,
-        "Patch": 1
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
     },
     "minimumAgentVersion": "1.95.0",
     "instanceNameFormat": "dotnet $(command)",
