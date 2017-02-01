@@ -99,10 +99,13 @@ function Publish-UpgradedServiceFabricApplication
 
         [Parameter(ParameterSetName="ApplicationParameterFilePath")]
         [Parameter(ParameterSetName="ApplicationName")]
-        [Switch]$CompressPackage
+        [Switch]$CompressPackage,
+
+        [Parameter(ParameterSetName="ApplicationParameterFilePath")]
+        [Parameter(ParameterSetName="ApplicationName")]
+        [Switch]$SkipUpgradeSameTypeAndVersion
     )
-
-
+    
     if (!(Test-Path $ApplicationPackagePath))
     {
         $errMsg = (Get-VstsLocString -Key PathDoesNotExist -ArgumentList $ApplicationPackagePath)
@@ -200,9 +203,21 @@ function Publish-UpgradedServiceFabricApplication
 
         $reg = Get-ServiceFabricApplicationType -ApplicationTypeName $names.ApplicationTypeName | Where-Object  { $_.ApplicationTypeVersion -eq $names.ApplicationTypeVersion }
         if ($reg)
-        {
-            Write-Host (Get-VstsLocString -Key SFSDK_UnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
-            $reg | Unregister-ServiceFabricApplicationType -Force
+        {            
+            try {
+                Write-Host (Get-VstsLocString -Key SFSDK_UnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))            
+                $reg | Unregister-ServiceFabricApplicationType -Force    
+            }
+            catch {
+                ## If SkipUpgrade param is set when existing version already deployed, then back out of upgrade
+                if($SkipUpgradeSameTypeAndVersion) {                    
+                    Write-Warning (Get-VstsLocString -Key SFSDK_SkipUpgradeWarning -ArgumentList @($reg.ApplicationTypeName, $reg.ApplicationTypeVersion))
+                    return
+                }
+                else {                    
+                    throw   
+                }                
+            }            
         }
     
         $applicationPackagePathInImageStore = $names.ApplicationTypeName

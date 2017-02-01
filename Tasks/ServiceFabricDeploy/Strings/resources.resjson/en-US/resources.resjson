@@ -39,6 +39,8 @@
   "loc.input.label.MaxPercentUnhealthyDeployedApplications": "MaxPercentUnhealthyDeployedApplications",
   "loc.input.label.UpgradeTimeoutSec": "UpgradeTimeoutSec",
   "loc.input.label.ServiceTypeHealthPolicyMap": "ServiceTypeHealthPolicyMap",
+  "loc.input.label.skipUpgradeSameTypeAndVersion": "Skip upgrade for same Type and Version",
+  "loc.input.help.skipUpgradeSameTypeAndVersion": "Indicates whether an upgrade will be skipped if the same application type and version already exists in the cluster, otherwise the upgrade fails during validation. If enabled, re-deployments are idempotent.",
   "loc.messages.ItemSearchMoreThanOneFound": "Found more than one item with search pattern {0}. There can be only one.",
   "loc.messages.ItemSearchNoFilesFound": "No items were found with search pattern {0}.",
   "loc.messages.SearchingForPath": "Searching for path: {0}",
@@ -87,5 +89,6 @@
   "loc.messages.SFSDK_UnzipPackage": "Attempting to unzip '{0}' to location '{1}'.",
   "loc.messages.SFSDK_UnexpectedError": "Unexpected Error. Error details: $_.Exception.Message",
   "loc.messages.SFSDK_CopyPackageTimeoutSecWarning": "The CopyPackageTimeoutSec parameter requires version '2.3' of the Service Fabric SDK, but the installed version is '{0}'. This parameter will be ignored.",
-  "loc.messages.SFSDK_CompressPackageWarning": "The CompressPackage parameter requires version '2.5' of the Service Fabric SDK, but the installed version is '{0}'. This parameter will be ignored."
+  "loc.messages.SFSDK_CompressPackageWarning": "The CompressPackage parameter requires version '2.5' of the Service Fabric SDK, but the installed version is '{0}'. This parameter will be ignored.",
+  "loc.messages.SFSDK_SkipUpgradeWarning": "Skipping upgrade, since application type '{0}' with version '{1}' already exists in cluster."
 }

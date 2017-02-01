@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 3,
-    "Patch": 4
+    "Patch": 5
   },
   "minimumAgentVersion": "1.95.0",
   "groups": [
@@ -267,6 +267,15 @@
       "required": false,
       "groupname": "upgrade",
       "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+    },
+    {
+      "name": "skipUpgradeSameTypeAndVersion",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.skipUpgradeSameTypeAndVersion",
+      "defaultValue": "false",
+      "required": false,
+      "groupname": "upgrade",
+      "helpMarkDown": "ms-resource:loc.input.help.skipUpgradeSameTypeAndVersion"
     }
   ],
   "execution": {
@@ -323,6 +332,7 @@
     "SFSDK_UnzipPackage": "ms-resource:loc.messages.SFSDK_UnzipPackage",
     "SFSDK_UnexpectedError": "ms-resource:loc.messages.SFSDK_UnexpectedError",
     "SFSDK_CopyPackageTimeoutSecWarning": "ms-resource:loc.messages.SFSDK_CopyPackageTimeoutSecWarning",
-    "SFSDK_CompressPackageWarning": "ms-resource:loc.messages.SFSDK_CompressPackageWarning"
+    "SFSDK_CompressPackageWarning": "ms-resource:loc.messages.SFSDK_CompressPackageWarning",
+    "SFSDK_SkipUpgradeWarning": "ms-resource:loc.messages.SFSDK_SkipUpgradeWarning"
   }
 }
