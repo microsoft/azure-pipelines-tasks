@@ -245,12 +245,8 @@ export function redirectMSDeployErrorToConsole(publishProfile: any) {
     if(tl.exist(msDeployErrorFilePath)) {
         var errorFileContent = fs.readFileSync(msDeployErrorFilePath).toString();
 
-        if(errorFileContent === "") {
-            if(publishProfile != null) {
-                console.log(tl.loc('WebappsuccessfullypublishedatUrl0', publishProfile.destinationAppUrl));
-            }
-        }
-        else {
+        if(errorFileContent !== "") {
+
             if(errorFileContent.indexOf("ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER") !== -1) {
                 tl.warning(tl.loc("Trytodeploywebappagainwithappofflineoptionselected"));
             }

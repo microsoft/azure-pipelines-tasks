@@ -44,11 +44,14 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
     var errObj = fs.createWriteStream("", {fd: fd} );
     
     errObj.on('finish', () => {
-        msDeployUtility.redirectMSDeployErrorToConsole(publishingProfile);
+        msDeployUtility.redirectMSDeployErrorToConsole();
     });
 
     try {
-        await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj})
+        await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj});
+        if(publishingProfile != null) {
+            console.log(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
+        }
     }
     catch (error) {
         tl.error(tl.loc('Failedtodeploywebsite'));
