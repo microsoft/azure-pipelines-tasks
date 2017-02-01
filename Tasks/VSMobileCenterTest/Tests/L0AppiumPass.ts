@@ -6,6 +6,8 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'vsmobilecentertest.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
+tmr.setInput('enablePrepare', 'true');
+tmr.setInput('enableRun', 'true');
 tmr.setInput('credsType', 'serviceEndpoint');
 tmr.setInput('serverEndpoint', 'MyTestEndpoint');
 tmr.setInput('appSlug', 'testuser/testapp');

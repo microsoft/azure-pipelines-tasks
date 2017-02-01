@@ -2,19 +2,25 @@ import path = require("path");
 import tl = require("vsts-task-lib/task");
 import fs = require("fs");
 import Q = require('q');
-import glob = require('glob');
 
 var Zip = require('jszip');
 
-export function checkAndFixFilePath(p, name) {
+export function checkAndFixFilePath(p, name, continueOnError) {
     if (p) {
         var workDir = tl.getVariable("System.DefaultWorkingDirectory");
         if (arePathEqual(p, workDir)) {
             // Path points to the source root, ignore it
             p = null;
         } else {
-            // will error and fail task if it doesn't exist.
-            tl.checkPath(p, name);
+            if (continueOnError) {
+                if (!tl.exist(p)) {
+                    tl.warning(tl.loc("FailedToFindFile", name, p));
+                    p = null;
+                }
+            } else {
+                // will error and fail task if it doesn't exist.
+                tl.checkPath(p, name);
+            }
         }
     }
 
@@ -52,7 +58,7 @@ function getAllFiles(rootPath, recursive) {
     return files;
 }
 
-export function createZipStream(rootPath : string, includeFolder: boolean) : NodeJS.ReadableStream {
+export function createZipStream(rootPath: string, includeFolder: boolean): NodeJS.ReadableStream {
     let zip = new Zip();
     let filePaths = getAllFiles(rootPath, /*recursive=*/ true);
     for (let i = 0; i < filePaths.length; i++) {
@@ -68,7 +74,7 @@ export function createZipStream(rootPath : string, includeFolder: boolean) : Nod
         compression: 'DEFLATE',
         type: 'nodebuffer',
         streamFiles: true
-    }, function(chunk) {
+    }, function (chunk) {
         if (chunk.currentFile != currentFile) {
             currentFile = chunk.currentFile;
             tl.debug(chunk.currentFile ? "Deflating file: " + chunk.currentFile + ", progress %" + chunk.percent : "done");
@@ -78,16 +84,16 @@ export function createZipStream(rootPath : string, includeFolder: boolean) : Nod
     return zipStream;
 }
 
-export function createZipFile(zipStream : NodeJS.ReadableStream, filename : string) : Q.Promise<string> {
+export function createZipFile(zipStream: NodeJS.ReadableStream, filename: string): Q.Promise<string> {
     var defer = Q.defer<string>();
 
     zipStream.pipe(fs.createWriteStream(filename))
-            .on('finish', function() {
-                defer.resolve();
-            })
-            .on('error', function(err) {
-                defer.reject(tl.loc("FailedToCreateFile", filename, err));
-            });
+        .on('finish', function () {
+            defer.resolve();
+        })
+        .on('error', function (err) {
+            defer.reject(tl.loc("FailedToCreateFile", filename, err));
+        });
 
     return defer.promise;
 }
@@ -97,21 +103,30 @@ export function isDsym(s: string) {
 }
 
 export function removeNewLine(str: string): string {
-    return str.replace(/(\r\n|\n|\r)/gm,"");
+    return str.replace(/(\r\n|\n|\r)/gm, "");
 }
 
-export function resolveSinglePath(pattern: string): string {
+export function resolveSinglePath(pattern: string, continueOnError: boolean): string {
     if (pattern) {
-        let matches: string[] = glob.sync(pattern);
-        
+        let matches: string[] = tl.glob(pattern);
+
         if (!matches || matches.length === 0) {
-            throw new Error(tl.loc("CannotFindAnyFile",pattern));
+            if (continueOnError) {
+                tl.warning(tl.loc("CannotFindAnyFile", pattern));
+                return null;
+            } else {
+                throw new Error(tl.loc("CannotFindAnyFile", pattern));
+            }
         }
-        
-        if(matches.length != 1) {
-            throw new Error(tl.loc("FoundMultipleFiles",pattern));
+
+        if (matches.length != 1) {
+            if (continueOnError) {
+                tl.warning(tl.loc("FoundMultipleFiles", pattern));
+            } else {
+                throw new Error(tl.loc("FoundMultipleFiles", pattern));
+            }
         }
-        
+
         return matches[0];
     }
 
