@@ -1,4 +1,4 @@
-# M112 Visual Studio Team Services Tasks
+# Visual Studio Team Services Tasks
 <br/>
 ![Tasks](/taskbanner.png?raw=true "Tasks")
 <br/>

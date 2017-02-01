@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "IIS Web App Manage On Machine Group",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=839731)",
+  "loc.helpMarkDown": "Replace with markdown to show in help",
   "loc.description": "Create or update a Website and an App Pool on an IIS using machine group",
   "loc.instanceNameFormat": "Manage IIS Web App: $(WebsiteName)",
   "loc.group.displayName.website": "Website",
