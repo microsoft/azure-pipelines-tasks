@@ -1,7 +1,7 @@
 import tl = require("vsts-task-lib/task");
 import path = require("path");
 import fs = require("fs");
-import ffl = require('find-files-legacy/findfiles.legacy');
+import nutil = require("nuget-task-common/utility");
 var archiver = require('archiver');
 
 export class dotNetExe {
@@ -72,7 +72,8 @@ export class dotNetExe {
             }
             else {
                 var pattern = path.dirname(projectFile) + "/**/publish";
-                var files = ffl.findFiles(pattern, true);
+                var files = nutil.resolveFilterSpec(pattern,
+            tl.getVariable("System.DefaultWorkingDirectory") || process.cwd());
                 for (var fileIndex in files) {
                     var file = files[fileIndex];
                     if (fs.lstatSync(file).isDirectory) {
@@ -194,7 +195,8 @@ export class dotNetExe {
             // projectPattern = "**/project.json;**/*.csproj";
         }
 
-        var projectFiles = ffl.findFiles(projectPattern, false);
+        var projectFiles = nutil.resolveFilterSpec(projectPattern,
+            tl.getVariable("System.DefaultWorkingDirectory") || process.cwd());
         if (!projectFiles || !projectFiles.length) {
             tl.warning(tl.loc("noProjectFilesFound"));
             return [];
