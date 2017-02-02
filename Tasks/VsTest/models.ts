@@ -10,6 +10,7 @@ export interface TestConfigurations {
     testDropLocation: string; // search folder
     overrideTestrunParameters: string;
     codeCoverageEnabled: boolean;
+    videoCoverageEnabled: boolean;
     buildConfig: string;
     buildPlatform: string;
     testRunTitle: string;
@@ -19,6 +20,7 @@ export interface TestConfigurations {
 }
 
 export interface DtaTestConfigurations extends TestConfigurations {
+    onDemandTestRunId: string;
     testConfigurationMapping: string; // TODO : What is this?
     testSelection: string; // "testPlan" as selection string
     testplan: number;
@@ -28,9 +30,6 @@ export interface DtaTestConfigurations extends TestConfigurations {
 }
 
 export interface VsTestConfigurations extends TestConfigurations {
-    vstestLocationMethod: string;
-    vstestLocation: string;
-    otherConsoleOptions: string;
     publishRunAttachments: string;
     runInParallel: boolean;
     vstestDiagFile: string;

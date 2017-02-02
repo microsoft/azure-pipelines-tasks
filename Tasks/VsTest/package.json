@@ -18,6 +18,7 @@
   "dependencies": {
     "performance-now": "0.2.0",
     "vsts-task-lib": "^2.0.0-preview",
+	  "vso-node-api": "6.0.1-preview",
     "xml2js": "0.4.16"
   },
   "optionalDependencies": {

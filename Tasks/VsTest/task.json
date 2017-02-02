@@ -1,7 +1,7 @@
 {
     "id": "EF087383-EE5E-42C7-9A53-AB56C98420F9",
     "name": "VSTest",
-    "friendlyName": "Visual Studio Test",
+    "friendlyName": "Visual Studio Test Plus Plus",
     "description": "Run tests with Visual Studio test runner",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
     "category": "Test",
@@ -9,7 +9,7 @@
         "Build",
         "Release"
     ],
-    "runsOn": [
+	"runsOn": [
         "Agent",
         "MachineGroup"
     ],
@@ -17,72 +17,179 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 11
+        "Patch": 100
     },
     "demands": [
         "vstest"
     ],
     "preview": "true",
-    "releaseNotes": "<ul><li><b>Test Impact Analysis:</b> Automatically select and run only the tests needed to validate the code change.</li><li>Support for minimatch patterns for specifying test assemblies.</li></ul>",
+    "releaseNotes" : "Adding the functionality to run distributed test with release phases.",
     "minimumAgentVersion": "1.89.0",
     "groups": [
+        {
+            "name": "testSelection",
+            "displayName": "Test selection",
+            "isExpanded": true
+        },
         {
             "name": "executionOptions",
             "displayName": "Execution Options",
             "isExpanded": true
         },
         {
-            "name": "tiaOptions",
-            "displayName": "Test Impact Analysis",
-            "isExpanded": true
-        },
-        {
-            "name": "advancedExecutionOptions",
-            "displayName": "Advanced Execution Options",
-            "isExpanded": false
-        },
-        {
             "name": "reportingOptions",
-            "displayName": "Reporting Options",
-            "isExpanded": false
+            "displayName": "Reporting options",
+            "isExpanded": true
         }
     ],
     "inputs": [
         {
+            "name": "testSelector",
+            "type": "pickList",
+            "label": "Select tests using",
+            "defaultValue": "testAssemblies",
+            "required": true,
+            "helpMarkDown": "******",
+            "groupName": "testSelection",
+            "options": {
+                "testAssemblies": "Test assemblies",
+                "testPlan": "Test plan",
+                "testRun": "Test run (for on-demand runs)"
+            }
+        },      
+        {
             "name": "testAssemblyVer2",
             "type": "multiLine",
-            "label": "Test Assembly",
+            "label": "Test assemblies",
             "defaultValue": "**\\*test*.dll\n!**\\obj\\**",
             "required": true,
             "helpMarkDown": "Run tests from the specified files. The file paths are relative to the search folder. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
-            "groupName": "executionOptions",
+            "groupName": "testSelection",
             "properties": {
                 "rows": "3",
                 "resizable": "true"
-            }
+            },
+            "visibleRule": "testSelector = testAssemblies"
         },
+        {
+            "name": "testPlan",
+            "type": "pickList",
+            "label": "Test plan",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select a Test Plan.",
+            "groupName": "testSelection",
+            "properties": {
+                "DisableManageLink": "True"
+            },
+            "visibleRule": "testSelector = testPlan"
+        },
+        {
+            "name": "testSuite",
+            "type": "pickList",
+            "label": "Test suite",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select Test Suites from the Test Plan.",
+            "groupName": "testSelection",          
+            "properties": {
+                "MultiSelect": "True",
+                "DisableManageLink": "True"
+            },
+            "visibleRule": "testSelector = testPlan"
+        },
+        {
+            "name": "testConfiguration",
+            "type": "pickList",
+            "label": "Test configuration",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select Test Configuration.",
+            "groupName": "testSelection",            
+            "properties": {
+                "DisableManageLink": "True"
+            },
+            "visibleRule": "testSelector = testPlan"
+        },
+        {
+            "name": "tcmTestRun",
+            "type": "string",
+            "label": "Test Run",
+            "defaultValue": "$(test.RunId)",
+            "required": false,
+            "helpMarkDown": "******",
+            "groupName": "testSelection",
+            "properties": {
+                "rows": "3",
+                "resizable": "true"
+            },
+            "visibleRule": "testSelector = testRun"
+        },        
         {
             "name": "searchFolder",
             "type": "string",
-            "label": "Search Folder",
-            "defaultValue": "",
+            "label": "Search folder",
+            "defaultValue": "$(System.DefaultWorkingDirectory)",
             "required": false,
             "helpMarkDown": "Folder to search for the test assemblies. Defaults to $(System.DefaultWorkingDirectory).",
-            "groupName": "executionOptions"
-        },
+            "groupName": "testSelection"
+        },     
         {
             "name": "testFiltercriteria",
             "type": "string",
-            "label": "Test Filter criteria",
+            "label": "Test filter criteria",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Additional criteria to filter tests from Test assemblies. For example: `Priority=1|Name=MyTestMethod`",
-            "groupName": "executionOptions"
+            "groupName": "testSelection",
+            "visibleRule": "testSelector = testAssemblies"
+        },        
+        {
+            "name": "uiTests",
+            "type": "boolean",
+            "label": "Test mix contains UI tests",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "*******",
+            "groupName": "testSelection"
         },
+        {
+            "name": "runOnlyImpactedTests",
+            "type": "boolean",
+            "label": "Run only impacted tests",
+            "defaultValue": "False",
+            "required": false,
+            "helpMarkDown": "Automatically select, and run only the tests needed to validate the code change.",
+            "groupName": "testSelection",
+            "visibleRule": "testSelector = testAssemblies"
+        },
+        {
+            "name": "runAllTestsAfterXBuilds",
+            "type": "string",
+            "label": "Number of builds after which all tests should be run",
+            "defaultValue": "50",
+            "required": false,
+            "helpMarkDown": "Number of builds after which to automatically run all tests. Test Impact Analysis stores the mapping between test cases and source code. It is recommended to regenerate the mapping by running all tests, on a regular basis.",
+            "groupName": "testSelection",
+            "visibleRule": "testSelector = testAssemblies && runOnlyImpactedTests = true"
+        },      
+        {  
+           "name": "testPlatform",  
+            "type": "pickList",  
+            "label": "Test platform version",  
+            "defaultValue": "14.0",  
+            "required": false,  
+            "helpMarkDown": "The version of Visual Studio test to use.",  
+            "groupName": "executionOptions",  
+            "options": {  
+                 "15.0": "Visual Studio 2017",  
+                 "14.0": "Visual Studio 2015"  
+             }  
+        },         
         {
             "name": "runSettingsFile",
             "type": "filePath",
-            "label": "Run Settings File",
+            "label": "Settings file",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Path to runsettings file to use with the tests. Use `$(Build.SourcesDirectory)` to access the Project folder.",
@@ -90,109 +197,64 @@
         },
         {
             "name": "overrideTestrunParameters",
-            "type": "string",
-            "label": "Override TestRun Parameters",
+            "type": "multiLine",
+            "label": "Override test run parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `AppURL=$(DeployURL);Port=8080`",
+            "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `-key1 value1 -key2 value2`",
+            "properties": {
+                "rows": "3",
+                "resizable": "true",
+                "editorExtension": "ms.vss-services-azure.parameters-grid"
+            },
             "groupName": "executionOptions"
         },
         {
-            "name": "codeCoverageEnabled",
+            "name": "runTestsInParallel",
             "type": "boolean",
-            "label": "Code Coverage Enabled",
+            "label": "Run tests in parallel on multi-core machines",
             "defaultValue": "False",
             "required": false,
-            "helpMarkDown": "Collect code coverage information from the Test run.",
+            "helpMarkDown": "******",
             "groupName": "executionOptions"
-        },
-        {
-            "name": "runInParallel",
+         },
+         {
+            "name": "runTestsInIsolation",
             "type": "boolean",
-            "label": "Run In Parallel",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Enable parallel execution of your tests.",
-            "groupName": "executionOptions"
-        },
-        {
-            "name": "runOnlyImpactedTests",
-            "type": "boolean",
-            "label": "Run Only Impacted Tests",
+            "label": "Run tests in isolation",
             "defaultValue": "False",
             "required": false,
-            "helpMarkDown": "Automatically select, and run only the tests needed to validate the code change.",
-            "groupName": "tiaOptions"
-        },
-        {
-            "name": "runAllTestsAfterXBuilds",
-            "type": "string",
-            "label": "Number Of Builds After Which To Run All Tests:",
-            "defaultValue": "50",
-            "required": false,
-            "helpMarkDown": "Number of builds after which to automatically run all tests. Test Impact Analysis stores the mapping between test cases and source code. It is recommended to regenerate the mapping by running all tests, on a regular basis.",
-            "groupName": "tiaOptions"
-        },
-        {
-            "name": "vstestLocationMethod",
-            "type": "radio",
-            "label": "VSTest",
-            "required": false,
-            "groupName": "advancedExecutionOptions",
-            "defaultValue": "version",
-            "options": {
-                "version": "Version",
-                "location": "Specify Location"
-            }
-        },
-        {
-            "name": "vsTestVersion",
-            "type": "pickList",
-            "label": "VSTest version",
-            "defaultValue": "14.0",
-            "required": false,
-            "helpMarkDown": "The version of VSTest to use.",
-            "groupName": "advancedExecutionOptions",
-            "visibleRule": "vstestLocationMethod = version",
-            "options": {
-                "latest": "Latest",
-                "15.0": "Visual Studio 2017",
-                "14.0": "Visual Studio 2015",
-                "12.0": "Visual Studio 2013"
-            }
-        },
-        {
-            "name": "vstestLocation",
-            "type": "string",
-            "label": "Path to vstest.console.exe",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Optionally supply the path to VSTest.",
-            "visibleRule": "vstestLocationMethod = location",
-            "groupName": "advancedExecutionOptions"
+            "helpMarkDown": "******",
+            "groupName": "executionOptions"
         },
         {
             "name": "pathtoCustomTestAdapters",
             "type": "string",
-            "label": "Path to Custom Test Adapters",
+            "label": "Path to custom tests adapters",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Directory path to custom test adapters. Nuget restored adapters are automatically searched for.",
-            "groupName": "advancedExecutionOptions"
-        },
-        {
-            "name": "otherConsoleOptions",
-            "type": "string",
-            "label": "Other console options",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Other Console options that can be passed to vstest.console.exe. Click on the help link below for more details.",
-            "groupName": "advancedExecutionOptions"
+            "groupName": "executionOptions"
+        }, 
+        {  
+           "name": "collectDiagnosticData",  
+            "type": "pickList", 
+            "label": "Collect diagnostic data",
+            "required": false,  
+            "helpMarkDown": "******",  
+            "groupName": "executionOptions",
+            "properties": {
+                "MultiSelectFlatList": "True"
+            },
+            "options": {  
+                 "video": "Video",  
+                 "codeCoverage": "Code Coverage"
+             }            
         },
         {
             "name": "testRunTitle",
             "type": "string",
-            "label": "Test Run Title",
+            "label": "Test run title",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Provide a name for the Test Run.",
@@ -224,6 +286,28 @@
             "required": false,
             "helpMarkDown": "Opt in/out of publishing test run level attachments.",
             "groupName": "reportingOptions"
+        }       
+    ],
+    "sourceDefinitions": [
+        {
+            "target": "testPlan",
+            "endpoint": "/$(system.teamProject)/_apis/test/plans?api-version=3.0-preview.2",
+            "selector": "jsonpath:$.value[*].name",
+            "keySelector": "jsonpath:$.value[*].id",
+            "authKey": "tfs:teamfoundation"
+        },
+        {
+            "target": "testConfiguration",
+            "endpoint": "/$(system.teamProject)/_apis/test/configurations?api-version=3.0-preview.1",
+            "selector": "jsonpath:$.value[*].name",
+            "keySelector": "jsonpath:$.value[*].id",
+            "authKey": "tfs:teamfoundation"
+        },
+        {
+            "target": "testSuite",
+            "endpoint": "/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites?$asTreeView=true&api-version=3.0-preview.2",
+            "selector": "jsonpath:$.value[*]",
+            "authKey": "tfs:teamfoundation"
         }
     ],
     "instanceNameFormat": "Test Assemblies",

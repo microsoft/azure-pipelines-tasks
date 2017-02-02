@@ -11,6 +11,7 @@ export function getDistributedTestConfigurations(): models.DtaTestConfigurations
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     const dtaConfiguration = {} as models.DtaTestConfigurations;
     initTestConfigurations(dtaConfiguration);
+    dtaConfiguration.onDemandTestRunId = tl.getInput('tcmTestRun');
     return dtaConfiguration;
 }
 
@@ -18,10 +19,6 @@ export function getvsTestConfigurations(): models.VsTestConfigurations {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     const vsTestConfiguration = {} as models.VsTestConfigurations;
     initTestConfigurations(vsTestConfiguration);
-    vsTestConfiguration.vstestLocationMethod = tl.getInput('vstestLocationMethod');
-    vsTestConfiguration.vstestLocation = tl.getPathInput('vsTestLocation');
-    vsTestConfiguration.pathtoCustomTestAdapters = tl.getInput('pathtoCustomTestAdapters');   
-    vsTestConfiguration.otherConsoleOptions = tl.getInput('otherConsoleOptions');
     vsTestConfiguration.publishRunAttachments = tl.getInput('publishRunAttachments');
     vsTestConfiguration.runInParallel = tl.getBoolInput('runInParallel');
     vsTestConfiguration.vstestDiagFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
@@ -38,16 +35,34 @@ export function getvsTestConfigurations(): models.VsTestConfigurations {
 
 function initTestConfigurations(testConfiguration: models.TestConfigurations)
 {
+    testConfiguration.pathtoCustomTestAdapters = tl.getInput('pathtoCustomTestAdapters');
     testConfiguration.sourceFilter = tl.getDelimitedInput('testAssemblyVer2', '\n', true);
+    testConfiguration.testDropLocation = tl.getInput('searchFolder');  
     testConfiguration.testcaseFilter = tl.getInput('testFiltercriteria');
     testConfiguration.runSettingsFile = tl.getPathInput('runSettingsFile');
-    testConfiguration.testDropLocation = tl.getInput('searchFolder');
     testConfiguration.overrideTestrunParameters = tl.getInput('overrideTestrunParameters');
-    testConfiguration.codeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');
     testConfiguration.buildConfig = tl.getInput('configuration');
     testConfiguration.buildPlatform = tl.getInput('platform');
     testConfiguration.testRunTitle = tl.getInput('testRunTitle');
-    testConfiguration.vsTestVersion = tl.getInput('vsTestVersion');
+    testConfiguration.vsTestVersion = tl.getInput('testPlatform');
+    initDataCollectorConfigurations(testConfiguration);
+}
+
+function initDataCollectorConfigurations(testConfiguration: models.TestConfigurations)
+{
+    const dataCollectors: string[] = tl.getDelimitedInput('collectDiagnosticData', ',', true);
+    testConfiguration.codeCoverageEnabled = false;
+    testConfiguration.videoCoverageEnabled = false;
+    dataCollectors.forEach((collector) => {
+        switch(collector.toLowerCase()) {
+            case 'codecoverage':
+                testConfiguration.codeCoverageEnabled = true;
+                break;
+            case 'video':
+                testConfiguration.videoCoverageEnabled = true;
+                break;
+        }
+    });
 }
 
 function getTiaConfiguration() : models.TiaConfiguration

@@ -17,37 +17,46 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 11
+    "Patch": 100
   },
   "demands": [
     "vstest"
   ],
   "preview": "true",
-  "releaseNotes": "<ul><li><b>Test Impact Analysis:</b> Automatically select and run only the tests needed to validate the code change.</li><li>Support for minimatch patterns for specifying test assemblies.</li></ul>",
+  "releaseNotes": "Adding the functionality to run distributed test with release phases.",
   "minimumAgentVersion": "1.89.0",
   "groups": [
+    {
+      "name": "testSelection",
+      "displayName": "ms-resource:loc.group.displayName.testSelection",
+      "isExpanded": true
+    },
     {
       "name": "executionOptions",
       "displayName": "ms-resource:loc.group.displayName.executionOptions",
       "isExpanded": true
     },
     {
-      "name": "tiaOptions",
-      "displayName": "ms-resource:loc.group.displayName.tiaOptions",
-      "isExpanded": true
-    },
-    {
-      "name": "advancedExecutionOptions",
-      "displayName": "ms-resource:loc.group.displayName.advancedExecutionOptions",
-      "isExpanded": false
-    },
-    {
       "name": "reportingOptions",
       "displayName": "ms-resource:loc.group.displayName.reportingOptions",
-      "isExpanded": false
+      "isExpanded": true
     }
   ],
   "inputs": [
+    {
+      "name": "testSelector",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.testSelector",
+      "defaultValue": "testAssemblies",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.testSelector",
+      "groupName": "testSelection",
+      "options": {
+        "testAssemblies": "Test assemblies",
+        "testPlan": "Test plan",
+        "testRun": "Test run (for on-demand runs)"
+      }
+    },
     {
       "name": "testAssemblyVer2",
       "type": "multiLine",
@@ -55,20 +64,75 @@
       "defaultValue": "**\\*test*.dll\n!**\\obj\\**",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.testAssemblyVer2",
-      "groupName": "executionOptions",
+      "groupName": "testSelection",
       "properties": {
         "rows": "3",
         "resizable": "true"
-      }
+      },
+      "visibleRule": "testSelector = testAssemblies"
+    },
+    {
+      "name": "testPlan",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.testPlan",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.testPlan",
+      "groupName": "testSelection",
+      "properties": {
+        "DisableManageLink": "True"
+      },
+      "visibleRule": "testSelector = testPlan"
+    },
+    {
+      "name": "testSuite",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.testSuite",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.testSuite",
+      "groupName": "testSelection",
+      "properties": {
+        "MultiSelect": "True",
+        "DisableManageLink": "True"
+      },
+      "visibleRule": "testSelector = testPlan"
+    },
+    {
+      "name": "testConfiguration",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.testConfiguration",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.testConfiguration",
+      "groupName": "testSelection",
+      "properties": {
+        "DisableManageLink": "True"
+      },
+      "visibleRule": "testSelector = testPlan"
+    },
+    {
+      "name": "tcmTestRun",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.tcmTestRun",
+      "defaultValue": "$(test.RunId)",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.tcmTestRun",
+      "groupName": "testSelection",
+      "properties": {
+        "rows": "3",
+        "resizable": "true"
+      },
+      "visibleRule": "testSelector = testRun"
     },
     {
       "name": "searchFolder",
       "type": "string",
       "label": "ms-resource:loc.input.label.searchFolder",
-      "defaultValue": "",
+      "defaultValue": "$(System.DefaultWorkingDirectory)",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.searchFolder",
-      "groupName": "executionOptions"
+      "groupName": "testSelection"
     },
     {
       "name": "testFiltercriteria",
@@ -77,7 +141,50 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.testFiltercriteria",
-      "groupName": "executionOptions"
+      "groupName": "testSelection",
+      "visibleRule": "testSelector = testAssemblies"
+    },
+    {
+      "name": "uiTests",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.uiTests",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.uiTests",
+      "groupName": "testSelection"
+    },
+    {
+      "name": "runOnlyImpactedTests",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.runOnlyImpactedTests",
+      "defaultValue": "False",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.runOnlyImpactedTests",
+      "groupName": "testSelection",
+      "visibleRule": "testSelector = testAssemblies"
+    },
+    {
+      "name": "runAllTestsAfterXBuilds",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.runAllTestsAfterXBuilds",
+      "defaultValue": "50",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.runAllTestsAfterXBuilds",
+      "groupName": "testSelection",
+      "visibleRule": "testSelector = testAssemblies && runOnlyImpactedTests = true"
+    },
+    {
+      "name": "testPlatform",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.testPlatform",
+      "defaultValue": "14.0",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.testPlatform",
+      "groupName": "executionOptions",
+      "options": {
+        "15.0": "Visual Studio 2017",
+        "14.0": "Visual Studio 2015"
+      }
     },
     {
       "name": "runSettingsFile",
@@ -90,86 +197,35 @@
     },
     {
       "name": "overrideTestrunParameters",
-      "type": "string",
+      "type": "multiLine",
       "label": "ms-resource:loc.input.label.overrideTestrunParameters",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.overrideTestrunParameters",
+      "properties": {
+        "rows": "3",
+        "resizable": "true",
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
+      },
       "groupName": "executionOptions"
     },
     {
-      "name": "codeCoverageEnabled",
+      "name": "runTestsInParallel",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.codeCoverageEnabled",
+      "label": "ms-resource:loc.input.label.runTestsInParallel",
       "defaultValue": "False",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.codeCoverageEnabled",
+      "helpMarkDown": "ms-resource:loc.input.help.runTestsInParallel",
       "groupName": "executionOptions"
     },
     {
-      "name": "runInParallel",
+      "name": "runTestsInIsolation",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.runInParallel",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.runInParallel",
-      "groupName": "executionOptions"
-    },
-    {
-      "name": "runOnlyImpactedTests",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.runOnlyImpactedTests",
+      "label": "ms-resource:loc.input.label.runTestsInIsolation",
       "defaultValue": "False",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.runOnlyImpactedTests",
-      "groupName": "tiaOptions"
-    },
-    {
-      "name": "runAllTestsAfterXBuilds",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.runAllTestsAfterXBuilds",
-      "defaultValue": "50",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.runAllTestsAfterXBuilds",
-      "groupName": "tiaOptions"
-    },
-    {
-      "name": "vstestLocationMethod",
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.vstestLocationMethod",
-      "required": false,
-      "groupName": "advancedExecutionOptions",
-      "defaultValue": "version",
-      "options": {
-        "version": "Version",
-        "location": "Specify Location"
-      }
-    },
-    {
-      "name": "vsTestVersion",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.vsTestVersion",
-      "defaultValue": "14.0",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.vsTestVersion",
-      "groupName": "advancedExecutionOptions",
-      "visibleRule": "vstestLocationMethod = version",
-      "options": {
-        "latest": "Latest",
-        "15.0": "Visual Studio 2017",
-        "14.0": "Visual Studio 2015",
-        "12.0": "Visual Studio 2013"
-      }
-    },
-    {
-      "name": "vstestLocation",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.vstestLocation",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.vstestLocation",
-      "visibleRule": "vstestLocationMethod = location",
-      "groupName": "advancedExecutionOptions"
+      "helpMarkDown": "ms-resource:loc.input.help.runTestsInIsolation",
+      "groupName": "executionOptions"
     },
     {
       "name": "pathtoCustomTestAdapters",
@@ -178,16 +234,22 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.pathtoCustomTestAdapters",
-      "groupName": "advancedExecutionOptions"
+      "groupName": "executionOptions"
     },
     {
-      "name": "otherConsoleOptions",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.otherConsoleOptions",
-      "defaultValue": "",
+      "name": "collectDiagnosticData",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.collectDiagnosticData",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.otherConsoleOptions",
-      "groupName": "advancedExecutionOptions"
+      "helpMarkDown": "ms-resource:loc.input.help.collectDiagnosticData",
+      "groupName": "executionOptions",
+      "properties": {
+        "MultiSelectFlatList": "True"
+      },
+      "options": {
+        "video": "Video",
+        "codeCoverage": "Code Coverage"
+      }
     },
     {
       "name": "testRunTitle",
@@ -224,6 +286,28 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.publishRunAttachments",
       "groupName": "reportingOptions"
+    }
+  ],
+  "sourceDefinitions": [
+    {
+      "target": "testPlan",
+      "endpoint": "/$(system.teamProject)/_apis/test/plans?api-version=3.0-preview.2",
+      "selector": "jsonpath:$.value[*].name",
+      "keySelector": "jsonpath:$.value[*].id",
+      "authKey": "tfs:teamfoundation"
+    },
+    {
+      "target": "testConfiguration",
+      "endpoint": "/$(system.teamProject)/_apis/test/configurations?api-version=3.0-preview.1",
+      "selector": "jsonpath:$.value[*].name",
+      "keySelector": "jsonpath:$.value[*].id",
+      "authKey": "tfs:teamfoundation"
+    },
+    {
+      "target": "testSuite",
+      "endpoint": "/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites?$asTreeView=true&api-version=3.0-preview.2",
+      "selector": "jsonpath:$.value[*]",
+      "authKey": "tfs:teamfoundation"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

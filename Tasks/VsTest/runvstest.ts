@@ -3,17 +3,24 @@ import models = require('./models')
 import taskInputParser = require('./taskInputParser')
 import localTest = require('./vstest')
 import path = require('path');
+import distributedTest = require('./distributedTest')
 
 try {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     const parallelExecution = tl.getVariable('System.ParallelExecutionType');
-    tl.debug('Value of ParallelExecutionType is ' + parallelExecution);
+    tl.debug('Value of ParallelExecutionType :' + parallelExecution);
 
-    if (parallelExecution && parallelExecution.toLowerCase() === 'multimachine') {
-        tl.debug('Multi Agent is ON.. Run the distributed tests.....');
-        tl.debug('**************************************************');
+    const testType = tl.getInput('testSelector');
+    tl.debug('Value of Test Selector :' + parallelExecution);
+
+    if (parallelExecution && parallelExecution.toLowerCase() === 'multimachine' || testType.toLowerCase() === 'testplan' || testType.toLowerCase() === 'testrun') {
+        tl.debug('Going to the DTA Flow..');
+        tl.debug('***********************');
+        const dtaTestConfig = taskInputParser.getDistributedTestConfigurations();
+        const test = new distributedTest.DistributedTest(dtaTestConfig);
+        test.runDistributedTest();
     } else {
-        tl.debug('Multi Agent is OFF.. Run the tests locally........');
+        tl.debug('Run the tests locally using vstest.console.exe....');
         tl.debug('**************************************************');
         localTest.startTest();
     }
