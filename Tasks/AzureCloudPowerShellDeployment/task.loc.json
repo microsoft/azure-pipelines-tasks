@@ -15,8 +15,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 36
+    "Minor": 1,
+    "Patch": 0
   },
   "demands": [
     "azureps"
@@ -55,6 +55,7 @@
       "label": "ms-resource:loc.input.label.ServiceName",
       "defaultValue": "",
       "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ServiceName",
       "properties": {
         "EditableOptions": "True"
       }
@@ -115,6 +116,16 @@
       "type": "boolean",
       "label": "ms-resource:loc.input.label.AllowUpgrade",
       "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.AllowUpgrade",
+      "required": true
+    },
+    {
+      "name": "ForceUpgrade",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ForceUpgrade",
+      "defaultValue": "false",
+      "visibleRule": "AllowUpgrade == true",
+      "helpMarkDown": "ms-resource:loc.input.help.ForceUpgrade",
       "required": true
     },
     {
