@@ -16,6 +16,7 @@ gulp-tsc-tmp-*
 *.suo
 *.user
 *.sln.docstates
+/.vs
 
 # Build results
 [Dd]ebug/

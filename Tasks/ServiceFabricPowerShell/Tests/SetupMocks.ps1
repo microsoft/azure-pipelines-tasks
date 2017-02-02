@@ -1,12 +1,5 @@
-[CmdletBinding()]
-param()
-
-. $PSScriptRoot\..\..\lib\Initialize-Test.ps1
-
-$publishProfilePath = "$PSScriptRoot\data\AadPublishProfile.xml"
-$applicationPackagePath = "random package path"
+# Arrange.
 $serviceConnectionName = "random connection name"
-$serviceFabricSdkModulePath = "$PSScriptRoot\data\ServiceFabricSDK.ps1"
 $serverCertThumbprint = "random thumbprint"
 $userName = "random user"
 $password = "random password"
@@ -17,15 +10,9 @@ $connectionEndpointFullUrl = "https://mycluster.com:19000"
 $connectionEndpoint = ([System.Uri]$connectionEndpointFullUrl).Authority
 
 # Setup input arguments
-Register-Mock Get-VstsInput { $publishProfilePath } -- -Name publishProfilePath
-Register-Mock Get-VstsInput { $applicationPackagePath } -- -Name applicationPackagePath -Require
 Register-Mock Get-VstsInput { $serviceConnectionName } -- -Name serviceConnectionName -Require
-Register-Mock Get-VstsInput { "false" } -- -Name compressPackage
 
-# Setup file resolution
-Register-Mock Find-VstsFiles { $publishProfilePath } -- -LegacyPattern $publishProfilePath
-Register-Mock Find-VstsFiles { $applicationPackagePath } -- -LegacyPattern $applicationPackagePath -IncludeDirectories
-
+# Configure Mocks
 Register-Mock Assert-VstsPath
 Register-Mock Test-Path { $true } -- "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK"
 
@@ -79,18 +66,3 @@ $regKeyObj = @{
     "FabricSDKPSModulePath" = $serviceFabricSdkModulePath
 }
 Register-Mock Get-ItemProperty { $regKeyObj } -- -Path "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK" -Name FabricSDKPSModulePath
-
-Register-Mock Get-ApplicationNameFromApplicationParameterFile { $appName } -- "$PSScriptRoot\data\ApplicationParameters.xml"
-
-# Indicate that the application does not exist on cluster
-Register-Mock Get-ServiceFabricApplication { $null } -- -ApplicationName $appName
-
-$publishArgs = @("-ApplicationParameterFilePath:", "$PSScriptRoot\data\ApplicationParameters.xml", "-OverwriteBehavior:", "SameAppTypeAndVersion", "-ApplicationPackagePath:", $applicationPackagePath, "-ErrorAction:", "Stop", "-Action:", "RegisterAndCreate")
-Register-Mock Publish-NewServiceFabricApplication -Arguments $publishArgs 
-
-# Act
-. $PSScriptRoot\..\..\..\Tasks\ServiceFabricDeploy\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
-@( & $PSScriptRoot/../../../Tasks/ServiceFabricDeploy/deploy.ps1 )
-
-# Assert
-Assert-WasCalled Publish-NewServiceFabricApplication -Arguments $publishArgs

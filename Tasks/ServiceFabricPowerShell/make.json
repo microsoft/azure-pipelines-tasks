@@ -4,11 +4,5 @@
             "module": "../Common/ServiceFabricHelpers",
             "type": "ps"
         }
-    ],
-    "cp": [
-        {
-            "source": "ServiceFabricSDK",
-            "options": "-R"
-        }
     ]
 }
