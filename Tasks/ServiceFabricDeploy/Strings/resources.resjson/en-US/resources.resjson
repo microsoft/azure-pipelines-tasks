@@ -19,6 +19,8 @@
   "loc.input.help.copyPackageTimeoutSec": "Timeout in seconds for copying application package to image store. If specified, this will override the value in the publish profile.",
   "loc.input.label.registerPackageTimeoutSec": "RegisterPackageTimeoutSec",
   "loc.input.help.registerPackageTimeoutSec": "Timeout in seconds for registering application package.",
+  "loc.input.label.overwriteBehavior": "Overwrite Behavior",
+  "loc.input.help.overwriteBehavior": "Overwrite Behavior if an application exists in the cluster with the same name, and upgrades have not been configured.",
   "loc.input.label.overridePublishProfileSettings": "Override All Publish Profile Upgrade Settings",
   "loc.input.help.overridePublishProfileSettings": "This will override all upgrade settings with either the values specified below or the default value if not specified.",
   "loc.input.label.isUpgrade": "Upgrade the Application",

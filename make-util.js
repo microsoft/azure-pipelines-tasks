@@ -128,9 +128,22 @@ exports.pathExists = pathExists;
 var buildNodeTask = function (taskPath, outDir) {
     var originalDir = pwd();
     cd(taskPath);
-    if (test('-f', rp('package.json'))) {
+    var packageJsonPath = rp('package.json');
+    if (test('-f', packageJsonPath)) {
+        var packageJson = JSON.parse(fs.readFileSync(packageJsonPath).toString());
+        if (packageJson.devDependencies && Object.keys(packageJson.devDependencies).length != 0) {
+            fail('The package.json should not contain dev dependencies. Move the dev dependencies into a package.json file under the Tests sub-folder. Offending package.json: ' + packageJsonPath);
+        }
+
         run('npm install');
     }
+
+    if (test('-f', rp(path.join('Tests', 'package.json')))) {
+        cd(rp('Tests'));
+        run('npm install');
+        cd(taskPath);
+    }
+
     run('tsc --outDir ' + outDir + ' --rootDir ' + taskPath);
     cd(originalDir);
 }
@@ -140,7 +153,7 @@ var buildPs3Task = function (taskPath, outDir) {
     var packageUrl = 'https://www.powershellgallery.com/api/v2/package/VstsTaskSdk/0.7.1';
     var packageSource = downloadArchive(packageUrl, /*omitExtensionCheck*/true);
     var packageDest = path.join(outDir, 'ps_modules/VstsTaskSdk');
-    matchCopy('+(*.ps1|*.psd1|*.psm1|lib.json|Strings)', packageSource, packageDest, { noRecurse: true });
+    matchCopy('+(*.ps1|*.psd1|*.psm1|lib.json|Strings)', packageSource, packageDest, { noRecurse: true, matchBase: true });
 }
 exports.buildPs3Task = buildPs3Task;
 
@@ -152,7 +165,7 @@ var copyTaskResources = function (taskMake, srcPath, destPath) {
     // copy the globally defined set of default task resources
     var toCopy = makeOptions['taskResources'];
     toCopy.forEach(function (item) {
-        matchCopy(item, srcPath, destPath, { noRecurse: true });
+        matchCopy(item, srcPath, destPath, { noRecurse: true, matchBase: true });
     });
 
     // copy the locally defined set of resources
@@ -171,16 +184,16 @@ var matchFind = function (pattern, root, options) {
     assert(pattern, 'pattern');
     assert(root, 'root');
 
+    // create a copy of the options
+    var clone = {};
+    Object.keys(options || {}).forEach(function (key) {
+        clone[key] = options[key];
+    });
+    options = clone;
+
     // determine whether to recurse
-    options = options || {};
     var noRecurse = options.hasOwnProperty('noRecurse') && options.noRecurse;
     delete options.noRecurse;
-
-    // merge specified options with defaults
-    mergedOptions = { matchBase: true };
-    Object.keys(options || {}).forEach(function (key) {
-        mergedOptions[key] = options[key];
-    });
 
     // normalize first, so we can substring later
     root = path.resolve(root);
@@ -200,7 +213,7 @@ var matchFind = function (pattern, root, options) {
             });
     }
 
-    return minimatch.match(items, pattern, mergedOptions);
+    return minimatch.match(items, pattern, options);
 }
 exports.matchFind = matchFind;
 
@@ -227,19 +240,6 @@ var matchCopy = function (pattern, sourceRoot, destRoot, options) {
         });
 }
 exports.matchCopy = matchCopy;
-
-var matchRemove = function (pattern, sourceRoot, options) {
-    assert(pattern, 'pattern');
-    assert(sourceRoot, 'sourceRoot');
-
-    console.log(`removing ${pattern}`);
-
-    matchFind(pattern, sourceRoot, options)
-        .forEach(function (item) {
-            rm('-Rf', item);
-        });
-}
-exports.matchRemove = matchRemove;
 
 var run = function (cl, inheritStreams, noHeader) {
     if (!noHeader) {
@@ -891,6 +891,44 @@ var createNonAggregatedZip = function (buildPath, packagePath) {
     compressTasks(nonAggregatedLayoutPath, nonAggregatedZipPath);
 }
 exports.createNonAggregatedZip = createNonAggregatedZip;
+
+var createHotfixLayout = function (packagePath, taskName) {
+    assert(packagePath, 'packagePath');
+    assert(taskName, 'taskName');
+    console.log();
+    console.log(`> Creating hotfix layout for task '${taskName}'`);
+
+    var branch = null;
+    if (process.env.TF_BUILD) {
+        // during CI agent checks out a commit, not a branch.
+        // $(build.sourceBranch) indicates the branch name, e.g. releases/m108
+        branch = process.env.BUILD_SOURCEBRANCH;
+    }
+    else {
+        // assumes user has checked out a branch. this is a fairly safe assumption.
+        // this code only runs during "package" and "publish" build targets, which
+        // is not typically run locally.
+        branch = run('git symbolic-ref HEAD', /*inheritStreams*/false, /*noHeader*/true);
+    }
+
+    var commitInfo = run('git log -1 --format=oneline', /*inheritStreams*/false, /*noHeader*/true);
+
+    // create the script
+    var hotfixPath = path.join(packagePath, 'hotfix');
+    mkdir('-p', hotfixPath);
+    var scriptPath = path.join(hotfixPath, `${taskName}.ps1`);
+    var scriptContent = '# Hotfix created from branch: ' + branch + os.EOL;
+    scriptContent += '# Commit: ' + commitInfo + os.EOL;
+    scriptContent += '$ErrorActionPreference=\'Stop\'' + os.EOL;
+    scriptContent += 'Update-DistributedTaskDefinitions -TaskZip $PSScriptRoot\\task.zip' + os.EOL;
+    fs.writeFileSync(scriptPath, scriptContent);
+
+    // link the non-aggregated tasks zip
+    var zipSourcePath = path.join(packagePath, 'non-aggregated-tasks.zip');
+    var zipDestPath = path.join(hotfixPath, 'tasks.zip');
+    cp(zipSourcePath, zipDestPath);
+}
+exports.createHotfixLayout = createHotfixLayout;
 
 var createAggregatedZip = function (packagePath) {
     assert(packagePath, 'packagePath');

@@ -93,6 +93,20 @@
             "helpMarkDown": "Timeout in seconds for registering application package."
         },
         {
+            "name": "overwriteBehavior",
+            "type": "pickList",
+            "label": "Overwrite Behavior",
+            "defaultValue": "SameAppTypeAndVersion",
+            "required": true,
+            "options": {
+                "Always": "Always",
+                "Never": "Never",
+                "SameAppTypeAndVersion": "SameAppTypeAndVersion"
+            },
+            "groupname": "advanced",
+            "helpMarkDown": "Overwrite Behavior if an application exists in the cluster with the same name, and upgrades have not been configured."
+        },
+        {
             "name": "overridePublishProfileSettings",
             "type": "boolean",
             "label": "Override All Publish Profile Upgrade Settings",
