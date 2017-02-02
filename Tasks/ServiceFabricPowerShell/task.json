@@ -3,7 +3,7 @@
     "name": "ServiceFabricPowerShell",
     "friendlyName": "Service Fabric PowerShell",
     "description": "Run a PowerShell script within the context of an Azure Service Fabric cluster connection.",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=TODO)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=841538)",
     "category": "Deploy",
     "visibility": [
         "Build",
