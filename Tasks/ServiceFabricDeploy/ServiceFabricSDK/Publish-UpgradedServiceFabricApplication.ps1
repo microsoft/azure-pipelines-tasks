@@ -208,9 +208,9 @@ function Publish-UpgradedServiceFabricApplication
                 Write-Host (Get-VstsLocString -Key SFSDK_UnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))            
                 $reg | Unregister-ServiceFabricApplicationType -Force    
             }
-            catch {
+            catch [System.Fabric.FabricException] {
                 ## If SkipUpgrade param is set when existing version already deployed, then back out of upgrade
-                if($SkipUpgradeSameTypeAndVersion) {                    
+                if($SkipUpgradeSameTypeAndVersion -And $Error[0].Exception.Message -like '*Application type and version is still in use*') {                    
                     Write-Warning (Get-VstsLocString -Key SFSDK_SkipUpgradeWarning -ArgumentList @($reg.ApplicationTypeName, $reg.ApplicationTypeVersion))
                     return
                 }
