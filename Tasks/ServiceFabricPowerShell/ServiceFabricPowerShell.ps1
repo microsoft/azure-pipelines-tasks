@@ -1,3 +1,5 @@
+# See Tasks\AzurePowerShell\AzurePowerShell.ps1 for the original inspiration
+
 Trace-VstsEnteringInvocation $MyInvocation
 Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
