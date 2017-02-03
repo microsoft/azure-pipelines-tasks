@@ -1,46 +1,44 @@
-function Get-HostName
-{
-    param(
-        [string]$protocol,
-        [string]$hostNameWithHttp,
-        [string]$hostNameWithSNI,
-        [string]$hostNameWithOutSNI,
-        [string]$sni
-    )
-    $hostName = [string]::Empty
 
-    if($protocol -eq "http")
-    {
-        $hostName = $hostNameWithHttp
-    }
-    elseif($sni -eq "true")
-    {
-        $hostName = $hostNameWithSNI
-    }
-    else
-    {
-        $hostName = $hostNameWithOutSNI
-    }
-    return $hostName
-}
-
-function Trim-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]$websitePathAuthuser, [ref]$appPoolUser, [ref]$sslCertThumbPrint)
+function Trim-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]$virtualPath, [ref]$physicalPathAuthuser, [ref]$appPoolUser, [ref]$sslCertThumbPrint)
 {
     Write-Verbose "Triming inputs for excess spaces, double quotes"
 
-    $siteName.Value = $siteName.Value.Trim('"', ' ')
-    $physicalPath.Value = $physicalPath.Value.Trim('"', ' ').Trim('\', ' ')
-    $poolName.Value = $poolName.Value.Trim('"', ' ')
-
-    $appPoolUser.Value = $appPoolUser.Value.Trim()
-    $websitePathAuthuser.Value = $websitePathAuthuser.Value.Trim()
-    $sslCertThumbPrint.Value = $sslCertThumbPrint.Value.Trim()
+    if ($siteName -ne $null) 
+    {
+        $siteName.Value = $siteName.Value.Trim('"', ' ')
+    }
+    if ($physicalPath -ne $null) 
+    {
+        $physicalPath.Value = $physicalPath.Value.Trim('"', ' ').Trim('\', ' ')
+    }
+    if ($virtualPath -ne $null) 
+    {
+        ## check
+        $virtualPath.Value = $virtualPath.Value.Trim('"', ' ').Trim('\', ' ').Trim('/', ' ')
+    }
+    if ($poolName -ne $null) 
+    {
+        $poolName.Value = $poolName.Value.Trim('"', ' ')
+    }
+    if ($appPoolUser -ne $null) 
+    {
+        $appPoolUser.Value = $appPoolUser.Value.Trim()
+    }
+    if ($physicalPathAuthuser -ne $null) 
+    {
+        $physicalPathAuthuser.Value = $physicalPathAuthuser.Value.Trim()
+    }
+    if ($sslCertThumbPrint -ne $null) 
+    {
+        $sslCertThumbPrint.Value = $sslCertThumbPrint.Value.Trim()
+    }
 }
 
 function Validate-Inputs
 {
     param(
-        [string]$createWebsite,
+        [string]$actionIISWebsite,
+        [string]$actionIISApplicationPool,
         [string]$websiteName,
         [string]$createAppPool,
         [string]$appPoolName,
@@ -50,12 +48,12 @@ function Validate-Inputs
     )
 
     Write-Verbose "Validating website and application pool inputs"
-    if($createWebsite -ieq "true" -and [string]::IsNullOrWhiteSpace($websiteName))
+    if(($createWebsite -ieq "true" -or $actionIISWebsite -ieq "CreateOrUpdateWebsite") -and [string]::IsNullOrWhiteSpace($websiteName))
     { 
         throw "Website Name cannot be empty if you want to create or update the target website."
     }
 
-    if($createAppPool -ieq "true" -and [string]::IsNullOrWhiteSpace($appPoolName))
+    if(($createAppPool -ieq "true" -or $actionIISApplicationPool -ieq "CreateOrUpdateAppPool") -and [string]::IsNullOrWhiteSpace($appPoolName))
     { 
         throw "Application pool name cannot be empty if you want to create or update the target app pool."
     }

@@ -23,39 +23,83 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
-      "name": "website",
-      "displayName": "ms-resource:loc.group.displayName.website",
-      "isExpanded": true
+      "name": "Website",
+      "displayName": "ms-resource:loc.group.displayName.Website",
+      "isExpanded": true,
+      "visibleRule": "ActionIISWebsite = CreateOrUpdateWebsite"
     },
     {
-      "name": "applicationPool",
-      "displayName": "ms-resource:loc.group.displayName.applicationPool",
-      "isExpanded": true
+      "name": "ApplicationPoolForWebsite",
+      "displayName": "ms-resource:loc.group.displayName.ApplicationPoolForWebsite",
+      "isExpanded": true,
+      "visibleRule": "IISDeploymentType = IISWebsite && ActionIISWebsite = CreateOrUpdateWebsite && CreateOrUpdateAppPoolForWebsite = true"
     },
     {
-      "name": "advanced",
-      "displayName": "ms-resource:loc.group.displayName.advanced",
-      "isExpanded": false
+      "name": "ApplicationPool",
+      "displayName": "ms-resource:loc.group.displayName.ApplicationPool",
+      "isExpanded": true,
+      "visibleRule": "ActionIISApplicationPool = CreateOrUpdateAppPool"
+    },
+    {
+      "name": "ApplicationPoolForApplication",
+      "displayName": "ms-resource:loc.group.displayName.ApplicationPoolForApplication",
+      "isExpanded": true,
+      "visibleRule": "IISDeploymentType = IISWebApplication && CreateOrUpdateAppPoolForApplication = true"
+    },
+    {
+      "name": "Advanced",
+      "displayName": "ms-resource:loc.group.displayName.Advanced",
+      "isExpanded": true
     }
   ],
   "inputs": [
     {
-      "name": "CreateWebsite",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.CreateWebsite",
+      "name": "IISDeploymentType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.IISDeploymentType",
       "required": false,
-      "groupName": "website",
-      "defaultValue": "false",
-      "helpMarkDown": "ms-resource:loc.input.help.CreateWebsite"
+      "options": {
+        "IISWebsite": "IIS Website",
+        "IISWebApplication": "IIS Web Application",
+        "IISVirtualDirectory": "IIS Virtual Directory",
+        "IISApplicationPool": "IIS Application Pool"
+      },
+      "helpMarkDown": ""
+    },
+    {
+      "name": "ActionIISWebsite",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ActionIISWebsite",
+      "required": true,
+      "visibleRule": "IISDeploymentType = IISWebsite",
+      "options": {
+        "CreateOrUpdateWebsite": "Create Or Update",
+        "StartWebsite": "Start website",
+        "StopWebsite": "Stop website"
+      },
+      "helpMarkDown": ""
+    },
+    {
+      "name": "ActionIISApplicationPool",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ActionIISApplicationPool",
+      "required": true,
+      "visibleRule": "IISDeploymentType = IISApplicationPool",
+      "options": {
+        "CreateOrUpdateAppPool": "Create Or Update",
+        "StartAppPool": "Start App pool",
+        "StopAppPool": "Stop App pool",
+        "RecycleAppPool": "Recycle App pool"
+      },
+      "helpMarkDown": ""
     },
     {
       "name": "WebsiteName",
       "type": "string",
       "label": "ms-resource:loc.input.label.WebsiteName",
       "required": true,
-      "groupName": "website",
+      "groupName": "Website",
       "defaultValue": "",
-      "visibleRule": "CreateWebsite = true",
       "helpMarkDown": "ms-resource:loc.input.help.WebsiteName"
     },
     {
@@ -63,9 +107,8 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.WebsitePhysicalPath",
       "required": true,
-      "groupName": "website",
+      "groupName": "Website",
       "defaultValue": "%SystemDrive%\\inetpub\\wwwroot",
-      "visibleRule": "CreateWebsite = true",
       "helpMarkDown": "ms-resource:loc.input.help.WebsitePhysicalPath"
     },
     {
@@ -73,9 +116,8 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.WebsitePhysicalPathAuth",
       "required": true,
-      "groupName": "website",
+      "groupName": "Website",
       "defaultValue": "Application User (Pass-through)",
-      "visibleRule": "CreateWebsite = true",
       "options": {
         "WebsiteUserPassThrough": "Application User (Pass-through)",
         "WebsiteWindowsAuth": "Windows Authentication"
@@ -87,7 +129,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.WebsiteAuthUserName",
       "required": true,
-      "groupName": "website",
+      "groupName": "Website",
       "defaultValue": "",
       "visibleRule": "WebsitePhysicalPathAuth = WebsiteWindowsAuth",
       "helpMarkDown": "ms-resource:loc.input.help.WebsiteAuthUserName"
@@ -97,7 +139,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.WebsiteAuthUserPassword",
       "required": false,
-      "groupName": "website",
+      "groupName": "Website",
       "defaultValue": "",
       "visibleRule": "WebsitePhysicalPathAuth = WebsiteWindowsAuth",
       "helpMarkDown": "ms-resource:loc.input.help.WebsiteAuthUserPassword"
@@ -107,9 +149,8 @@
       "type": "boolean",
       "label": "ms-resource:loc.input.label.AddBinding",
       "required": false,
-      "groupName": "website",
-      "defaultValue": "true",
-      "visibleRule": "CreateWebsite = true",
+      "groupName": "Website",
+      "defaultValue": "false",
       "helpMarkDown": "ms-resource:loc.input.help.AddBinding"
     },
     {
@@ -117,7 +158,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.Protocol",
       "required": true,
-      "groupName": "website",
+      "groupName": "Website",
       "visibleRule": "AddBinding = true",
       "defaultValue": "http",
       "options": {
@@ -131,7 +172,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.IPAddress",
       "required": true,
-      "groupName": "website",
+      "groupName": "Website",
       "visibleRule": "AddBinding = true",
       "defaultValue": "All Unassigned",
       "helpMarkDown": "ms-resource:loc.input.help.IPAddress"
@@ -142,7 +183,7 @@
       "label": "ms-resource:loc.input.label.Port",
       "required": true,
       "visibleRule": "AddBinding = true",
-      "groupName": "website",
+      "groupName": "Website",
       "defaultValue": "80",
       "helpMarkDown": "ms-resource:loc.input.help.Port"
     },
@@ -151,7 +192,7 @@
       "type": "boolean",
       "label": "ms-resource:loc.input.label.ServerNameIndication",
       "required": false,
-      "groupName": "website",
+      "groupName": "Website",
       "defaultValue": "false",
       "visibleRule": "Protocol = https",
       "helpMarkDown": "ms-resource:loc.input.help.ServerNameIndication"
@@ -161,7 +202,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.HostNameWithOutSNI",
       "required": false,
-      "groupName": "website",
+      "groupName": "Website",
       "defaultValue": "",
       "visibleRule": "ServerNameIndication = false",
       "helpMarkDown": "ms-resource:loc.input.help.HostNameWithOutSNI"
@@ -171,7 +212,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.HostNameWithHttp",
       "required": false,
-      "groupName": "website",
+      "groupName": "Website",
       "defaultValue": "",
       "visibleRule": "Protocol = http",
       "helpMarkDown": "ms-resource:loc.input.help.HostNameWithHttp"
@@ -181,7 +222,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.HostNameWithSNI",
       "required": true,
-      "groupName": "website",
+      "groupName": "Website",
       "defaultValue": "",
       "visibleRule": "ServerNameIndication = true",
       "helpMarkDown": "ms-resource:loc.input.help.HostNameWithSNI"
@@ -191,19 +232,295 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.SSLCertThumbPrint",
       "required": true,
-      "groupName": "website",
+      "groupName": "Website",
       "defaultValue": "",
       "visibleRule": "Protocol = https",
       "helpMarkDown": "ms-resource:loc.input.help.SSLCertThumbPrint"
     },
     {
-      "name": "CreateAppPool",
+      "name": "CreateOrUpdateAppPoolForWebsite",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.CreateAppPool",
+      "label": "ms-resource:loc.input.label.CreateOrUpdateAppPoolForWebsite",
       "required": false,
-      "groupName": "applicationPool",
+      "groupName": "Website",
       "defaultValue": "false",
-      "helpMarkDown": "ms-resource:loc.input.help.CreateAppPool"
+      "helpMarkDown": ""
+    },
+    {
+      "name": "AppPoolNameForWebsite",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AppPoolNameForWebsite",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "ApplicationPoolForWebsite",
+      "helpMarkDown": "ms-resource:loc.input.help.AppPoolNameForWebsite"
+    },
+    {
+      "name": "DotNetVersionForWebsite",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.DotNetVersionForWebsite",
+      "defaultValue": "v4.0",
+      "required": true,
+      "groupName": "ApplicationPoolForWebsite",
+      "helpMarkDown": "ms-resource:loc.input.help.DotNetVersionForWebsite",
+      "options": {
+        "v4.0": "v4.0",
+        "v2.0": "v2.0",
+        "No Managed Code": "No Managed Code"
+      }
+    },
+    {
+      "name": "PipeLineModeForWebsite",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.PipeLineModeForWebsite",
+      "defaultValue": "Integrated",
+      "required": true,
+      "groupName": "ApplicationPoolForWebsite",
+      "helpMarkDown": "ms-resource:loc.input.help.PipeLineModeForWebsite",
+      "options": {
+        "Integrated": "Integrated",
+        "Classic": "Classic"
+      }
+    },
+    {
+      "name": "AppPoolIdentityForWebsite",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.AppPoolIdentityForWebsite",
+      "defaultValue": "ApplicationPoolIdentity",
+      "required": true,
+      "groupName": "ApplicationPoolForWebsite",
+      "helpMarkDown": "ms-resource:loc.input.help.AppPoolIdentityForWebsite",
+      "options": {
+        "ApplicationPoolIdentity": "ApplicationPoolIdentity",
+        "LocalService": "LocalService",
+        "LocalSystem": "LocalSystem",
+        "NetworkService": "NetworkService",
+        "SpecificUser": "Custom Account"
+      }
+    },
+    {
+      "name": "AppPoolUsernameForWebsite",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AppPoolUsernameForWebsite",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "ApplicationPoolForWebsite",
+      "visibleRule": "AppPoolIdentityForWebsite = SpecificUser"
+    },
+    {
+      "name": "AppPoolPasswordForWebsite",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AppPoolPasswordForWebsite",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "ApplicationPoolForWebsite",
+      "helpMarkDown": "ms-resource:loc.input.help.AppPoolPasswordForWebsite",
+      "visibleRule": "AppPoolIdentityForWebsite = SpecificUser"
+    },
+    {
+      "name": "ParentWebsiteNameForVD",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ParentWebsiteNameForVD",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "IISDeploymentType = IISVirtualDirectory",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "ApplicationName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ApplicationName",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "IISDeploymentType = IISVirtualDirectory",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "VirtualPathForVD",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.VirtualPathForVD",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "IISDeploymentType = IISVirtualDirectory",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "PhysicalPathForVD",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.PhysicalPathForVD",
+      "defaultValue": "%SystemDrive%\\inetpub\\wwwroot",
+      "required": true,
+      "visibleRule": "IISDeploymentType = IISVirtualDirectory",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "VDPhysicalPathAuth",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.VDPhysicalPathAuth",
+      "required": false,
+      "visibleRule": "IISDeploymentType = IISVirtualDirectory",
+      "defaultValue": "Application User (Pass-through)",
+      "options": {
+        "VDUserPassThrough": "Application User (Pass-through)",
+        "VDWindowsAuth": "Windows Authentication"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.VDPhysicalPathAuth"
+    },
+    {
+      "name": "VDAuthUserName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.VDAuthUserName",
+      "required": true,
+      "defaultValue": "",
+      "visibleRule": "VDPhysicalPathAuth = VDWindowsAuth",
+      "helpMarkDown": "ms-resource:loc.input.help.VDAuthUserName"
+    },
+    {
+      "name": "VDAuthUserPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.VDAuthUserPassword",
+      "required": false,
+      "defaultValue": "",
+      "visibleRule": "VDPhysicalPathAuth = VDWindowsAuth",
+      "helpMarkDown": "ms-resource:loc.input.help.VDAuthUserPassword"
+    },
+    {
+      "name": "ParentWebsiteNameForApplication",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ParentWebsiteNameForApplication",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "IISDeploymentType = IISWebApplication",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "VirtualPathForApplication",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.VirtualPathForApplication",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "IISDeploymentType = IISWebApplication",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "PhysicalPathForApplication",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.PhysicalPathForApplication",
+      "defaultValue": "%SystemDrive%\\inetpub\\wwwroot",
+      "required": true,
+      "visibleRule": "IISDeploymentType = IISWebApplication",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "ApplicationPhysicalPathAuth",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ApplicationPhysicalPathAuth",
+      "required": false,
+      "visibleRule": "IISDeploymentType = IISWebApplication",
+      "defaultValue": "Application User (Pass-through)",
+      "options": {
+        "ApplicationUserPassThrough": "Application User (Pass-through)",
+        "ApplicationWindowsAuth": "Windows Authentication"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.ApplicationPhysicalPathAuth"
+    },
+    {
+      "name": "ApplicationAuthUserName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ApplicationAuthUserName",
+      "required": true,
+      "defaultValue": "",
+      "visibleRule": "ApplicationPhysicalPathAuth = ApplicationWindowsAuth",
+      "helpMarkDown": "ms-resource:loc.input.help.ApplicationAuthUserName"
+    },
+    {
+      "name": "ApplicationAuthUserPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ApplicationAuthUserPassword",
+      "required": false,
+      "defaultValue": "",
+      "visibleRule": "ApplicationPhysicalPathAuth = ApplicationWindowsAuth",
+      "helpMarkDown": "ms-resource:loc.input.help.ApplicationAuthUserPassword"
+    },
+    {
+      "name": "CreateOrUpdateAppPoolForApplication",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.CreateOrUpdateAppPoolForApplication",
+      "required": false,
+      "defaultValue": "false",
+      "visibleRule": "IISDeploymentType = IISWebApplication",
+      "helpMarkDown": ""
+    },
+    {
+      "name": "AppPoolNameForApplication",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AppPoolNameForApplication",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "ApplicationPoolForApplication",
+      "helpMarkDown": "ms-resource:loc.input.help.AppPoolNameForApplication"
+    },
+    {
+      "name": "DotNetVersionForApplication",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.DotNetVersionForApplication",
+      "defaultValue": "v4.0",
+      "required": true,
+      "groupName": "ApplicationPoolForApplication",
+      "helpMarkDown": "ms-resource:loc.input.help.DotNetVersionForApplication",
+      "options": {
+        "v4.0": "v4.0",
+        "v2.0": "v2.0",
+        "No Managed Code": "No Managed Code"
+      }
+    },
+    {
+      "name": "PipeLineModeForApplication",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.PipeLineModeForApplication",
+      "defaultValue": "Integrated",
+      "required": true,
+      "groupName": "ApplicationPoolForApplication",
+      "helpMarkDown": "ms-resource:loc.input.help.PipeLineModeForApplication",
+      "options": {
+        "Integrated": "Integrated",
+        "Classic": "Classic"
+      }
+    },
+    {
+      "name": "AppPoolIdentityForApplication",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.AppPoolIdentityForApplication",
+      "defaultValue": "ApplicationPoolIdentity",
+      "required": true,
+      "groupName": "ApplicationPoolForApplication",
+      "helpMarkDown": "ms-resource:loc.input.help.AppPoolIdentityForApplication",
+      "options": {
+        "ApplicationPoolIdentity": "ApplicationPoolIdentity",
+        "LocalService": "LocalService",
+        "LocalSystem": "LocalSystem",
+        "NetworkService": "NetworkService",
+        "SpecificUser": "Custom Account"
+      }
+    },
+    {
+      "name": "AppPoolUsernameForApplication",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AppPoolUsernameForApplication",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "ApplicationPoolForApplication",
+      "visibleRule": "AppPoolIdentityForApplication = SpecificUser"
+    },
+    {
+      "name": "AppPoolPasswordForApplication",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AppPoolPasswordForApplication",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "ApplicationPoolForApplication",
+      "helpMarkDown": "ms-resource:loc.input.help.AppPoolPasswordForApplication",
+      "visibleRule": "AppPoolIdentityForApplication = SpecificUser"
     },
     {
       "name": "AppPoolName",
@@ -211,8 +528,7 @@
       "label": "ms-resource:loc.input.label.AppPoolName",
       "defaultValue": "",
       "required": true,
-      "groupName": "applicationPool",
-      "visibleRule": "CreateAppPool = true",
+      "groupName": "ApplicationPool",
       "helpMarkDown": "ms-resource:loc.input.help.AppPoolName"
     },
     {
@@ -221,8 +537,7 @@
       "label": "ms-resource:loc.input.label.DotNetVersion",
       "defaultValue": "v4.0",
       "required": true,
-      "groupName": "applicationPool",
-      "visibleRule": "CreateAppPool = true",
+      "groupName": "ApplicationPool",
       "helpMarkDown": "ms-resource:loc.input.help.DotNetVersion",
       "options": {
         "v4.0": "v4.0",
@@ -236,8 +551,7 @@
       "label": "ms-resource:loc.input.label.PipeLineMode",
       "defaultValue": "Integrated",
       "required": true,
-      "groupName": "applicationPool",
-      "visibleRule": "CreateAppPool = true",
+      "groupName": "ApplicationPool",
       "helpMarkDown": "ms-resource:loc.input.help.PipeLineMode",
       "options": {
         "Integrated": "Integrated",
@@ -250,8 +564,7 @@
       "label": "ms-resource:loc.input.label.AppPoolIdentity",
       "defaultValue": "ApplicationPoolIdentity",
       "required": true,
-      "groupName": "applicationPool",
-      "visibleRule": "CreateAppPool = true",
+      "groupName": "ApplicationPool",
       "helpMarkDown": "ms-resource:loc.input.help.AppPoolIdentity",
       "options": {
         "ApplicationPoolIdentity": "ApplicationPoolIdentity",
@@ -267,7 +580,7 @@
       "label": "ms-resource:loc.input.label.AppPoolUsername",
       "defaultValue": "",
       "required": true,
-      "groupName": "applicationPool",
+      "groupName": "ApplicationPool",
       "visibleRule": "AppPoolIdentity = SpecificUser"
     },
     {
@@ -276,7 +589,7 @@
       "label": "ms-resource:loc.input.label.AppPoolPassword",
       "defaultValue": "",
       "required": false,
-      "groupName": "applicationPool",
+      "groupName": "ApplicationPool",
       "helpMarkDown": "ms-resource:loc.input.help.AppPoolPassword",
       "visibleRule": "AppPoolIdentity = SpecificUser"
     },
@@ -285,7 +598,7 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.AppCmdCommands",
       "required": false,
-      "groupName": "advanced",
+      "groupName": "Advanced",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.AppCmdCommands"
     }
