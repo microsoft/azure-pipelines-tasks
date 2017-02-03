@@ -11,8 +11,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 24
+    "Minor": 111,
+    "Patch": 1
   },
   "demands": [
     "JDK",
@@ -46,17 +46,18 @@
       "label": "ms-resource:loc.input.label.jarsign",
       "defaultValue": "true",
       "required": false,
-      "groupName": "jarsignerOptions"
+      "groupName": "jarsignerOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.jarsign"
     },
     {
       "name": "keystoreFile",
-      "type": "string",
+      "type": "filePath",
       "label": "ms-resource:loc.input.label.keystoreFile",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.keystoreFile",
       "visibleRule": "jarsign = true",
-      "groupName": "jarsignerOptions"
+      "groupName": "jarsignerOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.keystoreFile"
     },
     {
       "name": "keystorePass",
@@ -65,7 +66,8 @@
       "defaultValue": "",
       "required": false,
       "visibleRule": "jarsign = true",
-      "groupName": "jarsignerOptions"
+      "groupName": "jarsignerOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.keystorePass"
     },
     {
       "name": "keystoreAlias",
@@ -74,7 +76,8 @@
       "defaultValue": "",
       "required": false,
       "visibleRule": "jarsign = true",
-      "groupName": "jarsignerOptions"
+      "groupName": "jarsignerOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.keystoreAlias"
     },
     {
       "name": "keyPass",
@@ -83,7 +86,8 @@
       "defaultValue": "",
       "required": false,
       "visibleRule": "jarsign = true",
-      "groupName": "jarsignerOptions"
+      "groupName": "jarsignerOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.keyPass"
     },
     {
       "name": "jarsignerArguments",
@@ -92,7 +96,8 @@
       "defaultValue": "-verbose -sigalg MD5withRSA -digestalg SHA1",
       "required": false,
       "visibleRule": "jarsign = true",
-      "groupName": "jarsignerOptions"
+      "groupName": "jarsignerOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.jarsignerArguments"
     },
     {
       "name": "zipalign",
@@ -100,7 +105,8 @@
       "label": "ms-resource:loc.input.label.zipalign",
       "defaultValue": "true",
       "required": false,
-      "groupName": "zipalignOptions"
+      "groupName": "zipalignOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.zipalign"
     },
     {
       "name": "zipalignLocation",
@@ -108,9 +114,9 @@
       "label": "ms-resource:loc.input.label.zipalignLocation",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.zipalignLocation",
       "visibleRule": "zipalign = true",
-      "groupName": "zipalignOptions"
+      "groupName": "zipalignOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.zipalignLocation"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

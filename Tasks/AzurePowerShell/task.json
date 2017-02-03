@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 4
+        "Patch": 6
     },
     "demands": [
         "azureps"
@@ -96,7 +96,7 @@
             "defaultValue": "",
             "required": false,
             "properties": {
-                "editorExtension": "ms.vss-distributed-task-input-editor.parameters-grid"
+                "editorExtension": "ms.vss-services-azure.parameters-grid"
             },
             "helpMarkDown": "Additional parameters to pass to PowerShell.  Can be either ordinal or named parameters."
         }

@@ -11,7 +11,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 1,
+    "Minor": 112,
     "Patch": 1
   },
   "demands": [
@@ -45,6 +45,15 @@
       "defaultValue": "Release",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.configuration"
+    },
+    {
+      "name": "runNugetRestore",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.runNugetRestore",
+      "defaultValue": "true",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.runNugetRestore",
+      "groupName": "advanced"
     },
     {
       "name": "args",
@@ -95,7 +104,6 @@
       "required": false,
       "groupName": "sign",
       "defaultValue": "file",
-      "helpMarkDown": "ms-resource:loc.input.help.signMethod",
       "options": {
         "file": "File Contents",
         "id": "Identifiers"

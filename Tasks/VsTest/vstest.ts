@@ -20,6 +20,11 @@ const TITestSettingsNameTag = "testSettings-5d76a195-1e43-4b90-a6ce-4ec3de87ed25
 const TITestSettingsIDTag = "5d76a195-1e43-4b90-a6ce-4ec3de87ed25";
 const TITestSettingsXmlnsTag = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010"
 
+interface ExecutabaleInfo {
+    version: number;
+    location: string;
+}
+
 try {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     var vsTestVersion: string = tl.getInput('vsTestVersion');
@@ -38,7 +43,9 @@ try {
     var publishRunAttachments: string = tl.getInput('publishRunAttachments');
     var runInParallel: boolean = tl.getBoolInput('runInParallel');
     var tiaEnabled: boolean = tl.getBoolInput('runOnlyImpactedTests');
+    //The name of input "runOnlyImpactedTests" need to be updated for purpose of logging onprem telemetry as well.
     var tiaRebaseLimit: string = tl.getInput('runAllTestsAfterXBuilds');
+    var tiaFilterPaths: string = tl.getVariable("TIA_IncludePathFilters");
     var searchFolder: string = tl.getInput('searchFolder');
 
     var fileLevel = tl.getVariable('tia.filelevel');
@@ -50,6 +57,12 @@ try {
     var isPrFlow = tl.getVariable('tia.isPrFlow');
     var vsTestVersionForTIA: number[] = null;
     var ignoreVstestFailure: string = tl.getVariable("vstest.ignoretestfailures");
+
+    // only to facilitate the writing of unit tests 
+    var vs15HelperPath = tl.getVariable('vs15Helper');
+    if (!vs15HelperPath) {
+        vs15HelperPath = path.join(__dirname, 'vs15Helper.ps1');
+    }
 
     var useNewCollector = false;
     if (useNewCollectorFlag && useNewCollectorFlag.toUpperCase() === "TRUE") {
@@ -234,6 +247,8 @@ function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
     var startTime = perf();
     var endTime;
     var elapsedTime;
+    var definitionRunId: string;
+    var resultFile: string;
     var defer = Q.defer<string>();
     var allFilesInResultsDirectory;
     var resultFiles;
@@ -242,18 +257,34 @@ function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
     }
 
     var selectortool = tl.tool(getTestSelectorLocation());
-    selectortool.arg("UpdateTestResults");
-    selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
-    selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
-    selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
-    selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
+    selectortool.arg("UpdateTestResults"); 
+
+    if (context === "CD") {
+        definitionRunId = tl.getVariable("Release.ReleaseId");        
+    }
+    else {
+        definitionRunId = tl.getVariable("Build.BuildId");
+    }   
 
     if (resultFiles && resultFiles[0]) {
-        selectortool.arg("/ResultFile:" + resultFiles[0]);
+        resultFile = resultFiles[0];        
     }
-    selectortool.arg("/runidfile:" + runIdFile);
-    selectortool.arg("/Context:" + context);
-    selectortool.exec()
+    
+    selectortool.exec({ cwd: null,
+                        env: { "collectionurl": tl.getVariable("System.TeamFoundationCollectionUri"),
+                               "projectid": tl.getVariable("System.TeamProject"),
+                               "definitionrunid": definitionRunId,
+                               "token": tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false),
+                               "resultfile": resultFile,
+                               "runidfile": runIdFile,
+                               "context": context,                         
+                        },
+                        silent: null,
+                        failOnStdErr: null,
+                        ignoreReturnCode: null,
+                        outStream: null,
+                        errStream: null,
+                        windowsVerbatimArguments: null })
         .then(function(code) {
             endTime = perf();
             elapsedTime = endTime - startTime;
@@ -271,36 +302,68 @@ function generateResponseFile(discoveredTests: string): Q.Promise<string> {
     var startTime = perf();
     var endTime: number;
     var elapsedTime: number;
+    var definitionRunId: string;
+    var title: string;
+    var platformInput: string;
+    var configurationInput: string;
     var defer = Q.defer<string>();
     var respFile = path.join(os.tmpdir(), uuid.v1() + ".txt");
     tl.debug("Response file will be generated at " + respFile);
     tl.debug("RunId file will be generated at " + runIdFile);
     var selectortool = tl.tool(getTestSelectorLocation());
     selectortool.arg("GetImpactedtests");
-    selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
-    selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
 
     if (context === "CD") {
         // Release context. Passing Release Id.
-        selectortool.arg("/buildid:" + tl.getVariable("Release.ReleaseId"));
-        selectortool.arg("/releaseuri:" + tl.getVariable("release.releaseUri"));
-        selectortool.arg("/releaseenvuri:" + tl.getVariable("release.environmentUri"));
+        definitionRunId = tl.getVariable("Release.ReleaseId"); 
     } else {
         // Build context. Passing build id.
-        selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
+        definitionRunId = tl.getVariable("Build.BuildId");
     }
 
-    selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
-    selectortool.arg("/responsefile:" + respFile);
-    selectortool.arg("/DiscoveredTests:" + discoveredTests);
-    selectortool.arg("/runidfile:" + runIdFile);
-    selectortool.arg("/testruntitle:" + testRunTitle);
-    selectortool.arg("/BaseLineFile:" + baseLineBuildIdFile);
-    selectortool.arg("/platform:" + platform);
-    selectortool.arg("/configuration:" + configuration);
-    selectortool.arg("/Context:" + context);
+    if (platform) {
+        platformInput = platform;
+    }
+    else {
+        platformInput = "";
+    }
 
-    selectortool.exec()
+    if (testRunTitle) {
+        title = testRunTitle;
+    }
+    else {
+        title = "";
+    }
+
+    if (configuration) {
+        configurationInput = configuration;
+    }
+    else {
+        configurationInput = "";
+    }
+
+    selectortool.exec({ cwd: null,
+                        env: { "collectionurl": tl.getVariable("System.TeamFoundationCollectionUri"),
+                            "projectid": tl.getVariable("System.TeamProject"),
+                            "definitionrunid": definitionRunId,
+                            "releaseuri": tl.getVariable("release.releaseUri"),
+                            "releaseenvuri": tl.getVariable("release.environmentUri"),
+                            "token": tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false),
+                            "responsefilepath": respFile,
+                            "discoveredtestspath": discoveredTests,
+                            "runidfilepath": runIdFile,
+                            "testruntitle": title,
+                            "baselinebuildfilepath": baseLineBuildIdFile,
+                            "context": context,
+                            "platform": platformInput,
+                            "configuration": configurationInput
+                        },
+                        silent: null,
+                        failOnStdErr: null,
+                        ignoreReturnCode: null,
+                        outStream: null,
+                        errStream: null,
+                        windowsVerbatimArguments: null })
         .then(function(code) {
             endTime = perf();
             elapsedTime = endTime - startTime;
@@ -318,6 +381,12 @@ function publishCodeChanges(): Q.Promise<string> {
     var startTime = perf();
     var endTime: number;
     var elapsedTime: number;
+    var pathFilters: string;
+    var definitionRunId: string;
+    var definitionId: string;
+    var prFlow: string;
+    var rebaseLimit: string;
+    var sourcesDirectory: string;
     var defer = Q.defer<string>();
 
     var newprovider = "true";
@@ -327,34 +396,63 @@ function publishCodeChanges(): Q.Promise<string> {
 
     var selectortool = tl.tool(getTestSelectorLocation());
     selectortool.arg("PublishCodeChanges");
-    selectortool.arg("/TfsTeamProjectCollection:" + tl.getVariable("System.TeamFoundationCollectionUri"));
-    selectortool.arg("/ProjectId:" + tl.getVariable("System.TeamProject"));
+    
 
     if (context === "CD") {
         // Release context. Passing Release Id.
-        selectortool.arg("/buildid:" + tl.getVariable("Release.ReleaseId"));
-        selectortool.arg("/Definitionid:" + tl.getVariable("release.DefinitionId"));
+        definitionRunId = tl.getVariable("Release.ReleaseId");
+        definitionId = tl.getVariable("release.DefinitionId");
     } else {
         // Build context. Passing build id.
-        selectortool.arg("/buildid:" + tl.getVariable("Build.BuildId"));
-        selectortool.arg("/Definitionid:" + tl.getVariable("System.DefinitionId"));
+        definitionRunId = tl.getVariable("Build.BuildId");
+        definitionId = tl.getVariable("System.DefinitionId");
     }
 
-    selectortool.arg("/token:" + tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false));
-    selectortool.arg("/SourcesDir:" + sourcesDir);
-    selectortool.arg("/newprovider:" + newprovider);
-    selectortool.arg("/BaseLineFile:" + baseLineBuildIdFile);
-
     if (isPrFlow && isPrFlow.toUpperCase() === "TRUE") {
-        selectortool.arg("/IsPrFlow:" + "true");
+        prFlow = "true";        
+    }
+    else {
+        prFlow = "false";
     }
 
     if (tiaRebaseLimit) {
-        selectortool.arg("/RebaseLimit:" + tiaRebaseLimit);
-    }
-    selectortool.arg("/Context:" + context);
+        rebaseLimit = tiaRebaseLimit;        
+    }    
 
-    selectortool.exec()
+    if (typeof tiaFilterPaths != 'undefined') {
+        pathFilters = tiaFilterPaths.trim();
+    }
+    else {
+        pathFilters = "";
+    }
+
+    if (typeof sourcesDir != 'undefined') {
+        sourcesDirectory = sourcesDir.trim();
+    }
+    else {
+        sourcesDirectory = "";
+    }
+
+    selectortool.exec({cwd: null,
+                       env: {"collectionurl": tl.getVariable("System.TeamFoundationCollectionUri"),
+                             "projectid": tl.getVariable("System.TeamProject"),
+                             "definitionrunid": definitionRunId,
+                             "definitionid": definitionId,
+                             "token": tl.getEndpointAuthorizationParameter("SystemVssConnection", "AccessToken", false),
+                             "sourcesdir": sourcesDirectory,
+                             "newprovider": newprovider,
+                             "prflow": prFlow,
+                             "rebaselimit": rebaseLimit,
+                             "baselinefile": baseLineBuildIdFile,
+                             "context": context,
+                             "filter":pathFilters
+                        },
+                       silent: null,
+                       failOnStdErr: null,
+                       ignoreReturnCode: null,
+                       outStream: null,
+                       errStream: null,
+                       windowsVerbatimArguments: null})
         .then(function(code) {
             endTime = perf();
             elapsedTime = endTime - startTime;
@@ -617,8 +715,16 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                                             }).finally(function() {
                                                                 cleanFiles(responseFile, listFile);
                                                             });
+                                                    })
+                                                    .fail(function (err) {
+                                                        tl.error(err)
+                                                        defer.resolve(1);
                                                     });
                                             }
+                                        })
+                                        .fail(function (err) {
+                                            tl.error(err)
+                                            defer.resolve(1);
                                         });
                                 }
                             })
@@ -650,6 +756,10 @@ function runVStest(testResultsDirectory: string, settingsFile: string, vsVersion
                                     .fail(function(code) {
                                         defer.resolve(code);
                                     });
+                            })
+                            .fail(function (err) {
+                                tl.error(err)
+                                defer.resolve(1);
                             });
                     })
                     .fail(function(err) {
@@ -691,10 +801,11 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     }
     overrideTestRunParametersIfRequired(runSettingsFile)
         .then(function(overriddenSettingsFile) {
-            locateVSVersion()
-                .then(function(vsVersion) {
+            locateVSVersion(vsTestVersion)
+                .then(function(vsTestConsoleInfo) {
+                    let vsVersion = vsTestConsoleInfo.version;
+                    vstestLocation = vsTestConsoleInfo.location;
                     try {
-                        vstestLocation = getVSTestLocation(vsVersion);
                         let disableTIA = tl.getVariable("DisableTestImpactAnalysis");
                         if (disableTIA !== undefined && disableTIA.toLowerCase() === "true") {
                             tiaEnabled = false;
@@ -944,32 +1055,16 @@ function pushImpactLevelAndRootPathIfNotFound(dataCollectorArray): void {
             if (!dataCollectorArray[i].Configuration) {
                 dataCollectorArray[i] = { Configuration: {} };
             }
-            if (dataCollectorArray[i].Configuration.TestImpact && !dataCollectorArray[i].Configuration.RootPath) {
-                if (context && context === "CD") {
-                    dataCollectorArray[i].Configuration = { RootPath: "" };
-                } else {
-                    dataCollectorArray[i].Configuration = { RootPath: sourcesDir };
-                }
-            } else if (!dataCollectorArray[i].Configuration.TestImpact && dataCollectorArray[i].Configuration.RootPath) {
-                if (getTIALevel() === 'file') {
-                    dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), LogFilePath: 'true' };
-                } else {
-                    dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel() };
-                }
-            } else if (dataCollectorArray[i].Configuration && !dataCollectorArray[i].Configuration.TestImpact && !dataCollectorArray[i].Configuration.RootPath) {
-                if (context && context === "CD") {
-                    if (getTIALevel() === 'file') {
-                        dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), LogFilePath: 'true', RootPath: "" };
-                    } else {
-                        dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), RootPath: "" };
-                    }
-                } else {
-                    if (getTIALevel() === 'file') {
-                        dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), LogFilePath: 'true', RootPath: sourcesDir };
-                    } else {
-                        dataCollectorArray[i].Configuration = { ImpactLevel: getTIALevel(), RootPath: sourcesDir };
-                    }
-                }
+
+            //Add TIA level, Rootpath and LogFilePath config nodes.
+            dataCollectorArray[i].Configuration[0].ImpactLevel = getTIALevel();
+            if (getTIALevel() === 'file') {
+                dataCollectorArray[i].Configuration[0].LogFilePath = 'true';
+            }
+            if (context && context === "CD") {
+                dataCollectorArray[i].Configuration[0].RootPath = "";
+            } else {
+                dataCollectorArray[i].Configuration[0].RootPath = sourcesDir;
             }
 
             //Adding the codebase attribute to TestImpact collector 
@@ -1383,27 +1478,71 @@ function resetRunInParallel() {
     runInParallel = false;
 }
 
-function locateVSVersion(): Q.Promise<number> {
-    var defer = Q.defer<number>();
-    var vsVersion = parseFloat(vsTestVersion);
-    if (!isNaN(vsVersion)) {
-        defer.resolve(vsVersion);
-        return defer.promise;
-    }
-    var regPath = "HKLM\\SOFTWARE\\Microsoft\\VisualStudio";
-    regedit.list(regPath).on('data', function(entry) {
-        if (entry && entry.data && entry.data.keys) {
-            var subkeys = entry.data.keys;
-            var versions = getFloatsFromStringArray(subkeys);
-            if (versions && versions.length > 0) {
-                versions.sort((a, b) => a - b);
-                defer.resolve(versions[versions.length - 1]);
-                return defer.promise;
+
+function getLatestVSTestConsolePathFromRegistry(): Q.Promise<ExecutabaleInfo> {
+    let deferred = Q.defer<ExecutabaleInfo>();
+    let regPath = 'HKLM\\SOFTWARE\\Microsoft\\VisualStudio';
+    regedit.list(regPath).on('data', (entry) => {
+        let subkeys = entry.data.keys;
+        let versions = getFloatsFromStringArray(subkeys);
+        if (versions && versions.length > 0) {
+            versions.sort((a, b) => a-b);
+            let selectedVersion = versions[versions.length - 1];
+            tl.debug('Registry entry found. Selected version is ' + selectedVersion.toString());
+            deferred.resolve({version: selectedVersion, location: getVSTestLocation(selectedVersion)});
+        } else {
+            deferred.resolve(null);
+        }
+    }).on('error', () => {
+        tl.debug('Registry entry not found under VisualStudio node');
+        deferred.resolve(null);
+    });
+    return deferred.promise;
+}
+
+function getVSTestConsole15Path(): string {
+    let powershellTool = tl.tool('powershell');
+    let powershellArgs = ['-file', vs15HelperPath]
+    powershellTool.arg(powershellArgs);
+    let xml = powershellTool.execSync().stdout;
+    let deferred = Q.defer<string>();
+    let vstestconsolePath:string = null;
+    xml2js.parseString(xml, (err, result) => {
+        if(result) {
+            try {
+                let vs15InstallDir = result['Objs']['S'][0];
+                vstestconsolePath = path.join(vs15InstallDir, 'Common7', 'IDE', 'CommonExtensions', 'Microsoft', 'TestWindow', 'vstest.console.exe');
+            } catch (e) {
+                tl.debug('Unable to read Visual Studio 2017 installation path');
+                tl.debug(e);
+                vstestconsolePath = null;
             }
         }
-        defer.resolve(null);
-    });
-    return defer.promise;
+    })
+    return vstestconsolePath;
+}
+
+
+function locateVSVersion(version: string): Q.Promise<ExecutabaleInfo> {
+    let deferred = Q.defer<ExecutabaleInfo>();
+    let vsVersion: number = parseFloat(version);
+    
+    if (isNaN(vsVersion) || vsVersion == 15) {
+        // latest
+        tl.debug('Searching for latest Visual Studio');
+        let vstestconsole15Path = getVSTestConsole15Path();
+        if (vstestconsole15Path) {
+            deferred.resolve({version: 15, location: vstestconsole15Path});
+        } else {
+            // fallback
+            tl.debug('Unable to find an instance of Visual Studio 2017');
+            return getLatestVSTestConsolePathFromRegistry();
+        }
+    } else {
+        tl.debug('Searching for Visual Studio ' + vsVersion.toString());
+        deferred.resolve({version: vsVersion, location: getVSTestLocation(vsVersion)});
+    }
+    return deferred.promise;
 }
 
 function getFloatsFromStringArray(inputArray: string[]): number[] {

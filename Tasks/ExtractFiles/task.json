@@ -10,15 +10,15 @@
         "Build",
         "Release"
     ],
-	"runsOn": [
+    "runsOn": [
         "Agent",
         "MachineGroup"
     ],
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 8
+        "Minor": 112,
+        "Patch": 1
     },
     "instanceNameFormat": "Extract files $(message)",
     "inputs": [
@@ -56,5 +56,30 @@
             "target": "extractfilestask.js",
             "argumentFormat": ""
         }
+    },
+    "messages": {
+        "ExtractDirFailedinFindFiles": "Specified archive: %s can not be extracted because it is a directory.",
+        "ExtractNotFileFailed": "Specified archive: %s can not be extracted because it is not a file.",
+        "ExtractNotAccessibleFile": "Specified archive: %s can not be extracted because it can not be accessed: %s",
+        "SearchInDir": "Searching for: %s under directory: %s",
+        "SearchNonExistDir": "Search failed because the specified search directory: %s does not exist.",
+        "SearchNonDir": "Search failed because the specified search directory: %s is not a directory.",
+        "NoSearchPatternPath": "No path specified for search pattern: %s defaulting to: %s",
+        "ResolveRelativePath": "Relative file path: %s resolving to: %s",
+        "UnzipExtractFile": "Extracting file: %s",
+        "SevenZipExtractFile": "Extracting file: %s",
+        "TarExtractFile": "Extracting file: %s",
+        "ExtractFileFailedMsg": "Extraction failed for file: %s \ncode: %d \nstdout: %s \nstderr: %s \nerror: %s;",
+        "ExtractNonExistFile": "Extraction failed for file: %s because it does not exist.",
+        "ExtractDirFailed": "Extraction failed for file: %s because it is a directory.",
+        "CreateTempDir": "Creating temp folder: %s to decompress: %s",
+        "TempDir": "tempFolder = %s",
+        "DecompressedTempTar": "Decompressed temporary tar from: %s to: %s",
+        "RemoveTempDir": "Removing temp folder: %s",
+        "ExtractFailedCannotCreate": "Extraction failed for file: %s because temporary location could not be created: %s",
+        "FoundFiles": "Found: %d files to extract:",
+        "CleanDestDir": "Cleaning destination folder before extraction: %s",
+        "CreateDestDir": "Creating destination folder: %s",
+        "SucceedMsg": "Successfully extracted all files."
     }
 }

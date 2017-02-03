@@ -10,13 +10,21 @@
     "Build",
     "Release"
   ],
+  "runsOn": [
+    "Agent"
+  ],
   "version": {
     "Major": 1,
-    "Minor": 2,
-    "Patch": 0
+    "Minor": 3,
+    "Patch": 4
   },
   "minimumAgentVersion": "1.95.0",
   "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    },
     {
       "name": "upgrade",
       "displayName": "ms-resource:loc.group.displayName.upgrade",
@@ -58,11 +66,21 @@
       "helpMarkDown": "ms-resource:loc.input.help.applicationParameterPath"
     },
     {
+      "name": "compressPackage",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.compressPackage",
+      "defaultValue": "false",
+      "required": false,
+      "groupname": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.compressPackage"
+    },
+    {
       "name": "copyPackageTimeoutSec",
       "type": "string",
       "label": "ms-resource:loc.input.label.copyPackageTimeoutSec",
       "defaultValue": "",
       "required": false,
+      "groupname": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.copyPackageTimeoutSec"
     },
     {
@@ -71,7 +89,22 @@
       "label": "ms-resource:loc.input.label.registerPackageTimeoutSec",
       "defaultValue": "",
       "required": false,
+      "groupname": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.registerPackageTimeoutSec"
+    },
+    {
+      "name": "overwriteBehavior",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.overwriteBehavior",
+      "defaultValue": "SameAppTypeAndVersion",
+      "required": true,
+      "options": {
+        "Always": "Always",
+        "Never": "Never",
+        "SameAppTypeAndVersion": "SameAppTypeAndVersion"
+      },
+      "groupname": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.overwriteBehavior"
     },
     {
       "name": "overridePublishProfileSettings",
@@ -289,6 +322,7 @@
     "SFSDK_UpgradeRolledBack": "ms-resource:loc.messages.SFSDK_UpgradeRolledBack",
     "SFSDK_UnzipPackage": "ms-resource:loc.messages.SFSDK_UnzipPackage",
     "SFSDK_UnexpectedError": "ms-resource:loc.messages.SFSDK_UnexpectedError",
-    "CopyPackageTimeoutSecWarning": "ms-resource:loc.messages.CopyPackageTimeoutSecWarning"
+    "SFSDK_CopyPackageTimeoutSecWarning": "ms-resource:loc.messages.SFSDK_CopyPackageTimeoutSecWarning",
+    "SFSDK_CompressPackageWarning": "ms-resource:loc.messages.SFSDK_CompressPackageWarning"
   }
 }

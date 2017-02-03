@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkId=820528)",
   "loc.description": "Consente di distribuire un'applicazione di Service Fabric in un cluster.",
   "loc.instanceNameFormat": "Distribuisci applicazione di Service Fabric",
+  "loc.group.displayName.advanced": "Impostazioni avanzate",
   "loc.group.displayName.upgrade": "Impostazioni di aggiornamento",
   "loc.input.label.applicationPackagePath": "Pacchetto dell'applicazione",
   "loc.input.help.applicationPackagePath": "Percorso del pacchetto dell'applicazione che verrà distribuito. Nel percorso è possibile usare [variabili](https://go.microsoft.com/fwlink/?LinkID=550988) e caratteri jolly.",
@@ -12,12 +13,14 @@
   "loc.input.help.publishProfilePath": "Percorso del profilo di pubblicazione che definisce le impostazioni da usare. Nel percorso è possibile usare [variabili](https://go.microsoft.com/fwlink/?LinkID=550988) e caratteri jolly.",
   "loc.input.label.applicationParameterPath": "Parametri dell'applicazione",
   "loc.input.help.applicationParameterPath": "Percorso del file dei parametri dell'applicazione. Nel percorso è possibile usare [variabili](https://go.microsoft.com/fwlink/?LinkID=550988) e caratteri jolly. Se è specificato, sostituirà il valore nel profilo di pubblicazione.",
+  "loc.input.label.compressPackage": "Comprimi pacchetto",
+  "loc.input.help.compressPackage": "Indica se il pacchetto dell'applicazione deve essere compresso prima della copia nell'archivio immagini. Se è abilitato, sostituirà il valore nel profilo di pubblicazione.",
   "loc.input.label.copyPackageTimeoutSec": "CopyPackageTimeoutSec",
-  "loc.input.help.copyPackageTimeoutSec": "Timeout in seconds for copying application package to image store.",
+  "loc.input.help.copyPackageTimeoutSec": "Timeout in secondi per la copia del pacchetto dell'applicazione nell'archivio immagini. Se è specificato, sostituirà il valore nel profilo di pubblicazione.",
   "loc.input.label.registerPackageTimeoutSec": "RegisterPackageTimeoutSec",
-  "loc.input.help.registerPackageTimeoutSec": "Timeout in seconds for registering application package.",
+  "loc.input.help.registerPackageTimeoutSec": "Timeout in secondi per la registrazione del pacchetto dell'applicazione.",
   "loc.input.label.overridePublishProfileSettings": "Sostituisci tutte le impostazioni di aggiornamento del profilo di pubblicazione",
-  "loc.input.help.overridePublishProfileSettings": "Questo valore sostituirà tutte le impostazioni di aggiornamento con il valore specificato di seguito o, se non è specificato, con il valore predefinito.",
+  "loc.input.help.overridePublishProfileSettings": "Questo valore sostituirà tutte le impostazioni di aggiornamento con i valori specificati di seguito o, se non è specificato, con il valore predefinito.",
   "loc.input.label.isUpgrade": "Aggiorna l'applicazione",
   "loc.input.label.upgradeMode": "Modalità di aggiornamento",
   "loc.input.label.FailureAction": "FailureAction",
@@ -81,5 +84,6 @@
   "loc.messages.SFSDK_UpgradeRolledBack": "Il rollback dell'aggiornamento è stato eseguito.",
   "loc.messages.SFSDK_UnzipPackage": "Tentativo di decomprimere '{0}' nel percorso '{1}'.",
   "loc.messages.SFSDK_UnexpectedError": "Errore imprevisto. Dettagli errore: $_.Exception.Message",
-  "loc.messages.CopyPackageTimeoutSecWarning": "The CopyPackageTimeoutSec parameter requires version '2.3' of the Service Fabric SDK, but the installed version is '{0}'. This parameter will be ignored."
+  "loc.messages.SFSDK_CopyPackageTimeoutSecWarning": "Con il parametro CopyPackageTimeoutSec è richiesta la versione '2.3' di Service Fabric SDK, ma la versione installata è la '{0}'. Questo parametro verrà ignorato.",
+  "loc.messages.SFSDK_CompressPackageWarning": "Con il parametro CompressPackage è richiesta la versione '2.5' di Service Fabric SDK, ma la versione installata è la '{0}'. Questo parametro verrà ignorato."
 }

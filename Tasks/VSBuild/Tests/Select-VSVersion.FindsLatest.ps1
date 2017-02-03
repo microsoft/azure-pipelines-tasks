@@ -9,10 +9,10 @@ $knownVersions = '10.0', '11.0', '12.0', '14.0', '15.0' # Registered in ascendin
 foreach ($preferredVersion in $preferredVersions) {
     Unregister-Mock Get-VSPath
     foreach ($knownVersion in $knownVersions) {
-        Register-Mock Get-VSPath { "Some location" } -- -Version $knownVersion -SearchCom: $false
+        Register-Mock Get-VSPath { "Some location" } -- -Version $knownVersion
 
         # Act.
-        $actual = Select-VSVersion -PreferredVersion $preferredVersion -SearchCom:$false
+        $actual = Select-VSVersion -PreferredVersion $preferredVersion
 
         # Assert.
         Assert-AreEqual $knownVersion $actual

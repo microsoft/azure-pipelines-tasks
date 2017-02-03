@@ -12,13 +12,13 @@
     ],
     "runsOn": [
         "Agent",
-		"MachineGroup"
+        "MachineGroup"
     ],
     "demands": [],
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 5
+        "Patch": 7
     },
     "minimumAgentVersion": "1.95.0",
     "instanceNameFormat": "Azure CLI $(scriptPath)",

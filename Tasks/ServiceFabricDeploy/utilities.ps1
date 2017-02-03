@@ -90,8 +90,7 @@ function Get-AadSecurityToken
     Write-Host (Get-VstsLocString -Key ClientAppId -ArgumentList $clientApplicationId)
 
     # Acquire AAD access token
-    $serverOMDirectory = Get-VstsTaskVariable -Name 'Agent.ServerOMDirectory' -Require
-	Add-Type -LiteralPath "$serverOMDirectory\Microsoft.IdentityModel.Clients.ActiveDirectory.dll"	
+    Add-Type -LiteralPath "$PSScriptRoot\Microsoft.IdentityModel.Clients.ActiveDirectory.dll"
 	$authContext = Create-Object -TypeName Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext -ArgumentList @($authority)
     $authParams = $ConnectedServiceEndpoint.Auth.Parameters
 	$userCredential = Create-Object -TypeName Microsoft.IdentityModel.Clients.ActiveDirectory.UserCredential -ArgumentList @($authParams.Username, $authParams.Password)
@@ -146,8 +145,8 @@ function Read-PublishProfile
     $publishProfileElement = $publishProfileXml.PublishProfile
     $publishProfile = @{}
 
-    $publishProfile.ClusterConnectionParameters = Read-XmlElementAsHashtable $publishProfileElement.Item("ClusterConnectionParameters")
     $publishProfile.UpgradeDeployment = Read-XmlElementAsHashtable $publishProfileElement.Item("UpgradeDeployment")
+    $publishProfile.CopyPackageParameters = Read-XmlElementAsHashtable $publishProfileElement.Item("CopyPackageParameters")
 
     if ($publishProfileElement.Item("UpgradeDeployment"))
     {
@@ -185,12 +184,12 @@ function Add-Certificate
 
         if ($ConnectedServiceEndpoint.Auth.Parameters.CertificatePassword)
         {
-            $certificate.Import($bytes, $ConnectedServiceEndpoint.Auth.Parameters.CertificatePassword, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::DefaultKeySet)
+            $certPassword = $ConnectedServiceEndpoint.Auth.Parameters.CertificatePassword
         }
-        else
-        {
-            $certificate.Import($bytes)
-        }
+
+        # Explicitly set the key storage to use UserKeySet.  This will ensure the private key is stored in a folder location which the user has access to.
+        # If we don't explicitly set it to UserKeySet, it's possible the MachineKeySet will be used which the user doesn't have access to that folder location, resulting in an access denied error.
+        $certificate.Import($bytes, $certPassword, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::UserKeySet)
     }
     catch
     {

@@ -1,11 +1,16 @@
 {
   "loc.friendlyName": "CocoaPods",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613745)",
-  "loc.description": "CocoaPods es el administrador de dependencias para proyectos Swift y Objective-C de Cocoa. Ejecuta la instalación de Pod",
+  "loc.description": "CocoaPods es el administrador de dependencias para proyectos Swift y Objective-C de Cocoa. Esta tarea ejecuta \"pod install\".",
   "loc.instanceNameFormat": "instalación de pod",
+  "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.cwd": "Directorio de trabajo",
-  "loc.input.help.cwd": "Directorio de repositorio actual. Se establece de forma predeterminada en el directorio de repositorio.",
-  "loc.messages.PodReturnCode": "Se cerró Pod con el código de devolución: %d",
-  "loc.messages.PodFailed": "Error de Pod: %s",
-  "loc.messages.CocoaPodsNotFound": "No se ha encontrado el comando pod. Instale Cocoapods en la máquina de compilación (https://cocoapods.org)"
+  "loc.input.help.cwd": "Especifique el directorio de trabajo en el cual ejecutar este paso. Si se deja en blanco, se usará el directorio de repositorio.",
+  "loc.input.label.forceRepoUpdate": "Force Repo Update",
+  "loc.input.help.forceRepoUpdate": "Selecting this option will force running 'pod repo update' before install.",
+  "loc.input.label.projectDirectory": "Project Directory",
+  "loc.input.help.projectDirectory": "Optionally specify the path to the root of the project directory. If left empty, the project specified in the Podfile will be used. If no project is specified, then a search for an Xcode project will be made. If more than one Xcode project is found, an error will occur.",
+  "loc.messages.PodReturnCode": "El comando \"pod\" se cerró con el código de devolución: %d",
+  "loc.messages.PodFailed": "Error en el comando \"pod\": %s",
+  "loc.messages.CocoaPodsNotFound": "The 'pod' command was not found. Please install CocoaPods on the agent machine (https://cocoapods.org/)."
 }

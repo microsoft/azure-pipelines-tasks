@@ -1,10 +1,16 @@
 {
     "common": [
         {
+            "module": "../Common/azurerest-common",
+            "type": "node",
+            "dest": "./",
+            "compile" : true
+        },
+        {
             "module": "../Common/webdeployment-common",
             "type": "node",
-			"dest": "./",
-			"compile" : true
+            "dest": "./",
+            "compile" : true
         }
     ],
     "externals": {

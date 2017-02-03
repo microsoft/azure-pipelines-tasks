@@ -34,22 +34,21 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
     var webApplicationDeploymentPath = (virtualApplication) ? webAppName + "/" + virtualApplication : webAppName;
     
     if(isFolderBasedDeployment) {
-        msDeployCmdArgs += " -source:IisApp=\"" + webAppPackage + "\"";
-        msDeployCmdArgs += " -dest:iisApp=\"" + webApplicationDeploymentPath + "\"";
+        msDeployCmdArgs += " -source:IisApp=\'" + webAppPackage + "\'";
+        msDeployCmdArgs += " -dest:iisApp=\'" + webApplicationDeploymentPath + "\'";
     }
     else {       
-        msDeployCmdArgs += " -source:package=\"" + webAppPackage + "\"";
+        msDeployCmdArgs += " -source:package=\'" + webAppPackage + "\'";
 
         if(isParamFilePresentInPacakge) {
             msDeployCmdArgs += " -dest:auto";
         }
         else {
-            msDeployCmdArgs += " -dest:contentPath=\"" + webApplicationDeploymentPath + "\"";
+            msDeployCmdArgs += " -dest:contentPath=\'" + webApplicationDeploymentPath + "\'";
         }
     }
 
-    if(publishingProfile != null)
-    {
+    if(publishingProfile != null) {
         msDeployCmdArgs += ",ComputerName='https://" + publishingProfile.publishUrl + "/msdeploy.axd?site=" + webAppName + "',";
         msDeployCmdArgs += "UserName='" + publishingProfile.userName + "',Password='" + publishingProfile.userPWD + "',AuthType='Basic'";
     }
@@ -58,14 +57,13 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
         msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='" + webApplicationDeploymentPath + "'";
     }
 
+    if(takeAppOfflineFlag) {
+        msDeployCmdArgs += ' -enableRule:AppOffline';
+    }
+
     if(useWebDeploy) {
-
         if(setParametersFile) {
-            msDeployCmdArgs += " -setParamFile=\"" + setParametersFile + "\"";
-        }
-
-        if(takeAppOfflineFlag) {
-            msDeployCmdArgs += ' -enableRule:AppOffline';
+            msDeployCmdArgs += " -setParamFile=" + setParametersFile + " ";
         }
 
         if(excludeFilesFromAppDataFlag) {
@@ -100,32 +98,45 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
  * @returns boolean
  */
 export async  function containsParamFile(webAppPackage: string ) {
-    var msDeployPath = await getMSDeployFullPath();
-    var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package=\"" + webAppPackage + "\"";
-    
-    var msDeployParamFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'msDeployParam.bat';
     var parameterFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'parameter.xml';
+    var fd = fs.openSync(parameterFile, "w");
+    var outputObj = fs.createWriteStream("",{"fd": fd});
     
-    var silentCommand = '@echo off \n';
-    var msDeployCommand = '"' + msDeployPath + '" ' + msDeployCheckParamFileCmdArgs + " > \"" + parameterFile + "\"";
-    var batchCommand = silentCommand + msDeployCommand;
+    try {
+        var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package=\'" + webAppPackage + "\'";
+        await tl.exec("msdeploy", msDeployCheckParamFileCmdArgs, <any>{ failOnStdErr: true, outStream: outputObj });
+    }
+    catch(error) {
+        throw Error(error);
+    }
+    finally {
+        fs.fsyncSync(fd);
+        fs.closeSync(fd);
+    }
 
-    tl.writeFile(msDeployParamFile, batchCommand);
-    tl._writeLine(tl.loc("Runningcommand", msDeployCommand));
-
-    var taskResult = tl.execSync("cmd", ['/C', msDeployParamFile], <trm.IExecOptions>{ failOnStdErr: true, silent: true });
-    var paramContentXML = fs.readFileSync(parameterFile);
+    var paramContentXML = fs.readFileSync(parameterFile).toString();
+    paramContentXML = paramContentXML.slice(paramContentXML.indexOf('\n') + 1, paramContentXML.length);
     var isParamFilePresent = false;
+
     await parseString(paramContentXML, (error, result) => {
         if(error) {
             throw new Error(error);
         }
-        if(result['output']['parameters'][0] ) {
-            isParamFilePresent = true;
+        if(result != null && result['output'] != null && result['output']['parameters'] != null) {
+            if(result['output']['parameters'][0] ) {
+                isParamFilePresent = true;
+            }
         }
+        else {
+            tl.warning("Unable to parse the content of parameterFile: "+parameterFile);
+            tl.debug("Parameter File Content is:");
+            tl.debug(paramContentXML);
+        }
+
     });
+
     tl.debug("Is parameter file present in web package : " + isParamFilePresent);
-    tl.rmRF(msDeployParamFile, true);
+    tl.rmRF(parameterFile, true);
     return isParamFilePresent;
 }
 
@@ -205,15 +216,19 @@ function getMSDeployInstallPath(registryKey: string): Q.Promise<string> {
  */
 export function redirectMSDeployErrorToConsole() {
     var msDeployErrorFilePath = tl.getVariable('System.DefaultWorkingDirectory') + '\\error.txt';
+    
     if(tl.exist(msDeployErrorFilePath)) {
         var errorFileContent = fs.readFileSync(msDeployErrorFilePath);
-        if(errorFileContent.toString().indexOf("ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER") !== -1){
+        
+        if(errorFileContent.toString().indexOf("ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER") !== -1) {
             tl.warning(tl.loc("Trytodeploywebappagainwithappofflineoptionselected"));
         }
-        if(errorFileContent.toString().indexOf("FILE_IN_USE") !== -1){
+
+        if(errorFileContent.toString().indexOf("FILE_IN_USE") !== -1) {
             tl.warning(tl.loc("Trytodeploywebappagainwithrenamefileoptionselected"));
         }
         
         tl.error(errorFileContent.toString());
+        tl.rmRF(msDeployErrorFilePath);
     }
 }

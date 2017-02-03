@@ -4,7 +4,7 @@ import request = require('request');
 import Q = require('q');
 import fs = require('fs');
 
-import {ToolRunner} from 'vsts-task-lib/toolrunner';
+import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
 var utils = require('./utils.js');
 
@@ -30,13 +30,13 @@ function getEndpointDetails(endpointInputFieldName) {
     let url = tl.getEndpointUrl(endpoint, false);
     let apiServer = url.substr(0, url.lastIndexOf('/'));
     let apiVersion = url.substr(url.lastIndexOf('/') + 1);
-    let authToken = tl.getEndpointAuthorizationParameter(endpoint,'apitoken', false);
-    
-    return { 
-        apiServer: apiServer, 
+    let authToken = tl.getEndpointAuthorizationParameter(endpoint, 'apitoken', false);
+
+    return {
+        apiServer: apiServer,
         apiVersion: apiVersion,
-        authToken: authToken 
-    }; 
+        authToken: authToken
+    };
 }
 
 function responseHandler(defer, err, res, body, handler: () => void) {
@@ -48,7 +48,7 @@ function responseHandler(defer, err, res, body, handler: () => void) {
         tl.debug(`---- Failed with error: ${err}`);
         defer.reject(err);
         return;
-    } 
+    }
 
     if (!res) {
         defer.reject(tl.loc("NoResponseFromServer"));
@@ -61,19 +61,20 @@ function responseHandler(defer, err, res, body, handler: () => void) {
         defer.reject(message);
         return;
     }
-    
+
     handler();
 }
 
-function beginPackageUpload(apiServer: string, apiVersion: string, appSlug: string, token: string): Q.Promise<UploadInfo> {
-    tl.debug("-- Prepare for uploading package.");
+function beginReleaseUpload(apiServer: string, apiVersion: string, appSlug: string, token: string, userAgent: string): Q.Promise<UploadInfo> {
+    tl.debug("-- Prepare for uploading release.");
     let defer = Q.defer<UploadInfo>();
-    let beginUploadUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/package_uploads`;
+    let beginUploadUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/release_uploads`;
     tl.debug(`---- url: ${beginUploadUrl}`);
 
     let headers = {
         "Content-Type": "application/json",
-        "X-API-Token": token
+        "X-API-Token": token,
+        "User-Agent": userAgent
     };
     request.post({ url: beginUploadUrl, headers: headers }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
@@ -90,11 +91,14 @@ function beginPackageUpload(apiServer: string, apiVersion: string, appSlug: stri
     return defer.promise;
 }
 
-function uploadPackage(uploadUrl: string, file: string): Q.Promise<void> {
-    tl.debug("-- Uploading package...");
+function uploadRelease(uploadUrl: string, file: string, userAgent: string): Q.Promise<void> {
+    tl.debug("-- Uploading release...");
     let defer = Q.defer<void>();
     tl.debug(`---- url: ${uploadUrl}`);
-    let req = request.post(uploadUrl, (err, res, body) => {
+    let headers = {
+        "User-Agent": userAgent
+    };
+    let req = request.post({ url: uploadUrl, headers: headers }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             tl.debug('-- File uploaded.');
             defer.resolve();
@@ -107,21 +111,22 @@ function uploadPackage(uploadUrl: string, file: string): Q.Promise<void> {
     return defer.promise;
 }
 
-function commitPackage(apiServer: string, apiVersion: string, appSlug: string, upload_id: string, token: string): Q.Promise<string> {
-    tl.debug("-- Finishing uploading package...");
+function commitRelease(apiServer: string, apiVersion: string, appSlug: string, upload_id: string, token: string, userAgent: string): Q.Promise<string> {
+    tl.debug("-- Finishing uploading release...");
     let defer = Q.defer<string>();
-    let commitPackageUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/package_uploads/${upload_id}`;
-    tl.debug(`---- url: ${commitPackageUrl}`);
+    let commitReleaseUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/release_uploads/${upload_id}`;
+    tl.debug(`---- url: ${commitReleaseUrl}`);
     let headers = {
-        "X-API-Token": token
+        "X-API-Token": token,
+        "User-Agent": userAgent
     };
 
     let commitBody = { "status": "committed" };
 
-    request.patch({ url: commitPackageUrl, headers: headers, json: commitBody }, (err, res, body) => {
+    request.patch({ url: commitReleaseUrl, headers: headers, json: commitBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
-            if (body && body['package_url']) {
-                defer.resolve(body['package_url']);
+            if (body && body['release_url']) {
+                defer.resolve(body['release_url']);
             } else {
                 defer.reject(tl.loc("FailedToUploadFile"));
             }
@@ -131,23 +136,24 @@ function commitPackage(apiServer: string, apiVersion: string, appSlug: string, u
     return defer.promise;
 }
 
-function publishPackage(apiServer: string, packageUrl: string, releaseNotes: string, distributionGroupId: string, token: string) {
+function publishRelease(apiServer: string, releaseUrl: string, releaseNotes: string, distributionGroupId: string, token: string, userAgent: string) {
     tl.debug("-- Mark package available.");
     let defer = Q.defer<void>();
-    let publishPackageUrl: string = `${apiServer}/${packageUrl}`;
-    tl.debug(`---- url: ${publishPackageUrl}`);
+    let publishReleaseUrl: string = `${apiServer}/${releaseUrl}`;
+    tl.debug(`---- url: ${publishReleaseUrl}`);
 
     let headers = {
-        "X-API-Token": token
+        "X-API-Token": token,
+        "User-Agent": userAgent
     };
 
-    let publishBody = { 
-        "status": "available", 
+    let publishBody = {
+        "status": "available",
         "distribution_group_id": distributionGroupId,
         "release_notes": releaseNotes
     };
 
-    request.patch({ url: publishPackageUrl, headers: headers, json: publishBody }, (err, res, body) => {
+    request.patch({ url: publishReleaseUrl, headers: headers, json: publishBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             defer.resolve();
         });
@@ -164,22 +170,22 @@ function publishPackage(apiServer: string, packageUrl: string, releaseNotes: str
 function prepareSymbols(symbolsPath: string, packParentFolder: boolean): Q.Promise<string> {
     tl.debug("-- Prepare symbols")
     let defer = Q.defer<string>();
-  
+
     let stat = fs.statSync(symbolsPath);
     if (stat.isFile() && !packParentFolder) {
         // single file - Android source mapping txt file
         tl.debug(`---- symbol file: ${symbolsPath}`)
         defer.resolve(symbolsPath);
-    } else { 
+    } else {
         if (packParentFolder) {
             tl.debug(`---- Take the parent folder of ${symbolsPath}`);
-            symbolsPath = path.dirname(symbolsPath); 
+            symbolsPath = path.dirname(symbolsPath);
         }
 
         tl.debug(`---- Creating symbols from ${symbolsPath}`);
         let zipStream = utils.createZipStream(symbolsPath, utils.isDsym(symbolsPath));
         let workDir = tl.getVariable("System.DefaultWorkingDirectory");
-        let zipName = path.join(workDir, `${path.basename(symbolsPath)}.zip`); 
+        let zipName = path.join(workDir, `${path.basename(symbolsPath)}.zip`);
         utils.createZipFile(zipStream, zipName).
             then(() => {
                 tl.debug(`---- symbol file: ${zipName}`)
@@ -190,7 +196,7 @@ function prepareSymbols(symbolsPath: string, packParentFolder: boolean): Q.Promi
     return defer.promise;
 }
 
-function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: string, symbol_type: string, token: string): Q.Promise<SymbolsUploadInfo> {
+function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: string, symbol_type: string, token: string, userAgent: string): Q.Promise<SymbolsUploadInfo> {
     tl.debug("-- Begin symbols upload")
     let defer = Q.defer<SymbolsUploadInfo>();
 
@@ -198,12 +204,13 @@ function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: strin
     tl.debug(`---- url: ${beginSymbolUploadUrl}`);
 
     let headers = {
-        "X-API-Token": token
+        "X-API-Token": token,
+        "User-Agent": userAgent
     };
 
     let symbolsUploadBody = { "symbol_type": symbol_type };
-    
-    request.post({ url: beginSymbolUploadUrl, headers: headers, json: symbolsUploadBody}, (err, res, body) => {
+
+    request.post({ url: beginSymbolUploadUrl, headers: headers, json: symbolsUploadBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             let symbolsUploadInfo: SymbolsUploadInfo = {
                 symbol_upload_id: body['symbol_upload_id'],
@@ -218,18 +225,19 @@ function beginSymbolUpload(apiServer: string, apiVersion: string, appSlug: strin
     return defer.promise;
 }
 
-function uploadSymbols(uploadUrl: string, file: string): Q.Promise<void> {
+function uploadSymbols(uploadUrl: string, file: string, userAgent: string): Q.Promise<void> {
     tl.debug("-- Uploading symbols...");
     let defer = Q.defer<void>();
     tl.debug(`---- url: ${uploadUrl}`);
 
     let stat = fs.statSync(file);
     let headers = {
-         "x-ms-blob-type": "BlockBlob",
-         "Content-Length": stat.size
+        "x-ms-blob-type": "BlockBlob",
+        "Content-Length": stat.size,
+        "User-Agent": userAgent
     };
 
-    fs.createReadStream(file).pipe(request.put({url: uploadUrl, headers: headers}, (err, res, body) => {
+    fs.createReadStream(file).pipe(request.put({ url: uploadUrl, headers: headers }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             tl.debug('-- Symbol uploaded.');
             defer.resolve();
@@ -239,13 +247,14 @@ function uploadSymbols(uploadUrl: string, file: string): Q.Promise<void> {
     return defer.promise;
 }
 
-function commitSymbols(apiServer: string, apiVersion: string, appSlug: string, symbol_upload_id: string, token: string): Q.Promise<void> {
+function commitSymbols(apiServer: string, apiVersion: string, appSlug: string, symbol_upload_id: string, token: string, userAgent: string): Q.Promise<void> {
     tl.debug("-- Finishing uploading symbols...");
     let defer = Q.defer<void>();
     let commitSymbolsUrl: string = `${apiServer}/${apiVersion}/apps/${appSlug}/symbol_uploads/${symbol_upload_id}`;
     tl.debug(`---- url: ${commitSymbolsUrl}`);
     let headers = {
-        "X-API-Token": token
+        "X-API-Token": token,
+        "User-Agent": userAgent
     };
 
     let commitBody = { "status": "committed" };
@@ -261,31 +270,37 @@ function commitSymbols(apiServer: string, apiVersion: string, appSlug: string, s
 
 async function run() {
     try {
-        tl.setResourcePath(path.join( __dirname, 'task.json'));
+        tl.setResourcePath(path.join(__dirname, 'task.json'));
 
         // Get build inputs
         let apiEndpointData = getEndpointDetails('serverEndpoint');
         let apiToken: string = apiEndpointData.authToken;
         let apiServer: string = apiEndpointData.apiServer;
         let apiVersion: string = apiEndpointData.apiVersion;
-    
+
+        let userAgent = tl.getVariable('MSDEPLOY_HTTP_USER_AGENT');
+        if (!userAgent) {
+            userAgent = 'VSTS';
+        }
+        userAgent = userAgent + ' (Task:VSMobileCenterUpload)';
+
         var effectiveApiServer = process.env['SONOMA_API_SERVER'] || apiServer;
         var effectiveApiVersion = process.env['SONOMA_API_VERSION'] || apiVersion;
-        
+
         tl.debug(`Effective API Url: ${effectiveApiServer}/${effectiveApiVersion}`);
-        
+
         let appSlug: string = tl.getInput('appSlug', true);
         let appFilePattern: string = tl.getInput('app', true);
         let symbolsType: string = tl.getInput('symbolsType', false);
         let symbolVariableName = null;
         switch (symbolsType) {
-            case "Apple": 
+            case "Apple":
                 symbolVariableName = "dsymPath";
                 break;
             case "AndroidJava":
                 symbolVariableName = "mappingTxtPath";
                 break;
-            default: 
+            default:
                 symbolVariableName = "symbolsPath";
         }
         let symbolsPathPattern: string = tl.getInput(symbolVariableName, false);
@@ -307,37 +322,42 @@ async function run() {
         if (!apiToken) {
             throw new Error(tl.loc("NoApiTokenFound"));
         }
-        
+
         let app = utils.resolveSinglePath(appFilePattern);
         tl.checkPath(app, "Binary file");
 
-        let symbolsPath = utils.checkAndFixFilePath(utils.resolveSinglePath(symbolsPathPattern), "symbolsPath");
+        let continueIfSymbolsNotFoundVariable = tl.getVariable('VSMobileCenterUpload.ContinueIfSymbolsNotFound');
+        let continueIfSymbolsNotFound = false;
+        if (continueIfSymbolsNotFoundVariable && continueIfSymbolsNotFoundVariable.toLowerCase() === 'true') {
+            continueIfSymbolsNotFound = true;
+        }
+        let symbolsPath = utils.checkAndFixFilePath(utils.resolveSinglePath(symbolsPathPattern, continueIfSymbolsNotFound), "symbolsPath", continueIfSymbolsNotFound);
 
-        // Begin package upload
-        let uploadInfo: UploadInfo = await beginPackageUpload(effectiveApiServer, effectiveApiVersion, appSlug, apiToken);
+        // Begin release upload
+        let uploadInfo: UploadInfo = await beginReleaseUpload(effectiveApiServer, effectiveApiVersion, appSlug, apiToken, userAgent);
 
         // Perform the upload
-        await uploadPackage(uploadInfo.upload_url, app);
+        await uploadRelease(uploadInfo.upload_url, app, userAgent);
 
         // Commit the upload
-        let packageUrl = await commitPackage(effectiveApiServer, effectiveApiVersion, appSlug, uploadInfo.upload_id, apiToken);
+        let packageUrl = await commitRelease(effectiveApiServer, effectiveApiVersion, appSlug, uploadInfo.upload_id, apiToken, userAgent);
 
         // Publish
-        await publishPackage(effectiveApiServer, packageUrl, releaseNotes, distributionGroupId, apiToken);
+        await publishRelease(effectiveApiServer, packageUrl, releaseNotes, distributionGroupId, apiToken, userAgent);
 
         // Uploading symbols
         if (symbolsPath) {
             // Prepare symbols 
-            let symbolsFile = await prepareSymbols(symbolsPath, packParentFolder);                
-            
-            // Begin preparing upload symbols
-            let symbolsUploadInfo = await beginSymbolUpload(effectiveApiServer, effectiveApiVersion, appSlug, symbolsType, apiToken);
-            
-            // upload symbols 
-            await uploadSymbols(symbolsUploadInfo.upload_url, symbolsFile);
+            let symbolsFile = await prepareSymbols(symbolsPath, packParentFolder);
 
-            await commitSymbols(effectiveApiServer, effectiveApiVersion, appSlug, symbolsUploadInfo.symbol_upload_id, apiToken);
-        } 
+            // Begin preparing upload symbols
+            let symbolsUploadInfo = await beginSymbolUpload(effectiveApiServer, effectiveApiVersion, appSlug, symbolsType, apiToken, userAgent);
+
+            // upload symbols 
+            await uploadSymbols(symbolsUploadInfo.upload_url, symbolsFile, userAgent);
+
+            await commitSymbols(effectiveApiServer, effectiveApiVersion, appSlug, symbolsUploadInfo.symbol_upload_id, apiToken, userAgent);
+        }
 
         tl.setResult(tl.TaskResult.Succeeded, tl.loc("Succeeded"));
     } catch (err) {

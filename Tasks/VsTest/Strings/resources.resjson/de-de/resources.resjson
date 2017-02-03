@@ -1,16 +1,16 @@
 {
   "loc.friendlyName": "Visual Studio Test",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkId=835764)",
   "loc.description": "Test mit Visual Studio Test Runner ausführen",
-  "loc.instanceNameFormat": "Test Assemblies",
+  "loc.instanceNameFormat": "Testassemblys",
   "loc.group.displayName.executionOptions": "Ausführungsoptionen",
   "loc.group.displayName.tiaOptions": "Testauswirkungsanalyse",
   "loc.group.displayName.advancedExecutionOptions": "Erweiterte Ausführungsoptionen",
   "loc.group.displayName.reportingOptions": "Berichtoptionen",
-  "loc.input.label.testAssemblyVer2": "Test Assembly",
-  "loc.input.help.testAssemblyVer2": "Run tests from the specified files. The file paths are relative to the search folder. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
-  "loc.input.label.searchFolder": "Search Folder",
-  "loc.input.help.searchFolder": "Folder to search for the test assemblies. Defaults to $(System.DefaultWorkingDirectory).",
+  "loc.input.label.testAssemblyVer2": "Testassembly",
+  "loc.input.help.testAssemblyVer2": "Führen Sie Tests mit den angegebenen Dateien aus. Die Dateipfade sind relativ zum Suchordner angegeben. Es werden mehrzeilige Minimatchmuster unterstützt. [Weitere Informationen](https://go.microsoft.com/fwlink/?LinkId=835764)",
+  "loc.input.label.searchFolder": "Suchordner",
+  "loc.input.help.searchFolder": "Order für die Suche nach den Testassemblys. Der Standardwert lautet \"$(System.DefaultWorkingDirectory)\".",
   "loc.input.label.testFiltercriteria": "Testfilterkriterien",
   "loc.input.help.testFiltercriteria": "Zusätzliche Kriterien zum Filtern von Tests aus Testassemblys, z. B. \"Priority=1|Name=MeineTestMethode\".",
   "loc.input.label.runSettingsFile": "Testlaufeinstellungsdatei",
@@ -68,5 +68,5 @@
   "loc.messages.UnexpectedVersionString": "Unerwartete Versionszeichenfolge für \"vstest.console.exe\" erkannt: %s.",
   "loc.messages.UnexpectedVersionNumber": "Unerwartete Versionsnummer für \"vstest.console.exe\" erkannt: %s.",
   "loc.messages.VstestDiagNotSupported": "Die vstest.console.exe-Version bietet keine Unterstützung für das Flag \"/diag\". Aktivieren Sie die Diagnose über die exe.config-Dateien.",
-  "loc.messages.NoIncludePatternFound": "No include pattern found. Specify atleast one include pattern to search test assemblies."
+  "loc.messages.NoIncludePatternFound": "Kein Einschlussmuster gefunden. Geben Sie mindestens ein Einschlussmuster an, um nach Testassemblys zu suchen."
 }

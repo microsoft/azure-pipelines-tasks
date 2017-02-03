@@ -19,5 +19,13 @@
   "loc.input.label.preservePaths": "保留文件路径",
   "loc.input.help.preservePaths": "如果选中，将在上传文件的远程目录下重新创建有关本地目录结构。否则，会将文件直接上传到远程目录而不创建其他子目录。<p>例如，假设源文件夹为: <b>`/home/user/source/`</b>，它包含文件: <b>`foo/bar/foobar.txt`</b>，而远程目录为: <b>`/uploads/`</b>。<br>如果选中，文件将上传到: <b>`/ uploads/foo/bar/foobar.txt`</b>。否则上传到: <b>`/ uploads/foobar.txt`</b>。",
   "loc.input.label.trustSSL": "信任服务器证书",
-  "loc.input.help.trustSSL": "选择此选项将通过 ftps:// 信任 FTP 服务器的 SSL 证书，即使它是自签名证书或无法由证书颁发机构(CA)验证的证书。"
+  "loc.input.help.trustSSL": "选择此选项将通过 ftps:// 信任 FTP 服务器的 SSL 证书，即使它是自签名证书或无法由证书颁发机构(CA)验证的证书。",
+  "loc.messages.FTPConnected": "已连接: %s",
+  "loc.messages.CleanRemoteDir": "正在清理远程目录: %s",
+  "loc.messages.UploadRemoteDir": "正在将文件上传到远程目录: %s",
+  "loc.messages.UploadSucceedMsg": "FTP 已成功上传 %s",
+  "loc.messages.UploadSucceedRes": "FTP 已成功上传",
+  "loc.messages.DisconnectHost": "正在断开与 %s 的连接 ",
+  "loc.messages.Disconnected": "已断开连接",
+  "loc.messages.ConnectPort": "正在连接到: %s:%s"
 }

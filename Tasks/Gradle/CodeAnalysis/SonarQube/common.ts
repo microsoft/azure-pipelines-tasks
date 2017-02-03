@@ -1,21 +1,16 @@
 /// <reference path="../../../../definitions/vsts-task-lib.d.ts" />
-
 import Q = require('q');
-import path = require('path');
 import glob = require('glob');
 
-import {ToolRunner} from 'vsts-task-lib/toolrunner';
-
+import { ToolRunner } from 'vsts-task-lib/toolrunner';
 import tl = require('vsts-task-lib/task');
-import {TaskResult} from 'vsts-task-lib/task';
 
-import {SonarQubeEndpoint} from './endpoint';
-import {SonarQubeRunSettings} from './run-settings';
-import {ISonarQubeServer, SonarQubeServer} from './server';
-import {SonarQubeMetrics} from './metrics';
-import {SonarQubeReportBuilder} from './report-builder';
-import {SonarQubeParameterHelper} from './parameter-helper';
-import {VstsServerUtils} from './vsts-server-utils';
+import { SonarQubeEndpoint } from './endpoint';
+import { SonarQubeRunSettings } from './run-settings';
+import { ISonarQubeServer, SonarQubeServer } from './server';
+import { SonarQubeMetrics } from './metrics';
+import { SonarQubeParameterHelper } from './parameter-helper';
+import { VstsServerUtils } from './vsts-server-utils';
 
 export const toolName: string = 'SonarQube';
 
@@ -42,23 +37,22 @@ export function applySonarQubeParameters(toolRunner: ToolRunner): ToolRunner {
  * @returns {Promise<void>} Promise resolved when all SQ integration actions are complete.
  */
 export function processSonarQubeIntegration(sqTaskReportGlob: string): Q.Promise<void> {
-
     let sqTaskReportPath: string = findReportTaskFile(sqTaskReportGlob);
     if (sqTaskReportPath === null) {
         return Q.when();
     }
 
-    var sqRunSettings: SonarQubeRunSettings = getSonarQubeRunSettings(sqTaskReportPath);
-    var sqMetrics: SonarQubeMetrics = getSonarQubeMetrics(sqRunSettings);
+    let sqRunSettings: SonarQubeRunSettings = getSonarQubeRunSettings(sqTaskReportPath);
+    let sqMetrics: SonarQubeMetrics = getSonarQubeMetrics(sqRunSettings);
 
     // Wait for all promises to complete before proceeding (even if one or more promises reject).
     return Q.all([
-        VstsServerUtils.processSonarQubeBuildSummary(sqRunSettings, sqMetrics),
+        VstsServerUtils.processSonarQubeBuildSummary(sqRunSettings, sqMetrics)
     ])
-        .then(() => {
-            // Apply the build breaker at the end, since breaking the build exits the build process.
-            VstsServerUtils.processSonarQubeBuildBreaker(sqRunSettings, sqMetrics);
-        });
+    .then(() => {
+        // Apply the build breaker at the end, since breaking the build exits the build process.
+        VstsServerUtils.processSonarQubeBuildBreaker(sqRunSettings, sqMetrics);
+    });
 }
 
 /**
@@ -72,7 +66,6 @@ function getSonarQubeRunSettings(sqTaskReportPath: string): SonarQubeRunSettings
     if (VstsServerUtils.isPrBuild()) {
         return null;
     }
-
     return SonarQubeRunSettings.createRunSettingsFromFile(sqTaskReportPath);
 }
 
@@ -86,12 +79,11 @@ function getSonarQubeMetrics(sqRunSettings: SonarQubeRunSettings): SonarQubeMetr
         return null;
     }
 
-    var sqServer: ISonarQubeServer = new SonarQubeServer(SonarQubeEndpoint.getTaskSonarQubeEndpoint());
+    let sqServer: ISonarQubeServer = new SonarQubeServer(SonarQubeEndpoint.getTaskSonarQubeEndpoint());
     return new SonarQubeMetrics(sqServer, sqRunSettings.ceTaskId);
 }
 
 function findReportTaskFile(reportTaskGlob: string): string {
-
     // the output folder may not be directly in the build root, for example if the entire project is in a top-lvel dir
     let reportTaskGlobResults: string[] = glob.sync(reportTaskGlob);
 

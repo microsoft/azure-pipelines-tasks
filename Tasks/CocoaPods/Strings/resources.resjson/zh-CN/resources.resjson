@@ -1,11 +1,16 @@
 {
   "loc.friendlyName": "CocoaPods",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613745)",
-  "loc.description": "CocoaPod 是 Swift 和 Objective-C Cocoa 项目的依赖管理器。运行 pod 安装",
+  "loc.description": "CocoaPod 是 Swift 和 Objective-C Cocoa 项目的依赖项管理器。此任务将运行“pod 安装”。",
   "loc.instanceNameFormat": "pod 安装",
+  "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.cwd": "工作目录",
-  "loc.input.help.cwd": "当前工作目录。默认为存储库目录。",
-  "loc.messages.PodReturnCode": "Pod 已退出，返回代码为: %d",
-  "loc.messages.PodFailed": "Pod 失败，出现错误: %s",
-  "loc.messages.CocoaPodsNotFound": "命令池未找到。请在生成计算机上安装 Cocoapods (https://cocoapods.org)"
+  "loc.input.help.cwd": "指定要执行此步骤的工作目录。如果留空，将使用存储库目录。",
+  "loc.input.label.forceRepoUpdate": "Force Repo Update",
+  "loc.input.help.forceRepoUpdate": "Selecting this option will force running 'pod repo update' before install.",
+  "loc.input.label.projectDirectory": "Project Directory",
+  "loc.input.help.projectDirectory": "Optionally specify the path to the root of the project directory. If left empty, the project specified in the Podfile will be used. If no project is specified, then a search for an Xcode project will be made. If more than one Xcode project is found, an error will occur.",
+  "loc.messages.PodReturnCode": "已退出\"pod\" 命令，返回代码为: %d",
+  "loc.messages.PodFailed": "\"pod\" 命令失败，出现错误: %s",
+  "loc.messages.CocoaPodsNotFound": "The 'pod' command was not found. Please install CocoaPods on the agent machine (https://cocoapods.org/)."
 }

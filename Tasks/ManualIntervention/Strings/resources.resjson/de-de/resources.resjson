@@ -4,5 +4,7 @@
   "loc.description": "Bereitstellung anhalten und auf Eingriff warten",
   "loc.instanceNameFormat": "Manueller Eingriff",
   "loc.input.label.instructions": "Anweisungen",
-  "loc.input.help.instructions": "Diese Anweisungen werden dem Benutzer angezeigt, damit dieser den manuellen Eingriff fortsetzen oder ablehnen kann. Basierend auf diesen Anweisungen kann der Benutzer eine fundierte Entscheidung zu diesem manuellen Eingriff treffen."
+  "loc.input.help.instructions": "Diese Anweisungen werden dem Benutzer angezeigt, damit dieser den manuellen Eingriff fortsetzen oder ablehnen kann. Basierend auf diesen Anweisungen kann der Benutzer eine fundierte Entscheidung zu diesem manuellen Eingriff treffen.",
+  "loc.input.label.emailRecipients": "Benutzer benachrichtigen",
+  "loc.input.help.emailRecipients": "Senden Sie eine E-Mail an bestimmte Benutzer (oder Gruppen), um diese über ausstehende manuelle Eingriffe zu informieren. Nur Benutzer mit der Berechtigung zur Bereitstellungsverwaltung können manuelle Eingriffe vornehmen."
 }

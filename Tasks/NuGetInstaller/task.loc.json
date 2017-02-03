@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 26
+    "Patch": 29
   },
   "runsOn": [
     "Agent",
@@ -94,7 +94,7 @@
       "groupName": "advanced",
       "options": {
         "3.3.0": "3.3.0",
-        "3.5.0.1829": "3.5.0 - build 1938 (rc2)",
+        "3.5.0.1829": "3.5.0",
         "custom": "Custom"
       }
     },

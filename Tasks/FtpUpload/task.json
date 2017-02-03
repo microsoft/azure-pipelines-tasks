@@ -10,15 +10,15 @@
         "Build",
         "Release"
     ],
-	"runsOn": [
+    "runsOn": [
         "Agent",
         "MachineGroup"
     ],
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 5
+        "Minor": 111,
+        "Patch": 1
     },
     "instanceNameFormat": "FTP Upload: $(rootFolder)",
     "groups": [
@@ -107,5 +107,15 @@
             "target": "ftpuploadtask.js",
             "argumentFormat": ""
         }
+    },
+    "messages": {
+        "FTPConnected": "connected: %s",
+        "CleanRemoteDir": "cleaning remote directory: %s",
+        "UploadRemoteDir": "uploading files to remote directory: %s",
+        "UploadSucceedMsg": "FTP upload successful %s",
+        "UploadSucceedRes": "FTP upload successful",
+        "DisconnectHost": "disconnecting from: %s",
+        "Disconnected": "disconnected",
+        "ConnectPort": "connecting to: %s:%s"
     }
 }

@@ -32,7 +32,7 @@ process.env["AGENT_NAME"] = "author";
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     "which": {
-        "cmd": "cmd"
+        "msdeploy": "msdeploy"
     },
     "stats": {
     	"webAppPkg.zip": {
@@ -46,30 +46,31 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
         }
     },
      "checkPath": {
-        "cmd" : true,
+        "msdeploy" : true,
         "webAppPkg.zip": true,
         "webAppPkg": true
     },
     "osType": {
         "osType": "Windows"
     },
-    "exec": {
-        "cmd /C DefaultWorkingDirectory\\msDeployCommand.bat": {
-            "code" : 0,
-            "stdout": "Executed Successfully"
-        },
-        "cmd /C DefaultWorkingDirectory\\msDeployParam.bat": {
-            "code" : 0,
-            "stdout": "Executed Successfully"
-        }
-    },
-    "rmRF": {
-        "DefaultWorkingDirectory\\msDeployCommand.bat": {
+	 "rmRF": {
+        "DefaultWorkingDirectory\\tempSetParameters.xml": {
             "success": true
         }
     },
+    "exec": {
+        "msdeploy -verb:getParameters -source:package=\'webAppPkg.zip\'": {
+            "code": 0,
+            "stdout": "Executed Successfully"
+        },
+        "msdeploy -verb:sync -source:package=\'webAppPkg.zip\' -dest:auto,ComputerName=\'https://mytestappKuduUrl/msdeploy.axd?site=mytestapp\',UserName=\'$mytestapp\',Password=\'mytestappPwd\',AuthType=\'Basic\' -setParam:name=\'IIS Web Application Name\',value=\'mytestapp\' -setParamFile=tempSetParameters.xml  -enableRule:DoNotDeleteRule -userAgent:TFS_useragent": {
+            "code": 0,
+            "stdout": "Executed Successfully"
+        }
+    },
     "exist": {
-    	"webAppPkg.zip": true
+    	"webAppPkg.zip": true,
+        "DefaultWorkingDirectory\\tempSetParameters.xml": true
     },
     "glob": {
         "webAppPkg.zip": ["webAppPkg.zip"],
@@ -88,7 +89,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
 
 
 import mockTask = require('vsts-task-lib/mock-task');
-var kuduDeploymentLog = require('webdeployment-common/kududeploymentstatusutility.js');
+var kuduDeploymentLog = require('azurerest-common/kududeploymentstatusutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js'); 
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
@@ -97,12 +98,12 @@ tr.registerMock('./msdeployutility.js', {
         return msDeployFullPath;
     },
     containsParamFile: function(webAppPackage: string) {
-        var taskResult = mockTask.execSync("cmd", ['/C',"DefaultWorkingDirectory\\msDeployParam.bat"]);
+        var taskResult = mockTask.execSync("msdeploy", "-verb:getParameters -source:package=\'" + webAppPackage + "\'");
         return true;
     }
 }); 
 
-tr.registerMock('webdeployment-common/azurerestutility.js', {
+tr.registerMock('azurerest-common/azurerestutility.js', {
     getAzureRMWebAppPublishProfile: function(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
         var mockPublishProfile = {
             profileName: 'mytestapp - Web Deploy',
@@ -133,6 +134,7 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
 		id: 'appid',
   		properties: { 
      		virtualApplications: [ ['Object'], ['Object'], ['Object'] ],
+             scmType: "None"
     	} 
   	}
 
@@ -162,6 +164,31 @@ tr.registerMock('webdeployment-common/azurerestutility.js', {
         return appSettings;
     },
     updateWebAppAppSettings : function (){
+        return true;
+    },
+    updateAzureRMWebAppConfigDetails: function() {
+        console.log("Successfully updated scmType to VSTSRM");
+    }
+});
+
+var fs = require('fs');
+tr.registerMock('fs', {
+    createWriteStream: function (filePath, options) {
+        return { "isWriteStreamObj": true };
+    },
+    ReadStream: fs.ReadStream,
+    WriteStream: fs.WriteStream,
+    readFileSync: function(msDeployErrorFilePath) {
+        console.log("reading the error file");
+        return "ERROR DEPLOYING WEBSITE";
+    },
+    openSync: function (fd, options) {
+        return true;
+    },
+    closeSync: function (fd) {
+        return true;
+    },
+    fsyncSync: function(fd) {
         return true;
     }
 });

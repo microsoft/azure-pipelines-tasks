@@ -17,8 +17,8 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 5
+    "Minor": 111,
+    "Patch": 1
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -107,5 +107,15 @@
       "target": "ftpuploadtask.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "FTPConnected": "ms-resource:loc.messages.FTPConnected",
+    "CleanRemoteDir": "ms-resource:loc.messages.CleanRemoteDir",
+    "UploadRemoteDir": "ms-resource:loc.messages.UploadRemoteDir",
+    "UploadSucceedMsg": "ms-resource:loc.messages.UploadSucceedMsg",
+    "UploadSucceedRes": "ms-resource:loc.messages.UploadSucceedRes",
+    "DisconnectHost": "ms-resource:loc.messages.DisconnectHost",
+    "Disconnected": "ms-resource:loc.messages.Disconnected",
+    "ConnectPort": "ms-resource:loc.messages.ConnectPort"
   }
 }

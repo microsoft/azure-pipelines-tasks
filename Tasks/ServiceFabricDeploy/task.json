@@ -10,13 +10,21 @@
         "Build",
         "Release"
     ],
+    "runsOn": [
+        "Agent"
+    ],
     "version": {
         "Major": 1,
-        "Minor": 2,
-        "Patch": 0
+        "Minor": 3,
+        "Patch": 4
     },
     "minimumAgentVersion": "1.95.0",
     "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced Settings",
+            "isExpanded": false
+        },
         {
             "name": "upgrade",
             "displayName": "Upgrade Settings",
@@ -58,12 +66,22 @@
             "helpMarkDown": "Path to the application parameters file. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path. If specified, this will override the value in the publish profile."
         },
         {
+            "name": "compressPackage",
+            "type": "boolean",
+            "label": "Compress Package",
+            "defaultValue": "false",
+            "required": false,
+            "groupname": "advanced",
+            "helpMarkDown": "Indicates whether the application package should be compressed before copying to the image store. If enabled, this will override the value in the publish profile."
+        },
+        {
             "name": "copyPackageTimeoutSec",
             "type": "string",
             "label": "CopyPackageTimeoutSec",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Timeout in seconds for copying application package to image store."
+            "groupname": "advanced",
+            "helpMarkDown": "Timeout in seconds for copying application package to image store. If specified, this will override the value in the publish profile."
         },
         {
             "name": "registerPackageTimeoutSec",
@@ -71,7 +89,22 @@
             "label": "RegisterPackageTimeoutSec",
             "defaultValue": "",
             "required": false,
+            "groupname": "advanced",
             "helpMarkDown": "Timeout in seconds for registering application package."
+        },
+        {
+            "name": "overwriteBehavior",
+            "type": "pickList",
+            "label": "Overwrite Behavior",
+            "defaultValue": "SameAppTypeAndVersion",
+            "required": true,
+            "options": {
+                "Always": "Always",
+                "Never": "Never",
+                "SameAppTypeAndVersion": "SameAppTypeAndVersion"
+            },
+            "groupname": "advanced",
+            "helpMarkDown": "Overwrite Behavior if an application exists in the cluster with the same name, and upgrades have not been configured."
         },
         {
             "name": "overridePublishProfileSettings",
@@ -80,7 +113,7 @@
             "defaultValue": "false",
             "required": false,
             "groupname": "upgrade",
-            "helpMarkDown": "This will override all upgrade settings with either the value specified below or the default value if not specified."
+            "helpMarkDown": "This will override all upgrade settings with either the values specified below or the default value if not specified."
         },
         {
             "name": "isUpgrade",
@@ -289,6 +322,7 @@
         "SFSDK_UpgradeRolledBack": "Upgrade was rolled back.",
         "SFSDK_UnzipPackage": "Attempting to unzip '{0}' to location '{1}'.",
         "SFSDK_UnexpectedError": "Unexpected Error. Error details: $_.Exception.Message",
-        "CopyPackageTimeoutSecWarning": "The CopyPackageTimeoutSec parameter requires version '2.3' of the Service Fabric SDK, but the installed version is '{0}'. This parameter will be ignored."
+        "SFSDK_CopyPackageTimeoutSecWarning": "The CopyPackageTimeoutSec parameter requires version '2.3' of the Service Fabric SDK, but the installed version is '{0}'. This parameter will be ignored.",
+        "SFSDK_CompressPackageWarning": "The CompressPackage parameter requires version '2.5' of the Service Fabric SDK, but the installed version is '{0}'. This parameter will be ignored."
     }
 }

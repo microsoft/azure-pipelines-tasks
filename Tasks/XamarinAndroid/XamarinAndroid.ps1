@@ -9,6 +9,7 @@ try {
     [string]$project = Get-VstsInput -Name project -Require
     [string]$target = Get-VstsInput -Name target
     [string]$configuration = Get-VstsInput -Name configuration
+    [bool]$createAppPackage = Get-VstsInput -Name createAppPackage -AsBool
     [bool]$clean = Get-VstsInput -Name clean -AsBool
     [string]$outputDir = Get-VstsInput -Name outputDir
     [string]$msbuildLocationMethod = Get-VstsInput -Name msbuildLocationMethod
@@ -35,8 +36,10 @@ try {
     if($target) {
         $msBuildArguments = "$msBuildArguments /t:$target"
     }
-    # Always build the APK file
-    $msBuildArguments = "$msBuildArguments /t:PackageForAndroid"
+    # Build the APK file if createAppPackage is set to true
+    if($createAppPackage) {
+        $msBuildArguments = "$msBuildArguments /t:PackageForAndroid"
+    }
     if ($outputDir) {
         $msBuildArguments = "$msBuildArguments /p:OutputPath=""$outputDir"""
     }
@@ -53,19 +56,6 @@ try {
 
         Write-Verbose "msBuildArguments = $msBuildArguments"
     }
-
-    # Resolve the MSBuild location.
-    if ($msbuildLocationMethod.ToLower() -eq 'location') {
-        $msbuildLocationMethod = "location"
-    }
-    ElseIf ($msbuildLocation -and $msbuildVersion.ToLower() -eq 'latest') {
-        # Use location if msbuildLocation is set and verison is 'latest' for back compat
-        $msbuildLocationMethod = "location"
-    }
-    else {
-        $msbuildLocationMethod = "version"
-    }
-    Write-Verbose "msbuildLocationMethod = $msbuildLocationMethod"
 
     $msbuildLocation = Select-MSBuildLocation -Method $msbuildLocationMethod -Location $msbuildLocation -Version $msbuildVersion -Architecture $msbuildArchitecture
 

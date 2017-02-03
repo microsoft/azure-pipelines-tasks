@@ -1,16 +1,16 @@
 {
   "loc.friendlyName": "Тест Visual Studio",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
+  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkId=835764)",
   "loc.description": "Запуск тестов с помощью средства запуска тестов Visual Studio",
-  "loc.instanceNameFormat": "Test Assemblies",
+  "loc.instanceNameFormat": "Тестовые сборки",
   "loc.group.displayName.executionOptions": "Параметры выполнения",
   "loc.group.displayName.tiaOptions": "Анализ влияния на тестирование",
   "loc.group.displayName.advancedExecutionOptions": "Дополнительные параметры выполнения",
   "loc.group.displayName.reportingOptions": "Параметры отчетов",
-  "loc.input.label.testAssemblyVer2": "Test Assembly",
-  "loc.input.help.testAssemblyVer2": "Run tests from the specified files. The file paths are relative to the search folder. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
-  "loc.input.label.searchFolder": "Search Folder",
-  "loc.input.help.searchFolder": "Folder to search for the test assemblies. Defaults to $(System.DefaultWorkingDirectory).",
+  "loc.input.label.testAssemblyVer2": "Тестовая сборка",
+  "loc.input.help.testAssemblyVer2": "Выполнение тестов из указанных файлов. Пути к файлам указываются относительно папки поиска. Поддерживает несколько строк шаблонов minimatch. [Подробнее...](https://go.microsoft.com/fwlink/?LinkId=835764).",
+  "loc.input.label.searchFolder": "Папка поиска",
+  "loc.input.help.searchFolder": "Папка для поиска тестовых сборок. По умолчанию — $(System.DefaultWorkingDirectory).",
   "loc.input.label.testFiltercriteria": "Критерии фильтрации тестов",
   "loc.input.help.testFiltercriteria": "Дополнительные критерии фильтрации тестов из тестовых сборок. Например, Priority=1|Name=MyTestMethod",
   "loc.input.label.runSettingsFile": "Файл параметров запуска",
@@ -68,5 +68,5 @@
   "loc.messages.UnexpectedVersionString": "Обнаружена неожиданная строка версии для файла vstest.console.exe: %s.",
   "loc.messages.UnexpectedVersionNumber": "Обнаружена неожиданная версия файла vstest.console.exe: %s.",
   "loc.messages.VstestDiagNotSupported": "Эта версия vstest.console.exe не поддерживает флаг /diag. Включите диагностику в файлах конфигурации exe.config.",
-  "loc.messages.NoIncludePatternFound": "No include pattern found. Specify atleast one include pattern to search test assemblies."
+  "loc.messages.NoIncludePatternFound": "Не найден шаблон включения. Укажите хотя бы один шаблон включения для поиска тестовых сборок."
 }
