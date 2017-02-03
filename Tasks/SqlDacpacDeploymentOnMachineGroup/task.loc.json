@@ -16,7 +16,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "1.102.0",
@@ -37,7 +37,7 @@
     },
     {
       "name": "DacpacFile",
-      "type": "string",
+      "type": "filePath",
       "label": "ms-resource:loc.input.label.DacpacFile",
       "required": true,
       "visibleRule": "TaskType = dacpac",
