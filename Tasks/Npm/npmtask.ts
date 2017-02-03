@@ -4,7 +4,7 @@ import path = require('path');
 import url = require('url');
 import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
-import nutil = require('nuget-task-common/utility');
+var nutil = require('nuget-task-common/utility.js');
 
 var extend = require('util')._extend;
 
@@ -18,39 +18,39 @@ async function executeTask() {
 
     try {
         var filePath = tl.getPathInput('cwd', true, false);
-        var dirList: string[] = [];
-        if (filePath.indexOf("*") !== -1 || filePath.indexOf("?") !== -1) {
-            var filesList = nutil.resolveFilterSpec(filePath, tl.getVariable("Build.SourceDirectory"));
-            tl.debug("number of files matching filePath: " + filesList.length);
-            for (var file of filesList) {
-                dirList.push(path.dirname(file));
+        var dirList = [];
+        var filesList = nutil.resolveFilterSpec(filePath, tl.getVariable("System.DefaultWorkingDirectory"));
+        tl.debug("number of files matching filePath: " + filesList.length);
+        for (var workingDir of filesList) {
+            if (fs.statSync(workingDir).isFile()) {
+                workingDir = path.dirname(workingDir);
             }
-        }
-        else if (fs.statSync(filePath).isFile()) {
-            dirList.push(path.dirname(filePath));
-        }
-        else {
-            dirList.push(filePath);
+            if (dirList.indexOf(workingDir) === -1) {
+                dirList.push(workingDir);
+            }
         }
     }
     catch (error) {
         tl.warning(error);
     }
+    if (dirList.length === 0) {
+        dirList.push(tl.getVariable("System.DefaultWorkingDirectory"));
+    }
+
+    var command = tl.getInput('command', true);
+    if (command.indexOf(' ') >= 0) {
+        tl.setResult(tl.TaskResult.Failed, tl.loc('InvalidCommand'));
+        return;
+    }
+
+    var npmRunner = tl.tool(tl.which('npm', true));
+    npmRunner.arg(command);
+    npmRunner.line(tl.getInput('arguments', false));
+
     for (var cwd of dirList) {
         tl.debug('Executing command in directory: ' + cwd);
         tl.mkdirP(cwd);
         tl.cd(cwd);
-
-        var command = tl.getInput('command', true);
-        if (command.indexOf(' ') >= 0) {
-            tl.setResult(tl.TaskResult.Failed, tl.loc('InvalidCommand'));
-            return;
-        }
-
-        var npmRunner = tl.tool(tl.which('npm', true));
-        npmRunner.arg(command);
-        npmRunner.line(tl.getInput('arguments', false));
-
 
         if (shouldUseDeprecatedTask()) {
 

@@ -8,6 +8,7 @@ export class NpmMockHelper {
     static FakeWorkingDirectory = "fake\\wd";
     static AgentBuildDirectory = 'c:\\agent\\work\\build';
     static BuildBuildId = '12345';
+    static DefaultWorkingDirectory = "c:\\agent\\home\\directory";
 
     public answers: ma.TaskLibAnswers = {
         which: {},
@@ -23,11 +24,11 @@ export class NpmMockHelper {
         private tmr: tmrm.TaskMockRunner,
         public command: string,
         public args: string) { 
-        NpmMockHelper.setVariable('Agent.HomeDirectory', 'c:\\agent\\home\\directory');
+        NpmMockHelper.setVariable('Agent.HomeDirectory', NpmMockHelper.DefaultWorkingDirectory);
         NpmMockHelper.setVariable('Build.SourcesDirectory', 'c:\\agent\\home\\directory\\sources');
         process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = "{\"parameters\":{\"AccessToken\":\"token\"},\"scheme\":\"OAuth\"}";
         process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = "https://example.visualstudio.com/defaultcollection";
-        NpmMockHelper.setVariable('System.DefaultWorkingDirectory', 'c:\\agent\\home\\directory');
+        process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = NpmMockHelper.DefaultWorkingDirectory;
         NpmMockHelper.setVariable('System.TeamFoundationCollectionUri', 'https://example.visualstudio.com/defaultcollection');
         NpmMockHelper.setVariable('Agent.BuildDirectory', NpmMockHelper.AgentBuildDirectory);
         NpmMockHelper.setVariable('Build.BuildId', NpmMockHelper.BuildBuildId);
@@ -112,6 +113,7 @@ export class NpmMockHelper {
         this.setToolPath(this.answers, "npm", NpmMockHelper.NpmCmdPath);
         this.setOsType('WiNdOWs_nT');
         this.setProjectNpmrcExists();
+        this.answers.checkPath["c:\\agent\\home\\directory\\fake\\wd"] = true;
     }
 
     private setToolPath(answers: ma.TaskLibAnswers, tool: string, path: string) {
@@ -120,6 +122,6 @@ export class NpmMockHelper {
     }
 
     private setProjectNpmrcExists() {
-        this.answers.exist[path.join(NpmMockHelper.FakeWorkingDirectory, '.npmrc')] = true;
+        this.answers.exist[path.join(NpmMockHelper.DefaultWorkingDirectory, NpmMockHelper.FakeWorkingDirectory, '.npmrc')] = true;
     }
 }
