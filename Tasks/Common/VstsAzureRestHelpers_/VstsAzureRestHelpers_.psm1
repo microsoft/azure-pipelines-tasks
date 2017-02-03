@@ -50,7 +50,7 @@ function Get-ProxyUri
         Write-Verbose -Verbose ("Reading proxy from IE. Proxy url specified={0}" -f $proxyUri.OriginalString)
     }
 
-    if($serverUrl -like "*$($proxyUri.Host)*")
+    if($serverUrl -eq $null -or ([System.Uri]$serverUrl).Host -eq $proxyUri.Host)
     {
         return $null
     }
