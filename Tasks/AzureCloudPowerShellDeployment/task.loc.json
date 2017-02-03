@@ -126,7 +126,7 @@
       "defaultValue": "false",
       "visibleRule": "AllowUpgrade == true",
       "helpMarkDown": "ms-resource:loc.input.help.ForceUpgrade",
-      "required": true
+      "required": false
     },
     {
       "name": "DiagnosticStorageAccountKeys",

@@ -126,7 +126,7 @@
             "defaultValue": "false",
             "visibleRule": "AllowUpgrade == true",
             "helpMarkDown": "When selected sets the upgrade to a forced upgrade, which could potentially cause loss of local data.", 
-            "required": true
+            "required": false
         },
         {
             "name": "DiagnosticStorageAccountKeys",

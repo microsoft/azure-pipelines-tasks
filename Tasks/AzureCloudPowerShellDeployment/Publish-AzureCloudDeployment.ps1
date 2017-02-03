@@ -12,7 +12,7 @@ try{
     $DeploymentLabel = Get-VstsInput -Name DeploymentLabel
     $AppendDateTimeToLabel = Get-VstsInput -Name AppendDateTimeToLabel -Require
     $AllowUpgrade = Get-VstsInput -Name AllowUpgrade -Require -AsBool
-    $ForceUpgrade = Get-VstsInput -Name ForceUpgrade -Require -AsBool
+    $ForceUpgrade = Get-VstsInput -Name ForceUpgrade -AsBool
     $DiagnosticStorageAccountKeys = Get-VstsInput -Name DiagnosticStorageAccountKeys
     $NewServiceAdditionalArguments = Get-VstsInput -Name NewServiceAdditionalArguments
     $NewServiceAffinityGroup = Get-VstsInput -Name NewServiceAffinityGroup
