@@ -41,7 +41,7 @@ runner.registerMockExport('stats', (itemPath: string): any => {
     }
 });
 
-// override fs.chmodSync. it is the only fs function called by copyfiles.
+// override fs.chmodSync
 (fs as any).chmodSync = (path: string, mode: number) => {
     console.log(`##vso[task.debug]chmodSync ${path} ${mode}`);
 };
