@@ -19,8 +19,7 @@ export function getvsTestConfigurations(): models.VsTestConfigurations {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     const vsTestConfiguration = {} as models.VsTestConfigurations;
     initTestConfigurations(vsTestConfiguration);
-    vsTestConfiguration.publishRunAttachments = tl.getInput('publishRunAttachments');
-    vsTestConfiguration.runInParallel = tl.getBoolInput('runInParallel');
+    vsTestConfiguration.publishRunAttachments = tl.getInput('publishRunAttachments');    
     vsTestConfiguration.vstestDiagFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     vsTestConfiguration.ignoreVstestFailure = tl.getVariable('vstest.ignoretestfailures');
     vsTestConfiguration.tiaConfig = getTiaConfiguration();
@@ -45,6 +44,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations)
     testConfiguration.buildPlatform = tl.getInput('platform');
     testConfiguration.testRunTitle = tl.getInput('testRunTitle');
     testConfiguration.vsTestVersion = tl.getInput('testPlatform');
+    testConfiguration.runInParallel = tl.getBoolInput('runTestsInParallel');
     initDataCollectorConfigurations(testConfiguration);
 }
 

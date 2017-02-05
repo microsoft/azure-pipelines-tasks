@@ -17,6 +17,7 @@ export interface TestConfigurations {
     vsTestVersion: string;
     pathtoCustomTestAdapters: string;
     tiaConfig: TiaConfiguration;
+    runInParallel: boolean;
 }
 
 export interface DtaTestConfigurations extends TestConfigurations {
@@ -26,12 +27,11 @@ export interface DtaTestConfigurations extends TestConfigurations {
     testplan: number;
     testSuites: number[];
     testPlanConfigId: number;
-    customSlicingenabled: boolean;
+    customSlicingenabled: boolean;    
 }
 
 export interface VsTestConfigurations extends TestConfigurations {
-    publishRunAttachments: string;
-    runInParallel: boolean;
+    publishRunAttachments: string;    
     vstestDiagFile: string;
     ignoreVstestFailure: string;
     vs15HelperPath: string;

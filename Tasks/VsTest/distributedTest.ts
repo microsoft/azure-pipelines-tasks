@@ -8,6 +8,7 @@ import * as testapim from 'vso-node-api/TestApi';
 import * as testInterfaces from 'vso-node-api/interfaces/TestInterfaces'
 import * as tr from 'vsts-task-lib/toolrunner';
 import * as models from './models';
+import * as settingsHelper from './settingsHelper';
 
 export class DistributedTest {
     constructor(dtaTestConfig: models.DtaTestConfigurations) {
@@ -113,6 +114,13 @@ export class DistributedTest {
             this.addToProcessEnvVars(envVars, 'sourcefilter', '!**\obj\**');
         }
 
+        try {
+            this.dtaTestConfig.runSettingsFile = await settingsHelper.updateSettingsFileAsRequired(this.dtaTestConfig.runSettingsFile, this.dtaTestConfig.runInParallel, this.dtaTestConfig.videoCoverageEnabled, false);
+        } catch (error) {
+            tl.warning(tl.loc('ErrorWhileUpdatingSettings'));
+            tl.debug(error);
+        }
+        
         this.addToProcessEnvVars(envVars, 'testcasefilter', this.dtaTestConfig.testcaseFilter);
         this.addToProcessEnvVars(envVars, 'runsettings', this.dtaTestConfig.runSettingsFile);
         this.addToProcessEnvVars(envVars, 'testdroplocation', this.dtaTestConfig.testDropLocation);

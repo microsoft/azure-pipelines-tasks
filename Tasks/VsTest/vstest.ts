@@ -4,6 +4,7 @@ import path = require('path');
 import Q = require('q');
 import models = require('./models')
 import taskInputParser = require('./taskInputParser')
+import settingsHelper = require('./settingsHelper')
 
 var os = require('os');
 var regedit = require('regedit');
@@ -1293,7 +1294,7 @@ function setupRunSettingsFileForParallel(runInParallel: boolean, settingsFile: s
                         }
 
                         if (result.RunSettings === undefined) {
-                            tl.warning(tl.loc('FailedToSetRunInParallel'));
+                            tl.warning(tl.loc('FailedToSetRunConfiguration'));
                             defer.resolve(settingsFile);
                             return defer.promise;
                         }
