@@ -17,7 +17,7 @@
     "version": {
         "Major": 0,
         "Minor": 3,
-        "Patch": 1
+        "Patch": 2
     },
     "minimumAgentVersion": "1.95.0",
     "instanceNameFormat": "dotnet $(command)",
