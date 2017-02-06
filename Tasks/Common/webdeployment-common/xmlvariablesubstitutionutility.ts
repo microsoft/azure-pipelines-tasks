@@ -52,6 +52,8 @@ export async function substituteXmlVariables(configFile, tags, variableMap){
                 try {
                     if(xmlNode.name == "configSections") {
                         await updateXmlConfigNodeAttribute(xmlDocument, xmlNode, variableMap);
+                    } else if(xmlNode.name == "connectionStrings") {
+                        await updateXmlConnectionStringsNodeAttribute(xmlNode, variableMap);
                     } else {
                         await updateXmlNodeAttribute(xmlNode, variableMap);
                     }
@@ -110,6 +112,27 @@ async function updateXmlNodeAttribute(xmlDomNode, variableMap)
         var childNode = children[i];
         if(varUtility.isObject(childNode)) {
             updateXmlNodeAttribute(childNode, variableMap);
+        }
+    }
+}
+
+async function updateXmlConnectionStringsNodeAttribute(xmlDomNode, variableMap) {
+    if (varUtility.isEmpty(xmlDomNode) || !varUtility.isObject(xmlDomNode) || xmlDomNode.name == "#comment") {
+        tl.debug("Provided node is empty or a comment.");
+        return;
+    }
+    var xmlDomNodeAttributes = xmlDomNode.attrs;
+
+    if(xmlDomNodeAttributes.hasOwnProperty("name") && xmlDomNodeAttributes.hasOwnProperty("connectionString")) {
+        if(variableMap[xmlDomNodeAttributes.name]) {
+            xmlDomNode.attr("connectionString", variableMap[xmlDomNodeAttributes.name]);
+        }
+    }	
+    var children = xmlDomNode.children;
+    for(var i=0; i < children.length; i++) {
+        var childNode = children[i];
+        if(varUtility.isObject(childNode)) {
+            updateXmlConnectionStringsNodeAttribute(childNode, variableMap);
         }
     }
 }
