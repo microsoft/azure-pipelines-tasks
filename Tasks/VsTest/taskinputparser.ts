@@ -50,7 +50,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations)
 
 function initDataCollectorConfigurations(testConfiguration: models.TestConfigurations)
 {
-    const dataCollectors: string[] = tl.getDelimitedInput('collectDiagnosticData', ',', true);
+    const dataCollectors: string[] = tl.getDelimitedInput('collectDiagnosticData', ',', false);
     testConfiguration.codeCoverageEnabled = false;
     testConfiguration.videoCoverageEnabled = false;
     dataCollectors.forEach((collector) => {
