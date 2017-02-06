@@ -131,6 +131,9 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
     }
     if (settingsFile && pathExistsAsFile(settingsFile)) {
         argsArray.push("/Settings:" + settingsFile);
+        utilities.readFileContents(settingsFile, "utf-8").then(function (settings) {
+        tl.debug("Running VsTest with settings : " + settings);
+        });
     }
     if (vstestConfig.codeCoverageEnabled) {
         argsArray.push("/EnableCodeCoverage");
@@ -724,7 +727,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
         vstestConfig.vsTestVersion = null;
     }
     overrideTestRunParametersIfRequired(vstestConfig.runSettingsFile)
-        .then(async function (overriddenSettingsFile) {
+        .then(function (overriddenSettingsFile) {
             let vsVersion = vsVersionDetails.version;
             try {
                 let disableTIA = tl.getVariable("DisableTestImpactAnalysis");
@@ -748,10 +751,13 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
             setRunInParallellIfApplicable(vsVersion);
             var newSettingsFile = overriddenSettingsFile;
             try {                
-                newSettingsFile = await settingsHelper.updateSettingsFileAsRequired(overriddenSettingsFile, vstestConfig.runInParallel, false, vstestConfig.tiaConfig, false);
-                if(newSettingsFile != overriddenSettingsFile) {
+                settingsHelper.updateSettingsFileAsRequired(overriddenSettingsFile, vstestConfig.runInParallel, false, vstestConfig.tiaConfig, false).
+                then(function(ret) {
+                    newSettingsFile = ret;
+                    if(newSettingsFile != overriddenSettingsFile) {
                     cleanUp(overriddenSettingsFile);
-                } 
+                    } 
+                });                
             } catch (error) {
                 tl.warning(tl.loc('ErrorWhileUpdatingSettings'));
                 tl.debug(error);
