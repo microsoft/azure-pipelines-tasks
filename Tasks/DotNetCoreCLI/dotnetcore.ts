@@ -191,8 +191,7 @@ export class dotNetExe {
         var projectPattern = this.projects;
         var searchWebProjects = this.isPublishCommand() && this.publishWebProjects;
         if (searchWebProjects) {
-            projectPattern = "**/project.json";
-            // projectPattern = "**/project.json;**/*.csproj";
+            projectPattern = "**/project.json;**/*.csproj;**/*.vbproj";
         }
 
         var projectFiles = nutil.resolveFilterSpec(projectPattern,

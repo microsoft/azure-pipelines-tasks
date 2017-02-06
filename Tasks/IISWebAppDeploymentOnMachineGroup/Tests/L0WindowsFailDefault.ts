@@ -65,7 +65,13 @@ tr.registerMock('./msdeployutility.js', {
 var fs = require('fs');
 tr.registerMock('fs', {
     createWriteStream: function (filePath, options) {
-        return { "isWriteStreamObj": true };
+        return { 
+            "isWriteStreamObj": true,
+            "on": (event) => {
+                console.log("event: " + event + " has been triggered");
+            },
+            "end" : () => { return true; }
+        };
     },
     readFileSync: function (msDeployErrorFilePath) {
         console.log("reading the error file");

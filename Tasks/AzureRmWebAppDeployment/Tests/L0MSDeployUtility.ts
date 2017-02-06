@@ -36,7 +36,7 @@ let a = {
 tlm.setAnswers(a);
 
 mockery.registerMock('vsts-task-lib/task', tlm);
-
+var fs = require('fs');
 mockery.registerMock('fs', {
     createWriteStream: function (filePath, options) {
         console.log("inside createWriteStream function");
@@ -47,6 +47,8 @@ mockery.registerMock('fs', {
             }
         }; 
     },
+    ReadStream: fs.ReadStream,
+    WriteStream: fs.WriteStream,
     openSync: function (fd, options) {
         console.log("inside openSync function");
         return true;

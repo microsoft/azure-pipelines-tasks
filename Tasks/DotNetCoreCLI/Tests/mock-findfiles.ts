@@ -6,6 +6,10 @@ export function resolveFilterSpec (projects: string, includeFolder: boolean) : s
         if (projects == "**/project.json;**/*.csproj") {
             return ["web/project.json", "web2/project.json", "web.tests/project.json", "lib/project.json"];
         }
+        
+        if (projects == "**/project.json;**/*.csproj;**/*.vbproj") {
+            return ["web/project.json", "web2/project.json", "web.tests/project.json", "lib/project.json"];
+        }
 
         if (projects == "*fail*/project.json") {
             return [];

@@ -54,8 +54,6 @@
         "ServiceFabricDeploy",
         "ServiceFabricUpdateAppVersions",
         "ShellScript",
-        "SonarQubePostTest",
-        "SonarQubePreBuild",
         "SqlAzureDacpacDeployment",
         "SqlDacpacDeploymentOnMachineGroup",
         "SSH",
