@@ -55,7 +55,7 @@
   "loc.messages.NoMatchingTestAssemblies": "No test assemblies found matching the pattern: %s.",
   "loc.messages.VstestNotFound": "Vstest of version %d is not found. Try again with a visual studio version that exists on your build agent machine.",
   "loc.messages.VstestFailed": "Vstest failed with error. Check logs for failures. There might be failed tests.",
-  "loc.messages.VstestTIANotSupported": "Install Visual Studio 14 update 3 or 15 RC or above to run Test Impact Analysis.",
+  "loc.messages.VstestTIANotSupported": "Install Visual Studio 2015 update 3 or Visual Studio 2017 RC or above to run Test Impact Analysis.",
   "loc.messages.NoResultsToPublish": "No results found to publish.",
   "loc.messages.ErrorWhileReadingRunSettings": "Error occured while reading run settings file. Error : %s.",
   "loc.messages.ErrorWhileReadingTestSettings": "Error occured while reading test settings file. Error : %s.",
