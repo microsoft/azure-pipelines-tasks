@@ -500,7 +500,7 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
     let vstest = tl.tool(vsVersionDetails.location);
 
     if(vsVersion === 14) {
-        let vsTestPath = path.join(__dirname, "TestSelector/14.0/vstest.console.exe")
+        let vsTestPath = path.join(__dirname, "TestSelector/14.0/vstest.console.exe") // Use private vstest as the changes to discover tests are not there in update3
         vstest = tl.tool(vsTestPath);
     }
     addVstestArgs(argsArray, vstest);
@@ -753,6 +753,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                     if (tiaConfig.tiaEnabled && (vsTestVersionForTIA === null || 
                        (vsTestVersionForTIA[0] < 14 || 
                        (vsTestVersionForTIA[0] === 15 && vsTestVersionForTIA[1] === 0 && vsTestVersionForTIA[2] < 25727) || 
+                       // VS 2015 U3
                        (vsTestVersionForTIA[0] === 14 && vsTestVersionForTIA[1] === 0 && vsTestVersionForTIA[2] < 25420)))) {
                         tl.warning(tl.loc("VstestTIANotSupported"));
                         tiaConfig.tiaEnabled = false;
@@ -764,6 +765,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                 return defer.promise;
             }
 
+            // We need to use private data collector dll
             if(vsTestVersionForTIA[0] === 14) {
                 tiaConfig.useNewCollector = true;
             }
