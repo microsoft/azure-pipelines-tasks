@@ -2,6 +2,7 @@ import tl = require('vsts-task-lib/task');
 import path = require('path');
 import Q = require('q');
 import models = require('./models')
+import utilities = require('./utilities')
 
 var os = require('os');
 var uuid = require('node-uuid');
@@ -48,7 +49,7 @@ const runSettingsTemplate = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
     "</DataCollectionRunSettings>" +
 "</RunSettings>";
 
-export async function updateSettingsFileAsRequired(settingsFile: string, isParallelRun: boolean, videoCollector: boolean, tiaConfig: models.TiaConfiguration) : Promise<string>
+export async function updateSettingsFileAsRequired(settingsFile: string, isParallelRun: boolean, videoCollector: boolean, tiaConfig: models.TiaConfiguration, isDta: boolean) : Promise<string>
 {
     var defer=Q.defer<string>();
     var result: any;
@@ -57,20 +58,20 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
     var settingsExt = null;
     if (settingsFile && fs.lstatSync(settingsFile).isFile() && settingsFile.split('.').pop().toLowerCase() === "testsettings") {
         settingsExt=testSettingsExt;
-        result = await getXmlContents(settingsFile);
-    } else if (settingsFile && pathExistsAsFile(settingsFile)) {
+        result = await utilities.getXmlContents(settingsFile);
+    } else if (settingsFile && utilities.pathExistsAsFile(settingsFile)) {
         settingsExt = runSettingsExt;
-        result = await getXmlContents(settingsFile);
+        result = await utilities.getXmlContents(settingsFile);
     }
 
     if (isParallelRun) {        
         if (settingsExt === testSettingsExt) {
             tl.warning(tl.loc('RunInParallelNotSupported'));
         } else if (settingsExt === runSettingsExt) {
-            tl.debug("Enabling run in parallel by editing given runsettings.")
-            result = await setupRunSettingsFileForRunConfig(result, {MaxCpuCount: 0});
+            tl.debug("Enabling run in parallel by editing given runsettings.")            
+            result = await setupRunSettingsFileForRunConfig(result, {MaxCpuCount: 0});            
         } else {
-            tl.debug("Enabling run in parallel by creating new runsettings.");
+            tl.debug("Enabling run in parallel by creating new runsettings.");            
             settingsExt = runSettingsExt;
             result = await CreateSettings(runSettingsForParallel);
         }
@@ -97,47 +98,53 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
             result = await updateTestSettingsWithDataCollector(result, VideoCollectorFriendlyName, videoCollectorNode)
         }
     }
-
+    
     if (tiaConfig.tiaEnabled) {
-        var testImpactCollectorNode = null;
-        parser.parseString(TestImpactDataCollectorTemplate, function(err, data) {
-            if(err) {
-                defer.reject(err);
-            }
-            testImpactCollectorNode = data;
-            if(tiaConfig.useNewCollector) {
-                testImpactCollectorNode.DataCollector.$.codebase = getTraceCollectorUri();
-            }        
-            testImpactCollectorNode.DataCollector.Configuration[0].ImpactLevel = getTIALevel(tiaConfig);
-            if (getTIALevel(tiaConfig) === 'file') {
-                testImpactCollectorNode.DataCollector.Configuration[0].LogFilePath = 'true';
-            }
-            if (tiaConfig.context === "CD") {
-                testImpactCollectorNode.DataCollector.Configuration[0].RootPath = "";
-            } else {
-                testImpactCollectorNode.DataCollector.Configuration[0].RootPath = tiaConfig.sourcesDir;
-            }
-        });
-
-        if(settingsExt === testSettingsExt)
-        {
-            tl.debug("Enabling Test Impact collector by editing given testsettings.")
-            result = await updateTestSettingsWithDataCollector(result, TIFriendlyName, testImpactCollectorNode);
-        } else if (settingsExt === runSettingsExt) {
-            tl.debug("Enabling Test Impact collector by editing given runsettings.")
-            result = await updateRunSettingsWithDataCollector(result, TIFriendlyName, testImpactCollectorNode);
+        if (isDta) {
+            tl.warning(tl.loc('tiaNotSupportedInDta'));
         } else {
-            tl.debug("Enabling test impact data collection by creating new runsettings.")
-            settingsExt = runSettingsExt;
-            result = await CreateSettings(runSettingsTemplate);
-            result = await updateRunSettingsWithDataCollector(result, TIFriendlyName, testImpactCollectorNode);
-            var baseLineBuildId = await readFileContents(tiaConfig.baseLineBuildIdFile, "utf-8");            
-            result = await setupRunSettingsFileForRunConfig(result, { TestImpact : { '$': {enabled: 'true'} }, BaseLineRunId : baseLineBuildId});
+            var testImpactCollectorNode = null;
+            parser.parseString(TestImpactDataCollectorTemplate, function(err, data) {
+                if(err) {
+                    defer.reject(err);
+                }
+                testImpactCollectorNode = data;
+                if(tiaConfig.useNewCollector) {
+                    testImpactCollectorNode.DataCollector.$.codebase = getTraceCollectorUri();
+                }        
+                testImpactCollectorNode.DataCollector.Configuration[0].ImpactLevel = getTIALevel(tiaConfig);
+                if (getTIALevel(tiaConfig) === 'file') {
+                    testImpactCollectorNode.DataCollector.Configuration[0].LogFilePath = 'true';
+                }
+                if (tiaConfig.context === "CD") {
+                    testImpactCollectorNode.DataCollector.Configuration[0].RootPath = "";
+                } else {
+                    testImpactCollectorNode.DataCollector.Configuration[0].RootPath = tiaConfig.sourcesDir;
+                }
+            });
+            var baseLineBuildId = await utilities.readFileContents(tiaConfig.baseLineBuildIdFile, "utf-8");
+
+            if(settingsExt === testSettingsExt)
+            {
+                tl.debug("Enabling Test Impact collector by editing given testsettings.")
+                result = await updateTestSettingsWithDataCollector(result, TIFriendlyName, testImpactCollectorNode);
+                result = await setupTestSettingsFileForRunConfig(result, { TestImpact : { '$': {enabled: 'true'} }, BaseLineRunId : baseLineBuildId});
+            } else if (settingsExt === runSettingsExt) {
+                tl.debug("Enabling Test Impact collector by editing given runsettings.")
+                result = await updateRunSettingsWithDataCollector(result, TIFriendlyName, testImpactCollectorNode);
+                result = await setupRunSettingsFileForRunConfig(result, { TestImpact : { '$': {enabled: 'true'} }, BaseLineRunId : baseLineBuildId});
+            } else {
+                tl.debug("Enabling test impact data collection by creating new runsettings.")
+                settingsExt = runSettingsExt;
+                result = await CreateSettings(runSettingsTemplate);
+                result = await updateRunSettingsWithDataCollector(result, TIFriendlyName, testImpactCollectorNode);
+                result = await setupRunSettingsFileForRunConfig(result, { TestImpact : { '$': {enabled: 'true'} }, BaseLineRunId : baseLineBuildId});
+            }
         }
     }
 
     if (result) {
-        writeXmlFile(result, settingsFile, settingsExt)
+        utilities.writeXmlFile(result, settingsFile, settingsExt)
             .then(function (filename) {
                 defer.resolve(filename);
             });
@@ -244,22 +251,6 @@ function CreateSettings(runSettingsContents: string) : Q.Promise<any> {
     return defer.promise; 
 }
 
-function getXmlContents(filePath: string): Q.Promise<any> {
-    var defer=Q.defer<any>();
-    readFileContents(filePath, "utf-8")
-        .then(function (xmlContents) {
-            parser.parseString(xmlContents, function (err, result) {
-                if (err) {
-                    defer.reject(err);
-                }
-                else{
-                    defer.resolve(result);
-                }
-            });
-        });
-        return defer.promise;
-}
-
 function setupRunSettingsFileForRunConfig(result: any, innerNode: any) : Q.Promise<any> {
     var defer=Q.defer<any>();  
     if (!result || result.RunSettings === undefined) {
@@ -289,50 +280,6 @@ function setupTestSettingsFileForRunConfig(result: any, innerNode: any) : Q.Prom
         result.TestSettings.Execution =  innerNode ;
     }
     defer.resolve(result);
-    return defer.promise;
-}
-
-function pathExistsAsFile(path: string) {
-    return tl.exist(path) && tl.stats(path).isFile();
-}
-
-function saveToFile(fileContents: string, extension: string): Q.Promise<string> {
-    var defer = Q.defer<string>();
-    var tempFile = path.join(os.tmpdir(), uuid.v1() + extension);
-    fs.writeFile(tempFile, fileContents, function (err) {
-        if (err) {
-            defer.reject(err);
-        }
-        tl.debug("Temporary runsettings file created at " + tempFile);
-        defer.resolve(tempFile);
-    });
-    return defer.promise;
-}
-
-function readFileContents(filePath: string, encoding: string): Q.Promise<string> {
-    var defer = Q.defer<string>();
-    fs.readFile(filePath, encoding, (err, data) => {
-        if (err) {
-            defer.reject(new Error('Could not read file (' + filePath + '): ' + err.message));
-        }
-        else {
-            defer.resolve(data);
-        }
-    });
-    return defer.promise;
-}
-
-function writeXmlFile(result: any, settingsFile: string, fileExt: string): Q.Promise<string> {
-    var defer = Q.defer<string>();
-    var runSettingsForTestImpact = builder.buildObject(result);
-    saveToFile(runSettingsForTestImpact, fileExt)
-        .then(function (fileName) {
-            defer.resolve(fileName);
-            return defer.promise;
-        })
-        .fail(function (err) {
-            defer.reject(err);
-        });
     return defer.promise;
 }
 

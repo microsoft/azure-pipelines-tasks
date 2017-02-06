@@ -345,6 +345,8 @@
     "VstestDiagNotSupported": "ms-resource:loc.messages.VstestDiagNotSupported",
     "NoIncludePatternFound": "ms-resource:loc.messages.NoIncludePatternFound",
     "ErrorWhileUpdatingSettings": "ms-resource:loc.messages.ErrorWhileUpdatingSettings",
-    "VideoCollectorNotSupportedWithRunSettings": "ms-resource:loc.messages.VideoCollectorNotSupportedWithRunSettings"
+    "VideoCollectorNotSupportedWithRunSettings": "ms-resource:loc.messages.VideoCollectorNotSupportedWithRunSettings",
+    "runTestInIsolationNotSupported": "ms-resource:loc.messages.runTestInIsolationNotSupported",
+    "tiaNotSupportedInDta": "ms-resource:loc.messages.tiaNotSupportedInDta"
   }
 }

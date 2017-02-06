@@ -18,6 +18,7 @@ export interface TestConfigurations {
     pathtoCustomTestAdapters: string;
     tiaConfig: TiaConfiguration;
     runInParallel: boolean;
+    runTestsInIsolation: boolean;
 }
 
 export interface DtaTestConfigurations extends TestConfigurations {

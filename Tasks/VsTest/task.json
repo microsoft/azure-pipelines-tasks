@@ -345,6 +345,8 @@
         "VstestDiagNotSupported": "vstest.console.exe version does not support the /diag flag. Enable diagnositics via the exe.config files",
         "NoIncludePatternFound": "No include pattern found. Specify atleast one include pattern to search test assemblies.",
         "ErrorWhileUpdatingSettings": "Error occurred while updating the settings file. Using the specified settings file.",
-        "VideoCollectorNotSupportedWithRunSettings": "Vide collector is not supported with run settings."
+        "VideoCollectorNotSupportedWithRunSettings": "Vide collector is not supported with run settings.",
+        "runTestInIsolationNotSupported": "Running tests in isolation is not supported for multi-agent scenario.",
+        "tiaNotSupportedInDta": "Running only impacted tests is not supported for multi-agent scenario."
     }
 }

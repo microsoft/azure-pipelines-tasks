@@ -46,6 +46,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations)
     testConfiguration.testRunTitle = tl.getInput('testRunTitle');
     testConfiguration.vsTestVersion = tl.getInput('testPlatform');
     testConfiguration.runInParallel = tl.getBoolInput('runTestsInParallel');
+    testConfiguration.runTestsInIsolation = tl.getBoolInput('runTestsInIsolation');
     initDataCollectorConfigurations(testConfiguration);
 }
 

@@ -5,6 +5,7 @@ import Q = require('q');
 import models = require('./models')
 import taskInputParser = require('./taskInputParser')
 import settingsHelper = require('./settingsHelper')
+import utilities = require('./utilities')
 
 var os = require('os');
 var regedit = require('regedit');
@@ -753,7 +754,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
             }
             setupSettingsFileForTestImpact(vsVersion, overriddenSettingsFile)
                 .then(function (runSettingswithTestImpact) {
-                    setRunInParallellIfApplicable(vsVersion);
+                    utilities.setRunInParallellIfApplicable(vsVersion);
                     setupRunSettingsFileForParallel(vstestConfig.runInParallel, runSettingswithTestImpact)
                         .then(function (parallelRunSettingsFile) {
                             runVStest(testResultsDirectory, parallelRunSettingsFile, vsVersion)
