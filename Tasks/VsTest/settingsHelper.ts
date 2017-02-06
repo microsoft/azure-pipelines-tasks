@@ -122,23 +122,23 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
                     testImpactCollectorNode.DataCollector.Configuration[0].RootPath = tiaConfig.sourcesDir;
                 }
             });
-            var baseLineBuildId = await utilities.readFileContents(tiaConfig.baseLineBuildIdFile, "utf-8");
+            //var baseLineBuildId = await utilities.readFileContents(tiaConfig.baseLineBuildIdFile, "utf-8");
 
             if(settingsExt === testSettingsExt)
             {
                 tl.debug("Enabling Test Impact collector by editing given testsettings.")
                 result = await updateTestSettingsWithDataCollector(result, TIFriendlyName, testImpactCollectorNode);
-                result = await setupTestSettingsFileForRunConfig(result, { TestImpact : { '$': {enabled: 'true'} }, BaseLineRunId : baseLineBuildId});
+                //result = await setupTestSettingsFileForRunConfig(result, { TestImpact : { '$': {enabled: 'true'} }, BaseLineRunId : baseLineBuildId});
             } else if (settingsExt === runSettingsExt) {
                 tl.debug("Enabling Test Impact collector by editing given runsettings.")
                 result = await updateRunSettingsWithDataCollector(result, TIFriendlyName, testImpactCollectorNode);
-                result = await setupRunSettingsFileForRunConfig(result, { TestImpact : { '$': {enabled: 'true'} }, BaseLineRunId : baseLineBuildId});
+                //result = await setupRunSettingsFileForRunConfig(result, { TestImpact : { '$': {enabled: 'true'} }, BaseLineRunId : baseLineBuildId});
             } else {
                 tl.debug("Enabling test impact data collection by creating new runsettings.")
                 settingsExt = runSettingsExt;
                 result = await CreateSettings(runSettingsTemplate);
                 result = await updateRunSettingsWithDataCollector(result, TIFriendlyName, testImpactCollectorNode);
-                result = await setupRunSettingsFileForRunConfig(result, { TestImpact : { '$': {enabled: 'true'} }, BaseLineRunId : baseLineBuildId});
+                //result = await setupRunSettingsFileForRunConfig(result, { TestImpact : { '$': {enabled: 'true'} }, BaseLineRunId : baseLineBuildId});
             }
         }
     }

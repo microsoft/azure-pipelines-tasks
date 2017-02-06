@@ -35,45 +35,6 @@ export function getXmlContents(filePath: string): Q.Promise<any> {
         return defer.promise;
 }
 
-export function setRunInParallellIfApplicable(vsVersion: number) : boolean {    
-    if (!isNaN(vsVersion) && vsVersion >= 14) {
-        if (vsVersion >= 15) { // moved away from taef
-            return true;
-        }
-        // In 14.0 taef parellization needs TAEF enabled.
-        let vs14Common: string = tl.getVariable("VS140COMNTools");
-        if (vs14Common && pathExistsAsFile(path.join(vs14Common, "..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll"))) {
-            setRegistryKeyForParallelExecution(vsVersion);
-            return true;
-        } 
-    } 
-    tl.warning(tl.loc('UpdateOneOrHigherRequired'));
-    return false;
-}
-
-function setRegistryKeyForParallelExecution(vsVersion: number) {
-    var regKey = "HKCU\\SOFTWARE\\Microsoft\\VisualStudio\\" + vsVersion.toFixed(1) + "_Config\\FeatureFlags\\TestingTools\\UnitTesting\\Taef";
-    regedit.createKey(regKey, function (err) {
-        if (!err) {
-            var values = {
-                [regKey]: {
-                    'Value': {
-                        value: '1',
-                        type: 'REG_DWORD'
-                    }
-                }
-            };
-            regedit.putValue(values, function (err) {
-                if (err) {
-                    tl.warning(tl.loc('ErrorOccuredWhileSettingRegistry', err));
-                }
-            });
-        } else {
-            tl.warning(tl.loc('ErrorOccuredWhileSettingRegistry', err));
-        }
-    });
-}
-
 export function saveToFile(fileContents: string, extension: string): Q.Promise<string> {
     var defer = Q.defer<string>();
     var tempFile = path.join(os.tmpdir(), uuid.v1() + extension);
@@ -81,7 +42,7 @@ export function saveToFile(fileContents: string, extension: string): Q.Promise<s
         if (err) {
             defer.reject(err);
         }
-        tl.debug("Temporary runsettings file created at " + tempFile);
+        tl.debug("Temporary file created at " + tempFile);
         defer.resolve(tempFile);
     });
     return defer.promise;
