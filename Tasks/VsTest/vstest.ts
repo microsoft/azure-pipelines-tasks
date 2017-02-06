@@ -190,7 +190,12 @@ function getTestSelectorLocation(): string {
 }
 
 function getTraceCollectorUri(): string {
-    return "file://" + path.join(__dirname, "TestSelector/Microsoft.VisualStudio.TraceCollector.dll");
+    if(vsVersionDetails.version === 15) {
+        return "file://" + path.join(__dirname, "TestSelector/Microsoft.VisualStudio.TraceCollector.dll");
+    }
+    else {
+        return "file://" + path.join(__dirname, "TestSelector/14.0/Microsoft.VisualStudio.TraceCollector.dll");
+    }
 }
 
 function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
@@ -493,6 +498,11 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
     }
 
     let vstest = tl.tool(vsVersionDetails.location);
+
+    if(vsVersion === 14) {
+        let vsTestPath = path.join(__dirname, "TestSelector/14.0/vstest.console.exe")
+        vstest = tl.tool(vsTestPath);
+    }
     addVstestArgs(argsArray, vstest);
 
     tl.cd(workingDirectory);
@@ -740,7 +750,10 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                 if ((sysDebug !== undefined && sysDebug.toLowerCase() === "true") || tiaConfig.tiaEnabled) {
                     vsTestVersionForTIA = getVsTestVersion();
 
-                    if (tiaConfig.tiaEnabled && (vsTestVersionForTIA === null || (vsTestVersionForTIA[0] < 15 || (vsTestVersionForTIA[0] === 15 && vsTestVersionForTIA[1] === 0 && vsTestVersionForTIA[2] < 25727)))) {
+                    if (tiaConfig.tiaEnabled && (vsTestVersionForTIA === null || 
+                       (vsTestVersionForTIA[0] < 14 || 
+                       (vsTestVersionForTIA[0] === 15 && vsTestVersionForTIA[1] === 0 && vsTestVersionForTIA[2] < 25727) || 
+                       (vsTestVersionForTIA[0] === 14 && vsTestVersionForTIA[1] === 0 && vsTestVersionForTIA[2] < 25420)))) {
                         tl.warning(tl.loc("VstestTIANotSupported"));
                         tiaConfig.tiaEnabled = false;
                     }
@@ -750,6 +763,11 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                 defer.resolve(1);
                 return defer.promise;
             }
+
+            if(vsTestVersionForTIA[0] === 14) {
+                tiaConfig.useNewCollector = true;
+            }
+
             setupSettingsFileForTestImpact(vsVersion, overriddenSettingsFile)
                 .then(function (runSettingswithTestImpact) {
                     setRunInParallellIfApplicable(vsVersion);

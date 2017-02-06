@@ -37,8 +37,7 @@ export interface VsTestConfigurations extends TestConfigurations {
     vs15HelperPath: string;
 }
 
-export interface TiaConfiguration
-{
+export interface TiaConfiguration {
     tiaEnabled: boolean;
     tiaRebaseLimit: string;
     tiaFilterPaths: string;
