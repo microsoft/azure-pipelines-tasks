@@ -6,11 +6,13 @@ async function xmlVarSub() {
     var configFiles = [path.join(__dirname, 'L1XmlVarSub/Web_test.config'), path.join(__dirname, 'L1XmlVarSub/Web_test.Debug.config')];
     var variableMap = {
         'conntype' : 'new_connType',
-        'connectionString' : 'database_connection_string',
+        "MyDB": "TestDB",
         'webpages:Version' : '1.1.7.3',
         'rmtype' : 'newRM@type',
         'xdt:Transform' : 'DelAttributes',
-        'xdt:Locator' : 'Match(tag)'
+        'xdt:Locator' : 'Match(tag)',
+        'DefaultConnection': 'connectionStringValue1',
+        'OtherDefaultConnection': 'connectionStringValue2'
     }
 
     for(var configFile of configFiles) {
