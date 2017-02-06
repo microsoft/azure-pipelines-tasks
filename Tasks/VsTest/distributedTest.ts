@@ -114,15 +114,17 @@ export class DistributedTest {
             this.addToProcessEnvVars(envVars, 'sourcefilter', '!**\obj\**');
         }
 
+        //Modify settings file to enable configurations and data collectors.
+        var settingsFile = this.dtaTestConfig.runSettingsFile;
         try {
-            this.dtaTestConfig.runSettingsFile = await settingsHelper.updateSettingsFileAsRequired(this.dtaTestConfig.runSettingsFile, this.dtaTestConfig.runInParallel, this.dtaTestConfig.videoCoverageEnabled, false);
+            settingsFile = await settingsHelper.updateSettingsFileAsRequired(this.dtaTestConfig.runSettingsFile, this.dtaTestConfig.runInParallel, this.dtaTestConfig.videoCoverageEnabled, this.dtaTestConfig.tiaConfig);
         } catch (error) {
             tl.warning(tl.loc('ErrorWhileUpdatingSettings'));
             tl.debug(error);
         }
         
         this.addToProcessEnvVars(envVars, 'testcasefilter', this.dtaTestConfig.testcaseFilter);
-        this.addToProcessEnvVars(envVars, 'runsettings', this.dtaTestConfig.runSettingsFile);
+        this.addToProcessEnvVars(envVars, 'runsettings', settingsFile);
         this.addToProcessEnvVars(envVars, 'testdroplocation', this.dtaTestConfig.testDropLocation);
         this.addToProcessEnvVars(envVars, 'testrunparams', this.dtaTestConfig.overrideTestrunParameters);
         this.setEnvironmentVariableToString(envVars, 'codecoverageenabled', this.dtaTestConfig.codeCoverageEnabled);
@@ -141,7 +143,8 @@ export class DistributedTest {
         this.setEnvironmentVariableToString(envVars, 'customslicingenabled', 'true');
 
         await runDistributesTestTool.exec(<tr.IExecOptions>{ cwd: path.join(__dirname, 'modules'), env: envVars });
-        tl.debug('Run Distributed Test finished');
+        await this.cleanUp(settingsFile);
+        tl.debug('Run Distributed Test finished');        
     }
 
     private addToProcessEnvVars(envVars: { [key: string]: string; }, name: string, value: string) {
@@ -176,6 +179,17 @@ export class DistributedTest {
         tl.setVariable('DTA_INSTANCE_ID', taskInstanceId.toString());
         return taskInstanceId;
     }
+
+    private async cleanUp(temporarySettingsFile: string) {
+    //cleanup the runsettings file
+    if (temporarySettingsFile && this.dtaTestConfig.runSettingsFile != temporarySettingsFile) {
+        try {
+            tl.rmRF(temporarySettingsFile, true);
+        } catch (error) {
+            //Ignore.
+        }
+    }
+}
 
     private dtaHostLogFilePath: string;
     private dtaTestConfig: models.DtaTestConfigurations;

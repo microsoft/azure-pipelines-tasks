@@ -12,6 +12,7 @@ export function getDistributedTestConfigurations(): models.DtaTestConfigurations
     const dtaConfiguration = {} as models.DtaTestConfigurations;
     initTestConfigurations(dtaConfiguration);
     dtaConfiguration.onDemandTestRunId = tl.getInput('tcmTestRun');
+    dtaConfiguration.tiaConfig = getTiaConfiguration();    
     return dtaConfiguration;
 }
 

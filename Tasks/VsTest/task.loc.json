@@ -327,7 +327,6 @@
     "ErrorWhileReadingRunSettings": "ms-resource:loc.messages.ErrorWhileReadingRunSettings",
     "ErrorWhileReadingTestSettings": "ms-resource:loc.messages.ErrorWhileReadingTestSettings",
     "RunInParallelNotSupported": "ms-resource:loc.messages.RunInParallelNotSupported",
-    "ContradictorySettings": "ms-resource:loc.messages.ContradictorySettings",
     "FailedToSetRunConfiguration": "ms-resource:loc.messages.FailedToSetRunConfiguration",
     "UpdateOneOrHigherRequired": "ms-resource:loc.messages.UpdateOneOrHigherRequired",
     "ErrorOccuredWhileSettingRegistry": "ms-resource:loc.messages.ErrorOccuredWhileSettingRegistry",
@@ -345,6 +344,7 @@
     "UnexpectedVersionNumber": "ms-resource:loc.messages.UnexpectedVersionNumber",
     "VstestDiagNotSupported": "ms-resource:loc.messages.VstestDiagNotSupported",
     "NoIncludePatternFound": "ms-resource:loc.messages.NoIncludePatternFound",
-    "ErrorWhileUpdatingSettings": "ms-resource:loc.messages.ErrorWhileUpdatingSettings"
+    "ErrorWhileUpdatingSettings": "ms-resource:loc.messages.ErrorWhileUpdatingSettings",
+    "VideoCollectorNotSupportedWithRunSettings": "ms-resource:loc.messages.VideoCollectorNotSupportedWithRunSettings"
   }
 }

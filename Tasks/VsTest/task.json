@@ -327,7 +327,6 @@
         "ErrorWhileReadingRunSettings": "Error occured while reading run settings file. Error : %s.",
         "ErrorWhileReadingTestSettings": "Error occured while reading test settings file. Error : %s.",
         "RunInParallelNotSupported": "Run in Parallel is not supported with testsettings file.",
-        "ContradictorySettings": "Contradictory settings have been selected, cannot enable video data collection.",
         "FailedToSetRunConfiguration": "Failed to set run configuration. Invalid run settings file.",
         "UpdateOneOrHigherRequired": "Install Visual Studio 2015 Update 1 or higher on your build agent machine to run the tests in parallel.",
         "ErrorOccuredWhileSettingRegistry": "Error occured while setting registry key, Error: %s.",
@@ -345,6 +344,7 @@
         "UnexpectedVersionNumber": "Unexpected version number detected for vstest.console.exe: %s.",
         "VstestDiagNotSupported": "vstest.console.exe version does not support the /diag flag. Enable diagnositics via the exe.config files",
         "NoIncludePatternFound": "No include pattern found. Specify atleast one include pattern to search test assemblies.",
-        "ErrorWhileUpdatingSettings": "Error occurred while updating the settings file. Using the specified settings file."
+        "ErrorWhileUpdatingSettings": "Error occurred while updating the settings file. Using the specified settings file.",
+        "VideoCollectorNotSupportedWithRunSettings": "Vide collector is not supported with run settings."
     }
 }
