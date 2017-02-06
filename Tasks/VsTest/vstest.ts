@@ -750,7 +750,8 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                 if ((sysDebug !== undefined && sysDebug.toLowerCase() === "true") || tiaConfig.tiaEnabled) {
                     vsTestVersionForTIA = getVsTestVersion();
 
-                    if (tiaConfig.tiaEnabled && (vsTestVersionForTIA === null || 
+                    if (tiaConfig.tiaEnabled && 
+                       (vsTestVersionForTIA === null || 
                        (vsTestVersionForTIA[0] < 14 || 
                        (vsTestVersionForTIA[0] === 15 && vsTestVersionForTIA[1] === 0 && vsTestVersionForTIA[2] < 25727) || 
                        // VS 2015 U3
@@ -1442,12 +1443,12 @@ function locateVSVersion(version: string): Q.Promise<models.ExecutabaleInfo> {
     let deferred = Q.defer<models.ExecutabaleInfo>();
     let vsVersion: number = parseFloat(version);
 
-    if (isNaN(vsVersion) || vsVersion === 15) {
+    if (isNaN(vsVersion) || vsVersion === 15.0) {
         // latest
         tl.debug('Searching for latest Visual Studio');
         let vstestconsole15Path = getVSTestConsole15Path();
         if (vstestconsole15Path) {
-            deferred.resolve({ version: 15, location: vstestconsole15Path });
+            deferred.resolve({ version: 15.0, location: vstestconsole15Path });
         } else {
             // fallback
             tl.debug('Unable to find an instance of Visual Studio 2017');
