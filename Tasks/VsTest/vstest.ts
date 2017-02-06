@@ -499,7 +499,8 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
 
     let vstest = tl.tool(vsVersionDetails.location);
 
-    if(vsVersion === 14) {
+    if(vsVersion === 14.0) {
+        tl.debug("Visual studio 2015 selected. Selecting vstest.console.exe in task ");
         let vsTestPath = path.join(__dirname, "TestSelector/14.0/vstest.console.exe") // Use private vstest as the changes to discover tests are not there in update3
         vstest = tl.tool(vsTestPath);
     }
