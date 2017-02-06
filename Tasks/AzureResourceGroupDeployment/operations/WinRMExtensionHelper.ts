@@ -267,7 +267,7 @@ export class WinRMExtensionHelper {
     }
 
     private async AddWinRMExtension(vmId: string, vmName: string, dnsName: string, location: string): Promise<any> {
-        var extensionName: string = "CustomScriptExtension";
+        var extensionName: string = "WinRMCustomScriptExtension";
         var configWinRMScriptFile: string = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/ConfigureWinRM.ps1";
         var makeCertFile: string = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/makecert.exe";
         var winrmConfFile: string = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/winrmconf.cmd";

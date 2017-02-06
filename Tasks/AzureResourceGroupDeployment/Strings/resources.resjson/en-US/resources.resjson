@@ -135,7 +135,7 @@
   "loc.messages.AddedTargetInboundNatRuleLB": "Added the target virtual machine for the inbound NAT rules of load balancer %s",
   "loc.messages.FailedToFetchInstanceViewVM": "Failed to fetch the instance view of the virtual machine. Error : %s",
   "loc.messages.CreationOfExtensionFailed": "Failed to add the extension. Error: %s",
-  "loc.messages.AddedExtension": "Successfully added the CustomScriptExtension for the virtual Machine %s",
+  "loc.messages.AddedExtension": "Successfully added the WinRMCustomScriptExtension for the virtual Machine %s",
   "loc.messages.AddingExtensionSucceeded": "Addition of extension on vm %s succeeded",
   "loc.messages.DeletionSucceeded": "Deletion of extension on vm %s succeeded",
   "loc.messages.AdditionFailed": "Addition of %s on vm %s failed. Error : %s",
