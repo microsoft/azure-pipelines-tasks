@@ -134,6 +134,9 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
     }
     if (vstestConfig.codeCoverageEnabled) {
         argsArray.push("/EnableCodeCoverage");
+    }    
+    if (vstestConfig.runTestsInIsolation) {
+        argsArray.push("/InIsolation");
     }
 
     argsArray.push("/logger:trx");

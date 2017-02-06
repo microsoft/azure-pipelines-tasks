@@ -28,7 +28,7 @@ export interface DtaTestConfigurations extends TestConfigurations {
     testplan: number;
     testSuites: number[];
     testPlanConfigId: number;
-    customSlicingenabled: boolean;    
+    customSlicingenabled: boolean;
 }
 
 export interface VsTestConfigurations extends TestConfigurations {
