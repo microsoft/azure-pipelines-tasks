@@ -1,22 +1,87 @@
 import Q = require('q');
 import tl = require('vsts-task-lib/task');
 import fs = require('fs');
+import path = require('path');
 
 var ltx = require("ltx");
 var varUtility = require ('./variableutility.js');
 var ltxdomutility = require("./ltxdomutility.js");
 var fileEncoding = require('./fileencoding.js');
 
+function getReplacableTokenFromTags(xmlNode, variableMap) {
+    var parameterSubValue = {};
+    for (var childNode of xmlNode.children) {
+        if(!varUtility.isObject(childNode)) {
+            continue;
+        }
+        for(var nodeAttributes in childNode.attrs) {
+            if (childNode.attrs[nodeAttributes].startsWith('$(ReplacableToken_') && variableMap[childNode.attrs['name']]) {
+                var lastIndexOf_ = childNode.attrs[nodeAttributes].lastIndexOf('_');
+                if(lastIndexOf_ < 18) {
+                    tl.debug('Attribute value is in incorrect format ! ' + childNode.attrs[nodeAttributes]);
+                    continue;
+                }
+                parameterSubValue[childNode.attrs[nodeAttributes].substring(18, lastIndexOf_)] = variableMap[childNode.attrs['name']];
+            }
+        }
+    }
+    return parameterSubValue;
+}
+
+
+async function substituteValueinParameterFile(parameterFilePath, parameterSubValue) {
+    var fileBuffer: Buffer = fs.readFileSync(parameterFilePath);
+    var fileEncodeType = fileEncoding.detectFileEncoding(parameterFilePath, fileBuffer);
+    var webConfigContent: string = fileBuffer.toString(fileEncodeType[0]);
+    if(fileEncodeType[1]) {
+        webConfigContent = webConfigContent.slice(1);
+    }
+
+    var xmlDocument;
+    try {
+        xmlDocument = ltxdomutility.initializeDOM(webConfigContent);
+        for(var xmlChildNode of xmlDocument.children) {
+            if(!varUtility.isObject(xmlChildNode)) {
+                continue;
+            }
+            console.log(xmlChildNode);
+            if(parameterSubValue[ xmlChildNode.attrs.name ]) {
+                xmlChildNode.attrs.defaultValue = parameterSubValue[ xmlChildNode.attrs.name ];
+            }
+        }
+    }
+    catch(error) {
+        tl.debug("Unable to parse parameter file : " + parameterFilePath + ' Error: ' + error);
+        return;
+    }
+
+    var domContent = (fileEncodeType[1] ? '\uFEFF' : '') + ltxdomutility.getContentWithHeader(xmlDocument);
+
+    fs.writeFile(parameterFilePath, domContent, fileEncodeType[0], function(error) {
+        if(error) {
+            throw new Error(tl.loc("Failedtowritetoconfigfilewitherror", parameterFilePath, error));
+        }
+        tl.debug("Parameter file " + parameterFilePath + " updated.");
+    });
+}
+
 export async function substituteAppSettingsVariables(folderPath) {
     var configFiles = tl.findMatch(folderPath, "**/*.config");
+    var parameterFilePath = path.join(folderPath, 'parameters.xml');
+    if(tl.exist(parameterFilePath)) {
+        tl.debug('Detected parameters.xml file - XML variable substitution');
+    }
+    else {
+        parameterFilePath = null;
+    }
     var variableMap = varUtility.getVariableMap();
     var tags = ["applicationSettings", "appSettings", "connectionStrings", "configSections"];
     for(var configFile of configFiles) {
-        await substituteXmlVariables(configFile, tags, variableMap);
+        await substituteXmlVariables(configFile, tags, variableMap, parameterFilePath);
     }
 }
 
-export async function substituteXmlVariables(configFile, tags, variableMap){
+export async function substituteXmlVariables(configFile, tags, variableMap, parameterFilePath) {
     if(!tl.exist(configFile)) {
         throw new Error(tl.loc("Configfiledoesntexists", configFile));
     }
@@ -53,6 +118,10 @@ export async function substituteXmlVariables(configFile, tags, variableMap){
                     if(xmlNode.name == "configSections") {
                         await updateXmlConfigNodeAttribute(xmlDocument, xmlNode, variableMap);
                     } else if(xmlNode.name == "connectionStrings") {
+                        if(parameterFilePath) {
+                            var parameterSubValue = getReplacableTokenFromTags(xmlNode, variableMap);
+                            await substituteValueinParameterFile(parameterFilePath, parameterSubValue);
+                        }
                         await updateXmlConnectionStringsNodeAttribute(xmlNode, variableMap);
                     } else {
                         await updateXmlNodeAttribute(xmlNode, variableMap);
