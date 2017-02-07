@@ -247,8 +247,9 @@ export class WinRMExtensionHelper {
         });
     }
 
-    private async AddExtensionToVMsToConfigureWinRM() {
+    private async AddExtensionToVMsToConfigureWinRM() : Promise<any> {
         var resourceGroupDetails = await this.azureUtils.getResourceGroupDetails();
+        var promises = [];
         for (var vm of this.azureUtils.vmDetails) {
             var resourceName = vm.name;
             var resourceId = vm.id;
@@ -257,13 +258,22 @@ export class WinRMExtensionHelper {
             var resourceWinRmHttpsPort = vmResource.WinRMHttpsPort
             if (vm["properties"]["storageProfile"]["osDisk"]["osType"] === 'Windows') {
                 tl.debug("Enabling winrm for virtual machine " + resourceName);
-                await this.AddWinRMExtension(resourceId, resourceName, resourceFQDN, vm["location"]);
+                promises.push(this.AddWinRMExtension(resourceId, resourceName, resourceFQDN, vm["location"]));
             }
             else {
                 tl.debug("WinRM extension cannot be enabled on the virtual machine: " + resourceName + "since the OS type is " +
                     vm.properties["storageProfile"]["osDisk"]["osType"]);
             }
         }
+        return new Promise<any>((resolve, reject) => {
+            Promise.all(promises).then(() => {
+                tl.debug("Added custom script extension to all the vms in the resource group");
+                resolve(null);
+            }).catch((exception) => {
+                tl.debug("Failed to add extension to the vms with the exception: " + exception);
+                reject(exception);
+            });
+        });
     }
 
     private async AddWinRMExtension(vmId: string, vmName: string, dnsName: string, location: string): Promise<any> {
@@ -282,7 +292,7 @@ export class WinRMExtensionHelper {
         var extensionStatusValid = false;
         if (result) {
             if (result["properties"]["settings"]["fileUris"].length == fileUris.length && fileUris.every((element, index) => { return element === result["properties"]["settings"]["fileUris"][index]; })) {
-                tl.debug("Custom Script extension is for enabling Https Listener on VM" + vmName);
+                tl.debug("Custom Script extension is for enabling Https Listener on VM: " + vmName);
                 if (result["properties"]["provisioningState"] === 'Succeeded') {
                     extensionStatusValid = await this.ValidateExtensionExecutionStatus(vmName, dnsName, extensionName, location, fileUris);
                 }
@@ -295,14 +305,14 @@ export class WinRMExtensionHelper {
         if (!extensionStatusValid) {
             await this.AddExtensionToVM(vmName, dnsName, extensionName, location, fileUris);
         }
-        tl.debug("Addition of Custom Script Extension is completed");
+        tl.debug("Addition of Custom Script Extension is completed on vm: " + vmName);
     }
 
     private GetExtension(vmName: string, extensionName: string): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             this.computeClient.virtualMachineExtensions.get(this.resourceGroupName, vmName, extensionName, null, async (error, result, request, response) => {
                 if (error) {
-                    tl.debug("Failed to get the extension!!");
+                    tl.debug("Failed to get the extension for the vm: " + vmName + "!!");
                     return resolve(null);
                 }
                 resolve(result);
@@ -311,7 +321,7 @@ export class WinRMExtensionHelper {
     }
 
     private async ValidateExtensionExecutionStatus(vmName: string, dnsName: string, extensionName: string, location: string, fileUris): Promise<boolean> {
-        tl.debug("Validating the winrm configuration custom script extension status");
+        tl.debug("Validating the winrm configuration custom script extension status on vm: " + vmName);
 
         return new Promise<boolean>((resolve, reject) => {
             this.computeClient.virtualMachines.get(this.resourceGroupName, vmName, { expand: 'instanceView' }, async (error, result, request, response) => {
@@ -335,7 +345,7 @@ export class WinRMExtensionHelper {
                         }
                     }
                 }
-                tl.debug("Custom Script Extension status validated!!");
+                tl.debug("Custom Script Extension status validated for vm: " + vmName + "!!");
                 resolve(!invalidExecutionStatus);
             });
         });
@@ -370,7 +380,7 @@ export class WinRMExtensionHelper {
                     reject(tl.loc("CreationOfExtensionFailed", utils.getError(error)));
                     return;
                 }
-                tl.debug("Addition of extension completed for vm" + vmName);
+                tl.debug("Addition of extension completed for vm: " + vmName);
                 if (result["properties"]["provisioningState"] != 'Succeeded') {
                     tl.debug("Provisioning State of CustomScriptExtension is not suceeded on vm " + vmName);
                     reject(tl.loc("ARG_SetExtensionFailedForVm", this.resourceGroupName, vmName, result));
