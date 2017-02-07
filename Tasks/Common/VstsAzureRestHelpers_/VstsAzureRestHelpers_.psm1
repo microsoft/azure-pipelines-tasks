@@ -1,6 +1,7 @@
 ﻿# Private module-scope variables.
 $script:jsonContentType = "application/json;charset=utf-8"
 $script:formContentType = "application/x-www-form-urlencoded;charset=utf-8"
+$script:defaultAuthUri = "https://login.microsoftonline.com/"
 
 # Connection Types
 $certificateConnection = 'Certificate'
@@ -133,7 +134,11 @@ function Get-SpnAccessToken {
     $principalId = $endpoint.Auth.Parameters.ServicePrincipalId
     $tenantId = $endpoint.Auth.Parameters.TenantId
     $principalKey = $endpoint.Auth.Parameters.ServicePrincipalKey
-    $envAuthUrl = $endpoint.Data.environmentAuthorityUrl
+    $envAuthUrl = $script:defaultAuthUri
+    if($endpoint.Data.environmentAuthorityUrl)
+    {
+        $envAuthUrl = $endpoint.Data.environmentAuthorityUrl
+    }
 
     $azureUri = Get-AzureUri $endpoint
 

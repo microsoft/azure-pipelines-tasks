@@ -11,8 +11,8 @@ var azureApiVersion = '2016-09-01';
 function getAccessToken(endpoint, endpointUrl: string): Q.Promise<string> {
 
 	var deferred = Q.defer<string>();
-	var environmentAuthorityUrl = endpoint.Data["environmentAuthorityUrl"];
-	var authorityUrl = environmentAuthorityUrl + endpoint.tenantID + "/oauth2/token/";
+	var envAuthUrl = endpoint.envAuthUrl;
+	var authorityUrl = envAuthUrl + endpoint.tenantID + "/oauth2/token/";
 
 	var post_data = querystring.stringify({
 		resource: endpointUrl, 

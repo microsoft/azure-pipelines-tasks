@@ -22,6 +22,7 @@ async function run() {
 		SPN["servicePrincipalKey"] = endPointAuthCreds.parameters["serviceprincipalkey"];
 		SPN["tenantID"] = endPointAuthCreds.parameters["tenantid"];
 		SPN["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
+		SPN["envAuthUrl"] = tl.getEndpointDataParameter(connectedServiceName, 'environmentAuthorityUrl', true);
 		
 		var nicVm = await getNetworkInterface(SPN, endpointUrl, resourceGroupName);
 		tl.debug(`Network Interface - ${nicVm.name}'s configuration details fetched for the virtual machine ${process.env.COMPUTERNAME}`);

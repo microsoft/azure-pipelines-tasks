@@ -15,9 +15,11 @@ export class ApplicationTokenCredentials {
     private clientId: string;
     private domain: string;
     private secret: string;
+    public armUrl: string;
+    public authUrl: string;
     private token_deferred: Q.Promise<string>;
 
-    constructor(clientId: string, domain: string, secret: string) {
+    constructor(clientId: string, domain: string, secret: string, armUrl: string, authUrl: string) {
         if (!Boolean(clientId) || typeof clientId.valueOf() !== 'string') {
             throw new Error(tl.loc("ClientIdCannotBeEmpty"));
         }
@@ -30,9 +32,19 @@ export class ApplicationTokenCredentials {
             throw new Error(tl.loc("SecretCannotBeEmpty"));
         }
 
+        if (!Boolean(armUrl) || typeof armUrl.valueOf() !== 'string') {
+            throw new Error(tl.loc("armUrlCannotBeEmpty"));
+        }
+
+        if (!Boolean(authUrl) || typeof authUrl.valueOf() !== 'string') {
+            throw new Error(tl.loc("authUrlCannotBeEmpty"));
+        }
+
         this.clientId = clientId;
         this.domain = domain;
         this.secret = secret;
+        this.armUrl = armUrl;
+        this.authUrl = authUrl;
     }
 
     public getToken(force?: boolean): Q.Promise<string> {
@@ -45,9 +57,9 @@ export class ApplicationTokenCredentials {
 
     private getAuthorizationToken(): Q.Promise<string> {
         var deferred = Q.defer<string>();
-        var authorityUrl = authUrl + this.domain + "/oauth2/token/";
+        var authorityUrl = this.authUrl + this.domain + "/oauth2/token/";
         var requestData = querystring.stringify({
-            resource: 'https://management.azure.com/',
+            resource: this.armUrl,
             client_id: this.clientId,
             grant_type: "client_credentials",
             client_secret: this.secret
