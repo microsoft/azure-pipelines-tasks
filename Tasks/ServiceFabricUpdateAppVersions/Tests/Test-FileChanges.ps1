@@ -29,9 +29,9 @@ param(
     $LogAllChanges
 )
 
-. $PSScriptRoot\..\..\lib\Initialize-Test.ps1
+. $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 
-Microsoft.PowerShell.Core\Import-Module "$PSScriptRoot\..\..\..\Tasks\ServiceFabricUpdateAppVersions\Find-FileChanges.psm1"
+Microsoft.PowerShell.Core\Import-Module "$PSScriptRoot\..\Find-FileChanges.psm1"
 
 # Arrange.
 

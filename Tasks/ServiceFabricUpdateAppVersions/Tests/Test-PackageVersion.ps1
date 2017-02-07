@@ -12,9 +12,9 @@ param(
     $FilesChanged
 )
 
-. $PSScriptRoot\..\..\lib\Initialize-Test.ps1
+. $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 
-$taskPath = "$PSScriptRoot\..\..\..\Tasks\ServiceFabricUpdateAppVersions"
+$taskPath = "$PSScriptRoot\.."
 Microsoft.PowerShell.Core\Import-Module "$taskPath\Update-PackageVersion.psm1"
 Microsoft.PowerShell.Core\Import-Module "$taskPath\Test-XmlEqual.psm1"
 

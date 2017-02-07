@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param()
 
-. $PSScriptRoot\..\..\lib\Initialize-Test.ps1
+. $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 
 $publishProfilePath = "$PSScriptRoot\data\AadPublishProfile.xml"
 $applicationPackagePath = "random package path"
