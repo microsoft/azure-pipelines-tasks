@@ -5,6 +5,7 @@ import * as ps from 'child_process';
 import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
 import * as models from './models';
+import * as settingsHelper from './settingsHelper';
 import * as utils from './helpers';
 import * as ta from './testAgent';
 
@@ -76,8 +77,17 @@ export class DistributedTest {
             utils.Helper.addToProcessEnvVars(envVars, 'sourcefilter', '!**\obj\**');
         }
 
+        //Modify settings file to enable configurations and data collectors.
+        var settingsFile = this.dtaTestConfig.settingsFile;
+        try {
+            settingsFile = await settingsHelper.updateSettingsFileAsRequired(this.dtaTestConfig.settingsFile, this.dtaTestConfig.runInParallel, this.dtaTestConfig.tiaConfig, null, false);
+        } catch (error) {
+            tl.warning(tl.loc('ErrorWhileUpdatingSettings'));
+            tl.debug(error);
+        }
+        
         utils.Helper.addToProcessEnvVars(envVars, 'testcasefilter', this.dtaTestConfig.testcaseFilter);
-        utils.Helper.addToProcessEnvVars(envVars, 'runsettings', this.dtaTestConfig.runSettingsFile);
+        utils.Helper.addToProcessEnvVars(envVars, 'runsettings', settingsFile);
         utils.Helper.addToProcessEnvVars(envVars, 'testdroplocation', this.dtaTestConfig.testDropLocation);
         utils.Helper.addToProcessEnvVars(envVars, 'testrunparams', this.dtaTestConfig.overrideTestrunParameters);
         utils.Helper.setEnvironmentVariableToString(envVars, 'codecoverageenabled', this.dtaTestConfig.codeCoverageEnabled);
@@ -96,9 +106,20 @@ export class DistributedTest {
         utils.Helper.setEnvironmentVariableToString(envVars, 'customslicingenabled', 'true');
 
         await runDistributesTestTool.exec(<tr.IExecOptions>{ cwd: path.join(__dirname, 'modules'), env: envVars });
-        tl.debug('Run Distributed Test finished');
+        await this.cleanUp(settingsFile);
+        tl.debug('Run Distributed Test finished');        
     }
 
+    private async cleanUp(temporarySettingsFile: string) {
+    //cleanup the runsettings file
+    if (temporarySettingsFile && this.dtaTestConfig.settingsFile != temporarySettingsFile) {
+        try {
+            tl.rmRF(temporarySettingsFile, true);
+        } catch (error) {
+            //Ignore.
+        }
+    }
+    }
     private dtaTestConfig: models.DtaTestConfigurations;
     private dtaPid: number;
 }
