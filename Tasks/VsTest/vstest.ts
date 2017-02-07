@@ -190,7 +190,12 @@ function getTestSelectorLocation(): string {
 }
 
 function getTraceCollectorUri(): string {
-    return "file://" + path.join(__dirname, "TestSelector/Microsoft.VisualStudio.TraceCollector.dll");
+    if(vsVersionDetails.version === 15) {
+        return "file://" + path.join(__dirname, "TestSelector/Microsoft.VisualStudio.TraceCollector.dll");
+    }
+    else {
+        return "file://" + path.join(__dirname, "TestSelector/14.0/Microsoft.VisualStudio.TraceCollector.dll");
+    }
 }
 
 function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
@@ -493,6 +498,12 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
     }
 
     let vstest = tl.tool(vsVersionDetails.location);
+
+    if(vsVersion === 14.0) {
+        tl.debug("Visual studio 2015 selected. Selecting vstest.console.exe in task ");
+        let vsTestPath = path.join(__dirname, "TestSelector/14.0/vstest.console.exe") // Use private vstest as the changes to discover tests are not there in update3
+        vstest = tl.tool(vsTestPath);
+    }
     addVstestArgs(argsArray, vstest);
 
     tl.cd(workingDirectory);
@@ -740,7 +751,12 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                 if ((sysDebug !== undefined && sysDebug.toLowerCase() === "true") || tiaConfig.tiaEnabled) {
                     vsTestVersionForTIA = getVsTestVersion();
 
-                    if (tiaConfig.tiaEnabled && (vsTestVersionForTIA === null || (vsTestVersionForTIA[0] < 15 || (vsTestVersionForTIA[0] === 15 && vsTestVersionForTIA[1] === 0 && vsTestVersionForTIA[2] < 25727)))) {
+                    if (tiaConfig.tiaEnabled && 
+                       (vsTestVersionForTIA === null || 
+                       (vsTestVersionForTIA[0] < 14 || 
+                       (vsTestVersionForTIA[0] === 15 && vsTestVersionForTIA[1] === 0 && vsTestVersionForTIA[2] < 25727) || 
+                       // VS 2015 U3
+                       (vsTestVersionForTIA[0] === 14 && vsTestVersionForTIA[1] === 0 && vsTestVersionForTIA[2] < 25420)))) {
                         tl.warning(tl.loc("VstestTIANotSupported"));
                         tiaConfig.tiaEnabled = false;
                     }
@@ -750,6 +766,12 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                 defer.resolve(1);
                 return defer.promise;
             }
+
+            // We need to use private data collector dll
+            if(vsTestVersionForTIA[0] === 14) {
+                tiaConfig.useNewCollector = true;
+            }
+
             setupSettingsFileForTestImpact(vsVersion, overriddenSettingsFile)
                 .then(function (runSettingswithTestImpact) {
                     setRunInParallellIfApplicable(vsVersion);
@@ -1422,12 +1444,12 @@ function locateVSVersion(version: string): Q.Promise<models.ExecutabaleInfo> {
     let deferred = Q.defer<models.ExecutabaleInfo>();
     let vsVersion: number = parseFloat(version);
 
-    if (isNaN(vsVersion) || vsVersion === 15) {
+    if (isNaN(vsVersion) || vsVersion === 15.0) {
         // latest
         tl.debug('Searching for latest Visual Studio');
         let vstestconsole15Path = getVSTestConsole15Path();
         if (vstestconsole15Path) {
-            deferred.resolve({ version: 15, location: vstestconsole15Path });
+            deferred.resolve({ version: 15.0, location: vstestconsole15Path });
         } else {
             // fallback
             tl.debug('Unable to find an instance of Visual Studio 2017');
