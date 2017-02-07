@@ -88,6 +88,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 import mockTask = require('vsts-task-lib/mock-task');
 
 var msDeployUtility = require('webdeployment-common/msdeployutility.js'); 
+
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
     getMSDeployFullPath : function() {
@@ -106,6 +107,14 @@ tr.registerMock('webdeployment-common/ziputility.js', {
     },
     archiveFolder: function() {
         return "DefaultWorkingDirectory\\temp_web_package.zip"
+    },
+    getArchivedEntries: function(webDeployPkg) {
+        return {
+            "entries": [
+                "systemInfo.xml",
+                "parameters.xml"
+            ]
+        };
     }
 });
 
