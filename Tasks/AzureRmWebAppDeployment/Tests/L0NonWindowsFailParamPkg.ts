@@ -191,10 +191,6 @@ tr.registerMock('webdeployment-common/kuduutility.js', {
             }
         }
         return [virtualPath, physicalPath];
-    },
-    containsParamFile: function (webAppPackage) {
-    var isParamFilePresent = true;
-        return isParamFilePresent;
     }
 });
 
