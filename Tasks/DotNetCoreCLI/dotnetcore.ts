@@ -72,8 +72,7 @@ export class dotNetExe {
             }
             else {
                 var pattern = path.dirname(projectFile) + "/**/publish";
-                var files = nutil.resolveFilterSpec(pattern,
-            tl.getVariable("System.DefaultWorkingDirectory") || process.cwd());
+                var files = nutil.resolveFilterSpec(pattern, "", true, true);
                 for (var fileIndex in files) {
                     var file = files[fileIndex];
                     if (fs.lstatSync(file).isDirectory) {
@@ -194,8 +193,7 @@ export class dotNetExe {
             projectPattern = "**/project.json;**/*.csproj;**/*.vbproj";
         }
 
-        var projectFiles = nutil.resolveFilterSpec(projectPattern,
-            tl.getVariable("System.DefaultWorkingDirectory") || process.cwd());
+        var projectFiles = nutil.resolveFilterSpec(projectPattern, tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), true);
         if (!projectFiles || !projectFiles.length) {
             tl.warning(tl.loc("noProjectFilesFound"));
             return [];
