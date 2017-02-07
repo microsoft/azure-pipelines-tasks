@@ -80,7 +80,7 @@ export class DistributedTest {
         //Modify settings file to enable configurations and data collectors.
         var settingsFile = this.dtaTestConfig.settingsFile;
         try {
-            settingsFile = await settingsHelper.updateSettingsFileAsRequired(this.dtaTestConfig.settingsFile, this.dtaTestConfig.runInParallel, this.dtaTestConfig.tiaConfig, false);
+            settingsFile = await settingsHelper.updateSettingsFileAsRequired(this.dtaTestConfig.settingsFile, this.dtaTestConfig.runInParallel, this.dtaTestConfig.tiaConfig, null, false);
         } catch (error) {
             tl.warning(tl.loc('ErrorWhileUpdatingSettings'));
             tl.debug(error);
@@ -119,7 +119,7 @@ export class DistributedTest {
             //Ignore.
         }
     }
-
+    }
     private dtaTestConfig: models.DtaTestConfigurations;
     private dtaPid: number;
 }

@@ -49,9 +49,8 @@ const runSettingsTemplate = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
     "</DataCollectionRunSettings>" +
 "</RunSettings>";
 
-export async function updateSettingsFileAsRequired(settingsFile: string, isParallelRun: boolean, tiaConfig: models.TiaConfiguration, videoCollector: boolean) : Promise<string>
-{
-    videoCollector = false;
+export async function updateSettingsFileAsRequired(settingsFile: string, isParallelRun: boolean, tiaConfig: models.TiaConfiguration, vsVersion: any, videoCollector: boolean) : Promise<string>
+{    
     var defer=Q.defer<string>();
     var result: any;
 
@@ -121,7 +120,7 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
             }
             testImpactCollectorNode = data;
             if(tiaConfig.useNewCollector) {
-                testImpactCollectorNode.DataCollector.$.codebase = getTraceCollectorUri();
+                testImpactCollectorNode.DataCollector.$.codebase = getTraceCollectorUri(vsVersion);
             }        
             testImpactCollectorNode.DataCollector.Configuration[0].ImpactLevel = getTIALevel(tiaConfig);
             if (getTIALevel(tiaConfig) === 'file') {
@@ -274,8 +273,13 @@ function setupTestSettingsFileForRunConfig(result: any, innerNode: any) : Q.Prom
     return defer.promise;
 }
 
-function getTraceCollectorUri(): string {
-    return "file://" + path.join(__dirname, "TestSelector/Microsoft.VisualStudio.TraceCollector.dll");
+function getTraceCollectorUri(vsVersion: any): string {
+    if(vsVersion === 15) {
+        return "file://" + path.join(__dirname, "TestSelector/Microsoft.VisualStudio.TraceCollector.dll");
+    }
+    else {
+        return "file://" + path.join(__dirname, "TestSelector/14.0/Microsoft.VisualStudio.TraceCollector.dll");
+    }
 }
 
 function getTIALevel(tiaConfig: models.TiaConfiguration) {

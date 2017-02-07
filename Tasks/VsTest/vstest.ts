@@ -758,36 +758,6 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                 tl.error(e.message);
                 defer.resolve(1);
                 return defer.promise;
-            }            
-            setRunInParallellIfApplicable(vsVersion);
-            var newSettingsFile = overriddenSettingsFile;
-            try {
-                settingsHelper.updateSettingsFileAsRequired(overriddenSettingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig, false).
-                then(function(ret) {
-                    newSettingsFile = ret;
-                    if(newSettingsFile != overriddenSettingsFile) {
-                    cleanUp(overriddenSettingsFile);
-                    }
-                    runVStest(testResultsDirectory, newSettingsFile, vsVersion)
-                    .then(function (code) {
-                        defer.resolve(code);
-                    })
-                    .fail(function (code) {
-                        defer.resolve(code);
-                    });
-                    
-                })                               
-            } catch (error) {
-                tl.warning(tl.loc('ErrorWhileUpdatingSettings'));
-                tl.debug(error);
-                //Should continue to run without the selected configurations.
-                runVStest(testResultsDirectory, newSettingsFile, vsVersion)
-                    .then(function (code) {
-                        defer.resolve(code);
-                    })
-                    .fail(function (code) {
-                        defer.resolve(code);
-                    });
             }
 
             // We need to use private data collector dll
@@ -798,7 +768,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
             setRunInParallellIfApplicable(vsVersion);
             var newSettingsFile = overriddenSettingsFile;
             try {
-                settingsHelper.updateSettingsFileAsRequired(overriddenSettingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig, false).
+                settingsHelper.updateSettingsFileAsRequired(overriddenSettingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig, vsVersionDetails.version, false).
                 then(function(ret) {
                     newSettingsFile = ret;
                     if(newSettingsFile != overriddenSettingsFile) {
