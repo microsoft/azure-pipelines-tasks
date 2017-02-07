@@ -4,6 +4,8 @@ import path = require('path');
 import Q = require('q');
 import models = require('./models')
 import taskInputParser = require('./taskInputParser')
+import settingsHelper = require('./settingsHelper')
+import utilities = require('./utilities')
 
 var os = require('os');
 var regedit = require('regedit');
@@ -15,12 +17,6 @@ var process = require('process');
 
 const runSettingsExt = ".runsettings";
 const testSettingsExt = ".testsettings";
-const TIFriendlyName = "Test Impact";
-const TICollectorURI = "datacollector://microsoft/TestImpact/1.0";
-const TITestSettingsAgentNameTag = "testImpact-5d76a195-1e43-4b90-a6ce-4ec3de87ed25";
-const TITestSettingsNameTag = "testSettings-5d76a195-1e43-4b90-a6ce-4ec3de87ed25";
-const TITestSettingsIDTag = "5d76a195-1e43-4b90-a6ce-4ec3de87ed25";
-const TITestSettingsXmlnsTag = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010"
 
 let vstestConfig: models.VsTestConfigurations = undefined;
 let tiaConfig: models.TiaConfiguration = undefined;
@@ -38,7 +34,7 @@ export async function startTest() {
 
         testAssemblyFiles = getTestAssemblies();
         if (testAssemblyFiles && testAssemblyFiles.length !== 0) {
-            getTestResultsDirectory(vstestConfig.runSettingsFile, path.join(workingDirectory, 'TestResults'))
+            getTestResultsDirectory(vstestConfig.settingsFile, path.join(workingDirectory, 'TestResults'))
                 .then(function (resultsDirectory) {
                     invokeVSTest(resultsDirectory)
                         .then(function (code) {
@@ -135,9 +131,15 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
     }
     if (settingsFile && pathExistsAsFile(settingsFile)) {
         argsArray.push("/Settings:" + settingsFile);
+        utilities.readFileContents(settingsFile, "utf-8").then(function (settings) {
+        tl.debug("Running VsTest with settings : " + settings);
+        });
     }
     if (vstestConfig.codeCoverageEnabled) {
         argsArray.push("/EnableCodeCoverage");
+    }    
+    if (vstestConfig.runTestsInIsolation) {
+        argsArray.push("/InIsolation");
     }
 
     argsArray.push("/logger:trx");
@@ -187,10 +189,6 @@ function updateResponseFile(argsArray: string[], responseFile: string): Q.Promis
 
 function getTestSelectorLocation(): string {
     return path.join(__dirname, "TestSelector/TestSelector.exe");
-}
-
-function getTraceCollectorUri(): string {
-    return "file://" + path.join(__dirname, "TestSelector/Microsoft.VisualStudio.TraceCollector.dll");
 }
 
 function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
@@ -493,6 +491,12 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
     }
 
     let vstest = tl.tool(vsVersionDetails.location);
+
+    if(vsVersion === 14.0) {
+        tl.debug("Visual studio 2015 selected. Selecting vstest.console.exe in task ");
+        let vsTestPath = path.join(__dirname, "TestSelector/14.0/vstest.console.exe") // Use private vstest as the changes to discover tests are not there in update3
+        vstest = tl.tool(vsTestPath);
+    }
     addVstestArgs(argsArray, vstest);
 
     tl.cd(workingDirectory);
@@ -728,7 +732,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     if (vstestConfig.vsTestVersion && vstestConfig.vsTestVersion.toLowerCase() === "latest") {
         vstestConfig.vsTestVersion = null;
     }
-    overrideTestRunParametersIfRequired(vstestConfig.runSettingsFile)
+    overrideTestRunParametersIfRequired(vstestConfig.settingsFile)
         .then(function (overriddenSettingsFile) {
             let vsVersion = vsVersionDetails.version;
             try {
@@ -740,7 +744,12 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                 if ((sysDebug !== undefined && sysDebug.toLowerCase() === "true") || tiaConfig.tiaEnabled) {
                     vsTestVersionForTIA = getVsTestVersion();
 
-                    if (tiaConfig.tiaEnabled && (vsTestVersionForTIA === null || (vsTestVersionForTIA[0] < 15 || (vsTestVersionForTIA[0] === 15 && vsTestVersionForTIA[1] === 0 && vsTestVersionForTIA[2] < 25727)))) {
+                    if (tiaConfig.tiaEnabled && 
+                       (vsTestVersionForTIA === null || 
+                       (vsTestVersionForTIA[0] < 14 || 
+                       (vsTestVersionForTIA[0] === 15 && vsTestVersionForTIA[1] === 0 && vsTestVersionForTIA[2] < 25727) || 
+                       // VS 2015 U3
+                       (vsTestVersionForTIA[0] === 14 && vsTestVersionForTIA[1] === 0 && vsTestVersionForTIA[2] < 25420)))) {
                         tl.warning(tl.loc("VstestTIANotSupported"));
                         tiaConfig.tiaEnabled = false;
                     }
@@ -750,28 +759,42 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                 defer.resolve(1);
                 return defer.promise;
             }
-            setupSettingsFileForTestImpact(vsVersion, overriddenSettingsFile)
-                .then(function (runSettingswithTestImpact) {
-                    setRunInParallellIfApplicable(vsVersion);
-                    setupRunSettingsFileForParallel(vstestConfig.runInParallel, runSettingswithTestImpact)
-                        .then(function (parallelRunSettingsFile) {
-                            runVStest(testResultsDirectory, parallelRunSettingsFile, vsVersion)
-                                .then(function (code) {
-                                    defer.resolve(code);
-                                })
-                                .fail(function (code) {
-                                    defer.resolve(code);
-                                });
-                        })
-                        .fail(function (err) {
-                            tl.error(err);
-                            defer.resolve(1);
-                        });
-                })
-                .fail(function (err) {
-                    tl.error(err);
-                    defer.resolve(1);
-                });
+
+            // We need to use private data collector dll
+            if(vsTestVersionForTIA[0] === 14) {
+                tiaConfig.useNewCollector = true;
+            }
+      
+            setRunInParallellIfApplicable(vsVersion);
+            var newSettingsFile = overriddenSettingsFile;
+            try {
+                settingsHelper.updateSettingsFileAsRequired(overriddenSettingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig, vsVersionDetails.version, false).
+                then(function(ret) {
+                    newSettingsFile = ret;
+                    if(newSettingsFile != overriddenSettingsFile) {
+                    cleanUp(overriddenSettingsFile);
+                    }
+                    runVStest(testResultsDirectory, newSettingsFile, vsVersion)
+                    .then(function (code) {
+                        defer.resolve(code);
+                    })
+                    .fail(function (code) {
+                        defer.resolve(code);
+                    });
+                    
+                })                               
+            } catch (error) {
+                tl.warning(tl.loc('ErrorWhileUpdatingSettings'));
+                tl.debug(error);
+                //Should continue to run without the selected configurations.
+                runVStest(testResultsDirectory, newSettingsFile, vsVersion)
+                    .then(function (code) {
+                        defer.resolve(code);
+                    })
+                    .fail(function (code) {
+                        defer.resolve(code);
+                    });
+            }
         })
         .fail(function (err) {
             tl.error(err);
@@ -797,7 +820,7 @@ function publishTestResults(testResultsDirectory: string) {
 
 function cleanUp(temporarySettingsFile: string) {
     //cleanup the runsettings file
-    if (temporarySettingsFile && vstestConfig.runSettingsFile != temporarySettingsFile) {
+    if (temporarySettingsFile && vstestConfig.settingsFile != temporarySettingsFile) {
         try {
             tl.rmRF(temporarySettingsFile, true);
         } catch (error) {
@@ -828,7 +851,7 @@ function overrideTestRunParametersIfRequired(settingsFile: string): Q.Promise<st
         }
     });
 
-    readFileContents(vstestConfig.runSettingsFile, "utf-8")
+    utilities.readFileContents(vstestConfig.settingsFile, "utf-8")
         .then(function (xmlContents) {
             var parser = new xml2js.Parser();
             parser.parseString(xmlContents, function (err, result) {
@@ -851,7 +874,7 @@ function overrideTestRunParametersIfRequired(settingsFile: string): Q.Promise<st
                     tl.debug("Overriding test run parameters.");
                     var builder = new xml2js.Builder();
                     var overridedRunSettings = builder.buildObject(result);
-                    saveToFile(overridedRunSettings, runSettingsExt)
+                    utilities.saveToFile(overridedRunSettings, runSettingsExt)
                         .then(function (fileName) {
                             defer.resolve(fileName);
                         })
@@ -899,7 +922,7 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
         return defer.promise;
     }
 
-    readFileContents(vstestConfig.runSettingsFile, "utf-8")
+    utilities.readFileContents(vstestConfig.settingsFile, "utf-8")
         .then(function (xmlContents) {
             var parser = new xml2js.Parser();
             parser.parseString(xmlContents, function (err, result) {
@@ -910,7 +933,7 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
 
                     if (resultDirectory) {
                         // path.resolve will take care if the result directory given in settings files is not absolute.
-                        defer.resolve(path.resolve(path.dirname(vstestConfig.runSettingsFile), resultDirectory));
+                        defer.resolve(path.resolve(path.dirname(vstestConfig.settingsFile), resultDirectory));
                     }
                     else {
                         defer.resolve(defaultResultsDirectory);
@@ -926,427 +949,6 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
             tl.warning(err);
             defer.resolve(defaultResultsDirectory);
         });
-    return defer.promise;
-}
-
-
-function getTIAssemblyQualifiedName(vsVersion: number): String {
-    return "Microsoft.VisualStudio.TraceCollector.TestImpactDataCollector, Microsoft.VisualStudio.TraceCollector, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
-}
-
-function getTestImpactAttributes(vsVersion: number) {
-    return {
-        uri: TICollectorURI,
-        assemblyQualifiedName: getTIAssemblyQualifiedName(vsVersion),
-        friendlyName: TIFriendlyName,
-        codebase: getTraceCollectorUri()
-    };
-}
-
-function getTestImpactAttributesWithoutNewCollector(vsVersion: number) {
-    return {
-        uri: TICollectorURI,
-        assemblyQualifiedName: getTIAssemblyQualifiedName(vsVersion),
-        friendlyName: TIFriendlyName
-    };
-}
-
-function isTestImapctCollectorPresent(dataCollectorArray): Boolean {
-    var found = false;
-    var tiaFriendlyName = TIFriendlyName.toUpperCase();
-    for (var node of dataCollectorArray) {
-        if (node.$.friendlyName && node.$.friendlyName.toUpperCase() === tiaFriendlyName) {
-            tl.debug("Test impact data collector already present, will not add the node.");
-            found = true;
-            break;
-        }
-    }
-    return found;
-}
-
-function pushImpactLevelAndRootPathIfNotFound(dataCollectorArray): void {
-    tl.debug("Checking for ImpactLevel and RootPath nodes in TestImpact collector");
-    var tiaFriendlyName = TIFriendlyName.toUpperCase();
-    var arrayLength = dataCollectorArray.length;
-    for (var i = 0; i < arrayLength; i++) {
-        if (dataCollectorArray[i].$.friendlyName && dataCollectorArray[i].$.friendlyName.toUpperCase() === tiaFriendlyName) {
-            if (!dataCollectorArray[i].Configuration) {
-                dataCollectorArray[i] = { Configuration: {} };
-            }
-
-            //Add TIA level, Rootpath and LogFilePath config nodes.
-            dataCollectorArray[i].Configuration[0].ImpactLevel = getTIALevel();
-            if (getTIALevel() === 'file') {
-                dataCollectorArray[i].Configuration[0].LogFilePath = 'true';
-            }
-            if (tiaConfig.context && tiaConfig.context === "CD") {
-                dataCollectorArray[i].Configuration[0].RootPath = "";
-            } else {
-                dataCollectorArray[i].Configuration[0].RootPath = tiaConfig.sourcesDir;
-            }
-
-            //Adding the codebase attribute to TestImpact collector 
-            tl.debug("Adding codebase attribute to the existing test impact collector");
-            if (tiaConfig.useNewCollector) {
-                if (!dataCollectorArray[i].$.codebase) {
-                    dataCollectorArray[i].$.codebase = getTraceCollectorUri();
-                }
-            }
-        }
-    }
-}
-
-function roothPathGenerator(): any {
-    if (tiaConfig.context) {
-        if (tiaConfig.context === "CD") {
-            return { ImpactLevel: getTIALevel(), RootPath: "" };
-        } else {
-            return { ImpactLevel: getTIALevel(), RootPath: tiaConfig.sourcesDir };
-        }
-    }
-}
-
-function updateRunSettings(result: any, vsVersion: number) {
-    var dataCollectorNode = null;
-    if (!result.RunSettings) {
-        tl.debug("Updating runsettings file from RunSettings node");
-        result.RunSettings = { DataCollectionRunSettings: { DataCollectors: { DataCollector: { Configuration: roothPathGenerator() } } } };
-        dataCollectorNode = result.RunSettings.DataCollectionRunSettings.DataCollectors.DataCollector;
-    } else if (!result.RunSettings.DataCollectionRunSettings) {
-        tl.debug("Updating runsettings file from DataCollectionSettings node");
-        result.RunSettings.DataCollectionRunSettings = { DataCollectors: { DataCollector: { Configuration: roothPathGenerator() } } };
-        dataCollectorNode = result.RunSettings.DataCollectionRunSettings.DataCollectors.DataCollector;
-    } else if (!result.RunSettings.DataCollectionRunSettings[0].DataCollectors) {
-        tl.debug("Updating runsettings file from DataCollectors node");
-        result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: { Configuration: roothPathGenerator() } } };
-        dataCollectorNode = result.RunSettings.DataCollectionRunSettings[0].DataCollectors.DataCollector;
-    } else {
-        var dataCollectorArray = result.RunSettings.DataCollectionRunSettings[0].DataCollectors[0].DataCollector;
-        if (!dataCollectorArray) {
-            tl.debug("Updating runsettings file from DataCollector node");
-            result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: { DataCollector: { Configuration: roothPathGenerator() } } };
-            dataCollectorNode = result.RunSettings.DataCollectionRunSettings[0].DataCollectors.DataCollector;
-        } else {
-            if (!isTestImapctCollectorPresent(dataCollectorArray)) {
-                tl.debug("Updating runsettings file, adding a DataCollector node");
-                dataCollectorArray.push({ Configuration: roothPathGenerator() });
-                dataCollectorNode = dataCollectorArray[dataCollectorArray.length - 1];
-            } else {
-                pushImpactLevelAndRootPathIfNotFound(dataCollectorArray);
-            }
-        }
-    }
-    if (dataCollectorNode) {
-        tl.debug("Setting attributes for test impact data collector");
-        if (tiaConfig.useNewCollector) {
-            dataCollectorNode.$ = getTestImpactAttributes(vsVersion);
-        }
-        else {
-            dataCollectorNode.$ = getTestImpactAttributesWithoutNewCollector(vsVersion);
-        }
-    }
-}
-
-function updateRunSettingsFileForTestImpact(vsVersion: number, settingsFile: string, exitErrorMessage: string): Q.Promise<string> {
-    var defer = Q.defer<string>();
-    tl.debug("Adding test impact data collector element to runsettings file provided.");
-    readFileContents(settingsFile, "utf-8")
-        .then(function (xmlContents) {
-            var parser = new xml2js.Parser();
-            parser.parseString(xmlContents, function (err, result) {
-                if (err) {
-                    tl.warning(tl.loc('ErrorWhileReadingRunSettings', err));
-                    tl.debug(exitErrorMessage);
-                    defer.resolve(settingsFile);
-                    return defer.promise;
-                }
-                if (result.RunSettings === undefined) {
-                    tl.warning(tl.loc('ErrorWhileSettingTestImpactCollectorRunSettings'));
-                    defer.resolve(settingsFile);
-                    return defer.promise;
-                }
-                updateRunSettings(result, vsVersion);
-                writeXmlFile(result, settingsFile, runSettingsExt, exitErrorMessage)
-                    .then(function (filename) {
-                        defer.resolve(filename);
-                        return defer.promise;
-                    });
-            });
-        })
-        .fail(function (err) {
-            tl.warning(err);
-            tl.debug(exitErrorMessage);
-            defer.resolve(settingsFile);
-        });
-    return defer.promise;
-}
-
-function updatTestSettings(result: any, vsVersion: number) {
-    var dataCollectorNode = null;
-    if (!result.TestSettings) {
-        tl.debug("Updating testsettings file from TestSettings node");
-        result.TestSettings = { Execution: { AgentRule: { DataCollectors: { DataCollector: { Configuration: roothPathGenerator() } } } } };
-        result.TestSettings.Execution.AgentRule.$ = { name: TITestSettingsAgentNameTag };
-        result.TestSettings.$ = { name: TITestSettingsNameTag, id: TITestSettingsIDTag, xmlns: TITestSettingsXmlnsTag };
-        dataCollectorNode = result.TestSettings.Execution.AgentRule.DataCollectors.DataCollector;
-    } else if (!result.TestSettings.Execution) {
-        tl.debug("Updating testsettings file from Execution node");
-        result.TestSettings.Execution = { AgentRule: { DataCollectors: { DataCollector: { Configuration: roothPathGenerator() } } } };
-        result.TestSettings.Execution.AgentRule.$ = { name: TITestSettingsAgentNameTag };
-        dataCollectorNode = result.TestSettings.Execution.AgentRule.DataCollectors.DataCollector;
-    } else if (!result.TestSettings.Execution[0].AgentRule) {
-        tl.debug("Updating testsettings file from AgentRule node");
-        result.TestSettings.Execution[0] = { AgentRule: { DataCollectors: { DataCollector: { Configuration: roothPathGenerator() } } } };
-        result.TestSettings.Execution[0].AgentRule.$ = { name: TITestSettingsAgentNameTag };
-        dataCollectorNode = result.TestSettings.Execution[0].AgentRule.DataCollectors.DataCollector;
-    } else if (!result.TestSettings.Execution[0].AgentRule[0].DataCollectors) {
-        tl.debug("Updating testsettings file from DataCollectors node");
-        result.TestSettings.Execution[0].AgentRule[0] = { DataCollectors: { DataCollector: { Configuration: roothPathGenerator() } } };
-        dataCollectorNode = result.TestSettings.Execution[0].AgentRule[0].DataCollectors.DataCollector;
-    } else {
-        var dataCollectorArray = result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector;
-        if (!dataCollectorArray) {
-            tl.debug("Updating testsettings file from DataCollector node");
-            result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0] = { DataCollector: { Configuration: roothPathGenerator() } };
-            dataCollectorNode = result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector;
-        } else {
-            if (!isTestImapctCollectorPresent(dataCollectorArray)) {
-                tl.debug("Updating testsettings file, adding a DataCollector node");
-                dataCollectorArray.push({ Configuration: roothPathGenerator() });
-                dataCollectorNode = dataCollectorArray[dataCollectorArray.length - 1];
-            } else {
-                pushImpactLevelAndRootPathIfNotFound(dataCollectorArray);
-            }
-        }
-    }
-    if (dataCollectorNode) {
-        tl.debug("Setting attributes for test impact data collector");
-        if (tiaConfig.useNewCollector) {
-            dataCollectorNode.$ = getTestImpactAttributes(vsVersion);
-        } else {
-            dataCollectorNode.$ = getTestImpactAttributesWithoutNewCollector(vsVersion);
-        }
-    }
-}
-
-function writeXmlFile(result: any, settingsFile: string, fileExt: string, exitErrorMessage: string): Q.Promise<string> {
-    var defer = Q.defer<string>();
-    var builder = new xml2js.Builder();
-    var runSettingsForTestImpact = builder.buildObject(result);
-    saveToFile(runSettingsForTestImpact, fileExt)
-        .then(function (fileName) {
-            cleanUp(settingsFile);
-            defer.resolve(fileName);
-            return defer.promise;
-        })
-        .fail(function (err) {
-            tl.debug(exitErrorMessage);
-            tl.warning(err);
-            defer.resolve(settingsFile);
-        });
-    return defer.promise;
-}
-
-function updateTestSettingsFileForTestImpact(vsVersion: number, settingsFile: string, exitErrorMessage: string): Q.Promise<string> {
-    var defer = Q.defer<string>();
-    tl.debug("Adding test impact data collector element to testsettings file provided.");
-    readFileContents(settingsFile, "utf-8")
-        .then(function (xmlContents) {
-            var parser = new xml2js.Parser();
-            parser.parseString(xmlContents, function (err, result) {
-                if (err) {
-                    tl.warning(tl.loc('ErrorWhileReadingTestSettings', err));
-                    tl.debug(exitErrorMessage);
-                    defer.resolve(settingsFile);
-                    return defer.promise;
-                }
-                if (result.TestSettings === undefined) {
-                    tl.warning(tl.loc('ErrorWhileSettingTestImpactCollectorTestSettings'));
-                    defer.resolve(settingsFile);
-                    return defer.promise;
-                }
-                updatTestSettings(result, vsVersion);
-                writeXmlFile(result, settingsFile, testSettingsExt, exitErrorMessage)
-                    .then(function (filename) {
-                        defer.resolve(filename);
-                        return defer.promise;
-                    });
-            });
-        })
-        .fail(function (err) {
-            tl.warning(err);
-            tl.debug(exitErrorMessage);
-            defer.resolve(settingsFile);
-        });
-    return defer.promise;
-}
-
-
-function createRunSettingsForTestImpact(vsVersion: number, settingsFile: string, exitErrorMessage: string): Q.Promise<string> {
-    var defer = Q.defer<string>();
-    tl.debug("No settings file provided or the provided settings file does not exist. Creating run settings file for enabling test impact data collector.");
-    var runSettingsForTIA = '<?xml version="1.0" encoding="utf-8"?><RunSettings><DataCollectionRunSettings><DataCollectors>' +
-        '<DataCollector uri="' + TICollectorURI + '" ' +
-        'assemblyQualifiedName="' + getTIAssemblyQualifiedName(vsVersion) + '" ' +
-        'friendlyName="' + TIFriendlyName + '" ';
-
-    if (tiaConfig.useNewCollector) {
-        runSettingsForTIA = runSettingsForTIA +
-            'codebase="' + getTraceCollectorUri() + '"';
-    }
-
-    runSettingsForTIA = runSettingsForTIA +
-        ' >' +
-        '<Configuration>' +
-        '<ImpactLevel>' + getTIALevel() + '</ImpactLevel>';
-
-    if (getTIALevel() === 'file') {
-        runSettingsForTIA = runSettingsForTIA +
-            '<LogFilePath>' + 'true' + '</LogFilePath>';
-    }
-
-    runSettingsForTIA = runSettingsForTIA +
-        '<RootPath>' + (tiaConfig.context === "CD" ? "" : tiaConfig.sourcesDir) + '</RootPath>' +
-        '</Configuration>' +
-        '</DataCollector>' +
-        '</DataCollectors></DataCollectionRunSettings></RunSettings>';
-    saveToFile(runSettingsForTIA, runSettingsExt)
-        .then(function (fileName) {
-            defer.resolve(fileName);
-            return defer.promise;
-        })
-        .fail(function (err) {
-            tl.debug(exitErrorMessage);
-            tl.warning(err);
-            defer.resolve(settingsFile);
-        });
-    return defer.promise;
-}
-
-function setupSettingsFileForTestImpact(vsVersion: number, settingsFile: string): Q.Promise<string> {
-    var defer = Q.defer<string>();
-    var exitErrorMessage = "Error occured while setting in test impact data collector. Continuing...";
-    if (isTiaAllowed()) {
-        if (settingsFile && settingsFile.split('.').pop().toLowerCase() === "testsettings") {
-            updateTestSettingsFileForTestImpact(vsVersion, settingsFile, exitErrorMessage)
-                .then(function (updatedFile) {
-                    defer.resolve(updatedFile);
-                    return defer.promise;
-                });
-        }
-        else if (!settingsFile || settingsFile.split('.').pop().toLowerCase() != "runsettings" || !pathExistsAsFile(settingsFile)) {
-            createRunSettingsForTestImpact(vsVersion, settingsFile, exitErrorMessage)
-                .then(function (updatedFile) {
-                    defer.resolve(updatedFile);
-                    return defer.promise;
-                });
-        }
-        else {
-            updateRunSettingsFileForTestImpact(vsVersion, settingsFile, exitErrorMessage)
-                .then(function (updatedFile) {
-                    defer.resolve(updatedFile);
-                    return defer.promise;
-                });
-        }
-    }
-    else {
-        tl.debug("Settings are not sufficient for setting test impact. Not updating the settings file");
-        defer.resolve(settingsFile);
-    }
-    return defer.promise;
-}
-
-function setupRunSettingsFileForParallel(runInParallel: boolean, settingsFile: string): Q.Promise<string> {
-    var defer = Q.defer<string>();
-    var exitErrorMessage = "Error occured while setting run in parallel. Continuing...";
-    if (runInParallel) {
-        if (settingsFile && settingsFile.split('.').pop().toLowerCase() === "testsettings") {
-            tl.warning(tl.loc('RunInParallelNotSupported'));
-            defer.resolve(settingsFile);
-            return defer.promise;
-        }
-
-        if (!settingsFile || settingsFile.split('.').pop().toLowerCase() != "runsettings" || !pathExistsAsFile(settingsFile)) {
-            tl.debug("No settings file provided or the provided settings file does not exist.");
-            var runSettingsForParallel = '<?xml version="1.0" encoding="utf-8"?><RunSettings><RunConfiguration><MaxCpuCount>0</MaxCpuCount></RunConfiguration></RunSettings>';
-            saveToFile(runSettingsForParallel, runSettingsExt)
-                .then(function (fileName) {
-                    defer.resolve(fileName);
-                    return defer.promise;
-                })
-                .fail(function (err) {
-                    tl.debug(exitErrorMessage);
-                    tl.warning(err);
-                    defer.resolve(settingsFile);
-                });
-        } else {
-            tl.debug("Adding maxcpucount element to runsettings file provided.");
-            readFileContents(settingsFile, "utf-8")
-                .then(function (xmlContents) {
-                    var parser = new xml2js.Parser();
-                    parser.parseString(xmlContents, function (err, result) {
-                        if (err) {
-                            tl.warning(tl.loc('ErrorWhileReadingRunSettings', err));
-                            tl.debug(exitErrorMessage);
-                            defer.resolve(settingsFile);
-                            return defer.promise;
-                        }
-
-                        if (result.RunSettings === undefined) {
-                            tl.warning(tl.loc('FailedToSetRunInParallel'));
-                            defer.resolve(settingsFile);
-                            return defer.promise;
-                        }
-
-                        if (!result.RunSettings) {
-                            result.RunSettings = { RunConfiguration: { MaxCpuCount: 0 } };
-                        }
-                        else if (!result.RunSettings.RunConfiguration || !result.RunSettings.RunConfiguration[0]) {
-                            result.RunSettings.RunConfiguration = { MaxCpuCount: 0 };
-                        }
-                        else {
-                            var runConfigArray = result.RunSettings.RunConfiguration[0];
-                            runConfigArray.MaxCpuCount = 0;
-                        }
-
-                        var builder = new xml2js.Builder();
-                        var runSettingsForParallel = builder.buildObject(result);
-                        saveToFile(runSettingsForParallel, runSettingsExt)
-                            .then(function (fileName) {
-                                cleanUp(settingsFile);
-                                defer.resolve(fileName);
-                                return defer.promise;
-                            })
-                            .fail(function (err) {
-                                tl.debug(exitErrorMessage);
-                                tl.warning(err);
-                                defer.resolve(settingsFile);
-                            });
-                    });
-                })
-                .fail(function (err) {
-                    tl.warning(err);
-                    tl.debug(exitErrorMessage);
-                    defer.resolve(settingsFile);
-                });
-        }
-    } else {
-        defer.resolve(settingsFile);
-    }
-
-    return defer.promise;
-}
-
-function saveToFile(fileContents: string, extension: string): Q.Promise<string> {
-    var defer = Q.defer<string>();
-    var tempFile = path.join(os.tmpdir(), uuid.v1() + extension);
-    fs.writeFile(tempFile, fileContents, function (err) {
-        if (err) {
-            defer.reject(err);
-        }
-        tl.debug("Temporary runsettings file created at " + tempFile);
-        defer.resolve(tempFile);
-    });
     return defer.promise;
 }
 
@@ -1422,12 +1024,12 @@ function locateVSVersion(version: string): Q.Promise<models.ExecutabaleInfo> {
     let deferred = Q.defer<models.ExecutabaleInfo>();
     let vsVersion: number = parseFloat(version);
 
-    if (isNaN(vsVersion) || vsVersion === 15) {
+    if (isNaN(vsVersion) || vsVersion === 15.0) {
         // latest
         tl.debug('Searching for latest Visual Studio');
         let vstestconsole15Path = getVSTestConsole15Path();
         if (vstestconsole15Path) {
-            deferred.resolve({ version: 15, location: vstestconsole15Path });
+            deferred.resolve({ version: 15.0, location: vstestconsole15Path });
         } else {
             // fallback
             tl.debug('Unable to find an instance of Visual Studio 2017');
@@ -1477,21 +1079,6 @@ function setRegistryKeyForParallelExecution(vsVersion: number) {
     });
 }
 
-function readFileContents(filePath: string, encoding: string): Q.Promise<string> {
-    var defer = Q.defer<string>();
-
-    fs.readFile(filePath, encoding, (err, data) => {
-        if (err) {
-            defer.reject(new Error('Could not read file (' + filePath + '): ' + err.message));
-        }
-        else {
-            defer.resolve(data);
-        }
-    });
-
-    return defer.promise;
-}
-
 function pathExistsAsFile(path: string) {
     return tl.exist(path) && tl.stats(path).isFile();
 }
@@ -1522,7 +1109,7 @@ function getTIALevel() {
 }
 
 function responseContainsNoTests(filePath: string): Q.Promise<boolean> {
-    return readFileContents(filePath, "utf-8").then(function (resp) {
+    return utilities.readFileContents(filePath, "utf-8").then(function (resp) {
         if (resp === "/Tests:") {
             return true;
         }

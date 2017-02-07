@@ -12,7 +12,14 @@ export function getDistributedTestConfigurations(): models.DtaTestConfigurations
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     const dtaConfiguration = {} as models.DtaTestConfigurations;
     initTestConfigurations(dtaConfiguration);
-    dtaConfiguration.onDemandTestRunId = tl.getInput('tcmTestRun');
+    dtaConfiguration.onDemandTestRunId = tl.getInput('tcmTestRun');    
+    if(dtaConfiguration.tiaConfig.tiaEnabled) {
+        tl.warning(tl.loc('tiaNotSupportedInDta'));
+        dtaConfiguration.tiaConfig.tiaEnabled = false;
+    }
+    if(dtaConfiguration.runTestsInIsolation) {
+        tl.warning(tl.loc('runTestInIsolationNotSupported'));
+    }
     dtaConfiguration.dtaEnvironment = initDtaEnvironment();
     return dtaConfiguration;
 }
@@ -21,11 +28,9 @@ export function getvsTestConfigurations(): models.VsTestConfigurations {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     const vsTestConfiguration = {} as models.VsTestConfigurations;
     initTestConfigurations(vsTestConfiguration);
-    vsTestConfiguration.publishRunAttachments = tl.getInput('publishRunAttachments');
-    vsTestConfiguration.runInParallel = tl.getBoolInput('runInParallel');
+    vsTestConfiguration.publishRunAttachments = tl.getInput('publishRunAttachments');    
     vsTestConfiguration.vstestDiagFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     vsTestConfiguration.ignoreVstestFailure = tl.getVariable('vstest.ignoretestfailures');
-    vsTestConfiguration.tiaConfig = getTiaConfiguration();
 
     // only to facilitate the writing of unit tests 
     vsTestConfiguration.vs15HelperPath = tl.getVariable('vs15Helper');
@@ -70,18 +75,20 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations)
     testConfiguration.sourceFilter = tl.getDelimitedInput('testAssemblyVer2', '\n', true);
     testConfiguration.testDropLocation = tl.getInput('searchFolder');  
     testConfiguration.testcaseFilter = tl.getInput('testFiltercriteria');
-    testConfiguration.runSettingsFile = tl.getPathInput('runSettingsFile');
+    testConfiguration.settingsFile = tl.getPathInput('runSettingsFile');
     testConfiguration.overrideTestrunParameters = tl.getInput('overrideTestrunParameters');
     testConfiguration.buildConfig = tl.getInput('configuration');
     testConfiguration.buildPlatform = tl.getInput('platform');
     testConfiguration.testRunTitle = tl.getInput('testRunTitle');
+    testConfiguration.runInParallel = tl.getBoolInput('runTestsInParallel');
+    testConfiguration.runTestsInIsolation = tl.getBoolInput('runTestsInIsolation');
+    testConfiguration.tiaConfig = getTiaConfiguration();
     testConfiguration.vsTestVersion = tl.getInput('vsTestVersion');
 
     if(utils.Helper.isNullEmptyOrUndefined(testConfiguration.vsTestVersion)) {
         tl._writeLine('vsTestVersion is null or empty');
         throw new Error("vsTestVersion is null or empty");
     }
-
     initDataCollectorConfigurations(testConfiguration);
 }
 

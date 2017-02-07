@@ -6,7 +6,7 @@ export interface ExecutabaleInfo {
 export interface TestConfigurations {
     sourceFilter: string[];
     testcaseFilter: string;
-    runSettingsFile: string;
+    settingsFile: string;
     testDropLocation: string; // search folder
     overrideTestrunParameters: string;
     codeCoverageEnabled: boolean;
@@ -17,6 +17,8 @@ export interface TestConfigurations {
     vsTestVersion: string;
     pathtoCustomTestAdapters: string;
     tiaConfig: TiaConfiguration;
+    runInParallel: boolean;
+    runTestsInIsolation: boolean;
 }
 
 export interface DtaTestConfigurations extends TestConfigurations {
@@ -38,15 +40,13 @@ export interface DtaEnvironment {
 }
 
 export interface VsTestConfigurations extends TestConfigurations {
-    publishRunAttachments: string;
-    runInParallel: boolean;
+    publishRunAttachments: string;    
     vstestDiagFile: string;
     ignoreVstestFailure: string;
     vs15HelperPath: string;
 }
 
-export interface TiaConfiguration
-{
+export interface TiaConfiguration {
     tiaEnabled: boolean;
     tiaRebaseLimit: string;
     tiaFilterPaths: string;
