@@ -65,10 +65,6 @@ tr.registerMock('./msdeployutility.js', {
         var msDeployFullPath =  "msdeploypath\\msdeploy.exe";
         return msDeployFullPath;
     },
-    containsParamFile: function(webAppPackage: string) {
-		var taskResult = mockTask.execSync("msdeploy", "-verb:getParameters -source:package=\'" + webAppPackage + "\'");
-        return true;
-    },
 	redirectMSDeployErrorToConsole : msDeployUtility.redirectMSDeployErrorToConsole
 });
 
