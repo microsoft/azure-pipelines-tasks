@@ -5,7 +5,7 @@ import * as testInterfaces from 'vso-node-api/interfaces/TestInterfaces'
 import * as models from './models';
 
 export class TestAgent {
-    public static async createAgent(environment: models.DtaEnvironment, retries: number) : number {
+    public static async createAgent(environment: models.DtaEnvironment, retries: number) {
         while(retries > 0) {
             retries--;
             try {
