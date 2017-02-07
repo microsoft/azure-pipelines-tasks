@@ -17,7 +17,7 @@ function getReplacableTokenFromTags(xmlNode, variableMap) {
         for(var nodeAttributes in childNode.attrs) {
             if (childNode.attrs[nodeAttributes].startsWith('$(ReplacableToken_') && variableMap[childNode.attrs['name']]) {
                 var lastIndexOf_ = childNode.attrs[nodeAttributes].lastIndexOf('_');
-                if(lastIndexOf_ < 18) {
+                if(lastIndexOf_ < 19) {
                     tl.debug('Attribute value is in incorrect format ! ' + childNode.attrs[nodeAttributes]);
                     continue;
                 }
