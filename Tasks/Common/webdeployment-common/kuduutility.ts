@@ -121,7 +121,7 @@ export async function deployWebAppPackage(webAppPackage: string, publishingProfi
  * @param   webAppPackage   web deploy package
  * @returns boolean
  */
-export async  function containsParamFile(webAppPackage: string ) {
+/*export async  function containsParamFile(webAppPackage: string ) {
     var isParamFilePresent = false;
     var pacakgeComponent = await zipUtility.getArchivedEntries(webAppPackage);
     if ((pacakgeComponent["entries"].indexOf("parameters.xml") > -1) || (pacakgeComponent["entries"].indexOf("Parameters.xml") > -1)) {
@@ -129,7 +129,7 @@ export async  function containsParamFile(webAppPackage: string ) {
     }
     tl.debug("Is parameter file present in web package : " + isParamFilePresent);
     return isParamFilePresent;
-}
+}*/
 
 export async function ensurePhysicalPathExists(publishingProfile, physicalPath: string) {
     var defer = Q.defer<string>();
