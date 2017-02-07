@@ -60,7 +60,7 @@
   "loc.messages.ErrorWhileReadingRunSettings": "Error occured while reading run settings file. Error : %s.",
   "loc.messages.ErrorWhileReadingTestSettings": "Error occured while reading test settings file. Error : %s.",
   "loc.messages.RunInParallelNotSupported": "Running tests in parallel on multi-core machines is not supported with testsettings file. This option will be ignored.",
-  "loc.messages.FailedToSetRunConfiguration": "The specified settings file %s is invalid. This file will be ignored",
+  "loc.messages.InvalidSettingsFile": "The specified settings file %s is invalid. This file will be ignored",
   "loc.messages.UpdateOneOrHigherRequired": "Install Visual Studio 2015 Update 1 or higher on your build agent machine to run the tests in parallel.",
   "loc.messages.ErrorOccuredWhileSettingRegistry": "Error occured while setting registry key, Error: %s.",
   "loc.messages.ErrorWhileSettingTestImpactCollectorTestSettings": "Error occurred while setting Test Impact Collector in test settings file.",
