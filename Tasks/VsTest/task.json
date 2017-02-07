@@ -327,8 +327,8 @@
         "NoResultsToPublish": "No results found to publish.",
         "ErrorWhileReadingRunSettings": "Error occured while reading run settings file. Error : %s.",
         "ErrorWhileReadingTestSettings": "Error occured while reading test settings file. Error : %s.",
-        "RunInParallelNotSupported": "Run in Parallel is not supported with testsettings file.",
-        "FailedToSetRunConfiguration": "The specified settings file is invalid. Ignoring it.",
+        "RunInParallelNotSupported": "Running tests in parallel on multi-core machines is not supported with testsettings file. This option will be ignored.",
+        "FailedToSetRunConfiguration": "The specified settings file %s is invalid. This file will be ignored",
         "UpdateOneOrHigherRequired": "Install Visual Studio 2015 Update 1 or higher on your build agent machine to run the tests in parallel.",
         "ErrorOccuredWhileSettingRegistry": "Error occured while setting registry key, Error: %s.",
         "ErrorWhileSettingTestImpactCollectorTestSettings": "Error occurred while setting Test Impact Collector in test settings file.",
@@ -347,7 +347,7 @@
         "NoIncludePatternFound": "No include pattern found. Specify atleast one include pattern to search test assemblies.",
         "ErrorWhileUpdatingSettings": "Error occurred while updating the settings file. Using the specified settings file.",
         "VideoCollectorNotSupportedWithRunSettings": "Video collector is not supported with run settings.",
-        "runTestInIsolationNotSupported": "Running tests in isolation is not supported for multi-agent scenario.",
-        "tiaNotSupportedInDta": "Running only impacted tests is not supported for multi-agent scenario."
+        "runTestInIsolationNotSupported": "Running tests in isolation is not supported when using the multi-agent phase setting. This option will be ignored.",
+        "tiaNotSupportedInDta": "Running only impacted tests is not supported when using the multi-agent phase setting. This option will be ignored."
     }
 }

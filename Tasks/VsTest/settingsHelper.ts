@@ -65,14 +65,14 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
         settingsExt=testSettingsExt;
         result = await utilities.getXmlContents(settingsFile);
         if(!result || result.TestSettings === undefined) {
-            tl.warning(tl.loc('FailedToSetRunConfiguration'));
+            tl.warning(tl.loc('InvalidSettingsFile', settingsFile));
             settingsExt = null;
         }
     } else if (settingsFile && utilities.pathExistsAsFile(settingsFile)) {
         settingsExt = runSettingsExt;
         result = await utilities.getXmlContents(settingsFile);
-        if(!result || result.RunSettings === undefined) {
-            tl.warning(tl.loc('FailedToSetRunConfiguration'));
+        if(!result || result.RunSettings === undefined) {            
+            tl.warning(tl.loc('InvalidSettingsFile', settingsFile));
             settingsExt = null;
         }
     }
@@ -258,11 +258,7 @@ function setupRunSettingsFileForRunConfig(result: any, innerNode: any) : Q.Promi
 }
 
 function setupTestSettingsFileForRunConfig(result: any, innerNode: any) : Q.Promise<any> {
-    var defer=Q.defer<any>();  
-    if (!result || result.TestSettings === undefined) {
-        tl.warning(tl.loc('FailedToSetRunConfiguration'));
-        defer.resolve(null);
-    }
+    var defer=Q.defer<any>();    
     if (!result.TestSettings) {
         result.RunSettings = { Execution: innerNode  };
     }
