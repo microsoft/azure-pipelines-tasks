@@ -19,6 +19,7 @@ export interface TestConfigurations {
     tiaConfig: TiaConfiguration;
     runInParallel: boolean;
     runTestsInIsolation: boolean;
+    vs15HelperPath: string;
 }
 
 export interface DtaTestConfigurations extends TestConfigurations {
@@ -42,8 +43,7 @@ export interface DtaEnvironment {
 export interface VsTestConfigurations extends TestConfigurations {
     publishRunAttachments: string;    
     vstestDiagFile: string;
-    ignoreVstestFailure: string;
-    vs15HelperPath: string;
+    ignoreVstestFailure: string;    
 }
 
 export interface TiaConfiguration {

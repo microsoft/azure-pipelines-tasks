@@ -30,8 +30,7 @@ export async function startTest() {
     try {
         vstestConfig = taskInputParser.getvsTestConfigurations();
         tiaConfig = vstestConfig.tiaConfig;
-        vsVersionDetails = await locateVSVersion(vstestConfig.vsTestVersion);
-
+        vsVersionDetails = await utilities.locateVSTestConsole(vstestConfig);
         testAssemblyFiles = getTestAssemblies();
         if (testAssemblyFiles && testAssemblyFiles.length !== 0) {
             getTestResultsDirectory(vstestConfig.settingsFile, path.join(workingDirectory, 'TestResults'))
@@ -413,15 +412,6 @@ function publishCodeChanges(): Q.Promise<string> {
         });
 
     return defer.promise;
-}
-
-function getVSTestLocation(vsVersion: number): string {
-    let vsCommon: string = tl.getVariable('VS' + vsVersion + '0COMNTools');
-    if (!vsCommon) {
-        throw (new Error(tl.loc('VstestNotFound', vsVersion)));
-    } else {
-        return path.join(vsCommon, '..\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe');
-    }
 }
 
 function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: string, vsVersion: number, argsArray: string[]): Q.Promise<number> {
@@ -973,87 +963,6 @@ function setRunInParallellIfApplicable(vsVersion: number) {
 function resetRunInParallel() {
     tl.warning(tl.loc('UpdateOneOrHigherRequired'));
     vstestConfig.runInParallel = false;
-}
-
-
-function getLatestVSTestConsolePathFromRegistry(): Q.Promise<models.ExecutabaleInfo> {
-    let deferred = Q.defer<models.ExecutabaleInfo>();
-    let regPath = 'HKLM\\SOFTWARE\\Microsoft\\VisualStudio';
-    regedit.list(regPath).on('data', (entry) => {
-        let subkeys = entry.data.keys;
-        let versions = getFloatsFromStringArray(subkeys);
-        if (versions && versions.length > 0) {
-            versions.sort((a, b) => a - b);
-            let selectedVersion = versions[versions.length - 1];
-            tl.debug('Registry entry found. Selected version is ' + selectedVersion.toString());
-            deferred.resolve({ version: selectedVersion, location: getVSTestLocation(selectedVersion) });
-        } else {
-            deferred.resolve(null);
-        }
-    }).on('error', () => {
-        tl.debug('Registry entry not found under VisualStudio node');
-        deferred.resolve(null);
-    });
-    return deferred.promise;
-}
-
-function getVSTestConsole15Path(): string {
-    let powershellTool = tl.tool('powershell');
-    let powershellArgs = ['-file', vstestConfig.vs15HelperPath]
-    powershellTool.arg(powershellArgs);
-    let xml = powershellTool.execSync().stdout;
-    let deferred = Q.defer<string>();
-    let vstestconsolePath: string = null;
-    xml2js.parseString(xml, (err, result) => {
-        if (result) {
-            try {
-                let vs15InstallDir = result['Objs']['S'][0];
-                vstestconsolePath = path.join(vs15InstallDir, 'Common7', 'IDE', 'CommonExtensions', 'Microsoft', 'TestWindow', 'vstest.console.exe');
-            } catch (e) {
-                tl.debug('Unable to read Visual Studio 2017 installation path');
-                tl.debug(e);
-                vstestconsolePath = null;
-            }
-        }
-    })
-    return vstestconsolePath;
-}
-
-
-function locateVSVersion(version: string): Q.Promise<models.ExecutabaleInfo> {
-    let deferred = Q.defer<models.ExecutabaleInfo>();
-    let vsVersion: number = parseFloat(version);
-
-    if (isNaN(vsVersion) || vsVersion === 15.0) {
-        // latest
-        tl.debug('Searching for latest Visual Studio');
-        let vstestconsole15Path = getVSTestConsole15Path();
-        if (vstestconsole15Path) {
-            deferred.resolve({ version: 15.0, location: vstestconsole15Path });
-        } else {
-            // fallback
-            tl.debug('Unable to find an instance of Visual Studio 2017');
-            return getLatestVSTestConsolePathFromRegistry();
-        }
-    } else {
-        tl.debug('Searching for Visual Studio ' + vsVersion.toString());
-        deferred.resolve({ version: vsVersion, location: getVSTestLocation(vsVersion) });
-    }
-    return deferred.promise;
-}
-
-function getFloatsFromStringArray(inputArray: string[]): number[] {
-    var outputArray: number[] = [];
-    var count;
-    if (inputArray) {
-        for (count = 0; count < inputArray.length; count++) {
-            var floatValue = parseFloat(inputArray[count]);
-            if (!isNaN(floatValue)) {
-                outputArray.push(floatValue);
-            }
-        }
-    }
-    return outputArray;
 }
 
 function setRegistryKeyForParallelExecution(vsVersion: number) {

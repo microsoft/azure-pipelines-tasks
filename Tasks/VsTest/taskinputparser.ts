@@ -31,12 +31,6 @@ export function getvsTestConfigurations(): models.VsTestConfigurations {
     vsTestConfiguration.publishRunAttachments = tl.getInput('publishRunAttachments');    
     vsTestConfiguration.vstestDiagFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     vsTestConfiguration.ignoreVstestFailure = tl.getVariable('vstest.ignoretestfailures');
-
-    // only to facilitate the writing of unit tests 
-    vsTestConfiguration.vs15HelperPath = tl.getVariable('vs15Helper');
-    if (!vsTestConfiguration.vs15HelperPath) {
-        vsTestConfiguration.vs15HelperPath = path.join(__dirname, 'vs15Helper.ps1');
-    }
     return vsTestConfiguration;
 }
 
@@ -89,6 +83,13 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations)
         tl._writeLine('vsTestVersion is null or empty');
         throw new Error("vsTestVersion is null or empty");
     }
+
+        // only to facilitate the writing of unit tests 
+    testConfiguration.vs15HelperPath = tl.getVariable('vs15Helper');
+    if (!testConfiguration.vs15HelperPath) {
+        testConfiguration.vs15HelperPath = path.join(__dirname, 'vs15Helper.ps1');
+    }
+
     initDataCollectorConfigurations(testConfiguration);
 }
 

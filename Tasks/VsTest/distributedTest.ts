@@ -8,6 +8,7 @@ import * as models from './models';
 import * as settingsHelper from './settingsHelper';
 import * as utils from './helpers';
 import * as ta from './testAgent';
+import utilities = require('./utilities')
 
 export class DistributedTest {
     constructor(dtaTestConfig: models.DtaTestConfigurations) {
@@ -53,6 +54,11 @@ export class DistributedTest {
             this.dtaTestConfig.vsTestVersion = '15.0';
         }
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestPlatformVersion', this.dtaTestConfig.vsTestVersion);
+        utilities.locateTestWindow(this.dtaTestConfig)  
+        .then (function (exeInfo) {
+        
+        tl.debug("Adding env var DTA.TestWindow.Path = " + exeInfo.location);
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestWindow.Path', exeInfo.location);            
 
         // We are logging everything to a DTAExecutionHost.exe.log file and reading it at the end and adding to the build task debug logs
         // So we are not redirecting the IO streams from the DTAExecutionHost.exe process
@@ -62,6 +68,9 @@ export class DistributedTest {
         const proc = ps.spawn(path.join(__dirname, 'Modules/DTAExecutionHost.exe'), [], { env: envVars, stdio: 'ignore' });
         tl.debug('DtaExecutionHost is executing with the process : ' + proc.pid);
         return proc.pid;
+        });
+        tl.error("Could not find VS");
+        return 0;
     }
 
     private async startDtaTestRun() {
