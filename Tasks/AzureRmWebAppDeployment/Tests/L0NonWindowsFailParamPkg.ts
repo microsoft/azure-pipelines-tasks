@@ -198,6 +198,17 @@ tr.registerMock('webdeployment-common/kuduutility.js', {
     }
 });
 
+tr.registerMock("webdeployment-common/ziputility.js", {
+    getArchivedEntries: function( webDeployPkg) {
+        return {
+            "entries": [
+                "systemInfo.xml",
+                "parameters.xml"
+            ]
+        };
+    }
+});
+
 
 tr.setAnswers(a);
 tr.run();
