@@ -115,9 +115,9 @@ export class DistributedTest {
         }
 
         //Modify settings file to enable configurations and data collectors.
-        var settingsFile = this.dtaTestConfig.runSettingsFile;
+        var settingsFile = this.dtaTestConfig.settingsFile;
         try {
-            settingsFile = await settingsHelper.updateSettingsFileAsRequired(this.dtaTestConfig.runSettingsFile, this.dtaTestConfig.runInParallel, this.dtaTestConfig.videoCoverageEnabled, this.dtaTestConfig.tiaConfig, true);
+            settingsFile = await settingsHelper.updateSettingsFileAsRequired(this.dtaTestConfig.settingsFile, this.dtaTestConfig.runInParallel, this.dtaTestConfig.tiaConfig, false);
         } catch (error) {
             tl.warning(tl.loc('ErrorWhileUpdatingSettings'));
             tl.debug(error);
@@ -141,10 +141,6 @@ export class DistributedTest {
         this.setEnvironmentVariableToString(envVars, 'testplanconfigid', this.dtaTestConfig.testPlanConfigId);
         // In the phases world we will distribute based on number of agents
         this.setEnvironmentVariableToString(envVars, 'customslicingenabled', 'true');
-
-        if(this.dtaTestConfig.runTestsInIsolation) {
-            tl.warning(tl.loc('runTestInIsolationNotSupported'));
-        }
 
         await runDistributesTestTool.exec(<tr.IExecOptions>{ cwd: path.join(__dirname, 'modules'), env: envVars });
         await this.cleanUp(settingsFile);
@@ -186,7 +182,7 @@ export class DistributedTest {
 
     private async cleanUp(temporarySettingsFile: string) {
     //cleanup the runsettings file
-    if (temporarySettingsFile && this.dtaTestConfig.runSettingsFile != temporarySettingsFile) {
+    if (temporarySettingsFile && this.dtaTestConfig.settingsFile != temporarySettingsFile) {
         try {
             tl.rmRF(temporarySettingsFile, true);
         } catch (error) {

@@ -34,7 +34,7 @@ export async function startTest() {
 
         testAssemblyFiles = getTestAssemblies();
         if (testAssemblyFiles && testAssemblyFiles.length !== 0) {
-            getTestResultsDirectory(vstestConfig.runSettingsFile, path.join(workingDirectory, 'TestResults'))
+            getTestResultsDirectory(vstestConfig.settingsFile, path.join(workingDirectory, 'TestResults'))
                 .then(function (resultsDirectory) {
                     invokeVSTest(resultsDirectory)
                         .then(function (code) {
@@ -726,7 +726,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     if (vstestConfig.vsTestVersion && vstestConfig.vsTestVersion.toLowerCase() === "latest") {
         vstestConfig.vsTestVersion = null;
     }
-    overrideTestRunParametersIfRequired(vstestConfig.runSettingsFile)
+    overrideTestRunParametersIfRequired(vstestConfig.settingsFile)
         .then(function (overriddenSettingsFile) {
             let vsVersion = vsVersionDetails.version;
             try {
@@ -750,26 +750,34 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
             }            
             setRunInParallellIfApplicable(vsVersion);
             var newSettingsFile = overriddenSettingsFile;
-            try {                
-                settingsHelper.updateSettingsFileAsRequired(overriddenSettingsFile, vstestConfig.runInParallel, false, vstestConfig.tiaConfig, false).
+            try {
+                settingsHelper.updateSettingsFileAsRequired(overriddenSettingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig, false).
                 then(function(ret) {
                     newSettingsFile = ret;
                     if(newSettingsFile != overriddenSettingsFile) {
                     cleanUp(overriddenSettingsFile);
-                    } 
-                });                
+                    }
+                    runVStest(testResultsDirectory, newSettingsFile, vsVersion)
+                    .then(function (code) {
+                        defer.resolve(code);
+                    })
+                    .fail(function (code) {
+                        defer.resolve(code);
+                    });
+                    
+                })                               
             } catch (error) {
                 tl.warning(tl.loc('ErrorWhileUpdatingSettings'));
                 tl.debug(error);
+                //Should continue to run without the selected configurations.
+                runVStest(testResultsDirectory, newSettingsFile, vsVersion)
+                    .then(function (code) {
+                        defer.resolve(code);
+                    })
+                    .fail(function (code) {
+                        defer.resolve(code);
+                    });
             }
-
-            runVStest(testResultsDirectory, newSettingsFile, vsVersion)
-                .then(function (code) {
-                    defer.resolve(code);
-                })
-                .fail(function (code) {
-                    defer.resolve(code);
-                });
         })
         .fail(function (err) {
             tl.error(err);
@@ -795,7 +803,7 @@ function publishTestResults(testResultsDirectory: string) {
 
 function cleanUp(temporarySettingsFile: string) {
     //cleanup the runsettings file
-    if (temporarySettingsFile && vstestConfig.runSettingsFile != temporarySettingsFile) {
+    if (temporarySettingsFile && vstestConfig.settingsFile != temporarySettingsFile) {
         try {
             tl.rmRF(temporarySettingsFile, true);
         } catch (error) {
@@ -826,7 +834,7 @@ function overrideTestRunParametersIfRequired(settingsFile: string): Q.Promise<st
         }
     });
 
-    utilities.readFileContents(vstestConfig.runSettingsFile, "utf-8")
+    utilities.readFileContents(vstestConfig.settingsFile, "utf-8")
         .then(function (xmlContents) {
             var parser = new xml2js.Parser();
             parser.parseString(xmlContents, function (err, result) {
@@ -897,7 +905,7 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
         return defer.promise;
     }
 
-    utilities.readFileContents(vstestConfig.runSettingsFile, "utf-8")
+    utilities.readFileContents(vstestConfig.settingsFile, "utf-8")
         .then(function (xmlContents) {
             var parser = new xml2js.Parser();
             parser.parseString(xmlContents, function (err, result) {
@@ -908,7 +916,7 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
 
                     if (resultDirectory) {
                         // path.resolve will take care if the result directory given in settings files is not absolute.
-                        defer.resolve(path.resolve(path.dirname(vstestConfig.runSettingsFile), resultDirectory));
+                        defer.resolve(path.resolve(path.dirname(vstestConfig.settingsFile), resultDirectory));
                     }
                     else {
                         defer.resolve(defaultResultsDirectory);

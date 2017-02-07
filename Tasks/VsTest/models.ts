@@ -6,7 +6,7 @@ export interface ExecutabaleInfo {
 export interface TestConfigurations {
     sourceFilter: string[];
     testcaseFilter: string;
-    runSettingsFile: string;
+    settingsFile: string;
     testDropLocation: string; // search folder
     overrideTestrunParameters: string;
     codeCoverageEnabled: boolean;

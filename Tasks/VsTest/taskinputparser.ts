@@ -12,7 +12,15 @@ export function getDistributedTestConfigurations(): models.DtaTestConfigurations
     const dtaConfiguration = {} as models.DtaTestConfigurations;
     initTestConfigurations(dtaConfiguration);
     dtaConfiguration.onDemandTestRunId = tl.getInput('tcmTestRun');
-    dtaConfiguration.tiaConfig = getTiaConfiguration();    
+    
+    if(dtaConfiguration.tiaConfig.tiaEnabled) {
+        tl.warning(tl.loc('tiaNotSupportedInDta'));
+        dtaConfiguration.tiaConfig.tiaEnabled = false;
+    }
+    if(dtaConfiguration.runTestsInIsolation) {
+        tl.warning(tl.loc('runTestInIsolationNotSupported'));
+    }
+
     return dtaConfiguration;
 }
 
@@ -23,7 +31,6 @@ export function getvsTestConfigurations(): models.VsTestConfigurations {
     vsTestConfiguration.publishRunAttachments = tl.getInput('publishRunAttachments');    
     vsTestConfiguration.vstestDiagFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     vsTestConfiguration.ignoreVstestFailure = tl.getVariable('vstest.ignoretestfailures');
-    vsTestConfiguration.tiaConfig = getTiaConfiguration();
 
     // only to facilitate the writing of unit tests 
     vsTestConfiguration.vs15HelperPath = tl.getVariable('vs15Helper');
@@ -39,7 +46,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations)
     testConfiguration.sourceFilter = tl.getDelimitedInput('testAssemblyVer2', '\n', true);
     testConfiguration.testDropLocation = tl.getInput('searchFolder');  
     testConfiguration.testcaseFilter = tl.getInput('testFiltercriteria');
-    testConfiguration.runSettingsFile = tl.getPathInput('runSettingsFile');
+    testConfiguration.settingsFile = tl.getPathInput('runSettingsFile');
     testConfiguration.overrideTestrunParameters = tl.getInput('overrideTestrunParameters');
     testConfiguration.buildConfig = tl.getInput('configuration');
     testConfiguration.buildPlatform = tl.getInput('platform');
@@ -47,6 +54,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations)
     testConfiguration.vsTestVersion = tl.getInput('testPlatform');
     testConfiguration.runInParallel = tl.getBoolInput('runTestsInParallel');
     testConfiguration.runTestsInIsolation = tl.getBoolInput('runTestsInIsolation');
+    testConfiguration.tiaConfig = getTiaConfiguration();
     initDataCollectorConfigurations(testConfiguration);
 }
 

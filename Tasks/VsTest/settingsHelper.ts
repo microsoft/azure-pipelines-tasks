@@ -21,12 +21,12 @@ const TestSettingsIDTag = "5d76a195-1e43-4b90-a6ce-4ec3de87ed25";
 const TestSettingsXmlnsTag = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010"
 
 //TestImpact collector
-const TIFriendlyName = "Test Impact";
+const TestImpactFriendlyName = "Test Impact";
 const TestImpactDataCollectorTemplate = "<DataCollector uri=\"datacollector://microsoft/TestImpact/1.0\" assemblyQualifiedName=\"Microsoft.VisualStudio.TraceCollector.TestImpactDataCollector, Microsoft.VisualStudio.TraceCollector, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a\" friendlyName=\"Test Impact\"><Configuration><RootPath></RootPath></Configuration></DataCollector>";
 
 //Video collector
 const VideoCollectorFriendlyName ="Screen and Voice Recorder";
-const VideoDataCollectoTemplate = "<DataCollector uri=\"datacollector://microsoft/VideoRecorder/1.0\" assemblyQualifiedName=\"Microsoft.VisualStudio.TestTools.DataCollection.VideoRecorder.VideoRecorderDataCollector, Microsoft.VisualStudio.TestTools.DataCollection.VideoRecorder, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a\" friendlyName=\"Screen and Voice Recorder\"></DataCollector>";
+const VideoDataCollectorTemplate = "<DataCollector uri=\"datacollector://microsoft/VideoRecorder/1.0\" assemblyQualifiedName=\"Microsoft.VisualStudio.TestTools.DataCollection.VideoRecorder.VideoRecorderDataCollector, Microsoft.VisualStudio.TestTools.DataCollection.VideoRecorder, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a\" friendlyName=\"Screen and Voice Recorder\"></DataCollector>";
 
 //Parallel configuration
 var runSettingsForParallel = '<?xml version="1.0" encoding="utf-8"?><RunSettings><RunConfiguration><MaxCpuCount>0</MaxCpuCount></RunConfiguration></RunSettings>';
@@ -49,19 +49,33 @@ const runSettingsTemplate = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
     "</DataCollectionRunSettings>" +
 "</RunSettings>";
 
-export async function updateSettingsFileAsRequired(settingsFile: string, isParallelRun: boolean, videoCollector: boolean, tiaConfig: models.TiaConfiguration, isDta: boolean) : Promise<string>
+export async function updateSettingsFileAsRequired(settingsFile: string, isParallelRun: boolean, tiaConfig: models.TiaConfiguration, videoCollector: boolean) : Promise<string>
 {
+    videoCollector = false;
     var defer=Q.defer<string>();
     var result: any;
+
+    if(!isParallelRun && !videoCollector && !tiaConfig.tiaEnabled) {
+        defer.resolve(settingsFile);
+        return defer.promise;
+    }
 
     //Get extension of settings file and contents
     var settingsExt = null;
     if (settingsFile && fs.lstatSync(settingsFile).isFile() && settingsFile.split('.').pop().toLowerCase() === "testsettings") {
         settingsExt=testSettingsExt;
         result = await utilities.getXmlContents(settingsFile);
+        if(!result || result.TestSettings === undefined) {
+            tl.warning(tl.loc('FailedToSetRunConfiguration'));
+            settingsExt = null;
+        }
     } else if (settingsFile && utilities.pathExistsAsFile(settingsFile)) {
         settingsExt = runSettingsExt;
         result = await utilities.getXmlContents(settingsFile);
+        if(!result || result.RunSettings === undefined) {
+            tl.warning(tl.loc('FailedToSetRunConfiguration'));
+            settingsExt = null;
+        }
     }
 
     if (isParallelRun) {        
@@ -80,7 +94,7 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
     if (videoCollector) {
         //Enable video collector only in test settings.
         var videoCollectorNode = null;
-        parser.parseString(VideoDataCollectoTemplate, function(err, data) {
+        parser.parseString(VideoDataCollectorTemplate, function(err, data) {
             if(err) {
                 defer.reject(err);
             }
@@ -88,58 +102,54 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
             });
         if (settingsExt === testSettingsExt) {
             tl.debug("Enabling video data collector by editing given testsettings.")
-            result = await updateTestSettingsWithDataCollector(result, VideoCollectorFriendlyName, videoCollectorNode);
+            result = updateTestSettingsWithDataCollector(result, VideoCollectorFriendlyName, videoCollectorNode);
         } else if (settingsExt === runSettingsExt) {
             tl.warning(tl.loc('VideoCollectorNotSupportedWithRunSettings'));
         } else {
             tl.debug("Enabling video data collection by creating new test settings.")
             settingsExt = testSettingsExt;
             result = await CreateSettings(testSettingsTemplate);
-            result = await updateTestSettingsWithDataCollector(result, VideoCollectorFriendlyName, videoCollectorNode)
+            result = updateTestSettingsWithDataCollector(result, VideoCollectorFriendlyName, videoCollectorNode)
         }
     }
     
-    if (tiaConfig.tiaEnabled) {
-        if (isDta) {
-            tl.warning(tl.loc('tiaNotSupportedInDta'));
-        } else {
-            var testImpactCollectorNode = null;
-            parser.parseString(TestImpactDataCollectorTemplate, function(err, data) {
-                if(err) {
-                    defer.reject(err);
-                }
-                testImpactCollectorNode = data;
-                if(tiaConfig.useNewCollector) {
-                    testImpactCollectorNode.DataCollector.$.codebase = getTraceCollectorUri();
-                }        
-                testImpactCollectorNode.DataCollector.Configuration[0].ImpactLevel = getTIALevel(tiaConfig);
-                if (getTIALevel(tiaConfig) === 'file') {
-                    testImpactCollectorNode.DataCollector.Configuration[0].LogFilePath = 'true';
-                }
-                if (tiaConfig.context === "CD") {
-                    testImpactCollectorNode.DataCollector.Configuration[0].RootPath = "";
-                } else {
-                    testImpactCollectorNode.DataCollector.Configuration[0].RootPath = tiaConfig.sourcesDir;
-                }
-            });
-            //var baseLineBuildId = await utilities.readFileContents(tiaConfig.baseLineBuildIdFile, "utf-8");
-
-            if(settingsExt === testSettingsExt)
-            {
-                tl.debug("Enabling Test Impact collector by editing given testsettings.")
-                result = await updateTestSettingsWithDataCollector(result, TIFriendlyName, testImpactCollectorNode);
-                //result = await setupTestSettingsFileForRunConfig(result, { TestImpact : { '$': {enabled: 'true'} }, BaseLineRunId : baseLineBuildId});
-            } else if (settingsExt === runSettingsExt) {
-                tl.debug("Enabling Test Impact collector by editing given runsettings.")
-                result = await updateRunSettingsWithDataCollector(result, TIFriendlyName, testImpactCollectorNode);
-                //result = await setupRunSettingsFileForRunConfig(result, { TestImpact : { '$': {enabled: 'true'} }, BaseLineRunId : baseLineBuildId});
-            } else {
-                tl.debug("Enabling test impact data collection by creating new runsettings.")
-                settingsExt = runSettingsExt;
-                result = await CreateSettings(runSettingsTemplate);
-                result = await updateRunSettingsWithDataCollector(result, TIFriendlyName, testImpactCollectorNode);
-                //result = await setupRunSettingsFileForRunConfig(result, { TestImpact : { '$': {enabled: 'true'} }, BaseLineRunId : baseLineBuildId});
+    if (tiaConfig.tiaEnabled) {        
+        var testImpactCollectorNode = null;
+        parser.parseString(TestImpactDataCollectorTemplate, function(err, data) {
+            if(err) {
+                defer.reject(err);
             }
+            testImpactCollectorNode = data;
+            if(tiaConfig.useNewCollector) {
+                testImpactCollectorNode.DataCollector.$.codebase = getTraceCollectorUri();
+            }        
+            testImpactCollectorNode.DataCollector.Configuration[0].ImpactLevel = getTIALevel(tiaConfig);
+            if (getTIALevel(tiaConfig) === 'file') {
+                testImpactCollectorNode.DataCollector.Configuration[0].LogFilePath = 'true';
+            }
+            if (tiaConfig.context === "CD") {
+                testImpactCollectorNode.DataCollector.Configuration[0].RootPath = "";
+            } else {
+                testImpactCollectorNode.DataCollector.Configuration[0].RootPath = tiaConfig.sourcesDir;
+            }
+        });
+        //var baseLineBuildId = await utilities.readFileContents(tiaConfig.baseLineBuildIdFile, "utf-8");
+
+        if(settingsExt === testSettingsExt)
+        {
+            tl.debug("Enabling Test Impact collector by editing given testsettings.")
+            result = updateTestSettingsWithDataCollector(result, TestImpactFriendlyName, testImpactCollectorNode);
+            //result = await setupTestSettingsFileForRunConfig(result, { TestImpact : { '$': {enabled: 'true'} }, BaseLineRunId : baseLineBuildId});
+        } else if (settingsExt === runSettingsExt) {
+            tl.debug("Enabling Test Impact collector by editing given runsettings.")
+            result = updateRunSettingsWithDataCollector(result, TestImpactFriendlyName, testImpactCollectorNode);
+            //result = await setupRunSettingsFileForRunConfig(result, { TestImpact : { '$': {enabled: 'true'} }, BaseLineRunId : baseLineBuildId});
+        } else {
+            tl.debug("Enabling test impact data collection by creating new runsettings.")
+            settingsExt = runSettingsExt;
+            result = await CreateSettings(runSettingsTemplate);
+            result = updateRunSettingsWithDataCollector(result, TestImpactFriendlyName, testImpactCollectorNode);
+            //result = await setupRunSettingsFileForRunConfig(result, { TestImpact : { '$': {enabled: 'true'} }, BaseLineRunId : baseLineBuildId});
         }
     }
 
@@ -155,36 +165,29 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
     return defer.promise;
 }
 
-function updateRunSettingsWithDataCollector(result: any, dataCollectorFriendlyName: string, dataCollectorNodeToAdd) {
-    var defer = Q.defer<any>();
-    var dataCollectorNode = null;
+function updateRunSettingsWithDataCollector(result: any, dataCollectorFriendlyName: string, dataCollectorNodeToAdd) {    
     if (!result.RunSettings) {
         tl.debug("Updating runsettings file from RunSettings node");
         result.RunSettings = { DataCollectionRunSettings: { DataCollectors: dataCollectorNodeToAdd } };
-        defer.resolve(result);
     } else if (!result.RunSettings.DataCollectionRunSettings) {
         tl.debug("Updating runsettings file from DataCollectionSettings node");
         result.RunSettings.DataCollectionRunSettings = { DataCollectors: dataCollectorNodeToAdd };
-        defer.resolve(result);
     } else if (!result.RunSettings.DataCollectionRunSettings[0].DataCollectors) {
         tl.debug("Updating runsettings file from DataCollectors node");
         result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: dataCollectorNodeToAdd };
-        defer.resolve(result);
     } else {
         var dataCollectorArray = result.RunSettings.DataCollectionRunSettings[0].DataCollectors[0].DataCollector;
         if (!dataCollectorArray) {
             tl.debug("Updating runsettings file from DataCollector node");
             result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: dataCollectorNodeToAdd };
-            defer.resolve(result);
         } else {
             if (!isDataCollectorPresent(dataCollectorArray, dataCollectorFriendlyName)) {
                 tl.debug("Updating runsettings file, adding a DataCollector node");
-                dataCollectorArray.push(dataCollectorNodeToAdd.DataCollector);
-                defer.resolve(result);
+                dataCollectorArray.push(dataCollectorNodeToAdd.DataCollector);                
             }
         }
     }
-    return defer.promise; 
+    return result;
 }
 
 function isDataCollectorPresent(dataCollectorArray, dataCollectorFriendlyName: string): Boolean {
@@ -199,45 +202,37 @@ function isDataCollectorPresent(dataCollectorArray, dataCollectorFriendlyName: s
     return found;
 }
 
-function updateTestSettingsWithDataCollector(result: any, dataCollectorFriendlyName: string, dataCollectorNodeToAdd): Q.Promise<any> {
-    var defer = Q.defer<any>();
-    var dataCollectorNode = null;
+function updateTestSettingsWithDataCollector(result: any, dataCollectorFriendlyName: string, dataCollectorNodeToAdd) {    
     if (!result.TestSettings) {
         tl.debug("Updating testsettings file from TestSettings node");
         result.TestSettings = { Execution: { AgentRule: { DataCollectors:  dataCollectorNodeToAdd  } } };
         result.TestSettings.Execution.AgentRule.$ = { name: TestSettingsAgentNameTag };
         result.TestSettings.$ = { name: TestSettingsNameTag, id: TestSettingsIDTag, xmlns: TestSettingsXmlnsTag };
-        defer.resolve(result);
     } else if (!result.TestSettings.Execution) {
         tl.debug("Updating testsettings file from Execution node");
         result.TestSettings.Execution = { AgentRule: { DataCollectors:  dataCollectorNodeToAdd  } };
         result.TestSettings.Execution.AgentRule.$ = { name: TestSettingsAgentNameTag };
-        defer.resolve(result);
     } else if (!result.TestSettings.Execution[0].AgentRule) {
         tl.debug("Updating testsettings file from AgentRule node");
         result.TestSettings.Execution[0] = { AgentRule: { DataCollectors: dataCollectorNodeToAdd  } };
         result.TestSettings.Execution[0].AgentRule.$ = { name: TestSettingsAgentNameTag };
-        defer.resolve(result);
     } else if (!result.TestSettings.Execution[0].AgentRule[0].DataCollectors) {
         tl.debug("Updating testsettings file from DataCollectors node");
         result.TestSettings.Execution[0].AgentRule[0] = { DataCollectors: dataCollectorNodeToAdd };
         result.TestSettings.Execution[0].AgentRule.$ = { name: TestSettingsAgentNameTag };
-        defer.resolve(result);
     } else {
         var dataCollectorArray = result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0].DataCollector;
         if (!dataCollectorArray) {
             tl.debug("Updating testsettings file from DataCollector node");
             result.TestSettings.Execution[0].AgentRule[0].DataCollectors[0] = dataCollectorNodeToAdd;
-            defer.resolve(result);
         } else {
             if (!isDataCollectorPresent(dataCollectorArray, dataCollectorFriendlyName)) {
                 tl.debug("Updating testsettings file, adding a DataCollector node");
                 dataCollectorArray.push(dataCollectorNodeToAdd.DataCollector);
-                defer.resolve(result);
             }
         }
     }
-    return defer.promise;
+    return result;
 }
 
 function CreateSettings(runSettingsContents: string) : Q.Promise<any> {
@@ -253,10 +248,6 @@ function CreateSettings(runSettingsContents: string) : Q.Promise<any> {
 
 function setupRunSettingsFileForRunConfig(result: any, innerNode: any) : Q.Promise<any> {
     var defer=Q.defer<any>();  
-    if (!result || result.RunSettings === undefined) {
-        tl.warning(tl.loc('FailedToSetRunConfiguration'));
-        defer.resolve(null);
-    }
     if (!result.RunSettings) {
         result.RunSettings = { RunConfiguration: innerNode  };
     }

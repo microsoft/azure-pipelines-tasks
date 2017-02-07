@@ -25,12 +25,15 @@ export function getXmlContents(filePath: string): Q.Promise<any> {
         .then(function (xmlContents) {
             parser.parseString(xmlContents, function (err, result) {
                 if (err) {
-                    defer.reject(err);
+                    defer.resolve(null);
                 }
                 else{
                     defer.resolve(result);
                 }
             });
+        })
+        .fail(function(err) {
+            defer.reject(err);
         });
         return defer.promise;
 }
