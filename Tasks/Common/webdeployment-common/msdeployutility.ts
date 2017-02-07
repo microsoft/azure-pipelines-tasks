@@ -98,7 +98,8 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
  * @param   webAppPackage   web deploy package
  * @returns boolean
  */
-export async  function containsParamFile(webAppPackage: string ) {
+/*export async  function containsParamFile(webAppPackage: string ) {
+    
     var isParamFilePresent = false;
     var isParamFilePresentBackup;
     try {
@@ -147,14 +148,14 @@ export async  function containsParamFile(webAppPackage: string ) {
 
     tl.debug("Is parameter file present in web package : " + isParamFilePresent);
     return isParamFilePresent;
-}
+}*/
 
 /**
  * Check whether the package contains parameter.xml file
  * @param   webAppPackage   web deploy package
  * @returns boolean
  */
-async function isMSDeployPackage(webAppPackage: string ) {
+/*async function isMSDeployPackage(webAppPackage: string ) {
     var isParamFilePresent = false;
     var pacakgeComponent = await zipUtility.getArchivedEntries(webAppPackage);
     if (((pacakgeComponent["entries"].indexOf("parameters.xml") > -1) || (pacakgeComponent["entries"].indexOf("Parameters.xml") > -1)) && 
@@ -163,7 +164,7 @@ async function isMSDeployPackage(webAppPackage: string ) {
     }
     tl.debug("Is the package an msdeploy package : " + isParamFilePresent);
     return isParamFilePresent;
-}
+}*/
 
 /**
  * Gets the full path of MSDeploy.exe
