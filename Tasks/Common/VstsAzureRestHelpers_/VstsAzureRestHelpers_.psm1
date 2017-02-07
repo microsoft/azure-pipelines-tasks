@@ -2,6 +2,7 @@
 $script:jsonContentType = "application/json;charset=utf-8"
 $script:formContentType = "application/x-www-form-urlencoded;charset=utf-8"
 $script:defaultAuthUri = "https://login.microsoftonline.com/"
+$script:defaultEnvironmentAuthUri = "https://login.windows.net/"
 
 # Connection Types
 $certificateConnection = 'Certificate'
@@ -102,9 +103,13 @@ function Get-UsernamePasswordAccessToken {
     # Well known Client-Id
     $password = $endpoint.Auth.Parameters.Password
     $username = $endpoint.Auth.Parameters.UserName
-    $activeDirectoryAuthorityUrl = $endpoint.Data['activeDirectoryAuthority']
+    $authUrl = $script:defaultAuthUri
+    if($endpoint.Data.activeDirectoryAuthority)
+    {
+        $authUrl = $endpoint.Data.activeDirectoryAuthority
+    }
 
-    $authUri = "$activeDirectoryAuthorityUrl/common/oauth2/token"
+    $authUri = "$authUrl/common/oauth2/token"
     $body = @{
         resource=$script:azureUri
         client_id=$azurePsClientId
@@ -134,7 +139,7 @@ function Get-SpnAccessToken {
     $principalId = $endpoint.Auth.Parameters.ServicePrincipalId
     $tenantId = $endpoint.Auth.Parameters.TenantId
     $principalKey = $endpoint.Auth.Parameters.ServicePrincipalKey
-    $envAuthUrl = $script:defaultAuthUri
+    $envAuthUrl = $script:defaultEnvironmentAuthUri
     if($endpoint.Data.environmentAuthorityUrl)
     {
         $envAuthUrl = $endpoint.Data.environmentAuthorityUrl
