@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 3,
-        "Patch": 4
+        "Patch": 5
     },
     "minimumAgentVersion": "1.95.0",
     "groups": [
@@ -279,22 +279,13 @@
         "ItemSearchNoFilesFound": "No items were found with search pattern {0}.",
         "SearchingForPath": "Searching for path: {0}",
         "FoundPath": "Found path: {0}",
-        "ConnectedToCluster": "Successfully connected to cluster.",
-        "AadAuthority": "AAD Authority: {0}",
-        "ClusterAppId": "Cluster Application ID: {0}",
-        "ClientAppId": "Client Application ID: {0}",
         "PathDoesNotExist": "Path '{0}' does not exist.",
-        "ServiceFabricSDKNotInstalled": "Service Fabric SDK is not installed on the build agent.  Go to https://aka.ms/servicefabric to download and install it.",
-        "ErrorOnCertificateImport": "An error occurred attempting to import the certificate. Ensure that your service endpoint is configured properly with a correct certificate value and, if the certificate is password-protected, a valid password. Error message: {0}",
-        "ErrorOnAcquireToken": "An error occurred attempting to acquire an Azure Active Directory token. Ensure that your service endpoint is configured properly with valid credentials. Error message: {0}",
-        "ImportedCertificate": "Imported cluster client certificate with thumbprint '{0}'.",
         "ServiceEndpointUpgradeWarning": "Your deploy task has been upgraded to a new version with possible breaking changes. The Cluster Endpoint defined in your service endpoint was previously ignored, but will now override the value in the publish profile. Verify the endpoint is correct and prefixed with 'https://'. In addition, a Server Certificate Thumbprint field has been added to the service endpoint and will also override the publish profile value. Your service endpoint may not have been updated to allow specifying the Server Certificate Thumbprint, in which case we will still use the value from the publish profile and you should try again soon.",
         "OverrideApplicationParameterFile": "Overriding application parameter file specified in publish profile with '{0}' specified in the VSTS task.",
         "OverrideUpgradeSettings": "Overriding upgrade settings specified in publish profile with the settings specified in the VSTS Task.",
         "PublishProfileRequiredServerThumbprint": "A server certificate thumbprint must be defined on the endpoint or a publish profile must be specified in the VSTS task.",
         "PublishProfileRequiredAppParams": "An application parameters file or a publish profile must be specified in the VSTS task.",
         "PublishProfileRequiredUpgrade": "Upgrade settings must be overridden or a publish profile must be specified in the VSTS task.",
-        "DefaultPortWarning": "The port '{0}' specified on your connection endpoint does not match the default ClientConnectionEndpoint of '19000'. This might have caused cluster communication failure.",
         "SFSDK_InvalidSFPackage": "{0} is not a valid Service Fabric application package.",
         "SFSDK_PackageValidationFailed": "Validation failed for package: {0}",
         "SFSDK_UnableToVerifyClusterConnection": "Unable to verify connection to Service Fabric cluster.",
