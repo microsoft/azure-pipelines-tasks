@@ -83,6 +83,15 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
 
 
 import mockTask = require('vsts-task-lib/mock-task');
+tr.registerMock('webdeployment-common/ziputility.js', {
+    getArchivedEntries: function(webDeployPkg) {
+        return {
+            "entries":[
+                "systemInfo.xml"
+            ]
+        };
+    }
+});
 var kuduDeploymentLog = require('azurerest-common/kududeploymentstatusutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js'); 
 tr.registerMock('./msdeployutility.js', {

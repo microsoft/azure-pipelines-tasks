@@ -4,7 +4,6 @@ import trm = require('vsts-task-lib/toolrunner');
 import fs = require('fs');
 import path = require('path');
 
-var zipUtility = require('./ziputility.js');
 var winreg = require('winreg');
 var parseString = require('xml2js').parseString;
 
@@ -92,79 +91,6 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
     tl.debug('Constructed msDeploy comamnd line arguments');
     return msDeployCmdArgs;
 }
-
-/**
- * Check whether the package contains parameter.xml file
- * @param   webAppPackage   web deploy package
- * @returns boolean
- */
-/*export async  function containsParamFile(webAppPackage: string ) {
-    
-    var isParamFilePresent = false;
-    var isParamFilePresentBackup;
-    try {
-        isParamFilePresentBackup = await isMSDeployPackage(webAppPackage);
-    }
-    catch (error) {
-        isParamFilePresentBackup = false;
-        tl.debug("an error occurred in the function isMSDeployPackage");
-    }
-    var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package=\'" + webAppPackage + "\'";
-    var execResult =  tl.execSync("msdeploy", msDeployCheckParamFileCmdArgs, <any>{ failOnStdErr: true });
-
-    if((execResult.error && execResult.error.message.length > 0 ) || (execResult.stderr && execResult.stderr.length > 0)) {
-        tl.debug("[COMMAND FAILED]: msdeploy " + msDeployCheckParamFileCmdArgs);
-        if(execResult.error) {
-            tl.debug("res.error: " + execResult.error.message);
-        }
-        else if(execResult.stderr) {
-            tl.debug("res.stderr: " + execResult.stderr);
-        }
-        isParamFilePresent = isParamFilePresentBackup;
-        tl.debug("Is parameter file present in web package : " + isParamFilePresent);
-        return isParamFilePresent;
-    }
-
-    var paramContentXML = execResult.stdout;
-
-    await parseString(paramContentXML, (error, result) => {
-        if(error) {
-            isParamFilePresent = isParamFilePresentBackup;
-            tl.debug("Parameter Content that was parsed is:");
-            tl.debug(paramContentXML);
-        }
-        if(result != null && result['output'] != null && result['output']['parameters'] != null) {
-            if(result['output']['parameters'][0] ) {
-                isParamFilePresent = true;
-            }
-        }
-        else {
-            isParamFilePresent = false;
-            tl.warning("Parameter file is not well formed");
-            tl.debug("Parameter File Content is:");
-            tl.debug(paramContentXML);
-        }
-    });
-
-    tl.debug("Is parameter file present in web package : " + isParamFilePresent);
-    return isParamFilePresent;
-}*/
-
-/**
- * Check whether the package contains parameter.xml file
- * @param   webAppPackage   web deploy package
- * @returns boolean
- */
-/*async function isMSDeployPackage(webAppPackage: string ) {
-    var isParamFilePresent = false;
-    var pacakgeComponent = await zipUtility.getArchivedEntries(webAppPackage);
-    if (((pacakgeComponent["entries"].indexOf("parameters.xml") > -1) || (pacakgeComponent["entries"].indexOf("Parameters.xml") > -1)) && 
-    ((pacakgeComponent["entries"].indexOf("systeminfo.xml") > -1) || (pacakgeComponent["entries"].indexOf("systemInfo.xml") > -1))) {
-        isParamFilePresent = true;
-    }
-    tl.debug("Is the package an msdeploy package : " + isParamFilePresent);
-    return isParamFilePresent;
-}*/
 
 /**
  * Gets the full path of MSDeploy.exe
