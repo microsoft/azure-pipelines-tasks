@@ -30,13 +30,18 @@ function getReplacableTokenFromTags(xmlNode, variableMap) {
 
 
 async function substituteValueinParameterFile(parameterFilePath, parameterSubValue) {
+
+    if(Object.keys(parameterSubValue).length === 0) {
+        tl.debug('No substitution varaibles found for parameters.xml');
+        return;  
+    }
+
     var fileBuffer: Buffer = fs.readFileSync(parameterFilePath);
     var fileEncodeType = fileEncoding.detectFileEncoding(parameterFilePath, fileBuffer);
     var webConfigContent: string = fileBuffer.toString(fileEncodeType[0]);
     if(fileEncodeType[1]) {
         webConfigContent = webConfigContent.slice(1);
     }
-
     var xmlDocument;
     try {
         xmlDocument = ltxdomutility.initializeDOM(webConfigContent);
@@ -44,7 +49,6 @@ async function substituteValueinParameterFile(parameterFilePath, parameterSubVal
             if(!varUtility.isObject(xmlChildNode)) {
                 continue;
             }
-            console.log(xmlChildNode);
             if(parameterSubValue[ xmlChildNode.attrs.name ]) {
                 xmlChildNode.attrs.defaultValue = parameterSubValue[ xmlChildNode.attrs.name ];
             }
