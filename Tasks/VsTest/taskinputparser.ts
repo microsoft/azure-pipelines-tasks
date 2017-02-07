@@ -1,8 +1,9 @@
-import tl = require('vsts-task-lib/task');
-import tr = require('vsts-task-lib/toolrunner');
 import path = require('path');
 import Q = require('q');
-import models = require('./models')
+import tl = require('vsts-task-lib/task');
+import tr = require('vsts-task-lib/toolrunner');
+import models = require('./models');
+import utils = require('./helpers');
 
 let os = require('os');
 let uuid = require('node-uuid');
@@ -12,6 +13,7 @@ export function getDistributedTestConfigurations(): models.DtaTestConfigurations
     const dtaConfiguration = {} as models.DtaTestConfigurations;
     initTestConfigurations(dtaConfiguration);
     dtaConfiguration.onDemandTestRunId = tl.getInput('tcmTestRun');
+    dtaConfiguration.dtaEnvironment = initDtaEnvironment();
     return dtaConfiguration;
 }
 
@@ -33,6 +35,35 @@ export function getvsTestConfigurations(): models.VsTestConfigurations {
     return vsTestConfiguration;
 }
 
+function initDtaEnvironment(): models.DtaEnvironment {
+    const dtaEnvironment = {} as models.DtaEnvironment;
+    dtaEnvironment.tfsCollectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
+    dtaEnvironment.patToken = tl.getEndpointAuthorization('SystemVssConnection', true).parameters['AccessToken'];
+
+    //TODO : Consider build scenario
+    const releaseId = tl.getVariable('Release.ReleaseId');
+    const phaseId = tl.getVariable('Release.DeployPhaseId');
+    const projectName = tl.getVariable('System.TeamProject');
+    const taskInstanceId = getDtaInstanceId();
+
+    dtaEnvironment.environmentUri = 'dta://env/' + projectName + '/_apis/release/' + releaseId + '/' + phaseId + '/' + taskInstanceId;
+    dtaEnvironment.dtaHostLogFilePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'DTAExecutionHost.exe.log');
+    return dtaEnvironment;
+}
+
+function getDtaInstanceId(): number {
+    const taskInstanceIdString = tl.getVariable('DTA_INSTANCE_ID');
+    let taskInstanceId: number = 1;
+    if (taskInstanceIdString) {
+        const instanceId: number = Number(taskInstanceIdString);
+        if (!isNaN(instanceId)) {
+            taskInstanceId = instanceId + 1;
+        }
+    }
+    tl.setVariable('DTA_INSTANCE_ID', taskInstanceId.toString());
+    return taskInstanceId;
+}
+
 function initTestConfigurations(testConfiguration: models.TestConfigurations)
 {
     testConfiguration.pathtoCustomTestAdapters = tl.getInput('pathtoCustomTestAdapters');
@@ -44,7 +75,13 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations)
     testConfiguration.buildConfig = tl.getInput('configuration');
     testConfiguration.buildPlatform = tl.getInput('platform');
     testConfiguration.testRunTitle = tl.getInput('testRunTitle');
-    testConfiguration.vsTestVersion = tl.getInput('testPlatform');
+    testConfiguration.vsTestVersion = tl.getInput('vsTestVersion');
+
+    if(utils.Helper.isNullEmptyOrUndefined(testConfiguration.vsTestVersion)) {
+        tl._writeLine('vsTestVersion is null or empty');
+        throw new Error("vsTestVersion is null or empty");
+    }
+
     initDataCollectorConfigurations(testConfiguration);
 }
 

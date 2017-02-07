@@ -27,6 +27,14 @@ export interface DtaTestConfigurations extends TestConfigurations {
     testSuites: number[];
     testPlanConfigId: number;
     customSlicingenabled: boolean;
+    dtaEnvironment: DtaEnvironment;
+}
+
+export interface DtaEnvironment {
+    tfsCollectionUrl: string;
+    patToken: string;
+    environmentUri: string;
+    dtaHostLogFilePath: string;
 }
 
 export interface VsTestConfigurations extends TestConfigurations {
