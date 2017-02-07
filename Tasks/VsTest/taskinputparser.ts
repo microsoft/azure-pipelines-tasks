@@ -1,8 +1,9 @@
-import tl = require('vsts-task-lib/task');
-import tr = require('vsts-task-lib/toolrunner');
 import path = require('path');
 import Q = require('q');
-import models = require('./models')
+import tl = require('vsts-task-lib/task');
+import tr = require('vsts-task-lib/toolrunner');
+import models = require('./models');
+import utils = require('./helpers');
 
 let os = require('os');
 let uuid = require('node-uuid');
@@ -11,8 +12,7 @@ export function getDistributedTestConfigurations(): models.DtaTestConfigurations
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     const dtaConfiguration = {} as models.DtaTestConfigurations;
     initTestConfigurations(dtaConfiguration);
-    dtaConfiguration.onDemandTestRunId = tl.getInput('tcmTestRun');
-    
+    dtaConfiguration.onDemandTestRunId = tl.getInput('tcmTestRun');    
     if(dtaConfiguration.tiaConfig.tiaEnabled) {
         tl.warning(tl.loc('tiaNotSupportedInDta'));
         dtaConfiguration.tiaConfig.tiaEnabled = false;
@@ -20,7 +20,7 @@ export function getDistributedTestConfigurations(): models.DtaTestConfigurations
     if(dtaConfiguration.runTestsInIsolation) {
         tl.warning(tl.loc('runTestInIsolationNotSupported'));
     }
-
+    dtaConfiguration.dtaEnvironment = initDtaEnvironment();
     return dtaConfiguration;
 }
 
@@ -40,6 +40,35 @@ export function getvsTestConfigurations(): models.VsTestConfigurations {
     return vsTestConfiguration;
 }
 
+function initDtaEnvironment(): models.DtaEnvironment {
+    const dtaEnvironment = {} as models.DtaEnvironment;
+    dtaEnvironment.tfsCollectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
+    dtaEnvironment.patToken = tl.getEndpointAuthorization('SystemVssConnection', true).parameters['AccessToken'];
+
+    //TODO : Consider build scenario
+    const releaseId = tl.getVariable('Release.ReleaseId');
+    const phaseId = tl.getVariable('Release.DeployPhaseId');
+    const projectName = tl.getVariable('System.TeamProject');
+    const taskInstanceId = getDtaInstanceId();
+
+    dtaEnvironment.environmentUri = 'dta://env/' + projectName + '/_apis/release/' + releaseId + '/' + phaseId + '/' + taskInstanceId;
+    dtaEnvironment.dtaHostLogFilePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'DTAExecutionHost.exe.log');
+    return dtaEnvironment;
+}
+
+function getDtaInstanceId(): number {
+    const taskInstanceIdString = tl.getVariable('DTA_INSTANCE_ID');
+    let taskInstanceId: number = 1;
+    if (taskInstanceIdString) {
+        const instanceId: number = Number(taskInstanceIdString);
+        if (!isNaN(instanceId)) {
+            taskInstanceId = instanceId + 1;
+        }
+    }
+    tl.setVariable('DTA_INSTANCE_ID', taskInstanceId.toString());
+    return taskInstanceId;
+}
+
 function initTestConfigurations(testConfiguration: models.TestConfigurations)
 {
     testConfiguration.pathtoCustomTestAdapters = tl.getInput('pathtoCustomTestAdapters');
@@ -51,16 +80,21 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations)
     testConfiguration.buildConfig = tl.getInput('configuration');
     testConfiguration.buildPlatform = tl.getInput('platform');
     testConfiguration.testRunTitle = tl.getInput('testRunTitle');
-    testConfiguration.vsTestVersion = tl.getInput('testPlatform');
     testConfiguration.runInParallel = tl.getBoolInput('runTestsInParallel');
     testConfiguration.runTestsInIsolation = tl.getBoolInput('runTestsInIsolation');
     testConfiguration.tiaConfig = getTiaConfiguration();
+    testConfiguration.vsTestVersion = tl.getInput('vsTestVersion');
+
+    if(utils.Helper.isNullEmptyOrUndefined(testConfiguration.vsTestVersion)) {
+        tl._writeLine('vsTestVersion is null or empty');
+        throw new Error("vsTestVersion is null or empty");
+    }
     initDataCollectorConfigurations(testConfiguration);
 }
 
 function initDataCollectorConfigurations(testConfiguration: models.TestConfigurations)
 {
-    const dataCollectors: string[] = tl.getDelimitedInput('collectDiagnosticData', ',', true);
+    const dataCollectors: string[] = tl.getDelimitedInput('collectDiagnosticData', ',', false);
     testConfiguration.codeCoverageEnabled = false;
     testConfiguration.videoCoverageEnabled = false;
     dataCollectors.forEach((collector) => {

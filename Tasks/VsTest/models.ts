@@ -29,6 +29,14 @@ export interface DtaTestConfigurations extends TestConfigurations {
     testSuites: number[];
     testPlanConfigId: number;
     customSlicingenabled: boolean;
+    dtaEnvironment: DtaEnvironment;
+}
+
+export interface DtaEnvironment {
+    tfsCollectionUrl: string;
+    patToken: string;
+    environmentUri: string;
+    dtaHostLogFilePath: string;
 }
 
 export interface VsTestConfigurations extends TestConfigurations {
@@ -38,8 +46,7 @@ export interface VsTestConfigurations extends TestConfigurations {
     vs15HelperPath: string;
 }
 
-export interface TiaConfiguration
-{
+export interface TiaConfiguration {
     tiaEnabled: boolean;
     tiaRebaseLimit: string;
     tiaFilterPaths: string;

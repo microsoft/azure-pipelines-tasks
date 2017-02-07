@@ -1,7 +1,7 @@
 {
     "id": "EF087383-EE5E-42C7-9A53-AB56C98420F9",
     "name": "VSTest",
-    "friendlyName": "Visual Studio Test Plus Plus",
+    "friendlyName": "Visual Studio Test",
     "description": "Run tests with Visual Studio test runner",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
     "category": "Test",
@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 100
+        "Patch": 11
     },
     "demands": [
         "vstest"
@@ -174,17 +174,18 @@
             "visibleRule": "testSelector = testAssemblies && runOnlyImpactedTests = true"
         },      
         {  
-           "name": "testPlatform",  
-            "type": "pickList",  
-            "label": "Test platform version",  
-            "defaultValue": "14.0",  
+            "name": "vsTestVersion",
+            "type": "pickList",
+            "label": "VSTest version",
+            "defaultValue": "14.0",
             "required": false,  
             "helpMarkDown": "The version of Visual Studio test to use.",  
-            "groupName": "executionOptions",  
-            "options": {  
-                 "15.0": "Visual Studio 2017",  
-                 "14.0": "Visual Studio 2015"  
-             }  
+             "options": {
+                 "latest": "Latest",
+                 "15.0": "Visual Studio 2017",
+                 "14.0": "Visual Studio 2015",
+                 "12.0": "Visual Studio 2013"
+            }  
         },         
         {
             "name": "runSettingsFile",
@@ -322,7 +323,7 @@
         "NoMatchingTestAssemblies": "No test assemblies found matching the pattern: %s.",
         "VstestNotFound": "Vstest of version %d is not found. Try again with a visual studio version that exists on your build agent machine.",
         "VstestFailed": "Vstest failed with error. Check logs for failures. There might be failed tests.",
-        "VstestTIANotSupported": "Install Visual Studio version 15.0.25807 or higher to run Test Impact Analysis.",
+        "VstestTIANotSupported": "Install Visual Studio 2015 update 3 or Visual Studio 2017 RC or above to run Test Impact Analysis.",
         "NoResultsToPublish": "No results found to publish.",
         "ErrorWhileReadingRunSettings": "Error occured while reading run settings file. Error : %s.",
         "ErrorWhileReadingTestSettings": "Error occured while reading test settings file. Error : %s.",
