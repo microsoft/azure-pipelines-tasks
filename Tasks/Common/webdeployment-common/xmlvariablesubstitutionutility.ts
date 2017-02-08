@@ -14,15 +14,15 @@ function getReplacableTokenFromTags(xmlNode, variableMap) {
         if(!varUtility.isObject(childNode)) {
             continue;
         }
-        for(var nodeAttributes in childNode.attrs) {
-            if (childNode.attrs[nodeAttributes].startsWith('$(ReplacableToken_') && variableMap[childNode.attrs['name']]) {
+        for(var nodeAttribute in childNode.attrs) {
+            if (childNode.attrs[nodeAttribute].startsWith('$(ReplacableToken_') && variableMap[childNode.attrs['name']]) {
                 var indexOfReplaceToken = '$(ReplacableToken_'.length;
-                var lastIndexOf_ = childNode.attrs[nodeAttributes].lastIndexOf('_');
+                var lastIndexOf_ = childNode.attrs[nodeAttribute].lastIndexOf('_');
                 if(lastIndexOf_ <= indexOfReplaceToken) {
-                    tl.debug('Attribute value is in incorrect format ! ' + childNode.attrs[nodeAttributes]);
+                    tl.debug('Attribute value is in incorrect format ! ' + childNode.attrs[nodeAttribute]);
                     continue;
                 }
-                parameterSubValue[childNode.attrs[nodeAttributes].substring(indexOfReplaceToken, lastIndexOf_)] = variableMap[childNode.attrs['name']];
+                parameterSubValue[childNode.attrs[nodeAttribute].substring(indexOfReplaceToken, lastIndexOf_)] = variableMap[childNode.attrs['name']];
             }
         }
     }
