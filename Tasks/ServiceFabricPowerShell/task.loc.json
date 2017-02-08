@@ -10,16 +10,17 @@
     "Release"
   ],
   "runsOn": [
-    "Agent",
-    "MachineGroup"
+    "Agent"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
-  "demands": [],
+  "demands": [
+    "Cmd"
+  ],
   "minimumAgentVersion": "1.95.0",
   "inputs": [
     {
