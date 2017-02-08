@@ -35,7 +35,7 @@ export async function fileTransformations(isFolderBasedDeployment: boolean, JSON
     }
 
     if(xmlVariableSubstitution) {
-        await xmlSubstitutionUtility.substituteAppSettingsVariables(folderPath);
+        await xmlSubstitutionUtility.substituteAppSettingsVariables(folderPath, isFolderBasedDeployment);
         console.log(tl.loc('XMLvariablesubstitutionappliedsuccessfully'));
     }
 

@@ -16,12 +16,13 @@ function getReplacableTokenFromTags(xmlNode, variableMap) {
         }
         for(var nodeAttributes in childNode.attrs) {
             if (childNode.attrs[nodeAttributes].startsWith('$(ReplacableToken_') && variableMap[childNode.attrs['name']]) {
+                var indexOfReplaceToken = '$(ReplacableToken_'.length;
                 var lastIndexOf_ = childNode.attrs[nodeAttributes].lastIndexOf('_');
-                if(lastIndexOf_ < 19) {
+                if(lastIndexOf_ <= indexOfReplaceToken) {
                     tl.debug('Attribute value is in incorrect format ! ' + childNode.attrs[nodeAttributes]);
                     continue;
                 }
-                parameterSubValue[childNode.attrs[nodeAttributes].substring(18, lastIndexOf_)] = variableMap[childNode.attrs['name']];
+                parameterSubValue[childNode.attrs[nodeAttributes].substring(indexOfReplaceToken, lastIndexOf_)] = variableMap[childNode.attrs['name']];
             }
         }
     }
@@ -32,7 +33,7 @@ function getReplacableTokenFromTags(xmlNode, variableMap) {
 async function substituteValueinParameterFile(parameterFilePath, parameterSubValue) {
 
     if(Object.keys(parameterSubValue).length === 0) {
-        tl.debug('No substitution varaibles found for parameters.xml');
+        tl.debug('No substitution variables found for parameters.xml');
         return;  
     }
 
@@ -69,10 +70,10 @@ async function substituteValueinParameterFile(parameterFilePath, parameterSubVal
     });
 }
 
-export async function substituteAppSettingsVariables(folderPath) {
+export async function substituteAppSettingsVariables(folderPath, isFolderBasedDeployment) {
     var configFiles = tl.findMatch(folderPath, "**/*.config");
     var parameterFilePath = path.join(folderPath, 'parameters.xml');
-    if(tl.exist(parameterFilePath)) {
+    if(!isFolderBasedDeployment && tl.exist(parameterFilePath)) {
         tl.debug('Detected parameters.xml file - XML variable substitution');
     }
     else {
