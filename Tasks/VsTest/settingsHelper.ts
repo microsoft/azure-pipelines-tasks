@@ -2,7 +2,7 @@ import tl = require('vsts-task-lib/task');
 import path = require('path');
 import Q = require('q');
 import models = require('./models')
-import utilities = require('./utilities')
+import * as utils from './helpers';
 
 var os = require('os');
 var uuid = require('node-uuid');
@@ -63,15 +63,15 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
     var settingsExt = null;
     if (settingsFile && fs.lstatSync(settingsFile).isFile() && settingsFile.split('.').pop().toLowerCase() === "testsettings") {
         settingsExt=testSettingsExt;
-        result = await utilities.getXmlContents(settingsFile);
+        result = await utils.Helper.getXmlContents(settingsFile);
         if(!result || result.TestSettings === undefined) {
             tl.warning(tl.loc('InvalidSettingsFile', settingsFile));
             settingsExt = null;
         }
-    } else if (settingsFile && utilities.pathExistsAsFile(settingsFile)) {
+    } else if (settingsFile && utils.Helper.pathExistsAsFile(settingsFile)) {
         settingsExt = runSettingsExt;
-        result = await utilities.getXmlContents(settingsFile);
-        if(!result || result.RunSettings === undefined) {            
+        result = await utils.Helper.getXmlContents(settingsFile);
+        if(!result || result.RunSettings === undefined) {
             tl.warning(tl.loc('InvalidSettingsFile', settingsFile));
             settingsExt = null;
         }
@@ -153,7 +153,7 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
     }
 
     if (result) {
-        utilities.writeXmlFile(result, settingsFile, settingsExt)
+        utils.Helper.writeXmlFile(result, settingsFile, settingsExt)
             .then(function (filename) {
                 defer.resolve(filename);
             });

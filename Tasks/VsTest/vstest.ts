@@ -5,7 +5,8 @@ import Q = require('q');
 import models = require('./models')
 import taskInputParser = require('./taskInputParser')
 import settingsHelper = require('./settingsHelper')
-import utilities = require('./utilities')
+import versionFinder = require('./versionFinder')
+import * as utils from './helpers';
 
 var os = require('os');
 var regedit = require('regedit');
@@ -30,7 +31,7 @@ export async function startTest() {
     try {
         vstestConfig = taskInputParser.getvsTestConfigurations();
         tiaConfig = vstestConfig.tiaConfig;
-        vsVersionDetails = await utilities.locateVSTestConsole(vstestConfig);
+        vsVersionDetails = await versionFinder.locateVSTestConsole(vstestConfig);
         testAssemblyFiles = getTestAssemblies();
         if (testAssemblyFiles && testAssemblyFiles.length !== 0) {
             getTestResultsDirectory(vstestConfig.settingsFile, path.join(workingDirectory, 'TestResults'))
@@ -130,7 +131,7 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
     }
     if (settingsFile && pathExistsAsFile(settingsFile)) {
         argsArray.push("/Settings:" + settingsFile);
-        utilities.readFileContents(settingsFile, "utf-8").then(function (settings) {
+        utils.Helper.readFileContents(settingsFile, "utf-8").then(function (settings) {
         tl.debug("Running VsTest with settings : " + settings);
         });
     }
@@ -841,7 +842,7 @@ function overrideTestRunParametersIfRequired(settingsFile: string): Q.Promise<st
         }
     });
 
-    utilities.readFileContents(vstestConfig.settingsFile, "utf-8")
+    utils.Helper.readFileContents(vstestConfig.settingsFile, "utf-8")
         .then(function (xmlContents) {
             var parser = new xml2js.Parser();
             parser.parseString(xmlContents, function (err, result) {
@@ -864,7 +865,7 @@ function overrideTestRunParametersIfRequired(settingsFile: string): Q.Promise<st
                     tl.debug("Overriding test run parameters.");
                     var builder = new xml2js.Builder();
                     var overridedRunSettings = builder.buildObject(result);
-                    utilities.saveToFile(overridedRunSettings, runSettingsExt)
+                    utils.Helper.saveToFile(overridedRunSettings, runSettingsExt)
                         .then(function (fileName) {
                             defer.resolve(fileName);
                         })
@@ -912,7 +913,7 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
         return defer.promise;
     }
 
-    utilities.readFileContents(vstestConfig.settingsFile, "utf-8")
+    utils.Helper.readFileContents(vstestConfig.settingsFile, "utf-8")
         .then(function (xmlContents) {
             var parser = new xml2js.Parser();
             parser.parseString(xmlContents, function (err, result) {
@@ -1018,7 +1019,7 @@ function getTIALevel() {
 }
 
 function responseContainsNoTests(filePath: string): Q.Promise<boolean> {
-    return utilities.readFileContents(filePath, "utf-8").then(function (resp) {
+    return utils.Helper.readFileContents(filePath, "utf-8").then(function (resp) {
         if (resp === "/Tests:") {
             return true;
         }
