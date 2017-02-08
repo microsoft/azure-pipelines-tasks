@@ -177,7 +177,7 @@
       "name": "vsTestVersion",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.vsTestVersion",
-      "defaultValue": "14.0",
+      "defaultValue": "15.0",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.vsTestVersion",
       "options": {
@@ -185,7 +185,8 @@
         "15.0": "Visual Studio 2017",
         "14.0": "Visual Studio 2015",
         "12.0": "Visual Studio 2013"
-      }
+      },
+      "groupName": "executionOptions"
     },
     {
       "name": "runSettingsFile",
@@ -238,19 +239,13 @@
       "groupName": "executionOptions"
     },
     {
-      "name": "collectDiagnosticData",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.collectDiagnosticData",
+      "name": "codeCoverage",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.codeCoverage",
+      "defaultValue": "False",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.collectDiagnosticData",
-      "groupName": "executionOptions",
-      "properties": {
-        "MultiSelectFlatList": "True"
-      },
-      "options": {
-        "video": "Video",
-        "codeCoverage": "Code Coverage"
-      }
+      "helpMarkDown": "ms-resource:loc.input.help.codeCoverage",
+      "groupName": "executionOptions"
     },
     {
       "name": "testRunTitle",
