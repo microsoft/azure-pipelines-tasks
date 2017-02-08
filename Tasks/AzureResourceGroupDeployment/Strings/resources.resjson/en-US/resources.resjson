@@ -155,5 +155,6 @@
   "loc.messages.DeletingMGAgentFromVMs": "Deleting machine group agent from the resource group virutal machines.",
   "loc.messages.DeletingMGAgentOnVMs": "Deleting machine group agent on virtual machines",
   "loc.messages.AddingExtensionFailed": "Addition of extension on vm %s failed",
-  "loc.messages.TimeoutWhileWaiting": "Timed out while waiting"
+  "loc.messages.TimeoutWhileWaiting": "Timed out while waiting",
+  "loc.messages.InvalidTemplateLocation": "The template location supplied is invalid. Task only supports 'Linked artifact' or 'URL of the file'"
 }
