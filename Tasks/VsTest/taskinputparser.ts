@@ -93,11 +93,11 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     testConfiguration.tiaConfig = getTiaConfiguration();
     testConfiguration.testSelection = tl.getInput('testSelector');
 
-    if(testConfiguration.testSelection.toLowerCase() === 'testPlan') {    
+    if(testConfiguration.testSelection.toLowerCase() === 'testplan') {    
         testConfiguration.testplan = parseInt(tl.getInput('testPlan'));
         testConfiguration.testPlanConfigId = parseInt(tl.getInput('testConfiguration'));
         
-        var testSuiteStrings = tl.getInput('testSuite').split(',');    
+        var testSuiteStrings = tl.getDelimitedInput('testSuite', ',', true);
         testConfiguration.testSuites = new Array<number>();
         testSuiteStrings.forEach(element => {        
         testConfiguration.testSuites.push(parseInt(element));
