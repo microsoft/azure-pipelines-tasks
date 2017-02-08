@@ -5,13 +5,13 @@ import * as httpClient from 'vso-node-api/HttpClient';
 import * as restClient from 'vso-node-api/RestClient';
 
 var httpObj = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
-var authUrl = 'https://login.windows.net/';
+var defaultAuthUrl = 'https://login.windows.net/';
 var azureApiVersion = '2016-09-01';
 	
 function getAccessToken(endpoint, endpointUrl: string): Q.Promise<string> {
 
 	var deferred = Q.defer<string>();
-	var envAuthUrl = endpoint.envAuthUrl;
+	var envAuthUrl = (endpoint.envAuthUrl) ? endpoint.envAuthUrl : defaultAuthUrl;
 	var authorityUrl = envAuthUrl + endpoint.tenantID + "/oauth2/token/";
 
 	var post_data = querystring.stringify({
