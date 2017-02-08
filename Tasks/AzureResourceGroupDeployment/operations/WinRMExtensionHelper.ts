@@ -152,11 +152,12 @@ export class WinRMExtensionHelper {
         });
     }
 
-    private async AddNetworkSecurityRuleConfigForWinRMPort() {
+    private async AddNetworkSecurityRuleConfigForWinRMPort() : Promise<any> {
         var ruleName: string = "VSO-Custom-WinRM-Https-Port";
         var rulePriority: number = 3986;
         var winrmHttpsPort: string = "5986";
         var securityGroups = await this.GetNetworkSecurityGroups();
+        var promises = [];
         if (securityGroups && securityGroups.length) {
             tl.debug("Trying to add a network security group rule");
             for (var i = 0; i < securityGroups.length; i++) {
@@ -165,9 +166,19 @@ export class WinRMExtensionHelper {
                 var securityGrpName = securityGrp["name"];
 
                 tl.debug("Getting the network security rule config " + ruleName + " under security group " + securityGrpName);
-                await this.TryAddNetworkSecurityRule(securityGrpName, ruleName, rulePriority, winrmHttpsPort);
+                promises.push(this.TryAddNetworkSecurityRule(securityGrpName, ruleName, rulePriority, winrmHttpsPort));
             }
         }
+
+        return new Promise<any>((resolve, reject) => {
+            Promise.all(promises).then(() => {
+                tl.debug("Finished adding rules to the network security groups");
+                resolve(null);
+            }).catch((exception) => {
+                tl.debug("Failed to add the network security rules with the exception " + exception);
+                reject(exception);
+            });
+        });
     }
 
     private async AddInboundNetworkSecurityRule(securityGrpName, ruleName, rulePriority, winrmHttpsPort) {
