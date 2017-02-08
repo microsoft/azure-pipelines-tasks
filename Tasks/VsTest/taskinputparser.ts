@@ -12,7 +12,6 @@ export function getDistributedTestConfigurations(): models.DtaTestConfigurations
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     const dtaConfiguration = {} as models.DtaTestConfigurations;
     initTestConfigurations(dtaConfiguration);
-    dtaConfiguration.onDemandTestRunId = tl.getInput('tcmTestRun');    
     if(dtaConfiguration.tiaConfig.tiaEnabled) {
         tl.warning(tl.loc('tiaNotSupportedInDta'));
         dtaConfiguration.tiaConfig.tiaEnabled = false;
@@ -20,6 +19,15 @@ export function getDistributedTestConfigurations(): models.DtaTestConfigurations
     if(dtaConfiguration.runTestsInIsolation) {
         tl.warning(tl.loc('runTestInIsolationNotSupported'));
     }
+
+    dtaConfiguration.numberOfAgentsInPhase = 0;
+    const totalJobsInPhase = parseInt(tl.getVariable('SYSTEM_TOTALJOBSINPHASE'));
+    if(!isNaN(totalJobsInPhase)) {
+        dtaConfiguration.numberOfAgentsInPhase = totalJobsInPhase;
+    }
+
+    dtaConfiguration.onDemandTestRunId = tl.getInput('tcmTestRun');
+
     dtaConfiguration.dtaEnvironment = initDtaEnvironment();
     return dtaConfiguration;
 }
@@ -69,8 +77,7 @@ function getDtaInstanceId(): number {
     return taskInstanceId;
 }
 
-function initTestConfigurations(testConfiguration: models.TestConfigurations)
-{
+function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     testConfiguration.pathtoCustomTestAdapters = tl.getInput('pathtoCustomTestAdapters');
     testConfiguration.sourceFilter = tl.getDelimitedInput('testAssemblyVer2', '\n', true);
     testConfiguration.testDropLocation = tl.getInput('searchFolder');  
@@ -89,28 +96,11 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations)
         tl._writeLine('vsTestVersion is null or empty');
         throw new Error("vsTestVersion is null or empty");
     }
-    initDataCollectorConfigurations(testConfiguration);
+
+    testConfiguration.codeCoverageEnabled = tl.getBoolInput('codeCoverage');
 }
 
-function initDataCollectorConfigurations(testConfiguration: models.TestConfigurations)
-{
-    const dataCollectors: string[] = tl.getDelimitedInput('collectDiagnosticData', ',', false);
-    testConfiguration.codeCoverageEnabled = false;
-    testConfiguration.videoCoverageEnabled = false;
-    dataCollectors.forEach((collector) => {
-        switch(collector.toLowerCase()) {
-            case 'codecoverage':
-                testConfiguration.codeCoverageEnabled = true;
-                break;
-            case 'video':
-                testConfiguration.videoCoverageEnabled = true;
-                break;
-        }
-    });
-}
-
-function getTiaConfiguration() : models.TiaConfiguration
-{
+function getTiaConfiguration() : models.TiaConfiguration {
     const tiaConfiguration = {} as models.TiaConfiguration;
     tiaConfiguration.tiaEnabled =  tl.getBoolInput('runOnlyImpactedTests');
     tiaConfiguration.tiaRebaseLimit = tl.getInput('runAllTestsAfterXBuilds');
