@@ -43,7 +43,7 @@ function Initialize-AzureSubscription {
     Set-UserAgent
 
     $environmentName = "AzureCloud"
-    if( $Endpoint.Data.Environment ) {
+    if($Endpoint.Data.Environment) {
         $environmentName = $Endpoint.Data.Environment
     }
     
@@ -126,7 +126,7 @@ function Initialize-AzureSubscription {
         } else {
             # Else, this is AzureRM.
             try {
-                Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential"
+                Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -EnvironmentName $environmentName"
                 $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -EnvironmentName $environmentName
             } catch {
                 # Provide an additional, custom, credentials-related error message.
