@@ -177,7 +177,7 @@
             "name": "vsTestVersion",
             "type": "pickList",
             "label": "VSTest version",
-            "defaultValue": "14.0",
+            "defaultValue": "15.0",
             "required": false,  
             "helpMarkDown": "The version of Visual Studio test to use.",  
             "groupName": "executionOptions",
@@ -186,7 +186,8 @@
                  "15.0": "Visual Studio 2017",
                  "14.0": "Visual Studio 2015",
                  "12.0": "Visual Studio 2013"
-            }  
+            },
+            "groupName": "executionOptions"
         },         
         {
             "name": "runSettingsFile",
@@ -239,19 +240,13 @@
             "groupName": "executionOptions"
         }, 
         {  
-           "name": "collectDiagnosticData",  
-            "type": "pickList", 
-            "label": "Collect diagnostic data",
+           "name": "codeCoverage",  
+            "type": "boolean",
+            "label": "Code Coverage Enabled",
+            "defaultValue": "False",
             "required": false,  
-            "helpMarkDown": "******",  
-            "groupName": "executionOptions",
-            "properties": {
-                "MultiSelectFlatList": "True"
-            },
-            "options": {  
-                 "video": "Video",  
-                 "codeCoverage": "Code Coverage"
-             }            
+            "helpMarkDown": "Collect code coverage information from the Test run.",  
+            "groupName": "executionOptions"      
         },
         {
             "name": "testRunTitle",

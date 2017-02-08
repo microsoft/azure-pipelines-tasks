@@ -31,6 +31,7 @@ export interface DtaTestConfigurations extends TestConfigurations {
     testConfigurationMapping: string; // TODO : What is this?
     customSlicingenabled: boolean;
     dtaEnvironment: DtaEnvironment;
+    numberOfAgentsInPhase: number;
 }
 
 export interface DtaEnvironment {
