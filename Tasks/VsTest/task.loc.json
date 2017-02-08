@@ -180,6 +180,7 @@
       "defaultValue": "14.0",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.vsTestVersion",
+      "groupName": "executionOptions",
       "options": {
         "latest": "Latest",
         "15.0": "Visual Studio 2017",

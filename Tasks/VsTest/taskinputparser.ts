@@ -8,7 +8,7 @@ import utils = require('./helpers');
 let os = require('os');
 let uuid = require('node-uuid');
 
-export function getDistributedTestConfigurations(): models.DtaTestConfigurations {
+export function getDistributedTestConfigurations(isBuild : boolean): models.DtaTestConfigurations {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     const dtaConfiguration = {} as models.DtaTestConfigurations;
     initTestConfigurations(dtaConfiguration);
@@ -20,7 +20,7 @@ export function getDistributedTestConfigurations(): models.DtaTestConfigurations
     if(dtaConfiguration.runTestsInIsolation) {
         tl.warning(tl.loc('runTestInIsolationNotSupported'));
     }
-    dtaConfiguration.dtaEnvironment = initDtaEnvironment();
+    dtaConfiguration.dtaEnvironment = initDtaEnvironment(isBuild);
     return dtaConfiguration;
 }
 
@@ -34,7 +34,7 @@ export function getvsTestConfigurations(): models.VsTestConfigurations {
     return vsTestConfiguration;
 }
 
-function initDtaEnvironment(): models.DtaEnvironment {
+function initDtaEnvironment(isBuild: boolean): models.DtaEnvironment {
     const dtaEnvironment = {} as models.DtaEnvironment;
     dtaEnvironment.tfsCollectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
     dtaEnvironment.patToken = tl.getEndpointAuthorization('SystemVssConnection', true).parameters['AccessToken'];
@@ -44,8 +44,14 @@ function initDtaEnvironment(): models.DtaEnvironment {
     const phaseId = tl.getVariable('Release.DeployPhaseId');
     const projectName = tl.getVariable('System.TeamProject');
     const taskInstanceId = getDtaInstanceId();
+    
+    if(isBuild) {
+        const buildId = tl.getVariable('Build.BuildId');
+        dtaEnvironment.environmentUri = 'dta://env/' + projectName + '/_apis/build/' + buildId + '/' + taskInstanceId;
+    } else {
+        dtaEnvironment.environmentUri = 'dta://env/' + projectName + '/_apis/release/' + releaseId + '/' + phaseId + '/' + taskInstanceId;
+    }
 
-    dtaEnvironment.environmentUri = 'dta://env/' + projectName + '/_apis/release/' + releaseId + '/' + phaseId + '/' + taskInstanceId;
     dtaEnvironment.dtaHostLogFilePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'DTAExecutionHost.exe.log');
     return dtaEnvironment;
 }
@@ -77,8 +83,20 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations)
     testConfiguration.runInParallel = tl.getBoolInput('runTestsInParallel');
     testConfiguration.runTestsInIsolation = tl.getBoolInput('runTestsInIsolation');
     testConfiguration.tiaConfig = getTiaConfiguration();
-    testConfiguration.vsTestVersion = tl.getInput('vsTestVersion');
+    testConfiguration.testSelection = tl.getInput('testSelector');
 
+    if(testConfiguration.testSelection.toLowerCase() === 'testPlan') {    
+        testConfiguration.testplan = parseInt(tl.getInput('testPlan'));
+        testConfiguration.testPlanConfigId = parseInt(tl.getInput('testConfiguration'));
+        
+        var testSuiteStrings = tl.getInput('testSuite').split(',');    
+        testConfiguration.testSuites = new Array<number>();
+        testSuiteStrings.forEach(element => {        
+        testConfiguration.testSuites.push(parseInt(element));
+        });
+    }
+
+    testConfiguration.vsTestVersion = tl.getInput('vsTestVersion');    
     if(utils.Helper.isNullEmptyOrUndefined(testConfiguration.vsTestVersion)) {
         tl._writeLine('vsTestVersion is null or empty');
         throw new Error("vsTestVersion is null or empty");

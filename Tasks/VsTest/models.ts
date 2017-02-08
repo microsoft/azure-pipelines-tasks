@@ -20,15 +20,15 @@ export interface TestConfigurations {
     runInParallel: boolean;
     runTestsInIsolation: boolean;
     vs15HelperPath: string;
+    testSelection: string; // "testPlan" as selection string
+    testplan: number;
+    testSuites: number[];
+    testPlanConfigId: number;
 }
 
 export interface DtaTestConfigurations extends TestConfigurations {
     onDemandTestRunId: string;
     testConfigurationMapping: string; // TODO : What is this?
-    testSelection: string; // "testPlan" as selection string
-    testplan: number;
-    testSuites: number[];
-    testPlanConfigId: number;
     customSlicingenabled: boolean;
     dtaEnvironment: DtaEnvironment;
 }

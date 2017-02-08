@@ -64,7 +64,7 @@ function getLatestVSTestConsolePathFromRegistry(): Q.Promise<models.ExecutabaleI
 
 function getVSTestConsole15Path(vs15HelperPath: string): string {
     let powershellTool = tl.tool('powershell');
-    let powershellArgs = ['-file', vs15HelperPath]
+    let powershellArgs = ['-NonInteractive', '-ExecutionPolicy', 'Unrestricted', '-file', vs15HelperPath]
     powershellTool.arg(powershellArgs);
     let xml = powershellTool.execSync().stdout;
     let deferred = Q.defer<string>();

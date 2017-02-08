@@ -180,6 +180,7 @@
             "defaultValue": "14.0",
             "required": false,  
             "helpMarkDown": "The version of Visual Studio test to use.",  
+            "groupName": "executionOptions",
              "options": {
                  "latest": "Latest",
                  "15.0": "Visual Studio 2017",
