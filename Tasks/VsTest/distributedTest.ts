@@ -8,6 +8,7 @@ import * as models from './models';
 import * as settingsHelper from './settingsHelper';
 import * as utils from './helpers';
 import * as ta from './testAgent';
+import versionFinder = require('./versionFinder')
 
 export class DistributedTest {
     constructor(dtaTestConfig: models.DtaTestConfigurations) {
@@ -24,7 +25,7 @@ export class DistributedTest {
 
         try {
             const agentId = await ta.TestAgent.createAgent(this.dtaTestConfig.dtaEnvironment, 3);
-            this.dtaPid = this.startDtaExecutionHost(agentId);
+            this.dtaPid =  await this.startDtaExecutionHost(agentId);
             await this.startDtaTestRun();
             try {
                 // TODO: ranjanar: fixasap : This dangerous - Note that the PID only uniquely identifies your child process 
@@ -41,7 +42,7 @@ export class DistributedTest {
         }
     }
 
-    private startDtaExecutionHost(agentId: any): number {
+    private async startDtaExecutionHost(agentId: any) {
         tl.rmRF(this.dtaTestConfig.dtaEnvironment.dtaHostLogFilePath, true);
         const envVars: { [key: string]: string; } = process.env;
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AccessToken', this.dtaTestConfig.dtaEnvironment.patToken);
@@ -53,6 +54,15 @@ export class DistributedTest {
             this.dtaTestConfig.vsTestVersion = '15.0';
         }
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestPlatformVersion', this.dtaTestConfig.vsTestVersion);
+        
+        var exeInfo = await versionFinder.locateTestWindow(this.dtaTestConfig);
+        if(exeInfo) {
+            tl.debug("Adding env var DTA.TestWindow.Path = " + exeInfo.location);
+            utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestWindow.Path', exeInfo.location);
+        } else {
+            tl.error(tl.loc('VstestNotFound', this.dtaTestConfig.vsTestVersion));
+        }
+        
 
         // We are logging everything to a DTAExecutionHost.exe.log file and reading it at the end and adding to the build task debug logs
         // So we are not redirecting the IO streams from the DTAExecutionHost.exe process

@@ -180,13 +180,13 @@
       "defaultValue": "15.0",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.vsTestVersion",
+      "groupName": "executionOptions",
       "options": {
         "latest": "Latest",
         "15.0": "Visual Studio 2017",
         "14.0": "Visual Studio 2015",
         "12.0": "Visual Studio 2013"
-      },
-      "groupName": "executionOptions"
+      }
     },
     {
       "name": "runSettingsFile",
@@ -323,7 +323,7 @@
     "ErrorWhileReadingRunSettings": "ms-resource:loc.messages.ErrorWhileReadingRunSettings",
     "ErrorWhileReadingTestSettings": "ms-resource:loc.messages.ErrorWhileReadingTestSettings",
     "RunInParallelNotSupported": "ms-resource:loc.messages.RunInParallelNotSupported",
-    "FailedToSetRunConfiguration": "ms-resource:loc.messages.FailedToSetRunConfiguration",
+    "InvalidSettingsFile": "ms-resource:loc.messages.InvalidSettingsFile",
     "UpdateOneOrHigherRequired": "ms-resource:loc.messages.UpdateOneOrHigherRequired",
     "ErrorOccuredWhileSettingRegistry": "ms-resource:loc.messages.ErrorOccuredWhileSettingRegistry",
     "ErrorWhileSettingTestImpactCollectorTestSettings": "ms-resource:loc.messages.ErrorWhileSettingTestImpactCollectorTestSettings",

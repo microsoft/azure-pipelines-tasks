@@ -19,15 +19,16 @@ export interface TestConfigurations {
     tiaConfig: TiaConfiguration;
     runInParallel: boolean;
     runTestsInIsolation: boolean;
+    vs15HelperPath: string;
+    testSelection: string; // "testPlan" as selection string
+    testplan: number;
+    testSuites: number[];
+    testPlanConfigId: number;
 }
 
 export interface DtaTestConfigurations extends TestConfigurations {
     onDemandTestRunId: string;
     testConfigurationMapping: string; // TODO : What is this?
-    testSelection: string; // "testPlan" as selection string
-    testplan: number;
-    testSuites: number[];
-    testPlanConfigId: number;
     customSlicingenabled: boolean;
     dtaEnvironment: DtaEnvironment;
     numberOfAgentsInPhase: number;
@@ -43,8 +44,7 @@ export interface DtaEnvironment {
 export interface VsTestConfigurations extends TestConfigurations {
     publishRunAttachments: string;    
     vstestDiagFile: string;
-    ignoreVstestFailure: string;
-    vs15HelperPath: string;
+    ignoreVstestFailure: string;    
 }
 
 export interface TiaConfiguration {

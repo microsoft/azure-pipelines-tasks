@@ -59,8 +59,8 @@
   "loc.messages.NoResultsToPublish": "No results found to publish.",
   "loc.messages.ErrorWhileReadingRunSettings": "Error occured while reading run settings file. Error : %s.",
   "loc.messages.ErrorWhileReadingTestSettings": "Error occured while reading test settings file. Error : %s.",
-  "loc.messages.RunInParallelNotSupported": "Run in Parallel is not supported with testsettings file.",
-  "loc.messages.FailedToSetRunConfiguration": "The specified settings file is invalid. Ignoring it.",
+  "loc.messages.RunInParallelNotSupported": "Running tests in parallel on multi-core machines is not supported with testsettings file. This option will be ignored.",
+  "loc.messages.InvalidSettingsFile": "The specified settings file %s is invalid. This file will be ignored",
   "loc.messages.UpdateOneOrHigherRequired": "Install Visual Studio 2015 Update 1 or higher on your build agent machine to run the tests in parallel.",
   "loc.messages.ErrorOccuredWhileSettingRegistry": "Error occured while setting registry key, Error: %s.",
   "loc.messages.ErrorWhileSettingTestImpactCollectorTestSettings": "Error occurred while setting Test Impact Collector in test settings file.",
@@ -79,6 +79,6 @@
   "loc.messages.NoIncludePatternFound": "No include pattern found. Specify atleast one include pattern to search test assemblies.",
   "loc.messages.ErrorWhileUpdatingSettings": "Error occurred while updating the settings file. Using the specified settings file.",
   "loc.messages.VideoCollectorNotSupportedWithRunSettings": "Video collector is not supported with run settings.",
-  "loc.messages.runTestInIsolationNotSupported": "Running tests in isolation is not supported for multi-agent scenario.",
-  "loc.messages.tiaNotSupportedInDta": "Running only impacted tests is not supported for multi-agent scenario."
+  "loc.messages.runTestInIsolationNotSupported": "Running tests in isolation is not supported when using the multi-agent phase setting. This option will be ignored.",
+  "loc.messages.tiaNotSupportedInDta": "Running only impacted tests is not supported when using the multi-agent phase setting. This option will be ignored."
 }
