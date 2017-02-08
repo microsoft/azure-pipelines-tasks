@@ -65,8 +65,8 @@ export class AzureRGTaskParameters {
         var servicePrincipalKey: string = endpointAuth.parameters["serviceprincipalkey"];
         var tenantId: string = endpointAuth.parameters["tenantid"];
         var armUrl: string = tl.getEndpointUrl(connectedService, true);
-        var envAuthUrl: string = tl.getEndpointDataParameter(connectedService, 'environmentAuthorityUrl', true);
-        var credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalKey, armUrl, envAuthUrl);
+        var envAuthorityUrl: string = tl.getEndpointDataParameter(connectedService, 'environmentAuthorityUrl', true);
+        var credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalKey, armUrl, envAuthorityUrl);
         return credentials;
     }
 }
