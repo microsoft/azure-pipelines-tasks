@@ -6,7 +6,6 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
-    "Preview",
     "Release"
   ],
   "runsOn": [
@@ -15,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 1,
+    "Minor": 2,
     "Patch": 2
   },
   "demands": [],
@@ -37,7 +36,7 @@
     },
     {
       "name": "DacpacFile",
-      "type": "string",
+      "type": "filePath",
       "label": "ms-resource:loc.input.label.DacpacFile",
       "required": true,
       "visibleRule": "TaskType = dacpac",
@@ -167,6 +166,8 @@
     "SQLPowershellModuleisnotinstalledonyouragentmachine": "ms-resource:loc.messages.SQLPowershellModuleisnotinstalledonyouragentmachine",
     "InstallPowershellToolsharedManagementObjectsdependency": "ms-resource:loc.messages.InstallPowershellToolsharedManagementObjectsdependency",
     "RestartagentmachineafterinstallingtoolstoregisterModulepathupdates": "ms-resource:loc.messages.RestartagentmachineafterinstallingtoolstoregisterModulepathupdates",
-    "RunImportModuleSQLPSonyouragentPowershellprompt": "ms-resource:loc.messages.RunImportModuleSQLPSonyouragentPowershellprompt"
+    "RunImportModuleSQLPSonyouragentPowershellprompt": "ms-resource:loc.messages.RunImportModuleSQLPSonyouragentPowershellprompt",
+    "Nofileswerefoundtodeploywithsearchpattern0": "ms-resource:loc.messages.Nofileswerefoundtodeploywithsearchpattern0",
+    "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "ms-resource:loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone"
   }
 }

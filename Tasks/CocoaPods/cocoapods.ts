@@ -33,8 +33,8 @@ async function run() {
         }
 
         // Explicitly specify a project directory?
-        var projectDirectory: string = tl.getPathInput('projectDirectory', false, true);
-        if (projectDirectory) {
+        if (tl.filePathSupplied('projectDirectory')) {
+            var projectDirectory: string = tl.getPathInput('projectDirectory', false, true);
             pod.arg('--project-directory=' + projectDirectory);
         }
 

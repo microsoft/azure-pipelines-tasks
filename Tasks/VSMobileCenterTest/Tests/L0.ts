@@ -42,17 +42,17 @@ describe('VSMobileCenterTest L0 Suite', function () {
         done();
     });
 
-    it('Positive path: upload Expresso test with service endpoint', (done: MochaDone) => {
+    it('Positive path: upload Espresso test with service endpoint', (done: MochaDone) => {
         this.timeout(2000);
 
-        let tp = path.join(__dirname, 'L0ExpressoPass.js');
+        let tp = path.join(__dirname, 'L0EspressoPass.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.invokedToolCount === 2, 'Should have run test prepare and test run');
-        assert(tr.ran("/path/to/mobile-center test prepare expresso --artifacts-dir " + 
-            "/path/to/artifactsDir --build-dir /path/to/expresso_build_dir --test-apk-path /path/to/expresso_test_apk --debug --quiet"), 
+        assert(tr.ran("/path/to/mobile-center test prepare espresso --artifacts-dir " + 
+            "/path/to/artifactsDir --build-dir /path/to/espresso_build_dir --test-apk-path /path/to/espresso_test_apk --debug --quiet"), 
             "Should have run prepare");
 
         assert(tr.ran("/path/to/mobile-center test run manifest " + 
@@ -116,24 +116,24 @@ describe('VSMobileCenterTest L0 Suite', function () {
         done();
     });
 
-    it('Negative path: with username and password, should always logout even test prepare failed', (done: MochaDone) => {
+    it('Negative path: with username and password, should always logout even when test run failed', (done: MochaDone) => {
         this.timeout(2000);
 
-        let tp = path.join(__dirname, 'L0UITestFailPrepare.js');
+        let tp = path.join(__dirname, 'L0UITestFailRun.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();
         assert(tr.failed, 'task should have failed');
-        assert(tr.invokedToolCount === 3, 'Should have run login, test prepare and logout');
+        assert.equal(tr.invokedToolCount, 3, 'Should have run login, test prepare and logout');
         assert(tr.ran("/path/to/mobile-center login -u MyUsername -p MyPassword --quiet"),
             "Should have run login");
 
         assert(tr.ran("/path/to/mobile-center logout --quiet"),
             "Should have run logout");
 
-        assert(tr.ran("/path/to/mobile-center test prepare uitest --artifacts-dir " + 
-            "/path/to/artifactsDir --app-path /test/path/to/my.ipa --build-dir /path/to/uitest_build_dir --myopts --quiet"), 
-            "Should have run prepare");
+        assert(tr.ran("/path/to/mobile-center test run manifest --manifest-path " + 
+            "/path/to/artifactsDir/manifest.json --app-path /test/path/to/my.ipa --app testuser/testapp --devices 1234abcd --test-series master --dsym-dir /path/to/dsym --locale nc_US --quiet"), 
+            "Should have run 'run'");
 
         done();
     });

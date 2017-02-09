@@ -1,0 +1,297 @@
+{
+	"id": "1b2aec60-dc49-11e6-9b76-63056e018cac",
+	"name": "IISWebAppManagementOnMachineGroup",
+	"friendlyName": "IIS WebApp Manage(Preview)",
+	"description": "Create or update a Website, Web App, Virtual Directories, and Application Pool",
+	"author": "Microsoft Corporation",
+	"helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=839731)",
+	"category": "Deploy",
+	"visibility": [
+		"Release"
+	],
+	"runsOn": [
+		"MachineGroup"
+	],
+	"demands": [],
+	"version": {
+		"Major": 0,
+		"Minor": 0,
+		"Patch": 2
+	},
+	"minimumAgentVersion": "1.95.0",
+	"instanceNameFormat": "Manage IIS Web App: $(WebsiteName)",
+	"groups": [
+		{
+			"name": "website",
+			"displayName": "Website",
+			"isExpanded": true
+		},
+		{
+			"name": "applicationPool",
+			"displayName": "Application Pool",
+			"isExpanded": true
+		},
+		{
+			"name": "advanced",
+			"displayName": "Advanced",
+			"isExpanded": false
+		}
+	],
+	"inputs": [
+		{
+			"name": "CreateWebsite",
+			"type": "boolean",
+			"label": "Create or Update website",
+			"required": false,
+			"groupName": "website",
+			"defaultValue": "false",
+			"helpMarkDown": "Select the option to create a website or to update an existing website."
+		},
+		{
+			"name": "WebsiteName",
+			"type": "string",
+			"label": "Website name",
+			"required": true,
+			"groupName": "website",
+			"defaultValue": "",
+			"visibleRule": "CreateWebsite = true",
+			"helpMarkDown": "Provide the name of the IIS website. It will be created if new, or else the existing website will be updated. <br>For deploying a Web project to the website, use the same name as specified in the Web deploy zip package file. If in the Web App deployment task, a Parameter file and Override Parameter settings are also specified, then the website name that the app will be deployed to be, is the one specified in the Override Parameters setting.<br>"
+		},
+		{
+			"name": "WebsitePhysicalPath",
+			"type": "string",
+			"label": "Physical path",
+			"required": true,
+			"groupName": "website",
+			"defaultValue": "%SystemDrive%\\inetpub\\wwwroot",
+			"visibleRule": "CreateWebsite = true",
+			"helpMarkDown": "Provide the physical path where the website content will be stored. The content can reside on the local Computer, or in a remote directory, or on a network share, like C:\\Fabrikam or \\\\\\\\ContentShare\\Fabrikam."
+		},
+		{
+			"name": "WebsitePhysicalPathAuth",
+			"type": "pickList",
+			"label": "Physical path authentication",
+			"required": true,
+			"groupName": "website",
+			"defaultValue": "Application User (Pass-through)",
+			"visibleRule": "CreateWebsite = true",
+			"options": {
+				"WebsiteUserPassThrough": "Application User (Pass-through)",
+				"WebsiteWindowsAuth": "Windows Authentication"
+			},
+			"helpMarkDown": "Select the authentication mechanism that will be used to access the physical path of the website."
+		},
+		{
+			"name": "WebsiteAuthUserName",
+			"type": "string",
+			"label": "Username",
+			"required": true,
+			"groupName": "website",
+			"defaultValue": "",
+			"visibleRule": "WebsitePhysicalPathAuth = WebsiteWindowsAuth",
+			"helpMarkDown": "Provide the user name that will be used to access the website's physical path."
+		},
+		{
+			"name": "WebsiteAuthUserPassword",
+			"type": "string",
+			"label": "Password",
+			"required": false,
+			"groupName": "website",
+			"defaultValue": "",
+			"visibleRule": "WebsitePhysicalPathAuth = WebsiteWindowsAuth",
+			"helpMarkDown": "Provide the user's password that will be used to access the website's physical path. If you are using a gMSA, this is not required."
+		},
+		{
+			"name": "AddBinding",
+			"type": "boolean",
+			"label": "Add binding",
+			"required": false,
+			"groupName": "website",
+			"defaultValue": "true",
+			"visibleRule": "CreateWebsite = true",
+			"helpMarkDown": "Select the option to add port binding for the website."
+		},
+		{
+			"name": "Protocol",
+			"type": "pickList",
+			"label": "Protocol",
+			"required": true,
+			"groupName": "website",
+			"visibleRule": "AddBinding = true",
+			"defaultValue": "http",
+			"options": {
+				"https": "https",
+				"http": "http"
+			},
+			"helpMarkDown": "Select HTTP for the website to have an HTTP binding, or select HTTPS for the website to have a Secure Sockets Layer (SSL) binding."
+		},
+		{
+			"name": "IPAddress",
+			"type": "string",
+			"label": "IP address",
+			"required": true,
+			"groupName": "website",
+			"visibleRule": "AddBinding = true",
+			"defaultValue": "All Unassigned",
+			"helpMarkDown": "Provide an IP address that end-users can use to access this website. <br>If 'All Unassigned' is selected, then the website will respond to requests for all IP addresses on the port and for the host name, unless another website on the server has a binding on the same port but with a specific IP address.<br>"
+		},
+		{
+			"name": "Port",
+			"type": "string",
+			"label": "Port",
+			"required": true,
+			"visibleRule": "AddBinding = true",
+			"groupName": "website",
+			"defaultValue": "80",
+			"helpMarkDown": "Provide the port, where the Hypertext Transfer Protocol Stack (HTTP.sys) will listen to the website requests."
+		},
+		{
+			"name": "ServerNameIndication",
+			"type": "boolean",
+			"label": "Server Name Indication required",
+			"required": false,
+			"groupName": "website",
+			"defaultValue": "false",
+			"visibleRule": "Protocol = https",
+			"helpMarkDown": "Select the option to set the Server Name Indication (SNI) for the website. <br>SNI extends the SSL and TLS protocols to indicate the host name that the clients are attempting to connect to. It allows, multiple secure websites with different certificates, to use the same IP address.<br>"
+		},
+		{
+			"name": "HostNameWithOutSNI",
+			"type": "string",
+			"label": "Host name",
+			"required": false,
+			"groupName": "website",
+			"defaultValue": "",
+			"visibleRule": "ServerNameIndication = false",
+			"helpMarkDown": "Enter a host name (or domain name) for the website. <br>If a host name is specified, then the clients must use the host name instead of the IP address to access the website.<br>"
+		},
+		{
+			"name": "HostNameWithHttp",
+			"type": "string",
+			"label": "Host name",
+			"required": false,
+			"groupName": "website",
+			"defaultValue": "",
+			"visibleRule": "Protocol = http",
+			"helpMarkDown": "Enter a host name (or domain name) for the website. <br>If a host name is specified, then the clients must use the host name instead of the IP address to access the website.<br>"
+		},
+		{
+			"name": "HostNameWithSNI",
+			"type": "string",
+			"label": "Host name",
+			"required": true,
+			"groupName": "website",
+			"defaultValue": "",
+			"visibleRule": "ServerNameIndication = true",
+			"helpMarkDown": "Enter a host name (or domain name) for the website. <br>If a host name is specified, then the clients must use the host name instead of the IP address to access the website.<br>"
+		},
+		{
+			"name": "SSLCertThumbPrint",
+			"type": "string",
+			"label": "SSL Certificate Thumbprint",
+			"required": true,
+			"groupName": "website",
+			"defaultValue": "",
+			"visibleRule": "Protocol = https",
+			"helpMarkDown": "Provide the thumb-print of the Secure Socket Layer certificate that the website is going to use for the HTTPS communication as a 40 character long hexadecimal string. The SSL certificate should be already installed on the Computer, at Local Computer, Personal store."
+		},
+		{
+			"name": "CreateAppPool",
+			"type": "boolean",
+			"label": "Create or Update application pool",
+			"required": false,
+			"groupName": "applicationPool",
+			"defaultValue": "false",
+			"helpMarkDown": "Select the option to create an application pool or to update an existing application pool."
+		},
+		{
+			"name": "AppPoolName",
+			"type": "string",
+			"label": "Name",
+			"defaultValue": "",
+			"required": true,
+			"groupName": "applicationPool",
+			"visibleRule": "CreateAppPool = true",
+			"helpMarkDown": "Provide the name of the IIS application pool. Either a new app pool will be created if it doesn't exist, or the existing app pool will be updated with the settings specified here."
+		},
+		{
+			"name": "DotNetVersion",
+			"type": "pickList",
+			"label": ".NET version",
+			"defaultValue": "v4.0",
+			"required": true,
+			"groupName": "applicationPool",
+			"visibleRule": "CreateAppPool = true",
+			"helpMarkDown": "Select the version of the .NET Framework that is loaded by the application pool. <br>If the applications assigned to this application pool do not contain managed code, then select the 'No Managed Code' option from the list.<br>",
+			"options": {
+				"v4.0": "v4.0",
+				"v2.0": "v2.0",
+				"No Managed Code": "No Managed Code"
+			}
+		},
+		{
+			"name": "PipeLineMode",
+			"type": "pickList",
+			"label": "Managed pipeline mode",
+			"defaultValue": "Integrated",
+			"required": true,
+			"groupName": "applicationPool",
+			"visibleRule": "CreateAppPool = true",
+			"helpMarkDown": "Select the managed pipeline mode that specifies how IIS processes requests for managed content. Use classic mode only when the applications in the application pool cannot run in the Integrated mode.",
+			"options": {
+				"Integrated": "Integrated",
+				"Classic": "Classic"
+			}
+		},
+		{
+			"name": "AppPoolIdentity",
+			"type": "pickList",
+			"label": "Identity",
+			"defaultValue": "ApplicationPoolIdentity",
+			"required": true,
+			"groupName": "applicationPool",
+			"visibleRule": "CreateAppPool = true",
+			"helpMarkDown": "Configure the account under which an application pool's worker process runs. Select one of the predefined security accounts or configure a custom account.",
+			"options": {
+				"ApplicationPoolIdentity": "ApplicationPoolIdentity",
+				"LocalService": "LocalService",
+				"LocalSystem": "LocalSystem",
+				"NetworkService": "NetworkService",
+				"SpecificUser": "Custom Account"
+			}
+		},
+		{
+			"name": "AppPoolUsername",
+			"type": "string",
+			"label": "Username",
+			"defaultValue": "",
+			"required": true,
+			"groupName": "applicationPool",
+			"visibleRule": "AppPoolIdentity = SpecificUser"
+		},
+		{
+			"name": "AppPoolPassword",
+			"type": "string",
+			"label": "Password",
+			"defaultValue": "",
+			"required": false,
+			"groupName": "applicationPool",
+			"helpMarkDown": "If you are using a gMSA, this is not required.",
+			"visibleRule": "AppPoolIdentity = SpecificUser"
+		},
+		{
+			"name": "AppCmdCommands",
+			"type": "multiLine",
+			"label": "Additional AppCmd.exe commands",
+			"required": false,
+			"groupName": "advanced",
+			"defaultValue": "",
+			"helpMarkDown": "Enter additional AppCmd.exe commands to set the website or the application pool properties. For more than one command use a line separator, like <br/> list apppools <br/> list sites<br/> recycle apppool /apppool.name:ExampleAppPoolName"
+		}
+	],
+	"execution": {
+		"PowerShell3": {
+			"target": "IISWebAppManagementOnMachineGroup.ps1"
+		}
+	}
+}

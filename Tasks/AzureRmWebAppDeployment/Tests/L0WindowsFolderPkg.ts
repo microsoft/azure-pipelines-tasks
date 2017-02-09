@@ -97,10 +97,6 @@ tr.registerMock('./msdeployutility.js', {
     getMSDeployFullPath : function() {
         var msDeployFullPath =  "msdeploypath\\msdeploy.exe";
         return msDeployFullPath;
-    },
-    containsParamFile: function(webAppPackage: string) {
-        var taskResult = mockTask.execSync("msdeploy", "-verb:getParameters -source:package=\'" + webAppPackage + "\'");
-        return true;
     }
 }); 
 
@@ -175,7 +171,13 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
 var fs = require('fs');
 tr.registerMock('fs', {
     createWriteStream: function (filePath, options) {
-        return { "isWriteStreamObj": true };
+        return { 
+            "isWriteStreamObj": true,
+            "on": (event) => {
+                console.log("event: " + event + " has been triggered");
+            },
+            "end" : () => { return true; }
+        };
     },
     ReadStream: fs.ReadStream,
     WriteStream: fs.WriteStream,
