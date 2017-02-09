@@ -1,3 +1,4 @@
+
 {
   "loc.friendlyName": "Visual Studio Test",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
@@ -7,7 +8,7 @@
   "loc.group.displayName.executionOptions": "Execution Options",
   "loc.group.displayName.reportingOptions": "Reporting options",
   "loc.input.label.testSelector": "Select tests using",
-  "loc.input.help.testSelector": "******",
+  "loc.input.help.testSelector": "Specify the means to select tests",
   "loc.input.label.testAssemblyVer2": "Test assemblies",
   "loc.input.help.testAssemblyVer2": "Run tests from the specified files. The file paths are relative to the search folder. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
   "loc.input.label.testPlan": "Test plan",
@@ -17,13 +18,13 @@
   "loc.input.label.testConfiguration": "Test configuration",
   "loc.input.help.testConfiguration": "Select Test Configuration.",
   "loc.input.label.tcmTestRun": "Test Run",
-  "loc.input.help.tcmTestRun": "******",
+  "loc.input.help.tcmTestRun": "Test run based selection is used when triggering automated test runs from the test hub. This option cannot be used for running tests in the CI/CD pipeline.",
   "loc.input.label.searchFolder": "Search folder",
   "loc.input.help.searchFolder": "Folder to search for the test assemblies. Defaults to $(System.DefaultWorkingDirectory).",
   "loc.input.label.testFiltercriteria": "Test filter criteria",
   "loc.input.help.testFiltercriteria": "Additional criteria to filter tests from Test assemblies. For example: `Priority=1|Name=MyTestMethod`",
   "loc.input.label.uiTests": "Test mix contains UI tests",
-  "loc.input.help.uiTests": "*******",
+  "loc.input.help.uiTests": "To run UI tests, ensure that the agent is set to run in interactive mode. [More information](https://aka.ms/uitestmoreinfo).",
   "loc.input.label.runOnlyImpactedTests": "Run only impacted tests",
   "loc.input.help.runOnlyImpactedTests": "Automatically select, and run only the tests needed to validate the code change.",
   "loc.input.label.runAllTestsAfterXBuilds": "Number of builds after which all tests should be run",
@@ -35,9 +36,9 @@
   "loc.input.label.overrideTestrunParameters": "Override test run parameters",
   "loc.input.help.overrideTestrunParameters": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `-key1 value1 -key2 value2`",
   "loc.input.label.runTestsInParallel": "Run tests in parallel on multi-core machines",
-  "loc.input.help.runTestsInParallel": "******",
+  "loc.input.help.runTestsInParallel": "If set, tests will run in parallel leveraging available cores of the machine. [Click here](https://msdn.microsoft.com/library/jj159530.aspx) to learn more about how tests are run in parallel.",
   "loc.input.label.runTestsInIsolation": "Run tests in isolation",
-  "loc.input.help.runTestsInIsolation": "******",
+  "loc.input.help.runTestsInIsolation": "Runs the tests in an isolated process. This makes vstest.console.exe process less likely to be stopped on an error in the tests, but tests might run slower. This option currently cannot be used when running with the multi-agent phase setting.",
   "loc.input.label.pathtoCustomTestAdapters": "Path to custom tests adapters",
   "loc.input.help.pathtoCustomTestAdapters": "Directory path to custom test adapters. Nuget restored adapters are automatically searched for.",
   "loc.input.label.codeCoverage": "Code Coverage Enabled",
@@ -80,6 +81,5 @@
   "loc.messages.ErrorWhileUpdatingSettings": "Error occurred while updating the settings file. Using the specified settings file.",
   "loc.messages.VideoCollectorNotSupportedWithRunSettings": "Video collector is not supported with run settings.",
   "loc.messages.runTestInIsolationNotSupported": "Running tests in isolation is not supported when using the multi-agent phase setting. This option will be ignored.",
-  "loc.messages.tiaNotSupportedInDta": "Running only impacted tests is not supported when using the multi-agent phase setting. This option will be ignored.",
-  "loc.messages.overrideNotSupported": "Overriding test run parameters is supported only with runsettings file. This option will be ignored."
+  "loc.messages.tiaNotSupportedInDta": "Running only impacted tests is not supported when using the multi-agent phase setting. This option will be ignored."
 }
