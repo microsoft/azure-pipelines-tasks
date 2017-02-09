@@ -12,11 +12,13 @@
     "runsOn": [
         "Agent"
     ],
-    "demands": [],
+    "demands": [
+        "Cmd"
+    ],
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 8
+        "Patch": 9
     },
     "minimumAgentVersion": "1.95.0",
     "instanceNameFormat": "Update Service Fabric App Versions",

@@ -1,14 +1,13 @@
 {
 	"id": "1b2aec60-dc49-11e6-9b76-63056e018cac",
 	"name": "IISWebAppManagementOnMachineGroup",
-	"friendlyName": "IIS Web App Manage On Machine Group",
-	"description": "Create or update a Website and an App Pool on an IIS using machine group",
+	"friendlyName": "IIS WebApp Manage(Preview)",
+	"description": "Create or update a Website, Web App, Virtual Directories, and Application Pool",
 	"author": "Microsoft Corporation",
 	"helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=839731)",
 	"category": "Deploy",
 	"visibility": [
-		"Release", 
-		"Preview"
+		"Release"
 	],
 	"runsOn": [
 		"MachineGroup"
@@ -17,7 +16,7 @@
 	"version": {
 		"Major": 0,
 		"Minor": 0,
-		"Patch": 1
+		"Patch": 2
 	},
 	"minimumAgentVersion": "1.95.0",
 	"instanceNameFormat": "Manage IIS Web App: $(WebsiteName)",

@@ -149,14 +149,6 @@ var buildNodeTask = function (taskPath, outDir) {
 }
 exports.buildNodeTask = buildNodeTask;
 
-var buildPs3Task = function (taskPath, outDir) {
-    var packageUrl = 'https://www.powershellgallery.com/api/v2/package/VstsTaskSdk/0.7.1';
-    var packageSource = downloadArchive(packageUrl, /*omitExtensionCheck*/true);
-    var packageDest = path.join(outDir, 'ps_modules/VstsTaskSdk');
-    matchCopy('+(*.ps1|*.psd1|*.psm1|lib.json|Strings)', packageSource, packageDest, { noRecurse: true, matchBase: true });
-}
-exports.buildPs3Task = buildPs3Task;
-
 var copyTaskResources = function (taskMake, srcPath, destPath) {
     assert(taskMake, 'taskMake');
     assert(srcPath, 'srcPath');

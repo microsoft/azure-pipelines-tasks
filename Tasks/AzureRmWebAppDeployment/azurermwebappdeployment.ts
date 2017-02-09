@@ -170,7 +170,7 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
             webAppZipFile = await zipUtility.archiveFolder(webDeployPkg, "", tempPackagePath);
             tl.debug("Compressed folder " + webDeployPkg + " into zip : " +  webAppZipFile);
         } else {
-            if (await kuduUtility.containsParamFile(webAppZipFile)) {
+            if (await utility.isMSDeployPackage(webAppZipFile)) {
                 throw new Error(tl.loc("MSDeploygeneratedpackageareonlysupportedforWindowsplatform")); 
             }
         }

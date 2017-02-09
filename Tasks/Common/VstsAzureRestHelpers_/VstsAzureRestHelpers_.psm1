@@ -39,14 +39,20 @@ function Get-AzureUri
 function Get-ProxyUri
 {
     param([String] [Parameter(Mandatory=$true)] $serverUrl)
+    
+    $proxyUri = [System.Uri]($env:AGENT_PROXYURL)
+    Write-Verbose -Verbose ("Reading proxy from the AGENT_PROXYURL environment variable. Proxy url specified={0}" -f $proxyUri.OriginalString)
 
-    $proxyUri = [Uri]$null
-    $proxy = [System.Net.WebRequest]::GetSystemWebProxy()
-
-    if ($proxy)
+    if($proxyUri -eq $null)
     {
-        $proxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
+        $proxy = [System.Net.WebRequest]::GetSystemWebProxy()
         $proxyUri = $proxy.GetProxy("$serverUrl")
+        Write-Verbose -Verbose ("Reading proxy from IE. Proxy url specified={0}" -f $proxyUri.OriginalString)
+    }
+
+    if($serverUrl -eq $null -or ([System.Uri]$serverUrl).Host -eq $proxyUri.Host)
+    {
+        return $null
     }
 
     return $proxyUri
@@ -153,7 +159,7 @@ function Get-SpnAccessToken {
     try
     {
         $proxyUri = Get-ProxyUri $authUri
-        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $authUri))
+        if ($proxyUri -eq $null)
         {
             Write-Verbose "No proxy settings"
             $accessToken = Invoke-RestMethod -Uri $authUri -Method $method -Body $body -ContentType $script:formContentType
@@ -204,7 +210,7 @@ function Get-AzStorageKeys
         $certificate = Get-Certificate $endpoint
 
         $proxyUri = Get-ProxyUri $uri
-        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+        if ($proxyUri -eq $null)
         {
             $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate
             Write-Verbose "No Proxy settings"
@@ -245,7 +251,7 @@ function Get-AzRMStorageKeys
         $headers = @{"Authorization" = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
         $proxyUri = Get-ProxyUri $uri
-        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+        if ($proxyUri -eq $null)
         {
             $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
             Write-Verbose "No Proxy settings"
@@ -287,7 +293,7 @@ function Get-AzRmVmCustomScriptExtension
         $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
 
         $proxyUri = Get-ProxyUri $uri
-        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+        if ($proxyUri -eq $null)
         {
             $customScriptExt=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
             Write-Verbose "No proxy settings"
@@ -329,7 +335,7 @@ function Remove-AzRmVmCustomScriptExtension
         $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
 
         $proxyUri = Get-ProxyUri $uri
-        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+        if ($proxyUri -eq $null)
         {
             $response=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
             Write-Verbose "No proxy settings"
@@ -368,7 +374,7 @@ function Get-AzStorageAccount
         $certificate = Get-Certificate $endpoint
 
         $proxyUri = Get-ProxyUri $uri
-        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+        if ($proxyUri -eq $null)
         {
             $storageAccount=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate
             Write-Verbose "No Proxy settings"
@@ -409,7 +415,7 @@ function Get-AzRmStorageAccount
 
         $storageAccountUnformatted = $null
         $proxyUri = Get-ProxyUri $uri
-        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+        if ($proxyUri -eq $null)
         {
             $storageAccountUnformatted=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
             Write-Verbose "No Proxy settings"
@@ -462,8 +468,7 @@ function Get-AzRmResourceGroup
         $headers = @{"Authorization" = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
         $proxyUri = Get-ProxyUri $uri
-
-        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+        if ($proxyUri -eq $null)
         {
             $resourceGroup=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
             Write-Verbose "No Proxy settings"

@@ -93,54 +93,6 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
 }
 
 /**
- * Check whether the package contains parameter.xml file
- * @param   webAppPackage   web deploy package
- * @returns boolean
- */
-export async  function containsParamFile(webAppPackage: string ) {
-    var parameterFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'parameter.xml';
-    var fd = fs.openSync(parameterFile, "w");
-    var outputObj = fs.createWriteStream("",{"fd": fd});
-    
-    try {
-        var msDeployCheckParamFileCmdArgs = "-verb:getParameters -source:package=\'" + webAppPackage + "\'";
-        await tl.exec("msdeploy", msDeployCheckParamFileCmdArgs, <any>{ failOnStdErr: true, outStream: outputObj });
-    }
-    catch(error) {
-        throw Error(error);
-    }
-    finally {
-        fs.fsyncSync(fd);
-        fs.closeSync(fd);
-    }
-
-    var paramContentXML = fs.readFileSync(parameterFile).toString();
-    paramContentXML = paramContentXML.slice(paramContentXML.indexOf('\n') + 1, paramContentXML.length);
-    var isParamFilePresent = false;
-
-    await parseString(paramContentXML, (error, result) => {
-        if(error) {
-            throw new Error(error);
-        }
-        if(result != null && result['output'] != null && result['output']['parameters'] != null) {
-            if(result['output']['parameters'][0] ) {
-                isParamFilePresent = true;
-            }
-        }
-        else {
-            tl.warning("Unable to parse the content of parameterFile: "+parameterFile);
-            tl.debug("Parameter File Content is:");
-            tl.debug(paramContentXML);
-        }
-
-    });
-
-    tl.debug("Is parameter file present in web package : " + isParamFilePresent);
-    tl.rmRF(parameterFile, true);
-    return isParamFilePresent;
-}
-
-/**
  * Gets the full path of MSDeploy.exe
  * 
  * @returns    string
@@ -218,17 +170,20 @@ export function redirectMSDeployErrorToConsole() {
     var msDeployErrorFilePath = tl.getVariable('System.DefaultWorkingDirectory') + '\\error.txt';
     
     if(tl.exist(msDeployErrorFilePath)) {
-        var errorFileContent = fs.readFileSync(msDeployErrorFilePath);
-        
-        if(errorFileContent.toString().indexOf("ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER") !== -1) {
-            tl.warning(tl.loc("Trytodeploywebappagainwithappofflineoptionselected"));
+        var errorFileContent = fs.readFileSync(msDeployErrorFilePath).toString();
+
+        if(errorFileContent !== "") {
+            if(errorFileContent.indexOf("ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER") !== -1) {
+                tl.warning(tl.loc("Trytodeploywebappagainwithappofflineoptionselected"));
+            }
+
+            if(errorFileContent.indexOf("FILE_IN_USE") !== -1) {
+                tl.warning(tl.loc("Trytodeploywebappagainwithrenamefileoptionselected"));
+            }
+          
+            tl.error(errorFileContent);
         }
 
-        if(errorFileContent.toString().indexOf("FILE_IN_USE") !== -1) {
-            tl.warning(tl.loc("Trytodeploywebappagainwithrenamefileoptionselected"));
-        }
-        
-        tl.error(errorFileContent.toString());
         tl.rmRF(msDeployErrorFilePath);
     }
 }
