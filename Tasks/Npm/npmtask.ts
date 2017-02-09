@@ -22,7 +22,7 @@ async function executeTask() {
         var filesList = nutil.resolveFilterSpec(filePath, tl.getVariable("System.DefaultWorkingDirectory"));
         tl.debug("number of files matching filePath: " + filesList.length);
         for (var workingDir of filesList) {
-            if (fs.statSync(workingDir).isFile()) {
+            if (tl.stats(workingDir).isFile()) {
                 workingDir = path.dirname(workingDir);
             }
             if (dirList.indexOf(workingDir) === -1) {

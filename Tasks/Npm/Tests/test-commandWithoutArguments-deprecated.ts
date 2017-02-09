@@ -2,12 +2,10 @@ import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 import util = require('./NpmMockHelper');
-import fs = require('fs');
-var Stats = require('fs').Stats
 
 let taskPath = path.join(__dirname, '..', 'npmtask.js');
 let taskMockRunner = new tmrm.TaskMockRunner(taskPath);
-let npmMockHelper = new util.NpmMockHelper(taskMockRunner, "root", "");
+let npmMockHelper = new util.NpmMockHelper(taskMockRunner, "fake\\wd", "root", "");
 
 if (process.argv.length == 3) {
     if (process.argv[2] === "useDeprecated") {
@@ -20,6 +18,7 @@ npmMockHelper.mockAuthHelper();
 npmMockHelper.mockNpmConfigList();
 
 npmMockHelper.useDeprecatedTask();
+npmMockHelper.setStat("c:\\agent\\home\\directory\\fake\\wd", false);
 
 let root = path.join(process.env['INPUT_CWD'], "node_modules");
 
@@ -28,15 +27,5 @@ var execResult: ma.TaskLibAnswerExecResult = {
     stdout: root,
     stderr: ""
 };
-
-fs.statSync = (s) => {
-    let stat = new Stats;
-    stat.isFile = () => {
-        return false;
-    }
-
-    return stat;
-}
-taskMockRunner.registerMock('fs', fs);
 
 npmMockHelper.run(execResult);

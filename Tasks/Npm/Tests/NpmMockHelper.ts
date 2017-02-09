@@ -22,6 +22,7 @@ export class NpmMockHelper {
 
     constructor(
         private tmr: tmrm.TaskMockRunner,
+        public cwd: string,
         public command: string,
         public args: string) { 
         NpmMockHelper.setVariable('Agent.HomeDirectory', NpmMockHelper.DefaultWorkingDirectory);
@@ -33,7 +34,7 @@ export class NpmMockHelper {
         NpmMockHelper.setVariable('Agent.BuildDirectory', NpmMockHelper.AgentBuildDirectory);
         NpmMockHelper.setVariable('Build.BuildId', NpmMockHelper.BuildBuildId);
 
-        tmr.setInput('cwd', NpmMockHelper.FakeWorkingDirectory);
+        tmr.setInput('cwd', cwd);
         tmr.setInput('command', command);
         tmr.setInput('arguments', args);
 
@@ -114,6 +115,10 @@ export class NpmMockHelper {
         this.setOsType('WiNdOWs_nT');
         this.setProjectNpmrcExists();
         this.answers.checkPath["c:\\agent\\home\\directory\\fake\\wd"] = true;
+        this.answers.checkPath["c:\\agent\\home\\directory\\fake\\wd\\one\\package.json"] = true;
+        this.answers.checkPath["c:\\agent\\home\\directory\\fake\\wd\\two\\package.json"] = true;
+        this.answers.checkPath["c:\\agent\\home\\directory\\fake\\wd\\one"] = true;
+        this.answers.checkPath["c:\\agent\\home\\directory\\fake\\wd\two"] = true;
     }
 
     private setToolPath(answers: ma.TaskLibAnswers, tool: string, path: string) {
@@ -123,5 +128,32 @@ export class NpmMockHelper {
 
     private setProjectNpmrcExists() {
         this.answers.exist[path.join(NpmMockHelper.DefaultWorkingDirectory, NpmMockHelper.FakeWorkingDirectory, '.npmrc')] = true;
+        this.answers.exist[path.join(NpmMockHelper.DefaultWorkingDirectory, NpmMockHelper.FakeWorkingDirectory, "two", '.npmrc')] = true;
+        this.answers.exist[path.join(NpmMockHelper.DefaultWorkingDirectory, NpmMockHelper.FakeWorkingDirectory, "one", '.npmrc')] = true;
     }
+
+    public setStat(path: string, isFile: boolean) {
+        if(!this.answers["stats"]) {
+            this.answers["stats"]={};
+        }
+        this.answers["stats"] = {
+            "c:\\agent\\home\\directory\\fake\\wd" : {
+                "isDirectory": true
+            },
+                "c:\\agent\\home\\directory\\fake\\wd\\one": {
+                    "isDirectory": true
+                },
+
+                "c:\\agent\\home\\directory\\fake\\wd\\one\\package.json": {
+                    "isFile": true
+                },
+            "c:\\agent\\home\\directory\\fake\\wd\\two": {
+                    "isDirectory": true
+                },
+
+                "c:\\agent\\home\\directory\\fake\\wd\\two\\package.json": {
+                    "isFile": true
+                }
+            }
+        }
 }
