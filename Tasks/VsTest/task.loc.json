@@ -343,6 +343,7 @@
     "ErrorWhileUpdatingSettings": "ms-resource:loc.messages.ErrorWhileUpdatingSettings",
     "VideoCollectorNotSupportedWithRunSettings": "ms-resource:loc.messages.VideoCollectorNotSupportedWithRunSettings",
     "runTestInIsolationNotSupported": "ms-resource:loc.messages.runTestInIsolationNotSupported",
-    "tiaNotSupportedInDta": "ms-resource:loc.messages.tiaNotSupportedInDta"
+    "tiaNotSupportedInDta": "ms-resource:loc.messages.tiaNotSupportedInDta",
+    "overrideNotSupported": "ms-resource:loc.messages.overrideNotSupported"
   }
 }
