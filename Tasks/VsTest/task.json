@@ -23,7 +23,7 @@
         "vstest"
     ],
     "preview": "true",
-    "releaseNotes" : "Adding the functionality to run distributed test with release phases.",
+    "releaseNotes" : "<ul><li><b>Run tests using agent phase:</b>Unified agent across Build, Release and Test allows for automation agents to be used for testing purposes as well. You can now run Visual Studio tests in various modes: single agent, distributed test run using multi-agent setting and multi-config mode to replicate tests in different configurations.</li><li><b>Test Impact Analysis:</b> Automatically select and run only the tests needed to validate the code change.</li><li>Support for minimatch patterns for specifying test assemblies.</li></ul><p><a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">More information</a></p>",
     "minimumAgentVersion": "1.89.0",
     "groups": [
         {
@@ -49,7 +49,7 @@
             "label": "Select tests using",
             "defaultValue": "testAssemblies",
             "required": true,
-            "helpMarkDown": "******",
+            "helpMarkDown": "Specify the means to select tests",
             "groupName": "testSelection",
             "options": {
                 "testAssemblies": "Test assemblies",
@@ -117,7 +117,7 @@
             "label": "Test Run",
             "defaultValue": "$(test.RunId)",
             "required": false,
-            "helpMarkDown": "******",
+            "helpMarkDown": "Test run based selection is used when triggering automated test runs from the test hub. This option cannot be used for running tests in the CI/CD pipeline.",
             "groupName": "testSelection",
             "properties": {
                 "rows": "3",
@@ -170,7 +170,7 @@
             "label": "Test mix contains UI tests",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "*******",
+            "helpMarkDown": "To run UI tests, ensure that the agent is set to run in interactive mode. [More information](https://aka.ms/uitestmoreinfo).",
             "groupName": "testSelection"
         },
         {  
@@ -218,7 +218,7 @@
             "label": "Run tests in parallel on multi-core machines",
             "defaultValue": "False",
             "required": false,
-            "helpMarkDown": "******",
+            "helpMarkDown": "If set, tests will run in parallel leveraging available cores of the machine. [Click here](https://msdn.microsoft.com/library/jj159530.aspx) to learn more about how tests are run in parallel.",
             "groupName": "executionOptions"
          },
          {
@@ -227,7 +227,7 @@
             "label": "Run tests in isolation",
             "defaultValue": "False",
             "required": false,
-            "helpMarkDown": "******",
+            "helpMarkDown": "Runs the tests in an isolated process. This makes vstest.console.exe process less likely to be stopped on an error in the tests, but tests might run slower. This option currently cannot be used when running with the multi-agent phase setting.",
             "groupName": "executionOptions"
         },
         {
@@ -344,7 +344,7 @@
         "ErrorWhileUpdatingSettings": "Error occurred while updating the settings file. Using the specified settings file.",
         "VideoCollectorNotSupportedWithRunSettings": "Video collector is not supported with run settings.",
         "runTestInIsolationNotSupported": "Running tests in isolation is not supported when using the multi-agent phase setting. This option will be ignored.",
-        "tiaNotSupportedInDta": "Running only impacted tests is not supported when using the multi-agent phase setting. This option will be ignored.",
+        "tiaNotSupportedInDta": "Running only impacted tests is not supported when using the multi-agent phase setting. This option will be ignored."
         "overrideNotSupported": "Overriding test run parameters is supported only with runsettings file. This option will be ignored."
     }
 }

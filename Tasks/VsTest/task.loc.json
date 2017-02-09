@@ -23,7 +23,7 @@
     "vstest"
   ],
   "preview": "true",
-  "releaseNotes": "Adding the functionality to run distributed test with release phases.",
+  "releaseNotes": "<ul><li><b>Run tests using agent phase:</b>Unified agent across Build, Release and Test allows for automation agents to be used for testing purposes as well. You can now run Visual Studio tests in various modes: single agent, distributed test run using multi-agent setting and multi-config mode to replicate tests in different configurations.</li><li><b>Test Impact Analysis:</b> Automatically select and run only the tests needed to validate the code change.</li><li>Support for minimatch patterns for specifying test assemblies.</li></ul><p><a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">More information</a></p>",
   "minimumAgentVersion": "1.89.0",
   "groups": [
     {
@@ -343,7 +343,6 @@
     "ErrorWhileUpdatingSettings": "ms-resource:loc.messages.ErrorWhileUpdatingSettings",
     "VideoCollectorNotSupportedWithRunSettings": "ms-resource:loc.messages.VideoCollectorNotSupportedWithRunSettings",
     "runTestInIsolationNotSupported": "ms-resource:loc.messages.runTestInIsolationNotSupported",
-    "tiaNotSupportedInDta": "ms-resource:loc.messages.tiaNotSupportedInDta",
-    "overrideNotSupported": "ms-resource:loc.messages.overrideNotSupported"
+    "tiaNotSupportedInDta": "ms-resource:loc.messages.tiaNotSupportedInDta"
   }
 }
