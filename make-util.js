@@ -834,7 +834,7 @@ var getRefs = function () {
 
             // filter out releases less than 108 and greater than HEAD
             if (release < 108 ||
-                release > (info.head.release || 999)) {
+                release > (info.head.release || 112)) {
 
                 return;
             }
