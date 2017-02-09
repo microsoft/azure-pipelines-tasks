@@ -751,9 +751,10 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     }
 
     // We need to use private data collector dll
-    if(vsTestVersionForTIA[0] === 14) {
+    if(vsTestVersionForTIA !== null && vsTestVersionForTIA[0] === 14) {
         tiaConfig.useNewCollector = true;
     }
+
       
     setRunInParallellIfApplicable(vsVersion);
     var newSettingsFile = vstestConfig.settingsFile;

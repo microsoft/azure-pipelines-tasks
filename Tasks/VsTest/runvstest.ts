@@ -6,7 +6,6 @@ import path = require('path');
 import distributedTest = require('./distributedTest')
 
 try {
-    tl.setResourcePath(path.join(__dirname, 'task.json'));
     const parallelExecution = tl.getVariable('System.ParallelExecutionType');
     tl.debug('Value of ParallelExecutionType :' + parallelExecution);
 
