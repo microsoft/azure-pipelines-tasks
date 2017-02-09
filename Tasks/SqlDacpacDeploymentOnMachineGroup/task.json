@@ -1,8 +1,8 @@
 {
     "id": "4B506F7F-720F-47BB-BF21-029BAC6A690D",
     "name": "SqlDacpacDeploymentOnMachineGroup",
-    "friendlyName": "SQL Deploy on Machine Group (Preview)",
-    "description": "Deploy DB using sqlpackage.exe or Invoke-Sqlcmd",
+    "friendlyName": "SQL Server Database Deploy(Preview)",
+    "description": "Deploy to SQL Server Database using DACPAC or SQL scripts",
     "helpMarkDown": "[More Information](https://aka.ms/sqldacpacmachinegroupreadme)",
     "category": "Deploy",
     "visibility": [

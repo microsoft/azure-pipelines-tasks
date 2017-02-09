@@ -1,8 +1,8 @@
 {
     "id": "1B467810-6725-4B6D-ACCD-886174C09BBA",
     "name": "IISWebAppDeploymentOnMachineGroup",
-    "friendlyName": "IIS WebApp Deploy Machine Group(Preview)",
-    "description": "Deploy a WebSite or Virtual Application by using MSDeploy on Machine Group",
+    "friendlyName": "IIS WebApp Deploy(Preview)",
+    "description": "Deploy a Website or Web Application using WebDeploy",
     "helpMarkDown": "[More Information](https://aka.ms/iiswebappdeployreadme)",
     "category": "Deploy",
     "visibility": [
