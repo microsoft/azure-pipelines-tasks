@@ -843,7 +843,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                 }
 
                     // We need to use private data collector dll bundled in task
-                    if(vsTestVersionForTIA[0] === 14) {
+                    if(tiaEnabled === true && vsTestVersionForTIA[0] === 14) {
                     useNewCollector = true;
                     }
 
