@@ -60,15 +60,22 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
 import mockTask = require('vsts-task-lib/mock-task');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js');
 
+tr.registerMock('webdeployment-common/ziputility.js', {
+    getArchivedEntries: function(webDeployPkg) {
+        return {
+            "entries": [
+                "systemInfo.xml",
+                "parameters.xml"
+            ]
+        };
+    }
+});
+
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
     getMSDeployFullPath : function() {
         var msDeployFullPath =  "msdeploypath\\msdeploy.exe";
         return msDeployFullPath;
-    },
-    containsParamFile: function(webAppPackage: string) {
-		var taskResult = mockTask.execSync("msdeploy", "-verb:getParameters -source:package=\'" + webAppPackage + "\'");
-        return true;
     }
 });
 

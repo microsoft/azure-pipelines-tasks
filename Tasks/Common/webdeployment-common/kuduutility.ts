@@ -4,7 +4,6 @@ import path = require("path");
 import fs = require("fs");
 import httpClient = require('vso-node-api/HttpClient');
 var httpObj = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
-var zipUtility = require('./ziputility.js');
 
 export async function appOffineKuduService(publishUrl: string, physicalPath: string, headers, enableFeature: boolean) {
     var defer = Q.defer<string>();
@@ -114,21 +113,6 @@ export async function deployWebAppPackage(webAppPackage: string, publishingProfi
         }
     });
     return deferred.promise;
-}
-
-/**
- * Check whether the package contains parameter.xml file
- * @param   webAppPackage   web deploy package
- * @returns boolean
- */
-export async  function containsParamFile(webAppPackage: string ) {
-    var isParamFilePresent = false;
-    var pacakgeComponent = await zipUtility.getArchivedEntries(webAppPackage);
-    if ((pacakgeComponent["entries"].indexOf("parameters.xml") > -1) || (pacakgeComponent["entries"].indexOf("Parameters.xml") > -1)) {
-        isParamFilePresent = true;
-    }
-    tl.debug("Is parameter file present in web package : " + isParamFilePresent);
-    return isParamFilePresent;
 }
 
 export async function ensurePhysicalPathExists(publishingProfile, physicalPath: string) {
