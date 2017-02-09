@@ -178,6 +178,7 @@ async function updateXmlNodeAttribute(xmlDomNode, variableMap)
         var attributeNameValue = (attributeName === "key") ? xmlDomNodeAttributes[attributeName] : attributeName;
         var attributeName = (attributeName === "key") ? "value" : attributeName;
         if(variableMap[attributeNameValue]) {
+            tl.debug('Updating value for key=' + attributeNameValue);
             xmlDomNode.attr(attributeName, variableMap[attributeNameValue]);
         }
     }
@@ -199,6 +200,7 @@ async function updateXmlConnectionStringsNodeAttribute(xmlDomNode, variableMap) 
 
     if(xmlDomNodeAttributes.hasOwnProperty("name") && xmlDomNodeAttributes.hasOwnProperty("connectionString")) {
         if(variableMap[xmlDomNodeAttributes.name]) {
+            tl.debug('Substituting connectionString value for name=' + xmlDomNodeAttributes.name);
             xmlDomNode.attr("connectionString", variableMap[xmlDomNodeAttributes.name]);
         }
     }	
