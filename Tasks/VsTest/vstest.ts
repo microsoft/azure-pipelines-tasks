@@ -32,37 +32,42 @@ export async function startTest() {
         vstestConfig = taskInputParser.getvsTestConfigurations();
         tiaConfig = vstestConfig.tiaConfig;
         vsVersionDetails = await versionFinder.locateVSTestConsole(vstestConfig);
+        const resultsDirectory = getTestResultsDirectory(vstestConfig.settingsFile, path.join(workingDirectory, 'TestResults'));
+
+        // clean up old testResults
+        tl.rmRF(resultsDirectory, true);
+        tl.mkdirP(resultsDirectory);
+
         testAssemblyFiles = getTestAssemblies();
-        if (testAssemblyFiles && testAssemblyFiles.length !== 0) {
-            getTestResultsDirectory(vstestConfig.settingsFile, path.join(workingDirectory, 'TestResults'))
-                .then(function (resultsDirectory) {
-                    invokeVSTest(resultsDirectory)
-                        .then(function (code) {
-                            try {
-                                if (!isTiaAllowed()) {
-                                    publishTestResults(resultsDirectory);
-                                }
-                                tl.setResult(code, tl.loc('VstestReturnCode', code));
-                                deleteVstestDiagFile();
-                            } catch (error) {
-                                deleteVstestDiagFile();
-                                tl._writeLine('##vso[task.logissue type=error;code=' + error + ';TaskName=VSTest]');
-                                throw error;
-                            }
-                        })
-                        .fail(function (err) {
-                            deleteVstestDiagFile();
-                            tl._writeLine('##vso[task.logissue type=error;code=' + err + ';TaskName=VSTest]');
-                            throw err;
-                        });
-                });
-        } else {
-            deleteVstestDiagFile();
+
+        if (!testAssemblyFiles || testAssemblyFiles.length === 0) {
+            deleteVstestDiagFile(vstestConfig.vstestDiagFile);
             tl._writeLine('##vso[task.logissue type=warning;code=002004;]');
             tl.warning(tl.loc('NoMatchingTestAssemblies', vstestConfig.sourceFilter));
+            return;
         }
+ 
+        invokeVSTest(resultsDirectory)
+            .then(function (code) {
+                try {
+                    if (!isTiaAllowed()) {
+                        publishTestResults(resultsDirectory);
+                    }
+                    tl.setResult(code, tl.loc('VstestReturnCode', code));
+                    deleteVstestDiagFile(vstestConfig.vstestDiagFile);
+                } catch (error) {
+                    deleteVstestDiagFile(vstestConfig.vstestDiagFile);
+                    tl._writeLine('##vso[task.logissue type=error;code=' + error + ';TaskName=VSTest]');
+                    throw error;
+                }
+            })
+            .fail(function (err) {
+                deleteVstestDiagFile(vstestConfig.vstestDiagFile);
+                tl._writeLine('##vso[task.logissue type=error;code=' + err + ';TaskName=VSTest]');
+                throw err;
+            });
     } catch (error) {
-        deleteVstestDiagFile();
+        deleteVstestDiagFile(vstestConfig.vstestDiagFile);
         tl._writeLine('##vso[task.logissue type=error;code=' + error + ';TaskName=VSTest]');
         throw error;
     }
@@ -420,8 +425,6 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
     var vstest = tl.tool(vsVersionDetails.location);
     addVstestArgs(argsArray, vstest);
 
-    tl.rmRF(testResultsDirectory, true);
-    tl.mkdirP(testResultsDirectory);
     tl.cd(workingDirectory);
     var ignoreTestFailures = vstestConfig.ignoreVstestFailure && vstestConfig.ignoreVstestFailure.toLowerCase() === "true";
     vstest.exec(<tr.IExecOptions>{ failOnStdErr: !ignoreTestFailures })
@@ -512,10 +515,10 @@ function cleanFiles(responseFile: string, listFile: string): void {
     tl.rmRF(tiaConfig.baseLineBuildIdFile, true);
 }
 
-function deleteVstestDiagFile(): void {
-    if (pathExistsAsFile(vstestConfig.vstestDiagFile)) {
-        tl.debug("Deleting vstest diag file " + vstestConfig.vstestDiagFile);
-        tl.rmRF(vstestConfig.vstestDiagFile, true);
+function deleteVstestDiagFile(file: string): void {
+    if (pathExistsAsFile(file)) {
+        tl.debug("Deleting vstest diag file " + file);
+        tl.rmRF(file, true);
     }
 }
 
@@ -829,41 +832,28 @@ function isNugetRestoredAdapterPresent(rootDirectory: string): boolean {
     return false;
 }
 
-function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: string): Q.Promise<string> {
-    var defer = Q.defer<string>();
+function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: string): string {
     if (!settingsFile || !pathExistsAsFile(settingsFile)) {
-        defer.resolve(defaultResultsDirectory);
-        return defer.promise;
+        return defaultResultsDirectory;
     }
 
-    utils.Helper.readFileContents(vstestConfig.settingsFile, "utf-8")
-        .then(function (xmlContents) {
-            var parser = new xml2js.Parser();
-            parser.parseString(xmlContents, function (err, result) {
-                if (!err && result.RunSettings && result.RunSettings.RunConfiguration && result.RunSettings.RunConfiguration[0] &&
-                    result.RunSettings.RunConfiguration[0].ResultsDirectory && result.RunSettings.RunConfiguration[0].ResultsDirectory[0].length > 0) {
-                    var resultDirectory = result.RunSettings.RunConfiguration[0].ResultsDirectory[0];
-                    resultDirectory = resultDirectory.trim();
+    const xmlContents = utils.Helper.readFileContentsSync(vstestConfig.settingsFile, "utf-8");
+    const parser = new xml2js.Parser();
 
-                    if (resultDirectory) {
-                        // path.resolve will take care if the result directory given in settings files is not absolute.
-                        defer.resolve(path.resolve(path.dirname(vstestConfig.settingsFile), resultDirectory));
-                    }
-                    else {
-                        defer.resolve(defaultResultsDirectory);
-                    }
-                }
-                else {
-                    defer.resolve(defaultResultsDirectory);
-                }
-            });
-        })
-        .fail(function (err) {
-            tl.debug("Error occured while reading test result directory from run settings. Continuing...")
-            tl.warning(err);
-            defer.resolve(defaultResultsDirectory);
-        });
-    return defer.promise;
+    parser.parseString(xmlContents, function (err, result) {
+        if (!err && result.RunSettings && result.RunSettings.RunConfiguration && result.RunSettings.RunConfiguration[0] &&
+            result.RunSettings.RunConfiguration[0].ResultsDirectory && result.RunSettings.RunConfiguration[0].ResultsDirectory[0].length > 0) {
+            let resultDirectory = result.RunSettings.RunConfiguration[0].ResultsDirectory[0];
+            resultDirectory = resultDirectory.trim();
+
+            if (resultDirectory) {
+                // path.resolve will take care if the result directory given in settings files is not absolute.
+                return path.resolve(path.dirname(vstestConfig.settingsFile), resultDirectory);
+            }
+        }
+    });
+
+    return defaultResultsDirectory;
 }
 
 function setRunInParallellIfApplicable(vsVersion: number) {
