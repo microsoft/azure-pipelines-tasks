@@ -90,7 +90,6 @@ export class DistributedTest {
         //Modify settings file to enable configurations and data collectors.
         var settingsFile = this.dtaTestConfig.settingsFile;
         try {
-            tl.debug("zz"+this.dtaTestConfig.overrideTestrunParameters);
             settingsFile = await settingsHelper.updateSettingsFileAsRequired(this.dtaTestConfig.settingsFile, this.dtaTestConfig.runInParallel, this.dtaTestConfig.tiaConfig, null, false, this.dtaTestConfig.overrideTestrunParameters);
             //Reset override option so that it becomes a no-op in TaskExecutionHost
             this.dtaTestConfig.overrideTestrunParameters = null;
