@@ -1,14 +1,13 @@
 {
 	"id": "1b2aec60-dc49-11e6-9b76-63056e018cac",
 	"name": "IISWebAppManagementOnMachineGroup",
-	"friendlyName": "IIS Web App Manage On Machine Group",
-	"description": "Create or update a Website and an App Pool on an IIS using machine group",
+	"friendlyName": "IIS WebApp Manage(Preview)",
+	"description": "Create or update a Website, Web App, Virtual Directories, and Application Pool",
 	"author": "Microsoft Corporation",
 	"helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=839731)",
 	"category": "Deploy",
 	"visibility": [
-		"Release", 
-		"Preview"
+		"Release"
 	],
 	"runsOn": [
 		"MachineGroup"
@@ -16,12 +15,12 @@
 	"demands": [],
 	"version": {
 		"Major": 0,
-		"Minor": 0,
-		"Patch": 1
+		"Minor": 1,
+		"Patch": 0
 	},
 	"minimumAgentVersion": "1.95.0",
-	"instanceNameFormat": "Manage IIS Web App: $(WebsiteName)",
-	"groups": [
+	"instanceNameFormat": "Manage $(IISDeploymentType)",
+	"groups": [ 	
 		{
 			"name": "Website",
 			"displayName": "IIS Website",
@@ -64,7 +63,7 @@
 				"IISVirtualDirectory": "IIS Virtual Directory",
 				"IISApplicationPool": "IIS Application Pool"
 			},
-			"helpMarkDown": ""
+			"helpMarkDown": "Select the type of IIS object that is to be managed."
 		},
 		{
 			"name": "ActionIISWebsite",
@@ -73,11 +72,9 @@
 			"required": true,
 			"visibleRule": "IISDeploymentType = IISWebsite",
 			"options": {
-				"CreateOrUpdateWebsite": "Create Or Update",
-				"StartWebsite": "Start website",
-				"StopWebsite": "Stop website"
+				"CreateOrUpdateWebsite": "Create Or Update"
 			},
-			"helpMarkDown": ""
+			"helpMarkDown": "Select the appropriate action that you want to perform on an IIS website. \n\n\"Create Or Update\" will create a website or update an existing website."
 		},
 		{
 			"name": "ActionIISApplicationPool",
@@ -86,12 +83,9 @@
 			"required": true,
 			"visibleRule": "IISDeploymentType = IISApplicationPool",
 			"options": {
-				"CreateOrUpdateAppPool": "Create Or Update",
-				"StartAppPool": "Start App pool",
-				"StopAppPool": "Stop App pool",
-				"RecycleAppPool": "Recycle App pool"
+				"CreateOrUpdateAppPool": "Create Or Update"
 			},
-			"helpMarkDown": ""
+			"helpMarkDown": "Select the appropriate action that you want to perform on an IIS Application Pool. \n\n\"Create Or Update\" will create app-pool or update an existing one."
 		},
 		{
 			"name": "WebsiteName",
@@ -244,7 +238,7 @@
 			"required": false,
 			"groupName": "Website",
 			"defaultValue": "false",
-			"helpMarkDown": ""
+			"helpMarkDown": "Select the option to create an application pool or to update an existing application pool. If checked, the website will be created in the specified app pool. Otherwise the DefaultAppPool will be used."
 		},
 		{
 			"name": "AppPoolNameForWebsite",
@@ -291,10 +285,10 @@
 			"groupName": "ApplicationPoolForWebsite",
 			"helpMarkDown": "Configure the account under which an application pool's worker process runs. Select one of the predefined security accounts or configure a custom account.",
 			"options": {
-				"ApplicationPoolIdentity": "ApplicationPoolIdentity",
-				"LocalService": "LocalService",
-				"LocalSystem": "LocalSystem",
-				"NetworkService": "NetworkService",
+				"ApplicationPoolIdentity": "Application Pool Identity",
+				"LocalService": "Local Service",
+				"LocalSystem": "Local System",
+				"NetworkService": "Network Service",
 				"SpecificUser": "Custom Account"
 			}
 		},
@@ -305,7 +299,8 @@
 			"defaultValue": "",
 			"required": true,
 			"groupName": "ApplicationPoolForWebsite",
-			"visibleRule": "AppPoolIdentityForWebsite = SpecificUser"
+			"visibleRule": "AppPoolIdentityForWebsite = SpecificUser",
+			"helpMarkDown": "Provide the username of the SpecificUser account that you want to use."
 		},
 		{
 			"name": "AppPoolPasswordForWebsite",
@@ -324,7 +319,7 @@
 			"defaultValue": "",
 			"required": true,
 			"visibleRule": "IISDeploymentType = IISVirtualDirectory",
-			"helpMarkDown": ""
+			"helpMarkDown": "Provide the name of the parent Website of the virtual directory."
 		},
 		{
 			"name": "ApplicationName",
@@ -333,7 +328,7 @@
 			"defaultValue": "",
 			"required": false,
 			"visibleRule": "IISDeploymentType = IISVirtualDirectory",
-			"helpMarkDown": ""
+			"helpMarkDown": "Provide the virtual path of the application under which the virtual directory will be created or updated. If not specified, the virtual directory will be created under the root application of the parent Website."
 		},
 		{
 			"name": "VirtualPathForVD",
@@ -342,7 +337,7 @@
 			"defaultValue": "",
 			"required": true,
 			"visibleRule": "IISDeploymentType = IISVirtualDirectory",
-			"helpMarkDown": ""
+			"helpMarkDown": "Provide the virtual path of the virtual directory."
 		},
 		{
 			"name": "PhysicalPathForVD",
@@ -351,7 +346,7 @@
 			"defaultValue": "%SystemDrive%\\inetpub\\wwwroot",
 			"required": true,
 			"visibleRule": "IISDeploymentType = IISVirtualDirectory",
-			"helpMarkDown": ""
+			"helpMarkDown": "Provide the physical path where the virtual directory's content will be stored. The content can reside on the local Computer, or in a remote directory, or on a network share, like C:\\Fabrikam or \\\\\\\\ContentShare\\Fabrikam."
 		},
 		{
 			"name": "VDPhysicalPathAuth",
@@ -364,7 +359,7 @@
 				"VDUserPassThrough": "Application User (Pass-through)",
 				"VDWindowsAuth": "Windows Authentication"
 			},
-			"helpMarkDown": "Select the authentication mechanism that will be used to access the physical path of the website."
+			"helpMarkDown": "Select the authentication mechanism that will be used to access the physical path of the virtual directory."
 		},
 		{
 			"name": "VDAuthUserName",
@@ -373,7 +368,7 @@
 			"required": true,
 			"defaultValue": "",
 			"visibleRule": "VDPhysicalPathAuth = VDWindowsAuth",
-			"helpMarkDown": "Provide the user name that will be used to access the website's physical path."
+			"helpMarkDown": "Provide the user name that will be used to access the virtual directory's physical path."
 		},
 		{
 			"name": "VDAuthUserPassword",
@@ -382,7 +377,7 @@
 			"required": false,
 			"defaultValue": "",
 			"visibleRule": "VDPhysicalPathAuth = VDWindowsAuth",
-			"helpMarkDown": "Provide the user's password that will be used to access the website's physical path. If you are using a gMSA, this is not required."
+			"helpMarkDown": "Provide the user's password that will be used to access the virtual directory's physical path. If you are using a gMSA, this is not required."
 		},
 		{
 			"name": "ParentWebsiteNameForApplication",
@@ -391,7 +386,7 @@
 			"defaultValue": "",
 			"required": true,
 			"visibleRule": "IISDeploymentType = IISWebApplication",
-			"helpMarkDown": ""
+			"helpMarkDown": "Provide the name of the parent Website under which the application will be created or updated."
 		},
 		{
 			"name": "VirtualPathForApplication",
@@ -400,7 +395,7 @@
 			"defaultValue": "",
 			"required": true,
 			"visibleRule": "IISDeploymentType = IISWebApplication",
-			"helpMarkDown": ""
+			"helpMarkDown": "Provide the virtual path of the application."
 		},
 		{
 			"name": "PhysicalPathForApplication",
@@ -409,7 +404,7 @@
 			"defaultValue": "%SystemDrive%\\inetpub\\wwwroot",
 			"required": true,
 			"visibleRule": "IISDeploymentType = IISWebApplication",
-			"helpMarkDown": ""
+			"helpMarkDown": "Provide the physical path where the application's content will be stored. The content can reside on the local Computer, or in a remote directory, or on a network share, like C:\\Fabrikam or \\\\\\\\ContentShare\\Fabrikam."
 		},
 		{
 			"name": "ApplicationPhysicalPathAuth",
@@ -422,7 +417,7 @@
 				"ApplicationUserPassThrough": "Application User (Pass-through)",
 				"ApplicationWindowsAuth": "Windows Authentication"
 			},
-			"helpMarkDown": "Select the authentication mechanism that will be used to access the physical path of the website."
+			"helpMarkDown": "Select the authentication mechanism that will be used to access the physical path of the application."
 		},
 		{
 			"name": "ApplicationAuthUserName",
@@ -431,7 +426,7 @@
 			"required": true,
 			"defaultValue": "",
 			"visibleRule": "ApplicationPhysicalPathAuth = ApplicationWindowsAuth",
-			"helpMarkDown": "Provide the user name that will be used to access the website's physical path."
+			"helpMarkDown": "Provide the user name that will be used to access the application's physical path."
 		},
 		{
 			"name": "ApplicationAuthUserPassword",
@@ -440,7 +435,7 @@
 			"required": false,
 			"defaultValue": "",
 			"visibleRule": "ApplicationPhysicalPathAuth = ApplicationWindowsAuth",
-			"helpMarkDown": "Provide the user's password that will be used to access the website's physical path. If you are using a gMSA, this is not required."
+			"helpMarkDown": "Provide the user's password that will be used to access the application's physical path. If you are using a gMSA, this is not required."
 		},
 		{
 			"name": "CreateOrUpdateAppPoolForApplication",
@@ -449,7 +444,7 @@
 			"required": false,
 			"defaultValue": "false",
 			"visibleRule": "IISDeploymentType = IISWebApplication",
-			"helpMarkDown": ""
+			"helpMarkDown": "Select the option to create an application pool or to update an existing application pool. If checked, the application will be created in the specified app pool. Otherwise the DefaultAppPool will be used."
 		},
 		{
 			"name": "AppPoolNameForApplication",
@@ -496,10 +491,10 @@
 			"groupName": "ApplicationPoolForApplication",
 			"helpMarkDown": "Configure the account under which an application pool's worker process runs. Select one of the predefined security accounts or configure a custom account.",
 			"options": {
-				"ApplicationPoolIdentity": "ApplicationPoolIdentity",
-				"LocalService": "LocalService",
-				"LocalSystem": "LocalSystem",
-				"NetworkService": "NetworkService",
+				"ApplicationPoolIdentity": "Application Pool Identity",
+				"LocalService": "Local Service",
+				"LocalSystem": "Local System",
+				"NetworkService": "Network Service",
 				"SpecificUser": "Custom Account"
 			}
 		},
@@ -567,10 +562,10 @@
 			"groupName": "ApplicationPool",
 			"helpMarkDown": "Configure the account under which an application pool's worker process runs. Select one of the predefined security accounts or configure a custom account.",
 			"options": {
-				"ApplicationPoolIdentity": "ApplicationPoolIdentity",
-				"LocalService": "LocalService",
-				"LocalSystem": "LocalSystem",
-				"NetworkService": "NetworkService",
+				"ApplicationPoolIdentity": "Application Pool Identity",
+				"LocalService": "Local Service",
+				"LocalSystem": "Local System",
+				"NetworkService": "Network Service",
 				"SpecificUser": "Custom Account"
 			}
 		},
@@ -600,7 +595,7 @@
 			"required": false,
 			"groupName": "Advanced",
 			"defaultValue": "",
-			"helpMarkDown": "Enter additional AppCmd.exe commands to set the website or the application pool properties. For more than one command use a line separator, like <br/> list apppools <br/> list sites<br/> recycle apppool /apppool.name:ExampleAppPoolName"
+			"helpMarkDown": "Enter additional AppCmd.exe commands. For more than one command use a line separator, like <br/> list apppools <br/> list sites<br/> recycle apppool /apppool.name:ExampleAppPoolName"
 		}
 	],
 	"execution": {

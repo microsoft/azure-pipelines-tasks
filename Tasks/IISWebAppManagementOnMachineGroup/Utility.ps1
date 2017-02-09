@@ -1,3 +1,84 @@
+Import-Module $PSScriptRoot\ps_modules\TaskModuleIISManageUtility
+
+function Manage-IISWebSite
+{
+    Trim-Inputs -siteName ([ref]$websiteName) -physicalPath ([ref]$websitePhysicalPath)  -poolName ([ref]$appPoolNameForWebsite) -physicalPathAuthuser ([ref]$websiteAuthUserName) -appPoolUser ([ref]$appPoolUsernameForWebsite) -sslCertThumbPrint ([ref]$sslCertThumbPrint)
+
+    if((-not [string]::IsNullOrWhiteSpace($sslCertThumbPrint)) -and ($protocol -ieq "https") -and ($addBinding -ieq "true")) 
+    {
+        if(($sslCertThumbPrint.Length -ne 40) -or (-not [regex]::IsMatch($sslCertThumbPrint, "[a-fA-F0-9]{40}")))
+        {
+            throw "Invalid thumbprint. Length is not 40 characters or contains invalid characters."
+        }
+    }
+
+    if ($actionIISWebsite -ieq "CreateOrUpdateWebsite" -and $websitePhysicalPathAuth -ieq "WebsiteWindowsAuth") 
+    {
+        $websitePhysicalPathAuthCredentials = Get-CustomCredentials -username $websiteAuthUserName -password $websiteAuthUserPassword
+    }
+
+    if ($createOrUpdateAppPoolForWebsite -ieq "true" -and $appPoolIdentityForWebsite -ieq "SpecificUser") 
+    {
+        $appPoolCredentials = Get-CustomCredentials -username $appPoolUsernameForWebsite -password $appPoolPasswordForWebsite
+    }
+
+    Execute-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -PhysicalPath $websitePhysicalPath -PhysicalPathAuth $websitePhysicalPathAuth -PhysicalPathAuthCredentials $websitePhysicalPathAuthCredentials -AddBinding $addBinding -Protocol $protocol -IpAddress $ipAddress -Port $port -HostNameWithOutSNI $hostNameWithOutSNI -HostNameWithHttp $hostNameWithHttp -HostNameWithSNI $hostNameWithSNI -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -CreateAppPool $createOrUpdateAppPoolForWebsite -AppPoolName $appPoolNameForWebsite -DotNetVersion $dotNetVersionForWebsite -PipeLineMode $pipeLineModeForWebsite -AppPoolIdentity $appPoolIdentityForWebsite -AppPoolCredentials $appPoolCredentials -AppCmdCommands $appCmdCommands
+}
+
+function Manage-IISVirtualDirectory
+{
+    Trim-Inputs -siteName ([ref]$parentWebsiteNameForVD) -virtualPath ([ref]$virtualPathForVD) -physicalPath ([ref]$physicalPathForVD) -physicalPathAuthuser ([ref]$vdAuthUserName)
+
+    if ($vdPhysicalPathAuth -ieq "VDWindowsAuth") 
+    {
+        $vdPhysicalPathAuthCredentials = Get-CustomCredentials -username $vdAuthUserName -password $vdAuthUserPassword     
+    }
+
+    Execute-Main -CreateVirtualDirectory $true -WebsiteName $parentWebsiteNameForVD -applicationPath $applicationName -VirtualPath $virtualPathForVD -PhysicalPath $physicalPathForVD -PhysicalPathAuth $vdPhysicalPathAuth -PhysicalPathAuthCredentials $vdPhysicalPathAuthCredentials -AppCmdCommands $appCmdCommands
+}
+
+function Manage-IISWebApplication 
+{
+    Trim-Inputs -siteName ([ref]$parentWebsiteNameForApplication) -virtualPath ([ref]$virtualPathForApplication) -physicalPath ([ref]$physicalPathForApplication) -physicalPathAuthuser ([ref]$applicationAuthUserName) -poolName ([ref]$appPoolNameForApplication) -appPoolUser ([ref]$appPoolUsernameForApplication) 
+
+    if ($applicationPhysicalPathAuth -ieq "ApplicationWindowsAuth") 
+    {
+        $applicationPhysicalPathAuthCredentials = Get-CustomCredentials -username $applicationAuthUserName -password $applicationAuthUserPassword     
+    }
+
+    if ($createOrUpdateAppPoolForApplication -ieq "true" -and $appPoolIdentityForApplication -ieq "SpecificUser") 
+    {
+        $appPoolCredentials = Get-CustomCredentials -username $appPoolUsernameForApplication -password $appPoolPasswordForApplication
+    }
+
+    Execute-Main -CreateApplication $true -WebsiteName $parentWebsiteNameForApplication -VirtualPath $virtualPathForApplication -PhysicalPath $physicalPathForApplication -PhysicalPathAuth $applicationPhysicalPathAuth -PhysicalPathAuthCredentials $ApplicationPhysicalPathAuthCredentials -CreateAppPool $createOrUpdateAppPoolForApplication -AppPoolName $appPoolNameForApplication -DotNetVersion $dotNetVersionForApplication -PipeLineMode $pipeLineModeForApplication -AppPoolIdentity $appPoolIdentityForApplication -AppPoolCredentials $appPoolCredentials -AppCmdCommands $appCmdCommands
+}
+
+function Manage-IISApplicationPool
+{
+    Trim-Inputs -poolName ([ref]$appPoolName) -appPoolUser ([ref]$appPoolUsername) 
+
+    if ($actionIISApplicationPool -ieq "CreateOrUpdateAppPool" -and $appPoolIdentity -ieq "SpecificUser") 
+    {
+        $appPoolCredentials = Get-CustomCredentials -username $appPoolUsername -password $appPoolPassword        
+    }
+
+    Execute-Main -ActionIISApplicationPool $actionIISApplicationPool -AppPoolName $appPoolName -DotNetVersion $dotNetVersion -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolCredentials $appPoolCredentials -AppCmdCommands $appCmdCommands
+}
+
+function Get-CustomCredentials {
+
+    param (
+        [string] $username, 
+        [string] $password 
+    )
+
+    $secretPassword = "$password" | ConvertTo-SecureString -AsPlainText -Force
+    # Escape quotes here 
+    $credentials = New-Object System.Management.Automation.PSCredential ("$username", $secretPassword)
+
+    return $credentials
+}
 
 function Trim-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]$virtualPath, [ref]$physicalPathAuthuser, [ref]$appPoolUser, [ref]$sslCertThumbPrint)
 {
@@ -34,39 +115,6 @@ function Trim-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]$v
     }
 }
 
-function Validate-Inputs
-{
-    param(
-        [string]$actionIISWebsite,
-        [string]$actionIISApplicationPool,
-        [string]$websiteName,
-        [string]$createAppPool,
-        [string]$appPoolName,
-        [string]$addBinding,
-        [string]$protocol,
-        [string]$sslCertThumbPrint
-    )
-
-    Write-Verbose "Validating website and application pool inputs"
-    if(($createWebsite -ieq "true" -or $actionIISWebsite -ieq "CreateOrUpdateWebsite") -and [string]::IsNullOrWhiteSpace($websiteName))
-    { 
-        throw "Website Name cannot be empty if you want to create or update the target website."
-    }
-
-    if(($createAppPool -ieq "true" -or $actionIISApplicationPool -ieq "CreateOrUpdateAppPool") -and [string]::IsNullOrWhiteSpace($appPoolName))
-    { 
-        throw "Application pool name cannot be empty if you want to create or update the target app pool."
-    }
-
-    if((-not [string]::IsNullOrWhiteSpace($sslCertThumbPrint)) -and ($protocol -ieq "https") -and ($addBinding -ieq "true")) 
-    {
-        if(($sslCertThumbPrint.Length -ne 40) -or (-not [regex]::IsMatch($sslCertThumbPrint, "[a-fA-F0-9]{40}")))
-        {
-            throw "Invalid thumbprint. Length is not 40 characters or contains invalid characters."
-        }
-    }
-}
-
 function Escape-SpecialChars
 {
     param(
@@ -80,3 +128,4 @@ function Escape-SpecialChars
     
     return $str.Replace('`', '``').Replace('"', '`"').Replace('$', '`$')
 }
+

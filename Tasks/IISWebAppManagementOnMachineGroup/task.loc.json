@@ -7,8 +7,7 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
-    "Release",
-    "Preview"
+    "Release"
   ],
   "runsOn": [
     "MachineGroup"
@@ -16,8 +15,8 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 0,
-    "Patch": 1
+    "Minor": 1,
+    "Patch": 0
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -64,7 +63,7 @@
         "IISVirtualDirectory": "IIS Virtual Directory",
         "IISApplicationPool": "IIS Application Pool"
       },
-      "helpMarkDown": ""
+      "helpMarkDown": "ms-resource:loc.input.help.IISDeploymentType"
     },
     {
       "name": "ActionIISWebsite",
@@ -73,11 +72,9 @@
       "required": true,
       "visibleRule": "IISDeploymentType = IISWebsite",
       "options": {
-        "CreateOrUpdateWebsite": "Create Or Update",
-        "StartWebsite": "Start website",
-        "StopWebsite": "Stop website"
+        "CreateOrUpdateWebsite": "Create Or Update"
       },
-      "helpMarkDown": ""
+      "helpMarkDown": "ms-resource:loc.input.help.ActionIISWebsite"
     },
     {
       "name": "ActionIISApplicationPool",
@@ -86,12 +83,9 @@
       "required": true,
       "visibleRule": "IISDeploymentType = IISApplicationPool",
       "options": {
-        "CreateOrUpdateAppPool": "Create Or Update",
-        "StartAppPool": "Start App pool",
-        "StopAppPool": "Stop App pool",
-        "RecycleAppPool": "Recycle App pool"
+        "CreateOrUpdateAppPool": "Create Or Update"
       },
-      "helpMarkDown": ""
+      "helpMarkDown": "ms-resource:loc.input.help.ActionIISApplicationPool"
     },
     {
       "name": "WebsiteName",
@@ -244,7 +238,7 @@
       "required": false,
       "groupName": "Website",
       "defaultValue": "false",
-      "helpMarkDown": ""
+      "helpMarkDown": "ms-resource:loc.input.help.CreateOrUpdateAppPoolForWebsite"
     },
     {
       "name": "AppPoolNameForWebsite",
@@ -291,10 +285,10 @@
       "groupName": "ApplicationPoolForWebsite",
       "helpMarkDown": "ms-resource:loc.input.help.AppPoolIdentityForWebsite",
       "options": {
-        "ApplicationPoolIdentity": "ApplicationPoolIdentity",
-        "LocalService": "LocalService",
-        "LocalSystem": "LocalSystem",
-        "NetworkService": "NetworkService",
+        "ApplicationPoolIdentity": "Application Pool Identity",
+        "LocalService": "Local Service",
+        "LocalSystem": "Local System",
+        "NetworkService": "Network Service",
         "SpecificUser": "Custom Account"
       }
     },
@@ -305,7 +299,8 @@
       "defaultValue": "",
       "required": true,
       "groupName": "ApplicationPoolForWebsite",
-      "visibleRule": "AppPoolIdentityForWebsite = SpecificUser"
+      "visibleRule": "AppPoolIdentityForWebsite = SpecificUser",
+      "helpMarkDown": "ms-resource:loc.input.help.AppPoolUsernameForWebsite"
     },
     {
       "name": "AppPoolPasswordForWebsite",
@@ -324,7 +319,7 @@
       "defaultValue": "",
       "required": true,
       "visibleRule": "IISDeploymentType = IISVirtualDirectory",
-      "helpMarkDown": ""
+      "helpMarkDown": "ms-resource:loc.input.help.ParentWebsiteNameForVD"
     },
     {
       "name": "ApplicationName",
@@ -333,7 +328,7 @@
       "defaultValue": "",
       "required": false,
       "visibleRule": "IISDeploymentType = IISVirtualDirectory",
-      "helpMarkDown": ""
+      "helpMarkDown": "ms-resource:loc.input.help.ApplicationName"
     },
     {
       "name": "VirtualPathForVD",
@@ -342,7 +337,7 @@
       "defaultValue": "",
       "required": true,
       "visibleRule": "IISDeploymentType = IISVirtualDirectory",
-      "helpMarkDown": ""
+      "helpMarkDown": "ms-resource:loc.input.help.VirtualPathForVD"
     },
     {
       "name": "PhysicalPathForVD",
@@ -351,7 +346,7 @@
       "defaultValue": "%SystemDrive%\\inetpub\\wwwroot",
       "required": true,
       "visibleRule": "IISDeploymentType = IISVirtualDirectory",
-      "helpMarkDown": ""
+      "helpMarkDown": "ms-resource:loc.input.help.PhysicalPathForVD"
     },
     {
       "name": "VDPhysicalPathAuth",
@@ -391,7 +386,7 @@
       "defaultValue": "",
       "required": true,
       "visibleRule": "IISDeploymentType = IISWebApplication",
-      "helpMarkDown": ""
+      "helpMarkDown": "ms-resource:loc.input.help.ParentWebsiteNameForApplication"
     },
     {
       "name": "VirtualPathForApplication",
@@ -400,7 +395,7 @@
       "defaultValue": "",
       "required": true,
       "visibleRule": "IISDeploymentType = IISWebApplication",
-      "helpMarkDown": ""
+      "helpMarkDown": "ms-resource:loc.input.help.VirtualPathForApplication"
     },
     {
       "name": "PhysicalPathForApplication",
@@ -409,7 +404,7 @@
       "defaultValue": "%SystemDrive%\\inetpub\\wwwroot",
       "required": true,
       "visibleRule": "IISDeploymentType = IISWebApplication",
-      "helpMarkDown": ""
+      "helpMarkDown": "ms-resource:loc.input.help.PhysicalPathForApplication"
     },
     {
       "name": "ApplicationPhysicalPathAuth",
@@ -449,7 +444,7 @@
       "required": false,
       "defaultValue": "false",
       "visibleRule": "IISDeploymentType = IISWebApplication",
-      "helpMarkDown": ""
+      "helpMarkDown": "ms-resource:loc.input.help.CreateOrUpdateAppPoolForApplication"
     },
     {
       "name": "AppPoolNameForApplication",
@@ -496,10 +491,10 @@
       "groupName": "ApplicationPoolForApplication",
       "helpMarkDown": "ms-resource:loc.input.help.AppPoolIdentityForApplication",
       "options": {
-        "ApplicationPoolIdentity": "ApplicationPoolIdentity",
-        "LocalService": "LocalService",
-        "LocalSystem": "LocalSystem",
-        "NetworkService": "NetworkService",
+        "ApplicationPoolIdentity": "Application Pool Identity",
+        "LocalService": "Local Service",
+        "LocalSystem": "Local System",
+        "NetworkService": "Network Service",
         "SpecificUser": "Custom Account"
       }
     },
@@ -567,10 +562,10 @@
       "groupName": "ApplicationPool",
       "helpMarkDown": "ms-resource:loc.input.help.AppPoolIdentity",
       "options": {
-        "ApplicationPoolIdentity": "ApplicationPoolIdentity",
-        "LocalService": "LocalService",
-        "LocalSystem": "LocalSystem",
-        "NetworkService": "NetworkService",
+        "ApplicationPoolIdentity": "Application Pool Identity",
+        "LocalService": "Local Service",
+        "LocalSystem": "Local System",
+        "NetworkService": "Network Service",
         "SpecificUser": "Custom Account"
       }
     },
