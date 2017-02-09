@@ -1,12 +1,11 @@
 {
     "id": "1B467810-6725-4B6D-ACCD-886174C09BBA",
     "name": "IISWebAppDeploymentOnMachineGroup",
-    "friendlyName": "IIS Web App Deploy On Machine Group",
+    "friendlyName": "IIS WebApp Deploy Machine Group(Preview)",
     "description": "Deploy a WebSite or Virtual Application by using MSDeploy on Machine Group",
     "helpMarkDown": "[More Information](https://aka.ms/iiswebappdeployreadme)",
     "category": "Deploy",
     "visibility": [
-        "Preview",
         "Release"
     ],
     "runsOn": [
@@ -16,7 +15,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 8
+        "Patch": 9
     },
     "demands": [],
     "minimumAgentVersion": "2.104.1",

@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "IIS Web App Deploy On Machine Group",
+  "loc.friendlyName": "IIS WebApp Deploy Machine Group(Preview)",
   "loc.helpMarkDown": "[More Information](https://aka.ms/iiswebappdeployreadme)",
   "loc.description": "Deploy a WebSite or Virtual Application by using MSDeploy on Machine Group",
   "loc.instanceNameFormat": "Deploy IIS Website/App: $(WebDeployPackage)",
