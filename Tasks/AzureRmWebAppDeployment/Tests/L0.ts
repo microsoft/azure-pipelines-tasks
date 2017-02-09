@@ -26,7 +26,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
             
-            assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
+            assert(tr.invokedToolCount == 1, 'should have invoked tool once');
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             var expectedOut = 'Updated history to kudu'; 
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
@@ -35,29 +35,6 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.succeeded, 'task should have succeeded');
             done();
         });
-
-        it('msdeployutility.containsParamFile function runs successfully', (done:MochaDone) => {
-            let tp = path.join(__dirname, 'L0MSDeployUtility.js');
-            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-            tr.run();
-            
-            assert(tr.invokedToolCount == 1, 'should have invoked tool once');
-            assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
-            assert(tr.succeeded, 'task should have succeeded');
-            done();
-        });
-
-        it('msdeployutility.containsParamFile function fails', (done:MochaDone) => {
-            let tp = path.join(__dirname, 'L0MSDeployUtilityFail.js');
-            let tr = new ttm.MockTestRunner(tp);
-            tr.run();
-            assert(tr.invokedToolCount == 1, 'should have invoked tool once');
-            assert(tr.stderr.length > 0);
-            var expectedErr = "msdeploy failed to execute successfully";
-            assert(tr.stderr.search(expectedErr) >= 0, "should have said: " + expectedErr);
-            done();
-        });        
-
 
         it('Verify logs pushed to Kudu when task runs successfully with default inputs and env variables found', (done) => {
             this.timeout(1000);
@@ -89,7 +66,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
                 details : 'https://abc.visualstudio.com/MyFirstProject/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?releaseId=1&_a=release-summary'
             });
             expectedRequestBody = 'kudu log requestBody is:' + expectedRequestBody;
-            assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
+            assert(tr.invokedToolCount == 1, 'should have invoked tool once');
             assert(tr.stderr.length == 0 && tr.errorIssues.length == 0, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
@@ -105,7 +82,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             tr.run();
             
             var expectedOut = 'Updated history to kudu'; 
-            assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
+            assert(tr.invokedToolCount == 1, 'should have invoked tool once');
             assert(tr.stderr.length == 0 && tr.errorIssues.length == 0, 'should not have written to stderr');
             assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
             expectedOut = 'Successfully updated scmType to VSTSRM';
@@ -120,7 +97,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             tr.run();
             
             var expectedOut = 'Updated history to kudu';
-            assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
+            assert(tr.invokedToolCount == 1, 'should have invoked tool once');
             assert(tr.stderr.length == 0  && tr.errorIssues.length == 0, 'should not have written to stderr');
             assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
             expectedOut = 'Successfully updated scmType to VSTSRM';
@@ -136,7 +113,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             
             var expectedErr = 'Error: msdeploy failed with return code: 1';
             var expectedOut = 'Failed to update history to kudu';
-            assert(tr.invokedToolCount == 2, 'should have invoked tool once');
+            assert(tr.invokedToolCount == 1, 'should have invoked tool once');
             assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have written to stderr');
             assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'E should have said: ' + expectedErr); 
             assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
@@ -177,7 +154,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
                 details : 'https://abc.visualstudio.com/MyFirstProject/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?releaseId=1&_a=release-summary'
             });
 
-            assert(tr.invokedToolCount == 2, 'should have invoked tool once');
+            assert(tr.invokedToolCount == 1, 'should have invoked tool once');
             assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have written to stderr');
             
             assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr);
@@ -196,7 +173,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             tr.run();
             
             var expectedOut = 'Updated history to kudu';
-            assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
+            assert(tr.invokedToolCount == 1, 'should have invoked tool once');
             assert(tr.stderr.length == 0 && tr.errorIssues.length == 0, 'should not have written to stderr');
             assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
             expectedOut = 'Successfully updated scmType to VSTSRM';
@@ -278,7 +255,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             tr.run();
 
             var expectedOut = 'Updated history to kudu';
-            assert(tr.invokedToolCount == 3, 'should have invoked tool thrice');
+            assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
             assert(tr.stderr.length == 0  && tr.errorIssues.length == 0, 'should not have written to stderr');
             assert(tr.stdout.search(expectedOut) >= 0, 'should have said: ' + expectedOut);
             expectedOut = 'Successfully updated scmType to VSTSRM';
