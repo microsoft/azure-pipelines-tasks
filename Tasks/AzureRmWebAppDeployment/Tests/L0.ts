@@ -9,6 +9,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
      before((done) => {
         tl.cp(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.config'), path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.config'), null, false);
         tl.cp(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.Debug.config'), path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.Debug.config'), null, false);
+        tl.cp(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters.xml'), path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters_test.xml'), null, false);
         tl.cp(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XdtTransform', 'Web.config'), path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XdtTransform', 'Web_test.config'), null, false);
         done();
     });
@@ -16,6 +17,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         tl.rmRF(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XdtTransform', 'Web_test.config'), true);
         tl.rmRF(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.config'), true);
         tl.rmRF(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_Test.Debug.config'), true);
+        tl.rmRF(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters_test.xml'), true);
     });
 
     if(tl.osType().match(/^Win/)) {
@@ -429,13 +431,17 @@ describe('AzureRmWebAppDeployment Suite', function() {
         let tp = path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
-		
+
         var resultFile = ltx.parse(fs.readFileSync(path.join(__dirname,  "..", "node_modules","webdeployment-common","Tests", 'L1XmlVarSub', 'Web_test.config')));
         var expectFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XmlVarSub', 'Web_Expected.config')));
         assert(ltx.equal(resultFile, expectFile) , 'Should have substituted variables in Web.config file');
         var resultFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.Debug.config')));
         var expectFile = ltx.parse(fs.readFileSync(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_Expected.Debug.config')));
-        assert(ltx.equal(resultFile, expectFile) , 'Should have substituted variables in Web.Debug.config file');
+        assert(ltx.equal(resultFile, expectFile) , 'Should have substituted variables in Web.Debug.config file');   
+        var resultParamFile = ltx.parse(fs.readFileSync(path.join(__dirname,  "..", "node_modules","webdeployment-common","Tests", 'L1XmlVarSub', 'parameters_test.xml')));
+        var expectParamFile = ltx.parse(fs.readFileSync(path.join(__dirname,  "..", "node_modules","webdeployment-common","Tests", 'L1XmlVarSub', 'parameters_Expected.xml')));
+        assert(ltx.equal(resultParamFile, expectParamFile) , 'Should have substituted variables in parameters.xml file');
+
         done();
     });
 
