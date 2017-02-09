@@ -3,6 +3,7 @@ import path = require('path');
 import Q = require('q');
 import models = require('./models')
 import * as utils from './helpers';
+import * as parameterParser from './parameterParser'
 
 var os = require('os');
 var uuid = require('node-uuid');
@@ -49,12 +50,12 @@ const runSettingsTemplate = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
     "</DataCollectionRunSettings>" +
 "</RunSettings>";
 
-export async function updateSettingsFileAsRequired(settingsFile: string, isParallelRun: boolean, tiaConfig: models.TiaConfiguration, vsVersion: any, videoCollector: boolean) : Promise<string>
-{    
+export async function updateSettingsFileAsRequired(settingsFile: string, isParallelRun: boolean, tiaConfig: models.TiaConfiguration, vsVersion: any, videoCollector: boolean, overrideParametersString: string) : Promise<string>
+{
     var defer=Q.defer<string>();
     var result: any;
 
-    if(!isParallelRun && !videoCollector && !tiaConfig.tiaEnabled) {
+    if(!isParallelRun && !videoCollector && !tiaConfig.tiaEnabled && !overrideParametersString) {
         defer.resolve(settingsFile);
         return defer.promise;
     }
@@ -74,6 +75,14 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
         if(!result || result.RunSettings === undefined) {
             tl.warning(tl.loc('InvalidSettingsFile', settingsFile));
             settingsExt = null;
+        }
+    }
+
+    if (overrideParametersString) {
+        if(settingsExt === runSettingsExt) {
+            result = updateRunSettingsWithParameters(result, overrideParametersString);
+        } else {
+            tl.warning(tl.loc('overrideNotSupported'));
         }
     }
 
@@ -162,6 +171,22 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
         defer.resolve(settingsFile);
     }
     return defer.promise;
+}
+
+function updateRunSettingsWithParameters(result: any, overrideParametersString: string) {
+    var overrideParameters = parameterParser.parse(overrideParametersString);            
+    if (result.RunSettings && result.RunSettings.TestRunParameters && result.RunSettings.TestRunParameters[0] && 
+        result.RunSettings.TestRunParameters[0].Parameter) {
+            tl.debug("Overriding test run parameters.");
+            var parametersArray = result.RunSettings.TestRunParameters[0].Parameter;
+            parametersArray.forEach(function (parameter) {
+                var key = parameter.$.name;
+                if (overrideParameters[key] && overrideParameters[key].value) {
+                    parameter.$.value = overrideParameters[key].value;
+                }
+            });                    
+    }
+    return result;
 }
 
 function updateRunSettingsWithDataCollector(result: any, dataCollectorFriendlyName: string, dataCollectorNodeToAdd) {    

@@ -723,74 +723,64 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     if (vstestConfig.vsTestVersion && vstestConfig.vsTestVersion.toLowerCase() === "latest") {
         vstestConfig.vsTestVersion = null;
     }
-    overrideTestRunParametersIfRequired(vstestConfig.settingsFile)
-        .then(function (overriddenSettingsFile) {
-            let vsVersion = vsVersionDetails.version;
-            try {
-                let disableTIA = tl.getVariable("DisableTestImpactAnalysis");
-                if (disableTIA !== undefined && disableTIA.toLowerCase() === "true") {
-                    tiaConfig.tiaEnabled = false;
-                }
-                let sysDebug = tl.getVariable("System.Debug");
-                if ((sysDebug !== undefined && sysDebug.toLowerCase() === "true") || tiaConfig.tiaEnabled) {
-                    vsTestVersionForTIA = getVsTestVersion();
+    
+    let vsVersion = vsVersionDetails.version;
+    try {
+        let disableTIA = tl.getVariable("DisableTestImpactAnalysis");
+        if (disableTIA !== undefined && disableTIA.toLowerCase() === "true") {
+            tiaConfig.tiaEnabled = false;
+        }
+        let sysDebug = tl.getVariable("System.Debug");
+        if ((sysDebug !== undefined && sysDebug.toLowerCase() === "true") || tiaConfig.tiaEnabled) {
+            vsTestVersionForTIA = getVsTestVersion();
 
-                    if (tiaConfig.tiaEnabled && 
-                       (vsTestVersionForTIA === null || 
-                       (vsTestVersionForTIA[0] < 14 || 
-                       (vsTestVersionForTIA[0] === 15 && vsTestVersionForTIA[1] === 0 && vsTestVersionForTIA[2] < 25727) || 
-                       // VS 2015 U3
-                       (vsTestVersionForTIA[0] === 14 && vsTestVersionForTIA[1] === 0 && vsTestVersionForTIA[2] < 25420)))) {
-                        tl.warning(tl.loc("VstestTIANotSupported"));
-                        tiaConfig.tiaEnabled = false;
-                    }
-                }
-            } catch (e) {
-                tl.error(e.message);
-                defer.resolve(1);
-                return defer.promise;
+            if (tiaConfig.tiaEnabled && 
+                (vsTestVersionForTIA === null || 
+                (vsTestVersionForTIA[0] < 14 || 
+                (vsTestVersionForTIA[0] === 15 && vsTestVersionForTIA[1] === 0 && vsTestVersionForTIA[2] < 25727) || 
+                // VS 2015 U3
+                (vsTestVersionForTIA[0] === 14 && vsTestVersionForTIA[1] === 0 && vsTestVersionForTIA[2] < 25420)))) {
+                tl.warning(tl.loc("VstestTIANotSupported"));
+                tiaConfig.tiaEnabled = false;
             }
+        }
+    } catch (e) {
+        tl.error(e.message);
+        defer.resolve(1);
+        return defer.promise;
+    }
 
-            // We need to use private data collector dll
-            if(vsTestVersionForTIA[0] === 14) {
-                tiaConfig.useNewCollector = true;
-            }
+    // We need to use private data collector dll
+    if(vsTestVersionForTIA[0] === 14) {
+        tiaConfig.useNewCollector = true;
+    }
       
-            setRunInParallellIfApplicable(vsVersion);
-            var newSettingsFile = overriddenSettingsFile;
-            try {
-                settingsHelper.updateSettingsFileAsRequired(overriddenSettingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig, vsVersionDetails.version, false).
-                then(function(ret) {
-                    newSettingsFile = ret;
-                    if(newSettingsFile != overriddenSettingsFile) {
-                    cleanUp(overriddenSettingsFile);
-                    }
-                    runVStest(testResultsDirectory, newSettingsFile, vsVersion)
-                    .then(function (code) {
-                        defer.resolve(code);
-                    })
-                    .fail(function (code) {
-                        defer.resolve(code);
-                    });
-                    
-                })                               
-            } catch (error) {
-                tl.warning(tl.loc('ErrorWhileUpdatingSettings'));
-                tl.debug(error);
-                //Should continue to run without the selected configurations.
-                runVStest(testResultsDirectory, newSettingsFile, vsVersion)
-                    .then(function (code) {
-                        defer.resolve(code);
-                    })
-                    .fail(function (code) {
-                        defer.resolve(code);
-                    });
-            }
-        })
-        .fail(function (err) {
-            tl.error(err);
-            defer.resolve(1);
-        });
+    setRunInParallellIfApplicable(vsVersion);
+    var newSettingsFile = vstestConfig.settingsFile;
+    try {
+        settingsHelper.updateSettingsFileAsRequired(vstestConfig.settingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig, vsVersionDetails.version, false, vstestConfig.overrideTestrunParameters).
+        then(function(ret) {
+            newSettingsFile = ret;            
+            runVStest(testResultsDirectory, newSettingsFile, vsVersion)
+            .then(function (code) {
+                defer.resolve(code);
+            })
+            .fail(function (code) {
+                defer.resolve(code);
+            });            
+        })                               
+    } catch (error) {
+        tl.warning(tl.loc('ErrorWhileUpdatingSettings'));
+        tl.debug(error);
+        //Should continue to run without the selected configurations.
+        runVStest(testResultsDirectory, newSettingsFile, vsVersion)
+            .then(function (code) {
+                defer.resolve(code);
+            })
+            .fail(function (code) {
+                defer.resolve(code);
+            });
+    }
 
     return defer.promise;
 }
@@ -818,74 +808,6 @@ function cleanUp(temporarySettingsFile: string) {
             //ignore. just cleanup.
         }
     }
-}
-
-function overrideTestRunParametersIfRequired(settingsFile: string): Q.Promise<string> {
-    var defer = Q.defer<string>();
-    if (!settingsFile || !pathExistsAsFile(settingsFile) || !vstestConfig.overrideTestrunParameters || vstestConfig.overrideTestrunParameters.trim().length === 0) {
-        defer.resolve(settingsFile);
-        return defer.promise;
-    }
-
-    vstestConfig.overrideTestrunParameters = vstestConfig.overrideTestrunParameters.trim();
-    var overrideParameters = {};
-
-    var parameterStrings = vstestConfig.overrideTestrunParameters.split(";");
-    parameterStrings.forEach(function (parameterString) {
-        var pair = parameterString.split("=", 2);
-        if (pair.length === 2) {
-            var key = pair[0];
-            var value = pair[1];
-            if (!overrideParameters[key]) {
-                overrideParameters[key] = value;
-            }
-        }
-    });
-
-    utils.Helper.readFileContents(vstestConfig.settingsFile, "utf-8")
-        .then(function (xmlContents) {
-            var parser = new xml2js.Parser();
-            parser.parseString(xmlContents, function (err, result) {
-                if (err) {
-                    tl.warning(tl.loc('ErrorWhileReadingRunSettings', err));
-                    tl.debug("Error occured while overriding test run parameters. Continuing...");
-                    defer.resolve(settingsFile);
-                    return defer.promise;
-                }
-
-                if (result.RunSettings && result.RunSettings.TestRunParameters && result.RunSettings.TestRunParameters[0] &&
-                    result.RunSettings.TestRunParameters[0].Parameter) {
-                    var parametersArray = result.RunSettings.TestRunParameters[0].Parameter;
-                    parametersArray.forEach(function (parameter) {
-                        var key = parameter.$.name;
-                        if (overrideParameters[key]) {
-                            parameter.$.value = overrideParameters[key];
-                        }
-                    });
-                    tl.debug("Overriding test run parameters.");
-                    var builder = new xml2js.Builder();
-                    var overridedRunSettings = builder.buildObject(result);
-                    utils.Helper.saveToFile(overridedRunSettings, runSettingsExt)
-                        .then(function (fileName) {
-                            defer.resolve(fileName);
-                        })
-                        .fail(function (err) {
-                            tl.debug("Error occured while overriding test run parameters. Continuing...");
-                            tl.warning(err);
-                            defer.resolve(settingsFile);
-                        });
-                } else {
-                    tl.debug("No test run parameters found to override.");
-                    defer.resolve(settingsFile);
-                }
-            });
-        })
-        .fail(function (err) {
-            tl.debug("Error occured while overriding test run parameters. Continuing...");
-            tl.warning(err);
-            defer.resolve(settingsFile);
-        });
-    return defer.promise;
 }
 
 function isNugetRestoredAdapterPresent(rootDirectory: string): boolean {
