@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 11
+        "Patch": 12
     },
     "demands": [
         "vstest"
@@ -145,15 +145,6 @@
             "visibleRule": "testSelector = testAssemblies"
         },        
         {
-            "name": "uiTests",
-            "type": "boolean",
-            "label": "Test mix contains UI tests",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "*******",
-            "groupName": "testSelection"
-        },
-        {
             "name": "runOnlyImpactedTests",
             "type": "boolean",
             "label": "Run only impacted tests",
@@ -172,7 +163,16 @@
             "helpMarkDown": "Number of builds after which to automatically run all tests. Test Impact Analysis stores the mapping between test cases and source code. It is recommended to regenerate the mapping by running all tests, on a regular basis.",
             "groupName": "testSelection",
             "visibleRule": "testSelector = testAssemblies && runOnlyImpactedTests = true"
-        },      
+        },
+        {
+            "name": "uiTests",
+            "type": "boolean",
+            "label": "Test mix contains UI tests",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "*******",
+            "groupName": "testSelection"
+        },
         {  
             "name": "vsTestVersion",
             "type": "pickList",
