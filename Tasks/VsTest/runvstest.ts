@@ -16,13 +16,7 @@ try {
         tl.debug('Going to the DTA Flow..');
         tl.debug('***********************');
         
-        var dtaTestConfig = null;
-        if(parallelExecution && parallelExecution.toLowerCase() === 'multimachine') {
-            dtaTestConfig = taskInputParser.getDistributedTestConfigurations(false);
-        }
-        else {
-            dtaTestConfig = taskInputParser.getDistributedTestConfigurations(true);
-        }
+        var dtaTestConfig = taskInputParser.getDistributedTestConfigurations();
 
         const test = new distributedTest.DistributedTest(dtaTestConfig);
         test.runDistributedTest();

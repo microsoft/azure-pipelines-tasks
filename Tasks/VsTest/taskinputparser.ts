@@ -8,7 +8,7 @@ import utils = require('./helpers');
 let os = require('os');
 let uuid = require('node-uuid');
 
-export function getDistributedTestConfigurations(isBuild : boolean): models.DtaTestConfigurations {
+export function getDistributedTestConfigurations(): models.DtaTestConfigurations {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     const dtaConfiguration = {} as models.DtaTestConfigurations;
     initTestConfigurations(dtaConfiguration);
@@ -28,7 +28,7 @@ export function getDistributedTestConfigurations(isBuild : boolean): models.DtaT
 
     dtaConfiguration.onDemandTestRunId = tl.getInput('tcmTestRun');
 
-    dtaConfiguration.dtaEnvironment = initDtaEnvironment(isBuild);
+    dtaConfiguration.dtaEnvironment = initDtaEnvironment();
 
     return dtaConfiguration;
 }
@@ -43,7 +43,7 @@ export function getvsTestConfigurations(): models.VsTestConfigurations {
     return vsTestConfiguration;
 }
 
-function initDtaEnvironment(isBuild: boolean): models.DtaEnvironment {
+function initDtaEnvironment(): models.DtaEnvironment {
     const dtaEnvironment = {} as models.DtaEnvironment;
     dtaEnvironment.tfsCollectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
     dtaEnvironment.patToken = tl.getEndpointAuthorization('SystemVssConnection', true).parameters['AccessToken'];
@@ -54,11 +54,11 @@ function initDtaEnvironment(isBuild: boolean): models.DtaEnvironment {
     const projectName = tl.getVariable('System.TeamProject');
     const taskInstanceId = getDtaInstanceId();
     
-    if(isBuild) {
+    if(releaseId) {
+        dtaEnvironment.environmentUri = 'dta://env/' + projectName + '/_apis/release/' + releaseId + '/' + phaseId + '/' + taskInstanceId;        
+    } else {
         const buildId = tl.getVariable('Build.BuildId');
         dtaEnvironment.environmentUri = 'dta://env/' + projectName + '/_apis/build/' + buildId + '/' + taskInstanceId;
-    } else {
-        dtaEnvironment.environmentUri = 'dta://env/' + projectName + '/_apis/release/' + releaseId + '/' + phaseId + '/' + taskInstanceId;
     }
 
     dtaEnvironment.dtaHostLogFilePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'DTAExecutionHost.exe.log');
