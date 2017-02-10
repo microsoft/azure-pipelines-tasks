@@ -132,28 +132,10 @@ export class NpmMockHelper {
         this.answers.exist[path.join(NpmMockHelper.DefaultWorkingDirectory, NpmMockHelper.FakeWorkingDirectory, "one", '.npmrc')] = true;
     }
 
-    public setStat(path: string, isFile: boolean) {
+    public setStats(stats: any) {
         if(!this.answers["stats"]) {
             this.answers["stats"]={};
         }
-        this.answers["stats"] = {
-            "c:\\agent\\home\\directory\\fake\\wd" : {
-                "isDirectory": true
-            },
-                "c:\\agent\\home\\directory\\fake\\wd\\one": {
-                    "isDirectory": true
-                },
-
-                "c:\\agent\\home\\directory\\fake\\wd\\one\\package.json": {
-                    "isFile": true
-                },
-            "c:\\agent\\home\\directory\\fake\\wd\\two": {
-                    "isDirectory": true
-                },
-
-                "c:\\agent\\home\\directory\\fake\\wd\\two\\package.json": {
-                    "isFile": true
-                }
-            }
-        }
+        this.answers["stats"] = stats;
+    }
 }

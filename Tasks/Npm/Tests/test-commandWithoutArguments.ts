@@ -17,7 +17,6 @@ if (process.argv.length == 3) {
 npmMockHelper.setDebugState(true);
 npmMockHelper.mockAuthHelper();
 npmMockHelper.mockNpmConfigList();
-npmMockHelper.setStat("c:\\agent\\home\\directory\\fake\\wd", false);
 
 let root = path.join(process.env['INPUT_CWD'], "node_modules");
 

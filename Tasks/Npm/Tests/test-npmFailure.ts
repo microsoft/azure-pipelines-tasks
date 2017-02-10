@@ -22,7 +22,6 @@ if (process.argv.length == 3) {
 npmMockHelper.setDebugState(true);
 npmMockHelper.mockAuthHelper();
 npmMockHelper.mockNpmConfigList();
-npmMockHelper.setStat("c:\\agent\\home\\directory\\fake\\wd", false);
 
 var execResult: ma.TaskLibAnswerExecResult = {
     code: 1,

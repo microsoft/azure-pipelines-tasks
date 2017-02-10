@@ -18,7 +18,6 @@ npmMockHelper.mockAuthHelper();
 npmMockHelper.mockNpmConfigList();
 
 npmMockHelper.useDeprecatedTask();
-npmMockHelper.setStat("c:\\agent\\home\\directory\\fake\\wd", false);
 
 let root = path.join(process.env['INPUT_CWD'], "node_modules");
 

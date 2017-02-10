@@ -23,7 +23,6 @@ npmMockHelper.mockAuthHelper();
 npmMockHelper.mockNpmConfigList();
 
 npmMockHelper.useDeprecatedTask();
-npmMockHelper.setStat("c:\\agent\\home\\directory\\fake\\wd", false);
 
 var execResult: ma.TaskLibAnswerExecResult = {
     code: 1,

@@ -8,5 +8,4 @@ let taskMockRunner = new tmrm.TaskMockRunner(taskPath);
 let npmMockHelper = new util.NpmMockHelper(taskMockRunner, "fake\\wd", "config get", "registry");
 
 npmMockHelper.useDeprecatedTask();
-npmMockHelper.setStat("c:\\agent\\home\\directory\\fake\\wd", false);
 npmMockHelper.run();
