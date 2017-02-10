@@ -28,6 +28,7 @@ function Manage-IISWebSite
 function Manage-IISVirtualDirectory
 {
     Trim-Inputs -siteName ([ref]$parentWebsiteNameForVD) -virtualPath ([ref]$virtualPathForVD) -physicalPath ([ref]$physicalPathForVD) -physicalPathAuthuser ([ref]$vdAuthUserName)
+    Trim-Inputs -virtualPath ([ref]$applicationName)
 
     if ($vdPhysicalPathAuth -ieq "VDWindowsAuth") 
     {
@@ -74,7 +75,6 @@ function Get-CustomCredentials {
     )
 
     $secretPassword = "$password" | ConvertTo-SecureString -AsPlainText -Force
-    # Escape quotes here 
     $credentials = New-Object System.Management.Automation.PSCredential ("$username", $secretPassword)
 
     return $credentials
@@ -94,7 +94,6 @@ function Trim-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]$v
     }
     if ($virtualPath -ne $null) 
     {
-        ## check
         $virtualPath.Value = $virtualPath.Value.Trim('"', ' ').Trim('\', ' ').Trim('/', ' ')
     }
     if ($poolName -ne $null) 
