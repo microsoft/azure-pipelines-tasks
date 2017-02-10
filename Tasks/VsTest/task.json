@@ -17,7 +17,11 @@
     "version": {
         "Major": 2,
         "Minor": 0,
+<<<<<<< HEAD
         "Patch": 12
+=======
+        "Patch": 13
+>>>>>>> 6d1242b1d85a00a6f5c7f4cf65fa1efa1a0f1096
     },
     "demands": [
         "vstest"
@@ -145,6 +149,18 @@
             "visibleRule": "testSelector = testAssemblies"
         },        
         {
+<<<<<<< HEAD
+=======
+            "name": "uiTests",
+            "type": "boolean",
+            "label": "Test mix contains UI tests",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "To run UI tests, ensure that the agent is set to run in interactive mode. [More information](https://aka.ms/uitestmoreinfo).",
+            "groupName": "testSelection"
+        },
+        {
+>>>>>>> 6d1242b1d85a00a6f5c7f4cf65fa1efa1a0f1096
             "name": "runOnlyImpactedTests",
             "type": "boolean",
             "label": "Run only impacted tests",
@@ -345,6 +361,9 @@
         "VideoCollectorNotSupportedWithRunSettings": "Video collector is not supported with run settings.",
         "runTestInIsolationNotSupported": "Running tests in isolation is not supported when using the multi-agent phase setting. This option will be ignored.",
         "tiaNotSupportedInDta": "Running only impacted tests is not supported when using the multi-agent phase setting. This option will be ignored."
+<<<<<<< HEAD
         "overrideNotSupported": "Overriding test run parameters is supported only with runsettings file. This option will be ignored."
+=======
+>>>>>>> 6d1242b1d85a00a6f5c7f4cf65fa1efa1a0f1096
     }
 }
