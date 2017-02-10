@@ -12,7 +12,8 @@ try {
     const testType = tl.getInput('testSelector');
     tl.debug('Value of Test Selector :' + parallelExecution);
 
-    if (parallelExecution && parallelExecution.toLowerCase() === 'multimachine' || testType.toLowerCase() === 'testplan' || testType.toLowerCase() === 'testrun') {
+    if ((parallelExecution && parallelExecution.toLowerCase() === 'multimachine')
+         || testType.toLowerCase() === 'testplan' || testType.toLowerCase() === 'testrun') {
         tl.debug('Going to the DTA Flow..');
         tl.debug('***********************');
         
