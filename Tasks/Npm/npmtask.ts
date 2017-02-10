@@ -5,6 +5,7 @@ import url = require('url');
 import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
 var extend = require('util')._extend;
+var nutil = require('nuget-task-common/utility.js');
 
 interface EnvironmentDictionary { [key: string]: string; }
 
@@ -14,9 +15,26 @@ executeTask();
 
 async function executeTask() {
 
-    var cwd = tl.getPathInput('cwd', true, false);
-    tl.mkdirP(cwd);
-    tl.cd(cwd);
+    try {
+        var filePath = tl.getPathInput('cwd', true, false);
+        var dirList = [];
+        var filesList = nutil.resolveFilterSpec(filePath, tl.getVariable("System.DefaultWorkingDirectory"));
+        tl.debug("number of files matching filePath: " + filesList.length);
+        for (var workingDir of filesList) {
+            if (tl.stats(workingDir).isFile()) {
+                workingDir = path.dirname(workingDir);
+            }
+            if (dirList.indexOf(workingDir) === -1) {
+                dirList.push(workingDir);
+            }
+        }
+    }
+    catch (error) {
+        tl.warning(error);
+    }
+    if (dirList.length === 0) {
+        dirList.push(tl.getVariable("System.DefaultWorkingDirectory"));
+    }
 
     var command = tl.getInput('command', true);
     if (command.indexOf(' ') >= 0) {
@@ -28,53 +46,58 @@ async function executeTask() {
     npmRunner.arg(command);
     npmRunner.line(tl.getInput('arguments', false));
 
+    for (var cwd of dirList) {
+        tl.debug('Executing command in directory: ' + cwd);
+        tl.mkdirP(cwd);
+        tl.cd(cwd);
 
-    if(shouldUseDeprecatedTask()) {
+        if (shouldUseDeprecatedTask()) {
 
-        // deprecated version of task, which just runs the npm command with NO auth support.
-        try{
-            var code : number = await npmRunner.exec();
-            tl.setResult(code, tl.loc('NpmReturnCode', code));
-        } catch (err) {
-            tl.debug('taskRunner fail');
-            tl.setResult(tl.TaskResult.Failed, tl.loc('NpmFailed', err.message));
-        }
-    } else {
-
-        // new task version with auth support
-        try{
-
-            var npmrcPath: string = path.join(cwd, '.npmrc');
-            var tempNpmrcPath : string = getTempNpmrcPath();
-
-            var debugLog: boolean = tl.getVariable('system.debug') && tl.getVariable('system.debug').toLowerCase() === 'true';
-
-            var shouldRunAuthHelper: boolean = tl.osType().toLowerCase() === 'windows_nt' && tl.exist(npmrcPath); 
-            if(shouldRunAuthHelper) {
-                copyUserNpmrc(tempNpmrcPath);
-                await runNpmAuthHelperAsync(getNpmAuthHelperRunner(npmrcPath, tempNpmrcPath, debugLog));
+            // deprecated version of task, which just runs the npm command with NO auth support.
+            try {
+                var code: number = await npmRunner.exec();
+                tl.setResult(code, tl.loc('NpmReturnCode', code));
+            } catch (err) {
+                tl.debug('taskRunner fail');
+                tl.setResult(tl.TaskResult.Failed, tl.loc('NpmFailed', err.message));
             }
+        } else {
 
-            // set required environment variables for npm execution
-            var npmExecOptions = <trm.IExecOptions>{
-                env: extend({}, process.env)
-            };
+            // new task version with auth support
+            try {
 
-            if(shouldRunAuthHelper){
-                npmExecOptions.env['npm_config_userconfig'] = tempNpmrcPath;
+                var npmrcPath: string = path.join(cwd, '.npmrc');
+                var tempNpmrcPath: string = getTempNpmrcPath();
+
+                var debugLog: boolean = tl.getVariable('system.debug') && tl.getVariable('system.debug').toLowerCase() === 'true';
+
+                var shouldRunAuthHelper: boolean = tl.osType().toLowerCase() === 'windows_nt' && tl.exist(npmrcPath);
+                if (shouldRunAuthHelper) {
+                    copyUserNpmrc(tempNpmrcPath);
+                    await runNpmAuthHelperAsync(getNpmAuthHelperRunner(npmrcPath, tempNpmrcPath, debugLog));
+                }
+
+                // set required environment variables for npm execution
+                var npmExecOptions = <trm.IExecOptions>{
+                    env: extend({}, process.env)
+                };
+
+                if (shouldRunAuthHelper) {
+                    npmExecOptions.env['npm_config_userconfig'] = tempNpmrcPath;
+                }
+
+                if (debugLog) {
+                    npmExecOptions.env['npm_config_loglevel'] = 'verbose';
+                }
+
+                await tryRunNpmConfigAsync(getNpmConfigRunner(debugLog), npmExecOptions);
+                var code: number = await runNpmCommandAsync(npmRunner, npmExecOptions);
+                cleanUpTempNpmrcPath(tempNpmrcPath);
+                tl.setResult(code, tl.loc('NpmReturnCode', code));
+            } catch (err) {
+                cleanUpTempNpmrcPath(tempNpmrcPath);
+                tl.setResult(tl.TaskResult.Failed, tl.loc('NpmFailed', err.message));
             }
-
-            if(debugLog) {
-                npmExecOptions.env['npm_config_loglevel'] =  'verbose';
-            }
-
-            await tryRunNpmConfigAsync(getNpmConfigRunner(debugLog), npmExecOptions);
-            var code : number =  await runNpmCommandAsync(npmRunner, npmExecOptions);
-            cleanUpTempNpmrcPath(tempNpmrcPath);
-            tl.setResult(code, tl.loc('NpmReturnCode', code));
-        } catch (err) {
-            cleanUpTempNpmrcPath(tempNpmrcPath);
-            tl.setResult(tl.TaskResult.Failed, tl.loc('NpmFailed', err.message));
         }
     }
 }

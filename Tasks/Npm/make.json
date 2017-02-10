@@ -1,4 +1,11 @@
 {
+    "common": [
+        {
+            "module": "../Common/nuget-task-common",
+            "type": "node",
+            "compile": true
+        }
+    ],
     "externals": {
         "archivePackages": [
             {

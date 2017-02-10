@@ -5,6 +5,6 @@ import util = require('./NpmMockHelper');
 
 let taskPath = path.join(__dirname, '..', 'npmtask.js');
 let taskMockRunner = new tmrm.TaskMockRunner(taskPath);
-let npmMockHelper = new util.NpmMockHelper(taskMockRunner, "config get", "registry");
+let npmMockHelper = new util.NpmMockHelper(taskMockRunner, "fake\\wd", "config get", "registry");
 
 npmMockHelper.run();

@@ -5,7 +5,7 @@ import util = require('./NpmMockHelper');
 
 let taskPath = path.join(__dirname, '..', 'npmtask.js');
 let taskMockRunner = new tmrm.TaskMockRunner(taskPath);
-let npmMockHelper = new util.NpmMockHelper(taskMockRunner, "config", "list");
+let npmMockHelper = new util.NpmMockHelper(taskMockRunner, "fake\\wd", "config", "list");
 
 if (process.argv.length == 3) {
     if (process.argv[2] === "useDeprecated") {
