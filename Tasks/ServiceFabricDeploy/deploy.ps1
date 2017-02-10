@@ -131,7 +131,7 @@ try {
     {
         $publishParameters['Action'] = "RegisterAndUpgrade"
         $publishParameters['UpgradeParameters'] = $upgradeParameters
-        $publishParameters['UnregisterUnusedVersions'] = $true        
+        $publishParameters['UnregisterUnusedVersions'] = $true
         $publishParameters['SkipUpgradeSameTypeAndVersion'] = $skipUpgrade
 
         Publish-UpgradedServiceFabricApplication @publishParameters

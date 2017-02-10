@@ -203,21 +203,21 @@ function Publish-UpgradedServiceFabricApplication
 
         $reg = Get-ServiceFabricApplicationType -ApplicationTypeName $names.ApplicationTypeName | Where-Object  { $_.ApplicationTypeVersion -eq $names.ApplicationTypeVersion }
         if ($reg)
-        {            
+        {
             try {
-                Write-Host (Get-VstsLocString -Key SFSDK_UnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))            
-                $reg | Unregister-ServiceFabricApplicationType -Force    
+                Write-Host (Get-VstsLocString -Key SFSDK_UnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
+                $reg | Unregister-ServiceFabricApplicationType -Force
             }
             catch [System.Fabric.FabricException] {
                 ## If SkipUpgrade param is set when existing version already deployed, then back out of upgrade
-                if($SkipUpgradeSameTypeAndVersion -And $Error[0].Exception.Message -like '*Application type and version is still in use*') {                    
+                if($SkipUpgradeSameTypeAndVersion -And $Error[0].Exception.ErrorCode -eq [System.Fabric.FabricErrorCode]::ApplicationTypeInUse) {
                     Write-Warning (Get-VstsLocString -Key SFSDK_SkipUpgradeWarning -ArgumentList @($reg.ApplicationTypeName, $reg.ApplicationTypeVersion))
                     return
                 }
-                else {                    
-                    throw   
-                }                
-            }            
+                else {
+                    throw
+                }
+            }
         }
     
         $applicationPackagePathInImageStore = $names.ApplicationTypeName
