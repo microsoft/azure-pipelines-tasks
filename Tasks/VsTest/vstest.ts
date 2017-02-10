@@ -1549,21 +1549,27 @@ function getVSTestConsole15Path(): string {
 function locateVSVersion(version: string): Q.Promise<ExecutabaleInfo> {
     let deferred = Q.defer<ExecutabaleInfo>();
     let vsVersion: number = parseFloat(version);
-    
-    if (isNaN(vsVersion) || vsVersion == 15) {
-        // latest
-        tl.debug('Searching for latest Visual Studio');
-        let vstestconsole15Path = getVSTestConsole15Path();
-        if (vstestconsole15Path) {
-            deferred.resolve({version: 15, location: vstestconsole15Path});
+
+    if(vstestLocationMethod.toLowerCase() !== 'location') {    
+        if (isNaN(vsVersion) || vsVersion == 15) {
+            // latest
+            tl.debug('Searching for latest Visual Studio');
+            let vstestconsole15Path = getVSTestConsole15Path();
+            if (vstestconsole15Path) {
+                deferred.resolve({version: 15, location: vstestconsole15Path});
+            } else {
+                // fallback
+                tl.debug('Unable to find an instance of Visual Studio 2017');
+                return getLatestVSTestConsolePathFromRegistry();
+            }
         } else {
-            // fallback
-            tl.debug('Unable to find an instance of Visual Studio 2017');
-            return getLatestVSTestConsolePathFromRegistry();
+            tl.debug('Searching for Visual Studio ' + vsVersion.toString());
+            deferred.resolve({version: vsVersion, location: getVSTestLocation(vsVersion)});
         }
-    } else {
-        tl.debug('Searching for Visual Studio ' + vsVersion.toString());
-        deferred.resolve({version: vsVersion, location: getVSTestLocation(vsVersion)});
+    }
+    else {
+      vstestLocation = getVSTestLocation(vsVersion); // returns location if user has given path
+      deferred.resolve({ version: getVsTestVersion()[0], location: vstestLocation });
     }
     return deferred.promise;
 }
