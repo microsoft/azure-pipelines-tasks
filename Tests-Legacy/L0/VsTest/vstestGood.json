@@ -74,9 +74,31 @@
             "code": 0,
             "stdout": "vstest"
         },
-        "powershell -file /path/to/vs15Helper.ps1": {
+        "powershell -NonInteractive -ExecutionPolicy Unrestricted -file /path/to/vs15Helper.ps1": {
             "code": 0,
             "stdout": "<Objs Version=\"1.1.0.1\" xmlns=\"http://schemas.microsoft.com/powershell/2004/04\"><S>\\vs2017\\installation\\folder</S></Objs>"
+        },
+        "wmic datafile": {
+            "code": 0,
+            "stdout": "Version=15.0.26206.0"
+        },
+        "wmic datafile where name='some\\\\path\\\\to\\\\vstest.console.exe' get Version /Value": {
+            "code": 0,
+            "stdout": "Version=15.0.26206.0"
+        },
+        "wmic datafile where name='\\\\path\\\\to\\\\vstest\\\\directory\\\\vstest.console.exe' get Version /Value": {
+            "code": 0,
+            "stdout": "Version=15.0.26206.0"
+        }
+    },
+    "execSync": {
+        "wmic datafile where name='some\\path\\to\\vstest.console.exe' get Version /Value": {
+            "code": 0,
+            "stdout": "Version=15.0.26206.0"
+        },
+        "wmic datafile where name='\\path\\to\\vstest\\directory\\vstest.console.exe' get Version /Value": {
+            "code": 0,
+            "stdout": "Version=15.0.26206.0"
         }
     },
     "rmRF": {
@@ -100,10 +122,16 @@
         "some\\path\\to\\vstest.console.exe": {
             "isFile": true
         },
+        "\\path\\to\\vstest\\directory\\vstest.console.exe": {
+            "isFile": true
+        },
         "path/to/customadapters": {
             "isDirectory": true
         },
         "\\path\\to\\vstest\\directory": {
+            "isDirectory": true
+        },
+        "some\\path\\to": {
             "isDirectory": true
         }
     }
