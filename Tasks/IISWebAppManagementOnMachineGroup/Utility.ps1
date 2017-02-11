@@ -1,130 +1,84 @@
-Import-Module $PSScriptRoot\ps_modules\TaskModuleIISManageUtility
-
-function Manage-IISWebSite
+function Get-HostName
 {
-    Trim-Inputs -siteName ([ref]$websiteName) -physicalPath ([ref]$websitePhysicalPath)  -poolName ([ref]$appPoolNameForWebsite) -physicalPathAuthuser ([ref]$websiteAuthUserName) -appPoolUser ([ref]$appPoolUsernameForWebsite) -sslCertThumbPrint ([ref]$sslCertThumbPrint)
-    Validate-Inputs -sslCertThumbPrint $sslCertThumbPrint
-    
-    if ($actionIISWebsite -ieq "CreateOrUpdateWebsite" -and $websitePhysicalPathAuth -ieq "WebsiteWindowsAuth") 
-    {
-        $websitePhysicalPathAuthCredentials = Get-CustomCredentials -username $websiteAuthUserName -password $websiteAuthUserPassword
-    }
-
-    if ($createOrUpdateAppPoolForWebsite -ieq "true" -and $appPoolIdentityForWebsite -ieq "SpecificUser") 
-    {
-        $appPoolCredentials = Get-CustomCredentials -username $appPoolUsernameForWebsite -password $appPoolPasswordForWebsite
-    }
-
-    Execute-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -PhysicalPath $websitePhysicalPath -PhysicalPathAuth $websitePhysicalPathAuth -PhysicalPathAuthCredentials $websitePhysicalPathAuthCredentials -AddBinding $addBinding -Protocol $protocol -IpAddress $ipAddress -Port $port -HostNameWithOutSNI $hostNameWithOutSNI -HostNameWithHttp $hostNameWithHttp -HostNameWithSNI $hostNameWithSNI -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -CreateAppPool $createOrUpdateAppPoolForWebsite -AppPoolName $appPoolNameForWebsite -DotNetVersion $dotNetVersionForWebsite -PipeLineMode $pipeLineModeForWebsite -AppPoolIdentity $appPoolIdentityForWebsite -AppPoolCredentials $appPoolCredentials -AppCmdCommands $appCmdCommands
-}
-
-function Manage-IISVirtualDirectory
-{
-    Trim-Inputs -siteName ([ref]$parentWebsiteNameForVD) -virtualPath ([ref]$virtualPathForVD) -physicalPath ([ref]$physicalPathForVD) -physicalPathAuthuser ([ref]$vdAuthUserName)
-    Validate-Inputs -virtualPath $virtualPathForVD
-
-    if ($vdPhysicalPathAuth -ieq "VDWindowsAuth") 
-    {
-        $vdPhysicalPathAuthCredentials = Get-CustomCredentials -username $vdAuthUserName -password $vdAuthUserPassword     
-    }
-
-    Execute-Main -CreateVirtualDirectory $true -WebsiteName $parentWebsiteNameForVD -VirtualPath $virtualPathForVD -PhysicalPath $physicalPathForVD -PhysicalPathAuth $vdPhysicalPathAuth -PhysicalPathAuthCredentials $vdPhysicalPathAuthCredentials -AppCmdCommands $appCmdCommands
-}
-
-function Manage-IISWebApplication 
-{
-    Trim-Inputs -siteName ([ref]$parentWebsiteNameForApplication) -virtualPath ([ref]$virtualPathForApplication) -physicalPath ([ref]$physicalPathForApplication) -physicalPathAuthuser ([ref]$applicationAuthUserName) -poolName ([ref]$appPoolNameForApplication) -appPoolUser ([ref]$appPoolUsernameForApplication) 
-    Validate-Inputs -virtualPath $virtualPathForApplication
-
-    if ($applicationPhysicalPathAuth -ieq "ApplicationWindowsAuth") 
-    {
-        $applicationPhysicalPathAuthCredentials = Get-CustomCredentials -username $applicationAuthUserName -password $applicationAuthUserPassword     
-    }
-
-    if ($createOrUpdateAppPoolForApplication -ieq "true" -and $appPoolIdentityForApplication -ieq "SpecificUser") 
-    {
-        $appPoolCredentials = Get-CustomCredentials -username $appPoolUsernameForApplication -password $appPoolPasswordForApplication
-    }
-
-    Execute-Main -CreateApplication $true -WebsiteName $parentWebsiteNameForApplication -VirtualPath $virtualPathForApplication -PhysicalPath $physicalPathForApplication -PhysicalPathAuth $applicationPhysicalPathAuth -PhysicalPathAuthCredentials $ApplicationPhysicalPathAuthCredentials -CreateAppPool $createOrUpdateAppPoolForApplication -AppPoolName $appPoolNameForApplication -DotNetVersion $dotNetVersionForApplication -PipeLineMode $pipeLineModeForApplication -AppPoolIdentity $appPoolIdentityForApplication -AppPoolCredentials $appPoolCredentials -AppCmdCommands $appCmdCommands
-}
-
-function Manage-IISApplicationPool
-{
-    Trim-Inputs -poolName ([ref]$appPoolName) -appPoolUser ([ref]$appPoolUsername) 
-
-    if ($actionIISApplicationPool -ieq "CreateOrUpdateAppPool" -and $appPoolIdentity -ieq "SpecificUser") 
-    {
-        $appPoolCredentials = Get-CustomCredentials -username $appPoolUsername -password $appPoolPassword        
-    }
-
-    Execute-Main -ActionIISApplicationPool $actionIISApplicationPool -AppPoolName $appPoolName -DotNetVersion $dotNetVersion -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolCredentials $appPoolCredentials -AppCmdCommands $appCmdCommands
-}
-
-function Get-CustomCredentials {
-
-    param (
-        [string] $username, 
-        [string] $password 
+    param(
+        [string]$protocol,
+        [string]$hostNameWithHttp,
+        [string]$hostNameWithSNI,
+        [string]$hostNameWithOutSNI,
+        [string]$sni
     )
+    $hostName = [string]::Empty
 
-    $secretPassword = "$password" | ConvertTo-SecureString -AsPlainText -Force
-    $credentials = New-Object System.Management.Automation.PSCredential ("$username", $secretPassword)
-
-    return $credentials
+    if($protocol -eq "http")
+    {
+        $hostName = $hostNameWithHttp
+    }
+    elseif($sni -eq "true")
+    {
+        $hostName = $hostNameWithSNI
+    }
+    else
+    {
+        $hostName = $hostNameWithOutSNI
+    }
+    return $hostName
 }
 
-function Trim-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]$virtualPath, [ref]$physicalPathAuthuser, [ref]$appPoolUser, [ref]$sslCertThumbPrint)
+function Trim-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]$websitePathAuthuser, [ref]$appPoolUser, [ref]$sslCertThumbPrint)
 {
     Write-Verbose "Triming inputs for excess spaces, double quotes"
 
-    if ($siteName -ne $null) 
-    {
-        $siteName.Value = $siteName.Value.Trim('"', ' ')
-    }
-    if ($physicalPath -ne $null) 
-    {
-        $physicalPath.Value = $physicalPath.Value.Trim('"', ' ').Trim('\', ' ')
-    }
-    if ($virtualPath -ne $null) 
-    {
-        $virtualPath.Value = $virtualPath.Value.Trim('"', ' ').Trim('\', ' ')
-    }
-    if ($poolName -ne $null) 
-    {
-        $poolName.Value = $poolName.Value.Trim('"', ' ')
-    }
-    if ($appPoolUser -ne $null) 
-    {
-        $appPoolUser.Value = $appPoolUser.Value.Trim()
-    }
-    if ($physicalPathAuthuser -ne $null) 
-    {
-        $physicalPathAuthuser.Value = $physicalPathAuthuser.Value.Trim()
-    }
-    if ($sslCertThumbPrint -ne $null) 
-    {
-        $sslCertThumbPrint.Value = $sslCertThumbPrint.Value.Trim()
-    }
+    $siteName.Value = $siteName.Value.Trim('"', ' ')
+    $physicalPath.Value = $physicalPath.Value.Trim('"', ' ').Trim('\', ' ')
+    $poolName.Value = $poolName.Value.Trim('"', ' ')
+
+    $appPoolUser.Value = $appPoolUser.Value.Trim()
+    $websitePathAuthuser.Value = $websitePathAuthuser.Value.Trim()
+    $sslCertThumbPrint.Value = $sslCertThumbPrint.Value.Trim()
 }
 
-function Validate-Inputs 
+function Validate-Inputs
 {
-    param (
-        [string] $virtualPath,
-        [string] $sslCertThumbPrint
+    param(
+        [string]$createWebsite,
+        [string]$websiteName,
+        [string]$createAppPool,
+        [string]$appPoolName,
+        [string]$addBinding,
+        [string]$protocol,
+        [string]$sslCertThumbPrint
     )
+
+    Write-Verbose "Validating website and application pool inputs"
+    if($createWebsite -ieq "true" -and [string]::IsNullOrWhiteSpace($websiteName))
+    { 
+        throw "Website Name cannot be empty if you want to create or update the target website."
+    }
+
+    if($createAppPool -ieq "true" -and [string]::IsNullOrWhiteSpace($appPoolName))
+    { 
+        throw "Application pool name cannot be empty if you want to create or update the target app pool."
+    }
 
     if((-not [string]::IsNullOrWhiteSpace($sslCertThumbPrint)) -and ($protocol -ieq "https") -and ($addBinding -ieq "true")) 
     {
         if(($sslCertThumbPrint.Length -ne 40) -or (-not [regex]::IsMatch($sslCertThumbPrint, "[a-fA-F0-9]{40}")))
         {
-            throw (Get-VstsLocString -Key "InvalidSslThumbprint" )
+            throw "Invalid thumbprint. Length is not 40 characters or contains invalid characters."
         }
     }
+}
 
-    if((-not [string]::IsNullOrWhiteSpace($virtualPath)) -and (-not $virtualPath.StartsWith("/")))
+function Escape-SpecialChars
+{
+    param(
+        [string]$str
+    )
+
+    if([string]::IsNullOrWhiteSpace($str)) 
     {
-        throw (Get-VstsLocString -Key "InvalidVirtualPath")
-    }
+        return $null
+    } 
+    
+    return $str.Replace('`', '``').Replace('"', '`"').Replace('$', '`$')
 }
