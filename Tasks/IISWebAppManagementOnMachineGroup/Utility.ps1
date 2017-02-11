@@ -1,17 +1,12 @@
 Import-Module $PSScriptRoot\ps_modules\TaskModuleIISManageUtility
+Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
 function Manage-IISWebSite
 {
     Trim-Inputs -siteName ([ref]$websiteName) -physicalPath ([ref]$websitePhysicalPath)  -poolName ([ref]$appPoolNameForWebsite) -physicalPathAuthuser ([ref]$websiteAuthUserName) -appPoolUser ([ref]$appPoolUsernameForWebsite) -sslCertThumbPrint ([ref]$sslCertThumbPrint)
 
-    if((-not [string]::IsNullOrWhiteSpace($sslCertThumbPrint)) -and ($protocol -ieq "https") -and ($addBinding -ieq "true")) 
-    {
-        if(($sslCertThumbPrint.Length -ne 40) -or (-not [regex]::IsMatch($sslCertThumbPrint, "[a-fA-F0-9]{40}")))
-        {
-            throw "Invalid thumbprint. Length is not 40 characters or contains invalid characters."
-        }
-    }
-
+    Validate-Inputs -sslCertThumbPrint $sslCertThumbPrint
+    
     if ($actionIISWebsite -ieq "CreateOrUpdateWebsite" -and $websitePhysicalPathAuth -ieq "WebsiteWindowsAuth") 
     {
         $websitePhysicalPathAuthCredentials = Get-CustomCredentials -username $websiteAuthUserName -password $websiteAuthUserPassword
@@ -28,19 +23,20 @@ function Manage-IISWebSite
 function Manage-IISVirtualDirectory
 {
     Trim-Inputs -siteName ([ref]$parentWebsiteNameForVD) -virtualPath ([ref]$virtualPathForVD) -physicalPath ([ref]$physicalPathForVD) -physicalPathAuthuser ([ref]$vdAuthUserName)
-    Trim-Inputs -virtualPath ([ref]$applicationName)
+    Validate-Inputs -virtualPath $virtualPathForVD
 
     if ($vdPhysicalPathAuth -ieq "VDWindowsAuth") 
     {
         $vdPhysicalPathAuthCredentials = Get-CustomCredentials -username $vdAuthUserName -password $vdAuthUserPassword     
     }
 
-    Execute-Main -CreateVirtualDirectory $true -WebsiteName $parentWebsiteNameForVD -applicationPath $applicationName -VirtualPath $virtualPathForVD -PhysicalPath $physicalPathForVD -PhysicalPathAuth $vdPhysicalPathAuth -PhysicalPathAuthCredentials $vdPhysicalPathAuthCredentials -AppCmdCommands $appCmdCommands
+    Execute-Main -CreateVirtualDirectory $true -WebsiteName $parentWebsiteNameForVD -VirtualPath $virtualPathForVD -PhysicalPath $physicalPathForVD -PhysicalPathAuth $vdPhysicalPathAuth -PhysicalPathAuthCredentials $vdPhysicalPathAuthCredentials -AppCmdCommands $appCmdCommands
 }
 
 function Manage-IISWebApplication 
 {
     Trim-Inputs -siteName ([ref]$parentWebsiteNameForApplication) -virtualPath ([ref]$virtualPathForApplication) -physicalPath ([ref]$physicalPathForApplication) -physicalPathAuthuser ([ref]$applicationAuthUserName) -poolName ([ref]$appPoolNameForApplication) -appPoolUser ([ref]$appPoolUsernameForApplication) 
+    Validate-Inputs -virtualPath $virtualPathForApplication
 
     if ($applicationPhysicalPathAuth -ieq "ApplicationWindowsAuth") 
     {
@@ -94,7 +90,7 @@ function Trim-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]$v
     }
     if ($virtualPath -ne $null) 
     {
-        $virtualPath.Value = $virtualPath.Value.Trim('"', ' ').Trim('\', ' ').Trim('/', ' ')
+        $virtualPath.Value = $virtualPath.Value.Trim('"', ' ').Trim('\', ' ')
     }
     if ($poolName -ne $null) 
     {
@@ -114,17 +110,23 @@ function Trim-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]$v
     }
 }
 
-function Escape-SpecialChars
+function Validate-Inputs 
 {
-    param(
-        [string]$str
+    param (
+        [string] $virtualPath,
+        [string] $sslCertThumbPrint
     )
 
-    if([string]::IsNullOrWhiteSpace($str)) 
+    if((-not [string]::IsNullOrWhiteSpace($sslCertThumbPrint)) -and ($protocol -ieq "https") -and ($addBinding -ieq "true")) 
     {
-        return $null
-    } 
-    
-    return $str.Replace('`', '``').Replace('"', '`"').Replace('$', '`$')
-}
+        if(($sslCertThumbPrint.Length -ne 40) -or (-not [regex]::IsMatch($sslCertThumbPrint, "[a-fA-F0-9]{40}")))
+        {
+            throw (Get-VstsLocString -Key "InvalidSslThumbprint" )
+        }
+    }
 
+    if((-not [string]::IsNullOrWhiteSpace($virtualPath)) -and (-not $virtualPath.StartsWith("/")))
+    {
+        throw (Get-VstsLocString -Key "InvalidVirtualPath")
+    }
+}

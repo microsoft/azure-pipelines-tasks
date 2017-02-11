@@ -35,7 +35,6 @@ $appPoolPasswordForWebsite = Get-VstsInput -Name "AppPoolPasswordForWebsite"
 
 # Virtual directory related inputs 
 $parentWebsiteNameForVD = Get-VstsInput -Name "ParentWebsiteNameForVD"
-$applicationName = Get-VstsInput -Name "ApplicationName"
 $virtualPathForVD = Get-VstsInput -Name "VirtualPathForVD"
 $physicalPathForVD = Get-VstsInput -Name "PhysicalPathForVD"
 $vdPhysicalPathAuth = Get-VstsInput -Name "VDPhysicalPathAuth"

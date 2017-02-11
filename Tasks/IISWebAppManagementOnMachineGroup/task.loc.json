@@ -16,7 +16,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 0
+    "Patch": 20
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -322,15 +322,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.ParentWebsiteNameForVD"
     },
     {
-      "name": "ApplicationName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.ApplicationName",
-      "defaultValue": "",
-      "required": false,
-      "visibleRule": "IISDeploymentType = IISVirtualDirectory",
-      "helpMarkDown": "ms-resource:loc.input.help.ApplicationName"
-    },
-    {
       "name": "VirtualPathForVD",
       "type": "string",
       "label": "ms-resource:loc.input.label.VirtualPathForVD",
@@ -602,5 +593,9 @@
     "PowerShell3": {
       "target": "IISWebAppManagementOnMachineGroup.ps1"
     }
+  },
+  "messages": {
+    "InvalidSslThumbprint": "ms-resource:loc.messages.InvalidSslThumbprint",
+    "InvalidVirtualPath": "ms-resource:loc.messages.InvalidVirtualPath"
   }
 }

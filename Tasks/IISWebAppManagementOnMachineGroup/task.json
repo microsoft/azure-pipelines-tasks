@@ -16,7 +16,7 @@
 	"version": {
 		"Major": 0,
 		"Minor": 1,
-		"Patch": 0
+		"Patch": 20
 	},
 	"minimumAgentVersion": "1.95.0",
 	"instanceNameFormat": "Manage $(IISDeploymentType)",
@@ -322,15 +322,6 @@
 			"helpMarkDown": "Provide the name of the parent Website of the virtual directory."
 		},
 		{
-			"name": "ApplicationName",
-			"type": "string",
-			"label": "ApplicationName",
-			"defaultValue": "",
-			"required": false,
-			"visibleRule": "IISDeploymentType = IISVirtualDirectory",
-			"helpMarkDown": "Provide the virtual path of the application under which the virtual directory will be created or updated. If not specified, the virtual directory will be created under the root application of the parent Website."
-		},
-		{
 			"name": "VirtualPathForVD",
 			"type": "string",
 			"label": "Virtual path",
@@ -602,5 +593,10 @@
 		"PowerShell3": {
 			"target": "IISWebAppManagementOnMachineGroup.ps1"
 		}
+	},
+	"messages": {
+		"InvalidSslThumbprint": "Invalid thumbprint. Length is not 40 characters or contains invalid characters.",
+		"InvalidVirtualPath": "Virtual path should begin with a /"
 	}
+
 }

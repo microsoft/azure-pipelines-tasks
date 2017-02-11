@@ -58,8 +58,6 @@
   "loc.input.help.AppPoolPasswordForWebsite": "If you are using a gMSA, this is not required.",
   "loc.input.label.ParentWebsiteNameForVD": "Parent Website Name",
   "loc.input.help.ParentWebsiteNameForVD": "Provide the name of the parent Website of the virtual directory.",
-  "loc.input.label.ApplicationName": "ApplicationName",
-  "loc.input.help.ApplicationName": "Provide the virtual path of the application under which the virtual directory will be created or updated. If not specified, the virtual directory will be created under the root application of the parent Website.",
   "loc.input.label.VirtualPathForVD": "Virtual path",
   "loc.input.help.VirtualPathForVD": "Provide the virtual path of the virtual directory.",
   "loc.input.label.PhysicalPathForVD": "Physical path",
@@ -107,5 +105,7 @@
   "loc.input.label.AppPoolPassword": "Password",
   "loc.input.help.AppPoolPassword": "If you are using a gMSA, this is not required.",
   "loc.input.label.AppCmdCommands": "Additional AppCmd.exe commands",
-  "loc.input.help.AppCmdCommands": "Enter additional AppCmd.exe commands. For more than one command use a line separator, like <br/> list apppools <br/> list sites<br/> recycle apppool /apppool.name:ExampleAppPoolName"
+  "loc.input.help.AppCmdCommands": "Enter additional AppCmd.exe commands. For more than one command use a line separator, like <br/> list apppools <br/> list sites<br/> recycle apppool /apppool.name:ExampleAppPoolName",
+  "loc.messages.InvalidSslThumbprint": "Invalid thumbprint. Length is not 40 characters or contains invalid characters.",
+  "loc.messages.InvalidVirtualPath": "Virtual path should begin with a /"
 }
