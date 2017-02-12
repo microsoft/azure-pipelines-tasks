@@ -22,11 +22,14 @@ answers.find[path.normalize('/srcDir')] = [
     path.normalize('/srcDir/someOtherDir/file1.file'),
     path.normalize('/srcDir/someOtherDir/file2.file'),
 ];
-answers.rmRF[path.join(path.normalize('/destDir'))] = { success: true };
+answers.rmRF[path.join(path.normalize('/destDir/clean-subDir'))] = { success: true };
+answers.rmRF[path.join(path.normalize('/destDir/clean-file.txt'))] = { success: true };
 runner.setAnswers(answers);
 runner.registerMockExport('stats', (itemPath: string) => {
     console.log('##vso[task.debug]stats ' + itemPath);
     switch (itemPath) {
+        case path.normalize('/destDir'):
+            return { isDirectory: () => true };
         case path.normalize('/srcDir'):
         case path.normalize('/srcDir/someOtherDir'):
             return { isDirectory: () => true };
@@ -37,9 +40,21 @@ runner.registerMockExport('stats', (itemPath: string) => {
             throw { code: 'ENOENT' };
     }
 });
+let origReaddirSync = fs.readdirSync;
+fs.readdirSync = (p: string | Buffer) => {
+    console.log('HERE path ' + p);
+    let result: string[];
+    if (p == path.normalize('/destDir')) {
+        result = [ 'clean-subDir', 'clean-file.txt' ];
+    }
+    else {
+        result = origReaddirSync(p);
+    }
 
-// as a precaution, disable fs.chmodSync. it is the only fs function
-// called by copyfiles and should not be called during this scenario.
+    return result;
+}
+
+// as a precaution, disable fs.chmodSync. it should not be called during this scenario.
 fs.chmodSync = null;
 runner.registerMock('fs', fs);
 

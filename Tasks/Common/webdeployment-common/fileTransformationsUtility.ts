@@ -13,10 +13,14 @@ export async function fileTransformations(isFolderBasedDeployment: boolean, JSON
     var folderPath = utility.generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWorkingDirectory'), true);
         
     if(isFolderBasedDeployment) {
+        tl.debug('Copying Folder: ' + webDeployPkg + ' to temporary location: ' + folderPath);
         tl.cp(path.join(webDeployPkg, '/*'), folderPath, '-rf', false);
+        tl.debug('Copied Folder: ' + webDeployPkg + ' to temporary location: ' + folderPath + ' successfully.');
     }
     else {
+        tl.debug('Extracting Web Deploy Package: ' + webDeployPkg + ' to temporary location: ' + folderPath);
         await zipUtility.unzip(webDeployPkg, folderPath);
+        tl.debug('Extracted Web Deploy Package: ' + webDeployPkg + ' to temporary location: ' + folderPath + ' successfully.');
     }
 
     if(xmlTransformation) {
@@ -35,7 +39,7 @@ export async function fileTransformations(isFolderBasedDeployment: boolean, JSON
     }
 
     if(xmlVariableSubstitution) {
-        await xmlSubstitutionUtility.substituteAppSettingsVariables(folderPath);
+        await xmlSubstitutionUtility.substituteAppSettingsVariables(folderPath, isFolderBasedDeployment);
         console.log(tl.loc('XMLvariablesubstitutionappliedsuccessfully'));
     }
 

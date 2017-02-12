@@ -5,7 +5,7 @@ import * as tl from "vsts-task-lib/task";
 import * as ngToolRunner from "./NuGetToolRunner";
 
 // Attempts to resolve paths the same way the legacy PowerShell's Find-Files worked
-export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEmptyMatch?: boolean): string[] {
+export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEmptyMatch?: boolean, includeFolders?: boolean): string[] {
     // make sure to remove any empty entries, or else we'll accidentally match the current directory.
     let patterns = filterSpec.split(";").map(x => x.trim()).filter(x => !!x);
     let result = new Set<string>();
@@ -26,7 +26,7 @@ export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEm
 
         tl.debug(`pattern: ${pattern}, isNegative: ${isNegative}`);
 
-        let thisPatternFiles = resolveWildcardPath(pattern, true);
+        let thisPatternFiles = resolveWildcardPath(pattern, true, includeFolders);
         thisPatternFiles.forEach(file => {
             if (isNegative) {
                 result.delete(file);
@@ -45,7 +45,7 @@ export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEm
     return Array.from(result);
 }
 
-export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: boolean): string[] {
+export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: boolean, includeFolders?: boolean): string[] {
     let isWindows = tl.osType() === 'Windows_NT';
 
     // Resolve files for the specified value or pattern
@@ -109,7 +109,10 @@ export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: b
         filesList = allFiles.filter(patternFilter);
 
         // Avoid matching anything other than files
-        filesList = filesList.filter(x => tl.stats(x).isFile());
+        if (!includeFolders)
+            filesList = filesList.filter(x => tl.stats(x).isFile());
+        else
+            filesList = filesList.filter(x => tl.stats(x).isFile() || tl.stats(x).isDirectory());
 
         // Fail if no matching .sln files were found
         if (!allowEmptyWildcardMatch && (!filesList || filesList.length === 0)) {

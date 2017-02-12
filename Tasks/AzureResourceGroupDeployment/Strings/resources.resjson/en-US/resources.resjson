@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Resource Group Deployment",
-  "loc.helpMarkDown": "[More Information](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
+  "loc.helpMarkDown": "[More Information](https://aka.ms/argtaskreadme)",
   "loc.description": "Deploy, start, stop, delete Azure Resource Groups",
   "loc.instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
   "loc.group.displayName.AzureDetails": "Azure Details",
@@ -81,7 +81,7 @@
   "loc.messages.ARG_NetworkSecurityConfigFailed": "Failed to add the network security config rule",
   "loc.messages.ExtensionAlreadyPresentVm": "Extension %s is already present on the virtual machine '%s'",
   "loc.messages.AddExtension": "Adding extension '%s' on virtual machine '%s'",
-  "loc.messages.DeleteExtension": "Deleting extension %s from virtual machine %s",
+  "loc.messages.DeleteExtension": "Trying to delete extension %s from virtual machine %s",
   "loc.messages.ARG_AllResourceNotFound": "'%s' not found on resource group '%s'",
   "loc.messages.FailedToAddExtension": "Failed to add the network security rule with exception: %s",
   "loc.messages.AddingSecurityRuleNSG": "Adding security rule for the network security group: %s",
@@ -135,15 +135,16 @@
   "loc.messages.AddedTargetInboundNatRuleLB": "Added the target virtual machine for the inbound NAT rules of load balancer %s",
   "loc.messages.FailedToFetchInstanceViewVM": "Failed to fetch the instance view of the virtual machine. Error : %s",
   "loc.messages.CreationOfExtensionFailed": "Failed to add the extension. Error: %s",
-  "loc.messages.AddedExtension": "Successfully added the CustomScriptExtension for the virtual Machine %s",
+  "loc.messages.AddedExtension": "Successfully added the WinRMCustomScriptExtension for the virtual Machine %s",
   "loc.messages.AddingExtensionSucceeded": "Addition of extension on vm %s succeeded",
   "loc.messages.DeletionSucceeded": "Deletion of extension on vm %s succeeded",
   "loc.messages.AdditionFailed": "Addition of %s on vm %s failed. Error : %s",
   "loc.messages.DeletionFailed": "Deletion of %s on vm %s failed. Error : %s",
+  "loc.messages.DeleteAgentManually": "After the task execution completes, if the machine group agent corresponding to the virtual machine %s is present but not active in the machine group %s, then please delete it manually from the machine group.",
   "loc.messages.MGAgentOperationOnAllVMsFailed": "Machine group agent %s did not succeed on all VMs. %s",
   "loc.messages.MGAgentAddedOnAllVMs": "Machine group agent added on all virtual machines of the resource group",
   "loc.messages.MGAgentDeletedFromAllVMs": "Machine group agent deleted from all virtual machines of the resource group",
-  "loc.messages.MGAgentHandlerMajorVersion": "Machine group extension handler major version is %s",
+  "loc.messages.MGAgentHandlerMajorVersion": "Machine group extension handler major version is 1",
   "loc.messages.SkipDeleteExtension": "Either the extension %s is not present on the virtual machine %s or the machine is stopped. Skipping extension deletion.",
   "loc.messages.VMStartFailed": "Could not start the virtual machine %s. Error : %s",
   "loc.messages.VMStarted": "Started virtual machine: %s",
@@ -154,5 +155,6 @@
   "loc.messages.DeletingMGAgentFromVMs": "Deleting machine group agent from the resource group virutal machines.",
   "loc.messages.DeletingMGAgentOnVMs": "Deleting machine group agent on virtual machines",
   "loc.messages.AddingExtensionFailed": "Addition of extension on vm %s failed",
-  "loc.messages.TimeoutWhileWaiting": "Timed out while waiting"
+  "loc.messages.TimeoutWhileWaiting": "Timed out while waiting",
+  "loc.messages.InvalidTemplateLocation": "The template location supplied is invalid. Task only supports 'Linked artifact' or 'URL of the file'"
 }

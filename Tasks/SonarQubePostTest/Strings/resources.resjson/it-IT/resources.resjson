@@ -1,6 +1,0 @@
-{
-  "loc.friendlyName": "SonarQube per MSBuild - Termina analisi",
-  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkId=620063)",
-  "loc.description": "[DEPRECATO] Termina l'analisi e carica i risultati in SonarQube",
-  "loc.instanceNameFormat": "[DEPRECATO] Termina l'analisi e carica i risultati in SonarQube"
-}

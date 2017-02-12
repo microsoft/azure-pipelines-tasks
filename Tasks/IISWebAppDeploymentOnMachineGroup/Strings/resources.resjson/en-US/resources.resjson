@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "IIS Web App Deploy On Machine Group",
+  "loc.friendlyName": "IIS WebApp Deploy(Preview)",
   "loc.helpMarkDown": "[More Information](https://aka.ms/iiswebappdeployreadme)",
-  "loc.description": "Deploy a WebSite or Virtual Application by using MSDeploy on Machine Group",
+  "loc.description": "Deploy a Website or Web Application using WebDeploy",
   "loc.instanceNameFormat": "Deploy IIS Website/App: $(WebDeployPackage)",
   "loc.group.displayName.FileTransformsAndVariableSubstitution": "File Transforms & Variable Substitution Options",
   "loc.group.displayName.advanceDeploymentOptions": "Advanced Deployment Options",
