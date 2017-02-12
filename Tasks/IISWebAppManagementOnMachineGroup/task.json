@@ -328,7 +328,7 @@
 			"defaultValue": "",
 			"required": true,
 			"visibleRule": "IISDeploymentType = IISVirtualDirectory",
-			"helpMarkDown": "Provide the virtual path of the virtual directory. \n\nExample: To create a virtual directory Site/Application/VDir enter /Application/Vdir"
+			"helpMarkDown": "Provide the virtual path of the virtual directory. \n\nExample: To create a virtual directory Site/Application/VDir enter /Application/Vdir. The parent website and application should be already existing."
 		},
 		{
 			"name": "PhysicalPathForVD",
@@ -386,7 +386,7 @@
 			"defaultValue": "",
 			"required": true,
 			"visibleRule": "IISDeploymentType = IISWebApplication",
-			"helpMarkDown": "Provide the virtual path of the application. \n\nExample: To create an application Site/Application enter /Application"
+			"helpMarkDown": "Provide the virtual path of the application. \n\nExample: To create an application Site/Application enter /Application. The parent website should be already existing." 
 		},
 		{
 			"name": "PhysicalPathForApplication",
