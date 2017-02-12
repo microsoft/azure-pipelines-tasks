@@ -596,6 +596,8 @@
   },
   "messages": {
     "InvalidSslThumbprint": "ms-resource:loc.messages.InvalidSslThumbprint",
-    "InvalidVirtualPath": "ms-resource:loc.messages.InvalidVirtualPath"
+    "InvalidVirtualPath": "ms-resource:loc.messages.InvalidVirtualPath",
+    "EmptyIISDeploymentType": "ms-resource:loc.messages.EmptyIISDeploymentType",
+    "InvalidIISDeploymentType": "ms-resource:loc.messages.InvalidIISDeploymentType"
   }
 }
