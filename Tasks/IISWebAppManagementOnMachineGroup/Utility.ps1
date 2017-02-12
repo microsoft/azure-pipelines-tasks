@@ -1,10 +1,8 @@
 Import-Module $PSScriptRoot\ps_modules\TaskModuleIISManageUtility
-Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
 function Manage-IISWebSite
 {
     Trim-Inputs -siteName ([ref]$websiteName) -physicalPath ([ref]$websitePhysicalPath)  -poolName ([ref]$appPoolNameForWebsite) -physicalPathAuthuser ([ref]$websiteAuthUserName) -appPoolUser ([ref]$appPoolUsernameForWebsite) -sslCertThumbPrint ([ref]$sslCertThumbPrint)
-
     Validate-Inputs -sslCertThumbPrint $sslCertThumbPrint
     
     if ($actionIISWebsite -ieq "CreateOrUpdateWebsite" -and $websitePhysicalPathAuth -ieq "WebsiteWindowsAuth") 
