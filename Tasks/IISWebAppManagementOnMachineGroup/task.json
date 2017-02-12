@@ -238,7 +238,7 @@
 			"required": false,
 			"groupName": "Website",
 			"defaultValue": "false",
-			"helpMarkDown": "Select the option to create an application pool or to update an existing application pool. If checked, the website will be created in the specified app pool. Otherwise the DefaultAppPool will be used."
+			"helpMarkDown": "Select the option to create or update an application pool. If checked, the website will be created in the specified app pool. Otherwise the DefaultAppPool will be used."
 		},
 		{
 			"name": "AppPoolNameForWebsite",
@@ -435,7 +435,7 @@
 			"required": false,
 			"defaultValue": "false",
 			"visibleRule": "IISDeploymentType = IISWebApplication",
-			"helpMarkDown": "Select the option to create an application pool or to update an existing application pool. If checked, the application will be created in the specified app pool. Otherwise the DefaultAppPool will be used."
+			"helpMarkDown": "Select the option to create or update an application pool. If checked, the application will be created in the specified app pool. Otherwise the DefaultAppPool will be used."
 		},
 		{
 			"name": "AppPoolNameForApplication",
