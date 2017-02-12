@@ -596,7 +596,9 @@
 	},
 	"messages": {
 		"InvalidSslThumbprint": "Invalid thumbprint. Length is not 40 characters or contains invalid characters.",
-		"InvalidVirtualPath": "Virtual path should begin with a /"
+		"InvalidVirtualPath": "Virtual path should begin with a /",
+		"EmptyIISDeploymentType": "IIS Deployment Type input is empty. Executing additional AppCmd.exe commands.",
+		"InvalidIISDeploymentType": "Invalid IIS Deployment Type : {0}"
 	}
 
 }
