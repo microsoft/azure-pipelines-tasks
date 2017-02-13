@@ -22,19 +22,19 @@ export class NpmMockHelper {
 
     constructor(
         private tmr: tmrm.TaskMockRunner,
-        public cwd: string,
         public command: string,
-        public args: string) { 
+        public args: string,
+        public cwd?: string) { 
         NpmMockHelper.setVariable('Agent.HomeDirectory', NpmMockHelper.DefaultWorkingDirectory);
         NpmMockHelper.setVariable('Build.SourcesDirectory', 'c:\\agent\\home\\directory\\sources');
         process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = "{\"parameters\":{\"AccessToken\":\"token\"},\"scheme\":\"OAuth\"}";
         process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = "https://example.visualstudio.com/defaultcollection";
-        process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = NpmMockHelper.DefaultWorkingDirectory;
+        NpmMockHelper.setVariable('System.DefaultWorkingDirectory', NpmMockHelper.DefaultWorkingDirectory);
         NpmMockHelper.setVariable('System.TeamFoundationCollectionUri', 'https://example.visualstudio.com/defaultcollection');
         NpmMockHelper.setVariable('Agent.BuildDirectory', NpmMockHelper.AgentBuildDirectory);
         NpmMockHelper.setVariable('Build.BuildId', NpmMockHelper.BuildBuildId);
 
-        tmr.setInput('cwd', cwd);
+        tmr.setInput('cwd', cwd || NpmMockHelper.FakeWorkingDirectory);
         tmr.setInput('command', command);
         tmr.setInput('arguments', args);
 

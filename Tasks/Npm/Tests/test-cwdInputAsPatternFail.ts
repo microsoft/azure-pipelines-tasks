@@ -7,10 +7,10 @@ let taskPath = path.join(__dirname, '..', 'npmtask.js');
 let taskMockRunner = new tmrm.TaskMockRunner(taskPath);
 taskMockRunner.registerMock("nuget-task-common/utility.js", {
     resolveFilterSpec: function (filterSpec, basePath?, allowEmptyMatch?) {
-        return ["c:\\agent\\home\\directory\\fake\\wd\\one\\package.json", "c:\\agent\\home\\directory\\fake\\wd\\two\\package.json"];
+        return [];
     }
 });
-let npmMockHelper = new util.NpmMockHelper(taskMockRunner, "**/package.json", "config", "list");
+let npmMockHelper = new util.NpmMockHelper(taskMockRunner, "config", "list", "**/package.json");
 process.env['USERPROFILE'] = 'C:\\Users\\none';
 
 if (process.argv.length == 3) {
@@ -22,16 +22,6 @@ if (process.argv.length == 3) {
 npmMockHelper.setDebugState(true);
 npmMockHelper.mockAuthHelper();
 npmMockHelper.mockNpmConfigList();
-
-var stats = {
-    "c:\\agent\\home\\directory\\fake\\wd\\one\\package.json": {
-        isFile: true
-    },
-    "c:\\agent\\home\\directory\\fake\\wd\\two\\package.json": {
-        isFile: true
-    }
-}
-npmMockHelper.setStats(stats);
 
 var execResult: ma.TaskLibAnswerExecResult = {
     code: 0,

@@ -34,7 +34,7 @@ async function executeTask() {
         tl.warning(error);
     }
     if (dirList.length === 0) {
-        dirList.push(tl.getVariable("System.DefaultWorkingDirectory"));
+        tl.warning(tl.loc("NoWorkingDirectoryMatchingPattern", filePath));
     }
 
     var command = tl.getInput('command', true);
