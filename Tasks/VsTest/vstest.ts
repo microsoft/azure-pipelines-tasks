@@ -74,34 +74,38 @@ try {
     if (releaseuri) {
         context = "CD";
     }
-
     var systemDefaultWorkingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
+    var workingDirectory = systemDefaultWorkingDirectory;
+
+    const resultsDirectory = getTestResultsDirectory(runSettingsFile, path.join(workingDirectory, 'TestResults'));
+
+    // clean up old testResults
+    tl.rmRF(resultsDirectory, true);
+    tl.mkdirP(resultsDirectory);
+
     var testAssemblyFiles = getTestAssemblies();
 
     if (testAssemblyFiles && testAssemblyFiles.length != 0) {
-        var workingDirectory = systemDefaultWorkingDirectory;
-        getTestResultsDirectory(runSettingsFile, path.join(workingDirectory, 'TestResults')).then(function(resultsDirectory) {
-            invokeVSTest(resultsDirectory)
-                .then(function(code) {
-                    try {
-                        if (!isTiaAllowed()) {
-                            publishTestResults(resultsDirectory);
-                        }
-                        tl.setResult(code, tl.loc('VstestReturnCode', code));
-                        deleteVstestDiagFile();
+        invokeVSTest(resultsDirectory)
+            .then(function(code) {
+                try {
+                    if (!isTiaAllowed()) {
+                        publishTestResults(resultsDirectory);
                     }
-                    catch (error) {
-                        deleteVstestDiagFile();
-                        tl._writeLine("##vso[task.logissue type=error;code=" + error + ";TaskName=VSTest]");
-                        throw error;
-                    }
-                })
-                .fail(function(err) {
+                    tl.setResult(code, tl.loc('VstestReturnCode', code));
                     deleteVstestDiagFile();
-                    tl._writeLine("##vso[task.logissue type=error;code=" + err + ";TaskName=VSTest]");
-                    throw err;
-                });
-        });
+                }
+                catch (error) {
+                    deleteVstestDiagFile();
+                    tl._writeLine("##vso[task.logissue type=error;code=" + error + ";TaskName=VSTest]");
+                    throw error;
+                }
+            })
+            .fail(function(err) {
+                deleteVstestDiagFile();
+                tl._writeLine("##vso[task.logissue type=error;code=" + err + ";TaskName=VSTest]");
+                throw err;
+            });
     }
     else {
         deleteVstestDiagFile();
@@ -974,41 +978,29 @@ function isNugetRestoredAdapterPresent(rootDirectory: string): boolean {
     return false;
 }
 
-function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: string): Q.Promise<string> {
-    var defer = Q.defer<string>();
+function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: string): string {    
+
+    var resultDirectory = defaultResultsDirectory;
     if (!settingsFile || !pathExistsAsFile(settingsFile)) {
-        defer.resolve(defaultResultsDirectory);
-        return defer.promise;
+        return resultDirectory;
     }
 
-    readFileContents(runSettingsFile, "utf-8")
-        .then(function(xmlContents) {
-            var parser = new xml2js.Parser();
-            parser.parseString(xmlContents, function(err, result) {
-                if (!err && result.RunSettings && result.RunSettings.RunConfiguration && result.RunSettings.RunConfiguration[0] &&
-                    result.RunSettings.RunConfiguration[0].ResultsDirectory && result.RunSettings.RunConfiguration[0].ResultsDirectory[0].length > 0) {
-                    var resultDirectory = result.RunSettings.RunConfiguration[0].ResultsDirectory[0];
-                    resultDirectory = resultDirectory.trim();
+    const xmlContents = readFileContentsSync(runSettingsFile, "utf-8");
+    const parser = new xml2js.Parser();
 
-                    if (resultDirectory) {
-                        // path.resolve will take care if the result directory given in settings files is not absolute.
-                        defer.resolve(path.resolve(path.dirname(runSettingsFile), resultDirectory));
-                    }
-                    else {
-                        defer.resolve(defaultResultsDirectory);
-                    }
-                }
-                else {
-                    defer.resolve(defaultResultsDirectory);
-                }
-            });
-        })
-        .fail(function(err) {
-            tl.debug("Error occured while reading test result directory from run settings. Continuing...")
-            tl.warning(err);
-            defer.resolve(defaultResultsDirectory);
-        });
-    return defer.promise;
+    parser.parseString(xmlContents, function(err, result) {
+        if (!err && result.RunSettings && result.RunSettings.RunConfiguration && result.RunSettings.RunConfiguration[0] &&
+            result.RunSettings.RunConfiguration[0].ResultsDirectory && result.RunSettings.RunConfiguration[0].ResultsDirectory[0].length > 0) {
+            resultDirectory = result.RunSettings.RunConfiguration[0].ResultsDirectory[0];
+            resultDirectory = resultDirectory.trim();
+
+            if (resultDirectory) {
+                // path.resolve will take care if the result directory given in settings files is not absolute.
+                resultDirectory = path.resolve(path.dirname(runSettingsFile), resultDirectory);
+            }
+        }
+    });
+    return resultDirectory;
 }
 
 
@@ -1502,7 +1494,7 @@ function getLatestVSTestConsolePathFromRegistry(): Q.Promise<ExecutabaleInfo> {
 
 function getVSTestConsole15Path(): string {
     let powershellTool = tl.tool('powershell');
-    let powershellArgs = ['-file', vs15HelperPath]
+    let powershellArgs = ['-NonInteractive', '-ExecutionPolicy', 'Unrestricted', '-file', vs15HelperPath]
     powershellTool.arg(powershellArgs);
     let xml = powershellTool.execSync().stdout;
     let deferred = Q.defer<string>();
@@ -1580,6 +1572,10 @@ function setRegistryKeyForParallelExecution(vsVersion: number) {
             tl.warning(tl.loc('ErrorOccuredWhileSettingRegistry', err));
         }
     });
+}
+
+function readFileContentsSync(filePath: string, encoding: string): string {
+    return fs.readFileSync(filePath, encoding)
 }
 
 function readFileContents(filePath: string, encoding: string): Q.Promise<string> {
