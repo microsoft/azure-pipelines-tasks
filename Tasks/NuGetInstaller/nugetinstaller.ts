@@ -48,7 +48,7 @@ async function main(): Promise<void> {
 
         let restoreMode = tl.getInput("restoreMode") || "Restore";
         // normalize the restore mode for display purposes, and ensure it's a known one
-        let normalizedRestoreMode = ["restore", "install"].find(x => restoreMode.toUpperCase() === x.toUpperCase());
+        let normalizedRestoreMode = ["restore", "install", "update"].find(x => restoreMode.toUpperCase() === x.toUpperCase());
         if (!normalizedRestoreMode) {
             throw new Error(tl.loc("UnknownRestoreMode", restoreMode));
         }

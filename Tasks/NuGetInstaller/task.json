@@ -8,8 +8,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 2,
-        "Patch": 29
+        "Minor": 3,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
@@ -46,11 +46,12 @@
             "type": "radio",
             "label": "Installation type",
             "defaultValue": "restore",
-            "helpMarkDown": "Restore will restore the packages a solution depends upon, and is generally what you want.\n\nInstall will install packages from a packages.config file. Use this option if you want to install a standalone tool package.",
+            "helpMarkDown": "Restore will restore the packages a solution depends upon, and is generally what you want.\n\nInstall will install packages from a packages.config file. Use this option if you want to install a standalone tool package.\n\nUpdate will update your packages to the latest version",
             "required": "true",
             "options": {
                 "restore": "Restore",
-                "install": "Install"
+                "install": "Install",
+                "update": "Update"
             }
         },
         {
@@ -67,7 +68,7 @@
             "label": "NuGet arguments",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Additional arguments passed to NuGet.exe restore or install. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command)."
+            "helpMarkDown": "Additional arguments passed to NuGet.exe restore, install or update. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command)."
         },
         {
             "name": "verbosity",
