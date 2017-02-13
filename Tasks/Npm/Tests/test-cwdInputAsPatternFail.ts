@@ -7,7 +7,7 @@ let taskPath = path.join(__dirname, '..', 'npmtask.js');
 let taskMockRunner = new tmrm.TaskMockRunner(taskPath);
 taskMockRunner.registerMock("nuget-task-common/utility.js", {
     resolveFilterSpec: function (filterSpec, basePath?, allowEmptyMatch?) {
-        return [];
+        throw new Error("No matching files were found with search pattern: " + filterSpec);
     }
 });
 let npmMockHelper = new util.NpmMockHelper(taskMockRunner, "config", "list", "**/package.json");

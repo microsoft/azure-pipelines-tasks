@@ -57,7 +57,6 @@
         "NpmFailed": "npm failed with error: %s",
         "NpmConfigFailed": "Failed to log the npm config information. Error : %s",
         "NpmAuthFailed": "Failed to get the required authentication tokens for npm. Error: %s",
-        "BuildCredentialsWarn": "Could not determine credentials to use for npm",
-        "NoWorkingDirectoryMatchingPattern": "No directory found matching pattern %s"
+        "BuildCredentialsWarn": "Could not determine credentials to use for npm"
     }
 }

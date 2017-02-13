@@ -33,10 +33,7 @@ async function executeTask() {
     catch (error) {
         tl.warning(error);
     }
-    if (dirList.length === 0) {
-        tl.warning(tl.loc("NoWorkingDirectoryMatchingPattern", filePath));
-    }
-
+    
     var command = tl.getInput('command', true);
     if (command.indexOf(' ') >= 0) {
         tl.setResult(tl.TaskResult.Failed, tl.loc('InvalidCommand'));
