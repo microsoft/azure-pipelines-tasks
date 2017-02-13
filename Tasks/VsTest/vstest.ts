@@ -833,8 +833,10 @@ function isNugetRestoredAdapterPresent(rootDirectory: string): boolean {
 }
 
 function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: string): string {
+    let resultDirectory = defaultResultsDirectory;
+
     if (!settingsFile || !pathExistsAsFile(settingsFile)) {
-        return defaultResultsDirectory;
+        return resultDirectory;
     }
 
     const xmlContents = utils.Helper.readFileContentsSync(vstestConfig.settingsFile, "utf-8");
@@ -843,17 +845,17 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
     parser.parseString(xmlContents, function (err, result) {
         if (!err && result.RunSettings && result.RunSettings.RunConfiguration && result.RunSettings.RunConfiguration[0] &&
             result.RunSettings.RunConfiguration[0].ResultsDirectory && result.RunSettings.RunConfiguration[0].ResultsDirectory[0].length > 0) {
-            let resultDirectory = result.RunSettings.RunConfiguration[0].ResultsDirectory[0];
+            resultDirectory = result.RunSettings.RunConfiguration[0].ResultsDirectory[0];
             resultDirectory = resultDirectory.trim();
 
             if (resultDirectory) {
                 // path.resolve will take care if the result directory given in settings files is not absolute.
-                return path.resolve(path.dirname(vstestConfig.settingsFile), resultDirectory);
+                resultDirectory = path.resolve(path.dirname(vstestConfig.settingsFile), resultDirectory);
             }
         }
     });
 
-    return defaultResultsDirectory;
+    return resultDirectory;
 }
 
 function setRunInParallellIfApplicable(vsVersion: number) {
