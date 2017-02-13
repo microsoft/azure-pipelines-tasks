@@ -32,6 +32,7 @@ async function executeTask() {
     }
     catch (error) {
         tl.warning(error);
+        return;
     }
     
     var command = tl.getInput('command', true);

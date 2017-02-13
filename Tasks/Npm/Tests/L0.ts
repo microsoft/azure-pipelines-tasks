@@ -40,8 +40,6 @@ describe('Npm Task', function () {
         assert(tr.ran(`${NpmMockHelper.NpmCmdPath} config list`), 'it should have run npm');
         assert(tr.stdOutContained('; cli configs'), "should have npm config output");
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
-        // This assert is skipped due to a test mocking issue on non windows platforms.
-        // assert.equal(tr.warningIssues.length, 0, "should have no warnings: " + tr.warningIssues.join(','));
         assert(tr.succeeded, 'should have succeeded');
 
         done();
@@ -56,8 +54,6 @@ describe('Npm Task', function () {
 
         assert.equal(tr.invokedToolCount, 0, 'should not have run vsts-npm-auth, npm config list and npm command');
         assert.equal(tr.warningIssues.length, 1, "should have warning since no directory is found matching given pattern");
-        // This assert is skipped due to a test mocking issue on non windows platforms.
-        // assert.equal(tr.warningIssues.length, 0, "should have no warnings: " + tr.warningIssues.join(','));
         assert(tr.succeeded, 'should have succeeded');
 
         done();

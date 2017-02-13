@@ -8,4 +8,5 @@ let taskMockRunner = new tmrm.TaskMockRunner(taskPath);
 let npmMockHelper = new util.NpmMockHelper(taskMockRunner, "config get", "registry");
 
 npmMockHelper.useDeprecatedTask();
+
 npmMockHelper.run();
