@@ -212,12 +212,12 @@
       "groupName": "executionOptions"
     },
     {
-      "name": "runTestsInParallel",
+      "name": "runInParallel",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.runTestsInParallel",
+      "label": "ms-resource:loc.input.label.runInParallel",
       "defaultValue": "False",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.runTestsInParallel",
+      "helpMarkDown": "ms-resource:loc.input.help.runInParallel",
       "groupName": "executionOptions"
     },
     {
@@ -239,12 +239,12 @@
       "groupName": "executionOptions"
     },
     {
-      "name": "codeCoverage",
+      "name": "codeCoverageEnabled",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.codeCoverage",
+      "label": "ms-resource:loc.input.label.codeCoverageEnabled",
       "defaultValue": "False",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.codeCoverageEnabled",
       "groupName": "executionOptions"
     },
     {
@@ -344,6 +344,8 @@
     "VideoCollectorNotSupportedWithRunSettings": "ms-resource:loc.messages.VideoCollectorNotSupportedWithRunSettings",
     "runTestInIsolationNotSupported": "ms-resource:loc.messages.runTestInIsolationNotSupported",
     "tiaNotSupportedInDta": "ms-resource:loc.messages.tiaNotSupportedInDta",
-    "overrideNotSupported": "ms-resource:loc.messages.overrideNotSupported"
+    "overrideNotSupported": "ms-resource:loc.messages.overrideNotSupported",
+    "vs2013NotSupportedInDta": "ms-resource:loc.messages.vs2013NotSupportedInDta",
+    "configureDtaAgentFailed": "ms-resource:loc.messages.configureDtaAgentFailed"
   }
 }

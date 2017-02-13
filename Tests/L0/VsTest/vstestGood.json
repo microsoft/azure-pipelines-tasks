@@ -5,7 +5,11 @@
         "VS150COMNTools": "/vs/path",
         "VS140COMNTools": "/vs/path",
         "VS120COMNTools": "/vs/path",
-        "vs15Helper": "/path/to/vs15Helper.ps1"
+        "vs15Helper": "/path/to/vs15Helper.ps1",
+        "System.ParallelExecutionType": "test"
+    },
+    "getInput": {
+        "testSelector": "testAssemblies"
     },
     "match": {
         "**\\packages\\**\\*TestAdapter.dll": []
@@ -74,7 +78,7 @@
             "code": 0,
             "stdout": "vstest"
         },
-        "powershell -file /path/to/vs15Helper.ps1": {
+        "powershell -NonInteractive -ExecutionPolicy Unrestricted -file /path/to/vs15Helper.ps1": {
             "code": 0,
             "stdout": "<Objs Version=\"1.1.0.1\" xmlns=\"http://schemas.microsoft.com/powershell/2004/04\"><S>\\vs2017\\installation\\folder</S></Objs>"
         }

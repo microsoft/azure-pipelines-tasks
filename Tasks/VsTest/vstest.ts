@@ -63,8 +63,8 @@ export async function startTest() {
         }
     } catch (error) {
         deleteVstestDiagFile();
-        tl._writeLine('##vso[task.logissue type=error;code=' + error + ';TaskName=VSTest]');
-        throw error;
+        tl._writeLine('##vso[task.logissue type=error;TaskName=VSTest]' + error);
+        tl.setResult(tl.TaskResult.Failed, error);
     }
 }
 
