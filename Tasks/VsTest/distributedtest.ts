@@ -50,10 +50,10 @@ export class DistributedTest {
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.EnvironmentUri', this.dtaTestConfig.dtaEnvironment.environmentUri);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.TeamFoundationCollectionUri', this.dtaTestConfig.dtaEnvironment.tfsCollectionUrl);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.MiniMatchSourceFilter', 'true');
-        if (this.dtaTestConfig.vsTestVersion.toLowerCase() === 'latest') {
-            this.dtaTestConfig.vsTestVersion = '15.0';
+
+        if(this.dtaTestConfig.vsTestLocationMethod === utils.Constants.vsTestVersionString) {
+            utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestPlatformVersion', this.dtaTestConfig.vsTestVersion);
         }
-        utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestPlatformVersion', this.dtaTestConfig.vsTestVersion);
 
         var exeInfo = await versionFinder.locateTestWindow(this.dtaTestConfig);
         if(exeInfo) {

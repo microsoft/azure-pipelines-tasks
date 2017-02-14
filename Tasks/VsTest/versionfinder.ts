@@ -2,6 +2,7 @@ import tl = require('vsts-task-lib/task');
 import path = require('path');
 import Q = require('q');
 import models = require('./models')
+import utils = require('./helpers');
 
 var regedit = require('regedit');
 var xml2js = require('xml2js');
@@ -22,21 +23,39 @@ export function locateVSTestConsole(testConfig): Q.Promise<models.ExecutabaleInf
 export function locateTestWindow(testConfig: models.TestConfigurations): Q.Promise<models.ExecutabaleInfo> {
     let deferred = Q.defer<models.ExecutabaleInfo>();
     let vsVersion: number = parseFloat(testConfig.vsTestVersion);
-
-    if (isNaN(vsVersion) || vsVersion === 15.0) {
-        // latest
-        tl.debug('Searching for latest Visual Studio');
-        let vstestconsole15Path = getVSTestConsole15Path(testConfig.vs15HelperPath);
-        if (vstestconsole15Path) {
-            deferred.resolve({ version: 15.0, location: vstestconsole15Path });
+    if(testConfig.vsTestLocationMethod === utils.Constants.vsTestLocationString) {
+        if (utils.Helper.pathExistsAsFile(testConfig.vsTestLocation)) {
+            deferred.resolve({ version: null, location: path.join(testConfig.vsTestLocation,"..")});
+        } else if (utils.Helper.pathExistsAsDirectory(testConfig.vsTestLocation) && 
+            utils.Helper.pathExistsAsFile(path.join(testConfig.vsTestLocation, 'vstest.console.exe'))) {
+            deferred.resolve({ version: null, location: testConfig.vsTestLocation});
         } else {
-            // fallback
-            tl.debug('Unable to find an instance of Visual Studio 2017');
-            return getLatestVSTestConsolePathFromRegistry();
+            throw (new Error(tl.loc('PathDoesNotExist', testConfig.vsTestLocation)));
         }
     } else {
-        tl.debug('Searching for Visual Studio ' + vsVersion.toString());
-        deferred.resolve({ version: vsVersion, location: getVSTestLocation(vsVersion) });
+        if (isNaN(vsVersion)) {
+            // latest
+            tl.debug('Searching for latest Visual Studio');
+            let vstestconsole15Path = getVSTestConsole15Path(testConfig.vs15HelperPath);
+            if (vstestconsole15Path) {
+                deferred.resolve({ version: 15.0, location: vstestconsole15Path });
+            } else {
+                // fallback
+                tl.debug('Unable to find an instance of Visual Studio 2017');
+                return getLatestVSTestConsolePathFromRegistry();
+            }
+        } else if (vsVersion === 15.0) {
+            let vstestconsole15Path = getVSTestConsole15Path(testConfig.vs15HelperPath);
+            if (vstestconsole15Path) {
+                deferred.resolve({ version: 15.0, location: vstestconsole15Path });
+            } else {
+                throw (new Error(tl.loc('VstestNotFound', vsVersion)));
+            }
+        }
+        else {
+            tl.debug('Searching for Visual Studio ' + vsVersion.toString());
+            deferred.resolve({ version: vsVersion, location: getVSTestLocation(vsVersion) });
+        }
     }
     return deferred.promise;
 }
