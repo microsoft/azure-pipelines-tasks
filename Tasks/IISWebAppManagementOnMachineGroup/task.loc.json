@@ -57,6 +57,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.IISDeploymentType",
       "required": false,
+      "defaultValue": "IISWebsite",
       "options": {
         "IISWebsite": "IIS Website",
         "IISWebApplication": "IIS Web Application",
@@ -70,6 +71,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.ActionIISWebsite",
       "required": true,
+      "defaultValue": "CreateOrUpdateWebsite",
       "visibleRule": "IISDeploymentType = IISWebsite",
       "options": {
         "CreateOrUpdateWebsite": "Create Or Update"
@@ -82,6 +84,7 @@
       "label": "ms-resource:loc.input.label.ActionIISApplicationPool",
       "required": true,
       "visibleRule": "IISDeploymentType = IISApplicationPool",
+      "defaultValue": "CreateOrUpdateAppPool",
       "options": {
         "CreateOrUpdateAppPool": "Create Or Update"
       },
@@ -496,7 +499,8 @@
       "defaultValue": "",
       "required": true,
       "groupName": "ApplicationPoolForApplication",
-      "visibleRule": "AppPoolIdentityForApplication = SpecificUser"
+      "visibleRule": "AppPoolIdentityForApplication = SpecificUser",
+      "helpMarkDown": "ms-resource:loc.input.help.AppPoolUsernameForApplication"
     },
     {
       "name": "AppPoolPasswordForApplication",
@@ -505,8 +509,8 @@
       "defaultValue": "",
       "required": false,
       "groupName": "ApplicationPoolForApplication",
-      "helpMarkDown": "ms-resource:loc.input.help.AppPoolPasswordForApplication",
-      "visibleRule": "AppPoolIdentityForApplication = SpecificUser"
+      "visibleRule": "AppPoolIdentityForApplication = SpecificUser",
+      "helpMarkDown": "ms-resource:loc.input.help.AppPoolPasswordForApplication"
     },
     {
       "name": "AppPoolName",
@@ -567,7 +571,8 @@
       "defaultValue": "",
       "required": true,
       "groupName": "ApplicationPool",
-      "visibleRule": "AppPoolIdentity = SpecificUser"
+      "visibleRule": "AppPoolIdentity = SpecificUser",
+      "helpMarkDown": "ms-resource:loc.input.help.AppPoolUsername"
     },
     {
       "name": "AppPoolPassword",
@@ -576,8 +581,8 @@
       "defaultValue": "",
       "required": false,
       "groupName": "ApplicationPool",
-      "helpMarkDown": "ms-resource:loc.input.help.AppPoolPassword",
-      "visibleRule": "AppPoolIdentity = SpecificUser"
+      "visibleRule": "AppPoolIdentity = SpecificUser",
+      "helpMarkDown": "ms-resource:loc.input.help.AppPoolPassword"
     },
     {
       "name": "AppCmdCommands",

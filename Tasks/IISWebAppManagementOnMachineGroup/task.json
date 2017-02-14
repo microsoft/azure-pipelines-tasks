@@ -55,21 +55,23 @@
 		{
 			"name": "IISDeploymentType",
 			"type": "pickList",
-			"label": "IIS Deployment Type",
+			"label": "Configuration type",
 			"required": false,
+			"defaultValue": "IISWebsite",
 			"options": {
 				"IISWebsite": "IIS Website",
 				"IISWebApplication": "IIS Web Application",
 				"IISVirtualDirectory": "IIS Virtual Directory",
 				"IISApplicationPool": "IIS Application Pool"
 			},
-			"helpMarkDown": "Select the type of IIS object that is to be managed."
+			"helpMarkDown": " You can create or update sites, applications, virtual directories, and application pools."
 		},
 		{
 			"name": "ActionIISWebsite",
 			"type": "pickList",
 			"label": "Action",
 			"required": true,
+			"defaultValue": "CreateOrUpdateWebsite",
 			"visibleRule": "IISDeploymentType = IISWebsite",
 			"options": {
 				"CreateOrUpdateWebsite": "Create Or Update"
@@ -82,6 +84,7 @@
 			"label": "Action",
 			"required": true,
 			"visibleRule": "IISDeploymentType = IISApplicationPool",
+			"defaultValue": "CreateOrUpdateAppPool",
 			"options": {
 				"CreateOrUpdateAppPool": "Create Or Update"
 			},
@@ -94,7 +97,7 @@
 			"required": true,
 			"groupName": "Website",
 			"defaultValue": "",
-			"helpMarkDown": "Provide the name of the IIS website. It will be created if new, or else the existing website will be updated. <br>For deploying a Web project to the website, use the same name as specified in the Web deploy zip package file. If in the Web App deployment task, a Parameter file and Override Parameter settings are also specified, then the website name that the app will be deployed to be, is the one specified in the Override Parameters setting.<br>"
+			"helpMarkDown": "Provide the name of the IIS website to create or update."
 		},
 		{
 			"name": "WebsitePhysicalPath",
@@ -136,7 +139,7 @@
 			"groupName": "Website",
 			"defaultValue": "",
 			"visibleRule": "WebsitePhysicalPathAuth = WebsiteWindowsAuth",
-			"helpMarkDown": "Provide the user's password that will be used to access the website's physical path. If you are using a gMSA, this is not required."
+			"helpMarkDown": "Provide the user's password that will be used to access the website's physical path."
 		},
 		{
 			"name": "AddBinding",
@@ -238,7 +241,7 @@
 			"required": false,
 			"groupName": "Website",
 			"defaultValue": "false",
-			"helpMarkDown": "Select the option to create or update an application pool. If checked, the website will be created in the specified app pool. Otherwise the DefaultAppPool will be used."
+			"helpMarkDown": "Select the option to create or update an application pool. If checked, the website will be created in the specified app pool."
 		},
 		{
 			"name": "AppPoolNameForWebsite",
@@ -247,7 +250,7 @@
 			"defaultValue": "",
 			"required": true,
 			"groupName": "ApplicationPoolForWebsite",
-			"helpMarkDown": "Provide the name of the IIS application pool. Either a new app pool will be created if it doesn't exist, or the existing app pool will be updated with the settings specified here."
+			"helpMarkDown": "Provide the name of the IIS application pool to create or update."
 		},
 		{
 			"name": "DotNetVersionForWebsite",
@@ -300,7 +303,7 @@
 			"required": true,
 			"groupName": "ApplicationPoolForWebsite",
 			"visibleRule": "AppPoolIdentityForWebsite = SpecificUser",
-			"helpMarkDown": "Provide the username of the SpecificUser account that you want to use."
+			"helpMarkDown": "Provide the username of the custom account that you want to use."
 		},
 		{
 			"name": "AppPoolPasswordForWebsite",
@@ -309,7 +312,7 @@
 			"defaultValue": "",
 			"required": false,
 			"groupName": "ApplicationPoolForWebsite",
-			"helpMarkDown": "If you are using a gMSA, this is not required.",
+			"helpMarkDown": "Provide the password for custom account. <br/>The best practice is to create a variable in the Build or Release definition, and mark it as 'Secret' to secure it, and then use it here, like '$(userCredentials)'. ",
 			"visibleRule": "AppPoolIdentityForWebsite = SpecificUser"
 		},	
 		{
@@ -368,7 +371,7 @@
 			"required": false,
 			"defaultValue": "",
 			"visibleRule": "VDPhysicalPathAuth = VDWindowsAuth",
-			"helpMarkDown": "Provide the user's password that will be used to access the virtual directory's physical path. If you are using a gMSA, this is not required."
+			"helpMarkDown": "Provide the user's password that will be used to access the virtual directory's physical path."
 		},
 		{
 			"name": "ParentWebsiteNameForApplication",
@@ -426,7 +429,7 @@
 			"required": false,
 			"defaultValue": "",
 			"visibleRule": "ApplicationPhysicalPathAuth = ApplicationWindowsAuth",
-			"helpMarkDown": "Provide the user's password that will be used to access the application's physical path. If you are using a gMSA, this is not required."
+			"helpMarkDown": "Provide the user's password that will be used to access the application's physical path."
 		},
 		{
 			"name": "CreateOrUpdateAppPoolForApplication",
@@ -435,7 +438,7 @@
 			"required": false,
 			"defaultValue": "false",
 			"visibleRule": "IISDeploymentType = IISWebApplication",
-			"helpMarkDown": "Select the option to create or update an application pool. If checked, the application will be created in the specified app pool. Otherwise the DefaultAppPool will be used."
+			"helpMarkDown": "Select the option to create or update an application pool. If checked, the application will be created in the specified app pool."
 		},
 		{
 			"name": "AppPoolNameForApplication",
@@ -444,7 +447,7 @@
 			"defaultValue": "",
 			"required": true,
 			"groupName": "ApplicationPoolForApplication",
-			"helpMarkDown": "Provide the name of the IIS application pool. Either a new app pool will be created if it doesn't exist, or the existing app pool will be updated with the settings specified here."
+			"helpMarkDown": "Provide the name of the IIS application pool to create or update."
 		},
 		{
 			"name": "DotNetVersionForApplication",
@@ -496,7 +499,8 @@
 			"defaultValue": "",
 			"required": true,
 			"groupName": "ApplicationPoolForApplication",
-			"visibleRule": "AppPoolIdentityForApplication = SpecificUser"
+			"visibleRule": "AppPoolIdentityForApplication = SpecificUser",
+			"helpMarkDown": "Provide the username of the custom account that you want to use."
 		},
 		{
 			"name": "AppPoolPasswordForApplication",
@@ -504,9 +508,9 @@
 			"label": "Password",
 			"defaultValue": "",
 			"required": false,
-			"groupName": "ApplicationPoolForApplication",
-			"helpMarkDown": "If you are using a gMSA, this is not required.",
-			"visibleRule": "AppPoolIdentityForApplication = SpecificUser"
+			"groupName": "ApplicationPoolForApplication",			
+			"visibleRule": "AppPoolIdentityForApplication = SpecificUser",
+			"helpMarkDown": "Provide the password for custom account. <br/>The best practice is to create a variable in the Build or Release definition, and mark it as 'Secret' to secure it, and then use it here, like '$(userCredentials)'."
 		},
 		{
 			"name": "AppPoolName",
@@ -515,7 +519,7 @@
 			"defaultValue": "",
 			"required": true,
 			"groupName": "ApplicationPool",
-			"helpMarkDown": "Provide the name of the IIS application pool. Either a new app pool will be created if it doesn't exist, or the existing app pool will be updated with the settings specified here."
+			"helpMarkDown": "Provide the name of the IIS application pool to create or update."
 		},
 		{
 			"name": "DotNetVersion",
@@ -567,7 +571,8 @@
 			"defaultValue": "",
 			"required": true,
 			"groupName": "ApplicationPool",
-			"visibleRule": "AppPoolIdentity = SpecificUser"
+			"visibleRule": "AppPoolIdentity = SpecificUser",
+			"helpMarkDown": "Provide the username of the custom account that you want to use."
 		},
 		{
 			"name": "AppPoolPassword",
@@ -576,8 +581,8 @@
 			"defaultValue": "",
 			"required": false,
 			"groupName": "ApplicationPool",
-			"helpMarkDown": "If you are using a gMSA, this is not required.",
-			"visibleRule": "AppPoolIdentity = SpecificUser"
+			"visibleRule": "AppPoolIdentity = SpecificUser",
+			"helpMarkDown": "Provide the password for custom account. <br/>The best practice is to create a variable in the Build or Release definition, and mark it as 'Secret' to secure it, and then use it here, like '$(userCredentials)'."
 		},
 		{
 			"name": "AppCmdCommands",
