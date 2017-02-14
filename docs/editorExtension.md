@@ -12,7 +12,7 @@ The task editor extension is a [VSTS extension](https://www.visualstudio.com/en-
 
 The contribution should of type `ms.vss-distributed-task.task-input-editor` and it should target `ms.vss-distributed-task.task-input-editors` contribution.
 
-```
+```JSON
     "contributions":[
         {
             "id": "my-task-editor-extension",
@@ -28,11 +28,11 @@ The contribution should of type `ms.vss-distributed-task.task-input-editor` and 
 ```
 
 | Property | Description |
------------------------- |
+| -------- | ----------- |
 | name     | Friendly name of the extension | 
 | uri      | URI to the page that hosts the html that loads the extension UX and scripts |
 
-** Javascript sample **
+**Javascript sample**
 
 The extension can recieve the current value of all the input fields in the task. It also receives a delegate which can be used to query the content of a file in associated Source Control or Release Artifact.
 To return the resulting value, the extension needs to register a callback "onOkClicked".
@@ -65,6 +65,22 @@ VSS.ready( function() {
             }
     });
 });
+
+```
+## Refering to the extension in task.json
+Once you have authored the extension, you can refer to the extension against an input field by specifying the full extension id in the editorExtension property. See below.
+
+```JSON
+
+"inputs": [
+    {
+        "name": "complexParam",
+        "type": "multiLine",
+        "properties": {
+            "editorExtension": "extensionid"
+        }
+    }
+]
 
 ```
 
