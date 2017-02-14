@@ -496,8 +496,6 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
     var vstest = tl.tool(vstestLocation);
     addVstestArgs(argsArray, vstest);
 
-    tl.rmRF(testResultsDirectory, true);
-    tl.mkdirP(testResultsDirectory);
     tl.cd(workingDirectory);
     var ignoreTestFailures = ignoreVstestFailure && ignoreVstestFailure.toLowerCase() === "true";
     vstest.exec(<tr.IExecOptions>{ failOnStdErr: !ignoreTestFailures })
@@ -978,28 +976,35 @@ function isNugetRestoredAdapterPresent(rootDirectory: string): boolean {
     return false;
 }
 
-function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: string): string {    
-
+function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: string): string {
+    
     var resultDirectory = defaultResultsDirectory;
     if (!settingsFile || !pathExistsAsFile(settingsFile)) {
         return resultDirectory;
     }
+    try {
+        const xmlContents = readFileContentsSync(runSettingsFile, "utf-8");
+        const parser = new xml2js.Parser();
 
-    const xmlContents = readFileContentsSync(runSettingsFile, "utf-8");
-    const parser = new xml2js.Parser();
+        parser.parseString(xmlContents, function(err, result) {
+            if (!err && result.RunSettings && result.RunSettings.RunConfiguration && result.RunSettings.RunConfiguration[0] &&
+                result.RunSettings.RunConfiguration[0].ResultsDirectory && result.RunSettings.RunConfiguration[0].ResultsDirectory[0].length > 0) {
+                var runSettingsResultDirectory = result.RunSettings.RunConfiguration[0].ResultsDirectory[0];
+                runSettingsResultDirectory = runSettingsResultDirectory.trim();
 
-    parser.parseString(xmlContents, function(err, result) {
-        if (!err && result.RunSettings && result.RunSettings.RunConfiguration && result.RunSettings.RunConfiguration[0] &&
-            result.RunSettings.RunConfiguration[0].ResultsDirectory && result.RunSettings.RunConfiguration[0].ResultsDirectory[0].length > 0) {
-            resultDirectory = result.RunSettings.RunConfiguration[0].ResultsDirectory[0];
-            resultDirectory = resultDirectory.trim();
-
-            if (resultDirectory) {
-                // path.resolve will take care if the result directory given in settings files is not absolute.
-                resultDirectory = path.resolve(path.dirname(runSettingsFile), resultDirectory);
+                if (runSettingsResultDirectory) {
+                    // path.resolve will take care if the result directory given in settings files is not absolute.
+                    resultDirectory = path.resolve(path.dirname(runSettingsFile), runSettingsResultDirectory);
+                }
             }
-        }
-    });
+        });
+    }
+    catch(error) {
+        //In case of error return default directory.
+        tl.debug(error);
+        return resultDirectory;
+    }
+    
     return resultDirectory;
 }
 
@@ -1575,7 +1580,7 @@ function setRegistryKeyForParallelExecution(vsVersion: number) {
 }
 
 function readFileContentsSync(filePath: string, encoding: string): string {
-    return fs.readFileSync(filePath, encoding)
+    return fs.readFileSync(filePath, encoding);
 }
 
 function readFileContents(filePath: string, encoding: string): Q.Promise<string> {
