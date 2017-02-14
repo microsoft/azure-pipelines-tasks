@@ -70,6 +70,8 @@ VSS.ready( function() {
 ## Refering to the extension in task.json
 Once you have authored the extension, you can refer to the extension against an input field by specifying the full extension id in the editorExtension property. See below.
 
+In addition, you can also specify a "displayFormat" template if the value is a JSON object.
+
 ```JSON
 
 "inputs": [
@@ -77,10 +79,22 @@ Once you have authored the extension, you can refer to the extension against an 
         "name": "complexParam",
         "type": "multiLine",
         "properties": {
-            "editorExtension": "extensionid"
+            "editorExtension": "extensionid",
+            "displayFormat": "Configure for user {{userDetails.name}}"
         }
     }
 ]
+
+In the above example, if the returned value is following, the displayFormat would evaluate to "Configure for user John Doe".
+{
+    "userDetails":{ 
+        "name":"John Doe",
+        "address": ""
+    },
+    "configDetails":{
+
+    }
+}
 
 ```
 
