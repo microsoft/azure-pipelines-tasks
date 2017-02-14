@@ -839,21 +839,27 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
         return resultDirectory;
     }
 
-    const xmlContents = utils.Helper.readFileContentsSync(vstestConfig.settingsFile, "utf-8");
-    const parser = new xml2js.Parser();
+    try {
+        const xmlContents = utils.Helper.readFileContentsSync(vstestConfig.settingsFile, "utf-8");
+        const parser = new xml2js.Parser();
 
-    parser.parseString(xmlContents, function (err, result) {
-        if (!err && result.RunSettings && result.RunSettings.RunConfiguration && result.RunSettings.RunConfiguration[0] &&
-            result.RunSettings.RunConfiguration[0].ResultsDirectory && result.RunSettings.RunConfiguration[0].ResultsDirectory[0].length > 0) {
-            resultDirectory = result.RunSettings.RunConfiguration[0].ResultsDirectory[0];
-            resultDirectory = resultDirectory.trim();
+        parser.parseString(xmlContents, function (err, result) {
+            if (!err && result.RunSettings && result.RunSettings.RunConfiguration && result.RunSettings.RunConfiguration[0] &&
+                result.RunSettings.RunConfiguration[0].ResultsDirectory && result.RunSettings.RunConfiguration[0].ResultsDirectory[0].length > 0) {
+                let runSettingsResultDirectory = result.RunSettings.RunConfiguration[0].ResultsDirectory[0];
+                runSettingsResultDirectory = runSettingsResultDirectory.trim();
 
-            if (resultDirectory) {
-                // path.resolve will take care if the result directory given in settings files is not absolute.
-                resultDirectory = path.resolve(path.dirname(vstestConfig.settingsFile), resultDirectory);
+                if (runSettingsResultDirectory) {
+                    // path.resolve will take care if the result directory given in settings files is not absolute.
+                    resultDirectory = path.resolve(path.dirname(vstestConfig.settingsFile), runSettingsResultDirectory);
+                }
             }
-        }
-    });
+        });
+    } catch(error) {
+        //In case of error return default directory.
+        tl.debug(error);
+        return resultDirectory;
+    }
 
     return resultDirectory;
 }
