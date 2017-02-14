@@ -26,13 +26,11 @@ export function locateTestWindow(testConfig: models.TestConfigurations): Q.Promi
     if(testConfig.vsTestLocationMethod === utils.Constants.vsTestLocationString) {
         if (utils.Helper.pathExistsAsFile(testConfig.vsTestLocation)) {
             deferred.resolve({ version: null, location: path.join(testConfig.vsTestLocation,"..")});
+        } else if (utils.Helper.pathExistsAsDirectory(testConfig.vsTestLocation) && 
+            utils.Helper.pathExistsAsFile(path.join(testConfig.vsTestLocation, 'vstest.console.exe'))) {
+            deferred.resolve({ version: null, location: testConfig.vsTestLocation});
         } else {
-            if (utils.Helper.pathExistsAsDirectory(testConfig.vsTestLocation) && 
-                utils.Helper.pathExistsAsFile(path.join(testConfig.vsTestLocation, 'vstest.console.exe'))) {
-                deferred.resolve({ version: null, location: testConfig.vsTestLocation});
-            } else {
-                throw (new Error(tl.loc('PathDoesNotExist', testConfig.vsTestLocation)));
-            }
+            throw (new Error(tl.loc('PathDoesNotExist', testConfig.vsTestLocation)));
         }
     } else {
         if (isNaN(vsVersion)) {
