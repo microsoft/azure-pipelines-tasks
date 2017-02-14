@@ -37,8 +37,8 @@ export class DistributedTest {
             tl.debug(fs.readFileSync(this.dtaTestConfig.dtaEnvironment.dtaHostLogFilePath, 'utf-8'));
             tl.setResult(tl.TaskResult.Succeeded, 'Task succeeded');
         } catch (error) {
-            tl.debug('Create Agent failed with  : ' + error);
-            tl.setResult(tl.TaskResult.Failed, 'Task failed');
+            tl.error(error);
+            tl.setResult(tl.TaskResult.Failed, error);
         }
     }
 
@@ -54,7 +54,7 @@ export class DistributedTest {
             this.dtaTestConfig.vsTestVersion = '15.0';
         }
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestPlatformVersion', this.dtaTestConfig.vsTestVersion);
-        
+
         var exeInfo = await versionFinder.locateTestWindow(this.dtaTestConfig);
         if(exeInfo) {
             tl.debug("Adding env var DTA.TestWindow.Path = " + exeInfo.location);
@@ -62,7 +62,6 @@ export class DistributedTest {
         } else {
             tl.error(tl.loc('VstestNotFound', this.dtaTestConfig.vsTestVersion));
         }
-        
 
         // We are logging everything to a DTAExecutionHost.exe.log file and reading it at the end and adding to the build task debug logs
         // So we are not redirecting the IO streams from the DTAExecutionHost.exe process
@@ -97,7 +96,7 @@ export class DistributedTest {
             tl.warning(tl.loc('ErrorWhileUpdatingSettings'));
             tl.debug(error);
         }
-        
+
         utils.Helper.addToProcessEnvVars(envVars, 'testcasefilter', this.dtaTestConfig.testcaseFilter);
         utils.Helper.addToProcessEnvVars(envVars, 'runsettings', settingsFile);
         utils.Helper.addToProcessEnvVars(envVars, 'testdroplocation', this.dtaTestConfig.testDropLocation);
@@ -120,7 +119,7 @@ export class DistributedTest {
 
         await runDistributesTestTool.exec(<tr.IExecOptions>{ cwd: path.join(__dirname, 'modules'), env: envVars });
         await this.cleanUp(settingsFile);
-        tl.debug('Run Distributed Test finished');        
+        tl.debug('Run Distributed Test finished');
     }
 
     private async cleanUp(temporarySettingsFile: string) {

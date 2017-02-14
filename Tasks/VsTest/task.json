@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 12
+        "Patch": 13
     },
     "demands": [
         "vstest"
@@ -213,7 +213,7 @@
             "groupName": "executionOptions"
         },
         {
-            "name": "runTestsInParallel",
+            "name": "runInParallel",
             "type": "boolean",
             "label": "Run tests in parallel on multi-core machines",
             "defaultValue": "False",
@@ -240,7 +240,7 @@
             "groupName": "executionOptions"
         }, 
         {  
-           "name": "codeCoverage",  
+           "name": "codeCoverageEnabled",  
             "type": "boolean",
             "label": "Code Coverage Enabled",
             "defaultValue": "False",
@@ -345,6 +345,8 @@
         "VideoCollectorNotSupportedWithRunSettings": "Video collector is not supported with run settings.",
         "runTestInIsolationNotSupported": "Running tests in isolation is not supported when using the multi-agent phase setting. This option will be ignored.",
         "tiaNotSupportedInDta": "Running only impacted tests is not supported when using the multi-agent phase setting. This option will be ignored.",
-        "overrideNotSupported": "Overriding test run parameters is supported only with runsettings file. This option will be ignored."
+        "overrideNotSupported": "Overriding test run parameters is supported only with runsettings file. This option will be ignored.",
+        "vs2013NotSupportedInDta": "Running tests using Visual Studio 2013 with multi-agent phase settings is not supported.",
+        "configureDtaAgentFailed": "Configuring the test agent with the server failed even after %d retries with error %s"
     }
 }

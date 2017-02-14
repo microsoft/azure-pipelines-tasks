@@ -10,7 +10,7 @@ try {
     tl.debug('Value of ParallelExecutionType :' + parallelExecution);
 
     const testType = tl.getInput('testSelector');
-    tl.debug('Value of Test Selector :' + parallelExecution);
+    tl.debug('Value of Test Selector :' + testType);
 
     if ((parallelExecution && parallelExecution.toLowerCase() === 'multimachine')
          || testType.toLowerCase() === 'testplan' || testType.toLowerCase() === 'testrun') {
@@ -27,8 +27,8 @@ try {
         localTest.startTest();
     }
 } catch (error) {
-    tl._writeLine('##vso[task.logissue type=error;code=' + error + ';TaskName=VSTest]');
-    throw error;
+    tl._writeLine('##vso[task.logissue type=error;TaskName=VSTest]' + error);
+    tl.setResult(tl.TaskResult.Failed, error);
 }
 
 function getDtaInstanceId(): number {

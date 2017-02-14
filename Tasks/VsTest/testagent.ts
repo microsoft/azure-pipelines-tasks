@@ -6,8 +6,9 @@ import * as models from './models';
 
 export class TestAgent {
     public static async createAgent(environment: models.DtaEnvironment, retries: number) {
-        while(retries > 0) {
-            retries--;
+        var currentRetryCount = retries;
+        while(currentRetryCount > 0) {
+            currentRetryCount--;
             try {
                 const testAgentName: string = tl.getVariable('Agent.MachineName');
                 const envUrlRef: any = { Url: environment.environmentUri };
@@ -24,9 +25,10 @@ export class TestAgent {
                 tl.debug('created the test agent entry in DTA service, id : ' + registeredAgent.id);
                 return registeredAgent.id;
             } catch (error) {
-                tl.error('Error : created the test agent entry in DTA service, so retrying => retries pending  : ' + retries);
-                if(retries === 0) {
-                    throw error;
+                tl.error('Error : created the test agent entry in DTA service, so retrying => retries pending  : ' + currentRetryCount
+                        + 'error details :' + error);
+                if(currentRetryCount === 0) {
+                    throw new Error(tl.loc("configureDtaAgentFailed", retries, error));
                 }
             }
         }

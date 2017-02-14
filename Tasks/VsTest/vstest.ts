@@ -41,7 +41,7 @@ export async function startTest() {
         testAssemblyFiles = getTestAssemblies();
 
         if (!testAssemblyFiles || testAssemblyFiles.length === 0) {
-            deleteVstestDiagFile(vstestConfig.vstestDiagFile);
+            deleteVstestDiagFile();
             tl._writeLine('##vso[task.logissue type=warning;code=002004;]');
             tl.warning(tl.loc('NoMatchingTestAssemblies', vstestConfig.sourceFilter));
             return;
@@ -54,22 +54,22 @@ export async function startTest() {
                         publishTestResults(resultsDirectory);
                     }
                     tl.setResult(code, tl.loc('VstestReturnCode', code));
-                    deleteVstestDiagFile(vstestConfig.vstestDiagFile);
+                    deleteVstestDiagFile();
                 } catch (error) {
-                    deleteVstestDiagFile(vstestConfig.vstestDiagFile);
+                    deleteVstestDiagFile();
                     tl._writeLine('##vso[task.logissue type=error;code=' + error + ';TaskName=VSTest]');
                     throw error;
                 }
             })
             .fail(function (err) {
-                deleteVstestDiagFile(vstestConfig.vstestDiagFile);
+                deleteVstestDiagFile();
                 tl._writeLine('##vso[task.logissue type=error;code=' + err + ';TaskName=VSTest]');
                 throw err;
             });
     } catch (error) {
-        deleteVstestDiagFile(vstestConfig.vstestDiagFile);
-        tl._writeLine('##vso[task.logissue type=error;code=' + error + ';TaskName=VSTest]');
-        throw error;
+        deleteVstestDiagFile();
+        tl._writeLine('##vso[task.logissue type=error;TaskName=VSTest]' + error);
+        tl.setResult(tl.TaskResult.Failed, error);
     }
 }
 
@@ -515,10 +515,10 @@ function cleanFiles(responseFile: string, listFile: string): void {
     tl.rmRF(tiaConfig.baseLineBuildIdFile, true);
 }
 
-function deleteVstestDiagFile(file: string): void {
-    if (pathExistsAsFile(file)) {
-        tl.debug("Deleting vstest diag file " + file);
-        tl.rmRF(file, true);
+function deleteVstestDiagFile(): void {
+    if (pathExistsAsFile(vstestConfig.vstestDiagFile)) {
+        tl.debug("Deleting vstest diag file " + vstestConfig.vstestDiagFile);
+        tl.rmRF(vstestConfig.vstestDiagFile, true);
     }
 }
 

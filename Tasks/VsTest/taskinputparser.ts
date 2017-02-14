@@ -88,7 +88,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     testConfiguration.buildConfig = tl.getInput('configuration');
     testConfiguration.buildPlatform = tl.getInput('platform');
     testConfiguration.testRunTitle = tl.getInput('testRunTitle');
-    testConfiguration.runInParallel = tl.getBoolInput('runTestsInParallel');
+    testConfiguration.runInParallel = tl.getBoolInput('runInParallel');
     testConfiguration.runTestsInIsolation = tl.getBoolInput('runTestsInIsolation');
     testConfiguration.tiaConfig = getTiaConfiguration();
     testConfiguration.testSelection = tl.getInput('testSelector');
@@ -115,7 +115,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
         testConfiguration.vs15HelperPath = path.join(__dirname, 'vs15Helper.ps1');
     }
 
-    testConfiguration.codeCoverageEnabled = tl.getBoolInput('codeCoverage');
+    testConfiguration.codeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');
 }
 
 function getTiaConfiguration() : models.TiaConfiguration {
