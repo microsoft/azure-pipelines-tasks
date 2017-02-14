@@ -16,7 +16,7 @@
 	"version": {
 		"Major": 0,
 		"Minor": 1,
-		"Patch": 0
+		"Patch": 6
 	},
 	"minimumAgentVersion": "1.95.0",
 	"instanceNameFormat": "Manage $(IISDeploymentType)",
@@ -64,7 +64,7 @@
 				"IISVirtualDirectory": "IIS Virtual Directory",
 				"IISApplicationPool": "IIS Application Pool"
 			},
-			"helpMarkDown": " You can create or update sites, applications, virtual directories, and application pools."
+			"helpMarkDown": "You can create or update sites, applications, virtual directories, and application pools."
 		},
 		{
 			"name": "ActionIISWebsite",
@@ -227,7 +227,7 @@
 		{
 			"name": "SSLCertThumbPrint",
 			"type": "string",
-			"label": "SSL Certificate Thumbprint",
+			"label": "SSL certificate thumbprint",
 			"required": true,
 			"groupName": "Website",
 			"defaultValue": "",
@@ -237,7 +237,7 @@
 		{
 			"name": "CreateOrUpdateAppPoolForWebsite",
 			"type": "boolean",
-			"label": "Create or Update App pool",
+			"label": "Create or update app pool",
 			"required": false,
 			"groupName": "Website",
 			"defaultValue": "false",
@@ -318,7 +318,7 @@
 		{
 			"name": "ParentWebsiteNameForVD",
 			"type": "string",
-			"label": "Parent Website Name",
+			"label": "Parent website name",
 			"defaultValue": "",
 			"required": true,
 			"visibleRule": "IISDeploymentType = IISVirtualDirectory",
@@ -376,7 +376,7 @@
 		{
 			"name": "ParentWebsiteNameForApplication",
 			"type": "string",
-			"label": "Parent Website Name",
+			"label": "Parent website name",
 			"defaultValue": "",
 			"required": true,
 			"visibleRule": "IISDeploymentType = IISWebApplication",
@@ -434,7 +434,7 @@
 		{
 			"name": "CreateOrUpdateAppPoolForApplication",
 			"type": "boolean",
-			"label": "Create or Update App pool",
+			"label": "Create or update app pool",
 			"required": false,
 			"defaultValue": "false",
 			"visibleRule": "IISDeploymentType = IISWebApplication",
@@ -587,7 +587,7 @@
 		{
 			"name": "AppCmdCommands",
 			"type": "multiLine",
-			"label": "Additional AppCmd.exe commands",
+			"label": "Additional appcmd.exe commands",
 			"required": false,
 			"groupName": "Advanced",
 			"defaultValue": "",
@@ -602,7 +602,6 @@
 	"messages": {
 		"InvalidSslThumbprint": "Invalid thumbprint. Length is not 40 characters or contains invalid characters.",
 		"InvalidVirtualPath": "Virtual path should begin with a /",
-		"EmptyIISDeploymentType": "IIS Deployment Type input is empty. Executing additional AppCmd.exe commands.",
 		"InvalidIISDeploymentType": "Invalid IIS Deployment Type : {0}"
 	}
 
