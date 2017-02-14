@@ -174,12 +174,25 @@
       "groupName": "testSelection"
     },
     {
+      "name": "vstestLocationMethod",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.vstestLocationMethod",
+      "required": false,
+      "groupName": "executionOptions",
+      "defaultValue": "version",
+      "options": {
+        "version": "Version",
+        "location": "Specify Location"
+      }
+    },
+    {
       "name": "vsTestVersion",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.vsTestVersion",
       "defaultValue": "15.0",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.vsTestVersion",
+      "visibleRule": "vstestLocationMethod = version",
       "groupName": "executionOptions",
       "options": {
         "latest": "Latest",
@@ -187,6 +200,16 @@
         "14.0": "Visual Studio 2015",
         "12.0": "Visual Studio 2013"
       }
+    },
+    {
+      "name": "vstestLocation",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.vstestLocation",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.vstestLocation",
+      "visibleRule": "vstestLocationMethod = location",
+      "groupName": "executionOptions"
     },
     {
       "name": "runSettingsFile",

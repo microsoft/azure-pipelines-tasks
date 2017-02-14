@@ -14,7 +14,9 @@ export interface TestConfigurations {
     buildConfig: string;
     buildPlatform: string;
     testRunTitle: string;
+    vsTestLocationMethod: string;
     vsTestVersion: string;
+    vsTestLocation: string;
     pathtoCustomTestAdapters: string;
     tiaConfig: TiaConfiguration;
     runInParallel: boolean;

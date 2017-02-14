@@ -173,22 +173,44 @@
             "helpMarkDown": "To run UI tests, ensure that the agent is set to run in interactive mode. [More information](https://aka.ms/uitestmoreinfo).",
             "groupName": "testSelection"
         },
+        {
+            "name": "vstestLocationMethod",
+            "type": "radio",
+            "label": "VSTest",
+            "required": false,
+            "groupName": "executionOptions",
+            "defaultValue": "version",
+            "options": {
+                "version": "Version",
+                "location": "Specify Location"
+            }
+        },
         {  
             "name": "vsTestVersion",
             "type": "pickList",
             "label": "VSTest version",
             "defaultValue": "15.0",
-            "required": false,  
-            "helpMarkDown": "The version of Visual Studio test to use.",  
+            "required": false,
+            "helpMarkDown": "The version of Visual Studio test to use.",
+            "visibleRule": "vstestLocationMethod = version",
             "groupName": "executionOptions",
              "options": {
                  "latest": "Latest",
                  "15.0": "Visual Studio 2017",
                  "14.0": "Visual Studio 2015",
                  "12.0": "Visual Studio 2013"
-            },
+            }
+        },
+        {
+            "name": "vstestLocation",
+            "type": "string",
+            "label": "Path to vstest.console.exe",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Optionally supply the path to VSTest.",
+            "visibleRule": "vstestLocationMethod = location",
             "groupName": "executionOptions"
-        },         
+        },
         {
             "name": "runSettingsFile",
             "type": "filePath",
@@ -242,7 +264,7 @@
         {  
            "name": "codeCoverageEnabled",  
             "type": "boolean",
-            "label": "Code Coverage Enabled",
+            "label": "Code coverage enabled",
             "defaultValue": "False",
             "required": false,  
             "helpMarkDown": "Collect code coverage information from the Test run.",  
@@ -278,7 +300,7 @@
         {
             "name": "publishRunAttachments",
             "type": "boolean",
-            "label": "Upload Test Attachments",
+            "label": "Upload test attachments",
             "defaultValue": "true",
             "required": false,
             "helpMarkDown": "Opt in/out of publishing test run level attachments.",

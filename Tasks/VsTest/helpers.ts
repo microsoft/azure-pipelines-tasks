@@ -12,6 +12,11 @@ var xml2js = require('xml2js');
 var parser = new xml2js.Parser();
 var builder = new xml2js.Builder();
 
+export class Constants {
+    public static vsTestVersionString = 'version';
+    public static vsTestLocationString = 'location';
+}
+
 export class Helper{
     public static addToProcessEnvVars(envVars: { [key: string]: string; }, name: string, value: string) {
         if (!this.isNullEmptyOrUndefined(value)) {
@@ -35,6 +40,10 @@ export class Helper{
 
     public static pathExistsAsFile(path: string) {
         return tl.exist(path) && tl.stats(path).isFile();
+    }
+
+    public static pathExistsAsDirectory(path: string) {
+        return tl.exist(path) && tl.stats(path).isDirectory();
     }
 
     public static getXmlContents(filePath: string): Q.Promise<any> {

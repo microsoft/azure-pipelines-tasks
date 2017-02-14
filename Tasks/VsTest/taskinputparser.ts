@@ -104,11 +104,17 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
         });
     }
 
-    testConfiguration.vsTestVersion = tl.getInput('vsTestVersion');    
-    if(utils.Helper.isNullEmptyOrUndefined(testConfiguration.vsTestVersion)) {
-        tl._writeLine('vsTestVersion is null or empty');
-        throw new Error("vsTestVersion is null or empty");
+    testConfiguration.vsTestLocationMethod = tl.getInput('vstestLocationMethod');
+    if(testConfiguration.vsTestLocationMethod === utils.Constants.vsTestVersionString) {
+        testConfiguration.vsTestVersion = tl.getInput('vsTestVersion');
+        if(utils.Helper.isNullEmptyOrUndefined(testConfiguration.vsTestVersion)) {
+            tl._writeLine('vsTestVersion is null or empty');
+            throw new Error("vsTestVersion is null or empty");
+        }
+    } else {
+        testConfiguration.vsTestLocation = tl.getInput('vsTestLocation');
     }
+
         // only to facilitate the writing of unit tests 
     testConfiguration.vs15HelperPath = tl.getVariable('vs15Helper');
     if (!testConfiguration.vs15HelperPath) {
