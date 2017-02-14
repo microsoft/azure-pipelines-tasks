@@ -1,3 +1,5 @@
+import * as fs from 'fs';
+
 import tl = require('vsts-task-lib/task');
 import tr = require('vsts-task-lib/toolrunner');
 import path = require('path');
@@ -6,7 +8,6 @@ import models = require('./models')
 
 var os = require('os');
 var uuid = require('node-uuid');
-var fs = require('fs');
 var xml2js = require('xml2js');
 var parser = new xml2js.Parser();
 var builder = new xml2js.Builder();
@@ -79,6 +80,10 @@ export class Helper{
             }
         });
         return defer.promise;
+    }
+
+    public static readFileContentsSync(filePath: string, encoding: string): string {
+        return fs.readFileSync(filePath, encoding)
     }
 
     public static writeXmlFile(result: any, settingsFile: string, fileExt: string): Q.Promise<string> {
