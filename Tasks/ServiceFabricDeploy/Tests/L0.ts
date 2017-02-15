@@ -1,11 +1,10 @@
-/// <reference path="../../definitions/mocha.d.ts"/>
-/// <reference path="../../definitions/node.d.ts"/>
-/// <reference path="../../definitions/Q.d.ts"/>
+/// <reference path="../../../definitions/mocha.d.ts"/>
+/// <reference path="../../../definitions/node.d.ts"/>
+/// <reference path="../../../definitions/Q.d.ts"/>
 
 import Q = require('q');
 import assert = require('assert');
-import trm = require('../../lib/taskRunner');
-import psm = require('../../lib/psRunner');
+var psm = require('../../../Tests/lib/psRunner');
 import path = require('path');
 var shell = require('shelljs');
 var ps = shell.which('powershell.exe');

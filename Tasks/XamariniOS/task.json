@@ -11,8 +11,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 112,
-        "Patch": 1
+        "Minor": 113,
+        "Patch": 0
     },
     "demands": [
         "Xamarin.iOS"
@@ -36,7 +36,7 @@
             "label": "Solution",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Relative path from the repo root of the Xamarin.iOS solution to build."
+            "helpMarkDown": "Relative path from the repository root of the Xamarin.iOS solution to build."
         },
         {
             "name": "configuration",
@@ -52,7 +52,7 @@
             "label": "Run NuGet Restore",
             "defaultValue": "true",
             "required": true,
-            "helpMarkDown": "Optionally run `nuget restore` on the Xamarin iOS solution to install all referenced packages before build. The nuget tool in the PATH on the build server will be used. To use a different version of nuget or set additional arguments use the [NuGet Instaler Task](https://www.visualstudio.com/en-us/docs/build/steps/package/nuget-installer).",
+            "helpMarkDown": "Optionally run `nuget restore` on the Xamarin iOS solution to install all referenced packages before build. The 'nuget' tool in the PATH of the build agent machine will be used. To use a different version of NuGet or set additional arguments, use the [NuGet Installer Task](https://www.visualstudio.com/docs/build/steps/package/nuget-installer).",
             "groupName": "advanced"
         },
         {
@@ -95,7 +95,7 @@
             "label": "Build for iOS Simulator",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Optionally builds for the iOS Simulator instead of physical iOS devices."
+            "helpMarkDown": "Optionally build for the iOS Simulator instead of physical iOS devices."
         },
         {
             "name": "signMethod",
@@ -114,7 +114,7 @@
             "type": "string",
             "label": "Signing Identity",
             "required": false,
-            "helpMarkDown": "Optional signing identity override that should be used to sign the build. This defaults to Xcode Project setting. You may need to select 'Unlock Default Keychain' if you use this option.",
+            "helpMarkDown": "Optionally override the signing identity that will be used to sign the build. If nothing is entered, the setting in the Xcode project will be used. You may need to select 'Unlock Default Keychain' if you use this option.",
             "groupName": "sign",
             "visibleRule": "signMethod = id"
         },
@@ -151,7 +151,7 @@
             "type": "filePath",
             "label": "P12 Certificate File",
             "required": false,
-            "helpMarkDown": "Optional relative path to a PKCS12-formatted p12 certificate file containing a signing certificate to be used for this build.",
+            "helpMarkDown": "Optional relative path to a PKCS12-formatted P12 certificate file containing a signing certificate to be used for this build.",
             "groupName": "sign",
             "visibleRule": "signMethod = file"
         },
@@ -160,7 +160,7 @@
             "type": "string",
             "label": "P12 Password",
             "required": false,
-            "helpMarkDown": "Password to the P12 certificate file, if specified. Use a Build Variable to encrypt this value.",
+            "helpMarkDown": "Password to the P12 certificate file, if specified. Use a build variable to encrypt this value.",
             "groupName": "sign",
             "visibleRule": "signMethod = file"
         },

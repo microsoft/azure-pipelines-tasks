@@ -1,9 +1,9 @@
 [CmdletBinding()]
 param()
 
-. $PSScriptRoot\..\..\lib\Initialize-Test.ps1
+. $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 
-$taskPath = "$PSScriptRoot\..\..\..\Tasks\ServiceFabricUpdateAppVersions"
+$taskPath = "$PSScriptRoot\.."
 
 Microsoft.PowerShell.Core\Import-Module $taskPath\Assert-SingleItem.psm1
 Microsoft.PowerShell.Core\Import-Module $taskPath\Update-ServiceVersions.psm1

@@ -8,8 +8,7 @@
   "category": "Utility",
   "visibility": [
     "Build",
-    "Release",
-    "Preview"
+    "Release"
   ],
   "runsOn": [
     "MachineGroup"

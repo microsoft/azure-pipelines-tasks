@@ -70,7 +70,7 @@ describe('General Suite', function () {
             // Read the directory.
             fs.readdirSync(folder).forEach(item => {
                 var itemPath: string = path.join(folder, item);
-                if (fs.statSync(itemPath).isDirectory()) {
+                if (fs.statSync(itemPath).isDirectory() && itemPath != path.join(tasksFolder, 'Tests')) {
                     // Push the child directory.
                     folders.push(itemPath);
                 } else if (item.toUpperCase() == "TASK.JSON" &&
@@ -311,7 +311,7 @@ describe('General Suite', function () {
                 let dir: string = dirs.pop();
                 fs.readdirSync(dir).forEach((itemName: string) => {
                     let itemPath: string = path.join(dir, itemName);
-                    if (fs.statSync(itemPath).isDirectory() && itemName != 'node_modules') {
+                    if (fs.statSync(itemPath).isDirectory() && itemName != 'node_modules' && itemPath != path.join(taskPath, 'Tests')) {
                         dirs.push(itemPath);
                     }
                     else if (itemName.search(/\.ts$/) > 0) {
@@ -409,11 +409,11 @@ describe('General Suite', function () {
             }
         })
 
-        folders.forEach(folder => {
+        folders.forEach(taskFolder => {
             // Load the task.json or module.json if one exists.
-            var jsonFile = path.join(folder, 'task.json');
+            var jsonFile = path.join(taskFolder, 'task.json');
             var obj = { "messages": {} }
-            if (fs.existsSync(jsonFile) || fs.existsSync(jsonFile = path.join(folder, "module.json"))) {
+            if (fs.existsSync(jsonFile) || fs.existsSync(jsonFile = path.join(taskFolder, "module.json"))) {
                 obj = JSON.parse(fs.readFileSync(jsonFile).toString());
             } else {
                 jsonFile = ''
@@ -421,10 +421,11 @@ describe('General Suite', function () {
 
             // Recursively find all PS files.
             var psFiles: string[] = [];
-            var folderStack: string[] = [folder];
+            var folderStack: string[] = [taskFolder];
             while (folderStack.length > 0) {
-                folder = folderStack.pop();
+                var folder = folderStack.pop();
                 if (path.basename(folder).toLowerCase() == "ps_modules") { continue } // Skip nested ps_modules folder.
+                if (folder == path.join(taskFolder, 'Tests')) { continue } // Skip [...]/Task/Tests and [...]/Common/Tests folders.
                 fs.readdirSync(folder).forEach(itemName => {
                     var itemPath = path.join(folder, itemName);
                     if (fs.statSync(itemPath).isDirectory()) {

@@ -366,6 +366,7 @@
     "DeletingMGAgentFromVMs": "ms-resource:loc.messages.DeletingMGAgentFromVMs",
     "DeletingMGAgentOnVMs": "ms-resource:loc.messages.DeletingMGAgentOnVMs",
     "AddingExtensionFailed": "ms-resource:loc.messages.AddingExtensionFailed",
-    "TimeoutWhileWaiting": "ms-resource:loc.messages.TimeoutWhileWaiting"
+    "TimeoutWhileWaiting": "ms-resource:loc.messages.TimeoutWhileWaiting",
+    "InvalidTemplateLocation": "ms-resource:loc.messages.InvalidTemplateLocation"
   }
 }

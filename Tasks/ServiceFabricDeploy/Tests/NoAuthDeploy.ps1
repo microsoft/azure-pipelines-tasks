@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param()
 
-. $PSScriptRoot\..\..\lib\Initialize-Test.ps1
+. $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 
 $publishProfilePath = "$PSScriptRoot\data\NoAuthPublishProfile.xml"
 $applicationPackagePath = "random package path"
@@ -49,6 +49,7 @@ $publishArgs = @("-ApplicationParameterFilePath:", "$PSScriptRoot\data\Applicati
 Register-Mock Publish-NewServiceFabricApplication -Arguments $publishArgs
 
 # Act
+. $PSScriptRoot\..\..\..\Tasks\ServiceFabricDeploy\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
 @( & $PSScriptRoot/../../../Tasks/ServiceFabricDeploy/deploy.ps1 )
 
 # Assert

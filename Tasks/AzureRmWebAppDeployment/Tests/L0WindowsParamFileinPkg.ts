@@ -89,6 +89,16 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
 
 
 import mockTask = require('vsts-task-lib/mock-task');
+tr.registerMock('webdeployment-common/ziputility.js', {
+    getArchivedEntries: function(webDeployPkg) {
+        return {
+            "entries":[
+                "systemInfo.xml",
+                "parameters.xml"
+            ]
+        };
+    }
+});
 var kuduDeploymentLog = require('azurerest-common/kududeploymentstatusutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js'); 
 tr.registerMock('./msdeployutility.js', {
@@ -96,10 +106,6 @@ tr.registerMock('./msdeployutility.js', {
     getMSDeployFullPath : function() {
         var msDeployFullPath =  "msdeploypath\\msdeploy.exe";
         return msDeployFullPath;
-    },
-    containsParamFile: function(webAppPackage: string) {
-        var taskResult = mockTask.execSync("msdeploy", "-verb:getParameters -source:package=\'" + webAppPackage + "\'");
-        return true;
     }
 }); 
 

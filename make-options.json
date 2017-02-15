@@ -52,6 +52,7 @@
         "RunJMeterLoadTest",
         "RunLoadTest",
         "ServiceFabricDeploy",
+        "ServiceFabricPowerShell",
         "ServiceFabricUpdateAppVersions",
         "ShellScript",
         "SqlAzureDacpacDeployment",
