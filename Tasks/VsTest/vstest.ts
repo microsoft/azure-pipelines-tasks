@@ -77,8 +77,8 @@ try {
     var systemDefaultWorkingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
     var workingDirectory = systemDefaultWorkingDirectory;
 
-    const resultsDirectory = getTestResultsDirectory(runSettingsFile, path.join(workingDirectory, 'TestResults'));
-
+    //Try to find the results directory for clean up. This may change later if runsettings has results directory and location go runsettings file changes.
+    var resultsDirectory = getTestResultsDirectory(runSettingsFile, path.join(workingDirectory, 'TestResults'));
     // clean up old testResults
     tl.rmRF(resultsDirectory, true);
     tl.mkdirP(resultsDirectory);
@@ -495,6 +495,11 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
     var defer = Q.defer<number>();
     var vstest = tl.tool(vstestLocation);
     addVstestArgs(argsArray, vstest);
+
+    //Re-calculate the results directory based on final runsettings and clean up again if required.
+    resultsDirectory = getTestResultsDirectory(parallelRunSettingsFile, path.join(workingDirectory, 'TestResults'));
+    tl.rmRF(resultsDirectory, true);
+    tl.mkdirP(resultsDirectory);
 
     tl.cd(workingDirectory);
     var ignoreTestFailures = ignoreVstestFailure && ignoreVstestFailure.toLowerCase() === "true";
@@ -983,7 +988,7 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
         return resultDirectory;
     }
     try {
-        const xmlContents = readFileContentsSync(runSettingsFile, "utf-8");
+        const xmlContents = readFileContentsSync(settingsFile, "utf-8");
         const parser = new xml2js.Parser();
 
         parser.parseString(xmlContents, function(err, result) {
@@ -994,7 +999,7 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
 
                 if (runSettingsResultDirectory) {
                     // path.resolve will take care if the result directory given in settings files is not absolute.
-                    resultDirectory = path.resolve(path.dirname(runSettingsFile), runSettingsResultDirectory);
+                    resultDirectory = path.resolve(path.dirname(settingsFile), runSettingsResultDirectory);
                 }
             }
         });
