@@ -195,7 +195,6 @@
             "visibleRule": "vstestLocationMethod = version",
             "groupName": "executionOptions",
              "options": {
-                 "latest": "Latest",
                  "15.0": "Visual Studio 2017",
                  "14.0": "Visual Studio 2015",
                  "12.0": "Visual Studio 2013"
