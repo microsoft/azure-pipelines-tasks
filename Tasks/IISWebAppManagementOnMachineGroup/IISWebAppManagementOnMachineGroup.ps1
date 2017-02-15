@@ -94,11 +94,6 @@ try {
         {
             Manage-IISApplicationPool
         }
-        ""
-        {
-            Write-Output (Get-VstsLocString -Key "EmptyIISDeploymentType")
-            Execute-Main -AppCmdCommands $appCmdCommands
-        }
         default 
         {
             throw (Get-VstsLocString -Key "InvalidIISDeploymentType" -ArgumentList $iisDeploymentType)
