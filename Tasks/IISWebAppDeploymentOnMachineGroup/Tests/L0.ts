@@ -12,12 +12,14 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         tl.cp(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.config'), path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.config'), null, false);
         tl.cp(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web.Debug.config'), path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.Debug.config'), null, false);
         tl.cp(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XdtTransform', 'Web.config'), path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XdtTransform', 'Web_test.config'), null, false);
+        tl.cp(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters.xml'), path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters_test.xml'), null, false);
         done();
     });
     after(function() {
         tl.rmRF(path.join(__dirname, "..", "node_modules","webdeployment-common","Tests", 'L1XdtTransform', 'Web_test.config'), true);
         tl.rmRF(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_test.config'), true);
         tl.rmRF(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'Web_Test.Debug.config'), true);
+        tl.rmRF(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters_test.xml'), true);
     });
 
     if(!tl.osType().match(/^Win/)) {
@@ -29,7 +31,7 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
 
         tr.run();
 
-		assert(tr.invokedToolCount == 2, 'should have invoked tool once');
+		assert(tr.invokedToolCount == 1, 'should have invoked tool once');
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         done();
@@ -41,7 +43,7 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
 
         tr.run();
 
-		assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
+		assert(tr.invokedToolCount == 1, 'should have invoked tool once');
         assert(tr.stderr.length == 0 && tr.errorIssues.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         done();
@@ -54,7 +56,7 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
 		tr.run();
 
 		var expectedErr = 'Error: msdeploy failed with return code: 1';
-		assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
+		assert(tr.invokedToolCount == 1, 'should have invoked tool once');
         assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have written to stderr');
         assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'E should have said: ' + expectedErr); 
         assert(tr.failed, 'task should have failed');
@@ -67,7 +69,7 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         
 		tr.run();
 
-		assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
+		assert(tr.invokedToolCount == 1, 'should have invoked tool once');
         assert(tr.stderr.length == 0 && tr.errorIssues.length == 0, 'should not have written to stderr'); 
         assert(tr.succeeded, 'task should have succeeded');
         done();
@@ -120,7 +122,7 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
 
-        assert(tr.invokedToolCount == 3, 'should have invoked tool thrice');
+        assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
         let expectedErr = "loc_mock_XDTTransformationsappliedsuccessfully";
         assert(tr.stdout.search(expectedErr) >= 0);
         assert(tr.stderr.length == 0  && tr.errorIssues.length == 0, 'should not have written to stderr');
