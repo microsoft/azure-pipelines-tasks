@@ -26,14 +26,16 @@ let vsTestVersionForTIA: number[] = null;
 const systemDefaultWorkingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
 const workingDirectory = systemDefaultWorkingDirectory;
 let testAssemblyFiles = undefined;
+let resultsDirectory = null;
 
 export async function startTest() {
     try {
         vstestConfig = taskInputParser.getvsTestConfigurations();
         tiaConfig = vstestConfig.tiaConfig;
         vsVersionDetails = await versionFinder.locateVSTestConsole(vstestConfig);
-        const resultsDirectory = getTestResultsDirectory(vstestConfig.settingsFile, path.join(workingDirectory, 'TestResults'));
-
+        
+        //Try to find the results directory for clean up. This may change later if runsettings has results directory and location go runsettings file changes.
+        resultsDirectory = getTestResultsDirectory(vstestConfig.settingsFile, path.join(workingDirectory, 'TestResults'));
         // clean up old testResults
         tl.rmRF(resultsDirectory, true);
         tl.mkdirP(resultsDirectory);
@@ -424,6 +426,11 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
     var defer = Q.defer<number>();
     var vstest = tl.tool(vsVersionDetails.location);
     addVstestArgs(argsArray, vstest);
+
+    //Re-calculate the results directory based on final runsettings and clean up again if required.
+    resultsDirectory = getTestResultsDirectory(parallelRunSettingsFile, path.join(workingDirectory, 'TestResults'));
+    tl.rmRF(resultsDirectory, true);
+    tl.mkdirP(resultsDirectory);
 
     tl.cd(workingDirectory);
     var ignoreTestFailures = vstestConfig.ignoreVstestFailure && vstestConfig.ignoreVstestFailure.toLowerCase() === "true";
@@ -840,7 +847,7 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
     }
 
     try {
-        const xmlContents = utils.Helper.readFileContentsSync(vstestConfig.settingsFile, "utf-8");
+        const xmlContents = utils.Helper.readFileContentsSync(settingsFile, "utf-8");
         const parser = new xml2js.Parser();
 
         parser.parseString(xmlContents, function (err, result) {
@@ -851,7 +858,7 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
 
                 if (runSettingsResultDirectory) {
                     // path.resolve will take care if the result directory given in settings files is not absolute.
-                    resultDirectory = path.resolve(path.dirname(vstestConfig.settingsFile), runSettingsResultDirectory);
+                    resultDirectory = path.resolve(path.dirname(settingsFile), runSettingsResultDirectory);
                 }
             }
         });
