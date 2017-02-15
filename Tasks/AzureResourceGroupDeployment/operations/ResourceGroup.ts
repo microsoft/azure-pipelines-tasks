@@ -151,7 +151,8 @@ export class ResourceGroup {
         var override = parameterParser(this.taskParameters.overrideParameters);
         for (var key in override) {
             tl.debug("Overriding key: " + key);
-            parameters[key] = override[key];
+            if (override[key].value != "")
+                parameters[key] = override[key];
         }
 
         return parameters;
