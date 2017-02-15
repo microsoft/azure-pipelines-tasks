@@ -1,12 +1,10 @@
-import {AnalysisResult} from './AnalysisResult'
-import {FileSystemInteractions} from './FileSystemInteractions';
+import { AnalysisResult } from './AnalysisResult';
+import { FileSystemInteractions } from './FileSystemInteractions';
 
 import path = require('path');
 import fs = require('fs');
-import glob = require('glob');
 
 import tl = require('vsts-task-lib/task');
-
 
 export class CodeAnalysisResultPublisher {
     constructor(private analysisResults: AnalysisResult[], private stagingDir: string) {
@@ -24,7 +22,7 @@ export class CodeAnalysisResultPublisher {
      *
      * @param {string} prefix - used to discriminate between artifacts comming from different builds of the same projects (e.g. the build number)
      */
-    public uploadArtifacts(prefix: string):number {
+    public uploadArtifacts(prefix: string): number {
         // If there are no results to upload, return
         if (this.analysisResults.length === 0) {
             tl.debug('[CA] Skipping artifact upload: No analysis results');
@@ -32,9 +30,9 @@ export class CodeAnalysisResultPublisher {
         }
 
         // If there are no files to upload, return
-        var analysisResultsWithFiles:AnalysisResult[] = this.analysisResults.filter(
+        let analysisResultsWithFiles: AnalysisResult[] = this.analysisResults.filter(
             (analysisResult:AnalysisResult) => {
-                return analysisResult.resultFiles != undefined && analysisResult.resultFiles != null && analysisResult.resultFiles.length > 0;
+                return analysisResult.resultFiles !== undefined && analysisResult.resultFiles !== null && analysisResult.resultFiles.length > 0;
         });
         if (analysisResultsWithFiles.length === 0) {
             tl.debug('[CA] Skipping artifact upload: No files to upload');
@@ -43,30 +41,29 @@ export class CodeAnalysisResultPublisher {
 
         tl.debug('[CA] Preparing to upload artifacts');
 
-        let artifactBaseDir = path.join(this.stagingDir, 'CA');
+        let artifactBaseDir: string = path.join(this.stagingDir, 'CA');
         FileSystemInteractions.createDirectory(artifactBaseDir);
 
-        for (var analysisResult of analysisResultsWithFiles) {
+        for (let analysisResult of analysisResultsWithFiles) {
 
             // Group artifacts in folders representing the module name
-            let destinationDir = path.join(artifactBaseDir, analysisResult.moduleName);
+            let destinationDir: string = path.join(artifactBaseDir, analysisResult.moduleName);
             FileSystemInteractions.createDirectory(destinationDir);
 
-            for (var resultFile of analysisResult.resultFiles) {
-                let extension = path.extname(resultFile);
-                let reportName = path.basename(resultFile, extension);
+            for (let resultFile of analysisResult.resultFiles) {
+                let extension: string = path.extname(resultFile);
+                let reportName: string = path.basename(resultFile, extension);
 
-                let artifactName = `${prefix}_${reportName}_${analysisResult.originatingTool.toolName}${extension}`;
+                let artifactName: string = `${prefix}_${reportName}_${analysisResult.originatingTool.toolName}${extension}`;
                 FileSystemInteractions.copyFile(resultFile, path.join(destinationDir, artifactName));
             }
         }
 
-        tl.command("artifact.upload", {
-            'artifactname': tl.loc('codeAnalysisArtifactSummaryTitle')
-        }, artifactBaseDir);
+        tl.command('artifact.upload',
+                   { 'artifactname': tl.loc('codeAnalysisArtifactSummaryTitle') },
+                   artifactBaseDir);
         return analysisResultsWithFiles.length;
     }
-
 
     /**
      * Creates and uploads a build summary that looks like:
@@ -75,8 +72,7 @@ export class CodeAnalysisResultPublisher {
      *
      * Code analysis results can be found in the 'Artifacts' tab.
      */
-    public uploadBuildSummary(uploadedArtifacts:number):void {
-
+    public uploadBuildSummary(uploadedArtifacts: number): void {
         if (this.analysisResults.length === 0) {
             return;
         }
@@ -86,10 +82,10 @@ export class CodeAnalysisResultPublisher {
         this.uploadMdSummary(content);
     }
 
-    private groupBy(array: any, f: Function):any[] {
-        var groups: any = {};
+    private groupBy(array: any, f: Function): any[] {
+        let groups: any = {};
         array.forEach((o: any) => {
-            var group = JSON.stringify(f(o));
+            let group: string = JSON.stringify(f(o));
             groups[group] = groups[group] || [];
             groups[group].push(o);
         });
@@ -98,27 +94,28 @@ export class CodeAnalysisResultPublisher {
         });
     }
 
-    private uploadMdSummary(content: string):void {
-        var buildSummaryFilePath: string = path.join(this.stagingDir, 'CodeAnalysisBuildSummary.md');
+    private uploadMdSummary(content: string): void {
+        let buildSummaryFilePath: string = path.join(this.stagingDir, 'CodeAnalysisBuildSummary.md');
         FileSystemInteractions.createDirectory(this.stagingDir);
         fs.writeFileSync(buildSummaryFilePath, content);
 
         tl.debug('[CA] Uploading build summary from ' + buildSummaryFilePath);
 
-        tl.command('task.addattachment', {
-            'type': 'Distributedtask.Core.Summary',
-            'name': tl.loc('codeAnalysisBuildSummaryTitle')
-        }, buildSummaryFilePath);
+        tl.command('task.addattachment',
+                   {
+                       'type': 'Distributedtask.Core.Summary',
+                       'name': tl.loc('codeAnalysisBuildSummaryTitle')
+                   },
+                   buildSummaryFilePath);
     }
 
-    private createSummaryContent(uploadedArtifacts:number): string {
-
-        var buildSummaryLines: string[] = [];
-        var resultsGroupedByTool: AnalysisResult[][] =
+    private createSummaryContent(uploadedArtifacts: number): string {
+        let buildSummaryLines: string[] = [];
+        let resultsGroupedByTool: AnalysisResult[][] =
             this.groupBy(this.analysisResults, (o: AnalysisResult) => { return o.originatingTool.toolName; });
 
-        for (var resultGroup of resultsGroupedByTool) {
-            var summaryLine = this.createSummaryLine(resultGroup);
+        for (let resultGroup of resultsGroupedByTool) {
+            let summaryLine = this.createSummaryLine(resultGroup);
             if (summaryLine != null) {
                 buildSummaryLines.push(summaryLine);
             }
@@ -129,16 +126,16 @@ export class CodeAnalysisResultPublisher {
             buildSummaryLines.push('Code analysis results can be found in the \'Artifacts\' tab.');
         }
 
-        var buildSummaryString = buildSummaryLines.join('  \r\n');
+        let buildSummaryString: string = buildSummaryLines.join('  \r\n');
         tl.debug(`[CA] Build Summary: ${buildSummaryString}`);
         return buildSummaryString;
     }
 
     // For a given code analysis tool, create a one-line summary from multiple AnalysisResult objects.
     private createSummaryLine(analysisResultsGroup: AnalysisResult[]): string {
-        var violationCount: number = 0;
-        var affectedFileCount: number = 0;
-        var toolName = analysisResultsGroup[0].originatingTool.toolName;
+        let violationCount: number = 0;
+        let affectedFileCount: number = 0;
+        let toolName = analysisResultsGroup[0].originatingTool.toolName;
 
         analysisResultsGroup.forEach((analysisResult: AnalysisResult) => {
             violationCount += analysisResult.violationCount;
@@ -174,5 +171,4 @@ export class CodeAnalysisResultPublisher {
         throw new Error('Unexpected results from ' + toolName + ': '
             + violationCount + ' total violations in ' + affectedFileCount + ' files');
     }
-
 }

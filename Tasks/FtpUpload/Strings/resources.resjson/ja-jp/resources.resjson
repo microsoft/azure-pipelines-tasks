@@ -19,5 +19,13 @@
   "loc.input.label.preservePaths": "ファイル パスを保持",
   "loc.input.help.preservePaths": "選択すると、ファイルのアップロード先のリモート ディレクトリの下に、相対ローカル ディレクトリ構造が再作成されます。選択しない場合には、ファイルは、サブディレクトリが作成されることなくリモート ディレクトリに直接アップロードされます。<p>たとえば、ソース フォルダーが <b>`/home/user/source/`</b> で、ファイル <b>`foo/bar/foobar.txt`</b> が含まれ、リモート ディレクトリが <b>`/uploads/`</b> であるとします。<br>選択すると、ファイルは <b>`/uploads/foo/bar/foobar.txt`</b> にアップロードされます。選択しないと、<b>`/uploads/foobar.txt`</b> にアップロードされます。",
   "loc.input.label.trustSSL": "サーバー証明書を信頼する",
-  "loc.input.help.trustSSL": "このオプションを選択すると、FTP サーバーの SSL 証明書が、自己署名されている場合や証明書機関 (CA) によって検証できない場合であっても ftps:// によって信頼できるようになります。"
+  "loc.input.help.trustSSL": "このオプションを選択すると、FTP サーバーの SSL 証明書が、自己署名されている場合や証明書機関 (CA) によって検証できない場合であっても ftps:// によって信頼できるようになります。",
+  "loc.messages.FTPConnected": "接続されました: %s",
+  "loc.messages.CleanRemoteDir": "リモート ディレクトリをクリーニングしています: %s",
+  "loc.messages.UploadRemoteDir": "リモート ディレクトリにファイルをアップロードしています: %s",
+  "loc.messages.UploadSucceedMsg": "FTP が正常にアップロードされました %s",
+  "loc.messages.UploadSucceedRes": "FTP が正常にアップロードされました",
+  "loc.messages.DisconnectHost": "次から切断しています: %s",
+  "loc.messages.Disconnected": "切断されました",
+  "loc.messages.ConnectPort": "次に接続しています: %s:%s"
 }

@@ -8,6 +8,6 @@
   },
   "dependencies": {
     "xml2js": "^0.4.16",
-    "vsts-task-lib": "0.9.7"
+    "vsts-task-lib": "^1.1.0"
   }
 }

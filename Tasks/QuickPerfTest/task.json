@@ -110,7 +110,7 @@
                 "2": "Self-provisioned agents"
             }
         },
-		{
+        {
             "name": "avgResponseTimeThreshold",
             "type": "string",
             "label": "Fail test if Avg.Response Time(ms) exceeds",

@@ -58,6 +58,5 @@ foreach($sourcePath in $source)
             throw "Robocopy failed to copy from $sourceDirectory to $destinationDirectory. Failed with a exit code $robocopyExitCode."
         }
     }
-
     $counter++
 }

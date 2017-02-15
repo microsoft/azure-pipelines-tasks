@@ -40,10 +40,7 @@ async function run() {
         }
 
         //Process working directory
-        var cwd = cwd
-            || tl.getVariable('build.sourceDirectory')
-            || tl.getVariable('build.sourcesDirectory')
-            || tl.getVariable('System.DefaultWorkingDirectory');
+        var cwd = cwd || tl.getVariable('System.DefaultWorkingDirectory');
         tl.cd(cwd);
 
         var signMethod:string = tl.getInput('signMethod', false);

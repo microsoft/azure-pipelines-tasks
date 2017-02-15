@@ -1,27 +1,28 @@
 {
-  "id": "f045e430-8704-11e6-968f-e717e6411619",
-  "name": "AzureAppServiceManage",
-  "friendlyName": "Azure App Service Manage (PREVIEW)",
-  "description": "Start, Stop, Restart or Slot swap for an Azure App Service",
-  "author": "Microsoft Corporation",
-  "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=831573)",
-  "category": "Deploy",
-  "visibility": [
-      "Build",
-      "Release"
-  ],
-  "demands": [],
-  "version": {
-    "Major": 0,
-    "Minor": 2,
-    "Patch": 0
-  },
-  "minimumAgentVersion": "1.102.0",
-  "instanceNameFormat": "$(Action): $(WebAppName)",
-  "groups": [
-
+    "id": "f045e430-8704-11e6-968f-e717e6411619",
+    "name": "AzureAppServiceManage",
+    "friendlyName": "Azure App Service Manage (PREVIEW)",
+    "description": "Start, Stop, Restart or Slot swap for an Azure App Service",
+    "author": "Microsoft Corporation",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=831573)",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
     ],
-  "inputs": [
+    "runsOn": [
+        "Agent"
+    ],
+    "demands": [],
+    "version": {
+        "Major": 0,
+        "Minor": 2,
+        "Patch": 2
+    },
+    "minimumAgentVersion": "1.102.0",
+    "instanceNameFormat": "$(Action): $(WebAppName)",
+    "groups": [],
+    "inputs": [
         {
             "name": "ConnectedServiceName",
             "type": "connectedService:AzureRM",
@@ -56,6 +57,13 @@
             "helpMarkDown": "Enter or select the name of an existing Azure App Service"
         },
         {
+            "name": "SpecifySlot",
+            "type": "boolean",
+            "label": "Specify Slot",
+            "required": false,
+            "visibleRule": "Action != Swap Slots"
+        },
+        {
             "name": "ResourceGroupName",
             "type": "pickList",
             "label": "Resource group",
@@ -65,7 +73,7 @@
                 "EditableOptions": "True"
             },
             "helpMarkDown": "Enter or Select the Azure Resource Group that contains the Azure App Service specified above",
-            "visibleRule":"Action = Swap Slots"
+            "visibleRule": "Action = Swap Slots || SpecifySlot = true"
         },
         {
             "name": "SourceSlot",
@@ -108,9 +116,20 @@
             "required": false,
             "helpMarkDown": "Preserve the Virtual network settings",
             "visibleRule": "Action = Swap Slots"
+        },
+        {
+            "name": "Slot",
+            "type": "pickList",
+            "label": "Slot",
+            "defaultValue": "",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "required": true,
+            "visibleRule": "Action != Swap Slots && SpecifySlot = true"
         }
     ],
-  "dataSourceBindings": [
+    "dataSourceBindings": [
         {
             "target": "WebAppName",
             "endpointId": "$(ConnectedServiceName)",
@@ -160,13 +179,14 @@
             "target": "azureappservicemanage.js"
         }
     },
-   "messages": {
+    "messages": {
         "ErrorNoSuchDeployingMethodExists": "Error : Deploy method MSDeploy does not exists for Azure Web App: %s",
         "Successfullyupdatedslotswaphistory": "Successfully updated slot swap history at %s for Azure Web App : %s",
         "Failedtoupdateslotswaphistory": "Failed to update slot swap history for Azure Web App : %s",
         "WARNINGCannotupdateslotswapstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update slot swap status : SCM (Source Control Manager) endpoint is not enabled for this Azure Web App",
         "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update Kudu deployment log as unique deployment ID cannot be retrieved for this Azure Web App",
-        "Failedtoswapslots": "Failed to swap slots. Status %s for Azure Web App : %s",
+        "FailedToSwapWebAppSlots": "Failed to swap slots for Azure Web App: %s. Error: %s",
+        "SlotSwapOperationNotCompleted": "Slot swap operation was not completed for Azure Web App: %s",
         "Successfullyswappedslots": "Successfully swapped web app %s slots from %s to %s",
         "SourceAndTargetSlotCannotBeSame": "Source and target slot cannot be same",
         "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",

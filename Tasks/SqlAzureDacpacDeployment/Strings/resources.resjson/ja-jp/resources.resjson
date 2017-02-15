@@ -51,5 +51,6 @@
   "loc.messages.SAD_InvalidSqlFile": "無効な SQL ファイル '{0}' が指定されました",
   "loc.messages.SAD_NoPassword": "SQL ユーザーのパスワードが指定されていません: '{0}'",
   "loc.messages.SAD_InvalidPublishProfile": "無効な発行プロファイル '{0}' が指定されました",
-  "loc.messages.SAD_InvalidServerNameFormat": "サーバー名 '{0}' の形式が正しくありません。'{1}' のように FQDN 形式を使用してください。"
+  "loc.messages.SAD_InvalidServerNameFormat": "サーバー名 '{0}' の形式が正しくありません。'{1}' のように FQDN 形式を使用してください。",
+  "loc.messages.SAD_AzureSQLDacpacTaskFailed": "Azure SQL Dacpac タスクが失敗しました。"
 }

@@ -9,11 +9,16 @@
     "visibility": [
         "Build"
     ],
-    "demands": [],
+    "runsOn": [
+        "Agent"
+    ],
+    "demands": [
+        "Cmd"
+    ],
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 6
+        "Patch": 9
     },
     "minimumAgentVersion": "1.95.0",
     "instanceNameFormat": "Update Service Fabric App Versions",

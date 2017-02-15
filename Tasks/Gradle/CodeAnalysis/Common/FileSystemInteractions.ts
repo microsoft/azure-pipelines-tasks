@@ -14,9 +14,8 @@ export class FileSystemInteractions {
      * @param sourcePath      Path to copy from
      * @param destinationPath Path to copy to
      */
-    public static copyFile(sourcePath:string, destinationPath:string):void {
+    public static copyFile(sourcePath: string, destinationPath: string): void {
         shell.cp('-f', sourcePath, destinationPath);
-
         this.checkShell('cp', false);
     }
 
@@ -26,7 +25,7 @@ export class FileSystemInteractions {
      * Copied from: https://github.com/Microsoft/vsts-task-lib/blob/master/node/task.ts
      * @param directoryPath Path to create
      */
-    public static createDirectory(directoryPath:string):void {
+    public static createDirectory(directoryPath: string): void {
         // build a stack of directories to create
         let stack: string[] = [ ];
         let testDir: string = directoryPath;
@@ -43,10 +42,10 @@ export class FileSystemInteractions {
             try {
                 stats = fs.statSync(testDir);
             } catch (err) {
-                if (err.code == 'ENOENT') {
+                if (err.code === 'ENOENT') {
                     // validate the directory is not the drive root
-                    let parentDir = path.dirname(testDir);
-                    if (testDir == parentDir) {
+                    let parentDir: string = path.dirname(testDir);
+                    if (testDir === parentDir) {
                         throw new Error(tl.loc('LIB_MkdirFailedInvalidDriveRoot', directoryPath, testDir)); // Unable to create directory '{p}'. Root directory does not exist: '{testDir}'
                     }
 
@@ -54,11 +53,9 @@ export class FileSystemInteractions {
                     stack.push(testDir);
                     testDir = parentDir;
                     continue;
-                }
-                else if (err.code == 'UNKNOWN') {
-                    throw new Error(tl.loc('LIB_MkdirFailedInvalidShare', directoryPath, testDir)) // Unable to create directory '{p}'. Unable to verify the directory exists: '{testDir}'. If directory is a file share, please verify the share name is correct, the share is online, and the current process has permission to access the share.
-                }
-                else {
+                } else if (err.code === 'UNKNOWN') {
+                    throw new Error(tl.loc('LIB_MkdirFailedInvalidShare', directoryPath, testDir)); // Unable to create directory '{p}'. Unable to verify the directory exists: '{testDir}'. If directory is a file share, please verify the share name is correct, the share is online, and the current process has permission to access the share.
+                } else {
                     throw err;
                 }
             }
@@ -73,7 +70,7 @@ export class FileSystemInteractions {
 
         // create each directory
         while (stack.length) {
-            let dir = stack.pop();
+            let dir: string = stack.pop();
             tl.debug(`mkdir '${dir}'`);
             try {
                 fs.mkdirSync(dir);
@@ -90,8 +87,8 @@ export class FileSystemInteractions {
      * @param cmd             Command issued
      * @param continueOnError Do not throw an exception if an error was produced
      */
-    private static checkShell(cmd: string, continueOnError?: boolean) {
-        var se = shell.error();
+    private static checkShell(cmd: string, continueOnError?: boolean): void {
+        let se: string = shell.error();
 
         if (se) {
             tl.debug(cmd + ' failed');

@@ -31,7 +31,7 @@ process.env["AGENT_NAME"] = "author";
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "which": {
-        "cmd": "cmd"
+        "msdeploy": "msdeploy"
     },
     "stats": {
     	"webAppPkg.zip": {
@@ -42,21 +42,16 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "osType": "Windows"
     },
     "checkPath": {
-        "cmd": true,
         "webAppPkg.zip": true,
-        "webAppPkg": true
-    },
-    "rmRF": {
-        "DefaultWorkingDirectory\\msDeployCommand.bat": {
-            "success": true
-        }
+        "webAppPkg": true,
+        "msdeploy": true
     },
     "exec": {
-        "cmd /C DefaultWorkingDirectory\\msDeployCommand.bat": {
+       "msdeploy -verb:sync -source:package='webAppPkg.zip' -dest:auto,ComputerName='https://mytestappKuduUrl/msdeploy.axd?site=mytestapp',UserName='$mytestapp',Password='mytestappPwd',AuthType='Basic' -setParam:name='IIS Web Application Name',value='mytestapp' -enableRule:DoNotDeleteRule -userAgent:TFS_useragent": {
             "code": 0,
             "stdout": "Executed Successfully"
         },
-        "cmd /C DefaultWorkingDirectory\\msDeployParam.bat": {
+        "msdeploy -verb:getParameters -source:package=\'webAppPkg.zip\'": {
             "code": 0,
             "stdout": "Executed Successfully"
         }
@@ -93,6 +88,16 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 }
 
 import mockTask = require('vsts-task-lib/mock-task');
+tr.registerMock('webdeployment-common/ziputility.js', {
+    getArchivedEntries: function(webDeployPkg) {
+        return {
+            "entries":[
+                "systemInfo.xml",
+                "parameters.xml"
+            ]
+        };
+    }
+});
 var kuduDeploymentLog = require('azurerest-common/kududeploymentstatusutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js');
 
@@ -101,10 +106,6 @@ tr.registerMock('./msdeployutility.js', {
     getMSDeployFullPath : function() {
         var msDeployFullPath =  "msdeploypath\\msdeploy.exe";
         return msDeployFullPath;
-    },
-    containsParamFile: function(webAppPackage: string) {
-        var taskResult = mockTask.execSync("cmd", ['/C',"DefaultWorkingDirectory\\msDeployParam.bat"]);
-        return true;
     }
 }); 
 
@@ -139,6 +140,7 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
 			id: 'appid',
 			properties: { 
 				virtualApplications: [ ['Object'], ['Object'], ['Object'] ],
+                scmType: "None"
 			} 
 		}
 
@@ -168,6 +170,33 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
         return appSettings;
     },
     updateWebAppAppSettings : function (){
+        return true;
+    },
+    updateAzureRMWebAppConfigDetails: function() {
+        console.log("Successfully updated scmType to VSTSRM");
+    }
+});
+
+var fs = require('fs');
+tr.registerMock('fs', {
+    createWriteStream: function (filePath, options) {
+        return { 
+            "isWriteStreamObj": true,
+            "on": (event) => {
+                console.log("event: " + event + " has occurred");
+            },
+            "end" : () => { return true }
+        };
+    },
+    ReadStream: fs.ReadStream,
+    WriteStream: fs.WriteStream,
+    openSync: function (fd, options) {
+        return true;
+    },
+    closeSync: function (fd) {
+        return true;
+    },
+    fsyncSync: function(fd) {
         return true;
     }
 });

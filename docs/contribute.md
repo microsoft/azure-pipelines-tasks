@@ -54,7 +54,7 @@ npm install
 
 #build and test
 node make.js build --task ShellScript
-node make.js test --task ShellScript --suite LO
+node make.js test --task ShellScript --suite L0
 ```
 
 ## Build with Make
@@ -103,18 +103,16 @@ node make.js test --task ShellScript --suite L0
 
 ## Legacy Tests
 
-Legacy tests are located in a Tests folder which is a sibling to Tasks.
-
-```bash
-npm run testLegacy
-node make.js testLegacy --suite L0/XCode
-```
-
-For a specific suite and/or task
+Legacy tests are located in a Tests-Legacy folder which is a sibling to Tasks.
 
 ```bash
 node make.js testLegacy
-node make.js testLegacy --suite L0/XCode
+```
+
+For a specific task
+
+```bash
+node make.js testLegacy --task XCode
 ```
 
 ## Package

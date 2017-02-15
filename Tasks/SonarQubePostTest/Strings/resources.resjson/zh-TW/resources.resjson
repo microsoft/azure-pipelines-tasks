@@ -1,6 +1,0 @@
-{
-  "loc.friendlyName": "MSBuild 的 SonarQube - 結束分析",
-  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkId=620063)",
-  "loc.description": "[DEPRECATED] Finish the analysis and upload the results to SonarQube",
-  "loc.instanceNameFormat": "[DEPRECATED] Finish the analysis and upload the results to SonarQube"
-}

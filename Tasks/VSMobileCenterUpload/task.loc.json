@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 0,
-    "Patch": 1
+    "Minor": 113,
+    "Patch": 0
   },
   "groups": [
     {
@@ -147,6 +147,7 @@
     "Succeeded": "ms-resource:loc.messages.Succeeded",
     "CannotFindAnyFile": "ms-resource:loc.messages.CannotFindAnyFile",
     "FoundMultipleFiles": "ms-resource:loc.messages.FoundMultipleFiles",
-    "FailedToCreateFile": "ms-resource:loc.messages.FailedToCreateFile"
+    "FailedToCreateFile": "ms-resource:loc.messages.FailedToCreateFile",
+    "FailedToFindFile": "ms-resource:loc.messages.FailedToFindFile"
   }
 }

@@ -15,10 +15,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 0,
+        "Minor": 113,
         "Patch": 0
     },
-    "releaseNotes" : "Match pattern consistency.",
+    "releaseNotes": "Match pattern consistency.",
     "demands": [],
     "minimumAgentVersion": "1.91.0",
     "groups": [

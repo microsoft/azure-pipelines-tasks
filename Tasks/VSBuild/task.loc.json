@@ -11,8 +11,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 45
+    "Minor": 113,
+    "Patch": 0
   },
   "demands": [
     "msbuild",
@@ -88,10 +88,10 @@
       "label": "ms-resource:loc.input.label.vsVersion",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.vsVersion",
-      "defaultValue": "14.0",
+      "defaultValue": "15.0",
       "options": {
         "latest": "Latest",
-        "15.0": "Visual Studio \"15\" (preview)",
+        "15.0": "Visual Studio 2017",
         "14.0": "Visual Studio 2015",
         "12.0": "Visual Studio 2013",
         "11.0": "Visual Studio 2012"

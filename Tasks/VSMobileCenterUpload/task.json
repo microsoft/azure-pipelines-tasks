@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 0,
-        "Patch": 1
+        "Minor": 113,
+        "Patch": 0
     },
     "groups": [
         {
@@ -144,9 +144,10 @@
         "NoResponseFromServer": "No response from server.",
         "FailedToUploadFile": "Failed to complete file upload.",
         "NoApiTokenFound": "No API token found on Visual Studio Mobile Center connection.",
-        "Succeeded":"Visual Studio Mobile Center Upload Task succeeded",
+        "Succeeded": "Visual Studio Mobile Center Upload Task succeeded",
         "CannotFindAnyFile": "Cannot find any file based on %s.",
         "FoundMultipleFiles": "Found multiple files matching %s.",
-        "FailedToCreateFile": "Failed to create %s with error: %s." 
+        "FailedToCreateFile": "Failed to create %s with error: %s.",
+        "FailedToFindFile": "Failed to find %s at %s."
     }
 }

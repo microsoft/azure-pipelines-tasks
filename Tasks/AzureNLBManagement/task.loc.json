@@ -8,16 +8,15 @@
   "category": "Utility",
   "visibility": [
     "Build",
-    "Release",
-    "Preview"
+    "Release"
   ],
   "runsOn": [
     "MachineGroup"
   ],
   "version": {
-    "Major": "1",
-    "Minor": "0",
-    "Patch": "0"
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 2
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

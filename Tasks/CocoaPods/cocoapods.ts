@@ -2,6 +2,9 @@ import path = require('path');
 import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
 
+// The CocoaPods install command is documented here:
+// https://guides.cocoapods.org/terminal/commands.html#pod_install
+
 async function run() {
     try {
         // Set path to resource strings
@@ -20,13 +23,26 @@ async function run() {
             throw new Error(tl.loc('CocoaPodsNotFound'));
         }
 
-        // Run 'pod install'
+        // Prepare to run 'pod install'
         var pod: trm.ToolRunner = tl.tool(podPath);
         pod.arg('install');
 
+        // Force updating the pod repo before install?
+        if (tl.getBoolInput('forceRepoUpdate', true)) {
+            pod.arg('--repo-update');
+        }
+
+        // Explicitly specify a project directory?
+        if (tl.filePathSupplied('projectDirectory')) {
+            var projectDirectory: string = tl.getPathInput('projectDirectory', false, true);
+            pod.arg('--project-directory=' + projectDirectory);
+        }
+
+        // Execute
+        var returnCode: number = await pod.exec();
+        
         // Get the result code and set the task result accordingly
-        var code: number = await pod.exec();
-        tl.setResult(tl.TaskResult.Succeeded, tl.loc('PodReturnCode', code));
+        tl.setResult(tl.TaskResult.Succeeded, tl.loc('PodReturnCode', returnCode));
     }
     catch(err) {
         // Report failure

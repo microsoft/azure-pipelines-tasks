@@ -9,11 +9,14 @@
         "Build",
         "Release"
     ],
+    "runsOn": [
+        "Agent"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 34
+        "Minor": 1,
+        "Patch": 0
     },
     "demands": [
         "azureps"
@@ -30,7 +33,7 @@
         {
             "name": "ConnectedServiceName",
             "type": "connectedService:Azure:Certificate,UsernamePassword",
-            "label": "Azure Subscription (Classic)",
+            "label": "Azure subscription (Classic)",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Azure Classic subscription to target for deployment."
@@ -38,20 +41,21 @@
         {
             "name": "StorageAccount",
             "type": "pickList",
-            "label": "Storage Account",
+            "label": "Storage account",
             "defaultValue": "",
             "required": true,
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Storage Account must exist prior to deployment."
+            "helpMarkDown": "Storage account must exist prior to deployment."
         },
         {
             "name": "ServiceName",
             "type": "pickList",
-            "label": "Service Name",
+            "label": "Service name",
             "defaultValue": "",
             "required": true,
+            "helpMarkDown": "Select or enter an existing cloud service name.",
             "properties": {
                 "EditableOptions": "True"
             }
@@ -59,7 +63,7 @@
         {
             "name": "ServiceLocation",
             "type": "pickList",
-            "label": "Service Location",
+            "label": "Service location",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Select a region for new service deployment.Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others.",
@@ -94,7 +98,7 @@
         {
             "name": "DeploymentLabel",
             "type": "string",
-            "label": "Deployment Label",
+            "label": "Deployment label",
             "defaultValue": "$(Build.BuildNumber)",
             "required": false,
             "helpMarkDown": "Specifies the label name for the new deployment. If not specified, a Globally Unique Identifier (GUID) is used."
@@ -110,14 +114,24 @@
         {
             "name": "AllowUpgrade",
             "type": "boolean",
-            "label": "Allow Upgrade",
+            "label": "Allow upgrade",
             "defaultValue": "true",
+            "helpMarkDown": "When selected allows an upgrade to the Microsoft Azure deployment",
             "required": true
+        },
+        {
+            "name": "ForceUpgrade",
+            "type": "boolean",
+            "label": "Force upgrade",
+            "defaultValue": "false",
+            "visibleRule": "AllowUpgrade == true",
+            "helpMarkDown": "When selected sets the upgrade to a forced upgrade, which could potentially cause loss of local data.", 
+            "required": false
         },
         {
             "name": "DiagnosticStorageAccountKeys",
             "type": "multiLine",
-            "label": "Diagnostic Storage Account Keys",
+            "label": "Diagnostic storage account keys",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Provide storage keys for diagnostics storage account in Role:Storagekey format. The diagnostics storage account name for each role will be obtained from diagnostics config file (.wadcfgx). If the .wadcfgx file for a role is not found, diagnostics extensions won’t be set for the role. If the storage account name is missing in the .wadcfgx file, the default storage account will be used for storing diagnostics results and the storage key parameters from deployment task will be ignored. It’s recommended to save <storage_account_key> as a secret variable unless there is no sensitive information in the diagnostics result for your environment. <br/><br/>For example,<br/> WebRole: &lt;WebRole_storage_account_key&gt;<br/>WorkerRole: &lt;WorkerRole_stoarge_accoubt_key&gt;",
@@ -131,7 +145,7 @@
         {
             "name": "NewServiceAdditionalArguments",
             "type": "string",
-            "label": "Additional Arguments",
+            "label": "Additional arguments",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Pass in additional arguments while creating a brand new service. These will be passed on to `New-AzureService` commandlet. Eg: `-Label 'MyTestService'`",
@@ -140,7 +154,7 @@
         {
             "name": "NewServiceAffinityGroup",
             "type": "pickList",
-            "label": "AffinityGroup",
+            "label": "Affinity group",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "While creating new service, this affinity group will be considered instead of using service location.",
@@ -186,7 +200,7 @@
         "Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}",
         "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one.",
         "Storagekeysaredefinedininvalidformat": "Storage keys are defined in invalid format.",
-        "Unabletofind0usingprovidedsubscription" :"Unable to find {0} using provided subscription",
-        "Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics":"Current version of azure powershell don't support external storage account for configuring diagnostics."
+        "Unabletofind0usingprovidedsubscription": "Unable to find {0} using provided subscription",
+        "Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "Current version of azure powershell don't support external storage account for configuring diagnostics."
     }
 }

@@ -44,6 +44,11 @@ if ($b_versionByBuild)
     Write-Verbose "Autoversion: Getting version number from build"
     ##Get Version from Build
     
+    if($Env:SYSTEM_HOSTTYPE -eq "release") {
+        Write-Error (Get-LocalizedString -Key "Autoversion: Getting version number from build option is not supported in releases")
+        exit 1
+    }
+
     # Regular expression pattern to find the version in the build number 
     # and then apply it to the assemblies
     $VersionRegex = "\d+\.\d+\.\d+(?:\.\d+)?"

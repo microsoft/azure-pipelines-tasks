@@ -9,24 +9,11 @@ tr.setInput('WebSiteName', 'mytestwebsite');
 tr.setInput('Package', 'webAppPkg.zip');
 tr.setInput('SetParametersFile', 'parameterFilePresent.xml');
 
-process.env['TASK_TEST_TRACE'] = 1;
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  "DefaultWorkingDirectory";
-process.env["BUILD_SOURCEVERSION"] = "46da24f35850f455185b9188b4742359b537076f";
-process.env["BUILD_BUILDID"] = '1',
-process.env["RELEASE_RELEASEID"] = '1';
-process.env["BUILD_BUILDNUMBER"] = '1';
-process.env["RELEASE_RELEASENAME"] = "Release-1";
-process.env["BUILD_REPOSITORY_PROVIDER"] = "TfsGit";
-process.env["BUILD_REPOSITORY_NAME"] = "MyFirstProject";
-process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"] = "https://abc.visualstudio.com/";
-process.env["SYSTEM_TEAMPROJECT"] = "MyFirstProject";
-process.env["BUILD_SOURCEVERISONAUTHOR"] = "author";
-process.env["RELEASE_RELEASEURI"] = "vstfs:///ReleaseManagement/Release/1";
-process.env["AGENT_NAME"] = "author";
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     "which": {
-        "cmd": "cmd"
+        "msdeploy": "msdeploy"
     },
     "stats": {
     	"webAppPkg.zip": {
@@ -39,52 +26,83 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
             "isFile" : true
         }
     },
-     "checkPath": {
-        "cmd" : true
+    "checkPath": {
+        "webAppPkg.zip": true,
+        "msdeploy" : true
     },
     "osType": {
         "osType": "Windows"
     },
 	 "rmRF": {
-        "DefaultWorkingDirectory\\msDeployCommand.bat": {
+        "DefaultWorkingDirectory\\tempSetParameters.xml": {
             "success": true
         }
     },
     "exec": {
-        "cmd /C DefaultWorkingDirectory\\msDeployCommand.bat": {
+        "msdeploy -verb:sync -source:package='webAppPkg.zip' -dest:auto -setParam:name='IIS Web Application Name',value='mytestwebsite' -setParamFile=tempSetParameters.xml  -enableRule:DoNotDeleteRule": {
             "code" : 0,
             "stdout": "Executed Successfully"
         },
-        "cmd /C DefaultWorkingDirectory\\msDeployParam.bat": {
+        "msdeploy -verb:getParameters -source:package=\'webAppPkg.zip\'": {
             "code" : 0,
             "stdout": "Executed Successfully"
         }
     },
     "exist": {
-    	"webAppPkg.zip": true
+    	"webAppPkg.zip": true,
+        "DefaultWorkingDirectory\\tempSetParameters.xml": true        
     },
     "glob": {
-        "webAppPkg.zip": ["webAppPkg.zip"],
-        "webAppPkg": ["webAppPkg"]
-    },
-    "getVariable": {
-    	"SYSTEM_DEFAULTWORKINGDIRECTORY": "defaultWorkingDirectory",
-        "System.DefaultWorkingDirectory" : "DefaultWorkingDirectory",
-        "build.sourcesDirectory": "DefaultWorkingDirectory"
+        "webAppPkg.zip": ["webAppPkg.zip"]
     }
 };
 
 import mockTask = require('vsts-task-lib/mock-task');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js');
 
+tr.registerMock('webdeployment-common/ziputility.js', {
+    getArchivedEntries: function(webDeployPkg) {
+        return {
+            "entries": [
+                "systemInfo.xml",
+                "parameters.xml"
+            ]
+        };
+    }
+});
+
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
     getMSDeployFullPath : function() {
         var msDeployFullPath =  "msdeploypath\\msdeploy.exe";
         return msDeployFullPath;
+    }
+});
+
+var fs = require('fs');
+tr.registerMock('fs', {
+    createWriteStream: function (filePath, options) {
+        return { 
+            "isWriteStreamObj": true,
+            "on": (event) => {
+                console.log("event: " + event + " has been triggered");
+            },
+            "end" : () => { return true; }
+        };
     },
-    containsParamFile: function(webAppPackage: string) {
-		var taskResult = mockTask.execSync("cmd", ['/C', "DefaultWorkingDirectory\\msDeployParam.bat"]);
+    readFileSync: function (msDeployErrorFilePath) {
+        console.log("reading the error file");
+        return "ERROR DEPLOYING WEBSITE";
+    },
+    ReadStream: fs.ReadStream,
+    WriteStream: fs.WriteStream,
+    openSync: function (fd, options) {
+        return true;
+    },
+    closeSync: function (fd) {
+        return true;
+    },
+    fsyncSync: function(fd) {
         return true;
     }
 });

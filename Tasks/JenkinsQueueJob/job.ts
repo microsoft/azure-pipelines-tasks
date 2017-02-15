@@ -269,7 +269,7 @@ export class Job {
         thisJob.search.initialize().then(() => {
             if (thisJob.search.initialized) {
                 if (thisJob.queue.taskOptions.capturePipeline) {
-                    var downstreamProjects = thisJob.search.parsedTaskBody.downstreamProjects;
+                    var downstreamProjects = thisJob.search.parsedTaskBody.downstreamProjects || [];
                     downstreamProjects.forEach((project) => {
                         new Job(thisJob.queue, thisJob, project.url, null, -1, project.name); // will add a new child to the tree
                     });

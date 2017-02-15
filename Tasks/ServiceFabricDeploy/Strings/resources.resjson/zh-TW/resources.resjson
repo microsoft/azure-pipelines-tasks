@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkId=820528)",
   "loc.description": "將 Service Fabric 應用程式部署至叢集。",
   "loc.instanceNameFormat": "部署 Service Fabric 應用程式",
+  "loc.group.displayName.advanced": "進階設定",
   "loc.group.displayName.upgrade": "升級設定",
   "loc.input.label.applicationPackagePath": "應用程式套件",
   "loc.input.help.applicationPackagePath": "要部署之應用程式套件的路徑。路徑中可以使用[變數](https://go.microsoft.com/fwlink/?LinkID=550988)和萬用字元。",
@@ -12,12 +13,14 @@
   "loc.input.help.publishProfilePath": "發行設定檔的路徑，該設定檔會定義要使用的設定。路徑中可以使用[變數](https://go.microsoft.com/fwlink/?LinkID=550988)和萬用字元。",
   "loc.input.label.applicationParameterPath": "應用程式參數",
   "loc.input.help.applicationParameterPath": "應用程式參數檔案的路徑。路徑中可以使用[變數](https://go.microsoft.com/fwlink/?LinkID=550988)和萬用字元。如有指定，就會覆寫發行設定檔中的值。",
+  "loc.input.label.compressPackage": "壓縮套件",
+  "loc.input.help.compressPackage": "指定將應用程式套件複製到映像存放區之前，是否應先壓縮。如有啟用，此值將會覆寫發行設定檔中的值。",
   "loc.input.label.copyPackageTimeoutSec": "CopyPackageTimeoutSec",
-  "loc.input.help.copyPackageTimeoutSec": "Timeout in seconds for copying application package to image store.",
+  "loc.input.help.copyPackageTimeoutSec": "將應用程式套件複製到映像存放區的逾時 (秒)。如有指定，此值將會覆寫發行設定檔中的值。",
   "loc.input.label.registerPackageTimeoutSec": "RegisterPackageTimeoutSec",
-  "loc.input.help.registerPackageTimeoutSec": "Timeout in seconds for registering application package.",
+  "loc.input.help.registerPackageTimeoutSec": "註冊應用程式套件的逾時 (以秒為單位)。",
   "loc.input.label.overridePublishProfileSettings": "覆寫所有發行設定檔升級設定",
-  "loc.input.help.overridePublishProfileSettings": "這會以下方指定的值或預設值 (若未指定) 來覆寫所有升級設定。",
+  "loc.input.help.overridePublishProfileSettings": "這會由下方指定的值或 (若未指定時) 預設值覆寫所有的升級設定。",
   "loc.input.label.isUpgrade": "升級應用程式",
   "loc.input.label.upgradeMode": "升級模式",
   "loc.input.label.FailureAction": "FailureAction",
@@ -81,5 +84,6 @@
   "loc.messages.SFSDK_UpgradeRolledBack": "升級已復原。",
   "loc.messages.SFSDK_UnzipPackage": "正在嘗試將 '{0}' 解壓縮至位置 '{1}'。",
   "loc.messages.SFSDK_UnexpectedError": "未預期的錯誤。錯誤詳細資料: $_.Exception.Message",
-  "loc.messages.CopyPackageTimeoutSecWarning": "The CopyPackageTimeoutSec parameter requires version '2.3' of the Service Fabric SDK, but the installed version is '{0}'. This parameter will be ignored."
+  "loc.messages.SFSDK_CopyPackageTimeoutSecWarning": "CopyPackageTimeoutSec 參數需要 Service Fabric SDK 版本 '2.3'，但已安裝的版本為 '{0}'。將略過此參數。",
+  "loc.messages.SFSDK_CompressPackageWarning": "CompressPackage 參數需要 '2.5' 版的 Service Fabric SDK，但安裝的版本是 '{0}'。此參數將予忽略。"
 }

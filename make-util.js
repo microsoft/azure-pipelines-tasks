@@ -17,7 +17,7 @@ var downloadPath = path.join(__dirname, '_download');
 var makeOptions = require('./make-options.json');
 
 // list of .NET culture names
-var cultureNames = [ 'cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant' ];
+var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];
 
 //------------------------------------------------------------------------------
 // shell functions
@@ -128,21 +128,26 @@ exports.pathExists = pathExists;
 var buildNodeTask = function (taskPath, outDir) {
     var originalDir = pwd();
     cd(taskPath);
-    if (test('-f', rp('package.json'))) {
+    var packageJsonPath = rp('package.json');
+    if (test('-f', packageJsonPath)) {
+        var packageJson = JSON.parse(fs.readFileSync(packageJsonPath).toString());
+        if (packageJson.devDependencies && Object.keys(packageJson.devDependencies).length != 0) {
+            fail('The package.json should not contain dev dependencies. Move the dev dependencies into a package.json file under the Tests sub-folder. Offending package.json: ' + packageJsonPath);
+        }
+
         run('npm install');
     }
+
+    if (test('-f', rp(path.join('Tests', 'package.json')))) {
+        cd(rp('Tests'));
+        run('npm install');
+        cd(taskPath);
+    }
+
     run('tsc --outDir ' + outDir + ' --rootDir ' + taskPath);
     cd(originalDir);
 }
 exports.buildNodeTask = buildNodeTask;
-
-var buildPs3Task = function (taskPath, outDir) {
-    var packageUrl = 'https://www.powershellgallery.com/api/v2/package/VstsTaskSdk/0.7.1';
-    var packageSource = downloadArchive(packageUrl, /*omitExtensionCheck*/true);
-    var packageDest = path.join(outDir, 'ps_modules/VstsTaskSdk');
-    matchCopy('+(*.ps1|*.psd1|*.psm1|lib.json|Strings)', packageSource, packageDest, { noRecurse: true });
-}
-exports.buildPs3Task = buildPs3Task;
 
 var copyTaskResources = function (taskMake, srcPath, destPath) {
     assert(taskMake, 'taskMake');
@@ -152,7 +157,7 @@ var copyTaskResources = function (taskMake, srcPath, destPath) {
     // copy the globally defined set of default task resources
     var toCopy = makeOptions['taskResources'];
     toCopy.forEach(function (item) {
-        matchCopy(item, srcPath, destPath, { noRecurse: true });
+        matchCopy(item, srcPath, destPath, { noRecurse: true, matchBase: true });
     });
 
     // copy the locally defined set of resources
@@ -171,16 +176,16 @@ var matchFind = function (pattern, root, options) {
     assert(pattern, 'pattern');
     assert(root, 'root');
 
+    // create a copy of the options
+    var clone = {};
+    Object.keys(options || {}).forEach(function (key) {
+        clone[key] = options[key];
+    });
+    options = clone;
+
     // determine whether to recurse
-    options = options || {};
     var noRecurse = options.hasOwnProperty('noRecurse') && options.noRecurse;
     delete options.noRecurse;
-
-    // merge specified options with defaults
-    mergedOptions = { matchBase: true };
-    Object.keys(options || {}).forEach(function (key) {
-        mergedOptions[key] = options[key];
-    });
 
     // normalize first, so we can substring later
     root = path.resolve(root);
@@ -200,7 +205,7 @@ var matchFind = function (pattern, root, options) {
             });
     }
 
-    return minimatch.match(items, pattern, mergedOptions);
+    return minimatch.match(items, pattern, options);
 }
 exports.matchFind = matchFind;
 
@@ -227,19 +232,6 @@ var matchCopy = function (pattern, sourceRoot, destRoot, options) {
         });
 }
 exports.matchCopy = matchCopy;
-
-var matchRemove = function (pattern, sourceRoot, options) {
-    assert(pattern, 'pattern');
-    assert(sourceRoot, 'sourceRoot');
-
-    console.log(`removing ${pattern}`);
-
-    matchFind(pattern, sourceRoot, options)
-        .forEach(function (item) {
-            rm('-Rf', item);
-        });
-}
-exports.matchRemove = matchRemove;
 
 var run = function (cl, inheritStreams, noHeader) {
     if (!noHeader) {
@@ -406,7 +398,7 @@ var copyGroup = function (group, sourceRoot, destRoot) {
     }
 
     // build the source array
-    var source = typeof group.source == 'string' ? [ group.source ] : group.source;
+    var source = typeof group.source == 'string' ? [group.source] : group.source;
     source = source.map(function (val) { // root the paths
         return path.join(sourceRoot, val);
     });
@@ -536,6 +528,22 @@ var getExternals = function (externals, destRoot) {
             copyGroups(package.cp, packageSource, destRoot);
         });
     }
+
+    // for any file type that has to be shipped with task
+    if (externals.hasOwnProperty('files')) {
+        var files = externals.files;
+        files.forEach(function (file) {
+            assert(file.url, 'file.url');
+            assert(file.dest, 'file.dest');
+
+            // download the file from url
+            var fileSource = downloadFile(file.url);
+            // copy the files
+            var fileDest = path.join(destRoot, file.dest);
+            mkdir('-p', path.dirname(fileDest));
+            cp(fileSource, fileDest);
+        });
+    }
 }
 exports.getExternals = getExternals;
 
@@ -656,7 +664,7 @@ exports.validateTask = validateTask;
 var linkNonAggregatedLayoutContent = function (sourceRoot, destRoot, metadataOnly) {
     assert(sourceRoot, 'sourceRoot');
     assert(destRoot, 'destRoot');
-    var metadataFileNames = [ 'TASK.JSON', 'TASK.LOC.JSON', 'STRINGS', 'ICON.PNG' ];
+    var metadataFileNames = ['TASK.JSON', 'TASK.LOC.JSON', 'STRINGS', 'ICON.PNG'];
     // process each file/folder within the source root
     fs.readdirSync(sourceRoot).forEach(function (itemName) {
         var taskSourcePath = path.join(sourceRoot, itemName);
@@ -774,7 +782,7 @@ var getNonAggregatedLayout = function (packagePath, release, commit) {
 var getRefs = function () {
     console.log();
     console.log('> Getting branch/commit info')
-    var info = { };
+    var info = {};
     var branch;
     if (process.env.TF_BUILD) {
         // during CI agent checks out a commit, not a branch.
@@ -796,13 +804,13 @@ var getRefs = function () {
     }
 
     // get the ref info for HEAD
-    var info ={
+    var info = {
         head: {
             branch: branch,  // e.g. refs/heads/releases/m108
             commit: commit,  // leading 8 chars only
             release: release // e.g. 108 or undefined if not a release branch
         },
-        releases: { }
+        releases: {}
     };
 
     // get the ref info for each release branch within range
@@ -876,6 +884,44 @@ var createNonAggregatedZip = function (buildPath, packagePath) {
 }
 exports.createNonAggregatedZip = createNonAggregatedZip;
 
+var createHotfixLayout = function (packagePath, taskName) {
+    assert(packagePath, 'packagePath');
+    assert(taskName, 'taskName');
+    console.log();
+    console.log(`> Creating hotfix layout for task '${taskName}'`);
+
+    var branch = null;
+    if (process.env.TF_BUILD) {
+        // during CI agent checks out a commit, not a branch.
+        // $(build.sourceBranch) indicates the branch name, e.g. releases/m108
+        branch = process.env.BUILD_SOURCEBRANCH;
+    }
+    else {
+        // assumes user has checked out a branch. this is a fairly safe assumption.
+        // this code only runs during "package" and "publish" build targets, which
+        // is not typically run locally.
+        branch = run('git symbolic-ref HEAD', /*inheritStreams*/false, /*noHeader*/true);
+    }
+
+    var commitInfo = run('git log -1 --format=oneline', /*inheritStreams*/false, /*noHeader*/true);
+
+    // create the script
+    var hotfixPath = path.join(packagePath, 'hotfix');
+    mkdir('-p', hotfixPath);
+    var scriptPath = path.join(hotfixPath, `${taskName}.ps1`);
+    var scriptContent = '# Hotfix created from branch: ' + branch + os.EOL;
+    scriptContent += '# Commit: ' + commitInfo + os.EOL;
+    scriptContent += '$ErrorActionPreference=\'Stop\'' + os.EOL;
+    scriptContent += 'Update-DistributedTaskDefinitions -TaskZip $PSScriptRoot\\task.zip' + os.EOL;
+    fs.writeFileSync(scriptPath, scriptContent);
+
+    // link the non-aggregated tasks zip
+    var zipSourcePath = path.join(packagePath, 'non-aggregated-tasks.zip');
+    var zipDestPath = path.join(hotfixPath, 'tasks.zip');
+    cp(zipSourcePath, zipDestPath);
+}
+exports.createHotfixLayout = createHotfixLayout;
+
 var createAggregatedZip = function (packagePath) {
     assert(packagePath, 'packagePath');
 
@@ -893,7 +939,7 @@ var createAggregatedZip = function (packagePath) {
 
     // track task GUID + major version -> destination path
     // task directory names can change between different release branches
-    var taskDestMap = { };
+    var taskDestMap = {};
 
     // link the tasks from the non-aggregated layout into the aggregated layout
     var nonAggregatedLayoutPath = path.join(packagePath, 'non-aggregated-layout');
@@ -915,7 +961,7 @@ var createAggregatedZip = function (packagePath) {
         });
 
     // validate task uniqueness within the layout based on task GUID + major version
-    var majorVersions = { };
+    var majorVersions = {};
     fs.readdirSync(aggregatedLayoutPath) // walk each item in the aggregate layout
         .forEach(function (itemName) {
             var itemPath = path.join(aggregatedLayoutPath, itemName);

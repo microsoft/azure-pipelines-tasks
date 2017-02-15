@@ -32,23 +32,23 @@ process.env["AGENT_NAME"] = "author";
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     "which": {
-        "cmd": "cmd"
+        "msdeploy": "msdeploy"
     },
     "stats": {
     	"webAppPkg.zip": {
     		"isFile": true
     	},
-        "parameterFilePresent.xml": {
-            "isFile" : true
+        "invalidparameterFile.xml": {
+            "isFile" : false
         },
         "parameterFileUser.xml": {
             "isFile" : true
         }
     },
      "checkPath": {
-        "cmd" : true,
         "webAppPkg.zip": true,
-        "webAppPkg": true
+        "webAppPkg": true,
+        "msdeploy": true
     },
     "osType": {
         "osType": "Windows"
@@ -66,7 +66,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     "exist": {
     	"webAppPkg.zip": true
     },
-    "glob": {
+    "findMatch": {
         "webAppPkg.zip": ["webAppPkg.zip"],
         "webAppPkg": ["webAppPkg"]
     },
@@ -90,10 +90,6 @@ tr.registerMock('./msdeployutility.js', {
     getMSDeployFullPath : function() {
         var msDeployFullPath =  "msdeploypath\\msdeploy.exe";
         return msDeployFullPath;
-    },
-    containsParamFile: function(webAppPackage: string) {
-        var taskResult = mockTask.execSync("cmd", ['/C',"DefaultWorkingDirectory\\msDeployParam.bat"]);
-        return true;
     }
 }); 
 
@@ -128,6 +124,7 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
 			id: 'appid',
 			properties: { 
 				virtualApplications: [ ['Object'], ['Object'], ['Object'] ],
+                scmType: "None"
 			} 
 		}
 
@@ -158,6 +155,9 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
     },
     updateWebAppAppSettings : function (){
         return true;
+    },
+    updateAzureRMWebAppConfigDetails: function() {
+        console.log("Successfully updated scmType to VSTSRM");
     }
 });
 

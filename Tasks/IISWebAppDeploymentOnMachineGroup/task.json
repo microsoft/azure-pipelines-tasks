@@ -1,118 +1,146 @@
 {
-  "id": "1B467810-6725-4B6D-ACCD-886174C09BBA",
-  "name": "IISWebAppDeploymentOnMachineGroup",
-  "friendlyName": "IIS Web App Deploy On Machine Group",
-  "description": "Deploy a WebSite or Virtual Application by using MSDeploy on Machine Group",
-  "helpMarkDown": "[More Information](https://aka.ms/iiswebappdeployreadme)",
-  "category": "Deploy",
-  "visibility": [
-    "Preview",
-    "Release"
-  ],
-  "runsOn" : [
-  "MachineGroup"
-  ],
-  "author": "Microsoft Corporation",
-  "version": {
-    "Major": 0,
-    "Minor": 0,
-    "Patch": 3
-  },
-  "demands": [
-  ],
-  "minimumAgentVersion": "1.102.0",
-  "groups": [
-    {
-      "name": "advanceDeploymentOptions",
-      "displayName": "Advanced Deployment Options",
-      "isExpanded": true
-    }
-   ],
-   "inputs": [
-    {
-      "name": "WebSiteName",
-      "type": "string",
-      "label": "Website Name",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Provide the name of an existing website on the machine group machines"
+    "id": "1B467810-6725-4B6D-ACCD-886174C09BBA",
+    "name": "IISWebAppDeploymentOnMachineGroup",
+    "friendlyName": "IIS WebApp Deploy(Preview)",
+    "description": "Deploy a Website or Web Application using WebDeploy",
+    "helpMarkDown": "[More Information](https://aka.ms/iiswebappdeployreadme)",
+    "category": "Deploy",
+    "visibility": [
+        "Release"
+    ],
+    "runsOn": [
+        "MachineGroup"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 0,
+        "Patch": 9
     },
-	{
-      "name": "VirtualApplication",
-      "type": "string",
-      "label": "Virtual Application",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Specify the name of an already existing Virtual Application on the target Machines"
-    },
-	{
-      "name": "Package",
-      "type": "filePath",
-      "label": "Package or Folder",
-      "defaultValue": "$(System.DefaultWorkingDirectory)\\**\\*.zip",
-      "required": true,
-      "helpMarkDown": "Folder or file path to the Web App package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)\\\\\\*\\*\\\\\\*.zip."
-    },
-	{
-      "name": "SetParametersFile",
-      "type": "filePath",
-      "label": "SetParameters File",
-      "defaultValue": "",
-      "required": false,
-      "groupName": "advanceDeploymentOptions",
-      "helpMarkDown": "Optional: location of the SetParameters.xml file to use."
-    },
-    {
-      "name": "RemoveAdditionalFilesFlag",
-      "type": "boolean",
-      "label": "Remove Additional Files at Destination",
-      "defaultValue": "false",
-      "required": false,
-      "groupName": "advanceDeploymentOptions",
-      "helpMarkDown": "Select the option to delete files on the AzureRM Web App that have no matching files in the Web App zip package."
-    },
-    {
-      "name": "ExcludeFilesFromAppDataFlag",
-      "type": "boolean",
-      "label": "Exclude Files from the App_Data Folder",
-      "defaultValue": "false",
-      "required": false,
-      "groupName": "advanceDeploymentOptions",
-      "helpMarkDown": "Select the option to prevent files in the App_Data folder from being deployed to the AzureRM Web App."
-    },
-    {
-      "name": "TakeAppOfflineFlag",
-      "type": "boolean",
-      "label": "Take App Offline",
-      "defaultValue": "false",
-      "required": false,
-      "groupName": "advanceDeploymentOptions",
-      "helpMarkDown": "Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully."
-    },
-    {
-      "name": "AdditionalArguments",
-      "type": "string",
-      "label": "Additional Arguments",
-      "required": false,
-      "defaultValue": "",
-      "groupName": "advanceDeploymentOptions",
-      "helpMarkDown": "Additional Web Deploy arguments that will be applied when deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension."
-    }
-  ],
+    "demands": [],
+    "minimumAgentVersion": "2.104.1",
+    "groups": [
+        {
+            "name": "FileTransformsAndVariableSubstitution",
+            "displayName": "File Transforms & Variable Substitution Options",
+            "isExpanded": false
+        },
+        {
+            "name": "advanceDeploymentOptions",
+            "displayName": "Advanced Deployment Options",
+            "isExpanded": true
+        }
+    ],
+    "inputs": [
+        {
+            "name": "WebSiteName",
+            "type": "string",
+            "label": "Website Name",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Provide the name of an existing website on the machine group machines"
+        },
+        {
+            "name": "VirtualApplication",
+            "type": "string",
+            "label": "Virtual Application",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Specify the name of an already existing Virtual Application on the target Machines"
+        },
+        {
+            "name": "Package",
+            "type": "filePath",
+            "label": "Package or Folder",
+            "defaultValue": "$(System.DefaultWorkingDirectory)\\**\\*.zip",
+            "required": true,
+            "helpMarkDown": "Folder or file path to the Web App package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)\\\\\\*\\*\\\\\\*.zip."
+        },
+        {
+            "name": "SetParametersFile",
+            "type": "filePath",
+            "label": "SetParameters File",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "advanceDeploymentOptions",
+            "helpMarkDown": "Optional: location of the SetParameters.xml file to use."
+        },
+        {
+            "name": "RemoveAdditionalFilesFlag",
+            "type": "boolean",
+            "label": "Remove Additional Files at Destination",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "advanceDeploymentOptions",
+            "helpMarkDown": "Select the option to delete files on the Web App that have no matching files in the Web App zip package."
+        },
+        {
+            "name": "ExcludeFilesFromAppDataFlag",
+            "type": "boolean",
+            "label": "Exclude Files from the App_Data Folder",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "advanceDeploymentOptions",
+            "helpMarkDown": "Select the option to prevent files in the App_Data folder from being deployed to the Web App."
+        },
+        {
+            "name": "TakeAppOfflineFlag",
+            "type": "boolean",
+            "label": "Take App Offline",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "advanceDeploymentOptions",
+            "helpMarkDown": "Select the option to take the Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully."
+        },
+        {
+            "name": "AdditionalArguments",
+            "type": "string",
+            "label": "Additional Arguments",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "advanceDeploymentOptions",
+            "helpMarkDown": "Additional Web Deploy arguments that will be applied when deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension."
+        },
+        {
+            "name": "XmlTransformation",
+            "type": "boolean",
+            "label": "XML transformation",
+            "required": false,
+            "defaultValue": false,
+            "groupName": "FileTransformsAndVariableSubstitution",
+            "helpMarkDown": "The config transfoms will be run for `*.Release.config` and `*.<EnvironmentName>.config` on the `*.config file`.<br/> Config transforms will be run prior to the Variable Substitution.<br/>XML transformations are supported only for Windows platform."
+        },
+        {
+            "name": "XmlVariableSubstitution",
+            "type": "boolean",
+            "label": "XML variable substitution",
+            "required": false,
+            "defaultValue": false,
+            "groupName": "FileTransformsAndVariableSubstitution",
+            "helpMarkDown": "Variables defined in the Build or Release Definition will be matched against the 'key' or 'name' entries in the appSettings, applicationSettings, and connectionStrings sections of any config file. Variable Substitution is run after config transforms. <br/><br/> Note: If same variables are defined in the Release Definition and in the Environment, then the Environment variables will supersede the Release Definition variables.<br/>"
+        },
+        {
+            "name": "JSONFiles",
+            "type": "multiLine",
+            "label": "JSON variable substitution",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "FileTransformsAndVariableSubstitution",
+            "helpMarkDown": "Provide new line separated list of JSON files to substitute the variable values. Files names are to be provided relative to the root folder. <br/> To substitute JSON variables that are nested or hierarchical, specify them using JSONPath expressions. <br/> <br/> For example, to replace the value of ‘ConnectionString’ in the sample below, you need to define a variable as ‘Data.DefaultConnection.ConnectionString’ in the build/release definition (or release definition’s environment). <br/> {<br/>&nbsp;&nbsp;\"Data\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"DefaultConnection\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"ConnectionString\": \"Server=(localdb)\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/> }<br/> Variable Substitution is run after configuration transforms. <br/><br/> Note: Build/Release’s system definition variables are excluded in substitution"
+        }
+    ],
     "instanceNameFormat": "Deploy IIS Website/App: $(WebDeployPackage)",
     "execution": {
         "node": {
-        "target": "deployiiswebapp.js"
+            "target": "deployiiswebapp.js"
         }
     },
-  "messages": {
-        "Invalidwebapppackageorfolderpathprovided": "Invalid webapp package or folder path provided: %s",
+    "messages": {
         "SetParamFilenotfound0": "Set parameters file not found: %s",
-        "GotconnectiondetailsforazureRMWebApp0": "Got connection details for azureRM WebApp:'%s'",
-        "UnabletoretrieveWebAppIDforazureRMWebApp0StatusCode1": "Unable to retrieve WebApp ID for azureRM WebApp:'%s'. Status Code: %s",
-        "ErrorNoSuchDeployingMethodExists": "Error : No Such Deploying Method Exists",
-        "UnabletoretrieveconnectiondetailsforazureRMWebApp0StatusCode1": "Unable to retrieve connection details for azureRM WebApp:'%s'. Status Code: %s",
-        "Unabletoretrievewebapppublishurlforwebapp0StatusCode1" : "Unable to retrieve webapp publish url for webapp : '%s'. Status Code : '%s'",
+        "XDTTransformationsappliedsuccessfully": "XML Transformations applied successfully",
+        "CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot perform XML transformations on a non-Windows platform.",
+        "XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully.",
+        "JSONvariablesubstitutionappliedsuccessfully": "JSON variable substitution applied successfully.",
         "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
         "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
         "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website",
@@ -135,12 +163,20 @@
         "Unabletopackagecontentoffolder": "Unable to package content of folder : %s",
         "Compressedfolderintozip": "Compressed folder %s into zip : %s",
         "Webappfolderisbeingarchivedtobytescompressed": "Webapp folder : %s is being archived to %s. %s bytes compressed.",
-        "Initiateddeploymentviakuduserviceforwebapppackage": "Initiated deployment via kudu service for webapp package : %s",
         "MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy generated package are only supported for Windows platform.",
         "UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove": "Unsupported installed version: %s found for MSDeploy. version should be alteast 3 or above",
         "UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)",
         "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
         "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern": "More than one package matched with specified pattern. Please restrain the search patern.",
-        "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected."
-  }
+        "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy web app again with app_offline option selected.",
+        "Configfiledoesntexists": "Configuration file %s doesn't exist.",
+        "Failedtowritetoconfigfilewitherror": "Failed to write to config file %s with error : %s",
+        "NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern",
+        "JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "JSON variable substitution can only be applied for JSON files",
+        "JSONParseError": "Unable to parse JSON file: %s. Error: %s",
+        "XdtTransformationErrorWhileTransforming": "XML transformation error while transforming %s using %s.",
+        "EncodeNotSupported": "Detected file encoding of the file %s as %s. Variable substitution is not supported with file encoding %s. Supported encodings are UTF-8 and UTF-16 LE.",
+        "UnknownFileEncodeError": "Unable to detect encoding of the file %s (typeCode: %s). Supported encodings are UTF-8 and UTF-16 LE.",
+        "ShortFileBufferError": "File buffer is too short to detect encoding type : %s"
+    }
 }
