@@ -64,7 +64,7 @@ export class CodeAnalysisOrchestrator {
     }
 
     private checkBuildContext(): boolean {
-        let requiredVariables: string[] = ['build.sourcesDirectory', 'build.artifactStagingDirectory', 'build.buildNumber'];
+        let requiredVariables: string[] = ['System.DefaultWorkingDirectory', 'build.artifactStagingDirectory', 'build.buildNumber'];
 
         for (let requiredVariable of requiredVariables) {
             if (!tl.getVariable(requiredVariable)) {

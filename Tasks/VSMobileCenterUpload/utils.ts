@@ -5,46 +5,59 @@ import Q = require('q');
 
 var Zip = require('jszip');
 
-export function checkAndFixFilePath(p, name, continueOnError) {
-    if (p) {
-        var workDir = tl.getVariable("System.DefaultWorkingDirectory");
-        if (arePathEqual(p, workDir)) {
+var workDir = tl.getVariable("System.DefaultWorkingDirectory");
+
+export function checkAndFixFilePath(filePath: string, continueOnError: boolean ): string {
+    if (filePath) {
+        if (arePathEqual(filePath, workDir)) {
             // Path points to the source root, ignore it
-            p = null;
+            filePath = null;
         } else {
             if (continueOnError) {
-                if (!tl.exist(p)) {
-                    tl.warning(tl.loc("FailedToFindFile", name, p));
-                    p = null;
+                if (!tl.exist(filePath)) {
+                    tl.warning(tl.loc("FailedToFindFile", "symbolsPath", filePath));
+                    filePath = null;
                 }
             } else {
                 // will error and fail task if it doesn't exist.
-                tl.checkPath(p, name);
+                tl.checkPath(filePath, "symbolsPath");
             }
         }
     }
 
-    return p;
+    return filePath;
 }
 
-function arePathEqual(p1, p2) {
+export function getArchivePath(symbolsRoot: string): string {
+    // If symbol paths do not have anything common, e.g /a/b/c and /x/y/z,
+    // let's use some default name for the archive.
+    let zipName = symbolsRoot ? path.basename(symbolsRoot) : "symbols";
+    tl.debug(`---- Zip file name=${zipName}`); 
+
+    let zipPath = path.join(workDir, `${zipName}.zip`); 
+    tl.debug(`.... Zip file path=${zipPath}`); 
+
+    return zipPath;
+}
+
+function arePathEqual(p1: string, p2: string): boolean {
     if (!p1 && !p2) return true;
     else if (!p1 || !p2) return false;
     else return path.normalize(p1 || "") === path.normalize(p2 || "");
 }
 
-function getAllFiles(rootPath, recursive) {
-    var files = [];
+function getAllFiles(rootPath: string, recursive: boolean): string[] {
+    let files: string[] = [];
 
-    var folders = [];
+    let folders: string[] = [];
     folders.push(rootPath);
 
     while (folders.length > 0) {
-        var folderPath = folders.shift();
+        let folderPath = folders.shift();
 
-        var children = fs.readdirSync(folderPath);
-        for (var i = 0; i < children.length; i++) {
-            var childPath = path.join(folderPath, children[i]);
+        let children = fs.readdirSync(folderPath);
+        for (let i = 0; i < children.length; i++) {
+            let childPath = [folderPath, children[i]].join( "/");
             if (fs.statSync(childPath).isDirectory()) {
                 if (recursive) {
                     folders.push(childPath);
@@ -58,15 +71,32 @@ function getAllFiles(rootPath, recursive) {
     return files;
 }
 
-export function createZipStream(rootPath: string, includeFolder: boolean): NodeJS.ReadableStream {
+export function createZipStream(symbolsPaths: string[], symbolsRoot: string): NodeJS.ReadableStream {
+    tl.debug("---- Creating Zip stream");
     let zip = new Zip();
-    let filePaths = getAllFiles(rootPath, /*recursive=*/ true);
-    for (let i = 0; i < filePaths.length; i++) {
-        let filePath = filePaths[i];
-        let parentFolder = path.dirname(rootPath);
-        let relativePath = includeFolder ? path.relative(parentFolder, filePath) : path.relative(rootPath, filePath);
-        zip.file(relativePath, fs.createReadStream(filePath), { compression: 'DEFLATE' });
-    }
+
+    symbolsPaths.forEach(rootPath => {
+        let filePaths = getAllFiles(rootPath, /*recursive=*/ true);
+        tl.debug(`------ Adding files: ${filePaths}`);
+
+        for (let i = 0; i < filePaths.length; i++) {
+            let filePath = filePaths[i];
+
+            let relativePath: string = null;
+            if (symbolsRoot) {
+                relativePath = path.relative(symbolsRoot, filePath);
+            } else {
+                // If symbol paths do not have anything common, 
+                // e.g "/a/b/c" and "/x/y/z", or "C:/u/v/w" and "D:/u/v/w",
+                // let's use "a/b/c" and "x/y/z", or "C/u/v/w" and "D/u/v/w"
+                // as relative paths in the archive.
+                relativePath = filePath.replace(/^\/+/,"").replace(":", "");
+            }
+
+            tl.debug(`...... zip-entry: ${relativePath}`);
+            zip.file(relativePath, fs.createReadStream(filePath), { compression: 'DEFLATE' });
+        }
+    });
 
     let currentFile = null;
     let zipStream = zip.generateNodeStream({
@@ -98,27 +128,12 @@ export function createZipFile(zipStream: NodeJS.ReadableStream, filename: string
     return defer.promise;
 }
 
-export function isDsym(s: string) {
-    return (s && s.toLowerCase().endsWith(".dsym"));
-}
+export function resolveSinglePath(pattern: string, continueOnError?: boolean, packParentFolder?: boolean): string {
+    tl.debug("---- Resolving a single path");
 
-export function removeNewLine(str: string): string {
-    return str.replace(/(\r\n|\n|\r)/gm, "");
-}
+    let matches = resolvePaths(pattern, continueOnError, packParentFolder);
 
-export function resolveSinglePath(pattern: string, continueOnError: boolean): string {
-    if (pattern) {
-        let matches: string[] = tl.glob(pattern);
-
-        if (!matches || matches.length === 0) {
-            if (continueOnError) {
-                tl.warning(tl.loc("CannotFindAnyFile", pattern));
-                return null;
-            } else {
-                throw new Error(tl.loc("CannotFindAnyFile", pattern));
-            }
-        }
-
+    if (matches && matches.length > 0) {
         if (matches.length != 1) {
             if (continueOnError) {
                 tl.warning(tl.loc("FoundMultipleFiles", pattern));
@@ -132,3 +147,94 @@ export function resolveSinglePath(pattern: string, continueOnError: boolean): st
 
     return null;
 }
+
+export function resolvePaths(pattern: string, continueOnError?: boolean, packParentFolder?: boolean): string[] {
+    tl.debug("------- Resolving multiple paths");
+    tl.debug("....... path pattern: " + (pattern || ""));
+
+    if (pattern) {
+        let matches = tl.glob(pattern);
+
+        if (!matches || matches.length === 0) {
+            if (continueOnError) {
+                tl.warning(tl.loc("CannotFindAnyFile", pattern));
+                return null;
+            } else {
+                throw new Error(tl.loc("CannotFindAnyFile", pattern));
+            }
+        }
+
+        let selectedPaths = matches.map(v => packParentFolder ? path.dirname(v) : v);
+        tl.debug("....... selectedPaths: " + selectedPaths);
+
+        let uniquePaths = removeDuplicates(selectedPaths);
+        tl.debug("....... uniquePaths:   " + uniquePaths);
+
+        return uniquePaths;
+    }
+
+    return null;
+}
+
+export function removeDuplicates(list: string[]): string[] {
+
+    interface IStringDictionary { [name: string]: number };
+    let unique: IStringDictionary = {};
+
+    list.forEach(s => {
+        unique[s] = 0;
+    });
+
+    return Object.keys(unique);
+}
+
+export function findCommonParent(list: string[]): string {
+    tl.debug("---- Detecting the common parent of all symbols paths to define the archive's internal folder structure.")
+
+    function cutTail(list: string[], n: number) {
+        while (n-- > 0) {
+            list.pop();
+        }
+    }
+
+    if (!list) {
+        return null;
+    }
+
+    let commonSegments: string[] = [];
+    let parentPath: string = null;
+
+    list.forEach((nextPath, idx) => {
+        tl.debug(`------ next path[${idx}]\t ${nextPath}`);
+
+        if (idx === 0) {
+            // Take the first path as the common parent candidate
+            commonSegments = nextPath.split("/");
+        } else if (commonSegments.length === 0) { 
+            // We've already detected that the paths do not have a common parent.
+            // No sense to check the rest of paths.
+            return null; 
+        } else {
+            let pathSegmants: string[] = nextPath.split("/");
+
+            // If the current path contains less segments than the common path calculated so far,
+            // the trailing segmants in the latter cannot be a part of the resulting common path.
+            cutTail(commonSegments, commonSegments.length - pathSegmants.length);
+
+            for (let i = 0; i < pathSegmants.length; i++) {
+                if (pathSegmants[i] !== commonSegments[i]) {
+                    // Segments i, i+1, etc. cannot be a part of the resulting common path.
+                    cutTail(commonSegments, commonSegments.length - i);
+                    break;
+                }
+            }
+        }
+
+        parentPath = commonSegments.join("/");
+        tl.debug(`...... parent path  \t ${parentPath}`);
+    })
+
+    return parentPath;
+}
+
+

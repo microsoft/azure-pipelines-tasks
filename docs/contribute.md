@@ -54,7 +54,7 @@ npm install
 
 #build and test
 node make.js build --task ShellScript
-node make.js test --task ShellScript --suite LO
+node make.js test --task ShellScript --suite L0
 ```
 
 ## Build with Make

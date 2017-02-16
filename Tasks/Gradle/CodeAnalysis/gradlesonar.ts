@@ -48,7 +48,7 @@ export function processSonarQubeIntegration(): Q.Promise<void> {
     }
 
       // the output folder may not be directly in the build root, for example if the entire project is in a top-level dir
-    let reportTaskGlob: string = path.join(tl.getVariable('build.sourcesDirectory'), '**', 'build', 'sonar', 'report-task.txt');
+    let reportTaskGlob: string = path.join(tl.getVariable('System.DefaultWorkingDirectory'), '**', 'build', 'sonar', 'report-task.txt');
 
     return sqCommon.processSonarQubeIntegration(reportTaskGlob);
 }
