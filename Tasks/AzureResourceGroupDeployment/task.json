@@ -32,7 +32,7 @@
         },
         {
             "name": "AdvancedDeploymentOptions",
-            "displayName": "Advanced eployment options for virtual machines",
+            "displayName": "Advanced deployment options for virtual machines",
             "isExpanded": true,
             "visibleRule": "action = Create Or Update Resource Group || action = Select Resource Group"
         }
