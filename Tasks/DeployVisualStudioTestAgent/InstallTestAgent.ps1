@@ -79,6 +79,8 @@ function Install-Product($SetupPath, $ProductVersion, $Update)
             $tpPath = Join-Path $env:SystemDrive TestAgent2017
             $exitCode = InstallTestAgent2017 -SetupPath $SetupPath -InstallPath $tpPath
 
+            # Fresh installation of TA 2017 doesn't initialize the CodedUI packages.
+            # One needs to run configuration to set it up properly :(
             $configExe = [io.path]::combine($tpPath, 'Common7','IDE','TestAgentConfig.exe')
             Write-Verbose -Verbose "Configuration Test Agent path: $configExe"
             if(Test-Path -Path $configExe){
