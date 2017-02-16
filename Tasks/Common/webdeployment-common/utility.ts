@@ -154,3 +154,22 @@ export async function isMSDeployPackage(webAppPackage: string ) {
     tl.debug("Is the package an msdeploy package : " + isParamFilePresent);
     return isParamFilePresent;
 }
+
+export function copyDirectory(sourceDirectory: string, destDirectory: string) {
+    var queue = [[sourceDirectory, destDirectory]];
+    while(queue.length > 0) {
+        var sourceDestPair = queue.shift();
+        if(tl.stats(sourceDestPair[0]).isDirectory()) {
+            var listDir = tl.ls('-A',[sourceDestPair[0]]);
+            tl.debug('list of files to copy from ' + sourceDestPair[0] + ' to ' + sourceDestPair[1] + ' : ' + listDir);
+            for(var relativePath of listDir) {
+                queue.push([path.join(sourceDestPair[0], relativePath), path.join(sourceDestPair[1], relativePath)]);
+            }
+            tl.mkdirP(sourceDestPair[1]);
+        }
+        else {
+            tl.debug('Copying file: ' + sourceDestPair[0] + ' to ' + sourceDestPair[1]);
+            tl.cp(sourceDestPair[0], sourceDestPair[1], '-f', false);
+        }
+    }
+}

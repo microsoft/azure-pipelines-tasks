@@ -14,7 +14,7 @@ export async function fileTransformations(isFolderBasedDeployment: boolean, JSON
         
     if(isFolderBasedDeployment) {
         tl.debug('Copying Web Packge: ' + webDeployPkg + ' to temporary location: ' + folderPath);
-        tl.cp(path.join(webDeployPkg, '/*'), folderPath, '-rf', false);
+        utility.copyDirectory(webDeployPkg, folderPath);
         tl.debug('Copied Web Package: ' + webDeployPkg + ' to temporary location: ' + folderPath + ' successfully.');
     }
     else {
