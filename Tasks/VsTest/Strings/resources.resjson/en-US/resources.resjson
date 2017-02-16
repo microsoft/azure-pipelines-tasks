@@ -56,7 +56,7 @@
   "loc.messages.PathDoesNotExist": "%s path does not exist.",
   "loc.messages.VstestReturnCode": "Vstest exited with return code: %d.",
   "loc.messages.NoMatchingTestAssemblies": "No test assemblies found matching the pattern: %s.",
-  "loc.messages.VstestNotFound": "Vstest of version %d is not found. Try again with a visual studio version that exists on your build agent machine.",
+  "loc.messages.VstestNotFound": "Visual Studio version %d is not found. Try again with a version that exists on your build agent machine.",
   "loc.messages.VstestFailed": "Vstest failed with error. Check logs for failures. There might be failed tests.",
   "loc.messages.VstestTIANotSupported": "Install Visual Studio 2015 update 3 or Visual Studio 2017 RC or above to run Test Impact Analysis.",
   "loc.messages.NoResultsToPublish": "No results found to publish.",

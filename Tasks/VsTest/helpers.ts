@@ -108,4 +108,14 @@ export class Helper{
             });
         return defer.promise;
     }
+
+    public static getVSVersion(versionNum: number)
+    {
+        switch (versionNum) {
+            case 12: return "2013";
+            case 14: return "2015";
+            case 15: return "2017";
+            default: return "selected";
+        }
+    }
 }
