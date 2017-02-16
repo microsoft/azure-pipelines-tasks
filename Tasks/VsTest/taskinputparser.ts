@@ -37,7 +37,7 @@ export function getvsTestConfigurations(): models.VsTestConfigurations {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     const vsTestConfiguration = {} as models.VsTestConfigurations;
     initTestConfigurations(vsTestConfiguration);
-    vsTestConfiguration.publishRunAttachments = tl.getInput('publishRunAttachments');    
+    vsTestConfiguration.publishRunAttachments = tl.getInput('publishRunAttachments');
     vsTestConfiguration.vstestDiagFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     vsTestConfiguration.ignoreVstestFailure = tl.getVariable('vstest.ignoretestfailures');
     return vsTestConfiguration;
@@ -53,9 +53,15 @@ function initDtaEnvironment(): models.DtaEnvironment {
     const phaseId = tl.getVariable('Release.DeployPhaseId');
     const projectName = tl.getVariable('System.TeamProject');
     const taskInstanceId = getDtaInstanceId();
-    
+    const parallelExecution = tl.getVariable('System.ParallelExecutionType');
+
     if(releaseId) {
-        dtaEnvironment.environmentUri = 'dta://env/' + projectName + '/_apis/release/' + releaseId + '/' + phaseId + '/' + taskInstanceId;        
+        if(parallelExecution && parallelExecution.toLowerCase() === 'multiconfiguration') {
+            const jobId = tl.getVariable('System.JobId');
+            dtaEnvironment.environmentUri = 'dta://env/' + projectName + '/_apis/release/' + releaseId + '/' + phaseId + '/' + jobId + '/' + taskInstanceId;
+        } else {
+            dtaEnvironment.environmentUri = 'dta://env/' + projectName + '/_apis/release/' + releaseId + '/' + phaseId + '/' + taskInstanceId;
+        }
     } else {
         const buildId = tl.getVariable('Build.BuildId');
         dtaEnvironment.environmentUri = 'dta://env/' + projectName + '/_apis/build/' + buildId + '/' + taskInstanceId;
@@ -96,10 +102,10 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     if(testConfiguration.testSelection.toLowerCase() === 'testplan') {    
         testConfiguration.testplan = parseInt(tl.getInput('testPlan'));
         testConfiguration.testPlanConfigId = parseInt(tl.getInput('testConfiguration'));
-        
+
         var testSuiteStrings = tl.getDelimitedInput('testSuite', ',', true);
         testConfiguration.testSuites = new Array<number>();
-        testSuiteStrings.forEach(element => {        
+        testSuiteStrings.forEach(element => {
         testConfiguration.testSuites.push(parseInt(element));
         });
     }
