@@ -240,7 +240,12 @@ function getTestSelectorLocation(): string {
 }
 
 function getTraceCollectorUri(): string {
-    return "file://" + path.join(__dirname, "TestSelector/Microsoft.VisualStudio.TraceCollector.dll");
+    if(vsTestVersionForTIA[0] === 15) {
+        return "file://" + path.join(__dirname, "TestSelector/Microsoft.VisualStudio.TraceCollector.dll");
+    }
+    else {
+        return "file://" + path.join(__dirname, "TestSelector/14.0/Microsoft.VisualStudio.TraceCollector.dll");
+    }
 }
 
 function uploadTestResults(testResultsDirectory: string): Q.Promise<string> {
@@ -557,6 +562,14 @@ function getVstestTestsList(vsVersion: number): Q.Promise<string> {
     }
 
     let vstest = tl.tool(vstestLocation);
+
+    if(vsVersion === 14.0) {
+
+        tl.debug("Visual studio 2015 selected. Selecting vstest.console.exe bundled in the task");
+        let vsTestPath = path.join(__dirname, "TestSelector/14.0/vstest.console.exe") // Use private vstest as the changes to discover tests are not there in update3
+        vstest = tl.tool(vsTestPath);
+    }
+
     addVstestArgs(argsArray, vstest);
 
     tl.cd(workingDirectory);
@@ -813,17 +826,27 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
                         let sysDebug = tl.getVariable("System.Debug");
                         if ((sysDebug !== undefined && sysDebug.toLowerCase() === "true") || tiaEnabled) {
                             vsTestVersionForTIA = getVsTestVersion();
-
-                            if (tiaEnabled && (vsTestVersionForTIA === null || (vsTestVersionForTIA[0] < 15 || (vsTestVersionForTIA[0] === 15 && vsTestVersionForTIA[1] === 0 && vsTestVersionForTIA[2] < 25727)))) {
-                                tl.warning(tl.loc("VstestTIANotSupported"));
-                                tiaEnabled = false;
-                            }
+                            if (tiaEnabled && 
+                            (vsTestVersionForTIA === null ||
+                            (vsTestVersionForTIA[0] < 14 ||
+                            (vsTestVersionForTIA[0] === 15 && vsTestVersionForTIA[1] === 0 && vsTestVersionForTIA[2] < 25727) ||
+                            // VS 2015 U3
+                            (vsTestVersionForTIA[0] === 14 && vsTestVersionForTIA[1] === 0 && vsTestVersionForTIA[2] < 25420)))) {
+                            tl.warning(tl.loc("VstestTIANotSupported"));
+                            tiaEnabled = false;
                         }
-                    } catch (e) {
-                        tl.error(e.message);
-                        defer.resolve(1);
-                        return defer.promise;
                     }
+                } catch (e) {
+                      tl.error(e.message);
+                      defer.resolve(1);
+                      return defer.promise;
+                }
+
+                    // We need to use private data collector dll bundled in task
+                    if(tiaEnabled === true && vsTestVersionForTIA[0] === 14) {
+                    useNewCollector = true;
+                    }
+
                     setupSettingsFileForTestImpact(vsVersion, overriddenSettingsFile)
                         .then(function(runSettingswithTestImpact) {
                             setRunInParallellIfApplicable(vsVersion);
@@ -1502,7 +1525,7 @@ function getLatestVSTestConsolePathFromRegistry(): Q.Promise<ExecutabaleInfo> {
 
 function getVSTestConsole15Path(): string {
     let powershellTool = tl.tool('powershell');
-    let powershellArgs = ['-file', vs15HelperPath]
+    let powershellArgs = ['-NonInteractive', '-ExecutionPolicy', 'Unrestricted', '-file', vs15HelperPath]
     powershellTool.arg(powershellArgs);
     let xml = powershellTool.execSync().stdout;
     let deferred = Q.defer<string>();
@@ -1526,21 +1549,27 @@ function getVSTestConsole15Path(): string {
 function locateVSVersion(version: string): Q.Promise<ExecutabaleInfo> {
     let deferred = Q.defer<ExecutabaleInfo>();
     let vsVersion: number = parseFloat(version);
-    
-    if (isNaN(vsVersion) || vsVersion == 15) {
-        // latest
-        tl.debug('Searching for latest Visual Studio');
-        let vstestconsole15Path = getVSTestConsole15Path();
-        if (vstestconsole15Path) {
-            deferred.resolve({version: 15, location: vstestconsole15Path});
+
+    if(vstestLocationMethod.toLowerCase() !== 'location') {    
+        if (isNaN(vsVersion) || vsVersion == 15) {
+            // latest
+            tl.debug('Searching for latest Visual Studio');
+            let vstestconsole15Path = getVSTestConsole15Path();
+            if (vstestconsole15Path) {
+                deferred.resolve({version: 15, location: vstestconsole15Path});
+            } else {
+                // fallback
+                tl.debug('Unable to find an instance of Visual Studio 2017');
+                return getLatestVSTestConsolePathFromRegistry();
+            }
         } else {
-            // fallback
-            tl.debug('Unable to find an instance of Visual Studio 2017');
-            return getLatestVSTestConsolePathFromRegistry();
+            tl.debug('Searching for Visual Studio ' + vsVersion.toString());
+            deferred.resolve({version: vsVersion, location: getVSTestLocation(vsVersion)});
         }
-    } else {
-        tl.debug('Searching for Visual Studio ' + vsVersion.toString());
-        deferred.resolve({version: vsVersion, location: getVSTestLocation(vsVersion)});
+    }
+    else {
+      vstestLocation = getVSTestLocation(vsVersion); // returns location if user has given path
+      deferred.resolve({ version: getVsTestVersion()[0], location: vstestLocation });
     }
     return deferred.promise;
 }
