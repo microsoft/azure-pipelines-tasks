@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -320,6 +320,8 @@
         "ClientIdCannotBeEmpty": "clientId must be a non empty string.",
         "DomainCannotBeEmpty": "domain must be a non empty string.",
         "SecretCannotBeEmpty": "secret must be a non empty string.",
+        "armUrlCannotBeEmpty": "arm Url must be a non empty string.",
+        "authorityUrlCannotBeEmpty": "authority must be a non empty string.",
         "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for azure. Status code: %s, status message: %s",
         "LoadBalancerNameCannotBeNull": "'loadBalancerName cannot be null or undefined and it must be of type string.'",
         "NetworkInterfaceNameCannotBeNull": "networkInterfaceName cannot be null or undefined and it must be of type string.",
