@@ -2,10 +2,10 @@ import tl = require('vsts-task-lib/task');
 import tr = require('vsts-task-lib/toolrunner');
 import path = require('path');
 import Q = require('q');
-import models = require('./models')
-import taskInputParser = require('./taskInputParser')
-import settingsHelper = require('./settingsHelper')
-import versionFinder = require('./versionFinder')
+import models = require('./models');
+import taskInputParser = require('./taskInputParser');
+import settingsHelper = require('./settingsHelper');
+import versionFinder = require('./versionFinder');
 import * as utils from './helpers';
 
 var os = require('os');
@@ -33,7 +33,7 @@ export async function startTest() {
         vstestConfig = taskInputParser.getvsTestConfigurations();
         tiaConfig = vstestConfig.tiaConfig;
         vsVersionDetails = await versionFinder.locateVSTestConsole(vstestConfig);
-        
+
         //Try to find the results directory for clean up. This may change later if runsettings has results directory and location go runsettings file changes.
         resultsDirectory = getTestResultsDirectory(vstestConfig.settingsFile, path.join(workingDirectory, 'TestResults'));
         // clean up old testResults
@@ -48,7 +48,7 @@ export async function startTest() {
             tl.warning(tl.loc('NoMatchingTestAssemblies', vstestConfig.sourceFilter));
             return;
         }
- 
+
         invokeVSTest(resultsDirectory)
             .then(function (code) {
                 try {

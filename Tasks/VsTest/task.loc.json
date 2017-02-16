@@ -182,7 +182,7 @@
       "defaultValue": "version",
       "options": {
         "version": "Version",
-        "location": "Specify Location"
+        "location": "Specific location"
       }
     },
     {

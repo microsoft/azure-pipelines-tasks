@@ -33,7 +33,7 @@
         },
         {
             "name": "executionOptions",
-            "displayName": "Execution Options",
+            "displayName": "Execution options",
             "isExpanded": true
         },
         {
@@ -176,19 +176,19 @@
         {
             "name": "vstestLocationMethod",
             "type": "radio",
-            "label": "VSTest",
+            "label": "Select test platform using",
             "required": false,
             "groupName": "executionOptions",
             "defaultValue": "version",
             "options": {
                 "version": "Version",
-                "location": "Specify Location"
+                "location": "Specific location"
             }
         },
         {  
             "name": "vsTestVersion",
             "type": "pickList",
-            "label": "VSTest version",
+            "label": "Test platform version",
             "defaultValue": "15.0",
             "required": false,
             "helpMarkDown": "The version of Visual Studio test to use.",
@@ -216,7 +216,7 @@
             "label": "Settings file",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Path to runsettings file to use with the tests. Use `$(Build.SourcesDirectory)` to access the Project folder.",
+            "helpMarkDown": "Path to runsettings or testsettings file to use with the tests. Use `$(Build.SourcesDirectory)` to access the Project folder.",
             "groupName": "executionOptions"
         },
         {
@@ -254,7 +254,7 @@
         {
             "name": "pathtoCustomTestAdapters",
             "type": "string",
-            "label": "Path to custom tests adapters",
+            "label": "Path to custom test adapters",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Directory path to custom test adapters. Nuget restored adapters are automatically searched for.",
@@ -266,7 +266,7 @@
             "label": "Code coverage enabled",
             "defaultValue": "False",
             "required": false,  
-            "helpMarkDown": "Collect code coverage information from the Test run.",  
+            "helpMarkDown": "Collect code coverage information from the test run.",  
             "groupName": "executionOptions"      
         },
         {
@@ -275,25 +275,25 @@
             "label": "Test run title",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Provide a name for the Test Run.",
+            "helpMarkDown": "Provide a name for the test run.",
             "groupName": "reportingOptions"
         },
         {
             "name": "platform",
             "type": "string",
-            "label": "Platform",
+            "label": "Build platform",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Platform against which the tests should be reported. If you have defined a variable for platform in your build task, use that here.",
+            "helpMarkDown": "Build platform against which the tests should be reported. If you have defined a variable for platform in your build task, use that here.",
             "groupName": "reportingOptions"
         },
         {
             "name": "configuration",
             "type": "string",
-            "label": "Configuration",
+            "label": "Build configuration",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here.",
+            "helpMarkDown": "Build configuration against which the tests should be reported. If you have defined a variable for configuration in your build task, use that here.",
             "groupName": "reportingOptions"
         },
         {
@@ -302,7 +302,7 @@
             "label": "Upload test attachments",
             "defaultValue": "true",
             "required": false,
-            "helpMarkDown": "Opt in/out of publishing test run level attachments.",
+            "helpMarkDown": "Opt in/out of publishing run level attachments.",
             "groupName": "reportingOptions"
         }       
     ],

@@ -8,7 +8,7 @@ import * as models from './models';
 import * as settingsHelper from './settingsHelper';
 import * as utils from './helpers';
 import * as ta from './testAgent';
-import versionFinder = require('./versionFinder')
+import * as versionFinder from './versionFinder';
 
 export class DistributedTest {
     constructor(dtaTestConfig: models.DtaTestConfigurations) {
