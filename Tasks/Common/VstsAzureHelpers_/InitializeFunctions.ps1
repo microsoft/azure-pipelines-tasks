@@ -41,6 +41,11 @@ function Initialize-AzureSubscription {
 
     #Set UserAgent for Azure Calls
     Set-UserAgent
+
+    $environmentName = "AzureCloud"
+    if($Endpoint.Data.Environment) {
+        $environmentName = $Endpoint.Data.Environment
+    }
     
     if ($Endpoint.Auth.Scheme -eq 'Certificate') {
         # Certificate is only supported for the Azure module.
@@ -55,11 +60,6 @@ function Initialize-AzureSubscription {
         $additional = @{ }
         if ($StorageAccount) {
             $additional['CurrentStorageAccountName'] = $StorageAccount
-        }
-
-        $environmentName = "AzureCloud"
-        if( $Endpoint.Data.Environment ) {
-            $environmentName = $Endpoint.Data.Environment
         }
 
         # Set the subscription.
@@ -126,8 +126,8 @@ function Initialize-AzureSubscription {
         } else {
             # Else, this is AzureRM.
             try {
-                Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential"
-                $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential
+                Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -EnvironmentName $environmentName"
+                $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -EnvironmentName $environmentName
             } catch {
                 # Provide an additional, custom, credentials-related error message.
                 Write-VstsTaskError -Message $_.Exception.Message
