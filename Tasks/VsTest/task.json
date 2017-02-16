@@ -196,8 +196,7 @@
             "groupName": "executionOptions",
              "options": {
                  "15.0": "Visual Studio 2017",
-                 "14.0": "Visual Studio 2015",
-                 "12.0": "Visual Studio 2013"
+                 "14.0": "Visual Studio 2015"
             }
         },
         {
@@ -338,7 +337,7 @@
         "PathDoesNotExist": "%s path does not exist.",
         "VstestReturnCode": "Vstest exited with return code: %d.",
         "NoMatchingTestAssemblies": "No test assemblies found matching the pattern: %s.",
-        "VstestNotFound": "Vstest of version %d is not found. Try again with a visual studio version that exists on your build agent machine.",
+        "VstestNotFound": "Visual Studio %d is not found. Try again with a version that exists on your build agent machine.",
         "VstestFailed": "Vstest failed with error. Check logs for failures. There might be failed tests.",
         "VstestTIANotSupported": "Install Visual Studio 2015 update 3 or Visual Studio 2017 RC or above to run Test Impact Analysis.",
         "NoResultsToPublish": "No results found to publish.",

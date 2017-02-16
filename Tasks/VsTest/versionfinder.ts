@@ -49,7 +49,7 @@ export function locateTestWindow(testConfig: models.TestConfigurations): Q.Promi
             if (vstestconsole15Path) {
                 deferred.resolve({ version: 15.0, location: vstestconsole15Path });
             } else {
-                throw (new Error(tl.loc('VstestNotFound', vsVersion)));
+                throw (new Error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(vsVersion))));
             }
         }
         else {
@@ -106,7 +106,7 @@ function getVSTestConsole15Path(vs15HelperPath: string): string {
 function getVSTestLocation(vsVersion: number): string {
     let vsCommon: string = tl.getVariable('VS' + vsVersion + '0COMNTools');
     if (!vsCommon) {
-        throw (new Error(tl.loc('VstestNotFound', vsVersion)));
+        throw (new Error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(vsVersion))));
     } else {
         return path.join(vsCommon, '..\\IDE\\CommonExtensions\\Microsoft\\TestWindow');
     }

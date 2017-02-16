@@ -60,7 +60,7 @@ export class DistributedTest {
             tl.debug("Adding env var DTA.TestWindow.Path = " + exeInfo.location);
             utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestWindow.Path', exeInfo.location);
         } else {
-            tl.error(tl.loc('VstestNotFound', this.dtaTestConfig.vsTestVersion));
+            tl.error(tl.loc('VstestNotFound', utils.Helper.getVSVersion( parseFloat(this.dtaTestConfig.vsTestVersion))));
         }
 
         // We are logging everything to a DTAExecutionHost.exe.log file and reading it at the end and adding to the build task debug logs
