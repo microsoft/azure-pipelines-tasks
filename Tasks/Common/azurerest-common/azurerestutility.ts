@@ -125,7 +125,7 @@ export async function getAzureRMWebAppPublishProfile(endPoint, webAppName: strin
 function getAuthorizationToken(endPoint): Q.Promise<string> {
 
     var deferred = Q.defer<string>();
-    var envAuthUrl = (endPoint.envAuthUrl) ? envAuthUrl : defaultAuthUrl;
+    var envAuthUrl = (endPoint.envAuthUrl) ? (endPoint.envAuthUrl) : defaultAuthUrl;
     var authorityUrl = envAuthUrl + endPoint.tenantID + "/oauth2/token/";
     var requestData = querystring.stringify({
         resource: endPoint.url,
