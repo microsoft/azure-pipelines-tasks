@@ -15,9 +15,9 @@ export class NpmMockHelper {
         exec: {},
         checkPath: {},
         exist: {},
-        filter: {},
         find: {},
-        match: {}
+        findMatch: {},
+        rmRF: {}
     };
 
     constructor(
@@ -62,7 +62,9 @@ export class NpmMockHelper {
         let authHelperExternalPath = path.join(npmTaskDirName, 'Npm', 'vsts-npm-auth');
         let authHelperExePath = path.join(authHelperExternalPath, 'bin', 'vsts-npm-auth.exe');
         this.answers.find[authHelperExternalPath] = [npmTaskDirName, authHelperExePath, authHelperExePath + ".config"];
-        this.answers.filter['vsts-npm-auth.exe'] = [authHelperExePath];
+        this.answers["filter"] = {
+            'vsts-npm-auth.exe': [authHelperExePath]
+        };
 
         let targetNpmrcFile = `${NpmMockHelper.AgentBuildDirectory}\\npm\\auth.${NpmMockHelper.BuildBuildId}.npmrc`;
         let sourceNpmrcFile = `${NpmMockHelper.FakeWorkingDirectory}\\.npmrc`;
@@ -119,6 +121,12 @@ export class NpmMockHelper {
         this.answers.checkPath["c:\\agent\\home\\directory\\fake\\wd\\two\\package.json"] = true;
         this.answers.checkPath["c:\\agent\\home\\directory\\fake\\wd\\one"] = true;
         this.answers.checkPath["c:\\agent\\home\\directory\\fake\\wd\two"] = true;
+        this.answers.findMatch = {
+            "**\\package.json": 
+                ["c:\\agent\\home\\directory\\fake\\wd\\one\\package.json", "c:\\agent\\home\\directory\\fake\\wd\\two\\package.json"],
+            "fake\\wd":
+                ["c:\\agent\\home\\directory\\fake\\wd"]
+        }
     }
 
     private setToolPath(answers: ma.TaskLibAnswers, tool: string, path: string) {

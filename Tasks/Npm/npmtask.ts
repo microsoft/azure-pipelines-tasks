@@ -4,7 +4,6 @@ import path = require('path');
 import url = require('url');
 import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
-var nutil = require('nuget-task-common/utility.js');
 
 var extend = require('util')._extend;
 
@@ -19,7 +18,7 @@ async function executeTask() {
     try {
         var filePath = tl.getPathInput('cwd', true, false);
         var dirList = [];
-        var filesList = nutil.resolveFilterSpec(filePath, tl.getVariable("System.DefaultWorkingDirectory"));
+        var filesList = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), filePath);
         tl.debug("number of files matching filePath: " + filesList.length);
         for (var workingDir of filesList) {
             if (tl.stats(workingDir).isFile()) {

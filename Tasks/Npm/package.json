@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/microsoft/vsts-tasks#readme",
   "dependencies": {
-    "vsts-task-lib": "^0.9.20"
+    "vsts-task-lib": "^2.0.1-preview"
   }
 }
