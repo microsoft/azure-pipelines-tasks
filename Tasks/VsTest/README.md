@@ -39,14 +39,14 @@ The Test Impact Analysis feature is available through the v2.\* (preview) versio
 The feature is presently scoped to the following:
 - Dependencies
 	- **Requires use of the v2.\* (preview) of the VSTest task in the build definition.**
-	- **Requires VS 2017 RC on the build agent**
+	- **Requires VS 2015 Update 3 or VS 2017 RC and above on the build agent**
 - Supported
 	- Managed code
 	- CI and in PR workflows
 	- IIS interactions
 	- Automated Tests (unit tests, functional tests) - the tests and the application must be running on the same machine.
 	- Build vNext, with multiple Test Tasks
-	- Local build agents (you will need VS2017 RC – please see “Dependencies”)
+	- Local and Hosted build agents (you will need VS 2015 Update 3 or VS2017 RC and above – please see “Dependencies”)
 	- Git, GitHub, External Git, TFVC repos
 - Not yet  supported
 	- Remote testing (where the test is exercising an app deployed to a different machine)
