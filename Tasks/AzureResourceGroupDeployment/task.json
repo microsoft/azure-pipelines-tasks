@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -32,7 +32,7 @@
         },
         {
             "name": "AdvancedDeploymentOptions",
-            "displayName": "Advanced eployment options for virtual machines",
+            "displayName": "Advanced deployment options for virtual machines",
             "isExpanded": true,
             "visibleRule": "action = Create Or Update Resource Group || action = Select Resource Group"
         }

@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Azure Deployment:$(action) action on $(resourceGroupName)",
   "loc.group.displayName.AzureDetails": "Azure Details",
   "loc.group.displayName.Template": "Template",
-  "loc.group.displayName.AdvancedDeploymentOptions": "Advanced eployment options for virtual machines",
+  "loc.group.displayName.AdvancedDeploymentOptions": "Advanced deployment options for virtual machines",
   "loc.input.label.ConnectedServiceName": "Azure subscription",
   "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription for the deployment.",
   "loc.input.label.action": "Action",
