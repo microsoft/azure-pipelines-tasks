@@ -8,30 +8,60 @@ var Client = require('ftp');
 import ftputils = require('./ftputils');
 
 export class FtpOptions {
-    // server endpoint
-    serverEndpoint: string = tl.getInput('serverEndpoint', true);
-    serverEndpointUrl: url.Url = url.parse(tl.getEndpointUrl(this.serverEndpoint, false));
+    // url
+    serverEndpointUrl: url.Url;
 
-    serverEndpointAuth: tl.EndpointAuthorization = tl.getEndpointAuthorization(this.serverEndpoint, false);
-    username: string = this.serverEndpointAuth['parameters']['username'];
-    password: string = this.serverEndpointAuth['parameters']['password'];
+    // credentials
+    username: string;
+    password: string
 
     // other standard options
-    rootFolder: string = tl.getPathInput('rootFolder', true);
-    filePatterns: string[] = tl.getDelimitedInput('filePatterns', '\n', true);
-    remotePath: string = tl.getInput('remotePath', true).trim();
+    rootFolder: string;
+    filePatterns: string[];
+    remotePath: string;
 
     // advanced options
-    clean: boolean = tl.getBoolInput('clean', true);
-    overwrite: boolean = tl.getBoolInput('overwrite', true);
-    preservePaths: boolean = tl.getBoolInput('preservePaths', true);
-    trustSSL: boolean = tl.getBoolInput('trustSSL', true);
+    clean: boolean; 
+    overwrite: boolean; 
+    preservePaths: boolean; 
+    trustSSL: boolean; 
+}
+
+function getFtpOptions(): FtpOptions {
+    let options: FtpOptions = new FtpOptions();
+
+    if (tl.getInput('credsType') === 'serviceEndpoint') {
+        // server endpoint
+        let serverEndpoint: string = tl.getInput('serverEndpoint', true);
+        options.serverEndpointUrl = url.parse(tl.getEndpointUrl(serverEndpoint, false));
+
+        let serverEndpointAuth: tl.EndpointAuthorization = tl.getEndpointAuthorization(serverEndpoint, false);
+        options.username = serverEndpointAuth['parameters']['username'];
+        options.password = serverEndpointAuth['parameters']['password'];
+    } else if (tl.getInput('credsType') === 'inputs') {
+        options.serverEndpointUrl = url.parse(tl.getInput('serverUrl', true));
+        options.username = tl.getInput('username', true);
+        options.password = tl.getInput('password', true);
+    }
+
+    // other standard options
+    options.rootFolder = tl.getPathInput('rootFolder', true);
+    options.filePatterns = tl.getDelimitedInput('filePatterns', '\n', true);
+    options.remotePath = tl.getInput('remotePath', true).trim();
+
+    // advanced options
+    options.clean= tl.getBoolInput('clean', true);
+    options.overwrite = tl.getBoolInput('overwrite', true);
+    options.preservePaths = tl.getBoolInput('preservePaths', true);
+    options.trustSSL = tl.getBoolInput('trustSSL', true);
+
+    return options;
 }
 
 function doWork() {
     tl.setResourcePath(path.join( __dirname, 'task.json'));
 
-    var ftpOptions: FtpOptions = new FtpOptions();
+    var ftpOptions: FtpOptions = getFtpOptions();
     var ftpClient: any = new Client();
     var ftpHelper: ftputils.FtpHelper = new ftputils.FtpHelper(ftpOptions, ftpClient);
 
