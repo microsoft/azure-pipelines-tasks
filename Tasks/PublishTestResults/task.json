@@ -11,12 +11,14 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
+        "Major": 2,
         "Minor": 0,
-        "Patch": 36
+        "Patch": 0
     },
     "demands": [],
-    "minimumAgentVersion": "1.83.0",
+    "preview": "true",
+    "releaseNotes": "<ul><li>NUnit3 support</li></ul>",
+    "minimumAgentVersion": "2.0.0",
     "groups": [
         {
             "name": "advanced",
@@ -93,14 +95,6 @@
     ],
     "instanceNameFormat": "Publish Test Results $(testResultsFiles)",
     "execution": {
-        "PowerShell": {
-            "target": "$(currentDirectory)\\PublishTestResults.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)",
-            "platforms": [
-                "windows"
-            ]
-        },
         "Node": {
             "target": "publishtestresults.js",
             "argumentFormat": ""
