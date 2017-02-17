@@ -46,7 +46,7 @@ async function run() {
         }
 
         var isProject = false;
-        if (ws.trim().toLowerCase().endsWith(".xcodeproj")) {
+        if (ws.trim().toLowerCase().endsWith('.xcodeproj')) {
             isProject = true;
         }
 
@@ -110,7 +110,7 @@ async function run() {
         // iOS signing and provisioning
         //--------------------------------------------------------
         var signMethod: string = tl.getInput('signMethod', false);
-        var keychainToDelete: string[] = [];
+        var keychainToDelete: string;
         var profileToDelete: string;
         var automaticSigningWithXcode: boolean = tl.getBoolInput('xcode8AutomaticSigning');
         var xcode_otherCodeSignFlags: string;
@@ -133,7 +133,7 @@ async function run() {
                 await sign.installCertInTemporaryKeychain(keychain, keychainPwd, p12, p12pwd);
                 xcode_otherCodeSignFlags = 'OTHER_CODE_SIGN_FLAGS=--keychain=' + keychain;
                 xcb.arg(xcode_otherCodeSignFlags);
-                keychainToDelete = keychainToDelete.concat(keychain);
+                keychainToDelete = keychain;
 
                 //find signing identity
                 var signIdentity = await sign.findSigningIdentity(keychain);
@@ -331,7 +331,7 @@ async function run() {
                     var exportMethod: string;
                     var exportTeamId: string;
                     var exportOptionsPlist: string;
-                    
+
                     if (exportOptions === 'auto') {
                         // Automatically try to detect the export-method to use from the provisioning profile
                         // embedded in the .xcarchive file
@@ -402,14 +402,12 @@ async function run() {
         tl.setResult(tl.TaskResult.Failed, err);
     } finally {
         //clean up the temporary keychain, so it is not used to search for code signing identity in future builds
-        if (keychainToDelete && keychainToDelete.length > 0) {
-            for (var i = 0; i < keychainToDelete.length; i++) {
-                try {
-                    await sign.deleteKeychain(keychainToDelete[i]);
-                } catch (err) {
-                    tl.debug('Failed to delete temporary keychain. Error = ' + err);
-                    tl.warning(tl.loc('TempKeychainDeleteFailed', keychainToDelete[i]));
-                }
+        if (keychainToDelete) {
+            try {
+                await sign.deleteKeychain(keychainToDelete);
+            } catch (err) {
+                tl.debug('Failed to delete temporary keychain. Error = ' + err);
+                tl.warning(tl.loc('TempKeychainDeleteFailed', keychainToDelete));
             }
         }
 

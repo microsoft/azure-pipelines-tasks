@@ -25,6 +25,7 @@ tr.setInput('args', '');
 tr.setInput('cwd', '/user/build');
 tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
 tr.setInput('xcodeDeveloperDir', '');
+tr.setInput('useXctool', 'false');
 tr.setInput('xctoolReporter', '');
 tr.setInput('publishJUnitResults', 'false');
 tr.setInput('archivePath', '/user/output/myarchive.xcarchive');
@@ -38,7 +39,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "xcodebuild": "/home/bin/xcodebuild",
         "/usr/libexec/PlistBuddy": "/usr/libexec/PlistBuddy"
     },
-    "checkPath" : {
+    "checkPath": {
         "/home/bin/xcodebuild": true,
         "/usr/libexec/PlistBuddy": true
     },
@@ -74,7 +75,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "xcodebuild output here"
         },
-        "/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme archive -sdk $(SDK) -configuration $(Configuration) -archivePath /user/output/myarchive.xcarchive" : {
+        "/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme archive -sdk $(SDK) -configuration $(Configuration) -archivePath /user/output/myarchive.xcarchive": {
             "code": 0,
             "stdout": "xcodebuild archive output here"
         },

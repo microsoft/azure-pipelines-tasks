@@ -6,7 +6,7 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'xcode.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-process.env['HOME']='/users/test'; //replace with mock of setVariable when task-lib has the support
+process.env['HOME'] = '/users/test'; //replace with mock of setVariable when task-lib has the support
 
 tr.setInput('actions', 'build');
 tr.setInput('configuration', '$(Configuration)');
@@ -28,6 +28,7 @@ tr.setInput('args', '');
 tr.setInput('cwd', '/user/build');
 tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
 tr.setInput('xcodeDeveloperDir', '');
+tr.setInput('useXctool', 'false');
 tr.setInput('packageTool', 'xcodebuild');
 tr.setInput('xctoolReporter', '');
 tr.setInput('publishJUnitResults', 'false');
@@ -45,7 +46,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "rm": "/bin/rm",
         "cp": "/bin/cp"
     },
-    "checkPath" : {
+    "checkPath": {
         "/home/bin/xcodebuild": true,
         "/usr/bin/security": true,
         "/usr/libexec/PlistBuddy": true,
@@ -96,7 +97,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "default keychain unlocked"
         },
-        "/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme archive -sdk $(SDK) -configuration $(Configuration) -archivePath /user/build/testScheme" : {
+        "/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme archive -sdk $(SDK) -configuration $(Configuration) -archivePath /user/build/testScheme": {
             "code": 0,
             "stdout": "xcodebuild archive output here"
         },
