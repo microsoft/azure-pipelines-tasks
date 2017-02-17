@@ -37,6 +37,7 @@ describe(jobName + ' Suite', function () {
         it(os + ' check args: no serverEndpoint', (done) => {
             setResponseFile(responseFile);
             var tr = new trm.TaskRunner(jobName, true);
+            tr.setInput('credsType', 'serviceEndpoint');
 
             tr.run()
                 .then(() => {
@@ -196,6 +197,7 @@ describe(jobName + ' Suite', function () {
             setResponseFile(responseFile);
 
             var tr = new trm.TaskRunner(jobName, true);
+            tr.setInput('credsType', 'serviceEndpoint');
             tr.setInput('serverEndpoint', 'ID1');
             tr.setInput('rootFolder', 'rootFolder');
             tr.setInput('filePatterns', '**');
