@@ -110,6 +110,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.overwriteBehavior"
     },
     {
+      "name": "skipUpgradeSameTypeAndVersion",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.skipUpgradeSameTypeAndVersion",
+      "defaultValue": "false",
+      "required": false,
+      "groupname": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.skipUpgradeSameTypeAndVersion"
+    },
+    {
       "name": "overridePublishProfileSettings",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.overridePublishProfileSettings",
@@ -270,15 +279,6 @@
       "required": false,
       "groupname": "upgrade",
       "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
-    },
-    {
-      "name": "skipUpgradeSameTypeAndVersion",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.skipUpgradeSameTypeAndVersion",
-      "defaultValue": "false",
-      "required": false,
-      "groupname": "upgrade",
-      "helpMarkDown": "ms-resource:loc.input.help.skipUpgradeSameTypeAndVersion"
     }
   ],
   "execution": {

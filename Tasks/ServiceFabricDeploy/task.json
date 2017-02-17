@@ -110,6 +110,15 @@
             "helpMarkDown": "Overwrite Behavior if an application exists in the cluster with the same name, and upgrades have not been configured."
         },
         {
+            "name": "skipUpgradeSameTypeAndVersion",
+            "type": "boolean",
+            "label": "Skip upgrade for same Type and Version",
+            "defaultValue": "false",
+            "required": false,
+            "groupname": "advanced",
+            "helpMarkDown": "Indicates whether an upgrade will be skipped if the same application type and version already exists in the cluster, otherwise the upgrade fails during validation. If enabled, re-deployments are idempotent."
+        },
+        {
             "name": "overridePublishProfileSettings",
             "type": "boolean",
             "label": "Override All Publish Profile Upgrade Settings",
@@ -270,15 +279,6 @@
             "required": false,
             "groupname": "upgrade",
             "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
-        },
-        {
-            "name": "skipUpgradeSameTypeAndVersion",
-            "type": "boolean",
-            "label": "Skip upgrade for same Type and Version",
-            "defaultValue": "false",
-            "required": false,
-            "groupname": "upgrade",
-            "helpMarkDown": "Indicates whether an upgrade will be skipped if the same application type and version already exists in the cluster, otherwise the upgrade fails during validation. If enabled, re-deployments are idempotent."
         }
     ],
     "execution": {
