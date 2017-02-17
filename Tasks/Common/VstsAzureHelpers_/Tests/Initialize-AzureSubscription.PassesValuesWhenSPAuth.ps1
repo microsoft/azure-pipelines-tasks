@@ -67,7 +67,7 @@ foreach ($variableSet in $variableSets) {
         Assert-WasCalled Set-CurrentAzureSubscription -- -SubscriptionId $endpoint.Data.SubscriptionId -StorageAccount $variableSet.StorageAccount
     } else {
         Assert-WasCalled Add-AzureRMAccount -ArgumentsEvaluator {
-            $args.Length -eq 7 -and
+            $args.Length -eq 5 -and
             $args[0] -eq '-ServicePrincipal' -and
             $args[1] -eq '-Tenant' -and
             $args[2] -eq 'Some tenant ID' -and

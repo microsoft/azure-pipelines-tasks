@@ -29,7 +29,7 @@ process.env['ENDPOINT_AUTH_ID1'] = '{\"scheme\":\"UsernamePassword\", \"paramete
 process.env['BUILD_BUILDNUMBER'] = '14';
 process.env['BUILD_SOURCESDIRECTORY'] = `${taskReportValidDir}`;
 process.env['BUILD_ARTIFACTSTAGINGDIRECTORY'] = `${tempDir}`;
-process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = `${taskReportValidDir}`;
+process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = '/user/build/s';
 
 tr.setInput('wrapperScript', 'gradlew');
 tr.setInput('options', '');

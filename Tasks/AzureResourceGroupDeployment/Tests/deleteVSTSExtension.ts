@@ -14,8 +14,6 @@ tr.setInput("vstsPATToken", "PAT");
 process.env[ "ENDPOINT_AUTH_AzureRM"] = "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_DATA_AzureRM_SUBSCRIPTIONID"] = "sId";
 process.env["ENDPOINT_DATA_AzureRM_SUBSCRIPTIONNAME"] = "sName";
-process.env["ENDPOINT_URL_AzureRM"] = "https://management.azure.com/";
-process.env["ENDPOINT_DATA_AzureRM_ENVIRONMENTAUTHORITYURL"] = "https://login.windows.net/";
 
 process.env["__mg__internal__collection__uri"] = "https://testking123.visualstudio.com";
 process.env["__mg__internal__project__name"] = "AzureProj";

@@ -11,7 +11,8 @@ var kuduDeploymentStatusUtility = require('./kududeploymentstatusutility.js');
 var httpObj = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
 var restObj = new restClient.RestCallbackClient(httpObj);
 
-var defaultAuthUrl = 'https://login.windows.net/';
+var authUrl = 'https://login.windows.net/';
+var armUrl = 'https://management.azure.com/';
 var azureApiVersion = 'api-version=2016-08-01';
 
 /**
@@ -22,7 +23,7 @@ var azureApiVersion = 'api-version=2016-08-01';
 */
 export async function getResourceGroupName(endpoint, webAppName: string)
 {
-    var requestURL = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\' AND name EQ \'' + webAppName + '\'&api-version=2016-07-01';
+    var requestURL = armUrl + 'subscriptions/' + endpoint.subscriptionId + '/resources?$filter=resourceType EQ \'Microsoft.Web/Sites\' AND name EQ \'' + webAppName + '\'&api-version=2016-07-01';
     var accessToken = await getAuthorizationToken(endpoint);
     var headers = {
         authorization: 'Bearer '+ accessToken
@@ -96,7 +97,7 @@ export async function getAzureRMWebAppPublishProfile(endPoint, webAppName: strin
     var deferred = Q.defer();
     var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
 
-    var url = endPoint.url + 'subscriptions/' + endPoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
+    var url = armUrl + 'subscriptions/' + endPoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
                  '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + '/publishxml?' + azureApiVersion;
 
     tl.debug('Requesting Azure Publish Profile: ' + url);
@@ -125,8 +126,7 @@ export async function getAzureRMWebAppPublishProfile(endPoint, webAppName: strin
 function getAuthorizationToken(endPoint): Q.Promise<string> {
 
     var deferred = Q.defer<string>();
-    var envAuthUrl = (endPoint.envAuthUrl) ? (endPoint.envAuthUrl) : defaultAuthUrl;
-    var authorityUrl = envAuthUrl + endPoint.tenantID + "/oauth2/token/";
+    var authorityUrl = authUrl + endPoint.tenantID + "/oauth2/token/";
     var requestData = querystring.stringify({
         resource: endPoint.url,
         client_id: endPoint.servicePrincipalClientID,
@@ -198,7 +198,7 @@ export async function getAzureRMWebAppConfigDetails(endpoint, webAppName: string
     };
 
     var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
-    var configUrl = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
+    var configUrl = armUrl + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
              '/providers/Microsoft.Web/sites/' + webAppName + slotUrl +  '/config/web?' + azureApiVersion;
 
     tl.debug('Requesting Azure App Service Config Details: ' + configUrl);
@@ -218,17 +218,17 @@ export async function getAzureRMWebAppConfigDetails(endpoint, webAppName: string
     return deferred.promise;
 }
 
-export async function updateAzureRMWebAppConfigDetails(endPoint, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string, configDetails: string) {
+export async function updateAzureRMWebAppConfigDetails(SPN, webAppName: string, resourceGroupName: string, deployToSlotFlag: boolean, slotName: string, configDetails: string) {
 
     var deferred = Q.defer<any>();
-	var accessToken = await getAuthorizationToken(endPoint);
+	var accessToken = await getAuthorizationToken(SPN);
     var headers = {
         'Authorization': 'Bearer '+ accessToken,
         'Content-Type': 'application/json'
     };
 	
     var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
-    var configUrl = endPoint.url + 'subscriptions/' + endPoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
+    var configUrl = armUrl + 'subscriptions/' + SPN.subscriptionId + '/resourceGroups/' + resourceGroupName +
              '/providers/Microsoft.Web/sites/' + webAppName + slotUrl +  '/config/web?' + azureApiVersion;
 	
     tl.debug('Updating config details at: ' + configUrl);
@@ -257,7 +257,7 @@ export async function getWebAppAppSettings(endpoint, webAppName: string, resourc
     };
 	
     var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
-    var configUrl = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
+    var configUrl = armUrl + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
              '/providers/Microsoft.Web/sites/' + webAppName + slotUrl +  '/config/appsettings/list?' + azureApiVersion;
 	
 	tl.debug('Requesting for the Current List of App Settings: ' + configUrl);
@@ -287,7 +287,7 @@ export async function updateWebAppAppSettings(endpoint, webAppName: string, reso
     };
 	
     var slotUrl = deployToSlotFlag ? "/slots/" + slotName : "";
-    var configUrl = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
+    var configUrl = armUrl + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
              '/providers/Microsoft.Web/sites/' + webAppName + slotUrl +  '/config/appsettings?' + azureApiVersion;
 	
     tl.debug('Updating the Current List of App Settings: ' + configUrl);
@@ -357,7 +357,7 @@ function monitorSlotSwap(SPN, webAppName, resourceGroupName, sourceSlot, targetS
 export async function swapWebAppSlot(endpoint, resourceGroupName: string, webAppName: string, sourceSlot: string, targetSlot: string,preserveVnet: boolean) {
     
     var deferred = Q.defer<any>();
-    var url = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
+    var url = armUrl + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
                  '/providers/Microsoft.Web/sites/' + webAppName + "/slots/" + sourceSlot + '/slotsswap?' + azureApiVersion;
 
     var accessToken = await getAuthorizationToken(endpoint);
@@ -396,7 +396,7 @@ export async function startAppService(endpoint, resourceGroupName: string, webAp
     
     var deferred = Q.defer<any>();
     var slotUrl = (specifySlotFlag) ? "/slots/" + slotName : "";
-    var url = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
+    var url = armUrl + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
                 '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + "/start?" + azureApiVersion;
 
     var accessToken = await getAuthorizationToken(endpoint);
@@ -424,7 +424,7 @@ export async function stopAppService(endpoint, resourceGroupName: string, webApp
     
     var deferred = Q.defer<any>();
     var slotUrl = (specifySlotFlag) ? "/slots/" + slotName : "";
-    var url = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
+    var url = armUrl + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
                 '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + "/stop?" + azureApiVersion;
 
     var accessToken = await getAuthorizationToken(endpoint);
@@ -452,7 +452,7 @@ export async function restartAppService(endpoint, resourceGroupName: string, web
     
     var deferred = Q.defer<any>();
     var slotUrl = (specifySlotFlag) ? "/slots/" + slotName : "";
-    var url = endpoint.url + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
+    var url = armUrl + 'subscriptions/' + endpoint.subscriptionId + '/resourceGroups/' + resourceGroupName +
                 '/providers/Microsoft.Web/sites/' + webAppName + slotUrl + "/restart?" + azureApiVersion + '&synchronous=true';
 
     var accessToken = await getAuthorizationToken(endpoint);

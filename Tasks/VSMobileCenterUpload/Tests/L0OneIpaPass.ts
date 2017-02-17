@@ -80,21 +80,21 @@ nock('https://example.test')
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "checkPath" : {
-        "/test/path/to/my.ipa": true,
-        "/test/path/to/mappings.txt": true
-    },
-    "glob" : {
-        "/test/path/to/mappings.txt": [
-            "/test/path/to/mappings.txt"
-        ],
-        "/test/path/to/my.ipa": [
-            "/test/path/to/my.ipa"
-        ]
+        "/test/path/to/my.ipa": true
     }
 };
 tmr.setAnswers(a);
 
-fs.createReadStream = (s: string) => {
+tmr.registerMock('./utils.js', {
+    resolveSinglePath: function(s) {
+        return s ? s : null;
+    },
+    checkAndFixFilePath: function(p, name) {
+        return p;
+    }
+});
+
+fs.createReadStream = (s) => {
     let stream = new Readable;
     stream.push(s);
     stream.push(null);
@@ -102,16 +102,11 @@ fs.createReadStream = (s: string) => {
     return stream;
 };
 
-fs.statSync = (s: string) => {
+fs.statSync = (s) => {
     let stat = new Stats;
-    
     stat.isFile = () => {
-        return !s.toLowerCase().endsWith(".dsym");
+        return true;
     }
-    stat.isDirectory = () => {
-        return s.toLowerCase().endsWith(".dsym");
-    }
-    stat.size = 100;
 
     return stat;
 }

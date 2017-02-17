@@ -863,8 +863,7 @@ describe('Maven Suite', function () {
             path.join(__dirname, 'response.json'),
             path.join(__dirname, 'new_response.json'),
             [["build.sourceBranch", "refspull/6/master"], ["build.repository.provider", "TFSGit"],
-                ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir],
-                ['System.DefaultWorkingDirectory', testSrcDir]]);
+                ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
         var responseJsonFilePath: string = path.join(__dirname, 'new_response.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
 
@@ -918,8 +917,7 @@ describe('Maven Suite', function () {
             path.join(__dirname, 'response.json'),
             path.join(__dirname, 'new_response.json'),
             [["build.sourceBranch", "refspull/6/master"], ["build.repository.provider", "TFSGit"],
-                ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir],
-                ['System.DefaultWorkingDirectory', testSrcDir]]);
+                ['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
         var responseJsonFilePath: string = path.join(__dirname, 'new_response.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
 
@@ -984,8 +982,7 @@ describe('Maven Suite', function () {
         mockHelper.setResponseAndBuildVars(
             path.join(__dirname, 'response.json'),
             path.join(__dirname, 'new_response.json'),
-            [['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir],
-            ['System.DefaultWorkingDirectory', testSrcDir]]);
+            [['build.sourcesDirectory', testSrcDir], ['build.artifactStagingDirectory', testStgDir]]);
         var responseJsonFilePath: string = path.join(__dirname, 'new_response.json');
         var responseJsonContent = JSON.parse(fs.readFileSync(responseJsonFilePath, 'utf-8'));
 

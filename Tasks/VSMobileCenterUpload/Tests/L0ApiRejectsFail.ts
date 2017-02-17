@@ -25,14 +25,18 @@ nock('https://example.test')
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "checkPath" : {
         "/test/path/to/my.ipa": true
-    },
-    "glob" : {
-        "/test/path/to/my.ipa": [
-            "/test/path/to/my.ipa"
-        ]
     }
 };
 tmr.setAnswers(a);
+
+tmr.registerMock('./utils.js', {
+    resolveSinglePath: function(s) {
+        return s ? s : null;
+    },
+    checkAndFixFilePath: function(p, name) {
+        return p;
+    }
+});
 
 tmr.run();
 

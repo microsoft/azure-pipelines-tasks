@@ -111,8 +111,6 @@
   "loc.messages.ClientIdCannotBeEmpty": "clientId must be a non empty string.",
   "loc.messages.DomainCannotBeEmpty": "domain must be a non empty string.",
   "loc.messages.SecretCannotBeEmpty": "secret must be a non empty string.",
-  "loc.messages.armUrlCannotBeEmpty": "arm Url must be a non empty string.",
-  "loc.messages.authorityUrlCannotBeEmpty": "authority must be a non empty string.",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for azure. Status code: %s, status message: %s",
   "loc.messages.LoadBalancerNameCannotBeNull": "'loadBalancerName cannot be null or undefined and it must be of type string.'",
   "loc.messages.NetworkInterfaceNameCannotBeNull": "networkInterfaceName cannot be null or undefined and it must be of type string.",

@@ -21,18 +21,12 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "checkPath" : {
         "/test/path/to/one.ipa": true,
         "/test/path/to/two.ipa": true
-    },
-    "glob" : {
-        "/test/path/to/*.ipa": [
-            "/test/path/to/one.ipa",
-            "/test/path/to/two.ipa"
-        ]
     }
 };
 tmr.setAnswers(a);
 
 tmr.registerMock('./utils.js', {
-    resolveSinglePath: function(s, b1, b2) {
+    resolveSinglePath: function(s) {
        throw new Error("Matched multiple files"); 
     },
     checkAndFixFilePath: function(p, name) {

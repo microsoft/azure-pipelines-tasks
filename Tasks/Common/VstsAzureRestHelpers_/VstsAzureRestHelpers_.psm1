@@ -1,8 +1,8 @@
 ﻿# Private module-scope variables.
 $script:jsonContentType = "application/json;charset=utf-8"
 $script:formContentType = "application/x-www-form-urlencoded;charset=utf-8"
-$script:defaultAuthUri = "https://login.microsoftonline.com/"
-$script:defaultEnvironmentAuthUri = "https://login.windows.net/"
+$script:azureRmUri = "https://management.azure.com"
+$script:authUri = "https://login.microsoftonline.com/"
 
 # Connection Types
 $certificateConnection = 'Certificate'
@@ -109,13 +109,8 @@ function Get-UsernamePasswordAccessToken {
     # Well known Client-Id
     $password = $endpoint.Auth.Parameters.Password
     $username = $endpoint.Auth.Parameters.UserName
-    $authUrl = $script:defaultAuthUri
-    if($endpoint.Data.activeDirectoryAuthority)
-    {
-        $authUrl = $endpoint.Data.activeDirectoryAuthority
-    }
 
-    $authUri = "$authUrl/common/oauth2/token"
+    $authUri = "$script:authUri/common/oauth2/token"
     $body = @{
         resource=$script:azureUri
         client_id=$azurePsClientId
@@ -145,17 +140,12 @@ function Get-SpnAccessToken {
     $principalId = $endpoint.Auth.Parameters.ServicePrincipalId
     $tenantId = $endpoint.Auth.Parameters.TenantId
     $principalKey = $endpoint.Auth.Parameters.ServicePrincipalKey
-    $envAuthUrl = $script:defaultEnvironmentAuthUri
-    if($endpoint.Data.environmentAuthorityUrl)
-    {
-        $envAuthUrl = $endpoint.Data.environmentAuthorityUrl
-    }
 
     $azureUri = Get-AzureUri $endpoint
 
     # Prepare contents for POST
     $method = "POST"
-    $authUri = "$envAuthUrl" + "$tenantId/oauth2/token"
+    $authUri = "https://login.windows.net/$tenantId/oauth2/token"
     $body = @{
         resource=$azureUri+"/"
         client_id=$principalId
@@ -256,7 +246,7 @@ function Get-AzRMStorageKeys
         $resourceGroupId = $resourceGroupDetails.id
 
         $method = "POST"
-        $uri = "$($endpoint.Url)$resourceGroupId/providers/Microsoft.Storage/storageAccounts/$storageAccountName/listKeys" + '?api-version=2015-06-15'
+        $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Storage/storageAccounts/$storageAccountName/listKeys" + '?api-version=2015-06-15'
 
         $headers = @{"Authorization" = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
@@ -297,7 +287,7 @@ function Get-AzRmVmCustomScriptExtension
         $resourceGroupId = $resourceGroupDetails.id
 
         $method="GET"
-        $uri = "$($endpoint.Url)$resourceGroupId/providers/Microsoft.Compute/virtualMachines/$vmName/extensions/$Name" + '?api-version=2016-03-30'
+        $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Compute/virtualMachines/$vmName/extensions/$Name" + '?api-version=2016-03-30'
 
         $headers = @{"accept-language" = "en-US"}
         $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
@@ -339,7 +329,7 @@ function Remove-AzRmVmCustomScriptExtension
         $resourceGroupId = $resourceGroupDetails.id
 
         $method="DELETE"
-        $uri = "$($endpoint.Url)$resourceGroupId/providers/Microsoft.Compute/virtualMachines/$vmName/extensions/$Name" + '?api-version=2016-03-30'
+        $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Compute/virtualMachines/$vmName/extensions/$Name" + '?api-version=2016-03-30'
 
         $headers = @{"accept-language" = "en-US"}
         $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
@@ -419,7 +409,7 @@ function Get-AzRmStorageAccount
         $resourceGroupId = $resourceGroupDetails.id
 
         $method="GET"
-        $uri = "$($endpoint.Url)$resourceGroupId/providers/Microsoft.Storage/storageAccounts/$storageAccountName" + '?api-version=2016-01-01'
+        $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Storage/storageAccounts/$storageAccountName" + '?api-version=2016-01-01'
 
         $headers = @{"Authorization" = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
@@ -473,7 +463,7 @@ function Get-AzRmResourceGroup
         $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
 
         $method="GET"
-        $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName" + '?api-version=2016-02-01'
+        $uri = "$script:azureRmUri/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName" + '?api-version=2016-02-01'
 
         $headers = @{"Authorization" = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
@@ -512,7 +502,7 @@ function Get-AzureSqlDatabaseServerResourceId
 
     Write-Verbose "[Azure Rest Call] Get Resource Groups"
     $method = "GET"
-    $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resources?api-version=$apiVersion"
+    $uri = "$script:azureRmUri/subscriptions/$subscriptionId/resources?api-version=$apiVersion"
     $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
     do {
@@ -583,7 +573,7 @@ function Add-AzureRmSqlServerFirewall
     # get azure sql server resource Id
     $azureResourceId = Get-AzureSqlDatabaseServerResourceId -endpoint $endpoint -serverName $serverName -accessToken $accessToken
 
-    $uri = "$($endpoint.Url)/$azureResourceId/firewallRules/$firewallRuleName\?api-version=$apiVersion"
+    $uri = "$script:azureRmUri/$azureResourceId/firewallRules/$firewallRuleName\?api-version=$apiVersion"
     $body = "{
             'properties' : {
             'startIpAddress':'$startIPAddress',
@@ -636,7 +626,7 @@ function Remove-AzureRmSqlServerFirewall
     # Fetch Azure SQL server resource Id
     $azureResourceId = Get-AzureSqlDatabaseServerResourceId -endpoint $endpoint -serverName $serverName -accessToken $accessToken
 
-    $uri = "$($endpoint.Url)/$azureResourceId/firewallRules/$firewallRuleName\?api-version=$apiVersion"
+    $uri = "$script:azureRmUri/$azureResourceId/firewallRules/$firewallRuleName\?api-version=$apiVersion"
     $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
     Invoke-RestMethod -Uri $uri -Method Delete -Headers $headers

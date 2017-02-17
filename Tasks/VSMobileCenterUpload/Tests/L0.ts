@@ -15,7 +15,6 @@ describe('VSMobileCenterUpload L0 Suite', function () {
         process.env["ENDPOINT_AUTH_MyTestEndpoint"] = "{\"parameters\":{\"apitoken\":\"mytoken123\"},\"scheme\":\"apitoken\"}";
         process.env["ENDPOINT_URL_MyTestEndpoint"] = "https://example.test/v0.1";
         process.env["ENDPOINT_AUTH_PARAMETER_MyTestEndpoint_APITOKEN"] = "mytoken123";
-        process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"]="/agent/1/_work";
     });
 
     after(() => {
@@ -78,66 +77,6 @@ describe('VSMobileCenterUpload L0 Suite', function () {
 
         tr.run();
         assert(tr.failed, 'task should have failed');
-
-        done()
-    });
-
-    it('Positive path: single file with Include Parent', (done: MochaDone) => {
-        this.timeout(2000);
-
-        let tp = path.join(__dirname, 'L0SymIncludeParent.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        tr.run();
-        assert(tr.succeeded, 'task should have succeeded');
-
-        done()
-    });
-
-    it('Positive path: multiple dSYMs in the same foder', (done: MochaDone) => {
-        this.timeout(2000);
-
-        let tp = path.join(__dirname, 'L0SymMultipleDSYMs_flat_1.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        tr.run();
-        assert(tr.succeeded, 'task should have succeeded');
-
-        done()
-    });
-
-    it('Positive path: multiple dSYMs in parallel foders', (done: MochaDone) => {
-        this.timeout(2000);
-
-        let tp = path.join(__dirname, 'L0SymMultipleDSYMs_flat_2.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        tr.run();
-        assert(tr.succeeded, 'task should have succeeded');
-
-        done()
-    });
-
-    it('Positive path: multiple dSYMs in a tree', (done: MochaDone) => {
-        this.timeout(2000);
-
-        let tp = path.join(__dirname, 'L0SymMultipleDSYMs_tree.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        tr.run();
-        assert(tr.succeeded, 'task should have succeeded');
-
-        done()
-    });
-
-    it('Positive path: a single dSYM', (done: MochaDone) => {
-        this.timeout(2000);
-
-        let tp = path.join(__dirname, 'L0SymMultipleDSYMs_single.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        tr.run();
-        assert(tr.succeeded, 'task should have succeeded');
 
         done()
     })

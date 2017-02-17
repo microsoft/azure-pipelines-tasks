@@ -5,14 +5,13 @@ import * as httpClient from 'vso-node-api/HttpClient';
 import * as restClient from 'vso-node-api/RestClient';
 
 var httpObj = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
-var defaultAuthUrl = 'https://login.windows.net/';
+var authUrl = 'https://login.windows.net/';
 var azureApiVersion = '2016-09-01';
 	
 function getAccessToken(SPN, endpointUrl: string): Q.Promise<string> {
 
 	var deferred = Q.defer<string>();
-	var envAuthUrl = (SPN.envAuthUrl) ? SPN.envAuthUrl : defaultAuthUrl;
-	var authorityUrl = envAuthUrl + SPN.tenantID + "/oauth2/token/";
+	var authorityUrl = authUrl + SPN.tenantID + "/oauth2/token/";
 
 	var post_data = querystring.stringify({
 		resource: endpointUrl, 
@@ -44,7 +43,7 @@ function getAccessToken(SPN, endpointUrl: string): Q.Promise<string> {
 export async function getNetworkInterfacesInRG(SPN, endpointUrl: string, resourceGroupName: string) {
 
 	var deferred = Q.defer<any>();
-	var restUrl = SPN.url + "subscriptions/" + SPN.subscriptionId + "/resourceGroups/" + resourceGroupName + "/providers/Microsoft.Network/networkInterfaces?api-version=" + azureApiVersion;
+	var restUrl = "https://management.azure.com/subscriptions/" + SPN.subscriptionId + "/resourceGroups/" + resourceGroupName + "/providers/Microsoft.Network/networkInterfaces?api-version=" + azureApiVersion;
 	var accessToken = await getAccessToken(SPN, endpointUrl);
 
 	var requestHeader = {
@@ -70,7 +69,7 @@ export async function getNetworkInterfacesInRG(SPN, endpointUrl: string, resourc
 export async function getLoadBalancer(SPN, endpointUrl: string, name: string, resourceGroupName: string) {
 	
 	var deferred = Q.defer<any>();    
-	var restUrl = SPN.url + "subscriptions/" + SPN.subscriptionId + "/resourceGroups/" + resourceGroupName + "/providers/Microsoft.Network/loadBalancers/" + name + "?api-version=" + azureApiVersion;
+	var restUrl = "https://management.azure.com/subscriptions/" + SPN.subscriptionId + "/resourceGroups/" + resourceGroupName + "/providers/Microsoft.Network/loadBalancers/" + name + "?api-version=" + azureApiVersion;
 	var accessToken = await getAccessToken(SPN, endpointUrl);
 
 	var requestHeader = {
@@ -95,7 +94,7 @@ export async function getLoadBalancer(SPN, endpointUrl: string, name: string, re
 
 export async function getNetworkInterface(SPN, endpointUrl, name: string, resourceGroupName: string) {
 	var deferred = Q.defer<any>();   
-	var restUrl = SPN.url + "subscriptions/" + SPN.subscriptionId + "/resourceGroups/" + resourceGroupName + "/providers/Microsoft.Network/networkInterfaces/" + name + "?api-version=" + azureApiVersion;
+	var restUrl = "https://management.azure.com/subscriptions/" + SPN.subscriptionId + "/resourceGroups/" + resourceGroupName + "/providers/Microsoft.Network/networkInterfaces/" + name + "?api-version=" + azureApiVersion;
 	var accessToken = await getAccessToken(SPN, endpointUrl);
 
 	var requestHeader = {
@@ -140,7 +139,7 @@ async function checkProvisioningState(url: string, accessToken: string) {
 export async function setNetworkInterface(SPN, endpointUrl: string, nic, resourceGroupName: string){
 
 	var deferred = Q.defer();   
-	var restUrl = SPN.url + "subscriptions/" + SPN.subscriptionId + "/resourceGroups/" + resourceGroupName + "/providers/Microsoft.Network/networkInterfaces/" + nic.name + "?api-version=" + azureApiVersion;
+	var restUrl = "https://management.azure.com/subscriptions/" + SPN.subscriptionId + "/resourceGroups/" + resourceGroupName + "/providers/Microsoft.Network/networkInterfaces/" + nic.name + "?api-version=" + azureApiVersion;
 	var accessToken = await getAccessToken(SPN, endpointUrl);
 	var requestHeader = {
 		"Content-Type": "application/json; charset=utf-8",
