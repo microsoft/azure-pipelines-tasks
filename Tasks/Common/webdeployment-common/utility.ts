@@ -156,20 +156,22 @@ export async function isMSDeployPackage(webAppPackage: string ) {
 }
 
 export function copyDirectory(sourceDirectory: string, destDirectory: string) {
-    var queue = [[sourceDirectory, destDirectory]];
-    while(queue.length > 0) {
-        var sourceDestPair = queue.shift();
-        if(tl.stats(sourceDestPair[0]).isDirectory()) {
-            var listDir = tl.ls('-A',[sourceDestPair[0]]);
-            tl.debug('list of files to copy from ' + sourceDestPair[0] + ' to ' + sourceDestPair[1] + ' : ' + listDir);
-            for(var relativePath of listDir) {
-                queue.push([path.join(sourceDestPair[0], relativePath), path.join(sourceDestPair[1], relativePath)]);
-            }
-            tl.mkdirP(sourceDestPair[1]);
+    if(!tl.exist(destDirectory)) {
+        tl.mkdirP(destDirectory);
+    }
+    var listSrcDirectory = tl.find(sourceDirectory);
+    for(var srcDirPath of listSrcDirectory) {
+        var relativePath = srcDirPath.substring(sourceDirectory.length);
+        var destinationPath = path.join(destDirectory, relativePath);
+        if(tl.stats(srcDirPath).isDirectory()) {
+            tl.mkdirP(destinationPath);
         }
         else {
-            tl.debug('Copying file: ' + sourceDestPair[0] + ' to ' + sourceDestPair[1]);
-            tl.cp(sourceDestPair[0], sourceDestPair[1], '-f', false);
+            if(tl.exist(path.dirname(destinationPath))) {
+                tl.mkdirP(path.dirname(destinationPath));
+            }
+            tl.debug('copy file from: ' + srcDirPath + ' to: ' + destinationPath);
+            tl.cp(srcDirPath, destinationPath, '-f', false);
         }
     }
 }
