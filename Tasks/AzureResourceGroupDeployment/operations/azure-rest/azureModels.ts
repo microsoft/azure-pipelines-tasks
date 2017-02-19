@@ -1,7 +1,6 @@
 export interface AzureBaseObject {
     name?: string;
     id: string;
-    tags?: string ;
 }
 
 export interface LoadBalancerProperties {
@@ -44,6 +43,10 @@ export interface VMProperties {
     storageProfile: StorageProfile
 }
 
+export interface VMExtensionProperties {
+    provisioningState: string;
+}
+
 export interface StorageProfile{
     imageReference: Map<string, string>;
     osDisk: OSDisk;
@@ -77,7 +80,12 @@ export interface LoadBalancer extends AzureBaseObject {
 
 export interface VM extends AzureBaseObject {
     properties: VMProperties,
-    location: string
+    location: string,
+    tags?: string ;
+}
+
+export interface VMExtension extends AzureBaseObject {
+    properties: VMExtensionProperties,
 }
 
 export interface NetworkInterface extends AzureBaseObject {

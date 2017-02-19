@@ -295,8 +295,10 @@ export class ResourceGroup {
         var deployment: Deployment;
         if (this.taskParameters.templateLocation === "Linked artifact") {
             deployment = this.getDeploymentDataForLinkedArtifact();
-        } else {
+        } else if (this.taskParameters.templateLocation === "URL of the file") {
             deployment = await this.getDeploymentObjectForPublicURL();
+        } else {
+            throw new Error(tl.loc("InvalidTemplateLocation"));
         }
         await this.performAzureDeployment(armClient, deployment);
     }

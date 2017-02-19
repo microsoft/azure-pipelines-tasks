@@ -1,6 +1,0 @@
-{
-  "loc.friendlyName": "用于 MSBuild 的 SonarQube - 结束分析",
-  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkId=620063)",
-  "loc.description": "[已启用]完成分析并将结果上传到 SonarQube",
-  "loc.instanceNameFormat": "[已启用]完成分析并将结果上传到 SonarQube"
-}

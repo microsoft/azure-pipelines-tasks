@@ -19,29 +19,28 @@ Do Not Translate or Localize
 13.	end-of-stream (https://github.com/mafintosh/end-of-stream)
 14.	fs.realpath (https://github.com/isaacs/fs.realpath)
 15.	Glob (https://github.com/isaacs/node-glob)
-16.	globule (https://github.com/cowboy/node-globule)
-17.	graceful-fs (https://github.com/isaacs/node-graceful-fs)
-18.	inflight (https://github.com/npm/inflight)
-19.	inherits (https://github.com/isaacs/inherits)
-20.	isarray (https://github.com/juliangruber/isarray/)
-21.	lazystream (https://github.com/jpommerening/node-lazystream)
-22.	lodash (https://lodash.com/)
+16.	graceful-fs (https://github.com/isaacs/node-graceful-fs)
+17.	inflight (https://github.com/npm/inflight)
+18.	inherits (https://github.com/isaacs/inherits)
+19.	isarray (https://github.com/juliangruber/isarray/)
+20.	lazystream (https://github.com/jpommerening/node-lazystream)
+21.	lodash (https://lodash.com/)
 		Includes:File(s) copyright John Resig (http://ejohn.org/blog/javascript-micro-templating/)
 		Includes:File(s) copyright Laura Doktorova (https://github.com/olado/doT)
-23.	minimatch (https://github.com/isaacs/minimatch)
-24.	normalize-path (https://github.com/jonschlinkert/normalize-path)
-25.	once (https://github.com/isaacs/once)
-26.	path-is-absolute  (https://github.com/sindresorhus/path-is-absolute)
-27.	process-nextick-args (https://github.com/calvinmetcalf/process-nextick-args)
-28.	readable-stream (https://github.com/isaacs/readable-stream)
-29.	string_decoder (https://github.com/rvagg/string_decoder)
-30.	tar-stream (https://github.com/mafintosh/tar-stream)
-31.	util-deprecate (https://github.com/TooTallNate/util-deprecate)
-32.	vso-node-api (https://github.com/Microsoft/vsts-node-api)
-33.	VSTS-task-lib  (https://github.com/Microsoft/vsts-task-lib)
-34.	wrappy (https://github.com/npm/wrappy)
-35.	xtend (https://github.com/Raynos/xtend)
-36.	zip-stream  (https://github.com/archiverjs/node-zip-stream)
+22.	minimatch (https://github.com/isaacs/minimatch)
+23.	normalize-path (https://github.com/jonschlinkert/normalize-path)
+24.	once (https://github.com/isaacs/once)
+25.	path-is-absolute  (https://github.com/sindresorhus/path-is-absolute)
+26.	process-nextick-args (https://github.com/calvinmetcalf/process-nextick-args)
+27.	readable-stream (https://github.com/isaacs/readable-stream)
+28.	string_decoder (https://github.com/rvagg/string_decoder)
+29.	tar-stream (https://github.com/mafintosh/tar-stream)
+30.	util-deprecate (https://github.com/TooTallNate/util-deprecate)
+31.	vso-node-api (https://github.com/Microsoft/vsts-node-api)
+32.	VSTS-task-lib  (https://github.com/Microsoft/vsts-task-lib)
+33.	wrappy (https://github.com/npm/wrappy)
+34.	xtend (https://github.com/Raynos/xtend)
+35.	zip-stream  (https://github.com/archiverjs/node-zip-stream)
 
 
 %% Archiver NOTICES, INFORMATION, AND LICENSE BEGIN HERE
@@ -411,33 +410,6 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 =========================================
 END OF Glob NOTICES, INFORMATION, AND LICENSE
-
-%% globule NOTICES, INFORMATION, AND LICENSE BEGIN HERE
-=========================================
-Copyright (c) 2016 "Cowboy" Ben Alman
-
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-=========================================
-END OF globule NOTICES, INFORMATION, AND LICENSE
 
 %% graceful-fs NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================

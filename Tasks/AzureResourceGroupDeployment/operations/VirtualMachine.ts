@@ -47,9 +47,9 @@ export class VirtualMachine {
                             client.virtualMachines.restart(this.taskParameters.resourceGroupName, vmName, callback(vmName));
                             break;
                         case "Delete":
-                            var extDelPromise = this.machineGroupExtensionHelper.deleteExtension(listOfVms[i]);
+                            var extDelPromise = this.machineGroupExtensionHelper.deleteExtensionFromSingleVM(listOfVms[i]);
                             var deleteVM = this.getDeleteVMCallback(client, vmName, callback(vmName));
-                            extDelPromise.then(deleteVM, deleteVM); 
+                            extDelPromise.then(deleteVM, deleteVM);
                     }
                 }
             });
@@ -64,7 +64,7 @@ export class VirtualMachine {
         return deleteExtensionFromVM;
     }
 
-    private getCallback(count: number, resolve, reject): (vmName: string ) => (error, result, request, response) => void {
+    private getCallback(count: number, resolve, reject): (vmName: string) => (error, result, request, response) => void {
         var successCount = 0;
         var failureCount = 0;
         var total = count;

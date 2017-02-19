@@ -18,7 +18,7 @@
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
     "vsts-task-lib": "^0.9.20",
-    "find-files-legacy": "file:../Common/find-files-legacy",
+    "nuget-task-common": "file:../Common/nuget-task-common",
     "q": "^1.4.1",
     "vso-node-api": "^5.0.5",
     "archiver": "1.2.0"

@@ -200,6 +200,37 @@ describe('CopyFiles L0 Suite', function () {
             runner.succeeded,
             'should have succeeded');
         assert(
+            runner.stdOutContained(`rmRF ${path.normalize('/destDir/clean-subDir')}`),
+            'should have cleaned destDir/clean-subDir');
+        assert(
+            runner.stdOutContained(`rmRF ${path.normalize('/destDir/clean-file.txt')}`),
+            'should have cleaned destDir/clean-file.txt');
+        assert(
+            runner.stdOutContained(`creating path: ${path.normalize('/destDir')}`),
+            'should have mkdirP destDir');
+        assert(
+            runner.stdOutContained(`creating path: ${path.join('/destDir', 'someOtherDir')}`),
+            'should have mkdirP someOtherDir');
+        assert(
+            runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file1.file')} to ${path.normalize('/destDir/someOtherDir/file1.file')}`),
+            'should have copied file1');
+        assert(
+            runner.stdOutContained(`copying ${path.normalize('/srcDir/someOtherDir/file2.file')} to ${path.normalize('/destDir/someOtherDir/file2.file')}`),
+            'should have copied file2');
+        done();
+    });
+
+    it('cleans if specified and target is file', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let testPath = path.join(__dirname, 'L0cleansIfSpecifiedAndTargetIsFile.js');
+        let runner: mocktest.MockTestRunner = new mocktest.MockTestRunner(testPath);
+        runner.run();
+
+        assert(
+            runner.succeeded,
+            'should have succeeded');
+        assert(
             runner.stdOutContained(`rmRF ${path.normalize('/destDir')}`),
             'should have cleaned destDir');
         assert(
