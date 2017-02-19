@@ -34,11 +34,38 @@ describe('Azure Resource Group Deployment', function () {
             assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "virtualMachineExtensions.createOrUpdate  function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("loc_mock_MGAgentAddedOnAllVMs") > 0, "Machine group agent should have been added on all VMs");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
-            //assert(tr.stdout.indexOf("MGAgentHandlerMajorVersion") > 0, "Machine group extension handler major version has been update.");
+            assert(tr.stdout.indexOf("MGAgentHandlerMajorVersion") > 0, "Since agent major version has been upgraded, modify the task version and also in the loc string; both are in task.json.");
             assert(tr.stdout.indexOf("Copying VM tags") > 0, "Tags should be copied");
             assert(tr.stdout.indexOf("loc_mock_AddExtension") > 0, "TeamServicesAgent should have been added on the VM");
             assert(tr.stdout.indexOf("loc_mock_AddingExtensionSucceeded") > 0, "TeamServicesAgent should have been added on the VM");
             assert(tr.stdout.indexOf("loc_mock_VMDetailsFetchSucceeded") > 0, "VM details should have been fetched");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
+    it("Successfully removed failed extensions - Create or update RG", (done) => {
+        let tp = path.join(__dirname, "addVSTSExtension.js");
+        process.env["action"] = "Create Or Update Resource Group";
+        process.env["resourceGroupName"] = "dummy_ProvisioningOfMachineGroupExtensionFailed";
+        process.env["enableDeploymentPrerequisites"] = "ConfigureVMWithMGAgent";
+        process.env["copyAzureVMTags"] = "true";
+        process.env["outputVariable"] = "";
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(tr.failed, "Should have failed");
+            assert(tr.stdout.indexOf("virtualMachineExtensions.createOrUpdate is called") > 0, "virtualMachineExtensions.createOrUpdate  function should have been called from azure-sdk");
+            assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
+            assert(tr.stdout.indexOf("loc_mock_AddExtension") > 0, "TeamServicesAgent should have been tried to be added on the VM");
+            assert(tr.stdout.indexOf("loc_mock_AddingExtensionSucceeded") <= 0, "TeamServicesAgent should not have been added on the VM");
+            assert(tr.stdout.indexOf("loc_mock_DeleteExtension") > 0, "TeamServicesAgent should have been tried to be deleted from the VM, since the installation failed");
+            assert(tr.stdout.indexOf("loc_mock_DeletionSucceeded") > 0, "TeamServicesAgent should have been deleted successfully");
             done();
         }
         catch (error) {
@@ -247,7 +274,7 @@ describe('Azure Resource Group Deployment', function () {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.deleteMethod is called") > 0, "virtualMachineExtensions.deleteMethod function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("virtualMachines.deleteMethod is called") > 0, "Should have deleted VM");
-            assert(tr.stdout.indexOf("loc_mock_DeleteExtension") > 0, "Machine group agent should have started to be deleted from VM");
+            assert(tr.stdout.indexOf("loc_mock_DeleteExtension") > 0, "Machine group agent should have been tried to be deleted from VM");
             assert(tr.stdout.indexOf("loc_mock_DeletionSucceeded") > 0, "Machine group agent should have been deleted from VM");
             done();
         }
@@ -289,9 +316,33 @@ describe('Azure Resource Group Deployment', function () {
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.deleteMethod is called") <= 0, "virtualMachineExtensions.deleteMethod function should not have been called from azure-sdk");
-            assert(tr.stdout.indexOf("loc_mock_MGAgentDeletedFromAllVMs") <= 0, "Machine group agent should have been deleted from all VMs");
-            assert(tr.stdout.indexOf("loc_mock_VM_Delete") <= 0, "Should not have deleted VM");
-            assert(tr.stdout.indexOf("virtualMachines.deleteMethod is called") <= 0, "Should have called virtualMachines.deleteMethod function from azure-sdk");
+            assert(tr.stdout.indexOf("loc_mock_MGAgentDeletedFromAllVMs") <= 0, "Machine group agent should not have been deleted since there are no VMs");
+            assert(tr.stdout.indexOf("loc_mock_VM_Delete") <= 0, "Should not have deleted VM since no vms present");
+            assert(tr.stdout.indexOf("loc_mock_DeleteExtension") <= 0, "Should not have tried to deleted extension since no vms are present");
+            assert(tr.stdout.indexOf("virtualMachines.deleteMethod is called") <= 0, "Should not have called virtualMachines.deleteMethod function from azure-sdk");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
+    it("Did not delete extensions on stopped vm but vm got deleted- Delete VMs", (done) => {
+        let tp = path.join(__dirname, "deleteVSTSExtension.js");
+        process.env["action"] = "Delete";
+        process.env["resourceGroupName"] = "StoppedVM";
+        process.env["outputVariable"] = "";
+        let tr = new ttm.MockTestRunner(tp);
+        tr.run();
+        try {
+            assert(tr.succeeded, "Should have succeeded");
+            assert(tr.stdout.indexOf("virtualMachineExtensions.deleteMethod is called") > 0, "virtualMachineExtensions.deleteMethod function should have been called from azure-sdk");
+            assert(tr.stdout.indexOf("loc_mock_MGAgentDeletedFromAllVMs") <= 0, "Machine group agent should not have been deleted from all VMs");
+            assert(tr.stdout.indexOf("loc_mock_VM_Delete") > 0, "Should have deleted VM");
+            assert(tr.stdout.indexOf("loc_mock_DeleteExtension") > 0, "Should have tried to deleted extension");
+            assert(tr.stdout.indexOf("loc_mock_DeleteAgentManually") > 0, "Deletion warning should have been prompted");
+            assert(tr.stdout.indexOf("virtualMachines.deleteMethod is called") > 0, "Should have called virtualMachines.deleteMethod function from azure-sdk");
             done();
         }
         catch (error) {
@@ -310,7 +361,8 @@ describe('Azure Resource Group Deployment', function () {
         try {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("virtualMachineExtensions.deleteMethod is called") <= 0, "virtualMachineExtensions.deleteMethod function should not have been called from azure-sdk");
-            assert(tr.stdout.indexOf("loc_mock_MGAgentDeletedFromAllVMs") <= 0, "Machine group agent should have been deleted from all VMs");
+            assert(tr.stdout.indexOf("loc_mock_MGAgentDeletedFromAllVMs") <= 0, "Machine group agent should not have been deleted since there are not vms");
+            assert(tr.stdout.indexOf("loc_mock_DeleteExtension") <= 0, "Should not have tried to deleted extension since no vms are present");
             assert(tr.stdout.indexOf("resourceGroups.deleteMethod is called") > 0, "Delete Resource Group function should have been called");
             done();
         }
@@ -320,7 +372,7 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    it('Successfully triggered createOrUpdate deployment', (done) => {
+    /*it('Successfully triggered createOrUpdate deployment', (done) => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
@@ -923,5 +975,5 @@ describe('Azure Resource Group Deployment', function () {
             console.log("STDOUT", tr.stdout);
             done(error);
         }
-    });
+    });*/
 });

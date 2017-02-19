@@ -100,7 +100,7 @@ export class ResourceGroups {
                     else {
                         deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
                     }
-                });
+                }, (error) => deferred.reject(error));
             }
             return deferred.promise;
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
@@ -215,7 +215,7 @@ export class Deployments {
                                 }
                             }
                         });
-                    });
+                    }, (error) => reject(error));
                 }
             });
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),

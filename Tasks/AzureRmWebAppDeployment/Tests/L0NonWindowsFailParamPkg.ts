@@ -191,10 +191,17 @@ tr.registerMock('webdeployment-common/kuduutility.js', {
             }
         }
         return [virtualPath, physicalPath];
-    },
-    containsParamFile: function (webAppPackage) {
-    var isParamFilePresent = true;
-        return isParamFilePresent;
+    }
+});
+
+tr.registerMock("webdeployment-common/ziputility.js", {
+    getArchivedEntries: function( webDeployPkg) {
+        return {
+            "entries": [
+                "systemInfo.xml",
+                "parameters.xml"
+            ]
+        };
     }
 });
 

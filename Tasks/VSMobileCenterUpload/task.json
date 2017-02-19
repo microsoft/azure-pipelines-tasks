@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 112,
-        "Patch": 1
+        "Minor": 114,
+        "Patch": 0
     },
     "groups": [
         {
@@ -147,6 +147,7 @@
         "Succeeded": "Visual Studio Mobile Center Upload Task succeeded",
         "CannotFindAnyFile": "Cannot find any file based on %s.",
         "FoundMultipleFiles": "Found multiple files matching %s.",
-        "FailedToCreateFile": "Failed to create %s with error: %s."
+        "FailedToCreateFile": "Failed to create %s with error: %s.",
+        "FailedToFindFile": "Failed to find %s at %s."
     }
 }

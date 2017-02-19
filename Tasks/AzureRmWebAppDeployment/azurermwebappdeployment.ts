@@ -42,6 +42,7 @@ async function run() {
         endPoint["servicePrincipalKey"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'serviceprincipalkey', true);
         endPoint["tenantID"] = tl.getEndpointAuthorizationParameter(connectedServiceName, 'tenantid', true);
         endPoint["subscriptionId"] = tl.getEndpointDataParameter(connectedServiceName, 'subscriptionid', true);
+        endPoint["envAuthUrl"] = tl.getEndpointDataParameter(connectedServiceName, 'environmentAuthorityUrl', true);
         endPoint["url"] = tl.getEndpointUrl(connectedServiceName, true);
 
         if(deployToSlotFlag) {
@@ -170,7 +171,7 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
             webAppZipFile = await zipUtility.archiveFolder(webDeployPkg, "", tempPackagePath);
             tl.debug("Compressed folder " + webDeployPkg + " into zip : " +  webAppZipFile);
         } else {
-            if (await kuduUtility.containsParamFile(webAppZipFile)) {
+            if (await utility.isMSDeployPackage(webAppZipFile)) {
                 throw new Error(tl.loc("MSDeploygeneratedpackageareonlysupportedforWindowsplatform")); 
             }
         }

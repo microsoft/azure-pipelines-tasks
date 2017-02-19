@@ -48,6 +48,16 @@ let a: any = <any>{
 
 import mockTask = require('vsts-task-lib/mock-task');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js');
+tr.registerMock('webdeployment-common/ziputility.js', {
+    getArchivedEntries: function(webDeployPkg) {
+        return {
+            "entries": [
+                "systemInfo.xml",
+                "parameters.xml"
+            ]
+        };
+    }
+});
 
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
@@ -55,17 +65,19 @@ tr.registerMock('./msdeployutility.js', {
         var msDeployFullPath =  "msdeploypath\\msdeploy.exe";
         return msDeployFullPath;
     },
-    containsParamFile: function(webAppPackage: string) {
-		var taskResult = mockTask.execSync("msdeploy", "-verb:getParameters -source:package=\'" + webAppPackage + "\'");
-        return true;
-    },
 	redirectMSDeployErrorToConsole : msDeployUtility.redirectMSDeployErrorToConsole
 });
 
 var fs = require('fs');
 tr.registerMock('fs', {
     createWriteStream: function (filePath, options) {
-        return { "isWriteStreamObj": true };
+        return { 
+            "isWriteStreamObj": true,
+            "on": (event) => {
+                console.log("event: " + event + " has been triggered");
+            },
+            "end" : () => { return true; }
+        };
     },
     readFileSync: function (msDeployErrorFilePath) {
         console.log("reading the error file");

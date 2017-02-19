@@ -31,7 +31,7 @@ export function parse(input: string) {
 }
 
 function isName(literal: string, specialCharacterFlag: boolean): boolean {
-    return literal[0] === '-' && !specialCharacterFlag;
+    return literal[0] === '-' && !specialCharacterFlag && isNaN(Number(literal));
 }
 
 function findLiteral(input, currentPosition) {

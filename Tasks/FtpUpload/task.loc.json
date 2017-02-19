@@ -17,8 +17,8 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 111,
-    "Patch": 1
+    "Minor": 114,
+    "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -30,12 +30,49 @@
   ],
   "inputs": [
     {
+      "name": "credsType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.credsType",
+      "defaultValue": "serviceEndpoint",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.credsType",
+      "options": {
+        "serviceEndpoint": "FTP Service Endpoint",
+        "inputs": "Enter Credentials"
+      }
+    },
+    {
       "name": "serverEndpoint",
       "type": "connectedService:Generic",
       "label": "ms-resource:loc.input.label.serverEndpoint",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.serverEndpoint"
+      "helpMarkDown": "ms-resource:loc.input.help.serverEndpoint",
+      "visibleRule": "credsType = serviceEndpoint"
+    },
+    {
+      "name": "serverUrl",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.serverUrl",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "credsType = inputs"
+    },
+    {
+      "name": "username",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.username",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "credsType = inputs"
+    },
+    {
+      "name": "password",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.password",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "credsType = inputs"
     },
     {
       "name": "rootFolder",
