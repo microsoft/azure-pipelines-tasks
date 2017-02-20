@@ -20,6 +20,7 @@
     "Patch": 4
   },
   "demands": [],
+  "minimumAgentVersion": "2.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
