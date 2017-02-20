@@ -1,7 +1,7 @@
 {
     "id": "B832BEC5-8C27-4FEF-9FB8-6BEC8524AD8A",
     "name": "VSMobileCenterUpload",
-    "friendlyName": "Visual Studio Mobile Center Upload",
+    "friendlyName": "Mobile Center Upload",
     "description": "Upload mobile app packages to Visual Studio Mobile Center",
     "helpMarkDown": "Upload mobile app packages to Visual Studio Mobile Center",
     "category": "Deploy",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 114,
-        "Patch": 0
+        "Patch": 1
     },
     "groups": [
         {
