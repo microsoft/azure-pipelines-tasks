@@ -11,12 +11,14 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
+        "Major": 2,
         "Minor": 0,
-        "Patch": 36
+        "Patch": 0
     },
     "demands": [],
-    "minimumAgentVersion": "1.83.0",
+    "preview": "true",
+    "releaseNotes": "<ul><li>NUnit3 support</li><li>Support for Minimatch files pattern</li></ul>",
+    "minimumAgentVersion": "2.0.0",
     "groups": [
         {
             "name": "advanced",
@@ -41,11 +43,23 @@
         },
         {
             "name": "testResultsFiles",
-            "type": "filePath",
+            "type": "multiLine",
             "label": "Test Results Files",
-            "defaultValue": "**/TEST-*.xml",
+            "defaultValue": "**\\TEST-*.xml",
             "required": true,
-            "helpMarkDown": "Test results files path.  Wildcards can be used.  For example, `**/TEST-*.xml` for all xml files whose name starts with TEST-."
+            "helpMarkDown": "Test results files path. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
+            "properties": {
+                "rows": "3",
+                "resizable": "true"
+            }
+        },
+        {
+            "name": "searchFolder",
+            "type": "string",
+            "label": "Search Folder",
+            "defaultValue": "$(System.DefaultWorkingDirectory)",
+            "required": false,
+            "helpMarkDown": "Folder to search for the test assemblies. Defaults to $(System.DefaultWorkingDirectory)."
         },
         {
             "name": "mergeTestResults",
@@ -93,14 +107,6 @@
     ],
     "instanceNameFormat": "Publish Test Results $(testResultsFiles)",
     "execution": {
-        "PowerShell": {
-            "target": "$(currentDirectory)\\PublishTestResults.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)",
-            "platforms": [
-                "windows"
-            ]
-        },
         "Node": {
             "target": "publishtestresults.js",
             "argumentFormat": ""
