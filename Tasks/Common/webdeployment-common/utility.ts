@@ -167,7 +167,7 @@ export function copyDirectory(sourceDirectory: string, destDirectory: string) {
             tl.mkdirP(destinationPath);
         }
         else {
-            if(tl.exist(path.dirname(destinationPath))) {
+            if(!tl.exist(path.dirname(destinationPath))) {
                 tl.mkdirP(path.dirname(destinationPath));
             }
             tl.debug('copy file from: ' + srcDirPath + ' to: ' + destinationPath);
