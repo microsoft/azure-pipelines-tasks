@@ -46,7 +46,7 @@ async function run() {
         }
 
         var isProject = false;
-        if (ws.trim().toLowerCase().endsWith('.xcodeproj')) {
+        if (ws && ws.trim().toLowerCase().endsWith('.xcodeproj')) {
             isProject = true;
         }
 

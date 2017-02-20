@@ -13,7 +13,7 @@
   "loc.input.label.sdk": "SDK",
   "loc.input.help.sdk": "Build an Xcode project or workspace against the specified SDK.  Run *xcodebuild -showsdks* to see the valid list of SDKs.",
   "loc.input.label.xcWorkspacePath": "Workspace/Project Path",
-  "loc.input.help.xcWorkspacePath": "Optional relative path from repo root where xcworkspace folder exists. Path to the *.xcodeproj can also be specified. Scheme must also be specified if value provided. Omit if you intend to use the -target flag under Advanced Arguments.",
+  "loc.input.help.xcWorkspacePath": "Optional relative path from repo root to the Xcode workspace or project. For example: `MyApp/MyApp.xcworkspace` or `MyApp/MyApp.xcworkspace/MyApp.xcodeproj`. Leave blank if you intend to use the -target flag under Advanced Arguments.",
   "loc.input.label.scheme": "Scheme",
   "loc.input.help.scheme": "Optional scheme name in Xcode. *Must be a shared scheme* (shared checkbox under managed schemes in Xcode). **Required if Workspace is specified.**",
   "loc.input.label.packageApp": "Create App Package",
