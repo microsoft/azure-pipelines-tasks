@@ -5,10 +5,10 @@ import * as ps from 'child_process';
 import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
 import * as models from './models';
-import * as settingsHelper from './settingsHelper';
+import * as settingsHelper from './settingshelper';
 import * as utils from './helpers';
-import * as ta from './testAgent';
-import * as versionFinder from './versionFinder';
+import * as ta from './testagent';
+import * as versionFinder from './versionfinder';
 
 export class DistributedTest {
     constructor(dtaTestConfig: models.DtaTestConfigurations) {

@@ -3,7 +3,7 @@ import path = require('path');
 import Q = require('q');
 import models = require('./models')
 import * as utils from './helpers';
-import * as parameterParser from './parameterParser'
+import * as parameterParser from './parameterparser'
 
 var os = require('os');
 var uuid = require('node-uuid');
