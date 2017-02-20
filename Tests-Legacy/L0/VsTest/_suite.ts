@@ -303,32 +303,6 @@ describe('VsTest Suite', function () {
             });
     })
 
-    it('Vstest task when vstest of specified version is not found', (done) => {
-
-        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx"].join(" ");
-        setResponseFile('vstestFails.json'); // this response file does not have vs 2013
-
-        let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testSelector', 'testAssemblies');        
-        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
-        tr.setInput('vstestLocationMethod', 'version');
-        tr.setInput('vsTestVersion', '12.0');
-
-        tr.run()
-            .then(() => {
-                assert(tr.resultWasSet, 'task should have set a result');
-                assert(tr.stderr.length > 0, 'should have written to stderr');
-                assert(tr.failed, 'task should have failed');
-                assert(!tr.ran(vstestCmd), 'should not have run vstest');
-                assert(tr.stdout.search(/##vso\[results.publish/) < 0, 'should not have published test results.');
-                assert(tr.stdout.search(/Vstest of version 12 is not found. Try again with a visual studio version that exists on your build agent machine./) >= 0, 'should have displayed warning.');
-                done();
-            })
-            .fail((err) => {
-                done(err);
-            });
-    })
-
     it('Vstest task with test case filter', (done) => {
 
         let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/TestCaseFilter:testFilter", "/logger:trx"].join(" ");
@@ -689,7 +663,7 @@ describe('VsTest Suite', function () {
             .fail((err) => {
                 done(err);
             });
-    });
+});
 
     it('Vstest task should not use diag option when system.debug is not set', (done) => {
 
@@ -699,11 +673,11 @@ describe('VsTest Suite', function () {
         let tr = new trm.TaskRunner('VSTest');
         tr.setInput('testSelector', 'testAssemblies');        
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
+        tr.setInput('vstestLocationMethod', 'version');        
         tr.setInput('vsTestVersion', '14.0');
         tr.run()
             .then(() => {
                 console.log(tr.stderr.length);
-                
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
@@ -723,11 +697,11 @@ describe('VsTest Suite', function () {
         let tr = new trm.TaskRunner('VSTest');
         tr.setInput('testSelector', 'testAssemblies');
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
+        tr.setInput('vstestLocationMethod', 'version'); 
         tr.setInput('vsTestVersion', '14.0');
         tr.run()
             .then(() => {
                 console.log('The errors are..........' + tr.stderr);
-                console.log(tr.stdout);
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');

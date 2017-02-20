@@ -25,14 +25,15 @@ export class DistributedTest {
 
         try {
             const agentId = await ta.TestAgent.createAgent(this.dtaTestConfig.dtaEnvironment, 3);
-            this.dtaPid =  await this.startDtaExecutionHost(agentId);
+            await this.startDtaExecutionHost(agentId);
             await this.startDtaTestRun();
             try {
-                // TODO: ranjanar: fixasap : This dangerous - Note that the PID only uniquely identifies your child process 
-                // as long as it is running. After it has exited, the PID might have been reused for a different process.
-                process.kill(this.dtaPid);
+                if(this.dtaPid !== -1) {
+                    tl.debug('Trying to kill the Modules/DTAExecutionHost.exe process with pid :' + this.dtaPid);
+                    process.kill(this.dtaPid);
+                }
             } catch (error) {
-                tl.debug('Process kill failed, pid: ' + this.dtaPid + ' , error :' + error);
+                tl.warning('Modules/DTAExecutionHost.exe process kill failed, pid: ' + this.dtaPid + ' , error :' + error);
             }
             tl.debug(fs.readFileSync(this.dtaTestConfig.dtaEnvironment.dtaHostLogFilePath, 'utf-8'));
             tl.setResult(tl.TaskResult.Succeeded, 'Task succeeded');
@@ -43,7 +44,12 @@ export class DistributedTest {
     }
 
     private async startDtaExecutionHost(agentId: any) {
-        tl.rmRF(this.dtaTestConfig.dtaEnvironment.dtaHostLogFilePath, true);
+        try {
+            tl.rmRF(this.dtaTestConfig.dtaEnvironment.dtaHostLogFilePath, true);
+        } catch (error) {
+            //Ignore.
+        }
+
         const envVars: { [key: string]: string; } = process.env;
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AccessToken', this.dtaTestConfig.dtaEnvironment.patToken);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AgentId', agentId);
@@ -67,10 +73,23 @@ export class DistributedTest {
         // So we are not redirecting the IO streams from the DTAExecutionHost.exe process
         // We are not using toolrunner here because it doesn't have option to ignore the IO stream, so directly using spawn
 
-        // TODO : Currently we dont have way to see if crashes
         const proc = ps.spawn(path.join(__dirname, 'Modules/DTAExecutionHost.exe'), [], { env: envVars, stdio: 'ignore' });
-        tl.debug('DtaExecutionHost is executing with the process : ' + proc.pid);
-        return proc.pid;
+        this.dtaPid = proc.pid;
+        tl.debug('Modules/DTAExecutionHost.exe is executing with the process id : ' + this.dtaPid);
+
+        proc.on('error', (err) => {
+                this.dtaPid = -1;
+                throw new Error('Failed to start Modules/DTAExecutionHost.exe.');
+            });
+
+        proc.on('close', (code) => {
+            if (code !== 0) {
+                tl.debug('Modules/DTAExecutionHost.exe process exited with code ' + code);
+            } else {
+                tl.debug('Modules/DTAExecutionHost.exe exited');
+            }
+            this.dtaPid = -1;
+        });
     }
 
     private async startDtaTestRun() {
