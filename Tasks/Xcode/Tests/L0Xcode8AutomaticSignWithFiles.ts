@@ -6,8 +6,7 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'xcode.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-process.env['HOME']='/users/test'; //replace with mock of setVariable when task-lib has the support
-process.env['USEXCRUN']='false';
+process.env['HOME'] = '/users/test'; //replace with mock of setVariable when task-lib has the support
 
 tr.setInput('actions', 'build');
 tr.setInput('configuration', '$(Configuration)');
@@ -30,6 +29,7 @@ tr.setInput('cwd', '/user/build');
 tr.setInput('outputPattern', 'output/$(SDK)/$(Configuration)');
 tr.setInput('xcodeDeveloperDir', '');
 tr.setInput('useXctool', 'false');
+tr.setInput('packageTool', 'xcodebuild');
 tr.setInput('xctoolReporter', '');
 tr.setInput('publishJUnitResults', 'false');
 tr.setInput('archivePath', '/user/build');
@@ -46,7 +46,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "rm": "/bin/rm",
         "cp": "/bin/cp"
     },
-    "checkPath" : {
+    "checkPath": {
         "/home/bin/xcodebuild": true,
         "/usr/bin/security": true,
         "/usr/libexec/PlistBuddy": true,
@@ -89,7 +89,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "xcodebuild output here"
         },
-        "/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme archive -sdk $(SDK) -configuration $(Configuration) -archivePath /user/build/testScheme OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain" : {
+        "/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme archive -sdk $(SDK) -configuration $(Configuration) -archivePath /user/build/testScheme OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain": {
             "code": 0,
             "stdout": "xcodebuild archive output here"
         },
@@ -105,7 +105,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "plist add output here"
         },
-        "/usr/bin/security create-keychain -p _xcodetask_TmpKeychain_Pwd#1 /user/build/_xcodetasktmp.keychain" : {
+        "/usr/bin/security create-keychain -p _xcodetask_TmpKeychain_Pwd#1 /user/build/_xcodetasktmp.keychain": {
             "code": 0,
             "stdout": "temporary keychain created"
         },
@@ -121,7 +121,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "p12 imported into temporary keychain"
         },
-        "/usr/bin/security find-identity -v -p codesigning /user/build/_xcodetasktmp.keychain" : {
+        "/usr/bin/security find-identity -v -p codesigning /user/build/_xcodetasktmp.keychain": {
             "code": 0,
             "stdout": "1) 5229BFC905F473E52FAD51208174528106966930 \"iPhone Developer: XcodeTask Tester (HE432Y3E2Q)\"\n 1 valid identities found"
         },
@@ -137,11 +137,11 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "delete output here"
         },
-        "/usr/bin/security list-keychain -d user" : {
+        "/usr/bin/security list-keychain -d user": {
             "code": 0,
-            "stdout":  "/User/test/Library/Keychains/login.keychain \n /user/build/_xcodetasktmp.keychain"
+            "stdout": "/User/test/Library/Keychains/login.keychain \n /user/build/_xcodetasktmp.keychain"
         },
-        "/usr/bin/security list-keychain -d user -s /user/build/_xcodetasktmp.keychain /User/test/Library/Keychains/login.keychain /user/build/_xcodetasktmp.keychain" : {
+        "/usr/bin/security list-keychain -d user -s /user/build/_xcodetasktmp.keychain /User/test/Library/Keychains/login.keychain /user/build/_xcodetasktmp.keychain": {
             "code": 0,
             "stdout": "list-keychain output here"
         },
