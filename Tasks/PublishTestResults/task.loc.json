@@ -45,9 +45,18 @@
       "name": "testResultsFiles",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.testResultsFiles",
-      "defaultValue": "**/TEST-*.xml",
+      "defaultValue": "**\\TEST-*.xml",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.testResultsFiles"
+    },
+    {
+      "name": "searchFolder",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.searchFolder",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.searchFolder",
+      "groupName": "executionOptions"
     },
     {
       "name": "mergeTestResults",
