@@ -13,7 +13,7 @@ Use the next three options to manage your JUnit test results in VSTS
 
 - **Publish to VSTS/TFS :** Select this option to publish JUnit Test results produced by the Maven build to Visual Studio Team Services/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSTS/TFS.
 
-- **Test Results Files :** This option will appear if you select the above option. Here, provide Test results files path. Wildcards can be used. For example, `**/TEST-*.xml` for all xml files whose name starts with `TEST-."`
+- **Test Results Files :** This option will appear if you select the above option. Here, provide Test results files path. Wildcards can be used. For example, `**/TEST-*.xml` for all xml files whose name starts with `TEST-."`. Defaults to `$(System.DefaultWorkingDirectory)`
 
 - **Test Run Title :** This option will appear if you select the `Publish to VSTS/TFS` option. Here provide a name for the Test Run
 
