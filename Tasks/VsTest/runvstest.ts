@@ -1,9 +1,9 @@
 import tl = require('vsts-task-lib/task');
 import models = require('./models')
-import taskInputParser = require('./taskInputParser')
+import taskInputParser = require('./taskinputparser')
 import localTest = require('./vstest')
 import path = require('path');
-import distributedTest = require('./distributedTest')
+import distributedTest = require('./distributedtest')
 
 try {
     const parallelExecution = tl.getVariable('System.ParallelExecutionType');

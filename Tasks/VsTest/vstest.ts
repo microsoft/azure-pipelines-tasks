@@ -3,9 +3,9 @@ import tr = require('vsts-task-lib/toolrunner');
 import path = require('path');
 import Q = require('q');
 import models = require('./models');
-import taskInputParser = require('./taskInputParser');
-import settingsHelper = require('./settingsHelper');
-import versionFinder = require('./versionFinder');
+import taskInputParser = require('./taskinputparser');
+import settingsHelper = require('./settingshelper');
+import versionFinder = require('./versionfinder');
 import * as utils from './helpers';
 
 var os = require('os');
