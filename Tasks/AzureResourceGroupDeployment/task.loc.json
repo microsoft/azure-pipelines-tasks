@@ -5,7 +5,7 @@
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
-  "releaseNotes": "- Works with Xplat agents (Windows, Linux or OSX)\n- Supports Template JSONs located at any publicly accessible http/https URLs.\n- Enhanced UX for Override parameters which can now be viewed/edited in a grid.\n- NAT rule mapping for VMs which are backed by an Load balancer.\n- \"Resource group\" field is now renamed as \"VM details for  WinRM\" and is included in the section \"Advanced deployment options for virtual machines\".\n- Limitations: \n - No support for Classic subscriptions. Only for ARM subscriptions are supported.\n - No support for PowerShell syntax as the task is now node.js based.\nFor example, PowerShell cmdlets like \"ConvertTo-SecureString\" have to be removed when you migrate from version 1.0 to version 2.0.",
+  "releaseNotes": "- Works with Xplat agents (Windows, Linux or OSX)\n- Supports Template JSONs located at any publicly accessible http/https URLs.\n- Enhanced UX for Override parameters which can now be viewed/edited in a grid.\n- NAT rule mapping for VMs which are backed by an Load balancer.\n- \"Resource group\" field is now renamed as \"VM details for  WinRM\" and is included in the section \"Advanced deployment options for virtual machines\".\n- Limitations: \n - No support for Classic subscriptions. Only for ARM subscriptions are supported.\n - No support for PowerShell syntax as the task is now node.js based. Ensure the case sensitivity of the parameter names match, when you override the template parameters. Also, remove the PowerShell cmdlets like \"ConvertTo-SecureString\" when you migrate from version 1.0 to version 2.0.",
   "visibility": [
     "Build",
     "Release"
@@ -14,11 +14,9 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
-  "demands": [
-    "node.js"
-  ],
+  "demands": [],
   "minimumAgentVersion": "2.0.0",
   "groups": [
     {
@@ -82,36 +80,9 @@
       "name": "location",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.location",
-      "defaultValue": "East US",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.location",
       "groupName": "AzureDetails",
-      "options": {
-        "Australia East": "Australia East",
-        "Australia Southeast": "Australia Southeast",
-        "Brazil South": "Brazil South",
-        "Canada Central": "Canada Central",
-        "Canada East": "Canada East",
-        "Central India": "Central India",
-        "Central US": "Central US",
-        "East Asia": "East Asia",
-        "East US": "East US",
-        "East US 2 ": "East US 2 ",
-        "Japan East": "Japan East",
-        "Japan West": "Japan West",
-        "North Central US": "North Central US",
-        "North Europe": "North Europe",
-        "South Central US": "South Central US",
-        "South India": "South India",
-        "Southeast Asia": "Southeast Asia",
-        "UK South": "UK South",
-        "UK West": "UK West",
-        "West Central US": "West Central US",
-        "West Europe": "West Europe",
-        "West India": "West India",
-        "West US": "West US",
-        "West US 2": "West US 2"
-      },
       "properties": {
         "EditableOptions": "True"
       },
@@ -253,6 +224,11 @@
       "target": "resourceGroupName",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureResourceGroups"
+    },
+    {
+      "target": "location",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureLocations"
     }
   ],
   "sourceDefinitions": [
@@ -373,6 +349,7 @@
     "DeletionSucceeded": "ms-resource:loc.messages.DeletionSucceeded",
     "AdditionFailed": "ms-resource:loc.messages.AdditionFailed",
     "DeletionFailed": "ms-resource:loc.messages.DeletionFailed",
+    "DeleteAgentManually": "ms-resource:loc.messages.DeleteAgentManually",
     "MGAgentOperationOnAllVMsFailed": "ms-resource:loc.messages.MGAgentOperationOnAllVMsFailed",
     "MGAgentAddedOnAllVMs": "ms-resource:loc.messages.MGAgentAddedOnAllVMs",
     "MGAgentDeletedFromAllVMs": "ms-resource:loc.messages.MGAgentDeletedFromAllVMs",
@@ -387,6 +364,7 @@
     "DeletingMGAgentFromVMs": "ms-resource:loc.messages.DeletingMGAgentFromVMs",
     "DeletingMGAgentOnVMs": "ms-resource:loc.messages.DeletingMGAgentOnVMs",
     "AddingExtensionFailed": "ms-resource:loc.messages.AddingExtensionFailed",
-    "TimeoutWhileWaiting": "ms-resource:loc.messages.TimeoutWhileWaiting"
+    "TimeoutWhileWaiting": "ms-resource:loc.messages.TimeoutWhileWaiting",
+    "InvalidTemplateLocation": "ms-resource:loc.messages.InvalidTemplateLocation"
   }
 }

@@ -6,12 +6,13 @@ param()
 
 Trace-VstsEnteringInvocation $MyInvocation
 try {
-    # Import the localized strings. 
+    # Import the localized strings.
     Import-VstsLocStrings "$PSScriptRoot\task.json"
-    
+
     # Load utility functions
     . "$PSScriptRoot\utilities.ps1"
-    
+    Import-Module $PSScriptRoot\ps_modules\ServiceFabricHelpers
+
     # Collect input values
 
     $publishProfilePath = Get-SinglePathOfType (Get-VstsInput -Name publishProfilePath) Leaf
@@ -30,76 +31,29 @@ try {
     $compressPackage = [System.Boolean]::Parse((Get-VstsInput -Name compressPackage))
 
     $clusterConnectionParameters = @{}
-    
-    $regKey = "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK"
-    if (!(Test-Path $regKey))
-    {
-        throw (Get-VstsLocString -Key ServiceFabricSDKNotInstalled)
-    }
 
-    $connectionEndpointUrl = [System.Uri]$connectedServiceEndpoint.url
-    # Override the publish profile's connection endpoint with the one defined on the associated service endpoint
-    $clusterConnectionParameters["ConnectionEndpoint"] = $connectionEndpointUrl.Authority # Authority includes just the hostname and port
-
-    # Configure cluster connection pre-reqs
-    if ($connectedServiceEndpoint.Auth.Scheme -ne "None")
+    if ($connectedServiceEndpoint.Auth.Scheme -ne "None" -and !$connectedServiceEndpoint.Auth.Parameters.ServerCertThumbprint)
     {
-        # Add server cert thumbprint (common to both auth-types)
-        if ($ConnectedServiceEndpoint.Auth.Parameters.ServerCertThumbprint)
+        Write-Warning (Get-VstsLocString -Key ServiceEndpointUpgradeWarning)
+        if ($publishProfile)
         {
-            $clusterConnectionParameters["ServerCertThumbprint"] = $ConnectedServiceEndpoint.Auth.Parameters.ServerCertThumbprint
+            $clusterConnectionParameters["ServerCertThumbprint"] = $publishProfile.ClusterConnectionParameters["ServerCertThumbprint"]
         }
         else
         {
-            Write-Warning (Get-VstsLocString -Key ServiceEndpointUpgradeWarning)
-            if ($publishProfile)
-            {
-                $clusterConnectionParameters["ServerCertThumbprint"] = $publishProfile.ClusterConnectionParameters["ServerCertThumbprint"]
-            }
-            else
-            {
-                throw (Get-VstsLocString -Key PublishProfileRequiredServerThumbprint)
-            }
-        }
-
-        # Add auth-specific parameters
-        if ($connectedServiceEndpoint.Auth.Scheme -eq "UserNamePassword")
-        {
-            # Setup the AzureActiveDirectory and ServerCertThumbprint parameters before getting the security token, because getting the security token
-            # requires a connection request to the cluster in order to get metadata and so these two parameters are needed for that request.
-            $clusterConnectionParameters["AzureActiveDirectory"] = $true
-
-            $securityToken = Get-AadSecurityToken -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
-            $clusterConnectionParameters["SecurityToken"] = $securityToken
-            $clusterConnectionParameters["WarningAction"] = "SilentlyContinue"
-        }
-        elseif ($connectedServiceEndpoint.Auth.Scheme -eq "Certificate")
-        {
-            Add-Certificate -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
-            $clusterConnectionParameters["X509Credential"] = $true
+            throw (Get-VstsLocString -Key PublishProfileRequiredServerThumbprint)
         }
     }
 
     # Connect to cluster
-    try {
-        [void](Connect-ServiceFabricCluster @clusterConnectionParameters)
-    }
-    catch {
-        if ($connectionEndpointUrl.Port -ne "19000") {
-            Write-Warning (Get-VstsLocString -Key DefaultPortWarning $connectionEndpointUrl.Port)
-        }
+    Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
 
-        throw $_
-    }
-    
-    Write-Host (Get-VstsLocString -Key ConnectedToCluster)
-    
     . "$PSScriptRoot\ServiceFabricSDK\ServiceFabricSDK.ps1"
 
     $applicationParameterFile = Get-SinglePathOfType (Get-VstsInput -Name applicationParameterPath) Leaf
     if ($applicationParameterFile)
     {
-        Write-Host (Get-VstsLocString -Key OverrideApplicationParameterFile -ArgumentList $applicationParameterFile) 
+        Write-Host (Get-VstsLocString -Key OverrideApplicationParameterFile -ArgumentList $applicationParameterFile)
     }
     elseif ($publishProfile)
     {
@@ -183,7 +137,7 @@ try {
     else
     {
         $publishParameters['Action'] = "RegisterAndCreate"
-        $publishParameters['OverwriteBehavior'] = "SameAppTypeAndVersion"
+        $publishParameters['OverwriteBehavior'] = Get-VstsInput -Name overwriteBehavior
 
         Publish-NewServiceFabricApplication @publishParameters
     }

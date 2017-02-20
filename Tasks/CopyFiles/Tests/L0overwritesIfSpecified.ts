@@ -41,8 +41,7 @@ runner.registerMockExport('stats', (itemPath: string): any => {
     }
 });
 
-// as a precaution, disable fs.chmodSync. it is the only fs function
-// called by copyfiles and should not be called during this scenario.
+// as a precaution, disable fs.chmodSync. it should not be called during this scenario.
 fs.chmodSync = null;
 runner.registerMock('fs', fs);
 

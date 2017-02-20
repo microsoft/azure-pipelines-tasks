@@ -186,7 +186,7 @@ export class VirtualMachines {
                     else {
                         deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
                     }
-                });
+                }, (error) => deferred.reject(error));
             }
             return deferred.promise;
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
@@ -232,7 +232,7 @@ export class VirtualMachines {
                     else {
                         deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
                     }
-                });
+                }, (error) => deferred.reject(error));
             }
             return deferred.promise;
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
@@ -277,7 +277,7 @@ export class VirtualMachines {
                     else {
                         deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
                     }
-                });
+                }, (error) => deferred.reject(error));
             }
             return deferred.promise;
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
@@ -324,7 +324,7 @@ export class VirtualMachines {
                     } else {
                         deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
                     }
-                });
+                }, (error) => deferred.reject(error));
             }
             return deferred.promise;
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
@@ -447,7 +447,7 @@ export class VirtualMachineExtensions {
                     } else {
                         deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
                     }
-                });
+                }, (error) => deferred.reject(error));
             }
             return deferred.promise;
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
@@ -496,7 +496,7 @@ export class VirtualMachineExtensions {
                     } else {
                         deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(operationResponse)));
                     }
-                });
+                }, (error) => deferred.reject(error));
             }
             return deferred.promise;
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),

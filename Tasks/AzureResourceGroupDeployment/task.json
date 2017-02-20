@@ -3,9 +3,9 @@
     "name": "AzureResourceGroupDeployment",
     "friendlyName": "Azure Resource Group Deployment",
     "description": "Deploy, start, stop, delete Azure Resource Groups",
-    "helpMarkDown": "[More Information](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/DeployAzureResourceGroup/README.md)",
+    "helpMarkDown": "[More Information](https://aka.ms/argtaskreadme)",
     "category": "Deploy",
-    "releaseNotes": "- Works with Xplat agents (Windows, Linux or OSX)\n- Supports Template JSONs located at any publicly accessible http/https URLs.\n- Enhanced UX for Override parameters which can now be viewed/edited in a grid.\n- NAT rule mapping for VMs which are backed by an Load balancer.\n- \"Resource group\" field is now renamed as \"VM details for  WinRM\" and is included in the section \"Advanced deployment options for virtual machines\".\n- Limitations: \n - No support for Classic subscriptions. Only for ARM subscriptions are supported.\n - No support for PowerShell syntax as the task is now node.js based.\nFor example, PowerShell cmdlets like \"ConvertTo-SecureString\" have to be removed when you migrate from version 1.0 to version 2.0.",
+    "releaseNotes": "- Works with Xplat agents (Windows, Linux or OSX)\n- Supports Template JSONs located at any publicly accessible http/https URLs.\n- Enhanced UX for Override parameters which can now be viewed/edited in a grid.\n- NAT rule mapping for VMs which are backed by an Load balancer.\n- \"Resource group\" field is now renamed as \"VM details for  WinRM\" and is included in the section \"Advanced deployment options for virtual machines\".\n- Limitations: \n - No support for Classic subscriptions. Only for ARM subscriptions are supported.\n - No support for PowerShell syntax as the task is now node.js based. Ensure the case sensitivity of the parameter names match, when you override the template parameters. Also, remove the PowerShell cmdlets like \"ConvertTo-SecureString\" when you migrate from version 1.0 to version 2.0.",
     "visibility": [
         "Build",
         "Release"
@@ -14,11 +14,9 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 1
     },
-    "demands": [
-        "node.js"
-    ],
+    "demands": [],
     "minimumAgentVersion": "2.0.0",
     "groups": [
         {
@@ -34,7 +32,7 @@
         },
         {
             "name": "AdvancedDeploymentOptions",
-            "displayName": "Advanced eployment options for virtual machines",
+            "displayName": "Advanced deployment options for virtual machines",
             "isExpanded": true,
             "visibleRule": "action = Create Or Update Resource Group || action = Select Resource Group"
         }
@@ -82,36 +80,9 @@
             "name": "location",
             "type": "pickList",
             "label": "Location",
-            "defaultValue": "East US",
             "required": true,
             "helpMarkDown": "Location for deploying the resource group. If the resource group already exists in the subscription, then this value will be ignored.",
             "groupName": "AzureDetails",
-            "options": {
-                "Australia East": "Australia East",
-                "Australia Southeast": "Australia Southeast",
-                "Brazil South": "Brazil South",
-                "Canada Central": "Canada Central",
-                "Canada East": "Canada East",
-                "Central India": "Central India",
-                "Central US": "Central US",
-                "East Asia": "East Asia",
-                "East US": "East US",
-                "East US 2 ": "East US 2 ",
-                "Japan East": "Japan East",
-                "Japan West": "Japan West",
-                "North Central US": "North Central US",
-                "North Europe": "North Europe",
-                "South Central US": "South Central US",
-                "South India": "South India",
-                "Southeast Asia": "Southeast Asia",
-                "UK South": "UK South",
-                "UK West": "UK West",
-                "West Central US": "West Central US",
-                "West Europe": "West Europe",
-                "West India": "West India",
-                "West US": "West US",
-                "West US 2": "West US 2"
-            },
             "properties": {
                 "EditableOptions": "True"
             },
@@ -206,7 +177,6 @@
                 "ConfigureVMwithWinRM": "Configure virtual machines with WinRM"
             },
             "helpMarkDown": "These options would be applicable only when the Resource group contains virtual machines. <br><br>Choosing machine group option would configure machine group agent on each of the virtual machines. <br><br>Selecting WinRM option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986)."
-          
         },
         {
             "name": "machineGroupName",
@@ -234,7 +204,7 @@
             "label": "Personal access token",
             "groupName": "AdvancedDeploymentOptions",
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithMGAgent",
-            "defaultValue": "",       
+            "defaultValue": "",
             "required": true,
             "helpMarkDown": "Agent registration with machine group requires access to your visual studio project.​ It is recommended that you store the token in a secure variable and provide the variable reference here."
         },
@@ -254,6 +224,11 @@
             "target": "resourceGroupName",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureResourceGroups"
+        },
+        {
+            "target": "location",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureLocations"
         }
     ],
     "sourceDefinitions": [
@@ -315,7 +290,7 @@
         "ARG_NetworkSecurityConfigFailed": "Failed to add the network security config rule",
         "ExtensionAlreadyPresentVm": "Extension %s is already present on the virtual machine '%s'",
         "AddExtension": "Adding extension '%s' on virtual machine '%s'",
-        "DeleteExtension": "Deleting extension %s from virtual machine %s",
+        "DeleteExtension": "Trying to delete extension %s from virtual machine %s",
         "ARG_AllResourceNotFound": "'%s' not found on resource group '%s'",
         "FailedToAddExtension": "Failed to add the network security rule with exception: %s",
         "AddingSecurityRuleNSG": "Adding security rule for the network security group: %s",
@@ -369,15 +344,16 @@
         "AddedTargetInboundNatRuleLB": "Added the target virtual machine for the inbound NAT rules of load balancer %s",
         "FailedToFetchInstanceViewVM": "Failed to fetch the instance view of the virtual machine. Error : %s",
         "CreationOfExtensionFailed": "Failed to add the extension. Error: %s",
-        "AddedExtension" :"Successfully added the CustomScriptExtension for the virtual Machine %s",
+        "AddedExtension": "Successfully added the WinRMCustomScriptExtension for the virtual Machine %s",
         "AddingExtensionSucceeded": "Addition of extension on vm %s succeeded",
         "DeletionSucceeded": "Deletion of extension on vm %s succeeded",
         "AdditionFailed": "Addition of %s on vm %s failed. Error : %s",
         "DeletionFailed": "Deletion of %s on vm %s failed. Error : %s",
+        "DeleteAgentManually": "After the task execution completes, if the machine group agent corresponding to the virtual machine %s is present but not active in the machine group %s, then please delete it manually from the machine group.",
         "MGAgentOperationOnAllVMsFailed": "Machine group agent %s did not succeed on all VMs. %s",
         "MGAgentAddedOnAllVMs": "Machine group agent added on all virtual machines of the resource group",
         "MGAgentDeletedFromAllVMs": "Machine group agent deleted from all virtual machines of the resource group",
-        "MGAgentHandlerMajorVersion": "Machine group extension handler major version is %s",
+        "MGAgentHandlerMajorVersion": "Machine group extension handler major version is 1",
         "SkipDeleteExtension": "Either the extension %s is not present on the virtual machine %s or the machine is stopped. Skipping extension deletion.",
         "VMStartFailed": "Could not start the virtual machine %s. Error : %s",
         "VMStarted": "Started virtual machine: %s",
@@ -387,7 +363,8 @@
         "AddingMGAgentOnVMs": "Adding machine group agent on the resource group virutal machines.",
         "DeletingMGAgentFromVMs": "Deleting machine group agent from the resource group virutal machines.",
         "DeletingMGAgentOnVMs": "Deleting machine group agent on virtual machines",
-        "AddingExtensionFailed": "Addition of extension on vm %s failed", 
-        "TimeoutWhileWaiting": "Timed out while waiting"
+        "AddingExtensionFailed": "Addition of extension on vm %s failed",
+        "TimeoutWhileWaiting": "Timed out while waiting",
+        "InvalidTemplateLocation": "The template location supplied is invalid. Task only supports 'Linked artifact' or 'URL of the file'"
     }
 }

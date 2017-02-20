@@ -16,8 +16,11 @@
   "version": {
     "Major": 1,
     "Minor": 3,
-    "Patch": 3
+    "Patch": 6
   },
+  "demands": [
+    "Cmd"
+  ],
   "minimumAgentVersion": "1.95.0",
   "groups": [
     {
@@ -91,6 +94,20 @@
       "required": false,
       "groupname": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.registerPackageTimeoutSec"
+    },
+    {
+      "name": "overwriteBehavior",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.overwriteBehavior",
+      "defaultValue": "SameAppTypeAndVersion",
+      "required": true,
+      "options": {
+        "Always": "Always",
+        "Never": "Never",
+        "SameAppTypeAndVersion": "SameAppTypeAndVersion"
+      },
+      "groupname": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.overwriteBehavior"
     },
     {
       "name": "overridePublishProfileSettings",
@@ -265,22 +282,13 @@
     "ItemSearchNoFilesFound": "ms-resource:loc.messages.ItemSearchNoFilesFound",
     "SearchingForPath": "ms-resource:loc.messages.SearchingForPath",
     "FoundPath": "ms-resource:loc.messages.FoundPath",
-    "ConnectedToCluster": "ms-resource:loc.messages.ConnectedToCluster",
-    "AadAuthority": "ms-resource:loc.messages.AadAuthority",
-    "ClusterAppId": "ms-resource:loc.messages.ClusterAppId",
-    "ClientAppId": "ms-resource:loc.messages.ClientAppId",
     "PathDoesNotExist": "ms-resource:loc.messages.PathDoesNotExist",
-    "ServiceFabricSDKNotInstalled": "ms-resource:loc.messages.ServiceFabricSDKNotInstalled",
-    "ErrorOnCertificateImport": "ms-resource:loc.messages.ErrorOnCertificateImport",
-    "ErrorOnAcquireToken": "ms-resource:loc.messages.ErrorOnAcquireToken",
-    "ImportedCertificate": "ms-resource:loc.messages.ImportedCertificate",
     "ServiceEndpointUpgradeWarning": "ms-resource:loc.messages.ServiceEndpointUpgradeWarning",
     "OverrideApplicationParameterFile": "ms-resource:loc.messages.OverrideApplicationParameterFile",
     "OverrideUpgradeSettings": "ms-resource:loc.messages.OverrideUpgradeSettings",
     "PublishProfileRequiredServerThumbprint": "ms-resource:loc.messages.PublishProfileRequiredServerThumbprint",
     "PublishProfileRequiredAppParams": "ms-resource:loc.messages.PublishProfileRequiredAppParams",
     "PublishProfileRequiredUpgrade": "ms-resource:loc.messages.PublishProfileRequiredUpgrade",
-    "DefaultPortWarning": "ms-resource:loc.messages.DefaultPortWarning",
     "SFSDK_InvalidSFPackage": "ms-resource:loc.messages.SFSDK_InvalidSFPackage",
     "SFSDK_PackageValidationFailed": "ms-resource:loc.messages.SFSDK_PackageValidationFailed",
     "SFSDK_UnableToVerifyClusterConnection": "ms-resource:loc.messages.SFSDK_UnableToVerifyClusterConnection",

@@ -2,6 +2,7 @@ import path = require('path');
 import fs = require('fs');
 import tl = require('vsts-task-lib/task');
 
+var zipUtility = require('webdeployment-common/ziputility.js');
 /**
  * Validates the input package and finds out input type
  * 
@@ -136,4 +137,20 @@ export function generateTemporaryFolderOrZipPath(folderPath: string, isFolder: b
         return generateTemporaryFolderOrZipPath(folderPath, isFolder);
     }
     return tempPath;
+}
+
+/**
+ * Check whether the package contains parameter.xml file
+ * @param   webAppPackage   web deploy package
+ * @returns boolean
+ */
+export async function isMSDeployPackage(webAppPackage: string ) {
+    var isParamFilePresent = false;
+    var pacakgeComponent = await zipUtility.getArchivedEntries(webAppPackage);
+    if (((pacakgeComponent["entries"].indexOf("parameters.xml") > -1) || (pacakgeComponent["entries"].indexOf("Parameters.xml") > -1)) && 
+    ((pacakgeComponent["entries"].indexOf("systemInfo.xml") > -1) || (pacakgeComponent["entries"].indexOf("systeminfo.xml") > -1))) {
+        isParamFilePresent = true;
+    }
+    tl.debug("Is the package an msdeploy package : " + isParamFilePresent);
+    return isParamFilePresent;
 }
