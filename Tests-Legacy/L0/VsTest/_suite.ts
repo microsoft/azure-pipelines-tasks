@@ -678,7 +678,6 @@ describe('VsTest Suite', function () {
         tr.run()
             .then(() => {
                 console.log(tr.stderr.length);
-                
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
@@ -703,7 +702,6 @@ describe('VsTest Suite', function () {
         tr.run()
             .then(() => {
                 console.log('The errors are..........' + tr.stderr);
-                console.log(tr.stdout);
                 assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
                 assert(tr.succeeded, 'task should have succeeded');
                 assert(tr.ran(vstestCmd), 'should have run vstest');
