@@ -30,6 +30,10 @@
         "\\path\\to\\vstest\\directory\\vstest.console.exe /source/dir/someFile1 /logger:trx": {
             "code": 0,
             "stdout": "vstest"
+        },
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /logger:trx": {
+            "code": 0,
+            "stdout": "vstest"
         }
     },
     "rmRF": {
