@@ -15,6 +15,11 @@ function Manage-IISWebSite
         $appPoolCredentials = Get-CustomCredentials -username $appPoolUsernameForWebsite -password $appPoolPasswordForWebsite
     }
 
+    if($actionIISWebsite -ne "CreateOrUpdateWebsite") 
+    {
+        $websiteName = $startStopWebsiteName
+    }
+
     Execute-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -PhysicalPath $websitePhysicalPath -PhysicalPathAuth $websitePhysicalPathAuth -PhysicalPathAuthCredentials $websitePhysicalPathAuthCredentials -AddBinding $addBinding -Protocol $protocol -IpAddress $ipAddress -Port $port -HostNameWithOutSNI $hostNameWithOutSNI -HostNameWithHttp $hostNameWithHttp -HostNameWithSNI $hostNameWithSNI -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -CreateAppPool $createOrUpdateAppPoolForWebsite -AppPoolName $appPoolNameForWebsite -DotNetVersion $dotNetVersionForWebsite -PipeLineMode $pipeLineModeForWebsite -AppPoolIdentity $appPoolIdentityForWebsite -AppPoolCredentials $appPoolCredentials -AppCmdCommands $appCmdCommands
 }
 
@@ -58,6 +63,11 @@ function Manage-IISApplicationPool
         $appPoolCredentials = Get-CustomCredentials -username $appPoolUsername -password $appPoolPassword        
     }
 
+    if ($actionIISApplicationPool -ne "CreateOrUpdateAppPool") 
+    {
+        $appPoolName = $startStopRecycleAppPoolName
+    }
+    
     Execute-Main -ActionIISApplicationPool $actionIISApplicationPool -AppPoolName $appPoolName -DotNetVersion $dotNetVersion -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolCredentials $appPoolCredentials -AppCmdCommands $appCmdCommands
 }
 

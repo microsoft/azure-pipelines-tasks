@@ -11,6 +11,7 @@ Import-VstsLocStrings "$PSScriptRoot\Task.json"
 # Website related inputs 
 $actionIISWebsite = Get-VstsInput -Name "ActionIISWebsite"
 $websiteName = Get-VstsInput -Name "WebsiteName" 
+$startStopWebsiteName = Get-VstsInput -Name "StartStopWebsiteName"
 $websitePhysicalPath = Get-VstsInput -Name "WebsitePhysicalPath" 
 $websitePhysicalPathAuth = Get-VstsInput -Name "WebsitePhysicalPathAuth" 
 $websiteAuthUserName = Get-VstsInput -Name "WebsiteAuthUserName"
@@ -60,6 +61,7 @@ $appPoolPasswordForApplication = Get-VstsInput -Name "AppPoolPasswordForApplicat
 # Application pool related inputs 
 $actionIISApplicationPool = Get-VstsInput -Name "ActionIISApplicationPool"
 $appPoolName = Get-VstsInput -Name "AppPoolName"
+$startStopRecycleAppPoolName = Get-VstsInput -Name "StartStopRecycleAppPoolName"
 $dotNetVersion = Get-VstsInput -Name "DotNetVersion"
 $pipeLineMode = Get-VstsInput -Name "PipeLineMode"
 $appPoolIdentity = Get-VstsInput -Name "AppPoolIdentity"
