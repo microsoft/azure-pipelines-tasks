@@ -1320,7 +1320,8 @@ function Check-ContainerNameAndArgs
     param([string]$containerName,
           [string]$additionalArguments)
     
-    if($containerName -eq '$root' -and ($additionalArguments -eq "/S" -or $additionalArguments -like "/S *" -or $additionalArguments -like "* /S *" -or $additionalArguments -like "* /S"))
+    $additionalArguments = ' ' + $additionalArguments + ' '
+    if($containerName -eq '$root' -and $additionalArguments -like '* /S *')
     {
         Write-Warning (Get-vstsLocString -Key "AFC_RootContainerAndDirectory")
     }
