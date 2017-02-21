@@ -11,7 +11,13 @@ Check-ContainerNameAndArgs -containerName '$root' -additionalArguments "/S "
 Check-ContainerNameAndArgs -containerName '$root' -additionalArguments "/XN /S /XO"
 Check-ContainerNameAndArgs -containerName '$root' -additionalArguments " /S  "
 Check-ContainerNameAndArgs -containerName '$root' -additionalArguments "/Y /S"
-Assert-WasCalled Write-Warning -Times 5
+
+Check-ContainerNameAndArgs -containerName '$root' -additionalArguments "/s"
+Check-ContainerNameAndArgs -containerName '$root' -additionalArguments "/s "
+Check-ContainerNameAndArgs -containerName '$root' -additionalArguments "/XN /s /XO"
+Check-ContainerNameAndArgs -containerName '$root' -additionalArguments " /s  "
+Check-ContainerNameAndArgs -containerName '$root' -additionalArguments "/Y /s"
+Assert-WasCalled Write-Warning -Times 10
 
 Unregister-Mock Write-Warning
 Register-Mock Write-Warning { }
