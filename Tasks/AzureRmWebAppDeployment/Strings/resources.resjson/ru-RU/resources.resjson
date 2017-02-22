@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Развертывание службы приложений Azure: $(WebAppName)",
   "loc.group.displayName.AdditionalDeploymentOptions": "Дополнительные параметры развертывания",
   "loc.group.displayName.output": "Выход",
-  "loc.input.label.ConnectedServiceName": "Azure Subscription",
+  "loc.input.label.ConnectedServiceName": "Подписка Azure",
   "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription for the deployment",
   "loc.input.label.WebAppName": "Имя службы приложений",
   "loc.input.help.WebAppName": "Enter or Select the name of an existing Azure App Service",
