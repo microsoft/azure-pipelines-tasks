@@ -324,6 +324,6 @@
         "AFC_UnableToSetCustomScriptExtension": "Unable to set the custom script extension '{0}' for virtual machine '{1}': {2}",
         "AFC_CopyPrereqsFailed": "Failed to enable copy prerequisites. {0}",
         "AFC_BlobStorageNotFound": "Storage account: {0} not found. Please specify existing storage account",
-        "AFC_RootContainerAndDirectory": "Root Container ($root) has no support for virtual directories. Remove '/S' from additional arguments."
+        "AFC_RootContainerAndDirectory": "'/S' option is not valid for $root containers."
     }
 }
