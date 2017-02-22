@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Azure 应用服务部署: $(WebAppName)",
   "loc.group.displayName.AdditionalDeploymentOptions": "其他部署选项",
   "loc.group.displayName.output": "输出",
-  "loc.input.label.ConnectedServiceName": "Azure Subscription",
+  "loc.input.label.ConnectedServiceName": "Azure 订阅",
   "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription for the deployment",
   "loc.input.label.WebAppName": "应用服务名称",
   "loc.input.help.WebAppName": "Enter or Select the name of an existing Azure App Service",

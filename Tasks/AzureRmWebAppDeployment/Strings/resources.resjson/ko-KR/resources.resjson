@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Azure App Service 배포: $(WebAppName)",
   "loc.group.displayName.AdditionalDeploymentOptions": "추가 배포 옵션",
   "loc.group.displayName.output": "출력",
-  "loc.input.label.ConnectedServiceName": "Azure Subscription",
+  "loc.input.label.ConnectedServiceName": "Azure 구독",
   "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription for the deployment",
   "loc.input.label.WebAppName": "App Service 이름",
   "loc.input.help.WebAppName": "Enter or Select the name of an existing Azure App Service",
