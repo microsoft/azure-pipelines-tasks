@@ -823,14 +823,15 @@ function cleanUp(temporarySettingsFile: string) {
 
 function isNugetRestoredAdapterPresent(rootDirectory: string): boolean {
     var allFiles = tl.find(rootDirectory);
-    var adapterFiles = tl.match(allFiles, "**\\packages\\**\\*TestAdapter.dll", { matchBase: true });
+    var adapterFiles = tl.match(allFiles, "**\\packages\\**\\*TestAdapter.dll", { matchBase: true, nocase: true });
+
     if (adapterFiles && adapterFiles.length != 0) {
         for (var i = 0; i < adapterFiles.length; i++) {
             var adapterFile = adapterFiles[i];
             var packageIndex = adapterFile.indexOf('packages') + 7;
             var packageFolder = adapterFile.substr(0, packageIndex);
             var parentFolder = path.dirname(packageFolder);
-            var solutionFiles = tl.match(allFiles, path.join(parentFolder, "*.sln"), { matchBase: true });
+            var solutionFiles = tl.match(allFiles, path.join(parentFolder, "*.sln"), { matchBase: true, nocase: true });
             if (solutionFiles && solutionFiles.length != 0) {
                 return true;
             }
