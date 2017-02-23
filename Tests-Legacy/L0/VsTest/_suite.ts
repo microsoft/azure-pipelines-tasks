@@ -414,7 +414,7 @@ describe('VsTest Suite', function () {
         setResponseFile('vstestGood.json');
 
         let tr = new trm.TaskRunner('VSTest');
-        tr.setInput('testSelector', 'testAssemblies');        
+        tr.setInput('testSelector', 'testAssemblies');
         tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
         tr.setInput('vstestLocationMethod', 'version');
         tr.setInput('vsTestVersion', '14.0'); // response file sets below update1
@@ -511,6 +511,33 @@ describe('VsTest Suite', function () {
                 done();
             })
             .fail((err) => {
+                console.log(tr.stdout);
+                done(err);
+            });
+    })
+
+    it('Vstest task with Nuget restored adapter path', (done) => {
+
+        let vstestCmd = [sysVstestLocation, '/source/dir/someFile1', "/logger:trx", "/TestAdapterPath:/source/dir"].join(" ");
+        setResponseFile('vstestGoodwithNugetAdapter.json');
+
+        let tr = new trm.TaskRunner('VSTest');
+        tr.setInput('testSelector', 'testAssemblies');
+        tr.setInput('testAssemblyVer2', '/source/dir/someFile1');
+        tr.setInput('vstestLocationMethod', 'version');
+        tr.setInput('vsTestVersion', '14.0');
+
+        tr.run()
+            .then(() => {
+                assert(tr.resultWasSet, 'task should have set a result');
+                assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.ran(vstestCmd), 'should have run vstest');
+                assert(tr.stdout.search(/##vso\[results.publish type=VSTest;mergeResults=false;resultFiles=a.trx;\]/) >= 0, 'should publish test results.');
+                done();
+            })
+            .fail((err) => {
+                console.log(tr.stdout);
                 done(err);
             });
     })
@@ -565,6 +592,7 @@ describe('VsTest Suite', function () {
                 done();
             })
             .fail((err) => {
+                console.log(tr.stdout);
                 done(err);
             });
     })
