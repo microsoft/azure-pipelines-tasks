@@ -31,6 +31,10 @@
             "code": 0,
             "stdout": "vstest"
         },
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /logger:trx": {
+            "code": 0,
+            "stdout": "vstest"
+        },
         "wmic datafile where name='\\\\path\\\\to\\\\vstest\\\\directory\\\\vstest.console.exe' get Version /Value": {
             "code": 0,
             "stdout": "Version=14.0.25423.0"

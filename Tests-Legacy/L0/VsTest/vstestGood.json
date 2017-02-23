@@ -5,7 +5,11 @@
         "VS150COMNTools": "/vs/path",
         "VS140COMNTools": "/vs/path",
         "VS120COMNTools": "/vs/path",
-        "vs15Helper": "/path/to/vs15Helper.ps1"
+        "vs15Helper": "/path/to/vs15Helper.ps1",
+        "System.ParallelExecutionType": "test"
+    },
+    "getInput": {
+        "testSelector": "testAssemblies"
     },
     "match": {
         "**\\packages\\**\\*TestAdapter.dll": []
