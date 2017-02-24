@@ -116,6 +116,38 @@
             "helpMarkDown": "Specify a name for the output variable that is generated for the URL of the Azure App Service. The variable can be consumed in subsequent tasks."
         },
         {
+            "name": "AddWebConfig",
+            "type": "boolean",
+            "label": "Add web.config",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "AdditionalDeploymentOptions",
+            "helpMarkDown": "Select this option to generate web.config file for your node app"
+        },
+        {
+            "name": "AppType",
+            "type": "pickList",
+            "label": "App type",
+            "required": true,
+            "defaultValue": "Node",
+            "visibleRule": "AddWebConfig = true",
+            "groupName": "AdditionalDeploymentOptions",
+            "helpMarkDown": "Application type",
+            "options": {
+                "Node": "Node"
+            }
+        },
+        {
+            "name": "WebConfigParameters",
+            "type": "string",
+            "label": "web.config parameters",
+            "required": true,
+            "defaultValue": "",
+            "visibleRule": "AddWebConfig = true",
+            "groupName": "AdditionalDeploymentOptions",
+            "helpMarkDown": "Provide web.config parameters in json format"
+        },
+        {
             "name": "TakeAppOfflineFlag",
             "type": "boolean",
             "label": "Take App Offline",

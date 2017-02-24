@@ -7,9 +7,7 @@ var jsonSubstitutionUtility = require('webdeployment-common/jsonvariablesubstitu
 var xmlSubstitutionUtility = require('webdeployment-common/xmlvariablesubstitutionutility.js');
 var xdtTransformationUtility = require('webdeployment-common/xdttransformationutility.js');
 
-export async function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles: any, xmlTransformation: boolean, xmlVariableSubstitution: boolean, webDeployPkg: string) {
-
-    var tempPackagePath;
+export async function generateTemporaryFolder(isFolderBasedDeployment: boolean, webDeployPkg: string) {
     var folderPath = utility.generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWorkingDirectory'), true);
         
     if(isFolderBasedDeployment) {
@@ -20,6 +18,10 @@ export async function fileTransformations(isFolderBasedDeployment: boolean, JSON
     else {
         await zipUtility.unzip(webDeployPkg, folderPath);
     }
+    return folderPath;
+}
+
+export async function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles: any, xmlTransformation: boolean, xmlVariableSubstitution: boolean, folderPath: string) {
 
     if(xmlTransformation) {
         var environmentName = tl.getVariable('Release.EnvironmentName');
@@ -45,6 +47,10 @@ export async function fileTransformations(isFolderBasedDeployment: boolean, JSON
         jsonSubstitutionUtility.jsonVariableSubstitution(folderPath, JSONFiles);
         console.log(tl.loc('JSONvariablesubstitutionappliedsuccessfully'));
     }
+}
+
+export async function archiveFolder(isFolderBasedDeployment: boolean, webDeployPkg: string, folderPath: string) {
+    var tempPackagePath;
 
     if(isFolderBasedDeployment) {
         tempPackagePath = folderPath;

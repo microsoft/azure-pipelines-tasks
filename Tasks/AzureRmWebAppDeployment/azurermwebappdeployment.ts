@@ -33,6 +33,9 @@ async function run() {
         var JSONFiles = tl.getDelimitedInput('JSONFiles', '\n', false);
         var xmlVariableSubstitution: boolean = tl.getBoolInput('XmlVariableSubstitution', false);
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
+        var addWebConfig = tl.getBoolInput('AddWebConfig', false);
+        var appType = tl.getInput('AppType', true);
+        var webConfigParameters = tl.getInput('WebConfigParameters', true);
 
         var isDeploymentSuccess: boolean = true;
         var tempPackagePath = null;
@@ -68,9 +71,26 @@ async function run() {
         webDeployPkg = availableWebPackages[0];
 
         var isFolderBasedDeployment = utility.isInputPkgIsFolder(webDeployPkg);
+        var generateTempFolder = JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution || addWebConfig;
 
+        if(generateTempFolder) {
+            var folderPath = await fileTransformationsUtility.generateTemporaryFolder(isFolderBasedDeployment, webDeployPkg);
+        }
+        
         if(JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution) {
-            var output = await fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, webDeployPkg);
+            await fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, folderPath);
+        }
+
+        if (addWebConfig) {
+            switch (appType.toLowerCase()) {
+                case "node":
+                    addWebConfigForNode(folderPath, webConfigParameters);
+                    break;
+            }
+        }
+
+        if(generateTempFolder) {
+            var output = await fileTransformationsUtility.archiveFolder(isFolderBasedDeployment, webDeployPkg, folderPath);
             tempPackagePath = output.tempPackagePath;
             webDeployPkg = output.webDeployPkg;
         }
@@ -218,6 +238,18 @@ async function updateScmType(SPN, webAppName: string, resourceGroupName: string,
     catch(error) {
         tl.warning(tl.loc("FailedToUpdateAzureRMWebAppConfigDetails", error));
     }
+}
+
+function addWebConfigForNode(folderPath, webConfigParameters) {
+    var webConfigPath = path.join(folderPath, "web.config");
+    var JSONObject = JSON.parse(webConfigParameters);
+    var iisNodeConfigTemplatePath = path.join(__dirname, 'nodeconfigtemplate');
+
+    var webConfigContent = fs.readFileSync(iisNodeConfigTemplatePath, 'utf8');
+    webConfigContent = webConfigContent.replace(/\{NodeStartFile\}/g, JSONObject["StartupFile"]);
+
+    tl.writeFile(webConfigPath, webConfigContent, {encoding: "utf8"});
+    tl.debug("Generated web.config file");
 }
 
 run();

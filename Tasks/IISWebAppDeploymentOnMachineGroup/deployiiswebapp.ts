@@ -40,7 +40,9 @@ async function run()
 
         if ( JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution ) {
 
-            var output = await fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, webDeployPkg);
+			var folderPath = await fileTransformationsUtility.generateTemporaryFolder(isFolderBasedDeployment, webDeployPkg);
+            await fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, folderPath);
+			var output = await fileTransformationsUtility.archiveFolder(isFolderBasedDeployment, webDeployPkg, folderPath);
             tempPackagePath = output.tempPackagePath;
             webDeployPkg = output.webDeployPkg;
 		}		
