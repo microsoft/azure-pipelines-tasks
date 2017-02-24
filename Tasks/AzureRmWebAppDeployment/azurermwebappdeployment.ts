@@ -34,8 +34,8 @@ async function run() {
         var xmlVariableSubstitution: boolean = tl.getBoolInput('XmlVariableSubstitution', false);
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
         var addWebConfig = tl.getBoolInput('AddWebConfig', false);
-        var appType = tl.getInput('AppType', true);
-        var webConfigParameters = tl.getInput('WebConfigParameters', true);
+        var appType = tl.getInput('AppType', false);
+        var webConfigParameters = tl.getInput('WebConfigParameters', false);
 
         var isDeploymentSuccess: boolean = true;
         var tempPackagePath = null;
@@ -241,15 +241,20 @@ async function updateScmType(SPN, webAppName: string, resourceGroupName: string,
 }
 
 function addWebConfigForNode(folderPath, webConfigParameters) {
-    var webConfigPath = path.join(folderPath, "web.config");
-    var JSONObject = JSON.parse(webConfigParameters);
-    var iisNodeConfigTemplatePath = path.join(__dirname, 'nodeconfigtemplate');
+    try {
+        var webConfigPath = path.join(folderPath, "web.config");
+        var JSONObject = JSON.parse(webConfigParameters);
+        var iisNodeConfigTemplatePath = path.join(__dirname, 'nodeconfigtemplate');
 
-    var webConfigContent = fs.readFileSync(iisNodeConfigTemplatePath, 'utf8');
-    webConfigContent = webConfigContent.replace(/\{NodeStartFile\}/g, JSONObject["StartupFile"]);
+        var webConfigContent = fs.readFileSync(iisNodeConfigTemplatePath, 'utf8');
+        webConfigContent = webConfigContent.replace(/\{NodeStartFile\}/g, JSONObject["StartupFile"]);
 
-    tl.writeFile(webConfigPath, webConfigContent, {encoding: "utf8"});
-    tl.debug("Generated web.config file");
+        tl.writeFile(webConfigPath, webConfigContent, { encoding: "utf8" });
+        console.log(tl.loc("SuccessfullyGeneratedWebAppConfig"));
+    }
+    catch (error) {
+        tl.warning(tl.loc("FailedToGenerateWebAppConfig", error));
+    }
 }
 
 run();

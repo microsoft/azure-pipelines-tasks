@@ -102,5 +102,7 @@
   "loc.messages.VirtualApplicationDoesNotExist": "Virtual application doesn't exists : %s",
   "loc.messages.JSONParseError": "Unable to parse JSON file: %s. Error: %s",
   "loc.messages.JSONvariablesubstitutionappliedsuccessfully": "JSON variable substitution applied successfully.",
-  "loc.messages.XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully."
+  "loc.messages.XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully.",
+  "loc.messages.SuccessfullyGeneratedWebConfig": "Successfully generated web.config file",
+  "loc.messages.FailedToGenerateWebAppConfig": "Failed to generate web.config. Error: %s"
 }

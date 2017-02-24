@@ -36,6 +36,23 @@ describe('AzureRmWebAppDeployment Suite', function() {
             done();
         });
 
+        it('Runs successfully with default inputs and add web.config for node is selected', (done:MochaDone) => {
+            let tp = path.join(__dirname, 'L0AddWebConfigForNode.js');
+            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            tr.run();
+            
+            assert(tr.invokedToolCount == 1, 'should have invoked tool once');
+            assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+            var expectedOut = "loc_mock_SuccessfullyGeneratedWebAppConfig";
+            assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
+            expectedOut = 'Updated history to kudu'; 
+            assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
+            expectedOut = 'Successfully updated scmType to VSTSRM';
+            assert(tr.stdout.search(expectedOut) > 0, 'should have said: ' + expectedOut);
+            assert(tr.succeeded, 'task should have succeeded');
+            done();
+        });
+
         it('Verify logs pushed to Kudu when task runs successfully with default inputs and env variables found', (done) => {
             this.timeout(1000);
             let tp = path.join(__dirname, 'L0WindowsDefault.js');

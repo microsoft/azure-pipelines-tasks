@@ -142,7 +142,7 @@
             "type": "string",
             "label": "web.config parameters",
             "required": true,
-            "defaultValue": "",
+            "defaultValue": "{\"StartupFile\":\"server.js\"}",
             "visibleRule": "AddWebConfig = true",
             "groupName": "AdditionalDeploymentOptions",
             "helpMarkDown": "Provide web.config parameters in json format"
@@ -329,6 +329,8 @@
         "VirtualApplicationDoesNotExist": "Virtual application doesn't exists : %s",
         "JSONParseError": "Unable to parse JSON file: %s. Error: %s",
         "JSONvariablesubstitutionappliedsuccessfully": "JSON variable substitution applied successfully.",
-        "XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully."
+        "XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully.",
+        "SuccessfullyGeneratedWebConfig": "Successfully generated web.config file",
+        "FailedToGenerateWebAppConfig": "Failed to generate web.config. Error: %s"
     }
 }
