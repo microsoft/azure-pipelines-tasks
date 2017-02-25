@@ -15,8 +15,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 0,
-        "Patch": 9
+        "Minor": 1,
+        "Patch": 0
     },
     "preview": "true",
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
@@ -184,6 +184,40 @@
             "helpMarkDown": "Select the option to enable msdeploy flag MSDEPLOY_RENAME_FILES_FLAG in Azure App Service application settings. The option if set enables msdeploy to rename locked files that are locked during app deployment"
         },
         {
+            "name": "ScriptType",
+            "type": "pickList",
+            "label": "Script Type",
+            "defaultValue": "",
+            "options": {
+                "": "Select Script Type",
+                "Inline Script": "Inline Script",
+                "File Path": "File Path"
+            },
+            "groupName": "AdditionalDeploymentOptions",
+            "helpMarkDown": "Type of the script: File Path or Inline Script"
+        },
+        {
+            "name": "InlineScript",
+            "type": "multiLine",
+            "label": "Inline Script",
+            "defaultValue": ":: You can provide your deployment commands here. One command per line.",
+            "groupName": "AdditionalDeploymentOptions",
+            "visibleRule": "ScriptType == Inline Script",
+            "properties": {
+                "resizable": "true",
+                "rows": "10",
+                "maxLength": "500"
+            }
+        },
+        {
+            "name": "ScriptPath",
+            "type": "filePath",
+            "label": "Script Path",
+            "required": true,
+            "groupName": "AdditionalDeploymentOptions",
+            "visibleRule": "ScriptType == File Path"
+        },
+        {
             "name": "XmlTransformation",
             "type": "boolean",
             "label": "XML transformation",
@@ -297,6 +331,15 @@
         "VirtualApplicationDoesNotExist": "Virtual application doesn't exists : %s",
         "JSONParseError": "Unable to parse JSON file: %s. Error: %s",
         "JSONvariablesubstitutionappliedsuccessfully": "JSON variable substitution applied successfully.",
-        "XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully."
+        "XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully.",
+        "failedtoUploadFileToKudu": "Unable to upload file: %s to Kudu (%s). Status Code: %s (%s)",
+        "failedtoUploadFileToKuduError": "Unable to upload file: %s to Kudu (%s). Error: %s",
+        "ExecuteScriptOnKudu": "Executing given Script on Kudu: %s",
+        "FailedToRunScriptOnKuduError": "Unable to run the script on Kudu: %s. Error: %s",
+        "FailedToRunScriptOnKudu": "Unable to run the script on Kudu: %s. Status Code: %s (%s)",
+        "SciptExecutionOnKuduSuccess": "Successfully executed script on Kudu.",
+        "SciptExecutionOnKuduFailed": "Executed Script returned '%s' as return code. Error: %s",
+        "FailedtoDeleteFileFromKudu": "Unable to delete file: %s from Kudu (%s). Status Code: %s (%s)",
+        "FailedtoDeleteFileFromKuduError": "Unable to delete file: %s from Kudu (%s). Error: %s"
     }
 }
