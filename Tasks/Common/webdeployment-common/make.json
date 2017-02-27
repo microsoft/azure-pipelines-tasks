@@ -1,0 +1,8 @@
+{
+    "cp": [
+        {
+            "source": "WebConfigTemplates",
+            "options": "-R"
+        }
+    ]
+}

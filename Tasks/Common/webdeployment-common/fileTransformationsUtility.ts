@@ -7,20 +7,6 @@ var jsonSubstitutionUtility = require('webdeployment-common/jsonvariablesubstitu
 var xmlSubstitutionUtility = require('webdeployment-common/xmlvariablesubstitutionutility.js');
 var xdtTransformationUtility = require('webdeployment-common/xdttransformationutility.js');
 
-export async function generateTemporaryFolder(isFolderBasedDeployment: boolean, webDeployPkg: string) {
-    var folderPath = utility.generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWorkingDirectory'), true);
-        
-    if(isFolderBasedDeployment) {
-        tl.debug('Copying Web Packge: ' + webDeployPkg + ' to temporary location: ' + folderPath);
-        utility.copyDirectory(webDeployPkg, folderPath);
-        tl.debug('Copied Web Package: ' + webDeployPkg + ' to temporary location: ' + folderPath + ' successfully.');
-    }
-    else {
-        await zipUtility.unzip(webDeployPkg, folderPath);
-    }
-    return folderPath;
-}
-
 export async function fileTransformations(isFolderBasedDeployment: boolean, JSONFiles: any, xmlTransformation: boolean, xmlVariableSubstitution: boolean, folderPath: string) {
 
     if(xmlTransformation) {
@@ -47,24 +33,4 @@ export async function fileTransformations(isFolderBasedDeployment: boolean, JSON
         jsonSubstitutionUtility.jsonVariableSubstitution(folderPath, JSONFiles);
         console.log(tl.loc('JSONvariablesubstitutionappliedsuccessfully'));
     }
-}
-
-export async function archiveFolder(isFolderBasedDeployment: boolean, webDeployPkg: string, folderPath: string) {
-    var tempPackagePath;
-
-    if(isFolderBasedDeployment) {
-        tempPackagePath = folderPath;
-        webDeployPkg = folderPath;
-    }
-    else {
-        var tempWebPackageZip = utility.generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWorkingDirectory'), false);
-        webDeployPkg = await zipUtility.archiveFolder(folderPath, "", tempWebPackageZip);
-        tempPackagePath = webDeployPkg;
-        tl.rmRF(folderPath, true);
-    }
-
-    return {
-        "webDeployPkg": webDeployPkg,
-        "tempPackagePath": tempPackagePath
-    };
 }

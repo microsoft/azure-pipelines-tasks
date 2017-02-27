@@ -71,26 +71,19 @@ async function run() {
         webDeployPkg = availableWebPackages[0];
 
         var isFolderBasedDeployment = utility.isInputPkgIsFolder(webDeployPkg);
-        var generateTempFolder = JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution || addWebConfig;
+        var performXmlTransformation = JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution;
 
-        if(generateTempFolder) {
-            var folderPath = await fileTransformationsUtility.generateTemporaryFolder(isFolderBasedDeployment, webDeployPkg);
-        }
-        
-        if(JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution) {
-            await fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, folderPath);
-        }
-
-        if (addWebConfig) {
-            switch (appType.toLowerCase()) {
-                case "node":
-                    addWebConfigForNode(folderPath, webConfigParameters);
-                    break;
+        if (performXmlTransformation || addWebConfig) {
+            var folderPath = await utility.generateTemporaryFolderForDeployment(isFolderBasedDeployment, webDeployPkg);
+            if (performXmlTransformation) {
+                await fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, folderPath);
             }
-        }
 
-        if(generateTempFolder) {
-            var output = await fileTransformationsUtility.archiveFolder(isFolderBasedDeployment, webDeployPkg, folderPath);
+            if (addWebConfig) {
+                addWebConfigFile(appType.toLowerCase(), path.join(__dirname, path.normalize('node_modules/webdeployment-common/WebConfigTemplates'), appType), folderPath, webConfigParameters);
+            }
+
+            var output = await utility.archiveFolderForDeployment(isFolderBasedDeployment, folderPath);
             tempPackagePath = output.tempPackagePath;
             webDeployPkg = output.webDeployPkg;
         }
@@ -240,15 +233,17 @@ async function updateScmType(SPN, webAppName: string, resourceGroupName: string,
     }
 }
 
-function addWebConfigForNode(folderPath, webConfigParameters) {
+function addWebConfigFile(appType: string, folderPath: string, webConfigTemplatePath: string, webConfigParameters: string) {
     try {
         var webConfigPath = path.join(folderPath, "web.config");
         var JSONObject = JSON.parse(webConfigParameters);
-        var iisNodeConfigTemplatePath = path.join(__dirname, 'nodeconfigtemplate');
 
-        var webConfigContent = fs.readFileSync(iisNodeConfigTemplatePath, 'utf8');
-        webConfigContent = webConfigContent.replace(/\{NodeStartFile\}/g, JSONObject["StartupFile"]);
-
+        var webConfigContent = fs.readFileSync(webConfigTemplatePath, 'utf8');
+        switch(appType) {
+            case "node":
+                webConfigContent = webConfigContent.replace(/\{NodeStartFile\}/g, JSONObject["StartupFile"]);
+                break;
+        }
         tl.writeFile(webConfigPath, webConfigContent, { encoding: "utf8" });
         console.log(tl.loc("SuccessfullyGeneratedWebAppConfig"));
     }

@@ -26,10 +26,5 @@
                 "dest": "./"
             }
         ]
-    },
-    "cp": [
-        {
-            "source": "nodeconfigtemplate"
-        }
-    ]
+    }
 }
