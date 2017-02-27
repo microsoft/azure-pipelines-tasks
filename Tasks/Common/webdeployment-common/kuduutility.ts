@@ -225,17 +225,13 @@ async function runCommandOnKudu(publishUrl: string, physicalPath: string, header
     tl.debug('Executing Script on Kudu: ' + kuduDeploymentURL + '. Command: ' + command);
     httpObj.send('POST', kuduDeploymentURL, JSON.stringify(jsonData), headers, (error, response, body) => {
         if(error) {
-            console.log(response);
-            console.log(body);
             defer.reject(tl.loc('FailedToRunScriptOnKuduError', kuduDeploymentURL, error));
         }
         else if(response.statusCode === 200) {
             var responseBody = JSON.parse(body);
+            console.log(responseBody.Output);
             if(responseBody.ExitCode === 0) {
-                console.log('-----------------------------------------------------');
-                console.log(responseBody.Output);
-                console.log(responseBody.Error);
-                console.log('-----------------------------------------------------');
+            console.log(responseBody.Error);
                 defer.resolve(tl.loc('SciptExecutionOnKuduSuccess'));
             }
             else {
