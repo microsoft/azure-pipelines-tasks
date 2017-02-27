@@ -17,6 +17,7 @@ export async function unzip(zipLocation, unzipLocation) {
         defer.reject(error);
     });
     unzipper.on('extract', function (log) {
+        tl.debug('extracted ' + zipLocation + ' to ' + unzipLocation + ' Successfully');
         defer.resolve(unzipLocation);
     });
     unzipper.extract({

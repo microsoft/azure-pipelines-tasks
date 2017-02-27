@@ -1314,3 +1314,15 @@ function Add-AzureVMCustomScriptExtension
 
     Write-Verbose "Successfully added the custom script extension '$extensionName' for virtual machine '$vmName'"
 }
+
+function Check-ContainerNameAndArgs
+{
+    param([string]$containerName,
+          [string]$additionalArguments)
+    
+    $additionalArguments = ' ' + $additionalArguments + ' '
+    if($containerName -eq '$root' -and $additionalArguments -like '* /S *')
+    {
+        Write-Warning (Get-vstsLocString -Key "AFC_RootContainerAndDirectory")
+    }
+}

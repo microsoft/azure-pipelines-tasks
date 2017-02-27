@@ -44,6 +44,7 @@ $isPremiumStorage = $false
 
 $sourcePath = $sourcePath.Trim('"')
 $storageAccount = $storageAccount.Trim()
+$containerName = $containerName.Trim().ToLower()
 
 # azcopy location on automation agent
 $azCopyExeLocation = 'AzCopy\AzCopy.exe'
@@ -127,6 +128,8 @@ else
 {
     $uploadAdditionalArguments = $additionalArguments
 }
+
+Check-ContainerNameAndArgs -containerName $containerName -additionalArguments $additionalArguments
 
 # Uploading files to container
 Upload-FilesToAzureContainer -sourcePath $sourcePath -storageAccountName $storageAccount -containerName $containerName -blobPrefix $blobPrefix -blobStorageEndpoint $blobStorageEndpoint -storageKey $storageKey `

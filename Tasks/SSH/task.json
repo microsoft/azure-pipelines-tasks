@@ -20,6 +20,7 @@
         "Patch": 4
     },
     "demands": [],
+    "minimumAgentVersion": "2.102.0",
     "instanceNameFormat": "Run shell $(runOptions) on remote machine",
     "groups": [
         {
