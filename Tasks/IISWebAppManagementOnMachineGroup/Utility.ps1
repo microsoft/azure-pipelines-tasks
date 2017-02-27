@@ -5,22 +5,34 @@ function Manage-IISWebSite
     Trim-Inputs -siteName ([ref]$websiteName) -physicalPath ([ref]$websitePhysicalPath)  -poolName ([ref]$appPoolNameForWebsite) -physicalPathAuthuser ([ref]$websiteAuthUserName) -appPoolUser ([ref]$appPoolUsernameForWebsite) -sslCertThumbPrint ([ref]$sslCertThumbPrint)
     Validate-Inputs -sslCertThumbPrint $sslCertThumbPrint
     
-    if ($actionIISWebsite -ieq "CreateOrUpdateWebsite" -and $websitePhysicalPathAuth -ieq "WebsiteWindowsAuth") 
+    switch ($actionIISWebsite) 
     {
-        $websitePhysicalPathAuthCredentials = Get-CustomCredentials -username $websiteAuthUserName -password $websiteAuthUserPassword
-    }
+        "CreateOrUpdateWebsite" 
+        {
+            if($websitePhysicalPathAuth -ieq "WebsiteWindowsAuth") 
+            {
+                $websitePhysicalPathAuthCredentials = Get-CustomCredentials -username $websiteAuthUserName -password $websiteAuthUserPassword
+            }
 
-    if ($createOrUpdateAppPoolForWebsite -ieq "true" -and $appPoolIdentityForWebsite -ieq "SpecificUser") 
-    {
-        $appPoolCredentials = Get-CustomCredentials -username $appPoolUsernameForWebsite -password $appPoolPasswordForWebsite
-    }
+            if ($createOrUpdateAppPoolForWebsite -eq "true") 
+            {
+                if($appPoolIdentityForWebsite -ieq "SpecificUser") 
+                {
+                    $appPoolCredentials = Get-CustomCredentials -username $appPoolUsernameForWebsite -password $appPoolPasswordForWebsite
+                }
 
-    if($actionIISWebsite -ne "CreateOrUpdateWebsite") 
-    {
-        $websiteName = $startStopWebsiteName
-    }
-
-    Execute-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -PhysicalPath $websitePhysicalPath -PhysicalPathAuth $websitePhysicalPathAuth -PhysicalPathAuthCredentials $websitePhysicalPathAuthCredentials -AddBinding $addBinding -Protocol $protocol -IpAddress $ipAddress -Port $port -HostNameWithOutSNI $hostNameWithOutSNI -HostNameWithHttp $hostNameWithHttp -HostNameWithSNI $hostNameWithSNI -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -CreateAppPool $createOrUpdateAppPoolForWebsite -AppPoolName $appPoolNameForWebsite -DotNetVersion $dotNetVersionForWebsite -PipeLineMode $pipeLineModeForWebsite -AppPoolIdentity $appPoolIdentityForWebsite -AppPoolCredentials $appPoolCredentials -AppCmdCommands $appCmdCommands
+                Execute-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -PhysicalPath $websitePhysicalPath -PhysicalPathAuth $websitePhysicalPathAuth -PhysicalPathAuthCredentials $websitePhysicalPathAuthCredentials -AddBinding $addBinding -Protocol $protocol -IpAddress $ipAddress -Port $port -HostNameWithOutSNI $hostNameWithOutSNI -HostNameWithHttp $hostNameWithHttp -HostNameWithSNI $hostNameWithSNI -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -ActionIISApplicationPool "CreateOrUpdateAppPool" -AppPoolName $appPoolNameForWebsite -DotNetVersion $dotNetVersionForWebsite -PipeLineMode $pipeLineModeForWebsite -AppPoolIdentity $appPoolIdentityForWebsite -AppPoolCredentials $appPoolCredentials -AppCmdCommands $appCmdCommands
+            }
+            else 
+            {
+                Execute-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $websiteName -PhysicalPath $websitePhysicalPath -PhysicalPathAuth $websitePhysicalPathAuth -PhysicalPathAuthCredentials $websitePhysicalPathAuthCredentials -AddBinding $addBinding -Protocol $protocol -IpAddress $ipAddress -Port $port -HostNameWithOutSNI $hostNameWithOutSNI -HostNameWithHttp $hostNameWithHttp -HostNameWithSNI $hostNameWithSNI -ServerNameIndication $serverNameIndication -SslCertThumbPrint $sslCertThumbPrint -AppCmdCommands $appCmdCommands
+            }
+        }
+        {($_ -eq "StartWebsite") -or ($_ -eq "StopWebsite")}
+        {
+            Execute-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $startStopWebsiteName -AppCmdCommands $appCmdCommands
+        }
+    }    
 }
 
 function Manage-IISVirtualDirectory
@@ -41,34 +53,46 @@ function Manage-IISWebApplication
     Trim-Inputs -siteName ([ref]$parentWebsiteNameForApplication) -virtualPath ([ref]$virtualPathForApplication) -physicalPath ([ref]$physicalPathForApplication) -physicalPathAuthuser ([ref]$applicationAuthUserName) -poolName ([ref]$appPoolNameForApplication) -appPoolUser ([ref]$appPoolUsernameForApplication) 
     Validate-Inputs -virtualPath $virtualPathForApplication
 
-    if ($applicationPhysicalPathAuth -ieq "ApplicationWindowsAuth") 
+    if ($applicationPhysicalPathAuth -eq "ApplicationWindowsAuth") 
     {
         $applicationPhysicalPathAuthCredentials = Get-CustomCredentials -username $applicationAuthUserName -password $applicationAuthUserPassword     
     }
 
-    if ($createOrUpdateAppPoolForApplication -ieq "true" -and $appPoolIdentityForApplication -ieq "SpecificUser") 
+    if ($createOrUpdateAppPoolForApplication -eq "true") 
     {
-        $appPoolCredentials = Get-CustomCredentials -username $appPoolUsernameForApplication -password $appPoolPasswordForApplication
+        if($appPoolIdentityForApplication -ieq "SpecificUser") 
+        {
+            $appPoolCredentials = Get-CustomCredentials -username $appPoolUsernameForApplication -password $appPoolPasswordForApplication
+        }
+        
+        Execute-Main -CreateApplication $true -WebsiteName $parentWebsiteNameForApplication -VirtualPath $virtualPathForApplication -PhysicalPath $physicalPathForApplication -PhysicalPathAuth $applicationPhysicalPathAuth -PhysicalPathAuthCredentials $ApplicationPhysicalPathAuthCredentials -ActionIISApplicationPool "CreateOrUpdateAppPool" -AppPoolName $appPoolNameForApplication -DotNetVersion $dotNetVersionForApplication -PipeLineMode $pipeLineModeForApplication -AppPoolIdentity $appPoolIdentityForApplication -AppPoolCredentials $appPoolCredentials -AppCmdCommands $appCmdCommands
     }
-
-    Execute-Main -CreateApplication $true -WebsiteName $parentWebsiteNameForApplication -VirtualPath $virtualPathForApplication -PhysicalPath $physicalPathForApplication -PhysicalPathAuth $applicationPhysicalPathAuth -PhysicalPathAuthCredentials $ApplicationPhysicalPathAuthCredentials -CreateAppPool $createOrUpdateAppPoolForApplication -AppPoolName $appPoolNameForApplication -DotNetVersion $dotNetVersionForApplication -PipeLineMode $pipeLineModeForApplication -AppPoolIdentity $appPoolIdentityForApplication -AppPoolCredentials $appPoolCredentials -AppCmdCommands $appCmdCommands
+    else 
+    {
+        Execute-Main -CreateApplication $true -WebsiteName $parentWebsiteNameForApplication -VirtualPath $virtualPathForApplication -PhysicalPath $physicalPathForApplication -PhysicalPathAuth $applicationPhysicalPathAuth -PhysicalPathAuthCredentials $ApplicationPhysicalPathAuthCredentials -AppCmdCommands $appCmdCommands
+    }
 }
 
 function Manage-IISApplicationPool
 {
     Trim-Inputs -poolName ([ref]$appPoolName) -appPoolUser ([ref]$appPoolUsername) 
 
-    if ($actionIISApplicationPool -ieq "CreateOrUpdateAppPool" -and $appPoolIdentity -ieq "SpecificUser") 
+    switch ($actionIISApplicationPool) 
     {
-        $appPoolCredentials = Get-CustomCredentials -username $appPoolUsername -password $appPoolPassword        
-    }
+        "CreateOrUpdateAppPool" 
+        {
+            if($appPoolIdentity -ieq "SpecificUser") 
+            {
+                $appPoolCredentials = Get-CustomCredentials -username $appPoolUsername -password $appPoolPassword        
+            }
 
-    if ($actionIISApplicationPool -ne "CreateOrUpdateAppPool") 
-    {
-        $appPoolName = $startStopRecycleAppPoolName
+            Execute-Main -ActionIISApplicationPool $actionIISApplicationPool -AppPoolName $appPoolName -DotNetVersion $dotNetVersion -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolCredentials $appPoolCredentials -AppCmdCommands $appCmdCommands
+        }
+        {($_ -eq "StartAppPool") -or ($_ -eq "StopAppPool") -or ($_ -eq "RecycleAppPool")}
+        {
+            Execute-Main -ActionIISApplicationPool $actionIISApplicationPool -AppPoolName $startStopRecycleAppPoolName -AppCmdCommands $appCmdCommands
+        }
     }
-    
-    Execute-Main -ActionIISApplicationPool $actionIISApplicationPool -AppPoolName $appPoolName -DotNetVersion $dotNetVersion -PipeLineMode $pipeLineMode -AppPoolIdentity $appPoolIdentity -AppPoolCredentials $appPoolCredentials -AppCmdCommands $appCmdCommands
 }
 
 function Get-CustomCredentials {
@@ -94,7 +118,7 @@ function Trim-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]$v
     }
     if ($physicalPath -ne $null) 
     {
-        $physicalPath.Value = $physicalPath.Value.Trim('"', ' ').Trim('\', ' ')
+        $physicalPath.Value = $physicalPath.Value.Trim('"', ' ').TrimEnd('\', ' ')
     }
     if ($virtualPath -ne $null) 
     {
