@@ -46,6 +46,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 tmr.setAnswers(a);
 tmr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunner'));
-tmr.registerMock('nuget-task-common/utility', require('./mock-findfiles'));
+tmr.registerMock('nuget-task-common/Utility', require('./mock-findfiles'));
 
 tmr.run();
