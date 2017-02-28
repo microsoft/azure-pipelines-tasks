@@ -18,10 +18,7 @@ async function executeTask() {
     try {
         var filePath = tl.getPathInput('cwd', true, false);
         var dirList = [];
-        if (!RegExp("/[*?+@!{}\[\]]/").test(filePath)) {
-            dirList.push(filePath);
-        }
-        else {
+        if (/[\*?+@\[\]{}!]/.test(filePath)) {
             var filesList = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), filePath);
             tl.debug("number of files matching filePath: " + filesList.length);
             for (var workingDir of filesList) {
@@ -32,6 +29,9 @@ async function executeTask() {
                     dirList.push(workingDir);
                 }
             }
+        }
+        else {
+            dirList.push(filePath);
         }
     }
     catch (error) {
