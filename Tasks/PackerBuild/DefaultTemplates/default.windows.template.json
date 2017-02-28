@@ -1,0 +1,66 @@
+{
+  "variables": {
+    "client_id": "",
+    "client_secret": "",
+    "subscription_id": "",
+    "tenant_id": "",
+    "object_id": "",
+    "resource_group": "",
+    "storage_account": "",
+    "image_publisher": "",
+    "image_offer": "",
+    "image_sku": "",
+    "location": "",
+    "script_path": "",
+    "script_name": "",
+    "package_path": "",
+    "package_name": ""    
+  },
+  "builders": [{
+        "type": "azure-arm",
+        "client_id": "{{user `client_id`}}",
+        "client_secret": "{{user `client_secret`}}",
+        "resource_group_name": "{{user `resource_group`}}",
+        "storage_account": "{{user `storage_account`}}",
+        "subscription_id": "{{user `subscription_id`}}",
+        "tenant_id": "{{user `tenant_id`}}",
+        "object_id": "{{user `object_id`}}",
+                
+        "os_type": "Windows",
+        "image_publisher": "{{user `image_publisher`}}",
+        "image_offer": "{{user `image_offer`}}",
+        "image_sku": "{{user `image_sku`}}",
+        "communicator": "winrm",
+        "winrm_use_ssl": "true",
+        "winrm_insecure": "true",
+        "winrm_timeout": "15m",
+        "winrm_username": "packer",
+        "location": "{{user `location`}}",
+        "vm_size": "Standard_D3_v2",
+        "capture_container_name": "packer",
+        "capture_name_prefix": "packer"
+    }],
+    "provisioners": [{
+            "type": "windows-shell",
+            "inline": [
+                "cmd /c \"mkdir c:\\\\DeployTemp\""
+            ]
+        },
+        {
+            "type": "file",
+            "source": "{{user `script_path`}}",
+            "destination": "c:\\DeployTemp\\{{user `script_name`}}"
+        },
+        {
+            "type": "file",
+            "source": "{{user `package_path`}}",
+            "destination": "c:\\DeployTemp\\{{user `package_name`}}"
+        },
+        {
+            "type": "powershell",
+            "inline": [
+                "ls \"C:\\DeployTemp\"",
+                "Start-Process powershell -ArgumentList \"C:\\\\DeployTemp\\\\{{user `script_name`}}\" -NoNewWindow -Wait"
+            ]
+        }]
+}

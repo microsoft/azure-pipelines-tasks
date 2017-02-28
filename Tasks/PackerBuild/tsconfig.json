@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "module": "commonjs",
+        "sourceMap": true,
+        "sourceRoot": "E:\\github\\vsts-tasks\\Tasks\\PackerBuild" 
+    }
+}
