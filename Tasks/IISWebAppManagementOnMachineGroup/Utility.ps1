@@ -185,11 +185,11 @@ function Trim-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]$v
     }
     if ($physicalPath -ne $null) 
     {
-        $physicalPath.Value = $physicalPath.Value.Trim('"', ' ').TrimEnd('\', ' ')
+        $physicalPath.Value = $physicalPath.Value.Trim('"', ' ').TrimEnd('\')
     }
     if ($virtualPath -ne $null) 
     {
-        $virtualPath.Value = $virtualPath.Value.Trim('"', ' ').Trim('\', ' ')
+        $virtualPath.Value = $virtualPath.Value.Trim('"', ' ').Trim('\')
     }
     if ($poolName -ne $null) 
     {
