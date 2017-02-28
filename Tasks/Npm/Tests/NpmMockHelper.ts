@@ -123,9 +123,7 @@ export class NpmMockHelper {
         this.answers.checkPath["c:\\agent\\home\\directory\\fake\\wd\two"] = true;
         this.answers.findMatch = {
             "**\\package.json": 
-                ["c:\\agent\\home\\directory\\fake\\wd\\one\\package.json", "c:\\agent\\home\\directory\\fake\\wd\\two\\package.json"],
-            "fake\\wd":
-                ["c:\\agent\\home\\directory\\fake\\wd"]
+                ["c:\\agent\\home\\directory\\fake\\wd\\one\\package.json", "c:\\agent\\home\\directory\\fake\\wd\\two\\package.json"]
         }
     }
 
@@ -135,7 +133,7 @@ export class NpmMockHelper {
     }
 
     private setProjectNpmrcExists() {
-        this.answers.exist[path.join(NpmMockHelper.DefaultWorkingDirectory, NpmMockHelper.FakeWorkingDirectory, '.npmrc')] = true;
+        this.answers.exist[path.join(NpmMockHelper.FakeWorkingDirectory, '.npmrc')] = true;
         this.answers.exist[path.join(NpmMockHelper.DefaultWorkingDirectory, NpmMockHelper.FakeWorkingDirectory, "two", '.npmrc')] = true;
         this.answers.exist[path.join(NpmMockHelper.DefaultWorkingDirectory, NpmMockHelper.FakeWorkingDirectory, "one", '.npmrc')] = true;
     }
