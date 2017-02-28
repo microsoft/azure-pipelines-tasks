@@ -1,13 +1,13 @@
-import tl = require('vsts-task-lib/task');
-import ffl = require('find-files-legacy/findfiles.legacy');
+import * as tl from 'vsts-task-lib/task';
 
-var testRunner = tl.getInput('testRunner', true);
-var testResultsFiles = tl.getInput('testResultsFiles', true);
-var mergeResults = tl.getInput('mergeTestResults');
-var platform = tl.getInput('platform');
-var config = tl.getInput('configuration');
-var testRunTitle = tl.getInput('testRunTitle');
-var publishRunAttachments = tl.getInput('publishRunAttachments');
+const testRunner = tl.getInput('testRunner', true);
+const testResultsFiles: string[] = tl.getDelimitedInput('testResultsFiles', '\n', true);
+const mergeResults = tl.getInput('mergeTestResults');
+const platform = tl.getInput('platform');
+const config = tl.getInput('configuration');
+const testRunTitle = tl.getInput('testRunTitle');
+const publishRunAttachments = tl.getInput('publishRunAttachments');
+let searchFolder = tl.getInput('searchFolder');
 
 tl.debug('testRunner: ' + testRunner);
 tl.debug('testResultsFiles: ' + testResultsFiles);
@@ -17,12 +17,23 @@ tl.debug('config: ' + config);
 tl.debug('testRunTitle: ' + testRunTitle);
 tl.debug('publishRunAttachments: ' + publishRunAttachments);
 
-let matchingTestResultsFiles = ffl.findFiles(testResultsFiles, false, tl.getVariable('System.DefaultWorkingDirectory'));
-if(!matchingTestResultsFiles || matchingTestResultsFiles.length == 0) {
-  tl.warning('No test result files matching ' + testResultsFiles + ' were found.');  
-  tl.exit(0);
+if(isNullOrWhitespace(searchFolder)){
+    searchFolder = tl.getVariable('System.DefaultWorkingDirectory');
 }
-else{
+
+let matchingTestResultsFiles = tl.findMatch(searchFolder, testResultsFiles);
+if(!matchingTestResultsFiles || matchingTestResultsFiles.length == 0) {
+  tl.warning('No test result files matching ' + testResultsFiles + ' were found.');
+} else {
   let tp = new tl.TestPublisher(testRunner);
   tp.publish(matchingTestResultsFiles, mergeResults, platform, config, testRunTitle, publishRunAttachments);
+}
+
+tl.setResult(tl.TaskResult.Succeeded, '');
+
+function isNullOrWhitespace(input) {
+    if (typeof input === 'undefined' || input === null) {
+        return true;
+    }
+    return input.replace(/\s/g, '').length < 1;
 }
