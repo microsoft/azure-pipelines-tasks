@@ -1,4 +1,135 @@
-﻿function Get-TestAgentType([string] $Version)
+﻿function isAutoLogonDisabled()
+{
+    #check 64 bit or 32 bit
+	if ([IntPtr]::Size -eq 8)
+	{
+		$registryPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion\Winlogon"
+	}
+    else
+    {
+        $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
+    }
+
+    if (-not (Test-Path $registryPath))
+	{
+		return $true
+	}
+	
+	$autoadminLogon = (Get-ItemProperty $registryPath -ErrorAction SilentlyContinue).AutoAdminLogon
+	if (($autoadminLogon -eq $null) -or ($autoadminLogon.Length -eq 0))
+    {
+		return $true
+	}
+    elseif($autoadminLogon -eq "1")
+    {
+	    return $false
+    }
+
+    return $true
+}
+
+function isShowLogonMessagePolicyEnabled()
+{
+    #check 64 bit or 32 bit
+    if ([IntPtr]::Size -eq 8)
+	{
+		$registryPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\policies\system"
+	}
+    else
+    {
+        $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\policies\system"
+    }
+
+    if (-not (Test-Path $registryPath))
+	{
+		return $false
+	}
+	
+	$legalCaption = (Get-ItemProperty $registryPath -ErrorAction SilentlyContinue).legalnoticecaption
+	if (($legalCaption -ne $null) -and ($legalCaption.Length -gt 0))
+    {
+		return $true
+	}
+
+	$legalText = (Get-ItemProperty $registryPath -ErrorAction SilentlyContinue).legalnoticetext
+	if (($legalText -ne $null) -and ($legalText.Length -gt 0))
+    {
+		return $true
+	}
+
+    return $false
+}
+
+function isShowLogonMessageEnabled()
+{
+    #check 64 bit or 32 bit
+	if ([IntPtr]::Size -eq 8)
+	{
+		$registryPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion\Winlogon"
+	}
+    else
+    {
+        $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
+    }
+
+    if (-not (Test-Path $registryPath))
+	{
+		return $false
+	}
+	
+	$legalCaption = (Get-ItemProperty $registryPath -ErrorAction SilentlyContinue).LegalNoticeCaption
+	if (($legalCaption -ne $null) -and ($legalCaption.Length -gt 0))
+    {
+		return $true
+	}
+
+	$legalText = (Get-ItemProperty $registryPath -ErrorAction SilentlyContinue).LegalNoticeText
+	if (($legalText -ne $null) -and ($legalText.Length -gt 0))
+    {
+		return $true
+	}
+
+    return $false
+}
+
+function Update-RebootCount([string] $environmentURL)
+{
+    if ([IntPtr]::Size -eq 8)
+	{
+		$testAgentRegPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\TestAgentConfig"
+    }
+    else
+    {
+        $testAgentRegPath = "HKLM:\SOFTWARE\Microsoft\TestAgentConfig" 
+    }
+
+    if (-not (Test-Path $testAgentRegPath))
+	{
+		New-Item -Path $testAgentRegPath -Force | Out-Null
+        Write-Verbose -Message ("Updating machine reboot count to 1") -Verbose
+        New-ItemProperty -Path $testAgentRegPath -Name "MachineRebootCount" -Value 1 -PropertyType DWord -Force | Out-Null
+        New-ItemProperty -Path $testAgentRegPath -Name "EnvironmentURL" -Value $environmentURL -PropertyType String -Force | Out-Null
+        return 1;
+	}
+ 
+    [int]$machineRebootCount = (Get-ItemProperty $testAgentRegPath -ErrorAction SilentlyContinue).MachineRebootCount
+    $savedEnvURL = (Get-ItemProperty $testAgentRegPath -ErrorAction SilentlyContinue).EnvironmentURL
+
+    if (($machineRebootCount -eq $null) -or ([string]::Compare($savedEnvURL, $environmentURL, $True) -ne 0))
+    {
+        $machineRebootCount = 0
+	}
+
+    [int]$machineRebootCount = $machineRebootCount + 1;
+    Write-Verbose -Message ("Updating machine reboot count to : {0}" -f $machineRebootCount) -Verbose
+    Set-ItemProperty -Path $testAgentRegPath -Name "MachineRebootCount" -Value $machineRebootCount -Force | Out-Null
+    Set-ItemProperty -Path $testAgentRegPath -Name "EnvironmentURL" -Value $environmentURL -Force | Out-Null
+
+    return $machineRebootCount
+
+}
+
+function Get-TestAgentType([string] $Version)
 {
 	$Version = Locate-TestVersion
 	$testAgentPath = "HKLM:\SOFTWARE\Microsoft\VisualStudio\{0}\EnterpriseTools\QualityTools\Agent" -f $Version
@@ -276,6 +407,9 @@ function Set-TestAgentConfiguration
         $configArgs = $configArgs + ("/adminPassword:`"{0}`""  -f $MachineUserCredential.GetNetworkCredential().Password)
     }
 
+    
+    Write-Verbose -Message ("Checking for enableAutologon") -Verbose
+
     if ($PSBoundParameters.ContainsKey('EnableAutoLogon'))
     {
         if (-not $configAsProcess)
@@ -284,6 +418,26 @@ function Set-TestAgentConfiguration
         }
 
         $yesno = GetBoolAsYesNo($EnableAutoLogon)
+
+        Write-Verbose -Message ("Checking for enableAutologon value: {0}" -f $yesno) -Verbose
+
+        if($EnableAutoLogon)
+        {
+            if(isAutoLogonDisabled)
+            {
+                Write-Verbose -Message ("Admin auto logon is disabled") -Verbose
+            }
+            if(isShowLogonMessagePolicyEnabled)
+            {
+                Write-Verbose -Message ("Show logon message policy is enabled") -Verbose
+            }
+            elseif(isShowLogonMessageEnabled)
+            {
+                Write-Verbose -Message ("Show logon Message is enabled") -Verbose
+            }
+
+        }
+
         $configArgs = $configArgs + ("/enableAutoLogon:{0}" -f $yesno)
     }
 
@@ -801,7 +955,7 @@ function ConfigurePowerOptions([System.Management.Automation.PSCredential] $Mach
 function CreateNewSession([System.Management.Automation.PSCredential] $MachineCredentials)
 {
     Write-Verbose -Message("Trying to fetch WinRM details on the machine") -Verbose
-    $wsmanoutput = Get-WSManInstance –ResourceURI winrm/config/listener –Enumerate
+    $wsmanoutput = Get-WSManInstance -ResourceURI winrm/config/listener -Enumerate
 
     if($wsmanoutput -ne $null)
     {	
@@ -903,6 +1057,8 @@ function ConfigureTestAgent
         [System.Management.Automation.PSCredential] $AgentUserCredential
     )
 
+    $retCode = 0
+
     EnableTracing -TestAgentVersion $TestAgentVersion | Out-Null
 
     if ($AsServiceOrProcess -eq "Service")
@@ -919,9 +1075,9 @@ function ConfigureTestAgent
     {
         $retCode = $ret[$ret.Count - 1]
     }
-
+    
     Write-Verbose -Message ("Return code received : {0}" -f $retCode) -Verbose
-
+    
     if ($retCode -eq 0)
     {
         Write-Verbose -Message ("TestAgent Configured Successfully") -Verbose
@@ -929,12 +1085,17 @@ function ConfigureTestAgent
     elseif($retCode -eq 3010)
     {
         Write-Verbose -Message ("TestAgent configuration requested for reboot") -Verbose
+        $rebootCount = Update-RebootCount($EnvironmentUrl)
+        if($rebootCount -gt 3)
+        {
+            $retCode = 1
+            throw ("Exceeded maximum number of reboots. TestAgent Configuration is failing with exit code {0}. Error code : {1}" -f $LASTEXITCODE, $retCode)
+        }
     }
     else
     {
         throw ("TestAgent Configuration failed with exit code {0}. Error code : {1}" -f $LASTEXITCODE, $retCode)
     }
-
     return $retCode;
 }
 
