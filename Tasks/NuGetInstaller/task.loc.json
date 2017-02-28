@@ -26,24 +26,12 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
-      "name": "scenario",
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.scenario",
-      "defaultValue": "restore",
-      "required": "true",
-      "options": {
-        "restore": "Restore packages for a build",
-        "install": "Install tools packages to a working directory"
-      }
-    },
-    {
       "name": "solution",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.solution",
       "defaultValue": "**/*.sln",
       "helpMarkDown": "ms-resource:loc.input.help.solution",
-      "required": "true",
-      "visibleRule": "scenario = restore"
+      "required": "true"
     },
     {
       "name": "sources",
@@ -54,8 +42,7 @@
       "options": {
         "nugetAndSharing": "Use NuGet.org and sharing feeds",
         "nugetConfig": "Use feeds specified in my NuGet.Config"
-      },
-      "visibleRule": "scenario = restore"
+      }
     },
     {
       "name": "nugetConfigPath",
@@ -65,38 +52,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.nugetConfigPath",
       "required": "false",
       "visibleRule": "sources = nugetConfig"
-    },
-    {
-      "name": "feed",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.feed",
-      "defaultValue": "nuget-org",
-      "helpMarkDown": "ms-resource:loc.input.help.feed",
-      "required": "false",
-      "visibleRule": "scenario = install",
-      "options": {
-        "nuget-org": "NuGet.org",
-        "feed-a": "Feed A",
-        "feed-picker-goes-here": "Feed picker goes here"
-      }
-    },
-    {
-      "name": "packageId",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.packageId",
-      "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.packageId",
-      "required": "false",
-      "visibleRule": "scenario = install"
-    },
-    {
-      "name": "packageVersion",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.packageVersion",
-      "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.packageVersion",
-      "required": "false",
-      "visibleRule": "scenario = install"
     },
     {
       "name": "noCache",
