@@ -17,33 +17,33 @@ tl.cd(cwd);
 tl.debug('check path : ' + gulp);
 if (!tl.exist(gulp)) {
 	tl.debug('not found global installed gulp, try to find gulp locally.');
-	var gt = tl.createToolRunner(tl.which('node', true));
+	var gt = tl.tool(tl.which('node', true));
 	var gulpjs = tl.getInput('gulpjs', true);
 	gulpjs = path.resolve(cwd, gulpjs);
 	tl.debug('check path : ' + gulpjs);
 	if (!tl.exist(gulpjs)) {
 		tl.setResult(tl.TaskResult.Failed, tl.loc('GulpNotInstalled', gulpjs));
 	}
-	gt.pathArg(gulpjs);
+	gt.arg(gulpjs);
 }
 else {
-	var gt = tl.createToolRunner(gulp);
+	var gt = tl.tool(gulp);
 }
 
 if (isCodeCoverageEnabled) {
-	var npm = tl.createToolRunner(tl.which('npm', true));
-	npm.argString('install istanbul');
+	var npm = tl.tool(tl.which('npm', true));
+	npm.line('install istanbul');
 	var testFramework = tl.getInput('testFramework', true);
 	var srcFiles = tl.getInput('srcFiles', false);
 	var testSrc = tl.getPathInput('testFiles', true, false);
-	var istanbul = tl.createToolRunner(tl.which('node', true));
+	var istanbul = tl.tool(tl.which('node', true));
 	istanbul.arg('./node_modules/istanbul/lib/cli.js');
-	istanbul.argString('cover --report cobertura --report html');
+	istanbul.line('cover --report cobertura --report html');
 	if (srcFiles) {
-		istanbul.argString('-i .' + path.sep + path.join(srcFiles));
+		istanbul.line('-i .' + path.sep + path.join(srcFiles));
 	}
 	if (testFramework.toLowerCase() == 'jasmine') {
-		istanbul.argString('./node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=node_modules/jasmine/lib/examples/jasmine.json');
+		istanbul.line('./node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=node_modules/jasmine/lib/examples/jasmine.json');
 	} else {
 		istanbul.arg('./node_modules/mocha/bin/_mocha');
 	}
@@ -55,8 +55,8 @@ if (isCodeCoverageEnabled) {
 // optional - no targets will concat nothing
 gt.arg(tl.getDelimitedInput('targets', ' ', false));
 gt.arg('--gulpfile');
-gt.pathArg(gulpFile);
-gt.argString(tl.getInput('arguments', false));
+gt.arg(gulpFile);
+gt.line(tl.getInput('arguments', false));
 gt.exec().then(function (code) {
 	publishTestResults(publishJUnitResults, testResultsFiles);
 	if (isCodeCoverageEnabled) {
@@ -89,7 +89,7 @@ function publishTestResults(publishJUnitResults, testResultsFiles: string) {
             tl.debug('Pattern found in testResultsFiles parameter');
             var buildFolder = tl.getVariable('System.DefaultWorkingDirectory');
             var allFiles = tl.find(buildFolder);
-            var matchingTestResultsFiles = tl.match(allFiles, testResultsFiles, { matchBase: true });
+            var matchingTestResultsFiles = tl.match(allFiles, testResultsFiles, "", { matchBase: true });
         }
         else {
             tl.debug('No pattern found in testResultsFiles parameter');
