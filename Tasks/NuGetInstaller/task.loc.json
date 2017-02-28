@@ -7,9 +7,9 @@
   "category": "Package",
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 0,
-    "Minor": 2,
-    "Patch": 29
+    "Major": 10,
+    "Minor": 0,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -26,12 +26,36 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
+      "name": "scenario",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.scenario",
+      "defaultValue": "restore",
+      "required": "true",
+      "options": {
+        "restore": "Restore packages for a build",
+        "install": "Install tools packages to a working directory"
+      }
+    },
+    {
       "name": "solution",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.solution",
       "defaultValue": "**/*.sln",
       "helpMarkDown": "ms-resource:loc.input.help.solution",
-      "required": "true"
+      "required": "true",
+      "visibleRule": "scenario = restore"
+    },
+    {
+      "name": "sources",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.sources",
+      "defaultValue": "nugetAndSharing",
+      "required": "true",
+      "options": {
+        "nugetAndSharing": "Use NuGet.org and sharing feeds",
+        "nugetConfig": "Use feeds specified in my NuGet.Config"
+      },
+      "visibleRule": "scenario = restore"
     },
     {
       "name": "nugetConfigPath",
@@ -39,19 +63,40 @@
       "label": "ms-resource:loc.input.label.nugetConfigPath",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.nugetConfigPath",
-      "required": "false"
+      "required": "false",
+      "visibleRule": "sources = nugetConfig"
     },
     {
-      "name": "restoreMode",
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.restoreMode",
-      "defaultValue": "restore",
-      "helpMarkDown": "ms-resource:loc.input.help.restoreMode",
-      "required": "true",
+      "name": "feed",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.feed",
+      "defaultValue": "nuget-org",
+      "helpMarkDown": "ms-resource:loc.input.help.feed",
+      "required": "false",
+      "visibleRule": "scenario = install",
       "options": {
-        "restore": "Restore",
-        "install": "Install"
+        "nuget-org": "NuGet.org",
+        "feed-a": "Feed A",
+        "feed-picker-goes-here": "Feed picker goes here"
       }
+    },
+    {
+      "name": "packageId",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.packageId",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.packageId",
+      "required": "false",
+      "visibleRule": "scenario = install"
+    },
+    {
+      "name": "packageVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.packageVersion",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.packageVersion",
+      "required": "false",
+      "visibleRule": "scenario = install"
     },
     {
       "name": "noCache",
@@ -59,15 +104,17 @@
       "label": "ms-resource:loc.input.label.noCache",
       "defaultValue": "false",
       "helpMarkDown": "ms-resource:loc.input.help.noCache",
-      "required": "false"
+      "required": "false",
+      "groupName": "advanced"
     },
     {
-      "name": "nuGetRestoreArgs",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.nuGetRestoreArgs",
+      "name": "destinationDirectory",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.destinationDirectory",
       "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.nuGetRestoreArgs"
+      "helpMarkDown": "ms-resource:loc.input.help.destinationDirectory",
+      "required": "false",
+      "groupName": "advanced"
     },
     {
       "name": "verbosity",
@@ -83,29 +130,6 @@
         "Normal": "Normal",
         "Detailed": "Detailed"
       }
-    },
-    {
-      "name": "nuGetVersion",
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.nuGetVersion",
-      "defaultValue": "3.3.0",
-      "helpMarkDown": "ms-resource:loc.input.help.nuGetVersion",
-      "required": "true",
-      "groupName": "advanced",
-      "options": {
-        "3.3.0": "3.3.0",
-        "3.5.0.1829": "3.5.0",
-        "custom": "Custom"
-      }
-    },
-    {
-      "name": "nuGetPath",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.nuGetPath",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.nuGetPath",
-      "groupName": "advanced"
     }
   ],
   "execution": {

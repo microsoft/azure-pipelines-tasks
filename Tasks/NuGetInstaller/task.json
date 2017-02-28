@@ -1,15 +1,15 @@
 {
     "id": "333b11bd-d341-40d9-afcf-b32d5ce6f23b",
     "name": "NuGetInstaller",
-    "friendlyName": "NuGet Installer",
-    "description": "Installs or restores missing NuGet packages",
+    "friendlyName": "NuGet Restore/Install",
+    "description": "Restores or installs NuGet packages",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613747)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 0,
-        "Minor": 2,
-        "Patch": 29
+        "Major": 10,
+        "Minor": 0,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
@@ -26,55 +26,102 @@
     "instanceNameFormat": "NuGet $(restoreMode) $(solution)",
     "inputs": [
         {
+            "name": "scenario",
+            "type": "radio",
+            "label": "Scenario",
+            "defaultValue": "restore",
+            "required": "true",
+            "options": {
+                "restore": "Restore packages for a build",
+                "install": "Install tools packages to a working directory"
+            }
+        },
+        {
             "name": "solution",
             "type": "filePath",
-            "label": "Path to solution or packages.config",
+            "label": "Path to solution, packages.config, or project.json file",
             "defaultValue": "**/*.sln",
-            "helpMarkDown": "The path to the Visual Studio solution file or NuGet packages.config",
-            "required": "true"
+            "helpMarkDown": "The path to the Visual Studio solution file, packages.config, or project.json that specifies the required packages.",
+            "required": "true",
+            "visibleRule": "scenario = restore"
+        },
+        {
+            "name": "sources",
+            "type": "radio",
+            "label": "Feeds (package sources)",
+            "defaultValue": "nugetAndSharing",
+            "required": "true",
+            "options": {
+                "nugetAndSharing": "Use NuGet.org and sharing feeds",
+                "nugetConfig": "Use feeds specified in my NuGet.Config"
+            },
+            "visibleRule": "scenario = restore"
         },
         {
             "name": "nugetConfigPath",
             "type": "filePath",
             "label": "Path to NuGet.config",
             "defaultValue": "",
-            "helpMarkDown": "Equivalent to the -ConfigFile NuGet.exe command line argument",
-            "required": "false"
+            "helpMarkDown": "The path to the NuGet.config file that specifies which feeds to restore packages from.",
+            "required": "false",
+            "visibleRule": "sources = nugetConfig"
         },
         {
-            "name": "restoreMode",
-            "type": "radio",
-            "label": "Installation type",
-            "defaultValue": "restore",
-            "helpMarkDown": "Restore will restore the packages a solution depends upon, and is generally what you want.\n\nInstall will install packages from a packages.config file. Use this option if you want to install a standalone tool package.",
-            "required": "true",
+            "name": "feed",
+            "type": "pickList",
+            "label": "Feed (package source)",
+            "defaultValue": "nuget-org",
+            "helpMarkDown": "The feed to install packages from.",
+            "required": "false",
+            "visibleRule": "scenario = install",
             "options": {
-                "restore": "Restore",
-                "install": "Install"
+                "nuget-org": "NuGet.org",
+                "feed-a": "Feed A",
+                "feed-picker-goes-here": "Feed picker goes here"
             }
+        },
+        {
+            "name": "packageId",
+            "type": "string",
+            "label": "Package to install",
+            "defaultValue": "",
+            "helpMarkDown": "The ID of the package to install.",
+            "required": "false",
+            "visibleRule": "scenario = install"
+        },
+        {
+            "name": "packageVersion",
+            "type": "string",
+            "label": "Version to install",
+            "defaultValue": "",
+            "helpMarkDown": "The version of the provided package ID to install.",
+            "required": "false",
+            "visibleRule": "scenario = install"
         },
         {
             "name": "noCache",
             "type": "boolean",
             "label": "Disable local cache",
             "defaultValue": "false",
-            "helpMarkDown": "Equivalent to the -NoCache NuGet.exe command line argument",
-            "required": "false"
+            "helpMarkDown": "Prevent NuGet from using the local package cache.",
+            "required": "false",
+            "groupName": "advanced"
         },
         {
-            "name": "nuGetRestoreArgs",
-            "type": "string",
-            "label": "NuGet arguments",
+            "name": "destinationDirectory",
+            "type": "filePath",
+            "label": "Destination directory",
             "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Additional arguments passed to NuGet.exe restore or install. [More Information](https://docs.nuget.org/consume/command-line-reference#user-content-restore-command)."
+            "helpMarkDown": "Where packages are restored or installed; defaults to the working directory.",
+            "required": "false",
+            "groupName": "advanced"
         },
         {
             "name": "verbosity",
             "type": "pickList",
             "label": "Verbosity",
             "defaultValue": "-",
-            "helpMarkDown": "NuGet's verbosity level",
+            "helpMarkDown": "NuGet's verbosity level.",
             "required": "false",
             "groupName": "advanced",
             "options": {
@@ -83,29 +130,6 @@
                 "Normal": "Normal",
                 "Detailed": "Detailed"
             }
-        },
-        {
-            "name": "nuGetVersion",
-            "type": "radio",
-            "label": "NuGet Version",
-            "defaultValue": "3.3.0",
-            "helpMarkDown": "The version of NuGet to use, or external version.",
-            "required": "true",
-            "groupName": "advanced",
-            "options": {
-                "3.3.0": "3.3.0",
-                "3.5.0.1829": "3.5.0",
-                "custom": "Custom"
-            }
-        },
-        {
-            "name": "nuGetPath",
-            "type": "string",
-            "label": "Path to NuGet.exe",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Optionally supply the path to NuGet.exe. Will override version selection.",
-            "groupName": "advanced"
         }
     ],
     "execution": {
