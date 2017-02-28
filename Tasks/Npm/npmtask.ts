@@ -18,14 +18,19 @@ async function executeTask() {
     try {
         var filePath = tl.getPathInput('cwd', true, false);
         var dirList = [];
-        var filesList = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), filePath);
-        tl.debug("number of files matching filePath: " + filesList.length);
-        for (var workingDir of filesList) {
-            if (tl.stats(workingDir).isFile()) {
-                workingDir = path.dirname(workingDir);
-            }
-            if (dirList.indexOf(workingDir) === -1) {
-                dirList.push(workingDir);
+        if (!RegExp("/[*?+@!{}\[\]]/").test(filePath)) {
+            dirList.push(filePath);
+        }
+        else {
+            var filesList = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), filePath);
+            tl.debug("number of files matching filePath: " + filesList.length);
+            for (var workingDir of filesList) {
+                if (tl.stats(workingDir).isFile()) {
+                    workingDir = path.dirname(workingDir);
+                }
+                if (dirList.indexOf(workingDir) === -1) {
+                    dirList.push(workingDir);
+                }
             }
         }
     }
@@ -33,7 +38,7 @@ async function executeTask() {
         tl.warning(error);
         return;
     }
-    
+
     var command = tl.getInput('command', true);
     if (command.indexOf(' ') >= 0) {
         tl.setResult(tl.TaskResult.Failed, tl.loc('InvalidCommand'));
@@ -58,6 +63,7 @@ async function executeTask() {
             } catch (err) {
                 tl.debug('taskRunner fail');
                 tl.setResult(tl.TaskResult.Failed, tl.loc('NpmFailed', err.message));
+                break;
             }
         } else {
 
@@ -90,11 +96,12 @@ async function executeTask() {
 
                 await tryRunNpmConfigAsync(getNpmConfigRunner(debugLog), npmExecOptions);
                 var code: number = await runNpmCommandAsync(npmRunner, npmExecOptions);
-                cleanUpTempNpmrcPath(tempNpmrcPath);
                 tl.setResult(code, tl.loc('NpmReturnCode', code));
             } catch (err) {
-                cleanUpTempNpmrcPath(tempNpmrcPath);
                 tl.setResult(tl.TaskResult.Failed, tl.loc('NpmFailed', err.message));
+                break;
+            } finally {
+                cleanUpTempNpmrcPath(tempNpmrcPath);
             }
         }
     }
