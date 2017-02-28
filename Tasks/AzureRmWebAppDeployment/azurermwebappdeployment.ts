@@ -35,7 +35,6 @@ async function run() {
         var scriptType: string = tl.getInput('ScriptType', false);
         var inlineScript: string = tl.getInput('InlineScript', false);
         var scriptPath: string = tl.getPathInput('ScriptPath', false);
-
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
         var isDeploymentSuccess: boolean = true;
         var tempPackagePath = null;
@@ -193,10 +192,10 @@ async function DeployUsingKuduDeploy(webDeployPkg, azureWebAppDetails, publishin
             }
         }
         await kuduUtility.deployWebAppPackage(webAppZipFile, publishingProfile, virtualPath, physicalPath, takeAppOfflineFlag);
-        console.log(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
+        console.log(tl.loc('PackageDeploymentSuccess'));
     }
     catch(error) {
-        tl.error(tl.loc('Failedtodeploywebsite'));
+        tl.error(tl.loc('PackageDeploymentFailed'));
         throw Error(error);
     }
     finally {

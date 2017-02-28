@@ -50,11 +50,11 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
     try {
         await tl.exec("msdeploy", msDeployCmdArgs, <any>{failOnStdErr: true, errStream: errObj});
         if(publishingProfile != null) {
-            console.log(tl.loc('WebappsuccessfullypublishedatUrl0', publishingProfile.destinationAppUrl));
+            console.log(tl.loc('PackageDeploymentSuccess'));
         }
     }
     catch (error) {
-        tl.error(tl.loc('Failedtodeploywebsite'));
+        tl.error(tl.loc('PackageDeploymentFailed'));
         tl.debug(JSON.stringify(error));        
         throw Error(error.message);
     }

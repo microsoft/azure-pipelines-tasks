@@ -292,8 +292,8 @@
         "Unabletoretrievewebappsettings": "Unable to retrieve App Service application settings. [Status Code: '%s', Error Message: '%s']",
         "Unabletoupdatewebappsettings": "Unable to update App service application settings. [Status Code: '%s', Error Message: '%s']",
         "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update deployment status : Unique Deployment ID cannot be retrieved",
-        "WebappsuccessfullypublishedatUrl0": "App Service successfully deployed at url %s",
-        "Failedtodeploywebsite": "Failed to deploy website.",
+        "PackageDeploymentSuccess": "Successfully deployed web package to App Service.",
+        "PackageDeploymentFailed": "Failed to deploy web package to App Service.",
         "Runningcommand": "Running command: %s",
         "Deployingwebapplicationatvirtualpathandphysicalpath": "Deploying web package : %s at virtual path (physical path) : %s (%s)",
         "Successfullydeployedpackageusingkuduserviceat": "Successfully deployed package %s using kudu service at %s",
@@ -340,6 +340,7 @@
         "SciptExecutionOnKuduSuccess": "Successfully executed script on Kudu.",
         "SciptExecutionOnKuduFailed": "Executed Script returned '%s' as return code. Error: %s",
         "FailedtoDeleteFileFromKudu": "Unable to delete file: %s from Kudu (%s). Status Code: %s (%s)",
-        "FailedtoDeleteFileFromKuduError": "Unable to delete file: %s from Kudu (%s). Error: %s"
+        "FailedtoDeleteFileFromKuduError": "Unable to delete file: %s from Kudu (%s). Error: %s",
+        "ScriptFileNotFound": "Script file %s not found."
     }
 }

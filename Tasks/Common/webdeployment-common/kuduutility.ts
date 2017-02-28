@@ -6,46 +6,6 @@ import httpClient = require('vso-node-api/HttpClient');
 var httpObj = new httpClient.HttpCallbackClient(tl.getVariable("AZURE_HTTP_USER_AGENT"));
 var fileEncoding = require('./fileencoding.js');
 
-export async function appOffineKuduService(publishUrl: string, physicalPath: string, headers, enableFeature: boolean) {
-    var defer = Q.defer<string>();
-    var kuduDeploymentURL = "https://" + publishUrl + "/api/vfs/" + physicalPath + '/app_offline.htm';
-    if(enableFeature) {
-        var offlineFilePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'app_offline.htm');
-        fs.writeFileSync(offlineFilePath, '<h1>The Web Page is temporarily unavailable !</h1>');
-        var webAppReadStream = fs.createReadStream(offlineFilePath);
-        httpObj.sendStream('PUT', kuduDeploymentURL, webAppReadStream, headers, (error, response, body) => {
-            if (error) {
-                defer.reject(error);
-            }
-            else if (response.statusCode === 200 || response.statusCode === 201 || response.statusCode === 204) {
-                tl.debug('App Offline Mode Enabled at ' + physicalPath);
-                defer.resolve(tl.loc('AppOfflineModeenabled'));
-            }
-            else {
-                tl.error(response.statusMessage);
-                defer.reject(tl.loc('Failedtoenableappofflinemode', response.statusCode, response.statusMessage));
-            }
-        });
-    }
-    else {
-        headers['Content-Length'] = 0;
-        httpObj.get('DELETE', kuduDeploymentURL, headers, (error, response, contents) => {
-             if(error) {
-                defer.reject(error);
-            }
-            else if(response.statusCode === 200 || response.statusCode === 204) {
-                tl.debug('Removed app_offline.htm from ' + physicalPath);
-                defer.resolve(tl.loc('AppOflineModedisabled'));
-            }
-            else {
-                tl.error(contents);
-                defer.reject(tl.loc('FailedtodisableAppOfflineMode', response.statusCode, response.statusMessage));
-            }
-        });
-    }
-    return defer.promise;
-}
-
 /**
  * Finds out virtual path and corresponding physical path mapping.
  * 
@@ -88,7 +48,8 @@ export async function deployWebAppPackage(webAppPackage: string, publishingProfi
     };
     if(takeAppOfflineFlag) {
         tl.debug('Trying to enable app offline mode.');
-        await appOffineKuduService(publishingProfile.publishUrl, physicalPath, headers, true); 
+        await uploadFiletoKudu(publishingProfile.publishUrl, physicalPath, headers, 'app_offline.htm', '<h1> App Service is offline. </h1>');
+        tl.debug('App Offline mode enabled.');
     }
     console.log(tl.loc("Deployingwebapplicationatvirtualpathandphysicalpath", webAppPackage, virtualPath, physicalPath));
     var webAppReadStream = fs.createReadStream(webAppPackage);
@@ -101,7 +62,8 @@ export async function deployWebAppPackage(webAppPackage: string, publishingProfi
             if(takeAppOfflineFlag) {
                 tl.debug('Trying to disable app offline mode.');
                 try {
-                    await appOffineKuduService(publishingProfile.publishUrl, physicalPath, headers, false);
+                    await deleteFileFromKudu(publishingProfile.publishUrl, physicalPath, headers, 'app_offline.htm');
+                    tl.debug('App Offline mode disabled.');
                 }
                 catch(error) {
                     deferred.reject(error);
@@ -192,7 +154,7 @@ async function uploadFiletoKudu(publishUrl: string, physicalPath: string, header
     return defer.promise;
 }
 
-async function deteteFileFromKudu(publishUrl: string, physicalPath: string, headers, fileName: string) {
+async function deleteFileFromKudu(publishUrl: string, physicalPath: string, headers, fileName: string) {
     var defer = Q.defer<string>();
     var kuduDeploymentURL = "https://" + publishUrl + "/api/vfs/" + physicalPath + '/' + fileName;
     headers['Content-Length'] = 0;
@@ -259,6 +221,9 @@ export async function runPostDeploymentScript(publishingProfile, scriptType, inl
         scriptContent = inlineScript;
     }
     else {
+        if(!tl.exist(scriptPath)) {
+            throw Error(tl.loc('ScriptFileNotFound', scriptPath));
+        }
         var fileBuffer: Buffer = fs.readFileSync(scriptPath);
         var encodingType = fileEncoding.detectFileEncoding( scriptPath, fileBuffer);
         var scriptFileContent: string = fileBuffer.toString(encodingType[0]);
@@ -269,21 +234,27 @@ export async function runPostDeploymentScript(publishingProfile, scriptType, inl
     }
 
     if(appOfflineFlag) {
-        await appOffineKuduService(publishingProfile.publishUrl, 'site/wwwroot', headers, true);
+        await uploadFiletoKudu(publishingProfile.publishUrl, '/site/wwwroot', headers, 'app_offline.htm', '<h1> App Service is offline </h1>');
     }
 
     try {
         await uploadFiletoKudu(publishingProfile.publishUrl, '/site/wwwroot', headers, 'kuduPostDeploymentScript.cmd', scriptContent);
         console.log(tl.loc('ExecuteScriptOnKudu', publishingProfile.publishUrl));
         console.log(await runCommandOnKudu(publishingProfile.publishUrl, 'site\\wwwroot', headers, 'kuduPostDeploymentScript.cmd'));
-        await deteteFileFromKudu(publishingProfile.publishUrl, '/site/wwwroot', headers, 'kuduPostDeploymentScript.cmd');
     }
     catch(Exception) {
         throw Error(Exception);
     }
     finally {
+        try { 
+            await deleteFileFromKudu(publishingProfile.publishUrl, '/site/wwwroot', headers, 'kuduPostDeploymentScript.cmd');    
+        }
+        catch(error) {
+            tl.debug('Unable to remove kuduPostDeploymentScript.cmd. Error: ' + error);
+        }
+     
         if(appOfflineFlag) {
-            await appOffineKuduService(publishingProfile.publishUrl, 'site/wwwroot', headers, false);
+            await deleteFileFromKudu(publishingProfile.publishUrl, '/site/wwwroot', headers, 'app_offline.htm');  
         }
     }
 }

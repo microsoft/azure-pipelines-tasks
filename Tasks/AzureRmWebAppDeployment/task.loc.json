@@ -292,8 +292,8 @@
     "Unabletoretrievewebappsettings": "ms-resource:loc.messages.Unabletoretrievewebappsettings",
     "Unabletoupdatewebappsettings": "ms-resource:loc.messages.Unabletoupdatewebappsettings",
     "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "ms-resource:loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved",
-    "WebappsuccessfullypublishedatUrl0": "ms-resource:loc.messages.WebappsuccessfullypublishedatUrl0",
-    "Failedtodeploywebsite": "ms-resource:loc.messages.Failedtodeploywebsite",
+    "PackageDeploymentSuccess": "ms-resource:loc.messages.PackageDeploymentSuccess",
+    "PackageDeploymentFailed": "ms-resource:loc.messages.PackageDeploymentFailed",
     "Runningcommand": "ms-resource:loc.messages.Runningcommand",
     "Deployingwebapplicationatvirtualpathandphysicalpath": "ms-resource:loc.messages.Deployingwebapplicationatvirtualpathandphysicalpath",
     "Successfullydeployedpackageusingkuduserviceat": "ms-resource:loc.messages.Successfullydeployedpackageusingkuduserviceat",
@@ -340,6 +340,7 @@
     "SciptExecutionOnKuduSuccess": "ms-resource:loc.messages.SciptExecutionOnKuduSuccess",
     "SciptExecutionOnKuduFailed": "ms-resource:loc.messages.SciptExecutionOnKuduFailed",
     "FailedtoDeleteFileFromKudu": "ms-resource:loc.messages.FailedtoDeleteFileFromKudu",
-    "FailedtoDeleteFileFromKuduError": "ms-resource:loc.messages.FailedtoDeleteFileFromKuduError"
+    "FailedtoDeleteFileFromKuduError": "ms-resource:loc.messages.FailedtoDeleteFileFromKuduError",
+    "ScriptFileNotFound": "ms-resource:loc.messages.ScriptFileNotFound"
   }
 }
