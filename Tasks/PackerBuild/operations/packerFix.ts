@@ -12,5 +12,6 @@ export function run(packerHost: packerHost): Q.Promise<any> {
     command.arg("-validate=false");
     command.arg(packerHost.templateManager.getTemplateFileLocation());
 
+    console.log(tl.loc("ExecutingPackerFix"));
     return packerHost.execCommand(command);
 }

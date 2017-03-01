@@ -53,8 +53,18 @@
         }
     },
     "messages": {
-        "DefaultTemplateNotFound": "No default in-built template found for os type: %s.",
+        "OSTypeNotSupported": "This OS type is not supported for image creation: %s. Please use either windows or linux.",
         "CopyTemplateToTempFailed": "Could not copy built-in template from source %s to temp location %s",
-        "TaskNotFound": "Task.json file could not be found: %s"
+        "TaskNotFound": "Task.json file could not be found: %s",
+        "OriginalTemplateLocation": "Original template location: %s",
+        "CopyingTemplate": "Copying original template from %s to temporary location %s",
+        "TempTemplateLocation": "Copied template file to a temporary location: %s",
+        "CopySourceNotExists": "Source file path does not exist for copying: %s",
+        "CreatingDestinationDir": "Destination for copying does not exist. Creating: %s",
+        "CreatedDestinationDir": "Created destination directory for copying: %s",
+        "ExecutingPackerFix": "Running packer fix command",
+        "ExecutingPackerValidate": "Running packer validate command to ensure template is valid",
+        "ExecutingPackerBuild": "Running packer build command. Waiting for it to finish...",
+        "PackerBuildCompleted": "packer build completed."
     }
 }

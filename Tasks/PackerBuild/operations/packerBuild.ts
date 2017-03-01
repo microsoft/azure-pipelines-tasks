@@ -19,6 +19,7 @@ export function run(packerHost: packerHost): Q.Promise<any> {
     
     command.arg(packerHost.templateManager.getTemplateFileLocation());
 
+    console.log(tl.loc("ExecutingPackerBuild"));
     var outputExtractor: op.OutputVariablesExtractor = new op.OutputVariablesExtractor(["OSDiskUri", "StorageAccountLocation"]);
     return packerHost.execCommand(command, null, outputExtractor);
 }

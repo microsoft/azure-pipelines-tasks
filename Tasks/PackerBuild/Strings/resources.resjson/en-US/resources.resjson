@@ -6,7 +6,17 @@
   "loc.group.displayName.AzureDetails": "Azure Details",
   "loc.group.displayName.Template": "Template",
   "loc.input.label.osType": "OS Type",
-  "loc.messages.DefaultTemplateNotFound": "No default in-built template found for os type: %s.",
+  "loc.messages.OSTypeNotSupported": "This OS type is not supported for image creation: %s. Please use either windows or linux.",
   "loc.messages.CopyTemplateToTempFailed": "Could not copy built-in template from source %s to temp location %s",
-  "loc.messages.TaskNotFound": "Task.json file could not be found: %s"
+  "loc.messages.TaskNotFound": "Task.json file could not be found: %s",
+  "loc.messages.OriginalTemplateLocation": "Original template location: %s",
+  "loc.messages.CopyingTemplate": "Copying original template from %s to temporary location %s",
+  "loc.messages.TempTemplateLocation": "Copied template file to a temporary location: %s",
+  "loc.messages.CopySourceNotExists": "Source file path does not exist for copying: %s",
+  "loc.messages.CreatingDestinationDir": "Destination for copying does not exist. Creating: %s",
+  "loc.messages.CreatedDestinationDir": "Created destination directory for copying: %s",
+  "loc.messages.ExecutingPackerFix": "Running packer fix command",
+  "loc.messages.ExecutingPackerValidate": "Running packer validate command to ensure template is valid",
+  "loc.messages.ExecutingPackerBuild": "Running packer build command. Waiting for it to finish...",
+  "loc.messages.PackerBuildCompleted": "packer build completed."
 }

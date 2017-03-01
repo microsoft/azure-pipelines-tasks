@@ -5,6 +5,7 @@ import * as path from "path";
 import * as tl from "vsts-task-lib/task";
 import * as utils from "./utilities"
 import packerHost from "./packerHost";
+import * as constants from "./constants"
 
 export class PackerTemplateManager {
 
@@ -27,18 +28,22 @@ export class PackerTemplateManager {
         }
 
         // get template file location from suitable provider
-        var osType = tl.getInput("osType");
+        var osType = tl.getInput(constants.OsTypeInputName);
         var templateProvider = this._templateFileProviders[TemplateFileProviderTypes.BuiltIn];
         var templateFileLocation = templateProvider.getTemplateFileLocation(osType);
+        console.log(tl.loc("OriginalTemplateLocation", templateFileLocation));
 
         // move file to a temp folder
         var tempLocationForTemplate = path.join(os.tmpdir(), new Date().getTime().toString());
+        console.log(tl.loc("CopyingTemplate", templateFileLocation, tempLocationForTemplate));
         utils.copyFile(templateFileLocation, tempLocationForTemplate);
+        console.log(tl.loc("TempTemplateLocation", tempLocationForTemplate));      
         
         // construct new full path for template file
         var templateFileName = path.basename(templateFileLocation);
         var tempFileLocation = path.join(tempLocationForTemplate, templateFileName);
         this._templateFileLocation = tempFileLocation;
+        tl.debug("template location: " + tempFileLocation);
 
         return tempFileLocation; 
     }
@@ -48,7 +53,7 @@ export class PackerTemplateManager {
             return this._templateVariables;
         }
 
-        var osType = tl.getInput("osType");
+        var osType = tl.getInput(constants.OsTypeInputName);
         this._templateVariables = new Map<string, string>();
         
         var inputVariablesProvider = this._templateVariablesProviders[VariablesProviderTypes.TaskInput];

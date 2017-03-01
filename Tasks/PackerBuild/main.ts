@@ -12,18 +12,35 @@ import * as tvp from "./templateVariablesProviders";
 async function run(): Promise<any> {
     var host: packerHost = new packerHost();
     
-    // TODO: move to method. register providers
-    var builtInTemplateFileProvider = new tfp.BuiltInTemplateFileProvider();
-    builtInTemplateFileProvider.register(host);
-    var taskInputTemplateVariablesProvider = new tvp.TaskInputVariablesProvider();
-    taskInputTemplateVariablesProvider.register(host);
-    var spnVariablesProvider = new tvp.AzureSpnVariablesProvider();
-    spnVariablesProvider.register(host);
+    // register providers
+    registerProviders(host);
 
+    // run packer commands
     await packerFix.run(host);
     await packerValidate.run(host);
     var status = await packerBuild.run(host);
+    console.log(tl.loc("PackerBuildCompleted"));
 
+    // set output task variables
+    setOutputVariables(host);
+}
+
+function registerProviders(host: packerHost): void {
+    
+    // register built-in templates provider. This provider provides built-in packer templates used by task
+    var builtInTemplateFileProvider = new tfp.BuiltInTemplateFileProvider();
+    builtInTemplateFileProvider.register(host);
+
+    // register variables provider which will provide task inputs as variables for packer template
+    var taskInputTemplateVariablesProvider = new tvp.TaskInputVariablesProvider();
+    taskInputTemplateVariablesProvider.register(host);
+
+    //register SPN nariables provider which will fetch SPN data as variables for packer template
+    var spnVariablesProvider = new tvp.AzureSpnVariablesProvider();
+    spnVariablesProvider.register(host);
+}
+
+function setOutputVariables(host: packerHost): void {
     var outputs: Map<string, string> = host.getExtractedOutputs();
     var imageUri = outputs.get("OSDiskUri");
     tl.debug("Setting image URI variable to: " + imageUri);

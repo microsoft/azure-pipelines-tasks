@@ -53,8 +53,18 @@
     }
   },
   "messages": {
-    "DefaultTemplateNotFound": "ms-resource:loc.messages.DefaultTemplateNotFound",
+    "OSTypeNotSupported": "ms-resource:loc.messages.OSTypeNotSupported",
     "CopyTemplateToTempFailed": "ms-resource:loc.messages.CopyTemplateToTempFailed",
-    "TaskNotFound": "ms-resource:loc.messages.TaskNotFound"
+    "TaskNotFound": "ms-resource:loc.messages.TaskNotFound",
+    "OriginalTemplateLocation": "ms-resource:loc.messages.OriginalTemplateLocation",
+    "CopyingTemplate": "ms-resource:loc.messages.CopyingTemplate",
+    "TempTemplateLocation": "ms-resource:loc.messages.TempTemplateLocation",
+    "CopySourceNotExists": "ms-resource:loc.messages.CopySourceNotExists",
+    "CreatingDestinationDir": "ms-resource:loc.messages.CreatingDestinationDir",
+    "CreatedDestinationDir": "ms-resource:loc.messages.CreatedDestinationDir",
+    "ExecutingPackerFix": "ms-resource:loc.messages.ExecutingPackerFix",
+    "ExecutingPackerValidate": "ms-resource:loc.messages.ExecutingPackerValidate",
+    "ExecutingPackerBuild": "ms-resource:loc.messages.ExecutingPackerBuild",
+    "PackerBuildCompleted": "ms-resource:loc.messages.PackerBuildCompleted"
   }
 }

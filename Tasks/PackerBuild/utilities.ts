@@ -5,17 +5,15 @@ import * as stream from "stream";
 import * as tl from "vsts-task-lib/task";
 
 export function copyFile(source: string, destination: string): void {
-    tl.checkPath(source, "template file path");
+    tl.checkPath(source, tl.loc("CopySourceNotExists", source));
 
     if(!tl.exist(destination)) {
+        console.log(tl.loc("CreatingDestinationDir", destination));
         tl.mkdirP(destination);
+        console.log(tl.loc("CreatedDestinationDir", destination));        
     }
 
     tl.cp(source, destination, "-f")
-
-    // if(!tl.cp(source, destination, "-f")) {
-    //     throw (tl.loc("CopyTemplateToTempFailed", source, destination));
-    // }
 }
 
 export function IsNullOrEmpty(str: string): boolean {

@@ -23,6 +23,11 @@ export class OutputVariablesExtractor implements IOutputParser {
             return;
         }
 
+        tl.debug("Parsing log line to extract output...");
+        tl.debug("/*************************************")
+        tl.debug(line);
+        tl.debug("**************************************/")
+
         this._outputExtractionKeys.forEach((key: string) => {
             var keyValue = this._extractOutputValue(line, key);
             if(keyValue !== null) {
@@ -33,15 +38,19 @@ export class OutputVariablesExtractor implements IOutputParser {
 
     private _extractOutputValue(line: string, key: string): string {
         var matchingInfoStartIndex = line.search(util.format("%s: \\S*(\\n|\\r|\\u2028|\\u2029|\\s)", key));
+        tl.debug("Match start index: " + matchingInfoStartIndex);
+
         if (matchingInfoStartIndex !== -1) {
             var matchingInfo = line.substring(matchingInfoStartIndex + key.length + 1).trim();
             var matchingInfoEndIndex = matchingInfo.search("(\\n|\\r|\\u2028|\\u2029|\\s)");
+            tl.debug("Match end index: " + matchingInfoEndIndex);
+
             if (matchingInfoEndIndex !== -1) {
                 matchingInfo = matchingInfo.substring(0, matchingInfoEndIndex).trim();
             }
 
             var matchingValue = matchingInfo;
-            tl.debug("found match for key " + key + " value: " + matchingValue);
+            tl.debug("...found match for key " + key + " value: " + matchingValue);
             return matchingValue;
         }
 
