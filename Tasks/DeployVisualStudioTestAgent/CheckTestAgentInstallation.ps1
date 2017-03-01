@@ -16,11 +16,12 @@ function Check-Installation($ProductVersion, $VersionToInstall)
 	if($isProductExists)
 	{
 		$versionInstalled = (Get-ProductEntry -InstalledCheckRegKey $InstalledCheckRegKey -InstalledCheckRegValueName "Version")
+		Write-Verbose -Message ("Version already installed: " + $VersionInstalled) -verbose
+		
 		if(!([System.String]::IsNullOrEmpty($VersionToInstall)))
 		{
 			$VersionToInstall = $VersionToInstall.SubString(0, $VersionToInstall.LastIndexOf('.'))
-
-			Write-Verbose -Message ("Version already installed: " + $VersionInstalled) -verbose
+			
 			Write-Verbose -Message ("Version to be installed: " + $VersionToInstall) -verbose
 		}
 	}
