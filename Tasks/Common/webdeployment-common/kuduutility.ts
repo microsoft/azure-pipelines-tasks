@@ -164,7 +164,7 @@ async function deleteFileFromKudu(publishUrl: string, physicalPath: string, head
 
     tl.debug('Removing file: ' + fileName + ' using publishUrl: ' + kuduDeploymentURL);
     httpObj.get('DELETE', kuduDeploymentURL, headers, (error, response, contents) => {
-            if(error) {
+        if(error) {
             defer.reject(tl.loc('FailedtoDeleteFileFromKuduError', fileName, kuduDeploymentURL));
         }
         else if(response.statusCode === 200 || response.statusCode === 204) {
@@ -196,7 +196,7 @@ async function runCommandOnKudu(publishUrl: string, physicalPath: string, header
             var responseBody = JSON.parse(body);
             console.log(responseBody.Output);
             if(responseBody.ExitCode === 0) {
-            console.log(responseBody.Error);
+                console.log(responseBody.Error);
                 defer.resolve(tl.loc('SciptExecutionOnKuduSuccess'));
             }
             else {
