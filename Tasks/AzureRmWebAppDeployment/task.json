@@ -341,6 +341,7 @@
         "SciptExecutionOnKuduFailed": "Executed Script returned '%s' as return code. Error: %s",
         "FailedtoDeleteFileFromKudu": "Unable to delete file: %s from Kudu (%s). Status Code: %s (%s)",
         "FailedtoDeleteFileFromKuduError": "Unable to delete file: %s from Kudu (%s). Error: %s",
-        "ScriptFileNotFound": "Script file %s not found."
+        "ScriptFileNotFound": "Script file '%s' not found.",
+        "InvalidScriptFile": "Invalid Script file '%s' provided. Valid extensions are .bat and .cmd"
     }
 }

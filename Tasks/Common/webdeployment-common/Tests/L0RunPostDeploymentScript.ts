@@ -9,15 +9,18 @@ mockery.registerMock('vso-node-api/HttpClient', {
     HttpCallbackClient: function () {
         return {
             send: function (verb, url) {
-                if(verb == 'PUT' && url == 'https://mytestappKuduUrl/api/vfs//site/wwwroot/kuduPostDeploymentScript.cmd') {
-                    console.log('PUT:https://mytestappKuduUrl/api/vfs//site/wwwroot/kuduPostDeploymentScript.cmd');
-                    return;
-                }
                 if(verb == 'POST' && url == 'https://mytestappKuduUrl/api/command') {
                     console.log('POST:https://mytestappKuduUrl/api/command');
                     return;
                 }
                 throw Error('Unknown verb or URL - SEND');
+            },
+            sendStream: function (verb, url) {
+                if(verb == 'PUT' && url == 'https://mytestappKuduUrl/api/vfs//site/wwwroot/kuduPostDeploymentScript.cmd') {
+                    console.log('PUT:https://mytestappKuduUrl/api/vfs//site/wwwroot/kuduPostDeploymentScript.cmd');
+                    return;
+                }
+                throw Error('Unknown verb or URL - sendStream');
             },
             get: function(verb, url) {
                 if(verb == 'DELETE' && url == 'https://mytestappKuduUrl/api/vfs//site/wwwroot/kuduPostDeploymentScript.cmd') {
@@ -30,6 +33,21 @@ mockery.registerMock('vso-node-api/HttpClient', {
     }
 });
 
+mockery.registerMock('vsts-task-lib/task', {
+    exist: function() {
+        return true;
+    },
+    getVariable: function() {
+        return 'workigDirectory';
+    },
+    debug: function(message) {
+        console.log('##debug : ' + message);
+    },
+    loc: function(message, argument) {
+        console.log('##LOC: ' + message + ' : ' + argument);
+    }
+
+});
 mockery.registerMock('q', {
     'defer': function() {
         return {
@@ -37,8 +55,15 @@ mockery.registerMock('q', {
         }
     }
 });
-var kuduUtility = require('webdeployment-common/kuduutility.js');
 
+var fs = require('fs');
+mockery.registerMock('fs', {
+    'createReadStream': function() {
+        return '';
+    },
+    statSync: fs.statSync,
+    writeFileSync: fs.writeFileSync
+})
 var mockPublishProfile = {
     profileName: 'mytestapp - Web Deploy',
     publishMethod: 'MSDeploy',
@@ -54,4 +79,5 @@ var mockPublishProfile = {
     webSystem: 'WebSites' 
 };
 
-kuduUtility.runPostDeploymentScript(mockPublishProfile, "Inline Script", "echo 'hello'", null, false);
+var kuduUtility = require('webdeployment-common/kuduutility.js');
+kuduUtility.runPostDeploymentScript(mockPublishProfile, "File Path", null, 'myscript.cmd', false);
