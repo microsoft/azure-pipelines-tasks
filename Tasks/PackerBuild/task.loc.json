@@ -49,7 +49,7 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node": {
-      "target": "main.js"
+      "target": "src//main.js"
     }
   },
   "messages": {

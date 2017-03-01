@@ -52,7 +52,7 @@ function setOutputVariables(host: packerHost): void {
 }
 
 try {
-    tl.setResourcePath(path.join(__dirname, "task.json"));
+    tl.setResourcePath(path.join(__dirname, "..//task.json"));
 }
 catch (err) {
     tl.setResult(tl.TaskResult.Failed, tl.loc("TaskNotFound", err));

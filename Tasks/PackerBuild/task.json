@@ -49,7 +49,7 @@
     "instanceNameFormat": "Packer build for $(osType)",
     "execution": {
         "Node": {
-            "target": "main.js"
+            "target": "src//main.js"
         }
     },
     "messages": {

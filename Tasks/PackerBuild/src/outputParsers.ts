@@ -13,12 +13,9 @@ export class OutputVariablesExtractor implements IOutputParser {
 
     constructor(outputExtractionKeys?: string[]) {
         this._outputExtractionKeys = outputExtractionKeys;
-        //this._extractedOutputs = new Map<string, string>();
     }
 
     public parse(line: string, parsedOutputs: Map<string, string>): void {
-        //var extractedOutputs = new Map<string, string>();
-
         if(utils.IsNullOrEmpty(line) || utils.HasItems(this._outputExtractionKeys)) {
             return;
         }
@@ -58,5 +55,4 @@ export class OutputVariablesExtractor implements IOutputParser {
     }
 
     private _outputExtractionKeys: string[];
-    //private _extractedOutputs: Map<string, string>;
 }

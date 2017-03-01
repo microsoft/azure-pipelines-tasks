@@ -32,9 +32,8 @@ export function HasItems(arr: any[]): boolean {
     return false;
 }
 
+// Extends stream.Writable to support parsing data as they are written
 export class StringWritable extends stream.Writable {
-
-    value: string = "";
 
     constructor(options, parserCallback?) {
         super(options);
@@ -43,7 +42,7 @@ export class StringWritable extends stream.Writable {
 
     _write(data: any, encoding: string, callback: Function): void {
         tl.debug(data);
-        this.value += data;
+
         if(!!this._parserCallback) {
             this._parserCallback(data.toString());
         }
@@ -51,14 +50,6 @@ export class StringWritable extends stream.Writable {
         if (callback) {
             callback();
         }
-    }
-
-    public clear(): void {
-        this.value = "";
-    }
-
-    public toString(): string {
-        return this.value;
     }
 
     private _parserCallback: (line: string) => void;
