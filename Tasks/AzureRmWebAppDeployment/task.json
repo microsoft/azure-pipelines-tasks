@@ -139,13 +139,16 @@
         },
         {
             "name": "WebConfigParameters",
-            "type": "string",
+            "type": "multiLine",
             "label": "web.config parameters",
             "required": true,
-            "defaultValue": "{\"StartupFile\":\"server.js\"}",
-            "visibleRule": "AddWebConfig = true",
+            "defaultValue": "-appType Node -NodeStartFile server.js",
+            "visibleRule": "AddWebConfig == true",
             "groupName": "AdditionalDeploymentOptions",
-            "helpMarkDown": "Provide web.config parameters in json format"
+            "helpMarkDown": "Provide web.config parameters. For example '-appType Node -NodeStartFile server.js' (without quotes).",
+            "properties": {
+                "editorExtension": "ms.vss-services-azure.webconfig-parameters-grid"
+            }
         },
         {
             "name": "TakeAppOfflineFlag",

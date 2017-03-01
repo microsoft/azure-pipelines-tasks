@@ -27,7 +27,7 @@
   "loc.input.label.AppType": "App type",
   "loc.input.help.AppType": "Application type",
   "loc.input.label.WebConfigParameters": "web.config parameters",
-  "loc.input.help.WebConfigParameters": "Provide web.config parameters in json format",
+  "loc.input.help.WebConfigParameters": "Provide web.config parameters. For example '-appType Node -NodeStartFile server.js' (without quotes).",
   "loc.input.label.TakeAppOfflineFlag": "Take App Offline",
   "loc.input.help.TakeAppOfflineFlag": "Select the option to take the Azure App Service offline by placing an app_offline.htm file in the root directory of the App Service before the sync operation begins. The file will be removed after the sync operation completes successfully.",
   "loc.input.label.UseWebDeploy": "Publish using Web Deploy",
