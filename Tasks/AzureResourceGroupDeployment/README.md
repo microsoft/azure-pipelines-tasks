@@ -6,13 +6,13 @@ This task is used to create or update a resource group in Azure using the [Azure
 
 ### What's new in Version 2.0
  - Works with Xplat agents  (Windows, Linux or OSX)
- - Supports Template JSONs located at any publicly accessible http/https URLs. To use a file stored in a private storage account, retrieve and include the shared access signature (SAS) token in the URL of the template. Example: <blob_storage_url>/template.json?<SAStoken>. To upload a parameters file to a storage account and generate a SAS token, you could use [Azure file copy task](https://aka.ms/azurefilecopyreadme) or follow the steps using [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911)
+ - Supports Template JSONs located at any publicly accessible http/https URLs. To use a file stored in a private storage account, retrieve and include the shared access signature (SAS) token in the URL of the template. Example: `<blob_storage_url>/template.json?<SAStoken>`. To upload a parameters file to a storage account and generate a SAS token, you could use [Azure file copy task](https://aka.ms/azurefilecopyreadme) or follow the steps using [PowerShell](https://go.microsoft.com/fwlink/?linkid=838080) or [Azure CLI](https://go.microsoft.com/fwlink/?linkid=836911)
  - Supports viewing/editing template parameters in a grid by clicking on “…” next to Override template parameters textbox. This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS.
  - NAT rule mapping for VMs that are backed by an Load balancer
  - "Resource group" field is now renamed as "VM details for  WinRM" and is included into the section "Advanced deployment options for virtual machines".
  - Limitations:
-		1. No support for Classic subscriptions. Only [ARM] (https://azure.microsoft.com/en-in/documentation/articles/resource-group-overview/) subscriptions are supported.
-		2. No support for PowerShell syntax as the task is now node.js based. Ensure the case sensitivity of the parameter names match, when you override the template parameters. Also, remove the PowerShell cmdlets like "ConvertTo-SecureString" when you migrate from version 1.0 to version 2.0.
+  - No support for Classic subscriptions. Only [ARM] (https://azure.microsoft.com/en-in/documentation/articles/resource-group-overview/) subscriptions are supported.
+  - No support for PowerShell syntax as the task is now node.js based. Ensure the case sensitivity of the parameter names match, when you override the template parameters. Also, remove the PowerShell cmdlets like "ConvertTo-SecureString" when you migrate from version 1.0 to version 2.0.
 
 
 ### Contact Information
@@ -21,7 +21,7 @@ Please contact the alias RM\_Customer\_Queries at microsoft dot com, if you are 
 
 ### Prerequisite for the task
 
-##### Azure Subscription
+#### Azure Subscription
 
 To deploy to Azure, an Azure subscription has to be linked to Team Foundation Server or to Visual Studio Team Services using the Services tab in the Account Administration section. Add the Azure subscription to use in the Build or Release Management definition by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab. Create a service endpoint of 'Azure Resource Manager' type. For more troubleshooting guidance around endpoint creation, refer [this](https://www.visualstudio.com/en-us/docs/build/actions/azure-rm-endpoint).
 
@@ -32,7 +32,7 @@ For Azure MSDN accounts, one can either use a [Service Principal](https://go.mic
   - Login to the portal with this Active Directory account wiz. [testuser@joehotmail.onmicrosoft.com](mailto:testuser@joehotmail.onmicrosoft.com), and change the password. Initially a temporary password is created and that needs to be changed at the first login.
 2. Add that user and password in the service connections in Team Services and deployments will work with that account.
 
-##### Azure PowerShell
+#### Azure PowerShell
 
 The task needs the Azure PowerShell version to be installed on the automation agent, and that can be done easily using the [Azure PowerShell Installer v1.0.2] (https://github.com/Azure/azure-powershell/releases/tag/v1.0.2-December2015). Refer to "Supported Azure and AzureRM module versions" section below for recommended versions.
 
@@ -50,7 +50,7 @@ The parameters of the task are described in details, including examples, to show
 
  * **Resource Group**\*: Enter the name of the resource group. If this is an existing resource group, and the selected action is to create or update the resource group, then the task will update the resource group with the resources specified in the Azure template. If no Resource Group with the name exists in the subscription, then a new one will be created.
  
- * **Location**: The location where the resource group will be created. If an existing resource group is updated, then this parameter will be ignored.
+ * **Location**\*: The location where the resource group will be created. If an existing resource group is updated, then this parameter will be ignored.
 
 The following parameters are shown when the selected action is to create or update a resource group:
 
@@ -68,7 +68,7 @@ The following parameters are shown when the selected action is to create or upda
 | Azure KeyVault       | 3-24   | case-insensitive | alphanumeric                                                                          | Yes             |
 | Azure DNS Name       | 3-63   | lowercase        | alphanumeric and hyphens                                                              | Yes             |
 
- * **Override Template Parameters**: The Override template parameters is used to override the parameters, like -storageAcctName azurerg -Username $(vmusername) -azureKeyVaultName $(fabrikamFibre). To override a secure string like Password please use following format: -Password (ConvertTo-SecureString -String '$(password)' -AsPlainText -Force). By clicking on “…” next to Override template parameters textbox, template parameters can be viewed/overridden in a grid.  This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS.
+ * **Override Template Parameters**: The Override template parameters is used to override the parameters, like `-storageAcctName azurerg -Username $(vmusername) -azureKeyVaultName $(fabrikamFibre)`. To avoid storing "secureString" parameters in plain text, it is recommended that you use secret variables, for example `$(variableName)`. By clicking on “…” next to Override template parameters textbox, template parameters can be viewed/overridden in a grid.  This feature requires that CORS rules are enabled at the source. If templates are in Azure storage blob, refer to [this](https://docs.microsoft.com/en-us/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests) to enable CORS.
  
  * **Deployment Mode**: This specifies the [deployment mode](https://azure.microsoft.com/en-us/documentation/articles/resource-group-template-deploy) in which the Azure resources specified in the template have to be deployed. Incremental mode handles deployments as incremental updates to the resource group . It leaves unchanged resources that exist in the resource group but are not specified in the template. Complete mode deletes resources that are not in your template. [Validate mode](https://msdn.microsoft.com/en-us/library/azure/dn790547.aspx) enables you to find syntactical problems with the template before creating actual resources. By default, incremental mode is used. 
  
@@ -78,7 +78,7 @@ The following parameters are shown when the selected action is to create or upda
  
  * **Enable Deployment Prerequisites**: Selecting WinRM option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). Choosing Deployment group option would configure Deployment group agent on each of the virtual machines.
  
-  * **VM details for WinRM **: Provide a name for the variable for the resource group. The variable can be used as $(variableName) to refer to the resource group in subsequent tasks like in the PowerShell on Target Machines task for deploying applications. Valid only when the selected action is Create, Update or Select, and required when an existing resource group is selected.
+  * **VM details for WinRM**: Provide a name for the variable for the resource group. The variable can be used as $(variableName) to refer to the resource group in subsequent tasks like in the PowerShell on Target Machines task for deploying applications. Valid only when the selected action is Create, Update or Select, and required when an existing resource group is selected.
   
    Limitation: VM details produced during execution will only contain the VM hostname(s) and (public) ports, if any. Credentials to connect to the VM host(s) are to be provided explicitly in the subsequent tasks.
 
