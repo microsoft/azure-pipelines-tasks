@@ -1,132 +1,140 @@
-﻿function isAutoLogonDisabled()
+﻿function isAutoLogonDisabled([int] $OSType)
 {
-    #check 64 bit or 32 bit
-	if ([IntPtr]::Size -eq 8)
+	#check 64 bit or 32 bit
+	if ($OSType -eq 64)
 	{
 		$registryPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion\Winlogon"
 	}
-    else
-    {
-        $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
-    }
-
-    if (-not (Test-Path $registryPath))
+	else
 	{
+		$registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
+	}
+
+	if (-not (Test-Path $registryPath))
+	{
+		Write-Verbose -Message("Registry path {0} not found" -f $registryPath) -Verbose
 		return $true
 	}
 	
 	$autoadminLogon = (Get-ItemProperty $registryPath -ErrorAction SilentlyContinue).AutoAdminLogon
-	if (($autoadminLogon -eq $null) -or ($autoadminLogon.Length -eq 0))
-    {
+	if ((!$autoadminLogon) -or ($autoadminLogon.Length -eq 0))
+	{
+		Write-Verbose -Message("Registry path {0} found, but AutoAdminLogon key is not set." -f $registryPath) -Verbose
 		return $true
 	}
-    elseif($autoadminLogon -eq "1")
-    {
-	    return $false
-    }
+	elseif($autoadminLogon -eq "1")
+	{
+		return $false
+	}
 
-    return $true
+	Write-Verbose -Message("Registry path {0} found, but AutoAdminLogon key is not enabled." -f $registryPath) -Verbose
+	return $true
 }
 
-function isShowLogonMessagePolicyEnabled()
+function isShowLogonMessagePolicyEnabled([int] $OSType)
 {
-    #check 64 bit or 32 bit
-    if ([IntPtr]::Size -eq 8)
+	#check 64 bit or 32 bit
+	if ($OSType -eq 64)
 	{
 		$registryPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\policies\system"
 	}
-    else
-    {
-        $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\policies\system"
-    }
-
-    if (-not (Test-Path $registryPath))
+	else
 	{
+		$registryPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\policies\system"
+	}
+
+	if (-not (Test-Path $registryPath))
+	{
+		Write-Verbose -Message("Registry path {0} not found" -f $registryPath) -Verbose
 		return $false
 	}
 	
 	$legalCaption = (Get-ItemProperty $registryPath -ErrorAction SilentlyContinue).legalnoticecaption
-	if (($legalCaption -ne $null) -and ($legalCaption.Length -gt 0))
-    {
+	if (($legalCaption) -and ($legalCaption.Length -gt 0))
+	{
+		Write-Verbose -Message("Registry path {0} found, but legalnoticecaption key is set to some value." -f $registryPath) -Verbose
 		return $true
 	}
 
 	$legalText = (Get-ItemProperty $registryPath -ErrorAction SilentlyContinue).legalnoticetext
-	if (($legalText -ne $null) -and ($legalText.Length -gt 0))
-    {
+	if (($legalText) -and ($legalText.Length -gt 0))
+	{
+		Write-Verbose -Message("Registry path {0} found, but legalnoticetext key is set to some value." -f $registryPath) -Verbose
 		return $true
 	}
 
-    return $false
+	return $false
 }
 
-function isShowLogonMessageEnabled()
+function isShowLogonMessageEnabled([int] $OSType)
 {
-    #check 64 bit or 32 bit
-	if ([IntPtr]::Size -eq 8)
+	#check 64 bit or 32 bit
+	if ($OSType -eq 64)
 	{
 		$registryPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion\Winlogon"
 	}
-    else
-    {
-        $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
-    }
-
-    if (-not (Test-Path $registryPath))
+	else
 	{
+		$registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
+	}
+
+	if (-not (Test-Path $registryPath))
+	{
+		Write-Verbose -Message("Registry path {0} not found" -f $registryPath) -Verbose
 		return $false
 	}
 	
 	$legalCaption = (Get-ItemProperty $registryPath -ErrorAction SilentlyContinue).LegalNoticeCaption
 	if (($legalCaption -ne $null) -and ($legalCaption.Length -gt 0))
-    {
+	{
+		Write-Verbose -Message("Registry path {0} found, but LegalNoticeCaption is set to some value." -f $registryPath) -Verbose
 		return $true
 	}
 
 	$legalText = (Get-ItemProperty $registryPath -ErrorAction SilentlyContinue).LegalNoticeText
 	if (($legalText -ne $null) -and ($legalText.Length -gt 0))
-    {
+	{
+		Write-Verbose -Message("Registry path {0} found, but LegalNoticeText is set to some value." -f $registryPath) -Verbose
 		return $true
 	}
 
-    return $false
+	return $false
 }
 
 function Update-RebootCount([string] $environmentURL)
 {
-    if ([IntPtr]::Size -eq 8)
+	if ([IntPtr]::Size -eq 8)
 	{
 		$testAgentRegPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\TestAgentConfig"
-    }
-    else
-    {
-        $testAgentRegPath = "HKLM:\SOFTWARE\Microsoft\TestAgentConfig" 
-    }
+	}
+	else
+	{
+		$testAgentRegPath = "HKLM:\SOFTWARE\Microsoft\TestAgentConfig" 
+	}
 
-    if (-not (Test-Path $testAgentRegPath))
+	if (-not (Test-Path $testAgentRegPath))
 	{
 		New-Item -Path $testAgentRegPath -Force | Out-Null
-        Write-Verbose -Message ("Updating machine reboot count to 1") -Verbose
-        New-ItemProperty -Path $testAgentRegPath -Name "MachineRebootCount" -Value 1 -PropertyType DWord -Force | Out-Null
-        New-ItemProperty -Path $testAgentRegPath -Name "EnvironmentURL" -Value $environmentURL -PropertyType String -Force | Out-Null
-        return 1;
+		Write-Verbose -Message ("Updating machine reboot count to 1") -Verbose
+		New-ItemProperty -Path $testAgentRegPath -Name "MachineRebootCount" -Value 1 -PropertyType DWord -Force | Out-Null
+		New-ItemProperty -Path $testAgentRegPath -Name "EnvironmentURL" -Value $environmentURL -PropertyType String -Force | Out-Null
+		return 1;
 	}
  
-    [int]$machineRebootCount = (Get-ItemProperty $testAgentRegPath -ErrorAction SilentlyContinue).MachineRebootCount
-    $savedEnvURL = (Get-ItemProperty $testAgentRegPath -ErrorAction SilentlyContinue).EnvironmentURL
+	[int]$machineRebootCount = (Get-ItemProperty $testAgentRegPath -ErrorAction SilentlyContinue).MachineRebootCount
+	$savedEnvURL = (Get-ItemProperty $testAgentRegPath -ErrorAction SilentlyContinue).EnvironmentURL
 
-    if (($machineRebootCount -eq $null) -or ([string]::Compare($savedEnvURL, $environmentURL, $True) -ne 0))
-    {
-        $machineRebootCount = 0
+	if (($machineRebootCount -eq $null) -or ([string]::Compare($savedEnvURL, $environmentURL, $True) -ne 0))
+	{
+		$machineRebootCount = 0
 	}
 
-    [int]$machineRebootCount = $machineRebootCount + 1;
-    Write-Verbose -Message ("Updating machine reboot count to : {0}" -f $machineRebootCount) -Verbose
-    Set-ItemProperty -Path $testAgentRegPath -Name "MachineRebootCount" -Value $machineRebootCount -Force | Out-Null
-    Set-ItemProperty -Path $testAgentRegPath -Name "EnvironmentURL" -Value $environmentURL -Force | Out-Null
+	[int]$machineRebootCount = $machineRebootCount + 1;
+	Write-Verbose -Message ("Updating machine reboot count to : {0}" -f $machineRebootCount) -Verbose
+	Set-ItemProperty -Path $testAgentRegPath -Name "MachineRebootCount" -Value $machineRebootCount -Force | Out-Null
+	Set-ItemProperty -Path $testAgentRegPath -Name "EnvironmentURL" -Value $environmentURL -Force | Out-Null
 
-    return $machineRebootCount
-
+	return $machineRebootCount
 }
 
 function Get-TestAgentType([string] $Version)
@@ -407,9 +415,6 @@ function Set-TestAgentConfiguration
         $configArgs = $configArgs + ("/adminPassword:`"{0}`""  -f $MachineUserCredential.GetNetworkCredential().Password)
     }
 
-    
-    Write-Verbose -Message ("Checking for enableAutologon") -Verbose
-
     if ($PSBoundParameters.ContainsKey('EnableAutoLogon'))
     {
         if (-not $configAsProcess)
@@ -419,19 +424,17 @@ function Set-TestAgentConfiguration
 
         $yesno = GetBoolAsYesNo($EnableAutoLogon)
 
-        Write-Verbose -Message ("Checking for enableAutologon value: {0}" -f $yesno) -Verbose
-
         if($EnableAutoLogon)
         {
-            if(isAutoLogonDisabled)
+            if( (isAutoLogonDisabled(64)) -or (isAutoLogonDisabled(32)))
             {
                 Write-Verbose -Message ("Admin auto logon is disabled") -Verbose
             }
-            if(isShowLogonMessagePolicyEnabled)
+            if( (isShowLogonMessagePolicyEnabled(64)) -or (isShowLogonMessagePolicyEnabled(32)))
             {
                 Write-Verbose -Message ("Show logon message policy is enabled") -Verbose
             }
-            elseif(isShowLogonMessageEnabled)
+            elseif((isShowLogonMessageEnabled(64)) -or (isShowLogonMessageEnabled(32)))
             {
                 Write-Verbose -Message ("Show logon Message is enabled") -Verbose
             }
@@ -955,7 +958,7 @@ function ConfigurePowerOptions([System.Management.Automation.PSCredential] $Mach
 function CreateNewSession([System.Management.Automation.PSCredential] $MachineCredentials)
 {
     Write-Verbose -Message("Trying to fetch WinRM details on the machine") -Verbose
-    $wsmanoutput = Get-WSManInstance -ResourceURI winrm/config/listener -Enumerate
+    $wsmanoutput = Get-WSManInstance –ResourceURI winrm/config/listener –Enumerate
 
     if($wsmanoutput -ne $null)
     {	
@@ -1057,8 +1060,6 @@ function ConfigureTestAgent
         [System.Management.Automation.PSCredential] $AgentUserCredential
     )
 
-    $retCode = 0
-
     EnableTracing -TestAgentVersion $TestAgentVersion | Out-Null
 
     if ($AsServiceOrProcess -eq "Service")
@@ -1088,8 +1089,7 @@ function ConfigureTestAgent
         $rebootCount = Update-RebootCount($EnvironmentUrl)
         if($rebootCount -gt 3)
         {
-            $retCode = 1
-            throw ("Exceeded maximum number of reboots. TestAgent Configuration is failing with exit code {0}. Error code : {1}" -f $LASTEXITCODE, $retCode)
+            throw ("Stopping test agent configuration as it exceeded maximum number of reboots. If you are running test agent in interactive mode, please make sure that autologon is enabled and no legal notice is displayed on logon in test machines")
         }
     }
     else
