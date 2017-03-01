@@ -116,6 +116,41 @@
       "helpMarkDown": "ms-resource:loc.input.help.WebAppUri"
     },
     {
+      "name": "AddWebConfig",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.AddWebConfig",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "AdditionalDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.AddWebConfig"
+    },
+    {
+      "name": "AppType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.AppType",
+      "required": true,
+      "defaultValue": "Node",
+      "visibleRule": "AddWebConfig = true",
+      "groupName": "AdditionalDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.AppType",
+      "options": {
+        "Node": "Node"
+      }
+    },
+    {
+      "name": "WebConfigParameters",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.WebConfigParameters",
+      "required": true,
+      "defaultValue": "-appType Node -NodeStartFile server.js",
+      "visibleRule": "AddWebConfig == true",
+      "groupName": "AdditionalDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.WebConfigParameters",
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.webconfig-parameters-grid"
+      }
+    },
+    {
       "name": "TakeAppOfflineFlag",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.TakeAppOfflineFlag",
@@ -297,6 +332,8 @@
     "VirtualApplicationDoesNotExist": "ms-resource:loc.messages.VirtualApplicationDoesNotExist",
     "JSONParseError": "ms-resource:loc.messages.JSONParseError",
     "JSONvariablesubstitutionappliedsuccessfully": "ms-resource:loc.messages.JSONvariablesubstitutionappliedsuccessfully",
-    "XMLvariablesubstitutionappliedsuccessfully": "ms-resource:loc.messages.XMLvariablesubstitutionappliedsuccessfully"
+    "XMLvariablesubstitutionappliedsuccessfully": "ms-resource:loc.messages.XMLvariablesubstitutionappliedsuccessfully",
+    "SuccessfullyGeneratedWebConfig": "ms-resource:loc.messages.SuccessfullyGeneratedWebConfig",
+    "FailedToGenerateWebAppConfig": "ms-resource:loc.messages.FailedToGenerateWebAppConfig"
   }
 }
