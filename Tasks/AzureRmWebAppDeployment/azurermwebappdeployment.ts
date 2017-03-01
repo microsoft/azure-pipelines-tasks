@@ -71,16 +71,17 @@ async function run() {
         webDeployPkg = availableWebPackages[0];
 
         var isFolderBasedDeployment = utility.isInputPkgIsFolder(webDeployPkg);
-        var performXmlTransformation = JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution;
+        var applyFileTransformFlag = JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution;
 
-        if (performXmlTransformation || addWebConfig) {
+        if (applyFileTransformFlag || addWebConfig) {
             var folderPath = await utility.generateTemporaryFolderForDeployment(isFolderBasedDeployment, webDeployPkg);
-            if (performXmlTransformation) {
-                await fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, folderPath);
-            }
 
             if (addWebConfig) {
                 addWebConfigFile(appType.toLowerCase(), path.join(__dirname, path.normalize('node_modules/webdeployment-common/WebConfigTemplates'), appType), folderPath, webConfigParameters);
+            }
+
+            if (applyFileTransformFlag) {
+                await fileTransformationsUtility.fileTransformations(isFolderBasedDeployment, JSONFiles, xmlTransformation, xmlVariableSubstitution, folderPath);
             }
 
             var output = await utility.archiveFolderForDeployment(isFolderBasedDeployment, folderPath);
@@ -236,16 +237,18 @@ async function updateScmType(SPN, webAppName: string, resourceGroupName: string,
 function addWebConfigFile(appType: string, folderPath: string, webConfigTemplatePath: string, webConfigParameters: string) {
     try {
         var webConfigPath = path.join(folderPath, "web.config");
-        var JSONObject = JSON.parse(webConfigParameters);
+        if (!fs.existsSync(webConfigPath)) {
+            var JSONObject = JSON.parse(webConfigParameters);
 
-        var webConfigContent = fs.readFileSync(webConfigTemplatePath, 'utf8');
-        switch(appType) {
-            case "node":
-                webConfigContent = webConfigContent.replace(/\{NodeStartFile\}/g, JSONObject["StartupFile"]);
-                break;
+            var webConfigContent = fs.readFileSync(webConfigTemplatePath, 'utf8');
+            switch (appType) {
+                case "node":
+                    webConfigContent = webConfigContent.replace(/\{NodeStartFile\}/g, JSONObject["StartupFile"]);
+                    break;
+            }
+            tl.writeFile(webConfigPath, webConfigContent, { encoding: "utf8" });
+            console.log(tl.loc("SuccessfullyGeneratedWebAppConfig"));
         }
-        tl.writeFile(webConfigPath, webConfigContent, { encoding: "utf8" });
-        console.log(tl.loc("SuccessfullyGeneratedWebAppConfig"));
     }
     catch (error) {
         tl.warning(tl.loc("FailedToGenerateWebAppConfig", error));
