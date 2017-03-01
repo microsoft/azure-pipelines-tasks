@@ -114,5 +114,7 @@
   "loc.input.help.AppCmdCommands": "Enter additional AppCmd.exe commands. For more than one command use a line separator, like <br/> list apppools <br/> list sites<br/> recycle apppool /apppool.name:ExampleAppPoolName",
   "loc.messages.InvalidSslThumbprint": "Invalid thumbprint. Length is not 40 characters or contains invalid characters.",
   "loc.messages.InvalidVirtualPath": "Virtual path should begin with a /",
-  "loc.messages.InvalidIISDeploymentType": "Invalid IIS Deployment Type : {0}"
+  "loc.messages.InvalidIISDeploymentType": "Invalid IIS Deployment Type : {0}",
+  "loc.messages.InvalidActionIISWebsite": "Invalid action '{0}' selected for the IIS Website.",
+  "loc.messages.InvalidActionIISAppPool": "Invalid action '{0}' selected for the IIS Application Pool."
 }
