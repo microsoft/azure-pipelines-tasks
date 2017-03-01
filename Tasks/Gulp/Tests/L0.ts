@@ -11,7 +11,6 @@ describe('Gulp Task', function () {
     after(() => {
     });
 
-    /* Current behavior */
     it("runs a gulpfile through global gulp", (done: MochaDone) => {
         this.timeout(1000);
         let tp = path.join(__dirname, 'L0Default.js')
@@ -21,6 +20,22 @@ describe('Gulp Task', function () {
 
         assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run Gulp');
         assert(tr.invokedToolCount == 1, 'should have only run Gulp');
+        assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
+
+    it("runs multiple gulpfiles through global gulp", (done: MochaDone) => {
+        this.timeout(1000);
+        let tp = path.join(__dirname, 'L0MultipleGulpFile.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.ran('/usr/local/bin/gulp --gulpfile /user/build/one/gulpfile.js'), 'it should have run Gulp in directory, one');
+        assert(tr.ran('/usr/local/bin/gulp --gulpfile /user/build/two/gulpfile.js'), 'it should have run Gulp in directory, two');
+        assert(tr.invokedToolCount == 2, 'should have only run Gulp for two gulp files');
         assert(tr.stderr.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
 
@@ -186,7 +201,6 @@ describe('Gulp Task', function () {
         assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run gulp');
         assert(tr.invokedToolCount == 1, 'should have run npm and gulp');
 
-        // success scripts don't necessarily set a result
         var expectedErr = 'loc_mock_GulpFailed /usr/local/bin/gulp failed with return code: 1';
         assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have written to stderr');
         assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr);
