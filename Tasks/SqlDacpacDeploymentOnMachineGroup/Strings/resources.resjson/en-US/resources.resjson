@@ -13,6 +13,8 @@
   "loc.input.help.InlineSql": "Sql Queries inline",
   "loc.input.label.TargetMethod": "Specify SQL Using",
   "loc.input.help.TargetMethod": "Specify the option to connect to the target SQL Server Database. The options are either to provide the SQL Server Database details, or the SQL Server connection string, or the Publish profile XML file.",
+  "loc.input.label.ServerName": "Server Name",
+  "loc.input.help.ServerName": "Provide the SQL Server name like, machinename\\FabriakmSQL,1433 or localhost or .\\SQL2012R2. Specifying localhost will connect to the Default SQL Server instance on the machine.",
   "loc.input.label.DatabaseName": "Database Name",
   "loc.input.help.DatabaseName": "Provide the name of the SQL Server database.",
   "loc.input.label.AuthScheme": "Authentication",
