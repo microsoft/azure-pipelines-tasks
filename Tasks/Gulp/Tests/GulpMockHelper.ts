@@ -37,12 +37,7 @@ export var gulpGlobalGood: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exist": {
         "/usr/local/bin/gulp": true
     },
-    "find": {
-        "/user/build": [
-            "/user/build/fun/test-123.xml"
-        ]
-    },
-    "match": {
+    "findMatch": {
         "**/TEST-*.xml": [
             "/user/build/fun/test-123.xml"
         ],
@@ -83,12 +78,7 @@ export var gulpLocalGood: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "/fake/wd/node_modules/gulp/gulp.js": true,
         "c:\\fake\\wd\\node_modules\\gulp\\gulp.js": true
     },
-    "find": {
-        "/user/build": [
-            "/user/build/fun/test-123.xml"
-        ]
-    },
-    "match": {
+    "findMatch": {
         "**/TEST-*.xml": [
             "/user/build/fun/test-123.xml"
         ]
@@ -152,12 +142,7 @@ export var gulpNoGulp: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "/usr/local/bin/node_modules/istanbul/lib/cli.js": true,
         "gulpfile.js": true
     },
-    "find": {
-        "/user/build": [
-            "/user/build/fun/test-123.xml"
-        ]
-    },
-    "match": {
+    "findMatch": {
         "**/TEST-*.xml": [
             "/user/build/fun/test-123.xml"
         ]
@@ -194,12 +179,7 @@ export var npmFail: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exist": {
         "/usr/local/bin/gulp": true
     },
-    "find": {
-        "/user/build": [
-            "/user/build/fun/test-123.xml"
-        ]
-    },
-    "match": {
+    "findMatch": {
         "**/TEST-*.xml": [
             "/user/build/fun/test-123.xml"
         ],
@@ -242,12 +222,7 @@ export var gulpFail: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exist": {
         "/usr/local/bin/gulp": true
     },
-    "find": {
-        "/user/build": [
-            "/user/build/fun/test-123.xml"
-        ]
-    },
-    "match": {
+    "findMatch": {
         "**/TEST-*.xml": [
             "/user/build/fun/test-123.xml"
         ]
@@ -294,12 +269,7 @@ export var istanbulFail: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exist": {
         "/usr/local/bin/gulp": true
     },
-    "find": {
-        "/user/build": [
-            "/user/build/fun/test-123.xml"
-        ]
-    },
-    "match": {
+    "findMatch": {
         "**/TEST-*.xml": [
             "/user/build/fun/test-123.xml"
         ],
@@ -352,12 +322,7 @@ export var invalidTestSource: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exist": {
         "/usr/local/bin/gulp": true
     },
-    "find": {
-        "/user/build": [
-            "/user/build/fun/test-123.xml"
-        ]
-    },
-    "match": {
+    "findMatch": {
         "**/TEST-*.xml": [
             "/user/build/fun/test-123.xml"
         ],
@@ -413,11 +378,6 @@ export var gulpMultipleGulpFiles: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exist": {
         "/usr/local/bin/gulp": true
     },
-    "find": {
-        "/user/build": [
-            "/user/build/fun/test-123.xml"
-        ]
-    },
     "match": {
         "**/TEST-*.xml": [
             "/user/build/fun/test-123.xml"
@@ -430,6 +390,12 @@ export var gulpMultipleGulpFiles: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "**/gulpfile.js": [
             "/user/build/one/gulpfile.js",
             "/user/build/two/gulpfile.js"
+        ],
+        "**/TEST-*.xml": [
+            "/user/build/fun/test-123.xml"
+        ],
+        "**/*.js": [
+            "/test/test.js"
         ]
     },
     "getVariable": {

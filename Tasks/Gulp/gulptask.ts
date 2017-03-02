@@ -95,11 +95,9 @@ async function executeTask() {
 function publishTestResults(publishJUnitResults, testResultsFiles: string) {
 	if (publishJUnitResults) {
 		//check for pattern in testResultsFiles
-		if (testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
+		if (/[\*?+@!{}\[\]]/.test(testResultsFiles)) {
 			tl.debug('Pattern found in testResultsFiles parameter');
-			var buildFolder = tl.getVariable('System.DefaultWorkingDirectory');
-			var allFiles = tl.find(buildFolder);
-			var matchingTestResultsFiles = tl.match(allFiles, testResultsFiles, "", { matchBase: true });
+			var matchingTestResultsFiles = tl.findMatch(tl.getVariable('System.DefaultWorkingDirectory'), testResultsFiles, null, { matchBase: true });
 		}
 		else {
 			tl.debug('No pattern found in testResultsFiles parameter');
