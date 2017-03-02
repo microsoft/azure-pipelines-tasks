@@ -18,6 +18,7 @@
         "Minor": 0,
         "Patch": 0
     },
+    "preview": true,
     "demands": [
         "node.js"
     ],
@@ -166,6 +167,7 @@
         "GulpReturnCode": "Gulp exited with return code: %d",
         "GulpFailed": "Gulp failed with error: %s",
         "NpmFailed": "Npm failed with error: %s",
-        "IstanbulFailed": "Istanbul failed with error: %s"
+        "IstanbulFailed": "Istanbul failed with error: %s",
+        "NoGulpFileFound": "No gulp file found matching pattern: %s"
     }
 }

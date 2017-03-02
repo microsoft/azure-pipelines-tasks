@@ -58,13 +58,13 @@ async function executeTask() {
 	gt.arg(tl.getDelimitedInput('targets', ' ', false));
 	gt.arg('--gulpfile');
 
-	//sample path to gulpfile.js, it will get overridden later
+	//temp path to gulpfile.js, it will get overridden later
 	gt.arg("temp/gulpfile.js");
 	gt.line(tl.getInput('arguments', false));
 
 	for (var gulpFile of getGulpFiles(gulpFilePath)) {
 		substituteGulpFilePath(gt, gulpFile);
-		await gt.exec().then(async function (code) {
+		await gt.exec().then(function (code) {
 			publishTestResults(publishJUnitResults, testResultsFiles);
 			if (isCodeCoverageEnabled) {
 				return npm.exec().then(function () {
@@ -134,6 +134,9 @@ function getGulpFiles(gulpFilePath: string): string[] {
 	if (/[\*?+@!{}\[\]]/.test(gulpFilePath)) {
 		gulpFiles = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), gulpFilePath);
 		tl.debug("number of files matching filePath: " + gulpFiles.length);
+		if(gulpFiles.length === 0) {
+			tl.warning(tl.loc('NoGulpFileFound', gulpFilePath));
+		}
 	}
 	else {
 		tl.checkPath(gulpFilePath, "gulpfile");

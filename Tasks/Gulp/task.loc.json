@@ -18,6 +18,7 @@
     "Minor": 0,
     "Patch": 0
   },
+  "preview": true,
   "demands": [
     "node.js"
   ],
@@ -166,6 +167,7 @@
     "GulpReturnCode": "ms-resource:loc.messages.GulpReturnCode",
     "GulpFailed": "ms-resource:loc.messages.GulpFailed",
     "NpmFailed": "ms-resource:loc.messages.NpmFailed",
-    "IstanbulFailed": "ms-resource:loc.messages.IstanbulFailed"
+    "IstanbulFailed": "ms-resource:loc.messages.IstanbulFailed",
+    "NoGulpFileFound": "ms-resource:loc.messages.NoGulpFileFound"
   }
 }

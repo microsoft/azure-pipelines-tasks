@@ -34,5 +34,6 @@
   "loc.messages.GulpReturnCode": "Gulp exited with return code: %d",
   "loc.messages.GulpFailed": "Gulp failed with error: %s",
   "loc.messages.NpmFailed": "Npm failed with error: %s",
-  "loc.messages.IstanbulFailed": "Istanbul failed with error: %s"
+  "loc.messages.IstanbulFailed": "Istanbul failed with error: %s",
+  "loc.messages.NoGulpFileFound": "No gulp file found matching pattern: %s"
 }
