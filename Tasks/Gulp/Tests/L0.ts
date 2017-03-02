@@ -182,8 +182,7 @@ describe('Gulp Task', function () {
 
         assert(tr.invokedToolCount == 2, 'should have exited before running gulp');
 
-        // success scripts don't necessarily set a result
-        var expectedErr = 'loc_mock_NpmFailed /usr/local/bin/npm failed with return code: 1';
+        var expectedErr = 'Error: loc_mock_NpmFailed /usr/local/bin/npm failed with return code: 1';
         assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have written to stderr');
         assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr);
         assert(tr.failed, 'task should have failed');
@@ -201,7 +200,7 @@ describe('Gulp Task', function () {
         assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run gulp');
         assert(tr.invokedToolCount == 1, 'should have run npm and gulp');
 
-        var expectedErr = 'loc_mock_GulpFailed /usr/local/bin/gulp failed with return code: 1';
+        var expectedErr = 'Error: loc_mock_GulpFailed /usr/local/bin/gulp failed with return code: 1';
         assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have written to stderr');
         assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr);
         assert(tr.failed, 'task should have failed');
@@ -218,7 +217,7 @@ describe('Gulp Task', function () {
 
         assert(tr.ran('/usr/local/bin/gulp --gulpfile gulpfile.js'), 'it should have run gulp');
         assert(tr.invokedToolCount == 3, 'should have run npm, gulp and istanbul');
-        var expectedErr = 'loc_mock_IstanbulFailed /usr/local/bin/node failed with return code: 1';
+        var expectedErr = 'Error: loc_mock_IstanbulFailed /usr/local/bin/node failed with return code: 1';
         assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have written to stderr');
         assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr);
         assert(tr.failed, 'task should have failed');
@@ -279,7 +278,7 @@ describe('Gulp Task', function () {
 
         tr.run();
 
-        var expectedErr = 'loc_mock_IstanbulFailed /usr/local/bin/node failed with return code: 1';
+        var expectedErr = 'Error: loc_mock_IstanbulFailed /usr/local/bin/node failed with return code: 1';
         assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have written to stderr');
         assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr);
         assert(tr.failed, 'task should have failed');
