@@ -19,7 +19,7 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 113,
+        "Minor": 114,
         "Patch": 0
     },
     "minimumAgentVersion": "1.89.0",
@@ -85,7 +85,7 @@
             "defaultValue": "**/TEST-*.xml",
             "required": true,
             "groupName": "junitTestResults",
-            "helpMarkDown": "Test results files path. Wildcards can be used. For example, `**/TEST-*.xml` for all XML files whose name starts with TEST-.",
+            "helpMarkDown": "Specify the path and pattern of test results files to publish. For example, `**/TEST-*.xml` for all XML files whose name starts with `TEST-`. If no root path is specified, files are matched beneath the default working directory, the value of which is available in the variable: $(System.DefaultWorkingDirectory).  For example, a value of '**/TEST-*.xml' will actually result in matching files from '$(System.DefaultWorkingDirectory)/**/TEST-*.xml'.",
             "visibleRule": "publishJUnitResults = true"
         },
         {
