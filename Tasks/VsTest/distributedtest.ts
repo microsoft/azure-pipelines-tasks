@@ -53,9 +53,11 @@ export class DistributedTest {
         const envVars: { [key: string]: string; } = process.env;
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AccessToken', this.dtaTestConfig.dtaEnvironment.patToken);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AgentId', agentId);
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.AgentName', this.dtaTestConfig.dtaEnvironment.agentName);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.EnvironmentUri', this.dtaTestConfig.dtaEnvironment.environmentUri);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.TeamFoundationCollectionUri', this.dtaTestConfig.dtaEnvironment.tfsCollectionUrl);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.MiniMatchSourceFilter', 'true');
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.LocalTestDropPath', this.dtaTestConfig.testDropLocation);
 
         if(this.dtaTestConfig.vsTestLocationMethod === utils.Constants.vsTestVersionString) {
             utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestPlatformVersion', this.dtaTestConfig.vsTestVersion);
