@@ -1,6 +1,7 @@
 "use strict";
 
 import * as os from "os";
+import * as path from "path";
 import * as stream from "stream";
 import * as tl from "vsts-task-lib/task";
 
@@ -14,6 +15,14 @@ export function copyFile(source: string, destination: string): void {
     }
 
     tl.cp(source, destination, "-f")
+}
+
+export function getTempDirectory(): string {
+    return os.tmpdir();
+}
+
+export function getCurrentTime(): number {
+    return new Date().getTime();
 }
 
 export function IsNullOrEmpty(str: string): boolean {
@@ -41,7 +50,7 @@ export class StringWritable extends stream.Writable {
     }
 
     _write(data: any, encoding: string, callback: Function): void {
-        tl.debug(data);
+        console.log(data);
 
         if(!!this._parserCallback) {
             this._parserCallback(data.toString());

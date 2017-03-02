@@ -8,6 +8,7 @@ import * as packerValidate from "./operations/packerValidate";
 import * as packerBuild from "./operations/packerBuild";
 import * as tfp from "./templateFileProviders";
 import * as tvp from "./templateVariablesProviders";
+import * as utils from "./utilities"
 
 async function run(): Promise<any> {
     var host: packerHost = new packerHost();
@@ -43,12 +44,21 @@ function registerProviders(host: packerHost): void {
 function setOutputVariables(host: packerHost): void {
     var outputs: Map<string, string> = host.getExtractedOutputs();
     var imageUri = outputs.get("OSDiskUri");
-    tl.debug("Setting image URI variable to: " + imageUri);
-    tl.setVariable("imageUri", imageUri);
-
     var imageStorageAccount = outputs.get("StorageAccountLocation");
-    tl.debug("Setting image storage location variable to: " + imageStorageAccount);
-    tl.setVariable("imageStorageAccount", imageStorageAccount);
+
+    if(!utils.IsNullOrEmpty(imageUri)) {
+        tl.debug("Setting image URI variable to: " + imageUri);
+        tl.setVariable("imageUri", imageUri);
+    } else {
+        console.log(tl.loc("ImageURIOutputVariableNotFound"));
+    }
+
+    if(!utils.IsNullOrEmpty(imageStorageAccount)) {
+        tl.debug("Setting image storage location variable to: " + imageStorageAccount);
+        tl.setVariable("imageStorageAccount", imageStorageAccount);
+    } else {
+        console.log(tl.loc("StorageAccountLocationOutputVariableNotFound"));
+    }
 }
 
 try {

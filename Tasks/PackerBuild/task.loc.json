@@ -65,6 +65,8 @@
     "ExecutingPackerFix": "ms-resource:loc.messages.ExecutingPackerFix",
     "ExecutingPackerValidate": "ms-resource:loc.messages.ExecutingPackerValidate",
     "ExecutingPackerBuild": "ms-resource:loc.messages.ExecutingPackerBuild",
-    "PackerBuildCompleted": "ms-resource:loc.messages.PackerBuildCompleted"
+    "PackerBuildCompleted": "ms-resource:loc.messages.PackerBuildCompleted",
+    "ImageURIOutputVariableNotFound": "ms-resource:loc.messages.ImageURIOutputVariableNotFound",
+    "StorageAccountLocationOutputVariableNotFound": "ms-resource:loc.messages.StorageAccountLocationOutputVariableNotFound"
   }
 }

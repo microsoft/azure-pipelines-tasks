@@ -65,6 +65,9 @@
         "ExecutingPackerFix": "Running packer fix command",
         "ExecutingPackerValidate": "Running packer validate command to ensure template is valid",
         "ExecutingPackerBuild": "Running packer build command. Waiting for it to finish...",
-        "PackerBuildCompleted": "packer build completed."
+        "PackerBuildCompleted": "packer build completed.",
+        "ImageURIOutputVariableNotFound": "Could not get vhd image URI from packer execution. Output variable will not be set.",
+        "StorageAccountLocationOutputVariableNotFound": "Could not get vhd image storage account location from packer execution. Output variable will not be set."
+                
     }
 }

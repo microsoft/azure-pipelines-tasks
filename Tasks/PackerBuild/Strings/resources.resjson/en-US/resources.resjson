@@ -18,5 +18,7 @@
   "loc.messages.ExecutingPackerFix": "Running packer fix command",
   "loc.messages.ExecutingPackerValidate": "Running packer validate command to ensure template is valid",
   "loc.messages.ExecutingPackerBuild": "Running packer build command. Waiting for it to finish...",
-  "loc.messages.PackerBuildCompleted": "packer build completed."
+  "loc.messages.PackerBuildCompleted": "packer build completed.",
+  "loc.messages.ImageURIOutputVariableNotFound": "Could not get vhd image URI from packer execution. Output variable will not be set.",
+  "loc.messages.StorageAccountLocationOutputVariableNotFound": "Could not get vhd image storage account location from packer execution. Output variable will not be set."
 }

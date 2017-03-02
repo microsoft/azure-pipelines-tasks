@@ -34,7 +34,7 @@ export class PackerTemplateManager {
         console.log(tl.loc("OriginalTemplateLocation", templateFileLocation));
 
         // move file to a temp folder
-        var tempLocationForTemplate = path.join(os.tmpdir(), new Date().getTime().toString());
+        var tempLocationForTemplate = path.join(utils.getTempDirectory(), utils.getCurrentTime().toString())
         console.log(tl.loc("CopyingTemplate", templateFileLocation, tempLocationForTemplate));
         utils.copyFile(templateFileLocation, tempLocationForTemplate);
         console.log(tl.loc("TempTemplateLocation", tempLocationForTemplate));      
