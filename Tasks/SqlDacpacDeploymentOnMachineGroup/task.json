@@ -14,8 +14,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 2,
-        "Patch": 2
+        "Minor": 3,
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "1.102.0",
@@ -78,6 +78,15 @@
                 "publishProfile": "Publish Profile"
             },
             "helpMarkDown": "Specify the option to connect to the target SQL Server Database. The options are either to provide the SQL Server Database details, or the SQL Server connection string, or the Publish profile XML file."
+        },
+        {
+            "name": "ServerName",
+            "type": "string",
+            "label": "Server Name",
+            "required": true,
+            "defaultValue": "localhost",
+            "visibleRule": "TargetMethod = server || TaskType = sqlQuery || TaskType = sqlInline",
+            "helpMarkDown": "Provide the SQL Server name like, machinename\\FabriakmSQL,1433 or localhost or .\\SQL2012R2. Specifying localhost will connect to the Default SQL Server instance on the machine."
         },
         {
             "name": "DatabaseName",

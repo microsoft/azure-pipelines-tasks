@@ -15,10 +15,10 @@
 	"demands": [],
 	"version": {
 		"Major": 0,
-		"Minor": 1,
-		"Patch": 1
+		"Minor": 2,
+		"Patch": 0
 	},
-	"minimumAgentVersion": "1.95.0",
+	"minimumAgentVersion": "2.111.0",
 	"instanceNameFormat": "Manage $(IISDeploymentType)",
 	"groups": [ 	
 		{
@@ -74,9 +74,11 @@
 			"defaultValue": "CreateOrUpdateWebsite",
 			"visibleRule": "IISDeploymentType = IISWebsite",
 			"options": {
-				"CreateOrUpdateWebsite": "Create Or Update"
+				"CreateOrUpdateWebsite": "Create Or Update",
+				"StartWebsite": "Start Website",
+				"StopWebsite": "Stop Website"
 			},
-			"helpMarkDown": "Select the appropriate action that you want to perform on an IIS website. \n\n\"Create Or Update\" will create a website or update an existing website."
+			"helpMarkDown": "Select the appropriate action that you want to perform on an IIS website. \n\n\"Create Or Update\" will create a website or update an existing website.\n\n Start, Stop will start or stop the website respectively."
 		},
 		{
 			"name": "ActionIISApplicationPool",
@@ -86,9 +88,21 @@
 			"visibleRule": "IISDeploymentType = IISApplicationPool",
 			"defaultValue": "CreateOrUpdateAppPool",
 			"options": {
-				"CreateOrUpdateAppPool": "Create Or Update"
+				"CreateOrUpdateAppPool": "Create Or Update",
+				"StartAppPool": "Start Application Pool",
+				"StopAppPool": "Stop Applcation Pool",
+				"RecycleAppPool": "Recycle Application Pool"
 			},
-			"helpMarkDown": "Select the appropriate action that you want to perform on an IIS Application Pool. \n\n\"Create Or Update\" will create app-pool or update an existing one."
+			"helpMarkDown": "Select the appropriate action that you want to perform on an IIS Application Pool. \n\n\"Create Or Update\" will create app-pool or update an existing one.\n\nStart, Stop, Recycle will start, stop or recycle the application pool respectively."
+		},
+		{
+			"name": "StartStopWebsiteName",
+			"type": "string",
+			"label": "Website name",
+			"required": true,
+			"defaultValue": "",
+			"visibleRule": "ActionIISWebsite = StartWebsite || ActionIISWebsite = StopWebsite",
+			"helpMarkDown": "Provide the name of the IIS website."
 		},
 		{
 			"name": "WebsiteName",
@@ -585,6 +599,15 @@
 			"helpMarkDown": "Provide the password for custom account. <br/>The best practice is to create a variable in the Build or Release definition, and mark it as 'Secret' to secure it, and then use it here, like '$(userCredentials)'."
 		},
 		{
+			"name": "StartStopRecycleAppPoolName",
+			"type": "string",
+			"label": "Application pool name",
+			"defaultValue": "",
+			"required": true,
+			"visibleRule": "ActionIISApplicationPool = StartAppPool || ActionIISApplicationPool = StopAppPool || ActionIISApplicationPool = RecycleAppPool",
+			"helpMarkDown": "Provide the name of the IIS application pool."
+		},
+		{
 			"name": "AppCmdCommands",
 			"type": "multiLine",
 			"label": "Additional appcmd.exe commands",
@@ -602,7 +625,9 @@
 	"messages": {
 		"InvalidSslThumbprint": "Invalid thumbprint. Length is not 40 characters or contains invalid characters.",
 		"InvalidVirtualPath": "Virtual path should begin with a /",
-		"InvalidIISDeploymentType": "Invalid IIS Deployment Type : {0}"
+		"InvalidIISDeploymentType": "Invalid IIS Deployment Type : {0}",
+		"InvalidActionIISWebsite": "Invalid action '{0}' selected for the IIS Website.",
+		"InvalidActionIISAppPool": "Invalid action '{0}' selected for the IIS Application Pool."
 	}
 
 }

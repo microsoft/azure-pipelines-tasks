@@ -15,10 +15,10 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 1,
-    "Patch": 1
+    "Minor": 2,
+    "Patch": 0
   },
-  "minimumAgentVersion": "1.95.0",
+  "minimumAgentVersion": "2.111.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
@@ -74,7 +74,9 @@
       "defaultValue": "CreateOrUpdateWebsite",
       "visibleRule": "IISDeploymentType = IISWebsite",
       "options": {
-        "CreateOrUpdateWebsite": "Create Or Update"
+        "CreateOrUpdateWebsite": "Create Or Update",
+        "StartWebsite": "Start Website",
+        "StopWebsite": "Stop Website"
       },
       "helpMarkDown": "ms-resource:loc.input.help.ActionIISWebsite"
     },
@@ -86,9 +88,21 @@
       "visibleRule": "IISDeploymentType = IISApplicationPool",
       "defaultValue": "CreateOrUpdateAppPool",
       "options": {
-        "CreateOrUpdateAppPool": "Create Or Update"
+        "CreateOrUpdateAppPool": "Create Or Update",
+        "StartAppPool": "Start Application Pool",
+        "StopAppPool": "Stop Applcation Pool",
+        "RecycleAppPool": "Recycle Application Pool"
       },
       "helpMarkDown": "ms-resource:loc.input.help.ActionIISApplicationPool"
+    },
+    {
+      "name": "StartStopWebsiteName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.StartStopWebsiteName",
+      "required": true,
+      "defaultValue": "",
+      "visibleRule": "ActionIISWebsite = StartWebsite || ActionIISWebsite = StopWebsite",
+      "helpMarkDown": "ms-resource:loc.input.help.StartStopWebsiteName"
     },
     {
       "name": "WebsiteName",
@@ -585,6 +599,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.AppPoolPassword"
     },
     {
+      "name": "StartStopRecycleAppPoolName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.StartStopRecycleAppPoolName",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "ActionIISApplicationPool = StartAppPool || ActionIISApplicationPool = StopAppPool || ActionIISApplicationPool = RecycleAppPool",
+      "helpMarkDown": "ms-resource:loc.input.help.StartStopRecycleAppPoolName"
+    },
+    {
       "name": "AppCmdCommands",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.AppCmdCommands",
@@ -602,6 +625,8 @@
   "messages": {
     "InvalidSslThumbprint": "ms-resource:loc.messages.InvalidSslThumbprint",
     "InvalidVirtualPath": "ms-resource:loc.messages.InvalidVirtualPath",
-    "InvalidIISDeploymentType": "ms-resource:loc.messages.InvalidIISDeploymentType"
+    "InvalidIISDeploymentType": "ms-resource:loc.messages.InvalidIISDeploymentType",
+    "InvalidActionIISWebsite": "ms-resource:loc.messages.InvalidActionIISWebsite",
+    "InvalidActionIISAppPool": "ms-resource:loc.messages.InvalidActionIISAppPool"
   }
 }

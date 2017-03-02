@@ -1,7 +1,7 @@
 import tl = require("vsts-task-lib/task");
 import path = require("path");
 import fs = require("fs");
-import nutil = require("nuget-task-common/utility");
+import nutil = require("nuget-task-common/Utility");
 var archiver = require('archiver');
 
 export class dotNetExe {
