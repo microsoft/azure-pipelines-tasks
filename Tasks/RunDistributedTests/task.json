@@ -152,6 +152,15 @@
             "groupName": "executionOptions"
         },
         {
+            "name": "customSlicingEnabled",
+            "type": "boolean",
+            "label": "Distribute tests by number of machines",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Tests will be distributed based on the number of machines provided instead of number of test containers. Note that tests within a dll might also be distributed to multiple machines.",
+            "groupName": "executionOptions"
+        },
+        {
  	          "name": "testRunTitle", 
 	          "type": "string", 
 	          "label": "Test Run Title", 
