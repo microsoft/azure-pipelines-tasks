@@ -4,11 +4,9 @@ import path = require('path');
 import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
 
-executeTask();
-
-function executeTask() {
-
+async function executeTask() {
 	try {
+
 		tl.setResourcePath(path.join(__dirname, 'task.json'));
 		var gulpFilePath = tl.getPathInput('gulpFile', true, false);
 		var gulp = tl.which('gulp', false);
@@ -16,9 +14,9 @@ function executeTask() {
 		var publishJUnitResults = tl.getBoolInput('publishJUnitResults');
 		var testResultsFiles = tl.getInput('testResultsFiles', publishJUnitResults);
 		var cwd = tl.getPathInput('cwd', true, false);
-		var cwdGivenFlag = tl.getInput('cwd', true) ? true : false;
+		tl.mkdirP(cwd);
+		tl.cd(cwd);
 
-		var gulpFiles = [];
 		if (!tl.exist(gulp)) {
 			var gt = tl.tool(tl.which('node', true));
 			var gulpjs = tl.getInput('gulpjs', true);
@@ -52,38 +50,23 @@ function executeTask() {
 				istanbul.arg('./node_modules/mocha/bin/_mocha');
 			}
 			istanbul.arg(testSrc);
+			var summaryFile = path.join(cwd, 'coverage/cobertura-coverage.xml');
+			var reportDirectory = path.join(cwd, 'coverage/');
 		}
 
-		if (/[\*?+@!{}\[\]]/.test(gulpFilePath)) {
-			gulpFiles = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), gulpFilePath);
-			tl.debug("number of files matching filePath: " + gulpFiles.length);
-		}
-		else {
-			tl.checkPath(gulpFilePath, "gulpfile");
-			gulpFiles.push(gulpFilePath);
-		}
-
-		tl.mkdirP(cwd);
-		tl.cd(cwd);
-
+		// optional - no targets will concat nothing
 		gt.arg(tl.getDelimitedInput('targets', ' ', false));
 		gt.arg('--gulpfile');
-		gt.arg("gulpfile");
+		gt.arg("temp/gulpfile.js");
 		gt.line(tl.getInput('arguments', false));
 
-		var dirName = cwd;
-		for (var gulpFile of gulpFiles) {
-			// optional - no targets will concat nothing
+		for (var gulpFile of getGulpFiles(gulpFilePath)) {
 			substituteGulpFilePath(gt, gulpFile);
-			gt.exec().then(function (code) {
+
+			await gt.exec().then(async function (code) {
 				publishTestResults(publishJUnitResults, testResultsFiles);
 				if (isCodeCoverageEnabled) {
-					if (!cwdGivenFlag) {
-						dirName = path.dirname(gulpFile);
-					}
-					var summaryFile = path.join(dirName, 'coverage/cobertura-coverage.xml');
-					var reportDirectory = path.join(dirName, 'coverage/');
-					npm.exec().then(function () {
+					await npm.exec().then(function () {
 						istanbul.exec().then(function (code) {
 							publishCodeCoverage(summaryFile, reportDirectory);
 							tl.setResult(tl.TaskResult.Succeeded, tl.loc('GulpReturnCode', code));
@@ -98,7 +81,8 @@ function executeTask() {
 						tl.setResult(tl.TaskResult.Failed, tl.loc('NpmFailed', err.message));
 						return;
 					})
-				} else {
+				}
+				else {
 					tl.setResult(tl.TaskResult.Succeeded, tl.loc('GulpReturnCode', code));
 				}
 			}).fail(function (err) {
@@ -111,14 +95,6 @@ function executeTask() {
 	}
 	catch (error) {
 		tl.setResult(tl.TaskResult.Failed, error);
-		return;
-	}
-}
-
-function substituteGulpFilePath(gt: trm.ToolRunner, filePath: string) {
-	var indexOfGulpFile = gt.args.indexOf("--gulpfile");
-	if (indexOfGulpFile >= 0) {
-		gt.args[indexOfGulpFile + 1] = filePath;
 	}
 }
 
@@ -157,3 +133,31 @@ function publishCodeCoverage(summaryFile, reportDirectory) {
 		throw error;
 	}
 }
+
+function getGulpFiles(gulpFilePath: string): string[] {
+	try {
+		var gulpFiles = [];
+
+		if (/[\*?+@!{}\[\]]/.test(gulpFilePath)) {
+			gulpFiles = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), gulpFilePath);
+			tl.debug("number of files matching filePath: " + gulpFiles.length);
+		}
+		else {
+			tl.checkPath(gulpFilePath, "gulpfile");
+			gulpFiles.push(gulpFilePath);
+		}
+		return gulpFiles;
+	}
+	catch (error) {
+		tl.setResult(tl.TaskResult.Failed, error);
+	}
+}
+
+function substituteGulpFilePath(gt: trm.ToolRunner, filePath: string) {
+	var indexOfGulpFile = gt.args.indexOf("--gulpfile");
+	if (indexOfGulpFile >= 0) {
+		gt.args[indexOfGulpFile + 1] = filePath;
+	}
+}
+
+executeTask();

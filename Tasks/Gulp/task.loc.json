@@ -14,9 +14,9 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 0,
-    "Minor": 5,
-    "Patch": 30
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
   },
   "demands": [
     "node.js"
