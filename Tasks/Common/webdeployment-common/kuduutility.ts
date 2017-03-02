@@ -178,7 +178,7 @@ async function deleteFileFromKudu(publishUrl: string, physicalPath: string, head
     return defer.promise;
 }
 
-async function runCommandOnKudu(publishUrl: string, physicalPath: string, headers, command: string) {
+async function runCommandOnKudu(publishUrl: string, physicalPath: string, headers, command: string, retryFlag: boolean) {
     var defer = Q.defer<string>();
     var kuduDeploymentURL = "https://" + publishUrl + "/api/command";
     headers['Content-Type'] = 'application/json';
@@ -188,8 +188,18 @@ async function runCommandOnKudu(publishUrl: string, physicalPath: string, header
     };
 
     tl.debug('Executing Script on Kudu: ' + kuduDeploymentURL + '. Command: ' + command);
-    httpObj.send('POST', kuduDeploymentURL, JSON.stringify(jsonData), headers, (error, response, body) => {
+    httpObj.send('POST', kuduDeploymentURL, JSON.stringify(jsonData), headers, async (error, response, body) => {
         if(error) {
+            if(retryFlag && error.toString().indexOf('Request timeout: /api/command') != -1) {
+                console.log(tl.loc('RetryForTimeoutIssue'));
+                try {
+                    await runCommandOnKudu(publishUrl, physicalPath, headers, command, false);
+                    defer.resolve(tl.loc('SciptExecutionOnKuduSuccess'));
+                }
+                catch(retryError) {
+                    defer.reject(tl.loc('FailedToRunScriptOnKuduError', kuduDeploymentURL, retryError));
+                }
+            }
             defer.reject(tl.loc('FailedToRunScriptOnKuduError', kuduDeploymentURL, error));
         }
         else if(response.statusCode === 200) {
@@ -244,7 +254,7 @@ export async function runPostDeploymentScript(publishingProfile, scriptType, inl
     try {
         await uploadFiletoKudu(publishingProfile.publishUrl, '/site/wwwroot', headers, 'kuduPostDeploymentScript.cmd', scriptFilePath);
         console.log(tl.loc('ExecuteScriptOnKudu', publishingProfile.publishUrl));
-        console.log(await runCommandOnKudu(publishingProfile.publishUrl, 'site\\wwwroot', headers, 'kuduPostDeploymentScript.cmd'));
+        console.log(await runCommandOnKudu(publishingProfile.publishUrl, 'site\\wwwroot', headers, 'kuduPostDeploymentScript.cmd', true));
     }
     catch(Exception) {
         throw Error(Exception);

@@ -111,5 +111,6 @@
   "loc.messages.FailedtoDeleteFileFromKudu": "Unable to delete file: %s from Kudu (%s). Status Code: %s (%s)",
   "loc.messages.FailedtoDeleteFileFromKuduError": "Unable to delete file: %s from Kudu (%s). Error: %s",
   "loc.messages.ScriptFileNotFound": "Script file '%s' not found.",
-  "loc.messages.InvalidScriptFile": "Invalid Script file '%s' provided. Valid extensions are .bat and .cmd"
+  "loc.messages.InvalidScriptFile": "Invalid Script file '%s' provided. Valid extensions are .bat and .cmd",
+  "loc.messages.RetryForTimeoutIssue": "Script execution failed with timeout issue. Retrying once again."
 }
