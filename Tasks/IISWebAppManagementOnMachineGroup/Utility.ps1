@@ -1,6 +1,5 @@
 Import-Module $PSScriptRoot\ps_modules\TaskModuleIISManageUtility
 
-## add appcmd parameter
 function Manage-IISWebSite
 {
     param (
@@ -29,16 +28,17 @@ function Manage-IISWebSite
         [string] $pipeLineMode,
         [string] $appPoolIdentity,
         [string] $appPoolUsername,
-        [string] $appPoolPassword
+        [string] $appPoolPassword,
+        [string] $appCmdCommands
     )
 
-    Trim-Inputs -siteName ([ref]$websiteName) -physicalPath ([ref]$physicalPath)  -poolName ([ref]$appPoolName) -physicalPathAuthuser ([ref]$physicalPathAuthUserName) -appPoolUser ([ref]$appPoolUsername) -sslCertThumbPrint ([ref]$sslCertThumbPrint)
-    Validate-Inputs -sslCertThumbPrint $sslCertThumbPrint
-    
     switch ($actionIISWebsite) 
     {
         "CreateOrUpdateWebsite" 
         {
+            Trim-Inputs -siteName ([ref]$websiteName) -physicalPath ([ref]$physicalPath)  -poolName ([ref]$appPoolName) -physicalPathAuthuser ([ref]$physicalPathAuthUserName) -appPoolUser ([ref]$appPoolUsername) -sslCertThumbPrint ([ref]$sslCertThumbPrint)
+            Validate-Inputs -sslCertThumbPrint $sslCertThumbPrint -protocol $protocol -addBinding $addBinding
+    
             if($physicalPathAuth -ieq "WebsiteWindowsAuth") 
             {
                 $physicalPathAuthCredentials = Get-CustomCredentials -username $physicalPathAuthUserName -password $physicalPathAuthUserPassword
@@ -62,7 +62,13 @@ function Manage-IISWebSite
         }
         {($_ -eq "StartWebsite") -or ($_ -eq "StopWebsite")}
         {
+            Trim-Inputs -siteName ([ref]$startStopWebsiteName)
+            
             Execute-Main -ActionIISWebsite $actionIISWebsite -WebsiteName $startStopWebsiteName -AppCmdCommands $appCmdCommands
+        }
+        default 
+        {
+            throw (Get-VstsLocString -Key "InvalidActionIISWebsite" -ArgumentList $actionIISWebsite)
         }
     }    
 }
@@ -75,7 +81,8 @@ function Manage-IISVirtualDirectory
         [string] $physicalPath,
         [string] $PhysicalPathAuth,
         [string] $physicalPathAuthUserName,
-        [string] $physicalPathAuthUserPassword
+        [string] $physicalPathAuthUserPassword,
+        [string] $appCmdCommands
     )
 
     Trim-Inputs -siteName ([ref]$parentWebsiteName) -virtualPath ([ref]$virtualPath) -physicalPath ([ref]$physicalPath) -physicalPathAuthuser ([ref]$physicalPathAuthUserName)
@@ -106,7 +113,8 @@ function Manage-IISWebApplication
         [string] $pipeLineMode,
         [string] $appPoolIdentity,
         [string] $appPoolUsername,
-        [string] $appPoolPassword
+        [string] $appPoolPassword,
+        [string] $appCmdCommands
     )
 
     Trim-Inputs -siteName ([ref]$parentWebsiteName) -virtualPath ([ref]$virtualPath) -physicalPath ([ref]$physicalPath) -physicalPathAuthuser ([ref]$physicalPathAuthUserName) -poolName ([ref]$appPoolName) -appPoolUser ([ref]$appPoolUsername) 
@@ -144,15 +152,16 @@ function Manage-IISApplicationPool
         [string] $pipeLineMode,
         [string] $appPoolIdentity,
         [string] $appPoolUsername,
-        [string] $appPoolPassword
+        [string] $appPoolPassword,
+        [string] $appCmdCommands
     ) 
-
-    Trim-Inputs -poolName ([ref]$appPoolName) -appPoolUser ([ref]$appPoolUsername) 
 
     switch ($actionIISApplicationPool) 
     {
         "CreateOrUpdateAppPool" 
         {
+            Trim-Inputs -poolName ([ref]$appPoolName) -appPoolUser ([ref]$appPoolUsername) 
+
             if($appPoolIdentity -ieq "SpecificUser") 
             {
                 $appPoolCredentials = Get-CustomCredentials -username $appPoolUsername -password $appPoolPassword        
@@ -163,7 +172,13 @@ function Manage-IISApplicationPool
         }
         {($_ -eq "StartAppPool") -or ($_ -eq "StopAppPool") -or ($_ -eq "RecycleAppPool")}
         {
+            Trim-Inputs -poolName ([ref]$startStopRecycleAppPoolName)
+
             Execute-Main -ActionIISApplicationPool $actionIISApplicationPool -AppPoolName $startStopRecycleAppPoolName -AppCmdCommands $appCmdCommands
+        }
+        default 
+        {
+            throw (Get-VstsLocString -Key "InvalidActionIISAppPool" -ArgumentList $actionIISApplicationPool)
         }
     }
 }
@@ -219,7 +234,9 @@ function Validate-Inputs
 {
     param (
         [string] $virtualPath,
-        [string] $sslCertThumbPrint
+        [string] $sslCertThumbPrint,
+        [string] $protocol, 
+        [string] $addBinding
     )
 
     if((-not [string]::IsNullOrWhiteSpace($sslCertThumbPrint)) -and ($protocol -ieq "https") -and ($addBinding -ieq "true")) 

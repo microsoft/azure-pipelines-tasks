@@ -15,8 +15,8 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 1,
-    "Patch": 2
+    "Minor": 2,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.111.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -625,6 +625,8 @@
   "messages": {
     "InvalidSslThumbprint": "ms-resource:loc.messages.InvalidSslThumbprint",
     "InvalidVirtualPath": "ms-resource:loc.messages.InvalidVirtualPath",
-    "InvalidIISDeploymentType": "ms-resource:loc.messages.InvalidIISDeploymentType"
+    "InvalidIISDeploymentType": "ms-resource:loc.messages.InvalidIISDeploymentType",
+    "InvalidActionIISWebsite": "ms-resource:loc.messages.InvalidActionIISWebsite",
+    "InvalidActionIISAppPool": "ms-resource:loc.messages.InvalidActionIISAppPool"
   }
 }
