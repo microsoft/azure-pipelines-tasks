@@ -52,6 +52,7 @@ function initDtaEnvironment(): models.DtaEnvironment {
     const dtaEnvironment = {} as models.DtaEnvironment;
     dtaEnvironment.tfsCollectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
     dtaEnvironment.patToken = tl.getEndpointAuthorization('SystemVssConnection', true).parameters['AccessToken'];
+    dtaEnvironment.agentName = tl.getVariable('Agent.MachineName') + '-' + tl.getVariable('Agent.Name') + '-' + tl.getVariable('Agent.Id');
 
     //TODO : Consider build scenario
     const releaseId = tl.getVariable('Release.ReleaseId');
