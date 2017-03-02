@@ -11,7 +11,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 113,
+    "Minor": 115,
     "Patch": 0
   },
   "demands": [
@@ -47,6 +47,30 @@
       "helpMarkDown": "ms-resource:loc.input.help.configuration"
     },
     {
+      "name": "clean",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.clean",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.clean"
+    },
+    {
+      "name": "packageApp",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.packageApp",
+      "defaultValue": true,
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.packageApp"
+    },
+    {
+      "name": "forSimulator",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.forSimulator",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.forSimulator"
+    },
+    {
       "name": "runNugetRestore",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.runNugetRestore",
@@ -80,22 +104,6 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.mdtoolLocation",
       "groupName": "advanced"
-    },
-    {
-      "name": "packageApp",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.packageApp",
-      "defaultValue": true,
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.packageApp"
-    },
-    {
-      "name": "forSimulator",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.forSimulator",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.forSimulator"
     },
     {
       "name": "signMethod",
