@@ -54,6 +54,7 @@ describe('Npm Task', function () {
 
         assert.equal(tr.invokedToolCount, 0, 'should not have run vsts-npm-auth, npm config list and npm command');
         assert.equal(tr.warningIssues.length, 1, "should have warning since no directory is found matching given pattern");
+        assert(tr.stdout.search("loc_mock_NoDirectoryMatchingPattern") >= 0, "should show warning message")
         assert(tr.succeeded, 'should have succeeded');
 
         done();

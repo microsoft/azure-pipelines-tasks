@@ -10,7 +10,7 @@ taskMockRunner.registerMock("nuget-task-common/utility.js", {
         throw new Error("No matching files were found with search pattern: " + filterSpec);
     }
 });
-let npmMockHelper = new util.NpmMockHelper(taskMockRunner, "config", "list", "**/package.json");
+let npmMockHelper = new util.NpmMockHelper(taskMockRunner, "config", "list", "package(s)*.json");
 process.env['USERPROFILE'] = 'C:\\Users\\none';
 
 if (process.argv.length == 3) {

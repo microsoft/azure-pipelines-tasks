@@ -123,7 +123,9 @@ export class NpmMockHelper {
         this.answers.checkPath["c:\\agent\\home\\directory\\fake\\wd\two"] = true;
         this.answers.findMatch = {
             "**\\package.json": 
-                ["c:\\agent\\home\\directory\\fake\\wd\\one\\package.json", "c:\\agent\\home\\directory\\fake\\wd\\two\\package.json"]
+                ["c:\\agent\\home\\directory\\fake\\wd\\one\\package.json", "c:\\agent\\home\\directory\\fake\\wd\\two\\package.json"],
+            "package(s)*.json":
+                []
         }
     }
 

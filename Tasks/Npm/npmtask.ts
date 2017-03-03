@@ -17,10 +17,14 @@ async function executeTask() {
 
     try {
         var filePath = tl.getPathInput('cwd', true, false);
-        var dirList = [];
+        var dirList = [], filesList = [];
         if (/[\*?+@\[\]{}!]/.test(filePath)) {
-            var filesList = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), filePath);
+            filesList = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), filePath);
             tl.debug("number of files matching filePath: " + filesList.length);
+            if(filesList.length === 0) {
+                tl.warning(tl.loc("NoDirectoryMatchingPattern", filePath));
+                return;
+            }
             for (var workingDir of filesList) {
                 if (tl.stats(workingDir).isFile()) {
                     workingDir = path.dirname(workingDir);
@@ -59,7 +63,7 @@ async function executeTask() {
             // deprecated version of task, which just runs the npm command with NO auth support.
             try {
                 var code: number = await npmRunner.exec();
-                tl.setResult(code, tl.loc('NpmReturnCode', code));
+                console.log(tl.loc('NpmReturnCode', code));
             } catch (err) {
                 tl.debug('taskRunner fail');
                 tl.setResult(tl.TaskResult.Failed, tl.loc('NpmFailed', err.message));
@@ -96,7 +100,7 @@ async function executeTask() {
 
                 await tryRunNpmConfigAsync(getNpmConfigRunner(debugLog), npmExecOptions);
                 var code: number = await runNpmCommandAsync(npmRunner, npmExecOptions);
-                tl.setResult(code, tl.loc('NpmReturnCode', code));
+                console.log(code, tl.loc('NpmReturnCode', code));
             } catch (err) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc('NpmFailed', err.message));
                 break;

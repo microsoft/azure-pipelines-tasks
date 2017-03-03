@@ -7,10 +7,11 @@
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 0,
-        "Minor": 2,
-        "Patch": 21
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
     },
+    "preview": true,
     "runsOn": [
         "Agent",
         "MachineGroup"
@@ -57,6 +58,7 @@
         "NpmFailed": "npm failed with error: %s",
         "NpmConfigFailed": "Failed to log the npm config information. Error : %s",
         "NpmAuthFailed": "Failed to get the required authentication tokens for npm. Error: %s",
-        "BuildCredentialsWarn": "Could not determine credentials to use for npm"
+        "BuildCredentialsWarn": "Could not determine credentials to use for npm",
+        "NoDirectoryMatchingPattern": "No directory found matching pattern: %s"
     }
 }

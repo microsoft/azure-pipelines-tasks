@@ -13,5 +13,6 @@
   "loc.messages.NpmFailed": "npm failed with error: %s",
   "loc.messages.NpmConfigFailed": "Failed to log the npm config information. Error : %s",
   "loc.messages.NpmAuthFailed": "Failed to get the required authentication tokens for npm. Error: %s",
-  "loc.messages.BuildCredentialsWarn": "Could not determine credentials to use for npm"
+  "loc.messages.BuildCredentialsWarn": "Could not determine credentials to use for npm",
+  "loc.messages.NoDirectoryMatchingPattern": "No directory found matching pattern: %s"
 }
