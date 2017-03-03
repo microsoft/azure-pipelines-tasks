@@ -14,11 +14,10 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
-        "Minor": 0,
+        "Major": 0,
+        "Minor": 6,
         "Patch": 0
     },
-    "preview": true,
     "demands": [
         "node.js"
     ],
