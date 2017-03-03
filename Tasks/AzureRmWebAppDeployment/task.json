@@ -189,7 +189,7 @@
             "label": "Deployment script type",
             "defaultValue": "",
             "options": {
-                "": "Select deployment script type (inline or file)",
+                "": "Select deployment script type",
                 "Inline Script": "Inline Script",
                 "File Path": "Script File Path"
             },
