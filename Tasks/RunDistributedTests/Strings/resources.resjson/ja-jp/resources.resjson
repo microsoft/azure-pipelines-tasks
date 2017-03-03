@@ -28,6 +28,8 @@
   "loc.input.help.overrideRunParams": "runsettings ファイルの TestRunParameters セクションで定義されたパラメーターを無視します。例: 'AppURL=$(DeployURL);Port=8080'",
   "loc.input.label.codeCoverageEnabled": "コード カバレッジ有効",
   "loc.input.help.codeCoverageEnabled": "コード カバレッジを有効にする必要があるかどうか。",
+  "loc.input.label.customSlicingEnabled": "マシンの数に基づいてテストを配布する",
+  "loc.input.help.customSlicingEnabled": "テストは、テスト コンテナー数ではなく、指定したコンピューター数に基づいて配布されます。DLL 内のテストも複数のコンピューターに配布される場合があるのでご注意ください。",
   "loc.input.label.testRunTitle": "テスト実行のタイトル",
   "loc.input.help.testRunTitle": "テスト実行の名前を指定します。",
   "loc.input.label.platform": "プラットフォーム",

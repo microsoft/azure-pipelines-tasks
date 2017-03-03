@@ -1,14 +1,48 @@
-function Check-Installation($ProductVersion)
+function Check-Installation($ProductVersion, $VersionToInstall)
 {
     $InstalledCheckRegKey = ("SOFTWARE\Microsoft\DevDiv\vstf\Servicing\{0}\testagentcore" -f $ProductVersion)
 	$InstalledCheckRegValueName = "Install"
 	$InstalledCheckRegValueData = "1"
 
-	$isProductExists = Get-ProductEntry -InstalledCheckRegKey $InstalledCheckRegKey -InstalledCheckRegValueName $InstalledCheckRegValueName -InstalledCheckRegValueData $InstalledCheckRegValueData
+	$isProductExists = $false
+
+	$installValue = Get-ProductEntry -InstalledCheckRegKey $InstalledCheckRegKey -InstalledCheckRegValueName $InstalledCheckRegValueName
+
+	if($installValue -and ($installValue -eq $InstalledCheckRegValueData))
+	{
+		$isProductExists = $true
+	}
+	
+	if($isProductExists)
+	{
+		$versionInstalled = (Get-ProductEntry -InstalledCheckRegKey $InstalledCheckRegKey -InstalledCheckRegValueName "Version")
+		Write-Verbose -Message ("Version already installed: " + $VersionInstalled) -verbose
+		
+		if(!([System.String]::IsNullOrEmpty($VersionToInstall)))
+		{
+			$VersionToInstall = $VersionToInstall.SubString(0, $VersionToInstall.LastIndexOf('.'))
+			
+			Write-Verbose -Message ("Version to be installed: " + $VersionToInstall) -verbose
+		}
+	}
 
 	if($isProductExists)
 	{
-		Write-Verbose -Message ("Test Agent already exists") -verbose
+		if(!([System.String]::IsNullOrEmpty($VersionToInstall)))
+		{
+			if(($versionInstalled -ne $null) -and ([version]$VersionToInstall -le [version]$versionInstalled))
+			{
+				Write-Verbose -Message ("Test Agent already exists") -verbose
+			}
+			else 
+			{
+				Write-Verbose -Message ("Test Agent does not exists.") -verbose
+			}
+		}
+		else
+		{
+			Write-Verbose -Message ("Test Agent already exists") -verbose
+		}		
 	}
 	else
 	{
@@ -59,11 +93,10 @@ function Get-ProductEntry {
 	param
 	(
 		[string] $InstalledCheckRegKey,
-		[string] $InstalledCheckRegValueName,
-		[string] $InstalledCheckRegValueData
+		[string] $InstalledCheckRegValueName
 	)
 
-	if ($InstalledCheckRegKey -and $InstalledCheckRegValueName -and $InstalledCheckRegValueData)
+	if ($InstalledCheckRegKey -and $InstalledCheckRegValueName)
 	{
 		$installValue = $null
 
@@ -78,16 +111,10 @@ function Get-ProductEntry {
 			$installValue = Get-RegistryValue -RegistryHive LocalMachine -Key $InstalledCheckRegKey -Value $InstalledCheckRegValueName -RegistryView Registry32
 		}
 
-		if($installValue)
-		{
-			if($InstalledCheckRegValueData -and $installValue -eq $InstalledCheckRegValueData)
-			{
-				return $true
-			}
-		}
+		return $installValue
 	}
 
-	return $false
+	return $null
 }
 
-Check-Installation  -ProductVersion "14.0"
+Check-Installation  -ProductVersion "14.0" -VersionToInstall $versionToInstall

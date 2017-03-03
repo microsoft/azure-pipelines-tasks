@@ -28,6 +28,8 @@
   "loc.input.help.overrideRunParams": "Überschreiben Sie Parameter, die im Abschnitt \"TestRunParameters\" der Datei mit den Ausführungseinstellungen definiert sind, z. B. \"AppURL=$(DeployURL);Port=8080\".",
   "loc.input.label.codeCoverageEnabled": "Code Coverage aktiviert",
   "loc.input.help.codeCoverageEnabled": "Angabe, ob Code Coverage aktiviert werden muss.",
+  "loc.input.label.customSlicingEnabled": "Tests nach Anzahl der Computer verteilen",
+  "loc.input.help.customSlicingEnabled": "Tests werden basierend auf der Anzahl der bereitgestellten Computer anstatt basierend auf der Anzahl der Testcontainer verteilt. Beachten Sie, dass Tests innerhalb einer DLL auch auf mehrere Computer verteilt werden können.",
   "loc.input.label.testRunTitle": "Testlauftitel",
   "loc.input.help.testRunTitle": "Geben Sie einen Namen für den Testlauf an.",
   "loc.input.label.platform": "Plattform",

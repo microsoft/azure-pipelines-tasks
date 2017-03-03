@@ -28,6 +28,8 @@
   "loc.input.help.overrideRunParams": "覆寫在 runsettings 檔案 TestRunParameters 區段中定義的參數。例如: `AppURL=$(DeployURL);Port=8080`",
   "loc.input.label.codeCoverageEnabled": "已啟用程式碼涵蓋範圍",
   "loc.input.help.codeCoverageEnabled": "是否需要啟用程式碼涵蓋範圍。",
+  "loc.input.label.customSlicingEnabled": "依電腦數目散發測試",
+  "loc.input.help.customSlicingEnabled": "將會根據提供的電腦數目來散發測試，而不是測試容器數目。請注意，dll 內的測試也可能散發至多部電腦。",
   "loc.input.label.testRunTitle": "測試回合標題",
   "loc.input.help.testRunTitle": "提供測試回合的名稱。",
   "loc.input.label.platform": "平台",

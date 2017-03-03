@@ -1,4 +1,143 @@
-﻿function Get-TestAgentType([string] $Version)
+﻿function isAutoLogonDisabled([int] $OSType)
+{
+	#check 64 bit or 32 bit
+	if ($OSType -eq 64)
+	{
+		$registryPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion\Winlogon"
+	}
+	else
+	{
+		$registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
+	}
+
+	if (-not (Test-Path $registryPath))
+	{
+		Write-Verbose -Message("Registry path {0} not found" -f $registryPath) -Verbose
+		return $true
+	}
+	
+	$autoadminLogon = (Get-ItemProperty $registryPath -ErrorAction SilentlyContinue).AutoAdminLogon
+	if ((!$autoadminLogon) -or ($autoadminLogon.Length -eq 0))
+	{
+		Write-Verbose -Message("Registry path {0} found, but AutoAdminLogon key is not set." -f $registryPath) -Verbose
+		return $true
+	}
+	elseif($autoadminLogon -eq "1")
+	{
+		return $false
+	}
+
+	Write-Verbose -Message("Registry path {0} found, but AutoAdminLogon key is not enabled." -f $registryPath) -Verbose
+	return $true
+}
+
+function isShowLogonMessagePolicyEnabled([int] $OSType)
+{
+	#check 64 bit or 32 bit
+	if ($OSType -eq 64)
+	{
+		$registryPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\policies\system"
+	}
+	else
+	{
+		$registryPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\policies\system"
+	}
+
+	if (-not (Test-Path $registryPath))
+	{
+		Write-Verbose -Message("Registry path {0} not found" -f $registryPath) -Verbose
+		return $false
+	}
+	
+	$legalCaption = (Get-ItemProperty $registryPath -ErrorAction SilentlyContinue).legalnoticecaption
+	if (($legalCaption) -and ($legalCaption.Length -gt 0))
+	{
+		Write-Verbose -Message("Registry path {0} found, but legalnoticecaption key is set to some value." -f $registryPath) -Verbose
+		return $true
+	}
+
+	$legalText = (Get-ItemProperty $registryPath -ErrorAction SilentlyContinue).legalnoticetext
+	if (($legalText) -and ($legalText.Length -gt 0))
+	{
+		Write-Verbose -Message("Registry path {0} found, but legalnoticetext key is set to some value." -f $registryPath) -Verbose
+		return $true
+	}
+
+	return $false
+}
+
+function isShowLogonMessageEnabled([int] $OSType)
+{
+	#check 64 bit or 32 bit
+	if ($OSType -eq 64)
+	{
+		$registryPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion\Winlogon"
+	}
+	else
+	{
+		$registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
+	}
+
+	if (-not (Test-Path $registryPath))
+	{
+		Write-Verbose -Message("Registry path {0} not found" -f $registryPath) -Verbose
+		return $false
+	}
+	
+	$legalCaption = (Get-ItemProperty $registryPath -ErrorAction SilentlyContinue).LegalNoticeCaption
+	if (($legalCaption -ne $null) -and ($legalCaption.Length -gt 0))
+	{
+		Write-Verbose -Message("Registry path {0} found, but LegalNoticeCaption is set to some value." -f $registryPath) -Verbose
+		return $true
+	}
+
+	$legalText = (Get-ItemProperty $registryPath -ErrorAction SilentlyContinue).LegalNoticeText
+	if (($legalText -ne $null) -and ($legalText.Length -gt 0))
+	{
+		Write-Verbose -Message("Registry path {0} found, but LegalNoticeText is set to some value." -f $registryPath) -Verbose
+		return $true
+	}
+
+	return $false
+}
+
+function Update-RebootCount([string] $environmentURL)
+{
+	if ([IntPtr]::Size -eq 8)
+	{
+		$testAgentRegPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\TestAgentConfig"
+	}
+	else
+	{
+		$testAgentRegPath = "HKLM:\SOFTWARE\Microsoft\TestAgentConfig" 
+	}
+
+	if (-not (Test-Path $testAgentRegPath))
+	{
+		New-Item -Path $testAgentRegPath -Force | Out-Null
+		Write-Verbose -Message ("Updating machine reboot count to 1") -Verbose
+		New-ItemProperty -Path $testAgentRegPath -Name "MachineRebootCount" -Value 1 -PropertyType DWord -Force | Out-Null
+		New-ItemProperty -Path $testAgentRegPath -Name "EnvironmentURL" -Value $environmentURL -PropertyType String -Force | Out-Null
+		return 1;
+	}
+ 
+	[int]$machineRebootCount = (Get-ItemProperty $testAgentRegPath -ErrorAction SilentlyContinue).MachineRebootCount
+	$savedEnvURL = (Get-ItemProperty $testAgentRegPath -ErrorAction SilentlyContinue).EnvironmentURL
+
+	if (($machineRebootCount -eq $null) -or ([string]::Compare($savedEnvURL, $environmentURL, $True) -ne 0))
+	{
+		$machineRebootCount = 0
+	}
+
+	[int]$machineRebootCount = $machineRebootCount + 1;
+	Write-Verbose -Message ("Updating machine reboot count to : {0}" -f $machineRebootCount) -Verbose
+	Set-ItemProperty -Path $testAgentRegPath -Name "MachineRebootCount" -Value $machineRebootCount -Force | Out-Null
+	Set-ItemProperty -Path $testAgentRegPath -Name "EnvironmentURL" -Value $environmentURL -Force | Out-Null
+
+	return $machineRebootCount
+}
+
+function Get-TestAgentType([string] $Version)
 {
 	$Version = Locate-TestVersion
 	$testAgentPath = "HKLM:\SOFTWARE\Microsoft\VisualStudio\{0}\EnterpriseTools\QualityTools\Agent" -f $Version
@@ -284,6 +423,24 @@ function Set-TestAgentConfiguration
         }
 
         $yesno = GetBoolAsYesNo($EnableAutoLogon)
+
+        if($EnableAutoLogon)
+        {
+            if( (isAutoLogonDisabled(64)) -or (isAutoLogonDisabled(32)))
+            {
+                Write-Verbose -Message ("Admin auto logon is disabled") -Verbose
+            }
+            if( (isShowLogonMessagePolicyEnabled(64)) -or (isShowLogonMessagePolicyEnabled(32)))
+            {
+                Write-Verbose -Message ("Show logon message policy is enabled") -Verbose
+            }
+            elseif((isShowLogonMessageEnabled(64)) -or (isShowLogonMessageEnabled(32)))
+            {
+                Write-Verbose -Message ("Show logon Message is enabled") -Verbose
+            }
+
+        }
+
         $configArgs = $configArgs + ("/enableAutoLogon:{0}" -f $yesno)
     }
 
@@ -772,6 +929,11 @@ function InvokeDTAExecHostExe([string] $Version, [System.Management.Automation.P
     Try
     {
         $session = CreateNewSession -MachineCredential $MachineCredential
+        # Make sure DTA Agent Execution Service starts first before invoking DTA Execution Host
+        Invoke-Command -Session $session -ErrorAction SilentlyContinue -ErrorVariable err -OutVariable out { Restart-Service -Name "DTAAgentExecutionService" }
+        Write-Verbose -Message ("Error : {0} " -f ($err | out-string)) -Verbose
+        Write-Verbose -Message ("Output : {0} " -f ($out | out-string)) -Verbose
+        
         Invoke-Command -Session $session -ErrorAction SilentlyContinue -ErrorVariable err -OutVariable out -scriptBlock { schtasks.exe /create /TN:DTAConfig /TR:$args /F /RL:HIGHEST /SC:MONTHLY ; schtasks.exe /run /TN:DTAConfig ; Sleep 10 ; schtasks.exe /change /disable /TN:DTAConfig } -ArgumentList $exePath
         Write-Verbose -Message ("Error : {0} " -f ($err | out-string)) -Verbose
         Write-Verbose -Message ("Output : {0} " -f ($out | out-string)) -Verbose
@@ -919,9 +1081,9 @@ function ConfigureTestAgent
     {
         $retCode = $ret[$ret.Count - 1]
     }
-
+    
     Write-Verbose -Message ("Return code received : {0}" -f $retCode) -Verbose
-
+    
     if ($retCode -eq 0)
     {
         Write-Verbose -Message ("TestAgent Configured Successfully") -Verbose
@@ -929,12 +1091,16 @@ function ConfigureTestAgent
     elseif($retCode -eq 3010)
     {
         Write-Verbose -Message ("TestAgent configuration requested for reboot") -Verbose
+        $rebootCount = Update-RebootCount($EnvironmentUrl)
+        if($rebootCount -gt 3)
+        {
+            throw ("Stopping test agent configuration as it exceeded maximum number of reboots. If you are running test agent in interactive mode, please make sure that autologon is enabled and no legal notice is displayed on logon in test machines")
+        }
     }
     else
     {
         throw ("TestAgent Configuration failed with exit code {0}. Error code : {1}" -f $LASTEXITCODE, $retCode)
     }
-
     return $retCode;
 }
 

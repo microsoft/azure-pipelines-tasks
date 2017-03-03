@@ -28,6 +28,8 @@
   "loc.input.help.overrideRunParams": "Reemplace los parámetros definidos en la sección TestRunParameters del archivo runsettings. Por ejemplo: `AppURL=$(DeployURL);Port=8080`",
   "loc.input.label.codeCoverageEnabled": "Cobertura de código habilitada",
   "loc.input.help.codeCoverageEnabled": "Si es necesario habilitar la cobertura de código.",
+  "loc.input.label.customSlicingEnabled": "Distribuir pruebas por número de máquinas",
+  "loc.input.help.customSlicingEnabled": "Las pruebas se distribuirán en función del número de máquinas proporcionadas en lugar del número de contenedores de pruebas. Tenga en cuenta que las pruebas con un archivo dll también se pueden distribuir a varias máquinas.",
   "loc.input.label.testRunTitle": "Título de la serie de pruebas",
   "loc.input.help.testRunTitle": "Proporcione un nombre para la ejecución de prueba.",
   "loc.input.label.platform": "Plataforma",
