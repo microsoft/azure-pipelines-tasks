@@ -11,7 +11,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 113,
+        "Minor": 115,
         "Patch": 0
     },
     "demands": [
@@ -45,6 +45,30 @@
             "defaultValue": "Release",
             "required": true,
             "helpMarkDown": "Standard configurations are Ad-Hoc, AppStore, Debug, Release."
+        },
+        {
+            "name": "clean",
+            "type": "boolean",
+            "label": "Clean",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Run a clean build (/t:clean) prior to the build."
+        },
+        {
+            "name": "packageApp",
+            "type": "boolean",
+            "label": "Create App Package",
+            "defaultValue": true,
+            "required": true,
+            "helpMarkDown": "Indicates whether an IPA should be generated as a part of the build."
+        },
+        {
+            "name": "forSimulator",
+            "type": "boolean",
+            "label": "Build for iOS Simulator",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Optionally build for the iOS Simulator instead of physical iOS devices."
         },
         {
             "name": "runNugetRestore",
@@ -82,28 +106,13 @@
             "groupName": "advanced"
         },
         {
-            "name": "packageApp",
-            "type": "boolean",
-            "label": "Create App Package",
-            "defaultValue": true,
-            "required": true,
-            "helpMarkDown": "Indicates whether an IPA should be generated as a part of the build."
-        },
-        {
-            "name": "forSimulator",
-            "type": "boolean",
-            "label": "Build for iOS Simulator",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "Optionally build for the iOS Simulator instead of physical iOS devices."
-        },
-        {
             "name": "signMethod",
             "type": "radio",
             "label": "Override Using",
             "required": false,
             "groupName": "sign",
             "defaultValue": "file",
+            "helpMarkDown": "Indicates that the build should use different signing and/or mobile provisioning settings than are installed on the build server. Leave fields blank if you do not wish to override.",
             "options": {
                 "file": "File Contents",
                 "id": "Identifiers"
