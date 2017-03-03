@@ -28,6 +28,8 @@
   "loc.input.help.overrideRunParams": "runsettings 파일의 TestRunParameters 섹션에 정의된 매개 변수를 재정의하세요. 예: `AppURL=$(DeployURL);Port=8080`",
   "loc.input.label.codeCoverageEnabled": "코드 검사 사용",
   "loc.input.help.codeCoverageEnabled": "코드 검사를 사용해야 하는지 여부를 나타냅니다.",
+  "loc.input.label.customSlicingEnabled": "컴퓨터 수를 기준으로 테스트 분산",
+  "loc.input.help.customSlicingEnabled": "테스트는 테스트 컨테이너 수가 아니라 제공된 컴퓨터 수를 기반으로 분산됩니다. dll 내의 테스트도 여러 컴퓨터에 분산될 수 있습니다.",
   "loc.input.label.testRunTitle": "테스트 실행 제목",
   "loc.input.help.testRunTitle": "테스트 실행의 이름을 제공하세요.",
   "loc.input.label.platform": "플랫폼",

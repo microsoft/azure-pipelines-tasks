@@ -28,6 +28,8 @@
   "loc.input.help.overrideRunParams": "Переопределите параметры, заданные в разделе TestRunParameters файла runsettings. Пример: \"AppURL=$(DeployURL);Port=8080\"",
   "loc.input.label.codeCoverageEnabled": "Оценка объемов протестированного кода включена",
   "loc.input.help.codeCoverageEnabled": "Нужно ли включить оценку объемов протестированного кода.",
+  "loc.input.label.customSlicingEnabled": "Распределить тесты по числу компьютеров",
+  "loc.input.help.customSlicingEnabled": "Тесты будут распределяться в соответствии с числом предоставленных компьютеров, а не числом контейнеров для тестирования. Обратите внимание на то, что тесты из одной библиотеки DLL также могут распределяться по разным компьютерам.",
   "loc.input.label.testRunTitle": "Заголовок тестового запуска",
   "loc.input.help.testRunTitle": "Укажите имя для тестового запуска.",
   "loc.input.label.platform": "Платформа",

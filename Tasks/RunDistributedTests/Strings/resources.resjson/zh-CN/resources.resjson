@@ -28,6 +28,8 @@
   "loc.input.help.overrideRunParams": "替代 runsettings 文件的 TestRunParameters 部分中定义的参数。例如: \"AppURL=$(DeployURL);Port=8080\"",
   "loc.input.label.codeCoverageEnabled": "代码覆盖率已启用",
   "loc.input.help.codeCoverageEnabled": "是否需要启用代码覆盖率。",
+  "loc.input.label.customSlicingEnabled": "按计算机的数目分发测试",
+  "loc.input.help.customSlicingEnabled": "将根据提供的计算机的数目而不是测试容器的数目来分发测试。请注意，也可能会将 dll 中的测试分发到多台计算机。",
   "loc.input.label.testRunTitle": "测试运行标题",
   "loc.input.help.testRunTitle": "提供测试运行的名称。",
   "loc.input.label.platform": "平台",
