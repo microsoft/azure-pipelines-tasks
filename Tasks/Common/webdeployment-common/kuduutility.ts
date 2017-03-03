@@ -49,7 +49,7 @@ export async function deployWebAppPackage(webAppPackage: string, publishingProfi
     if(takeAppOfflineFlag) {
         tl.debug('Trying to enable app offline mode.');
         var appOfflineFilePath = path.join(tl.getVariable('system.DefaultWorkingDirectory'), 'app_offline_temp.htm');
-        tl.writeFile(appOfflineFilePath, '<h1> Site under construction. </h1>');
+        tl.writeFile(appOfflineFilePath, '<h1>App Service is offline.</h1>');
         await uploadFiletoKudu(publishingProfile.publishUrl, '/site/wwwroot', headers, 'app_offline.htm', appOfflineFilePath);
         tl.debug('App Offline mode enabled.');
     }
@@ -249,7 +249,7 @@ export async function runPostDeploymentScript(publishingProfile, scriptType, inl
 
     if(appOfflineFlag) {
         var appOfflineFilePath = path.join(tl.getVariable('system.DefaultWorkingDirectory'), 'app_offline_temp.htm');
-        tl.writeFile(appOfflineFilePath, '<h1> Site under construction. </h1>');
+        tl.writeFile(appOfflineFilePath, '<h1>App Service is offline.</h1>');
         await uploadFiletoKudu(publishingProfile.publishUrl, '/site/wwwroot', headers, 'app_offline.htm', appOfflineFilePath);
     }
 
