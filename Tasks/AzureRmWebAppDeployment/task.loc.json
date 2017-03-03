@@ -15,8 +15,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 0,
-    "Patch": 9
+    "Minor": 1,
+    "Patch": 0
   },
   "preview": "true",
   "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
@@ -184,6 +184,40 @@
       "helpMarkDown": "ms-resource:loc.input.help.RenameFilesFlag"
     },
     {
+      "name": "ScriptType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ScriptType",
+      "defaultValue": "",
+      "options": {
+        "": "Select deployment script type",
+        "Inline Script": "Inline Script",
+        "File Path": "Script File Path"
+      },
+      "groupName": "AdditionalDeploymentOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptType"
+    },
+    {
+      "name": "InlineScript",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.InlineScript",
+      "defaultValue": ":: You can provide your deployment commands here. One command per line.",
+      "groupName": "AdditionalDeploymentOptions",
+      "visibleRule": "ScriptType == Inline Script",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "500"
+      }
+    },
+    {
+      "name": "ScriptPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.ScriptPath",
+      "required": true,
+      "groupName": "AdditionalDeploymentOptions",
+      "visibleRule": "ScriptType == File Path"
+    },
+    {
       "name": "XmlTransformation",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.XmlTransformation",
@@ -258,8 +292,8 @@
     "Unabletoretrievewebappsettings": "ms-resource:loc.messages.Unabletoretrievewebappsettings",
     "Unabletoupdatewebappsettings": "ms-resource:loc.messages.Unabletoupdatewebappsettings",
     "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "ms-resource:loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved",
-    "WebappsuccessfullypublishedatUrl0": "ms-resource:loc.messages.WebappsuccessfullypublishedatUrl0",
-    "Failedtodeploywebsite": "ms-resource:loc.messages.Failedtodeploywebsite",
+    "PackageDeploymentSuccess": "ms-resource:loc.messages.PackageDeploymentSuccess",
+    "PackageDeploymentFailed": "ms-resource:loc.messages.PackageDeploymentFailed",
     "Runningcommand": "ms-resource:loc.messages.Runningcommand",
     "Deployingwebapplicationatvirtualpathandphysicalpath": "ms-resource:loc.messages.Deployingwebapplicationatvirtualpathandphysicalpath",
     "Successfullydeployedpackageusingkuduserviceat": "ms-resource:loc.messages.Successfullydeployedpackageusingkuduserviceat",
@@ -297,6 +331,20 @@
     "VirtualApplicationDoesNotExist": "ms-resource:loc.messages.VirtualApplicationDoesNotExist",
     "JSONParseError": "ms-resource:loc.messages.JSONParseError",
     "JSONvariablesubstitutionappliedsuccessfully": "ms-resource:loc.messages.JSONvariablesubstitutionappliedsuccessfully",
-    "XMLvariablesubstitutionappliedsuccessfully": "ms-resource:loc.messages.XMLvariablesubstitutionappliedsuccessfully"
+    "XMLvariablesubstitutionappliedsuccessfully": "ms-resource:loc.messages.XMLvariablesubstitutionappliedsuccessfully",
+    "failedtoUploadFileToKudu": "ms-resource:loc.messages.failedtoUploadFileToKudu",
+    "failedtoUploadFileToKuduError": "ms-resource:loc.messages.failedtoUploadFileToKuduError",
+    "ExecuteScriptOnKudu": "ms-resource:loc.messages.ExecuteScriptOnKudu",
+    "FailedToRunScriptOnKuduError": "ms-resource:loc.messages.FailedToRunScriptOnKuduError",
+    "FailedToRunScriptOnKudu": "ms-resource:loc.messages.FailedToRunScriptOnKudu",
+    "SciptExecutionOnKuduSuccess": "ms-resource:loc.messages.SciptExecutionOnKuduSuccess",
+    "SciptExecutionOnKuduFailed": "ms-resource:loc.messages.SciptExecutionOnKuduFailed",
+    "FailedtoDeleteFileFromKudu": "ms-resource:loc.messages.FailedtoDeleteFileFromKudu",
+    "FailedtoDeleteFileFromKuduError": "ms-resource:loc.messages.FailedtoDeleteFileFromKuduError",
+    "ScriptFileNotFound": "ms-resource:loc.messages.ScriptFileNotFound",
+    "InvalidScriptFile": "ms-resource:loc.messages.InvalidScriptFile",
+    "RetryForTimeoutIssue": "ms-resource:loc.messages.RetryForTimeoutIssue",
+    "stdoutFromScript": "ms-resource:loc.messages.stdoutFromScript",
+    "stderrFromScript": "ms-resource:loc.messages.stderrFromScript"
   }
 }
