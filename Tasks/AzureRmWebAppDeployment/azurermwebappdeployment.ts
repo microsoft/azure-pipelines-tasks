@@ -1,6 +1,7 @@
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
+import * as ParameterParser from './parameterparser'
 
 var azureRESTUtility = require ('azurerest-common/azurerestutility.js');
 var msDeployUtility = require('webdeployment-common/msdeployutility.js');
@@ -33,9 +34,8 @@ async function run() {
         var JSONFiles = tl.getDelimitedInput('JSONFiles', '\n', false);
         var xmlVariableSubstitution: boolean = tl.getBoolInput('XmlVariableSubstitution', false);
         var endPointAuthCreds = tl.getEndpointAuthorization(connectedServiceName, true);
-        var addWebConfig = tl.getBoolInput('AddWebConfig', false);
-        var appType = tl.getInput('AppType', false);
-        var webConfigParameters = tl.getInput('WebConfigParameters', false);
+        var generateWebConfig = tl.getBoolInput('GenerateWebConfig', false);
+        var webConfigParametersStr = tl.getInput('WebConfigParameters', false);
 
         var isDeploymentSuccess: boolean = true;
         var tempPackagePath = null;
@@ -73,11 +73,30 @@ async function run() {
         var isFolderBasedDeployment = utility.isInputPkgIsFolder(webDeployPkg);
         var applyFileTransformFlag = JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution;
 
-        if (applyFileTransformFlag || addWebConfig) {
+        if (applyFileTransformFlag || generateWebConfig) {
             var folderPath = await utility.generateTemporaryFolderForDeployment(isFolderBasedDeployment, webDeployPkg);
 
-            if (addWebConfig) {
-                addWebConfigFile(appType.toLowerCase(), path.join(__dirname, path.normalize('node_modules/webdeployment-common/WebConfigTemplates'), appType), folderPath, webConfigParameters);
+            if (generateWebConfig) {
+
+                //Generate the web.config file if it does not already exist.
+                var webConfigPath = path.join(folderPath, "web.config");
+                if (!fs.existsSync(webConfigPath)) {
+
+                    tl.debug(tl.loc('WebConfigDoesNotExist'));
+
+                    //Extract out the appType parameter as it is not to be replaced.
+                    var webConfigParameters = ParameterParser.parse(webConfigParametersStr);
+                    var appType: string = webConfigParameters['appType'].value;
+                    delete webConfigParameters['appType'];
+
+                    // Get the template path for the given appType
+                    var webConfigTemplatePath = path.join(__dirname, path.normalize('node_modules/webdeployment-common/WebConfigTemplates'), appType.toLowerCase());
+
+                    // Create web.config
+                    generateWebConfigFile(webConfigPath, webConfigTemplatePath, webConfigParameters);
+                } else{
+                    tl.debug(tl.loc('WebConfigAlreadyExists'));
+                }
             }
 
             if (applyFileTransformFlag) {
@@ -234,25 +253,23 @@ async function updateScmType(SPN, webAppName: string, resourceGroupName: string,
     }
 }
 
-function addWebConfigFile(appType: string, folderPath: string, webConfigTemplatePath: string, webConfigParameters: string) {
+function generateWebConfigFile(webConfigTargetPath: string, webConfigTemplatePath: string, substitutionParameters: any) {
     try {
-        var webConfigPath = path.join(folderPath, "web.config");
-        if (!fs.existsSync(webConfigPath)) {
-            var JSONObject = JSON.parse(webConfigParameters);
-
-            var webConfigContent = fs.readFileSync(webConfigTemplatePath, 'utf8');
-            switch (appType) {
-                case "node":
-                    webConfigContent = webConfigContent.replace(/\{NodeStartFile\}/g, JSONObject["StartupFile"]);
-                    break;
-            }
-            tl.writeFile(webConfigPath, webConfigContent, { encoding: "utf8" });
-            console.log(tl.loc("SuccessfullyGeneratedWebAppConfig"));
-        }
+        var webConfigContent: string = fs.readFileSync(webConfigTemplatePath, 'utf8');
+        webConfigContent = replaceMultiple(webConfigContent, substitutionParameters);
+        tl.writeFile(webConfigTargetPath, webConfigContent, { encoding: "utf8" });
+        console.log(tl.loc("SuccessfullyGeneratedWebConfig"));
     }
     catch (error) {
-        tl.warning(tl.loc("FailedToGenerateWebAppConfig", error));
+        throw new Error(tl.loc("FailedToGenerateWebConfig", error));
     }
+}
+
+function replaceMultiple(text: string, substitutions: any): string{
+    for(var key in substitutions){
+        text = text.replace(new RegExp('{' + key + '}', 'g'), substitutions[key].value);
+    }
+    return text;
 }
 
 run();

@@ -116,34 +116,21 @@
       "helpMarkDown": "ms-resource:loc.input.help.WebAppUri"
     },
     {
-      "name": "AddWebConfig",
+      "name": "GenerateWebConfig",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.AddWebConfig",
+      "label": "ms-resource:loc.input.label.GenerateWebConfig",
       "defaultValue": "false",
       "required": false,
       "groupName": "AdditionalDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.AddWebConfig"
-    },
-    {
-      "name": "AppType",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.AppType",
-      "required": true,
-      "defaultValue": "Node",
-      "visibleRule": "AddWebConfig = true",
-      "groupName": "AdditionalDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.AppType",
-      "options": {
-        "Node": "Node"
-      }
+      "helpMarkDown": "ms-resource:loc.input.help.GenerateWebConfig"
     },
     {
       "name": "WebConfigParameters",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.WebConfigParameters",
       "required": true,
-      "defaultValue": "-appType Node -NodeStartFile server.js",
-      "visibleRule": "AddWebConfig == true",
+      "defaultValue": "-appType Node -Handler iisnode -NodeStartFile server.js",
+      "visibleRule": "GenerateWebConfig == true",
       "groupName": "AdditionalDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.WebConfigParameters",
       "properties": {
@@ -333,7 +320,9 @@
     "JSONParseError": "ms-resource:loc.messages.JSONParseError",
     "JSONvariablesubstitutionappliedsuccessfully": "ms-resource:loc.messages.JSONvariablesubstitutionappliedsuccessfully",
     "XMLvariablesubstitutionappliedsuccessfully": "ms-resource:loc.messages.XMLvariablesubstitutionappliedsuccessfully",
+    "WebConfigAlreadyExists": "ms-resource:loc.messages.WebConfigAlreadyExists",
+    "WebConfigDoesNotExist": "ms-resource:loc.messages.WebConfigDoesNotExist",
     "SuccessfullyGeneratedWebConfig": "ms-resource:loc.messages.SuccessfullyGeneratedWebConfig",
-    "FailedToGenerateWebAppConfig": "ms-resource:loc.messages.FailedToGenerateWebAppConfig"
+    "FailedToGenerateWebConfig": "ms-resource:loc.messages.FailedToGenerateWebConfig"
   }
 }

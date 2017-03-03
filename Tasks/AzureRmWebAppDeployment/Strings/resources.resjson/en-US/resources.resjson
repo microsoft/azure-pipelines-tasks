@@ -22,12 +22,10 @@
   "loc.input.help.Package": "Folder or file path to the App Service package. Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip.",
   "loc.input.label.WebAppUri": "App Service URL",
   "loc.input.help.WebAppUri": "Specify a name for the output variable that is generated for the URL of the Azure App Service. The variable can be consumed in subsequent tasks.",
-  "loc.input.label.AddWebConfig": "Add web.config",
-  "loc.input.help.AddWebConfig": "Select this option to generate web.config file for your node app",
-  "loc.input.label.AppType": "App type",
-  "loc.input.help.AppType": "Application type",
-  "loc.input.label.WebConfigParameters": "web.config parameters",
-  "loc.input.help.WebConfigParameters": "Provide web.config parameters. For example '-appType Node -NodeStartFile server.js' (without quotes).",
+  "loc.input.label.GenerateWebConfig": "Generate web.config",
+  "loc.input.help.GenerateWebConfig": "Select this option to generate web.config file. The web.config file will be generated only if the file does not already exist.",
+  "loc.input.label.WebConfigParameters": "Web.Config parameters",
+  "loc.input.help.WebConfigParameters": "Provide web.config parameters to be replaced for the generated file. For example '-appType Node -Handler iisnode -NodeStartFile server.js'. This input will be ignored if project had existing web.config.",
   "loc.input.label.TakeAppOfflineFlag": "Take App Offline",
   "loc.input.help.TakeAppOfflineFlag": "Select the option to take the Azure App Service offline by placing an app_offline.htm file in the root directory of the App Service before the sync operation begins. The file will be removed after the sync operation completes successfully.",
   "loc.input.label.UseWebDeploy": "Publish using Web Deploy",
@@ -103,6 +101,8 @@
   "loc.messages.JSONParseError": "Unable to parse JSON file: %s. Error: %s",
   "loc.messages.JSONvariablesubstitutionappliedsuccessfully": "JSON variable substitution applied successfully.",
   "loc.messages.XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully.",
+  "loc.messages.WebConfigAlreadyExists": "web.config file already exists. Not generating.",
+  "loc.messages.WebConfigDoesNotExist": "web.config file does not exist. Generating.",
   "loc.messages.SuccessfullyGeneratedWebConfig": "Successfully generated web.config file",
-  "loc.messages.FailedToGenerateWebAppConfig": "Failed to generate web.config. Error: %s"
+  "loc.messages.FailedToGenerateWebConfig": "Failed to generate web.config. %s"
 }

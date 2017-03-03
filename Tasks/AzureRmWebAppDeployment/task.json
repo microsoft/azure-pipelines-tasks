@@ -116,36 +116,23 @@
             "helpMarkDown": "Specify a name for the output variable that is generated for the URL of the Azure App Service. The variable can be consumed in subsequent tasks."
         },
         {
-            "name": "AddWebConfig",
+            "name": "GenerateWebConfig",
             "type": "boolean",
-            "label": "Add web.config",
+            "label": "Generate Web.config",
             "defaultValue": "false",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
-            "helpMarkDown": "Select this option to generate web.config file for your node app"
-        },
-        {
-            "name": "AppType",
-            "type": "pickList",
-            "label": "App type",
-            "required": true,
-            "defaultValue": "Node",
-            "visibleRule": "AddWebConfig = true",
-            "groupName": "AdditionalDeploymentOptions",
-            "helpMarkDown": "Application type",
-            "options": {
-                "Node": "Node"
-            }
+            "helpMarkDown": "Select this option to generate web.config file. The web.config file will be generated only if the file does not already exist."
         },
         {
             "name": "WebConfigParameters",
             "type": "multiLine",
-            "label": "web.config parameters",
+            "label": "Edit Web.config parameters",
             "required": true,
-            "defaultValue": "-appType Node -NodeStartFile server.js",
-            "visibleRule": "AddWebConfig == true",
+            "defaultValue": "-appType Node -Handler iisnode -NodeStartFile server.js",
+            "visibleRule": "GenerateWebConfig == true",
             "groupName": "AdditionalDeploymentOptions",
-            "helpMarkDown": "Provide web.config parameters. For example '-appType Node -NodeStartFile server.js' (without quotes).",
+            "helpMarkDown": "Provide web.config parameters to be replaced for the generated file. For example '-appType Node -Handler iisnode -NodeStartFile server.js'. This input will be ignored if project had existing web.config.",
             "properties": {
                 "editorExtension": "ms.vss-services-azure.webconfig-parameters-grid"
             }
@@ -333,7 +320,9 @@
         "JSONParseError": "Unable to parse JSON file: %s. Error: %s",
         "JSONvariablesubstitutionappliedsuccessfully": "JSON variable substitution applied successfully.",
         "XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully.",
+        "WebConfigAlreadyExists": "web.config file already exists. Not generating.",
+        "WebConfigDoesNotExist": "web.config file does not exist. Generating.",
         "SuccessfullyGeneratedWebConfig": "Successfully generated web.config file",
-        "FailedToGenerateWebAppConfig": "Failed to generate web.config. Error: %s"
+        "FailedToGenerateWebConfig": "Failed to generate web.config. %s"
     }
 }
