@@ -15,7 +15,6 @@ param(
     [string]$testPlan,
     [string]$testSuite,
     [string]$testConfiguration
-
 )
 
 Function CmdletHasMember($memberName) {
@@ -24,6 +23,7 @@ Function CmdletHasMember($memberName) {
 }
 
 Write-Verbose "Entering script RunDistributedTests.ps1"
+Write-Verbose "Team Project = $env:SYSTEM_TEAMPROJECT"
 Write-Verbose "TestMachineGroup = $testMachineGroup"
 Write-Verbose "Test Drop Location = $dropLocation"
 Write-Verbose "Source Filter = $sourcefilters"
@@ -35,6 +35,7 @@ Write-Verbose "CodeCoverage Enabled = $codeCoverageEnabled"
 Write-Verbose "TestRun Parameters to override = $overrideRunParams"
 Write-Verbose "TestConfiguration = $testConfigurations"
 Write-Verbose "Application Under Test Machine Group = $autTestMachineGroup"
+Write-Verbose "Use Standalone DTA Agent = $env:UseDtaV2Agent"
 
 # Import the Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
@@ -72,8 +73,14 @@ if([int]::TryParse($testPlan, [ref]$testPlanId)){}
 $testConfigurationId = 0
 if([int]::TryParse($testConfiguration, [ref]$testConfigurationId)){}
  
- 
-if([string]::Equals($testSelection, "testPlan")) 
+$testMachinesGroupName=$testMachineGroup
+if ([string]::Equals($env:UseDtaV2Agent, "true")) {
+    # dtav2://env/TestProject/_apis/testrig/<name>
+    $testMachinesGroupName=[string]::Format("dtav2://env/{0}/_apis/testrig/{1}", $env:SYSTEM_TEAMPROJECT, $testMachineGroup.ToLowerInvariant())
+}
+
+Write-Verbose "Test Machines Group Name = $testMachinesGroupName"
+if([string]::Equals($testSelection, "testPlan"))
 {
     if($checkTestAgentCompatScriptLocationMemberExists)
     {   
@@ -81,13 +88,13 @@ if([string]::Equals($testSelection, "testPlan"))
         {
             Write-Verbose "Invoking Run Distributed Tests with Register Environment support"
     
-            Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TestSelection $testSelection -TestPlan $testPlanId -TestSuites $testSuites -TestConfig $testConfigurationId -TaskContext $distributedTaskContext -CheckTestAgentCompatScriptLocation $checkTaCompatScriptLocation        
+            Invoke-RunDistributedTests -TestMachineGroup $testMachinesGroupName -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TestSelection $testSelection -TestPlan $testPlanId -TestSuites $testSuites -TestConfig $testConfigurationId -TaskContext $distributedTaskContext -CheckTestAgentCompatScriptLocation $checkTaCompatScriptLocation        
         }
         else
         {
             Write-Verbose "Invoking Run Distributed Tests with Machine Group Confg"
             
-            Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFilePreview -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabledPreview -TestRunParams $overrideRunParamsPreview -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TestSelection $testSelection -TestPlan $testPlanId -TestSuites $testSuites -TestConfig $testConfigurationId -CheckTestAgentCompatScriptLocation $checkTaCompatScriptLocation    
+            Invoke-RunDistributedTests -TestMachineGroup $testMachinesGroupName -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFilePreview -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabledPreview -TestRunParams $overrideRunParamsPreview -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TestSelection $testSelection -TestPlan $testPlanId -TestSuites $testSuites -TestConfig $testConfigurationId -CheckTestAgentCompatScriptLocation $checkTaCompatScriptLocation    
         }  
     }
     else
@@ -101,12 +108,12 @@ else
     {
         Write-Verbose "Invoking Run Distributed Tests with Register Environment support"
         
-        Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TaskContext $distributedTaskContext
+        Invoke-RunDistributedTests -TestMachineGroup $testMachinesGroupName -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TaskContext $distributedTaskContext
     }
     else
     {
         Write-Verbose "Invoking Run Distributed Tests with Machng Group Confg"
         
-        Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle
+        Invoke-RunDistributedTests -TestMachineGroup $testMachinesGroupName -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle
     }
 }
