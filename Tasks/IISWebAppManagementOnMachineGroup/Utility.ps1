@@ -226,7 +226,11 @@ function Trim-Inputs([ref]$siteName, [ref]$physicalPath, [ref]$poolName, [ref]$v
     }
     if ($sslCertThumbPrint -ne $null) 
     {
-        $sslCertThumbPrint.Value = $sslCertThumbPrint.Value.Trim()
+        # Trim all non-hexadecimal characters from the ssl cetificate thumbprint
+        Write-Warning (Get-VstsLocString -Key "SSLCertWarningInvalidCharacters")
+        $sslCertThumbprint.Value = [Regex]::Replace($sslCertThumbprint.Value, "[^a-fA-F0-9]+" , "")
+        $sslCertThumbprintValue = $sslCertThumbprint.Value
+        Write-Host "##vso[task.setvariable variable=sslCertThumbprint;isSecret=true]$sslCertThumbprintValue"
     }
 }
 
