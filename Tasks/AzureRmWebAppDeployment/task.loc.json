@@ -189,9 +189,9 @@
       "label": "ms-resource:loc.input.label.ScriptType",
       "defaultValue": "",
       "options": {
-        "": "Select Script Type",
+        "": "Select deployment script type (inline or file)",
         "Inline Script": "Inline Script",
-        "File Path": "File Path"
+        "File Path": "Script File Path"
       },
       "groupName": "AdditionalDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.ScriptType"

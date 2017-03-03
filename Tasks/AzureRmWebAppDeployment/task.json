@@ -186,15 +186,15 @@
         {
             "name": "ScriptType",
             "type": "pickList",
-            "label": "Script Type",
+            "label": "Deployment script type",
             "defaultValue": "",
             "options": {
-                "": "Select Script Type",
+                "": "Select deployment script type (inline or file)",
                 "Inline Script": "Inline Script",
-                "File Path": "File Path"
+                "File Path": "Script File Path"
             },
             "groupName": "AdditionalDeploymentOptions",
-            "helpMarkDown": "Type of the script: File Path or Inline Script"
+            "helpMarkDown": "Customize the deployment by providing a script that will run on the Azure App service. For example restore packages for Node, PHP, Python applications. [Learn more](https://go.microsoft.com/fwlink/?linkid=843471)."
         },
         {
             "name": "InlineScript",
@@ -212,7 +212,7 @@
         {
             "name": "ScriptPath",
             "type": "filePath",
-            "label": "Script Path",
+            "label": "Deployment script path",
             "required": true,
             "groupName": "AdditionalDeploymentOptions",
             "visibleRule": "ScriptType == File Path"
@@ -334,17 +334,17 @@
         "XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully.",
         "failedtoUploadFileToKudu": "Unable to upload file: %s to Kudu (%s). Status Code: %s (%s)",
         "failedtoUploadFileToKuduError": "Unable to upload file: %s to Kudu (%s). Error: %s",
-        "ExecuteScriptOnKudu": "Executing given Script on Kudu: %s",
+        "ExecuteScriptOnKudu": "Executing given script on Kudu: %s",
         "FailedToRunScriptOnKuduError": "Unable to run the script on Kudu: %s. Error: %s",
         "FailedToRunScriptOnKudu": "Unable to run the script on Kudu: %s. Status Code: %s (%s)",
         "SciptExecutionOnKuduSuccess": "Successfully executed script on Kudu.",
-        "SciptExecutionOnKuduFailed": "Executed Script returned '%s' as return code. Error: %s",
+        "SciptExecutionOnKuduFailed": "Executed script returned '%s' as return code. Error: %s",
         "FailedtoDeleteFileFromKudu": "Unable to delete file: %s from Kudu (%s). Status Code: %s (%s)",
         "FailedtoDeleteFileFromKuduError": "Unable to delete file: %s from Kudu (%s). Error: %s",
         "ScriptFileNotFound": "Script file '%s' not found.",
-        "InvalidScriptFile": "Invalid Script file '%s' provided. Valid extensions are .bat and .cmd",
+        "InvalidScriptFile": "Invalid script file '%s' provided. Valid extensions are .bat and .cmd",
         "RetryForTimeoutIssue": "Script execution failed with timeout issue. Retrying once again.",
-        "stdoutFromScript": "Standard Output from Script: ",
-        "stderrFromScript": "Standard Error from Script: "
+        "stdoutFromScript": "Standard output from script: ",
+        "stderrFromScript": "Standard error from script: "
     }
 }
