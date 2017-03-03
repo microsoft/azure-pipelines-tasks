@@ -343,6 +343,8 @@
     "FailedtoDeleteFileFromKuduError": "ms-resource:loc.messages.FailedtoDeleteFileFromKuduError",
     "ScriptFileNotFound": "ms-resource:loc.messages.ScriptFileNotFound",
     "InvalidScriptFile": "ms-resource:loc.messages.InvalidScriptFile",
-    "RetryForTimeoutIssue": "ms-resource:loc.messages.RetryForTimeoutIssue"
+    "RetryForTimeoutIssue": "ms-resource:loc.messages.RetryForTimeoutIssue",
+    "stdoutFromScript": "ms-resource:loc.messages.stdoutFromScript",
+    "stderrFromScript": "ms-resource:loc.messages.stderrFromScript"
   }
 }

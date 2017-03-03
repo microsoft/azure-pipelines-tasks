@@ -204,7 +204,9 @@ async function runCommandOnKudu(publishUrl: string, physicalPath: string, header
         }
         else if(response.statusCode === 200) {
             var responseBody = JSON.parse(body);
+            console.log(tl.loc('stdoutFromScript'));
             console.log(responseBody.Output);
+            console.log(tl.loc('stderrFromScript'));
             if(responseBody.ExitCode === 0) {
                 console.log(responseBody.Error);
                 defer.resolve(tl.loc('SciptExecutionOnKuduSuccess'));
