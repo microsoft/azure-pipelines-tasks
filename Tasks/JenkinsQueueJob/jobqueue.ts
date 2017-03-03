@@ -15,6 +15,8 @@ import JobState = job.JobState;
 import jobsearch = require('./jobsearch');
 import JobSearch = jobsearch.JobSearch;
 
+import util = require('./util');
+
 export class JobQueue {
     taskOptions: TaskOptions;
 
@@ -80,7 +82,7 @@ export class JobQueue {
         var running = [];
         for (var i in this.allJobs) {
             var job = this.allJobs[i];
-            if (job.state == JobState.Streaming || job.state==JobState.Downloading || job.state == JobState.Finishing) {
+            if (job.state == JobState.Streaming || job.state == JobState.Downloading || job.state == JobState.Finishing) {
                 running.push(job);
             }
         }
@@ -179,21 +181,12 @@ export class JobQueue {
     }
 
     writeFinalMarkdown(complete: boolean) {
-        tl.debug('writing summary markdown');
-        var thisQueue = this;
-        var tempDir = shell.tempdir();
-        var linkMarkdownFile = path.join(tempDir, 'JenkinsJob_' + this.rootJob.name + '_' + this.rootJob.executableNumber + '.md');
-        tl.debug('markdown location: ' + linkMarkdownFile);
-        var tab: string = "  ";
-        var paddingTab: number = 4;
-        var markdownContents = walkHierarchy(this.rootJob, "", 0);
-
         function walkHierarchy(job: Job, indent: string, padding: number): string {
             var jobContents = indent + '<ul style="padding-left:' + padding + '">\n';
 
             // if this job was joined to another follow that one instead
             job = findWorkingJob(job);
-            
+
             if (job.executableNumber == -1) {
                 jobContents += indent + job.name + ' ' + job.getResultString() + '<br>\n';
             } else {
@@ -216,36 +209,60 @@ export class JobQueue {
             }
         }
 
-        fs.writeFile(linkMarkdownFile, markdownContents, function callback(err) {
-            tl.debug('writeFinalMarkdown().writeFile().callback()');
+        function generatePipelineReport(job: Job) {
 
-            if (err) {
-                //don't fail the build -- there just won't be a link
-                console.log('Error creating link to Jenkins job: ' + err);
-            } else {
-                console.log('##vso[task.addattachment type=Distributedtask.Core.Summary;name=Jenkins Results;]' + linkMarkdownFile);
-            }
+        }
 
-            var message: string = null;
-            if (complete) {
-                if (thisQueue.taskOptions.capturePipeline) {
-                    message = 'Jenkins pipeline complete';
-                } else if (thisQueue.taskOptions.captureConsole) {
-                    message = 'Jenkins job complete';
+        function generateMarkdownContent(job: Job, taskOptions: TaskOptions, callback: (markdownContent) => void) {
+            util.isPipelineJob(job, taskOptions)
+                .then((isPipeline) => {
+                    if (isPipeline) {
+                        callback("This is a pipeline job: "+job.name + " " + job.executableNumber);
+                    } else {
+                        callback(walkHierarchy(job, "", 0));
+                    }
+                })
+        }
+
+        tl.debug('writing summary markdown');
+        var thisQueue = this;
+        var tempDir = shell.tempdir();
+        var linkMarkdownFile = path.join(tempDir, 'JenkinsJob_' + this.rootJob.name + '_' + this.rootJob.executableNumber + '.md');
+        tl.debug('markdown location: ' + linkMarkdownFile);
+        var tab: string = "  ";
+        var paddingTab: number = 4;
+        generateMarkdownContent(this.rootJob, thisQueue.taskOptions, (markdownContents) => {
+            fs.writeFile(linkMarkdownFile, markdownContents, function callback(err) {
+                tl.debug('writeFinalMarkdown().writeFile().callback()');
+
+                if (err) {
+                    //don't fail the build -- there just won't be a link
+                    console.log('Error creating link to Jenkins job: ' + err);
                 } else {
-                    message = 'Jenkins job queued';
+                    console.log('##vso[task.addattachment type=Distributedtask.Core.Summary;name=Jenkins Results;]' + linkMarkdownFile);
                 }
-                tl.setResult(tl.TaskResult.Succeeded, message);
-            } else {
-                if (thisQueue.taskOptions.capturePipeline) {
-                    message = 'Jenkins pipeline failed';
-                } else if (thisQueue.taskOptions.captureConsole) {
-                    message = 'Jenkins job failed';
+
+                var message: string = null;
+                if (complete) {
+                    if (thisQueue.taskOptions.capturePipeline) {
+                        message = 'Jenkins pipeline complete';
+                    } else if (thisQueue.taskOptions.captureConsole) {
+                        message = 'Jenkins job complete';
+                    } else {
+                        message = 'Jenkins job queued';
+                    }
+                    tl.setResult(tl.TaskResult.Succeeded, message);
                 } else {
-                    message = 'Jenkins job failed to queue';
+                    if (thisQueue.taskOptions.capturePipeline) {
+                        message = 'Jenkins pipeline failed';
+                    } else if (thisQueue.taskOptions.captureConsole) {
+                        message = 'Jenkins job failed';
+                    } else {
+                        message = 'Jenkins job failed to queue';
+                    }
+                    tl.setResult(tl.TaskResult.Failed, message);
                 }
-                tl.setResult(tl.TaskResult.Failed, message);
-            }
+            });
         });
     }
 }
