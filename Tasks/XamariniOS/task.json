@@ -112,6 +112,7 @@
             "required": false,
             "groupName": "sign",
             "defaultValue": "file",
+            "helpMarkDown": "Indicates that the build should use different signing and/or mobile provisioning settings than are installed on the build server. Leave fields blank if you do not wish to override.",
             "options": {
                 "file": "File Contents",
                 "id": "Identifiers"

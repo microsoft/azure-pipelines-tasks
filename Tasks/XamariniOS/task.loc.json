@@ -112,6 +112,7 @@
       "required": false,
       "groupName": "sign",
       "defaultValue": "file",
+      "helpMarkDown": "ms-resource:loc.input.help.signMethod",
       "options": {
         "file": "File Contents",
         "id": "Identifiers"

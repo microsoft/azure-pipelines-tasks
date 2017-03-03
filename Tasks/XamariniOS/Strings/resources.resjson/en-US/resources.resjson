@@ -24,6 +24,7 @@
   "loc.input.label.mdtoolLocation": "Xbuild Path",
   "loc.input.help.mdtoolLocation": "Optionally supply the path to xbuild, the Xamarin Studio mono build tool. When empty, the default xbuild path is used.",
   "loc.input.label.signMethod": "Override Using",
+  "loc.input.help.signMethod": "Indicates that the build should use different signing and/or mobile provisioning settings than are installed on the build server. Leave fields blank if you do not wish to override.",
   "loc.input.label.iosSigningIdentity": "Signing Identity",
   "loc.input.help.iosSigningIdentity": "Optionally override the signing identity that will be used to sign the build. If nothing is entered, the setting in the Xcode project will be used. You may need to select 'Unlock Default Keychain' if you use this option.",
   "loc.input.label.unlockDefaultKeychain": "Unlock Default Keychain",
