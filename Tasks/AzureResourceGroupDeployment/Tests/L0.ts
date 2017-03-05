@@ -372,7 +372,7 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    /*it('Successfully triggered createOrUpdate deployment', (done) => {
+    it('Successfully triggered createOrUpdate deployment', (done) => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
@@ -975,5 +975,5 @@ describe('Azure Resource Group Deployment', function () {
             console.log("STDOUT", tr.stdout);
             done(error);
         }
-    });*/
+    });
 });
