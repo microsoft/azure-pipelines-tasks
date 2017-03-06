@@ -5,6 +5,10 @@ import util = require("util");
 import os = require("os");
 
 export class azureclitask {
+    public static checkIfAzurePythonSdkIsInstalled() {
+        return !!tl.which("az", true);
+    }
+
     public static async runMain() {
         var toolExecutionError = null;
         try {
@@ -109,10 +113,7 @@ export class azureclitask {
 
     private static logoutAzure() {
         try {
-            var connectedService: string;
-            connectedService = tl.getInput("connectedServiceNameARM", true);
-            var subscriptionName: string = tl.getEndpointDataParameter(connectedService, "SubscriptionName", true);
-            tl.execSync("az", " account clear --subscription \"" + subscriptionName + "\"");
+            tl.execSync("az", " account clear");
         }
         catch (err) {
             // task should not fail if logout doesn`t occur
@@ -147,6 +148,10 @@ export class azureclitask {
             }
         }
     }
+}
+
+if (!azureclitask.checkIfAzurePythonSdkIsInstalled()) {
+    tl.setResult(tl.TaskResult.Failed, tl.loc("AzureSDKNotFound"));
 }
 
 azureclitask.runMain();

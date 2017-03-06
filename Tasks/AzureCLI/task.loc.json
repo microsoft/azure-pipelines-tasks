@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -46,8 +46,8 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.scriptLocation",
       "options": {
-        "inlineScript": "Inline Script",
-        "scriptPath": "Script Path"
+        "inlineScript": "Inline script",
+        "scriptPath": "Script path"
       }
     },
     {
@@ -109,6 +109,7 @@
   "messages": {
     "ScriptReturnCode": "ms-resource:loc.messages.ScriptReturnCode",
     "ScriptFailed": "ms-resource:loc.messages.ScriptFailed",
-    "UnsupportedEndpointScheme": "ms-resource:loc.messages.UnsupportedEndpointScheme"
+    "UnsupportedEndpointScheme": "ms-resource:loc.messages.UnsupportedEndpointScheme",
+    "AzureSDKNotFound": "ms-resource:loc.messages.AzureSDKNotFound"
   }
 }
