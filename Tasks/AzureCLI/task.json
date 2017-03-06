@@ -12,7 +12,7 @@
     ],
     "runsOn": [
         "Agent",
-        "MachineGroup"
+        "DeploymentGroup"
     ],
     "demands": [],
     "version": {
