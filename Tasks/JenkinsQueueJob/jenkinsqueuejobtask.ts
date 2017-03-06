@@ -104,7 +104,6 @@ function trackJobQueued(queueUri: string) {
     });
 }
 
-<<<<<<< HEAD
 function createLinkAndFinish(result, jobStatus: string, resultMessage: string) {
     var tempDir = shell.tempdir();
     var linkMarkdownFile = path.join(tempDir, 'JenkinsJob_' + jenkinsTaskName + '_' + jenkinsExecutableNumber + '.md');
@@ -122,18 +121,6 @@ function createLinkAndFinish(result, jobStatus: string, resultMessage: string) {
         tl.setResult(result, resultMessage);
     });
 }
-=======
-        this.teamBuildPluginAvailable = false;
-        // 'Build.StagingDirectory' is available during build.
-        // It is kept here (different than what is used during release) to maintain
-        // compatibility with other tasks relying on Jenkins results being placed in this folder.
-        var resultsDirectory: string = tl.getVariable('Build.StagingDirectory');
-        if (!resultsDirectory) {
-            // 'System.DefaultWorkingDirectory' is available during build and release
-            resultsDirectory = tl.getVariable('System.DefaultWorkingDirectory');
-        }
-        this.saveResultsTo = path.join(resultsDirectory, 'jenkinsResults');
->>>>>>> upstream/master
 
 function captureJenkinsConsole(consoleOffset: number) {
     var fullUrl =  protocol + username + ':' + password + '@' + jenkinsExecutableUrl.replace(protocol,"") + 'logText/progressiveText/?start=' + consoleOffset;
@@ -215,7 +202,6 @@ function checkSuccess() {
     });
 }
 
-<<<<<<< HEAD
 /**
  * This post starts the process by kicking off the job and then: 
  *    |
@@ -275,18 +261,5 @@ else
             trackJobQueued(protocol + username + ':' + password + '@' + queueUri.replace(protocol,""));
         }
     }).auth(username, password, true);
-=======
-        var jobQueue: JobQueue = new JobQueue(taskOptions);
-        var queueUri = await util.pollSubmitJob(taskOptions);
-        console.log(tl.loc('JenkinsJobQueued'));
-        var rootJob = await util.pollCreateRootJob(queueUri, jobQueue, taskOptions);
-        //start the job queue
-        jobQueue.start();
-    } catch (e) {
-        tl.debug(e.message);
-        tl._writeError(e);
-        tl.setResult(tl.TaskResult.Failed, e.message);
-    }
->>>>>>> upstream/master
 }
 
